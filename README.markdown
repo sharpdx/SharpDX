@@ -19,7 +19,7 @@ SharpDX is an open-source DirectX and Windows Multimedia .Net Managed API. The *
 
 ### Features
 The key features and benefits of this API are
-*	API is generated from DirectX SDK headers : meaning *a complete and reliable API* and *an easy support for future API*.
+*	API is generated from DirectX SDK headers : meaning a complete and reliable API and an easy support for future API.
 *	Full support for the following DirectX API:
  * Direct3D10
  * Direct3D10.1
@@ -40,7 +40,7 @@ The key features and benefits of this API are
 *	*Raw DirectX object life management* : No overhead of ObjectTable or RCW mechanism, the API is using direct native management with classic COM method "Release".
 *	*Easily mergeable / obfuscatable* : If you need to obfuscate SharpDX assemblies, they are easily obfusctable due to the fact the framework is not using any mixed assemblies. You can also merge SharpDX assemblies into a single exe using with tool like [ILMerge](http://research.microsoft.com/en-us/people/mbarnett/ilmerge.aspx).
 
-An *optional assembly SharDX.Diagnostics* is delivered and can be added to your project in order to have an explicit error messages when there is a DirectX functions returning an error code. This assembly can be used in development but is not mandatory.
+An *optional assembly SharpDX.Diagnostics* is delivered and can be added to your project in order to have an explicit error messages when there is a DirectX functions returning an error code. This assembly can be used in development but is not mandatory.
 
 ### Documentation
 Todo
