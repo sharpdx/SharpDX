@@ -13,12 +13,12 @@ SharpDX is an open-source DirectX and Windows Multimedia .Net Managed API. The *
  * Support for Mono Runtime (Still Direct3D samples are not working due to a bug in Application.Idle and Winform on Mono, help is needed!)
  * DirectWrite is now supporting a broader range of callback samples, a genuine SharpDX exclusivity, as you cannot do this with any other legacy DirectX .Net API! (thanks to Fadi!).
  * Improved native interop system, safer, faster, MonoLinker/Obfuscator friendly 
- * Various small bugfixes on names and enhancement, see [http://code.google.com/p/sharpdx/source/browse/trunk/ChangeLog.txt?r=94 changelog].
+ * Various small bugfixes on names and enhancement, see [changelog](http://code.google.com/p/sharpdx/source/browse/trunk/ChangeLog.txt?r=94).
 * 19 December 2010, SharpDX 1.1 is released. This release provides full support for all .Net Frameworks 2.0, 3.0, 3.5, 4.0. Various small bugfixes on names and enhancement, see [changelog](http://code.google.com/p/sharpdx/source/browse/trunk/ChangeLog.txt?r=65).
 * 30 November 2010, SharpDX 1.0 final is released. Full support for Direct3D10, Direct3D10.1, Direct3D11, Direct2D1, DirectWrite, D3DCompiler, DXGI 1.0, DXGI 1.1, DirectSound, XAudio2, XAPO.
 
 ### Features
-The key features and benefits of this API are:
+The key features and benefits of this API are
 * API is generated from DirectX SDK headers : meaning *a complete and reliable API* and *an easy support for future API*.
 * Full support for the following DirectX API:
  * Direct3D10
@@ -43,13 +43,13 @@ The key features and benefits of this API are:
 An *optional assembly SharDX.Diagnostics* is delivered and can be added to your project in order to have an explicit error messages when there is a DirectX functions returning an error code. This assembly can be used in development but is not mandatory.
 
 ### Documentation
-* Todo
+Todo
  
- ### Samples
+### Samples
 
 Checkout the [SamplesGallery Samples Gallery]
 
-The samples archive contains several small samples for various API, including :
+The samples archive contains several small samples for various API, including
 * Direct3D10
  * MiniTri Sample (port from SlimDX)
  * Font Sample
