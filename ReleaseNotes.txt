@@ -1,0 +1,11 @@
+Release Notes (2011-02-17)
+* SharpDX goes 1.3
+* Full support for Mono 2.10
+* Various bugfixes and enhancement. See ChangeLog.txt file.
+
+Release Notes (2010-12-19)
+
+* SharpDX goes 1.1
+* SharpDX is now compatible with all .Net Frameworks 2.0 / 3.5 / 4.0
+* Various bugfixes and enhancement. See ChangeLog.txt file.
+

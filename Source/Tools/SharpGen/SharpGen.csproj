@@ -1,0 +1,237 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{31F85A16-CB01-4456-BE3C-76E9FF3A1343}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SharpGen</RootNamespace>
+    <AssemblyName>SharpGen</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>Bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>Bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>Bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;XIDLToCSharp</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>Bin\Release\</OutputPath>
+    <DefineConstants>TRACE;XIDLToCSharp</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>SharpGen.Program</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>logo_sharp_gen.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Build" />
+    <Reference Include="Microsoft.JScript" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Config\BindRule.cs" />
+    <Compile Include="Config\ContextSetRule.cs" />
+    <Compile Include="Config\ContextRule.cs" />
+    <Compile Include="Config\MoveRule.cs" />
+    <Compile Include="Config\ParamAttribute.cs" />
+    <Compile Include="Config\CreateExtensionRule.cs" />
+    <Compile Include="Config\DefineExtensionRule.cs" />
+    <Compile Include="Config\MappingBaseRule.cs" />
+    <Compile Include="Config\MappingRule.cs" />
+    <Compile Include="Config\RemoveRule.cs" />
+    <Compile Include="Config\ITypeRule.cs" />
+    <Compile Include="Config\IncludeRule.cs" />
+    <Compile Include="Config\KeyValue.cs" />
+    <Compile Include="Config\ConfigFile.cs" />
+    <Compile Include="Config\LiteralAttribute.cs" />
+    <Compile Include="Config\NamingRule.cs" />
+    <Compile Include="Config\NamingRuleShort.cs" />
+    <Compile Include="Config\ExtensionBaseRule.cs" />
+    <Compile Include="Config\ConstantRule.cs" />
+    <Compile Include="Config\Visibility.cs" />
+    <Compile Include="CppModel\CppCallingConvention.cs" />
+    <Compile Include="CppModel\CppConstant.cs" />
+    <Compile Include="CppModel\CppElement.cs" />
+    <Compile Include="CppModel\CppEnum.cs" />
+    <Compile Include="CppModel\CppEnumItem.cs" />
+    <Compile Include="CppModel\CppField.cs" />
+    <Compile Include="CppModel\CppFunction.cs" />
+    <Compile Include="CppModel\CppGuid.cs" />
+    <Compile Include="CppModel\CppInclude.cs" />
+    <Compile Include="CppModel\CppModule.cs" />
+    <Compile Include="CppModel\CppInterface.cs" />
+    <Compile Include="CppModel\CppDefine.cs" />
+    <Compile Include="CppModel\CppMethod.cs" />
+    <Compile Include="CppModel\CppParameter.cs" />
+    <Compile Include="CppModel\CppStruct.cs" />
+    <Compile Include="CppModel\CppType.cs" />
+    <Compile Include="Model\CsEnumItem.cs" />
+    <Compile Include="Model\InteropMethodSignature.cs" />
+    <Compile Include="Generator\EnumTransform.cs" />
+    <Compile Include="Generator\InterfaceTransform.cs" />
+    <Compile Include="Generator\MethodTransform.cs" />
+    <Compile Include="Generator\StructTransform.cs" />
+    <Compile Include="Generator\TransformManager.cs" />
+    <Compile Include="Config\ConfigBaseRule.cs" />
+    <Compile Include="Generator\TransformBase.cs" />
+    <Compile Include="Generator\NamingRulesManager.cs" />
+    <Compile Include="Parser\DocItem.cs" />
+    <Compile Include="Parser\DocProvider.cs" />
+    <Compile Include="Parser\GccXml.cs" />
+    <Compile Include="Parser\MacroManager.cs" />
+    <Compile Include="Parser\CppParser.cs" />
+    <Compile Include="Model\InteropType.cs" />
+    <Compile Include="Global.cs" />
+    <Compile Include="Model\InteropManager.cs" />
+    <Compile Include="Model\CsAssembly.cs" />
+    <Compile Include="Model\CsField.cs" />
+    <Compile Include="Model\CsVariable.cs" />
+    <Compile Include="Model\CsBase.cs" />
+    <Compile Include="Model\CsEnum.cs" />
+    <Compile Include="Model\CsFieldBase.cs" />
+    <Compile Include="Model\CsFunction.cs" />
+    <Compile Include="Model\CsClass.cs" />
+    <Compile Include="Model\CsInterface.cs" />
+    <Compile Include="Model\CsMarshalBase.cs" />
+    <Compile Include="Model\CsMethod.cs" />
+    <Compile Include="Model\CsNamespace.cs" />
+    <Compile Include="Model\CsParameterAttribute.cs" />
+    <Compile Include="Model\CsParameter.cs" />
+    <Compile Include="Model\CsProperty.cs" />
+    <Compile Include="Model\CsStruct.cs" />
+    <Compile Include="Model\CppElement.Extensions.cs" />
+    <Compile Include="Model\CsTypeBase.cs" />
+    <Compile Include="CodeGenApp.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="ProgressForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProgressForm.Designer.cs">
+      <DependentUpon>ProgressForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TextTemplating\TemplateIncludeArgs.cs" />
+    <Compile Include="TextTemplating\Templatizer.cs" />
+    <Compile Include="TextTemplating\Tokenizer.cs" />
+    <Compile Include="TextTemplating\TemplateEngine.cs" />
+    <Compile Include="Utilities.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ProgressForm.resx">
+      <DependentUpon>ProgressForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Templates\Enumerations.tt">
+      <LastGenOutput>MyTemplate.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\Structures.tt">
+      <LastGenOutput>Structs.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\Interfaces.tt">
+      <LastGenOutput>Interfaces.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\LocalInterop.tt">
+      <LastGenOutput>MyTemplate.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\Functions.tt">
+      <LastGenOutput>Interfaces.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\Method.tt">
+      <LastGenOutput>Interfaces.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="RunGenerator.bat" />
+    <EmbeddedResource Include="Templates\Header.tt">
+      <LastGenOutput>MyTemplate.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="logo_sharp_gen.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharpCore\SharpCore.csproj">
+      <Project>{9435EFE8-5875-42E8-983B-29298C4CE5FF}</Project>
+      <Name>SharpCore</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

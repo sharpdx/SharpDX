@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config id="sharpdx-directshow" depends="sharpdx-core sharpdx-direct3d9">
+  <namespace>SharpDX.DirectShow</namespace>
+  <assembly>SharpDX.DirectShow</assembly>
+  <include file="dshow.h" attach="true" />
+  <include file="strmif.h" attach="true" />
+  <include file="amvideo.h" attach="true" />
+  <include file="control.h" attach="true" />
+  <include file="vmr9.h" attach="true" />
+  <naming />
+  <types>
+  </types>
+  <mapping>
+    <context>dshow</context>
+
+    <context-clear />
+  </mapping>
+</config>

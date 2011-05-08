@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config id="sharpdx-wic" depends="sharpdx-core">
+  <namespace>SharpDX.WIC</namespace>
+  <assembly>SharpDX.WIC</assembly>
+  <include file="wincodec.h" attach="true" />
+  <naming />
+  <types>
+  </types>
+  <mapping>
+    <context>wincodec</context>
+
+    <context-clear />
+  </mapping>
+</config>

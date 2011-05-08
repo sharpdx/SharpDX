@@ -1,0 +1,1155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+-->
+<config id="sharpdx-direct3d9" depends="sharpdx sharpdx-d3dcompiler" xmlns="urn:SharpGen.Config">
+  
+  <namespace>SharpDX.Direct3D9</namespace>
+  <assembly>SharpDX.Direct3D9</assembly>
+
+  <!-- D3D9 includes -->
+  <include file="d3d9.h" attach="true" />
+  <include file="d3d9caps.h" attach="true" />
+  <include file="d3d9types.h" attach="true" />
+  <include file="d3dx9.h" attach="true" />
+  <include file="d3dx9anim.h" attach="true" />
+  <include file="d3dx9core.h" attach="true" />
+  <include file="d3dx9effect.h" attach="true" />
+  <include file="d3dx9mesh.h" attach="true" />
+  <include file="d3dx9shader.h" attach="true" />
+  <include file="d3dx9shape.h" attach="true" />
+  <include file="d3dx9tex.h" attach="true" />
+  <include file="d3dx9xof.h" attach="true" />
+  
+  <naming />
+
+  <context-set id="d3d9-all">
+    <context>sharpdx-direct3d9-ext</context>
+    <context>d3d9</context>
+    <context>d3d9caps</context>
+    <context>d3d9types</context>
+    <context>d3dx9</context>
+    <context>d3dx9anim</context>
+    <context>d3dx9core</context>
+    <context>d3dx9effect</context>
+    <context>d3dx9mesh</context>
+    <context>d3dx9shader</context>
+    <context>d3dx9shape</context>
+    <context>d3dx9tex</context>
+    <context>d3dx9xof</context>
+  </context-set>
+
+  <!-- D3D9 extensions -->
+  <extension>
+    <context id="d3d9-all"/>
+
+    <create-cpp enum="D3DCREATE_FLAGS" macro="D3DCREATE_.*" />
+    <create-cpp enum="D3DPRESENT_INTERVAL" macro="D3DPRESENT_INTERVAL_.*" />
+    <create-cpp enum="D3DPRESENT" macro="D3DPRESENT_[^I][^N].*" />
+    <create-cpp enum="D3DPRESENT_FLAGS" macro="D3DPRESENTFLAG.*" />
+    <create-cpp enum="D3DCLEAR_FLAGS" macro="D3DCLEAR_.*" />
+    <create-cpp enum="D3DLOCK" macro="D3DLOCK_.*" />
+    <create-cpp enum="D3DFVF" macro="D3DFVF_.*" />
+    <create-cpp enum="D3DUSAGE" macro="D3DUSAGE_.*" />
+
+    <define struct="SharpDX.Direct3D9.PaletteEntry" sizeof="4" />
+
+    <const from-macro="D3D_SDK_VERSION" class="SharpDX.Direct3D9.D3D9" type="int" name="SdkVersion" />
+    
+    <create class="D3D9" />
+    <create class="D3DX9" />
+
+    <context-clear/>
+  </extension>
+
+  <bindings>
+    <bind from="PALETTEENTRY" to="SharpDX.Direct3D9.PaletteEntry"/>
+  </bindings>
+
+  <!-- D3D9 mapping -->
+  <mapping>
+    <context id="d3d9-all"/>
+
+    <!--
+    // *****************************************************************
+    // D3D9 Enumerations
+    // *****************************************************************
+    -->
+    <remove element="_?D3DAUTHENTICATEDCHANNEL.*" />
+    <remove interface="IDirect3DDevice9Video" />
+    <remove interface="IDirect3DAuthenticatedChannel9" />
+    <remove enum-item="D3DFVF_TEXTUREFORMAT.*" />
+    <remove enum-item="D3DFVF_RESERVED2" />
+    <remove enum="_MAX_FVF_DECL_SIZE" />
+    <remove enum="_D3DXERR" />
+    <remove enum="_D3DXPATCHMESH" />
+    <remove enum="D3DXIMT" />
+    <remove enum="D3DXUVATLAS" />
+    <remove enum="D3DXIMT" />
+    <remove enum="D3DXSHGPUSIMOPT" />
+    <remove enum="D3DSHADER_COMPARISON" />
+    <remove enum="D3DSHADER_INSTRUCTION_OPCODE_TYPE" />
+    <remove enum="D3DSHADER_PARAM_REGISTER_TYPE" />
+    <remove enum="D3DVS_RASTOUT_OFFSETS" />
+    <remove enum="D3DVS_ADDRESSMODE_TYPE" />
+    <remove enum="D3DSHADER_ADDRESSMODE_TYPE" />
+    <remove enum="D3DSHADER_PARAM_SRCMOD_TYPE" />
+    <remove enum="D3DXSHCOMPRESSQUALITYTYPE" />
+    <map enum="D3D(.*)" name-tmp="$1" />
+    <map enum="D3DX(.*)" name-tmp="$1" />
+    <map enum="_D3DXMESHOPT" name="MeshOptions" />
+    <map enum="D3DLOCK" name="LockFlags" none="true" />
+    <map enum="D3DLOCK" flags="true" />
+    <map enum="D3DUSAGE" name="Usage" />
+    <map enum="D3DFVF" name="VertexFormat" none="true"/>
+    <map enum="D3DFVF" flags="true" />
+    <map enum="D3DPRESENT_INTERVAL" name="PresentInterval" />
+    <map enum="D3DPRESENT" name="Present" />
+    <map enum="D3DPRESENT" flags="true" />
+    <map enum="D3DPRESENT_FLAGS" name="PresentFlags" />
+    <map enum="D3DCREATE_FLAGS" name="CreateFlags" />
+    <map enum="D3DCLEAR_FLAGS" name="ClearFlags" />
+    <map enum="_D3DXMESHSIMP" name="MeshSimplification" />
+    <map enum="_D3DXMESH" name="MeshFlags" />
+    <map enum="_D3DXMESH" flags="true" />
+    <map enum="D3DXMESHOPT" name="MeshOptimizeFlags" />
+    <map enum="_D3DXWELDEPSILONSFLAGS" name="WeldFlags" />
+    <map enum="D3DBASISTYPE" name="Basis" />
+    <map enum="D3DBLENDOP" name="BlendOperation" />
+    <map enum="D3DCMPFUNC" name="Compare" />
+    <map enum="D3DCOMPOSERECTSOP" name="ComposeRectOperation" />
+    <map enum="D3DCUBEMAP_FACES" name="CubeMapFace" />
+    <map enum="D3DDEBUGMONITORTOKENS" name="DebugMonitorTokens" />
+    <map enum="D3DDECLMETHOD" name="DeclarationMethod" type="byte" />
+    <map enum="D3DDECLTYPE" name="DeclarationType" type="byte" />
+    <map enum="D3DDECLUSAGE" name="DeclarationUsage" type="byte" />
+    <map enum="D3DDEGREETYPE" name="Degree" />
+    <map enum="D3DDEVTYPE" name="DeviceType" />
+    <map enum="D3DDISPLAYROTATION" name="DisplayRotation" />
+    <map enum="D3DFILLMODE" name="FillMode" />
+    <map enum="D3DFOGMODE" name="FogMode" />
+    <map enum="D3DLIGHTTYPE" name="LightType" />
+    <map enum="D3DMATERIALCOLORSOURCE" name="ColorSource" />
+    <map enum="D3DPATCHEDGESTYLE" name="PatchEdgeStyle" />
+    <map enum="D3DPRIMITIVETYPE" name="PrimitiveType" />
+    <map enum="D3DQUERYTYPE" name="QueryType" />
+    <map enum="D3DRENDERSTATETYPE" name="RenderState" />
+    <map enum="D3DRESOURCETYPE" name="ResourceType" />
+    <map enum="D3DSAMPLERSTATETYPE" name="SamplerState" />
+    <map enum="D3DSCANLINEORDERING" name="ScanlineOrdering" />
+    <map enum="D3DSHADEMODE" name="ShadeMode" />
+    <map enum="D3DSTATEBLOCKTYPE" name="StateBlockType" />
+    <map enum="D3DSWAPEFFECT" name="SwapEffect" />
+    <map enum="D3DTEXTUREADDRESS" name="TextureAddress" />
+    <map enum="D3DTEXTUREFILTERTYPE" name="TextureFilter" />
+    <map enum="D3DTEXTUREOP" name="TextureOperation" />
+    <map enum="D3DTEXTURESTAGESTATETYPE" name="TextureStage" />
+    <map enum="D3DTEXTURETRANSFORMFLAGS" name="TextureTransform" />
+    <map enum="D3DTRANSFORMSTATETYPE" name="TransformState" />
+    <map enum="D3DVERTEXBLENDFLAGS" name="VertexBlend" />
+    <map enum="D3DXCLEANTYPE" name="CleanType" />
+    <map enum="D3DXEFFECTDEFAULTTYPE" name="EffectDefaultType" />
+    <map enum="D3DXIMAGE_FILEFORMAT" name="ImageFileFormat" />
+    <map enum="D3DXMESHDATATYPE" name="MeshDataType" />
+    <map enum="D3DXPATCHMESHTYPE" name="PatchMeshType" />
+    <map enum="D3DXPRIORITY_TYPE" name="TrackPriority" />
+    <map enum="D3DXTANGENT" name="TangentOptions" />
+    <map enum="D3DZBUFFERTYPE" name="ZBufferType" />
+    <map enum-item="D3DLIGHT_POINT" name="Point" />
+    <map enum-item="D3DLIGHT_SPOT" name="Spot" />
+    <map enum-item="D3DLIGHT_DIRECTIONAL" name="Directional" />
+    <map enum-item="D3DSHADE_FLAT" name="Flat" />
+    <map enum-item="D3DSHADE_GOURAUD" name="Gouraud" />
+    <map enum-item="D3DSHADE_PHONG" name="Phong" />
+    <map enum-item="D3DFILL_POINT" name="Point" />
+    <map enum-item="D3DFILL_WIREFRAME" name="Wireframe" />
+    <map enum-item="D3DFILL_SOLID" name="Solid" />
+    <map enum-item="D3DBLEND_ZERO" name="Zero" />
+    <map enum-item="D3DBLEND_ONE" name="One" />
+    <map enum-item="D3DBLEND_SRCCOLOR" name="SourceColor" />
+    <map enum-item="D3DBLEND_INVSRCCOLOR" name="InverseSourceColor" />
+    <map enum-item="D3DBLEND_SRCALPHA" name="SourceAlpha" />
+    <map enum-item="D3DBLEND_INVSRCALPHA" name="InverseSourceAlpha" />
+    <map enum-item="D3DBLEND_DESTALPHA" name="DestinationAlpha" />
+    <map enum-item="D3DBLEND_INVDESTALPHA" name="InverseDestinationAlpha" />
+    <map enum-item="D3DBLEND_DESTCOLOR" name="DestinationColor" />
+    <map enum-item="D3DBLEND_INVDESTCOLOR" name="InverseDestinationColor" />
+    <map enum-item="D3DBLEND_SRCALPHASAT" name="SourceAlphaSaturated" />
+    <map enum-item="D3DBLEND_BOTHSRCALPHA" name="BothSourceAlpha" />
+    <map enum-item="D3DBLEND_BOTHINVSRCALPHA" name="BothInverseSourceAlpha" />
+    <map enum-item="D3DBLEND_BLENDFACTOR" name="BlendFactor" />
+    <map enum-item="D3DBLEND_INVBLENDFACTOR" name="InverseBlendFactor" />
+    <map enum-item="D3DBLEND_SRCCOLOR2" name="SourceColor2" />
+    <map enum-item="D3DBLEND_INVSRCCOLOR2" name="InverseSourceColor2" />
+    <map enum-item="D3DBLENDOP_ADD" name="Add" />
+    <map enum-item="D3DBLENDOP_SUBTRACT" name="Subtract" />
+    <map enum-item="D3DBLENDOP_REVSUBTRACT" name="ReverseSubtract" />
+    <map enum-item="D3DBLENDOP_MIN" name="Minimum" />
+    <map enum-item="D3DBLENDOP_MAX" name="Maximum" />
+    <map enum-item="D3DTADDRESS_WRAP" name="Wrap" />
+    <map enum-item="D3DTADDRESS_MIRROR" name="Mirror" />
+    <map enum-item="D3DTADDRESS_CLAMP" name="Clamp" />
+    <map enum-item="D3DTADDRESS_BORDER" name="Border" />
+    <map enum-item="D3DTADDRESS_MIRRORONCE" name="MirrorOnce" />
+    <map enum-item="D3DCULL_NONE" name="None" />
+    <map enum-item="D3DCULL_CW" name="Clockwise" />
+    <map enum-item="D3DCULL_CCW" name="Counterclockwise" />
+    <map enum-item="D3DCMP_NEVER" name="Never" />
+    <map enum-item="D3DCMP_LESS" name="Less" />
+    <map enum-item="D3DCMP_EQUAL" name="Equal" />
+    <map enum-item="D3DCMP_LESSEQUAL" name="LessEqual" />
+    <map enum-item="D3DCMP_GREATER" name="Greater" />
+    <map enum-item="D3DCMP_NOTEQUAL" name="NotEqual" />
+    <map enum-item="D3DCMP_GREATEREQUAL" name="GreaterEqual" />
+    <map enum-item="D3DCMP_ALWAYS" name="Always" />
+    <map enum-item="D3DSTENCILOP_KEEP" name="Keep" />
+    <map enum-item="D3DSTENCILOP_ZERO" name="Zero" />
+    <map enum-item="D3DSTENCILOP_REPLACE" name="Replace" />
+    <map enum-item="D3DSTENCILOP_INCRSAT" name="IncrementSaturate" />
+    <map enum-item="D3DSTENCILOP_DECRSAT" name="DecrementSaturate" />
+    <map enum-item="D3DSTENCILOP_INVERT" name="Invert" />
+    <map enum-item="D3DSTENCILOP_INCR" name="Increment" />
+    <map enum-item="D3DSTENCILOP_DECR" name="Decrement" />
+    <map enum-item="D3DFOG_NONE" name="None" />
+    <map enum-item="D3DFOG_EXP" name="Exponential" />
+    <map enum-item="D3DFOG_EXP2" name="ExponentialSquared" />
+    <map enum-item="D3DFOG_LINEAR" name="Linear" />
+    <map enum-item="D3DZB_FALSE" name="DontUseZBuffer" />
+    <map enum-item="D3DZB_TRUE" name="UseZBuffer" />
+    <map enum-item="D3DZB_USEW" name="UseWBuffer" />
+    <map enum-item="D3DPT_POINTLIST" name="PointList" />
+    <map enum-item="D3DPT_LINELIST" name="LineList" />
+    <map enum-item="D3DPT_LINESTRIP" name="LineStrip" />
+    <map enum-item="D3DPT_TRIANGLELIST" name="TriangleList" />
+    <map enum-item="D3DPT_TRIANGLESTRIP" name="TriangleStrip" />
+    <map enum-item="D3DPT_TRIANGLEFAN" name="TriangleFan" />
+    <map enum-item="D3DTS_VIEW" name="View" />
+    <map enum-item="D3DTS_PROJECTION" name="Projection" />
+    <map enum-item="D3DTS_TEXTURE0" name="Texture0" />
+    <map enum-item="D3DTS_TEXTURE1" name="Texture1" />
+    <map enum-item="D3DTS_TEXTURE2" name="Texture2" />
+    <map enum-item="D3DTS_TEXTURE3" name="Texture3" />
+    <map enum-item="D3DTS_TEXTURE4" name="Texture4" />
+    <map enum-item="D3DTS_TEXTURE5" name="Texture5" />
+    <map enum-item="D3DTS_TEXTURE6" name="Texture6" />
+    <map enum-item="D3DTS_TEXTURE7" name="Texture7" />
+    <map enum-item="D3DRS_ZENABLE" name="ZEnable" />
+    <map enum-item="D3DRS_FILLMODE" name="FillMode" />
+    <map enum-item="D3DRS_SHADEMODE" name="ShadeMode" />
+    <map enum-item="D3DRS_ZWRITEENABLE" name="ZWriteEnable" />
+    <map enum-item="D3DRS_ALPHATESTENABLE" name="AlphaTestEnable" />
+    <map enum-item="D3DRS_LASTPIXEL" name="LastPixel" />
+    <map enum-item="D3DRS_SRCBLEND" name="SourceBlend" />
+    <map enum-item="D3DRS_DESTBLEND" name="DestinationBlend" />
+    <map enum-item="D3DRS_CULLMODE" name="CullMode" />
+    <map enum-item="D3DRS_ZFUNC" name="ZFunc" />
+    <map enum-item="D3DRS_ALPHAREF" name="AlphaRef" />
+    <map enum-item="D3DRS_ALPHAFUNC" name="AlphaFunc" />
+    <map enum-item="D3DRS_DITHERENABLE" name="DitherEnable" />
+    <map enum-item="D3DRS_ALPHABLENDENABLE" name="AlphaBlendEnable" />
+    <map enum-item="D3DRS_FOGENABLE" name="FogEnable" />
+    <map enum-item="D3DRS_SPECULARENABLE" name="SpecularEnable" />
+    <map enum-item="D3DRS_FOGCOLOR" name="FogColor" />
+    <map enum-item="D3DRS_FOGTABLEMODE" name="FogTableMode" />
+    <map enum-item="D3DRS_FOGSTART" name="FogStart" />
+    <map enum-item="D3DRS_FOGEND" name="FogEnd" />
+    <map enum-item="D3DRS_FOGDENSITY" name="FogDensity" />
+    <map enum-item="D3DRS_RANGEFOGENABLE" name="RangeFogEnable" />
+    <map enum-item="D3DRS_STENCILENABLE" name="StencilEnable" />
+    <map enum-item="D3DRS_STENCILFAIL" name="StencilFail" />
+    <map enum-item="D3DRS_STENCILZFAIL" name="StencilZFail" />
+    <map enum-item="D3DRS_STENCILPASS" name="StencilPass" />
+    <map enum-item="D3DRS_STENCILFUNC" name="StencilFunc" />
+    <map enum-item="D3DRS_STENCILREF" name="StencilRef" />
+    <map enum-item="D3DRS_STENCILMASK" name="StencilMask" />
+    <map enum-item="D3DRS_STENCILWRITEMASK" name="StencilWriteMask" />
+    <map enum-item="D3DRS_TEXTUREFACTOR" name="TextureFactor" />
+    <map enum-item="D3DRS_WRAP0" name="Wrap0" />
+    <map enum-item="D3DRS_WRAP1" name="Wrap1" />
+    <map enum-item="D3DRS_WRAP2" name="Wrap2" />
+    <map enum-item="D3DRS_WRAP3" name="Wrap3" />
+    <map enum-item="D3DRS_WRAP4" name="Wrap4" />
+    <map enum-item="D3DRS_WRAP5" name="Wrap5" />
+    <map enum-item="D3DRS_WRAP6" name="Wrap6" />
+    <map enum-item="D3DRS_WRAP7" name="Wrap7" />
+    <map enum-item="D3DRS_CLIPPING" name="Clipping" />
+    <map enum-item="D3DRS_LIGHTING" name="Lighting" />
+    <map enum-item="D3DRS_AMBIENT" name="Ambient" />
+    <map enum-item="D3DRS_FOGVERTEXMODE" name="FogVertexMode" />
+    <map enum-item="D3DRS_COLORVERTEX" name="ColorVertex" />
+    <map enum-item="D3DRS_LOCALVIEWER" name="LocalViewer" />
+    <map enum-item="D3DRS_NORMALIZENORMALS" name="NormalizeNormals" />
+    <map enum-item="D3DRS_DIFFUSEMATERIALSOURCE" name="DiffuseMaterialSource" />
+    <map enum-item="D3DRS_SPECULARMATERIALSOURCE" name="SpecularMaterialSource" />
+    <map enum-item="D3DRS_AMBIENTMATERIALSOURCE" name="AmbientMaterialSource" />
+    <map enum-item="D3DRS_EMISSIVEMATERIALSOURCE" name="EmissiveMaterialSource" />
+    <map enum-item="D3DRS_VERTEXBLEND" name="VertexBlend" />
+    <map enum-item="D3DRS_CLIPPLANEENABLE" name="ClipPlaneEnable" />
+    <map enum-item="D3DRS_POINTSIZE" name="PointSize" />
+    <map enum-item="D3DRS_POINTSIZE_MIN" name="PointSizeMin" />
+    <map enum-item="D3DRS_POINTSPRITEENABLE" name="PointSpriteEnable" />
+    <map enum-item="D3DRS_POINTSCALEENABLE" name="PointScaleEnable" />
+    <map enum-item="D3DRS_POINTSCALE_A" name="PointScaleA" />
+    <map enum-item="D3DRS_POINTSCALE_B" name="PointScaleB" />
+    <map enum-item="D3DRS_POINTSCALE_C" name="PointScaleC" />
+    <map enum-item="D3DRS_MULTISAMPLEANTIALIAS" name="MultisampleAntialias" />
+    <map enum-item="D3DRS_MULTISAMPLEMASK" name="MultisampleMask" />
+    <map enum-item="D3DRS_PATCHEDGESTYLE" name="PatchEdgeStyle" />
+    <map enum-item="D3DRS_DEBUGMONITORTOKEN" name="DebugMonitorToken" />
+    <map enum-item="D3DRS_POINTSIZE_MAX" name="PointSizeMax" />
+    <map enum-item="D3DRS_INDEXEDVERTEXBLENDENABLE" name="IndexedVertexBlendEnable" />
+    <map enum-item="D3DRS_COLORWRITEENABLE" name="ColorWriteEnable" />
+    <map enum-item="D3DRS_TWEENFACTOR" name="TweenFactor" />
+    <map enum-item="D3DRS_BLENDOP" name="BlendOperation" />
+    <map enum-item="D3DRS_POSITIONDEGREE" name="PositionDegree" />
+    <map enum-item="D3DRS_NORMALDEGREE" name="NormalDegree" />
+    <map enum-item="D3DRS_SCISSORTESTENABLE" name="ScissorTestEnable" />
+    <map enum-item="D3DRS_SLOPESCALEDEPTHBIAS" name="SlopeScaleDepthBias" />
+    <map enum-item="D3DRS_ANTIALIASEDLINEENABLE" name="AntialiasedLineEnable" />
+    <map enum-item="D3DRS_MINTESSELLATIONLEVEL" name="MinTessellationLevel" />
+    <map enum-item="D3DRS_MAXTESSELLATIONLEVEL" name="MaxTessellationLevel" />
+    <map enum-item="D3DRS_ADAPTIVETESS_X" name="AdaptiveTessX" />
+    <map enum-item="D3DRS_ADAPTIVETESS_Y" name="AdaptiveTessY" />
+    <map enum-item="D3DRS_ADAPTIVETESS_Z" name="AdaptiveTessZ" />
+    <map enum-item="D3DRS_ADAPTIVETESS_W" name="AdaptiveTessW" />
+    <map enum-item="D3DRS_ENABLEADAPTIVETESSELLATION" name="EnableAdaptiveTessellation" />
+    <map enum-item="D3DRS_TWOSIDEDSTENCILMODE" name="TwoSidedStencilMode" />
+    <map enum-item="D3DRS_CCW_STENCILFAIL" name="CcwStencilFail" />
+    <map enum-item="D3DRS_CCW_STENCILZFAIL" name="CcwStencilZFail" />
+    <map enum-item="D3DRS_CCW_STENCILPASS" name="CcwStencilPass" />
+    <map enum-item="D3DRS_CCW_STENCILFUNC" name="CcwStencilFunc" />
+    <map enum-item="D3DRS_COLORWRITEENABLE1" name="ColorWriteEnable1" />
+    <map enum-item="D3DRS_COLORWRITEENABLE2" name="ColorWriteEnable2" />
+    <map enum-item="D3DRS_COLORWRITEENABLE3" name="ColorWriteEnable3" />
+    <map enum-item="D3DRS_BLENDFACTOR" name="BlendFactor" />
+    <map enum-item="D3DRS_SRGBWRITEENABLE" name="SrgbWriteEnable" />
+    <map enum-item="D3DRS_DEPTHBIAS" name="DepthBias" />
+    <map enum-item="D3DRS_WRAP8" name="Wrap8" />
+    <map enum-item="D3DRS_WRAP9" name="Wrap9" />
+    <map enum-item="D3DRS_WRAP10" name="Wrap10" />
+    <map enum-item="D3DRS_WRAP11" name="Wrap11" />
+    <map enum-item="D3DRS_WRAP12" name="Wrap12" />
+    <map enum-item="D3DRS_WRAP13" name="Wrap13" />
+    <map enum-item="D3DRS_WRAP14" name="Wrap14" />
+    <map enum-item="D3DRS_WRAP15" name="Wrap15" />
+    <map enum-item="D3DRS_SEPARATEALPHABLENDENABLE" name="SeparateAlphaBlendEnable" />
+    <map enum-item="D3DRS_SRCBLENDALPHA" name="SourceBlendAlpha" />
+    <map enum-item="D3DRS_DESTBLENDALPHA" name="DestinationBlendAlpha" />
+    <map enum-item="D3DRS_BLENDOPALPHA" name="BlendOperationAlpha" />
+    <map enum-item="D3DMCS_MATERIAL" name="Material" />
+    <map enum-item="D3DMCS_COLOR1" name="Color1" />
+    <map enum-item="D3DMCS_COLOR2" name="Color2" />
+    <map enum-item="D3DTSS_COLOROP" name="ColorOperation" />
+    <map enum-item="D3DTSS_COLORARG1" name="ColorArg1" />
+    <map enum-item="D3DTSS_COLORARG2" name="ColorArg2" />
+    <map enum-item="D3DTSS_ALPHAOP" name="AlphaOperation" />
+    <map enum-item="D3DTSS_ALPHAARG1" name="AlphaArg1" />
+    <map enum-item="D3DTSS_ALPHAARG2" name="AlphaArg2" />
+    <map enum-item="D3DTSS_BUMPENVMAT00" name="BumpEnvironmentMat00" />
+    <map enum-item="D3DTSS_BUMPENVMAT01" name="BumpEnvironmentMat01" />
+    <map enum-item="D3DTSS_BUMPENVMAT10" name="BumpEnvironmentMat10" />
+    <map enum-item="D3DTSS_BUMPENVMAT11" name="BumpEnvironmentMat11" />
+    <map enum-item="D3DTSS_TEXCOORDINDEX" name="TexCoordIndex" />
+    <map enum-item="D3DTSS_BUMPENVLSCALE" name="BumpEnvironmentLScale" />
+    <map enum-item="D3DTSS_BUMPENVLOFFSET" name="BumpEnvironmentLOffset" />
+    <map enum-item="D3DTSS_TEXTURETRANSFORMFLAGS" name="TextureTransformFlags" />
+    <map enum-item="D3DTSS_COLORARG0" name="ColorArg0" />
+    <map enum-item="D3DTSS_ALPHAARG0" name="AlphaArg0" />
+    <map enum-item="D3DTSS_RESULTARG" name="ResultArg" />
+    <map enum-item="D3DTSS_CONSTANT" name="Constant" />
+    <map enum-item="D3DSAMP_ADDRESSU" name="AddressU" />
+    <map enum-item="D3DSAMP_ADDRESSV" name="AddressV" />
+    <map enum-item="D3DSAMP_ADDRESSW" name="AddressW" />
+    <map enum-item="D3DSAMP_BORDERCOLOR" name="BorderColor" />
+    <map enum-item="D3DSAMP_MAGFILTER" name="MagFilter" />
+    <map enum-item="D3DSAMP_MINFILTER" name="MinFilter" />
+    <map enum-item="D3DSAMP_MIPFILTER" name="MipFilter" />
+    <map enum-item="D3DSAMP_MIPMAPLODBIAS" name="MipMapLodBias" />
+    <map enum-item="D3DSAMP_MAXMIPLEVEL" name="MaxMipLevel" />
+    <map enum-item="D3DSAMP_MAXANISOTROPY" name="MaxAnisotropy" />
+    <map enum-item="D3DSAMP_SRGBTEXTURE" name="SrgbTexture" />
+    <map enum-item="D3DSAMP_ELEMENTINDEX" name="ElementIndex" />
+    <map enum-item="D3DSAMP_DMAPOFFSET" name="DisplacementMapOffset" />
+    <map enum-item="D3DSTT_UNKNOWN" name="Unknown" />
+    <map enum-item="D3DSTT_2D" name="Texture2D" />
+    <map enum-item="D3DSTT_CUBE" name="TextureCube" />
+    <map enum-item="D3DSTT_VOLUME" name="TextureVolume" />
+    <map enum-item="D3DTOP_DISABLE" name="Disable" />
+    <map enum-item="D3DTOP_SELECTARG1" name="SelectArg1" />
+    <map enum-item="D3DTOP_SELECTARG2" name="SelectArg2" />
+    <map enum-item="D3DTOP_MODULATE" name="Modulate" />
+    <map enum-item="D3DTOP_MODULATE2X" name="Modulate2X" />
+    <map enum-item="D3DTOP_MODULATE4X" name="Modulate4X" />
+    <map enum-item="D3DTOP_ADD" name="Add" />
+    <map enum-item="D3DTOP_ADDSIGNED" name="AddSigned" />
+    <map enum-item="D3DTOP_ADDSIGNED2X" name="AddSigned2X" />
+    <map enum-item="D3DTOP_SUBTRACT" name="Subtract" />
+    <map enum-item="D3DTOP_ADDSMOOTH" name="AddSmooth" />
+    <map enum-item="D3DTOP_BLENDDIFFUSEALPHA" name="BlendDiffuseAlpha" />
+    <map enum-item="D3DTOP_BLENDTEXTUREALPHA" name="BlendTextureAlpha" />
+    <map enum-item="D3DTOP_BLENDFACTORALPHA" name="BlendFactorAlpha" />
+    <map enum-item="D3DTOP_BLENDTEXTUREALPHAPM" name="BlendTextureAlphaPM" />
+    <map enum-item="D3DTOP_BLENDCURRENTALPHA" name="BlendCurrentAlpha" />
+    <map enum-item="D3DTOP_PREMODULATE" name="Premodulate" />
+    <map enum-item="D3DTOP_MODULATEALPHA_ADDCOLOR" name="ModulateAlphaAddColor" />
+    <map enum-item="D3DTOP_MODULATECOLOR_ADDALPHA" name="ModulateColorAddAlpha" />
+    <map enum-item="D3DTOP_MODULATEINVALPHA_ADDCOLOR" name="ModulateInvAlphaAddColor" />
+    <map enum-item="D3DTOP_MODULATEINVCOLOR_ADDALPHA" name="ModulateInvColorAddAlpha" />
+    <map enum-item="D3DTOP_BUMPENVMAP" name="BumpEnvironmentMap" />
+    <map enum-item="D3DTOP_BUMPENVMAPLUMINANCE" name="BumpEnvironmentMapLuminance" />
+    <map enum-item="D3DTOP_DOTPRODUCT3" name="DotProduct3" />
+    <map enum-item="D3DTOP_MULTIPLYADD" name="MultiplyAdd" />
+    <map enum-item="D3DTOP_LERP" name="Lerp" />
+    <map enum-item="D3DTEXF_NONE" name="None" />
+    <map enum-item="D3DTEXF_POINT" name="Point" />
+    <map enum-item="D3DTEXF_LINEAR" name="Linear" />
+    <map enum-item="D3DTEXF_ANISOTROPIC" name="Anisotropic" />
+    <map enum-item="D3DTEXF_PYRAMIDALQUAD" name="PyramidalQuad" />
+    <map enum-item="D3DTEXF_GAUSSIANQUAD" name="GaussianQuad" />
+    <map enum-item="D3DTEXF_CONVOLUTIONMONO" name="ConvolutionMono" />
+    <map enum-item="D3DDECLUSAGE_POSITION" name="Position" />
+    <map enum-item="D3DDECLUSAGE_BLENDWEIGHT" name="BlendWeight" />
+    <map enum-item="D3DDECLUSAGE_BLENDINDICES" name="BlendIndices" />
+    <map enum-item="D3DDECLUSAGE_NORMAL" name="Normal" />
+    <map enum-item="D3DDECLUSAGE_PSIZE" name="PointSize" />
+    <map enum-item="D3DDECLUSAGE_TEXCOORD" name="TextureCoordinate" />
+    <map enum-item="D3DDECLUSAGE_TANGENT" name="Tangent" />
+    <map enum-item="D3DDECLUSAGE_BINORMAL" name="Binormal" />
+    <map enum-item="D3DDECLUSAGE_TESSFACTOR" name="TessellateFactor" />
+    <map enum-item="D3DDECLUSAGE_POSITIONT" name="PositionTransformed" />
+    <map enum-item="D3DDECLUSAGE_COLOR" name="Color" />
+    <map enum-item="D3DDECLUSAGE_FOG" name="Fog" />
+    <map enum-item="D3DDECLUSAGE_DEPTH" name="Depth" />
+    <map enum-item="D3DDECLUSAGE_SAMPLE" name="Sample" />
+    <map enum-item="D3DDECLMETHOD_DEFAULT" name="Default" />
+    <map enum-item="D3DDECLMETHOD_PARTIALU" name="PartialU" />
+    <map enum-item="D3DDECLMETHOD_PARTIALV" name="PartialV" />
+    <map enum-item="D3DDECLMETHOD_CROSSUV" name="CrossUV" />
+    <map enum-item="D3DDECLMETHOD_UV" name="UV" />
+    <map enum-item="D3DDECLMETHOD_LOOKUP" name="Lookup" />
+    <map enum-item="D3DDECLMETHOD_LOOKUPPRESAMPLED" name="LookupPresampled" />
+    <map enum-item="D3DDECLTYPE_FLOAT1" name="Float1" />
+    <map enum-item="D3DDECLTYPE_FLOAT2" name="Float2" />
+    <map enum-item="D3DDECLTYPE_FLOAT3" name="Float3" />
+    <map enum-item="D3DDECLTYPE_FLOAT4" name="Float4" />
+    <map enum-item="D3DDECLTYPE_D3DCOLOR" name="Color" />
+    <map enum-item="D3DDECLTYPE_UBYTE4" name="Ubyte4" />
+    <map enum-item="D3DDECLTYPE_SHORT2" name="Short2" />
+    <map enum-item="D3DDECLTYPE_SHORT4" name="Short4" />
+    <map enum-item="D3DDECLTYPE_UBYTE4N" name="UByte4N" />
+    <map enum-item="D3DDECLTYPE_SHORT2N" name="Short2N" />
+    <map enum-item="D3DDECLTYPE_SHORT4N" name="Short4N" />
+    <map enum-item="D3DDECLTYPE_USHORT2N" name="UShort2N" />
+    <map enum-item="D3DDECLTYPE_USHORT4N" name="UShort4N" />
+    <map enum-item="D3DDECLTYPE_UDEC3" name="UDec3" />
+    <map enum-item="D3DDECLTYPE_DEC3N" name="Dec3N" />
+    <map enum-item="D3DDECLTYPE_FLOAT16_2" name="HalfTwo" />
+    <map enum-item="D3DDECLTYPE_FLOAT16_4" name="HalfFour" />
+    <map enum-item="D3DDECLTYPE_UNUSED" name="Unused" />
+    <map enum-item="D3DBASIS_BEZIER" name="Bezier" />
+    <map enum-item="D3DBASIS_BSPLINE" name="BSpline" />
+    <map enum-item="D3DBASIS_CATMULL_ROM" name="CatmullRom" />
+    <map enum-item="D3DDEGREE_LINEAR" name="Linear" />
+    <map enum-item="D3DDEGREE_QUADRATIC" name="Quadratic" />
+    <map enum-item="D3DDEGREE_CUBIC" name="Cubic" />
+    <map enum-item="D3DDEGREE_QUINTIC" name="Quintic" />
+    <map enum-item="D3DPATCHEDGE_DISCRETE" name="Discrete" />
+    <map enum-item="D3DPATCHEDGE_CONTINUOUS" name="Continuous" />
+    <map enum-item="D3DSBT_ALL" name="All" />
+    <map enum-item="D3DSBT_PIXELSTATE" name="PixelState" />
+    <map enum-item="D3DSBT_VERTEXSTATE" name="VertexState" />
+    <map enum-item="D3DVBF_DISABLE" name="Disable" />
+    <map enum-item="D3DVBF_1WEIGHTS" name="Weights1" />
+    <map enum-item="D3DVBF_2WEIGHTS" name="Weights2" />
+    <map enum-item="D3DVBF_3WEIGHTS" name="Weights3" />
+    <map enum-item="D3DVBF_TWEENING" name="Tweening" />
+    <map enum-item="D3DVBF_0WEIGHTS" name="Weights0" />
+    <map enum-item="None" name="Disable" />
+    <map enum-item="D3DTTFF_DISABLE" name="Disable" />
+    <map enum-item="D3DTTFF_COUNT1" name="Count1" />
+    <map enum-item="D3DTTFF_COUNT2" name="Count2" />
+    <map enum-item="D3DTTFF_COUNT3" name="Count3" />
+    <map enum-item="D3DTTFF_COUNT4" name="Count4" />
+    <map enum-item="D3DTTFF_PROJECTED" name="Projected" />
+    <map enum-item="None" name="Disable" />
+    <map enum-item="D3DDEVTYPE_HAL" name="Hardware" />
+    <map enum-item="D3DDEVTYPE_REF" name="Reference" />
+    <map enum-item="D3DDEVTYPE_SW" name="Software" />
+    <map enum-item="D3DDEVTYPE_NULLREF" name="NullReference" />
+    <map enum-item="D3DMULTISAMPLE_NONE" name="None" />
+    <map enum-item="D3DMULTISAMPLE_NONMASKABLE" name="NonMaskable" />
+    <map enum-item="D3DMULTISAMPLE_2_SAMPLES" name="TwoSamples" />
+    <map enum-item="D3DMULTISAMPLE_3_SAMPLES" name="ThreeSamples" />
+    <map enum-item="D3DMULTISAMPLE_4_SAMPLES" name="FourSamples" />
+    <map enum-item="D3DMULTISAMPLE_5_SAMPLES" name="FiveSamples" />
+    <map enum-item="D3DMULTISAMPLE_6_SAMPLES" name="SixSamples" />
+    <map enum-item="D3DMULTISAMPLE_7_SAMPLES" name="SevenSamples" />
+    <map enum-item="D3DMULTISAMPLE_8_SAMPLES" name="EightSamples" />
+    <map enum-item="D3DMULTISAMPLE_9_SAMPLES" name="NineSamples" />
+    <map enum-item="D3DMULTISAMPLE_10_SAMPLES" name="TenSamples" />
+    <map enum-item="D3DMULTISAMPLE_11_SAMPLES" name="ElevenSamples" />
+    <map enum-item="D3DMULTISAMPLE_12_SAMPLES" name="TwelveSamples" />
+    <map enum-item="D3DMULTISAMPLE_13_SAMPLES" name="ThirteenSamples" />
+    <map enum-item="D3DMULTISAMPLE_14_SAMPLES" name="FourteenSamples" />
+    <map enum-item="D3DMULTISAMPLE_15_SAMPLES" name="FifteenSamples" />
+    <map enum-item="D3DMULTISAMPLE_16_SAMPLES" name="SixteenSamples" />
+    <map enum-item="D3DFMT_UNKNOWN" name="Unknown" />
+    <map enum-item="D3DFMT_R8G8B8" name="R8G8B8" />
+    <map enum-item="D3DFMT_A8R8G8B8" name="A8R8G8B8" />
+    <map enum-item="D3DFMT_X8R8G8B8" name="X8R8G8B8" />
+    <map enum-item="D3DFMT_R5G6B5" name="R5G6B5" />
+    <map enum-item="D3DFMT_X1R5G5B5" name="X1R5G5B5" />
+    <map enum-item="D3DFMT_A1R5G5B5" name="A1R5G5B5" />
+    <map enum-item="D3DFMT_A4R4G4B4" name="A4R4G4B4" />
+    <map enum-item="D3DFMT_R3G3B2" name="R3G3B2" />
+    <map enum-item="D3DFMT_A8" name="A8" />
+    <map enum-item="D3DFMT_A8R3G3B2" name="A8R3G3B2" />
+    <map enum-item="D3DFMT_X4R4G4B4" name="X4R4G4B4" />
+    <map enum-item="D3DFMT_A2B10G10R10" name="A2B10G10R10" />
+    <map enum-item="D3DFMT_A8B8G8R8" name="A8B8G8R8" />
+    <map enum-item="D3DFMT_X8B8G8R8" name="X8B8G8R8" />
+    <map enum-item="D3DFMT_G16R16" name="G16R16" />
+    <map enum-item="D3DFMT_A2R10G10B10" name="A2R10G10B10" />
+    <map enum-item="D3DFMT_A16B16G16R16" name="A16B16G16R16" />
+    <map enum-item="D3DFMT_A8P8" name="A8P8" />
+    <map enum-item="D3DFMT_P8" name="P8" />
+    <map enum-item="D3DFMT_L8" name="L8" />
+    <map enum-item="D3DFMT_A8L8" name="A8L8" />
+    <map enum-item="D3DFMT_A4L4" name="A4L4" />
+    <map enum-item="D3DFMT_V8U8" name="V8U8" />
+    <map enum-item="D3DFMT_L6V5U5" name="L6V5U5" />
+    <map enum-item="D3DFMT_X8L8V8U8" name="X8L8V8U8" />
+    <map enum-item="D3DFMT_Q8W8V8U8" name="Q8W8V8U8" />
+    <map enum-item="D3DFMT_V16U16" name="V16U16" />
+    <map enum-item="D3DFMT_A2W10V10U10" name="A2W10V10U10" />
+    <map enum-item="D3DFMT_D16_LOCKABLE" name="D16Lockable" />
+    <map enum-item="D3DFMT_D32" name="D32" />
+    <map enum-item="D3DFMT_D15S1" name="D15S1" />
+    <map enum-item="D3DFMT_D24S8" name="D24S8" />
+    <map enum-item="D3DFMT_D24X8" name="D24X8" />
+    <map enum-item="D3DFMT_D24X4S4" name="D24X4S4" />
+    <map enum-item="D3DFMT_D16" name="D16" />
+    <map enum-item="D3DFMT_D32F_LOCKABLE" name="D32SingleLockable" />
+    <map enum-item="D3DFMT_D24FS8" name="D24SingleS8" />
+    <map enum-item="D3DFMT_D32_LOCKABLE" name="D32Lockable" />
+    <map enum-item="D3DFMT_S8_LOCKABLE" name="S8Lockable" />
+    <map enum-item="D3DFMT_L16" name="L16" />
+    <map enum-item="D3DFMT_VERTEXDATA" name="VertexData" />
+    <map enum-item="D3DFMT_INDEX16" name="Index16" />
+    <map enum-item="D3DFMT_INDEX32" name="Index32" />
+    <map enum-item="D3DFMT_Q16W16V16U16" name="Q16W16V16U16" />
+    <map enum-item="D3DFMT_R16F" name="R16F" />
+    <map enum-item="D3DFMT_G16R16F" name="G16R16F" />
+    <map enum-item="D3DFMT_A16B16G16R16F" name="A16B16G16R16F" />
+    <map enum-item="D3DFMT_R32F" name="R32F" />
+    <map enum-item="D3DFMT_G32R32F" name="G32R32F" />
+    <map enum-item="D3DFMT_A32B32G32R32F" name="A32B32G32R32F" />
+    <map enum-item="D3DFMT_CxV8U8" name="CxV8U8" />
+    <map enum-item="D3DFMT_A1" name="A1" />
+    <map enum-item="D3DFMT_A2B10G10R10_XR_BIAS" name="A2B10G10R10_XR_BIAS" />
+    <map enum-item="D3DFMT_BINARYBUFFER" name="BinaryBuffer" />
+    <map enum-item="D3DSWAPEFFECT_DISCARD" name="Discard" />
+    <map enum-item="D3DSWAPEFFECT_FLIP" name="Flip" />
+    <map enum-item="D3DSWAPEFFECT_COPY" name="Copy" />
+    <map enum-item="D3DSWAPEFFECT_OVERLAY" name="Overlay" />
+    <map enum-item="D3DSWAPEFFECT_FLIPEX" name="FlipEx" />
+    <map enum-item="D3DPOOL_DEFAULT" name="Default" />
+    <map enum-item="D3DPOOL_MANAGED" name="Managed" />
+    <map enum-item="D3DPOOL_SYSTEMMEM" name="SystemMemory" />
+    <map enum-item="D3DPOOL_SCRATCH" name="Scratch" />
+    <map enum-item="D3DRTYPE_SURFACE" name="Surface" />
+    <map enum-item="D3DRTYPE_VOLUME" name="Volume" />
+    <map enum-item="D3DRTYPE_TEXTURE" name="Texture" />
+    <map enum-item="D3DRTYPE_VOLUMETEXTURE" name="VolumeTexture" />
+    <map enum-item="D3DRTYPE_CUBETEXTURE" name="CubeTexture" />
+    <map enum-item="D3DRTYPE_VERTEXBUFFER" name="VertexBuffer" />
+    <map enum-item="D3DRTYPE_INDEXBUFFER" name="IndexBuffer" />
+    <map enum-item="D3DCUBEMAP_FACE_POSITIVE_X" name="PositiveX" />
+    <map enum-item="D3DCUBEMAP_FACE_NEGATIVE_X" name="NegativeX" />
+    <map enum-item="D3DCUBEMAP_FACE_POSITIVE_Y" name="PositiveY" />
+    <map enum-item="D3DCUBEMAP_FACE_NEGATIVE_Y" name="NegativeY" />
+    <map enum-item="D3DCUBEMAP_FACE_POSITIVE_Z" name="PositiveZ" />
+    <map enum-item="D3DCUBEMAP_FACE_NEGATIVE_Z" name="NegativeZ" />
+    <map enum-item="D3DDMT_ENABLE" name="Enable" />
+    <map enum-item="D3DDMT_DISABLE" name="Disable" />
+    <map enum-item="D3DQUERYTYPE_VCACHE" name="VCache" />
+    <map enum-item="D3DQUERYTYPE_RESOURCEMANAGER" name="ResourceManager" />
+    <map enum-item="D3DQUERYTYPE_VERTEXSTATS" name="VertexStats" />
+    <map enum-item="D3DQUERYTYPE_EVENT" name="Event" />
+    <map enum-item="D3DQUERYTYPE_OCCLUSION" name="Occlusion" />
+    <map enum-item="D3DQUERYTYPE_TIMESTAMP" name="Timestamp" />
+    <map enum-item="D3DQUERYTYPE_TIMESTAMPDISJOINT" name="TimestampDisjoint" />
+    <map enum-item="D3DQUERYTYPE_TIMESTAMPFREQ" name="TimestampFreq" />
+    <map enum-item="D3DQUERYTYPE_PIPELINETIMINGS" name="PipelineTimings" />
+    <map enum-item="D3DQUERYTYPE_INTERFACETIMINGS" name="InterfaceTimings" />
+    <map enum-item="D3DQUERYTYPE_VERTEXTIMINGS" name="VertexTimings" />
+    <map enum-item="D3DQUERYTYPE_PIXELTIMINGS" name="PixelTimings" />
+    <map enum-item="D3DQUERYTYPE_BANDWIDTHTIMINGS" name="BandwidthTimings" />
+    <map enum-item="D3DQUERYTYPE_CACHEUTILIZATION" name="CacheUtilization" />
+    <map enum-item="D3DQUERYTYPE_MEMORYPRESSURE" name="MemoryPressure" />
+    <map enum-item="D3DCOMPOSERECTS_COPY" name="Copy" />
+    <map enum-item="D3DCOMPOSERECTS_OR" name="Or" />
+    <map enum-item="D3DCOMPOSERECTS_AND" name="And" />
+    <map enum-item="D3DCOMPOSERECTS_NEG" name="Negate" />
+    <map enum-item="D3DSCANLINEORDERING_UNKNOWN" name="Unknown" />
+    <map enum-item="D3DSCANLINEORDERING_PROGRESSIVE" name="Progressive" />
+    <map enum-item="D3DSCANLINEORDERING_INTERLACED" name="Interlaced" />
+    <map enum-item="D3DDISPLAYROTATION_IDENTITY" name="Identity" />
+    <map enum-item="D3DDISPLAYROTATION_90" name="Rotation90" />
+    <map enum-item="D3DDISPLAYROTATION_180" name="Rotation180" />
+    <map enum-item="D3DDISPLAYROTATION_270" name="Rotation270" />
+    <map enum-item="D3DXPATCHMESH_RECT" name="Rectangle" />
+    <map enum-item="D3DXPATCHMESH_TRI" name="Triangle" />
+    <map enum-item="D3DXPATCHMESH_NPATCH" name="NPatch" />
+    <map enum-item="D3DXMESH_32BIT" name="Use32Bit" />
+    <map enum-item="D3DXMESH_DONOTCLIP" name="DoNotClip" />
+    <map enum-item="D3DXMESH_POINTS" name="Points" />
+    <map enum-item="D3DXMESH_RTPATCHES" name="RTPatches" />
+    <map enum-item="D3DXMESH_NPATCHES" name="NPatches" />
+    <map enum-item="D3DXMESH_VB_SYSTEMMEM" name="VertexBufferSystemMemory" />
+    <map enum-item="D3DXMESH_VB_MANAGED" name="VertexBufferManaged" />
+    <map enum-item="D3DXMESH_VB_WRITEONLY" name="VertexBufferWriteOnly" />
+    <map enum-item="D3DXMESH_VB_DYNAMIC" name="VertexBufferDynamic" />
+    <map enum-item="D3DXMESH_VB_SOFTWAREPROCESSING" name="VertexBufferSoftware" />
+    <map enum-item="D3DXMESH_IB_SYSTEMMEM" name="IndexBufferSystemMemory" />
+    <map enum-item="D3DXMESH_IB_MANAGED" name="IndexBufferManaged" />
+    <map enum-item="D3DXMESH_IB_WRITEONLY" name="IndexBufferWriteOnly" />
+    <map enum-item="D3DXMESH_IB_DYNAMIC" name="IndexBufferDynamic" />
+    <map enum-item="D3DXMESH_IB_SOFTWAREPROCESSING" name="IndexBufferSoftware" />
+    <map enum-item="D3DXMESH_VB_SHARE" name="VertexBufferShare" />
+    <map enum-item="D3DXMESH_USEHWONLY" name="UseHardwareOnly" />
+    <map enum-item="D3DXMESH_SYSTEMMEM" name="SystemMemory" />
+    <map enum-item="D3DXMESH_MANAGED" name="Managed" />
+    <map enum-item="D3DXMESH_WRITEONLY" name="WriteOnly" />
+    <map enum-item="D3DXMESH_DYNAMIC" name="Dynamic" />
+    <map enum-item="D3DXMESH_SOFTWAREPROCESSING" name="Software" />
+    <map enum-item="D3DXCLEAN_BACKFACING" name="BackFacing" />
+    <map enum-item="D3DXCLEAN_BOWTIES" name="Bowties" />
+    <map enum-item="D3DXCLEAN_SKINNING" name="Skinning" />
+    <map enum-item="D3DXCLEAN_OPTIMIZATION" name="Optimization" />
+    <map enum-item="D3DXCLEAN_SIMPLIFICATION" name="Simplification" />
+    <map enum-item="D3DXTANGENT_WRAP_U" name="WrapU" />
+    <map enum-item="D3DXTANGENT_WRAP_V" name="WrapV" />
+    <map enum-item="D3DXTANGENT_WRAP_UV" name="WrapUV" />
+    <map enum-item="D3DXTANGENT_DONT_NORMALIZE_PARTIALS" name="DontNormalizePartials" />
+    <map enum-item="D3DXTANGENT_DONT_ORTHOGONALIZE" name="DontOrthogonalize" />
+    <map enum-item="D3DXTANGENT_ORTHOGONALIZE_FROM_V" name="OrthogonalizeFromV" />
+    <map enum-item="D3DXTANGENT_ORTHOGONALIZE_FROM_U" name="OrthogonalizeFromU" />
+    <map enum-item="D3DXTANGENT_WEIGHT_BY_AREA" name="WeightByArea" />
+    <map enum-item="D3DXTANGENT_WEIGHT_EQUAL" name="WeightEqual" />
+    <map enum-item="D3DXTANGENT_WIND_CW" name="WindCW" />
+    <map enum-item="D3DXTANGENT_CALCULATE_NORMALS" name="CalculateNormals" />
+    <map enum-item="D3DXTANGENT_GENERATE_IN_PLACE" name="GenerateInPlace" />
+    <map enum-item="D3DXEDT_STRING" name="String" />
+    <map enum-item="D3DXEDT_FLOATS" name="Floats" />
+    <map enum-item="D3DXEDT_DWORD" name="Dword" />
+    <map enum-item="D3DXWELDEPSILONS_WELDALL" name="WeldAll" />
+    <map enum-item="D3DXWELDEPSILONS_WELDPARTIALMATCHES" name="WeldPartialMatches" />
+    <map enum-item="D3DXWELDEPSILONS_DONOTREMOVEVERTICES" name="DoNotRemoveVertices" />
+    <map enum-item="D3DXWELDEPSILONS_DONOTSPLIT" name="DoNotSplit" />
+    <map enum-item="D3DXRS_BOOL" name="Bool" />
+    <map enum-item="D3DXRS_INT4" name="Int4" />
+    <map enum-item="D3DXRS_FLOAT4" name="Float4" />
+    <map enum-item="D3DXRS_SAMPLER" name="Sampler" />
+    <map enum-item="D3DXPC_SCALAR" name="Scalar" />
+    <map enum-item="D3DXPC_VECTOR" name="Vector" />
+    <map enum-item="D3DXPC_MATRIX_ROWS" name="MatrixRows" />
+    <map enum-item="D3DXPC_MATRIX_COLUMNS" name="MatrixColumns" />
+    <map enum-item="D3DXPC_OBJECT" name="Object" />
+    <map enum-item="D3DXPC_STRUCT" name="Struct" />
+    <map enum-item="D3DXPT_VOID" name="Void" />
+    <map enum-item="D3DXPT_BOOL" name="Bool" />
+    <map enum-item="D3DXPT_INT" name="Int" />
+    <map enum-item="D3DXPT_FLOAT" name="Float" />
+    <map enum-item="D3DXPT_STRING" name="String" />
+    <map enum-item="D3DXPT_TEXTURE" name="Texture" />
+    <map enum-item="D3DXPT_TEXTURE1D" name="Texture1D" />
+    <map enum-item="D3DXPT_TEXTURE2D" name="Texture2D" />
+    <map enum-item="D3DXPT_TEXTURE3D" name="Texture3D" />
+    <map enum-item="D3DXPT_TEXTURECUBE" name="TextureCube" />
+    <map enum-item="D3DXPT_SAMPLER" name="Sampler" />
+    <map enum-item="D3DXPT_SAMPLER1D" name="Sampler1D" />
+    <map enum-item="D3DXPT_SAMPLER2D" name="Sampler2D" />
+    <map enum-item="D3DXPT_SAMPLER3D" name="Sampler3D" />
+    <map enum-item="D3DXPT_SAMPLERCUBE" name="SamplerCube" />
+    <map enum-item="D3DXPT_PIXELSHADER" name="PixelShader" />
+    <map enum-item="D3DXPT_VERTEXSHADER" name="VertexShader" />
+    <map enum-item="D3DXPT_PIXELFRAGMENT" name="PixelFragment" />
+    <map enum-item="D3DXPT_VERTEXFRAGMENT" name="VertexFragment" />
+    <map enum-item="D3DXPT_UNSUPPORTED" name="Unsupported" />
+    <map enum-item="D3DXINC_LOCAL" name="Local" />
+    <map enum-item="D3DXINC_SYSTEM" name="System" />
+    <map enum-item="D3DXIFF_BMP" name="Bmp" />
+    <map enum-item="D3DXIFF_JPG" name="Jpg" />
+    <map enum-item="D3DXIFF_TGA" name="Tga" />
+    <map enum-item="D3DXIFF_PNG" name="Png" />
+    <map enum-item="D3DXIFF_DDS" name="Dds" />
+    <map enum-item="D3DXIFF_PPM" name="Ppm" />
+    <map enum-item="D3DXIFF_DIB" name="Dib" />
+    <map enum-item="D3DXIFF_HDR" name="Hdr" />
+    <map enum-item="D3DXIFF_PFM" name="Pfm" />
+    <map enum-item="D3DXMESHSIMP_VERTEX" name="Vertex" />
+    <map enum-item="D3DXMESHSIMP_FACE" name="Face" />
+    <map enum-item="D3DXMESHTYPE_MESH" name="Mesh" />
+    <map enum-item="D3DXMESHTYPE_PMESH" name="ProgressiveMesh" />
+    <map enum-item="D3DXMESHTYPE_PATCHMESH" name="PatchMesh" />
+    <map enum-item="D3DXCALLBACK_SEARCH_EXCLUDING_INITIAL_POSITION" name="SearchExcludingInitialPosition" />
+    <map enum-item="D3DXCALLBACK_SEARCH_BEHIND_INITIAL_POSITION" name="SearchBehindInitialPosition" />
+    <map enum-item="D3DXPLAY_LOOP" name="Loop" />
+    <map enum-item="D3DXPLAY_ONCE" name="Once" />
+    <map enum-item="D3DXPLAY_PINGPONG" name="PingPong" />
+    <map enum-item="D3DXPRIORITY_LOW" name="Low" />
+    <map enum-item="D3DXPRIORITY_HIGH" name="High" />
+    <map enum-item="D3DXEVENT_TRACKSPEED" name="TrackSpeed" />
+    <map enum-item="D3DXEVENT_TRACKWEIGHT" name="TrackWeight" />
+    <map enum-item="D3DXEVENT_TRACKPOSITION" name="TrackPosition" />
+    <map enum-item="D3DXEVENT_TRACKENABLE" name="TrackEnable" />
+    <map enum-item="D3DXEVENT_PRIORITYBLEND" name="PriorityBlend" />
+    <map enum-item="D3DXTRANSITION_LINEAR" name="Linear" />
+    <map enum-item="D3DXTRANSITION_EASEINEASEOUT" name="EaseInEaseOut" />
+    <map enum-item="D3DCREATE_PUREDEVICE" name="PureDevice" />
+    <map enum-item="D3DCREATE_SOFTWARE_VERTEXPROCESSING" name="SoftwareVertexProcessing" />
+    <map enum-item="D3DCREATE_HARDWARE_VERTEXPROCESSING" name="HardwareVertexProcessing" />
+    <map enum-item="D3DCREATE_MIXED_VERTEXPROCESSING" name="MixedVertexProcessing" />
+    <map enum-item="D3DCREATE_ADAPTERGROUP_DEVICE" name="AdapterGroupDevice" />
+    <map enum-item="D3DCREATE_DISABLE_DRIVER_MANAGEMENT_EX" name="DisableExtendedDriverManagement" />
+    <map enum-item="D3DCREATE_NOWINDOWCHANGES" name="NoWindowChanges" />
+    <map enum-item="D3DCREATE_ENABLE_PRESENTSTATS" name="EnablePresentStatistics" />
+    <map enum-item="D3DCREATE_DISABLE_PRINTSCREEN" name="DisablePrintScreen" />
+    <map enum-item="D3DCREATE_SCREENSAVER" name="AllowScreensavers" />
+    <map enum-item="D3DPRESENT_DONOTWAIT" name="DoNotWait" />
+    <map enum-item="D3DPRESENT_DONOTFLIP" name="DoNotFlip" />
+    <map enum-item="D3DPRESENT_FLIPRESTART" name="FlipRestart" />
+    <map enum-item="D3DPRESENT_UPDATEOVERLAYONLY" name="UpdateOverlayOnly" />
+    <map enum-item="D3DPRESENT_HIDEOVERLAY" name="HideOverlay" />
+    <map enum-item="D3DPRESENT_UPDATECOLORKEY" name="UpdateColorKey" />
+    <map enum-item="D3DPRESENT_FORCEIMMEDIATE" name="ForceImmediate" />
+    <map enum-item="D3DPRESENT_RATE_DEFAULT" name="None" />
+    <map enum-item="D3DPRESENTFLAG_LOCKABLE_BACKBUFFER" name="LockableBackBuffer" />
+    <map enum-item="D3DPRESENTFLAG_DISCARD_DEPTHSTENCIL" name="DiscardDepthStencil" />
+    <map enum-item="D3DPRESENTFLAG_DEVICECLIP" name="DeviceClip" />
+    <map enum-item="D3DPRESENTFLAG_VIDEO" name="Video" />
+    <map enum-item="D3DPRESENTFLAG_NOAUTOROTATE" name="NoAutoRotate" />
+    <map enum-item="D3DPRESENTFLAG_UNPRUNEDMODE" name="UnprunedMode" />
+    <map enum-item="D3DPRESENTFLAG_OVERLAY_LIMITEDRGB" name="OverlayLimitedRgb" />
+    <map enum-item="D3DPRESENTFLAG_OVERLAY_YCbCr_BT709" name="OverlayYCbCr_BT709" />
+    <map enum-item="D3DPRESENTFLAG_OVERLAY_YCbCr_xvYCC" name="OverlayYCbCr_xvYCC" />
+    <map enum-item="D3DPRESENTFLAG_RESTRICTED_CONTENT" name="RestrictedContent" />
+    <map enum-item="D3DPRESENTFLAG_RESTRICT_SHARED_RESOURCE_DRIVER" name="RestrictSharedResourceDriver" />
+    <map enum-item="D3DFVF_XYZ" name="Position" />
+    <map enum-item="D3DFVF_XYZRHW" name="PositionRhw" />
+    <map enum-item="D3DFVF_XYZB1" name="PositionBlend1" />
+    <map enum-item="D3DFVF_XYZB2" name="PositionBlend2" />
+    <map enum-item="D3DFVF_XYZB3" name="PositionBlend3" />
+    <map enum-item="D3DFVF_XYZB4" name="PositionBlend4" />
+    <map enum-item="D3DFVF_XYZB5" name="PositionBlend5" />
+    <map enum-item="D3DFVF_XYZW" name="PositionW" />
+    <map enum-item="D3DFVF_PSIZE" name="PointSize" />
+    <map enum-item="D3DFVF_TEXCOUNT_MASK" name="TextureCountMask" />
+    <map enum-item="D3DFVF_TEXCOUNT_SHIFT" name="TextureCountShift" />
+    <map enum-item="D3DFVF_TEX0" name="Texture0" />
+    <map enum-item="D3DFVF_TEX1" name="Texture1" />
+    <map enum-item="D3DFVF_TEX2" name="Texture2" />
+    <map enum-item="D3DFVF_TEX3" name="Texture3" />
+    <map enum-item="D3DFVF_TEX4" name="Texture4" />
+    <map enum-item="D3DFVF_TEX5" name="Texture5" />
+    <map enum-item="D3DFVF_TEX6" name="Texture6" />
+    <map enum-item="D3DFVF_TEX7" name="Texture7" />
+    <map enum-item="D3DFVF_TEX8" name="Texture8" />
+    <map enum-item="D3DFVF_LASTBETA_UBYTE4" name="LastBetaUByte4" />
+    <map enum-item="D3DFVF_LASTBETA_D3DCOLOR" name="LastBetaColor" />
+    <map enum-item="D3DFVF_NONE" name="None" />
+    <map enum-item="D3DUSAGE_RENDERTARGET" name="RenderTarget" />
+    <map enum-item="D3DUSAGE_DEPTHSTENCIL" name="DepthStencil" />
+    <map enum-item="D3DUSAGE_NONSECURE" name="NonSecure" />
+    <map enum-item="D3DUSAGE_AUTOGENMIPMAP" name="AutoGenerateMipMap" />
+    <map enum-item="D3DUSAGE_DMAP" name="DisplacementMap" />
+    <map enum-item="D3DUSAGE_QUERY_LEGACYBUMPMAP" name="QueryLegacyBumpMap" />
+    <map enum-item="D3DUSAGE_QUERY_SRGBREAD" name="QuerySrgbRead" />
+    <map enum-item="D3DUSAGE_QUERY_SRGBWRITE" name="QuerySrgbWrite" />
+    <map enum-item="D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING" name="QueryPostPixelShaderBlending" />
+    <map enum-item="D3DUSAGE_QUERY_VERTEXTEXTURE" name="QueryVertexTexture" />
+    <map enum-item="D3DUSAGE_QUERY_WRAPANDMIP" name="QueryWrapAndMip" />
+    <map enum-item="D3DUSAGE_WRITEONLY" name="WriteOnly" />
+    <map enum-item="D3DUSAGE_SOFTWAREPROCESSING" name="SoftwareProcessing" />
+    <map enum-item="D3DUSAGE_DONOTCLIP" name="DoNotClip" />
+    <map enum-item="D3DUSAGE_RTPATCHES" name="RTPatches" />
+    <map enum-item="D3DUSAGE_NPATCHES" name="NPatches" />
+    <map enum-item="D3DUSAGE_TEXTAPI" name="TextApi" />
+    <map enum-item="D3DXCLEAN_BACKFACING" name="BackFacing" />
+    <map enum-item="D3DXCLEAN_SKINNING" name="Skinning" />
+    <map enum-item="D3DXCLEAN_OPTIMIZATION" name="Optimization" />
+    <map enum-item="D3DLOCK_READONLY" name="ReadOnly" />
+    <map enum-item="D3DLOCK_NOOVERWRITE" name="NoOverwrite" />
+    <map enum-item="D3DLOCK_NOSYSLOCK" name="NoSystemLock" />
+    <map enum-item="D3DLOCK_DONOTWAIT" name="DoNotWait" />
+    <map enum-item="D3DCLEAR_ZBUFFER" name="ZBuffer" />
+
+    <!--
+    // *****************************************************************
+    // D3D9 Structures
+    // *****************************************************************
+    -->
+    <map struct="D3D(.*)" name-tmp="$1" />
+    <map struct="D3DX(.*)" name-tmp="$1" />
+    <remove struct="D3D_OMAC" />
+    <remove struct="D3DDEVINFO_.*" />
+    <remove struct="D3DAES_CTR_IV" />
+    <remove struct="D3DENCRYPTED_BLOCK_INFO" />
+    <remove struct="D3DRANGE" />
+    <remove struct="D3DRESOURCESTATS" />
+    <remove struct="D3DMEMORYPRESSURE" />
+    <remove struct="D3DCOMPOSERECTDESC" />
+    <remove struct="D3DCOMPOSERECTDESTINATION" />
+    <remove struct="D3DOVERLAYCAPS" />
+    <remove struct="D3DCONTENTPROTECTIONCAPS" />
+    <remove struct="D3DXFONT_DESCA" />
+    <remove struct="D3DXF_FILELOADRESOURCE" />
+    <remove struct="D3DXF_FILELOADMEMORY" />
+    <remove struct="D3DXINTERSECTINFO" />
+    <remove struct="D3DXSHMATERIAL" />
+    <remove struct="D3DXSHPRTSPLITMESHVERTDATA" />
+    <remove struct="D3DXSHPRTSPLITMESHCLUSTERDATA" />
+    <remove struct="D3DXSHADER_TYPEINFO" />
+    <remove struct="D3DXSHADER_STRUCTMEMBERINFO" />
+    <remove struct="D3DXSHCOMPRESSQUALITYTYPE" />
+    <remove struct="D3DXSHGPUSIMOPT" />
+    <map struct="D3DPRESENTSTATS" name="PresentationStatistics" />
+    <map struct="D3D(.*)9" name-tmp="$1" />
+    <map struct="D3DXMATERIAL" name="ExtendedMaterial" />
+    <map struct="D3DXMESHCONTAINER" name="MeshContainer" />
+    <map struct="D3DXMESHDATA" name="MeshData" />
+    <map struct="D3DXWELDEPSILONS" name="WeldEpsilons" />
+    <map struct="D3DXEFFECTINSTANCE" name="EffectInstance" />
+    <map struct="D3DXFONT_DESCW" name="FontDescription" />
+    <map struct="D3DADAPTER_IDENTIFIER9" name="AdapterDetails" />
+    <map struct="D3DCAPS9" name="Capabilities" />
+    <map struct="D3DCLIPSTATUS9" name="ClipStatus" />
+    <map struct="D3DDEVICE_CREATION_PARAMETERS" name="CreationParameters" />
+    <map struct="D3DDISPLAYMODE" name="DisplayMode" />
+    <map struct="D3DDISPLAYMODEEX" name="DisplayModeEx" />
+    <map struct="D3DDISPLAYMODEFILTER" name="DisplayModeFilter" />
+    <map struct="D3DGAMMARAMP" name="GammaRamp" />
+    <map struct="D3DINDEXBUFFER_DESC" name="IndexBufferDescription" />
+    <map struct="D3DPSHADERCAPS2_0" name="PixelShader20Caps" />
+    <map struct="D3DRECTPATCH_INFO" name="RectanglePatchInfo" />
+    <map struct="D3DTRIPATCH_INFO" name="TrianglePatchInfo" />
+    <map struct="D3DVERTEXBUFFER_DESC" name="VertexBufferDescription" />
+    <map struct="D3DVERTEXELEMENT9" name="VertexElement" />
+    <map struct="D3DVSHADERCAPS2_0" name="VertexShader20Caps" />
+    <map struct="D3DXATTRIBUTERANGE" name="AttributeRange" />
+    <map struct="D3DXATTRIBUTEWEIGHTS" name="AttributeWeights" />
+    <map struct="D3DXBONECOMBINATION" name="BoneCombination" />
+    <map struct="D3DXCONSTANTTABLE_DESC" name="ConstantTableDescription" />
+    <map struct="D3DXEFFECTDEFAULT" name="EffectDefault" />
+    <map struct="D3DXKEY_CALLBACK" name="CallbackKey" />
+    <map struct="D3DXKEY_QUATERNION" name="RotationKey" />
+    <map struct="D3DXKEY_VECTOR3" name="ScaleKey" />
+    <map struct="D3DXPATCHINFO" name="PatchInfo" />
+    <map struct="D3DXRTE_DESC" name="RenderToEnvironmentMapDescription" />
+    <map struct="D3DXRTS_DESC" name="RenderToSurfaceDescription" />
+    <map struct="D3DXSEMANTIC" name="ShaderSemantic" />
+    <map field="D3DPRESENT_PARAMETERS::Flags" name="PresentFlags" type="D3DPRESENT_FLAGS" />
+    <map field="D3DPRESENT_PARAMETERS::hDeviceWindow" name="DeviceWindowHandle" />
+    <map field="D3DPRESENT_PARAMETERS::PresentationInterval" type="D3DPRESENT_INTERVAL" />
+    <map field="D3DVERTEXBUFFER_DESC::FVF" type="D3DFVF" />
+    <map field="D3DVERTEXELEMENT9::Type" type="D3DDECLTYPE" />
+    <map field="D3DVERTEXELEMENT9::Method" type="D3DDECLMETHOD" />
+    <map field="D3DVERTEXELEMENT9::Usage" type="D3DDECLUSAGE" />
+
+    <!--
+    // *****************************************************************
+    // D3D9 Interfaces
+    // *****************************************************************
+    -->
+    <map interface="IDirect3D(.+)" name-tmp="$1" />
+    <map interface="IDirect3D(.+)9" name-tmp="$1" />
+    <map interface="IDirect3D9Ex(.+)" name-tmp="$1" />
+    <map interface="IDirect3D9Ex" name="Direct3DEx" />
+    <map method="GetDC" name="GetDisplayDeviceContext" />
+    <remove interface="IDirect3DCryptoSession9" />
+    <remove interface="IDirect3D9ExOverlayExtension" />
+    <remove interface="ID3DXPRTBuffer" />
+    <remove interface="ID3DXPRTEngine" />
+    <remove interface="ID3DXPRTCompBuffer" />
+    <remove interface="ID3DXTextureGutterHelper" />
+    <map param="IDirect3D9Ex::CreateDeviceEx::pPresentationParameters" attribute="in buffer"/>
+    <map param="IDirect3D9Ex::CreateDeviceEx::pFullscreenDisplayMode" attribute="in buffer"/>
+    <map interface="ID3DXAllocateHierarchy" name="IAllocateHierarchy" />
+    <map interface="ID3DXBuffer" name="ShaderBytecode" />
+    <map interface="ID3DXLoadUserData" name="ILoadUserData" />
+    <map interface="ID3DXRenderToEnvMap" name="RenderToEnvironmentMap" />
+    <map interface="ID3DXSaveUserData" name="ISaveUserData" />
+    <map interface="IDirect3D9" name="Direct3D" />
+    <map interface="IDirect3DDevice9Ex" name="DeviceEx" />
+    <map interface="ID3DXSPMesh" name="SimplificationMesh" />
+    <remove method="ID3DXFont::GetDescA" />
+    <map method="ID3DXFont::GetTextMetricsA" visibility="internal" />
+    <map method="ID3DXFont::GetTextMetricsW" visibility="internal" />
+    <map method="IDirect3D9::CreateDevice" visibility="internal" />
+    <map param="BehaviorFlags" type="D3DCREATE_FLAGS" />
+    <map param="pPresentationParameters" attribute="in buffer" />
+    <map param="IDirect3DDevice9::Clear::Flags" type="D3DCLEAR_FLAGS" />
+    <map param="IDirect3DDevice9::Clear::pRects" attribute="in buffer optional" />
+    <map method="IDirect3DDevice9::Clear" visibility="internal" name="Clear_" />
+    <map param="IDirect3DDevice9::ColorFill::pRect" attribute="in optional" />
+    <map method="IDirect3DDevice9::Create.*" visibility="internal" />
+    <map param="IDirect3DDevice9::CreateVertexBuffer::FVF" name="vertexFormat" type="D3DFVF" />
+    <map param="IDirect3DDevice9::CreateVertexBuffer::Usage" type="D3DUSAGE" />
+    <map param="IDirect3DDevice9::CreateVertexDeclaration::pVertexElements" attribute="in buffer" />
+    <map method="IDirect3DDevice9::GetFVF" name="GetVertexFormat" />
+    <map method="IDirect3DDevice9::SetFVF" name="SetVertexFormat" />
+    <map param="FVF" name="vertexFormat" type="D3DFVF" />
+    <map param="IDirect3DDevice9::GetFVF::pFVF" name="vertexFormat" type="D3DFVF" />
+    <map method="IDirect3DDevice9::DrawPrimitive" name="DrawPrimitives" />
+    <map param="IDirect3DDevice9::Present::pSourceRect" attribute="in optional" />
+    <map param="IDirect3DDevice9::Present::pDestRect" attribute="inout optional" />
+    <map param="IDirect3DDevice9::Present::pDirtyRegion" attribute="in optional" />
+    <map method="IDirect3DDevice9::Present" visibility="internal" />
+    <map method="IDirect3DVertexBuffer9::Lock" visibility="internal" name="Lock_" />
+    <map param="ppbData" attribute="out" />
+    <map param="Flags" name="lockFlags" type="D3DLOCK" />
+    <map param="ID3DXEffectStateManager::SetFVF::FVF" name="vertexFormat" type="D3DFVF" />
+    <map method="ID3DXEffectStateManager::SetFVF" name="SetVertexFormat" />
+    <map method="ID3DXBaseMesh::GetNumVertices" visibility="internal" property="true" />
+    <map method="ID3DXBaseMesh::GetNumFaces" visibility="internal" property="true" />
+    <map method="ID3DXPMesh::SetNumVertices" visibility="internal" property="true" />
+    <map method="ID3DXPMesh::SetNumFaces" visibility="internal" property="true" />
+    <map param="IDirect3D9::GetAdapterIdentifier::pIdentifier" attribute="out" />
+    <map param="IDirect3D9::GetAdapterDisplayMode::pMode" attribute="out" />
+    <map param="IDirect3D9::GetDeviceCaps::pCaps" attribute="out" />
+    <map param="IDirect3DDevice9::GetDirect3D::ppD3D9" attribute="out" />
+    <map param="IDirect3DDevice9::GetDeviceCaps::pCaps" attribute="out" />
+    <map param="IDirect3DDevice9::GetDisplayMode::pMode" attribute="out" />
+    <map param="IDirect3DDevice9::GetCreationParameters::pParameters" attribute="out" />
+    <map param="IDirect3DDevice9::GetSwapChain::pSwapChain" attribute="out" />
+    <map param="IDirect3DDevice9::GetBackBuffer::ppBackBuffer" attribute="out" />
+    <map param="IDirect3DDevice9::GetRasterStatus::pRasterStatus" attribute="out" />
+    <map param="IDirect3DDevice9::GetGammaRamp::pRamp" attribute="out" />
+    <map param="IDirect3DDevice9::GetRenderTargetData::pRenderTarget" attribute="out" />
+    <map param="IDirect3DDevice9::GetRenderTargetData::pDestSurface" attribute="out" />
+    <map param="IDirect3DDevice9::GetFrontBufferData::pDestSurface" attribute="out" />
+    <map param="IDirect3DDevice9::GetRenderTarget::ppRenderTarget" attribute="out" />
+    <map param="IDirect3DDevice9::GetDepthStencilSurface::ppZStencilSurface" attribute="out" />
+    <map param="IDirect3DDevice9::GetTransform::pMatrix" attribute="out" />
+    <map param="IDirect3DDevice9::GetViewport::pViewport" attribute="out" />
+    <map param="IDirect3DDevice9::GetMaterial::pMaterial" attribute="out" />
+    <map param="IDirect3DDevice9::GetLight::arg1" attribute="out" />
+    <map param="IDirect3DDevice9::GetLightEnable::pEnable" attribute="out" />
+    <map param="IDirect3DDevice9::GetClipPlane::pPlane" attribute="out" />
+    <map param="IDirect3DDevice9::GetRenderState::pValue" attribute="out" />
+    <map param="IDirect3DDevice9::GetClipStatus::pClipStatus" attribute="out" />
+    <map param="IDirect3DDevice9::GetTexture::ppTexture" attribute="out" />
+    <map param="IDirect3DDevice9::GetTextureStageState::pValue" attribute="out" />
+    <map param="IDirect3DDevice9::GetSamplerState::pValue" attribute="out" />
+    <map param="IDirect3DDevice9::GetPaletteEntries::pEntries" attribute="out" />
+    <map param="IDirect3DDevice9::GetCurrentTexturePalette::PaletteNumber" attribute="out" />
+    <map param="IDirect3DDevice9::GetScissorRect::pRect" attribute="out" />
+    <map param="IDirect3DDevice9::GetVertexDeclaration::ppDecl" attribute="out" />
+    <map param="IDirect3DDevice9::GetFVF::pFVF" attribute="out" />
+    <map param="IDirect3DDevice9::GetVertexShader::ppShader" attribute="out" />
+    <map param="IDirect3DDevice9::GetVertexShaderConstantF::pConstantData" attribute="out" />
+    <map param="IDirect3DDevice9::GetVertexShaderConstantI::pConstantData" attribute="out" />
+    <map param="IDirect3DDevice9::GetVertexShaderConstantB::pConstantData" attribute="out" />
+    <map param="IDirect3DDevice9::GetStreamSource::ppStreamData" attribute="out" />
+    <map param="IDirect3DDevice9::GetStreamSource::pOffsetInBytes" attribute="out" />
+    <map param="IDirect3DDevice9::GetStreamSource::pStride" attribute="out" />
+    <map param="IDirect3DDevice9::GetStreamSourceFreq::pSetting" attribute="out" />
+    <map param="IDirect3DDevice9::GetIndices::ppIndexData" attribute="out" />
+    <map param="IDirect3DDevice9::GetPixelShader::ppShader" attribute="out" />
+    <map param="IDirect3DDevice9::GetPixelShaderConstantF::pConstantData" attribute="out" />
+    <map param="IDirect3DDevice9::GetPixelShaderConstantI::pConstantData" attribute="out" />
+    <map param="IDirect3DDevice9::GetPixelShaderConstantB::pConstantData" attribute="out" />
+    <map param="IDirect3DStateBlock9::GetDevice::ppDevice" attribute="out" />
+    <map param="IDirect3DResource9::GetDevice::ppDevice" attribute="out" />
+    <map param="IDirect3DResource9::GetPrivateData::pSizeOfData" attribute="out" />
+    <map param="IDirect3DVertexDeclaration9::GetDevice::ppDevice" attribute="out" />
+    <map param="IDirect3DVertexDeclaration9::GetDeclaration::pElement" attribute="out" />
+    <map param="IDirect3DVertexDeclaration9::GetDeclaration::pNumElements" attribute="out" />
+    <map param="IDirect3DVertexShader9::GetDevice::ppDevice" attribute="out" />
+    <map param="IDirect3DVertexShader9::GetFunction::pSizeOfData" attribute="out" />
+    <map param="IDirect3DPixelShader9::GetDevice::ppDevice" attribute="out" />
+    <map param="IDirect3DPixelShader9::GetFunction::pSizeOfData" attribute="out" />
+    <map param="IDirect3DTexture9::GetLevelDesc::pDesc" attribute="out" />
+    <map param="IDirect3DTexture9::GetSurfaceLevel::ppSurfaceLevel" attribute="out" return="true" />
+    <map param="IDirect3DVolumeTexture9::GetLevelDesc::pDesc" attribute="out" />
+    <map param="IDirect3DVolumeTexture9::GetVolumeLevel::ppVolumeLevel" attribute="out" />
+    <map param="IDirect3DCubeTexture9::GetLevelDesc::pDesc" attribute="out" />
+    <map param="IDirect3DCubeTexture9::GetCubeMapSurface::ppCubeMapSurface" attribute="out" />
+    <map param="IDirect3DVertexBuffer9::GetDesc::pDesc" attribute="out" />
+    <map param="IDirect3DIndexBuffer9::GetDesc::pDesc" attribute="out" />
+    <map param="IDirect3DSurface9::GetDesc::pDesc" attribute="out" />
+    <map param="IDirect3DSurface9::GetDC::phdc" attribute="out" />
+    <map param="IDirect3DVolume9::GetDevice::ppDevice" attribute="out" />
+    <map param="IDirect3DVolume9::GetPrivateData::pSizeOfData" attribute="out" />
+    <map param="IDirect3DVolume9::GetDesc::pDesc" attribute="out" />
+    <map param="IDirect3DSwapChain9::GetFrontBufferData::pDestSurface" attribute="out" />
+    <map param="IDirect3DSwapChain9::GetBackBuffer::ppBackBuffer" attribute="out" />
+    <map param="IDirect3DSwapChain9::GetRasterStatus::pRasterStatus" attribute="out" />
+    <map param="IDirect3DSwapChain9::GetDisplayMode::pMode" attribute="out" />
+    <map param="IDirect3DSwapChain9::GetDevice::ppDevice" attribute="out" />
+    <map param="IDirect3DSwapChain9::GetPresentParameters::pPresentationParameters" attribute="out" />
+    <map param="IDirect3DQuery9::GetDevice::ppDevice" attribute="out" />
+    <map param="IDirect3D9Ex::GetAdapterModeCountEx::pFilter" attribute="out" />
+    <map param="IDirect3D9Ex::GetAdapterDisplayModeEx::pMode" attribute="out" />
+    <map param="IDirect3D9Ex::GetAdapterDisplayModeEx::pRotation" attribute="out" />
+    <map param="IDirect3D9Ex::GetAdapterLUID::pLUID" attribute="out" />
+    <map param="IDirect3DDevice9Ex::GetGPUThreadPriority::pPriority" attribute="out" />
+    <map param="IDirect3DDevice9Ex::GetMaximumFrameLatency::pMaxLatency" attribute="out" />
+    <map param="IDirect3DDevice9Ex::GetDisplayModeEx::pMode" attribute="out" />
+    <map param="IDirect3DDevice9Ex::GetDisplayModeEx::pRotation" attribute="out" />
+    <map param="IDirect3DSwapChain9Ex::GetLastPresentCount::pLastPresentCount" attribute="out" />
+    <map param="IDirect3DSwapChain9Ex::GetPresentStats::pPresentationStatistics" attribute="out" />
+    <map param="IDirect3DSwapChain9Ex::GetDisplayModeEx::pMode" attribute="out" />
+    <map param="IDirect3DSwapChain9Ex::GetDisplayModeEx::pRotation" attribute="out" />
+    <map param="IDirect3DDevice9Video::GetContentProtectionCaps::pCryptoType" attribute="out" />
+    <map param="IDirect3DDevice9Video::GetContentProtectionCaps::pDecodeProfile" attribute="out" />
+    <map param="IDirect3DDevice9Video::GetContentProtectionCaps::pCaps" attribute="out" />
+    <map param="IDirect3DAuthenticatedChannel9::GetCertificateSize::pCertificateSize" attribute="out" />
+    <map param="IDirect3DAuthenticatedChannel9::GetCertificate::ppCertificate" attribute="out" />
+    <map param="IDirect3DCryptoSession9::GetCertificateSize::pCertificateSize" attribute="out" />
+    <map param="IDirect3DCryptoSession9::GetCertificate::ppCertificate" attribute="out" />
+    <map param="IDirect3DCryptoSession9::GetSurfacePitch::pSrcSurface" attribute="out" />
+    <map param="IDirect3DCryptoSession9::GetSurfacePitch::pSurfacePitch" attribute="out" />
+    <map param="IDirect3DCryptoSession9::GetEncryptionBltKey::pReadbackKey" attribute="out" />
+    <map param="ID3DXSprite::GetDevice::ppDevice" attribute="out" />
+    <map param="ID3DXSprite::GetTransform::pTransform" attribute="out" />
+    <map param="ID3DXFont::GetDevice::ppDevice" attribute="out" />
+    <map param="ID3DXFont::GetDescA::pDesc" attribute="out" />
+    <map param="ID3DXFont::GetDescW::pDesc" attribute="out" />
+    <map param="ID3DXFont::GetTextMetricsA::pTextMetrics" attribute="out" />
+    <map param="ID3DXFont::GetTextMetricsW::pTextMetrics" attribute="out" />
+    <map param="ID3DXFont::GetGlyphData::ppTexture" attribute="out" />
+    <map param="ID3DXFont::GetGlyphData::pBlackBox" attribute="out" />
+    <map param="ID3DXFont::GetGlyphData::pCellInc" attribute="out" />
+    <map param="ID3DXRenderToSurface::GetDevice::ppDevice" attribute="out" />
+    <map param="ID3DXRenderToSurface::GetDesc::pDesc" attribute="out" />
+    <map param="ID3DXRenderToEnvMap::GetDevice::ppDevice" attribute="out" />
+    <map param="ID3DXRenderToEnvMap::GetDesc::pDesc" attribute="out" />
+    <map param="ID3DXLine::GetDevice::ppDevice" attribute="out" />
+    <map param="ID3DXFileSaveObject::GetFile::arg0" attribute="out" />
+    <map param="ID3DXFileSaveData::GetSave::arg0" attribute="out" />
+    <map param="ID3DXFileSaveData::GetName::arg1" attribute="out" />
+    <map param="ID3DXFileSaveData::GetType::arg0" attribute="out" />
+    <map param="ID3DXFileEnumObject::GetFile::arg0" attribute="out" />
+    <map param="ID3DXFileEnumObject::GetChildren::arg0" attribute="out" />
+    <map param="ID3DXFileEnumObject::GetChild::arg1" attribute="out" />
+    <map param="ID3DXFileData::GetEnum::arg0" attribute="out" />
+    <map param="ID3DXFileData::GetName::arg1" attribute="out" />
+    <map param="ID3DXFileData::GetType::arg0" attribute="out" />
+    <map param="ID3DXFileData::GetChildren::arg0" attribute="out" />
+    <map param="ID3DXFileData::GetChild::arg1" attribute="out" />
+    <map param="ID3DXBaseMesh::GetDevice::ppDevice" attribute="out" />
+    <map param="ID3DXBaseMesh::GetVertexBuffer::ppVB" attribute="out" />
+    <map param="ID3DXBaseMesh::GetIndexBuffer::ppIB" attribute="out" />
+    <map param="ID3DXBaseMesh::GetAttributeTable::pAttribTable" attribute="out" />
+    <map param="ID3DXBaseMesh::GetAttributeTable::pAttribTableSize" attribute="out" />
+    <map param="ID3DXPMesh::GetAdjacency::pAdjacency" attribute="out" />
+    <map param="ID3DXSPMesh::GetDevice::ppDevice" attribute="out" />
+    <map param="ID3DXSPMesh::GetVertexWeights::pVertexWeights" attribute="out" />
+    <map param="ID3DXPatchMesh::GetDevice::ppDevice" attribute="out" />
+    <map param="ID3DXPatchMesh::GetVertexBuffer::ppVB" attribute="out" />
+    <map param="ID3DXPatchMesh::GetIndexBuffer::ppIB" attribute="out" />
+    <map param="ID3DXPatchMesh::GetTessSize::NumTriangles" attribute="out" />
+    <map param="ID3DXPatchMesh::GetTessSize::NumVertices" attribute="out" />
+    <map param="ID3DXPatchMesh::GetDisplaceParam::Texture" attribute="out" />
+    <map param="ID3DXPatchMesh::GetDisplaceParam::MinFilter" attribute="out" />
+    <map param="ID3DXPatchMesh::GetDisplaceParam::MagFilter" attribute="out" />
+    <map param="ID3DXPatchMesh::GetDisplaceParam::MipFilter" attribute="out" />
+    <map param="ID3DXPatchMesh::GetDisplaceParam::Wrap" attribute="out" />
+    <map param="ID3DXPatchMesh::GetDisplaceParam::dwLODBias" attribute="out" />
+    <map param="ID3DXSkinInfo::GetBoneInfluence::vertices" attribute="out" />
+    <map param="ID3DXSkinInfo::GetBoneInfluence::weights" attribute="out" />
+    <map param="ID3DXSkinInfo::GetBoneVertexInfluence::pWeight" attribute="out" />
+    <map param="ID3DXSkinInfo::GetBoneVertexInfluence::pVertexNum" attribute="out" />
+    <map param="ID3DXSkinInfo::GetMaxVertexInfluences::maxVertexInfluences" attribute="out" />
+    <map param="ID3DXSkinInfo::GetMaxFaceInfluences::maxFaceInfluences" attribute="out" />
+    <map param="ID3DXTextureGutterHelper::GetFaceMap::pFaceData" attribute="out" />
+    <map param="ID3DXTextureGutterHelper::GetBaryMap::pBaryData" attribute="out" />
+    <map param="ID3DXTextureGutterHelper::GetTexelMap::pTexelData" attribute="out" />
+    <map param="ID3DXTextureGutterHelper::GetGutterMap::pGutterData" attribute="out" />
+    <map param="ID3DXPRTEngine::GetVertexAlbedo::pVertColors" attribute="out" />
+    <map param="ID3DXPRTEngine::GetAdaptedMesh::pFaceRemap" attribute="out" />
+    <map param="ID3DXPRTEngine::GetAdaptedMesh::pVertRemap" attribute="out" />
+    <map param="ID3DXPRTEngine::GetAdaptedMesh::pfVertWeights" attribute="out" />
+    <map param="ID3DXPRTEngine::GetAdaptedMesh::ppMesh" attribute="out" />
+    <map param="ID3DXConstantTable::GetDesc::pDesc" attribute="out" />
+    <map param="ID3DXConstantTable::GetConstantDesc::pConstantDesc" attribute="out" />
+    <map param="ID3DXConstantTable::GetConstantDesc::pCount" attribute="out" />
+    <map param="ID3DXTextureShader::GetFunction::ppFunction" attribute="out" />
+    <map param="ID3DXTextureShader::GetConstantBuffer::ppConstantBuffer" attribute="out" />
+    <map param="ID3DXTextureShader::GetDesc::pDesc" attribute="out" />
+    <map param="ID3DXTextureShader::GetConstantDesc::pConstantDesc" attribute="out" />
+    <map param="ID3DXTextureShader::GetConstantDesc::pCount" attribute="out" />
+    <map param="ID3DXBaseEffect::GetDesc::pDesc" attribute="out" />
+    <map param="ID3DXBaseEffect::GetParameterDesc::pDesc" attribute="out" />
+    <map param="ID3DXBaseEffect::GetTechniqueDesc::pDesc" attribute="out" />
+    <map param="ID3DXBaseEffect::GetPassDesc::pDesc" attribute="out" />
+    <map param="ID3DXBaseEffect::GetFunctionDesc::pDesc" attribute="out" />
+    <map param="ID3DXBaseEffect::GetBool::pb" attribute="out" />
+    <map param="ID3DXBaseEffect::GetBoolArray::pb" attribute="out" />
+    <map param="ID3DXBaseEffect::GetInt::pn" attribute="out" />
+    <map param="ID3DXBaseEffect::GetIntArray::pn" attribute="out" />
+    <map param="ID3DXBaseEffect::GetFloat::pf" attribute="out" />
+    <map param="ID3DXBaseEffect::GetFloatArray::pf" attribute="out" />
+    <map param="ID3DXBaseEffect::GetVector::pVector" attribute="out" />
+    <map param="ID3DXBaseEffect::GetVectorArray::pVector" attribute="out" />
+    <map param="ID3DXBaseEffect::GetMatrix::pMatrix" attribute="out" />
+    <map param="ID3DXBaseEffect::GetMatrixArray::pMatrix" attribute="out" />
+    <map param="ID3DXBaseEffect::GetMatrixPointerArray::ppMatrix" attribute="out" />
+    <map param="ID3DXBaseEffect::GetMatrixTranspose::pMatrix" attribute="out" />
+    <map param="ID3DXBaseEffect::GetMatrixTransposeArray::pMatrix" attribute="out" />
+    <map param="ID3DXBaseEffect::GetMatrixTransposePointerArray::ppMatrix" attribute="out" />
+    <map param="ID3DXBaseEffect::GetString::ppString" attribute="out" />
+    <map param="ID3DXBaseEffect::GetTexture::ppTexture" attribute="out" />
+    <map param="ID3DXBaseEffect::GetPixelShader::ppPShader" attribute="out" />
+    <map param="ID3DXBaseEffect::GetVertexShader::ppVShader" attribute="out" />
+    <map param="ID3DXEffect::GetPool::ppPool" attribute="out" />
+    <map param="ID3DXEffect::GetDevice::ppDevice" attribute="out" />
+    <map param="ID3DXEffect::GetStateManager::ppManager" attribute="out" />
+    <map param="ID3DXEffectCompiler::GetLiteral::pLiteral" attribute="out" />
+    <map param="ID3DXAnimationSet::GetSRT::pScale" attribute="out" />
+    <map param="ID3DXAnimationSet::GetSRT::pRotation" attribute="out" />
+    <map param="ID3DXAnimationSet::GetSRT::pTranslation" attribute="out" />
+    <map param="ID3DXAnimationSet::GetCallback::pCallbackPosition" attribute="out" />
+    <map param="ID3DXCompressedAnimationSet::GetCompressedData::ppCompressedData" attribute="out" />
+    <map param="ID3DXAnimationController::GetAnimationSet::ppAnimationSet" attribute="out" />
+    <map param="ID3DXAnimationController::GetTrackAnimationSet::ppAnimSet" attribute="out" />
+
+    <!--
+    // *****************************************************************
+    // D3D9 Functions
+    // *****************************************************************
+    -->
+    <remove function="D3DX.*PRT.*" />
+    <remove function="D3DXCreateFontIndirectA" />
+    <remove function="D3DXSHPRTCompSplitMeshSC" />
+    <remove function="D3DXCreateTextureGutterHelper" />
+    <map function="D3DXCreateFontIndirectW" name="CreateFontIndirect" />
+    <map function="D3D9.*" dll="d3d9.dll" group="SharpDX.Direct3D9.D3D9" />
+    <map function="Direct3D.*" dll="d3d9.dll" group="SharpDX.Direct3D9.D3D9" />
+    <map function="D3DX9.*" dll="d3dx9_#(D3DX_SDK_VERSION).dll" group="SharpDX.Direct3D9.D3DX9" />
+    <map function="D3DX[^0-9].*" dll="d3dx9_#(D3DX_SDK_VERSION).dll" group="SharpDX.Direct3D9.D3DX9" />
+    <map function="D3DPERF.*" dll="d3dx9_#(D3DX_SDK_VERSION).dll" group="SharpDX.Direct3D9.D3DX9" />
+    
+    <context-clear />
+  </mapping>
+</config>

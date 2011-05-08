@@ -1,0 +1,172 @@
+﻿<#@ include file="Header.tt" #>
+
+namespace <#= Namespace.Name #> {
+
+// Disable warning : XML comment is not placed on a valid language element
+#pragma warning disable 419
+#pragma warning disable 1587
+#pragma warning disable 1574
+
+<#
+foreach (var sharpInterface in Namespace.Interfaces)
+{
+	ProcessInterface(sharpInterface);
+}
+#>
+}
+<#+
+	public void ProcessInterface(CsInterface sharpInterface) {
+#>
+
+<#+	
+
+	if (sharpInterface.Parent is CsInterface) {
+#>    /// <summary>Interface <#= sharpInterface.Name #>.</summary>
+    /// <unmanaged><#= sharpInterface.DocUnmanagedName #></unmanaged>
+<#+
+	} else {
+		foreach (var docItem in sharpInterface.DocItems) {
+#>
+    /// <#= docItem #>	
+<#+			
+		}
+	}
+
+	if (sharpInterface.Guid != null) {
+#>
+    [Guid("<#= sharpInterface.Guid #>")]
+<#+	
+	}
+	
+	// If Callback, then declare as interface
+	if (sharpInterface.IsCallback) {
+#>    <#= sharpInterface.VisibilityName #>partial interface <#= sharpInterface.Name #><#+	
+	} else {
+#>    <#= sharpInterface.VisibilityName #>partial class <#= sharpInterface.Name #><#+	
+	}
+	
+	// Is there any Base class?
+	if (sharpInterface.Base != null || sharpInterface.IBase != null) {
+#> : <#+	
+		string separator = "";
+		if (sharpInterface.Base != null) {
+#><#= sharpInterface.Base.QualifiedName #><#+
+			separator = ", ";
+		}		
+		if (sharpInterface.IBase != null) {
+#><#= separator #><#= sharpInterface.IBase.QualifiedName #><#+
+		}
+	}
+#> {
+<#+
+	if (!sharpInterface.IsCallback) {#>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="<#= sharpInterface.QualifiedName #>"/> class.
+        /// </summary>
+        /// <param name="nativePtr">The native pointer.</param>	
+        public <#= sharpInterface.Name #>(IntPtr nativePtr) : base(nativePtr) {
+        }
+<#+
+	}
+#>
+        
+<#+
+
+	// --------------------------------------------------------------------------------------------------
+	// Handle Inner Constants
+	// --------------------------------------------------------------------------------------------------
+	foreach (var sharpConstant in sharpInterface.Variables) {		
+#>        
+        /// <summary>Constant <#= sharpConstant.Name #>.</summary>
+        /// <unmanaged><#= sharpConstant.CppElementName #></unmanaged>
+        <#= sharpConstant.VisibilityName #><#= sharpConstant.TypeName #> <#= sharpConstant.Name #> = <#= sharpConstant.Value #>;
+<#+
+	}
+	
+	// --------------------------------------------------------------------------------------------------
+	// Handle Inner Interfaces
+	// --------------------------------------------------------------------------------------------------
+	if (sharpInterface.HasInnerInterfaces) {
+	
+#>				
+        /// <summary>Update nested inner interfaces pointer</summary>
+        protected override void NativePointerUpdated()
+        {            
+<#+
+		// Include Inner structure
+		foreach (var innerInterface in sharpInterface.InnerInterfaces) {
+#>            <#= innerInterface.PropertyAccesName #> = new <#= innerInterface.QualifiedName #>(this.NativePointer);		
+<#+		
+		}
+#>        }
+<#+
+		
+		// Include Inner structure
+		foreach (var innerInterface in sharpInterface.InnerInterfaces) {
+#>      
+		/// <summary>Inner interface giving access to <#= innerInterface.Name #> methods. </summary>
+        public <#= innerInterface.Name #> <#= innerInterface.PropertyAccesName #> { get; private set; }		
+<#+		
+			PushIndent("    ");		
+			ProcessInterface(innerInterface);			
+			PopIndent();
+		}
+	}
+	
+	// ------------------------------------------------------------------------------------------------------------
+	// Output Properties
+	// ------------------------------------------------------------------------------------------------------------
+	if (!sharpInterface.IsCallback)
+	foreach (var sharpProperty in sharpInterface.Properties) {				
+#>
+        
+<#+	
+		foreach (var docItem in sharpProperty.DocItems) {
+#>
+        /// <#= docItem #>	
+<#+			
+		}		
+#>
+        /// <unmanaged><#= sharpProperty.CppSignature #></unmanaged>
+        <#= sharpProperty.VisibilityName #><#= sharpProperty.PublicType.QualifiedName #> <#= sharpProperty.Name #> {
+<#+		if (sharpProperty.IsPropertyParam) {
+			if (sharpProperty.Getter != null) {
+#>
+                get { <#= sharpProperty.PublicType.QualifiedName #> __output__; <#= sharpProperty.Getter.Name #>(out __output__); return __output__; }
+<#+		
+			}
+			if (sharpProperty.Setter != null) {
+#>
+                set { <#= sharpProperty.Setter.Name #>(<#= sharpProperty.PrefixSetterParam #>value); }
+<#+		
+			}
+		} else {
+			if (sharpProperty.Getter != null) {			
+#>
+                get { return <#= sharpProperty.Getter.Name #>(); }
+<#+		
+			}
+			if (sharpProperty.Setter != null) {
+#>
+                set { <#= sharpProperty.Setter.Name #>(<#= sharpProperty.PrefixSetterParam #>value); }
+<#+		
+			}
+		}
+#>        }
+<#+		
+	}
+		
+	// ------------------------------------------------------------------------------------------------------------
+	// Output methods
+	// ------------------------------------------------------------------------------------------------------------
+	foreach (var sharpInterfaceMethod in sharpInterface.Methods) {
+		if (sharpInterface.IsCallback)
+			sharpInterfaceMethod.Hidden = true;
+		ProcessMethod(sharpInterfaceMethod);
+	}
+#>
+    }
+<#+
+    } // End of ProcessInterface
+#>
+<#@ include file="Method.tt" #>

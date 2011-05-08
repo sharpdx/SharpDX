@@ -1,0 +1,111 @@
+<project name="SharpDX Build" default="build">
+  <property name="project.name" value="SharpDX"/>
+  <property name="project.sname" value="sharpdx"/>
+  <property name="configuration" value="release"/>
+
+  <!-- Load NantGoogleTask -->
+  <loadtasks assembly="External\NantGoogleCode\NantGoogleCode.dll" />
+
+  <!-- Load version from source code SharedAssemblyInfo.cs -->
+  <loadfile file="Source/SharedAssemblyInfo.cs" property="assembly_version_file" />
+  <regex pattern="AssemblyVersion\(.(?'assembly_version'\d+\.\d+)" input="${assembly_version_file}" />
+  <property name="output_bin_zip" value="${project.name}-Bin-${assembly_version}.zip"/>
+  <property name="output_bin_and_samples_zip" value="${project.name}-BinAndSamples-${assembly_version}.zip"/>
+  
+  <!-- Prints the version -->
+  <target name="version" descriptio="Loads the version for the project">
+    <echo message="${project.name} version from file is ${assembly_version}"/>
+  </target>
+  
+  <!-- Clean all directories -->
+  <target name="clean" description="Delete all previously compiled binaries.">
+    <delete>
+      <fileset>
+        <include name="**/Bin/*.pdb" />
+        <include name="**/Bin/x86/*.*" />
+        <include name="**/Bin/x64/*.*" />
+        <include name="**/Bin/*.pdb" />
+        <include name="**/Bin/*.lib" />
+        <include name="**/Bin/*.exp" />
+        <include name="**/Bin/*.check" />
+        <include name="**/Debug/**" />
+        <include name="**/Release/**" />
+        <include name="**/obj/**" />
+        <include name="**/Generated/**" />
+        <include name="**/*.suo" />
+        <include name="**/*.bak" />
+        <include name="**/*.user" />
+        <include name="**/_ReSharper.*/**" />
+      </fileset>
+    </delete>
+  </target>
+  
+  <target name="fullclean" description="Delete all previously compiled binaries and bin directories.">
+    <call target="clean"/>    
+    <delete>
+      <fileset>
+        <include name="**/Bin/**" />
+      </fileset>
+    </delete>
+  </target>
+
+  <!-- Release and upload the zip to googlecode -->
+  <target name="release" description="Release the targets">
+    <call target="version"/>
+    <loadfile file="googlecode_password.txt" property="googlecode_password" />
+
+	<gcupload labels="Type-Archive,Featured" username="alx.xoofx@gmail.com" password="${googlecode_password}" projectname="${project.sname}" filename="${output_bin_zip}" targetfilename="${output_bin_zip}" summary="${output_bin_zip} uploaded"/>
+
+	<gcupload labels="Type-Archive,Featured" username="alx.xoofx@gmail.com" password="${googlecode_password}" projectname="${project.sname}" filename="${output_bin_and_samples_zip}" targetfilename="${output_bin_and_samples_zip}" summary="${output_bin_and_samples_zip} uploaded"/>      
+  </target>
+
+  <!-- Full clean and build -->
+  <target name="full" description="Full build targets." depends="clean, build">
+  </target>
+  
+  <!-- Main build task -->
+  <target name="build" description="Build all targets.">
+    <call target="fullclean"/>
+	
+    <mkdir dir="Source/Tools/SharpGen/Bin/Release"/>
+
+    <copy todir="Source/Tools/SharpGen/Bin/Release">
+      <fileset basedir="Source/Tools/SharpGen/Doc/">
+        <include name="*.*" />
+      </fileset>
+    </copy>
+
+    <mkdir dir="Bin"/>
+    
+    <exec program="msbuild.exe" >
+      <arg value="/t:Build"/>
+      <arg value="/p:Configuration=Release"/>
+      <arg value='/p:Platform="Any CPU"'/>	  
+      <arg value="${project.name}.sln" />
+    </exec>
+
+    <call target="clean"/>
+   
+    <call target="version"/>
+      
+    <zip ziplevel="9" zipfile="${output_bin_zip}">
+      <fileset basedir="..">
+        <include name="${project.name}/Bin/**" />
+        <include name="${project.name}/*.txt"/>
+		<exclude name="${project.name}/googlecode_password.txt"/>
+      </fileset>
+    </zip>   
+ 
+    <zip ziplevel="9" zipfile="${output_bin_and_samples_zip}">
+      <fileset basedir="..">
+        <include name="${project.name}/Bin/**" />
+        <include name="${project.name}/Samples/**" />
+		<exclude name="${project.name}/Samples/**/*.sample.csproj"/>		
+        <include name="${project.name}/*.txt"/>
+		<exclude name="${project.name}/googlecode_password.txt"/>
+      </fileset>
+    </zip>
+	
+    <call target="clean"/>    
+  </target>
+</project>

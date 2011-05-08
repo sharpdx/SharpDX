@@ -1,0 +1,35 @@
+﻿<#@ include file="Header.tt" #>
+
+namespace <#= Assembly.QualifiedName #>
+{
+#pragma warning disable 649
+#pragma warning disable 419
+#pragma warning disable 1587
+#pragma warning disable 1574
+
+    internal partial class LocalInterop
+    {
+<#
+foreach (var method in Assembly.Interop.Methods) {
+#>
+        public static unsafe <#= method.ReturnType.TypeName #> <#= method.Name #>(<#
+		if (!method.IsFunction) {
+			#>void* thisObject<# 
+			if (method.ParameterTypes.Count>0) {#>,<#}			
+		}
+		for(int i = 0; i < method.ParameterTypes.Count; i++) {
+#><#= method.ParameterTypes[i].TypeName #> arg<#= i #><#
+			if ( (i+1) < method.ParameterTypes.Count) {#>,<#}
+		}
+		if (method.IsFunction) {
+			if (method.ParameterTypes.Count>0) {#>,<#}			
+			#>void* funcPtr<# 
+		} else {
+			#>,void* methodPtr<# 
+		}
+#>) { throw new NotImplementedException(); }
+<#	
+}
+#>
+    }
+}

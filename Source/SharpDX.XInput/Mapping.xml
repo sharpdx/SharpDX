@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config id="sharpdx-xinput" depends="sharpdx-core">
+  <namespace>SharpDX.XInput</namespace>
+  <assembly>SharpDX.XInput</assembly>
+  <include id="xinput" file="xinput.h" attach="true" />
+  <naming />
+  <types>
+    <create class="SharpDX.XInput.XInput" />
+  </types>
+  <mapping>
+    <context>xinput</context>
+    <map struct="XINPUT(.*)" name-tmp="$1" />
+    <map function="XInput.*" macro-dll="XINPUT_DLL_A" group="SharpDX.XInput.XInput" />
+    <context-clear />
+  </mapping>
+</config>

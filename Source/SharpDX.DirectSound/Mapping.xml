@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+-->
+<config id="sharpdx-directsound" depends="sharpdx" xmlns="urn:SharpGen.Config">
+  
+  <namespace>SharpDX.DirectSound</namespace>  
+  <assembly>SharpDX.DirectSound</assembly>
+
+  <!-- DirectSound includes -->
+  <include file="dsound.h" attach="true" />
+
+  <!-- DirectSound naming -->
+  <naming />
+  
+  <!-- DirectSound extensions -->
+  <extension>
+    <context>sharpdx-directsound-ext</context>
+    <context>dsound</context>
+
+    <create-cpp enum="DSCAPS_FLAGS" macro="DSCAPS_.*" />
+    <create-cpp enum="DSSPEAKER_ENUM" macro="DSSPEAKER_[^G].*" />
+    <create-cpp enum="DSSPEAKER_GEOMETRY_ENUM" macro="DSSPEAKER_GEOMETRY.*" />
+    <create-cpp enum="DSBCAPS_FLAGS" macro="DSBCAPS_.*" />
+    <create-cpp enum="DSBPLAY_FLAGS" macro="DSBPLAY_.*" />
+    <create-cpp enum="DSBSTATUS_FLAGS" macro="DSBSTATUS_.*" />
+    <create-cpp enum="DSCBCAPS_FLAGS" macro="DSCBCAPS_.*" />
+    <create-cpp enum="DSCCAPS_FLAGS" macro="DSCCAPS_.*" />
+    <create-cpp enum="DSCBSTATUS_FLAGS" macro="DSCBSTATUS_.*" />
+    <create-cpp enum="DSBLOCK_ENUM" macro="DSBLOCK_.*" />
+    <create-cpp enum="DSSCL_ENUM" macro="DSSCL_.*" />
+    <create-cpp enum="DS3DMODE" macro="DS3DMODE_.*" />
+    <create-cpp enum="DSCFX_ENUM" macro="DSCFX_LOC.*" />
+    <create-cpp enum="DSCFX_AEC_MODE" macro="DSCFX_AEC_MODE_.*" />
+    <create-cpp enum="DSCFX_AEC_STATUS" macro="DSCFX_AEC_STATUS_.*" />
+
+    <const from-guid="GUID_All_Objects" class="SharpDX.DirectSound.DSound" type="System.Guid" name="AllObjects">new System.Guid("$1")</const>
+    <const from-guid="GUID_DSCFX_CLASS_AEC" class="SharpDX.DirectSound.CaptureEffectGuid" type="System.Guid" name="AcousticEchoCancellationCaptureEffect">new System.Guid("$1")</const>
+    <const from-guid="GUID_DSCFX_MS_AEC" class="SharpDX.DirectSound.CaptureEffectGuid" type="System.Guid" name="MicrosoftAcousticEchoCancellationCaptureEffect">new System.Guid("$1")</const>
+    <const from-guid="GUID_DSCFX_SYSTEM_AEC" class="SharpDX.DirectSound.CaptureEffectGuid" type="System.Guid" name="SystemAcousticEchoCancellationCaptureEffect">new System.Guid("$1")</const>
+    <const from-guid="GUID_DSCFX_CLASS_NS" class="SharpDX.DirectSound.CaptureEffectGuid" type="System.Guid" name="NoiseSuppressionCaptureEffect">new System.Guid("$1")</const>
+    <const from-guid="GUID_DSCFX_MS_NS" class="SharpDX.DirectSound.CaptureEffectGuid" type="System.Guid" name="MicrosoftNoiseSuppressionCaptureEffect">new System.Guid("$1")</const>
+    <const from-guid="GUID_DSCFX_SYSTEM_NS" class="SharpDX.DirectSound.CaptureEffectGuid" type="System.Guid" name="SystemNoiseSuppressionCaptureEffect">new System.Guid("$1")</const>
+    <const from-guid="GUID_DSFX_(.*)" class="SharpDX.DirectSound.SoundEffectGuid" type="System.Guid" name="$1">new System.Guid("$1")</const>
+    <!-- const class="SharpDX.DirectSound.DirectSound3DAlgorithmGuid" type="System.Guid" name="Default3DAlgorithm">new System.Guid("00000000-0000-0000-0000-000000000000")</const -->
+    <const from-guid="DS3DALG_HRTF_FULL" class="SharpDX.DirectSound.DirectSound3DAlgorithmGuid" type="System.Guid" name="FullHrt3DAlgorithm">new System.Guid("$1")</const>
+    <const from-guid="DS3DALG_HRTF_LIGHT" class="SharpDX.DirectSound.DirectSound3DAlgorithmGuid" type="System.Guid" name="LightHrt3DAlgorithm">new System.Guid("$1")</const>
+    <const from-guid="DS3DALG_NO_VIRTUALIZATION" class="SharpDX.DirectSound.DirectSound3DAlgorithmGuid" type="System.Guid" name="NoVirtualization3DAlgorithm">new System.Guid("$1")</const>
+
+    <create class="DSound" />
+    <create class="CaptureEffectGuid" />
+    <create class="SoundEffectGuid" />
+    <create class="DirectSound3DAlgorithmGuid" />
+
+    <context-clear />
+  </extension>
+
+  <!-- DirectSound mapping -->
+  <mapping>
+    <context>sharpdx-directsound-ext</context>
+    <context>dsound</context>
+
+    <!--
+    // *****************************************************************
+    // DirectSound Enumerations
+    // *****************************************************************
+    -->
+    <map enum="DSCAPS_FLAGS" name="CapabilitiesFlags" />
+    <map enum="DSSPEAKER_ENUM" name="SpeakerConfiguration" />
+    <map enum="DSSPEAKER_GEOMETRY_ENUM" name="SpeakerGeometry" />
+    <map enum="DSBCAPS_FLAGS" name="BufferFlags" />
+    <map enum="DSBPLAY_FLAGS" name="PlayFlags" />
+    <map enum="DSBSTATUS_FLAGS" name="BufferStatus" />
+    <map enum="DSBLOCK_ENUM" name="LockFlags" />
+    <map enum="DSCBSTATUS_FLAGS" name="CaptureBufferStatusFlags" />
+    <map enum="DSSCL_ENUM" name="CooperativeLevel" />
+    <map enum="DS3DMODE" name="Mode3D" />
+    <map enum="DSOUND_ENUM_0" name="SoundEffectResult" />
+    <map enum="DSOUND_ENUM_1" name="I3DL2MaterialPreset" />
+    <map enum="DSOUND_ENUM_2" name="I3DL2ReverbPreset" />
+    <map enum="DSCFX_ENUM" name="CaptureEffectResult" />
+    <map enum="DSCBCAPS_FLAGS" name="CaptureBufferCapabilitiesFlags" />
+    <map enum="DSCCAPS_FLAGS" name="CaptureCapabilitiesFlags" />
+    <map enum="DSCFX_AEC_MODE" name="AcousticEchoCancelMode" />
+    <map enum="DSCFX_AEC_STATUS" name="AcousticEchoCancelStatus" />
+    <map enum-item="DSCAPS_CERTIFIED" name="Certified" />
+    <map enum-item="DSCAPS_CONTINUOUSRATE" name="ContinousRate" />
+    <map enum-item="DSCAPS_EMULDRIVER" name="EmulatedDriver" />
+    <map enum-item="DSCAPS_PRIMARY16BIT" name="PrimaryBuffer16Bit" />
+    <map enum-item="DSCAPS_PRIMARY8BIT" name="PrimaryBuffer8Bit" />
+    <map enum-item="DSCAPS_PRIMARYMONO" name="PrimaryBufferMono" />
+    <map enum-item="DSCAPS_PRIMARYSTEREO" name="PrimaryBufferStereo" />
+    <map enum-item="DSCAPS_SECONDARY16BIT" name="SecondaryBufer16Bit" />
+    <map enum-item="DSCAPS_SECONDARY8BIT" name="SecondaryBufer8Bit" />
+    <map enum-item="DSCAPS_SECONDARYMONO" name="SecondaryBufferMono" />
+    <map enum-item="DSCAPS_SECONDARYSTEREO" name="SecondaryBufferStereo" />
+    <map enum-item="DSCBCAPS_WAVEMAPPED" name="WaveMapped" />
+    <map enum-item="DSCBCAPS_CTRLFX" name="ControlEffects" />
+    <map enum-item="DSCCAPS_EMULDRIVER" name="EmulateDriver" />
+    <map enum-item="DSCCAPS_CERTIFIED" name="Certified" />
+    <map enum-item="DSCCAPS_MULTIPLECAPTURE" name="MultipleCapture" />
+    <map enum-item="DSFXR_PRESENT" name="Present" />
+    <map enum-item="DSFXR_LOCHARDWARE" name="LocatedInHardware" />
+    <map enum-item="DSFXR_LOCSOFTWARE" name="LocatedInSoftware" />
+    <map enum-item="DSFXR_UNALLOCATED" name="Unallocated" />
+    <map enum-item="DSFXR_FAILED" name="Failed" />
+    <map enum-item="DSFXR_UNKNOWN" name="Unknown" />
+    <map enum-item="DSCFX_LOCHARDWARE" name="LocatedInHardware" />
+    <map enum-item="DSCFX_LOCSOFTWARE" name="LocatedInSoftware" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_DEFAULT" name="Default" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_GENERIC" name="Generic" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_PADDEDCELL" name="PaddedCell" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_ROOM" name="Room" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_BATHROOM" name="Bathroom" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_LIVINGROOM" name="LivingRoom" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_STONEROOM" name="StoneRoom" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_AUDITORIUM" name="Auditorium" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_CONCERTHALL" name="ConcertHall" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_CAVE" name="Cave" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_ARENA" name="Arena" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_HANGAR" name="Hangar" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_CARPETEDHALLWAY" name="CarpetedHallway" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_HALLWAY" name="Hallway" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_STONECORRIDOR" name="StoneCorridor" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_ALLEY" name="Alley" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_FOREST" name="Forest" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_CITY" name="City" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_MOUNTAINS" name="Mountains" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_QUARRY" name="Quarry" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_PLAIN" name="Plain" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_PARKINGLOT" name="ParkingLot" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_SEWERPIPE" name="SewerPipe" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_UNDERWATER" name="Underwater" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_SMALLROOM" name="SmallRoom" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_MEDIUMROOM" name="MediumRoom" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_LARGEROOM" name="LargeRoom" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_MEDIUMHALL" name="MediumHall" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_LARGEHALL" name="LargeHall" />
+    <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_PLATE" name="Plate" />
+    <map enum-item="DSFX_I3DL2_MATERIAL_PRESET_(.*)" name-tmp="$1" />
+    <map enum-item="DSSPEAKER_DIRECTOUT" name="DirectOut" />
+    <map enum-item="DSSPEAKER_QUAD" name="Quadrophonic" />
+    <map enum-item="DSSPEAKER_5POINT1" name="FivePointOne" />
+    <map enum-item="DSSPEAKER_7POINT1" name="SevenPointOne" />
+    <map enum-item="DSSPEAKER_7POINT1_WIDE" name="SevenPointOneWide" />
+    <map enum-item="DSSPEAKER_5POINT1_BACK" name="FivePointOneBack" />
+    <map enum-item="DSSPEAKER_5POINT1_SURROUND" name="FivePointOneSurround" />
+    <map enum-item="DSSPEAKER_7POINT1_SURROUND" name="SevenPointOneSurround" />
+    <map enum-item="DSBCAPS_PRIMARYBUFFER" name="PrimaryBuffer" />
+    <map enum-item="DSBCAPS_LOCHARDWARE" name="Hardware" />
+    <map enum-item="DSBCAPS_LOCSOFTWARE" name="Software" />
+    <map enum-item="DSBCAPS_CTRL3D" name="Control3D" />
+    <map enum-item="DSBCAPS_CTRLFREQUENCY" name="ControlFrequency" />
+    <map enum-item="DSBCAPS_CTRLPAN" name="ControlPan" />
+    <map enum-item="DSBCAPS_CTRLVOLUME" name="ControlVolume" />
+    <map enum-item="DSBCAPS_CTRLPOSITIONNOTIFY" name="ControlPositionNotify" />
+    <map enum-item="DSBCAPS_CTRLFX" name="ControlEffects" />
+    <map enum-item="DSBCAPS_STICKYFOCUS" name="StickyFocus" />
+    <map enum-item="DSBCAPS_GLOBALFOCUS" name="GlobalFocus" />
+    <map enum-item="DSBCAPS_GETCURRENTPOSITION2" name="GetCurrentPosition2" />
+    <map enum-item="DSBCAPS_MUTE3DATMAXDISTANCE" name="Mute3DAtMaxDistance" />
+    <map enum-item="DSBCAPS_LOCDEFER" name="Defer" />
+    <map enum-item="DSBPLAY_LOCHARDWARE" name="Hardware" />
+    <map enum-item="DSBPLAY_LOCSOFTWARE" name="Software" />
+    <map enum-item="DSBPLAY_TERMINATEBY_TIME" name="TerminateByTime" />
+    <map enum-item="DSBPLAY_TERMINATEBY_DISTANCE" name="TerminateByDistance" />
+    <map enum-item="DSBPLAY_TERMINATEBY_PRIORITY" name="TerminateByPriority" />
+    <map enum-item="DSBSTATUS_BUFFERLOST" name="BufferLost" />
+    <map enum-item="DSBSTATUS_LOCHARDWARE" name="Hardware" />
+    <map enum-item="DSBSTATUS_LOCSOFTWARE" name="Software" />
+    <map enum-item="DSBLOCK_FROMWRITECURSOR" name="FromWriteCursor" />
+    <map enum-item="DSBLOCK_ENTIREBUFFER" name="EntireBuffer" />
+    <map enum-item="DSSCL_WRITEPRIMARY" name="WritePrimary" />
+    <map enum-item="DS3DMODE_HEADRELATIVE" name="HeadRelative" />
+
+    <!--
+    // *****************************************************************
+    // DirectSound Structures
+    // *****************************************************************
+    -->
+    <map field="DS.*::dwSize" visibility="internal" />
+    <map field="DS.*::dwReserved\d?" visibility="internal" />
+    <map field="DSCAPS::dwFlags" type="DSCAPS_FLAGS" />
+    <map field="DSBCAPS::dwFlags" type="DSBCAPS_FLAGS" />
+    <map field="DSCEFFECTDESC::dwFlags" type="DSCFX_ENUM" />
+    <map field="DSBUFFERDESC::dwFlags" type="DSBCAPS_FLAGS" />
+    <map field="DSCBCAPS::dwFlags" type="DSCBCAPS_FLAGS" />
+    <map field="DSCBUFFERDESC::dwFlags" type="DSCBCAPS_FLAGS" />
+    <map field="DS.*::[a-w][a-w]?(.*)" name="$1" />
+    <map field="DSCFXAec::dwMode" type="DSCFX_AEC_MODE" />
+    <remove struct="DSBUFFERDESC1" />
+    <remove struct="DSCBUFFERDESC1" />
+    <map struct="DSCAPS" name="Capabilities" />
+    <map struct="DSCAPS" native="true" struct-to-class="true" marshal="false" new="true" />
+    <map field="DSCAPS::dw(.*)Hw(.*)" name="$1Hardware$2" />
+    <map struct="DSBCAPS" name="BufferCapabilities" />
+    <map struct="DSBCAPS" native="true" struct-to-class="true" marshal="false" new="true" />
+    <map struct="DSEFFECTDESC" name="SoundBufferEffectDescription" />
+    <map struct="DSEFFECTDESC" native="true" struct-to-class="true" marshal="false" new="true" />
+    <map struct="DSCEFFECTDESC" name="CaptureEffectDescription" />
+    <map struct="DSCEFFECTDESC" native="true" struct-to-class="true" marshal="false" new="true" marshalto="true" />
+    <map field="DSCEFFECTDESC::guidDSCFXClass" name="CaptureEffectClass" />
+    <map field="DSCEFFECTDESC::guidDSCFXInstance" name="CaptureEffectInstance" />
+    <map struct="DSBUFFERDESC" name="SoundBufferDescription" />
+    <map struct="DSBUFFERDESC" native="true" struct-to-class="true" marshal="true" new="true" />
+    <map field="DSBUFFERDESC::lpwfxFormat" visibility="internal" />
+    <map field="DSBUFFERDESC::lpwfxFormat" name="pFormat" />
+    <map field="DSBUFFERDESC::guid3DAlgorithm" name="AlgorithmFor3D" />
+    <map struct="DS3DBUFFER" name="Buffer3DSettings" />
+    <map struct="DS3DBUFFER" native="true" struct-to-class="true" marshal="false" new="true" />
+    <map struct="DS3DLISTENER" name="Listener3DSettings" />
+    <map struct="DS3DLISTENER" native="true" struct-to-class="true" marshal="false" new="true" />
+    <map struct="DSCBUFFERDESC" name="CaptureBufferDescription" />
+    <map struct="DSCBUFFERDESC" native="true" struct-to-class="true" marshal="true" new="true" />
+    <map field="DSCBUFFERDESC::lpDSCFXDesc" visibility="internal" name="EffectDescriptionPointer" />
+    <map field="DSCBUFFERDESC::dwFXCount" visibility="internal" name="EffectCount" />
+    <map field="DSCBUFFERDESC::lpwfxFormat" visibility="internal" name="FormatPointer" />
+    <map struct="DSCBCAPS" name="CaptureBufferCapabilities" />
+    <map struct="DSCBCAPS" native="true" struct-to-class="true" marshal="false" new="true" />
+    <map struct="DSCCAPS" name="CaptureCapabilities" />
+    <map struct="DSCCAPS" native="true" struct-to-class="true" marshal="false" new="true" />
+    <map struct="DSBPOSITIONNOTIFY" name="NotificationPosition" />
+    <map struct="DSBPOSITIONNOTIFY" native="true" struct-to-class="true" marshal="true" new="true" />
+    <map field="DSBPOSITIONNOTIFY::hEventNotify" visibility="internal" name="EventNotifyHandlerPointer" />
+    <map struct="DSFX(.*)" name="$1Settings" />
+    <map struct="DSCFXAec" name="AcousticEchoCancelSettings" />
+    <map struct="DSCFXNoiseSuppress" name="NoiseSuppressSettings" />
+    <map struct="DSFXParamEq" name="ParametricEqualizerSettings" />
+    <map struct="DSEFFECTDESC" visibility="internal" />
+
+    <!--
+    // *****************************************************************
+    // DirectSound Interfaces
+    // *****************************************************************
+    -->
+    <remove interface="IKsPropertySet" />
+    <remove interface="IReferenceClock" />
+    <map interface="IDirectSound(.+)" name-tmp="$1" />
+    <map interface="IDirectSoundFX(.*)" name="$1" />
+    <map interface="IDirectSoundNotify" name="SoundBufferNotifier" />
+    <map interface="IDirectSound" name="DirectSoundBase" />
+    <map interface="IDirectSound8" name="DirectSound" />
+    <map interface="IDirectSoundCapture" name="DirectSoundCapture" />
+    <map interface="IDirectSoundCaptureBuffer" name="CaptureBufferBase" />
+    <map interface="IDirectSoundCaptureBuffer8" name="CaptureBuffer" />
+    <map interface="IDirectSoundBuffer" name="SoundBuffer" />
+    <map interface="IDirectSoundBuffer8" name="SecondarySoundBuffer" />
+    <map interface="IDirectSound3DListener" name="SoundListener3D" />
+    <map interface="IDirectSound3DBuffer" name="SoundBuffer3D" />
+    <map interface="IDirectSoundCaptureFXAec" name="AcousticEchoCancel" />
+    <map interface="IDirectSoundCaptureFXNoiseSuppress" name="NoiseSuppress" />
+    <map interface="IDirectSoundFXParamEq" name="ParametricEqualizer" />
+    <map method="IDirectSoundCapture::CreateCaptureBuffer" visibility="internal" />
+    <map method="IDirectSoundCaptureBuffer::GetStatus" visibility="internal" name="GetCaptureStatus" />
+    <map param="pdwStatus" type="DSCBSTATUS_FLAGS" />
+    <map method="IDirectSoundCaptureBuffer::GetCurrentPosition" visibility="internal" />
+    <map method="IDirectSoundCaptureBuffer::GetFormat" visibility="internal" />
+    <map param="pwfxFormat" type="void" attribute="in" />
+    <map param="IDirectSoundCaptureBuffer::Start::dwFlags" type="BOOL" />
+    <map method="IDirectSoundCaptureBuffer::Lock" visibility="internal" />
+    <map param="ppvAudioPtr1" attribute="out" />
+    <map param="ppvAudioPtr2" attribute="out" />
+    <map param="ppvAudioPtr1" name="audioPtr1" />
+    <map param="ppvAudioPtr2" name="audioPtr2" />
+    <map method="IDirectSoundCaptureBuffer::Unlock" visibility="internal" />
+    <remove method="IDirectSound::Initialize" />
+    <remove method="IDirectSoundCaptureBuffer::Initialize" />
+    <remove method="IDirectSoundCapture::Initialize" />
+    <remove method="IDirectSoundFullDuplex::Initialize" />
+    <map method="IDirectSoundCaptureBuffer8::GetFXStatus" visibility="internal" name="GetEffectStatus" />
+    <map param="pdwFXStatus" type="DSCFX_ENUM" />
+    <map method="IDirectSoundCaptureBuffer8::GetObjectInPath" visibility="internal" name="GetEffect" />
+    <map param="IDirectSoundCaptureFXAec::GetStatus::pdwStatus" type="DSCFX_AEC_STATUS" />
+    <map interface="IDirectSoundNotify" visibility="internal" />
+    <map param="IDirectSound.*::dw(.*)" name-tmp="$1" />
+    <map param="IDirectSound.*::pdw(.*)" name-tmp="$1" />
+    <map param="IDirectSound.*::fl(.*)" name-tmp="$1" />
+    <map param="IDirectSound.*::l(.*)" name-tmp="$1" />
+    <map interface="IDirectSoundBuffer" visibility="public abstract" />
+    <map method="IDirectSoundBuffer::Play" visibility="internal" />
+    <map param="dwFlags" type="DSBPLAY_FLAGS" />
+    <map method="IDirectSoundBuffer8::SetFX" visibility="internal" name="SetEffect" />
+    <map method="IDirectSoundBuffer8::GetObjectInPath" visibility="internal" name="GetEffect" />
+    <map param="IDirectSoundBuffer8::SetFX::pdwResultCodes" type="DSOUND_ENUM_0" attribute="inout buffer" />
+    <map param="IDirectSoundBuffer::Lock::dwFlags" type="DSBLOCK_ENUM" />
+    <map method="IDirectSoundBuffer::Lock" visibility="internal" />
+    <map param="ppvAudioPtr1" attribute="out" />
+    <map param="ppvAudioPtr2" attribute="out" />
+    <map param="ppvAudioPtr1" name="audioPtr1" />
+    <map param="ppvAudioPtr2" name="audioPtr2" />
+    <map method="IDirectSoundBuffer::Unlock" visibility="internal" />
+    <map param="IDirectSound::CreateSoundBuffer::ppDSBuffer" type="void" />
+    <map param="IDirectSound::DuplicateSoundBuffer::ppDSBufferDuplicate" type="void" />
+    <map method="IDirectSound::CreateSoundBuffer" visibility="internal" />
+    <map method="IDirectSound::DuplicateSoundBuffer" visibility="internal" />
+    <map param="IDirectSound::SetCooperativeLevel::dwLevel" type="DSSCL_ENUM" />
+    <map method="IDirectSound.*::GetCaps" name="GetCapabilities" />
+    <map method="IDirectSound::(.*)SpeakerConfig" visibility="internal" property="true" name="$1SpeakerConfiguration" />
+    <map method="IDirectSound8::VerifyCertification" visibility="internal" />
+    <map method="IDirectSound3DBuffer::.*" visibility="internal" />
+    <map method="IDirectSound3DListener::[GS].*" visibility="internal" />
+
+    <!--
+    // *****************************************************************
+    // DirectSound Functions
+    // *****************************************************************
+    -->
+    <map function="DirectSound(.+)" name-tmp="$1" />
+    <map function="DirectSound.*" dll="dsound.dll" group="SharpDX.DirectSound.DSound" />
+    <map function="GetDeviceID.*" dll="dsound.dll" group="SharpDX.DirectSound.DSound" />
+    
+    <context-clear />
+  </mapping>
+</config>

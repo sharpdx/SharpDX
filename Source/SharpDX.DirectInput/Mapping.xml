@@ -1,0 +1,1053 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+-->
+<config id="sharpdx-directinput" depends="sharpdx" xmlns="urn:SharpGen.Config">
+  
+  <namespace>SharpDX.DirectInput</namespace>
+  <assembly>SharpDX.DirectInput</assembly>
+
+  <include file="dinput.h" attach="true">
+    <pre>
+      // Redefine FIELD_OFFSET using builtin gcc offsetof in order to use them in enum/variable declarations
+      #define FIELD_OFFSET(type, field) __builtin_offsetof(type,field)
+    </pre>
+    <post>
+      // Add JoystickOffsets predefined values
+      #define DIJOFS_SLIDER0 DIJOFS_SLIDER(0)
+      #define DIJOFS_SLIDER1 DIJOFS_SLIDER(1)
+      #define DIJOFS_POINT_OF_VIEW0 DIJOFS_POV(0)
+      #define DIJOFS_POINT_OF_VIEW1 DIJOFS_POV(1)
+      #define DIJOFS_POINT_OF_VIEW2 DIJOFS_POV(2)
+      #define DIJOFS_POINT_OF_VIEW3 DIJOFS_POV(3)
+      #define DIK_UNKNOWN 0      
+    </post>
+  </include>
+  
+  <naming />
+  
+  <extension>
+    <context>sharpdx-directinput-ext</context>
+    <context>dinput</context>    
+
+    <!-- class SharpDX.DirectInput.AirCombatControls -->
+    <create class="AirCombatControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_FLYING_MILITARY" type="int" name="AirCombatGenre" class="SharpDX.DirectInput.AirCombatControls" />
+    <const from-macro="DIAXIS_FLYINGM_(.*)" type="int" name="$1" class="SharpDX.DirectInput.AirCombatControls" />
+    <const from-macro="DIBUTTON_FLYINGM_FIRESECONDARY" type="int" name="FireSecondary" class="SharpDX.DirectInput.AirCombatControls"/>
+    <const from-macro="DIBUTTON_FLYINGM_(.*)" type="int" name="$1" class="SharpDX.DirectInput.AirCombatControls"/>
+    <const from-macro="DIHATSWITCH_FLYINGM_(.*)" type="int" name="$1" class="SharpDX.DirectInput.AirCombatControls"/>    
+    
+    <!-- class SharpDX.DirectInput.AnyControls -->
+    <create class="AnyControls" visibility="public"/>
+    <const from-macro="DIAXIS_ANY_X_1" type="int" name="XAxis1" class="SharpDX.DirectInput.AnyControls" />
+    <const from-macro="DIAXIS_ANY_X_2" type="int" name="XAxis2" class="SharpDX.DirectInput.AnyControls" />
+    <const from-macro="DIAXIS_ANY_Y_1" type="int" name="YAxis1" class="SharpDX.DirectInput.AnyControls" />
+    <const from-macro="DIAXIS_ANY_Y_2" type="int" name="YAxis2" class="SharpDX.DirectInput.AnyControls" />
+    <const from-macro="DIAXIS_ANY_Z_1" type="int" name="ZAxis1" class="SharpDX.DirectInput.AnyControls" />
+    <const from-macro="DIAXIS_ANY_Z_2" type="int" name="ZAxis2" class="SharpDX.DirectInput.AnyControls" />
+    <const from-macro="DIAXIS_ANY_R_1" type="int" name="RAxis1" class="SharpDX.DirectInput.AnyControls" />
+    <const from-macro="DIAXIS_ANY_R_2" type="int" name="RAxis2" class="SharpDX.DirectInput.AnyControls" />
+    <const from-macro="DIAXIS_ANY_U_1" type="int" name="UAxis1" class="SharpDX.DirectInput.AnyControls" />
+    <const from-macro="DIAXIS_ANY_U_2" type="int" name="UAxis2" class="SharpDX.DirectInput.AnyControls" />
+    <const from-macro="DIAXIS_ANY_V_1" type="int" name="VAxis1" class="SharpDX.DirectInput.AnyControls" />
+    <const from-macro="DIAXIS_ANY_V_2" type="int" name="VAxis2" class="SharpDX.DirectInput.AnyControls" />
+    <const from-macro="DIAXIS_ANY_A_1" type="int" name="Accelerator1" class="SharpDX.DirectInput.AnyControls" />
+    <const from-macro="DIAXIS_ANY_A_2" type="int" name="Accelerator2" class="SharpDX.DirectInput.AnyControls" />
+    <const from-macro="DIAXIS_ANY_B_1" type="int" name="Brake1" class="SharpDX.DirectInput.AnyControls" />    
+    <const from-macro="DIAXIS_ANY_B_2" type="int" name="Brake2" class="SharpDX.DirectInput.AnyControls" />
+    <const from-macro="DIAXIS_ANY_C_1" type="int" name="Clutch1" class="SharpDX.DirectInput.AnyControls" />
+    <const from-macro="DIAXIS_ANY_C_2" type="int" name="Clutch2" class="SharpDX.DirectInput.AnyControls" />
+    <const from-macro="DIAXIS_ANY_S_1" type="int" name="SAxis1" class="SharpDX.DirectInput.AnyControls" />
+    <const from-macro="DIAXIS_ANY_S_2" type="int" name="SAxis2" class="SharpDX.DirectInput.AnyControls" />
+    <const from-macro="DIAXIS_ANY_1" type="int" name="Axis1" class="SharpDX.DirectInput.AnyControls" />
+    <const from-macro="DIAXIS_ANY_2" type="int" name="Axis2" class="SharpDX.DirectInput.AnyControls" />
+    <const from-macro="DIAXIS_ANY_3" type="int" name="Axis3" class="SharpDX.DirectInput.AnyControls" />
+    <const from-macro="DIAXIS_ANY_4" type="int" name="Axis4" class="SharpDX.DirectInput.AnyControls" />
+    <const from-macro="DIPOV_ANY_1" type="int" name="PointOfView1" class="SharpDX.DirectInput.AnyControls" />
+    <const from-macro="DIPOV_ANY_2" type="int" name="PointOfView2" class="SharpDX.DirectInput.AnyControls" />
+    <const from-macro="DIPOV_ANY_3" type="int" name="PointOfView3" class="SharpDX.DirectInput.AnyControls" />
+    <const from-macro="DIPOV_ANY_4" type="int" name="PointOfView4" class="SharpDX.DirectInput.AnyControls" />
+
+    <!-- class SharpDX.DirectInput.BaseballBattingControls -->
+    <create class="BaseballBattingControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_SPORTS_BASEBALL_BAT" type="int" name="BaseballBattingGenre" class="SharpDX.DirectInput.BaseballBattingControls" />   
+    <const from-macro="DIAXIS_BASEBALLB_(.*)" type="int" name="$1" class="SharpDX.DirectInput.BaseballBattingControls" />
+    <const from-macro="DIBUTTON_BASEBALLB_(.*)" type="int" name="$1" class="SharpDX.DirectInput.BaseballBattingControls"/>
+
+    <!-- class SharpDX.DirectInput.BaseballFieldingControls -->
+    <create class="BaseballFieldingControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_SPORTS_BASEBALL_FIELD" type="int" name="BaseballFieldingGenre" class="SharpDX.DirectInput.BaseballFieldingControls" />
+    <const from-macro="DIAXIS_BASEBALLF_(.*)" type="int" name="$1" class="SharpDX.DirectInput.BaseballFieldingControls" />
+    <const from-macro="DIBUTTON_BASEBALLF_(.*)" type="int" name="$1" class="SharpDX.DirectInput.BaseballFieldingControls"/>
+
+    <!-- class SharpDX.DirectInput.BaseballPitchingControls -->
+    <create class="BaseballPitchingControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_SPORTS_BASEBALL_PITCH" type="int" name="BaseballPitchingGenre" class="SharpDX.DirectInput.BaseballPitchingControls" />
+    <const from-macro="DIAXIS_BASEBALLP_(.*)" type="int" name="$1" class="SharpDX.DirectInput.BaseballPitchingControls" />
+    <const from-macro="DIBUTTON_BASEBALLP_(.*)" type="int" name="$1" class="SharpDX.DirectInput.BaseballPitchingControls"/>
+
+    <!-- class SharpDX.DirectInput.BasketballDefenseControls -->
+    <create class="BasketballDefenseControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_SPORTS_BASKETBALL_DEFENSE" type="int" name="BasketballDefenseGenre" class="SharpDX.DirectInput.BasketballDefenseControls" />
+    <const from-macro="DIAXIS_BBALLD_(.*)" type="int" name="$1" class="SharpDX.DirectInput.BasketballDefenseControls" />
+    <const from-macro="DIBUTTON_BBALLD_(.*)" type="int" name="$1" class="SharpDX.DirectInput.BasketballDefenseControls"/>
+    <const from-macro="DIHATSWITCH_BBALLD_(.*)" type="int" name="$1" class="SharpDX.DirectInput.BasketballDefenseControls"/>
+
+    <!-- class SharpDX.DirectInput.BasketballOffenseControls -->
+    <create class="BasketballOffenseControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_SPORTS_BASKETBALL_OFFENSE" type="int" name="BasketballOffenseGenre" class="SharpDX.DirectInput.BasketballOffenseControls" />
+    <const from-macro="DIAXIS_BBALLO_(.*)" type="int" name="$1" class="SharpDX.DirectInput.BasketballOffenseControls" />
+    <const from-macro="DIBUTTON_BBALLO_(.*)" type="int" name="$1" class="SharpDX.DirectInput.BasketballOffenseControls"/>
+    <const from-macro="DIHATSWITCH_BBALLO_(.*)" type="int" name="$1" class="SharpDX.DirectInput.BasketballOffenseControls"/>
+
+    <!-- class SharpDX.DirectInput.BrowserControls -->
+    <create class="BrowserControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_BROWSER_CONTROL" type="int" name="BrowserGenre" class="SharpDX.DirectInput.BrowserControls" />
+    <const from-macro="DIAXIS_BROWSER_(.*)" type="int" name="$1" class="SharpDX.DirectInput.BrowserControls" />
+    <const from-macro="DIBUTTON_BROWSER_(.*)" type="int" name="$1" class="SharpDX.DirectInput.BrowserControls"/>
+
+    <!-- class SharpDX.DirectInput.CivilianFlightControls -->
+    <create class="CivilianFlightControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_FLYING_CIVILIAN" type="int" name="CivilianFlightGenre" class="SharpDX.DirectInput.CivilianFlightControls" />
+    <const from-macro="DIAXIS_FLYINGC_(.*)" type="int" name="$1" class="SharpDX.DirectInput.CivilianFlightControls" />
+    <const from-macro="DIBUTTON_FLYINGC_(.*)" type="int" name="$1" class="SharpDX.DirectInput.CivilianFlightControls"/>
+    <const from-macro="DIHATSWITCH_FLYINGC_(.*)" type="int" name="$1" class="SharpDX.DirectInput.CivilianFlightControls"/>
+
+    <!-- class SharpDX.DirectInput.CombatRacingControls -->
+    <create class="CombatRacingControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_DRIVING_COMBAT" type="int" name="AirCombatGenre" class="SharpDX.DirectInput.CombatRacingControls" />
+    <const from-macro="DIAXIS_DRIVINGC_STEER" type="int" name="Steer" class="SharpDX.DirectInput.CombatRacingControls" />
+    <const from-macro="DIAXIS_DRIVINGC_ACCELERATE" type="int" name="Accelerate" class="SharpDX.DirectInput.CombatRacingControls" />
+    <const from-macro="DIAXIS_DRIVINGC_BRAKE" type="int" name="BrakeAxis" class="SharpDX.DirectInput.CombatRacingControls" />
+    <const from-macro="DIAXIS_DRIVINGC_ACCEL_AND_BRAKE" type="int" name="AccelerateAndBrake" class="SharpDX.DirectInput.CombatRacingControls" />
+    <const from-macro="DIBUTTON_DRIVINGC_(.*)" type="int" name="$1" class="SharpDX.DirectInput.CombatRacingControls"/>    
+    <const from-macro="DIHATSWITCH_DRIVINGC_(.*)" type="int" name="$1" class="SharpDX.DirectInput.CombatRacingControls"/>
+
+    <!-- class SharpDX.DirectInput.DeviceSubtype -->
+    <create class="DeviceSubtype" visibility="public"/>
+    <const from-macro="DI8DEVTYPEMOUSE_(.*)" type="int" name="Mouse_$1" class="SharpDX.DirectInput.DeviceSubtype" />
+    <const from-macro="DI8DEVTYPEKEYBOARD_(.*)" type="int" name="Keyboard_$1" class="SharpDX.DirectInput.DeviceSubtype" />
+    <const from-macro="DI8DEVTYPEJOYSTICK_(.*)" type="int" name="Joystick_$1" class="SharpDX.DirectInput.DeviceSubtype" />
+    <const from-macro="DI8DEVTYPEGAMEPAD_(.*)" type="int" name="Gamepad_$1" class="SharpDX.DirectInput.DeviceSubtype" />
+    <const from-macro="DI8DEVTYPEDRIVING_(.*)" type="int" name="Driving_$1" class="SharpDX.DirectInput.DeviceSubtype" />
+    <const from-macro="DI8DEVTYPEFLIGHT_(.*)" type="int" name="Flight_$1" class="SharpDX.DirectInput.DeviceSubtype" />
+    <const from-macro="DI8DEVTYPE1STPERSON_(.*)" type="int" name="First_Person_$1" class="SharpDX.DirectInput.DeviceSubtype" />
+    <const from-macro="DI8DEVTYPESCREENPTR_(.*)" type="int" name="Screen_Pointer_$1" class="SharpDX.DirectInput.DeviceSubtype" />
+    <const from-macro="DI8DEVTYPEREMOTE_(.*)" type="int" name="Remote_$1" class="SharpDX.DirectInput.DeviceSubtype" />
+    <const from-macro="DI8DEVTYPEDEVICECTRL_(.*)" type="int" name="Device_Control_$1" class="SharpDX.DirectInput.DeviceSubtype" />
+    <const from-macro="DI8DEVTYPESUPPLEMENTAL_(.*)" type="int" name="Supplemental_$1" class="SharpDX.DirectInput.DeviceSubtype" />
+
+    <!-- class SharpDX.DirectInput.EffectGuid -->
+    <create class="EffectGuid" visibility="public sealed"/>
+    <const from-guid="GUID_(ConstantForce)" class="SharpDX.DirectInput.EffectGuid" type="System.Guid" name="$1">new System.Guid("$1")</const>
+    <const from-guid="GUID_(RampForce)" class="SharpDX.DirectInput.EffectGuid" type="System.Guid" name="$1">new System.Guid("$1")</const>
+    <const from-guid="GUID_(Square)" class="SharpDX.DirectInput.EffectGuid" type="System.Guid" name="$1">new System.Guid("$1")</const>
+    <const from-guid="GUID_(Sine)" class="SharpDX.DirectInput.EffectGuid" type="System.Guid" name="$1">new System.Guid("$1")</const>
+    <const from-guid="GUID_(Triangle)" class="SharpDX.DirectInput.EffectGuid" type="System.Guid" name="$1">new System.Guid("$1")</const>
+    <const from-guid="GUID_(SawtoothUp)" class="SharpDX.DirectInput.EffectGuid" type="System.Guid" name="$1">new System.Guid("$1")</const>
+    <const from-guid="GUID_(SawtoothDown)" class="SharpDX.DirectInput.EffectGuid" type="System.Guid" name="$1">new System.Guid("$1")</const>
+    <const from-guid="GUID_(Spring)" class="SharpDX.DirectInput.EffectGuid" type="System.Guid" name="$1">new System.Guid("$1")</const>
+    <const from-guid="GUID_(Damper)" class="SharpDX.DirectInput.EffectGuid" type="System.Guid" name="$1">new System.Guid("$1")</const>
+    <const from-guid="GUID_(Inertia)" class="SharpDX.DirectInput.EffectGuid" type="System.Guid" name="$1">new System.Guid("$1")</const>
+    <const from-guid="GUID_(Friction)" class="SharpDX.DirectInput.EffectGuid" type="System.Guid" name="$1">new System.Guid("$1")</const>
+    <const from-guid="GUID_(CustomForce)" class="SharpDX.DirectInput.EffectGuid" type="System.Guid" name="$1">new System.Guid("$1")</const>
+
+    <!-- class SharpDX.DirectInput.DeviceGuid -->
+    <create class="DeviceGuid" visibility="internal sealed"/>
+    <const from-guid="GUID_(SysMouse)" class="SharpDX.DirectInput.DeviceGuid" type="System.Guid" name="$1">new System.Guid("$1")</const>
+    <const from-guid="GUID_(SysKeyboard)" class="SharpDX.DirectInput.DeviceGuid" type="System.Guid" name="$1">new System.Guid("$1")</const>
+    <const from-guid="GUID_(Joystick)" class="SharpDX.DirectInput.DeviceGuid" type="System.Guid" name="$1">new System.Guid("$1")</const>
+    <const from-guid="GUID_(SysMouseEm)" class="SharpDX.DirectInput.DeviceGuid" type="System.Guid" name="$1">new System.Guid("$1")</const>
+    <const from-guid="GUID_(SysMouseEm2)" class="SharpDX.DirectInput.DeviceGuid" type="System.Guid" name="$1">new System.Guid("$1")</const>
+    <const from-guid="GUID_(SysKeyboardEm)" class="SharpDX.DirectInput.DeviceGuid" type="System.Guid" name="$1">new System.Guid("$1")</const>
+    <const from-guid="GUID_(SysKeyboardEm2)" class="SharpDX.DirectInput.DeviceGuid" type="System.Guid" name="$1">new System.Guid("$1")</const>
+
+    <!-- class SharpDX.DirectInput.FishingControls -->
+    <create class="FishingControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_SPORTS_FISHING" type="int" name="FishingGenre" class="SharpDX.DirectInput.FishingControls" />
+    <const from-macro="DIAXIS_FISHING_(.*)" type="int" name="$1" class="SharpDX.DirectInput.FishingControls" />
+    <const from-macro="DIBUTTON_FISHING__(.*)" type="int" name="$1" class="SharpDX.DirectInput.FishingControls"/>
+    <const from-macro="DIHATSWITCH_FISHING_(.*)" type="int" name="$1" class="SharpDX.DirectInput.FishingControls"/>
+
+    <!-- class SharpDX.DirectInput.FootballDefenseControls -->
+    <create class="FootballDefenseControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_SPORTS_FOOTBALL_DEFENSE" type="int" name="FootballDefenseGenre" class="SharpDX.DirectInput.FootballDefenseControls" />
+    <const from-macro="DIAXIS_FOOTBALLD_(.*)" type="int" name="$1" class="SharpDX.DirectInput.FootballDefenseControls" />
+    <const from-macro="DIBUTTON_FOOTBALLD_(.*)" type="int" name="$1" class="SharpDX.DirectInput.FootballDefenseControls"/>
+
+    <!-- class SharpDX.DirectInput.FootballOffenseControls -->
+    <create class="FootballOffenseControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_SPORTS_FOOTBALL_OFFENSE" type="int" name="FootballOffenseGenre" class="SharpDX.DirectInput.FootballOffenseControls" />
+    <const from-macro="DIAXIS_FOOTBALLO_(.*)" type="int" name="$1" class="SharpDX.DirectInput.FootballOffenseControls" />
+    <const from-macro="DIBUTTON_FOOTBALLO_(.*)" type="int" name="$1" class="SharpDX.DirectInput.FootballOffenseControls"/>
+
+    <!-- class SharpDX.DirectInput.FootballPlayControls -->
+    <create class="FootballPlayControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_SPORTS_FOOTBALL_FIELD" type="int" name="FootballPlayGenre" class="SharpDX.DirectInput.FootballPlayControls" />
+    <const from-macro="DIBUTTON_FOOTBALLP_(.*)" type="int" name="$1" class="SharpDX.DirectInput.FootballPlayControls" />
+
+    <!-- class SharpDX.DirectInput.FootballQuarterbackControls -->
+    <create class="FootballQuarterbackControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_SPORTS_FOOTBALL_QBCK" type="int" name="FootballQuarterbackGenre" class="SharpDX.DirectInput.FootballQuarterbackControls" />
+    <const from-macro="DIAXIS_FOOTBALLQ_(.*)" type="int" name="$1" class="SharpDX.DirectInput.FootballQuarterbackControls" />
+    <const from-macro="DIBUTTON_FOOTBALLQ_(.*)" type="int" name="$1" class="SharpDX.DirectInput.FootballQuarterbackControls"/>
+
+    <!-- class SharpDX.DirectInput.GolfControls -->
+    <create class="GolfControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_SPORTS_GOLF" type="int" name="GolfGenre" class="SharpDX.DirectInput.GolfControls" />
+    <const from-macro="DIAXIS_GOLF_(.*)" type="int" name="$1" class="SharpDX.DirectInput.GolfControls" />
+    <const from-macro="DIBUTTON_GOLF_(.*)" type="int" name="$1" class="SharpDX.DirectInput.GolfControls"/>
+
+    <!-- class SharpDX.DirectInput.HandToHandControls -->
+    <create class="HandToHandControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_FIGHTING_HAND2HAND" type="int" name="HandToHandGenre" class="SharpDX.DirectInput.HandToHandControls" />
+    <const from-macro="DIAXIS_FIGHTINGH_(.*)" type="int" name="$1" class="SharpDX.DirectInput.HandToHandControls" />
+    <const from-macro="DIBUTTON_FIGHTINGH_(.*)" type="int" name="$1" class="SharpDX.DirectInput.HandToHandControls"/>
+    <const from-macro="DIHATSWITCH_FIGHTINGH_(.*)" type="int" name="$1" class="SharpDX.DirectInput.HandToHandControls"/>
+
+    <!-- class SharpDX.DirectInput.HelicopterCombatControls -->
+    <create class="HelicopterCombatControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_FLYING_HELICOPTER" type="int" name="HelicopterCombatGenre" class="SharpDX.DirectInput.HelicopterCombatControls" />
+    <const from-macro="DIAXIS_FLYINGH_(.*)" type="int" name="$1" class="SharpDX.DirectInput.HelicopterCombatControls" />
+    <const from-macro="DIBUTTON_FLYINGH_(.*)" type="int" name="$1" class="SharpDX.DirectInput.HelicopterCombatControls"/>
+    <const from-macro="DIHATSWITCH_FLYINGH_(.*)" type="int" name="$1" class="SharpDX.DirectInput.HelicopterCombatControls"/>
+
+    <!-- class SharpDX.DirectInput.HockeyDefenseControls -->
+    <create class="HockeyDefenseControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_SPORTS_HOCKEY_DEFENSE" type="int" name="HockeyDefenseGenre" class="SharpDX.DirectInput.HockeyDefenseControls" />
+    <const from-macro="DIAXIS_HOCKEYD_(.*)" type="int" name="$1" class="SharpDX.DirectInput.HockeyDefenseControls" />
+    <const from-macro="DIBUTTON_HOCKEYD_(.*)" type="int" name="$1" class="SharpDX.DirectInput.HockeyDefenseControls"/>
+    <const from-macro="DIHATSWITCH_HOCKEYD_(.*)" type="int" name="$1" class="SharpDX.DirectInput.HockeyDefenseControls"/>
+
+    <!-- class SharpDX.DirectInput.HockeyGoalieControls -->
+    <create class="HockeyGoalieControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_SPORTS_HOCKEY_GOALIE" type="int" name="HockeyGoalieGenre" class="SharpDX.DirectInput.HockeyGoalieControls" />
+    <const from-macro="DIAXIS_HOCKEYG_(.*)" type="int" name="$1" class="SharpDX.DirectInput.HockeyGoalieControls" />
+    <const from-macro="DIBUTTON_HOCKEYG_(.*)" type="int" name="$1" class="SharpDX.DirectInput.HockeyGoalieControls"/>
+    <const from-macro="DIHATSWITCH_HOCKEYG_(.*)" type="int" name="$1" class="SharpDX.DirectInput.HockeyGoalieControls"/>
+
+    <!-- class SharpDX.DirectInput.HockeyOffenseControls -->
+    <create class="HockeyOffenseControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_SPORTS_HOCKEY_OFFENSE" type="int" name="HockeyOffenseGenre" class="SharpDX.DirectInput.HockeyOffenseControls" />
+    <const from-macro="DIAXIS_HOCKEYO_(.*)" type="int" name="$1" class="SharpDX.DirectInput.HockeyOffenseControls" />
+    <const from-macro="DIBUTTON_HOCKEYO_(.*)" type="int" name="$1" class="SharpDX.DirectInput.HockeyOffenseControls"/>
+    <const from-macro="DIHATSWITCH_HOCKEYO_(.*)" type="int" name="$1" class="SharpDX.DirectInput.HockeyOffenseControls"/>
+
+    <!-- class SharpDX.DirectInput.HuntingControls -->
+    <create class="HuntingControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_SPORTS_HUNTING" type="int" name="HuntingGenre" class="SharpDX.DirectInput.HuntingControls" />
+    <const from-macro="DIAXIS_HUNTING_(.*)" type="int" name="$1" class="SharpDX.DirectInput.HuntingControls" />
+    <const from-macro="DIBUTTON_HUNTING_(.*)" type="int" name="$1" class="SharpDX.DirectInput.HuntingControls"/>
+    <const from-macro="DIHATSWITCH_HUNTING_(.*)" type="int" name="$1" class="SharpDX.DirectInput.HuntingControls"/>
+
+    <!-- class SharpDX.DirectInput.MechanicalFightingControls -->
+    <create class="MechanicalFightingControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_DRIVING_MECHA" type="int" name="MechanicalFightingGenre" class="SharpDX.DirectInput.MechanicalFightingControls" />
+    <const from-macro="DIAXIS_MECHA_(.*)" type="int" name="$1" class="SharpDX.DirectInput.MechanicalFightingControls" />
+    <const from-macro="DIBUTTON_MECHA_(.*)" type="int" name="$1" class="SharpDX.DirectInput.MechanicalFightingControls"/>
+    <const from-macro="DIHATSWITCH_MECHA_(.*)" type="int" name="$1" class="SharpDX.DirectInput.MechanicalFightingControls"/>
+
+    <!-- class SharpDX.DirectInput.Models3DControls -->
+    <create class="Models3DControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_CAD_MODEL" type="int" name="Models3DGenre" class="SharpDX.DirectInput.Models3DControls" />
+    <const from-macro="DIAXIS_CADM_(.*)" type="int" name="$1" class="SharpDX.DirectInput.Models3DControls" />
+    <const from-macro="DIBUTTON_CADM_(.*)" type="int" name="$1" class="SharpDX.DirectInput.Models3DControls"/>
+    <const from-macro="DIHATSWITCH_CADM_(.*)" type="int" name="$1" class="SharpDX.DirectInput.Models3DControls"/>
+
+    <!-- class SharpDX.DirectInput.MountainBikingControls -->
+    <create class="MountainBikingControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_SPORTS_BIKING_MOUNTAIN" type="int" name="MountainBikingGenre" class="SharpDX.DirectInput.MountainBikingControls" />
+    <const from-macro="DIAXIS_BIKINGM_(.*)" type="int" name="$1" class="SharpDX.DirectInput.MountainBikingControls" />
+    <const from-macro="DIBUTTON_BIKINGM_(.*)" type="int" name="$1" class="SharpDX.DirectInput.MountainBikingControls"/>
+    <const from-macro="DIHATSWITCH_BIKINGM_(.*)" type="int" name="$1" class="SharpDX.DirectInput.MountainBikingControls"/>
+
+    <!-- class SharpDX.DirectInput.Navigation3DControls -->
+    <create class="Navigation3DControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_CAD_FLYBY" type="int" name="Navigation3DGenre" class="SharpDX.DirectInput.Navigation3DControls" />
+    <const from-macro="DIAXIS_CADF_(.*)" type="int" name="$1" class="SharpDX.DirectInput.Navigation3DControls" />
+    <const from-macro="DIBUTTON_CADF_(.*)" type="int" name="$1" class="SharpDX.DirectInput.Navigation3DControls"/>
+    <const from-macro="DIHATSWITCH_CADF_(.*)" type="int" name="$1" class="SharpDX.DirectInput.Navigation3DControls"/>
+
+    <!-- class SharpDX.DirectInput.ObjectGuid -->
+    <create class="ObjectGuid" visibility="public sealed"/>
+    <const from-guid="GUID_(XAxis)" class="SharpDX.DirectInput.ObjectGuid" type="string" name="$1Str" visibility="public const">"$1"</const>
+    <const from-guid="GUID_(YAxis)" class="SharpDX.DirectInput.ObjectGuid" type="string" name="$1Str" visibility="public const">"$1"</const>
+    <const from-guid="GUID_(ZAxis)" class="SharpDX.DirectInput.ObjectGuid" type="string" name="$1Str" visibility="public const">"$1"</const>
+    <const from-guid="GUID_(RxAxis)" class="SharpDX.DirectInput.ObjectGuid" type="string" name="$1Str" visibility="public const">"$1"</const>
+    <const from-guid="GUID_(RyAxis)" class="SharpDX.DirectInput.ObjectGuid" type="string" name="$1Str" visibility="public const">"$1"</const>
+    <const from-guid="GUID_(RzAxis)" class="SharpDX.DirectInput.ObjectGuid" type="string" name="$1Str" visibility="public const">"$1"</const>
+    <const from-guid="GUID_(Button)" class="SharpDX.DirectInput.ObjectGuid" type="string" name="$1Str" visibility="public const">"$1"</const>
+    <const from-guid="GUID_(Key)" class="SharpDX.DirectInput.ObjectGuid" type="string" name="$1Str" visibility="public const">"$1"</const>
+    <const from-guid="GUID_(Slider)" class="SharpDX.DirectInput.ObjectGuid" type="string" name="$1Str" visibility="public const">"$1"</const>
+    <const from-guid="GUID_POV" class="SharpDX.DirectInput.ObjectGuid" type="string" name="PovControllerStr" visibility="public const">"$1"</const>
+    <const from-guid="GUID_(Unknown)" class="SharpDX.DirectInput.ObjectGuid" type="string" name="$1Str" visibility="public const">"$1"</const>
+
+    <!-- class SharpDX.DirectInput.Objects2DControls -->
+    <create class="Objects2DControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_CAD_2DCONTROL" type="int" name="Objects2DGenre" class="SharpDX.DirectInput.Objects2DControls" />
+    <const from-macro="DIAXIS_2DCONTROL_(.*)" type="int" name="$1" class="SharpDX.DirectInput.Objects2DControls" />
+    <const from-macro="DIBUTTON_2DCONTROL_(.*)" type="int" name="$1" class="SharpDX.DirectInput.Objects2DControls"/>
+    <const from-macro="DIHATSWITCH_2DCONTROL_(.*)" type="int" name="$1" class="SharpDX.DirectInput.Objects2DControls"/>
+
+    <!-- class SharpDX.DirectInput.Objects3DControls -->
+    <create class="Objects3DControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_CAD_3DCONTROL" type="int" name="Objects3DGenre" class="SharpDX.DirectInput.Objects3DControls" />
+    <const from-macro="DIAXIS_3DCONTROL_(.*)" type="int" name="$1" class="SharpDX.DirectInput.Objects3DControls" />
+    <const from-macro="DIBUTTON_3DCONTROL_(.*)" type="int" name="$1" class="SharpDX.DirectInput.Objects3DControls"/>
+    <const from-macro="DIHATSWITCH_3DCONTROL_(.*)" type="int" name="$1" class="SharpDX.DirectInput.Objects3DControls"/>
+
+    <!-- class SharpDX.DirectInput.PlatformControls -->
+    <create class="PlatformControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_ARCADE_PLATFORM" type="int" name="PlatformGenre" class="SharpDX.DirectInput.PlatformControls" />
+    <const from-macro="DIAXIS_ARCADEP_(.*)" type="int" name="$1" class="SharpDX.DirectInput.PlatformControls" />
+    <const from-macro="DIBUTTON_ARCADEP_(.*)" type="int" name="$1" class="SharpDX.DirectInput.PlatformControls"/>
+    <const from-macro="DIHATSWITCH_ARCADEP_(.*)" type="int" name="$1" class="SharpDX.DirectInput.PlatformControls"/>
+
+    <!-- class SharpDX.DirectInput.RacingControls -->
+    <create class="RacingControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_DRIVING_RACE" type="int" name="RacingGenre" class="SharpDX.DirectInput.RacingControls" />
+    <const from-macro="DIAXIS_DRIVINGR_STEER" type="int" name="Steer" class="SharpDX.DirectInput.RacingControls" />
+    <const from-macro="DIAXIS_DRIVINGR_ACCELERATE" type="int" name="Accelerate" class="SharpDX.DirectInput.RacingControls" />
+    <const from-macro="DIAXIS_DRIVINGR_BRAKE" type="int" name="BrakeAxis" class="SharpDX.DirectInput.RacingControls" />
+    <const from-macro="DIAXIS_DRIVINGR_ACCEL_AND_BRAKE" type="int" name="AccelerateAndBrake" class="SharpDX.DirectInput.RacingControls" />
+    <const from-macro="DIBUTTON_DRIVINGR_(.*)" type="int" name="$1" class="SharpDX.DirectInput.RacingControls"/>
+    <const from-macro="DIHATSWITCH_DRIVINGR_(.*)" type="int" name="$1" class="SharpDX.DirectInput.RacingControls"/>
+
+    <!-- class SharpDX.DirectInput.RacquetControls -->
+    <create class="RacquetControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_SPORTS_RACQUET" type="int" name="RacquetGenre" class="SharpDX.DirectInput.RacquetControls" />
+    <const from-macro="DIAXIS_RACQUET_(.*)" type="int" name="$1" class="SharpDX.DirectInput.RacquetControls" />
+    <const from-macro="DIBUTTON_RACQUET_(.*)" type="int" name="$1" class="SharpDX.DirectInput.RacquetControls"/>
+    <const from-macro="DIHATSWITCH_RACQUET_(.*)" type="int" name="$1" class="SharpDX.DirectInput.RacquetControls"/>
+
+    <!-- class SharpDX.DirectInput.RemoteControls -->
+    <create class="RemoteControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_REMOTE_CONTROL" type="int" name="RacquetGenre" class="SharpDX.DirectInput.RemoteControls" />
+    <const from-macro="DIAXIS_REMOTE_(.*)" type="int" name="$1" class="SharpDX.DirectInput.RemoteControls" />
+    <const from-macro="DIBUTTON_REMOTE_(.*)" type="int" name="$1" class="SharpDX.DirectInput.RemoteControls"/>
+
+    <!-- class SharpDX.DirectInput.ResultCode -->
+    <create class="ResultCode" visibility="public sealed"/>    
+    <const from-macro="DI_OK" type="SharpDX.Result" cpp-type="int" name="Ok" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DI_NOTATTACHED" type="SharpDX.Result" cpp-type="int" name="NotAttached" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DI_BUFFEROVERFLOW" type="SharpDX.Result" cpp-type="int" name="BufferOverflow" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DI_PROPNOEFFECT" type="SharpDX.Result" cpp-type="int" name="PropertyHadNoEffect" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DI_NOEFFECT" type="SharpDX.Result" cpp-type="int" name="NoEffect" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DI_POLLEDDEVICE" type="SharpDX.Result" cpp-type="int" name="PolledDevice" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DI_DOWNLOADSKIPPED" type="SharpDX.Result" cpp-type="int" name="DownloadSkipped" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DI_EFFECTRESTARTED" type="SharpDX.Result" cpp-type="int" name="EffectRestarted" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DI_TRUNCATED" type="SharpDX.Result" cpp-type="int" name="Truncated" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DI_SETTINGSNOTSAVED" type="SharpDX.Result" cpp-type="int" name="SettingsNotSaved" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DI_TRUNCATEDANDRESTARTED" type="SharpDX.Result" cpp-type="int" name="TruncatedAndRestarted" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DI_WRITEPROTECT" type="SharpDX.Result" cpp-type="int" name="WriteProtect" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_READONLY" type="SharpDX.Result" cpp-type="int" name="ReadOnly" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_NOTFOUND" type="SharpDX.Result" cpp-type="int" name="NotFound" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_MAPFILEFAIL" type="SharpDX.Result" cpp-type="int" name="MapFileFail" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_ALREADYINITIALIZED" type="SharpDX.Result" cpp-type="int" name="AlreadyInitialized" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_INCOMPLETEEFFECT" type="SharpDX.Result" cpp-type="int" name="IncompleteEffect" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_INVALIDPARAM" type="SharpDX.Result" cpp-type="int" name="InvalidParam" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_EFFECTPLAYING" type="SharpDX.Result" cpp-type="int" name="EffectPlaying" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_NOTINITIALIZED" type="SharpDX.Result" cpp-type="int" name="NotInitialized" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_NOTACQUIRED" type="SharpDX.Result" cpp-type="int" name="NotAcquired" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_HANDLEEXISTS" type="SharpDX.Result" cpp-type="int" name="HandleExists" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_HASEFFECTS" type="SharpDX.Result" cpp-type="int" name="HasEffects" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_OLDDIRECTINPUTVERSION" type="SharpDX.Result" cpp-type="int" name="OldDirectInputVersion" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_NOAGGREGATION" type="SharpDX.Result" cpp-type="int" name="NoAggregation" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_MOREDATA" type="SharpDX.Result" cpp-type="int" name="MoreData" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_DEVICEFULL" type="SharpDX.Result" cpp-type="int" name="DeviceFull" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_REPORTFULL" type="SharpDX.Result" cpp-type="int" name="ReportFull" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_NOTDOWNLOADED" type="SharpDX.Result" cpp-type="int" name="NotDownloaded" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_NOTBUFFERED" type="SharpDX.Result" cpp-type="int" name="NotBuffered" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_OBJECTNOTFOUND" type="SharpDX.Result" cpp-type="int" name="ObjectNotFound" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_INSUFFICIENTPRIVS" type="SharpDX.Result" cpp-type="int" name="InsufficientPrivileges" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_NOINTERFACE" type="SharpDX.Result" cpp-type="int" name="NoInterface" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_OUTOFMEMORY" type="SharpDX.Result" cpp-type="int" name="OutOfMemory" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_DEVICENOTREG" type="SharpDX.Result" cpp-type="int" name="DeviceNotRegistered" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_GENERIC" type="SharpDX.Result" cpp-type="int" name="Generic" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_OTHERAPPHASPRIO" type="SharpDX.Result" cpp-type="int" name="OtherApplicationHasPriority" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_NOTEXCLUSIVEACQUIRED" type="SharpDX.Result" cpp-type="int" name="NotExclusiveAcquired" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_INPUTLOST" type="SharpDX.Result" cpp-type="int" name="InputLost" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_BETADIRECTINPUTVERSION" type="SharpDX.Result" cpp-type="int" name="BetaDirectInputVersion" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_BADDRIVERVER" type="SharpDX.Result" cpp-type="int" name="BadDriverVersion" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DIERR_(.*)" type="SharpDX.Result" cpp-type="int" name="$1" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+
+    <!-- class SharpDX.DirectInput.RolePlayingControls -->
+    <create class="RolePlayingControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_STRATEGY_ROLEPLAYING" type="int" name="RolePlayingGenre" class="SharpDX.DirectInput.RolePlayingControls" />
+    <const from-macro="DIAXIS_STRATEGYR_(.*)" type="int" name="$1" class="SharpDX.DirectInput.RolePlayingControls" />
+    <const from-macro="DIBUTTON_STRATEGYR_(.*)" type="int" name="$1" class="SharpDX.DirectInput.RolePlayingControls"/>
+    <const from-macro="DIHATSWITCH_STRATEGYR_(.*)" type="int" name="$1" class="SharpDX.DirectInput.RolePlayingControls"/>
+
+    <!-- class SharpDX.DirectInput.ShootingControls -->
+    <create class="ShootingControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_FPS_FPS" type="int" name="ShootingGenre" class="SharpDX.DirectInput.ShootingControls" />
+    <const from-macro="DIAXIS_FPS_(.*)" type="int" name="$1" class="SharpDX.DirectInput.ShootingControls" />
+    <const from-macro="DIBUTTON_FPS_(.*)" type="int" name="$1" class="SharpDX.DirectInput.ShootingControls"/>
+    <const from-macro="DIHATSWITCH_FPS_(.*)" type="int" name="$1" class="SharpDX.DirectInput.ShootingControls"/>
+
+    <!-- class SharpDX.DirectInput.SideToSideControls -->
+    <create class="SideToSideControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_ARCADE_SIDE2SIDE" type="int" name="SideToSideGenre" class="SharpDX.DirectInput.SideToSideControls" />
+    <const from-macro="DIAXIS_ARCADES_(.*)" type="int" name="$1" class="SharpDX.DirectInput.SideToSideControls" />
+    <const from-macro="DIBUTTON_ARCADES_(.*)" type="int" name="$1" class="SharpDX.DirectInput.SideToSideControls"/>
+    <const from-macro="DIHATSWITCH_ARCADES_(.*)" type="int" name="$1" class="SharpDX.DirectInput.SideToSideControls"/>
+
+    <!-- class SharpDX.DirectInput.SkiingControls -->
+    <create class="SkiingControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_SPORTS_SKIING" type="int" name="SkiingGenre" class="SharpDX.DirectInput.SkiingControls" />
+    <const from-macro="DIAXIS_SKIING_(.*)" type="int" name="$1" class="SharpDX.DirectInput.SkiingControls" />
+    <const from-macro="DIBUTTON_SKIING_(.*)" type="int" name="$1" class="SharpDX.DirectInput.SkiingControls"/>
+    <const from-macro="DIHATSWITCH_SKIING_(.*)" type="int" name="$1" class="SharpDX.DirectInput.SkiingControls"/>
+
+    <!-- class SharpDX.DirectInput.SoccerDefenseControls -->
+    <create class="SoccerDefenseControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_SPORTS_SOCCER_DEFENSE" type="int" name="SoccerDefenseGenre" class="SharpDX.DirectInput.SoccerDefenseControls" />
+    <const from-macro="DIAXIS_SOCCERD_(.*)" type="int" name="$1" class="SharpDX.DirectInput.SoccerDefenseControls" />
+    <const from-macro="DIBUTTON_SOCCERD_(.*)" type="int" name="$1" class="SharpDX.DirectInput.SoccerDefenseControls"/>
+    <const from-macro="DIHATSWITCH_SOCCERD_(.*)" type="int" name="$1" class="SharpDX.DirectInput.SoccerDefenseControls"/>
+
+    <!-- class SharpDX.DirectInput.SoccerOffenceControls -->
+    <create class="SoccerOffenceControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_SPORTS_SOCCER_OFFENSE" type="int" name="SoccerOffenceGenre" class="SharpDX.DirectInput.SoccerOffenceControls" />
+    <const from-macro="DIAXIS_SOCCERO_(.*)" type="int" name="$1" class="SharpDX.DirectInput.SoccerOffenceControls" />
+    <const from-macro="DIBUTTON_SOCCERO_(.*)" type="int" name="$1" class="SharpDX.DirectInput.SoccerOffenceControls"/>
+    <const from-macro="DIHATSWITCH_SOCCERO_(.*)" type="int" name="$1" class="SharpDX.DirectInput.SoccerOffenceControls"/>
+
+    <!-- class SharpDX.DirectInput.SpaceCombatControls -->
+    <create class="SpaceCombatControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_SPACESIM" type="int" name="SpaceCombatGenre" class="SharpDX.DirectInput.SpaceCombatControls" />
+    <const from-macro="DIAXIS_SPACESIM_(.*)" type="int" name="$1" class="SharpDX.DirectInput.SpaceCombatControls" />
+    <const from-macro="DIBUTTON_SPACESIM_(.*)" type="int" name="$1" class="SharpDX.DirectInput.SpaceCombatControls"/>
+    <const from-macro="DIHATSWITCH_SPACESIM_(.*)" type="int" name="$1" class="SharpDX.DirectInput.SpaceCombatControls"/>
+
+    <!-- class SharpDX.DirectInput.TankDrivingControls -->
+    <create class="TankDrivingControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_DRIVING_TANK" type="int" name="TankDrivingGenre" class="SharpDX.DirectInput.TankDrivingControls" />
+    <const from-macro="DIAXIS_DRIVINGT_BRAKE" type="int" name="BrakeAxis" class="SharpDX.DirectInput.TankDrivingControls" />
+    <const from-macro="DIAXIS_DRIVINGT_ACCEL_AND_BRAKE" type="int" name="AccelerateAndBrake" class="SharpDX.DirectInput.TankDrivingControls" />
+    <const from-macro="DIAXIS_DRIVINGT_(.*)" type="int" name="$1" class="SharpDX.DirectInput.TankDrivingControls" />
+    <const from-macro="DIBUTTON_DRIVINGT_(.*)" type="int" name="$1" class="SharpDX.DirectInput.TankDrivingControls"/>
+    <const from-macro="DIHATSWITCH_DRIVINGT_(.*)" type="int" name="$1" class="SharpDX.DirectInput.TankDrivingControls"/>
+
+    <!-- class SharpDX.DirectInput.ThirdPersonControls -->
+    <create class="ThirdPersonControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_FIGHTING_THIRDPERSON" type="int" name="TankDrivingGenre" class="SharpDX.DirectInput.ThirdPersonControls" />
+    <const from-macro="DIAXIS_TPS_(.*)" type="int" name="$1" class="SharpDX.DirectInput.ThirdPersonControls" />
+    <const from-macro="DIBUTTON_TPS_(.*)" type="int" name="$1" class="SharpDX.DirectInput.ThirdPersonControls"/>
+    <const from-macro="DIHATSWITCH_TPS_(.*)" type="int" name="$1" class="SharpDX.DirectInput.ThirdPersonControls"/>
+
+    <!-- class SharpDX.DirectInput.TurnBasedControls -->
+    <create class="TurnBasedControls" visibility="public"/>
+    <const from-macro="DIVIRTUAL_STRATEGY_TURN" type="int" name="TankDrivingGenre" class="SharpDX.DirectInput.TurnBasedControls" />
+    <const from-macro="DIAXIS_STRATEGYT_(.*)" type="int" name="$1" class="SharpDX.DirectInput.TurnBasedControls" />
+    <const from-macro="DIBUTTON_STRATEGYT_(.*)" type="int" name="$1" class="SharpDX.DirectInput.TurnBasedControls"/>
+    <const from-macro="DIHATSWITCH_STRATEGYT_(.*)" type="int" name="$1" class="SharpDX.DirectInput.TurnBasedControls"/>
+
+    <!-- class SharpDX.DirectInput.EffectGuid -->
+    <create class="PropertyGuids" visibility="internal sealed"/>
+    <const from-macro="DIPROP_(.*)" class="SharpDX.DirectInput.PropertyGuids" type="System.IntPtr" cpp-type="int" cpp-cast="(int)&amp;" name="$1" visibility="public static readonly">new System.IntPtr($1)</const>
+
+    <!-- enum SharpDX.DirectInput.CooperativeLevel -->
+    <create-cpp enum="DISCL" macro="DISCL_.*"/>
+
+    <!-- enum SharpDX.DirectInput.DataFormatFlag -->
+    <create-cpp enum="DIDF" macro="DIDF_.*"/>
+
+    <!-- enum SharpDX.DirectInput.DeviceAxisMode -->
+    <create-cpp enum="DIPROPAXISMODE" macro="DIPROPAXISMODE_.*"/>
+
+    <!-- enum SharpDX.DirectInput.DeviceClass -->
+    <create-cpp enum="DI8DEVCLASS" macro="DI8DEVCLASS_.*"/>
+
+    <!-- enum SharpDX.DirectInput.DeviceEnumerationFlags -->
+    <create-cpp enum="DIEDFL" macro="DIEDFL_.*"/>
+
+    <!-- enum SharpDX.DirectInput.DeviceFlags -->
+    <create-cpp enum="DIDC" macro="DIDC_.*"/>
+
+    <!-- class SharpDX.DirectInput.DeviceType -->
+    <create-cpp enum="DI8DEVTYPE" macro="DI8DEVTYPE_.*"/>
+
+    <!-- class SharpDX.DirectInput.EffectFileFlags -->
+    <create-cpp enum="DIFEF" macro="DIFEF_.*"/>
+
+    <!-- class SharpDX.DirectInput.EffectFlags -->
+    <create-cpp enum="DIEFF" macro="DIEFF_.*"/>
+
+    <!-- class SharpDX.DirectInput.EffectParameterFlags -->
+    <create-cpp enum="DIEP" macro="DIEP_.*"/>
+
+    <!-- class SharpDX.DirectInput.EffectPlayFlags -->
+    <create-cpp enum="DIES" macro="DIES_.*" />
+
+    <!-- class SharpDX.DirectInput.EffectStatus -->
+    <create-cpp enum="DIEGES" macro="DIEGES_.*" />
+
+    <!-- class SharpDX.DirectInput.EffectType -->
+    <create-cpp enum="DIEFT" macro="DIEFT_.*" />
+
+    <!-- class SharpDX.DirectInput.ImageUsage -->
+    <create-cpp enum="DIDIFT" macro="DIDIFT_.*"/>
+
+    <!-- class SharpDX.DirectInput.Key -->
+    <create-cpp enum="DIK" macro="DIK_.*"/>
+
+    <!-- class SharpDX.DirectInput.MouseOffsets -->
+    <create-cpp enum="DIMOFS" macro="DIMOFS_.*"/>
+
+    <!-- class SharpDX.DirectInput.JoystickOffsets -->
+    <create-cpp enum="DIJOFS" macro="DIJOFS_.*"/>
+
+    <!-- class SharpDX.DirectInput.DIDOI -->
+    <create-cpp enum="DIDOI" macro="DIDOI_.*"/>
+
+    <!-- class SharpDX.DirectInput.ObjectDeviceTypeFlags -->
+    <create-cpp enum="DIDFT_FLAGS" macro="DIDFT_.*" />
+    <!-- class SharpDX.DirectInput.ObjectDeviceType -->
+    <define enum="SharpDX.DirectInput.DeviceObjectId" sizeof="4" />
+
+    <!-- class SharpDX.DirectInput.TextAlignment -->
+    <create-cpp enum="DIDAL" macro="DIDAL_.*"/>
+
+    <!-- class SharpDX.DirectInput.PropertyHowType -->
+    <create-cpp enum="DIPH" macro="DIPH_.*"/>
+
+    <!-- define enum SharpDX.DirectInput.ObjectDataFormatFlags -->
+    <define enum="SharpDX.DirectInput.ObjectDataFormatFlags" sizeof="4" />
+
+    <create class="DInput"/>
+    <const from-macro="DIRECTINPUT_VERSION" type="int" name="SdkVersion" class="SharpDX.DirectInput.DInput"/>
+
+    <context-clear />
+  </extension>
+
+  <bindings>
+    <bind from="DIDFF" to="SharpDX.DirectInput.ObjectDataFormatFlags" />
+    <bind from="DIDFT" to="SharpDX.DirectInput.DeviceObjectId" />
+  </bindings>
+
+  <mapping>
+    <context>sharpdx-directinput-ext</context>
+    <context>dinput</context>
+    <!--
+    // *****************************************************************
+    // DirectInput Enumerations
+    // *****************************************************************
+    -->
+    <map enum="DISCL" name="CooperativeLevel" flags="true"/>
+    <map enum-item="DISCL_(.*)" name-tmp="$1"/>
+    <map enum-item="DISCL_NONEXCLUSIVE" name="NonExclusive"/>
+    <map enum-item="DISCL_NOWINKEY" name="NoWinKey"/>
+
+    <map enum="DIDF" name="DataFormatFlag"/>
+    <map enum-item="DIDF_ABSAXIS" name="AbsoluteAxis"/>
+    <map enum-item="DIDF_RELAXIS" name="RelativeAxis"/>
+
+    <map enum="DIPROPAXISMODE" name="DeviceAxisMode"/>
+    <map enum-item="DIPROPAXISMODE_ABS" name="Absolute"/>
+    <map enum-item="DIPROPAXISMODE_REL" name="Relative"/>
+
+    <map enum="DI8DEVCLASS" name="DeviceClass"/>
+    <map enum-item="DI8DEVCLASS_(.*)" name-tmp="$1"/>
+    <map enum-item="DI8DEVCLASS_GAMECTRL" name="GameControl"/>
+
+    <map enum="DIEDFL" name="DeviceEnumerationFlags" flags="true"/>
+    <map enum-item="DIEDFL_ALLDEVICES" name="AllDevices"/>
+    <map enum-item="DIEDFL_ATTACHEDONLY" name="AttachedOnly"/>
+    <map enum-item="DIEDFL_FORCEFEEDBACK" name="ForceFeedback"/>
+    <map enum-item="DIEDFL_INCLUDEALIASES" name="IncludeAliases"/>
+    <map enum-item="DIEDFL_INCLUDEPHANTOMS" name="IncludePhantoms"/>
+    <map enum-item="DIEDFL_INCLUDEHIDDEN" name="IncludeHidden"/>
+
+    <map enum="DIDC" name="DeviceFlags" flags="true"/>
+    <map enum-item="DIDC_ATTACHED" name="Attached"/>
+    <map enum-item="DIDC_POLLEDDEVICE" name="PolledDevice"/>
+    <map enum-item="DIDC_EMULATED" name="Emulated"/>
+    <map enum-item="DIDC_POLLEDDATAFORMAT" name="PolledDataFormat"/>
+    <map enum-item="DIDC_FORCEFEEDBACK" name="ForceFeedback"/>
+    <map enum-item="DIDC_FFATTACK" name="ForwardFeedbackAttack"/>
+    <map enum-item="DIDC_FFFADE" name="ForceFeedbackDate"/>
+    <map enum-item="DIDC_SATURATION" name="Saturation"/>
+    <map enum-item="DIDC_POSNEGCOEFFICIENTS" name="PositiveNegativeCoeeficients"/>
+    <map enum-item="DIDC_POSNEGSATURATION" name="PositiveNegativeSaturation"/>
+    <map enum-item="DIDC_DEADBAND" name="DeadBand"/>
+    <map enum-item="DIDC_STARTDELAY" name="StartDelay"/>
+    <map enum-item="DIDC_ALIAS" name="Alias"/>
+    <map enum-item="DIDC_PHANTOM" name="Phantom"/>
+    <map enum-item="DIDC_HIDDEN" name="Hidden"/>
+
+    <map enum="DI8DEVTYPE" name="DeviceType"/>
+    <map enum-item="DI8DEVTYPE_(.*)" name-tmp="$1"/>
+    <map enum-item="DI8DEVTYPE_1STPERSON" name="FirstPerson"/>
+    <map enum-item="DI8DEVTYPE_DEVICECTRL" name="ControlDevice"/>
+    <map enum-item="DI8DEVTYPE_SCREENPOINTER" name="ScreenPointer"/>
+    <remove enum-item="DI8DEVTYPE_LIMITEDGAMESUBTYPE" />
+
+    <map enum="DIFEF" name="EffectFileFlags" flags="true"/>
+    <map enum-item="DIFEF_DEFAULT" name="None"/>
+    <map enum-item="DIFEF_INCLUDENONSTANDARD" name="IncludeNonStandard"/>
+    <map enum-item="DIFEF_MODIFYIFNEEDED" name="ModidyIfNeeded"/>
+    
+    <map enum="DIEFF" name="EffectFlags" flags="true" none="true"/>
+    <map enum-item="DIEFF_(.*)" name-tmp="$1"/>
+    <map enum-item="DIEFF_OBJECTIDS" name="ObjectIds"/>
+    <map enum-item="DIEFF_OBJECTOFFSETS" name="ObjectOffsets"/>
+
+    <!-- class SharpDX.DirectInput.EffectParameterFlags -->
+    <map enum="DIEP" name="EffectParameterFlags" flags="true" none="true"/>
+    <map enum-item="DIEP_(.*)" name-tmp="$1"/>
+    <map enum-item="DIEP_SAMPLEPERIOD" name="SamplePeriod"/>
+    <map enum-item="DIEP_TRIGGERBUTTON" name="TriggerButton"/>
+    <map enum-item="DIEP_TRIGGERREPEATINTERVAL" name="TriggerRepeatInterval"/>
+    <map enum-item="DIEP_TYPESPECIFICPARAMS" name="TypeSpecificParameters"/>
+    <map enum-item="DIEP_STARTDELAY" name="StartDelay"/>
+    <map enum-item="DIEP_ALLPARAMS_DX5" name="AllExceptDelay"/>
+    <map enum-item="DIEP_ALLPARAMS" name="All"/>
+    <map enum-item="DIEP_NORESTART" name="NoRestart"/>
+    <map enum-item="DIEP_NODOWNLOAD" name="NoDownload"/>
+
+    <!-- class SharpDX.DirectInput.EffectPlayFlags -->
+    <map enum="DIES" name="EffectPlayFlags" flags="true" none="true"/>
+    <map enum-item="DIES_SOLO" name="Solo"/>
+    <map enum-item="DIES_NODOWNLOAD" name="NoDownload"/>
+
+    <!-- class SharpDX.DirectInput.EffectStatus -->
+    <map enum="DIEGES" name="EffectStatus" flags="true" none="true"/>
+    <map enum-item="DIEGES_(.*)" name-tmp="$1"/>
+
+    <!-- class SharpDX.DirectInput.EffectType -->
+    <map enum="DIEFT" name="EffectType" flags="true" none="true"/>
+    <map enum-item="DIEFT_(.*)" name-tmp="$1"/>
+    <map enum-item="DIEFT_CONSTANTFORCE" name="ConstantForce"/>
+    <map enum-item="DIEFT_RAMPFORCE" name="RampForce"/>
+    <map enum-item="DIEFT_CUSTOMFORCE" name="CustomForce"/>
+    <map enum-item="DIEFT_FFATTACK" name="Attack"/>
+    <map enum-item="DIEFT_FFFADE" name="Fade"/>
+    <map enum-item="DIEFT_POSNEGCOEFFICIENTS" name="TwoCoefficients"/>
+    <map enum-item="DIEFT_POSNEGSATURATION" name="TwoSaturations"/>
+    <map enum-item="DIEFT_DEADBAND" name="DeadBand"/>
+    <map enum-item="DIEFT_STARTDELAY" name="StartDelay"/>
+
+    <!-- class SharpDX.DirectInput.ImageUsage -->
+    <map enum="DIDIFT" name="ImageUsage"/>
+    <map enum-item="DIDIFT_(.*)" name-tmp="$1"/>
+
+    <!-- class SharpDX.DirectInput.Key -->
+    <map enum="DIK" name="Key"/>
+    <remove enum-item="DIK_BACKSPACE"/>
+    <remove enum-item="DIK_NUMPADSTAR"/>
+    <remove enum-item="DIK_LALT"/>
+    <remove enum-item="DIK_CAPSLOCK"/>
+    <remove enum-item="DIK_NUMPADMINUS"/>
+    <remove enum-item="DIK_NUMPADPLUS"/>
+    <remove enum-item="DIK_NUMPADPERIOD"/>
+    <remove enum-item="DIK_NUMPADSLASH"/>
+    <remove enum-item="DIK_RALT"/>
+    <remove enum-item="DIK_UPARROW"/>
+    <remove enum-item="DIK_PGUP"/>
+    <remove enum-item="DIK_LEFTARROW"/>
+    <remove enum-item="DIK_RIGHTARROW"/>
+    <remove enum-item="DIK_DOWNARROW"/>
+    <remove enum-item="DIK_PGDN"/>
+    <remove enum-item="DIK_CIRCUMFLEX"/>
+    <map enum-item="DIK_([A-Z].*)" name-tmp="$1"/>
+    <map enum-item="DIK_([0-9])" name-tmp="D$1"/>
+    <map enum-item="DIK_UP" name="UpArrow"/>
+    <map enum-item="DIK_Left" name="LeftArrow"/>
+    <map enum-item="DIK_Right" name="RightArrow"/>
+    <map enum-item="DIK_Down" name="DownArrow"/>
+    <map enum-item="DIK_APPS" name="Applications"/>
+    <map enum-item="DIK_AT" name="AT"/>
+    <map enum-item="DIK_AX" name="AX"/>
+    <map enum-item="DIK_CAPSLOCK" name="CapsLock"/>
+    <map enum-item="DIK_LBRACKET" name="LeftBracket"/>
+    <map enum-item="DIK_LCONTROL" name="LeftControl"/>
+    <map enum-item="DIK_LMENU" name="LeftAlt"/>
+    <map enum-item="DIK_LSHIFT" name="LeftShift"/>
+    <map enum-item="DIK_LWIN" name="LeftWindowsKey"/>
+    <map enum-item="DIK_MEDIASELECT" name="MediaSelect"/>
+    <map enum-item="DIK_MEDIASTOP" name="MediaStop"/>
+    <map enum-item="DIK_MYCOMPUTER" name="MyComputer"/>
+    <map enum-item="DIK_NEXTTRACK" name="NextTrack"/>
+    <map enum-item="DIK_NOCONVERT" name="NoConvert"/>
+    <map enum-item="DIK_NUMLOCK" name="NumberLock"/>
+    <map enum-item="DIK_NUMPAD(.*)" name-tmp="Number_Pad_$1"/>
+    <map enum-item="DIK_NEXT" name="PageDown"/>
+    <map enum-item="DIK_PRIOR" name="PageUp"/>
+    <map enum-item="DIK_PLAYPAUSE" name="PlayPause"/>
+    <map enum-item="DIK_PREVTRACK" name="PreviousTrack"/>
+    <map enum-item="DIK_RBRACKET" name="RightBracket"/>
+    <map enum-item="DIK_RCONTROL" name="RightControl"/>
+    <map enum-item="DIK_RMENU" name="RightAlt"/>
+    <map enum-item="DIK_RSHIFT" name="RightShift"/>
+    <map enum-item="DIK_RWIN" name="RightWindowsKey"/>
+    <map enum-item="DIK_SCROLL" name="ScrollLock"/>
+    <map enum-item="DIK_SYSRQ" name="PrintScreen"/>
+    <map enum-item="DIK_VOLUMEDOWN" name="VolumeDown"/>
+    <map enum-item="DIK_VOLUMEUP" name="VolumeUp"/>
+    <map enum-item="DIK_WAKE" name="Wake"/>
+    <map enum-item="DIK_WEB(.*)" name-tmp="Web_$1"/>
+
+    <!-- class SharpDX.DirectInput.MouseOffsets -->
+    <map enum="DIMOFS" name="MouseOffsets" visibility="internal"/>
+
+    <!-- class SharpDX.DirectInput.JoystickOffsets -->
+    <map enum="DIJOFS" name="JoystickOffsets" visibility="internal"/>
+    <map enum-item="DIJOFS_R([XYZ])" name="$1AxisRotation"/>
+    <map enum-item="DIJOFS_([XYZ])" name="$1Axis"/>
+
+    <!-- class SharpDX.DirectInput.ObjectAspect -->
+    <map enum="DIDOI" name="ObjectAspect"/>
+    <map enum-item="DIDOI_ASPECT(.*)" name-tmp="$1"/>
+    <map enum-item="DIDOI_ASPECTACCEL" name="Acceleration"/>
+    <map enum-item="DIDOI_FFACTUATOR" name="ForceFeedbackActuator"/>
+    <map enum-item="DIDOI_FFEFFECTTRIGGER" name="ForceFeedbackTrigger"/>
+    <map enum-item="DIDOI_GUIDISUSAGE" name="GuidIsUsage"/>
+
+    <!-- class SharpDX.DirectInput.ObjectDeviceType -->
+    <map enum="DIDFT_FLAGS" name="DeviceObjectTypeFlags" flags="true" none="false"/>
+    <remove enum-item="DIDFT_INSTANCEMASK"/>
+    <remove enum-item="DIDFT_NOCOLLECTION"/>
+    <map enum-item="DIDFT_(.*)" name-tmp="$1"/>
+    <map enum-item="DIDFT_RELAXIS" name="RelativeAxis"/>
+    <map enum-item="DIDFT_ABSAXIS" name="AbsoluteAxis"/>
+    <map enum-item="DIDFT_PSHBUTTON" name="PushButton"/>
+    <map enum-item="DIDFT_TGLBUTTON" name="ToggleButton"/>
+    <map enum-item="DIDFT_POV" name="PointOfViewController"/>
+    <map enum-item="DIDFT_NODATA" name="NoData"/>
+    <map enum-item="DIDFT_ANYINSTANCE" name="AnyInstance"/>
+    <map enum-item="DIDFT_FFACTUATOR" name="ForceFeedbackActuator"/>
+    <map enum-item="DIDFT_FFEFFECTTRIGGER" name="ForceFeedbackEffectTrigger"/>
+    <map enum-item="DIDFT_VENDORDEFINED" name="VendorDefined"/>
+
+    <!-- class SharpDX.DirectInput.TextAlignment -->
+    <map enum="DIDAL" name="TextAlignment" flags="true"/>
+    <map enum-item="DIDAL_(.*)" name-tmp="$1"/>
+    <map enum-item="DIDAL_(.*)ALIGNED" name-tmp="$1"/>
+
+    <!-- class SharpDX.DirectInput.PropertyHowType -->
+    <map enum="DIPH" name="PropertyHowType" visibility="internal"/>
+    <map enum-item="DIPH_(.*)" name-tmp="$1"/>
+
+    <!--
+    // *****************************************************************
+    // DirectInput Structures
+    // *****************************************************************
+    -->
+    <remove struct="DIACTIONFORMATA" />
+    <remove struct="DIDEVCAPS_DX3" />
+    <remove struct="DIACTIONA" />
+    <remove struct="DICONFIGUREDEVICESPARAMSA" />
+    <remove struct="DIDEVICEIMAGEINFOA" />
+    <remove struct="DIDEVICEIMAGEINFOHEADERA" />
+    <remove struct="DIDEVICEOBJECTINSTANCE_DX3[AW]" />
+    <remove struct="DIDEVICEOBJECTINSTANCEA" />
+    <remove struct="DIDEVICEOBJECTDATA_DX3" />
+    <remove struct="DIDEVICEINSTANCE_DX3|AW]" />
+    <remove struct="DIDEVICEINSTANCEA" />
+    <remove struct="DIEFFECTINFOA" />
+    <remove struct="DIMOUSESTATE" />
+    <remove struct="DIJOYSTATE" />
+    <remove struct="DIEFFECT_DX5" />
+    <remove struct="DIPROPCPOINTS" />
+    <remove struct="DIPROPCALPOV"/>
+    <remove struct="CPOINT"/>
+    
+    <!-- Structure mapped by hand-->
+    <remove struct="DIJOYSTATE2"/>
+    <remove struct="DIMOUSESTATE2"/>
+    <remove struct="DIOBJECTDATAFORMAT"/> 
+
+    <!-- 
+      DIACTIONW has an inner union that we need to remove.
+      This struct will be handled differently
+    -->
+    <map field=".*::dw(.+)" name="$1"/>
+    <map field=".*::dwc([A-Z].+)" name="$1"/>
+    <map field=".*::c([A-Z].+)" name="$1"/>
+    <map field=".*::u([A-Z].+)" name="$1"/>
+    <map field=".*::cb([A-Z].+)" name="$1"/>
+    <map field=".*::[wt]sz(.+)" name="$1"/>
+    <map field=".*::[wl]([A-Z].*)" name="$1"/>
+    <map field=".*::tsz(.+)" name="$1"/>
+    <map field=".*::lpv(.+)" name="$1"/>
+    <map field=".*::lptsz(.+)" name="$1"/>
+    <map field=".*::lprg(.+)" name="$1"/>
+    <map field=".*::lpUnk(.+)" name="$1"/>
+    <map field=".*::dwOfs" name="Offset"/>
+
+
+    <!-- Make all dwSize fields in structure hidden by default -->
+    <map field=".*::dwSize" visibility="internal"/>
+
+
+    <remove field="DIACTIONW::uResIdString"/>
+    <map field="DIACTIONW::lptszActionName" type="void"/>
+    <map struct="DIENVELOPE" name="Envelope"/>
+    <map struct="DIDEVICEINSTANCEW" name="DeviceInstance"/>
+    <map struct="DIDEVICEOBJECTINSTANCEW" name="DeviceObjectInstance"/>
+    <map struct="DIDATAFORMAT" name="DataFormat"/>
+    <map struct="DIACTIONW" name="Action" visibility="internal"/>
+    <map struct="DIEFFECTINFOW" name="EffectInfo"/>
+    <map struct="DIFILEEFFECT" name="EffectFile"/>
+    <map struct="DIACTIONFORMATW" name="ActionFormat" visibility="internal"/>
+    <map struct="DIDEVICEIMAGEINFOW" name="DeviceImage"/>
+    <map struct="DIDEVICEIMAGEINFOHEADERW" name="DeviceImageHeader"/>
+    <map struct="DIEFFECT" name="EffectParameters"/>
+    <map struct="DIDEVICEOBJECTDATA" name="ObjectData" visbility="internal"/>
+    <map struct="DICONFIGUREDEVICESPARAMSW" name="ConfigureDeviceParameters" visibility="internal"/>
+    <map struct="DICOLORSET" name="ColorSet"/>
+    <map struct="DIEFFESCAPE" name="EffectEscape" visibility="internal"/>
+    <map struct="DIDEVCAPS" name="Capabilities"/>
+    <map struct="DIFILEEFFECT" name="EffectFile"/>
+
+    <map field="DIPROP.*::diph" name="Header"/>
+    <!-- generate MarshalTo for all property objects -->
+    <map struct="DIPROP.*" marshalto="true"/>
+    <map struct="DIPROPHEADER" name="PropertyHeader" visibility="internal"/>
+    <map field="DIPROPHEADER::dwHow" name="Type" type="DIPH"/>
+    <map struct="DIPROPDWORD" name="PropertyInt" visibility="internal"/>
+    <map struct="DIPROPCAL" name="PropertyCalibration" visibility="internal"/>    
+    <map struct="DIPROPGUIDANDPATH" name="PropertyGuidAndPath" visibility="internal"/>
+    <map struct="DIPROPPOINTER" name="PropertyPointer" visibility="internal"/>
+    <map struct="DIPROPRANGE" name="PropertyRange" visibility="internal"/>
+    <map struct="DIPROPSTRING" name="PropertyString" visibility="internal"/>
+    <map field="DIPROPSTRING::wsz" name="Text"/>
+    
+
+    <map struct="DICONDITION" name="Condition"/>
+    <map struct="DICUSTOMFORCE" name="RawCustomForce" visibility="internal"/>
+    <map field="DICUSTOMFORCE::rglForceData" name="ForceDataPointer" />
+    <map struct="DIPERIODIC" name="RawPeriodicForce" visibility="internal"/>
+    <map struct="DIRAMPFORCE" name="RawRampForce" visibility="internal"/>
+    <map struct="DICONSTANTFORCE" name="RawConstantForce" visibility="internal"/>
+
+    <map field="DIEFFESCAPE::lpvInBuffer" name="InBufferPointer" visibility="internal"/>
+    <map field="DIEFFESCAPE::cbInBuffer" name="InBufferSize" visibility="internal"/>
+    <map field="DIEFFESCAPE::lpvOutBuffer" name="OutBufferPointer" visibility="internal"/>
+    <map field="DIEFFESCAPE::cbOutBuffer" name="OutBufferSize" visibility="internal"/>
+
+    <map struct="DIDEVCAPS" native="true" struct-to-class="true" marshal="false" new="true" />
+    <map field="DIDEVCAPS::dwSize" visibility="internal"/>
+    <map field="DIDEVCAPS::dwAxes" name="AxeCount"/>
+    <map field="DIDEVCAPS::dwButtons" name="ButtonCount"/>
+    <map field="DIDEVCAPS::dwFFDriverVersion" name="DriverVersion"/>
+    <map field="DIDEVCAPS::dwFFMinTimeResolution" name="ForceFeedbackMinimumTimeResolution"/>
+    <map field="DIDEVCAPS::dwFFSamplePeriod" name="ForceFeedbackSamplePeriod"/>
+    <map field="DIDEVCAPS::dwPOVs" name="PovCount"/>
+    <map field="DIDEVCAPS::dwFlags" type="DIDC"/>
+    <map field="DIDEVCAPS::dwDevType" name="RawType" visibility="internal"/>
+
+    <map struct="DIDEVICEINSTANCEW" struct-to-class="true" new="true" />
+    <map field="DIDEVICEINSTANCEW::dwSize" visibility="internal"/>
+    <map field="DIDEVICEINSTANCEW::guidProduct" name="ProductGuid"/>
+    <map field="DIDEVICEINSTANCEW::guidInstance" name="InstanceGuid"/>
+    <map field="DIDEVICEINSTANCEW::guidFFDriver" name="ForceFeedbackDriverGuid"/>
+    <map field="DIDEVICEINSTANCEW::dwDevType" name="RawType" visibility="internal"/>
+    <map field="DIDEVICEINSTANCEW::wUsagePage" type="HID_USAGE_PAGE"/>
+    <map field="DIDEVICEINSTANCEW::wUsage" type="HID_USAGE_ID"/>
+
+    <map struct="DIDEVICEIMAGEINFOHEADERW" native="true" struct-to-class="true" marshal="true" new="true" />
+    <map field="DIDEVICEIMAGEINFOHEADERW::dwSize" visibility="internal"/>
+    <map field="DIDEVICEIMAGEINFOHEADERW::dwSizeImageInfo" visibility="internal"/>
+    <map field="DIDEVICEIMAGEINFOHEADERW::dwcViews" name="ViewCount"/>
+    <map field="DIDEVICEIMAGEINFOHEADERW::dwcButtons" name="ButtonCount"/>
+    <map field="DIDEVICEIMAGEINFOHEADERW::dwcAxes" name="AxeCount"/>
+    <map field="DIDEVICEIMAGEINFOHEADERW::dwcPOVs" name="PovCount"/>
+    <map field="DIDEVICEIMAGEINFOHEADERW::dwBufferSize" visibility="internal"/>
+    <map field="DIDEVICEIMAGEINFOHEADERW::dwBufferUsed" visibility="internal"/>
+    <map field="DIDEVICEIMAGEINFOHEADERW::lprgImageInfoArray" name="ImageInfoArrayPointer" visibility="internal"/>
+
+    <map field="DICONFIGUREDEVICESPARAMSW::dwcFormats" name="FormatCount"/>
+
+    <map struct="DIDEVICEOBJECTINSTANCEW" native="true" struct-to-class="true" marshal="false" new="true" />
+    <map field="DIDEVICEOBJECTINSTANCEW::dwSize" visibility="internal"/>
+    <map field="DIDEVICEOBJECTINSTANCEW::guidType" name="ObjectType"/>
+    <map field="DIDEVICEOBJECTINSTANCEW::dwType" name="ObjectId" type="DIDFT"/>
+    <map field="DIDEVICEOBJECTINSTANCEW::dwOfs" name="Offset"/>
+    <map field="DIDEVICEOBJECTINSTANCEW::dwFlags" name="Aspect" type="DIDOI"/>
+    <map field="DIDEVICEOBJECTINSTANCEW::dwFFMaxForce" name="MaximumForceFeedback"/>
+    <map field="DIDEVICEOBJECTINSTANCEW::dwFFForceResolution" name="ForceFeedbackResolution"/>
+    <map field="DIDEVICEOBJECTINSTANCEW::wCollectionNumber" name="CollectionNumber"/>
+    <map field="DIDEVICEOBJECTINSTANCEW::wDesignatorIndex" name="DesignatorIndex"/>
+    <map field="DIDEVICEOBJECTINSTANCEW::wUsage" name="Usage"/>
+    <map field="DIDEVICEOBJECTINSTANCEW::wUsagePage" name="UsagePage"/>
+
+    <map struct="DIEFFECTINFOW" native="true" struct-to-class="true" marshal="false" new="true" />
+    <map field="DIEFFECTINFOW::dwSize" visibility="internal"/>
+    <map field="DIEFFECTINFOW::dwEffType" name="Type" type="DIEFT"/>
+    <map field="DIEFFECTINFOW::dwStaticParams" name="StaticParameters" type="DIEP"/>
+    <map field="DIEFFECTINFOW::dwDynamicParams" name="DynamicParameters" type="DIEP"/>
+
+    <map struct="DIFILEEFFECT" native="true" struct-to-class="true" marshal="true" new="true" />
+    <map field="DIFILEEFFECT::dwSize" visibility="internal"/>
+    <map field="DIFILEEFFECT::GuidEffect" name="Guid"/>
+    <map field="DIFILEEFFECT::lpDiEffect" name="EffectParametersPointer" visibility="internal"/>
+    <map field="DIFILEEFFECT::szFriendlyName" name="Name"/>
+
+    <map struct="DIEFFECT" native="true" struct-to-class="true" marshal="true" new="true" />
+    <map field="DIEFFECT::dwSize" visibility="internal"/>
+    <map field="DIEFFECT::dwFlags" type="DIEFF"/>
+    <map field="DIEFFECT::cAxes" name="AxeCount" visibility="internal"/>
+    <map field="DIEFFECT::rgdwAxes" name="AxePointer" visibility="internal"/>
+    <map field="DIEFFECT::rglDirection" name="DirectionPointer" visibility="internal"/>
+    <map field="DIEFFECT::lpEnvelope" name="EnvelopePointer" visibility="internal"/>
+    <map field="DIEFFECT::cbTypeSpecificParams" name="TypeSpecificParamCount" visibility="internal"/>
+    <map field="DIEFFECT::lpvTypeSpecificParams" name="TypeSpecificParamPointer" visibility="internal"/>
+
+    <map struct="DIENVELOPE" native="true" struct-to-class="true" marshal="false" new="true" marshalto="true"/>
+
+    <map field="DIDEVICEOBJECTDATA::dwOfs" name="Offset"/>
+    <map field="DIDEVICEOBJECTDATA::dwData" name="Data"/>
+    <map field="DIDEVICEOBJECTDATA::dwTimeStamp" visibility="internal"/>
+    <map field="DIDEVICEOBJECTDATA::dwSequence" visibility="internal"/>
+    <map field="DIDEVICEOBJECTDATA::uAppData" name="AppDataPointer" visibility="internal"/>
+
+    <map struct="DIDATAFORMAT" visibility="internal" native="true" struct-to-class="true" marshal="true" new="true"/>
+    <map field="DIDATAFORMAT::dwSize" visibility="internal"/>
+    <map field="DIDATAFORMAT::dwFlags" type="DIDF"/>    
+    <map field="DIDATAFORMAT::dwObjSize" name="ObjectSize" visibility="internal"/>
+    <map field="DIDATAFORMAT::dwNumObjs" name="ObjectArrayCount" visibility="internal"/>
+    <map field="DIDATAFORMAT::rgodf" type="void" name="ObjectArrayPointer" visibility="internal"/>
+
+    <!-- Struture mapped by hand 
+    <map struct="DIOBJECTDATAFORMAT" visibility="internal" native="true" struct-to-class="true" marshal="true" marshalto="true"/>
+    <map field="DIOBJECTDATAFORMAT::pguid" name="GuidPointer"/>
+    <map field="DIOBJECTDATAFORMAT::dwType" type="DIDFT"/>
+    <map field="DIOBJECTDATAFORMAT::dwFlags" type="DIDFF"/>
+    -->
+    
+    <!--
+    // *****************************************************************
+    // DirectInput Interfaces
+    // *****************************************************************
+    -->
+    <map interface="IDirectInput8W" name="DirectInput" />
+    <map interface="IDirectInputDevice8W" name="Device"/>
+    <map interface="IDirectInputEffect" name="Effect"/>
+    
+    <remove interface="IDirectInput[27]?[AW]"/>
+    <remove interface="IDirectInputDevice[27]?[AW]"/>
+    <remove interface="IDirectInput8A"/>
+    <remove interface="IDirectInputDevice8A"/>
+
+    <!-- 
+    All Enum methods are using a FunctionCallback that must be implemented 
+    So Mark them as internal.
+    -->
+    <map method=".*::Enum.*" visibility="internal"/>
+    
+    <!-- IDirectInput8 -->
+    <map method="IDirectInput8W::ConfigureDevices" visibility="internal"/>
+    <map method="IDirectInput8W::CreateDevice" visibility="internal"/>
+    <map param="IDirectInput8W::CreateDevice::arg1" type="void" attribute="out" />
+    <map param="IDirectInput8W::EnumDevices::arg3" type="DIEDFL" />
+
+    <map param="IDirectInput8W::FindDevice::arg2" attribute="out" return="true" />
+
+    <map method="IDirectInput8W::GetDeviceStatus" visibility="internal" check="false"/>
+    <map method="IDirectInput8W::RunControlPanel" visibility="internal" />
+    <map method="IDirectInput8W::Initialize" visibility="internal" />
+
+    <!-- IDirectInputDevice8 -->
+    <map method="IDirectInputDevice8W::Escape" visibility="internal" />
+    <map param="IDirectInputDevice8W::GetCapabilities::arg0" attribute="out"/>
+
+    <map method="IDirectInputDevice8W::GetDeviceInfo" name="GetInformation"/>
+    <map param="IDirectInputDevice8W::GetDeviceInfo::arg0" attribute="out"/>
+    
+    <map method="IDirectInputDevice8W::GetImageInfo" visibility="internal"/>
+    <map param="arg0" attribute="inout"/>
+
+    <map method="IDirectInputDevice8W::BuildActionMap" visibility="internal"/>
+    <map method="IDirectInputDevice8W::SetActionMap" visibility="internal"/>
+
+    <map param="IDirectInputDevice8W::GetEffectInfo::arg0" attribute="out" return="true"/>
+    <map param="IDirectInputDevice8W::EnumEffects::arg2" type="DIEFT"/>
+    <map param="IDirectInputDevice8W::EnumEffectsInFile::arg3" type="DIFEF"/>
+
+    <map param="IDirectInputDevice8W::EnumObjects::arg3" type="DIDFT"/>
+    
+    <map method="IDirectInputDevice8W::GetObjectInfo" visibility="internal"/>
+    <map param="IDirectInputDevice8W::GetObjectInfo::arg0" attribute="out" return="true"/>
+    <map param="IDirectInputDevice8W::GetObjectInfo::arg2" type="DIPH"/>
+
+    <map method="IDirectInputDevice8W::[SG]etProperty" visibility="internal"/>
+    <map param="IDirectInputDevice8W::[SG]etProperty::arg[01]" type="void" />
+
+    <map method="IDirectInputDevice8W::GetDeviceState" visibility="internal"/>
+
+    <map method="IDirectInputDevice8W::GetDeviceData" visibility="internal"/>
+    <map param="IDirectInputDevice8W::GetDeviceData::arg1" attribute="in buffer" type="void"/>
+    <map param="IDirectInputDevice8W::GetDeviceData::arg2" attribute="inout"/>
+
+    <map method="IDirectInputDevice8W::SendDeviceData" visibility="internal"/>
+    <map param="IDirectInputDevice8W::SendDeviceData::arg1" attribute="in buffer"/>
+    <map param="IDirectInputDevice8W::SendDeviceData::arg2" attribute="inout"/>
+
+    <map method="IDirectInputDevice8W::SetDataFormat" visibility="internal" propery="false"/>
+    <map method="IDirectInputDevice8W::SetEventNotification" visibility="internal" propery="false"/>
+
+    <map param="IDirectInputDevice8W::SetCooperativeLevel::arg1" type="DISCL"/>
+
+    <map method="IDirectInputDevice8W::Initialize" visibility="internal" />
+    <map method="IDirectInputDevice8W::RunControlPanel" visibility="internal" />
+    <map method="IDirectInputDevice8W::CreateEffect" visibility="internal" />
+    <map method="IDirectInputDevice8W::GetForceFeedbackState" visibility="internal" />
+    <map method="IDirectInputDevice8W::SendForceFeedbackCommand" visibility="internal" />
+
+    <map param="IDirectInputDevice8W::WriteEffectToFile" visibility="internal"/>
+    <map param="IDirectInputDevice8W::WriteEffectToFile::arg2" attribute="in buffer"/>
+
+    <!-- IDirectInputEffect -->
+    <map method="IDirectInputEffect::Escape" visibility="internal"/>
+
+    <map method="IDirectInputEffect::Initialize" visibility="internal"/>
+
+    <map method="IDirectInputEffect::GetEffectGuid" name="GetGuid"/>
+    <map param="IDirectInputEffect::GetEffectGuid::arg0" attribute="out"/>
+
+    <map method="IDirectInputEffect::GetEffectStatus" name="GetStatus"/>
+    <map param="IDirectInputEffect::GetEffectStatus::arg0" attribute="out" type="DIEGES"/>
+
+    <map param="IDirectInputEffect::GetParameters::arg0" attribute="out" return="true"/>
+    <map param="IDirectInputEffect::GetParameters::arg1" type="DIEP"/>
+
+    <map method="IDirectInputEffect::SetParameters" visibility="internal"/>
+    <map param="IDirectInputEffect::SetParameters::arg1" type="DIEP"/>
+
+    <map param="IDirectInputEffect::Start::arg1" type="DIES"/>
+    
+    <!--
+    // *****************************************************************
+    // DirectInput Functions
+    // *****************************************************************
+    -->
+    <remove function="joyConfigChanged" />    
+    <remove function="ShowJoyCPL" />
+
+    <map function="DirectInput.*" dll="dinput8.dll" group="SharpDX.DirectInput.DInput" />
+    <map param="DirectInput8Create::ppvOut" attribute="out"/>
+
+    <context-clear />
+  </mapping>
+</config>

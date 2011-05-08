@@ -1,0 +1,96 @@
+﻿@*
+// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.       
+// -------------------------------------------------------------------------------
+// Override this to modify the sequence of the generated file for this template
+// -------------------------------------------------------------------------------
+*@
+@using SharpDoc.Model
+@using System.Text;
+@using SharpCore.Logging;
+@model SharpDoc.TemplateContext
+@Include("TagResolver", @Model)    
+@Include("LinkResolver", @Model)
+@Include("Setup", @Model)     
+@functions {
+    /// <summary>
+    /// Write all topics and sub topics
+    /// </summary>
+    /// <param name="topics"></param>
+    public void WriteTopic(IEnumerable<NTopic> topics) {
+        foreach (var topic in topics)
+        {
+            Model.Topic = topic;
+            Model.WriteToFile("html\\" + topic.NormalizedId + ".htm", Parse("Topic"));
+            WriteTopic(topic.SubTopics);
+        }
+    }
+}
+
+@{    
+    Model.CopyDirectoryContent("css");
+    Model.CopyDirectoryContent("js");
+    Model.CopyDirectoryContent("images");
+    Model.CopyDirectoryContent("syntaxhighlighter");
+
+    // Write root index.html (which is just a redirect)
+    Model.WriteToFile("index" + Param.FileExt, Parse("Root"));
+
+    // Write all topics
+    WriteTopic(Model.Topics);
+    Model.Topic = null;
+    
+    // Write a link to the root library    
+    Model.WriteToFile("html\\ClassLibrary" + Param.FileExt, Parse("Library"));
+
+    foreach (var assembly in Model.Assemblies)
+    {
+        Model.Assembly = assembly;
+        Model.Namespace = null;
+        Model.Type = null;
+       
+        Logger.Message("Generate documentation for assembly [{0}]", assembly.Name);
+
+        Model.WriteToFile("html\\" + assembly.NormalizedId + Param.FileExt, Parse("Assembly"));
+        
+        foreach (var @namespace in assembly.Namespaces)
+        {
+            Model.Namespace = @namespace;
+            Model.Type = null;
+
+            Model.WriteToFile("html\\" + @namespace.NormalizedId + Param.FileExt, Parse("Namespace"));
+
+            foreach (var type in @namespace.Types)
+            {
+                Model.Type = type;
+                Model.WriteToFile("html\\" + @type.NormalizedId + Param.FileExt, Parse("Type"));
+
+                foreach (var member in type.Members)
+                {
+                    Model.Member = member;
+                    Model.WriteToFile("html\\" + @member.NormalizedId + Param.FileExt, Parse("Member"));
+                }
+                Model.Member = null;
+                Model.Type = null;
+            }
+        }
+    }    
+}
+

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config id="sharpdx-x3daudio" depends="sharpdx-core">
+  <namespace>SharpDX.X3DAudio</namespace>
+  <assembly>SharpDX.X3DAudio</assembly>
+  <include id="x3daudio" file="x3daudio.h" attach="true" />
+  <naming />
+  <types>
+    <create class="SharpDX.X3DAudio.X3DAudio" />
+  </types>
+  <mapping>
+    <context>x3daudio</context>
+    <map enum="X3DAUDIO(.*)" name-tmp="$1" />
+    <map struct="X3DAUDIO(.*)" name-tmp="$1" />
+    <map function="X3DAudio.*" dll="X3DAudio1_7.dll" group="SharpDX.X3DAudio.X3DAudio" />
+    <context-clear />
+  </mapping>
+</config>

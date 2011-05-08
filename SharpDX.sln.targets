@@ -1,0 +1,8 @@
+<!-- Common Targets used by SharpDX projects -->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask AssemblyFile="$(SolutionDir)Source\Bin\SharpCli.exe" TaskName="SharpCli.InteropBuilderTask" />
+  <Target Name="AfterBuild">
+    <InteropBuilderTask FileName="$(TargetPath)"/>
+    <Copy SourceFiles="@(MainAssembly)" DestinationFiles="@(IntermediateAssembly)"/>
+  </Target>
+</Project>

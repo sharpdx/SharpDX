@@ -1,0 +1,78 @@
+﻿// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+using System;
+using System.Runtime.InteropServices;
+
+namespace SharpDX.Direct2D1
+{
+    /// <summary>
+    /// Internal GeometrySink Callback
+    /// </summary>
+    internal partial class GeometrySinkCallback : SimplifiedGeometrySinkCallback
+    {
+        GeometrySink Callback { get; set; }
+
+        public GeometrySinkCallback(GeometrySink callback) : base(callback, 5)
+        {
+            Callback = callback;
+            AddMethod(new AddLineDelegate(AddLineImpl));
+            AddMethod(new AddBezierDelegate(AddBezierImpl));
+            AddMethod(new AddQuadraticBezierDelegate(AddQuadraticBezierImpl));
+            AddMethod(new AddQuadraticBeziersDelegate(AddQuadraticBeziersImpl));
+            AddMethod(new AddArcDelegate(AddArcImpl));
+        }
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        private delegate void AddLineDelegate(System.Drawing.PointF point);
+        private unsafe void AddLineImpl(System.Drawing.PointF point)
+        {
+            Callback.AddLine(point);
+        }
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        private delegate void AddBezierDelegate(IntPtr bezier);
+        private unsafe void AddBezierImpl(IntPtr bezier)
+        {
+            Callback.AddBezier(*((SharpDX.Direct2D1.BezierSegment*)bezier));
+        }
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        private delegate void AddQuadraticBezierDelegate(IntPtr bezier);
+        private unsafe void AddQuadraticBezierImpl(IntPtr bezier)
+        {
+            Callback.AddQuadraticBezier(*((SharpDX.Direct2D1.QuadraticBezierSegment*)bezier));
+        }
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        private delegate void AddQuadraticBeziersDelegate(IntPtr beziers, int beziersCount);
+        private unsafe void AddQuadraticBeziersImpl(IntPtr beziers, int beziersCount)
+        {
+            SharpDX.Direct2D1.QuadraticBezierSegment[] managedBeziers = new SharpDX.Direct2D1.QuadraticBezierSegment[beziersCount];
+            Utilities.Read(beziers, managedBeziers, 0, beziersCount);
+            Callback.AddQuadraticBeziers(managedBeziers);
+        }
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        private delegate void AddArcDelegate(IntPtr arc);
+        private unsafe void AddArcImpl(IntPtr arc)
+        {
+            Callback.AddArc(*((ArcSegment*) arc));
+        }
+    }
+}

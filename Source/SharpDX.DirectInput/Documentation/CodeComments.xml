@@ -1,0 +1,221 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+-->
+<comments><comment id="DISCL_EXCLUSIVE"><summary>	
+The application is requesting an exclusive access to the device. If the exclusive access is authorized, no other instance of the device can get an exclusive access to the device while it is acquired. Note that non-exclusive access to the input device is always authorized, even when another application has an exclusive access.  In exclusive mode, an application that acquires the mouse or keyboard device must unacquire the input device when it receives a windows event message WM_ENTERSIZEMOVE or WM_ENTERMENULOOP. Otherwise, the user won't be able to access to the menu or move and resize the window.
+</summary></comment>
+<comment id="DISCL_NONEXCLUSIVE"><summary>	
+The application is requesting a non-exclusive access to the device. There is no interference even if another application is using the same device. 
+</summary></comment>
+<comment id="DISCL_FOREGROUND"><summary>	
+The application is requesting a foreground access to the device. If the foreground access is authorized and the associated window moves to the background, the device is automatically unacquired.
+</summary></comment>
+<comment id="DISCL_BACKGROUND"><summary>	
+The application is requesting a background access to the device. If background access is authorized, the device can be acquired even when the associated window is not the active window.
+</summary></comment>
+<comment id="DISCL_NOWINKEY"><summary>	
+The application is requesting to disable the Windows logo key effect. When this flag is set, the user cannot perturbate the application. However, when the default action mapping UI is displayed, the Windows logo key is operating as long as that UI is opened. Consequently, this flag has no effect in this situation.
+</summary></comment>
+<comment id="IDirectInputDevice8W::SetCooperativeLevel"><summary>	
+Requests the cooperative level for this instance of the inpute device. The cooperative level determines how this instance of the device interacts with other instances of the device and the rest of the system.	
+</summary><param name="arg0">Window handle to be associated with the device. This parameter must be a valid top-level window handle that belongs to the process. The window associated with the device must not be destroyed while it is still active in a DirectInput device.</param><param name="arg1">Flags that specify the cooperative level to associate with the input device.</param><returns>If the method succeeds, the return value is <see cref="SharpDX.DirectInput.ResultCode.Ok" />. If the method fails, a <see cref="SharpDXException" /> is raised with the following error code values: <see cref="SharpDX.DirectInput.ResultCode.InvalidParam" />, <see cref="SharpDX.DirectInput.ResultCode.NotInitialized" />, <see cref="Result.Handle" />.</returns><remarks>	
+<para>Applications cannot specify <see cref="SharpDX.DirectInput.CooperativeLevel.Foreground" /> and <see cref="SharpDX.DirectInput.CooperativeLevel.Background" /> at the same time. This apply as well to <see cref="SharpDX.DirectInput.CooperativeLevel.Exclusive" /> and <see cref="SharpDX.DirectInput.CooperativeLevel.NonExclusive" />.</para>
+ <para>When the mouse is acquired with exclusive access, the mouse pointer is removed from the screen until the device is unacquired.</para>	
+ <para>Applications that select the background exclusive mode cooperative level are not guaranteed to retain access to the device if another application requests exclusive access. When a background exclusive mode application loses access, calls to DirectInput device methods will fail and return <see cref="SharpDX.DirectInput.ResultCode.NotAcquired" />. The application can regain access to the device by manually unacquiring the device and reaquiring it.</para>	
+ <para>Applications must call this method before acquiring the device by using the <see cref="SharpDX.DirectInput.Device" /> method.</para>	
+</remarks></comment>
+<comment id="DISCL"><summary>	
+Flags that specify the cooperative level to associate with the input device. This flag is used by <see cref="Device.SetCooperativeLevel(System.Windows.Forms.Control,SharpDX.DirectInput.CooperativeLevel)" /> method.
+</summary></comment>
+<comment id="DIDF"><summary>	
+Flags describing other attributes of the <see cref="DataFormat" />.	
+</summary></comment>
+<comment id="DIDATAFORMAT::dwFlags"><summary>	
+Flags describing other attributes of the data format.
+</summary></comment>
+<comment id="DIDF_RELAXIS"><summary>	
+The axes are specified in relative mode. Specifying this flag in <see cref="DataFormat" /> equals to manually setting the axis mode property using the <see cref="DeviceProperties.AxisMode" /> property on the <see cref="Device" />. 
+<para>Usage of this flag is exclusive with <see cref="SharpDX.DirectInput.DataFormatFlag.AbsoluteAxis" /> flag.</para>
+</summary></comment>
+<comment id="DIDF_ABSAXIS"><summary>	
+The axes are specified in absolute mode. Specifying this flag in <see cref="DataFormat" /> equals to manually setting the axis mode property, using the <see cref="DeviceProperties.AxisMode" /> property on the <see cref="Device" />. 
+<para>xUsage of this flag is exclusive with <see cref="SharpDX.DirectInput.DataFormatFlag.RelativeAxis" /> flag.</para>
+</summary></comment>
+<comment id="DIPROPAXISMODE"><summary>	
+Device Axis mode. This flag is used by the <see cref="DeviceProperties.AxisMode" /> property on the <see cref="Device" />.
+</summary></comment>
+<comment id="DIPROPAXISMODE_ABS"><summary>	
+The axes are specified in absolute mode for the whole device.
+</summary></comment>
+<comment id="DIPROPAXISMODE_REL"><summary>	
+The axes are specified in relative mode for the whole device.
+</summary></comment>
+<comment id="DI8DEVCLASS"><summary>	
+Device class filter used by <see cref="DirectInput.GetDevices(SharpDX.DirectInput.DeviceClass,SharpDX.DirectInput.DeviceEnumerationFlags)" /> method.
+</summary></comment>
+<comment id="DI8DEVCLASS_ALL"><summary>	
+All devices.
+</summary></comment>
+<comment id="DI8DEVCLASS_DEVICE"><summary>	
+All devices that do not fall into another class.
+</summary></comment>
+<comment id="DI8DEVCLASS_POINTER"><summary>	
+All devices of type <see cref="SharpDX.DirectInput.DeviceType.Mouse" /> and <see cref="SharpDX.DirectInput.DeviceType.ScreenPointer" />.
+</summary></comment>
+<comment id="DI8DEVCLASS_KEYBOARD"><summary>	
+All keyboards. Equivalent to <see cref="SharpDX.DirectInput.DeviceType.Keyboard" />.
+</summary></comment>
+<comment id="DI8DEVCLASS_GAMECTRL"><summary>	
+All game controllers.
+</summary></comment>
+<comment id="DIEDFL"><summary>	
+Flags that refine the scope of the enumeration used by <see cref="DirectInput.GetDevices(SharpDX.DirectInput.DeviceClass,SharpDX.DirectInput.DeviceEnumerationFlags)" /> 
+and <see cref="DirectInput.GetDevices(SharpDX.DirectInput.DeviceType,SharpDX.DirectInput.DeviceEnumerationFlags)" /> methods.
+</summary></comment>
+<comment id="DIEDFL_ALLDEVICES"><summary>	
+All installed devices are enumerated. This is the default behavior.
+</summary></comment>
+<comment id="DIEDFL_ATTACHEDONLY"><summary>	
+Only attached and installed devices.
+</summary></comment>
+<comment id="DIEDFL_FORCEFEEDBACK"><summary>	
+Only devices that support force feedback.
+</summary></comment>
+<comment id="DIEDFL_INCLUDEALIASES"><summary>	
+Include devices that are aliases for other devices. 
+</summary></comment>
+<comment id="DIEDFL_INCLUDEPHANTOMS"><summary>	
+Include hidden devices. For more information about hidden devices, see <see cref="SharpDX.DirectInput.Capabilities" />.
+</summary></comment>
+<comment id="DIEDFL_INCLUDEHIDDEN"><summary>	
+Include phantom (placeholder) devices.
+</summary></comment>
+<comment id="DIDC"><summary>	
+Flags associated with the device.
+</summary></comment>
+<comment id="DIDC_HIDDEN"><summary>	
+Fictitious device created by a device driver so that it can generate keyboard and mouse events. Such devices are not normally returned by <see cref="DirectInput.GetDevices()" />. 
+</summary></comment>
+<comment id="DIDC_ALIAS"><summary>	
+The device is a alias to another DirectInput device. Alias devices are by default not returned by <see cref="DirectInput.GetDevices()" />.
+</summary></comment>
+<comment id="DIDC_DEADBAND"><summary>	
+The device supports deadband for at least one force-feedback condition. 
+</summary></comment>
+<comment id="DIDC_PHANTOM"><summary>	
+Placeholder. Phantom devices are by default not enumerated by <see cref="DirectInput.GetDevices()" />. 
+</summary></comment>
+<comment id="DIDC_POLLEDDEVICE"><summary>	
+At least one object on the device is polled, rather than interrupt-driven. For these objects, the application must explicitly call the <see cref="Device" /> Interface method to obtain data. HID devices can contain a mixture of polled and nonpolled objects. 
+</summary></comment>
+<comment id="DIDC_ATTACHED"><summary>	
+The device is physically attached to the user's computer. 
+</summary></comment>
+<comment id="DIDC_EMULATED"><summary>	
+If this flag is set, the data is coming from a user mode device interface, such as a Human Interface Device (human interface device), or by some other ring 3 means. If it is not set, the data is coming directly from a kernel mode driver.
+</summary></comment>
+<comment id="DIDC_POLLEDDATAFORMAT"><summary>	
+At least one object in the current data format is polled, rather than interrupt-driven. For these objects, the application must explicitly call the <see cref="Device" /> Interface method to obtain data. 
+</summary></comment>
+<comment id="DIDC_FORCEFEEDBACK"><summary>	
+The device supports force feedback. 
+</summary></comment>
+<comment id="DIDC_FFATTACK"><summary>	
+The force-feedback system supports the attack parameter for at least one effect. 
+<para>If the device does not support attack, the attack level and attack time members of the <see cref="Envelope" /> structure are ignored by the device. </para>
+<para>After a call to the <see cref="Device.GetEffectInfo" /> method, an individual effect sets the <see cref="EffectType.Attack" /> flag if attack is supported for that effect.</para>
+</summary></comment>
+<comment id="DIDC_FFFADE"><summary>	
+The force-feedback system supports the fade parameter for at least one effect. 
+<para>If the device does not support fade, the fade level and fade time members of the <see cref="Envelope" /> structure are ignored by the device. </para>
+<para>After a call to the <see cref="Device.GetEffectInfo" /> method, an individual effect sets the <see cref="EffectType.Fade" /> flag if fade is supported for that effect.</para>
+</summary></comment>
+<comment id="DIDC_POSNEGCOEFFICIENTS"><summary>	
+The force-feedback system supports two coefficient values for conditions (one for the positive displacement of the axis and one for the negative displacement of the axis) for at least one condition. If the device does not support both coefficients, the negative coefficient in the <see cref="Condition" /> structure is ignored.
+<para>After a call to the <see cref="Device.GetEffectInfo" /> method, an individual condition sets the <see cref="EffectType.TwoCoefficients" /> flag if separate positive and negative coefficients are supported for that condition.</para>
+</summary></comment>
+<comment id="DIDC_POSNEGSATURATION"><summary>	
+The force-feedback system supports a maximum saturation for both positive and negative force output for at least one condition. If the device does not support both saturation values, the negative saturation in the <see cref="Condition" /> structure is ignored.
+<para>After a call to the IDirectInputDevice8::GetEffectInfo method, an individual condition sets the <see cref="EffectType.TwoSaturations" /> flag if separate positive and negative saturation are supported for that condition.</para>
+</summary></comment>
+<comment id="DIDC_SATURATION"><summary>	
+The force-feedback system supports the saturation of condition effects for at least one condition. If the device does not support saturation, the force generated by a condition is limited only by the maximum force that the device can generate.
+<para>After a call to the <see cref="Device.GetEffectInfo" /> method, an individual condition sets the <see cref="EffectType.Saturation" /> flag if saturation is supported for that condition.</para>
+</summary></comment>
+<comment id="DIDC_STARTDELAY"><summary>	
+The force-feedback system supports the start delay parameter for at least one effect. If the device does not support start delays, the <see cref="EffectParameters.StartDelay" /> member of the <see cref="EffectParameters" /> structure is ignored. 
+</summary></comment>
+<comment id="DIDFT_ABSAXIS"><summary>	
+An absolute axis.
+</summary></comment>
+<comment id="DIDFT_ALIAS"><summary>	
+Controls identified by a Human Interface Device <see cref="UsageId" /> alias. This flag applies only to HID-compliant USB devices.
+</summary></comment>
+<comment id="DIDFT_ALL"><summary>	
+All objects.
+</summary></comment>
+<comment id="DIDFT_AXIS"><summary>	
+An axis, either absolute or relative.
+</summary></comment>
+<comment id="DIDFT_BUTTON"><summary>	
+A push button or a toggle button.
+</summary></comment>
+<comment id="DIDFT_FFACTUATOR"><summary>	
+An object that contains a force-feedback actuator. In other words, forces can be applied to this object.
+</summary></comment>
+<comment id="DIDFT_COLLECTION"><summary>	
+A HID link collection. HID link collections do not generate data of their own.
+</summary></comment>
+<comment id="DIDFT_FFEFFECTTRIGGER"><summary>	
+An object that can be used to trigger force-feedback effects.
+</summary></comment>
+<comment id="DIDFT_POV"><summary>	
+A point-of-view controller.
+</summary></comment>
+<comment id="DIDFT_NODATA"><summary>	
+An object that does not generate any data.
+</summary></comment>
+<comment id="DIDFT_OUTPUT"><summary>	
+An object that supports output. Not supported.
+</summary></comment>
+<comment id="DIDFT_PSHBUTTON"><summary>	
+A push button. A push button is reported as down when the user presses it, and as up when the user releases it.
+</summary></comment>
+<comment id="DIDFT_RELAXIS"><summary>	
+A relative axis.
+</summary></comment>
+<comment id="DIDFT_TGLBUTTON"><summary>	
+A toggle button. A toggle button is reported as down when the user presses it and remains so until the user presses the button a second time.
+</summary></comment>
+<comment id="DIDFT_OPTIONAL"><summary>	
+Specify that this type is optional.
+</summary></comment>
+<comment id="DIDFT_VENDORDEFINED"><summary>	
+An object of a type defined by the manufacturer.
+</summary></comment>
+<comment id="DIDFT_ANYINSTANCE"><summary>	
+Any instance mask.
+</summary></comment>
+<comment id="DI8DEVTYPE_1STPERSON"><summary>	
+First-person action game device. The following subtypes are defined.
+</summary></comment>
+</comments>

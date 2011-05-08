@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+-->
+<config id="sharpdx-core-direct3d" depends="sharpdx-core" xmlns="urn:SharpGen.Config">
+  
+  <assembly>SharpDX</assembly>
+  <namespace>SharpDX.Direct3D</namespace>
+
+  <!-- Direct3D includes -->
+  <include file="d3dcommon.h" attach="true" output="Direct3D"/>
+
+  <naming />
+
+  <!-- Direct3D types -->
+  <extension>
+    <context>d3dcommon</context>
+
+    <const from-guid="WKPDID_D3DDebugObjectName" class="SharpDX.Direct3D.CommonGuid" type="System.Guid" name="DebugObjectName">new System.Guid("$1")</const>
+
+    <create class="D3DCommon" />
+    <create class="CommonGuid" visibility="public" />
+
+    <context-clear/>
+  </extension>
+
+  <!-- Direct3D mapping -->
+  <mapping>
+    <context>d3dcommon</context>
+
+    <!--
+    // *****************************************************************
+    // Direct3D Common Enumerations
+    // *****************************************************************
+    -->
+    <map enum="D3D(.*)" name-tmp="$1" />
+    <map enum-item="D3D(.*)" name-tmp="$1" />
+    <remove enum-item="D3D(\d+)_CBF_USERPACKED.*"/>
+    <remove enum-item="D3D(\d+)_PRIMITIVE_TOPOLOGY_.*" />
+    <remove enum-item="D3D(\d+)_PRIMITIVE_.*" />
+    <remove enum-item="D3D(\d+)_SRV_DIMENSION_.*" />
+    <remove enum-item="D3D(\d+_1)_SRV_DIMENSION_.*" />
+    <remove enum-item="D3D(\d+)_SVC_.*" />
+    <remove enum-item="D3D(\d+)_SVF_.*" />
+    <remove enum-item="D3D(\d+)_SVT_.*" />
+    <remove enum-item="D3D(\d+)_SIF_.*" />
+    <remove enum-item="D3D(\d+)_SIT_.*" />
+    <remove enum-item="D3D(\d+)_CT_.*" />
+    <remove enum-item="D3D(\d+)_NAME_.*" />
+    <remove enum-item="D3D(\d+)_INCLUDE_.*" />
+    <remove enum-item="D3D(\d+)_RETURN_TYPE_.*" />
+    <remove enum-item="D3D(\d+)_TESSELLATOR_OUTPUT_.*" />
+    <remove enum-item="D3D(\d+)_TESSELLATOR_DOMAIN_.*" />
+    <remove enum-item="D3D(\d+)_TESSELLATOR_PARTITIONING_.*" />
+    <remove enum-item="D3D(\d+)_REGISTER_COMPONENT_.*" />
+    <map enum="D3D_PRIMITIVE" name="InputPrimitive" />
+    <map enum-item="D3D_FEATURE_LEVEL_(.*)" name="Level_$1" />
+    <map enum="D3D_SRV_DIMENSION" name="ShaderResourceViewDimension" />
+    <map enum-item="D3D_SRV_DIMENSION_(.*)" name-tmp="$1" />
+    <map enum-item="D3D_PRIMITIVE_(\d+)_CONTROL_POINT_PATCH" name="PatchWith$1ControlPoints" />
+    <map enum-item="D3D_PRIMITIVE_([^0-9].*)" name-tmp="$1" />
+    <map enum="D3D_PRIMITIVE_TOPOLOGY" name="PrimitiveTopology" />
+    <map enum-item="D3D_PRIMITIVE_TOPOLOGY_(.*)" name-tmp="$1" />
+    <map enum-item="D3D_PRIMITIVE_TOPOLOGY_(\d+)_CONTROL_POINT_PATCHLIST" name="PatchListWith$1ControlPoints" />
+    <map enum="D3D_SHADER_CBUFFER_FLAGS" name="ConstantBufferFlags" />
+    <map enum-item="D3D_SVC_(.*)" name-tmp="$1" />
+    <map enum-item="D3D_SVF_(.*)" name-tmp="$1" />
+    <map enum-item="D3D_SVT_(.*)" name-tmp="$1" />
+    <map enum-item="D3D_SIF_(.*)" name-tmp="$1" />
+    <map enum-item="D3D_SIT_(.*)" name-tmp="$1" />
+    <map enum-item="D3D_CT_(.*)" name-tmp="$1" />
+    <map enum="D3D_DRIVER_TYPE" name="DriverType" />
+    <map enum-item="D3D_DRIVER_TYPE_(.*)" name-tmp="$1" />
+    <map enum="D3D_NAME" name="SystemValueType" />
+    <map enum-item="D3D_NAME_(.*)" name-tmp="$1" />
+    <map enum="D3DCOMPILER_STRIP_FLAGS" name="StripFlags" />
+    <map enum="D3D_INCLUDE_TYPE" name="IncludeType" />
+    <map enum-item="D3D_INCLUDE_(.*)" name-tmp="$1" />
+    <map enum-item="D3D_RETURN_TYPE_(.*)" name-tmp="$1" />
+    <map enum-item="D3D_TESSELLATOR_DOMAIN_(.*)" name-tmp="$1" />
+    <map enum-item="D3D_TESSELLATOR_DOMAIN_TRI" name="Triangle" />
+    <map enum-item="D3D_TESSELLATOR_OUTPUT_(.*)" name-tmp="$1" />
+    <map enum-item="D3D_TESSELLATOR_OUTPUT_TRIANGLE_CCW" name="TriangleCounterclockwise" />
+    <map enum-item="D3D_TESSELLATOR_OUTPUT_TRIANGLE_CW" name="TriangleClockwise" />
+    <map enum-item="D3D_TESSELLATOR_PARTITIONING_(.*)" name-tmp="$1" />
+    <map enum-item="D3D_TESSELLATOR_PARTITIONING_POW2" name="PowerOfTwo" />
+    <map enum="D3D_REGISTER_COMPONENT_TYPE" name="RegisterComponentType" />
+    <map enum-item="D3D_REGISTER_COMPONENT_(.*)" name-tmp="$1" />
+    <!--
+    // *****************************************************************
+    // Direct3D Common Structures
+    // *****************************************************************
+    -->
+    <map struct="D3D(.*)" name-tmp="$1" />
+
+    <!--
+    // *****************************************************************
+    // Direct3D Common Interfaces
+    // *****************************************************************
+    -->
+    <map interface="ID3DInclude" name="Include" callback="true" callback-dual="false" />
+    <map interface="ID3D10Blob" name="Blob" />
+        
+    <context-clear />
+  </mapping>
+</config>

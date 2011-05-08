@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+-->
+<config id="sharpdx-d3dcompiler" depends="sharpdx" xmlns="urn:SharpGen.Config">
+  
+  <namespace>SharpDX.D3DCompiler</namespace>
+  <assembly>SharpDX.D3DCompiler</assembly>
+
+  <!-- D3DCompiler includes -->
+  <include file="d3dcompiler.h" attach="true" />
+  <include file="d3d11shader.h" attach="true" />
+  <include file="d3dcommon.h">
+    <attach>D3D_PRIMITIVE</attach>
+    <attach>D3D_CBUFFER_TYPE</attach>
+    <attach>D3D_RESOURCE_RETURN_TYPE</attach>
+    <attach>D3D_SHADER_CBUFFER_FLAGS</attach>
+    <attach>D3D_SHADER_INPUT_TYPE</attach>
+    <attach>D3D_SHADER_VARIABLE_FLAGS</attach>
+    <attach>D3D_SHADER_VARIABLE_CLASS</attach>
+    <attach>D3D_SHADER_VARIABLE_FLAG$S</attach>
+    <attach>D3D_SHADER_VARIABLE_TYPE</attach>
+    <attach>D3D_TESSELLATOR_DOMAIN</attach>
+    <attach>D3D_TESSELLATOR_PARTITIONING</attach>
+    <attach>D3D_TESSELLATOR_OUTPUT_PRIMITIVE</attach>
+    <attach>D3D_SHADER_INPUT_FLAGS</attach>
+    <attach>D3D_NAME</attach>
+    <attach>D3D_REGISTER_COMPONENT_TYPE</attach>
+    <attach>ID3DInclude</attach>
+    <attach>D3D_INCLUDE_TYPE</attach>
+  </include>
+
+  <context-set id="d3dcompiler-all">
+    <context>sharpdx-d3dcompiler-ext</context>
+    <context>d3dcompiler</context>
+    <context>d3d11shader</context>
+  </context-set>
+
+  <!-- D3DCompiler global naming -->
+  <naming />
+
+  <!-- D3DCompiler extensions -->
+  <extension>
+    <context id="d3dcompiler-all"/>
+    
+    <create-cpp enum="D3DCOMPILE_SHADER_FLAGS" macro="D3DCOMPILE_\w[^F].*" />
+    <create-cpp enum="D3DCOMPILE_EFFECT_FLAGS" macro="D3DCOMPILE_EFFECT_.*" />
+    <create-cpp enum="D3DCOMPILE_DISASM_FLAGS" macro="D3D_DISASM_.*" />
+    <define enum="SharpDX.D3DCompiler.RegisterComponentMaskFlags" sizeof="4" />
+    <create class="D3D" />
+
+    <context-clear/>
+  </extension>
+  
+  <bindings>
+    <bind from="D3D11_REGISTER_COMPONENT_MASK_FLAG" to="SharpDX.D3DCompiler.RegisterComponentMaskFlags" />
+  </bindings>
+  
+  <mapping>
+    <context>d3dcommon</context>
+    <remove enum-item="D3D10_CBF_USERPACKED" />
+    <context-clear />
+    
+    <context id="d3dcompiler-all"/>
+    <!--
+    // *****************************************************************
+    // D3DCompiler Enumerations
+    // *****************************************************************
+    -->
+    <map enum="D3D(.*)" name-tmp="$1" />
+    <map enum-item="D3D(.*)" name-tmp="$1" />
+    <map enum="D3DCOMPILE_(.+)" name-tmp="$1" />
+    <map enum="D3DCOMPILER_(.+)" name-tmp="$1" />
+    <map enum="D3D11(.*)" name-tmp="$1" />
+    <map enum-item="D3D11(.*)" name-tmp="$1" />
+    <map enum-item="D3DCOMPILE_EFFECT_CHILD_EFFECT" name="ChildEffect" />
+    <map enum-item="D3DCOMPILE_EFFECT_ALLOW_SLOW_OPS" name="AllowSlowOperations" />
+    <map enum-item="D3D_CT_RESOURCE_BIND_INFO" name="ResourceBinding" />
+    <map enum-item="D3D_DISASM_(.*)" name-tmp="$1" />
+    <map enum-item="D3D11_REGISTER_COMPONENT_MASK_(.*)" name-tmp="$1" />
+    <map enum-item="D3DCOMPILE_(\w[^F].*)" name-tmp="$1" />
+    <map enum="D3D11_SHADER_VERSION_TYPE" name="ShaderVersion" />
+    <map enum-item="D3D11_SHVER_(.*)" name-tmp="$1" />
+    <map enum="D3D_BLOB_PART" name="ShaderBytecodePart" />
+    <map enum-item="D3D_BLOB_(.*)" name-tmp="$1" />
+
+    <!--
+    // *****************************************************************
+    // D3DCompiler Structures
+    // *****************************************************************
+    -->
+    <map struct="D3D(.*)" name-tmp="$1" />
+    <map struct="D3D11(.*)" name-tmp="$1" />
+    <map struct="D3DCOMPILE_(.+)" name-tmp="$1" />
+    <map struct="D3DCOMPILER_(.+)" name-tmp="$1" />
+    <map struct="D3D_SHADER_DATA" visibility="internal" />
+    <map field="D3D_SHADER_DATA::pBytecode" name="BytecodePtr" />
+    <map struct="D3D11_SHADER_BUFFER_DESC" name="ConstantBufferDescription" />
+    <map field="D3D11_SHADER_BUFFER_DESC::uFlags" name="Flags" type="D3D_SHADER_CBUFFER_FLAGS" />
+    <map field="D3D11_SHADER_BUFFER_DESC::Variables" name="VariableCount" />
+    <map struct="D3D11_SHADER_INPUT_BIND_DESC" name="InputBindingDescription" />
+    <map field="D3D11_SHADER_INPUT_BIND_DESC::uFlags" name="Flags" type="D3D_SHADER_INPUT_FLAGS" />
+    <map field="D3D11_SHADER_BUFFER_DESC::NumSamples" name="SampleCount" />
+    <map field="D3D11_SHADER_DESC::c([A-Z].*)" name="$1" />
+    <map field="D3D11_SHADER_DESC::cGS(.*)" name="GeometryShader$1" />
+    <map field="D3D11_SHADER_DESC::GS(.*)" name="GeometryShader$1" />
+    <map field="D3D11_SHADER_DESC::HS(.*)" name="HullShader$1" />
+    <map field="D3D11_SHADER_DESC::DclCount" name="DeclarationCount" />
+    <map field="D3D11_SHADER_DESC::DefCount" name="DefineCount" />
+    <map field="D3D11_SHADER_DESC::Flags" type="D3DCOMPILE_SHADER_FLAGS" />
+    <map struct="D3D11_SIGNATURE_PARAMETER_DESC" name="ShaderParameterDescription" />
+    <map field="D3D11_SIGNATURE_PARAMETER_DESC::ReadWriteMask" type="D3D11_REGISTER_COMPONENT_MASK_FLAG" />
+    <map field="D3D11_SIGNATURE_PARAMETER_DESC::Mask" name="UsageMask" type="D3D11_REGISTER_COMPONENT_MASK_FLAG" />
+    <map field="D3D11_SHADER_TYPE_DESC::Columns" name="ColumnCount" />
+    <map field="D3D11_SHADER_TYPE_DESC::Elements" name="ElementCount" />
+    <map field="D3D11_SHADER_TYPE_DESC::Members" name="MemberCount" />
+    <map field="D3D11_SHADER_TYPE_DESC::Rows" name="RowCount" />
+    <map field="D3D11_SHADER_VARIABLE_DESC::uFlags" name="Flags" type="D3D_SHADER_VARIABLE_FLAGS" />
+
+    <!--
+    // *****************************************************************
+    // D3DCompiler Interfaces
+    // *****************************************************************
+    -->
+    <map interface="ID3D(.*)" name-tmp="$1" />
+    <map interface="ID3D11(.*)" name-tmp="$1" />
+    <map interface="ID3D11ShaderReflectionConstantBuffer" name="ConstantBuffer" />
+    <map param="ID3D(\d+)ShaderReflectionConstantBuffer::GetDesc::pDesc" attribute="out" />
+    <map method="ID3D11ShaderReflectionConstantBuffer::GetVariable.*" name="GetVariable" />
+    <map method="ID3D11ShaderReflection::GetConstantBuffer.*" name="GetConstantBuffer" />
+    <map method="ID3D11ShaderReflection::GetVariableBy.*" name="GetVariable" />
+    <map method="ID3D11ShaderReflection::GetResourceBindingDesc.*" name="GetResourceBindingDescription" />
+    <map param="ID3D11ShaderReflection::GetInputParameterDesc::pDesc" return="true" />
+    <map param="ID3D11ShaderReflection::GetOutputParameterDesc::pDesc" return="true" />
+    <map param="ID3D11ShaderReflection::GetPatchConstantParameterDesc.*::pDesc" return="true" />
+    <map method="ID3D11ShaderReflection::GetGSInputPrimitive" name="GetGeometryShaderSInputPrimitive" />
+    <map method="ID3D11ShaderReflection::GetMovcInstructionCount" name="GetConditionalMoveInstructionCount" />
+    <map method="ID3D11ShaderReflection::GetMovInstructionCount" name="GetMoveInstructionCount" />
+    <map method="ID3D11ShaderReflection::GetNumInterfaceSlots" name="GetInterfaceSlotCount" />
+    <map method="ID3D11ShaderReflectionType::GetInterfaceByIndex" name="GetInterface" />
+    <map method="ID3D11ShaderReflectionType::GetMemberTypeBy.*" name="GetMemberType" />
+    <map method="ID3D11ShaderReflectionType::ImplementsInterface" visibility="internal" name="ImplementsInterface_" />
+    <map method="ID3D11ShaderReflectionType::IsEqual" visibility="internal" name="IsEqual_" />
+    <map method="ID3D11ShaderReflectionType::IsOfType" visibility="internal" name="IsOfType_" />
+    <map method="ID3D11ShaderReflectionVariable::GetType" property="true" name="GetVariableType" />
+
+    <!--
+    // *****************************************************************
+    // D3DCompiler Functions
+    // *****************************************************************
+    -->
+    <map function="D3D(.*)" name-tmp="$1" />
+    <map function="D3D[^1].*" dll="#(D3DCOMPILER_DLL_A)" group="SharpDX.D3DCompiler.D3D" />
+    <map function="D3DCreateBlob" dll="#(D3DCOMPILER_DLL_A)" group="SharpDX.Direct3D.D3DCommon" />
+    <remove function="D3DDisassemble10Effect" />
+    <map param="D3DCompile.*?::Flags1" type="D3DCOMPILE_SHADER_FLAGS" />
+    <map param="D3DCompile.*?::Flags2" type="D3DCOMPILE_EFFECT_FLAGS" />
+    <map param="D3DDisassemble::Flags" type="D3DCOMPILE_DISASM_FLAGS" />
+    <map param="D3DStripShader::uStripFlags" type="D3DCOMPILER_STRIP_FLAGS" />
+    <map param="D3DCompile::pDefines" attribute="in buffer optional" />
+    <map param="D3DPreprocess::pDefines" attribute="in buffer optional" />
+    
+    <context-clear />
+  </mapping>
+</config>

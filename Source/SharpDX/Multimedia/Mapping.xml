@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+-->
+<config id="sharpdx-core-multimedia" depends="sharpdx-core" xmlns="urn:SharpGen.Config">
+  <namespace>SharpDX.Multimedia</namespace>
+  <assembly>SharpDX</assembly>
+
+  <include file="hidusage.h" namespace="SharpDX.Multimedia" output="Multimedia" attach="true">
+    <post>
+      // Additionnals HID_USAGE_PAGES*
+      #define HID_USAGE_PAGE_MEDICAL  0x40
+      #define HID_USAGE_PAGE_MONITOR_PAGE0 0x80
+      #define HID_USAGE_PAGE_MONITOR_PAGE1 0x81
+      #define HID_USAGE_PAGE_MONITOR_PAGE2 0x82
+      #define HID_USAGE_PAGE_MONITOR_PAGE3 0x83
+      #define HID_USAGE_PAGE_POWER_PAGE0 0x84
+      #define HID_USAGE_PAGE_POWER_PAGE1 0x85
+      #define HID_USAGE_PAGE_POWER_PAGE2 0x86
+      #define HID_USAGE_PAGE_POWER_PAGE3 0x87
+      #define HID_USAGE_PAGE_BARCODE 0x8C
+      #define HID_USAGE_PAGE_SCALE 0x8D
+      #define HID_USAGE_PAGE_MSR 0x8E
+    </post>
+  </include>
+ 
+  <!-- SharpDX global types -->
+  <extension>
+      <!-- class SharpDX.Multimedia.UsagePage -->
+    <create-cpp enum="HID_USAGE_PAGE" macro="HID_USAGE_PAGE_.*" />
+
+    <!-- class SharpDX.Multimedia.UsageId -->
+    <create-cpp enum="HID_USAGE_ID" macro="HID_USAGE_[^P].*" />
+  </extension>
+
+  <!-- SharpDX global mapping -->
+  <mapping>    
+    <context>sharpdx-core-multimedia-ext</context>
+    <!-- class SharpDX.Multimedia.UsagePage -->
+    <map enum="HID_USAGE_PAGE" name="UsagePage" type="short"/>
+    <map enum-item="HID_USAGE_PAGE_(.*)" name-tmp="$1" />
+
+    <!-- class SharpDX.Multimedia.UsageId -->
+    <map enum="HID_USAGE_ID" name="UsageId" type="short"/>
+    <map enum-item="HID_USAGE_([^P].*)" name-tmp="$1" />
+
+    <context-clear/>
+  </mapping>
+</config>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config id="sharpdx-xact3" depends="sharpdx-core">
+  <namespace>SharpDX.XACT3</namespace>
+  <assembly>SharpDX.XACT3</assembly>
+  <include id="xact3" file="xact3.h" attach="true" >
+    <filter-error>$(FILTER_PASTING_ERROR)</filter-error>
+    <pre>
+      #undef _X86_
+    </pre>
+    <post>
+      #define _X86_
+    </post>
+  </include>
+  <include id="xact3wb" file="xact3wb.h" attach="true" />
+  <naming />
+  <types />
+  <mapping>
+    <context>xact3</context>
+    <context>xact3wb</context>
+    <map struct="XACT(.*)" name-tmp="$1" />
+    <map interface="IXACT3(.*)" name="$1" />
+    <remove function="IXACT3(.*)" />
+    <context-clear />
+  </mapping>
+</config>

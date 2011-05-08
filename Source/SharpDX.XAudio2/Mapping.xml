@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+-->
+<config id="sharpdx-xaudio2" depends="sharpdx sharpdx-xapo" xmlns="urn:SharpGen.Config">
+  
+  <namespace>SharpDX.XAudio2</namespace>
+  <assembly>SharpDX.XAudio2</assembly>
+
+  <!-- XAudio2 includes -->
+  <include file="xaudio2.h" attach="true">
+    <filter-error>$(FILTER_PASTING_ERROR)</filter-error>
+  </include>
+  <include file="xaudio2fx.h" attach="true" namespace="SharpDX.XAudio2.Fx" output="Fx" >
+    <filter-error>$(FILTER_PASTING_ERROR)</filter-error>
+  </include>
+  
+  <naming />
+
+  <!-- XAudio2 extensions -->
+  <extension>
+    <create-cpp enum="XAUDIO2_VOICE_SEND_FLAGS" macro="XAUDIO2_VOICE_(USEFILTER)" />
+    <create-cpp enum="XAUDIO2_VOICE_FLAGS" macro="XAUDIO2_VOICE_[^U].*" />
+    <create-cpp enum="XAUDIO2_FLAGS" macro="XAUDIO2_DEBUG_ENGINE" />
+    <create-cpp enum="XAUDIO2_PLAY_FLAGS" macro="XAUDIO2_PLAY_.*" />
+    <create-cpp enum="XAUDIO2_LOG_TYPE" macro="XAUDIO2_LOG_.*" />
+    <create-cpp enum="XAUDIO2_BUFFER_FLAGS" macro="XAUDIO2_END_OF_STREAM" />
+
+    <const from-macro="XAUDIO2_LOOP_INFINITE" class="SharpDX.XAudio2.AudioBuffer" type="int" name="LoopInfinite" />
+    
+    <const from-guid="CLSID_XAudio2.*" class="SharpDX.XAudio2.XAudio2" type="System.Guid">new System.Guid("$1")</const>
+    <const from-guid="IID_IXAudio2" class="SharpDX.XAudio2.XAudio2" type="System.Guid">new System.Guid("$1")</const>
+
+    <!-- Warning, gccxml cannot parse thoe CLSID - Need to declare them manually
+    DEFINE_CLSID(AudioVolumeMeter, cac1105f, 619b, 4d04, 83, 1a, 44, e1, cb, f1, 2d, 57);
+    DEFINE_CLSID(AudioVolumeMeter_Debug, 2d9a0f9c, e67b, 4b24, ab, 44, 92, b3, e7, 70, c0, 20);
+    DEFINE_CLSID(AudioReverb, 6a93130e, 1d53, 41d1, a9, cf, e7, 58, 80, 0b, b1, 79);
+    DEFINE_CLSID(AudioReverb_Debug, c4f82dd4, cb4e, 4ce1, 8b, db, ee, 32, d4, 19, 82, 69);
+    
+    <const from-guid="CLSID_Audio.*" class="SharpDX.XAudio2.Fx.XAudio2FxContants" type="System.Guid">new System.Guid("$1")</const>    
+    <create class="SharpDX.XAudio2.Fx.XAudio2FxContants" />
+    -->
+  </extension>
+
+  <!-- XAudio2 mapping -->
+  <mapping>
+    <context>sharpdx-xaudio2-ext</context>
+    <context>xaudio2</context>
+    <context>xaudio2fx</context>
+
+    <!--
+    // *****************************************************************
+    // XAudio2 Enumerations
+    // *****************************************************************
+    -->
+    <map enum-item="XAUDIO2_ANY_PROCESSOR" name="AnyProcessor" />
+    <map enum-item="XAUDIO2_DEFAULT_PROCESSOR" name="DefaultProcessor" />
+    <map enum="XAUDIO2_(.*)" name-tmp="$1" />
+    <map enum="XAUDIO2_FLAGS" name="XAudio2Flags" />
+
+    <!--
+    // *****************************************************************
+    // XAudio2 Structures
+    // *****************************************************************
+    -->
+    <map struct="XAUDIO2FX_(.*)" name-tmp="$1" />
+    <map struct="XAUDIO2_(.*)" name-tmp="$1" />
+    <map enum="XAUDIO2_LOG_TYPE" flags="true" />
+    <map struct="XAUDIO2_EFFECT_CHAIN" visibility="internal" />
+    <map struct="XAUDIO2_BUFFER" name="AudioBuffer" />
+    <map field="XAUDIO2_BUFFER::Flags" type="XAUDIO2_BUFFER_FLAGS" />
+    <map field="XAUDIO2_BUFFER::pContext" name="Context" />
+    <map struct="XAUDIO2_BUFFER" native="true" struct-to-class="true" marshal="false" new="false" />
+    <map field="XAUDIO2_BUFFER::pAudioData" name="AudioDataPointer" />
+    <map field="XAUDIO2_BUFFER::pAudioData" visibility="internal" />
+    <map struct="XAUDIO2_SEND_DESCRIPTOR" name="VoiceSendDescriptor" />
+    <map field="XAUDIO2_SEND_DESCRIPTOR::Flags" type="XAUDIO2_VOICE_SEND_FLAGS" />
+    <map field="XAUDIO2_SEND_DESCRIPTOR::pOutputVoice" name="OutputVoicePointer" />
+    <map field="XAUDIO2_SEND_DESCRIPTOR::pOutputVoice" visibility="internal" />
+    <map struct="XAUDIO2_VOICE_SENDS" visibility="internal" />
+    <map struct="XAUDIO2_VOICE_SENDS" name="VoiceSendDescriptors" />
+    <map field="XAUDIO2_VOICE_SENDS::pSends" name="SendPointer" />
+    <map field="XAUDIO2_VOICE_SENDS::pSends" visibility="internal" />
+    <map field="XAUDIO2_EFFECT_CHAIN::pEffectDescriptors" name="EffectDescriptorPointer" />
+    <map field="XAUDIO2_EFFECT_CHAIN::pEffectDescriptors" visibility="internal" />
+    <map field="XAUDIO2_BUFFER_WMA::pDecodedPacketCumulativeBytes" name="DecodedPacketCumulativeBytesPointer" />
+    <map field="XAUDIO2_VOICE_STATE::pCurrentBufferContext" name="Context" />
+    <map field="XAUDIO2_VOICE_DETAILS::InputChannels" name="InputChanneCount" />
+    <map field="XAUDIO2_EFFECT_DESCRIPTOR::OutputChannels" name="OutputChannelCount" />
+    <map field="XAUDIO2_EFFECT_DESCRIPTOR::pEffect" name="EffectPointer" />
+    <map field="XAUDIO2_EFFECT_DESCRIPTOR::pEffect" visibility="internal" />
+    <map field="XAUDIO2FX_VOLUMEMETER_LEVELS::pPeakLevels" name="PeakLevelPointer" />
+    <map field="XAUDIO2FX_VOLUMEMETER_LEVELS::pPeakLevels" visibility="internal" />
+    <map field="XAUDIO2FX_VOLUMEMETER_LEVELS::pRMSLevels" name="RmsLevelsPointer" />
+    <map field="XAUDIO2FX_VOLUMEMETER_LEVELS::pRMSLevels" visibility="internal" />
+    <map struct="XAUDIO2_EFFECT_DESCRIPTOR" native="true" struct-to-class="true" marshal="false" new="false" marshalto="true" />
+    
+    <map interface="IXAudio2(.+)" name-tmp="$1" />
+    <map interface="IXAudio2" name="XAudio2" />
+    <map method="IXAudio2::Initialize" visibility="internal" />
+    <map method="IXAudio2::GetDeviceDetails" visibility="internal" />
+    <map interface="IXAudio2EngineCallback" visibility="internal" />
+    <map method="IXAudio2Voice::SetOutputVoices" visibility="internal" />
+    <map method="IXAudio2Voice::GetEffectParameters" visibility="internal" />
+    <map method="IXAudio2Voice::SetEffectParameters" visibility="internal" />    
+    
+    <map method="IXAudio2Voice::GetEffectState" name="IsEffectEnabled"/>
+    <map param="pEnabled" return="true" />
+    
+    <map method="IXAudio2SourceVoice::Start" visibility="internal" />
+    <map interface="IXAudio2.*Callback" callback="true" callback-dual="false" />
+    <map method="IXAudio2::Create.*" visibility="internal" />
+    <map param="IXAudio2::CreateSourceVoice::Flags" type="XAUDIO2_VOICE_FLAGS" />
+    <map param="IXAudio2::CreateSubmixVoice::Flags" type="XAUDIO2_VOICE_SEND_FLAGS" />
+    <map param="IXAudio2SourceVoice::Stop::Flags" type="XAUDIO2_PLAY_FLAGS" />
+    <map method="IXAudio2Voice::SetEffectChain" visibility="internal" property="true" />
+    
+    <context-clear />
+  </mapping>
+</config>

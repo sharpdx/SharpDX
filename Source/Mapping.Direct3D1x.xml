@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+-->
+<config id="sharpdx-direct3d1x" depends="sharpdx" xmlns="urn:SharpGen.Config">
+
+  <!--  This file is a common mapping file to D3D10, D3D10.1 and D3D11 APIs -->
+  
+  <!-- Includes are not attached to any namespace/assembly here -->
+  <!-- Attatch is done in specific D3D10/D3D11 mapping file -->
+
+  <!-- D3D10 includes -->
+  <!-- d3d10_1.h must be included before d3d10.h -->
+  <include file="d3d10_1.h" />
+  <include file="d3d10.h" />
+  <include file="d3d10_1shader.h" />
+  <include file="d3d10effect.h" />
+  <include file="d3d10misc.h" />
+  <include file="d3d10sdklayers.h" />
+  <include file="d3d10shader.h" />
+  <include file="d3dx10.h" />
+  <include file="d3dx10core.h" />
+  <include file="d3dx10tex.h" />
+  <include file="d3dx10mesh.h" />
+  <include file="d3dx10async.h"  />
+
+  <!-- D3D11 includes -->
+  <include file="d3d11.h" />
+  <include file="d3dx11.h" />
+  <include file="d3d11sdklayers.h" />
+  <include file="d3dx11core.h" />
+  <include file="d3dx11tex.h" />
+  <include file="d3dx11async.h" />
+  <include file="d3dcsx.h" />
+
+  <naming />
+  <binding/>
+  <extensions />
+
+  <mapping>
+    <context>d3d10</context>
+    <context>d3d10_1</context>
+    <context>d3d10_1shader</context>
+    <context>d3d10effect</context>
+    <context>d3d10misc</context>
+    <context>d3d10sdklayers</context>
+    <context>d3d10shader</context>
+    <context>d3dx10</context>
+    <context>d3dx10core</context>
+    <context>d3dx10tex</context>
+    <context>d3dx10mesh</context>
+    <context>d3dx10async</context>
+    
+    <context>d3d11</context>
+    <context>d3dx11</context>
+    <context>d3d11sdklayers</context>
+    <context>d3dx11core</context>
+    <context>d3dx11tex</context>
+    <context>d3dx11async</context>
+    <context>d3dcsx</context>
+
+    <!--
+    // *****************************************************************
+    // D3D1x Enumerations
+    // *****************************************************************
+    -->
+    <map enum="D3D(\d+)(.*)" name-tmp="$2" />    
+    <map enum="D3DX(\d+)(.*)" name-tmp="$2" />    
+    <map enum="D3D(\d+)_FORMAT_SUPPORT" flags="true" />
+    <map enum="D3D(\d+)_COLOR_WRITE_ENABLE" flags="true" />
+    <remove enum="D3D\d+_RAISE_FLAG" />
+    <map enum-item="D3D(\d+)_ASYNC_GETDATA_DONOTFLUSH" name="DoNotFlush" />
+    <map enum="D3D(\d+)_CREATE_DEVICE_FLAG" name="DeviceCreationFlags" />
+    <map enum-item="D3D(\d+)_CREATE_DEVICE_(.*)" name-tmp="$2" />
+    <map enum="D3D(\d+)_QUERY_MISC_FLAG" name="QueryFlags" />
+    <map enum="D3D(\d+)_QUERY" name="QueryType" />
+    <map enum="D3D(\d+)_COUNTER" name="CounterKind" />
+    <map enum="D3D(\d+)_BLEND" name="BlendOption" />
+    <map enum="D3D(\d+)_ASYNC_GETDATA_FLAG" name="AsynchronousFlags" />
+    <map enum="D3D(\d+)_ASYNC_GETDATA_DONOTFLUSH" name="DoNotFlush" />
+    <map enum="D3D(\d+)_MAP" name="MapMode" />
+    <map enum-item="D3D(\d+)_MAP_FLAG" name="MapFlags" />
+    <map enum="D3D(\d+)_BIND_FLAG" name="BindFlags" />
+    <map enum-item="D3D(\d+)_BIND_(.*)" name-tmp="$2" />
+    <map enum="D3D(\d+)_MAP_FLAG_(.*)" name-tmp="$2" />
+    <map enum-item="D3D(\d+)_MAP_FLAG_(.*)" name-tmp="$2" />
+    <map enum="D3D(\d+)_BUFFER_UAV_FLAG" name="UnorderedAccessViewBufferFlags" />
+    <map enum-item="D3D(\d+)_BUFFER_UAV_FLAG_(.*)" name-tmp="$2" />
+    <map enum="D3D(\d+)_COLOR_WRITE_ENABLE" name="ColorWriteMaskFlags" type="byte" />
+    <map enum-item="D3D(\d+)_COLOR_WRITE_ENABLE_(.*)" name-tmp="$2" />
+    <map enum="D3D(\d+)_CPU_ACCESS_FLAG" name="CpuAccessFlags" />
+    <map enum-item="D3D(\d+)_CPU_ACCESS_(.*)" name-tmp="$2" />
+    <map enum="D3D(\d+)_USAGE" name="ResourceUsage" />
+    <map enum-item="D3D(\d+)_USAGE_(.*)" name-tmp="$2" />
+    <map enum="D3D(\d+)_RESOURCE_MISC_FLAG" name="ResourceOptionFlags" />
+    <map enum-item="D3D(\d+)_RESOURCE_MISC_(.*)" name-tmp="$2" />
+    <map enum="D3D(\d+)_CLEAR_FLAG" name="DepthStencilClearFlags" />
+    <map enum-item="D3D(\d+)_CLEAR_(.*)" name-tmp="$2" />
+    <map enum="D3D(\d+)_CLEAR_FLAG" flags="true" none="false" />
+    <map enum="D3D(\d+)_DSV_FLAG" name="DepthStencilViewFlags" />
+    <map enum-item="D3D(\d+)_DSV_(.*)" name-tmp="$2" />
+    <map enum="D3D(\d+)_DSV_DIMENSION" name="DepthStencilViewDimension" />
+    <map enum-item="D3D(\d+)_DSV_DIMENSION_(.*)" name-tmp="$2" />
+    <map enum="D3D(\d+)_COMPARISON_FUNC" name="Comparison" />
+    <map enum="D3DX(\d+)_CHANNEL_FLAG" name="Channel" />
+    <map enum-item="D3DX(\d+)_CHANNEL_(.*)" name-tmp="$2" />
+    <map enum="D3DX(\d+)_FILTER_FLAG" name="FilterFlags" />
+    <map enum-item="D3DX(\d+)_FILTER_(.*)" name-tmp="$2" />
+    <map enum-item="D3DX(\d+)_IFF_(.*)" name-tmp="$2" />
+    <map enum="D3DX(\d+)_NORMALMAP_FLAG" name="NormalMapFlags" />
+    <map enum-item="D3DX(\d+)_NORMALMAP_(.*)" name-tmp="$2" />
+    <map enum="D3DX(\d+)_SAVE_TEXTURE_FLAG" name="SaveTextureFlags" />
+    <map enum="D3DX(\d+)_STF_USEINPUTBLOB" name="UseInputBlob" />
+    <map enum-item="D3DX(\d+)_STF_(.*)" name-tmp="$2" />
+    <map enum="D3D(\d+)_SHADER_DEBUG_REGTYPE" name="ShaderDebugRegisterType" />
+    <map enum-item="D3D(\d+)_SHADER_DEBUG_REG_(.+)" name-tmp="$2" />
+    <map enum-item="D3D(\d+)_RESOURCE_MISC_GENERATE_MIPS" name="GenerateMipMaps" />
+    <remove enum="D3DX(\d+)_SAVE_TEXTURE_FLAG" />
+    <map enum-item="D3D(\d+)_STENCIL_OP_DECR_SAT" name="DecrementAndClamp" />
+    <map enum-item="D3D(\d+)_STENCIL_OP_INCR_SAT" name="IncrementAndClamp" />
+    <map enum-item="D3D(\d+)_FILTER_MIN_(.*)" name-tmp="MINIFI_$2" />
+    <map enum-item="D3D(\d+)_FILTER_(.+)_MIN_(.+)" name-tmp="$2_MINIFI_$3" />
+
+    <!--
+    // *****************************************************************
+    // D3D1x Structures
+    // *****************************************************************
+    -->
+    <map struct="D3D(\d+)(.*)" name-tmp="$2" />
+    <map struct="D3DX(\d+)(.*)" name-tmp="$2" />
+
+    <map struct="D3D(\d+)_BOX" name="ResourceRegion" />
+    <map struct="D3D(\d+)_COUNTER_INFO" name="CounterCapabilities" />
+    <map struct="D3D(\d+)_BLEND_DESC" name="BlendStateDescription" />
+    <map struct="D3D(\d+)_RASTERIZER_DESC" name="RasterizerStateDescription" />
+    <map struct="D3D(\d+)_SAMPLER_DESC" name="SamplerStateDescription" />
+    <map field="D3D(\d+)_SAMPLER_DESC::BorderColor" type="SHARPDX_COLOR4" array="0" />
+    <map field="D3D(\d+)_SAMPLER_DESC::MaxAnisotropy" name="MaximumAnisotropy" />
+    <map field="D3D(\d+)_SAMPLER_DESC::ComparisonFunc" name="ComparisonFunction" />
+    <map field="D3D(\d+)_SAMPLER_DESC::MaxLOD" name="MaximumLod" />
+    <map field="D3D(\d+)_SAMPLER_DESC::MinLOD" name="MinimumLod" />
+    <map field="D3D(\d+)_SAMPLER_DESC::MipLODBias" name="MipLodBias" />
+    <map struct="D3D(\d+)_QUERY_DATA_SO_STATISTICS" name="StreamOutputStatistics" />
+    <map struct="D3D(\d+)_SO_DECLARATION_ENTRY" name="StreamOutputElement" />
+    <map struct="D3D(\d+)_INPUT_ELEMENT_DESC" name="InputElement" />
+    <map field="D3D(\d+)_INPUT_ELEMENT_DESC::InputSlot" name="Slot" />
+    <map field="D3D(\d+)_INPUT_ELEMENT_DESC::InputSlotClass" name="Classification" />
+    <map struct="D3D(\d+)_SUBRESOURCE_DATA" visibility="internal" />
+    <map struct="D3D(\d+)_MAPPED_SUBRESOURCE" visibility="internal" />
+    <map field="D3D(\d+)_RENDER_TARGET_BLEND_DESC1?::RenderTargetWriteMask" type="D3D$1_COLOR_WRITE_ENABLE" />
+    <map struct="D3D(\d+)_DEPTH_STENCILOP_DESC" name="DepthStencilOperationDescription" />
+    <map field="D3D(\d+)_DEPTH_STENCILOP_DESC::StencilFailOp" name="FailOperation" />
+    <map field="D3D(\d+)_DEPTH_STENCILOP_DESC::StencilDepthFailOp" name="DepthFailOperation" />
+    <map field="D3D(\d+)_DEPTH_STENCILOP_DESC::StencilPassOp" name="PassOperation" />
+    <map field="D3D(\d+)_DEPTH_STENCILOP_DESC::StencilFunc" name="Comparison" />
+    <map struct="D3D(\d+)_DEPTH_STENCIL_DESC" name="DepthStencilStateDescription" />
+    <map field="D3D(\d+)_DEPTH_STENCIL_DESC::DepthEnable" name="IsDepthEnabled" />
+    <map field="D3D(\d+)_DEPTH_STENCIL_DESC::StencilEnable" name="IsStencilEnabled" />
+    <map field="D3D(\d+)_DEPTH_STENCIL_DESC::DepthFunc" name="DepthComparison" />
+    
+    <map struct="D3D(\d+)_(.*)_SRV" name-tmp="$2_Resource" />
+    <move struct="D3D(\d+)_(.*)_SRV" to="D3D$1_SHADER_RESOURCE_VIEW_DESC"/>
+    
+    <map struct="D3D(\d+)_(.*)_SRV1" name-tmp="$2_Resource1" />
+    <move struct="D3D(\d+)_(.*)_SRV1" to="D3D$1_SHADER_RESOURCE_VIEW_DESC1"/>
+    
+    <map struct="D3D(\d+)_(.*)_RTV" name-tmp="$2_Resource" />
+    <move struct="D3D(\d+)_(.*)_RTV" to="D3D$1_RENDER_TARGET_VIEW_DESC"/>
+    <map field="D3D(\d+)_TEX3D_RTV::FirstWSlice" name="FirstDepthSlice" />
+    <map field="D3D(\d+)_TEX3D_RTV::WSize" name="DepthSliceCount" />
+
+    <map struct="D3D(\d+)_(.*)_DSV" name-tmp="$2_Resource" />
+    <move struct="D3D(\d+)_(.*)_DSV" to="D3D$1_DEPTH_STENCIL_VIEW_DESC"/>
+    
+    <map struct="D3D(\d+)_(.*)_UAV" name-tmp="$2_Resource" />
+    <move struct="D3D(\d+)_(.*)_UAV" to="D3D$1_UNORDERED_ACCESS_VIEW_DESC"/>
+
+    <map field="D3D(\d+)_.*::ViewDimension" name="Dimension" />
+    <map struct="D3D(\d+)_PASS_DESC" name="EffectPassDescription" />
+    <map struct="D3D(\d+)_PASS_SHADER_DESC" name="EffectPassShaderDescription" />
+    <map struct="D3D(\d+)_TECHNIQUE_DESC" name="EffectTechniqueDescription" />
+    <map field="D3D(\d+)_BUFFER_DESC::BindFlags" type="D3D$1_BIND_FLAG" />
+    <map field="D3D(\d+)_BUFFER_DESC::CPUAccessFlags" name="CpuAccessFlags" type="D3D$1_CPU_ACCESS_FLAG" />
+    <map field="D3D(\d+)_BUFFER_DESC::MiscFlags" name="OptionFlags" type="D3D$1_RESOURCE_MISC_FLAG" />
+    <map field="D3D(\d+)_TEXTURE1D_DESC::BindFlags" type="D3D$1_BIND_FLAG" />
+    <map field="D3D(\d+)_TEXTURE1D_DESC::CPUAccessFlags" name="CpuAccessFlags" type="D3D$1_CPU_ACCESS_FLAG" />
+    <map field="D3D(\d+)_TEXTURE1D_DESC::MiscFlags" name="OptionFlags" type="D3D$1_RESOURCE_MISC_FLAG" />
+    <map field="D3D(\d+)_TEXTURE2D_DESC::BindFlags" type="D3D$1_BIND_FLAG" />
+    <map field="D3D(\d+)_TEXTURE2D_DESC::CPUAccessFlags" name="CpuAccessFlags" type="D3D$1_CPU_ACCESS_FLAG" />
+    <map field="D3D(\d+)_TEXTURE2D_DESC::MiscFlags" name="OptionFlags" type="D3D$1_RESOURCE_MISC_FLAG" />
+    <map field="D3D(\d+)_TEXTURE3D_DESC::BindFlags" type="D3D$1_BIND_FLAG" />
+    <map field="D3D(\d+)_TEXTURE3D_DESC::CPUAccessFlags" name="CpuAccessFlags" type="D3D$1_CPU_ACCESS_FLAG" />
+    <map field="D3D(\d+)_TEXTURE3D_DESC::MiscFlags" name="OptionFlags" type="D3D$1_RESOURCE_MISC_FLAG" />
+    <map field="D3D(\d+)_FEATURE_DATA_FORMAT_SUPPORT::OutFormatSupport" type="D3D$1_FORMAT_SUPPORT" />
+    <map field="D3D(\d+)_FEATURE_DATA_FORMAT_SUPPORT2::OutFormatSupport2" type="D3D$1_FORMAT_SUPPORT2" />
+    <map field="D3DX(\d+)_IMAGE_INFO::MiscFlags" type="D3D$1_RESOURCE_MISC_FLAG" />
+    <map field="D3DX(\d+)_IMAGE_LOAD_INFO::BindFlags" type="D3D$1_BIND_FLAG" />
+    <map field="D3DX(\d+)_IMAGE_LOAD_INFO::CpuAccessFlags" type="D3D$1_CPU_ACCESS_FLAG" />
+    <map field="D3DX(\d+)_IMAGE_LOAD_INFO::MiscFlags" type="D3D$1_RESOURCE_MISC_FLAG" />
+    <map field="D3DX(\d+)_IMAGE_LOAD_INFO::Filter" type="D3DX$1_FILTER_FLAG" />
+    <map field="D3DX(\d+)_IMAGE_LOAD_INFO::MipFilter" type="D3DX$1_FILTER_FLAG" />
+    <map field="D3DX(\d+)_TEXTURE_LOAD_INFO::Filter" type="D3DX$1_FILTER_FLAG" />
+    <map field="D3DX(\d+)_TEXTURE_LOAD_INFO::MipFilter" type="D3DX$1_FILTER_FLAG" />
+    <map field="D3D(\d+)_DEPTH_STENCIL_VIEW_DESC::Flags" type="D3D$1_DSV_FLAG" />
+    <map field="D3D(\d+)_SHADER_DESC::Flags" type="D3DCOMPILE_SHADER_FLAGS" />
+    <map field="D3D(\d+)_BUFFER_DESC::ByteWidth" name="SizeInBytes" />
+    <map field="D3D(\d+)_BUFFER_DESC::MiscFlags" name="OptionFlags" />
+    <map field="D3D(\d+)_TEXTURE1D_DESC::MiscFlags" name="OptionFlags" />
+    <map field="D3D(\d+)_TEXTURE2D_DESC::MiscFlags" name="OptionFlags" />
+    <map field="D3D(\d+)_TEXTURE3D_DESC::MiscFlags" name="OptionFlags" />
+    <map field="D3DX(\d+)_IMAGE_INFO::MiscFlags" name="OptionFlags" />
+    <map field="D3DX(\d+)_IMAGE_LOAD_INFO::MiscFlags" name="OptionFlags" />
+    <map field="D3D(\d+)_BUFFER_DESC::MiscFlags" name="OptionFlags" />
+    <map field="D3D(\d+)_SUBRESOURCE_DATA::pSysMem" name="DataPointer" />
+    <map field="D3D(\d+)_SUBRESOURCE_DATA::SysMemPitch" name="Pitch" />
+    <map field="D3D(\d+)_SUBRESOURCE_DATA::SysMemSlicePitch" name="SlicePitch" />
+    <map field="D3D(\d+)_QUERY_DESC::Query" name="Type" />
+    <map field="D3D(\d+)_QUERY_DESC::MiscFlags" name="Flags" type="D3D$1_QUERY_MISC_FLAG" />
+    <map field="D3D(\d+)_BUFFEREX_SRV::Flags" type="D3D$1_BUFFEREX_SRV_FLAG" />
+    <map field="D3D(\d+)_BUFFER_UAV::Flags" type="D3D$1_BUFFER_UAV_FLAG" />
+    <map field="D3D(\d+)_SHADER_VARIABLE_DESC::uFlags" name="Flags" type="D3D_SHADER_VARIABLE_FLAGS" />
+    <map field="D3D(\d+)_SHADER_INPUT_BIND_DESC::uFlags" name="Flags" type="D3D_SHADER_INPUT_FLAGS" />
+    <map field="D3D(\d+)_QUERY_DATA_PIPELINE_STATISTICS::(.*)s" name="$2Count" />
+    <map field="D3D(\d+)_SHADER_DESC::(.*[^g])s" name="$2Count" />
+    <map field="D3D(\d+)_SHADER_BUFFER_DESC::Variables" name="VariableCount" />
+    <map field="D3D(\d+)_SHADER_BUFFER_DESC::uFlags" name="Flags" type="D3D_SHADER_CBUFFER_FLAGS" />
+    <map field="D3D(\d+)_SHADER_TYPE_DESC::(.*[^g])s" name="$2Count" />
+    <map field="D3DX?(\d+).*::Num(.*)s" name="$2Count" />
+    <map field="D3D(\d+)_EFFECT_DESC::(.*[^g])s" name="$2Count" />
+    <map field="D3D(\d+)_TECHNIQUE_DESC::Passes" name="PassCount" />
+    <map field="D3D(\d+)_TECHNIQUE_DESC::Annotations" name="AnnotationCount" />
+    <map field="D3D(\d+)_PASS_DESC::(.*[^g])s" name="$2Count" />
+    <map field="D3D(\d+)_PASS_DESC::pIAInputSignature" visibility="internal" />
+    <map field="D3D(\d+)_PASS_DESC::IAInputSignatureSize" visibility="internal" />
+    <map field="D3D(\d+)_PASS_DESC::BlendFactor" type="SHARPDX_COLOR4" pointer="" array="0" />
+    <map field="D3D(\d+)_PASS_DESC::StencilRef" name="StencilReference" />
+    <map field="D3D(\d+)_PASS_SHADER_DESC::pShaderVariable" visibility="internal" />
+    <map field="D3D(\d+)_PASS_SHADER_DESC::pShaderVariable" name="VariablePointer" />
+    <map field="D3D(\d+)_PASS_SHADER_DESC::ShaderIndex" name="Index" />
+    <map field="D3D(\d+)_EFFECT_SHADER_DESC::pInputSignature" visibility="internal" name="InputSignaturePointer" />
+    <map field="D3D(\d+)_EFFECT_SHADER_DESC::pBytecode" visibility="internal" name="BytecodePointer" />
+    <map field="D3D(\d+)_EFFECT_SHADER_DESC::BytecodeLength" visibility="internal" />
+    <map field="D3D(\d+)_EFFECT_SHADER_DESC::SODecl" name="StreamOutputDeclaration" />
+    <map field="D3D(\d+)_EFFECT_SHADER_DESC::NumInputSignatureEntries" name="InputParameterCount" />
+    <map field="D3D(\d+)_EFFECT_SHADER_DESC::NumOutputSignatureEntries" name="OutputParameterCount" />
+    <map field="D3D(\d+)_EFFECT_VARIABLE_DESC::Flags" type="D3D$1_EFFECT_VARIABLE_FLAGS" />
+    <map field="D3D(\d+)_EFFECT_VARIABLE_DESC::Annotations" name="AnnotationCount" />
+    <map field="D3D(\d+)_RASTERIZER_DESC::(.*)Enable" name="Is$2Enabled" />
+    <map field="D3D(\d+)_RASTERIZER_DESC::FrontCounterClockwise" name="IsFrontCounterClockwise" />
+    <map field="D3D(\d+)_RENDER_TARGET_BLEND_DESC1?::BlendEnable" name="IsBlendEnabled" />
+    <map field="D3D(\d+)_RENDER_TARGET_BLEND_DESC1?::SrcBlend" name="SourceBlend" />
+    <map field="D3D(\d+)_RENDER_TARGET_BLEND_DESC1?::DestBlend" name="DestinationBlend" />
+    <map field="D3D(\d+)_RENDER_TARGET_BLEND_DESC1?::BlendOp" name="BlendOperation" />
+    <map field="D3D(\d+)_RENDER_TARGET_BLEND_DESC1?::SrcBlendAlpha" name="SourceAlphaBlend" />
+    <map field="D3D(\d+)_RENDER_TARGET_BLEND_DESC1?::DestBlendAlpha" name="DestinationAlphaBlend" />
+    <map field="D3D(\d+)_RENDER_TARGET_BLEND_DESC1?::BlendOpAlpha" name="AlphaBlendOperation" />
+    <map struct="D3DX(\d+)_TEXTURE_LOAD_INFO" native="true" struct-to-class="true" marshal="true" new="false" marshalto="true" />
+    <map field="D3DX(\d+)_TEXTURE_LOAD_INFO::pSrcBox" visibility="internal" name="SourceRegionPointer" />
+    <map field="D3DX(\d+)_TEXTURE_LOAD_INFO::pDstBox" visibility="internal" name="DestinationRegionPointer" />
+    <map field="D3DX(\d+)_TEXTURE_LOAD_INFO::SrcFirstMip" name="FirstSourceMip" />
+    <map field="D3DX(\d+)_TEXTURE_LOAD_INFO::SrcFirstElement" name="FirstSourceElement" />
+    <map field="D3DX(\d+)_TEXTURE_LOAD_INFO::DstFirstMip" name="FirstDestinationMip" />
+    <map field="D3DX(\d+)_TEXTURE_LOAD_INFO::DstFirstElement" name="FirstDestinationElement" />
+
+    <!--
+    // *****************************************************************
+    // D3D1x Interfaces
+    // *****************************************************************
+    -->
+    <map interface="ID3D10(.+)" name-tmp="$1" />
+    <map interface="ID3DX10(.+)" name-tmp="$1" />
+    <map interface="ID3D11(.+)" name-tmp="$1" />
+    <map interface="ID3DX11(.+)" name-tmp="$1" />
+    
+    <remove interface="ID3D10InfoQueue" />
+    <remove struct="D3D10_INFO_QUEUE_FILTER" />
+    <remove struct="D3D10_INFO_QUEUE_FILTER_DESC" />
+    <map method="ID3D(\d+)ClassInstance::GetInstanceName" visibility="internal" />
+    <map method="ID3D(\d+)ClassInstance::GetTypeName" visibility="internal" />
+    <map param="ID3D(\d+)Device::CheckFormatSupport::pFormatSupport" type="D3D$1_FORMAT_SUPPORT" return="true" />
+    <map param="ID3D(\d+)Device::CheckMultisampleQualityLevels::pNumQualityLevels" return="true" />
+    <map method="ID3D(\d+)Device::CheckCounterInfo" property="true" name="GetCounterCapabilities" />
+    <map param="pCounterInfo" return="true" />
+    <map method="ID3D(\d+)Device1?::Create.*" visibility="internal" />
+    <map method="ID3D(\d+)Device::GetImmediateContext" visibility="internal" property="true" />
+    <remove method="ID3D(\d+)Device::.*TextFilterSize" />
+    <map method="ID3D(\d+)Device::GetPredication" visibility="internal" />
+    <map method="ID3D(\d+)Device::OpenSharedResource" visibility="internal" />
+    <map method="ID3D(\d+)Device::UpdateSubresource" visibility="internal" />
+    <map interface="ID3D(\d+)View" name="ResourceView" />
+    <map param="ID3D(\d+)Device::CreateTexture[0-9]D::pInitialData" attribute="in buffer optional" />
+    <map method="ID3D(\d+)DeviceContext::SetVertexBuffers" visibility="internal" />
+    <map method="ID3D(\d+)DeviceContext::SetTargets" visibility="internal" />
+    <map method="ID3D(\d+)DeviceContext::SetRenderTargetsAndUnorderedAccessViews" visibility="internal" />
+    <map param="ID3D(\d+)DeviceContext::ClearRenderTargetView::ColorRGBA" type="SHARPDX_COLOR4" pointer="*" array="0" />
+    <map method="ID3D\d+DeviceContext::IA(.*)" name="$1" />
+    <map method="ID3D\d+DeviceContext::VS(.*)" name="$1" />
+    <map method="ID3D\d+DeviceContext::PS(.*)" name="$1" />
+    <map method="ID3D\d+DeviceContext::GS(.*)" name="$1" />
+    <map method="ID3D\d+DeviceContext::SO(.*)" name="$1" />
+    <map method="ID3D\d+DeviceContext::DS(.*)" name="$1" />
+    <map method="ID3D\d+DeviceContext::HS(.*)" name="$1" />
+    <map method="ID3D\d+DeviceContext::RS(.*)" name="$1" />
+    <map method="ID3D\d+DeviceContext::OM(.*)" name="$1" />
+    <map method="ID3D\d+DeviceContext::CS(.*)" name="$1" />
+    <map method="ID3D(\d+)DeviceContext::IA.*" property="true" />
+    <map method="ID3D(\d+)DeviceContext::SetViewports" visibility="internal" />
+    <map method="ID3D(\d+)DeviceContext::SetScissorRects" visibility="internal" />
+    <map method="ID3D(\d+)DeviceContext::IASetVertexBuffers" visibility="internal" />
+    <map method="ID3D(\d+)DeviceContext::[A-Z][A-Z]SetShader" visibility="internal override" />
+    <map method="ID3D(\d+)DeviceContext::[A-Z][A-Z]SetShaderResources" visibility="public override" />
+    <map method="ID3D(\d+)DeviceContext::[A-Z][A-Z]SetSamplers" visibility="public override" />
+    <map method="ID3D(\d+)DeviceContext::[A-Z][A-Z]GetShader" visibility="internal override" />
+    <map method="ID3D(\d+)DeviceContext::[A-Z][A-Z]SetConstantBuffers" visibility="public override" />
+    <map method="ID3D(\d+)DeviceContext::[A-Z][A-Z]GetShaderResources" visibility="internal override" />
+    <map method="ID3D(\d+)DeviceContext::[A-Z][A-Z]GetSamplers" visibility="internal override" />
+    <map method="ID3D(\d+)DeviceContext::[A-Z][A-Z]GetConstantBuffers" visibility="internal override" />
+    <map method="ID3D(\d+)DeviceContext::OMGet.*" visibility="internal" />
+    <map method="ID3D(\d+)DeviceContext::SO.*" visibility="internal" />
+    <map method="ID3D(\d+)DeviceContext::RSGetScissorRects" visibility="internal" />
+    <map method="ID3D(\d+)DeviceContext::RSSetScissorRects" visibility="internal" />
+    <map method="ID3D(\d+)DeviceContext::RSGetViewports" visibility="internal" />
+    <map method="ID3D(\d+)DeviceContext::RSSetViewports" visibility="internal" />
+    <map param="ID3D(\d+)DeviceContext::OMGetBlendState::BlendFactor" type="SHARPDX_COLOR4" pointer="*" array="0" />
+    <map param="ID3D(\d+)DeviceContext::OMSetBlendState::BlendFactor" type="SHARPDX_COLOR4" pointer="*" array="0" />
+    <map param="ID3D(\d+)DeviceContext::[A-Z][A-Z]GetShader::pNumClassInstances" attribute="inout" />
+    <map method="ID3D(\d+)DeviceContext::Map" visibility="internal" />
+    <map method="ID3D(\d+)DeviceContext::Unmap" name="UnmapSubresource" />
+    <map method="ID3D(\d+)DeviceContext::UpdateSubresource" visibility="internal" />
+    <map param="ID3D(\d+)DeviceContext::Map::MapFlags" type="D3D$1_MAP_FLAG" />
+    <map param="ID3D(\d+)DeviceContext::GetData::GetDataFlags" type="D3D$1_ASYNC_GETDATA_FLAG" />
+    <map method="ID3D(\d+)DeviceContext::GetData" visibility="internal" name="GetDataInternal" />
+    <map method="ID3D(\d+)DeviceContext::FinishCommandList" visibility="internal" name="FinishCommandListInternal" />
+    <map method="ID3D(\d+)DeviceContext::GetResourceMinLOD" name="GetMinimumLod" />
+    <map method="ID3D(\d+)DeviceContext::SetResourceMinLOD" name="SetMinimumLod" />
+    <map method="ID3D(\d+)DeviceContext::ClearUnorderedAccessViewFloat" name="ClearUnorderedAccessView" />
+    <map method="ID3D(\d+)DeviceContext::ClearUnorderedAccessViewUint" name="ClearUnorderedAccessView" />
+    <map param="ID3D(\d+)DeviceContext::ClearDepthStencilView::ClearFlags" type="D3D11_CLEAR_FLAG" />
+    <remove interface="ID3DX(\d+)ThreadPump" />
+    <remove interface="ID3DX(\d+)DataLoader" />
+    <remove interface="ID3DX(\d+)DataProcessor" />
+    <map param="ID3D(\d+)ShaderReflectionType::GetDesc::pDesc" attribute="out" />
+    <map param="ID3D(\d+)ShaderReflectionVariable::GetDesc::pDesc" attribute="out" />
+    <map param="ID3D(\d+)ShaderReflectionConstantBuffer::GetDesc::pDesc" attribute="out" />
+    <map param="ID3D(\d+)ShaderReflection::GetDesc::pDesc" attribute="out" />
+    <map param="ID3D(\d+)ShaderReflection::GetResourceBindingDesc::pDesc" attribute="out" />
+    <map param="ID3D(\d+)ShaderReflection::GetInputParameterDesc::pDesc" attribute="out" />
+    <map param="ID3D(\d+)ShaderReflection::GetOutputParameterDesc::pDesc" attribute="out" />
+    <map param="ID3D(\d+)StateBlock::GetDevice::ppDevice" attribute="out" />
+    <map param="ID3D(\d+)EffectType::GetDesc::pDesc" attribute="out" />
+    <map param="ID3D(\d+)EffectVariable::GetDesc::pDesc" attribute="out" />
+    <map param="ID3D(\d+)EffectBlendVariable::GetBlendState::ppBlendState" attribute="out" return="true" />
+    <map param="ID3D(\d+)EffectBlendVariable::GetBackingStore::pBlendDesc" attribute="out" />
+    <map method="ID3D(\d+)EffectConstantBuffer::Get.*" property="true" />
+    <map method="ID3D(\d+)EffectConstantBuffer::Set.*" property="true" />
+    <map param="ID3D(\d+)EffectConstantBuffer::GetConstantBuffer::ppConstantBuffer" attribute="out" return="true" />
+    <map param="ID3D(\d+)EffectConstantBuffer::GetTextureBuffer::ppTextureBuffer" attribute="out" return="true" />
+    <map param="ID3D(\d+)EffectDepthStencilVariable::GetDepthStencilState::ppDepthStencilState" attribute="out" return="true" />
+    <map param="ID3D(\d+)EffectDepthStencilVariable::GetBackingStore::pDepthStencilDesc" attribute="out" return="true" />
+    <map method="ID3D(\d+)EffectDepthStencilViewVariable::Get.*" visibility="internal" property="true" />
+    <map method="ID3D(\d+)EffectDepthStencilViewVariable::Set.*" visibility="internal" property="true" />
+    <map method="ID3D(\d+)EffectDepthStencilViewVariable::GetDepthStencil" visibility="public" />
+    <map param="ppResource" return="true" />
+    <map method="ID3D(\d+)EffectDepthStencilViewVariable::SetDepthStencil" visibility="public" />
+    <map param="ID3D(\d+)EffectDepthStencilViewVariable::GetDepthStencilArray::ppResources" attribute="out buffer" />
+    <map param="ID3D(\d+)EffectDepthStencilViewVariable::SetDepthStencilArray::ppResources" attribute="in buffer" />
+    <map method="ID3D(\d+)EffectMatrixVariable::.*" visibility="internal" property="true" />
+    <map method="ID3D(\d+)EffectMatrixVariable::GetMatrix" visibility="public" />
+    <map method="ID3D(\d+)EffectMatrixVariable::GetMatrixTranspose" visibility="public" />
+    <map method="ID3D(\d+)EffectMatrixVariable::SetMatrix" visibility="public" />
+    <map method="ID3D(\d+)EffectMatrixVariable::SetMatrixTranspose" visibility="public" />
+    <map param="ID3D(\d+)EffectMatrixVariable::SetMatrix::pData" type="SHARPDX_MATRIX" attribute="in" />
+    <map param="pData" type="SHARPDX_MATRIX" attribute="in" />
+    <map param="ID3D(\d+)EffectMatrixVariable::SetMatrixArray::pData" type="SHARPDX_MATRIX" attribute="in buffer" />
+    <map param="ID3D(\d+)EffectMatrixVariable::SetMatrixTransposeArray::pData" type="SHARPDX_MATRIX" attribute="in buffer" />
+    <map param="ID3D(\d+)EffectMatrixVariable::GetMatrix::pData" type="SHARPDX_MATRIX" attribute="out" return="true" />
+    <map param="ID3D(\d+)EffectMatrixVariable::GetMatrixArray::pData" type="SHARPDX_MATRIX" attribute="out buffer" />
+    <map param="ID3D(\d+)EffectMatrixVariable::GetMatrixTranspose::pData" type="SHARPDX_MATRIX" attribute="out" return="true" />
+    <map param="ID3D(\d+)EffectMatrixVariable::GetMatrixTransposeArray::pData" type="SHARPDX_MATRIX" attribute="out buffer" />
+    <map param="ID3D(\d+)EffectPass::GetDesc::pDesc" attribute="out" />
+    <map param="ID3D(\d+)EffectPass::GetVertexShaderDesc::pDesc" attribute="out" />
+    <map param="ID3D(\d+)EffectPass::GetGeometryShaderDesc::pDesc" attribute="out" />
+    <map param="ID3D(\d+)EffectPass::GetPixelShaderDesc::pDesc" attribute="out" />
+    <map param="ID3D(\d+)EffectRasterizerVariable::GetBackingStore::pRasterizerDesc" attribute="out" />
+    <map param="ID3D(\d+)EffectRasterizerVariable::GetRasterizerState::ppRasterizerState" attribute="out" return="true" />
+    <map method="ID3D(\d+)EffectRenderTargetViewVariable::.*" visibility="internal" property="true" />
+    <map method="ID3D(\d+)EffectRenderTargetViewVariable::GetRenderTarget" visibility="public" />
+    <map method="ID3D(\d+)EffectRenderTargetViewVariable::SetRenderTarget" visibility="public" />
+    <map param="ID3D(\d+)EffectRenderTargetViewVariable::GetRenderTarget::ppResource" attribute="out" return="true" />
+    <map param="ID3D(\d+)EffectRenderTargetViewVariable::GetRenderTargetArray::ppResources" attribute="out buffer" />
+    <map param="ID3D(\d+)EffectRenderTargetViewVariable::SetRenderTargetArray::ppResources" attribute="in buffer" />
+    <map param="ID3D(\d+)EffectSamplerVariable::GetSampler::ppSampler" attribute="out" return="true" />
+    <map param="ID3D(\d+)EffectSamplerVariable::GetBackingStore::pSamplerDesc" attribute="out" />
+    <map method="ID3D(\d+)EffectScalarVariable::.*" visibility="internal" property="true" />
+    <map method="ID3D(\d+)EffectScalarVariable::GetFloat" visibility="public" />
+    <map method="ID3D(\d+)EffectScalarVariable::GetInt" visibility="public" />
+    <map param="ID3D(\d+)EffectScalarVariable::GetFloat::pValue" attribute="out" return="true" />
+    <map param="pValue" attribute="out" return="true" />
+    <map param="ID3D(\d+)EffectScalarVariable::GetBool::pValue" attribute="out" />
+    <map param="ID3D(\d+)EffectScalarVariable::GetFloatArray::pData" attribute="out buffer" />
+    <map param="ID3D(\d+)EffectScalarVariable::GetIntArray::pData" attribute="out buffer" />
+    <map param="ID3D(\d+)EffectScalarVariable::GetBoolArray::pData" attribute="out buffer" />
+    <map param="ID3D(\d+)EffectScalarVariable::SetFloatArray::pData" attribute="in buffer" />
+    <map param="ID3D(\d+)EffectScalarVariable::SetIntArray::pData" attribute="in buffer" />
+    <map param="ID3D(\d+)EffectScalarVariable::SetBoolArray::pData" attribute="in buffer" />
+    <map method="ID3D(\d+)EffectShaderResourceVariable::.*" visibility="internal" property="true" />
+    <map method="ID3D(\d+)EffectShaderResourceVariable::GetResource" visibility="public" />
+    <map method="ID3D(\d+)EffectShaderResourceVariable::SetResource" visibility="public" />
+    <map param="ID3D(\d+)EffectShaderResourceVariable::GetResource::ppResource" attribute="out" return="true" />
+    <map param="ID3D(\d+)EffectShaderResourceVariable::GetResourceArray::ppResources" attribute="out buffer" />
+    <map param="ID3D(\d+)EffectShaderResourceVariable::SetResourceArray::ppResources" attribute="in buffer" />
+    <map param="ID3D(\d+)EffectShaderVariable::GetShaderDesc::pDesc" attribute="out" return="true" />
+    <map param="ID3D(\d+)EffectShaderVariable::GetVertexShader::ppVS" attribute="out" return="true" />
+    <map param="ID3D(\d+)EffectShaderVariable::GetGeometryShader::ppGS" attribute="out" return="true" />
+    <map param="ID3D(\d+)EffectShaderVariable::GetPixelShader::ppPS" attribute="out" return="true" />
+    <map param="ID3D(\d+)EffectShaderVariable::GetInputSignatureElementDesc::pDesc" name="GetInputParameterDescription" attribute="out" return="true" />
+    <map param="ID3D(\d+)EffectShaderVariable::GetOutputSignatureElementDesc::pDesc" name="GetOutputParameterDescription" attribute="out" return="true" />
+    <map method="ID3D(\d+)EffectStringVariable::.*" visibility="internal" property="true" />
+    <map param="ID3D(\d+)EffectStringVariable::GetString::ppString" type="void" attribute="out" />
+    <map param="ID3D(\d+)EffectStringVariable::GetStringArray::ppStrings" type="void" attribute="out buffer" />
+    <map method="ID3D(\d+)EffectVariable::(As.*)" visibility="internal" name="$2_" />
+    <map method="ID3D(\d+)EffectVectorVariable::.*" visibility="internal" property="true" />
+    <map method="ID3D(\d+)EffectVectorVariable::SetIntVector" visibility="public" />
+    <map method="ID3D(\d+)EffectVectorVariable::SetFloatVector" visibility="public" />
+    <map param="ID3D(\d+)EffectVectorVariable::GetIntVector::pData" type="SHARPDX_INT4" attribute="out" />
+    <map param="ID3D(\d+)EffectVectorVariable::GetFloatVector::pData" type="SHARPDX_VECTOR4" attribute="out" />
+    <map param="ID3D(\d+)EffectVectorVariable::GetIntVectorArray::pData" type="SHARPDX_INT4" attribute="out buffer" />
+    <map param="ID3D(\d+)EffectVectorVariable::GetFloatVectorArray::pData" type="SHARPDX_VECTOR4" attribute="out buffer" />
+    <map param="ID3D(\d+)EffectVectorVariable::SetIntVectorArray::pData" type="SHARPDX_INT4" attribute="in buffer" />
+    <map param="ID3D(\d+)EffectVectorVariable::SetFloatVectorArray::pData" type="SHARPDX_VECTOR4" attribute="in buffer" />
+    <map param="ID3D(\d+)EffectVectorVariable::SetIntVector::pData" type="SHARPDX_INT4" attribute="in" />
+    <map param="pData" type="SHARPDX_VECTOR4" attribute="in" />
+    <map method="ID3D(\d+)EffectVectorVariable::Set.*" name="Set" />
+    <map param="ID3D(\d+)EffectVectorVariable::GetBoolVector::pData" attribute="out buffer" />
+    <map param="ID3D(\d+)EffectVectorVariable::GetBoolVectorArray::pData" attribute="out buffer" />
+    <map param="ID3D(\d+)EffectVectorVariable::SetBoolVector::pData" attribute="in buffer" />
+    <map param="ID3D(\d+)EffectVectorVariable::SetBoolVectorArray::pData" attribute="in buffer" />
+    <map param="ID3D(\d+)EffectTechnique::GetDesc::pDesc" attribute="out" />
+    <map param="ID3D(\d+)Effect::GetDevice::ppDevice" attribute="out" />
+    <map param="ID3D(\d+)Effect::GetDesc::pDesc" attribute="out" />
+    <map param="ID3D(\d+)ShaderReflection1::GetDesc::pDesc" attribute="out" />
+    <map param="ID3D(\d+)ShaderReflection1::GetResourceBindingDesc::pDesc" attribute="out" />
+    <map param="ID3D(\d+)ShaderReflection1::GetInputParameterDesc::pDesc" attribute="out" />
+    <map param="ID3D(\d+)ShaderReflection1::GetOutputParameterDesc::pDesc" attribute="out" />
+    <map param="ID3D(\d+)ShaderReflection1::GetMovInstructionCount::pCount" attribute="out" />
+    <map param="ID3D(\d+)ShaderReflection1::GetMovcInstructionCount::pCount" attribute="out" />
+    <map param="ID3D(\d+)ShaderReflection1::GetConversionInstructionCount::pCount" attribute="out" />
+    <map param="ID3D(\d+)ShaderReflection1::GetBitwiseInstructionCount::pCount" attribute="out" />
+    <map param="ID3D(\d+)ShaderReflection1::GetGSInputPrimitive::pPrim" attribute="out" />
+    <map param="ID3D(\d+)ShaderReflection1::IsLevel9Shader::pbLevel9Shader" attribute="out" />
+    <map param="ID3D(\d+)ShaderReflection1::IsSampleFrequencyShader::pbSampleFrequency" attribute="out" />
+    <map param="ID3DX(\d*)Sprite::Begin::flags" type="D3DX$1_SPRITE_FLAG" />
+    <map param="ID3D(\d+).*::Map::MapFlags" type="D3D$1_MAP_FLAG" />
+    <map method="ID3D(\d+)EffectPass::Apply" visibility="internal" />
+    <map method="ID3DX(\d*)Font::GetTextMetrics.*" visibility="internal" />
+
+    <!--
+    // *****************************************************************
+    // D3D1x Functions
+    // *****************************************************************
+    -->
+    <map function="D3DX\d+(.*)W" name-tmp="$1" />
+    <remove function="D3DX(\d+)UnsetAllDeviceObjects" />
+    <map param="D3D(\d+)CreateDevice.*?::Flags" type="D3D$1_CREATE_DEVICE_FLAG" />
+    <map param="D3DX(\d+).*?::Flags1" type="D3DCOMPILE_SHADER_FLAGS" />
+    <map param="D3DX(\d+).*?::Flags2" type="D3DCOMPILE_EFFECT_FLAGS" />
+    <map param="D3DX(\d+)ComputeNormalMap::Flags" type="D3DX$1_NORMALMAP_FLAG" />
+    <map param="D3DX(\d+)ComputeNormalMap::Channel" type="D3DX$1_CHANNEL_FLAG" />
+    <map param="D3DX(\d+)CreateTextureFromFileW::ppTexture" attribute="out" />
+    <map param="D3DX(\d+)CreateTextureFromResourceW::ppTexture" attribute="out" />
+    <map param="D3DX(\d+)CreateTextureFromMemory::ppTexture" attribute="out" />
+    <map param="D3DX(\d+)SaveTextureToMemory::ppDestBuf" attribute="out" />
+    <map param="D3DX(\d+)CreateTextureFromFileW::pLoadInfo" attribute="in optional" />
+    <map param="D3DX(\d+)CreateTextureFromResourceW::pLoadInfo" attribute="in optional" />
+    <map param="D3DX(\d+)CreateTextureFromMemory::pLoadInfo" attribute="in optional" />
+    <map param="D3DX(\d+)CreateShaderResourceViewFromFileW::pLoadInfo" attribute="in optional" />
+    <map param="D3DX(\d+)CreateShaderResourceViewFromResourceW::pLoadInfo" attribute="in optional" />
+    <map param="D3DX(\d+)CreateShaderResourceViewFromMemory::pLoadInfo" attribute="in optional" />
+    <map param="D3DX(\d+).*?::pDefines" attribute="in buffer optional" />
+    <map param="D3D(\d+)CreateDeviceAndSwapChain::pSwapChainDesc" attribute="in" />
+    <map param="D3DX?(\d+).*?::pHResult" attribute="out" />
+    <map function="D3DX(\d+)CreateTextureFromFileW" visibility="internal" />
+    <map function="D3DX(\d+)CreateTextureFromResourceW" visibility="internal" />
+    <map function="D3DX(\d+)CreateTextureFromMemory" visibility="internal" />
+    <map function="D3DX(\d+)SaveTextureToFile" visibility="internal" />
+    <map function="D3DX(\d+)SaveTextureToMemory" visibility="internal" />
+    <remove function="D3DX(\d+).*A" />
+    <map function="D3DX(\d+)(.+)W" name-tmp="$2" />
+    <remove function="D3DX(\d+)Compile.*" />
+    <remove function="D3DX(\d+)PreprocessShader.*" />
+    <remove function="D3DX(\d+)CreateAsync.*" />
+    <remove function="D3DX(\d+)CreateThreadPump.*" />
+    <context-clear />
+  </mapping>
+</config>

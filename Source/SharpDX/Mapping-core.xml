@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+-->
+<config id="sharpdx-core" depends="sharpdx-root" xmlns="urn:SharpGen.Config">
+  <namespace>SharpDX</namespace>
+  <assembly>SharpDX</assembly>
+
+  <include file="objidl.h" namespace="SharpDX.Win32" output="Win32">
+    <attach>STATSTG</attach>
+    <attach>ISequentialStream</attach>
+    <attach>IStream</attach>
+  </include>
+
+  <!-- SharpDX global naming -->
+  <naming>    
+    <short name="DESC">Description</short>
+    <short name="CBUFFER">ConstantBuffer</short>
+    <short name="TBUFFER">TextureBuffer</short>
+    <short name="BUFFEREX">ExtendedBuffer</short>
+    <short name="FUNC">Function</short>
+    <short name="FLAG">Flags</short>
+    <short name="SRV">ShaderResourceView</short>
+    <short name="DSV">DepthStencilView</short>
+    <short name="RTV">RenderTargetView</short>
+    <short name="UAV">UnorderedAccessView</short>
+    <short name="TEXTURE1D">Texture1D</short>
+    <short name="TEXTURE2D">Texture2D</short>
+    <short name="TEXTURE3D">Texture3D</short>
+    <short name="TEXTURECUBE">TextureCube</short>
+    <short name="TEX1D">Texture1D</short>
+    <short name="TEX2D">Texture2D</short>
+    <short name="TEX3D">Texture3D</short>
+    <short name="TEXCUBE">TextureCube</short>
+    <short name="TEX2DMS">Texture2DMultisampled</short>
+    <short name="RWTEXTURE1D">RWTexture1D</short>
+    <short name="RWTEXTURE2D">RWTexture2D</short>
+    <short name="RWTEXTURE3D">RWTexture3D</short>
+    <short name="RWTEXTURE1DARRAY">RWTexture1DArray</short>
+    <short name="RWTEXTURE2DARRAY">RWTexture2DArray</short>
+    <short name="TEXTURE1DARRAY">Texture1DArray</short>
+    <short name="TEXTURE2DARRAY">Texture2DArray</short>
+    <short name="TEXTURE3DARRAY">Texture3DArray</short>
+    <short name="TEXTURE2DMS">Texture2DMultisampled</short>
+    <short name="TEXTURE2DMSARRAY">Texture2DMultisampledArray</short>
+    <short name="RWBUFFER">RWBuffer</short>
+    <short name="RWBYTEADDRESS">RWByteAddress</short>
+    <short name="UINT8">UInt8</short>
+    <short name="UINT">UInt</short>
+    <short name="SINT">SInt</short>
+    <short name="UNORM">UNorm</short>
+    <short name="SNORM">SNorm</short>
+    <short name="SRGB">SRgb</short>
+    <short name="ADJ">WithAdjacency</short>
+    <short name="IA">InputAssembly</short>
+    <short name="SO">StreamOutput</short>
+    <short name="OP">Operation</short>
+    <short name="INV">Inverse</short>
+    <short name="SRC">Source</short>
+    <short name="SRC1">SecondarySource</short>
+    <short name="SAT">Saturate</short>
+    <short name="DEST">Destination</short>
+    <short name="REV">Reverse</short>
+    <short name="MAX">Maximum</short>
+    <short name="MIN">Minimum</short>
+    <short name="MINIFI">Min</short>
+    <short name="INCR">Increment</short>
+    <short name="DECR">Decrement</short>
+    <short name="SRGB">StandardRgb</short>
+    <short name="STENCILOP">StencilOperation</short>
+    <short name="SUBRESOURCE">SubResource</short>
+    <short name="CBF">ConstantBuffer</short>
+    <short name="INFO">Information</short>
+    <short name="DESC1">Description1</short>
+    <short name="DISASM">Disassembly</short>
+    <short name="FFT">FastFourierTransform</short>
+    <short name="DC">DeviceContext</short>
+    <short name="LINELIST">LineList</short>
+    <short name="LINESTRIP">LineStrip</short>
+    <short name="POINTLIST">PointList</short>
+    <short name="TRIANGLELIST">TriangleList</short>
+    <short name="TRIANGLESTRIP">TriangleStrip</short>
+  </naming>
+
+  <!-- SharpDX global types -->
+  <extension>
+    <define struct="System.Drawing.SizeF" sizeof="8" />
+    <define struct="System.Drawing.Size" sizeof="8" />
+    <define struct="System.Drawing.PointF" sizeof="8" />
+    <define struct="System.Drawing.Point" sizeof="8" />
+    <define struct="SharpDX.Result" sizeof="4" />
+    <define struct="SharpDX.Size" sizeof="8" />
+    <define struct="SharpDX.Matrix" sizeof="64" />
+    <define struct="SharpDX.Vector2" sizeof="8" />
+    <define struct="SharpDX.Vector3" sizeof="12" />
+    <define struct="SharpDX.Vector4" sizeof="16" />
+    <define struct="SharpDX.Color3" sizeof="12" />
+    <define struct="SharpDX.Color4" sizeof="16" />
+    <define struct="SharpDX.Quaternion" sizeof="16" />
+    <define struct="SharpDX.Plane" sizeof="16" />
+
+    <define struct="SharpDX.Win32Native.TextMetric" sizeof="32"/> <!-- TODO calculate sizeof -->
+    <define struct="SharpDX.Win32Native.TextMetricA" sizeof="32"/> <!-- TODO calculate sizeof -->
+    <define struct="SharpDX.Win32Native.LogFont" sizeof="32"/> <!-- TODO calculate sizeof -->
+    
+    
+    <define struct="SharpDX.Int4" sizeof="16" />
+    <define struct="SharpDX.Rectangle" sizeof="16" />
+    <define struct="SharpDX.RectangleF" sizeof="16" />
+    <define struct="SharpDX.Multimedia.WaveFormat" sizeof="18" marshal="true" />
+    <define struct="SharpDX.Multimedia.WaveFormatExtensible" sizeof="18"  marshal="true" custom-new="true"/>
+    <define struct="SharpDX.FunctionCallback" sizeof="8" />
+    <define interface="SharpDX.ComObject" />
+  </extension>
+
+  <!--
+    // *****************************************************************
+    // Bindings
+    // *****************************************************************
+    -->
+  <bindings>
+    <!-- Primitive bindings -->
+    <bind from="void" to="System.Void" />
+    <bind from="int" to="System.Int32" />
+    <bind from="unsigned int" to="System.Int32" />
+    <bind from="short" to="System.Int16" />
+    <bind from="unsigned short" to="System.Int16" />
+    <bind from="unsigned char" to="System.Byte" />
+    <bind from="longlong" to="System.Int64" />
+    <bind from="unsigned longlong" to="System.Int64" />
+    <bind from="float" to="System.Single" />
+    <bind from="double" to="System.Double" />
+    <bind from="bool" to="System.Boolean" />
+
+    <!-- SharpDX bindings -->
+    <bind from="SHARPDX_INT4" to="SharpDX.Int4" />
+    <bind from="SHARPDX_COLOR4" to="SharpDX.Color4" />
+    <bind from="SHARPDX_VECTOR4" to="SharpDX.Vector4" />
+    <bind from="SHARPDX_MATRIX" to="SharpDX.Matrix" />
+
+    <!-- Global D3DX/D3D bindings -->
+    <bind from="D3DCOLORVALUE" to="SharpDX.Color4" />
+    <bind from="D3DXCOLOR" to="SharpDX.Color4" />
+    <bind from="D3DXMATRIX" to="SharpDX.Matrix" />
+    <bind from="D3DMATRIX" to="SharpDX.Matrix" />
+    <bind from="D3DXVECTOR2" to="SharpDX.Vector2" />
+    <bind from="D3DVECTOR" to="SharpDX.Vector3" />
+    <bind from="D3DXVECTOR3" to="SharpDX.Vector3" />
+    <bind from="D3DXVECTOR4" to="SharpDX.Vector4" />
+    <bind from="D3DXQUATERNION" to="SharpDX.Quaternion" />
+    <bind from="D3DXPLANE" to="SharpDX.Plane" />
+    <bind from="D3DCOLOR" to="SharpDX.Color4" />
+    <bind from="D3DXFLOAT16" to="System.Int32" />
+    <bind from="D3DXVECTOR2_16F" to="System.Int32" />
+    <bind from="D3DXVECTOR3_16F" to="System.Int32" />
+    <bind from="D3DXVECTOR4_16F" to="System.Int32" />
+    <bind from="D3D_OMAC" to="System.Guid" />
+    <bind from="D3DRECT" to="SharpDX.Rectangle" />
+
+    <!-- Win32 bindings -->
+    <bind from="INT_PTR" to="System.IntPtr" />
+    <bind from="LONG_PTR" to="System.IntPtr" />
+    <bind from="UINT_PTR" to="System.IntPtr" />
+    <bind from="HANDLE_PTR" to="System.IntPtr" />
+
+    <bind from="LPGLYPHMETRICSFLOAT" to="System.IntPtr" />
+    <bind from="WAVEFORMATEX" to="SharpDX.Multimedia.WaveFormat" />
+    <bind from="tWAVEFORMATEX" to="SharpDX.Multimedia.WaveFormat" />    
+    <bind from="WAVEFORMATEXTENSIBLE" to="SharpDX.Multimedia.WaveFormatExtensible" />
+    <bind from="POINT" to="System.Drawing.Point" />
+    <bind from="RECT" to="SharpDX.Rectangle" />
+    <bind from="BOOL" to="System.Boolean" marshal="System.Int32" />
+    <bind from="HACCEL" to="System.IntPtr"/>    
+    <bind from="HWND" to="System.IntPtr"/>
+    <bind from="HDC" to="System.IntPtr"/>
+    <bind from="HICON" to="System.IntPtr"/>
+    <bind from="HKEY" to="System.IntPtr"/>
+    <bind from="HBITMAP" to="System.IntPtr"/>
+    <bind from="HINSTANCE" to="System.IntPtr"/>
+    <bind from="HMONITOR" to="System.IntPtr"/>
+    <bind from="HPALETTE" to="System.IntPtr"/>
+    <bind from="LUID" to="System.Int64"/>
+    <bind from="LARGE_INTEGER" to="System.Int64"/>
+    <bind from="ULARGE_INTEGER" to="System.Int64"/>    
+    <bind from="HRESULT" to="SharpDX.Result" />
+    <bind from="FILETIME" to="System.Int64" />
+    <bind from="GUID" to="System.Guid" />
+    <bind from="COLORREF" to="SharpDX.Color4" />
+    <bind from="__function__stdcall" to="SharpDX.FunctionCallback" />
+    <bind from="SIZE" to="System.Drawing.Size" />
+    <bind from="SIZE_T" to="SharpDX.Size" marshal="System.IntPtr"/>
+    <bind from="SSIZE_T" to="SharpDX.Size" marshal="System.IntPtr"/>
+    
+    <!-- todo Color 8 bit must be created-->
+    <bind from="RGBQUAD" to="System.Int32"/>
+
+    <!-- unsupported type yet -->
+    <bind from="HALF_PTR" to="SharpDX.Win32.Unsupported.HALF_PTR"/>
+    <bind from="UHALF_PTR" to="SharpDX.Win32.Unsupported.UHALF_PTR"/>
+    
+    <bind from="BITMAPINFOHEADER" to="SharpDX.Win32.Unsupported.BitmapInfoHeader"/>
+    <bind from="VIDEOINFOHEADER" to="SharpDX.Win32.Unsupported.VideoInfoHeader"/>
+    <bind from="AM_MEDIA_TYPE" to="SharpDX.Win32.Unsupported.AMMediaType"/>
+    <bind from="RPC_MESSAGE" to="SharpDX.Win32.Unsupported.RpcMessage"/>
+    <bind from="SAFEARRAY" to="SharpDX.Win32.Unsupported.SafeArray"/>
+    <bind from="VARIANT" to="SharpDX.Win32.Unsupported.Variant"/>
+    <bind from="PROPVARIANT" to="SharpDX.Win32.Unsupported.PropertyVariant"/>
+
+    <!-- todo create those structures -->
+    <bind from="RGNDATA" to="System.IntPtr"/>
+    <bind from="TEXTMETRICW" to="SharpDX.Win32Native.TextMetric"/>
+    <bind from="TEXTMETRICA" to="SharpDX.Win32Native.TextMetricA"/>
+    <bind from="LOGFONTW" to="SharpDX.Win32Native.LogFont"/>
+
+    <!-- Win32 structures -->
+    <bind from="DISPPARAMS" to="System.Runtime.InteropServices.ComTypes.DISPPARAMS"/>
+    <bind from="EXCEPINFO" to="System.Runtime.InteropServices.ComTypes.EXCEPINFO"/>
+
+    <!-- Root IUnknown interface -->
+    <bind from="IUnknown" to="SharpDX.ComObject" />
+    <bind from="IDispatch" to="SharpDX.ComDispatch" />
+    <bind from="IPersist" to="SharpDX.ComPersistBase" />
+    <bind from="IPropertyBag" to="SharpDX.ComPropertyBag" />
+
+    <!-- COM interfaces not directly used -->
+    <bind from="ITypeInfo" to="SharpDX.ComObject" />
+    <bind from="IErrorLog" to="SharpDX.ComObject" />
+    <bind from="IMoniker" to="SharpDX.ComObject" />
+    <bind from="IEnumMoniker" to="SharpDX.ComObject" />
+    <bind from="IBindCtx" to="SharpDX.ComObject" />
+    <bind from="IRpcStubBuffer" to="SharpDX.ComObject"/>
+    <bind from="IRpcChannelBuffer" to="SharpDX.ComObject"/>
+    <bind from="IPropertyStore" to="SharpDX.ComObject"/>
+    <bind from="IPropertyBag2" to="SharpDX.ComObject"/>
+    <bind from="IClassFactory" to="SharpDX.ComObject"/>
+    <bind from="IEnumUnknown" to="SharpDX.ComObject"/>
+    <bind from="IEnumString" to="SharpDX.ComObject"/>
+    <bind from="INamedPropertyStore" to="SharpDX.ComObject"/>
+  </bindings>  
+
+  <!-- SharpDX global mapping -->
+  <mapping>
+    <!--
+    // *****************************************************************
+    // Modify all enums
+    // *****************************************************************
+    -->
+    <remove enum-item=".*_FORCE_DWORD" />
+    <remove enum-item=".*_FORCE_UINT" />
+
+    <!--
+    // *****************************************************************
+    // Modify all fields
+    // *****************************************************************
+    -->
+    <map field=".*::(.*)DescW?" name="$1Description" />
+    <map field=".*::(.*)Desc1" name="$1Description1" />
+
+    <!--
+    // *****************************************************************
+    // Modify all methods
+    // *****************************************************************
+    -->
+    <map method=".*::(.*)DescW?" name="$1Description" />
+    <map method=".*::(.*)Desc1" name="$1Description1" />
+    <map method=".*GetType" name="GetTypeInfo" />
+
+    <!--
+    // Some global macros are overiding method names
+    -->
+    <map method=".*::GetTextMetricsW" name="GetTextMetrics" />
+    <map method=".*::PreloadTextW" name="PreloadText" />
+    <map method=".*::GetMessageW" name="GetMessage" />
+    <map method=".*::DrawTextW" name="DrawText" />
+    <map method=".*::GetGlyphIndicesW" name="GetGlyphIndices" />
+
+    <!-- Map IStream -->
+    <context>objidl</context>
+    <map struct="STATSTG" name="StorageStatistics" />
+    <map interface="ISequentialStream" name="ComBaseStream" callback-visibility="public" callback="true" callback-dual="true"/>
+    <map interface="IStream" name="ComStream" callback-visibility="public" callback="true" callback-dual="true"/>
+    <context-clear/>
+  </mapping>
+</config>

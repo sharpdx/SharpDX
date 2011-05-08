@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+-->
+<config id="sharpdx-directwrite" depends="sharpdx sharpdx-dxgi" xmlns="urn:SharpGen.Config">
+  
+  <namespace>SharpDX.DirectWrite</namespace>
+  <assembly>SharpDX.Direct2D1</assembly>
+  
+  <include file="dcommon.h" attach="true" output="DirectWrite"/>
+  <include file="dwrite.h" attach="true" />
+  
+  <naming />
+  
+  <extension>
+    <create class="DWrite" />
+  </extension>
+  
+  <mapping>
+    <context>dcommon</context>
+    <context>dwrite</context>
+    
+    <map enum="DWRITE(.+)" name-tmp="$1" />
+    
+    <map struct="DWRITE(.+)" name-tmp="$1" />
+    <map struct="DWRITE_GLYPH_RUN" native="true" struct-to-class="true" marshal="true" new="false" />
+    <map field="DWRITE_GLYPH_RUN::fontEmSize" name="FontSize" />
+    <map field="DWRITE_GLYPH_RUN::glyphCount" visibility="internal" />
+    <map field="DWRITE_GLYPH_RUN::fontFace" visibility="internal" name="FontFacePointer" />
+    <map field="DWRITE_GLYPH_RUN::glyphIndices" visibility="internal" name="GlyphIndicesPointer" />
+    <map field="DWRITE_GLYPH_RUN::glyphAdvances" visibility="internal" name="GlyphAdvancesPointer" />
+    <map field="DWRITE_GLYPH_RUN::glyphOffsets" visibility="internal" name="GlyphOffsetsPointer" />
+    <map struct="DWRITE_GLYPH_RUN_DESCRIPTION" native="true" struct-to-class="true" marshal="true" new="false" />
+    <map field="DWRITE_GLYPH_RUN_DESCRIPTION::stringLength" visibility="internal" name="TextLength" />
+    <map field="DWRITE_GLYPH_RUN_DESCRIPTION::string" name="Text" />
+    <map field="DWRITE_SHAPING_TEXT_PROPERTIES::reserved" visibility="internal" />
+    <map field="DWRITE_SHAPING_GLYPH_PROPERTIES::reserved" visibility="internal" />
+    <map field="DWRITE_SHAPING_GLYPH_PROPERTIES::justification" visibility="internal" name="Justification_" />
+    <map field="DWRITE_LINE_BREAKPOINT::padding" visibility="internal" />
+    <map field="DWRITE_CLUSTER_METRICS::padding" visibility="internal" />
+    <map field="DWRITE_LINE_BREAKPOINT::breakConditionBefore" visibility="internal" name="BreakConditionBefore_" />
+    <map field="DWRITE_LINE_BREAKPOINT::breakConditionAfter" visibility="internal" name="BreakConditionAfter_" />
+    
+    <map interface="IDWrite(.+)" name-tmp="$1" />
+    <map method="IDWriteFactory::Create.*" visibility="internal" />
+    <map param="IDWriteFactory::GetSystemFontCollection::fontCollection" return="true" />
+    <map interface="IDWriteFontFileStream" callback-visibility="public" callback="true" callback-dual="true" />
+    <map param="IDWriteFontFileStream::ReadFileFragment::fragmentStart" attribute="out" />
+    <map method="IDWriteFontFile::GetReferenceKey" visibility="internal" />
+    <map interface="IDWriteInlineObject" callback-visibility="public" callback="true" callback-dual="true" />
+    <map param="IDWriteInlineObject::Draw::clientDrawingEffect" type="void" />
+    <map method="IDWriteFont::CreateFontFace" visibility="internal" />
+    <map param="IDWriteFont::HasCharacter::exists" return="true" />
+    <map param="IDWriteFont::GetInformationalStrings::exists" return="true" />
+    
+    <map method="IDWriteFontFace::GetFiles" visibility="internal" />
+    <map method="IDWriteFontFace::GetDesignGlyphMetrics" visibility="internal" />
+    <map method="IDWriteFontFace::GetGdiCompatibleGlyphMetrics" visibility="internal" />
+    <map param="IDWriteFontFace::GetGdiCompatibleMetrics::fontFaceMetrics" return="true" />
+    <map method="IDWriteFontFace::GetGlyphIndices" visibility="internal" />
+    <map param="IDWriteFontFace::GetRecommendedRenderingMode::renderingMode" return="true" />
+    <map method="IDWriteFontFace::TryGetFontTable" visibility="internal" />
+    <map method="IDWriteFontFace::GetType" name="GetFaceType" />
+    <map param="IDWriteFontList::GetFont::font" return="true" />
+    <map param="IDWriteFontFamily::GetFirstMatchingFont::matchingFont" return="true" />
+    <map param="IDWriteFontFamily::GetMatchingFonts::matchingFonts" return="true" />
+    <map param="IDWriteFontCollection::FindFamilyName::exists" return="true" />
+    <map param="IDWriteFontCollection::GetFontFamily::fontFamily" return="true" />
+    <map param="IDWriteFontCollection::GetFontFromFontFace::font" return="true" />
+    <map interface="IDWriteFontCollectionLoader" callback="true" callback-dual="false" />
+    <map method="IDWriteFontFile::GetLoader" visibility="internal" property="true" />
+    <map interface="IDWriteFontFileLoader" callback-visibility="public" callback="true" callback-dual="true" />
+    <map interface="IDWriteFontFileEnumerator" callback="true" callback-dual="false" />
+    <map interface="IDWritePixelSnapping" callback="true" callback-dual="false" />
+    <map interface="IDWriteTextRenderer" callback="true" callback-dual="false" />
+    <map method="IDWriteGdiInterop::.*?LOGFONT" visibility="internal" />
+    <map param="logFont" type="void" attribute="in" />
+    <map param="IDWriteGdiInterop::CreateBitmapRenderTarget::renderTarget" return="true" />
+    <map param="IDWriteGdiInterop::CreateFontFaceFromHdc::fontFace" return="true" />
+    <map param="IDWriteGlyphRunAnalysis::GetAlphaTextureBounds::textureBounds" return="true" />
+    <map param="IDWriteLocalFontFileLoader::GetFilePathLengthFromKey::filePathLength" return="true" />
+    <map param="IDWriteLocalFontFileLoader::GetLastWriteTimeFromKey::lastWriteTime" return="true" />
+    <map param="IDWriteLocalizedStrings::FindLocaleName::exists" return="true" />
+    <map method="IDWriteLocalizedStrings::GetLocaleNameLength" visibility="internal" />
+    <map method="IDWriteLocalizedStrings::GetLocaleName" visibility="internal" />
+    <map method="IDWriteLocalizedStrings::GetString" visibility="internal" />
+    <map method="IDWriteLocalizedStrings::GetStringLength" visibility="internal" />
+    <map interface="IDWriteTextAnalysisSink" callback="true" callback-dual="false" />
+    <map interface="IDWriteTextAnalysisSource" callback="true" callback-dual="false" />
+    <map param="IDWriteTextLayout::DetermineMinWidth::minWidth" return="true" />
+    <map method="IDWriteTextLayout::GetClusterMetrics" visibility="internal" />
+    <map param="IDWriteTextLayout::GetDrawingEffect::drawingEffect" return="true" />
+    <map param="IDWriteTextLayout::GetFontCollection::fontCollection" return="true" />
+    <map method="IDWriteTextLayout::GetFontFamilyName" visibility="internal" />
+    <map method="IDWriteTextLayout::GetFontFamilyNameLength" visibility="internal" />
+    <map param="IDWriteTextLayout::GetFontSize::fontSize" return="true" />
+    <map param="IDWriteTextLayout::GetFontStretch::fontStretch" return="true" />
+    <map param="IDWriteTextLayout::GetFontStyle::fontStyle" return="true" />
+    <map param="IDWriteTextLayout::GetFontWeight::fontWeight" return="true" />
+    <map param="IDWriteTextLayout::GetInlineObject::inlineObject" return="true" />
+    <map method="IDWriteTextLayout::GetLineMetrics" visibility="internal" />
+    <map method="IDWriteTextLayout::GetLocaleName" visibility="internal" />
+    <map method="IDWriteTextLayout::GetLocaleNameLength" visibility="internal" />
+    <map method="IDWriteTextLayout::GetStrikethrough" name="HasStrikethrough" />
+    <map param="hasStrikethrough" return="true" />
+    <map param="IDWriteTextLayout::GetTypography::typography" return="true" />
+    <map method="IDWriteTextLayout::GetUnderline" name="HasUnderline" />
+    <map param="hasUnderline" return="true" />
+    <map method="IDWriteTextLayout::([GS]etDrawingEffect)" visibility="internal" name="$1_" />
+    <map param="IDWriteTextLayout::[GS]etDrawingEffect::drawingEffect" type="void" />
+    <map method="IDWriteTextFormat::GetFontFamilyName" visibility="internal" />
+    <map method="IDWriteTextFormat::GetLocaleName" visibility="internal" />
+    <map method="IDWriteTextFormat::GetFontFamilyNameLength" visibility="internal" property="true" />
+    <map method="IDWriteTextFormat::GetLocaleNameLength" visibility="internal" property="true" />
+    <map param="IDWriteTextLayout::HitTestPoint::hitTestMetrics" return="true" />
+    <map param="IDWriteTextLayout::HitTestTextPosition::hitTestMetrics" return="true" />
+    <map method="IDWriteTextLayout::HitTestTextRange" visibility="internal" />
+    <map param="IDWriteTypography::GetFontFeature::fontFeature" return="true" />
+    
+    <map function="DWrite(.+)" name-tmp="$1" />
+    <map function="DWriteCreateFactory" dll="dwrite.dll" group="SharpDX.DirectWrite.DWrite" />
+    
+    <context-clear />
+  </mapping>
+</config>
