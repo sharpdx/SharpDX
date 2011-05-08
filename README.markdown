@@ -19,8 +19,8 @@ SharpDX is an open-source DirectX and Windows Multimedia .Net Managed API. The *
 
 ### Features
 The key features and benefits of this API are
-* API is generated from DirectX SDK headers : meaning *a complete and reliable API* and *an easy support for future API*.
-* Full support for the following DirectX API:
+*	API is generated from DirectX SDK headers : meaning *a complete and reliable API* and *an easy support for future API*.
+*	Full support for the following DirectX API:
  * Direct3D10
  * Direct3D10.1
  * Direct3D11
@@ -33,12 +33,12 @@ The key features and benefits of this API are
  * XAudio2
  * XAPO
  * An integrated math API directly ported from SlimMath
-* **Managed platform independent .NET API** : assemblies are compiled with AnyCpu target. You can run your code on a x64 or a x86 machine with the same assemblies, without recompiling your project.
-* *Lightweight [AssemblyDlls individual assemblies]*  : a core assembly - SharpDX - containing common classes and an assembly for each subgroup API (Direct3D10, Direct3D11, DXGI, D3DCompiler...etc.). Assemblies are also lightweight.
-* *Fast Interop* : the framework is using a genuine way to avoid any C++/CLI while still achieving better performance than existing managed API. Check this [benchmark](http://code4k.blogspot.com/2011/03/benchmarking-cnet-direct3d-11-apis-vs.html).
-* *API naming convention mostly compatible with SlimDX API*.
-* *Raw DirectX object life management* : No overhead of ObjectTable or RCW mechanism, the API is using direct native management with classic COM method "Release".
-* *Easily mergeable / obfuscatable* : If you need to obfuscate SharpDX assemblies, they are easily obfusctable due to the fact the framework is not using any mixed assemblies. You can also merge SharpDX assemblies into a single exe using with tool like [ILMerge](http://research.microsoft.com/en-us/people/mbarnett/ilmerge.aspx).
+*	**Managed platform independent .NET API** : assemblies are compiled with AnyCpu target. You can run your code on a x64 or a x86 machine with the same assemblies, without recompiling your project.
+*	*Lightweight [AssemblyDlls individual assemblies]*  : a core assembly - SharpDX - containing common classes and an assembly for each subgroup API (Direct3D10, Direct3D11, DXGI, D3DCompiler...etc.). Assemblies are also lightweight.
+*	*Fast Interop* : the framework is using a genuine way to avoid any C++/CLI while still achieving better performance than existing managed API. Check this [benchmark](http://code4k.blogspot.com/2011/03/benchmarking-cnet-direct3d-11-apis-vs.html).
+*	*API naming convention mostly compatible with SlimDX API*.
+*	*Raw DirectX object life management* : No overhead of ObjectTable or RCW mechanism, the API is using direct native management with classic COM method "Release".
+*	*Easily mergeable / obfuscatable* : If you need to obfuscate SharpDX assemblies, they are easily obfusctable due to the fact the framework is not using any mixed assemblies. You can also merge SharpDX assemblies into a single exe using with tool like [ILMerge](http://research.microsoft.com/en-us/people/mbarnett/ilmerge.aspx).
 
 An *optional assembly SharDX.Diagnostics* is delivered and can be added to your project in order to have an explicit error messages when there is a DirectX functions returning an error code. This assembly can be used in development but is not mandatory.
 
