@@ -47,7 +47,7 @@ Requirements
 ------------
 * **Operating system: Windows XP, Vista, 7**
 * **.Net framework 2.0, 3.0, 3.5, 4.0** are supported. 
-* ** Mono 2.10** is supported
+* **Mono 2.10** is supported
 * The current code is based on **DirecX SDK June 2010**. You need to have at least the latest [DirectX runtime](http://www.microsoft.com/downloads/en/details.aspx?displaylang=en&FamilyID=3b170b25-abab-4bc3-ae91-50ceb6d8fa8d ) to develop with SharpDX. If you need to debug DirectX calls, you will need also to install the [DirectX SDK](http://www.microsoft.com/downloads/en/details.aspx?displaylang=en&FamilyID=3021d52b-514e-41d3-ad02-438a3ba730ba ).
 
 Future Plans
