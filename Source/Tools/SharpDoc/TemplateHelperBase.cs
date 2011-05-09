@@ -26,10 +26,11 @@ using SharpCore;
 using SharpCore.Logging;
 using SharpDoc.Model;
 
-namespace SharpDoc.RazorExtensions
+namespace SharpDoc
 {
     /// <summary>
-    /// 
+    /// Overrides default RazorEngine TemplateBase to provide additionnal
+    /// methods (Import) and properties (Helpers, Param, Style).
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class TemplateHelperBase : TemplateBase<TemplateContext>

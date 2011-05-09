@@ -24,7 +24,6 @@ using System.Reflection;
 using Mono.Options;
 using RazorEngine;
 using SharpDoc.Model;
-using SharpDoc.RazorExtensions;
 
 namespace SharpDoc
 {
@@ -145,15 +144,8 @@ namespace SharpDoc
 
             // args = GetFiles(args);
 
-            var assemblyManager = new AssemblyManager();            
-            foreach (var arg in Config.Sources)
-                assemblyManager.Sources.Add(arg);
-
-            foreach (var arg in Config.References)
-                assemblyManager.References.Add(arg);
-
-            var modelProcessor = new ModelProcessor();
-            modelProcessor.Run(assemblyManager.Load());
+            var modelProcessor = new ModelProcessor {AssemblyManager = new MonoCecilAssemblyManager(), ModelBuilder = new MonoCecilModelBuilder()};
+            modelProcessor.Run(Config);
 
             var context = new TemplateContext
             {

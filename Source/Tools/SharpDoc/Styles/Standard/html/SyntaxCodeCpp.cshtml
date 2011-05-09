@@ -19,35 +19,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.       
 // -------------------------------------------------------------------------------
-// Override this template to modify the global behavior for each Dump functions
+// Override this template to modify the generated VB syntax of a member
 // -------------------------------------------------------------------------------
 *@
 @model SharpDoc.TemplateContext
+@using System.Text;
 @using SharpDoc.Model
-@Import("SyntaxMethod")
-@Import("TabCode")
-@Import("SyntaxCodeCSharp")
-@Import("SyntaxCodeVB")
-@Import("SyntaxCodeCpp")
-@Import("SyntaxCodeFSharp")
-<!-- 
-// Dumps syntax section
--->
 @helper Dump(NMember member)
 {
-    @Helpers.TabCode.Dump(new string[] {
-        "C#",  "<pre class='brush: csharp;'>" + Helpers.SyntaxCodeCSharp.Dump(member) + "</pre>",
-        "VB",  Helpers.SyntaxCodeVB.Dump(member),
-        "C++", Helpers.SyntaxCodeCpp.Dump(member),
-        "F#",  Helpers.SyntaxCodeFSharp.Dump(member),
-    });
-        
-    if (member.GetType() == typeof(NMethod))
-    {
-    @Helpers.SyntaxMethod.Dump((NMethod)member);
-    }
-    else if (member is NType)
-    {
-    <p>@member.Name expose the following members:</p>
-    }   
+    <p>Syntax for C++ is not yet implemented</p>
 }

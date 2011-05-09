@@ -23,7 +23,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Mono.Cecil;
-using SharpCore;
 using SharpCore.Logging;
 using SharpDoc.Model;
 
@@ -32,7 +31,7 @@ namespace SharpDoc
     /// <summary>
     /// Mono.Cecil implementation of a <see cref="IModelBuilder"/>.
     /// </summary>
-    public class MonoCecilModelBuilder : IModelBuilder
+    internal class MonoCecilModelBuilder : IModelBuilder
     {
         private NAssemblySource _source;
         private MemberRegistry _registry;
@@ -187,17 +186,50 @@ namespace SharpDoc
 
             // Add reference to inherited interfaces
             foreach (var typeReference in typeDef.Interfaces)
-            {
-                var interfaceTypeDef = typeReference.Resolve();
-                type.Interfaces.Add(GetTypeReference(interfaceTypeDef));
-            }
+                type.Interfaces.Add(GetTypeReference(typeReference));
 
             if (typeDef.IsPublic)
                 type.Visibility = NVisibility.Public;
             else if (typeDef.IsNotPublic)
                 type.Visibility = NVisibility.Private;
-            // else if (typeDef.IsAssembly)
-            //    type.Visibility = NVisibility.Internal;
+            type.IsAbstract = typeDef.IsAbstract;
+            type.IsFinal = typeDef.IsSealed;
+
+            // Reconstruct StructLayout attribute
+            if (typeDef.IsExplicitLayout || typeDef.IsSequentialLayout)
+            {
+                var layout = new StringBuilder();
+                layout.Append("StructLayoutAttribute(");
+                if (typeDef.IsExplicitLayout)
+                    layout.Append("LayoutKind.Explicit");
+                else if (typeDef.IsSequentialLayout)
+                    layout.Append("LayoutKind.Sequential");
+                else
+                    layout.Append("LayoutKind.Auto");
+
+                if (typeDef.IsUnicodeClass)
+                    layout.Append(", CharSet = CharSet.Unicode");
+                else if (typeDef.IsAnsiClass)
+                    layout.Append(", CharSet = CharSet.Ansi");
+                else if (typeDef.IsAutoClass)
+                    layout.Append(", CharSet = CharSet.Auto");
+
+                if (typeDef.PackingSize != 0)
+                    layout.Append(", Pack = ").Append(typeDef.PackingSize);
+
+                if (typeDef.ClassSize != 0)
+                    layout.Append(", Size = ").Append(typeDef.ClassSize);
+
+                layout.Append(")");
+                type.Attributes.Add(layout.ToString());
+            }
+
+            // Reconstruct Serializable attribute
+            if (typeDef.IsSerializable)
+                type.Attributes.Add("SerializableAttribute");
+
+            //else if (typeDef.IsAssembly)
+            //   type.Visibility = NVisibility.Internal;
             //else if (typeDef.IsFamily)
             //    type.Visibility = NVisibility.Protected;
             //else if (typeDef.IsFamilyOrAssembly)
@@ -393,30 +425,26 @@ namespace SharpDoc
             typeReference.IsSentinel = typeDef.IsSentinel;
             FillGenericParameters(typeReference, typeDef);
 
-            // If generic parameters, than rewrite the name/fullname
-            if (typeReference.GenericParameters.Count > 0)
+            // Handle generic instance
+            var genericInstanceDef = typeDef as GenericInstanceType;
+
+            if (genericInstanceDef != null && genericInstanceDef.GenericArguments.Count > 0)
             {
+                foreach (var genericArgumentDef in genericInstanceDef.GenericArguments)
+                {
+                    var genericArgument = new NTypeReference();
+                    FillTypeReference(genericArgument, genericArgumentDef);
+                    typeReference.GenericArguments.Add(genericArgument);
+                }
+
+                // Remove `number from Name
+                typeReference.Name = BuildGenericName(typeDef.Name, typeReference.GenericArguments);
+                typeReference.FullName = BuildGenericName(typeDef.FullName, typeReference.GenericArguments);
+            } else if (typeReference.GenericParameters.Count > 0)
+            {
+                // If generic parameters, than rewrite the name/fullname
                 typeReference.Name = BuildGenericName(typeDef.Name, typeReference.GenericParameters);
                 typeReference.FullName = BuildGenericName(typeDef.FullName, typeReference.GenericParameters);
-            }
-            else
-            {
-
-                // Handle generic instance
-                var genericInstanceDef = typeDef as GenericInstanceType;
-                if (genericInstanceDef != null && genericInstanceDef.GenericArguments.Count > 0)
-                {
-                    foreach (var genericArgumentDef in genericInstanceDef.GenericArguments)
-                    {
-                        var genericArgument = new NTypeReference();
-                        FillTypeReference(genericArgument, genericArgumentDef);
-                        typeReference.GenericArguments.Add(genericArgument);
-                    }
-
-                    // Remove `number from Name
-                    typeReference.Name = BuildGenericName(typeDef.Name, typeReference.GenericArguments);
-                    typeReference.FullName = BuildGenericName(typeDef.FullName, typeReference.GenericArguments);
-                }
             }
         }
 

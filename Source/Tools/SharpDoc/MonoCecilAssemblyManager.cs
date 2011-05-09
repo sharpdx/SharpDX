@@ -17,7 +17,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
@@ -27,20 +26,20 @@ using SharpDoc.Model;
 
 namespace SharpDoc
 {
-    public class AssemblyManager : BaseAssemblyResolver 
+    /// <summary>
+    /// Mono Cecil implementation of <see cref="IAssemblyManager"/>.
+    /// </summary>
+    internal class MonoCecilAssemblyManager : BaseAssemblyResolver, IAssemblyManager
     {
-        public AssemblyManager()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MonoCecilAssemblyManager"/> class.
+        /// </summary>
+        public MonoCecilAssemblyManager()
         {
-            Sources = new List<string>();
-            References = new List<string>();
             AssemblySources = new List<NAssemblySource>();
             AssemblyReferences = new List<AssemblyDefinition>();
             AssemblyDocSources = new List<XmlDocument>();
         }
-
-        public List<string> Sources { get; private set; }
-
-        public List<string> References { get; private set; }
 
         private List<AssemblyDefinition> AssemblyReferences { get; set; }
 
@@ -51,14 +50,14 @@ namespace SharpDoc
         /// <summary>
         /// Loads all <see cref="Sources"/> and <see cref="References"/>.
         /// </summary>
-        public List<NAssemblySource> Load()
+        public List<NAssemblySource> Load(Config config)
         {
             // Preload references
-            foreach(var assemblyRef in References)
+            foreach(var assemblyRef in config.References)
                 AssemblyReferences.Add(AssemblyDefinition.ReadAssembly(assemblyRef, new ReaderParameters(ReadingMode.Deferred)));
 
             // Load all sources
-            foreach (var source in Sources)
+            foreach (var source in config.Sources)
                 Load(source);
 
             // Check that all source assemblies have valid Xml associated with it

@@ -24,10 +24,9 @@ using System.Linq.Expressions;
 using System.Reflection;
 using RazorEngine.Templating;
 
-namespace SharpDoc.RazorExtensions
+namespace SharpDoc
 {
-
-    public class DynamicHelper : IDynamicMetaObjectProvider
+    internal class DynamicHelper : IDynamicMetaObjectProvider
     {
         public DynamicHelper()
         {

@@ -25,7 +25,7 @@ namespace SharpDoc
     /// <summary>
     /// Dynamic object used in templates for Param and Style shortcuts.
     /// This class acts as a <see cref="ExpandoObject"/> except that if a property
-    /// doesn't exist, It returns an empty string instead of throwing an exception.
+    /// doesn't exist, It returns a null value instead of throwing an exception.
     /// </summary>
     public class DynamicParam : DynamicObject
     {

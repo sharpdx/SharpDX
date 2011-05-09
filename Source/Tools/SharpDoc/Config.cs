@@ -19,19 +19,19 @@
 // THE SOFTWARE.
 using System.Collections.Generic;
 using System.IO;
-using System.Security.AccessControl;
 using System.Xml.Serialization;
 using SharpDoc.Model;
 
 namespace SharpDoc
 {
     /// <summary>
-    /// Config file.
+    /// Config file for SharpDoc.
     /// </summary>
     [XmlRoot("config", Namespace = NS)]
     public class Config
     {
         internal const string NS = "SharpDoc";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Config"/> class.
         /// </summary>

@@ -1,3 +1,4 @@
+﻿@*
 // Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -16,49 +17,15 @@
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-using System;
-using System.Collections.Generic;
-using System.Xml.Serialization;
-
-namespace SharpDoc
+// THE SOFTWARE.       
+// -------------------------------------------------------------------------------
+// Override this template to modify the generated VB syntax of a member
+// -------------------------------------------------------------------------------
+*@
+@model SharpDoc.TemplateContext
+@using System.Text;
+@using SharpDoc.Model
+@helper Dump(NMember member)
 {
-    /// <summary>
-    /// This is the description for this class.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <remarks>
-    /// This is the remarks for this class.
-    /// </remarks>
-    public class XTest<T> : List<T>
-    {
-
-        /// <summary>
-        /// Loads from.
-        /// </summary>
-        public void LoadFrom()
-        {
-            
-        }
-
-        /// <summary>
-        /// Loads from.
-        /// </summary>
-        public void LoadFrom(int test)
-        {
-
-        }
-        /// <summary>
-        /// Loads from string.
-        /// </summary>
-        /// <typeparam name="TMode">The type of the mode.</typeparam>
-        /// <param name="toto">The toto.</param>
-        /// <param name="tata">The tata.</param>
-        /// <param name="tutu">The tutu.</param>
-        public void LoadFrom<TMode>(string toto, TMode tata, T tutu) 
-        {
-            
-        }
-
-    }
+    <p>Syntax for VB is not yet implemented.</p>
 }

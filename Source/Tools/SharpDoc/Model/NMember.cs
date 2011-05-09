@@ -104,10 +104,55 @@ namespace SharpDoc.Model
         public NTypeReference DeclaringType { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this instance is static.
+        /// </summary>
+        /// <value><c>true</c> if this instance is static; otherwise, <c>false</c>.</value>
+        public bool IsStatic { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is final.
+        /// </summary>
+        /// <value><c>true</c> if this instance is final; otherwise, <c>false</c>.</value>
+        public bool IsFinal { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is abstract.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is abstract; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsAbstract { get; set; }
+
+        /// <summary>
         /// Gets or sets the visibility.
         /// </summary>
         /// <value>The visibility.</value>
         public NVisibility Visibility { get; set; }
+
+        /// <summary>
+        /// Gets the name of the visibility.
+        /// </summary>
+        /// <value>The name of the visibility.</value>
+        public string VisibilityName
+        {
+            get
+            {
+                switch (Visibility)
+                {
+                    case NVisibility.Public:
+                        return "public";
+                    case NVisibility.Protected:
+                        return "protected";
+                    case NVisibility.Private:
+                        return "private";
+                    case NVisibility.ProtectedInternal:
+                        return "protected internal";
+                    case NVisibility.Internal:
+                        return "internal";
+                }
+                return "";
+            }
+        }
 
         /// <summary>
         /// Gets or sets the namespace this member is attached.

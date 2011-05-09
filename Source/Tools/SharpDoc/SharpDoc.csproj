@@ -103,21 +103,21 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AssemblyDoc.cs" />
-    <Compile Include="AssemblyManager.cs" />
+    <Compile Include="MonoCecilAssemblyManager.cs" />
     <Compile Include="ConfigParam.cs" />
     <Compile Include="DynamicParam.cs" />
+    <Compile Include="Model\IAssemblyManager.cs" />
     <Compile Include="LinkType.cs" />
     <Compile Include="Model\NDelegate.cs" />
     <Compile Include="ModelProcessor.cs" />
     <Compile Include="Model\NReference.cs" />
     <Compile Include="Model\NTopic.cs" />
     <Compile Include="NamespaceDoc.cs" />
-    <Compile Include="RazorExtensions\DynamicHelper.cs" />
+    <Compile Include="DynamicHelper.cs" />
     <Compile Include="Model\INMemberReference.cs" />
     <Compile Include="Model\NGenericParameter.cs" />
     <Compile Include="Model\NMemberReference.cs" />
     <Compile Include="Model\NAssemblySource.cs" />
-    <Compile Include="CompatibilityType.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Model\DocTag.cs" />
     <Compile Include="Model\IComment.cs" />
@@ -145,18 +145,21 @@
     <Compile Include="Model\NType.cs" />
     <Compile Include="Model\NEnum.cs" />
     <Compile Include="MonoCecilHelper.cs" />
-    <Compile Include="OperatorType.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DocIdHelper.cs" />
     <Compile Include="SharpDocApp.cs" />
     <Compile Include="TemplateContext.cs" />
-    <Compile Include="RazorExtensions\TemplateHelperBase.cs" />
+    <Compile Include="TemplateHelperBase.cs" />
     <Compile Include="LinkDescriptor.cs" />
     <Compile Include="TextReferenceUtility.cs" />
-    <Compile Include="XTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Styles\Standard\html\SyntaxCodeFSharp.cshtml" />
+    <None Include="Styles\Standard\html\SyntaxCodeCpp.cshtml" />
+    <None Include="Styles\Standard\html\SyntaxCodeVB.cshtml" />
+    <None Include="Styles\Standard\html\SyntaxCodeCSharp.cshtml" />
+    <None Include="Styles\Standard\html\TabCode.cshtml" />
     <None Include="Styles\Standard\Setup.cshtml" />
     <None Include="Styles\Standard\html\Assembly.cshtml" />
     <None Include="Styles\Standard\html\AssemblyBody.cshtml" />
@@ -233,6 +236,8 @@
     <None Include="Styles\Standard\html\Header.cshtml" />
     <None Include="Styles\Standard\html\Footer.cshtml" />
     <None Include="Styles\Standard\Main.cshtml" />
+    <None Include="Styles\Standard\syntaxhighlighter\LGPL-LICENSE" />
+    <None Include="Styles\Standard\syntaxhighlighter\MIT-LICENSE" />
     <None Include="web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -244,10 +249,55 @@
     <Content Include="Styles\Standard\images\toc-child.gif" />
     <Content Include="Styles\Standard\images\toc-top.gif" />
     <Content Include="Styles\Standard\images\toc-up.gif" />
-    <Content Include="Styles\Standard\js\Copy of splitpane.js" />
-    <Content Include="Styles\Standard\js\splitpane.js" />
+    <Content Include="Styles\Standard\js\sharpdoc.js" />
     <Content Include="Styles\Standard\js\mootools-more.js" />
     <Content Include="Styles\Standard\js\mootools.js" />
+    <Content Include="Styles\Standard\syntaxhighlighter\index.html" />
+    <Content Include="Styles\Standard\syntaxhighlighter\js\shAutoloader.js" />
+    <Content Include="Styles\Standard\syntaxhighlighter\js\shBrushAppleScript.js" />
+    <Content Include="Styles\Standard\syntaxhighlighter\js\shBrushAS3.js" />
+    <Content Include="Styles\Standard\syntaxhighlighter\js\shBrushBash.js" />
+    <Content Include="Styles\Standard\syntaxhighlighter\js\shBrushColdFusion.js" />
+    <Content Include="Styles\Standard\syntaxhighlighter\js\shBrushCpp.js" />
+    <Content Include="Styles\Standard\syntaxhighlighter\js\shBrushCSharp.js" />
+    <Content Include="Styles\Standard\syntaxhighlighter\js\shBrushCss.js" />
+    <Content Include="Styles\Standard\syntaxhighlighter\js\shBrushDelphi.js" />
+    <Content Include="Styles\Standard\syntaxhighlighter\js\shBrushDiff.js" />
+    <Content Include="Styles\Standard\syntaxhighlighter\js\shBrushErlang.js" />
+    <Content Include="Styles\Standard\syntaxhighlighter\js\shBrushGroovy.js" />
+    <Content Include="Styles\Standard\syntaxhighlighter\js\shBrushJava.js" />
+    <Content Include="Styles\Standard\syntaxhighlighter\js\shBrushJavaFX.js" />
+    <Content Include="Styles\Standard\syntaxhighlighter\js\shBrushJScript.js" />
+    <Content Include="Styles\Standard\syntaxhighlighter\js\shBrushPerl.js" />
+    <Content Include="Styles\Standard\syntaxhighlighter\js\shBrushPhp.js" />
+    <Content Include="Styles\Standard\syntaxhighlighter\js\shBrushPlain.js" />
+    <Content Include="Styles\Standard\syntaxhighlighter\js\shBrushPowerShell.js" />
+    <Content Include="Styles\Standard\syntaxhighlighter\js\shBrushPython.js" />
+    <Content Include="Styles\Standard\syntaxhighlighter\js\shBrushRuby.js" />
+    <Content Include="Styles\Standard\syntaxhighlighter\js\shBrushSass.js" />
+    <Content Include="Styles\Standard\syntaxhighlighter\js\shBrushScala.js" />
+    <Content Include="Styles\Standard\syntaxhighlighter\js\shBrushSql.js" />
+    <Content Include="Styles\Standard\syntaxhighlighter\js\shBrushVb.js" />
+    <Content Include="Styles\Standard\syntaxhighlighter\js\shBrushXml.js" />
+    <Content Include="Styles\Standard\syntaxhighlighter\js\shCore.js" />
+    <Content Include="Styles\Standard\syntaxhighlighter\js\shLegacy.js" />
+    <Content Include="Styles\Standard\syntaxhighlighter\styles\shCore.css" />
+    <Content Include="Styles\Standard\syntaxhighlighter\styles\shCoreDefault.css" />
+    <Content Include="Styles\Standard\syntaxhighlighter\styles\shCoreDjango.css" />
+    <Content Include="Styles\Standard\syntaxhighlighter\styles\shCoreEclipse.css" />
+    <Content Include="Styles\Standard\syntaxhighlighter\styles\shCoreEmacs.css" />
+    <Content Include="Styles\Standard\syntaxhighlighter\styles\shCoreFadeToGrey.css" />
+    <Content Include="Styles\Standard\syntaxhighlighter\styles\shCoreMDUltra.css" />
+    <Content Include="Styles\Standard\syntaxhighlighter\styles\shCoreMidnight.css" />
+    <Content Include="Styles\Standard\syntaxhighlighter\styles\shCoreRDark.css" />
+    <Content Include="Styles\Standard\syntaxhighlighter\styles\shThemeDefault.css" />
+    <Content Include="Styles\Standard\syntaxhighlighter\styles\shThemeDjango.css" />
+    <Content Include="Styles\Standard\syntaxhighlighter\styles\shThemeEclipse.css" />
+    <Content Include="Styles\Standard\syntaxhighlighter\styles\shThemeEmacs.css" />
+    <Content Include="Styles\Standard\syntaxhighlighter\styles\shThemeFadeToGrey.css" />
+    <Content Include="Styles\Standard\syntaxhighlighter\styles\shThemeMDUltra.css" />
+    <Content Include="Styles\Standard\syntaxhighlighter\styles\shThemeMidnight.css" />
+    <Content Include="Styles\Standard\syntaxhighlighter\styles\shThemeRDark.css" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
@@ -277,6 +327,7 @@
       <Name>SharpCore</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -29,9 +29,10 @@
     {
 @* Initialize splitpane *@
      <script type="text/javascript" language="javascript">
-        document.addEvent('domready', function() {
-            SplitPane('toc_content', 'pane_toggle', 'pane_resizer');
-        });
+         document.addEvent('domready', function () {
+             InstallCodeTabs();
+             SplitPane('toc_content', 'pane_toggle', 'pane_resizer');
+         });
     </script>   
      <div class="sharpdoc">
         <table class="table_content">

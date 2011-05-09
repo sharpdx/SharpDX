@@ -1,4 +1,3 @@
-﻿@*
 // Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -17,37 +16,21 @@
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.       
-// -------------------------------------------------------------------------------
-// Override this template to modify the global behavior for each Dump functions
-// -------------------------------------------------------------------------------
-*@
-@model SharpDoc.TemplateContext
-@using SharpDoc.Model
-@Import("SyntaxMethod")
-@Import("TabCode")
-@Import("SyntaxCodeCSharp")
-@Import("SyntaxCodeVB")
-@Import("SyntaxCodeCpp")
-@Import("SyntaxCodeFSharp")
-<!-- 
-// Dumps syntax section
--->
-@helper Dump(NMember member)
+// THE SOFTWARE.
+using System.Collections.Generic;
+
+namespace SharpDoc.Model
 {
-    @Helpers.TabCode.Dump(new string[] {
-        "C#",  "<pre class='brush: csharp;'>" + Helpers.SyntaxCodeCSharp.Dump(member) + "</pre>",
-        "VB",  Helpers.SyntaxCodeVB.Dump(member),
-        "C++", Helpers.SyntaxCodeCpp.Dump(member),
-        "F#",  Helpers.SyntaxCodeFSharp.Dump(member),
-    });
-        
-    if (member.GetType() == typeof(NMethod))
+    /// <summary>
+    /// Interface to load assembly and comments files from a config description.
+    /// </summary>
+    public interface IAssemblyManager
     {
-    @Helpers.SyntaxMethod.Dump((NMethod)member);
+        /// <summary>
+        /// Loads all <see cref="Config.Sources"/> and <see cref="Config.References"/>.
+        /// </summary>
+        /// <param name="config">The config file to use.</param>
+        /// <returns>A list of assembly source</returns>
+        List<NAssemblySource> Load(Config config);
     }
-    else if (member is NType)
-    {
-    <p>@member.Name expose the following members:</p>
-    }   
 }

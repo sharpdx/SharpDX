@@ -33,6 +33,22 @@ function supports_local_storage() {
   }
 }
 
+function InstallCodeTabs() {
+    var groupTabs = $$('.grouptab');
+    groupTabs.each(function (groupTab, groupIndex) {
+        var tabs = groupTab.getChildren('.tabs li.tab');
+        var content = groupTab.getChildren('.tabcontent');
+        tabs.each(function (tab, index) {
+            tab.addEvent('click', function () {
+                tabs.removeClass('selected');
+                content.removeClass('selected');
+                tabs[index].addClass('selected');
+                content[index].addClass('selected');
+            });
+        });    
+    });  
+}
+
 function SplitPane(splitPaneId, splitPaneToggleId, splitPaneResizerId) {
 
     // Define column elemnts

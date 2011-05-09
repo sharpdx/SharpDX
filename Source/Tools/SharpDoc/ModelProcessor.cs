@@ -50,6 +50,12 @@ namespace SharpDoc
         public List<NAssembly> Assemblies { get; private set; }
 
         /// <summary>
+        /// Gets or sets the assembly manager.
+        /// </summary>
+        /// <value>The assembly manager.</value>
+        public IAssemblyManager AssemblyManager { get; set; }
+
+        /// <summary>
         /// Gets or sets the model builder.
         /// </summary>
         /// <value>The model builder.</value>
@@ -58,14 +64,20 @@ namespace SharpDoc
         /// <summary>
         /// Runs this instance.
         /// </summary>
-        /// <param name="assemblySources">The assembly sources to process.</param>
-        public void Run(List<NAssemblySource> assemblySources)
+        public void Run(Config config)
         {
+            if (AssemblyManager == null)
+                throw new InvalidOperationException("AssemblyManager must be set");
+
+            if (ModelBuilder == null)
+                throw new InvalidOperationException("ModelBuilder must be set");
+
+            var assemblySources = AssemblyManager.Load(config);
+
             // Process all assemblies
             foreach (var assemblySource in assemblySources)
             {
-                var modelBuilder = new MonoCecilModelBuilder();
-                var assembly = modelBuilder.LoadFrom(assemblySource, Registry);
+                var assembly = ModelBuilder.LoadFrom(assemblySource, Registry);
                 Assemblies.Add(assembly);
             }
 

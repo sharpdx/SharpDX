@@ -57,26 +57,6 @@ namespace SharpDoc.Model
         public bool IsVirtual { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this instance is static.
-        /// </summary>
-        /// <value><c>true</c> if this instance is static; otherwise, <c>false</c>.</value>
-        public bool IsStatic { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this instance is final.
-        /// </summary>
-        /// <value><c>true</c> if this instance is final; otherwise, <c>false</c>.</value>
-        public bool IsFinal { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this instance is abstract.
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if this instance is abstract; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsAbstract { get; set; }
-
-        /// <summary>
         /// Gets or sets the implements method.
         /// </summary>
         /// <value>The implements.</value>

@@ -47,7 +47,7 @@ namespace SharpDoc
 
         private static string ReplaceGenericsEvaluator(Match match)
         {
-            int nbGenerics = int.Parse(match.Groups[1].Value);
+            int nbGenerics = Int32.Parse(match.Groups[1].Value);
             var text = new StringBuilder();
             text.Append("<");
             for(int i = 0; i < nbGenerics; i++)
