@@ -1,6 +1,6 @@
 SharpDX
 =======
-Official homepage can be found at [SharpDX.org](http://sharpdx.org)
+Official homepage can be found at [sharpdx.org](http://sharpdx.org)
 
 SharpDX is an open-source DirectX and Windows Multimedia .Net Managed API. The *API is generated automatically from DirectX SDK headers*, with *AnyCpu target*, meaning that you can run your application on x86 and x64 platform, without recompiling your project or installing assemblies into the GAC. SharpDX is also [the fastest Managed-DirectX implementation](http://code4k.blogspot.com/2011/03/benchmarking-cnet-direct3d-11-apis-vs.html).
 
