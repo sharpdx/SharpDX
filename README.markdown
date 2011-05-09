@@ -22,9 +22,10 @@ News
 Features
 --------
 The key features and benefits of this API are
-* A
-* B
-* C
+* A.
+* B.
+* C.
+
 *	**The API is generated from DirectX SDK headers**
 	SharpDX provides a complete and reliable API and an easy support for future API.
 *	**Full support for the following DirectX API**
