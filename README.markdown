@@ -6,6 +6,7 @@ SharpDX is an open-source DirectX and Windows Multimedia .Net Managed API. The *
 
 News
 ----
+
 * 8 May 2011, moving to github. First alpha of v2, new code generator.
 * 8 April 2011, Working on SharpDX v2 with lots of new APIs, enhancements and more... unfortunately, current SVN dev version cannot be compiled. This will be fix in a couple of weeks, stay tuned.
 * 17 February 2011, SharpDX 1.3 is released. *Full support for mono 2.10* (Mono 2.10 includes a bugfix necessary for SharpDX to work with it). MessagePump renamed to RenderLoop and some other small issues. see [changelog](http://code.google.com/p/sharpdx/source/browse/trunk/ChangeLog.txt?r=109)
@@ -22,9 +23,6 @@ News
 Features
 --------
 The key features and benefits of this API are
-* A.
-* B.
-* C.
 
 *	**The API is generated from DirectX SDK headers**
 	SharpDX provides a complete and reliable API and an easy support for future API.
