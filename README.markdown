@@ -22,7 +22,10 @@ News
 Features
 --------
 The key features and benefits of this API are
-*	**API is generated from DirectX SDK headers**
+* A
+* B
+* C
+*	**The API is generated from DirectX SDK headers**
 	SharpDX provides a complete and reliable API and an easy support for future API.
 *	**Full support for the following DirectX API**
 	Direct3D9, Direct3D10, Direct3D10.1, Direct3D11, Direct2D1 (including custom rendering, tessellation callbacks), DirectWrite (including custom client callbacks), D3DCompiler, DXGI, DXGI 1.1, DirectSound, DirectInput, XAudio2, XAPO
