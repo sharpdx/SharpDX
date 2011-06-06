@@ -34,9 +34,7 @@ namespace SharpDX.Direct2D1
         public DeviceContextRenderTarget(Factory factory, RenderTargetProperties properties)
             : base(IntPtr.Zero)
         {
-            DeviceContextRenderTarget temp;
-            factory.CreateDCRenderTarget(ref properties, out temp);
-            NativePointer = temp.NativePointer;
+            factory.CreateDCRenderTarget(ref properties, this);
         }
     }
 }

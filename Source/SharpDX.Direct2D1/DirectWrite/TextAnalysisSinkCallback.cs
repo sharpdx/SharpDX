@@ -25,7 +25,7 @@ namespace SharpDX.DirectWrite
     /// <summary>
     /// Internal TextAnalysisSink Callback
     /// </summary>
-    internal class TextAnalysisSinkCallback : SharpDX.ComObjectCallback
+    internal class TextAnalysisSinkCallback : SharpDX.ComObjectCallbackNative
     {
         /// <summary>
         /// Gets or sets the callback.
@@ -33,13 +33,15 @@ namespace SharpDX.DirectWrite
         /// <value>The callback.</value>
         public TextAnalysisSink Callback { get; private set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TextAnalysisSinkCallback"/> class.
-        /// </summary>
-        /// <param name="callback">The callback.</param>
-        public TextAnalysisSinkCallback(TextAnalysisSink callback) : base(callback, 4)
+        public static IntPtr CallbackToPtr(TextAnalysisSink callback)
         {
-            Callback = callback;
+            return CallbackToPtr<TextAnalysisSink, TextAnalysisSinkCallback>(callback);
+        }
+
+        public override void Attach<T>(T callback)
+        {
+            Attach(callback, 4);
+            Callback = (TextAnalysisSink)callback;
             unsafe
             {
                 AddMethod(new SetScriptAnalysisDelegate(SetScriptAnalysisImpl));

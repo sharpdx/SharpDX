@@ -77,19 +77,9 @@ namespace SharpDX.XAudio2
 
             // Register engine callback
             _engineCallbackImpl = new EngineCallbackImpl(this);
+            ((ICallbackable)this).Callback = _engineCallbackImpl;
             RegisterForCallbacks_(_engineCallbackImpl.NativePointer);
         }
-
-        /// <summary>
-        /// Releases unmanaged resources and performs other cleanup operations before the
-        /// <see cref="XAudio2"/> is reclaimed by garbage collection.
-        /// </summary>
-        ~XAudio2()
-        {
-            UnregisterForCallbacks_(_engineCallbackImpl.NativePointer);
-            _engineCallbackImpl = null;
-        }
-
 
         /// <summary>	
         /// Returns information about an audio output device.	
@@ -180,6 +170,22 @@ namespace SharpDX.XAudio2
             this.CommitChanges(0);
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (_engineCallbackImpl != null)
+                UnregisterForCallbacks_(_engineCallbackImpl.NativePointer);
+
+            if (disposing)
+            {
+                if (_engineCallbackImpl != null)
+                {
+                    _engineCallbackImpl.Dispose();
+                    _engineCallbackImpl = null;
+                }
+            }
+            base.Dispose(disposing);
+        }
+
         #region EngineCallback Members
 
         void EngineCallback.OnProcessingPassStart()
@@ -199,6 +205,9 @@ namespace SharpDX.XAudio2
             EventHandler<ErrorEventArgs> handler = CriticalError;
             if (handler != null) handler(this, new ErrorEventArgs(error));
         }
+
+        IDisposable ICallbackable.Callback { get; set; }
+
         #endregion
     }
 }

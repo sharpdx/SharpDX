@@ -74,9 +74,7 @@ namespace SharpDX.Direct2D1
         public Bitmap(RenderTarget renderTarget, System.Drawing.Size size, DataStream dataStream, int pitch, SharpDX.Direct2D1.BitmapProperties bitmapProperties)
             : base(IntPtr.Zero)
         {
-            Bitmap bitmap;
-            renderTarget.CreateBitmap(size, dataStream == null ? IntPtr.Zero : dataStream.PositionPointer, pitch, bitmapProperties, out bitmap);
-            NativePointer = bitmap.NativePointer;
+            renderTarget.CreateBitmap(size, dataStream == null ? IntPtr.Zero : dataStream.PositionPointer, pitch, bitmapProperties, this);
         }
 
 
@@ -101,9 +99,7 @@ namespace SharpDX.Direct2D1
         public Bitmap(RenderTarget renderTarget, Bitmap bitmap, SharpDX.Direct2D1.BitmapProperties? bitmapProperties)
             : base(IntPtr.Zero)
         {
-            Bitmap temp;
-            renderTarget.CreateSharedBitmap(typeof(Bitmap).GUID, bitmap.NativePointer, bitmapProperties, out temp);
-            NativePointer = temp.NativePointer;
+            renderTarget.CreateSharedBitmap(typeof(Bitmap).GUID, bitmap.NativePointer, bitmapProperties, this);
         }
 
         /// <summary>	
@@ -127,9 +123,7 @@ namespace SharpDX.Direct2D1
         public Bitmap(RenderTarget renderTarget, Surface surface, SharpDX.Direct2D1.BitmapProperties? bitmapProperties)
             : base(IntPtr.Zero)
         {
-            Bitmap temp;
-            renderTarget.CreateSharedBitmap(typeof(Surface).GUID, surface.NativePointer, bitmapProperties, out temp);
-            NativePointer = temp.NativePointer;
+            renderTarget.CreateSharedBitmap(typeof(Surface).GUID, surface.NativePointer, bitmapProperties, this);
         }
 
         /// <summary>	

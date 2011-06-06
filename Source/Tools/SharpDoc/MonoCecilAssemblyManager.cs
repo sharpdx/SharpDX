@@ -53,8 +53,17 @@ namespace SharpDoc
         public List<NAssemblySource> Load(Config config)
         {
             // Preload references
-            foreach(var assemblyRef in config.References)
-                AssemblyReferences.Add(AssemblyDefinition.ReadAssembly(assemblyRef, new ReaderParameters(ReadingMode.Deferred)));
+            foreach (var assemblyRef in config.References)
+            {
+                if (!File.Exists(assemblyRef))
+                {
+                    Logger.Error("Assembly reference file [{0}] not found", assemblyRef);
+                }
+                else
+                {
+                    AssemblyReferences.Add(AssemblyDefinition.ReadAssembly(assemblyRef, new ReaderParameters(ReadingMode.Deferred)));
+                }
+            }
 
             // Load all sources
             foreach (var source in config.Sources)
@@ -88,6 +97,12 @@ namespace SharpDoc
 
         private void Load(string source)
         {
+            if (!File.Exists(source))
+            {
+                Logger.Error("Assembly file [{0}] not found", source);
+                return;
+            }
+
             var extension = Path.GetExtension(source);
 
             if (extension != null && (extension.ToLower() == ".dll" || extension.ToLower() == ".exe"))

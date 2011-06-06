@@ -70,9 +70,7 @@ namespace SharpDX.XAudio2
         public SubmixVoice(XAudio2 device, int inputChannels, int inputSampleRate, VoiceSendFlags flags, int processingStage)
             : base(IntPtr.Zero)
         {
-            SubmixVoice temp;
-            device.CreateSubmixVoice(out temp, inputChannels, inputSampleRate,  flags, processingStage, null, null);
-            NativePointer = temp.NativePointer;
+            device.CreateSubmixVoice(this, inputChannels, inputSampleRate,  flags, processingStage, null, null);
         }
     }
 }

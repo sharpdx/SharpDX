@@ -31,9 +31,7 @@ namespace SharpDX.Direct3D10
         /// <param name="fontDescription">The font description.</param>
         public Font(Device device, FontDescription fontDescription) : base(IntPtr.Zero)
         {
-            Font temp;
-            D3DX10.CreateFontIndirect(device, ref fontDescription, out temp);
-            NativePointer = temp.NativePointer;
+            D3DX10.CreateFontIndirect(device, ref fontDescription, this);
         }
 
 
@@ -53,10 +51,8 @@ namespace SharpDX.Direct3D10
         /// <param name="faceName">Name of the face.</param>
         public Font(Device device, int height, int width, FontWeight weight, int mipLevels, bool isItalic, FontCharacterSet characterSet, FontPrecision precision, FontQuality quality, FontPitchAndFamily pitchAndFamily, string faceName)
         {
-            Font temp;
             D3DX10.CreateFont(device, height, width, (int) weight, mipLevels, isItalic, (int) characterSet, (int) precision, (int) quality, (int) pitchAndFamily,
-                              faceName, out temp);
-            NativePointer = temp.NativePointer;
+                              faceName, this);
         }
 
         /// <summary>	

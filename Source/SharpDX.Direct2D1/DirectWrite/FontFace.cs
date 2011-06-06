@@ -35,9 +35,7 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteFactory::CreateFontFace([None] DWRITE_FONT_FACE_TYPE fontFaceType,[None] int numberOfFiles,[In, Buffer] const IDWriteFontFile** fontFiles,[None] int faceIndex,[None] DWRITE_FONT_SIMULATIONS fontFaceSimulationFlags,[Out] IDWriteFontFace** fontFace)</unmanaged>
         public FontFace(Factory factory, FontFaceType fontFaceType, FontFile[] fontFiles, int faceIndex, FontSimulations fontFaceSimulationFlags)
         {
-            FontFace temp;
-            factory.CreateFontFace(fontFaceType, fontFiles.Length, fontFiles, faceIndex, fontFaceSimulationFlags, out temp);
-            NativePointer = temp.NativePointer;
+            factory.CreateFontFace(fontFaceType, fontFiles.Length, fontFiles, faceIndex, fontFaceSimulationFlags, this);
         }
 
         /// <summary>	
@@ -47,9 +45,7 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteFont::CreateFontFace([Out] IDWriteFontFace** fontFace)</unmanaged>
         public FontFace(Font font)
         {
-            FontFace temp;
-            font.CreateFontFace(out temp);
-            NativePointer = temp.NativePointer;
+            font.CreateFontFace(this);
         }
 
         /// <summary>	
@@ -160,21 +156,11 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteFontFace::GetGlyphRunOutline([None] float emSize,[In, Buffer] const short* glyphIndices,[In, Buffer, Optional] const float* glyphAdvances,[In, Buffer, Optional] const DWRITE_GLYPH_OFFSET* glyphOffsets,[None] int glyphCount,[None] BOOL isSideways,[None] BOOL isRightToLeft,[None] IDWriteGeometrySink* geometrySink)</unmanaged>
         public Result GetGlyphRunOutline(float emSize, short[] glyphIndices, float[] glyphAdvances, GlyphOffset[] glyphOffsets, bool isSideways, bool isRightToLeft, SimplifiedGeometrySink geometrySink)
         {
-            SimplifiedGeometrySinkCallback callback;
             IntPtr ptr;
-            if (geometrySink is ComObject)
-                ptr = (geometrySink as ComObject).NativePointer;
+            if ( geometrySink is GeometrySink)
+                ptr = GeometrySinkCallback.CallbackToPtr((GeometrySink)geometrySink);
             else
-            {
-                if ( geometrySink is GeometrySink)
-                {
-                    callback = new GeometrySinkCallback((GeometrySink)geometrySink);
-                } else
-                {
-                    callback = new SimplifiedGeometrySinkCallback(geometrySink, 0);
-                }
-                ptr = callback.NativePointer;
-            }
+                ptr = SimplifiedGeometrySinkCallback.CallbackToPtr(geometrySink);
             return GetGlyphRunOutline_(emSize, glyphIndices, glyphAdvances, glyphOffsets, glyphIndices.Length, isSideways, isRightToLeft, ptr);
         }
     }

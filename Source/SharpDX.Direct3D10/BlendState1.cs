@@ -32,9 +32,7 @@ namespace SharpDX.Direct3D10
         public BlendState1(Device1 device, BlendStateDescription1 description)
             : base(IntPtr.Zero)
         {
-            BlendState1 temp;
-            device.CreateBlendState1(ref description, out temp);
-            NativePointer = temp.NativePointer;
+            device.CreateBlendState1(ref description, this);
         }
 
         /// <summary>
@@ -46,9 +44,7 @@ namespace SharpDX.Direct3D10
         public BlendState1(Device1 device, ref BlendStateDescription1 description)
             : base(IntPtr.Zero)
         {
-            BlendState1 temp;
-            device.CreateBlendState1(ref description, out temp);
-            NativePointer = temp.NativePointer;
+            device.CreateBlendState1(ref description, this);
         }
     }
 }

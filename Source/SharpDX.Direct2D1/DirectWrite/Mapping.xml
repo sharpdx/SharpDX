@@ -61,13 +61,35 @@
     
     <map interface="IDWrite(.+)" name-tmp="$1" />
     <map method="IDWriteFactory::Create.*" visibility="internal" />
+
+    <!-- Create Fast out arguments for all Create.* methods -->
+    <map param="IDWriteFactory::CreateCustomFontCollection::fontCollection" attribute="out fast"/>
+    <map param="IDWriteFactory::CreateFontFileReference::fontFile" attribute="out fast"/>
+    <map param="IDWriteFactory::CreateCustomFontFileReference::fontFile" attribute="out fast"/>
+    <map param="IDWriteFactory::CreateFontFace::fontFace" attribute="out fast"/>
+    <map param="IDWriteFactory::CreateRenderingParams::renderingParams" attribute="out fast"/>
+    <map param="IDWriteFactory::CreateMonitorRenderingParams::renderingParams" attribute="out fast"/>
+    <map param="IDWriteFactory::CreateCustomRenderingParams::renderingParams" attribute="out fast"/>
+    <map param="IDWriteFactory::CreateTextFormat::textFormat" attribute="out fast"/>
+    <map param="IDWriteFactory::CreateTypography::typography" attribute="out fast"/>
+    <map param="IDWriteFactory::CreateTextLayout::textLayout" attribute="out fast"/>
+    <map param="IDWriteFactory::CreateGdiCompatibleTextLayout::textLayout" attribute="out fast"/>
+    <map param="IDWriteFactory::CreateEllipsisTrimmingSign::trimmingSign" attribute="out fast"/>
+    <map param="IDWriteFactory::CreateTextAnalyzer::textAnalyzer" attribute="out fast"/>
+    <map param="IDWriteFactory::CreateNumberSubstitution::numberSubstitution" attribute="out fast"/>
+    <map param="IDWriteFactory::CreateGlyphRunAnalysis::glyphRunAnalysis" attribute="out fast"/>
+
+
     <map param="IDWriteFactory::GetSystemFontCollection::fontCollection" return="true" />
     <map interface="IDWriteFontFileStream" callback-visibility="public" callback="true" callback-dual="true" />
     <map param="IDWriteFontFileStream::ReadFileFragment::fragmentStart" attribute="out" />
     <map method="IDWriteFontFile::GetReferenceKey" visibility="internal" />
     <map interface="IDWriteInlineObject" callback-visibility="public" callback="true" callback-dual="true" />
     <map param="IDWriteInlineObject::Draw::clientDrawingEffect" type="void" />
+
     <map method="IDWriteFont::CreateFontFace" visibility="internal" />
+    <map param="IDWriteFont::CreateFontFace::fontFace" attribute="out fast" />
+
     <map param="IDWriteFont::HasCharacter::exists" return="true" />
     <map param="IDWriteFont::GetInformationalStrings::exists" return="true" />
     
@@ -87,7 +109,9 @@
     <map param="IDWriteFontCollection::GetFontFromFontFace::font" return="true" />
     <map interface="IDWriteFontCollectionLoader" callback="true" callback-dual="false" />
     <map method="IDWriteFontFile::GetLoader" visibility="internal" property="true" />
+    
     <map interface="IDWriteFontFileLoader" callback-visibility="public" callback="true" callback-dual="true" />
+
     <map interface="IDWriteFontFileEnumerator" callback="true" callback-dual="false" />
     <map interface="IDWritePixelSnapping" callback="true" callback-dual="false" />
     <map interface="IDWriteTextRenderer" callback="true" callback-dual="false" />
@@ -95,6 +119,7 @@
     <map param="logFont" type="void" attribute="in" />
     <map param="IDWriteGdiInterop::CreateBitmapRenderTarget::renderTarget" return="true" />
     <map param="IDWriteGdiInterop::CreateFontFaceFromHdc::fontFace" return="true" />
+
     <map param="IDWriteGlyphRunAnalysis::GetAlphaTextureBounds::textureBounds" return="true" />
     <map param="IDWriteLocalFontFileLoader::GetFilePathLengthFromKey::filePathLength" return="true" />
     <map param="IDWriteLocalFontFileLoader::GetLastWriteTimeFromKey::lastWriteTime" return="true" />
@@ -137,7 +162,8 @@
     
     <map function="DWrite(.+)" name-tmp="$1" />
     <map function="DWriteCreateFactory" dll="dwrite.dll" group="SharpDX.DirectWrite.DWrite" />
-    
+    <map param="DWriteCreateFactory::factory" attribute="out fast"/>
+
     <context-clear />
   </mapping>
 </config>

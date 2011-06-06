@@ -65,6 +65,20 @@
     <map method="ID2D1DCRenderTarget::BindDC" name="BindDeviceContext" />
     <map method="ID2D1Factory::GetDesktopDpi" visibility="internal" />
     <map method="ID2D(\d+)Factory::Create.*" visibility="internal" />
+
+    <!-- Create Fast out arguments for all Create.* methods -->
+    <map param="ID2D(\d+)Factory::CreateRectangleGeometry::rectangleGeometry" attribute="out fast"/>
+    <map param="ID2D(\d+)Factory::CreateRoundedRectangleGeometry::roundedRectangleGeometry" attribute="out fast"/>
+    <map param="ID2D(\d+)Factory::CreateEllipseGeometry::ellipseGeometry" attribute="out fast"/>
+    <map param="ID2D(\d+)Factory::CreateGeometryGroup::geometryGroup" attribute="out fast"/>
+    <map param="ID2D(\d+)Factory::CreateTransformedGeometry::transformedGeometry" attribute="out fast"/>
+    <map param="ID2D(\d+)Factory::CreatePathGeometry::pathGeometry" attribute="out fast"/>
+    <map param="ID2D(\d+)Factory::CreateStrokeStyle::strokeStyle" attribute="out fast"/>
+    <map param="ID2D(\d+)Factory::CreateDrawingStateBlock::drawingStateBlock" attribute="out fast"/>
+    <map param="ID2D(\d+)Factory::CreateHwndRenderTarget::hwndRenderTarget" attribute="out fast"/>
+    <map param="ID2D(\d+)Factory::CreateDxgiSurfaceRenderTarget::renderTarget" attribute="out fast"/>
+    <map param="ID2D(\d+)Factory::CreateDCRenderTarget::dcRenderTarget" attribute="out fast"/>
+
     <map method="ID2D1Geometry::CombineWithGeometry" name="Combine" />
     <map method="ID2D1Geometry::CompareWithGeometry" name="Compare" />
     <map param="relation" return="true" />
@@ -80,7 +94,21 @@
     <map interface="ID2D1HwndRenderTarget" name="WindowRenderTarget" />
     <map param="ID2D1PathGeometry::Open::geometrySink" return="true" />
     <map method="ID2D1RectangleGeometry::GetRect" name="GetRectangle" />
+    
     <map method="ID2D(\d+)RenderTarget::Create.*" visibility="internal" />
+
+    <!-- Create Fast out arguments for all Create.* methods -->
+    <map param="ID2D(\d+)RenderTarget::CreateBitmap::bitmap" attribute="out fast"/>
+    <map param="ID2D(\d+)RenderTarget::CreateSharedBitmap::bitmap" attribute="out fast"/>
+    <map param="ID2D(\d+)RenderTarget::CreateBitmapBrush::bitmapBrush" attribute="out fast"/>
+    <map param="ID2D(\d+)RenderTarget::CreateSolidColorBrush::solidColorBrush" attribute="out fast"/>
+    <map param="ID2D(\d+)RenderTarget::CreateGradientStopCollection::gradientStopCollection" attribute="out fast"/>
+    <map param="ID2D(\d+)RenderTarget::CreateLinearGradientBrush::linearGradientBrush" attribute="out fast"/>
+    <map param="ID2D(\d+)RenderTarget::CreateRadialGradientBrush::radialGradientBrush" attribute="out fast"/>
+    <map param="ID2D(\d+)RenderTarget::CreateCompatibleRenderTarget::bitmapRenderTarget" attribute="out fast"/>
+    <map param="ID2D(\d+)RenderTarget::CreateLayer::layer" attribute="out fast"/>
+    <map param="ID2D(\d+)RenderTarget::CreateMesh::mesh" attribute="out fast"/>
+
     <map param="ID2D(\d+)RenderTarget::CreateSharedBitmap::data" attribute="in" />
     <map method="ID2D1RenderTarget::DrawTextA" visibility="internal" name="DrawText" />
     <map method="ID2D1RenderTarget::(.*)Dpi" visibility="internal" />

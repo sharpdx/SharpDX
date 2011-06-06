@@ -33,13 +33,15 @@ namespace SharpDX.DirectWrite
         /// <value>The callback.</value>
         public TextRenderer Callback { get; private set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TextRendererCallback"/> class.
-        /// </summary>
-        /// <param name="callback">The callback.</param>
-        public TextRendererCallback(TextRenderer callback) : base(callback, 4)
+        public static IntPtr CallbackToPtr(TextRenderer callback)
         {
-            Callback = callback;
+            return CallbackToPtr<TextRenderer, TextRendererCallback>(callback);
+        }
+
+        public override void Attach<T>(T callback)
+        {
+            Attach(callback, 4);
+            Callback = (TextRenderer)callback;
             AddMethod(new DrawGlyphRunDelegate(DrawGlyphRunImpl));
             AddMethod(new DrawUnderlineDelegate(DrawUnderlineImpl));
             AddMethod(new DrawStrikethroughDelegate(DrawStrikethroughImpl));
@@ -106,6 +108,5 @@ namespace SharpDX.DirectWrite
         {
             return Callback.DrawInlineObject(Utilities.GetObjectForIUnknown(clientDrawingContextPtr), originX, originY, new InlineObjectNative(inlineObject), isSideways != 0, isRightToLeft != 0, (ComObject)Utilities.GetObjectForIUnknown(clientDrawingEffectPtr)).Code;
         }
-
     }
 }

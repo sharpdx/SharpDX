@@ -65,6 +65,16 @@ namespace SharpDoc
         public dynamic Style { get { return Model.Style; }}
 
         /// <summary>
+        /// Includes the specified name.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
+        public override string Include(string name)
+        {
+            return base.Include(name, Model);
+        }
+
+        /// <summary>
         /// Registers the helper.
         /// </summary>
         /// <param name="name">The name.</param>
@@ -172,12 +182,6 @@ namespace SharpDoc
         }
 
         /// <summary>
-        /// Gets or sets the template directories.
-        /// </summary>
-        /// <value>The template directories.</value>
-        public List<string> TemplateDirectories { get { return Model.TemplateDirectories; } }
-
-        /// <summary>
         /// Copies the content of the directory.
         /// </summary>
         /// <param name="directory">The directory.</param>
@@ -235,7 +239,7 @@ namespace SharpDoc
         {
             if (content == null)
                 return "NULLERROR";
-            return HtmlUtility.Escape(content);
+            return Utility.EscapeHtml(content);
         }
     }
 }

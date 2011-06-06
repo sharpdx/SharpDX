@@ -24,7 +24,7 @@ namespace SharpDX.DirectWrite
     /// <summary>
     /// Default abstract implementation of TextRenderer. Need to implement a least a DrawXXX method to use it.
     /// </summary>
-    public abstract class TextRendererBase : TextRenderer
+    public abstract class TextRendererBase : CallbackBase, TextRenderer
     {
         /// <summary>
         /// Determines whether pixel snapping is disabled. The recommended default is FALSE,
@@ -138,5 +138,5 @@ namespace SharpDX.DirectWrite
         {
             return Result.NotImplemented;
         }
-    }
+   }
 }

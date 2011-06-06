@@ -45,6 +45,7 @@
 using System;
 using SharpDX;
 using SharpDX.D3DCompiler;
+using SharpDX.Diagnostics;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D10;
 using SharpDX.DXGI;
@@ -66,6 +67,8 @@ namespace MiniTri
         {
             var form = new RenderForm("SharpDX - MiniTri Direct3D 10 Sample");
 
+            Configuration.EnableObjectTracking = true;
+
             // SwapChain description
             var desc = new SwapChainDescription()
                            {
@@ -86,11 +89,11 @@ namespace MiniTri
             Device.CreateWithSwapChain(DriverType.Hardware, DeviceCreationFlags.Debug, desc, out device, out swapChain);
 
             // Ignore all windows events
-            Factory factory = swapChain.GetParent<Factory>();
+            var factory = swapChain.GetParent<Factory>();
             factory.MakeWindowAssociation(form.Handle, WindowAssociationFlags.IgnoreAll);
 
             // New RenderTargetView from the backbuffer
-            Texture2D backBuffer = Texture2D.FromSwapChain<Texture2D>(swapChain, 0);
+            var backBuffer = Texture2D.FromSwapChain<Texture2D>(swapChain, 0);
             var renderView = new RenderTargetView(device, backBuffer);
 
             // Compile Vertex and Pixel shaders
@@ -100,7 +103,8 @@ namespace MiniTri
             var pass = technique.GetPassByIndex(0);
 
             // Layout from VertexShader input signature
-            var layout = new InputLayout(device, pass.Description.Signature, new[]
+            var passSignature = pass.Description.Signature;
+            var layout = new InputLayout(device, passSignature, new[]
                                                                                  {
                                                                                      new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
                                                                                      new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0)
@@ -125,7 +129,7 @@ namespace MiniTri
                                                               SizeInBytes = 32*3,
                                                               Usage = ResourceUsage.Default,
                                                           });
-            stream.Release();
+            stream.Dispose();
 
             // Prepare All the stages
             device.InputAssembler.SetInputLayout(layout);
@@ -147,17 +151,19 @@ namespace MiniTri
                                       });
 
             // Release all resources
-            effectByteCode.Release();
-            vertices.Release();
-            layout.Release();
-            renderView.Release();
-            backBuffer.Release();
+            passSignature.Dispose();
+            effect.Dispose();
+            effectByteCode.Dispose();
+            vertices.Dispose();
+            layout.Dispose();
+            renderView.Dispose();
+            backBuffer.Dispose();
             device.ClearState();
             device.Flush();
-            device.Release();
-            device.Release();
-            swapChain.Release();
-            factory.Release();
+            device.Dispose();
+            device.Dispose();
+            swapChain.Dispose();
+            factory.Dispose();           
         }
     }
 }

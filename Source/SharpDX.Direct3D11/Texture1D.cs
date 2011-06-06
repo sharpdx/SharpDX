@@ -32,9 +32,7 @@ namespace SharpDX.Direct3D11
         public Texture1D(Device device, Texture1DDescription description)
             : base(IntPtr.Zero)
         {
-            Texture1D temp;
-            device.CreateTexture1D(ref description, null, out temp);
-            NativePointer = temp.NativePointer;
+            device.CreateTexture1D(ref description, null, this);
         }
 
         /// <summary>
@@ -59,15 +57,11 @@ namespace SharpDX.Direct3D11
             : base(IntPtr.Zero)
         {
             System.Diagnostics.Debug.Assert(data != null);
-
-            Texture1D temp;
-
-            SubResourceData[] subResourceDatas = new SubResourceData[data.Length];
+            var subResourceDatas = new SubResourceData[data.Length];
             for (int i = 0; i < subResourceDatas.Length; i++)
                 subResourceDatas[i].DataPointer = data[i].DataPointer;
 
-            device.CreateTexture1D(ref description, subResourceDatas, out temp);
-            NativePointer = temp.NativePointer;
+            device.CreateTexture1D(ref description, subResourceDatas, this);
         }
     }
 }

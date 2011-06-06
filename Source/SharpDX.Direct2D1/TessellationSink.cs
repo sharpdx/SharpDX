@@ -18,9 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using System.Runtime.InteropServices;
-
 namespace SharpDX.Direct2D1
 {
     public partial interface TessellationSink
@@ -37,65 +34,5 @@ namespace SharpDX.Direct2D1
         /// </summary>	
         /// <unmanaged>HRESULT Close()</unmanaged>
         void Close();
-    }
-
-    internal partial class TessellationSinkNative
-    {
-        public void AddTriangles(Triangle[] triangles)
-        {
-            AddTriangles_(triangles, triangles.Length);
-        }
-
-        public void Close()
-        {
-            Close_();
-        }
-    }
-
-    /// <summary>
-    /// Internal TessellationSink Callback
-    /// </summary>
-    internal class TessellationSinkCallback : SharpDX.ComObjectCallback
-    {
-        TessellationSink Callback { get; set; }
-
-        public TessellationSinkCallback(TessellationSink callback) : base(callback, 2)
-        {
-            Callback = callback;
-            AddMethod(new AddTrianglesDelegate(AddTrianglesImpl));
-            AddMethod(new CloseDelegate(CloseImpl));
-        }
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate void AddTrianglesDelegate(IntPtr thisPtr, IntPtr triangles, int trianglesCount);
-        private void AddTrianglesImpl(IntPtr thisPtr, IntPtr triangles, int trianglesCount)
-        {
-            unsafe
-            {
-                Triangle[] managedTriangles = new Triangle[trianglesCount];
-                Utilities.Read(triangles, managedTriangles, 0, trianglesCount);
-                Callback.AddTriangles(managedTriangles);
-            }
-        }
-
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate int CloseDelegate(IntPtr thisPtr);
-        private int CloseImpl(IntPtr thisPtr)
-        {
-            try
-            {
-                Callback.Close();
-            }
-            catch (SharpDXException exception)
-            {
-                return exception.ResultCode.Code;
-            }
-            catch (Exception)
-            {
-                return Result.Fail.Code;
-            }
-            return Result.Ok.Code;
-        }
     }
 }

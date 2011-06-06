@@ -31,9 +31,7 @@ namespace SharpDX.Direct3D11
         public Texture3D(Device device, Texture3DDescription description)
             : base(IntPtr.Zero)
         {
-            Texture3D temp;
-            device.CreateTexture3D(ref description, null, out temp);
-            NativePointer = temp.NativePointer;
+            device.CreateTexture3D(ref description, null, this);
         }
 
         /// <summary>
@@ -55,8 +53,6 @@ namespace SharpDX.Direct3D11
         /// <param name = "data">An array of initial texture data for each subresource.</param>
         public Texture3D(Device device, Texture3DDescription description, DataBox[] data) : base(IntPtr.Zero)
         {
-            Texture3D temp;
-
             SubResourceData[] subResourceDatas = null;
 
             if (data != null)
@@ -70,8 +66,7 @@ namespace SharpDX.Direct3D11
                 }
             }
 
-            device.CreateTexture3D(ref description, subResourceDatas, out temp);
-            NativePointer = temp.NativePointer;
+            device.CreateTexture3D(ref description, subResourceDatas, this);
         }
     }
 }

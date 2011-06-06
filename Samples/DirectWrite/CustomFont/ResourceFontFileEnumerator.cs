@@ -25,7 +25,7 @@ namespace CustomFont
     /// <summary>
     /// Resource FontFileEnumerator.
     /// </summary>
-    public  class ResourceFontFileEnumerator : FontFileEnumerator
+    public  class ResourceFontFileEnumerator : CallbackBase, FontFileEnumerator
     {
         private Factory _factory;
         private FontFileLoader _loader;
@@ -58,7 +58,7 @@ namespace CustomFont
             if (moveNext)
             {
                 if (_currentFontFile != null)
-                    _currentFontFile.Release();
+                    _currentFontFile.Dispose();
 
                 _currentFontFile = new FontFile(_factory, keyStream.PositionPointer, 4, _loader);
                 keyStream.Position += 4;

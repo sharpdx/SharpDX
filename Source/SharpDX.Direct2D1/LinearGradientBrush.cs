@@ -45,9 +45,7 @@ namespace SharpDX.Direct2D1
         /// <unmanaged>HRESULT CreateLinearGradientBrush([In] const D2D1_LINEAR_GRADIENT_BRUSH_PROPERTIES* linearGradientBrushProperties,[In, Optional] const D2D1_BRUSH_PROPERTIES* brushProperties,[In] ID2D1GradientStopCollection* gradientStopCollection,[Out] ID2D1LinearGradientBrush** linearGradientBrush)</unmanaged>
         public LinearGradientBrush(RenderTarget renderTarget, SharpDX.Direct2D1.LinearGradientBrushProperties linearGradientBrushProperties, SharpDX.Direct2D1.BrushProperties? brushProperties, SharpDX.Direct2D1.GradientStopCollection gradientStopCollection) : base(IntPtr.Zero)
         {
-            LinearGradientBrush temp;
-            renderTarget.CreateLinearGradientBrush(linearGradientBrushProperties, brushProperties, gradientStopCollection, out temp);
-            NativePointer = temp.NativePointer;          
+            renderTarget.CreateLinearGradientBrush(linearGradientBrushProperties, brushProperties, gradientStopCollection, this);
         }
 
     }

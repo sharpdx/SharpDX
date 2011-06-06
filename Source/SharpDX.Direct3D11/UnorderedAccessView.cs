@@ -32,9 +32,7 @@ namespace SharpDX.Direct3D11
         public UnorderedAccessView(Device device, Resource resource)
             : base(IntPtr.Zero)
         {
-            UnorderedAccessView view;
-            device.CreateUnorderedAccessView(resource, null, out view);
-            NativePointer = view.NativePointer;
+            device.CreateUnorderedAccessView(resource, null, this);
         }
 
         /// <summary>
@@ -47,9 +45,7 @@ namespace SharpDX.Direct3D11
         public UnorderedAccessView(Device device, Resource resource, UnorderedAccessViewDescription description)
             : base(IntPtr.Zero)
         {
-            UnorderedAccessView view;
-            device.CreateUnorderedAccessView(resource, description, out view);
-            NativePointer = view.NativePointer;
+            device.CreateUnorderedAccessView(resource, description, this);
         }
     }
 }

@@ -18,6 +18,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+//using System;
+using System;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.RegularExpressions;
+using System.Xml;
+using Lucene.Net.Analysis.Standard;
+using Lucene.Net.Documents;
+using Lucene.Net.Index;
+using Lucene.Net.Search;
+using Lucene.Net.Store;
+using SharpCore.Logging;
+using Directory = System.IO.Directory;
+using Version = Lucene.Net.Util.Version;
+
 namespace SharpDoc
 {
     /// <summary>
@@ -27,9 +42,15 @@ namespace SharpDoc
     {
         static void Main(string[] args)
         {
-            var app = new SharpDocApp();
-            app.ParseArguments(args);
-            app.Run();
+            try
+            {
+                var app = new SharpDocApp();
+                app.ParseArguments(args);
+                app.Run();
+            } catch (Exception ex)
+            {
+                Logger.Fatal("Unexpected exception", ex);
+            }
         }
     }
 }

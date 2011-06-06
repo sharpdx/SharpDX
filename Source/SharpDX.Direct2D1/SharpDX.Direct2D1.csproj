@@ -169,10 +169,14 @@
     <Compile Include="GradientStopCollection.cs" />
     <Compile Include="LinearGradientBrush.cs" />
     <Compile Include="SimplifiedGeometrySink.cs" />
+    <Compile Include="SimplifiedGeometrySinkCallback.cs" />
+    <Compile Include="SimplifiedGeometrySinkNative.cs" />
     <Compile Include="SolidColorBrush.cs" />
     <Compile Include="DrawingStateBlock.cs" />
     <Compile Include="GeometryGroup.cs" />
     <Compile Include="DeviceContextRenderTarget.cs" />
+    <Compile Include="TessellationSinkCallback.cs" />
+    <Compile Include="TessellationSinkNative.cs" />
     <Compile Include="WindowRenderTarget.cs" />
     <Compile Include="PixelFormat.cs" />
     <Compile Include="RenderTarget.cs" />

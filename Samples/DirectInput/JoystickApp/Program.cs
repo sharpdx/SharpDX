@@ -39,9 +39,14 @@ namespace EnumDevicesApp
             foreach (var deviceInstance in directInput.GetDevices(DeviceType.Gamepad, DeviceEnumerationFlags.AllDevices))
                 joystickGuid = deviceInstance.InstanceGuid;
 
+
             // If Joystick not found, throws an error
             if (joystickGuid == Guid.Empty)
-                throw new InvalidOperationException("No joystick/Gamepad found");
+            {
+                Console.WriteLine("No joystick/Gamepad found.");
+                Console.ReadKey();
+                Environment.Exit(1);
+            }
 
             // Instantiate the joystick
             var joystick = new Joystick(directInput, joystickGuid);

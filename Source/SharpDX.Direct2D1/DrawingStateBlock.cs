@@ -59,9 +59,7 @@ namespace SharpDX.Direct2D1
         public DrawingStateBlock(Factory factory, SharpDX.Direct2D1.DrawingStateDescription? drawingStateDescription, SharpDX.DirectWrite.RenderingParams textRenderingParams)
             : base(IntPtr.Zero)
         {
-            DrawingStateBlock temp;
-            factory.CreateDrawingStateBlock(drawingStateDescription, textRenderingParams, out temp);
-            NativePointer = temp.NativePointer;
+            factory.CreateDrawingStateBlock(drawingStateDescription, textRenderingParams, this);
         }
     }
 }

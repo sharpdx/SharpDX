@@ -97,12 +97,10 @@ namespace SharpDX.Direct3D11
         private void CreateDevice(Adapter adapter, DriverType driverType, DeviceCreationFlags flags,
                                   FeatureLevel[] featureLevels)
         {
-            Device device;
             FeatureLevel selectedLevel;
             D3D11.CreateDevice(adapter, driverType, IntPtr.Zero, flags, featureLevels,
-                               featureLevels == null ? 0 : featureLevels.Length, D3D11.SdkVersion, out device,
+                               featureLevels == null ? 0 : featureLevels.Length, D3D11.SdkVersion, this,
                                out selectedLevel, out _immediateContext);
-            NativePointer = device.NativePointer;
         }
 
         /// <summary>
@@ -212,20 +210,19 @@ namespace SharpDX.Direct3D11
             private set { _immediateContext = value; }
         }
 
-        /// <summary>
-        ///   Release COM reference
-        /// </summary>
-        /// <returns></returns>
-        public override int Release()
+        protected override void Dispose(bool disposing)
         {
-            if (_immediateContext != null)
+            if (disposing)
             {
-                _immediateContext.ClearState();
-                _immediateContext.Flush();
-                _immediateContext.Release();
-                _immediateContext = null;
+                if (_immediateContext != null)
+                {
+                    _immediateContext.ClearState();
+                    _immediateContext.Flush();
+                    _immediateContext.Dispose();
+                    _immediateContext = null;
+                }                
             }
-            return base.Release();
+            base.Dispose(disposing);
         }
 
         /// <summary>
@@ -411,12 +408,12 @@ namespace SharpDX.Direct3D11
         public static FeatureLevel GetSupportedFeatureLevel()
         {
             FeatureLevel outputLevel;
-            Device device;
+            var device = new Device(IntPtr.Zero);
             DeviceContext context;
-            D3D11.CreateDevice(null, DriverType.Hardware, IntPtr.Zero, DeviceCreationFlags.None, null, 0, D3D11.SdkVersion, out device, out outputLevel,
+            D3D11.CreateDevice(null, DriverType.Hardware, IntPtr.Zero, DeviceCreationFlags.None, null, 0, D3D11.SdkVersion, device, out outputLevel,
                                out context);
-            context.Release();
-            device.Release();
+            context.Dispose();
+            device.Dispose();
             return outputLevel;
         }
 
@@ -430,12 +427,12 @@ namespace SharpDX.Direct3D11
         public static FeatureLevel GetSupportedFeatureLevel(Adapter adapter)
         {
             FeatureLevel outputLevel;
-            Device device;
+            var device = new Device(IntPtr.Zero);
             DeviceContext context;
-            D3D11.CreateDevice(adapter, DriverType.Unknown, IntPtr.Zero, DeviceCreationFlags.None, null, 0, D3D11.SdkVersion, out device, out outputLevel,
+            D3D11.CreateDevice(adapter, DriverType.Unknown, IntPtr.Zero, DeviceCreationFlags.None, null, 0, D3D11.SdkVersion, device, out outputLevel,
                                out context);
-            context.Release();
-            device.Release();
+            context.Dispose();
+            device.Dispose();
             return outputLevel;
         }
 

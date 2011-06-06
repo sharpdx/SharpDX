@@ -23,8 +23,6 @@ namespace SharpDX.DirectWrite
 {
     public partial class FontCollection
     {
-        private FontCollectionLoaderCallback _callback;
-
         /// <summary>	
         /// Creates a font collection using a custom font collection loader. 	
         /// </summary>	
@@ -34,12 +32,7 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteFactory::CreateCustomFontCollection([None] IDWriteFontCollectionLoader* collectionLoader,[In, Buffer] const void* collectionKey,[None] int collectionKeySize,[Out] IDWriteFontCollection** fontCollection)</unmanaged>
         public FontCollection(Factory factory, FontCollectionLoader collectionLoader, DataStream collectionKey)
         {
-            _callback = factory.FindRegisteredFontCollectionLoaderCallback(collectionLoader);
-            if (_callback == null) throw new ArgumentException("FontCollectionLoader must be registered on the factory before using it", "collectionLoader");
-
-            FontCollection temp;
-            factory.CreateCustomFontCollection_(_callback.NativePointer, collectionKey.PositionPointer, (int)collectionKey.RemainingLength, out temp);
-            NativePointer = temp.NativePointer;
+            factory.CreateCustomFontCollection_(FontCollectionLoaderCallback.CallbackToPtr(collectionLoader), collectionKey.PositionPointer, (int)collectionKey.RemainingLength, this);
         }
-        }
+    }
 }

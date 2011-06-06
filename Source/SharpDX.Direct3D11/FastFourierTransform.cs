@@ -42,9 +42,7 @@ namespace SharpDX.Direct3D11
         /// <param name="flags">Flag affecting the behavior of the FFT.</param>
         public FastFourierTransform(DeviceContext context, FastFourierTransformDescription description, FastFourierTransformCreationFlags flags) : base(IntPtr.Zero)
         {
-            FastFourierTransform temp;
-            D3DCSX.CreateFFT(context, ref description, (int)flags, out _bufferRequirements, out temp);
-            NativePointer = temp.NativePointer; 
+            D3DCSX.CreateFFT(context, ref description, (int)flags, out _bufferRequirements, this);
         }
 
         /// <summary>	

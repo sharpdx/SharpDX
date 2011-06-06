@@ -21,6 +21,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using Mono.Options;
 using SharpCore.Logging;
 using SharpGen.Config;
 using SharpGen.Generator;
@@ -52,21 +53,73 @@ namespace SharpGen
         private string _assemblyCheckFile;
         private string _generatedPath;
         private string _allConfigCheck;
+        private string _configRootPath;
+
+        /// <summary>
+        /// Print usages the error.
+        /// </summary>
+        /// <param name="error">The error.</param>
+        /// <param name="parameters">The parameters.</param>
+        private static void UsageError(string error, params object[] parameters)
+        {
+            var exeName = Path.GetFileName(Assembly.GetEntryAssembly().Location);
+            Console.Write("{0}: ", exeName);
+            Console.WriteLine(error, parameters);
+            Console.WriteLine("Use {0} --help' for more information.", exeName);
+            Environment.Exit(1);
+        }
+
+        /// <summary>
+        /// Parses the command line arguments.
+        /// </summary>
+        /// <param name="args">The args.</param>
+        public void ParseArguments(string[] args)
+        {
+            var showHelp = false;
+
+            var options = new OptionSet()
+                              {
+                                  "Copyright (c) 2010-2011 SharpDX - Alexandre Mutel",
+                                  "Usage: SharpGen [options] config_file.xml",
+                                  "Code generator from C++ to C# for .Net languages",
+                                  "",
+                                  {"g|gccxml=", "Specify the path to gccxml.exe", opt => GccXmlExecutablePath = opt},
+                                  {"d|doc=", "Specify the path to the assembly doc provider [default: null]", opt => DocProviderAssemblyPath = opt},
+                                  "",
+                                  {"h|help", "Show this message and exit", opt => showHelp = opt != null},
+                                  // default
+                                  {"<>", opt => _configRootPath = opt },
+                              };
+            try
+            {
+                options.Parse(args);
+            }
+            catch (OptionException e)
+            {
+                UsageError(e.Message);
+            }
+
+            if (showHelp)
+            {
+                options.WriteOptionDescriptions(Console.Out);
+                Environment.Exit(0);
+            }
+
+            if (_configRootPath == null)
+                UsageError("Missing config.xml. A config.xml must be specified");
+        }
 
         /// <summary>
         /// Inits the specified instance with a config root file.
         /// </summary>
-        /// <param name="configRootPath">The config file.</param>
         /// <returns>true if the config or assembly changed from the last run; otherwise returns false</returns>
-        public bool Init(string configRootPath)
+        public bool Init()
         {
-            if (configRootPath == null) throw new ArgumentNullException("configRootPath");
-
             _thisAssemblyPath = Assembly.GetExecutingAssembly().Location;
             _assemblyCheckFile = Path.ChangeExtension(_thisAssemblyPath, ".check");
             _assemblyDatetime = File.GetLastWriteTime(_thisAssemblyPath);
             _isAssemblyNew = (File.GetLastWriteTime(_thisAssemblyPath) != File.GetLastWriteTime(_assemblyCheckFile));
-            _generatedPath = Path.GetDirectoryName(configRootPath);
+            _generatedPath = Path.GetDirectoryName(_configRootPath);
 
             if (_isAssemblyNew)
                 Logger.Message("Assembly [{0}] changed. All files will be generated", _thisAssemblyPath);
@@ -74,7 +127,7 @@ namespace SharpGen
             Logger.Message("Loading config files...");
 
             // Load configuration
-            Config = ConfigFile.Load(configRootPath);
+            Config = ConfigFile.Load(_configRootPath);
             var latestConfigTime = ConfigFile.GetLatestTimestamp(Config.ConfigFilesLoaded);
 
             _allConfigCheck = Config.Id + "-CodeGen.check";

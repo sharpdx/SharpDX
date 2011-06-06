@@ -17,9 +17,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System;
-using System.Runtime.InteropServices;
-
 namespace SharpDX.XAudio2
 {
     /// <summary>	
@@ -46,53 +43,5 @@ namespace SharpDX.XAudio2
         /// <param name="error"> Error code returned by XAudio2. </param>
         /// <unmanaged>void IXAudio2EngineCallback::OnCriticalError([None] HRESULT Error)</unmanaged>
         void OnCriticalError(Result error);
-    }
-
-   /// <summary>
-    /// Internal EngineCallback Callback Impl
-    /// </summary>
-    internal class EngineCallbackImpl : SharpDX.CppObjectCallback
-    {
-        private EngineCallback Callback { get; set; }
-
-        public EngineCallbackImpl(EngineCallback callback)
-            : base(3)
-        {
-            Callback = callback;
-            AddMethod(new OnProcessingPassStartDelegate(OnProcessingPassStartImpl));
-            AddMethod(new OnProcessingPassEndDelegate(OnProcessingPassEndImpl));
-            AddMethod(new OnCriticalErrorDelegate(OnCriticalErrorImpl));
-        }
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate void OnProcessingPassStartDelegate(IntPtr thisObject);
-        private void OnProcessingPassStartImpl(IntPtr thisObject)
-        {
-            Callback.OnProcessingPassStart();
-        }
-
-        /// <summary>	
-        /// Called by XAudio2 just after an audio processing pass ends.	
-        /// </summary>	
-        /// <unmanaged>void IXAudio2EngineCallback::OnProcessingPassEnd()</unmanaged>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate void OnProcessingPassEndDelegate(IntPtr thisObject);
-        private void OnProcessingPassEndImpl(IntPtr thisObject)
-        {
-            Callback.OnProcessingPassStart();
-        }
-
-       /// <summary>	
-       /// Called if a critical system error occurs that requires XAudio2 to be closed down and restarted.	
-       /// </summary>
-       /// <param name="thisObject">This pointer</param>
-       /// <param name="error"> Error code returned by XAudio2. </param>
-       /// <unmanaged>void IXAudio2EngineCallback::OnCriticalError([None] HRESULT Error)</unmanaged>
-       [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate void OnCriticalErrorDelegate(IntPtr thisObject, int error);
-        private void OnCriticalErrorImpl(IntPtr thisObject, int error)
-        {
-            Callback.OnCriticalError(new Result(error));            
-        }
     }
 }

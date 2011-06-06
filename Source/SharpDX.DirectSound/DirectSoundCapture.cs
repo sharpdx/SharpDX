@@ -29,9 +29,7 @@ namespace SharpDX.DirectSound
         /// </summary>
         public DirectSoundCapture()
         {
-            DirectSoundCapture temp;
-            DSound.CaptureCreate8(null, out temp, null);
-            NativePointer = temp.NativePointer;
+            DSound.CaptureCreate8(null, this, null);
         }
 
         /// <summary>
@@ -41,9 +39,7 @@ namespace SharpDX.DirectSound
         /// <returns />
         public DirectSoundCapture(Guid device)
         {
-            DirectSoundCapture temp;
-            DSound.CaptureCreate8(device, out temp, null);
-            NativePointer = temp.NativePointer;
+            DSound.CaptureCreate8(device, this, null);
         }
 
         /// <summary>

@@ -77,11 +77,8 @@ namespace SharpDX.XAudio2
         public SourceVoice(XAudio2 device, SharpDX.Multimedia.WaveFormat sourceFormat, SharpDX.XAudio2.VoiceFlags flags, float maxFrequencyRatio, VoiceCallback callback)
             : base(IntPtr.Zero)
         {
-            SourceVoice temp;
-
             _voiceCallBackImpl = callback==null?null:new VoiceCallBackImpl(callback);
-            device.CreateSourceVoice_(out temp, ref sourceFormat, flags, maxFrequencyRatio, callback==null?IntPtr.Zero:_voiceCallBackImpl.NativePointer, null, null);
-            NativePointer = temp.NativePointer;
+            device.CreateSourceVoice_(this, ref sourceFormat, flags, maxFrequencyRatio, callback==null?IntPtr.Zero:_voiceCallBackImpl.NativePointer, null, null);
         }
 
         /// <summary>	
@@ -103,6 +100,19 @@ namespace SharpDX.XAudio2
         public SharpDX.Result Start(int operationSet)
         {
             return this.Start(0, operationSet);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_voiceCallBackImpl != null)
+                {
+                    _voiceCallBackImpl.Dispose();
+                    _voiceCallBackImpl = null;
+                }
+            }
+            base.Dispose(disposing);
         }
     }
 }

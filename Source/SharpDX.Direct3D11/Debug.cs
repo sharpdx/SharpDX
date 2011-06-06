@@ -29,7 +29,7 @@ namespace SharpDX.Direct3D11
         /// <param name="device">The device.</param>
         public Debug(Device device)
         {
-            NativePointer = device.QueryInterface<Debug>().NativePointer;
+            QueryInterfaceFrom(device);
         }
 
         /// <summary>

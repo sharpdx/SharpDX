@@ -26,7 +26,7 @@ namespace SharpDX.DirectWrite
     /// <summary>
     /// Internal FontFileLoader Callback
     /// </summary>
-    internal class FontFileLoaderCallback : SharpDX.ComObjectCallback
+    internal class FontFileLoaderCallback : SharpDX.ComObjectCallbackNative
     {
         /// <summary>
         /// Gets or sets the callback.
@@ -34,17 +34,15 @@ namespace SharpDX.DirectWrite
         /// <value>The callback.</value>
         public FontFileLoader Callback { get; private set; }
 
-        private List<FontFileStreamCallback> _streamCallbacks;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FontFileLoaderCallback"/> class.
-        /// </summary>
-        /// <param name="callback">The callback.</param>
-        public FontFileLoaderCallback(FontFileLoader callback)
-            : base(callback, 1)
+        public static IntPtr CallbackToPtr(FontFileLoader callback)
         {
-            Callback = callback;
-            _streamCallbacks = new List<FontFileStreamCallback>();
+            return CallbackToPtr<FontFileLoader, FontFileLoaderCallback>(callback);
+        }
+
+        public override void Attach<T>(T callback)
+        {
+            Attach(callback, 1);
+            Callback = (FontFileLoader)callback;
             AddMethod(new CreateStreamFromKeyDelegate(CreateStreamFromKeyImpl));
         }
 
@@ -59,11 +57,7 @@ namespace SharpDX.DirectWrite
             try
             {
                 var fontFileStream = Callback.CreateStreamFromKey(new DataStream(fontFileReferenceKey, fontFileReferenceKeySize, true, true));
-
-                var fontFileStreamCallback = new FontFileStreamCallback(fontFileStream);
-                _streamCallbacks.Add(fontFileStreamCallback);
-
-                fontFileStreamPtr = fontFileStreamCallback.NativePointer;
+                fontFileStreamPtr = FontFileStreamCallback.CallbackToPtr(fontFileStream);
             }
             catch (SharpDXException exception)
             {

@@ -29,9 +29,7 @@ namespace SharpDX.DirectSound
         /// </summary>
         public DirectSound() : base(IntPtr.Zero)
         {
-            DirectSound temp;
-            DSound.Create8(null, out temp, null);
-            NativePointer = temp.NativePointer;
+            DSound.Create8(null, this, null);
         }
 
         /// <summary>

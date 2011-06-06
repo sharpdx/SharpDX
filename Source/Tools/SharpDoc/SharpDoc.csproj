@@ -61,7 +61,7 @@
     <DocumentationFile>bin\Debug\SharpDoc.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>Bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -69,14 +69,20 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>logo_sharp_doc.ico</ApplicationIcon>
+    <ApplicationIcon>SharpDoc.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Lucene.Net, Version=2.9.2.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\External\Lucene.Net\bin\Lucene.Net.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>..\..\..\External\Mono.Cecil\Mono.Cecil.dll</HintPath>
     </Reference>
@@ -89,6 +95,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\External\RazorEngine\System.Web.Razor.dll</HintPath>
     </Reference>
@@ -103,6 +110,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AssemblyDoc.cs" />
+    <Compile Include="ConfigDocPak.cs" />
     <Compile Include="MonoCecilAssemblyManager.cs" />
     <Compile Include="ConfigParam.cs" />
     <Compile Include="DynamicParam.cs" />
@@ -145,22 +153,33 @@
     <Compile Include="Model\NType.cs" />
     <Compile Include="Model\NEnum.cs" />
     <Compile Include="MonoCecilHelper.cs" />
+    <Compile Include="OutputType.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DocIdHelper.cs" />
     <Compile Include="SharpDocApp.cs" />
+    <Compile Include="StyleDefinition.cs" />
+    <Compile Include="StyleManager.cs" />
     <Compile Include="TemplateContext.cs" />
     <Compile Include="TemplateHelperBase.cs" />
     <Compile Include="LinkDescriptor.cs" />
     <Compile Include="TextReferenceUtility.cs" />
+    <Compile Include="TopicBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Styles\Standard\MainClassLibrary.cshtml" />
+    <None Include="Styles\Standard\MainTopic.cshtml" />
+    <None Include="Styles\Standard\MainEnd.cshtml" />
+    <None Include="Styles\Standard\MainBegin.cshtml" />
+    <None Include="Styles\Standard\html\Search.cshtml" />
+    <None Include="Styles\Standard\html\SearchBody.cshtml" />
+    <None Include="Styles\Standard\html\SearchBox.cshtml" />
     <None Include="Styles\Standard\html\SyntaxCodeFSharp.cshtml" />
     <None Include="Styles\Standard\html\SyntaxCodeCpp.cshtml" />
     <None Include="Styles\Standard\html\SyntaxCodeVB.cshtml" />
     <None Include="Styles\Standard\html\SyntaxCodeCSharp.cshtml" />
     <None Include="Styles\Standard\html\TabCode.cshtml" />
-    <None Include="Styles\Standard\Setup.cshtml" />
+    <None Include="Styles\Standard\Param.cshtml" />
     <None Include="Styles\Standard\html\Assembly.cshtml" />
     <None Include="Styles\Standard\html\AssemblyBody.cshtml" />
     <None Include="Styles\Standard\html\Member.cshtml" />
@@ -241,7 +260,10 @@
     <None Include="web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="logo_sharp_doc.ico" />
+    <Content Include="SharpDoc.ico" />
+    <Content Include="Styles\Standard\style.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Styles\Standard\images\pane-collapse.gif" />
     <Content Include="Styles\Standard\images\pane-expand.gif" />
     <Content Include="Styles\Standard\images\slider-in.png" />
@@ -326,9 +348,20 @@
       <Project>{9435EFE8-5875-42E8-983B-29298C4CE5FF}</Project>
       <Name>SharpCore</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SharpDocPak\SharpDocPak.csproj">
+      <Project>{8247C384-795D-432B-A7A1-FB3632E2A5F3}</Project>
+      <Name>SharpDocPak</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy  $(TargetPath) $(SolutionDir)Build\Tools\Bin\
+copy  $(TargetDir)\*.dll $(SolutionDir)Build\Tools\Bin\
+rmdir /S /Q  $(SolutionDir)Build\Tools\Styles
+mkdir $(SolutionDir)Build\Tools\Styles
+xcopy /E $(ProjectDir)Styles $(SolutionDir)Build\Tools\Styles\</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

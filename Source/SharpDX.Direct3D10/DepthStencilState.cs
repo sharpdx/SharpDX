@@ -32,9 +32,7 @@ namespace SharpDX.Direct3D10
         public DepthStencilState(Device device, DepthStencilStateDescription description)
             : base(IntPtr.Zero)
         {
-            DepthStencilState temp;
-            device.CreateDepthStencilState(ref description, out temp);
-            NativePointer = temp.NativePointer;
+            device.CreateDepthStencilState(ref description, this);
         }
 
         /// <summary>
@@ -46,9 +44,7 @@ namespace SharpDX.Direct3D10
         public DepthStencilState(Device device, ref DepthStencilStateDescription description)
             : base(IntPtr.Zero)
         {
-            DepthStencilState temp;
-            device.CreateDepthStencilState(ref description, out temp);
-            NativePointer = temp.NativePointer;
+            device.CreateDepthStencilState(ref description, this);
         }
     }
 }

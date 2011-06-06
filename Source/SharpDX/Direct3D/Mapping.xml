@@ -118,7 +118,7 @@
     -->
     <map interface="ID3DInclude" name="Include" callback="true" callback-dual="false" />
     <map interface="ID3D10Blob" name="Blob" />
-        
+
     <context-clear />
   </mapping>
 </config>

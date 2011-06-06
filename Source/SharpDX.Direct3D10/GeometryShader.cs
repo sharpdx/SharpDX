@@ -32,10 +32,8 @@ namespace SharpDX.Direct3D10
         public GeometryShader(Device device, ShaderBytecode shaderBytecode)
             : base(IntPtr.Zero)
         {
-            GeometryShader temp;
             device.CreateGeometryShader(shaderBytecode.GetBufferPointer(),
-                                        shaderBytecode.GetBufferSize(), out temp);
-            NativePointer = temp.NativePointer;
+                                        shaderBytecode.GetBufferSize(), this);
         }
 
         /// <summary>
@@ -48,10 +46,8 @@ namespace SharpDX.Direct3D10
         public GeometryShader(Device device, ShaderBytecode shaderBytecode, StreamOutputElement[] elements, int outputStreamStride)
             : base(IntPtr.Zero)
         {
-            GeometryShader temp;
             device.CreateGeometryShaderWithStreamOutput(shaderBytecode.GetBufferPointer(),
-                                                        shaderBytecode.GetBufferSize(), elements, elements.Length, outputStreamStride, out temp);
-            NativePointer = temp.NativePointer;
+                                                        shaderBytecode.GetBufferSize(), elements, elements.Length, outputStreamStride, this);
         }
     }
 }

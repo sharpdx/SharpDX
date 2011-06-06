@@ -335,11 +335,17 @@
     <map function="D3D10(.+)" name-tmp="$1" />
     <map function="D3DX10(.+)" name-tmp="$1" />
     <map function="D3DX10(.+)W" name-tmp="$1" />
-    <map param="D3D10CreateDevice1?::ppDevice" attribute="out" />
+    <map param="D3D10CreateDevice1?::ppDevice" attribute="out fast" />
     <map param="D3D10CreateDeviceAndSwapChain1?::ppDevice" attribute="out" />
     <map param="D3D10CreateDeviceAndSwapChain1?::ppSwapChain" attribute="out" />
-    <map param="D3D10CreateEffectFromMemory::ppEffect" attribute="out" />
+    <map param="D3D10CreateEffectFromMemory::ppEffect" attribute="out fast" />
     <map param="D3DX10CreateMesh::pDeclaration" attribute="in buffer" />
+    <map param="D3D10CreateStateBlock::ppStateBlock" attribute="out fast"/>
+    <map param="D3D10CreateEffectPoolFromMemory::ppEffectPool" attribute="out fast"/>
+    <map param="D3DX10CreateFont.*::ppFont" attribute="out fast"/>
+    <map param="D3DX10CreateSprite::ppSprite" attribute="out fast"/>
+    <map param="D3DX10CreateMesh::ppMesh" attribute="out fast"/>
+    
     <remove function="D3D10CreateBlob" />
     <remove function="D3D10CompileShader" />
     <remove function="D3D10DisassembleShader" />

@@ -31,9 +31,7 @@ namespace SharpDX.Direct2D1
         /// <param name="matrix3X2"></param>
         public TransformedGeometry(Factory factory, Geometry geometrySource, Matrix3x2 matrix3X2) : base(IntPtr.Zero)
         {
-            TransformedGeometry temp;
-            factory.CreateTransformedGeometry(geometrySource, ref matrix3X2, out temp);
-            NativePointer = temp.NativePointer;
+            factory.CreateTransformedGeometry(geometrySource, ref matrix3X2, this);
         }
     }
 }

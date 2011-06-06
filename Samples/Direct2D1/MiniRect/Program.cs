@@ -100,14 +100,14 @@ namespace MiniRect
                                       });
 
             // Release all resources
-            renderView.Release();
-            backBuffer.Release();
+            renderView.Dispose();
+            backBuffer.Dispose();
             device.ClearState();
             device.Flush();
-            device.Release();
-            device.Release();
-            swapChain.Release();
-            factory.Release();
+            device.Dispose();
+            device.Dispose();
+            swapChain.Dispose();
+            factory.Dispose();
         }
     }
 }

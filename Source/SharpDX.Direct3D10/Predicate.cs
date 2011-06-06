@@ -32,9 +32,7 @@ namespace SharpDX.Direct3D10
         public Predicate(Device device, QueryDescription description)
             : base(IntPtr.Zero)
         {
-            Predicate temp;
-            device.CreatePredicate(description, out temp);
-            NativePointer = temp.NativePointer;
+            device.CreatePredicate(description, this);
         }
     }
 }

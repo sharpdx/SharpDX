@@ -42,9 +42,7 @@ namespace SharpDX.Direct2D1
         public StrokeStyle(Factory factory, StrokeStyleProperties properties, float[] dashes)
             : base(IntPtr.Zero)
         {
-            StrokeStyle temp;
-            factory.CreateStrokeStyle(ref properties, dashes, dashes.Length, out temp);
-            NativePointer = temp.NativePointer;
+            factory.CreateStrokeStyle(ref properties, dashes, dashes.Length, this);
         }
     }
 }

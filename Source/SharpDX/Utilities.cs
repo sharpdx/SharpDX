@@ -33,14 +33,6 @@ namespace SharpDX
     public static class Utilities
     {
         /// <summary>
-        /// Force an ini
-        /// </summary>
-        static Utilities()
-        {
-            CppObject.Init();
-        }
-
-        /// <summary>
         /// Native memcpy.
         /// </summary>
         /// <param name="dest">The destination memory location</param>
@@ -76,7 +68,6 @@ namespace SharpDX
                 return new IntPtr(SharpDX.Interop.Pin<T>(ref data));
             }
         }
-
 
         /// <summary>
         /// Return the sizeof a struct from a CLR. Equivalent to sizeof operator but works on generics too.
@@ -319,6 +310,11 @@ namespace SharpDX
         [DllImport("ole32.dll", ExactSpelling = true, PreserveSig = true)]
         static internal extern Result CoCreateInstance([In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid, IntPtr pUnkOuter, CLSCTX dwClsContext, [In, MarshalAs(UnmanagedType.LPStruct)] Guid riid, out IntPtr comObject);
 
+        /// <summary>
+        /// Converts a blob to a string.
+        /// </summary>
+        /// <param name="blob">A blob.</param>
+        /// <returns>A string extracted from a blob.</returns>
         internal static string BlobToString(Blob blob)
         {
             string output;
@@ -326,7 +322,7 @@ namespace SharpDX
             {
                 output = new string((sbyte*) blob.GetBufferPointer());
             }
-            blob.Release();
+            blob.Dispose();
             return output;
         }
 

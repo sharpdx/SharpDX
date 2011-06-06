@@ -107,7 +107,7 @@ namespace SharpDX.D3DCompiler
         protected internal ShaderBytecode(Blob blob)
             : base(IntPtr.Zero)
         {
-            NativePointer = blob.NativePointer;
+            FromTemp(blob);
         }
 
         private void CreateFromBuffer(byte[] buffer)
@@ -121,14 +121,9 @@ namespace SharpDX.D3DCompiler
 
         private void CreateFromPointer(IntPtr buffer, int sizeInBytes)
         {
-            Blob blob;
-            D3DCommon.CreateBlob(sizeInBytes, out blob);
-            NativePointer = blob.NativePointer;
-
-            Utilities.CopyMemory(blob.GetBufferPointer(), buffer, sizeInBytes);
+            D3DCommon.CreateBlob(sizeInBytes, this);
+            Utilities.CopyMemory(GetBufferPointer(), buffer, sizeInBytes);
         }
-
-
 
         /// <summary>
         ///   Compiles the provided shader or effect source.

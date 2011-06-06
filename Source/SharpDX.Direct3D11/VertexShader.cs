@@ -42,10 +42,8 @@ namespace SharpDX.Direct3D11
         public VertexShader(Device device, ShaderBytecode shaderBytecode, ClassLinkage linkage)
             : base(IntPtr.Zero)
         {
-            VertexShader vertexShader;
             device.CreateVertexShader(shaderBytecode.GetBufferPointer(),
-                                      shaderBytecode.GetBufferSize(), linkage, out vertexShader);
-            NativePointer = vertexShader.NativePointer;
+                                      shaderBytecode.GetBufferSize(), linkage, this);
         }
     }
 }

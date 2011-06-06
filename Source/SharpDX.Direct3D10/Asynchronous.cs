@@ -56,7 +56,7 @@ namespace SharpDX.Direct3D10
             }
             catch (Exception)
             {
-                dataStream.Release();
+                dataStream.Dispose();
                 throw;
             }
             return dataStream;

@@ -18,8 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.IO;
-using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 using SharpCore.Logging;
@@ -33,62 +31,6 @@ namespace SharpGen
     {
         private static CodeGenApp _codeGenApp;
         private static ProgressForm _progressForm;
-
-        private class CommandArgs
-        {
-            public string GccXmlExecutablePath;
-            public string DocProviderAssemblyPath;
-            public string ConfigRootPath;
-        }
-
-        /// <summary>
-        /// Print usage and exit
-        /// </summary>
-        /// <param name="exitCode">exit code to return</param>
-        /// <param name="message">error message to print</param>
-        /// <param name="messageArgs">error message arguments</param>
-        private static void Usage(int exitCode, string message = null, params string[] messageArgs)
-        {
-            Logger.Error("Usage: {0} [/d:path_to_docprovider default = null] /gccxml:path_to_gcc_xml_exe path_to_root_config_file.xml", Path.GetFileName(Assembly.GetEntryAssembly().Location));
-            if (message != null)
-                Logger.Error(message, messageArgs);
-
-            Logger.Fatal("Invalid command args");
-        }
-
-        /// <summary>
-        /// Parse arguments
-        /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        private static CommandArgs ParseArgs(string[] args)
-        {
-            var cmdArgs = new CommandArgs();
-
-            foreach (var arg in args)
-            {
-                if (arg.StartsWith("/d:"))
-                    cmdArgs.DocProviderAssemblyPath = arg.Substring("/d:".Length);
-                else if (arg.StartsWith("/gccxml:"))
-                    cmdArgs.GccXmlExecutablePath = arg.Substring("/gccxml:".Length);
-                else if (cmdArgs.ConfigRootPath != null)
-                {
-                    Usage(1, "Unexpected argument: {0}", arg);
-                }
-                else
-                {
-                    cmdArgs.ConfigRootPath = arg;
-                }
-            }
-
-            if (cmdArgs.GccXmlExecutablePath == null)
-                Usage(1, "expecting arg: /gccxml option");
-
-            if (cmdArgs.ConfigRootPath == null)
-                Usage(1, "expecting arg: path_to_config_root_file.xml");
-
-            return cmdArgs;
-        }
 
         /// <summary>
         /// Runs code generation asynchronously.
@@ -125,17 +67,13 @@ namespace SharpGen
                 // Optimize XmlSerialization by generating XmlSerializers assembly
                 Utilities.SGenThisAssembly();
 
-                var commandArgs = ParseArgs(args);
+                _codeGenApp = new CodeGenApp();
+                _codeGenApp.ParseArguments(args);
 
-                _codeGenApp = new CodeGenApp
-                {
-                    DocProviderAssemblyPath = commandArgs.DocProviderAssemblyPath,
-                    GccXmlExecutablePath = commandArgs.GccXmlExecutablePath
-                };
-
-                if (_codeGenApp.Init(commandArgs.ConfigRootPath))
+                if (_codeGenApp.Init())
                 {
                     Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
                     _progressForm = new ProgressForm();
                     Logger.ProgressReport = _progressForm;
                     _progressForm.Show();

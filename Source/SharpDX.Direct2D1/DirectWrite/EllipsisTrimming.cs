@@ -45,9 +45,7 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteFactory::CreateEllipsisTrimmingSign([None] IDWriteTextFormat* textFormat,[Out] IDWriteInlineObject** trimmingSign)</unmanaged>
         public EllipsisTrimming(Factory factory, TextFormat textFormat) : this(IntPtr.Zero)
         {
-            InlineObject temp;
-            factory.CreateEllipsisTrimmingSign(textFormat, out temp);
-            NativePointer = ((ComObject) temp).NativePointer;
+            factory.CreateEllipsisTrimmingSign(textFormat, this);
         }
     }
 }

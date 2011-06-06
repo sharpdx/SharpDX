@@ -43,9 +43,7 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteFactory::CreateFontFileReference([In] const wchar_t* filePath,[In, Optional] const __int64* lastWriteTime,[Out] IDWriteFontFile** fontFile)</unmanaged>
         public FontFile(Factory factory, string filePath, long? lastWriteTime)
         {
-            FontFile temp;
-            factory.CreateFontFileReference(filePath, lastWriteTime, out temp);
-            NativePointer = temp.NativePointer;
+            factory.CreateFontFileReference(filePath, lastWriteTime, this);
         }
 
         /// <summary>
@@ -61,11 +59,7 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteFactory::CreateCustomFontFileReference([In, Buffer] const void* fontFileReferenceKey,[None] int fontFileReferenceKeySize,[None] IDWriteFontFileLoader* fontFileLoader,[Out] IDWriteFontFile** fontFile)</unmanaged>
         public FontFile(Factory factory, IntPtr fontFileReferenceKey, int fontFileReferenceKeySize, FontFileLoader fontFileLoader)
         {
-            FontFile temp;
-            _fontLoaderCallback = factory.FindRegisteredFontFileLoaderCallback(fontFileLoader);
-            if (_fontLoaderCallback == null ) throw new ArgumentException("FontFileLoader must be registered on the factory before using it", "fontFileLoader");
-            factory.CreateCustomFontFileReference_(fontFileReferenceKey, fontFileReferenceKeySize, _fontLoaderCallback.NativePointer, out temp);
-            NativePointer = temp.NativePointer;
+            factory.CreateCustomFontFileReference_(fontFileReferenceKey, fontFileReferenceKeySize, FontFileLoaderCallback.CallbackToPtr(fontFileLoader), this);
         }
 
         /// <summary>	

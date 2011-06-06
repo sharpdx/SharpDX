@@ -35,9 +35,7 @@ namespace SharpDX.Direct2D1
         public GeometryGroup(Factory factory, FillMode fillMode, Geometry[] geometries)
             : base(IntPtr.Zero)
         {
-            GeometryGroup temp;
-            factory.CreateGeometryGroup(fillMode, geometries, geometries.Length, out temp);
-            NativePointer = temp.NativePointer;
+            factory.CreateGeometryGroup(fillMode, geometries, geometries.Length, this);
         }
 
         /// <summary>	

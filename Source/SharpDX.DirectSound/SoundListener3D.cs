@@ -67,8 +67,7 @@ namespace SharpDX.DirectSound
         /// <param name="soundBuffer">The SlimDX::DirectSound::SoundBuffer object.</param>
         public SoundListener3D(SoundBuffer soundBuffer)
         {
-            SoundListener3D temp = soundBuffer.QueryInterface<SoundListener3D>();
-            NativePointer = temp.NativePointer;
+            QueryInterfaceFrom(soundBuffer);
         }
 
         /// <summary>

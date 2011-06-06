@@ -61,35 +61,10 @@ namespace SharpDX
         private readonly bool _canRead;
         private readonly bool _canWrite;
         private GCHandle _gCHandle;
-        private readonly Blob _blob;
+        private Blob _blob;
         private readonly bool _ownsBuffer;
         private long _position;
         private readonly long _size;
-
-        /// <summary>
-        ///   Release any resource associated to this DataStream
-        /// </summary>
-        public void Release()
-        {
-            unsafe
-            {
-                if (_blob != null)
-                    _blob.Release();
-                if (_gCHandle.IsAllocated)
-                    _gCHandle.Free();
-                if (_ownsBuffer && _buffer != (sbyte*) 0)
-                {
-                    Marshal.FreeHGlobal((IntPtr) _buffer);
-                    _buffer = (sbyte*) 0;
-                }
-            }
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            Release();
-            base.Dispose(disposing);
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataStream"/> class from a Blob buffer.
@@ -223,6 +198,34 @@ namespace SharpDX
             _canRead = canRead;
             _canWrite = canWrite;
             _ownsBuffer = makeCopy;
+        }
+
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_blob != null)
+                {
+                    _blob.Dispose();
+                    _blob = null;
+                }
+            }
+
+            if (_gCHandle.IsAllocated)
+                _gCHandle.Free();
+
+            unsafe
+            {
+                if (_ownsBuffer && _buffer != (sbyte*)0)
+                {
+                    Marshal.FreeHGlobal((IntPtr)_buffer);
+                    _buffer = (sbyte*)0;
+                }
+            }
         }
 
         /// <summary>

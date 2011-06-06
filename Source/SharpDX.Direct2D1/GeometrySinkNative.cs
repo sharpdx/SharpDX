@@ -23,12 +23,6 @@ namespace SharpDX.Direct2D1
 {
     internal partial class GeometrySinkNative
     {
-
-        ~GeometrySinkNative()
-        {
-            Release();
-        }
-
         public void AddLine(PointF point)
         {
             AddLine_(point);

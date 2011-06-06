@@ -26,7 +26,7 @@ namespace SharpDX.DirectWrite
     /// <summary>
     /// Internal FontFileStream Callback
     /// </summary>
-    internal class FontFileStreamCallback : SharpDX.ComObjectCallback
+    internal class FontFileStreamCallback : SharpDX.ComObjectCallbackNative
     {
         /// <summary>
         /// Gets or sets the callback.
@@ -34,13 +34,16 @@ namespace SharpDX.DirectWrite
         /// <value>The callback.</value>
         public FontFileStream Callback { get; private set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FontFileStreamCallback"/> class.
-        /// </summary>
-        /// <param name="callback">The callback.</param>
-        public FontFileStreamCallback(FontFileStream callback) : base(callback, 4)
+
+        public static IntPtr CallbackToPtr(FontFileStream fontFileStream)
         {
-            Callback = callback;
+            return CallbackToPtr<FontFileStream, FontFileStreamCallback>(fontFileStream);
+        }
+
+        public override void Attach<T>(T callback)
+        {
+            Attach(callback, 4);
+            Callback = (FontFileStream)callback;
             AddMethod(new ReadFileFragmentDelegate(ReadFileFragmentImpl));
             AddMethod(new ReleaseFileFragmentDelegate(ReleaseFileFragmentImpl));
             AddMethod(new GetFileSizeDelegate(GetFileSizeImpl));

@@ -34,9 +34,7 @@ namespace SharpDX.Direct2D1
         /// <unmanaged>HRESULT CreateMesh([Out] ID2D1Mesh** mesh)</unmanaged>
         public Mesh(RenderTarget renderTarget) : base(IntPtr.Zero)
         {
-            Mesh temp;
-            renderTarget.CreateMesh(out temp);
-            NativePointer = temp.NativePointer;   
+            renderTarget.CreateMesh(this);
         }
 
         /// <summary>	

@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 using System;
 using System.Collections.Generic;
+using SharpCore.Logging;
 using SharpDoc.Model;
 
 namespace SharpDoc

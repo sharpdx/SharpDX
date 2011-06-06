@@ -70,9 +70,7 @@ namespace SharpDX.Direct2D1
         /// <unmanaged>HRESULT CreateRadialGradientBrush([In] const D2D1_RADIAL_GRADIENT_BRUSH_PROPERTIES* radialGradientBrushProperties,[In, Optional] const D2D1_BRUSH_PROPERTIES* brushProperties,[In] ID2D1GradientStopCollection* gradientStopCollection,[Out] ID2D1RadialGradientBrush** radialGradientBrush)</unmanaged>
         public RadialGradientBrush(RenderTarget renderTarget, ref SharpDX.Direct2D1.RadialGradientBrushProperties radialGradientBrushProperties, SharpDX.Direct2D1.BrushProperties? brushProperties, SharpDX.Direct2D1.GradientStopCollection gradientStopCollection) : base(IntPtr.Zero)
         {
-            RadialGradientBrush temp;
-            renderTarget.CreateRadialGradientBrush(ref radialGradientBrushProperties, brushProperties, gradientStopCollection, out temp);
-            NativePointer = temp.NativePointer;          
+            renderTarget.CreateRadialGradientBrush(ref radialGradientBrushProperties, brushProperties, gradientStopCollection, this);
         }
 
     }

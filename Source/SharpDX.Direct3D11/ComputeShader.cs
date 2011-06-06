@@ -43,10 +43,8 @@ namespace SharpDX.Direct3D11
         public ComputeShader(Device device, ShaderBytecode shaderBytecode, ClassLinkage linkage)
             : base(IntPtr.Zero)
         {
-            ComputeShader pixelShader;
             device.CreateComputeShader(shaderBytecode.GetBufferPointer(),
-                                       shaderBytecode.GetBufferSize(), linkage, out pixelShader);
-            NativePointer = pixelShader.NativePointer;
+                                       shaderBytecode.GetBufferSize(), linkage, this);
         }
     }
 }

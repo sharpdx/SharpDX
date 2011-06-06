@@ -45,7 +45,7 @@ namespace SharpDX.DXGI
                 try
                 {
                     var adapter = GetAdapter1(nbAdapters);
-                    adapter.Release();
+                    adapter.Dispose();
                 }
                 catch (SharpDXException exception)
                 {

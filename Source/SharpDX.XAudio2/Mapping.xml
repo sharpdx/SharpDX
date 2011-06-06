@@ -112,7 +112,13 @@
     <map field="XAUDIO2FX_VOLUMEMETER_LEVELS::pRMSLevels" name="RmsLevelsPointer" />
     <map field="XAUDIO2FX_VOLUMEMETER_LEVELS::pRMSLevels" visibility="internal" />
     <map struct="XAUDIO2_EFFECT_DESCRIPTOR" native="true" struct-to-class="true" marshal="false" new="false" marshalto="true" />
-    
+
+
+    <!--
+    // *****************************************************************
+    // XAudio2 Interfaces
+    // *****************************************************************
+    -->
     <map interface="IXAudio2(.+)" name-tmp="$1" />
     <map interface="IXAudio2" name="XAudio2" />
     <map method="IXAudio2::Initialize" visibility="internal" />
@@ -128,6 +134,10 @@
     <map method="IXAudio2SourceVoice::Start" visibility="internal" />
     <map interface="IXAudio2.*Callback" callback="true" callback-dual="false" />
     <map method="IXAudio2::Create.*" visibility="internal" />
+    <map param="IXAudio2::CreateMasteringVoice::ppMasteringVoice" attribute="out fast" />
+    <map param="IXAudio2::CreateSourceVoice::ppSourceVoice" attribute="out fast" />
+    <map param="IXAudio2::CreateSubmixVoice::ppSubmixVoice" attribute="out fast" />
+
     <map param="IXAudio2::CreateSourceVoice::Flags" type="XAUDIO2_VOICE_FLAGS" />
     <map param="IXAudio2::CreateSubmixVoice::Flags" type="XAUDIO2_VOICE_SEND_FLAGS" />
     <map param="IXAudio2SourceVoice::Stop::Flags" type="XAUDIO2_PLAY_FLAGS" />

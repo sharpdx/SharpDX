@@ -32,9 +32,7 @@ namespace SharpDX.XAPO.Fx
         public Equalizer()
             : base(IntPtr.Zero)
         {
-            ComObject comObject;
-            XAPOFx.CreateFX(XAPOFx.CLSID_FXEQ, out comObject);
-            NativePointer = comObject.NativePointer;
+            XAPOFx.CreateFX(XAPOFx.CLSID_FXEQ, this);
         }
     }
 }

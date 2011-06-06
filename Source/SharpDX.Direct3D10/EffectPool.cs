@@ -41,9 +41,7 @@ namespace SharpDX.Direct3D10
         /// <param name="fxFlags">Effect compile options</param>
         public EffectPool(Device device, ShaderBytecode effectByteCode, EffectFlags fxFlags) 
         {
-            EffectPool temp;
-            D3D10.CreateEffectPoolFromMemory(effectByteCode.BufferPointer, effectByteCode.BufferSize, (int)fxFlags, device, out temp);
-            NativePointer = temp.NativePointer;
+            D3D10.CreateEffectPoolFromMemory(effectByteCode.BufferPointer, effectByteCode.BufferSize, (int)fxFlags, device, this);
         }
     }
 }

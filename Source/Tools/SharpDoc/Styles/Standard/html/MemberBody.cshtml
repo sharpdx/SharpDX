@@ -29,14 +29,14 @@
 @{
     var self = Model.Member;
 }
-<h1 id="#top" class="top-title">@(self.DeclaringType.Name).@self.Name @self.TypeMember</h1>
+<h1 id="#top" class="content-title">@(self.DeclaringType.Name).@self.Name @self.TypeMember</h1>
         
 <div class="summary"><p>@TagExpand(self.Description)</p></div>
 
 <strong>Namespace: </strong>@ToUrl(Model.Namespace)<br />
 <strong>Assembly: </strong>@ToUrl(Model.Assembly) (@Model.Assembly.FileName @Model.Assembly.Version)<br />
       
-@Include("TypeBodyMembersHeader", @Model)
+@Include("TypeBodyMembersHeader")
 
 @* Dump Syntax section *@
 @Helpers.Section.DumpSyntax(self)

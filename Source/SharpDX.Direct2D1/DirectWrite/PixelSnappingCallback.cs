@@ -25,7 +25,7 @@ namespace SharpDX.DirectWrite
     /// <summary>
     /// Internal TessellationSink Callback
     /// </summary>
-    internal class PixelSnappingCallback : SharpDX.ComObjectCallback
+    internal abstract class PixelSnappingCallback : SharpDX.ComObjectCallbackNative
     {
         /// <summary>
         /// Gets or sets the callback.
@@ -33,10 +33,10 @@ namespace SharpDX.DirectWrite
         /// <value>The callback.</value>
         public PixelSnapping CallbackPixelSnapping { get; private set; }
 
-        public PixelSnappingCallback(PixelSnapping callback, int nbMethods)
-            : base(callback, nbMethods + 3)
+        protected override void Attach<T>(T callback, int nbMethods)
         {
-            CallbackPixelSnapping = callback;
+            base.Attach(callback, nbMethods + 3);
+            CallbackPixelSnapping = (PixelSnapping)callback;
             AddMethod(new IsPixelSnappingDisabledDelegate(IsPixelSnappingDisabledImpl));
             AddMethod(new GetCurrentTransformDelegate(GetCurrentTransformImpl));
             AddMethod(new GetPixelsPerDipDelegate(GetPixelsPerDipImpl));

@@ -33,9 +33,7 @@ namespace SharpDX.Direct3D11
         public ShaderResourceView(Device device, Resource resource)
             : base(IntPtr.Zero)
         {
-            ShaderResourceView view;
-            device.CreateShaderResourceView(resource, null, out view);
-            NativePointer = view.NativePointer;
+            device.CreateShaderResourceView(resource, null, this);
         }
 
         /// <summary>
@@ -48,9 +46,7 @@ namespace SharpDX.Direct3D11
         public ShaderResourceView(Device device, Resource resource, ShaderResourceViewDescription description)
             : base(IntPtr.Zero)
         {
-            ShaderResourceView view;
-            device.CreateShaderResourceView(resource, description, out view);
-            NativePointer = view.NativePointer;
+            device.CreateShaderResourceView(resource, description, this);
         }
 
         /// <summary>	

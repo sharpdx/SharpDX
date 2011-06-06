@@ -88,10 +88,22 @@ namespace SharpDoc.Model
         /// <value>The text of the signature of this method.</value>
         public string Signature { get; set; }
 
-        protected override void OnDocNodeUpdate()
+        /// <summary>
+        /// Gets or sets the return description.
+        /// </summary>
+        /// <value>The return description.</value>
+        public string ReturnDescription { get; set; }
+
+        protected internal override void OnDocNodeUpdate()
         {
             base.OnDocNodeUpdate();
+            ReturnDescription = DocFromTag("returns");
 
+            // Update DocNode for parameters
+            foreach (var parameter in Parameters)
+            {
+                parameter.DocNode = DocNode;
+            }
         }
 
         /// <summary>

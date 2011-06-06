@@ -39,7 +39,7 @@ namespace SharpCore
         private const string MsdnUrlFormat = "http://msdn2.microsoft.com/{0}/library/{1}";
         private const string MtpsService = "http://services.msdn.microsoft.com/ContentServices/ContentService.asmx";
         private string MsdnRegistryCachingFile;
-        private const string MsdnRegistryCachingFilePostfix = ".msdn.cache";
+        private const string MsdnRegistryCachingFilePostfix = "msdn.cache";
         public const string DefaultLocale = "en-us";
 
         /// <summary>
@@ -49,7 +49,11 @@ namespace SharpCore
         {
             // Use caching file per application using it
             AppId = Path.GetFileNameWithoutExtension(Assembly.GetEntryAssembly().Location);
-            MsdnRegistryCachingFile = AppId + MsdnRegistryCachingFilePostfix;
+            string directory = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SharpDX"), AppId);
+            if (!Directory.Exists(directory))
+                Directory.CreateDirectory(directory);
+            MsdnRegistryCachingFile = Path.Combine(directory, MsdnRegistryCachingFilePostfix);
+
             Locale = DefaultLocale;
             var endpointAddress = new EndpointAddress(MtpsService);
             var binding = new BasicHttpBinding();

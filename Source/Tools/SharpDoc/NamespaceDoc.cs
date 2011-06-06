@@ -22,7 +22,7 @@ using System;
 namespace SharpDoc
 {
     /// <summary>
-    /// Main namespace for NDocx.
+    /// Main namespace for SharpDoc.
     /// </summary>
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     class NamespaceDoc

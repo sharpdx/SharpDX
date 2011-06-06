@@ -32,9 +32,7 @@ namespace SharpDX.Direct3D10
         public RasterizerState(Device device, RasterizerStateDescription description)
             : base(IntPtr.Zero)
         {
-            RasterizerState temp;
-            device.CreateRasterizerState(ref description, out temp);
-            NativePointer = temp.NativePointer;
+            device.CreateRasterizerState(ref description, this);
         }
 
         /// <summary>
@@ -46,9 +44,7 @@ namespace SharpDX.Direct3D10
         public RasterizerState(Device device, ref RasterizerStateDescription description)
             : base(IntPtr.Zero)
         {
-            RasterizerState temp;
-            device.CreateRasterizerState(ref description, out temp);
-            NativePointer = temp.NativePointer;
+            device.CreateRasterizerState(ref description, this);
         }
     }
 }

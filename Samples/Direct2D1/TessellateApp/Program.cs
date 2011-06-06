@@ -55,7 +55,6 @@ namespace TessellateApp
             GeometrySink.Close();
         }
 
-
         protected override void Draw(DemoTime time)
         {
             base.Draw(time);
@@ -85,6 +84,11 @@ namespace TessellateApp
         {
             Program program = new Program();
             program.Run(new DemoConfiguration("SharpDX Direct2D1 Tessellate Demo"));
+        }
+
+        public IDisposable Callback
+        {
+            get; set;
         }
     }
 }

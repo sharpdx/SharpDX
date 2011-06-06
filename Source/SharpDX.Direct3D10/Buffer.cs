@@ -31,9 +31,7 @@ namespace SharpDX.Direct3D10
         public Buffer(Device device, BufferDescription description)
             : base(IntPtr.Zero)
         {
-            Buffer buffer;
-            device.CreateBuffer(ref description, null, out buffer);
-            NativePointer = buffer.NativePointer;
+            device.CreateBuffer(ref description, null, this);
         }
 
         /// <summary>
@@ -50,9 +48,7 @@ namespace SharpDX.Direct3D10
             subResourceData.Pitch = 0;
             subResourceData.SlicePitch = 0;
 
-            Buffer buffer;
-            device.CreateBuffer(ref description, subResourceData, out buffer);
-            NativePointer = buffer.NativePointer;
+            device.CreateBuffer(ref description, subResourceData, this);
         }
 
         /// <summary>
@@ -77,9 +73,7 @@ namespace SharpDX.Direct3D10
                                       Usage = usage,                                      
                                   };
 
-            Buffer buffer;
-            device.CreateBuffer(ref description, null, out buffer);
-            NativePointer = buffer.NativePointer;
+            device.CreateBuffer(ref description, null, this);
         }
 
         /// <summary>
@@ -110,9 +104,7 @@ namespace SharpDX.Direct3D10
             subResourceData.Pitch = 0;
             subResourceData.SlicePitch = 0;
 
-            Buffer buffer;
-            device.CreateBuffer(ref description, subResourceData, out buffer);
-            NativePointer = buffer.NativePointer;
+            device.CreateBuffer(ref description, subResourceData, this);
         }
 
         /// <summary>	

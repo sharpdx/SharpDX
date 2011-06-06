@@ -33,9 +33,7 @@ namespace SharpDX.Direct3D11
         /// <unmanaged>HRESULT D3DX11CreateScan([In] ID3D11DeviceContext* pDeviceContext,[None] int MaxElementScanSize,[None] int MaxScanCount,[Out] ID3DX11Scan** ppScan)</unmanaged>
         public Scan(DeviceContext deviceContext, int maxElementScanSize, int maxScanCount)
         {
-            Scan temp;
-            D3DCSX.CreateScan(deviceContext, maxElementScanSize, maxScanCount, out temp);
-            NativePointer = temp.NativePointer;
+            D3DCSX.CreateScan(deviceContext, maxElementScanSize, maxScanCount, this);
         }
     }
 }

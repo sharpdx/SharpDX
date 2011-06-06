@@ -67,9 +67,7 @@ namespace SharpDX.Direct2D1
         /// <unmanaged>HRESULT CreateGradientStopCollection([In, Buffer] const D2D1_GRADIENT_STOP* gradientStops,[None] UINT gradientStopsCount,[None] D2D1_GAMMA colorInterpolationGamma,[None] D2D1_EXTEND_MODE extendMode,[Out] ID2D1GradientStopCollection** gradientStopCollection)</unmanaged>
         public GradientStopCollection(RenderTarget renderTarget, SharpDX.Direct2D1.GradientStop[] gradientStops, SharpDX.Direct2D1.Gamma colorInterpolationGamma, SharpDX.Direct2D1.ExtendMode extendMode) : base(IntPtr.Zero)
         {
-            GradientStopCollection temp;
-            renderTarget.CreateGradientStopCollection(gradientStops, gradientStops.Length, colorInterpolationGamma, extendMode, out temp);
-            NativePointer = temp.NativePointer;
+            renderTarget.CreateGradientStopCollection(gradientStops, gradientStops.Length, colorInterpolationGamma, extendMode, this);
         }
     }
 }

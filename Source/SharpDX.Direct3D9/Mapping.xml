@@ -1134,6 +1134,12 @@
     <map param="ID3DXAnimationController::GetAnimationSet::ppAnimationSet" attribute="out" />
     <map param="ID3DXAnimationController::GetTrackAnimationSet::ppAnimSet" attribute="out" />
 
+    <!-- Tag all Create methods with pp.* parameters to use Fast Out attribute -->
+    <map param="IDirect3DDevice9::Create.*::pp.*" attribute="out fast"/>
+    <map param="IDirect3DDevice9Ex::Create.*::pp.*" attribute="out fast"/>
+    <map param="IDirect3D9::CreateDevice::ppReturnedDeviceInterface" attribute="out fast"/>
+    <map param="IDirect3D9Ex::CreateDeviceEx::ppReturnedDeviceInterface" attribute="out fast"/>
+    
     <!--
     // *****************************************************************
     // D3D9 Functions
@@ -1149,6 +1155,7 @@
     <map function="D3DX9.*" dll="d3dx9_#(D3DX_SDK_VERSION).dll" group="SharpDX.Direct3D9.D3DX9" />
     <map function="D3DX[^0-9].*" dll="d3dx9_#(D3DX_SDK_VERSION).dll" group="SharpDX.Direct3D9.D3DX9" />
     <map function="D3DPERF.*" dll="d3dx9_#(D3DX_SDK_VERSION).dll" group="SharpDX.Direct3D9.D3DX9" />
+    <map param="Direct3DCreate9Ex::arg1" attribute="out fast"/>
     
     <context-clear />
   </mapping>

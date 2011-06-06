@@ -41,9 +41,7 @@ namespace SharpDX.Direct2D1
         public SolidColorBrush(RenderTarget renderTarget, SharpDX.Color4 color, SharpDX.Direct2D1.BrushProperties? brushProperties)
             : base(IntPtr.Zero)
         {
-            SolidColorBrush temp;
-            renderTarget.CreateSolidColorBrush(color, brushProperties, out temp);
-            NativePointer = temp.NativePointer;
+            renderTarget.CreateSolidColorBrush(color, brushProperties, this);
         }
     }
 }

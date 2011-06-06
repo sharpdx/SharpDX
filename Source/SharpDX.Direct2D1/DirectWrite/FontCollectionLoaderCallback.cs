@@ -27,7 +27,7 @@ namespace SharpDX.DirectWrite
     /// <summary>
     /// Internal FontCollectionLoader Callback
     /// </summary>
-    internal class FontCollectionLoaderCallback : SharpDX.ComObjectCallback
+    internal class FontCollectionLoaderCallback : SharpDX.ComObjectCallbackNative
     {
         /// <summary>
         /// Gets or sets the callback.
@@ -37,20 +37,25 @@ namespace SharpDX.DirectWrite
 
         private Factory _factory;
 
-        private List<FontFileEnumeratorCallback> _enumeratorCallbacks;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FontCollectionLoaderCallback"/> class.
-        /// </summary>
-        /// <param name="factory">The factory.</param>
-        /// <param name="callback">The callback.</param>
-        public FontCollectionLoaderCallback(Factory factory, FontCollectionLoader callback) : base(callback, 1)
+        public static IntPtr CallbackToPtr(FontCollectionLoader fontFileEnumerator)
         {
-            _factory = factory;
-            Callback = callback;
-            _enumeratorCallbacks = new List<FontFileEnumeratorCallback>();
+            return CallbackToPtr<FontCollectionLoader, FontCollectionLoaderCallback>(fontFileEnumerator);
+        }
+
+        public static IntPtr CallbackToPtr(Factory factory, FontCollectionLoader fontFileEnumerator)
+        {
+            var callback = QueryCallback<FontCollectionLoader, FontCollectionLoaderCallback>(fontFileEnumerator);
+            callback._factory = factory;
+            return callback.NativePointer;
+        }
+
+        public override void Attach<T>(T callback)
+        {
+            Attach(callback, 1);
+            Callback = (FontCollectionLoader)callback;
             AddMethod(new CreateEnumeratorFromKeyDelegate(CreateEnumeratorFromKeyImpl));
         }
+        
 
         /// <unmanaged>HRESULT IDWriteFontCollectionLoader::CreateEnumeratorFromKey([None] IDWriteFactory* factory,[In, Buffer] const void* collectionKey,[None] int collectionKeySize,[Out] IDWriteFontFileEnumerator** fontFileEnumerator)</unmanaged>
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
@@ -62,13 +67,8 @@ namespace SharpDX.DirectWrite
             try
             {
                 Debug.Assert(factory == _factory.NativePointer);
-
                 var enumerator = Callback.CreateEnumeratorFromKey(_factory, new DataStream(collectionKey, collectionKeySize, true, true));
-
-                var enumeratorCallback = new FontFileEnumeratorCallback(enumerator);
-                _enumeratorCallbacks.Add(enumeratorCallback);
-
-                fontFileEnumerator = enumeratorCallback.NativePointer;
+                fontFileEnumerator = FontFileEnumeratorCallback.CallbackToPtr(enumerator);
             }
             catch (SharpDXException exception)
             {
@@ -79,6 +79,7 @@ namespace SharpDX.DirectWrite
                 return Result.Fail.Code;
             }
             return Result.Ok.Code;
-        }       
+        }
+
     }
 }

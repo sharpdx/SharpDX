@@ -48,9 +48,7 @@ namespace SharpDX.Direct2D1
         /// <unmanaged>HRESULT CreateLayer([In, Optional] const D2D1_SIZE_F* size,[Out] ID2D1Layer** layer)</unmanaged>
         public Layer(RenderTarget renderTarget, System.Drawing.SizeF? size) : base(IntPtr.Zero)
         {
-            Layer temp;
-            renderTarget.CreateLayer(size, out temp);
-            NativePointer = temp.NativePointer;    
+            renderTarget.CreateLayer(size, this);
         }
     }
 }

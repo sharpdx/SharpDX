@@ -62,6 +62,18 @@ namespace SharpPak
         public List<string> AssembliesToLink { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether [auto references].
+        /// </summary>
+        /// <value><c>true</c> if [auto references]; otherwise, <c>false</c>.</value>
+        public bool AutoReferences { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [no linker].
+        /// </summary>
+        /// <value><c>true</c> if [no linker]; otherwise, <c>false</c>.</value>
+        public bool NoLinker { get; set; }
+
+        /// <summary>
         /// Print usages the error.
         /// </summary>
         /// <param name="error">The error.</param>
@@ -89,6 +101,8 @@ namespace SharpPak
                                   "Assembly linker for SharpDX applications",
                                   "",
                                   "options:",
+                                  {"a|auto", "Embed automatically all referenced assemblies [default: false]", opt => AutoReferences = opt != null},
+                                  {"n|nolinker", "Perform no linker [default: false]", opt => NoLinker = opt != null},
                                   {"o|output=", "Specify the output directory [default: Output]", opt => OutputDirectory = opt},
                                   {"h|help", "Show this message and exit", opt => showHelp = opt != null},
                                   // default
@@ -126,7 +140,7 @@ namespace SharpPak
             // 1) Mono.Cecil: Determine assembly dependencies
             // 2) ILMerge: Merge exe into a single assembly
             // 3) Mono.Linker
-            var includeMergeListRegex = new string[] { @"SharpDX.*" };
+            var includeMergeListRegex = new string[] { @"SharpDX\..*" };
 
             // Step 1 : Mono.Cecil: Determine assembly dependencies
             var assembly = AssemblyDefinition.ReadAssembly(MainAssembly);
@@ -137,9 +151,13 @@ namespace SharpPak
             var paths = new List<string>();
             paths.Add(assembly.MainModule.FullyQualifiedName);
 
+            var fromDirectory = Path.GetDirectoryName(assembly.MainModule.FullyQualifiedName);
+
             // Load SharpDX assemblies
             foreach (var assemblyRef in assembly.MainModule.AssemblyReferences)
             {
+                bool isAssemblyAdded = false;
+
                 foreach (var regexIncludeStr in includeMergeListRegex)
                 {
                     var regexInclude = new Regex(regexIncludeStr);
@@ -148,7 +166,18 @@ namespace SharpPak
                         var assemblyDefRef = assembly.MainModule.AssemblyResolver.Resolve(assemblyRef);
                         assemblyReferences.Add(assemblyDefRef);
                         paths.Add(assemblyDefRef.MainModule.FullyQualifiedName);
+                        isAssemblyAdded = true;
                         break;
+                    }
+                }
+
+                if (!isAssemblyAdded && AutoReferences)
+                {
+                    var assemblyDefRef = assembly.MainModule.AssemblyResolver.Resolve(assemblyRef);
+                    var directoryOfAssembly = Path.GetDirectoryName(assemblyDefRef.MainModule.FullyQualifiedName);
+                    if (fromDirectory == directoryOfAssembly)
+                    {
+                        paths.Add(assemblyDefRef.MainModule.FullyQualifiedName);
                     }
                 }
             }
@@ -193,24 +222,27 @@ namespace SharpPak
             merge.Merge();
 
             // Step 3: Mono.Linker
-            var pipeline = GetStandardPipeline();
-            var context = new LinkContext(pipeline) { CoreAction = AssemblyAction.Skip, OutputDirectory = OutputDirectory };
-            context.OutputDirectory = OutputDirectory;
+            if (!NoLinker)
+            {
+                var pipeline = GetStandardPipeline();
+                var context = new LinkContext(pipeline) {CoreAction = AssemblyAction.Skip, OutputDirectory = OutputDirectory};
+                context.OutputDirectory = OutputDirectory;
 
-            var mainAssemblyDirectory = new DirectoryInfo(Path.GetDirectoryName(Path.GetFullPath(MainAssembly)));
-            context.Resolver.AddSearchDirectory(mainAssemblyDirectory.FullName);
+                var mainAssemblyDirectory = new DirectoryInfo(Path.GetDirectoryName(Path.GetFullPath(MainAssembly)));
+                context.Resolver.AddSearchDirectory(mainAssemblyDirectory.FullName);
 
-            // Load assembly merged previously by ILMerge
-            var mergedAssemblyDefinition = context.Resolve(merge.OutputFile);
+                // Load assembly merged previously by ILMerge
+                var mergedAssemblyDefinition = context.Resolve(merge.OutputFile);
 
-            // Create Mono.Linker default pipeline
-            pipeline = GetStandardPipeline();
-            pipeline.PrependStep(new ResolveFromAssemblyStep(mergedAssemblyDefinition));
+                // Create Mono.Linker default pipeline
+                pipeline = GetStandardPipeline();
+                pipeline.PrependStep(new ResolveFromAssemblyStep(mergedAssemblyDefinition));
 
-            // Add custom step for ComObject constructors
-            pipeline.AddStepBefore(typeof(SweepStep), new ComObjectStep());
+                // Add custom step for ComObject constructors
+                pipeline.AddStepBefore(typeof (SweepStep), new ComObjectStep());
 
-            pipeline.Process(context);
+                pipeline.Process(context);
+            }
 
             Console.WriteLine("Assembly successfully packed to [{0}]", merge.OutputFile);
         }

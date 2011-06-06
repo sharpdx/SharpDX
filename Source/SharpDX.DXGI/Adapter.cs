@@ -99,7 +99,7 @@ namespace SharpDX.DXGI
                 try
                 {
                     var output = GetOutput(nbOutputs);
-                    output.Release();
+                    output.Dispose();
                 }
                 catch (SharpDXException exception)
                 {

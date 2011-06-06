@@ -32,9 +32,7 @@ namespace SharpDX.Direct3D10
         public SamplerState(Device device, SamplerStateDescription description)
             : base(IntPtr.Zero)
         {
-            SamplerState temp;
-            device.CreateSamplerState(ref description, out temp);
-            NativePointer = temp.NativePointer;
+            device.CreateSamplerState(ref description, this);
         }
 
         /// <summary>
@@ -46,9 +44,7 @@ namespace SharpDX.Direct3D10
         public SamplerState(Device device, ref SamplerStateDescription description)
             : base(IntPtr.Zero)
         {
-            SamplerState temp;
-            device.CreateSamplerState(ref description, out temp);
-            NativePointer = temp.NativePointer;
+            device.CreateSamplerState(ref description, this);
         }
     }
 }

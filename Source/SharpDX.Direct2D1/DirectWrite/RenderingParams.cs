@@ -30,9 +30,7 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteFactory::CreateRenderingParams([Out] IDWriteRenderingParams** renderingParams)</unmanaged>
         public RenderingParams(Factory factory)
         {
-            RenderingParams temp;
-            factory.CreateRenderingParams(out temp);
-            NativePointer = temp.NativePointer;
+            factory.CreateRenderingParams(this);
         }
 
         /// <summary>	
@@ -43,9 +41,7 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteFactory::CreateMonitorRenderingParams([None] void* monitor,[Out] IDWriteRenderingParams** renderingParams)</unmanaged>
         public RenderingParams(Factory factory, IntPtr monitorHandle)
         {
-            RenderingParams temp;
-            factory.CreateMonitorRenderingParams(monitorHandle, out temp);
-            NativePointer = temp.NativePointer;
+            factory.CreateMonitorRenderingParams(monitorHandle, this);
         }
 
         /// <summary>	
@@ -60,9 +56,7 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteFactory::CreateCustomRenderingParams([None] float gamma,[None] float enhancedContrast,[None] float clearTypeLevel,[None] DWRITE_PIXEL_GEOMETRY pixelGeometry,[None] DWRITE_RENDERING_MODE renderingMode,[Out] IDWriteRenderingParams** renderingParams)</unmanaged>
         public RenderingParams(Factory factory, float gamma, float enhancedContrast, float clearTypeLevel, PixelGeometry pixelGeometry, RenderingMode renderingMode)
         {
-            RenderingParams temp;
-            factory.CreateCustomRenderingParams(gamma, enhancedContrast, clearTypeLevel, pixelGeometry, renderingMode, out temp);
-            NativePointer = temp.NativePointer;
+            factory.CreateCustomRenderingParams(gamma, enhancedContrast, clearTypeLevel, pixelGeometry, renderingMode, this);
         }
     }
 }

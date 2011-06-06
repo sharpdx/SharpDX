@@ -32,9 +32,7 @@ namespace SharpDX.Direct3D11
         public DeviceContext(Device device)
             : base(IntPtr.Zero)
         {
-            DeviceContext temp;
-            device.CreateDeferredContext(0, out temp);
-            NativePointer = temp.NativePointer;
+            device.CreateDeferredContext(0, this);
         }
 
         /// <summary>

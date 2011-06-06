@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,110 +18,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.Runtime.InteropServices;
 
 namespace SharpDX
 {
     /// <summary>
-    /// A COM Interface Callback
+    /// Base class for unmanaged callabackable Com object.
     /// </summary>
-    internal class ComObjectCallback : ComObject
+    public class ComObjectCallback : ComObject, ICallbackable
     {
-        private readonly CppObjectCallback _cppCallback;
-        private object _callback;
-        private int _count;
-
         /// <summary>
-        /// Default Constructor.
+        /// Initializes a new instance of the <see cref="ComObject"/> class.
         /// </summary>
-        /// <param name="callback">the client callback</param>
-        /// <param name="numberOfCallbackMethods">number of methods to allocate in the VTBL</param>
-        protected ComObjectCallback(object callback, int numberOfCallbackMethods)
+        /// <param name="pointer">Pointer to Cpp Object</param>
+        protected ComObjectCallback(IntPtr pointer) : base(pointer)
         {
-            unsafe
-            {
-                _callback = callback;
-                _cppCallback = new CppObjectCallback(numberOfCallbackMethods + 3);
-                NativePointer = _cppCallback.NativePointer;
-
-                AddMethod(new QueryInterfaceDelegate(QueryInterfaceImpl));
-                AddMethod(new AddRefDelegate(AddRefImpl));
-                AddMethod(new ReleaseDelegate(ReleaseImpl));
-            }
         }
 
         /// <summary>
-        /// Gets a managed callback from an unknown.
+        /// Initializes a new instance of the <see cref="ComObject"/> class.
         /// </summary>
-        /// <param name="ptr">The PTR.</param>
-        /// <returns></returns>
-        public static object GetCallbackFromIUnknown(IntPtr ptr)
+        protected ComObjectCallback()
         {
-            return CppObjectCallback.GetCallbackFromIUnknown(ptr);
         }
 
         /// <summary>
-        /// Add a method supported by this interface. This method is typically called from inherited constructor.
+        /// Implements <see cref="ICallbackable"/> but it cannot not be set. 
+        /// This is only used to support for interop with unmanaged callback.
         /// </summary>
-        /// <param name="method">the managed delegate method</param>
-        protected void AddMethod(Delegate method)
+        public IDisposable Callback
         {
-            _cppCallback.AddMethod(method);
-        }
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public unsafe delegate int QueryInterfaceDelegate(IntPtr thisObject, Guid* guid, out IntPtr output);
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public  delegate int AddRefDelegate(IntPtr thisObject);
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate int ReleaseDelegate(IntPtr thisObject);
-
-        private static Guid IID_IUnknown = new Guid("00000000-0000-0000-C000-000000000046");
-
-        protected unsafe virtual int QueryInterfaceImpl(IntPtr thisObject, Guid* guid, out IntPtr output)
-        {
-            if (*guid == _callback.GetType().GUID)
-            {
-                AddRefImpl(thisObject);
-                output = NativePointer;
-                return Result.Ok.Code;
-            }
-
-            if (*guid == GetType().GUID)
-            {
-                AddRefImpl(thisObject);
-                output = NativePointer;
-                return Result.Ok.Code;
-            }
-
-            if (*guid == IID_IUnknown)
-            {
-                AddRefImpl(thisObject);
-                output = NativePointer;
-                return Result.Ok.Code;
-            }
-            output = IntPtr.Zero;
-            return Result.NoInterface.Code;
-        }
-
-        protected virtual int AddRefImpl(IntPtr thisObject)
-        {
-            _count++;
-            return _count;
-        }
-
-        protected virtual int ReleaseImpl(IntPtr thisObject)
-        {
-            _count--;
-            return _count;
-        }
-
-        public override void Dispose()
-        {
-            // Only dispose the CppCallback
-            _cppCallback.Dispose();
+            get { throw new InvalidOperationException("Invalid access to Callback. This is used internally."); }
+            set { throw new InvalidOperationException("Invalid access to Callback. This is used internally."); }
         }
     }
 }

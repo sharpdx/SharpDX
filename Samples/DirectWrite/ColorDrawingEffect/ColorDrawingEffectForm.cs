@@ -123,11 +123,11 @@ namespace ColorDrawingEffect
             CurrentTextLayout.SetDrawingEffect(GreenDrawingEffect, new TextRange(21, 8));
 
             // Set a stylistic typography
-            var typo = new Typography(FactoryDWrite);
-            typo.AddFontFeature(new FontFeature(FontFeatureTag.StylisticSet7, 1));
-            CurrentTextLayout.SetTypography(typo, CurrentTextRange);
-            typo.Release();
-
+            using (var typo = new Typography(FactoryDWrite))
+            {
+                typo.AddFontFeature(new FontFeature(FontFeatureTag.StylisticSet7, 1));
+                CurrentTextLayout.SetTypography(typo, CurrentTextRange);
+            }
         }
 
     private void LogException(Exception ex)

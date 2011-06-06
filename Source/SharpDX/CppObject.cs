@@ -18,44 +18,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.Diagnostics;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 
 namespace SharpDX
 {
     /// <summary>
     /// Root class for all Cpp interop object.
     /// </summary>
-    public partial class CppObject
+    public class CppObject : DisposeBase
     {
         /// <summary>
         /// The native pointer
         /// </summary>
         protected unsafe void* _nativePointer;
-
-//        /// <summary>
-//        ///   Static initializer.
-//        /// </summary>
-//        static CppObject()
-//        {
-//            // Generate Interop Assembly
-//            // interopAssembly = DynamicInterop.Generate(_interopCalliSignatures, false, null);
-////            interopAssembly = DynamicInterop.Generate(_interopCalliSignatures, true, ".");
-//            // Bind AppDomain AssemblyResolve to return Interop Assembly
-//            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-//        }
-
-        /// <summary>
-        ///   Fake Init Method. Force CppObject to initialize
-        /// </summary>
-        /// <returns></returns>
-        [MethodImpl(MethodImplOptions.NoInlining)]        
-        internal static void Init()
-        {
-            // Debug.WriteLineIf(interopAssembly == null, "Warning, interop assembly was not dynamically generated");
-        }
 
         /// <summary>
         ///   Default constructor.
@@ -64,10 +38,6 @@ namespace SharpDX
         public CppObject(IntPtr pointer)
         {
             NativePointer = pointer;
-            //unsafe
-            //{
-            //    _nativePointer = (void*) pointer;
-            //}
         }
 
         /// <summary>
@@ -93,53 +63,55 @@ namespace SharpDX
             {
                 unsafe
                 {
-                    void* newNativePointer = (void*) value;
+                    var newNativePointer = (void*) value;
                     if (_nativePointer != newNativePointer)
                     {
+                        NativePointerUpdating();
+                        var oldNativePointer = _nativePointer;
                         _nativePointer = newNativePointer;
-                        NativePointerUpdated();
+                        NativePointerUpdated((IntPtr)oldNativePointer);
                     }
                 }
             }
         }
 
         /// <summary>
-        ///   Method that could be modified by inherited class
+        /// Initializes this instance with a pointer from a temporary object and set the pointer of the temporary  
+        /// object to IntPtr.Zero.
         /// </summary>
-        protected virtual void NativePointerUpdated()
+        /// <param name="temp">The instance to get the NativePointer.</param>
+        protected void FromTemp(CppObject temp)
+        {
+            NativePointer = temp.NativePointer;
+            temp.NativePointer = IntPtr.Zero;
+        }
+
+        /// <summary>
+        /// Initializes this instance with a pointer from a temporary object and set the pointer of the temporary  
+        /// object to IntPtr.Zero.
+        /// </summary>
+        /// <param name="temp">The instance to get the NativePointer.</param>
+        protected void FromTemp(IntPtr temp)
+        {
+            NativePointer = temp;
+        }
+
+        /// <summary>
+        /// Method called when the NativePointer is updated.
+        /// </summary>
+        protected virtual void NativePointerUpdating()
         {
         }
 
+        /// <summary>
+        /// Method called when the NativePointer is updated.
+        /// </summary>
+        protected virtual void NativePointerUpdated(IntPtr oldNativePointer)
+        {
+        }
 
-        //private static Regex matchAssemblyName = new Regex(@"^([^,]+)");
-
-        ///// <summary>
-        /////   Assembly Resolve callback
-        ///// </summary>
-        ///// <param name = "sender"></param>
-        ///// <param name = "args"></param>
-        ///// <returns></returns>
-        //private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
-        //{
-        //    string assemblyName = matchAssemblyName.Match(args.Name).Groups[0].Value;
-
-        //    if (assemblyName.StartsWith(typeof(CppObject).Namespace + ".") && assemblyName.EndsWith(".Interop"))
-        //    {
-        //        string rootNameSpace = assemblyName.Substring(0, assemblyName.Length - ".Interop".Length);
-        //        string signatureType = rootNameSpace + ".LocalInteropSignatures";
-
-        //        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-        //        {
-        //            Type type = assembly.GetType(signatureType);
-        //            if (type != null)
-        //            {
-        //                DynamicInterop.CalliSignature[] signatures = (DynamicInterop.CalliSignature[]) type.GetField("Signatures").GetValue(null);
-
-        //                return DynamicInterop.Generate(rootNameSpace, signatures, false, null);
-        //            }
-        //        }
-        //    }
-        //    return null;
-        //}
+        protected override void Dispose(bool disposing)
+        {            
+        }
     }
 }

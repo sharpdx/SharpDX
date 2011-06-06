@@ -34,9 +34,7 @@ namespace SharpDX.Direct3D9
         /// <param name="pool">The memory class into which the resource will be placed.</param>
         public VertexBuffer(Device device, int sizeInBytes, Usage usage, VertexFormat format, Pool pool) : base(IntPtr.Zero)
         {
-            VertexBuffer temp;
-            device.CreateVertexBuffer(sizeInBytes, usage, format, pool, out temp, IntPtr.Zero);
-            NativePointer = temp.NativePointer;            
+            device.CreateVertexBuffer(sizeInBytes, usage, format, pool, this, IntPtr.Zero);
         }
 
         /// <summary>
@@ -53,11 +51,9 @@ namespace SharpDX.Direct3D9
         {
             unsafe
             {
-                VertexBuffer temp;
                 sharedHandle = IntPtr.Zero;
                 fixed (void* pSharedHandle = &sharedHandle)
-                    device.CreateVertexBuffer(sizeInBytes, usage, format, pool, out temp, new IntPtr(pSharedHandle));
-                NativePointer = temp.NativePointer;
+                    device.CreateVertexBuffer(sizeInBytes, usage, format, pool, this, new IntPtr(pSharedHandle));
             }
         }
 

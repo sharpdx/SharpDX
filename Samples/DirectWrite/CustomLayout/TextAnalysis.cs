@@ -28,7 +28,7 @@ namespace CustomLayout
     /// <summary>
     /// Helper source/sink class for text analysis.
     /// </summary>
-    internal class TextAnalysis : TextAnalysisSource, TextAnalysisSink
+    internal class TextAnalysis : CallbackBase, TextAnalysisSource, TextAnalysisSink
     {
         protected String text_;
         protected String localeName_;

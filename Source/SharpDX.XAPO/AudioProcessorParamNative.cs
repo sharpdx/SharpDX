@@ -42,9 +42,9 @@ namespace SharpDX.XAPO
         /// <summary>
         /// Update the Native Poinder. Rebuild ParameterProviderNative.
         /// </summary>
-        protected override void NativePointerUpdated()
+        protected override void NativePointerUpdated(IntPtr oldPointer)
         {
-            base.NativePointerUpdated();
+            base.NativePointerUpdated(oldPointer);
 
             if (NativePointer != IntPtr.Zero)
             {

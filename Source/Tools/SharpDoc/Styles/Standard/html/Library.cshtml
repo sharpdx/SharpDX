@@ -25,4 +25,4 @@
 @using SharpDoc.Model
 @model SharpDoc.TemplateContext
 @Import("Page")
-@Helpers.Page.Dump(@Model.ClassLibraryName, "LibraryBody")
+@Helpers.Page.Dump(Model.Topic.FullName, "LibraryBody")

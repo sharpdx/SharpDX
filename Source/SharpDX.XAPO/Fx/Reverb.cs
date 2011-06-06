@@ -32,9 +32,7 @@ namespace SharpDX.XAPO.Fx
         public Reverb()
             : base(IntPtr.Zero)
         {
-            ComObject comObject;
-            XAPOFx.CreateFX(XAPOFx.CLSID_FXReverb, out comObject);
-            NativePointer = comObject.NativePointer;
+            XAPOFx.CreateFX(XAPOFx.CLSID_FXReverb, this);
         }
     }
 }

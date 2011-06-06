@@ -55,7 +55,7 @@ namespace SharpDX.Direct3D11
                 DepthStencilView depthStencilView;
                 GetRenderTargets(numViews, renderTargets, out depthStencilView);
                 if (depthStencilView != null)
-                    depthStencilView.Release();
+                    depthStencilView.Dispose();
                 return renderTargets;
             }
 
@@ -123,7 +123,7 @@ namespace SharpDX.Direct3D11
                 var temp = new UnorderedAccessView[count];
                 DepthStencilView depthStencilView;
                 GetRenderTargetsAndUnorderedAccessViews(0, new RenderTargetView[0], out depthStencilView, startSlot, count, temp);
-                depthStencilView.Release();
+                depthStencilView.Dispose();
                 return temp;
             }
 
@@ -290,7 +290,7 @@ namespace SharpDX.Direct3D11
                     int sampleMaskRef;
                     GetBlendState(out state, out blendFactor, out sampleMaskRef);
                     if (state != null)
-                        state.Release();
+                        state.Dispose();
                     return blendFactor;
 
                 }
@@ -302,7 +302,7 @@ namespace SharpDX.Direct3D11
                     GetBlendState(out state, out blendFactor, out sampleMaskRef);
                     SetBlendState(state, value, sampleMaskRef);
                     if (state != null)
-                        state.Release();
+                        state.Dispose();
                 }
             }
 
@@ -319,7 +319,7 @@ namespace SharpDX.Direct3D11
                     int sampleMaskRef;
                     GetBlendState(out state, out blendFactor, out sampleMaskRef);
                     if (state != null)
-                        state.Release();
+                        state.Dispose();
                     return sampleMaskRef;
                 }
                 set
@@ -330,7 +330,7 @@ namespace SharpDX.Direct3D11
                     GetBlendState(out state, out blendFactor, out sampleMaskRef);
                     SetBlendState(state, blendFactor, value);
                     if (state != null)
-                        state.Release();
+                        state.Dispose();
                 }
             }
 
@@ -355,7 +355,7 @@ namespace SharpDX.Direct3D11
                     int sampleMaskRef;
                     GetBlendState(out state, out blendFactor, out sampleMaskRef);
                     if (state != null)
-                        state.Release();
+                        state.Dispose();
                     SetBlendState(value, blendFactor, sampleMaskRef);
                 }
             }
@@ -372,7 +372,7 @@ namespace SharpDX.Direct3D11
                     int reference;
                     GetDepthStencilState(out state, out reference);
                     if (state != null)
-                        state.Release();
+                        state.Dispose();
                     return reference;
                 }
                 set
@@ -382,7 +382,7 @@ namespace SharpDX.Direct3D11
                     GetDepthStencilState(out state, out reference);
                     SetDepthStencilState(state, value);
                     if (state != null)
-                        state.Release();
+                        state.Dispose();
                 }
             }
 
@@ -405,7 +405,7 @@ namespace SharpDX.Direct3D11
                     int reference;
                     GetDepthStencilState(out state, out reference);
                     if (state != null)
-                        state.Release();
+                        state.Dispose();
                     SetDepthStencilState(value, reference);
                 }
             }

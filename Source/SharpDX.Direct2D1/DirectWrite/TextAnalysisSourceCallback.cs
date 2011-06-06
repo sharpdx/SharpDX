@@ -27,7 +27,7 @@ namespace SharpDX.DirectWrite
    /// <summary>
     /// Internal TextAnalysisSource Callback
     /// </summary>
-    internal class TextAnalysisSourceCallback : SharpDX.ComObjectCallback
+    internal class TextAnalysisSourceCallback : SharpDX.ComObjectCallbackNative
     {
         /// <summary>
         /// Gets or sets the callback.
@@ -35,30 +35,26 @@ namespace SharpDX.DirectWrite
         /// <value>The callback.</value>
         public TextAnalysisSource Callback { get; private set; }
 
-       private List<IntPtr> _allocatedStrings;
+        private List<IntPtr> _allocatedStrings;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TextAnalysisSourceCallback"/> class.
-        /// </summary>
-        /// <param name="callback">The callback.</param>
-        public TextAnalysisSourceCallback(TextAnalysisSource callback) : base(callback, 5)
+        public static IntPtr CallbackToPtr(TextAnalysisSource callback)
         {
-            Callback = callback;
-            _allocatedStrings = new List<IntPtr>();
-            unsafe
-            {
-                AddMethod(new GetTextAtPositionDelegate(GetTextAtPositionImpl));
-                AddMethod(new GetTextBeforePositionDelegate(GetTextBeforePositionImpl));
-                AddMethod(new GetParagraphReadingDirectionDelegate(GetParagraphReadingDirectionImpl));
-                AddMethod(new GetLocaleNameDelegate(GetLocaleNameImpl));
-                AddMethod(new GetNumberSubstitutionDelegate(GetNumberSubstitutionImpl));
-            }
+            return CallbackToPtr<TextAnalysisSource, TextAnalysisSourceCallback>(callback);
         }
 
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public override void Dispose()
+        public override void Attach<T>(T callback)
+        {
+            Attach(callback, 5);
+            Callback = (TextAnalysisSource)callback;
+            _allocatedStrings = new List<IntPtr>();
+            AddMethod(new GetTextAtPositionDelegate(GetTextAtPositionImpl));
+            AddMethod(new GetTextBeforePositionDelegate(GetTextBeforePositionImpl));
+            AddMethod(new GetParagraphReadingDirectionDelegate(GetParagraphReadingDirectionImpl));
+            AddMethod(new GetLocaleNameDelegate(GetLocaleNameImpl));
+            AddMethod(new GetNumberSubstitutionDelegate(GetNumberSubstitutionImpl));
+        }
+
+        protected override void Dispose(bool disposing)
         {
             if (_allocatedStrings != null)
             {
@@ -66,7 +62,7 @@ namespace SharpDX.DirectWrite
                     Marshal.FreeHGlobal(allocatedString);
                 _allocatedStrings = null;
             }
-            base.Dispose();
+            base.Dispose(disposing);
         }
 
        /// <unmanaged>HRESULT IDWriteTextAnalysisSource::GetTextAtPosition([None] int textPosition,[Out] const wchar_t** textString,[Out] int* textLength)</unmanaged>

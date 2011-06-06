@@ -32,9 +32,7 @@ namespace SharpDX.Direct3D10
         public RenderTargetView(Device device, Resource resource)
             : base(IntPtr.Zero)
         {
-            RenderTargetView view;
-            device.CreateRenderTargetView(resource, null, out view);
-            NativePointer = view.NativePointer;
+            device.CreateRenderTargetView(resource, null, this);
         }
 
         /// <summary>
@@ -47,9 +45,7 @@ namespace SharpDX.Direct3D10
         public RenderTargetView(Device device, Resource resource, RenderTargetViewDescription description)
             : base(IntPtr.Zero)
         {
-            RenderTargetView view;
-            device.CreateRenderTargetView(resource, description, out view);
-            NativePointer = view.NativePointer;
+            device.CreateRenderTargetView(resource, description, this);
         }
     }
 }

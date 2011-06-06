@@ -194,7 +194,7 @@ namespace SharpDX.Direct3D10
             for (int byteIndex = 0; byteIndex < blobSize; ++byteIndex)
                 stream.WriteByte(Marshal.ReadByte(bufferPtr, byteIndex));
 
-            blob.Release();
+            blob.Dispose();
 
             return result;
         }

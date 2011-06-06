@@ -31,9 +31,7 @@ namespace SharpDX.Direct2D1
         public EllipseGeometry(Factory factory, Ellipse ellipse)
             : base(IntPtr.Zero)
         {
-            EllipseGeometry temp;
-            factory.CreateEllipseGeometry(ellipse, out temp);
-            NativePointer = temp.NativePointer;
+            factory.CreateEllipseGeometry(ellipse, this);
         }
     }
 }

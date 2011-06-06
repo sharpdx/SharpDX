@@ -72,9 +72,7 @@ namespace SharpDX.Direct2D1
         /// <unmanaged>HRESULT CreateCompatibleRenderTarget([In, Optional] const D2D1_SIZE_F* desiredSize,[In, Optional] const D2D1_SIZE_U* desiredPixelSize,[In, Optional] const D2D1_PIXEL_FORMAT* desiredFormat,[None] D2D1_COMPATIBLE_RENDER_TARGET_OPTIONS options,[Out] ID2D1BitmapRenderTarget** bitmapRenderTarget)</unmanaged>
         public BitmapRenderTarget(RenderTarget renderTarget, SharpDX.Direct2D1.CompatibleRenderTargetOptions options, System.Drawing.SizeF? desiredSize, System.Drawing.Size? desiredPixelSize, SharpDX.Direct2D1.PixelFormat? desiredFormat) : base(IntPtr.Zero)
         {
-            BitmapRenderTarget temp;
-            renderTarget.CreateCompatibleRenderTarget(desiredSize, desiredPixelSize, desiredFormat, options, out temp);
-            NativePointer = temp.NativePointer;    
+            renderTarget.CreateCompatibleRenderTarget(desiredSize, desiredPixelSize, desiredFormat, options, this);
         }
     }
 }

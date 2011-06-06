@@ -30,9 +30,7 @@ namespace SharpDX.Direct2D1
         public PathGeometry(Factory factory)
             : base(IntPtr.Zero)
         {
-            PathGeometry temp;
-            factory.CreatePathGeometry(out temp);
-            NativePointer = temp.NativePointer;
+            factory.CreatePathGeometry(this);
         }
 
         /// <summary>	
@@ -43,16 +41,7 @@ namespace SharpDX.Direct2D1
         /// <unmanaged>HRESULT Stream([In] ID2D1GeometrySink* geometrySink)</unmanaged>
         public SharpDX.Result Stream(GeometrySink geometrySink)
         {
-            GeometrySinkCallback _callback = null;
-            IntPtr ptr;
-            if (geometrySink is ComObject)
-                ptr = (geometrySink as ComObject).NativePointer;
-            else
-            {
-                _callback = new GeometrySinkCallback(geometrySink);
-                ptr = _callback.NativePointer;
-            }
-            return this.Stream_(ptr);
+            return this.Stream_(GeometrySinkCallback.CallbackToPtr(geometrySink));
         }
     }
 }

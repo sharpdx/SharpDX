@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 using RazorEngine;
 using RazorEngine.Templating;
@@ -49,10 +50,8 @@ namespace SharpDoc
         /// </summary>
         public TemplateContext()
         {
-            TemplateDirectories = new List<string>();
-            OutputDirectory = "Output";
+            StyleDirectories = new List<string>();
             _regexItems = new List<TagExpandItem>();
-            Topics = new List<NTopic>();
             _msnRegistry = new MsdnRegistry();
             Param = new DynamicParam();
             Style = new DynamicParam();
@@ -87,10 +86,10 @@ namespace SharpDoc
         public dynamic Style { get; private set; }
 
         /// <summary>
-        /// Gets or sets the name of the class library.
+        /// Gets or sets the style manager.
         /// </summary>
-        /// <value>The name of the class library.</value>
-        public string ClassLibraryName { get; set; }
+        /// <value>The style manager.</value>
+        public StyleManager StyleManager { get; set; }
 
         /// <summary>
         /// Gets or sets the registry.
@@ -102,7 +101,13 @@ namespace SharpDoc
         /// Gets or sets the topics.
         /// </summary>
         /// <value>The topics.</value>
-        public List<NTopic> Topics { get; set; }
+        public NTopic RootTopic { get; set; }
+
+        /// <summary>
+        /// Gets or sets the search topic.
+        /// </summary>
+        /// <value>The search topic.</value>
+        public NTopic SearchTopic { get; set;}
 
         /// <summary>
         /// Gets or sets the assemblies.
@@ -141,10 +146,10 @@ namespace SharpDoc
         public NMember Member { get; set; }
 
         /// <summary>
-        /// Gets or sets the template directories.
+        /// Gets or sets the style directories.
         /// </summary>
-        /// <value>The template directories.</value>
-        public List<string> TemplateDirectories {get; private set;}
+        /// <value>The style directories.</value>
+        private List<string> StyleDirectories {get; set;}
 
         /// <summary>
         /// Gets or sets the output directory.
@@ -157,6 +162,18 @@ namespace SharpDoc
         /// </summary>
         /// <value>The link resolver.</value>
         public LinkResolverDelegate LinkResolver { get; set; }
+
+        /// <summary>
+        /// Finds the topic by id.
+        /// </summary>
+        /// <param name="topicId">The topic id.</param>
+        /// <returns></returns>
+        public NTopic FindTopicById(string topicId)
+        {
+            if (RootTopic == null)
+                return null;
+            return RootTopic.FindTopicById(topicId);
+        }
 
         /// <summary>
         /// Gets the current context.
@@ -180,8 +197,9 @@ namespace SharpDoc
 
         public string ToUrl(IModelReference reference, string linkName = null, bool forceLocal = false, string attributes = null)
         {
-            return ToUrl(reference.Id, linkName, forceLocal, attributes);
+            return ToUrl(reference.Id, linkName, forceLocal, attributes, reference);
         }
+
 
         /// <summary>
         /// Resolve a document Id (ie. "T:System.Object") to an url.
@@ -190,26 +208,45 @@ namespace SharpDoc
         /// <param name="linkName">Name of the link.</param>
         /// <param name="forceLocal">if set to <c>true</c> [force local].</param>
         /// <param name="attributes">The attributes.</param>
+        /// <param name="localReference">The local reference.</param>
         /// <returns></returns>
-        public string ToUrl(string id, string linkName = null, bool forceLocal = false, string attributes = null)
+        public string ToUrl(string id, string linkName = null, bool forceLocal = false, string attributes = null, IModelReference localReference = null)
         {
-            var linkDescriptor = new LinkDescriptor {Id = id, Type = LinkType.None, LocalReference = FindLocalReference(id)};
-            if (linkDescriptor.LocalReference != null)
+            var linkDescriptor = new LinkDescriptor { Type = LinkType.None };
+            var typeReference = localReference as NTypeReference;
+            NTypeReference genericInstance = null;
+            bool isGenericInstance = typeReference != null && typeReference.IsGenericInstance;
+            bool isGenericParameter = typeReference != null && typeReference.IsGenericParameter;
+
+            if (isGenericInstance)
             {
-                linkDescriptor.Type = LinkType.Local;
+                var elementType = typeReference.ElementType;
+                id = elementType.Id;
+                genericInstance = typeReference;
+                linkName = elementType.Name.Substring(0, elementType.Name.IndexOf('<'));
+            }
+
+            linkDescriptor.LocalReference = FindLocalReference(id);
+
+            if (isGenericParameter)
+            {
+                linkDescriptor.Name = typeReference.Name;
+            } else if (linkDescriptor.LocalReference != null)
+            {
                 // For local references, use short name
                 linkDescriptor.Name = linkDescriptor.LocalReference.Name;
+                linkDescriptor.Type = LinkType.Local;
                 if (!forceLocal && CurrentContext != null && linkDescriptor.LocalReference is NMember)
                 {
                     var declaringType = ((NMember) linkDescriptor.LocalReference).DeclaringType;
                     // If link is self referencing the current context, then use a self link
-                    if ( id == CurrentContext.Id || (declaringType != null && declaringType.Id == CurrentContext.Id))
+                    if (id == CurrentContext.Id || (declaringType != null && declaringType.Id == CurrentContext.Id))
                     {
                         linkDescriptor.Type = LinkType.Self;
                     }
                 }
 
-            } else
+            } else 
             {
                 linkDescriptor.Location = _msnRegistry.FindUrl(id);
                 var reference = TextReferenceUtility.CreateReference(id);                    
@@ -234,41 +271,69 @@ namespace SharpDoc
             if (linkName != null)
                 linkDescriptor.Name = linkName;
 
+            linkDescriptor.Id = id;
             linkDescriptor.Attributes = attributes;
 
-            return LinkResolver(linkDescriptor);
+            var urlBuilder = new StringBuilder();
+            urlBuilder.Append(LinkResolver(linkDescriptor));
+
+            // Handle url for generic instance
+            if (genericInstance != null)
+            {
+                urlBuilder.Append("&lt;");
+                for (int i = 0; i < genericInstance.GenericArguments.Count; i++)
+                {
+                    if (i > 0)
+                        urlBuilder.Append(", ");
+                    var genericArgument = genericInstance.GenericArguments[i];
+                    // Recursive call here
+                    urlBuilder.Append(ToUrl(genericArgument));
+                }
+                urlBuilder.Append("&gt;");
+            }
+            return urlBuilder.ToString();
         }
 
         /// <summary>
         /// Uses the style.
         /// </summary>
         /// <param name="styleName">Name of the style.</param>
-        /// <param name="inherit">if set to <c>true</c> [inherit].</param>
         /// <returns></returns>
-        public void UseStyle(string styleName, bool inherit)
+        internal void UseStyle(string styleName)
         {
-            string executablePath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            if (!StyleManager.StyleExist(styleName))
+                Logger.Fatal("Cannot us style [{0}]. Style doesn't exist", styleName);
 
-            string styleSubpath = StyleDirectory + "\\" + styleName;
+            var includeBaseStyle = new List<string>();
 
-            // Locate global styles
-            InsertTemplateDirectory(Path.Combine(executablePath, "..\\..\\" + styleSubpath), inherit);
+            var styles = StyleManager.AvailableStyles;
+            includeBaseStyle.Add(styleName);
 
-            string exePath = Path.Combine(executablePath, styleSubpath);
-            // Locate local styles from exe directory
-            InsertTemplateDirectory(exePath, inherit);
+            bool isNotComplete = true;
 
-            string localPath = Path.Combine(Path.GetFullPath(Environment.CurrentDirectory), styleSubpath);
-            // Locate local styles from current location
-            if (localPath != exePath)
-                InsertTemplateDirectory(localPath, inherit);
-        }
+            // Compute directories to look, by following inheritance
+            // In the same order they are declared
+            while (isNotComplete)
+            {
+                isNotComplete = false;
+                // Build directories to look for this specific style and all its base style);
+                var toRemove = new List<StyleDefinition>();
+                foreach (var style in styles)
+                {
+                    if (includeBaseStyle.Contains(style.Name))
+                    {
+                        toRemove.Add(style);
+                        StyleDirectories.Add(style.DirectoryPath);
+                        isNotComplete = true;
+                        if (style.HasBaseStyle)
+                            includeBaseStyle.Add(style.BaseStyle);
+                    }
+                }
 
-        private void InsertTemplateDirectory(string path, bool inheritedTemplateDir)
-        {
-            int position = inheritedTemplateDir ? 0 : TemplateDirectories.Count;
-            if (Directory.Exists(path))
-                TemplateDirectories.Insert(position, path);
+                // Remove the style that was processed by the previous loop
+                foreach (var styleDefinition in toRemove)
+                    styles.Remove(styleDefinition);
+            }
         }
 
         /// <summary>
@@ -278,9 +343,9 @@ namespace SharpDoc
         /// <returns>A filepath to the file or directory</returns>
         public string ResolvePath(string path)
         {
-            for (int i = TemplateDirectories.Count - 1; i >= 0; i--)
+            for (int i = 0; i < StyleDirectories.Count; i++)
             {
-                string filePath = Path.Combine(TemplateDirectories[i], path);
+                string filePath = Path.Combine(StyleDirectories[i], path);
                 if (File.Exists(filePath))
                     return filePath;
             }
@@ -296,7 +361,7 @@ namespace SharpDoc
         {
             string filePath = ResolvePath(file);
             if (filePath == null) {
-                Logger.Fatal("Cannot find file [{0}] from the following Template Directories [{1}]", file, string.Join(",", TemplateDirectories));
+                Logger.Fatal("Cannot find file [{0}] from the following Template Directories [{1}]", file, string.Join(",", StyleDirectories));
                 // Fatal is stopping the process
                 return "";
             }
@@ -316,7 +381,7 @@ namespace SharpDoc
 
             if (location == null)
             {
-                Logger.Fatal("Cannot find template [{0}] from the following Template Directories [{1}]", name, string.Join(",", TemplateDirectories));
+                Logger.Fatal("Cannot find template [{0}] from the following Template Directories [{1}]", name, string.Join(",", StyleDirectories));
                 // Fatal is stopping the process
                 return "";
             }
@@ -330,11 +395,11 @@ namespace SharpDoc
         /// <param name="directoryName">Name of the directory.</param>
         public void CopyDirectoryContent(string directoryName)
         {
-            foreach (var templateDirectory in TemplateDirectories)
+            foreach (var templateDirectory in StyleDirectories)
             {
                 string filePath = Path.Combine(templateDirectory, directoryName);
                 if (Directory.Exists(filePath))
-                    CopyDirectory(filePath, Path.Combine(Path.GetFullPath(OutputDirectory), directoryName));
+                    CopyDirectory(filePath, Path.Combine(OutputDirectory, directoryName));
             }
         }
 
@@ -355,27 +420,13 @@ namespace SharpDoc
         }
 
         /// <summary>
-        /// Removes the output directory.
-        /// </summary>
-        internal void RemoveOutputDirectory()
-        {
-            try
-            {
-                Directory.Delete(Path.GetFullPath(OutputDirectory), true);
-            } catch (Exception)
-            {
-                Logger.Warning("Unable to remove output directory [{0}]", OutputDirectory);
-            }
-        }
-
-        /// <summary>
         /// Write a content to an output file.
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="content">The content.</param>
         public void WriteToFile(string name, string content)
         {
-            string path = Path.Combine(Path.GetFullPath(OutputDirectory), name);
+            string path = Path.Combine(OutputDirectory, name);
 
             string dirPath = Path.GetDirectoryName(path);
             if (!Directory.Exists(dirPath))
@@ -479,6 +530,12 @@ namespace SharpDoc
                 }
                 Logger.PopLocation();
                 Logger.Fatal("Error when compiling template [{0}]", templateName);
+            } catch (Exception ex)
+            {
+                Logger.PushLocation(location);
+                Logger.Error("Unexpected exceprion", ex);
+                Logger.PopLocation();
+                throw ex;
             }
             return "";
         }

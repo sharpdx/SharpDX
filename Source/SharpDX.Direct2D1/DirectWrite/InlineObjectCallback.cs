@@ -25,7 +25,7 @@ namespace SharpDX.DirectWrite
     /// <summary>
     /// Internal InlineObject Callback
     /// </summary>
-    internal class InlineObjectCallback : SharpDX.ComObjectCallback
+    internal class InlineObjectCallback : SharpDX.ComObjectCallbackNative
     {
         /// <summary>
         /// Gets or sets the callback.
@@ -33,14 +33,15 @@ namespace SharpDX.DirectWrite
         /// <value>The callback.</value>
         public InlineObject Callback { get; private set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="InlineObjectCallback"/> class.
-        /// </summary>
-        /// <param name="callback">The callback.</param>
-        public InlineObjectCallback(InlineObject callback)
-            : base(callback, 4)
+        public static IntPtr CallbackToPtr(InlineObject callback)
         {
-            Callback = callback;
+            return CallbackToPtr<InlineObject, InlineObjectCallback>(callback);
+        }
+
+        public override void Attach<T>(T callback)
+        {
+            Attach(callback, 4);
+            Callback = (InlineObject)callback;
             unsafe
             {
                 AddMethod(new DrawDelegate(DrawImpl));
@@ -49,7 +50,7 @@ namespace SharpDX.DirectWrite
                 AddMethod(new GetBreakConditionsDelegate(GetBreakConditionsImpl));
             }
         }
-
+       
        /// <unmanaged>HRESULT IDWriteInlineObject::Draw([None] void* clientDrawingContext,[None] IDWriteTextRenderer* renderer,[None] float originX,[None] float originY,[None] BOOL isSideways,[None] BOOL isRightToLeft,[None] IUnknown* clientDrawingEffect)</unmanaged>
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate int DrawDelegate(
@@ -141,5 +142,6 @@ namespace SharpDX.DirectWrite
             }
             return Result.Ok.Code;
         }
+
     }
 }

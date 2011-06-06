@@ -35,9 +35,11 @@ namespace SharpDX.DirectSound
 
             CaptureBufferBase captureBuffer;
             capture.CreateCaptureBuffer(ref description, out captureBuffer, null);
-            NativePointer = captureBuffer.NativePointer;
-            NativePointer = QueryInterface<CaptureBuffer>().NativePointer;
-            captureBuffer.Release();
+            using (captureBuffer)
+            {
+                NativePointer = captureBuffer.NativePointer;
+                QueryInterfaceFrom(this);
+            }
         }
 
         /// <summary>	
@@ -72,18 +74,10 @@ namespace SharpDX.DirectSound
         /// <returns></returns>
         public Result SetNotificationPositions(NotificationPosition[] positions)
         {
-            var notifier = QueryInterface<SoundBufferNotifier>();
-            Result result;
-            try
+            using (var notifier = QueryInterface<SoundBufferNotifier>())
             {
-                result = notifier.SetNotificationPositions(positions.Length, positions);
+                return notifier.SetNotificationPositions(positions.Length, positions);
             }
-            catch (SharpDXException)
-            {
-                notifier.Release();
-                throw;
-            }
-            return result;
         }
     }
 }

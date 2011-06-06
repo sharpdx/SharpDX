@@ -87,9 +87,7 @@ namespace SharpDX.Direct3D10
 
         private void CreateDevice(Adapter adapter, DriverType driverType, DeviceCreationFlags flags, FeatureLevel featureLevel)
         {
-            Device1 device;
-            D3D10.CreateDevice1(adapter, driverType, IntPtr.Zero, flags, featureLevel, D3D10.SdkVersion1, out device);
-            NativePointer = device.NativePointer;
+            D3D10.CreateDevice1(adapter, driverType, IntPtr.Zero, flags, featureLevel, D3D10.SdkVersion1, this);
         }
 
         /// <summary>

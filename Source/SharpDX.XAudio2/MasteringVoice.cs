@@ -67,9 +67,7 @@ namespace SharpDX.XAudio2
         /// <unmanaged>HRESULT IXAudio2::CreateMasteringVoice([Out] IXAudio2MasteringVoice** ppMasteringVoice,[None] UINT32 InputChannels,[None] UINT32 InputSampleRate,[None] UINT32 Flags,[None] UINT32 DeviceIndex,[In, Optional] const XAUDIO2_EFFECT_CHAIN* pEffectChain)</unmanaged>
         public MasteringVoice(XAudio2 device, int inputChannels, int inputSampleRate, int deviceIndex) : base(IntPtr.Zero)
         {
-            MasteringVoice temp;
-            device.CreateMasteringVoice(out temp, inputChannels, inputSampleRate, 0, deviceIndex, null);
-            NativePointer = temp.NativePointer;
+            device.CreateMasteringVoice(this, inputChannels, inputSampleRate, 0, deviceIndex, null);
         }
     }
 }

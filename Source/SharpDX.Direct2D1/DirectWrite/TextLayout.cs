@@ -37,9 +37,7 @@ namespace SharpDX.DirectWrite
         public TextLayout(Factory factory, string text, SharpDX.DirectWrite.TextFormat textFormat, float maxWidth, float maxHeight)
             : base(IntPtr.Zero)
         {
-            TextLayout temp;
-            factory.CreateTextLayout(text, text.Length, textFormat, maxWidth, maxHeight, out temp);
-            NativePointer = temp.NativePointer;
+            factory.CreateTextLayout(text, text.Length, textFormat, maxWidth, maxHeight, this);
         }
 
         /// <summary>	
@@ -78,9 +76,7 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteFactory::CreateGdiCompatibleTextLayout([In, Buffer] const wchar_t* string,[None] int stringLength,[None] IDWriteTextFormat* textFormat,[None] float layoutWidth,[None] float layoutHeight,[None] float pixelsPerDip,[In, Optional] const DWRITE_MATRIX* transform,[None] BOOL useGdiNatural,[Out] IDWriteTextLayout** textLayout)</unmanaged>
         public TextLayout(Factory factory, string text, TextFormat textFormat, float layoutWidth, float layoutHeight, float pixelsPerDip, Matrix? transform, bool useGdiNatural) : base(IntPtr.Zero)
         {
-            TextLayout temp;
-            factory.CreateGdiCompatibleTextLayout(text, text.Length, textFormat, layoutWidth, layoutHeight, pixelsPerDip, transform, useGdiNatural, out temp);
-            NativePointer = temp.NativePointer;
+            factory.CreateGdiCompatibleTextLayout(text, text.Length, textFormat, layoutWidth, layoutHeight, pixelsPerDip, transform, useGdiNatural, this);
         }
 
         /// <summary>	
@@ -112,12 +108,11 @@ namespace SharpDX.DirectWrite
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.</returns>
         /// <unmanaged>HRESULT Draw([None] void* clientDrawingContext,[None] IDWriteTextRenderer* renderer,[None] FLOAT originX,[None] FLOAT originY)</unmanaged>
         public SharpDX.Result Draw(object clientDrawingContext, TextRenderer renderer, float originX, float originY) {
-            var callback = new TextRendererCallback(renderer);
             IntPtr clientDrawingContextPtr = Utilities.GetIUnknownForObject(clientDrawingContext);
             Result result;
             try
             {
-                result = this.Draw_(clientDrawingContextPtr, callback.NativePointer, originX, originY);
+                result = this.Draw_(clientDrawingContextPtr, TextRendererCallback.CallbackToPtr(renderer), originX, originY);
             }
             finally
             {
@@ -438,9 +433,7 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteTextLayout::SetInlineObject([None] IDWriteInlineObject* inlineObject,[None] DWRITE_TEXT_RANGE textRange)</unmanaged>
         public SharpDX.Result SetInlineObject(InlineObject inlineObject, SharpDX.DirectWrite.TextRange textRange)
         {
-            var inlineObjectCallback = new InlineObjectCallback(inlineObject);
-            // TODO release Callback
-            return SetInlineObject_(inlineObjectCallback.NativePointer, textRange);
+            return SetInlineObject_(InlineObjectCallback.CallbackToPtr(inlineObject), textRange);
         }
     }
 }

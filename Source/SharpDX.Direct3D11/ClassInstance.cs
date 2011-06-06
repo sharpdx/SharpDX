@@ -39,13 +39,8 @@ namespace SharpDX.Direct3D11
         /// <unmanaged>HRESULT ID3D11ClassLinkage::CreateClassInstance([In] const char* pClassTypeName,[In] int ConstantBufferOffset,[In] int ConstantVectorOffset,[In] int TextureOffset,[In] int SamplerOffset,[Out] ID3D11ClassInstance** ppInstance)</unmanaged>
         public ClassInstance(ClassLinkage linkage, string classTypeName, int constantBufferOffset, int constantVectorOffset, int textureOffset, int samplerOffset) : base(IntPtr.Zero)
         {
-            ClassInstance temp;
-            linkage.CreateClassInstance(classTypeName, constantBufferOffset, constantVectorOffset, textureOffset, samplerOffset, out temp);
-            NativePointer = temp.NativePointer;
+            linkage.CreateClassInstance(classTypeName, constantBufferOffset, constantVectorOffset, textureOffset, samplerOffset, this);
         }
-
-
-
 
         /// <summary>
         ///   Gets the instance name of the current HLSL class.

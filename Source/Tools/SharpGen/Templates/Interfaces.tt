@@ -90,8 +90,9 @@ foreach (var sharpInterface in Namespace.Interfaces)
 	
 #>				
         /// <summary>Update nested inner interfaces pointer</summary>
-        protected override void NativePointerUpdated()
+        protected override void NativePointerUpdated(IntPtr oldPointer)
         {            
+            base.NativePointerUpdated(oldPointer);
 <#+
 		// Include Inner structure
 		foreach (var innerInterface in sharpInterface.InnerInterfaces) {

@@ -25,7 +25,7 @@ namespace SharpDoc.Model
     /// <summary>
     /// Base class for <see cref="IModelReference"/>.
     /// </summary>
-    public abstract class NModelBase : IModelReference, IComment
+    public abstract class NModelBase : IModelReference, IComment, IEquatable<NModelBase>
     {
         private XmlNode _docNode;
 
@@ -83,9 +83,15 @@ namespace SharpDoc.Model
         public string Remarks { get; set; }
 
         /// <summary>
+        /// Gets or sets the topic link.
+        /// </summary>
+        /// <value>The topic link.</value>
+        public NTopic TopicLink { get; set; }
+
+        /// <summary>
         /// Called when <see cref="DocNode"/> is updated.
         /// </summary>
-        protected virtual void OnDocNodeUpdate()
+        protected internal virtual void OnDocNodeUpdate()
         {
             if (DocNode != null)
             {
@@ -109,6 +115,66 @@ namespace SharpDoc.Model
                     return selectedNode.InnerXml.Trim();
             }
             return null;
+        }
+
+        /// <summary>
+        /// Equalses the specified other.
+        /// </summary>
+        /// <param name="other">The other.</param>
+        /// <returns></returns>
+        public bool Equals(NModelBase other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Equals(other.Id, Id);
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="System.Object"/> is equal to this instance.
+        /// </summary>
+        /// <param name="obj">The <see cref="System.Object"/> to compare with this instance.</param>
+        /// <returns>
+        /// 	<c>true</c> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != typeof (NModelBase)) return false;
+            return Equals((NModelBase) obj);
+        }
+
+        /// <summary>
+        /// Returns a hash code for this instance.
+        /// </summary>
+        /// <returns>
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+        /// </returns>
+        public override int GetHashCode()
+        {
+            return (Id != null ? Id.GetHashCode() : 0);
+        }
+
+        /// <summary>
+        /// Implements the operator ==.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator ==(NModelBase left, NModelBase right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// Implements the operator !=.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator !=(NModelBase left, NModelBase right)
+        {
+            return !Equals(left, right);
         }
     }
 }

@@ -42,18 +42,20 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>Bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>logo_sharp_cli.ico</ApplicationIcon>
+    <ApplicationIcon>SharpCli.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Build.Framework" />
@@ -75,7 +77,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="logo_sharp_cli.ico" />
+    <Content Include="SharpCli.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
@@ -90,6 +92,10 @@
     <Copy Condition="!Exists('$(TargetTaskPath)')" SourceFiles="$(TargetPath)" DestinationFiles="$(TargetTaskPath)" />
     <Message Importance="high" Text="Copying SharpCli Task from $(TargetPath) to $(TargetTaskPath)" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>copy  $(TargetDir)*.exe $(SolutionDir)Build\Tools\Bin\
+copy  $(TargetDir)*.dll $(SolutionDir)Build\Tools\Bin\</PostBuildEvent>
+  </PropertyGroup>
   <!-- Custom target to copy InteropBuilder to another path, used by all subsequent tasks -->
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

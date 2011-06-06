@@ -31,35 +31,13 @@ namespace SharpDX
     /// to verify that access is done within the size of the buffer.
     /// </remarks>
     /// <unmanaged>None</unmanaged>
-    public class DataBuffer : IDisposable
+    public class DataBuffer : DisposeBase
     {
         private unsafe sbyte* _buffer;
         private GCHandle _gCHandle;
         private Blob _blob;
         private readonly bool _ownsBuffer;
         private readonly long _size;
-
-        /// <summary>
-        ///   Release any resource associated to this DataBuffer
-        /// </summary>
-        public void Release()
-        {
-            unsafe
-            {
-                if (_blob != null)
-                {
-                    _blob.Release();
-                    _blob = null;
-                }
-                if (_gCHandle.IsAllocated)
-                    _gCHandle.Free();
-                if (_ownsBuffer && _buffer != (sbyte*)0)
-                {
-                    Marshal.FreeHGlobal((IntPtr)_buffer);
-                    _buffer = (sbyte*)0;
-                }
-            }
-        }
 
         internal unsafe DataBuffer(Blob buffer)
         {
@@ -148,6 +126,34 @@ namespace SharpDX
                 System.Diagnostics.Debug.Assert(sizeInBytes > 0);
                 _buffer = (sbyte*)userBuffer.ToPointer();
                 _size = sizeInBytes;
+            }
+        }
+
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_blob != null)
+                {
+                    _blob.Dispose();
+                    _blob = null;
+                }
+            }
+
+            if (_gCHandle.IsAllocated)
+                _gCHandle.Free();
+
+            unsafe
+            {
+                if (_ownsBuffer && _buffer != (sbyte*)0)
+                {
+                    Marshal.FreeHGlobal((IntPtr)_buffer);
+                    _buffer = (sbyte*)0;
+                }
             }
         }
 
@@ -670,14 +676,5 @@ namespace SharpDX
         {
             get { return _size; }
         }
-
-        #region Implementation of IDisposable
-
-        public void Dispose()
-        {
-            Release();
-        }
-
-        #endregion
     }
 }

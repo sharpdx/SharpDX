@@ -38,15 +38,15 @@ namespace SharpDX.Samples
         {
             base.Initialize(demoConfiguration);
             Factory2D = new SharpDX.Direct2D1.Factory();
-            Surface surface = BackBuffer.QueryInterface<Surface>();
-            RenderTarget2D = new RenderTarget(Factory2D, surface,
-                                                            new RenderTargetProperties(new PixelFormat(Format.Unknown, AlphaMode.Premultiplied)));
-
+            using (var surface = BackBuffer.QueryInterface<Surface>())
+            {
+                RenderTarget2D = new RenderTarget(Factory2D, surface,
+                                                  new RenderTargetProperties(new PixelFormat(Format.Unknown, AlphaMode.Premultiplied)));
+            }
             RenderTarget2D.AntialiasMode = AntialiasMode.PerPrimitive;
 
             FactoryDWrite = new SharpDX.DirectWrite.Factory();
 
-            surface.Release();
             SceneColorBrush = new SolidColorBrush(RenderTarget2D, new Color4(1, 1, 1, 1));
         }
 

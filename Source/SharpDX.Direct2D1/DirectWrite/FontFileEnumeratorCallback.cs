@@ -25,7 +25,7 @@ namespace SharpDX.DirectWrite
     /// <summary>
     /// Internal FontFileEnumerator Callback
     /// </summary>
-    internal class FontFileEnumeratorCallback : SharpDX.ComObjectCallback
+    internal class FontFileEnumeratorCallback : SharpDX.ComObjectCallbackNative
     {
         /// <summary>
         /// Gets or sets the callback.
@@ -33,13 +33,15 @@ namespace SharpDX.DirectWrite
         /// <value>The callback.</value>
         public FontFileEnumerator Callback { get; private set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FontFileEnumeratorCallback"/> class.
-        /// </summary>
-        /// <param name="callback">The callback.</param>
-        public FontFileEnumeratorCallback(FontFileEnumerator callback) : base(callback, 2)
+        public static IntPtr CallbackToPtr(FontFileEnumerator fontFileEnumerator)
         {
-            Callback = callback;
+            return CallbackToPtr<FontFileEnumerator, FontFileEnumeratorCallback>(fontFileEnumerator);
+        }
+
+        public override void Attach<T>(T callback)
+        {
+            Attach(callback, 2);
+            Callback = (FontFileEnumerator)callback;
             AddMethod(new MoveNextDelegate(MoveNextImpl));
             AddMethod(new GetCurrentFontFileDelegate(GetCurrentFontFileImpl));
         }
@@ -92,6 +94,6 @@ namespace SharpDX.DirectWrite
                 return Result.Fail.Code;
             }
             return Result.Ok.Code;
-        }       
+        }
     }
 }

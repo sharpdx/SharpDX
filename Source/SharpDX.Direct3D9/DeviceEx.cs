@@ -40,9 +40,7 @@ namespace SharpDX.Direct3D9
         /// <unmanaged>HRESULT CreateDevice([None] UINT Adapter,[None] D3DDEVTYPE DeviceType,[None] HWND hFocusWindow,[None] int BehaviorFlags,[None] D3DPRESENT_PARAMETERS* pPresentationParameters,[None] IDirect3DDevice9** ppReturnedDeviceInterface)</unmanaged>
         public DeviceEx(Direct3DEx direct3D, int adapter, SharpDX.Direct3D9.DeviceType deviceType, IntPtr hFocusWindow, CreateFlags behaviorFlags, params SharpDX.Direct3D9.PresentParameters[] presentationParametersRef) : base(IntPtr.Zero)
         {
-            DeviceEx temp;
-            direct3D.CreateDeviceEx(adapter, deviceType, hFocusWindow, (int)behaviorFlags, presentationParametersRef, null, out temp);
-            NativePointer = temp.NativePointer;
+            direct3D.CreateDeviceEx(adapter, deviceType, hFocusWindow, (int)behaviorFlags, presentationParametersRef, null, this);
         }
     }
 }

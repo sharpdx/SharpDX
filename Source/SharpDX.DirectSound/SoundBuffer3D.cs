@@ -55,8 +55,7 @@ namespace SharpDX.DirectSound
         /// <returns />
         public SoundBuffer3D(SoundBuffer soundBuffer)
         {
-            SoundBuffer3D temp = soundBuffer.QueryInterface<SoundBuffer3D>();
-            NativePointer = temp.NativePointer;            
+            QueryInterfaceFrom(soundBuffer);
         }
 
         /// <summary>

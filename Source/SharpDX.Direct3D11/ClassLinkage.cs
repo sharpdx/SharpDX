@@ -29,9 +29,7 @@ namespace SharpDX.Direct3D11
         /// <param name = "device"></param>
         public ClassLinkage(Device device) : base(IntPtr.Zero)
         {
-            ClassLinkage temp;
-            device.CreateClassLinkage(out temp);
-            NativePointer = temp.NativePointer;
+            device.CreateClassLinkage(this);
         }
     }
 }

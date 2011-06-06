@@ -29,15 +29,27 @@ namespace SharpDX.Direct2D1
     {
         GeometrySink Callback { get; set; }
 
-        public GeometrySinkCallback(GeometrySink callback) : base(callback, 5)
+        /// <summary>
+        /// Get a native callback pointer from a managed callback.
+        /// </summary>
+        /// <param name="geometrySink">The geometry sink.</param>
+        /// <returns>A pointer to the unmanaged geomerty sink counterpart</returns>
+        public static IntPtr CallbackToPtr(GeometrySink geometrySink)
         {
-            Callback = callback;
+            return CallbackToPtr<GeometrySink, GeometrySinkCallback>(geometrySink);
+        }
+
+        public override void Attach<T>(T callback)
+        {
+            Attach(callback, 5);
+            Callback = (GeometrySink)callback;
             AddMethod(new AddLineDelegate(AddLineImpl));
             AddMethod(new AddBezierDelegate(AddBezierImpl));
             AddMethod(new AddQuadraticBezierDelegate(AddQuadraticBezierImpl));
             AddMethod(new AddQuadraticBeziersDelegate(AddQuadraticBeziersImpl));
             AddMethod(new AddArcDelegate(AddArcImpl));
         }
+        
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate void AddLineDelegate(System.Drawing.PointF point);
         private unsafe void AddLineImpl(System.Drawing.PointF point)
@@ -74,5 +86,6 @@ namespace SharpDX.Direct2D1
         {
             Callback.AddArc(*((ArcSegment*) arc));
         }
+
     }
 }

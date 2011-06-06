@@ -171,13 +171,13 @@ namespace CustomFont
             {
                 if (CurrentTextFormat != null)
                 {
-                    CurrentTextFormat.Release();
+                    CurrentTextFormat.Dispose();
                     CurrentTextFormat = null;
                 }
 
                 if (CurrentTextLayout != null)
                 {
-                    CurrentTextLayout.Release();
+                    CurrentTextLayout.Dispose();
                     CurrentTextLayout = null;
                 }
 

@@ -30,9 +30,7 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteFactory::CreateTextAnalyzer([Out] IDWriteTextAnalyzer** textAnalyzer)</unmanaged>
         public TextAnalyzer(Factory factory)
         {
-            TextAnalyzer temp;
-            factory.CreateTextAnalyzer(out temp);
-            NativePointer = temp.NativePointer;
+            factory.CreateTextAnalyzer(this);
         }
 
         /// <summary>	
@@ -46,19 +44,7 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteTextAnalyzer::AnalyzeScript([None] IDWriteTextAnalysisSource* analysisSource,[None] int textPosition,[None] int textLength,[None] IDWriteTextAnalysisSink* analysisSink)</unmanaged>
         public SharpDX.Result AnalyzeScript(TextAnalysisSource analysisSource, int textPosition, int textLength, TextAnalysisSink analysisSink)
         {
-            var analysisSourceCallback = new TextAnalysisSourceCallback(analysisSource);
-            var analysisSinkCallback = new TextAnalysisSinkCallback(analysisSink);
-            Result result;
-            try
-            {
-                result = AnalyzeScript__(analysisSourceCallback.NativePointer, textPosition, textLength, analysisSinkCallback.NativePointer);
-            }
-            finally
-            {
-                analysisSourceCallback.Dispose();
-                analysisSinkCallback.Dispose();
-            }
-            return result;
+            return AnalyzeScript__(TextAnalysisSourceCallback.CallbackToPtr(analysisSource), textPosition, textLength, TextAnalysisSinkCallback.CallbackToPtr(analysisSink));
         }
 
         /// <summary>	
@@ -75,19 +61,7 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteTextAnalyzer::AnalyzeBidi([None] IDWriteTextAnalysisSource* analysisSource,[None] int textPosition,[None] int textLength,[None] IDWriteTextAnalysisSink* analysisSink)</unmanaged>
         public SharpDX.Result AnalyzeBidi(TextAnalysisSource analysisSource, int textPosition, int textLength, TextAnalysisSink analysisSink)
         {
-            var analysisSourceCallback = new TextAnalysisSourceCallback(analysisSource);
-            var analysisSinkCallback = new TextAnalysisSinkCallback(analysisSink);
-            Result result;
-            try
-            {
-                result = AnalyzeBidi__(analysisSourceCallback.NativePointer, textPosition, textLength, analysisSinkCallback.NativePointer);
-            }
-            finally
-            {
-                analysisSourceCallback.Dispose();
-                analysisSinkCallback.Dispose();
-            }
-            return result;
+            return AnalyzeBidi__(TextAnalysisSourceCallback.CallbackToPtr(analysisSource), textPosition, textLength, TextAnalysisSinkCallback.CallbackToPtr(analysisSink));
         }
 
         /// <summary>	
@@ -104,19 +78,7 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteTextAnalyzer::AnalyzeNumberSubstitution([None] IDWriteTextAnalysisSource* analysisSource,[None] int textPosition,[None] int textLength,[None] IDWriteTextAnalysisSink* analysisSink)</unmanaged>
         public SharpDX.Result AnalyzeNumberSubstitution(TextAnalysisSource analysisSource, int textPosition, int textLength, TextAnalysisSink analysisSink)
         {
-            var analysisSourceCallback = new TextAnalysisSourceCallback(analysisSource);
-            var analysisSinkCallback = new TextAnalysisSinkCallback(analysisSink);
-            Result result;
-            try
-            {
-                result = AnalyzeNumberSubstitution__(analysisSourceCallback.NativePointer, textPosition, textLength, analysisSinkCallback.NativePointer);
-            }
-            finally
-            {
-                analysisSourceCallback.Dispose();
-                analysisSinkCallback.Dispose();
-            }
-            return result;
+            return AnalyzeNumberSubstitution__(TextAnalysisSourceCallback.CallbackToPtr(analysisSource), textPosition, textLength, TextAnalysisSinkCallback.CallbackToPtr(analysisSink));
         }
 
         /// <summary>	
@@ -133,19 +95,7 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteTextAnalyzer::AnalyzeLineBreakpoints([None] IDWriteTextAnalysisSource* analysisSource,[None] int textPosition,[None] int textLength,[None] IDWriteTextAnalysisSink* analysisSink)</unmanaged>
         public SharpDX.Result AnalyzeLineBreakpoints(TextAnalysisSource analysisSource, int textPosition, int textLength, TextAnalysisSink analysisSink)
         {
-            var analysisSourceCallback = new TextAnalysisSourceCallback(analysisSource);
-            var analysisSinkCallback = new TextAnalysisSinkCallback(analysisSink);
-            Result result;
-            try
-            {
-                result = AnalyzeLineBreakpoints__(analysisSourceCallback.NativePointer, textPosition, textLength, analysisSinkCallback.NativePointer);
-            }
-            finally
-            {
-                analysisSourceCallback.Dispose();
-                analysisSinkCallback.Dispose();
-            }
-            return result;
+            return AnalyzeLineBreakpoints__(TextAnalysisSourceCallback.CallbackToPtr(analysisSource), textPosition, textLength, TextAnalysisSinkCallback.CallbackToPtr(analysisSink));
         }
     }
 }

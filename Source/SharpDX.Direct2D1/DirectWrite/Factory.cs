@@ -24,24 +24,24 @@ namespace SharpDX.DirectWrite
 {
     public partial class Factory
     {
-        private readonly List<FontCollectionLoaderCallback> _fontCollectionLoaderCallbacks = new List<FontCollectionLoaderCallback>();
-        private readonly List<FontFileLoaderCallback> _fontFileLoaderCallbacks = new List<FontFileLoaderCallback>();
+        private readonly List<FontCollectionLoader> _fontCollectionLoaderCallbacks = new List<FontCollectionLoader>();
+        private readonly List<FontFileLoader> _fontFileLoaderCallbacks = new List<FontFileLoader>();
 
-        internal FontCollectionLoaderCallback FindRegisteredFontCollectionLoaderCallback(FontCollectionLoader loader)
+        internal FontCollectionLoader FindRegisteredFontCollectionLoaderCallback(FontCollectionLoader loader)
         {
             foreach (var fontCollectionLoaderCallback in _fontCollectionLoaderCallbacks)
             {
-                if (fontCollectionLoaderCallback.Callback == loader)
+                if (fontCollectionLoaderCallback == loader)
                     return fontCollectionLoaderCallback;
             }
             return null;
         }
 
-        internal FontFileLoaderCallback FindRegisteredFontFileLoaderCallback(FontFileLoader loader)
+        internal FontFileLoader FindRegisteredFontFileLoaderCallback(FontFileLoader loader)
         {
             foreach (var fontFileLoaderCallback in _fontFileLoaderCallbacks)
             {
-                if (fontFileLoaderCallback.Callback == loader)
+                if (fontFileLoaderCallback == loader)
                     return fontFileLoaderCallback;
             }
             return null;
@@ -61,9 +61,7 @@ namespace SharpDX.DirectWrite
         public Factory(FactoryType factoryType)
             : base(IntPtr.Zero)
         {
-            ComObject temp;
-            DWrite.CreateFactory(factoryType, typeof(Factory).GUID, out temp);
-            NativePointer = temp.NativePointer;
+            DWrite.CreateFactory(factoryType, typeof(Factory).GUID, this);
         }
 
         /// <summary>	
@@ -77,9 +75,8 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteFactory::RegisterFontCollectionLoader([None] IDWriteFontCollectionLoader* fontCollectionLoader)</unmanaged>
         public Result RegisterFontCollectionLoader(FontCollectionLoader fontCollectionLoader)
         {
-            var callback = new FontCollectionLoaderCallback(this, fontCollectionLoader);
-            var result = this.RegisterFontCollectionLoader_(callback.NativePointer);
-            _fontCollectionLoaderCallbacks.Add(callback);
+            var result = this.RegisterFontCollectionLoader_(FontCollectionLoaderCallback.CallbackToPtr(this, fontCollectionLoader));
+            _fontCollectionLoaderCallbacks.Add(fontCollectionLoader);
             return result;
         }
 
@@ -91,22 +88,9 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteFactory::UnregisterFontCollectionLoader([None] IDWriteFontCollectionLoader* fontCollectionLoader)</unmanaged>
         public SharpDX.Result UnregisterFontCollectionLoader(FontCollectionLoader fontCollectionLoader)
         {
-            FontCollectionLoaderCallback callback = null;
-            int indexToRemove = 0;
-            for (int i = _fontCollectionLoaderCallbacks.Count - 1; i >= 0; i--)
-            {
-                if (_fontCollectionLoaderCallbacks[i].Callback == fontCollectionLoader)
-                {
-                    callback = _fontCollectionLoaderCallbacks[i];
-                    indexToRemove = i;
-                    break;
-                }
-            }
-            if (callback == null) throw new ArgumentException("This font collection loader is not registered", "fontCollectionLoader");
-
-            var result = UnregisterFontCollectionLoader_(callback.NativePointer);
-
-            _fontCollectionLoaderCallbacks.RemoveAt(indexToRemove);
+            if (!_fontCollectionLoaderCallbacks.Contains(fontCollectionLoader)) throw new ArgumentException("This font collection loader is not registered", "fontCollectionLoader");
+            var result = UnregisterFontCollectionLoader_(FontCollectionLoaderCallback.CallbackToPtr(fontCollectionLoader));
+            _fontCollectionLoaderCallbacks.Remove(fontCollectionLoader);
             return result;
         }
 
@@ -122,9 +106,8 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteFactory::RegisterFontFileLoader([None] IDWriteFontFileLoader* fontFileLoader)</unmanaged>
         public SharpDX.Result RegisterFontFileLoader(FontFileLoader fontFileLoader)
         {
-            var callback = new FontFileLoaderCallback(fontFileLoader);
-            var result = this.RegisterFontFileLoader_(callback.NativePointer);
-            _fontFileLoaderCallbacks.Add(callback);
+            var result = this.RegisterFontFileLoader_(FontFileLoaderCallback.CallbackToPtr(fontFileLoader));
+            _fontFileLoaderCallbacks.Add(fontFileLoader);
             return result;
         }
 
@@ -139,24 +122,11 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteFactory::UnregisterFontFileLoader([None] IDWriteFontFileLoader* fontFileLoader)</unmanaged>
         public SharpDX.Result UnregisterFontFileLoader(FontFileLoader fontFileLoader)
         {
-            FontFileLoaderCallback callback = null;
-            int indexToRemove = 0;
-            for (int i = _fontFileLoaderCallbacks.Count - 1; i >= 0; i--)
-            {
-                if (_fontFileLoaderCallbacks[i].Callback == fontFileLoader)
-                {
-                    callback = _fontFileLoaderCallbacks[i];
-                    indexToRemove = i;
-                    break;
-                }
-            }
-            if (callback == null) throw new ArgumentException("This font file loader is not registered", "FontFileLoader");
+            if (!_fontFileLoaderCallbacks.Contains(fontFileLoader)) throw new ArgumentException("This font file loader is not registered", "FontFileLoader");
 
-            var result = UnregisterFontFileLoader_(callback.NativePointer);
-
-            _fontFileLoaderCallbacks.RemoveAt(indexToRemove);
+            var result = UnregisterFontFileLoader_(FontFileLoaderCallback.CallbackToPtr(fontFileLoader));
+            _fontFileLoaderCallbacks.Remove(fontFileLoader);
             return result;
         }
-
     }
 }

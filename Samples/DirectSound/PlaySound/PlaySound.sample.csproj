@@ -72,9 +72,9 @@
       <Project>{26DBF35D-47A6-4741-B059-841C5441BCD6}</Project>
       <Name>SharpDX.DirectSound</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Source\SharpDX.Error\SharpDX.Error.csproj">
+    <ProjectReference Include="..\..\..\Source\SharpDX.Diagnostics\SharpDX.Diagnostics.csproj">
       <Project>{8ECEF885-63EC-4A82-A219-4AB312D1B097}</Project>
-      <Name>SharpDX.Error</Name>
+      <Name>SharpDX.Diagnostics</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Source\SharpDX\SharpDX.csproj">
       <Project>{CE5194D5-30A4-43A4-BF7A-7AC0C1988224}</Project>

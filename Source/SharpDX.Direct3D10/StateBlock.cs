@@ -35,9 +35,7 @@ namespace SharpDX.Direct3D10
         /// <unmanaged>HRESULT D3D10CreateStateBlock([None] ID3D10Device* pDevice,[None] D3D10_STATE_BLOCK_MASK* pStateBlockMask,[None] ID3D10StateBlock** ppStateBlock)</unmanaged>
         public StateBlock(Device device, StateBlockMask mask)
         {
-            StateBlock temp;
-            D3D10.CreateStateBlock(device, ref mask, out temp);
-            NativePointer = temp.NativePointer;
+            D3D10.CreateStateBlock(device, ref mask, this);
         }
     }
 }

@@ -36,9 +36,7 @@ namespace SharpDX.Direct2D1
         public WindowRenderTarget(Factory factory, RenderTargetProperties renderTargetProperties, HwndRenderTargetProperties hwndProperties)
             : base(IntPtr.Zero)
         {
-            WindowRenderTarget temp;
-            factory.CreateHwndRenderTarget(ref renderTargetProperties, ref hwndProperties, out temp);
-            NativePointer = temp.NativePointer;
+            factory.CreateHwndRenderTarget(ref renderTargetProperties, ref hwndProperties, this);
         }
     }
 }

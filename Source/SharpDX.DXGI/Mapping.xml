@@ -140,6 +140,9 @@
     
     <map method="IDXGIDevice::CreateSurface" visibility="internal" />
     <map method="IDXGIDevice::QueryResourceResidency" visibility="internal" />
+
+    <map method="IDXGIFactory::CreateSwapChain" visibility="internal" />
+    <map param="ppSwapChain" attribute="out fast"/>
     
     <map param="IDXGIFactory::CreateSoftwareAdapter::ppAdapter" return="true" />
     <map method="IDXGIFactory::EnumAdapters" name="GetAdapter" />

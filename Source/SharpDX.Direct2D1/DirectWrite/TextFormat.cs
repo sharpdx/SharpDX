@@ -95,9 +95,7 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT CreateTextFormat([In] const wchar* fontFamilyName,[None] IDWriteFontCollection* fontCollection,[None] DWRITE_FONT_WEIGHT fontWeight,[None] DWRITE_FONT_STYLE fontStyle,[None] DWRITE_FONT_STRETCH fontStretch,[None] FLOAT fontSize,[In] const wchar* localeName,[Out] IDWriteTextFormat** textFormat)</unmanaged>
         public TextFormat(Factory factory, string fontFamilyName, SharpDX.DirectWrite.FontCollection fontCollection, SharpDX.DirectWrite.FontWeight fontWeight, SharpDX.DirectWrite.FontStyle fontStyle, SharpDX.DirectWrite.FontStretch fontStretch, float fontSize, string localeName) : base(IntPtr.Zero)
         {
-            TextFormat temp;
-            factory.CreateTextFormat(fontFamilyName, fontCollection, fontWeight, fontStyle, fontStretch, fontSize, localeName, out temp);
-            NativePointer = temp.NativePointer;
+            factory.CreateTextFormat(fontFamilyName, fontCollection, fontWeight, fontStyle, fontStretch, fontSize, localeName, this);
         }
 
         /// <summary>	

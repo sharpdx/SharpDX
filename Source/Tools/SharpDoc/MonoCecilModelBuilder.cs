@@ -352,6 +352,9 @@ namespace SharpDoc
             BuildMethodSignatureParameters(method, signature);
             method.Signature = signature.ToString();
 
+            // Force update of documentation for parameters
+            method.OnDocNodeUpdate();
+
             return method;
         }
 
@@ -428,18 +431,22 @@ namespace SharpDoc
             // Handle generic instance
             var genericInstanceDef = typeDef as GenericInstanceType;
 
-            if (genericInstanceDef != null && genericInstanceDef.GenericArguments.Count > 0)
+            if (genericInstanceDef != null )
             {
-                foreach (var genericArgumentDef in genericInstanceDef.GenericArguments)
-                {
-                    var genericArgument = new NTypeReference();
-                    FillTypeReference(genericArgument, genericArgumentDef);
-                    typeReference.GenericArguments.Add(genericArgument);
-                }
+                typeReference.ElementType = GetTypeReference(genericInstanceDef.ElementType);
 
-                // Remove `number from Name
-                typeReference.Name = BuildGenericName(typeDef.Name, typeReference.GenericArguments);
-                typeReference.FullName = BuildGenericName(typeDef.FullName, typeReference.GenericArguments);
+                if (genericInstanceDef.GenericArguments.Count > 0)
+                {
+                    foreach (var genericArgumentDef in genericInstanceDef.GenericArguments)
+                    {
+                        var genericArgument = new NTypeReference();
+                        FillTypeReference(genericArgument, genericArgumentDef);
+                        typeReference.GenericArguments.Add(genericArgument);
+                    }
+                    // Remove `number from Name
+                    typeReference.Name = BuildGenericName(typeDef.Name, typeReference.GenericArguments);
+                    typeReference.FullName = BuildGenericName(typeDef.FullName, typeReference.GenericArguments);
+                }
             } else if (typeReference.GenericParameters.Count > 0)
             {
                 // If generic parameters, than rewrite the name/fullname

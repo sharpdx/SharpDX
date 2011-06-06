@@ -59,7 +59,7 @@
     <Reference Include="SharpDX.Direct2D1, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="SharpDX.Error, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SharpDX.Diagnostics, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="System" />

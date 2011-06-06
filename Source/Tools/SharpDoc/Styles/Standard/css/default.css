@@ -1,531 +1,595 @@
-﻿html, body {
-    height: 100%;
-    font-family: 'Segoe UI',Verdana,Arial;
-    font-size: 0.91em;
-    margin: 0;
-}
-
-a:link {
-    color: #1364C4;
-    text-decoration: none;
-}
-
-h4 
+﻿#pane_toggle.collapse
 {
-    color: #3F529C;
-    font-size: 1em;
-    font-weight: bold;    
+	background-image:url("../images/pane-collapse.gif");
 }
 
-.sharpdoc {
-    min-height: 100%;
-    height: 100%;
-}
-
-.sharpdoc-header
+#pane_toggle.expand
 {
-    border-bottom:1px solid #E0E0E0;
-    height: 48px;
+	background-image:url("../images/pane-expand.gif");
 }
 
-.sharpdoc-header .cell, .sharpdoc-footer .cell
+#sharpdoc-search
 {
-    padding-left: 1em;
-    padding-right: 1em;
+	margin-bottom:1em;
+	margin-right:1em;
+	overflow:hidden;
 }
 
-.sharpdoc-footer 
+#sharpdoc-search .sharpdoc-search-wrapper
 {
-    border-top: 1px solid #C0C0C0;
-    height: 32px;
-    background-image: url("../images/copyright-bg.png");    
+	width:100%;
 }
 
-
-/* SplitPane */
-.sharpdoc .splitpane {
-
-}
-
-.sharpdoc .table_content
+#sharpdoc-search-opt
 {
-    border-collapse: collapse;
-    height: 100%;
+	opacity:.5;
 }
 
-.sharpdoc #pane_toc        
+#sharpdoc-search-opt:hover
 {
-    overflow: hidden;
-    white-space: nowrap; 
-    vertical-align: top; 
-    padding-top: 1em;
-    padding-bottom: 1em;
+	opacity:1px;
+}
+
+#sharpdoc-search-str
+{
+	background:transparent url(../images/search-icon.png) 99% 4px no-repeat !important;
+	border:1px solid #E0E0E0;
+	border-bottom-left-radius:8px;
+	border-bottom-right-radius:8px;
+	border-top-left-radius:8px;
+	border-top-right-radius:8px;
+	color:#8A8A8A;
+	font-size:1em;
+	font-style:italic;
+	outline:none;
+	padding:4px;
+	width:95%;
+}
+
+#sharpdoc-search-str:focus
+{
+	border:1px solid #303030;
+	color:#303030;
+	font-style:normal;
+}
+
+#sharpdoc-search-str:hover
+{
+	border:1px solid #8A8A8A;
+	color:#8A8A8A;
+	font-style:normal;
+}
+
+.sdoc-parameter
+{
+	font-style:italic;
+}
+
+.sdoc-subheading
+{
+	color:#3F529C;
+	font-size:1em;
+	font-weight:bold;
+}
+
+.sharpdoc
+{
+	height:100%;
+	min-height:100%;
+}
+
+.sharpdoc #pane_toc
+{
+	overflow:hidden;
+	padding-bottom:1em;
+	padding-top:1em;
+	vertical-align:top;
+	white-space:nowrap;
+}
+
+.sharpdoc #pane_toggle
+{
+	background-repeat:no-repeat;
+	cursor:pointer;
+	float:left;
+	height:23px;
+	position:relative;
+	right:1px;
+	top:43px;
+	width:7px;
+	z-index:300;
 }
 
 .sharpdoc #toc_content
 {
-    width: 250px;  
-    padding-left: 1em;
-}
- 
-.sharpdoc .pane_resizer {
-    width: 8px;
-    border-left:1px dotted #666666;
-    cursor: col-resize;
-    vertical-align: top;
+	padding-left:1em;
+	width:250px;
 }
 
-.sharpdoc .pane_content
+.sharpdoc .content .section .members
 {
-    width: 100%;
-    padding: 0 13px 13px 0px;
-    vertical-align: top;
+	margin:0;
+	padding:0;
+	width:auto;
 }
- 
- 
-.sharpdoc #pane_toggle 
+
+.sharpdoc .content .section .members div.icon
 {
-    position: relative;
-    float: left;
-    top: 20px;
-    cursor: pointer;
-    right: 1px;
-    width: 7px;
-    height: 23px;
-    z-index:300;
-    background-repeat: no-repeat;
-} 
- 
-#pane_toggle.collapse {
-    background-image: url("../images/pane-collapse.gif");
-} 
-
-#pane_toggle.expand {
-    background-image: url("../images/pane-expand.gif");
+	background-repeat:no-repeat;
+	float:left;
+	height:16px;
+	margin:0;
+	padding-left:4px;
+	padding-right:4px;
+	width:16px;
 }
 
-/* toc */
-.sharpdoc .toc
+.sharpdoc .content .section .members div.icon.privclass
 {
+	background-image:url("../images/privclass.gif");
 }
 
-.sharpdoc .toc .icon
+.sharpdoc .content .section .members div.icon.privdelegate
 {
-    /*float: left;*/
-    background-repeat: no-repeat;
-    display: inline;
+	background-image:url("../images/privdelegate.gif");
 }
 
-
-/* toc */
-.sharpdoc .toc.top .icon
+.sharpdoc .content .section .members div.icon.privenum
 {
-    width: 3px;
-    height: 3px;
-    top: 6px;
-    padding-right: 10px;
-    background-image: url("../images/toc-top.gif");   
+	background-image:url("../images/privenum.gif");
 }
 
-.sharpdoc .toc.up .icon
+.sharpdoc .content .section .members div.icon.privevent
 {
-    width: 5px;
-    height: 9px;
-    top: 4px;
-    padding-right: 10px;
-    background-image: url("../images/toc-up.gif");   
-    background-repeat: no-repeat;
+	background-image:url("../images/privevent.gif");
 }
 
-.sharpdoc .toc.child .icon
+.sharpdoc .content .section .members div.icon.privfield
 {
-    width: 13px;
-    height: 9px;
-    padding-right: 15px;
-    background-image: url("../images/toc-child.gif");   
-    background-repeat: no-repeat;
+	background-image:url("../images/privfield.gif");
 }
 
-.sharpdoc .toc.level0
+.sharpdoc .content .section .members div.icon.privinterface
 {
-    padding-left: 2px;
+	background-image:url("../images/privinterface.gif");
 }
 
-.sharpdoc .toc.level1
+.sharpdoc .content .section .members div.icon.privmethod
 {
-    padding-left: 12px;
+	background-image:url("../images/privmethod.gif");
 }
 
-.sharpdoc .toc.level2
+.sharpdoc .content .section .members div.icon.privoperator
 {
-    padding-left: 22px;
+	background-image:url("../images/privoperator.gif");
 }
 
-.sharpdoc .toc.level3
+.sharpdoc .content .section .members div.icon.privproperty
 {
-    padding-left: 32px;
+	background-image:url("../images/privproperty.gif");
 }
 
-.sharpdoc .toc.level4
+.sharpdoc .content .section .members div.icon.privstructure
 {
-    padding-left: 42px;
+	background-image:url("../images/privstructure.gif");
 }
 
-.sharpdoc a.highlight 
+.sharpdoc .content .section .members div.icon.protclass
 {
-    color: #E66A38;
-    font-weight: bold;    
+	background-image:url("../images/protclass.gif");
 }
 
-
-/* content */
-.sharpdoc .content 
+.sharpdoc .content .section .members div.icon.protdelegate
 {
+	background-image:url("../images/protdelegate.gif");
 }
 
-.sharpdoc .top-title 
+.sharpdoc .content .section .members div.icon.protenum
 {
-    color: #3f529c;
-    font-size: 1.77em;
-    font-weight: bold;
-    left: -10px;    
+	background-image:url("../images/protenum.gif");
 }
 
-/*.sharpdoc .content .section a.title
+.sharpdoc .content .section .members div.icon.protevent
 {
-    outline: invert none medium;   
-    text-decoration: none;    
-}*/
-.sharpdoc .content .section div.title
-{  
-    margin-bottom: 19px;
-    margin-top: 19px;
+	background-image:url("../images/protevent.gif");
 }
 
-.sharpdoc .content .section a.title
-{  
-    float: left;
-    text-decoration: none;    
-    outline: invert none medium;   
-}
-
-.sharpdoc .content .section div.hr
-{  
-    padding-top: 15px;
-}
-
-.sharpdoc .content .section hr
-{  
-    color: #e5e5e5;
-    border-bottom: #E5E5E5 1px solid;
-    border-top: none;
-    border-right: none;    
-    margin-left: 4px;
-}
-
-/* title section */
-.sharpdoc .content .section span.title 
+.sharpdoc .content .section .members div.icon.protfield
 {
-    padding-top: 15px;
-    padding-left: 6px;
-    font-size: 1.53em;
-    font-weight: bold;    
-    color: #3f529c;
-    word-wrap: break-word;
-    word-break: break-all;
+	background-image:url("../images/protfield.gif");
 }
 
-/* members */
-.sharpdoc .content .section .members {
-	width: auto;
-	padding: 0;
-	margin: 0;
-}
-
-/* for properties icon */
-.sharpdoc .content .section div.toggle_icon 
+.sharpdoc .content .section .members div.icon.protinterface
 {
-    width: 9px;
-    height: 12px;
-    margin-top: 9px;
-    background-repeat: no-repeat;
-    float: left; 
+	background-image:url("../images/protinterface.gif");
 }
 
-/* for properties icon */
-.sharpdoc .content .section div.toggle_icon.in {
-    background-image: url("../images/slider-in.png");
-}
-
-/* for properties icon */
-.sharpdoc .content .section div.toggle_icon.out {
-    background-image: url("../images/slider-out.png");
-}
-
-/* members icon */
-.sharpdoc .content .section .members div.icon {
-    background-repeat: no-repeat;
-    float: left;
-    width: 16px; 
-    height: 16px;
-    margin: 0;
-    padding-left: 4px;
-    padding-right: 4px;
-}
-
-/* for class icon */
-.sharpdoc .content .section .members div.icon.pubclass {
-    background-image: url("../images/pubclass.gif");
-}
-
-.sharpdoc .content .section .members div.icon.protclass {
-    background-image: url("../images/protclass.gif");
-}
-
-.sharpdoc .content .section .members div.icon.privclass {
-    background-image: url("../images/privclass.gif");
-}
-
-/* for interface icon */
-.sharpdoc .content .section .members div.icon.pubinterface {
-    background-image: url("../images/pubinterface.gif");
-}
-
-.sharpdoc .content .section .members div.icon.protinterface {
-    background-image: url("../images/protinterface.gif");
-}
-
-.sharpdoc .content .section .members div.icon.privinterface {
-    background-image: url("../images/privinterface.gif");
-}
-
-/* for structure icon */
-.sharpdoc .content .section .members div.icon.pubstructure {
-    background-image: url("../images/pubstructure.gif");
-}
-
-.sharpdoc .content .section .members div.icon.protstructure {
-    background-image: url("../images/protstructure.gif");
-}
-
-.sharpdoc .content .section .members div.icon.privstructure {
-    background-image: url("../images/privstructure.gif");
-}
-
-/* for enum icon */
-.sharpdoc .content .section .members div.icon.pubenum {
-    background-image: url("../images/pubenum.gif");
-}
-
-.sharpdoc .content .section .members div.icon.protenum {
-    background-image: url("../images/protenum.gif");
-}
-
-.sharpdoc .content .section .members div.icon.privenum {
-    background-image: url("../images/privenum.gif");
-}
-
-/* for properties icon */
-.sharpdoc .content .section .members div.icon.pubproperty {
-    background-image: url("../images/pubproperty.gif");
-}
-
-.sharpdoc .content .section .members div.icon.protproperty {
-    background-image: url("../images/protproperty.gif");
-}
-
-.sharpdoc .content .section .members div.icon.privproperty {
-    background-image: url("../images/privproperty.gif");
-}
-
-/* for methods icon */
-.sharpdoc .content .section .members div.icon.pubmethod {
-    background-image: url("../images/pubmethod.gif");
-}
-
-.sharpdoc .content .section .members div.icon.protmethod {
-    background-image: url("../images/protmethod.gif");
-}
-
-.sharpdoc .content .section .members div.icon.privmethod {
-    background-image: url("../images/privmethod.gif");
-}
-
-/* for fields icon */
-.sharpdoc .content .section .members div.icon.pubfield {
-    background-image: url("../images/pubfield.gif");
-}
-
-.sharpdoc .content .section .members div.icon.protfield {
-    background-image: url("../images/protfield.gif");
-}
-
-.sharpdoc .content .section .members div.icon.privfield {
-    background-image: url("../images/privfield.gif");
-}
-
-/* for events icon */
-.sharpdoc .content .section .members div.icon.pubevent {
-    background-image: url("../images/pubevent.gif");
-}
-
-.sharpdoc .content .section .members div.icon.protevent {
-    background-image: url("../images/protevent.gif");
-}
-
-.sharpdoc .content .section .members div.icon.privevent {
-    background-image: url("../images/privevent.gif");
-}
-
-/* for operators icon */
-.sharpdoc .content .section .members div.icon.puboperator {
-    background-image: url("../images/puboperator.gif");
-}
-
-.sharpdoc .content .section .members div.icon.protoperator {
-    background-image: url("../images/protoperator.gif");
-}
-
-.sharpdoc .content .section .members div.icon.privoperator {
-    background-image: url("../images/privoperator.gif");
-}
-
-/* for delegates icon */
-.sharpdoc .content .section .members div.icon.pubdelegate {
-    background-image: url("../images/pubdelegate.gif");
-}
-
-.sharpdoc .content .section .members div.icon.protdelegate {
-    background-image: url("../images/protdelegate.gif");
-}
-
-.sharpdoc .content .section .members div.icon.privdelegate {
-    background-image: url("../images/privdelegate.gif");
-}
-
-/* static methods */
-.sharpdoc .content .section .members div.icon.static {
-    background-image: url("../images/static.gif");
-}
-
-.sharpdoc .content .section div.block {
-    padding-left: 15px;
-    display: block;
-    clear: both;
-}
-
-.sharpdoc .content .section table.members
+.sharpdoc .content .section .members div.icon.protmethod
 {
-    width: 100%;
-	border-width: 1px;
-	border-color: #bbb;
-	border-style: solid;
-	border-collapse: collapse;
+	background-image:url("../images/protmethod.gif");
 }
 
-.sharpdoc .content .section .members tr th
+.sharpdoc .content .section .members div.icon.protoperator
 {
+	background-image:url("../images/protoperator.gif");
+}
+
+.sharpdoc .content .section .members div.icon.protproperty
+{
+	background-image:url("../images/protproperty.gif");
+}
+
+.sharpdoc .content .section .members div.icon.protstructure
+{
+	background-image:url("../images/protstructure.gif");
+}
+
+.sharpdoc .content .section .members div.icon.pubclass
+{
+	background-image:url("../images/pubclass.gif");
+}
+
+.sharpdoc .content .section .members div.icon.pubdelegate
+{
+	background-image:url("../images/pubdelegate.gif");
+}
+
+.sharpdoc .content .section .members div.icon.pubenum
+{
+	background-image:url("../images/pubenum.gif");
+}
+
+.sharpdoc .content .section .members div.icon.pubevent
+{
+	background-image:url("../images/pubevent.gif");
+}
+
+.sharpdoc .content .section .members div.icon.pubfield
+{
+	background-image:url("../images/pubfield.gif");
+}
+
+.sharpdoc .content .section .members div.icon.pubinterface
+{
+	background-image:url("../images/pubinterface.gif");
+}
+
+.sharpdoc .content .section .members div.icon.pubmethod
+{
+	background-image:url("../images/pubmethod.gif");
+}
+
+.sharpdoc .content .section .members div.icon.puboperator
+{
+	background-image:url("../images/puboperator.gif");
+}
+
+.sharpdoc .content .section .members div.icon.pubproperty
+{
+	background-image:url("../images/pubproperty.gif");
+}
+
+.sharpdoc .content .section .members div.icon.pubstructure
+{
+	background-image:url("../images/pubstructure.gif");
+}
+
+.sharpdoc .content .section .members div.icon.static
+{
+	background-image:url("../images/static.gif");
+}
+
+.sharpdoc .content .section .members td
+{
+	border-color:#bbb;
+	border-style:solid;
+	border-width:1px;
+	font-size:1.077em;
+	font-style:normal;
+	font-weight:normal;
+	line-height:140%;
+	margin:1px;
+	padding:4px;
+}
+
+.sharpdoc .content .section .members td.icon-col,td.name-col,td.desc-col
+{
+	border-bottom:1px solid #C1DAD7;
+	border-right:1px solid #C1DAD7;
 }
 
 .sharpdoc .content .section .members th
 {
-	border-width: 1px;
-	border-color: #bbb;
-	border-style: solid;
-    text-align: left;
-    height: 21px;
-	background: url(../images/table-header-bg.png) repeat-x;
-	padding: 4px;	
-    font-size: 1.077em;
-    font-style: normal;
-    font-weight: normal;
+	background:url(../images/table-header-bg.png) repeat-x;
+	border-color:#bbb;
+	border-style:solid;
+	border-width:1px;
+	font-size:1.077em;
+	font-style:normal;
+	font-weight:normal;
+	height:21px;
+	padding:4px;
+	text-align:left;
 }
-.sharpdoc .content .section .members td
+
+.sharpdoc .content .section .members th.icon-col,td.icon-col
 {
-    line-height: 140%;
-	border-width: 1px;
-	border-color: #bbb;
-	border-style: solid;
-	padding: 4px;
-	margin: 1px;
-    font-size: 1.077em;
-    font-style: normal;
-    font-weight: normal;
+	width:55px;
 }
 
-.sharpdoc .content .section .members th.icon-col,td.icon-col {
-    width: 55px;
+.sharpdoc .content .section .members th.name-col
+{
+	width:15%;
 }
 
-.sharpdoc .content .section .members th.name-col {
-    width: 15%;
+.sharpdoc .content .section a.title
+{
+	float:left;
+	outline:invert none medium;
+	text-decoration:none;
 }
 
-.sharpdoc .content .section .members td.icon-col,td.name-col,td.desc-col {
-	border-right: 1px solid #C1DAD7;
-	border-bottom: 1px solid #C1DAD7;
+.sharpdoc .content .section div.block
+{
+	clear:both;
+	display:block;
+	padding-left:15px;
 }
 
-.tabs	{
-	list-style: none;
-	border-bottom: 1px solid #DDD;
-	height: 20px;
-	margin: 0;
-	padding: 0;
+.sharpdoc .content .section div.title
+{
+	margin-bottom:19px;
+	margin-top:19px;
 }
 
-.tabs LI	{
-	cursor: pointer;
-	float: left;
-	font: bold 1em Helvetica, Arial, sans-serif;
-	margin: 0 1px 0 0;
-	text-align: center;
+.sharpdoc .content .section div.toggle_icon
+{
+	background-repeat:no-repeat;
+	float:left;
+	height:12px;
+	margin-top:9px;
+	width:9px;
 }
 
-.tabs LI.tab	{
-	background: #EFF5FF;
-	background: -moz-linear-gradient(top, #FDFDFD, #EFF5FF);
-	background: -webkit-gradient(linear, left top, left bottom, from(#FDFDFD), to(#EFF5FF));
-	border: 1px solid #CCC;
-	border-bottom: none;
-	color: #1364C4;
-	filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#FDFDFD', EndColorStr='#EFF5FF');
-	padding: 2px 0 0 0;
-	height: 18px;
-	width: 32px;
-	-moz-border-radius-topleft: 4px;
-	-moz-border-radius-topright: 4px;
-	border-top-left-radius: 4px;
-	border-top-right-radius: 4px;
+.sharpdoc .content .section div.toggle_icon.in
+{
+	background-image:url("../images/slider-in.png");
 }
 
-.tabs LI.selected	{
-    color: #E66A38;
-    font-weight: bold;    
-	height: 19px;
+.sharpdoc .content .section div.toggle_icon.out
+{
+	background-image:url("../images/slider-out.png");
 }
 
-.tabs LI.selected.code {
-	background: #FFF;
-	background: -moz-linear-gradient(top, #FDFDFD, #FFFFFF);
-	background: -webkit-gradient(linear, left top, left bottom, from(#FDFDFD), to(#FFFFFF));
-	filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#FDFDFD', EndColorStr='#FFFFFF');
+.sharpdoc .content .section span.title
+{
+	color:#3f529c;
+	font-size:1.53em;
+	font-weight:bold;
+	padding-left:6px;
+	padding-top:15px;
+	word-break:break-all;
+	word-wrap:break-word;
 }
 
-.tabs:AFTER	{
-	clear: both;
-	content: ".";
-	display: block;
-	height: 0;
-	visibility: hidden;
+.sharpdoc .content .section table.members
+{
+	border-collapse:collapse;
+	border-color:#bbb;
+	border-style:solid;
+	border-width:1px;
+	width:100%;
 }
 
-.tabcontent	{	
-	display: none;
-	padding: 1em;
-	border: 1px solid #CCC;
+.sharpdoc .pane_content
+{
+	padding:0 13px 13px 0;
+	vertical-align:top;
+	width:100%;
 }
 
-.tabcontent.selected	{
-	display: block;
+.sharpdoc .pane_resizer
+{
+	border-left:1px dotted #666666;
+	cursor:col-resize;
+	vertical-align:top;
+	width:8px;
+}
+
+.sharpdoc .table_content
+{
+	border-collapse:collapse;
+	height:100%;
+}
+
+.sharpdoc .toc .icon
+{
+	background-repeat:no-repeat;
+	display:inline;
+}
+
+.sharpdoc .toc.child .icon
+{
+	background-image:url("../images/toc-child.gif");
+	background-repeat:no-repeat;
+	height:9px;
+	padding-right:15px;
+	width:13px;
+}
+
+.sharpdoc .toc.level0
+{
+	padding-left:2px;
+}
+
+.sharpdoc .toc.level1
+{
+	padding-left:12px;
+}
+
+.sharpdoc .toc.level2
+{
+	padding-left:22px;
+}
+
+.sharpdoc .toc.level3
+{
+	padding-left:32px;
+}
+
+.sharpdoc .toc.level4
+{
+	padding-left:42px;
+}
+
+.sharpdoc .toc.top .icon
+{
+	background-image:url("../images/toc-top.gif");
+	height:3px;
+	padding-right:10px;
+	top:6px;
+	width:3px;
+}
+
+.sharpdoc .toc.up .icon
+{
+	background-image:url("../images/toc-up.gif");
+	background-repeat:no-repeat;
+	height:9px;
+	padding-right:10px;
+	top:4px;
+	width:5px;
+}
+
+.sharpdoc .top-title,.sharpdoc .content-title
+{
+	color:#3f529c;
+	font-size:1.77em;
+	font-weight:bold;
+	left:-10px;
+}
+
+.sharpdoc a.highlight
+{
+	color:#E66A38;
+	font-weight:bold;
+}
+
+.sharpdoc div.hr
+{
+	padding-top:15px;
+}
+
+.sharpdoc hr
+{
+	border-bottom:#E5E5E5 1px solid;
+	border-right:none;
+	border-top:none;
+	color:#e5e5e5;
+	margin-left:4px;
+}
+
+.sharpdoc-footer
+{
+	background-image:url("../images/copyright-bg.png");
+	border-top:1px solid #C0C0C0;
+	height:32px;
+}
+
+.sharpdoc-header
+{
+	border-bottom:1px solid #E0E0E0;
+	height:48px;
+	vertical-align:middle;
+}
+
+.sharpdoc-header .cell,.sharpdoc-footer .cell
+{
+	padding-left:1em;
+	padding-right:1em;
+}
+
+.tabcontent
+{
+	border:1px solid #CCC;
+	display:none;
+	padding:1em;
+}
+
+.tabcontent.selected
+{
+	display:block;
+}
+
+.tabs
+{
+	border-bottom:1px solid #DDD;
+	height:20px;
+	list-style:none;
+	margin:0;
+	padding:0;
+}
+
+.tabs LI
+{
+	cursor:pointer;
+	float:left;
+	font:bold 1em Helvetica, Arial, sans-serif;
+	margin:0 1px 0 0;
+	text-align:center;
+}
+
+.tabs LI.selected
+{
+	color:#E66A38;
+	font-weight:bold;
+	height:19px;
+}
+
+.tabs LI.selected.code
+{
+	background:#FFF;
+}
+
+.tabs LI.tab
+{
+	-moz-border-radius-topleft:4px;
+	-moz-border-radius-topright:4px;
+	background:#EFF5FF;
+	border:1px solid #CCC;
+	border-bottom:none;
+	border-top-left-radius:4px;
+	border-top-right-radius:4px;
+	color:#1364C4;
+	height:18px;
+	padding:2px 0 0;
+	width:32px;
+}
+
+.tabs:AFTER
+{
+	clear:both;
+	content:".";
+	display:block;
+	height:0;
+	visibility:hidden;
+}
+
+a:link
+{
+	color:#1364C4;
+	text-decoration:none;
+}
+
+h1.content-title:hover
+{
+	cursor:pointer;
+}
+
+html,body
+{
+	font-family:'Segoe UI',Verdana,Arial;
+	font-size:0.91em;
+	height:100%;
+	margin:0;
 }

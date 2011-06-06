@@ -133,13 +133,13 @@ namespace TextDialog
             {
                 if (CurrentTextFormat != null)
                 {
-                    CurrentTextFormat.Release();
+                    CurrentTextFormat.Dispose();
                     CurrentTextFormat = null;
                 }
 
                 if (CurrentTextLayout != null)
                 {
-                    CurrentTextLayout.Release();
+                    CurrentTextLayout.Dispose();
                     CurrentTextLayout = null;
                 }
 
@@ -152,7 +152,7 @@ namespace TextDialog
                 var typo = new Typography(FactoryDWrite);
                 typo.AddFontFeature(new FontFeature(FontFeatureTag.StylisticSet7, 1));
                 CurrentTextLayout.SetTypography(typo, CurrentTextRange);
-                typo.Release();
+                typo.Dispose();
 
                 UpdateBold();
                 UpdateItalic();

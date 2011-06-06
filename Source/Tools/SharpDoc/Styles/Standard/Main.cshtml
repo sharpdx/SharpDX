@@ -26,71 +26,34 @@
 @using System.Text;
 @using SharpCore.Logging;
 @model SharpDoc.TemplateContext
-@Include("TagResolver", @Model)    
-@Include("LinkResolver", @Model)
-@Include("Setup", @Model)     
-@functions {
-    /// <summary>
-    /// Write all topics and sub topics
-    /// </summary>
-    /// <param name="topics"></param>
-    public void WriteTopic(IEnumerable<NTopic> topics) {
-        foreach (var topic in topics)
-        {
-            Model.Topic = topic;
-            Model.WriteToFile("html\\" + topic.NormalizedId + ".htm", Parse("Topic"));
-            WriteTopic(topic.SubTopics);
-        }
-    }
-}
-
 @{    
+    // Generates Prolog
+    Include("MainBegin");
+    
+    // Installs the Tag Resolver
+    Include("TagResolver");
+    
+    // Installs the Link Resolver
+    Include("LinkResolver");
+    
+    // Defines default parameters
+    Include("Param");
+
+    // Copy directories
     Model.CopyDirectoryContent("css");
     Model.CopyDirectoryContent("js");
     Model.CopyDirectoryContent("images");
     Model.CopyDirectoryContent("syntaxhighlighter");
-
+    
     // Write root index.html (which is just a redirect)
     Model.WriteToFile("index" + Param.FileExt, Parse("Root"));
-
-    // Write all topics
-    WriteTopic(Model.Topics);
-    Model.Topic = null;
-    
-    // Write a link to the root library    
-    Model.WriteToFile("html\\ClassLibrary" + Param.FileExt, Parse("Library"));
-
-    foreach (var assembly in Model.Assemblies)
-    {
-        Model.Assembly = assembly;
-        Model.Namespace = null;
-        Model.Type = null;
-       
-        Logger.Message("Generate documentation for assembly [{0}]", assembly.Name);
-
-        Model.WriteToFile("html\\" + assembly.NormalizedId + Param.FileExt, Parse("Assembly"));
         
-        foreach (var @namespace in assembly.Namespaces)
-        {
-            Model.Namespace = @namespace;
-            Model.Type = null;
-
-            Model.WriteToFile("html\\" + @namespace.NormalizedId + Param.FileExt, Parse("Namespace"));
-
-            foreach (var type in @namespace.Types)
-            {
-                Model.Type = type;
-                Model.WriteToFile("html\\" + @type.NormalizedId + Param.FileExt, Parse("Type"));
-
-                foreach (var member in type.Members)
-                {
-                    Model.Member = member;
-                    Model.WriteToFile("html\\" + @member.NormalizedId + Param.FileExt, Parse("Member"));
-                }
-                Model.Member = null;
-                Model.Type = null;
-            }
-        }
-    }    
+    // Generates topics
+    Include("MainTopic");
+    
+    // Generates class library (if any)
+    Include("MainClassLibrary");
+    
+    // Generates Epilog
+    Include("MainEnd");    
 }
-

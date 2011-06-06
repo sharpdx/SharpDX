@@ -1012,6 +1012,7 @@
     <map method="IDirectInputDevice8W::Initialize" visibility="internal" />
     <map method="IDirectInputDevice8W::RunControlPanel" visibility="internal" />
     <map method="IDirectInputDevice8W::CreateEffect" visibility="internal" />
+    <map param="IDirectInputDevice8W::CreateEffect::arg2" attribute="out fast"/>
     <map method="IDirectInputDevice8W::GetForceFeedbackState" visibility="internal" />
     <map method="IDirectInputDevice8W::SendForceFeedbackCommand" visibility="internal" />
 
@@ -1045,7 +1046,7 @@
     <remove function="joyConfigChanged" />    
     <remove function="ShowJoyCPL" />
 
-    <map function="DirectInput.*" dll="dinput8.dll" group="SharpDX.DirectInput.DInput" />
+    <map function="DirectInput.*" dll="dinput8.dll" group="SharpDX.DirectInput.DInput" />   
     <map param="DirectInput8Create::ppvOut" attribute="out"/>
 
     <context-clear />

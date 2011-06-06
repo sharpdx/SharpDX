@@ -31,9 +31,7 @@ namespace SharpDX.XAPO.Fx
         /// </summary>
         public MasteringLimiter() : base(IntPtr.Zero)
         {
-            ComObject comObject;
-            XAPOFx.CreateFX(XAPOFx.CLSID_FXMasteringLimiter, out comObject);
-            NativePointer = comObject.NativePointer;
+            XAPOFx.CreateFX(XAPOFx.CLSID_FXMasteringLimiter, this);
         }
     }
 }

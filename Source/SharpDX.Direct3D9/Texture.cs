@@ -26,20 +26,16 @@ namespace SharpDX.Direct3D9
     {
         public Texture(Device device, int width, int height, int levelCount, Usage usage, Format format, Pool pool) : base(IntPtr.Zero)
         {
-            Texture temp;
-            device.CreateTexture(width, height, levelCount, (int)usage, format, pool, out temp, IntPtr.Zero);
-            NativePointer = temp.NativePointer;
+            device.CreateTexture(width, height, levelCount, (int)usage, format, pool, this, IntPtr.Zero);
         }
         
         public Texture(Device device, int width, int height, int levelCount, Usage usage, Format format, Pool pool, ref IntPtr sharedHandle) : base(IntPtr.Zero)
         {
             unsafe
             {
-                Texture temp;
                 // TODO, fix param shraredHandle
                 fixed (void* pSharedHandle = &sharedHandle)
-                    device.CreateTexture(width, height, levelCount, (int)usage, format, pool, out temp, new IntPtr(pSharedHandle));
-                NativePointer = temp.NativePointer;
+                    device.CreateTexture(width, height, levelCount, (int)usage, format, pool, this, new IntPtr(pSharedHandle));
             }
         }
     }

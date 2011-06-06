@@ -26,7 +26,7 @@ namespace CustomFont
     /// <summary>
     /// This FontFileStream implem is reading data from a <see cref="DataStream"/>.
     /// </summary>
-    public class ResourceFontFileStream : FontFileStream
+    public class ResourceFontFileStream : CallbackBase, FontFileStream
     {
         private readonly DataStream _stream;
 

@@ -32,9 +32,7 @@ namespace SharpDX.Direct3D10
         public DepthStencilView(Device device, Resource resource)
             : base(IntPtr.Zero)
         {
-            DepthStencilView view;
-            device.CreateDepthStencilView(resource, null, out view);
-            NativePointer = view.NativePointer;
+            device.CreateDepthStencilView(resource, null, this);
         }
 
         /// <summary>
@@ -47,9 +45,7 @@ namespace SharpDX.Direct3D10
         public DepthStencilView(Device device, Resource resource, DepthStencilViewDescription description)
             : base(IntPtr.Zero)
         {
-            DepthStencilView view;
-            device.CreateDepthStencilView(resource, description, out view);
-            NativePointer = view.NativePointer;
+            device.CreateDepthStencilView(resource, description, this);
         }
     }
 }

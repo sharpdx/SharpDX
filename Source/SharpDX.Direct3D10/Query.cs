@@ -32,9 +32,7 @@ namespace SharpDX.Direct3D10
         public Query(Device device, QueryDescription description)
             : base(IntPtr.Zero)
         {
-            Query temp;
-            device.CreateQuery(description, out temp);
-            NativePointer = temp.NativePointer;
+            device.CreateQuery(description, this);
         }
     }
 }

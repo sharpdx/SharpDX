@@ -36,9 +36,7 @@ namespace SharpDX.Direct3D10
         /// <unmanaged>HRESULT D3DX10CreateMesh([None] ID3D10Device* pDevice,[In, Buffer] const D3D10_INPUT_ELEMENT_DESC* pDeclaration,[None] int DeclCount,[None] const char* pPositionSemantic,[None] int VertexCount,[None] int FaceCount,[None] int Options,[None] ID3DX10Mesh** ppMesh)</unmanaged>
         public Mesh(Device device, InputElement[] elements, string positionElement, int vertexCount, int faceCount, MeshFlags flags)
         {
-            Mesh mesh;
-            D3DX10.CreateMesh(device, elements, elements.Length, positionElement, vertexCount, faceCount, (int) flags, out mesh);
-            NativePointer = mesh.NativePointer;
+            D3DX10.CreateMesh(device, elements, elements.Length, positionElement, vertexCount, faceCount, (int) flags, this);
         }
 
         /// <summary>	
@@ -147,14 +145,14 @@ namespace SharpDX.Direct3D10
                     result = Optimize((int)flags, faceRemap, new IntPtr(&blobPtr));
                     dataStream = new DataStream(new Blob(blobPtr));
                     vertexRemap = dataStream.ReadRange<int>(VertexCount);
-                    dataStream.Release();
+                    dataStream.Dispose();
                 }
                 catch (Exception)
                 {
                     faceRemap = null;
                     vertexRemap = null;
                     if (dataStream!=null)
-                        dataStream.Release();
+                        dataStream.Dispose();
                     throw;
                 }
             }

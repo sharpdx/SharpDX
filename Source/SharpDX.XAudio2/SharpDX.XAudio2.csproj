@@ -53,6 +53,7 @@
     <Compile Include="EffectDescriptor.cs" />
     <Compile Include="AudioBuffer.cs" />
     <Compile Include="EngineCallback.cs" />
+    <Compile Include="EngineCallbackImpl.cs" />
     <Compile Include="ErrorEventArgs.cs" />
     <Compile Include="Fx\XAudio2FxContants.cs" />
     <Compile Include="Generated\Enumerations.cs" />

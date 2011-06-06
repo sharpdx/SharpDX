@@ -25,7 +25,7 @@
 @using SharpDoc.Model
 @model SharpDoc.TemplateContext
 @Import("Section")
-<h1 id="#top" class="top-title">@Model.ClassLibraryName</h1>       
+<h1 id="#top" class="content-title">@Model.Topic.Name</h1>       
 <div class="summary"><p>List of assemblies inside this library.</p></div>
 <div class="members">
     @Helpers.Section.Dump("Assemblies", @Model.Assemblies, false)

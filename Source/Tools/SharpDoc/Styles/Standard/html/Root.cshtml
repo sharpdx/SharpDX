@@ -26,17 +26,18 @@
 @using SharpDoc.Model
 <html>
     <head>
-        <title>@Model.ClassLibraryName</title>
+        <title>@Param.DocumentationTitle</title>
+        @if (Model.RootTopic != null)
+        {
         <script type="text/javascript" language="JavaScript">
-            @if (Model.Topics.Count > 0)
-            {
-                WriteLiteral("window.location = \"html/" + Model.Topics[0].NormalizedId + ".htm\";");
-            }
-            else
-            {
-                WriteLiteral("window.location = \"html/ClassLibrary.htm\";");
-            }
+            window.location = "html/@Model.RootTopic.NormalizedId@Param.FileExt";
         </script>
+        }
     </head>
-    <body></body>
+    <body>
+        @if (Model.RootTopic == null)
+        {
+            <p>No topics generated</p>
+        }    
+    </body>
 </html>

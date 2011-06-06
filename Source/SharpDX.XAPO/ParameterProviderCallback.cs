@@ -27,25 +27,20 @@ namespace SharpDX.XAPO
     /// </summary>
     /// <unmanaged>IXAPOParameters</unmanaged>
     [Guid("a90bc001-e897-e897-55e4-9e4700000001")]
-    internal class ParameterProviderCallback : ComObjectCallback
+    internal class ParameterProviderCallback : ComObjectCallbackNative
     {
-        private readonly ParameterProvider Callback;
+        private ParameterProvider Callback;
 
-        internal ParameterProviderCallback(ParameterProvider callback)
-            : base(callback, 2)
+        public override void Attach<T>(T callback)
         {
-            unsafe
-            {
-                Callback = callback;
-                AddMethod(new GetSetParametersDelegate(SetParametersImpl));
-                AddMethod(new GetSetParametersDelegate(GetParameters));
-            }
+            Attach(callback, 2);
+            Callback = (ParameterProvider)callback;
+            AddMethod(new GetSetParametersDelegate(SetParametersImpl));
+            AddMethod(new GetSetParametersDelegate(GetParameters));
         }
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate void GetSetParametersDelegate(IntPtr thisObject, IntPtr paramPointer, int paramSize);
-
-
         /// <summary>	
         /// Sets effect-specific parameters.	
         /// </summary>	

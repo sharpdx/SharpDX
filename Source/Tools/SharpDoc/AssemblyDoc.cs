@@ -22,7 +22,7 @@ using System;
 namespace SharpDoc
 {
     /// <summary>
-    /// NDocx is a tool to generate documentation for .Net assemblies. <a href="http://sharpdx.org">Go to SharpDX!</a>.
+    /// SharpDoc is a tool to generate documentation for .Net assemblies. <a href="http://sharpdx.org">Go to SharpDX!</a>.
     /// </summary>
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal partial class AssemblyDoc

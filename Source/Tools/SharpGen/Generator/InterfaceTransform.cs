@@ -36,6 +36,8 @@ namespace SharpGen.Generator
     {
         private readonly Dictionary<Regex, InnerInterfaceMethod> _mapMoveMethodToInnerInterface = new Dictionary<Regex, InnerInterfaceMethod>();
         private readonly CsTypeBase DefaultInterfaceCppObject = new CsInterface { Name = Global.Name + ".CppObject" };
+        private readonly CsTypeBase DefaultCallbackable = new CsInterface { Name = Global.Name + ".ICallbackable" };
+        private readonly CsTypeBase DefaultComObjectCallback = new CsInterface { Name = Global.Name + ".ComObjectCallback" };
 
         /// <summary>
         /// Moves the methods to an inner C# interface.
@@ -239,6 +241,11 @@ namespace SharpGen.Generator
 
                 nativeCallback.Base = interfaceType.Base;
 
+                if (nativeCallback.IsBaseComObject)
+                {
+                    nativeCallback.Base = DefaultComObjectCallback;
+                }
+
                 // If Parent is a DualInterface, then inherit from Default Callback
                 if (interfaceType.Base is CsInterface)
                 {
@@ -285,14 +292,13 @@ namespace SharpGen.Generator
             }
 
             // If interface is a callback and parent is ComObject, then remove it
-            if (interfaceType.IsCallback && interfaceType.Base is CsInterface)
+            if (interfaceType.IsCallback )
             {
-                if ((interfaceType.Base as CsInterface).QualifiedName == Global.Name + ".ComObject")
-                {
+                if (interfaceType.IsBaseComObject)
                     interfaceType.Base = null;
-                }
+                if (interfaceType.Base == null)
+                    interfaceType.Base = DefaultCallbackable;
             }
-
         }
 
         /// <summary>

@@ -31,9 +31,7 @@ namespace SharpDX.Direct3D10
         /// <unmanaged>HRESULT D3DX10CreateSprite([None] ID3D10Device* pDevice,[None] int cDeviceBufferSize,[None] LPD3DX10SPRITE* ppSprite)</unmanaged>
         public Sprite(Device device, int bufferSize)
         {
-            Sprite temp;
-            D3DX10.CreateSprite(device, bufferSize, out temp);
-            NativePointer = temp.NativePointer;
+            D3DX10.CreateSprite(device, bufferSize, this);
         }
 
         /// <summary>	

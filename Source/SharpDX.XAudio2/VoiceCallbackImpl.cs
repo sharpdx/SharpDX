@@ -25,7 +25,7 @@ namespace SharpDX.XAudio2
     /// <summary>
     /// Internal VoiceCallback Callback Impl
     /// </summary>
-    internal class VoiceCallBackImpl : SharpDX.CppObjectCallback
+    internal class VoiceCallBackImpl : SharpDX.CppObjectCallbackNative
     {
         private VoiceCallback Callback { get; set; }
 

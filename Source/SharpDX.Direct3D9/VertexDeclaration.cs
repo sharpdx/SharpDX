@@ -35,9 +35,7 @@ namespace SharpDX.Direct3D9
         /// <unmanaged>HRESULT IDirect3DDevice9::CreateVertexDeclaration([In, Buffer] const D3DVERTEXELEMENT9* pVertexElements,[None] IDirect3DVertexDeclaration9** ppDecl)</unmanaged>
         public VertexDeclaration(Device device, VertexElement[] elements)
         {
-            VertexDeclaration temp;
-            device.CreateVertexDeclaration(elements, out temp);
-            NativePointer = temp.NativePointer;
+            device.CreateVertexDeclaration(elements, this);
         }
     }
 }

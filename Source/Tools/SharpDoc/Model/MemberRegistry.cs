@@ -28,6 +28,7 @@ namespace SharpDoc.Model
     public class MemberRegistry
     {
         private readonly Dictionary<string, Dictionary<string, IModelReference>> _mapIdToModelElement;
+        private const string TopicContainer = "__topics__";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MemberRegistry"/> class.
@@ -81,6 +82,7 @@ namespace SharpDoc.Model
                     assemblyIds.Add(((NAssembly)context).Id);
                 }
             }
+            assemblyIds.Add(TopicContainer);
 
             foreach (var assemblyId in assemblyIds)
             {
@@ -102,11 +104,47 @@ namespace SharpDoc.Model
         /// <param name="modelReference">The model element.</param>
         public void Register(NAssembly assembly, IModelReference modelReference)
         {
+            Register(assembly.Id, modelReference);
+        }
+
+        /// <summary>
+        /// Registers the specified topic and all subtopics.
+        /// </summary>
+        public void Register(NTopic topic)
+        {
+            if (topic == null)
+                return;
+
+            var previousTopic = FindById(topic.Id);
+            if (previousTopic is NTopic)
+            {
+                Logger.Error("The topic [{0}] is already declared", previousTopic.Id);
+                return;
+            }
+
+            // Otherwise, the previous topic is probably a class/member definition, so we
+            // don't need to register it
+            if (previousTopic != null)
+                return;
+
+            // If this is a real topic, we can register it and all its children
+            Register(TopicContainer, topic);
+            foreach (var subTopic in topic.SubTopics)
+                Register(subTopic);
+        }
+
+        /// <summary>
+        /// Registers the specified model element with the specified id.
+        /// </summary>
+        /// <param name="containerId">The container id.</param>
+        /// <param name="modelReference">The model element.</param>
+        private void Register(string containerId, IModelReference modelReference)
+        {
             Dictionary<string, IModelReference> idToRef;
-            if (!_mapIdToModelElement.TryGetValue(assembly.Id, out idToRef))
+            if (!_mapIdToModelElement.TryGetValue(containerId, out idToRef))
             {
                 idToRef = new Dictionary<string, IModelReference>();
-                _mapIdToModelElement.Add(assembly.Id, idToRef);
+                _mapIdToModelElement.Add(containerId, idToRef);
             }
 
             if (idToRef.ContainsKey(modelReference.Id))

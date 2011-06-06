@@ -31,9 +31,7 @@ namespace SharpDX.DirectInput
         /// <param name="parameters">The parameters.</param>
         public Effect(Device device, Guid guid, EffectParameters parameters)
         {
-            Effect temp;
-            device.CreateEffect(guid, ref parameters, out temp, null);
-            NativePointer = temp.NativePointer;
+            device.CreateEffect(guid, ref parameters, this, null);
         }
 
         /// <summary>

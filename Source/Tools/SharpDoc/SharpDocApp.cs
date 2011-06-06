@@ -23,7 +23,9 @@ using System.IO;
 using System.Reflection;
 using Mono.Options;
 using RazorEngine;
+using SharpCore.Logging;
 using SharpDoc.Model;
+using SharpDocPak;
 
 namespace SharpDoc
 {
@@ -38,6 +40,7 @@ namespace SharpDoc
         public SharpDocApp()
         {
             Config = new Config();
+            StyleManager = new StyleManager();
         }
 
         /// <summary>
@@ -47,14 +50,21 @@ namespace SharpDoc
         public Config Config { get; set; }
 
         /// <summary>
+        /// Gets or sets the style manager.
+        /// </summary>
+        /// <value>The style manager.</value>
+        public StyleManager StyleManager { get; set; }
+
+        /// <summary>
         /// Print usages the error.
         /// </summary>
         /// <param name="error">The error.</param>
-        private static void UsageError(string error)
+        /// <param name="parameters">The parameters.</param>
+        private static void UsageError(string error, params object[] parameters)
         {
             var exeName = Path.GetFileName(Assembly.GetEntryAssembly().Location);
             Console.Write("{0}: ", exeName);
-            Console.WriteLine(error);
+            Console.WriteLine(error, parameters);
             Console.WriteLine("Use {0} --help' for more information.", exeName);
             Environment.Exit(1);
         }
@@ -94,6 +104,7 @@ namespace SharpDoc
                                               Config.StyleParameters.Add(new ConfigParam(style, value));
                                           }
                                       },
+                                  {"d|style-dir=", "Add a style directory", opt => Config.StyleDirectories.Add(opt) },
                                   {"s|style=", "Specify the style to use [default: Standard]", opt => Config.StyleName = opt},
                                   {"o|output=", "Specify the output directory [default: Output]", opt => Config.OutputDirectory = opt},
                                   {"r|references=", "Add reference assemblies in order to load source assemblies", opt => Config.References.Add(opt)},
@@ -107,6 +118,8 @@ namespace SharpDoc
             try
             {
                 options.Parse(args);
+
+                StyleManager.Init(Config);
             }
             catch (OptionException e)
             {
@@ -116,22 +129,16 @@ namespace SharpDoc
             if (showHelp)
             {
                 options.WriteOptionDescriptions(Console.Out);
+                StyleManager.WriteAvailaibleStyles(Console.Out);
                 Environment.Exit(0);
             }
 
             if (Config.Sources.Count == 0)
                 UsageError("At least one option is missing. Either a valid config file (-config) or a direct list of assembly/xml files must be specified");
 
-            foreach (var m in Config.Parameters)
-            {
-                Console.WriteLine("\t{0}={1}", m.Name, m.value);
-            }
-            Console.WriteLine("Options:");
-            Console.WriteLine("\tOuptut File: {0}", Config.OutputDirectory);
-            foreach (var source in Config.Sources)
-            {
-                Console.WriteLine("\tSource File: {0}", source);                
-            }
+            // Verify the validity of the style
+            if (!StyleManager.StyleExist(Config.StyleName))
+                UsageError("Style [{0}] does not exist. Use --help to have a list of available styles.", Config.StyleName);
         }
 
         /// <summary>
@@ -139,20 +146,36 @@ namespace SharpDoc
         /// </summary>
         public void Run()
         {
-            // Force loading of dynamics
+            // Force loading of dynamics for RazorEngine
             bool loaded = typeof(Microsoft.CSharp.RuntimeBinder.Binder).Assembly != null;
 
-            // args = GetFiles(args);
-
+            // Process the assemblies
             var modelProcessor = new ModelProcessor {AssemblyManager = new MonoCecilAssemblyManager(), ModelBuilder = new MonoCecilModelBuilder()};
             modelProcessor.Run(Config);
 
+            if (Logger.HasErrors)
+                Logger.Fatal("Too many errors in config file. Check previous message.");
+
+            // Build the topics
+            var topicBuilder = new TopicBuilder() {Assemblies = modelProcessor.Assemblies, Registry = modelProcessor.Registry, RootTopic = Config.RootTopic};
+            topicBuilder.Run();
+
+            // New instance of a tempalte context used by the RazorEngine
             var context = new TemplateContext
             {
                 Assemblies = new List<NAssembly>(modelProcessor.Assemblies),
-                ClassLibraryName = "SharpDX Class Library",
-                Registry = modelProcessor.Registry
+                Registry = modelProcessor.Registry,
+                RootTopic = topicBuilder.RootTopic,
+                SearchTopic = topicBuilder.SearchTopic,
+                StyleManager = StyleManager,
+                OutputDirectory =  Config.AbsoluteOutputDirectory
             };
+
+            if (Logger.HasErrors)
+                Logger.Fatal("Too many errors in config file. Check previous message.");
+
+            // Set title
+            context.Param.DocumentationTitle = Config.Title;
 
             // Add parameters
             if (Config.Parameters.Count > 0)
@@ -179,10 +202,32 @@ namespace SharpDoc
             Razor.SetTemplateBase(typeof(TemplateHelperBase));
             Razor.AddResolver(context);
 
-            context.UseStyle(Config.StyleName, false);
+            context.UseStyle(Config.StyleName);
+          
+            context.Parse(StyleDefinition.DefaultBootableTemplateName);
+        
+            if ((Config.OutputType & OutputType.DocPak) != 0 )
+                GenerateDocPak();
+        }
 
-            context.RemoveOutputDirectory();
-            context.Parse("Main");            
+        private void GenerateDocPak()
+        {
+            if (Config.DocPak == null)
+            {
+                Logger.Error("Docpak config not found from the config file. Cannot generate docpak");
+                return;
+            }
+
+            var sharpDocPak = new SharpDocPakApp
+                                  {
+                                      Output = Config.DocPak.Name,
+                                      CommandType = CommandType.Pak,
+                                      DirectoryLocation = Config.AbsoluteOutputDirectory,
+                                      Tags = Config.DocPak.Tags,
+                                      Title = Config.Title
+                                  };
+
+            sharpDocPak.Run();
         }
 
         static public string[] GetFiles(string[] patterns)

@@ -26,7 +26,7 @@ namespace ColorDrawingEffect
     /// <summary>
     /// Custom TextRenderer
     /// </summary>
-    public class CustomTextRenderer : SharpDX.DirectWrite.TextRenderer
+    public class CustomTextRenderer : CallbackBase, SharpDX.DirectWrite.TextRenderer
     {
         readonly SharpDX.Direct2D1.Factory _d2DFactory;
         readonly WindowRenderTarget _renderTarget;

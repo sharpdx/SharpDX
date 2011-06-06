@@ -31,9 +31,7 @@ namespace SharpDX.Direct3D11
         /// <unmanaged>HRESULT D3DX11CreateSegmentedScan([In] ID3D11DeviceContext* pDeviceContext,[None] int MaxElementScanSize,[Out] ID3DX11SegmentedScan** ppScan)</unmanaged>
         public SegmentedScan(DeviceContext deviceContext, int maxElementScanSize)
         {
-            SegmentedScan temp;
-            D3DCSX.CreateSegmentedScan(deviceContext, maxElementScanSize, out temp);
-            NativePointer = temp.NativePointer;
+            D3DCSX.CreateSegmentedScan(deviceContext, maxElementScanSize, this);
         }        
     }
 }

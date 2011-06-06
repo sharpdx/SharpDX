@@ -17,6 +17,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
@@ -38,26 +39,51 @@ namespace SharpDoc
         public Config()
         {
             StyleName = "Standard";
-            Topics = new List<NTopic>();
+            OutputDirectory = "Output";
             Sources = new List<string>();
             References = new List<string>();
             Parameters = new List<ConfigParam>();
             StyleParameters = new List<ConfigParam>();
+            StyleDirectories = new List<string>();
+            OutputType = OutputType.Default;
         }
+
+        /// <summary>
+        /// Gets or sets the title.
+        /// </summary>
+        /// <value>The title.</value>
+        [XmlElement("title")]
+        public string Title { get; set; }
+
+        /// <summary>
+        /// Gets or sets the file path.
+        /// </summary>
+        /// <value>The file path.</value>
+        [XmlIgnore]
+        public string FilePath { get; set; }
 
         /// <summary>
         /// Gets or sets the topic.
         /// </summary>
         /// <value>The topic.</value>
-        [XmlArray("topics")]
-        public List<NTopic> Topics { get; set; }
+        [XmlElement("topic")]
+        public NTopic RootTopic { get; set; }
 
         /// <summary>
         /// Gets or sets the output directory.
         /// </summary>
         /// <value>The output directory.</value>
-        [XmlElement("output")]
+        [XmlElement("output-dir")]
         public string OutputDirectory { get; set; }
+
+        /// <summary>
+        /// Gets the absolute output directory.
+        /// </summary>
+        /// <value>The absolute output directory.</value>
+        public string AbsoluteOutputDirectory
+        {
+            get { return Path.Combine(string.IsNullOrEmpty(FilePath) ? Environment.CurrentDirectory : Path.GetDirectoryName(FilePath), OutputDirectory); }
+        }
 
         /// <summary>
         /// Gets or sets a list of source file (assembly or xml comment file).
@@ -95,6 +121,32 @@ namespace SharpDoc
         public string StyleName { get; set; }
 
         /// <summary>
+        /// Gets or sets styles override.
+        /// </summary>
+        /// <value>The styles override.</value>
+        [XmlElement("style-dir")]
+        public List<string> StyleDirectories { get; set; }
+
+        /// <summary>
+        /// Style directory name
+        /// </summary>
+        public const string DefaultStyleDirectoryName = "Styles";
+
+        /// <summary>
+        /// Gets or sets the type of the output.
+        /// </summary>
+        /// <value>The type of the output.</value>
+        [XmlElement("output-type")]
+        public OutputType OutputType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the doc pak.
+        /// </summary>
+        /// <value>The doc pak.</value>
+        [XmlElement("docpak")]
+        public ConfigDocPak DocPak { get; set; }
+
+        /// <summary>
         /// Loads the specified config file.
         /// </summary>
         /// <param name="file">The config file.</param>
@@ -102,7 +154,24 @@ namespace SharpDoc
         public static Config Load(string file)
         {
             var deserializer = new XmlSerializer(typeof(Config));
-            return (Config)deserializer.Deserialize(new StringReader(File.ReadAllText(file)));            
+            var config = (Config)deserializer.Deserialize(new StringReader(File.ReadAllText(file)));
+            config.FilePath = file;
+            // Load all Topics content
+            if (config.RootTopic != null)
+                config.RootTopic.Init(Path.GetDirectoryName(file));
+            return config;
+        }
+
+        /// <summary>
+        /// Finds the topic by id.
+        /// </summary>
+        /// <param name="topicId">The topic id.</param>
+        /// <returns></returns>
+        public NTopic FindTopicById(string topicId)
+        {
+            if (RootTopic == null)
+                return null;
+            return RootTopic.FindTopicById(topicId);
         }
 
         /// <summary>

@@ -54,7 +54,7 @@ namespace SharpDX.Direct2D1
 
             IntPtr temp;
             D2D1.CreateFactory(factoryType, typeof(Factory).GUID, options, out temp);
-            NativePointer = temp;
+            FromTemp(temp);
         }
 
         /// <summary>	

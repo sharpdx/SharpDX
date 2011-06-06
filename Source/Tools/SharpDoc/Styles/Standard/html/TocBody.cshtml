@@ -24,49 +24,58 @@
 *@
 @model SharpDoc.TemplateContext
 @using SharpDoc.Model
-@helper Dump()
-    {
-    if (Model.Assembly == null)
-    {
-        <div class="toc top"><div class="icon"></div><a href="ClassLibrary.htm" class="highlight">@Model.ClassLibraryName</a><div style="clear: both"></div></div>
-        foreach (var assembly in Model.Assemblies)
-        {
-            <div class="toc child level0"><div class="icon"></div>@ToUrl(assembly,assembly.FullName + " Assembly")<div style="clear: both"></div></div>
-        }
+@using System.Text
+@functions {
+    public void DisplayTopic(StringBuilder toc, NTopic topic, string classLevel, bool isHighlight = false) {
+        // Don't list the search topic unless its selected
+        if (topic.IsSearchResult && Model.Topic.Id != topic.Id)
+            return;
+        toc.AppendFormat("<div class='{0}'><div class='icon'></div><a href='{1}{2}'{3}>{4}</a><div style='clear: both'></div></div>",
+            classLevel,
+            topic.NormalizedId,
+            Param.FileExt,
+            isHighlight?" class='highlight'":"",
+            topic.Name).AppendLine();
     }
-    else
-    {
-        <div class="toc top"><div class="icon"></div><a href="ClassLibrary.htm">@Model.ClassLibraryName</a><div style="clear: both"></div></div>
-        if (Model.Namespace == null)
-        {
-            <div class="toc up"><div class="icon"></div>@ToUrl(Model.Assembly, Model.Assembly.FullName + " Assembly", true, "class='highlight'")<div style="clear: both"></div></div>
-            foreach (var ns in Model.Assembly.Namespaces)
-            {
-                <div class="toc child level0"><div class="icon"></div>@ToUrl(ns, ns.FullName + " Namespace")<div style="clear: both"></div></div>
+
+    public string DumpToc() {
+        var toc = new StringBuilder();
+        var topicHasChildrens = Model.Topic.SubTopics.Count > 0;
+        var topics = Model.Topic.GetParents();
+        var i = 0;
+        for(; i < topics.Count; i++)  {
+            var topic = topics[i];
+            string divClass = (i>0)?"toc up":"toc top";
+            if ((i+1) == topics.Count && !topicHasChildrens) 
+            {            
+                divClass = "toc child level0";
+            }
+            DisplayTopic(toc, topic, divClass);
+        }
+        if (topicHasChildrens) {
+            string topicClassLevel = (i==0)?"toc top":"toc child level0";
+            string subTopicClassLevel = (i==0)?"toc child level0":"toc child level1";
+            
+            DisplayTopic(toc, Model.Topic, topicClassLevel, true);
+            foreach(var topic in Model.Topic.SubTopics) {
+                DisplayTopic(toc, topic, subTopicClassLevel);
             }
         }
         else
         {
-            <div class="toc up"><div class="icon"></div>@ToUrl(Model.Assembly, Model.Assembly.FullName + " Assembly")<div style="clear: both"></div></div>
-            if (Model.Type == null)
-            {
-                <div class="toc child level0"><div class="icon"></div>@ToUrl(Model.Namespace, Model.Namespace.FullName + " Namespace", true, "class='highlight'")<div style="clear: both"></div></div>
-            }
-            else
-            {
-                <div class="toc child level0"><div class="icon"></div>@ToUrl(Model.Namespace, Model.Namespace.FullName + " Namespace")<div style="clear: both"></div></div>
-            }
-            foreach (var type in Model.Namespace.Types)
-            {
-                if (Model.Type != null && type.Id == Model.Type.Id)
-                {
-                    <div class="toc child level1"><div class="icon"></div>@ToUrl(type, type.Name + " " + type.TypeName, true, "class='highlight'")<div style="clear: both"></div></div>
-                }
-                else
-                {
-                    <div class="toc child level1"><div class="icon"></div>@ToUrl(type, type.Name + " " + type.TypeName)<div style="clear: both"></div></div>
-                }
+            if (i == 0 && Model.Topic.Parent == null) {
+                DisplayTopic(toc, Model.Topic, "toc top", true);                
+            } else {
+                foreach (var topic in Model.Topic.Parent.SubTopics)
+                    DisplayTopic(toc, topic, "toc child level1", topic.Id == Model.Topic.Id);
             }
         }
+        return toc.ToString();        
     }
+}
+
+@helper Dump()
+{   
+    @Include("SearchBox")
+    @DumpToc()
 }

@@ -64,5 +64,17 @@ namespace SharpDoc.Model
         /// </summary>
         /// <value>The parent method.</value>
         public NMethod ParentMethod { get; set; }
+
+        protected internal override void OnDocNodeUpdate()
+        {
+            // Don't call base, as we need to get param description from param tag
+            // base.OnDocNodeUpdate();
+            if (DocNode != null)
+            {
+                var selectedNode = DocNode.SelectSingleNode("param[@name='" + Name + "']");
+                if (selectedNode != null)
+                    Description = selectedNode.InnerXml.Trim();
+            }
+        }
     }
 }

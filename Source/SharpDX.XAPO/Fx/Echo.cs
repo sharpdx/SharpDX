@@ -32,9 +32,7 @@ namespace SharpDX.XAPO.Fx
         public Echo()
             : base(IntPtr.Zero)
         {
-            ComObject comObject;
-            XAPOFx.CreateFX(XAPOFx.CLSID_FXEcho, out comObject);
-            NativePointer = comObject.NativePointer;
+            XAPOFx.CreateFX(XAPOFx.CLSID_FXEcho, this);
         }
     }
 }

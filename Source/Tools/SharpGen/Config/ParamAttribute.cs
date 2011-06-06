@@ -37,6 +37,11 @@ namespace SharpGen.Config
         [EnumMember, XmlEnum("buffer")]
         Buffer = 0x8,
         [EnumMember, XmlEnum("optional")]
-        Optional = 0x10
+        Optional = 0x10,
+        /// <summary>
+        /// Fast flag used for Out parameter.
+        /// </summary>
+        [EnumMember, XmlEnum("fast")]
+        Fast = 0x20
     }
 }

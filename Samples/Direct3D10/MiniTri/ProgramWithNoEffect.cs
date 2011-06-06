@@ -103,7 +103,7 @@ namespace MiniTri
                                                               SizeInBytes = 32*3,
                                                               Usage = ResourceUsage.Default,
                                                           });
-            stream.Release();
+            stream.Dispose();
 
             // Prepare All the stages
             device.InputAssembler.SetInputLayout(layout);
@@ -123,20 +123,20 @@ namespace MiniTri
                                       });
 
             // Release all resources
-            vertexShaderByteCode.Release();
-            vertexShader.Release();
-            pixelShaderByteCode.Release();
-            pixelShader.Release();
-            vertices.Release();
-            layout.Release();
-            renderView.Release();
-            backBuffer.Release();
+            vertexShaderByteCode.Dispose();
+            vertexShader.Dispose();
+            pixelShaderByteCode.Dispose();
+            pixelShader.Dispose();
+            vertices.Dispose();
+            layout.Dispose();
+            renderView.Dispose();
+            backBuffer.Dispose();
             device.ClearState();
             device.Flush();
-            device.Release();
-            device.Release();
-            swapChain.Release();
-            factory.Release();
+            device.Dispose();
+            device.Dispose();
+            swapChain.Dispose();
+            factory.Dispose();
         }
     }
 }

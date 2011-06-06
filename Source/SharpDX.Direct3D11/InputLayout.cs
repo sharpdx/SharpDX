@@ -35,10 +35,8 @@ namespace SharpDX.Direct3D11
         public InputLayout(Device device, ShaderBytecode shaderBytecode, InputElement[] elements)
             : base(IntPtr.Zero)
         {
-            InputLayout layout;
             device.CreateInputLayout(elements, elements.Length, shaderBytecode.GetBufferPointer(),
-                                     shaderBytecode.GetBufferSize(), out layout);
-            NativePointer = layout.NativePointer;
+                                     shaderBytecode.GetBufferSize(), this);
         }
 
         /// <summary>
@@ -52,10 +50,8 @@ namespace SharpDX.Direct3D11
         public InputLayout(Device device, ShaderSignature shaderSignature, InputElement[] elements)
             : base(IntPtr.Zero)
         {
-            InputLayout layout;
             device.CreateInputLayout(elements, elements.Length, shaderSignature.GetBufferPointer(),
-                                     shaderSignature.GetBufferSize(), out layout);
-            NativePointer = layout.NativePointer;
+                                     shaderSignature.GetBufferSize(), this);
         }
     }
 }

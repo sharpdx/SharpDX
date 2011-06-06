@@ -27,7 +27,7 @@ namespace CustomFont
     /// ResourceFont main loader. This classes implements FontCollectionLoader and FontFileLoader.
     /// It reads all fonts embedded as resource in the current assembly and expose them.
     /// </summary>
-    public partial class ResourceFontLoader : FontCollectionLoader, FontFileLoader
+    public partial class ResourceFontLoader : CallbackBase, FontCollectionLoader, FontFileLoader
     {
         private readonly List<ResourceFontFileStream> _fontStreams = new List<ResourceFontFileStream>();
         private readonly List<ResourceFontFileEnumerator> _enumerators = new List<ResourceFontFileEnumerator>();

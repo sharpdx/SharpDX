@@ -33,9 +33,7 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteFactory::CreateNumberSubstitution([In] DWRITE_NUMBER_SUBSTITUTION_METHOD substitutionMethod,[In] const wchar_t* localeName,[In] BOOL ignoreUserOverride,[Out] IDWriteNumberSubstitution** numberSubstitution)</unmanaged>
         public NumberSubstitution(Factory factory, NumberSubstitutionMethod substitutionMethod, string localeName, bool ignoreUserOverride)
         {
-            NumberSubstitution temp;
-            factory.CreateNumberSubstitution(substitutionMethod, localeName, ignoreUserOverride, out temp);
-            NativePointer = temp.NativePointer;
+            factory.CreateNumberSubstitution(substitutionMethod, localeName, ignoreUserOverride, this);
         }
     }
 }

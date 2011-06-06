@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Runtime.InteropServices;
 
 namespace SharpDX.DirectSound
 {
@@ -34,9 +35,8 @@ namespace SharpDX.DirectSound
             IntPtr temp;
             dSound.CreateSoundBuffer(ref bufferDescription, out temp, null);
             NativePointer = temp;
-            var secondaryBuffer =  QueryInterface<SecondarySoundBuffer>();
-            this.Release();
-            NativePointer = secondaryBuffer.NativePointer;
+            QueryInterfaceFrom(this);
+            Marshal.Release(temp);
         }
 
         /// <summary>	
@@ -66,10 +66,7 @@ namespace SharpDX.DirectSound
                 return new SoundEffectResult[0];
             }
 
-            int count = effects.Length;
-
-
-            SoundBufferEffectDescription[] effectDescriptions = new SoundBufferEffectDescription[effects.Length];
+            var effectDescriptions = new SoundBufferEffectDescription[effects.Length];
             for(int i = 0; i < effectDescriptions.Length; i++)
             {
                 effectDescriptions[i] = new SoundBufferEffectDescription();
@@ -79,7 +76,7 @@ namespace SharpDX.DirectSound
 
             SoundEffectResult[] resultCode = new SoundEffectResult[effects.Length];
 
-            SetEffect(count, effectDescriptions, resultCode);
+            SetEffect(effects.Length, effectDescriptions, resultCode);
 
             return resultCode;
         }

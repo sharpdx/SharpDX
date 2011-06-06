@@ -27,7 +27,7 @@ namespace SharpDX.XAPO
     /// also providing its parameter through a generic.
     /// </summary>
     /// <typeparam name="T">type of the parameter for this AudioProcessor</typeparam>
-    public abstract partial class AudioProcessorBase<T> : AudioProcessor, ParameterProvider where T : struct
+    public abstract partial class AudioProcessorBase<T> : CallbackBase, AudioProcessor, ParameterProvider where T : struct
     {
         private RegistrationProperties _registrationProperies;
         private T _parameters;
@@ -35,13 +35,6 @@ namespace SharpDX.XAPO
         private WaveFormat _inputFormatLocked;
         private WaveFormat _outputFormatLocked;
         private int _maxFrameCountLocked;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AudioProcessorBase&lt;T&gt;"/> class.
-        /// </summary>
-        public AudioProcessorBase()
-        {           
-        }
 
         ///<summary>
         /// Return parameters

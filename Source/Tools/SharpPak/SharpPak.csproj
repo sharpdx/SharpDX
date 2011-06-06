@@ -43,7 +43,7 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>Bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -51,6 +51,11 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>SharpPak.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ILMerge, Version=2.10.526.0, Culture=neutral, PublicKeyToken=736440c9b414ea16, processorArchitecture=MSIL">
@@ -85,7 +90,14 @@
     <Compile Include="ComObjectStep.cs" />
     <Compile Include="SharpPakApp.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="SharpPak.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy  $(TargetDir)*.exe $(SolutionDir)Build\Tools\Bin\
+copy  $(TargetDir)*.dll $(SolutionDir)Build\Tools\Bin\</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

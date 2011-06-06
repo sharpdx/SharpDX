@@ -39,7 +39,7 @@
             <tbody>
                 <tr class="sharpdoc-header">
                     <td colspan="3" class="cell">
-                        @Include("Header", @Model)
+                        @Include("Header")
                     </td>                
                 </tr>
                 <tr>
@@ -51,15 +51,15 @@
                 <td id="pane_resizer" class="pane_resizer">
                     <div id="pane_toggle" class="collapse" ></div>
                 </td>
-                <td class="pane_content">
+                <td id="pane_content" class="pane_content">
                     <div class="content">
-                        @Include(bodyTemplateName, @Model)
+                        @Include(bodyTemplateName)
                     </div>
                 </td>
                 </tr>
                 <tr class="sharpdoc-footer">
                     <td colspan="3" class="cell">
-                        @Include("Footer", @Model)
+                        @Include("Footer")
                     </td>                
                 </tr>
             </tbody>

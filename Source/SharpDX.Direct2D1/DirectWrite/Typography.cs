@@ -30,9 +30,7 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteFactory::CreateTypography([Out] IDWriteTypography** typography)</unmanaged>
         public Typography(Factory factory)
         {
-            Typography temp;
-            factory.CreateTypography(out temp);
-            NativePointer = temp.NativePointer;
+            factory.CreateTypography(this);
         }
     }
 }

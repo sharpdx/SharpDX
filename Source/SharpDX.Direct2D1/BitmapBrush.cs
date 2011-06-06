@@ -68,9 +68,7 @@ namespace SharpDX.Direct2D1
         /// <unmanaged>HRESULT CreateBitmapBrush([In] ID2D1Bitmap* bitmap,[In, Optional] const D2D1_BITMAP_BRUSH_PROPERTIES* bitmapBrushProperties,[In, Optional] const D2D1_BRUSH_PROPERTIES* brushProperties,[Out] ID2D1BitmapBrush** bitmapBrush)</unmanaged>
         public BitmapBrush(RenderTarget renderTarget, SharpDX.Direct2D1.Bitmap bitmap, SharpDX.Direct2D1.BitmapBrushProperties? bitmapBrushProperties, SharpDX.Direct2D1.BrushProperties? brushProperties) : base(IntPtr.Zero)
         {
-            BitmapBrush temp;
-            renderTarget.CreateBitmapBrush(bitmap, bitmapBrushProperties, brushProperties, out temp);
-            NativePointer = temp.NativePointer;
+            renderTarget.CreateBitmapBrush(bitmap, bitmapBrushProperties, brushProperties, this);
         }
 
     }

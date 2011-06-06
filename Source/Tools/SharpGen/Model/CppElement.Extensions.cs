@@ -128,7 +128,10 @@ namespace SharpGen.Model
                                tag.FunctionDllName = element.ParentRoot.FindFirst<CppDefine>(fromTag.FunctionDllNameFromMacro).StripStringValue;
                            if (fromTag.CsClass != null) tag.CsClass = fromTag.CsClass;
                            if (fromTag.ParameterAttribute != null && element is CppParameter)
+                           {
                                (element as CppParameter).Attribute = fromTag.ParameterAttribute.Value;
+                               tag.ParameterAttribute = fromTag.ParameterAttribute.Value;
+                           }
                            if (fromTag.ParameterUsedAsReturnType != null ) tag.ParameterUsedAsReturnType = fromTag.ParameterUsedAsReturnType;
                            return false;
                        };

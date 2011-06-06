@@ -38,22 +38,17 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteInlineObject::Draw([None] void* clientDrawingContext,[None] IDWriteTextRenderer* renderer,[None] float originX,[None] float originY,[None] BOOL isSideways,[None] BOOL isRightToLeft,[None] IUnknown* clientDrawingEffect)</unmanaged>
         public void Draw(object clientDrawingContext, TextRenderer renderer, float originX, float originY, bool isSideways, bool isRightToLeft, ComObject clientDrawingEffect)
         {
-            IntPtr rendererPtr = IntPtr.Zero;
-            TextRendererCallback callback = null;
-            if (renderer is ComObject)
-            {
-                rendererPtr = ((ComObject)renderer).NativePointer;
-            }
-            else
-            {
-                callback = new TextRendererCallback(renderer);
-                rendererPtr = callback.NativePointer;
-            }
-
             IntPtr clientDrawingContextPtr = Utilities.GetIUnknownForObject(clientDrawingContext);
             IntPtr clientDrawingEffectPtr = Utilities.GetIUnknownForObject(clientDrawingEffect);
-
-            this.Draw__(clientDrawingContextPtr, rendererPtr, originX, originY, isSideways, isRightToLeft, clientDrawingEffectPtr);
+            try
+            {
+                this.Draw__(clientDrawingContextPtr, TextRendererCallback.CallbackToPtr(renderer), originX, originY, isSideways, isRightToLeft,
+                            clientDrawingEffectPtr);
+            } finally
+            {
+                if (clientDrawingContextPtr != IntPtr.Zero) Marshal.Release(clientDrawingContextPtr);
+                if (clientDrawingEffectPtr != IntPtr.Zero) Marshal.Release(clientDrawingEffectPtr);
+            }
         }
 
         /// <summary>	

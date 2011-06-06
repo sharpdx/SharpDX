@@ -108,7 +108,8 @@
     // *****************************************************************
     -->
     <map function="CreateFX" dll="XAPOFX1_5.dll" group="SharpDX.XAPO.Fx.XAPOFx" />
-    
+    <map param="CreateFX::pEffect" attribute="out fast" />
+
     <context-clear />
   </mapping>
 </config>

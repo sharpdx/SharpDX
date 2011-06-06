@@ -112,18 +112,10 @@ namespace SharpDX.DirectSound
         /// <returns></returns>
         public Result SetNotificationPositions(NotificationPosition[] positions)
         {
-            var notifier = QueryInterface<SoundBufferNotifier>();
-            Result result;
-            try
+            using (var notifier = QueryInterface<SoundBufferNotifier>())
             {
-                result = notifier.SetNotificationPositions(positions.Length, positions);
+                return notifier.SetNotificationPositions(positions.Length, positions);
             }
-            catch (SharpDXException)
-            {
-                notifier.Release();
-                throw;
-            }
-            return result;
         }
     }
 }

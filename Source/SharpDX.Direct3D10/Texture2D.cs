@@ -32,9 +32,7 @@ namespace SharpDX.Direct3D10
         public Texture2D(Device device, Texture2DDescription description)
             : base(IntPtr.Zero)
         {
-            Texture2D temp;
-            device.CreateTexture2D(ref description, null, out temp);
-            NativePointer = temp.NativePointer;
+            device.CreateTexture2D(ref description, null, this);
         }
 
         /// <summary>
@@ -57,8 +55,6 @@ namespace SharpDX.Direct3D10
         public Texture2D(Device device, Texture2DDescription description, DataRectangle[] data)
             : base(IntPtr.Zero)
         {
-            Texture2D temp;
-
             SubResourceData[] subResourceDatas = null;
 
             if (data != null)
@@ -71,8 +67,7 @@ namespace SharpDX.Direct3D10
                 }
             }
 
-            device.CreateTexture2D(ref description, subResourceDatas, out temp);
-            NativePointer = temp.NativePointer;
+            device.CreateTexture2D(ref description, subResourceDatas, this);
         }
 
         /// <summary>

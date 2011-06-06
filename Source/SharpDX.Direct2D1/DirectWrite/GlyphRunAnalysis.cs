@@ -59,9 +59,7 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteFactory::CreateGlyphRunAnalysis([In] const DWRITE_GLYPH_RUN* glyphRun,[None] float pixelsPerDip,[In, Optional] const DWRITE_MATRIX* transform,[None] DWRITE_RENDERING_MODE renderingMode,[None] DWRITE_MEASURING_MODE measuringMode,[None] float baselineOriginX,[None] float baselineOriginY,[Out] IDWriteGlyphRunAnalysis** glyphRunAnalysis)</unmanaged>
         public GlyphRunAnalysis(Factory factory, GlyphRun glyphRun, float pixelsPerDip, Matrix? transform, RenderingMode renderingMode, MeasuringMode measuringMode, float baselineOriginX, float baselineOriginY)
         {
-            GlyphRunAnalysis temp;
-            factory.CreateGlyphRunAnalysis(ref glyphRun, pixelsPerDip, transform, renderingMode, measuringMode, baselineOriginX, baselineOriginY, out temp);
-            NativePointer = temp.NativePointer;
+            factory.CreateGlyphRunAnalysis(ref glyphRun, pixelsPerDip, transform, renderingMode, measuringMode, baselineOriginX, baselineOriginY, this);
         }
     }
 }

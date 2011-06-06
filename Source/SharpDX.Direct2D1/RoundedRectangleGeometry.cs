@@ -31,9 +31,7 @@ namespace SharpDX.Direct2D1
         public RoundedRectangleGeometry(Factory factory, RoundedRect roundedRectangle)
             : base(IntPtr.Zero)
         {
-            RoundedRectangleGeometry temp;
-            factory.CreateRoundedRectangleGeometry(ref roundedRectangle, out temp);
-            NativePointer = temp.NativePointer;
+            factory.CreateRoundedRectangleGeometry(ref roundedRectangle, this);
         }
     }
 }

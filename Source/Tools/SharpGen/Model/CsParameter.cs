@@ -26,10 +26,13 @@ namespace SharpGen.Model
 {
     public class CsParameter : CsMarshalBase, ICloneable
     {
+        private bool _isFast;
+
         public CsParameter()
         {
             // Default is In
             Attribute = CsParameterAttribute.In;
+            _isFast = false;
         }
 
         public CsParameterAttribute Attribute { get; set; }
@@ -38,6 +41,11 @@ namespace SharpGen.Model
 
         public bool IsUsedAsReturnType { get; set; }
 
+        public bool IsFastOut
+        {
+            get { return _isFast && IsOut; }
+        }
+
         private const int SizeOfLimit = 16;
 
         protected override void UpdateFromTag(MappingRule tag)
@@ -45,6 +53,8 @@ namespace SharpGen.Model
             base.UpdateFromTag(tag);
             if (tag.ParameterUsedAsReturnType.HasValue)
                 IsUsedAsReturnType = tag.ParameterUsedAsReturnType.Value;
+            if (tag.ParameterAttribute.HasValue && (tag.ParameterAttribute.Value & ParamAttribute.Fast) != 0)
+                _isFast = true;
         }
 
         public bool IsFixed
@@ -135,7 +145,7 @@ namespace SharpGen.Model
             get
             {
                 StringBuilder builder = new StringBuilder();
-                if (Attribute == CsParameterAttribute.Out && (!IsArray || PublicType.Name == "string"))
+                if (!IsFastOut && Attribute == CsParameterAttribute.Out && (!IsArray || PublicType.Name == "string"))
                     builder.Append("out ");
                 else if ((Attribute == CsParameterAttribute.Ref || Attribute == CsParameterAttribute.RefIn) && !IsArray)
                 {

@@ -48,7 +48,7 @@ namespace SharpCore.Logging
             if (Output == null)
                 return;
 
-            Log(LogLevel.Error, new LogLocation("CodeGen"), null, "Process stopped. " + reason, null);
+            Logger.Error("Process stopped. " + reason);
             Environment.Exit(exitCode);
         }
 

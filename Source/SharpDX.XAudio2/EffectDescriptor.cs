@@ -25,7 +25,6 @@ namespace SharpDX.XAudio2
     public partial class EffectDescriptor
     {
         private AudioProcessor _effect;
-        private AudioProcessorCallback _effectCallback;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EffectDescriptor"/> class with a Stereo Effect.
@@ -67,16 +66,8 @@ namespace SharpDX.XAudio2
                     throw new ArgumentException("Cannot set Effect twice on the same EffectDescriptor");
 
                 _effect = value;
-                if (_effect is ComObject)
-                {
-                    this.EffectPointer = (_effect as ComObject).NativePointer;
-                } else
-                {
-                    _effectCallback = new AudioProcessorCallback(_effect);
-                    this.EffectPointer = _effectCallback.NativePointer;
-                }
+                EffectPointer = AudioProcessorCallback.CallbackToPtr(_effect);
             }
-        }
-        
+        }        
     }
 }

@@ -19,13 +19,14 @@
 // THE SOFTWARE.
 using System;
 using System.Runtime.InteropServices;
+using SharpDX.Diagnostics;
 
 namespace SharpDX
 {
     /// <summary>
     /// Root IUnknown class to interop with COM object
     /// </summary>
-    public class ComObject : CppObject, IDisposable
+    public class ComObject : CppObject, IUnknown
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ComObject"/> class.
@@ -49,7 +50,7 @@ namespace SharpDX
         /// <param name = "outPtr">output object associated with this GUID, IntPtr.Zero in interface is not supported</param>
         public virtual void QueryInterface(Guid guid, out IntPtr outPtr)
         {
-            Result result = Marshal.QueryInterface(NativePointer, ref guid, out outPtr);
+            var result = ((IUnknown) this).QueryInterface(ref guid, out outPtr);
             result.CheckError();
         }
 
@@ -65,6 +66,18 @@ namespace SharpDX
             return FromPointer<T>(parentPtr);
         }
 
+        ///<summary>
+        /// Query Interface for a particular interface support and attach to the given instance.
+        ///</summary>
+        ///<typeparam name="T"></typeparam>
+        ///<returns></returns>
+        internal void QueryInterfaceFrom<T>(T fromObject) where T : ComObject
+        {
+            IntPtr parentPtr;
+            fromObject.QueryInterface(typeof(T).GUID, out parentPtr);
+            NativePointer = parentPtr;
+        }
+
         /// <summary>
         /// Instantiate a ComObject from a native pointer.
         /// </summary>
@@ -76,36 +89,48 @@ namespace SharpDX
             return (comObjectPtr == IntPtr.Zero) ? null : (T) Activator.CreateInstance(typeof (T), comObjectPtr);
         }
 
-        /// <summary>
-        ///   Increment COM reference
-        /// </summary>
-        /// <returns>Reference counter</returns>
-        public virtual int AddReference()
+        Result IUnknown.QueryInterface(ref Guid guid, out IntPtr comObject)
         {
-            if (NativePointer == IntPtr.Zero) return 0;
-            return Marshal.AddRef(NativePointer);
+            return Marshal.QueryInterface(NativePointer, ref guid, out comObject);              
         }
 
-        /// <summary>
-        ///   Release COM reference
-        /// </summary>
-        /// <returns></returns>
-        public virtual int Release()
+        int IUnknown.AddReference()
         {
-            if (NativePointer == IntPtr.Zero) return 0;
+            if (NativePointer == IntPtr.Zero) throw new InvalidOperationException("COM Object pointer is null");
+            return Marshal.AddRef(NativePointer);            
+        }
+
+        int IUnknown.Release()
+        {
+            if (NativePointer == IntPtr.Zero) throw new InvalidOperationException("COM Object pointer is null");
             return Marshal.Release(NativePointer);
         }
 
-        #region Implementation of IDisposable
-
         /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// Releases unmanaged and - optionally - managed resources
         /// </summary>
-        public virtual void Dispose()
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        protected override void Dispose(bool disposing)
         {
-            Release();
+            // Only dispose non-zero object
+            if (NativePointer != IntPtr.Zero)
+            {
+                ((IUnknown) this).Release();
+                ObjectTracker.UnTrack(this);
+            }
+            base.Dispose(disposing);
         }
 
-        #endregion
+        protected override void NativePointerUpdating()
+        {
+            if (Configuration.EnableObjectTracking)
+                ObjectTracker.UnTrack(this);
+        }
+
+        protected override void NativePointerUpdated(IntPtr oldNativePointer)
+        {
+            if (Configuration.EnableObjectTracking)
+                ObjectTracker.Track(this);
+        }
     }
 }

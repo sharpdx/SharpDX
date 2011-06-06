@@ -85,8 +85,8 @@
     <Reference Include="SharpDX.DXGI">
       <HintPath>..\..\..\Bin\SharpDX.DXGI.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.Error">
-      <HintPath>..\..\..\Bin\SharpDX.Error.dll</HintPath>
+    <Reference Include="SharpDX.Diagnostics">
+      <HintPath>..\..\..\Bin\SharpDX.Diagnostics.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

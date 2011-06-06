@@ -35,9 +35,7 @@ namespace SharpDX.DXGI
         /// <unmanaged>HRESULT IDXGIFactory::CreateSwapChain([In] IUnknown* pDevice,[In] DXGI_SWAP_CHAIN_DESC* pDesc,[Out] IDXGISwapChain** ppSwapChain)</unmanaged>
         public SwapChain(Factory factory, ComObject device, SwapChainDescription description) : base(IntPtr.Zero)
         {
-            SwapChain temp;
-            factory.CreateSwapChain(device, ref description, out temp);
-            NativePointer = temp.NativePointer;
+            factory.CreateSwapChain(device, ref description, this);
         }
 
         /// <summary>
@@ -71,7 +69,7 @@ namespace SharpDX.DXGI
                 Output output;
                 GetFullscreenState(out isFullScreen, out output);
                 if (output != null)
-                    output.Release();
+                    output.Dispose();
                 return isFullScreen;
             }
 

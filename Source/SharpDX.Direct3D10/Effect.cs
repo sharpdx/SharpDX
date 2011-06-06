@@ -51,9 +51,7 @@ namespace SharpDX.Direct3D10
         /// <param name="effectPool">Optional. A reference to an memory space for effect variables that are shared across effects (see <see cref="SharpDX.Direct3D10.EffectPool"/>).</param>
         public Effect(Device device, ShaderBytecode effectByteCode, EffectFlags fxFlags, EffectPool effectPool) 
         {
-            Effect temp;
-            D3D10.CreateEffectFromMemory(effectByteCode.BufferPointer, effectByteCode.BufferSize, (int)fxFlags, device, effectPool, out temp);
-            NativePointer = temp.NativePointer;
+            D3D10.CreateEffectFromMemory(effectByteCode.BufferPointer, effectByteCode.BufferSize, (int)fxFlags, device, effectPool, this);
         }
    }
 }

@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{31F85A16-CB01-4456-BE3C-76E9FF3A1343}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SharpGen</RootNamespace>
     <AssemblyName>SharpGen</AssemblyName>
@@ -40,6 +40,8 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -67,11 +69,14 @@
     <StartupObject>SharpGen.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>logo_sharp_gen.ico</ApplicationIcon>
+    <ApplicationIcon>SharpGen.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Build" />
     <Reference Include="Microsoft.JScript" />
+    <Reference Include="Mono.Options">
+      <HintPath>..\..\..\External\Mono.Options\Mono.Options.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -214,18 +219,18 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="logo_sharp_gen.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\SharpCore\SharpCore.csproj">
       <Project>{9435EFE8-5875-42E8-983B-29298C4CE5FF}</Project>
       <Name>SharpCore</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="SharpGen.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>copy  $(TargetPath) $(SolutionDir)Build\Tools\Bin\
+copy  $(TargetDir)\*.dll $(SolutionDir)Build\Tools\Bin\</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

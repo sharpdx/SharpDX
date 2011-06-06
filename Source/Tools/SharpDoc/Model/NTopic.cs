@@ -17,21 +17,49 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Xml.Serialization;
+using SharpCore;
+using SharpCore.Logging;
 
 namespace SharpDoc.Model
 {
     /// <summary>
     /// Documentation topic store in an external file.
     /// </summary>
+    [XmlType("topic")]
     public class NTopic : IModelReference
     {
+        /// <summary>
+        /// Id for the default class library topic
+        /// </summary>
+        public const string ClassLibraryTopicId = "X:ClassLibrary";
+
+        /// <summary>
+        /// Id for the default search results topic
+        /// </summary>
+        public const string SearchResultsTopicId = "X:SearchResults";
+               
         /// <summary>
         /// Initializes a new instance of the <see cref="NTopic"/> class.
         /// </summary>
         public NTopic()
         {
+            SubTopics = new List<NTopic>();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NTopic"/> class.
+        /// </summary>
+        /// <param name="reference">The reference.</param>
+        public NTopic(IModelReference reference)
+        {
+            Id = reference.Id;
+            NormalizedId = reference.NormalizedId;
+            Name = reference.Name;
+            FullName = reference.FullName;
             SubTopics = new List<NTopic>();
         }
 
@@ -48,7 +76,7 @@ namespace SharpDoc.Model
         /// can be used for filename.
         /// </summary>
         /// <value>The file id.</value>
-        [XmlIgnore]
+        [XmlAttribute("fileid")]
         public string NormalizedId { get; set; }
 
         /// <summary>
@@ -94,9 +122,154 @@ namespace SharpDoc.Model
         public List<NTopic> SubTopics { get; set; }
 
         /// <summary>
-        /// Id for the default class library topic
+        /// Gets a value indicating whether this instance is class library.
         /// </summary>
-        public const string DefaultClassLibraryTopicId = "X:ClassLibrary";
+        /// <value>
+        /// 	<c>true</c> if this instance is class library; otherwise, <c>false</c>.
+        /// </value>
+        [XmlIgnore]
+        public bool IsClassLibrary
+        {
+            get { return Id == ClassLibraryTopicId; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is search result.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is search result; otherwise, <c>false</c>.
+        /// </value>
+        [XmlIgnore]
+        public bool IsSearchResult
+        {
+            get { return Id == SearchResultsTopicId; }
+        }
+
+        /// <summary>
+        /// Finds the topic by id.
+        /// </summary>
+        /// <param name="topicId">The topic id.</param>
+        /// <returns></returns>
+        public NTopic FindTopicById(string topicId)
+        {
+            if (Id == topicId)
+                return this;
+            return FindTopicById(SubTopics, topicId);
+        }
+
+        /// <summary>
+        /// Finds the topic by id.
+        /// </summary>
+        /// <param name="topics">The topics.</param>
+        /// <param name="topicId">The topic id.</param>
+        /// <returns></returns>
+        public static NTopic FindTopicById(IEnumerable<NTopic> topics, string topicId)
+        {
+            NTopic topicFound = null;
+            foreach (var topic in topics)
+            {
+                topicFound = topic.FindTopicById(topicId);
+                if (topicFound != null)
+                    break;
+            }
+            return topicFound;
+        }
+
+        /// <summary>
+        /// Associate topics with their parent
+        /// </summary>
+        public void BuildParents(NTopic parentTopic = null)
+        {
+            Parent = parentTopic;
+            foreach (var subTopic in SubTopics)
+                subTopic.BuildParents(this);
+        }
+
+        /// <summary>
+        /// Gets the parents of this intance.
+        /// </summary>
+        /// <returns>Parents of this instance</returns>
+        /// <remarks>
+        /// The parents is ordered from the root level to this instance (excluding this instance)
+        /// </remarks>
+        public List<NTopic> GetParents()
+        {
+            var topics = new List<NTopic>();
+            var topic = Parent;
+            while (topic != null)
+            {
+                topics.Insert(0, topic);
+                topic = topic.Parent;
+            }
+            return topics;
+        }
+
+        /// <summary>
+        /// Loads the content of this topic.
+        /// </summary>
+        /// <param name="rootPath">The root path.</param>
+        public void Init(string rootPath)
+        {
+            // Check that id is valid
+            if (string.IsNullOrEmpty(Id))
+                Logger.Error("Missing id for topic [{0}]", this);
+
+            // Check that name is valid
+            if (string.IsNullOrEmpty(Name))
+            {
+                if (Id == ClassLibraryTopicId)
+                {
+                    Name = "Class Library";
+                }
+                else
+                {
+                    Logger.Error("Missing name for topic [{0}]", this);
+                }
+            }
+
+
+            // Copy Name to Fullname if empty
+            if (string.IsNullOrEmpty(FullName))
+                FullName = Name;
+
+            rootPath = rootPath ?? "";
+
+            // Initialize sub topics
+            foreach(var topic in SubTopics)
+                topic.Init(rootPath);
+
+            if (Id != ClassLibraryTopicId)
+            {
+                // Load content file
+                if (string.IsNullOrEmpty(FileName))
+                {
+                    // Check that filename is valid
+                    Logger.Error("Filname for topic [{0}] cannot be empty", this);
+                }
+                else
+                {
+                    string filePath = null;
+                    try
+                    {
+                        if (string.IsNullOrEmpty(NormalizedId))
+                            NormalizedId = Path.GetFileNameWithoutExtension(FileName);
+                        filePath = Path.Combine(rootPath, FileName);
+                        Content = File.ReadAllText(filePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error("Cannot load content for topic [{0}] from path [{1}]. Reason: {2}", this, filePath, ex.Message);
+                    }
+                }
+            }
+
+            if (string.IsNullOrEmpty(NormalizedId))
+                NormalizedId = DocIdHelper.StripXmlId(Id);
+
+            // Check that NormalizeId is a valid filename
+            if (!Utility.IsValidFilename(NormalizedId))
+                Logger.Error("Invalid fileid/normalizedId [{0}] for topic [{1}]. Fileid must contain valid filename chars", NormalizedId, this);
+        }
 
         /// <summary>
         /// Gets the default class library topic.
@@ -108,11 +281,39 @@ namespace SharpDoc.Model
             {
                 return new NTopic()
                            {
-                               Id = DefaultClassLibraryTopicId,
+                               Id = ClassLibraryTopicId,
                                NormalizedId = "ClassLibrary",
                                Name = "Class Library"
                            };
             }
-        } 
+        }
+
+        /// <summary>
+        /// Gets the default search results topic.
+        /// </summary>
+        /// <value>The default search results topic.</value>
+        public static NTopic DefaultSearchResultsTopic
+        {
+            get
+            {
+                return new NTopic()
+                {
+                    Id = SearchResultsTopicId,
+                    NormalizedId = "SearchResults",
+                    Name = "Search results"
+                };
+            }
+        }
+
+        /// <summary>
+        /// Returns a <see cref="System.String"/> that represents this instance.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String"/> that represents this instance.
+        /// </returns>
+        public override string ToString()
+        {
+            return string.Format("Id: {0}, NormalizedId: {1}, Name: {2}, FullName: {3}, FileName: {4}, SubTopics.Count: {5}", Id, NormalizedId, Name, FullName, FileName, SubTopics.Count);
+        }
     }
 }

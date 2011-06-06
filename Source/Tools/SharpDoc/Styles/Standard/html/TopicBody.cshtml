@@ -25,5 +25,6 @@
 @using SharpDoc.Model
 @using System.Text;
 @model SharpDoc.TemplateContext
-@* inline the topic as-is *@           
-@Model.Topic.Content
+@* inline the topic as-is *@      
+<h1 class="content-title">@Model.Topic.FullName</h1>     
+@TagExpand(Model.Topic.Content)

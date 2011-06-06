@@ -9,18 +9,28 @@ namespace SharpDX.XAPO
     /// </summary>
     /// IXAPO GUID
     [Guid("a90bc001-e897-e897-55e4-9e4700000000")]
-    internal class AudioProcessorCallback : ComObjectCallback
+    internal class AudioProcessorCallback : ComObjectCallbackNative
     {
-        private readonly AudioProcessor Callback;
-        private readonly ParameterProviderCallback _parameterProviderCallback;
+        private AudioProcessor Callback;
+        private ParameterProviderCallback _parameterProviderCallback;
 
-        internal AudioProcessorCallback(AudioProcessor callback) : base(callback, 10)        
+        public static IntPtr CallbackToPtr(AudioProcessor audioProcessor)
         {
+            return CallbackToPtr<AudioProcessor, AudioProcessorCallback>(audioProcessor);
+        }
+
+        public override void Attach<T>(T callback)
+        {
+            Attach(callback, 10);
+            Callback = (AudioProcessor)callback;
+            if (Callback is ParameterProvider)
+            {
+                _parameterProviderCallback = new ParameterProviderCallback();
+                _parameterProviderCallback.Attach(Callback);
+            }
+
             unsafe
             {
-                Callback = callback;
-                if (Callback is ParameterProvider)
-                    _parameterProviderCallback = new ParameterProviderCallback(Callback as ParameterProvider);
                 AddMethod(new GetRegistrationPropertiesDelegate(GetRegistrationPropertiesImpl));
                 AddMethod(new IsInputFormatSupportedDelegate(IsInputFormatSupportedImpl));
                 AddMethod(new IsOutputFormatSupportedDelegate(IsOutputFormatSupportedImpl));
@@ -32,6 +42,18 @@ namespace SharpDX.XAPO
                 AddMethod(new CalcInputFramesDelegate(CalcInputFramesImpl));
                 AddMethod(new CalcOutputFramesDelegate(CalcOutputFramesImpl));
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            // Dispose the callback for the parameter provider
+            if (disposing && _parameterProviderCallback != null)
+            {
+                _parameterProviderCallback.Dispose();
+                _parameterProviderCallback = null;
+            }
+
+            base.Dispose(disposing);
         }
 
         protected unsafe override int QueryInterfaceImpl(IntPtr thisPointer, Guid* guid, out IntPtr output)

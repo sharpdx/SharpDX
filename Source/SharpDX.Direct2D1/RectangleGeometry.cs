@@ -31,9 +31,7 @@ namespace SharpDX.Direct2D1
         public RectangleGeometry(Factory factory, RectangleF rectangle)
             : base(IntPtr.Zero)
         {
-            RectangleGeometry temp;
-            factory.CreateRectangleGeometry(rectangle, out temp);
-            NativePointer = temp.NativePointer;
+            factory.CreateRectangleGeometry(rectangle, this);
         }
     }
 }

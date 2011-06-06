@@ -32,10 +32,8 @@ namespace SharpDX.Direct3D10
         public PixelShader(Device device, ShaderBytecode shaderBytecode)
             : base(IntPtr.Zero)
         {
-            PixelShader pixelShader;
             device.CreatePixelShader(shaderBytecode.GetBufferPointer(),
-                                     shaderBytecode.GetBufferSize(), out pixelShader);
-            NativePointer = pixelShader.NativePointer;
+                                     shaderBytecode.GetBufferSize(), this);
         }
     }
 }

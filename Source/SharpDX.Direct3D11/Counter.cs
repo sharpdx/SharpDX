@@ -32,9 +32,7 @@ namespace SharpDX.Direct3D11
         public Counter(Device device, CounterDescription description)
             : base(IntPtr.Zero)
         {
-            Counter temp;
-            device.CreateCounter(description, out temp);
-            NativePointer = temp.NativePointer;
+            device.CreateCounter(description, this);
         }
     }
 }

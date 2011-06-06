@@ -51,7 +51,7 @@ namespace SharpDX.D3DCompiler
     /// <summary>
     /// Internal Include Callback
     /// </summary>
-    internal class IncludeCallback : SharpDX.CppObjectCallback
+    internal class IncludeCallback : SharpDX.CppObjectCallbackNative
     {
         private Dictionary<IntPtr, Frame> _frames;
 

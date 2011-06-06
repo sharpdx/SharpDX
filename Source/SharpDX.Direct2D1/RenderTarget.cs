@@ -54,9 +54,7 @@ namespace SharpDX.Direct2D1
         public RenderTarget(Factory factory, Surface dxgiSurface,  RenderTargetProperties properties)
             : base(IntPtr.Zero)
         {
-            RenderTarget temp;
-            factory.CreateDxgiSurfaceRenderTarget(dxgiSurface, ref properties, out temp);
-            NativePointer = temp.NativePointer;
+            factory.CreateDxgiSurfaceRenderTarget(dxgiSurface, ref properties, this);
         }
 
 
