@@ -89,9 +89,8 @@
     <Reference Include="Mono.Options">
       <HintPath>..\..\..\External\Mono.Options\Mono.Options.dll</HintPath>
     </Reference>
-    <Reference Include="RazorEngine, Version=2.1.4133.29523, Culture=neutral, PublicKeyToken=1f722ed313f51831, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\RazorEngine\RazorEngine v2\Core\RazorEngine\bin\Debug\RazorEngine.dll</HintPath>
+    <Reference Include="RazorEngine">
+      <HintPath>..\..\..\External\RazorEngine\RazorEngine.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

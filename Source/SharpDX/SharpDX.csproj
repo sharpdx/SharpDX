@@ -106,6 +106,7 @@
     <Compile Include="Collision.cs" />
     <Compile Include="Color3.cs" />
     <Compile Include="Color4.cs" />
+    <Compile Include="ComBaseStreamNative.cs" />
     <Compile Include="ComObject.cs" />
     <Compile Include="ComObjectCallback.cs" />
     <Compile Include="ComObjectCallbackNative.cs" />
@@ -139,7 +140,6 @@
     <Compile Include="Generated\Direct3D\Structures.cs" />
     <Compile Include="Generated\LocalInterop.cs" />
     <Compile Include="Generated\Multimedia\Enumerations.cs" />
-    <Compile Include="Generated\Win32\ComBaseStreamNative.cs" />
     <Compile Include="Generated\Win32\Interfaces.cs" />
     <Compile Include="Generated\Win32\Structures.cs" />
     <Compile Include="Half.cs" />
@@ -203,8 +203,6 @@
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
-  <Exec Command="$(SolutionDir)Source\CodeGen\RunGenerator.bat $(ConfigurationName)"/>
-	<CodeGenTask ConfigFile="$(SolutionDir)\Source\Mapping.xml" GccXmlExecutablePath="$(SolutionDir)\External\gccxml\bin\gccxml.exe" />
   </Target>
   <Target Name="AfterBuild">
   </Target>
