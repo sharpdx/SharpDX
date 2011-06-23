@@ -55,6 +55,7 @@ namespace ColorDrawingEffect
 
         private CustomTextRenderer CustomTextRenderer { get; set; }
 
+        private static int count = 0;
         /// <summary>
         /// Initializes a new instance of the <see cref="ColorDrawingEffectForm"/> class.
         /// </summary>
@@ -75,6 +76,7 @@ namespace ColorDrawingEffect
 
             Paint += RenderControlPaint;
             Resize += RenderControlResize;
+            KeyDown += new KeyEventHandler((s, e) => { this.RenderControlPaint(this, null); });
         }
 
         /// <summary>
@@ -171,7 +173,7 @@ namespace ColorDrawingEffect
 
                 CurrentTextLayout.Draw(CustomTextRenderer, 0, 0);
 
-
+                Text = "Frame " + count++;
                 RenderTarget2D.EndDraw();
             }
             catch (Exception ex)

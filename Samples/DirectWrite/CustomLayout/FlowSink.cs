@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using SharpDX.DirectWrite;
 
@@ -110,14 +111,16 @@ namespace CustomLayout
         {
             try
             {
-                GlyphRun gr = new GlyphRun();
-                gr.Items = new GlyphRunItem[glyphCount];
-                for (int i = 0; i < glyphCount; i++)
-                {
-                    gr.Items[i].Index = glyphIndices[glyphStart + i];
-                    gr.Items[i].Advance = glyphAdvances[glyphStart + i];
-                    gr.Items[i].Offset = glyphOffsets[glyphStart + i];
-                }
+                var gr = new GlyphRun();
+                gr.Indices = new short[glyphCount];
+                glyphIndices.CopyTo(glyphStart, gr.Indices, 0, glyphCount);
+
+                gr.Advances = new float[glyphCount];
+                glyphAdvances.CopyTo(glyphStart, gr.Advances, 0, glyphCount);
+
+                gr.Offsets= new GlyphOffset[glyphCount];
+                glyphOffsets.CopyTo(glyphStart, gr.Offsets, 0, glyphCount);
+                
                 gr.FontSize = fontEmSize;
                 gr.FontFace = fontFace;
                 gr.BidiLevel = bidiLevel;

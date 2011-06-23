@@ -43,11 +43,8 @@ namespace ColorDrawingEffect
         {
             var pathGeometry = new PathGeometry(_d2DFactory);
             var geometrySink = pathGeometry.Open();
-            float[] advances;
-            GlyphOffset[] offsets;
-            var indecies = glyphRun.ToArrays(out advances, out offsets);
 
-            var result = glyphRun.FontFace.GetGlyphRunOutline(glyphRun.FontSize, indecies, advances, offsets, glyphRun.IsSideways, glyphRun.BidiLevel % 2 != 0, geometrySink);
+            glyphRun.FontFace.GetGlyphRunOutline(glyphRun.FontSize, glyphRun.Indices, glyphRun.Advances, glyphRun.Offsets, glyphRun.IsSideways, glyphRun.BidiLevel % 2 != 0, geometrySink);
             geometrySink.Close();
             var matrix = new Matrix3x2()
             {

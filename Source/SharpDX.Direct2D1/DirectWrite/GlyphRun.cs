@@ -31,31 +31,19 @@ namespace SharpDX.DirectWrite
         public FontFace FontFace { get; set; }
 
         /// <summary>
-        /// Gets or sets an array containing glyph advance widths for the glyph run. 
+        /// An array of glyph indices. This array contains <see cref="GlyphCount"/> elements.
         /// </summary>
-        /// <value>The glyph advances.</value>
-        public GlyphRunItem[] Items { get; set; }
-
+        public short[] Indices { get; set; }
 
         /// <summary>
-        /// Trannsform this GlyphRun to individual indices, advances and offsets arrays.
+        /// An optional array of glyph advances. This array could be null or contains <see cref="GlyphCount"/> elements.
         /// </summary>
-        /// <param name="advances">The advances array.</param>
-        /// <param name="offsets">The offsets array.</param>
-        /// <returns>the indices array.</returns>
-        public short[] ToArrays(out float[] advances, out GlyphOffset[] offsets)
-        {
-            var indices = new short[Items.Length];
-            advances = new float[Items.Length];
-            offsets = new GlyphOffset[Items.Length];
-            for (int i = 0; i < Items.Length; i++)
-            {
-                indices[i] = Items[i].Index;
-                advances[i] = Items[i].Advance;
-                offsets[i] = Items[i].Offset;
-            }
-            return indices;
-        }
+        public float[] Advances { get; set; }
+
+        /// <summary>
+        /// An optional array of glyph offsets. This array could be null or contains <see cref="GlyphCount"/> elements.
+        /// </summary>
+        public GlyphOffset[] Offsets { get; set; }
 
         // Internal native struct used for marshalling
         [StructLayout(LayoutKind.Sequential, Pack = 0)]
@@ -91,12 +79,23 @@ namespace SharpDX.DirectWrite
         {
             this.FontFace = (@ref.FontFace == IntPtr.Zero) ? null : new FontFace(@ref.FontFace);
             this.FontSize= @ref.FontEmSize;
-            this.Items = new GlyphRunItem[@ref.GlyphCount];
-            for (int i = 0; i < Items.Length; i++)
+            this.GlyphCount = @ref.GlyphCount;
+            if (@ref.GlyphIndices != IntPtr.Zero)
             {
-                Items[i].Index = ((short*) @ref.GlyphIndices)[i];
-                Items[i].Advance = ((float*)@ref.GlyphAdvances)[i];
-                Items[i].Offset = ((GlyphOffset*)@ref.GlyphOffsets)[i];
+                Indices = new short[GlyphCount];
+                Utilities.Read(@ref.GlyphIndices, Indices, 0, GlyphCount);
+            }
+
+            if (@ref.GlyphAdvances != IntPtr.Zero)
+            {
+                Advances = new float[GlyphCount];
+                Utilities.Read(@ref.GlyphAdvances, Advances, 0, GlyphCount);
+            }
+
+            if (@ref.GlyphOffsets != IntPtr.Zero)
+            {
+                Offsets = new GlyphOffset[GlyphCount];
+                Utilities.Read(@ref.GlyphOffsets, Offsets, 0, GlyphCount);
             }
             this._IsSideways = @ref._IsSideways;
             this.BidiLevel = @ref.BidiLevel;
@@ -106,24 +105,29 @@ namespace SharpDX.DirectWrite
         {
             @ref.FontFace = this.FontFace == null?IntPtr.Zero:this.FontFace.NativePointer;
             @ref.FontEmSize = this.FontSize;
-            @ref.GlyphCount = Items == null ? 0 : Items.Length;
+            @ref.GlyphCount = this.GlyphCount;
             @ref.GlyphIndices = IntPtr.Zero;
             @ref.GlyphAdvances = IntPtr.Zero;
             @ref.GlyphOffsets = IntPtr.Zero;
-            if (Items != null && Items.Length > 0)
-            {
-                // TODO: improve performance by making a single AllocHGlobal call
-                @ref.GlyphIndices = Marshal.AllocHGlobal(this.Items.Length * sizeof(short));
-                @ref.GlyphAdvances = Marshal.AllocHGlobal(this.Items.Length * sizeof(float));
-                @ref.GlyphOffsets = Marshal.AllocHGlobal(this.Items.Length * sizeof(GlyphOffset));
 
-                for (int i = 0; i < Items.Length; i++)
-                {
-                    ((short*) @ref.GlyphIndices)[i] = Items[i].Index;
-                    ((float*) @ref.GlyphAdvances)[i] = Items[i].Advance;
-                    ((GlyphOffset*) @ref.GlyphOffsets)[i] = Items[i].Offset;
-                }
+            if (this.Indices != null)
+            {
+                @ref.GlyphIndices = Marshal.AllocHGlobal(this.Indices.Length*sizeof (short));
+                Utilities.Write(@ref.GlyphIndices, Indices, 0, GlyphCount);
             }
+
+            if (this.Advances != null)
+            {
+                @ref.GlyphAdvances = Marshal.AllocHGlobal(this.Advances.Length * sizeof(float));
+                Utilities.Write(@ref.GlyphAdvances, Advances, 0, GlyphCount);
+            }
+
+            if (this.Offsets != null)
+            {
+                @ref.GlyphOffsets = Marshal.AllocHGlobal(this.Offsets.Length * sizeof(GlyphOffset));
+                Utilities.Write(@ref.GlyphOffsets, Offsets, 0, GlyphCount);
+            }
+
             @ref._IsSideways = this._IsSideways;
             @ref.BidiLevel = this.BidiLevel;
         }
