@@ -131,6 +131,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoystickApp.samples", "Samp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitmapApp.sample", "Samples\Direct2D1\BitmapApp\BitmapApp.sample.csproj", "{AB183A0E-36DF-4C01-B46F-413F4070C43D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{1B526C0E-EE4A-4E8F-BF8F-8C7397FB4918}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
