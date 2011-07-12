@@ -395,7 +395,14 @@ namespace SharpDX.DirectWrite
         }
 
         /// <summary>	
-        /// The application calls this function to get a set of hit-test metrics corresponding to a range of text positions. One of the main usages is to implement highlight selection of the text string. The function returns E_NOT_SUFFICIENT_BUFFER, which is equivalent to HRESULT_FROM_WIN32(ERROR_INSUFFICIENT_BUFFER), when the buffer size of hitTestMetrics is too small to hold all the regions calculated by the function. In this situation, the function sets the output value *actualHitTestMetricsCount to the number of geometries calculated. The application is responsible for allocating a new buffer of greater size and calling the function again. A good value to use as an initial value for maxHitTestMetricsCount may be calculated from the following equation: maxHitTestMetricsCount = lineCount * maxBidiReorderingDepth where lineCount is obtained from the value of the output argument *actualLineCount (from the function IDWriteTextLayout::GetLineLengths), and the maxBidiReorderingDepth value from the DWRITE_TEXT_METRICS structure of the output argument *textMetrics (from the function IDWriteFactory::CreateTextLayout). 	
+        /// The application calls this function to get a set of hit-test metrics corresponding to a range of text positions. 
+        /// One of the main usages is to implement highlight selection of the text string. 
+        /// The function returns E_NOT_SUFFICIENT_BUFFER, which is equivalent to HRESULT_FROM_WIN32(ERROR_INSUFFICIENT_BUFFER), 
+        /// when the buffer size of hitTestMetrics is too small to hold all the regions calculated by the function. 
+        /// In this situation, the function sets the output value *actualHitTestMetricsCount to the number of geometries calculated. 
+        /// The application is responsible for allocating a new buffer of greater size and calling the function again. 
+        /// A good value to use as an initial value for maxHitTestMetricsCount may be calculated from the following equation: 
+        /// maxHitTestMetricsCount = lineCount * maxBidiReorderingDepth where lineCount is obtained from the value of the output argument *actualLineCount (from the function IDWriteTextLayout::GetLineLengths), and the maxBidiReorderingDepth value from the DWRITE_TEXT_METRICS structure of the output argument *textMetrics (from the function IDWriteFactory::CreateTextLayout). 	
         /// </summary>	
         /// <param name="textPosition">The first text position of the specified range. </param>
         /// <param name="textLength">The number of positions of the specified range. </param>
@@ -415,8 +422,12 @@ namespace SharpDX.DirectWrite
             catch (SharpDXException)
             {
             }
-            hitTestMetrics = new HitTestMetrics[actualHitTestMetricsCount];
-            HitTestTextRange(textPosition, textLength, originX, originY, hitTestMetrics, actualHitTestMetricsCount, out actualHitTestMetricsCount);
+            if (actualHitTestMetricsCount > 0)
+            {
+                hitTestMetrics = new HitTestMetrics[actualHitTestMetricsCount];
+                HitTestTextRange(textPosition, textLength, originX, originY, hitTestMetrics, actualHitTestMetricsCount,
+                                 out actualHitTestMetricsCount);
+            }
             return hitTestMetrics;
         }
 
