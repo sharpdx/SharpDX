@@ -55,18 +55,17 @@ namespace SharpDX.Direct3D10
         public Texture2D(Device device, Texture2DDescription description, DataRectangle[] data)
             : base(IntPtr.Zero)
         {
-            SubResourceData[] subResourceDatas = null;
+            DataBox[] subResourceDatas = null;
 
             if (data != null)
             {
-                subResourceDatas = new SubResourceData[data.Length];
+                subResourceDatas = new DataBox[data.Length];
                 for (int i = 0; i < subResourceDatas.Length; i++)
                 {
-                    subResourceDatas[i].DataPointer = data[i].Data.DataPointer;
-                    subResourceDatas[i].Pitch = data[i].Pitch;
+                    subResourceDatas[i].DataPointer = data[i].DataPointer;
+                    subResourceDatas[i].RowPitch = data[i].Pitch;
                 }
             }
-
             device.CreateTexture2D(ref description, subResourceDatas, this);
         }
 
@@ -96,15 +95,36 @@ namespace SharpDX.Direct3D10
         {
             var desc = Description;
             int subresource = CalculateSubresourceIndex(mipSlice, 0, desc.MipLevels);
+
+            DataRectangle mappedTexture2D;
+            Map(subresource, mode, flags, out mappedTexture2D);
+            return mappedTexture2D;
+        }
+
+        /// <summary>
+        /// Maps the texture, providing CPU access to its contents.
+        /// </summary>
+        /// <param name="mipSlice">The mip slice to map.</param>
+        /// <param name="mode">The IO operations to enable on the CPU.</param>
+        /// <param name="flags">Flags indicating how the CPU should respond when the GPU is busy.</param>
+        /// <param name="dataStream">The data stream.</param>
+        /// <returns>
+        /// A data rectangle containing the mapped data. This data stream is invalidated when the buffer is unmapped.
+        /// </returns>
+        public DataRectangle Map(int mipSlice, MapMode mode, MapFlags flags, out DataStream dataStream)
+        {
+            var desc = Description;
+            int subresource = CalculateSubresourceIndex(mipSlice, 0, desc.MipLevels);
             int mipHeight = GetMipSize(mipSlice, desc.Height);
 
-            MappedTexture2D mappedTexture2D;
+            DataRectangle mappedTexture2D;
             Map(subresource, mode, flags, out mappedTexture2D);
 
             bool canRead = mode == MapMode.Read || mode == MapMode.ReadWrite;
             bool canWrite = mode != MapMode.Read;
+            dataStream = new DataStream(mappedTexture2D.DataPointer, mipHeight * mappedTexture2D.Pitch, canRead, canWrite);
 
-            return new DataRectangle(mappedTexture2D.RowPitch, new DataStream(mappedTexture2D.PData, mipHeight * mappedTexture2D.RowPitch, canRead, canWrite));
+            return mappedTexture2D;
         }
     }
 }

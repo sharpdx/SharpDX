@@ -144,7 +144,6 @@ namespace SharpDX.Direct3D11
             CopySubresourceRegion_(destination, destinationSubResource, dstX, dstY, dstZ, source, sourceSubresource, sourceRegion);
         }
 
-
         /// <summary>	
         /// Copy a multisampled resource into a non-multisampled resource.	
         /// </summary>	
@@ -160,26 +159,6 @@ namespace SharpDX.Direct3D11
         public void ResolveSubresource(SharpDX.Direct3D11.Resource source, int sourceSubresource, SharpDX.Direct3D11.Resource destination, int destinationSubresource, SharpDX.DXGI.Format format)
         {
             ResolveSubresource_(destination, destinationSubresource, source, sourceSubresource, format);
-        }
-
-        /// <summary>
-        ///   Maps a GPU resource into CPU-accessible memory.
-        /// </summary>
-        /// <param name = "resource">The resource to map.</param>
-        /// <param name = "subresource">Index of the subresource to map.</param>
-        /// <param name = "sizeInBytes">Size, in bytes, of the data to retrieve.</param>
-        /// <param name = "mode">Specifies the CPU's read and write permissions for the resource. </param>
-        /// <param name = "flags">Flags that specify what the CPU should do when the GPU is busy.</param>
-        /// <returns>The mapped resource data.</returns>
-        public DataBox MapSubresource(Resource resource, int subresource, MapMode mode, MapFlags flags)
-        {
-            unsafe
-            {
-                MappedSubResource mappedSubResource;
-                Map(resource, subresource, mode, flags, out mappedSubResource);
-                return new DataBox(mappedSubResource.RowPitch, mappedSubResource.DepthPitch,
-                                   new DataStream((void*)mappedSubResource.PData, mappedSubResource.DepthPitch, true, true, false));
-            }
         }
 
         /// <summary>

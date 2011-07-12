@@ -57,7 +57,7 @@ namespace SharpDX.Direct3D11
             : base(IntPtr.Zero)
         {
             System.Diagnostics.Debug.Assert(data != null);
-            var subResourceDatas = new SubResourceData[data.Length];
+            var subResourceDatas = new DataBox[data.Length];
             for (int i = 0; i < subResourceDatas.Length; i++)
                 subResourceDatas[i].DataPointer = data[i].DataPointer;
 

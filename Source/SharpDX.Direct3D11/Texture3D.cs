@@ -53,20 +53,7 @@ namespace SharpDX.Direct3D11
         /// <param name = "data">An array of initial texture data for each subresource.</param>
         public Texture3D(Device device, Texture3DDescription description, DataBox[] data) : base(IntPtr.Zero)
         {
-            SubResourceData[] subResourceDatas = null;
-
-            if (data != null)
-            {
-                subResourceDatas = new SubResourceData[data.Length];
-                for (int i = 0; i < subResourceDatas.Length; i++)
-                {
-                    subResourceDatas[i].DataPointer = data[i].Data.DataPointer;
-                    subResourceDatas[i].Pitch = data[i].RowPitch;
-                    subResourceDatas[i].SlicePitch = data[i].SlicePitch;
-                }
-            }
-
-            device.CreateTexture3D(ref description, subResourceDatas, this);
+            device.CreateTexture3D(ref description, data, this);
         }
     }
 }

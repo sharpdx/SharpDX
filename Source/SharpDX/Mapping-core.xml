@@ -120,8 +120,10 @@
     <define struct="SharpDX.Win32Native.TextMetric" sizeof="32"/> <!-- TODO calculate sizeof -->
     <define struct="SharpDX.Win32Native.TextMetricA" sizeof="32"/> <!-- TODO calculate sizeof -->
     <define struct="SharpDX.Win32Native.LogFont" sizeof="32"/> <!-- TODO calculate sizeof -->
-    
-    
+
+
+    <define struct="SharpDX.DataRectangle" sizeof="12" />
+    <define struct="SharpDX.DataBox" sizeof="16" />
     <define struct="SharpDX.Int4" sizeof="16" />
     <define struct="SharpDX.Rectangle" sizeof="16" />
     <define struct="SharpDX.RectangleF" sizeof="16" />

@@ -43,12 +43,7 @@ namespace SharpDX.Direct3D10
         public Buffer(Device device, DataStream data, BufferDescription description)
             : base(IntPtr.Zero)
         {
-            var subResourceData = new SubResourceData();
-            subResourceData.DataPointer = data.DataPointer;
-            subResourceData.Pitch = 0;
-            subResourceData.SlicePitch = 0;
-
-            device.CreateBuffer(ref description, subResourceData, this);
+            device.CreateBuffer(ref description, new DataBox(data.DataPointer, 0, 0), this);
         }
 
         /// <summary>
@@ -98,13 +93,7 @@ namespace SharpDX.Direct3D10
                                       SizeInBytes = sizeInBytes,
                                       Usage = usage,
                                   };
-
-            var subResourceData = new SubResourceData();
-            subResourceData.DataPointer = data.DataPointer;
-            subResourceData.Pitch = 0;
-            subResourceData.SlicePitch = 0;
-
-            device.CreateBuffer(ref description, subResourceData, this);
+            device.CreateBuffer(ref description, new DataBox(data.DataPointer, 0, 0), this);
         }
 
         /// <summary>	

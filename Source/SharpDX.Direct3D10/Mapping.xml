@@ -104,6 +104,9 @@
     <bind from="D3DX10_FONT_PRECISION" to="SharpDX.Direct3D10.FontPrecision" />
     <bind from="D3DX10_FONT_CHARSET" to="SharpDX.Direct3D10.FontCharacterSet" />
     <bind from="D3DX10_FONT_PITCHFAMILY" to="SharpDX.Direct3D10.FontPitchAndFamily" />
+    <bind from="D3D10_SUBRESOURCE_DATA" to="SharpDX.DataBox"/>
+    <bind from="D3D10_MAPPED_TEXTURE2D" to="SharpDX.DataRectangle"/>
+    <bind from="D3D10_MAPPED_TEXTURE3D" to="SharpDX.DataBox"/>
     <bind from="ID3DX10ThreadPump" to="System.IntPtr" />
   </bindings>
 

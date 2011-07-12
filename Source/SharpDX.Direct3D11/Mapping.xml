@@ -77,6 +77,8 @@
   <!-- D3D11 bindings -->
   <bindings>
     <bind from="ID3DX11ThreadPump" to="System.IntPtr" />
+    <bind from="D3D11_MAPPED_SUBRESOURCE" to="SharpDX.DataBox" />
+    <bind from="D3D11_SUBRESOURCE_DATA" to="SharpDX.DataBox" />
   </bindings>
 
   <!-- D3D11 mapping -->

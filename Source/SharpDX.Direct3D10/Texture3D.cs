@@ -54,20 +54,7 @@ namespace SharpDX.Direct3D10
         /// <param name = "data">An array of initial texture data for each subresource.</param>
         public Texture3D(Device device, Texture3DDescription description, DataBox[] data) : base(IntPtr.Zero)
         {
-            SubResourceData[] subResourceDatas = null;
-
-            if (data != null)
-            {
-                subResourceDatas = new SubResourceData[data.Length];
-                for (int i = 0; i < subResourceDatas.Length; i++)
-                {
-                    subResourceDatas[i].DataPointer = data[i].Data.DataPointer;
-                    subResourceDatas[i].Pitch = data[i].RowPitch;
-                    subResourceDatas[i].SlicePitch = data[i].SlicePitch;
-                }
-            }
-
-            device.CreateTexture3D(ref description, subResourceDatas, this);
+            device.CreateTexture3D(ref description, data, this);
         }
 
         /// <summary>
@@ -76,20 +63,44 @@ namespace SharpDX.Direct3D10
         /// <param name="mipSlice">The mip slice to map.</param>
         /// <param name="mode">The IO operations to enable on the CPU.</param>
         /// <param name="flags">Flags indicating how the CPU should respond when the GPU is busy.</param>
-        /// <returns>A databox containing the mapped data. This data stream is invalidated when the buffer is unmapped.</returns>
+        /// <returns>
+        /// A databox containing the mapped data. This data stream is invalidated when the buffer is unmapped.
+        /// </returns>
         public DataBox Map(int mipSlice, MapMode mode, MapFlags flags)
         {
             var desc = Description;
             int subresource = CalculateSubresourceIndex(mipSlice, 0, desc.MipLevels);
-            int mipDepth = GetMipSize(mipSlice, desc.Depth);
 
-            MappedTexture3D mappedTexture3D;
+            DataBox mappedTexture3D;
+            Map(subresource, mode, flags, out mappedTexture3D);
+
+            return mappedTexture3D;
+        }
+
+        /// <summary>
+        /// Maps the texture, providing CPU access to its contents.
+        /// </summary>
+        /// <param name="mipSlice">The mip slice to map.</param>
+        /// <param name="mode">The IO operations to enable on the CPU.</param>
+        /// <param name="flags">Flags indicating how the CPU should respond when the GPU is busy.</param>
+        /// <param name="dataStream">The data stream.</param>
+        /// <returns>
+        /// A databox containing the mapped data. This data stream is invalidated when the buffer is unmapped.
+        /// </returns>
+        public DataBox Map(int mipSlice, MapMode mode, MapFlags flags, out DataStream dataStream)
+        {
+            var desc = Description;
+            int subresource = CalculateSubresourceIndex(mipSlice, 0, desc.MipLevels);
+
+            DataBox mappedTexture3D;
             Map(subresource, mode, flags, out mappedTexture3D);
 
             bool canRead = mode == MapMode.Read || mode == MapMode.ReadWrite;
             bool canWrite = mode != MapMode.Read;
+            int mipDepth = GetMipSize(mipSlice, desc.Depth);
+            dataStream = new DataStream(mappedTexture3D.DataPointer, mipDepth * mappedTexture3D.SlicePitch, canRead, canWrite);
 
-            return new DataBox(mappedTexture3D.RowPitch, mappedTexture3D.DepthPitch, new DataStream(mappedTexture3D.PData, mipDepth*mappedTexture3D.DepthPitch, canRead, canWrite));
+            return mappedTexture3D;
         }
     }
 }

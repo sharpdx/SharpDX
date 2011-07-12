@@ -32,12 +32,19 @@ namespace SharpDX.DXGI
         {
             MappedRect mappedRect;
             Map(out mappedRect, (int) flags);
-            // TODO Check to use MappedRect.Pitch instead of calculating the size of a Format
-            var desc = Description;
-            int size = (int)(FormatHelper.SizeOfInBytes(desc.Format)*desc.Width*desc.Height);
-            var canRead = (flags & MapFlags.Read) != 0;
-            var canWrite = (flags & MapFlags.Write) != 0;
-            return new DataRectangle(mappedRect.Pitch, new DataStream(mappedRect.PBits, size, canRead, canWrite));     
+            return new DataRectangle(mappedRect.PBits, mappedRect.Pitch);
+        }
+
+        /// <summary>
+        /// Acquires access to the surface data.
+        /// </summary>
+        /// <param name="flags">Flags specifying CPU access permissions.</param>
+        /// <returns>A <see cref="T:SharpDX.DataRectangle" /> for accessing the mapped data, or <c>null</c> on failure.</returns>.
+        public DataRectangle Map(MapFlags flags, out DataStream dataStream)
+        {
+            var dataRectangle = Map(flags);
+            dataStream = new DataStream(dataRectangle.DataPointer, Description.Height * dataRectangle.Pitch, true, true);
+            return dataRectangle;
         }
 
         /// <summary>

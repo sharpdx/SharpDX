@@ -54,15 +54,15 @@ namespace SharpDX.Direct3D11
         public Texture2D(Device device, Texture2DDescription description, DataRectangle[] data)
             : base(IntPtr.Zero)
         {
-            SubResourceData[] subResourceDatas = null;
+            DataBox[] subResourceDatas = null;
 
             if (data != null)
             {
-                subResourceDatas = new SubResourceData[data.Length];
+                subResourceDatas = new DataBox[data.Length];
                 for (int i = 0; i < subResourceDatas.Length; i++)
                 {
-                    subResourceDatas[i].DataPointer = data[i].Data.DataPointer;
-                    subResourceDatas[i].Pitch = data[i].Pitch;
+                    subResourceDatas[i].DataPointer = data[i].DataPointer;
+                    subResourceDatas[i].RowPitch = data[i].Pitch;
                 }
             }
 

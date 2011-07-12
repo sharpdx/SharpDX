@@ -343,7 +343,8 @@
     <map param="ID3D(\d+)DeviceContext::OMGetBlendState::BlendFactor" type="SHARPDX_COLOR4" pointer="*" array="0" />
     <map param="ID3D(\d+)DeviceContext::OMSetBlendState::BlendFactor" type="SHARPDX_COLOR4" pointer="*" array="0" />
     <map param="ID3D(\d+)DeviceContext::[A-Z][A-Z]GetShader::pNumClassInstances" attribute="inout" />
-    <map method="ID3D(\d+)DeviceContext::Map" visibility="internal" />
+    <map method="ID3D(\d+)DeviceContext::Map" name="MapSubresource" />
+    <map param="pMappedResource" return="true" />
     <map method="ID3D(\d+)DeviceContext::Unmap" name="UnmapSubresource" />
     <map method="ID3D(\d+)DeviceContext::UpdateSubresource" visibility="internal" />
     <map param="ID3D(\d+)DeviceContext::Map::MapFlags" type="D3D$1_MAP_FLAG" />
