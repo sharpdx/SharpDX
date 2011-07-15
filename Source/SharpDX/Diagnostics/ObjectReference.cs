@@ -38,8 +38,8 @@ namespace SharpDX.Diagnostics
         public ObjectReference(DateTime creationTime, ComObject comObject, StackTrace stackTrace)
         {
             CreationTime = creationTime;
-            // Creates a short week reference to the ComObject
-            Object = new WeakReference(comObject);
+            // Creates a long week reference to the ComObject
+            Object = new WeakReference(comObject, true);
             StackTrace = stackTrace;
         }
 

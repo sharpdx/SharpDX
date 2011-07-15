@@ -17,6 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System;
+
 namespace SharpDX.Direct3D11
 {
     public partial class DeviceContext
@@ -49,7 +52,32 @@ namespace SharpDX.Direct3D11
                     strides[i] = vertexBufferBindings[i].Stride;
                     offsets[i] = vertexBufferBindings[i].Offset;
                 }
-                SetVertexBuffers(firstSlot, vertexBufferBindings.Length, vertexBuffers, strides, offsets);
+                SetVertexBuffers(firstSlot, vertexBuffers, strides, offsets);
+            }
+
+            /// <summary>
+            /// Binds an array of vertex buffers to the input assembler.
+            /// </summary>
+            /// <param name="slot">Index of the first input slot to use for binding. The first vertex buffer is explicitly bound to the start slot; this causes each additional vertex buffer in the array to be implicitly bound to each subsequent input slot. There are 16 input slots.</param>
+            /// <param name="vertexBuffers">The vertex buffers.</param>
+            /// <param name="stridesRef">The strides.</param>
+            /// <param name="offsetsRef">The offsets.</param>
+            public void SetVertexBuffers(int slot, SharpDX.Direct3D11.Buffer[] vertexBuffers, int[] stridesRef, int[] offsetsRef)
+            {
+                unsafe
+                {
+                    IntPtr* vertexBuffersOut_ = (IntPtr*)0;
+                    if (vertexBuffers != null)
+                    {
+                        IntPtr* vertexBuffersOut__ = stackalloc IntPtr[vertexBuffers.Length];
+                        vertexBuffersOut_ = vertexBuffersOut__;
+                        for (int i = 0; i < vertexBuffers.Length; i++)
+                            vertexBuffersOut_[i] = (vertexBuffers[i] == null) ? IntPtr.Zero : vertexBuffers[i].NativePointer;
+                    }
+                    fixed (void* stridesRef_ = stridesRef)
+                    fixed (void* offsetsRef_ = offsetsRef)
+                        SharpDX.Direct3D11.LocalInterop.Callivoid(_nativePointer, slot, vertexBuffers.Length, vertexBuffersOut_, stridesRef_, offsetsRef_, ((void**)(*(void**)_nativePointer))[18]);
+                }
             }
         }
     }

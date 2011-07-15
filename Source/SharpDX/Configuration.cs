@@ -28,17 +28,19 @@ namespace SharpDX
     public class Configuration
     {
         /// <summary>
-        /// Gets or sets a value indicating whether to enable object tracking.
+        /// Enables or disables object tracking. Default is disabled (false).
         /// </summary>
-        /// <value>
-        /// 	<c>true</c> if object tracking is enable; otherwise, <c>false</c>.
-        /// </value>
         /// <remarks>
         /// Object Tracking is used to track COM object lifecycle creation/dispose. When this option is enabled
         /// objects can be tracked using <see cref="ObjectTracker"/>. Using Object tracking has a significant
         /// impact on performance and should be used only while debugging.
         /// </remarks>
-        public static bool EnableObjectTracking { get; set; }
+        public static bool EnableObjectTracking = false;
+
+        /// <summary>
+        /// Enables or disables release of ComObject on finalizer. Default is enabled (true).
+        /// </summary>
+        public static bool EnableReleaseOnFinalizer = true;
     }
 }
 

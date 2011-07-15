@@ -148,6 +148,7 @@
     <map method="ID3D11ShaderReflection::GetConstantBuffer.*" name="GetConstantBuffer" />
     <map method="ID3D11ShaderReflection::GetVariableBy.*" name="GetVariable" />
     <map method="ID3D11ShaderReflection::GetResourceBindingDesc.*" name="GetResourceBindingDescription" />
+    <map param="ID3D11ShaderReflection::GetResourceBindingDesc.*::pDesc" return="true" />
     <map param="ID3D11ShaderReflection::GetInputParameterDesc::pDesc" return="true" />
     <map param="ID3D11ShaderReflection::GetOutputParameterDesc::pDesc" return="true" />
     <map param="ID3D11ShaderReflection::GetPatchConstantParameterDesc.*::pDesc" return="true" />

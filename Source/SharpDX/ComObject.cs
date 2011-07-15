@@ -110,13 +110,28 @@ namespace SharpDX
         /// Releases unmanaged and - optionally - managed resources
         /// </summary>
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-        protected override void Dispose(bool disposing)
+        protected unsafe override void Dispose(bool disposing)
         {
             // Only dispose non-zero object
             if (NativePointer != IntPtr.Zero)
             {
-                ((IUnknown) this).Release();
-                ObjectTracker.UnTrack(this);
+                // If object is disposed by the finalizer, emits a warning
+                if (Configuration.EnableObjectTracking && !disposing)
+                {
+                    var objectReference = ObjectTracker.Find(this);
+                    Console.WriteLine("Warning, ComObject dispose on finalizer: {0}", objectReference);
+                }
+
+                // Release the object
+                if (disposing || Configuration.EnableReleaseOnFinalizer)
+                    ((IUnknown)this).Release();
+
+                // Untrack the object
+                if (Configuration.EnableObjectTracking)
+                    ObjectTracker.UnTrack(this);                
+
+                // Set pointer to null (using protected members in order to avoid NativePointerUpdat* callbacks.
+                _nativePointer = (void*)0;
             }
             base.Dispose(disposing);
         }

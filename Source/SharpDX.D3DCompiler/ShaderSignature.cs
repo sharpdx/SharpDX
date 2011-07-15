@@ -66,6 +66,16 @@ namespace SharpDX.D3DCompiler
         }
 
         /// <summary>
+        ///   Initializes a new instance of the <see cref = "T:SharpDX.D3DCompiler.ShaderSignature" /> class.
+        /// </summary>
+        /// <param name = "ptr">A pointer to a Blob object.</param>
+        private ShaderSignature(Blob blob) : base(IntPtr.Zero)
+        {
+            FromTemp(blob);
+            _data = new DataStream(this);
+        }
+
+        /// <summary>
         ///   Extracts the input and output signatures from a compiled shader or effect.
         /// </summary>
         /// <param name = "shaderBytecode">The bytecode of the compiled shader or effect.</param>
@@ -82,7 +92,7 @@ namespace SharpDX.D3DCompiler
             {
                 return null;
             }
-            return new ShaderSignature(shaderSignature.NativePointer);
+            return new ShaderSignature(shaderSignature);
         }
 
         /// <summary>
@@ -102,7 +112,7 @@ namespace SharpDX.D3DCompiler
             {
                 return null;
             }
-            return new ShaderSignature(shaderSignature.NativePointer);
+            return new ShaderSignature(shaderSignature);
         }
 
         /// <summary>
@@ -122,7 +132,7 @@ namespace SharpDX.D3DCompiler
             {
                 return null;
             }
-            return new ShaderSignature(shaderSignature.NativePointer);
+            return new ShaderSignature(shaderSignature);
         }
 
         /// <summary>

@@ -325,7 +325,12 @@
     <map method="ID3D(\d+)DeviceContext::IA.*" property="true" />
     <map method="ID3D(\d+)DeviceContext::SetViewports" visibility="internal" />
     <map method="ID3D(\d+)DeviceContext::SetScissorRects" visibility="internal" />
-    <map method="ID3D(\d+)DeviceContext::IASetVertexBuffers" visibility="internal" />
+    
+    <!-- Gives access to raw method-->
+    <map method="ID3D(\d+)DeviceContext::IASetVertexBuffers"/>
+    <map param="ppVertexBuffers" type="void" pointer="*" array="0" />
+    <map param="pStrides" type="void" pointer="*" array="0" />
+    <map param="pOffsets" type="void" pointer="*" array="0" />
     <map method="ID3D(\d+)DeviceContext::[A-Z][A-Z]SetShader" visibility="internal override" />
     <map method="ID3D(\d+)DeviceContext::[A-Z][A-Z]SetShaderResources" visibility="public override" />
     <map method="ID3D(\d+)DeviceContext::[A-Z][A-Z]SetSamplers" visibility="public override" />

@@ -147,7 +147,6 @@ namespace SharpDX.Diagnostics
             }
         }
 
-
         /// <summary>
         /// Reports all COM object that are active and not yet disposed.
         /// </summary>
