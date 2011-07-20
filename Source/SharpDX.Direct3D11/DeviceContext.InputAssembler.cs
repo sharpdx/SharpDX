@@ -75,8 +75,8 @@ namespace SharpDX.Direct3D11
                             vertexBuffersOut_[i] = (vertexBuffers[i] == null) ? IntPtr.Zero : vertexBuffers[i].NativePointer;
                     }
                     fixed (void* stridesRef_ = stridesRef)
-                    fixed (void* offsetsRef_ = offsetsRef)
-                        SharpDX.Direct3D11.LocalInterop.Callivoid(_nativePointer, slot, vertexBuffers.Length, vertexBuffersOut_, stridesRef_, offsetsRef_, ((void**)(*(void**)_nativePointer))[18]);
+                        fixed (void* offsetsRef_ = offsetsRef)
+                            SharpDX.Direct3D11.LocalInterop.Callivoid(_nativePointer, slot, vertexBuffers != null?vertexBuffers.Length:0, vertexBuffersOut_, stridesRef_, offsetsRef_, ((void**)(*(void**)_nativePointer))[18]);
                 }
             }
         }

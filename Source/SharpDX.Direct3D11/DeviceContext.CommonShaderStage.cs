@@ -28,39 +28,15 @@ namespace SharpDX.Direct3D11
         /// TODO: check if usage of abstract is not introducing an unacceptable overhead...
         /// </summary>
         /// <typeparam name = "T">Type of the shader</typeparam>
-        public abstract class CommonShaderStage<T> : CppObject where T : ComObject
+        public abstract class CommonShaderStage: CppObject
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="CommonShaderStage&lt;T&gt;"/> class.
             /// </summary>
             /// <param name="pointer">The pointer.</param>
-            protected CommonShaderStage(IntPtr pointer) : base(pointer)
+            protected CommonShaderStage(IntPtr pointer)
+                : base(pointer)
             {
-            }
-
-            /// <summary>
-            ///   Gets the shader currently assigned to the device.
-            /// </summary>
-            /// <returns>The shader (null if no shader is assigned).</returns>
-            public T Get()
-            {
-                T temp;
-                int numClassInstances = 0;
-                GetShader(out temp, null, ref numClassInstances);
-                return temp;
-            }
-
-            /// <summary>
-            ///   Gets the shader currently assigned to the device.
-            /// </summary>
-            /// <param name = "classInstances">An array that will be used to contain any class instances currently active.</param>
-            /// <returns>The shader (null if no shader is assigned).</returns>
-            public T Get(ClassInstance[] classInstances)
-            {
-                T temp;
-                int numClassInstances = classInstances.Length;
-                GetShader(out temp, classInstances, ref numClassInstances);
-                return temp;
             }
 
             /// <summary>
@@ -103,32 +79,13 @@ namespace SharpDX.Direct3D11
             }
 
             /// <summary>
-            ///   Assigns a compute shader to the device.
-            /// </summary>
-            /// <param name = "shader">The shader to assign to the device. Assign null to disable the compute shader.</param>
-            public void Set(T shader)
-            {
-                SetShader(shader, null, 0);
-            }
-
-            /// <summary>
-            ///   Assigns a compute shader to the device.
-            /// </summary>
-            /// <param name = "shader">The shader to assign to the device. Assign <c>null</c> to disable the compute shader.</param>
-            /// <param name = "classInstances">An array of class-instance interfaces. Each interface used by a shader must have a corresponding class instance or the shader will get disabled.</param>
-            public void Set(T shader, ClassInstance[] classInstances)
-            {
-                SetShader(shader, classInstances, classInstances.Length);
-            }
-
-            /// <summary>
             ///   Sets a single constant buffer to be used by the shader stage.
             /// </summary>
             /// <param name = "slot">Index into the device's zero-based array to which to set the constant buffer.</param>
             /// <param name = "constantBuffer">constant buffer to set</param>
             public void SetConstantBuffer(int slot, Buffer constantBuffer)
             {
-                SetConstantBuffers(slot, 1, new[] {constantBuffer});
+                SetConstantBuffers(slot, 1, new[] { constantBuffer });
             }
 
             /// <summary>
@@ -138,7 +95,7 @@ namespace SharpDX.Direct3D11
             /// <param name = "sampler">sampler state to set</param>
             public void SetSampler(int slot, SamplerState sampler)
             {
-                SetSamplers(slot, 1, new[] {sampler});
+                SetSamplers(slot, 1, new[] { sampler });
             }
 
             /// <summary>
@@ -148,7 +105,7 @@ namespace SharpDX.Direct3D11
             /// <param name = "resourceView">Resource view to attach</param>
             public void SetShaderResource(int slot, ShaderResourceView resourceView)
             {
-                SetShaderResources(slot, 1, new[] {resourceView});
+                SetShaderResources(slot, 1, new[] { resourceView });
             }
 
 
@@ -230,6 +187,66 @@ namespace SharpDX.Direct3D11
             /// <unmanaged>void PSSetConstantBuffers([In] UINT StartSlot,[In] UINT NumBuffers,[In, Buffer] const ID3D11Buffer** ppConstantBuffers)</unmanaged>
             public abstract void SetConstantBuffers(int startSlot, int numBuffers,
                                                     SharpDX.Direct3D11.Buffer[] constantBuffersRef);
+        }
+
+        /// <summary>
+        /// Common Shader class. Provides a common set of methods for a Shader Stage.
+        /// TODO: check if usage of abstract is not introducing an unacceptable overhead...
+        /// </summary>
+        /// <typeparam name = "T">Type of the shader</typeparam>
+        public abstract class CommonShaderStage<T> : CommonShaderStage where T : ComObject
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="CommonShaderStage&lt;T&gt;"/> class.
+            /// </summary>
+            /// <param name="pointer">The pointer.</param>
+            protected CommonShaderStage(IntPtr pointer) : base(pointer)
+            {
+            }
+
+            /// <summary>
+            ///   Gets the shader currently assigned to the device.
+            /// </summary>
+            /// <returns>The shader (null if no shader is assigned).</returns>
+            public T Get()
+            {
+                T temp;
+                int numClassInstances = 0;
+                GetShader(out temp, null, ref numClassInstances);
+                return temp;
+            }
+
+            /// <summary>
+            ///   Gets the shader currently assigned to the device.
+            /// </summary>
+            /// <param name = "classInstances">An array that will be used to contain any class instances currently active.</param>
+            /// <returns>The shader (null if no shader is assigned).</returns>
+            public T Get(ClassInstance[] classInstances)
+            {
+                T temp;
+                int numClassInstances = classInstances.Length;
+                GetShader(out temp, classInstances, ref numClassInstances);
+                return temp;
+            }
+
+            /// <summary>
+            ///   Assigns a compute shader to the device.
+            /// </summary>
+            /// <param name = "shader">The shader to assign to the device. Assign null to disable the compute shader.</param>
+            public void Set(T shader)
+            {
+                SetShader(shader, null, 0);
+            }
+
+            /// <summary>
+            ///   Assigns a compute shader to the device.
+            /// </summary>
+            /// <param name = "shader">The shader to assign to the device. Assign <c>null</c> to disable the compute shader.</param>
+            /// <param name = "classInstances">An array of class-instance interfaces. Each interface used by a shader must have a corresponding class instance or the shader will get disabled.</param>
+            public void Set(T shader, ClassInstance[] classInstances)
+            {
+                SetShader(shader, classInstances, classInstances.Length);
+            }
 
             internal abstract void SetShader(T shaderRef,
                                              SharpDX.Direct3D11.ClassInstance[] classInstancesRef, int numClassInstances);
