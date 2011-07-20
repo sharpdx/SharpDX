@@ -431,8 +431,20 @@ namespace SharpGen.Generator
                 var parent = getterOrSetter.Parent;
 
                 // If Getter has no propery, 
-                if ((property.Getter != null && property.Getter.NoProperty) || (property.Setter != null && property.Setter.NoProperty))
+                if ((property.Getter != null && !property.Getter.AllowProperty))
+                {
+                    Console.WriteLine("Method [{0}] PropertyAllow: {1}", property.Getter.CppSignature,
+                                      property.Getter.AllowProperty);
                     continue;
+
+                }
+                if (property.Setter != null && !property.Setter.AllowProperty)
+                {
+                    Console.WriteLine("Method [{0}] PropertyAllow: {1}", property.Setter.CppSignature,
+                                      property.Setter.AllowProperty);
+                    continue;
+
+                }
 
                 // Update visibility for getter and setter (set to internal)
                 if (property.Getter != null)

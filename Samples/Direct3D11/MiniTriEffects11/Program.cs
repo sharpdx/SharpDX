@@ -63,7 +63,7 @@ namespace MiniTri
         [STAThread]
         private static void Main()
         {
-            var form = new RenderForm("SharpDX - MiniTri Direct3D 10 Sample");
+            var form = new RenderForm("SharpDX - MiniTri Direct3D 11 Sample using Effects11 system");
 
             Configuration.EnableObjectTracking = true;
 
@@ -96,7 +96,7 @@ namespace MiniTri
             var renderView = new RenderTargetView(device, backBuffer);
 
             // Compile Vertex and Pixel shaders
-            var effectByteCode = ShaderBytecode.CompileFromFile("MiniTri.fx", "fx_4_0", ShaderFlags.None, EffectFlags.None);
+            var effectByteCode = ShaderBytecode.CompileFromFile("MiniTri.fx", "fx_5_0", ShaderFlags.None, EffectFlags.None);
             var effect = new Effect(device, effectByteCode);
             var technique = effect.GetTechniqueByIndex(0);
             var pass = technique.GetPassByIndex(0);
@@ -131,8 +131,8 @@ namespace MiniTri
             stream.Dispose();
 
             // Prepare All the stages
-            context.InputAssembler.SetInputLayout(layout);
-            context.InputAssembler.SetPrimitiveTopology(PrimitiveTopology.TriangleList);
+            context.InputAssembler.InputLayout = layout;
+            context.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
             context.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(vertices, 32, 0));
             context.Rasterizer.SetViewports(new Viewport(0, 0, form.ClientSize.Width, form.ClientSize.Height, 0.0f, 1.0f));
             context.OutputMerger.SetTargets(renderView);
@@ -157,9 +157,6 @@ namespace MiniTri
             layout.Dispose();
             renderView.Dispose();
             backBuffer.Dispose();
-            context.ClearState();
-            context.Flush();
-            context.Dispose();
             device.Dispose();
             swapChain.Dispose();
             factory.Dispose();

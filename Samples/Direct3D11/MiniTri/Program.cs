@@ -130,8 +130,8 @@ namespace MiniTri
             stream.Dispose();
 
             // Prepare All the stages
-            context.InputAssembler.SetInputLayout(layout);
-            context.InputAssembler.SetPrimitiveTopology(PrimitiveTopology.TriangleList);
+            context.InputAssembler.InputLayout = layout;
+            context.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
             context.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(vertices, 32, 0));
             context.VertexShader.Set(vertexShader);
             context.Rasterizer.SetViewports(new Viewport(0, 0, form.ClientSize.Width, form.ClientSize.Height, 0.0f, 1.0f));

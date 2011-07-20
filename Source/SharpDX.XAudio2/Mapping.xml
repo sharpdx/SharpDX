@@ -141,7 +141,7 @@
     <map param="IXAudio2::CreateSourceVoice::Flags" type="XAUDIO2_VOICE_FLAGS" />
     <map param="IXAudio2::CreateSubmixVoice::Flags" type="XAUDIO2_VOICE_SEND_FLAGS" />
     <map param="IXAudio2SourceVoice::Stop::Flags" type="XAUDIO2_PLAY_FLAGS" />
-    <map method="IXAudio2Voice::SetEffectChain" visibility="internal" property="true" />
+    <map method="IXAudio2Voice::SetEffectChain" visibility="internal" property="false" />
     
     <context-clear />
   </mapping>

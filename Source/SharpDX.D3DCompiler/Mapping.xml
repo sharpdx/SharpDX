@@ -161,7 +161,7 @@
     <map method="ID3D11ShaderReflectionType::ImplementsInterface" visibility="internal" name="ImplementsInterface_" />
     <map method="ID3D11ShaderReflectionType::IsEqual" visibility="internal" name="IsEqual_" />
     <map method="ID3D11ShaderReflectionType::IsOfType" visibility="internal" name="IsOfType_" />
-    <map method="ID3D11ShaderReflectionVariable::GetType" property="true" name="GetVariableType" />
+    <map method="ID3D11ShaderReflectionVariable::GetType" property="false" name="GetVariableType" />
 
     <!--
     // *****************************************************************

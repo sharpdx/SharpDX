@@ -230,8 +230,8 @@ namespace SharpGen.Model
                     Remarks = string.IsNullOrEmpty(CppElement.Remarks) ? Remarks : CppElement.Remarks;
 
                     // Update this container with tag
-                    if (_cppElement.Tag != null)
-                        UpdateFromTag(_cppElement.GetTagOrDefault<MappingRule>());
+                    //if (_cppElement.Tag != null)
+                    UpdateFromTag(_cppElement.GetTagOrDefault<MappingRule>());
                 }
             }
         }

@@ -313,7 +313,7 @@
     <map method="IDirectSound::DuplicateSoundBuffer" visibility="internal" />
     <map param="IDirectSound::SetCooperativeLevel::dwLevel" type="DSSCL_ENUM" />
     <map method="IDirectSound.*::GetCaps" name="GetCapabilities" />
-    <map method="IDirectSound::(.*)SpeakerConfig" visibility="internal" property="true" name="$1SpeakerConfiguration" />
+    <map method="IDirectSound::(.*)SpeakerConfig" visibility="internal" property="false" name="$1SpeakerConfiguration" />
     <map method="IDirectSound8::VerifyCertification" visibility="internal" />
     <map method="IDirectSound3DBuffer::.*" visibility="internal" />
     <map method="IDirectSound3DListener::[GS].*" visibility="internal" />

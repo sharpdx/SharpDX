@@ -100,14 +100,16 @@ namespace SharpGen.Model
         {
             base.UpdateFromTag(tag);
 
-            if (tag.Property.HasValue)
-                NoProperty = tag.Property.Value;
+
+            Console.WriteLine("Method.UpdateFromTag {0} {1}", CppSignature, tag.Property.HasValue);
+
+            AllowProperty = !tag.Property.HasValue || tag.Property.Value;
 
             if (tag.MethodCheckReturnType.HasValue)
                 CheckReturnType = tag.MethodCheckReturnType.Value;
         }
 
-        public bool NoProperty { get; set; }
+        public bool AllowProperty { get; set; }
 
         public int Offset { get; set; }
 

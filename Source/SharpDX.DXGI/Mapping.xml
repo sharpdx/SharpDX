@@ -149,7 +149,7 @@
     <map param="ppAdapter" return="true" />
     <map method="IDXGIFactory1::EnumAdapters1" name="GetAdapter1" />
     <map param="ppAdapter" return="true" />
-    <map method="IDXGIFactory::GetWindowAssociation" property="true" />
+    <map method="IDXGIFactory::GetWindowAssociation" property="false" />
     <map param="pWindowHandle" return="true" />
     <map param="IDXGIFactory::MakeWindowAssociation::Flags" type="DXGI_MWA_FLAGS" />
     
@@ -157,7 +157,7 @@
     
     <map method="IDXGIOutput::FindClosestMatchingMode" visibility="internal" />
     <map method="IDXGIOutput::GetDisplayModeList" visibility="internal" />
-    <map method="IDXGIOutput::SetDisplaySurface" visibility="public" property="true" />
+    <map method="IDXGIOutput::SetDisplaySurface" visibility="public" property="false" />
     <map method="IDXGIOutput::GetDisplaySurfaceData" name="CopyDisplaySurfaceTo" />
     <map method="IDXGIOutput::WaitForVBlank" name="WaitForVerticalBlank" />
     

@@ -300,11 +300,11 @@
     <map method="ID3D(\d+)ClassInstance::GetTypeName" visibility="internal" />
     <map param="ID3D(\d+)Device::CheckFormatSupport::pFormatSupport" type="D3D$1_FORMAT_SUPPORT" return="true" />
     <map param="ID3D(\d+)Device::CheckMultisampleQualityLevels::pNumQualityLevels" return="true" />
-    <map method="ID3D(\d+)Device::CheckCounterInfo" property="true" name="GetCounterCapabilities" />
+    <map method="ID3D(\d+)Device::CheckCounterInfo" property="false" name="GetCounterCapabilities" />
     <map param="pCounterInfo" return="true" />
     <map method="ID3D(\d+)Device1?::Create.*" visibility="internal" />
     <map param="ID3D(\d+)Device1?::Create.*::pp.*" attribute="out fast" />
-    <map method="ID3D(\d+)Device::GetImmediateContext" visibility="internal" property="true" />
+    <map method="ID3D(\d+)Device::GetImmediateContext" visibility="internal" property="false" />
     <remove method="ID3D(\d+)Device::.*TextFilterSize" />
     <map method="ID3D(\d+)Device::GetPredication" visibility="internal" />
     <map method="ID3D(\d+)Device::OpenSharedResource" visibility="internal" />
@@ -325,7 +325,9 @@
     <map method="ID3D\d+DeviceContext::RS(.*)" name="$1" />
     <map method="ID3D\d+DeviceContext::OM(.*)" name="$1" />
     <map method="ID3D\d+DeviceContext::CS(.*)" name="$1" />
-    <map method="ID3D(\d+)DeviceContext::IA.*" property="true" />
+    <map method="ID3D(\d+)DeviceContext::IA.*" property="false" />
+    <map method="ID3D(\d+)DeviceContext::IA[GS]etInputLayout" property="true" />
+    <map method="ID3D(\d+)DeviceContext::IA[GS]etPrimitiveTopology" property="true" />
     <map method="ID3D(\d+)DeviceContext::SetViewports" visibility="internal" />
     <map method="ID3D(\d+)DeviceContext::SetScissorRects" visibility="internal" />
     
@@ -379,20 +381,20 @@
     <map param="ID3DX?(\d+)EffectVariable::GetDesc::pDesc" attribute="out" />
     <map param="ID3DX?(\d+)EffectBlendVariable::GetBlendState::ppBlendState" attribute="out" return="true" />
     <map param="ID3DX?(\d+)EffectBlendVariable::GetBackingStore::pBlendDesc" attribute="out" />
-    <map method="ID3DX?(\d+)EffectConstantBuffer::Get.*" property="true" />
-    <map method="ID3DX?(\d+)EffectConstantBuffer::Set.*" property="true" />
+    <map method="ID3DX?(\d+)EffectConstantBuffer::Get.*" property="false" />
+    <map method="ID3DX?(\d+)EffectConstantBuffer::Set.*" property="false" />
     <map param="ID3DX?(\d+)EffectConstantBuffer::GetConstantBuffer::ppConstantBuffer" attribute="out" return="true" />
     <map param="ID3DX?(\d+)EffectConstantBuffer::GetTextureBuffer::ppTextureBuffer" attribute="out" return="true" />
     <map param="ID3DX?(\d+)EffectDepthStencilVariable::GetDepthStencilState::ppDepthStencilState" attribute="out" return="true" />
     <map param="ID3DX?(\d+)EffectDepthStencilVariable::GetBackingStore::pDepthStencilDesc" attribute="out" return="true" />
-    <map method="ID3DX?(\d+)EffectDepthStencilViewVariable::Get.*" visibility="internal" property="true" />
-    <map method="ID3DX?(\d+)EffectDepthStencilViewVariable::Set.*" visibility="internal" property="true" />
+    <map method="ID3DX?(\d+)EffectDepthStencilViewVariable::Get.*" visibility="internal" property="false" />
+    <map method="ID3DX?(\d+)EffectDepthStencilViewVariable::Set.*" visibility="internal" property="false" />
     <map method="ID3DX?(\d+)EffectDepthStencilViewVariable::GetDepthStencil" visibility="public" />
     <map param="ppResource" return="true" />
     <map method="ID3DX?(\d+)EffectDepthStencilViewVariable::SetDepthStencil" visibility="public" />
     <map param="ID3DX?(\d+)EffectDepthStencilViewVariable::GetDepthStencilArray::ppResources" attribute="out buffer" />
     <map param="ID3DX?(\d+)EffectDepthStencilViewVariable::SetDepthStencilArray::ppResources" attribute="in buffer" />
-    <map method="ID3DX?(\d+)EffectMatrixVariable::.*" visibility="internal" property="true" />
+    <map method="ID3DX?(\d+)EffectMatrixVariable::.*" visibility="internal" property="false" />
     <map method="ID3DX?(\d+)EffectMatrixVariable::GetMatrix" visibility="public" />
     <map method="ID3DX?(\d+)EffectMatrixVariable::GetMatrixTranspose" visibility="public" />
     <map method="ID3DX?(\d+)EffectMatrixVariable::SetMatrix" visibility="public" />
@@ -411,7 +413,7 @@
     <map param="ID3DX?(\d+)EffectPass::GetPixelShaderDesc::pDesc" attribute="out" />
     <map param="ID3DX?(\d+)EffectRasterizerVariable::GetBackingStore::pRasterizerDesc" attribute="out" />
     <map param="ID3DX?(\d+)EffectRasterizerVariable::GetRasterizerState::ppRasterizerState" attribute="out" return="true" />
-    <map method="ID3DX?(\d+)EffectRenderTargetViewVariable::.*" visibility="internal" property="true" />
+    <map method="ID3DX?(\d+)EffectRenderTargetViewVariable::.*" visibility="internal" property="false" />
     <map method="ID3DX?(\d+)EffectRenderTargetViewVariable::GetRenderTarget" visibility="public" />
     <map method="ID3DX?(\d+)EffectRenderTargetViewVariable::SetRenderTarget" visibility="public" />
     <map param="ID3DX?(\d+)EffectRenderTargetViewVariable::GetRenderTarget::ppResource" attribute="out" return="true" />
@@ -419,7 +421,7 @@
     <map param="ID3DX?(\d+)EffectRenderTargetViewVariable::SetRenderTargetArray::ppResources" attribute="in buffer" />
     <map param="ID3DX?(\d+)EffectSamplerVariable::GetSampler::ppSampler" attribute="out" return="true" />
     <map param="ID3DX?(\d+)EffectSamplerVariable::GetBackingStore::pSamplerDesc" attribute="out" />
-    <map method="ID3DX?(\d+)EffectScalarVariable::.*" visibility="internal" property="true" />
+    <map method="ID3DX?(\d+)EffectScalarVariable::.*" visibility="internal" property="false" />
     <map method="ID3DX?(\d+)EffectScalarVariable::GetFloat" visibility="public" />
     <map method="ID3DX?(\d+)EffectScalarVariable::GetInt" visibility="public" />
     <map param="ID3DX?(\d+)EffectScalarVariable::GetFloat::pValue" attribute="out" return="true" />
@@ -431,7 +433,7 @@
     <map param="ID3DX?(\d+)EffectScalarVariable::SetFloatArray::pData" attribute="in buffer" />
     <map param="ID3DX?(\d+)EffectScalarVariable::SetIntArray::pData" attribute="in buffer" />
     <map param="ID3DX?(\d+)EffectScalarVariable::SetBoolArray::pData" attribute="in buffer" />
-    <map method="ID3DX?(\d+)EffectShaderResourceVariable::.*" visibility="internal" property="true" />
+    <map method="ID3DX?(\d+)EffectShaderResourceVariable::.*" visibility="internal" property="false" />
     <map method="ID3DX?(\d+)EffectShaderResourceVariable::GetResource" visibility="public" />
     <map method="ID3DX?(\d+)EffectShaderResourceVariable::SetResource" visibility="public" />
     <map param="ID3DX?(\d+)EffectShaderResourceVariable::GetResource::ppResource" attribute="out" return="true" />
@@ -443,11 +445,11 @@
     <map param="ID3DX?(\d+)EffectShaderVariable::GetPixelShader::ppPS" attribute="out" return="true" />
     <map param="ID3DX?(\d+)EffectShaderVariable::GetInputSignatureElementDesc::pDesc" name="GetInputParameterDescription" attribute="out" return="true" />
     <map param="ID3DX?(\d+)EffectShaderVariable::GetOutputSignatureElementDesc::pDesc" name="GetOutputParameterDescription" attribute="out" return="true" />
-    <map method="ID3DX?(\d+)EffectStringVariable::.*" visibility="internal" property="true" />
+    <map method="ID3DX?(\d+)EffectStringVariable::.*" visibility="internal" property="false" />    
     <map param="ID3DX?(\d+)EffectStringVariable::GetString::ppString" type="void" attribute="out" />
     <map param="ID3DX?(\d+)EffectStringVariable::GetStringArray::ppStrings" type="void" attribute="out buffer" />
     <map method="ID3DX?(\d+)EffectVariable::(As.*)" visibility="internal" name="$2_" />
-    <map method="ID3DX?(\d+)EffectVectorVariable::.*" visibility="internal" property="true" />
+    <map method="ID3DX?(\d+)EffectVectorVariable::.*" visibility="internal" property="false" />
     <map method="ID3DX?(\d+)EffectVectorVariable::SetIntVector" visibility="public" />
     <map method="ID3DX?(\d+)EffectVectorVariable::SetFloatVector" visibility="public" />
     <map param="ID3DX?(\d+)EffectVectorVariable::GetIntVector::pData" type="SHARPDX_INT4" attribute="out" />

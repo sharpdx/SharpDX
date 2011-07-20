@@ -929,10 +929,10 @@
     <map param="Flags" name="lockFlags" type="D3DLOCK" />
     <map param="ID3DXEffectStateManager::SetFVF::FVF" name="vertexFormat" type="D3DFVF" />
     <map method="ID3DXEffectStateManager::SetFVF" name="SetVertexFormat" />
-    <map method="ID3DXBaseMesh::GetNumVertices" visibility="internal" property="true" />
-    <map method="ID3DXBaseMesh::GetNumFaces" visibility="internal" property="true" />
-    <map method="ID3DXPMesh::SetNumVertices" visibility="internal" property="true" />
-    <map method="ID3DXPMesh::SetNumFaces" visibility="internal" property="true" />
+    <map method="ID3DXBaseMesh::GetNumVertices" visibility="internal" property="false" />
+    <map method="ID3DXBaseMesh::GetNumFaces" visibility="internal" property="false" />
+    <map method="ID3DXPMesh::SetNumVertices" visibility="internal" property="false" />
+    <map method="ID3DXPMesh::SetNumFaces" visibility="internal" property="false" />
     <map param="IDirect3D9::GetAdapterIdentifier::pIdentifier" attribute="out" />
     <map param="IDirect3D9::GetAdapterDisplayMode::pMode" attribute="out" />
     <map param="IDirect3D9::GetDeviceCaps::pCaps" attribute="out" />

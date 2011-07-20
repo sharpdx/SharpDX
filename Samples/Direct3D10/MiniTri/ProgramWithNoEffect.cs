@@ -106,8 +106,8 @@ namespace MiniTri
             stream.Dispose();
 
             // Prepare All the stages
-            device.InputAssembler.SetInputLayout(layout);
-            device.InputAssembler.SetPrimitiveTopology(PrimitiveTopology.TriangleList);
+            device.InputAssembler.InputLayout = layout;
+            device.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
             device.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(vertices, 32, 0));
             device.VertexShader.Set(vertexShader);
             device.Rasterizer.SetViewports(new Viewport(0, 0, form.ClientSize.Width, form.ClientSize.Height, 0.0f, 1.0f));

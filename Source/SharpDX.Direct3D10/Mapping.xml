@@ -211,8 +211,8 @@
     <remove interface="ID3D10Multithread" />
     <remove interface="ID3D10ShaderReflection.*" />
     <remove interface="ID3D10ShaderReflection.*" />
-    <map method="ID3D10Asynchronous::Get.*" visibility="internal" property="true" />
-    <map method="ID3D10Debug::(.*)FeatureMask" visibility="internal" property="true" name="$1FeatureFlags" />
+    <map method="ID3D10Asynchronous::Get.*" visibility="internal" property="false" />
+    <map method="ID3D10Debug::(.*)FeatureMask" visibility="internal" property="false" name="$1FeatureFlags" />
     <map method="ID3D10Buffer::Map.*" visibility="internal" />
     <map method="ID3D10Device::IA(.*)" name="$1" />
     <map method="ID3D10Device::VS(.*)" name="$1" />
@@ -232,15 +232,17 @@
     
     <map param="ID3D10Device::ClearDepthStencilView::ClearFlags" type="D3D10_CLEAR_FLAG" attribute="in" />
     <map param="ID3D10Device::ClearRenderTargetView::ColorRGBA" type="SHARPDX_COLOR4" pointer="*" array="0" attribute="in" />
-    <map method="ID3D10Device::IA.*" property="true" />
-    <map method="ID3D10Device::GetCreationFlags" visibility="internal" property="true" />
+    <map method="ID3D10Device::IA.*" property="false" />
+    <map method="ID3D10Device::IA[GS]etInputLayout" property="true" />
+    <map method="ID3D10Device::IA[GS]etPrimitiveTopology" property="true" />
+    <map method="ID3D10Device::GetCreationFlags" visibility="internal" property="false" />
     <map method="ID3D10Device::SetViewports" visibility="internal" />
     <map method="ID3D10Device::SetScissorRects" visibility="internal" />
     <map method="ID3D10Device::IASetVertexBuffers" visibility="internal" />
-    <map method="ID3D10Device::[A-Z][A-Z]SetShader" property="true" name="Set" />
+    <map method="ID3D10Device::[A-Z][A-Z]SetShader" property="false" name="Set" />
     <map method="ID3D10Device::[A-Z][A-Z]SetShaderResources" visibility="public override" />
     <map method="ID3D10Device::[A-Z][A-Z]SetSamplers" visibility="public override" />
-    <map method="ID3D10Device::[A-Z][A-Z]GetShader" property="true" name="Get" />
+    <map method="ID3D10Device::[A-Z][A-Z]GetShader" property="false" name="Get" />
     <map method="ID3D10Device::[A-Z][A-Z]SetConstantBuffers" visibility="public override" />
     <map method="ID3D10Device::[A-Z][A-Z]GetShaderResources" visibility="internal override" />
     <map method="ID3D10Device::[A-Z][A-Z]GetSamplers" visibility="internal override" />
@@ -286,38 +288,38 @@
     <map method="ID3DX10Mesh::CommitToDevice" name="Commit" />
     <map method="ID3DX10Mesh::GenerateAdjacencyAndPointReps" name="GenerateAdjacencyAndPointRepresentation" />
     <map method="ID3DX10Mesh::GenerateGSAdjacency" name="GenerateGeometryShaderAdjacency" />
-    <map method="ID3DX10Mesh::GetAdjacencyBuffer" visibility="public" property="true" />
+    <map method="ID3DX10Mesh::GetAdjacencyBuffer" visibility="public" property="false" />
     <map param="ppAdjacency" return="true" />
-    <map method="ID3DX10Mesh::GetAttributeBuffer" visibility="public" property="true" />
+    <map method="ID3DX10Mesh::GetAttributeBuffer" visibility="public" property="false" />
     <map param="ppAttribute" return="true" />
-    <map method="ID3DX10Mesh::GetDeviceIndexBuffer" visibility="public" property="true" />
+    <map method="ID3DX10Mesh::GetDeviceIndexBuffer" visibility="public" property="false" />
     <map param="ppIndexBuffer" return="true" />
-    <map method="ID3DX10Mesh::GetDeviceVertexBuffer" visibility="public" property="true" />
+    <map method="ID3DX10Mesh::GetDeviceVertexBuffer" visibility="public" property="false" />
     <map param="ppVertexBuffer" return="true" />
-    <map method="ID3DX10Mesh::GetFlags" visibility="internal" property="true" />
-    <map method="ID3DX10Mesh::GetIndexBuffer" visibility="public" property="true" />
+    <map method="ID3DX10Mesh::GetFlags" visibility="internal" property="false" />
+    <map method="ID3DX10Mesh::GetIndexBuffer" visibility="public" property="false" />
     <map param="ppIndexBuffer" return="true" />
-    <map method="ID3DX10Mesh::GetVertexBuffer" visibility="public" property="true" />
+    <map method="ID3DX10Mesh::GetVertexBuffer" visibility="public" property="false" />
     <map param="ppVertexBuffer" return="true" />
-    <map method="ID3DX10Mesh::GetAttributeTable" visibility="internal" property="true" />
+    <map method="ID3DX10Mesh::GetAttributeTable" visibility="internal" property="false" />
     <map param="pAttribTable" attribute="out buffer optional" />
     <map param="pAttribTableSize" attribute="inout" />
-    <map method="ID3DX10Mesh::GetPointRepBuffer" visibility="internal" property="true" />
+    <map method="ID3DX10Mesh::GetPointRepBuffer" visibility="internal" property="false" />
     <map param="ID3DX10Mesh::SetPointRepData::pPointReps" type="void" attribute="in" />
-    <map method="ID3DX10Mesh::GetVertexDescription" visibility="internal" property="true" />
+    <map method="ID3DX10Mesh::GetVertexDescription" visibility="internal" property="false" />
     <map param="ppDesc" attribute="out buffer" />
-    <map method="ID3DX10Mesh::Optimize" visibility="internal" property="true" />
+    <map method="ID3DX10Mesh::Optimize" visibility="internal" property="false" />
     <map param="pFaceRemap" attribute="out buffer optional" />
     <map param="ppVertexRemap" type="void" attribute="in" />
-    <map method="ID3DX10Mesh::SetAdjacencyData" visibility="internal" property="true" />
+    <map method="ID3DX10Mesh::SetAdjacencyData" visibility="internal" property="false" />
     <map param="pAdjacency" type="void" attribute="in" />
-    <map method="ID3DX10Mesh::SetAttributeData" visibility="internal" property="true" />
+    <map method="ID3DX10Mesh::SetAttributeData" visibility="internal" property="false" />
     <map param="pData" type="void" attribute="in" />
-    <map method="ID3DX10Mesh::SetAttributeTable" visibility="internal" property="true" />
+    <map method="ID3DX10Mesh::SetAttributeTable" visibility="internal" property="false" />
     <map param="pAttribTable" attribute="in buffer" />
-    <map method="ID3DX10Mesh::SetPointRepData" visibility="internal" property="true" />
-    <map method="ID3DX10Mesh::SetIndexData" visibility="internal" property="true" />
-    <map method="ID3DX10Mesh::SetVertexData" visibility="internal" property="true" />
+    <map method="ID3DX10Mesh::SetPointRepData" visibility="internal" property="false" />
+    <map method="ID3DX10Mesh::SetIndexData" visibility="internal" property="false" />
+    <map method="ID3DX10Mesh::SetVertexData" visibility="internal" property="false" />
     <map method="ID3DX10MeshBuffer::Map" visibility="internal" />
     <map param=".*" attribute="out" />
     <map method="ID3DX10MeshBuffer::GetSize" name="GetSizeInBytes" />

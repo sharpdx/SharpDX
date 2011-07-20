@@ -107,7 +107,7 @@
     <map param="IDWriteFontCollection::GetFontFamily::fontFamily" return="true" />
     <map param="IDWriteFontCollection::GetFontFromFontFace::font" return="true" />
     <map interface="IDWriteFontCollectionLoader" callback="true" callback-dual="false" />
-    <map method="IDWriteFontFile::GetLoader" visibility="internal" property="true" />
+    <map method="IDWriteFontFile::GetLoader" visibility="internal" property="false" />
     
     <map interface="IDWriteFontFileLoader" callback-visibility="public" callback="true" callback-dual="true" />
 
@@ -152,8 +152,8 @@
     <map param="IDWriteTextLayout::[GS]etDrawingEffect::drawingEffect" type="void" />
     <map method="IDWriteTextFormat::GetFontFamilyName" visibility="internal" />
     <map method="IDWriteTextFormat::GetLocaleName" visibility="internal" />
-    <map method="IDWriteTextFormat::GetFontFamilyNameLength" visibility="internal" property="true" />
-    <map method="IDWriteTextFormat::GetLocaleNameLength" visibility="internal" property="true" />
+    <map method="IDWriteTextFormat::GetFontFamilyNameLength" visibility="internal" property="false" />
+    <map method="IDWriteTextFormat::GetLocaleNameLength" visibility="internal" property="false" />
     <map param="IDWriteTextLayout::HitTestPoint::hitTestMetrics" return="true" />
     <map param="IDWriteTextLayout::HitTestTextPosition::hitTestMetrics" return="true" />
     <map method="IDWriteTextLayout::HitTestTextRange" visibility="internal" />
