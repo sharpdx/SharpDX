@@ -344,8 +344,9 @@ namespace SharpCli
         /// Patches the method.
         /// </summary>
         /// <param name="method">The method.</param>
-        void PatchMethod(MethodDefinition method)
+        bool PatchMethod(MethodDefinition method)
         {
+            bool isSharpJit = false;
             if (method.DeclaringType.Name == "Interop")
             {
                 if (method.Name == "memcpy")
@@ -387,7 +388,29 @@ namespace SharpCli
                     if (instruction.OpCode == OpCodes.Call && instruction.Operand is MethodDefinition)
                     {
                         var methodDescription = (MethodDefinition) instruction.Operand;
-                        if (methodDescription.Name.StartsWith("Calli") && methodDescription.DeclaringType.Name == "LocalInterop")
+
+                        foreach(var customAttribute in methodDescription.CustomAttributes)
+                        {
+                            if ( customAttribute.AttributeType.FullName == typeof(ObfuscationAttribute).FullName)
+                            {
+                                foreach(var arg in customAttribute.Properties)
+                                {
+                                    if (arg.Name == "Feature" && arg.Argument.Value != null)
+                                    {
+                                        var customValue = arg.Argument.Value.ToString();
+                                        if (customValue.StartsWith("SharpJit."))
+                                        {
+                                            isSharpJit = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            if (isSharpJit)
+                                break;
+                        }
+
+                        if (!isSharpJit && methodDescription.Name.StartsWith("Calli") && methodDescription.DeclaringType.Name == "LocalInterop")
                         {
                             var callSite = new CallSite
                                                {
@@ -411,7 +434,10 @@ namespace SharpCli
                     }
                 }
             }
+            return isSharpJit;
         }
+
+        bool containsSharpJit;
 
         /// <summary>
         /// Patches the type.
@@ -419,15 +445,14 @@ namespace SharpCli
         /// <param name="type">The type.</param>
         void PatchType(TypeDefinition type)
         {
-            // LocalInterop will be removed after the patch
-            if (type.Name == "LocalInterop")
-            {
-                classToRemoveList.Add(type);
-            }
-
             // Patch methods
             foreach (var method in type.Methods)
-                PatchMethod(method);
+                if (PatchMethod(method))
+                    containsSharpJit = true;
+
+            // LocalInterop will be removed after the patch only for non SharpJit code
+            if (!containsSharpJit && type.Name == "LocalInterop")
+                classToRemoveList.Add(type);
 
             // Patch nested types
             foreach (var typeDefinition in type.NestedTypes)

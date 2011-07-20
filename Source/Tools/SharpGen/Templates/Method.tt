@@ -19,6 +19,61 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.	
 
+	private void ProcessMethodCalli(CsMethod method) {
+		// Number of parameters
+		var maxParam = method.ParameterCount;		
+		// IF Function, else method
+		if (method is CsFunction) {
+#><#= method.CastStart #><#= method.Assembly.QualifiedName #>.LocalInterop.<#= method.Interop.Name #>(<#+
+			if (method.IsReturnStructLarge) {#>(void*)&__result__<#+}				
+		} else {
+#><#= method.CastStart #><#= method.Assembly.QualifiedName #>.LocalInterop.<#= method.Interop.Name #>(_nativePointer<#+
+			if (method.IsReturnStructLarge) {#>,(void*)&__result__<#+}				
+			if (maxParam > 0) {#>, <#+}
+		}
+		for(int i  = 0; i < maxParam; i++) {
+			var param = method.Parameters[i];
+			if (i>0) {#>, <#+}
+			#><#= param.CallName #><#+				
+		}
+		if (method is CsFunction) {
+			if (maxParam > 0 || method.IsReturnStructLarge) {#>, <#+}
+			#>(void*)<#= method.CppElementName #>_<#+
+		} else {
+			#>,((void**)(*(void**)_nativePointer))[<#= method.Offset #>]<#+
+		}
+		#>)<#= method.CastEnd #>;		
+<#+
+	}
+
+	private void ProcessMethodCalliX86Jit(CsMethod method) {
+		// Number of parameters
+		var maxParam = method.ParameterCount;		
+		// IF Function, else method
+		if (method is CsFunction) {
+#><#= method.CastStart #><#= method.Assembly.QualifiedName #>.LocalInterop.<#= method.Interop.Name #>((void*)<#= method.CppElementName #>_, 0<#+
+		} else {
+#><#= method.CastStart #><#= method.Assembly.QualifiedName #>.LocalInterop.<#= method.Interop.Name #>(&__ptr__, ((void**)(*(void**)_nativePointer))[<#= method.Offset #>], &__ptr__ <#+
+		}
+		if (maxParam > 0) {#>, <#+}
+
+		// For ClrCall to StdCall, reverse order of pushed parameters in order to have right to left parameters		
+		for(int i  = maxParam-1; i >=0; i--) {
+			var param = method.Parameters[i];
+			if (i < (maxParam-1)) {#>,<#+}
+			#><#= param.CallName #><#+				
+		}
+		if (method is CsFunction) {
+			if (maxParam > 0 && method.IsReturnStructLarge) {#>, <#+}
+			if (method.IsReturnStructLarge) {#>(void*)&__result__<#+}				
+		} else {
+			if (method.IsReturnStructLarge) {#>,(void*)&__result__<#+}				
+			#>,_nativePointer<#+
+		}
+		#>)<#= method.CastEnd #>;		
+<#+
+	}
+	
 	public void ProcessMethod(CsMethod method) {
 		
 	// ------------------------------------------------------------------------------------------------------------
@@ -156,6 +211,14 @@
 				} 
 				// End Of initializing parameter out
 				// ---------------------------------------------------------------------------------------------------
+
+				/*
+				if (!(method is CsFunction)) {			
+#if JIT_x86
+				void* __ptr__;
+#endif				
+				}
+				*/
 				
 				// ---------------------------------------------------------------------------------------------------
 				// Pre-Declare Return Type
@@ -182,41 +245,21 @@
 					} 
 				}
 
+									
 				// ---------------------------------------------------------------------------------------------------
 				// Perform method call to Interop.Calli*
 				// ---------------------------------------------------------------------------------------------------
 				if (method.HasReturnType && !method.IsReturnStructLarge) {#>
-                __result__= <#+
+                __result__= 
+				<#+
 				} else {
 #>                <#+
 				}
-				// Number of parameters
-				maxParam = method.ParameterCount;
-				
-				// IF Function, else method
-				if (method is CsFunction) {
-#><#= method.CastStart #><#= method.Assembly.QualifiedName #>.LocalInterop.<#= method.Interop.Name #>(<#+
-					if (method.IsReturnStructLarge) {#>(void*)&__result__<#+}				
-				} else {
-#><#= method.CastStart #><#= method.Assembly.QualifiedName #>.LocalInterop.<#= method.Interop.Name #>(_nativePointer<#+
-					if (method.IsReturnStructLarge) {#>,(void*)&__result__<#+}				
-					if (maxParam > 0) {#>, <#+}
-				}
-				i = 0;
-				foreach (var param in method.Parameters) {
-					#><#= param.CallName #><#+				
-					if ((i+1)<maxParam) {#>, <#+}
-					i++;
-				}
-				if (method is CsFunction) {
-					if (maxParam > 0 || method.IsReturnStructLarge) {#>, <#+}
-					#>(void*)<#= method.CppElementName #>_<#+
-				} else {
-					#>,((void**)(*(void**)_nativePointer))[<#= method.Offset #>]<#+
-				}
-				#>)<#= method.CastEnd #>;
-<#+
-
+//#if JIT_x86
+//				ProcessMethodCalliX86Jit(method);
+//#else
+				ProcessMethodCalli(method);
+//#endif
 				// ---------------------------------------------------------------------------------------------------
 				// Unindent fixed parameters
 				// ---------------------------------------------------------------------------------------------------

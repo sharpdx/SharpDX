@@ -320,7 +320,7 @@ namespace SharpGen.Generator
                 string propertyName = isIs ? cSharpMethod.Name : cSharpMethod.Name.Substring("Get".Length);
 
                 int parameterCount = cSharpMethod.ParameterCount;
-                var parameterList = cSharpMethod.Parameters.ToList();
+                var parameterList = cSharpMethod.Parameters;
 
                 CsProperty csProperty;
                 bool isPropertyToAdd = false;

@@ -37,12 +37,10 @@ namespace SharpGen.Model
             CppElement = cppMethod;
         }
 
-        public IEnumerable<CsParameter> Parameters
+        private List<CsParameter> _parameters;
+        public List<CsParameter> Parameters
         {
-            get
-            {
-                return Items.OfType<CsParameter>();
-            }
+            get { return _parameters ?? (_parameters = Items.OfType<CsParameter>().ToList()); }
         }
 
         public IEnumerable<CsParameter> PublicParameters
@@ -57,7 +55,7 @@ namespace SharpGen.Model
 
         public int ParameterCount
         {
-            get { return Items.OfType<CsParameter>().Count(); }
+            get { return Parameters.Count; }
         }
 
         public int PublicParameterCount

@@ -116,7 +116,8 @@ namespace SharpCore.Logging
                 }
                 else
                 {
-                    Log(LogLevel.Error, logLocation, null, line, null);
+                    // Escape a line
+                    Log(LogLevel.Error, logLocation, null, line.Replace("{", "{{").Replace("}", "}}"), null);
                 }
             }
         }
