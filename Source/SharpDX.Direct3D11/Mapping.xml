@@ -24,7 +24,10 @@
   
   <namespace>SharpDX.Direct3D11</namespace>  
   <assembly>SharpDX.Direct3D11</assembly>
-
+  
+  <!-- Add Effects11 include directory-->
+  <include-dir>$(THIS_CONFIG_PATH)\..\..\External\Effects11\Inc</include-dir>
+  
   <include-prolog>
     #define D3D11_NO_HELPERS
   </include-prolog>
@@ -37,7 +40,9 @@
   <include file="d3dx11tex.h" attach="true" />
   <include file="d3dx11async.h" attach="true" />
   <include file="d3dcsx.h" attach="true" />
-  
+  <!-- D3D11 Effects includes -->
+  <include file="d3dx11effect.h" attach="true" />
+
   <naming />
 
   <context-set id="d3d11-all">
@@ -49,6 +54,7 @@
     <context>d3dx11tex</context>
     <context>d3dx11async</context>
     <context>d3dcsx</context>
+    <context>d3dx11effect</context>
   </context-set>
 
   <!-- D3D11 extensions -->
@@ -70,6 +76,9 @@
     <create class="D3D11" />
     <create class="D3DX11" />
     <create class="D3DCSX" />
+
+    <create-cpp enum="D3DX11_EFFECT_VARIABLE_FLAGS" macro="D3DX11_EFFECT_VARIABLE_(.*)" />
+    <create class="D3DX11Effects" />    
 
     <context-clear />
   </extension>
@@ -106,6 +115,12 @@
     <map enum="D3DX11_FFT_DIM_MASK" name="FastFourierTransformDimensions" />
     <map enum-item="D3DX11_FFT_DIM_MASK_(.*)" name="Dimension$1" />
     <map enum="D3DX11_FFT_CREATE_FLAG" name="FastFourierTransformCreationFlags" />
+
+    <!--
+    // *****************************************************************
+    // D3D11 Struct
+    // *****************************************************************
+    -->
     <map struct="D3D11_SHADER_BUFFER_DESC" name="ConstantBufferDescription" />
     <map field="D3D11_SHADER_DESC::Version" type="D3D11_SHADER_VERSION_TYPE" />
     <map field="D3D11_CLASS_INSTANCE_DESC::Created" name="IsCreated" />
@@ -120,7 +135,9 @@
     <map field="D3DX11_FFT_BUFFER_INFO::PrecomputeBufferFloatSizes" name="PrecomputeBufferSizes" />
     <map field="D3DX11_FFT_DESC::DimensionMask" name="Dimensions" type="D3DX11_FFT_DIM_MASK" />
     <map field="D3DX11_FFT_DESC::Type" name="DataType" />
-
+    <map enum="D3DX11_EFFECT_VARIABLE_FLAGS" name="EffectVariableFlags" />
+    <map field="D3DX11_EFFECT_SHADER_DESC::SODecls" visibility="internal" type="void" array="0"/>
+    
     <!--
     // *****************************************************************
     // D3D11 Interfaces
@@ -165,11 +182,13 @@
     -->
     <map function="D3D11(.+)" name-tmp="$1" />
     <map function="D3DX11(.+)" name-tmp="$1" />
-    <map function="D3DX11(.+)W" name-tmp="$1" />
-    <map function="D3D11.*" dll="d3d11.dll" group="SharpDX.Direct3D11.D3D11" />
+    <map function="D3DX11(.+)W" name-tmp="$1" />    
+    <map function="D3D11.*" dll="d3d11.dll" group"SharpDX.Direct3D11.D3D11" />
     <map function="D3DX11.*" dll="#(D3DX11_DLL_A)" group="SharpDX.Direct3D11.D3DX11" />
     <map param="D3D11CreateDevice::ppDevice" attribute="out fast" />
 
+    <map param="D3DX11CreateEffectFromMemory::ppEffect" attribute="out fast" />
+    <map function="D3DX11CreateEffectFromMemory" dll="sharpdx_direct3d11_effects_x86.dll" group="SharpDX.Direct3D11.D3DX11Effects" />
     <!--
     // *****************************************************************
     // D3D11 Constants

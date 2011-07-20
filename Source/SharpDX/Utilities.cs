@@ -143,13 +143,13 @@ namespace SharpDX
             }
         }
 
-        internal unsafe static void ConvertToIntArray(bool[] array, int* dest)
+        public unsafe static void ConvertToIntArray(bool[] array, int* dest)
         {
             for (int i = 0; i < array.Length; i++)
                 dest[i] = array[i] ? 1 : 0;
         }
 
-        internal unsafe static bool[] ConvertToBoolArray(int* array, int length)
+        public unsafe static bool[] ConvertToBoolArray(int* array, int length)
         {
             var temp = new bool[length];
             for (int i = 0; i < temp.Length; i++)
@@ -162,7 +162,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="array">The array.</param>
         /// <returns></returns>
-        internal static int[] ConvertToIntArray(bool[] array)
+        public static int[] ConvertToIntArray(bool[] array)
         {
             var temp = new int[array.Length];
             for (int i = 0; i < temp.Length; i++)
@@ -175,7 +175,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="array">The array.</param>
         /// <returns></returns>
-        internal static bool[] ConvertToBoolArray(int[] array)
+        public static bool[] ConvertToBoolArray(int[] array)
         {
             var temp = new bool[array.Length];
             for (int i = 0; i < temp.Length; i++)
@@ -183,12 +183,12 @@ namespace SharpDX
             return temp;
         }
 
-        internal static void ConvertRECTToRectangle(ref System.Drawing.Rectangle rect)
+        public static void ConvertRECTToRectangle(ref System.Drawing.Rectangle rect)
         {
             rect = new System.Drawing.Rectangle(rect.X, rect.Y, rect.Width - rect.X, rect.Height - rect.Y);
         }
 
-        internal static void ConvertRectangleToRect(ref System.Drawing.Rectangle rect)
+        public static void ConvertRectangleToRect(ref System.Drawing.Rectangle rect)
         {
             rect = new System.Drawing.Rectangle(rect.X, rect.Y, rect.Width - rect.X, rect.Height - rect.Y);
         }
@@ -282,7 +282,7 @@ namespace SharpDX
         }
 
         [Flags]
-        internal enum CLSCTX : uint
+        public enum CLSCTX : uint
         {
             ClsctxInprocServer = 0x1,
             ClsctxInprocHandler = 0x2,
@@ -308,14 +308,14 @@ namespace SharpDX
         }
 
         [DllImport("ole32.dll", ExactSpelling = true, PreserveSig = true)]
-        static internal extern Result CoCreateInstance([In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid, IntPtr pUnkOuter, CLSCTX dwClsContext, [In, MarshalAs(UnmanagedType.LPStruct)] Guid riid, out IntPtr comObject);
+        public static extern Result CoCreateInstance([In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid, IntPtr pUnkOuter, CLSCTX dwClsContext, [In, MarshalAs(UnmanagedType.LPStruct)] Guid riid, out IntPtr comObject);
 
         /// <summary>
         /// Converts a blob to a string.
         /// </summary>
         /// <param name="blob">A blob.</param>
         /// <returns>A string extracted from a blob.</returns>
-        internal static string BlobToString(Blob blob)
+        public static string BlobToString(Blob blob)
         {
             string output;
             unsafe
@@ -375,7 +375,7 @@ namespace SharpDX
         /// <param name="dllName">Name of the DLL.</param>
         /// <exception cref="DllNotFoundException">If dll was not found</exception>
         /// <returns></returns>
-        internal static IntPtr LoadLibrary(string dllName)
+        public static IntPtr LoadLibrary(string dllName)
         {
             IntPtr result = LoadLibrary_(dllName);
             if (result == IntPtr.Zero)
@@ -393,7 +393,7 @@ namespace SharpDX
         /// <param name="dllFunctionToImport">The DLL function to import.</param>
         /// <exception cref="EntryPointNotFoundException">If the function was not found</exception>
         /// <returns></returns>
-        internal static IntPtr GetProcAddress(IntPtr handle, string dllFunctionToImport)
+        public static IntPtr GetProcAddress(IntPtr handle, string dllFunctionToImport)
         {
             IntPtr result = GetProcAddress_(handle, dllFunctionToImport);
             if (result == IntPtr.Zero)

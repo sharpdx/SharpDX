@@ -43,8 +43,8 @@ namespace SharpDX.Direct3D11
         public GeometryShader(Device device, ShaderBytecode shaderBytecode, ClassLinkage linkage)
             : base(IntPtr.Zero)
         {
-            device.CreateGeometryShader(shaderBytecode.GetBufferPointer(),
-                                        shaderBytecode.GetBufferSize(), linkage, this);
+            device.CreateGeometryShader(shaderBytecode.BufferPointer,
+                                        shaderBytecode.BufferSize, linkage, this);
         }
 
         /// <summary>
@@ -73,8 +73,8 @@ namespace SharpDX.Direct3D11
         public GeometryShader(Device device, ShaderBytecode shaderBytecode, StreamOutputElement[] elements,
                               int[] bufferedStrides, int rasterizedStream, ClassLinkage linkage) : base(IntPtr.Zero)
         {
-            device.CreateGeometryShaderWithStreamOutput(shaderBytecode.GetBufferPointer(),
-                                                        shaderBytecode.GetBufferSize(), elements, elements.Length,
+            device.CreateGeometryShaderWithStreamOutput(shaderBytecode.BufferPointer,
+                                                        shaderBytecode.BufferSize, elements, elements.Length,
                                                         bufferedStrides, bufferedStrides.Length, rasterizedStream,
                                                         linkage, this);
         }

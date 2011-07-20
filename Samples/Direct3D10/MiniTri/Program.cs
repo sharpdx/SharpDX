@@ -161,7 +161,6 @@ namespace MiniTri
             device.ClearState();
             device.Flush();
             device.Dispose();
-            device.Dispose();
             swapChain.Dispose();
             factory.Dispose();           
         }

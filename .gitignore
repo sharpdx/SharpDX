@@ -23,8 +23,11 @@ Thumbs.db
 [Dd]ebug*/
 *.lib
 *.sbr
+*.sdf
+*.suo
 *.dotCover
 obj/
+ipch*/
 [Rr]elease*/
 _ReSharper*/
 [Tt]est[Rr]esult*

@@ -71,7 +71,7 @@ namespace SharpDX
         ///</summary>
         ///<typeparam name="T"></typeparam>
         ///<returns></returns>
-        internal void QueryInterfaceFrom<T>(T fromObject) where T : ComObject
+        protected void QueryInterfaceFrom<T>(T fromObject) where T : ComObject
         {
             IntPtr parentPtr;
             fromObject.QueryInterface(typeof(T).GUID, out parentPtr);

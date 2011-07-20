@@ -116,6 +116,23 @@
     <Compile Include="DeviceContext.OutputMerger.cs" />
     <Compile Include="DeviceContext.Rasterizer.cs" />
     <Compile Include="DomainShader.cs" />
+    <Compile Include="Effect.cs" />
+    <Compile Include="EffectBlendVariable.cs" />
+    <Compile Include="EffectDepthStencilVariable.cs" />
+    <Compile Include="EffectDepthStencilViewVariable.cs" />
+    <Compile Include="EffectMatrixVariable.cs" />
+    <Compile Include="EffectPass.cs" />
+    <Compile Include="EffectPassDescription.cs" />
+    <Compile Include="EffectPassShaderDescription.cs" />
+    <Compile Include="EffectRasterizerVariable.cs" />
+    <Compile Include="EffectRenderTargetViewVariable.cs" />
+    <Compile Include="EffectSamplerVariable.cs" />
+    <Compile Include="EffectScalarVariable.cs" />
+    <Compile Include="EffectShaderDescription.cs" />
+    <Compile Include="EffectShaderResourceVariable.cs" />
+    <Compile Include="EffectStringVariable.cs" />
+    <Compile Include="EffectVariable.cs" />
+    <Compile Include="EffectVectorVariable.cs" />
     <Compile Include="FastFourierTransform.cs" />
     <Compile Include="Generated\Enumerations.cs" />
     <Compile Include="Generated\Functions.cs" />
@@ -164,6 +181,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_effects_x64.dll">
+      <Link>sharpdx_direct3d11_effects_x64.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_effects_x86.dll">
+      <Link>sharpdx_direct3d11_effects_x86.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Mapping.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -43,8 +43,8 @@ namespace SharpDX.Direct3D11
         public DomainShader(Device device, ShaderBytecode shaderBytecode, ClassLinkage linkage)
             : base(IntPtr.Zero)
         {
-            device.CreateDomainShader(shaderBytecode.GetBufferPointer(),
-                                      shaderBytecode.GetBufferSize(), linkage, this);
+            device.CreateDomainShader(shaderBytecode.BufferPointer,
+                                      shaderBytecode.BufferSize, linkage, this);
         }
     }
 }

@@ -31,8 +31,8 @@ namespace SharpDX.Direct3D10
         /// <param name = "shaderBytecode">The compiled shader bytecode.</param>
         public VertexShader(Device device, ShaderBytecode shaderBytecode) : base(IntPtr.Zero)
         {
-            device.CreateVertexShader(shaderBytecode.GetBufferPointer(),
-                                      shaderBytecode.GetBufferSize(), this);
+            device.CreateVertexShader(shaderBytecode.BufferPointer,
+                                      shaderBytecode.BufferSize, this);
         }
     }
 }

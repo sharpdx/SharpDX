@@ -429,6 +429,8 @@ namespace SharpGen.Config
             FilePath = file;
             Parent = parent;
 
+            Variables.Add(new KeyValue("THIS_CONFIG_PATH", Path.GetDirectoryName(AbsoluteFilePath)));
+
             // Load all dependencies
             foreach (var dependFile in Files)
             {

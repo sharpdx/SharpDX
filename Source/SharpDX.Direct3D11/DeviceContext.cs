@@ -93,7 +93,7 @@ namespace SharpDX.Direct3D11
                 int size = Marshal.SizeOf(typeof (T));
                 // TODO, verify if stackalloc is a good place to store async data
                 byte* pBuffer = stackalloc byte[size];
-                DataStream stream = new DataStream(pBuffer, size, true, true, false);
+                var stream = new DataStream((IntPtr)pBuffer, size, true, true);
 
                 GetDataInternal(data, stream.DataPointer, size, flags);
 

@@ -43,8 +43,8 @@ namespace SharpDX.Direct3D11
         public HullShader(Device device, ShaderBytecode shaderBytecode, ClassLinkage linkage)
             : base(IntPtr.Zero)
         {
-            device.CreateHullShader(shaderBytecode.GetBufferPointer(),
-                                    shaderBytecode.GetBufferSize(), linkage, this);
+            device.CreateHullShader(shaderBytecode.BufferPointer,
+                                    shaderBytecode.BufferSize, linkage, this);
         }
     }
 }
