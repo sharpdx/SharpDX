@@ -362,9 +362,9 @@
     <remove function="D3D10GetShaderDebugInfo" />
     <remove function="D3D10CompileEffectFromMemory" />
     <remove function="D3D10DisassembleEffect" />
-    <map function="D3D10.*" dll="d3d10.dll" group="SharpDX.Direct3D10.D3D10" />
-    <map function="D3D10.*1" dll="d3d10_1.dll" group="SharpDX.Direct3D10.D3D10" />
-    <map function="D3DX10.*" dll="#(D3DX10_DLL_A)" group="SharpDX.Direct3D10.D3DX10" />
+    <map function="D3D10.*" dll='"d3d10.dll"' group="SharpDX.Direct3D10.D3D10" />
+    <map function="D3D10.*1" dll='"d3d10_1.dll"' group="SharpDX.Direct3D10.D3D10" />
+    <map function="D3DX10.*" dll='"#(D3DX10_DLL_A)"' group="SharpDX.Direct3D10.D3DX10" />
        
     <context-clear />
   </mapping>

@@ -1046,7 +1046,7 @@
     <remove function="joyConfigChanged" />    
     <remove function="ShowJoyCPL" />
 
-    <map function="DirectInput.*" dll="dinput8.dll" group="SharpDX.DirectInput.DInput" />   
+    <map function="DirectInput.*" dll='"dinput8.dll"' group="SharpDX.DirectInput.DInput" />   
     <map param="DirectInput8Create::ppvOut" attribute="out"/>
 
     <context-clear />

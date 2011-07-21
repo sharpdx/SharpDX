@@ -324,8 +324,8 @@
     // *****************************************************************
     -->
     <map function="DirectSound(.+)" name-tmp="$1" />
-    <map function="DirectSound.*" dll="dsound.dll" group="SharpDX.DirectSound.DSound" />
-    <map function="GetDeviceID.*" dll="dsound.dll" group="SharpDX.DirectSound.DSound" />
+    <map function="DirectSound.*" dll='"dsound.dll"' group="SharpDX.DirectSound.DSound" />
+    <map function="GetDeviceID.*" dll='"dsound.dll"' group="SharpDX.DirectSound.DSound" />
     <map param="DirectSoundCreate8::ppDS8" attribute="out fast"/>
     <map param="DirectSoundCaptureCreate8::ppDSC8" attribute="out fast"/>
     <map param="DirectSoundFullDuplexCreate::ppDSFD" attribute="out fast"/>

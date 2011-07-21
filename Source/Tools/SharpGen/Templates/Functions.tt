@@ -34,31 +34,40 @@ foreach (var sharpFunctionGroup in Namespace.Classes)
 	if (dllNames.Count > 0) {		
 #>
 		/// <summary>
-		/// Load DLLs and bind functions
+		/// DLLs loaders
 		/// </summary>
-		static <#= sharpFunctionGroup.Name #>() {
-			IntPtr[] _dllHandles = new IntPtr[<#= dllNames.Count #>];
 <#
 	
 		for(int i = 0; i < dllNames.Count; i++) {
-#>
-            _dllHandles[<#= i #>] = SharpDX.Utilities.LoadLibrary("<#= dllNames[i] #>");
+#>			
+		private static IntPtr DllHandle<#= i #>_;
+		private static IntPtr DllHandle<#= i #> {
+			get {
+				if (DllHandle<#= i #>_ == IntPtr.Zero) {
+		            DllHandle<#= i #>_ = SharpDX.Utilities.LoadLibrary(<#= dllNames[i] #>);
+				}
+				return DllHandle<#= i #>_;
+			}
+		}
 <#
 		}
-	
+			
 		foreach (var sharpFunction in sharpFunctionGroup.Functions) {
-			int indexDll = dllNames.IndexOf(sharpFunction.DllName);
-#>
-            <#= sharpFunction.CppElementName #>_ = SharpDX.Utilities.GetProcAddress(_dllHandles[<#= indexDll #>], "<#= sharpFunction.CppElementName #>");
-<#	
-		}	
-#>
-        }
-<#	
-		foreach (var sharpFunction in sharpFunctionGroup.Functions) {
+			int indexDll = dllNames.IndexOf(sharpFunction.DllName);			
 			ProcessMethod(sharpFunction);
 #>
-        private static IntPtr <#= sharpFunction.CppElementName #>_;
+        private static IntPtr <#= sharpFunction.CppElementName #>Field_;
+        private static IntPtr <#= sharpFunction.CppElementName #>_
+        {
+            get
+            {
+                if (<#= sharpFunction.CppElementName #>Field_ == IntPtr.Zero)
+                {
+                    <#= sharpFunction.CppElementName #>Field_ = SharpDX.Utilities.GetProcAddress(DllHandle<#= indexDll #>, "<#= sharpFunction.CppElementName #>");
+                }
+                return <#= sharpFunction.CppElementName #>Field_;
+            }
+        }		
 <#		
 		}
 	}

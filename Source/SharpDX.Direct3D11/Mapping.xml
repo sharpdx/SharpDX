@@ -183,12 +183,12 @@
     <map function="D3D11(.+)" name-tmp="$1" />
     <map function="D3DX11(.+)" name-tmp="$1" />
     <map function="D3DX11(.+)W" name-tmp="$1" />    
-    <map function="D3D11.*" dll="d3d11.dll" group="SharpDX.Direct3D11.D3D11" />
-    <map function="D3DX11.*" dll="#(D3DX11_DLL_A)" group="SharpDX.Direct3D11.D3DX11" />
+    <map function="D3D11.*" dll='"d3d11.dll"' group="SharpDX.Direct3D11.D3D11" />
+    <map function="D3DX11.*" dll='"#(D3DX11_DLL_A)"' group="SharpDX.Direct3D11.D3DX11" />
     <map param="D3D11CreateDevice::ppDevice" attribute="out fast" />
 
     <map param="D3DX11CreateEffectFromMemory::ppEffect" attribute="out fast" />
-    <map function="D3DX11CreateEffectFromMemory" dll="sharpdx_direct3d11_effects_x86.dll" group="SharpDX.Direct3D11.D3DX11Effects" />
+    <map function="D3DX11CreateEffectFromMemory" dll='IntPtr.Size == 4?"sharpdx_direct3d11_effects_x86.dll":"sharpdx_direct3d11_effects_x64.dll"' group="SharpDX.Direct3D11.D3DX11Effects" />
     <!--
     // *****************************************************************
     // D3D11 Constants
@@ -197,7 +197,7 @@
     <context-clear />
 
     <context>d3dcsx</context>
-    <map function="D3DX11.*" dll="#(D3DCSX_DLL_A)" group="SharpDX.Direct3D11.D3DCSX" />
+    <map function="D3DX11.*" dll='"#(D3DCSX_DLL_A)"' group="SharpDX.Direct3D11.D3DCSX" />
     <map param="D3DX11CreateSegmentedScan::ppScan" attribute="out fast"/>
     <map param="D3DX11CreateScan::ppScan" attribute="out fast"/>
     <map param="D3DX11CreateFFT::ppFFT" attribute="out fast"/>   

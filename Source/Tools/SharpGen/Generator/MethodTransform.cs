@@ -61,7 +61,7 @@ namespace SharpGen.Generator
                 }
 
                 // Set the DllName for this function
-                ((CsFunction)cSharpFunction).DllName = tag.FunctionDllName.ToLower();
+                ((CsFunction)cSharpFunction).DllName = tag.FunctionDllName;
 
                 // Add the function to the ClassType
                 csClass.Add(cSharpFunction);

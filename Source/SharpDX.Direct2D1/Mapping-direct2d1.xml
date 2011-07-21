@@ -116,7 +116,7 @@
     <map interface="ID2D(\d+).*Sink" callback="true" callback-dual="true" />
     
     <map function="D2D1(.+)" name-tmp="$1" />
-    <map function="D2D1.*" dll="d2d1.dll" group="SharpDX.Direct2D1.D2D1" />
+    <map function="D2D1.*" dll='"d2d1.dll"' group="SharpDX.Direct2D1.D2D1" />
     <context-clear />
   </mapping>
 </config>

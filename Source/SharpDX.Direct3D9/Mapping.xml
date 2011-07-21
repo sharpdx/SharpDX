@@ -1150,11 +1150,11 @@
     <remove function="D3DXSHPRTCompSplitMeshSC" />
     <remove function="D3DXCreateTextureGutterHelper" />
     <map function="D3DXCreateFontIndirectW" name="CreateFontIndirect" />
-    <map function="D3D9.*" dll="d3d9.dll" group="SharpDX.Direct3D9.D3D9" />
-    <map function="Direct3D.*" dll="d3d9.dll" group="SharpDX.Direct3D9.D3D9" />
-    <map function="D3DX9.*" dll="d3dx9_#(D3DX_SDK_VERSION).dll" group="SharpDX.Direct3D9.D3DX9" />
-    <map function="D3DX[^0-9].*" dll="d3dx9_#(D3DX_SDK_VERSION).dll" group="SharpDX.Direct3D9.D3DX9" />
-    <map function="D3DPERF.*" dll="d3dx9_#(D3DX_SDK_VERSION).dll" group="SharpDX.Direct3D9.D3DX9" />
+    <map function="D3D9.*" dll='"d3d9.dll"' group="SharpDX.Direct3D9.D3D9" />
+    <map function="Direct3D.*" dll='"d3d9.dll"' group="SharpDX.Direct3D9.D3D9" />
+    <map function="D3DX9.*" dll='"d3dx9_#(D3DX_SDK_VERSION).dll"' group="SharpDX.Direct3D9.D3DX9" />
+    <map function="D3DX[^0-9].*" dll='"d3dx9_#(D3DX_SDK_VERSION).dll"' group="SharpDX.Direct3D9.D3DX9" />
+    <map function="D3DPERF.*" dll='"d3dx9_#(D3DX_SDK_VERSION).dll"' group="SharpDX.Direct3D9.D3DX9" />
     <map param="Direct3DCreate9Ex::arg1" attribute="out fast"/>
     
     <context-clear />

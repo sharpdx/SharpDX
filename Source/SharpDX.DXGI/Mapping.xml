@@ -175,7 +175,7 @@
     // DXGI Functions
     // *****************************************************************
     -->
-    <map function="CreateDXGIFactory.*" dll="dxgi.dll" group="SharpDX.DXGI.DXGI" />
+    <map function="CreateDXGIFactory.*" dll='"dxgi.dll"' group="SharpDX.DXGI.DXGI" />
     <map param="CreateDXGIFactory.*?::ppFactory" attribute="out" />
     
     <context-clear/>

@@ -160,7 +160,7 @@
     <map param="IDWriteTypography::GetFontFeature::fontFeature" return="true" />
     
     <map function="DWrite(.+)" name-tmp="$1" />
-    <map function="DWriteCreateFactory" dll="dwrite.dll" group="SharpDX.DirectWrite.DWrite" />
+    <map function="DWriteCreateFactory" dll='"dwrite.dll"' group="SharpDX.DirectWrite.DWrite" />
     <map param="DWriteCreateFactory::factory" attribute="out fast"/>
 
     <context-clear />
