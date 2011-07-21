@@ -69,7 +69,8 @@ namespace SharpCore.Logging
                 lineMessage.AppendFormat("{0}({1},{2}): ", logLocation.File, logLocation.Line, logLocation.Column);
 
             // Write log parsable by Visual Studio
-            lineMessage.AppendFormat("{0}:{1}", Enum.GetName(typeof (LogLevel), logLevel).ToLower(), FormatMessage(context, message, parameters));
+            var levelName = Enum.GetName(typeof (LogLevel), logLevel).ToLower();
+            lineMessage.AppendFormat("{0}:{1}", levelName == "fatal" ? "error:fatal":levelName , FormatMessage(context, message, parameters));
 
             return lineMessage.ToString();
         }
