@@ -1384,7 +1384,7 @@ namespace SharpGen.Parser
                         continue;
                     
                     if (cppEnum.Items.Count != docItem.Items.Count)
-                        Console.WriteLine("Warning Invalid number enum items in documentation for Enum {0}",
+                        Logger.Warning("Warning Invalid number enum items in documentation for Enum {0}",
                                           cppEnum.Name);
                     int count = Math.Min(cppEnum.Items.Count, docItem.Items.Count);
                     int i = 0;
@@ -1407,7 +1407,7 @@ namespace SharpGen.Parser
                         continue;
                     
                     if (cppStruct.Items.Count != docItem.Items.Count)
-                        Console.WriteLine("Invalid number of fields in documentation for Struct {0}", cppStruct.Name);
+                        Logger.Warning("Invalid number of fields in documentation for Struct {0}", cppStruct.Name);
                     int count = Math.Min(cppStruct.Items.Count, docItem.Items.Count);
                     int i = 0;
                     foreach (CppField cppEnumItem in cppStruct.Fields)
@@ -1439,7 +1439,7 @@ namespace SharpGen.Parser
                             continue;
                         
                         if (cppMethod.Items.Count != methodDocItem.Items.Count)
-                            Console.WriteLine("Invalid number of documentation for Parameters for method {0}",
+                            Logger.Warning("Invalid number of documentation for Parameters for method {0}",
                                               methodName);
                         int count = Math.Min(cppMethod.Items.Count, methodDocItem.Items.Count);
                         int i = 0;
@@ -1464,7 +1464,7 @@ namespace SharpGen.Parser
                         continue;
 
                     if (cppFunction.Items.Count != docItem.Items.Count)
-                        Console.WriteLine("Invalid number of documentation for Parameters for Function {0}",
+                        Logger.Warning("Invalid number of documentation for Parameters for Function {0}",
                                           cppFunction.Name);
                     int count = Math.Min(cppFunction.Items.Count, docItem.Items.Count);
                     int i = 0;

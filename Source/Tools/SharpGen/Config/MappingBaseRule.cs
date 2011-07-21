@@ -17,67 +17,12 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
 namespace SharpGen.Config
 {
     public abstract class MappingBaseRule : ConfigBaseRule, ITypeRule
     {
-
-        private static readonly Dictionary<string,PropertyInfo> MapShortNameToProperty = new Dictionary<string, PropertyInfo>();
-
-
-        static MappingBaseRule()
-        {
-            foreach (var prop in typeof(MappingBaseRule).GetProperties())
-            {
-                var list = prop.GetCustomAttributes(typeof (XmlAttributeAttribute), false);
-                if (list.Length != 0)
-                    MapShortNameToProperty.Add( ((XmlAttributeAttribute)list[0]).AttributeName, prop );
-            }
-        }
-
-        public void Set(Type type, string name)
-        {
-            PropertyInfo prop = null;
-            foreach (var attribute in type.GetCustomAttributes(false))
-            {
-                if (attribute is XmlTypeAttribute)
-                {
-                    var typeName = ((XmlTypeAttribute)attribute).TypeName;
-                    if (!string.IsNullOrEmpty(typeName))
-                        MapShortNameToProperty.TryGetValue(typeName, out prop);
-                }
-                else if (attribute is DataContractAttribute)
-                {
-                    var typeName = ((DataContractAttribute)attribute).Name;
-                    if (!string.IsNullOrEmpty(typeName))
-                        MapShortNameToProperty.TryGetValue(typeName, out prop);
-                }
-
-                if (prop != null)
-                    break;
-            }
-
-            if (prop == null)
-            {
-                Console.WriteLine("ERROR, unable to get MappingTag [{0}]", type.Name);
-            }
-            else
-            {
-                prop.SetValue(this, name, null);
-            }
-        }
-
-        public void Set<T>(string name)
-        {
-            Set(typeof(T), name);
-        }
-
         [XmlAttribute("class")]
         public string NewClass { get; set; }
         [XmlAttribute("enum")]
@@ -117,9 +62,7 @@ namespace SharpGen.Config
 
                 }                
             }
-
             return string.Format("{0} {1}", base.ToString(), type);
         }
-
     }
 }

@@ -73,7 +73,7 @@ namespace SharpGen
         private static void ImportXmlTypes(Type type, List<XmlMapping> mappings, List<Type> importedTypes, XmlReflectionImporter importer)
         {
             XmlTypeMapping mapping = null;
-            XmlReflectionImporter importer2 = new XmlReflectionImporter();
+            var importer2 = new XmlReflectionImporter();
             try
             {
                 mapping = importer2.ImportTypeMapping(type);
@@ -84,11 +84,6 @@ namespace SharpGen
                 {
                     throw;
                 }
-                //if (verbose)
-                //{
-                //    Console.Out.WriteLine(FormatMessage(parsableerrors, true, Res.GetString("Warning", new object[] { Res.GetString("InfoIgnoreType", new object[] { type.FullName }) })));
-                //    Warning(exception, parsableerrors);
-                //}
                 return;
             }
             if (mapping != null)

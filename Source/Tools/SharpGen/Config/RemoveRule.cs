@@ -25,11 +25,5 @@ namespace SharpGen.Config
     [XmlType("remove")]
     public class RemoveRule: MappingBaseRule
     {
-        public static RemoveRule Create<T>(string regexp) 
-        {
-            var result = new RemoveRule();
-            result.Set<T>(regexp);
-            return result;
-        }
     }
 }

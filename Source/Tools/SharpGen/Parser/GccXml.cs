@@ -177,7 +177,7 @@ namespace SharpGen.Parser
 
 
                 startInfo.Arguments = arguments + " " + headerFile;
-                // Console.WriteLine("{0} {1}",ExecutablePath, startInfo.Arguments);
+
                 currentProcess.StartInfo = startInfo;
                 currentProcess.ErrorDataReceived += ProcessErrorFromHeaderFile;
                 currentProcess.OutputDataReceived += handler;
@@ -232,7 +232,6 @@ namespace SharpGen.Parser
                     arguments += " -I \"" + directory.TrimEnd('\\') + "\"";
 
                 startInfo.Arguments = arguments + " " + headerFile;
-                // Console.WriteLine("{0} {1}", ExecutablePath, startInfo.Arguments);
 
                 currentProcess.StartInfo = startInfo;
                 currentProcess.ErrorDataReceived += ProcessErrorFromHeaderFile;

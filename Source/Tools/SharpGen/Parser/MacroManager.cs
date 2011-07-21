@@ -77,7 +77,7 @@ namespace SharpGen.Parser
         private void ParseLine(object sendingProcess, DataReceivedEventArgs outLine)
         {
             string line = outLine.Data;
-            // Console.WriteLine("Debug: {0}",line);
+
             // Collect the sort command output.
             if (!String.IsNullOrEmpty(line))
             {

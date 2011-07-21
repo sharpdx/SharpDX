@@ -528,8 +528,7 @@ namespace SharpGen.Generator
                 Logger.Progress(85 + (indexToGenerate*15/templateNames.Length), "Generating code for {0}...", templateName);
                 indexToGenerate++;
 
-                Console.WriteLine();
-                Console.WriteLine("Generate {0}", templateName);
+                Logger.Message("\nGenerate {0}", templateName);
                 string templateFileName = templateName + ".tt";
 
                 string input = Utilities.GetResourceAsString("Templates." + templateFileName);
@@ -552,12 +551,12 @@ namespace SharpGen.Generator
                         Directory.CreateDirectory(generatedDirectoryForAssembly);
 
 
-                    Console.WriteLine("Process Assembly {0} => {1}", csAssembly.Name, generatedDirectoryForAssembly);
+                    Logger.Message("Process Assembly {0} => {1}", csAssembly.Name, generatedDirectoryForAssembly);
 
                     // LocalInterop is once generated per assembly
                     if (templateName == "LocalInterop")
                     {
-                        Console.WriteLine("\tProcess Interop {0} => {1}", csAssembly.Name, generatedDirectoryForAssembly);
+                        Logger.Message("\tProcess Interop {0} => {1}", csAssembly.Name, generatedDirectoryForAssembly);
 
                         //Transform the text template.
                         string output = engine.ProcessTemplate(input);
@@ -580,7 +579,7 @@ namespace SharpGen.Generator
                             if (!Directory.Exists(nameSpaceDirectory))
                                 Directory.CreateDirectory(nameSpaceDirectory);
 
-                            Console.WriteLine("\tProcess Namespace {0} => {1}", csNamespace.Name, nameSpaceDirectory);
+                            Logger.Message("\tProcess Namespace {0} => {1}", csNamespace.Name, nameSpaceDirectory);
 
                             ////host.Session = new TextTemplatingSession();
                             //host.Session = host.CreateSession();

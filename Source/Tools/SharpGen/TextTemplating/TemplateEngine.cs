@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using SharpCore.Logging;
 
 namespace SharpGen.TextTemplating
 {
@@ -230,7 +231,7 @@ using System.Text.RegularExpressions;
 
             // Output any errors
             foreach (var compilerError in compilerResults.Errors)
-                Console.WriteLine(compilerError);
+                Logger.Error(compilerError.ToString());
 
             // If successfull, gets the compiled assembly
             if (compilerResults.Errors.Count == 0 && compilerResults.CompiledAssembly != null)
@@ -240,9 +241,7 @@ using System.Text.RegularExpressions;
             }
             else
             {
-                Console.Out.Flush();
-                // If errors, then exit with exitcode 1
-                Environment.Exit(1);
+                Logger.Fatal("Template [{0}] contains error", TemplateFileName);
             }
 
             // Get a new templatizer instance
@@ -337,8 +336,6 @@ using System.Text.RegularExpressions;
                             AddDoTemplateClassCode(tokeniser.Location, tokeniser.Value);
                         break;
                     case State.Directive:
-                        //Console.WriteLine(">>Directive:" + tokeniser.Value);
-
                         Directive directive = null;
                         string attName = null;
                         while (!skip && tokeniser.Advance())
@@ -378,7 +375,6 @@ using System.Text.RegularExpressions;
                             }
                             _directives.Add(directive);
                         }
-                        //Console.WriteLine("Include " + Path.GetDirectoryName(tokeniser.Location.FileName));
                         break;
                     default:
                         throw new InvalidOperationException();
