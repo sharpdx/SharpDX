@@ -32,10 +32,17 @@
     <context>sharpdx-directinput-ext</context>
     <context>dinput</context>
 
+    <define struct="SharpDX.X3DAudio.X3DAudioHandle" sizeof="20" />
+
     <create-cpp enum="X3DAudioCalculateFlags" macro="X3DAUDIO_CALCULATE_.*" />
     
     <create class="X3DAudio" visibility="public"/>
   </extension>
+
+  <bindings>
+    <!-- Primitive bindings -->
+    <bind from="X3DAUDIOHANDLE" to="SharpDX.X3DAudio.X3DAudioHandle" />
+  </bindings>
 
   <mapping>
     <context>sharpdx-x3daudio-ext</context>
@@ -66,11 +73,11 @@
     // X3DAudio Functions
     // *****************************************************************
     -->
-    <map param="X3DAudioInitialize::Instance" type="void" return="true"/>
-    <map param="X3DAudioCalculate::Instance" type="void"/>
+    <map param="X3DAudioInitialize::Instance" type="X3DAUDIOHANDLE"/>
+    <map param="X3DAudioInitialize::SpeakerChannelMask" type="SPEAKER_FLAGS"/>    
+    <map param="X3DAudioCalculate::Instance" type="X3DAUDIOHANDLE"/>
     <map param="X3DAudioCalculate::Flags" type="X3DAudioCalculateFlags"/>
-    <map param="X3DAudioCalculate::pDSPSettings" return="true" attribute="out"/>
-
+    
     <context-clear />
   </mapping>
 </config>
