@@ -164,6 +164,8 @@ namespace SharpGen.Model
                     builder.Append("protected ");
                 else if ((Visibility & Visibility.Internal) != 0)
                     builder.Append("internal ");
+                else if ((Visibility & Visibility.Private) != 0)
+                    builder.Append("private ");
                 else if ((Visibility & Visibility.PublicProtected) != 0)
                     builder.Append("");
 

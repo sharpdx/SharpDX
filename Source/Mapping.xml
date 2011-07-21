@@ -53,12 +53,12 @@ enum __SAL_YesNo {};
   <file>SharpDX.Direct3D9\Mapping.xml</file>
   <file>SharpDX.DirectSound\Mapping.xml</file>
   <file>SharpDX.XAPO\Mapping.xml</file>
-  <file>SharpDX.XAudio2\Mapping.xml</file>    
+  <file>SharpDX.XAudio2\Mapping.xml</file>
+  <file>SharpDX.X3DAudio\Mapping.xml</file>
   <!--  
   <file>SharpDX.MediaFoundation\Mapping.xml</file>
   <file>SharpDX.DirectDraw\Mapping.xml</file>
   <file>SharpDX.DirectShow\Mapping.xml</file>
-  <file>SharpDX.X3DAudio\Mapping.xml</file>
   <file>SharpDX.XACT3\Mapping.xml</file>
   <file>SharpDX.XInput\Mapping.xml</file>
   <file>SharpDX.WIC\Mapping.xml</file>

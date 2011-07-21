@@ -33,19 +33,21 @@ namespace SharpGen.Config
         Protected = 0x04,
         [XmlEnum("public-protected")] 
         PublicProtected = 0x08,
+        [XmlEnum("private")]
+        Private = 0x10,
         [XmlEnum("override")]
-        Override = 0x10,
+        Override = 0x20,
         [XmlEnum("abstract")]
-        Abstract = 0x20,
+        Abstract = 0x40,
         [XmlEnum("static")]
-        Static = 0x40,
+        Static = 0x80,
         [XmlEnum("const")]
-        Const = 0x80,
+        Const = 0x100,
         [XmlEnum("virtual")]
-        Virtual = 0x100,
+        Virtual = 0x200,
         [XmlEnum("readonly")]
-        Readonly = 0x200,
+        Readonly = 0x400,
         [XmlEnum("sealed")]
-        Sealed = 0x400,
+        Sealed = 0x800,
     }
 }
