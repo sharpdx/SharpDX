@@ -41,19 +41,40 @@
       #define HID_USAGE_PAGE_MSR 0x8E
     </post>
   </include>
+
+  <include file="audiodefs.h" namespace="SharpDX.Multimedia" output="Multimedia"/>
  
   <!-- SharpDX global types -->
   <extension>
-      <!-- class SharpDX.Multimedia.UsagePage -->
+    <context>sharpdx-core-multimedia-ext</context>
+    <context>hidusage</context>
+    <context>audiodefs</context>
+
+    <!-- class SharpDX.Multimedia.UsagePage -->
+    <create-cpp enum="SPEAKER_FLAGS" macro="SPEAKER_.*" />
+
+    <!-- class SharpDX.Multimedia.UsagePage -->
     <create-cpp enum="HID_USAGE_PAGE" macro="HID_USAGE_PAGE_.*" />
 
     <!-- class SharpDX.Multimedia.UsageId -->
     <create-cpp enum="HID_USAGE_ID" macro="HID_USAGE_[^P].*" />
   </extension>
 
-  <!-- SharpDX global mapping -->
+    <!-- SharpDX global mapping -->
   <mapping>    
     <context>sharpdx-core-multimedia-ext</context>
+    <context>hidusage</context>
+    <context>audiodefs</context>
+
+    <!-- class SharpDX.Multimedia.UsagePage -->
+    <map enum="SPEAKER_FLAGS" name="Speakers" flags="true" none="true"/>
+    <map enum-item="SPEAKER_2POINT1" name="TwoPointOne" />
+    <map enum-item="SPEAKER_4POINT1" name="FourPointOne" />
+    <map enum-item="SPEAKER_5POINT1" name="FivePointOne" />
+    <map enum-item="SPEAKER_7POINT1" name="SevenPointOne" />
+    <map enum-item="SPEAKER_5POINT1_SURROUND" name="FivePointOneSurround" />
+    <map enum-item="SPEAKER_7POINT1_SURROUND" name="SevenPointOneSurround" />
+
     <!-- class SharpDX.Multimedia.UsagePage -->
     <map enum="HID_USAGE_PAGE" name="UsagePage" type="short"/>
     <map enum-item="HID_USAGE_PAGE_(.*)" name-tmp="$1" />
