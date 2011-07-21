@@ -152,7 +152,7 @@ namespace SharpDX.Direct3D11
             /// <param name = "renderTargetViews">A set of render target views to bind.</param>
             public void SetTargets(DepthStencilView depthStencilView, params RenderTargetView[] renderTargetViews)
             {
-                SetRenderTargets(renderTargetViews.Length, renderTargetViews, depthStencilView);
+                SetRenderTargets(renderTargetViews==null?0:renderTargetViews.Length, renderTargetViews, depthStencilView);
             }
 
             /// <summary>
