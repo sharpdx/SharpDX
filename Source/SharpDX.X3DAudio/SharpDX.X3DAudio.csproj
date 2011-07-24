@@ -45,9 +45,13 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="DistanceCurve.cs" />
+    <Compile Include="Emitter.cs" />
+    <Compile Include="DspSettings.cs" />
     <Compile Include="Generated\Enumerations.cs" />
     <Compile Include="Generated\Functions.cs" />
     <Compile Include="Generated\Interfaces.cs" />
+    <Compile Include="Listener.cs" />
     <Compile Include="Generated\LocalInterop.cs" />
     <Compile Include="Generated\Structures.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

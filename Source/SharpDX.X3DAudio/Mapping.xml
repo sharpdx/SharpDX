@@ -65,8 +65,15 @@
     // X3DAudio Structures
     // *****************************************************************
     -->
+    <!-- Set all fields with pointer to internal -->
+    <map field="X3DAUDIO_.*::p([A-Z].*)" name-tmp="$1Pointer" visibility="internal"/>
+
     <map struct="X3DAUDIO_DISTANCE_CURVE" visibility="internal"/>
     <map struct="X3DAUDIO_DISTANCE_CURVE_POINT" name="CurvePoint"/>
+    <map struct="X3DAUDIO_CONE" native="true" struct-to-class="true" marshalto="true"/>
+    <map struct="X3DAUDIO_EMITTER" native="true" struct-to-class="true" marshal="true"/>
+    <map struct="X3DAUDIO_LISTENER" native="true" struct-to-class="true" marshal="true"/>
+    <map struct="X3DAUDIO_DSP_SETTINGS" native="true" struct-to-class="true" marshal="true"/>
 
     <!--
     // *****************************************************************
