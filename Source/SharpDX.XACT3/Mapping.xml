@@ -1,8 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<config id="sharpdx-xact3" depends="sharpdx-core">
+<!--
+// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+-->
+<config id="sharpdx-xact3" depends="sharpdx sharpdx-xaudio2" xmlns="urn:SharpGen.Config">
+
   <namespace>SharpDX.XACT3</namespace>
   <assembly>SharpDX.XACT3</assembly>
-  <include id="xact3" file="xact3.h" attach="true" >
+  
+  <include file="xact3.h" attach="true" >
     <filter-error>$(FILTER_PASTING_ERROR)</filter-error>
     <pre>
       #undef _X86_
@@ -12,14 +35,52 @@
     </post>
   </include>
   <include id="xact3wb" file="xact3wb.h" attach="true" />
-  <naming />
-  <types />
-  <mapping>
+
+
+  <extension>
+    <context>sharpdx-xact3-ext</context>
     <context>xact3</context>
     <context>xact3wb</context>
-    <map struct="XACT(.*)" name-tmp="$1" />
-    <map interface="IXACT3(.*)" name="$1" />
-    <remove function="IXACT3(.*)" />
+
+    <create class="XACT3"/>
+    
+    <context-clear />
+  </extension>
+
+  <mapping>
+    <context>sharpdx-xact3-ext</context>
+    <context>xact3</context>
+    <context>xact3wb</context>
+
+    <!--
+    // *****************************************************************
+    // XACT3 Enumerations
+    // *****************************************************************
+    -->
+    <map enum="XACT3(.*)" name-tmp="$1" />
+
+    <!--
+    // *****************************************************************
+    // XACT3 Structures
+    // *****************************************************************
+    -->
+    <map struct="XACT3(.*)" name-tmp="$1" />
+
+    <!--
+    // *****************************************************************
+    // XACT3 Interfaces
+    // *****************************************************************
+    -->
+    <map interface="IXACT3(.*)" name-tmp="$1" />
+    <map method="IXACT3Cue::SetOutputVoices" visibility="internal" property="false" />
+
+    <!--
+    // *****************************************************************
+    // XACT3 Functions
+    // *****************************************************************
+    -->
+
+
     <context-clear />
   </mapping>
 </config>

@@ -55,6 +55,7 @@ enum __SAL_YesNo {};
   <file>SharpDX.XAPO\Mapping.xml</file>
   <file>SharpDX.XAudio2\Mapping.xml</file>
   <file>SharpDX.X3DAudio\Mapping.xml</file>
+  <file>SharpDX.XACT3\Mapping.xml</file>
   <!--  
   <file>SharpDX.MediaFoundation\Mapping.xml</file>
   <file>SharpDX.DirectDraw\Mapping.xml</file>

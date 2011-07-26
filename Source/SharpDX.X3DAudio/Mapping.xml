@@ -29,14 +29,15 @@
 
 
   <extension>
-    <context>sharpdx-directinput-ext</context>
-    <context>dinput</context>
+    <context>sharpdx-x3daudio-ext</context>
+    <context>x3daudio</context>
 
     <define struct="SharpDX.X3DAudio.X3DAudioHandle" sizeof="20" />
 
     <create-cpp enum="X3DAudioCalculateFlags" macro="X3DAUDIO_CALCULATE_.*" />
     
     <create class="X3DAudio" visibility="public"/>
+    <context-clear />
   </extension>
 
   <bindings>
