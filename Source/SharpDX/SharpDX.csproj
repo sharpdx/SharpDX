@@ -154,6 +154,7 @@
     <Compile Include="IUnknown.cs" />
     <Compile Include="MathUtil.cs" />
     <Compile Include="Matrix.cs" />
+    <Compile Include="Multimedia\SpeakersHelper.cs" />
     <Compile Include="Multimedia\WaveFormat.cs" />
     <Compile Include="Multimedia\WaveFormatEncoding.cs" />
     <Compile Include="Multimedia\WaveFormatExtensible.cs" />

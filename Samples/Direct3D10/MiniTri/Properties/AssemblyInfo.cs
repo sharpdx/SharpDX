@@ -28,9 +28,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("MiniTri")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("SharpDX Group")]
 [assembly: AssemblyProduct("MiniTri")]
-[assembly: AssemblyCopyright("Copyright © 2007-2010 SharpDX Group")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -46,7 +46,7 @@ namespace SharpDX.DirectWrite
         public  Result DrawGlyphRun(float baselineOriginX, float baselineOriginY, MeasuringMode measuringMode, GlyphRun glyphRun, RenderingParams renderingParams, Color4 textColor)
         {
             Rectangle temp;
-            return DrawGlyphRun(baselineOriginX, baselineOriginY, measuringMode, ref glyphRun, renderingParams, textColor, out temp);
+            return DrawGlyphRun(baselineOriginX, baselineOriginY, measuringMode, glyphRun, renderingParams, textColor, out temp);
         }
     }
 }

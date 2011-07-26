@@ -101,7 +101,7 @@ namespace PlaySoundCustomXAPO
             if (!isStarted)
             {
                 // Play a buffer
-                sourceVoice.SubmitSourceBuffer(ref audioBuffer, null);
+                sourceVoice.SubmitSourceBuffer(audioBuffer, null);
                 sourceVoice.Start();
                 isStarted = true;
                 buttonPlayStop.Text = "Stop";

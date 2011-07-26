@@ -115,6 +115,11 @@ namespace SharpGen.Model
             get { return PublicType is CsStruct || PublicType is CsEnum || (PublicType.Type != null && (PublicType.Type.IsValueType || PublicType.Type.IsPrimitive)); }
         }
 
+        public bool IsStructClass
+        {
+            get { return PublicType is CsStruct && ((CsStruct)PublicType).GenerateAsClass; }
+        }
+
         public bool HasNativeValueType
         {
             get { return (PublicType is CsStruct && (PublicType as CsStruct).HasMarshalType) ; }
@@ -149,7 +154,7 @@ namespace SharpGen.Model
                     builder.Append("out ");
                 else if ((Attribute == CsParameterAttribute.Ref || Attribute == CsParameterAttribute.RefIn) && !IsArray)
                 {
-                    if (!(IsRefInValueTypeOptional || IsRefInValueTypeByValue))
+                    if (!(IsRefInValueTypeOptional || IsRefInValueTypeByValue) && !IsStructClass)
                         builder.Append("ref ");
                 }
 

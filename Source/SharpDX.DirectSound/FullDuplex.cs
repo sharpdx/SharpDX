@@ -36,7 +36,7 @@ namespace SharpDX.DirectSound
         /// <param name="secondaryBuffer" />
         public FullDuplex(Guid captureDevice, Guid playbackDevice, CaptureBufferDescription captureDescription, SoundBufferDescription bufferDescription, IntPtr windowHandle, CooperativeLevel level, out CaptureBuffer captureBuffer, out SecondarySoundBuffer secondaryBuffer)
         {
-            DSound.FullDuplexCreate(captureDevice, playbackDevice, ref captureDescription, ref bufferDescription, windowHandle, (int) level, this,
+            DSound.FullDuplexCreate(captureDevice, playbackDevice, captureDescription, bufferDescription, windowHandle, (int) level, this,
                                     out captureBuffer, out secondaryBuffer, null);
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 
 namespace SharpDX.X3DAudio
 {
@@ -7,7 +8,11 @@ namespace SharpDX.X3DAudio
     /// </summary>	
     /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='X3DAUDIO_DSP_SETTINGS']/*"/>	
     /// <unmanaged>X3DAUDIO_DSP_SETTINGS</unmanaged>	
-    public  partial class DspSettings {
+    public  partial class DspSettings
+    {
+        public float[] MatrixCoefficients;
+
+        public float[] DelayTimes;
 
         // Internal native struct used for marshalling
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -28,6 +33,10 @@ namespace SharpDX.X3DAudio
             // Method to free unmanaged allocation
             internal unsafe void __MarshalFree()
             {
+                if (MatrixCoefficientsPointer != IntPtr.Zero)
+                    Marshal.FreeHGlobal(MatrixCoefficientsPointer);
+                if (DelayTimesPointer != IntPtr.Zero)
+                    Marshal.FreeHGlobal(DelayTimesPointer);
             }
         }
 
@@ -40,12 +49,21 @@ namespace SharpDX.X3DAudio
         // Method to marshal from native to managed struct
         internal unsafe void __MarshalFrom(ref __Native @ref)
         {
-            this.MatrixCoefficientsPointer = @ref.MatrixCoefficientsPointer;
-            this.DelayTimesPointer = @ref.DelayTimesPointer;
-            this.SrcChannelCount = @ref.SrcChannelCount;
-            this.DstChannelCount = @ref.DstChannelCount;
-            this.LPFDirectCoefficient = @ref.LPFDirectCoefficient;
-            this.LPFReverbCoefficient = @ref.LPFReverbCoefficient;
+            //this.MatrixCoefficientsPointer = @ref.MatrixCoefficientsPointer;
+            //this.DelayTimesPointer = @ref.DelayTimesPointer;
+
+            MatrixCoefficients = new float[@ref.SrcChannelCount * @ref.DstChannelCount];
+            if (MatrixCoefficients.Length > 0)
+                Utilities.Read(@ref.MatrixCoefficientsPointer, MatrixCoefficients, 0, MatrixCoefficients.Length);
+
+            DelayTimes = new float[@ref.DstChannelCount];
+            if (DelayTimes.Length > 0)
+                Utilities.Read(@ref.DelayTimesPointer, DelayTimes, 0, DelayTimes.Length);
+
+            this.SourceChannelCount = @ref.SrcChannelCount;
+            this.DestinationChannelCount = @ref.DstChannelCount;
+            this.LpfDirectCoefficient = @ref.LPFDirectCoefficient;
+            this.LpfReverbCoefficient = @ref.LPFReverbCoefficient;
             this.ReverbLevel = @ref.ReverbLevel;
             this.DopplerFactor = @ref.DopplerFactor;
             this.EmitterToListenerAngle = @ref.EmitterToListenerAngle;
@@ -53,15 +71,16 @@ namespace SharpDX.X3DAudio
             this.EmitterVelocityComponent = @ref.EmitterVelocityComponent;
             this.ListenerVelocityComponent = @ref.ListenerVelocityComponent;
         }
+
         // Method to marshal from managed struct tot native
         internal unsafe void __MarshalTo(ref __Native @ref)
         {
-            @ref.MatrixCoefficientsPointer = this.MatrixCoefficientsPointer;
-            @ref.DelayTimesPointer = this.DelayTimesPointer;
-            @ref.SrcChannelCount = this.SrcChannelCount;
-            @ref.DstChannelCount = this.DstChannelCount;
-            @ref.LPFDirectCoefficient = this.LPFDirectCoefficient;
-            @ref.LPFReverbCoefficient = this.LPFReverbCoefficient;
+            @ref.MatrixCoefficientsPointer = Marshal.AllocHGlobal(SourceChannelCount * DestinationChannelCount * sizeof(float));
+            @ref.DelayTimesPointer = Marshal.AllocHGlobal(DestinationChannelCount * sizeof(float));
+            @ref.SrcChannelCount = this.SourceChannelCount;
+            @ref.DstChannelCount = this.DestinationChannelCount;
+            @ref.LPFDirectCoefficient = this.LpfDirectCoefficient;
+            @ref.LPFReverbCoefficient = this.LpfReverbCoefficient;
             @ref.ReverbLevel = this.ReverbLevel;
             @ref.DopplerFactor = this.DopplerFactor;
             @ref.EmitterToListenerAngle = this.EmitterToListenerAngle;

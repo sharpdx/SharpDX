@@ -213,7 +213,7 @@ namespace SharpDX.Direct3D11
         /// <unmanaged>HRESULT D3DX10LoadTextureFromTexture([None] ID3D10Resource* pSrcTexture,[None] D3DX10_TEXTURE_LOAD_INFO* pLoadInfo,[None] ID3D10Resource* pDstTexture)</unmanaged>
         public static Result LoadTextureFromTexture(DeviceContext context, Resource source, Resource destination, TextureLoadInformation loadInformation)
         {
-            return D3DX11.LoadTextureFromTexture(context, source, ref loadInformation, destination);
+            return D3DX11.LoadTextureFromTexture(context, source, loadInformation, destination);
         }
     }
 }

@@ -26,21 +26,49 @@ namespace SharpDX.X3DAudio
     {
         private X3DAudioHandle handle;
 
+        /// <summary>
+        /// Speed of sound in the air.
+        /// </summary>
+        public const float SpeedOfSound = 343.5f;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="X3DAudio"/> class.
+        /// </summary>
+        /// <param name="speakers">The speakers config.</param>
+        public X3DAudio(Speakers speakers) : this(speakers, SpeedOfSound)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="X3DAudio"/> class.
+        /// </summary>
+        /// <param name="speakers">The speakers config.</param>
+        /// <param name="speedOfSound">The speed of sound.</param>
         public X3DAudio(Speakers speakers, float speedOfSound)
         {
             X3DAudioInitialize(speakers, speedOfSound, out handle);
         }
 
-        public DspSettings Calculate(ref Listener listener, ref Emitter emitter, CalculateFlags flags, int sourceChannelCount, int destinationChannelCount)
+        /// <summary>
+        /// Calculates dsp settings for the specified listener and emitter.
+        /// </summary>
+        /// <param name="listener">The listener.</param>
+        /// <param name="emitter">The emitter.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="sourceChannelCount">The source channel count.</param>
+        /// <param name="destinationChannelCount">The destination channel count.</param>
+        /// <returns>Dsp settings</returns>
+        public DspSettings Calculate(Listener listener, Emitter emitter, CalculateFlags flags, int sourceChannelCount, int destinationChannelCount)
         {
+            var settings = new DspSettings
+            {
+                SourceChannelCount = sourceChannelCount,
+                DestinationChannelCount = destinationChannelCount
+            };
 
-            var settings = new DspSettings();
-            settings.SrcChannelCount = sourceChannelCount;
-            settings.DstChannelCount = destinationChannelCount;
+            X3DAudioCalculate(ref handle, listener, emitter, flags, settings);
 
-            X3DAudioCalculate(ref handle, ref listener, ref emitter, flags, ref settings);
-
-            return new DspSettings();
+            return settings;
         }
     }
 }

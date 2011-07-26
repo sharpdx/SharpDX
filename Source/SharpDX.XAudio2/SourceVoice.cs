@@ -91,6 +91,17 @@ namespace SharpDX.XAudio2
             return this.Start(0, 0);
         }
 
+
+        /// <summary>
+        /// Sets the frequency ratio.
+        /// </summary>
+        /// <param name="ratio">The ratio.</param>
+        /// <returns></returns>
+        public SharpDX.Result SetFrequencyRatio(float ratio)
+        {
+            return SetFrequencyRatio(ratio, 0);
+        }
+
         /// <summary>	
         /// Starts consumption and processing of audio by the voice. Delivers the result to any connected submix or mastering voices, or to the output device.	
         /// </summary>	

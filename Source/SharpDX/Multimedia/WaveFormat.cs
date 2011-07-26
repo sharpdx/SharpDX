@@ -186,7 +186,7 @@ namespace SharpDX.Multimedia
         /// </summary>
         public WaveFormat(int rate, int bits, int channels)
         {
-            if (channels < 1)
+            if ((int)channels  == 0)
             {
                 throw new ArgumentOutOfRangeException("Channels must be 1 or greater", "channels");
             }
@@ -418,7 +418,5 @@ namespace SharpDX.Multimedia
                 return extraSize;
             }
         }
-
-
     }
 }

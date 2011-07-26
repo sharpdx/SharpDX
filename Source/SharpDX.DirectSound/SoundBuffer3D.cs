@@ -72,7 +72,7 @@ namespace SharpDX.DirectSound
             }
             set
             {
-                SetAllParameters(ref value, Deferred ? 1 : 0);
+                SetAllParameters(value, Deferred ? 1 : 0);
             }
         }
 

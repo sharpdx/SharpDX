@@ -27,18 +27,18 @@ namespace SharpGen.Model
     public static class CppElementExtensions
     {
 
-        private static string LastCppMethod = "???";
+        private static string LastCppOuterElement = "???";
 
         public static void Tag<T>(this CppElement element, string regex, MappingRule tag) where T : CppElement
         {
             string regexStr = CppElement.StripRegex(regex);
-            if (typeof(CppMethod).IsAssignableFrom(typeof(T)))
+            if (typeof(CppMethod).IsAssignableFrom(typeof(T)) || typeof(CppStruct).IsAssignableFrom(typeof(T)))
             {
-                LastCppMethod = regexStr;
+                LastCppOuterElement = regexStr;
             }
-            else if (typeof(T) == typeof(CppParameter) && !regexStr.Contains("::"))
+            else if ( (typeof(T) == typeof(CppParameter) || typeof(T) == typeof(CppField)) && !regexStr.Contains("::"))
             {
-                regexStr = LastCppMethod + "::" + regexStr;
+                regexStr = LastCppOuterElement + "::" + regexStr;
             }
 
             //element.Logger.Flush();

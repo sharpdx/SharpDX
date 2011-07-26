@@ -16,6 +16,8 @@ namespace SharpDX.X3DAudio
         /// <unmanaged>X3DAUDIO_CONE* pCone</unmanaged>	
         public Cone Cone;
 
+        public float[] ChannelAzimuths;
+
         public CurvePoint[] VolumeCurve;
 
         public CurvePoint[] LfeCurve;
@@ -53,6 +55,20 @@ namespace SharpDX.X3DAudio
             // Method to free unmanaged allocation
             internal unsafe void __MarshalFree()
             {
+                if (ChannelAzimuthsPointer != IntPtr.Zero)
+                    Marshal.FreeHGlobal(ChannelAzimuthsPointer);
+                if (VolumeCurvePointer != IntPtr.Zero)
+                    Marshal.FreeHGlobal(VolumeCurvePointer);
+                if (LFECurvePointer != IntPtr.Zero)
+                    Marshal.FreeHGlobal(LFECurvePointer);
+                if (LPFDirectCurvePointer != IntPtr.Zero)
+                    Marshal.FreeHGlobal(LPFDirectCurvePointer);
+                if (LPFReverbCurvePointer != IntPtr.Zero)
+                    Marshal.FreeHGlobal(LPFReverbCurvePointer);
+                if (ReverbCurvePointer != IntPtr.Zero)
+                    Marshal.FreeHGlobal(ReverbCurvePointer);
+                if (VolumeCurvePointer != IntPtr.Zero)
+                    Marshal.FreeHGlobal(VolumeCurvePointer);
             }
         }
 
@@ -62,27 +78,29 @@ namespace SharpDX.X3DAudio
             @ref.__MarshalFree();
         }
 
-        // Method to marshal from native to managed struct
-        internal unsafe void __MarshalFrom(ref __Native @ref)
-        {
-            this.ConePointer = @ref.ConePointer;
-            this.OrientFront = @ref.OrientFront;
-            this.OrientTop = @ref.OrientTop;
-            this.Position = @ref.Position;
-            this.Velocity = @ref.Velocity;
-            this.InnerRadius = @ref.InnerRadius;
-            this.InnerRadiusAngle = @ref.InnerRadiusAngle;
-            this.ChannelCount = @ref.ChannelCount;
-            this.ChannelRadius = @ref.ChannelRadius;
-            this.ChannelAzimuthsPointer = @ref.ChannelAzimuthsPointer;
-            this.VolumeCurvePointer = @ref.VolumeCurvePointer;
-            this.LFECurvePointer = @ref.LFECurvePointer;
-            this.LPFDirectCurvePointer = @ref.LPFDirectCurvePointer;
-            this.LPFReverbCurvePointer = @ref.LPFReverbCurvePointer;
-            this.ReverbCurvePointer = @ref.ReverbCurvePointer;
-            this.CurveDistanceScaler = @ref.CurveDistanceScaler;
-            this.DopplerScaler = @ref.DopplerScaler;
-        }
+        //// Method to marshal from native to managed struct
+        /// disabled as it is not used
+        //internal unsafe void __MarshalFrom(ref __Native @ref)
+        //{
+        //    this.ConePointer = @ref.ConePointer;
+        //    this.OrientFront = @ref.OrientFront;
+        //    this.OrientTop = @ref.OrientTop;
+        //    this.Position = @ref.Position;
+        //    this.Velocity = @ref.Velocity;
+        //    this.InnerRadius = @ref.InnerRadius;
+        //    this.InnerRadiusAngle = @ref.InnerRadiusAngle;
+        //    this.ChannelCount = @ref.ChannelCount;
+        //    this.ChannelRadius = @ref.ChannelRadius;
+        //    this.ChannelAzimuthsPointer = @ref.ChannelAzimuthsPointer;
+        //    this.VolumeCurvePointer = @ref.VolumeCurvePointer;
+        //    this.LFECurvePointer = @ref.LFECurvePointer;
+        //    this.LPFDirectCurvePointer = @ref.LPFDirectCurvePointer;
+        //    this.LPFReverbCurvePointer = @ref.LPFReverbCurvePointer;
+        //    this.ReverbCurvePointer = @ref.ReverbCurvePointer;
+        //    this.CurveDistanceScaler = @ref.CurveDistanceScaler;
+        //    this.DopplerScaler = @ref.DopplerScaler;
+        //}
+
         // Method to marshal from managed struct tot native
         internal unsafe void __MarshalTo(ref __Native @ref)
         {
@@ -94,7 +112,12 @@ namespace SharpDX.X3DAudio
             @ref.InnerRadiusAngle = this.InnerRadiusAngle;
             @ref.ChannelCount = this.ChannelCount;
             @ref.ChannelRadius = this.ChannelRadius;
-            @ref.ChannelAzimuthsPointer = this.ChannelAzimuthsPointer;
+
+            if (this.ChannelAzimuths != null && this.ChannelAzimuths.Length > 0 && ChannelCount > 0)
+            {
+                @ref.ChannelAzimuthsPointer = Marshal.AllocHGlobal(sizeof (float)* Math.Min(ChannelCount, ChannelAzimuths.Length));
+                Utilities.Write(@ref.ChannelAzimuthsPointer, ChannelAzimuths, 0, ChannelCount);
+            }
 
             @ref.VolumeCurvePointer = DistanceCurve.FromCurvePoints(this.VolumeCurve);
             @ref.LFECurvePointer = DistanceCurve.FromCurvePoints(this.LfeCurve);

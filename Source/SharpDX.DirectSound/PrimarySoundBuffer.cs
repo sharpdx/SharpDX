@@ -44,7 +44,7 @@ namespace SharpDX.DirectSound
             : base(IntPtr.Zero)
         {
             IntPtr temp;
-            dSound.CreateSoundBuffer(ref bufferDescription, out temp, null);
+            dSound.CreateSoundBuffer(bufferDescription, out temp, null);
             NativePointer = temp;
         }
     }

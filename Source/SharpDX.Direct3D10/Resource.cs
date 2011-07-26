@@ -210,7 +210,7 @@ namespace SharpDX.Direct3D10
         /// <unmanaged>HRESULT D3DX10LoadTextureFromTexture([None] ID3D10Resource* pSrcTexture,[None] D3DX10_TEXTURE_LOAD_INFO* pLoadInfo,[None] ID3D10Resource* pDstTexture)</unmanaged>
         public static Result LoadTextureFromTexture(Resource source, Resource destination, TextureLoadInformation loadInformation)
         {
-            return D3DX10.LoadTextureFromTexture(source, ref loadInformation, destination);
+            return D3DX10.LoadTextureFromTexture(source, loadInformation, destination);
         }
 
         /// <summary>

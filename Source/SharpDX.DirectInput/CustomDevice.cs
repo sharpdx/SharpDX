@@ -39,7 +39,7 @@ namespace SharpDX.DirectInput
         protected CustomDevice(DirectInput directInput, Guid deviceGuid) : base(directInput, deviceGuid)
         {
             var dataFormat = GetDataFormat();
-            SetDataFormat(ref dataFormat);
+            SetDataFormat(dataFormat);
         }
 
         private static readonly TUpdate[] singletonEmptyArray = new TUpdate[0];

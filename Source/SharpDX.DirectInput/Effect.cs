@@ -31,7 +31,7 @@ namespace SharpDX.DirectInput
         /// <param name="parameters">The parameters.</param>
         public Effect(Device device, Guid guid, EffectParameters parameters)
         {
-            device.CreateEffect(guid, ref parameters, this, null);
+            device.CreateEffect(guid, parameters, this, null);
         }
 
         /// <summary>
@@ -82,17 +82,6 @@ namespace SharpDX.DirectInput
         public Result SetParameters(EffectParameters parameters)
         {
             return SetParameters(parameters, EffectParameterFlags.All);
-        }
-
-        /// <summary>
-        /// Sets the characteristics of an effect.
-        /// </summary>
-        /// <param name="parameters">The parameters of this effect.</param>
-        /// <param name="flags">Flags that specify which portions of the effect information are to be set and how the downloading of the parameters should be handled. </param>
-        /// <returns>A <see cref = "T:SharpDX.Result" /> object describing the result of the operation.</returns>
-        public Result SetParameters(EffectParameters parameters, EffectParameterFlags flags)
-        {
-            return SetParameters(ref parameters, flags);
         }
 
         /// <summary>

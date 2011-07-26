@@ -34,9 +34,18 @@ namespace SharpDX.Multimedia
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 2)]
     public class WaveFormatExtensible : WaveFormat
     {
-        short wValidBitsPerSample; // bits of precision, or is wSamplesPerBlock if wBitsPerSample==0
-        int dwChannelMask; // which channels are present in stream
-        Guid subFormat;
+        short wValidBitsPerSample; // bits of precision, or is wSamplesPerBlock if wBitsPerSample==0        
+
+        /// <summary>
+        /// Guid of the subformat.
+        /// </summary>
+        public Guid GuidSubFormat;
+
+        /// <summary>
+        /// Speaker configuration
+        /// </summary>
+        public Speakers ChannelMask; // which channels are present in stream
+
 
         /// <summary>
         /// Parameterless constructor for marshalling
@@ -54,21 +63,14 @@ namespace SharpDX.Multimedia
             waveFormatTag = WaveFormatEncoding.Extensible;
             extraSize = 22;
             wValidBitsPerSample = (short)bits;
+            int dwChannelMask = 0;
             for (int n = 0; n < channels; n++)
-            {
                 dwChannelMask |= (1 << n);
-            }
-            if (bits == 32)
-            {
-                // KSDATAFORMAT_SUBTYPE_IEEE_FLOAT
-                subFormat = new Guid("00000003-0000-0010-8000-00aa00389b71"); // AudioMediaSubtypes.MEDIASUBTYPE_IEEE_FLOAT;
-            }
-            else
-            {
-                // KSDATAFORMAT_SUBTYPE_PCM
-                subFormat = new Guid("00000001-0000-0010-8000-00aa00389b71"); // AudioMediaSubtypes.MEDIASUBTYPE_PCM; //
-            }
+            ChannelMask = (Speakers)dwChannelMask;
 
+            // KSDATAFORMAT_SUBTYPE_IEEE_FLOAT // AudioMediaSubtypes.MEDIASUBTYPE_IEEE_FLOAT
+            // KSDATAFORMAT_SUBTYPE_PCM // AudioMediaSubtypes.MEDIASUBTYPE_PCM;
+            GuidSubFormat = bits == 32 ? new Guid("00000003-0000-0010-8000-00aa00389b71") : new Guid("00000001-0000-0010-8000-00aa00389b71");
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 2)]
@@ -76,7 +78,7 @@ namespace SharpDX.Multimedia
         {
             public WaveFormat.__Native waveFormat;
             public short wValidBitsPerSample; // bits of precision, or is wSamplesPerBlock if wBitsPerSample==0
-            public int dwChannelMask; // which channels are present in stream
+            public Speakers dwChannelMask; // which channels are present in stream
             public Guid subFormat;
 
             // Method to free native struct
@@ -90,16 +92,16 @@ namespace SharpDX.Multimedia
         {
             this.__MarshalFrom(ref @ref.waveFormat);
             this.wValidBitsPerSample = @ref.wValidBitsPerSample;
-            this.dwChannelMask = @ref.dwChannelMask;
-            this.subFormat = @ref.subFormat;
+            this.ChannelMask = @ref.dwChannelMask;
+            this.GuidSubFormat = @ref.subFormat;
         }
         // Method to marshal from managed struct tot native
         internal unsafe void __MarshalTo(ref __Native @ref)
         {
             this.__MarshalTo(ref @ref.waveFormat);
             @ref.wValidBitsPerSample = this.wValidBitsPerSample;
-            @ref.dwChannelMask = this.dwChannelMask;
-            @ref.subFormat = this.subFormat;
+            @ref.dwChannelMask = this.ChannelMask;
+            @ref.subFormat = this.GuidSubFormat;
         }
 
         internal static __Native __NewNative()
@@ -117,11 +119,11 @@ namespace SharpDX.Multimedia
         /// </summary>
         public override string ToString()
         {
-            return String.Format("{0} wBitsPerSample:{1} dwChannelMask:{2} subFormat:{3} extraSize:{4}",
+            return String.Format("{0} wBitsPerSample:{1} ChannelMask:{2} SubFormat:{3} extraSize:{4}",
                 base.ToString(),
                 wValidBitsPerSample,
-                dwChannelMask,
-                subFormat,
+                ChannelMask,
+                GuidSubFormat,
                 extraSize);
         }
     }

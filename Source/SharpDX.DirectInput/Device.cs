@@ -92,7 +92,7 @@ namespace SharpDX.DirectInput
         public DeviceImageHeader GetDeviceImages()
         {
             var imageHeader = new DeviceImageHeader();
-            GetImageInfo(ref imageHeader);
+            GetImageInfo(imageHeader);
 
             if (imageHeader.BufferUsed > 0)
             {
@@ -102,7 +102,7 @@ namespace SharpDX.DirectInput
                     var pImages = stackalloc DeviceImage.__Native[imageHeader.BufferSize/sizeof (DeviceImage.__Native)];
                     imageHeader.ImageInfoArrayPointer = (IntPtr)pImages;
                 }
-                GetImageInfo(ref imageHeader);
+                GetImageInfo(imageHeader);
             }
             return imageHeader;
         }

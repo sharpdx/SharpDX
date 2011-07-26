@@ -1033,7 +1033,6 @@
     <map param="IDirectInputEffect::GetParameters::arg0" attribute="out" return="true"/>
     <map param="IDirectInputEffect::GetParameters::arg1" type="DIEP"/>
 
-    <map method="IDirectInputEffect::SetParameters" visibility="internal"/>
     <map param="IDirectInputEffect::SetParameters::arg1" type="DIEP"/>
 
     <map param="IDirectInputEffect::Start::arg1" type="DIES"/>

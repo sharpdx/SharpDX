@@ -34,7 +34,7 @@ namespace SharpDX.DirectSound
         {
 
             CaptureBufferBase captureBuffer;
-            capture.CreateCaptureBuffer(ref description, out captureBuffer, null);
+            capture.CreateCaptureBuffer(description, out captureBuffer, null);
             using (captureBuffer)
             {
                 NativePointer = captureBuffer.NativePointer;

@@ -38,15 +38,17 @@ namespace SharpDX.X3DAudio
             @ref.__MarshalFree();
         }
 
-        // Method to marshal from native to managed struct
-        internal unsafe void __MarshalFrom(ref __Native @ref)
-        {
-            this.OrientFront = @ref.OrientFront;
-            this.OrientTop = @ref.OrientTop;
-            this.Position = @ref.Position;
-            this.Velocity = @ref.Velocity;
-            this.ConePointer = @ref.ConePointer;
-        }
+        //// Method to marshal from native to managed struct
+        /// Disabled as it is not used
+        //internal unsafe void __MarshalFrom(ref __Native @ref)
+        //{
+        //    this.OrientFront = @ref.OrientFront;
+        //    this.OrientTop = @ref.OrientTop;
+        //    this.Position = @ref.Position;
+        //    this.Velocity = @ref.Velocity;
+        //    this.ConePointer = @ref.ConePointer;
+        //}
+
         // Method to marshal from managed struct tot native
         internal unsafe void __MarshalTo(ref __Native @ref)
         {
