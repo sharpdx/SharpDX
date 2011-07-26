@@ -27,7 +27,7 @@ The key features and benefits of this API are
 *	**The API is generated from DirectX SDK headers**
 	SharpDX provides a complete and reliable API and an easy support for future API.
 *	**Full support for the following DirectX API**
-	Direct3D9, Direct3D10, Direct3D10.1, Direct3D11, Direct2D1 (including custom rendering, tessellation callbacks), DirectWrite (including custom client callbacks), D3DCompiler, DXGI, DXGI 1.1, DirectSound, DirectInput, XAudio2, XAPO
+	Direct3D9, Direct3D10, Direct3D10.1, Direct3D11, Direct2D1 (including custom rendering, tessellation callbacks), DirectWrite (including custom client callbacks), D3DCompiler, DXGI, DXGI 1.1, DirectSound, DirectInput, X3DAudio, XAudio2, XAPO
 	An integrated math API directly ported from SlimMath
 *	**Managed platform independent .NET API**
 	Assemblies are compiled with AnyCpu target. You can run your code on a x64 or a x86 machine with the same assemblies, without recompiling your project.
