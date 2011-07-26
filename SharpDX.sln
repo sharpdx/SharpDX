@@ -6,6 +6,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sources", "Sources", "{CC8D
 		ChangeLog.txt = ChangeLog.txt
 		Source\Mapping.Direct3D1x.xml = Source\Mapping.Direct3D1x.xml
 		Source\Mapping.xml = Source\Mapping.xml
+		README.markdown = README.markdown
 		ReleaseNotes.txt = ReleaseNotes.txt
 	EndProjectSection
 EndProject
