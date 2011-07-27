@@ -41,6 +41,7 @@
       #define MACRO_XACT_STATE_INUSE           XACT_STATE_INUSE
       #define MACRO_XACT_STATE_PREPAREFAILED   XACT_STATE_PREPAREFAILED
 
+
       #define MACRO_XACT_FLAG_STOP_RELEASE    XACT_FLAG_STOP_RELEASE
       #define MACRO_XACT_FLAG_STOP_IMMEDIATE  XACT_FLAG_STOP_IMMEDIATE
 
@@ -73,8 +74,11 @@
     <context>xact3</context>
     <context>xact3wb</context>
 
-    <create-cpp enum="XACT_CUE_STATE" macro="MACRO_XACT_STATE_.*" />
-    <create-cpp enum="XACT_STOP_FLAGS" macro="MACRO_XACT_FLAG_.*" />
+    <create-cpp enum="XACT_CUE_STATE" macro="XACT_CUESTATE_.*" />
+    <create-cpp enum="XACT_WAVE_STATE" macro="MACRO_XACT_STATE_.*" />
+    <create-cpp enum="XACT_STOP_FLAGS" macro="XACT_FLAG_CUE_STOP_.*" />
+
+    <create-cpp enum="WAVEBANKMINIFORMAT_TAG" macro="WAVEBANKMINIFORMAT_TAG_.*" />
 
     <create-cpp enum="XACT_NOTIFICATION_TYPE" macro="MACRO_XACT_NOTIFICATIONTYPE_.*" />
 
@@ -95,12 +99,18 @@
     -->
     <map enum="XACT_?(.*)" name-tmp="$1" />
     <map enum="XACT_CUE_STATE" flags="true" none="false"/>
+    <map enum="XACT_WAVE_STATE" flags="true" none="false"/>
     <map enum="XACT_STOP_FLAGS" flags="true" none="false"/>
+    <map enum="WAVEBANKMINIFORMAT_TAG" name="WaveBankMiniFormatTag"/>
 
-    <map enum-item="MACRO_XACT_[A-Z]+_(.*)" name-tmp="$1"/>
+    <map enum-item="XACT_CUESTATE_(.*)" name-tmp="$1"/>
+    <map enum-item="XACT_FLAG_CUE_STOP_(.*)" name-tmp="$1"/>
+    <map enum-item="MACRO_XACT_NOTIFICATIONTYPE_(.*)" name-tmp="$1"/>
+    <map enum-item="MACRO_XACT_STATE_(.*)" name-tmp="$1"/>
     <map enum-item="MACRO_XACT_STATE_INUSE" name="InUse"/>
     <map enum-item="MACRO_XACT_STATE_PREPAREFAILED" name="PrepareFailed"/>
-    <map enum-item="MACRO_XACT_FLAG_STOP_(.*)" name-tmp="$1"/>
+
+    <map enum-item="WAVEBANKMINIFORMAT_TAG_(.*)" name-tmp="$1"/>
 
     <map enum="XACT_NOTIFICATION_TYPE" type="byte" visibility="internal"/>
     <!--
@@ -109,8 +119,9 @@
     // *****************************************************************
     -->
     <map struct="XACT_?(.*)" name-tmp="$1" />
+    <remove struct="XACTCHANNEL.*"/>
 
-    <map field=".*::ia([A-Z].*)" name="$1"/>
+    <map field=".*::[diawn]+([A-Z].*)" name="$1"/>
     <map field=".*::num([A-Z].*)s" name="$1Count"/>
 
     <map field=".*::pv?([A-Z].*)" name="$1Pointer"/>
@@ -134,16 +145,39 @@
 
     <map field="XACT_RUNTIME_PARAMETERS::pRendererID" name="RendererId"/>
     <map field="XACT_RUNTIME_PARAMETERS::pXAudio2" visibility="internal"/>
-    <map field="XACT_RUNTIME_PARAMETERS::pMasteringVoice" visibility="internal"/>
+    <map field="XACT_RUNTIME_PARAMETERS::pMasteringVoice" visibility="internal"/>    
+    <map field="XACT_RUNTIME_PARAMETERS::pGlobalSettingsBuffer" visibility="internal"/>
     <map field="XACT_RUNTIME_PARAMETERS::globalSettingsAllocAttributes" visibility="internal"/>
     <map field="XACT_RUNTIME_PARAMETERS::globalSettingsBufferSize" visibility="internal"/>
     <map field="XACT_RUNTIME_PARAMETERS::globalSettingsFlags" visibility="internal"/>
+    <map field="XACT_RUNTIME_PARAMETERS::fileIOCallbacks" visibility="internal"/>
+    <map field="XACT_RUNTIME_PARAMETERS::fnNotificationCallback" visibility="internal"/>
 
     <map field="XACT_NOTIFICATION::type" type="XACT_NOTIFICATION_TYPE"/>
     <map field="XACT_NOTIFICATION_DESCRIPTION::type" type="XACT_NOTIFICATION_TYPE"/>
 
     <!-- Make all notification struct internal -->
     <map struct="XACT_NOTIFICATION.*" visibility="internal"/>
+
+    <map field="XACT_WAVE_INSTANCE_PROPERTIES::backgroundMusic" name="IsBackgroundMusic" />
+
+    <map field="XACT_WAVE_PROPERTIES::streaming" name="IsStreaming" />
+
+    <map struct="WAVEBANKMINIWAVEFORMAT" name="WaveBankMiniWaveFormat" />
+
+    <map field="WAVEBANKMINIWAVEFORMAT::wFormatTag" name="RawFormatTag" visibility="internal" />
+    <map field="WAVEBANKMINIWAVEFORMAT::dwValue" visibility="internal" />
+    <map field="WAVEBANKMINIWAVEFORMAT::nSamplesPerSec" name="SamplesPerSecond" />
+
+    <map struct="WAVEBANKSAMPLEREGION" name="WaveBankSampleRegion"/>
+
+    <map struct="WAVEBANKREGION" name="WaveBankRegion" visibility="internal"/>
+    <map struct="WAVEBANKENTRY" name="WaveBankEntry" visibility="internal"/>
+    <map struct="WAVEBANKENTRYCOMPACT" name="WaveBankEntryCompact" visibility="internal"/>
+    <map struct="WAVEBANKHEADER" name="WaveBankHeader" visibility="internal"/>
+    <map struct="WAVEBANKDATA" name="WaveBankData" visibility="internal"/>
+
+    <map struct="XACT_FILEIO_CALLBACKS" name="FileIoCallbacks" visibility="internal"/>
 
     <!--
     // *****************************************************************
@@ -156,11 +190,18 @@
     <map param="IXACT3.*::.*::[undwszf]+([A-Z].*)" name-tmp="$1"/>
     <map param="IXACT3.*::.*::p[undwszf]+([A-Z].*)" name-tmp="p$1"/>
 
+    <!-- Change all GetNum...s method to Get...Count -->
+    <map method=".*::GetNum([A-Z].*)s" name="Get$1Count"/>
+
+    <!-- Change dwFlags type for all Stop methods in order to use our enum -->
+    <map param=".*::Stop::dwFlags" type="XACT_STOP_FLAGS"/>
+
+    <!-- Change pMatrixCoefficients attribute to In Buffer -->
+    <map param=".*::SetMatrixCoefficients::pMatrixCoefficients" attribute="in buffer"/>
+
     <!-- IXACT3Cue -->
     <remove method="IXACT3Cue::SetOutputVoices"/>
     <map param="IXACT3Cue::GetState::pdwState" type="XACT_CUE_STATE"/>
-    <map param="IXACT3Cue::Stop::dwFlags" type="XACT_STOP_FLAGS"/>
-    <map param="IXACT3Cue::SetMatrixCoefficients::pMatrixCoefficients" attribute="in buffer"/>
     <map param="IXACT3Cue::GetVariable::nValue" return="true"/>
 
     <!-- IXACT3Engine -->
@@ -168,7 +209,19 @@
     <map param="IXACT3Engine::GetRendererDetails::pRendererDetails" return="true"/>
 
     <map method="IXACT3Engine::.*Notification" visibility="internal"/>
-    
+
+    <map method="IXACT3Engine::Create.*" visibility="internal"/>
+    <map method="IXACT3Engine::Prepare.*" visibility="internal"/>
+
+    <!-- IXACT3SoundBank -->
+    <map method="IXACT3SoundBank::GetState" visibility="internal" property="false"/>
+    <map param="IXACT3SoundBank::GetCueProperties::pProperties" return="true"/>
+    <map param="IXACT3SoundBank::.*::ppCue" return="true"/>   
+    <map method="IXACT3SoundBank::Play" visibility="internal"/>
+    <map method="IXACT3SoundBank::Prepare" visibility="internal"/>
+
+    <!-- IXACT3Wave -->
+    <map param="IXACT3Wave::GetState::pdwState" type="XACT_WAVE_STATE"/>
 
     <!--
     // *****************************************************************
