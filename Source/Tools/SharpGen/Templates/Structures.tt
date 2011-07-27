@@ -250,7 +250,7 @@ foreach (var sharpStruct in Namespace.Structs)
 <#+
 					} else if (sharpStructItem.PublicType.QualifiedName == "string" && sharpStructItem.MarshalType.QualifiedName == "byte") {
 #>
-            fixed (void* __ptr = @ref.<#= sharpStructItem.Name #>) this.<#= sharpStructItem.Name #> = SharpDX.Utilities.PtrToStringUni((IntPtr)__ptr, <#= sharpStructItem.ArrayDimension #>);
+            fixed (void* __ptr = @ref.<#= sharpStructItem.Name #>) this.<#= sharpStructItem.Name #> = SharpDX.Utilities.PtrToStringAnsi((IntPtr)__ptr, <#= sharpStructItem.ArrayDimension #>);
 <#+
 					} else {
 #>
@@ -339,7 +339,12 @@ foreach (var sharpStruct in Namespace.Structs)
 					} else if ( sharpStructItemAsStruct != null && sharpStructItemAsStruct.HasMarshalType) {
 #>
 			@ref.<#= sharpStructItem.Name #> = <#= sharpStructItemAsStruct.GetConstructor() #>;
-			if (this.<#= sharpStructItem.Name #> != null)
+<#+
+						if (sharpStructItemAsStruct.GenerateAsClass) {
+#>						
+						if (this.<#= sharpStructItem.Name #> != null) <#+
+						}
+#>						
                 this.<#= sharpStructItem.Name #>.__MarshalTo(ref @ref.<#= sharpStructItem.Name #>);
 <#+
 		    		} else {
