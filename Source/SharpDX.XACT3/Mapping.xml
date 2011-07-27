@@ -57,15 +57,18 @@
     // XACT3 Enumerations
     // *****************************************************************
     -->
-    <map enum="XACT3(.*)" name-tmp="$1" />
+    <map enum="XACT_?(.*)" name-tmp="$1" />
 
     <!--
     // *****************************************************************
     // XACT3 Structures
     // *****************************************************************
     -->
-    <map struct="XACT3(.*)" name-tmp="$1" />
+    <map struct="XACT_?(.*)" name-tmp="$1" />
 
+    <map struct="XACT_SOUND_PROPERTIES" marshalto="true"/>
+    <map struct="XACT_SOUND_VARIATION_PROPERTIES" marshalto="true"/>
+    
     <!--
     // *****************************************************************
     // XACT3 Interfaces
