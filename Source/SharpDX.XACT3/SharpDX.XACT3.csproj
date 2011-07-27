@@ -48,6 +48,7 @@
     <Compile Include="Generated\LocalInterop.cs" />
     <Compile Include="Generated\Structures.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SoundProperties.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpDX.XAudio2\SharpDX.XAudio2.csproj">

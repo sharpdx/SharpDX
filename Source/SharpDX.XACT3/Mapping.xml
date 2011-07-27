@@ -31,16 +31,52 @@
       #undef _X86_
     </pre>
     <post>
+      #define MACRO_XACT_STATE_CREATED         XACT_STATE_CREATED
+      #define MACRO_XACT_STATE_PREPARING       XACT_STATE_PREPARING
+      #define MACRO_XACT_STATE_PREPARED        XACT_STATE_PREPARED
+      #define MACRO_XACT_STATE_PLAYING         XACT_STATE_PLAYING
+      #define MACRO_XACT_STATE_STOPPING        XACT_STATE_STOPPING
+      #define MACRO_XACT_STATE_STOPPED         XACT_STATE_STOPPED
+      #define MACRO_XACT_STATE_PAUSED          XACT_STATE_PAUSED
+      #define MACRO_XACT_STATE_INUSE           XACT_STATE_INUSE
+      #define MACRO_XACT_STATE_PREPAREFAILED   XACT_STATE_PREPAREFAILED
+
+      #define MACRO_XACT_FLAG_STOP_RELEASE    XACT_FLAG_STOP_RELEASE
+      #define MACRO_XACT_FLAG_STOP_IMMEDIATE  XACT_FLAG_STOP_IMMEDIATE
+
+      #define MACRO_XACT_NOTIFICATIONTYPE_CUEPREPARED   XACTNOTIFICATIONTYPE_CUEPREPARED
+      #define MACRO_XACT_NOTIFICATIONTYPE_CUEPLAY   XACTNOTIFICATIONTYPE_CUEPLAY
+      #define MACRO_XACT_NOTIFICATIONTYPE_CUESTOP   XACTNOTIFICATIONTYPE_CUESTOP
+      #define MACRO_XACT_NOTIFICATIONTYPE_CUEDESTROYED   XACTNOTIFICATIONTYPE_CUEDESTROYED
+      #define MACRO_XACT_NOTIFICATIONTYPE_MARKER   XACTNOTIFICATIONTYPE_MARKER
+      #define MACRO_XACT_NOTIFICATIONTYPE_SOUNDBANKDESTROYED   XACTNOTIFICATIONTYPE_SOUNDBANKDESTROYED
+      #define MACRO_XACT_NOTIFICATIONTYPE_WAVEBANKDESTROYED   XACTNOTIFICATIONTYPE_WAVEBANKDESTROYED
+      #define MACRO_XACT_NOTIFICATIONTYPE_LOCALVARIABLECHANGED   XACTNOTIFICATIONTYPE_LOCALVARIABLECHANGED
+      #define MACRO_XACT_NOTIFICATIONTYPE_GLOBALVARIABLECHANGED   XACTNOTIFICATIONTYPE_GLOBALVARIABLECHANGED
+      #define MACRO_XACT_NOTIFICATIONTYPE_GUICONNECTED   XACTNOTIFICATIONTYPE_GUICONNECTED
+      #define MACRO_XACT_NOTIFICATIONTYPE_GUIDISCONNECTED   XACTNOTIFICATIONTYPE_GUIDISCONNECTED
+      #define MACRO_XACT_NOTIFICATIONTYPE_WAVEPREPARED   XACTNOTIFICATIONTYPE_WAVEPREPARED
+      #define MACRO_XACT_NOTIFICATIONTYPE_WAVEPLAY   XACTNOTIFICATIONTYPE_WAVEPLAY
+      #define MACRO_XACT_NOTIFICATIONTYPE_WAVESTOP   XACTNOTIFICATIONTYPE_WAVESTOP
+      #define MACRO_XACT_NOTIFICATIONTYPE_WAVELOOPED   XACTNOTIFICATIONTYPE_WAVELOOPED
+      #define MACRO_XACT_NOTIFICATIONTYPE_WAVEDESTROYED   XACTNOTIFICATIONTYPE_WAVEDESTROYED
+      #define MACRO_XACT_NOTIFICATIONTYPE_WAVEBANKPREPARED   XACTNOTIFICATIONTYPE_WAVEBANKPREPARED
+      #define MACRO_XACT_NOTIFICATIONTYPE_WAVEBANKSTREAMING_INVALIDCONTENT   XACTNOTIFICATIONTYPE_WAVEBANKSTREAMING_INVALIDCONTENT
+
       #define _X86_
     </post>
   </include>
   <include id="xact3wb" file="xact3wb.h" attach="true" />
 
-
   <extension>
     <context>sharpdx-xact3-ext</context>
     <context>xact3</context>
     <context>xact3wb</context>
+
+    <create-cpp enum="XACT_CUE_STATE" macro="MACRO_XACT_STATE_.*" />
+    <create-cpp enum="XACT_STOP_FLAGS" macro="MACRO_XACT_FLAG_.*" />
+
+    <create-cpp enum="XACT_NOTIFICATION_TYPE" macro="MACRO_XACT_NOTIFICATIONTYPE_.*" />
 
     <create class="XACT3"/>
     
@@ -58,7 +94,15 @@
     // *****************************************************************
     -->
     <map enum="XACT_?(.*)" name-tmp="$1" />
+    <map enum="XACT_CUE_STATE" flags="true" none="false"/>
+    <map enum="XACT_STOP_FLAGS" flags="true" none="false"/>
 
+    <map enum-item="MACRO_XACT_[A-Z]+_(.*)" name-tmp="$1"/>
+    <map enum-item="MACRO_XACT_STATE_INUSE" name="InUse"/>
+    <map enum-item="MACRO_XACT_STATE_PREPAREFAILED" name="PrepareFailed"/>
+    <map enum-item="MACRO_XACT_FLAG_STOP_(.*)" name-tmp="$1"/>
+
+    <map enum="XACT_NOTIFICATION_TYPE" type="byte" visibility="internal"/>
     <!--
     // *****************************************************************
     // XACT3 Structures
@@ -66,16 +110,65 @@
     -->
     <map struct="XACT_?(.*)" name-tmp="$1" />
 
+    <map field=".*::ia([A-Z].*)" name="$1"/>
+    <map field=".*::num([A-Z].*)s" name="$1Count"/>
+
+    <map field=".*::pv?([A-Z].*)" name="$1Pointer"/>
+
     <map struct="XACT_SOUND_PROPERTIES" marshalto="true"/>
     <map struct="XACT_SOUND_VARIATION_PROPERTIES" marshalto="true"/>
-    
+
+    <map field="XACT_CUE_INSTANCE_PROPERTIES::allocAttributes" visibility="internal"/>
+
+    <map field="XACT_CUE_PROPERTIES::interactive" name="IsInteractive"/>
+
+    <map field="XACT_VARIATION_PROPERTIES::linger" name="ShouldLinger"/>
+
+    <map struct="XACT_SOUND_PROPERTIES" native="true" struct-to-class="true" marshal="true" marshalto="true"/>
+    <remove field="XACT_SOUND_PROPERTIES::numTracks"/>
+    <!-- remove field in order to provide custom marshaling for this field - variable array at the end of the struct-->
+    <remove field="XACT_SOUND_PROPERTIES::arrTrackProperties"/>
+
+    <map field="XACT_RENDERER_DETAILS::rendererID" name="RendererId"/>
+    <map field="XACT_RENDERER_DETAILS::defaultDevice" name="IsDefault"/>
+
+    <map field="XACT_RUNTIME_PARAMETERS::pRendererID" name="RendererId"/>
+    <map field="XACT_RUNTIME_PARAMETERS::pXAudio2" visibility="internal"/>
+    <map field="XACT_RUNTIME_PARAMETERS::pMasteringVoice" visibility="internal"/>
+    <map field="XACT_RUNTIME_PARAMETERS::globalSettingsAllocAttributes" visibility="internal"/>
+    <map field="XACT_RUNTIME_PARAMETERS::globalSettingsBufferSize" visibility="internal"/>
+    <map field="XACT_RUNTIME_PARAMETERS::globalSettingsFlags" visibility="internal"/>
+
+    <map field="XACT_NOTIFICATION::type" type="XACT_NOTIFICATION_TYPE"/>
+    <map field="XACT_NOTIFICATION_DESCRIPTION::type" type="XACT_NOTIFICATION_TYPE"/>
+
+    <!-- Make all notification struct internal -->
+    <map struct="XACT_NOTIFICATION.*" visibility="internal"/>
+
     <!--
     // *****************************************************************
     // XACT3 Interfaces
     // *****************************************************************
     -->
     <map interface="IXACT3(.*)" name-tmp="$1" />
-    <map method="IXACT3Cue::SetOutputVoices" visibility="internal" property="false" />
+
+    <!-- Rename parameters -->
+    <map param="IXACT3.*::.*::[undwszf]+([A-Z].*)" name-tmp="$1"/>
+    <map param="IXACT3.*::.*::p[undwszf]+([A-Z].*)" name-tmp="p$1"/>
+
+    <!-- IXACT3Cue -->
+    <remove method="IXACT3Cue::SetOutputVoices"/>
+    <map param="IXACT3Cue::GetState::pdwState" type="XACT_CUE_STATE"/>
+    <map param="IXACT3Cue::Stop::dwFlags" type="XACT_STOP_FLAGS"/>
+    <map param="IXACT3Cue::SetMatrixCoefficients::pMatrixCoefficients" attribute="in buffer"/>
+    <map param="IXACT3Cue::GetVariable::nValue" return="true"/>
+
+    <!-- IXACT3Engine -->
+    <map param="IXACT3Engine::GetGlobalVariable::nValue" return="true"/>
+    <map param="IXACT3Engine::GetRendererDetails::pRendererDetails" return="true"/>
+
+    <map method="IXACT3Engine::.*Notification" visibility="internal"/>
+    
 
     <!--
     // *****************************************************************
