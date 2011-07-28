@@ -48,6 +48,8 @@
     <Compile Include="Generated\Interfaces.cs" />
     <Compile Include="Generated\LocalInterop.cs" />
     <Compile Include="Generated\Structures.cs" />
+    <Compile Include="EngineEvent.cs" />
+    <Compile Include="RawNotification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SoundBank.cs" />
     <Compile Include="SoundProperties.cs" />

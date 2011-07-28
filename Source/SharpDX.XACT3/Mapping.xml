@@ -76,6 +76,9 @@
     <context>xact3</context>
     <context>xact3wb</context>
 
+    <!-- Fake size -->
+    <define struct="SharpDX.XACT3.RawNotification" sizeof="64" />
+
     <create-cpp enum="XACT_CUE_STATE" macro="XACT_CUESTATE_.*" />
     <create-cpp enum="XACT_WAVE_STATE" macro="MACRO_XACT_STATE_.*" />
     <create-cpp enum="XACT_STOP_FLAGS" macro="XACT_FLAG_CUE_STOP_.*" />
@@ -89,6 +92,10 @@
     
     <context-clear />
   </extension>
+
+  <bindings>
+    <bind from="XACT_NOTIFICATION" to="SharpDX.XACT3.RawNotification" />
+  </bindings>
 
   <mapping>
     <context>sharpdx-xact3-ext</context>
@@ -162,7 +169,7 @@
     <map field="XACT_NOTIFICATION_DESCRIPTION::type" type="XACT_NOTIFICATION_TYPE"/>
 
     <!-- Make all notification struct internal -->
-    <map struct="XACT_NOTIFICATION.*" visibility="internal"/>
+    <map struct="XACT_NOTIFICATION_(.*)" name-tmp="Raw_Notification_$1" visibility="internal"/>
 
     <map field="XACT_WAVE_INSTANCE_PROPERTIES::backgroundMusic" name="IsBackgroundMusic" />
 

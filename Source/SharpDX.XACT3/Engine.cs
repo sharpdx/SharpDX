@@ -19,6 +19,8 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Microsoft.Win32;
 
 namespace SharpDX.XACT3
@@ -57,6 +59,68 @@ namespace SharpDX.XACT3
             result.CheckError();
             NativePointer = temp;            
         }
+
+        private Dictionary<IntPtr, Cue> mapCues;
+        private Dictionary<IntPtr, SoundBank> mapSoundBanks;
+
+        Cue FindRegisteredCue(IntPtr cuePointer)
+        {
+            Cue temp;
+            mapCues.TryGetValue(cuePointer, out temp);
+            return temp;
+        }
+
+        SoundBank FindRegisteredSoundBank(IntPtr soundBankPointer)
+        {
+            SoundBank temp;
+            mapSoundBanks.TryGetValue(soundBankPointer, out temp);
+            return temp;
+        }
+
+        private unsafe static void InitializeEventArgsBase(EngineEvent args, RawNotification* notification)
+        {
+            args.Type = notification->Type;
+            args.Context = Marshal.GetObjectForIUnknown(notification->ContextPointer);
+            args.TimeStamp = notification->TimeStamp;
+        }
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        private unsafe delegate void NotificationCallbackDelegate(RawNotification* notification);
+        private unsafe void NotificationCallbackDelegateImpl(RawNotification* notification)
+        {
+            // Don't do anything if there is no OnEngineEvent
+            if (OnEngineEvent == null)
+                return;
+
+            
+            EngineEvent engineEventArgs = null;
+
+            switch (notification->Type)
+            {
+                case NotificationType.Cuedestroyed:
+                case NotificationType.Cueplay:
+                case NotificationType.Cueprepared:
+                case NotificationType.Cuestop:
+                    engineEventArgs = new CueEvent
+                                       {
+                                           CueIndex = notification->Data.Cue.CueIndex,
+                                           Cue = FindRegisteredCue(notification->Data.Cue.CuePointer),
+                                           SoundBank = FindRegisteredSoundBank(notification->Data.Cue.SoundBankPointer)
+                                       };
+                    break;
+            }
+
+            InitializeEventArgsBase(engineEventArgs, notification);
+
+            // Dispatch the event
+            if (OnEngineEvent != null)
+                OnEngineEvent(this, engineEventArgs);
+        }
+
+        /// <summary>
+        /// Occurs when an engine event occurs.
+        /// </summary>
+        public event EventHandler<EngineEvent> OnEngineEvent;
     }
 }
 
