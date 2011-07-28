@@ -19,21 +19,34 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.Win32;
 
 namespace SharpDX.XACT3
 {
+    internal delegate void ManagedNotificationCallback(Notification notification);
+
     public partial class Engine
     {
+        private const int DefaultLookAhead = 250;
         private const string DebugEngineRegistryKey = "Software\\Microsoft\\XACT";
         private const string DebugEngineRegistryValue = "DebugEngine";
 
+        private readonly NotificationCallbackDelegate unmanagedDelegate;
+        private readonly IntPtr unmanagedDelegatePointer;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Engine"/> class.
+        /// </summary>
         public Engine() : this(CreationFlags.None)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Engine"/> class.
+        /// </summary>
+        /// <param name="creationFlags">The creation flags.</param>
         public Engine(CreationFlags creationFlags)
         {
             bool debug = (creationFlags == CreationFlags.DebugMode);
@@ -57,70 +70,115 @@ namespace SharpDX.XACT3
             IntPtr temp;
             var result = Utilities.CoCreateInstance(selectedEngineCLSID, IntPtr.Zero, Utilities.CLSCTX.ClsctxInprocServer, typeof(Engine).GUID, out temp);
             result.CheckError();
-            NativePointer = temp;            
+            NativePointer = temp;
+
+            unsafe
+            {
+                unmanagedDelegate = new NotificationCallbackDelegate(NotificationCallbackDelegateImpl);
+                unmanagedDelegatePointer = Marshal.GetFunctionPointerForDelegate(unmanagedDelegate);
+            }
         }
 
-        private Dictionary<IntPtr, Cue> mapCues;
-        private Dictionary<IntPtr, SoundBank> mapSoundBanks;
-
-        Cue FindRegisteredCue(IntPtr cuePointer)
+        /// <summary>
+        /// Initializes this instance.
+        /// </summary>
+        /// <unmanaged>IXACT3Engine::Initialize</unmanaged>
+		public void Initialize()
         {
-            Cue temp;
-            mapCues.TryGetValue(cuePointer, out temp);
-            return temp;
+            Initialize(null, null);
         }
 
-        SoundBank FindRegisteredSoundBank(IntPtr soundBankPointer)
+        /// <summary>
+        /// Initializes this instance with the specified settings file.
+        /// </summary>
+        /// <param name="settingsFile">The settings file.</param>
+        /// <unmanaged>IXACT3Engine::Initialize</unmanaged>
+		public void Initialize(Stream settingsFile)
+		{
+            Initialize(settingsFile, null);		    
+		}
+
+        /// <summary>
+        /// Initializes this instance with the specified renderer index.
+        /// </summary>
+        /// <param name="rendererIndex">Index of the renderer.</param>
+        /// <unmanaged>IXACT3Engine::Initialize</unmanaged>
+		public void Initialize(short rendererIndex)
         {
-            SoundBank temp;
-            mapSoundBanks.TryGetValue(soundBankPointer, out temp);
-            return temp;
+            Initialize(null, rendererIndex);
         }
 
-        private unsafe static void InitializeEventArgsBase(EngineEvent args, RawNotification* notification)
+        /// <summary>
+        /// Initializes this instance from a settings file and a renderer index.
+        /// </summary>
+        /// <param name="settingsFile">The settings file.</param>
+        /// <param name="rendererIndex">Index of the renderer.</param>
+        /// <unmanaged>IXACT3Engine::Initialize</unmanaged>
+		public unsafe void Initialize(Stream settingsFile, short? rendererIndex)
+		{
+            var runtimeParameters = new RuntimeParameters
+                                        {
+                                            LookAheadTime = DefaultLookAhead,
+                                            FnNotificationCallback = unmanagedDelegatePointer,
+                                        };
+
+            // Init from a settings file
+            if (settingsFile != null)
+            {
+                settingsFile.Position = 0;
+                var settingsData = new byte[settingsFile.Length];
+                settingsFile.Read(settingsData, 0, settingsData.Length);
+                runtimeParameters.GlobalSettingsBufferPointer = Marshal.AllocCoTaskMem(settingsData.Length);
+                runtimeParameters.GlobalSettingsBufferSize = settingsData.Length;
+                runtimeParameters.GlobalSettingsFlags = 1;
+                Utilities.Write(runtimeParameters.GlobalSettingsBufferPointer, settingsData, 0, settingsData.Length);
+            }
+
+            // Init with a RendererIndex
+            if (rendererIndex.HasValue)
+            {
+                var rendererDetails = GetRendererDetails(rendererIndex.Value);
+                runtimeParameters.RendererId = rendererDetails.RendererId;
+            }
+
+            // Final init
+            Initialize(ref runtimeParameters);
+		}
+
+        /// <summary>
+        /// Occurs when an engine event occurs.
+        /// </summary>
+        public event EventHandler<Notification> OnNotification;
+
+
+        void OnNotificationDelegate(Notification notification)
         {
-            args.Type = notification->Type;
-            args.Context = Marshal.GetObjectForIUnknown(notification->ContextPointer);
-            args.TimeStamp = notification->TimeStamp;
+            // Dispatch the event
+            if (OnNotification != null)
+                OnNotification(this, notification);            
         }
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private unsafe delegate void NotificationCallbackDelegate(RawNotification* notification);
-        private unsafe void NotificationCallbackDelegateImpl(RawNotification* notification)
+        private static unsafe void NotificationCallbackDelegateImpl(RawNotification* rawNotification)
         {
-            // Don't do anything if there is no OnEngineEvent
-            if (OnEngineEvent == null)
-                return;
+            var callback = (ManagedNotificationCallback)Marshal.GetDelegateForFunctionPointer(rawNotification->ContextPointer, typeof(ManagedNotificationCallback));
 
-            
-            EngineEvent engineEventArgs = null;
+            Notification notification = null;
 
-            switch (notification->Type)
+            switch (rawNotification->Type)
             {
                 case NotificationType.Cuedestroyed:
                 case NotificationType.Cueplay:
                 case NotificationType.Cueprepared:
                 case NotificationType.Cuestop:
-                    engineEventArgs = new CueEvent
-                                       {
-                                           CueIndex = notification->Data.Cue.CueIndex,
-                                           Cue = FindRegisteredCue(notification->Data.Cue.CuePointer),
-                                           SoundBank = FindRegisteredSoundBank(notification->Data.Cue.SoundBankPointer)
-                                       };
+                    notification = new CueNotification(rawNotification);
                     break;
             }
 
-            InitializeEventArgsBase(engineEventArgs, notification);
-
-            // Dispatch the event
-            if (OnEngineEvent != null)
-                OnEngineEvent(this, engineEventArgs);
+            // Notify client
+            callback(notification);
         }
-
-        /// <summary>
-        /// Occurs when an engine event occurs.
-        /// </summary>
-        public event EventHandler<EngineEvent> OnEngineEvent;
     }
 }
 

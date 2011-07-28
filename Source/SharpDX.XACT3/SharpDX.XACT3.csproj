@@ -42,19 +42,25 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="GuiNotification.cs" />
+    <Compile Include="CueNotification.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Generated\Enumerations.cs" />
     <Compile Include="Generated\Functions.cs" />
     <Compile Include="Generated\Interfaces.cs" />
     <Compile Include="Generated\LocalInterop.cs" />
     <Compile Include="Generated\Structures.cs" />
-    <Compile Include="EngineEvent.cs" />
+    <Compile Include="MarkerNotification.cs" />
+    <Compile Include="Notification.cs" />
     <Compile Include="RawNotification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SoundBank.cs" />
+    <Compile Include="SoundBankNotification.cs" />
     <Compile Include="SoundProperties.cs" />
+    <Compile Include="VariableNotification.cs" />
     <Compile Include="WaveBankMiniWaveFormat.cs" />
     <Compile Include="WaveBankState.cs" />
+    <Compile Include="WaveNotification.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpDX.XAudio2\SharpDX.XAudio2.csproj">

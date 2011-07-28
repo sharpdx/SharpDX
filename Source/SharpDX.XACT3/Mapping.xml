@@ -124,7 +124,8 @@
 
     <map enum-item="WAVEBANKMINIFORMAT_TAG_(.*)" name-tmp="$1"/>
 
-    <map enum="XACT_NOTIFICATION_TYPE" type="byte" visibility="internal"/>
+    <map enum="XACT_NOTIFICATION_TYPE" type="byte" visibility="public"/>
+    
     <!--
     // *****************************************************************
     // XACT3 Structures
@@ -224,6 +225,8 @@
 
     <map method="IXACT3Engine::Create.*" visibility="internal"/>
     <map method="IXACT3Engine::Prepare.*" visibility="internal"/>
+
+    <map method="IXACT3Engine::Initialize" visibility="internal"/>
 
     <!-- IXACT3SoundBank -->
     <map method="IXACT3SoundBank::GetState" visibility="internal" property="false"/>

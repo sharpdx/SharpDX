@@ -17,47 +17,14 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
-using System;
-
 namespace SharpDX.XACT3
 {
     /// <summary>
-    /// Generic notification event.
+    /// SoundBank notification parameters.
     /// </summary>
-    public abstract class EngineEvent : EventArgs
+    /// <unmanaged>XACT_NOTIFICATION_SOUNDBANK</unmanaged>	
+    public class SoundBankNotification : Notification
     {
-        /// <summary>
-        /// Gets or sets the type.
-        /// </summary>
-        /// <value>
-        /// The type.
-        /// </value>
-        public NotificationType Type { get; set; }
-
-        /// <summary>	
-        /// Timestamp of notification, in milliseconds.
-        /// </summary>	
-        /// <unmanaged>int timeStamp</unmanaged>	
-        public int TimeStamp;
-
-        /// <summary>	
-        /// No documentation.	
-        /// </summary>	
-        /// <unmanaged>void* pvContext</unmanaged>	
-        public Object Context;
-    }
-
-    /// <summary>
-    /// Cue events parameters.
-    /// </summary>
-    public class CueEvent : EngineEvent
-    {
-        public int CueIndex { get; set; }
-
-        public Cue Cue { get; set; }
-
         public SoundBank SoundBank { get; set; }
     }
 }
-

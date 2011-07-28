@@ -113,5 +113,16 @@ namespace SharpDX
         protected override void Dispose(bool disposing)
         {            
         }
+
+        /// <summary>
+        /// Instantiate a ComObject from a native pointer.
+        /// </summary>
+        /// <typeparam name="T">The ComObject class that will be returned</typeparam>
+        /// <param name="comObjectPtr">The native pointer to a com object.</param>
+        /// <returns>An instance of T binded to the native pointer</returns>
+        public static T FromPointer<T>(IntPtr comObjectPtr) where T : CppObject
+        {
+            return (comObjectPtr == IntPtr.Zero) ? null : (T) Activator.CreateInstance(typeof (T), comObjectPtr);
+        }
     }
 }
