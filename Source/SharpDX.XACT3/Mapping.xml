@@ -31,7 +31,7 @@
       #undef _X86_
     </pre>
     <post>
-      #define MACRO_XACT_STATE_CREATED         XACT_STATE_CREATED
+      #define MACRO_XACT_STATE_CREATED         XACT_STATE_CREATED      
       #define MACRO_XACT_STATE_PREPARING       XACT_STATE_PREPARING
       #define MACRO_XACT_STATE_PREPARED        XACT_STATE_PREPARED
       #define MACRO_XACT_STATE_PLAYING         XACT_STATE_PLAYING
@@ -41,6 +41,8 @@
       #define MACRO_XACT_STATE_INUSE           XACT_STATE_INUSE
       #define MACRO_XACT_STATE_PREPAREFAILED   XACT_STATE_PREPAREFAILED
 
+      #define MACRO_XACT_FLAG_API_AUDITION_MODE XACT_FLAG_API_AUDITION_MODE
+      #define MACRO_XACT_FLAG_API_DEBUG_MODE XACT_FLAG_API_DEBUG_MODE
 
       #define MACRO_XACT_FLAG_STOP_RELEASE    XACT_FLAG_STOP_RELEASE
       #define MACRO_XACT_FLAG_STOP_IMMEDIATE  XACT_FLAG_STOP_IMMEDIATE
@@ -77,10 +79,11 @@
     <create-cpp enum="XACT_CUE_STATE" macro="XACT_CUESTATE_.*" />
     <create-cpp enum="XACT_WAVE_STATE" macro="MACRO_XACT_STATE_.*" />
     <create-cpp enum="XACT_STOP_FLAGS" macro="XACT_FLAG_CUE_STOP_.*" />
-
+    <create-cpp enum="XACT_CREATION_FLAGS" macro="MACRO_XACT_FLAG_API_.*" />
     <create-cpp enum="WAVEBANKMINIFORMAT_TAG" macro="WAVEBANKMINIFORMAT_TAG_.*" />
-
     <create-cpp enum="XACT_NOTIFICATION_TYPE" macro="MACRO_XACT_NOTIFICATIONTYPE_.*" />
+
+    <const from-guid="CLSID_XACT(.*Engine)" class="SharpDX.XACT3.Engine" type="System.Guid" name="$1Guid" visibility="internal">new System.Guid("$1")</const>
 
     <create class="XACT3"/>
     
@@ -101,6 +104,7 @@
     <map enum="XACT_CUE_STATE" flags="true" none="false"/>
     <map enum="XACT_WAVE_STATE" flags="true" none="false"/>
     <map enum="XACT_STOP_FLAGS" flags="true" none="false"/>
+    <map enum="XACT_CREATION_FLAGS" flags="true" none="true"/>
     <map enum="WAVEBANKMINIFORMAT_TAG" name="WaveBankMiniFormatTag"/>
 
     <map enum-item="XACT_CUESTATE_(.*)" name-tmp="$1"/>
@@ -109,6 +113,7 @@
     <map enum-item="MACRO_XACT_STATE_(.*)" name-tmp="$1"/>
     <map enum-item="MACRO_XACT_STATE_INUSE" name="InUse"/>
     <map enum-item="MACRO_XACT_STATE_PREPAREFAILED" name="PrepareFailed"/>
+    <map enum-item="MACRO_XACT_FLAG_API_(.*)" name-tmp="$1"/>
 
     <map enum-item="WAVEBANKMINIFORMAT_TAG_(.*)" name-tmp="$1"/>
 
