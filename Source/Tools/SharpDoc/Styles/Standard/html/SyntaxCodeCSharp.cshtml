@@ -70,6 +70,51 @@
         
         return text.ToString();
     }
+
+
+    /// <summary>
+    /// Dump the C# syntax of a type method
+    /// </summary>
+    /// <param name="method"></param>
+    /// <returns></returns>
+    protected string DumpMethod(NMethod method)
+    {
+        var text = new StringBuilder();
+
+        // Append attributes        
+        foreach (var attribute in method.Attributes)
+            text.Append("[").Append(attribute).Append("]").AppendLine();
+
+        // Append visibility
+        text.Append(method.VisibilityName).Append(" ");
+        if (method.IsStatic) text.Append("static ");
+        if (method.IsAbstract) text.Append("abstract ");
+        if (method.IsFinal) text.Append("sealed ");
+
+        // Append the return type
+        text.Append(Escape(method.ReturnType.Name)).Append(" ");
+        
+        // Append the name
+        text.Append(Escape(method.Name)).Append("(");
+
+        if (method.Parameters.Count > 0)
+        {
+            text.AppendLine();
+            for (int i = 0; i < method.Parameters.Count; i++)
+            {
+                if (i > 0)
+                    text.Append(", ").AppendLine();
+                text.Append("\t").Append(Escape(method.Parameters[i].ParameterType.Name)).Append(" ").Append(Escape(method.Parameters[i].Name));
+            }
+            text.AppendLine();
+        }
+        text.Append(")");
+
+        // TODO add generic constraints here
+
+        return text.ToString();
+    }    
+    
 }
 
 
@@ -78,5 +123,8 @@
     if (member is NType)
     {
         @DumpType((NType)member);
+    } else if (member is NMethod)
+    {
+        @DumpMethod((NMethod)member);
     }
 }

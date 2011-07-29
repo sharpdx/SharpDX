@@ -170,15 +170,15 @@ namespace SharpDoc
             return "";
         }
 
-        protected string ToUrl(IModelReference modelRef, string content = null, bool forceLocal = false, string attributes = null)
+        protected string ToUrl(IModelReference modelRef, string content = null, bool forceLocal = false, string attributes = null, bool useSelf = true)
         {
-            return Model.ToUrl(modelRef, content, forceLocal, attributes);
+            return Model.ToUrl(modelRef, content, forceLocal, attributes, useSelf);
         }
 
 
-        protected string ToUrl(string id, string content = null, bool forceLocal = false, string attributes = null)
+        protected string ToUrl(string id, string content = null, bool forceLocal = false, string attributes = null, bool useSelf = true)
         {
-            return Model.ToUrl(id, content, forceLocal, attributes);
+            return Model.ToUrl(id, content, forceLocal, attributes, null, useSelf);
         }
 
         /// <summary>

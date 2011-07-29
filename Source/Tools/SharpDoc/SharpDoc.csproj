@@ -110,6 +110,7 @@
     </Compile>
     <Compile Include="AssemblyDoc.cs" />
     <Compile Include="ConfigDocPak.cs" />
+    <Compile Include="Model\NSeeAlso.cs" />
     <Compile Include="MonoCecilAssemblyManager.cs" />
     <Compile Include="ConfigParam.cs" />
     <Compile Include="DynamicParam.cs" />
@@ -166,6 +167,7 @@
     <Compile Include="TopicBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Styles\Standard\html\SeeAlso.cshtml" />
     <None Include="Styles\Standard\MainClassLibrary.cshtml" />
     <None Include="Styles\Standard\MainTopic.cshtml" />
     <None Include="Styles\Standard\MainEnd.cshtml" />

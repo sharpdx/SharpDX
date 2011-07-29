@@ -195,11 +195,19 @@ namespace SharpDoc
             }
         }
 
-        public string ToUrl(IModelReference reference, string linkName = null, bool forceLocal = false, string attributes = null)
+        /// <summary>
+        /// Resolve a local element Id (ie. "T:System.Object") to an url.
+        /// </summary>
+        /// <param name="reference">The reference.</param>
+        /// <param name="linkName">Name of the link.</param>
+        /// <param name="forceLocal">if set to <c>true</c> [force local].</param>
+        /// <param name="attributes">The attributes.</param>
+        /// <param name="useSelf">if set to <c>true</c> [use self when possible].</param>
+        /// <returns></returns>
+        public string ToUrl(IModelReference reference, string linkName = null, bool forceLocal = false, string attributes = null, bool useSelf = true)
         {
-            return ToUrl(reference.Id, linkName, forceLocal, attributes, reference);
+            return ToUrl(reference.Id, linkName, forceLocal, attributes, reference, useSelf);
         }
-
 
         /// <summary>
         /// Resolve a document Id (ie. "T:System.Object") to an url.
@@ -209,8 +217,9 @@ namespace SharpDoc
         /// <param name="forceLocal">if set to <c>true</c> [force local].</param>
         /// <param name="attributes">The attributes.</param>
         /// <param name="localReference">The local reference.</param>
+        /// <param name="useSelf"></param>
         /// <returns></returns>
-        public string ToUrl(string id, string linkName = null, bool forceLocal = false, string attributes = null, IModelReference localReference = null)
+        public string ToUrl(string id, string linkName = null, bool forceLocal = false, string attributes = null, IModelReference localReference = null, bool useSelf = true)
         {
             var linkDescriptor = new LinkDescriptor { Type = LinkType.None };
             var typeReference = localReference as NTypeReference;
@@ -240,7 +249,7 @@ namespace SharpDoc
                 {
                     var declaringType = ((NMember) linkDescriptor.LocalReference).DeclaringType;
                     // If link is self referencing the current context, then use a self link
-                    if (id == CurrentContext.Id || (declaringType != null && declaringType.Id == CurrentContext.Id))
+                    if ((id == CurrentContext.Id || (declaringType != null && declaringType.Id == CurrentContext.Id)) && useSelf)
                     {
                         linkDescriptor.Type = LinkType.Self;
                     }

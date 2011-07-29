@@ -53,7 +53,7 @@
     }
     @if (method.ReturnType.Name != "void") {
         <h4 class="sdoc-subheading">Return Value</h4>
-        <span>Type: @ToUrl(method.ReturnType, method.ReturnType.FullName)<br />
+        <span>Type: @ToUrl(method.ReturnType, method.ReturnType.FullName, false, null, false)<br />
         @TagExpand(method.ReturnDescription)
         </span>            
     }

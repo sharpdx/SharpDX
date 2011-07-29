@@ -122,6 +122,9 @@ namespace SharpDoc
             // Apply documentation on namespace from NamespaceDoc special class
             @namespace.DocNode = _source.FindMemberDoc("T:" + name + "." + NamespaceDocClass);
 
+            // Add See Alsos
+            @namespace.SeeAlsos.Add( new NSeeAlso(@namespace.Assembly) );
+
             assembly.Namespaces.Add(@namespace);
             return @namespace;
         }
@@ -279,6 +282,9 @@ namespace SharpDoc
             // Sort members
             type.Members.Sort((left, right) => left.Name.CompareTo(right.Name));
 
+            type.SeeAlsos.Add(new NSeeAlso(@namespace));
+            type.SeeAlsos.Add(new NSeeAlso(@namespace.Assembly));
+
             // Add nested types to the global namespace.
             foreach (var nestedType in typeDef.NestedTypes)
                 AddType(@namespace, nestedType);
@@ -386,6 +392,11 @@ namespace SharpDoc
             {
                 parent.HasMethods = true;
             }
+
+            // Add SeeAlso
+            method.SeeAlsos.Add(new NSeeAlso(parent));
+            method.SeeAlsos.Add(new NSeeAlso(parent.Namespace));
+            method.SeeAlsos.Add(new NSeeAlso(parent.Namespace.Assembly));
         }
 
         private static string ReplacePrimitive(string name, string fullName)

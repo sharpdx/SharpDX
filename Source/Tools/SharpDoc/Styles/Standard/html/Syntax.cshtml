@@ -42,7 +42,7 @@
         "F#",  Helpers.SyntaxCodeFSharp.Dump(member),
     });
         
-    if (member.GetType() == typeof(NMethod))
+    if (member is NMethod)
     {
     @Helpers.SyntaxMethod.Dump((NMethod)member);
     }

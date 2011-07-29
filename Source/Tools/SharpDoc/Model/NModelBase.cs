@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Collections.Generic;
 using System.Xml;
 
 namespace SharpDoc.Model
@@ -28,6 +29,11 @@ namespace SharpDoc.Model
     public abstract class NModelBase : IModelReference, IComment, IEquatable<NModelBase>
     {
         private XmlNode _docNode;
+
+        protected NModelBase()
+        {
+            SeeAlsos = new List<NSeeAlso>();
+        }
 
         /// <summary>
         /// Gets or sets the XML generated commment ID.
@@ -87,6 +93,14 @@ namespace SharpDoc.Model
         /// </summary>
         /// <value>The topic link.</value>
         public NTopic TopicLink { get; set; }
+
+        /// <summary>
+        /// Gets or sets the see alsos.
+        /// </summary>
+        /// <value>
+        /// The see alsos.
+        /// </value>
+        public List<NSeeAlso> SeeAlsos { get; set; }
 
         /// <summary>
         /// Called when <see cref="DocNode"/> is updated.
