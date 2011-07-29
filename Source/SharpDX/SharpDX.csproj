@@ -174,6 +174,7 @@
     <Compile Include="Vector2.cs" />
     <Compile Include="Vector3.cs" />
     <Compile Include="Vector4.cs" />
+    <Compile Include="Win32\FileHelper.cs" />
     <Compile Include="Windows\RenderLoop.cs" />
     <Compile Include="Windows\RenderControl.cs">
       <SubType>UserControl</SubType>

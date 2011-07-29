@@ -22,6 +22,8 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.Win32;
+using Microsoft.Win32.SafeHandles;
+using SharpDX.Win32;
 
 namespace SharpDX.XACT3
 {

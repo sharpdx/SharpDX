@@ -224,7 +224,9 @@
     <map method="IXACT3Engine::.*Notification" visibility="internal"/>
 
     <map method="IXACT3Engine::Create.*" visibility="internal"/>
+    <map param="IXACT3Engine::Create.*::pp.*" attribute="out fast"/>
     <map method="IXACT3Engine::Prepare.*" visibility="internal"/>
+    <map param="IXACT3Engine::Prepare.*::pp.*" attribute="out fast"/>
 
     <map method="IXACT3Engine::Initialize" visibility="internal"/>
 

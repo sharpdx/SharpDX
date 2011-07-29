@@ -58,6 +58,7 @@
     <Compile Include="SoundBankNotification.cs" />
     <Compile Include="SoundProperties.cs" />
     <Compile Include="VariableNotification.cs" />
+    <Compile Include="WaveBank.cs" />
     <Compile Include="WaveBankMiniWaveFormat.cs" />
     <Compile Include="WaveBankState.cs" />
     <Compile Include="WaveNotification.cs" />
