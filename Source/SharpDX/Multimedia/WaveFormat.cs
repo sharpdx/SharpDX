@@ -31,6 +31,7 @@ namespace SharpDX.Multimedia
     /// <summary>
     /// Represents a Wave file format
     /// </summary>
+    /// <unmanaged>WAVEFORMATEX</unmanaged>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 2)]
     public class WaveFormat
     {
@@ -148,14 +149,16 @@ namespace SharpDX.Multimedia
         /// <returns></returns>
         public static WaveFormat CreateCustomFormat(WaveFormatEncoding tag, int sampleRate, int channels, int averageBytesPerSecond, int blockAlign, int bitsPerSample)
         {
-            WaveFormat waveFormat = new WaveFormat();
-            waveFormat.waveFormatTag = tag;
-            waveFormat.channels = (short)channels;
-            waveFormat.sampleRate = sampleRate;
-            waveFormat.averageBytesPerSecond = averageBytesPerSecond;
-            waveFormat.blockAlign = (short)blockAlign;
-            waveFormat.bitsPerSample = (short)bitsPerSample;
-            waveFormat.extraSize = 0;
+            var waveFormat = new WaveFormat
+                                 {
+                                     waveFormatTag = tag,
+                                     channels = (short) channels,
+                                     sampleRate = sampleRate,
+                                     averageBytesPerSecond = averageBytesPerSecond,
+                                     blockAlign = (short) blockAlign,
+                                     bitsPerSample = (short) bitsPerSample,
+                                     extraSize = 0
+                                 };
             return waveFormat;
         }
 
@@ -208,12 +211,14 @@ namespace SharpDX.Multimedia
         /// <param name="channels">number of channels</param>
         public static WaveFormat CreateIeeeFloatWaveFormat(int sampleRate, int channels)
         {
-            WaveFormat wf = new WaveFormat();
-            wf.waveFormatTag = WaveFormatEncoding.IeeeFloat;
-            wf.channels = (short)channels;
-            wf.bitsPerSample = 32;
-            wf.sampleRate = sampleRate;
-            wf.blockAlign = (short)(4 * channels);
+            var wf = new WaveFormat
+                         {
+                             waveFormatTag = WaveFormatEncoding.IeeeFloat,
+                             channels = (short) channels,
+                             bitsPerSample = 32,
+                             sampleRate = sampleRate,
+                             blockAlign = (short) (4*channels)
+                         };
             wf.averageBytesPerSecond = sampleRate * wf.blockAlign;
             wf.extraSize = 0;
             return wf;
@@ -224,21 +229,36 @@ namespace SharpDX.Multimedia
         /// </summary>
         /// <param name="pointer">WaveFormat structure</param>
         /// <returns></returns>
-        public static WaveFormat MarshalFromPtr(IntPtr pointer)
+        public unsafe static WaveFormat MarshalFromPtr(IntPtr pointer)
         {
-            WaveFormat waveFormat = (WaveFormat)Marshal.PtrToStructure(pointer, typeof(WaveFormat));
-            switch (waveFormat.Encoding)
+            WaveFormat waveFormat;
+            switch (*(WaveFormatEncoding*)pointer)
             {
                 case WaveFormatEncoding.Pcm:
+                    waveFormat = new WaveFormat();
+                    waveFormat.__MarshalFrom(ref *(__Native*)pointer);
                     // can't rely on extra size even being there for PCM so blank it to avoid reading
                     // corrupt data
                     waveFormat.extraSize = 0;
                     break;
                 case WaveFormatEncoding.Extensible:
-                    waveFormat = (WaveFormatExtensible)Marshal.PtrToStructure(pointer, typeof(WaveFormatExtensible));
+                    var waveFormatExtensible = new WaveFormatExtensible();
+                    waveFormatExtensible.__MarshalFrom(ref *(WaveFormatExtensible.__Native*)pointer);
+                    waveFormat = waveFormatExtensible;
+                    break;
+                default:
+                    waveFormat = new WaveFormat();
+                    waveFormat.__MarshalFrom(ref *(__Native*)pointer);
                     break;
             }
             return waveFormat;
+        }
+
+        protected unsafe virtual IntPtr MarshalToPtr()
+        {
+            var result = Marshal.AllocHGlobal(Utilities.SizeOf<WaveFormat.__Native>());
+            __MarshalTo(ref *(WaveFormat.__Native*)result);
+            return result;
         }
 
         /// <summary>
@@ -248,10 +268,7 @@ namespace SharpDX.Multimedia
         /// <returns>IntPtr to WaveFormat structure (needs to be freed by callee)</returns>
         public static IntPtr MarshalToPtr(WaveFormat format)
         {
-            int formatSize = Marshal.SizeOf(format);
-            IntPtr formatPointer = Marshal.AllocHGlobal(formatSize);
-            Marshal.StructureToPtr(format, formatPointer, false);
-            return formatPointer;
+            return format.MarshalToPtr();
         }
 
         /// <summary>

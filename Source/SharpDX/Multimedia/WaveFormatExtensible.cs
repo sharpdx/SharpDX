@@ -31,6 +31,7 @@ namespace SharpDX.Multimedia
     /// WaveFormatExtensible
     /// http://www.microsoft.com/whdc/device/audio/multichaud.mspx
     /// </summary>
+    /// <unmanaged>WAVEFORMATEXTENSIBLE</unmanaged>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 2)]
     public class WaveFormatExtensible : WaveFormat
     {
@@ -71,6 +72,14 @@ namespace SharpDX.Multimedia
             // KSDATAFORMAT_SUBTYPE_IEEE_FLOAT // AudioMediaSubtypes.MEDIASUBTYPE_IEEE_FLOAT
             // KSDATAFORMAT_SUBTYPE_PCM // AudioMediaSubtypes.MEDIASUBTYPE_PCM;
             GuidSubFormat = bits == 32 ? new Guid("00000003-0000-0010-8000-00aa00389b71") : new Guid("00000001-0000-0010-8000-00aa00389b71");
+        }
+
+
+        protected unsafe override IntPtr MarshalToPtr()
+        {
+            var result = Marshal.AllocHGlobal(Utilities.SizeOf<WaveFormatExtensible.__Native>());
+            __MarshalTo(ref *(WaveFormatExtensible.__Native*)result);
+            return result;
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 2)]

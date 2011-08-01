@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 using System;
 using System.IO;
-using System.Runtime.InteropServices;
 
 namespace SharpDX.Multimedia
 {
@@ -99,7 +98,9 @@ namespace SharpDX.Multimedia
         /// Gets structured data contained in this chunk.
         /// </summary>
         /// <typeparam name="T">The type of the data to return</typeparam>
-        /// <returns>A structure filled with the chunk data</returns>
+        /// <returns>
+        /// A structure filled with the chunk data
+        /// </returns>
         public unsafe T GetDataAs<T>() where T : struct
         {
             var value = new T();
