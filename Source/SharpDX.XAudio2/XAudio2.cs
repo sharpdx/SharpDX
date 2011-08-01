@@ -26,14 +26,14 @@ namespace SharpDX.XAudio2
     {
         private EngineCallbackImpl _engineCallbackImpl;
 
-        /// <summary>Constant None.</summary>
-        internal static Guid CLSID_XAudio2 = new Guid("5a508685-a254-4fba-9b82-9a24b00306af");
+        ///// <summary>Constant None.</summary>
+        //internal static Guid CLSID_XAudio2 = new Guid("5a508685-a254-4fba-9b82-9a24b00306af");
         
-        /// <summary>Constant None.</summary>
-        internal static Guid CLSID_XAudio2_Debug = new Guid("db05ea35-0329-4d4b-a53a-6dead03d3852");
+        ///// <summary>Constant None.</summary>
+        //internal static Guid CLSID_XAudio2_Debug = new Guid("db05ea35-0329-4d4b-a53a-6dead03d3852");
 
-        /// <summary>Constant None.</summary>
-        internal static Guid IID_IXAudio2 = new Guid("8bcf1f58-9fe7-4583-8ac6-e2adc465c8bb");
+        ///// <summary>Constant None.</summary>
+        //internal static Guid IID_IXAudio2 = new Guid("8bcf1f58-9fe7-4583-8ac6-e2adc465c8bb");
 
         /// <summary>	
         /// Called by XAudio2 just before an audio processing pass begins.	

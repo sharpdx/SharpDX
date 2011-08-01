@@ -23,13 +23,13 @@ namespace SharpDX.XAPO.Fx
 {
     internal partial class XAPOFx
     {
-        /// <summary>Constant None.</summary>
-        internal static Guid CLSID_FXEcho = new Guid("a90bc001-e897-e897-7439-435500000003");
-        /// <summary>Constant None.</summary>
-        internal static Guid CLSID_FXEQ = new Guid("a90bc001-e897-e897-7439-435500000000");
-        /// <summary>Constant None.</summary>
-        internal static Guid CLSID_FXMasteringLimiter = new Guid("a90bc001-e897-e897-7439-435500000001");
-        /// <summary>Constant None.</summary>
-        internal static Guid CLSID_FXReverb = new Guid("a90bc001-e897-e897-7439-435500000002");
+        ///// <summary>Constant None.</summary>
+        //internal static Guid CLSID_FXEcho = new Guid("a90bc001-e897-e897-7439-435500000003");
+        ///// <summary>Constant None.</summary>
+        //internal static Guid CLSID_FXEQ = new Guid("a90bc001-e897-e897-7439-435500000000");
+        ///// <summary>Constant None.</summary>
+        //internal static Guid CLSID_FXMasteringLimiter = new Guid("a90bc001-e897-e897-7439-435500000001");
+        ///// <summary>Constant None.</summary>
+        //internal static Guid CLSID_FXReverb = new Guid("a90bc001-e897-e897-7439-435500000002");
     }
 }
