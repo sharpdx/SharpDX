@@ -17,26 +17,32 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+using System;
+using System.IO;
+using System.Runtime.InteropServices;
+
 namespace SharpDX.Multimedia
 {
     /// <summary>
-    /// 
+    /// A chunk of a Riff stream.
     /// </summary>
     public class RiffChunk
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RiffChunk"/> class.
         /// </summary>
+        /// <param name="stream">The stream holding this chunk</param>
         /// <param name="type">The type.</param>
         /// <param name="size">The size.</param>
-        /// <param name="dataOffset">The data offset.</param>
+        /// <param name="dataPosition">The data offset.</param>
         /// <param name="isList">if set to <c>true</c> [is list].</param>
         /// <param name="isHeader">if set to <c>true</c> [is header].</param>
-        public RiffChunk(FourCC type, uint size, uint dataOffset, bool isList = false, bool isHeader = false)
+        public RiffChunk(Stream stream, FourCC type, uint size, uint dataPosition, bool isList = false, bool isHeader = false)
         {
+            Stream = stream;
             Type = type;
             Size = size;
-            DataOffset = dataOffset;
+            DataPosition = dataPosition;
             IsList = isList;
             IsHeader = isHeader;
         }
@@ -44,20 +50,25 @@ namespace SharpDX.Multimedia
         /// <summary>
         /// Gets the type.
         /// </summary>
+        public Stream Stream{ get; private set; }
+
+        /// <summary>
+        /// Gets the <see cref="FourCC"/> of this chunk.
+        /// </summary>
         public FourCC Type { get; private set; }
 
         /// <summary>
-        /// Gets the size.
+        /// Gets the size of the data enbedded by this chunk.
         /// </summary>
         public uint Size { get; private set; }
 
         /// <summary>
-        /// Gets the data offset from the stream.
+        /// Gets the position of the data embedded by this chunk relative to the stream.
         /// </summary>
-        public uint DataOffset { get; private set; }
+        public uint DataPosition { get; private set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this instance is list.
+        /// Gets or sets a value indicating whether this instance is a list chunk.
         /// </summary>
         /// <value>
         ///   <c>true</c> if this instance is list; otherwise, <c>false</c>.
@@ -65,12 +76,60 @@ namespace SharpDX.Multimedia
         public bool IsList { get; private set; }
 
         /// <summary>
-        /// Gets a value indicating whether this instance is header.
+        /// Gets a value indicating whether this instance is a header chunk.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if this instance is header; otherwise, <c>false</c>.
+        ///   <c>true</c> if this instance is a header; otherwise, <c>false</c>.
         /// </value>
         public bool IsHeader { get; private set; }
+
+        /// <summary>
+        /// Gets the raw data contained in this chunk.
+        /// </summary>
+        /// <returns></returns>
+        public byte[] GetData()
+        {
+            var data = new byte[Size];
+            Stream.Position = DataPosition;
+            Stream.Read(data, 0, (int)Size);
+            return data;
+        }
+
+        /// <summary>
+        /// Gets structured data contained in this chunk.
+        /// </summary>
+        /// <typeparam name="T">The type of the data to return</typeparam>
+        /// <returns>A structure filled with the chunk data</returns>
+        public unsafe T GetDataAs<T>() where T : struct
+        {
+            var value = new T();
+            var data = GetData();
+            fixed (void* ptr = data)
+            {
+                Utilities.Read((IntPtr) ptr, ref value);
+            }
+            return value;
+        }
+
+        /// <summary>
+        /// Gets structured data contained in this chunk.
+        /// </summary>
+        /// <typeparam name="T">The type of the data to return</typeparam>
+        /// <returns>A structure filled with the chunk data</returns>
+        public unsafe T[] GetDataAsArray<T>() where T : struct
+        {
+            int sizeOfT = Utilities.SizeOf<T>();
+            if ((Size % sizeOfT) != 0)
+                throw new ArgumentException("Size of T is incompatible with size of chunk");
+
+            var values = new T[Size/sizeOfT];
+            var data = GetData();
+            fixed (void* ptr = data)
+            {
+                Utilities.Read((IntPtr)ptr, values, 0, values.Length);
+            }
+            return values;
+        }
 
         /// <summary>
         /// Returns a <see cref="System.String"/> that represents this instance.
@@ -80,7 +139,7 @@ namespace SharpDX.Multimedia
         /// </returns>
         public override string ToString()
         {
-            return string.Format("Type: {0}, Size: {1}, DataOffset: {2}, IsList: {3}, IsHeader: {4}", Type, Size, DataOffset, IsList, IsHeader);
+            return string.Format("Type: {0}, Size: {1}, Position: {2}, IsList: {3}, IsHeader: {4}", Type, Size, DataPosition, IsList, IsHeader);
         }
     }
 }

@@ -42,13 +42,17 @@
     </post>
   </include>
 
+  <!-- Incldue mmreg.h before audiodefs.h in order to avoid redefinition problem -->
+  <include file="mmreg.h" namespace="SharpDX.Multimedia" output="Multimedia"/>
+
   <include file="audiodefs.h" namespace="SharpDX.Multimedia" output="Multimedia"/>
- 
+
   <!-- SharpDX global types -->
   <extension>
     <context>sharpdx-core-multimedia-ext</context>
     <context>hidusage</context>
     <context>audiodefs</context>
+    <context>mmreg</context>
 
     <!-- class SharpDX.Multimedia.UsagePage -->
     <create-cpp enum="SPEAKER_FLAGS" macro="SPEAKER_.*" />
@@ -58,6 +62,9 @@
 
     <!-- class SharpDX.Multimedia.UsageId -->
     <create-cpp enum="HID_USAGE_ID" macro="HID_USAGE_[^P].*" />
+
+    <!-- class SharpDX.Multimedia.WaveFormatEncoding-->
+    <create-cpp enum="WAVE_FORMAT_ENCODING" macro="WAVE_FORMAT_(.*)" />
   </extension>
 
     <!-- SharpDX global mapping -->
@@ -82,6 +89,11 @@
     <!-- class SharpDX.Multimedia.UsageId -->
     <map enum="HID_USAGE_ID" name="UsageId" type="short"/>
     <map enum-item="HID_USAGE_([^P].*)" name-tmp="$1" />
+
+    <!-- class SharpDX.Multimedia.WaveFormatEncoding-->
+    <map enum="WAVE_FORMAT_ENCODING" name="WaveFormatEncoding" type="short"/>
+    <map enum-item="WAVE_FORMAT_(.*)" name-tmp="$1" />
+    <map enum-item="WAVE_FORMAT_([0-9].*)" name-tmp="Tag$1" />
 
     <context-clear/>
   </mapping>

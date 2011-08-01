@@ -167,7 +167,7 @@ namespace SharpDX.Multimedia
         /// <returns>Wave Format</returns>
         public static WaveFormat CreateALawFormat(int sampleRate, int channels)
         {
-            return CreateCustomFormat(WaveFormatEncoding.ALaw, sampleRate, channels, sampleRate * channels, 1, 8);
+            return CreateCustomFormat(WaveFormatEncoding.Alaw, sampleRate, channels, sampleRate * channels, 1, 8);
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace SharpDX.Multimedia
         /// <returns>Wave Format</returns>
         public static WaveFormat CreateMuLawFormat(int sampleRate, int channels)
         {
-            return CreateCustomFormat(WaveFormatEncoding.MuLaw, sampleRate, channels, sampleRate * channels, 1, 8);
+            return CreateCustomFormat(WaveFormatEncoding.Mulaw, sampleRate, channels, sampleRate * channels, 1, 8);
         }
 
         /// <summary>
