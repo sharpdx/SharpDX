@@ -72,6 +72,7 @@
   <include id="xact3wb" file="xact3wb.h" attach="true" />
 
   <extension>
+    <context>sharpdx-xact3</context>
     <context>sharpdx-xact3-ext</context>
     <context>xact3</context>
     <context>xact3wb</context>

@@ -45,6 +45,7 @@
   <naming />
   
   <extension>
+    <context>sharpdx-directinput</context>
     <context>sharpdx-directinput-ext</context>
     <context>dinput</context>    
 

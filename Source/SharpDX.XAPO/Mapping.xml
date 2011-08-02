@@ -43,6 +43,11 @@
 
   <!-- XAPO extensions -->
   <extension>
+    <context>sharpdx-xapo</context>
+    <context>sharpdx-xapo-ext</context>
+    <context>xapo</context>
+    <context>xapofx</context>
+
     <create-cpp enum="XAPO_PROPERTY_TYPE" macro="XAPO_FLAG_(.*)" />
 
     <const from-guid="CLSID_FXEQ" class="SharpDX.XAPO.Fx.XAPOFx" type="System.Guid">new System.Guid("$1")</const>
@@ -53,6 +58,8 @@
     <const from-macro="FXMASTERINGLIMITER_(.*)" class="SharpDX.XAPO.Fx.MasteringLimiterParameters" type="int" name="$1" />
 
     <create class="SharpDX.XAPO.Fx.XAPOFx" />
+
+    <context-clear/>
   </extension>
   
   <!-- XAPO mapping -->

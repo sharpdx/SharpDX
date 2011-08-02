@@ -260,6 +260,7 @@
 
   <!-- SharpDX global mapping -->
   <mapping>
+    <context-clear/>
     <!--
     // *****************************************************************
     // Modify all enums

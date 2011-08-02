@@ -37,6 +37,9 @@
 
   <!-- XAudio2 extensions -->
   <extension>
+    <context>sharpdx-xaudio2-ext</context>
+    <context>xaudio2</context>
+    <context>xaudio2fx</context>
     <create-cpp enum="XAUDIO2_VOICE_SEND_FLAGS" macro="XAUDIO2_VOICE_(USEFILTER)" />
     <create-cpp enum="XAUDIO2_VOICE_FLAGS" macro="XAUDIO2_VOICE_[^U].*" />
     <create-cpp enum="XAUDIO2_FLAGS" macro="XAUDIO2_DEBUG_ENGINE" />
@@ -58,6 +61,7 @@
     <const from-guid="CLSID_Audio.*" class="SharpDX.XAudio2.Fx.XAudio2FxContants" type="System.Guid">new System.Guid("$1")</const>    
     <create class="SharpDX.XAudio2.Fx.XAudio2FxContants" />
     -->
+    <context-clear/>
   </extension>
 
   <!-- XAudio2 mapping -->
