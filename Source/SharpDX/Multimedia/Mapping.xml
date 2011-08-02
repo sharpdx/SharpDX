@@ -43,12 +43,17 @@
   </include>
 
   <!-- Incldue mmreg.h before audiodefs.h in order to avoid redefinition problem -->
-  <include file="mmreg.h" namespace="SharpDX.Multimedia" output="Multimedia"/>
+  <include file="mmreg.h" namespace="SharpDX.Multimedia" output="Multimedia">
+    <pre>
+      #define WAVE_FORMAT_PCM     1
+    </pre>
+  </include>
 
   <include file="audiodefs.h" namespace="SharpDX.Multimedia" output="Multimedia"/>
 
   <!-- SharpDX global types -->
   <extension>
+    <context>sharpdx-core-multimedia</context>
     <context>sharpdx-core-multimedia-ext</context>
     <context>hidusage</context>
     <context>audiodefs</context>
@@ -65,10 +70,11 @@
 
     <!-- class SharpDX.Multimedia.WaveFormatEncoding-->
     <create-cpp enum="WAVE_FORMAT_ENCODING" macro="WAVE_FORMAT_(.*)" />
+    <context-clear/>
   </extension>
 
     <!-- SharpDX global mapping -->
-  <mapping>    
+  <mapping>
     <context>sharpdx-core-multimedia-ext</context>
     <context>hidusage</context>
     <context>audiodefs</context>

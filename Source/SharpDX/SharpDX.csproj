@@ -154,15 +154,14 @@
     <Compile Include="IUnknown.cs" />
     <Compile Include="MathUtil.cs" />
     <Compile Include="Matrix.cs" />
-    <Compile Include="Multimedia\RiffStream.cs" />
-    <Compile Include="Multimedia\WAVStream.cs" />
+    <Compile Include="Multimedia\SoundStream.cs" />
+    <Compile Include="Multimedia\WaveFormatAdpcm.cs" />
     <Compile Include="Multimedia\FourCC.cs" />
     <Compile Include="Multimedia\RiffChunk.cs" />
     <Compile Include="Multimedia\RiffParser.cs" />
     <Compile Include="Multimedia\SpeakersExtensions.cs" />
     <Compile Include="Multimedia\WaveFormat.cs" />
     <Compile Include="Multimedia\WaveFormatExtensible.cs" />
-    <Compile Include="Multimedia\XWMAStream.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="Win32Native.cs" />
     <Compile Include="Plane.cs" />
@@ -207,9 +206,9 @@
   <PropertyGroup>
     <PreBuildEvent>$(SolutionDir)Source\Tools\SharpGen\RunGenerator.bat $(ConfigurationName)</PreBuildEvent>
   </PropertyGroup>
+  <Import Project="$(SolutionPath).targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
-  <Import Project="$(SolutionPath).targets" />
 <Target Name="BeforeBuild">
   </Target>
   <Target Name="AfterBuild">

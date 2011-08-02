@@ -25,31 +25,31 @@ using System.Linq;
 namespace SharpDX.Multimedia
 {
     /// <summary>
-    /// Base class for a RIFF stream (WAV, xWMA... etc.)
+    /// Generic sound input stream supporting WAV (Pcm,Float), ADPCM, xWMA sound file formats.
     /// </summary>
-    public abstract class RiffStream : Stream
+    public class SoundStream : Stream
     {
         private readonly bool isOwnerOfInput;
-        protected Stream input;
-        protected long startPositionOfWXMA;
-        protected long length;
+        private Stream input;
+        private long startPositionOfData;
+        private long length;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="XWMAStream"/> class.
+        /// Initializes a new instance of the <see cref="SoundStream"/> class.
         /// </summary>
-        /// <param name="xwmaFile">The xwma file.</param>
-        protected RiffStream(string xwmaFile)
+        /// <param name="soundFile">The sound file.</param>
+        public SoundStream(string soundFile)
         {
-            input = new FileStream(xwmaFile, FileMode.Open, FileAccess.Read);
+            input = new FileStream(soundFile, FileMode.Open, FileAccess.Read);
             isOwnerOfInput = true;
             Initialize(input);
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="XWMAStream"/> class.
+        /// Initializes a new instance of the <see cref="SoundStream"/> class.
         /// </summary>
-        /// <param name="stream">The xwma stream.</param>
-        protected RiffStream(Stream stream)
+        /// <param name="stream">The sound stream.</param>
+        public SoundStream(Stream stream)
         {
             if (stream == null) throw new ArgumentNullException("stream");
             input = stream;
@@ -64,24 +64,98 @@ namespace SharpDX.Multimedia
         {
             var parser = new RiffParser(stream);
 
+            FileFormatName = "Unknown";
+
             // Parse Header
-            parser.MoveNext();
-            if (parser.Current.Type != FileFormatName)
+            if (!parser.MoveNext() || parser.Current == null)
+            {
                 ThrowInvalidFileFormat();
+                return;
+            }
+
+            // Check that WAVE or XWMA header is present
+            FileFormatName = parser.Current.Type;
+            if (FileFormatName != "WAVE" && FileFormatName != "XWMA")
+                throw new InvalidOperationException("Unsupported " + FileFormatName + " file format. Only WAVE or XWMA");
 
             // Parse inside the first chunk
             parser.Descend();
 
             // Get all the chunk
             var chunks = parser.GetAllChunks();
-            Initialize(chunks);
+
+            // Get "fmt" chunk
+            var fmtChunk = Chunk(chunks, "fmt ");
+            if (fmtChunk.Size < sizeof(WaveFormat.__PcmNative))
+                ThrowInvalidFileFormat();
+
+            var pcmWaveFormat = fmtChunk.GetDataAs<WaveFormat.__PcmNative>();
+            var encoding = pcmWaveFormat.waveFormatTag;
+
+            // Load simple PcmWaveFormat if channels <= 2 and encoding is Pcm, IeeFloat, Wmaudio2, Wmaudio3
+            // See http://msdn.microsoft.com/en-us/library/microsoft.directx_sdk.xaudio2.waveformatex%28v=vs.85%29.aspx
+            if (pcmWaveFormat.channels <= 2 && (encoding == WaveFormatEncoding.Pcm || encoding == WaveFormatEncoding.IeeeFloat || encoding == WaveFormatEncoding.Wmaudio2 || encoding == WaveFormatEncoding.Wmaudio3))
+            {
+                var waveFormat = new WaveFormat();
+                waveFormat.__MarshalFrom(ref pcmWaveFormat);
+                Format = waveFormat;
+            }
+            else if (encoding == WaveFormatEncoding.Extensible)
+            {
+                if (fmtChunk.Size < sizeof(WaveFormatExtensible.__Native))
+                    ThrowInvalidFileFormat();
+
+                var waveFormat = new WaveFormatExtensible();
+                var waveFormatNative = fmtChunk.GetDataAs<WaveFormatExtensible.__Native>();
+                waveFormat.__MarshalFrom(ref waveFormatNative);
+                Format = waveFormat;
+            }
+            else if (encoding == WaveFormatEncoding.Adpcm)
+            {
+                if (fmtChunk.Size < sizeof(WaveFormatAdpcm.__Native))
+                    ThrowInvalidFileFormat();
+
+                var waveFormat = new WaveFormatAdpcm();
+                var waveFormatNative = fmtChunk.GetDataAs<WaveFormatAdpcm.__Native>();
+                waveFormat.__MarshalFrom(ref waveFormatNative);
+                Format = waveFormat;
+            } else
+            {
+                ThrowInvalidFileFormat();
+            }
+
+            // If XWMA
+            if (FileFormatName == "XWMA")
+            {
+                // Check that format is Wma
+                if (Format.Encoding != WaveFormatEncoding.Wmaudio2 && Format.Encoding != WaveFormatEncoding.Wmaudio3)
+                    ThrowInvalidFileFormat();
+
+                // Check for "dpds" chunk
+                // Get the dpds decoded packed cumulative bytes
+                var dpdsChunk = Chunk(chunks, "dpds");
+                DecodedPacketsInfo = dpdsChunk.GetDataAsArray<uint>();                
+            } else
+            {
+                switch (Format.Encoding)
+                {
+                    case WaveFormatEncoding.Pcm:
+                    case WaveFormatEncoding.IeeeFloat:
+                    case WaveFormatEncoding.Extensible:
+                    case WaveFormatEncoding.Adpcm:
+                        break;
+                    default:
+                        ThrowInvalidFileFormat();
+                        break;
+                }                
+            }
 
             // Check for "data" chunk
             var dataChunk = Chunk(chunks, "data");
-            startPositionOfWXMA = dataChunk.DataPosition;
+            startPositionOfData = dataChunk.DataPosition;
             length = dataChunk.Size;
 
-            input.Position = startPositionOfWXMA;
+            input.Position = startPositionOfData;
         }
 
         protected void ThrowInvalidFileFormat()
@@ -90,14 +164,29 @@ namespace SharpDX.Multimedia
         }
 
         /// <summary>
-        /// Initializes the specified stream.
+        /// Gets the decoded packets info.
         /// </summary>
-        protected abstract unsafe void Initialize(IEnumerable<RiffChunk> chunks);
+        /// <remarks>
+        /// This property is only valid for XWMA stream.</remarks>
+        public uint[] DecodedPacketsInfo { get; private set; }
 
         /// <summary>
         /// Gets the wave format of this instance.
         /// </summary>
-        public WaveFormat WaveFormat { get; protected set; }
+        public WaveFormat Format { get; protected set; }
+
+        /// <summary>
+        /// Converts this stream to a DataStream by loading all the data from the source stream.
+        /// </summary>
+        /// <returns></returns>
+        public DataStream ToDataStream()
+        {
+            var buffer = new byte[Length];
+            if ( Read(buffer, 0, (int)Length) != Length)
+                throw new InvalidOperationException("Unable to get a valid DataStream");
+
+            return new DataStream(buffer, true, true);
+        }
 
         /// <summary>
         /// When overridden in a derived class, gets a value indicating whether the current stream supports reading.
@@ -151,7 +240,7 @@ namespace SharpDX.Multimedia
         {
             get
             {
-                return input.Position - startPositionOfWXMA;
+                return input.Position - startPositionOfData;
             }
             set
             {
@@ -177,7 +266,7 @@ namespace SharpDX.Multimedia
             return chunk;
         }
 
-        protected abstract string FileFormatName { get; }
+        private string FileFormatName { get; set; }
 
         /// <summary>
         /// When overridden in a derived class, clears all buffers for this stream and causes any buffered data to be written to the underlying device.
@@ -215,17 +304,17 @@ namespace SharpDX.Multimedia
             switch (origin)
             {
                 case SeekOrigin.Begin:
-                    newPosition = startPositionOfWXMA + offset;
+                    newPosition = startPositionOfData + offset;
                     break;
                 case SeekOrigin.Current:
                     newPosition = input.Position + offset;
                     break;
                 case SeekOrigin.End:
-                    newPosition = startPositionOfWXMA + length + offset;
+                    newPosition = startPositionOfData + length + offset;
                     break;
             }
 
-            if (newPosition < startPositionOfWXMA || newPosition > (startPositionOfWXMA+length))
+            if (newPosition < startPositionOfData || newPosition > (startPositionOfData+length))
                 throw new InvalidOperationException("Cannot seek outside the range of this stream");
 
             return input.Seek(offset, origin);
@@ -285,7 +374,7 @@ namespace SharpDX.Multimedia
         ///   </exception>
         public override int Read(byte[] buffer, int offset, int count)
         {
-            if ( (input.Position + count) > length)
+            if ( (input.Position + count) > (startPositionOfData +length))
                 throw new InvalidOperationException("Cannot read more than the length of the stream");
             return input.Read(buffer, offset, count);
         }

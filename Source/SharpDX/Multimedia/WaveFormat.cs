@@ -53,18 +53,7 @@ namespace SharpDX.Multimedia
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 2)]
         internal struct __Native
         {
-            /// <summary>format type</summary>
-            public WaveFormatEncoding waveFormatTag;
-            /// <summary>number of channels</summary>
-            public short channels;
-            /// <summary>sample rate</summary>
-            public int sampleRate;
-            /// <summary>for buffer estimation</summary>
-            public int averageBytesPerSecond;
-            /// <summary>block size of data</summary>
-            public short blockAlign;
-            /// <summary>number of bits per sample of mono data</summary>
-            public short bitsPerSample;
+            public __PcmNative pcmWaveFormat;
             /// <summary>number of following bytes</summary>
             public short extraSize;
             // Method to free native struct
@@ -81,16 +70,66 @@ namespace SharpDX.Multimedia
         // Method to marshal from native to managed struct
         internal unsafe void __MarshalFrom(ref __Native @ref)
         {
+            this.waveFormatTag = @ref.pcmWaveFormat.waveFormatTag;
+            this.channels = @ref.pcmWaveFormat.channels;
+            this.sampleRate = @ref.pcmWaveFormat.sampleRate;
+            this.averageBytesPerSecond = @ref.pcmWaveFormat.averageBytesPerSecond;
+            this.blockAlign = @ref.pcmWaveFormat.blockAlign;
+            this.bitsPerSample = @ref.pcmWaveFormat.bitsPerSample;
+            this.extraSize = @ref.extraSize;            
+        }
+        // Method to marshal from managed struct tot native
+        internal unsafe void __MarshalTo(ref __Native @ref)
+        {
+            @ref.pcmWaveFormat.waveFormatTag = this.waveFormatTag;
+            @ref.pcmWaveFormat.channels = this.channels;
+            @ref.pcmWaveFormat.sampleRate = this.sampleRate;
+            @ref.pcmWaveFormat.averageBytesPerSecond = this.averageBytesPerSecond;
+            @ref.pcmWaveFormat.blockAlign = this.blockAlign;
+            @ref.pcmWaveFormat.bitsPerSample = this.bitsPerSample;
+            @ref.extraSize = this.extraSize;  
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 2)]
+        internal struct __PcmNative
+        {
+            /// <summary>format type</summary>
+            public WaveFormatEncoding waveFormatTag;
+            /// <summary>number of channels</summary>
+            public short channels;
+            /// <summary>sample rate</summary>
+            public int sampleRate;
+            /// <summary>for buffer estimation</summary>
+            public int averageBytesPerSecond;
+            /// <summary>block size of data</summary>
+            public short blockAlign;
+            /// <summary>number of bits per sample of mono data</summary>
+            public short bitsPerSample;
+
+            // Method to free native struct
+            internal unsafe void __MarshalFree()
+            {
+            }
+        }
+
+        internal unsafe void __MarshalFree(ref __PcmNative @ref)
+        {
+            @ref.__MarshalFree();
+        }
+
+        // Method to marshal from native to managed struct
+        internal unsafe void __MarshalFrom(ref __PcmNative @ref)
+        {
             this.waveFormatTag = @ref.waveFormatTag;
             this.channels = @ref.channels;
             this.sampleRate = @ref.sampleRate;
             this.averageBytesPerSecond = @ref.averageBytesPerSecond;
             this.blockAlign = @ref.blockAlign;
             this.bitsPerSample = @ref.bitsPerSample;
-            this.extraSize = @ref.extraSize;            
+            this.extraSize = 0;
         }
         // Method to marshal from managed struct tot native
-        internal unsafe void __MarshalTo(ref __Native @ref)
+        internal unsafe void __MarshalTo(ref __PcmNative @ref)
         {
             @ref.waveFormatTag = this.waveFormatTag;
             @ref.channels = this.channels;
@@ -98,8 +137,8 @@ namespace SharpDX.Multimedia
             @ref.averageBytesPerSecond = this.averageBytesPerSecond;
             @ref.blockAlign = this.blockAlign;
             @ref.bitsPerSample = this.bitsPerSample;
-            @ref.extraSize = this.extraSize;  
         }
+
 
         /// <summary>
         /// Creates a new PCM 44.1Khz stereo 16 bit format
@@ -236,10 +275,7 @@ namespace SharpDX.Multimedia
             {
                 case WaveFormatEncoding.Pcm:
                     waveFormat = new WaveFormat();
-                    waveFormat.__MarshalFrom(ref *(__Native*)pointer);
-                    // can't rely on extra size even being there for PCM so blank it to avoid reading
-                    // corrupt data
-                    waveFormat.extraSize = 0;
+                    waveFormat.__MarshalFrom(ref *(__PcmNative*)pointer);
                     break;
                 case WaveFormatEncoding.Extensible:
                     var waveFormatExtensible = new WaveFormatExtensible();
