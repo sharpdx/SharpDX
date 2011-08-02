@@ -373,6 +373,8 @@ namespace SharpGen.Parser
                             {
                                 if (CheckIfRuleIsCreatingHeadersExtension(typeBaseRule))
                                     extensionWriter.Write(CreateCppFromMacro(typeBaseRule));
+                                else if (typeBaseRule is ContextRule)
+                                    HandleContextRule(configFile, (ContextRule) typeBaseRule);
                             }
                             extensionWriter.Close();
                         }
@@ -427,6 +429,31 @@ namespace SharpGen.Parser
             _configRoot.ExpandVariables(true);
 
             return _group;
+        }
+
+        /// <summary>
+        /// Handles the context rule.
+        /// </summary>
+        /// <param name="file">The file.</param>
+        /// <param name="contextRule">The context rule.</param>
+        private void HandleContextRule(ConfigFile file, ContextRule contextRule)
+        {
+            if (contextRule is ClearContextRule)
+                _group.ClearContextFind();
+            else
+            {
+                var contextIds = new List<string>();
+
+                if (!string.IsNullOrEmpty(contextRule.ContextSetId))
+                {
+                    var contextSet = file.FindContextSetById(contextRule.ContextSetId);
+                    if (contextSet != null)
+                        contextIds.AddRange(contextSet.Contexts);
+                }
+                contextIds.AddRange(contextRule.Ids);
+
+                _group.AddContextRangeFind(contextIds);
+            }
         }
 
         /// <summary>
