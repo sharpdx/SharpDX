@@ -48,8 +48,17 @@ namespace SharpDX.XACT3
         /// <summary>
         /// Initializes a new instance of the <see cref="Engine"/> class.
         /// </summary>
+        /// <param name="settingsFile">The settings file.</param>
+        public Engine(Stream settingsFile) : this(CreationFlags.None, settingsFile)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Engine"/> class.
+        /// </summary>
         /// <param name="creationFlags">The creation flags.</param>
-        public Engine(CreationFlags creationFlags)
+        /// <param name="settingsFile"></param>
+        public Engine(CreationFlags creationFlags, Stream settingsFile = null)
         {
             bool debug = (creationFlags == CreationFlags.DebugMode);
             bool audition = (creationFlags == CreationFlags.AuditionMode);
@@ -79,35 +88,9 @@ namespace SharpDX.XACT3
                 unmanagedDelegate = new NotificationCallbackDelegate(NotificationCallbackDelegateImpl);
                 unmanagedDelegatePointer = Marshal.GetFunctionPointerForDelegate(unmanagedDelegate);
             }
-        }
 
-        /// <summary>
-        /// Initializes this instance.
-        /// </summary>
-        /// <unmanaged>IXACT3Engine::Initialize</unmanaged>
-		public void Initialize()
-        {
-            Initialize(null, null);
-        }
-
-        /// <summary>
-        /// Initializes this instance with the specified settings file.
-        /// </summary>
-        /// <param name="settingsFile">The settings file.</param>
-        /// <unmanaged>IXACT3Engine::Initialize</unmanaged>
-		public void Initialize(Stream settingsFile)
-		{
-            Initialize(settingsFile, null);		    
-		}
-
-        /// <summary>
-        /// Initializes this instance with the specified renderer index.
-        /// </summary>
-        /// <param name="rendererIndex">Index of the renderer.</param>
-        /// <unmanaged>IXACT3Engine::Initialize</unmanaged>
-		public void Initialize(short rendererIndex)
-        {
-            Initialize(null, rendererIndex);
+            // Initialize the engine
+            Initialize(settingsFile, null);
         }
 
         /// <summary>
@@ -116,7 +99,7 @@ namespace SharpDX.XACT3
         /// <param name="settingsFile">The settings file.</param>
         /// <param name="rendererIndex">Index of the renderer.</param>
         /// <unmanaged>IXACT3Engine::Initialize</unmanaged>
-		public unsafe void Initialize(Stream settingsFile, short? rendererIndex)
+		private unsafe void Initialize(Stream settingsFile, short? rendererIndex)
 		{
             var runtimeParameters = new RuntimeParameters
                                         {

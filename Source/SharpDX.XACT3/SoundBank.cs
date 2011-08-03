@@ -25,6 +25,8 @@ namespace SharpDX.XACT3
 {
     public partial class SoundBank
     {
+        private DataStream soundBankSourceStream;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SoundBank"/> class from a soundbank stream.
         /// </summary>
@@ -33,19 +35,13 @@ namespace SharpDX.XACT3
         /// <unmanaged>HRESULT IXACT3Engine::CreateSoundBank([In] const void* pvBuffer,[In] unsigned int dwSize,[In] unsigned int dwFlags,[In] unsigned int dwAllocAttributes,[Out, Fast] IXACT3SoundBank** ppSoundBank)</unmanaged>
         public SoundBank(Engine engine, Stream stream)
         {
-            if (stream is DataStream)
-            {
-                engine.CreateSoundBank(((DataStream)stream).DataPointer, (int)stream.Length, 0, 0, this);
-            }
-            else
-            {
-                var data = Utilities.ReadStream(stream);
-                unsafe
-                {
-                    fixed (void* pData = data)
-                        engine.CreateSoundBank((IntPtr) pData, data.Length, 0, 0, this);
-                }
-            }
+            soundBankSourceStream = stream as DataStream ?? new DataStream(Utilities.ReadStream(stream), true, true);
+            engine.CreateSoundBank(soundBankSourceStream.DataPointer, (int)soundBankSourceStream.Length, 0, 0, this);
+        }
+
+        public SharpDX.XACT3.Cue Play(short cueIndex)
+        {
+            return Play(cueIndex, 0, 0);
         }
 
         public SharpDX.XACT3.Cue Play(short cueIndex, int timeOffset)
@@ -53,9 +49,27 @@ namespace SharpDX.XACT3
             return Play(cueIndex, 0, timeOffset);
         }
 
+        public SharpDX.XACT3.Cue Prepare(short cueIndex)
+        {
+            return Prepare(cueIndex, 0);
+        }
+
         public SharpDX.XACT3.Cue Prepare(short cueIndex, int timeOffset)
         {
             return Prepare(cueIndex, 0, timeOffset);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (soundBankSourceStream != null)
+                {
+                    soundBankSourceStream.Dispose();
+                    soundBankSourceStream = null;
+                }
+            }
+            base.Dispose(disposing);
         }
 
         /// <summary>
