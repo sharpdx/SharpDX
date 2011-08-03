@@ -7,6 +7,8 @@ namespace SharpDX
     /// </summary>
     public abstract class DisposeBase : IDisposable
     {
+        protected bool IsDisposed;
+
         /// <summary>
         /// Releases unmanaged resources and performs other cleanup operations before the
         /// <see cref="DisposeBase"/> is reclaimed by garbage collection.
@@ -22,8 +24,13 @@ namespace SharpDX
         /// </summary>
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            // TODO Should we throw an exception if this method is called more than once?
+            if (!IsDisposed)
+            {
+                Dispose(true);
+                GC.SuppressFinalize(this);
+                IsDisposed = true;
+            }
         }
 
         /// <summary>
