@@ -189,6 +189,18 @@ namespace SharpDX.Multimedia
         }
 
         /// <summary>
+        /// Performs an implicit conversion from <see cref="SharpDX.Multimedia.SoundStream"/> to <see cref="SharpDX.DataStream"/>.
+        /// </summary>
+        /// <param name="stream">The stream.</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
+        public static implicit operator DataStream(SoundStream stream)
+        {
+            return stream.ToDataStream();
+        }
+
+        /// <summary>
         /// When overridden in a derived class, gets a value indicating whether the current stream supports reading.
         /// </summary>
         /// <returns>true if the stream supports reading; otherwise, false.
@@ -250,7 +262,7 @@ namespace SharpDX.Multimedia
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && isOwnerOfInput && input != null)
+            if (input != null)
             {
                 input.Dispose();
                 input = null;

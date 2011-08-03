@@ -105,6 +105,7 @@
     <map field="XAUDIO2_VOICE_SENDS::pSends" visibility="internal" />
     <map field="XAUDIO2_EFFECT_CHAIN::pEffectDescriptors" name="EffectDescriptorPointer" />
     <map field="XAUDIO2_EFFECT_CHAIN::pEffectDescriptors" visibility="internal" />
+    <map struct="XAUDIO2_BUFFER_WMA" visibility="internal"/>
     <map field="XAUDIO2_BUFFER_WMA::pDecodedPacketCumulativeBytes" name="DecodedPacketCumulativeBytesPointer" />
     <map field="XAUDIO2_VOICE_STATE::pCurrentBufferContext" name="Context" />
     <map field="XAUDIO2_VOICE_DETAILS::InputChannels" name="InputChanneCount" />
@@ -145,6 +146,8 @@
     <map param="IXAudio2::CreateSourceVoice::Flags" type="XAUDIO2_VOICE_FLAGS" />
     <map param="IXAudio2::CreateSubmixVoice::Flags" type="XAUDIO2_VOICE_SEND_FLAGS" />
     <map param="IXAudio2SourceVoice::Stop::Flags" type="XAUDIO2_PLAY_FLAGS" />
+    <map method="IXAudio2SourceVoice::SubmitSourceBuffer" visibility="internal" />
+    <map param="pBufferWMA" type="void" attribute="in"/>
     <map method="IXAudio2Voice::SetEffectChain" visibility="internal" property="false" />
     
     <context-clear />

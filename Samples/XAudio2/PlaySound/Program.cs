@@ -17,62 +17,86 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
 using System;
+using System.IO;
 using System.Threading;
-using SharpDX;
 using SharpDX.Multimedia;
 using SharpDX.XAudio2;
-using SharpDX.XAudio2.Fx;
-using BufferFlags = SharpDX.XAudio2.BufferFlags;
 
-namespace PlaySoundCustomXAPO
+namespace PLaySound
 {
     class Program
     {
         /// <summary>
-        /// SharpDX XAudio2 sample. Plays a generated sound with some reverb.
+        /// SharpDX XAudio2 sample. Plays wav/xwma/adpcm files from the disk.
         /// </summary>
-        [STAThread]
         static void Main(string[] args)
         {
             var xaudio2 = new XAudio2();
             var masteringVoice = new MasteringVoice(xaudio2);
 
-            var waveFormat = new WaveFormat(44100, 32, 2);
-            var sourceVoice = new SourceVoice(xaudio2, waveFormat);
+            PLaySoundFile(xaudio2, "1) Playing a standard WAV file", "ergon.wav");
+            PLaySoundFile(xaudio2, "2) Playing a XWMA file", "ergon.xwma");
+            PLaySoundFile(xaudio2, "3) Playing an ADPCM file", "ergon.adpcm.wav");
 
-            int bufferSize = waveFormat.ConvertLatencyToByteSize(60000);
-            var dataStream = new DataStream(bufferSize, true, true);
+            masteringVoice.Dispose();
+            xaudio2.Dispose();
+        }
 
-            int numberOfSamples = bufferSize/waveFormat.BlockAlign;
-            for (int i = 0; i < numberOfSamples; i++)
-            {
-                double vibrato = Math.Cos(2 * Math.PI * 10.0 * i / waveFormat.SampleRate);
-                float value = (float) (Math.Cos(2*Math.PI*(220.0 + 4.0*vibrato)*i/waveFormat.SampleRate)*0.5); 
-                dataStream.Write(value);
-                dataStream.Write(value);
-            }
-            dataStream.Position = 0;
-
-            var audioBuffer = new AudioBuffer {Stream = dataStream, Flags = BufferFlags.EndOfStream, AudioBytes = bufferSize};
-
-            var reverb = new Reverb();
-            var effectDescriptor = new EffectDescriptor(reverb);
-            sourceVoice.SetEffectChain(effectDescriptor);
-            sourceVoice.EnableEffect(0);
-
-            sourceVoice.SubmitSourceBuffer(audioBuffer, null);
-
+        /// <summary>
+        /// Play a sound file. Supported format are Wav(pcm+adpcm) and XWMA
+        /// </summary>
+        /// <param name="device">The device.</param>
+        /// <param name="text">Text to display</param>
+        /// <param name="fileName">Name of the file.</param>
+        static void PLaySoundFile(XAudio2 device, string text, string fileName)
+        {
+            Console.WriteLine("{0} => {1} (Press esc to skip)", text, fileName);
+            var stream = new SoundStream(File.OpenRead(fileName));
+            var waveFormat = stream.Format;
+            var buffer = new AudioBuffer
+                             {
+                                 Stream = stream.ToDataStream(),
+                                 AudioBytes = (int) stream.Length,
+                                 Flags = BufferFlags.EndOfStream
+                             };
+            stream.Close();
+            
+            var sourceVoice = new SourceVoice(device, waveFormat, true);
+            // Adds a sample callback to check that they are working on source voices
+            sourceVoice.BufferEnd += (context) => Console.WriteLine(" => event received: end of buffer");
+            sourceVoice.SubmitSourceBuffer(buffer, stream.DecodedPacketsInfo);
             sourceVoice.Start();
 
-            Console.WriteLine("Play sound");
-            for(int i = 0; i < 60; i++)
+            int count = 0;
+            while (sourceVoice.State.BuffersQueued > 0 && !IsKeyPressed(ConsoleKey.Escape))
             {
-                Console.Write(".");
-                Console.Out.Flush();
-                Thread.Sleep(1000);
+                if (count == 50)
+                {
+                    Console.Write(".");
+                    Console.Out.Flush();
+                    count = 0;
+                }
+                Thread.Sleep(10);
+                count++;
             }
+            Console.WriteLine();
+
+            sourceVoice.DestroyVoice();
+            sourceVoice.Dispose();
+            buffer.Stream.Dispose();
+        }
+
+        /// <summary>
+        /// Determines whether the specified key is pressed.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified key is pressed; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsKeyPressed(ConsoleKey key)
+        {
+            return Console.KeyAvailable && Console.ReadKey(true).Key == key;
         }
     }
 }
