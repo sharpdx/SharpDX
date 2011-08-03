@@ -3,6 +3,10 @@
   <UsingTask AssemblyFile="$(SolutionDir)Source\Bin\SharpCli.exe" TaskName="SharpCli.InteropBuilderTask" />
   <Target Name="AfterBuild">
     <InteropBuilderTask FileName="$(TargetPath)"/>
-    <Copy SourceFiles="@(MainAssembly)" DestinationFiles="@(IntermediateAssembly)"/>
+
+    <!-- Copy back *.dll from bin/Debug|Release to obj/Debug/Release directory -->
+    <Copy SourceFiles="@(MainAssembly)" DestinationFolder="$(IntermediateOutputPath)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)"/>
+    <!-- Copy back *.pdb from bin/Debug|Release to obj/Debug/Release directory -->
+    <Copy SourceFiles="@(_DebugSymbolsOutputPath)" DestinationFiles="@(_DebugSymbolsIntermediatePath)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)" Condition="'$(_DebugSymbolsProduced)'=='true' and '$(SkipCopyingSymbolsToOutputDirectory)' != 'true'"/>
   </Target>
 </Project>

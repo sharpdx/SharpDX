@@ -34,7 +34,7 @@ namespace SharpCli
             try
             {
                 var program = new InteropApp();
-                // program.Logger = this.Log;
+                program.Logger = this.Log;
 
                 if (program.PatchFile(FileName))
                     Log.LogMessage(MessageImportance.High, "SharpCli patching assembly -> {0}", FileName);
