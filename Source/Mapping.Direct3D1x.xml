@@ -293,9 +293,9 @@
     <map interface="ID3D11(.+)" name-tmp="$1" />
     <map interface="ID3DX11(.+)" name-tmp="$1" />
     
-    <remove interface="ID3D10InfoQueue" />
+    <!--<remove interface="ID3D10InfoQueue" />
     <remove struct="D3D10_INFO_QUEUE_FILTER" />
-    <remove struct="D3D10_INFO_QUEUE_FILTER_DESC" />
+    <remove struct="D3D10_INFO_QUEUE_FILTER_DESC" />-->
     <map method="ID3D(\d+)ClassInstance::GetInstanceName" visibility="internal" />
     <map method="ID3D(\d+)ClassInstance::GetTypeName" visibility="internal" />
     <map param="ID3D(\d+)Device::CheckFormatSupport::pFormatSupport" type="D3D$1_FORMAT_SUPPORT" return="true" />

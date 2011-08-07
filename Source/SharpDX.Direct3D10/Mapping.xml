@@ -126,7 +126,7 @@
     <map enum="D3D10_FEATURE_LEVEL1" name="FeatureLevel" />
     <map enum-item="D3D10_FEATURE_LEVEL_(.*)" name="Level_$1" />
     <remove enum="_D3DX10_ERR" />
-    <remove enum="D3D10_MESSAGE_.*" />
+    <!--<remove enum="D3D10_MESSAGE_.*" />-->
     <map enum="D3DX10_NORMALMAP_FLAG" flags="true" none="false" />
     <map enum="D3DX10_NORMALMAP_INVERTSIGN" name="InvertSign" />
     <map enum="_D3DX10_MESH" name="MeshFlags" />
@@ -170,7 +170,7 @@
     <remove struct="D3D10_SHADER_DEBUG_FILE_INFO" />
     <remove struct="D3D10_SHADER_DEBUG_INFO" />
     <remove struct="D3DX10_INTERSECT_INFO" />
-    <remove struct="D3D10_MESSAGE" />
+    <!--<remove struct="D3D10_MESSAGE" />-->
     <remove struct="D3DX10_WELD_EPSILONS" />
     <map struct="D3D10_BLEND_DESC1" name="BlendStateDescription1" />
     <map field="D3D10_BLEND_DESC1?::BlendEnable" name="IsBlendEnabled" />
