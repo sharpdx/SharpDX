@@ -71,8 +71,8 @@ namespace SharpDX.Direct2D1
             result.M12 = matrix.M12;
             result.M21 = matrix.M21;
             result.M22 = matrix.M22;
-            result.M31 = matrix.M31;
-            result.M32 = matrix.M32;
+            result.M31 = matrix.M41;
+            result.M32 = matrix.M42;
             return result;
         }
 
