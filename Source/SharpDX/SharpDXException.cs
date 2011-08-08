@@ -38,8 +38,7 @@ namespace SharpDX
         public SharpDXException()
             : base("A SharpDX exception occurred.")
         {
-            Result result = new Result(-2147467259);
-            this.m_Result = result;
+            this.m_Result = Result.Fail;
         }
 
         /// <summary>
@@ -47,7 +46,18 @@ namespace SharpDX
         /// </summary>
         /// <param name = "result">The result code that caused this exception.</param>
         public SharpDXException(Result result)
-            : base(result.ToString())
+            : this(result, result.ToString())
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:SharpDX.SharpDXException"/> class.
+        /// </summary>
+        /// <param name="result">The error result code.</param>
+        /// <param name="message">The message describing the exception.</param>
+        /// <param name="args">formatting arguments</param>
+        public SharpDXException(Result result, string message, params object[] args)
+            : base(string.Format(message, args))
         {
             this.m_Result = result;
         }
@@ -57,11 +67,8 @@ namespace SharpDX
         /// </summary>
         /// <param name = "message">The message describing the exception.</param>
         /// <param name="args">formatting arguments</param>
-        public SharpDXException(string message, params object[] args)
-            : base(string.Format(message, args))
+        public SharpDXException(string message, params object[] args) : this(Result.Fail, message, args)
         {
-            Result result = new Result(-2147467259);
-            this.m_Result = result;
         }
 
         /// <summary>
@@ -86,8 +93,7 @@ namespace SharpDX
         public SharpDXException(string message, Exception innerException, params object[] args)
             : base(string.Format(message, args), innerException)
         {
-            Result result = new Result(-2147467259);
-            this.m_Result = result;
+            this.m_Result = Result.Fail;
         }
 
         /// <summary>

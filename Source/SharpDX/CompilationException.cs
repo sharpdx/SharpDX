@@ -18,34 +18,42 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using SharpDX.Diagnostics;
-
 namespace SharpDX
 {
     /// <summary>
-    /// Global configuration.
+    /// A compilation exception.
     /// </summary>
-    public class Configuration
+    public class CompilationException : SharpDXException
     {
         /// <summary>
-        /// Enables or disables object tracking. Default is disabled (false).
+        /// Initializes a new instance of the <see cref="CompilationException"/> class.
         /// </summary>
-        /// <remarks>
-        /// Object Tracking is used to track COM object lifecycle creation/dispose. When this option is enabled
-        /// objects can be tracked using <see cref="ObjectTracker"/>. Using Object tracking has a significant
-        /// impact on performance and should be used only while debugging.
-        /// </remarks>
-        public static bool EnableObjectTracking = false;
+        /// <param name="message">The message.</param>
+        public CompilationException(string message) : base(message, (object[])null)
+        {
+        }
 
         /// <summary>
-        /// Enables or disables release of ComObject on finalizer. Default is enabled (true).
+        /// Initializes a new instance of the <see cref="CompilationException"/> class.
         /// </summary>
-        public static bool EnableReleaseOnFinalizer = true;
+        /// <param name="errorCode">The error code.</param>
+        /// <param name="message">The message.</param>
+        public CompilationException(Result errorCode, string message) : base(errorCode, message, null)
+        {
+        }
 
         /// <summary>
-        /// Throws a <see cref="CompilationException"/> when a shader or effect compilation error occured. Default is enabled (true).
+        /// Checks the specified error code and error message.
         /// </summary>
-        public static bool ThrowOnShaderCompileError = true;
+        /// <param name="errorCode">The error code.</param>
+        /// <param name="errorMessage">The error message.</param>
+        /// <returns>A CompilationException or null otherwise</returns>
+        public static CompilationException Check(Result errorCode, string errorMessage)
+        {
+            if (!Configuration.ThrowOnShaderCompileError)
+                return null;
+
+            return new CompilationException(errorCode, errorMessage);
+        }
     }
 }
-

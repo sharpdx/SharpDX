@@ -111,6 +111,7 @@
     <Compile Include="ComObject.cs" />
     <Compile Include="ComObjectCallback.cs" />
     <Compile Include="ComObjectCallbackNative.cs" />
+    <Compile Include="CompilationException.cs" />
     <Compile Include="Component.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="CppObject.cs" />
