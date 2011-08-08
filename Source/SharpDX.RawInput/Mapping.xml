@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+-->
+<config id="sharpdx-rawinput" depends="sharpdx" xmlns="urn:SharpGen.Config">
+  
+  <namespace>SharpDX.RawInput</namespace>
+  <assembly>SharpDX.RawInput</assembly>
+
+  <include file="winuser.h">
+    <attach>RAWINPUTHEADER</attach>
+    <attach>RAWMOUSE</attach>
+    <attach>RAWKEYBOARD</attach>
+    <attach>RAWHID</attach>
+    <attach>RAWINPUT</attach>
+    <attach>RID_DEVICE_INFO_MOUSE</attach>
+    <attach>RID_DEVICE_INFO_KEYBOARD</attach>
+    <attach>RID_DEVICE_INFO_HID</attach>
+    <attach>RID_DEVICE_INFO</attach>
+    <attach>RAWINPUT_INNER_0</attach>
+
+    <attach>GetRawInputData</attach>
+    <attach>GetRawInputDeviceInfo</attach>
+    <attach>GetRawInputBuffer</attach>
+    <attach>GetRawInputDeviceList</attach>
+    <attach>GetRegisteredRawInputDevices</attach>
+    <attach>RegisterRawInputDevices</attach>
+  </include>
+  
+  <naming />
+  
+  <extension>
+    <context>sharpdx-rawinput</context>
+    <context>sharpdx-rawinput-ext</context>
+    <context>winuser</context>
+
+    <create-cpp enum="RAW_DEVICE_FLAGS" macro="RIDEV_.*"/>
+    <create-cpp enum="RAW_DEVICE_TYPE" macro="RIM_.*"/>
+    <create-cpp enum="RAW_SCAN_CODE_FLAGS" macro="RI_KEY_.*"/>
+    <create-cpp enum="RAW_KEY_STATE" macro="WM.*KEY.*"/>
+    <create-cpp enum="RAW_MOUSE_BUTTON_FLAGS" macro="RI_MOUSE_.*"/>
+    <create-cpp enum="RAW_MOUSE_MODE" macro="MOUSE_.*"/>
+
+    <create class="RawInput"/>
+
+    <context-clear />
+  </extension>
+
+  <bindings>
+  </bindings>
+
+  <mapping>
+    <context>sharpdx-rawinput</context>
+    <context>sharpdx-rawinput-ext</context>
+    <context>winuser</context>
+    <!--
+    // *****************************************************************
+    // RawInput Enumerations
+    // *****************************************************************
+    -->
+    <map enum="RAW_(.*)" name-tmp="$1"/>
+
+    <map enum="RAW_DEVICE_FLAGS" flag="true" none="true"/>
+    <map enum="RAW_SCAN_CODE_FLAGS" flag="true" none="false"/>
+    <map enum="RAW_MOUSE_BUTTON_FLAGS" flag="true" none="true"/>
+    <map enum="RAW_MOUSE_MODE" flag="true" none="false"/>
+
+    <!--
+    // *****************************************************************
+    // RawInput Structures
+    // *****************************************************************
+    -->
+    <map struct="RAW_(.*)" name-tmp="$1"/>
+    <map struct="RID_(.*)" name-tmp="$1"/>
+       
+    <!--
+    // *****************************************************************
+    // RawInput Functions
+    // *****************************************************************
+    -->
+    <map function="GetRawInputData" dll='"user32.dll"' group="SharpDX.RawInput.RawInput" />
+    <map function="GetRawInputDeviceInfo" dll='"user32.dll"' group="SharpDX.RawInput.RawInput" />
+    <map function="GetRawInputBuffer" dll='"user32.dll"' group="SharpDX.RawInput.RawInput" />
+    <map function="GetRawInputDeviceList" dll='"user32.dll"' group="SharpDX.RawInput.RawInput" />
+    <map function="GetRegisteredRawInputDevices" dll='"user32.dll"' group="SharpDX.RawInput.RawInput" />
+    <map function="RegisterRawInputDevices" dll='"user32.dll"' group="SharpDX.RawInput.RawInput" />
+
+    <context-clear />
+  </mapping>
+</config>
