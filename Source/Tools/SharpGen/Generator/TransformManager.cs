@@ -859,7 +859,12 @@ namespace SharpGen.Generator
                     return regExp.Value;
             }
 
-            return _mapIncludeToNamespace[element.ParentInclude.Name];
+            CsNamespace ns;
+            if (!_mapIncludeToNamespace.TryGetValue(element.ParentInclude.Name, out ns))
+            {
+                Logger.Fatal("Unable to find namespace for element [{0}] from include [{1}]", element, element.ParentInclude.Name);
+            }
+            return ns;
         }
 
         /// <summary>
