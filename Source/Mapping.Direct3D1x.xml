@@ -149,6 +149,14 @@
     <map struct="D3D(\d+)(.*)" name-tmp="$2" />
     <map struct="D3DX(\d+)(.*)" name-tmp="$2" />
 
+    <map struct="D3D(\d+)_MESSAGE" marshal="true" new="false" marshalto="true" />
+    <map field="D3D(\d+)_MESSAGE::pDescription" name="Description"/>
+    <map field="D3D(\d+)_MESSAGE::DescriptionByteLength" visibility="internal"/>
+
+    <map struct="D3D(\d+)_INFO_QUEUE_FILTER" name="InfoQueueFilter" native="true" struct-to-class="true" marshalto="true" />
+    <map struct="D3D(\d+)_INFO_QUEUE_FILTER_DESC" name="InfoQueueFilterDescription"  native="true" marshal="true" struct-to-class="true" marshalto="true" />
+    <map field="D3D(\d+)_INFO_QUEUE_FILTER_DESC::.*" visibility="internal"/>
+
     <map struct="D3D(\d+)_BOX" name="ResourceRegion" />
     <map struct="D3D(\d+)_COUNTER_INFO" name="CounterCapabilities" />
     <map struct="D3D(\d+)_BLEND_DESC" name="BlendStateDescription" />
@@ -296,6 +304,13 @@
     <!--<remove interface="ID3D10InfoQueue" />
     <remove struct="D3D10_INFO_QUEUE_FILTER" />
     <remove struct="D3D10_INFO_QUEUE_FILTER_DESC" />-->
+    <map method="ID3D(\d+)InfoQueue::GetMessageW" visibility="internal"/>
+    <map param="pMessage" type="void" attribute="in"/>
+    <map method="ID3D(\d+)InfoQueue::GetStorageFilter" visibility="internal"/>
+    <map param="pFilter" type="void" attribute="in"/>
+    <map method="ID3D(\d+)InfoQueue::GetRetrievalFilter" visibility="internal"/>
+    <map param="pFilter" type="void" attribute="in"/>
+    
     <map method="ID3D(\d+)ClassInstance::GetInstanceName" visibility="internal" />
     <map method="ID3D(\d+)ClassInstance::GetTypeName" visibility="internal" />
     <map param="ID3D(\d+)Device::CheckFormatSupport::pFormatSupport" type="D3D$1_FORMAT_SUPPORT" return="true" />

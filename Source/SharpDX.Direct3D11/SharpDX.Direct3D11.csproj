@@ -143,8 +143,11 @@
     <Compile Include="HullShader.cs" />
     <Compile Include="ImageInformation.cs" />
     <Compile Include="ImageLoadInformation.cs" />
+    <Compile Include="InfoQueue.cs" />
+    <Compile Include="InfoQueueFilterDescription.cs" />
     <Compile Include="InputElement.cs" />
     <Compile Include="InputLayout.cs" />
+    <Compile Include="Message.cs" />
     <Compile Include="PixelShader.cs" />
     <Compile Include="Predicate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
