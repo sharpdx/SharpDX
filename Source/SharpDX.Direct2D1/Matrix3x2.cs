@@ -18,12 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.using System;
 using System.Runtime.InteropServices;
-using SharpDX;
 
 namespace SharpDX.Direct2D1
 {
     /// <summary>
-    /// Direct2D Matrix 3x2. Use <see cref="SharpDX.Matrix"/> and explicit cast to <see cref="Matrix3x2"/>.
+    /// Direct2D Matrix 3x2. Use <see cref="SharpDX.Matrix"/> and implicit cast to <see cref="Matrix3x2"/>.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct Matrix3x2
@@ -59,21 +58,21 @@ namespace SharpDX.Direct2D1
         public float M32;
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="SharpDX.Matrix"/> to <see cref="SharpDX.Direct2D1.Matrix3x2"/>.
+        /// Performs an implicit conversion from <see cref="SharpDX.Matrix"/> to <see cref="SharpDX.Direct2D1.Matrix3x2"/>.
         /// </summary>
         /// <param name="matrix">The matrix.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator Matrix3x2(Matrix matrix)
+        public static implicit operator Matrix3x2(Matrix matrix)
         {
-            Matrix3x2 result = new Matrix3x2();
-
-            result.M11 = matrix.M11;
-            result.M12 = matrix.M12;
-            result.M21 = matrix.M21;
-            result.M22 = matrix.M22;
-            result.M31 = matrix.M41;
-            result.M32 = matrix.M42;
-            return result;
+            return new Matrix3x2
+                                   {
+                                       M11 = matrix.M11,
+                                       M12 = matrix.M12,
+                                       M21 = matrix.M21,
+                                       M22 = matrix.M22,
+                                       M31 = matrix.M41,
+                                       M32 = matrix.M42
+                                   };
         }
 
         /// <summary>
@@ -84,10 +83,7 @@ namespace SharpDX.Direct2D1
         {
             get
             {
-                Matrix3x2 result = new Matrix3x2();
-                result.M11 = 1f;
-                result.M22 = 1f;
-                return result;
+                return new Matrix3x2 {M11 = 1f, M22 = 1f};
             }
         }
     }
