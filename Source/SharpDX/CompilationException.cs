@@ -29,7 +29,7 @@ namespace SharpDX
         /// Initializes a new instance of the <see cref="CompilationException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
-        public CompilationException(string message) : base(message, (object[])null)
+        public CompilationException(string message) : base(message)
         {
         }
 
@@ -38,7 +38,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="errorCode">The error code.</param>
         /// <param name="message">The message.</param>
-        public CompilationException(Result errorCode, string message) : base(errorCode, message, null)
+        public CompilationException(Result errorCode, string message) : base(errorCode, message)
         {
         }
 

@@ -55,6 +55,17 @@ namespace SharpDX
         /// </summary>
         /// <param name="result">The error result code.</param>
         /// <param name="message">The message describing the exception.</param>
+        public SharpDXException(Result result, string message)
+            : base(message)
+        {
+            this.m_Result = result;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:SharpDX.SharpDXException"/> class.
+        /// </summary>
+        /// <param name="result">The error result code.</param>
+        /// <param name="message">The message describing the exception.</param>
         /// <param name="args">formatting arguments</param>
         public SharpDXException(Result result, string message, params object[] args)
             : base(string.Format(message, args))
