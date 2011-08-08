@@ -17,20 +17,21 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 namespace SharpDX.XACT3
 {
     /// <summary>
-    /// SoundBank notification parameters.
+    /// Wavebank notification parameters.
     /// </summary>
-    /// <unmanaged>XACT_NOTIFICATION_SOUNDBANK</unmanaged>	
-    public class SoundBankNotification : Notification
+    /// <unmanaged>XACT_NOTIFICATION_WAVEBANK</unmanaged>
+    public class WaveBankNotification : Notification
     {
-        internal unsafe SoundBankNotification(RawNotification* rawNotification)
+        internal unsafe WaveBankNotification(RawNotification* rawNotification)
             : base(rawNotification)
         {
-            SoundBank = CppObject.FromPointer<SoundBank>(rawNotification->Data.SoundBank.SoundBankPointer);
+            WaveBank = CppObject.FromPointer<WaveBank>(rawNotification->Data.WaveBank.WaveBankPointer);
         }
 
-        public SoundBank SoundBank { get; set; }
+        public WaveBank WaveBank { get; set; }
     }
 }

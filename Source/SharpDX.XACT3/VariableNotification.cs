@@ -25,6 +25,17 @@ namespace SharpDX.XACT3
     /// <unmanaged>XACT_NOTIFICATION_VARIABLE</unmanaged>
     public class VariableNotification : Notification
     {
+        internal unsafe VariableNotification(RawNotification* rawNotification)
+            : base(rawNotification)
+        {
+            CueIndex = rawNotification->Data.Variable.CueIndex;
+            SoundBank = CppObject.FromPointer<SoundBank>(rawNotification->Data.Variable.SoundBankPointer);
+            Cue = CppObject.FromPointer<Cue>(rawNotification->Data.Variable.CuePointer);
+            VariableIndex = rawNotification->Data.Variable.VariableIndex;
+            VariableValue = rawNotification->Data.Variable.VariableValue;
+            IsLocal = rawNotification->Data.Variable.Local;
+        }
+
         public int CueIndex { get;set; }
 
         public SoundBank SoundBank { get; set; }

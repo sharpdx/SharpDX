@@ -16,8 +16,8 @@ Global Settings
     Header File = C:\Code\SharpDX\Samples\XACT3\PlaySound\TestWithSharpDX.h;
     Exclude Category Names = 0;
     Exclude Variable Names = 0;
-    Last Modified Low = 3928617135;
-    Last Modified High = 30167597;
+    Last Modified Low = 836448716;
+    Last Modified High = 30168543;
 
     Category
     {
@@ -215,56 +215,6 @@ Global Settings
         Max = 1000000.000000;
     }
 
-    Variable
-    {
-        Name = FilterCuttof;
-        Public = 1;
-        Global = 0;
-        Internal = 0;
-        External = 0;
-        Monitored = 1;
-        Reserved = 0;
-        Read Only = 0;
-        Time = 0;
-        Value = 1000.000000;
-        Initial Value = 20000.000000;
-        Min = 1000.000000;
-        Max = 20000.000000;
-    }
-
-    RPC
-    {
-        Name = Filter;
-
-        RPC Curve
-        {
-            Name = 1::c2d12a60-da69-413b-86c4-be871560b9af;
-            Property = 3;
-            Sound = 0;
-            Line Color = 4280027050;
-            Viewable = 1;
-
-            Variable Entry
-            {
-                Name = FilterCuttof;
-            }
-
-            RPC Point
-            {
-                X = 33.333332;
-                Y = 10000.000000;
-                Curve = 0;
-            }
-
-            RPC Point
-            {
-                X = 66.666664;
-                Y = 10000.000000;
-                Curve = 0;
-            }
-        }
-    }
-
     Compression Preset
     {
         Name = Compression Preset;
@@ -292,6 +242,8 @@ Wave Bank
     Xbox Bank Last Modified High = 0;
     PC Bank Last Modified Low = 3269084326;
     PC Bank Last Modified High = 30167594;
+    Header Last Modified Low = 0;
+    Header Last Modified High = 0;
     Bank Last Revised Low = 3190099808;
     Bank Last Revised High = 30167594;
 
@@ -327,6 +279,8 @@ Sound Bank
     Windows File = Ergon.xsb;
     Xbox Bank Path Edited = 0;
     Windows Bank Path Edited = 1;
+    Bank Last Modified Low = 836578724;
+    Bank Last Modified High = 30168543;
     Header Last Modified High = 0;
     Header Last Modified Low = 0;
 
@@ -340,11 +294,6 @@ Sound Bank
         Category Entry
         {
             Name = Default;
-        }
-
-        RPC Entry
-        {
-            RPC Name = Filter;
         }
 
         Track
@@ -382,12 +331,6 @@ Sound Bank
                     Weight = 255;
                     Weight Min = 0;
                 }
-            }
-
-            RPC Curve Entry
-            {
-                RPC Name = Filter;
-                RPC Curve Name = 1::c2d12a60-da69-413b-86c4-be871560b9af;
             }
         }
     }

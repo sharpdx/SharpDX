@@ -26,5 +26,9 @@ namespace SharpDX.XACT3
     /// <unmanaged>XACT_NOTIFICATION_GUI</unmanaged>
     public class GuiNotification : Notification
     {
+        internal unsafe GuiNotification(RawNotification* rawNotification)
+            : base(rawNotification)
+        {
+        }
     }
 }

@@ -42,9 +42,11 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AudioEngineSettings.cs" />
+    <Compile Include="Cue.cs" />
     <Compile Include="GuiNotification.cs" />
     <Compile Include="CueNotification.cs" />
-    <Compile Include="Engine.cs" />
+    <Compile Include="AudioEngine.cs" />
     <Compile Include="Generated\Enumerations.cs" />
     <Compile Include="Generated\Functions.cs" />
     <Compile Include="Generated\Interfaces.cs" />
@@ -58,8 +60,10 @@
     <Compile Include="SoundBankNotification.cs" />
     <Compile Include="SoundProperties.cs" />
     <Compile Include="VariableNotification.cs" />
+    <Compile Include="Wave.cs" />
     <Compile Include="WaveBank.cs" />
     <Compile Include="WaveBankMiniWaveFormat.cs" />
+    <Compile Include="WavebankNotification.cs" />
     <Compile Include="WaveBankState.cs" />
     <Compile Include="WaveNotification.cs" />
   </ItemGroup>

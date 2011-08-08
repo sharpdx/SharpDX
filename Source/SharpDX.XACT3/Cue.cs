@@ -19,29 +19,13 @@
 // THE SOFTWARE.
 
 using System;
-using System.IO;
 
 namespace SharpDX.XACT3
 {
-    public partial class SoundBank
+    public partial class Cue
     {
-        private DataStream soundBankSourceStream;
         private AudioEngine audioEngine;
-        private readonly bool isAudioEngineReadonly;
-        
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SoundBank"/> class from a soundbank stream.
-        /// </summary>
-        /// <param name="audioEngine">The engine.</param>
-        /// <param name="stream">The soundbank stream stream.</param>
-        /// <unmanaged>HRESULT IXACT3Engine::CreateSoundBank([In] const void* pvBuffer,[In] unsigned int dwSize,[In] unsigned int dwFlags,[In] unsigned int dwAllocAttributes,[Out, Fast] IXACT3SoundBank** ppSoundBank)</unmanaged>
-        public SoundBank(AudioEngine audioEngine, Stream stream)
-        {
-            this.audioEngine = audioEngine;
-            isAudioEngineReadonly = true;
-            soundBankSourceStream = stream as DataStream ?? new DataStream(Utilities.ReadStream(stream), true, true);
-            audioEngine.CreateSoundBank(soundBankSourceStream.DataPointer, (int)soundBankSourceStream.Length, 0, 0, this);
-        }
+        internal bool IsAudioEngineReadonly;
 
         /// <summary>
         /// Gets or sets the audio engine.
@@ -54,42 +38,14 @@ namespace SharpDX.XACT3
             get { return audioEngine; }
             set
             {
-                if (isAudioEngineReadonly)
+                if (IsAudioEngineReadonly)
                     throw new InvalidOperationException("Cannot change an initialized AudioEngine with this instance");
-                
                 audioEngine = value;
             }
         }
 
-
-        public SharpDX.XACT3.Cue Play(short cueIndex)
-        {
-            return Play(cueIndex, 0);
-        }
-
-        public SharpDX.XACT3.Cue Play(short cueIndex, int timeOffset)
-        {
-            var cue = Play(cueIndex, 0, timeOffset);
-            cue.AudioEngine = AudioEngine;
-            cue.IsAudioEngineReadonly = true;
-            return cue;
-        }
-
-        public SharpDX.XACT3.Cue Prepare(short cueIndex)
-        {
-            return Prepare(cueIndex, 0);
-        }
-
-        public SharpDX.XACT3.Cue Prepare(short cueIndex, int timeOffset)
-        {
-            var cue = Prepare(cueIndex, 0, timeOffset);
-            cue.AudioEngine = AudioEngine;
-            cue.IsAudioEngineReadonly = true;
-            return cue;
-        }
-
         /// <summary>
-        /// Occurs when a Soundbank event occurs.
+        /// Occurs when a cue event occurs.
         /// </summary>
         /// <remarks>
         /// Use <see cref="RegisterNotification"/> to register types.
@@ -116,9 +72,9 @@ namespace SharpDX.XACT3
             if (AudioEngine == null)
                 throw new InvalidOperationException("AudioEngine attached to this instance cannot be null");
 
-            var notificationDescription = AudioEngine.VerifyRegister(notificationType, typeof(SoundBank),
+            var notificationDescription = AudioEngine.VerifyRegister(notificationType, typeof (Cue),
                                                                      OnNotificationDelegate);
-            notificationDescription.SoundBankPointer = NativePointer;
+            notificationDescription.CuePointer = NativePointer;
             AudioEngine.RegisterNotification(ref notificationDescription);
         }
 
@@ -131,40 +87,10 @@ namespace SharpDX.XACT3
             if (AudioEngine == null)
                 throw new InvalidOperationException("AudioEngine attached to this instance cannot be null");
 
-            var notificationDescription = AudioEngine.VerifyRegister(notificationType, typeof(SoundBank),
+            var notificationDescription = AudioEngine.VerifyRegister(notificationType, typeof(Cue),
                                                                      OnNotificationDelegate);
-            notificationDescription.SoundBankPointer = NativePointer;
+            notificationDescription.CuePointer = NativePointer;
             AudioEngine.UnRegisterNotification(ref notificationDescription);
         }
-
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (soundBankSourceStream != null)
-                {
-                    soundBankSourceStream.Dispose();
-                    soundBankSourceStream = null;
-                }
-            }
-            base.Dispose(disposing);
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether this instance is referenced by at least one valid cue instance or other client. For example, the game itself might reference the sound bank. 
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance is in use; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsInUse
-        {
-            get
-            {
-                int state;
-                GetState(out state);
-                return state != 0;
-            }
-        }        
     }
 }

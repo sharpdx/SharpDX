@@ -31,7 +31,7 @@
       #undef _X86_
     </pre>
     <post>
-      #define MACRO_XACT_STATE_CREATED         XACT_STATE_CREATED      
+      #define MACRO_XACT_STATE_CREATED         XACT_STATE_CREATED
       #define MACRO_XACT_STATE_PREPARING       XACT_STATE_PREPARING
       #define MACRO_XACT_STATE_PREPARED        XACT_STATE_PREPARED
       #define MACRO_XACT_STATE_PLAYING         XACT_STATE_PLAYING
@@ -66,6 +66,9 @@
       #define MACRO_XACT_NOTIFICATIONTYPE_WAVEBANKPREPARED   XACTNOTIFICATIONTYPE_WAVEBANKPREPARED
       #define MACRO_XACT_NOTIFICATIONTYPE_WAVEBANKSTREAMING_INVALIDCONTENT   XACTNOTIFICATIONTYPE_WAVEBANKSTREAMING_INVALIDCONTENT
 
+      #define MACRO_XACT_FLAG_UNITS_MS   XACT_FLAG_UNITS_MS
+      #define MACRO_XACT_FLAG_UNITS_SAMPLES      XACT_FLAG_UNITS_SAMPLES
+      
       #define _X86_
     </post>
   </include>
@@ -86,8 +89,9 @@
     <create-cpp enum="XACT_CREATION_FLAGS" macro="MACRO_XACT_FLAG_API_.*" />
     <create-cpp enum="WAVEBANKMINIFORMAT_TAG" macro="WAVEBANKMINIFORMAT_TAG_.*" />
     <create-cpp enum="XACT_NOTIFICATION_TYPE" macro="MACRO_XACT_NOTIFICATIONTYPE_.*" />
+    <create-cpp enum="XACT_CONTENT_PREPARATION_FLAGS" macro="MACRO_XACT_FLAG_UNITS.*" />
 
-    <const from-guid="CLSID_XACT(.*Engine)" class="SharpDX.XACT3.Engine" type="System.Guid" name="$1Guid" visibility="internal">new System.Guid("$1")</const>
+    <const from-guid="CLSID_XACT(.*Engine)" class="SharpDX.XACT3.AudioEngine" type="System.Guid" name="$1Guid" visibility="internal">new System.Guid("$1")</const>
 
     <create class="XACT3"/>
     
@@ -113,6 +117,7 @@
     <map enum="XACT_WAVE_STATE" flags="true" none="false"/>
     <map enum="XACT_STOP_FLAGS" flags="true" none="false"/>
     <map enum="XACT_CREATION_FLAGS" flags="true" none="true"/>
+    <map enum="XACT_CONTENT_PREPARATION_FLAGS" flags="true" none="false"/>
     <map enum="WAVEBANKMINIFORMAT_TAG" name="WaveBankMiniFormatTag"/>
 
     <map enum-item="XACT_CUESTATE_(.*)" name-tmp="$1"/>
@@ -122,6 +127,26 @@
     <map enum-item="MACRO_XACT_STATE_INUSE" name="InUse"/>
     <map enum-item="MACRO_XACT_STATE_PREPAREFAILED" name="PrepareFailed"/>
     <map enum-item="MACRO_XACT_FLAG_API_(.*)" name-tmp="$1"/>
+    <map enum-item="MACRO_XACT_FLAG_(UNITS_.*)" name-tmp="$1"/>
+
+    <map enum-item="MACRO_XACT_NOTIFICATIONTYPE_CUEPREPARED" name="CuePrepared"/>
+    <map enum-item="MACRO_XACT_NOTIFICATIONTYPE_CUEPLAY" name="CuePlay"/>
+    <map enum-item="MACRO_XACT_NOTIFICATIONTYPE_CUESTOP" name="CueStop"/>
+    <map enum-item="MACRO_XACT_NOTIFICATIONTYPE_CUEDESTROYED" name="CueDestroyed"/>
+    <map enum-item="MACRO_XACT_NOTIFICATIONTYPE_MARKER" name="Marker"/>
+    <map enum-item="MACRO_XACT_NOTIFICATIONTYPE_SOUNDBANKDESTROYED" name="SoundBankDestroyed"/>
+    <map enum-item="MACRO_XACT_NOTIFICATIONTYPE_WAVEBANKDESTROYED" name="WaveBankDestroyed"/>
+    <map enum-item="MACRO_XACT_NOTIFICATIONTYPE_LOCALVARIABLECHANGED" name="LocalVariableChanged"/>
+    <map enum-item="MACRO_XACT_NOTIFICATIONTYPE_GLOBALVARIABLECHANGED" name="GlobalVariableChanged"/>
+    <map enum-item="MACRO_XACT_NOTIFICATIONTYPE_GUICONNECTED" name="GuiConnected"/>
+    <map enum-item="MACRO_XACT_NOTIFICATIONTYPE_GUIDISCONNECTED" name="GuiDisconnected"/>
+    <map enum-item="MACRO_XACT_NOTIFICATIONTYPE_WAVEPREPARED" name="WavePrepared"/>
+    <map enum-item="MACRO_XACT_NOTIFICATIONTYPE_WAVEPLAY" name="WavePlay"/>
+    <map enum-item="MACRO_XACT_NOTIFICATIONTYPE_WAVESTOP" name="WaveStop"/>
+    <map enum-item="MACRO_XACT_NOTIFICATIONTYPE_WAVELOOPED" name="WaveLooped"/>
+    <map enum-item="MACRO_XACT_NOTIFICATIONTYPE_WAVEDESTROYED" name="WaveDestroyed"/>
+    <map enum-item="MACRO_XACT_NOTIFICATIONTYPE_WAVEBANKPREPARED" name="WaveBankPrepared"/>
+    <map enum-item="MACRO_XACT_NOTIFICATIONTYPE_WAVEBANKSTREAMING_INVALIDCONTENT" name="WaveBankStreamingInvalidContent"/>
 
     <map enum-item="WAVEBANKMINIFORMAT_TAG_(.*)" name-tmp="$1"/>
 
@@ -157,6 +182,7 @@
     <map field="XACT_RENDERER_DETAILS::rendererID" name="RendererId"/>
     <map field="XACT_RENDERER_DETAILS::defaultDevice" name="IsDefault"/>
 
+    <map struct="XACT_RUNTIME_PARAMETERS" name="AudioEngineSettings" native="true" struct-to-class="true"/>
     <map field="XACT_RUNTIME_PARAMETERS::pRendererID" name="RendererId"/>
     <map field="XACT_RUNTIME_PARAMETERS::pXAudio2" visibility="internal"/>
     <map field="XACT_RUNTIME_PARAMETERS::pMasteringVoice" visibility="internal"/>    
@@ -199,6 +225,7 @@
     // *****************************************************************
     -->
     <map interface="IXACT3(.*)" name-tmp="$1" />
+    <map interface="IXACT3Engine" name="AudioEngine" />
 
     <!-- Rename parameters -->
     <map param="IXACT3.*::.*::[undwszf]+([A-Z].*)" name-tmp="$1"/>
@@ -228,7 +255,6 @@
     <map param="IXACT3Engine::Create.*::pp.*" attribute="out fast"/>
     <map method="IXACT3Engine::Prepare.*" visibility="internal"/>
     <map param="IXACT3Engine::Prepare.*::pp.*" attribute="out fast"/>
-
     <map method="IXACT3Engine::Initialize" visibility="internal"/>
 
     <!-- IXACT3SoundBank -->
@@ -237,6 +263,13 @@
     <map param="IXACT3SoundBank::.*::ppCue" return="true"/>   
     <map method="IXACT3SoundBank::Play" visibility="internal"/>
     <map method="IXACT3SoundBank::Prepare" visibility="internal"/>
+
+    <!-- IXACT3WaveBank -->
+    <map param="IXACT3WaveBank::.*::ppWave" return="true"/>
+    <map method="IXACT3WaveBank::Play" visibility="internal" name="Play_"/>
+    <map param="dwFlags" type="XACT_CONTENT_PREPARATION_FLAGS"/>
+    <map method="IXACT3WaveBank::Prepare" visibility="internal" name="Prepare_"/>
+    <map param="dwFlags" type="XACT_CONTENT_PREPARATION_FLAGS"/>
 
     <!-- IXACT3Wave -->
     <map param="IXACT3Wave::GetState::pdwState" type="XACT_WAVE_STATE"/>

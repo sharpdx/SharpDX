@@ -26,6 +26,15 @@ namespace SharpDX.XACT3
     /// <unmanaged>XACT_NOTIFICATION_MARKER</unmanaged>
     public class MarkerNotification : Notification
     {
+        internal unsafe MarkerNotification(RawNotification* rawNotification)
+            : base(rawNotification)
+        {
+            CueIndex = rawNotification->Data.Marker.CueIndex;
+            SoundBank = CppObject.FromPointer<SoundBank>(rawNotification->Data.Marker.SoundBankPointer);
+            Cue = CppObject.FromPointer<Cue>(rawNotification->Data.Marker.CuePointer);
+            Marker = rawNotification->Data.Marker.Marker;
+        }
+
         public int CueIndex { get; set; }
 
         public SoundBank SoundBank { get; set; }

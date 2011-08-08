@@ -26,6 +26,17 @@ namespace SharpDX.XACT3
     /// <unmanaged>XACT_NOTIFICATION_WAVE</unmanaged>
     public class WaveNotification : Notification
     {
+        internal unsafe WaveNotification(RawNotification* rawNotification)
+            : base(rawNotification)
+        {
+            WaveBank= CppObject.FromPointer<WaveBank>(rawNotification->Data.Wave.WaveBankPointer);
+            WaveIndex = rawNotification->Data.Wave.WaveIndex;
+            CueIndex = rawNotification->Data.Wave.CueIndex;
+            SoundBank = CppObject.FromPointer<SoundBank>(rawNotification->Data.Wave.SoundBankPointer);
+            Cue = CppObject.FromPointer<Cue>(rawNotification->Data.Wave.CuePointer);
+            Wave = CppObject.FromPointer<Wave>(rawNotification->Data.Wave.WavePointer);
+        }
+
         public WaveBank WaveBank { get; set; }
 
         public int WaveIndex { get; set; }
