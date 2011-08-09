@@ -22,7 +22,7 @@ namespace SharpDX.RawInput
     /// <summary>
     /// RawInput Mouse event.
     /// </summary>
-    public class MouseInputEventArgs : RawInputEventArgsBase
+    public class MouseInputEventArgs : RawInputEventArgs
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MouseInputEventArgs"/> class.

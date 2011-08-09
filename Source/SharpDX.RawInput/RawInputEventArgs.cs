@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,53 +17,30 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+using System;
+
 namespace SharpDX.RawInput
 {
     /// <summary>
-    /// Describes the format of the raw input from a Human Interface Device (HID). 
+    /// RawInput event arguments base.
     /// </summary>
-    public class RawInputEventArgs : RawInputEventArgsBase
+    public abstract class RawInputEventArgs : EventArgs
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RawInputEventArgs"/> class.
-        /// </summary>
-        public RawInputEventArgs()
+        protected RawInputEventArgs()
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RawInputEventArgs"/> class.
-        /// </summary>
-        /// <param name="rawInput">The raw input.</param>
-        internal RawInputEventArgs(ref RawInput rawInput) : base(ref rawInput)
+        internal RawInputEventArgs(ref RawInput rawInput)
         {
-            Count = rawInput.Data.Hid.Count;
-            DataSize = rawInput.Data.Hid.SizeHid;
-            RawData = rawInput.Data.Hid.RawData;
+            Device = rawInput.Header.Device;
         }
 
         /// <summary>
-        /// Gets or sets the number of Hid structure in the <see cref="RawData"/>.
+        /// Gets or sets the RawInput device.
         /// </summary>
         /// <value>
-        /// The count.
+        /// The device.
         /// </value>
-        public int Count { get; set; }
-
-        /// <summary>
-        /// Gets or sets the size of the Hid structure in the <see cref="RawData"/>.
-        /// </summary>
-        /// <value>
-        /// The size of the data.
-        /// </value>
-        public int DataSize { get; set; }
-
-        /// <summary>
-        /// Gets or sets the raw data.
-        /// </summary>
-        /// <value>
-        /// The raw data.
-        /// </value>
-        public byte[] RawData { get; set; }
+        public IntPtr Device { get; set; }
     }
 }

@@ -46,7 +46,7 @@ namespace SharpDX.RawInput
         /// <summary>
         /// Occurs when [raw input].
         /// </summary>
-        public static event EventHandler<RawInputEventArgsBase> RawInput;
+        public static event EventHandler<RawInputEventArgs> RawInput;
 
         /// <summary>
         /// Gets the devices.
@@ -162,7 +162,7 @@ namespace SharpDX.RawInput
                 {
                     case DeviceType.HumanInputDevice:
                         if (RawInput != null)
-                            RawInput(null, new RawInputEventArgs(ref rawInput));
+                            RawInput(null, new HidInputEventArgs(ref rawInput));
                         break;
                     case DeviceType.Keyboard:
                         if (KeyboardInput != null)

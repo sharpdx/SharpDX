@@ -17,74 +17,53 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System.Windows.Forms;
-
 namespace SharpDX.RawInput
 {
     /// <summary>
-    /// RawInput Keyboard event.
+    /// Describes the format of the raw input from a Human Interface Device (HID). 
     /// </summary>
-    public class KeyboardInputEventArgs : RawInputEventArgs
+    public class HidInputEventArgs : RawInputEventArgs
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="KeyboardInputEventArgs"/> class.
+        /// Initializes a new instance of the <see cref="HidInputEventArgs"/> class.
         /// </summary>
-        public KeyboardInputEventArgs()
+        public HidInputEventArgs()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="KeyboardInputEventArgs"/> class.
+        /// Initializes a new instance of the <see cref="HidInputEventArgs"/> class.
         /// </summary>
         /// <param name="rawInput">The raw input.</param>
-        internal KeyboardInputEventArgs(ref RawInput rawInput)
-            : base(ref rawInput)
+        internal HidInputEventArgs(ref RawInput rawInput) : base(ref rawInput)
         {
-            Key = (Keys) rawInput.Data.Keyboard.VKey;
-            MakeCode = rawInput.Data.Keyboard.MakeCode;
-            ScanCodeFlags = rawInput.Data.Keyboard.Flags;
-            State = rawInput.Data.Keyboard.Message;
-            ExtraInformation = rawInput.Data.Keyboard.ExtraInformation;
+            Count = rawInput.Data.Hid.Count;
+            DataSize = rawInput.Data.Hid.SizeHid;
+            RawData = rawInput.Data.Hid.RawData;
         }
 
         /// <summary>
-        /// Gets or sets the key.
+        /// Gets or sets the number of Hid structure in the <see cref="RawData"/>.
         /// </summary>
         /// <value>
-        /// The key.
+        /// The count.
         /// </value>
-        public Keys Key { get; set; }
+        public int Count { get; set; }
 
         /// <summary>
-        /// Gets or sets the make code.
+        /// Gets or sets the size of the Hid structure in the <see cref="RawData"/>.
         /// </summary>
         /// <value>
-        /// The make code.
+        /// The size of the data.
         /// </value>
-        public int MakeCode { get; set; }
+        public int DataSize { get; set; }
 
         /// <summary>
-        /// Gets or sets the scan code flags.
+        /// Gets or sets the raw data.
         /// </summary>
         /// <value>
-        /// The scan code flags.
+        /// The raw data.
         /// </value>
-        public ScanCodeFlags ScanCodeFlags { get; set; }
-
-        /// <summary>
-        /// Gets or sets the state.
-        /// </summary>
-        /// <value>
-        /// The state.
-        /// </value>
-        public KeyState State { get; set; }
-
-        /// <summary>
-        /// Gets or sets the extra information.
-        /// </summary>
-        /// <value>
-        /// The extra information.
-        /// </value>
-        public int ExtraInformation { get; set; }
+        public byte[] RawData { get; set; }
     }
 }

@@ -84,7 +84,7 @@ namespace SharpDX.RawInput
             switch (rawDeviceInfo.Type)
             {
                 case DeviceType.HumanInputDevice:
-                    deviceInfo = new HumanDeviceInfo(ref rawDeviceInfo, deviceName, deviceHandle);
+                    deviceInfo = new HidInfo(ref rawDeviceInfo, deviceName, deviceHandle);
                     break;
                 case DeviceType.Keyboard:
                     deviceInfo = new KeyboardInfo(ref rawDeviceInfo, deviceName, deviceHandle);

@@ -24,22 +24,22 @@ namespace SharpDX.RawInput
     /// <summary>
     /// Defines the raw input data coming from the specified Human Interface Device (HID). 
     /// </summary>
-    public class HumanDeviceInfo : DeviceInfo
+    public class HidInfo : DeviceInfo
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="HumanDeviceInfo"/> class.
+        /// Initializes a new instance of the <see cref="HidInfo"/> class.
         /// </summary>
-        public HumanDeviceInfo()
+        public HidInfo()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HumanDeviceInfo"/> class.
+        /// Initializes a new instance of the <see cref="HidInfo"/> class.
         /// </summary>
         /// <param name="rawDeviceInfo">The raw device info.</param>
         /// <param name="deviceName">Name of the device.</param>
         /// <param name="deviceHandle">The device handle.</param>
-        internal HumanDeviceInfo(ref RawDeviceInformation rawDeviceInfo, string deviceName, IntPtr deviceHandle) : base(ref rawDeviceInfo, deviceName, deviceHandle)
+        internal HidInfo(ref RawDeviceInformation rawDeviceInfo, string deviceName, IntPtr deviceHandle) : base(ref rawDeviceInfo, deviceName, deviceHandle)
         {
             VendorId = rawDeviceInfo.Hid.VendorId;
             ProductId = rawDeviceInfo.Hid.ProductId;
