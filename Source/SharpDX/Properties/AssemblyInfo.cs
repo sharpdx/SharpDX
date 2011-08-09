@@ -38,6 +38,7 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("SharpDX.XAPO")]
 [assembly: InternalsVisibleTo("SharpDX.XAudio2")]
 [assembly: InternalsVisibleTo("SharpDX.XACT3")]
+[assembly: InternalsVisibleTo("SharpDX.WIC")]
 
 [assembly: InternalsVisibleTo("SharpDX.Framework.Graphics")]
 

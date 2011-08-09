@@ -1,13 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
-<config id="sharpdx-wic" depends="sharpdx-core">
+<!--
+// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+-->
+<config id="sharpdx-wic" depends="sharpdx" xmlns="urn:SharpGen.Config">
+
   <namespace>SharpDX.WIC</namespace>
   <assembly>SharpDX.WIC</assembly>
-  <include file="wincodec.h" attach="true" />
+
+  <include file="wincodec.h" attach="true"/>
+
   <naming />
-  <types>
-  </types>
-  <mapping>
+
+  <extension>
+    <context>sharpdx-wic</context>
+    <context>sharpdx-wic-ext</context>
     <context>wincodec</context>
+
+
+    <context-clear />
+  </extension>
+
+  <bindings>
+  </bindings>
+
+  <mapping>
+    <context>sharpdx-wic</context>
+    <context>sharpdx-wic-ext</context>
+    <context>wincodec</context>
+    <!--
+    // *****************************************************************
+    // WIC Enumerations
+    // *****************************************************************
+    -->
+    <map enum="WIC(.*)" name="$1"/>
+    <map enum="WIC8(.*)" name="$1"/>
+    <map enum-item="WIC(.*)" name="$1"/>
+    <map enum-item="WIC8(.*)" name="$1"/>
+
+    <map enum-item="WICBitmapInterpolationMode(.*)" name="$1"/>
+    <map enum-item="WIC8BIMIptc(.*)" name="$1"/>
+    <map enum-item="WIC8BIMIptcDigest(.*)" name="$1"/>
+    <map enum-item="WIC8BIMResolutionInfo(.*)" name="$1"/>
+    <map enum-item="WICBitmap(.*)" name="$1"/>
+    <map enum-item="WICBitmapDecoderCapability(.*)" name="$1"/>
+    <map enum-item="WICBitmapDitherType(.*)" name="$1"/>
+    <map enum-item="WICBitmapEncoder(.*)" name="$1"/>
+    <map enum-item="WICBitmapEncoderCache(.*)" name="$1"/>
+    <map enum-item="WICBitmapInterpolationMode(.*)" name="$1"/>
+    <map enum-item="WICBitmapPaletteType(.*)" name="$1"/>
+    <map enum-item="WICBitmapLock(.*)" name="$1"/>
+    <map enum-item="WICBitmapTransform(.*)" name="$1"/>
+    <map enum-item="WICColorContext(.*)" name="$1"/>
+    <map enum-item="WICComponent(.*)" name="$1"/>
+    <map enum-item="WICComponentEnumerate(.*)" name="$1"/>
+    <map enum-item="WICDecodeMetadata(.*)" name="$1"/>
+    <map enum-item="WICGifApplicationExtension(.*)" name="$1"/>
+    <map enum-item="WICGifCommentExtension(.*)" name="$1"/>
+    <map enum-item="WICGifGraphicControlExtension(.*)" name="$1"/>
+    <map enum-item="WICGifImageDescriptor(.*)" name="$1"/>
+    <map enum-item="WICGifLogicalScreen(.*)" name="$1"/>
+    <map enum-item="WICGifLogicalScreenDescriptor(.*)" name="$1"/>    
+    <map enum-item="WICJpegChrominance(.*)" name="$1"/>
+    <map enum-item="WICJpegComment(.*)" name="$1"/>    
+    <map enum-item="WICJpegLuminance(.*)" name="$1"/>
+    <map enum-item="WICJpegYCrCbSubsampling(.*)" name="$1"/>
+    <map enum-item="WICJpegYCrCbSubsampling([0-9]+)" name="Mode$1"/>
+    <map enum-item="WICWhitePoint(.*)" name="$1"/>
+    <map enum-item="WICPixelFormatNumericRepresentation(.*)" name="$1"/>
+    <map enum-item="WICPngBkgdBackground(.*)" name="$1"/>
+    <map enum-item="WICPngChrm(.*)" name="$1"/>
+    <map enum-item="WICPngFilter(.*)" name="$1"/>
+    <map enum-item="WICPngGama(.*)" name="$1"/>
+    <map enum-item="WICPngHist(.*)" name="$1"/>
+    <map enum-item="WICPngIccp(.*)" name="$1"/>
+    <map enum-item="WICPngItxt(.*)" name="$1"/>
+    <map enum-item="WICPngSrgb(.*)" name="$1"/>
+    <map enum-item="WICPngTime(.*)" name="$1"/>
+    <map enum-item="WICProgressNotification(.*)" name="$1"/>
+    <map enum-item="WICProgressOperation(.*)" name="$1"/>
+    <map enum-item="WICRawCapability(.*)" name="$1"/>
+    <map enum-item="WIC(.*)ParameterSet" name="$1"/>
+    <map enum-item="WICRawRenderMode(.*)" name="$1"/>
+    <map enum-item="WICRawRotationCapability(.*)" name="$1"/>
+    <map enum-item="WICSectionAccessLevel(.*)" name="$1"/>
+    <map enum-item="WICTiffCompression(.*)" name="$1"/>
+    <map enum-item="WICSectionAccessLevel(.*)" name="$1"/>
+    <map enum-item="WICSectionAccessLevel(.*)" name="$1"/>
+    <map enum-item="WICSectionAccessLevel(.*)" name="$1"/>
+    <map enum-item="WICSectionAccessLevel(.*)" name="$1"/>
+
+
+    <!--
+    // *****************************************************************
+    // WIC Structures
+    // *****************************************************************
+    -->
+    <map struct="WIC(.*)" name="$1"/>
+
+    <!--
+    // *****************************************************************
+    // WIC Interfaces
+    // *****************************************************************
+    -->
+    <map interface="IWIC(.*)" name="$1"/>
+    <map method="IWICBitmapCodecProgressNotification::RegisterProgressNotification" visibility="internal"/>
+
+    <map param=".*::.*::[cbdwz]+([A-Z].*)" name-tmp="$1"/>
+    <map param=".*::.*::p[cbdwz]*I?([A-Z].*)" name-tmp="p$1"/>
+    <map param=".*::.*::pp[cbdwz]*I?([A-Z].*)" name-tmp="pp$1"/>
+
+    <map param=".*::.*::pbBuffer" type="void" attribute="in"/>
+    
+    <!--Temporarly remove unsupported type from methods -->
+    <remove method="IWICEnumMetadataItem::Next"/>
+    <remove method="IWICMetadataQueryWriter::SetMetadataByName"/>
+
+    <!--IWICBitmap -->
+    <map param="IWICBitmap::Lock::ppILock" return="true"/>
+    <map param="IWICBitmap::Lock::flags" type="WICBitmapLockFlags"/>
+    
+    <map param="IWICBitmapDecoderInfo::GetPatterns::pcPatterns" name="patternCount" />
+    
+    
+    <!--
+    // *****************************************************************
+    // WIC Functions
+    // *****************************************************************
+    -->
+    <remove function=".*" />
 
     <context-clear />
   </mapping>
