@@ -34,11 +34,15 @@
     <context>sharpdx-wic-ext</context>
     <context>wincodec</context>
 
-
+    <!-- class SharpDX.DirectInput.DeviceGuid -->
+    <create class="PixelFormat" visibility="public sealed"/>
+    <const from-guid="GUID_WICPixel(Format.*)" class="SharpDX.WIC.PixelFormat" type="System.Guid" name="$1">new System.Guid("$1")</const>
+    
     <context-clear />
   </extension>
 
   <bindings>
+    <bind from="WICRect" to="System.Drawing.Rectangle"/>
   </bindings>
 
   <mapping>
@@ -114,6 +118,7 @@
     // *****************************************************************
     -->
     <map struct="WIC(.*)" name="$1"/>
+    <remove struct="WICRect"/>
 
     <!--
     // *****************************************************************
@@ -123,9 +128,10 @@
     <map interface="IWIC(.*)" name="$1"/>
     <map method="IWICBitmapCodecProgressNotification::RegisterProgressNotification" visibility="internal"/>
 
-    <map param=".*::.*::[cbdwz]+([A-Z].*)" name-tmp="$1"/>
-    <map param=".*::.*::p[cbdwz]*I?([A-Z].*)" name-tmp="p$1"/>
-    <map param=".*::.*::pp[cbdwz]*I?([A-Z].*)" name-tmp="pp$1"/>
+    <map param=".*::.*::[cuibdwz]+([A-Z].*)" name-tmp="$1"/>
+    <map param=".*::.*::p[cuibdwz]*I?([A-Z].*)" name-tmp="p$1"/>
+    <map param=".*::.*::pp[cuibdwz]*I?([A-Z].*)" name-tmp="pp$1"/>
+    <map param=".*::.*::prc" name="pRectangle"/>
 
     <map param=".*::.*::pbBuffer" type="void" attribute="in"/>
     
@@ -136,7 +142,35 @@
     <!--IWICBitmap -->
     <map param="IWICBitmap::Lock::ppILock" return="true"/>
     <map param="IWICBitmap::Lock::flags" type="WICBitmapLockFlags"/>
-    
+
+    <!--IWICBitmapCodecInfo -->
+    <map method="IWICBitmapCodecInfo::GetPixelFormats" visibility="internal"/>
+    <map param="IWICBitmapCodecInfo::GetPixelFormats::pguidPixelFormats" type="GUID" pointer="*" attribute="in buffer"/>
+    <map method="IWICBitmapCodecInfo::Get.*" visibility="internal"/>
+    <map param="IWICBitmapCodecInfo::Get.*::wz.*" type="void" attribute="in"/>
+    <map method="IWICBitmapCodecInfo::GetContainerFormat" visibility="public"/>
+    <map method="IWICBitmapCodecInfo::DoesSupport(.*)" name="Is$1Supported" property="true"/>
+    <map param="IWICBitmapCodecInfo::MatchesMimeType::pfMatches" return="true"/>
+
+    <!--IWICBitmapDecoder -->
+    <map method="IWICBitmapDecoder::GetColorContexts" visibility="internal"/>
+    <map param="IWICBitmapDecoder::GetColorContexts::ppIColorContexts" attribute="out buffer optional"/>
+    <map param="IWICBitmapDecoder::GetFrame::ppIBitmapFrame" return="true"/>
+
+    <!--IWICBitmapDecoderInfo -->
+    <map method="IWICBitmapDecoderInfo::GetPatterns" visibility="internal"/>
+    <map param="IWICBitmapDecoderInfo::GetPatterns::pPatterns" attribute="out buffer optional"/>
+    <map param="IWICBitmapDecoderInfo::GetPatterns::pcPatterns" attribute="out"/>
+    <map param="IWICBitmapDecoderInfo::GetPatterns::pcbPatternsActual" attribute="out"/>
+
+    <map method="IWICBitmapDecoderInfo::CreateInstance" visibility="internal"/>
+    <map param="IWICBitmapDecoderInfo::CreateInstance::ppIBitmapDecoder" attribute="out fast"/>
+
+    <!--IWICBitmapSource -->
+    <map method="IWICBitmapSource::GetSize" visibility="internal"/>
+
+
+
     <map param="IWICBitmapDecoderInfo::GetPatterns::pcPatterns" name="patternCount" />
     
     
