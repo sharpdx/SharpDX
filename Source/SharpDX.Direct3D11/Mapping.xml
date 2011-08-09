@@ -136,7 +136,8 @@
     <map field="D3DX11_FFT_DESC::DimensionMask" name="Dimensions" type="D3DX11_FFT_DIM_MASK" />
     <map field="D3DX11_FFT_DESC::Type" name="DataType" />
     <map enum="D3DX11_EFFECT_VARIABLE_FLAGS" name="EffectVariableFlags" />
-    <map field="D3DX11_EFFECT_SHADER_DESC::SODecls" visibility="internal" type="void" array="0"/>
+    <map field="D3DX11_EFFECT_SHADER_DESC::SODecls" visibility="internal" type="void"/>
+    <!--<map field="D3DX11_EFFECT_SHADER_DESC::SODecls" visibility="internal" type="void" array="0"/>-->
     
     <!--
     // *****************************************************************
