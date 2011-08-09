@@ -30,6 +30,10 @@
     <attach>IStream</attach>
   </include>
 
+  <include file="wtypes.h" namespace="SharpDX.Win32" output="Win32">
+    <attach>STGC</attach>
+  </include>
+
   <include file="winerror.h" namespace="SharpDX.Win32" output="Win32"/>
 
   <!-- SharpDX global naming -->
@@ -309,9 +313,16 @@
 
     <!-- Map IStream -->
     <context>objidl</context>
+    <context>wtypes</context>
     <map struct="STATSTG" name="StorageStatistics" />
-    <map interface="ISequentialStream" name="ComBaseStream" callback-visibility="public" callback="true" callback-dual="true"/>
-    <map interface="IStream" name="ComStream" callback-visibility="public" callback="true" callback-dual="true"/>
+
+    <map enum="STGC" name="CommitFlags" flags="true"/>
+    <map enum-item="STGC_(.*)" name-tmp="$1"/>
+    <map enum-item="STGC_ONLYIFCURRENT" name="OnlyCurrent"/>
+    <map enum-item="STGC_DANGEROUSLYCOMMITMERELYTODISKCACHE" name="DangerouslyCommitMerelyToDiskCache"/>
+
+    <map interface="ISequentialStream" name="IStreamBase" callback-visibility="public" callback="true" callback-dual="true" callback-name="ComStreamBase"/>
+    <map interface="IStream" name="IStream" callback-visibility="public" callback="true" callback-dual="true" callback-name="ComStream"/>
     <context-clear/>
   </mapping>
 </config>
