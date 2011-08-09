@@ -38,7 +38,9 @@ namespace SharpGen.Model
 
         public bool IsArray { get; set; }
 
-        public int ArrayDimension { get; set; }
+        public int ArrayDimensionValue { get; set; }
+
+        public string ArrayDimension { get; set; }
 
         public bool IsWideChar { get; set; }
 

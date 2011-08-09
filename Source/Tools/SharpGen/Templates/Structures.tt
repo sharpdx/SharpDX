@@ -166,23 +166,29 @@ foreach (var sharpStruct in Namespace.Structs)
 	    foreach (var sharpStructItem in sharpStruct.Fields) {				
 			var sharpStructItemAsStruct = sharpStructItem.PublicType as CsStruct;
 			
+			
+		if (sharpStruct.ExplicitLayout) {
+#>
+            [FieldOffset(<#= sharpStructItem.Offset #>)]
+<#+			
+		}				
 		    if (sharpStructItem.IsBoolToInt && !sharpStructItem.IsArray) {
 #>
             public <#= sharpStructItem.MarshalType.QualifiedName #> _<#= sharpStructItem.Name #>;
 <#+			
 			} else  if (sharpStructItem.IsArray) {
-				if (sharpStructItem.MarshalType is CsStruct) {
+				if (sharpStructItem.IsFixedArrayOfStruct ) {
 #>
             public <#= sharpStructItem.MarshalType.QualifiedName #> <#= sharpStructItem.Name #>;
 <#+
-					for(int i = 1; i < sharpStructItem.ArrayDimension; i++) {
+					for(int i = 1; i < sharpStructItem.ArrayDimensionValue; i++) {
 #>
             <#= sharpStructItem.MarshalType.QualifiedName #> __<#= sharpStructItem.Name #><#= i #>;
 <#+
 					}
 				} else {
 #>
-            public fixed <#= sharpStructItem.MarshalType.QualifiedName #> <#= sharpStructItem.Name #>[<#= sharpStructItem.ArrayDimension #>];
+            public fixed <#= sharpStructItem.MarshalType.QualifiedName #> <#= sharpStructItem.Name #>[<#= sharpStructItem.ArrayDimensionValue #>];
 <#+
 				}
 		    } else if ( sharpStructItemAsStruct != null && sharpStructItemAsStruct.HasMarshalType) {
@@ -239,7 +245,7 @@ foreach (var sharpStruct in Namespace.Structs)
 #>			this._<#= sharpStructItem.Name #> = @ref._<#= sharpStructItem.Name #>;
 <#+				}
 			} else  if (sharpStructItem.IsArray) {
-				if (sharpStructItem.MarshalType is CsStruct) {
+				if (sharpStructItem.IsFixedArrayOfStruct) {
 #>
             fixed (void* __to = &this.<#= sharpStructItem.Name #>[0]) fixed (void* __from = &@ref.<#= sharpStructItem.Name #>) SharpDX.Utilities.CopyMemory((IntPtr) __to, (IntPtr) __from, <#= sharpStructItem.ArrayDimension #>*sizeof ( <#= sharpStructItem.MarshalType.QualifiedName #>));
 <#+
@@ -303,7 +309,7 @@ foreach (var sharpStruct in Namespace.Structs)
 #>            @ref._<#= sharpStructItem.Name #> = this._<#= sharpStructItem.Name #>;
 <#+				}
 			} else  if (sharpStructItem.IsArray) {
-				if (sharpStructItem.MarshalType is CsStruct) {
+				if (sharpStructItem.IsFixedArrayOfStruct) {
 #>
             fixed (void* __to = &@ref.<#= sharpStructItem.Name #>) fixed (void* __from = &this.<#= sharpStructItem.Name #>[0]) SharpDX.Utilities.CopyMemory((IntPtr) __to, (IntPtr) __from, <#= sharpStructItem.ArrayDimension #>*sizeof ( <#= sharpStructItem.MarshalType.QualifiedName #>));
 <#+

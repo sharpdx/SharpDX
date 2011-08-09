@@ -37,5 +37,13 @@ namespace SharpGen.Model
         {
             get { return CppElement != null ? CppElement.ToString() : "???"; }
         }
+
+        public bool IsFixedArrayOfStruct
+        {
+            get
+            {
+                return MarshalType is CsStruct || PublicType.Type == typeof(System.IntPtr);
+            }
+        }
     }
 }

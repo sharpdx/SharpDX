@@ -710,11 +710,24 @@ namespace SharpGen.Generator
                                   {
                                       CppElement = cppType,
                                       IsArray = cppType.IsArray,
+                                      ArrayDimension = cppType.ArrayDimension,
                                       // TODO: handle multidimension
-                                      ArrayDimension = cppType.IsArray ? int.Parse(cppType.ArrayDimension) : 1,
                                       HasPointer = !string.IsNullOrEmpty(cppType.Pointer) && (cppType.Pointer.Contains("*") || cppType.Pointer.Contains("&")),
                                   };
 
+
+            // Calculate ArrayDimension
+            int arrayDimensionValue = 1;
+            if (cppType.IsArray)
+            {
+                if (!int.TryParse(cppType.ArrayDimension, out arrayDimensionValue))
+                    arrayDimensionValue = 1;
+
+                interopType.ArrayDimensionValue = arrayDimensionValue;
+            }
+            interopType.ArrayDimensionValue = arrayDimensionValue;
+            
+            
             string typeName = cppType.GetTypeNameWithMapping();
 
             switch (typeName)
@@ -757,7 +770,7 @@ namespace SharpGen.Generator
                     }
                     else
                     {
-                        interopType.ArrayDimension = 0;
+                        interopType.ArrayDimensionValue = 0;
                         interopType.IsArray = false;
                     }
 
@@ -841,7 +854,7 @@ namespace SharpGen.Generator
             interopType.MarshalType = marshalType;
 
             // Update the SizeOf according to the SizeOf MarshalType
-            interopType.SizeOf = interopType.MarshalType.SizeOf*((interopType.ArrayDimension > 1) ? interopType.ArrayDimension : 1);
+            interopType.SizeOf = interopType.MarshalType.SizeOf*((interopType.ArrayDimensionValue > 1) ? interopType.ArrayDimensionValue : 1);
 
             return interopType;
         }

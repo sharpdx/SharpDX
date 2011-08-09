@@ -139,10 +139,8 @@ namespace SharpGen.Config
         /// <summary>
         /// ArrayDimension
         /// </summary>
-        [XmlIgnore]
-        public int? TypeArrayDimension { get; set; }
         [XmlAttribute("array")]
-        public int _TypeArrayDimension_ { get { return TypeArrayDimension.Value; } set { TypeArrayDimension = value; } } public bool ShouldSerialize_TypeArrayDimension_() { return TypeArrayDimension != null; }
+        public string TypeArrayDimension { get; set; }
 
         /// <summary>
         /// Used for enums, to tag enums that are used as flags

@@ -113,8 +113,8 @@ namespace SharpGen.Model
                                }
                                if (fromTag.TypeArrayDimension != null)
                                {
-                                   cppType.ArrayDimension = "" + fromTag.TypeArrayDimension.Value;
-                                   if (fromTag.TypeArrayDimension.Value == 0)
+                                   cppType.ArrayDimension = fromTag.TypeArrayDimension;
+                                   if (fromTag.TypeArrayDimension == null)
                                        cppType.IsArray = false;
                                    tag.TypeArrayDimension = fromTag.TypeArrayDimension;
                                }
