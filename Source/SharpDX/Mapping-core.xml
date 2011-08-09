@@ -179,7 +179,7 @@
     <bind from="D3DXVECTOR4" to="SharpDX.Vector4" />
     <bind from="D3DXQUATERNION" to="SharpDX.Quaternion" />
     <bind from="D3DXPLANE" to="SharpDX.Plane" />
-    <bind from="D3DCOLOR" to="SharpDX.Color4" />
+    <bind from="D3DCOLOR" to="SharpDX.Color4" marshal="System.Int32"/>
     <bind from="D3DXFLOAT16" to="System.Int32" />
     <bind from="D3DXVECTOR2_16F" to="System.Int32" />
     <bind from="D3DXVECTOR3_16F" to="System.Int32" />

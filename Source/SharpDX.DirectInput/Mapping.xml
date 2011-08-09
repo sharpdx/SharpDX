@@ -815,8 +815,8 @@
     <map struct="DIDEVICEIMAGEINFOHEADERW" name="DeviceImageHeader"/>
     <map struct="DIEFFECT" name="EffectParameters"/>
     <map struct="DIDEVICEOBJECTDATA" name="ObjectData" visbility="internal"/>
-    <map struct="DICONFIGUREDEVICESPARAMSW" name="ConfigureDeviceParameters" visibility="internal"/>
-    <map struct="DICOLORSET" name="ColorSet"/>
+    <remove struct="DICONFIGUREDEVICESPARAMSW"/>
+    <remove struct="DICOLORSET"/>
     <map struct="DIEFFESCAPE" name="EffectEscape" visibility="internal"/>
     <map struct="DIDEVCAPS" name="Capabilities"/>
     <map struct="DIFILEEFFECT" name="EffectFile"/>
@@ -958,7 +958,7 @@
     <map method=".*::Enum.*" visibility="internal"/>
     
     <!-- IDirectInput8 -->
-    <map method="IDirectInput8W::ConfigureDevices" visibility="internal"/>
+    <remove method="IDirectInput8W::ConfigureDevices"/>
     <map method="IDirectInput8W::CreateDevice" visibility="internal"/>
     <map param="IDirectInput8W::CreateDevice::arg1" type="void" attribute="out" />
     <map param="IDirectInput8W::EnumDevices::arg3" type="DIEDFL" />
@@ -1037,7 +1037,7 @@
     <map param="IDirectInputEffect::SetParameters::arg1" type="DIEP"/>
 
     <map param="IDirectInputEffect::Start::arg1" type="DIES"/>
-    
+
     <!--
     // *****************************************************************
     // DirectInput Functions

@@ -744,11 +744,25 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="System.Int32"/> to <see cref="SharpDX.Color4"/>.
+        /// Performs an implicit conversion from <see cref="SharpDX.Color4"/> to <see cref="System.Int32"/>.
         /// </summary>
         /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static explicit operator Color4(int value)
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
+        public static implicit operator int(Color4 value)
+        {
+            return value.ToArgb();
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="System.Int32"/> to <see cref="SharpDX.Color4"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
+        public static implicit operator Color4(int value)
         {
             return new Color4(value);
         }
