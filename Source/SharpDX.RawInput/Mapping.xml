@@ -27,10 +27,12 @@
 
   <include file="winuser.h">
     <attach>RAWINPUTHEADER</attach>
-    <attach>RAWMOUSE</attach>
+    <!--<attach>RAWMOUSE</attach>-->
     <attach>RAWKEYBOARD</attach>
     <attach>RAWHID</attach>
     <attach>RAWINPUT</attach>
+    <attach>RAWINPUTDEVICE</attach>
+    <attach>RAWINPUTDEVICELIST</attach>
     <attach>RID_DEVICE_INFO_MOUSE</attach>
     <attach>RID_DEVICE_INFO_KEYBOARD</attach>
     <attach>RID_DEVICE_INFO_HID</attach>
@@ -38,7 +40,7 @@
     <attach>RAWINPUT_INNER_0</attach>
 
     <attach>GetRawInputData</attach>
-    <attach>GetRawInputDeviceInfo</attach>
+    <attach>GetRawInputDeviceInfoW</attach>
     <attach>GetRawInputBuffer</attach>
     <attach>GetRawInputDeviceList</attach>
     <attach>GetRegisteredRawInputDevices</attach>
@@ -52,19 +54,25 @@
     <context>sharpdx-rawinput-ext</context>
     <context>winuser</context>
 
+    <define struct="SharpDX.RawInput.RawMouse" sizeof="22" />
+
     <create-cpp enum="RAW_DEVICE_FLAGS" macro="RIDEV_.*"/>
     <create-cpp enum="RAW_DEVICE_TYPE" macro="RIM_.*"/>
     <create-cpp enum="RAW_SCAN_CODE_FLAGS" macro="RI_KEY_.*"/>
     <create-cpp enum="RAW_KEY_STATE" macro="WM.*KEY.*"/>
     <create-cpp enum="RAW_MOUSE_BUTTON_FLAGS" macro="RI_MOUSE_.*"/>
     <create-cpp enum="RAW_MOUSE_MODE" macro="MOUSE_.*"/>
-
-    <create class="RawInput"/>
+    <create-cpp enum="RAW_INPUT_DEVICE_INFO_TYPE" macro="RIDI_.*"/>
+    <create-cpp enum="RAW_INPUT_DATA_TYPE" macro="RID_.*"/>
+    
+    <create class="RawInputFunctions"/>
 
     <context-clear />
   </extension>
 
   <bindings>
+    <bind from="HRAWINPUT" to="System.IntPtr" />
+    <bind from="RAWMOUSE" to="SharpDX.RawInput.RawMouse" />
   </bindings>
 
   <mapping>
@@ -78,30 +86,102 @@
     -->
     <map enum="RAW_(.*)" name-tmp="$1"/>
 
-    <map enum="RAW_DEVICE_FLAGS" flag="true" none="true"/>
-    <map enum="RAW_SCAN_CODE_FLAGS" flag="true" none="false"/>
-    <map enum="RAW_MOUSE_BUTTON_FLAGS" flag="true" none="true"/>
-    <map enum="RAW_MOUSE_MODE" flag="true" none="false"/>
+    <map enum="RAW_DEVICE_FLAGS" flags="true" none="true"/>
+    <map enum="RAW_SCAN_CODE_FLAGS" flags="true" none="false"/>
+    <map enum="RAW_MOUSE_BUTTON_FLAGS" flags="true" none="true"/>
+    <map enum="RAW_MOUSE_MODE" flags="true" none="false"/>
+
+    <map enum-item="RIDEV_(.*)" name-tmp="$1"/>
+    <map enum-item="RIDEV_PAGEONLY" name="PageOnly"/>
+    <map enum-item="RIDEV_NOLEGACY" name="NoLegacy"/>
+    <map enum-item="RIDEV_INPUTSINK" name="InputSink"/>
+    <map enum-item="RIDEV_CAPTUREMOUSE" name="CaptureMouse"/>
+    <map enum-item="RIDEV_NOHOTKEYS" name="NoHotKeys"/>
+    <map enum-item="RIDEV_APPKEYS" name="AppKeys"/>
+    <map enum-item="RIDEV_DEVNOTIFY" name="DeviceNotify"/>
+    <map enum-item="RIDEV_EXINPUTSINK" name="ExclusiveInputSink"/>
+    <remove enum-item="RIDEV_EXMODEMASK"/>
+    
+    <map enum-item="RIM_(.*)" name-tmp="$1"/>
+    <remove enum-item="RIM_INPUT.*"/>
+
+    <map enum-item="WM_(.*)" name-tmp="$1"/>
+    <map enum-item="WM_VKEYTOITEM" name="VirtualKeyToItem"/>
+    <map enum-item="WM_SETHOTKEY" name="SetHotKey"/>
+    <map enum-item="WM_GETHOTKEY" name="GetHotKey"/>
+    <map enum-item="WM_KEYFIRST" name="KeyFirst"/>
+    <map enum-item="WM_KEYDOWN" name="KeyDown"/>
+    <map enum-item="WM_KEYUP" name="KeyUp"/>
+    <map enum-item="WM_SYSKEYDOWN" name="SystemKeyDown"/>
+    <map enum-item="WM_SYSKEYUP" name="SystemKeyUp"/>
+    <map enum-item="WM_KEYLAST" name="KeyLast"/>
+    <map enum-item="WM_IME_KEYLAST" name="ImeKeyLast"/>
+    <map enum-item="WM_IME_KEYDOWN" name="ImeKeyDown"/>
+    <map enum-item="WM_IME_KEYUP" name="ImeKeyUp"/>
+    <map enum-item="WM_HOTKEY" name="HotKey"/>
+
+    <map enum-item="RIM_(.*)" name-tmp="$1"/>
+    <map enum-item="RIM_TYPE(.*)" name-tmp="$1"/>
+    <map enum-item="RIM_TYPEHID" name="HumanInputDevice"/>
+    
+    <map enum-item="RI_MOUSE_(.*)" name-tmp="$1"/>
+    <map enum-item="RI_MOUSE_WHEEL" name="MouseWheel"/>
+
+    <map enum-item="MOUSE_(.*)" name-tmp="$1"/>
+    <map enum-item="MOUSE_MOVE_NOCOALESCE" name="MoveNoCoalesce"/>
+    
+    <map enum-item="RI_KEY_(.*)" name-tmp="$1"/>
+    <remove enum-item="RI_KEY_TERMSRV.*" />
+
+    <map enum="RAW_INPUT_DEVICE_INFO_TYPE" name="RawInputDeviceInfoType" visibility="internal"/>
+    <map enum-item="RIDI_DEVICENAME" name="DeviceName"/>
+    <map enum-item="RIDI_DEVICEINFO" name="DeviceInfo"/>
+    <map enum-item="RIDI_PREPARSEDDATA" name="PreparsedData"/>
+
+    <map enum="RAW_INPUT_DATA_TYPE" name="RawInputDataType" visibility="internal"/>
+    <map enum-item="RID_(.*)" name-tmp="$1"/>
 
     <!--
     // *****************************************************************
     // RawInput Structures
     // *****************************************************************
     -->
-    <map struct="RAW_(.*)" name-tmp="$1"/>
-    <map struct="RID_(.*)" name-tmp="$1"/>
-       
+    <map struct="RAW_(.*)" visibility="internal"/>
+    <map struct="RID_(.*)" name-tmp="RAW_$1" visibility="internal"/>
+    <map struct="RAW(.*)" name-tmp="RAW_$1" visibility="internal"/>
+    <map struct="RAWINPUT(.*)" name-tmp="RAW_INPUT_$1" visibility="internal"/>
+
+    <map struct="RAWINPUT_INNER_0" marshalto="true"/>
+    <map struct="RAWHID" marshalto="true"/>
+
+    <map field=".*::[a-z]+([A-Z].*)" name="$1"/>
+
+    <map field="RID_DEVICE_INFO::dwType" type="RAW_DEVICE_TYPE"/>
+    <map field="RID_DEVICE_INFO_HID::usUsagePage" type="HID_USAGE_PAGE"/>
+    <map field="RID_DEVICE_INFO_HID::usUsage" type="HID_USAGE_ID"/>
+
+    <!-- Use Count property as a dynamic dimension for the array -->
+    <map field="RAWHID::bRawData" array="Count * SizeHid"/>
+
+    <map field="RAWINPUTHEADER::dwType" type="RAW_DEVICE_TYPE"/>
+
+    <map field="RAWKEYBOARD::Flags" type="RAW_SCAN_CODE_FLAGS"/>
+    <map field="RAWKEYBOARD::Message" type="RAW_KEY_STATE"/>
+
     <!--
     // *****************************************************************
     // RawInput Functions
     // *****************************************************************
     -->
-    <map function="GetRawInputData" dll='"user32.dll"' group="SharpDX.RawInput.RawInput" />
-    <map function="GetRawInputDeviceInfo" dll='"user32.dll"' group="SharpDX.RawInput.RawInput" />
-    <map function="GetRawInputBuffer" dll='"user32.dll"' group="SharpDX.RawInput.RawInput" />
-    <map function="GetRawInputDeviceList" dll='"user32.dll"' group="SharpDX.RawInput.RawInput" />
-    <map function="GetRegisteredRawInputDevices" dll='"user32.dll"' group="SharpDX.RawInput.RawInput" />
-    <map function="RegisterRawInputDevices" dll='"user32.dll"' group="SharpDX.RawInput.RawInput" />
+    <map function="GetRawInputData" dll='"user32.dll"' group="SharpDX.RawInput.RawInputFunctions" />
+    <map param="GetRawInputData::uiCommand" type="RAW_INPUT_DATA_TYPE"/>
+    <map function="GetRawInputDeviceInfoW" name="GetRawInputDeviceInfo" dll='"user32.dll"' group="SharpDX.RawInput.RawInputFunctions" />
+    <map param="GetRawInputDeviceInfoW::uiCommand" type="RAW_INPUT_DEVICE_INFO_TYPE"/>
+    
+    <map function="GetRawInputBuffer" dll='"user32.dll"' group="SharpDX.RawInput.RawInputFunctions" />
+    <map function="GetRawInputDeviceList" dll='"user32.dll"' group="SharpDX.RawInput.RawInputFunctions" />
+    <map function="GetRegisteredRawInputDevices" dll='"user32.dll"' group="SharpDX.RawInput.RawInputFunctions" />
+    <map function="RegisterRawInputDevices" dll='"user32.dll"' group="SharpDX.RawInput.RawInputFunctions" />
 
     <context-clear />
   </mapping>

@@ -46,11 +46,21 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Device.cs" />
+    <Compile Include="DeviceInfo.cs" />
     <Compile Include="Generated\Enumerations.cs" />
     <Compile Include="Generated\Functions.cs" />
     <Compile Include="Generated\LocalInterop.cs" />
     <Compile Include="Generated\Structures.cs" />
+    <Compile Include="HumanDeviceInfo.cs" />
+    <Compile Include="RawInputEventArgs.cs" />
+    <Compile Include="KeyboardInfo.cs" />
+    <Compile Include="KeyboardInputEventArgs.cs" />
+    <Compile Include="MouseInfo.cs" />
+    <Compile Include="MouseInputEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RawInputEventArgsBase.cs" />
+    <Compile Include="RawMouse.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpDX\SharpDX.csproj">
