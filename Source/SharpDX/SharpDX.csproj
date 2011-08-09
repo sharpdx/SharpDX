@@ -142,6 +142,7 @@
     <Compile Include="Generated\Direct3D\Structures.cs" />
     <Compile Include="Generated\LocalInterop.cs" />
     <Compile Include="Generated\Multimedia\Enumerations.cs" />
+    <Compile Include="Generated\Win32\Functions.cs" />
     <Compile Include="Generated\Win32\Interfaces.cs" />
     <Compile Include="Generated\Win32\Structures.cs" />
     <Compile Include="Half.cs" />
@@ -179,6 +180,7 @@
     <Compile Include="Vector2.cs" />
     <Compile Include="Vector3.cs" />
     <Compile Include="Vector4.cs" />
+    <Compile Include="Win32\ErrorCode.cs" />
     <Compile Include="Win32\FileHelper.cs" />
     <Compile Include="Windows\RenderLoop.cs" />
     <Compile Include="Windows\RenderControl.cs">

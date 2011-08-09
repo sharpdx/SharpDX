@@ -30,6 +30,8 @@
     <attach>IStream</attach>
   </include>
 
+  <include file="winerror.h" namespace="SharpDX.Win32" output="Win32"/>
+
   <!-- SharpDX global naming -->
   <naming>    
     <short name="DESC">Description</short>
@@ -102,6 +104,14 @@
 
   <!-- SharpDX global types -->
   <extension>
+    <context>sharpdx-core-ext</context>
+    <context>sharpdx-core</context>
+    <context>winerror</context>
+    <create class="SharpDX.Win32.ErrorCode" visibility="public sealed"/>
+    <!--<const from-macro="ERROR_(.*)" type="SharpDX.Result" cpp-type="int" name="$1" class="SharpDX.Win32.ResultCode" visibility="public static readonly" />-->
+    <const from-macro="ERROR_(.*)" type="int" cpp-type="int" name="$1" class="SharpDX.Win32.ErrorCode" visibility="public const" />
+    <context-clear/>
+    
     <define struct="System.Drawing.SizeF" sizeof="8" />
     <define struct="System.Drawing.Size" sizeof="8" />
     <define struct="System.Drawing.PointF" sizeof="8" />
