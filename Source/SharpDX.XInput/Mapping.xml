@@ -1,16 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
-<config id="sharpdx-xinput" depends="sharpdx-core">
+<!--
+// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+-->
+<config id="sharpdx-xinput" depends="sharpdx" xmlns="urn:SharpGen.Config">
+
   <namespace>SharpDX.XInput</namespace>
   <assembly>SharpDX.XInput</assembly>
-  <include id="xinput" file="xinput.h" attach="true" />
+
+  <include file="xinput.h" attach="true">
+    <post>
+      #define XINPUT_FLAG_ANY 0
+      
+      #define XUSER_INDEX_ONE 1
+      #define XUSER_INDEX_TWO 2
+      #define XUSER_INDEX_THREE 3
+      #define XUSER_INDEX_FOUR 4
+    </post>
+  </include>
+
   <naming />
-  <types>
-    <create class="SharpDX.XInput.XInput" />
-  </types>
-  <mapping>
+
+  <extension>
+    <context>sharpdx-xinput</context>
+    <context>sharpdx-xinput-ext</context>
     <context>xinput</context>
-    <map struct="XINPUT(.*)" name-tmp="$1" />
-    <map function="XInput.*" macro-dll="XINPUT_DLL_A" group="SharpDX.XInput.XInput" />
+
+    <create-cpp enum="BATTERY_DEVTYPE" macro="BATTERY_DEVTYPE_.*"/>
+    <create-cpp enum="BATTERY_TYPE" macro="BATTERY_TYPE_.*"/>
+    <create-cpp enum="BATTERY_LEVEL" macro="BATTERY_LEVEL_.*"/>
+    <create-cpp enum="XINPUT_DEVTYPE" macro="XINPUT_DEVTYPE_.*"/>
+    <create-cpp enum="XINPUT_DEVSUBTYPE" macro="XINPUT_DEVSUBTYPE_.*"/>
+    <create-cpp enum="XINPUT_CAPS_FLAGS" macro="XINPUT_CAPS_.*"/>
+    <create-cpp enum="XINPUT_GAMEPAD_BUTTON_FLAGS" macro="XINPUT_GAMEPAD_([ABDLRSXY][A-Z]+_[A-Z]+|[A-Z]+)"/>
+    <create-cpp enum="XINPUT_GAMEPAD_KEY_CODE" macro="VK_PAD_.*"/>
+    <create-cpp enum="XINPUT_KEYSTROKE_FLAGS" macro="XINPUT_KEYSTROKE_.*"/>
+    <create-cpp enum="XINPUT_DEVQUERYTYPE" macro="XINPUT_FLAG_.*"/>
+    <create-cpp enum="XUSER_INDEX" macro="XUSER_INDEX_.*"/>
+
+    <const from-macro="XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE" class="SharpDX.XInput.Gamepad" type="short" name="LeftThumbDeadZone" />
+    <const from-macro="XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE" class="SharpDX.XInput.Gamepad" type="short" name="RightThumbDeadZone" />
+
+    <create class="XInput"/>
+
+    <context-clear />
+  </extension>
+
+  <bindings>
+  </bindings>
+
+  <mapping>
+    <context>sharpdx-xinput</context>
+    <context>sharpdx-xinput-ext</context>
+    <context>xinput</context>
+    <!--
+    // *****************************************************************
+    // XInput Enumerations
+    // *****************************************************************
+    -->
+    <map enum="BATTERY_DEVTYPE" name="BatteryDeviceType"/>
+    <map enum-item="BATTERY_DEVTYPE_(.*)" name-tmp="$1"/>
+
+    <map enum="BATTERY_TYPE" name="BatteryType" type="byte"/>
+    <map enum-item="BATTERY_TYPE_(.*)" name-tmp="$1"/>
+
+    <map enum="BATTERY_LEVEL" name="BatteryLevel" type="byte"/>
+    <map enum-item="BATTERY_LEVEL_(.*)" name-tmp="$1"/>
+
+    <map enum="XINPUT_DEVTYPE" name="DeviceType" type="byte"/>
+    <map enum-item="XINPUT_DEVTYPE_(.*)" name-tmp="$1"/>
+
+    <map enum="XINPUT_DEVSUBTYPE" name="DeviceSubType" type="byte"/>
+    <map enum-item="XINPUT_DEVSUBTYPE_(.*)" name-tmp="$1"/>
+
+    <map enum="XINPUT_CAPS_FLAGS" name="CapabilityFlags" type="short"/>
+    <map enum-item="XINPUT_CAPS_(.*)" name-tmp="$1"/>
+
+    <map enum="XINPUT_GAMEPAD_BUTTON_FLAGS" name="GamepadButtonFlags" flags="true" none="true" type="short"/>
+    <map enum-item="XINPUT_GAMEPAD_(.*)" name-tmp="$1"/>
+    <map enum-item="XINPUT_GAMEPAD_DPAD_(.*)" name-tmp="D_PAD_$1"/>
+
+    <map enum="XINPUT_GAMEPAD_KEY_CODE" name="GamepadKeyCode" flags="true" none="true" type="short"/>
+    <map enum-item="VK_PAD_(.*)" name-tmp="$1"/>
+    <map enum-item="VK_PAD_LTHUMB_(.*)" name-tmp="LEFT_THUMB_$1"/>
+    <map enum-item="VK_PAD_RTHUMB_(.*)" name-tmp="RIGHT_THUMB_$1"/>
+    <map enum-item="VK_PAD_LTHUMB_(.+)LEFT" name-tmp="RIGHT_THUMB_$1_LEFT"/>
+    <map enum-item="VK_PAD_RTHUMB_(.+)RIGHT" name-tmp="RIGHT_THUMB_$1_RIGHT"/>
+    <map enum-item="VK_PAD_RSHOULDER" name="RightShoulder"/>
+    <map enum-item="VK_PAD_LSHOULDER" name="LeftShoulder"/>
+    <map enum-item="VK_PAD_RTRIGGER" name="RightTrigger"/>
+    <map enum-item="VK_PAD_LTRIGGER" name="LeftTrigger"/>
+    <map enum-item="VK_PAD_DPAD_(.*)" name-tmp="D_PAD_$1"/>
+
+    <map enum="XINPUT_KEYSTROKE_FLAGS" name="KeyStrokeFlags" flags="true" none="true" type="short"/>
+    <map enum-item="XINPUT_KEYSTROKE_(.*)" name-tmp="$1"/>
+    <map enum-item="XINPUT_KEYSTROKE_KEYDOWN" name="KeyDown"/>
+    <map enum-item="XINPUT_KEYSTROKE_KEYUP" name="KeyUp"/>
+
+    <map enum="XINPUT_DEVQUERYTYPE" name="DeviceQueryType"/>
+    <map enum-item="XINPUT_FLAG_(.*)" name-tmp="$1"/>
+
+    <map enum="XUSER_INDEX" name="UserIndex" type="byte"/>
+    <map enum-item="XUSER_INDEX_(.*)" name-tmp="$1"/>
+
+    <!--
+    // *****************************************************************
+    // XInput Structures
+    // *****************************************************************
+    -->
+    <map struct="XINPUT(.*)" name-tmp="$1"/>
+    <map field=".*::[dsbw]+([A-Z].*)" name="$1"/>
+
+    <map field="XINPUT_BATTERY_INFORMATION::BatteryType" type="BATTERY_TYPE"/>
+    <map field="XINPUT_BATTERY_INFORMATION::BatteryLevel" type="BATTERY_LEVEL"/>
+
+    <map field="XINPUT_CAPABILITIES::Type" type="XINPUT_DEVTYPE"/>
+    <map field="XINPUT_CAPABILITIES::SubType" type="XINPUT_DEVSUBTYPE"/>
+    <map field="XINPUT_CAPABILITIES::Flags" type="XINPUT_CAPS_FLAGS"/>
+
+    <map field="XINPUT_GAMEPAD::wButtons" type="XINPUT_GAMEPAD_BUTTON_FLAGS"/>
+    <map field="XINPUT_GAMEPAD::sThumbLX" name="LeftThumbX"/>
+    <map field="XINPUT_GAMEPAD::sThumbLY" name="LeftThumbY"/>
+    <map field="XINPUT_GAMEPAD::sThumbRX" name="RightThumbX"/>
+    <map field="XINPUT_GAMEPAD::sThumbRY" name="RightThumbY"/>
+
+    <map field="XINPUT_KEYSTROKE::VirtualKey" type="XINPUT_GAMEPAD_KEY_CODE"/>
+    <map field="XINPUT_KEYSTROKE::Flags" type="XINPUT_KEYSTROKE_FLAGS"/>
+    <map field="XINPUT_KEYSTROKE::UserIndex" type="XUSER_INDEX"/>
+
+    <!--
+    // *****************************************************************
+    // XInput Functions
+    // *****************************************************************
+    -->
+    <map function="XInput.*" dll='"#(XINPUT_DLL_A)"' group="SharpDX.XInput.XInput" />
+
+    <map param="XInputGetCapabilities::dwFlags" type="XINPUT_DEVQUERYTYPE"/>
+    <map param="XInputGetBatteryInformation::devType" type="BATTERY_DEVTYPE"/>
+
     <context-clear />
   </mapping>
 </config>
