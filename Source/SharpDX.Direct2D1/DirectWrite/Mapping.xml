@@ -44,6 +44,7 @@
     <map struct="DWRITE_GLYPH_RUN" native="true" struct-to-class="true" marshal="true" new="false" />
     <map field="DWRITE_GLYPH_RUN::fontEmSize" name="FontSize" />
     <map field="DWRITE_GLYPH_RUN::fontFace" visibility="internal" name="FontFacePointer" />
+    <map field="DWRITE_GLYPH_RUN::glyphCount" visibility="internal" />
     <map field="DWRITE_GLYPH_RUN::glyphIndices" visibility="internal" name="GlyphIndicesPointer" />
     <map field="DWRITE_GLYPH_RUN::glyphAdvances" visibility="internal" name="GlyphAdvancesPointer" />
     <map field="DWRITE_GLYPH_RUN::glyphOffsets" visibility="internal" name="GlyphOffsetsPointer" />

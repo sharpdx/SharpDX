@@ -105,28 +105,41 @@ namespace SharpDX.DirectWrite
         {
             @ref.FontFace = this.FontFace == null?IntPtr.Zero:this.FontFace.NativePointer;
             @ref.FontEmSize = this.FontSize;
-            @ref.GlyphCount = this.GlyphCount;
+            @ref.GlyphCount = -1;
             @ref.GlyphIndices = IntPtr.Zero;
             @ref.GlyphAdvances = IntPtr.Zero;
             @ref.GlyphOffsets = IntPtr.Zero;
 
             if (this.Indices != null)
             {
+                @ref.GlyphCount = this.Indices.Length;
                 @ref.GlyphIndices = Marshal.AllocHGlobal(this.Indices.Length*sizeof (short));
-                Utilities.Write(@ref.GlyphIndices, Indices, 0, GlyphCount);
+                Utilities.Write(@ref.GlyphIndices, Indices, 0, this.Indices.Length);
             }
 
             if (this.Advances != null)
             {
+                if (@ref.GlyphCount >= 0 && @ref.GlyphCount != this.Advances.Length)
+                    throw new InvalidOperationException(string.Format("Invalid length for array Advances [{0}] and Indices [{1}]. Indices, Advances and Offsets array must have same size - or may be null", this.Advances.Length, @ref.GlyphCount));
+                @ref.GlyphCount = this.Advances.Length;
                 @ref.GlyphAdvances = Marshal.AllocHGlobal(this.Advances.Length * sizeof(float));
-                Utilities.Write(@ref.GlyphAdvances, Advances, 0, GlyphCount);
-            }
+                Utilities.Write(@ref.GlyphAdvances, Advances, 0, this.Advances.Length);
+            } 
 
             if (this.Offsets != null)
             {
+                if (@ref.GlyphCount >= 0 && @ref.GlyphCount != this.Offsets.Length)
+                    throw new InvalidOperationException( string.Format("Invalid length for array Offsets [{0}]. Indices, Advances and Offsets array must have same size (Current is [{1}]- or may be null", this.Offsets.Length, @ref.GlyphCount));
+                @ref.GlyphCount = this.Offsets.Length;
                 @ref.GlyphOffsets = Marshal.AllocHGlobal(this.Offsets.Length * sizeof(GlyphOffset));
-                Utilities.Write(@ref.GlyphOffsets, Offsets, 0, GlyphCount);
+                Utilities.Write(@ref.GlyphOffsets, Offsets, 0, this.Offsets.Length);
             }
+
+            if (@ref.GlyphCount < 0)
+                @ref.GlyphCount = 0;
+
+            // Update GlyphCount only for debug purpose
+            this.GlyphCount = @ref.GlyphCount;
 
             @ref._IsSideways = this._IsSideways;
             @ref.BidiLevel = this.BidiLevel;
