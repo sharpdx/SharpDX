@@ -715,18 +715,23 @@ namespace SharpGen.Generator
                                       HasPointer = !string.IsNullOrEmpty(cppType.Pointer) && (cppType.Pointer.Contains("*") || cppType.Pointer.Contains("&")),
                                   };
 
-
             // Calculate ArrayDimension
-            int arrayDimensionValue = 1;
+            int arrayDimensionValue = 0;
             if (cppType.IsArray)
             {
-                if (!int.TryParse(cppType.ArrayDimension, out arrayDimensionValue))
+                if (string.IsNullOrEmpty(cppType.ArrayDimension))
+                    arrayDimensionValue = 0;
+                else if (!int.TryParse(cppType.ArrayDimension, out arrayDimensionValue))
                     arrayDimensionValue = 1;
-
-                interopType.ArrayDimensionValue = arrayDimensionValue;
+            }
+            
+            // If array Dimension is 0, then it is not an array
+            if (arrayDimensionValue == 0)
+            {
+                cppType.IsArray = false;
+                interopType.IsArray = false;
             }
             interopType.ArrayDimensionValue = arrayDimensionValue;
-            
             
             string typeName = cppType.GetTypeNameWithMapping();
 
