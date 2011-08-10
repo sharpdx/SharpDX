@@ -175,5 +175,9 @@ namespace SharpDX
 
         [DllImport("kernel32.dll", EntryPoint = "GetModuleHandle", CharSet = CharSet.Auto)]
         public static extern IntPtr GetModuleHandle(string lpModuleName);
+
+
+        public const int GenericRead = unchecked((int)0x80000000L);
+        public const int GenericWrite = unchecked((int)0x40000000L);
     }
 }

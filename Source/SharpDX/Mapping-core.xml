@@ -151,6 +151,7 @@
     <define struct="SharpDX.Multimedia.WaveFormatExtensible" sizeof="18"  marshal="true" custom-new="true"/>
     <define struct="SharpDX.FunctionCallback" sizeof="8" />
     <define interface="SharpDX.ComObject" />
+    <define interface="SharpDX.Win32.PropertyBag"/>
   </extension>
 
   <!--
@@ -272,7 +273,7 @@
     <bind from="IRpcStubBuffer" to="SharpDX.ComObject"/>
     <bind from="IRpcChannelBuffer" to="SharpDX.ComObject"/>
     <bind from="IPropertyStore" to="SharpDX.ComObject"/>
-    <bind from="IPropertyBag2" to="SharpDX.ComObject"/>
+    <bind from="IPropertyBag2" to="SharpDX.Win32.PropertyBag"/>
     <bind from="IClassFactory" to="SharpDX.ComObject"/>
     <bind from="IEnumUnknown" to="SharpDX.ComObject"/>
     <bind from="IEnumString" to="SharpDX.ComObject"/>
