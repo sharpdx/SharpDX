@@ -18,24 +18,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Drawing;
+using System;
+using System.IO;
 
 namespace SharpDX.WIC
 {
-    public partial class BitmapSource
+    public partial class WICStream
     {
         /// <summary>
-        /// Gets the size.
+        /// Initializes a new instance of the <see cref="WICStream"/> class.
         /// </summary>
-        /// <unmanaged>HRESULT IWICBitmapSource::GetSize([Out] unsigned int* puiWidth,[Out] unsigned int* puiHeight)</unmanaged>
-        public System.Drawing.Size Size
+        /// <param name="factory">The factory.</param>
+        public WICStream(ImagingFactory factory) : base(IntPtr.Zero)
         {
-            get
+            factory.CreateStream(this);
+        }
+
+        /// <unmanaged>HRESULT IWICStream::InitializeFromFilename([In] const wchar_t* wzFileName,[In] unsigned int dwDesiredAccess)</unmanaged>	
+        public SharpDX.Result InitializeFromFilename(string fileName, FileAccess fileAccess)
+        {
+            int nativeFileAccess;
+            switch (fileAccess)
             {
-                int width, height;
-                GetSize(out width, out height);
-                return new System.Drawing.Size(width,height);
+                case FileAccess.Read:
+                    nativeFileAccess = Win32Native.GenericRead;
+                    break;
+                case FileAccess.Write:
+                    nativeFileAccess = Win32Native.GenericWrite;
+                    break;
+                default:
+                    nativeFileAccess = Win32Native.GenericRead | Win32Native.GenericWrite;
+                    break;
             }
+            return InitializeFromFilename(fileName, nativeFileAccess);
         }
     }
 }

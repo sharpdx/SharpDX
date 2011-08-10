@@ -37,7 +37,17 @@
     <!-- class SharpDX.DirectInput.DeviceGuid -->
     <create class="PixelFormat" visibility="public sealed"/>
     <const from-guid="GUID_WICPixel(Format.*)" class="SharpDX.WIC.PixelFormat" type="System.Guid" name="$1">new System.Guid("$1")</const>
-    
+    <const from-guid="CLSID_WICImagingFactory" class="SharpDX.WIC.ImagingFactory" type="System.Guid" name="WICImagingFactoryClsid">new System.Guid("$1")</const>
+
+    <create class="BitmapEncoderGuids" visibility="public sealed"/>
+    <const from-guid="CLSID_WIC(.*)Encoder" class="SharpDX.WIC.BitmapEncoderGuids" type="System.Guid" name="$1">new System.Guid("$1")</const>
+
+    <create class="ContainerFormatGuids" visibility="public sealed"/>
+    <const from-guid="GUID_ContainerFormat(.*)" class="SharpDX.WIC.ContainerFormatGuids" type="System.Guid" name="$1">new System.Guid("$1")</const>
+
+    <create class="BitmapDecoderGuids" visibility="public sealed"/>
+    <const from-guid="CLSID_WIC(.*)Decoder" class="SharpDX.WIC.BitmapDecoderGuids" type="System.Guid" name="$1">new System.Guid("$1")</const>
+
     <context-clear />
   </extension>
 
@@ -58,6 +68,9 @@
     <map enum="WIC8(.*)" name="$1"/>
     <map enum-item="WIC(.*)" name="$1"/>
     <map enum-item="WIC8(.*)" name="$1"/>
+
+    <map enum="WICBitmapDecoderCapabilities" flags="true" none="true"/>
+    <map enum="WICBitmapEncoderCacheOption" visibility="internal"/>
 
     <map enum-item="WICBitmapInterpolationMode(.*)" name="$1"/>
     <map enum-item="WIC8BIMIptc(.*)" name="$1"/>
@@ -126,6 +139,7 @@
     // *****************************************************************
     -->
     <map interface="IWIC(.*)" name="$1"/>
+    <map interface="IWICStream" name="WICStream"/>
     <map method="IWICBitmapCodecProgressNotification::RegisterProgressNotification" visibility="internal"/>
 
     <map param=".*::.*::[cuibdwz]+([A-Z].*)" name-tmp="$1"/>
@@ -156,6 +170,7 @@
     <map method="IWICBitmapDecoder::GetColorContexts" visibility="internal"/>
     <map param="IWICBitmapDecoder::GetColorContexts::ppIColorContexts" attribute="out buffer optional"/>
     <map param="IWICBitmapDecoder::GetFrame::ppIBitmapFrame" return="true"/>
+    <map param="IWICBitmapDecoder::QueryCapability::pdwCapability" type="WICBitmapDecoderCapabilities" return="true"/>
 
     <!--IWICBitmapDecoderInfo -->
     <map method="IWICBitmapDecoderInfo::GetPatterns" visibility="internal"/>
@@ -166,10 +181,22 @@
     <map method="IWICBitmapDecoderInfo::CreateInstance" visibility="internal"/>
     <map param="IWICBitmapDecoderInfo::CreateInstance::ppIBitmapDecoder" attribute="out fast"/>
 
+    <map param="IWICBitmapDecoderInfo::MatchesPattern::pfMatches" return="true"/>
+
+    <!--IWICBitmapEncoder -->
+    <map method="IWICBitmapEncoder::SetColorContexts" visibility="internal"/>
+    <map method="IWICBitmapEncoder::CreateNewFrame" visibility="internal"/>
+    <map param="IWICBitmapEncoder::CreateNewFrame::.*" attribute="out fast"/>
+
+    <!--IWICBitmapFrameEncode-->
+    <map method="IWICBitmapFrameEncode::Initialize" visibility="internal"/>
+
     <!--IWICBitmapSource -->
     <map method="IWICBitmapSource::GetSize" visibility="internal"/>
 
-
+    <!--IWICImagingFactory-->
+    <map method="IWICImagingFactory::Create.*" visibility="internal"/>
+    <map param="IWICImagingFactory::Create.*::pp.*" attribute="out fast"/>
 
     <map param="IWICBitmapDecoderInfo::GetPatterns::pcPatterns" name="patternCount" />
     

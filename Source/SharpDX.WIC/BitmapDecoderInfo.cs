@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using SharpDX.Win32;
+
 namespace SharpDX.WIC
 {
     public partial class BitmapDecoderInfo
@@ -25,6 +27,7 @@ namespace SharpDX.WIC
         /// <summary>
         /// Gets the file pattern signatures supported by the decoder.
         /// </summary>
+        /// <unmanaged>HRESULT IWICBitmapDecoderInfo::GetPatterns([In] unsigned int cbSizePatterns,[Out, Buffer, Optional] WICBitmapPattern* pPatterns,[Out] unsigned int* pcPatterns,[Out] unsigned int* pcbPatternsActual)</unmanaged>	
         public BitmapPattern[] Patterns
         {
             get
@@ -41,6 +44,17 @@ namespace SharpDX.WIC
 
                 return temp;
             }
+        }
+
+        /// <summary>
+        /// Retrieves a value that indicates whether the codec recognizes the pattern within a specified stream.
+        /// </summary>
+        /// <param name="stream">The stream to pattern match within.</param>
+        /// <returns><c>true</c> if the patterns match; otherwise, <c>false</c>.</returns>
+        /// <unmanaged>HRESULT IWICBitmapDecoderInfo::MatchesPattern([In, Optional] IStream* pIStream,[Out] BOOL* pfMatches)</unmanaged>
+        public bool MatchesPattern(IStream stream)
+        {
+            return MatchesPattern_(ComStream.ToComPointer(stream));
         }
     }
 }

@@ -18,24 +18,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Drawing;
+using System;
 
 namespace SharpDX.WIC
 {
-    public partial class BitmapSource
+    public partial class ImagingFactory
     {
         /// <summary>
-        /// Gets the size.
+        /// Initializes a new instance of the <see cref="ImagingFactory"/> class.
         /// </summary>
-        /// <unmanaged>HRESULT IWICBitmapSource::GetSize([Out] unsigned int* puiWidth,[Out] unsigned int* puiHeight)</unmanaged>
-        public System.Drawing.Size Size
+        public ImagingFactory()
         {
-            get
-            {
-                int width, height;
-                GetSize(out width, out height);
-                return new System.Drawing.Size(width,height);
-            }
+            IntPtr temp;
+            Result result = Utilities.CoCreateInstance(WICImagingFactoryClsid, IntPtr.Zero, Utilities.CLSCTX.ClsctxInprocServer, typeof(ImagingFactory).GUID, out temp);
+            result.CheckError();
+            NativePointer = temp;
         }
     }
 }

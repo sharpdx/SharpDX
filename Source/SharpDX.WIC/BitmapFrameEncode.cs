@@ -18,24 +18,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Drawing;
+using System;
 
 namespace SharpDX.WIC
 {
-    public partial class BitmapSource
+    public partial class BitmapFrameEncode
     {
         /// <summary>
-        /// Gets the size.
+        /// Initializes a new instance of the <see cref="BitmapFrameEncode"/> class.
         /// </summary>
-        /// <unmanaged>HRESULT IWICBitmapSource::GetSize([Out] unsigned int* puiWidth,[Out] unsigned int* puiHeight)</unmanaged>
-        public System.Drawing.Size Size
+        /// <param name="encoder">The encoder.</param>
+        /// <unmanaged>HRESULT IWICBitmapEncoder::CreateNewFrame([Out] IWICBitmapFrameEncode** ppIFrameEncode,[Out] IPropertyBag2** ppIEncoderOptions)</unmanaged>	
+        public BitmapFrameEncode(BitmapEncoder encoder)
         {
-            get
-            {
-                int width, height;
-                GetSize(out width, out height);
-                return new System.Drawing.Size(width,height);
-            }
+            Properties = new BitmapEncoderOptions(IntPtr.Zero);
+
+            encoder.CreateNewFrame(this, Properties);
+        }
+
+        /// <summary>
+        /// Gets the properties to setup before <see cref="Initialize()"/>.
+        /// </summary>
+        public BitmapEncoderOptions Properties { get; private set; }
+
+        /// <summary>
+        /// Initializes this instance.
+        /// </summary>
+        /// <unmanaged>HRESULT IWICBitmapFrameEncode::Initialize([In, Optional] IPropertyBag2* pIEncoderOptions)</unmanaged>
+        public void Initialize()
+        {
+            Initialize(Properties);
         }
     }
 }

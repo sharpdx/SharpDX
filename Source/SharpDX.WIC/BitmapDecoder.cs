@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using SharpDX.Win32;
 
 namespace SharpDX.WIC
 {
@@ -52,6 +53,30 @@ namespace SharpDX.WIC
 
                 return temp;
             }
+        }
+
+        /// <summary>
+        /// Queries the capabilities of the decoder based on the specified stream.
+        /// </summary>
+        /// <param name="stream">The stream to retrieve the decoder capabilities from..</param>
+        /// <returns>Capabilities of the decoder</returns>
+        /// <unmanaged>HRESULT IWICBitmapDecoder::QueryCapability([In, Optional] IStream* pIStream,[Out] WICBitmapDecoderCapabilities* pdwCapability)</unmanaged>
+        public SharpDX.WIC.BitmapDecoderCapabilities QueryCapability(IStream stream)
+        {
+            return QueryCapability_(ComStream.ToComPointer(stream));
+        }
+
+
+        /// <summary>
+        /// Initializes the decoder with the provided stream.
+        /// </summary>
+        /// <param name="stream">The stream to use for initialization.</param>
+        /// <param name="cacheOptions">The cache options.</param>
+        /// <returns>If the method succeeds, it returns <see cref="Result.Ok"/>. Otherwise, it throws an exception.</returns>
+        /// <unmanaged>HRESULT IWICBitmapDecoder::Initialize([In, Optional] IStream* pIStream,[In] WICDecodeOptions cacheOptions)</unmanaged>
+        public SharpDX.Result Initialize(IStream stream, SharpDX.WIC.DecodeOptions cacheOptions)
+        {
+            return Initialize_(ComStream.ToComPointer(stream), cacheOptions);
         }
     }
 }
