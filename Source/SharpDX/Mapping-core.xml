@@ -26,12 +26,15 @@
 
   <include file="objidl.h" namespace="SharpDX.Win32" output="Win32">
     <attach>STATSTG</attach>
+    <attach>tagLOCKTYPE</attach>
+    <attach>LOCKTYPE</attach>
     <attach>ISequentialStream</attach>
     <attach>IStream</attach>
   </include>
 
   <include file="wtypes.h" namespace="SharpDX.Win32" output="Win32">
     <attach>STGC</attach>
+    <attach>STATFLAG</attach>    
   </include>
 
   <include file="winerror.h" namespace="SharpDX.Win32" output="Win32"/>
@@ -116,6 +119,7 @@
     <const from-macro="ERROR_(.*)" type="int" cpp-type="int" name="$1" class="SharpDX.Win32.ErrorCode" visibility="public const" />
     <context-clear/>
 
+    <define enum="System.IO.SeekOrigin" sizeof="4" />
     <define struct="System.Drawing.Rectangle" sizeof="16" />
     <define struct="System.Drawing.RectangleF" sizeof="16" />
     <define struct="System.Drawing.SizeF" sizeof="8" />
@@ -173,6 +177,7 @@
     <bind from="SHARPDX_COLOR4" to="SharpDX.Color4" />
     <bind from="SHARPDX_VECTOR4" to="SharpDX.Vector4" />
     <bind from="SHARPDX_MATRIX" to="SharpDX.Matrix" />
+    <bind from="SHARPDX_SEEKORIGIN" to="System.IO.SeekOrigin" />
 
     <!-- Global D3DX/D3D bindings -->
     <bind from="D3DCOLORVALUE" to="SharpDX.Color4" />
@@ -321,8 +326,32 @@
     <map enum-item="STGC_ONLYIFCURRENT" name="OnlyCurrent"/>
     <map enum-item="STGC_DANGEROUSLYCOMMITMERELYTODISKCACHE" name="DangerouslyCommitMerelyToDiskCache"/>
 
+    <map enum="LOCKTYPE" name="LockType" flags="true"/>
+    <map enum-item="LOCK_(.*)" name-tmp="$1"/>
+    <map enum-item="LOCK_ONLYONCE" name="OnlyOnce"/>
+
+    <map enum="STATFLAG" name="StorageStatisticsFlags"/>
+    <map enum-item="STATFLAG_DEFAULT" name="Default"/>
+    <map enum-item="STATFLAG_NONAME" name="NoName"/>
+    <remove enum-item="STATFLAG_NOOPEN"/>
+
     <map interface="ISequentialStream" name="IStreamBase" callback-visibility="public" callback="true" callback-dual="true" callback-name="ComStreamBase"/>
+    <map param="ISequentialStream::Read::pcbRead" return="true"/>
+    <map param="ISequentialStream::Write::pcbWritten" return="true"/>
+    <map method="ISequentialStream::.*" keep-implement-public="true"/>
+
     <map interface="IStream" name="IStream" callback-visibility="public" callback="true" callback-dual="true" callback-name="ComStream"/>
+    <map param="IStream::Seek::dwOrigin" type="SHARPDX_SEEKORIGIN"/>
+    <map param="IStream::Seek::plibNewPosition" return="true"/>
+    <map param="IStream::CopyTo::pcbRead" return="true"/>
+    <map param="IStream::Commit::grfCommitFlags" type="STGC"/>
+    <map param="IStream::.*::dwLockType" type="LOCKTYPE"/>
+    <map method="IStream::Stat" name="GetStatistics" />
+    <map param="IStream::Stat::pstatstg" return="true"/>
+    <map param="IStream::Stat::grfStatFlag" type="STATFLAG"/>
+    <map param="IStream::Clone::ppstm" return="true"/>
+    <map method="IStream::.*" keep-implement-public="true"/>
+    
     <context-clear/>
   </mapping>
 </config>

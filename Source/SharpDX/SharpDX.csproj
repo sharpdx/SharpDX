@@ -181,9 +181,13 @@
     <Compile Include="Vector2.cs" />
     <Compile Include="Vector3.cs" />
     <Compile Include="Vector4.cs" />
+    <Compile Include="Win32\ComStream.cs" />
+    <Compile Include="Win32\ComStreamCallback.cs" />
+    <Compile Include="Win32\ComStreamBaseCallback.cs" />
     <Compile Include="Win32\ErrorCode.cs" />
     <Compile Include="Win32\FileHelper.cs" />
     <Compile Include="Win32\IStream.cs" />
+    <Compile Include="Win32\IStreamBase.cs" />
     <Compile Include="Windows\RenderLoop.cs" />
     <Compile Include="Windows\RenderControl.cs">
       <SubType>UserControl</SubType>
