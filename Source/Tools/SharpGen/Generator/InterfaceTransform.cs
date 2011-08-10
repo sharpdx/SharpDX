@@ -263,8 +263,13 @@ namespace SharpGen.Generator
                     {
                         var method = (CsMethod)innerElement;
                         var newCsMethod = (CsMethod)method.Clone();
-                        newCsMethod.Visibility = Visibility.Internal;
-                        newCsMethod.Name = newCsMethod.Name + "_";
+                        var tagForMethod = method.CppElement.GetTagOrDefault<MappingRule>();
+                        bool keepMethodPublic = tagForMethod.IsKeepImplementPublic.HasValue && tagForMethod.IsKeepImplementPublic.Value;
+                        if (!keepMethodPublic)
+                        {
+                            newCsMethod.Visibility = Visibility.Internal;
+                            newCsMethod.Name = newCsMethod.Name + "_";
+                        }
                         nativeCallback.Add(newCsMethod);
                     }
                     else

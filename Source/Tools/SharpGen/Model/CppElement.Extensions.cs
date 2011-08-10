@@ -123,6 +123,7 @@ namespace SharpGen.Model
                            if (fromTag.EnumHasNone != null) tag.EnumHasNone = fromTag.EnumHasNone;
                            if (fromTag.IsCallbackInterface != null) tag.IsCallbackInterface = fromTag.IsCallbackInterface;
                            if (fromTag.IsDualCallbackInterface != null) tag.IsDualCallbackInterface = fromTag.IsDualCallbackInterface;
+                           if (fromTag.IsKeepImplementPublic != null) tag.IsKeepImplementPublic = fromTag.IsKeepImplementPublic;
                            if (fromTag.FunctionDllName != null) tag.FunctionDllName = RegexRename(pathREgex, element.FullName, fromTag.FunctionDllName);
                            if (fromTag.FunctionDllNameFromMacro != null)
                                tag.FunctionDllName = element.ParentRoot.FindFirst<CppDefine>(fromTag.FunctionDllNameFromMacro).StripStringValue;

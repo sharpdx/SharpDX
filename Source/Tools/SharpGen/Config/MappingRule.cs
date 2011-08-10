@@ -175,6 +175,14 @@ namespace SharpGen.Config
         public bool _IsDualCallbackInterface_ { get { return IsDualCallbackInterface.Value; } set { IsDualCallbackInterface = value; } } public bool ShouldSerialize_IsDualCallbackInterface_() { return IsDualCallbackInterface != null; }
 
         /// <summary>
+        /// Used for methods to specify that inheriting methods from interface should be kept public and without any rename.
+        /// </summary>
+        [XmlIgnore]
+        public bool? IsKeepImplementPublic { get; set; }
+        [XmlAttribute("keep-implement-public")]
+        public bool _IsKeepImplementPublic_ { get { return IsKeepImplementPublic.Value; } set { IsKeepImplementPublic = value; } } public bool ShouldSerialize_IsKeepImplementPublic_() { return IsKeepImplementPublic != null; }
+
+        /// <summary>
         /// DLL name attached to a function
         /// </summary>
         [XmlAttribute("dll")]
