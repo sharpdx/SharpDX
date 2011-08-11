@@ -23,33 +23,35 @@ using System;
 namespace SharpDX.WIC
 {
     /// <summary>
-    /// Tiff bitmap encoder using <see cref="BitmapEncoder"/> initialized with default guid <see cref="ContainerFormatGuids.Jpeg"/>.
+    /// Wmp bitmap encoder using <see cref="BitmapEncoder"/> initialized with default guid <see cref="ContainerFormatGuids.Wmp"/>.
     /// </summary>
-    public class JpegBitmapEncoder : BitmapEncoder
+    public class WmpBitmapEncoder : BitmapEncoder
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="JpegBitmapEncoder"/> class.
+        /// Initializes a new instance of the <see cref="WmpBitmapEncoder"/> class.
         /// </summary>
         /// <param name="nativePtr">The native PTR.</param>
-        public JpegBitmapEncoder(IntPtr nativePtr) : base(nativePtr)
+        public WmpBitmapEncoder(IntPtr nativePtr)
+            : base(nativePtr)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="JpegBitmapEncoder"/> class.
+        /// Initializes a new instance of the <see cref="WmpBitmapEncoder"/> class.
         /// </summary>
         /// <param name="factory">The factory.</param>
-        public JpegBitmapEncoder(ImagingFactory factory) : base(factory, ContainerFormatGuids.Jpeg)
+        public WmpBitmapEncoder(ImagingFactory factory)
+            : base(factory, ContainerFormatGuids.Wmp)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="JpegBitmapEncoder"/> class.
+        /// Initializes a new instance of the <see cref="WmpBitmapEncoder"/> class.
         /// </summary>
         /// <param name="factory">The factory.</param>
         /// <param name="guidVendorRef">The GUID vendor ref.</param>
-        public JpegBitmapEncoder(ImagingFactory factory, Guid guidVendorRef)
-            : base(factory, ContainerFormatGuids.Jpeg, guidVendorRef)
+        public WmpBitmapEncoder(ImagingFactory factory, Guid guidVendorRef)
+            : base(factory, ContainerFormatGuids.Wmp, guidVendorRef)
         {
         }
     }

@@ -34,7 +34,7 @@ namespace EncodeDecode
 
             var stream = new WICStream(factory, "output.jpg", FileAccess.Write);
 
-            var encoder = new BitmapEncoder(factory, ContainerFormatGuids.Jpeg);
+            var encoder = new JpegBitmapEncoder(factory);
             encoder.Initialize(stream);
 
             var bitmapFrameEncode = new BitmapFrameEncode(encoder);

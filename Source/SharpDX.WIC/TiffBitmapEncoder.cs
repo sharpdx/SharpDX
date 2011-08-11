@@ -23,33 +23,35 @@ using System;
 namespace SharpDX.WIC
 {
     /// <summary>
-    /// Tiff bitmap encoder using <see cref="BitmapEncoder"/> initialized with default guid <see cref="ContainerFormatGuids.Jpeg"/>.
+    /// Tiff bitmap encoder using <see cref="BitmapEncoder"/> initialized with default guid <see cref="ContainerFormatGuids.Tiff"/>.
     /// </summary>
-    public class JpegBitmapEncoder : BitmapEncoder
+    public class TiffBitmapEncoder : BitmapEncoder
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="JpegBitmapEncoder"/> class.
+        /// Initializes a new instance of the <see cref="TiffBitmapEncoder"/> class.
         /// </summary>
         /// <param name="nativePtr">The native PTR.</param>
-        public JpegBitmapEncoder(IntPtr nativePtr) : base(nativePtr)
+        public TiffBitmapEncoder(IntPtr nativePtr)
+            : base(nativePtr)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="JpegBitmapEncoder"/> class.
+        /// Initializes a new instance of the <see cref="TiffBitmapEncoder"/> class.
         /// </summary>
         /// <param name="factory">The factory.</param>
-        public JpegBitmapEncoder(ImagingFactory factory) : base(factory, ContainerFormatGuids.Jpeg)
+        public TiffBitmapEncoder(ImagingFactory factory)
+            : base(factory, ContainerFormatGuids.Tiff)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="JpegBitmapEncoder"/> class.
+        /// Initializes a new instance of the <see cref="TiffBitmapEncoder"/> class.
         /// </summary>
         /// <param name="factory">The factory.</param>
         /// <param name="guidVendorRef">The GUID vendor ref.</param>
-        public JpegBitmapEncoder(ImagingFactory factory, Guid guidVendorRef)
-            : base(factory, ContainerFormatGuids.Jpeg, guidVendorRef)
+        public TiffBitmapEncoder(ImagingFactory factory, Guid guidVendorRef)
+            : base(factory, ContainerFormatGuids.Tiff, guidVendorRef)
         {
         }
     }

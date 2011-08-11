@@ -23,33 +23,35 @@ using System;
 namespace SharpDX.WIC
 {
     /// <summary>
-    /// Tiff bitmap encoder using <see cref="BitmapEncoder"/> initialized with default guid <see cref="ContainerFormatGuids.Jpeg"/>.
+    /// Gif bitmap encoder using <see cref="BitmapEncoder"/> initialized with default guid <see cref="ContainerFormatGuids.Gif"/>.
     /// </summary>
-    public class JpegBitmapEncoder : BitmapEncoder
+    public class GifBitmapEncoder : BitmapEncoder
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="JpegBitmapEncoder"/> class.
+        /// Initializes a new instance of the <see cref="GifBitmapEncoder"/> class.
         /// </summary>
         /// <param name="nativePtr">The native PTR.</param>
-        public JpegBitmapEncoder(IntPtr nativePtr) : base(nativePtr)
+        public GifBitmapEncoder(IntPtr nativePtr)
+            : base(nativePtr)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="JpegBitmapEncoder"/> class.
+        /// Initializes a new instance of the <see cref="GifBitmapEncoder"/> class.
         /// </summary>
         /// <param name="factory">The factory.</param>
-        public JpegBitmapEncoder(ImagingFactory factory) : base(factory, ContainerFormatGuids.Jpeg)
+        public GifBitmapEncoder(ImagingFactory factory)
+            : base(factory, ContainerFormatGuids.Gif)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="JpegBitmapEncoder"/> class.
+        /// Initializes a new instance of the <see cref="GifBitmapEncoder"/> class.
         /// </summary>
         /// <param name="factory">The factory.</param>
         /// <param name="guidVendorRef">The GUID vendor ref.</param>
-        public JpegBitmapEncoder(ImagingFactory factory, Guid guidVendorRef)
-            : base(factory, ContainerFormatGuids.Jpeg, guidVendorRef)
+        public GifBitmapEncoder(ImagingFactory factory, Guid guidVendorRef)
+            : base(factory, ContainerFormatGuids.Gif, guidVendorRef)
         {
         }
     }
