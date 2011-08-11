@@ -32,15 +32,13 @@ namespace EncodeDecode
         {
             var factory = new ImagingFactory();
 
-            var stream = new WICStream(factory);
-            stream.InitializeFromFilename("output.jpg", FileAccess.Write);
+            var stream = new WICStream(factory, "output.jpg", FileAccess.Write);
 
             var encoder = new BitmapEncoder(factory, ContainerFormatGuids.Jpeg);
             encoder.Initialize(stream);
 
             var bitmapFrameEncode = new BitmapFrameEncode(encoder);
-
-            bitmapFrameEncode.Properties.ImageQuality = 0.8f;
+            bitmapFrameEncode.Options.ImageQuality = 0.8f;
             bitmapFrameEncode.Initialize();
 
             bitmapFrameEncode.SetSize(512, 512);

@@ -20,23 +20,25 @@
 
 using System;
 using System.IO;
+using SharpDX.Win32;
 
 namespace SharpDX.WIC
 {
     public partial class WICStream
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="WICStream"/> class.
+        /// Initializes a new instance of the <see cref="WICStream"/> class from a file.
         /// </summary>
         /// <param name="factory">The factory.</param>
-        public WICStream(ImagingFactory factory) : base(IntPtr.Zero)
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="fileAccess">The file access.</param>
+        /// <unmanaged>HRESULT IWICImagingFactory::CreateStream([Out, Fast] IWICStream** ppIWICStream)</unmanaged>	
+        /// <unmanaged>HRESULT IWICStream::InitializeFromFilename([In] const wchar_t* wzFileName,[In] unsigned int dwDesiredAccess)</unmanaged>	
+        public WICStream(ImagingFactory factory, string fileName, FileAccess fileAccess)
+            : base(IntPtr.Zero)
         {
             factory.CreateStream(this);
-        }
 
-        /// <unmanaged>HRESULT IWICStream::InitializeFromFilename([In] const wchar_t* wzFileName,[In] unsigned int dwDesiredAccess)</unmanaged>	
-        public SharpDX.Result InitializeFromFilename(string fileName, FileAccess fileAccess)
-        {
             int nativeFileAccess;
             switch (fileAccess)
             {
@@ -50,7 +52,35 @@ namespace SharpDX.WIC
                     nativeFileAccess = Win32Native.GenericRead | Win32Native.GenericWrite;
                     break;
             }
-            return InitializeFromFilename(fileName, nativeFileAccess);
+            InitializeFromFilename(fileName, nativeFileAccess);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WICStream"/> class from a <see cref="IStream"/>.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="stream">The stream.</param>
+        /// <unmanaged>HRESULT IWICImagingFactory::CreateStream([Out, Fast] IWICStream** ppIWICStream)</unmanaged>	
+        /// <unmanaged>HRESULT IWICStream::InitializeFromFilename([In] const wchar_t* wzFileName,[In] unsigned int dwDesiredAccess)</unmanaged>	
+        public WICStream(ImagingFactory factory, IStream stream)
+            : base(IntPtr.Zero)
+        {
+            factory.CreateStream(this);
+            InitializeFromIStream_(ToComPointer(stream));
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WICStream"/> class from an unmanaged memory through a <see cref="DataStream"/>.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="dataStream">The unmanaged memory stream.</param>
+        /// <unmanaged>HRESULT IWICImagingFactory::CreateStream([Out, Fast] IWICStream** ppIWICStream)</unmanaged>	
+        /// <unmanaged>HRESULT IWICStream::InitializeFromFilename([In] const wchar_t* wzFileName,[In] unsigned int dwDesiredAccess)</unmanaged>	
+        public WICStream(ImagingFactory factory, DataStream dataStream)
+            : base(IntPtr.Zero)
+        {
+            factory.CreateStream(this);
+            InitializeFromMemory(dataStream.DataPointer, (int)dataStream.Length);
         }
     }
 }

@@ -198,6 +198,10 @@
     <map method="IWICImagingFactory::Create.*" visibility="internal"/>
     <map param="IWICImagingFactory::Create.*::pp.*" attribute="out fast"/>
 
+
+    <!--IWICStream -->
+    <map method="IWICStream::InitializeFrom.*" visibility="internal"/>
+
     <map param="IWICBitmapDecoderInfo::GetPatterns::pcPatterns" name="patternCount" />
     
     

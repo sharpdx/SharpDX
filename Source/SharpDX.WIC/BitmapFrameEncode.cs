@@ -31,15 +31,15 @@ namespace SharpDX.WIC
         /// <unmanaged>HRESULT IWICBitmapEncoder::CreateNewFrame([Out] IWICBitmapFrameEncode** ppIFrameEncode,[Out] IPropertyBag2** ppIEncoderOptions)</unmanaged>	
         public BitmapFrameEncode(BitmapEncoder encoder)
         {
-            Properties = new BitmapEncoderOptions(IntPtr.Zero);
+            Options = new BitmapEncoderOptions(IntPtr.Zero);
 
-            encoder.CreateNewFrame(this, Properties);
+            encoder.CreateNewFrame(this, Options);
         }
 
         /// <summary>
         /// Gets the properties to setup before <see cref="Initialize()"/>.
         /// </summary>
-        public BitmapEncoderOptions Properties { get; private set; }
+        public BitmapEncoderOptions Options { get; private set; }
 
         /// <summary>
         /// Initializes this instance.
@@ -47,7 +47,7 @@ namespace SharpDX.WIC
         /// <unmanaged>HRESULT IWICBitmapFrameEncode::Initialize([In, Optional] IPropertyBag2* pIEncoderOptions)</unmanaged>
         public void Initialize()
         {
-            Initialize(Properties);
+            Initialize(Options);
         }
     }
 }
