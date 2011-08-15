@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2011 Silicon Studio
 
 using System;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace SharpDX.Win32
@@ -132,6 +133,29 @@ namespace SharpDX.Win32
            IntPtr lpSecurityAttributes,
            NativeFileCreationDisposition dwCreationDisposition,
            NativeFileAttributes dwFlagsAndAttributes,
-           IntPtr hTemplateFile);         
+           IntPtr hTemplateFile);
+
+        /// <summary>
+        /// Converts the specified file access to a native file access.
+        /// </summary>
+        /// <param name="fileAccess">The file access.</param>
+        /// <returns></returns>
+        public static NativeFileAccess Convert(FileAccess fileAccess)
+        {
+            NativeFileAccess nativeFileAccess;
+            switch (fileAccess)
+            {
+                case FileAccess.Read:
+                    nativeFileAccess = NativeFileAccess.GenericRead;
+                    break;
+                case FileAccess.Write:
+                    nativeFileAccess = NativeFileAccess.GenericWrite;
+                    break;
+                default:
+                    nativeFileAccess = NativeFileAccess.GenericRead | NativeFileAccess.GenericWrite;
+                    break;
+            }
+            return nativeFileAccess;
+        }
     }
 }

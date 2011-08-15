@@ -38,21 +38,7 @@ namespace SharpDX.WIC
             : base(IntPtr.Zero)
         {
             factory.CreateStream(this);
-
-            int nativeFileAccess;
-            switch (fileAccess)
-            {
-                case FileAccess.Read:
-                    nativeFileAccess = Win32Native.GenericRead;
-                    break;
-                case FileAccess.Write:
-                    nativeFileAccess = Win32Native.GenericWrite;
-                    break;
-                default:
-                    nativeFileAccess = Win32Native.GenericRead | Win32Native.GenericWrite;
-                    break;
-            }
-            InitializeFromFilename(fileName, nativeFileAccess);
+            InitializeFromFilename(fileName, (int)FileHelper.Convert(fileAccess));
         }
 
         /// <summary>
@@ -66,7 +52,7 @@ namespace SharpDX.WIC
             : base(IntPtr.Zero)
         {
             factory.CreateStream(this);
-            InitializeFromIStream_(ToComPointer(stream));
+            InitializeFromIStream_(ToIntPtr(stream));
         }
 
         /// <summary>

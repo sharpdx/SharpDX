@@ -201,9 +201,10 @@
 
     <!-- Win32 bindings -->
     <bind from="INT_PTR" to="System.IntPtr" />
-    <bind from="LONG_PTR" to="System.IntPtr" />
     <bind from="UINT_PTR" to="System.IntPtr" />
-    <bind from="HANDLE_PTR" to="System.IntPtr" />
+    <bind from="LONG_PTR" to="System.IntPtr" />
+    <bind from="ULONG_PTR" to="System.IntPtr" />
+    <bind from="HANDLE_PTR" to="System.IntPtr" />    
 
     <bind from="LPGLYPHMETRICSFLOAT" to="System.IntPtr" />
     <bind from="WAVEFORMATEX" to="SharpDX.Multimedia.WaveFormat" />

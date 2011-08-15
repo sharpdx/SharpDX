@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.IO;
 using SharpDX.Win32;
 
 namespace SharpDX.WIC
@@ -26,7 +27,7 @@ namespace SharpDX.WIC
     public partial class BitmapDecoder
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BitmapDecoder"/> class.
+        /// Initializes a new instance of the <see cref="BitmapDecoder"/> class from a <see cref="BitmapDecoderInfo"/>.
         /// </summary>
         /// <param name="bitmapDecoderInfo">The bitmap decoder info.</param>
         /// <unmanaged>HRESULT IWICBitmapDecoderInfo::CreateInstance([Out, Fast] IWICBitmapDecoder** ppIBitmapDecoder)</unmanaged>
@@ -34,6 +35,119 @@ namespace SharpDX.WIC
         {
             bitmapDecoderInfo.CreateInstance(this);
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BitmapDecoder"/> class from a guid. <see cref="BitmapDecoderGuids"/> for a list of default supported decoder.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="containerFormatGuid">The container format GUID.</param>
+        /// <unmanaged>HRESULT IWICImagingFactory::CreateDecoder([In] const GUID&amp; guidContainerFormat,[In, Optional] const GUID* pguidVendor,[Out, Fast] IWICBitmapDecoder** ppIDecoder)</unmanaged>	
+        public BitmapDecoder(ImagingFactory factory, Guid containerFormatGuid)
+        {
+            factory.CreateDecoder(containerFormatGuid, null, this);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BitmapDecoder"/> class.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="containerFormatGuid">The container format GUID.</param>
+        /// <param name="guidVendorRef">The GUID vendor ref.</param>
+        /// <unmanaged>HRESULT IWICImagingFactory::CreateDecoder([In] const GUID&amp; guidContainerFormat,[In, Optional] const GUID* pguidVendor,[Out, Fast] IWICBitmapDecoder** ppIDecoder)</unmanaged>	
+        public BitmapDecoder(ImagingFactory factory, Guid containerFormatGuid, System.Guid guidVendorRef)
+        {
+            factory.CreateDecoder(containerFormatGuid, guidVendorRef, this);        
+    
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BitmapDecoder"/> class from a <see cref="IStream"/>.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="streamRef">The stream ref.</param>
+        /// <param name="metadataOptions">The metadata options.</param>
+        /// <unmanaged>HRESULT IWICImagingFactory::CreateDecoderFromStream([In, Optional] IStream* pIStream,[In, Optional] const GUID* pguidVendor,[In] WICDecodeOptions metadataOptions,[Out, Fast] IWICBitmapDecoder** ppIDecoder)</unmanaged>
+        public BitmapDecoder(ImagingFactory factory, IStream streamRef, SharpDX.WIC.DecodeOptions metadataOptions)
+        {
+            factory.CreateDecoderFromStream_(ComStream.ToIntPtr(streamRef), null, metadataOptions, this);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BitmapDecoder"/> class from a <see cref="IStream"/>.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="streamRef">The stream ref.</param>
+        /// <param name="guidVendorRef">The GUID vendor ref.</param>
+        /// <param name="metadataOptions">The metadata options.</param>
+        /// <unmanaged>HRESULT IWICImagingFactory::CreateDecoderFromStream([In, Optional] IStream* pIStream,[In, Optional] const GUID* pguidVendor,[In] WICDecodeOptions metadataOptions,[Out, Fast] IWICBitmapDecoder** ppIDecoder)</unmanaged>
+        public BitmapDecoder(ImagingFactory factory, IStream streamRef, System.Guid guidVendorRef, SharpDX.WIC.DecodeOptions metadataOptions)
+        {
+            factory.CreateDecoderFromStream_(ComStream.ToIntPtr(streamRef), guidVendorRef, metadataOptions, this);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BitmapDecoder"/> class from a file in read mode.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="filename">The filename.</param>
+        /// <param name="metadataOptions">The metadata options.</param>
+        /// <unmanaged>HRESULT IWICImagingFactory::CreateDecoderFromFilename([In] const wchar_t* wzFilename,[In, Optional] const GUID* pguidVendor,[In] unsigned int dwDesiredAccess,[In] WICDecodeOptions metadataOptions,[Out, Fast] IWICBitmapDecoder** ppIDecoder)</unmanaged>
+        public BitmapDecoder(ImagingFactory factory, string filename, SharpDX.WIC.DecodeOptions metadataOptions)
+            : this(factory, filename, null, FileAccess.Read, metadataOptions)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BitmapDecoder"/> class from a file.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="filename">The filename.</param>
+        /// <param name="desiredAccess">The desired access.</param>
+        /// <param name="metadataOptions">The metadata options.</param>
+        /// <unmanaged>HRESULT IWICImagingFactory::CreateDecoderFromFilename([In] const wchar_t* wzFilename,[In, Optional] const GUID* pguidVendor,[In] unsigned int dwDesiredAccess,[In] WICDecodeOptions metadataOptions,[Out, Fast] IWICBitmapDecoder** ppIDecoder)</unmanaged>
+        public BitmapDecoder(ImagingFactory factory, string filename, FileAccess desiredAccess, SharpDX.WIC.DecodeOptions metadataOptions) : this(factory, filename, null, desiredAccess, metadataOptions)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BitmapDecoder"/> class from a file.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="filename">The filename.</param>
+        /// <param name="guidVendorRef">The GUID vendor ref.</param>
+        /// <param name="desiredAccess">The desired access.</param>
+        /// <param name="metadataOptions">The metadata options.</param>
+        /// <unmanaged>HRESULT IWICImagingFactory::CreateDecoderFromFilename([In] const wchar_t* wzFilename,[In, Optional] const GUID* pguidVendor,[In] unsigned int dwDesiredAccess,[In] WICDecodeOptions metadataOptions,[Out, Fast] IWICBitmapDecoder** ppIDecoder)</unmanaged>
+        public BitmapDecoder(ImagingFactory factory, string filename, System.Guid? guidVendorRef, FileAccess desiredAccess, SharpDX.WIC.DecodeOptions metadataOptions)
+        {
+            factory.CreateDecoderFromFilename(filename, guidVendorRef, (int)FileHelper.Convert(desiredAccess), metadataOptions, this);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BitmapDecoder"/> class from a filestream.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="fileStream">The filename.</param>
+        /// <param name="metadataOptions">The metadata options.</param>
+        /// <unmanaged>HRESULT IWICImagingFactory::CreateDecoderFromFileHandle([In] unsigned int hFile,[In, Optional] const GUID* pguidVendor,[In] WICDecodeOptions metadataOptions,[Out, Fast] IWICBitmapDecoder** ppIDecoder)</unmanaged>	
+        public BitmapDecoder(ImagingFactory factory, FileStream fileStream, SharpDX.WIC.DecodeOptions metadataOptions)
+        {
+            factory.CreateDecoderFromFileHandle(fileStream.SafeFileHandle.DangerousGetHandle(), null, metadataOptions, this);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BitmapDecoder"/> class from a filestream.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="fileStream">The filename.</param>
+        /// <param name="guidVendorRef">The GUID vendor ref.</param>
+        /// <param name="metadataOptions">The metadata options.</param>
+        /// <unmanaged>HRESULT IWICImagingFactory::CreateDecoderFromFileHandle([In] unsigned int hFile,[In, Optional] const GUID* pguidVendor,[In] WICDecodeOptions metadataOptions,[Out, Fast] IWICBitmapDecoder** ppIDecoder)</unmanaged>	
+        public BitmapDecoder(ImagingFactory factory, FileStream fileStream, System.Guid guidVendorRef, SharpDX.WIC.DecodeOptions metadataOptions)
+        {
+            factory.CreateDecoderFromFileHandle(fileStream.SafeFileHandle.DangerousGetHandle(), guidVendorRef, metadataOptions, this);
+        }
+
 
         /// <summary>
         /// Gets the <see cref="ColorContext"/> objects of the image.
@@ -63,7 +177,7 @@ namespace SharpDX.WIC
         /// <unmanaged>HRESULT IWICBitmapDecoder::QueryCapability([In, Optional] IStream* pIStream,[Out] WICBitmapDecoderCapabilities* pdwCapability)</unmanaged>
         public SharpDX.WIC.BitmapDecoderCapabilities QueryCapability(IStream stream)
         {
-            return QueryCapability_(ComStream.ToComPointer(stream));
+            return QueryCapability_(ComStream.ToIntPtr(stream));
         }
 
 
@@ -76,7 +190,7 @@ namespace SharpDX.WIC
         /// <unmanaged>HRESULT IWICBitmapDecoder::Initialize([In, Optional] IStream* pIStream,[In] WICDecodeOptions cacheOptions)</unmanaged>
         public SharpDX.Result Initialize(IStream stream, SharpDX.WIC.DecodeOptions cacheOptions)
         {
-            return Initialize_(ComStream.ToComPointer(stream), cacheOptions);
+            return Initialize_(ComStream.ToIntPtr(stream), cacheOptions);
         }
     }
 }

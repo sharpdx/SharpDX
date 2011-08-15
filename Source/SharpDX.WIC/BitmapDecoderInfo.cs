@@ -54,7 +54,7 @@ namespace SharpDX.WIC
         /// <unmanaged>HRESULT IWICBitmapDecoderInfo::MatchesPattern([In, Optional] IStream* pIStream,[Out] BOOL* pfMatches)</unmanaged>
         public bool MatchesPattern(IStream stream)
         {
-            return MatchesPattern_(ComStream.ToComPointer(stream));
+            return MatchesPattern_(ComStream.ToIntPtr(stream));
         }
     }
 }

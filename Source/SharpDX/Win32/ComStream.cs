@@ -33,7 +33,7 @@ namespace SharpDX.Win32
         /// <returns>The number of bytes read from this instance</returns>
         public long CopyTo(IStream streamDest, long numberOfBytesToCopy, out long bytesWritten)
         {
-            return CopyTo_(ToComPointer(streamDest), numberOfBytesToCopy, out bytesWritten);
+            return CopyTo_(ToIntPtr(streamDest), numberOfBytesToCopy, out bytesWritten);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace SharpDX.Win32
         /// </summary>
         /// <param name="stream">The stream.</param>
         /// <returns>A Com pointer</returns>
-        public static IntPtr ToComPointer(IStream stream)
+        public static IntPtr ToIntPtr(IStream stream)
         {
             return ComStreamShadow.ToIntPtr(stream);
         }

@@ -56,7 +56,7 @@ namespace SharpDX.WIC
         /// <unmanaged>HRESULT IWICBitmapEncoder::Initialize([In, Optional] IStream* pIStream,[In] WICBitmapEncoderCacheOption cacheOption)</unmanaged>	
         public SharpDX.Result Initialize(IStream stream)
         {
-            return Initialize_(ComStream.ToComPointer(stream), SharpDX.WIC.BitmapEncoderCacheOption.NoCache);
+            return Initialize_(ComStream.ToIntPtr(stream), SharpDX.WIC.BitmapEncoderCacheOption.NoCache);
         }
 
         /// <summary>
