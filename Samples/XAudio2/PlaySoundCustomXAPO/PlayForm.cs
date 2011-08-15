@@ -82,6 +82,24 @@ namespace PlaySoundCustomXAPO
             this.Closed += new EventHandler(PlayForm_Closed);
         }
 
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (components != null)
+                    components.Dispose();
+                if (masteringVoice != null)
+                    masteringVoice.Dispose();
+                if (xaudio2 != null)
+                    xaudio2.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
         void PlayForm_Closed(object sender, EventArgs e)
         {
             sourceVoice.Stop(PlayFlags.None, 0);

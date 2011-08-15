@@ -307,8 +307,39 @@ namespace SharpDX
             ClsctxAll = ClsctxServer | ClsctxInprocHandler
         }
 
-        [DllImport("ole32.dll", ExactSpelling = true, PreserveSig = true)]
+        [DllImport("ole32.dll", ExactSpelling = true, EntryPoint = "CoCreateInstance", PreserveSig = true)]
         public static extern Result CoCreateInstance([In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid, IntPtr pUnkOuter, CLSCTX dwClsContext, [In, MarshalAs(UnmanagedType.LPStruct)] Guid riid, out IntPtr comObject);
+
+        /// <summary>Determines the concurrency model used for incoming calls to objects created by this thread. This concurrency model can be either apartment-threaded or multi-threaded.</summary>
+        public enum CoInit
+        {
+            /// <summary>
+            /// Initializes the thread for apartment-threaded object concurrency.
+            /// </summary>
+            MultiThreaded = 0x0,
+
+            /// <summary>
+            /// Initializes the thread for multi-threaded object concurrency.
+            /// </summary>
+            ApartmentThreaded = 0x2,
+
+            /// <summary>
+            /// Disables DDE for OLE1 support.
+            /// </summary>
+            DisableOle1Dde = 0x4,
+
+            /// <summary>
+            /// Trade memory for speed.
+            /// </summary>
+            SpeedOverMemory = 0x8
+        }
+
+        /// <summary>Initializes the COM library for use by the calling thread, sets the thread's concurrency model, and creates a new apartment for the thread if one is required.</summary>
+        /// <param name="reserved">This parameter is reserved and must be NULL.</param>
+        /// <param name="coInit">The concurrency model and initialization options for the thread. Values for this parameter are taken from the CoInit enumeration. Any combination of values can be used, except that the ApartmentThreaded and MultiThreaded flags cannot both be set. The default is MultiThreaded.</param>
+        /// <returns>If function succeeds, it returns S_OK. Otherwise, it returns an error code.</returns>
+        [DllImport("ole32.dll", ExactSpelling = true, EntryPoint = "CoInitializeEx", PreserveSig = true)]
+        internal static extern Result CoInitializeEx(IntPtr reserved, CoInit coInit);
 
         /// <summary>
         /// Converts a blob to a string.

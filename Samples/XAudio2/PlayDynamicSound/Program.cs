@@ -33,7 +33,6 @@ namespace PlayDynamicSound
         /// <summary>
         /// SharpDX XAudio2 sample. Plays a generated sound with some reverb.
         /// </summary>
-        [STAThread]
         static void Main(string[] args)
         {
             var xaudio2 = new XAudio2();

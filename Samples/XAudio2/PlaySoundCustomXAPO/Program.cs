@@ -29,7 +29,7 @@ namespace PlaySoundCustomXAPO
         /// <summary>
         /// SharpDX XAudio2 sample. Plays a generated sound with some reverb.
         /// </summary>
-        [STAThread]
+        [MTAThread]
         static void Main(string[] args)
         {
             Application.EnableVisualStyles();

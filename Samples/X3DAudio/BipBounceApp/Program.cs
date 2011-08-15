@@ -31,7 +31,6 @@ namespace BipBounceApp
         /// <summary>
         /// SharpDX X3DAudio sample. Plays a generated sound rotating around the listener.
         /// </summary>
-        [STAThread]
         static void Main(string[] args)
         {
             var xaudio2 = new XAudio2();
