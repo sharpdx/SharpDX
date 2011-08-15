@@ -75,7 +75,7 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteFactory::RegisterFontCollectionLoader([None] IDWriteFontCollectionLoader* fontCollectionLoader)</unmanaged>
         public Result RegisterFontCollectionLoader(FontCollectionLoader fontCollectionLoader)
         {
-            var result = this.RegisterFontCollectionLoader_(FontCollectionLoaderCallback.CallbackToPtr(this, fontCollectionLoader));
+            var result = this.RegisterFontCollectionLoader_(FontCollectionLoaderShadow.ToIntPtr(this, fontCollectionLoader));
             _fontCollectionLoaderCallbacks.Add(fontCollectionLoader);
             return result;
         }
@@ -89,7 +89,7 @@ namespace SharpDX.DirectWrite
         public SharpDX.Result UnregisterFontCollectionLoader(FontCollectionLoader fontCollectionLoader)
         {
             if (!_fontCollectionLoaderCallbacks.Contains(fontCollectionLoader)) throw new ArgumentException("This font collection loader is not registered", "fontCollectionLoader");
-            var result = UnregisterFontCollectionLoader_(FontCollectionLoaderCallback.CallbackToPtr(fontCollectionLoader));
+            var result = UnregisterFontCollectionLoader_(FontCollectionLoaderShadow.ToIntPtr(fontCollectionLoader));
             _fontCollectionLoaderCallbacks.Remove(fontCollectionLoader);
             return result;
         }
@@ -106,7 +106,7 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteFactory::RegisterFontFileLoader([None] IDWriteFontFileLoader* fontFileLoader)</unmanaged>
         public SharpDX.Result RegisterFontFileLoader(FontFileLoader fontFileLoader)
         {
-            var result = this.RegisterFontFileLoader_(FontFileLoaderCallback.CallbackToPtr(fontFileLoader));
+            var result = this.RegisterFontFileLoader_(FontFileLoaderShadow.ToIntPtr(fontFileLoader));
             _fontFileLoaderCallbacks.Add(fontFileLoader);
             return result;
         }
@@ -124,7 +124,7 @@ namespace SharpDX.DirectWrite
         {
             if (!_fontFileLoaderCallbacks.Contains(fontFileLoader)) throw new ArgumentException("This font file loader is not registered", "FontFileLoader");
 
-            var result = UnregisterFontFileLoader_(FontFileLoaderCallback.CallbackToPtr(fontFileLoader));
+            var result = UnregisterFontFileLoader_(FontFileLoaderShadow.ToIntPtr(fontFileLoader));
             _fontFileLoaderCallbacks.Remove(fontFileLoader);
             return result;
         }

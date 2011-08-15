@@ -45,7 +45,7 @@ namespace SharpDX
         /// Implements <see cref="ICallbackable"/> but it cannot not be set. 
         /// This is only used to support for interop with unmanaged callback.
         /// </summary>
-        public IDisposable Callback
+        public IDisposable Shadow
         {
             get { throw new InvalidOperationException("Invalid access to Callback. This is used internally."); }
             set { throw new InvalidOperationException("Invalid access to Callback. This is used internally."); }

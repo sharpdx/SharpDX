@@ -34,15 +34,15 @@ namespace SharpDX
         {
             if (disposing)
             {
-                var callback = ((ICallbackable) this).Callback;
-                if (callback != null)
+                var callback = ((ICallbackable) this);
+                if (callback.Shadow != null)
                 {
-                    callback.Dispose();
-                    ((ICallbackable) this).Callback = null;
+                    callback.Shadow.Dispose();
+                    callback.Shadow = null;
                 }
             }
         }
 
-        IDisposable ICallbackable.Callback { get; set; }
+        IDisposable ICallbackable.Shadow { get; set; }
     }
 }

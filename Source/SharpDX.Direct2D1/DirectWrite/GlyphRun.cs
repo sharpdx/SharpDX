@@ -78,6 +78,9 @@ namespace SharpDX.DirectWrite
         internal unsafe void __MarshalFrom(ref __Native @ref)
         {
             this.FontFace = (@ref.FontFace == IntPtr.Zero) ? null : new FontFace(@ref.FontFace);
+            // If FontFace != null, adds a reference to it
+            if (FontFace != null)
+                ((IUnknown) this.FontFace).AddReference();
             this.FontSize= @ref.FontEmSize;
             this.GlyphCount = @ref.GlyphCount;
             if (@ref.GlyphIndices != IntPtr.Zero)

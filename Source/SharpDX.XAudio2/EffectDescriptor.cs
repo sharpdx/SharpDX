@@ -66,7 +66,7 @@ namespace SharpDX.XAudio2
                     throw new ArgumentException("Cannot set Effect twice on the same EffectDescriptor");
 
                 _effect = value;
-                EffectPointer = AudioProcessorCallback.CallbackToPtr(_effect);
+                EffectPointer = AudioProcessorShadow.ToIntPtr(_effect);
             }
         }        
     }

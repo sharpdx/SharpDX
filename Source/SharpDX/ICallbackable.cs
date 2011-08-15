@@ -23,19 +23,19 @@ namespace SharpDX
 {
     /// <summary>
     /// Use this interface to tag a class that is called by an unmanaged
-    /// object. A <see cref="ICallbackable"/> class must dispose the <see cref="Callback"/>
+    /// object. A <see cref="ICallbackable"/> class must dispose the <see cref="Shadow"/>
     /// on dispose.
     /// </summary>
     public interface ICallbackable : IDisposable
     {
         /// <summary>
-        /// Gets or sets the unmanaged callback.
+        /// Gets or sets the unmanaged shadow callback.
         /// </summary>
-        /// <value>The unmanaged callback.</value>
+        /// <value>The unmanaged shadow callback.</value>
         /// <remarks>
-        /// This property is set whenever this instance has an unmanaged callback
+        /// This property is set whenever this instance has an unmanaged shadow callback
         /// registered. This callback must be disposed when disposing this instance. 
         /// </remarks>
-        IDisposable Callback { get; set; }
+        IDisposable Shadow { get; set; }
     }
 }

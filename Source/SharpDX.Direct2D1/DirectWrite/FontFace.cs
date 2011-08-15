@@ -158,9 +158,9 @@ namespace SharpDX.DirectWrite
         {
             IntPtr ptr;
             if ( geometrySink is GeometrySink)
-                ptr = GeometrySinkCallback.CallbackToPtr((GeometrySink)geometrySink);
+                ptr = GeometrySinkShadow.ToIntPtr((GeometrySink)geometrySink);
             else
-                ptr = SimplifiedGeometrySinkCallback.CallbackToPtr(geometrySink);
+                ptr = SimplifiedGeometrySinkShadow.ToIntPtr(geometrySink);
             return GetGlyphRunOutline_(emSize, glyphIndices, glyphAdvances, glyphOffsets, glyphIndices.Length, isSideways, isRightToLeft, ptr);
         }
     }

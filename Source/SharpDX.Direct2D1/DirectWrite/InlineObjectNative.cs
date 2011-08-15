@@ -38,15 +38,15 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteInlineObject::Draw([None] void* clientDrawingContext,[None] IDWriteTextRenderer* renderer,[None] float originX,[None] float originY,[None] BOOL isSideways,[None] BOOL isRightToLeft,[None] IUnknown* clientDrawingEffect)</unmanaged>
         public void Draw(object clientDrawingContext, TextRenderer renderer, float originX, float originY, bool isSideways, bool isRightToLeft, ComObject clientDrawingEffect)
         {
-            IntPtr clientDrawingContextPtr = Utilities.GetIUnknownForObject(clientDrawingContext);
+            var handle = GCHandle.Alloc(clientDrawingContext);
             IntPtr clientDrawingEffectPtr = Utilities.GetIUnknownForObject(clientDrawingEffect);
             try
             {
-                this.Draw__(clientDrawingContextPtr, TextRendererCallback.CallbackToPtr(renderer), originX, originY, isSideways, isRightToLeft,
+                this.Draw__(GCHandle.ToIntPtr(handle), TextRendererShadow.ToIntPtr(renderer), originX, originY, isSideways, isRightToLeft,
                             clientDrawingEffectPtr);
             } finally
             {
-                if (clientDrawingContextPtr != IntPtr.Zero) Marshal.Release(clientDrawingContextPtr);
+                if (handle.IsAllocated) handle.Free();
                 if (clientDrawingEffectPtr != IntPtr.Zero) Marshal.Release(clientDrawingEffectPtr);
             }
         }

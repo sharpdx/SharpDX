@@ -382,14 +382,8 @@ namespace SharpDX.D3DCompiler
 
                 try
                 {
-                    IncludeCallback includeCallback = null;
-                    if (include != null)
-                        includeCallback = new IncludeCallback(include);
-                    IntPtr includeCallbackPtr = includeCallback == null ? IntPtr.Zero : includeCallback.NativePointer;
-
-
                     fixed (void* pData = &shaderSource[0])
-                        D3D.Compile((IntPtr)pData, shaderSource.Length, sourceFileName, PrepareMacros(defines), includeCallbackPtr, entryPoint,
+                        D3D.Compile((IntPtr)pData, shaderSource.Length, sourceFileName, PrepareMacros(defines), IncludeShadow.ToIntPtr(include), entryPoint,
                                     profile, shaderFlags,
                                     effectFlags, out blobForCode, out blobForErrors);
                 }
@@ -737,13 +731,8 @@ namespace SharpDX.D3DCompiler
 
                 try
                 {
-                    IncludeCallback includeCallback = null;
-                    if (include != null)
-                        includeCallback = new IncludeCallback(include);
-                    IntPtr includeCallbackPtr = includeCallback == null ? IntPtr.Zero : includeCallback.NativePointer;
-
                     fixed (void* pData = &shaderSource[0])
-                        D3D.Preprocess((IntPtr)pData, shaderSource.Length, "", PrepareMacros(defines), includeCallbackPtr,
+                        D3D.Preprocess((IntPtr)pData, shaderSource.Length, "", PrepareMacros(defines), IncludeShadow.ToIntPtr(include),
                                        out blobForText, out blobForErrors);
                 }
                 catch (SharpDXException ex)

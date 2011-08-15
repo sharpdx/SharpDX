@@ -52,7 +52,7 @@
     </Compile>
     <Compile Include="AudioProcessor.cs" />
     <Compile Include="AudioProcessorBase.cs" />
-    <Compile Include="AudioProcessorCallback.cs" />
+    <Compile Include="AudioProcessorShadow.cs" />
     <Compile Include="AudioProcessorNative.cs" />
     <Compile Include="AudioProcessorParamNative.cs" />
     <Compile Include="Fx\XAPOFx.cs" />
@@ -63,7 +63,7 @@
     <Compile Include="Generated\Interfaces.cs" />
     <Compile Include="Generated\LocalInterop.cs" />
     <Compile Include="Generated\Structures.cs" />
-    <Compile Include="ParameterProviderCallback.cs" />
+    <Compile Include="ParameterProviderShadow.cs" />
     <Compile Include="Fx\Echo.cs" />
     <Compile Include="Fx\Equalizer.cs" />
     <Compile Include="Fx\MasteringLimiter.cs" />

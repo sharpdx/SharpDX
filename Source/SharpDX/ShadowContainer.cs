@@ -22,38 +22,39 @@ using System.Collections.Generic;
 
 namespace SharpDX
 {
-    internal class CallbackContainer : DisposeBase
+    internal class ShadowContainer : DisposeBase
     {
+        private readonly List<Entry> entries;
+        
         private struct Entry
         {
-            public Entry(Type type, ComObjectCallbackNative nativeCallback)
+            public Entry(Type type, CppObjectShadow shadow)
             {
                 Type = type;
-                NativeCallback = nativeCallback;
+                Shadow = shadow;
             }
 
             public Type Type;
-            public ComObjectCallbackNative NativeCallback;
+
+            public CppObjectShadow Shadow;
         }
 
-        private readonly List<Entry> _entries;
-
-        public CallbackContainer()
+        public ShadowContainer()
         {
-            _entries = new List<Entry>(5);
+            entries = new List<Entry>(3);
         }
 
-        internal ComObjectCallbackNative Find(Type type)
+        internal CppObjectShadow Find(Type type)
         {
-            for (int i = 0; i < _entries.Count; i++)
-                if (_entries[i].Type == type)
-                    return _entries[i].NativeCallback;
+            for (int i = 0; i < entries.Count; i++)
+                if (entries[i].Type == type)
+                    return entries[i].Shadow;
             return null;
         }
 
-        internal void Add(Type type, ComObjectCallbackNative callbackNative)
+        internal void Add(Type type, CppObjectShadow shadow)
         {
-            _entries.Add(new Entry(type, callbackNative));
+            entries.Add(new Entry(type, shadow));
         }
 
         // The bulk of the clean-up code is implemented in Dispose(bool)
@@ -61,9 +62,9 @@ namespace SharpDX
         {
             if (disposing)
             {
-                foreach (var comObjectCallbackNative in _entries)
-                    comObjectCallbackNative.NativeCallback.Dispose();
-                _entries.Clear();
+                foreach (var comObjectCallbackNative in entries)
+                    comObjectCallbackNative.Shadow.Dispose();
+                entries.Clear();
             }
         }
     }

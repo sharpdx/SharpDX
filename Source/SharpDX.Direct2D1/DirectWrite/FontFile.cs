@@ -23,7 +23,7 @@ namespace SharpDX.DirectWrite
 {
     public partial class FontFile
     {
-        private FontFileLoaderCallback _fontLoaderCallback;
+        private FontFileLoaderShadow fontLoaderShadow;
 
         /// <summary>	
         /// Creates a font file reference object from a local font file. 	
@@ -59,7 +59,7 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteFactory::CreateCustomFontFileReference([In, Buffer] const void* fontFileReferenceKey,[None] int fontFileReferenceKeySize,[None] IDWriteFontFileLoader* fontFileLoader,[Out] IDWriteFontFile** fontFile)</unmanaged>
         public FontFile(Factory factory, IntPtr fontFileReferenceKey, int fontFileReferenceKeySize, FontFileLoader fontFileLoader)
         {
-            factory.CreateCustomFontFileReference_(fontFileReferenceKey, fontFileReferenceKeySize, FontFileLoaderCallback.CallbackToPtr(fontFileLoader), this);
+            factory.CreateCustomFontFileReference_(fontFileReferenceKey, fontFileReferenceKeySize, FontFileLoaderShadow.ToIntPtr(fontFileLoader), this);
         }
 
         /// <summary>	
@@ -70,8 +70,8 @@ namespace SharpDX.DirectWrite
         {
             get
             {
-                if (_fontLoaderCallback != null)
-                    return _fontLoaderCallback.Callback;
+                if (fontLoaderShadow != null)
+                    return (FontFileLoader)fontLoaderShadow.Callback;
                 
                 SharpDX.DirectWrite.FontFileLoader __output__; 
                 GetLoader(out __output__); 

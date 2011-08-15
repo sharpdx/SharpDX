@@ -54,7 +54,7 @@
     <Compile Include="EffectDescriptor.cs" />
     <Compile Include="AudioBuffer.cs" />
     <Compile Include="EngineCallback.cs" />
-    <Compile Include="EngineCallbackImpl.cs" />
+    <Compile Include="EngineShadow.cs" />
     <Compile Include="ErrorEventArgs.cs" />
     <Compile Include="Fx\XAudio2FxContants.cs" />
     <Compile Include="Generated\Enumerations.cs" />
@@ -68,7 +68,7 @@
     <Compile Include="SourceVoice.cs" />
     <Compile Include="SubmixVoice.cs" />
     <Compile Include="Voice.cs" />
-    <Compile Include="VoiceCallbackImpl.cs" />
+    <Compile Include="VoiceShadow.cs" />
     <Compile Include="XAudio2.cs" />
     <Compile Include="Fx\Reverb.cs" />
     <Compile Include="Fx\VolumeMeter.cs" />

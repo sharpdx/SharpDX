@@ -43,7 +43,7 @@ namespace SharpDX.Win32
         /// <returns>A Com pointer</returns>
         public static IntPtr ToComPointer(IStream stream)
         {
-            return ComStreamCallback.CallbackToPtr(stream);
+            return ComStreamShadow.ToIntPtr(stream);
         }
     }
 }

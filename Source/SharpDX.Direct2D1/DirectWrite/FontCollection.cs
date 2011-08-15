@@ -32,7 +32,7 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteFactory::CreateCustomFontCollection([None] IDWriteFontCollectionLoader* collectionLoader,[In, Buffer] const void* collectionKey,[None] int collectionKeySize,[Out] IDWriteFontCollection** fontCollection)</unmanaged>
         public FontCollection(Factory factory, FontCollectionLoader collectionLoader, DataStream collectionKey)
         {
-            factory.CreateCustomFontCollection_(FontCollectionLoaderCallback.CallbackToPtr(collectionLoader), collectionKey.PositionPointer, (int)collectionKey.RemainingLength, this);
+            factory.CreateCustomFontCollection_(FontCollectionLoaderShadow.ToIntPtr(collectionLoader), collectionKey.PositionPointer, (int)collectionKey.RemainingLength, this);
         }
     }
 }

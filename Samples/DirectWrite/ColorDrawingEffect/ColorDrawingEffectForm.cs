@@ -79,6 +79,44 @@ namespace ColorDrawingEffect
             KeyDown += new KeyEventHandler((s, e) => { this.RenderControlPaint(this, null); });
         }
 
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (components != null)
+                    components.Dispose();
+
+                if (CurrentTextFormat != null)
+                    CurrentTextFormat.Dispose();
+
+                if (CurrentTextLayout != null)
+                    CurrentTextLayout.Dispose();
+
+                if (CustomTextRenderer != null)
+                    CustomTextRenderer.Dispose();
+
+                if (SceneColorBrush!= null)
+                    SceneColorBrush.Dispose();
+
+                if (RenderTarget2D != null)
+                    RenderTarget2D.Dispose();
+
+                if (FactoryDWrite != null)
+                    FactoryDWrite.Dispose();
+
+                if (Factory2D != null)
+                    Factory2D.Dispose();
+
+            }
+            base.Dispose(disposing);
+        }
+
+
         /// <summary>
         /// Inits the direct2D and direct write.
         /// </summary>

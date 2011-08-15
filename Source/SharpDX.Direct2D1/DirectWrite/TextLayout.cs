@@ -108,15 +108,15 @@ namespace SharpDX.DirectWrite
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.</returns>
         /// <unmanaged>HRESULT Draw([None] void* clientDrawingContext,[None] IDWriteTextRenderer* renderer,[None] FLOAT originX,[None] FLOAT originY)</unmanaged>
         public SharpDX.Result Draw(object clientDrawingContext, TextRenderer renderer, float originX, float originY) {
-            IntPtr clientDrawingContextPtr = Utilities.GetIUnknownForObject(clientDrawingContext);
+            var handle = GCHandle.Alloc(clientDrawingContext);
             Result result;
             try
             {
-                result = this.Draw_(clientDrawingContextPtr, TextRendererCallback.CallbackToPtr(renderer), originX, originY);
+                result = this.Draw_(GCHandle.ToIntPtr(handle), TextRendererShadow.ToIntPtr(renderer), originX, originY);
             }
             finally
             {
-                if (clientDrawingContextPtr != IntPtr.Zero) Marshal.Release(clientDrawingContextPtr);
+                if (handle.IsAllocated) handle.Free();
             }
             return result;
         }
@@ -444,7 +444,7 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>HRESULT IDWriteTextLayout::SetInlineObject([None] IDWriteInlineObject* inlineObject,[None] DWRITE_TEXT_RANGE textRange)</unmanaged>
         public SharpDX.Result SetInlineObject(InlineObject inlineObject, SharpDX.DirectWrite.TextRange textRange)
         {
-            return SetInlineObject_(InlineObjectCallback.CallbackToPtr(inlineObject), textRange);
+            return SetInlineObject_(InlineObjectShadow.ToIntPtr(inlineObject), textRange);
         }
     }
 }

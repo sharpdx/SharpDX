@@ -39,7 +39,7 @@
     <DocumentationFile>..\..\Bin\SharpDX.xml</DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
-   <PropertyGroup>
+  <PropertyGroup>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
@@ -56,19 +56,20 @@
     <Compile Include="BoundingBox.cs" />
     <Compile Include="BoundingSphere.cs" />
     <Compile Include="CallbackBase.cs" />
-    <Compile Include="CallbackContainer.cs" />
+    <Compile Include="ShadowContainer.cs" />
     <Compile Include="Collision.cs" />
     <Compile Include="Color3.cs" />
     <Compile Include="Color4.cs" />
     <Compile Include="ComBaseStreamNative.cs" />
     <Compile Include="ComObject.cs" />
     <Compile Include="ComObjectCallback.cs" />
-    <Compile Include="ComObjectCallbackNative.cs" />
+    <Compile Include="ComObjectShadow.cs" />
     <Compile Include="CompilationException.cs" />
     <Compile Include="Component.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="CppObject.cs" />
-    <Compile Include="CppObjectCallbackNative.cs" />
+    <Compile Include="CppObjectShadow.cs" />
+    <Compile Include="CppObjectVtbl.cs" />
     <Compile Include="DataBox.cs" />
     <Compile Include="DataRectangle.cs" />
     <Compile Include="DataStream.cs" />
@@ -135,8 +136,8 @@
     <Compile Include="Vector3.cs" />
     <Compile Include="Vector4.cs" />
     <Compile Include="Win32\ComStream.cs" />
-    <Compile Include="Win32\ComStreamCallback.cs" />
-    <Compile Include="Win32\ComStreamBaseCallback.cs" />
+    <Compile Include="Win32\ComStreamShadow.cs" />
+    <Compile Include="Win32\ComStreamBaseShadow.cs" />
     <Compile Include="Win32\ErrorCode.cs" />
     <Compile Include="Win32\FileHelper.cs" />
     <Compile Include="Win32\PropertyBag.cs" />

@@ -38,7 +38,7 @@
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <DocumentationFile>..\..\Bin\SharpDX.D3DCompiler.xml</DocumentationFile>
   </PropertyGroup>
-    <PropertyGroup>
+  <PropertyGroup>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
@@ -53,6 +53,7 @@
     <Compile Include="Generated\Functions.cs" />
     <Compile Include="Generated\Interfaces.cs" />
     <Compile Include="Generated\LocalInterop.cs" />
+    <Compile Include="IncludeShadow.cs" />
     <Compile Include="RegisterComponentMaskFlags.cs" />
     <Compile Include="Generated\Structures.cs" />
     <Compile Include="Include.cs" />

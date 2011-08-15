@@ -79,7 +79,7 @@ namespace SharpDX.Direct2D1
         /// <unmanaged>HRESULT CombineWithGeometry([In] ID2D1Geometry* inputGeometry,[None] D2D1_COMBINE_MODE combineMode,[In, Optional] const D2D1_MATRIX_3X2_F* inputGeometryTransform,[None] FLOAT flatteningTolerance,[In] ID2D1SimplifiedGeometrySink* geometrySink)</unmanaged>
         public SharpDX.Result Combine(SharpDX.Direct2D1.Geometry inputGeometry, SharpDX.Direct2D1.CombineMode combineMode, SharpDX.Direct2D1.Matrix3x2? inputGeometryTransform, float flatteningTolerance, GeometrySink geometrySink)
         {
-            return this.Combine_(inputGeometry, combineMode, inputGeometryTransform, flatteningTolerance, GeometrySinkCallback.CallbackToPtr(geometrySink));
+            return this.Combine_(inputGeometry, combineMode, inputGeometryTransform, flatteningTolerance, GeometrySinkShadow.ToIntPtr(geometrySink));
         }
 
         /// <summary>	
@@ -327,7 +327,7 @@ namespace SharpDX.Direct2D1
         /// <unmanaged>HRESULT Outline([In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] FLOAT flatteningTolerance,[In] ID2D1SimplifiedGeometrySink* geometrySink)</unmanaged>
         public SharpDX.Result Outline(SharpDX.Direct2D1.Matrix3x2? worldTransform, float flatteningTolerance, GeometrySink geometrySink)
         {
-            return this.Outline_(worldTransform, flatteningTolerance, GeometrySinkCallback.CallbackToPtr(geometrySink));
+            return this.Outline_(worldTransform, flatteningTolerance, GeometrySinkShadow.ToIntPtr(geometrySink));
         }
 
         /// <summary>	
@@ -366,7 +366,7 @@ namespace SharpDX.Direct2D1
         /// <unmanaged>HRESULT Simplify([None] D2D1_GEOMETRY_SIMPLIFICATION_OPTION simplificationOption,[In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] FLOAT flatteningTolerance,[In] ID2D1SimplifiedGeometrySink* geometrySink)</unmanaged>
         public SharpDX.Result Simplify(SharpDX.Direct2D1.GeometrySimplificationOption simplificationOption, SharpDX.Direct2D1.Matrix3x2? worldTransform, float flatteningTolerance, GeometrySink geometrySink)
         {
-            return this.Simplify_(simplificationOption, worldTransform, flatteningTolerance, GeometrySinkCallback.CallbackToPtr(geometrySink));
+            return this.Simplify_(simplificationOption, worldTransform, flatteningTolerance, GeometrySinkShadow.ToIntPtr(geometrySink));
         }
 
         /// <summary>	
@@ -495,7 +495,7 @@ namespace SharpDX.Direct2D1
         /// <unmanaged>HRESULT Tessellate([In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] FLOAT flatteningTolerance,[In] ID2D1TessellationSink* tessellationSink)</unmanaged>
         public SharpDX.Result Tessellate(SharpDX.Direct2D1.Matrix3x2? worldTransform, float flatteningTolerance, TessellationSink tessellationSink)
         {
-            return this.Tessellate_(worldTransform, flatteningTolerance, TessellationSinkCallback.CallbackToPtr(tessellationSink));
+            return this.Tessellate_(worldTransform, flatteningTolerance, TessellationSinkShadow.ToIntPtr(tessellationSink));
         }
 
         /// <summary>	
@@ -549,7 +549,7 @@ namespace SharpDX.Direct2D1
         /// <unmanaged>HRESULT Widen([None] FLOAT strokeWidth,[In, Optional] ID2D1StrokeStyle* strokeStyle,[In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] FLOAT flatteningTolerance,[In] ID2D1SimplifiedGeometrySink* geometrySink)</unmanaged>
         public SharpDX.Result Widen(float strokeWidth, SharpDX.Direct2D1.StrokeStyle strokeStyle, SharpDX.Direct2D1.Matrix3x2? worldTransform, float flatteningTolerance, GeometrySink geometrySink)
         {
-            return this.Widen_(strokeWidth, strokeStyle, worldTransform, flatteningTolerance, GeometrySinkCallback.CallbackToPtr(geometrySink));
+            return this.Widen_(strokeWidth, strokeStyle, worldTransform, flatteningTolerance, GeometrySinkShadow.ToIntPtr(geometrySink));
         }
     }
 }

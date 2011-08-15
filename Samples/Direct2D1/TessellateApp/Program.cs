@@ -86,7 +86,7 @@ namespace TessellateApp
             program.Run(new DemoConfiguration("SharpDX Direct2D1 Tessellate Demo"));
         }
 
-        public IDisposable Callback
+        public IDisposable Shadow
         {
             get; set;
         }

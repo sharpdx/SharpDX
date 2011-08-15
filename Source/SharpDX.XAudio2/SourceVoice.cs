@@ -21,9 +21,9 @@ using System;
 
 namespace SharpDX.XAudio2
 {
-    public partial class SourceVoice : VoiceCallback
+    public partial class SourceVoice
     {
-        private VoiceCallBackImpl _voiceCallBackImpl;
+        private VoiceCallbackImpl voiceCallbackImpl;
 
         /// <summary>	
         /// Creates and configures a source voice.	
@@ -105,8 +105,7 @@ namespace SharpDX.XAudio2
         public SourceVoice(XAudio2 device, SharpDX.Multimedia.WaveFormat sourceFormat, SharpDX.XAudio2.VoiceFlags flags, float maxFrequencyRatio, VoiceCallback callback)
             : base(IntPtr.Zero)
         {
-            _voiceCallBackImpl = callback==null?null:new VoiceCallBackImpl(callback);
-            device.CreateSourceVoice_(this, ref sourceFormat, flags, maxFrequencyRatio, callback==null?IntPtr.Zero:_voiceCallBackImpl.NativePointer, null, null);
+            device.CreateSourceVoice_(this, ref sourceFormat, flags, maxFrequencyRatio, callback == null ? IntPtr.Zero : VoiceShadow.ToIntPtr(callback), null, null);
         }
 
         /// <summary>	
@@ -122,10 +121,9 @@ namespace SharpDX.XAudio2
         public SourceVoice(XAudio2 device, SharpDX.Multimedia.WaveFormat sourceFormat, SharpDX.XAudio2.VoiceFlags flags, float maxFrequencyRatio, bool enableCallbackEvents)
             : base(IntPtr.Zero)
         {
-            _voiceCallBackImpl = enableCallbackEvents ? new VoiceCallBackImpl(this) : null;
-            device.CreateSourceVoice_(this, ref sourceFormat, flags, maxFrequencyRatio, enableCallbackEvents ? _voiceCallBackImpl.NativePointer : IntPtr.Zero, null, null);
+            voiceCallbackImpl = new VoiceCallbackImpl(this);
+            device.CreateSourceVoice_(this, ref sourceFormat, flags, maxFrequencyRatio, enableCallbackEvents ? VoiceShadow.ToIntPtr(voiceCallbackImpl) : IntPtr.Zero, null, null);
         }
-
 
         /// <summary>	
         /// Starts consumption and processing of audio by the voice. Delivers the result to any connected submix or mastering voices, or to the output device, with CommitNow changes.
@@ -200,20 +198,11 @@ namespace SharpDX.XAudio2
         {
             if (disposing)
             {
-                if (_voiceCallBackImpl != null)
-                {
-                    _voiceCallBackImpl.Dispose();
-                    _voiceCallBackImpl = null;
-                }
-
-                var callback = ((ICallbackable) this).Callback;
-                if (callback != null)
-                    callback.Dispose();
+                if (voiceCallbackImpl != null)
+                    voiceCallbackImpl.Dispose();
             }
             base.Dispose(disposing);
         }
-
-        IDisposable ICallbackable.Callback { get; set; }
 
         /// <summary>
         /// Occurs just before the processing pass for the voice begins.
@@ -271,39 +260,49 @@ namespace SharpDX.XAudio2
         /// </remarks>
         public event Action<IntPtr, Result> VoiceError;
 
-        void VoiceCallback.OnVoiceProcessingPassStart(int bytesRequired)
+        private class VoiceCallbackImpl : CallbackBase, VoiceCallback
         {
-            if (ProcessingPassStart != null) ProcessingPassStart(bytesRequired);
-        }
+            private SourceVoice Voice { get; set; }
 
-        void VoiceCallback.OnVoiceProcessingPassEnd()
-        {
-            if (ProcessingPassEnd != null) ProcessingPassEnd();
-        }
+            public VoiceCallbackImpl(SourceVoice voice)
+            {
+                Voice = voice;
+            }
 
-        void VoiceCallback.OnStreamEnd()
-        {
-            if (StreamEnd != null) StreamEnd();
-        }
+            void VoiceCallback.OnVoiceProcessingPassStart(int bytesRequired)
+            {
+                if (Voice.ProcessingPassStart != null) Voice.ProcessingPassStart(bytesRequired);
+            }
 
-        void VoiceCallback.OnBufferStart(IntPtr context)
-        {
-            if (BufferStart != null) BufferStart(context);
-        }
+            void VoiceCallback.OnVoiceProcessingPassEnd()
+            {
+                if (Voice.ProcessingPassEnd != null) Voice.ProcessingPassEnd();
+            }
 
-        void VoiceCallback.OnBufferEnd(IntPtr context)
-        {
-            if (BufferEnd != null) BufferEnd(context);
-        }
+            void VoiceCallback.OnStreamEnd()
+            {
+                if (Voice.StreamEnd != null) Voice.StreamEnd();
+            }
 
-        void VoiceCallback.OnLoopEnd(IntPtr context)
-        {
-            if (LoopEnd != null) LoopEnd(context);
-        }
+            void VoiceCallback.OnBufferStart(IntPtr context)
+            {
+                if (Voice.BufferStart != null) Voice.BufferStart(context);
+            }
 
-        void VoiceCallback.OnVoiceError(IntPtr context, Result error)
-        {
-            if (VoiceError != null) VoiceError(context,error);
+            void VoiceCallback.OnBufferEnd(IntPtr context)
+            {
+                if (Voice.BufferEnd != null) Voice.BufferEnd(context);
+            }
+
+            void VoiceCallback.OnLoopEnd(IntPtr context)
+            {
+                if (Voice.LoopEnd != null) Voice.LoopEnd(context);
+            }
+
+            void VoiceCallback.OnVoiceError(IntPtr context, Result error)
+            {
+                if (Voice.VoiceError != null) Voice.VoiceError(context, error);
+            }
         }
     }
 }

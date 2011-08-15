@@ -18,13 +18,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.Runtime.InteropServices;
 
 namespace SharpDX.XAudio2
 {
-    public partial class XAudio2 : EngineCallback
+    public partial class XAudio2
     {
-        private EngineCallbackImpl _engineCallbackImpl;
+        private EngineCallbackImpl engineCallbackImpl;
+        private IntPtr engineShadowPtr;
 
         ///// <summary>Constant None.</summary>
         //internal static Guid CLSID_XAudio2 = new Guid("5a508685-a254-4fba-9b82-9a24b00306af");
@@ -76,9 +76,10 @@ namespace SharpDX.XAudio2
             Initialize(0, processorSpecifier);
 
             // Register engine callback
-            _engineCallbackImpl = new EngineCallbackImpl(this);
-            ((ICallbackable)this).Callback = _engineCallbackImpl;
-            RegisterForCallbacks_(_engineCallbackImpl.NativePointer);
+
+            engineCallbackImpl = new EngineCallbackImpl(this);
+            engineShadowPtr = EngineShadow.ToIntPtr(engineCallbackImpl);
+            RegisterForCallbacks_(engineShadowPtr);
         }
 
         /// <summary>	
@@ -172,42 +173,45 @@ namespace SharpDX.XAudio2
 
         protected override void Dispose(bool disposing)
         {
-            if (_engineCallbackImpl != null)
-                UnregisterForCallbacks_(_engineCallbackImpl.NativePointer);
+            if (engineShadowPtr != IntPtr.Zero)
+                UnregisterForCallbacks_(engineShadowPtr);
 
             if (disposing)
             {
-                if (_engineCallbackImpl != null)
-                {
-                    _engineCallbackImpl.Dispose();
-                    _engineCallbackImpl = null;
-                }
+                if (engineCallbackImpl != null)
+                    engineCallbackImpl.Dispose();
             }
             base.Dispose(disposing);
         }
 
-        #region EngineCallback Members
-
-        void EngineCallback.OnProcessingPassStart()
+        private class EngineCallbackImpl : CallbackBase, EngineCallback
         {
-            EventHandler handler = ProcessingPassStart;
-            if (handler != null) handler(this, EventArgs.Empty);
+            XAudio2 XAudio2 { get; set; }
+
+            public EngineCallbackImpl(XAudio2 xAudio2)
+            {
+                XAudio2 = xAudio2;
+            }
+
+            public void OnProcessingPassStart()
+            {
+                EventHandler handler = XAudio2.ProcessingPassStart;
+                if (handler != null) handler(this, EventArgs.Empty);
+            }
+
+            public void OnProcessingPassEnd()
+            {
+                EventHandler handler = XAudio2.ProcessingPassEnd;
+                if (handler != null) handler(this, EventArgs.Empty);
+            }
+
+            public void OnCriticalError(Result error)
+            {
+                EventHandler<ErrorEventArgs> handler = XAudio2.CriticalError;
+                if (handler != null) handler(this, new ErrorEventArgs(error));
+            }
+
+            IDisposable ICallbackable.Shadow { get; set; }
         }
-
-        void EngineCallback.OnProcessingPassEnd()
-        {
-            EventHandler handler = ProcessingPassEnd;
-            if (handler != null) handler(this, EventArgs.Empty);
-        }
-
-        void EngineCallback.OnCriticalError(Result error)
-        {
-            EventHandler<ErrorEventArgs> handler = CriticalError;
-            if (handler != null) handler(this, new ErrorEventArgs(error));
-        }
-
-        IDisposable ICallbackable.Callback { get; set; }
-
-        #endregion
     }
 }
