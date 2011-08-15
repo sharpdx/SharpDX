@@ -76,6 +76,7 @@ namespace CustomFont
         {
             get
             {
+                ((IUnknown) _currentFontFile).AddReference();
                 return _currentFontFile;
             }
         }
