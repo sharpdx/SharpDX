@@ -74,13 +74,16 @@ namespace SharpDX
             protected ComObjectVtbl(int numberOfCallbackMethods)
                 : base(numberOfCallbackMethods + 3)
             {
-                AddMethod(new QueryInterfaceDelegate(QueryInterfaceImpl));
-                AddMethod(new AddRefDelegate(AddRefImpl));
-                AddMethod(new ReleaseDelegate(ReleaseImpl));
+                unsafe
+                {
+                    AddMethod(new QueryInterfaceDelegate(QueryInterfaceImpl));
+                    AddMethod(new AddRefDelegate(AddRefImpl));
+                    AddMethod(new ReleaseDelegate(ReleaseImpl));
+                }
             }
 
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            public delegate int QueryInterfaceDelegate(IntPtr thisObject, ref Guid guid, out IntPtr output);
+            public unsafe delegate int QueryInterfaceDelegate(IntPtr thisObject, Guid* guid, out IntPtr output);
 
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
             public delegate int AddRefDelegate(IntPtr thisObject);
@@ -88,10 +91,10 @@ namespace SharpDX
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
             public delegate int ReleaseDelegate(IntPtr thisObject);
 
-            protected static int QueryInterfaceImpl(IntPtr thisObject, ref Guid guid, out IntPtr output)
+            protected unsafe static int QueryInterfaceImpl(IntPtr thisObject, Guid* guid, out IntPtr output)
             {
                 var shadow = ToShadow<ComObjectShadow>(thisObject);
-                return shadow.QueryInterfaceImpl(thisObject, ref guid, out output);
+                return shadow.QueryInterfaceImpl(thisObject, ref *guid, out output);
             }
 
             protected static int AddRefImpl(IntPtr thisObject)
