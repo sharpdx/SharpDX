@@ -43,10 +43,13 @@ namespace SharpDX.DirectWrite
         {
             public TextRendererVtbl() : base(4)
             {
-                AddMethod(new DrawGlyphRunDelegate(DrawGlyphRunImpl));
-                AddMethod(new DrawUnderlineDelegate(DrawUnderlineImpl));
-                AddMethod(new DrawStrikethroughDelegate(DrawStrikethroughImpl));
-                AddMethod(new DrawInlineObjectDelegate(DrawInlineObjectImpl));
+                unsafe
+                {
+                    AddMethod(new DrawGlyphRunDelegate(DrawGlyphRunImpl));
+                    AddMethod(new DrawUnderlineDelegate(DrawUnderlineImpl));
+                    AddMethod(new DrawStrikethroughDelegate(DrawStrikethroughImpl));
+                    AddMethod(new DrawInlineObjectDelegate(DrawInlineObjectImpl));
+                }
             }
 
             /// <unmanaged>HRESULT DrawGlyphRun([None] void* clientDrawingContext,[None] FLOAT baselineOriginX,[None] FLOAT baselineOriginY,[None] DWRITE_MEASURING_MODE measuringMode,[In] const DWRITE_GLYPH_RUN* glyphRun,[In] const DWRITE_GLYPH_RUN_DESCRIPTION* glyphRunDescription,[None] IUnknown* clientDrawingEffect)</unmanaged>
@@ -80,33 +83,33 @@ namespace SharpDX.DirectWrite
 
             /// <unmanaged>HRESULT DrawUnderline([None] void* clientDrawingContext,[None] FLOAT baselineOriginX,[None] FLOAT baselineOriginY,[In] const DWRITE_UNDERLINE* underline,[None] IUnknown* clientDrawingEffect)</unmanaged>
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            private delegate int DrawUnderlineDelegate(IntPtr thisObject, IntPtr clientDrawingContext, float baselineOriginX, float baselineOriginY, IntPtr underline, IntPtr clientDrawingEffect);
-            private static int DrawUnderlineImpl(IntPtr thisObject, IntPtr clientDrawingContextPtr, float baselineOriginX, float baselineOriginY, IntPtr underline, IntPtr clientDrawingEffectPtr)
+            private unsafe delegate int DrawUnderlineDelegate(IntPtr thisObject, IntPtr clientDrawingContext, float baselineOriginX, float baselineOriginY, Underline.__Native* underline, IntPtr clientDrawingEffect);
+            private unsafe static int DrawUnderlineImpl(IntPtr thisObject, IntPtr clientDrawingContextPtr, float baselineOriginX, float baselineOriginY, Underline.__Native* underline, IntPtr clientDrawingEffectPtr)
             {
                 unsafe
                 {
                     var shadow = ToShadow<TextRendererShadow>(thisObject);
                     var callback = (TextRenderer)shadow.Callback;
 
-                    Underline underlineData = default(Underline);
-                    Utilities.Read(underline, ref underlineData);
+                    var underlineData = new Underline();
+                    underlineData.__MarshalFrom(ref *underline);
                     return callback.DrawUnderline(GCHandle.FromIntPtr(clientDrawingContextPtr).Target, baselineOriginX, baselineOriginY, ref underlineData, (ComObject)Utilities.GetObjectForIUnknown(clientDrawingEffectPtr)).Code;
                 }
             }
 
             /// <unmanaged>HRESULT DrawStrikethrough([None] void* clientDrawingContext,[None] FLOAT baselineOriginX,[None] FLOAT baselineOriginY,[In] const DWRITE_STRIKETHROUGH* strikethrough,[None] IUnknown* clientDrawingEffect)</unmanaged>
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            private delegate int DrawStrikethroughDelegate(IntPtr thisObject, IntPtr clientDrawingContext, float baselineOriginX, float baselineOriginY, IntPtr strikethrough,
+            private unsafe delegate int DrawStrikethroughDelegate(IntPtr thisObject, IntPtr clientDrawingContext, float baselineOriginX, float baselineOriginY, Strikethrough.__Native* strikethrough,
                                                            IntPtr clientDrawingEffect);
-            private static int DrawStrikethroughImpl(IntPtr thisObject, IntPtr clientDrawingContextPtr, float baselineOriginX, float baselineOriginY, IntPtr strikethrough, IntPtr clientDrawingEffectPtr)
+            private unsafe static int DrawStrikethroughImpl(IntPtr thisObject, IntPtr clientDrawingContextPtr, float baselineOriginX, float baselineOriginY, Strikethrough.__Native* strikethrough, IntPtr clientDrawingEffectPtr)
             {
                 unsafe
                 {
                     var shadow = ToShadow<TextRendererShadow>(thisObject);
                     var callback = (TextRenderer)shadow.Callback;
 
-                    Strikethrough strikethroughData = default(Strikethrough);
-                    Utilities.Read(strikethrough, ref strikethroughData);
+                    var strikethroughData = new Strikethrough();
+                    strikethroughData.__MarshalFrom(ref *strikethrough);
                     return callback.DrawStrikethrough(GCHandle.FromIntPtr(clientDrawingContextPtr).Target, baselineOriginX, baselineOriginY, ref strikethroughData, (ComObject)Utilities.GetObjectForIUnknown(clientDrawingEffectPtr)).Code;
                 }
             }

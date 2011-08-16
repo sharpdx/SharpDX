@@ -161,6 +161,8 @@ namespace ColorDrawingEffect
             CurrentTextLayout.SetDrawingEffect(RedDrawingeffect, new TextRange(0, 14));
             CurrentTextLayout.SetDrawingEffect(BlueDrawingEffect, new TextRange(14, 7));
             CurrentTextLayout.SetDrawingEffect(GreenDrawingEffect, new TextRange(21, 8));
+            CurrentTextLayout.SetUnderline(true, new TextRange(0, 20));
+            CurrentTextLayout.SetStrikethrough(true, new TextRange(22, 7));
 
             // Set a stylistic typography
             using (var typo = new Typography(FactoryDWrite))
