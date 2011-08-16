@@ -50,6 +50,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="WicRenderTarget.cs" />
     <Compile Include="DirectWrite\BitmapRenderTarget.cs" />
     <Compile Include="DirectWrite\EllipsisTrimming.cs" />
     <Compile Include="DirectWrite\Factory.cs" />

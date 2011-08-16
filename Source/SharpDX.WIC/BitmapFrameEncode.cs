@@ -49,5 +49,29 @@ namespace SharpDX.WIC
         {
             Initialize(Options);
         }
+
+        /// <summary>
+        /// Sets the <see cref="ColorContext"/> objects for this frame encoder.
+        /// </summary>
+        /// <param name="colorContextOut">The color contexts to set for the encoder.</param>
+        /// <returns>If the method succeeds, it returns <see cref="Result.Ok"/>. Otherwise, it throws an exception.</returns>
+        /// <unmanaged>HRESULT IWICBitmapFrameEncode::SetColorContexts([In] unsigned int cCount,[In, Buffer] IWICColorContext** ppIColorContext)</unmanaged>	
+        public SharpDX.Result SetColorContexts(SharpDX.WIC.ColorContext[] colorContextOut)
+        {
+            return SetColorContexts(colorContextOut != null ? colorContextOut.Length : 0, colorContextOut);
+        }
+
+
+        /// <summary>
+        /// Encodes the frame scanlines.
+        /// </summary>
+        /// <param name="lineCount">The line count.</param>
+        /// <param name="buffer">The buffer.</param>
+        /// <returns></returns>
+        /// <unmanaged>HRESULT IWICBitmapFrameEncode::WritePixels([In] unsigned int lineCount,[In] unsigned int cbStride,[In] unsigned int cbBufferSize,[In, Buffer] unsigned char* pbPixels)</unmanaged>
+        public SharpDX.Result WritePixels(int lineCount, DataRectangle buffer)
+        {
+            return WritePixels(lineCount, buffer.Pitch, lineCount*buffer.Pitch, buffer.DataPointer);
+        }
     }
 }

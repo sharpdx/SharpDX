@@ -144,6 +144,7 @@
     <Compile Include="Win32\IStream.cs" />
     <Compile Include="Win32\IStreamBase.cs" />
     <Compile Include="Win32\PropertyKey.cs" />
+    <Compile Include="Win32\ComStringEnumerator.cs" />
     <Compile Include="Windows\RenderLoop.cs" />
     <Compile Include="Windows\RenderControl.cs">
       <SubType>UserControl</SubType>

@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System.IO;
+using SharpDX;
 using SharpDX.WIC;
 
 namespace EncodeDecode
@@ -30,9 +31,14 @@ namespace EncodeDecode
         /// </summary>
         static void Main()
         {
+            const string filename = "output.jpg";
+
             var factory = new ImagingFactory();
 
-            var stream = new WICStream(factory, "output.jpg", FileAccess.Write);
+            if (File.Exists(filename))
+                File.Delete(filename);
+
+            var stream = new WICStream(factory, filename, FileAccess.Write);
 
             var encoder = new JpegBitmapEncoder(factory);
             encoder.Initialize(stream);
@@ -41,15 +47,30 @@ namespace EncodeDecode
             bitmapFrameEncode.Options.ImageQuality = 0.8f;
             bitmapFrameEncode.Initialize();
 
-            bitmapFrameEncode.SetSize(512, 512);
+            const int width = 512;
+            const int height = 512;
+
+            bitmapFrameEncode.SetSize(width, height);
 
             bitmapFrameEncode.PixelFormat = PixelFormat.Format24bppBGR;
 
-            //bitmapFrameEncode.WritePixels()
+            int stride = (width * 24 + 7) / 8/***WICGetStride***/;
+            var bufferSize = height * stride;
+
+            var buffer = new DataStream(bufferSize, true, true);
+            for(int i = 0; i < bufferSize; i++)
+                buffer.WriteByte((byte)i);
+
+            bitmapFrameEncode.WritePixels(512, new DataRectangle(buffer.DataPointer, stride));
 
             bitmapFrameEncode.Commit();
 
             encoder.Commit();
+
+            bitmapFrameEncode.Dispose();
+            encoder.Dispose();
+            stream.Dispose();
+            factory.Dispose();
         }
     }
 }

@@ -67,6 +67,7 @@ namespace SharpDX.WIC
             try
             {
                 factory.CreateBitmapFromHBITMAP(hBitmap, hPalette, options, this);
+
             }
             finally
             {
@@ -74,6 +75,49 @@ namespace SharpDX.WIC
                 Marshal.FreeHGlobal(hPalette);
             }
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Bitmap"/> class from a memory location using <see cref="DataRectangle"/>.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="pixelFormat">The pixel format.</param>
+        /// <param name="dataRectangle">The data rectangle.</param>
+        /// <unmanaged>HRESULT IWICImagingFactory::CreateBitmapFromMemory([In] unsigned int uiWidth,[In] unsigned int uiHeight,[In] const GUID&amp; pixelFormat,[In] unsigned int cbStride,[In] unsigned int cbBufferSize,[In] void* pbBuffer,[Out, Fast] IWICBitmap** ppIBitmap)</unmanaged>
+        public Bitmap(ImagingFactory factory, int width, int height, System.Guid pixelFormat, DataRectangle dataRectangle) : base(IntPtr.Zero)
+        {
+            int sizeInByte = height*dataRectangle.Pitch;
+            factory.CreateBitmapFromMemory(width, height, pixelFormat, dataRectangle.Pitch, sizeInByte,
+                                           dataRectangle.DataPointer, this);
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Bitmap"/> class from a <see cref="BitmapSource"/>
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="bitmapSource">The bitmap source ref.</param>
+        /// <param name="option">The option.</param>
+        /// <unmanaged>HRESULT IWICImagingFactory::CreateBitmapFromSource([In, Optional] IWICBitmapSource* pIBitmapSource,[In] WICBitmapCreateCacheOption option,[Out, Fast] IWICBitmap** ppIBitmap)</unmanaged>
+        public Bitmap(ImagingFactory factory, SharpDX.WIC.BitmapSource bitmapSource, SharpDX.WIC.BitmapCreateCacheOption option) : base(IntPtr.Zero)
+        {
+            factory.CreateBitmapFromSource(bitmapSource, option, this);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Bitmap"/> class from a <see cref="BitmapSource"/>.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="bitmapSource">The bitmap source.</param>
+        /// <param name="rectangle">The rectangle.</param>
+        /// <unmanaged>HRESULT IWICImagingFactory::CreateBitmapFromSourceRect([In, Optional] IWICBitmapSource* pIBitmapSource,[In] unsigned int x,[In] unsigned int y,[In] unsigned int width,[In] unsigned int height,[Out, Fast] IWICBitmap** ppIBitmap)</unmanaged>
+        public Bitmap(ImagingFactory factory, SharpDX.WIC.BitmapSource bitmapSource, System.Drawing.Rectangle rectangle)
+            : base(IntPtr.Zero)
+        {
+            factory.CreateBitmapFromSourceRect(bitmapSource, rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height, this);
+        }
+
 
         private static IntPtr ConvertToHPALETTE(ColorPalette colorPalette)
         {

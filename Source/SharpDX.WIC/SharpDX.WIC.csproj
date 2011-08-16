@@ -47,14 +47,36 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Bitmap.cs" />
+    <Compile Include="BitmapClipper.cs" />
     <Compile Include="BitmapCodecInfo.cs" />
     <Compile Include="BitmapDecoder.cs" />
     <Compile Include="BitmapDecoderInfo.cs" />
     <Compile Include="BitmapEncoder.cs" />
     <Compile Include="BitmapEncoderOptions.cs" />
+    <Compile Include="BitmapFlipRotator.cs" />
+    <Compile Include="BitmapFrameDecode.cs" />
     <Compile Include="BitmapFrameEncode.cs" />
+    <Compile Include="BitmapLock.cs" />
+    <Compile Include="BitmapScaler.cs" />
     <Compile Include="BitmapSource.cs" />
+    <Compile Include="BitmapSourceTransform.cs" />
     <Compile Include="BmpBitmapEncoder.cs" />
+    <Compile Include="ColorContext.cs" />
+    <Compile Include="ColorTransform.cs" />
+    <Compile Include="ComponentInfo.cs" />
+    <Compile Include="BmpBitmapDecoder.cs" />
+    <Compile Include="FormatConverterInfo.cs" />
+    <Compile Include="MetadataQueryReader.cs" />
+    <Compile Include="MetadataQueryWriter.cs" />
+    <Compile Include="Palette.cs" />
+    <Compile Include="PixelFormatInfo.cs" />
+    <Compile Include="WmpBitmapDecoder.cs" />
+    <Compile Include="TiffBitmapDecoder.cs" />
+    <Compile Include="PngBitmapDecoder.cs" />
+    <Compile Include="JpegBitmapDecoder.cs" />
+    <Compile Include="GifBitmapDecoder.cs" />
+    <Compile Include="FastMetadataEncoder.cs" />
+    <Compile Include="FormatConverter.cs" />
     <Compile Include="WmpBitmapEncoder.cs" />
     <Compile Include="GifBitmapEncoder.cs" />
     <Compile Include="PngBitmapEncoder.cs" />

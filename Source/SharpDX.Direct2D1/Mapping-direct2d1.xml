@@ -57,8 +57,11 @@
     <map struct="D2D1(.*)" name-tmp="$1" />
     
     <map interface="ID2D1(.+)" name-tmp="$1" />
-    <remove method="ID2D(\d+)RenderTarget::CreateBitmapFromWicBitmap" />
-    <remove method="ID2D(\d+)Factory::CreateWicBitmapRenderTarget" />
+
+    <map param="ID2D1RenderTarget::CreateBitmapFromWicBitmap::wicBitmapSource" type="IUnknown"/>
+    <map param="ID2D1Factory::CreateWicBitmapRenderTarget::target" type="IUnknown"/>
+    <!--<remove method="ID2D(\d+)RenderTarget::CreateBitmapFromWicBitmap" />
+    <remove method="ID2D(\d+)Factory::CreateWicBitmapRenderTarget" />-->
     <map method="ID2D1Bitmap::CopyFrom.*" visibility="internal" />
     <map method="ID2D1Bitmap::GetDpi" visibility="internal" />
     <map interface="ID2D1DCRenderTarget" name="DeviceContextRenderTarget" />
@@ -78,6 +81,8 @@
     <map param="ID2D(\d+)Factory::CreateHwndRenderTarget::hwndRenderTarget" attribute="out fast"/>
     <map param="ID2D(\d+)Factory::CreateDxgiSurfaceRenderTarget::renderTarget" attribute="out fast"/>
     <map param="ID2D(\d+)Factory::CreateDCRenderTarget::dcRenderTarget" attribute="out fast"/>
+    <map param="ID2D(\d+)Factory::CreateWicBitmapRenderTarget::renderTarget" attribute="out fast"/>
+    
 
     <map method="ID2D1Geometry::CombineWithGeometry" name="Combine" />
     <map method="ID2D1Geometry::CompareWithGeometry" name="Compare" />

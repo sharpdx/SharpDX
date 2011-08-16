@@ -126,6 +126,37 @@ namespace SharpDX.Direct2D1
             renderTarget.CreateSharedBitmap(typeof(Surface).GUID, surface.NativePointer, bitmapProperties, this);
         }
 
+
+        /// <summary>
+        /// Creates a Bitmap from a wic bitmap.
+        /// </summary>
+        /// <param name="renderTarget">The render target.</param>
+        /// <param name="wicBitmapSource">A reference to a <see cref="SharpDX.WIC.BitmapSource"/> wic bitmap.</param>
+        /// <returns></returns>
+        /// <unmanaged>HRESULT CreateSharedBitmap([In] REFIID riid,[InOut] void* data,[In, Optional] const D2D1_BITMAP_PROPERTIES* bitmapProperties,[Out] ID2D1Bitmap** bitmap)</unmanaged>
+        public static Bitmap FromWicBitmapSource(RenderTarget renderTarget, ComObject wicBitmapSource)
+        {
+            Bitmap bitmap;
+            renderTarget.CreateBitmapFromWicBitmap(wicBitmapSource, null, out bitmap);
+            return bitmap;
+        }
+
+        /// <summary>
+        /// Creates a Bitmap from a wic bitmap.
+        /// </summary>
+        /// <param name="renderTarget">The render target.</param>
+        /// <param name="wicBitmap">The wic bitmap.</param>
+        /// <param name="bitmapProperties">The bitmap properties.</param>
+        /// <returns></returns>
+        /// <unmanaged>HRESULT CreateSharedBitmap([In] REFIID riid,[InOut] void* data,[In, Optional] const D2D1_BITMAP_PROPERTIES* bitmapProperties,[Out] ID2D1Bitmap** bitmap)</unmanaged>
+        public static Bitmap FromWicBitmap(RenderTarget renderTarget, ComObject wicBitmap, SharpDX.Direct2D1.BitmapProperties bitmapProperties)
+        {
+            Bitmap bitmap;
+            renderTarget.CreateBitmapFromWicBitmap(wicBitmap, bitmapProperties, out bitmap);
+            return bitmap;
+        }
+
+
         /// <summary>	
         /// Copies the specified region from the specified bitmap into the current bitmap. 	
         /// </summary>	
