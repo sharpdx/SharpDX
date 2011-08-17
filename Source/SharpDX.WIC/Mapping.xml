@@ -151,7 +151,6 @@
     
     <!--Temporarly remove unsupported type from methods -->
     <remove method="IWICEnumMetadataItem::Next"/>
-    <remove method="IWICMetadataQueryWriter::SetMetadataByName"/>
 
     <!--IWICBitmap -->
     <map param="IWICBitmap::Lock::ppILock" return="true"/>
@@ -253,6 +252,10 @@
 
     <map method="IWICMetadataQueryReader::GetEnumerator" visibility="internal" property="false"/>
     <map param="ppIEnumString" type="void" return="true"/>
+
+    <!--IWICMetadataQueryReader-->
+    <map method="IWICMetadataQueryWriter::SetMetadataByName" visibility="internal"/>
+    <map param="pvarValue" type="void"/>
 
     <!--IWICPalette-->
     <map method="IWICPalette::Initialize.*" name="Initialize"/>

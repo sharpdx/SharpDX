@@ -28,7 +28,7 @@ namespace SharpDX.Win32
     /// </summary>
     internal class ComStreamBaseShadow : SharpDX.ComObjectShadow
     {
-        private static readonly ComStreamBaseVtbl Vtbl = new ComStreamBaseVtbl();
+        private static readonly ComStreamBaseVtbl Vtbl = new ComStreamBaseVtbl(0);
 
         internal class ComStreamBaseVtbl : ComObjectVtbl
         {
@@ -37,7 +37,8 @@ namespace SharpDX.Win32
             //    return CallbackToPtr<IStreamBase, ComStreamBaseShadow>(fontFileEnumerator);
             //}
 
-            public ComStreamBaseVtbl() : base(2)
+            public ComStreamBaseVtbl(int numberOfMethods)
+                : base(numberOfMethods + 2)
             {
                 AddMethod(new ReadDelegate(ReadImpl));
                 AddMethod(new WriteDelegate(WriteImpl));

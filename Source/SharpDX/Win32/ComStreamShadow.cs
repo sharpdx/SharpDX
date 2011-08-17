@@ -44,7 +44,7 @@ namespace SharpDX.Win32
 
         private class ComStreamVtbl : ComStreamBaseVtbl
         {
-            public ComStreamVtbl()
+            public ComStreamVtbl() : base(9)
             {
                 AddMethod(new SeekDelegate(SeekImpl));
                 AddMethod(new SetSizeDelegate(SetSizeImpl));

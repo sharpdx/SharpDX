@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Runtime.InteropServices;
 
 namespace SharpDX.WIC
 {
@@ -69,6 +70,20 @@ namespace SharpDX.WIC
             : base(IntPtr.Zero)
         {
             factory.CreateQueryWriterFromReader(metadataQueryReader, guidVendorRef, this);
+        }
+
+
+        /// <summary>
+        /// Sets the value for a metadata name
+        /// </summary>
+        /// <param name="name">The name of the metadata.</param>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
+        public unsafe SharpDX.Result SetMetadataByName(string name, object value)
+        {
+            byte* variant = stackalloc byte[512];
+            Marshal.GetNativeVariantForObject(value, (IntPtr)variant);
+            return SetMetadataByName(name, (IntPtr) variant);
         }
     }
 }

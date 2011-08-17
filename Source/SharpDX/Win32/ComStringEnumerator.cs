@@ -29,7 +29,7 @@ namespace SharpDX.Win32
     /// <summary>
     /// An enumerator using internally a <see cref="IEnumString"/>.
     /// </summary>
-    internal class ComStringEnumerator : IEnumerator<string>
+    internal class ComStringEnumerator : IEnumerator<string>, IEnumerable<string>
     {
         private readonly IEnumString enumString;
         private string current;
@@ -72,6 +72,16 @@ namespace SharpDX.Win32
         object IEnumerator.Current
         {
             get { return Current; }
+        }
+
+        public IEnumerator<string> GetEnumerator()
+        {
+            return this;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.IO;
 using SharpDX;
 using SharpDX.WIC;
@@ -31,46 +32,93 @@ namespace EncodeDecode
         /// </summary>
         static void Main()
         {
+            const int width = 512;
+            const int height = 512;
             const string filename = "output.jpg";
 
             var factory = new ImagingFactory();
 
+            WICStream stream = null;
+
+            // ------------------------------------------------------
+            // Encode a JPG image
+            // ------------------------------------------------------
+
+            // Create a WIC outputstream 
             if (File.Exists(filename))
                 File.Delete(filename);
 
-            var stream = new WICStream(factory, filename, FileAccess.Write);
+            stream = new WICStream(factory, filename, FileAccess.Write);
 
+            // Initialize a Jpeg encoder with this stream
             var encoder = new JpegBitmapEncoder(factory);
             encoder.Initialize(stream);
 
+            // Create a Frame encoder
             var bitmapFrameEncode = new BitmapFrameEncode(encoder);
             bitmapFrameEncode.Options.ImageQuality = 0.8f;
             bitmapFrameEncode.Initialize();
-
-            const int width = 512;
-            const int height = 512;
-
             bitmapFrameEncode.SetSize(width, height);
-
             bitmapFrameEncode.PixelFormat = PixelFormat.Format24bppBGR;
 
-            int stride = (width * 24 + 7) / 8/***WICGetStride***/;
+            // Write a pseudo-plasma to a buffer
+            int stride = PixelFormat.GetStride(PixelFormat.Format24bppBGR, width);
             var bufferSize = height * stride;
-
             var buffer = new DataStream(bufferSize, true, true);
-            for(int i = 0; i < bufferSize; i++)
-                buffer.WriteByte((byte)i);
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    buffer.WriteByte((byte)(x / 2.0 + 20.0 * Math.Sin(y / 40.0)));
+                    buffer.WriteByte((byte)(y / 2.0 + 30.0 * Math.Sin(x / 80.0)));
+                    buffer.WriteByte((byte)(x / 2.0));
+                }
+            }
 
+            // Copy the pixels from the buffer to the Wic Bitmap Frame encoder
             bitmapFrameEncode.WritePixels(512, new DataRectangle(buffer.DataPointer, stride));
 
+            // Commit changes
             bitmapFrameEncode.Commit();
-
             encoder.Commit();
-
             bitmapFrameEncode.Dispose();
             encoder.Dispose();
             stream.Dispose();
+
+            // ------------------------------------------------------
+            // Decode the previous JPG image
+            // ------------------------------------------------------
+
+            // Read input
+            stream = new WICStream(factory, filename, FileAccess.Read);
+            var decoder = new JpegBitmapDecoder(factory);
+            decoder.Initialize(stream, DecodeOptions.CacheOnDemand);
+            var bitmapFrameDecode = decoder.GetFrame(0);
+            var queryReader = bitmapFrameDecode.MetadataQueryReader;
+
+            // Test by reading the MetadataQueryreader
+            var app0 = (MetadataQueryReader)queryReader.GetMetadataByName("/app0");
+            foreach (var name in app0.Enumerator)
+            {
+                try
+                {
+                    Console.WriteLine("/app0 {0} = {1}", name, app0.GetMetadataByName(name));
+                } catch (Exception ex)
+                {
+                    Console.WriteLine("Error while getting metadata /app0{0} : {1}", name, ex.Message);
+                }
+            }
+
+            queryReader.Dispose();
+
+            bitmapFrameDecode.Dispose();
+            decoder.Dispose();
+            stream.Dispose();
+
+            // Dispose
             factory.Dispose();
+
+            System.Diagnostics.Process.Start(Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, filename)));
         }
     }
 }

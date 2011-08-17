@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{FF907522-E5A4-4AF0-8B74-4700545B3718}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{8D9B8BB6-2898-4B18-AEAB-DBC1097D0317}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EncodeDecode</RootNamespace>
-    <AssemblyName>EncodeDecode</AssemblyName>
+    <RootNamespace>RenderToWicApp</RootNamespace>
+    <AssemblyName>RenderToWicApp</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -19,10 +19,10 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <OutputPath>bin\Release\</OutputPath>
@@ -32,16 +32,12 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -52,6 +48,10 @@
       <Project>{003655D0-CC78-411F-AD2D-655E03927827}</Project>
       <Name>SharpDX.Diagnostics</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Source\SharpDX.Direct2D1\SharpDX.Direct2D1.csproj">
+      <Project>{6C573B77-76D7-4DB8-93A4-DF613A5F26F8}</Project>
+      <Name>SharpDX.Direct2D1</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Source\SharpDX.DXGI\SharpDX.DXGI.csproj">
       <Project>{3FC6DE77-B412-4101-9E64-6B9AA831179B}</Project>
       <Name>SharpDX.DXGI</Name>
@@ -61,7 +61,7 @@
       <Name>SharpDX.WIC</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Source\SharpDX\SharpDX.csproj">
-      <Project>{D0BCD56A-41C4-4A4E-8590-26864CED07FF}</Project>
+      <Project>{CE5194D5-30A4-43A4-BF7A-7AC0C1988224}</Project>
       <Name>SharpDX</Name>
     </ProjectReference>
   </ItemGroup>

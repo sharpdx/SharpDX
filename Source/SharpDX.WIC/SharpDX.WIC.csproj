@@ -69,6 +69,7 @@
     <Compile Include="MetadataQueryReader.cs" />
     <Compile Include="MetadataQueryWriter.cs" />
     <Compile Include="Palette.cs" />
+    <Compile Include="PixelFormat.cs" />
     <Compile Include="PixelFormatInfo.cs" />
     <Compile Include="WmpBitmapDecoder.cs" />
     <Compile Include="TiffBitmapDecoder.cs" />

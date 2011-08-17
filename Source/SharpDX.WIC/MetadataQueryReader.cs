@@ -30,7 +30,7 @@ namespace SharpDX.WIC
         /// <summary>
         /// Gets the enumerator on the metadata names.
         /// </summary>
-        public IEnumerator<string> Enumerator
+        public IEnumerable<string> Enumerator
         {
             get { return new ComStringEnumerator(GetEnumerator()); }
         }
@@ -68,9 +68,24 @@ namespace SharpDX.WIC
         {
             unsafe
             {
-                byte* variant = stackalloc byte[16];
-                GetMetadataByName(name, (IntPtr) variant);
-                return Marshal.GetObjectForNativeVariant((IntPtr) variant);
+                byte* variant = stackalloc byte[512];
+                var pointer = new IntPtr(variant);
+                GetMetadataByName(name, pointer);
+                var value = Marshal.GetObjectForNativeVariant(pointer);
+
+                // If object is a ComObject, try to instantiate a MetaDataQueryReader
+                if (value is MarshalByRefObject)
+                {
+                    var temp = new ComObject(Marshal.GetIUnknownForObject(value));
+                    try
+                    {
+                        value = temp.QueryInterface<MetadataQueryReader>();
+                    } catch (Exception ex)
+                    {
+                        return value;
+                    }
+                }
+                return value;
             }
         }
     }

@@ -73,5 +73,10 @@ namespace SharpDX.WIC
         {
             return WritePixels(lineCount, buffer.Pitch, lineCount*buffer.Pitch, buffer.DataPointer);
         }
+
+        public SharpDX.Result WriteSource(SharpDX.WIC.BitmapSource bitmapSource)
+        {
+            return WriteSource(bitmapSource, null);
+        }
     }
 }
