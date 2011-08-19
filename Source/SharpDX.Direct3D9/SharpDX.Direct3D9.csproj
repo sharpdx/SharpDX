@@ -47,6 +47,7 @@
     <Compile Include="DeviceEx.cs" />
     <Compile Include="Direct3D.cs" />
     <Compile Include="Direct3DEx.cs" />
+    <Compile Include="DriverLevel.cs" />
     <Compile Include="Generated\Enumerations.cs" />
     <Compile Include="Generated\Functions.cs" />
     <Compile Include="Generated\Interfaces.cs" />
