@@ -59,6 +59,12 @@ namespace SharpGen.Config
         public bool ShouldSerializeMappingName() { return IsFinalMappingName.HasValue && !IsFinalMappingName.Value; }
 
         /// <summary>
+        /// Mapping replace 
+        /// </summary>
+        [XmlAttribute("replace")]
+        public string Replace { get; set; }
+
+        /// <summary>
         /// Mapping name
         /// </summary>
         [XmlAttribute("name")]

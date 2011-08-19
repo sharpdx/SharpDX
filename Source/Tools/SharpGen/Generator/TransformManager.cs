@@ -897,6 +897,35 @@ namespace SharpGen.Generator
         }
 
         /// <summary>
+        /// Gets a C# type is registered.
+        /// </summary>
+        /// <param name = "type">The C# type.</param>
+        public CsTypeBase GetTypeDefined(CsTypeBase type)
+        {
+            CsTypeBase outType;
+            _mapDefinedCSharpType.TryGetValue(type.QualifiedName, out outType);
+            return outType;
+        }
+
+        /// <summary>
+        /// Tests if a a C# type is registered.
+        /// </summary>
+        /// <param name = "type">The C# type.</param>
+        public bool IsTypeDefined(CsTypeBase type)
+        {
+            return GetTypeDefined(type) != null;
+        }
+
+        /// <summary>
+        /// Removes a C# type.
+        /// </summary>
+        /// <param name = "type">The C# type.</param>
+        public bool RemoveDefineType(CsTypeBase type)
+        {
+            return _mapDefinedCSharpType.Remove(type.QualifiedName);
+        }
+
+        /// <summary>
         /// Imports a defined C# type.
         /// </summary>
         /// <param name = "type">The C# type.</param>
@@ -982,6 +1011,29 @@ namespace SharpGen.Generator
         /// <param name = "marshalType">The C# marshal type</param>
         public void BindType(string cppName, CsTypeBase type, CsTypeBase marshalType = null)
         {
+            // Check for type replacer
+            if (type.CppElement != null)
+            {
+                var tag = type.CppElement.GetTagOrDefault<MappingRule>();
+                if (tag.Replace != null)
+                {
+                    Logger.Warning("Replace type {0} -> {1}", cppName, tag.Replace);
+
+                    // Remove old type from namespace if any
+                    var oldType = FindBindType(tag.Replace);
+                    if (oldType != null)
+                    {
+                        if (oldType.Parent != null)
+                            oldType.Parent.Remove(oldType);
+                    }
+
+                    _mapCppNameToCSharpType.Remove(tag.Replace);
+
+                    // Replace the name
+                    cppName = tag.Replace;
+                }
+            }
+
             if (_mapCppNameToCSharpType.ContainsKey(cppName))
             {
                 var old = _mapCppNameToCSharpType[cppName];
