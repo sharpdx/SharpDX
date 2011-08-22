@@ -30,7 +30,7 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
-   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -338,7 +338,8 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy  $(TargetPath) $(SolutionDir)Build\Tools\Bin\
+    <PostBuildEvent>mkdir  $(SolutionDir)Build\Tools\Bin\
+copy  $(TargetPath) $(SolutionDir)Build\Tools\Bin\
 copy  $(TargetDir)\*.dll $(SolutionDir)Build\Tools\Bin\
 rmdir /S /Q  $(SolutionDir)Build\Tools\Styles
 mkdir $(SolutionDir)Build\Tools\Styles

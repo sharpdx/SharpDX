@@ -43,7 +43,7 @@
     <DocumentationFile>
     </DocumentationFile>
   </PropertyGroup>
-   <PropertyGroup>
+  <PropertyGroup>
     <StartupObject>SharpGen.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
@@ -207,7 +207,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy  $(TargetPath) $(SolutionDir)Build\Tools\Bin\
+    <PostBuildEvent>mkdir $(SolutionDir)Build\Tools\Bin\
+copy  $(TargetPath) $(SolutionDir)Build\Tools\Bin\
 copy  $(TargetDir)\*.dll $(SolutionDir)Build\Tools\Bin\</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
