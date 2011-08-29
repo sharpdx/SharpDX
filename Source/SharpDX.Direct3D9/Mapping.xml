@@ -728,12 +728,16 @@
     <map enum-item="D3DCAPS2_CANMANAGERESOURCE" name="CanManageResource"/>
     <map enum-item="D3DCAPS2_DYNAMICTEXTURES" name="DynamicTextures"/>
     <map enum-item="D3DCAPS2_CANAUTOGENMIPMAP" name="CanAutoGenerateMipMap"/>
+    <map enum-item="D3DCAPS2_CANSHARERESOURCE" name="CanShareResource"/>
+    <remove enum-item="D3DCAPS2_RESERVED"/>
 
     <map enum="D3DCAPS3" name="Caps3" flags="true" none="true"/>
     <map enum-item="D3DCAPS3_ALPHA_FULLSCREEN_FLIP_OR_DISCARD" name="AlphaFullScreenFlipOrDiscard"/>
     <map enum-item="D3DCAPS3_LINEAR_TO_SRGB_PRESENTATION" name="LinearToSrgbPresentation"/>
     <map enum-item="D3DCAPS3_COPY_TO_VIDMEM" name="CopyToVideoMemory"/>
     <map enum-item="D3DCAPS3_COPY_TO_SYSTEMMEM" name="CopyToSystemMemory"/>
+    <map enum-item="D3DCAPS3_DXVAHD" name="DXVAHd"/>
+    <remove enum-item="D3DCAPS3_RESERVED"/>
 
     <map enum="D3DX_CHANNEL" name="Channel" flags="true" none="false"/>
     <map enum-item="D3DX_CHANNEL_RED" name="Red"/>
@@ -1918,8 +1922,37 @@
     <map struct="D3DXWELDEPSILONS" name="WeldEpsilons" />
     <map struct="D3DXEFFECTINSTANCE" name="EffectInstance" />
     <map struct="D3DXFONT_DESCW" name="FontDescription" />
-    <map struct="D3DADAPTER_IDENTIFIER9" name="AdapterDetails" />
+    
+    <map struct="D3DADAPTER_IDENTIFIER9" struct-to-class="true" name="AdapterDetails" />
+    <map field="DriverVersion" name="RawDriverVersion" visibility="internal"/>
+    <map field="SubSysId" name="SubsystemId"/>
+    <map field="WHQLLevel" name="WhqlLevel"/>
+
+    <map struct="D3DXATTRIBUTEWEIGHTS" name="AttributeWeights" />
+    <map field="Texcoord" name="TextureCoordinate" />
+
+    <map struct="D3DXBONECOMBINATION" name="BoneCombination" native="true" struct-to-class="true" marshal="true"/>
+    <map field="BoneId" name="BonedIdsPointer" visibility="internal"/>
+
+    <map struct="D3DXKEY_CALLBACK" name="CallbackKey" />
+    <map field="pCallbackData" name="Data"/>
+
     <map struct="D3DCAPS9" name="Capabilities" />
+    <map field="Caps" type="D3DCAPS" />
+    <map field="Caps2" type="D3DCAPS2" />
+    <map field="Caps3" type="D3DCAPS3" />
+    <map field="PresentationIntervals" type="D3DPRESENT_INTERVAL" />
+    <map field="CursorCaps" type="D3DCURSORCAPS" />
+    <map field="DevCaps" name="DeviceCaps" type="D3DDEVCAPS" />
+    <map field="PrimitiveMiscCaps" type="D3DPMISCCAPS" />
+    <map field="RasterCaps" type="D3DPRASTERCAPS" />
+    <map field="ZCmpCaps" name="DepthCompareCaps" type="D3DPCMPCAPS" />
+    <map field="SrcBlendCaps" name="SourceBlendCaps" type="D3DPBLENDCAPS" />
+    <map field="DestBlendCaps" name="DestinationBlendCaps" type="D3DPBLENDCAPS" />
+    <map field="AlphaCmpCaps" name="AlpaCompareCaps" type="D3DPCMPCAPS" />
+    
+
+
     <map struct="D3DCLIPSTATUS9" name="ClipStatus" />
     <map struct="D3DDEVICE_CREATION_PARAMETERS" name="CreationParameters" />
     <map struct="D3DDISPLAYMODE" name="DisplayMode" />
@@ -1934,11 +1967,8 @@
     <map struct="D3DVERTEXELEMENT9" name="VertexElement" />
     <map struct="D3DVSHADERCAPS2_0" name="VertexShader20Caps" />
     <map struct="D3DXATTRIBUTERANGE" name="AttributeRange" />
-    <map struct="D3DXATTRIBUTEWEIGHTS" name="AttributeWeights" />
-    <map struct="D3DXBONECOMBINATION" name="BoneCombination" />
     <map struct="D3DXCONSTANTTABLE_DESC" name="ConstantTableDescription" />
     <map struct="D3DXEFFECTDEFAULT" name="EffectDefault" />
-    <map struct="D3DXKEY_CALLBACK" name="CallbackKey" />
     <map struct="D3DXKEY_QUATERNION" name="RotationKey" />
     <map struct="D3DXKEY_VECTOR3" name="ScaleKey" />
     <map struct="D3DXPATCHINFO" name="PatchInfo" />
