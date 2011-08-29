@@ -2,10 +2,10 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:dpf="clr-namespace:WPFHost"
-        Title="MainWindow" Height="350" Width="525">
+        Title="SharpDX WPF-D3D10 Interop Example" Height="698" Width="990">
     <Grid>
         <dpf:DPFCanvas x:Name="Canvas1" Stretch="Fill" Margin="38,34,56,36" />
-        <Button Content="Button" Height="23" HorizontalAlignment="Left" Margin="355,234,0,0" Name="button1" VerticalAlignment="Top" Width="75" />
-        <Slider Height="23" HorizontalAlignment="Left" Margin="49,47,0,0" Name="slider1" VerticalAlignment="Top" Width="381" />
+        <Button Content="Button" Height="23" HorizontalAlignment="Left" Margin="805,580,0,0" Name="button1" VerticalAlignment="Top" Width="75" />
+        <Slider Height="23" HorizontalAlignment="Left" Margin="38,47,0,0" Name="slider1" VerticalAlignment="Top" Width="874" />
     </Grid>
 </Window>
