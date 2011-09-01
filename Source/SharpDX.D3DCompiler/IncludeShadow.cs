@@ -30,7 +30,7 @@ namespace SharpDX.D3DCompiler
     internal class IncludeShadow : CppObjectShadow
     {
         private static readonly IncludeVtbl Vtbl = new IncludeVtbl();
-        private Dictionary<IntPtr, Frame> _frames;
+        private readonly Dictionary<IntPtr, Frame> frames = new Dictionary<IntPtr, Frame>();
 
         private struct Frame
         {
@@ -96,8 +96,8 @@ namespace SharpDX.D3DCompiler
                         Stream stream = null;
                         Stream parentStream = null;
 
-                        if (shadow._frames.ContainsKey(pParentData))
-                            parentStream = shadow._frames[pParentData].Stream;
+                        if (shadow.frames.ContainsKey(pParentData))
+                            parentStream = shadow.frames[pParentData].Stream;
 
                         stream = callback.Open(includeType, new String((sbyte*)fileNameRef), parentStream);
                         if (stream == null)
@@ -122,7 +122,7 @@ namespace SharpDX.D3DCompiler
                             bytesRef = data.Length;
                         }
 
-                        shadow._frames.Add(dataRef, new Frame(stream, handle));
+                        shadow.frames.Add(dataRef, new Frame(stream, handle));
 
                         return Result.Ok;
                     }
@@ -157,9 +157,9 @@ namespace SharpDX.D3DCompiler
                     var callback = (Include)shadow.Callback;
 
                     Frame frame;
-                    if (shadow._frames.TryGetValue(pData, out frame))
+                    if (shadow.frames.TryGetValue(pData, out frame))
                     {
-                        shadow._frames.Remove(pData);
+                        shadow.frames.Remove(pData);
                         callback.Close(frame.Stream);
                         frame.Close();
                     }
