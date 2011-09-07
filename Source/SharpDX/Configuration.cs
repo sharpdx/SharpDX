@@ -38,9 +38,9 @@ namespace SharpDX
         public static bool EnableObjectTracking = false;
 
         /// <summary>
-        /// Enables or disables release of ComObject on finalizer. Default is enabled (true).
+        /// Enables or disables release of ComObject on finalizer. Default is disabled (false).
         /// </summary>
-        public static bool EnableReleaseOnFinalizer = true;
+        public static bool EnableReleaseOnFinalizer = false;
 
         /// <summary>
         /// Throws a <see cref="CompilationException"/> when a shader or effect compilation error occured. Default is enabled (true).
