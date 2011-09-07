@@ -144,6 +144,7 @@
     <remove enum="D3D10_SHADER_DEBUG_REGTYPE" />
     <remove enum="D3D10_SHADER_DEBUG_SCOPETYPE" />
     <remove enum="D3D10_SHADER_DEBUG_VARTYPE" />
+    <remove enum="D3D10_DEVICE_STATE_TYPES" />
     <remove struct="D3D10_SHADER_DESC" />
     <remove struct="D3D10_SHADER_INPUT_BIND_DESC" />
     <remove struct="D3D10_SHADER_TYPE_DESC" />
@@ -360,8 +361,15 @@
     <remove function="D3D10GetOutputSignatureBlob" />
     <remove function="D3D10GetInputAndOutputSignatureBlob" />
     <remove function="D3D10GetShaderDebugInfo" />
-    <remove function="D3D10CompileEffectFromMemory" />
     <remove function="D3D10DisassembleEffect" />
+    <remove function="D3D10StateBlockMask.*"/>
+
+    <!-- Warning, D3D10CompileEffectFromMemory code is copied to D3D compiler dll  -->
+    <map function="D3D10CompileEffectFromMemory" name="CompileEffect10FromMemory" />
+    <map param="D3D10CompileEffectFromMemory::HLSLFlags" type="D3DCOMPILE_SHADER_FLAGS" />
+    <map param="D3D10CompileEffectFromMemory::FXFlags" type="D3DCOMPILE_EFFECT_FLAGS" />
+    <map param="D3D10CompileEffectFromMemory::pDefines" attribute="in buffer optional" />
+
     <map function="D3D10.*" dll='"d3d10.dll"' group="SharpDX.Direct3D10.D3D10" />
     <map function="D3D10.*1" dll='"d3d10_1.dll"' group="SharpDX.Direct3D10.D3D10" />
     <map function="D3DX10.*" dll='"#(D3DX10_DLL_A)"' group="SharpDX.Direct3D10.D3DX10" />

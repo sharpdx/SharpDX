@@ -18,7 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.IO;
+using System.Text;
+
 using SharpDX.D3DCompiler;
+using SharpDX.Direct3D;
 
 namespace SharpDX.Direct3D10
 {
@@ -53,5 +57,5 @@ namespace SharpDX.Direct3D10
         {
             D3D10.CreateEffectFromMemory(effectByteCode.BufferPointer, effectByteCode.BufferSize, (int)fxFlags, device, effectPool, this);
         }
-   }
+  }
 }

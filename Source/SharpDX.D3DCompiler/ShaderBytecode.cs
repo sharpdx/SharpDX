@@ -57,6 +57,11 @@ namespace SharpDX.D3DCompiler
     public class ShaderBytecode : Blob
     {
         /// <summary>
+        /// Use this ShaderFlags constant in order to compile an effect with old D3D10CompileEffectFromMemory.
+        /// </summary>
+        public const ShaderFlags Effect10 = (ShaderFlags)0x40000000;
+
+        /// <summary>
         ///   Initializes a new instance of the <see cref = "T:SharpDX.D3DCompiler.ShaderBytecode" /> class.
         /// </summary>
         /// <param name = "data">A <see cref = "T:SharpDX.DataStream" /> containing the compiled bytecode.</param>
@@ -382,10 +387,38 @@ namespace SharpDX.D3DCompiler
 
                 try
                 {
-                    fixed (void* pData = &shaderSource[0])
-                        D3D.Compile((IntPtr)pData, shaderSource.Length, sourceFileName, PrepareMacros(defines), IncludeShadow.ToIntPtr(include), entryPoint,
-                                    profile, shaderFlags,
-                                    effectFlags, out blobForCode, out blobForErrors);
+                    if ((shaderFlags & Effect10) != 0)
+                    {
+                        shaderFlags ^= Effect10;
+
+                        fixed (void* pData = &shaderSource[0])
+                            D3D.CompileEffect10FromMemory(
+                                (IntPtr)pData,
+                                shaderSource.Length,
+                                sourceFileName,
+                                PrepareMacros(defines),
+                                IncludeShadow.ToIntPtr(include),
+                                shaderFlags,
+                                effectFlags,
+                                out blobForCode,
+                                out blobForErrors);
+                    }
+                    else
+                    {
+                        fixed (void* pData = &shaderSource[0])
+                            D3D.Compile(
+                                (IntPtr)pData,
+                                shaderSource.Length,
+                                sourceFileName,
+                                PrepareMacros(defines),
+                                IncludeShadow.ToIntPtr(include),
+                                entryPoint,
+                                profile,
+                                shaderFlags,
+                                effectFlags,
+                                out blobForCode,
+                                out blobForErrors);
+                    }
                 }
                 catch (SharpDXException ex)
                 {
