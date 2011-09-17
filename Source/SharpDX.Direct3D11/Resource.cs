@@ -40,6 +40,7 @@ namespace SharpDX.Direct3D11
             return swapChain.GetBackBuffer<T>(index);
         }
 
+#if Win8
         /// <summary>
         ///   Loads a texture from an image file.
         /// </summary>
@@ -48,8 +49,8 @@ namespace SharpDX.Direct3D11
         /// <returns>The loaded texture object.</returns>
         public static T FromFile<T>(Device device, string fileName) where T : Resource
         {
-            System.Diagnostics.Debug.Assert(typeof (T) == typeof (Texture1D) || typeof (T) == typeof (Texture2D) ||
-                         typeof (T) == typeof (Texture3D));
+            System.Diagnostics.Debug.Assert(typeof(T) == typeof(Texture1D) || typeof(T) == typeof(Texture2D) ||
+                         typeof(T) == typeof(Texture3D));
 
             Resource temp;
             Result resultOut;
@@ -67,8 +68,8 @@ namespace SharpDX.Direct3D11
         /// <returns>The loaded texture object.</returns>
         public static T FromFile<T>(Device device, string fileName, ImageLoadInformation loadInfo) where T : Resource
         {
-            System.Diagnostics.Debug.Assert(typeof (T) == typeof (Texture1D) || typeof (T) == typeof (Texture2D) ||
-                         typeof (T) == typeof (Texture3D));
+            System.Diagnostics.Debug.Assert(typeof(T) == typeof(Texture1D) || typeof(T) == typeof(Texture2D) ||
+                         typeof(T) == typeof(Texture3D));
 
             Resource temp;
             Result resultOut;
@@ -85,8 +86,8 @@ namespace SharpDX.Direct3D11
         /// <returns>The loaded texture object.</returns>
         public static T FromMemory<T>(Device device, byte[] memory) where T : Resource
         {
-            System.Diagnostics.Debug.Assert(typeof (T) == typeof (Texture1D) || typeof (T) == typeof (Texture2D) ||
-                         typeof (T) == typeof (Texture3D));
+            System.Diagnostics.Debug.Assert(typeof(T) == typeof(Texture1D) || typeof(T) == typeof(Texture2D) ||
+                         typeof(T) == typeof(Texture3D));
 
             unsafe
             {
@@ -95,7 +96,7 @@ namespace SharpDX.Direct3D11
                 Resource temp;
                 Result resultOut;
                 fixed (void* pBuffer = &memory[0])
-                    D3DX11.CreateTextureFromMemory(device, (IntPtr) pBuffer, memory.Length, null, IntPtr.Zero,
+                    D3DX11.CreateTextureFromMemory(device, (IntPtr)pBuffer, memory.Length, null, IntPtr.Zero,
                                                    out temp, out resultOut);
                 // TODO test resultOut?
                 return FromPointer<T>(temp.NativePointer);
@@ -111,8 +112,8 @@ namespace SharpDX.Direct3D11
         /// <returns>The loaded texture object.</returns>
         public static T FromMemory<T>(Device device, byte[] memory, ImageLoadInformation loadInfo) where T : Resource
         {
-            System.Diagnostics.Debug.Assert(typeof (T) == typeof (Texture1D) || typeof (T) == typeof (Texture2D) ||
-                         typeof (T) == typeof (Texture3D));
+            System.Diagnostics.Debug.Assert(typeof(T) == typeof(Texture1D) || typeof(T) == typeof(Texture2D) ||
+                         typeof(T) == typeof(Texture3D));
 
             unsafe
             {
@@ -121,7 +122,7 @@ namespace SharpDX.Direct3D11
                 Resource temp;
                 Result resultOut;
                 fixed (void* pBuffer = &memory[0])
-                    D3DX11.CreateTextureFromMemory(device, (IntPtr) pBuffer, memory.Length, loadInfo, IntPtr.Zero,
+                    D3DX11.CreateTextureFromMemory(device, (IntPtr)pBuffer, memory.Length, loadInfo, IntPtr.Zero,
                                                    out temp, out resultOut);
                 // TODO test resultOut?
                 return FromPointer<T>(temp.NativePointer);
@@ -215,5 +216,6 @@ namespace SharpDX.Direct3D11
         {
             return D3DX11.LoadTextureFromTexture(context, source, loadInformation, destination);
         }
+#endif
     }
 }

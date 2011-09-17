@@ -424,7 +424,7 @@ namespace SharpGen.Config
             return result;
         }
 
-        private void PostLoad(ConfigFile parent, string file)
+        private void PostLoad(ConfigFile parent, string file, string[] macros = null)
         {
             FilePath = file;
             Parent = parent;
@@ -438,7 +438,7 @@ namespace SharpGen.Config
                 if (!Path.IsPathRooted(dependFilePath))
                     dependFilePath = Path.Combine(Path.GetDirectoryName(AbsoluteFilePath), dependFilePath);
                 
-                var subMapping = Load(this, dependFilePath);
+                var subMapping = Load(this, dependFilePath, macros);
                 if (subMapping != null)
                 {
                     subMapping.FilePath = dependFile;
@@ -482,17 +482,17 @@ namespace SharpGen.Config
         /// <param name="parent">The parent.</param>
         /// <param name="file">The file.</param>
         /// <returns>The MappingFile loaded</returns>
-        private static ConfigFile Load(ConfigFile parent, string file)
+        private static ConfigFile Load(ConfigFile parent, string file, string[] macros = null)
         {
             var deserializer = new XmlSerializer(typeof(ConfigFile));
             ConfigFile config = null;
             try
             {
                 Logger.PushLocation(file);
-                config = (ConfigFile)deserializer.Deserialize(new StringReader(File.ReadAllText(file)));
+                config = (ConfigFile)deserializer.Deserialize(new StringReader(Preprocessor.Preprocess(File.ReadAllText(file), macros)));
 
                 if (config != null)
-                    config.PostLoad(parent, file);
+                    config.PostLoad(parent, file, macros);
             }
             catch (Exception ex)
             {
@@ -544,9 +544,9 @@ namespace SharpGen.Config
         /// </summary>
         /// <param name="file">The MappingFile.</param>
         /// <returns>The MappingFile loaded</returns>
-        public static ConfigFile Load(string file)
+        public static ConfigFile Load(string file, string[] macros = null)
         {
-            var root =  Load(null, file);
+            var root =  Load(null, file, macros);
             root.Verify();
             root.ExpandVariables(false);
             return root;

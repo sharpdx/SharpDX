@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -34,6 +35,14 @@ namespace SharpGen
     public class CodeGenApp
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="CodeGenApp"/> class.
+        /// </summary>
+        public CodeGenApp()
+        {
+            Macros = new List<string>();
+        }
+
+        /// <summary>
         /// Gets or sets the path to a C++ document provider assembly.
         /// </summary>
         /// <value>The path to a C++ document provider assembly.</value>
@@ -44,6 +53,14 @@ namespace SharpGen
         /// </summary>
         /// <value>The GCC XML executable path.</value>
         public string GccXmlExecutablePath { get; set; }
+
+        /// <summary>
+        /// Gets or sets the macros.
+        /// </summary>
+        /// <value>
+        /// The macros.
+        /// </value>
+        public List<string> Macros { get; set; }
 
         private ConfigFile Config { get; set; }
 
@@ -127,7 +144,9 @@ namespace SharpGen
             Logger.Message("Loading config files...");
 
             // Load configuration
-            Config = ConfigFile.Load(_configRootPath);
+            Macros.Add("Win8");
+
+            Config = ConfigFile.Load(_configRootPath, Macros.ToArray());
             var latestConfigTime = ConfigFile.GetLatestTimestamp(Config.ConfigFilesLoaded);
 
             _allConfigCheck = Config.Id + "-CodeGen.check";

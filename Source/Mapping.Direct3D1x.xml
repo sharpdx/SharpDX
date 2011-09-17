@@ -36,22 +36,32 @@
   <include file="d3d10misc.h" />
   <include file="d3d10sdklayers.h" />
   <include file="d3d10shader.h" />
-  <include file="d3dx10.h" />
-  <include file="d3dx10core.h" />
-  <include file="d3dx10tex.h" />
-  <include file="d3dx10mesh.h" />
-  <include file="d3dx10async.h"  />
-
+  
+  <ifndef name="Win8">
+    <include file="d3dx10.h" />
+    <include file="d3dx10core.h" />
+    <include file="d3dx10tex.h" />
+    <include file="d3dx10mesh.h" />
+    <include file="d3dx10async.h"  />
+  </ifndef>
+  
   <!-- D3D11 includes -->
   <include file="d3d11.h" />
-  <include file="d3dx11.h" />
+  <ifdef name="Win8">
+    <include file="d3d11_1.h" />
+  </ifdef>
   <include file="d3d11sdklayers.h" />
-  <include file="d3dx11core.h" />
-  <include file="d3dx11tex.h" />
-  <include file="d3dx11async.h" />
-  <include file="d3dcsx.h" />
-  <include file="d3dx11effect.h"/>
 
+  
+  <ifndef name="Win8">
+    <include file="d3dx11.h" />
+    <include file="d3dx11core.h" />
+    <include file="d3dx11tex.h" />
+    <include file="d3dx11async.h" />
+    <include file="d3dcsx.h" />
+    <include file="d3dx11effect.h"/>
+  </ifndef>
+  
   <naming />
   <binding/>
   <extensions />
@@ -64,21 +74,27 @@
     <context>d3d10misc</context>
     <context>d3d10sdklayers</context>
     <context>d3d10shader</context>
-    <context>d3dx10</context>
-    <context>d3dx10core</context>
-    <context>d3dx10tex</context>
-    <context>d3dx10mesh</context>
-    <context>d3dx10async</context>
+    <ifndef name="Win8">
+      <context>d3dx10</context>
+      <context>d3dx10core</context>
+      <context>d3dx10tex</context>
+      <context>d3dx10mesh</context>
+      <context>d3dx10async</context>
+    </ifndef>
     
     <context>d3d11</context>
-    <context>d3dx11</context>
-    <context>d3d11sdklayers</context>
-    <context>d3dx11core</context>
-    <context>d3dx11tex</context>
-    <context>d3dx11async</context>
-    <context>d3dcsx</context>
-    <context>d3dx11effect</context>
-
+    <ifdef name="Win8">
+      <context>d3d11_1</context>
+    </ifdef>
+    <ifndef name="Win8">
+      <context>d3dx11</context>
+      <context>d3d11sdklayers</context>
+      <context>d3dx11core</context>
+      <context>d3dx11tex</context>
+      <context>d3dx11async</context>
+      <context>d3dcsx</context>
+      <context>d3dx11effect</context>
+    </ifndef>
     <!--
     // *****************************************************************
     // D3D1x Enumerations

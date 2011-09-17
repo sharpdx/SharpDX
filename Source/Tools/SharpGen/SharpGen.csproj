@@ -78,6 +78,7 @@
     <Compile Include="Config\DefineExtensionRule.cs" />
     <Compile Include="Config\MappingBaseRule.cs" />
     <Compile Include="Config\MappingRule.cs" />
+    <Compile Include="Config\Preprocessor.cs" />
     <Compile Include="Config\RemoveRule.cs" />
     <Compile Include="Config\ITypeRule.cs" />
     <Compile Include="Config\IncludeRule.cs" />

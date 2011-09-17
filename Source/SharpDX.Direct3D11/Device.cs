@@ -435,7 +435,7 @@ namespace SharpDX.Direct3D11
             device.Dispose();
             return outputLevel;
         }
-
+#if Win8
         /// <summary>
         /// Gets a value indicating whether the current device is using the reference rasterizer.
         /// </summary>
@@ -454,5 +454,6 @@ namespace SharpDX.Direct3D11
                 }
             }
         }
+#endif
     }
 }
