@@ -41,7 +41,7 @@ namespace PlaySoundCustomXAPO
             InitializeComponent();
 
             // Initalize XAudio2
-            xaudio2 = new XAudio2(XAudio2Flags.DebugEngine, WindowsProcessorSpecifier.DefaultProcessor);
+            xaudio2 = new XAudio2(XAudio2Flags.None, ProcessorSpecifier.DefaultProcessor);
             masteringVoice = new MasteringVoice(xaudio2);
 
             var waveFormat = new WaveFormat(44100, 32, 2);

@@ -19,6 +19,8 @@
 // THE SOFTWARE.
 using System;
 
+using SharpDX.Direct2D1;
+
 namespace SharpDX.DirectWrite
 {
     public partial class GlyphRunAnalysis

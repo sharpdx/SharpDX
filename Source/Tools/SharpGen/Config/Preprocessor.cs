@@ -53,8 +53,8 @@ namespace SharpGen.Config
                 {
                     foreach (var element in ifndef.Elements())
                     {
-                        Console.WriteLine("=============== ifndef Add element {0}", element);
-                        ifndef.AddAfterSelf(element);
+                        //Console.WriteLine("=============== ifndef Add element {0}", element);
+                        ifndef.AddBeforeSelf(element);
                     }
 
                     ifndef.Remove();
@@ -73,8 +73,8 @@ namespace SharpGen.Config
                 {
                     foreach(var element in ifdef.Elements())
                     {
-                        Console.WriteLine("=============== ifdef Add element {0}", element);
-                        ifdef.AddAfterSelf(element);
+                        //Console.WriteLine("=============== ifdef Add element {0}", element);
+                        ifdef.AddBeforeSelf(element);
                     }
 
                     ifdef.Remove();

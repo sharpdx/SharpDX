@@ -20,6 +20,8 @@
 using System;
 using System.Runtime.InteropServices;
 
+using SharpDX.Direct2D1;
+
 namespace SharpDX.DirectWrite
 {
     /// <summary>
@@ -54,9 +56,9 @@ namespace SharpDX.DirectWrite
 
             /// <unmanaged>HRESULT DrawGlyphRun([None] void* clientDrawingContext,[None] FLOAT baselineOriginX,[None] FLOAT baselineOriginY,[None] DWRITE_MEASURING_MODE measuringMode,[In] const DWRITE_GLYPH_RUN* glyphRun,[In] const DWRITE_GLYPH_RUN_DESCRIPTION* glyphRunDescription,[None] IUnknown* clientDrawingEffect)</unmanaged>
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            private delegate int DrawGlyphRunDelegate(IntPtr thisObject, IntPtr clientDrawingContext, float baselineOriginX, float baselineOriginY, SharpDX.DirectWrite.MeasuringMode measuringMode,
+            private delegate int DrawGlyphRunDelegate(IntPtr thisObject, IntPtr clientDrawingContext, float baselineOriginX, float baselineOriginY, MeasuringMode measuringMode,
                                                       IntPtr glyphRunPtr, IntPtr glyphRunDescription, IntPtr clientDrawingEffect);
-            private static int DrawGlyphRunImpl(IntPtr thisObject, IntPtr clientDrawingContextPtr, float baselineOriginX, float baselineOriginY, SharpDX.DirectWrite.MeasuringMode measuringMode,
+            private static int DrawGlyphRunImpl(IntPtr thisObject, IntPtr clientDrawingContextPtr, float baselineOriginX, float baselineOriginY, MeasuringMode measuringMode,
                                          IntPtr glyphRunPtr, IntPtr glyphRunDescriptionPtr, IntPtr clientDrawingEffectPtr)
             {
                 unsafe

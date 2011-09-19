@@ -25,7 +25,8 @@
 		// IF Function, else method
 		if (method is CsFunction) {
 #><#= method.CastStart #><#= method.Assembly.QualifiedName #>.LocalInterop.<#= method.Interop.Name #>(<#+
-			if (method.IsReturnStructLarge) {#>(void*)&__result__<#+}				
+			if (method.IsReturnStructLarge) {#>(void*)&__result__<#+ if (maxParam > 0) {#>, <#+} }
+
 		} else {
 #><#= method.CastStart #><#= method.Assembly.QualifiedName #>.LocalInterop.<#= method.Interop.Name #>(_nativePointer<#+
 			if (method.IsReturnStructLarge) {#>,(void*)&__result__<#+}				

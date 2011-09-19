@@ -21,6 +21,8 @@ using System.Windows.Forms;
 using SharpDX.Direct2D1;
 using SharpDX.DXGI;
 using SharpDX;
+
+using AlphaMode = SharpDX.Direct2D1.AlphaMode;
 using Factory = SharpDX.Direct2D1.Factory;
 
 namespace SharpDX.Samples

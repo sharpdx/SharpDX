@@ -54,7 +54,7 @@ namespace SharpDX.XAudio2
         /// Initializes a new instance of the <see cref="XAudio2"/> class.
         /// </summary>
         public XAudio2()
-            : this(XAudio2Flags.None, WindowsProcessorSpecifier.DefaultProcessor)
+            : this(XAudio2Flags.None, ProcessorSpecifier.DefaultProcessor)
         {
         }
 
@@ -63,8 +63,10 @@ namespace SharpDX.XAudio2
         /// </summary>
         /// <param name="flags">Specify a Debug or Normal XAudio2 instance.</param>
         /// <param name="processorSpecifier">The processor specifier.</param>
-        public XAudio2(XAudio2Flags flags, WindowsProcessorSpecifier processorSpecifier) : base(IntPtr.Zero)
+        public XAudio2(XAudio2Flags flags, ProcessorSpecifier processorSpecifier)
+            : base(IntPtr.Zero)
         {
+#if !WIN8
             Guid clsid = (flags == XAudio2Flags.DebugEngine) ? CLSID_XAudio2_Debug : CLSID_XAudio2;
 
             // Initialize for multithreaded
@@ -78,7 +80,11 @@ namespace SharpDX.XAudio2
 
             // Initialize XAudio2
             Initialize(0, processorSpecifier);
+#else
 
+            XAudio2Functions.XAudio2Create(this, 0, (int)processorSpecifier);
+
+#endif
             // Register engine callback
 
             engineCallbackImpl = new EngineCallbackImpl(this);
@@ -86,6 +92,7 @@ namespace SharpDX.XAudio2
             RegisterForCallbacks_(engineShadowPtr);
         }
 
+#if !WIN8
         /// <summary>	
         /// Returns information about an audio output device.	
         /// </summary>	
@@ -98,6 +105,7 @@ namespace SharpDX.XAudio2
             GetDeviceDetails(index, out details);
             return details;
         }
+#endif
 
         /// <summary>
         /// Calculate a decibel from a volume.

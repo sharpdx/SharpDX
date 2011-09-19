@@ -19,6 +19,8 @@
 // THE SOFTWARE.
 using System;
 
+using SharpDX.Direct2D1;
+
 namespace SharpDX.DirectWrite
 {
     public partial interface TextRenderer
@@ -27,7 +29,7 @@ namespace SharpDX.DirectWrite
         ///  IDWriteTextLayout::Draw calls this function to instruct the client to render a run of glyphs. 	
         /// </summary>	
         /// <remarks>	
-        /// The <see cref="SharpDX.DirectWrite.TextLayout.Draw_"/> function calls this callback function with all the information about glyphs to render. The application implements this callback by mostly delegating the call to the underlying platform's graphics API such as {{Direct2D}} to draw glyphs on the drawing context. An application that uses GDI can implement this callback in terms of the <see cref="BitmapRenderTarget.DrawGlyphRun(float,float,SharpDX.DirectWrite.MeasuringMode,SharpDX.DirectWrite.GlyphRun,SharpDX.DirectWrite.RenderingParams,SharpDX.Color4)"/> method.	
+        /// The <see cref="SharpDX.DirectWrite.TextLayout.Draw_"/> function calls this callback function with all the information about glyphs to render. The application implements this callback by mostly delegating the call to the underlying platform's graphics API such as {{Direct2D}} to draw glyphs on the drawing context. An application that uses GDI can implement this callback in terms of the <see cref="BitmapRenderTarget.DrawGlyphRun(float,float,MeasuringMode,SharpDX.DirectWrite.GlyphRun,SharpDX.DirectWrite.RenderingParams,SharpDX.Color4)"/> method.	
         /// </remarks>	
         /// <param name="clientDrawingContext">The application-defined drawing context passed to  <see cref="SharpDX.DirectWrite.TextLayout.Draw_"/>.</param>
         /// <param name="baselineOriginX">The pixel location (X-coordinate) at the baseline origin of the glyph run.</param>
@@ -38,7 +40,7 @@ namespace SharpDX.DirectWrite
         /// <param name="clientDrawingEffect">Application-defined drawing effects for the glyphs to render. Usually this argument represents effects such as the foreground brush filling the interior of text.</param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.</returns>
         /// <unmanaged>HRESULT DrawGlyphRun([None] void* clientDrawingContext,[None] FLOAT baselineOriginX,[None] FLOAT baselineOriginY,[None] DWRITE_MEASURING_MODE measuringMode,[In] const DWRITE_GLYPH_RUN* glyphRun,[In] const DWRITE_GLYPH_RUN_DESCRIPTION* glyphRunDescription,[None] IUnknown* clientDrawingEffect)</unmanaged>
-        Result DrawGlyphRun(object clientDrawingContext, float baselineOriginX, float baselineOriginY, SharpDX.DirectWrite.MeasuringMode measuringMode,
+        Result DrawGlyphRun(object clientDrawingContext, float baselineOriginX, float baselineOriginY, MeasuringMode measuringMode,
                           SharpDX.DirectWrite.GlyphRun glyphRun, SharpDX.DirectWrite.GlyphRunDescription glyphRunDescription,
                           SharpDX.ComObject clientDrawingEffect);
 

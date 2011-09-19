@@ -20,6 +20,8 @@
 
 using System;
 using System.Collections.Generic;
+
+using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 
 namespace CustomLayout

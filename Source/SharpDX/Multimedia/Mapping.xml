@@ -49,6 +49,10 @@
     </pre>
   </include>
 
+  <ifdef name="WIN8">
+    <include file="audiosessiontypes.h" attach="true" namespace="SharpDX.Multimedia" output="Multimedia"/>
+  </ifdef>
+
   <include file="audiodefs.h" namespace="SharpDX.Multimedia" output="Multimedia"/>
 
   <!-- SharpDX global types -->
@@ -57,6 +61,7 @@
     <context>sharpdx-core-multimedia-ext</context>
     <context>hidusage</context>
     <context>audiodefs</context>
+    <context>audiosessiontypes</context>
     <context>mmreg</context>
 
     <!-- class SharpDX.Multimedia.UsagePage -->
@@ -78,6 +83,7 @@
     <context>sharpdx-core-multimedia-ext</context>
     <context>hidusage</context>
     <context>audiodefs</context>
+    <context>audiosessiontypes</context>
 
     <!-- class SharpDX.Multimedia.UsagePage -->
     <map enum="SPEAKER_FLAGS" name="Speakers" flags="true" none="true"/>
@@ -100,6 +106,9 @@
     <map enum="WAVE_FORMAT_ENCODING" name="WaveFormatEncoding" type="short"/>
     <map enum-item="WAVE_FORMAT_(.*)" name-tmp="$1" />
     <map enum-item="WAVE_FORMAT_([0-9].*)" name-tmp="Tag$1" />
+    <map enum-item="WAVE_FORMAT_GSM610" name-tmp="DefaultGsm610" />
+
+    <map enum-item="AudioCategory_(.*)" name="$1"/>
 
     <context-clear/>
   </mapping>

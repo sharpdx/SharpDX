@@ -663,14 +663,15 @@ namespace SharpGen.Parser
             {
                 bool addThisChar = true;
                 char attributeChar = attributes[i];
-                if (attributeChar == '"')
+                if (attributeChar == '(')
                 {
-                    if ((i+1) < attributes.Length && attributes[i+1] == ')')
-                        doubleQuoteCount--;
-                    else
-                        doubleQuoteCount++;
+                    doubleQuoteCount++;
                 }
-                else if (doubleQuoteCount > 0 && char.IsWhiteSpace(attributeChar))
+                else if (attributeChar == ')')
+                {
+                    doubleQuoteCount--;
+                }
+                else if (doubleQuoteCount > 0 && (char.IsWhiteSpace(attributeChar) | attributeChar == '"'))
                 {
                     addThisChar = false;
                 }
@@ -678,7 +679,7 @@ namespace SharpGen.Parser
                     stripSpaces.Append(attributeChar);                
             }
             attributes = stripSpaces.ToString();
-
+            
             // Default calling convention
             var cppCallingConvention = CppCallingConvention.Unknown;
 
@@ -690,21 +691,48 @@ namespace SharpGen.Parser
 
             // Parse attributes
             const string gccXmlAttribute = "gccxml(";
+            // none == 0
+            // pre == 1
+            // post == 2
+            bool isPre = false;
+            bool isPost = false;
+            bool hasWritable = false;
+
             foreach (var item in attributes.Split(' '))
             {
                 string newItem = item;
                 if (newItem.StartsWith(gccXmlAttribute))
-                    newItem = newItem.Trim(')').Substring(gccXmlAttribute.Length).Trim('"');
+                    newItem = newItem.Substring(gccXmlAttribute.Length);
 
                 if (newItem.StartsWith("SAL_pre"))
-                    paramAttribute |= ParamAttribute.In;
+                {
+                    // paramAttribute |= ParamAttribute.In;
+                    isPre = true;
+                    isPost = false;
+                } 
                 else if (newItem.StartsWith("SAL_post"))
+                {
+                    // paramAttribute |= ParamAttribute.Out;
+                    isPre = false;
+                    isPost = true;
+                }
+                else if (isPost && newItem.StartsWith("SAL_valid"))
+                {
                     paramAttribute |= ParamAttribute.Out;
-                else if (newItem.StartsWith("SAL_maybenull"))
+                }
+                else if (newItem.StartsWith("SAL_maybenull") || (newItem.StartsWith("SAL_null") && newItem.Contains("__maybe")))
+                {
                     paramAttribute |= ParamAttribute.Optional;
+                }
                 else if (newItem.StartsWith("SAL_readableTo") || newItem.StartsWith("SAL_writableTo"))
                 {
-                    if (!newItem.Contains("SPECSTRINGIZE(1)"))
+                    if (newItem.StartsWith("SAL_writableTo"))
+                    {
+                        if (isPost) paramAttribute |= ParamAttribute.Out;
+                        hasWritable = true;
+                    }
+
+                    if (!newItem.Contains("SPECSTRINGIZE(1)") && !newItem.Contains("elementCount(1)"))
                         paramAttribute |= ParamAttribute.Buffer;
                 }
                 else if (newItem.StartsWith("__stdcall__"))
@@ -716,6 +744,13 @@ namespace SharpGen.Parser
                     guid = newItem.Trim(')').Substring("uuid(".Length).Trim('"');
                 }
             }
+
+            // If no writable, than this is an In parameter
+            if (!hasWritable)
+            {
+                paramAttribute |= ParamAttribute.In;
+            }
+
 
             // Update CppElement based on its type
             if (cppElement is CppParameter)

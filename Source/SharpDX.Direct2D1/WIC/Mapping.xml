@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+-->
+<config id="sharpdx-wic" depends="sharpdx" xmlns="urn:SharpGen.Config">
+
+  <namespace>SharpDX.WIC</namespace>
+  <assembly>SharpDX.Direct2D1</assembly>
+
+  <include file="wincodec.h" attach="true" output="WIC"/>
+
+  <naming />
+
+  <extension>
+    <context>sharpdx-wic</context>
+    <context>sharpdx-wic-ext</context>
+    <context>wincodec</context>
+
+    <!-- class SharpDX.DirectInput.DeviceGuid -->
+    <create class="PixelFormat" visibility="public sealed"/>
+    <const from-guid="GUID_WICPixel(Format.*)" class="SharpDX.WIC.PixelFormat" type="System.Guid" name="$1">new System.Guid("$1")</const>
+    <const from-guid="CLSID_WICImagingFactory" class="SharpDX.WIC.ImagingFactory" type="System.Guid" name="WICImagingFactoryClsid">new System.Guid("$1")</const>
+
+    <create class="BitmapEncoderGuids" visibility="public sealed"/>
+    <const from-guid="CLSID_WIC(.*)Encoder" class="SharpDX.WIC.BitmapEncoderGuids" type="System.Guid" name="$1">new System.Guid("$1")</const>
+
+    <create class="ContainerFormatGuids" visibility="public sealed"/>
+    <const from-guid="GUID_ContainerFormat(.*)" class="SharpDX.WIC.ContainerFormatGuids" type="System.Guid" name="$1">new System.Guid("$1")</const>
+
+    <create class="BitmapDecoderGuids" visibility="public sealed"/>
+    <const from-guid="CLSID_WIC(.*)Decoder" class="SharpDX.WIC.BitmapDecoderGuids" type="System.Guid" name="$1">new System.Guid("$1")</const>
+
+    <context-clear />
+  </extension>
+
+  <bindings>
+    <bind from="WICRect" to="System.Drawing.Rectangle"/>
+  </bindings>
+
+  <mapping>
+    <context>sharpdx-wic</context>
+    <context>sharpdx-wic-ext</context>
+    <context>wincodec</context>
+    <!--
+    // *****************************************************************
+    // WIC Enumerations
+    // *****************************************************************
+    -->
+    <map enum="WIC(.*)" name="$1"/>
+    <map enum="WIC8(.*)" name="$1"/>
+    <map enum-item="WIC(.*)" name="$1"/>
+    <map enum-item="WIC8(.*)" name="$1"/>
+
+    <map enum="WICBitmapDecoderCapabilities" flags="true" none="true"/>
+    <map enum="WICBitmapEncoderCacheOption" visibility="internal"/>
+
+    <map enum-item="WICBitmapInterpolationMode(.*)" name="$1"/>
+    <map enum-item="WIC8BIMIptc(.*)" name="$1"/>
+    <map enum-item="WIC8BIMIptcDigest(.*)" name="$1"/>
+    <map enum-item="WIC8BIMResolutionInfo(.*)" name="$1"/>
+    <map enum-item="WICBitmap(.*)" name="$1"/>
+    <map enum-item="WICBitmapDecoderCapability(.*)" name="$1"/>
+    <map enum-item="WICBitmapDitherType(.*)" name="$1"/>
+    <map enum-item="WICBitmapEncoder(.*)" name="$1"/>
+    <map enum-item="WICBitmapEncoderCache(.*)" name="$1"/>
+    <map enum-item="WICBitmapInterpolationMode(.*)" name="$1"/>
+    <map enum-item="WICBitmapPaletteType(.*)" name="$1"/>
+    <map enum-item="WICBitmapLock(.*)" name="$1"/>
+    <map enum-item="WICBitmapTransform(.*)" name="$1"/>
+    <map enum-item="WICColorContext(.*)" name="$1"/>
+    <map enum-item="WICComponent(.*)" name="$1"/>
+    <map enum-item="WICComponentEnumerate(.*)" name="$1"/>
+    <map enum-item="WICDecodeMetadata(.*)" name="$1"/>
+    <map enum-item="WICGifApplicationExtension(.*)" name="$1"/>
+    <map enum-item="WICGifCommentExtension(.*)" name="$1"/>
+    <map enum-item="WICGifGraphicControlExtension(.*)" name="$1"/>
+    <map enum-item="WICGifImageDescriptor(.*)" name="$1"/>
+    <map enum-item="WICGifLogicalScreen(.*)" name="$1"/>
+    <map enum-item="WICGifLogicalScreenDescriptor(.*)" name="$1"/>    
+    <map enum-item="WICJpegChrominance(.*)" name="$1"/>
+    <map enum-item="WICJpegComment(.*)" name="$1"/>    
+    <map enum-item="WICJpegLuminance(.*)" name="$1"/>
+    <map enum-item="WICJpegYCrCbSubsampling(.*)" name="$1"/>
+    <map enum-item="WICJpegYCrCbSubsampling([0-9]+)" name="Mode$1"/>
+    <map enum-item="WICWhitePoint(.*)" name="$1"/>
+    <map enum-item="WICPixelFormatNumericRepresentation(.*)" name="$1"/>
+    <map enum-item="WICPngBkgdBackground(.*)" name="$1"/>
+    <map enum-item="WICPngChrm(.*)" name="$1"/>
+    <map enum-item="WICPngFilter(.*)" name="$1"/>
+    <map enum-item="WICPngGama(.*)" name="$1"/>
+    <map enum-item="WICPngHist(.*)" name="$1"/>
+    <map enum-item="WICPngIccp(.*)" name="$1"/>
+    <map enum-item="WICPngItxt(.*)" name="$1"/>
+    <map enum-item="WICPngSrgb(.*)" name="$1"/>
+    <map enum-item="WICPngTime(.*)" name="$1"/>
+    <map enum-item="WICProgressNotification(.*)" name="$1"/>
+    <map enum-item="WICProgressOperation(.*)" name="$1"/>
+    <map enum-item="WICRawCapability(.*)" name="$1"/>
+    <map enum-item="WIC(.*)ParameterSet" name="$1"/>
+    <map enum-item="WICRawRenderMode(.*)" name="$1"/>
+    <map enum-item="WICRawRotationCapability(.*)" name="$1"/>
+    <map enum-item="WICSectionAccessLevel(.*)" name="$1"/>
+    <map enum-item="WICTiffCompression(.*)" name="$1"/>
+    <map enum-item="WICSectionAccessLevel(.*)" name="$1"/>
+    <map enum-item="WICSectionAccessLevel(.*)" name="$1"/>
+    <map enum-item="WICSectionAccessLevel(.*)" name="$1"/>
+    <map enum-item="WICSectionAccessLevel(.*)" name="$1"/>
+
+
+    <!--
+    // *****************************************************************
+    // WIC Structures
+    // *****************************************************************
+    -->
+    <map struct="WIC(.*)" name="$1"/>
+    <remove struct="WICRect"/>
+
+    <!--
+    // *****************************************************************
+    // WIC Interfaces
+    // *****************************************************************
+    -->
+    <map interface="IWIC(.*)" name="$1"/>
+    <map interface="IWICStream" name="WICStream"/>
+    <map method="IWICBitmapCodecProgressNotification::RegisterProgressNotification" visibility="internal"/>
+
+    <map param=".*::.*::[cuibdwz]+([A-Z].*)" name-tmp="$1"/>
+    <map param=".*::.*::p[cuibdwz]*I?([A-Z].*)" name-tmp="p$1"/>
+    <map param=".*::.*::pp[cuibdwz]*I?([A-Z].*)" name-tmp="pp$1"/>
+    <map param=".*::.*::prc" name="pRectangle"/>
+
+    <map param=".*::.*::pbBuffer" type="void" attribute="in"/>
+    
+    <!--Temporarly remove unsupported type from methods -->
+    <remove method="IWICEnumMetadataItem::Next"/>
+
+    <!--IWICBitmap -->
+    <map param="IWICBitmap::Lock::ppILock" return="true"/>
+    <map param="IWICBitmap::Lock::flags" type="WICBitmapLockFlags"/>
+
+    <!--IWICBitmapCodecInfo and IWICComponentInfo Get methods for string-->
+    <map param="IWIC.*Info::Get.*::wz.*" type="void" attribute="in"/>
+
+    <!--IWICBitmapCodecInfo -->
+    <map method="IWICBitmapCodecInfo::GetPixelFormats" visibility="internal"/>
+    <map param="IWICBitmapCodecInfo::GetPixelFormats::pguidPixelFormats" type="GUID" pointer="*" attribute="in buffer"/>
+    <map method="IWICBitmapCodecInfo::Get.*" visibility="internal"/>
+    <map method="IWICBitmapCodecInfo::GetContainerFormat" visibility="public"/>
+    <map method="IWICBitmapCodecInfo::DoesSupport(.*)" name="Is$1Supported" property="true"/>
+    <map param="IWICBitmapCodecInfo::MatchesMimeType::pfMatches" return="true"/>
+
+    <!--IWICBitmapCodecProgressNotification-->
+    <map interface="IWICBitmapCodecProgressNotification" visibility="internal"/>
+
+    <!--IWICBitmapDecoder -->
+    <map method="IWICBitmapDecoder::GetColorContexts" visibility="internal"/>
+    <map param="IWICBitmapDecoder::GetColorContexts::ppIColorContexts" attribute="out buffer optional"/>
+    <map param="IWICBitmapDecoder::GetFrame::ppIBitmapFrame" return="true"/>
+    <map param="IWICBitmapDecoder::QueryCapability::pdwCapability" type="WICBitmapDecoderCapabilities" return="true"/>
+
+    <!--IWICBitmapDecoderInfo -->
+    <map method="IWICBitmapDecoderInfo::GetPatterns" visibility="internal"/>
+    <map param="IWICBitmapDecoderInfo::GetPatterns::pPatterns" attribute="out buffer optional"/>
+    <map param="IWICBitmapDecoderInfo::GetPatterns::pcPatterns" attribute="out"/>
+    <map param="IWICBitmapDecoderInfo::GetPatterns::pcbPatternsActual" attribute="out"/>
+
+    <map method="IWICBitmapDecoderInfo::CreateInstance" visibility="internal"/>
+    <map param="IWICBitmapDecoderInfo::CreateInstance::ppIBitmapDecoder" attribute="out fast"/>
+
+    <map param="IWICBitmapDecoderInfo::MatchesPattern::pfMatches" return="true"/>
+    <map param="IWICBitmapDecoderInfo::GetPatterns::pcPatterns" name="patternCount" />
+
+    <!--IWICBitmapEncoder -->
+    <map method="IWICBitmapEncoder::SetColorContexts" visibility="internal"/>
+    <map method="IWICBitmapEncoder::CreateNewFrame" visibility="internal"/>
+    <map param="IWICBitmapEncoder::CreateNewFrame::.*" attribute="out fast"/>
+
+    <!--IWICBitmapFrameDecode-->
+    <map method="IWICBitmapFrameDecode::GetColorContexts" visibility="internal"/>
+
+    <!--IWICBitmapFrameEncode-->
+    <map method="IWICBitmapFrameEncode::Initialize" visibility="internal"/>
+    <map method="IWICBitmapFrameEncode::SetColorContexts" visibility="internal"/>
+    <map method="IWICBitmapFrameEncode::WritePixels" visibility="internal"/>
+    <map param="pbPixels" type="void"/>
+
+    <!--IWICBitmapLock-->
+    <map method="IWICBitmapLock::GetSize" visibility="internal"/>
+    <map method="IWICBitmapLock::GetDataPointer" visibility="internal"/>
+    <map param="ppbData" attribute="out" type="void" return="true"/>
+
+    <!--IWICBitmapSource -->
+    <map method="IWICBitmapSource::GetSize" visibility="internal"/>
+    <map method="IWICBitmapSource::CopyPixels" visibility="internal"/>
+
+    <!--IWICBitmapSourceTransform-->
+    <map method="IWICBitmapSourceTransform::GetClosestSize" visibility="internal"/>
+    <map method="IWICBitmapSourceTransform::CopyPixels" visibility="internal"/>
+    <map method="IWICBitmapSourceTransform::DoesSupportTransform" name="IsSupportingTransform"/>
+
+    <!--IWICColorContext-->
+    <map method="IWICColorContext::InitializeFromMemory" visibility="internal"/>
+    <map method="IWICColorContext::GetProfileBytes" visibility="internal"/>
+
+    <map method="IWICComponentInfo::GetAuthor" visibility="internal"/>
+    <map method="IWICComponentInfo::GetVersion" visibility="internal"/>
+    <map method="IWICComponentInfo::GetSpecVersion" visibility="internal"/>
+    <map method="IWICComponentInfo::GetFriendlyName" visibility="internal"/>
+
+    <!--IWICDevelopRawNotificationCallback-->
+    <map interface="IWICDevelopRawNotificationCallback" visibility="internal"/>
+    <map method="IWICDevelopRaw::SetNotificationCallback" visibility="internal"/>
+
+    <!--IWICEnumMetadataItem-->
+    <map interface="IWICEnumMetadataItem" visibility="internal"/>
+
+    <!--IWICFormatConverter-->
+    <map param="IWICFormatConverter::CanConvert::pfCanConvert" return="true"/>
+
+    <!--IWICFormatConverterInfo-->
+    <map method="IWICFormatConverterInfo::GetPixelFormats" visibility="internal"/>
+    <map param="pPixelFormatGUIDs" type="void" attribute="in"/>
+    <map method="IWICFormatConverterInfo::CreateInstance" visibility="internal"/>
+    <map param="ppIConverter" attribute="out fast"/>
+
+    <!--IWICImagingFactory-->
+    <map method="IWICImagingFactory::Create.*" visibility="internal"/>
+    <map param="IWICImagingFactory::Create.*::pp.*" attribute="out fast"/>
+
+    <!--IWICMetadataQueryReader-->
+    <map method="IWICMetadataQueryReader::GetLocation" visibility="internal"/>
+    <map param="IWICMetadataQueryReader::GetLocation::wz.*"  type="void" attribute="in"/>
+    <map method="IWICMetadataQueryReader::GetMetadataByName"  visibility="internal"/>
+
+    <map method="IWICMetadataQueryReader::GetEnumerator" visibility="internal" property="false"/>
+    <map param="ppIEnumString" type="void" return="true"/>
+
+    <!--IWICMetadataQueryReader-->
+    <map method="IWICMetadataQueryWriter::SetMetadataByName" visibility="internal"/>
+    <map param="pvarValue" type="void"/>
+
+    <!--IWICPalette-->
+    <map method="IWICPalette::Initialize.*" name="Initialize"/>
+    <map method="IWICPalette::InitializeCustom" visibility="internal"/>
+    <map method="IWICPalette::GetColors" visibility="internal"/>
+
+    <!--IWICPixelFormatInfo-->
+    <map method="IWICPixelFormatInfo::GetChannelMask" visibility="internal"/>
+    <map param="pbMaskBuffer" type="void" attribute="in"/>
+
+    <!--IWICPixelFormatInfo2-->
+    <map method="IWICPixelFormatInfo2::SupportsTransparency" name="IsSupportingTransparency"/>
+
+
+    <!--IWICProgressCallback-->
+    <map interface="IWICProgressCallback" visibility="internal"/>
+
+    <!--IWICStream -->
+    <map method="IWICStream::InitializeFrom.*" visibility="internal"/>
+
+    <!--
+    // *****************************************************************
+    // WIC Functions
+    // *****************************************************************
+    -->
+    <remove function=".*" />
+
+    <context-clear />
+  </mapping>
+</config>

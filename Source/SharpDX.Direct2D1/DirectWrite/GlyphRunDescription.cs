@@ -61,5 +61,11 @@ namespace SharpDX.DirectWrite
             @ref.ClusterMap = this.ClusterMap;
             @ref.TextPosition = this.TextPosition;
         }
+
+        // Method to marshal from native to managed struct
+        internal unsafe void __MarshalFree(ref __Native @ref)
+        {
+            @ref.__MarshalFree();
+        }
     }
 }

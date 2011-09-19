@@ -24,13 +24,25 @@
   <namespace>SharpDX</namespace>
   <assembly>SharpDX</assembly>
 
-  <include file="objidl.h" namespace="SharpDX.Win32" output="Win32">
-    <attach>STATSTG</attach>
-    <attach>tagLOCKTYPE</attach>
-    <attach>LOCKTYPE</attach>
-    <attach>ISequentialStream</attach>
-    <attach>IStream</attach>
-  </include>
+  <ifdef name="WIN8">
+    <include file="objidlbase.h" namespace="SharpDX.Win32" output="Win32">
+      <attach>STATSTG</attach>
+      <attach>tagLOCKTYPE</attach>
+      <attach>LOCKTYPE</attach>
+      <attach>ISequentialStream</attach>
+      <attach>IStream</attach>
+    </include>
+  </ifdef>
+
+  <ifndef name="WIN8">
+    <include file="objidl.h" namespace="SharpDX.Win32" output="Win32">
+      <attach>STATSTG</attach>
+      <attach>tagLOCKTYPE</attach>
+      <attach>LOCKTYPE</attach>
+      <attach>ISequentialStream</attach>
+      <attach>IStream</attach>
+    </include>
+  </ifndef>
 
   <include file="wtypes.h" namespace="SharpDX.Win32" output="Win32">
     <attach>STGC</attach>
@@ -152,6 +164,7 @@
     <define struct="SharpDX.FunctionCallback" sizeof="8" />
     <define interface="SharpDX.ComObject" />
     <define interface="SharpDX.Win32.PropertyBag"/>
+    <define struct="SharpDX.Win32.SecurityAttributes" sizeof="16" />
   </extension>
 
   <!--
@@ -233,6 +246,8 @@
     <bind from="SIZE" to="System.Drawing.Size" />
     <bind from="SIZE_T" to="SharpDX.Size" marshal="System.IntPtr"/>
     <bind from="SSIZE_T" to="SharpDX.Size" marshal="System.IntPtr"/>
+
+    <bind from="SECURITY_ATTRIBUTES" to="SharpDX.Win32.SecurityAttributes"/>
     
     <!-- todo Color 8 bit must be created-->
     <bind from="RGBQUAD" to="System.Int32"/>
@@ -319,7 +334,13 @@
     <map method=".*::GetGlyphIndicesW" name="GetGlyphIndices" />
 
     <!-- Map IStream -->
-    <context>objidl</context>
+    <ifdef name="WIN8">
+      <context>objidlbase</context>
+    </ifdef>
+    <ifndef name="WIN8">
+      <context>objidl</context>
+    </ifndef>
+
     <context>wtypes</context>
     <map struct="STATSTG" name="StorageStatistics" />
 

@@ -158,7 +158,7 @@ namespace SharpGen.Model
                         builder.Append("ref ");
                 }
 
-                if (IsRefIn && IsValueType && !IsArray && IsOptionnal)
+                if (IsRefIn && IsValueType && !IsArray && IsOptionnal && !IsStructClass)
                     builder.Append(PublicType.QualifiedName + "?");
                 else
                     builder.Append(PublicType.QualifiedName);
@@ -222,7 +222,13 @@ namespace SharpGen.Model
                     }
                 }
                 if (IsRefInValueTypeOptional)
+                {
+                    if (IsStructClass)
+                    {
+                        return "(" + Name + " != null)?&" + TempName + ":(void*)IntPtr.Zero";
+                    }
                     return "(" + Name + ".HasValue)?&" + TempName + ":(void*)IntPtr.Zero";
+                }
                 if (IsRefInValueTypeSmall)
                     return "&" + Name;
                 if (PublicType.QualifiedName == Global.Name + ".Color4" && MarshalType.Type == typeof(int))

@@ -135,6 +135,18 @@ namespace SharpDX.XAudio2
             return this.Start(0, 0);
         }
 
+#if WIN8
+        /// <summary>
+        /// Gets the state.
+        /// </summary>
+        public VoiceState State
+        {
+            get
+            {
+                return GetState(0);
+            }
+        }
+#endif
 
         /// <summary>
         /// Sets the frequency ratio.

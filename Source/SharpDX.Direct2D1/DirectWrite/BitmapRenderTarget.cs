@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 using System;
 using SharpDX;
+using SharpDX.Direct2D1;
 
 namespace SharpDX.DirectWrite
 {

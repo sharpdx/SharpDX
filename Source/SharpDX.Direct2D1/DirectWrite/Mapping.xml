@@ -25,9 +25,8 @@
   <namespace>SharpDX.DirectWrite</namespace>
   <assembly>SharpDX.Direct2D1</assembly>
   
-  <include file="dcommon.h" attach="true" output="DirectWrite"/>
-  <include file="dwrite.h" attach="true" />
-  
+  <include file="dwrite.h" attach="true" output="DirectWrite"/>
+
   <naming />
   
   <extension>
@@ -35,7 +34,6 @@
   </extension>
   
   <mapping>
-    <context>dcommon</context>
     <context>dwrite</context>
     
     <map enum="DWRITE(.+)" name-tmp="$1" />

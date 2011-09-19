@@ -143,9 +143,10 @@ namespace SharpGen
 
             Logger.Message("Loading config files...");
 
+#if WIN8
             // Load configuration
-            Macros.Add("Win8");
-
+            Macros.Add("WIN8");
+#endif
             Config = ConfigFile.Load(_configRootPath, Macros.ToArray());
             var latestConfigTime = ConfigFile.GetLatestTimestamp(Config.ConfigFilesLoaded);
 

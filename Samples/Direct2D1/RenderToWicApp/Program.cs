@@ -23,6 +23,8 @@ using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DXGI;
 using SharpDX.WIC;
+
+using AlphaMode = SharpDX.Direct2D1.AlphaMode;
 using Bitmap = SharpDX.WIC.Bitmap;
 using PixelFormat = SharpDX.Direct2D1.PixelFormat;
 

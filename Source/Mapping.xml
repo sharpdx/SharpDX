@@ -21,8 +21,18 @@
 // THE SOFTWARE.
 -->
 <config id="sharpdx-root" xmlns="urn:SharpGen.Config">
-  <!-- Add DirectX SDK by default -->
-  <include-dir>$(DXSDK_DIR)\include</include-dir>
+
+  <ifdef name="WIN8">
+    <include-dir>$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\vc-include\include</include-dir>
+    <include-dir>$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\sdk-include\shared</include-dir>
+    <include-dir>$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\sdk-include\um</include-dir>
+    <include-dir>$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\include</include-dir>
+  </ifdef>
+
+  <ifndef name="WIN8">
+    <!-- Add DirectX SDK by default -->
+    <include-dir>$(DXSDK_DIR)\include</include-dir>
+  </ifndef>
 
   <var name="FILTER_PASTING_ERROR">error: pasting .*a valid preprocessing token</var>  
   
@@ -51,16 +61,15 @@ enum __SAL_YesNo {};
   <file>SharpDX.Direct3D10\Mapping.xml</file>
   <file>SharpDX.Direct3D11\Mapping.xml</file>
   <file>SharpDX.Direct2D1\Mapping.xml</file>
-  <file>SharpDX.WIC\Mapping.xml</file>
-  <ifndef name="Win8">
+  <ifndef name="WIN8">
     <file>SharpDX.DirectInput\Mapping.xml</file>
     <file>SharpDX.Direct3D9\Mapping.xml</file>
     <file>SharpDX.DirectSound\Mapping.xml</file>
+    <file>SharpDX.X3DAudio\Mapping.xml</file>
     <file>SharpDX.XACT3\Mapping.xml</file>
   </ifndef>
   <file>SharpDX.XAPO\Mapping.xml</file>
   <file>SharpDX.XAudio2\Mapping.xml</file>
-  <file>SharpDX.X3DAudio\Mapping.xml</file>
   <file>SharpDX.XInput\Mapping.xml</file>
   <file>SharpDX.RawInput\Mapping.xml</file>
   <!--  

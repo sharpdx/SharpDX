@@ -208,6 +208,10 @@ namespace SharpGen.Parser
                 if (!File.Exists(headerFile))
                     Logger.Fatal("C++ Header file [{0}] not found", headerFile);
 
+#if WIN8
+                // Overrides settings for gccxml for compiling Win8 version
+                ExecutablePath = Path.Combine(Path.GetDirectoryName(ExecutablePath), "gccxml_win8.bat");
+#endif
                 var currentProcess = new Process();
                 var startInfo = new ProcessStartInfo(ExecutablePath)
                                     {
@@ -219,20 +223,17 @@ namespace SharpGen.Parser
                                     };
                 var xmlFile = Path.ChangeExtension(headerFile, "xml");
 
-
                 // Delete any previously genereated xml file
                 File.Delete(xmlFile);
 
-                // File.WriteAllText(GccXmlGccOptionsFile, "-m64");
-
                 var arguments = ""; // "--gccxml-gcc-options " + GccXmlGccOptionsFile;
-                
                 arguments += " -fxml=" + xmlFile;
                 foreach (var directory in IncludeDirectoryList)
                     arguments += " -I \"" + directory.TrimEnd('\\') + "\"";
 
                 startInfo.Arguments = arguments + " " + headerFile;
 
+                Console.WriteLine(startInfo.Arguments);
                 currentProcess.StartInfo = startInfo;
                 currentProcess.ErrorDataReceived += ProcessErrorFromHeaderFile;
                 currentProcess.OutputDataReceived += ProcessOutputFromHeaderFile;

@@ -25,6 +25,8 @@ using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 using SharpDX.DXGI;
 using SharpDX;
+
+using AlphaMode = SharpDX.Direct2D1.AlphaMode;
 using FontStyle = SharpDX.DirectWrite.FontStyle;
 
 namespace CustomFont

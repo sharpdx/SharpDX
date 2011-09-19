@@ -24,9 +24,18 @@
   
   <namespace>SharpDX.Direct2D1</namespace>
   <assembly>SharpDX.Direct2D1</assembly>
-  
+
+  <!--<include-prolog>
+    #define _D2D1_HELPER_H_
+  </include-prolog>-->
+
+  <include file="dcommon.h" attach="true"/>
   <include file="d2d1.h" attach="true" />
-  
+  <ifdef name="WIN8">
+    <include file="d2d1_1.h" attach="true" />
+    <include file="d2d1effectauthor.h" attach="true" />
+  </ifdef>
+
   <naming />
   
   <extension>
@@ -42,22 +51,52 @@
     <bind from="D2D_POINT_2F" to="System.Drawing.PointF" />
     <bind from="D2D_POINT_2U" to="System.Drawing.Point" />
     <bind from="D2D_COLOR_F" to="SharpDX.Color4" />
-    <bind from="D2D_MATRIX_3X2_F" to="SharpDX.Direct2D1.Matrix3x2" />    
+    <bind from="D2D_MATRIX_3X2_F" to="SharpDX.Direct2D1.Matrix3x2" />
+    <bind from="IPrintDocumentPackageTarget" to="SharpDX.ComObject" />
   </bindings>
   
   <mapping>
     <context>sharpdx-direct2d1-ext</context>
+    <context>dcommon</context>
     <context>d2d1</context>
-    
+    <context>d2d1_1</context>
+    <context>d2d1effectauthor</context>
+
+    <!--
+    // *****************************************************************
+    // D2D1 Enumerations
+    // *****************************************************************
+    -->
     <map enum="D2D1(.*)" name-tmp="$1" />
     <map enum-item="D2D1_FEATURE_LEVEL_(.*)" name="Level_$1" />
     <map enum-item="D2D1_GAMMA_2_2" name="StandardRgb" />
     <map enum-item="D2D1_GAMMA_1_0" name="Linear" />
-    
+
+    <map enum-item="D2D1_BUFFER_PRECISION_([0-9]+)BPC_(.*)" name-tmp="PER_CHANNEL_$1_$2" />
+
+    <map enum-item="D2D1_CHANNEL_DEPTH_1" name-tmp="One" />
+    <map enum-item="D2D1_CHANNEL_DEPTH_4" name-tmp="Four" />
+
+    <!-- For dcommon -->
+    <map enum="DWRITE(.+)" name-tmp="$1" />
+
+    <!--
+    // *****************************************************************
+    // D2D1 Structures
+    // *****************************************************************
+    -->
     <map struct="D2D1(.*)" name-tmp="$1" />
-    
+    <map field="D2D1_BLEND_DESCRIPTION::blendFactor" type="SHARPDX_COLOR4" array="0"/>
+
+    <!--
+    // *****************************************************************
+    // D2D1 Interfaces
+    // *****************************************************************
+    -->
     <map interface="ID2D1(.+)" name-tmp="$1" />
 
+    <map param="ID2D1Device::CreatePrintControl::wicFactory" type="IUnknown"/>
+    <map param="ID2D1DeviceContext::CreateBitmapFromWicBitmap::wicBitmapSource" type="IUnknown"/>
     <map param="ID2D1RenderTarget::CreateBitmapFromWicBitmap::wicBitmapSource" type="IUnknown"/>
     <map param="ID2D1Factory::CreateWicBitmapRenderTarget::target" type="IUnknown"/>
     <!--<remove method="ID2D(\d+)RenderTarget::CreateBitmapFromWicBitmap" />
@@ -119,7 +158,20 @@
     <map method="ID2D1RenderTarget::(.*)Dpi" visibility="internal" />
     <map method="ID2D(\d+)Mesh::Open" visibility="internal" name="Open_" />
     <map interface="ID2D(\d+).*Sink" callback="true" callback-dual="true" />
+
+    <map param="ID2D1DeviceContext::CreateColorContextFromWicColorContext::wicColorContext" type="IUnknown"/>
+    <map param="ID2D1DeviceContext::CreateColorContextFromWicColorContext::colorContext" type="IUnknown"/>
+
+    <map param="ID2D1EffectContext::CreateColorContextFromWicColorContext::wicColorContext" type="IUnknown"/>
+    <map param="ID2D1EffectContext::CreateColorContextFromWicColorContext::colorContext" type="IUnknown"/>
+
+    <map method="ID2D1Factory1::RegisterEffectFromString" visibility="internal"/>
     
+    <!--
+    // *****************************************************************
+    // D2D1 Functions
+    // *****************************************************************
+    -->
     <map function="D2D1(.+)" name-tmp="$1" />
     <map function="D2D1.*" dll='"d2d1.dll"' group="SharpDX.Direct2D1.D2D1" />
     <context-clear />

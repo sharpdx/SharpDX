@@ -34,10 +34,10 @@
   
   <!-- D3D11 includes -->
   <include file="d3d11.h" attach="true"/>
-  <ifdef name="Win8">
+  <ifdef name="WIN8">
     <include file="d3d11_1.h" attach="true" />
   </ifdef>
-  <ifndef name="Win8">
+  <ifndef name="WIN8">
     <include file="d3dx11.h" attach="true" />
     <include file="d3d11sdklayers.h" attach="true" />
     <include file="d3dx11core.h" attach="true" />
@@ -53,10 +53,10 @@
   <context-set id="d3d11-all">
     <context>sharpdx-direct3d11-ext</context>
     <context>d3d11</context>
-    <ifdef name="Win8">
+    <ifdef name="WIN8">
       <context>d3d11_1</context>
     </ifdef>
-    <ifndef name="Win8">
+    <ifndef name="WIN8">
       <context>d3dx11</context>
       <context>d3d11sdklayers</context>
       <context>d3dx11core</context>
@@ -109,6 +109,7 @@
     // D3D11 Enumerations
     // *****************************************************************
     -->
+    <map enum="D3D11_1_(.*)" name-tmp="$1"/>
     <map enum-item="D3D11_FEATURE_FORMAT_SUPPORT2" name="ComputeShaders" />
     <map enum-item="D3D11_FEATURE_DOUBLES" name="ShaderDoubles" />
     <remove enum="_D3DX11_ERR" />
@@ -125,6 +126,16 @@
     <map enum="D3DX11_FFT_DIM_MASK" name="FastFourierTransformDimensions" />
     <map enum-item="D3DX11_FFT_DIM_MASK_(.*)" name="Dimension$1" />
     <map enum="D3DX11_FFT_CREATE_FLAG" name="FastFourierTransformCreationFlags" />
+
+    <map enum-item="D3D11_SHADER_MIN_PRECISION_8_AND_10_BIT" name="Bit8And10"/>
+    <map enum-item="D3D11_SHADER_MIN_PRECISION_16_BIT" name="Bit16"/>
+    <map enum-item="D3D11_VIDEO_PROCESSOR_ITELECINE_CAPS_([0-9]+)" name="Value$1"/>
+
+    <map enum-item="D3D11_VIDEO_PROCESSOR_ROTATION_90" name="Rotation90"/>
+    <map enum-item="D3D11_VIDEO_PROCESSOR_ROTATION_180" name="Rotation180"/>
+    <map enum-item="D3D11_VIDEO_PROCESSOR_ROTATION_270" name="Rotation270"/>
+
+    
 
     <!--
     // *****************************************************************
@@ -147,6 +158,8 @@
     <map field="D3DX11_FFT_DESC::Type" name="DataType" />
     <map enum="D3DX11_EFFECT_VARIABLE_FLAGS" name="EffectVariableFlags" />
     <map field="D3DX11_EFFECT_SHADER_DESC::SODecls" visibility="internal" type="void"/>
+    <map struct="D3D11_OMAC" name="MessageAuthenticationCode" marshalto="true"/>
+    <map field="D3D11_OMAC::Omac" name="Buffer"/>
     <!--<map field="D3DX11_EFFECT_SHADER_DESC::SODecls" visibility="internal" type="void" array="0"/>-->
     
     <!--
@@ -195,7 +208,9 @@
     <map function="D3D11.*" dll='"d3d11.dll"' group="SharpDX.Direct3D11.D3D11" />
     <map param="D3D11CreateDevice::ppDevice" attribute="out fast" />
 
-    <ifndef name="Win8">
+    <remove function="ID3D11DeviceContext1_.*"/>
+    
+    <ifndef name="WIN8">
       <map function="D3DX11(.+)" name-tmp="$1" />
       <map function="D3DX11(.+)W" name-tmp="$1" />
       <map function="D3DX11.*" dll='"#(D3DX11_DLL_A)"' group="SharpDX.Direct3D11.D3DX11" />
@@ -208,7 +223,7 @@
     // D3D11 Constants
     // *****************************************************************
     -->
-    <ifndef name="Win8">
+    <ifndef name="WIN8">
       <context-clear />
       <context>d3dcsx</context>
       <map function="D3DX11.*" dll='"#(D3DCSX_DLL_A)"' group="SharpDX.Direct3D11.D3DCSX" />

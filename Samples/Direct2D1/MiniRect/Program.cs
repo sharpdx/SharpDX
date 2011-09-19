@@ -25,6 +25,7 @@ using SharpDX.Direct3D10;
 using SharpDX.DXGI;
 using SharpDX.Windows;
 
+using AlphaMode = SharpDX.Direct2D1.AlphaMode;
 using Device1 = SharpDX.Direct3D10.Device1;
 using DriverType = SharpDX.Direct3D10.DriverType;
 using Factory = SharpDX.DXGI.Factory;

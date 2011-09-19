@@ -20,7 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 -->
-<config id="sharpdx-direct2d1-directwrite" depends="sharpdx sharpdx-direct2d1 sharpdx-directwrite" xmlns="urn:SharpGen.Config">
+<config id="sharpdx-direct2d1-directwrite" depends="sharpdx sharpdx-direct2d1 sharpdx-directwrite sharpdx-wic" xmlns="urn:SharpGen.Config">
   <file>Mapping-direct2d1.xml</file>
   <file>DirectWrite\Mapping.xml</file>
+  <file>WIC\Mapping.xml</file>
 </config>

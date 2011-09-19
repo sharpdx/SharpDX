@@ -41,6 +41,31 @@
   <PropertyGroup>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;WIN8</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>Bin\Debug\SharpDX.Direct2D1.XML</DocumentationFile>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;WIN8</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>..\..\Bin\SharpDX.Direct2D1.xml</DocumentationFile>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -50,6 +75,10 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Generated\WIC\Enumerations.cs" />
+    <Compile Include="Generated\WIC\Functions.cs" />
+    <Compile Include="Generated\WIC\Interfaces.cs" />
+    <Compile Include="Generated\WIC\Structures.cs" />
     <Compile Include="WicRenderTarget.cs" />
     <Compile Include="DirectWrite\BitmapRenderTarget.cs" />
     <Compile Include="DirectWrite\EllipsisTrimming.cs" />
@@ -129,6 +158,45 @@
     <Compile Include="DeviceContextRenderTarget.cs" />
     <Compile Include="TessellationSinkShadow.cs" />
     <Compile Include="TessellationSinkNative.cs" />
+    <Compile Include="WIC\Bitmap.cs" />
+    <Compile Include="WIC\BitmapClipper.cs" />
+    <Compile Include="WIC\BitmapCodecInfo.cs" />
+    <Compile Include="WIC\BitmapDecoder.cs" />
+    <Compile Include="WIC\BitmapDecoderInfo.cs" />
+    <Compile Include="WIC\BitmapEncoder.cs" />
+    <Compile Include="WIC\BitmapEncoderOptions.cs" />
+    <Compile Include="WIC\BitmapFlipRotator.cs" />
+    <Compile Include="WIC\BitmapFrameDecode.cs" />
+    <Compile Include="WIC\BitmapFrameEncode.cs" />
+    <Compile Include="WIC\BitmapLock.cs" />
+    <Compile Include="WIC\BitmapScaler.cs" />
+    <Compile Include="WIC\BitmapSource.cs" />
+    <Compile Include="WIC\BitmapSourceTransform.cs" />
+    <Compile Include="WIC\BmpBitmapDecoder.cs" />
+    <Compile Include="WIC\BmpBitmapEncoder.cs" />
+    <Compile Include="WIC\ColorContext.cs" />
+    <Compile Include="WIC\ColorTransform.cs" />
+    <Compile Include="WIC\ComponentInfo.cs" />
+    <Compile Include="WIC\FastMetadataEncoder.cs" />
+    <Compile Include="WIC\FormatConverter.cs" />
+    <Compile Include="WIC\FormatConverterInfo.cs" />
+    <Compile Include="WIC\GifBitmapDecoder.cs" />
+    <Compile Include="WIC\GifBitmapEncoder.cs" />
+    <Compile Include="WIC\ImagingFactory.cs" />
+    <Compile Include="WIC\JpegBitmapDecoder.cs" />
+    <Compile Include="WIC\JpegBitmapEncoder.cs" />
+    <Compile Include="WIC\MetadataQueryReader.cs" />
+    <Compile Include="WIC\MetadataQueryWriter.cs" />
+    <Compile Include="WIC\Palette.cs" />
+    <Compile Include="WIC\PixelFormat.cs" />
+    <Compile Include="WIC\PixelFormatInfo.cs" />
+    <Compile Include="WIC\PngBitmapDecoder.cs" />
+    <Compile Include="WIC\PngBitmapEncoder.cs" />
+    <Compile Include="WIC\TiffBitmapDecoder.cs" />
+    <Compile Include="WIC\TiffBitmapEncoder.cs" />
+    <Compile Include="WIC\WICStream.cs" />
+    <Compile Include="WIC\WmpBitmapDecoder.cs" />
+    <Compile Include="WIC\WmpBitmapEncoder.cs" />
     <Compile Include="WindowRenderTarget.cs" />
     <Compile Include="PixelFormat.cs" />
     <Compile Include="RenderTarget.cs" />
@@ -156,8 +224,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Mapping-direct2d1.xml" />
-    <Content Include="DirectWrite\Mapping.xml" />
+    <Content Include="DirectWrite\Mapping.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Mapping.xml" />
+    <Content Include="WIC\Mapping.xml">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionPath).targets" />
