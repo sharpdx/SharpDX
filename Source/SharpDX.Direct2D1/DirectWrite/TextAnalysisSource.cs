@@ -52,16 +52,19 @@ namespace SharpDX.DirectWrite
         /// <unmanaged>DWRITE_READING_DIRECTION IDWriteTextAnalysisSource::GetParagraphReadingDirection()</unmanaged>
         SharpDX.DirectWrite.ReadingDirection ReadingDirection { get; }
 
-        /// <summary>	
-        /// Gets the locale name on the range affected by the text analysis.	
-        /// </summary>	
-        /// <remarks>	
-        /// The localeName reference must remain valid until the next call or until the analysis returns. 	
-        /// </remarks>	
-        /// <param name="textPosition">The text position to examine. </param>
-        /// <returns>the locale name on the range affected by the text analysis </returns>
+        /// <summary>
+        /// Gets the locale name on the range affected by the text analysis.
+        /// </summary>
+        /// <param name="textPosition">The text position to examine.</param>
+        /// <param name="textLength">Contains the length of the text being affected by the text analysis up to the next differing locale.</param>
+        /// <returns>
+        /// the locale name on the range affected by the text analysis
+        /// </returns>
         /// <unmanaged>HRESULT IDWriteTextAnalysisSource::GetLocaleName([None] int textPosition,[Out] int* textLength,[Out] const wchar_t** localeName)</unmanaged>
-        string GetLocaleName(int textPosition);
+        /// <remarks>
+        /// The localeName reference must remain valid until the next call or until the analysis returns.
+        /// </remarks>
+        string GetLocaleName(int textPosition, out int textLength);
 
         /// <summary>	
         /// Gets the number substitution from the text range affected by the text analysis.	

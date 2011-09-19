@@ -140,12 +140,13 @@ namespace CustomLayout
                 return readingDirection_;
             }
         }
-        public string GetLocaleName(int textPosition)
+        public string GetLocaleName(int textPosition, out int textLength)
         {
             // The pointer returned should remain valid until the next call,
             // or until analysis ends. Since only one locale name is supported,
             // the text length is valid from the current position forward to
             // the end of the string.
+            textLength = 1; // ?? What values to put?
             return localeName_;
         }
         public NumberSubstitution GetNumberSubstitution(int textPosition, out int textLength)

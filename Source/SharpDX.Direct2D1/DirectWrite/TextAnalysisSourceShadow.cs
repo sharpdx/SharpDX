@@ -152,11 +152,10 @@ namespace SharpDX.DirectWrite
                 {
                     var shadow = ToShadow<TextAnalysisSourceShadow>(thisPtr);
                     var callback = (TextAnalysisSource)shadow.Callback;
-                    string textToReturn = callback.GetLocaleName(textPosition);
+                    string textToReturn = callback.GetLocaleName(textPosition, out textLength);
                     if (textToReturn != null)
                     {
                         textString = Marshal.StringToHGlobalUni(textToReturn);
-                        textLength = textToReturn.Length;
                         shadow.allocatedStrings.Add(textString);
                     }
                 }
