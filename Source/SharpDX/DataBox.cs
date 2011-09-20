@@ -43,6 +43,17 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="DataBox"/> struct.
+        /// </summary>
+        /// <param name="dataPointer">The data pointer.</param>
+        public DataBox(IntPtr dataPointer)
+        {
+            DataPointer = dataPointer;
+            RowPitch = 0;
+            SlicePitch = 0;
+        }
+
+        /// <summary>
         /// Gets a stream from the <see cref="DataPointer"/>.
         /// </summary>
         /// <remarks>

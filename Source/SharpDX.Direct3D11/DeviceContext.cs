@@ -169,7 +169,7 @@ namespace SharpDX.Direct3D11
         /// <param name = "subresource">The destination subresource.</param>
         public void UpdateSubresource(DataBox source, Resource resource, int subresource)
         {
-            UpdateSubresource(resource, subresource, null, source.Data.DataPointer, source.RowPitch, source.SlicePitch);
+            UpdateSubresource(resource, subresource, null, source.DataPointer, source.RowPitch, source.SlicePitch);
         }
 
         /// <summary>
@@ -181,7 +181,7 @@ namespace SharpDX.Direct3D11
         /// <param name = "region">The destination region within the resource.</param>
         public void UpdateSubresource(DataBox source, Resource resource, int subresource, ResourceRegion region)
         {
-            UpdateSubresource(resource, subresource, region, source.Data.DataPointer, source.RowPitch, source.SlicePitch);
+            UpdateSubresource(resource, subresource, region, source.DataPointer, source.RowPitch, source.SlicePitch);
         }
     }
 }
