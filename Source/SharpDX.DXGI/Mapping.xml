@@ -139,7 +139,6 @@
     -->
     <map struct="DXGI(.+)" name-tmp="$1" />
     <remove struct="DXGI_DISPLAY_COLOR_SPACE" />
-    <map field="DXGI_SWAP_CHAIN_DESC::Flags" type="DXGI_SWAP_CHAIN_FLAG" />
     
     <map field="DXGI_ADAPTER_DESC1?::AdapterLuid" name="Luid" />
     <map field="DXGI_ADAPTER_DESC1?::SubSysId" name="SubsystemId" />
@@ -155,11 +154,12 @@
     <map field="DXGI_OUTPUT_DESC::AttachedToDesktop" name="IsAttachedToDesktop" />
     <map field="DXGI_OUTPUT_DESC::Monitor" name="MonitorHandle" />
     
-    <map field="DXGI_SWAP_CHAIN_DESC::BufferDesc" name="ModeDescription" />
+    <map field="DXGI_SWAP_CHAIN_DESC1?::BufferDesc" name="ModeDescription" />
     <map field="DXGI_SWAP_CHAIN_DESC::OutputWindow" name="OutputHandle" />
     <map field="DXGI_SWAP_CHAIN_DESC::Windowed" name="IsWindowed" />
-    <map field="DXGI_SWAP_CHAIN_DESC::BufferUsage" name="Usage" type="DXGI_USAGE_ENUM"/>
-        
+    <map field="DXGI_SWAP_CHAIN_DESC1?::BufferUsage" name="Usage" type="DXGI_USAGE_ENUM"/>
+    <map field="DXGI_SWAP_CHAIN_DESC1?::Flags" type="DXGI_SWAP_CHAIN_FLAG" />
+
     <map struct="DXGI_MAPPED_RECT" visibility="internal" />
 
     <!--
@@ -190,7 +190,9 @@
     <map method="IDXGIFactory::GetWindowAssociation" property="false" />
     <map param="pWindowHandle" return="true" />
     <map param="IDXGIFactory::MakeWindowAssociation::Flags" type="DXGI_MWA_FLAGS" />
-    
+
+    <map param="IDXGIFactory2::.*::ppSwapChain" return="true"/>
+
     <map method="IDXGIKeyedMutex::(.*)Sync" name="$1" />
     
     <map method="IDXGIOutput::FindClosestMatchingMode" visibility="internal" />
