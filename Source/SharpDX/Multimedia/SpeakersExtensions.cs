@@ -30,7 +30,7 @@ namespace SharpDX.Multimedia
         /// </summary>
         /// <param name="speakers">The speakers mask.</param>
         /// <returns></returns>
-        public static int ToChannelCount(this Speakers speakers)
+        public static int ToChannelCount(Speakers speakers)
         {
             var channelsMask = (int)speakers;
             int channelCount = 0;

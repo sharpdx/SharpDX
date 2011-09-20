@@ -20,7 +20,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace SharpDX.Multimedia
 {
@@ -272,7 +271,15 @@ namespace SharpDX.Multimedia
 
         protected RiffChunk Chunk(IEnumerable<RiffChunk> chunks, string id)
         {
-            var chunk = chunks.FirstOrDefault(riff => riff.Type == id);
+            RiffChunk chunk = null;
+            foreach (var riffChunk in chunks)
+            {
+                if (riffChunk.Type == id)
+                {
+                    chunk = riffChunk;
+                    break;
+                }
+            }
             if (chunk == null || chunk.Type != id)
                 throw new InvalidOperationException("Invalid " + FileFormatName + " file format");
             return chunk;

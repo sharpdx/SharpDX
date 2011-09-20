@@ -224,13 +224,15 @@ namespace SharpDX.XAudio2
         /// </remarks>
         public event Action<int> ProcessingPassStart;
 
+        public delegate void VoidAction();
+
         /// <summary>
         /// Occurs just after the processing pass for the voice ends.
         /// </summary>
         /// <remarks>
         /// In order to use this delegate, this instance must have been intialized with events delegate support.
         /// </remarks>
-        public event Action ProcessingPassEnd;
+        public event VoidAction ProcessingPassEnd;
 
         /// <summary>
         /// Occurs when the voice has just finished playing a contiguous audio stream.
@@ -238,7 +240,7 @@ namespace SharpDX.XAudio2
         /// <remarks>
         /// In order to use this delegate, this instance must have been intialized with events delegate support.
         /// </remarks>
-        public event Action StreamEnd;
+        public event VoidAction StreamEnd;
 
         /// <summary>
         /// Occurs when the voice is about to start processing a new audio buffer.
@@ -264,13 +266,26 @@ namespace SharpDX.XAudio2
         /// </remarks>
         public event Action<IntPtr> LoopEnd;
 
+
+        public struct VoiceErrorArgs
+        {
+            public VoiceErrorArgs(IntPtr pointer, Result result)
+            {
+                this.Pointer = pointer;
+                this.Result = result;
+            }
+
+            public IntPtr Pointer;
+            public Result Result;
+        }
+
         /// <summary>
         /// Occurs when [voice error].
         /// </summary>
         /// <remarks>
         /// In order to use this delegate, this instance must have been intialized with events delegate support.
         /// </remarks>
-        public event Action<IntPtr, Result> VoiceError;
+        public event Action<VoiceErrorArgs> VoiceError;
 
         private class VoiceCallbackImpl : CallbackBase, VoiceCallback
         {
@@ -313,7 +328,7 @@ namespace SharpDX.XAudio2
 
             void VoiceCallback.OnVoiceError(IntPtr context, Result error)
             {
-                if (Voice.VoiceError != null) Voice.VoiceError(context, error);
+                if (Voice.VoiceError != null) Voice.VoiceError(new VoiceErrorArgs(context, error));
             }
         }
     }
