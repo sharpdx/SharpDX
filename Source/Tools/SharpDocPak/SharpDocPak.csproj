@@ -110,8 +110,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>mkdir  $(SolutionDir)Build\Tools\Bin\
-$(SolutionDir)Source\Tools\SharpPak\Bin\$(ConfigurationName)\SharpPak.exe --nolinker --auto --output  $(SolutionDir)Build\Tools\Bin\  $(TargetPath)</PostBuildEvent>
+    <PostBuildEvent>REM mkdir  $(SolutionDir)Build\Tools\Bin\
+REM $(SolutionDir)Source\Tools\SharpPak\Bin\$(ConfigurationName)\SharpPak.exe --nolinker --auto --output  $(SolutionDir)Build\Tools\Bin\  $(TargetPath)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

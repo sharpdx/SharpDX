@@ -201,59 +201,71 @@ namespace SharpGen.Parser
             StreamReader result = null;
 
             Logger.RunInContext("gccxml", () =>
-            {
-                if (!File.Exists(ExecutablePath))
-                    Logger.Fatal("gccxml.exe not found from path: [{0}]", ExecutablePath);
+                {
+                    // Absolutize executable path
+                    ExecutablePath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, ExecutablePath));
 
-                if (!File.Exists(headerFile))
-                    Logger.Fatal("C++ Header file [{0}] not found", headerFile);
+                    if (!File.Exists(ExecutablePath)) Logger.Fatal("gccxml.exe not found from path: [{0}]", ExecutablePath);
 
+                    if (!File.Exists(headerFile)) Logger.Fatal("C++ Header file [{0}] not found", headerFile);
+
+                    var currentProcess = new Process();
+                    var startInfo = new ProcessStartInfo(ExecutablePath)
+                        {
+                            RedirectStandardOutput = true,
+                            RedirectStandardError = true,
+                            UseShellExecute = false,
+                            CreateNoWindow = true,
+                            WorkingDirectory = Environment.CurrentDirectory
+                        };
+                    var xmlFile = Path.ChangeExtension(headerFile, "xml");
+
+                    // Delete any previously genereated xml file
+                    File.Delete(xmlFile);
+
+                    var arguments = ""; // "--gccxml-gcc-options " + GccXmlGccOptionsFile;
 #if WIN8
-                // Overrides settings for gccxml for compiling Win8 version
-                ExecutablePath = Path.Combine(Path.GetDirectoryName(ExecutablePath), "gccxml_win8.bat");
+                    // Overrides settings for gccxml for compiling Win8 version
+                    arguments += " --gccxml-config \"" + Path.Combine(Path.GetDirectoryName(ExecutablePath), @"..\share\gccxml-0.9\vc11\gccxml_config") + "\"";
 #endif
-                var currentProcess = new Process();
-                var startInfo = new ProcessStartInfo(ExecutablePath)
-                                    {
-                                        RedirectStandardOutput = true,
-                                        RedirectStandardError = true,
-                                        UseShellExecute = false,
-                                        CreateNoWindow = true,
-                                        WorkingDirectory = Environment.CurrentDirectory
-                                    };
-                var xmlFile = Path.ChangeExtension(headerFile, "xml");
+                    arguments += " -fxml=" + xmlFile;
+                    foreach (var directory in IncludeDirectoryList)
+                    {
+                        if (directory.Contains("overrides"))
+                        {
+                            arguments += " -iwrapper\"" + directory.TrimEnd('\\') + "\"";
+                        }
+                        else
+                        {
+                            arguments += " -I \"" + directory.TrimEnd('\\') + "\"";
+                        }
 
-                // Delete any previously genereated xml file
-                File.Delete(xmlFile);
+                        if (!Directory.Exists(directory)) Logger.Warning("Include directory [{0}] doesn't exist", directory);
+                    }
 
-                var arguments = ""; // "--gccxml-gcc-options " + GccXmlGccOptionsFile;
-                arguments += " -fxml=" + xmlFile;
-                foreach (var directory in IncludeDirectoryList)
-                    arguments += " -I \"" + directory.TrimEnd('\\') + "\"";
+                    startInfo.Arguments = arguments + " " + headerFile;
 
-                startInfo.Arguments = arguments + " " + headerFile;
+                    Console.WriteLine(startInfo.Arguments);
+                    currentProcess.StartInfo = startInfo;
+                    currentProcess.ErrorDataReceived += ProcessErrorFromHeaderFile;
+                    currentProcess.OutputDataReceived += ProcessOutputFromHeaderFile;
+                    currentProcess.Start();
+                    currentProcess.BeginOutputReadLine();
+                    currentProcess.BeginErrorReadLine();
 
-                Console.WriteLine(startInfo.Arguments);
-                currentProcess.StartInfo = startInfo;
-                currentProcess.ErrorDataReceived += ProcessErrorFromHeaderFile;
-                currentProcess.OutputDataReceived += ProcessOutputFromHeaderFile;
-                currentProcess.Start();
-                currentProcess.BeginOutputReadLine();
-                currentProcess.BeginErrorReadLine();
+                    currentProcess.WaitForExit();
 
-                currentProcess.WaitForExit();
+                    currentProcess.Close();
 
-                currentProcess.Close();
-
-                if (!File.Exists(xmlFile) || Logger.HasErrors)
-                {
-                    Logger.Error("Unable to generate XML file with gccxml [{0}]. Check previous errors.", xmlFile);
-                }
-                else
-                {
-                    result = new StreamReader(xmlFile);
-                } 
-            });
+                    if (!File.Exists(xmlFile) || Logger.HasErrors)
+                    {
+                        Logger.Error("Unable to generate XML file with gccxml [{0}]. Check previous errors.", xmlFile);
+                    }
+                    else
+                    {
+                        result = new StreamReader(xmlFile);
+                    }
+                });
 
             return result;
         }
