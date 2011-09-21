@@ -45,6 +45,7 @@
 
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 using SharpDX.Direct3D;
 
@@ -54,8 +55,11 @@ namespace SharpDX.D3DCompiler
     ///   Represents the compiled bytecode of a shader or effect.
     /// </summary>
     /// <unmanaged>Blob</unmanaged>
-    public class ShaderBytecode : Blob
+    public class ShaderBytecode : DisposeBase
     {
+        private bool isOwner;
+        private Blob blob;
+
         /// <summary>
         /// Use this ShaderFlags constant in order to compile an effect with old D3D10CompileEffectFromMemory.
         /// </summary>
@@ -65,7 +69,7 @@ namespace SharpDX.D3DCompiler
         ///   Initializes a new instance of the <see cref = "T:SharpDX.D3DCompiler.ShaderBytecode" /> class.
         /// </summary>
         /// <param name = "data">A <see cref = "T:SharpDX.DataStream" /> containing the compiled bytecode.</param>
-        public ShaderBytecode(DataStream data) : base(IntPtr.Zero)
+        public ShaderBytecode(DataStream data)
         {
             CreateFromPointer(data.DataPointer, (int) data.Length);
         }
@@ -75,7 +79,6 @@ namespace SharpDX.D3DCompiler
         /// </summary>
         /// <param name = "data">A <see cref = "T:System.IO.Stream" /> containing the compiled bytecode.</param>
         public ShaderBytecode(Stream data)
-            : base(IntPtr.Zero)
         {
             int size = (int) (data.Length - data.Position);
 
@@ -89,7 +92,6 @@ namespace SharpDX.D3DCompiler
         /// </summary>
         /// <param name="buffer">The buffer.</param>
         public ShaderBytecode(byte[] buffer)
-            : base(IntPtr.Zero)
         {
             CreateFromBuffer(buffer);
         }
@@ -100,9 +102,9 @@ namespace SharpDX.D3DCompiler
         /// <param name = "buffer">a pointer to a compiler bytecode</param>
         /// <param name = "sizeInBytes">size of the bytecode</param>
         public ShaderBytecode(IntPtr buffer, int sizeInBytes)
-            : base(IntPtr.Zero)
         {
-            CreateFromPointer(buffer, sizeInBytes);
+            BufferPointer = buffer;
+            BufferSize = sizeInBytes;
         }
 
         /// <summary>
@@ -110,9 +112,10 @@ namespace SharpDX.D3DCompiler
         /// </summary>
         /// <param name="blob">The BLOB.</param>
         protected internal ShaderBytecode(Blob blob)
-            : base(IntPtr.Zero)
         {
-            FromTemp(blob);
+            this.blob = blob;
+            BufferPointer = blob.BufferPointer;
+            BufferSize = blob.BufferSize;
         }
 
         private void CreateFromBuffer(byte[] buffer)
@@ -126,9 +129,25 @@ namespace SharpDX.D3DCompiler
 
         private void CreateFromPointer(IntPtr buffer, int sizeInBytes)
         {
-            D3DCommon.CreateBlob(sizeInBytes, this);
-            Utilities.CopyMemory(GetBufferPointer(), buffer, sizeInBytes);
+            // D3DCommon.CreateBlob(sizeInBytes, this);
+            BufferPointer = Marshal.AllocHGlobal(sizeInBytes);
+            BufferSize = sizeInBytes;
+            isOwner = true;
+            Utilities.CopyMemory(BufferPointer, buffer, sizeInBytes);
         }
+
+        /// <summary>
+        /// Gets the buffer pointer.
+        /// </summary>
+        public System.IntPtr BufferPointer { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the size of the buffer.
+        /// </summary>
+        /// <value>
+        /// The size of the buffer.
+        /// </value>
+        public SharpDX.Size BufferSize { get; set; }
 
         /// <summary>
         /// Compiles the provided shader or effect source.
@@ -658,7 +677,7 @@ namespace SharpDX.D3DCompiler
         public string Disassemble(DisassemblyFlags flags, string comments)
         {
             Blob output;
-            D3D.Disassemble(GetBufferPointer(), GetBufferSize(), flags, comments, out output);
+            D3D.Disassemble(BufferPointer, BufferSize, flags, comments, out output);
             return Utilities.BlobToString(output);
         }
 
@@ -676,6 +695,51 @@ namespace SharpDX.D3DCompiler
             Blob blob;
             D3D.GetBlobPart(this.BufferPointer, this.BufferSize, part, 0, out blob);
             return new ShaderBytecode(blob);
+        }
+
+        /// <summary>
+        /// Loads from the specified file name.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns>A shader bytecode</returns>
+        public static ShaderBytecode Load(string fileName)
+        {
+            using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read)) 
+                return Load(stream);            
+        }
+
+        /// <summary>
+        /// Loads from the specified stream.
+        /// </summary>
+        /// <param name="stream">The stream.</param>
+        /// <returns>A shader bytecode</returns>
+        public static ShaderBytecode Load(Stream stream)
+        {
+            var buffer = Utilities.ReadStream(stream);
+            return new ShaderBytecode(buffer);
+        }
+
+        /// <summary>
+        /// Saves to the specified file name.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        public void Save(string fileName)
+        {
+            using (var stream = new FileStream(fileName, FileMode.Create, FileAccess.Write)) 
+                Save(stream);
+        }
+
+        /// <summary>
+        /// Saves this bycode to the specified stream.
+        /// </summary>
+        /// <param name="stream">The stream.</param>
+        public void Save(Stream stream)
+        {
+            if (BufferSize == 0) return;
+
+            var buffer = new byte[BufferSize];
+            Utilities.Read(BufferPointer, buffer, 0, buffer.Length);
+            stream.Write(buffer, 0, buffer.Length);
         }
 
         /// <summary>
@@ -868,7 +932,7 @@ namespace SharpDX.D3DCompiler
             try
             {
                 Blob blob;
-                D3D.StripShader(GetBufferPointer(), GetBufferSize(), flags, out blob);
+                D3D.StripShader(BufferPointer, BufferSize, flags, out blob);
                 return new ShaderBytecode(blob);
             }
             catch (SharpDXException)
@@ -882,7 +946,7 @@ namespace SharpDX.D3DCompiler
         /// </summary>
         public DataStream Data
         {
-            get { return new DataStream(this); }
+            get { return new DataStream(BufferPointer, BufferSize, true, true); }
         }
 
         /// <summary>
@@ -922,6 +986,24 @@ namespace SharpDX.D3DCompiler
 
             macroArray[macros.Length] = new ShaderMacro(null, null);
             return macroArray;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (blob != null)
+                {
+                    blob.Dispose();
+                    blob = null;
+                }
+            }
+            if (isOwner && BufferPointer != IntPtr.Zero)
+            {
+                Marshal.FreeHGlobal(BufferPointer);
+                BufferPointer = IntPtr.Zero;
+                BufferSize = 0;
+            }
         }
     }
 }

@@ -85,8 +85,8 @@ namespace SharpDX.D3DCompiler
             Blob shaderSignature;
             try
             {
-                D3D.GetInputAndOutputSignatureBlob(shaderBytecode.GetBufferPointer(),
-                                                   shaderBytecode.GetBufferSize(), out shaderSignature);
+                D3D.GetInputAndOutputSignatureBlob(shaderBytecode.BufferPointer,
+                                                   shaderBytecode.BufferSize, out shaderSignature);
             }
             catch (SharpDXException)
             {
@@ -105,8 +105,8 @@ namespace SharpDX.D3DCompiler
             Blob shaderSignature;
             try
             {
-                D3D.GetInputSignatureBlob(shaderBytecode.GetBufferPointer(),
-                                          shaderBytecode.GetBufferSize(), out shaderSignature);
+                D3D.GetInputSignatureBlob(shaderBytecode.BufferPointer,
+                                          shaderBytecode.BufferSize, out shaderSignature);
             }
             catch (SharpDXException)
             {
@@ -125,8 +125,8 @@ namespace SharpDX.D3DCompiler
             Blob shaderSignature;
             try
             {
-                D3D.GetOutputSignatureBlob(shaderBytecode.GetBufferPointer(),
-                                           shaderBytecode.GetBufferSize(), out shaderSignature);
+                D3D.GetOutputSignatureBlob(shaderBytecode.BufferPointer,
+                                           shaderBytecode.BufferSize, out shaderSignature);
             }
             catch (SharpDXException)
             {
