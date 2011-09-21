@@ -851,7 +851,7 @@
     <map enum-item="D3DDMT_ENABLE" name="Enable"/>
     <map enum-item="D3DDMT_DISABLE" name="Disable"/>
 
-    <map enum="D3DDECLMETHOD" name="DeclarationMethod" flags="false" none="false"/>
+    <map enum="D3DDECLMETHOD" name="DeclarationMethod" flags="false" none="false" type="byte"/>
     <map enum-item="D3DDECLMETHOD_DEFAULT" name="Default"/>
     <map enum-item="D3DDECLMETHOD_PARTIALU" name="PartialU"/>
     <map enum-item="D3DDECLMETHOD_PARTIALV" name="PartialV"/>
@@ -860,7 +860,7 @@
     <map enum-item="D3DDECLMETHOD_LOOKUP" name="Lookup"/>
     <map enum-item="D3DDECLMETHOD_LOOKUPPRESAMPLED" name="LookupPresampled"/>
 
-    <map enum="D3DDECLTYPE" name="DeclarationType" flags="false" none="false"/>
+    <map enum="D3DDECLTYPE" name="DeclarationType" flags="false" none="false" type="byte"/>
     <map enum-item="D3DDECLTYPE_FLOAT1" name="Float1"/>
     <map enum-item="D3DDECLTYPE_FLOAT2" name="Float2"/>
     <map enum-item="D3DDECLTYPE_FLOAT3" name="Float3"/>
@@ -892,7 +892,7 @@
     <map enum-item="D3DDTCAPS_FLOAT16_2" name="HalfTwo"/>
     <map enum-item="D3DDTCAPS_FLOAT16_4" name="HalfFour"/>
 
-    <map enum="D3DDECLUSAGE" name="DeclarationUsage" flags="false" none="false"/>
+    <map enum="D3DDECLUSAGE" name="DeclarationUsage" flags="false" none="false" type="byte"/>
     <map enum-item="D3DDECLUSAGE_POSITION" name="Position"/>
     <map enum-item="D3DDECLUSAGE_BLENDWEIGHT" name="BlendWeight"/>
     <map enum-item="D3DDECLUSAGE_BLENDINDICES" name="BlendIndices"/>
