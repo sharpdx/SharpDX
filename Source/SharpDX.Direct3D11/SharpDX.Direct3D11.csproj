@@ -108,6 +108,7 @@
     <Compile Include="EffectShaderDescription.cs" />
     <Compile Include="EffectShaderResourceVariable.cs" />
     <Compile Include="EffectStringVariable.cs" />
+    <Compile Include="EffectUnorderedAccessViewVariable.cs" />
     <Compile Include="EffectVariable.cs" />
     <Compile Include="EffectVectorVariable.cs" />
     <Compile Include="FastFourierTransform.cs" />
