@@ -57,19 +57,6 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Pin a local structure. The structure declare local to a method in order for this method to be safe.
-        /// </summary>
-        /// <typeparam name="T">a struct to pin</typeparam>
-        /// <returns>a pointer to this struct</returns>
-        public static IntPtr Pin<T>(ref T data) where T : struct
-        {
-            unsafe
-            {
-                return new IntPtr(SharpDX.Interop.Pin<T>(ref data));
-            }
-        }
-
-        /// <summary>
         /// Return the sizeof a struct from a CLR. Equivalent to sizeof operator but works on generics too.
         /// </summary>
         /// <typeparam name="T">a struct to evaluate</typeparam>

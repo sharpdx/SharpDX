@@ -162,12 +162,29 @@ namespace SharpDX.Direct3D11
         }
 
         /// <summary>
+        /// Copies data from the CPU to to a non-mappable subresource region.
+        /// </summary>
+        /// <typeparam name="T">Type of the data to upload</typeparam>
+        /// <param name="data">A reference to the data to upload.</param>
+        /// <param name="resource">The destination resource.</param>
+        /// <param name="subresource">The destination subresource.</param>
+        /// <param name="rowPitch">The row pitch.</param>
+        /// <param name="depthPitch">The depth pitch.</param>
+        public void UpdateSubresource<T>(ref T data, Resource resource, int subresource = 0, int rowPitch = 0, int depthPitch = 0)
+        {
+            unsafe
+            {
+                UpdateSubresource(resource, subresource, null, (IntPtr)Interop.Fixed(ref data), 0, 0);
+            }
+        }
+
+        /// <summary>
         ///   Copies data from the CPU to to a non-mappable subresource region.
         /// </summary>
         /// <param name = "source">The source data.</param>
         /// <param name = "resource">The destination resource.</param>
         /// <param name = "subresource">The destination subresource.</param>
-        public void UpdateSubresource(DataBox source, Resource resource, int subresource)
+        public void UpdateSubresource(DataBox source, Resource resource, int subresource = 0)
         {
             UpdateSubresource(resource, subresource, null, source.DataPointer, source.RowPitch, source.SlicePitch);
         }

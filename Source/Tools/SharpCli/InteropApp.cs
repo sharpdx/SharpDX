@@ -91,33 +91,43 @@ namespace SharpCli
             gen.Emit(OpCodes.Ret);
         }
 
-        /// <summary>
-        /// Creates the pin  method with the following signature: 
-        /// <code>
-        /// public static unsafe void* Pin&lt;T&gt;(ref T data) where T : struct
-        /// </code>
-        /// </summary>
-        /// <param name="method">The method to patch</param>
-        private void CreatePinMethod(MethodDefinition method)
+        private void ReplaceFixedStatement(MethodDefinition method, ILProcessor ilProcessor, Instruction fixedtoPatch)
         {
-            method.Body.Instructions.Clear();
-            method.Body.InitLocals = true;
-
-            var gen = method.Body.GetILProcessor();
             var paramT = method.GenericParameters[0];
             // Preparing locals
             // local(0) T*
             method.Body.Variables.Add(new VariableDefinition(new PinnedType(new PointerType(paramT))));
 
-            // fixed (void* pinnedData = &data)
-            gen.Emit(OpCodes.Ldarg_0);
-            gen.Emit(OpCodes.Stloc_0);
+            int index = method.Body.Variables.Count - 1;
 
-            // Push (1) pinnedData for memcpy
-            gen.Emit(OpCodes.Ldloc_0);
-
-            // Ret
-            gen.Emit(OpCodes.Ret);
+            Instruction ldlocFixed;
+            Instruction stlocFixed;
+            switch (index)
+            {
+                case 0:
+                    stlocFixed = ilProcessor.Create(OpCodes.Stloc_0);
+                    ldlocFixed = ilProcessor.Create(OpCodes.Ldloc_0);
+                    break;
+                case 1:
+                    stlocFixed = ilProcessor.Create(OpCodes.Stloc_1);
+                    ldlocFixed = ilProcessor.Create(OpCodes.Ldloc_1);
+                    break;
+                case 2:
+                    stlocFixed = ilProcessor.Create(OpCodes.Stloc_2);
+                    ldlocFixed = ilProcessor.Create(OpCodes.Ldloc_2);
+                    break;
+                case 3:
+                    stlocFixed = ilProcessor.Create(OpCodes.Stloc_3);
+                    ldlocFixed = ilProcessor.Create(OpCodes.Ldloc_3);
+                    break;
+                default:
+                    stlocFixed = ilProcessor.Create(OpCodes.Stloc, index);
+                    ldlocFixed = ilProcessor.Create(OpCodes.Ldloc, index);
+                    break;
+            }
+            
+            ilProcessor.InsertBefore(fixedtoPatch, stlocFixed);
+            ilProcessor.Replace(fixedtoPatch, ldlocFixed);
         }
 
         /// <summary>
@@ -353,10 +363,6 @@ namespace SharpCli
                 {
                     CreateMemcpy(method);
                 }
-                else if (method.Name == "Pin")
-                {
-                    CreatePinMethod(method);
-                }
                 else if (method.Name == "SizeOf")
                 {
                     CreateSizeOfStructGeneric(method);
@@ -381,55 +387,63 @@ namespace SharpCli
                 var ilProcessor = method.Body.GetILProcessor();
 
                 var instructions = method.Body.Instructions;
+                Instruction instruction = null;
+                Instruction previousInstruction;
                 for (int i = 0; i < instructions.Count; i++)
                 {
-                    var instruction = instructions[i];
+                    previousInstruction = instruction;
+                    instruction = instructions[i];
 
-                    if (instruction.OpCode == OpCodes.Call && instruction.Operand is MethodDefinition)
+                    if (instruction.OpCode == OpCodes.Call && instruction.Operand is MethodReference)
                     {
-                        var methodDescription = (MethodDefinition) instruction.Operand;
+                        var methodDescription = (MethodReference)instruction.Operand;
 
-                        foreach(var customAttribute in methodDescription.CustomAttributes)
+                        if (methodDescription is MethodDefinition)
                         {
-                            if ( customAttribute.AttributeType.FullName == typeof(ObfuscationAttribute).FullName)
+                            foreach (var customAttribute in ((MethodDefinition)methodDescription).CustomAttributes)
                             {
-                                foreach(var arg in customAttribute.Properties)
+                                if (customAttribute.AttributeType.FullName == typeof(ObfuscationAttribute).FullName)
                                 {
-                                    if (arg.Name == "Feature" && arg.Argument.Value != null)
+                                    foreach (var arg in customAttribute.Properties)
                                     {
-                                        var customValue = arg.Argument.Value.ToString();
-                                        if (customValue.StartsWith("SharpJit."))
+                                        if (arg.Name == "Feature" && arg.Argument.Value != null)
                                         {
-                                            isSharpJit = true;
-                                            break;
+                                            var customValue = arg.Argument.Value.ToString();
+                                            if (customValue.StartsWith("SharpJit."))
+                                            {
+                                                isSharpJit = true;
+                                                break;
+                                            }
                                         }
                                     }
                                 }
+                                if (isSharpJit) break;
                             }
-                            if (isSharpJit)
-                                break;
                         }
 
-                        if (!isSharpJit && methodDescription.Name.StartsWith("Calli") && methodDescription.DeclaringType.Name == "LocalInterop")
+                        if (!isSharpJit)
                         {
-                            var callSite = new CallSite
-                                               {
-                                                   ReturnType = methodDescription.ReturnType,
-                                                   CallingConvention = MethodCallingConvention.StdCall
-                                               };
-                            // Last parameter is the function ptr, so we don't add it as a parameter for calli
-                            // as it is already an implicit parameter for calli
-                            for (int j = 0; j < methodDescription.Parameters.Count - 1; j++)
+                            if (methodDescription.Name.StartsWith("Calli") && methodDescription.DeclaringType.Name == "LocalInterop")
                             {
-                                var parameterDefinition = methodDescription.Parameters[j];
-                                callSite.Parameters.Add(parameterDefinition);
+                                var callSite = new CallSite { ReturnType = methodDescription.ReturnType, CallingConvention = MethodCallingConvention.StdCall };
+                                // Last parameter is the function ptr, so we don't add it as a parameter for calli
+                                // as it is already an implicit parameter for calli
+                                for (int j = 0; j < methodDescription.Parameters.Count - 1; j++)
+                                {
+                                    var parameterDefinition = methodDescription.Parameters[j];
+                                    callSite.Parameters.Add(parameterDefinition);
+                                }
+
+                                // Create calli Instruction
+                                var callIInstruction = ilProcessor.Create(OpCodes.Calli, callSite);
+
+                                // Replace instruction
+                                ilProcessor.Replace(instruction, callIInstruction);
+                            } 
+                            else if (methodDescription.FullName.Contains("Fixed") && methodDescription.DeclaringType.Name == "Interop") 
+                            {
+                                ReplaceFixedStatement(method, ilProcessor, instruction);
                             }
-
-                            // Create calli Instruction
-                            var callIInstruction = ilProcessor.Create(OpCodes.Calli, callSite);
-
-                            // Replace instruction
-                            ilProcessor.Replace(instruction, callIInstruction);
                         }
                     }
                 }

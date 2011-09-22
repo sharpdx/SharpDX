@@ -30,7 +30,7 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("SharpDX.D3DCompiler")]
 [assembly: InternalsVisibleTo("SharpDX.Direct3D9")]
 [assembly: InternalsVisibleTo("SharpDX.Direct3D10")]
-// [assembly: InternalsVisibleTo("SharpDX.Direct3D11")]
+[assembly: InternalsVisibleTo("SharpDX.Direct3D11")]
 // [assembly: InternalsVisibleTo("SharpDX.Direct3D11.Effects")]
 [assembly: InternalsVisibleTo("SharpDX.Direct2D1")]
 [assembly: InternalsVisibleTo("SharpDX.DirectInput")]

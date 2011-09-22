@@ -24,16 +24,25 @@ namespace SharpDX
     /// <summary>
     /// The implementation of this class is filled by InteropBuilder post-building-event.
     /// </summary>
-    class Interop
+    internal class Interop
     {
+        /// <summary>
+        /// Provides a fixed statement working with generics.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data">The data.</param>
+        /// <returns>A fixed pointer to the referenced structure</returns>
+        /// <remarks>
+        /// This is the only function in this class that is inlined in order to inline the fixed statement correctly.
+        /// </remarks>
+        public static unsafe void* Fixed<T>(ref T data)
+        {
+            throw new NotImplementedException();
+        }
+
         public static unsafe void memcpy(void* pDest, void* pSrc, int count)
         {
             throw new NotImplementedException();    
-        }
-
-        public static unsafe void* Pin<T>(ref T data) where T : struct
-        {
-            throw new NotImplementedException();
         }
 
         public static unsafe void* Read<T>(void* pSrc, ref T data) where T : struct

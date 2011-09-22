@@ -148,7 +148,7 @@ namespace MiniTri
             stream.Dispose();
 
             // Create Constant Buffer
-            var contantBuffer = new Buffer(device, Utilities.SizeOf<Matrix>(), ResourceUsage.Dynamic, BindFlags.ConstantBuffer, CpuAccessFlags.Write, ResourceOptionFlags.None, 0);
+            var contantBuffer = new Buffer(device, Utilities.SizeOf<Matrix>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0);
 
 
             // Create Depth Buffer & View
@@ -197,11 +197,9 @@ namespace MiniTri
                     context.ClearRenderTargetView(renderView, new Color4(1.0f, 0.0f, 0.0f, 0.0f));
 
                     // Update WorldViewProj Matrix
-                    var dataBox = context.MapSubresource(contantBuffer, 0, MapMode.WriteDiscard, MapFlags.None);
                     var worldViewProj = Matrix.RotationX(time) * Matrix.RotationY(time * 2) * Matrix.RotationZ(time * .7f) * viewProj;
                     worldViewProj.Transpose();
-                    Utilities.Write(dataBox.DataPointer, ref worldViewProj);
-                    context.UnmapSubresource(contantBuffer, 0);
+                    context.UpdateSubresource(ref worldViewProj, contantBuffer);
 
                     // Draw the cube
                     context.Draw(36, 0);
