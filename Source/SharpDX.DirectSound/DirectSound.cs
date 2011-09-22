@@ -33,6 +33,15 @@ namespace SharpDX.DirectSound
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="DirectSound"/> class.
+        /// </summary>
+        /// <param name="driverGuid">The driver GUID.</param>
+        public DirectSound(Guid driverGuid) : base(IntPtr.Zero)
+        {
+            DSound.Create8(driverGuid, this, null);
+        }
+
+        /// <summary>
         /// Verifies the certification.
         /// </summary>
         /// <returns>Return true if the driver is certified</returns>
