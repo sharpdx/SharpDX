@@ -85,49 +85,37 @@ namespace MiniTri
             var context = device.ImmediateContext;
 
             // Ignore all windows events
-            Factory factory = swapChain.GetParent<Factory>();
+            var factory = swapChain.GetParent<Factory>();
             factory.MakeWindowAssociation(form.Handle, WindowAssociationFlags.IgnoreAll);
 
             // New RenderTargetView from the backbuffer
-            Texture2D backBuffer = Texture2D.FromSwapChain<Texture2D>(swapChain, 0);
+            var backBuffer = Texture2D.FromSwapChain<Texture2D>(swapChain, 0);
             var renderView = new RenderTargetView(device, backBuffer);
 
             // Compile Vertex and Pixel shaders
-            var vertexShaderByteCode = ShaderBytecode.CompileFromFile("MiniTri.fx", "VS", "vs_4_0", ShaderFlags.None,
-                                                                      EffectFlags.None);
+            var vertexShaderByteCode = ShaderBytecode.CompileFromFile("MiniTri.fx", "VS", "vs_4_0", ShaderFlags.None, EffectFlags.None);
             var vertexShader = new VertexShader(device, vertexShaderByteCode);
 
-            var pixelShaderByteCode = ShaderBytecode.CompileFromFile("MiniTri.fx", "PS", "ps_4_0", ShaderFlags.None,
-                                                                     EffectFlags.None);
+            var pixelShaderByteCode = ShaderBytecode.CompileFromFile("MiniTri.fx", "PS", "ps_4_0", ShaderFlags.None, EffectFlags.None);
             var pixelShader = new PixelShader(device, pixelShaderByteCode);
 
             // Layout from VertexShader input signature
-            var layout = new InputLayout(device, ShaderSignature.GetInputSignature(vertexShaderByteCode), new[] { 
-                new InputElement("POSITION",0,Format.R32G32B32A32_Float,0,0),
-                new InputElement("COLOR",0,Format.R32G32B32A32_Float,16,0)
-            });
+            var layout = new InputLayout(
+                device,
+                ShaderSignature.GetInputSignature(vertexShaderByteCode),
+                new[]
+                    {
+                        new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
+                        new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0)
+                    });
 
-            // Write vertex data to a datastream
-            var stream = new DataStream(32*3, true, true);
-            stream.WriteRange(new[]
+            // Instantiate Vertex buiffer from vertex data
+            var vertices = Buffer.Create(device, BindFlags.VertexBuffer, new[]
                                   {
                                       new Vector4(0.0f, 0.5f, 0.5f, 1.0f), new Vector4(1.0f, 0.0f, 0.0f, 1.0f),
                                       new Vector4(0.5f, -0.5f, 0.5f, 1.0f), new Vector4(0.0f, 1.0f, 0.0f, 1.0f),
                                       new Vector4(-0.5f, -0.5f, 0.5f, 1.0f), new Vector4(0.0f, 0.0f, 1.0f, 1.0f)
                                   });
-            stream.Position = 0;
-
-            // Instantiate Vertex buiffer from vertex data
-            var vertices = new Buffer(device, stream, new BufferDescription()
-                                                          {
-                                                              BindFlags = BindFlags.VertexBuffer,
-                                                              CpuAccessFlags = CpuAccessFlags.None,
-                                                              OptionFlags = ResourceOptionFlags.None,
-                                                              SizeInBytes = 32*3,
-                                                              Usage = ResourceUsage.Default,
-                                                              StructureByteStride = 0
-                                                          });
-            stream.Dispose();
 
             // Prepare All the stages
             context.InputAssembler.InputLayout = layout;

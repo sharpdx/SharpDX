@@ -96,7 +96,7 @@ namespace SharpCli
             var paramT = method.GenericParameters[0];
             // Preparing locals
             // local(0) T*
-            method.Body.Variables.Add(new VariableDefinition(new PinnedType(new PointerType(paramT))));
+            method.Body.Variables.Add(new VariableDefinition("pin", new PinnedType(new PointerType(paramT))));
 
             int index = method.Body.Variables.Count - 1;
 
@@ -125,7 +125,49 @@ namespace SharpCli
                     ldlocFixed = ilProcessor.Create(OpCodes.Ldloc, index);
                     break;
             }
-            
+            ilProcessor.InsertBefore(fixedtoPatch, stlocFixed);
+            ilProcessor.Replace(fixedtoPatch, ldlocFixed);
+        }
+
+        private void ReplaceFixedArrayStatement(MethodDefinition method, ILProcessor ilProcessor, Instruction fixedtoPatch)
+        {
+            var paramT = method.GenericParameters[0];
+            // Preparing locals
+            // local(0) T*
+            method.Body.Variables.Add(new VariableDefinition("pin", new PinnedType(new PointerType(paramT))));
+
+            int index = method.Body.Variables.Count - 1;
+
+            Instruction ldlocFixed;
+            Instruction stlocFixed;
+            switch (index)
+            {
+                case 0:
+                    stlocFixed = ilProcessor.Create(OpCodes.Stloc_0);
+                    ldlocFixed = ilProcessor.Create(OpCodes.Ldloc_0);
+                    break;
+                case 1:
+                    stlocFixed = ilProcessor.Create(OpCodes.Stloc_1);
+                    ldlocFixed = ilProcessor.Create(OpCodes.Ldloc_1);
+                    break;
+                case 2:
+                    stlocFixed = ilProcessor.Create(OpCodes.Stloc_2);
+                    ldlocFixed = ilProcessor.Create(OpCodes.Ldloc_2);
+                    break;
+                case 3:
+                    stlocFixed = ilProcessor.Create(OpCodes.Stloc_3);
+                    ldlocFixed = ilProcessor.Create(OpCodes.Ldloc_3);
+                    break;
+                default:
+                    stlocFixed = ilProcessor.Create(OpCodes.Stloc, index);
+                    ldlocFixed = ilProcessor.Create(OpCodes.Ldloc, index);
+                    break;
+            }
+
+            var instructionLdci40 = ilProcessor.Create(OpCodes.Ldc_I4_0);
+            ilProcessor.InsertBefore(fixedtoPatch, instructionLdci40);
+            var instructionLdElema = ilProcessor.Create(OpCodes.Ldelema, paramT);
+            ilProcessor.InsertBefore(fixedtoPatch, instructionLdElema);
             ilProcessor.InsertBefore(fixedtoPatch, stlocFixed);
             ilProcessor.Replace(fixedtoPatch, ldlocFixed);
         }
@@ -442,7 +484,13 @@ namespace SharpCli
                             } 
                             else if (methodDescription.FullName.Contains("Fixed") && methodDescription.DeclaringType.Name == "Interop") 
                             {
-                                ReplaceFixedStatement(method, ilProcessor, instruction);
+                                if (methodDescription.Parameters[0].ParameterType.IsArray)
+                                {
+                                    ReplaceFixedArrayStatement(method, ilProcessor, instruction);
+                                } else
+                                {
+                                    ReplaceFixedStatement(method, ilProcessor, instruction);
+                                }
                             }
                         }
                     }

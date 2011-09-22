@@ -26,6 +26,15 @@ namespace SharpDX
     /// </summary>
     internal class Interop
     {
+        public unsafe static void Toto(IntPtr ptr, Vector3[] test)
+        {
+            fixed(void* pTest = test)
+            {
+                memcpy((void*)ptr, pTest, test.Length * SizeOf<Vector3>());
+            }
+        }
+
+
         /// <summary>
         /// Provides a fixed statement working with generics.
         /// </summary>
@@ -35,7 +44,12 @@ namespace SharpDX
         /// <remarks>
         /// This is the only function in this class that is inlined in order to inline the fixed statement correctly.
         /// </remarks>
-        public static unsafe void* Fixed<T>(ref T data)
+        public static unsafe void* Fixed<T>(ref T data) where T : struct
+        {
+            throw new NotImplementedException();
+        }
+
+        public static unsafe void* Fixed<T>(T[] data) where T : struct
         {
             throw new NotImplementedException();
         }

@@ -87,9 +87,8 @@ namespace MiniTri
                         new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0)
                     });
 
-            // Write vertex data to a datastream
-            var stream = new DataStream(6 * 6 * Utilities.SizeOf<Vector4>() * 2, true, true);
-            stream.WriteRange(new[]
+            // Instantiate Vertex buiffer from vertex data
+            var vertices = Buffer.Create(device, BindFlags.VertexBuffer, new[]
                                   {
                                       new Vector4(-1.0f, -1.0f, -1.0f, 1.0f), new Vector4(1.0f, 0.0f, 0.0f, 1.0f), // Front
                                       new Vector4(-1.0f,  1.0f, -1.0f, 1.0f), new Vector4(1.0f, 0.0f, 0.0f, 1.0f),
@@ -133,19 +132,6 @@ namespace MiniTri
                                       new Vector4( 1.0f,  1.0f, -1.0f, 1.0f), new Vector4(0.0f, 1.0f, 1.0f, 1.0f),
                                       new Vector4( 1.0f,  1.0f,  1.0f, 1.0f), new Vector4(0.0f, 1.0f, 1.0f, 1.0f),
                             });
-            stream.Position = 0;
-
-            // Instantiate Vertex buiffer from vertex data
-            var vertices = new Buffer(device, stream, new BufferDescription()
-                                                          {
-                                                              BindFlags = BindFlags.VertexBuffer,
-                                                              CpuAccessFlags = CpuAccessFlags.None,
-                                                              OptionFlags = ResourceOptionFlags.None,
-                                                              SizeInBytes = (int)stream.Length,
-                                                              Usage = ResourceUsage.Default,
-                                                              StructureByteStride = 0
-                                                          });
-            stream.Dispose();
 
             // Create Constant Buffer
             var contantBuffer = new Buffer(device, Utilities.SizeOf<Matrix>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0);
