@@ -23,6 +23,6 @@ using System.Runtime.CompilerServices;
 
 [assembly: AssemblyProduct("SharpDX.XAPO")]
 [assembly: AssemblyTitle("SharpDX.XAPO")]
-[assembly: AssemblyDescription("Assembly providing XAPO managed API")]
+[assembly: AssemblyDescription("Assembly providing DirectX - XAPO managed API")]
 
 [assembly: InternalsVisibleTo("SharpDX.XAudio2")]

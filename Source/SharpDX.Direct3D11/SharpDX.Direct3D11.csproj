@@ -170,9 +170,13 @@
       <Link>sharpdx_direct3d11_effects_x86.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Mapping.xml">
+    <None Include="Documentation\CodeComments.xml" />
+    <None Include="Mapping.xml">
       <SubType>Designer</SubType>
-    </Content>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SharpDX.Direct3D11.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionPath).targets" />

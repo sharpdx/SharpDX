@@ -22,6 +22,6 @@ using System.Reflection;
 
 [assembly: AssemblyProduct("SharpDX.Direct2D1")]
 [assembly: AssemblyTitle("SharpDX.Direct2D1")]
-[assembly: AssemblyDescription("Assembly providing Direct2D and DirectWrite managed API")]
+[assembly: AssemblyDescription("Assembly providing DirectX - Direct2D, DirectWrite and WIC managed API")]
 
 

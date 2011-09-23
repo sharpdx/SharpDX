@@ -8,6 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sources", "Sources", "{CC8D
 		Source\Mapping.xml = Source\Mapping.xml
 		README.markdown = README.markdown
 		ReleaseNotes.txt = ReleaseNotes.txt
+		Source\SharedAssemblyInfo.cs = Source\SharedAssemblyInfo.cs
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{E8942E09-FD2E-4ED1-9724-623262BC2A9F}"

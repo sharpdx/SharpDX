@@ -22,4 +22,4 @@ using System.Reflection;
 
 [assembly: AssemblyProduct("SharpDX.Direct3D10")]
 [assembly: AssemblyTitle("SharpDX.Direct3D10")]
-[assembly: AssemblyDescription("Assembly providing Direct3D10 and Direct3D10.1 managed API")]
+[assembly: AssemblyDescription("Assembly providing DirectX - Direct3D10 and Direct3D10.1 managed API")]

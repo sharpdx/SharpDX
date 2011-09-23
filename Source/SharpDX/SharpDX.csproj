@@ -181,19 +181,20 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Mapping-core.xml">
+    <None Include="Mapping-core.xml">
       <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Direct3D\Mapping.xml">
+    </None>
+    <None Include="Direct3D\Mapping.xml">
       <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Documentation\CodeComments.xml" />
-    <Content Include="Mapping.xml">
+    </None>
+    <None Include="Documentation\CodeComments.xml" />
+    <None Include="Mapping.xml">
       <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Multimedia\Mapping.xml">
+    </None>
+    <None Include="Multimedia\Mapping.xml">
       <SubType>Designer</SubType>
-    </Content>
+    </None>
+    <None Include="SharpDX.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

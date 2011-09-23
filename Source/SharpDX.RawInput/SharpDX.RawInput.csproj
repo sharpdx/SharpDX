@@ -94,10 +94,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Documentation\CodeComments.xml" />
-    <Content Include="Mapping.xml">
+    <None Include="Documentation\CodeComments.xml" />
+    <None Include="Mapping.xml">
       <SubType>Designer</SubType>
-    </Content>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SharpDX.RawInput.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionPath).targets" />

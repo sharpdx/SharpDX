@@ -23,7 +23,7 @@ using System.Runtime.CompilerServices;
 
 [assembly: AssemblyProduct("SharpDX.DXGI")]
 [assembly: AssemblyTitle("SharpDX.DXGI")]
-[assembly: AssemblyDescription("Assembly providing DXGI 1.0 and 1.1 managed API")]
+[assembly: AssemblyDescription("Assembly providing DirectX - DXGI 1.0, 1.1 and 1.2 managed API")]
 
 // Make internals SharpDX visible to all SharpDX assemblies
 [assembly: InternalsVisibleTo("SharpDX.Direct3D10")]

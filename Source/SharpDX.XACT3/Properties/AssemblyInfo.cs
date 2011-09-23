@@ -23,5 +23,5 @@ using System.Runtime.CompilerServices;
 
 [assembly: AssemblyProduct("SharpDX.XACT3")]
 [assembly: AssemblyTitle("SharpDX.XACT3")]
-[assembly: AssemblyDescription("Assembly providing XACT3 managed API")]
+[assembly: AssemblyDescription("Assembly providing DirectX - XACT3 managed API")]
 

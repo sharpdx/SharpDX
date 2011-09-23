@@ -22,4 +22,4 @@ using System.Reflection;
 
 [assembly: AssemblyProduct("SharpDX.XInput")]
 [assembly: AssemblyTitle("SharpDX.XInput")]
-[assembly: AssemblyDescription("Assembly providing XInput managed API")]
+[assembly: AssemblyDescription("Assembly providing DirectX - XInput managed API")]

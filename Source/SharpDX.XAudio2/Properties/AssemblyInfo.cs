@@ -23,6 +23,6 @@ using System.Runtime.CompilerServices;
 
 [assembly: AssemblyProduct("SharpDX.XAudio2")]
 [assembly: AssemblyTitle("SharpDX.XAudio2")]
-[assembly: AssemblyDescription("Assembly providing XAudio2 managed API")]
+[assembly: AssemblyDescription("Assembly providing DirectX - XAudio2 managed API")]
 
 [assembly: InternalsVisibleTo("SharpDX.XACT3")]

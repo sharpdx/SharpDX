@@ -22,4 +22,4 @@ using System.Reflection;
 
 [assembly: AssemblyProduct("SharpDX.DirectInput")]
 [assembly: AssemblyTitle("SharpDX.DirectInput")]
-[assembly: AssemblyDescription("Assembly providing DirectInput managed API")]
+[assembly: AssemblyDescription("Assembly providing DirectX - DirectInput managed API")]

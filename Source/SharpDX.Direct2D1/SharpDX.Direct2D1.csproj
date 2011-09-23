@@ -223,14 +223,20 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Mapping-direct2d1.xml" />
-    <Content Include="DirectWrite\Mapping.xml">
+    <None Include="Mapping-direct2d1.xml" />
+    <None Include="DirectWrite\Mapping.xml">
       <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Mapping.xml" />
-    <Content Include="WIC\Mapping.xml">
+    </None>
+    <None Include="Mapping.xml" />
+    <None Include="WIC\Mapping.xml">
       <SubType>Designer</SubType>
-    </Content>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SharpDX.Direct2D1.nuspec" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Documentation\CodeComments.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionPath).targets" />

@@ -23,5 +23,5 @@ using System.Runtime.CompilerServices;
 
 [assembly: AssemblyProduct("SharpDX.X3DAudio")]
 [assembly: AssemblyTitle("SharpDX.X3DAudio")]
-[assembly: AssemblyDescription("Assembly providing X3DAudio managed API")]
+[assembly: AssemblyDescription("Assembly providing DirectX - X3DAudio managed API")]
 

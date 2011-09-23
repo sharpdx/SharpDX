@@ -23,7 +23,7 @@ using System.Runtime.CompilerServices;
 
 [assembly: AssemblyProduct("SharpDX.D3DCompiler")]
 [assembly: AssemblyTitle("SharpDX.D3DCompiler")]
-[assembly: AssemblyDescription("Assembly providing D3DCompiler managed API")]
+[assembly: AssemblyDescription("Assembly providing DirectX - D3DCompiler managed API")]
 
 // Make internals SharpDX.D3DCompiler visible to other assemblies
 [assembly: InternalsVisibleTo("SharpDX.Direct3D11")]
