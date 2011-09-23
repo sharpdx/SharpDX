@@ -23,9 +23,13 @@ Thumbs.db
 [Dd]ebug*/
 *.lib
 *.sbr
+*.nupkg
+*.zip
 *.sdf
 *.suo
 *.dotCover
+sdk-include/
+vc-include/
 obj/
 ipch*/
 [Rr]elease*/
