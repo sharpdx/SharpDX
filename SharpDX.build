@@ -222,7 +222,7 @@
         <include name="${project.name}/Samples/**" unless="${win8}"/>
         <include name="${project.name}/Samples/*Win8*" if="${win8}"/>
         <include name="${project.name}/Samples/Win8/**" if="${win8}"/>
-        <include name="${project.name}/*.txt" unless="${win8}"/>
+        <include name="${project.name}/*.txt"/>
         <exclude name="${project.name}/googlecode_password.txt"/>
         <exclude name="${project.name}/Samples/**/*.sample.csproj"/>
         <exclude name="${project.name}/Samples/*Win8*" unless="${win8}"/>
