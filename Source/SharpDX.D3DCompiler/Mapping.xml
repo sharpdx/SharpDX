@@ -61,9 +61,11 @@
   <extension>
     <context id="d3dcompiler-all"/>
     
-    <create-cpp enum="D3DCOMPILE_SHADER_FLAGS" macro="D3DCOMPILE_\w[^F].*" />
+    <create-cpp enum="D3DCOMPILE_SHADER_FLAGS" macro="D3DCOMPILE_DEBUG|D3DCOMPILE_SKIP_VALIDATION|D3DCOMPILE_SKIP_OPTIMIZATION|D3DCOMPILE_PACK_MATRIX_ROW_MAJOR|D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR|D3DCOMPILE_PARTIAL_PRECISION|D3DCOMPILE_FORCE_VS_SOFTWARE_NO_OPT|D3DCOMPILE_FORCE_PS_SOFTWARE_NO_OPT|D3DCOMPILE_NO_PRESHADER|D3DCOMPILE_AVOID_FLOW_CONTROL|D3DCOMPILE_PREFER_FLOW_CONTROL|D3DCOMPILE_ENABLE_STRICTNESS|D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY|D3DCOMPILE_IEEE_STRICTNESS|D3DCOMPILE_OPTIMIZATION_LEVEL0|D3DCOMPILE_OPTIMIZATION_LEVEL1|D3DCOMPILE_OPTIMIZATION_LEVEL2|D3DCOMPILE_OPTIMIZATION_LEVEL3|D3DCOMPILE_RESERVED16|D3DCOMPILE_RESERVED17|D3DCOMPILE_WARNINGS_ARE_ERRORS" />
     <create-cpp enum="D3DCOMPILE_EFFECT_FLAGS" macro="D3DCOMPILE_EFFECT_.*" />
     <create-cpp enum="D3DCOMPILE_DISASM_FLAGS" macro="D3D_DISASM_.*" />
+    <create-cpp enum="D3DCOMPILE_SECDATA_FLAGS" macro="D3DCOMPILE_SECDATA_.*"/>
+    
     <define enum="SharpDX.D3DCompiler.RegisterComponentMaskFlags" sizeof="4" />
     <create class="D3D" />
 
@@ -101,6 +103,8 @@
     <map enum-item="D3D11_SHVER_(.*)" name-tmp="$1" />
     <map enum="D3D_BLOB_PART" name="ShaderBytecodePart" />
     <map enum-item="D3D_BLOB_(.*)" name-tmp="$1" />
+    <map enum="D3DCOMPILE_SECDATA_FLAGS" name="SecondaryDataFlags"/>
+    <map enum-item="D3DCOMPILE_SECDATA_(.*)" name-tmp="$1"/>
 
     <!--
     // *****************************************************************
@@ -179,7 +183,11 @@
     <map param="D3DStripShader::uStripFlags" type="D3DCOMPILER_STRIP_FLAGS" />
     <map param="D3DCompile::pDefines" attribute="in buffer optional" />
     <map param="D3DPreprocess::pDefines" attribute="in buffer optional" />
-    
+
+    <map param="D3DGetTraceInstructionOffsets::pOffsets" attribute="out" return="true"/>
+    <map param="D3DGetTraceInstructionOffsets::pTotalInsts" attribute="out"/>
+    <map param="D3DCompile2::SecondaryDataFlags" type="D3DCOMPILE_SECDATA_FLAGS"/>
+
     <context-clear />
   </mapping>
 </config>
