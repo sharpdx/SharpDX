@@ -29,7 +29,7 @@
     <owners>$author$</owners>
     <licenseUrl>http://sharpdx.org/License.txt</licenseUrl>
     <projectUrl>http://sharpdx.org</projectUrl>
-    <iconUrl>http://sharpdx.org/logo_32x32.png</iconUrl>
+    <iconUrl>http://sharpdx.org/logo_100x100.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <copyright>Copyright (c) 2010-2011 Alexandre Mutel</copyright>

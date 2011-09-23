@@ -30,13 +30,13 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\Bin\</OutputPath>
+    <OutputPath>bin\Release</OutputPath>
     <DefineConstants>TRACE;WinFormsInterop</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <DocumentationFile>..\..\Bin\SharpDX.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\SharpDX.xml</DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup>
@@ -57,10 +57,10 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Release|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\..\Bin\</OutputPath>
+    <OutputPath>bin\Win8Release</OutputPath>
     <DefineConstants>TRACE;WinFormsInterop;WIN8</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>..\..\Bin\SharpDX.xml</DocumentationFile>
+    <DocumentationFile>bin\Win8Release\SharpDX.xml</DocumentationFile>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>

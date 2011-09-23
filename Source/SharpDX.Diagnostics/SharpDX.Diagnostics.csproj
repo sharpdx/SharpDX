@@ -29,11 +29,11 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\Bin\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\Bin\SharpDX.Diagnostics.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\SharpDX.Diagnostics.xml</DocumentationFile>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup>
@@ -52,9 +52,9 @@
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Release|AnyCPU'">
-    <OutputPath>..\..\Bin\</OutputPath>
+    <OutputPath>bin\Win8Release\</OutputPath>
     <DefineConstants>TRACE;WIN8</DefineConstants>
-    <DocumentationFile>..\..\Bin\SharpDX.Diagnostics.xml</DocumentationFile>
+    <DocumentationFile>bin\Win8Release\SharpDX.Diagnostics.xml</DocumentationFile>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>

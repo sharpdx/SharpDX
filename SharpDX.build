@@ -1,55 +1,83 @@
-<project name="SharpDX Build" default="build">
+<!--
+// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+-->
+<!-- Nant Build file for SharpDX -->
+<project name="SharpDX Build" default="help">
   <property name="project.name" value="SharpDX"/>
   <property name="project.sname" value="sharpdx"/>
-  <property name="configuration" value="release"/>
+  <property name="win8" value="false"/>
+  <property name="keeppdb" value="false"/>
+  <property name="keepexe" value="false"/>
+  <property name="cleandir" value="./"/>
 
-  <!-- Load NantGoogleTask -->
-  <loadtasks assembly="External\NantGoogleCode\NantGoogleCode.dll" />
-
-  <!-- Load version from source code SharedAssemblyInfo.cs -->
-  <loadfile file="Source/SharedAssemblyInfo.cs" property="assembly_version_file" />
-  <regex pattern="AssemblyVersion\(.(?'assembly_version'\d+\.\d+)" input="${assembly_version_file}" />
-  <property name="output_bin_zip" value="${project.name}-Bin-${assembly_version}.zip"/>
-  <property name="output_bin_and_samples_zip" value="${project.name}-BinAndSamples-${assembly_version}.zip"/>
+  <!-- Load NantGoogleTask  <loadtasks assembly="External\NantGoogleCode\NantGoogleCode.dll" /> -->
   
   <!-- Prints the version -->
-  <target name="version" descriptio="Loads the version for the project">
+  <target name="setup" descriptio="Loads the version for the project">
+    <!-- Load version from source code SharedAssemblyInfo.cs -->
+    <loadfile file="Source/SharedAssemblyInfo.cs" property="assembly_version_file" />
+	<property name="win8-postfix" value=""/>
+	<property name="win8-postfix" value="-Win8Preview" if="${win8}"/>
+    <regex pattern="AssemblyVersion\(.(?'assembly_version'\d+\.\d+.\d+.\d++)" input="${assembly_version_file}" />
+    <property name="output_bin_zip" value="${project.name}${win8-postfix}-Bin-${assembly_version}.zip"/>
+    <property name="output_bin_and_samples_zip" value="${project.name}${win8-postfix}-BinAndSamples-${assembly_version}.zip"/>
+
+    <!-- Setup configuration -->
+    <property name="configuration" value="Release" unless="${win8}"/>
+    <property name="configuration" value="Win8Release" if="${win8}"/>
+	
     <echo message="${project.name} version from file is ${assembly_version}"/>
   </target>
-  
+
   <!-- Clean all directories -->
   <target name="clean" description="Delete all previously compiled binaries.">
     <delete>
-      <fileset>
-        <include name="**/Bin/*.pdb" />
+      <fileset basedir="${cleandir}">
+        <include name="**/Bin/*.exe" unless="${keepexe}"/>
+        <include name="**/Bin/*.dll" unless="${keepexe}"/>
+        <include name="**/Bin/*.pdb" unless="${keeppdb}"/>
         <include name="**/Bin/x86/*.*" />
         <include name="**/Bin/x64/*.*" />
-        <include name="**/Bin/*.pdb" />
         <include name="**/Bin/*.lib" />
         <include name="**/Bin/*.exp" />
         <include name="**/Bin/*.check" />
         <include name="**/Debug/**" />
         <include name="**/Release/**" />
+        <include name="**/Win8Debug/**" />
+        <include name="**/Win8Release/**" />
         <include name="**/obj/**" />
         <include name="**/Generated/**" />
         <include name="**/*.suo" />
         <include name="**/*.bak" />
         <include name="**/*.user" />
         <include name="**/_ReSharper.*/**" />
+        <exclude name="**/External/**" />
+        <exclude name="**/.git/**" />
       </fileset>
     </delete>
-  </target>
-  
-  <target name="fullclean" description="Delete all previously compiled binaries and bin directories.">
-    <call target="clean"/>    
-    <delete>
-      <fileset>
-        <include name="**/Bin/**" />
-      </fileset>
-    </delete>
+    <!--Reset property cleandir -->
+    <property name="cleandir" value="./"/>
   </target>
 
-  <!-- Release and upload the zip to googlecode -->
+  <!-- Release and upload the zip to googlecode 
   <target name="release" description="Release the targets">
     <call target="version"/>
     <loadfile file="googlecode_password.txt" property="googlecode_password" />
@@ -58,54 +86,151 @@
 
 	<gcupload labels="Type-Archive,Featured" username="alx.xoofx@gmail.com" password="${googlecode_password}" projectname="${project.sname}" filename="${output_bin_and_samples_zip}" targetfilename="${output_bin_and_samples_zip}" summary="${output_bin_and_samples_zip} uploaded"/>      
   </target>
+  -->
 
   <!-- Full clean and build -->
-  <target name="full" description="Full build targets." depends="clean, build">
+  <target name="help" description="Prints help about this build." >
+    <echo message="Usage MakeSharpDX.cmd target"/>
+    <echo message=""/>
+    <echo message="Target can have the following value:"/>
+    <echo message="     clean = Full cleanup"/>
+    <echo message="      win8 = Build Win8 Assemblies (DirectX11.1 + Metro samples)"/>
+    <echo message="     build = Build Standard Assemblies (DirectX11)"/>
+    <echo message="     zip   = Zip assemblies and samplles (Run 'build' target before this)"/>
+    <echo message="     nuget = Build Nuget Packages (Run 'build' target before this)"/>
+    <echo message="nuget-push = Publish Nuget packages (Run 'nuget' target before this)"/>
+    <echo message="      full = Run build+zip nuget win8+zip"/>
+  </target>
+
+  <!-- Full clean and build -->
+  <target name="full" description="Full build targets.">
+	<call target="build"/>
+	<call target="zip"/>
+	<call target="nuget"/>
+	<call target="win8"/>
+	<call target="zip"/>
+  </target>
+
+  <!-- Win8 build -->
+  <target name="win8" description="Build Win8 targets.">
+    <property name="win8" value="true"/>
+    <call target="build"/>
+  </target>
+
+  <!-- Nuget Package build -->
+  <target name="nuget" description="Build NuGet Packages">
+    <delete dir="Packages"/>
+    <mkdir dir="Packages"/>
+    <foreach item="File" property="filename">
+      <in>
+        <items>
+          <include name="**/*.nuspec" />
+        </items>
+      </in>
+      <do>
+        <echo message="Nuget on ${path::get-directory-name(filename)}"/>
+        <exec program="nuget.exe" workingdir="${path::get-directory-name(filename)}">
+          <arg value="pack" />
+          <arg value="-Symbols" />
+          <!-- <arg value="-Verbose" /> -->
+          <arg value="-OutputDirectory" />
+          <arg value="${project::get-base-directory()}\Packages" />
+          <arg value="-Properties" />
+          <arg value="Configuration=Release" />
+        </exec>
+      </do>
+    </foreach>
   </target>
   
+  <!-- Nuget-Publish -->
+  <target name="nuget-push" description="Publish NuGet Packages">
+    <foreach item="File" property="filename">
+      <in>
+        <items>
+          <include name="Packages/*.nupkg" />
+        </items>
+      </in>
+      <do>
+        <echo message="Nuget push  ${filename}"/>
+        <exec program="nuget.exe">
+          <arg value="push" />
+          <arg value="${filename}" />
+        </exec>
+      </do>
+    </foreach>
+  </target>  
+
   <!-- Main build task -->
   <target name="build" description="Build all targets.">
-    <call target="fullclean"/>
-	
-    <mkdir dir="Source/Tools/SharpGen/Bin/Release"/>
+    <!-- Setup based on config -->
+	<call target="setup"/>
 
+    <!-- Clean all directories -->
+    <property name="keeppdb" value="false"/>
+    <property name="keepexe" value="false"/>
+    <call target="clean"/>
+
+    <!-- Copy doc to SharpGen directory -->
+    <mkdir dir="Source/Tools/SharpGen/Bin/Release"/>
     <copy todir="Source/Tools/SharpGen/Bin/Release">
       <fileset basedir="Source/Tools/SharpGen/Doc/">
         <include name="*.*" />
       </fileset>
     </copy>
 
-    <mkdir dir="Bin"/>
-    
+    <!-- Setup MSBuild -->
     <exec program="msbuild.exe" >
       <arg value="/t:Build"/>
-      <arg value="/p:Configuration=Release"/>
-      <arg value='/p:Platform="Any CPU"'/>	  
+      <arg value="/p:Configuration=${configuration}"/>
+      <arg value='/p:Platform="Any CPU"'/>
       <arg value="${project.name}.sln" />
     </exec>
+  </target>
+  
+  <!-- Main zip task -->
+  <target name="zip" description="Build all targets.">
+    <!-- Setup based on config -->
+	<call target="setup"/>
 
+    <!-- Create Bin Output Directory -->
+	<delete dir="Bin"/>
+    <mkdir dir="Bin"/>
+
+    <copy flatten="true" todir="Bin">
+      <fileset basedir="Source/">
+        <include name="SharpDX.*/Bin/${configuration}/*.dll" />
+        <include name="SharpDX.*/Bin/${configuration}/*.xml" />
+      </fileset>
+    </copy>
+
+    <property name="cleandir" value="Samples"/>
     <call target="clean"/>
-   
-    <call target="version"/>
-      
+
+	
     <zip ziplevel="9" zipfile="${output_bin_zip}">
       <fileset basedir="..">
         <include name="${project.name}/Bin/**" />
         <include name="${project.name}/*.txt"/>
-		<exclude name="${project.name}/googlecode_password.txt"/>
+        <exclude name="${project.name}/googlecode_password.txt"/>
+        <exclude name="${project.name}/**/*.pdb"/>
       </fileset>
-    </zip>   
- 
+    </zip>
+
     <zip ziplevel="9" zipfile="${output_bin_and_samples_zip}">
       <fileset basedir="..">
         <include name="${project.name}/Bin/**" />
-        <include name="${project.name}/Samples/**" />
-		<exclude name="${project.name}/Samples/**/*.sample.csproj"/>		
-        <include name="${project.name}/*.txt"/>
-		<exclude name="${project.name}/googlecode_password.txt"/>
+        <include name="${project.name}/Samples/**" unless="${win8}"/>
+        <include name="${project.name}/Samples/*Win8*" if="${win8}"/>
+        <include name="${project.name}/Samples/Win8/**" if="${win8}"/>
+        <include name="${project.name}/*.txt" unless="${win8}"/>
+        <exclude name="${project.name}/googlecode_password.txt"/>
+        <exclude name="${project.name}/Samples/**/*.sample.csproj"/>
+        <exclude name="${project.name}/Samples/*Win8*" unless="${win8}"/>
+        <exclude name="${project.name}/Samples/Win8/**" unless="${win8}"/>
+        <exclude name="${project.name}/**/*.pdb"/>
       </fileset>
     </zip>
-	
-    <call target="clean"/>    
-  </target>
+
+  </target>  
+  
 </project>

@@ -28,12 +28,12 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\Bin\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>..\..\Bin\SharpDX.XInput.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\SharpDX.XInput.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -48,10 +48,10 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Release|AnyCPU'">
-    <OutputPath>..\..\Bin\</OutputPath>
+    <OutputPath>bin\Win8Release\</OutputPath>
     <DefineConstants>TRACE;WIN8</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>..\..\Bin\SharpDX.XInput.XML</DocumentationFile>
+    <DocumentationFile>bin\Win8Release\SharpDX.XInput.XML</DocumentationFile>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -87,10 +87,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Documentation\CodeComments.xml" />
-    <Content Include="Mapping.xml">
-      <SubType>Designer</SubType>
-    </Content>
+    <None Include="Documentation\CodeComments.xml" />
+    <None Include="Mapping.xml"/>
   </ItemGroup>
   <ItemGroup>
     <None Include="SharpDX.XInput.nuspec" />
