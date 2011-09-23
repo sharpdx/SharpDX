@@ -94,8 +94,12 @@ namespace SharpGen.Generator
                 }
                 else
                 {
-                    if (csMethod.ReturnType.PublicType.QualifiedName == "SharpDX.Result")
+                    // Patch for Mono bug with structs marshalling and calli. TEMPORARY
+                    var returnQualifiedName = csMethod.ReturnType.PublicType.QualifiedName;
+                    if (returnQualifiedName == "SharpDX.Result")
                         cSharpInteropCalliSignature.ReturnType = typeof (int);
+                    else if (returnQualifiedName == "SharpDX.Size")
+                        cSharpInteropCalliSignature.ReturnType = typeof(IntPtr);
                     else
                         cSharpInteropCalliSignature.ReturnType = csMethod.ReturnType.PublicType.QualifiedName;
                 }
@@ -131,7 +135,8 @@ namespace SharpGen.Generator
                 else
                 {
                     Type type = param.MarshalType.Type;
-                    if (type == typeof(IntPtr))
+                    // Patch for Mono bug with structs marshalling and calli. TEMPORARY
+                    if (type == typeof(IntPtr) || param.PublicType.QualifiedName == "SharpDX.Size")
                         type = typeof(void*);
                     cSharpInteropCalliSignature.ParameterTypes.Add(type);
                 }
