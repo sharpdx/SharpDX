@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
+  <Identity Name="c8ea6136-1ca4-4037-b857-6c1d0c17df01" Publisher="CN=amutel" Version="1.0.0.0" />
+  <Properties>
+    <DisplayName>Win8MiniCube</DisplayName>
+    <PublisherDisplayName>amutel</PublisherDisplayName>
+    <Logo>Images\StoreLogo.png</Logo>
+    <Description>Win8SharpDXApp</Description>
+  </Properties>
+  <Prerequisites>
+    <OSMinVersion>6.2</OSMinVersion>
+    <OSMaxVersionTested>6.2</OSMaxVersionTested>
+  </Prerequisites>
+  <Resources>
+    <Resource Language="en-us" />
+  </Resources>
+  <Applications>
+    <Application Id="App" Executable="Win8MiniCube.exe" EntryPoint="Win8MiniCube.App">
+      <VisualElements DisplayName="Win8MiniCube" Logo="Images\Logo.png" SmallLogo="Images\SmallLogo.png" Description="Win8MiniCube" ForegroundText="light" BackgroundColor="#222222" InitialRotationPreference="landscape">
+        <SplashScreen Image="Images\SplashScreen.png" />
+      </VisualElements>
+    </Application>
+  </Applications>
+</Package>

@@ -37,7 +37,7 @@ namespace MiniTri
     internal static class ProgramWithNoEffect
     {
         [STAThread]
-        private static void Main()
+        private static void Main2()
         {
             var form = new RenderForm("SharpDX - MiniTri Direct3D 10 Sample");
 

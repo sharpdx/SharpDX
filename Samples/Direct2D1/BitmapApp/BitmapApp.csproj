@@ -60,9 +60,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\SharpDX.Samples.sample.csproj">
+    <ProjectReference Include="..\..\Common\SharpDX.Samples.csproj">
       <Project>{93716298-9FA4-4002-AE0B-4C9F4705CCEA}</Project>
-      <Name>SharpDX.Samples.sample</Name>
+      <Name>SharpDX.Samples</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

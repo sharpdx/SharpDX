@@ -135,7 +135,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitmapApp.sample", "Samples
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{1B526C0E-EE4A-4E8F-BF8F-8C7397FB4918}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniTriEffects11", "Samples\Direct3D11\MiniTriEffects11\MiniTriEffects11.csproj", "{35774633-98A0-464E-AFDE-A567D5D9B370}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniTriEffects11.sample", "Samples\Direct3D11\MiniTriEffects11\MiniTriEffects11.sample.csproj", "{35774633-98A0-464E-AFDE-A567D5D9B370}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpDX.X3DAudio", "Source\SharpDX.X3DAudio\SharpDX.X3DAudio.csproj", "{046C5D40-A52E-4442-88A9-1A5DDF370A5E}"
 EndProject
@@ -157,7 +157,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpDX.XInput", "Source\Sh
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WIC", "WIC", "{A29AD0F6-05CC-478B-95EF-55B209A84787}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EncodeDecode.samples", "Samples\WIC\EncodeDecode\EncodeDecode.samples.csproj", "{FF907522-E5A4-4AF0-8B74-4700545B3718}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EncodeDecode.sample", "Samples\WIC\EncodeDecode\EncodeDecode.sample.csproj", "{FF907522-E5A4-4AF0-8B74-4700545B3718}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RenderToWicApp.sample", "Samples\Direct2D1\RenderToWicApp\RenderToWicApp.sample.csproj", "{8D9B8BB6-2898-4B18-AEAB-DBC1097D0317}"
 EndProject
