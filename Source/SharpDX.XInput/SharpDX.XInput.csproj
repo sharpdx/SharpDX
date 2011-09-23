@@ -37,10 +37,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Win8Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;WIN8</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>bin\Debug\SharpDX.XInput.XML</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
@@ -88,7 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Documentation\CodeComments.xml" />
-    <None Include="Mapping.xml"/>
+    <None Include="Mapping.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SharpDX.XInput.nuspec" />
