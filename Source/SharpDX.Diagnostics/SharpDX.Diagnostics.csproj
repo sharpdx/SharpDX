@@ -52,7 +52,7 @@
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Release|AnyCPU'">
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\Bin\</OutputPath>
     <DefineConstants>TRACE;WIN8</DefineConstants>
     <DocumentationFile>..\..\Bin\SharpDX.Diagnostics.xml</DocumentationFile>
     <Optimize>true</Optimize>
