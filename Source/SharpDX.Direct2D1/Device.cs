@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,23 +19,33 @@
 // THE SOFTWARE.
 using System;
 
+#if WIN8
 namespace SharpDX.Direct2D1
 {
-    /// <summary>
-    /// A Wic RenderTarget.
-    /// </summary>
-    public class WicRenderTarget : RenderTarget
+    public partial class Device
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="WicRenderTarget"/> class from a <see cref="SharpDX.WIC.Bitmap"/>.
+        /// Initializes a new instance of the <see cref="Device"/> class.
         /// </summary>
-        /// <param name="factory">The factory.</param>
-        /// <param name="wicBitmap">The wic bitmap.</param>
-        /// <param name="renderTargetProperties">The render target properties.</param>
-        public WicRenderTarget(Factory factory, WIC.Bitmap wicBitmap, RenderTargetProperties renderTargetProperties)
+        /// <param name="device">The device.</param>
+        /// <unmanaged>HRESULT D2D1CreateDevice([In] IDXGIDevice* dxgiDevice,[In, Optional] const D2D1_CREATION_PROPERTIES* creationProperties,[Out] ID2D1Device** d2dDevice)</unmanaged>
+        public Device(SharpDX.DXGI.Device device)
             : base(IntPtr.Zero)
         {
-            factory.CreateWicBitmapRenderTarget(wicBitmap, ref renderTargetProperties, this);
+            D2D1.CreateDevice(device, null, this);
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Device"/> class.
+        /// </summary>
+        /// <param name="device">The device.</param>
+        /// <param name="creationProperties">The creation properties.</param>
+        /// <unmanaged>HRESULT D2D1CreateDevice([In] IDXGIDevice* dxgiDevice,[In, Optional] const D2D1_CREATION_PROPERTIES* creationProperties,[Out] ID2D1Device** d2dDevice)</unmanaged>
+        public Device(SharpDX.DXGI.Device device, CreationProperties creationProperties)
+            : base(IntPtr.Zero)
+        {
+            D2D1.CreateDevice(device, creationProperties, this);
+        }        
     }
 }
+#endif

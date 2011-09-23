@@ -95,10 +95,10 @@
     -->
     <map interface="ID2D1(.+)" name-tmp="$1" />
 
-    <map param="ID2D1Device::CreatePrintControl::wicFactory" type="IUnknown"/>
-    <map param="ID2D1DeviceContext::CreateBitmapFromWicBitmap::wicBitmapSource" type="IUnknown"/>
-    <map param="ID2D1RenderTarget::CreateBitmapFromWicBitmap::wicBitmapSource" type="IUnknown"/>
-    <map param="ID2D1Factory::CreateWicBitmapRenderTarget::target" type="IUnknown"/>
+    <!--<map param="ID2D1Device::CreatePrintControl::wicFactory" type="IUnknown"/>-->
+    <!--<map param="ID2D1DeviceContext::CreateBitmapFromWicBitmap::wicBitmapSource" type="IUnknown"/>
+    <map param="ID2D1RenderTarget::CreateBitmapFromWicBitmap::wicBitmapSource" type="IUnknown"/>-->
+    <!--<map param="ID2D1Factory::CreateWicBitmapRenderTarget::target" type="IUnknown"/>-->
     <!--<remove method="ID2D(\d+)RenderTarget::CreateBitmapFromWicBitmap" />
     <remove method="ID2D(\d+)Factory::CreateWicBitmapRenderTarget" />-->
     <map method="ID2D1Bitmap::CopyFrom.*" visibility="internal" />
@@ -159,11 +159,11 @@
     <map method="ID2D(\d+)Mesh::Open" visibility="internal" name="Open_" />
     <map interface="ID2D(\d+).*Sink" callback="true" callback-dual="true" />
 
-    <map param="ID2D1DeviceContext::CreateColorContextFromWicColorContext::wicColorContext" type="IUnknown"/>
-    <map param="ID2D1DeviceContext::CreateColorContextFromWicColorContext::colorContext" type="IUnknown"/>
+    <!--<map param="ID2D1DeviceContext::CreateColorContextFromWicColorContext::wicColorContext" type="IUnknown"/>
+    <map param="ID2D1DeviceContext::CreateColorContextFromWicColorContext::colorContext" type="IUnknown"/>-->
 
-    <map param="ID2D1EffectContext::CreateColorContextFromWicColorContext::wicColorContext" type="IUnknown"/>
-    <map param="ID2D1EffectContext::CreateColorContextFromWicColorContext::colorContext" type="IUnknown"/>
+    <!--<map param="ID2D1EffectContext::CreateColorContextFromWicColorContext::wicColorContext" type="IUnknown"/>
+    <map param="ID2D1EffectContext::CreateColorContextFromWicColorContext::colorContext" type="IUnknown"/>-->
 
     <map method="ID2D1Factory1::RegisterEffectFromString" visibility="internal"/>
     
@@ -174,6 +174,10 @@
     -->
     <map function="D2D1(.+)" name-tmp="$1" />
     <map function="D2D1.*" dll='"d2d1.dll"' group="SharpDX.Direct2D1.D2D1" />
+
+    <map param="D2D1CreateDevice::d2dDevice" attribute="out fast"/>
+    <map param="D2D1CreateDeviceContext::d2dDeviceContext" attribute="out fast"/>
+
     <context-clear />
   </mapping>
 </config>
