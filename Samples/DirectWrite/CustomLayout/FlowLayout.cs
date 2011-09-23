@@ -243,7 +243,6 @@ namespace CustomLayout
                     run.isNumberSubstituted ? numberSubstitution_ : null,
                     null,
                     null,
-                    0,
                     maxGlyphCount,
                     call_glyphClusters_,
                     textProps,
@@ -307,7 +306,6 @@ namespace CustomLayout
                 localName_,
                 null,
                 null,
-                0,
                 call2_glyphAdvances_,
                 call2_glyphOffsets_);
             //call2_glyphClusters_.CopyTo(glyphClusters_, textStart);
