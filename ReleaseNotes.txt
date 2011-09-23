@@ -1,3 +1,14 @@
+Release Notes (2011-09-24)
+* SharpDX goes 2.0 beta
+* Adding missing DirectX APIs including Direct3D9 (not finished yet for Beta but WPF Interop is working), DirectInput, RawInput, XInput, X3DAudio, XACT3, WIC (integrated with Direct2D1).
+* API Support for upcomming Win8/DirectX11.1 (D3DCompiler 44, DXGI 1.2, Direct3D11.1, Direct2D1.1) and including support for DirectX Metro application in C#/.Net!
+* New Samples (Direct3D10 WPF Interop, Direct3D11 MiniCube, WIC RenderToTarget, WIC EncodeDecode, XAudio2 play XWMA,ADPCM,WAV)
+* New 2 Samples for Win8/Metro Preview (MiniCube and port of Win8 C++ DirectX Tutorial)
+* NuGet Package available for all SharpDX 2.0 assemblies with symbols (enabling "source step into" debugging)
+* Lots of bugfixes, apis simplification and helpers.
+* Interop performance slightly improved for method calls.
+* Full rewrite of SharpGen, the core technology of SharpDX, a genuine C# code generator directly from C++ Headers using now gccxml. SharpGen is now able to parse all Windows headers!
+
 Release Notes (2011-02-17)
 * SharpDX goes 1.3
 * Full support for Mono 2.10
