@@ -69,7 +69,7 @@ namespace SharpDX.Diagnostics
         /// Gets the stack trace when the track object was created.
         /// </summary>
         /// <value>The stack trace.</value>
-//        public StackTrace StackTrace { get; private set; }
+        public StackTrace StackTrace { get; private set; }
 #endif
         /// <summary>
         /// Gets a value indicating whether the tracked object is alive.
