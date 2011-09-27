@@ -174,7 +174,7 @@ namespace SharpDX.Direct3D11
         {
             unsafe
             {
-                UpdateSubresource(resource, subresource, null, (IntPtr)Interop.Fixed(ref data), 0, 0);
+                UpdateSubresource(resource, subresource, null, (IntPtr)Interop.Fixed(ref data), rowPitch, depthPitch);
             }
         }
 
@@ -191,7 +191,7 @@ namespace SharpDX.Direct3D11
         {
             unsafe
             {
-                UpdateSubresource(resource, subresource, null, (IntPtr)Interop.Fixed(data), 0, 0);
+                UpdateSubresource(resource, subresource, null, (IntPtr)Interop.Fixed(data), rowPitch, depthPitch);
             }
         }
 
