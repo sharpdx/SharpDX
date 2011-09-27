@@ -88,7 +88,7 @@ namespace SharpDX.Samples
             };
 
             // Create Device and SwapChain
-            Device1.CreateWithSwapChain(DriverType.Hardware, DeviceCreationFlags.Debug | DeviceCreationFlags.BgraSupport, desc, FeatureLevel.Level_10_0, out _device, out _swapChain);
+            Device1.CreateWithSwapChain(DriverType.Hardware, DeviceCreationFlags.BgraSupport, desc, FeatureLevel.Level_10_0, out _device, out _swapChain);
 
             // Ignore all windows events
             Factory factory = _swapChain.GetParent<Factory>();

@@ -84,7 +84,7 @@ namespace MiniTri
             // Create Device and SwapChain
             Device device;
             SwapChain swapChain;
-            Device.CreateWithSwapChain(DriverType.Hardware, DeviceCreationFlags.Debug, desc, out device, out swapChain);
+            Device.CreateWithSwapChain(DriverType.Hardware, DeviceCreationFlags.None, desc, out device, out swapChain);
             var context = device.ImmediateContext;
 
             // Ignore all windows events

@@ -60,7 +60,7 @@ namespace MiniRect
             // Create Device and SwapChain
             Device1 device;
             SwapChain swapChain;
-            Device1.CreateWithSwapChain(DriverType.Hardware, DeviceCreationFlags.Debug|DeviceCreationFlags.BgraSupport, desc, FeatureLevel.Level_10_0, out device, out swapChain);
+            Device1.CreateWithSwapChain(DriverType.Hardware, DeviceCreationFlags.BgraSupport, desc, FeatureLevel.Level_10_0, out device, out swapChain);
 
             var d2dFactory = new SharpDX.Direct2D1.Factory();
 

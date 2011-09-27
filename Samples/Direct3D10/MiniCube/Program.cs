@@ -23,24 +23,24 @@ using System.Diagnostics;
 using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D;
-using SharpDX.Direct3D11;
+using SharpDX.Direct3D10;
 using SharpDX.DXGI;
 using SharpDX.Windows;
-using Buffer = SharpDX.Direct3D11.Buffer;
-using Device = SharpDX.Direct3D11.Device;
-using MapFlags = SharpDX.Direct3D11.MapFlags;
+using Buffer = SharpDX.Direct3D10.Buffer;
+using Device = SharpDX.Direct3D10.Device;
+using DriverType = SharpDX.Direct3D10.DriverType;
 
 namespace MiniTri
 {
     /// <summary>
-    /// SharpDX MiniCube Direct3D 11 Sample
+    /// SharpDX MiniCube Direct3D 10 Sample
     /// </summary>
     internal static class Program
     {
         [STAThread]
         private static void Main()
         {
-            var form = new RenderForm("SharpDX - MiniCube Direct3D 11 Sample");
+            var form = new RenderForm("SharpDX - MiniCube Direct3D 10 Sample");
 
             // SwapChain description
             var desc = new SwapChainDescription()
@@ -60,7 +60,7 @@ namespace MiniTri
             Device device;
             SwapChain swapChain;
             Device.CreateWithSwapChain(DriverType.Hardware, DeviceCreationFlags.None, desc, out device, out swapChain);
-            var context = device.ImmediateContext;
+            var context = device;
 
             // Ignore all windows events
             var factory = swapChain.GetParent<Factory>();
@@ -134,8 +134,7 @@ namespace MiniTri
                             });
 
             // Create Constant Buffer
-            var contantBuffer = new Buffer(device, Utilities.SizeOf<Matrix>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0);
-
+            var contantBuffer = new Buffer(device, Utilities.SizeOf<Matrix>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None);
 
             // Create Depth Buffer & View
             var depthBuffer = new Texture2D(device, new Texture2DDescription()
@@ -162,7 +161,6 @@ namespace MiniTri
             context.VertexShader.Set(vertexShader);
             context.Rasterizer.SetViewports(new Viewport(0, 0, form.ClientSize.Width, form.ClientSize.Height, 0.0f, 1.0f));
             context.PixelShader.Set(pixelShader);
-            context.OutputMerger.SetTargets(depthView, renderView);
 
             // Prepare matrices
             var view = Matrix.LookAtLH(new Vector3(0, 0, -5), new Vector3(0, 0, 0), Vector3.UnitY);
@@ -179,6 +177,8 @@ namespace MiniTri
                     var time = clock.ElapsedMilliseconds / 1000.0f;
 
                     // Clear views
+                    context.OutputMerger.SetTargets(depthView, renderView);
+
                     context.ClearDepthStencilView(depthView, DepthStencilClearFlags.Depth, 1.0f, 0);
                     context.ClearRenderTargetView(renderView, new Color4(1.0f, 0.0f, 0.0f, 0.0f));
 
