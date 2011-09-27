@@ -33,7 +33,7 @@ namespace SharpDX.XAPO
 
         protected override int QueryInterfaceImpl(IntPtr thisPointer, ref Guid guid, out IntPtr output)
         {
-            if (guid == typeof(ParameterProvider).GUID)
+            if (guid == Utilities.GetGuidFromType(typeof(ParameterProvider)))
             {
                 if (parameterProviderShadow != IntPtr.Zero)
                 {

@@ -80,7 +80,7 @@ namespace CustomFont
         /// <param name="ex">The ex.</param>
         private void LogException(Exception ex)
         {
-            MessageBox.Show(this, string.Format("Unexpected error. Reason : {0}", ex), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(this, string.Format(System.Globalization.CultureInfo.InvariantCulture, "Unexpected error. Reason : {0}", ex), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         /// <summary>

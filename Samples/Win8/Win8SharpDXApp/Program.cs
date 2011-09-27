@@ -25,7 +25,6 @@ using SharpDX.Direct3D;
 //using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
-using SharpDX.Windows;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Infrastructure;
 using Windows.UI.Core;

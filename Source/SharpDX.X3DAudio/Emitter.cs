@@ -30,7 +30,7 @@ namespace SharpDX.X3DAudio
 
         // Internal native struct used for marshalling
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        internal unsafe partial struct __Native
+        internal partial struct __Native
         {
             public System.IntPtr ConePointer;
             public SharpDX.Vector3 OrientFront;

@@ -30,7 +30,7 @@ namespace SharpDX.DirectInput
         public DirectInput() : base(IntPtr.Zero)
         {
             IntPtr temp;
-            DInput.DirectInput8Create(Win32Native.GetModuleHandle(null), DInput.SdkVersion, typeof(DirectInput).GUID, out temp, null);
+            DInput.DirectInput8Create(Win32Native.GetModuleHandle(null), DInput.SdkVersion, Utilities.GetGuidFromType(typeof(DirectInput)), out temp, null);
             NativePointer = temp;
         }
 

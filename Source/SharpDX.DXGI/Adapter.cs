@@ -77,7 +77,7 @@ namespace SharpDX.DXGI
         {
             try
             {
-                CheckInterfaceSupport(type.GUID, out userModeVersion);
+                CheckInterfaceSupport(Utilities.GetGuidFromType(type), out userModeVersion);
             }
             catch (SharpDXException)
             {

@@ -104,7 +104,7 @@ namespace SharpDoc
                 if (helperMethodInstance == null)
                 {
                     // Todo, write parameters
-                    throw new InvalidOperationException(string.Format("Unable to find target method [{0}]", binder.Name));
+                    throw new InvalidOperationException(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Unable to find target method [{0}]", binder.Name));
                 }
 
                 var methodParams = new Expression[args.Length];

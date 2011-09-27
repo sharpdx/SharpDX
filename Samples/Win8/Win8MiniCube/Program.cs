@@ -26,7 +26,6 @@ using SharpDX.D3DCompiler;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
-using SharpDX.Windows;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Infrastructure;
 using Windows.UI.Core;
@@ -67,7 +66,7 @@ namespace Win8MiniCube
             }
 
             /// <inheritdoc/>
-            public unsafe void Run()
+            public void Run()
             {
                 // Enable compatibility with Direct2D
                 var defaultDevice = new Device(DriverType.Hardware, DeviceCreationFlags.BgraSupport);

@@ -1306,7 +1306,7 @@ namespace SharpGen.Parser
                         isTypeResolved = true;
                         break;
                     default:
-                        throw new InvalidOperationException(string.Format("Unexpected tag type [{0}]", xType.Name.LocalName));
+                        throw new InvalidOperationException(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Unexpected tag type [{0}]", xType.Name.LocalName));
                 }
             }
         }

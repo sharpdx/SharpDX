@@ -126,7 +126,7 @@ namespace SharpGen.Config
         /// </returns>
         public override string ToString()
         {
-            return string.Format("include: {0}", File);
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "include: {0}", File);
         }
     }
 }

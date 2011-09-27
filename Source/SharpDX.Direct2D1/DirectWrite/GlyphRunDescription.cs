@@ -26,7 +26,7 @@ namespace SharpDX.DirectWrite
     {
         // Internal native struct used for marshalling
         [StructLayout(LayoutKind.Sequential, Pack = 0)]
-        internal unsafe partial struct __Native
+        internal partial struct __Native
         {
             public IntPtr LocaleName;
             public IntPtr Text;
@@ -46,8 +46,8 @@ namespace SharpDX.DirectWrite
         // Method to marshal from native to managed struct
         internal unsafe void __MarshalFrom(ref __Native @ref)
         {
-            this.LocaleName = (@ref.LocaleName == IntPtr.Zero) ? null : new string((char*)@ref.LocaleName);
-            this.Text = (@ref.Text == IntPtr.Zero) ? null : new string((char*)@ref.Text, 0, @ref.TextLength);
+            this.LocaleName = (@ref.LocaleName == IntPtr.Zero) ? null : Marshal.PtrToStringUni(@ref.LocaleName);
+            this.Text = (@ref.Text == IntPtr.Zero) ? null : Marshal.PtrToStringUni(@ref.Text, @ref.TextLength);
             this.TextLength = @ref.TextLength;
             this.ClusterMap = @ref.ClusterMap;
             this.TextPosition = @ref.TextPosition;

@@ -174,8 +174,8 @@ namespace SharpGen.Model
                 if (ReturnType.PublicType.Type == typeof(string))
                 {
                     if (ReturnType.IsWideChar)
-                        return "new string((char*)";
-                    return "new string((sbyte*)";
+                        return "Marshal.PtrToStringUni(";
+                    return "Marshal.PtrToStringAnsi(";
                 }
                 return "";
             }

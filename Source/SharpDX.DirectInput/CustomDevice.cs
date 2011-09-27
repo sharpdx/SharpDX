@@ -117,7 +117,7 @@ namespace SharpDX.DirectInput
         {
             DataObjectFormat objectFormat;
             if (!_mapNameToObjectFormat.TryGetValue(name, out objectFormat))
-                throw new ArgumentException(string.Format("Invalid name [{0}]. Must be in [{1}]", name, Utilities.Join(";", _mapNameToObjectFormat.Keys)));
+                throw new ArgumentException(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Invalid name [{0}]. Must be in [{1}]", name, Utilities.Join(";", _mapNameToObjectFormat.Keys)));
             return objectFormat;
         }
         
@@ -137,7 +137,7 @@ namespace SharpDX.DirectInput
                     var dataFormatAttributes = typeof (TRaw).GetCustomAttributes(typeof (DataFormatAttribute), false);
                     if (dataFormatAttributes.Length != 1)
                         throw new InvalidOperationException(
-                            string.Format("The structure [{0}] must be marked with DataFormatAttribute or provide a IDataFormatProvider",
+                            string.Format(System.Globalization.CultureInfo.InvariantCulture, "The structure [{0}] must be marked with DataFormatAttribute or provide a IDataFormatProvider",
                                             typeof (TRaw).FullName));
 
                     _dataFormat = new DataFormat(((DataFormatAttribute) dataFormatAttributes[0]).Flags) {DataSize = Utilities.SizeOf<TRaw>()};
@@ -167,7 +167,7 @@ namespace SharpDX.DirectInput
                             // For a simple field without any array element, sub-field = field
                             int sizeOfField = totalSizeOfField / numberOfDataObjects;
                             if ((sizeOfField * numberOfDataObjects) != totalSizeOfField)
-                                throw new InvalidOperationException(string.Format("Field [{0}] has incompatible size [{1}] and number of DataObjectAttributes [{2}]", field.Name, (double)totalSizeOfField / numberOfDataObjects, numberOfDataObjects));
+                                throw new InvalidOperationException(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Field [{0}] has incompatible size [{1}] and number of DataObjectAttributes [{2}]", field.Name, (double)totalSizeOfField / numberOfDataObjects, numberOfDataObjects));
 
                             int subFieldIndex = 0;
 
@@ -207,7 +207,7 @@ namespace SharpDX.DirectInput
 
                     // Map field name to object
                     if (_mapNameToObjectFormat.ContainsKey(dataObject.Name))
-                        throw new InvalidOperationException(string.Format("Incorrect field name [{0}]. Field name must be unique", dataObject.Name));
+                        throw new InvalidOperationException(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Incorrect field name [{0}]. Field name must be unique", dataObject.Name));
                     _mapNameToObjectFormat.Add(dataObject.Name, dataObject);                    
                 }
 

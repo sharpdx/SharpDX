@@ -53,7 +53,7 @@ namespace SharpGen.Config
         /// </returns>
         public override string ToString()
         {
-            return string.Format("naming-rule-short: \"{0}\" => \"{1}\"", Name, Value);
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "naming-rule-short: \"{0}\" => \"{1}\"", Name, Value);
         }
     }
 }

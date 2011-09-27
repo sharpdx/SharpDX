@@ -154,7 +154,7 @@ namespace SharpDX.DXGI
                 case Format.R32G32B32A32_UInt:
                     return 128;
             }
-            throw new ArgumentException(string.Format("Unknown size for DXGI Format [{0}] ", format));
+            throw new ArgumentException(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Unknown size for DXGI Format [{0}] ", format));
         }
     }
 }

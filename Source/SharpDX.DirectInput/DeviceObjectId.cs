@@ -73,7 +73,7 @@ namespace SharpDX.DirectInput
 
         public override string ToString()
         {
-            return string.Format("Flags: {0} InstanceNumber: {1} RawId: 0x{2:X8}", Flags, InstanceNumber, _rawType);
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "Flags: {0} InstanceNumber: {1} RawId: 0x{2:X8}", Flags, InstanceNumber, _rawType);
         }
     }
 }

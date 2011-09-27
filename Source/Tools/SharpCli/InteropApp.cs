@@ -21,6 +21,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mono.Cecil;
@@ -589,6 +591,17 @@ namespace SharpCli
             voidType = mscorlibAssembly.MainModule.GetType("System.Void");
             voidType = new PointerType(assembly.MainModule.Import(voidType));
             intType = assembly.MainModule.Import( mscorlibAssembly.MainModule.GetType("System.Int32"));
+
+            // Remove CompilationRelaxationsAttribute
+            for (int i = 0; i < assembly.CustomAttributes.Count; i++)
+            {
+                var customAttribute = assembly.CustomAttributes[i];
+                if (customAttribute.AttributeType.FullName == typeof(CompilationRelaxationsAttribute).FullName)
+                {
+                    assembly.CustomAttributes.RemoveAt(i);
+                    i--;
+                }
+            }
 
             Log("SharpDX interop patch for assembly [{0}]", file);
             foreach (var type in assembly.MainModule.Types)

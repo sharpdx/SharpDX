@@ -71,7 +71,7 @@ namespace SharpDX.DirectSound
                     guid = *((Guid*) guidPtr);
                 }
 
-                Informations.Add(new DeviceInformation(guid, new string((char*) description), new string((char*) module)));
+                Informations.Add(new DeviceInformation(guid, Marshal.PtrToStringUni( description), Marshal.PtrToStringUni( module)));
             }
             // Return true to continue enumerate the devices.
             return 1;

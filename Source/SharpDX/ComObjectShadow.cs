@@ -32,14 +32,14 @@ namespace SharpDX
 
         protected virtual int QueryInterfaceImpl(IntPtr thisObject, ref Guid guid, out IntPtr output)
         {
-            if (guid == GetType().GUID)
+            if (guid == Utilities.GetGuidFromType(GetType()))
             {
                 AddRefImpl(thisObject);
                 output = thisObject;
                 return Result.Ok.Code;
             }
 
-            if (guid == Callback.GetType().GUID)
+            if (guid == Utilities.GetGuidFromType(Callback.GetType()))
             {
                 AddRefImpl(thisObject);
                 output = thisObject;

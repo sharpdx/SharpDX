@@ -62,7 +62,7 @@ namespace SharpGen.Config
 
         public override string ToString()
         {
-            return string.Format("{0} from-{1}:{2} class:{3} cpp-type:{4} cpp-cast:{5} type:{6} name:{7} value:{8}", base.ToString(), Macro!=null?"macro":"guid",  Macro ?? Guid, ClassName, CppType, CppCast, Type, Name, Value);
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0} from-{1}:{2} class:{3} cpp-type:{4} cpp-cast:{5} type:{6} name:{7} value:{8}", base.ToString(), Macro!=null?"macro":"guid",  Macro ?? Guid, ClassName, CppType, CppCast, Type, Name, Value);
         }
     }
 }

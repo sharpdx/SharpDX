@@ -36,7 +36,7 @@ namespace SharpDX.DirectInput
 
         public override string ToString()
         {
-            return string.Format("Offset: {0}, Value: {1} Timestamp: {2} Sequence: {3}", Offset, Value, Timestamp, Sequence);
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "Offset: {0}, Value: {1} Timestamp: {2} Sequence: {3}", Offset, Value, Timestamp, Sequence);
         }
     }
 }

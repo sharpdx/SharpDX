@@ -88,7 +88,7 @@ namespace SharpGen.Config
         /// </returns>
         public override string ToString()
         {
-            return string.Format("{0} from:{1} to:{2} marshal:{3}", base.ToString(), From, To, Marshal);
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0} from:{1} to:{2} marshal:{3}", base.ToString(), From, To, Marshal);
         }
     }
 }

@@ -102,7 +102,7 @@ namespace CustomLayout
 
         private void LogException(Exception ex)
         {
-            //MessageBox.Show(this, string.Format("Unable to use the font {0}. Reason : {1}", FontFamilyName, ex), "Error while setting text layout", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //MessageBox.Show(this, string.Format(System.Globalization.CultureInfo.InvariantCulture, "Unable to use the font {0}. Reason : {1}", FontFamilyName, ex), "Error while setting text layout", MessageBoxButtons.OK, MessageBoxIcon.Error);
             MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 

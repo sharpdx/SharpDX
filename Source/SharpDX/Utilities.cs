@@ -24,6 +24,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
 using SharpDX.Direct3D;
+using System.Reflection;
 
 namespace SharpDX
 {
@@ -32,16 +33,16 @@ namespace SharpDX
     /// </summary>
     public static class Utilities
     {
-        /// <summary>
-        /// Native memcpy.
-        /// </summary>
-        /// <param name="dest">The destination memory location</param>
-        /// <param name="src">The source memory location.</param>
-        /// <param name="sizeInBytesToCopy">The count.</param>
-        /// <returns></returns>
-        [DllImport("msvcrt.dll", EntryPoint = "memcpy", CallingConvention = CallingConvention.Cdecl,
-            SetLastError = false), SuppressUnmanagedCodeSecurity]
-        public static extern IntPtr CopyMemory(IntPtr dest, IntPtr src, ulong sizeInBytesToCopy);
+        ///// <summary>
+        ///// Native memcpy.
+        ///// </summary>
+        ///// <param name="dest">The destination memory location</param>
+        ///// <param name="src">The source memory location.</param>
+        ///// <param name="sizeInBytesToCopy">The count.</param>
+        ///// <returns></returns>
+        //[DllImport("msvcrt.dll", EntryPoint = "memcpy", CallingConvention = CallingConvention.Cdecl,
+        //    SetLastError = false), SuppressUnmanagedCodeSecurity]
+        //public static extern IntPtr CopyMemory(IntPtr dest, IntPtr src, ulong sizeInBytesToCopy);
 
         /// <summary>
         /// Native memcpy.
@@ -50,10 +51,13 @@ namespace SharpDX
         /// <param name="src">The source memory location.</param>
         /// <param name="sizeInBytesToCopy">The count.</param>
         /// <returns></returns>
-        public static IntPtr CopyMemory(IntPtr dest, IntPtr src, int sizeInBytesToCopy)
+        public static void CopyMemory(IntPtr dest, IntPtr src, int sizeInBytesToCopy)
         {
-            // TODO plug in Interop a pluggable CopyMemory using cpblk or memcpy based on architecture
-            return CopyMemory(dest, src, (ulong) sizeInBytesToCopy);
+            unsafe
+            {
+                // TODO plug in Interop a pluggable CopyMemory using cpblk or memcpy based on architecture
+                Interop.memcpy((void*)dest, (void*)src, sizeInBytesToCopy);
+            }
         }
 
         /// <summary>
@@ -170,6 +174,18 @@ namespace SharpDX
             return temp;
         }
 
+        /// <summary>
+        /// Gets the <see cref="System.Guid"/> from a type.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>The guid associated with this type</returns>
+        public static Guid GetGuidFromType(Type type)
+        {
+            // TODO: We will have call type.GetTypeInfo().GUID on Win8
+            // Once Visual Studio 11 (not developer preview) is ready for Win8, we will be able to port it
+            return type.GUID;
+        }
+
         public static void ConvertRECTToRectangle(ref System.Drawing.Rectangle rect)
         {
             rect = new System.Drawing.Rectangle(rect.X, rect.Y, rect.Width - rect.X, rect.Height - rect.Y);
@@ -188,6 +204,9 @@ namespace SharpDX
         /// <returns></returns>
         public static string PtrToStringAnsi(IntPtr pointer, int maxLength)
         {
+#if WIN8
+            return Marshal.PtrToStringAnsi(pointer, maxLength);
+#else
             unsafe
             {
                 var pStr = (byte*)pointer;
@@ -196,6 +215,7 @@ namespace SharpDX
                         return new string((sbyte*)pointer);
                 return new string((sbyte*)pointer, 0, maxLength);
             }
+#endif
         }
 
         /// <summary>
@@ -206,6 +226,9 @@ namespace SharpDX
         /// <returns></returns>
         public static string PtrToStringUni(IntPtr pointer, int maxLength)
         {
+#if WIN8
+            return Marshal.PtrToStringUni(pointer, maxLength);
+#else
             unsafe
             {
                 var pStr = (char*)pointer;
@@ -214,6 +237,7 @@ namespace SharpDX
                         return new string((char*)pointer);
                 return new string((char*)pointer, 0, maxLength);
             }
+#endif
         }
 
         /// <summary>
@@ -241,6 +265,7 @@ namespace SharpDX
             return iunknownPtr == IntPtr.Zero ? null : Marshal.GetObjectForIUnknown(iunknownPtr);
         }
 
+#if !WIN8
         /// <summary>
         /// String helper join method to display an array of object as a single string.
         /// </summary>
@@ -267,7 +292,7 @@ namespace SharpDX
 
             return string.Join(separator, Array.ConvertAll(elementList.ToArray(), from => from.ToString()));
         }
-
+#endif
         [Flags]
         public enum CLSCTX : uint
         {
@@ -321,13 +346,6 @@ namespace SharpDX
             SpeedOverMemory = 0x8
         }
 
-        /// <summary>Initializes the COM library for use by the calling thread, sets the thread's concurrency model, and creates a new apartment for the thread if one is required.</summary>
-        /// <param name="reserved">This parameter is reserved and must be NULL.</param>
-        /// <param name="coInit">The concurrency model and initialization options for the thread. Values for this parameter are taken from the CoInit enumeration. Any combination of values can be used, except that the ApartmentThreaded and MultiThreaded flags cannot both be set. The default is MultiThreaded.</param>
-        /// <returns>If function succeeds, it returns S_OK. Otherwise, it returns an error code.</returns>
-        [DllImport("ole32.dll", ExactSpelling = true, EntryPoint = "CoInitializeEx", PreserveSig = true)]
-        internal static extern Result CoInitializeEx(IntPtr reserved, CoInit coInit);
-
         /// <summary>
         /// Converts a blob to a string.
         /// </summary>
@@ -336,10 +354,14 @@ namespace SharpDX
         public static string BlobToString(Blob blob)
         {
             string output;
+#if WIN8
+            output = Marshal.PtrToStringAnsi(blob.BufferPointer);
+#else
             unsafe
             {
-                output = new string((sbyte*) blob.GetBufferPointer());
+                output = new string((sbyte*) blob.BufferPointer);
             }
+#endif
             blob.Dispose();
             return output;
         }
@@ -402,7 +424,6 @@ namespace SharpDX
         }
         [DllImport("kernel32", EntryPoint = "LoadLibrary", SetLastError = true, CharSet = CharSet.Ansi)]
         static extern IntPtr LoadLibrary_(string lpFileName);
-
 
         /// <summary>
         /// Gets the proc address of a dll.

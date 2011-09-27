@@ -29,7 +29,7 @@ namespace SharpDX.DXGI
         public Factory1() : base(IntPtr.Zero)
         {
             IntPtr factoryPtr;
-            DXGI.CreateDXGIFactory1(GetType().GUID, out factoryPtr);
+            DXGI.CreateDXGIFactory1(Utilities.GetGuidFromType(GetType()), out factoryPtr);
             NativePointer = factoryPtr;
         }
 

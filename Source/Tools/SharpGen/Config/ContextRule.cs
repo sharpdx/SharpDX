@@ -48,7 +48,7 @@ namespace SharpGen.Config
 
         public override string ToString()
         {
-            return string.Format("{0} Ids:{1}", base.ToString(), (Ids != null) ? Ids.ToString() : "");
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0} Ids:{1}", base.ToString(), (Ids != null) ? Ids.ToString() : "");
         }
     }
 

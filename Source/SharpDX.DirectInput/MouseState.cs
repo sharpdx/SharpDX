@@ -58,7 +58,7 @@ namespace SharpDX.DirectInput
 
         public override string ToString()
         {
-            return string.Format("X: {0}, Y: {1}, Z: {2}, Buttons: {3}", X, Y, Z, Utilities.Join(";",Buttons));
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "X: {0}, Y: {1}, Z: {2}, Buttons: {3}", X, Y, Z, Utilities.Join(";",Buttons));
         }
     }
 }

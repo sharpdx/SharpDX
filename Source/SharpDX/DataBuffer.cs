@@ -631,7 +631,7 @@ namespace SharpDX
         {
             unsafe
             {
-                Utilities.CopyMemory((IntPtr)(_buffer + positionInBytes), source, (ulong)count);
+                Utilities.CopyMemory((IntPtr)(_buffer + positionInBytes), source, (int)count);
             }
         }
 

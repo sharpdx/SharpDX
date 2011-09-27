@@ -140,7 +140,7 @@ namespace SharpDX.Multimedia
         /// </returns>
         public override string ToString()
         {
-            return string.Format("Type: {0}, Size: {1}, Position: {2}, IsList: {3}, IsHeader: {4}", Type, Size, DataPosition, IsList, IsHeader);
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "Type: {0}, Size: {1}, Position: {2}, IsList: {3}, IsHeader: {4}", Type, Size, DataPosition, IsList, IsHeader);
         }
     }
 }

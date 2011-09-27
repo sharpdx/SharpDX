@@ -90,14 +90,14 @@ namespace SharpDX.Diagnostics
                 return "";
 
             var builder = new StringBuilder();
-            builder.AppendFormat(CultureInfo.InvariantCulture, "Active COM Object: [0x{0:X}] Class: [{1}] Time [{2}] Stack:", comObject.NativePointer.ToInt64(), comObject.GetType().FullName, CreationTime).AppendLine();
+            builder.AppendFormat(System.Globalization.CultureInfo.InvariantCulture, "Active COM Object: [0x{0:X}] Class: [{1}] Time [{2}] Stack:", comObject.NativePointer.ToInt64(), comObject.GetType().FullName, CreationTime).AppendLine();
 #if !WIN8
             foreach (var stackFrame in StackTrace.GetFrames())
             {
                 // Skip system/generated frame
                 if (stackFrame.GetFileLineNumber() == 0)
                     continue;
-                builder.AppendFormat(CultureInfo.InvariantCulture, "\t{0}({1},{2}) : {3}", stackFrame.GetFileName(), stackFrame.GetFileLineNumber(),
+                builder.AppendFormat(System.Globalization.CultureInfo.InvariantCulture, "\t{0}({1},{2}) : {3}", stackFrame.GetFileName(), stackFrame.GetFileLineNumber(),
                                      stackFrame.GetFileColumnNumber(),
                                      stackFrame.GetMethod()).AppendLine();
             }

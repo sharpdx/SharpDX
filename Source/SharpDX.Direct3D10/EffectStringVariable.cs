@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Runtime.InteropServices;
 
 namespace SharpDX.Direct3D10
 {
@@ -33,7 +34,7 @@ namespace SharpDX.Direct3D10
             unsafe {
                 IntPtr temp;
                 GetString(out temp);
-                return new string((sbyte*) temp);
+                return Marshal.PtrToStringAnsi( temp);
             }
         }
 
@@ -62,7 +63,7 @@ namespace SharpDX.Direct3D10
                 string[] result = new string[count];
                 GetStringArray((IntPtr) temp, offset, count);
                 for (int i = 0; i < result.Length; i++)
-                    result[i] = new string((sbyte*) temp[i]);
+                    result[i] = Marshal.PtrToStringAnsi( temp[i]);
                 return result;
             }
         }        

@@ -215,7 +215,7 @@ namespace SharpPak
                 string installRoot = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\.NetFramework", false).GetValue("InstallRoot").ToString();
                 var directorties = Directory.GetDirectories(installRoot, "v4.*");
                 if (directorties.Length == 0)
-                    UsageError(string.Format("Cannot found any .Net 4.0 directory from [{0}] ", installRoot));
+                    UsageError(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Cannot found any .Net 4.0 directory from [{0}] ", installRoot));
                 merge.SetTargetPlatform("v4", directorties[0]);                
             }
 

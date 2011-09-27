@@ -61,7 +61,7 @@ namespace SharpDX.DirectWrite
         public Factory(FactoryType factoryType)
             : base(IntPtr.Zero)
         {
-            DWrite.CreateFactory(factoryType, typeof(Factory).GUID, this);
+            DWrite.CreateFactory(factoryType, Utilities.GetGuidFromType(typeof(Factory)), this);
         }
 
         /// <summary>	

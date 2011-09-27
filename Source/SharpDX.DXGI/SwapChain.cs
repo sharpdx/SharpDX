@@ -50,7 +50,7 @@ namespace SharpDX.DXGI
         public T GetBackBuffer<T>(int index) where T : ComObject
         {
             IntPtr temp;
-            GetBuffer(index, typeof (T).GUID, out temp);
+            GetBuffer(index, Utilities.GetGuidFromType(typeof (T)), out temp);
             return FromPointer<T>(temp);
         }
 

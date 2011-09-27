@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Runtime.InteropServices;
 
 namespace SharpDX.Direct3D11
 {
@@ -60,7 +61,7 @@ namespace SharpDX.Direct3D11
                     GetInstanceName(IntPtr.Zero, ref size);
                     sbyte* pBuffer = stackalloc sbyte[size];
                     GetInstanceName((IntPtr) pBuffer, ref size);
-                    return new string(pBuffer);
+                    return Marshal.PtrToStringAnsi((IntPtr)pBuffer);
                 }
             }
         }
@@ -83,7 +84,7 @@ namespace SharpDX.Direct3D11
                     GetInstanceName(IntPtr.Zero, ref size);
                     sbyte* pBuffer = stackalloc sbyte[size];
                     GetTypeName((IntPtr) pBuffer, ref size);
-                    return new string(pBuffer);
+                    return Marshal.PtrToStringAnsi((IntPtr)pBuffer);
                 }
             }
         }

@@ -86,7 +86,7 @@ namespace SharpDX.XACT3
             var selectedEngineCLSID = (debug) ? DebugEngineGuid : (audition) ? AuditionEngineGuid : EngineGuid;
 
             IntPtr temp;
-            var result = Utilities.CoCreateInstance(selectedEngineCLSID, IntPtr.Zero, Utilities.CLSCTX.ClsctxInprocServer, typeof(AudioEngine).GUID, out temp);
+            var result = Utilities.CoCreateInstance(selectedEngineCLSID, IntPtr.Zero, Utilities.CLSCTX.ClsctxInprocServer, Utilities.GetGuidFromType(typeof(AudioEngine)), out temp);
             result.CheckError();
             NativePointer = temp;
 
@@ -257,7 +257,7 @@ namespace SharpDX.XACT3
         internal static RawNotificationDescription VerifyRegister(NotificationType notificationType, Type type, ManagedNotificationCallback notificationCallback)
         {
             if (!AllowedNotifications[notificationType].Contains(type))
-                throw new InvalidOperationException(string.Format("Register to notification [{0}] not supported for type [{1}]", notificationType, type));
+                throw new InvalidOperationException(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Register to notification [{0}] not supported for type [{1}]", notificationType, type));
             return new RawNotificationDescription()
             {
                 Type = notificationType,

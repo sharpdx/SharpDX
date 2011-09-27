@@ -113,7 +113,7 @@ namespace SharpGen.Generator
             }
             else
             {
-                throw new ArgumentException(string.Format("Invalid return type {0} for method {1}", csMethod.ReturnType.PublicType.QualifiedName, csMethod.CppElement));
+                throw new ArgumentException(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Invalid return type {0} for method {1}", csMethod.ReturnType.PublicType.QualifiedName, csMethod.CppElement));
             }
 
             // Handle Parameters
@@ -129,7 +129,7 @@ namespace SharpGen.Generator
                     }
                     else
                     {
-                        throw new ArgumentException(string.Format("Invalid parameter {0} for method {1}", param.PublicType.QualifiedName, csMethod.CppElement));
+                        throw new ArgumentException(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Invalid parameter {0} for method {1}", param.PublicType.QualifiedName, csMethod.CppElement));
                     }
                 }
                 else

@@ -30,7 +30,7 @@ namespace SharpDX.DXGI
         public T GetParent<T>() where T : ComObject
         {
             IntPtr temp;
-            this.GetParent(typeof (T).GUID, out temp);
+            this.GetParent(Utilities.GetGuidFromType(typeof (T)), out temp);
             return FromPointer<T>(temp);
         }
     }

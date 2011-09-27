@@ -30,7 +30,7 @@ namespace SharpDX.D3DCompiler
         public ShaderReflection(ShaderBytecode shaderBytecode)
         {
             IntPtr temp;
-            D3D.Reflect(shaderBytecode.BufferPointer, shaderBytecode.BufferSize, GetType().GUID, out temp);
+            D3D.Reflect(shaderBytecode.BufferPointer, shaderBytecode.BufferSize, Utilities.GetGuidFromType(GetType()), out temp);
             NativePointer = temp;
         }
     }

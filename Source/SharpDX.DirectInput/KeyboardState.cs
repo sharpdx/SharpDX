@@ -87,7 +87,7 @@ namespace SharpDX.DirectInput
 
         public override string ToString()
         {
-            return string.Format("PressedKeys: {0}", PressedKeys);
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "PressedKeys: {0}", PressedKeys);
         }
     }
 }

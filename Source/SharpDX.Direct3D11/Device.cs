@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Runtime.InteropServices;
 using SharpDX.Direct3D;
 using SharpDX.DXGI;
 
@@ -255,9 +256,9 @@ namespace SharpDX.Direct3D11
 
                 data.Type = type;
                 data.HardwareCounterCount = hardwareCounterCount;
-                data.Name = new string(name, 0, nameLength);
-                data.Units = new string(units, 0, unitsLength);
-                data.Description = new string(description, 0, descriptionLength);
+                data.Name = Marshal.PtrToStringAnsi((IntPtr)name, nameLength);
+                data.Units = Marshal.PtrToStringAnsi((IntPtr)units, unitsLength);
+                data.Description = Marshal.PtrToStringAnsi((IntPtr)description, descriptionLength);
 
                 return data;
             }
@@ -291,7 +292,7 @@ namespace SharpDX.Direct3D11
         public T OpenSharedResource<T>(IntPtr resourceHandle) where T : ComObject
         {
             IntPtr temp;
-            OpenSharedResource(resourceHandle, typeof(T).GUID, out temp);
+            OpenSharedResource(resourceHandle, Utilities.GetGuidFromType(typeof(T)), out temp);
             return FromPointer<T>(temp);
         }
 

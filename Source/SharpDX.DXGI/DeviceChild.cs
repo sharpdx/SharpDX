@@ -32,7 +32,7 @@ namespace SharpDX.DXGI
         public T GetDevice<T>() where T : ComObject
         {
             IntPtr temp;
-            GetDevice(typeof(T).GUID, out temp);
+            GetDevice(Utilities.GetGuidFromType(typeof(T)), out temp);
             return FromPointer<T>(temp);
         }
     }

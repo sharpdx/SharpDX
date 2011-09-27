@@ -112,7 +112,7 @@ namespace SharpDX
                 }
                 else
                 {
-                    num = Marshal.SizeOf(userBuffer.GetValue(0))*userBuffer.Length;
+                    num = Marshal.SizeOf(userBuffer.GetValue(new [] {0}))*userBuffer.Length;
                 }
                 _size = num;
                 _canRead = canRead;
@@ -1052,7 +1052,7 @@ namespace SharpDX
                 System.Diagnostics.Debug.Assert((_position + count) < _size);
 
                 // TODO: use Interop.memcpy
-                Utilities.CopyMemory((IntPtr) (_buffer + _position), source, (ulong) count);
+                Utilities.CopyMemory((IntPtr) (_buffer + _position), source, (int) count);
                 _position += count;
             }
         }

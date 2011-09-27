@@ -22,14 +22,16 @@ using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using SharpDX.Design;
 
 namespace SharpDX
 {
     /// <summary>
     ///   A half precision (16 bit) floating point value.
     /// </summary>
-    [Serializable, StructLayout(LayoutKind.Sequential), TypeConverter(typeof (HalfConverter))]
+    [Serializable, StructLayout(LayoutKind.Sequential)]
+#if !WIN8
+    [TypeConverter(typeof(SharpDX.Design.HalfConverter))]
+#endif
     public struct Half
     {
         private ushort value;

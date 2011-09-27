@@ -34,7 +34,7 @@ namespace SharpDX.XAPO
 
         // Internal native struct used for marshalling
         [StructLayout(LayoutKind.Sequential, Pack = 1 )]
-        internal unsafe partial struct __Native {	
+        internal partial struct __Native {	
             public IntPtr FormatPointer;
             public int MaxFrameCount;        
             internal unsafe void __MarshalFree()

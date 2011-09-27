@@ -1,6 +1,5 @@
 ﻿using System;
 using SharpDX.Multimedia;
-using SharpDX.Windows;
 
 namespace SharpDX.XAPO
 {

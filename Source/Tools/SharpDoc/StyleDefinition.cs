@@ -121,7 +121,7 @@ namespace SharpDoc
         /// </returns>
         public override string ToString()
         {
-            return string.Format("Name: {0}, Path: {1}{2}", Name, DirectoryPath, HasBaseStyle?", Base: " + BaseStyle:"");
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "Name: {0}, Path: {1}{2}", Name, DirectoryPath, HasBaseStyle?", Base: " + BaseStyle:"");
         }
     }
 }

@@ -62,7 +62,7 @@ namespace SharpDX
         public virtual T QueryInterface<T>() where T : ComObject
         {
             IntPtr parentPtr;
-            this.QueryInterface(typeof (T).GUID, out parentPtr);
+            this.QueryInterface(Utilities.GetGuidFromType(typeof(T)), out parentPtr);
             return FromPointer<T>(parentPtr);
         }
 
@@ -74,7 +74,7 @@ namespace SharpDX
         protected void QueryInterfaceFrom<T>(T fromObject) where T : ComObject
         {
             IntPtr parentPtr;
-            fromObject.QueryInterface(typeof(T).GUID, out parentPtr);
+            fromObject.QueryInterface(Utilities.GetGuidFromType(typeof(T)), out parentPtr);
             NativePointer = parentPtr;
         }
 

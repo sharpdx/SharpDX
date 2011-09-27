@@ -154,7 +154,7 @@ namespace SharpDX
         {
             if (_methodGetErrorDescription != null)
                 return _methodGetErrorDescription.Invoke(null, new object[] {_code}).ToString();
-            return string.Format("Unknown error (HRESULT = 0x{0:X})", _code);
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "Unknown error (HRESULT = 0x{0:X})", _code);
         }
 
         /// <summary>
@@ -168,6 +168,7 @@ namespace SharpDX
             }
         }
 
+#if !WIN8		
         static Result()
         {
             _methodGetErrorDescription = null;
@@ -180,7 +181,7 @@ namespace SharpDX
             {                
             }
         }
-
+#endif
         /// <summary>
         /// Result code Ok
         /// </summary>

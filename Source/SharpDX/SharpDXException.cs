@@ -18,8 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.Runtime.Serialization;
-using System.Security.Permissions;
 
 namespace SharpDX
 {
@@ -83,19 +81,6 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SharpDXException"/> class.
-        /// </summary>
-        /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
-        /// <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
-        /// <exception cref="T:System.ArgumentNullException">The <paramref name="info"/> parameter is null. </exception>
-        /// <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0). </exception>
-        protected SharpDXException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-            this.m_Result = (Result) info.GetValue("Result", typeof (Result));
-        }
-
-        /// <summary>
         ///   Initializes a new instance of the <see cref = "T:SharpDX.SharpDXException" /> class.
         /// </summary>
         /// <param name = "message">The message describing the exception.</param>
@@ -105,22 +90,6 @@ namespace SharpDX
             : base(string.Format(message, args), innerException)
         {
             this.m_Result = Result.Fail;
-        }
-
-        /// <summary>
-        ///   When overridden in a derived class, sets the <see cref = "T:System.Runtime.Serialization.SerializationInfo" /> with information about the exception.
-        /// </summary>
-        /// <param name = "info">The <see cref = "T:System.Runtime.Serialization.SerializationInfo" /> that holds the serialized object data about the exception being thrown.</param>
-        /// <param name = "context">The <see cref = "T:System.Runtime.Serialization.StreamingContext" /> that contains contextual information about the source or destination.</param>
-        [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.SerializationFormatter)]
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            if (info == null)
-            {
-                throw new ArgumentNullException("info");
-            }
-            info.AddValue("Result", this.m_Result);
-            base.GetObjectData(info, context);
         }
 
         /// <summary>

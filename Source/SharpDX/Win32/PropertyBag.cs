@@ -103,7 +103,7 @@ namespace SharpDX.Win32
             // Gets the property
             var result = nativePropertyBag.Read(1, ref propbag2, IntPtr.Zero, out value, out error);
             if (result.Failure || error.Failure)
-                throw new InvalidOperationException(string.Format("Property with name [{0}] is not valid for this instance", name));
+                throw new InvalidOperationException(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Property with name [{0}] is not valid for this instance", name));
             propbag2.Dispose();
             return value;
         }
@@ -169,7 +169,7 @@ namespace SharpDX.Win32
                 {
                     unsafe
                     {
-                        return new string((char*)pstrName);
+                        return Marshal.PtrToStringUni(pstrName);
                     }
                 }
                 set

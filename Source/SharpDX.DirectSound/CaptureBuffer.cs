@@ -51,7 +51,7 @@ namespace SharpDX.DirectSound
         public T GetEffect<T>(int index) where T : ComObject
         {
             IntPtr effectPtr;
-            GetEffect(DSound.AllObjects, index, typeof (T).GUID, out effectPtr);
+            GetEffect(DSound.AllObjects, index, Utilities.GetGuidFromType(typeof(T)), out effectPtr);
             return FromPointer<T>(effectPtr);
         }
 

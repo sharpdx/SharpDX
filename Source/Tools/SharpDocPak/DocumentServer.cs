@@ -139,8 +139,8 @@ namespace SharpDocPak
                 }
                 response.StatusCode = (int)HttpStatusCode.OK;
                 response.StatusDescription = "OK";
-                //response.AppendHeader("Expires", string.Format("{0:r}",expireTime));
-                //response.AppendHeader("Last-Modified", string.Format("{0:r}", lastTime));
+                //response.AppendHeader("Expires", string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:r}",expireTime));
+                //response.AppendHeader("Last-Modified", string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:r}", lastTime));
                 response.KeepAlive = keepAlive;
                 response.ContentLength64 = buffer.Length;
                 response.OutputStream.Write(buffer, 0, buffer.Length);

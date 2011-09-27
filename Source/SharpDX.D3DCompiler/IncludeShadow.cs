@@ -99,7 +99,7 @@ namespace SharpDX.D3DCompiler
                         if (shadow.frames.ContainsKey(pParentData))
                             parentStream = shadow.frames[pParentData].Stream;
 
-                        stream = callback.Open(includeType, new String((sbyte*)fileNameRef), parentStream);
+                        stream = callback.Open(includeType, Marshal.PtrToStringAnsi(fileNameRef), parentStream);
                         if (stream == null)
                             return Result.Fail;
 

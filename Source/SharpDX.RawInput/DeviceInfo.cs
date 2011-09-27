@@ -93,7 +93,7 @@ namespace SharpDX.RawInput
                     deviceInfo = new MouseInfo(ref rawDeviceInfo, deviceName, deviceHandle);
                     break;
                 default:
-                    throw new InvalidOperationException(string.Format("Unsupported Device Type [{0}]", (int)rawDeviceInfo.Type));
+                    throw new InvalidOperationException(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Unsupported Device Type [{0}]", (int)rawDeviceInfo.Type));
             }
             return deviceInfo;
         }

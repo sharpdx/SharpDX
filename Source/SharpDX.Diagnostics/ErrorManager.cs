@@ -49,8 +49,8 @@ namespace SharpDX.Diagnostics
             {
                 string prefix = unchecked((int) Code) < 0 ? "Error: " : "";
                 if (string.IsNullOrEmpty(Description))
-                    return string.Format("{0}{1} (0x{2:X})", prefix, CodeString, Code);
-                return string.Format("{0}{1} (0x{2:X}) {3}", prefix, CodeString, Code, Description);
+                    return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}{1} (0x{2:X})", prefix, CodeString, Code);
+                return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}{1} (0x{2:X}) {3}", prefix, CodeString, Code, Description);
             }
         }
 

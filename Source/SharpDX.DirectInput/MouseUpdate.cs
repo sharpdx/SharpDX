@@ -44,7 +44,7 @@ namespace SharpDX.DirectInput
                 value = (Value & 0x80) != 0;
             else
                 value = Value;
-            return string.Format("Offset: {0}, Value: {1} Timestamp: {2} Sequence: {3}", Offset, value, Timestamp, Sequence);
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "Offset: {0}, Value: {1} Timestamp: {2} Sequence: {3}", Offset, value, Timestamp, Sequence);
         }
     }
 }

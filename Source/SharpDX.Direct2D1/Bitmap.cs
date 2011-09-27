@@ -99,7 +99,7 @@ namespace SharpDX.Direct2D1
         public Bitmap(RenderTarget renderTarget, Bitmap bitmap, SharpDX.Direct2D1.BitmapProperties? bitmapProperties)
             : base(IntPtr.Zero)
         {
-            renderTarget.CreateSharedBitmap(typeof(Bitmap).GUID, bitmap.NativePointer, bitmapProperties, this);
+            renderTarget.CreateSharedBitmap(Utilities.GetGuidFromType(typeof(Bitmap)), bitmap.NativePointer, bitmapProperties, this);
         }
 
         /// <summary>	
@@ -123,7 +123,7 @@ namespace SharpDX.Direct2D1
         public Bitmap(RenderTarget renderTarget, Surface surface, SharpDX.Direct2D1.BitmapProperties? bitmapProperties)
             : base(IntPtr.Zero)
         {
-            renderTarget.CreateSharedBitmap(typeof(Surface).GUID, surface.NativePointer, bitmapProperties, this);
+            renderTarget.CreateSharedBitmap(Utilities.GetGuidFromType(typeof(Surface)), surface.NativePointer, bitmapProperties, this);
         }
 
 

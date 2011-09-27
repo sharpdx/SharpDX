@@ -85,7 +85,7 @@ using System.Text.RegularExpressions;
         private void AddDoTemplateCode(Location location, string content)
         {
             if (_isTemplateClassCode)
-                throw new InvalidOperationException(string.Format("Cannot add Process code [{0}] after Process Class level code", content));
+                throw new InvalidOperationException(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Cannot add Process code [{0}] after Process Class level code", content));
 
             _doTemplateCode.AppendLine().AppendFormat("#line {0} \"{1}\"", location.Line, location.FileName).AppendLine();
             _doTemplateCode.Append(content);
@@ -188,7 +188,7 @@ using System.Text.RegularExpressions;
             // Build parameters for template
             var parametersCode = new StringBuilder();
             foreach (var parameterValueType in _parameters.Values)
-                parametersCode.Append(string.Format("public {0} {1} {{ get; set; }}\n", parameterValueType.Type.FullName, parameterValueType.Name));
+                parametersCode.Append(string.Format(System.Globalization.CultureInfo.InvariantCulture, "public {0} {1} {{ get; set; }}\n", parameterValueType.Type.FullName, parameterValueType.Name));
 
             // Build import namespaces for template
             var importNamespaceCode = new StringBuilder();

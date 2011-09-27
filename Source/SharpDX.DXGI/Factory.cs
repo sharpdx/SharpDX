@@ -31,7 +31,7 @@ namespace SharpDX.DXGI
         public Factory() : base(IntPtr.Zero)
         {
             IntPtr factoryPtr;
-            DXGI.CreateDXGIFactory(GetType().GUID, out factoryPtr);
+            DXGI.CreateDXGIFactory(Utilities.GetGuidFromType(GetType()), out factoryPtr);
             NativePointer = factoryPtr;
         }
 #if !WIN8

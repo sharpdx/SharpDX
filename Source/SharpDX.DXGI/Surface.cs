@@ -56,7 +56,7 @@ namespace SharpDX.DXGI
         public static Surface FromSwapChain(SwapChain swapChain, int index)
         {
             IntPtr surfacePointer;
-            swapChain.GetBuffer(index, typeof (Surface).GUID, out surfacePointer);
+            swapChain.GetBuffer(index, Utilities.GetGuidFromType(typeof (Surface)), out surfacePointer);
             return new Surface(surfacePointer);
         }
     }

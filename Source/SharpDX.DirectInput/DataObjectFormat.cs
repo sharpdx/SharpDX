@@ -79,7 +79,7 @@ namespace SharpDX.DirectInput
 
         // Internal native struct used for marshalling
         [StructLayout(LayoutKind.Sequential, Pack = 0)]
-        internal unsafe partial struct __Native
+        internal partial struct __Native
         {
             public System.IntPtr GuidPointer;
             public int Offset;

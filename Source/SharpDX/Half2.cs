@@ -21,14 +21,16 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using SharpDX.Design;
 
 namespace SharpDX
 {
     /// <summary>
     /// Defines a two component vector, using half precision floating point coordinates.
     /// </summary>
-    [Serializable, StructLayout(LayoutKind.Sequential), TypeConverter(typeof(Half2Converter))]
+    [Serializable, StructLayout(LayoutKind.Sequential)]
+#if !WIN8
+    [TypeConverter(typeof(SharpDX.Design.Half2Converter))]
+#endif
     public struct Half2 : IEquatable<Half2>
     {
         /// <summary>

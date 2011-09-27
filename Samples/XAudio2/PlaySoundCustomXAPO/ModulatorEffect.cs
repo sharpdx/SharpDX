@@ -42,7 +42,7 @@ namespace PlaySoundCustomXAPO
         {
             RegistrationProperties = new RegistrationProperties()
                                          {
-                                             Clsid = typeof(ModulatorEffect).GUID,
+                                             Clsid = Utilities.GetGuidFromType(typeof(ModulatorEffect)),
                                              CopyrightInfo = "Copyright",
                                              FriendlyName = "Modulator",
                                              MaxInputBufferCount = 1,

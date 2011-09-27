@@ -313,7 +313,7 @@ namespace SharpDoc.Model
         /// </returns>
         public override string ToString()
         {
-            return string.Format("Id: {0}, NormalizedId: {1}, Name: {2}, FullName: {3}, FileName: {4}, SubTopics.Count: {5}", Id, NormalizedId, Name, FullName, FileName, SubTopics.Count);
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "Id: {0}, NormalizedId: {1}, Name: {2}, FullName: {3}, FileName: {4}, SubTopics.Count: {5}", Id, NormalizedId, Name, FullName, FileName, SubTopics.Count);
         }
     }
 }

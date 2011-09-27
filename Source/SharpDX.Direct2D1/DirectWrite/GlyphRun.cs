@@ -47,7 +47,7 @@ namespace SharpDX.DirectWrite
 
         // Internal native struct used for marshalling
         [StructLayout(LayoutKind.Sequential, Pack = 0)]
-        internal unsafe partial struct __Native
+        internal partial struct __Native
         {
             public IntPtr FontFace;
             public float FontEmSize;
@@ -123,7 +123,7 @@ namespace SharpDX.DirectWrite
             if (this.Advances != null)
             {
                 if (@ref.GlyphCount >= 0 && @ref.GlyphCount != this.Advances.Length)
-                    throw new InvalidOperationException(string.Format("Invalid length for array Advances [{0}] and Indices [{1}]. Indices, Advances and Offsets array must have same size - or may be null", this.Advances.Length, @ref.GlyphCount));
+                    throw new InvalidOperationException(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Invalid length for array Advances [{0}] and Indices [{1}]. Indices, Advances and Offsets array must have same size - or may be null", this.Advances.Length, @ref.GlyphCount));
                 @ref.GlyphCount = this.Advances.Length;
                 @ref.GlyphAdvances = Marshal.AllocHGlobal(this.Advances.Length * sizeof(float));
                 Utilities.Write(@ref.GlyphAdvances, Advances, 0, this.Advances.Length);
@@ -132,7 +132,7 @@ namespace SharpDX.DirectWrite
             if (this.Offsets != null)
             {
                 if (@ref.GlyphCount >= 0 && @ref.GlyphCount != this.Offsets.Length)
-                    throw new InvalidOperationException( string.Format("Invalid length for array Offsets [{0}]. Indices, Advances and Offsets array must have same size (Current is [{1}]- or may be null", this.Offsets.Length, @ref.GlyphCount));
+                    throw new InvalidOperationException( string.Format(System.Globalization.CultureInfo.InvariantCulture, "Invalid length for array Offsets [{0}]. Indices, Advances and Offsets array must have same size (Current is [{1}]- or may be null", this.Offsets.Length, @ref.GlyphCount));
                 @ref.GlyphCount = this.Offsets.Length;
                 @ref.GlyphOffsets = Marshal.AllocHGlobal(this.Offsets.Length * sizeof(GlyphOffset));
                 Utilities.Write(@ref.GlyphOffsets, Offsets, 0, this.Offsets.Length);

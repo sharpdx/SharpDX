@@ -49,7 +49,7 @@ namespace SharpDX.WIC
         {
             int bitsPerPixel = GetBitsPerPixel(guid);
             if (bitsPerPixel == 0)
-                throw new ArgumentException(string.Format("Invalid PixelFormat guid [{0}]. Unable to calculate stride", guid));
+                throw new ArgumentException(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Invalid PixelFormat guid [{0}]. Unable to calculate stride", guid));
             return (bitsPerPixel*width + 7)/8;
         }
 

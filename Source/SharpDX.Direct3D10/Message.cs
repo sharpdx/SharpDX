@@ -27,7 +27,7 @@ namespace SharpDX.Direct3D10
     {
         // Internal native struct used for marshalling
         [StructLayout(LayoutKind.Sequential, Pack = 0)]
-        internal unsafe partial struct __Native
+        internal partial struct __Native
         {
             public SharpDX.Direct3D10.MessageCategory Category;
             public SharpDX.Direct3D10.MessageSeverity Severity;
@@ -54,7 +54,7 @@ namespace SharpDX.Direct3D10
             this.Category = @ref.Category;
             this.Severity = @ref.Severity;
             this.Id = @ref.Id;
-            this.Description = (@ref.PDescription == IntPtr.Zero) ? null : new string((sbyte*)@ref.PDescription);
+            this.Description = (@ref.PDescription == IntPtr.Zero) ? null : Marshal.PtrToStringAnsi(@ref.PDescription);
             this.DescriptionByteLength = @ref.DescriptionByteLength;
         }
         // Method to marshal from managed struct tot native

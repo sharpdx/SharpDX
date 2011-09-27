@@ -124,7 +124,7 @@ namespace SharpDoc.Model
         /// </returns>
         public override string ToString()
         {
-            return string.Format("method {0}", FullName);
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "method {0}", FullName);
         }
     }
 }

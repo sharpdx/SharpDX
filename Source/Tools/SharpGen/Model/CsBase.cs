@@ -415,7 +415,7 @@ namespace SharpGen.Model
             if (csType == null) 
                 return match.Value;
 
-            return string.Format("<see cref=\"{0}\"/>", csType.QualifiedName);
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "<see cref=\"{0}\"/>", csType.QualifiedName);
         }
     }
 }

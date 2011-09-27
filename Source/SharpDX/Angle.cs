@@ -44,6 +44,7 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Globalization;
 
@@ -54,6 +55,7 @@ namespace SharpDX
     /// Represents a unit independant angle using a single-precision floating-point
     /// internal representation.
     /// </summary>
+    [StructLayout(LayoutKind.Explicit)]
     [Serializable]
     public struct AngleSingle : IComparable, IComparable<AngleSingle>, IEquatable<AngleSingle>, IFormattable
     {
@@ -90,7 +92,11 @@ namespace SharpDX
         /// <summary>
         /// The internal representation of the angle.
         /// </summary>
+        [FieldOffset(0)]
         float radians;
+
+        [FieldOffset(0)]
+        private int radiansInt;
 
         /// <summary>
         /// Initializes a new instance of the SharpDX.AngleSingle structure with the
@@ -100,6 +106,7 @@ namespace SharpDX
         /// <param name="type">The type of unit the angle argument is.</param>
         public AngleSingle(float angle, AngleType type)
         {
+            radiansInt = 0;
             switch (type)
             {
                 case AngleType.Revolution:
@@ -132,6 +139,7 @@ namespace SharpDX
         /// <param name="radius">The radius of the circle.</param>
         public AngleSingle(float arcLength, float radius)
         {
+            radiansInt = 0;
             radians = arcLength / radius;
         }
 
@@ -759,7 +767,7 @@ namespace SharpDX
         /// <returns>A 32-bit signed integer hash code.</returns>
         public override int GetHashCode()
         {
-            return (int)(BitConverter.DoubleToInt64Bits(radians) % int.MaxValue);
+            return radiansInt;
         }
 
         /// <summary>

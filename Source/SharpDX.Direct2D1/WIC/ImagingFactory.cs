@@ -30,7 +30,7 @@ namespace SharpDX.WIC
         public ImagingFactory()
         {
             IntPtr temp;
-            Result result = Utilities.CoCreateInstance(WICImagingFactoryClsid, IntPtr.Zero, Utilities.CLSCTX.ClsctxInprocServer, typeof(ImagingFactory).GUID, out temp);
+            Result result = Utilities.CoCreateInstance(WICImagingFactoryClsid, IntPtr.Zero, Utilities.CLSCTX.ClsctxInprocServer, Utilities.GetGuidFromType(typeof(ImagingFactory)), out temp);
             result.CheckError();
             NativePointer = temp;
         }

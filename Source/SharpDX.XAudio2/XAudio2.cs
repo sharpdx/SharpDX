@@ -70,11 +70,11 @@ namespace SharpDX.XAudio2
             Guid clsid = (flags == XAudio2Flags.DebugEngine) ? CLSID_XAudio2_Debug : CLSID_XAudio2;
 
             // Initialize for multithreaded
-            var result = Utilities.CoInitializeEx(IntPtr.Zero, Utilities.CoInit.MultiThreaded);
-            result.CheckError();
+            //var result = Utilities.CoInitializeEx(IntPtr.Zero, Utilities.CoInit.MultiThreaded);
+            //result.CheckError();
 
             IntPtr temp;
-            result = Utilities.CoCreateInstance(clsid, IntPtr.Zero, Utilities.CLSCTX.ClsctxInprocServer, typeof(XAudio2).GUID, out temp);
+            var result = Utilities.CoCreateInstance(clsid, IntPtr.Zero, Utilities.CLSCTX.ClsctxInprocServer, Utilities.GetGuidFromType(typeof(XAudio2)), out temp);
             result.CheckError();
             NativePointer = temp;
 

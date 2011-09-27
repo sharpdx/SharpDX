@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Globalization;
 
 namespace SharpDX.Multimedia
 {
@@ -119,7 +120,7 @@ namespace SharpDX.Multimedia
         private static uint ToFourCC(string fourCC)
         {
             if (fourCC.Length != 4)
-                throw new ArgumentException(string.Format("Invalid length for FourCC(\"{0}\". Must be be 4 characters long ", fourCC), "fourCC");
+                throw new ArgumentException(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Invalid length for FourCC(\"{0}\". Must be be 4 characters long ", fourCC), "fourCC");
             return ((uint)fourCC[3]) << 24 | ((uint)fourCC[2]) << 16 | ((uint)fourCC[1]) << 8 | ((uint)fourCC[0]);
         }
     }

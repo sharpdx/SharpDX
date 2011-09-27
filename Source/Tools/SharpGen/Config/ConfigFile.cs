@@ -580,7 +580,7 @@ namespace SharpGen.Config
         /// </returns>
         public override string ToString()
         {
-            return string.Format("config {0}", Id);
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "config {0}", Id);
         }
     }
 }

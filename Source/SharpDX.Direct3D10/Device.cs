@@ -210,7 +210,7 @@ namespace SharpDX.Direct3D10
         public T OpenSharedResource<T>(IntPtr resourceHandle) where T : ComObject
         {
             IntPtr temp;
-            OpenSharedResource(resourceHandle, typeof(T).GUID, out temp);
+            OpenSharedResource(resourceHandle, Utilities.GetGuidFromType(typeof(T)), out temp);
             return FromPointer<T>(temp);
         }
 

@@ -33,7 +33,7 @@ namespace SharpGen.Config
 
         public override string ToString()
         {
-            return string.Format("{0} visibility:{1}", base.ToString(), Visibility.HasValue ? Visibility.Value.ToString() : "undef");
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0} visibility:{1}", base.ToString(), Visibility.HasValue ? Visibility.Value.ToString() : "undef");
         }
     }
 
@@ -45,7 +45,7 @@ namespace SharpGen.Config
 
         public override string ToString()
         {
-            return string.Format("{0} macro:{1}", base.ToString(), Macro);
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0} macro:{1}", base.ToString(), Macro);
         }
     }
 }

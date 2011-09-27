@@ -75,7 +75,11 @@ namespace SharpDX.Diagnostics
                     referenceList = new List<ObjectReference>();
                     ObjectReferences.Add(comObject.NativePointer, referenceList);
                 }
+#if WIN8
+                referenceList.Add(new ObjectReference(DateTime.Now, comObject));
+#else
                 referenceList.Add(new ObjectReference(DateTime.Now, comObject, new StackTrace(3, true)));
+#endif
             }
         }
 

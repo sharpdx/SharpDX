@@ -107,7 +107,7 @@ namespace SharpGen.Model
 
         public override string ToString()
         {
-            return string.Format("csinterface {0} => {1}", CppElementName, QualifiedName);
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "csinterface {0} => {1}", CppElementName, QualifiedName);
         }
 
         /// <summary>

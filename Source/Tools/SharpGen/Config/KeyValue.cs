@@ -67,7 +67,7 @@ namespace SharpGen.Config
         /// </returns>
         public override string ToString()
         {
-            return string.Format("{0}=\"{1}\"", Name, Value);
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}=\"{1}\"", Name, Value);
         }
     }
 }

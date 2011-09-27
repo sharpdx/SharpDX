@@ -40,7 +40,7 @@ namespace SharpDoc.Model
         /// </returns>
         public override string ToString()
         {
-            return string.Format("field {0} ({1})", Name, DeclaringType.Name);
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "field {0} ({1})", Name, DeclaringType.Name);
         }
     }
 }

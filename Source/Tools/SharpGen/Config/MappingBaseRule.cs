@@ -62,7 +62,7 @@ namespace SharpGen.Config
 
                 }                
             }
-            return string.Format("{0} {1}", base.ToString(), type);
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0} {1}", base.ToString(), type);
         }
     }
 }

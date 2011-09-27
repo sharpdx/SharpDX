@@ -62,7 +62,7 @@ namespace SharpGen.Config
 
         public override string ToString()
         {
-            return string.Format("{0} {1} {2}", base.ToString(), SizeOf.HasValue ? "sizeof:" + SizeOf.Value : "", Align.HasValue ? "align:" + Align.Value : "");
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0} {1} {2}", base.ToString(), SizeOf.HasValue ? "sizeof:" + SizeOf.Value : "", Align.HasValue ? "align:" + Align.Value : "");
         }
     }
 }
