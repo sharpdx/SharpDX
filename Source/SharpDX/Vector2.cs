@@ -54,7 +54,9 @@ namespace SharpDX
     /// </summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
+#if !WIN8
     [TypeConverter(typeof(SharpDX.Design.Vector2Converter))]
+#endif
     public struct Vector2 : IEquatable<Vector2>, IFormattable
     {
         /// <summary>

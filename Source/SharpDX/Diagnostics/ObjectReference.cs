@@ -35,6 +35,14 @@ namespace SharpDX.Diagnostics
         /// <param name="creationTime">The creation time.</param>
         /// <param name="comObject">The com object to track.</param>
         /// <param name="stackTrace">The stack trace.</param>
+#if WIN8
+        public ObjectReference(DateTime creationTime, ComObject comObject)
+        {
+            CreationTime = creationTime;
+            // Creates a long week reference to the ComObject
+            Object = new WeakReference(comObject, true);
+        }
+#else
         public ObjectReference(DateTime creationTime, ComObject comObject, StackTrace stackTrace)
         {
             CreationTime = creationTime;
@@ -42,6 +50,7 @@ namespace SharpDX.Diagnostics
             Object = new WeakReference(comObject, true);
             StackTrace = stackTrace;
         }
+#endif
 
         /// <summary>
         /// Gets the time the object was created.
@@ -55,12 +64,13 @@ namespace SharpDX.Diagnostics
         /// <value>The weak reference to the tracked object.</value>
         public WeakReference Object { get; private set; }
 
+#if !WIN8
         /// <summary>
         /// Gets the stack trace when the track object was created.
         /// </summary>
         /// <value>The stack trace.</value>
-        public StackTrace StackTrace { get; private set; }
-
+//        public StackTrace StackTrace { get; private set; }
+#endif
         /// <summary>
         /// Gets a value indicating whether the tracked object is alive.
         /// </summary>
@@ -81,6 +91,7 @@ namespace SharpDX.Diagnostics
 
             var builder = new StringBuilder();
             builder.AppendFormat(CultureInfo.InvariantCulture, "Active COM Object: [0x{0:X}] Class: [{1}] Time [{2}] Stack:", comObject.NativePointer.ToInt64(), comObject.GetType().FullName, CreationTime).AppendLine();
+#if !WIN8
             foreach (var stackFrame in StackTrace.GetFrames())
             {
                 // Skip system/generated frame
@@ -90,6 +101,7 @@ namespace SharpDX.Diagnostics
                                      stackFrame.GetFileColumnNumber(),
                                      stackFrame.GetMethod()).AppendLine();
             }
+#endif
             return builder.ToString();
         }
     }

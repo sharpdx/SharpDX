@@ -34,7 +34,7 @@ namespace SharpDX.DXGI
             DXGI.CreateDXGIFactory(GetType().GUID, out factoryPtr);
             NativePointer = factoryPtr;
         }
-
+#if !WIN8
         /// <summary>	
         /// Create an adapter interface that represents a software adapter.	
         /// </summary>	
@@ -48,7 +48,7 @@ namespace SharpDX.DXGI
         {
             return CreateSoftwareAdapter(Marshal.GetHINSTANCE(module));
         }
-
+#endif
         /// <summary>
         ///   Return the number of available adapters from this factory.
         /// </summary>

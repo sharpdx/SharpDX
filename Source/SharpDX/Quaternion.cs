@@ -56,7 +56,9 @@ namespace SharpDX
     /// </summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
+#if !WIN8
     [TypeConverter(typeof(SharpDX.Design.QuaternionConverter))]
+#endif
     public struct Quaternion : IEquatable<Quaternion>, IFormattable
     {
         /// <summary>

@@ -56,7 +56,9 @@ namespace SharpDX
     /// </summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
+#if !WIN8
     [TypeConverter(typeof(SharpDX.Design.MatrixConverter))]
+#endif
     public struct Matrix : IEquatable<Matrix>, IFormattable
     {
         /// <summary>

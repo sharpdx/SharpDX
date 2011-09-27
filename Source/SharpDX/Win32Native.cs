@@ -98,6 +98,7 @@ namespace SharpDX
             public byte tmPitchAndFamily;
             public byte tmCharSet;
         }
+#if !WIN8
 
         [StructLayout(LayoutKind.Sequential)]
         public struct NativeMessage
@@ -175,5 +176,6 @@ namespace SharpDX
 
         [DllImport("kernel32.dll", EntryPoint = "GetModuleHandle", CharSet = CharSet.Auto)]
         public static extern IntPtr GetModuleHandle(string lpModuleName);
+#endif
     }
 }

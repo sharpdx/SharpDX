@@ -391,13 +391,13 @@ namespace SharpDX
         /// Loads a native library.
         /// </summary>
         /// <param name="dllName">Name of the DLL.</param>
-        /// <exception cref="DllNotFoundException">If dll was not found</exception>
+        /// <exception cref="SharpDXException">If dll was not found</exception>
         /// <returns></returns>
         public static IntPtr LoadLibrary(string dllName)
         {
             IntPtr result = LoadLibrary_(dllName);
             if (result == IntPtr.Zero)
-                throw new DllNotFoundException(dllName);
+                throw new SharpDXException(dllName);
             return result;
         }
         [DllImport("kernel32", EntryPoint = "LoadLibrary", SetLastError = true, CharSet = CharSet.Ansi)]
@@ -409,13 +409,13 @@ namespace SharpDX
         /// </summary>
         /// <param name="handle">The handle.</param>
         /// <param name="dllFunctionToImport">The DLL function to import.</param>
-        /// <exception cref="EntryPointNotFoundException">If the function was not found</exception>
+        /// <exception cref="SharpDXException">If the function was not found</exception>
         /// <returns></returns>
         public static IntPtr GetProcAddress(IntPtr handle, string dllFunctionToImport)
         {
             IntPtr result = GetProcAddress_(handle, dllFunctionToImport);
             if (result == IntPtr.Zero)
-                throw new EntryPointNotFoundException(dllFunctionToImport);
+                throw new SharpDXException(dllFunctionToImport);
             return result;
         }
         [DllImport("kernel32", EntryPoint = "GetProcAddress", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]

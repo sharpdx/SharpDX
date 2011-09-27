@@ -42,6 +42,7 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
+#if !WIN8
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -180,3 +181,4 @@ namespace SharpDX.Design
         }
     }
 }
+#endif

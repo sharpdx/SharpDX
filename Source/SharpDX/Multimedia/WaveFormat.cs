@@ -315,7 +315,7 @@ namespace SharpDX.Multimedia
         {
             int formatChunkLength = br.ReadInt32();
             if (formatChunkLength < 16)
-                throw new ApplicationException("Invalid WaveFormat Structure");
+                throw new SharpDXException("Invalid WaveFormat Structure");
             this.waveFormatTag = (WaveFormatEncoding)br.ReadUInt16();
             this.channels = br.ReadInt16();
             this.sampleRate = br.ReadInt32();

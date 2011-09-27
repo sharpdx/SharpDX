@@ -32,6 +32,7 @@ namespace SharpDX.Diagnostics
     {
         private static readonly Dictionary<IntPtr, List<ObjectReference>> ObjectReferences = new Dictionary<IntPtr, List<ObjectReference>>();
 
+#if !WIN8
         /// <summary>
         /// Initializes the <see cref="ObjectTracker"/> class.
         /// </summary>
@@ -55,7 +56,8 @@ namespace SharpDX.Diagnostics
                     Console.WriteLine(text);
             }
         }
-
+#endif
+        
         /// <summary>
         /// Tracks the specified COM object.
         /// </summary>
