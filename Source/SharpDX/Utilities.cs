@@ -181,9 +181,11 @@ namespace SharpDX
         /// <returns>The guid associated with this type</returns>
         public static Guid GetGuidFromType(Type type)
         {
-            // TODO: We will have call type.GetTypeInfo().GUID on Win8
-            // Once Visual Studio 11 (not developer preview) is ready for Win8, we will be able to port it
+#if WIN8
+            return type.GetTypeInfo().GUID;
+#else
             return type.GUID;
+#endif
         }
 
         public static void ConvertRECTToRectangle(ref System.Drawing.Rectangle rect)

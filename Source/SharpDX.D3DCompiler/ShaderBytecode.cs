@@ -166,33 +166,29 @@ namespace SharpDX.D3DCompiler
         public static ShaderBytecode Compile(string shaderSource, string profile, ShaderFlags shaderFlags,
                                              EffectFlags effectFlags, string sourceFileName = "unknown", SecondaryDataFlags secondaryDataFlags = SecondaryDataFlags.None, DataStream secondaryData = null)
         {
-            string compilationErrors = null;
             if (string.IsNullOrEmpty(shaderSource))
             {
                 throw new ArgumentNullException("shaderSource");
             }
-            return Compile(Encoding.ASCII.GetBytes(shaderSource), null, profile, shaderFlags, effectFlags, null, null,
-                           out compilationErrors, sourceFileName, secondaryDataFlags, secondaryData);
-        }
-
-        /// <summary>
-        /// Compiles the provided shader or effect source.
-        /// </summary>
-        /// <param name="shaderSource">An array of bytes containing the raw source of the shader or effect to compile.</param>
-        /// <param name="profile">The shader target or set of shader features to compile against.</param>
-        /// <param name="shaderFlags">Shader compilation options.</param>
-        /// <param name="effectFlags">Effect compilation options.</param>
-        /// <param name="sourceFileName">Name of the source file.</param>
-        /// <param name="secondaryDataFlags">The secondary data flags.</param>
-        /// <param name="secondaryData">The secondary data.</param>
-        /// <returns>
-        /// The compiled shader bytecode, or <c>null</c> if the method fails.
-        /// </returns>
-        public static ShaderBytecode Compile(byte[] shaderSource, string profile, ShaderFlags shaderFlags,
-                                             EffectFlags effectFlags, string sourceFileName = "unknown", SecondaryDataFlags secondaryDataFlags = SecondaryDataFlags.None, DataStream secondaryData = null)
-        {
-            string compilationErrors = null;
-            return Compile(shaderSource, null, profile, shaderFlags, effectFlags, null, null, out compilationErrors, sourceFileName, secondaryDataFlags, secondaryData);
+            var shaderSourcePtr = Marshal.StringToHGlobalAnsi(shaderSource);
+            try
+            {
+                return Compile(
+                    shaderSourcePtr,
+                    shaderSource.Length,
+                    null,
+                    profile,
+                    shaderFlags,
+                    effectFlags,
+                    null,
+                    null,              
+                    sourceFileName,
+                    secondaryDataFlags,
+                    secondaryData);
+            } finally
+            {
+                if (shaderSourcePtr != IntPtr.Zero) Marshal.FreeHGlobal(shaderSourcePtr);
+            }
         }
 
         /// <summary>
@@ -212,35 +208,20 @@ namespace SharpDX.D3DCompiler
         public static ShaderBytecode Compile(string shaderSource, string entryPoint, string profile,
                                              ShaderFlags shaderFlags, EffectFlags effectFlags, string sourceFileName = "unknown", SecondaryDataFlags secondaryDataFlags = SecondaryDataFlags.None, DataStream secondaryData = null)
         {
-            string compilationErrors = null;
             if (string.IsNullOrEmpty(shaderSource))
             {
                 throw new ArgumentNullException("shaderSource");
             }
-            return Compile(Encoding.ASCII.GetBytes(shaderSource), entryPoint, profile, shaderFlags, effectFlags, null,
-                           null, out compilationErrors, sourceFileName, secondaryDataFlags, secondaryData);
-        }
-
-        /// <summary>
-        /// Compiles the provided shader or effect source.
-        /// </summary>
-        /// <param name="shaderSource">An array of bytes containing the raw source of the shader or effect to compile.</param>
-        /// <param name="entryPoint">The name of the shader entry-point function, or <c>null</c> for an effect file.</param>
-        /// <param name="profile">The shader target or set of shader features to compile against.</param>
-        /// <param name="shaderFlags">Shader compilation options.</param>
-        /// <param name="effectFlags">Effect compilation options.</param>
-        /// <param name="sourceFileName">Name of the source file.</param>
-        /// <param name="secondaryDataFlags">The secondary data flags.</param>
-        /// <param name="secondaryData">The secondary data.</param>
-        /// <returns>
-        /// The compiled shader bytecode, or <c>null</c> if the method fails.
-        /// </returns>
-        public static ShaderBytecode Compile(byte[] shaderSource, string entryPoint, string profile,
-                                             ShaderFlags shaderFlags, EffectFlags effectFlags, string sourceFileName = "unknown", SecondaryDataFlags secondaryDataFlags = SecondaryDataFlags.None, DataStream secondaryData = null)
-        {
-            string compilationErrors = null;
-            return Compile(shaderSource, entryPoint, profile, shaderFlags, effectFlags, null, null,
-                           out compilationErrors, sourceFileName, secondaryDataFlags, secondaryData);
+            var shaderSourcePtr = Marshal.StringToHGlobalAnsi(shaderSource);
+            try
+            {
+                return Compile(shaderSourcePtr, shaderSource.Length, entryPoint, profile, shaderFlags, effectFlags, null,
+                               null, sourceFileName, secondaryDataFlags, secondaryData);
+            }
+            finally
+            {
+                if (shaderSourcePtr != IntPtr.Zero) Marshal.FreeHGlobal(shaderSourcePtr);
+            }
         }
 
         /// <summary>
@@ -259,15 +240,23 @@ namespace SharpDX.D3DCompiler
         /// The compiled shader bytecode, or <c>null</c> if the method fails.
         /// </returns>
         public static ShaderBytecode Compile(string shaderSource, string profile, ShaderFlags shaderFlags,
-                                             EffectFlags effectFlags, ShaderMacro[] defines, Include include, string sourceFileName = "unknown", SecondaryDataFlags secondaryDataFlags = SecondaryDataFlags.None, DataStream secondaryData = null)
+                                             EffectFlags effectFlags, ShaderMacro[] defines, Include include,
+                                             string sourceFileName = "unknown", SecondaryDataFlags secondaryDataFlags = SecondaryDataFlags.None, DataStream secondaryData = null)
         {
-            string compilationErrors = null;
             if (string.IsNullOrEmpty(shaderSource))
             {
                 throw new ArgumentNullException("shaderSource");
             }
-            return Compile(Encoding.ASCII.GetBytes(shaderSource), null, profile, shaderFlags, effectFlags, defines,
-                           include, out compilationErrors, sourceFileName, secondaryDataFlags, secondaryData);
+            var shaderSourcePtr = Marshal.StringToHGlobalAnsi(shaderSource);
+            try
+            {
+                return Compile(shaderSourcePtr, shaderSource.Length, null, profile, shaderFlags, effectFlags, defines,
+                               include, sourceFileName, secondaryDataFlags, secondaryData);
+            }
+            finally
+            {
+                if (shaderSourcePtr != IntPtr.Zero) Marshal.FreeHGlobal(shaderSourcePtr);
+            }
         }
 
         /// <summary>
@@ -286,63 +275,11 @@ namespace SharpDX.D3DCompiler
         /// The compiled shader bytecode, or <c>null</c> if the method fails.
         /// </returns>
         public static ShaderBytecode Compile(byte[] shaderSource, string profile, ShaderFlags shaderFlags,
-                                             EffectFlags effectFlags, ShaderMacro[] defines, Include include, string sourceFileName = "unknown", SecondaryDataFlags secondaryDataFlags = SecondaryDataFlags.None, DataStream secondaryData = null)
-        {
-            string compilationErrors = null;
-            return Compile(shaderSource, null, profile, shaderFlags, effectFlags, defines, include,
-                           out compilationErrors, sourceFileName, secondaryDataFlags, secondaryData);
-        }
-
-        /// <summary>
-        /// Compiles the provided shader or effect source.
-        /// </summary>
-        /// <param name="shaderSource">A string containing the source of the shader or effect to compile.</param>
-        /// <param name="profile">The shader target or set of shader features to compile against.</param>
-        /// <param name="shaderFlags">Shader compilation options.</param>
-        /// <param name="effectFlags">Effect compilation options.</param>
-        /// <param name="defines">A set of macros to define during compilation.</param>
-        /// <param name="include">An interface for handling include files.</param>
-        /// <param name="compilationErrors">When the method completes, contains a string of compilation errors, or an empty string if compilation succeeded.</param>
-        /// <param name="sourceFileName">Name of the source file.</param>
-        /// <param name="secondaryDataFlags">The secondary data flags.</param>
-        /// <param name="secondaryData">The secondary data.</param>
-        /// <returns>
-        /// The compiled shader bytecode, or <c>null</c> if the method fails.
-        /// </returns>
-        public static ShaderBytecode Compile(string shaderSource, string profile, ShaderFlags shaderFlags,
                                              EffectFlags effectFlags, ShaderMacro[] defines, Include include,
-                                             out string compilationErrors, string sourceFileName = "unknown", SecondaryDataFlags secondaryDataFlags = SecondaryDataFlags.None, DataStream secondaryData = null)
-        {
-            if (string.IsNullOrEmpty(shaderSource))
-            {
-                throw new ArgumentNullException("shaderSource");
-            }
-            return Compile(Encoding.ASCII.GetBytes(shaderSource), null, profile, shaderFlags, effectFlags, defines,
-                           include, out compilationErrors, sourceFileName, secondaryDataFlags, secondaryData);
-        }
-
-        /// <summary>
-        /// Compiles the provided shader or effect source.
-        /// </summary>
-        /// <param name="shaderSource">An array of bytes containing the raw source of the shader or effect to compile.</param>
-        /// <param name="profile">The shader target or set of shader features to compile against.</param>
-        /// <param name="shaderFlags">Shader compilation options.</param>
-        /// <param name="effectFlags">Effect compilation options.</param>
-        /// <param name="defines">A set of macros to define during compilation.</param>
-        /// <param name="include">An interface for handling include files.</param>
-        /// <param name="compilationErrors">When the method completes, contains a string of compilation errors, or an empty string if compilation succeeded.</param>
-        /// <param name="sourceFileName">Name of the source file.</param>
-        /// <param name="secondaryDataFlags">The secondary data flags.</param>
-        /// <param name="secondaryData">The secondary data.</param>
-        /// <returns>
-        /// The compiled shader bytecode, or <c>null</c> if the method fails.
-        /// </returns>
-        public static ShaderBytecode Compile(byte[] shaderSource, string profile, ShaderFlags shaderFlags,
-                                             EffectFlags effectFlags, ShaderMacro[] defines, Include include,
-                                             out string compilationErrors, string sourceFileName = "unknown", SecondaryDataFlags secondaryDataFlags = SecondaryDataFlags.None, DataStream secondaryData = null)
+                                             string sourceFileName = "unknown", SecondaryDataFlags secondaryDataFlags = SecondaryDataFlags.None, DataStream secondaryData = null)
         {
             return Compile(shaderSource, null, profile, shaderFlags, effectFlags, defines, include,
-                           out compilationErrors, sourceFileName, secondaryDataFlags, secondaryData);
+                           sourceFileName, secondaryDataFlags, secondaryData);
         }
 
         /// <summary>
@@ -365,13 +302,20 @@ namespace SharpDX.D3DCompiler
                                              ShaderFlags shaderFlags, EffectFlags effectFlags, ShaderMacro[] defines,
                                              Include include, string sourceFileName = "unknown", SecondaryDataFlags secondaryDataFlags = SecondaryDataFlags.None, DataStream secondaryData = null)
         {
-            string compilationErrors = null;
             if (string.IsNullOrEmpty(shaderSource))
             {
                 throw new ArgumentNullException("shaderSource");
             }
-            return Compile(Encoding.ASCII.GetBytes(shaderSource), entryPoint, profile, shaderFlags, effectFlags, defines,
-                           include, out compilationErrors, sourceFileName, secondaryDataFlags, secondaryData);
+            var shaderSourcePtr = Marshal.StringToHGlobalAnsi(shaderSource);
+            try
+            {
+                return Compile(shaderSourcePtr, shaderSource.Length, entryPoint, profile, shaderFlags, effectFlags, defines,
+                               include, sourceFileName, secondaryDataFlags, secondaryData);
+            }
+            finally
+            {
+                if (shaderSourcePtr != IntPtr.Zero) Marshal.FreeHGlobal(shaderSourcePtr);
+            }
         }
 
         /// <summary>
@@ -384,7 +328,7 @@ namespace SharpDX.D3DCompiler
         /// <param name="effectFlags">Effect compilation options.</param>
         /// <param name="defines">A set of macros to define during compilation.</param>
         /// <param name="include">An interface for handling include files.</param>
-        /// <param name="sourceFileName">Name of the source file.</param>
+        /// <param name="sourceFileName">Name of the source file used for reporting errors. Default is "unknown"</param>
         /// <param name="secondaryDataFlags">The secondary data flags.</param>
         /// <param name="secondaryData">The secondary data.</param>
         /// <returns>
@@ -394,38 +338,86 @@ namespace SharpDX.D3DCompiler
                                              ShaderFlags shaderFlags, EffectFlags effectFlags, ShaderMacro[] defines,
                                              Include include, string sourceFileName = "unknown", SecondaryDataFlags secondaryDataFlags = SecondaryDataFlags.None, DataStream secondaryData = null)
         {
-            string compilationErrors = null;
-            return Compile(shaderSource, entryPoint, profile, shaderFlags, effectFlags, defines, include, out compilationErrors, sourceFileName, secondaryDataFlags, secondaryData);
+            unsafe
+            {
+                fixed (void* pData = &shaderSource[0])
+                    return Compile(
+                        (IntPtr)pData,
+                        shaderSource.Length,
+                        entryPoint,
+                        profile,
+                        shaderFlags,
+                        effectFlags,
+                        defines,
+                        include,
+                        sourceFileName,
+                        secondaryDataFlags,
+                        secondaryData);
+            }
         }
 
         /// <summary>
         /// Compiles the provided shader or effect source.
         /// </summary>
-        /// <param name="shaderSource">A string containing the source of the shader or effect to compile.</param>
+        /// <param name="textSource">The shader data.</param>
+        /// <param name="textSize">Size of the shader.</param>
         /// <param name="entryPoint">The name of the shader entry-point function, or <c>null</c> for an effect file.</param>
         /// <param name="profile">The shader target or set of shader features to compile against.</param>
         /// <param name="shaderFlags">Shader compilation options.</param>
         /// <param name="effectFlags">Effect compilation options.</param>
         /// <param name="defines">A set of macros to define during compilation.</param>
         /// <param name="include">An interface for handling include files.</param>
-        /// <param name="compilationErrors">When the method completes, contains a string of compilation errors, or an empty string if compilation succeeded.</param>
-        /// <param name="sourceFileName">Name of the source file.</param>
+        /// <param name="sourceFileName">Name of the source file used for reporting errors. Default is "unknown"</param>
         /// <param name="secondaryDataFlags">The secondary data flags.</param>
         /// <param name="secondaryData">The secondary data.</param>
         /// <returns>
         /// The compiled shader bytecode, or <c>null</c> if the method fails.
         /// </returns>
-        public static ShaderBytecode Compile(string shaderSource, string entryPoint, string profile,
+        public static ShaderBytecode Compile(IntPtr textSource, int textSize, string entryPoint, string profile,
                                              ShaderFlags shaderFlags, EffectFlags effectFlags, ShaderMacro[] defines,
-                                             Include include, out string compilationErrors, string sourceFileName = "unknown", SecondaryDataFlags secondaryDataFlags = SecondaryDataFlags.None, DataStream secondaryData = null)
+                                             Include include, string sourceFileName = "unknown", SecondaryDataFlags secondaryDataFlags = SecondaryDataFlags.None, DataStream secondaryData = null)
         {
-            if (string.IsNullOrEmpty(shaderSource))
+            unsafe
             {
-                throw new ArgumentNullException("shaderSource");
+                ShaderBytecode bytecode;
+
+                Blob blobForCode = null;
+                Blob blobForErrors = null;
+
+                try
+                {
+                    D3D.Compile2(
+                        (IntPtr)textSource,
+                        textSize,
+                        sourceFileName,
+                        PrepareMacros(defines),
+                        IncludeShadow.ToIntPtr(include),
+                        entryPoint,
+                        profile,
+                        shaderFlags,
+                        effectFlags,
+                        secondaryDataFlags,
+                        secondaryData != null ? secondaryData.DataPointer : IntPtr.Zero,
+                        secondaryData != null ? (int)secondaryData.Length : 0,
+                        out blobForCode,
+                        out blobForErrors);
+                }
+                catch (SharpDXException ex)
+                {
+                    if (blobForErrors != null)
+                    {
+                        var compilationErrors = Utilities.BlobToString(blobForErrors);
+                        throw new CompilationException(ex.ResultCode, compilationErrors);
+                    }
+                    throw;
+                }
+
+                bytecode = new ShaderBytecode(blobForCode);
+
+                return bytecode;
             }
-            return Compile(Encoding.ASCII.GetBytes(shaderSource), entryPoint, profile, shaderFlags, effectFlags, defines,
-                           include, out compilationErrors, sourceFileName, secondaryDataFlags, secondaryData);
         }
+#else
 
         /// <summary>
         /// Compiles a shader or effect from a file on disk.
@@ -572,81 +564,7 @@ namespace SharpDX.D3DCompiler
             return Compile(File.ReadAllText(fileName), entryPoint, profile, shaderFlags, effectFlags,
                            PrepareMacros(defines), include, out compilationErrors, fileName, secondaryDataFlags, secondaryData);
         }
-
-
-        /// <summary>
-        /// Compiles the provided shader or effect source.
-        /// </summary>
-        /// <param name="shaderSource">An array of bytes containing the raw source of the shader or effect to compile.</param>
-        /// <param name="entryPoint">The name of the shader entry-point function, or <c>null</c> for an effect file.</param>
-        /// <param name="profile">The shader target or set of shader features to compile against.</param>
-        /// <param name="shaderFlags">Shader compilation options.</param>
-        /// <param name="effectFlags">Effect compilation options.</param>
-        /// <param name="defines">A set of macros to define during compilation.</param>
-        /// <param name="include">An interface for handling include files.</param>
-        /// <param name="compilationErrors">When the method completes, contains a string of compilation errors, or an empty string if compilation succeeded.</param>
-        /// <param name="sourceFileName">Name of the source file used for reporting errors. Default is "unknown"</param>
-        /// <param name="secondaryDataFlags">The secondary data flags.</param>
-        /// <param name="secondaryData">The secondary data.</param>
-        /// <returns>
-        /// The compiled shader bytecode, or <c>null</c> if the method fails.
-        /// </returns>
-        public static ShaderBytecode Compile(byte[] shaderSource, string entryPoint, string profile,
-                                             ShaderFlags shaderFlags, EffectFlags effectFlags, ShaderMacro[] defines,
-                                             Include include, out string compilationErrors, string sourceFileName = "unknown", SecondaryDataFlags secondaryDataFlags = SecondaryDataFlags.None, DataStream secondaryData = null)
-        {
-            unsafe
-            {
-                ShaderBytecode bytecode;
-
-                Blob blobForCode = null;
-                Blob blobForErrors = null;
-                compilationErrors = null;
-
-                CompilationException compilationException = null;
-
-                try
-                {
-                    fixed (void* pData = &shaderSource[0])
-                        D3D.Compile2(
-                            (IntPtr)pData,
-                            shaderSource.Length,
-                            sourceFileName,
-                            PrepareMacros(defines),
-                            IncludeShadow.ToIntPtr(include),
-                            entryPoint,
-                            profile,
-                            shaderFlags,
-                            effectFlags,
-                            secondaryDataFlags,
-                            secondaryData != null ? secondaryData.DataPointer : IntPtr.Zero,
-                            secondaryData != null ? (int)secondaryData.Length : 0,
-                            out blobForCode,
-                            out blobForErrors);
-                }
-                catch (SharpDXException ex)
-                {
-                    if (blobForErrors != null)
-                    {
-                        compilationErrors = Utilities.BlobToString(blobForErrors);
-                        compilationException = CompilationException.Check(ex.ResultCode, compilationErrors);
-                    }
-                    else
-                    {
-                        ex.Data.Add("CompilationErrors", compilationErrors);
-                        throw;
-                    }
-                }
-
-                if (compilationException != null)
-                    throw compilationException;
-
-                bytecode = new ShaderBytecode(blobForCode);
-
-                return bytecode;
-            }
-        }
-#else
+        
         /// <summary>
         /// Compiles the provided shader or effect source.
         /// </summary>
@@ -1248,17 +1166,6 @@ namespace SharpDX.D3DCompiler
 #endif
 
         /// <summary>
-        /// Loads from the specified file name.
-        /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        /// <returns>A shader bytecode</returns>
-        public static ShaderBytecode Load(string fileName)
-        {
-            using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read)) 
-                return Load(stream);            
-        }
-
-        /// <summary>
         /// Loads from the specified stream.
         /// </summary>
         /// <param name="stream">The stream.</param>
@@ -1307,43 +1214,26 @@ namespace SharpDX.D3DCompiler
         ///   Preprocesses the provided shader or effect source.
         /// </summary>
         /// <param name = "shaderSource">A string containing the source of the shader or effect to preprocess.</param>
-        /// <returns>The preprocessed shader source.</returns>
-        public static string Preprocess(string shaderSource)
-        {
-            string errors = null;
-            if (string.IsNullOrEmpty(shaderSource))
-            {
-                throw new ArgumentNullException("shaderSource");
-            }
-            return Preprocess(Encoding.ASCII.GetBytes(shaderSource), null, null, out errors);
-        }
-
-        /// <summary>
-        ///   Preprocesses the provided shader or effect source.
-        /// </summary>
-        /// <param name = "shaderSource">An array of bytes containing the raw source of the shader or effect to preprocess.</param>
-        /// <returns>The preprocessed shader source.</returns>
-        public static string Preprocess(byte[] shaderSource)
-        {
-            string errors = null;
-            return Preprocess(shaderSource, null, null, out errors);
-        }
-
-        /// <summary>
-        ///   Preprocesses the provided shader or effect source.
-        /// </summary>
-        /// <param name = "shaderSource">A string containing the source of the shader or effect to preprocess.</param>
         /// <param name = "defines">A set of macros to define during preprocessing.</param>
         /// <param name = "include">An interface for handling include files.</param>
         /// <returns>The preprocessed shader source.</returns>
-        public static string Preprocess(string shaderSource, ShaderMacro[] defines, Include include)
+        public static string Preprocess(string shaderSource, ShaderMacro[] defines = null, Include include = null)
         {
             string errors = null;
             if (string.IsNullOrEmpty(shaderSource))
             {
                 throw new ArgumentNullException("shaderSource");
             }
-            return Preprocess(Encoding.ASCII.GetBytes(shaderSource), defines, include, out errors);
+            var shaderSourcePtr = Marshal.StringToHGlobalAnsi(shaderSource);
+            try
+            {
+                return Preprocess(shaderSourcePtr, shaderSource.Length, defines, include, out errors);
+            } 
+            finally
+            {
+                if (shaderSourcePtr != IntPtr.Zero) 
+                    Marshal.FreeHGlobal(shaderSourcePtr);
+            }
         }
 
         /// <summary>
@@ -1353,7 +1243,7 @@ namespace SharpDX.D3DCompiler
         /// <param name = "defines">A set of macros to define during preprocessing.</param>
         /// <param name = "include">An interface for handling include files.</param>
         /// <returns>The preprocessed shader source.</returns>
-        public static string Preprocess(byte[] shaderSource, ShaderMacro[] defines, Include include)
+        public static string Preprocess(byte[] shaderSource, ShaderMacro[] defines = null, Include include = null)
         {
             string errors = null;
             return Preprocess(shaderSource, defines, include, out errors);
@@ -1367,7 +1257,25 @@ namespace SharpDX.D3DCompiler
         /// <param name = "include">An interface for handling include files.</param>
         /// <param name = "compilationErrors">When the method completes, contains a string of compilation errors, or an empty string if preprocessing succeeded.</param>
         /// <returns>The preprocessed shader source.</returns>
-        public static string Preprocess(byte[] shaderSource, ShaderMacro[] defines, Include include,
+        public static string Preprocess(byte[] shaderSource, ShaderMacro[] defines, Include include, out string compilationErrors)
+        {
+            unsafe
+            {
+                fixed (void* pData = &shaderSource[0])
+                    return Preprocess((IntPtr)pData, shaderSource.Length, defines, include, out compilationErrors);
+            }
+        }
+
+
+        /// <summary>
+        ///   Preprocesses the provided shader or effect source.
+        /// </summary>
+        /// <param name = "shaderSource">An array of bytes containing the raw source of the shader or effect to preprocess.</param>
+        /// <param name = "defines">A set of macros to define during preprocessing.</param>
+        /// <param name = "include">An interface for handling include files.</param>
+        /// <param name = "compilationErrors">When the method completes, contains a string of compilation errors, or an empty string if preprocessing succeeded.</param>
+        /// <returns>The preprocessed shader source.</returns>
+        public static string Preprocess(IntPtr shaderSourcePtr, int shaderSourceLength, ShaderMacro[] defines, Include include,
                                         out string compilationErrors)
         {
             unsafe
@@ -1378,17 +1286,16 @@ namespace SharpDX.D3DCompiler
 
                 try
                 {
-                    fixed (void* pData = &shaderSource[0])
-                        D3D.Preprocess((IntPtr)pData, shaderSource.Length, "", PrepareMacros(defines), IncludeShadow.ToIntPtr(include),
-                                       out blobForText, out blobForErrors);
+                    D3D.Preprocess(shaderSourcePtr, shaderSourceLength, "", PrepareMacros(defines), IncludeShadow.ToIntPtr(include),
+                                    out blobForText, out blobForErrors);
                 }
                 catch (SharpDXException ex)
                 {
                     if (blobForErrors != null)
                     {
                         compilationErrors = Utilities.BlobToString(blobForErrors);
+                        throw new CompilationException(ex.ResultCode, compilationErrors);
                     }
-                    ex.Data.Add("CompilationErrors", compilationErrors);
                     throw;
                 }
                 return Utilities.BlobToString(blobForText);
@@ -1403,16 +1310,24 @@ namespace SharpDX.D3DCompiler
         /// <param name = "include">An interface for handling include files.</param>
         /// <param name = "compilationErrors">When the method completes, contains a string of compilation errors, or an empty string if preprocessing succeeded.</param>
         /// <returns>The preprocessed shader source.</returns>
-        public static string Preprocess(string shaderSource, ShaderMacro[] defines, Include include,
-                                        out string compilationErrors)
+        public static string Preprocess(string shaderSource, ShaderMacro[] defines, Include include, out string compilationErrors)
         {
             if (string.IsNullOrEmpty(shaderSource))
             {
                 throw new ArgumentNullException("shaderSource");
             }
-            return Preprocess(Encoding.ASCII.GetBytes(shaderSource), defines, include, out compilationErrors);
+            var shaderSourcePtr = Marshal.StringToHGlobalAnsi(shaderSource);
+            try
+            {
+                return Preprocess(shaderSourcePtr, shaderSource.Length, defines, include, out compilationErrors);
+            }
+            finally
+            {
+                if (shaderSourcePtr != IntPtr.Zero)
+                    Marshal.FreeHGlobal(shaderSourcePtr);
+            }
         }
-
+#if !WIN8
         /// <summary>
         ///   Preprocesses a shader or effect from a file on disk.
         /// </summary>
@@ -1471,7 +1386,7 @@ namespace SharpDX.D3DCompiler
             }
             return Preprocess(File.ReadAllText(fileName), defines, include, out compilationErrors);
         }
-
+#endif
         /// <summary>
         ///   Strips extraneous information from a compiled shader or effect.
         /// </summary>
@@ -1508,7 +1423,7 @@ namespace SharpDX.D3DCompiler
         {
             return new ShaderBytecode(stream);
         }
-
+#if !WIN8
         /// <summary>
         ///   Read a compiled shader bytecode from a Stream and return a ShaderBytecode
         /// </summary>
@@ -1518,7 +1433,7 @@ namespace SharpDX.D3DCompiler
         {
             return new ShaderBytecode(File.ReadAllBytes(fileName));
         }
-
+#endif
         internal static ShaderMacro[] PrepareMacros(ShaderMacro[] macros)
         {
             if (macros == null)

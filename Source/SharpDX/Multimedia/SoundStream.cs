@@ -36,17 +36,6 @@ namespace SharpDX.Multimedia
         /// <summary>
         /// Initializes a new instance of the <see cref="SoundStream"/> class.
         /// </summary>
-        /// <param name="soundFile">The sound file.</param>
-        public SoundStream(string soundFile)
-        {
-            input = new FileStream(soundFile, FileMode.Open, FileAccess.Read);
-            isOwnerOfInput = true;
-            Initialize(input);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SoundStream"/> class.
-        /// </summary>
         /// <param name="stream">The sound stream.</param>
         public SoundStream(Stream stream)
         {

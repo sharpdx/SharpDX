@@ -1,72 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\SharpDX.PreSettings.targets" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{361D3F81-A48A-47F2-80DF-CA4F9536CB4E}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SharpDX.D3DCompiler</RootNamespace>
     <AssemblyName>SharpDX.D3DCompiler</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <DocumentationFile>bin\Debug\SharpDX.D3DCompiler.XML</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <DocumentationFile>bin\Release\SharpDX.D3DCompiler.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup>
-    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Debug|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Win8Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;WIN8</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>
-    </DocumentationFile>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
-    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Release|AnyCPU'">
-    <OutputPath>bin\Win8Release\</OutputPath>
-    <DefineConstants>TRACE;WIN8</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>bin\Win8Release\SharpDX.D3DCompiler.xml</DocumentationFile>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
-    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -108,7 +48,7 @@
     <None Include="Documentation\CodeComments.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionPath).targets" />
+  <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

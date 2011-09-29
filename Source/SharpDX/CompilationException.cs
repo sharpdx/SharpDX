@@ -41,19 +41,5 @@ namespace SharpDX
         public CompilationException(Result errorCode, string message) : base(errorCode, message)
         {
         }
-
-        /// <summary>
-        /// Checks the specified error code and error message.
-        /// </summary>
-        /// <param name="errorCode">The error code.</param>
-        /// <param name="errorMessage">The error message.</param>
-        /// <returns>A CompilationException or null otherwise</returns>
-        public static CompilationException Check(Result errorCode, string errorMessage)
-        {
-            if (!Configuration.ThrowOnShaderCompileError)
-                return null;
-
-            return new CompilationException(errorCode, errorMessage);
-        }
     }
 }

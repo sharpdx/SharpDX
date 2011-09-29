@@ -1,0 +1,20 @@
+<!-- Common Targets used by SharpDX projects -->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DocumentationFile>bin\Release\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Release|AnyCPU'">
+    <DocumentationFile>bin\Win8Release\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <UsingTask AssemblyFile="$(SolutionDir)Source\Bin\SharpCli.exe" TaskName="SharpCli.InteropBuilderTask" />
+  <Target Name="AfterBuild">
+    <InteropBuilderTask FileName="$(TargetPath)"/>
+
+    <!-- Copy back *.dll from bin/Debug|Release to obj/Debug/Release directory -->
+    <Copy SourceFiles="@(MainAssembly)" DestinationFolder="$(IntermediateOutputPath)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)"/>
+    <!-- Copy back *.pdb from bin/Debug|Release to obj/Debug/Release directory -->
+    <Copy SourceFiles="@(_DebugSymbolsOutputPath)" DestinationFiles="@(_DebugSymbolsIntermediatePath)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)" Condition="'$(_DebugSymbolsProduced)'=='true' and '$(SkipCopyingSymbolsToOutputDirectory)' != 'true'"/>
+  </Target>
+</Project>

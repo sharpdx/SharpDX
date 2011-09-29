@@ -1,78 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\SharpDX.PreSettings.targets" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{D0BCD56A-41C4-4A4E-8590-26864CED07FF}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SharpDX</RootNamespace>
     <AssemblyName>SharpDX</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;WinFormsInterop</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <DocumentationFile>bin\Debug\SharpDX.XML</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
-    <DefineConstants>TRACE;WinFormsInterop</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <DocumentationFile>bin\Release\SharpDX.xml</DocumentationFile>
-    <DebugSymbols>true</DebugSymbols>
-  </PropertyGroup>
-  <PropertyGroup>
-    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Debug|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Win8Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;WinFormsInterop;WIN8</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>
-    </DocumentationFile>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Release|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Win8Release</OutputPath>
-    <DefineConstants>TRACE;WinFormsInterop;WIN8</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>bin\Win8Release\SharpDX.xml</DocumentationFile>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' "/>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
@@ -200,7 +140,7 @@
   <PropertyGroup>
     <PreBuildEvent>$(SolutionDir)Source\Tools\SharpGen\RunGenerator.bat $(ConfigurationName)</PreBuildEvent>
   </PropertyGroup>
-  <Import Project="$(SolutionPath).targets" />
+  <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
 <Target Name="BeforeBuild">
