@@ -17,6 +17,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
@@ -41,7 +43,8 @@ namespace SharpGen.Model
             IsIn = true;
             IsOut = false; 
             CppElement = cppStruct;
-            if (cppStruct != null)
+            // Align was not overloaded by MappingRule tag, then we can take the default value
+            if (cppStruct != null &&  Align == 0) 
                 Align = cppStruct.Align;
         }
 
@@ -49,6 +52,11 @@ namespace SharpGen.Model
         {
             base.UpdateFromTag(tag);
 
+            if (tag.StructPack != null)
+            {
+                Console.WriteLine("YESSSSSSSSSSSSSSSSSSSSSSSSSSSSSS => {0}", tag.StructPack.Value);
+            }
+            Align = tag.StructPack != null ? tag.StructPack.Value : Align;
             HasMarshalType = tag.StructHasNativeValueType != null ? tag.StructHasNativeValueType.Value : false;
             GenerateAsClass = tag.StructToClass != null ? tag.StructToClass.Value : false;
             HasCustomMarshal = tag.StructCustomMarshall != null ? tag.StructCustomMarshall.Value : false;

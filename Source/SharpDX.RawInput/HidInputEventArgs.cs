@@ -17,6 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System;
+
 namespace SharpDX.RawInput
 {
     /// <summary>
@@ -39,7 +42,11 @@ namespace SharpDX.RawInput
         {
             Count = rawInput.Data.Hid.Count;
             DataSize = rawInput.Data.Hid.SizeHid;
-            RawData = rawInput.Data.Hid.RawData;
+            RawData = new byte[Count * DataSize];
+            unsafe
+            {
+                if (RawData.Length > 0) fixed (void* __to = RawData) fixed (void* __from = &rawInput.Data.Hid.RawData) SharpDX.Utilities.CopyMemory((IntPtr)__to, (IntPtr)__from, RawData.Length *sizeof(byte));
+            }
         }
 
         /// <summary>

@@ -87,7 +87,7 @@
     <map enum="RAW_(.*)" name-tmp="$1"/>
 
     <map enum="RAW_DEVICE_FLAGS" flags="true" none="true"/>
-    <map enum="RAW_SCAN_CODE_FLAGS" flags="true" none="false"/>
+    <map enum="RAW_SCAN_CODE_FLAGS" flags="true" none="false" type="short"/>
     <map enum="RAW_MOUSE_BUTTON_FLAGS" flags="true" none="true"/>
     <map enum="RAW_MOUSE_MODE" flags="true" none="false"/>
 
@@ -152,7 +152,7 @@
     <map struct="RAWINPUT(.*)" name-tmp="RAW_INPUT_$1" visibility="internal"/>
 
     <map struct="RAWINPUT_INNER_0" marshalto="true"/>
-    <map struct="RAWHID" marshalto="true"/>
+    <map struct="RAWHID" marshalto="true" marshal="true"/>
 
     <map field=".*::[a-z]+([A-Z].*)" name="$1"/>
 
@@ -160,11 +160,12 @@
     <map field="RID_DEVICE_INFO_HID::usUsagePage" type="HID_USAGE_PAGE"/>
     <map field="RID_DEVICE_INFO_HID::usUsage" type="HID_USAGE_ID"/>
 
-    <!-- Use Count property as a dynamic dimension for the array -->
-    <map field="RAWHID::bRawData" array="Count * SizeHid"/>
+    <!-- Use transform bRawData to int -->
+    <map field="RAWHID::bRawData" type="int" array="0"/>
 
     <map field="RAWINPUTHEADER::dwType" type="RAW_DEVICE_TYPE"/>
 
+    <map struct="RAWKEYBOARD" pack="1"/>
     <map field="RAWKEYBOARD::Flags" type="RAW_SCAN_CODE_FLAGS"/>
     <map field="RAWKEYBOARD::Message" type="RAW_KEY_STATE"/>
 

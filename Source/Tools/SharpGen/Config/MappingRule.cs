@@ -52,6 +52,15 @@ namespace SharpGen.Config
         public bool _Property_ { get { return Property.Value; } set { Property = value; } } public bool ShouldSerialize_Property_() { return Property != null; }
 
         /// <summary>
+        /// Gets or sets the struct pack alignment.
+        /// </summary>
+        /// <value>The struct pack. </value>
+        [XmlIgnore]
+        public int? StructPack { get; set; }
+        [XmlAttribute("pack")]
+        public int _StructPack_ { get { return StructPack.Value; } set { StructPack = value; } } public bool ShouldSerialize_StructPack_() { return StructPack != null; }
+
+        /// <summary>
         /// Mapping name
         /// </summary>
         [XmlAttribute("name-tmp")]

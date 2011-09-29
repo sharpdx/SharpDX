@@ -155,22 +155,21 @@ namespace SharpDX.RawInput
                 var rawInputDataPtr = stackalloc byte[sizeOfRawInputData];
                 RawInputFunctions.GetRawInputData(rawInputHandle, RawInputDataType.Input, (IntPtr)rawInputDataPtr, ref sizeOfRawInputData, Utilities.SizeOf<RawInputHeader>());
 
-                var rawInput = new RawInput();
-                rawInput.__MarshalFrom(ref *(RawInput.__Native*)rawInputDataPtr);
+                var rawInput = (RawInput*)rawInputDataPtr;
 
-                switch (rawInput.Header.Type)
+                switch (rawInput->Header.Type)
                 {
                     case DeviceType.HumanInputDevice:
                         if (RawInput != null)
-                            RawInput(null, new HidInputEventArgs(ref rawInput));
+                            RawInput(null, new HidInputEventArgs(ref *rawInput));
                         break;
                     case DeviceType.Keyboard:
                         if (KeyboardInput != null)
-                            KeyboardInput(null, new KeyboardInputEventArgs(ref rawInput));
+                            KeyboardInput(null, new KeyboardInputEventArgs(ref *rawInput));
                         break;
                     case DeviceType.Mouse:
                         if (MouseInput != null)
-                            MouseInput(null, new MouseInputEventArgs(ref rawInput));
+                            MouseInput(null, new MouseInputEventArgs(ref *rawInput));
                         break;
                 }
 
