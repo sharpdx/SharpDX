@@ -22,76 +22,55 @@ using System.Runtime.InteropServices;
 
 namespace SharpDX.RawInput
 {
-    /// <summary>	
-    /// No documentation.	
-    /// </summary>	
-    /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='RAWMOUSE']/*"/>	
-    /// <unmanaged>RAWMOUSE</unmanaged>	
-    [StructLayout(LayoutKind.Explicit, Pack = 0)]
-    internal partial struct RawMouse
+    /// <summary>
+    /// Contains information about the state of the mouse.
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct RawMouse
     {
-        /// <summary>	
-        /// No documentation.	
-        /// </summary>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='RAWMOUSE::usFlags']/*"/>	
-        /// <unmanaged>unsigned short usFlags</unmanaged>	
-        [FieldOffset(0)]
+        /// <summary>
+        /// The mouse state.
+        /// </summary>
         public short Flags;
 
-        /// <summary>	
-        /// No documentation.	
-        /// </summary>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='RAWMOUSE::ulButtons']/*"/>	
-        /// <unmanaged>unsigned int ulButtons</unmanaged>	
-        [FieldOffset(2)]
-        public int Buttons;
+        [StructLayout(LayoutKind.Explicit)]
+        public struct RawMouseButtonsData
+        {
+            [FieldOffset(0)]
+            public int Buttons;
 
-        /// <summary>	
-        /// No documentation.	
-        /// </summary>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='RAWMOUSE::usButtonFlags']/*"/>	
-        /// <unmanaged>unsigned short usButtonFlags</unmanaged>	
-        [FieldOffset(2)]
-        public short ButtonFlags;
+            /// <summary>
+            /// Flags for the event.
+            /// </summary>
+            [FieldOffset(0)]
+            public short ButtonFlags;
 
-        /// <summary>	
-        /// No documentation.	
-        /// </summary>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='RAWMOUSE::usButtonData']/*"/>	
-        /// <unmanaged>unsigned short usButtonData</unmanaged>	
-        [FieldOffset(4)]
-        public short ButtonData;
+            /// <summary>
+            /// If the mouse wheel is moved, this will contain the delta amount.
+            /// </summary>
+            [FieldOffset(2)]
+            public short ButtonData;
+        }
 
-        /// <summary>	
-        /// No documentation.	
-        /// </summary>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='RAWMOUSE::ulRawButtons']/*"/>	
-        /// <unmanaged>unsigned int ulRawButtons</unmanaged>	
-        [FieldOffset(6)]
+        public RawMouseButtonsData ButtonsData;
+
+        /// <summary>
+        /// Raw button data.
+        /// </summary>
         public int RawButtons;
-
-        /// <summary>	
-        /// No documentation.	
-        /// </summary>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='RAWMOUSE::lLastX']/*"/>	
-        /// <unmanaged>int lLastX</unmanaged>	
-        [FieldOffset(10)]
+        /// <summary>
+        /// The motion in the X direction. This is signed relative motion or
+        /// absolute motion, depending on the value of usFlags.
+        /// </summary>
         public int LastX;
-
-        /// <summary>	
-        /// No documentation.	
-        /// </summary>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='RAWMOUSE::lLastY']/*"/>	
-        /// <unmanaged>int lLastY</unmanaged>	
-        [FieldOffset(14)]
+        /// <summary>
+        /// The motion in the Y direction. This is signed relative motion or absolute motion,
+        /// depending on the value of usFlags.
+        /// </summary>
         public int LastY;
-
-        /// <summary>	
-        /// No documentation.	
-        /// </summary>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='RAWMOUSE::ulExtraInformation']/*"/>	
-        /// <unmanaged>unsigned int ulExtraInformation</unmanaged>	
-        [FieldOffset(18)]
+        /// <summary>
+        /// The device-specific additional information for the event.
+        /// </summary>
         public int ExtraInformation;
     }
 }

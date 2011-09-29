@@ -39,9 +39,9 @@ namespace SharpDX.RawInput
             : base(ref rawInput)
         {
             Mode = (MouseMode) rawInput.Data.Mouse.Flags;
-            ButtonFlags = (MouseButtonFlags)rawInput.Data.Mouse.ButtonFlags;
+            ButtonFlags = (MouseButtonFlags)rawInput.Data.Mouse.ButtonsData.ButtonFlags;
             WheelDelta = rawInput.Data.Mouse.RawButtons;
-            this.Buttons = rawInput.Data.Mouse.ButtonData;
+            this.Buttons = rawInput.Data.Mouse.ButtonsData.ButtonData;
             X = rawInput.Data.Mouse.LastX;
             Y = rawInput.Data.Mouse.LastY;
             ExtraInformation = rawInput.Data.Mouse.ExtraInformation;

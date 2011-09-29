@@ -63,7 +63,7 @@ namespace MouseTrackApp
         {
             var args = (MouseInputEventArgs)rawArgs;
 
-            textBox.AppendText(string.Format("(x,y):({0},{1}) Buttons: {2} State: {3} Wheel: {4}\r\n", args.X, args.Y, args.Buttons, args.Mode, args.WheelDelta));            
+            textBox.AppendText(string.Format("(x,y):({0},{1}) Buttons: {2} State: {3} Wheel: {4}\r\n", args.X, args.Y, args.ButtonFlags, args.Mode, args.WheelDelta));            
         }
 
         /// <summary>
