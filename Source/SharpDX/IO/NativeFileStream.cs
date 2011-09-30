@@ -51,6 +51,7 @@ namespace SharpDX.IO
             if (handle.ToInt32() == -1)
                 throw new IOException(string.Format("Unable to open file {0}", fileName), Marshal.GetLastWin32Error());
 
+            // TODO setup correctly canRead, canWrite, canSeek flags
             canRead = true;
             canWrite = true;
             canSeek = true;
@@ -64,22 +65,30 @@ namespace SharpDX.IO
         /// <inheritdoc/>
         public override long Seek(long offset, SeekOrigin origin)
         {
-            long newPosition = 0;
-            int result = NativeFile.SetFilePointerEx(handle, offset, out newPosition, origin);
-            if (result != 0)
+            long newPosition;
+            if (!NativeFile.SetFilePointerEx(handle, offset, out newPosition, origin))
                 throw new IOException("Unable to seek to this position", Marshal.GetLastWin32Error());
-
-            return newPosition;
+            position = newPosition;
+            return position;
         }
 
         /// <inheritdoc/>
         public override void SetLength(long value)
         {
             long newPosition;
-            int result = NativeFile.SetFilePointerEx(handle, value, out newPosition, SeekOrigin.Begin);
-            if (result != 0)
+            if (!NativeFile.SetFilePointerEx(handle, value, out newPosition, SeekOrigin.Begin))
                 throw new IOException("Unable to seek to this position", Marshal.GetLastWin32Error());
-            NativeFile.SetEndOfFile(handle);
+            if (!NativeFile.SetEndOfFile(handle))
+                throw new IOException("Unable to set the new length", Marshal.GetLastWin32Error());
+
+            if (position < value)
+            {
+                Seek(position, SeekOrigin.Begin);
+            } 
+            else
+            {
+                Seek(0, SeekOrigin.End);
+            }
         }
 
         /// <inheritdoc/>
@@ -90,8 +99,8 @@ namespace SharpDX.IO
             {
                 fixed (void* pbuffer = &buffer[offset])
                 {
-                    var result = NativeFile.ReadFile(handle, (IntPtr)pbuffer, count, out numberOfBytesRead, IntPtr.Zero);
-                    result.CheckError();
+                    if (!NativeFile.ReadFile(handle, (IntPtr)pbuffer, count, out numberOfBytesRead, IntPtr.Zero))
+                        throw new IOException("Unable to read from file", Marshal.GetLastWin32Error());
                 }
                 position += numberOfBytesRead;
             }
@@ -106,8 +115,8 @@ namespace SharpDX.IO
             {
                 fixed (void* pbuffer = &buffer[offset])
                 {
-                    var result = NativeFile.WriteFile(handle, (IntPtr)pbuffer, count, out numberOfBytesWritten, IntPtr.Zero);
-                    result.CheckError();
+                    if (!NativeFile.WriteFile(handle, (IntPtr)pbuffer, count, out numberOfBytesWritten, IntPtr.Zero))
+                        throw new IOException("Unable to write to file", Marshal.GetLastWin32Error());
                 }
                 position += numberOfBytesWritten;
             }
@@ -146,8 +155,8 @@ namespace SharpDX.IO
             get
             {
                 long length;
-                if ( NativeFile.GetFileSizeEx(handle, out length) != 0 )
-                    throw new IOException("Unable to get length", Marshal.GetLastWin32Error());
+                if (!NativeFile.GetFileSizeEx(handle, out length))
+                    throw new IOException("Unable to get file length", Marshal.GetLastWin32Error());
                 return length;
             }
         }
@@ -164,6 +173,13 @@ namespace SharpDX.IO
                 Seek(value, SeekOrigin.Begin);
                 position = value;
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            Utilities.CloseHandle(handle);
+            handle = IntPtr.Zero;
+            base.Dispose(disposing);
         }
     }
 }

@@ -443,5 +443,9 @@ namespace SharpDX
         }
         [DllImport("kernel32", EntryPoint = "GetProcAddress", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
         static extern IntPtr GetProcAddress_(IntPtr hModule, string procName);
+
+
+        [DllImport("kernel32.dll", EntryPoint = "CloseHandle", SetLastError = true)]
+        internal static extern bool CloseHandle(IntPtr handle);
     }
 }

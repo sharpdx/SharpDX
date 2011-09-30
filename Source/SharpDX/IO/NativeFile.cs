@@ -21,8 +21,6 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 
-using Microsoft.Win32.SafeHandles;
-
 namespace SharpDX.IO
 {
     /// <summary>
@@ -84,7 +82,7 @@ namespace SharpDX.IO
         /// <returns>A Result</returns>
         /// <unmanaged>ReadFile</unmanaged>
         [DllImport("kernel32.dll", EntryPoint = "ReadFile", SetLastError = true, CharSet = CharSet.Auto)]
-        internal static extern Result ReadFile(IntPtr fileHandle, IntPtr buffer, int numberOfBytesToRead, out int numberOfBytesRead, IntPtr overlapped);
+        internal static extern bool ReadFile(IntPtr fileHandle, IntPtr buffer, int numberOfBytesToRead, out int numberOfBytesRead, IntPtr overlapped);
 
         /// <summary>
         /// Writes to a file.
@@ -97,7 +95,7 @@ namespace SharpDX.IO
         /// <returns>A Result</returns>
         /// <unmanaged>WriteFile</unmanaged>
         [DllImport("kernel32.dll", EntryPoint = "WriteFile", SetLastError = true, CharSet = CharSet.Auto)]
-        internal static extern Result WriteFile(IntPtr fileHandle, IntPtr buffer, int numberOfBytesToRead, out int numberOfBytesRead, IntPtr overlapped);
+        internal static extern bool WriteFile(IntPtr fileHandle, IntPtr buffer, int numberOfBytesToRead, out int numberOfBytesRead, IntPtr overlapped);
 
         /// <summary>
         /// Sets the file pointer.
@@ -109,7 +107,7 @@ namespace SharpDX.IO
         /// <returns></returns>
         /// <unmanaged>SetFilePointerEx</unmanaged>
         [DllImport("kernel32.dll", EntryPoint = "SetFilePointerEx", SetLastError = true, CharSet = CharSet.Auto)]
-        internal static extern int SetFilePointerEx(IntPtr handle, long distanceToMove, out long distanceToMoveHigh, SeekOrigin seekOrigin);
+        internal static extern bool SetFilePointerEx(IntPtr handle, long distanceToMove, out long distanceToMoveHigh, SeekOrigin seekOrigin);
 
         /// <summary>
         /// Sets the end of file.
@@ -118,7 +116,7 @@ namespace SharpDX.IO
         /// <returns></returns>
         /// <unmanaged>SetEndOfFile</unmanaged>
         [DllImport("kernel32.dll", EntryPoint = "SetEndOfFile", SetLastError = true, CharSet = CharSet.Auto)]
-        internal static extern int SetEndOfFile(IntPtr handle);
+        internal static extern bool SetEndOfFile(IntPtr handle);
 
         /// <summary>
         /// Gets the size of the file.
@@ -128,6 +126,6 @@ namespace SharpDX.IO
         /// <returns></returns>
         /// <unmanaged>GetFileSizeEx</unmanaged>
         [DllImport("kernel32.dll", EntryPoint = "GetFileSizeEx", SetLastError = true, CharSet = CharSet.Auto)]
-        internal static extern int GetFileSizeEx(IntPtr handle, out long fileSize);
+        internal static extern bool GetFileSizeEx(IntPtr handle, out long fileSize);
     }
 }
