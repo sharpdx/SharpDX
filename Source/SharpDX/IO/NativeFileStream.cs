@@ -60,6 +60,7 @@ namespace SharpDX.IO
         /// <inheritdoc/>
         public override void Flush()
         {
+            // TODO implement flush
         }
 
         /// <inheritdoc/>
@@ -155,6 +156,7 @@ namespace SharpDX.IO
             get
             {
                 long length;
+                // TODO implement WIN8 replacement
                 if (!NativeFile.GetFileSizeEx(handle, out length))
                     throw new IOException("Unable to get file length", Marshal.GetLastWin32Error());
                 return length;
