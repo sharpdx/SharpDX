@@ -20,6 +20,8 @@
 
 using System;
 using System.IO;
+
+using SharpDX.IO;
 using SharpDX.Win32;
 
 namespace SharpDX.WIC
@@ -34,11 +36,11 @@ namespace SharpDX.WIC
         /// <param name="fileAccess">The file access.</param>
         /// <unmanaged>HRESULT IWICImagingFactory::CreateStream([Out, Fast] IWICStream** ppIWICStream)</unmanaged>	
         /// <unmanaged>HRESULT IWICStream::InitializeFromFilename([In] const wchar_t* wzFileName,[In] unsigned int dwDesiredAccess)</unmanaged>	
-        public WICStream(ImagingFactory factory, string fileName, FileAccess fileAccess)
+        public WICStream(ImagingFactory factory, string fileName, NativeFileAccess fileAccess)
             : base(IntPtr.Zero)
         {
             factory.CreateStream(this);
-            InitializeFromFilename(fileName, (int)FileHelper.Convert(fileAccess));
+            InitializeFromFilename(fileName, (int)fileAccess);
         }
 
         /// <summary>

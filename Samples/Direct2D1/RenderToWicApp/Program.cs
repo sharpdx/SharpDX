@@ -22,6 +22,7 @@ using System.IO;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DXGI;
+using SharpDX.IO;
 using SharpDX.WIC;
 
 using AlphaMode = SharpDX.Direct2D1.AlphaMode;
@@ -62,7 +63,7 @@ namespace RenderToWicApp
             if (File.Exists(filename))
                 File.Delete(filename);
 
-            var stream = new WICStream(wicFactory, filename, FileAccess.Write);
+            var stream = new WICStream(wicFactory, filename, NativeFileAccess.Write);
             // Initialize a Jpeg encoder with this stream
             var encoder = new JpegBitmapEncoder(wicFactory);
             encoder.Initialize(stream);

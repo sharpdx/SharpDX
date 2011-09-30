@@ -20,6 +20,8 @@
 
 using System;
 using System.IO;
+
+using SharpDX.IO;
 using SharpDX.Win32;
 
 namespace SharpDX.WIC
@@ -93,7 +95,7 @@ namespace SharpDX.WIC
         /// <param name="metadataOptions">The metadata options.</param>
         /// <unmanaged>HRESULT IWICImagingFactory::CreateDecoderFromFilename([In] const wchar_t* wzFilename,[In, Optional] const GUID* pguidVendor,[In] unsigned int dwDesiredAccess,[In] WICDecodeOptions metadataOptions,[Out, Fast] IWICBitmapDecoder** ppIDecoder)</unmanaged>
         public BitmapDecoder(ImagingFactory factory, string filename, SharpDX.WIC.DecodeOptions metadataOptions)
-            : this(factory, filename, null, FileAccess.Read, metadataOptions)
+            : this(factory, filename, null, NativeFileAccess.Read, metadataOptions)
         {
         }
 
@@ -105,7 +107,7 @@ namespace SharpDX.WIC
         /// <param name="desiredAccess">The desired access.</param>
         /// <param name="metadataOptions">The metadata options.</param>
         /// <unmanaged>HRESULT IWICImagingFactory::CreateDecoderFromFilename([In] const wchar_t* wzFilename,[In, Optional] const GUID* pguidVendor,[In] unsigned int dwDesiredAccess,[In] WICDecodeOptions metadataOptions,[Out, Fast] IWICBitmapDecoder** ppIDecoder)</unmanaged>
-        public BitmapDecoder(ImagingFactory factory, string filename, FileAccess desiredAccess, SharpDX.WIC.DecodeOptions metadataOptions) : this(factory, filename, null, desiredAccess, metadataOptions)
+        public BitmapDecoder(ImagingFactory factory, string filename, NativeFileAccess desiredAccess, SharpDX.WIC.DecodeOptions metadataOptions) : this(factory, filename, null, desiredAccess, metadataOptions)
         {
         }
 
@@ -118,9 +120,9 @@ namespace SharpDX.WIC
         /// <param name="desiredAccess">The desired access.</param>
         /// <param name="metadataOptions">The metadata options.</param>
         /// <unmanaged>HRESULT IWICImagingFactory::CreateDecoderFromFilename([In] const wchar_t* wzFilename,[In, Optional] const GUID* pguidVendor,[In] unsigned int dwDesiredAccess,[In] WICDecodeOptions metadataOptions,[Out, Fast] IWICBitmapDecoder** ppIDecoder)</unmanaged>
-        public BitmapDecoder(ImagingFactory factory, string filename, System.Guid? guidVendorRef, FileAccess desiredAccess, SharpDX.WIC.DecodeOptions metadataOptions)
+        public BitmapDecoder(ImagingFactory factory, string filename, System.Guid? guidVendorRef, NativeFileAccess desiredAccess, SharpDX.WIC.DecodeOptions metadataOptions)
         {
-            factory.CreateDecoderFromFilename(filename, guidVendorRef, (int)FileHelper.Convert(desiredAccess), metadataOptions, this);
+            factory.CreateDecoderFromFilename(filename, guidVendorRef, (int)desiredAccess, metadataOptions, this);
         }
 
         /// <summary>

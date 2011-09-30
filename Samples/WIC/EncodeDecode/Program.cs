@@ -21,6 +21,7 @@
 using System;
 using System.IO;
 using SharpDX;
+using SharpDX.IO;
 using SharpDX.WIC;
 
 namespace EncodeDecode
@@ -48,7 +49,7 @@ namespace EncodeDecode
             if (File.Exists(filename))
                 File.Delete(filename);
 
-            stream = new WICStream(factory, filename, FileAccess.Write);
+            stream = new WICStream(factory, filename, NativeFileAccess.Write);
 
             // Initialize a Jpeg encoder with this stream
             var encoder = new JpegBitmapEncoder(factory);
@@ -90,7 +91,7 @@ namespace EncodeDecode
             // ------------------------------------------------------
 
             // Read input
-            stream = new WICStream(factory, filename, FileAccess.Read);
+            stream = new WICStream(factory, filename, NativeFileAccess.Read);
             var decoder = new JpegBitmapDecoder(factory);
             decoder.Initialize(stream, DecodeOptions.CacheOnDemand);
             var bitmapFrameDecode = decoder.GetFrame(0);

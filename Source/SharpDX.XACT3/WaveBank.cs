@@ -21,6 +21,8 @@
 using System;
 using System.IO;
 using Microsoft.Win32.SafeHandles;
+
+using SharpDX.IO;
 using SharpDX.Win32;
 
 namespace SharpDX.XACT3
@@ -67,10 +69,10 @@ namespace SharpDX.XACT3
             this.audioEngine = audioEngine;
             isAudioEngineReadonly = true;
 
-            var handle = FileHelper.CreateFile(fileName, NativeFileAccess.GenericRead, NativeFileShare.Read | NativeFileShare.Write,
-                                  IntPtr.Zero, NativeFileCreationDisposition.OpenExisting,
-                                  NativeFileAttributes.Normal | NativeFileAttributes.NoBuffering |
-                                  NativeFileAttributes.Overlapped | NativeFileAttributes.SequentialScan, IntPtr.Zero);
+            var handle = NativeFile.Create(fileName, NativeFileAccess.Read, NativeFileShare.Read | NativeFileShare.Write,
+                                  IntPtr.Zero, NativeFileMode.Open,
+                                  NativeFileOptions.Normal | NativeFileOptions.NoBuffering |
+                                  NativeFileOptions.Overlapped | NativeFileOptions.SequentialScan, IntPtr.Zero);
 
 
             if (handle == IntPtr.Zero || handle.ToInt32() == -1)

@@ -12,7 +12,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' "/>
+    <Reference Include="System.Windows.Forms" Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' " />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
@@ -22,6 +22,12 @@
     <Compile Include="BoundingBox.cs" />
     <Compile Include="BoundingSphere.cs" />
     <Compile Include="CallbackBase.cs" />
+    <Compile Include="IO\NativeFile.cs" />
+    <Compile Include="IO\NativeFileStream.cs" />
+    <Compile Include="IO\NativeFileAccess.cs" />
+    <Compile Include="IO\NativeFileOptions.cs" />
+    <Compile Include="IO\NativeFileMode.cs" />
+    <Compile Include="IO\NativeFileShare.cs" />
     <Compile Include="ShadowContainer.cs" />
     <Compile Include="Collision.cs" />
     <Compile Include="Color3.cs" />
@@ -105,7 +111,6 @@
     <Compile Include="Win32\ComStreamShadow.cs" />
     <Compile Include="Win32\ComStreamBaseShadow.cs" />
     <Compile Include="Win32\ErrorCode.cs" />
-    <Compile Include="Win32\FileHelper.cs" />
     <Compile Include="Win32\PropertyBag.cs" />
     <Compile Include="Win32\IStream.cs" />
     <Compile Include="Win32\IStreamBase.cs" />
@@ -113,12 +118,8 @@
     <Compile Include="Win32\ComStringEnumerator.cs" />
     <Compile Include="Win32\SecurityAttributes.cs" />
     <Compile Include="Windows\RenderLoop.cs" />
-    <Compile Include="Windows\RenderControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Windows\RenderForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Windows\RenderControl.cs" />
+    <Compile Include="Windows\RenderForm.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Mapping-core.xml">
