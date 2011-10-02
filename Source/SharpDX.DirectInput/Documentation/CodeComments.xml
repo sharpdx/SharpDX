@@ -218,4 +218,108 @@ Any instance mask.
 <comment id="DI8DEVTYPE_1STPERSON"><summary>	
 First-person action game device. The following subtypes are defined.
 </summary></comment>
+  <comment id="DISFFC">
+    <summary>
+      Sends a command to the device's force-feedback system. The device must be acquired at the exclusive cooperative level for this method to succeed.
+      This flag is used by <see cref="Device.SendForceFeedbackCommand(SharpDX.DirectInput.ForceFeedbackCommand)" /> method.
+    </summary>
+  </comment>
+  <comment id="DISFFC_CONTINUE">
+    <summary>
+      Paused playback of all active effects is to be continued. It is an error to send this command when the device is not in a paused state.
+    </summary>
+  </comment>
+  <comment id="DISFFC_PAUSE">
+    <summary>
+      Paused playback of all active effects is to be continued. It is an error to send this command when the device is not in a paused state.
+    </summary>
+  </comment>
+  <comment id="DISFFC_RESET">
+    <summary>
+      Paused playback of all active effects is to be continued. It is an error to send this command when the device is not in a paused state.
+    </summary>
+  </comment>
+  <comment id="DISFFC_SETACTUATORSOFF">
+    <summary>
+      Paused playback of all active effects is to be continued. It is an error to send this command when the device is not in a paused state.
+    </summary>
+  </comment>
+  <comment id="DISFFC_SETACTUATORSON">
+    <summary>
+      Paused playback of all active effects is to be continued. It is an error to send this command when the device is not in a paused state.
+    </summary>
+  </comment>
+  <comment id="DISFFC_STOPALL">
+    <summary>
+      Paused playback of all active effects is to be continued. It is an error to send this command when the device is not in a paused state.
+    </summary>
+  </comment>
+  <comment id="DIGFFS">
+    <summary>
+      Retrieves the state of the device's force-feedback system.  The device must be acquired at the exclusive cooperative level for this method to succeed.
+      The method <see cref="Device.GetForceFeedbackState()" /> can return any valid combination of these flags.
+    </summary>
+  </comment>
+  <comment id="DIGFFS_ACTUATORSOFF">
+    <summary>
+      The device's force-feedback actuators are disabled. If the device cannot report the actuator state, neither <see cref="ForceFeedbackState.ActuatorsOff"/> nor <see cref="ForceFeedbackState.ActuatorsOn"/> is returned.
+    </summary>
+  </comment>
+  <comment id="DIGFFS_ACTUATORSON">
+    <summary>
+      The device's force-feedback actuators are enabled. If the device cannot report the actuator state, neither <see cref="ForceFeedbackState.ActuatorsOff"/> nor <see cref="ForceFeedbackState.ActuatorsOn"/> is returned.
+    </summary>
+  </comment>
+  <comment id="DIGFFS_DEVICELOST">
+    <summary>
+      The device suffered an unexpected failure and is in an indeterminate state. It must be reset either by unacquiring and reacquiring the device, or by sending a <see cref="ForceFeedbackCommand.Reset"/> command.
+    </summary>
+  </comment>
+  <comment id="DIGFFS_EMPTY">
+    <summary>
+      The device has no downloaded effects.
+    </summary>
+  </comment>
+  <comment id="DIGFFS_PAUSED">
+    <summary>
+      Playback of all active effects has been paused.
+    </summary>
+  </comment>
+  <comment id="DIGFFS_POWEROFF">
+    <summary>
+      The force-feedback system is not currently available. If the device cannot report the power state, neither <see cref="ForceFeedbackState.PowerOn"/> nor <see cref="ForceFeedbackState.PowerOff"/> is returned.
+    </summary>
+  </comment>
+  <comment id="DIGFFS_POWERON">
+    <summary>
+      Power to the force-feedback system is currently available. If the device cannot report the power state, neither <see cref="ForceFeedbackState.PowerOn"/> nor <see cref="ForceFeedbackState.PowerOff"/> is returned.
+    </summary>
+  </comment>
+  <comment id="DIGFFS_SAFETYSWITCHOFF">
+    <summary>
+      The safety switch is currently off; that is, the device cannot operate. If the device cannot report the state of the safety switch, neither <see cref="ForceFeedbackState.SafetySwitchOn"/> nor <see cref="ForceFeedbackState.SafetySwitchOff"/> is returned.
+    </summary>
+  </comment>
+  <comment id="DIGFFS_SAFETYSWITCHON">
+    <summary>
+      The safety switch is currently on; that is, the device can operate. If the device cannot report the state of the safety switch, neither <see cref="ForceFeedbackState.SafetySwitchOn"/> nor <see cref="ForceFeedbackState.SafetySwitchOff"/> is returned.
+    </summary>
+  </comment>
+  <comment id="DIGFFS_STOPPED">
+    <summary>
+      No effects are playing, and the device is not paused.
+    </summary>
+  </comment>
+  <comment id="DIGFFS_USERFFSWITCHOFF">
+    <summary>
+      The user force-feedback switch is currently off; that is, the device cannot operate. If the device cannot report the state of the user force-feedback switch, neither <see cref="ForceFeedbackState.UserSafetySwitchOn"/>
+      nor <see cref="ForceFeedbackState.UserSafetySwitchOff"/> is returned.
+    </summary>
+  </comment>
+  <comment id="DIGFFS_USERFFSWITCHON">
+    <summary>
+      The user force-feedback switch is currently off; that is, the device cannot operate. If the device cannot report the state of the user force-feedback switch, neither <see cref="ForceFeedbackState.UserSafetySwitchOn"/>
+      nor <see cref="ForceFeedbackState.UserSafetySwitchOff"/> is returned.
+    </summary>
+  </comment>  
 </comments>

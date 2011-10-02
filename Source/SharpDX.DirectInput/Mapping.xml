@@ -532,6 +532,12 @@
     <!-- class SharpDX.DirectInput.PropertyHowType -->
     <create-cpp enum="DIPH" macro="DIPH_.*"/>
 
+    <!-- class SharpDX.DirectInput.ForceFeedbackState -->
+    <create-cpp enum="DIGFFS" macro="DIGFFS_.*"/>
+    
+    <!-- class SharpDX.DirectInput.ForceFeedbackCommand -->
+    <create-cpp enum="DISFFC" macro="DISFFC_.*"/>
+
     <!-- define enum SharpDX.DirectInput.ObjectDataFormatFlags -->
     <define enum="SharpDX.DirectInput.ObjectDataFormatFlags" sizeof="4" />
 
@@ -748,6 +754,30 @@
     <!-- class SharpDX.DirectInput.PropertyHowType -->
     <map enum="DIPH" name="PropertyHowType" visibility="internal"/>
     <map enum-item="DIPH_(.*)" name-tmp="$1"/>
+
+    <!-- class SharpDX.DirectInput.ForceFeedbackCommand -->
+    <map enum="DISFFC" name="ForceFeedbackCommand" flags="true"/>
+    <map enum-item="DISFFC_CONTINUE" name="Continue"/>
+    <map enum-item="DISFFC_PAUSE" name="Pause"/>
+    <map enum-item="DISFFC_RESET" name="Reset"/>
+    <map enum-item="DISFFC_SETACTUATORSOFF" name="SetActuatorsOff"/>
+    <map enum-item="DISFFC_SETACTUATORSON" name="SetActuatorsOn"/>
+    <map enum-item="DISFFC_STOPALL" name="StopAll"/>
+    
+    <!-- class SharpDX.DirectInput.ForceFeedbackState -->
+    <map enum="DIGFFS" name="ForceFeedbackState" flags="true"/>
+    <map enum-item="DIGFFS_ACTUATORSOFF" name="ActuatorsOff"/>
+    <map enum-item="DIGFFS_ACTUATORSON" name="ActuatorsOn"/>
+    <map enum-item="DIGFFS_DEVICELOST" name="DeviceLost"/>
+    <map enum-item="DIGFFS_EMPTY" name="Empty"/>
+    <map enum-item="DIGFFS_PAUSED" name="Paused"/>
+    <map enum-item="DIGFFS_POWEROFF" name="PowerOff"/>
+    <map enum-item="DIGFFS_POWERON" name="PowerOn"/>
+    <map enum-item="DIGFFS_SAFETYSWITCHOFF" name="SafetySwitchOff"/>
+    <map enum-item="DIGFFS_SAFETYSWITCHON" name="SafetySwitchOn"/>
+    <map enum-item="DIGFFS_STOPPED" name="Stopped"/>
+    <map enum-item="DIGFFS_USERFFSWITCHOFF" name="UserSafetySwitchOff"/>
+    <map enum-item="DIGFFS_USERFFSWITCHON" name="UserSafetySwitchOn"/>
 
     <!--
     // *****************************************************************
@@ -1014,8 +1044,12 @@
     <map method="IDirectInputDevice8W::RunControlPanel" visibility="internal" />
     <map method="IDirectInputDevice8W::CreateEffect" visibility="internal" />
     <map param="IDirectInputDevice8W::CreateEffect::arg2" attribute="out fast"/>
-    <map method="IDirectInputDevice8W::GetForceFeedbackState" visibility="internal" />
-    <map method="IDirectInputDevice8W::SendForceFeedbackCommand" visibility="internal" />
+    
+    <map method="IDirectInputDevice8W::GetForceFeedbackState" property="false"/>
+    <map param="IDirectInputDevice8W::GetForceFeedbackState::arg0" attribute="out" return="true" type="DIGFFS"/>
+    
+    <map method="IDirectInputDevice8W::SendForceFeedbackCommand"/>
+    <map param="IDirectInputDevice8W::SendForceFeedbackCommand::arg0" type="DISFFC"/>
 
     <map param="IDirectInputDevice8W::WriteEffectToFile" visibility="internal"/>
     <map param="IDirectInputDevice8W::WriteEffectToFile::arg2" attribute="in buffer"/>
