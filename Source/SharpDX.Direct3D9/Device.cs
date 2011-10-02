@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Drawing;
 
 namespace SharpDX.Direct3D9
 {
@@ -55,7 +56,21 @@ namespace SharpDX.Direct3D9
         /// <unmanaged>HRESULT IDirect3DDevice9::Clear([None] int Count,[In, Buffer, Optional] const D3DRECT* pRects,[None] int Flags,[None] D3DCOLOR Color,[None] float Z,[None] int Stencil)</unmanaged>
         public Result Clear(ClearFlags clearFlags, SharpDX.Color4 color, float zdepth, int stencil)
         {
-            return this.Clear_(0 , null, clearFlags, color, zdepth, stencil);
+            return this.Clear_(0, null, clearFlags, color.ToArgb(), zdepth, stencil);
+        }
+
+        /// <summary>
+        /// Clears one or more surfaces such as a render target, a stencil buffer, and a depth buffer.
+        /// </summary>
+        /// <param name="clearFlags">Flags that specify which surfaces will be cleared.</param>
+        /// <param name="color">The color that will be used to fill the cleared render target.</param>
+        /// <param name="zdepth">The value that will be used to fill the cleared depth buffer.</param>
+        /// <param name="stencil">The value that will be used to fill the cleared stencil buffer.</param>
+        /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::Clear([None] int Count,[In, Buffer, Optional] const D3DRECT* pRects,[None] int Flags,[None] D3DCOLOR Color,[None] float Z,[None] int Stencil)</unmanaged>
+        public Result Clear(ClearFlags clearFlags, int color, float zdepth, int stencil)
+        {
+            return this.Clear_(0, null, clearFlags, color, zdepth, stencil);
         }
 
         /// <summary>
@@ -70,7 +85,22 @@ namespace SharpDX.Direct3D9
         /// <unmanaged>HRESULT IDirect3DDevice9::Clear([None] int Count,[In, Buffer, Optional] const D3DRECT* pRects,[None] int Flags,[None] D3DCOLOR Color,[None] float Z,[None] int Stencil)</unmanaged>
         public Result Clear(ClearFlags clearFlags, SharpDX.Color4 color, float zdepth, int stencil, Rectangle[] rectangles)
         {
-            return this.Clear_( rectangles == null?0:rectangles.Length, rectangles, clearFlags, color, zdepth, stencil);
+            return this.Clear_( rectangles == null?0:rectangles.Length, rectangles, clearFlags, color.ToArgb(), zdepth, stencil);
+        }
+
+        /// <summary>
+        /// Clears one or more surfaces such as a render target, a stencil buffer, and a depth buffer.
+        /// </summary>
+        /// <param name="clearFlags">Flags that specify which surfaces will be cleared.</param>
+        /// <param name="color">The color that will be used to fill the cleared render target.</param>
+        /// <param name="zdepth">The value that will be used to fill the cleared depth buffer.</param>
+        /// <param name="stencil">The value that will be used to fill the cleared stencil buffer.</param>
+        /// <param name="rectangles">The areas on the surfaces that will be cleared.</param>
+        /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::Clear([None] int Count,[In, Buffer, Optional] const D3DRECT* pRects,[None] int Flags,[None] D3DCOLOR Color,[None] float Z,[None] int Stencil)</unmanaged>
+        public Result Clear(ClearFlags clearFlags, int color, float zdepth, int stencil, Rectangle[] rectangles)
+        {
+            return this.Clear_(rectangles == null ? 0 : rectangles.Length, rectangles, clearFlags, color, zdepth, stencil);
         }
 
         /// <summary>	
@@ -86,6 +116,397 @@ namespace SharpDX.Direct3D9
         public SharpDX.Result ColorFill(SharpDX.Direct3D9.Surface surfaceRef, SharpDX.Color4 color)
         {
             return this.ColorFill(surfaceRef, null, color);
+        }
+
+        /// <summary>
+        /// Draws the indexed user primitives.
+        /// </summary>
+        /// <typeparam name="S"></typeparam>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="primitiveType">Type of the primitive.</param>
+        /// <param name="minimumVertexIndex">Minimum index of the vertex.</param>
+        /// <param name="vertexCount">The vertex count.</param>
+        /// <param name="primitiveCount">The primitive count.</param>
+        /// <param name="indexData">The index data.</param>
+        /// <param name="indexDataFormat">The index data format.</param>
+        /// <param name="vertexData">The vertex data.</param>
+        /// <param name="vertexStride">The vertex stride.</param>
+        /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
+        public Result DrawIndexedUserPrimitives<S, T>(PrimitiveType primitiveType, int minimumVertexIndex, int vertexCount, int primitiveCount, S[] indexData, Format indexDataFormat, T[] vertexData, int vertexStride)
+            where S : struct
+            where T : struct
+        {
+            return DrawIndexedUserPrimitives(primitiveType, 0, 0, minimumVertexIndex, vertexCount, primitiveCount, indexData, indexDataFormat, vertexData, vertexStride);
+        }
+
+        /// <summary>
+        /// Draws the indexed user primitives.
+        /// </summary>
+        /// <typeparam name="S"></typeparam>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="primitiveType">Type of the primitive.</param>
+        /// <param name="startIndex">The start index.</param>
+        /// <param name="minimumVertexIndex">Minimum index of the vertex.</param>
+        /// <param name="vertexCount">The vertex count.</param>
+        /// <param name="primitiveCount">The primitive count.</param>
+        /// <param name="indexData">The index data.</param>
+        /// <param name="indexDataFormat">The index data format.</param>
+        /// <param name="vertexData">The vertex data.</param>
+        /// <param name="vertexStride">The vertex stride.</param>
+        /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
+        public Result DrawIndexedUserPrimitives<S, T>(PrimitiveType primitiveType, int startIndex, int minimumVertexIndex, int vertexCount, int primitiveCount, S[] indexData, Format indexDataFormat, T[] vertexData, int vertexStride)
+            where S : struct
+            where T : struct
+        {
+            return DrawIndexedUserPrimitives(primitiveType, startIndex, 0, minimumVertexIndex, vertexCount, primitiveCount, indexData, indexDataFormat, vertexData, vertexStride);
+        }
+
+        /// <summary>
+        /// Draws the indexed user primitives.
+        /// </summary>
+        /// <typeparam name="S"></typeparam>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="primitiveType">Type of the primitive.</param>
+        /// <param name="startIndex">The start index.</param>
+        /// <param name="startVertex">The start vertex.</param>
+        /// <param name="minimumVertexIndex">Minimum index of the vertex.</param>
+        /// <param name="vertexCount">The vertex count.</param>
+        /// <param name="primitiveCount">The primitive count.</param>
+        /// <param name="indexData">The index data.</param>
+        /// <param name="indexDataFormat">The index data format.</param>
+        /// <param name="vertexData">The vertex data.</param>
+        /// <param name="vertexStride">The vertex stride.</param>
+        /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
+        public Result DrawIndexedUserPrimitives<S, T>(PrimitiveType primitiveType, int startIndex, int startVertex, int minimumVertexIndex, int vertexCount, int primitiveCount, S[] indexData, Format indexDataFormat, T[] vertexData, int vertexStride)
+            where S : struct
+            where T : struct
+        {
+            unsafe
+            {
+                return DrawIndexedPrimitiveUP(primitiveType, minimumVertexIndex, vertexCount, primitiveCount, (IntPtr)Interop.Fixed(ref indexData[startIndex]), indexDataFormat, (IntPtr)Interop.Fixed(ref vertexData[startVertex]), vertexStride);
+            }            
+        }
+
+        /// <summary>
+        /// Draws the user primitives.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="primitiveType">Type of the primitive.</param>
+        /// <param name="primitiveCount">The primitive count.</param>
+        /// <param name="data">The data.</param>
+        /// <param name="vertexStreamZeroStride">The vertex stream zero stride.</param>
+        /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
+        public Result DrawUserPrimitives<T>(PrimitiveType primitiveType, int primitiveCount, T[] data, int vertexStreamZeroStride = 0) where T : struct
+        {
+            return DrawUserPrimitives(primitiveType, 0, primitiveCount, data, vertexStreamZeroStride);
+        }
+
+        /// <summary>
+        /// Draws the user primitives.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="primitiveType">Type of the primitive.</param>
+        /// <param name="startIndex">The start index.</param>
+        /// <param name="primitiveCount">The primitive count.</param>
+        /// <param name="data">The data.</param>
+        /// <param name="vertexStreamZeroStride">The vertex stream zero stride.</param>
+        /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
+        public Result DrawUserPrimitives<T>(PrimitiveType primitiveType, int startIndex, int primitiveCount, T[] data, int vertexStreamZeroStride = 0) where T : struct
+        {
+            unsafe
+            {
+                return DrawPrimitiveUP(primitiveType, primitiveCount, (IntPtr)Interop.Fixed(ref data[startIndex]), vertexStreamZeroStride);
+            }    
+        }
+
+        /// <summary>
+        /// Gets the back buffer.
+        /// </summary>
+        /// <param name="swapChain">The swap chain.</param>
+        /// <param name="backBuffer">The back buffer.</param>
+        /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
+        public SharpDX.Direct3D9.Surface GetBackBuffer(int swapChain, int backBuffer)
+        {
+            return GetBackBuffer(swapChain, backBuffer, BackBufferType.Mono);
+        }
+
+
+        /// <summary>
+        /// Gets the palette entries.
+        /// </summary>
+        /// <param name="paletteNumber">The palette number.</param>
+        /// <returns>An array of <see cref="PaletteEntry"/></returns>
+        public PaletteEntry[] GetPaletteEntries(int paletteNumber)
+        {
+            var entries = new PaletteEntry[256];
+            GetPaletteEntries(paletteNumber, entries);
+            return entries;
+        }
+
+        /// <summary>
+        /// Gets the pixel shader boolean constant.
+        /// </summary>
+        /// <param name="startRegister">The start register.</param>
+        /// <param name="count">The count.</param>
+        /// <returns>An array of boolean constants</returns>
+        public bool[] GetPixelShaderBooleanConstant(int startRegister, int count)
+        {
+            unsafe
+            {
+                if (count < 1024)
+                {
+                    var result = stackalloc int[count];
+                    GetPixelShaderConstantB(startRegister, (IntPtr)result, count);
+                    return Utilities.ConvertToBoolArray(result, count);
+                }
+                else
+                {
+                    var result = new int[count];
+                    fixed (void* pResult = result)
+                        GetPixelShaderConstantB(startRegister, (IntPtr)pResult, count);
+                    return Utilities.ConvertToBoolArray(result);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the pixel shader float constant.
+        /// </summary>
+        /// <param name="startRegister">The start register.</param>
+        /// <param name="count">The count.</param>
+        /// <returns>An array of float constants</returns>
+        public float[] GetPixelShaderFloatConstant(int startRegister, int count)
+        {
+            var result = new float[count];
+            GetPixelShaderConstantF(startRegister, result, count);
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the pixel shader integer constant.
+        /// </summary>
+        /// <param name="startRegister">The start register.</param>
+        /// <param name="count">The count.</param>
+        /// <returns>An array of int constants</returns>
+        public int[] GetPixelShaderIntegerConstant(int startRegister, int count)
+        {
+            var result = new int[count];
+            GetPixelShaderConstantI(startRegister, result, count);
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the state of the render.
+        /// </summary>
+        /// <param name="state">The state.</param>
+        /// <returns>The render state value</returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::GetRenderState([In] D3DRENDERSTATETYPE State,[In] void* pValue)</unmanaged>
+        public int GetRenderState(SharpDX.Direct3D9.RenderState state)
+        {
+            unsafe
+            {
+                int result = 0;
+                GetRenderState(state, new IntPtr(&result));
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Gets the state of the render.
+        /// </summary>
+        /// <typeparam name="T">Type of the state value.</typeparam>
+        /// <param name="state">The state.</param>
+        /// <returns>
+        /// The render state value
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::GetRenderState([In] D3DRENDERSTATETYPE State,[In] void* pValue)</unmanaged>
+        public T GetRenderState<T>(SharpDX.Direct3D9.RenderState state) where T : struct
+        {
+            unsafe
+            {
+                T result = default(T);
+                GetRenderState(state, (IntPtr)Interop.Fixed(ref result));
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Gets the state of the sampler.
+        /// </summary>
+        /// <param name="sampler">The sampler.</param>
+        /// <param name="state">The state.</param>
+        /// <returns>
+        /// The sampler state value
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::GetSamplerState([In] unsigned int Sampler,[In] D3DSAMPLERSTATETYPE Type,[In] void* pValue)</unmanaged>
+        public int GetSamplerState(int sampler, SharpDX.Direct3D9.SamplerState state)
+        {
+            unsafe
+            {
+                int result = 0;
+                GetSamplerState(sampler, state, new IntPtr(&result));
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Gets the state of the sampler.
+        /// </summary>
+        /// <typeparam name="T">Type of the sampler statet value</typeparam>
+        /// <param name="sampler">The sampler.</param>
+        /// <param name="state">The state.</param>
+        /// <returns>
+        /// The sampler state value
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::GetSamplerState([In] unsigned int Sampler,[In] D3DSAMPLERSTATETYPE Type,[In] void* pValue)</unmanaged>
+        public T GetSamplerState<T>(int sampler, SharpDX.Direct3D9.SamplerState state) where T : struct
+        {
+            unsafe
+            {
+                T result = default(T);
+                GetSamplerState(sampler, state, (IntPtr)Interop.Fixed(ref result));
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Gets the state of the texture stage.
+        /// </summary>
+        /// <param name="stage">The stage.</param>
+        /// <param name="type">The type.</param>
+        /// <returns>
+        /// The texture stage state.
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::GetTextureStageState([In] unsigned int Stage,[In] D3DTEXTURESTAGESTATETYPE Type,[In] void* pValue)</unmanaged>
+        public int GetTextureStageState(int stage, SharpDX.Direct3D9.TextureStage type)
+        {
+            unsafe
+            {
+                int result = 0;
+                GetTextureStageState(stage, type, new IntPtr(&result));
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Gets the state of the texture stage.
+        /// </summary>
+        /// <typeparam name="T">Type of the texture stage state</typeparam>
+        /// <param name="stage">The stage.</param>
+        /// <param name="type">The type.</param>
+        /// <returns>
+        /// The texture stage state.
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::GetTextureStageState([In] unsigned int Stage,[In] D3DTEXTURESTAGESTATETYPE Type,[In] void* pValue)</unmanaged>
+        public T GetTextureStageState<T>(int stage, SharpDX.Direct3D9.TextureStage type) where T : struct
+        {
+            unsafe
+            {
+                T result = default(T);
+                GetTextureStageState(stage, type, (IntPtr)Interop.Fixed(ref result));
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Gets the vertex shader boolean constant.
+        /// </summary>
+        /// <param name="startRegister">The start register.</param>
+        /// <param name="count">The count.</param>
+        /// <returns>An array of boolean constants</returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::GetVertexShaderConstantB([In] unsigned int StartRegister,[In] void* pConstantData,[In] unsigned int BoolCount)</unmanaged>	
+        public bool[] GetVertexShaderBooleanConstant(int startRegister, int count)
+        {
+            unsafe
+            {
+                if (count < 1024)
+                {
+                    var result = stackalloc int[count];
+                    return Utilities.ConvertToBoolArray(result, count);
+                }
+                else
+                {
+                    var result = new int[count];
+                    fixed (void* pResult = result)
+                        GetVertexShaderConstantB(startRegister, (IntPtr)pResult, count);
+                    return Utilities.ConvertToBoolArray(result);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the vertex shader float constant.
+        /// </summary>
+        /// <param name="startRegister">The start register.</param>
+        /// <param name="count">The count.</param>
+        /// <returns>An array of float constants</returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::GetVertexShaderConstantF([In] unsigned int StartRegister,[In, Buffer] float* pConstantData,[In] unsigned int Vector4fCount)</unmanaged>	
+        public float[] GetVertexShaderFloatConstant(int startRegister, int count)
+        {
+            var result = new float[count];
+            GetVertexShaderConstantF(startRegister, result, count);
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the vertex shader integer constant.
+        /// </summary>
+        /// <param name="startRegister">The start register.</param>
+        /// <param name="count">The count.</param>
+        /// <returns>An array of int constants</returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::GetVertexShaderConstantI([In] unsigned int StartRegister,[Out] int* pConstantData,[In] unsigned int Vector4iCount)</unmanaged>	
+        public int[] GetVertexShaderIntegerConstant(int startRegister, int count)
+        {
+            var result = new int[count];
+            GetVertexShaderConstantI(startRegister, result, count);
+            return result;
+        }
+
+        /// <summary>
+        /// Sets the cursor position.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <param name="flags">if set to <c>true</c> [flags].</param>
+        /// <unmanaged>void IDirect3DDevice9::SetCursorPosition([In] int X,[In] int Y,[In] unsigned int Flags)</unmanaged>
+        public void SetCursorPosition(Point point, bool flags)
+        {
+            SetCursorPosition(point.X, point.Y, flags);
+        }
+
+        /// <summary>
+        /// Sets the cursor position.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <param name="flags">if set to <c>true</c> [flags].</param>
+        /// <unmanaged>void IDirect3DDevice9::SetCursorPosition([In] int X,[In] int Y,[In] unsigned int Flags)</unmanaged>
+        public void SetCursorPosition(int x, int y, bool flags)
+        {
+            SetCursorPosition(x, y, flags?1:0);
+        }
+
+        /// <summary>
+        /// Sets the cursor properties.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <param name="cursorBitmapRef">The cursor bitmap ref.</param>
+        /// <returns></returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::SetCursorProperties([In] unsigned int XHotSpot,[In] unsigned int YHotSpot,[In] IDirect3DSurface9* pCursorBitmap)</unmanaged>
+        public SharpDX.Result SetCursorProperties(Point point, SharpDX.Direct3D9.Surface cursorBitmapRef)
+        {
+            return SetCursorProperties(point.X, point.Y, cursorBitmapRef);
+        }
+
+        /// <summary>
+        /// Sets the gamma ramp.
+        /// </summary>
+        /// <param name="swapChain">The swap chain.</param>
+        /// <param name="rampRef">The ramp ref.</param>
+        /// <param name="calibrate">if set to <c>true</c> [calibrate].</param>
+        /// <unmanaged>void IDirect3DDevice9::SetGammaRamp([In] unsigned int iSwapChain,[In] unsigned int Flags,[In] const D3DGAMMARAMP* pRamp)</unmanaged>
+        public void SetGammaRamp(int swapChain, ref SharpDX.Direct3D9.GammaRamp rampRef, bool calibrate)
+        {
+            SetGammaRamp(swapChain, calibrate ? 1 : 0, ref rampRef);
         }
 
         /// <summary>
@@ -161,6 +582,254 @@ namespace SharpDX.Direct3D9
                     destPtr = new IntPtr(&destinationRectangle);
 
                 Present(sourceRectangleOptional, destPtr, windowOverride, regionPtr);
+            }
+        }
+
+        /// <summary>
+        /// Sets the pixel shader constant.
+        /// </summary>
+        /// <param name="startRegister">The start register.</param>
+        /// <param name="data">The data.</param>
+        /// <returns>
+        /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::SetPixelShaderConstantF([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int Vector4fCount)</unmanaged>
+        public Result SetPixelShaderConstant(int startRegister, Matrix[] data)
+        {
+            unsafe
+            {
+                fixed (void* pData = data)
+                    return SetPixelShaderConstantF(startRegister, (IntPtr)pData, data.Length << 4);
+            }                              
+        }
+
+        /// <summary>
+        /// Sets the pixel shader constant.
+        /// </summary>
+        /// <param name="startRegister">The start register.</param>
+        /// <param name="data">The data.</param>
+        /// <returns>
+        /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::SetPixelShaderConstantF([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int Vector4fCount)</unmanaged>
+        public Result SetPixelShaderConstant(int startRegister, Vector4[] data)
+        {
+            unsafe
+            {
+                fixed (void* pData = data)
+                    return SetPixelShaderConstantF(startRegister, (IntPtr)pData, data.Length << 2);
+            }                  
+        }
+
+        /// <summary>
+        /// Sets the pixel shader constant.
+        /// </summary>
+        /// <param name="startRegister">The start register.</param>
+        /// <param name="data">The data.</param>
+        /// <returns>
+        /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::SetPixelShaderConstantB([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int BoolCount)</unmanaged>
+        public Result SetPixelShaderConstant(int startRegister, bool[] data)
+        {
+            unsafe
+            {
+                if (data.Length < 1024)
+                {
+                    var result = stackalloc int[data.Length];
+                    Utilities.ConvertToIntArray(data, result);
+                    return SetPixelShaderConstantB(startRegister, (IntPtr)result, data.Length);
+                }
+                else
+                {
+                    var result = Utilities.ConvertToIntArray(data);
+                    fixed (void* pResult = result)
+                        return SetPixelShaderConstantB(startRegister, (IntPtr)pResult, data.Length);
+                }
+            }            
+        }
+
+        /// <summary>
+        /// Sets the pixel shader constant.
+        /// </summary>
+        /// <param name="startRegister">The start register.</param>
+        /// <param name="data">The data.</param>
+        /// <returns>
+        /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::SetPixelShaderConstantI([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int Vector4iCount)</unmanaged>
+        public Result SetPixelShaderConstant(int startRegister, int[] data)
+        {
+            unsafe
+            {
+                fixed (void* pData = data)
+                    return SetPixelShaderConstantI(startRegister, (IntPtr)pData, data.Length);
+            }                      
+        }
+
+        /// <summary>
+        /// Sets the pixel shader constant.
+        /// </summary>
+        /// <param name="startRegister">The start register.</param>
+        /// <param name="data">The data.</param>
+        /// <returns>
+        /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::SetPixelShaderConstantF([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int Vector4fCount)</unmanaged>
+        public Result SetPixelShaderConstant(int startRegister, float[] data)
+        {
+            unsafe
+            {
+                fixed (void* pData = data)
+                    return SetPixelShaderConstantF(startRegister, (IntPtr)pData, data.Length);
+            }            
+        }
+
+        /// <summary>
+        /// Sets the pixel shader constant.
+        /// </summary>
+        /// <param name="startRegister">The start register.</param>
+        /// <param name="data">The data.</param>
+        /// <returns>
+        /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::SetPixelShaderConstantF([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int Vector4fCount)</unmanaged>
+        public unsafe Result SetPixelShaderConstant(int startRegister, Matrix* data)
+        {
+            return SetPixelShaderConstantF(startRegister, (IntPtr)data, 16);
+        }
+
+        /// <summary>
+        /// Sets the pixel shader constant.
+        /// </summary>
+        /// <param name="startRegister">The start register.</param>
+        /// <param name="data">The data.</param>
+        /// <returns>
+        /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::SetPixelShaderConstantF([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int Vector4fCount)</unmanaged>
+        public Result SetPixelShaderConstant(int startRegister, Matrix data)
+        {
+            unsafe
+            {
+                return SetPixelShaderConstantF(startRegister, new IntPtr(&data), 16);
+            }
+        }
+
+        /// <summary>
+        /// Sets the pixel shader constant.
+        /// </summary>
+        /// <param name="startRegister">The start register.</param>
+        /// <param name="data">The data.</param>
+        /// <param name="count">The count.</param>
+        /// <returns>
+        /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::SetPixelShaderConstantF([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int Vector4fCount)</unmanaged>
+        public unsafe Result SetPixelShaderConstant(int startRegister, Matrix* data, int count)
+        {
+            return SetPixelShaderConstantF(startRegister, (IntPtr)data, count << 4);
+        }
+
+        /// <summary>
+        /// Sets the pixel shader constant.
+        /// </summary>
+        /// <param name="startRegister">The start register.</param>
+        /// <param name="data">The data.</param>
+        /// <param name="offset">The offset.</param>
+        /// <param name="count">The count.</param>
+        /// <returns>
+        /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::SetPixelShaderConstantF([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int Vector4fCount)</unmanaged>
+        public Result SetPixelShaderConstant(int startRegister, Matrix[] data, int offset, int count)
+        {
+            unsafe
+            {
+                fixed (void* pData = &data[offset])
+                    return SetPixelShaderConstantF(startRegister, (IntPtr)pData, count << 4);
+            }
+        }
+
+        /// <summary>
+        /// Sets the pixel shader constant.
+        /// </summary>
+        /// <param name="startRegister">The start register.</param>
+        /// <param name="data">The data.</param>
+        /// <param name="offset">The offset.</param>
+        /// <param name="count">The count.</param>
+        /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::SetPixelShaderConstantF([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int Vector4fCount)</unmanaged>
+        public Result SetPixelShaderConstant(int startRegister, Vector4[] data, int offset, int count)
+        {
+            unsafe
+            {
+                fixed (void* pData = &data[offset])
+                    return SetPixelShaderConstantF(startRegister, (IntPtr)pData, count << 2);
+            }            
+        }
+
+        /// <summary>
+        /// Sets the pixel shader constant.
+        /// </summary>
+        /// <param name="startRegister">The start register.</param>
+        /// <param name="data">The data.</param>
+        /// <param name="offset">The offset.</param>
+        /// <param name="count">The count.</param>
+        /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::SetPixelShaderConstantB([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int BoolCount)</unmanaged>
+        public Result SetPixelShaderConstant(int startRegister, bool[] data, int offset, int count)
+        {
+            unsafe
+            {
+                if (count < 1024)
+                {
+                    var result = stackalloc int[data.Length];
+                    Utilities.ConvertToIntArray(data, result);
+                    return SetPixelShaderConstantB(startRegister, new IntPtr(&result[offset]), count);
+                }
+                else
+                {
+                    var result = Utilities.ConvertToIntArray(data);                    
+                    fixed (void* pResult = &result[offset])
+                        return SetPixelShaderConstantB(startRegister, (IntPtr)pResult, count);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets the pixel shader constant.
+        /// </summary>
+        /// <param name="startRegister">The start register.</param>
+        /// <param name="data">The data.</param>
+        /// <param name="offset">The offset.</param>
+        /// <param name="count">The count.</param>
+        /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::SetPixelShaderConstantI([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int Vector4iCount)</unmanaged>
+        public Result SetPixelShaderConstant(int startRegister, int[] data, int offset, int count)
+        {
+            unsafe
+            {
+                fixed (void* pData = &data[offset])
+                    return SetPixelShaderConstantI(startRegister, (IntPtr)pData, count);
+            }            
+        }
+
+        /// <summary>
+        /// Sets the pixel shader constant.
+        /// </summary>
+        /// <param name="startRegister">The start register.</param>
+        /// <param name="data">The data.</param>
+        /// <param name="offset">The offset.</param>
+        /// <param name="count">The count.</param>
+        /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::SetPixelShaderConstantF([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int Vector4fCount)</unmanaged>
+        public Result SetPixelShaderConstant(int startRegister, float[] data, int offset, int count)
+        {
+            unsafe
+            {
+                fixed (void* pData = &data[offset])
+                    return SetPixelShaderConstantF(startRegister, (IntPtr)pData, count);
             }
         }
     }
