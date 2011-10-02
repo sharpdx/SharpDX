@@ -55,6 +55,7 @@ enum __SAL_YesNo {};
 
 
   <file>SharpDX\Mapping.xml</file>
+  <file>SharpDX.Animation\Mapping.xml</file>
   <file>SharpDX.DXGI\Mapping.xml</file>
   <file>SharpDX.D3DCompiler\Mapping.xml</file>  
   <file>Mapping.Direct3D1x.xml</file>

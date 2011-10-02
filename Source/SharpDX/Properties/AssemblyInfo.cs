@@ -26,6 +26,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyDescription("Core assembly for all SharpDX assemblies.")]
 
 // Make internals SharpDX visible to all SharpDX assemblies
+[assembly: InternalsVisibleTo("SharpDX.Animation")]
 [assembly: InternalsVisibleTo("SharpDX.DXGI")]
 [assembly: InternalsVisibleTo("SharpDX.D3DCompiler")]
 [assembly: InternalsVisibleTo("SharpDX.Direct3D9")]
