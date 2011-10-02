@@ -73,10 +73,7 @@ namespace SharpDX.XAudio2
             //var result = Utilities.CoInitializeEx(IntPtr.Zero, Utilities.CoInit.MultiThreaded);
             //result.CheckError();
 
-            IntPtr temp;
-            var result = Utilities.CoCreateInstance(clsid, IntPtr.Zero, Utilities.CLSCTX.ClsctxInprocServer, Utilities.GetGuidFromType(typeof(XAudio2)), out temp);
-            result.CheckError();
-            NativePointer = temp;
+            Utilities.CreateComInstance(clsid, Utilities.CLSCTX.ClsctxInprocServer, Utilities.GetGuidFromType(typeof(XAudio2)), this);
 
             // Initialize XAudio2
             Initialize(0, processorSpecifier);

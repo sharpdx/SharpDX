@@ -85,10 +85,7 @@ namespace SharpDX.XACT3
 
             var selectedEngineCLSID = (debug) ? DebugEngineGuid : (audition) ? AuditionEngineGuid : EngineGuid;
 
-            IntPtr temp;
-            var result = Utilities.CoCreateInstance(selectedEngineCLSID, IntPtr.Zero, Utilities.CLSCTX.ClsctxInprocServer, Utilities.GetGuidFromType(typeof(AudioEngine)), out temp);
-            result.CheckError();
-            NativePointer = temp;
+            Utilities.CreateComInstance(selectedEngineCLSID, Utilities.CLSCTX.ClsctxInprocServer, Utilities.GetGuidFromType(typeof(AudioEngine)), this);
 
             unsafe
             {

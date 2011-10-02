@@ -43,11 +43,7 @@ namespace SharpDX.XAudio2.Fx
             : base(IntPtr.Zero)
         {
             Guid clsid = (isUsingDebug) ? XAudio2FxContants.CLSID_AudioVolumeMeter_Debug : XAudio2FxContants.CLSID_AudioVolumeMeter;
-
-            IntPtr temp;
-            Result result = Utilities.CoCreateInstance(clsid, IntPtr.Zero, Utilities.CLSCTX.ClsctxInprocServer, Utilities.GetGuidFromType(typeof(AudioProcessor)), out temp);
-            result.CheckError();
-            NativePointer = temp;
+            Utilities.CreateComInstance(clsid, Utilities.CLSCTX.ClsctxInprocServer, Utilities.GetGuidFromType(typeof(AudioProcessor)), this);
         }
     }
 }
