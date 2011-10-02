@@ -45,6 +45,7 @@
   </ifndef>
 
   <include file="wtypes.h" namespace="SharpDX.Win32" output="Win32">
+    <attach>tagSTGC</attach>
     <attach>STGC</attach>
     <attach>STATFLAG</attach>    
   </include>

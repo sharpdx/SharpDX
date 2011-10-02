@@ -573,13 +573,15 @@ namespace SharpGen.Parser
                         case GccXml.TagEnumeration:
                             string structName = xStruct.AttributeValue("name");
                             // Rename all structure starting with tagXXXX to XXXX
-                            if (structName.Length > 4 && structName.StartsWith("tag") && Char.IsUpper(structName[3]))
-                                structName = structName.Substring(3);
+                            //if (structName.Length > 4 && structName.StartsWith("tag") && Char.IsUpper(structName[3]))
+                            //    structName = structName.Substring(3);
 
-                            // Remove all leading and trailing _ in a struct name
-                            structName = structName.Trim('_');
-
-                            xStruct.SetAttributeValue("name", structName);
+                            if (structName.StartsWith("tag") || structName.StartsWith("_"))
+                            {
+                                var typeName = xTypedef.AttributeValue("name");
+                                xStruct.SetAttributeValue("name", typeName);
+                                Logger.Message("Use typedef to rename [{0}] to [{1}]", structName, typeName);
+                            }
                             break;
                     }
                 }
