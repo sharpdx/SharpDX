@@ -18,6 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+using System.Runtime.InteropServices;
+
 namespace SharpDX.Animation
 {
     public partial class Variable
@@ -31,6 +34,42 @@ namespace SharpDX.Animation
         public Variable(Manager manager, double initialValue = 0.0)
         {
             manager.CreateAnimationVariable(initialValue, this);
+        }
+
+        /// <summary>
+        /// Sets the tag.
+        /// </summary>
+        /// <param name="object">The @object.</param>
+        /// <param name="id">The id.</param>
+        /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
+        /// <unmanaged>HRESULT IUIAnimationStoryboard::SetTag([In, Optional] void* object,[In] unsigned int id)</unmanaged>
+        public SharpDX.Result SetTag(object @object, int id)
+        {
+            // Free any previous tag set
+            IntPtr tagObjectPtr = IntPtr.Zero;
+            int previousId;
+            GetTag(out tagObjectPtr, out previousId);
+            if (tagObjectPtr != IntPtr.Zero)
+                GCHandle.FromIntPtr(tagObjectPtr).Free();
+
+            return SetTag(GCHandle.ToIntPtr(GCHandle.Alloc(@object)), id);
+        }
+
+        /// <summary>
+        /// Gets the tag.
+        /// </summary>
+        /// <param name="object">The @object.</param>
+        /// <param name="id">The id.</param>
+        /// <returns>
+        /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
+        /// </returns>
+        /// <unmanaged>HRESULT IUIAnimationStoryboard::GetTag([Out, Optional] void** object,[Out, Optional] unsigned int* id)</unmanaged>
+        public SharpDX.Result GetTag(out object @object, out int id)
+        {
+            IntPtr tagObjectPtr;
+            var result = GetTag(out tagObjectPtr, out id);
+            @object = GCHandle.FromIntPtr(tagObjectPtr).Target;
+            return result;
         }
     }
 }

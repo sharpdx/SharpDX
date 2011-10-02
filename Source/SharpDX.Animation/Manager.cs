@@ -44,6 +44,15 @@ namespace SharpDX.Animation
         public delegate void StatusChangedDelegate(ManagerStatus newStatus, ManagerStatus previousStatus);
 
         /// <summary>
+        /// A delegate used to resolve scheduling conflicts.
+        /// </summary>
+        /// <param name="scheduledStoryboard">The scheduled storyboard.</param>
+        /// <param name="newStoryboard">The new storyboard.</param>
+        /// <param name="priorityEffect">The priority effect.</param>
+        /// <returns><c>true</c> if newStoryboard has priority. <c>false</c> if scheduledStoryboard has priority</returns>
+        public delegate bool PriorityComparisonDelegate(Storyboard scheduledStoryboard, Storyboard newStoryboard, PriorityEffect priorityEffect);
+
+        /// <summary>
         /// Occurs when [status changed].
         /// </summary>
         public event StatusChangedDelegate StatusChanged
@@ -56,14 +65,13 @@ namespace SharpDX.Animation
                     shadowEventHandler = new ManagerEventHandlerShadow();
                     SetManagerEventHandler_(ManagerEventHandlerShadow.ToIntPtr(shadowEventHandler));
                 }
-                else
-                {
-                    shadowEventHandler.Delegates += value;
-                }
+                shadowEventHandler.Delegates += value;
             }
 
             remove
             {
+                if (shadowEventHandler == null) return;
+
                 shadowEventHandler.Delegates -= value;
 
                 if (shadowEventHandler.Delegates.GetInvocationList().Length == 0)
@@ -75,6 +83,128 @@ namespace SharpDX.Animation
             }
         }
 
+        private PriorityComparisonShadow cancelPriorityComparisonShadow;
+
+        /// <summary>
+        /// Sets the cancel priority comparison.
+        /// </summary>
+        /// <value>
+        /// The cancel priority comparison.
+        /// </value>
+        public PriorityComparisonDelegate CancelPriorityComparison
+        {
+            set
+            {
+                if (value != null)
+                {
+                    if (cancelPriorityComparisonShadow == null)
+                    {
+                        cancelPriorityComparisonShadow = new PriorityComparisonShadow { Delegate = value };
+                        SetCancelPriorityComparison_(PriorityComparisonShadow.ToIntPtr(cancelPriorityComparisonShadow));
+                    }
+                    cancelPriorityComparisonShadow.Delegate = value;
+                }
+                else if (cancelPriorityComparisonShadow != null)
+                {
+                    SetCancelPriorityComparison_(IntPtr.Zero);
+                    cancelPriorityComparisonShadow.Dispose();
+                    cancelPriorityComparisonShadow = null;
+                }
+            }
+        }
+
+        private PriorityComparisonShadow trimPriorityComparisonShadow;
+
+        /// <summary>
+        /// Sets the trim priority comparison.
+        /// </summary>
+        /// <value>
+        /// The trim priority comparison.
+        /// </value>
+        public PriorityComparisonDelegate TrimPriorityComparison
+        {
+            set
+            {
+                if (value != null)
+                {
+                    if (trimPriorityComparisonShadow == null)
+                    {
+                        trimPriorityComparisonShadow = new PriorityComparisonShadow { Delegate = value };
+                        SetTrimPriorityComparison_(PriorityComparisonShadow.ToIntPtr(trimPriorityComparisonShadow));
+                    }
+                    trimPriorityComparisonShadow.Delegate = value;
+                }
+                else if (trimPriorityComparisonShadow != null)
+                {
+                    SetTrimPriorityComparison_(IntPtr.Zero);
+                    trimPriorityComparisonShadow.Dispose();
+                    trimPriorityComparisonShadow = null;
+                }
+            }
+        }
+
+        private PriorityComparisonShadow compressPriorityComparisonShadow;
+
+        /// <summary>
+        /// Sets the compress priority comparison.
+        /// </summary>
+        /// <value>
+        /// The compress priority comparison.
+        /// </value>
+        public PriorityComparisonDelegate CompressPriorityComparison
+        {
+            set
+            {
+                if (value != null)
+                {
+                    if (compressPriorityComparisonShadow == null)
+                    {
+                        compressPriorityComparisonShadow = new PriorityComparisonShadow { Delegate = value };
+                        SetCompressPriorityComparison_(PriorityComparisonShadow.ToIntPtr(compressPriorityComparisonShadow));
+                    }
+                    compressPriorityComparisonShadow.Delegate = value;
+                }
+                else if (compressPriorityComparisonShadow != null)
+                {
+                    SetCompressPriorityComparison_(IntPtr.Zero);
+                    compressPriorityComparisonShadow.Dispose();
+                    compressPriorityComparisonShadow = null;
+                }
+            }
+        }
+
+        private PriorityComparisonShadow concludePriorityComparisonShadow;
+
+        /// <summary>
+        /// Sets the conclude priority comparison.
+        /// </summary>
+        /// <value>
+        /// The conclude priority comparison.
+        /// </value>
+        public PriorityComparisonDelegate ConcludePriorityComparison
+        {
+            set
+            {
+                if (value != null)
+                {
+                    if (trimPriorityComparisonShadow == null)
+                    {
+                        trimPriorityComparisonShadow = new PriorityComparisonShadow { Delegate = value };
+                        SetConcludePriorityComparison_(PriorityComparisonShadow.ToIntPtr(trimPriorityComparisonShadow));
+                    }
+                    trimPriorityComparisonShadow.Delegate = value;
+                }
+                else if (trimPriorityComparisonShadow != null)
+                {
+                    SetConcludePriorityComparison_(IntPtr.Zero);
+                    trimPriorityComparisonShadow.Dispose();
+                    trimPriorityComparisonShadow = null;
+                }
+            }
+        }
+
+
+
         /// <summary>
         /// Gets the variable from tag.
         /// </summary>
@@ -84,15 +214,14 @@ namespace SharpDX.Animation
         /// <unmanaged>HRESULT IUIAnimationManager::GetVariableFromTag([In, Optional] void* object,[In] unsigned int id,[Out] IUIAnimationVariable** variable)</unmanaged>
         public SharpDX.Animation.Variable GetVariableFromTag(int id, object tagObject = null)
         {
-            var tagObjectPtr = Marshal.GetIUnknownForObject(tagObject);
+            var tagObjectHandle = GCHandle.Alloc(tagObject);
             try
             {
-                return GetVariableFromTag(tagObjectPtr, id);
+                return GetVariableFromTag(GCHandle.ToIntPtr(tagObjectHandle), id);
             } 
             finally
             {
-                if (tagObjectPtr != IntPtr.Zero) 
-                    Marshal.Release(tagObjectPtr);
+                tagObjectHandle.Free();
             }
         }
 
@@ -105,15 +234,14 @@ namespace SharpDX.Animation
         /// <unmanaged>HRESULT IUIAnimationManager::GetStoryboardFromTag([In, Optional] void* object,[In] unsigned int id,[Out] IUIAnimationStoryboard** storyboard)</unmanaged>
         public SharpDX.Animation.Storyboard GetStoryboardFromTag(int id, object tagObject = null)
         {
-            var tagObjectPtr = Marshal.GetIUnknownForObject(tagObject);
+            var tagObjectHandle = GCHandle.Alloc(tagObject);
             try
             {
-                return GetStoryboardFromTag(tagObjectPtr, id);
+                return GetStoryboardFromTag(GCHandle.ToIntPtr(tagObjectHandle), id);
             }
             finally
             {
-                if (tagObjectPtr != IntPtr.Zero) 
-                    Marshal.Release(tagObjectPtr);
+                tagObjectHandle.Free();
             }
         }
 
@@ -125,6 +253,34 @@ namespace SharpDX.Animation
                 SetManagerEventHandler_(IntPtr.Zero);
                 shadowEventHandler.Dispose();
                 shadowEventHandler = null;
+            }
+
+            if (cancelPriorityComparisonShadow != null)
+            {
+                SetCancelPriorityComparison_(IntPtr.Zero);
+                cancelPriorityComparisonShadow.Dispose();
+                cancelPriorityComparisonShadow = null;
+            }
+
+            if (trimPriorityComparisonShadow != null)
+            {
+                SetConcludePriorityComparison_(IntPtr.Zero);
+                trimPriorityComparisonShadow.Dispose();
+                trimPriorityComparisonShadow = null;
+            }
+
+            if (compressPriorityComparisonShadow != null)
+            {
+                SetCompressPriorityComparison_(IntPtr.Zero);
+                compressPriorityComparisonShadow.Dispose();
+                compressPriorityComparisonShadow = null;
+            }
+
+            if (trimPriorityComparisonShadow != null)
+            {
+                SetConcludePriorityComparison_(IntPtr.Zero);
+                trimPriorityComparisonShadow.Dispose();
+                trimPriorityComparisonShadow = null;
             }
 
             base.Dispose(disposing);

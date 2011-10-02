@@ -16,6 +16,10 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Transition.cs" />
+    <Compile Include="TransitionLibrary.cs" />
+    <Compile Include="KeyFrame.cs" />
+    <Compile Include="PriorityComparisonShadow.cs" />
     <Compile Include="Generated\Enumerations.cs" />
     <Compile Include="Generated\Functions.cs" />
     <Compile Include="Generated\Interfaces.cs" />
@@ -24,8 +28,12 @@
     <Compile Include="ManagerEventHandlerShadow.cs" />
     <Compile Include="Manager.cs" />
     <Compile Include="ManagerEventHandler.cs" />
+    <Compile Include="PriorityComparison.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RepeatCount.cs" />
     <Compile Include="Storyboard.cs" />
+    <Compile Include="Timer.cs" />
+    <Compile Include="TransitionFactory.cs" />
     <Compile Include="Variable.cs" />
   </ItemGroup>
   <ItemGroup>

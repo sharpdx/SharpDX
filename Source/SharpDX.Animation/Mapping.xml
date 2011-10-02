@@ -78,7 +78,7 @@
     <map struct="UI_ANIMATION_(.*)" name-tmp="$1"/>
 
     <map struct="__MIDL___MIDL_itf_UIAnimation_0000_0002_0003" name="KeyFrame"/>
-    <map field="__MIDL___MIDL_itf_UIAnimation_0000_0002_0003::_" name="Id"/>
+    <map field="__MIDL___MIDL_itf_UIAnimation_0000_0002_0003::_" name="Id" type="void" pointer="*"/>
 
     <!--
     // *****************************************************************
@@ -90,6 +90,7 @@
     <map param="IUIAnimationInterpolator::InterpolateValue::value" return="true"/>
     <map param="IUIAnimationInterpolator::InterpolateVelocity::velocity" return="true"/>
 
+    <!-- IUIAnimationManager -->
     <map method="IUIAnimationManager::CreateAnimationVariable" visibility="internal"/>
     <map param="IUIAnimationManager::CreateAnimationVariable::variable" attribute="fast out"/>
 
@@ -109,7 +110,35 @@
     <!-- Don't generate properties for event handler setter -->
     <map interface=".*Handler2?" callback="true" visibility="internal"/>
     <map method=".*::Set.*Handler" property="false"/>
+    
+    <!-- Callback for Priority Comparison -->
+    <map interface="IUIAnimationPriorityComparison" callback="true" visibility="internal"/>
+    <map method="IUIAnimationManager::Set.*Comparison" property="false"/>
 
+    <!-- IUIAnimationStoryboard -->
+    <map param="IUIAnimationStoryboard::AddKeyframeAtOffset::keyframe" return="true"/>
+    <map param="IUIAnimationStoryboard::AddKeyframeAfterTransition::keyframe" return="true"/>
+    <map param="IUIAnimationStoryboard::Schedule::schedulingResult" return="true"/>
+
+    <map method="IUIAnimationStoryboard::SetTag" visibility="internal"/>
+    <map method="IUIAnimationStoryboard::GetTag" visibility="internal"/>
+    <map param="IUIAnimationStoryboard::SetTag::object" type="void"/>
+    <map param="IUIAnimationStoryboard::GetTag::object" type="void"/>
+
+    <!-- IUIAnimationTransitionLibrary -->
+    <map method="IUIAnimationTransitionLibrary::Create(.*)Transition" name="$1"/>
+    <map method="IUIAnimationTransitionLibrary::Create(.*)Transition(.+)" name="$1$2"/>
+    <map param="IUIAnimationTransitionLibrary::.*::transition" return="true"/>
+
+    <!-- IUIAnimationTransitionFactory -->
+    <map method="IUIAnimationTransitionFactory::CreateTransition" visibility="internal"/>
+    <map param="IUIAnimationTransitionFactory::CreateTransition::transition" attribute="fast out"/>
+
+    <!-- IUIAnimationVariable -->
+    <map method="IUIAnimationVariable::SetTag" visibility="internal"/>
+    <map method="IUIAnimationVariable::GetTag" visibility="internal"/>
+    <map param="IUIAnimationVariable::SetTag::object" type="void"/>
+    <map param="IUIAnimationVariable::GetTag::object" type="void"/>
 
     <!--
     // *****************************************************************
