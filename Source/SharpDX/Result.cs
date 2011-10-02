@@ -188,6 +188,11 @@ namespace SharpDX
         public static Result Ok = new Result(unchecked((int)0x00000000));
 
         /// <summary>
+        /// Result code False
+        /// </summary>
+        public static Result False = new Result(unchecked((int)0x00000001));
+
+        /// <summary>
         /// Result code Abord
         /// </summary>
         public static Result Abord = new Result(unchecked((int)0x80004004));
