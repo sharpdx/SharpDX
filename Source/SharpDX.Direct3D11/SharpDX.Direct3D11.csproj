@@ -29,6 +29,7 @@
     <Compile Include="DepthStencilState.cs" />
     <Compile Include="DepthStencilView.cs" />
     <Compile Include="Device.cs" />
+    <Compile Include="DeviceChild.cs" />
     <Compile Include="DeviceContext.StreamOutput.cs" />
     <Compile Include="DeviceContext.CommonShaderStage.cs" />
     <Compile Include="DeviceContext.ComputeShader.cs" />

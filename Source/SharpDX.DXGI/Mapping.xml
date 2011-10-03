@@ -170,7 +170,9 @@
     <map interface="IDXGI(.+)" name-tmp="$1" />
     <map interface="IDXGIObject" name="DXGIObject" />
     <map interface="IDXGIDeviceSubObject" name="DeviceChild" />
-    
+
+    <map method=".*::GetPrivateData" check="false"/>
+
     <map method="IDXGIAdapter::EnumOutputs" name="GetOutput" />
     <map param="ppOutput" return="true" />
     

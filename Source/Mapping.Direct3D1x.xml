@@ -316,7 +316,9 @@
     <map interface="ID3DX10(.+)" name-tmp="$1" />
     <map interface="ID3D11(.+)" name-tmp="$1" />
     <map interface="ID3DX11(.+)" name-tmp="$1" />
-    
+
+    <map method=".*::GetPrivateData" check="false"/>
+
     <!--<remove interface="ID3D10InfoQueue" />
     <remove struct="D3D10_INFO_QUEUE_FILTER" />
     <remove struct="D3D10_INFO_QUEUE_FILTER_DESC" />-->

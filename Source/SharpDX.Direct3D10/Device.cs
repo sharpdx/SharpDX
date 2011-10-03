@@ -19,6 +19,8 @@
 // THE SOFTWARE.
 using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
+
 using SharpDX.Direct3D;
 using SharpDX.DXGI;
 using SharpDX;
@@ -341,6 +343,42 @@ namespace SharpDX.Direct3D10
             get
             {
                 return (DeviceCreationFlags) GetCreationFlags();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the debug-name for this object.
+        /// </summary>
+        /// <value>
+        /// The debug name.
+        /// </value>
+        public string DebugName
+        {
+            get
+            {
+                unsafe
+                {
+                    byte* pname = stackalloc byte[1024];
+                    int size = 1024 - 1;
+                    if (GetPrivateData(CommonGuid.DebugObjectName, ref size, new IntPtr(pname)).Failure)
+                        return string.Empty;
+                    pname[size] = 0;
+                    return Marshal.PtrToStringAnsi(new IntPtr(pname));
+                }
+            }
+
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    SetPrivateData(CommonGuid.DebugObjectName, 0, IntPtr.Zero);
+                }
+                else
+                {
+                    var namePtr = Marshal.StringToHGlobalAnsi(value);
+                    SetPrivateData(CommonGuid.DebugObjectName, value.Length, namePtr);
+                    Marshal.Release(namePtr);
+                }
             }
         }
     }

@@ -1994,6 +1994,10 @@
     <map interface="IDirect3D(.+)9" name-tmp="$1" />
     <map interface="IDirect3D9Ex(.+)" name-tmp="$1" />
     <map interface="IDirect3D9Ex" name="Direct3DEx" />
+
+    <map method="IDirect3DResource9::GetPrivateData" check="false"/>
+    <map param="pSizeOfData" attribute="inout"/>
+
     <map method="GetDC" name="GetDisplayDeviceContext" />
     <remove interface="IDirect3DCryptoSession9" />
     <remove interface="IDirect3D9ExOverlayExtension" />
@@ -2133,7 +2137,6 @@
 
     <map param="IDirect3DStateBlock9::GetDevice::ppDevice" attribute="out" />
     <map param="IDirect3DResource9::GetDevice::ppDevice" attribute="out" />
-    <map param="IDirect3DResource9::GetPrivateData::pSizeOfData" attribute="out" />
     <map param="IDirect3DVertexDeclaration9::GetDevice::ppDevice" attribute="out" />
     <map param="IDirect3DVertexDeclaration9::GetDeclaration::pElement" attribute="out" />
     <map param="IDirect3DVertexDeclaration9::GetDeclaration::pNumElements" attribute="out" />
