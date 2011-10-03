@@ -28,6 +28,7 @@
     <Compile Include="IO\NativeFileOptions.cs" />
     <Compile Include="IO\NativeFileMode.cs" />
     <Compile Include="IO\NativeFileShare.cs" />
+    <Compile Include="Matrix3x2.cs" />
     <Compile Include="ShadowContainer.cs" />
     <Compile Include="Collision.cs" />
     <Compile Include="Color3.cs" />

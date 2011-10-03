@@ -153,7 +153,6 @@
     <Compile Include="EllipseGeometry.cs" />
     <Compile Include="PathGeometry.cs" />
     <Compile Include="RoundedRectangleGeometry.cs" />
-    <Compile Include="Matrix3x2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

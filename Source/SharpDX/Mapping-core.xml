@@ -142,6 +142,7 @@
     <define struct="SharpDX.Result" sizeof="4" />
     <define struct="SharpDX.Size" sizeof="8" />
     <define struct="SharpDX.Matrix" sizeof="64" />
+    <define struct="SharpDX.Matrix3x2" sizeof="24" />
     <define struct="SharpDX.Vector2" sizeof="8" />
     <define struct="SharpDX.Vector3" sizeof="12" />
     <define struct="SharpDX.Vector4" sizeof="16" />

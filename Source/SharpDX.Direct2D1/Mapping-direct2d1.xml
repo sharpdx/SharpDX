@@ -39,7 +39,6 @@
   <naming />
   
   <extension>
-    <define struct="SharpDX.Direct2D1.Matrix3x2" sizeof="24" />
     <create class="D2D1" />
   </extension>
   
@@ -51,7 +50,7 @@
     <bind from="D2D_POINT_2F" to="System.Drawing.PointF" />
     <bind from="D2D_POINT_2U" to="System.Drawing.Point" />
     <bind from="D2D_COLOR_F" to="SharpDX.Color4" />
-    <bind from="D2D_MATRIX_3X2_F" to="SharpDX.Direct2D1.Matrix3x2" />
+    <bind from="D2D_MATRIX_3X2_F" to="SharpDX.Matrix3x2" />
     <bind from="IPrintDocumentPackageTarget" to="SharpDX.ComObject" />
   </bindings>
   
