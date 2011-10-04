@@ -77,7 +77,7 @@ namespace SharpDX.Direct2D1
         /// <param name="geometrySink">The result of the combine operation.</param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.</returns>
         /// <unmanaged>HRESULT CombineWithGeometry([In] ID2D1Geometry* inputGeometry,[None] D2D1_COMBINE_MODE combineMode,[In, Optional] const D2D1_MATRIX_3X2_F* inputGeometryTransform,[None] FLOAT flatteningTolerance,[In] ID2D1SimplifiedGeometrySink* geometrySink)</unmanaged>
-        public SharpDX.Result Combine(SharpDX.Direct2D1.Geometry inputGeometry, SharpDX.Direct2D1.CombineMode combineMode, SharpDX.Direct2D1.Matrix3x2? inputGeometryTransform, float flatteningTolerance, GeometrySink geometrySink)
+        public SharpDX.Result Combine(SharpDX.Direct2D1.Geometry inputGeometry, SharpDX.Direct2D1.CombineMode combineMode, SharpDX.Matrix3x2? inputGeometryTransform, float flatteningTolerance, GeometrySink geometrySink)
         {
             return this.Combine_(inputGeometry, combineMode, inputGeometryTransform, flatteningTolerance, GeometrySinkShadow.ToIntPtr(geometrySink));
         }
@@ -325,7 +325,7 @@ namespace SharpDX.Direct2D1
         /// <param name="geometrySink">The <see cref="SharpDX.Direct2D1.SimplifiedGeometrySink"/> to which the geometry's transformed outline is appended. </param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.</returns>
         /// <unmanaged>HRESULT Outline([In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] FLOAT flatteningTolerance,[In] ID2D1SimplifiedGeometrySink* geometrySink)</unmanaged>
-        public SharpDX.Result Outline(SharpDX.Direct2D1.Matrix3x2? worldTransform, float flatteningTolerance, GeometrySink geometrySink)
+        public SharpDX.Result Outline(SharpDX.Matrix3x2? worldTransform, float flatteningTolerance, GeometrySink geometrySink)
         {
             return this.Outline_(worldTransform, flatteningTolerance, GeometrySinkShadow.ToIntPtr(geometrySink));
         }
@@ -364,7 +364,7 @@ namespace SharpDX.Direct2D1
         /// <param name="geometrySink"> The <see cref="SharpDX.Direct2D1.SimplifiedGeometrySink"/> to which the simplified geometry is appended. </param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.</returns>
         /// <unmanaged>HRESULT Simplify([None] D2D1_GEOMETRY_SIMPLIFICATION_OPTION simplificationOption,[In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] FLOAT flatteningTolerance,[In] ID2D1SimplifiedGeometrySink* geometrySink)</unmanaged>
-        public SharpDX.Result Simplify(SharpDX.Direct2D1.GeometrySimplificationOption simplificationOption, SharpDX.Direct2D1.Matrix3x2? worldTransform, float flatteningTolerance, GeometrySink geometrySink)
+        public SharpDX.Result Simplify(SharpDX.Direct2D1.GeometrySimplificationOption simplificationOption, SharpDX.Matrix3x2? worldTransform, float flatteningTolerance, GeometrySink geometrySink)
         {
             return this.Simplify_(simplificationOption, worldTransform, flatteningTolerance, GeometrySinkShadow.ToIntPtr(geometrySink));
         }
@@ -493,7 +493,7 @@ namespace SharpDX.Direct2D1
         /// <param name="tessellationSink">The <see cref="SharpDX.Direct2D1.TessellationSink"/> to which the tessellated is appended.</param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.</returns>
         /// <unmanaged>HRESULT Tessellate([In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] FLOAT flatteningTolerance,[In] ID2D1TessellationSink* tessellationSink)</unmanaged>
-        public SharpDX.Result Tessellate(SharpDX.Direct2D1.Matrix3x2? worldTransform, float flatteningTolerance, TessellationSink tessellationSink)
+        public SharpDX.Result Tessellate(SharpDX.Matrix3x2? worldTransform, float flatteningTolerance, TessellationSink tessellationSink)
         {
             return this.Tessellate_(worldTransform, flatteningTolerance, TessellationSinkShadow.ToIntPtr(tessellationSink));
         }
@@ -547,7 +547,7 @@ namespace SharpDX.Direct2D1
         /// <param name="geometrySink">The <see cref="SharpDX.Direct2D1.SimplifiedGeometrySink"/> to which the widened geometry is appended.</param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.</returns>
         /// <unmanaged>HRESULT Widen([None] FLOAT strokeWidth,[In, Optional] ID2D1StrokeStyle* strokeStyle,[In, Optional] const D2D1_MATRIX_3X2_F* worldTransform,[None] FLOAT flatteningTolerance,[In] ID2D1SimplifiedGeometrySink* geometrySink)</unmanaged>
-        public SharpDX.Result Widen(float strokeWidth, SharpDX.Direct2D1.StrokeStyle strokeStyle, SharpDX.Direct2D1.Matrix3x2? worldTransform, float flatteningTolerance, GeometrySink geometrySink)
+        public SharpDX.Result Widen(float strokeWidth, SharpDX.Direct2D1.StrokeStyle strokeStyle, SharpDX.Matrix3x2? worldTransform, float flatteningTolerance, GeometrySink geometrySink)
         {
             return this.Widen_(strokeWidth, strokeStyle, worldTransform, flatteningTolerance, GeometrySinkShadow.ToIntPtr(geometrySink));
         }
