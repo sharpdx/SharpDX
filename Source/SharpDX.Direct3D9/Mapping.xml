@@ -40,7 +40,7 @@
   <include file="d3dx9xof.h" attach="true">
 
     <post>
-      #define D3DCLEAR_ALL ZB
+      #define D3DCLEAR_ALL D3DCLEAR_STENCIL | D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER
       #define D3DLOCK_DONOTCOPYDATA D3DPV_DONOTCOPYDATA
       #define D3DVERTEXTEXTURESAMPLERMAPSAMPLER D3DDMAPSAMPLER
       #define D3DX_FILTER_DEFAULT D3DX_DEFAULT
@@ -72,6 +72,7 @@
   <naming />
 
   <context-set id="d3d9-all">
+    <context>sharpdx-direct3d9</context>
     <context>sharpdx-direct3d9-ext</context>
     <context>d3d9</context>
     <context>d3d9caps</context>
@@ -521,20 +522,20 @@
     <!-- D3DWRAPCOORD_3 -->
 
     <create-cpp enum="D3DTRANSFORMSTATETYPE2" macro="D3DTS2_.*"/>
-    <!-- D3DTS_VIEW -->
-    <!-- D3DTS_PROJECTION -->
-    <!-- D3DTS_WORLD -->
-    <!-- D3DTS_WORLD1 -->
-    <!-- D3DTS_WORLD2 -->
-    <!-- D3DTS_WORLD3 -->
-    <!-- D3DTS_TEXTURE0 -->
-    <!-- D3DTS_TEXTURE1 -->
-    <!-- D3DTS_TEXTURE2 -->
-    <!-- D3DTS_TEXTURE3 -->
-    <!-- D3DTS_TEXTURE4 -->
-    <!-- D3DTS_TEXTURE5 -->
-    <!-- D3DTS_TEXTURE6 -->
-    <!-- D3DTS_TEXTURE7 -->
+    <!-- D3DTS2_VIEW -->
+    <!-- D3DTS2_PROJECTION -->
+    <!-- D3DTS2_WORLD -->
+    <!-- D3DTS2_WORLD1 -->
+    <!-- D3DTS2_WORLD2 -->
+    <!-- D3DTS2_WORLD3 -->
+    <!-- D3DTS2_TEXTURE0 -->
+    <!-- D3DTS2_TEXTURE1 -->
+    <!-- D3DTS2_TEXTURE2 -->
+    <!-- D3DTS2_TEXTURE3 -->
+    <!-- D3DTS2_TEXTURE4 -->
+    <!-- D3DTS2_TEXTURE5 -->
+    <!-- D3DTS2_TEXTURE6 -->
+    <!-- D3DTS2_TEXTURE7 -->
 
     <create-cpp enum="D3DUSAGE" macro="D3DUSAGE_.*"/>
     <!-- D3DUSAGE_AUTOGENMIPMAP -->
@@ -1754,20 +1755,20 @@
     <map enum-item="D3DXPRIORITY_HIGH" name="High"/>
 
     <map enum="D3DTRANSFORMSTATETYPE2" replace="D3DTRANSFORMSTATETYPE" name="TransformState" flags="false" none="false"/>
-    <map enum-item="D3DTS_VIEW" name="View"/>
-    <map enum-item="D3DTS_PROJECTION" name="Projection"/>
-    <map enum-item="D3DTS_WORLD" name="World"/>
-    <map enum-item="D3DTS_WORLD1" name="World1"/>
-    <map enum-item="D3DTS_WORLD2" name="World2"/>
-    <map enum-item="D3DTS_WORLD3" name="World3"/>
-    <map enum-item="D3DTS_TEXTURE0" name="Texture0"/>
-    <map enum-item="D3DTS_TEXTURE1" name="Texture1"/>
-    <map enum-item="D3DTS_TEXTURE2" name="Texture2"/>
-    <map enum-item="D3DTS_TEXTURE3" name="Texture3"/>
-    <map enum-item="D3DTS_TEXTURE4" name="Texture4"/>
-    <map enum-item="D3DTS_TEXTURE5" name="Texture5"/>
-    <map enum-item="D3DTS_TEXTURE6" name="Texture6"/>
-    <map enum-item="D3DTS_TEXTURE7" name="Texture7"/>
+    <map enum-item="D3DTS2_VIEW" name="View"/>
+    <map enum-item="D3DTS2_PROJECTION" name="Projection"/>
+    <map enum-item="D3DTS2_WORLD" name="World"/>
+    <map enum-item="D3DTS2_WORLD1" name="World1"/>
+    <map enum-item="D3DTS2_WORLD2" name="World2"/>
+    <map enum-item="D3DTS2_WORLD3" name="World3"/>
+    <map enum-item="D3DTS2_TEXTURE0" name="Texture0"/>
+    <map enum-item="D3DTS2_TEXTURE1" name="Texture1"/>
+    <map enum-item="D3DTS2_TEXTURE2" name="Texture2"/>
+    <map enum-item="D3DTS2_TEXTURE3" name="Texture3"/>
+    <map enum-item="D3DTS2_TEXTURE4" name="Texture4"/>
+    <map enum-item="D3DTS2_TEXTURE5" name="Texture5"/>
+    <map enum-item="D3DTS2_TEXTURE6" name="Texture6"/>
+    <map enum-item="D3DTS2_TEXTURE7" name="Texture7"/>
 
     <map enum="D3DXTRANSITION_TYPE" name="TransitionType" flags="false" none="false"/>
     <map enum-item="D3DXTRANSITION_LINEAR" name="Linear"/>
