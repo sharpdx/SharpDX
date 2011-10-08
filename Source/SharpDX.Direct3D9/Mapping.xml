@@ -2090,6 +2090,7 @@
     <map param="IDirect3DDevice9::GetStreamSource::pOffsetInBytes" attribute="out" />
     <map param="IDirect3DDevice9::GetStreamSource::pStride" attribute="out" />
     <map method="IDirect3DDevice9::GetStreamSourceFreq" name="GetStreamSourceFrequency" />
+    <map method="IDirect3DDevice9::SetStreamSourceFreq" name="SetStreamSourceFrequency" visibility="internal" />
     <map param="IDirect3DDevice9::GetStreamSourceFreq::pSetting" attribute="out" />
 
     <map param="IDirect3DDevice9::GetSwapChain::pSwapChain" return="true" attribute="out" />
@@ -2124,7 +2125,28 @@
     <map param="IDirect3DDevice9::SetPaletteEntries::pEntries" attribute="in buffer" />
 
     <map method="IDirect3DDevice9::SetPixelShaderConstant.*" visibility="internal"/>
-    <map param="IDirect3DDevice9::SetPixelShaderConstant[BFI]::pConstantData" type="void" attribute="in"/>    
+    <map param="IDirect3DDevice9::SetPixelShaderConstant[BFI]::pConstantData" type="void" attribute="in"/>
+
+    <map method="IDirect3DDevice9::SetVertexShaderConstant.*" visibility="internal"/>
+    <map param="IDirect3DDevice9::SetVertexShaderConstant[BFI]::pConstantData" type="void" attribute="in"/>
+
+    <map method="IDirect3DDevice9::SetTransform" name="SetTransform_" visibility="internal"/>
+    <map param="State" type="int" />
+
+    <map method="IDirect3DDevice9::StretchRect" name="StretchRectangle" />
+    <map param="IDirect3DDevice9::StretchRect::pSourceRect" attribute="in optional" />
+    <map param="IDirect3DDevice9::StretchRect::pDestRect" attribute="in optional" />
+
+    <map param="IDirect3DDevice9::UpdateSurface::pSourceRect" attribute="in optional" />
+    <map param="IDirect3DDevice9::UpdateSurface::pDestPoint" attribute="in optional" />
+
+    <map method="IDirect3DDevice9::ShowCursor" name="GetSetShowCursor" />
+
+    <map method="IDirect3DDevice9::GetAvailableTextureMem" property="false" visibility="internal"/>
+
+    <map method="IDirect3DDevice9::GetDeviceCaps" name="GetCapabilities"/>
+
+    <map method="IDirect3DDevice9::GetNumberOfSwapChains" name="GetSwapChainCount" />
     
     <map method="IDirect3DVertexBuffer9::Lock" visibility="internal" name="Lock_" />
     <map param="ppbData" attribute="out" />
@@ -2310,11 +2332,11 @@
     <remove function="D3DXSHPRTCompSplitMeshSC" />
     <remove function="D3DXCreateTextureGutterHelper" />
     <map function="D3DXCreateFontIndirectW" name="CreateFontIndirect" />
-    <map function="D3D9.*" dll='"d3d9.dll"' group="SharpDX.Direct3D9.D3D9" />
-    <map function="Direct3D.*" dll='"d3d9.dll"' group="SharpDX.Direct3D9.D3D9" />
-    <map function="D3DX9.*" dll='"d3dx9_#(D3DX_SDK_VERSION).dll"' group="SharpDX.Direct3D9.D3DX9" />
-    <map function="D3DX[^0-9].*" dll='"d3dx9_#(D3DX_SDK_VERSION).dll"' group="SharpDX.Direct3D9.D3DX9" />
-    <map function="D3DPERF.*" dll='"d3dx9_#(D3DX_SDK_VERSION).dll"' group="SharpDX.Direct3D9.D3DX9" />
+    <map function="D3D9(.*)" name-tmp="$1" dll='"d3d9.dll"' group="SharpDX.Direct3D9.D3D9" />
+    <map function="Direct3D(.*)" name-tmp="$1" dll='"d3d9.dll"' group="SharpDX.Direct3D9.D3D9" />
+    <map function="D3DX9(.*)" name-tmp="$1" dll='"d3dx9_#(D3DX_SDK_VERSION).dll"' group="SharpDX.Direct3D9.D3DX9" />
+    <map function="D3DX([^0-9].*)" name-tmp="$1" dll='"d3dx9_#(D3DX_SDK_VERSION).dll"' group="SharpDX.Direct3D9.D3DX9" />
+    <map function="D3DPERF(.*)" name-tmp="$1" dll='"d3dx9_#(D3DX_SDK_VERSION).dll"' group="SharpDX.Direct3D9.D3DX9" />
     <map param="Direct3DCreate9Ex::arg1" attribute="out fast"/>
     
     <context-clear />

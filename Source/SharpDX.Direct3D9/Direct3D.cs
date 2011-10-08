@@ -33,7 +33,7 @@ namespace SharpDX.Direct3D9
         /// </remarks>
         public Direct3D()
         {
-            FromTemp(D3D9.Direct3DCreate9(D3D9.SdkVersion));
+            FromTemp(D3D9.Create9(D3D9.SdkVersion));
         }
     }
 }

@@ -32,7 +32,7 @@ namespace SharpDX.Direct3D9
         /// <unmanaged>HRESULT Direct3DCreate9Ex([None] int SDKVersion,[None] IDirect3D9Ex** arg1)</unmanaged>
         public Direct3DEx()
         {
-            D3D9.Direct3DCreate9Ex(D3D9.SdkVersion, this);
+            D3D9.Create9Ex(D3D9.SdkVersion, this);
         }
     }
 }
