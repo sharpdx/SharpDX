@@ -2147,7 +2147,18 @@
     <map method="IDirect3DDevice9::GetDeviceCaps" name="GetCapabilities"/>
 
     <map method="IDirect3DDevice9::GetNumberOfSwapChains" name="GetSwapChainCount" />
-    
+
+    <map method="IDirect3DDevice9::DrawRectPatch" name="DrawRectanglePatch" />
+    <map param="pNumSegs" attribute="in buffer"/>
+
+    <map method="IDirect3DDevice9::DrawRectPatch" name="DrawRectanglePatch" visibility="internal"/>
+    <map param="pNumSegs" attribute="in buffer"/>
+    <map param="pRectPatchInfo" type="void"/>
+
+    <map method="IDirect3DDevice9::DrawTriPatch" name="DrawTrianglePatch" visibility="internal"/>
+    <map param="pNumSegs" attribute="in buffer"/>
+    <map param="pTriPatchInfo" type="void"/>
+
     <map method="IDirect3DVertexBuffer9::Lock" visibility="internal" name="Lock_" />
     <map param="ppbData" attribute="out" />
     <map param="Flags" name="lockFlags" type="D3DLOCK" />

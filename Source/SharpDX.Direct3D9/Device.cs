@@ -232,6 +232,71 @@ namespace SharpDX.Direct3D9
             }            
         }
 
+
+        /// <summary>
+        /// Draws the rectangle patch.
+        /// </summary>
+        /// <param name="handle">The handle.</param>
+        /// <param name="segmentCounts">The segment counts.</param>
+        /// <returns>
+        /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::DrawRectPatch([In] unsigned int Handle,[In, Buffer] const float* pNumSegs,[In] const void* pRectPatchInfo)</unmanaged>
+        public Result DrawRectanglePatch(int handle, float[] segmentCounts)
+        {
+            return DrawRectanglePatch(handle, segmentCounts, IntPtr.Zero);
+        }
+
+
+        /// <summary>
+        /// Draws the rectangle patch.
+        /// </summary>
+        /// <param name="handle">The handle.</param>
+        /// <param name="segmentCounts">The segment counts.</param>
+        /// <param name="info">The info.</param>
+        /// <returns>
+        /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
+        /// </returns>
+        /// <unmanaged href="bb174373">IDirect3DDevice9::DrawRectPatch</unmanaged>
+        public Result DrawRectanglePatch(int handle, float[] segmentCounts, RectanglePatchInfo info)
+        {
+            unsafe
+            {
+                return DrawRectanglePatch(handle, segmentCounts, new IntPtr(&info));
+            }
+        }
+
+        /// <summary>
+        /// Draws the triangle patch.
+        /// </summary>
+        /// <param name="handle">The handle.</param>
+        /// <param name="segmentCounts">The segment counts.</param>
+        /// <returns>
+        /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::DrawTriPatch([In] unsigned int Handle,[In, Buffer] const float* pNumSegs,[In] const void* pTriPatchInfo)</unmanaged>
+        public Result DrawTrianglePatch(int handle, float[] segmentCounts)
+        {
+            return DrawTrianglePatch(handle, segmentCounts, IntPtr.Zero);
+        }
+
+        /// <summary>
+        /// Draws the triangle patch.
+        /// </summary>
+        /// <param name="handle">The handle.</param>
+        /// <param name="segmentCounts">The segment counts.</param>
+        /// <param name="info">The info.</param>
+        /// <returns>
+        /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
+        /// </returns>
+        public Result DrawTrianglePatch(int handle, float[] segmentCounts, TrianglePatchInfo info)
+        {
+            unsafe
+            {
+                return DrawTrianglePatch(handle, segmentCounts, new IntPtr(&info));
+            }
+        }
+
         /// <summary>
         /// Draws the user primitives.
         /// </summary>
