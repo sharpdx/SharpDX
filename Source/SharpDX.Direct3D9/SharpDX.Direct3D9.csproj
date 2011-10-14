@@ -19,6 +19,7 @@
     </Compile>
     <Compile Include="AdapterDetails.cs" />
     <Compile Include="BoneCombination.cs" />
+    <Compile Include="D3DX.cs" />
     <Compile Include="Device.cs" />
     <Compile Include="DeviceEx.cs" />
     <Compile Include="Direct3D.cs" />

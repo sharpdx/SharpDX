@@ -27,10 +27,12 @@ namespace SharpDX.Direct3D9
         /// </summary>
         public static readonly VertexElement VertexDeclarationEnd;
 
+        /// <summary>
+        /// Initializes the <see cref="VertexElement"/> struct.
+        /// </summary>
         static VertexElement()
         {
-            VertexElement element = new VertexElement(0xff, 0, DeclarationType.Unused, DeclarationMethod.Default, DeclarationUsage.Position, 0);
-            VertexDeclarationEnd = element;
+            VertexDeclarationEnd = new VertexElement(0xff, 0, DeclarationType.Unused, DeclarationMethod.Default, DeclarationUsage.Position, 0);
         }
 
         /// <summary>

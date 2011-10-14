@@ -625,6 +625,8 @@
     <define struct="SharpDX.Direct3D9.PaletteEntry" sizeof="4" />
 
     <const from-macro="D3D_SDK_VERSION" class="SharpDX.Direct3D9.D3D9" type="int" name="SdkVersion" />
+    <const from-macro="D3DX_VERSION" class="SharpDX.Direct3D9.D3DX9" type="int" name="Version" />
+    <const from-macro="D3DX_SDK_VERSION" class="SharpDX.Direct3D9.D3DX9" type="int" name="SdkVersion" />
     
     <create class="D3D9" />
     <create class="D3DX9" />
@@ -650,7 +652,7 @@
     <remove interface="IDirect3DAuthenticatedChannel9" />
     <remove enum-item="D3DFVF_TEXTUREFORMAT.*" />
     <remove enum-item="D3DFVF_RESERVED2" />
-    <remove enum="_MAX_FVF_DECL_SIZE" />
+    <remove enum="MAX_FVF_DECL_SIZE" />
     <remove enum="_D3DXERR" />
     <remove enum="_D3DXPATCHMESH" />
     <remove enum="D3DXUVATLAS" />
@@ -667,6 +669,8 @@
     
     <!--<map enum="D3D(.*)" name-tmp="$1" />
     <map enum="D3DX(.*)" name-tmp="$1" />-->
+    <map enum="_MAX_FVF_DECL_SIZE" name="VertexFormatDeclaratorCount" visibility="internal" />
+    <map enum-item="MAX_FVF_DECL_SIZE" name="Max"/>
 
     <map enum="D3DBACKBUFFER_TYPE" name="BackBufferType"/>
     <map enum-item="D3DBACKBUFFER_TYPE_(.*)" name-tmp="$1"/>
@@ -2349,7 +2353,33 @@
     <map function="D3DX([^0-9].*)" name-tmp="$1" dll='"d3dx9_#(D3DX_SDK_VERSION).dll"' group="SharpDX.Direct3D9.D3DX9" />
     <map function="D3DPERF(.*)" name-tmp="$1" dll='"d3dx9_#(D3DX_SDK_VERSION).dll"' group="SharpDX.Direct3D9.D3DX9" />
     <map param="Direct3DCreate9Ex::arg1" attribute="out fast"/>
-    
+
+    <map param="D3DX.*::FVF" type="D3DFVF"/>
+    <map param="D3DX.*::pDecl" attribute="in buffer"/>
+
+    <map function="D3DXDeclaratorFromFVF" check="false"/>
+    <map param="D3DXDeclaratorFromFVF::pDeclarator" attribute="in buffer"/>
+
+    <map param="D3DXFVFFromDeclarator::pDeclarator" attribute="in buffer"/>
+    <map param="D3DXFVFFromDeclarator::pFVF" return="true" type="D3DFVF" attribute="out"/>
+
+    <map function="D3DXGenerateOutputDecl" check="false"/>
+    <map param="D3DXGenerateOutputDecl::.*" attribute="in buffer"/>
+
+    <map function="D3DXOptimizeFaces" check="false"/>
+    <map param="D3DXOptimizeFaces::pFaceRemap" type="int" attribute="in buffer"/>
+
+    <map function="D3DXOptimizeVertices" check="false"/>
+    <map param="D3DXOptimizeVertices::pVertexRemap" type="int" attribute="in buffer"/>
+
+    <map function="D3DXRectPatchSize" check="false"/>
+    <map param="D3DXRectPatchSize::pdwTriangles" attribute="out"/>
+    <map param="D3DXRectPatchSize::pdwVertices" attribute="out"/>
+
+    <map function="D3DXTriPatchSize" check="false"/>
+    <map param="D3DXTriPatchSize::pdwTriangles" attribute="out"/>
+    <map param="D3DXTriPatchSize::pdwVertices" attribute="out"/>
+
     <context-clear />
   </mapping>
 </config>
