@@ -2036,7 +2036,11 @@
     <map param="IDirect3DDevice9::Clear::pRects" attribute="in buffer optional" />
     <map method="IDirect3DDevice9::Clear" visibility="internal" name="Clear_" />
     <map param="IDirect3DDevice9::ColorFill::pRect" attribute="in optional" />
+    
     <map method="IDirect3DDevice9::Create.*" visibility="internal" />
+
+    <map param="IDirect3DDevice9::CreateAdditionalSwapChain::pSwapChain" attribute="out fast" />
+
     <map method="IDirect3DDevice9::DrawIndexedPrimitiveUP" visibility="internal" />
     <map method="IDirect3DDevice9::DrawPrimitiveUP" visibility="internal" />
     <map param="IDirect3DDevice9::EndStateBlock::ppSB" return="true" />
@@ -2197,13 +2201,17 @@
     <map param="IDirect3DVolume9::GetDesc::pDesc" attribute="out" />
 
     <map method="IDirect3DSwapChain9::GetBackBuffer" visibility="internal" />
-    <map param="IDirect3DSwapChain9::GetFrontBufferData::pDestSurface" attribute="out" />
+    <map param="IDirect3DSwapChain9::GetFrontBufferData::pDestSurface" attribute="in" />
     <map param="IDirect3DSwapChain9::GetBackBuffer::ppBackBuffer" return="true" attribute="out" />
     <map param="IDirect3DSwapChain9::GetRasterStatus::pRasterStatus" attribute="out" />
     <map param="IDirect3DSwapChain9::GetDisplayMode::pMode" attribute="out" />
     <map param="IDirect3DSwapChain9::GetDevice::ppDevice" attribute="out" />
     <map param="IDirect3DSwapChain9::GetPresentParameters::pPresentationParameters" attribute="out" />
 
+    <map method="IDirect3DSwapChain9::Present" visibility="internal" />
+    <map param="IDirect3DSwapChain9::Present::pSourceRect" type="void" attribute="in optional" />
+    <map param="IDirect3DSwapChain9::Present::pDestRect" type="void" attribute="inout optional" />
+    
     <map param="IDirect3DQuery9::GetDevice::ppDevice" attribute="out" />
     <map param="IDirect3D9Ex::GetAdapterModeCountEx::pFilter" attribute="out" />
     <map param="IDirect3D9Ex::GetAdapterDisplayModeEx::pMode" attribute="out" />
