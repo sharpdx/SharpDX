@@ -19,12 +19,15 @@
     </Compile>
     <Compile Include="AdapterDetails.cs" />
     <Compile Include="BoneCombination.cs" />
+    <Compile Include="CubeTexture.cs" />
+    <Compile Include="CubeTextureRequirements.cs" />
     <Compile Include="D3DX.cs" />
     <Compile Include="Device.cs" />
     <Compile Include="DeviceEx.cs" />
     <Compile Include="Direct3D.cs" />
     <Compile Include="Direct3DEx.cs" />
     <Compile Include="DriverLevel.cs" />
+    <Compile Include="Fill3DCallback.cs" />
     <Compile Include="Generated\Enumerations.cs" />
     <Compile Include="Generated\Functions.cs" />
     <Compile Include="Generated\Interfaces.cs" />

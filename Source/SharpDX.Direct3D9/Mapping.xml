@@ -1929,6 +1929,8 @@
     <map struct="D3DXWELDEPSILONS" name="WeldEpsilons" />
     <map struct="D3DXEFFECTINSTANCE" name="EffectInstance" />
     <map struct="D3DXFONT_DESCW" name="FontDescription" />
+
+    <map struct="D3DLOCKED_RECT" visibility="internal"/>
     
     <map struct="D3DADAPTER_IDENTIFIER9" struct-to-class="true" name="AdapterDetails" />
     <map field="DriverVersion" name="RawDriverVersion" visibility="internal"/>
@@ -1999,6 +2001,7 @@
     <map interface="IDirect3D(.+)9" name-tmp="$1" />
     <map interface="IDirect3D9Ex(.+)" name-tmp="$1" />
     <map interface="IDirect3D9Ex" name="Direct3DEx" />
+    <map interface="ID3DX(.*)" name="$1" />
 
     <map method="IDirect3DResource9::GetPrivateData" check="false"/>
     <map param="pSizeOfData" attribute="inout"/>
@@ -2186,16 +2189,40 @@
     <map param="IDirect3DVertexShader9::GetFunction::pSizeOfData" attribute="out" />
     <map param="IDirect3DPixelShader9::GetDevice::ppDevice" attribute="out" />
     <map param="IDirect3DPixelShader9::GetFunction::pSizeOfData" attribute="out" />
-    <map param="IDirect3DTexture9::GetLevelDesc::pDesc" attribute="out" />
-    <map param="IDirect3DTexture9::GetSurfaceLevel::ppSurfaceLevel" attribute="out" return="true" />
+    
     <map param="IDirect3DVolumeTexture9::GetLevelDesc::pDesc" attribute="out" />
     <map param="IDirect3DVolumeTexture9::GetVolumeLevel::ppVolumeLevel" attribute="out" />
-    <map param="IDirect3DCubeTexture9::GetLevelDesc::pDesc" attribute="out" />
-    <map param="IDirect3DCubeTexture9::GetCubeMapSurface::ppCubeMapSurface" attribute="out" />
+
+    <map param="IDirect3DCubeTexture9::GetLevelDesc::pDesc" return="true" attribute="out" />
+    <map param="IDirect3DCubeTexture9::GetCubeMapSurface::ppCubeMapSurface" return="true" attribute="out" />
+    <map method="IDirect3DCubeTexture9::LockRect" name="LockRectangle" visibility="internal" />
+    <map param="IDirect3DCubeTexture9::LockRect::Flags" type="D3DLOCK" />
+    <map param="IDirect3DCubeTexture9::LockRect::pRect" type="void" />
+    <map param="IDirect3DCubeTexture9::LockRect::pLockedRect" attribute="out" />
+    
+    <map method="IDirect3DCubeTexture9::UnlockRectangle" name="UnlockRectangle"/>
+    <map method="IDirect3DCubeTexture9::AddDirtyRect" name="AddDirtyRectangle" visibility="internal" />
+    <map param="IDirect3DCubeTexture9::AddDirtyRect::pDirtyRect" type="void" />
+
     <map param="IDirect3DVertexBuffer9::GetDesc::pDesc" attribute="out" />
     <map param="IDirect3DIndexBuffer9::GetDesc::pDesc" attribute="out" />
+    
     <map param="IDirect3DSurface9::GetDesc::pDesc" attribute="out" />
     <map param="IDirect3DSurface9::GetDC::phdc" attribute="out" />
+    <map method="IDirect3DSurface9::LockRect" name="LockRectangle" visibility="internal" />
+    <map param="IDirect3DSurface9::LockRect::pRect" type="void"/>
+    <map param="IDirect3DSurface9::LockRect::Flags" type="D3DLOCK"/>
+    <map param="IDirect3DSurface9::LockRect::pLockedRect" attribute="out" />
+    <map method="IDirect3DSurface9::UnlockRectangle" name="UnlockRectangle"/>
+
+    <map param="IDirect3DTexture9::GetLevelDesc::pDesc" return="true" attribute="out" />
+    <map param="IDirect3DTexture9::GetSurfaceLevel::ppSurfaceLevel" attribute="out" return="true" />
+    <map method="IDirect3DTexture9::LockRect" name="LockRectangle" visibility="internal" />
+    <map param="IDirect3DTexture9::LockRect::pRect" type="void"/>
+    <map param="IDirect3DTexture9::LockRect::Flags" type="D3DLOCK"/>
+    <map param="IDirect3DTexture9::LockRect::pLockedRect" attribute="out" />
+    <map method="IDirect3DTexture9::UnlockRectangle" name="UnlockRectangle"/>
+
     <map param="IDirect3DVolume9::GetDevice::ppDevice" attribute="out" />
     <map param="IDirect3DVolume9::GetPrivateData::pSizeOfData" attribute="out" />
     <map param="IDirect3DVolume9::GetDesc::pDesc" attribute="out" />
@@ -2387,6 +2414,15 @@
     <map function="D3DXTriPatchSize" check="false"/>
     <map param="D3DXTriPatchSize::pdwTriangles" attribute="out"/>
     <map param="D3DXTriPatchSize::pdwVertices" attribute="out"/>
+
+    <map param="D3DXCheckCubeTextureRequirements::pSize" attribute="inout"/>
+    <map param="D3DXCheckCubeTextureRequirements::pNumMipLevels" attribute="inout"/>
+    <map param="D3DXCheckCubeTextureRequirements::pFormat" attribute="inout"/>
+
+    <map param="D3DXCreateCubeTextureFromFileInMemoryEx::pSrcInfo" type="void"/>
+    <map param="D3DXCreateCubeTextureFromFileInMemoryEx::pPalette" attribute="out buffer"/>
+
+
 
     <context-clear />
   </mapping>
