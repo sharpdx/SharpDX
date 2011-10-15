@@ -169,6 +169,217 @@ namespace SharpDX.Direct3D9
             }
         }
 
+        /// <summary>
+        /// Creates a <see cref="CubeTexture"/> from a file
+        /// </summary>
+        /// <param name="device">The device.</param>
+        /// <param name="filename">The filename.</param>
+        /// <returns>
+        /// A <see cref="CubeTexture"/>
+        /// </returns>
+        /// <unmanaged>HRESULT D3DXCreateCubeTextureFromFileExW([In] IDirect3DDevice9* pDevice,[In] const wchar_t* pSrcFile,[In] unsigned int Size,[In] unsigned int MipLevels,[In] unsigned int Usage,[In] D3DFORMAT Format,[In] D3DPOOL Pool,[In] unsigned int Filter,[In] unsigned int MipFilter,[In] D3DCOLOR ColorKey,[In] void* pSrcInfo,[Out, Buffer] PALETTEENTRY* pPalette,[In] IDirect3DCubeTexture9** ppCubeTexture)</unmanaged>
+        public static CubeTexture FromFile(Device device, string filename)
+        {
+            CubeTexture cubeTexture;
+            D3DX9.CreateCubeTextureFromFileW(device, filename, out cubeTexture);
+            return cubeTexture;
+        }
+
+        /// <summary>
+        /// Creates a <see cref="CubeTexture"/> from a file
+        /// </summary>
+        /// <param name="device">The device.</param>
+        /// <param name="filename">The filename.</param>
+        /// <param name="usage">The usage.</param>
+        /// <param name="pool">The pool.</param>
+        /// <returns>
+        /// A <see cref="CubeTexture"/>
+        /// </returns>
+        /// <unmanaged>HRESULT D3DXCreateCubeTextureFromFileExW([In] IDirect3DDevice9* pDevice,[In] const wchar_t* pSrcFile,[In] unsigned int Size,[In] unsigned int MipLevels,[In] unsigned int Usage,[In] D3DFORMAT Format,[In] D3DPOOL Pool,[In] unsigned int Filter,[In] unsigned int MipFilter,[In] D3DCOLOR ColorKey,[In] void* pSrcInfo,[Out, Buffer] PALETTEENTRY* pPalette,[In] IDirect3DCubeTexture9** ppCubeTexture)</unmanaged>
+        public static CubeTexture FromFile(Device device, string filename, Usage usage, Pool pool)
+        {
+            return FromFile(device, filename, -1, -1, usage, Format.Unknown, pool, Filter.None, Filter.None, 0);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="CubeTexture"/> from a file
+        /// </summary>
+        /// <param name="device">The device.</param>
+        /// <param name="filename">The filename.</param>
+        /// <param name="size">The size.</param>
+        /// <param name="levelCount">The level count.</param>
+        /// <param name="usage">The usage.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="pool">The pool.</param>
+        /// <param name="filter">The filter.</param>
+        /// <param name="mipFilter">The mip filter.</param>
+        /// <param name="colorKey">The color key.</param>
+        /// <returns>
+        /// A <see cref="CubeTexture"/>
+        /// </returns>
+        /// <unmanaged>HRESULT D3DXCreateCubeTextureFromFileExW([In] IDirect3DDevice9* pDevice,[In] const wchar_t* pSrcFile,[In] unsigned int Size,[In] unsigned int MipLevels,[In] unsigned int Usage,[In] D3DFORMAT Format,[In] D3DPOOL Pool,[In] unsigned int Filter,[In] unsigned int MipFilter,[In] D3DCOLOR ColorKey,[In] void* pSrcInfo,[Out, Buffer] PALETTEENTRY* pPalette,[In] IDirect3DCubeTexture9** ppCubeTexture)</unmanaged>
+        public static CubeTexture FromFile(Device device, string filename, int size, int levelCount, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey)
+        {
+            return CreateFromFile(device, filename, size, levelCount, usage, format, pool, filter, mipFilter, colorKey, IntPtr.Zero, null);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="CubeTexture"/> from a file
+        /// </summary>
+        /// <param name="device">The device.</param>
+        /// <param name="filename">The filename.</param>
+        /// <param name="size">The size.</param>
+        /// <param name="levelCount">The level count.</param>
+        /// <param name="usage">The usage.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="pool">The pool.</param>
+        /// <param name="filter">The filter.</param>
+        /// <param name="mipFilter">The mip filter.</param>
+        /// <param name="colorKey">The color key.</param>
+        /// <param name="imageInformation">The image information.</param>
+        /// <returns>
+        /// A <see cref="CubeTexture"/>
+        /// </returns>
+        /// <unmanaged>HRESULT D3DXCreateCubeTextureFromFileExW([In] IDirect3DDevice9* pDevice,[In] const wchar_t* pSrcFile,[In] unsigned int Size,[In] unsigned int MipLevels,[In] unsigned int Usage,[In] D3DFORMAT Format,[In] D3DPOOL Pool,[In] unsigned int Filter,[In] unsigned int MipFilter,[In] D3DCOLOR ColorKey,[In] void* pSrcInfo,[Out, Buffer] PALETTEENTRY* pPalette,[In] IDirect3DCubeTexture9** ppCubeTexture)</unmanaged>
+        public static unsafe CubeTexture FromFile(Device device, string filename, int size, int levelCount, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey, out ImageInformation imageInformation)
+        {
+            fixed (void* pImageInfo = &imageInformation)
+                return CreateFromFile(device, filename, size, levelCount, usage, format, pool, filter, mipFilter, colorKey, (IntPtr)pImageInfo, null);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="CubeTexture"/> from a file
+        /// </summary>
+        /// <param name="device">The device.</param>
+        /// <param name="filename">The filename.</param>
+        /// <param name="size">The size.</param>
+        /// <param name="levelCount">The level count.</param>
+        /// <param name="usage">The usage.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="pool">The pool.</param>
+        /// <param name="filter">The filter.</param>
+        /// <param name="mipFilter">The mip filter.</param>
+        /// <param name="colorKey">The color key.</param>
+        /// <param name="imageInformation">The image information.</param>
+        /// <param name="palette">The palette.</param>
+        /// <returns>
+        /// A <see cref="CubeTexture"/>
+        /// </returns>
+        /// <unmanaged>HRESULT D3DXCreateCubeTextureFromFileExW([In] IDirect3DDevice9* pDevice,[In] const wchar_t* pSrcFile,[In] unsigned int Size,[In] unsigned int MipLevels,[In] unsigned int Usage,[In] D3DFORMAT Format,[In] D3DPOOL Pool,[In] unsigned int Filter,[In] unsigned int MipFilter,[In] D3DCOLOR ColorKey,[In] void* pSrcInfo,[Out, Buffer] PALETTEENTRY* pPalette,[In] IDirect3DCubeTexture9** ppCubeTexture)</unmanaged>
+        public static unsafe CubeTexture FromFile(Device device, string filename, int size, int levelCount, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey, out ImageInformation imageInformation, out PaletteEntry[] palette)
+        {
+            palette = new PaletteEntry[256];
+            fixed (void* pImageInfo = &imageInformation)
+                return CreateFromFile(device, filename, size, levelCount, usage, format, pool, filter, mipFilter, colorKey, (IntPtr)pImageInfo, palette);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="CubeTexture"/> from a memory buffer.
+        /// </summary>
+        /// <param name="device">The device.</param>
+        /// <param name="buffer">The buffer.</param>
+        /// <returns>
+        /// A <see cref="CubeTexture"/>
+        /// </returns>
+        /// <unmanaged>HRESULT D3DXCreateCubeTextureFromFileInMemory([In] IDirect3DDevice9* pDevice,[In] const void* pSrcData,[In] unsigned int SrcDataSize,[In] IDirect3DCubeTexture9** ppCubeTexture)</unmanaged>
+        public static CubeTexture FromMemory(Device device, byte[] buffer)
+        {
+            CubeTexture cubeTexture;
+            unsafe
+            {
+                fixed (void* pData = buffer)
+                    D3DX9.CreateCubeTextureFromFileInMemory(device, (IntPtr)pData, buffer.Length, out cubeTexture);
+            }
+            return cubeTexture;
+        }
+
+        /// <summary>
+        /// Creates a <see cref="CubeTexture"/> from a memory buffer.
+        /// </summary>
+        /// <param name="device">The device.</param>
+        /// <param name="buffer">The buffer.</param>
+        /// <param name="usage">The usage.</param>
+        /// <param name="pool">The pool.</param>
+        /// <returns>
+        /// A <see cref="CubeTexture"/>
+        /// </returns>
+        /// <unmanaged>HRESULT D3DXCreateCubeTextureFromFileInMemoryEx([In] IDirect3DDevice9* pDevice,[In] const void* pSrcData,[In] unsigned int SrcDataSize,[In] unsigned int Size,[In] unsigned int MipLevels,[In] unsigned int Usage,[In] D3DFORMAT Format,[In] D3DPOOL Pool,[In] unsigned int Filter,[In] unsigned int MipFilter,[In] D3DCOLOR ColorKey,[Out] D3DXIMAGE_INFO* pSrcInfo,[Out, Buffer] PALETTEENTRY* pPalette,[In] IDirect3DCubeTexture9** ppCubeTexture)</unmanaged>
+        public static CubeTexture FromMemory(Device device, byte[] buffer, Usage usage, Pool pool)
+        {
+            return FromMemory(device, buffer, -1, -1, usage, Format.Unknown, pool, Filter.None, Filter.None, 0);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="CubeTexture"/> from a memory buffer.
+        /// </summary>
+        /// <param name="device">The device.</param>
+        /// <param name="buffer">The buffer.</param>
+        /// <param name="size">The size.</param>
+        /// <param name="levelCount">The level count.</param>
+        /// <param name="usage">The usage.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="pool">The pool.</param>
+        /// <param name="filter">The filter.</param>
+        /// <param name="mipFilter">The mip filter.</param>
+        /// <param name="colorKey">The color key.</param>
+        /// <returns>
+        /// A <see cref="CubeTexture"/>
+        /// </returns>
+        /// <unmanaged>HRESULT D3DXCreateCubeTextureFromFileInMemoryEx([In] IDirect3DDevice9* pDevice,[In] const void* pSrcData,[In] unsigned int SrcDataSize,[In] unsigned int Size,[In] unsigned int MipLevels,[In] unsigned int Usage,[In] D3DFORMAT Format,[In] D3DPOOL Pool,[In] unsigned int Filter,[In] unsigned int MipFilter,[In] D3DCOLOR ColorKey,[Out] D3DXIMAGE_INFO* pSrcInfo,[Out, Buffer] PALETTEENTRY* pPalette,[In] IDirect3DCubeTexture9** ppCubeTexture)</unmanaged>
+        public static CubeTexture FromMemory(Device device, byte[] buffer, int size, int levelCount, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey)
+        {
+            return CreateFromMemory(device, buffer, size, levelCount, usage, format, pool, filter, mipFilter, colorKey, IntPtr.Zero, null);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="CubeTexture"/> from a memory buffer.
+        /// </summary>
+        /// <param name="device">The device.</param>
+        /// <param name="buffer">The buffer.</param>
+        /// <param name="size">The size.</param>
+        /// <param name="levelCount">The level count.</param>
+        /// <param name="usage">The usage.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="pool">The pool.</param>
+        /// <param name="filter">The filter.</param>
+        /// <param name="mipFilter">The mip filter.</param>
+        /// <param name="colorKey">The color key.</param>
+        /// <param name="imageInformation">The image information.</param>
+        /// <returns>
+        /// A <see cref="CubeTexture"/>
+        /// </returns>
+        /// <unmanaged>HRESULT D3DXCreateCubeTextureFromFileInMemoryEx([In] IDirect3DDevice9* pDevice,[In] const void* pSrcData,[In] unsigned int SrcDataSize,[In] unsigned int Size,[In] unsigned int MipLevels,[In] unsigned int Usage,[In] D3DFORMAT Format,[In] D3DPOOL Pool,[In] unsigned int Filter,[In] unsigned int MipFilter,[In] D3DCOLOR ColorKey,[Out] D3DXIMAGE_INFO* pSrcInfo,[Out, Buffer] PALETTEENTRY* pPalette,[In] IDirect3DCubeTexture9** ppCubeTexture)</unmanaged>
+        public static unsafe CubeTexture FromMemory(Device device, byte[] buffer, int size, int levelCount, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey, out ImageInformation imageInformation)
+        {
+            fixed (void* pImageInfo = &imageInformation)
+                return CreateFromMemory(device, buffer, size, levelCount, usage, format, pool, filter, mipFilter, colorKey, (IntPtr)pImageInfo, null);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="CubeTexture"/> from a memory buffer.
+        /// </summary>
+        /// <param name="device">The device.</param>
+        /// <param name="buffer">The buffer.</param>
+        /// <param name="size">The size.</param>
+        /// <param name="levelCount">The level count.</param>
+        /// <param name="usage">The usage.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="pool">The pool.</param>
+        /// <param name="filter">The filter.</param>
+        /// <param name="mipFilter">The mip filter.</param>
+        /// <param name="colorKey">The color key.</param>
+        /// <param name="imageInformation">The image information.</param>
+        /// <param name="palette">The palette.</param>
+        /// <returns>
+        /// A <see cref="CubeTexture"/>
+        /// </returns>
+        /// <unmanaged>HRESULT D3DXCreateCubeTextureFromFileInMemoryEx([In] IDirect3DDevice9* pDevice,[In] const void* pSrcData,[In] unsigned int SrcDataSize,[In] unsigned int Size,[In] unsigned int MipLevels,[In] unsigned int Usage,[In] D3DFORMAT Format,[In] D3DPOOL Pool,[In] unsigned int Filter,[In] unsigned int MipFilter,[In] D3DCOLOR ColorKey,[Out] D3DXIMAGE_INFO* pSrcInfo,[Out, Buffer] PALETTEENTRY* pPalette,[In] IDirect3DCubeTexture9** ppCubeTexture)</unmanaged>
+        public static unsafe CubeTexture FromMemory(Device device, byte[] buffer, int size, int levelCount, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey, out ImageInformation imageInformation, out PaletteEntry[] palette)
+        {
+            palette = new PaletteEntry[256];
+            fixed (void* pImageInfo = &imageInformation)
+                return CreateFromMemory(device, buffer, size, levelCount, usage, format, pool, filter, mipFilter, colorKey, (IntPtr)pImageInfo, palette);
+        }
 
         /// <summary>
         /// Creates a <see cref="CubeTexture"/> from a stream.
@@ -313,6 +524,47 @@ namespace SharpDX.Direct3D9
         /// Creates a <see cref="CubeTexture"/> from a stream.
         /// </summary>
         /// <param name="device">The device.</param>
+        /// <param name="buffer">The buffer.</param>
+        /// <param name="size">The size.</param>
+        /// <param name="levelCount">The level count.</param>
+        /// <param name="usage">The usage.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="pool">The pool.</param>
+        /// <param name="filter">The filter.</param>
+        /// <param name="mipFilter">The mip filter.</param>
+        /// <param name="colorKey">The color key.</param>
+        /// <param name="imageInformation">The image information.</param>
+        /// <param name="palette">The palette.</param>
+        /// <returns>
+        /// A <see cref="CubeTexture"/>
+        /// </returns>
+        /// <unmanaged>HRESULT D3DXCreateCubeTextureFromFileInMemoryEx([In] IDirect3DDevice9* pDevice,[In] const void* pSrcData,[In] unsigned int SrcDataSize,[In] unsigned int Size,[In] unsigned int MipLevels,[In] unsigned int Usage,[In] D3DFORMAT Format,[In] D3DPOOL Pool,[In] unsigned int Filter,[In] unsigned int MipFilter,[In] D3DCOLOR ColorKey,[Out] D3DXIMAGE_INFO* pSrcInfo,[Out, Buffer] PALETTEENTRY* pPalette,[In] IDirect3DCubeTexture9** ppCubeTexture)</unmanaged>
+        private static unsafe CubeTexture CreateFromMemory(Device device, byte[] buffer, int size, int levelCount, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey, IntPtr imageInformation, PaletteEntry[] palette)
+        {
+            CubeTexture cubeTexture;
+            fixed (void* pBuffer = buffer)
+                cubeTexture = CreateFromPointer(
+                    device,
+                    (IntPtr)pBuffer,
+                    buffer.Length,
+                    size,
+                    levelCount,
+                    usage,
+                    format,
+                    pool,
+                    filter,
+                    mipFilter,
+                    colorKey,
+                    imageInformation,
+                    palette
+                    );
+            return cubeTexture;
+        }
+
+        /// <summary>
+        /// Creates a <see cref="CubeTexture"/> from a stream.
+        /// </summary>
+        /// <param name="device">The device.</param>
         /// <param name="stream">The stream.</param>
         /// <param name="sizeBytes">The size bytes.</param>
         /// <param name="size">The size.</param>
@@ -333,43 +585,124 @@ namespace SharpDX.Direct3D9
             sizeBytes = sizeBytes == 0 ? (int)stream.Length : sizeBytes;
             if (stream is DataStream)
             {
-                D3DX9.CreateCubeTextureFromFileInMemoryEx(
+                cubeTexture = CreateFromPointer(
                     device,
                     ((DataStream)stream).DataPointer,
                     sizeBytes,
                     size,
                     levelCount,
-                    (int)usage,
+                    usage,
                     format,
                     pool,
-                    (int)filter,
-                    (int)mipFilter,
+                    filter,
+                    mipFilter,
                     colorKey,
                     imageInformation,
-                    palette,
-                    out cubeTexture);
+                    palette
+                    );
             }
             else
             {
                 var data = Utilities.ReadStream(stream);
                 fixed (void* pData = data)
-                    D3DX9.CreateCubeTextureFromFileInMemoryEx(
+                    cubeTexture = CreateFromPointer(
                         device,
                         (IntPtr)pData,
                         data.Length,
                         size,
                         levelCount,
-                        (int)usage,
+                        usage,
                         format,
                         pool,
-                        (int)filter,
-                        (int)mipFilter,
+                        filter,
+                        mipFilter,
                         colorKey,
                         imageInformation,
-                        palette,
-                        out cubeTexture);
+                        palette
+                        );
             }
             stream.Position = sizeBytes;
+            return cubeTexture;
+        }
+
+        /// <summary>
+        /// Creates a <see cref="CubeTexture"/> from a stream.
+        /// </summary>
+        /// <param name="device">The device.</param>
+        /// <param name="pointer">The pointer.</param>
+        /// <param name="sizeInBytes">The size in bytes.</param>
+        /// <param name="size">The size.</param>
+        /// <param name="levelCount">The level count.</param>
+        /// <param name="usage">The usage.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="pool">The pool.</param>
+        /// <param name="filter">The filter.</param>
+        /// <param name="mipFilter">The mip filter.</param>
+        /// <param name="colorKey">The color key.</param>
+        /// <param name="imageInformation">The image information.</param>
+        /// <param name="palette">The palette.</param>
+        /// <returns>
+        /// A <see cref="CubeTexture"/>
+        /// </returns>
+        /// <unmanaged>HRESULT D3DXCreateCubeTextureFromFileInMemoryEx([In] IDirect3DDevice9* pDevice,[In] const void* pSrcData,[In] unsigned int SrcDataSize,[In] unsigned int Size,[In] unsigned int MipLevels,[In] unsigned int Usage,[In] D3DFORMAT Format,[In] D3DPOOL Pool,[In] unsigned int Filter,[In] unsigned int MipFilter,[In] D3DCOLOR ColorKey,[Out] D3DXIMAGE_INFO* pSrcInfo,[Out, Buffer] PALETTEENTRY* pPalette,[In] IDirect3DCubeTexture9** ppCubeTexture)</unmanaged>
+        private static unsafe CubeTexture CreateFromPointer(Device device, IntPtr pointer, int sizeInBytes, int size, int levelCount, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey, IntPtr imageInformation, PaletteEntry[] palette)
+        {
+            CubeTexture cubeTexture;
+            D3DX9.CreateCubeTextureFromFileInMemoryEx(
+                device,
+                pointer,
+                sizeInBytes,
+                size,
+                levelCount,
+                (int)usage,
+                format,
+                pool,
+                (int)filter,
+                (int)mipFilter,
+                colorKey,
+                imageInformation,
+                palette,
+                out cubeTexture);
+            return cubeTexture;
+        }
+
+
+        /// <summary>
+        /// Creates a <see cref="CubeTexture"/> from a stream.
+        /// </summary>
+        /// <param name="device">The device.</param>
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="size">The size.</param>
+        /// <param name="levelCount">The level count.</param>
+        /// <param name="usage">The usage.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="pool">The pool.</param>
+        /// <param name="filter">The filter.</param>
+        /// <param name="mipFilter">The mip filter.</param>
+        /// <param name="colorKey">The color key.</param>
+        /// <param name="imageInformation">The image information.</param>
+        /// <param name="palette">The palette.</param>
+        /// <returns>
+        /// A <see cref="CubeTexture"/>
+        /// </returns>
+        /// <unmanaged>HRESULT D3DXCreateCubeTextureFromFileInMemoryEx([In] IDirect3DDevice9* pDevice,[In] const void* pSrcData,[In] unsigned int SrcDataSize,[In] unsigned int Size,[In] unsigned int MipLevels,[In] unsigned int Usage,[In] D3DFORMAT Format,[In] D3DPOOL Pool,[In] unsigned int Filter,[In] unsigned int MipFilter,[In] D3DCOLOR ColorKey,[Out] D3DXIMAGE_INFO* pSrcInfo,[Out, Buffer] PALETTEENTRY* pPalette,[In] IDirect3DCubeTexture9** ppCubeTexture)</unmanaged>
+        private static CubeTexture CreateFromFile(Device device, string fileName, int size, int levelCount, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey, IntPtr imageInformation, PaletteEntry[] palette)
+        {
+            CubeTexture cubeTexture;
+            D3DX9.CreateCubeTextureFromFileExW(
+                device,
+                fileName,
+                size,
+                levelCount,
+                (int)usage,
+                format,
+                pool,
+                (int)filter,
+                (int)mipFilter,
+                colorKey,
+                imageInformation,
+                palette,
+                out cubeTexture);
             return cubeTexture;
         }
     }

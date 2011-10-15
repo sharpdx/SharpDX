@@ -2200,7 +2200,7 @@
     <map param="IDirect3DCubeTexture9::LockRect::pRect" type="void" />
     <map param="IDirect3DCubeTexture9::LockRect::pLockedRect" attribute="out" />
     
-    <map method="IDirect3DCubeTexture9::UnlockRectangle" name="UnlockRectangle"/>
+    <map method="IDirect3DCubeTexture9::UnlockRect" name="UnlockRectangle"/>
     <map method="IDirect3DCubeTexture9::AddDirtyRect" name="AddDirtyRectangle" visibility="internal" />
     <map param="IDirect3DCubeTexture9::AddDirtyRect::pDirtyRect" type="void" />
 
@@ -2213,7 +2213,7 @@
     <map param="IDirect3DSurface9::LockRect::pRect" type="void"/>
     <map param="IDirect3DSurface9::LockRect::Flags" type="D3DLOCK"/>
     <map param="IDirect3DSurface9::LockRect::pLockedRect" attribute="out" />
-    <map method="IDirect3DSurface9::UnlockRectangle" name="UnlockRectangle"/>
+    <map method="IDirect3DSurface9::UnlockRect" name="UnlockRectangle"/>
 
     <map param="IDirect3DTexture9::GetLevelDesc::pDesc" return="true" attribute="out" />
     <map param="IDirect3DTexture9::GetSurfaceLevel::ppSurfaceLevel" attribute="out" return="true" />
@@ -2221,7 +2221,7 @@
     <map param="IDirect3DTexture9::LockRect::pRect" type="void"/>
     <map param="IDirect3DTexture9::LockRect::Flags" type="D3DLOCK"/>
     <map param="IDirect3DTexture9::LockRect::pLockedRect" attribute="out" />
-    <map method="IDirect3DTexture9::UnlockRectangle" name="UnlockRectangle"/>
+    <map method="IDirect3DTexture9::UnlockRect" name="UnlockRectangle"/>
 
     <map param="IDirect3DVolume9::GetDevice::ppDevice" attribute="out" />
     <map param="IDirect3DVolume9::GetPrivateData::pSizeOfData" attribute="out" />
@@ -2421,8 +2421,9 @@
 
     <map param="D3DXCreateCubeTextureFromFileInMemoryEx::pSrcInfo" type="void"/>
     <map param="D3DXCreateCubeTextureFromFileInMemoryEx::pPalette" attribute="out buffer"/>
-
-
+    
+    <map param="D3DXCreateCubeTextureFromFileExW::pSrcInfo" type="void"/>
+    <map param="D3DXCreateCubeTextureFromFileExW::pPalette" attribute="out buffer"/>
 
     <context-clear />
   </mapping>
