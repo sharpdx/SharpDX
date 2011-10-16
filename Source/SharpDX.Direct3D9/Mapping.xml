@@ -2039,10 +2039,18 @@
     <map param="IDirect3DDevice9::Clear::pRects" attribute="in buffer optional" />
     <map method="IDirect3DDevice9::Clear" visibility="internal" name="Clear_" />
     <map param="IDirect3DDevice9::ColorFill::pRect" attribute="in optional" />
-    
+
+    <!-- Tag all Create methods with pp.* parameters to use Fast Out attribute -->
     <map method="IDirect3DDevice9::Create.*" visibility="internal" />
+    <map param="IDirect3DDevice9::Create.*::pp.*" attribute="out fast"/>
+    <map param="IDirect3DDevice9Ex::Create.*::pp.*" attribute="out fast"/>
+
+    <map param="IDirect3D9::CreateDevice::ppReturnedDeviceInterface" attribute="out fast"/>
+    <map param="IDirect3D9Ex::CreateDeviceEx::ppReturnedDeviceInterface" attribute="out fast"/>
 
     <map param="IDirect3DDevice9::CreateAdditionalSwapChain::pSwapChain" attribute="out fast" />
+    <map param="IDirect3DDevice9(Ex)?::.*Surface(Ex)?::ppSurface" return="true" attribute="out" />
+    <map param="IDirect3DDevice9(Ex)?::CreateRenderTarget(Ex)?::ppSurface" return="true" attribute="out" />
 
     <map method="IDirect3DDevice9::DrawIndexedPrimitiveUP" visibility="internal" />
     <map method="IDirect3DDevice9::DrawPrimitiveUP" visibility="internal" />
@@ -2366,11 +2374,6 @@
     <map param="ID3DXAnimationController::GetAnimationSet::ppAnimationSet" attribute="out" />
     <map param="ID3DXAnimationController::GetTrackAnimationSet::ppAnimSet" attribute="out" />
 
-    <!-- Tag all Create methods with pp.* parameters to use Fast Out attribute -->
-    <map param="IDirect3DDevice9::Create.*::pp.*" attribute="out fast"/>
-    <map param="IDirect3DDevice9Ex::Create.*::pp.*" attribute="out fast"/>
-    <map param="IDirect3D9::CreateDevice::ppReturnedDeviceInterface" attribute="out fast"/>
-    <map param="IDirect3D9Ex::CreateDeviceEx::ppReturnedDeviceInterface" attribute="out fast"/>
     
     <!--
     // *****************************************************************

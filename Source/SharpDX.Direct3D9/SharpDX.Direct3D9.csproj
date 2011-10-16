@@ -37,6 +37,7 @@
     <Compile Include="PresentParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resource.cs" />
+    <Compile Include="Surface.cs" />
     <Compile Include="SwapChain.cs" />
     <Compile Include="Texture.cs" />
     <Compile Include="VertexBuffer.cs" />
