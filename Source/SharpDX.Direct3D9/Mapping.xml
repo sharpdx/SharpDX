@@ -630,12 +630,13 @@
     
     <create class="D3D9" />
     <create class="D3DX9" />
-
+    
     <context-clear/>
   </extension>
 
   <bindings>
     <bind from="PALETTEENTRY" to="SharpDX.Direct3D9.PaletteEntry"/>
+    <bind from="ID3DXBuffer" to="SharpDX.Direct3D.Blob"/>
   </bindings>
 
   <!-- D3D9 mapping -->
@@ -2016,7 +2017,6 @@
     <map param="IDirect3D9Ex::CreateDeviceEx::pPresentationParameters" attribute="in buffer"/>
     <map param="IDirect3D9Ex::CreateDeviceEx::pFullscreenDisplayMode" attribute="in buffer"/>
     <map interface="ID3DXAllocateHierarchy" name="IAllocateHierarchy" />
-    <map interface="ID3DXBuffer" name="ShaderBytecode" />
     <map interface="ID3DXLoadUserData" name="ILoadUserData" />
     <map interface="ID3DXRenderToEnvMap" name="RenderToEnvironmentMap" />
     <map interface="ID3DXSaveUserData" name="ISaveUserData" />
@@ -2222,6 +2222,7 @@
     <map param="IDirect3DSurface9::LockRect::Flags" type="D3DLOCK"/>
     <map param="IDirect3DSurface9::LockRect::pLockedRect" attribute="out" />
     <map method="IDirect3DSurface9::UnlockRect" name="UnlockRectangle"/>
+    <map method="IDirect3DSurface9::GetDC" property="false"/>
 
     <map param="IDirect3DTexture9::GetLevelDesc::pDesc" return="true" attribute="out" />
     <map param="IDirect3DTexture9::GetSurfaceLevel::ppSurfaceLevel" attribute="out" return="true" />
@@ -2427,6 +2428,22 @@
     
     <map param="D3DXCreateCubeTextureFromFileExW::pSrcInfo" type="void"/>
     <map param="D3DXCreateCubeTextureFromFileExW::pPalette" attribute="out buffer"/>
+
+    <map param="D3DXLoadSurfaceFrom.*::pSrcRect" type="void"/>
+    <map param="D3DXLoadSurfaceFrom.*::pDestRect" type="void"/>
+    <map param="D3DXLoadSurfaceFrom.*::Filter" type="D3DX_FILTER"/>
+    <map param="D3DXLoadSurfaceFrom.*::pSrcPalette" attribute="in buffer"/>
+    <map param="D3DXLoadSurfaceFrom.*::pDestPalette" attribute="out buffer"/>
+    <map param="D3DXLoadSurfaceFrom.*::pSrcInfo" type="void"/>
+    <map param="D3DXLoadSurfaceFrom.*::ColorKey" type="int"/>
+
+    <map param="D3DXSaveSurfaceTo.*::pSrcRect" type="void"/>
+    <map param="D3DXSaveSurfaceTo.*::pDestRect" type="void"/>
+    <map param="D3DXSaveSurfaceTo.*::Filter" type="D3DX_FILTER"/>
+    <map param="D3DXSaveSurfaceTo.*::pSrcPalette" attribute="in buffer"/>
+    <map param="D3DXSaveSurfaceTo.*::pDestPalette" attribute="out buffer"/>
+    <map param="D3DXSaveSurfaceTo.*::pSrcInfo" type="void"/>
+    <map param="D3DXSaveSurfaceTo.*::ColorKey" type="int"/>
 
     <context-clear />
   </mapping>

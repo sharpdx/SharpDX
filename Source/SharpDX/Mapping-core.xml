@@ -165,6 +165,7 @@
     <define struct="SharpDX.Multimedia.WaveFormatExtensible" sizeof="18"  marshal="true" custom-new="true"/>
     <define struct="SharpDX.FunctionCallback" sizeof="8" />
     <define interface="SharpDX.ComObject" />
+    <define interface="SharpDX.Direct3D.Blob"/>
     <define interface="SharpDX.Win32.PropertyBag"/>
     <define struct="SharpDX.Win32.SecurityAttributes" sizeof="16" />
   </extension>
