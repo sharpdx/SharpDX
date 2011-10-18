@@ -1922,6 +1922,9 @@
     <remove struct="D3DXSHADER_STRUCTMEMBERINFO" />
     <remove struct="D3DXSHCOMPRESSQUALITYTYPE" />
     <remove struct="D3DXSHGPUSIMOPT" />
+
+    <map field=".*::Usage" type="D3DUSAGE"/>
+    
     <map struct="D3DPRESENTSTATS" name="PresentationStatistics" />
     <map struct="D3D(.*)9" name-tmp="$1" />
     <map struct="D3DXMATERIAL" name="ExtendedMaterial" />
@@ -2007,7 +2010,6 @@
     <map method="IDirect3DResource9::GetPrivateData" check="false"/>
     <map param="pSizeOfData" attribute="inout"/>
 
-    <map method="GetDC" name="GetDisplayDeviceContext" />
     <remove interface="IDirect3DCryptoSession9" />
     <remove interface="IDirect3D9ExOverlayExtension" />
     <remove interface="ID3DXPRTBuffer" />
@@ -2216,13 +2218,15 @@
     <map param="IDirect3DIndexBuffer9::GetDesc::pDesc" attribute="out" />
     
     <map param="IDirect3DSurface9::GetDesc::pDesc" attribute="out" />
-    <map param="IDirect3DSurface9::GetDC::phdc" attribute="out" />
+    <map param="IDirect3DSurface9::GetDC::phdc" return="true" attribute="out" />
     <map method="IDirect3DSurface9::LockRect" name="LockRectangle" visibility="internal" />
     <map param="IDirect3DSurface9::LockRect::pRect" type="void"/>
     <map param="IDirect3DSurface9::LockRect::Flags" type="D3DLOCK"/>
     <map param="IDirect3DSurface9::LockRect::pLockedRect" attribute="out" />
     <map method="IDirect3DSurface9::UnlockRect" name="UnlockRectangle"/>
     <map method="IDirect3DSurface9::GetDC" property="false"/>
+    <map method="IDirect3DSurface9::GetContainer" visibility="internal"/>
+    <map param="IDirect3DSurface9::GetContainer::ppContainer" attribute="out"/>
 
     <map param="IDirect3DTexture9::GetLevelDesc::pDesc" return="true" attribute="out" />
     <map param="IDirect3DTexture9::GetSurfaceLevel::ppSurfaceLevel" attribute="out" return="true" />

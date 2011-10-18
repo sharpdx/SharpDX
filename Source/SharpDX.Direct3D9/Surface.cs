@@ -40,7 +40,8 @@ namespace SharpDX.Direct3D9
         /// <param name="discard">if set to <c>true</c> [discard].</param>
         /// <returns>A reference to a <see cref="Surface"/>, representing the created depth-stencil surface resource. </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::CreateDepthStencilSurface([In] unsigned int Width,[In] unsigned int Height,[In] D3DFORMAT Format,[In] D3DMULTISAMPLE_TYPE MultiSample,[In] unsigned int MultisampleQuality,[In] BOOL Discard,[Out] IDirect3DSurface9** ppSurface,[In] void** pSharedHandle)</unmanaged>
-        public static Surface CreateDepthStencil(Device device, int width, int height, Format format, MultisampleType multisampleType, int multisampleQuality, bool discard)
+        public static Surface CreateDepthStencil(
+            Device device, int width, int height, Format format, MultisampleType multisampleType, int multisampleQuality, bool discard)
         {
             return device.CreateDepthStencilSurface(width, height, format, multisampleType, multisampleQuality, discard, IntPtr.Zero);
         }
@@ -58,13 +59,14 @@ namespace SharpDX.Direct3D9
         /// <param name="sharedHandle">The shared handle.</param>
         /// <returns>A reference to a <see cref="Surface"/>, representing the created depth-stencil surface resource. </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::CreateDepthStencilSurface([In] unsigned int Width,[In] unsigned int Height,[In] D3DFORMAT Format,[In] D3DMULTISAMPLE_TYPE MultiSample,[In] unsigned int MultisampleQuality,[In] BOOL Discard,[Out] IDirect3DSurface9** ppSurface,[In] void** pSharedHandle)</unmanaged>
-        public static Surface CreateDepthStencil(Device device, int width, int height, Format format, MultisampleType multisampleType, int multisampleQuality, bool discard, out IntPtr sharedHandle)
+        public static Surface CreateDepthStencil(
+            Device device, int width, int height, Format format, MultisampleType multisampleType, int multisampleQuality, bool discard, out IntPtr sharedHandle)
         {
             unsafe
             {
                 fixed (void* pSharedHandle = &sharedHandle)
                     return device.CreateDepthStencilSurface(width, height, format, multisampleType, multisampleQuality, discard, (IntPtr)pSharedHandle);
-            }           
+            }
         }
 
         /// <summary>
@@ -80,7 +82,8 @@ namespace SharpDX.Direct3D9
         /// <param name="usage">The usage.</param>
         /// <returns>A reference to a <see cref="Surface"/>, representing the created depth-stencil surface resource. </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9Ex::CreateDepthStencilSurfaceEx([In] unsigned int Width,[In] unsigned int Height,[In] D3DFORMAT Format,[In] D3DMULTISAMPLE_TYPE MultiSample,[In] unsigned int MultisampleQuality,[In] BOOL Discard,[Out, Fast] IDirect3DSurface9** ppSurface,[In] void** pSharedHandle,[In] unsigned int Usage)</unmanaged>
-        public static Surface CreateDepthStencilEx(DeviceEx device, int width, int height, Format format, MultisampleType multisampleType, int multisampleQuality, bool discard, Usage usage)
+        public static Surface CreateDepthStencilEx(
+            DeviceEx device, int width, int height, Format format, MultisampleType multisampleType, int multisampleQuality, bool discard, Usage usage)
         {
             return device.CreateDepthStencilSurfaceEx(width, height, format, multisampleType, multisampleQuality, discard, IntPtr.Zero, (int)usage);
         }
@@ -99,12 +102,22 @@ namespace SharpDX.Direct3D9
         /// <param name="sharedHandle">The shared handle.</param>
         /// <returns>A reference to a <see cref="Surface"/>, representing the created depth-stencil surface resource. </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9Ex::CreateDepthStencilSurfaceEx([In] unsigned int Width,[In] unsigned int Height,[In] D3DFORMAT Format,[In] D3DMULTISAMPLE_TYPE MultiSample,[In] unsigned int MultisampleQuality,[In] BOOL Discard,[Out, Fast] IDirect3DSurface9** ppSurface,[In] void** pSharedHandle,[In] unsigned int Usage)</unmanaged>
-        public static Surface CreateDepthStencilEx(DeviceEx device, int width, int height, Format format, MultisampleType multisampleType, int multisampleQuality, bool discard, Usage usage, out IntPtr sharedHandle)
+        public static Surface CreateDepthStencilEx(
+            DeviceEx device,
+            int width,
+            int height,
+            Format format,
+            MultisampleType multisampleType,
+            int multisampleQuality,
+            bool discard,
+            Usage usage,
+            out IntPtr sharedHandle)
         {
             unsafe
             {
                 fixed (void* pSharedHandle = &sharedHandle)
-                    return device.CreateDepthStencilSurfaceEx(width, height, format, multisampleType, multisampleQuality, discard, (IntPtr)pSharedHandle, (int)usage);
+                    return device.CreateDepthStencilSurfaceEx(
+                        width, height, format, multisampleType, multisampleQuality, discard, (IntPtr)pSharedHandle, (int)usage);
             }
         }
 
@@ -181,7 +194,7 @@ namespace SharpDX.Direct3D9
             {
                 fixed (void* pSharedHandle = &sharedHandle)
                     return device.CreateOffscreenPlainSurfaceEx(width, height, format, pool, (IntPtr)pSharedHandle, (int)usage);
-            }          
+            }
         }
 
         /// <summary>
@@ -198,7 +211,8 @@ namespace SharpDX.Direct3D9
         /// A render-target <see cref="Surface"/>.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::CreateRenderTarget([In] unsigned int Width,[In] unsigned int Height,[In] D3DFORMAT Format,[In] D3DMULTISAMPLE_TYPE MultiSample,[In] unsigned int MultisampleQuality,[In] BOOL Lockable,[Out] IDirect3DSurface9** ppSurface,[In] void** pSharedHandle)</unmanaged>
-        public static Surface CreateRenderTarget(Device device, int width, int height, Format format, MultisampleType multisampleType, int multisampleQuality, bool lockable)
+        public static Surface CreateRenderTarget(
+            Device device, int width, int height, Format format, MultisampleType multisampleType, int multisampleQuality, bool lockable)
         {
             return device.CreateRenderTarget(width, height, format, multisampleType, multisampleQuality, lockable, IntPtr.Zero);
         }
@@ -218,13 +232,14 @@ namespace SharpDX.Direct3D9
         /// A render-target <see cref="Surface"/>.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::CreateRenderTarget([In] unsigned int Width,[In] unsigned int Height,[In] D3DFORMAT Format,[In] D3DMULTISAMPLE_TYPE MultiSample,[In] unsigned int MultisampleQuality,[In] BOOL Lockable,[Out] IDirect3DSurface9** ppSurface,[In] void** pSharedHandle)</unmanaged>
-        public static Surface CreateRenderTarget(Device device, int width, int height, Format format, MultisampleType multisampleType, int multisampleQuality, bool lockable, out IntPtr sharedHandle)
+        public static Surface CreateRenderTarget(
+            Device device, int width, int height, Format format, MultisampleType multisampleType, int multisampleQuality, bool lockable, out IntPtr sharedHandle)
         {
             unsafe
             {
                 fixed (void* pSharedHandle = &sharedHandle)
                     return device.CreateRenderTarget(width, height, format, multisampleType, multisampleQuality, lockable, (IntPtr)pSharedHandle);
-            }                      
+            }
         }
 
         /// <summary>
@@ -240,7 +255,8 @@ namespace SharpDX.Direct3D9
         /// <param name="usage">The usage.</param>
         /// <returns>A render-target <see cref="Surface"/>.</returns>
         /// <unmanaged>HRESULT IDirect3DDevice9Ex::CreateRenderTargetEx([In] unsigned int Width,[In] unsigned int Height,[In] D3DFORMAT Format,[In] D3DMULTISAMPLE_TYPE MultiSample,[In] unsigned int MultisampleQuality,[In] BOOL Lockable,[Out] IDirect3DSurface9** ppSurface,[In] void** pSharedHandle,[In] unsigned int Usage)</unmanaged>
-        public static Surface CreateRenderTargetEx(DeviceEx device, int width, int height, Format format, MultisampleType multisampleType, int multisampleQuality, bool lockable, Usage usage)
+        public static Surface CreateRenderTargetEx(
+            DeviceEx device, int width, int height, Format format, MultisampleType multisampleType, int multisampleQuality, bool lockable, Usage usage)
         {
             return device.CreateRenderTargetEx(width, height, format, multisampleType, multisampleQuality, lockable, IntPtr.Zero, (int)usage);
         }
@@ -259,7 +275,16 @@ namespace SharpDX.Direct3D9
         /// <param name="sharedHandle">The shared handle.</param>
         /// <returns>A render-target <see cref="Surface"/>.</returns>
         /// <unmanaged>HRESULT IDirect3DDevice9Ex::CreateRenderTargetEx([In] unsigned int Width,[In] unsigned int Height,[In] D3DFORMAT Format,[In] D3DMULTISAMPLE_TYPE MultiSample,[In] unsigned int MultisampleQuality,[In] BOOL Lockable,[Out] IDirect3DSurface9** ppSurface,[In] void** pSharedHandle,[In] unsigned int Usage)</unmanaged>
-        public static Surface CreateRenderTargetEx(DeviceEx device, int width, int height, Format format, MultisampleType multisampleType, int multisampleQuality, bool lockable, Usage usage, out IntPtr sharedHandle)
+        public static Surface CreateRenderTargetEx(
+            DeviceEx device,
+            int width,
+            int height,
+            Format format,
+            MultisampleType multisampleType,
+            int multisampleQuality,
+            bool lockable,
+            Usage usage,
+            out IntPtr sharedHandle)
         {
             unsafe
             {
@@ -297,7 +322,8 @@ namespace SharpDX.Direct3D9
         {
             unsafe
             {
-                return D3DX9.LoadSurfaceFromFileW(surface, null, new IntPtr(&destinationRectangle), fileName, new IntPtr(&sourceRectangle), filter, colorKey, IntPtr.Zero);
+                return D3DX9.LoadSurfaceFromFileW(
+                    surface, null, new IntPtr(&destinationRectangle), fileName, new IntPtr(&sourceRectangle), filter, colorKey, IntPtr.Zero);
             }
         }
 
@@ -313,7 +339,14 @@ namespace SharpDX.Direct3D9
         /// <param name="imageInformation">The image information.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT D3DXLoadSurfaceFromFileW([In] IDirect3DSurface9* pDestSurface,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestRect,[In] const wchar_t* pSrcFile,[In] const void* pSrcRect,[In] D3DX_FILTER Filter,[In] int ColorKey,[In] void* pSrcInfo)</unmanaged>
-        public static Result FromFile(Surface surface, string fileName, Filter filter, int colorKey, Rectangle sourceRectangle, Rectangle destinationRectangle, out ImageInformation imageInformation)
+        public static Result FromFile(
+            Surface surface,
+            string fileName,
+            Filter filter,
+            int colorKey,
+            Rectangle sourceRectangle,
+            Rectangle destinationRectangle,
+            out ImageInformation imageInformation)
         {
             return FromFile(surface, fileName, filter, colorKey, sourceRectangle, destinationRectangle, null, out imageInformation);
         }
@@ -331,12 +364,21 @@ namespace SharpDX.Direct3D9
         /// <param name="imageInformation">The image information.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT D3DXLoadSurfaceFromFileW([In] IDirect3DSurface9* pDestSurface,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestRect,[In] const wchar_t* pSrcFile,[In] const void* pSrcRect,[In] D3DX_FILTER Filter,[In] int ColorKey,[In] void* pSrcInfo)</unmanaged>
-        public static Result FromFile(Surface surface, string fileName, Filter filter, int colorKey, Rectangle sourceRectangle, Rectangle destinationRectangle, PaletteEntry[] palette, out ImageInformation imageInformation)
+        public static Result FromFile(
+            Surface surface,
+            string fileName,
+            Filter filter,
+            int colorKey,
+            Rectangle sourceRectangle,
+            Rectangle destinationRectangle,
+            PaletteEntry[] palette,
+            out ImageInformation imageInformation)
         {
             unsafe
             {
                 fixed (void* pImageInformation = &imageInformation)
-                    return D3DX9.LoadSurfaceFromFileW(surface, palette, new IntPtr(&destinationRectangle), fileName, new IntPtr(&sourceRectangle), filter, colorKey, (IntPtr)pImageInformation);
+                    return D3DX9.LoadSurfaceFromFileW(
+                        surface, palette, new IntPtr(&destinationRectangle), fileName, new IntPtr(&sourceRectangle), filter, colorKey, (IntPtr)pImageInformation);
             }
         }
 
@@ -354,7 +396,8 @@ namespace SharpDX.Direct3D9
             unsafe
             {
                 fixed (void* pMemory = memory)
-                    return D3DX9.LoadSurfaceFromFileInMemory(surface, null, IntPtr.Zero, (IntPtr)pMemory, memory.Length, IntPtr.Zero, filter, colorKey, IntPtr.Zero);
+                    return D3DX9.LoadSurfaceFromFileInMemory(
+                        surface, null, IntPtr.Zero, (IntPtr)pMemory, memory.Length, IntPtr.Zero, filter, colorKey, IntPtr.Zero);
             }
         }
 
@@ -369,12 +412,22 @@ namespace SharpDX.Direct3D9
         /// <param name="destinationRectangle">The destination rectangle.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT D3DXLoadSurfaceFromFileInMemory([In] IDirect3DSurface9* pDestSurface,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestRect,[In] const void* pSrcData,[In] unsigned int SrcDataSize,[In] const void* pSrcRect,[In] D3DX_FILTER Filter,[In] int ColorKey,[In] void* pSrcInfo)</unmanaged>
-        public static Result FromFileInMemory(Surface surface, byte[] memory, Filter filter, int colorKey, Rectangle sourceRectangle, Rectangle destinationRectangle)
+        public static Result FromFileInMemory(
+            Surface surface, byte[] memory, Filter filter, int colorKey, Rectangle sourceRectangle, Rectangle destinationRectangle)
         {
             unsafe
             {
                 fixed (void* pMemory = memory)
-                    return D3DX9.LoadSurfaceFromFileInMemory(surface, null, new IntPtr(&destinationRectangle), (IntPtr)pMemory, memory.Length, new IntPtr(&sourceRectangle), filter, colorKey, IntPtr.Zero);
+                    return D3DX9.LoadSurfaceFromFileInMemory(
+                        surface,
+                        null,
+                        new IntPtr(&destinationRectangle),
+                        (IntPtr)pMemory,
+                        memory.Length,
+                        new IntPtr(&sourceRectangle),
+                        filter,
+                        colorKey,
+                        IntPtr.Zero);
             }
         }
 
@@ -390,7 +443,14 @@ namespace SharpDX.Direct3D9
         /// <param name="imageInformation">The image information.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT D3DXLoadSurfaceFromFileInMemory([In] IDirect3DSurface9* pDestSurface,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestRect,[In] const void* pSrcData,[In] unsigned int SrcDataSize,[In] const void* pSrcRect,[In] D3DX_FILTER Filter,[In] int ColorKey,[In] void* pSrcInfo)</unmanaged>
-        public static Result FromFileInMemory(Surface surface, byte[] memory, Filter filter, int colorKey, Rectangle sourceRectangle, Rectangle destinationRectangle, out ImageInformation imageInformation)
+        public static Result FromFileInMemory(
+            Surface surface,
+            byte[] memory,
+            Filter filter,
+            int colorKey,
+            Rectangle sourceRectangle,
+            Rectangle destinationRectangle,
+            out ImageInformation imageInformation)
         {
             return FromFileInMemory(surface, memory, filter, colorKey, sourceRectangle, destinationRectangle, null, out imageInformation);
         }
@@ -408,13 +468,30 @@ namespace SharpDX.Direct3D9
         /// <param name="imageInformation">The image information.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT D3DXLoadSurfaceFromFileInMemory([In] IDirect3DSurface9* pDestSurface,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestRect,[In] const void* pSrcData,[In] unsigned int SrcDataSize,[In] const void* pSrcRect,[In] D3DX_FILTER Filter,[In] int ColorKey,[In] void* pSrcInfo)</unmanaged>
-        public static Result FromFileInMemory(Surface surface, byte[] memory, Filter filter, int colorKey, Rectangle sourceRectangle, Rectangle destinationRectangle, PaletteEntry[] palette, out ImageInformation imageInformation)
+        public static Result FromFileInMemory(
+            Surface surface,
+            byte[] memory,
+            Filter filter,
+            int colorKey,
+            Rectangle sourceRectangle,
+            Rectangle destinationRectangle,
+            PaletteEntry[] palette,
+            out ImageInformation imageInformation)
         {
             unsafe
             {
                 fixed (void* pMemory = memory)
-                    fixed (void* pImageInformation = &imageInformation)
-                        return D3DX9.LoadSurfaceFromFileInMemory(surface, palette, new IntPtr(&destinationRectangle), (IntPtr)pMemory, memory.Length, new IntPtr(&sourceRectangle), filter, colorKey, (IntPtr)pImageInformation);
+                fixed (void* pImageInformation = &imageInformation)
+                    return D3DX9.LoadSurfaceFromFileInMemory(
+                        surface,
+                        palette,
+                        new IntPtr(&destinationRectangle),
+                        (IntPtr)pMemory,
+                        memory.Length,
+                        new IntPtr(&sourceRectangle),
+                        filter,
+                        colorKey,
+                        (IntPtr)pImageInformation);
             }
         }
 
@@ -436,29 +513,12 @@ namespace SharpDX.Direct3D9
                 if (stream is DataStream)
                 {
                     return D3DX9.LoadSurfaceFromFileInMemory(
-                        surface,
-                        null,
-                        IntPtr.Zero,
-                        ((DataStream)stream).DataPointer,
-                        (int)stream.Length,
-                        IntPtr.Zero,
-                        filter,
-                        colorKey,
-                        IntPtr.Zero);
+                        surface, null, IntPtr.Zero, ((DataStream)stream).DataPointer, (int)stream.Length, IntPtr.Zero, filter, colorKey, IntPtr.Zero);
                 }
 
                 var data = Utilities.ReadStream(stream);
                 fixed (void* pData = data)
-                    return D3DX9.LoadSurfaceFromFileInMemory(
-                        surface,
-                        null,
-                        IntPtr.Zero,
-                        (IntPtr)pData,
-                        data.Length,
-                        IntPtr.Zero,
-                        filter,
-                        colorKey,
-                        IntPtr.Zero);
+                    return D3DX9.LoadSurfaceFromFileInMemory(surface, null, IntPtr.Zero, (IntPtr)pData, data.Length, IntPtr.Zero, filter, colorKey, IntPtr.Zero);
             }
         }
 
@@ -475,7 +535,8 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXLoadSurfaceFromFileInMemory([In] IDirect3DSurface9* pDestSurface,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestRect,[In] const void* pSrcData,[In] unsigned int SrcDataSize,[In] const void* pSrcRect,[In] D3DX_FILTER Filter,[In] int ColorKey,[In] void* pSrcInfo)</unmanaged>
-        public static Result FromFileInStream(Surface surface, Stream stream, Filter filter, int colorKey, Rectangle sourceRectangle, Rectangle destinationRectangle)
+        public static Result FromFileInStream(
+            Surface surface, Stream stream, Filter filter, int colorKey, Rectangle sourceRectangle, Rectangle destinationRectangle)
         {
             return CreateFromFileInStream(surface, stream, filter, colorKey, sourceRectangle, destinationRectangle, null, IntPtr.Zero);
         }
@@ -494,7 +555,14 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXLoadSurfaceFromFileInMemory([In] IDirect3DSurface9* pDestSurface,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestRect,[In] const void* pSrcData,[In] unsigned int SrcDataSize,[In] const void* pSrcRect,[In] D3DX_FILTER Filter,[In] int ColorKey,[In] void* pSrcInfo)</unmanaged>
-        public static Result FromFileInStream(Surface surface, Stream stream, Filter filter, int colorKey, Rectangle sourceRectangle, Rectangle destinationRectangle, out ImageInformation imageInformation)
+        public static Result FromFileInStream(
+            Surface surface,
+            Stream stream,
+            Filter filter,
+            int colorKey,
+            Rectangle sourceRectangle,
+            Rectangle destinationRectangle,
+            out ImageInformation imageInformation)
         {
             return FromFileInStream(surface, stream, filter, colorKey, sourceRectangle, destinationRectangle, null, out imageInformation);
         }
@@ -514,7 +582,15 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXLoadSurfaceFromFileInMemory([In] IDirect3DSurface9* pDestSurface,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestRect,[In] const void* pSrcData,[In] unsigned int SrcDataSize,[In] const void* pSrcRect,[In] D3DX_FILTER Filter,[In] int ColorKey,[In] void* pSrcInfo)</unmanaged>
-        public static unsafe Result FromFileInStream(Surface surface, Stream stream, Filter filter, int colorKey, Rectangle sourceRectangle, Rectangle destinationRectangle, PaletteEntry[] palette, out ImageInformation imageInformation)
+        public static unsafe Result FromFileInStream(
+            Surface surface,
+            Stream stream,
+            Filter filter,
+            int colorKey,
+            Rectangle sourceRectangle,
+            Rectangle destinationRectangle,
+            PaletteEntry[] palette,
+            out ImageInformation imageInformation)
         {
             fixed (void* pImageInformation = &imageInformation)
                 return CreateFromFileInStream(surface, stream, filter, colorKey, sourceRectangle, destinationRectangle, palette, (IntPtr)pImageInformation);
@@ -533,7 +609,15 @@ namespace SharpDX.Direct3D9
         /// <param name="imageInformation">The image information.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT D3DXLoadSurfaceFromFileInMemory([In] IDirect3DSurface9* pDestSurface,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestRect,[In] const void* pSrcData,[In] unsigned int SrcDataSize,[In] const void* pSrcRect,[In] D3DX_FILTER Filter,[In] int ColorKey,[In] void* pSrcInfo)</unmanaged>
-        private static unsafe Result CreateFromFileInStream(Surface surface, Stream stream, Filter filter, int colorKey, Rectangle sourceRectangle, Rectangle destinationRectangle, PaletteEntry[] palette, IntPtr imageInformation)
+        private static unsafe Result CreateFromFileInStream(
+            Surface surface,
+            Stream stream,
+            Filter filter,
+            int colorKey,
+            Rectangle sourceRectangle,
+            Rectangle destinationRectangle,
+            PaletteEntry[] palette,
+            IntPtr imageInformation)
         {
             if (stream is DataStream)
             {
@@ -577,7 +661,8 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXLoadSurfaceFromMemory([In] IDirect3DSurface9* pDestSurface,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestRect,[In] const void* pSrcMemory,[In] D3DFORMAT SrcFormat,[In] unsigned int SrcPitch,[In, Buffer] const PALETTEENTRY* pSrcPalette,[In] const void* pSrcRect,[In] D3DX_FILTER Filter,[In] int ColorKey)</unmanaged>
-        public static Result FromMemory(Surface surface, byte[] data, Filter filter, int colorKey, Format sourceFormat, int sourcePitch, Rectangle sourceRectangle)
+        public static Result FromMemory(
+            Surface surface, byte[] data, Filter filter, int colorKey, Format sourceFormat, int sourcePitch, Rectangle sourceRectangle)
         {
             return FromMemory(surface, data, filter, colorKey, sourceFormat, sourcePitch, sourceRectangle, null, null);
         }
@@ -597,7 +682,15 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXLoadSurfaceFromMemory([In] IDirect3DSurface9* pDestSurface,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestRect,[In] const void* pSrcMemory,[In] D3DFORMAT SrcFormat,[In] unsigned int SrcPitch,[In, Buffer] const PALETTEENTRY* pSrcPalette,[In] const void* pSrcRect,[In] D3DX_FILTER Filter,[In] int ColorKey)</unmanaged>
-        public static Result FromMemory(Surface surface, byte[] data, Filter filter, int colorKey, Format sourceFormat, int sourcePitch, Rectangle sourceRectangle, Rectangle destinationRectangle)
+        public static Result FromMemory(
+            Surface surface,
+            byte[] data,
+            Filter filter,
+            int colorKey,
+            Format sourceFormat,
+            int sourcePitch,
+            Rectangle sourceRectangle,
+            Rectangle destinationRectangle)
         {
             return FromMemory(surface, data, filter, colorKey, sourceFormat, sourcePitch, sourceRectangle, destinationRectangle, null, null);
         }
@@ -618,12 +711,31 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXLoadSurfaceFromMemory([In] IDirect3DSurface9* pDestSurface,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestRect,[In] const void* pSrcMemory,[In] D3DFORMAT SrcFormat,[In] unsigned int SrcPitch,[In, Buffer] const PALETTEENTRY* pSrcPalette,[In] const void* pSrcRect,[In] D3DX_FILTER Filter,[In] int ColorKey)</unmanaged>
-        public static Result FromMemory(Surface surface, byte[] data, Filter filter, int colorKey, Format sourceFormat, int sourcePitch, Rectangle sourceRectangle, PaletteEntry[] sourcePalette, PaletteEntry[] destinationPalette)
+        public static Result FromMemory(
+            Surface surface,
+            byte[] data,
+            Filter filter,
+            int colorKey,
+            Format sourceFormat,
+            int sourcePitch,
+            Rectangle sourceRectangle,
+            PaletteEntry[] sourcePalette,
+            PaletteEntry[] destinationPalette)
         {
             unsafe
             {
                 fixed (void* pData = data)
-                    return D3DX9.LoadSurfaceFromMemory(surface, destinationPalette, IntPtr.Zero, (IntPtr)pData, sourceFormat, sourcePitch, sourcePalette, new IntPtr(&sourceRectangle), filter, colorKey);
+                    return D3DX9.LoadSurfaceFromMemory(
+                        surface,
+                        destinationPalette,
+                        IntPtr.Zero,
+                        (IntPtr)pData,
+                        sourceFormat,
+                        sourcePitch,
+                        sourcePalette,
+                        new IntPtr(&sourceRectangle),
+                        filter,
+                        colorKey);
             }
         }
 
@@ -642,12 +754,32 @@ namespace SharpDX.Direct3D9
         /// <param name="destinationPalette">The destination palette.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT D3DXLoadSurfaceFromMemory([In] IDirect3DSurface9* pDestSurface,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestRect,[In] const void* pSrcMemory,[In] D3DFORMAT SrcFormat,[In] unsigned int SrcPitch,[In, Buffer] const PALETTEENTRY* pSrcPalette,[In] const void* pSrcRect,[In] D3DX_FILTER Filter,[In] int ColorKey)</unmanaged>
-        public static Result FromMemory(Surface surface, byte[] data, Filter filter, int colorKey, Format sourceFormat, int sourcePitch, Rectangle sourceRectangle, Rectangle destinationRectangle, PaletteEntry[] sourcePalette, PaletteEntry[] destinationPalette)
+        public static Result FromMemory(
+            Surface surface,
+            byte[] data,
+            Filter filter,
+            int colorKey,
+            Format sourceFormat,
+            int sourcePitch,
+            Rectangle sourceRectangle,
+            Rectangle destinationRectangle,
+            PaletteEntry[] sourcePalette,
+            PaletteEntry[] destinationPalette)
         {
             unsafe
             {
                 fixed (void* pData = data)
-                    return D3DX9.LoadSurfaceFromMemory(surface, destinationPalette, new IntPtr(&destinationRectangle), (IntPtr)pData, sourceFormat, sourcePitch, sourcePalette, new IntPtr(&sourceRectangle), filter, colorKey);
+                    return D3DX9.LoadSurfaceFromMemory(
+                        surface,
+                        destinationPalette,
+                        new IntPtr(&destinationRectangle),
+                        (IntPtr)pData,
+                        sourceFormat,
+                        sourcePitch,
+                        sourcePalette,
+                        new IntPtr(&sourceRectangle),
+                        filter,
+                        colorKey);
             }
         }
 
@@ -665,7 +797,8 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXLoadSurfaceFromMemory([In] IDirect3DSurface9* pDestSurface,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestRect,[In] const void* pSrcMemory,[In] D3DFORMAT SrcFormat,[In] unsigned int SrcPitch,[In, Buffer] const PALETTEENTRY* pSrcPalette,[In] const void* pSrcRect,[In] D3DX_FILTER Filter,[In] int ColorKey)</unmanaged>
-        public static Result FromStream(Surface surface, Stream stream, Filter filter, int colorKey, Format sourceFormat, int sourcePitch, Rectangle sourceRectangle)
+        public static Result FromStream(
+            Surface surface, Stream stream, Filter filter, int colorKey, Format sourceFormat, int sourcePitch, Rectangle sourceRectangle)
         {
             return FromStream(surface, stream, filter, colorKey, sourceFormat, sourcePitch, sourceRectangle, null, null);
         }
@@ -685,7 +818,15 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXLoadSurfaceFromMemory([In] IDirect3DSurface9* pDestSurface,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestRect,[In] const void* pSrcMemory,[In] D3DFORMAT SrcFormat,[In] unsigned int SrcPitch,[In, Buffer] const PALETTEENTRY* pSrcPalette,[In] const void* pSrcRect,[In] D3DX_FILTER Filter,[In] int ColorKey)</unmanaged>
-        public static Result FromStream(Surface surface, Stream stream, Filter filter, int colorKey, Format sourceFormat, int sourcePitch, Rectangle sourceRectangle, Rectangle destinationRectangle)
+        public static Result FromStream(
+            Surface surface,
+            Stream stream,
+            Filter filter,
+            int colorKey,
+            Format sourceFormat,
+            int sourcePitch,
+            Rectangle sourceRectangle,
+            Rectangle destinationRectangle)
         {
             return FromStream(surface, stream, filter, colorKey, sourceFormat, sourcePitch, sourceRectangle, destinationRectangle, null, null);
         }
@@ -706,16 +847,45 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXLoadSurfaceFromMemory([In] IDirect3DSurface9* pDestSurface,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestRect,[In] const void* pSrcMemory,[In] D3DFORMAT SrcFormat,[In] unsigned int SrcPitch,[In, Buffer] const PALETTEENTRY* pSrcPalette,[In] const void* pSrcRect,[In] D3DX_FILTER Filter,[In] int ColorKey)</unmanaged>
-        public static Result FromStream(Surface surface, Stream stream, Filter filter, int colorKey, Format sourceFormat, int sourcePitch, Rectangle sourceRectangle, PaletteEntry[] sourcePalette, PaletteEntry[] destinationPalette)
+        public static Result FromStream(
+            Surface surface,
+            Stream stream,
+            Filter filter,
+            int colorKey,
+            Format sourceFormat,
+            int sourcePitch,
+            Rectangle sourceRectangle,
+            PaletteEntry[] sourcePalette,
+            PaletteEntry[] destinationPalette)
         {
             unsafe
             {
                 if (stream is DataStream)
-                    return D3DX9.LoadSurfaceFromMemory(surface, destinationPalette, IntPtr.Zero, ((DataStream)stream).DataPointer, sourceFormat, sourcePitch, sourcePalette, new IntPtr(&sourceRectangle), filter, colorKey);
+                    return D3DX9.LoadSurfaceFromMemory(
+                        surface,
+                        destinationPalette,
+                        IntPtr.Zero,
+                        ((DataStream)stream).DataPointer,
+                        sourceFormat,
+                        sourcePitch,
+                        sourcePalette,
+                        new IntPtr(&sourceRectangle),
+                        filter,
+                        colorKey);
 
                 var data = Utilities.ReadStream(stream);
                 fixed (void* pData = data)
-                    return D3DX9.LoadSurfaceFromMemory(surface, destinationPalette, IntPtr.Zero, (IntPtr)pData, sourceFormat, sourcePitch, sourcePalette, new IntPtr(&sourceRectangle), filter, colorKey);
+                    return D3DX9.LoadSurfaceFromMemory(
+                        surface,
+                        destinationPalette,
+                        IntPtr.Zero,
+                        (IntPtr)pData,
+                        sourceFormat,
+                        sourcePitch,
+                        sourcePalette,
+                        new IntPtr(&sourceRectangle),
+                        filter,
+                        colorKey);
             }
         }
 
@@ -736,16 +906,46 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXLoadSurfaceFromMemory([In] IDirect3DSurface9* pDestSurface,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestRect,[In] const void* pSrcMemory,[In] D3DFORMAT SrcFormat,[In] unsigned int SrcPitch,[In, Buffer] const PALETTEENTRY* pSrcPalette,[In] const void* pSrcRect,[In] D3DX_FILTER Filter,[In] int ColorKey)</unmanaged>
-        public static Result FromStream(Surface surface, Stream stream, Filter filter, int colorKey, Format sourceFormat, int sourcePitch, Rectangle sourceRectangle, Rectangle destinationRectangle, PaletteEntry[] sourcePalette, PaletteEntry[] destinationPalette)
+        public static Result FromStream(
+            Surface surface,
+            Stream stream,
+            Filter filter,
+            int colorKey,
+            Format sourceFormat,
+            int sourcePitch,
+            Rectangle sourceRectangle,
+            Rectangle destinationRectangle,
+            PaletteEntry[] sourcePalette,
+            PaletteEntry[] destinationPalette)
         {
             unsafe
             {
                 if (stream is DataStream)
-                    return D3DX9.LoadSurfaceFromMemory(surface, destinationPalette, new IntPtr(&destinationRectangle), ((DataStream)stream).DataPointer, sourceFormat, sourcePitch, sourcePalette, new IntPtr(&sourceRectangle), filter, colorKey);
+                    return D3DX9.LoadSurfaceFromMemory(
+                        surface,
+                        destinationPalette,
+                        new IntPtr(&destinationRectangle),
+                        ((DataStream)stream).DataPointer,
+                        sourceFormat,
+                        sourcePitch,
+                        sourcePalette,
+                        new IntPtr(&sourceRectangle),
+                        filter,
+                        colorKey);
 
                 var data = Utilities.ReadStream(stream);
                 fixed (void* pData = data)
-                    return D3DX9.LoadSurfaceFromMemory(surface, destinationPalette, new IntPtr(&destinationRectangle), (IntPtr)pData, sourceFormat, sourcePitch, sourcePalette, new IntPtr(&sourceRectangle), filter, colorKey);
+                    return D3DX9.LoadSurfaceFromMemory(
+                        surface,
+                        destinationPalette,
+                        new IntPtr(&destinationRectangle),
+                        (IntPtr)pData,
+                        sourceFormat,
+                        sourcePitch,
+                        sourcePalette,
+                        new IntPtr(&sourceRectangle),
+                        filter,
+                        colorKey);
             }
         }
 
@@ -778,7 +978,8 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXLoadSurfaceFromSurface([In] IDirect3DSurface9* pDestSurface,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestRect,[In] IDirect3DSurface9* pSrcSurface,[In, Buffer] const PALETTEENTRY* pSrcPalette,[In] const void* pSrcRect,[In] D3DX_FILTER Filter,[In] int ColorKey)</unmanaged>
-        public static Result FromSurface(Surface destinationSurface, Surface sourceSurface, Filter filter, int colorKey, Rectangle sourceRectangle, Rectangle destinationRectangle)
+        public static Result FromSurface(
+            Surface destinationSurface, Surface sourceSurface, Filter filter, int colorKey, Rectangle sourceRectangle, Rectangle destinationRectangle)
         {
             return FromSurface(destinationSurface, sourceSurface, filter, colorKey, sourceRectangle, destinationRectangle, null, null);
         }
@@ -798,11 +999,71 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXLoadSurfaceFromSurface([In] IDirect3DSurface9* pDestSurface,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestRect,[In] IDirect3DSurface9* pSrcSurface,[In, Buffer] const PALETTEENTRY* pSrcPalette,[In] const void* pSrcRect,[In] D3DX_FILTER Filter,[In] int ColorKey)</unmanaged>
-        public static Result FromSurface(Surface destinationSurface, Surface sourceSurface, Filter filter, int colorKey, Rectangle sourceRectangle, Rectangle destinationRectangle, PaletteEntry[] destinationPalette, PaletteEntry[] sourcePalette)
+        public static Result FromSurface(
+            Surface destinationSurface,
+            Surface sourceSurface,
+            Filter filter,
+            int colorKey,
+            Rectangle sourceRectangle,
+            Rectangle destinationRectangle,
+            PaletteEntry[] destinationPalette,
+            PaletteEntry[] sourcePalette)
         {
             unsafe
             {
-                return D3DX9.LoadSurfaceFromSurface(destinationSurface, destinationPalette, new IntPtr(&destinationRectangle), sourceSurface, sourcePalette, new IntPtr(&sourceRectangle), filter, colorKey);
+                return D3DX9.LoadSurfaceFromSurface(
+                    destinationSurface,
+                    destinationPalette,
+                    new IntPtr(&destinationRectangle),
+                    sourceSurface,
+                    sourcePalette,
+                    new IntPtr(&sourceRectangle),
+                    filter,
+                    colorKey);
+            }
+        }
+
+        /// <summary>
+        /// Gets the parent cube texture or texture (mipmap) object, if this surface is a child level of a cube texture or a mipmap. 
+        /// This method can also provide access to the parent swap chain if the surface is a back-buffer child.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="guid">The GUID.</param>
+        /// <returns>The parent container texture.</returns>
+        public T GetContainer<T>(Guid guid) where T : ComObject
+        {
+            IntPtr containerPtr;
+            GetContainer(guid, out containerPtr);
+            return FromPointer<T>(containerPtr);
+        }
+
+        /// <summary>
+        /// Locks a rectangle on a surface.
+        /// </summary>
+        /// <param name="flags">The type of lock to perform.</param>
+        /// <returns>A pointer to the locked region</returns>
+        /// <unmanaged>HRESULT IDirect3DSurface9::LockRect([Out] D3DLOCKED_RECT* pLockedRect,[In] const void* pRect,[In] D3DLOCK Flags)</unmanaged>
+        public DataRectangle LockRectangle(LockFlags flags)
+        {
+            LockedRect lockedRect;
+            LockRectangle(out lockedRect, IntPtr.Zero, flags);
+            return new DataRectangle(lockedRect.PBits, lockedRect.Pitch);
+        }
+
+        /// <summary>
+        /// Locks a rectangle on a surface.
+        /// </summary>
+        /// <param name="rect">The rectangle to lock.</param>
+        /// <param name="flags">The type of lock to perform.</param>
+        /// <returns>A pointer to the locked region</returns>
+        /// <unmanaged>HRESULT IDirect3DSurface9::LockRect([Out] D3DLOCKED_RECT* pLockedRect,[In] const void* pRect,[In] D3DLOCK Flags)</unmanaged>
+        public DataRectangle LockRectangle(Rectangle rect, LockFlags flags)
+        {
+            unsafe
+            {
+                LockedRect lockedRect;
+                LockRectangle(out lockedRect, new IntPtr(&rect), flags);
+                return new DataRectangle(lockedRect.PBits, lockedRect.Pitch);
             }
         }
 
