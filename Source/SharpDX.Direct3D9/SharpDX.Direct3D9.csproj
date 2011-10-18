@@ -33,10 +33,16 @@
     <Compile Include="Generated\Interfaces.cs" />
     <Compile Include="Generated\LocalInterop.cs" />
     <Compile Include="Generated\Structures.cs" />
+    <Compile Include="Include.cs" />
+    <Compile Include="IncludeShadow.cs" />
+    <Compile Include="IndexBuffer.cs" />
+    <Compile Include="Macro.cs" />
     <Compile Include="PaletteEntry.cs" />
+    <Compile Include="PixelShader.cs" />
     <Compile Include="PresentParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resource.cs" />
+    <Compile Include="ShaderBytecode.cs" />
     <Compile Include="Surface.cs" />
     <Compile Include="SwapChain.cs" />
     <Compile Include="Texture.cs" />
@@ -45,10 +51,6 @@
     <Compile Include="VertexElement.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpDX.D3DCompiler\SharpDX.D3DCompiler.csproj">
-      <Project>{361D3F81-A48A-47F2-80DF-CA4F9536CB4E}</Project>
-      <Name>SharpDX.D3DCompiler</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SharpDX\SharpDX.csproj">
       <Project>{D0BCD56A-41C4-4A4E-8590-26864CED07FF}</Project>
       <Name>SharpDX</Name>

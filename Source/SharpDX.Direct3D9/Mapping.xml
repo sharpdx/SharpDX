@@ -2006,9 +2006,12 @@
     <map interface="IDirect3D9Ex(.+)" name-tmp="$1" />
     <map interface="IDirect3D9Ex" name="Direct3DEx" />
     <map interface="ID3DX(.*)" name="$1" />
+    <map interface="ID3D(XFile.*)" name="$1" />
 
     <map method="IDirect3DResource9::GetPrivateData" check="false"/>
     <map param="pSizeOfData" attribute="inout"/>
+
+    <map interface="ID3DXInclude" name="Include" callback="true" callback-dual="false" />
 
     <remove interface="IDirect3DCryptoSession9" />
     <remove interface="IDirect3D9ExOverlayExtension" />
@@ -2215,8 +2218,12 @@
     <map param="IDirect3DCubeTexture9::AddDirtyRect::pDirtyRect" type="void" />
 
     <map param="IDirect3DVertexBuffer9::GetDesc::pDesc" attribute="out" />
+
     <map param="IDirect3DIndexBuffer9::GetDesc::pDesc" attribute="out" />
-    
+    <map method="IDirect3DIndexBuffer9::Lock" visibility="internal" />
+    <map param="IDirect3DIndexBuffer9::Lock::ppbData" attribute="out" />
+    <map param="IDirect3DIndexBuffer9::Lock::Flags" type="D3DLOCK" />
+
     <map param="IDirect3DSurface9::GetDesc::pDesc" attribute="out" />
     <map param="IDirect3DSurface9::GetDC::phdc" return="true" attribute="out" />
     <map method="IDirect3DSurface9::LockRect" name="LockRectangle" visibility="internal" />
@@ -2448,6 +2455,26 @@
     <map param="D3DXSaveSurfaceTo.*::pDestPalette" attribute="out buffer"/>
     <map param="D3DXSaveSurfaceTo.*::pSrcInfo" type="void"/>
     <map param="D3DXSaveSurfaceTo.*::ColorKey" type="int"/>
+
+    <map param="D3DX.*::pDefines" attribute="in buffer"/>
+    <map param="D3DXCompileShader::pSrcData" type="void"/>
+
+    <map param="D3DXGetShader.*::pFunction" type="void"/>
+    <map param="D3DXDisassembleShader::pShader" type="void"/>
+    <map param="D3DXPreprocessShader::pSrcData" type="void"/>
+    <map param="D3DXAssembleShader::pSrcData" type="void"/>
+
+    <map param="D3DXFindShaderComment::pFunction" type="void"/>
+    <map param="D3DXFindShaderComment::ppData" attribute="out"/>
+    <map param="D3DXFindShaderComment::pSizeInBytes" attribute="out"/>
+
+    <map param="D3DXGetShader.*Semantics::pSemantics" attribute="in out buffer"/>
+    <map param="D3DXGetShader.*Semantics::pCount" attribute="inout"/>
+
+    <map param="D3DXGetShaderSamplers::pSamplers" type="void" attribute="in out buffer"/>
+    <map param="D3DXGetShaderSamplers::pCount" attribute="inout"/>
+
+    <map param="D3DXGetShaderConstantTable::ppConstantTable" return="true" attribute="out"/>
 
     <context-clear />
   </mapping>
