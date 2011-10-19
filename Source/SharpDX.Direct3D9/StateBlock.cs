@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,48 +18,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-
-using SharpDX.Direct3D;
-
 namespace SharpDX.Direct3D9
 {
-    public partial class PixelShader
+    public partial class StateBlock
     {
-        private ShaderBytecode function;
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="PixelShader"/> class.
+        /// Initializes a new instance of the <see cref="StateBlock"/> class.
         /// </summary>
         /// <param name="device">The device.</param>
-        /// <param name="function">The function.</param>
-        public PixelShader(Device device, ShaderBytecode function)
+        /// <param name="type">The type.</param>
+        public StateBlock(Device device, StateBlockType type)
         {
-            device.CreatePixelShader(function.BufferPointer, this);
-            this.function = function;
-        }
-
-        /// <summary>
-        /// Gets the bytecode associated to this shader..
-        /// </summary>
-        public ShaderBytecode Function
-        {
-            get
-            {
-                if (function != null)
-                    return function;
-
-                int size = 0;
-                GetFunction(IntPtr.Zero, ref size);
-
-                Blob blob;
-                D3DX9.CreateBuffer(size, out blob);
-
-                GetFunction(blob.BufferPointer, ref size);
-
-                function = new ShaderBytecode(blob);
-                return function;
-            }
+            device.CreateStateBlock(type, this);
         }
     }
 }
+

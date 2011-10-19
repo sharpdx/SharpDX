@@ -235,7 +235,7 @@ namespace SharpGen.Model
                 {
                     return Name + ".ToArgb()";
                 }
-                if (PublicType is CsEnum && !IsArray)
+                if (!IsFixed && PublicType is CsEnum && !IsArray)
                     return "unchecked((int)" + Name + ")";
                 if (PublicType.Type == typeof (string))
                     return "(void*)" + TempName;

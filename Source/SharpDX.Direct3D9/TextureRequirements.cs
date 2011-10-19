@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,48 +18,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-
-using SharpDX.Direct3D;
+using System.Runtime.InteropServices;
 
 namespace SharpDX.Direct3D9
 {
-    public partial class PixelShader
+    [StructLayout(LayoutKind.Sequential)]
+    public struct TextureRequirements
     {
-        private ShaderBytecode function;
+        /// <summary>
+        /// Width of the texture.
+        /// </summary>
+        public int Width;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PixelShader"/> class.
+        /// Height of the texture.
         /// </summary>
-        /// <param name="device">The device.</param>
-        /// <param name="function">The function.</param>
-        public PixelShader(Device device, ShaderBytecode function)
-        {
-            device.CreatePixelShader(function.BufferPointer, this);
-            this.function = function;
-        }
+        public int Height;
 
         /// <summary>
-        /// Gets the bytecode associated to this shader..
+        /// Format of the texture.
         /// </summary>
-        public ShaderBytecode Function
-        {
-            get
-            {
-                if (function != null)
-                    return function;
+        public Format Format;
 
-                int size = 0;
-                GetFunction(IntPtr.Zero, ref size);
-
-                Blob blob;
-                D3DX9.CreateBuffer(size, out blob);
-
-                GetFunction(blob.BufferPointer, ref size);
-
-                function = new ShaderBytecode(blob);
-                return function;
-            }
-        }
+        /// <summary>
+        /// Mip level count of the texture.
+        /// </summary>
+        public int MipLevelCount;
     }
 }
+

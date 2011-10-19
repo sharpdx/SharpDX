@@ -19,6 +19,7 @@
     </Compile>
     <Compile Include="AdapterDetails.cs" />
     <Compile Include="BoneCombination.cs" />
+    <Compile Include="ConstantTable.cs" />
     <Compile Include="CubeTexture.cs" />
     <Compile Include="CubeTextureRequirements.cs" />
     <Compile Include="D3DX.cs" />
@@ -27,6 +28,7 @@
     <Compile Include="Direct3D.cs" />
     <Compile Include="Direct3DEx.cs" />
     <Compile Include="DriverLevel.cs" />
+    <Compile Include="EffectInstance.cs" />
     <Compile Include="Fill3DCallback.cs" />
     <Compile Include="EffectHandle.cs" />
     <Compile Include="Generated\Enumerations.cs" />
@@ -42,14 +44,18 @@
     <Compile Include="PixelShader.cs" />
     <Compile Include="PresentParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Query.cs" />
     <Compile Include="Resource.cs" />
     <Compile Include="ShaderBytecode.cs" />
+    <Compile Include="StateBlock.cs" />
     <Compile Include="Surface.cs" />
     <Compile Include="SwapChain.cs" />
     <Compile Include="Texture.cs" />
+    <Compile Include="TextureRequirements.cs" />
     <Compile Include="VertexBuffer.cs" />
     <Compile Include="VertexDeclaration.cs" />
     <Compile Include="VertexElement.cs" />
+    <Compile Include="VertexShader.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpDX\SharpDX.csproj">

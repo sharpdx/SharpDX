@@ -627,7 +627,23 @@
     <const from-macro="D3D_SDK_VERSION" class="SharpDX.Direct3D9.D3D9" type="int" name="SdkVersion" />
     <const from-macro="D3DX_VERSION" class="SharpDX.Direct3D9.D3DX9" type="int" name="Version" />
     <const from-macro="D3DX_SDK_VERSION" class="SharpDX.Direct3D9.D3DX9" type="int" name="SdkVersion" />
+
+    <const from-macro="D3DVS20_MAX_DYNAMICFLOWCONTROLDEPTH" type="int" name="MaxDynamicFlowControlDepth" class="SharpDX.Direct3D9.VertexShader" />
+    <const from-macro="D3DVS20_MIN_DYNAMICFLOWCONTROLDEPTH" type="int" name="MinDynamicFlowControlDepth" class="SharpDX.Direct3D9.VertexShader" />
+    <const from-macro="D3DVS20_MAX_NUMTEMPS" type="int" name="MaxTemps" class="SharpDX.Direct3D9.VertexShader" />
+    <const from-macro="D3DVS20_MIN_NUMTEMPS" type="int" name="MinTemps" class="SharpDX.Direct3D9.VertexShader" />
+    <const from-macro="D3DVS20_MAX_STATICFLOWCONTROLDEPTH" type="int" name="MaxStaticFlowControlDepth" class="SharpDX.Direct3D9.VertexShader" />
+    <const from-macro="D3DVS20_MIN_STATICFLOWCONTROLDEPTH" type="int" name="MinStaticFlowControlDepth" class="SharpDX.Direct3D9.VertexShader" />
     
+    <const from-macro="D3DPS20_MAX_DYNAMICFLOWCONTROLDEPTH" type="int" name="MaxDynamicFlowControlDepth" class="SharpDX.Direct3D9.PixelShader" />
+    <const from-macro="D3DPS20_MIN_DYNAMICFLOWCONTROLDEPTH" type="int" name="MinDynamicFlowControlDepth" class="SharpDX.Direct3D9.PixelShader" />
+    <const from-macro="D3DPS20_MAX_NUMTEMPS" type="int" name="MaxTemps" class="SharpDX.Direct3D9.PixelShader" />
+    <const from-macro="D3DPS20_MIN_NUMTEMPS" type="int" name="MinTemps" class="SharpDX.Direct3D9.PixelShader" />
+    <const from-macro="D3DPS20_MAX_STATICFLOWCONTROLDEPTH" type="int" name="MaxStaticFlowControlDepth" class="SharpDX.Direct3D9.PixelShader" />
+    <const from-macro="D3DPS20_MIN_STATICFLOWCONTROLDEPTH" type="int" name="MinStaticFlowControlDepth" class="SharpDX.Direct3D9.PixelShader" />
+    <const from-macro="D3DPS20_MAX_NUMINSTRUCTIONSLOTS" type="int" name="MaxInstructionSlots" class="SharpDX.Direct3D9.PixelShader" />
+    <const from-macro="D3DPS20_MIN_NUMINSTRUCTIONSLOTS" type="int" name="MinInstructionSlots" class="SharpDX.Direct3D9.PixelShader" />
+
     <create class="D3D9" />
     <create class="D3DX9" />
 
@@ -1904,11 +1920,9 @@
     <map struct="D3D(.*)" name-tmp="$1" />
     <map struct="D3DX(.*)" name-tmp="$1" />
     <remove struct="D3D_OMAC" />
-    <remove struct="D3DDEVINFO_.*" />
     <remove struct="D3DAES_CTR_IV" />
     <remove struct="D3DENCRYPTED_BLOCK_INFO" />
     <remove struct="D3DRANGE" />
-    <remove struct="D3DRESOURCESTATS" />
     <remove struct="D3DMEMORYPRESSURE" />
     <remove struct="D3DCOMPOSERECTDESC" />
     <remove struct="D3DCOMPOSERECTDESTINATION" />
@@ -1926,6 +1940,25 @@
     <remove struct="D3DXSHCOMPRESSQUALITYTYPE" />
     <remove struct="D3DXSHGPUSIMOPT" />
 
+    <map struct="D3DRESOURCESTATS" name="ResourceStats"/>
+    <map field="D3DRESOURCESTATS::ApproxBytesDownloaded" name="ApproximateBytesDownloaded"/>
+    <map field="D3DRESOURCESTATS::NumEvicts" name="NumberEvicted"/>
+    <map field="D3DRESOURCESTATS::NumVidCreates" name="NumberVideoCreated"/>
+    <map field="D3DRESOURCESTATS::LastPri" name="LastPriority"/>
+    <map field="D3DRESOURCESTATS::NumUsed" name="NumberUsed"/>
+    <map field="D3DRESOURCESTATS::NumUsedInVidMem" name="NumberUsedInVideoMemory"/>
+    <map field="D3DRESOURCESTATS::bThrashing" name="Thrashing"/>
+    
+    <map struct="D3DDEVINFO_(.*)" name-tmp="$1"/>
+    <map struct="D3DDEVINFO_RESOURCEMANAGER" name="ResourceManager"/>
+    <map struct="D3DDEVINFO_VCACHE" name="VCache"/>
+    <map struct="D3DDEVINFO_D3D9PIPELINETIMINGS" name="PipelineTimings"/>
+    <map struct="D3DDEVINFO_D3D9INTERFACETIMINGS" name="InterfaceTimings"/>
+    <map struct="D3DDEVINFO_D3D9STAGETIMINGS" name="StageTimings"/>
+    <map struct="D3DDEVINFO_D3D9BANDWIDTHTIMINGS" name="BandwidthTimings"/>
+    <map struct="D3DDEVINFO_D3D9CACHEUTILIZATION" name="CacheUtilization"/>
+    <map struct="D3DDEVINFO_D3DVERTEXSTATS" name="VertexStats"/>
+
     <map field=".*::Usage" type="D3DUSAGE"/>
     
     <map struct="D3DPRESENTSTATS" name="PresentationStatistics" />
@@ -1934,7 +1967,12 @@
     <map struct="D3DXMESHCONTAINER" name="MeshContainer" />
     <map struct="D3DXMESHDATA" name="MeshData" />
     <map struct="D3DXWELDEPSILONS" name="WeldEpsilons" />
-    <map struct="D3DXEFFECTINSTANCE" name="EffectInstance" />
+    
+    <map struct="D3DXEFFECTINSTANCE" name="EffectInstance" native="true" struct-to-class="true" marshal="true"/>
+    <map field="D3DXEFFECTINSTANCE::pEffectFilename" name="EffectFilename"/>
+    <map field="D3DXEFFECTINSTANCE::NumDefaults" name="DefaultCount" visibility="internal"/>
+    <map field="D3DXEFFECTINSTANCE::pDefaults" name="DefaultPointer" visibility="internal"/>
+
     <map struct="D3DXFONT_DESCW" name="FontDescription" />
 
     <map struct="D3DLOCKED_RECT" visibility="internal"/>
@@ -1966,8 +2004,7 @@
     <map field="SrcBlendCaps" name="SourceBlendCaps" type="D3DPBLENDCAPS" />
     <map field="DestBlendCaps" name="DestinationBlendCaps" type="D3DPBLENDCAPS" />
     <map field="AlphaCmpCaps" name="AlpaCompareCaps" type="D3DPCMPCAPS" />
-    
-
+    <map field="NumSimultaneousRTs" name="SimultaneousRTCount"/>
 
     <map struct="D3DCLIPSTATUS9" name="ClipStatus" />
     <map struct="D3DDEVICE_CREATION_PARAMETERS" name="CreationParameters" />
@@ -1976,15 +2013,32 @@
     <map struct="D3DDISPLAYMODEFILTER" name="DisplayModeFilter" />
     <map struct="D3DGAMMARAMP" name="GammaRamp" />
     <map struct="D3DINDEXBUFFER_DESC" name="IndexBufferDescription" />
+    
     <map struct="D3DPSHADERCAPS2_0" name="PixelShader20Caps" />
+    <map field="D3DPSHADERCAPS2_0::Caps" type="D3DPS20CAPS" />
+    <map field="D3DPSHADERCAPS2_0::NumTemps" name="TempCount" />
+    <map field="D3DPSHADERCAPS2_0::NumInstructionSlots" name="InstructionSlotCount" />
+
     <map struct="D3DRECTPATCH_INFO" name="RectanglePatchInfo" />
+    
     <map struct="D3DTRIPATCH_INFO" name="TrianglePatchInfo" />
+    <map field="D3DTRIPATCH_INFO::NumVertices" name="VertexCount"/>
+    
     <map struct="D3DVERTEXBUFFER_DESC" name="VertexBufferDescription" />
     <map struct="D3DVERTEXELEMENT9" name="VertexElement" />
+    
     <map struct="D3DVSHADERCAPS2_0" name="VertexShader20Caps" />
+    <map field="D3DVSHADERCAPS2_0::Caps" type="D3DVS20CAPS" />
+    <map field="D3DVSHADERCAPS2_0::NumTemps" name="TempCount" />
+
     <map struct="D3DXATTRIBUTERANGE" name="AttributeRange" />
     <map struct="D3DXCONSTANTTABLE_DESC" name="ConstantTableDescription" />
+    
     <map struct="D3DXEFFECTDEFAULT" name="EffectDefault" />
+    <map field="D3DXEFFECTDEFAULT::pParamName" name="ParameterName"/>
+    <map field="D3DXEFFECTDEFAULT::NumBytes" name="BufferSize" visibility="internal" />
+    <map field="D3DXEFFECTDEFAULT::pValue" name="BufferPointer" visibility="internal"/>
+
     <map struct="D3DXKEY_QUATERNION" name="RotationKey" />
     <map struct="D3DXKEY_VECTOR3" name="ScaleKey" />
     <map struct="D3DXPATCHINFO" name="PatchInfo" />
@@ -2013,6 +2067,8 @@
 
     <map method="IDirect3DResource9::GetPrivateData" check="false"/>
     <map param="pSizeOfData" attribute="inout"/>
+
+    <map param=".*::hConstant" name="effectHandle"/>
 
     <map interface="ID3DXInclude" name="Include" callback="true" callback-dual="false" />
 
@@ -2059,6 +2115,9 @@
     <map param="IDirect3DDevice9::CreateAdditionalSwapChain::pSwapChain" attribute="out fast" />
     <map param="IDirect3DDevice9(Ex)?::.*Surface(Ex)?::ppSurface" return="true" attribute="out" />
     <map param="IDirect3DDevice9(Ex)?::CreateRenderTarget(Ex)?::ppSurface" return="true" attribute="out" />
+
+    <map param="IDirect3DDevice9::CreateVertexShader::pFunction" type="void"/>
+    <map param="IDirect3DDevice9::CreatePixelShader::pFunction" type="void"/>
 
     <map method="IDirect3DDevice9::DrawIndexedPrimitiveUP" visibility="internal" />
     <map method="IDirect3DDevice9::DrawPrimitiveUP" visibility="internal" />
@@ -2193,6 +2252,8 @@
     <map method="ID3DXEffectStateManager::SetFVF" name="SetVertexFormat" />
     <map method="ID3DXBaseMesh::GetNumVertices" visibility="internal" property="false" />
     <map method="ID3DXBaseMesh::GetNumFaces" visibility="internal" property="false" />
+
+    <map interface="ID3DXPMesh" name="ProgressiveMesh"/>
     <map method="ID3DXPMesh::SetNumVertices" visibility="internal" property="false" />
     <map method="ID3DXPMesh::SetNumFaces" visibility="internal" property="false" />
 
@@ -2201,11 +2262,15 @@
     <map param="IDirect3DVertexDeclaration9::GetDevice::ppDevice" attribute="out" />
     <map param="IDirect3DVertexDeclaration9::GetDeclaration::pElement" attribute="out" />
     <map param="IDirect3DVertexDeclaration9::GetDeclaration::pNumElements" attribute="out" />
-    <map param="IDirect3DVertexShader9::GetDevice::ppDevice" attribute="out" />
-    <map param="IDirect3DVertexShader9::GetFunction::pSizeOfData" attribute="out" />
-    <map param="IDirect3DPixelShader9::GetDevice::ppDevice" attribute="out" />
-    <map param="IDirect3DPixelShader9::GetFunction::pSizeOfData" attribute="out" />
     
+    <map param="IDirect3DVertexShader9::GetDevice::ppDevice" attribute="out" />
+    <map method="IDirect3DVertexShader9::GetFunction" property="false" visibility="internal"/>
+    <map param="IDirect3DVertexShader9::GetFunction::pSizeOfData" attribute="inout" />
+
+    <map param="IDirect3DPixelShader9::GetDevice::ppDevice" attribute="out" />
+    <map method="IDirect3DPixelShader9::GetFunction" property="false" visibility="internal"/>
+    <map param="IDirect3DPixelShader9::GetFunction::pSizeOfData" attribute="inout" />
+
     <map param="IDirect3DVolumeTexture9::GetLevelDesc::pDesc" attribute="out" />
     <map param="IDirect3DVolumeTexture9::GetVolumeLevel::ppVolumeLevel" attribute="out" />
 
@@ -2245,7 +2310,9 @@
     <map param="IDirect3DTexture9::LockRect::Flags" type="D3DLOCK"/>
     <map param="IDirect3DTexture9::LockRect::pLockedRect" attribute="out" />
     <map method="IDirect3DTexture9::UnlockRect" name="UnlockRectangle"/>
-
+    <map method="IDirect3DTexture9::AddDirtyRect" name="AddDirtyRectangle" visibility="internal" />
+    <map param="IDirect3DTexture9::AddDirtyRect::pDirtyRect" type="void" />
+    
     <map param="IDirect3DVolume9::GetDevice::ppDevice" attribute="out" />
     <map param="IDirect3DVolume9::GetPrivateData::pSizeOfData" attribute="out" />
     <map param="IDirect3DVolume9::GetDesc::pDesc" attribute="out" />
@@ -2263,6 +2330,11 @@
     <map param="IDirect3DSwapChain9::Present::pDestRect" type="void" attribute="inout optional" />
     
     <map param="IDirect3DQuery9::GetDevice::ppDevice" attribute="out" />
+    <map method="IDirect3DQuery9::GetType" property="false" visibility="internal"/>
+    <map param="IDirect3DQuery9::Issue::dwIssueFlags" type="D3DISSUE" />
+    <map method="IDirect3DQuery9::GetType" property="false" />
+    <map method="IDirect3DQuery9::GetData" visibility="internal" />
+
     <map param="IDirect3D9Ex::GetAdapterModeCountEx::pFilter" attribute="out" />
     <map param="IDirect3D9Ex::GetAdapterDisplayModeEx::pMode" attribute="out" />
     <map param="IDirect3D9Ex::GetAdapterDisplayModeEx::pRotation" attribute="out" />
@@ -2346,14 +2418,26 @@
     <map param="ID3DXPRTEngine::GetAdaptedMesh::pVertRemap" attribute="out" />
     <map param="ID3DXPRTEngine::GetAdaptedMesh::pfVertWeights" attribute="out" />
     <map param="ID3DXPRTEngine::GetAdaptedMesh::ppMesh" attribute="out" />
+
+    <!--ID3DXConstantTable-->
     <map param="ID3DXConstantTable::GetDesc::pDesc" attribute="out" />
-    <map param="ID3DXConstantTable::GetConstantDesc::pConstantDesc" attribute="out" />
-    <map param="ID3DXConstantTable::GetConstantDesc::pCount" attribute="out" />
+    <map method="ID3DXConstantTable::GetConstantDesc" visibility="internal" />
+    <map param="ID3DXConstantTable::GetConstantDesc::pConstantDesc" attribute="out buffer" />
+    <map param="ID3DXConstantTable::GetConstantDesc::pCount" attribute="inout" />
+
+    <map method="ID3DXConstantTable::Set.*" visibility="internal" />
+    <map method="ID3DXConstantTable::SetDefaults" property="false" visibility="internal"/>
+    <map param="ID3DXConstantTable::Set.*Array::(pb|pn|pf|pVector|pMatrix)" attribute="in buffer"/>
+
+    <!--ID3DXTextureShader-->
     <map param="ID3DXTextureShader::GetFunction::ppFunction" attribute="out" />
     <map param="ID3DXTextureShader::GetConstantBuffer::ppConstantBuffer" attribute="out" />
     <map param="ID3DXTextureShader::GetDesc::pDesc" attribute="out" />
-    <map param="ID3DXTextureShader::GetConstantDesc::pConstantDesc" attribute="out" />
-    <map param="ID3DXTextureShader::GetConstantDesc::pCount" attribute="out" />
+
+    <map method="ID3DXTextureShader::GetConstantDesc" visibility="internal" />
+    <map param="ID3DXTextureShader::GetConstantDesc::pConstantDesc" attribute="out buffer" />
+    <map param="ID3DXTextureShader::GetConstantDesc::pCount" attribute="inout" />
+    
     <map param="ID3DXBaseEffect::GetDesc::pDesc" attribute="out" />
     <map param="ID3DXBaseEffect::GetParameterDesc::pDesc" attribute="out" />
     <map param="ID3DXBaseEffect::GetTechniqueDesc::pDesc" attribute="out" />
@@ -2437,11 +2521,18 @@
     <map param="D3DXCheckCubeTextureRequirements::pNumMipLevels" attribute="inout"/>
     <map param="D3DXCheckCubeTextureRequirements::pFormat" attribute="inout"/>
 
-    <map param="D3DXCreateCubeTextureFromFileInMemoryEx::pSrcInfo" type="void"/>
-    <map param="D3DXCreateCubeTextureFromFileInMemoryEx::pPalette" attribute="out buffer"/>
+    <map param="D3DXCheckTextureRequirements::pWidth" attribute="inout"/>
+    <map param="D3DXCheckTextureRequirements::pHeight" attribute="inout"/>
+    <map param="D3DXCheckTextureRequirements::pNumMipLevels" attribute="inout"/>
+    <map param="D3DXCheckTextureRequirements::pFormat" attribute="inout"/>
+
+    <map param="D3DXCreate(Cube)?TextureFromFileInMemoryEx::pSrcInfo" type="void"/>
+    <map param="D3DXCreate(Cube)?TextureFromFileInMemoryEx::pPalette" attribute="out buffer"/>
     
-    <map param="D3DXCreateCubeTextureFromFileExW::pSrcInfo" type="void"/>
-    <map param="D3DXCreateCubeTextureFromFileExW::pPalette" attribute="out buffer"/>
+    <map param="D3DXCreate(Cube)?TextureFromFileExW::pSrcInfo" type="void"/>
+    <map param="D3DXCreate(Cube)?TextureFromFileExW::pPalette" attribute="out buffer"/>
+
+    <map param="D3DXComputeNormalMap::pSrcPalette" attribute="out buffer"/>
 
     <map param="D3DXLoadSurfaceFrom.*::pSrcRect" type="void"/>
     <map param="D3DXLoadSurfaceFrom.*::pDestRect" type="void"/>

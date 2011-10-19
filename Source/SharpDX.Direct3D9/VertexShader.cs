@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,18 +24,18 @@ using SharpDX.Direct3D;
 
 namespace SharpDX.Direct3D9
 {
-    public partial class PixelShader
+    public partial class VertexShader
     {
         private ShaderBytecode function;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PixelShader"/> class.
+        /// Initializes a new instance of the <see cref="VertexShader"/> class.
         /// </summary>
         /// <param name="device">The device.</param>
         /// <param name="function">The function.</param>
-        public PixelShader(Device device, ShaderBytecode function)
+        public VertexShader(Device device, ShaderBytecode function)
         {
-            device.CreatePixelShader(function.BufferPointer, this);
+            device.CreateVertexShader(function.BufferPointer, this);
             this.function = function;
         }
 
@@ -63,3 +63,4 @@ namespace SharpDX.Direct3D9
         }
     }
 }
+
