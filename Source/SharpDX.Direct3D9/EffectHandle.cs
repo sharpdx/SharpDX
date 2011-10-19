@@ -90,6 +90,26 @@ namespace SharpDX.Direct3D9
             internal void __MarshalFree()
             {
             }
+
+            public static implicit operator IntPtr(__Native value)
+            {
+                return value.Pointer;
+            }
+
+            public static implicit operator __Native(IntPtr value)
+            {
+                return new __Native() { Pointer = value };
+            }
+
+            public unsafe static implicit operator void*(__Native value)
+            {
+                return (void*)value.Pointer;
+            }
+
+            public static unsafe implicit operator __Native(void* value)
+            {
+                return new __Native() { Pointer = (IntPtr)value };
+            }
         }
 
         // Method to free unmanaged allocation

@@ -153,7 +153,7 @@
 							}
 						} else {#>
                 <#= param.PublicType.QualifiedName #>.__Native <#= param.TempName #> = <#= ((CsStruct)param.PublicType).GetConstructor() #>;
-<#+							if ((param.IsRefIn || param.IsRef) && param.HasNativeValueType) {#>
+<#+							if ((param.IsRefIn || param.IsRef || param.IsIn) && param.HasNativeValueType) {#>
                 <#= param.Name #>.__MarshalTo(ref <#= param.TempName #>);
 <#+							}
 						}						

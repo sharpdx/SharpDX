@@ -119,12 +119,19 @@ namespace SharpGen.Generator
             // Handle Parameters
             foreach (var param in csMethod.Parameters)
             {
-                if (param.MarshalType.Type == null)
+                InteropType interopType;
+                string publicName = param.PublicType.QualifiedName;
+                // Patch for Mono bug with structs marshalling and calli. TEMPORARY
+                if (publicName == "SharpDX.Size" || param.PublicType.QualifiedName == "SharpDX.Direct3D9.EffectHandle")
+                {
+                    interopType = typeof(void*);
+                }
+                else if (param.MarshalType.Type == null)
                 {
                     if (param.PublicType is CsStruct)
                     {
                         // If parameter is a struct, then a LocalInterop is needed
-                        cSharpInteropCalliSignature.ParameterTypes.Add(param.PublicType.QualifiedName);
+                        interopType = param.PublicType.QualifiedName;
                         cSharpInteropCalliSignature.IsLocal = true;
                     }
                     else
@@ -136,10 +143,12 @@ namespace SharpGen.Generator
                 {
                     Type type = param.MarshalType.Type;
                     // Patch for Mono bug with structs marshalling and calli. TEMPORARY
-                    if (type == typeof(IntPtr) || param.PublicType.QualifiedName == "SharpDX.Size" || param.PublicType.QualifiedName == "SharpDX.Direct3D9.EffectHandle")
+                    if (type == typeof(IntPtr))
                         type = typeof(void*);
-                    cSharpInteropCalliSignature.ParameterTypes.Add(type);
+                    interopType = type;
                 }
+
+                cSharpInteropCalliSignature.ParameterTypes.Add(interopType);
             }
 
             var assembly = csMethod.GetParent<CsAssembly>();
@@ -205,9 +214,6 @@ namespace SharpGen.Generator
                 CsParameterAttribute parameterAttribute = CsParameterAttribute.In;
 
                 if (hasArray)
-                    hasPointer = true;
-
-                if (marshalType != null && marshalType.Type == typeof(System.IntPtr))
                     hasPointer = true;
 
                 // --------------------------------------------------------------------------------

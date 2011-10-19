@@ -947,18 +947,19 @@ namespace SharpGen.Generator
             if (!_mapDefinedCSharpType.TryGetValue(typeName, out cSharpType))
             {
                 var type = Type.GetType(qualifiedName);
+                int sizeOf = 0;
                 if (type == null)
                     Logger.Warning("Type [{0}] is not defined", qualifiedName);
-
-                int sizeOf = 0;
-                try
+                else
                 {
-                    sizeOf = Marshal.SizeOf(type);
+                    try
+                    {
+                        sizeOf = Marshal.SizeOf(type);
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
-                catch (Exception)
-                {
-                }
-
                 cSharpType = new CsTypeBase {Name = typeName, Type = type, SizeOf = sizeOf};
                 DefineType(cSharpType);
             }

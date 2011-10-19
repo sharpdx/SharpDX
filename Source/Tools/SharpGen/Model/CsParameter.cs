@@ -264,7 +264,11 @@ namespace SharpGen.Model
                 if (PublicType.Type == typeof (IntPtr) && !IsArray)
                     return "(void*)" + Name;
                 if (HasNativeValueType)
+                {
+                    if (IsIn)
+                        return TempName;
                     return "&" + TempName;
+                }
                 if (PublicType.Name == Global.Name + ".Size")
                     return "(void*)" + Name;
                 return Name;
