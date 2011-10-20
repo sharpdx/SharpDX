@@ -2555,7 +2555,10 @@
     
     <map param="D3DXCreate(Cube|Volume)?TextureFromFileExW::pSrcInfo" type="void"/>
     <map param="D3DXCreate(Cube|Volume)?TextureFromFileExW::pPalette" attribute="out buffer"/>
-    
+
+
+
+
     <map param="D3DXComputeNormalMap::pSrcPalette" attribute="out buffer"/>
 
     <map param="D3DXLoadSurfaceFrom.*::pSrcRect" type="void"/>
@@ -2574,6 +2577,14 @@
     <map param="D3DXSaveSurfaceTo.*::pSrcInfo" type="void"/>
     <map param="D3DXSaveSurfaceTo.*::ColorKey" type="int"/>
 
+    <map param="D3DXLoadVolumeFromFileInMemory.*::pSrcBox" type="void"/>
+    <map param="D3DXLoadVolumeFromFileInMemory.*::pDestBox" type="void"/>
+    <map param="D3DXLoadVolumeFromFileInMemory.*::Filter" type="D3DX_FILTER"/>
+    <map param="D3DXLoadVolumeFromFileInMemory.*::pSrcPalette" attribute="in buffer"/>
+    <map param="D3DXLoadVolumeFromFileInMemory.*::pDestPalette" attribute="out buffer"/>
+    <map param="D3DXLoadVolumeFromFileInMemory.*::pSrcInfo" type="void"/>
+    <map param="D3DXLoadVolumeFromFileInMemory.*::ColorKey" type="int"/>
+    
     <map param="D3DX.*::pDefines" attribute="in buffer"/>
     <map param="D3DXCompileShader::pSrcData" type="void"/>
 
