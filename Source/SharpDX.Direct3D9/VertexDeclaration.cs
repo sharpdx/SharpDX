@@ -24,18 +24,38 @@ namespace SharpDX.Direct3D9
 {
     public partial class VertexDeclaration
     {
-        /// <summary>	
-        /// Create a vertex shader declaration from the device and the vertex elements.	
-        /// </summary>	
-        /// <remarks>	
-        ///  See the {{Vertex Declaration (Direct3D 9)}} page for a detailed description of how to map vertex declarations between different versions of DirectX. 	
-        /// </remarks>	
+        /// <summary>
+        /// Create a vertex shader declaration from the device and the vertex elements.
+        /// </summary>
+        /// <remarks>
+        ///  See the {{Vertex Declaration (Direct3D 9)}} page for a detailed description of how to map vertex declarations between different versions of DirectX. 
+        /// </remarks>
         /// <param name="elements"> An array of <see cref="SharpDX.Direct3D9.VertexElement"/> vertex elements. </param>
         /// <returns><see cref="VertexDeclaration"/> If the method succeeds</returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::CreateVertexDeclaration([In, Buffer] const D3DVERTEXELEMENT9* pVertexElements,[None] IDirect3DVertexDeclaration9** ppDecl)</unmanaged>
         public VertexDeclaration(Device device, VertexElement[] elements)
         {
             device.CreateVertexDeclaration(elements, this);
+        }
+
+        /// <summary>
+        /// Gets the elements.
+        /// </summary>
+        /// <unmanaged>HRESULT IDirect3DVertexDeclaration9::GetDeclaration([Out, Buffer] D3DVERTEXELEMENT9* pElement,[InOut] unsigned int* pNumElements)</unmanaged>
+        public VertexElement[] Elements
+        {
+            get
+            {
+                int count = 0;
+                GetDeclaration(null, ref count);
+                if (count == 0)
+                    return null;
+
+                var buffer = new VertexElement[count];
+                GetDeclaration(buffer, ref count);
+
+                return buffer;
+            }
         }
     }
 }

@@ -56,6 +56,8 @@
     <Compile Include="VertexDeclaration.cs" />
     <Compile Include="VertexElement.cs" />
     <Compile Include="VertexShader.cs" />
+    <Compile Include="VolumeTexture.cs" />
+    <Compile Include="VolumeTextureRequirements.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpDX\SharpDX.csproj">
