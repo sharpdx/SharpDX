@@ -111,7 +111,7 @@
     <map method="IDWriteFontFace::GetDesignGlyphMetrics" visibility="internal" />
     <map method="IDWriteFontFace::GetGdiCompatibleGlyphMetrics" visibility="internal" />
     <map param="IDWriteFontFace::GetGdiCompatibleMetrics::fontFaceMetrics" return="true" />
-    <map method="IDWriteFontFace::GetGlyphIndices" visibility="internal" />
+    <map method="IDWriteFontFace::GetGlyphIndicesW" visibility="internal" />
     <map param="IDWriteFontFace::GetRecommendedRenderingMode::renderingMode" return="true" />
     <map method="IDWriteFontFace::TryGetFontTable" visibility="internal" />
     <map method="IDWriteFontFace::GetType" name="GetFaceType" />
