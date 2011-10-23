@@ -2048,7 +2048,10 @@
     <map struct="D3DXPATCHINFO" name="PatchInfo" />
     <map struct="D3DXRTE_DESC" name="RenderToEnvironmentMapDescription" />
     <map struct="D3DXRTS_DESC" name="RenderToSurfaceDescription" />
+
     <map struct="D3DXSEMANTIC" name="ShaderSemantic" />
+    <map field="D3DXSEMANTIC::Usage" type="D3DDECLUSAGE" />
+
     <map field="D3DPRESENT_PARAMETERS::Flags" name="PresentFlags" type="D3DPRESENTFLAG" />
     <map field="D3DPRESENT_PARAMETERS::hDeviceWindow" name="DeviceWindowHandle" />
     <map field="D3DPRESENT_PARAMETERS::PresentationInterval" type="D3DPRESENT_INTERVAL" />
