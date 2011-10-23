@@ -18,6 +18,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AdapterDetails.cs" />
+    <Compile Include="BaseEffect.cs" />
     <Compile Include="BoneCombination.cs" />
     <Compile Include="ConstantTable.cs" />
     <Compile Include="CubeTexture.cs" />
@@ -25,9 +26,12 @@
     <Compile Include="D3DX.cs" />
     <Compile Include="Device.cs" />
     <Compile Include="DeviceEx.cs" />
+    <Compile Include="DeviceState.cs" />
     <Compile Include="Direct3D.cs" />
     <Compile Include="Direct3DEx.cs" />
     <Compile Include="DriverLevel.cs" />
+    <Compile Include="Effect.cs" />
+    <Compile Include="EffectDefault.cs" />
     <Compile Include="EffectInstance.cs" />
     <Compile Include="Fill3DCallback.cs" />
     <Compile Include="EffectHandle.cs" />
@@ -56,6 +60,8 @@
     <Compile Include="VertexDeclaration.cs" />
     <Compile Include="VertexElement.cs" />
     <Compile Include="VertexShader.cs" />
+    <Compile Include="Viewport.cs" />
+    <Compile Include="Volume.cs" />
     <Compile Include="VolumeTexture.cs" />
     <Compile Include="VolumeTextureRequirements.cs" />
   </ItemGroup>

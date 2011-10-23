@@ -2109,7 +2109,7 @@
     <map param="IDirect3DDevice9::ColorFill::pRect" attribute="in optional" />
 
     <!-- Tag all Create methods with pp.* parameters to use Fast Out attribute -->
-    <map method="IDirect3DDevice9::Create.*" visibility="internal" />
+    <map method="IDirect3DDevice9(Ex)?::Create.*" visibility="internal" />
     <map param="IDirect3DDevice9::Create.*::pp.*" attribute="out fast"/>
     <map param="IDirect3DDevice9Ex::Create.*::pp.*" attribute="out fast"/>
 
@@ -2357,10 +2357,23 @@
     <map param="IDirect3D9Ex::GetAdapterDisplayModeEx::pMode" attribute="out" />
     <map param="IDirect3D9Ex::GetAdapterDisplayModeEx::pRotation" attribute="out" />
     <map param="IDirect3D9Ex::GetAdapterLUID::pLUID" attribute="out" />
+    
     <map param="IDirect3DDevice9Ex::GetGPUThreadPriority::pPriority" attribute="out" />
     <map param="IDirect3DDevice9Ex::GetMaximumFrameLatency::pMaxLatency" attribute="out" />
-    <map param="IDirect3DDevice9Ex::GetDisplayModeEx::pMode" attribute="out" />
-    <map param="IDirect3DDevice9Ex::GetDisplayModeEx::pRotation" attribute="out" />
+    <map method="IDirect3DDevice9Ex::GetDisplayModeEx" visibility="internal" />
+    <map param="IDirect3DDevice9Ex::GetDisplayModeEx::pMode" return="true" attribute="out" />
+    <map param="IDirect3DDevice9Ex::GetDisplayModeEx::pRotation" type="void" />
+    <map method="IDirect3DDevice9Ex::CheckDeviceState" name="CheckDeviceState_" visibility="internal" check="false" />
+    <map method="IDirect3DDevice9Ex::CheckResourceResidency" visibility="internal" check="false" />
+    <map param="IDirect3DDevice9Ex::CheckResourceResidency::pResourceArray" attribute="in buffer" />
+    <map method="IDirect3DDevice9Ex::PresentEx" visibility="internal"/>
+    <map param="IDirect3DDevice9Ex::PresentEx::pSourceRect" type="void" />
+    <map param="IDirect3DDevice9Ex::PresentEx::pDestRect" type="void" />
+    <map method="IDirect3DDevice9Ex::ResetEx" visibility="internal"/>
+    <map param="IDirect3DDevice9Ex::ResetEx::pFullscreenDisplayMode" type="void" />
+    <map param="IDirect3DDevice9Ex::SetConvolutionMonoKernel::rows" attribute="in buffer" />
+    <map param="IDirect3DDevice9Ex::SetConvolutionMonoKernel::columns" attribute="in buffer" />
+
     <map param="IDirect3DSwapChain9Ex::GetLastPresentCount::pLastPresentCount" attribute="out" />
     <map param="IDirect3DSwapChain9Ex::GetPresentStats::pPresentationStatistics" attribute="out" />
     <map param="IDirect3DSwapChain9Ex::GetDisplayModeEx::pMode" attribute="out" />
@@ -2457,10 +2470,26 @@
     <map param="ID3DXTextureShader::GetConstantDesc::pCount" attribute="inout" />
     
     <map param="ID3DXBaseEffect::GetDesc::pDesc" attribute="out" />
-    <map param="ID3DXBaseEffect::GetParameterDesc::pDesc" attribute="out" />
-    <map param="ID3DXBaseEffect::GetTechniqueDesc::pDesc" attribute="out" />
-    <map param="ID3DXBaseEffect::GetPassDesc::pDesc" attribute="out" />
-    <map param="ID3DXBaseEffect::GetFunctionDesc::pDesc" attribute="out" />
+    <map param="ID3DXBaseEffect::GetParameterDesc::pDesc" return="true" attribute="out" />
+    <map param="ID3DXBaseEffect::GetTechniqueDesc::pDesc" return="true" attribute="out" />
+    <map param="ID3DXBaseEffect::GetPassDesc::pDesc" return="true" attribute="out" />
+    <map param="ID3DXBaseEffect::GetFunctionDesc::pDesc" return="true" attribute="out" />
+    <map method="ID3DXBaseEffect::[GS]etValue" visibility="internal" />
+    <map method="ID3DXBaseEffect::[GS]etBool" visibility="internal" />
+    <map method="ID3DXBaseEffect::[GS]etBoolArray" visibility="internal" />
+    <map method="ID3DXBaseEffect::[GS]etInt" visibility="internal" />
+    <map method="ID3DXBaseEffect::[GS]etIntArray" visibility="internal" />
+    <map method="ID3DXBaseEffect::[GS]etFloat" visibility="internal" />
+    <map method="ID3DXBaseEffect::[GS]etFloatArray" visibility="internal" />
+    <map method="ID3DXBaseEffect::[GS]etVector" visibility="internal" />
+    <map method="ID3DXBaseEffect::[GS]etVectorArray" visibility="internal" />
+    <map method="ID3DXBaseEffect::[GS]etMatrix" visibility="internal" />
+    <map method="ID3DXBaseEffect::[GS]etMatrixArray" visibility="internal" />
+    <map method="ID3DXBaseEffect::[GS]etMatrixPointerArray" visibility="internal" />
+    <map method="ID3DXBaseEffect::[GS]etMatrixTranspose" visibility="internal" />
+    <map method="ID3DXBaseEffect::[GS]etMatrixTransposeArray" visibility="internal" />
+    <map method="ID3DXBaseEffect::[GS]etArrayRange" visibility="internal" />
+    <map method="ID3DXBaseEffect::SetArrayRange" visibility="internal" />
     <map param="ID3DXBaseEffect::GetBool::pb" attribute="out" />
     <map param="ID3DXBaseEffect::GetBoolArray::pb" attribute="out" />
     <map param="ID3DXBaseEffect::GetInt::pn" attribute="out" />
@@ -2475,13 +2504,28 @@
     <map param="ID3DXBaseEffect::GetMatrixTranspose::pMatrix" attribute="out" />
     <map param="ID3DXBaseEffect::GetMatrixTransposeArray::pMatrix" attribute="out" />
     <map param="ID3DXBaseEffect::GetMatrixTransposePointerArray::ppMatrix" attribute="out" />
-    <map param="ID3DXBaseEffect::GetString::ppString" attribute="out" />
-    <map param="ID3DXBaseEffect::GetTexture::ppTexture" attribute="out" />
-    <map param="ID3DXBaseEffect::GetPixelShader::ppPShader" attribute="out" />
-    <map param="ID3DXBaseEffect::GetVertexShader::ppVShader" attribute="out" />
+    <map method="ID3DXBaseEffect::GetString" name="GetString_" visibility="internal" />
+    <map param="ID3DXBaseEffect::GetString::ppString" type="void" return="true" attribute="out" />
+    <map param="ID3DXBaseEffect::GetTexture::ppTexture" return="true" attribute="out" />
+    <map param="ID3DXBaseEffect::GetPixelShader::ppPShader" return="true" attribute="out" />
+    <map param="ID3DXBaseEffect::GetVertexShader::ppVShader" return="true" attribute="out" />
+    <map param="ID3DXBaseEffect::Get.*Array::(pb|pn|pf|pVector|pMatrix)" attribute="out buffer"/>
+    <map param="ID3DXBaseEffect::Set.*Array::(pb|pn|pf|pVector|pMatrix)" attribute="in buffer"/>
+    <map method="ID3DXBaseEffect::(Get.*)By.*" name="$1"/>
+    <map method="ID3DXBaseEffect::GetParameterBySemantic" name="GetParameterBySemantic"/>
+
+    <map param="ID3DXEffect::Begin::pPasses" return="true" attribute="out" />
+    <map param="ID3DXEffect::Begin::Flags" type="D3DXFX" />
     <map param="ID3DXEffect::GetPool::ppPool" attribute="out" />
     <map param="ID3DXEffect::GetDevice::ppDevice" attribute="out" />
     <map param="ID3DXEffect::GetStateManager::ppManager" attribute="out" />
+    <map method="ID3DXEffect::CloneEffect" name="Clone" />
+    <map param="ID3DXEffect::CloneEffect::ppEffect" return="true" attribute="out" />
+    <map param="ID3DXEffect::FindNextValidTechnique::pTechnique" return="true" attribute="out" />
+    <map method="ID3DXEffect::GetCurrentTechnique" property="false" visibility="internal"/>
+    <map method="ID3DXEffect::SetTechnique" property="false" visibility="internal"/>
+    <map method="ID3DXEffect::SetRawValue" visibility="internal"/>
+
     <map param="ID3DXEffectCompiler::GetLiteral::pLiteral" attribute="out" />
     <map param="ID3DXAnimationSet::GetSRT::pScale" attribute="out" />
     <map param="ID3DXAnimationSet::GetSRT::pRotation" attribute="out" />
@@ -2577,14 +2621,22 @@
     <map param="D3DXSaveSurfaceTo.*::pSrcInfo" type="void"/>
     <map param="D3DXSaveSurfaceTo.*::ColorKey" type="int"/>
 
-    <map param="D3DXLoadVolumeFromFileInMemory.*::pSrcBox" type="void"/>
-    <map param="D3DXLoadVolumeFromFileInMemory.*::pDestBox" type="void"/>
-    <map param="D3DXLoadVolumeFromFileInMemory.*::Filter" type="D3DX_FILTER"/>
-    <map param="D3DXLoadVolumeFromFileInMemory.*::pSrcPalette" attribute="in buffer"/>
-    <map param="D3DXLoadVolumeFromFileInMemory.*::pDestPalette" attribute="out buffer"/>
-    <map param="D3DXLoadVolumeFromFileInMemory.*::pSrcInfo" type="void"/>
-    <map param="D3DXLoadVolumeFromFileInMemory.*::ColorKey" type="int"/>
-    
+    <map param="D3DXLoadVolumeFrom.*::pSrcBox" type="void"/>
+    <map param="D3DXLoadVolumeFrom.*::pDestBox" type="void"/>
+    <map param="D3DXLoadVolumeFrom.*::Filter" type="D3DX_FILTER"/>
+    <map param="D3DXLoadVolumeFrom.*::pSrcPalette" attribute="in buffer"/>
+    <map param="D3DXLoadVolumeFrom.*::pDestPalette" attribute="out buffer"/>
+    <map param="D3DXLoadVolumeFrom.*::pSrcInfo" type="void"/>
+    <map param="D3DXLoadVolumeFrom.*::ColorKey" type="int"/>
+
+    <map param="D3DXSaveVolumeTo.*::pSrcBox" type="void"/>
+    <map param="D3DXSaveVolumeTo.*::pDestBox" type="void"/>
+    <map param="D3DXSaveVolumeTo.*::Filter" type="D3DX_FILTER"/>
+    <map param="D3DXSaveVolumeTo.*::pSrcPalette" attribute="in buffer"/>
+    <map param="D3DXSaveVolumeTo.*::pDestPalette" attribute="out buffer"/>
+    <map param="D3DXSaveVolumeTo.*::pSrcInfo" type="void"/>
+    <map param="D3DXSaveVolumeTo.*::ColorKey" type="int"/>
+
     <map param="D3DX.*::pDefines" attribute="in buffer"/>
     <map param="D3DXCompileShader::pSrcData" type="void"/>
 

@@ -55,6 +55,13 @@ namespace SharpDX.Direct3D9
         /// <summary>
         /// Initializes a new instance of the <see cref="EffectHandle"/> class.
         /// </summary>
+        public EffectHandle()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EffectHandle"/> class.
+        /// </summary>
         /// <param name="pointer">
         /// The pointer.
         /// </param>
