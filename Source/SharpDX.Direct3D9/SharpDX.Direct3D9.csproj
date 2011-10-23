@@ -17,10 +17,17 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AdapterCollection.cs" />
     <Compile Include="AdapterDetails.cs" />
+    <Compile Include="AdapterInformation.cs" />
     <Compile Include="BaseEffect.cs" />
     <Compile Include="BoneCombination.cs" />
     <Compile Include="ConstantTable.cs" />
+    <Compile Include="AdapterExCollection.cs" />
+    <Compile Include="AdapterInformationEx.cs" />
+    <Compile Include="DisplayModeEx.cs" />
+    <Compile Include="DisplayMode.cs" />
+    <Compile Include="DisplayModeExCollection.cs" />
     <Compile Include="CubeTexture.cs" />
     <Compile Include="CubeTextureRequirements.cs" />
     <Compile Include="D3DX.cs" />
@@ -29,6 +36,7 @@
     <Compile Include="DeviceState.cs" />
     <Compile Include="Direct3D.cs" />
     <Compile Include="Direct3DEx.cs" />
+    <Compile Include="DisplayModeCollection.cs" />
     <Compile Include="DriverLevel.cs" />
     <Compile Include="Effect.cs" />
     <Compile Include="EffectCompiler.cs" />

@@ -626,7 +626,7 @@ namespace SharpDX.Direct3D9
         /// <unmanaged>IDirect3DDevice9::Present</unmanaged>
         public void Present()
         {
-            Present(null, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
+            Present(IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
         }
 
         /// <summary>
@@ -638,7 +638,7 @@ namespace SharpDX.Direct3D9
         /// <unmanaged>IDirect3DDevice9::Present</unmanaged>
         public void Present(Rectangle sourceRectangle, Rectangle destinationRectangle)
         {
-            Present(sourceRectangle, destinationRectangle);
+            Present(sourceRectangle, destinationRectangle, IntPtr.Zero);
         }
 
         /// <summary>
@@ -653,15 +653,7 @@ namespace SharpDX.Direct3D9
         {
             unsafe
             {
-                Rectangle? sourceRectangleOptional = null;
-                if (sourceRectangle != Rectangle.Empty)
-                    sourceRectangleOptional = sourceRectangle;
-
-                IntPtr destPtr = IntPtr.Zero;
-                if (destinationRectangle != Rectangle.Empty)
-                    destPtr = new IntPtr(&destinationRectangle);
-
-                Present(sourceRectangleOptional, destPtr, windowOverride, IntPtr.Zero);
+                Present(new IntPtr(&sourceRectangle), new IntPtr(&destinationRectangle), windowOverride, IntPtr.Zero);
             }
         }
 
@@ -682,16 +674,7 @@ namespace SharpDX.Direct3D9
                 var graphics = System.Drawing.Graphics.FromHwnd(windowOverride);
                 IntPtr regionPtr = region.GetHrgn(graphics);
                 graphics.Dispose();
-
-                Rectangle? sourceRectangleOptional = null;
-                if (sourceRectangle != Rectangle.Empty)
-                    sourceRectangleOptional = sourceRectangle;
-
-                IntPtr destPtr = IntPtr.Zero;
-                if (destinationRectangle != Rectangle.Empty)
-                    destPtr = new IntPtr(&destinationRectangle);
-
-                Present(sourceRectangleOptional, destPtr, windowOverride, regionPtr);
+                Present(new IntPtr(&sourceRectangle), new IntPtr(&destinationRectangle), windowOverride, regionPtr);
             }
         }
 

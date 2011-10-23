@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Drawing;
 
 namespace SharpDX.Direct3D9
 {
@@ -149,6 +150,76 @@ namespace SharpDX.Direct3D9
                 fixed (void* pRotation = &rotation)
                     return GetDisplayModeEx(swapChain, (IntPtr)pRotation);
             }
+        }
+
+        /// <summary>
+        /// Swap the swapchain's next buffer with the front buffer.
+        /// </summary>
+        /// <param name="flags">The flags.</param>
+        /// <returns>
+        /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9Ex::PresentEx([In] const void* pSourceRect,[In] const void* pDestRect,[In] HWND hDestWindowOverride,[In] const RGNDATA* pDirtyRegion,[In] unsigned int dwFlags)</unmanaged>
+        public Result PresentEx(Present flags)
+        {
+            return PresentEx(IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, (int)flags);
+        }
+
+        /// <summary>
+        /// Swap the swapchain's next buffer with the front buffer.
+        /// </summary>
+        /// <param name="flags">The flags.</param>
+        /// <param name="sourceRectangle">The source rectangle.</param>
+        /// <param name="destinationRectangle">The destination rectangle.</param>
+        /// <returns>
+        /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9Ex::PresentEx([In] const void* pSourceRect,[In] const void* pDestRect,[In] HWND hDestWindowOverride,[In] const RGNDATA* pDirtyRegion,[In] unsigned int dwFlags)</unmanaged>
+        public Result PresentEx(Present flags, Rectangle sourceRectangle, Rectangle destinationRectangle)
+        {
+            return PresentEx(flags, sourceRectangle, destinationRectangle, IntPtr.Zero);
+        }
+
+        /// <summary>
+        /// Swap the swapchain's next buffer with the front buffer.
+        /// </summary>
+        /// <param name="flags">The flags.</param>
+        /// <param name="sourceRectangle">The source rectangle.</param>
+        /// <param name="destinationRectangle">The destination rectangle.</param>
+        /// <param name="windowOverride">The window override.</param>
+        /// <returns>
+        /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9Ex::PresentEx([In] const void* pSourceRect,[In] const void* pDestRect,[In] HWND hDestWindowOverride,[In] const RGNDATA* pDirtyRegion,[In] unsigned int dwFlags)</unmanaged>
+        public Result PresentEx(Present flags, Rectangle sourceRectangle, Rectangle destinationRectangle, IntPtr windowOverride)
+        {
+            unsafe
+            {
+                return PresentEx(new IntPtr(&sourceRectangle), new IntPtr(&destinationRectangle), windowOverride, IntPtr.Zero, (int)flags);
+            }
+        }
+
+        /// <summary>
+        /// Swap the swapchain's next buffer with the front buffer.
+        /// </summary>
+        /// <param name="flags">The flags.</param>
+        /// <param name="sourceRectangle">The source rectangle.</param>
+        /// <param name="destinationRectangle">The destination rectangle.</param>
+        /// <param name="windowOverride">The window override.</param>
+        /// <param name="region">The region.</param>
+        /// <returns>
+        /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9Ex::PresentEx([In] const void* pSourceRect,[In] const void* pDestRect,[In] HWND hDestWindowOverride,[In] const RGNDATA* pDirtyRegion,[In] unsigned int dwFlags)</unmanaged>
+        public Result PresentEx(Present flags, Rectangle sourceRectangle, Rectangle destinationRectangle, IntPtr windowOverride, Region region)
+        {
+            unsafe
+            {
+                var graphics = Graphics.FromHwnd(windowOverride);
+                var regionPtr = region.GetHrgn(graphics);
+                graphics.Dispose();
+                return PresentEx(new IntPtr(&sourceRectangle), new IntPtr(&destinationRectangle), windowOverride, regionPtr, (int)flags);
+            }            
         }
 
         /// <summary>

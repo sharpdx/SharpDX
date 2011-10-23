@@ -2082,8 +2082,6 @@
     <remove interface="ID3DXPRTEngine" />
     <remove interface="ID3DXPRTCompBuffer" />
     <remove interface="ID3DXTextureGutterHelper" />
-    <map param="IDirect3D9Ex::CreateDeviceEx::pPresentationParameters" attribute="in buffer"/>
-    <map param="IDirect3D9Ex::CreateDeviceEx::pFullscreenDisplayMode" attribute="in buffer"/>
     <map interface="ID3DXAllocateHierarchy" name="IAllocateHierarchy" />
     <map interface="ID3DXLoadUserData" name="ILoadUserData" />
     <map interface="ID3DXRenderToEnvMap" name="RenderToEnvironmentMap" />
@@ -2095,12 +2093,17 @@
     <map method="ID3DXFont::GetTextMetricsA" visibility="internal" />
     <map method="ID3DXFont::GetTextMetricsW" visibility="internal" />
 
-    <map param="IDirect3D9::GetAdapterIdentifier::pIdentifier" attribute="out" />
-    <map param="IDirect3D9::GetAdapterDisplayMode::pMode" attribute="out" />
-    <map param="IDirect3D9::GetDeviceCaps::pCaps" attribute="out" />
+    <map param="IDirect3D9::CreateDevice::ppReturnedDeviceInterface" attribute="out fast"/>
+    <map method="IDirect3D9::GetAdapterIdentifier" visibility="internal" />
+    <map param="IDirect3D9::GetAdapterIdentifier::pIdentifier" return="true" attribute="out" />
+    <map param="IDirect3D9::GetAdapterDisplayMode::pMode" return="true" attribute="out" />
+    <map param="IDirect3D9::GetDeviceCaps::pCaps" return="true" attribute="out" />
     <map method="IDirect3D9::CreateDevice" visibility="internal" />
     <map param="BehaviorFlags" type="D3DCREATE" />
     <map param="pPresentationParameters" attribute="in buffer" />
+    <map method="IDirect3D9::Check(.*)" name="Check$1_" visibility="internal"/>
+    <map param="IDirect3D9::CheckDeviceMultiSampleType::pQualityLevels" attribute="out"/>
+    <map param="IDirect3D9::EnumAdapterModes::pMode" return="true" attribute="out"/>
     
     <map param="IDirect3DDevice9::Clear::Flags" type="D3DCLEAR" />
     <map param="IDirect3DDevice9::Clear::Color" type="int" />
@@ -2113,8 +2116,17 @@
     <map param="IDirect3DDevice9::Create.*::pp.*" attribute="out fast"/>
     <map param="IDirect3DDevice9Ex::Create.*::pp.*" attribute="out fast"/>
 
-    <map param="IDirect3D9::CreateDevice::ppReturnedDeviceInterface" attribute="out fast"/>
+    <map method="IDirect3D9Ex::CreateDeviceEx" visibility="internal"/>
     <map param="IDirect3D9Ex::CreateDeviceEx::ppReturnedDeviceInterface" attribute="out fast"/>
+    <map param="IDirect3D9Ex::CreateDeviceEx::pPresentationParameters" attribute="in buffer"/>
+    <map param="IDirect3D9Ex::CreateDeviceEx::pFullscreenDisplayMode" attribute="in buffer"/>
+    <map method="IDirect3D9Ex::EnumAdapterModesEx" name="EnumerateAdapterModesEx"/>
+    <map param="IDirect3D9Ex::EnumAdapterModesEx::pMode" return="true" attribute="out"/>
+    <map param="IDirect3D9Ex::GetAdapterDisplayModeEx::pMode" return="true" attribute="out"/>
+    <map param="IDirect3D9Ex::GetAdapterDisplayModeEx::pRotation" attribute="out" />
+    <map method="IDirect3D9Ex::GetAdapterLUID" name="GetAdapterLuid"/>
+    <map param="IDirect3D9Ex::GetAdapterLUID::pLUID" return="true" attribute="out"/>
+    <map param="IDirect3D9Ex::GetAdapterModeCountEx::pFilter" attribute="in"/>
 
     <map param="IDirect3DDevice9::CreateAdditionalSwapChain::pSwapChain" attribute="out fast" />
     <map param="IDirect3DDevice9(Ex)?::.*Surface(Ex)?::ppSurface" return="true" attribute="out" />
@@ -2135,9 +2147,9 @@
     <map param="FVF" name="vertexFormat" type="D3DFVF" />
     <map param="IDirect3DDevice9::GetFVF::pFVF" name="vertexFormat" type="D3DFVF" />
     <map method="IDirect3DDevice9::DrawPrimitive" name="DrawPrimitives" />
-    <map param="IDirect3DDevice9::Present::pSourceRect" attribute="in optional" />
-    <map param="IDirect3DDevice9::Present::pDestRect" attribute="inout optional" />
-    <map param="IDirect3DDevice9::Present::pDirtyRegion" attribute="in optional" />
+    <map param="IDirect3DDevice9::Present::pSourceRect" type="void" attribute="in" />
+    <map param="IDirect3DDevice9::Present::pDestRect" type="void" attribute="in" />
+    <map param="IDirect3DDevice9::Present::pDirtyRegion" type="void" attribute="in" />
     <map method="IDirect3DDevice9::Present" visibility="internal" />
 
     <map param="IDirect3DDevice9::GetClipPlane::pPlane" return="true" attribute="out" />
@@ -2352,11 +2364,6 @@
     <map param="IDirect3DQuery9::Issue::dwIssueFlags" type="D3DISSUE" />
     <map method="IDirect3DQuery9::GetType" property="false" />
     <map method="IDirect3DQuery9::GetData" visibility="internal" />
-
-    <map param="IDirect3D9Ex::GetAdapterModeCountEx::pFilter" attribute="out" />
-    <map param="IDirect3D9Ex::GetAdapterDisplayModeEx::pMode" attribute="out" />
-    <map param="IDirect3D9Ex::GetAdapterDisplayModeEx::pRotation" attribute="out" />
-    <map param="IDirect3D9Ex::GetAdapterLUID::pLUID" attribute="out" />
     
     <map param="IDirect3DDevice9Ex::GetGPUThreadPriority::pPriority" attribute="out" />
     <map param="IDirect3DDevice9Ex::GetMaximumFrameLatency::pMaxLatency" attribute="out" />
@@ -2639,7 +2646,7 @@
     <map param="D3DXSaveVolumeTo.*::pSrcInfo" type="void"/>
     <map param="D3DXSaveVolumeTo.*::ColorKey" type="int"/>
 
-    <map param="D3DX.*::pDefines" attribute="in buffer"/>
+    <map param="D3DX.*::pDefines" attribute="in buffer optional"/>
     <map param="D3DXCompileShader::pSrcData" type="void"/>
 
     <map param="D3DXGetShader.*::pFunction" type="void"/>

@@ -34,6 +34,215 @@ namespace SharpDX.Direct3D9
         public Direct3D()
         {
             FromTemp(D3D9.Create9(D3D9.SdkVersion));
+            Adapters = new AdapterCollection(this);
+            if (!D3DX.CheckVersion())
+                throw new SharpDXException("Direct3DX9 was not found. Install latest DirectX redistributable runtimes from Microsoft");
+        }
+
+        /// <summary>
+        /// Gets the adapters.
+        /// </summary>
+        public AdapterCollection Adapters { get; internal set; }
+
+        /// <summary>
+        /// Determines whether a depth-stencil format is compatible with a render-target format in a particular display mode.
+        /// </summary>
+        /// <param name="adapter">The adapter.</param>
+        /// <param name="deviceType">Type of the device.</param>
+        /// <param name="adapterFormat">The adapter format.</param>
+        /// <param name="renderTargetFormat">The render target format.</param>
+        /// <param name="depthStencilFormat">The depth stencil format.</param>
+        /// <returns>If the depth-stencil format is compatible with the render-target format in the display mode, this method returns <c>true</c></returns>
+        /// <unmanaged>HRESULT IDirect3D9::CheckDepthStencilMatch([In] unsigned int Adapter,[In] D3DDEVTYPE DeviceType,[In] D3DFORMAT AdapterFormat,[In] D3DFORMAT RenderTargetFormat,[In] D3DFORMAT DepthStencilFormat)</unmanaged>
+        public bool CheckDepthStencilMatch(int adapter, DeviceType deviceType, Format adapterFormat, Format renderTargetFormat, Format depthStencilFormat)
+        {
+            return CheckDepthStencilMatch_(adapter, deviceType, adapterFormat, renderTargetFormat, depthStencilFormat) == 0;
+        }
+
+        /// <summary>
+        /// Determines whether a depth-stencil format is compatible with a render-target format in a particular display mode.
+        /// </summary>
+        /// <param name="adapter">The adapter.</param>
+        /// <param name="deviceType">Type of the device.</param>
+        /// <param name="adapterFormat">The adapter format.</param>
+        /// <param name="renderTargetFormat">The render target format.</param>
+        /// <param name="depthStencilFormat">The depth stencil format.</param>
+        /// <param name="result">The result.</param>
+        /// <returns>
+        /// If the depth-stencil format is compatible with the render-target format in the display mode, this method returns <c>true</c>
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3D9::CheckDepthStencilMatch([In] unsigned int Adapter,[In] D3DDEVTYPE DeviceType,[In] D3DFORMAT AdapterFormat,[In] D3DFORMAT RenderTargetFormat,[In] D3DFORMAT DepthStencilFormat)</unmanaged>
+        public bool CheckDepthStencilMatch(int adapter, DeviceType deviceType, Format adapterFormat, Format renderTargetFormat, Format depthStencilFormat, out Result result)
+        {
+            result = CheckDepthStencilMatch_(adapter, deviceType, adapterFormat, renderTargetFormat, depthStencilFormat);
+            return result == 0;
+        }
+
+        /// <summary>
+        /// Determines whether a surface format is available as a specified resource type and can be used as a texture, depth-stencil buffer, or render target, or any combination of the three, on a device representing this adapter.
+        /// </summary>
+        /// <param name="adapter">The adapter.</param>
+        /// <param name="deviceType">Type of the device.</param>
+        /// <param name="adapterFormat">The adapter format.</param>
+        /// <param name="usage">The usage.</param>
+        /// <param name="resourceType">Type of the resource.</param>
+        /// <param name="checkFormat">The check format.</param>
+        /// <returns>
+        /// If the format is compatible with the specified device for the requested usage, this method returns <c>true</c>
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3D9::CheckDeviceFormat([In] unsigned int Adapter,[In] D3DDEVTYPE DeviceType,[In] D3DFORMAT AdapterFormat,[In] unsigned int Usage,[In] D3DRESOURCETYPE RType,[In] D3DFORMAT CheckFormat)</unmanaged>
+        public bool CheckDeviceFormat(int adapter, DeviceType deviceType, Format adapterFormat, Usage usage, ResourceType resourceType, Format checkFormat)
+        {
+            return CheckDeviceFormat_(adapter, deviceType, adapterFormat, (int)usage, resourceType, checkFormat) == 0;
+        }
+
+        /// <summary>
+        /// Determines whether a surface format is available as a specified resource type and can be used as a texture, depth-stencil buffer, or render target, or any combination of the three, on a device representing this adapter.
+        /// </summary>
+        /// <param name="adapter">The adapter.</param>
+        /// <param name="deviceType">Type of the device.</param>
+        /// <param name="adapterFormat">The adapter format.</param>
+        /// <param name="usage">The usage.</param>
+        /// <param name="resourceType">Type of the resource.</param>
+        /// <param name="checkFormat">The check format.</param>
+        /// <param name="result">The result.</param>
+        /// <returns>If the format is compatible with the specified device for the requested usage, this method returns <c>true</c></returns>
+        /// <unmanaged>HRESULT IDirect3D9::CheckDeviceFormat([In] unsigned int Adapter,[In] D3DDEVTYPE DeviceType,[In] D3DFORMAT AdapterFormat,[In] unsigned int Usage,[In] D3DRESOURCETYPE RType,[In] D3DFORMAT CheckFormat)</unmanaged>
+        public bool CheckDeviceFormat(int adapter, DeviceType deviceType, Format adapterFormat, Usage usage, ResourceType resourceType, Format checkFormat, out Result result)
+        {
+            result = CheckDeviceFormat_(adapter, deviceType, adapterFormat, (int)usage, resourceType, checkFormat);
+            return result == 0;
+        }
+
+        /// <summary>
+        /// Tests the device to see if it supports conversion from one display format to another.
+        /// </summary>
+        /// <param name="adapter">The adapter.</param>
+        /// <param name="deviceType">Type of the device.</param>
+        /// <param name="sourceFormat">The source format.</param>
+        /// <param name="targetFormat">The target format.</param>
+        /// <returns>
+        /// True if the method succeeds.
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3D9::CheckDeviceFormatConversion([In] unsigned int Adapter,[In] D3DDEVTYPE DeviceType,[In] D3DFORMAT SourceFormat,[In] D3DFORMAT TargetFormat)</unmanaged>
+        public bool CheckDeviceFormatConversion(int adapter, DeviceType deviceType, Format sourceFormat, Format targetFormat)
+        {
+            return CheckDeviceFormatConversion_(adapter, deviceType, sourceFormat, targetFormat) == 0;
+        }
+
+        /// <summary>
+        /// Tests the device to see if it supports conversion from one display format to another.
+        /// </summary>
+        /// <param name="adapter">The adapter.</param>
+        /// <param name="deviceType">Type of the device.</param>
+        /// <param name="sourceFormat">The source format.</param>
+        /// <param name="targetFormat">The target format.</param>
+        /// <param name="result">The result.</param>
+        /// <returns>True if the method succeeds.</returns>
+        /// <unmanaged>HRESULT IDirect3D9::CheckDeviceFormatConversion([In] unsigned int Adapter,[In] D3DDEVTYPE DeviceType,[In] D3DFORMAT SourceFormat,[In] D3DFORMAT TargetFormat)</unmanaged>
+        public bool CheckDeviceFormatConversion(int adapter, DeviceType deviceType, Format sourceFormat, Format targetFormat, out Result result)
+        {
+            result = CheckDeviceFormatConversion_(adapter, deviceType, sourceFormat, targetFormat);
+            return result == 0;
+        }
+
+        /// <summary>
+        /// Determines if a multisampling technique is available on this device.
+        /// </summary>
+        /// <param name="adapter">The adapter.</param>
+        /// <param name="deviceType">Type of the device.</param>
+        /// <param name="surfaceFormat">The surface format.</param>
+        /// <param name="windowed">if set to <c>true</c> [windowed].</param>
+        /// <param name="multisampleType">Type of the multisample.</param>
+        /// <returns>
+        /// f the device can perform the specified multisampling method, this method returns <c>true</c>
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3D9::CheckDeviceMultiSampleType([In] unsigned int Adapter,[In] D3DDEVTYPE DeviceType,[In] D3DFORMAT SurfaceFormat,[In] BOOL Windowed,[In] D3DMULTISAMPLE_TYPE MultiSampleType,[Out] unsigned int* pQualityLevels)</unmanaged>
+        public bool CheckDeviceMultisampleType(int adapter, DeviceType deviceType, Format surfaceFormat, bool windowed, MultisampleType multisampleType)
+        {
+            int qualityLevels;
+            return CheckDeviceMultiSampleType_(adapter, deviceType, surfaceFormat, windowed, multisampleType, out qualityLevels) == 0;
+        }
+
+        /// <summary>
+        /// Determines if a multisampling technique is available on this device.
+        /// </summary>
+        /// <param name="adapter">The adapter.</param>
+        /// <param name="deviceType">Type of the device.</param>
+        /// <param name="surfaceFormat">The surface format.</param>
+        /// <param name="windowed">if set to <c>true</c> [windowed].</param>
+        /// <param name="multisampleType">Type of the multisample.</param>
+        /// <param name="qualityLevels">The quality levels.</param>
+        /// <returns>
+        /// f the device can perform the specified multisampling method, this method returns <c>true</c>
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3D9::CheckDeviceMultiSampleType([In] unsigned int Adapter,[In] D3DDEVTYPE DeviceType,[In] D3DFORMAT SurfaceFormat,[In] BOOL Windowed,[In] D3DMULTISAMPLE_TYPE MultiSampleType,[Out] unsigned int* pQualityLevels)</unmanaged>
+        public bool CheckDeviceMultisampleType(int adapter, DeviceType deviceType, Format surfaceFormat, bool windowed, MultisampleType multisampleType, out int qualityLevels)
+        {
+            return CheckDeviceMultiSampleType_(adapter, deviceType, surfaceFormat, windowed, multisampleType, out qualityLevels) == 0;
+        }
+
+        /// <summary>
+        /// Determines if a multisampling technique is available on this device.
+        /// </summary>
+        /// <param name="adapter">The adapter.</param>
+        /// <param name="deviceType">Type of the device.</param>
+        /// <param name="surfaceFormat">The surface format.</param>
+        /// <param name="windowed">if set to <c>true</c> [windowed].</param>
+        /// <param name="multisampleType">Type of the multisample.</param>
+        /// <param name="qualityLevels">The quality levels.</param>
+        /// <param name="result">The result.</param>
+        /// <returns>f the device can perform the specified multisampling method, this method returns <c>true</c></returns>
+        /// <unmanaged>HRESULT IDirect3D9::CheckDeviceMultiSampleType([In] unsigned int Adapter,[In] D3DDEVTYPE DeviceType,[In] D3DFORMAT SurfaceFormat,[In] BOOL Windowed,[In] D3DMULTISAMPLE_TYPE MultiSampleType,[Out] unsigned int* pQualityLevels)</unmanaged>
+        public bool CheckDeviceMultisampleType(int adapter, DeviceType deviceType, Format surfaceFormat, bool windowed, MultisampleType multisampleType, out int qualityLevels, out Result result)
+        {
+            result = CheckDeviceMultiSampleType_(adapter, deviceType, surfaceFormat, windowed, multisampleType, out qualityLevels);
+            return result != 0;
+        }
+
+        /// <summary>
+        /// Verifies whether a hardware accelerated device type can be used on this adapter.
+        /// </summary>
+        /// <param name="adapter">The adapter.</param>
+        /// <param name="deviceType">Type of the device.</param>
+        /// <param name="adapterFormat">The adapter format.</param>
+        /// <param name="backBufferFormat">The back buffer format.</param>
+        /// <param name="windowed">if set to <c>true</c> [windowed].</param>
+        /// <returns>
+        ///   <c>true</c> if the device can be used on this adapter
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3D9::CheckDeviceType([In] unsigned int Adapter,[In] D3DDEVTYPE DevType,[In] D3DFORMAT AdapterFormat,[In] D3DFORMAT BackBufferFormat,[In] BOOL bWindowed)</unmanaged>
+        public bool CheckDeviceType(int adapter, DeviceType deviceType, Format adapterFormat, Format backBufferFormat, bool windowed)
+        {
+            return CheckDeviceType_(adapter, deviceType, adapterFormat, backBufferFormat, windowed) != 0;
+        }
+
+        /// <summary>
+        /// Verifies whether a hardware accelerated device type can be used on this adapter.
+        /// </summary>
+        /// <param name="adapter">The adapter.</param>
+        /// <param name="deviceType">Type of the device.</param>
+        /// <param name="adapterFormat">The adapter format.</param>
+        /// <param name="backBufferFormat">The back buffer format.</param>
+        /// <param name="windowed">if set to <c>true</c> [windowed].</param>
+        /// <param name="result">The result.</param>
+        /// <returns><c>true</c> if the device can be used on this adapter</returns>
+        /// <unmanaged>HRESULT IDirect3D9::CheckDeviceType([In] unsigned int Adapter,[In] D3DDEVTYPE DevType,[In] D3DFORMAT AdapterFormat,[In] D3DFORMAT BackBufferFormat,[In] BOOL bWindowed)</unmanaged>
+        public bool CheckDeviceType(int adapter, DeviceType deviceType, Format adapterFormat, Format backBufferFormat, bool windowed, out Result result)
+        {
+            result = CheckDeviceType_(adapter, deviceType, adapterFormat, backBufferFormat, windowed);
+            return result != 0;
+        }
+
+        /// <summary>
+        /// Get the physical display adapters present in the system when this <see cref="Direct3D"/> was instantiated.
+        /// </summary>
+        /// <param name="adapter">The adapter.</param>
+        /// <returns>The physical display adapters</returns>
+        /// <unmanaged>HRESULT IDirect3D9::GetAdapterIdentifier([In] unsigned int Adapter,[In] unsigned int Flags,[Out] D3DADAPTER_IDENTIFIER9* pIdentifier)</unmanaged>
+        public SharpDX.Direct3D9.AdapterDetails GetAdapterIdentifier(int adapter)
+        {
+            return GetAdapterIdentifier(adapter, 0);
         }
     }
 }
