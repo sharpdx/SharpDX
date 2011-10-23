@@ -25,6 +25,8 @@ namespace SharpDX.Direct3D9
 {
     public partial class EffectInstance
     {
+        public EffectDefault[] Defaults { get; set; }
+
         // Internal native struct used for marshalling
         [StructLayout(LayoutKind.Sequential, Pack = 0)]
         internal partial struct __Native
@@ -37,6 +39,8 @@ namespace SharpDX.Direct3D9
             {
                 if (this.EffectFilename != IntPtr.Zero)
                     Marshal.FreeHGlobal(this.EffectFilename);
+                if (DefaultPointer != IntPtr.Zero)
+                    Marshal.FreeHGlobal(this.DefaultPointer);
             }
         }
 
@@ -50,16 +54,26 @@ namespace SharpDX.Direct3D9
         internal unsafe void __MarshalFrom(ref __Native @ref)
         {
             this.EffectFilename = (@ref.EffectFilename == IntPtr.Zero) ? null : Marshal.PtrToStringAnsi(@ref.EffectFilename);
-            this.DefaultCount = @ref.DefaultCount;
-            this.DefaultPointer = @ref.DefaultPointer;
+            var defaultsNative = new EffectDefault.__Native[@ref.DefaultCount];
+            Utilities.Read(@ref.DefaultPointer, defaultsNative, 0, defaultsNative.Length);
+            Defaults = new EffectDefault[defaultsNative.Length];
+            for (int i = 0; i < Defaults.Length; i++)
+            {
+                Defaults[i] = new EffectDefault();
+                Defaults[i].__MarshalFrom(ref defaultsNative[i]);
+            }
         }
         // Method to marshal from managed struct tot native
         internal unsafe void __MarshalTo(ref __Native @ref)
         {
             @ref.EffectFilename = (this.EffectFilename == null) ? IntPtr.Zero : Marshal.StringToHGlobalAnsi(this.EffectFilename);
-            @ref.DefaultCount = this.DefaultCount;
-            @ref.DefaultPointer = this.DefaultPointer;
-            // TODO add unmarshalling of Defaults array
+            var defaultsNative = (EffectDefault.__Native*)Marshal.AllocHGlobal(Defaults.Length * sizeof(EffectDefault.__Native));
+            for (int i = 0; i < Defaults.Length; i++)
+            {
+                Defaults[i].__MarshalTo(ref defaultsNative[i]);
+            }
+            @ref.DefaultCount = Defaults.Length;
+            @ref.DefaultPointer = (IntPtr)defaultsNative;
         }
     }
 }

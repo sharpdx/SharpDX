@@ -2038,7 +2038,7 @@
     <map struct="D3DXATTRIBUTERANGE" name="AttributeRange" />
     <map struct="D3DXCONSTANTTABLE_DESC" name="ConstantTableDescription" />
     
-    <map struct="D3DXEFFECTDEFAULT" name="EffectDefault" />
+    <map struct="D3DXEFFECTDEFAULT" name="EffectDefault" marshalto="true"/>
     <map field="D3DXEFFECTDEFAULT::pParamName" name="ParameterName"/>
     <map field="D3DXEFFECTDEFAULT::NumBytes" name="BufferSize" visibility="internal" />
     <map field="D3DXEFFECTDEFAULT::pValue" name="BufferPointer" visibility="internal"/>
@@ -2526,7 +2526,9 @@
     <map method="ID3DXEffect::SetTechnique" property="false" visibility="internal"/>
     <map method="ID3DXEffect::SetRawValue" visibility="internal"/>
 
-    <map param="ID3DXEffectCompiler::GetLiteral::pLiteral" attribute="out" />
+    <map param="ID3DXEffectCompiler::GetLiteral::pLiteral" return="true" attribute="out" />
+    <map method="ID3DXEffectCompiler::Compile.*" visibility="internal" />
+
     <map param="ID3DXAnimationSet::GetSRT::pScale" attribute="out" />
     <map param="ID3DXAnimationSet::GetSRT::pRotation" attribute="out" />
     <map param="ID3DXAnimationSet::GetSRT::pTranslation" attribute="out" />
@@ -2656,6 +2658,11 @@
     <map param="D3DXGetShaderSamplers::pCount" attribute="inout"/>
 
     <map param="D3DXGetShaderConstantTable::ppConstantTable" return="true" attribute="out"/>
+
+    <map param="D3DXCreateEffectPool::ppPool"  attribute="out fast"/>
+    
+    <map param="D3DXCreateEffectCompiler::ppCompiler" attribute="out fast"/>
+    <map param="D3DXCreateEffectCompiler::pSrcData" type="void"/>
 
     <context-clear />
   </mapping>

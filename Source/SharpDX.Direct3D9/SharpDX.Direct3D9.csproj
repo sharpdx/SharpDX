@@ -31,8 +31,10 @@
     <Compile Include="Direct3DEx.cs" />
     <Compile Include="DriverLevel.cs" />
     <Compile Include="Effect.cs" />
+    <Compile Include="EffectCompiler.cs" />
     <Compile Include="EffectDefault.cs" />
     <Compile Include="EffectInstance.cs" />
+    <Compile Include="EffectPool.cs" />
     <Compile Include="Fill3DCallback.cs" />
     <Compile Include="EffectHandle.cs" />
     <Compile Include="Generated\Enumerations.cs" />
