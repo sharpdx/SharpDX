@@ -30,7 +30,7 @@ using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 using MapFlags = SharpDX.Direct3D11.MapFlags;
 
-namespace MiniTri
+namespace MiniCube
 {
     /// <summary>
     /// SharpDX MiniCube Direct3D 11 Sample
@@ -40,7 +40,7 @@ namespace MiniTri
         [STAThread]
         private static void Main()
         {
-            var form = new RenderForm("SharpDX - MiniCube Direct3D 11 Sample");
+            var form = new RenderForm("SharpDX - MiniCube Direct3D11 Sample");
 
             // SwapChain description
             var desc = new SwapChainDescription()

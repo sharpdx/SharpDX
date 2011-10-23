@@ -30,7 +30,7 @@ using Buffer = SharpDX.Direct3D10.Buffer;
 using Device = SharpDX.Direct3D10.Device;
 using DriverType = SharpDX.Direct3D10.DriverType;
 
-namespace MiniTri
+namespace MiniCube
 {
     /// <summary>
     /// SharpDX MiniCube Direct3D 10 Sample
