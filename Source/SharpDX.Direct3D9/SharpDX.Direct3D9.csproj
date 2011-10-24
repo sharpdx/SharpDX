@@ -22,6 +22,7 @@
     <Compile Include="AdapterInformation.cs" />
     <Compile Include="BaseEffect.cs" />
     <Compile Include="BoneCombination.cs" />
+    <Compile Include="Capabilities.cs" />
     <Compile Include="ConstantTable.cs" />
     <Compile Include="AdapterExCollection.cs" />
     <Compile Include="AdapterInformationEx.cs" />

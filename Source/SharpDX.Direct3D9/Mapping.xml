@@ -1999,6 +1999,7 @@
     <map field="PresentationIntervals" type="D3DPRESENT_INTERVAL" />
     <map field="CursorCaps" type="D3DCURSORCAPS" />
     <map field="DevCaps" name="DeviceCaps" type="D3DDEVCAPS" />
+    <map field="DevCaps2" name="DeviceCaps2" type="D3DDEVCAPS2" />
     <map field="PrimitiveMiscCaps" type="D3DPMISCCAPS" />
     <map field="RasterCaps" type="D3DPRASTERCAPS" />
     <map field="ZCmpCaps" name="DepthCompareCaps" type="D3DPCMPCAPS" />
@@ -2006,6 +2007,20 @@
     <map field="DestBlendCaps" name="DestinationBlendCaps" type="D3DPBLENDCAPS" />
     <map field="AlphaCmpCaps" name="AlpaCompareCaps" type="D3DPCMPCAPS" />
     <map field="NumSimultaneousRTs" name="SimultaneousRTCount"/>
+    <map field="TextureCaps" type="D3DPTEXTURECAPS"/>
+    <map field=".*FilterCaps" type="D3DPTFILTERCAPS"/>
+    <map field="TextureAddressCaps" type="D3DPTADDRESSCAPS"/>
+    <map field="VolumeTextureAddressCaps" type="D3DPTADDRESSCAPS"/>
+    <map field="DeclTypes" name="DeclarationTypes" type="D3DDTCAPS"/>
+    <map field="LineCaps" type="D3DLINECAPS"/>
+    <map field="PixelShaderVersion" name="PixelShaderVersion_" visibility="internal"/>
+    <map field="VertexShaderVersion" name="VertexShaderVersion_" visibility="internal"/>
+    <map field="Reserved5" visibility="internal"/>
+    <map field="StencilCaps" type="D3DSTENCILCAPS"/>
+    <map field="FVFCaps" type="D3DFVFCAPS"/>
+    <map field="TextureOpCaps" name="TextureOperationCaps" type="D3DTEXOPCAPS"/>
+    <map field="VertexProcessingCaps" type="D3DVTXPCAPS"/>
+    <map field="ShadeCaps" type="D3DPSHADECAPS"/>
 
     <map struct="D3DCLIPSTATUS9" name="ClipStatus" />
     <map struct="D3DDEVICE_CREATION_PARAMETERS" name="CreationParameters" />
