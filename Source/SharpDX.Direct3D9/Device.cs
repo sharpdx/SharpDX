@@ -679,6 +679,17 @@ namespace SharpDX.Direct3D9
         }
 
         /// <summary>
+        /// Resets the stream source frequency by setting the frequency to 1.
+        /// </summary>
+        /// <param name="stream">The stream index.</param>
+        /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::SetStreamSourceFreq([In] unsigned int StreamNumber,[In] unsigned int Setting)</unmanaged>
+        public SharpDX.Result ResetStreamSourceFrequency(int stream)
+        {
+            return SetStreamSourceFrequency(stream, 1);
+        }
+
+        /// <summary>
         /// Sets the pixel shader constant.
         /// </summary>
         /// <param name="startRegister">The start register.</param>
