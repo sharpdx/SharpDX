@@ -2119,7 +2119,7 @@
     <map method="IDirect3D9::CreateDevice" visibility="internal" />
     <map param="BehaviorFlags" type="D3DCREATE" />
     <map param="pPresentationParameters" attribute="in buffer" />
-    <map method="IDirect3D9::Check(.*)" name="Check$1_" visibility="internal"/>
+    <map method="IDirect3D9::Check(.*)" name="Check$1_" check="false" visibility="internal"/>
     <map param="IDirect3D9::CheckDeviceMultiSampleType::pQualityLevels" attribute="out"/>
     <map param="IDirect3D9::EnumAdapterModes::pMode" return="true" attribute="out"/>
     
