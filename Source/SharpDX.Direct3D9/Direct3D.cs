@@ -197,7 +197,7 @@ namespace SharpDX.Direct3D9
         public bool CheckDeviceMultisampleType(int adapter, DeviceType deviceType, Format surfaceFormat, bool windowed, MultisampleType multisampleType, out int qualityLevels, out Result result)
         {
             result = CheckDeviceMultiSampleType_(adapter, deviceType, surfaceFormat, windowed, multisampleType, out qualityLevels);
-            return result != 0;
+            return result == 0;
         }
 
         /// <summary>
@@ -231,7 +231,7 @@ namespace SharpDX.Direct3D9
         public bool CheckDeviceType(int adapter, DeviceType deviceType, Format adapterFormat, Format backBufferFormat, bool windowed, out Result result)
         {
             result = CheckDeviceType_(adapter, deviceType, adapterFormat, backBufferFormat, windowed);
-            return result != 0;
+            return result == 0;
         }
 
         /// <summary>
