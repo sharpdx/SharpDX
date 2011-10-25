@@ -88,6 +88,7 @@
       <TargetTaskPath>$(TargetTaskDir)$(TargetFileName)</TargetTaskPath>
     </PropertyGroup>
     <MakeDir Condition="!Exists('$(TargetTaskDir)')" Directories="$(TargetTaskDir)" />
+    <Delete Files="@(ReferenceCopyLocalPaths->'$(TargetTaskDir)%(Filename)%(Extension)')" TreatErrorsAsWarnings="true" />
     <!-- Copy References -->
     <Copy SourceFiles="@(ReferenceCopyLocalPaths)" DestinationFiles="@(ReferenceCopyLocalPaths->'$(TargetTaskDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" ContinueOnError="true" />
     <!-- Copy InteropBuilder -->
