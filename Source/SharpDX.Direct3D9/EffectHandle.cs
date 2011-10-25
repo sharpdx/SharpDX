@@ -31,7 +31,7 @@ namespace SharpDX.Direct3D9
         /// <summary>
         /// Defines the behaviour for caching strings. True by default.
         /// </summary>
-        public static bool UseCacheStrings = true;
+        private const bool UseCacheStrings = true;
 
         /// <summary>
         /// Cache of allocated strings.
@@ -121,33 +121,36 @@ namespace SharpDX.Direct3D9
         /// <summary>
         /// marshal free.
         /// </summary>
-        /// <param name="ref">
-        /// The @ref.
-        /// </param>
-        internal void __MarshalFree(ref __Native @ref)
+        /// <param name="__from">The __from.</param>
+        /// <param name="ref">The @ref.</param>
+        internal static void __MarshalFree(ref EffectHandle __from, ref __Native @ref)
         {
         }
 
         /// <summary>
         /// Method to marshal from native to managed struct
         /// </summary>
-        /// <param name="ref">
-        /// The @ref.
-        /// </param>
-        internal void __MarshalFrom(ref __Native @ref)
+        /// <param name="__from">The __from.</param>
+        /// <param name="ref">The @ref.</param>
+        internal static void __MarshalFrom(ref EffectHandle __from, ref __Native @ref)
         {
-            this.pointer = @ref.Pointer;
+            if (@ref.Pointer == IntPtr.Zero)
+                __from = null;
+            else
+                __from.pointer = @ref.Pointer;
         }
 
         /// <summary>
         /// Method to marshal from managed struct tot native
         /// </summary>
-        /// <param name="ref">
-        /// The @ref.
-        /// </param>
-        internal void __MarshalTo(ref __Native @ref)
+        /// <param name="__from">The __from.</param>
+        /// <param name="ref">The @ref.</param>
+        internal static void __MarshalTo(ref EffectHandle __from, ref __Native @ref)
         {
-            @ref.Pointer = pointer;
+            if (__from == null)
+                @ref.Pointer = IntPtr.Zero;
+            else
+                @ref.Pointer = __from.pointer;
         }
 
         /// <inheritdoc/>

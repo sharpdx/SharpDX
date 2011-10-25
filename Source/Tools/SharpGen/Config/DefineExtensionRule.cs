@@ -56,6 +56,11 @@ namespace SharpGen.Config
         public bool _HasCustomMarshal_ { get { return HasCustomMarshal.Value; } set { HasCustomMarshal = value; } } public bool ShouldSerialize_HasCustomMarshal_() { return HasCustomMarshal != null; }
 
         [XmlIgnore]
+        public bool? IsStaticMarshal { get; set; }
+        [XmlAttribute("static-marshal")]
+        public bool _IsStaticMarshal_ { get { return IsStaticMarshal.Value; } set { IsStaticMarshal = value; } } public bool ShouldSerialize_IsStaticMarshal_() { return IsStaticMarshal != null; }
+
+        [XmlIgnore]
         public bool? HasCustomNew { get; set; }
         [XmlAttribute("custom-new")]
         public bool _HasCustomNew_ { get { return HasCustomNew.Value; } set { HasCustomNew = value; } } public bool ShouldSerialize_HasCustomNew_() { return HasCustomNew != null; }

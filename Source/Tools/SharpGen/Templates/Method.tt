@@ -153,9 +153,15 @@
 							}
 						} else {#>
                 <#= param.PublicType.QualifiedName #>.__Native <#= param.TempName #> = <#= ((CsStruct)param.PublicType).GetConstructor() #>;
-<#+							if ((param.IsRefIn || param.IsRef || param.IsIn) && param.HasNativeValueType) {#>
+<#+							if ((param.IsRefIn || param.IsRef || param.IsIn) && param.HasNativeValueType) {
+								if (param.IsStaticMarshal) {#>
+                <#= param.PublicType.QualifiedName #>.__MarshalTo(ref <#= param.Name #>, ref <#= param.TempName #>);
+<#+							
+								} else {#>
                 <#= param.Name #>.__MarshalTo(ref <#= param.TempName #>);
-<#+							}
+<#+
+								} 
+							}
 						}						
 					} else if (param.IsOut) {
 						if (param.IsValueType && !param.IsPrimitive) {#>
@@ -280,8 +286,12 @@
                     <#= param.Name #>[i].__MarshalFrom(ref <#= param.TempName #>_[i]);				
 <#+								} else {#>
                 <#= param.Name #> = new <#= param.PublicType.QualifiedName #>();
+<#+									if (param.IsStaticMarshal) {#>
+                <#= param.PublicType.QualifiedName #>.__MarshalFrom(ref <#= param.Name #>, ref <#= param.TempName #>);
+<#+									} else {#>
                 <#= param.Name #>.__MarshalFrom(ref <#= param.TempName #>);
-<#+								}
+<#+									}
+								}
 						} else if (param.PublicType is CsInterface ) {
 							var paramInterface = param.PublicType as CsInterface;
 							if (param.IsArray) {
@@ -313,11 +323,18 @@
                 for (int i = 0; i < <#= param.Name #>.Length; i++)
                     <#= param.Name #>[i].__MarshalFree(ref <#= param.TempName #>_[i]);
 <#+						} else {
-							if (param.IsRef) {
+							if (param.IsStaticMarshal) {
+								if (param.IsRef) {
+#>                <#= param.PublicType.QualifiedName #>.__MarshalFrom(ref <#= param.Name #>, ref <#= param.TempName #>);
+<#+								}
+#>                <#= param.PublicType.QualifiedName #>.__MarshalFree(ref <#= param.Name #>, ref <#= param.TempName #>);
+<#+							} else {
+								if (param.IsRef) {
 #>                <#= param.Name #>.__MarshalFrom(ref <#= param.TempName #>);
-<#+						}
+<#+								}
 #>                <#= param.Name #>.__MarshalFree(ref <#= param.TempName #>);
-<#+						}
+<#+							}
+						}
 					}
 				}
 

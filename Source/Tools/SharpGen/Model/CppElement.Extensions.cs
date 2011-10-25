@@ -96,7 +96,7 @@ namespace SharpGen.Model
                            if (fromTag.StructPack != null) tag.StructPack = fromTag.StructPack;
                            if (fromTag.StructHasNativeValueType != null) tag.StructHasNativeValueType = fromTag.StructHasNativeValueType;
                            if (fromTag.StructToClass != null) tag.StructToClass = fromTag.StructToClass;
-                           if (fromTag.StructCustomMarshall != null) tag.StructCustomMarshall = fromTag.StructCustomMarshall;
+                           if (fromTag.StructCustomMarshal != null) tag.StructCustomMarshal = fromTag.StructCustomMarshal;
                            if (fromTag.StructCustomNew != null) tag.StructCustomNew = fromTag.StructCustomNew;
                            if (fromTag.StructForceMarshalToToBeGenerated != null)
                                tag.StructForceMarshalToToBeGenerated = fromTag.StructForceMarshalToToBeGenerated;

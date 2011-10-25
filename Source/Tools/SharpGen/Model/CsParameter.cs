@@ -125,6 +125,11 @@ namespace SharpGen.Model
             get { return (PublicType is CsStruct && (PublicType as CsStruct).HasMarshalType) ; }
         }
 
+        public bool IsStaticMarshal
+        {
+            get { return (PublicType is CsStruct && (PublicType as CsStruct).IsStaticMarshal); }
+        }
+
         public bool IsRefInValueTypeOptional
         {
             get { return IsRefIn && IsValueType && !IsArray && IsOptionnal; }

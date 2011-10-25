@@ -119,9 +119,17 @@ namespace SharpGen.Config
         /// True if a struct is using some Custom Marshal (imply StructHasNativeValueType)
         /// </summary>
         [XmlIgnore]
-        public bool? StructCustomMarshall { get; set; }
+        public bool? StructCustomMarshal { get; set; }
         [XmlAttribute("marshal")]
-        public bool _StructCustomMarshall_ { get { return StructCustomMarshall.Value; } set { StructCustomMarshall = value; } } public bool ShouldSerialize_StructCustomMarshall_() { return StructCustomMarshall != null; }
+        public bool _StructCustomMarshal_ { get { return StructCustomMarshal.Value; } set { StructCustomMarshal = value; } } public bool ShouldSerialize_StructCustomMarshal_() { return StructCustomMarshal != null; }
+
+        /// <summary>
+        /// True if a struct is using some Custom Marshal (imply StructHasNativeValueType)
+        /// </summary>
+        [XmlIgnore]
+        public bool? IsStaticMarshal { get; set; }
+        [XmlAttribute("static-marshal")]
+        public bool _IsStaticMarshal_ { get { return IsStaticMarshal.Value; } set { IsStaticMarshal = value; } } public bool ShouldSerialize_IsStaticMarshal_() { return IsStaticMarshal != null; }
 
         /// <summary>
         /// True if a struct is using some a Custom New for the Native struct (imply StructHasNativeValueType)

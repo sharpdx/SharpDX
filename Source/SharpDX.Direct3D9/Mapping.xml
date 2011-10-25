@@ -647,7 +647,7 @@
     <create class="D3D9" />
     <create class="D3DX9" />
 
-    <define struct="SharpDX.Direct3D9.EffectHandle" sizeof="4" marshal="true"/>
+    <define struct="SharpDX.Direct3D9.EffectHandle" sizeof="4" marshal="true" static-marshal="true"/>
 
     <context-clear/>
   </extension>

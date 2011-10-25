@@ -332,6 +332,9 @@ namespace SharpGen.Generator
                                 if (defineRule.HasCustomMarshal.HasValue)
                                     ((CsStruct) defineType).HasMarshalType = defineRule.HasCustomMarshal.Value;
 
+                                if (defineRule.IsStaticMarshal.HasValue)
+                                    ((CsStruct)defineType).IsStaticMarshal = defineRule.IsStaticMarshal.Value;
+
                                 if (defineRule.HasCustomNew.HasValue)
                                     ((CsStruct) defineType).HasCustomNew = defineRule.HasCustomNew.Value;
                             }

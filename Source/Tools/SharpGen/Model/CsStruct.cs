@@ -51,15 +51,11 @@ namespace SharpGen.Model
         protected override void UpdateFromTag(MappingRule tag)
         {
             base.UpdateFromTag(tag);
-
-            if (tag.StructPack != null)
-            {
-                Console.WriteLine("YESSSSSSSSSSSSSSSSSSSSSSSSSSSSSS => {0}", tag.StructPack.Value);
-            }
             Align = tag.StructPack != null ? tag.StructPack.Value : Align;
             HasMarshalType = tag.StructHasNativeValueType != null ? tag.StructHasNativeValueType.Value : false;
             GenerateAsClass = tag.StructToClass != null ? tag.StructToClass.Value : false;
-            HasCustomMarshal = tag.StructCustomMarshall != null ? tag.StructCustomMarshall.Value : false;
+            HasCustomMarshal = tag.StructCustomMarshal != null ? tag.StructCustomMarshal.Value : false;
+            IsStaticMarshal = tag.IsStaticMarshal != null ? tag.IsStaticMarshal.Value : false;
             HasCustomNew = tag.StructCustomNew != null ? tag.StructCustomNew.Value : false;
             IsOut = tag.StructForceMarshalToToBeGenerated != null ? tag.StructForceMarshalToToBeGenerated.Value : false;
 
@@ -84,6 +80,8 @@ namespace SharpGen.Model
         public bool HasMarshalType { get; set; }
 
         public bool HasCustomMarshal { get; set; }
+
+        public bool IsStaticMarshal { get; set; }
 
         public bool GenerateAsClass { get; set; }
 
