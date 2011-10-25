@@ -2689,6 +2689,8 @@
     <map param="D3DXCreateEffectCompiler::ppCompiler" attribute="out fast"/>
     <map param="D3DXCreateEffectCompiler::pSrcData" type="void"/>
 
+    <map param="D3DXGetImageInfoFrom.*::pSrcInfo" return="true" attribute="out"/>
+
     <context-clear />
   </mapping>
 </config>

@@ -51,6 +51,7 @@
     <Compile Include="Generated\Interfaces.cs" />
     <Compile Include="Generated\LocalInterop.cs" />
     <Compile Include="Generated\Structures.cs" />
+    <Compile Include="ImageInformation.cs" />
     <Compile Include="Include.cs" />
     <Compile Include="IncludeShadow.cs" />
     <Compile Include="IndexBuffer.cs" />
