@@ -2307,6 +2307,9 @@
     <map method="IDirect3DPixelShader9::GetFunction" property="false" visibility="internal"/>
     <map param="IDirect3DPixelShader9::GetFunction::pSizeOfData" attribute="inout" />
 
+    <map method="IDirect3DBaseTexture9::[GS]etLOD" visibility="internal" property="false" />
+    <map method="IDirect3DBaseTexture9::([GS]et)(AutoGenFilterType)" name="$1AutoMipGenerationFilter" />
+
     <map param="IDirect3DVolumeTexture9::GetLevelDesc::pDesc" return="true" attribute="out" />
     <map param="IDirect3DVolumeTexture9::GetVolumeLevel::ppVolumeLevel" return="true" attribute="out" />
     <map method="IDirect3DVolumeTexture9::LockBox" visibility="internal" />
@@ -2690,6 +2693,12 @@
     <map param="D3DXCreateEffectCompiler::pSrcData" type="void"/>
 
     <map param="D3DXGetImageInfoFrom.*::pSrcInfo" return="true" attribute="out"/>
+
+    <map param="D3DXFilterTexture::Filter" type="D3DX_FILTER"/>
+    <map param="D3DXFilterTexture::pPalette" attribute="in buffer"/>
+
+    <map param="D3DXSaveTextureToFile.*::ppDestBuf" return="true" attribute="out"/>
+    <map param="D3DXSaveTextureToFile.*::pSrcPalette" attribute="in buffer"/>
 
     <context-clear />
   </mapping>
