@@ -78,7 +78,7 @@ namespace SharpDX.Direct3D9
         /// <unmanaged>HRESULT D3DXSaveTextureToFileW([In] const wchar_t* pDestFile,[In] D3DXIMAGE_FILEFORMAT DestFormat,[In] IDirect3DBaseTexture9* pSrcTexture,[In, Buffer] const PALETTEENTRY* pSrcPalette)</unmanaged>
         public static Result ToFile(BaseTexture texture, string fileName, ImageFileFormat format, PaletteEntry[] palette)
         {
-            return D3DX9.SaveTextureToFileW(fileName, format, texture, null);            
+            return D3DX9.SaveTextureToFileW(fileName, format, texture, palette);            
         }
 
         /// <summary>
