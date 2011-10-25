@@ -122,6 +122,24 @@ namespace SharpDX.Direct3D9
             return new DataRectangle(lockedRect.PBits, lockedRect.Pitch);
         }
 
+        /// <summary>
+        /// Locks a rectangle on a cube texture resource.
+        /// </summary>
+        /// <param name="faceType">Type of the face.</param>
+        /// <param name="level">The level.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="stream">The stream pointing to the locked region.</param>
+        /// <returns>
+        /// A <see cref="DataRectangle"/> describing the region locked.
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3DCubeTexture9::LockRect([In] D3DCUBEMAP_FACES FaceType,[In] unsigned int Level,[In] D3DLOCKED_RECT* pLockedRect,[In] const void* pRect,[In] D3DLOCK Flags)</unmanaged>
+        public DataRectangle LockRectangle(SharpDX.Direct3D9.CubeMapFace faceType, int level, SharpDX.Direct3D9.LockFlags flags, out DataStream stream)
+        {
+            LockedRect lockedRect;
+            LockRectangle(faceType, level, out lockedRect, IntPtr.Zero, flags);
+            stream = new DataStream(lockedRect.PBits, lockedRect.Pitch * GetLevelDescription(level).Height, true, (flags & LockFlags.ReadOnly) == 0);
+            return new DataRectangle(lockedRect.PBits, lockedRect.Pitch);
+        }
 
         /// <summary>
         /// Locks a rectangle on a cube texture resource.
@@ -139,6 +157,29 @@ namespace SharpDX.Direct3D9
             {
                 LockedRect lockedRect;
                 LockRectangle(faceType, level, out lockedRect, new IntPtr(&rectangle), flags);
+                return new DataRectangle(lockedRect.PBits, lockedRect.Pitch);
+            }
+        }
+
+        /// <summary>
+        /// Locks a rectangle on a cube texture resource.
+        /// </summary>
+        /// <param name="faceType">Type of the face.</param>
+        /// <param name="level">The level.</param>
+        /// <param name="rectangle">The rectangle.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="stream">The stream pointing to the locked region.</param>
+        /// <returns>
+        /// A <see cref="DataRectangle"/> describing the region locked.
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3DCubeTexture9::LockRect([In] D3DCUBEMAP_FACES FaceType,[In] unsigned int Level,[In] D3DLOCKED_RECT* pLockedRect,[In] const void* pRect,[In] D3DLOCK Flags)</unmanaged>
+        public DataRectangle LockRectangle(SharpDX.Direct3D9.CubeMapFace faceType, int level, Rectangle rectangle, SharpDX.Direct3D9.LockFlags flags, out DataStream stream)
+        {
+            unsafe
+            {
+                LockedRect lockedRect;
+                LockRectangle(faceType, level, out lockedRect, new IntPtr(&rectangle), flags);
+                stream = new DataStream(lockedRect.PBits, lockedRect.Pitch * GetLevelDescription(level).Height, true, (flags & LockFlags.ReadOnly) == 0);
                 return new DataRectangle(lockedRect.PBits, lockedRect.Pitch);
             }
         }

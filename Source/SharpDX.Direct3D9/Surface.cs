@@ -1068,6 +1068,40 @@ namespace SharpDX.Direct3D9
         }
 
         /// <summary>
+        /// Locks a rectangle on a surface.
+        /// </summary>
+        /// <param name="flags">The type of lock to perform.</param>
+        /// <param name="stream">The stream pointing to the locked region.</param>
+        /// <returns>A pointer to the locked region</returns>
+        /// <unmanaged>HRESULT IDirect3DSurface9::LockRect([Out] D3DLOCKED_RECT* pLockedRect,[In] const void* pRect,[In] D3DLOCK Flags)</unmanaged>
+        public DataRectangle LockRectangle(LockFlags flags, out DataStream stream)
+        {
+            LockedRect lockedRect;
+            LockRectangle(out lockedRect, IntPtr.Zero, flags);
+            stream = new DataStream(lockedRect.PBits, lockedRect.Pitch * Description.Height, true, (flags & LockFlags.ReadOnly) == 0);
+            return new DataRectangle(lockedRect.PBits, lockedRect.Pitch);
+        }
+
+        /// <summary>
+        /// Locks a rectangle on a surface.
+        /// </summary>
+        /// <param name="rect">The rectangle to lock.</param>
+        /// <param name="flags">The type of lock to perform.</param>
+        /// <param name="stream">The stream pointing to the locked region.</param>
+        /// <returns>A pointer to the locked region</returns>
+        /// <unmanaged>HRESULT IDirect3DSurface9::LockRect([Out] D3DLOCKED_RECT* pLockedRect,[In] const void* pRect,[In] D3DLOCK Flags)</unmanaged>
+        public DataRectangle LockRectangle(Rectangle rect, LockFlags flags, out DataStream stream)
+        {
+            unsafe
+            {
+                LockedRect lockedRect;
+                LockRectangle(out lockedRect, new IntPtr(&rect), flags);
+                stream = new DataStream(lockedRect.PBits, lockedRect.Pitch * Description.Height, true, (flags & LockFlags.ReadOnly) == 0);
+                return new DataRectangle(lockedRect.PBits, lockedRect.Pitch);
+            }
+        }
+
+        /// <summary>
         /// Saves a surface to a file.
         /// </summary>
         /// <param name="surface">The surface.</param>
