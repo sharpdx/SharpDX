@@ -239,7 +239,7 @@ namespace SharpDX.Direct3D9
         /// <unmanaged>HRESULT D3DXCreateCubeTextureFromFileExW([In] IDirect3DDevice9* pDevice,[In] const wchar_t* pSrcFile,[In] unsigned int Size,[In] unsigned int MipLevels,[In] unsigned int Usage,[In] D3DFORMAT Format,[In] D3DPOOL Pool,[In] unsigned int Filter,[In] unsigned int MipFilter,[In] D3DCOLOR ColorKey,[In] void* pSrcInfo,[Out, Buffer] PALETTEENTRY* pPalette,[In] IDirect3DCubeTexture9** ppCubeTexture)</unmanaged>
         public static CubeTexture FromFile(Device device, string filename, Usage usage, Pool pool)
         {
-            return FromFile(device, filename, -1, -1, usage, Format.Unknown, pool, Filter.None, Filter.None, 0);
+            return FromFile(device, filename, -1, -1, usage, Format.Unknown, pool, Filter.Default, Filter.Default, 0);
         }
 
         /// <summary>
@@ -347,7 +347,7 @@ namespace SharpDX.Direct3D9
         /// <unmanaged>HRESULT D3DXCreateCubeTextureFromFileInMemoryEx([In] IDirect3DDevice9* pDevice,[In] const void* pSrcData,[In] unsigned int SrcDataSize,[In] unsigned int Size,[In] unsigned int MipLevels,[In] unsigned int Usage,[In] D3DFORMAT Format,[In] D3DPOOL Pool,[In] unsigned int Filter,[In] unsigned int MipFilter,[In] D3DCOLOR ColorKey,[Out] D3DXIMAGE_INFO* pSrcInfo,[Out, Buffer] PALETTEENTRY* pPalette,[In] IDirect3DCubeTexture9** ppCubeTexture)</unmanaged>
         public static CubeTexture FromMemory(Device device, byte[] buffer, Usage usage, Pool pool)
         {
-            return FromMemory(device, buffer, -1, -1, usage, Format.Unknown, pool, Filter.None, Filter.None, 0);
+            return FromMemory(device, buffer, -1, -1, usage, Format.Unknown, pool, Filter.Default, Filter.Default, 0);
         }
 
         /// <summary>
@@ -461,7 +461,7 @@ namespace SharpDX.Direct3D9
         /// <unmanaged>HRESULT D3DXCreateCubeTextureFromFileInMemoryEx([In] IDirect3DDevice9* pDevice,[In] const void* pSrcData,[In] unsigned int SrcDataSize,[In] unsigned int Size,[In] unsigned int MipLevels,[In] unsigned int Usage,[In] D3DFORMAT Format,[In] D3DPOOL Pool,[In] unsigned int Filter,[In] unsigned int MipFilter,[In] D3DCOLOR ColorKey,[Out] D3DXIMAGE_INFO* pSrcInfo,[Out, Buffer] PALETTEENTRY* pPalette,[In] IDirect3DCubeTexture9** ppCubeTexture)</unmanaged>
         public static CubeTexture FromStream(Device device, Stream stream, Usage usage, Pool pool)
         {
-            return FromStream(device, stream, 0, -1, -1, usage, Format.Unknown, pool, Filter.None, Filter.None, 0);
+            return FromStream(device, stream, 0, -1, -1, usage, Format.Unknown, pool, Filter.Default, Filter.Default, 0);
         }
 
         /// <summary>
