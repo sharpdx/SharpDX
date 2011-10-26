@@ -63,5 +63,13 @@ namespace SharpDX.Direct3D11
 
             device.CreateTexture1D(ref description, subResourceDatas, this);
         }
+
+        /// <inheritdoc/>
+        public override int CalculateSubResourceIndex(int mipSlice, int arraySlice, out int mipSize)
+        {
+            var desc = Description;
+            mipSize = CalculateMipSize(mipSlice, desc.Width);
+            return CalculateSubResourceIndex(mipSlice, arraySlice, desc.MipLevels);
+        }
     }
 }
