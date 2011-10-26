@@ -29,7 +29,7 @@ namespace SharpDX.Win32
         /// <returns>A HRESULT code</returns>
         public static Result ToResult(int errorCode)
         {
-            return new Result(((errorCode <= 0) ? (uint)errorCode : (((uint)errorCode & 0x0000FFFF) | (7 << 16) | 0x80000000)));
+            return new Result(((errorCode <= 0) ? unchecked((uint)errorCode) : ((unchecked((uint)errorCode) & 0x0000FFFF) | 0x80070000)));
         }
     }
 }

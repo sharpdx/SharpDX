@@ -29,10 +29,10 @@
     <post>
       #define XINPUT_FLAG_ANY 0
       
-      #define XUSER_INDEX_ONE 1
-      #define XUSER_INDEX_TWO 2
-      #define XUSER_INDEX_THREE 3
-      #define XUSER_INDEX_FOUR 4
+      #define XUSER_INDEX_ONE 0
+      #define XUSER_INDEX_TWO 1
+      #define XUSER_INDEX_THREE 2
+      #define XUSER_INDEX_FOUR 3
     </post>
   </include>
 

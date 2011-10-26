@@ -124,7 +124,7 @@ namespace SharpDX.XInput
             get
             {
                 State temp;
-                return XInput.XInputGetState((int)userIndex, out temp) != ErrorCode.DeviceNotConnected;
+                return XInput.XInputGetState((int)userIndex, out temp) == ErrorCode.Success;
             }
         }
 
