@@ -162,6 +162,127 @@ namespace SharpDX.Direct3D11
         }
 
         /// <summary>
+        /// Maps the data contained in a subresource to a memory pointer, and denies the GPU access to that subresource.
+        /// </summary>
+        /// <param name="resource">The resource.</param>
+        /// <param name="mipSlice">The mip slice.</param>
+        /// <param name="arraySlice">The array slice.</param>
+        /// <param name="mode">The mode.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="stream">The output stream containing the pointer.</param>
+        /// <returns>
+        /// The locked <see cref="SharpDX.DataBox"/>
+        /// </returns>
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
+        public DataBox MapSubresource(Texture1D resource, int mipSlice, int arraySlice, MapMode mode, MapFlags flags, out DataStream stream)
+        {
+            var desc = resource.Description;
+            int sizeInBytes = Resource.CalculateMipSize(mipSlice, desc.Width) * (int)DXGI.FormatHelper.SizeOfInBytes(desc.Format);
+            int subresource = Resource.CalculateSubResourceIndex(mipSlice, arraySlice, desc.MipLevels);
+            var box = MapSubresource(resource, subresource, mode, flags);
+            stream = new DataStream(box.DataPointer, sizeInBytes, true, true);
+            return box;
+        }
+
+        /// <summary>
+        /// Maps the data contained in a subresource to a memory pointer, and denies the GPU access to that subresource.
+        /// </summary>
+        /// <param name="resource">The resource.</param>
+        /// <param name="mipSlice">The mip slice.</param>
+        /// <param name="arraySlice">The array slice.</param>
+        /// <param name="mode">The mode.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="stream">The output stream containing the pointer.</param>
+        /// <returns>
+        /// The locked <see cref="SharpDX.DataBox"/>
+        /// </returns>
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
+        public DataBox MapSubresource(Texture2D resource, int mipSlice, int arraySlice, MapMode mode, MapFlags flags, out DataStream stream)
+        {
+            var desc = resource.Description;
+            int mipHeight = Resource.CalculateMipSize(mipSlice, desc.Height);
+            int subresource = Resource.CalculateSubResourceIndex(mipSlice, arraySlice, desc.MipLevels);
+            var box = MapSubresource(resource, subresource, mode, flags);
+            stream = new DataStream(box.DataPointer, mipHeight * box.RowPitch, true, true);
+            return box;
+        }
+
+        /// <summary>
+        /// Maps the data contained in a subresource to a memory pointer, and denies the GPU access to that subresource.
+        /// </summary>
+        /// <param name="resource">The resource.</param>
+        /// <param name="mipSlice">The mip slice.</param>
+        /// <param name="arraySlice">The array slice.</param>
+        /// <param name="mode">The mode.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="stream">The output stream containing the pointer.</param>
+        /// <returns>
+        /// The locked <see cref="SharpDX.DataBox"/>
+        /// </returns>
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
+        public DataBox MapSubresource(Texture3D resource, int mipSlice, int arraySlice, MapMode mode, MapFlags flags, out DataStream stream)
+        {
+            var desc = resource.Description;
+            int depthIndex = Resource.CalculateMipSize(mipSlice, desc.Depth);
+            int subresource = Resource.CalculateSubResourceIndex(mipSlice, arraySlice, desc.MipLevels);
+            var box = MapSubresource(resource, subresource, mode, flags);
+            stream = new DataStream(box.DataPointer, depthIndex * box.SlicePitch, true, true);
+            return box;
+        }
+
+        /// <summary>
+        /// Maps the data contained in a subresource to a memory pointer, and denies the GPU access to that subresource.
+        /// </summary>
+        /// <param name="resource">The resource.</param>
+        /// <param name="mode">The mode.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="stream">The output stream containing the pointer.</param>
+        /// <returns>
+        /// The locked <see cref="SharpDX.DataBox"/>
+        /// </returns>
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
+        public DataBox MapSubresource(Buffer resource, MapMode mode, MapFlags flags, out DataStream stream)
+        {
+            var box = MapSubresource(resource, 0, mode, flags);
+            stream = new DataStream(box.DataPointer, resource.Description.SizeInBytes, true, true);
+            return box;
+        }
+
+        /// <summary>
+        /// Maps the data contained in a subresource to a memory pointer, and denies the GPU access to that subresource.
+        /// </summary>
+        /// <param name="resource">The resource.</param>
+        /// <param name="subresource">The subresource.</param>
+        /// <param name="mode">The mode.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="stream">The output stream containing the pointer.</param>
+        /// <returns>The locked <see cref="SharpDX.DataBox"/></returns>
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
+        public SharpDX.DataBox MapSubresource(SharpDX.Direct3D11.Resource resource, int subresource, SharpDX.Direct3D11.MapMode mode, SharpDX.Direct3D11.MapFlags flags, out DataStream stream)
+        {
+            int mipLevels;
+            switch (resource.Dimension)
+            {
+                case ResourceDimension.Buffer:
+                    return MapSubresource((Buffer)resource, mode, flags, out stream);
+                case ResourceDimension.Texture1D:
+                    var texture1D = (Texture1D)resource;
+                    mipLevels = texture1D.Description.MipLevels;
+                    return MapSubresource(texture1D, subresource % mipLevels, subresource / mipLevels, mode, flags, out stream);
+                case ResourceDimension.Texture2D:
+                    var texture2D = (Texture2D)resource;
+                    mipLevels = texture2D.Description.MipLevels;
+                    return MapSubresource(texture2D, subresource % mipLevels, subresource / mipLevels, mode, flags, out stream);
+                case ResourceDimension.Texture3D:
+                    var texture3D = (Texture3D)resource;
+                    mipLevels = texture3D.Description.MipLevels;
+                    return MapSubresource(texture3D, subresource % mipLevels, subresource / mipLevels, mode, flags, out stream);
+                default:
+                    throw new InvalidOperationException(string.Format("Resource [{0}] is unsupported for MapSubresource", resource.Dimension));
+            }
+        }
+
+        /// <summary>
         /// Copies data from the CPU to to a non-mappable subresource region.
         /// </summary>
         /// <typeparam name="T">Type of the data to upload</typeparam>

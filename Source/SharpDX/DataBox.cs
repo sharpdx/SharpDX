@@ -54,17 +54,6 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Gets a stream from the <see cref="DataPointer"/>.
-        /// </summary>
-        /// <remarks>
-        /// This methods returns a convenient way to access data.
-        /// </remarks>
-        public DataStream Data
-        {
-            get { return new DataStream(DataPointer, SlicePitch, true, true); }
-        }
-
-        /// <summary>
         /// Pointer to the data.
         /// </summary>
         public IntPtr DataPointer;

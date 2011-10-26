@@ -78,6 +78,38 @@ namespace SharpDX.Direct3D11
             return FromPointer<T>(temp.NativePointer);
         }
 
+        /// <summary>	
+        /// Load a texture from a texture.	
+        /// </summary>
+        /// <param name="context">A reference to a valid <see cref="DeviceContext"/></param>
+        /// <param name="source">Pointer to the source texture. See <see cref="SharpDX.Direct3D11.Resource"/>. </param>
+        /// <param name="destination">Pointer to the destination texture. See <see cref="SharpDX.Direct3D11.Resource"/>. </param>
+        /// <param name="loadInformation">Pointer to texture loading parameters. See <see cref="SharpDX.Direct3D11.TextureLoadInformation"/>. </param>
+        /// <returns>The return value is one of the values listed in {{Direct3D 10 Return Codes}}. </returns>
+        /// <unmanaged>HRESULT D3DX10LoadTextureFromTexture([None] ID3D10Resource* pSrcTexture,[None] D3DX10_TEXTURE_LOAD_INFO* pLoadInfo,[None] ID3D10Resource* pDstTexture)</unmanaged>
+        public static Result LoadTextureFromTexture(DeviceContext context, Resource source, Resource destination, TextureLoadInformation loadInformation)
+        {
+            return D3DX11.LoadTextureFromTexture(context, source, loadInformation, destination);
+        }
+
+        /// <summary>
+        ///   Saves a texture to file.
+        /// </summary>
+        /// <param name = "context">The device used to save the texture.</param>
+        /// <param name = "texture">The texture to save.</param>
+        /// <param name = "format">The format the texture will be saved as.</param>
+        /// <param name = "fileName">Name of the destination output file where the texture will be saved.</param>
+        /// <returns>A <see cref = "T:SharpDX.Result" /> object describing the result of the operation.</returns>
+        public static Result ToFile<T>(DeviceContext context, T texture, ImageFileFormat format, string fileName)
+            where T : Resource
+        {
+            System.Diagnostics.Debug.Assert(typeof(T) == typeof(Texture1D) || typeof(T) == typeof(Texture2D) ||
+                         typeof(T) == typeof(Texture3D));
+
+            return D3DX11.SaveTextureToFile(context, texture, format, fileName);
+        }
+#endif
+
         /// <summary>
         ///   Loads a texture from an image in memory.
         /// </summary>
@@ -158,23 +190,6 @@ namespace SharpDX.Direct3D11
         }
 
         /// <summary>
-        ///   Saves a texture to file.
-        /// </summary>
-        /// <param name = "context">The device used to save the texture.</param>
-        /// <param name = "texture">The texture to save.</param>
-        /// <param name = "format">The format the texture will be saved as.</param>
-        /// <param name = "fileName">Name of the destination output file where the texture will be saved.</param>
-        /// <returns>A <see cref = "T:SharpDX.Result" /> object describing the result of the operation.</returns>
-        public static Result ToFile<T>(DeviceContext context, T texture, ImageFileFormat format, string fileName)
-            where T : Resource
-        {
-            System.Diagnostics.Debug.Assert(typeof (T) == typeof (Texture1D) || typeof (T) == typeof (Texture2D) ||
-                         typeof (T) == typeof (Texture3D));
-
-            return D3DX11.SaveTextureToFile(context, texture, format, fileName);
-        }
-
-        /// <summary>
         ///   Saves a texture to a stream.
         /// </summary>
         /// <param name = "context">The device used to save the texture.</param>
@@ -203,19 +218,33 @@ namespace SharpDX.Direct3D11
             return result;
         }
 
-        /// <summary>	
-        /// Load a texture from a texture.	
+        /// <summary>
+        /// Calculates the sub resource index from the miplevel.
         /// </summary>
-        /// <param name="context">A reference to a valid <see cref="DeviceContext"/></param>
-        /// <param name="source">Pointer to the source texture. See <see cref="SharpDX.Direct3D11.Resource"/>. </param>
-        /// <param name="destination">Pointer to the destination texture. See <see cref="SharpDX.Direct3D11.Resource"/>. </param>
-        /// <param name="loadInformation">Pointer to texture loading parameters. See <see cref="SharpDX.Direct3D11.TextureLoadInformation"/>. </param>
-        /// <returns>The return value is one of the values listed in {{Direct3D 10 Return Codes}}. </returns>
-        /// <unmanaged>HRESULT D3DX10LoadTextureFromTexture([None] ID3D10Resource* pSrcTexture,[None] D3DX10_TEXTURE_LOAD_INFO* pLoadInfo,[None] ID3D10Resource* pDstTexture)</unmanaged>
-        public static Result LoadTextureFromTexture(DeviceContext context, Resource source, Resource destination, TextureLoadInformation loadInformation)
+        /// <param name="mipSlice">A zero-based index for the mipmap level to address; 0 indicates the first, most detailed mipmap level.</param>
+        /// <param name="arraySlice">The zero-based index for the array level to address; always use 0 for volume (3D) textures.</param>
+        /// <param name="mipLevels">Number of mipmap levels in the resource.</param>
+        /// <returns>
+        /// The index which equals MipSlice + (ArraySlice * MipLevels).
+        /// </returns>
+        /// <unmanaged>D3D11CalcSubresource</unmanaged>
+        public static int CalculateSubResourceIndex(int mipSlice, int arraySlice, int mipLevels)
         {
-            return D3DX11.LoadTextureFromTexture(context, source, loadInformation, destination);
+            return (mipLevels * arraySlice) + mipSlice;
         }
-#endif
+
+        /// <summary>
+        /// Calculates the resulting size at a single level for an original size.
+        /// </summary>
+        /// <param name="mipLevel">The mip level to get the size.</param>
+        /// <param name="baseSize">Size of the base.</param>
+        /// <returns>
+        /// Size of the mipLevel
+        /// </returns>
+        public static int CalculateMipSize(int mipLevel, int baseSize)
+        {
+            baseSize = baseSize >> mipLevel;
+            return baseSize > 0 ? baseSize : 1;
+        }
     }
 }
