@@ -22,6 +22,7 @@
     <Compile Include="BoundingBox.cs" />
     <Compile Include="BoundingSphere.cs" />
     <Compile Include="CallbackBase.cs" />
+    <Compile Include="Direct3D\PixHelper.cs" />
     <Compile Include="IO\NativeFile.cs" />
     <Compile Include="IO\NativeFileStream.cs" />
     <Compile Include="IO\NativeFileAccess.cs" />
