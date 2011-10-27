@@ -43,6 +43,14 @@ namespace SharpGen
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this instance is generating doc.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is generating doc; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsGeneratingDoc { get; set; }
+
+        /// <summary>
         /// Gets or sets the path to a C++ document provider assembly.
         /// </summary>
         /// <value>The path to a C++ document provider assembly.</value>
@@ -101,7 +109,8 @@ namespace SharpGen
                                   "Code generator from C++ to C# for .Net languages",
                                   "",
                                   {"g|gccxml=", "Specify the path to gccxml.exe", opt => GccXmlExecutablePath = opt},
-                                  {"d|doc=", "Specify the path to the assembly doc provider [default: null]", opt => DocProviderAssemblyPath = opt},
+                                  {"d|doc", "Specify to generate the documentation [default: false]", opt => IsGeneratingDoc = true},
+                                  {"p|docpath=", "Specify the path to the assembly doc provider [default: null]", opt => DocProviderAssemblyPath = opt},
                                   "",
                                   {"h|help", "Show this message and exit", opt => showHelp = opt != null},
                                   // default
@@ -168,6 +177,7 @@ namespace SharpGen
                 // Run the parser
                 var parser = new Parser.CppParser
                                  {
+                                     IsGeneratingDoc = IsGeneratingDoc,
                                      DocProviderAssembly = DocProviderAssemblyPath,
                                      // @"..\..\..\DocProviderFromMsdn\bin\debug\DocProviderFromMsdn.exe",
                                      ForceParsing = _isAssemblyNew,

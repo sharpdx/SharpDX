@@ -75,6 +75,14 @@
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HtmlAgilityPack, Version=1.4.0.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\External\HtmlAgilityPack\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\External\ICSharpCode.SharpZipLib\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Build" />
     <Reference Include="Microsoft.JScript" />
     <Reference Include="Mono.Options">
@@ -85,6 +93,8 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -131,6 +141,7 @@
     <Compile Include="CppModel\CppParameter.cs" />
     <Compile Include="CppModel\CppStruct.cs" />
     <Compile Include="CppModel\CppType.cs" />
+    <Compile Include="Doc\DocProviderFromMsdn.cs" />
     <Compile Include="Model\CsEnumItem.cs" />
     <Compile Include="Model\InteropMethodSignature.cs" />
     <Compile Include="Generator\EnumTransform.cs" />
@@ -141,8 +152,6 @@
     <Compile Include="Config\ConfigBaseRule.cs" />
     <Compile Include="Generator\TransformBase.cs" />
     <Compile Include="Generator\NamingRulesManager.cs" />
-    <Compile Include="Parser\DocItem.cs" />
-    <Compile Include="Parser\DocProvider.cs" />
     <Compile Include="Parser\GccXml.cs" />
     <Compile Include="Parser\MacroManager.cs" />
     <Compile Include="Parser\CppParser.cs" />
@@ -217,6 +226,10 @@
     <EmbeddedResource Include="Templates\Method.tt">
       <LastGenOutput>Interfaces.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.config" />
+    <Content Include="MSDNDoc.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="RunGenerator.bat" />
     <EmbeddedResource Include="Templates\Header.tt">
       <LastGenOutput>MyTemplate.cs</LastGenOutput>

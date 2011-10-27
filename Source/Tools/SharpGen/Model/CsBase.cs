@@ -402,20 +402,22 @@ namespace SharpGen.Model
         private string RegexReplaceCReference(Match match)
         {
             string matchName = match.Groups[1].Value;
-            var csType = Generator.FindBindType(matchName);
+            var csName = Generator.FindDocName(matchName);
 
             // Tries to match with W::
-            if (csType == null && regextWithMethodW.Match(matchName).Success)
-                csType = Generator.FindBindType(regextWithMethodW.Replace(matchName, "$1W::"));
+            if (csName == null && regextWithMethodW.Match(matchName).Success)
+                csName = Generator.FindDocName(regextWithMethodW.Replace(matchName, "$1W::"));
 
             // Or with W
-            if (csType == null && regexWithTypeW.Match(matchName).Success)
-                csType = Generator.FindBindType(regexWithTypeW.Replace(matchName, "$1W"));
+            if (csName == null && regexWithTypeW.Match(matchName).Success)
+                csName = Generator.FindDocName(regexWithTypeW.Replace(matchName, "$1W"));
 
-            if (csType == null) 
-                return match.Value;
+            if (csName == null) 
+                return matchName;
 
-            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "<see cref=\"{0}\"/>", csType.QualifiedName);
+            if (csName.StartsWith("<"))
+                return csName;
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "<see cref=\"{0}\"/>", csName);
         }
     }
 }

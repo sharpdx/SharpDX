@@ -23,9 +23,12 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
+
+using SharpCore;
 using SharpCore.Logging;
 using SharpGen.Config;
 using SharpGen.CppModel;
+using SharpGen.Doc;
 
 namespace SharpGen.Parser
 {
@@ -75,6 +78,14 @@ namespace SharpGen.Parser
         {
             ForceParsing = false;
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is generating doc.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is generating doc; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsGeneratingDoc { get; set; }
 
         /// <summary>
         /// Gets or sets the doc provider assembly.
@@ -386,7 +397,10 @@ namespace SharpGen.Parser
                     if (xmlReader != null)
                     {
                         Parse(xmlReader);
-                        ApplyDocumentation();
+
+                        // If doc must be generated
+                        if (IsGeneratingDoc)
+                            ApplyDocumentation();
                     }
 
                     Logger.Progress(30, progressMessage);
@@ -1403,33 +1417,30 @@ namespace SharpGen.Parser
         /// </summary>
         private void ApplyDocumentation()
         {
-            if (DocProviderAssembly == null)
-                return;
+            // Use default MSDN doc provider
+            DocProvider docProvider = new DocProviderMsdn();
 
-            DocProvider docProvider = null;
-            try
+            // Try to load doc provider from an external assembly
+            if (DocProviderAssembly != null)
             {
-                var assembly = Assembly.LoadFrom(DocProviderAssembly);
-
-                foreach (var type in assembly.GetTypes())
+                try
                 {
-                    if (typeof(DocProvider).IsAssignableFrom(type))
+                    var assembly = Assembly.LoadFrom(DocProviderAssembly);
+
+                    foreach (var type in assembly.GetTypes())
                     {
-                        docProvider = (DocProvider)Activator.CreateInstance(type);
-                        break;
+                        if (typeof(DocProvider).IsAssignableFrom(type))
+                        {
+                            docProvider = (DocProvider)Activator.CreateInstance(type);
+                            break;
+                        }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                Logger.Warning("Warning, Unable to locate/load DocProvider Assembly.");
-                return;
-            }
-
-            if (docProvider == null)
-            {
-                Logger.Warning("Warning, DocProvider was not found from assembly [{0}]", DocProviderAssembly);
-                return;
+                catch (Exception ex)
+                {
+                    Logger.Warning("Warning, Unable to locate/load DocProvider Assembly.");
+                    Logger.Warning("Warning, DocProvider was not found from assembly [{0}]", DocProviderAssembly);
+                }
             }
 
             Logger.Progress(20, "Applying C++ documentation");

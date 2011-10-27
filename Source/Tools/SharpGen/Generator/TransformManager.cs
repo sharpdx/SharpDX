@@ -41,6 +41,7 @@ namespace SharpGen.Generator
     {
         private readonly List<string> _includesToProcess = new List<string>();
         private readonly Dictionary<string, List<CsVariable>> _mapConstantToCSharpType = new Dictionary<string, List<CsVariable>>();
+        private readonly Dictionary<string, string> _docToCSharp = new Dictionary<string, string>();
         private readonly Dictionary<string, Tuple<CsTypeBase, CsTypeBase>> _mapCppNameToCSharpType = new Dictionary<string, Tuple<CsTypeBase, CsTypeBase>>();
         private readonly Dictionary<string, CsTypeBase> _mapDefinedCSharpType = new Dictionary<string, CsTypeBase>();
 
@@ -413,6 +414,8 @@ namespace SharpGen.Generator
                             CppModule.Tag<CppParameter>(mappingRule.Parameter, mappingRule);
                         else if (mappingRule.Element != null)
                             CppModule.Tag<CppElement>(mappingRule.Element, mappingRule);
+                        else if (mappingRule.DocItem != null)
+                            AddDocLink(mappingRule.DocItem, mappingRule.MappingNameFinal);
                     }
                     else if (configRule is ContextRule)
                     {
@@ -970,6 +973,17 @@ namespace SharpGen.Generator
         }
 
         /// <summary>
+        /// Adds a doc link.
+        /// </summary>
+        /// <param name="cppName">Name of the CPP.</param>
+        /// <param name="cSharpName">Name of the c sharp.</param>
+        public void AddDocLink(string cppName, string cSharpName)
+        {
+            if (!_docToCSharp.ContainsKey(cppName))
+                _docToCSharp.Add(cppName, cSharpName);
+        }
+
+        /// <summary>
         /// Gets the short C# name of a fully qualified C# name
         /// </summary>
         /// <param name="typeName">Name of the type.</param>
@@ -1063,6 +1077,24 @@ namespace SharpGen.Generator
             _mapCppNameToCSharpType.TryGetValue(cppName, out typeMap);
             if (typeMap == null) return null;
             return typeMap.Item1;
+        }
+
+        /// <summary>
+        ///   Finds the C# full name from a C++ name.
+        /// </summary>
+        /// <param name = "cppName">Name of a c++ type</param>
+        /// <returns>Name of the C# type</returns>
+        public string FindDocName(string cppName)
+        {
+            string cSharpName = null;
+            if (_docToCSharp.TryGetValue(cppName, out cSharpName))
+                return cSharpName;
+
+            var cSharpType = FindBindType(cppName);
+            if (cSharpType != null)
+                return cSharpType.QualifiedName;
+
+            return null;
         }
 
         /// <summary>

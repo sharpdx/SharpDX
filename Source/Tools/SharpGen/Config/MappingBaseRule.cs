@@ -47,6 +47,8 @@ namespace SharpGen.Config
         public string Element { get; set; }
         [XmlAttribute("variable")]
         public string Variable { get; set; }
+        [XmlAttribute("doc")]
+        public string DocItem { get; set; }
 
         public override string ToString()
         {
