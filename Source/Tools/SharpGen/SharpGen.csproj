@@ -227,9 +227,6 @@
       <LastGenOutput>Interfaces.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.config" />
-    <Content Include="MSDNDoc.zip">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Include="RunGenerator.bat" />
     <EmbeddedResource Include="Templates\Header.tt">
       <LastGenOutput>MyTemplate.cs</LastGenOutput>
