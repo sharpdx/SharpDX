@@ -34,7 +34,7 @@ namespace SharpGen.Model
     /// <summary>
     /// Root class for all model elements.
     /// </summary>
-    public class CsBase
+    public class CsBase : ICloneable
     {
         private List<CsBase> _items;
         private CppElement _cppElement;
@@ -418,6 +418,11 @@ namespace SharpGen.Model
             if (csName.StartsWith("<"))
                 return csName;
             return string.Format(System.Globalization.CultureInfo.InvariantCulture, "<see cref=\"{0}\"/>", csName);
+        }
+
+        public virtual object Clone()
+        {
+            return MemberwiseClone();
         }
     }
 }

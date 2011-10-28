@@ -177,6 +177,19 @@ namespace SharpDX.Direct3D10
                                                     SharpDX.Direct3D10.ShaderResourceView[] shaderResourceViewsRef);
 
             /// <summary>
+            ///   Bind an array of shader resources to the shader stage.
+            /// </summary>
+            /// <remarks>
+            ///   If an overlapping resource view is already bound to an output slot, such as a rendertarget, then this API will fill the destination shader resource slot with NULL.For information about creating shader-resource views, see <see cref = "SharpDX.Direct3D10.Device.CreateShaderResourceView" />. The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10.
+            /// </remarks>
+            /// <param name = "startSlot">Index into the device's zero-based array to begin setting shader resources to (ranges from 0 to D3D10_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1).</param>
+            /// <param name = "numViews">Number of shader resources to set. Up to a maximum of 128 slots are available for shader resources (ranges from 0 to D3D10_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot).</param>
+            /// <param name = "shaderResourceViewsRef">Array of {{shader resource view}} interfaces to set to the device.</param>
+            /// <unmanaged>void PSSetShaderResources([In] UINT StartSlot,[In] UINT NumViews,[In, Buffer] const ID3D10ShaderResourceView** ppShaderResourceViews)</unmanaged>
+            public abstract void SetShaderResources(int startSlot, int numViews,
+                                                    SharpDX.ComArray<SharpDX.Direct3D10.ShaderResourceView> shaderResourceViewsRef);
+
+            /// <summary>
             ///   Set an array of sampler states to the shader pipeline stage.
             /// </summary>
             /// <remarks>
@@ -189,6 +202,18 @@ namespace SharpDX.Direct3D10
             public abstract void SetSamplers(int startSlot, int numSamplers,
                                              SharpDX.Direct3D10.SamplerState[] samplersRef);
 
+            /// <summary>
+            ///   Set an array of sampler states to the shader pipeline stage.
+            /// </summary>
+            /// <remarks>
+            ///   Any sampler may be set to NULL; this invokes the default state, which is defined to be the following.StateDefault ValueFilterD3D10_FILTER_MIN_MAG_MIP_LINEARAddressUD3D10_TEXTURE_ADDRESS_CLAMPAddressVD3D10_TEXTURE_ADDRESS_CLAMPAddressWD3D10_TEXTURE_ADDRESS_CLAMPMipLODBias0MaxAnisotropy1ComparisonFuncD3D10_COMPARISON_NEVERBorderColor[0]1.0fBorderColor[1]1.0fBorderColor[2]1.0fBorderColor[3]1.0fMinLOD-FLT_MAXMaxLODFLT_MAX  The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10.
+            /// </remarks>
+            /// <param name = "startSlot">Index into the device's zero-based array to begin setting samplers to (ranges from 0 to D3D10_COMMONSHADER_SAMPLER_SLOT_COUNT - 1).</param>
+            /// <param name = "numSamplers">Number of samplers in the array. Each pipeline stage has a total of 16 sampler slots available (ranges from 0 to D3D10_COMMONSHADER_SAMPLER_SLOT_COUNT - StartSlot).</param>
+            /// <param name = "samplersRef">Pointer to an array of sampler-state interfaces (see <see cref = "SharpDX.Direct3D10.SamplerState" />). See Remarks.</param>
+            /// <unmanaged>void PSSetSamplers([In] UINT StartSlot,[In] UINT NumSamplers,[In, Buffer] const ID3D10SamplerState** ppSamplers)</unmanaged>
+            public abstract void SetSamplers(int startSlot, int numSamplers,
+                                             SharpDX.ComArray<SharpDX.Direct3D10.SamplerState> samplersRef);
 
             /// <summary>
             ///   Set the constant buffers used by the shader pipeline stage.
@@ -202,6 +227,18 @@ namespace SharpDX.Direct3D10
             /// <unmanaged>void PSSetConstantBuffers([In] UINT StartSlot,[In] UINT NumBuffers,[In, Buffer] const ID3D10Buffer** ppConstantBuffers)</unmanaged>
             public abstract void SetConstantBuffers(int startSlot, int numBuffers,
                                                     SharpDX.Direct3D10.Buffer[] constantBuffersRef);
+
+            /// <summary>
+            ///   Set the constant buffers used by the shader pipeline stage.
+            /// </summary>
+            /// <remarks>
+            ///   The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10.
+            /// </remarks>
+            /// <param name = "startSlot">Index into the device's zero-based array to begin setting constant buffers to (ranges from 0 to D3D10_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1).</param>
+            /// <param name = "numBuffers">Number of buffers to set (ranges from 0 to D3D10_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot).</param>
+            /// <param name = "constantBuffersRef">Array of constant buffers (see <see cref = "SharpDX.Direct3D10.Buffer" />) being given to the device.</param>
+            /// <unmanaged>void PSSetConstantBuffers([In] UINT StartSlot,[In] UINT NumBuffers,[In, Buffer] const ID3D10Buffer** ppConstantBuffers)</unmanaged>
+            public abstract void SetConstantBuffers(int startSlot, int numBuffers, SharpDX.ComArray<SharpDX.Direct3D10.Buffer> constantBuffersRef);
         }
     }
 }

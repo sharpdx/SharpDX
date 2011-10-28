@@ -168,7 +168,7 @@
                 <#= param.Name #> = new <#= param.PublicType.QualifiedName #>();
 <#+						} else if ( param.IsBoolToInt && !param.IsArray ) {#>
                 int <#= param.TempName #>;
-<#+						} else if (param.PublicType is CsInterface) {
+<#+						} else if (param.IsComObject) {
 							if (param.IsArray) {
 								if (param.IsOptionnal) {#>
                 IntPtr* <#= param.TempName #> = stackalloc IntPtr[<#= param.Name #> == null ? 0 : <#= param.Name #>.Length];
@@ -183,7 +183,7 @@
 						}
 					} else if (param.IsArray) {
 						// Handle Array Of Interface [In]
-						if (param.PublicType is CsInterface) {
+						if (param.IsComObject) {
 							if (param.IsIn && param.IsOptionnal) {#>
                 IntPtr* <#= param.TempName #> = (IntPtr*)0;
                 if ( <#= param.Name #> != null ) {
@@ -292,7 +292,7 @@
                 <#= param.Name #>.__MarshalFrom(ref <#= param.TempName #>);
 <#+									}
 								}
-						} else if (param.PublicType is CsInterface ) {
+						} else if (param.IsComObject ) {
 							var paramInterface = param.PublicType as CsInterface;
 							if (param.IsArray) {
 								if (param.IsOptionnal) {#>

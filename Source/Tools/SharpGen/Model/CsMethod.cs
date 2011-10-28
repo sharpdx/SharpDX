@@ -248,9 +248,12 @@ namespace SharpGen.Model
             }
         }
 
-        public object Clone()
+        public override object Clone()
         {
-            var  method = (CsMethod)MemberwiseClone();
+            var method = (CsMethod)base.Clone();
+
+            // Clear cached parameters
+            method._parameters = null;
             method.ClearItems();
             foreach (var parameter in Parameters)
                 method.Add((CsParameter) parameter.Clone());

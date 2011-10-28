@@ -151,6 +151,9 @@ namespace SharpGen.Generator
 
                 MethodTranform.Process(cSharpMethod);
 
+                // Add specialized method for ComArray
+                CreateMethodsForComArrayMethod(interfaceType, cSharpMethod);
+
                 //MapMethod(cSharpMethod);
                 //RegisterNativeInterop(cSharpMethod);
 
@@ -159,22 +162,14 @@ namespace SharpGen.Generator
 
             // Dispatch method to inner interface if any
             var mapInnerInterface = new Dictionary<string, CsInterface>();
-            foreach (var keyValuePair in _mapMoveMethodToInnerInterface)
+
+            // Make a copy of the methods
+            var methods = interfaceType.Methods.ToList();
+            foreach (var csMethod in methods)
             {
-                foreach (var cppMethod in cppInterface.Methods)
+                string cppName = interfaceType.CppElementName + "::" + csMethod.CppElement.Name;
+                foreach (var keyValuePair in _mapMoveMethodToInnerInterface)
                 {
-                    CsMethod csMethod = null;
-                    foreach (var newCSharpMethod in interfaceType.Methods)
-                    {
-                        if (newCSharpMethod.CppElement == cppMethod)
-                        {
-                            csMethod = newCSharpMethod;
-                            break;
-                        }
-                    }
-
-                    string cppName = interfaceType.CppElementName + "::" + cppMethod.Name;
-
                     if (keyValuePair.Key.Match(cppName).Success)
                     {
                         string innerInterfaceName = keyValuePair.Value.InnerInterface;
@@ -187,7 +182,7 @@ namespace SharpGen.Generator
                         {
                             if (!mapInnerInterface.TryGetValue(parentInterfaceName, out parentCsInterface))
                             {
-                                parentCsInterface = new CsInterface(null) {Name = parentInterfaceName};
+                                parentCsInterface = new CsInterface(null) { Name = parentInterfaceName };
                                 mapInnerInterface.Add(parentInterfaceName, parentCsInterface);
                             }
                         }
@@ -196,19 +191,17 @@ namespace SharpGen.Generator
                         {
                             // TODO custom cppInterface?
                             innerCsInterface = new CsInterface(cppInterface)
-                                                   {
-                                                       Name = innerInterfaceName,
-                                                       PropertyAccesName = keyValuePair.Value.PropertyAccessName,
-                                                       Base = parentCsInterface ?? DefaultInterfaceCppObject
-                                                   };
+                                { Name = innerInterfaceName, PropertyAccesName = keyValuePair.Value.PropertyAccessName, Base = parentCsInterface ?? DefaultInterfaceCppObject };
 
                             // Add inner interface to root interface
                             interfaceType.Add(innerCsInterface);
                             // Move method to inner interface
                             mapInnerInterface.Add(innerInterfaceName, innerCsInterface);
                         }
+
                         interfaceType.Remove(csMethod);
                         innerCsInterface.Add(csMethod);
+                        break;
                     }
                 }
             }
@@ -303,6 +296,26 @@ namespace SharpGen.Generator
                     interfaceType.Base = null;
                 if (interfaceType.Base == null)
                     interfaceType.Base = DefaultCallbackable;
+            }
+        }
+
+        private static void CreateMethodsForComArrayMethod(CsInterface interfaceType, CsMethod csMethod)
+        {
+            foreach (var csParameter in csMethod.Parameters)
+            {
+                // Look for at least one parameter ComArray candidate
+                if (csParameter.IsInComArrayLike)
+                {
+                    // Create a new method and transforms all array of ComObject to ComArray<ComObject>
+                    var newMethod = (CsMethod)csMethod.Clone();
+                    foreach (var csSubParameter in newMethod.Parameters)
+                    {
+                        if (csSubParameter.IsInComArrayLike)
+                            csSubParameter.PublicType = new CsComArray((CsInterface)csSubParameter.PublicType);
+                    }
+                    interfaceType.Add(newMethod);
+                    break;
+                }
             }
         }
 

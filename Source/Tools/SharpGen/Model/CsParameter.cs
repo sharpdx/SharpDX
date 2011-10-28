@@ -24,7 +24,7 @@ using SharpGen.Config;
 
 namespace SharpGen.Model
 {
-    public class CsParameter : CsMarshalBase, ICloneable
+    public class CsParameter : CsMarshalBase
     {
         private bool _isFast;
 
@@ -69,7 +69,7 @@ namespace SharpGen.Model
                 }
                 if (Attribute == CsParameterAttribute.Out && !IsBoolToInt)
                     return true;
-                if (IsArray)
+                if (IsArray && !IsComArray)
                     return true;
                 return false;
             }
@@ -83,6 +83,30 @@ namespace SharpGen.Model
         public bool IsRef
         {
             get { return Attribute == CsParameterAttribute.Ref; }
+        }
+
+        public bool IsComArray
+        {
+            get
+            {
+                return PublicType is CsComArray;
+            }
+        }
+
+        public bool IsInComArrayLike
+        {
+            get
+            {
+                return IsArray && IsComObject && !IsOut;
+            }
+        }
+
+        public bool IsComObject
+        {
+            get
+            {
+                return PublicType.GetType() == typeof(CsInterface);
+            }
         }
 
         public bool IsRefIn
@@ -168,7 +192,7 @@ namespace SharpGen.Model
                 else
                     builder.Append(PublicType.QualifiedName);
 
-                if (IsArray && PublicType.Name != "string")
+                if (IsArray && PublicType.Name != "string" && !IsComArray)
                     builder.Append("[]");
                 builder.Append(" ");
                 builder.Append(Name);
@@ -187,6 +211,10 @@ namespace SharpGen.Model
         {
             get
             {
+                // All ComArray are handle the same way
+                if (IsComArray)
+                    return "(void*)((" + Name + " == null)?IntPtr.Zero:" + Name + ".NativePointer)";
+
                 if (IsOut)
                 {
                     if (PublicType is CsInterface)
@@ -205,6 +233,9 @@ namespace SharpGen.Model
                         //{
                         //    return TempName;
                         //}
+                        if (IsComArray)
+                            return Name;
+
                         return TempName;
                     }
                     if (IsFixed && !HasNativeValueType)
@@ -280,9 +311,9 @@ namespace SharpGen.Model
             }
         }
 
-        public object Clone()
+        public override object Clone()
         {
-            var parameter = (CsParameter)MemberwiseClone();
+            var parameter = (CsParameter)base.Clone();
             parameter.Parent = null;
             return parameter;
         }

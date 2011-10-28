@@ -142,6 +142,7 @@
     <Compile Include="CppModel\CppStruct.cs" />
     <Compile Include="CppModel\CppType.cs" />
     <Compile Include="Doc\DocProviderFromMsdn.cs" />
+    <Compile Include="Model\CsComArray.cs" />
     <Compile Include="Model\CsEnumItem.cs" />
     <Compile Include="Model\InteropMethodSignature.cs" />
     <Compile Include="Generator\EnumTransform.cs" />

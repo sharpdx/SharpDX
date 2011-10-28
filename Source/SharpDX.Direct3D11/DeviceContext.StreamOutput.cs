@@ -35,7 +35,7 @@ namespace SharpDX.Direct3D11
             {
                 if (bufferBindings == null)
                 {
-                    SetTargets(0, null, null);
+                    SetTargets(0, (Buffer[])null, null);
                 }
                 else
                 {
