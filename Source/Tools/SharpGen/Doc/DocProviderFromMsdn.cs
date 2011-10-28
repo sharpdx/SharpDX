@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -32,11 +33,14 @@ namespace SharpGen.Doc
             ArchiveName = "MSDNDoc.zip";
             UseArchive = true;
             mapReplaceName = new Dictionary<Regex, string>();
-            //ReplaceName("IDirectSound(?<name>[3A-Za-z]*)::(?<method>.*)$", @"IDirectSound${name}8::${method}");
-            //ReplaceName("IDirectSound(?<name>[3A-Za-z]*)$", @"IDirectSound${name}8");
+            ReplaceName("IDirectSound(?<name>[3A-Za-z]*)::(?<method>.*)$", @"IDirectSound${name}8::${method}");
+            ReplaceName("IDirectSound(?<name>[3A-Za-z]*)$", @"IDirectSound${name}8");
+            ReplaceName("IDirectInput(?<name>[A-Za-z]*)([0-9]?|[0-9]A)::(?<method>.*)$", @"IDirectInput${name}8::${method}");
+            ReplaceName("IDirectInput(?<name>[A-Za-z]*)([0-9]?|[0-9]A)$", @"IDirectInput${name}8");
             ReplaceName("W::", @"::");
             ReplaceName("([a-z0-9])A::", @"$1::");
             ReplaceName("W$", @"");
+            ReplaceName("^_+", @"");
         }
 
         public void ReplaceName(string fromNameRegex, string toName)
@@ -483,6 +487,9 @@ namespace SharpGen.Doc
         }
 
 
+
+        private static Regex matchId = new Regex(@"/([a-zA-Z0-9]+)(\(.+\).*|\.[a-zA-Z]+)?$");
+
         public static string GetShortId(string name)
         {
             try
@@ -509,20 +516,16 @@ namespace SharpGen.Doc
                         if (hrefAttribute != null)
                         {
                             var contentUrl = hrefAttribute.Value;
-                            var indexOfId = contentUrl.LastIndexOf('/') + 1;
-                            if (indexOfId > 0 && indexOfId < contentUrl.Length)
-                            {
-                                var lastIndex = contentUrl.IndexOf('(', indexOfId);
-                                if (lastIndex < 0)
-                                    lastIndex = contentUrl.Length;
-                                return contentUrl.Substring(indexOfId, lastIndex - indexOfId);
-                            }
+                            var match = matchId.Match(contentUrl);
+                            if (match.Success)
+                                return match.Groups[1].Value;
                         }
                     }
                 }
             } 
             catch (Exception ex)
             {
+                Logger.Warning("Unable to get id for [{0}]", name);
             }
 
             return string.Empty;
