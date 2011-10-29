@@ -207,11 +207,11 @@ namespace SharpGen.Generator
             }
 
             // Remove dispatched methods from outer interface
-            foreach (var innerInterface in mapInnerInterface)
-            {
-                foreach (var method in innerInterface.Value.Methods)
-                    cppInterface.Remove(method.CppElement);
-            }
+            //foreach (var innerInterface in mapInnerInterface)
+            //{
+            //    foreach (var method in innerInterface.Value.Methods)
+            //        cppInterface.Remove(method.CppElement);
+            //}
 
             // If interfaceType is DualCallback, then need to generate a default implem
             if (interfaceType.IsDualCallback)
