@@ -370,7 +370,8 @@
     <map param="pStrides" type="void" pointer="*" array="0" />
     <map param="pOffsets" type="void" pointer="*" array="0" />
     <map method="ID3D(\d+)DeviceContext::[A-Z][A-Z]SetShader" visibility="internal override" />
-    <map method="ID3D(\d+)DeviceContext::[A-Z][A-Z]SetShaderResources" visibility="public override" />
+    <map method="ID3D(\d+)DeviceContext::[A-Z][A-Z]SetShaderResources" visibility="internal override" />
+    <map param="ID3D(\d+)DeviceContext::[A-Z][A-Z]SetShaderResources::ppShaderResourceViews" type="void" />
     <map method="ID3D(\d+)DeviceContext::[A-Z][A-Z]SetSamplers" visibility="public override" />
     <map method="ID3D(\d+)DeviceContext::[A-Z][A-Z]GetShader" visibility="internal override" />
     <map method="ID3D(\d+)DeviceContext::[A-Z][A-Z]SetConstantBuffers" visibility="public override" />

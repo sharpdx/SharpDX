@@ -105,9 +105,12 @@ namespace SharpDX.Direct3D11
             /// <param name = "resourceView">Resource view to attach</param>
             public void SetShaderResource(int slot, ShaderResourceView resourceView)
             {
-                SetShaderResources(slot, 1, new[] { resourceView });
+                IntPtr localPointer = resourceView.NativePointer;
+                unsafe
+                {
+                    SetShaderResources(slot, 1, new IntPtr(&localPointer));
+                }
             }
-
 
             /// <summary>
             ///   Get the shader resources.
@@ -148,6 +151,33 @@ namespace SharpDX.Direct3D11
             internal abstract void GetConstantBuffers(int startSlot, int numBuffers,
                                                       SharpDX.Direct3D11.Buffer[] constantBuffersRef);
 
+
+            /// <summary>
+            ///   Bind an array of shader resources to the shader stage.
+            /// </summary>
+            /// <remarks>
+            ///   If an overlapping resource view is already bound to an output slot, such as a rendertarget, then this API will fill the destination shader resource slot with NULL.For information about creating shader-resource views, see <see cref = "SharpDX.Direct3D11.Device.CreateShaderResourceView" />. The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10.
+            /// </remarks>
+            /// <param name = "startSlot">Index into the device's zero-based array to begin setting shader resources to (ranges from 0 to D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1).</param>
+            /// <param name = "numViews">Number of shader resources to set. Up to a maximum of 128 slots are available for shader resources (ranges from 0 to D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot).</param>
+            /// <param name = "shaderResourceViewsOut">Array of {{shader resource view}} interfaces to set to the device.</param>
+            /// <unmanaged>void PSSetShaderResources([In] UINT StartSlot,[In] UINT NumViews,[In, Buffer] const ID3D11ShaderResourceView** ppShaderResourceViews)</unmanaged>
+            public void SetShaderResources(int startSlot, int numViews, SharpDX.Direct3D11.ShaderResourceView[] shaderResourceViewsOut)
+            {
+                unsafe
+                {
+                    IntPtr* shaderResourceViewsOut_ = (IntPtr*)0;
+                    if (shaderResourceViewsOut != null)
+                    {
+                        IntPtr* shaderResourceViewsOut__ = stackalloc IntPtr[shaderResourceViewsOut.Length];
+                        shaderResourceViewsOut_ = shaderResourceViewsOut__;
+                        for (int i = 0; i < shaderResourceViewsOut.Length; i++)
+                            shaderResourceViewsOut_[i] = (shaderResourceViewsOut[i] == null) ? IntPtr.Zero : shaderResourceViewsOut[i].NativePointer;
+                    }
+                    SetShaderResources(startSlot, numViews, (IntPtr)shaderResourceViewsOut_);
+                }
+            }
+
             /// <summary>
             ///   Bind an array of shader resources to the shader stage.
             /// </summary>
@@ -158,8 +188,23 @@ namespace SharpDX.Direct3D11
             /// <param name = "numViews">Number of shader resources to set. Up to a maximum of 128 slots are available for shader resources (ranges from 0 to D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot).</param>
             /// <param name = "shaderResourceViewsRef">Array of {{shader resource view}} interfaces to set to the device.</param>
             /// <unmanaged>void PSSetShaderResources([In] UINT StartSlot,[In] UINT NumViews,[In, Buffer] const ID3D11ShaderResourceView** ppShaderResourceViews)</unmanaged>
-            public abstract void SetShaderResources(int startSlot, int numViews,
-                                                    SharpDX.Direct3D11.ShaderResourceView[] shaderResourceViewsRef);
+            public void SetShaderResources(int startSlot, int numViews,
+                                                    SharpDX.ComArray<SharpDX.Direct3D11.ShaderResourceView> shaderResourceViewsRef)
+            {
+                SetShaderResources(startSlot, numViews, shaderResourceViewsRef.NativePointer);
+            }
+
+            /// <summary>
+            ///   Bind an array of shader resources to the shader stage.
+            /// </summary>
+            /// <remarks>
+            ///   If an overlapping resource view is already bound to an output slot, such as a rendertarget, then this API will fill the destination shader resource slot with NULL.For information about creating shader-resource views, see <see cref = "SharpDX.Direct3D11.Device.CreateShaderResourceView" />. The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10.
+            /// </remarks>
+            /// <param name = "startSlot">Index into the device's zero-based array to begin setting shader resources to (ranges from 0 to D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1).</param>
+            /// <param name = "numViews">Number of shader resources to set. Up to a maximum of 128 slots are available for shader resources (ranges from 0 to D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot).</param>
+            /// <param name = "shaderResourceViewsRef">Array of {{shader resource view}} interfaces to set to the device.</param>
+            /// <unmanaged>void PSSetShaderResources([In] UINT StartSlot,[In] UINT NumViews,[In, Buffer] const ID3D11ShaderResourceView** ppShaderResourceViews)</unmanaged>
+            internal abstract void SetShaderResources(int startSlot, int numViews, IntPtr shaderResourceViewsRef);
 
             /// <summary>
             ///   Set an array of sampler states to the shader pipeline stage.
@@ -188,19 +233,6 @@ namespace SharpDX.Direct3D11
             public abstract void SetConstantBuffers(int startSlot, int numBuffers,
                                                     SharpDX.Direct3D11.Buffer[] constantBuffersRef);
 
-
-            /// <summary>
-            ///   Bind an array of shader resources to the shader stage.
-            /// </summary>
-            /// <remarks>
-            ///   If an overlapping resource view is already bound to an output slot, such as a rendertarget, then this API will fill the destination shader resource slot with NULL.For information about creating shader-resource views, see <see cref = "SharpDX.Direct3D11.Device.CreateShaderResourceView" />. The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10.
-            /// </remarks>
-            /// <param name = "startSlot">Index into the device's zero-based array to begin setting shader resources to (ranges from 0 to D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1).</param>
-            /// <param name = "numViews">Number of shader resources to set. Up to a maximum of 128 slots are available for shader resources (ranges from 0 to D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot).</param>
-            /// <param name = "shaderResourceViewsRef">Array of {{shader resource view}} interfaces to set to the device.</param>
-            /// <unmanaged>void PSSetShaderResources([In] UINT StartSlot,[In] UINT NumViews,[In, Buffer] const ID3D11ShaderResourceView** ppShaderResourceViews)</unmanaged>
-            public abstract void SetShaderResources(int startSlot, int numViews,
-                                                    SharpDX.ComArray<SharpDX.Direct3D11.ShaderResourceView> shaderResourceViewsRef);
 
             /// <summary>
             ///   Set an array of sampler states to the shader pipeline stage.
