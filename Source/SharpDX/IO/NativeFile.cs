@@ -118,6 +118,77 @@ namespace SharpDX.IO
         [DllImport("kernel32.dll", EntryPoint = "SetEndOfFile", SetLastError = true, CharSet = CharSet.Auto)]
         internal static extern bool SetEndOfFile(IntPtr handle);
 
+#if WIN8
+
+        private enum FILE_INFO_BY_HANDLE_CLASS : int
+        {
+            FileBasicInfo = 0,
+
+            FileStandardInfo = 1,
+
+            FileNameInfo = 2,
+
+            FileRenameInfo = 3,
+
+            FileDispositionInfo = 4,
+
+            FileAllocationInfo = 5,
+
+            FileEndOfFileInfo = 6,
+
+            FileStreamInfo = 7,
+
+            FileCompressionInfo = 8,
+
+            FileAttributeTagInfo = 9,
+
+            FileIdBothDirectoryInfo = 10, // 0xA
+            FileIdBothDirectoryRestartInfo = 11, // 0xB
+            FileIoPriorityHintInfo = 12, // 0xC
+            FileRemoteProtocolInfo = 13, // 0xD
+            FileFullDirectoryInfo = 14, // 0xE
+            FileFullDirectoryRestartInfo = 15, // 0xF
+            FileStorageInfo = 16, // 0x10
+            FileAlignmentInfo = 17, // 0x11
+            MaximumFileInfoByHandlesClass
+        };
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct FILE_STANDARD_INFO
+        {
+            public long AllocationSize;
+
+            public long EndOfFile;
+
+            public int NumberOfLinks;
+
+            public int DeletePending;
+
+            public int Directory;
+        };
+
+        [DllImport("kernel32.dll", EntryPoint = "GetFileInformationByHandleEx", SetLastError = true, CharSet = CharSet.Auto)]
+        private static extern bool GetFileInformationByHandleEx(IntPtr handle, FILE_INFO_BY_HANDLE_CLASS FileInformationClass, IntPtr lpFileInformation, int dwBufferSize);
+
+        /// <summary>
+        /// Gets the size of the file.
+        /// </summary>
+        /// <param name="handle">The handle.</param>
+        /// <param name="fileSize">Size of the file.</param>
+        /// <returns></returns>
+        /// <unmanaged>GetFileSizeEx</unmanaged>
+        internal static bool GetFileSizeEx(IntPtr handle, out long fileSize)
+        {
+            FILE_STANDARD_INFO info;
+            unsafe
+            {
+                var result = GetFileInformationByHandleEx(handle, FILE_INFO_BY_HANDLE_CLASS.FileStandardInfo, new IntPtr(&info), Utilities.SizeOf<FILE_STANDARD_INFO>());
+                fileSize = info.AllocationSize;
+                return result;
+            }
+        }
+
+#else
         /// <summary>
         /// Gets the size of the file.
         /// </summary>
@@ -127,5 +198,7 @@ namespace SharpDX.IO
         /// <unmanaged>GetFileSizeEx</unmanaged>
         [DllImport("kernel32.dll", EntryPoint = "GetFileSizeEx", SetLastError = true, CharSet = CharSet.Auto)]
         internal static extern bool GetFileSizeEx(IntPtr handle, out long fileSize);
+#endif
+
     }
 }
