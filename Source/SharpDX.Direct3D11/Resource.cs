@@ -108,7 +108,6 @@ namespace SharpDX.Direct3D11
 
             return D3DX11.SaveTextureToFile(context, texture, format, fileName);
         }
-#endif
 
         /// <summary>
         ///   Loads a texture from an image in memory.
@@ -217,6 +216,7 @@ namespace SharpDX.Direct3D11
 
             return result;
         }
+#endif
 
         /// <summary>
         /// Calculates the sub resource index from a miplevel.
