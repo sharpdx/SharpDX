@@ -48,7 +48,7 @@ namespace SharpDX.IO
 #else
             handle = NativeFile.Create(fileName, access, share, IntPtr.Zero, fileMode, NativeFileOptions.None, IntPtr.Zero);
 #endif
-            if (handle.ToInt32() == -1)
+            if (handle == new IntPtr(-1))
                 throw new IOException(string.Format("Unable to open file {0}", fileName), Marshal.GetLastWin32Error());
 
             // TODO setup correctly canRead, canWrite, canSeek flags

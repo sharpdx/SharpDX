@@ -121,8 +121,12 @@
     <Compile Include="Win32\ComStringEnumerator.cs" />
     <Compile Include="Win32\SecurityAttributes.cs" />
     <Compile Include="Windows\RenderLoop.cs" />
-    <Compile Include="Windows\RenderControl.cs" />
-    <Compile Include="Windows\RenderForm.cs" />
+    <Compile Include="Windows\RenderControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Windows\RenderForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Mapping-core.xml">

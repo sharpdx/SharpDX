@@ -83,7 +83,7 @@ namespace SharpDX
             }
 
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            public unsafe delegate int QueryInterfaceDelegate(IntPtr thisObject, Guid* guid, out IntPtr output);
+            public delegate int QueryInterfaceDelegate(IntPtr thisObject, IntPtr guid, out IntPtr output);
 
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
             public delegate int AddRefDelegate(IntPtr thisObject);
@@ -91,10 +91,13 @@ namespace SharpDX
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
             public delegate int ReleaseDelegate(IntPtr thisObject);
 
-            protected unsafe static int QueryInterfaceImpl(IntPtr thisObject, Guid* guid, out IntPtr output)
+            protected static int QueryInterfaceImpl(IntPtr thisObject, IntPtr guid, out IntPtr output)
             {
                 var shadow = ToShadow<ComObjectShadow>(thisObject);
-                return shadow.QueryInterfaceImpl(thisObject, ref *guid, out output);
+                unsafe
+                {
+                    return shadow.QueryInterfaceImpl(thisObject, ref *((Guid*)guid), out output);
+                }
             }
 
             protected static int AddRefImpl(IntPtr thisObject)

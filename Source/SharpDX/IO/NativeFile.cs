@@ -183,7 +183,7 @@ namespace SharpDX.IO
             unsafe
             {
                 var result = GetFileInformationByHandleEx(handle, FILE_INFO_BY_HANDLE_CLASS.FileStandardInfo, new IntPtr(&info), Utilities.SizeOf<FILE_STANDARD_INFO>());
-                fileSize = info.AllocationSize;
+                fileSize = info.EndOfFile;
                 return result;
             }
         }

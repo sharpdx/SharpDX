@@ -46,7 +46,6 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Text;
 using SharpDX.Direct3D;
 
 namespace SharpDX.D3DCompiler
@@ -689,6 +688,16 @@ namespace SharpDX.D3DCompiler
                 return bytecode;
             }
         }
+
+        /// <summary>
+        /// Saves to the specified file name.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        public void Save(string fileName)
+        {
+            using (var stream = new FileStream(fileName, FileMode.Create, FileAccess.Write)) 
+                Save(stream);
+        }
 #endif
 
         /// <summary>	
@@ -836,16 +845,6 @@ namespace SharpDX.D3DCompiler
         {
             var buffer = Utilities.ReadStream(stream);
             return new ShaderBytecode(buffer);
-        }
-
-        /// <summary>
-        /// Saves to the specified file name.
-        /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        public void Save(string fileName)
-        {
-            using (var stream = new FileStream(fileName, FileMode.Create, FileAccess.Write)) 
-                Save(stream);
         }
 
         /// <summary>

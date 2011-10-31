@@ -118,6 +118,11 @@ namespace SharpDX.Tests
                 // Try to read again
                 length = stream.Read(buffer, 0, buffer.Length);
                 Assert.True(length == 0);
+
+                // Rewind
+                stream.Position = 0;
+                var buffer2 = Utilities.ReadStream(stream);
+                Assert.True(buffer2.Length == size);
             }
 
             // Loads a file
@@ -141,7 +146,7 @@ namespace SharpDX.Tests
 
 
         [Test]
-        public void Test()
+        public void TestNative()
         {
             isTestingNativeFileStream = true;
             CoreTestAll();
@@ -153,5 +158,13 @@ namespace SharpDX.Tests
             isTestingNativeFileStream = false;
             CoreTestAll();
         }
+
+        [Test]
+        [ExpectedException("System.IO.IOException")]
+        public void CheckFileStreamException()
+        {            
+            var test = new NativeFileStream("blabla", NativeFileMode.Open, NativeFileAccess.Read);
+        }
+
     }
 }

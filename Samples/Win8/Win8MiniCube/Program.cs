@@ -68,6 +68,8 @@ namespace Win8MiniCube
             /// <inheritdoc/>
             public void Run()
             {
+                var path = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
+
                 // Enable compatibility with Direct2D
                 var defaultDevice = new Device(DriverType.Hardware, DeviceCreationFlags.BgraSupport);
 
@@ -80,14 +82,18 @@ namespace Win8MiniCube
                 // Because d3dcompiler_44.dll is not in the path, use precompiled fx files
                 // var vertexShaderByteCode = ShaderBytecode.CompileFromFile("MiniCube.fx", "VS", "vs_4_0", ShaderFlags.None, EffectFlags.None);
                 // vertexShaderByteCode.Save("MiniCube_VS.fxo");
-                var vertexShaderByteCode = ShaderBytecode.Load("MiniCube_VS.fxo");
+                ShaderBytecode vertexShaderByteCode;
+                using (var stream = new NativeFileStream(path + "\\MiniCube_VS.fxo", NativeFileMode.Open, NativeFileAccess.Read))
+                    vertexShaderByteCode = ShaderBytecode.Load(stream);
                 var vertexShader = new VertexShader(device, vertexShaderByteCode);
 
                 // Because d3dcompiler_44.dll is not in the path, use precompiled fx files
                 // var pixelShaderByteCode = ShaderBytecode.CompileFromFile("MiniCube.fx", "PS", "ps_4_0", ShaderFlags.None, EffectFlags.None);
                 // pixelShaderByteCode.Save("MiniCube_PS.fxo");
-                var pixelShaderByteCode = ShaderBytecode.Load("MiniCube_PS.fxo");
-                var pixelShader = new PixelShader(device, pixelShaderByteCode);
+                ShaderBytecode pixelShaderByteCode;
+                using (var stream = new NativeFileStream(path + "\\MiniCube_PS.fxo", NativeFileMode.Open, NativeFileAccess.Read))
+                    pixelShaderByteCode = ShaderBytecode.Load(stream);
+                var pixelShader = new PixelShader(device, pixelShaderByteCode); 
 
                 // Layout from VertexShader input signature
                 var layout = new InputLayout(device, vertexShaderByteCode, new[]

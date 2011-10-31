@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Globalization;
 
 namespace SharpDX
 {
@@ -66,7 +67,7 @@ namespace SharpDX
         /// <param name="message">The message describing the exception.</param>
         /// <param name="args">formatting arguments</param>
         public SharpDXException(Result result, string message, params object[] args)
-            : base(string.Format(message, args))
+            : base(string.Format(CultureInfo.InvariantCulture, message, args))
         {
             this.m_Result = result;
         }
@@ -87,7 +88,7 @@ namespace SharpDX
         /// <param name = "innerException">The exception that caused this exception.</param>
         /// <param name="args">formatting arguments</param>
         public SharpDXException(string message, Exception innerException, params object[] args)
-            : base(string.Format(message, args), innerException)
+            : base(string.Format(CultureInfo.InvariantCulture, message, args), innerException)
         {
             this.m_Result = Result.Fail;
         }

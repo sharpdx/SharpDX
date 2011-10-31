@@ -47,7 +47,7 @@ namespace SharpDX
         internal CppObjectShadow Find(Type type)
         {
             for (int i = 0; i < entries.Count; i++)
-                if (entries[i].Type == type)
+                if (ReferenceEquals(entries[i].Type,type))
                     return entries[i].Shadow;
             return null;
         }

@@ -92,31 +92,13 @@ namespace SharpDX
         ///   <c>true</c> if reading from the buffer should be allowed; otherwise, <c>false</c>.</param>
         /// <param name = "canWrite">
         ///   <c>true</c> if writing to the buffer should be allowed; otherwise, <c>false</c>.</param>
-        public DataStream(Array userBuffer, bool canRead, bool canWrite)
+        public static DataStream Create<T>(T[] userBuffer, bool canRead, bool canWrite) where T : struct
         {
             unsafe
             {
-                int num;
                 if (userBuffer == null)
-                {
                     throw new ArgumentNullException("userBuffer");
-                }
-                GCHandle handle = GCHandle.Alloc(userBuffer, GCHandleType.Pinned);
-
-                _gCHandle = handle;
-                IntPtr ptr = _gCHandle.AddrOfPinnedObject();
-                _buffer = (sbyte*) ptr.ToPointer();
-                if (userBuffer.Length == 0)
-                {
-                    num = 0;
-                }
-                else
-                {
-                    num = Marshal.SizeOf(userBuffer.GetValue(new [] {0}))*userBuffer.Length;
-                }
-                _size = num;
-                _canRead = canRead;
-                _canWrite = canWrite;
+                return new DataStream(Interop.Fixed(userBuffer), userBuffer.Length, canRead, canWrite, false);
             }
         }
 

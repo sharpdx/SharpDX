@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Globalization;
 using System.Runtime.InteropServices;
 
 namespace SharpDX.Direct3D11
@@ -292,7 +293,7 @@ namespace SharpDX.Direct3D11
                     mipLevels = texture3D.Description.MipLevels;
                     return MapSubresource(texture3D, subresource % mipLevels, subresource / mipLevels, mode, flags, out stream);
                 default:
-                    throw new InvalidOperationException(string.Format("MapSubresource is not supported for Resource [{0}]", resource.Dimension));
+                    throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "MapSubresource is not supported for Resource [{0}]", resource.Dimension));
             }
         }
 

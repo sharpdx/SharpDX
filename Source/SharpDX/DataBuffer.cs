@@ -49,32 +49,20 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref = "SharpDX.DataBuffer" /> class, using a managed buffer as a backing store.
+        /// Creates the specified user buffer.
         /// </summary>
-        /// <param name = "userBuffer">A managed array to be used as a backing store.</param>
-        public DataBuffer(Array userBuffer)
+        /// <typeparam name="T"></typeparam>
+        /// <param name="userBuffer">The user buffer.</param>
+        /// <param name="canRead">if set to <c>true</c> [can read].</param>
+        /// <param name="canWrite">if set to <c>true</c> [can write].</param>
+        /// <returns></returns>
+        public static DataBuffer Create<T>(T[] userBuffer, bool canRead, bool canWrite) where T : struct
         {
             unsafe
             {
-                int num;
                 if (userBuffer == null)
-                {
                     throw new ArgumentNullException("userBuffer");
-                }
-                GCHandle handle = GCHandle.Alloc(userBuffer, GCHandleType.Pinned);
-
-                _gCHandle = handle;
-                IntPtr ptr = _gCHandle.AddrOfPinnedObject();
-                _buffer = (sbyte*)ptr.ToPointer();
-                if (userBuffer.Length == 0)
-                {
-                    num = 0;
-                }
-                else
-                {
-                    num = Marshal.SizeOf(userBuffer.GetValue(0)) * userBuffer.Length;
-                }
-                _size = num;
+                return new DataBuffer(Interop.Fixed(userBuffer), userBuffer.Length, false);
             }
         }
 

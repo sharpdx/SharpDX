@@ -173,7 +173,7 @@ namespace SharpDX.Multimedia
             if ( Read(buffer, 0, (int)Length) != Length)
                 throw new InvalidOperationException("Unable to get a valid DataStream");
 
-            return new DataStream(buffer, true, true);
+            return DataStream.Create(buffer, true, true);
         }
 
         /// <summary>
