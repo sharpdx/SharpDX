@@ -129,7 +129,7 @@ namespace SharpDX
             if (value == null)
                 return false;
 
-            if (value.GetType() != GetType())
+            if (!ReferenceEquals(value.GetType(), typeof(Size)))
                 return false;
 
             return Equals((Size) value);

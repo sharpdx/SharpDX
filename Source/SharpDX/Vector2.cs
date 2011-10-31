@@ -1332,7 +1332,7 @@ namespace SharpDX
             if (value == null)
                 return false;
 
-            if (value.GetType() != GetType())
+            if (!ReferenceEquals(value.GetType(), typeof(Vector2)))
                 return false;
 
             return Equals((Vector2)value);

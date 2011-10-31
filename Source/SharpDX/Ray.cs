@@ -363,7 +363,7 @@ namespace SharpDX
             if (value == null)
                 return false;
 
-            if (value.GetType() != GetType())
+            if (!ReferenceEquals(value.GetType(), typeof(Ray)))
                 return false;
 
             return Equals((Ray)value);

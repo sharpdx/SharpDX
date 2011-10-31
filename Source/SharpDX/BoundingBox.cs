@@ -427,7 +427,7 @@ namespace SharpDX
             if (value == null)
                 return false;
 
-            if (value.GetType() != GetType())
+            if (!ReferenceEquals(value.GetType(), typeof(BoundingBox)))
                 return false;
 
             return Equals((BoundingBox)value);

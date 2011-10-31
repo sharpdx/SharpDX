@@ -134,7 +134,7 @@ namespace SharpDX
             {
                 return false;
             }
-            if (obj.GetType() != base.GetType())
+            if (!ReferenceEquals(obj.GetType(), typeof(Half2)))
             {
                 return false;
             }

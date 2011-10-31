@@ -39,7 +39,7 @@ namespace SharpDX.XACT3
         {
             this.audioEngine = audioEngine;
             isAudioEngineReadonly = true;
-            soundBankSourceStream = stream as DataStream ?? new DataStream(Utilities.ReadStream(stream), true, true);
+            soundBankSourceStream = stream as DataStream ?? DataStream.Create(Utilities.ReadStream(stream), true, true);
             audioEngine.CreateSoundBank(soundBankSourceStream.DataPointer, (int)soundBankSourceStream.Length, 0, 0, this);
         }
 

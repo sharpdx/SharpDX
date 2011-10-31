@@ -46,6 +46,8 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
+
 using SharpDX.Direct3D;
 
 namespace SharpDX.D3DCompiler

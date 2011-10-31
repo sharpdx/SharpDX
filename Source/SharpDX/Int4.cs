@@ -640,7 +640,7 @@ namespace SharpDX
             if (value == null)
                 return false;
 
-            if (value.GetType() != GetType())
+            if (!ReferenceEquals(value.GetType(), typeof(Int4)))
                 return false;
 
             return Equals((Int4) value);
