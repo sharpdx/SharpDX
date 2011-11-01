@@ -89,7 +89,13 @@ namespace SharpDX.Multimedia
             public WaveFormat.__Native waveFormat;
             public ushort samplesPerBlock;
             public ushort numberOfCoefficients;
-            public fixed int coefficients[7];
+            public int coefficients;
+            public int coefficients2;
+            public int coefficients3;
+            public int coefficients4;
+            public int coefficients5;
+            public int coefficients6;
+            public int coefficients7;
 
             // Method to free native struct
             internal unsafe void __MarshalFree()
@@ -105,7 +111,7 @@ namespace SharpDX.Multimedia
             this.Coefficients = new int[@ref.numberOfCoefficients];
             if (@ref.numberOfCoefficients > 7)
                 throw new InvalidOperationException("Unable to read Adpcm format. Too may coefficients (max 7)");
-            fixed(int* pCoefs = @ref.coefficients)
+            fixed(int* pCoefs = &@ref.coefficients)
             for (int i = 0; i < @ref.numberOfCoefficients; i++)
                 this.Coefficients[i] = pCoefs[i];
             this.extraSize = (short) (4 + 4*Coefficients.Length);
@@ -120,7 +126,7 @@ namespace SharpDX.Multimedia
             this.__MarshalTo(ref @ref.waveFormat);
             @ref.samplesPerBlock = this.samplesPerBlock;
             @ref.numberOfCoefficients = (ushort)this.Coefficients.Length;
-            fixed (int* pCoefs = @ref.coefficients)
+            fixed (int* pCoefs = &@ref.coefficients)
                 for (int i = 0; i < @ref.numberOfCoefficients; i++)
                     pCoefs[i] = this.Coefficients[i];
         }
