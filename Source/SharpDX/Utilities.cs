@@ -182,13 +182,7 @@ namespace SharpDX
         public static Guid GetGuidFromType(Type type)
         {
 #if WIN8
-            var attributes = type.GetTypeInfo().GetCustomAttributes(typeof(GuidAttribute), true);
-            if (attributes.Length == 0)
-            {
-                return Guid.Empty;
-            }
-            return new Guid(((GuidAttribute)attributes[0]).Value);
-            //return type.GetTypeInfo().GUID;
+            return type.GetTypeInfo().GUID;
 #else
             return type.GUID;
 #endif

@@ -23,6 +23,7 @@
 // -----------------------------------------------------------------------------
 
 using System;
+using System.Globalization;
 using System.Runtime.InteropServices;
 
 namespace SharpDX.Multimedia
@@ -127,7 +128,7 @@ namespace SharpDX.Multimedia
         /// </summary>
         public override string ToString()
         {
-            return String.Format("{0} wBitsPerSample:{1} ChannelMask:{2} SubFormat:{3} extraSize:{4}",
+            return String.Format(CultureInfo.InvariantCulture, "{0} wBitsPerSample:{1} ChannelMask:{2} SubFormat:{3} extraSize:{4}",
                 base.ToString(),
                 wValidBitsPerSample,
                 ChannelMask,

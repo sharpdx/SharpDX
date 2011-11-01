@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 #if !WIN8
 using System;
+using System.Globalization;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 
@@ -127,7 +128,7 @@ namespace SharpDX.Windows
                     {
                         if (Win32Native.GetMessage(out msg, _windowHandle, 0, 0) == -1)
                         {
-                            throw new InvalidOperationException(String.Format(
+                            throw new InvalidOperationException(String.Format(CultureInfo.InvariantCulture,
                                 "An error happened in rendering loop while processing windows messages. Error: {0}",
                                 Marshal.GetLastWin32Error()));
                         }

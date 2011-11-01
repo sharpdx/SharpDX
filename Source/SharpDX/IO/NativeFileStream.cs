@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
 
@@ -49,7 +50,7 @@ namespace SharpDX.IO
             handle = NativeFile.Create(fileName, access, share, IntPtr.Zero, fileMode, NativeFileOptions.None, IntPtr.Zero);
 #endif
             if (handle == new IntPtr(-1))
-                throw new IOException(string.Format("Unable to open file {0}", fileName), Marshal.GetLastWin32Error());
+                throw new IOException(string.Format(CultureInfo.InvariantCulture, "Unable to open file {0}", fileName), Marshal.GetLastWin32Error());
 
             // TODO setup correctly canRead, canWrite, canSeek flags
             canRead = true;
