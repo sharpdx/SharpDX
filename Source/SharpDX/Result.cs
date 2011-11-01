@@ -30,8 +30,9 @@ namespace SharpDX
     public struct Result : IEquatable<Result>
     {
         private int _code;
+#if !WIN8
         private static MethodInfo _methodGetErrorDescription;
-
+#endif
         /// <summary>
         /// Initializes a new instance of the <see cref="Result"/> struct.
         /// </summary>
@@ -152,8 +153,10 @@ namespace SharpDX
         /// </returns>
         public override string ToString()
         {
+#if !WIN8
             if (_methodGetErrorDescription != null)
                 return _methodGetErrorDescription.Invoke(null, new object[] {_code}).ToString();
+#endif
             return string.Format(System.Globalization.CultureInfo.InvariantCulture, "Unknown error (HRESULT = 0x{0:X})", _code);
         }
 
