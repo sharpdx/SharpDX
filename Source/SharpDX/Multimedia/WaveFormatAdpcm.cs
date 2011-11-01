@@ -28,7 +28,6 @@ namespace SharpDX.Multimedia
     /// http://msdn.microsoft.com/en-us/library/microsoft.directx_sdk.xaudio2.adpcmwaveformat%28v=vs.85%29.aspx
     /// </summary>
     /// <unmanaged>WAVEFORMATADPCM</unmanaged>
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 2)]
     public class WaveFormatAdpcm : WaveFormat
     {
         private ushort samplesPerBlock;

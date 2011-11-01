@@ -33,7 +33,6 @@ namespace SharpDX.Multimedia
     /// http://www.microsoft.com/whdc/device/audio/multichaud.mspx
     /// </summary>
     /// <unmanaged>WAVEFORMATEXTENSIBLE</unmanaged>
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 2)]
     public class WaveFormatExtensible : WaveFormat
     {
         short wValidBitsPerSample; // bits of precision, or is wSamplesPerBlock if wBitsPerSample==0        

@@ -33,7 +33,6 @@ namespace SharpDX.Multimedia
     /// Represents a Wave file format
     /// </summary>
     /// <unmanaged>WAVEFORMATEX</unmanaged>
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 2)]
     public class WaveFormat
     {
         /// <summary>format type</summary>
