@@ -49,6 +49,32 @@ namespace SharpDX.Direct3D11
         }
 
         /// <summary>
+        /// Determines whether asynhronous query data is available.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns>
+        ///   <c>true</c> if asynhronous query data is available; otherwise, <c>false</c>.
+        /// </returns>
+        /// <unmanaged>HRESULT ID3D11DeviceContext::GetData([In] ID3D11Asynchronous* pAsync,[Out, Buffer, Optional] void* pData,[In] unsigned int DataSize,[In] D3D11_ASYNC_GETDATA_FLAG GetDataFlags)</unmanaged>
+        public bool IsDataAvailable(Asynchronous data)
+        {
+            return IsDataAvailable( data, AsynchronousFlags.None );
+        }
+
+        /// <summary>
+        /// Determines whether asynhronous query data is available.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns>
+        ///   <c>true</c> if asynhronous query data is available; otherwise, <c>false</c>.
+        /// </returns>
+        /// <unmanaged>HRESULT ID3D11DeviceContext::GetData([In] ID3D11Asynchronous* pAsync,[Out, Buffer, Optional] void* pData,[In] unsigned int DataSize,[In] D3D11_ASYNC_GETDATA_FLAG GetDataFlags)</unmanaged>
+        public bool IsDataAvailable(Asynchronous data, AsynchronousFlags flags)
+        {
+            return GetDataInternal(data, IntPtr.Zero, 0, flags) == Result.Ok;
+        }
+
+        /// <summary>
         ///   Gets data from the GPU asynchronously.
         /// </summary>
         /// <param name = "data">The asynchronous data provider.</param>
@@ -69,6 +95,20 @@ namespace SharpDX.Direct3D11
         }
 
         /// <summary>
+        /// Gets data from the GPU asynchronously.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data">The asynchronous data provider.</param>
+        /// <param name="result">The data retrieved from the GPU.</param>
+        /// <returns>
+        /// True if result contains valid data, false otherwise.
+        /// </returns>
+        public bool GetData<T>(Asynchronous data, out T result) where T : struct
+        {
+            return GetData(data, AsynchronousFlags.None, out result);
+        }
+
+        /// <summary>
         ///   Gets data from the GPU asynchronously.
         /// </summary>
         /// <param name = "data">The asynchronous data provider.</param>
@@ -76,7 +116,7 @@ namespace SharpDX.Direct3D11
         /// <returns>The data retrieved from the GPU.</returns>
         public DataStream GetData(Asynchronous data, AsynchronousFlags flags)
         {
-            DataStream result = new DataStream(data.DataSize, true, true);
+            var result = new DataStream(data.DataSize, true, true);
             GetDataInternal(data, result.DataPointer, (int) result.Length, flags);
             return result;
         }
@@ -89,18 +129,30 @@ namespace SharpDX.Direct3D11
         /// <returns>The data retrieved from the GPU.</returns>
         public T GetData<T>(Asynchronous data, AsynchronousFlags flags) where T : struct
         {
+            T result;
+            GetData<T>(data, flags, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Gets data from the GPU asynchronously.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data">The asynchronous data provider.</param>
+        /// <param name="flags">Flags specifying how the command should operate.</param>
+        /// <param name="result">The data retrieved from the GPU.</param>
+        /// <returns>
+        /// True if result contains valid data, false otherwise.
+        /// </returns>
+        public bool GetData<T>(Asynchronous data, AsynchronousFlags flags, out T result) where T : struct
+        {
             unsafe
             {
-                int size = Marshal.SizeOf(typeof (T));
-                // TODO, verify if stackalloc is a good place to store async data
-                byte* pBuffer = stackalloc byte[size];
-                var stream = new DataStream((IntPtr)pBuffer, size, true, true);
-
-                GetDataInternal(data, stream.DataPointer, size, flags);
-
-                return stream.Read<T>();
+                result = default(T);
+                return GetDataInternal(data, (IntPtr)Interop.Fixed(ref result), Utilities.SizeOf<T>(), flags) == Result.Ok;
             }
         }
+
 
         /// <summary>	
         /// Copy the entire contents of the source resource to the destination resource using the GPU. 	
