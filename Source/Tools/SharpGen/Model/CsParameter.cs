@@ -219,8 +219,12 @@ namespace SharpGen.Model
                 {
                     if (PublicType is CsInterface)
                     {
-                        if (IsArray && IsOptionnal)
-                            return Name + "==null?(void*)0:" + TempName;
+                        if (IsArray)
+                        {
+                            if (IsOptionnal)
+                                return Name + "==null?(void*)0:" + TempName;
+                            return TempName;
+                        }
                         return "&" + TempName;
                     }
                     if (IsArray)
