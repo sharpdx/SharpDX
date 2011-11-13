@@ -33,6 +33,7 @@ namespace SharpDX.Direct3D9
         /// </summary>
         /// <param name="device">The device.</param>
         /// <param name="function">The function.</param>
+        /// <unmanaged>HRESULT IDirect3DDevice9::CreatePixelShader([In] const void* pFunction,[Out, Fast] IDirect3DPixelShader9** ppShader)</unmanaged>	
         public PixelShader(Device device, ShaderBytecode function)
         {
             device.CreatePixelShader(function.BufferPointer, this);

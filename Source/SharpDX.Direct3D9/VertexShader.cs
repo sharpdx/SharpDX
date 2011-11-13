@@ -33,6 +33,7 @@ namespace SharpDX.Direct3D9
         /// </summary>
         /// <param name="device">The device.</param>
         /// <param name="function">The function.</param>
+        /// <unmanaged>HRESULT IDirect3DDevice9::CreateVertexShader([In] const void* pFunction,[Out, Fast] IDirect3DVertexShader9** ppShader)</unmanaged>	
         public VertexShader(Device device, ShaderBytecode function)
         {
             device.CreateVertexShader(function.BufferPointer, this);

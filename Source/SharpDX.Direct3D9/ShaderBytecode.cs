@@ -154,6 +154,16 @@ namespace SharpDX.Direct3D9
         }
 
         /// <summary>
+        /// Gets the size of the shader from a function pointer.
+        /// </summary>
+        /// <param name="shaderFunctionPtr">The shader function pointer.</param>
+        /// <returns>Size of the shader</returns>
+        public static int GetShaderSize(IntPtr shaderFunctionPtr)
+        {
+            return D3DX9.GetShaderSize(shaderFunctionPtr);
+        }
+            
+        /// <summary>
         /// Assembles a shader from the given source data.
         /// </summary>
         /// <param name="sourceData">The source shader data.</param>
@@ -176,7 +186,6 @@ namespace SharpDX.Direct3D9
         {
             return Assemble(sourceData, null, null, flags);
         }
- 
 
         /// <summary>
         /// Assembles a shader from the given source data.
