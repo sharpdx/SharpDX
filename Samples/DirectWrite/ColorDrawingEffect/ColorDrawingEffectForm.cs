@@ -133,7 +133,7 @@ namespace ColorDrawingEffect
                                      TextAntialiasMode = TextAntialiasMode.Cleartype
                                  };
 
-            SceneColorBrush = new SolidColorBrush(RenderTarget2D, new Color4(1, 0, 0, 0));
+            SceneColorBrush = new SolidColorBrush(RenderTarget2D, Colors.Black);
 
             CustomTextRenderer = new CustomTextRenderer(Factory2D, RenderTarget2D);
         
@@ -154,9 +154,9 @@ namespace ColorDrawingEffect
 
             CurrentTextLayout = new TextLayout(FactoryDWrite, FontText, CurrentTextFormat, ClientRectangle.Width, ClientRectangle.Height);
 
-            RedDrawingeffect = new ColorDrawingEffect(new Color4(1, 1, 0, 0));
-            BlueDrawingEffect = new ColorDrawingEffect(new Color4(1, 0, 0, 1));
-            GreenDrawingEffect = new ColorDrawingEffect(new Color4(1, 0, 1, 0));
+            RedDrawingeffect = new ColorDrawingEffect(Colors.Red);
+            BlueDrawingEffect = new ColorDrawingEffect(Colors.Blue);
+            GreenDrawingEffect = new ColorDrawingEffect(Colors.Green);
 
             CurrentTextLayout.SetDrawingEffect(RedDrawingeffect, new TextRange(0, 14));
             CurrentTextLayout.SetDrawingEffect(BlueDrawingEffect, new TextRange(14, 7));
@@ -207,7 +207,7 @@ namespace ColorDrawingEffect
             {
                 RenderTarget2D.BeginDraw();
 
-                RenderTarget2D.Clear(new Color4(1, 1, 1, 1));
+                RenderTarget2D.Clear(Colors.White);
 
                 //RenderTarget2D.DrawTextLayout(new PointF(0, 0), CurrentTextLayout, SceneColorBrush);
 

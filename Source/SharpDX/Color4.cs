@@ -90,16 +90,16 @@ namespace SharpDX
         /// <summary>
         /// Initializes a new instance of the <see cref="SharpDX.Color4"/> struct.
         /// </summary>
-        /// <param name="alpha">The alpha component of the color.</param>
         /// <param name="red">The red component of the color.</param>
         /// <param name="green">The green component of the color.</param>
         /// <param name="blue">The blue component of the color.</param>
-        public Color4(float alpha, float red, float green, float blue)
+        /// <param name="alpha">The alpha component of the color.</param>
+        public Color4(float red, float green, float blue, float alpha)
         {
-            Alpha = alpha;
             Red = red;
             Green = green;
             Blue = blue;
+            Alpha = alpha;
         }
 
         /// <summary>
@@ -125,6 +125,18 @@ namespace SharpDX
             Green = value.Y;
             Blue = value.Z;
             Alpha = alpha;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SharpDX.Color4"/> struct.
+        /// </summary>
+        /// <param name="argb">A packed integer containing all four color components.</param>
+        public Color4(uint argb)
+        {
+            Alpha = ((argb >> 24) & 255) / 255.0f;
+            Red = ((argb >> 16) & 255) / 255.0f;
+            Green = ((argb >> 8) & 255) / 255.0f;
+            Blue = (argb & 255) / 255.0f;
         }
 
         /// <summary>
@@ -261,7 +273,7 @@ namespace SharpDX
         /// <returns>The sum of the two colors.</returns>
         public static Color4 Add(Color4 left, Color4 right)
         {
-            return new Color4(left.Alpha + right.Alpha, left.Red + right.Red, left.Green + right.Green, left.Blue + right.Blue);
+            return new Color4(left.Red + right.Red, left.Green + right.Green, left.Blue + right.Blue, left.Alpha + right.Alpha);
         }
 
         /// <summary>
@@ -286,7 +298,7 @@ namespace SharpDX
         /// <returns>The difference of the two colors.</returns>
         public static Color4 Subtract(Color4 left, Color4 right)
         {
-            return new Color4(left.Alpha - right.Alpha, left.Red - right.Red, left.Green - right.Green, left.Blue - right.Blue);
+            return new Color4(left.Red - right.Red, left.Green - right.Green, left.Blue - right.Blue, left.Alpha - right.Alpha);
         }
 
         /// <summary>
@@ -311,7 +323,7 @@ namespace SharpDX
         /// <returns>The modulated color.</returns>
         public static Color4 Modulate(Color4 left, Color4 right)
         {
-            return new Color4(left.Alpha * right.Alpha, left.Red * right.Red, left.Green * right.Green, left.Blue * right.Blue);
+            return new Color4(left.Red * right.Red, left.Green * right.Green, left.Blue * right.Blue, left.Alpha * right.Alpha);
         }
 
         /// <summary>
@@ -336,7 +348,7 @@ namespace SharpDX
         /// <returns>The scaled color.</returns>
         public static Color4 Scale(Color4 value, float scale)
         {
-            return new Color4(value.Alpha * scale, value.Red * scale, value.Green * scale, value.Blue * scale);
+            return new Color4(value.Red * scale, value.Green * scale, value.Blue * scale, value.Alpha * scale);
         }
 
         /// <summary>
@@ -359,7 +371,7 @@ namespace SharpDX
         /// <returns>The negated color.</returns>
         public static Color4 Negate(Color4 value)
         {
-            return new Color4(1.0f - value.Alpha, 1.0f - value.Red, 1.0f - value.Green, 1.0f - value.Blue);
+            return new Color4(1.0f - value.Red, 1.0f - value.Green, 1.0f - value.Blue, 1.0f - value.Alpha);
         }
 
         /// <summary>
@@ -387,7 +399,7 @@ namespace SharpDX
             blue = (blue > max.Blue) ? max.Blue : blue;
             blue = (blue < min.Blue) ? min.Blue : blue;
 
-            result = new Color4(alpha, red, green, blue);
+            result = new Color4(red, green, blue, alpha);
         }
 
         /// <summary>
@@ -439,10 +451,10 @@ namespace SharpDX
         public static Color4 Lerp(Color4 start, Color4 end, float amount)
         {
             return new Color4(
-                start.Alpha + amount * (end.Alpha - start.Alpha),
                 start.Red + amount * (end.Red - start.Red),
                 start.Green + amount * (end.Green - start.Green),
-                start.Blue + amount * (end.Blue - start.Blue));
+                start.Blue + amount * (end.Blue - start.Blue),
+                start.Alpha + amount * (end.Alpha - start.Alpha));
         }
 
         /// <summary>
@@ -475,11 +487,11 @@ namespace SharpDX
             amount = (amount > 1.0f) ? 1.0f : ((amount < 0.0f) ? 0.0f : amount);
             amount = (amount * amount) * (3.0f - (2.0f * amount));
 
-            return new Color4(
-                start.Alpha + ((end.Alpha - start.Alpha) * amount),
+            return new Color4(                
                 start.Red + ((end.Red - start.Red) * amount),
                 start.Green + ((end.Green - start.Green) * amount),
-                start.Blue + ((end.Blue - start.Blue) * amount));
+                start.Blue + ((end.Blue - start.Blue) * amount),
+                start.Alpha + ((end.Alpha - start.Alpha) * amount));
         }
 
         /// <summary>
@@ -558,11 +570,11 @@ namespace SharpDX
         /// <returns>The adjusted color.</returns>
         public static Color4 AdjustContrast(Color4 value, float contrast)
         {
-            return new Color4(
-                value.Alpha,
+            return new Color4(                
                 0.5f + contrast * (value.Red - 0.5f),
                 0.5f + contrast * (value.Green - 0.5f),
-                0.5f + contrast * (value.Blue - 0.5f));
+                0.5f + contrast * (value.Blue - 0.5f),
+                value.Alpha);
         }
 
         /// <summary>
@@ -591,11 +603,11 @@ namespace SharpDX
         {
             float grey = value.Red * 0.2125f + value.Green * 0.7154f + value.Blue * 0.0721f;
 
-            return new Color4(
-                value.Alpha,
+            return new Color4(                
                 grey + saturation * (value.Red - grey),
                 grey + saturation * (value.Green - grey),
-                grey + saturation * (value.Blue - grey));
+                grey + saturation * (value.Blue - grey),
+                value.Alpha);
         }
 
         /// <summary>
@@ -606,7 +618,7 @@ namespace SharpDX
         /// <returns>The sum of the two colors.</returns>
         public static Color4 operator +(Color4 left, Color4 right)
         {
-            return new Color4(left.Alpha + right.Alpha, left.Red + right.Red, left.Green + right.Green, left.Blue + right.Blue);
+            return new Color4(left.Red + right.Red, left.Green + right.Green, left.Blue + right.Blue, left.Alpha + right.Alpha);
         }
 
         /// <summary>
@@ -627,7 +639,7 @@ namespace SharpDX
         /// <returns>The difference of the two colors.</returns>
         public static Color4 operator -(Color4 left, Color4 right)
         {
-            return new Color4(left.Alpha - right.Alpha, left.Red - right.Red, left.Green - right.Green, left.Blue - right.Blue);
+            return new Color4(left.Red - right.Red, left.Green - right.Green, left.Blue - right.Blue, left.Alpha - right.Alpha);
         }
 
         /// <summary>
@@ -637,7 +649,7 @@ namespace SharpDX
         /// <returns>A negated color.</returns>
         public static Color4 operator -(Color4 value)
         {
-            return new Color4(-value.Alpha, -value.Red, -value.Green, -value.Blue);
+            return new Color4(-value.Red, -value.Green, -value.Blue, -value.Alpha);
         }
 
         /// <summary>
@@ -648,7 +660,7 @@ namespace SharpDX
         /// <returns>The scaled color.</returns>
         public static Color4 operator *(float scale, Color4 value)
         {
-            return new Color4(value.Alpha * scale, value.Red * scale, value.Green * scale, value.Blue * scale);
+            return new Color4(value.Red * scale, value.Green * scale, value.Blue * scale, value.Alpha * scale);
         }
 
         /// <summary>
@@ -659,7 +671,7 @@ namespace SharpDX
         /// <returns>The scaled color.</returns>
         public static Color4 operator *(Color4 value, float scale)
         {
-            return new Color4(value.Alpha * scale, value.Red * scale, value.Green * scale, value.Blue * scale);
+            return new Color4(value.Red * scale, value.Green * scale, value.Blue * scale, value.Alpha * scale);
         }
 
         /// <summary>
@@ -670,7 +682,7 @@ namespace SharpDX
         /// <returns>The modulated color.</returns>
         public static Color4 operator *(Color4 left, Color4 right)
         {
-            return new Color4(left.Alpha * right.Alpha, left.Red * right.Red, left.Green * right.Green, left.Blue * right.Blue);
+            return new Color4(left.Red * right.Red, left.Green * right.Green, left.Blue * right.Blue, left.Alpha * right.Alpha);
         }
 
         /// <summary>

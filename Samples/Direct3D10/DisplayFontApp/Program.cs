@@ -68,7 +68,7 @@ namespace DisplayFontApp
         {
             base.Draw(time);
 
-            Device.ClearRenderTargetView(BackBufferView, new Color4(1,0.1f,0.1f,0.1f));
+            Device.ClearRenderTargetView(BackBufferView, Colors.White);
 
             // Make the text boucing on the screen limits
             if ((fontDimension.Right + xDir) > Config.Width)
@@ -87,7 +87,7 @@ namespace DisplayFontApp
             fontDimension.Right += (int)xDir;
 
             // Draw the text
-            font.DrawText(null, DisplayText, fontDimension, FontDrawFlags.Center | FontDrawFlags.VerticalCenter, new Color4(1, 1, 1, 1));
+            font.DrawText(null, DisplayText, fontDimension, FontDrawFlags.Center | FontDrawFlags.VerticalCenter, Colors.White);
         }
 
         [STAThread]

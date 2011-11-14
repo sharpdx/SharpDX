@@ -651,7 +651,7 @@ namespace SharpDX
         /// <returns>The result of the conversion.</returns>
         public static explicit operator Color4(Color3 value)
         {
-            return new Color4(1.0f, value.Red, value.Green, value.Blue);
+            return new Color4(value.Red, value.Green, value.Blue, 1.0f);
         }
 
         /// <summary>

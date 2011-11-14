@@ -49,7 +49,7 @@ namespace SharpDX.Samples
 
             FactoryDWrite = new SharpDX.DirectWrite.Factory();
 
-            SceneColorBrush = new SolidColorBrush(RenderTarget2D, new Color4(1, 1, 1, 1));
+            SceneColorBrush = new SolidColorBrush(RenderTarget2D, Colors.White);
         }
 
         protected override void BeginDraw()

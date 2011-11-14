@@ -42,7 +42,7 @@ namespace WPFHost
         private IScene RenderScene;
         private bool SceneAttached;
 
-        public Color4 ClearColor = new Color4(1.0f, 0.0f, 0.0f, 0.0f);
+        public Color4 ClearColor = SharpDX.Colors.Black;
 
         public DPFCanvas()
         {

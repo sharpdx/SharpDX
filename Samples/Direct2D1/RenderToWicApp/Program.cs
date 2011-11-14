@@ -53,10 +53,10 @@ namespace RenderToWicApp
 
             var d2dRenderTarget = new WicRenderTarget(d2dFactory, wicBitmap, renderTargetProperties);
 
-            var solidColorBrush = new SolidColorBrush(d2dRenderTarget, new Color4(1, 1, 1, 1));
+            var solidColorBrush = new SolidColorBrush(d2dRenderTarget, Colors.White);
 
             d2dRenderTarget.BeginDraw();
-            d2dRenderTarget.Clear(new Color4(1.0f, 0.0f, 0.0f, 0.0f));
+            d2dRenderTarget.Clear(Colors.Black);
             d2dRenderTarget.FillGeometry(rectangleGeometry, solidColorBrush, null);
             d2dRenderTarget.EndDraw();
 

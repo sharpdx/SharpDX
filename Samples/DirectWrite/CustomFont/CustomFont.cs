@@ -100,7 +100,7 @@ namespace CustomFont
             RenderTarget2D.AntialiasMode = AntialiasMode.PerPrimitive;
             RenderTarget2D.TextAntialiasMode = TextAntialiasMode.Cleartype;
 
-            SceneColorBrush = new SolidColorBrush(RenderTarget2D, new Color4(1, 0, 0, 0));
+            SceneColorBrush = new SolidColorBrush(RenderTarget2D, Colors.Black);
 
             renderControl.Paint += new PaintEventHandler(renderControl_Paint);
             renderControl.Resize += new EventHandler(renderControl_Resize);
@@ -149,7 +149,7 @@ namespace CustomFont
             {
                 RenderTarget2D.BeginDraw();
 
-                RenderTarget2D.Clear(new Color4(1, 1, 1, 1));
+                RenderTarget2D.Clear(Colors.White);
 
                 RenderTarget2D.DrawLine(new PointF(0, 0), new PointF(renderControl.ClientSize.Width, renderControl.ClientSize.Height), SceneColorBrush);
                 RenderTarget2D.DrawLine(new PointF(0, renderControl.ClientSize.Height), new PointF(renderControl.ClientSize.Width, 0), SceneColorBrush);

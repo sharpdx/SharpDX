@@ -129,7 +129,7 @@ namespace MiniTri
             // Main loop
             RenderLoop.Run(form, () =>
                                       {
-                                          context.ClearRenderTargetView(renderView, new Color4(1.0f, 0.0f, 0.0f, 0.0f));
+                                          context.ClearRenderTargetView(renderView, Colors.Black);
                                           context.Draw(3, 0);
                                           swapChain.Present(0, PresentFlags.None);
                                       });

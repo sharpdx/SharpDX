@@ -102,7 +102,7 @@ namespace SharpDX.Direct3D10
         public SharpDX.Rectangle Measure(Sprite sprite, string text, SharpDX.Rectangle rect, FontDrawFlags drawFlags)
         {
             // DT_CALCRECT
-            DrawText(sprite, text, text.Length, rect, ((int) drawFlags)|0x400, new Color4(1, 1, 1, 1));
+            DrawText(sprite, text, text.Length, rect, ((int) drawFlags)|0x400, Colors.White);
             return rect;
         }
     }

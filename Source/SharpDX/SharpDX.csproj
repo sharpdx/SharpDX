@@ -129,6 +129,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Colors.cs" />
     <None Include="Mapping-core.xml">
       <SubType>Designer</SubType>
     </None>

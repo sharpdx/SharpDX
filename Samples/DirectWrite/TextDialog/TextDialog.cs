@@ -96,7 +96,7 @@ namespace TextDialog
             RenderTarget2D.AntialiasMode = AntialiasMode.PerPrimitive;
             RenderTarget2D.TextAntialiasMode = TextAntialiasMode.Cleartype;
 
-            SceneColorBrush = new SolidColorBrush(RenderTarget2D, new Color4(1, 0, 0, 0));            
+            SceneColorBrush = new SolidColorBrush(RenderTarget2D, Colors.Black);            
         }
 
         /// <summary>
@@ -263,7 +263,7 @@ namespace TextDialog
             {
                 RenderTarget2D.BeginDraw();
 
-                RenderTarget2D.Clear(new Color4(1, 1, 1, 1));
+                RenderTarget2D.Clear(Colors.White);
 
                 RenderTarget2D.DrawTextLayout(new PointF(0, 0), CurrentTextLayout, SceneColorBrush);
 
