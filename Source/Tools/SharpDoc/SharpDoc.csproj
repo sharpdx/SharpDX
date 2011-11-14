@@ -361,12 +361,12 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>mkdir  $(SolutionDir)Build\Tools\Bin\
-copy  $(TargetPath) $(SolutionDir)Build\Tools\Bin\
-copy  $(TargetDir)\*.dll $(SolutionDir)Build\Tools\Bin\
-rmdir /S /Q  $(SolutionDir)Build\Tools\Styles
-mkdir $(SolutionDir)Build\Tools\Styles
-xcopy /E $(ProjectDir)Styles $(SolutionDir)Build\Tools\Styles\</PostBuildEvent>
+    <PostBuildEvent>mkdir  "$(SolutionDir)Build\Tools\Bin\"
+copy  "$(TargetPath)" "$(SolutionDir)Build\Tools\Bin\"
+copy  "$(TargetDir)*.dll" "$(SolutionDir)Build\Tools\Bin\"
+rmdir /S /Q  "$(SolutionDir)Build\Tools\Styles"
+mkdir "$(SolutionDir)Build\Tools\Styles"
+xcopy /E "$(ProjectDir)Styles" "$(SolutionDir)Build\Tools\Styles\"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

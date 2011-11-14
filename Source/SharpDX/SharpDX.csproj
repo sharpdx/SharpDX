@@ -121,8 +121,12 @@
     <Compile Include="Win32\ComStringEnumerator.cs" />
     <Compile Include="Win32\SecurityAttributes.cs" />
     <Compile Include="Windows\RenderLoop.cs" />
-    <Compile Include="Windows\RenderControl.cs" />
-    <Compile Include="Windows\RenderForm.cs" />
+    <Compile Include="Windows\RenderControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Windows\RenderForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Mapping-core.xml">
@@ -142,7 +146,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>$(SolutionDir)Source\Tools\SharpGen\RunGenerator.bat $(ConfigurationName)</PreBuildEvent>
+    <PreBuildEvent>"$(SolutionDir)Source\Tools\SharpGen\RunGenerator.bat" $(ConfigurationName)</PreBuildEvent>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

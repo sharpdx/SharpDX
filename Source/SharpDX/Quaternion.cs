@@ -54,9 +54,9 @@ namespace SharpDX
     /// <summary>
     /// Represents a four dimensional mathematical quaternion.
     /// </summary>
-    [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
 #if !WIN8
+    [Serializable]
     [TypeConverter(typeof(SharpDX.Design.QuaternionConverter))]
 #endif
     public struct Quaternion : IEquatable<Quaternion>, IFormattable

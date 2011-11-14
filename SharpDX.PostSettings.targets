@@ -8,6 +8,32 @@
     <DocumentationFile>bin\Win8Release\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <ResolveReferencesDependsOn>
+      $(ResolveReferencesDependsOn);
+      ImplicitlyExpandTargetFramework
+    </ResolveReferencesDependsOn>
+  </PropertyGroup>
+
+  <Target Name="ImplicitlyExpandTargetFramework" Condition="'$(ImplicitlyExpandTargetFramework)' == 'true'">
+    <ItemGroup>
+      <ReferencePath Include="$(FrameworkPathOverride)\*.dll">
+        <WinMDFile>false</WinMDFile>
+        <CopyLocal>false</CopyLocal>
+        <ReferenceGrouping>$(TargetFrameworkMoniker)</ReferenceGrouping>
+        <ResolvedFrom>ImplicitlyExpandTargetFramework</ResolvedFrom>
+      </ReferencePath>
+    </ItemGroup>
+
+    <Message Importance="Low" Text="Including @(ReferencePath)"
+      Condition="'%(ReferencePath.ResolvedFrom)' == 'ImplicitlyExpandTargetFramework'"/>
+
+    <ItemGroup>
+      <_ResolveAssemblyReferenceResolvedFiles Include="@(ReferencePath)"
+        Condition="'%(ReferencePath.ResolvedFrom)' == 'ImplicitlyExpandTargetFramework'"/>
+    </ItemGroup>
+  </Target>
+
   <UsingTask AssemblyFile="$(SolutionDir)Source\Bin\SharpCli.exe" TaskName="SharpCli.InteropBuilderTask" />
   <Target Name="AfterBuild">
     <InteropBuilderTask FileName="$(TargetPath)"/>

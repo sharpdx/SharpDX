@@ -54,9 +54,9 @@ namespace SharpDX
     /// <summary>
     /// Represents a 4x4 mathematical matrix.
     /// </summary>
-    [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
 #if !WIN8
+    [Serializable]
     [TypeConverter(typeof(SharpDX.Design.MatrixConverter))]
 #endif
     public struct Matrix : IEquatable<Matrix>, IFormattable

@@ -52,9 +52,9 @@ namespace SharpDX
     /// <summary>
     /// Represents a three dimensional mathematical vector.
     /// </summary>
-    [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
 #if !WIN8
+    [Serializable]
     [TypeConverter(typeof(SharpDX.Design.Vector3Converter))]
 #endif
     public struct Vector3 : IEquatable<Vector3>, IFormattable

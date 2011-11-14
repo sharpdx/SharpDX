@@ -28,7 +28,9 @@ namespace SharpDX
     /// <summary>
     ///   Represents a four dimensional mathematical vector.
     /// </summary>
+#if !WIN8
     [Serializable]
+#endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct Int4 : IEquatable<Int4>, IFormattable
     {

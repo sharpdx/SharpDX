@@ -52,11 +52,11 @@ namespace SharpDX
     /// <summary>
     /// Represents a four dimensional mathematical vector.
     /// </summary>
-    [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
 #if !WIN8
+    [Serializable]
     [TypeConverter(typeof(SharpDX.Design.Vector4Converter))]
-#endif    
+#endif
     public struct Vector4 : IEquatable<Vector4>, IFormattable
     {
         /// <summary>

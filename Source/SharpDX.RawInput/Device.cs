@@ -52,7 +52,7 @@ namespace SharpDX.RawInput
         /// Gets the devices.
         /// </summary>
         /// <returns></returns>
-        public static unsafe ReadOnlyCollection<DeviceInfo> GetDevices()
+        public static unsafe List<DeviceInfo> GetDevices()
         {
             // Get the number of input device
             int deviceCount = 0;
@@ -86,7 +86,7 @@ namespace SharpDX.RawInput
                 deviceInfoList.Add(DeviceInfo.Convert(ref *(RawDeviceInformation*) deviceInfoPtr, deviceName, deviceHandle));
             }
 
-            return deviceInfoList.AsReadOnly();
+            return deviceInfoList;
         }
 
         /// <summary>

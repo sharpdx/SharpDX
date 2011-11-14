@@ -52,7 +52,9 @@ namespace SharpDX
     /// <summary>
     /// Represents a plane in three dimensional space.
     /// </summary>
+#if !WIN8
     [Serializable]
+#endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct Plane : IEquatable<Plane>, IFormattable
     {

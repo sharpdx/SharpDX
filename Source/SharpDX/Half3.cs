@@ -27,8 +27,9 @@ namespace SharpDX
     /// <summary>
     /// Defines a three component vector, using half precision floating point coordinates.
     /// </summary>
-    [Serializable, StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
 #if !WIN8
+    [Serializable]
     [TypeConverter(typeof(SharpDX.Design.Half3Converter))]
 #endif
     public struct Half3 : IEquatable<Half3>

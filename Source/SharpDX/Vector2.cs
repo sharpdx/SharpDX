@@ -52,9 +52,9 @@ namespace SharpDX
     /// <summary>
     /// Represents a two dimensional mathematical vector.
     /// </summary>
-    [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
 #if !WIN8
+    [Serializable]
     [TypeConverter(typeof(SharpDX.Design.Vector2Converter))]
 #endif
     public struct Vector2 : IEquatable<Vector2>, IFormattable

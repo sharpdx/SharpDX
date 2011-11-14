@@ -96,9 +96,9 @@
     <Message Importance="high" Text="Copying SharpCli Task from $(TargetPath) to $(TargetTaskPath)" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>mkdir $(SolutionDir)Build\Tools\Bin\
-copy  $(TargetDir)*.exe $(SolutionDir)Build\Tools\Bin\
-copy  $(TargetDir)*.dll $(SolutionDir)Build\Tools\Bin\</PostBuildEvent>
+    <PostBuildEvent>mkdir "$(SolutionDir)Build\Tools\Bin\"
+copy  "$(TargetDir)*.exe" "$(SolutionDir)Build\Tools\Bin\"
+copy  "$(TargetDir)*.dll" "$(SolutionDir)Build\Tools\Bin\"</PostBuildEvent>
   </PropertyGroup>
   <!-- Custom target to copy InteropBuilder to another path, used by all subsequent tasks -->
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

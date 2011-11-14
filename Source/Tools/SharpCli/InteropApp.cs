@@ -581,6 +581,20 @@ namespace SharpCli
                 }                
             }
 
+            // TODO: Temporary patch to handle correctly 4.5 Core profile
+            if (mscorlibAssembly == null)
+            {
+                foreach (var assemblyNameReference in assembly.MainModule.AssemblyReferences)
+                {
+                    if (assemblyNameReference.Name == "System.Runtime")
+                    {
+                        ((BaseAssemblyResolver)assembly.MainModule.AssemblyResolver).AddSearchDirectory(@"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETCore\v4.5");
+                        mscorlibAssembly = assembly.MainModule.AssemblyResolver.Resolve(assemblyNameReference);
+                        break;
+                    }
+                }
+            }
+
             if (mscorlibAssembly == null)
             {
                 LogError("Missing mscorlib.dll from assembly {0}", file);

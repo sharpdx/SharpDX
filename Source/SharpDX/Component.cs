@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace SharpDX
 {
@@ -71,7 +72,11 @@ namespace SharpDX
         /// <param name="name">The name attached to this component</param>
         protected internal Component(string name)
         {
+#if WIN8
+            Name = name ?? GetType().GetTypeInfo().Name;
+#else
             Name = name ?? GetType().Name;
+#endif
             Disposables = new List<IDisposable>();
 
             // Try to ToDispose this component on the latest active collector

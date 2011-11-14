@@ -125,6 +125,7 @@ namespace SharpDX.WIC
             factory.CreateDecoderFromFilename(filename, guidVendorRef, (int)desiredAccess, metadataOptions, this);
         }
 
+#if !WIN8
         /// <summary>
         /// Initializes a new instance of the <see cref="BitmapDecoder"/> class from a filestream.
         /// </summary>
@@ -149,7 +150,7 @@ namespace SharpDX.WIC
         {
             factory.CreateDecoderFromFileHandle(fileStream.SafeFileHandle.DangerousGetHandle(), guidVendorRef, metadataOptions, this);
         }
-
+#endif
 
         /// <summary>
         /// Gets the <see cref="ColorContext"/> objects of the image.
