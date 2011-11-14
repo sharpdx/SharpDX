@@ -48,7 +48,7 @@ namespace SharpDX.DirectInput
         [DataObjectFormat(ObjectGuid.RzAxisStr, TypeRelativeAxisOpt, ObjectDataFormatFlags.Position)]
         public int RotationZ;
 
-        [DataObjectFormat(ObjectGuid.SliderStr, 2, TypeRelativeAxisOpt, ObjectDataFormatFlags.Position | ObjectDataFormatFlags.Velocity | ObjectDataFormatFlags.Acceleration | ObjectDataFormatFlags.Force)]
+        [DataObjectFormat(ObjectGuid.SliderStr, 2, TypeRelativeAxisOpt, ObjectDataFormatFlags.Position)]
         public fixed int Sliders[2];
 
         [DataObjectFormat(ObjectGuid.PovControllerStr, 4, TypePovOpt)]
