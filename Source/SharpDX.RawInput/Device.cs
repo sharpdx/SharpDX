@@ -107,7 +107,8 @@ namespace SharpDX.RawInput
         /// <param name="usageId">The usage id.</param>
         /// <param name="flags">The flags.</param>
         /// <param name="target">The target.</param>
-        public static void RegisterDevice(UsagePage usagePage, UsageId usageId, DeviceFlags flags, IntPtr target)
+        /// <param name="addMessageFilter">if set to <c>true</c> register message filter to Application.AddMessageFilter.</param>
+        public static void RegisterDevice(UsagePage usagePage, UsageId usageId, DeviceFlags flags, IntPtr target, bool addMessageFilter = true)
         {
             var rawInputDevices = new RawInputDevice[1];
             rawInputDevices[0].UsagePage = (short) usagePage;
@@ -118,7 +119,7 @@ namespace SharpDX.RawInput
             // Register this device
             RawInputFunctions.RegisterRawInputDevices(rawInputDevices, 1, Utilities.SizeOf<RawInputDevice>());
 
-            if (rawInputMessageFilter == null)
+            if (rawInputMessageFilter == null && addMessageFilter)
             {
                 rawInputMessageFilter = new RawInputMessageFilter();
                 Application.AddMessageFilter(rawInputMessageFilter);
@@ -126,34 +127,26 @@ namespace SharpDX.RawInput
         }
 
         /// <summary>
-        /// Internal RawInput message filtering
+        /// Handles a RawInput message manually.
         /// </summary>
-        internal class RawInputMessageFilter : IMessageFilter
+        /// <param name="rawInputMessagePointer">A pointer to a RawInput message.</param>
+        /// <remarks>
+        /// This method can be used directly when handling RawInput messages from non-WinForms application.
+        /// </remarks>
+        public static void HandleMessage(IntPtr rawInputMessagePointer)
         {
-            /// <summary>
-            /// WM_INPUT
-            /// </summary>
-            private const int WmInput = 0x00FF;
-
-            public unsafe virtual bool PreFilterMessage(ref Message m)
+            unsafe
             {
-                // Handle only WM_INPUT messages
-                if (m.Msg != WmInput)
-                    return false;
-
-                // Get the RawInput handle
-                var rawInputHandle = m.LParam;
-
                 // Get the size of the RawInput structure
                 int sizeOfRawInputData = 0;
-                RawInputFunctions.GetRawInputData(rawInputHandle, RawInputDataType.Input, IntPtr.Zero, ref sizeOfRawInputData, Utilities.SizeOf<RawInputHeader>());
+                RawInputFunctions.GetRawInputData(rawInputMessagePointer, RawInputDataType.Input, IntPtr.Zero, ref sizeOfRawInputData, Utilities.SizeOf<RawInputHeader>());
 
                 if (sizeOfRawInputData == 0)
-                    return false;
+                    return;
 
                 // Get the RawInput data structure
                 var rawInputDataPtr = stackalloc byte[sizeOfRawInputData];
-                RawInputFunctions.GetRawInputData(rawInputHandle, RawInputDataType.Input, (IntPtr)rawInputDataPtr, ref sizeOfRawInputData, Utilities.SizeOf<RawInputHeader>());
+                RawInputFunctions.GetRawInputData(rawInputMessagePointer, RawInputDataType.Input, (IntPtr)rawInputDataPtr, ref sizeOfRawInputData, Utilities.SizeOf<RawInputHeader>());
 
                 var rawInput = (RawInput*)rawInputDataPtr;
 
@@ -172,7 +165,24 @@ namespace SharpDX.RawInput
                             MouseInput(null, new MouseInputEventArgs(ref *rawInput));
                         break;
                 }
+            }
+        }
 
+        /// <summary>
+        /// Internal RawInput message filtering
+        /// </summary>
+        internal class RawInputMessageFilter : IMessageFilter
+        {
+            /// <summary>
+            /// WM_INPUT
+            /// </summary>
+            private const int WmInput = 0x00FF;
+
+            public virtual bool PreFilterMessage(ref Message m)
+            {
+                // Handle only WM_INPUT messages
+                if (m.Msg == WmInput)
+                    HandleMessage(m.LParam);
                 return false;
             }
         }
