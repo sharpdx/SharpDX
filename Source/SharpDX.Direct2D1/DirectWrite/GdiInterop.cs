@@ -22,6 +22,7 @@ using System.Runtime.InteropServices;
 
 namespace SharpDX.DirectWrite
 {
+
     public partial class GdiInterop
     {
         /// <summary>	
@@ -65,7 +66,7 @@ namespace SharpDX.DirectWrite
                 return isSystemFont;                
             }
         } 
-
+#if !WIN8
         /// <summary>	
         /// Creates a font object that matches the properties specified by the LOGFONT structure. 	
         /// </summary>	
@@ -92,5 +93,6 @@ namespace SharpDX.DirectWrite
             font = System.Drawing.Font.FromLogFont(logfontw);
             return isSystemFont;
         }
+#endif
     }
 }

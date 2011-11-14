@@ -73,6 +73,8 @@ namespace SharpDX.WIC
                 GetMetadataByName(name, pointer);
                 var value = Marshal.GetObjectForNativeVariant(pointer);
 
+                // TODO Implement this part correctly for Win8
+#if !WIN8
                 // If object is a ComObject, try to instantiate a MetaDataQueryReader
                 if (value is MarshalByRefObject)
                 {
@@ -85,6 +87,7 @@ namespace SharpDX.WIC
                         return value;
                     }
                 }
+#endif
                 return value;
             }
         }

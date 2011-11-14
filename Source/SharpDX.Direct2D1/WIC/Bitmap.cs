@@ -42,41 +42,6 @@ namespace SharpDX.WIC
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Bitmap"/> class from a <see cref="Icon"/>.
-        /// </summary>
-        /// <param name="factory">The factory.</param>
-        /// <param name="icon">The icon.</param>
-        /// <unmanaged>HRESULT IWICImagingFactory::CreateBitmapFromHICON([In] HICON hIcon,[Out, Fast] IWICBitmap** ppIBitmap)</unmanaged>
-        public Bitmap(ImagingFactory factory, Icon icon) : base(IntPtr.Zero)
-        {
-            factory.CreateBitmapFromHICON(icon.Handle, this);
-
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Bitmap"/> class from a <see cref="System.Drawing.Bitmap"/>.
-        /// </summary>
-        /// <param name="factory">The factory.</param>
-        /// <param name="bitmap">The bitmap.</param>
-        /// <param name="options">The options.</param>
-        /// <unmanaged>HRESULT IWICImagingFactory::CreateBitmapFromHBITMAP([In] HBITMAP hBitmap,[In, Optional] HPALETTE hPalette,[In] WICBitmapAlphaChannelOption options,[Out, Fast] IWICBitmap** ppIBitmap)</unmanaged>
-        public Bitmap(ImagingFactory factory, System.Drawing.Bitmap bitmap, SharpDX.WIC.BitmapAlphaChannelOption options) : base(IntPtr.Zero)
-        {
-            var hBitmap = bitmap.GetHbitmap();
-            var hPalette = ConvertToHPALETTE(bitmap.Palette);
-            try
-            {
-                factory.CreateBitmapFromHBITMAP(hBitmap, hPalette, options, this);
-
-            }
-            finally
-            {
-                DeleteObject(hBitmap);
-                Marshal.FreeHGlobal(hPalette);
-            }
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Bitmap"/> class from a memory location using <see cref="DataRectangle"/>.
         /// </summary>
         /// <param name="factory">The factory.</param>
@@ -118,6 +83,41 @@ namespace SharpDX.WIC
             factory.CreateBitmapFromSourceRect(bitmapSource, rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height, this);
         }
 
+#if !WIN8
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Bitmap"/> class from a <see cref="Icon"/>.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="icon">The icon.</param>
+        /// <unmanaged>HRESULT IWICImagingFactory::CreateBitmapFromHICON([In] HICON hIcon,[Out, Fast] IWICBitmap** ppIBitmap)</unmanaged>
+        public Bitmap(ImagingFactory factory, Icon icon) : base(IntPtr.Zero)
+        {
+            factory.CreateBitmapFromHICON(icon.Handle, this);
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Bitmap"/> class from a <see cref="System.Drawing.Bitmap"/>.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="bitmap">The bitmap.</param>
+        /// <param name="options">The options.</param>
+        /// <unmanaged>HRESULT IWICImagingFactory::CreateBitmapFromHBITMAP([In] HBITMAP hBitmap,[In, Optional] HPALETTE hPalette,[In] WICBitmapAlphaChannelOption options,[Out, Fast] IWICBitmap** ppIBitmap)</unmanaged>
+        public Bitmap(ImagingFactory factory, System.Drawing.Bitmap bitmap, SharpDX.WIC.BitmapAlphaChannelOption options) : base(IntPtr.Zero)
+        {
+            var hBitmap = bitmap.GetHbitmap();
+            var hPalette = ConvertToHPALETTE(bitmap.Palette);
+            try
+            {
+                factory.CreateBitmapFromHBITMAP(hBitmap, hPalette, options, this);
+
+            }
+            finally
+            {
+                DeleteObject(hBitmap);
+                Marshal.FreeHGlobal(hPalette);
+            }
+        }
 
         private static IntPtr ConvertToHPALETTE(ColorPalette colorPalette)
         {
@@ -133,6 +133,7 @@ namespace SharpDX.WIC
 
         [DllImport("gdi32.dll", EntryPoint = "DeleteObject")]
         private static extern bool DeleteObject(IntPtr hObject);
+#endif
     }
 }
 

@@ -68,7 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Source\SharpDX.Direct2D1\SharpDX.Direct2D1.csproj">
-      <Project>{6C573B77-76D7-4DB8-93A4-DF613A5F26F8}</Project>
+      <Project>{C97878F4-1510-4BBA-8153-BD71DA7D50D8}</Project>
       <Name>SharpDX.Direct2D1</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Source\SharpDX.Direct3D10\SharpDX.Direct3D10.csproj">
