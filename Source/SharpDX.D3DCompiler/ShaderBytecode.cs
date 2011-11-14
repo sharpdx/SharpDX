@@ -148,7 +148,7 @@ namespace SharpDX.D3DCompiler
         /// <value>
         /// The size of the buffer.
         /// </value>
-        public SharpDX.Size BufferSize { get; set; }
+        public SharpDX.PointerSize BufferSize { get; set; }
 
 #if WIN8
         /// <summary>
@@ -783,7 +783,7 @@ namespace SharpDX.D3DCompiler
         /// <param name="finishByteOffsetRef">The finish byte offset ref.</param>
         /// <returns>The textual source of the shader or effect.</returns>
         /// <unmanaged>HRESULT D3DDisassembleRegion([In, Buffer] const void* pSrcData,[In] SIZE_T SrcDataSize,[In] unsigned int Flags,[In, Optional] const char* szComments,[In] SIZE_T StartByteOffset,[In] SIZE_T NumInsts,[Out, Optional] SIZE_T* pFinishByteOffset,[Out] ID3D10Blob** ppDisassembly)</unmanaged>	
-        public string DisassembleRegion(DisassemblyFlags flags, string comments, Size startByteOffset, Size numberOfInstructions, out SharpDX.Size finishByteOffsetRef)
+        public string DisassembleRegion(DisassemblyFlags flags, string comments, Size startByteOffset, PointerSize numberOfInstructions, out SharpDX.PointerSize finishByteOffsetRef)
         {
             Blob output;
             D3D.DisassembleRegion(BufferPointer, BufferSize, (int)flags, comments, startByteOffset, numberOfInstructions, out finishByteOffsetRef, out output);
@@ -800,7 +800,7 @@ namespace SharpDX.D3DCompiler
         /// <param name="totalInstsRef">The total insts ref.</param>
         /// <returns>An offset</returns>
         /// <unmanaged>HRESULT D3DGetTraceInstructionOffsets([In, Buffer] const void* pSrcData,[In] SIZE_T SrcDataSize,[In] unsigned int Flags,[In] SIZE_T StartInstIndex,[In] SIZE_T NumInsts,[Out, Buffer, Optional] SIZE_T* pOffsets,[Out, Optional] SIZE_T* pTotalInsts)</unmanaged>
-        public Size GetTraceInstructionOffsets(bool isIncludingNonExecutableCode, Size startInstIndex, Size numInsts, out SharpDX.Size totalInstsRef)
+        public PointerSize GetTraceInstructionOffsets(bool isIncludingNonExecutableCode, PointerSize startInstIndex, PointerSize numInsts, out SharpDX.PointerSize totalInstsRef)
         {
             return D3D.GetTraceInstructionOffsets(BufferPointer, BufferSize, isIncludingNonExecutableCode ? 1 : 0, startInstIndex, numInsts, out totalInstsRef);
         }

@@ -104,7 +104,7 @@
     <Compile Include="RectangleF.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="Direct3D\ShaderMacro.cs" />
-    <Compile Include="Size.cs" />
+    <Compile Include="PointerSize.cs" />
     <Compile Include="SharpDXException.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="Vector2.cs" />

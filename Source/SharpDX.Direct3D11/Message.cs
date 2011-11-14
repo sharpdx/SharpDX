@@ -33,7 +33,7 @@ namespace SharpDX.Direct3D11
             public SharpDX.Direct3D11.MessageSeverity Severity;
             public SharpDX.Direct3D11.MessageId Id;
             public System.IntPtr PDescription;
-            public SharpDX.Size DescriptionByteLength;
+            public SharpDX.PointerSize DescriptionByteLength;
             // Method to free unmanaged allocation
             internal unsafe void __MarshalFree()
             {

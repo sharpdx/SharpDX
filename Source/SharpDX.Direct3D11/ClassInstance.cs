@@ -57,7 +57,7 @@ namespace SharpDX.Direct3D11
             {
                 unsafe
                 {
-                    Size size = new Size();
+                    PointerSize size = new PointerSize();
                     GetInstanceName(IntPtr.Zero, ref size);
                     sbyte* pBuffer = stackalloc sbyte[size];
                     GetInstanceName((IntPtr) pBuffer, ref size);
@@ -80,7 +80,7 @@ namespace SharpDX.Direct3D11
             {
                 unsafe
                 {
-                    Size size = new Size();
+                    PointerSize size = new PointerSize();
                     GetInstanceName(IntPtr.Zero, ref size);
                     sbyte* pBuffer = stackalloc sbyte[size];
                     GetTypeName((IntPtr) pBuffer, ref size);

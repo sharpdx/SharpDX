@@ -59,7 +59,7 @@ namespace SharpDX.D3DCompiler
         /// <unmanaged>HRESULT D3D10CompileEffectFromMemory([In] void* pData,[In] SIZE_T DataLength,[In] const char* pSrcFileName,[In, Buffer, Optional] const D3D_SHADER_MACRO* pDefines,[In] ID3DInclude* pInclude,[In] D3DCOMPILE_SHADER_FLAGS HLSLFlags,[In] D3DCOMPILE_EFFECT_FLAGS FXFlags,[In] ID3D10Blob** ppCompiledEffect,[In] ID3D10Blob** ppErrors)</unmanaged>
         public static SharpDX.Result CompileEffect10FromMemory(
             System.IntPtr dataRef,
-            SharpDX.Size dataLength,
+            SharpDX.PointerSize dataLength,
             string srcFileNameRef,
             SharpDX.Direct3D.ShaderMacro[] definesRef,
             System.IntPtr includeRef,

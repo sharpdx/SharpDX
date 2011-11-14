@@ -33,7 +33,7 @@ namespace SharpDX.Direct3D10
         /// <unmanaged>HRESULT ID3D10InfoQueue::GetMessageW([In] unsigned longlong MessageIndex,[Out, Buffer, Optional] D3D10_MESSAGE* pMessage,[InOut] SIZE_T* pMessageByteLength)</unmanaged>	
         public Message GetMessage(long messageIndex)
         {
-            Size messageSize = 0;
+            PointerSize messageSize = 0;
             GetMessage(messageIndex, IntPtr.Zero, ref messageSize);
 
             var message = new Message { DescriptionByteLength = messageSize };

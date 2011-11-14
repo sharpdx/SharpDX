@@ -35,7 +35,7 @@ namespace SharpDX.Direct3D10
         public DataStream Map()
         {
             IntPtr dataPointer;
-            Size dataSize;
+            PointerSize dataSize;
             Map(out dataPointer, out dataSize);
             return new DataStream(dataPointer, dataSize, true, true);
         }

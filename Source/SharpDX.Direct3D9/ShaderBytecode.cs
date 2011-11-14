@@ -125,7 +125,7 @@ namespace SharpDX.Direct3D9
         /// <value>
         /// The size of the buffer.
         /// </value>
-        public SharpDX.Size BufferSize { get; set; }
+        public SharpDX.PointerSize BufferSize { get; set; }
 
         /// <summary>
         /// Gets the shader constant table.

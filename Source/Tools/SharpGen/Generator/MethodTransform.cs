@@ -98,7 +98,7 @@ namespace SharpGen.Generator
                     var returnQualifiedName = csMethod.ReturnType.PublicType.QualifiedName;
                     if (returnQualifiedName == "SharpDX.Result")
                         cSharpInteropCalliSignature.ReturnType = typeof (int);
-                    else if (returnQualifiedName == "SharpDX.Size" || returnQualifiedName == "SharpDX.Direct3D9.EffectHandle")
+                    else if (returnQualifiedName == "SharpDX.PointerSize" || returnQualifiedName == "SharpDX.Direct3D9.EffectHandle")
                         cSharpInteropCalliSignature.ReturnType = typeof(void*);
                     else
                         cSharpInteropCalliSignature.ReturnType = csMethod.ReturnType.PublicType.QualifiedName;
@@ -122,7 +122,7 @@ namespace SharpGen.Generator
                 InteropType interopType;
                 string publicName = param.PublicType.QualifiedName;
                 // Patch for Mono bug with structs marshalling and calli. TEMPORARY
-                if (publicName == "SharpDX.Size" || param.PublicType.QualifiedName == "SharpDX.Direct3D9.EffectHandle")
+                if (publicName == "SharpDX.PointerSize" || param.PublicType.QualifiedName == "SharpDX.Direct3D9.EffectHandle")
                 {
                     interopType = typeof(void*);
                 }

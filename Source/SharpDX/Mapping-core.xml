@@ -140,7 +140,7 @@
     <define struct="System.Drawing.PointF" sizeof="8" />
     <define struct="System.Drawing.Point" sizeof="8" />
     <define struct="SharpDX.Result" sizeof="4" />
-    <define struct="SharpDX.Size" sizeof="8" />
+    <define struct="SharpDX.PointerSize" sizeof="8" />
     <define struct="SharpDX.Matrix" sizeof="64" />
     <define struct="SharpDX.Matrix3x2" sizeof="24" />
     <define struct="SharpDX.Vector2" sizeof="8" />
@@ -247,8 +247,8 @@
     <bind from="COLORREF" to="SharpDX.Color4" />
     <bind from="__function__stdcall" to="SharpDX.FunctionCallback" />
     <bind from="SIZE" to="System.Drawing.Size" />
-    <bind from="SIZE_T" to="SharpDX.Size" marshal="System.IntPtr"/>
-    <bind from="SSIZE_T" to="SharpDX.Size" marshal="System.IntPtr"/>
+    <bind from="SIZE_T" to="SharpDX.PointerSize" marshal="System.IntPtr"/>
+    <bind from="SSIZE_T" to="SharpDX.PointerSize" marshal="System.IntPtr"/>
 
     <bind from="SECURITY_ATTRIBUTES" to="SharpDX.Win32.SecurityAttributes"/>
     

@@ -309,7 +309,7 @@ namespace SharpGen.Model
                         return TempName;
                     return "&" + TempName;
                 }
-                if (PublicType.Name == Global.Name + ".Size")
+                if (PublicType.Name == "SharpDX.PointerSize")
                     return "(void*)" + Name;
                 return Name;
             }
