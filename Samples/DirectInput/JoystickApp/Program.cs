@@ -36,9 +36,14 @@ namespace EnumDevicesApp
 
             // Find a Joystick Guid
             var joystickGuid = Guid.Empty;
+
             foreach (var deviceInstance in directInput.GetDevices(DeviceType.Gamepad, DeviceEnumerationFlags.AllDevices))
                 joystickGuid = deviceInstance.InstanceGuid;
 
+            // If Gamepad not found, look for a Joystick
+            if (joystickGuid == Guid.Empty)
+                foreach (var deviceInstance in directInput.GetDevices(DeviceType.Joystick, DeviceEnumerationFlags.AllDevices))
+                    joystickGuid = deviceInstance.InstanceGuid;
 
             // If Joystick not found, throws an error
             if (joystickGuid == Guid.Empty)
@@ -47,9 +52,11 @@ namespace EnumDevicesApp
                 Console.ReadKey();
                 Environment.Exit(1);
             }
-
+           
             // Instantiate the joystick
             var joystick = new Joystick(directInput, joystickGuid);
+
+            Console.WriteLine("Found Joystick/Gamepad with GUID: {0}", joystickGuid);
 
             // Query all suported ForceFeedback effects
             var allEffects = joystick.GetEffects();
