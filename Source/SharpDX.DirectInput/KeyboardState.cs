@@ -69,15 +69,14 @@ namespace SharpDX.DirectInput
             unsafe
             {
                 var update = new KeyboardUpdate();
-                var updateInterface = (IStateUpdate) update;
                 
                 fixed (byte* pRawKeys = value.Keys)
                     for (int i = 0; i < 256; i++)
                     {
-                        updateInterface.RawOffset = i;
-                        updateInterface.Value = pRawKeys[i];
-                        if (update.Key == Key.Unknown)
-                            continue;
+                        update.RawOffset = i;
+                        update.Value = pRawKeys[i];
+                        //if (update.Key == Key.Unknown)
+                        //    continue;
                         
                         if (update.IsPressed)
                             PressedKeys.Add(update.Key);
@@ -87,7 +86,7 @@ namespace SharpDX.DirectInput
 
         public override string ToString()
         {
-            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "PressedKeys: {0}", PressedKeys);
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "PressedKeys: {0}", Utilities.Join(",", PressedKeys));
         }
     }
 }

@@ -93,9 +93,9 @@ namespace SharpDX.DirectInput
         {
             unsafe
             {
-                TRaw temp = default(TRaw);
                 int size = Utilities.SizeOf<TRaw>();
-                byte* pTemp = stackalloc byte[size];
+                byte* pTemp = stackalloc byte[size*2];
+                TRaw temp = default(TRaw);
                 var result = GetDeviceState(size, (IntPtr)pTemp);
                 Utilities.Read((IntPtr)pTemp, ref temp);
                 data.MarshalFrom(ref temp);
