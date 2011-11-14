@@ -783,7 +783,7 @@ namespace SharpDX.D3DCompiler
         /// <param name="finishByteOffsetRef">The finish byte offset ref.</param>
         /// <returns>The textual source of the shader or effect.</returns>
         /// <unmanaged>HRESULT D3DDisassembleRegion([In, Buffer] const void* pSrcData,[In] SIZE_T SrcDataSize,[In] unsigned int Flags,[In, Optional] const char* szComments,[In] SIZE_T StartByteOffset,[In] SIZE_T NumInsts,[Out, Optional] SIZE_T* pFinishByteOffset,[Out] ID3D10Blob** ppDisassembly)</unmanaged>	
-        public string DisassembleRegion(DisassemblyFlags flags, string comments, Size startByteOffset, PointerSize numberOfInstructions, out SharpDX.PointerSize finishByteOffsetRef)
+        public string DisassembleRegion(DisassemblyFlags flags, string comments, PointerSize startByteOffset, PointerSize numberOfInstructions, out SharpDX.PointerSize finishByteOffsetRef)
         {
             Blob output;
             D3D.DisassembleRegion(BufferPointer, BufferSize, (int)flags, comments, startByteOffset, numberOfInstructions, out finishByteOffsetRef, out output);
