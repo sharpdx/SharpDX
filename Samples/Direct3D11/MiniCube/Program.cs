@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 using System;
 using System.Diagnostics;
+using System.Drawing;
 
 using SharpDX;
 using SharpDX.D3DCompiler;
@@ -40,7 +41,15 @@ namespace MiniCube
         [STAThread]
         private static void Main()
         {
-            var form = new RenderForm("SharpDX - MiniCube Direct3D11 Sample");
+            // Set the number of cubes to display (horizontally and vertically)
+            const int CountCubes = 1;
+
+            // Set this constant to true to use deferred mode. False is using immediate mode.
+            const bool UseDeferred = false;
+
+            // Create the Rendering form
+            var form = new RenderForm("SharpDX - MiniCube Direct3D11");
+            form.ClientSize = new Size(1024, 1024);
 
             // SwapChain description
             var desc = new SwapChainDescription()
@@ -61,6 +70,11 @@ namespace MiniCube
             SwapChain swapChain;
             Device.CreateWithSwapChain(DriverType.Hardware, DeviceCreationFlags.None, desc, out device, out swapChain);
             var context = device.ImmediateContext;
+            var defferedContext = UseDeferred ? new DeviceContext(device) : context;
+
+            bool supportConcurentResources;
+            bool supportCommandList;
+            device.CheckThreadingSupport(out supportConcurentResources, out supportCommandList);
 
             // Ignore all windows events
             var factory = swapChain.GetParent<Factory>();
@@ -135,7 +149,7 @@ namespace MiniCube
 
             // Create Constant Buffer
             var contantBuffer = new Buffer(device, Utilities.SizeOf<Matrix>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0);
-
+            //var contantBuffer = new Buffer(device, Utilities.SizeOf<Matrix>(), ResourceUsage.Dynamic, BindFlags.ConstantBuffer, CpuAccessFlags.Write, ResourceOptionFlags.None, 0);
 
             // Create Depth Buffer & View
             var depthBuffer = new Texture2D(device, new Texture2DDescription()
@@ -155,17 +169,19 @@ namespace MiniCube
             var depthView = new DepthStencilView(device, depthBuffer);
 
             // Prepare All the stages
-            context.InputAssembler.InputLayout = layout;
-            context.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
-            context.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(vertices, Utilities.SizeOf<Vector4>() * 2, 0));
-            context.VertexShader.SetConstantBuffer(0, contantBuffer);
-            context.VertexShader.Set(vertexShader);
-            context.Rasterizer.SetViewports(new Viewport(0, 0, form.ClientSize.Width, form.ClientSize.Height, 0.0f, 1.0f));
-            context.PixelShader.Set(pixelShader);
-            context.OutputMerger.SetTargets(depthView, renderView);
+            defferedContext.InputAssembler.InputLayout = layout;
+            defferedContext.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
+            defferedContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(vertices, Utilities.SizeOf<Vector4>() * 2, 0));
+            defferedContext.VertexShader.SetConstantBuffer(0, contantBuffer);
+            defferedContext.VertexShader.Set(vertexShader);
+            defferedContext.Rasterizer.SetViewports(new Viewport(0, 0, form.ClientSize.Width, form.ClientSize.Height, 0.0f, 1.0f));
+            defferedContext.PixelShader.Set(pixelShader);
+            defferedContext.OutputMerger.SetTargets(depthView, renderView);
+
+            const float viewZ = 5.0f;
 
             // Prepare matrices
-            var view = Matrix.LookAtLH(new Vector3(0, 0, -5), new Vector3(0, 0, 0), Vector3.UnitY);
+            var view = Matrix.LookAtLH(new Vector3(0, 0, -viewZ), new Vector3(0, 0, 0), Vector3.UnitY);
             var proj = Matrix.PerspectiveFovLH((float)Math.PI / 4.0f, form.ClientSize.Width / (float)form.ClientSize.Height, 0.1f, 100.0f);
             var viewProj = Matrix.Multiply(view, proj);
 
@@ -173,22 +189,60 @@ namespace MiniCube
             var clock = new Stopwatch();
             clock.Start();
 
+            var fpsTimer = new Stopwatch();
+            fpsTimer.Start();
+            int fpsCounter = 0;
+            bool isDeferred = defferedContext.NativePointer != context.NativePointer;
+
             // Main loop
             RenderLoop.Run(form, () =>
                 {
                     var time = clock.ElapsedMilliseconds / 1000.0f;
 
+                    fpsCounter++;
+                    if (fpsTimer.ElapsedMilliseconds > 1000 )
+                    {
+                        form.Text = string.Format("SharpDX - MiniCube Direct3D11 - {0} Mode - FPS: {1} ms/frame: {2}", isDeferred ? "Deferred" : "Immediate", 1000.0 * fpsCounter / fpsTimer.ElapsedMilliseconds, (float)fpsTimer.ElapsedMilliseconds / fpsCounter);
+                        fpsTimer.Reset();
+                        fpsTimer.Stop();
+                        fpsTimer.Start();
+                        fpsCounter = 0;
+                    }
+
                     // Clear views
-                    context.ClearDepthStencilView(depthView, DepthStencilClearFlags.Depth, 1.0f, 0);
-                    context.ClearRenderTargetView(renderView, Colors.Black);
+                    defferedContext.ClearDepthStencilView(depthView, DepthStencilClearFlags.Depth, 1.0f, 0);
+                    defferedContext.ClearRenderTargetView(renderView, Colors.Black);
 
-                    // Update WorldViewProj Matrix
-                    var worldViewProj = Matrix.RotationX(time) * Matrix.RotationY(time * 2) * Matrix.RotationZ(time * .7f) * viewProj;
-                    worldViewProj.Transpose();
-                    context.UpdateSubresource(ref worldViewProj, contantBuffer);
+                    const float divCubes = (float)CountCubes / (viewZ - 1);
 
-                    // Draw the cube
-                    context.Draw(36, 0);
+                    var preMatrix = Matrix.Scaling(1.0f / CountCubes) * Matrix.RotationX(time) * Matrix.RotationY(time * 2) * Matrix.RotationZ(time * .7f);
+
+                    for (int y = 0; y < CountCubes; y++)
+                    {
+                        for (int x = 0; x < CountCubes; x++)
+                        {
+                            var rotateMatrix = preMatrix * Matrix.Translation(((float)x + .5f - (float)CountCubes / 2.0f) / divCubes, ((float)y + .5f - (float)CountCubes / 2.0f) / divCubes, 0);
+
+                            // Update WorldViewProj Matrix
+                            var worldViewProj = rotateMatrix * viewProj;
+                            worldViewProj.Transpose();
+                            defferedContext.UpdateSubresource(ref worldViewProj, contantBuffer);
+
+                            //var dataBox = defferedContext.MapSubresource(contantBuffer, 0, MapMode.WriteDiscard, MapFlags.None);
+                            //Utilities.Write(dataBox.DataPointer, ref worldViewProj);
+                            //defferedContext.UnmapSubresource(contantBuffer, 0);
+
+                            // Draw the cube
+                            defferedContext.Draw(36, 0);
+                        }
+                    }
+
+                    if (isDeferred)
+                    {
+                        var commandList = defferedContext.FinishCommandList(true);
+                        context.ExecuteCommandList(commandList, false);
+                        commandList.Dispose();
+                    }
 
                     // Present!
                     swapChain.Present(0, PresentFlags.None);
