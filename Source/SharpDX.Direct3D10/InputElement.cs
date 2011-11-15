@@ -92,5 +92,67 @@ namespace SharpDX.Direct3D10
             this.Classification = InputClassification.PerVertexData;
             this.InstanceDataStepRate = 0;
         }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="InputElement"/> is equal to this instance.
+        /// </summary>
+        /// <param name="obj">The <see cref="InputElement"/> to compare with this instance.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified <see cref="InputElement"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Equals(InputElement other)
+        {
+            return Equals(other.SemanticName, SemanticName) && other.SemanticIndex == SemanticIndex && Equals(other.Format, Format) && other.Slot == Slot && other.AlignedByteOffset == AlignedByteOffset && Equals(other.Classification, Classification) && other.InstanceDataStepRate == InstanceDataStepRate;
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (obj.GetType() != typeof(InputElement)) return false;
+            return Equals((InputElement)obj);
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int result = SemanticName.GetHashCode();
+                result = (result * 397) ^ SemanticIndex.GetHashCode();
+                result = (result * 397) ^ Format.GetHashCode();
+                result = (result * 397) ^ Slot.GetHashCode();
+                result = (result * 397) ^ AlignedByteOffset.GetHashCode();
+                result = (result * 397) ^ Classification.GetHashCode();
+                result = (result * 397) ^ InstanceDataStepRate.GetHashCode();
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Implements the operator ==.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
+        public static bool operator ==(InputElement left, InputElement right)
+        {
+            return left.Equals(right);
+        }
+
+        /// <summary>
+        /// Implements the operator !=.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
+        public static bool operator !=(InputElement left, InputElement right)
+        {
+            return !left.Equals(right);
+        }
     }
 }
