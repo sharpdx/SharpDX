@@ -119,7 +119,7 @@ namespace SharpDX
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources
         /// </summary>
-        void IDisposable.Dispose()
+        public void Dispose()
         {
             if (!IsDisposed)
             {
