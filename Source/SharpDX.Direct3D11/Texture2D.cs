@@ -39,24 +39,13 @@ namespace SharpDX.Direct3D11
         /// </summary>
         /// <param name = "device">The device with which to associate the texture.</param>
         /// <param name = "description">The description of the texture.</param>
-        /// <param name = "data">The initial texture data.</param>
-        public Texture2D(Device device, Texture2DDescription description, DataRectangle data)
-            : this(device, description, new[] {data})
-        {
-        }
-
-        /// <summary>
-        ///   Initializes a new instance of the <see cref = "T:SharpDX.Direct3D11.Texture2D" /> class.
-        /// </summary>
-        /// <param name = "device">The device with which to associate the texture.</param>
-        /// <param name = "description">The description of the texture.</param>
         /// <param name = "data">An array of initial texture data for each subresource.</param>
-        public Texture2D(Device device, Texture2DDescription description, DataRectangle[] data)
+        public Texture2D(Device device, Texture2DDescription description, params DataRectangle[] data)
             : base(IntPtr.Zero)
         {
             DataBox[] subResourceDatas = null;
 
-            if (data != null)
+            if (data != null && data.Length > 0)
             {
                 subResourceDatas = new DataBox[data.Length];
                 for (int i = 0; i < subResourceDatas.Length; i++)

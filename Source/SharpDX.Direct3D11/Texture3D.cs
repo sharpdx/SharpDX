@@ -39,21 +39,13 @@ namespace SharpDX.Direct3D11
         /// </summary>
         /// <param name = "device">The device with which to associate the texture.</param>
         /// <param name = "description">The description of the texture.</param>
-        /// <param name = "data">The initial texture data.</param>
-        public Texture3D(Device device, Texture3DDescription description, DataBox data)
-            : this(device, description, new[] {data})
-        {
-        }
-
-        /// <summary>
-        ///   Initializes a new instance of the <see cref = "T:SharpDX.Direct3D11.Texture3D" /> class.
-        /// </summary>
-        /// <param name = "device">The device with which to associate the texture.</param>
-        /// <param name = "description">The description of the texture.</param>
         /// <param name = "data">An array of initial texture data for each subresource.</param>
-        public Texture3D(Device device, Texture3DDescription description, DataBox[] data) : base(IntPtr.Zero)
+        public Texture3D(Device device, Texture3DDescription description, params DataBox[] data) : base(IntPtr.Zero)
         {
-            device.CreateTexture3D(ref description, data, this);
+            if (data == null || data.Length == 0)
+                device.CreateTexture3D(ref description, null, this);
+            else
+                device.CreateTexture3D(ref description, data, this);
         }
 
         /// <inheritdoc/>
