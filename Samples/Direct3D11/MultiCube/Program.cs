@@ -56,11 +56,13 @@ namespace MultiCube
             public int CountCubes;
             public int ThreadCount;
             public bool UseDeferred;
+            public bool SimulateCpuUsage;
             public bool UseMap;
         }
         
-        const int MaxNumberOfCubes = 64;
+        const int MaxNumberOfCubes = 256;
         const int MaxNumberOfThreads = 16;
+        const int BurnCpuFactor = 50;
 
         public void Run()
         {
@@ -69,11 +71,13 @@ namespace MultiCube
             var currentState = new State
             {
                 // Set the number of cubes to display (horizontally and vertically) 
-                CountCubes = 256,
+                CountCubes = 64,
                 // Number of threads to run concurrently 
                 ThreadCount = 4,
                 // Use deferred by default
                 UseDeferred = true,
+                // BurnCpu by default
+                SimulateCpuUsage = true,
                 // Default is using Map/Unmap
                 UseMap = true,
             };
@@ -242,10 +246,14 @@ namespace MultiCube
                     nextState.CountCubes--;
                 if (arg.KeyCode == Keys.Right && nextState.CountCubes < MaxNumberOfCubes)
                     nextState.CountCubes++;
+
                 if (arg.KeyCode == Keys.F1)
                     nextState.UseDeferred = !nextState.UseDeferred;
                 if (arg.KeyCode == Keys.F2)
                     nextState.UseMap = !nextState.UseMap;
+                if (arg.KeyCode == Keys.F3)
+                    nextState.SimulateCpuUsage = !nextState.SimulateCpuUsage;
+
                 if (nextState.UseDeferred)
                 {
                     if (arg.KeyCode == Keys.Down && nextState.ThreadCount > 1)
@@ -318,6 +326,16 @@ namespace MultiCube
                         Matrix worldViewProj;
                         Matrix.Multiply(ref rotateMatrix, ref viewProj, out worldViewProj);
                         worldViewProj.Transpose();
+                        // Simulate CPU usage in order to see benefits of worlViewProj
+
+                        if (currentState.SimulateCpuUsage)
+                        {
+                            for (int i = 0; i < BurnCpuFactor; i++)
+                            {
+                                Matrix.Multiply(ref rotateMatrix, ref viewProj, out worldViewProj);
+                                worldViewProj.Transpose();
+                            }
+                        }
 
                         if (currentState.UseMap)
                         {
@@ -347,7 +365,7 @@ namespace MultiCube
                 fpsCounter++;
                 if (fpsTimer.ElapsedMilliseconds > 1000)
                 {
-                    form.Text = string.Format("SharpDX - MultiCube Direct3D11 - {0} (F1) - {1} (F2) - Threads ←{2}→ - Cube Count ↑{3}↓ - FPS: {4:F2} - MS/Frame: {5:F2}ms", currentState.UseDeferred ? supportCommandList ? "Deferred" : "Deferred*" : "Immediate", currentState.UseMap ? "Map/UnMap" : "UpdateSubresource", currentState.UseDeferred ? currentState.ThreadCount : 1, currentState.CountCubes * currentState.CountCubes, 1000.0 * fpsCounter / fpsTimer.ElapsedMilliseconds, (float)fpsTimer.ElapsedMilliseconds / fpsCounter);
+                    form.Text = string.Format("SharpDX - MultiCube D3D11 - (F1) {0} - (F2) {1} - (F3) {2} - Threads ↑↓{3} - Count ←{4}→ - FPS: {5:F2} ({6:F2}ms)", currentState.UseDeferred ? supportCommandList ? "Deferred" : "Deferred*" : "Immediate", currentState.UseMap ? "Map/UnMap" : "UpdateSubresource", currentState.SimulateCpuUsage ? "BurnCPU On" : "BurnCpu Off", currentState.UseDeferred ? currentState.ThreadCount : 1, currentState.CountCubes * currentState.CountCubes, 1000.0 * fpsCounter / fpsTimer.ElapsedMilliseconds, (float)fpsTimer.ElapsedMilliseconds / fpsCounter);
                     fpsTimer.Reset();
                     fpsTimer.Stop();
                     fpsTimer.Start();
