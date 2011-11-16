@@ -453,8 +453,8 @@ namespace SharpDX.D3DCompiler
         /// <returns>
         /// The compiled shader bytecode, or <c>null</c> if the method fails.
         /// </returns>
-        public static ShaderBytecode Compile(byte[] shaderSource, string profile, ShaderFlags shaderFlags,
-                                             EffectFlags effectFlags, string sourceFileName = "unknown")
+        public static ShaderBytecode Compile(byte[] shaderSource, string profile, ShaderFlags shaderFlags = ShaderFlags.None,
+                                             EffectFlags effectFlags = EffectFlags.None, string sourceFileName = "unknown")
         {
             return Compile(shaderSource, null, profile, shaderFlags, effectFlags, null, null, sourceFileName);
         }
@@ -471,7 +471,8 @@ namespace SharpDX.D3DCompiler
         /// <returns>
         /// The compiled shader bytecode, or <c>null</c> if the method fails.
         /// </returns>
-        public static ShaderBytecode Compile(string shaderSource, string entryPoint, string profile, ShaderFlags shaderFlags, EffectFlags effectFlags, string sourceFileName = "unknown")
+        public static ShaderBytecode Compile(string shaderSource, string entryPoint, string profile, ShaderFlags shaderFlags = ShaderFlags.None,
+                                             EffectFlags effectFlags = EffectFlags.None, string sourceFileName = "unknown")
         {
             if (string.IsNullOrEmpty(shaderSource))
             {
@@ -491,7 +492,8 @@ namespace SharpDX.D3DCompiler
         /// <param name = "effectFlags">Effect compilation options.</param>
         /// <returns>The compiled shader bytecode, or <c>null</c> if the method fails.</returns>
         public static ShaderBytecode Compile(byte[] shaderSource, string entryPoint, string profile,
-                                             ShaderFlags shaderFlags, EffectFlags effectFlags, string sourceFileName = "unknown")
+                                             ShaderFlags shaderFlags = ShaderFlags.None,
+                                             EffectFlags effectFlags = EffectFlags.None, string sourceFileName = "unknown")
         {
             return Compile(shaderSource, entryPoint, profile, shaderFlags, effectFlags, null, null,
                            sourceFileName);

@@ -23,6 +23,8 @@ using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using MultiCube.Properties;
+
 using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D;
@@ -134,11 +136,11 @@ namespace MultiCube
             var renderView = ToDispose(new RenderTargetView(device, backBuffer));
 
             // Compile Vertex and Pixel shaders 
-            var vertexShaderByteCode = ToDispose(ShaderBytecode.CompileFromFile("MultiCube.fx", "VS", "vs_4_0"));
+            var vertexShaderByteCode = ToDispose(ShaderBytecode.Compile(Resources.MultiCube, "VS", "vs_4_0"));
 
             var vertexShader = ToDispose(new VertexShader(device, vertexShaderByteCode));
 
-            var pixelShaderByteCode = ToDispose(ShaderBytecode.CompileFromFile("MultiCube.fx", "PS", "ps_4_0"));
+            var pixelShaderByteCode = ToDispose(ShaderBytecode.Compile(Resources.MultiCube, "PS", "ps_4_0"));
             var pixelShader = ToDispose(new PixelShader(device, pixelShaderByteCode));
 
             // Layout from VertexShader input signature 
