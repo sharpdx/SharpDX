@@ -71,6 +71,57 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Pins the specified source and call an action with the pinned pointer.
+        /// </summary>
+        /// <typeparam name="T">The type of the structure to pin</typeparam>
+        /// <param name="source">The source.</param>
+        /// <param name="pinAction">The pin action to perform on the pinned pointer.</param>
+        public static void Pin<T>(ref T source, Action<IntPtr> pinAction) where T : struct
+        {
+            unsafe
+            {
+                pinAction((IntPtr)Interop.Fixed(ref source));
+            }
+        }
+
+        /// <summary>
+        /// Pins the specified source and call an action with the pinned pointer.
+        /// </summary>
+        /// <typeparam name="T">The type of the structure to pin</typeparam>
+        /// <param name="source">The source array.</param>
+        /// <param name="pinAction">The pin action to perform on the pinned pointer.</param>
+        public static void Pin<T>(T[] source, Action<IntPtr> pinAction) where T : struct
+        {
+            unsafe
+            {
+                pinAction(source == null ? IntPtr.Zero : (IntPtr)Interop.Fixed(source));
+            }
+        }
+
+        /// <summary>
+        /// Covnerts a structured array to an equivalent byte array.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source">The source.</param>
+        /// <returns></returns>
+        public static byte[] ToByteArray<T>(T[] source) where T : struct
+        {
+            if (source == null) return null;
+
+            var buffer = new byte[SizeOf<T>() * source.Length];
+
+            if (source.Length == 0)
+                return buffer;
+
+            unsafe
+            {
+                fixed (void* pBuffer = buffer)
+                    SharpDX.Interop.Write<T>(pBuffer, source, 0, source.Length);
+            }
+            return buffer;
+        }
+
+        /// <summary>
         /// Reads the specified T data from a memory location.
         /// </summary>
         /// <typeparam name="T">Type of a data to read</typeparam>
