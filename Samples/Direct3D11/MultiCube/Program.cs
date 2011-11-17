@@ -123,6 +123,7 @@ namespace MultiCube
             var contextPerThread = new DeviceContext[MaxNumberOfThreads];
             contextPerThread[0] = immediateContext;
 
+            // Check if driver is supporting natively CommandList
             bool supportConcurentResources;
             bool supportCommandList;
             device.CheckThreadingSupport(out supportConcurentResources, out supportCommandList);
@@ -136,19 +137,20 @@ namespace MultiCube
             var renderView = ToDispose(new RenderTargetView(device, backBuffer));
 
             // Compile Vertex and Pixel shaders 
-            var vertexShaderByteCode = ToDispose(ShaderBytecode.Compile(Resources.MultiCube, "VS", "vs_4_0"));
-
-            var vertexShader = ToDispose(new VertexShader(device, vertexShaderByteCode));
-
-            var pixelShaderByteCode = ToDispose(ShaderBytecode.Compile(Resources.MultiCube, "PS", "ps_4_0"));
-            var pixelShader = ToDispose(new PixelShader(device, pixelShaderByteCode));
+            var bytecode = ShaderBytecode.Compile(Resources.MultiCube, "VS", "vs_4_0");
+            var vertexShader = ToDispose(new VertexShader(device, bytecode));
 
             // Layout from VertexShader input signature 
-            var layout = ToDispose(new InputLayout(device, ToDispose(ShaderSignature.GetInputSignature(vertexShaderByteCode)), new[] 
+            var layout = ToDispose(new InputLayout(device, ToDispose(ShaderSignature.GetInputSignature(bytecode)), new[] 
                     { 
                         new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0), 
                         new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0) 
                     }));
+            bytecode.Dispose();
+
+            bytecode = ToDispose(ShaderBytecode.Compile(Resources.MultiCube, "PS", "ps_4_0"));
+            var pixelShader = ToDispose(new PixelShader(device, bytecode));
+            bytecode.Dispose();
 
             // Instantiate Vertex buiffer from vertex data 
             var vertices = ToDispose(Buffer.Create(device, BindFlags.VertexBuffer, new[] 
@@ -292,7 +294,7 @@ namespace MultiCube
                     renderingContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(vertices, Utilities.SizeOf<Vector4>() * 2, 0));
                     renderingContext.VertexShader.SetConstantBuffer(0, currentState.UseMap ? dynamicConstantBuffer : staticContantBuffer);
                     renderingContext.VertexShader.Set(vertexShader);
-                    renderingContext.Rasterizer.SetViewports(new Viewport(0, 0, form.ClientSize.Width, form.ClientSize.Height, 0.0f, 1.0f));
+                    renderingContext.Rasterizer.SetViewport(0, 0, form.ClientSize.Width, form.ClientSize.Height);
                     renderingContext.PixelShader.Set(pixelShader);
                     renderingContext.OutputMerger.SetTargets(depthView, renderView);
                 }

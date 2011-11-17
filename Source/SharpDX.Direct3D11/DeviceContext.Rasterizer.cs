@@ -17,6 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System;
+
 namespace SharpDX.Direct3D11
 {
     public partial class DeviceContext
@@ -79,12 +82,19 @@ namespace SharpDX.Direct3D11
             }
 
             /// <summary>
-            ///   Binds a single scissor rectangle to the rasterizer stage.
+            /// Binds a single scissor rectangle to the rasterizer stage.
             /// </summary>
-            /// <param name = "scissorRectangle">The scissor rectangle to bind.</param>
-            public void SetScissorRectangles(Rectangle scissorRectangle)
+            /// <param name="left">The left.</param>
+            /// <param name="top">The top.</param>
+            /// <param name="right">The right.</param>
+            /// <param name="bottom">The bottom.</param>
+            public void SetScissorRectangle(int left, int top, int right, int bottom)
             {
-                SetScissorRectangles(new Rectangle[] {scissorRectangle});
+                var rect = new Rectangle(left, top, right, bottom);
+                unsafe
+                {
+                    SetScissorRects(1, new IntPtr(&rect));
+                }
             }
 
             /// <summary>
@@ -93,7 +103,29 @@ namespace SharpDX.Direct3D11
             /// <param name = "scissorRectangles">The set of scissor rectangles to bind.</param>
             public void SetScissorRectangles(params Rectangle[] scissorRectangles)
             {
-                SetScissorRects(scissorRectangles.Length, scissorRectangles);
+                unsafe
+                {
+                    fixed (void* pBuffer = scissorRectangles)
+                        SetScissorRects(scissorRectangles == null ? 0 : scissorRectangles.Length, (IntPtr)pBuffer);
+                }
+            }
+
+            /// <summary>
+            /// Binds a single viewport to the rasterizer stage.
+            /// </summary>
+            /// <param name="x">The x coord of the viewport.</param>
+            /// <param name="y">The x coord of the viewport.</param>
+            /// <param name="width">The width.</param>
+            /// <param name="height">The height.</param>
+            /// <param name="minZ">The min Z.</param>
+            /// <param name="maxZ">The max Z.</param>
+            public void SetViewport(float x, float y, float width, float height, float minZ = 0.0f, float maxZ = 1.0f)
+            {
+                var viewport = new Viewport(x, y, width, height, minZ, maxZ);
+                unsafe
+                {
+                    SetViewports(1, new IntPtr(&viewport));
+                }
             }
 
             /// <summary>
@@ -102,16 +134,11 @@ namespace SharpDX.Direct3D11
             /// <param name = "viewports">The set of viewports to bind.</param>
             public void SetViewports(params Viewport[] viewports)
             {
-                SetViewports(viewports.Length, viewports);
-            }
-
-            /// <summary>
-            ///   Binds a single viewport to the rasterizer stage.
-            /// </summary>
-            /// <param name = "viewport">The viewport to bind.</param>
-            public void SetViewports(Viewport viewport)
-            {
-                SetViewports(new Viewport[] {viewport});
+                unsafe
+                {
+                    fixed (void* pBuffer = viewports)
+                        SetViewports(viewports == null ? 0 : viewports.Length, (IntPtr)pBuffer);
+                }
             }
         }
     }
