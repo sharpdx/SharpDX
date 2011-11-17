@@ -98,7 +98,7 @@ namespace SharpDX
             {
                 if (userBuffer == null)
                     throw new ArgumentNullException("userBuffer");
-                return new DataStream(Interop.Fixed(userBuffer), userBuffer.Length, canRead, canWrite, false);
+                return new DataStream(Interop.Fixed(userBuffer), userBuffer.Length * Utilities.SizeOf<T>(), canRead, canWrite, false);
             }
         }
 
