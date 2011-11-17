@@ -162,12 +162,12 @@ namespace SharpDX.Direct3D11
             /// <param name = "numViews">Number of shader resources to set. Up to a maximum of 128 slots are available for shader resources (ranges from 0 to D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot).</param>
             /// <param name = "shaderResourceViewsOut">Array of {{shader resource view}} interfaces to set to the device.</param>
             /// <unmanaged>void PSSetShaderResources([In] UINT StartSlot,[In] UINT NumViews,[In, Buffer] const ID3D11ShaderResourceView** ppShaderResourceViews)</unmanaged>
-            public void SetShaderResources(int startSlot, int numViews, SharpDX.Direct3D11.ShaderResourceView[] shaderResourceViewsOut)
+            public void SetShaderResources(int startSlot, int numViews, params SharpDX.Direct3D11.ShaderResourceView[] shaderResourceViewsOut)
             {
                 unsafe
                 {
                     IntPtr* shaderResourceViewsOut_ = (IntPtr*)0;
-                    if (shaderResourceViewsOut != null)
+                    if (shaderResourceViewsOut != null && shaderResourceViewsOut.Length > 0)
                     {
                         IntPtr* shaderResourceViewsOut__ = stackalloc IntPtr[shaderResourceViewsOut.Length];
                         shaderResourceViewsOut_ = shaderResourceViewsOut__;
