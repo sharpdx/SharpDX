@@ -146,7 +146,7 @@ namespace SharpDX.Windows
             ResizeRedraw = true;
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
 
-            //Icon = SharpDX.Resources.BlackIcon;
+            Icon = SharpDX.Properties.Resources.logo;
         }
 
         /// <summary>

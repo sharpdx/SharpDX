@@ -31,6 +31,11 @@
     <Compile Include="IO\NativeFileMode.cs" />
     <Compile Include="IO\NativeFileShare.cs" />
     <Compile Include="Matrix3x2.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="ShadowContainer.cs" />
     <Compile Include="Collision.cs" />
     <Compile Include="Color3.cs" />
@@ -144,6 +149,12 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="SharpDX.nuspec" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
