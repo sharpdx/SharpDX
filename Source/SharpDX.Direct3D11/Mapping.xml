@@ -199,6 +199,10 @@
     <move method="ID3D11DeviceContext::HS(.*)" to="HullShaderStage" property="HullShader" base="CommonShaderStage&lt;HullShader&gt;"/>
     <move method="ID3D11DeviceContext::CS(.*)" to="ComputeShaderStage" property="ComputeShader" base="CommonShaderStage&lt;ComputeShader&gt;"/>
 
+    <map method="ID3D11DeviceContext::OMSetRenderTargets" visibility="internal"/>
+    <map param="ppRenderTargetViews" type="void" attribute="in"/>
+    <map method="ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews" visibility="internal"/>
+
     <map method="ID3DX11EffectUnorderedAccessViewVariable::.*" property="false"/>
     <map method="ID3DX11EffectUnorderedAccessViewVariable::Set.*" name="Set"/>
     <map param="ID3DX11EffectUnorderedAccessViewVariable::GetUnorderedAccessView::ppResource" return="true"/>

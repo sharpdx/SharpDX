@@ -128,6 +128,14 @@ namespace SharpDX.Direct3D11
             }
 
             /// <summary>
+            ///   Unbinds all depth-stencil buffer and render targets from the output-merger stage.
+            /// </summary>
+            public void UnsetTargets()
+            {
+                SetRenderTargets(0, IntPtr.Zero, null);
+            }
+
+            /// <summary>
             ///   Binds a set of render targets to the output-merger stage.
             /// </summary>
             /// <param name = "renderTargetViews">A set of render target views to bind.</param>
@@ -142,7 +150,7 @@ namespace SharpDX.Direct3D11
             /// <param name = "renderTargetView">A view of the render target to bind.</param>
             public void SetTargets(RenderTargetView renderTargetView)
             {
-                SetTargets((DepthStencilView) null, renderTargetView);
+                SetTargets((DepthStencilView)null, renderTargetView);
             }
 
             /// <summary>
@@ -162,9 +170,35 @@ namespace SharpDX.Direct3D11
             /// <param name = "renderTargetView">A view of the render target to bind.</param>
             public void SetTargets(DepthStencilView depthStencilView, RenderTargetView renderTargetView)
             {
-                SetTargets(depthStencilView, new[] {renderTargetView});
+                IntPtr targetPtr = renderTargetView == null ? IntPtr.Zero : renderTargetView.NativePointer;
+                unsafe
+                {
+                    // Optimized version for one render target
+                    SetRenderTargets(1, new IntPtr(&targetPtr), depthStencilView);
+                }
             }
 
+            /// <summary>
+            ///   Binds a depth-stencil buffer and a set of render targets to the output-merger stage.
+            /// </summary>
+            /// <param name = "depthStencilView">A view of the depth-stencil buffer to bind.</param>
+            /// <param name = "renderTargetViews">A set of render target views to bind.</param>
+            /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargets([In] unsigned int NumViews,[In, Buffer, Optional] const ID3D11RenderTargetView** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView)</unmanaged>	
+            public void SetTargets(SharpDX.Direct3D11.DepthStencilView depthStencilView, SharpDX.ComArray<SharpDX.Direct3D11.RenderTargetView> renderTargetViews)
+            {
+                SetRenderTargets(renderTargetViews == null ? 0 : renderTargetViews.Length, (renderTargetViews == null) ? IntPtr.Zero : renderTargetViews.NativePointer, depthStencilView);
+            }
+
+            /// <summary>
+            ///   Binds a set of render targets to the output-merger stage and clear the depth stencil view.
+            /// </summary>
+            /// <param name = "renderTargetViews">A set of render target views to bind.</param>
+            /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargets([In] unsigned int NumViews,[In, Buffer, Optional] const ID3D11RenderTargetView** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView)</unmanaged>	
+            public void SetTargets(SharpDX.ComArray<SharpDX.Direct3D11.RenderTargetView> renderTargetViews)
+            {
+                SetRenderTargets(renderTargetViews == null ? 0 : renderTargetViews.Length, (renderTargetViews == null) ? IntPtr.Zero : renderTargetViews.NativePointer, null);
+            }
+            
             /// <summary>
             ///   Binds a set of unordered access views and a single render target to the output-merger stage.
             /// </summary>
@@ -275,6 +309,23 @@ namespace SharpDX.Direct3D11
                 SetRenderTargetsAndUnorderedAccessViews(renderTargetViews.Length, renderTargetViews, depthStencilView,
                                                         startSlot, unorderedAccessViews.Length, unorderedAccessViews,
                                                         initialLengths);
+            }
+
+            /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargets([In] unsigned int NumViews,[In, Buffer, Optional] const ID3D11RenderTargetView** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView)</unmanaged>	
+            private void SetRenderTargets(int numViews, SharpDX.Direct3D11.RenderTargetView[] renderTargetViews, SharpDX.Direct3D11.DepthStencilView depthStencilViewRef)
+            {
+                unsafe
+                {
+                    IntPtr* renderTargetViewsPtr = (IntPtr*)0;
+                    if (numViews > 0)
+                    {
+                        IntPtr* tempPtr = stackalloc IntPtr[numViews];
+                        renderTargetViewsPtr = tempPtr;
+                        for (int i = 0; i < numViews; i++)
+                            renderTargetViewsPtr[i] = (renderTargetViews[i] == null) ? IntPtr.Zero : renderTargetViews[i].NativePointer;
+                    }
+                    SetRenderTargets(numViews, (IntPtr)renderTargetViewsPtr, depthStencilViewRef);
+                }
             }
 
             /// <summary>

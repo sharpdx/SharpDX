@@ -85,7 +85,31 @@ namespace SharpDX.Direct3D11
             /// <param name = "constantBuffer">constant buffer to set</param>
             public void SetConstantBuffer(int slot, Buffer constantBuffer)
             {
-                SetConstantBuffers(slot, 1, new[] { constantBuffer });
+                var tempPtr = constantBuffer == null ? IntPtr.Zero : constantBuffer.NativePointer;
+                unsafe
+                {
+                    SetConstantBuffers(slot, 1, new IntPtr(&tempPtr));
+                }
+            }
+
+            /// <summary>
+            ///   Sets an array of constant buffers to be used by the shader stage.
+            /// </summary>
+            /// <param name = "slot">Index into the device's zero-based array to which to set the array of constant buffers.</param>
+            /// <param name = "constantBuffers">An array of constant buffer to set</param>
+            public void SetConstantBuffers(int slot, params Buffer[] constantBuffers)
+            {
+                SetConstantBuffers(slot, constantBuffers == null ? 0 : constantBuffers.Length, constantBuffers);
+            }
+
+            /// <summary>
+            ///   Sets an array of constant buffers to be used by the shader stage.
+            /// </summary>
+            /// <param name = "slot">Index into the device's zero-based array to which to set the array of constant buffers.</param>
+            /// <param name = "constantBuffers">An array of constant buffer to set</param>
+            public void SetConstantBuffers(int slot, ComArray<Buffer> constantBuffers)
+            {
+                SetConstantBuffers(slot, constantBuffers == null ? 0 : constantBuffers.Length, constantBuffers);
             }
 
             /// <summary>
@@ -95,7 +119,31 @@ namespace SharpDX.Direct3D11
             /// <param name = "sampler">sampler state to set</param>
             public void SetSampler(int slot, SamplerState sampler)
             {
-                SetSamplers(slot, 1, new[] { sampler });
+                var tempPtr = sampler == null ? IntPtr.Zero : sampler.NativePointer;
+                unsafe
+                {
+                    SetSamplers(slot, 1, new IntPtr(&tempPtr));
+                }
+            }
+
+            /// <summary>
+            ///   Sets an array of samplers to be used by the shader stage.
+            /// </summary>
+            /// <param name = "slot">Index into the device's zero-based array to which to set the array of sampler states.</param>
+            /// <param name = "samplers">An array of sampler state to set</param>
+            public void SetSamplers(int slot, params SamplerState[] samplers)
+            {
+                SetSamplers(slot, samplers == null ? 0 : samplers.Length, samplers);
+            }
+
+            /// <summary>
+            ///   Sets an array of samplesr to be used by the shader stage.
+            /// </summary>
+            /// <param name = "slot">Index into the device's zero-based array to which  to set the array of sampler states.</param>
+            /// <param name = "samplers">An array of sampler state to set</param>
+            public void SetSamplers(int slot, ComArray<SamplerState> samplers)
+            {
+                SetSamplers(slot, samplers == null ? 0 : samplers.Length, samplers);
             }
 
             /// <summary>
@@ -110,6 +158,32 @@ namespace SharpDX.Direct3D11
                 {
                     SetShaderResources(slot, 1, new IntPtr(&localPointer));
                 }
+            }
+
+            /// <summary>
+            ///   Bind an array of shader resources to the shader stage.
+            /// </summary>
+            /// <remarks>
+            ///   If an overlapping resource view is already bound to an output slot, such as a rendertarget, then this API will fill the destination shader resource slot with NULL.For information about creating shader-resource views, see <see cref = "SharpDX.Direct3D11.Device.CreateShaderResourceView" />. The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10.
+            /// </remarks>
+            /// <param name = "startSlot">Index into the device's zero-based array to begin setting shader resources to (ranges from 0 to D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1).</param>
+            /// <param name = "shaderResourceViews">Array of {{shader resource view}} interfaces to set to the device.</param>
+            public void SetShaderResources(int startSlot, params SharpDX.Direct3D11.ShaderResourceView[] shaderResourceViews)
+            {
+                SetShaderResources(startSlot, shaderResourceViews.Length, shaderResourceViews);
+            }
+
+            /// <summary>
+            ///   Bind an array of shader resources to the shader stage.
+            /// </summary>
+            /// <remarks>
+            ///   If an overlapping resource view is already bound to an output slot, such as a rendertarget, then this API will fill the destination shader resource slot with NULL.For information about creating shader-resource views, see <see cref = "SharpDX.Direct3D11.Device.CreateShaderResourceView" />. The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10.
+            /// </remarks>
+            /// <param name = "startSlot">Index into the device's zero-based array to begin setting shader resources to (ranges from 0 to D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1).</param>
+            /// <param name = "shaderResourceViews">Array of {{shader resource view}} interfaces to set to the device.</param>
+            public void SetShaderResources(int startSlot, ComArray<SharpDX.Direct3D11.ShaderResourceView> shaderResourceViews)
+            {
+                SetShaderResources(startSlot, shaderResourceViews.Length, shaderResourceViews);
             }
 
             /// <summary>
@@ -160,21 +234,21 @@ namespace SharpDX.Direct3D11
             /// </remarks>
             /// <param name = "startSlot">Index into the device's zero-based array to begin setting shader resources to (ranges from 0 to D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - 1).</param>
             /// <param name = "numViews">Number of shader resources to set. Up to a maximum of 128 slots are available for shader resources (ranges from 0 to D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT - StartSlot).</param>
-            /// <param name = "shaderResourceViewsOut">Array of {{shader resource view}} interfaces to set to the device.</param>
+            /// <param name = "shaderResourceViews">Array of {{shader resource view}} interfaces to set to the device.</param>
             /// <unmanaged>void PSSetShaderResources([In] UINT StartSlot,[In] UINT NumViews,[In, Buffer] const ID3D11ShaderResourceView** ppShaderResourceViews)</unmanaged>
-            public void SetShaderResources(int startSlot, int numViews, params SharpDX.Direct3D11.ShaderResourceView[] shaderResourceViewsOut)
+            public void SetShaderResources(int startSlot, int numViews, params SharpDX.Direct3D11.ShaderResourceView[] shaderResourceViews)
             {
                 unsafe
                 {
-                    IntPtr* shaderResourceViewsOut_ = (IntPtr*)0;
-                    if (shaderResourceViewsOut != null && shaderResourceViewsOut.Length > 0)
+                    var shaderResourceViewsPtr = (IntPtr*)0;
+                    if (numViews > 0)
                     {
-                        IntPtr* shaderResourceViewsOut__ = stackalloc IntPtr[shaderResourceViewsOut.Length];
-                        shaderResourceViewsOut_ = shaderResourceViewsOut__;
-                        for (int i = 0; i < shaderResourceViewsOut.Length; i++)
-                            shaderResourceViewsOut_[i] = (shaderResourceViewsOut[i] == null) ? IntPtr.Zero : shaderResourceViewsOut[i].NativePointer;
+                        var tempPtr = stackalloc IntPtr[numViews];
+                        shaderResourceViewsPtr = tempPtr;
+                        for (int i = 0; i < numViews; i++)
+                            shaderResourceViewsPtr[i] = (shaderResourceViews[i] == null) ? IntPtr.Zero : shaderResourceViews[i].NativePointer;
                     }
-                    SetShaderResources(startSlot, numViews, (IntPtr)shaderResourceViewsOut_);
+                    SetShaderResources(startSlot, numViews, (IntPtr)shaderResourceViewsPtr);
                 }
             }
 
@@ -214,25 +288,23 @@ namespace SharpDX.Direct3D11
             /// </remarks>
             /// <param name = "startSlot">Index into the device's zero-based array to begin setting samplers to (ranges from 0 to D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - 1).</param>
             /// <param name = "numSamplers">Number of samplers in the array. Each pipeline stage has a total of 16 sampler slots available (ranges from 0 to D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - StartSlot).</param>
-            /// <param name = "samplersRef">Pointer to an array of sampler-state interfaces (see <see cref = "SharpDX.Direct3D11.SamplerState" />). See Remarks.</param>
+            /// <param name = "samplers">Pointer to an array of sampler-state interfaces (see <see cref = "SharpDX.Direct3D11.SamplerState" />). See Remarks.</param>
             /// <unmanaged>void PSSetSamplers([In] UINT StartSlot,[In] UINT NumSamplers,[In, Buffer] const ID3D11SamplerState** ppSamplers)</unmanaged>
-            public abstract void SetSamplers(int startSlot, int numSamplers,
-                                             SharpDX.Direct3D11.SamplerState[] samplersRef);
-
-
-            /// <summary>
-            ///   Set the constant buffers used by the shader pipeline stage.
-            /// </summary>
-            /// <remarks>
-            ///   The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10.
-            /// </remarks>
-            /// <param name = "startSlot">Index into the device's zero-based array to begin setting constant buffers to (ranges from 0 to D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1).</param>
-            /// <param name = "numBuffers">Number of buffers to set (ranges from 0 to D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot).</param>
-            /// <param name = "constantBuffersRef">Array of constant buffers (see <see cref = "SharpDX.Direct3D11.Buffer" />) being given to the device.</param>
-            /// <unmanaged>void PSSetConstantBuffers([In] UINT StartSlot,[In] UINT NumBuffers,[In, Buffer] const ID3D11Buffer** ppConstantBuffers)</unmanaged>
-            public abstract void SetConstantBuffers(int startSlot, int numBuffers,
-                                                    SharpDX.Direct3D11.Buffer[] constantBuffersRef);
-
+            public void SetSamplers(int startSlot, int numSamplers, params SharpDX.Direct3D11.SamplerState[] samplers)
+            {
+                unsafe
+                {
+                    var samplersPtr = (IntPtr*)0;
+                    if (numSamplers > 0)
+                    {
+                        var tempPtr = stackalloc IntPtr[numSamplers];
+                        samplersPtr = tempPtr;
+                        for (int i = 0; i < numSamplers; i++)
+                            samplersPtr[i] = (samplers[i] == null) ? IntPtr.Zero : samplers[i].NativePointer;
+                    }
+                    SetSamplers(startSlot, numSamplers, (IntPtr)samplersPtr);
+                }
+            }
 
             /// <summary>
             ///   Set an array of sampler states to the shader pipeline stage.
@@ -242,11 +314,14 @@ namespace SharpDX.Direct3D11
             /// </remarks>
             /// <param name = "startSlot">Index into the device's zero-based array to begin setting samplers to (ranges from 0 to D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - 1).</param>
             /// <param name = "numSamplers">Number of samplers in the array. Each pipeline stage has a total of 16 sampler slots available (ranges from 0 to D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT - StartSlot).</param>
-            /// <param name = "samplersRef">Pointer to an array of sampler-state interfaces (see <see cref = "SharpDX.Direct3D11.SamplerState" />). See Remarks.</param>
+            /// <param name = "samplers">Pointer to an array of sampler-state interfaces (see <see cref = "SharpDX.Direct3D11.SamplerState" />). See Remarks.</param>
             /// <unmanaged>void PSSetSamplers([In] UINT StartSlot,[In] UINT NumSamplers,[In, Buffer] const ID3D11SamplerState** ppSamplers)</unmanaged>
-            public abstract void SetSamplers(int startSlot, int numSamplers,
-                                             SharpDX.ComArray<SharpDX.Direct3D11.SamplerState> samplersRef);
+            public void SetSamplers(int startSlot, int numSamplers, SharpDX.ComArray<SharpDX.Direct3D11.SamplerState> samplers)
+            {
+                SetSamplers(startSlot, numSamplers, samplers.NativePointer);
+            }
 
+            internal abstract void SetSamplers(int startSlot, int numSamplers, IntPtr samplersRef);
 
             /// <summary>
             ///   Set the constant buffers used by the shader pipeline stage.
@@ -256,10 +331,40 @@ namespace SharpDX.Direct3D11
             /// </remarks>
             /// <param name = "startSlot">Index into the device's zero-based array to begin setting constant buffers to (ranges from 0 to D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1).</param>
             /// <param name = "numBuffers">Number of buffers to set (ranges from 0 to D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot).</param>
-            /// <param name = "constantBuffersRef">Array of constant buffers (see <see cref = "SharpDX.Direct3D11.Buffer" />) being given to the device.</param>
+            /// <param name = "constantBuffers">Array of constant buffers (see <see cref = "SharpDX.Direct3D11.Buffer" />) being given to the device.</param>
             /// <unmanaged>void PSSetConstantBuffers([In] UINT StartSlot,[In] UINT NumBuffers,[In, Buffer] const ID3D11Buffer** ppConstantBuffers)</unmanaged>
-            public abstract void SetConstantBuffers(int startSlot, int numBuffers,
-                                                    SharpDX.ComArray<SharpDX.Direct3D11.Buffer> constantBuffersRef);
+            public void SetConstantBuffers(int startSlot, int numBuffers, params SharpDX.Direct3D11.Buffer[] constantBuffers)
+            {
+                unsafe
+                {
+                    var constantBuffersPtr = (IntPtr*)0;
+                    if (numBuffers > 0)
+                    {
+                        var tempPtr = stackalloc IntPtr[numBuffers];
+                        constantBuffersPtr = tempPtr;
+                        for (int i = 0; i < numBuffers; i++)
+                            constantBuffersPtr[i] = (constantBuffers[i] == null) ? IntPtr.Zero : constantBuffers[i].NativePointer;
+                    }
+                    SetConstantBuffers(startSlot, numBuffers, (IntPtr)constantBuffersPtr);
+                }
+            }
+
+            /// <summary>
+            ///   Set the constant buffers used by the shader pipeline stage.
+            /// </summary>
+            /// <remarks>
+            ///   The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10.
+            /// </remarks>
+            /// <param name = "startSlot">Index into the device's zero-based array to begin setting constant buffers to (ranges from 0 to D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1).</param>
+            /// <param name = "numBuffers">Number of buffers to set (ranges from 0 to D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot).</param>
+            /// <param name = "constantBuffers">Array of constant buffers (see <see cref = "SharpDX.Direct3D11.Buffer" />) being given to the device.</param>
+            /// <unmanaged>void PSSetConstantBuffers([In] UINT StartSlot,[In] UINT NumBuffers,[In, Buffer] const ID3D11Buffer** ppConstantBuffers)</unmanaged>
+            public void SetConstantBuffers(int startSlot, int numBuffers, SharpDX.ComArray<SharpDX.Direct3D11.Buffer> constantBuffers)
+            {
+                SetConstantBuffers(startSlot, numBuffers, constantBuffers.NativePointer);
+            }
+
+            internal abstract void SetConstantBuffers(int startSlot, int numBuffers, IntPtr constantBuffersRef);
         }
 
         /// <summary>
@@ -308,7 +413,7 @@ namespace SharpDX.Direct3D11
             /// <param name = "shader">The shader to assign to the device. Assign null to disable the compute shader.</param>
             public void Set(T shader)
             {
-                SetShader(shader, (ClassInstance[])null, 0);
+                SetShader(shader, (SharpDX.ComArray<SharpDX.Direct3D11.ClassInstance>)null, 0);
             }
 
             /// <summary>
@@ -318,7 +423,7 @@ namespace SharpDX.Direct3D11
             /// <param name = "classInstances">An array of class-instance interfaces. Each interface used by a shader must have a corresponding class instance or the shader will get disabled.</param>
             public void Set(T shader, ClassInstance[] classInstances)
             {
-                SetShader(shader, classInstances, classInstances.Length);
+                SetShader(shader, classInstances, classInstances == null ? 0 : classInstances.Length);
             }
 
             /// <summary>
@@ -328,7 +433,7 @@ namespace SharpDX.Direct3D11
             /// <param name = "classInstances">An array of class-instance interfaces. Each interface used by a shader must have a corresponding class instance or the shader will get disabled.</param>
             public void Set(T shader, SharpDX.ComArray<ClassInstance> classInstances)
             {
-                SetShader(shader, classInstances, classInstances.Length);
+                SetShader(shader, classInstances, classInstances == null ? 0 : classInstances.Length);
             }
 
             internal abstract void SetShader(T shaderRef, SharpDX.Direct3D11.ClassInstance[] classInstancesRef, int numClassInstances);
