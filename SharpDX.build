@@ -36,7 +36,7 @@
     <loadfile file="Source/SharedAssemblyInfo.cs" property="assembly_version_file" />
 	<property name="win8-postfix" value=""/>
 	<property name="win8-postfix" value="-Win8Preview" if="${win8}"/>
-    <regex pattern="AssemblyVersion\(.(?'assembly_version'\d+\.\d+.\d+.\d+)" input="${assembly_version_file}" />
+    <regex pattern="AssemblyVersion\(.(?'assembly_version'\d+\.\d+.\d+)" input="${assembly_version_file}" />
     <property name="output_bin_zip" value="${project.name}${win8-postfix}-Bin-${assembly_version}.zip"/>
     <property name="output_bin_and_samples_zip" value="${project.name}${win8-postfix}-BinAndSamples-${assembly_version}.zip"/>
 
