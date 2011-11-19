@@ -52,12 +52,19 @@ namespace MultiCube
         /// <summary>
         /// State used to store testcase values.
         /// </summary>
+        enum TestType
+        {
+            Immediate = 0,
+            Deferred = 1,
+            FrozenDeferred = 2
+        }
+        
         struct State
         {
             public bool Exit;
             public int CountCubes;
             public int ThreadCount;
-            public bool UseDeferred;
+            public TestType Type;
             public bool SimulateCpuUsage;
             public bool UseMap;
         }
@@ -77,7 +84,7 @@ namespace MultiCube
                 // Number of threads to run concurrently 
                 ThreadCount = 4,
                 // Use deferred by default
-                UseDeferred = true,
+                Type = TestType.Deferred,
                 // BurnCpu by default
                 SimulateCpuUsage = true,
                 // Default is using Map/Unmap
@@ -122,6 +129,8 @@ namespace MultiCube
             // Allocate rendering context array 
             var contextPerThread = new DeviceContext[MaxNumberOfThreads];
             contextPerThread[0] = immediateContext;
+            var commandLists = new CommandList[MaxNumberOfThreads];
+            CommandList[] frozenCommandLists = null;
 
             // Check if driver is supporting natively CommandList
             bool supportConcurentResources;
@@ -252,13 +261,13 @@ namespace MultiCube
                     nextState.CountCubes++;
 
                 if (arg.KeyCode == Keys.F1)
-                    nextState.UseDeferred = !nextState.UseDeferred;
+                    nextState.Type= (TestType)((((int)nextState.Type) + 1) % 3);
                 if (arg.KeyCode == Keys.F2)
                     nextState.UseMap = !nextState.UseMap;
                 if (arg.KeyCode == Keys.F3)
                     nextState.SimulateCpuUsage = !nextState.SimulateCpuUsage;
 
-                if (nextState.UseDeferred)
+                if (nextState.Type == TestType.Deferred)
                 {
                     if (arg.KeyCode == Keys.Down && nextState.ThreadCount > 1)
                         nextState.ThreadCount--;
@@ -276,9 +285,9 @@ namespace MultiCube
             Action SetupPipeline = () =>
             {
                 int threadCount = 1;
-                if (currentState.UseDeferred)
+                if (currentState.Type != TestType.Immediate)
                 {
-                    threadCount = currentState.ThreadCount;
+                    threadCount = currentState.Type == TestType.Deferred ? currentState.ThreadCount : 1;
                     Array.Copy(deferredContexts, contextPerThread, contextPerThread.Length);
                 }
                 else
@@ -356,7 +365,33 @@ namespace MultiCube
                         renderingContext.Draw(36, 0);
                     }
                 }
+
+                if (currentState.Type != TestType.Immediate)
+                    commandLists[contextIndex] = renderingContext.FinishCommandList(false);
             };
+
+
+            Action<int> RenderDeferred = (int threadCount) =>
+                {
+                    int deltaCube = currentState.CountCubes / threadCount;
+                    if (deltaCube == 0) deltaCube = 1;
+                    int nextStartingRow = 0;
+                    var tasks = new Task[threadCount];
+                    for (int i = 0; i < threadCount; i++)
+                    {
+                        var threadIndex = i;
+                        int fromRow = nextStartingRow;
+                        int toRow = (i + 1) == threadCount ? currentState.CountCubes : fromRow + deltaCube;
+                        if (toRow > currentState.CountCubes)
+                            toRow = currentState.CountCubes;
+                        nextStartingRow = toRow;
+
+                        tasks[i] = new Task(() => RenderRow(threadIndex, fromRow, toRow) );
+                        tasks[i].Start();
+                    }
+                    Task.WaitAll(tasks);
+                };
+
 
             // --------------------------------------------------------------------------------------
             // Main Loop
@@ -369,7 +404,10 @@ namespace MultiCube
                 fpsCounter++;
                 if (fpsTimer.ElapsedMilliseconds > 1000)
                 {
-                    form.Text = string.Format("SharpDX - MultiCube D3D11 - (F1) {0} - (F2) {1} - (F3) {2} - Threads ↑↓{3} - Count ←{4}→ - FPS: {5:F2} ({6:F2}ms)", currentState.UseDeferred ? supportCommandList ? "Deferred" : "Deferred*" : "Immediate", currentState.UseMap ? "Map/UnMap" : "UpdateSubresource", currentState.SimulateCpuUsage ? "BurnCPU On" : "BurnCpu Off", currentState.UseDeferred ? currentState.ThreadCount : 1, currentState.CountCubes * currentState.CountCubes, 1000.0 * fpsCounter / fpsTimer.ElapsedMilliseconds, (float)fpsTimer.ElapsedMilliseconds / fpsCounter);
+                    var typeStr = currentState.Type.ToString();
+                    if (currentState.Type != TestType.Immediate && !supportCommandList) typeStr += "*";
+
+                    form.Text = string.Format("SharpDX - MultiCube D3D11 - (F1) {0} - (F2) {1} - (F3) {2} - Threads ↑↓{3} - Count ←{4}→ - FPS: {5:F2} ({6:F2}ms)", typeStr, currentState.UseMap ? "Map/UnMap" : "UpdateSubresource", currentState.SimulateCpuUsage ? "BurnCPU On" : "BurnCpu Off", currentState.Type == TestType.Deferred ? currentState.ThreadCount : 1, currentState.CountCubes * currentState.CountCubes, 1000.0 * fpsCounter / fpsTimer.ElapsedMilliseconds, (float)fpsTimer.ElapsedMilliseconds / fpsCounter);
                     fpsTimer.Reset();
                     fpsTimer.Stop();
                     fpsTimer.Start();
@@ -380,46 +418,37 @@ namespace MultiCube
                 SetupPipeline();
 
                 // Execute on the rendering thread when ThreadCount == 1 or No deferred rendering is selected
-                if (!currentState.UseDeferred || currentState.ThreadCount == 1)
+                if (currentState.Type == TestType.Immediate || ( currentState.Type == TestType.Deferred && currentState.ThreadCount == 1))
                 {
                     RenderRow(0, 0, currentState.CountCubes);
                 }
 
                 // In case of deferred context, use of FinishCommandList / ExecuteCommandList
-                if (currentState.UseDeferred)
+                if (currentState.Type != TestType.Immediate)
                 {
-                    if (currentState.ThreadCount > 1)
+                    if (currentState.Type == TestType.FrozenDeferred)
                     {
-                        int deltaCube = currentState.CountCubes / currentState.ThreadCount;
-                        if (deltaCube == 0) deltaCube = 1;
-                        int nextStartingRow = 0;
-                        var tasks = new Task[currentState.ThreadCount];
-                        for (int i = 0; i < currentState.ThreadCount; i++)
-                        {
-                            var threadIndex = i;
-                            int fromRow = nextStartingRow;
-                            int toRow = (i + 1) == currentState.ThreadCount ? currentState.CountCubes : fromRow + deltaCube;
-                            if (toRow > currentState.CountCubes)
-                                toRow = currentState.CountCubes;
-                            nextStartingRow = toRow;
-
-                            tasks[i] = new Task(() => RenderRow(threadIndex, fromRow, toRow));
-                            tasks[i].Start();
-                        }
-                        Task.WaitAll(tasks);
+                        if (commandLists[0] == null)
+                            RenderDeferred(1);
+                    } 
+                    else if (currentState.ThreadCount > 1)
+                    {
+                        RenderDeferred(currentState.ThreadCount);
                     }
 
                     for (int i = 0; i < currentState.ThreadCount; i++)
                     {
-                        var renderingContext = contextPerThread[i];
-                        // Gather command list for the thread
-                        var commandList = renderingContext.FinishCommandList(false);
-
+                        var commandList = commandLists[i];
                         // Execute the deferred command list on the immediate context
                         immediateContext.ExecuteCommandList(commandList, false);
 
-                        // Release the command list
-                        commandList.Dispose();
+                        // For classic deferred we release the command list. Not for frozen
+                        if (currentState.Type == TestType.Deferred)
+                        {
+                            // Release the command list
+                            commandList.Dispose();
+                            commandLists[i] = null;
+                        }
                     }
                 }
 
