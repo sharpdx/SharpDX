@@ -22,7 +22,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
+
+using Microsoft.Win32;
+
 using SharpCore.Logging;
+
+using SharpGen.Config;
 
 namespace SharpGen.Parser
 {
@@ -115,7 +120,7 @@ namespace SharpGen.Parser
         /// Gets or sets the include directory list.
         /// </summary>
         /// <value>The include directory list.</value>
-        public List<string> IncludeDirectoryList { get; private set; }
+        public List<IncludeDirRule> IncludeDirectoryList { get; private set; }
 
         /// <summary>
         /// List of error filters regexp.
@@ -127,7 +132,7 @@ namespace SharpGen.Parser
         /// </summary>
         public GccXml()
         {
-            IncludeDirectoryList = new List<string>();
+            IncludeDirectoryList = new List<IncludeDirRule>();
             _filterErrors = new List<Regex>();
         }
 
@@ -170,10 +175,8 @@ namespace SharpGen.Parser
                 File.WriteAllText(GccXmlGccOptionsFile, "-dDI -E");
 
                 var arguments = "-E --gccxml-gcc-options " + GccXmlGccOptionsFile;
-                foreach (var directory in IncludeDirectoryList)
-                {
-                    arguments += " -I \"" + directory.TrimEnd('\\') + "\"";
-                }
+                foreach (var directory in GetIncludePaths())
+                    arguments += " " + directory;
 
 
                 startInfo.Arguments = arguments + " " + headerFile;
@@ -189,6 +192,82 @@ namespace SharpGen.Parser
                 currentProcess.Close();
                                            
             });
+        }
+
+        private List<string> GetIncludePaths()
+        {
+            var paths = new List<string>();
+
+            foreach (var directory in IncludeDirectoryList)
+            {
+                var path = directory.Path;
+
+                // Is Using registry?
+                if (path.StartsWith("="))
+                {
+                    var registryPath = directory.Path.Substring(1);
+                    var indexOfSubPath = registryPath.IndexOf(";");
+                    string subPath = "";
+                    if (indexOfSubPath >= 0)
+                    {
+                        subPath = registryPath.Substring(indexOfSubPath + 1);
+                        registryPath = registryPath.Substring(0, indexOfSubPath);
+                    }
+                    var indexOfKey = registryPath.LastIndexOf("\\");
+                    var subKeyStr = registryPath.Substring(indexOfKey + 1);
+                    registryPath = registryPath.Substring(0, indexOfKey);
+
+                    var indexOfHive = registryPath.IndexOf("\\");
+                    var hiveStr = registryPath.Substring(0, indexOfHive).ToUpper();
+                    registryPath = registryPath.Substring(indexOfHive+1);
+
+                    try
+                    {
+                        var hive = RegistryHive.LocalMachine;
+                        switch (hiveStr)
+                        {
+                            case "HKEY_LOCAL_MACHINE":
+                                hive = RegistryHive.LocalMachine;
+                                break;
+                            case "HKEY_CURRENT_USER":
+                                hive = RegistryHive.CurrentUser;
+                                break;
+                            case "HKEY_CURRENT_CONFIG":
+                                hive = RegistryHive.CurrentConfig;
+                                break;
+                        }
+                        var rootKey = RegistryKey.OpenBaseKey(hive, RegistryView.Registry32);
+                        var subKey = rootKey.OpenSubKey(registryPath);
+                        if (subKey == null)
+                        {
+                            Logger.Error("Unable to locate key [{0}] in registry", registryPath);
+                            continue;
+
+                        }
+                        path = Path.Combine(subKey.GetValue(subKeyStr).ToString(), subPath);
+                    } catch (Exception ex)
+                    {
+                        Logger.Error("Unable to locate key [{0}] in registry", registryPath);
+                        continue;
+                    }
+                }
+
+                if (directory.IsOverride)
+                {
+                    paths.Add("-iwrapper\"" + path.TrimEnd('\\') + "\"");
+                }
+                else
+                {
+                    paths.Add("-I\"" + path.TrimEnd('\\') + "\"");
+                }
+            }
+
+            foreach (var path in paths)
+            {
+                Logger.Message("Path used for gccxml [{0}]", path);
+            }
+
+            return paths;
         }
 
         /// <summary>
@@ -229,19 +308,8 @@ namespace SharpGen.Parser
                     arguments += " --gccxml-config \"" + Path.Combine(Path.GetDirectoryName(ExecutablePath), @"..\share\gccxml-0.9\vc11\gccxml_config") + "\"";
 #endif
                     arguments += " -fxml=" + xmlFile;
-                    foreach (var directory in IncludeDirectoryList)
-                    {
-                        if (directory.Contains("overrides"))
-                        {
-                            arguments += " -iwrapper\"" + directory.TrimEnd('\\') + "\"";
-                        }
-                        else
-                        {
-                            arguments += " -I \"" + directory.TrimEnd('\\') + "\"";
-                        }
-
-                        if (!Directory.Exists(directory)) Logger.Warning("Include directory [{0}] doesn't exist", directory);
-                    }
+                    foreach (var directory in GetIncludePaths())
+                        arguments += " " + directory;
 
                     startInfo.Arguments = arguments + " " + headerFile;
 

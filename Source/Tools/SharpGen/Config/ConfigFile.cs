@@ -41,7 +41,7 @@ namespace SharpGen.Config
             Depends = new List<string>();
             Files = new List<string>();
             References = new List<ConfigFile>();
-            IncludeDirs = new List<string>();
+            IncludeDirs = new List<IncludeDirRule>();
             Variables = new List<KeyValue>();
             Naming = new List<NamingRule>();
             Includes = new List<IncludeRule>();
@@ -165,7 +165,7 @@ namespace SharpGen.Config
         public List<ConfigFile> References { get; set; }
 
         [XmlElement("include-dir")]
-        public List<string> IncludeDirs { get; set; }
+        public List<IncludeDirRule> IncludeDirs { get; set; }
 
         [XmlElement("include-prolog")]
         public string IncludeProlog { get; set; }
@@ -528,10 +528,12 @@ namespace SharpGen.Config
 
             foreach (var includeDir in IncludeDirs)
             {
-                var directory = ExpandString(includeDir, false);
 
-                if (!Directory.Exists(directory))
-                    throw new DirectoryNotFoundException("Directory [" + directory + "] not found in config file [" + Id + "]");
+
+                includeDir.Path = ExpandString(includeDir.Path, false);
+
+                if (!includeDir.Path.StartsWith("=") && !Directory.Exists(includeDir.Path))
+                    throw new DirectoryNotFoundException("Directory [" + includeDir.Path + "] not found in config file [" + Id + "]");
             }
 
             // Verify all dependencies

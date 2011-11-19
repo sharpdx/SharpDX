@@ -31,7 +31,7 @@
     <Compile Include="IO\NativeFileMode.cs" />
     <Compile Include="IO\NativeFileShare.cs" />
     <Compile Include="Matrix3x2.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
+    <Compile Include="Properties\Resources.Designer.cs" Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' ">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>

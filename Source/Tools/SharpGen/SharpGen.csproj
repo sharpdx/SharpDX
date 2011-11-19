@@ -107,6 +107,7 @@
     <Compile Include="Config\BindRule.cs" />
     <Compile Include="Config\ContextSetRule.cs" />
     <Compile Include="Config\ContextRule.cs" />
+    <Compile Include="Config\IncludeDirRule.cs" />
     <Compile Include="Config\MoveRule.cs" />
     <Compile Include="Config\ParamAttribute.cs" />
     <Compile Include="Config\CreateExtensionRule.cs" />

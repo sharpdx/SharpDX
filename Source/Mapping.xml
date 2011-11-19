@@ -23,10 +23,10 @@
 <config id="sharpdx-root" xmlns="urn:SharpGen.Config">
 
   <ifdef name="WIN8">
-    <include-dir>$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\overrides</include-dir>
-    <include-dir>$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\sdk-include\shared</include-dir>
-    <include-dir>$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\sdk-include\um</include-dir>
-    <include-dir>$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\vc-include</include-dir>
+    <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\overrides</include-dir>
+    <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\11.0\Setup\VC\ProductDir;Include</include-dir>
+    <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot;Include\shared</include-dir>
+    <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot;Include\um</include-dir>
   </ifdef>
 
   <ifndef name="WIN8">

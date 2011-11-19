@@ -127,7 +127,7 @@ namespace SharpGen.Parser
             var prolog = new StringBuilder();
 
             // Add current directory for gccxml
-            _gccxml.IncludeDirectoryList.Add(Environment.CurrentDirectory);
+            _gccxml.IncludeDirectoryList.Add(new IncludeDirRule(Environment.CurrentDirectory));
 
             // Configure gccxml with include directory
             foreach (var configFile in _configRoot.ConfigFilesLoaded)

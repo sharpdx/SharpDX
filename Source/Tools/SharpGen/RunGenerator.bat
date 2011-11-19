@@ -4,7 +4,7 @@ setlocal
 pushd "%~dp0\Bin\%1"
 ECHO "%~dp0msdndoc.zip"
 xcopy /D /Y "%~dp0MSDNDoc.zip" .
-SharpGen.exe --gccxml ..\..\..\..\..\External\gccxml\bin\gccxml.exe ..\..\..\..\Mapping.xml
+SharpGen.exe --doc --gccxml ..\..\..\..\..\External\gccxml\bin\gccxml.exe ..\..\..\..\Mapping.xml
 set LOCALERROR = %ERRORLEVEL%
 xcopy /D /Y MSDNDoc.zip %~dp0
 exit /B %LOCALERROR%
