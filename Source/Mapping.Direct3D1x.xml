@@ -102,7 +102,7 @@
     -->
     <map enum="D3D(\d+)(.*)" name-tmp="$2" />    
     <map enum="D3DX(\d+)(.*)" name-tmp="$2" />    
-    <map enum="D3D(\d+)_FORMAT_SUPPORT" flags="true" />
+    <map enum="D3D(\d+)_FORMAT_SUPPORT" flags="true" none="true" />
     <map enum="D3D(\d+)_COLOR_WRITE_ENABLE" flags="true" />
     <remove enum="D3D\d+_RAISE_FLAG" />
     <map enum-item="D3D(\d+)_ASYNC_GETDATA_DONOTFLUSH" name="DoNotFlush" />
@@ -331,9 +331,11 @@
     
     <map method="ID3D(\d+)ClassInstance::GetInstanceName" visibility="internal" />
     <map method="ID3D(\d+)ClassInstance::GetTypeName" visibility="internal" />
-    <map param="ID3D(\d+)Device::CheckFormatSupport::pFormatSupport" type="D3D$1_FORMAT_SUPPORT" return="true" />
+    <map method="ID3D(\d+)Device::CheckFormatSupport" check="false" />
+    <map method="ID3D(\d+)Device::CheckMultisampleQualityLevels" check="false"/>
+    <map param="ID3D(\d+)Device::CheckFormatSupport::pFormatSupport" type="D3D$1_FORMAT_SUPPORT" return="true"/>
     <map param="ID3D(\d+)Device::CheckMultisampleQualityLevels::pNumQualityLevels" return="true" />
-    <map method="ID3D(\d+)Device::CheckCounterInfo" property="false" name="GetCounterCapabilities" />
+    <map method="ID3D(\d+)Device::CheckCounterInfo" property="false" check="false" name="GetCounterCapabilities" />
     <map param="pCounterInfo" return="true" />
     <map method="ID3D(\d+)Device1?::Create.*" visibility="internal" />
     <map param="ID3D(\d+)Device1?::Create.*::pp.*" attribute="out fast" />
