@@ -64,6 +64,12 @@ namespace SharpGen
             return _isAborted;
         }
 
+        public void FatalExit(string message)
+        {
+            MessageBox.Show(this, message, "SharpGen Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Abort();
+        }
+
         /// <summary>
         /// Handles the Click event of the buttonAbort control.
         /// </summary>

@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 using Microsoft.Win32;
 
@@ -127,6 +128,12 @@ namespace SharpGen.Parser
         /// </summary>
         private readonly List<Regex> _filterErrors;
 
+#if WIN8
+        private const string VsVersion = "11.0";
+#else
+        private const string VsVersion = "10.0";
+#endif
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GccXml"/> class.
         /// </summary>
@@ -155,43 +162,45 @@ namespace SharpGen.Parser
         public void Preprocess(string headerFile, DataReceivedEventHandler handler)
         {
             Logger.RunInContext("gccxml", () =>
-            {
-                if (!File.Exists(ExecutablePath) )
-                    Logger.Fatal("gccxml.exe not found from path: [{0}]", ExecutablePath);
+                    {
+                        CheckVisualStudioVersion();
 
-                if (!File.Exists(headerFile))
-                    Logger.Fatal("C++ Header file [{0}] not found", headerFile);
+                        if (!File.Exists(ExecutablePath))
+                            Logger.Fatal("gccxml.exe not found from path: [{0}]", ExecutablePath);
 
-                var currentProcess = new Process();
-                var startInfo = new ProcessStartInfo(ExecutablePath)
-                                    {
-                                        RedirectStandardOutput = true,
-                                        RedirectStandardError = true,
-                                        UseShellExecute = false,
-                                        CreateNoWindow = true,
-                                        WorkingDirectory = Environment.CurrentDirectory
-                                    };
+                        if (!File.Exists(headerFile))
+                            Logger.Fatal("C++ Header file [{0}] not found", headerFile);
 
-                File.WriteAllText(GccXmlGccOptionsFile, "-dDI -E");
+                        var currentProcess = new Process();
+                        var startInfo = new ProcessStartInfo(ExecutablePath)
+                            {
+                                RedirectStandardOutput = true,
+                                RedirectStandardError = true,
+                                UseShellExecute = false,
+                                CreateNoWindow = true,
+                                WorkingDirectory = Environment.CurrentDirectory
+                            };
 
-                var arguments = "-E --gccxml-gcc-options " + GccXmlGccOptionsFile;
-                foreach (var directory in GetIncludePaths())
-                    arguments += " " + directory;
+                        File.WriteAllText(GccXmlGccOptionsFile, "-dDI -E");
+
+                        var arguments = "-E --gccxml-gcc-options " + GccXmlGccOptionsFile;
+                        foreach (var directory in GetIncludePaths())
+                            arguments += " " + directory;
 
 
-                startInfo.Arguments = arguments + " " + headerFile;
+                        startInfo.Arguments = arguments + " " + headerFile;
 
-                currentProcess.StartInfo = startInfo;
-                currentProcess.ErrorDataReceived += ProcessErrorFromHeaderFile;
-                currentProcess.OutputDataReceived += handler;
-                currentProcess.Start();
-                currentProcess.BeginOutputReadLine();
-                currentProcess.BeginErrorReadLine();
+                        currentProcess.StartInfo = startInfo;
+                        currentProcess.ErrorDataReceived += ProcessErrorFromHeaderFile;
+                        currentProcess.OutputDataReceived += handler;
+                        currentProcess.Start();
+                        currentProcess.BeginOutputReadLine();
+                        currentProcess.BeginErrorReadLine();
 
-                currentProcess.WaitForExit();
-                currentProcess.Close();
-                                           
-            });
+                        currentProcess.WaitForExit();
+                        currentProcess.Close();
+
+                    });
         }
 
         private List<string> GetIncludePaths()
@@ -270,6 +279,16 @@ namespace SharpGen.Parser
             return paths;
         }
 
+        private void CheckVisualStudioVersion()
+        {
+            var key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
+            var subKey = key.OpenSubKey(@"SOFTWARE\Microsoft\VisualStudio\" + VsVersion + @"\Setup\VC");
+            if (subKey == null)
+            {
+                Logger.Exit("Visual Studio {0} with C++ not found. SharpDX requires this version to generate code from C++", VsVersion);
+            } 
+        }
+
         /// <summary>
         /// Processes the specified header headerFile.
         /// </summary>
@@ -281,6 +300,8 @@ namespace SharpGen.Parser
 
             Logger.RunInContext("gccxml", () =>
                 {
+                    CheckVisualStudioVersion();
+
                     // Absolutize executable path
                     ExecutablePath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, ExecutablePath));
 
@@ -307,6 +328,7 @@ namespace SharpGen.Parser
                     // Overrides settings for gccxml for compiling Win8 version
                     arguments += " --gccxml-config \"" + Path.Combine(Path.GetDirectoryName(ExecutablePath), @"..\share\gccxml-0.9\vc11\gccxml_config") + "\"";
 #endif
+
                     arguments += " -fxml=" + xmlFile;
                     foreach (var directory in GetIncludePaths())
                         arguments += " " + directory;

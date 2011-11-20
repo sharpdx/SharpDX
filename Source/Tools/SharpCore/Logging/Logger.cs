@@ -281,14 +281,17 @@ namespace SharpCore.Logging
         }
 
         /// <summary>
-        ///   Exits the process.
+        /// Exits the process.
         /// </summary>
-        /// <param name = "reason">The reason.</param>
-        /// <param name = "exitCode">The exit code.</param>
-        public static void Exit(string reason, int exitCode = 1)
+        /// <param name="reason">The reason.</param>
+        /// <param name="parameters">The parameters.</param>
+        public static void Exit(string reason, params object[] parameters)
         {
+            if (ProgressReport != null)
+                ProgressReport.FatalExit(string.Format(reason, parameters));
+
             if (LoggerOutput != null)
-                LoggerOutput.Exit(reason, exitCode);
+                LoggerOutput.Exit(reason, 1);
         }
 
         /// <summary>

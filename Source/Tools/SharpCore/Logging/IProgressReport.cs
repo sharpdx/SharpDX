@@ -31,5 +31,7 @@ namespace SharpCore.Logging
         /// <param name="message">The message to notify.</param>
         /// <returns>true if the process is aborted; false otherwise</returns>
         bool ProgressStatus(int level, string message);
+
+        void FatalExit(string message);
     }
 }
