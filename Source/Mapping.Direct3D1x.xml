@@ -337,6 +337,7 @@
     <map param="ID3D(\d+)Device::CheckMultisampleQualityLevels::pNumQualityLevels" return="true" />
     <map method="ID3D(\d+)Device::CheckCounterInfo" property="false" check="false" name="GetCounterCapabilities" />
     <map param="pCounterInfo" return="true" />
+    <map method="ID3D(\d+)Device::CheckCounter" visibility="internal"/>
     <map method="ID3D(\d+)Device1?::Create.*" visibility="internal" />
     <map param="ID3D(\d+)Device1?::Create.*::pp.*" attribute="out fast" />
     <map method="ID3D(\d+)Device::GetImmediateContext" visibility="internal" property="false" />
