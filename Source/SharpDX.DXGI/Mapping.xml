@@ -94,7 +94,10 @@
     <create-cpp enum="DXGI_MAP_FLAGS" macro="DXGI_MAP_.*" />
     <create-cpp enum="DXGI_ENUM_MODES_FLAGS" macro="DXGI_ENUM_MODES_.*" />
     <create-cpp enum="DXGI_MWA_FLAGS" macro="DXGI_MWA_.*" />
-    <create-cpp enum="DXGI_ERROR" macro="DXGI_ERROR_.*" />
+    
+    <create class="DXGIError" visibility="public"/>
+    <const from-macro="DXGI_ERROR_(.*)" type="SharpDX.Result" cpp-type="int" name="$1" class="SharpDX.DXGI.DXGIError" visibility="public static readonly" />
+
     <create-cpp enum="DXGI_STATUS" macro="DXGI_STATUS_.*" />
     <create class="DXGI" />
 
@@ -122,7 +125,6 @@
     <map enum="DXGI_MODE_ROTATION" name="DisplayModeRotation" />
     <map enum="DXGI_MODE_SCALING" name="DisplayModeScaling" />
     <map enum="DXGI_MODE_SCANLINE_ORDER" name="DisplayModeScanlineOrder" />
-    <map enum="DXGI_ERROR" name="DXGIError" />
     <map enum="DXGI_STATUS" name="DXGIStatus" />
     <map enum="DXGI_ENUM_MODES_FLAGS" name="DisplayModeEnumerationFlags" flags="true" none="false"/>
     <map enum="DXGI_MAP_FLAGS" flags="true" none="false" />
