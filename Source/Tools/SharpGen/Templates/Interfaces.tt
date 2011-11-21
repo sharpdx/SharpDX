@@ -108,9 +108,9 @@ foreach (var sharpInterface in Namespace.Interfaces)
 		/// <summary>Inner interface giving access to <#= innerInterface.Name #> methods. </summary>
         public <#= innerInterface.Name #> <#= innerInterface.PropertyAccesName #> { get; private set; }		
 <#+		
-			PushIndent("    ");		
-			ProcessInterface(innerInterface);			
-			PopIndent();
+			//PushIndent("    ");		
+			//ProcessInterface(innerInterface);			
+			//PopIndent();
 		}
 	}
 	

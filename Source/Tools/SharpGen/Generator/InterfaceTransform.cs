@@ -195,6 +195,8 @@ namespace SharpGen.Generator
 
                             // Add inner interface to root interface
                             interfaceType.Add(innerCsInterface);
+                            interfaceType.Parent.Add(innerCsInterface);
+
                             // Move method to inner interface
                             mapInnerInterface.Add(innerInterfaceName, innerCsInterface);
                         }

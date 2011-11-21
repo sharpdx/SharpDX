@@ -39,15 +39,17 @@ namespace SharpGen.Config
         Override = 0x20,
         [XmlEnum("abstract")]
         Abstract = 0x40,
+        [XmlEnum("partial")]
+        Partial = 0x80,
         [XmlEnum("static")]
-        Static = 0x80,
+        Static = 0x100,
         [XmlEnum("const")]
-        Const = 0x100,
+        Const = 0x200,
         [XmlEnum("virtual")]
-        Virtual = 0x200,
+        Virtual = 0x400,
         [XmlEnum("readonly")]
-        Readonly = 0x400,
+        Readonly = 0x800,
         [XmlEnum("sealed")]
-        Sealed = 0x800,
+        Sealed = 0x1000,
     }
 }

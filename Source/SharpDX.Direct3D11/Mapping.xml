@@ -80,6 +80,13 @@
     <const from-macro="D3D11_REQ_TEXTURE3D_U_V_OR_W_DIMENSION" class="SharpDX.Direct3D11.Resource" type="int" name="MaximumTexture3DSize" />
     <const from-macro="D3D11_REQ_TEXTURECUBE_DIMENSION" class="SharpDX.Direct3D11.Resource" type="int" name="MaximumTextureCubeSize" />
 
+    <create class="CommonShaderStage" visibility="public abstract partial" />
+    <const from-macro="D3D11_COMMONSHADER_(.*)" class="SharpDX.Direct3D11.CommonShaderStage" type="int" name="$1" />
+    <const from-macro="D3D11_IA_(.*)" class="SharpDX.Direct3D11.InputAssemblerStage" type="int" name="$1" />
+    <const from-macro="D3D11_IA_(.*)" class="SharpDX.Direct3D11.InputAssemblerStage" type="int" name="$1" />
+
+
+
     <const from-macro="D3D11_SDK_VERSION" class="SharpDX.Direct3D11.D3D11" type="int" name="SdkVersion" />
 
     <create-cpp enum="D3D11_DEBUG_FEATURE_FLAGS" macro="D3D11_DEBUG_FEATURE_(.*)" />
