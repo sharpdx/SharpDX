@@ -130,7 +130,7 @@ namespace SharpDX.Direct3D11
             /// <summary>
             ///   Unbinds all depth-stencil buffer and render targets from the output-merger stage.
             /// </summary>
-            public void UnsetTargets()
+            public void ResetTargets()
             {
                 SetRenderTargets(0, IntPtr.Zero, null);
             }
