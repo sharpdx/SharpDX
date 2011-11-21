@@ -172,7 +172,7 @@
     // *****************************************************************
     -->
     <ifdef name="WIN8">
-      <map function="XAudio2Create" dll='"#(XAUDIO2_DLL)"' group="SharpDX.XAudio2.XAudio2Functions" />
+      <map function="XAudio2Create" dll='"#(XAUDIO2_DLL_A)"' group="SharpDX.XAudio2.XAudio2Functions" />
       <map param="XAudio2Create::ppXAudio2" attribute="out fast"/>
     </ifdef>
     
