@@ -250,15 +250,19 @@ namespace SharpGen.Doc
         {
             StringBuilder documentation = new StringBuilder();
 
+            bool isDocClear = false;
+            bool isParagraph = false;
+
             if (!isRoot)
             {
+                isParagraph = htmlNode.Name.ToLower() == "p";
                 if (htmlNode.Name.ToLower() == "dl")
                     documentation.Append("<list>\r\n");
                 else if (htmlNode.Name.ToLower() == "dt")
                     documentation.Append("<item><term>");
                 else if (htmlNode.Name.ToLower() == "dd")
                     documentation.Append("<description>");
-                else if (htmlNode.Name.ToLower() == "p")
+                else if (isParagraph)
                     documentation.Append("<para>");
             }
 
@@ -300,10 +304,17 @@ namespace SharpGen.Doc
                 //    documentation.Append(" ");
                 //}
 
-                documentation.Append(text);
+                if (text.StartsWith("Type:"))
+                {
+                    isDocClear = true;
+                }
+                else
+                {
+                    documentation.Append(text);
+                }
             }
 
-            if (!isRoot)
+            if (!isRoot && !isDocClear)
             {
                 if (htmlNode.Name.ToLower() == "dl")
                     documentation.Append("</list>\r\n");
@@ -311,9 +322,12 @@ namespace SharpGen.Doc
                     documentation.Append("</term>");
                 else if (htmlNode.Name.ToLower() == "dd")
                     documentation.Append("</description></item>\r\n");
-                else if (htmlNode.Name.ToLower() == "p")
+                else if (isParagraph)
                     documentation.Append("</para>\r\n");
             }
+
+            if (isDocClear)
+                documentation.Clear();
 
             //if (htmlNode.Name == "p")
             //    documentation.Append("\r\n");
