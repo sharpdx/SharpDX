@@ -151,7 +151,7 @@ namespace SharpDX.Direct3D11
         /// <param name = "resourceView">Resource view to attach</param>
         public void SetShaderResource(int slot, ShaderResourceView resourceView)
         {
-            IntPtr localPointer = resourceView.NativePointer;
+            IntPtr localPointer = resourceView == null ? IntPtr.Zero : resourceView.NativePointer;
             unsafe
             {
                 SetShaderResources(slot, 1, new IntPtr(&localPointer));
