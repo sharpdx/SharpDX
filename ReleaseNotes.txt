@@ -47,6 +47,7 @@ SharpDX beta2 (2.0.2)
     - Fix error for XAudio2 dll loading under Win8 
  * XInput
     - Add XGamePadApp sample
+    - Fix UserIndex enumeration and Controller.IsConnected method.
 
 --------------------------
 Release Notes (2011-09-24)
