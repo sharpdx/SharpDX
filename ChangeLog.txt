@@ -1,6 +1,10 @@
 SharpDX Change Log
 ==================
 
+2011-11-22 Release SharpDX 2.0.2 Beta2
+* This version is including several bug fixes, performance enhancement, Win8 certification for Metro style App and generated XML for API documentation. 
+* Check the release notes for a complete list of the changes
+
 2011-09-24 Release SharpDX 2.0 Beta
 * Major release!
 * New APIs for Direct3D9 (not finished yet for Beta but WPF Interop is working), DirectInput, RawInput, XInput, X3DAudio, XACT3, WIC (integrated with Direct2D1).
