@@ -7,41 +7,41 @@ SharpDX beta2 (2.0.2)
 * Win8 Certification Support 
     - SharpDX on Win8 is now compiled with .NET 4.5 Core profile and is passing successfully Windows Metro Style App certification. 
  * Build 
-	- Improve build system to support cross .NET framework compilation from 2.0 to 4.5.
-	- In order to compile SharpDX for Win8, you need to have Visual Studio 2011, but you can compile from Visual Studio 2010 under Win7 and Win8.
+    - Improve build system to support cross .NET framework compilation from 2.0 to 4.5.
+    - In order to compile SharpDX for Win8, you need to have Visual Studio 2011, but you can compile from Visual Studio 2010 under Win7 and Win8.
     - Fix build for path containing spaces.
-	- Turn-on by default generated XML documentation from MSDN
+    - Turn-on by default generated XML documentation from MSDN
  * Core
     - Breaking changes in the API for Color4. Using more natural (red,green,blue,alpha) constructor instead of (alpha,red,green,blue). All usages are fixed. Add new Colors class to list predefined colors in the same way System.Drawing.Color
     - Add SharpDX.IO.NativeFileStream to allow direct FileStream access from Win8
-	- Bugfix for methods using out array of com objects
-	- Rename SharpDX.Size to SharpDX.PointerSize
-	- Add new ComArray<T> class to support faster marshalling of array of ComObject for several methods in the API (mainly Direct3D11)
+    - Bugfix for methods using out array of com objects
+    - Rename SharpDX.Size to SharpDX.PointerSize
+    - Add new ComArray<T> class to support faster marshalling of array of ComObject for several methods in the API (mainly Direct3D11)
  * Direct3D
     - Add explicit DebugName property on all Device, DeviceChild for DXGI, Direct3D9, Direct3D10, and Direct3D11.
  * Direct3D9 
     - Add support for all main APIs (Only XFile/Mesh loading is not supported)
  * Direct3D10/11
     - Add Equals method to InputElement
-	- Remove result check from Device.CheckFormatSupport. Add None value to FormatSupport. 
+    - Remove result check from Device.CheckFormatSupport. Add None value to FormatSupport. 
  * Direct3D11
     - Add optimized methods for DeviceContext.CommonShaderStage.SetSampler(s)/SetShaderResource(s)/SetConstantBuffer(s)
     - Add MultiCube sample for multithreading and deferred context benchmark. See http://code4k.blogspot.com/2011/11/direct3d11-multithreading-micro.html
     - Use a common pattern for Texture1D, Texture2D, Texture3D constructors 
-	- Add DeviceContext.IsAvailableData for Begin/End Query statistics. Add new GetData method.
-	- Add method DeviceContext.OutputMerger.ResetTargets to unset all binded Targets
+    - Add DeviceContext.IsAvailableData for Begin/End Query statistics. Add new GetData method.
+    - Add method DeviceContext.OutputMerger.ResetTargets to unset all binded Targets
  * Direct2D1
     - Move Matrix3x2 from Direct2D to SharpDX core assembly
  * DirectInput
     - ForceFeedback is now enabled.
-	- Sliders are now using correct flags
-	- Keyboard state is now properly returned.
+    - Sliders are now using correct flags
+    - Keyboard state is now properly returned.
  * DXGI
     - Change DXGIError to class using SharpDX.Result fields 
  * RawInput 
     - Fix wrong layout of RawMouse structure
-	- Add RawInput access from non-winform application like WPF
-	- Fix invalid values for WheelData/Buttons in MouseInfoInputEventArgs
+    - Add RawInput access from non-winform application like WPF
+    - Fix invalid values for WheelData/Buttons in MouseInfoInputEventArgs
  * XAudio2
     - Fix error for XAudio2 dll loading under Win8 
  * XInput
