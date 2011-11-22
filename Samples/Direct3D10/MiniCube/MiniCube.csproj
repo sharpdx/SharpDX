@@ -56,6 +56,21 @@
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="SharpDX">
+      <HintPath>..\..\..\Bin\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.D3DCompiler">
+      <HintPath>..\..\..\Bin\SharpDX.D3DCompiler.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Diagnostics">
+      <HintPath>..\..\..\Bin\SharpDX.Diagnostics.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct3D10">
+      <HintPath>..\..\..\Bin\SharpDX.Direct3D10.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.DXGI">
+      <HintPath>..\..\..\Bin\SharpDX.DXGI.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -64,28 +79,6 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Source\SharpDX.D3DCompiler\SharpDX.D3DCompiler.csproj">
-      <Project>{2BC0D3FF-D3B0-44F2-8ECE-37768BF3E812}</Project>
-      <Name>SharpDX.D3DCompiler</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Source\SharpDX.Diagnostics\SharpDX.Diagnostics.csproj">
-      <Project>{003655D0-CC78-411F-AD2D-655E03927827}</Project>
-      <Name>SharpDX.Diagnostics</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Source\SharpDX.Direct3D10\SharpDX.Direct3D10.csproj">
-      <Project>{618AFA87-81A8-4B1C-8876-5457D49F2DEF}</Project>
-      <Name>SharpDX.Direct3D10</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Source\SharpDX.DXGI\SharpDX.DXGI.csproj">
-      <Project>{D4D38A41-0729-4606-A54E-EB0B0E07C836}</Project>
-      <Name>SharpDX.DXGI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Source\SharpDX\SharpDX.csproj">
-      <Project>{CE5194D5-30A4-43A4-BF7A-7AC0C1988224}</Project>
-      <Name>SharpDX</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="MiniCube.fx">
