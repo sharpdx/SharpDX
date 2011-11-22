@@ -19,6 +19,7 @@ SharpDX beta2 (2.0.2)
     - Add new ComArray<T> class to support faster marshalling of array of ComObject for several methods in the API (mainly Direct3D11)
  * Direct3D
     - Add explicit DebugName property on all Device, DeviceChild for DXGI, Direct3D9, Direct3D10, and Direct3D11.
+    - Add new SharpDX.Direct3D.PIXHelper class and methods begin-end/marker providing usefull information under PIX debugger.
  * Direct3D9 
     - Add support for all main APIs (Only XFile/Mesh loading is not supported)
  * Direct3D10/11
