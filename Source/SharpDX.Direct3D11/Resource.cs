@@ -52,11 +52,11 @@ namespace SharpDX.Direct3D11
             System.Diagnostics.Debug.Assert(typeof(T) == typeof(Texture1D) || typeof(T) == typeof(Texture2D) ||
                          typeof(T) == typeof(Texture3D));
 
-            Resource temp;
+            IntPtr temp;
             Result resultOut;
             D3DX11.CreateTextureFromFile(device, fileName, null, IntPtr.Zero, out temp, out resultOut);
             // TODO test resultOut?
-            return FromPointer<T>(temp.NativePointer);
+            return FromPointer<T>(temp);
         }
 
         /// <summary>
@@ -71,11 +71,10 @@ namespace SharpDX.Direct3D11
             System.Diagnostics.Debug.Assert(typeof(T) == typeof(Texture1D) || typeof(T) == typeof(Texture2D) ||
                          typeof(T) == typeof(Texture3D));
 
-            Resource temp;
+            IntPtr temp;
             Result resultOut;
             D3DX11.CreateTextureFromFile(device, fileName, loadInfo, IntPtr.Zero, out temp, out resultOut);
-            // TODO test resultOut?
-            return FromPointer<T>(temp.NativePointer);
+            return FromPointer<T>(temp);
         }
 
         /// <summary>	
@@ -124,13 +123,13 @@ namespace SharpDX.Direct3D11
             {
                 System.Diagnostics.Debug.Assert(memory != null);
                 System.Diagnostics.Debug.Assert(memory.Length > 0);
-                Resource temp;
+                IntPtr temp;
                 Result resultOut;
                 fixed (void* pBuffer = &memory[0])
                     D3DX11.CreateTextureFromMemory(device, (IntPtr)pBuffer, memory.Length, null, IntPtr.Zero,
                                                    out temp, out resultOut);
                 // TODO test resultOut?
-                return FromPointer<T>(temp.NativePointer);
+                return FromPointer<T>(temp);
             }
         }
 
@@ -150,13 +149,12 @@ namespace SharpDX.Direct3D11
             {
                 System.Diagnostics.Debug.Assert(memory != null);
                 System.Diagnostics.Debug.Assert(memory.Length > 0);
-                Resource temp;
+                IntPtr temp;
                 Result resultOut;
                 fixed (void* pBuffer = &memory[0])
                     D3DX11.CreateTextureFromMemory(device, (IntPtr)pBuffer, memory.Length, loadInfo, IntPtr.Zero,
                                                    out temp, out resultOut);
-                // TODO test resultOut?
-                return FromPointer<T>(temp.NativePointer);
+                return FromPointer<T>(temp);
             }
         }
 

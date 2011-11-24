@@ -533,16 +533,16 @@
     // *****************************************************************
     -->
     <map function="D3DX\d+(.*)W" name-tmp="$1" />
-    <map param="D3DX(\d+)CreateTextureFromFileW::ppTexture" attribute="out" />
+    <map param="D3DX(\d+)CreateTextureFromFileW::ppTexture" type="void" attribute="out" />
     <remove function="D3DX(\d+)UnsetAllDeviceObjects" />
     <map param="D3D(\d+)CreateDevice.*?::Flags" type="D3D$1_CREATE_DEVICE_FLAG" />   
     <map param="D3DX(\d+).*?::Flags1" type="D3DCOMPILE_SHADER_FLAGS" />
     <map param="D3DX(\d+).*?::Flags2" type="D3DCOMPILE_EFFECT_FLAGS" />
     <map param="D3DX(\d+)ComputeNormalMap::Flags" type="D3DX$1_NORMALMAP_FLAG" />
     <map param="D3DX(\d+)ComputeNormalMap::Channel" type="D3DX$1_CHANNEL_FLAG" />
-    <map param="D3DX(\d+)CreateTextureFromFileW::ppTexture" attribute="out" />
-    <map param="D3DX(\d+)CreateTextureFromResourceW::ppTexture" attribute="out" />
-    <map param="D3DX(\d+)CreateTextureFromMemory::ppTexture" attribute="out" />
+    <map param="D3DX(\d+)CreateTextureFromFileW::ppTexture" type="void" attribute="out" />
+    <map param="D3DX(\d+)CreateTextureFromResourceW::ppTexture" type="void" attribute="out" />
+    <map param="D3DX(\d+)CreateTextureFromMemory::ppTexture" type="void" attribute="out" />
     <map param="D3DX(\d+)SaveTextureToMemory::ppDestBuf" attribute="out" />
     <map param="D3DX(\d+)CreateTextureFromFileW::pLoadInfo" attribute="in optional" />
     <map param="D3DX(\d+)CreateTextureFromResourceW::pLoadInfo" attribute="in optional" />
