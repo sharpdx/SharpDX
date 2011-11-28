@@ -183,13 +183,18 @@ namespace SharpGen.Parser
 
                         File.WriteAllText(GccXmlGccOptionsFile, "-dDI -E");
 
-                        var arguments = "-E --gccxml-gcc-options " + GccXmlGccOptionsFile;
+                        var arguments = ""; // "--gccxml-gcc-options " + GccXmlGccOptionsFile;
+#if WIN8
+                        // Overrides settings for gccxml for compiling Win8 version
+                        arguments += " --gccxml-config \"" + Path.Combine(Path.GetDirectoryName(ExecutablePath), @"..\share\gccxml-0.9\vc11\gccxml_config") + "\"";
+#endif
+                        
+                        arguments += " -E --gccxml-gcc-options " + GccXmlGccOptionsFile;
                         foreach (var directory in GetIncludePaths())
                             arguments += " " + directory;
 
-
                         startInfo.Arguments = arguments + " " + headerFile;
-
+                        Console.WriteLine(startInfo.Arguments);
                         currentProcess.StartInfo = startInfo;
                         currentProcess.ErrorDataReceived += ProcessErrorFromHeaderFile;
                         currentProcess.OutputDataReceived += handler;
