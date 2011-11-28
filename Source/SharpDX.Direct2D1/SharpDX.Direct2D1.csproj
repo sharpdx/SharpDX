@@ -17,6 +17,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Factory1.cs" />
     <Compile Include="Device.cs" />
     <Compile Include="DeviceContext.cs" />
     <Compile Include="Generated\WIC\Enumerations.cs" />
