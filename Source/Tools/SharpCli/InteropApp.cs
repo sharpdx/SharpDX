@@ -362,6 +362,30 @@ namespace SharpCli
         }
 
         /// <summary>
+        /// Creates the memset method with the following signature:
+        /// <code>
+        /// public static unsafe void memset(void* pDest, int value, int count)
+        /// </code>
+        /// </summary>
+        /// <param name="methodSetStruct">The method set struct.</param>
+        private void CreateMemset(MethodDefinition methodSetStruct, bool isX64)
+        {
+            methodSetStruct.Body.Instructions.Clear();
+
+            var gen = methodSetStruct.Body.GetILProcessor();
+
+            gen.Emit(OpCodes.Ldarg_0);
+            gen.Emit(OpCodes.Ldarg_1);
+            gen.Emit(OpCodes.Ldarg_2);
+            if (isX64)
+                gen.Emit(OpCodes.Conv_I8);       //  for x64 platform
+            gen.Emit(OpCodes.Initblk);
+
+            // Ret
+            gen.Emit(OpCodes.Ret);
+        }
+
+        /// <summary>
         /// Creates the size of struct generic with the following signature:
         /// <code>
         /// public static int SizeOf&lt;T&gt;() where T : struct
@@ -406,6 +430,14 @@ namespace SharpCli
                 if (method.Name == "memcpy")
                 {
                     CreateMemcpy(method);
+                }
+                else if (method.Name == "memsetx86")
+                {
+                    CreateMemset(method, false);
+                }
+                else if (method.Name == "memsetx64")
+                {
+                    CreateMemset(method, true);
                 }
                 else if (method.Name == "SizeOf")
                 {

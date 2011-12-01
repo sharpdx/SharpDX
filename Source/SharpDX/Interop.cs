@@ -26,15 +26,6 @@ namespace SharpDX
     /// </summary>
     internal class Interop
     {
-        public unsafe static void Toto(IntPtr ptr, Vector3[] test)
-        {
-            fixed(void* pTest = test)
-            {
-                memcpy((void*)ptr, pTest, test.Length * SizeOf<Vector3>());
-            }
-        }
-
-
         /// <summary>
         /// Provides a fixed statement working with generics.
         /// </summary>
@@ -57,6 +48,16 @@ namespace SharpDX
         public static unsafe void memcpy(void* pDest, void* pSrc, int count)
         {
             throw new NotImplementedException();    
+        }
+
+        public static unsafe void memsetx86(void* pDest, int value, int count)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static unsafe void memsetx64(void* pDest, int value, int count)
+        {
+            throw new NotImplementedException();
         }
 
         public static unsafe void* Read<T>(void* pSrc, ref T data) where T : struct
