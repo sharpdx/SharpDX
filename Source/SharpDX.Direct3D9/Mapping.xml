@@ -644,6 +644,45 @@
     <const from-macro="D3DPS20_MAX_NUMINSTRUCTIONSLOTS" type="int" name="MaxInstructionSlots" class="SharpDX.Direct3D9.PixelShader" />
     <const from-macro="D3DPS20_MIN_NUMINSTRUCTIONSLOTS" type="int" name="MinInstructionSlots" class="SharpDX.Direct3D9.PixelShader" />
 
+    <create class="ResultCode" visibility="public"/>
+    <const from-macro="D3DXERR_CANNOTATTRSORT" type="SharpDX.Result" cpp-type="int" name="CannotAttributeSort" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DXERR_CANNOTMODIFYINDEXBUFFER" type="SharpDX.Result" cpp-type="int" name="CannotModifyIndexBuffer" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DXERR_CANNOTREMOVELASTITEM" type="SharpDX.Result" cpp-type="int" name="CannotRemoveLastItem" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DERR_CONFLICTINGRENDERSTATE" type="SharpDX.Result" cpp-type="int" name="ConflictingRenderState" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DERR_CONFLICTINGTEXTUREFILTER" type="SharpDX.Result" cpp-type="int" name="ConflictingTextureFilter" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DERR_CONFLICTINGTEXTUREPALETTE" type="SharpDX.Result" cpp-type="int" name="ConflictingTexturePalette" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DERR_DEVICEHUNG" type="SharpDX.Result" cpp-type="int" name="DeviceHung" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DERR_DEVICELOST" type="SharpDX.Result" cpp-type="int" name="DeviceLost" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DERR_DEVICENOTRESET" type="SharpDX.Result" cpp-type="int" name="DeviceNotReset" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DERR_DEVICEREMOVED" type="SharpDX.Result" cpp-type="int" name="DeviceRemoved" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DERR_DRIVERINTERNALERROR" type="SharpDX.Result" cpp-type="int" name="DriverInternalError" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DXERR_DUPLICATENAMEDFRAGMENT" type="SharpDX.Result" cpp-type="int" name="DuplicateNamedFragment" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DERR_INVALIDCALL" type="SharpDX.Result" cpp-type="int" name="InvalidCall" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DXERR_INVALIDDATA" type="SharpDX.Result" cpp-type="int" name="InvalidData" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DERR_INVALIDDEVICE" type="SharpDX.Result" cpp-type="int" name="InvalidDevice" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DXERR_INVALIDMESH" type="SharpDX.Result" cpp-type="int" name="InvalidMesh" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DXERR_LOADEDMESHASNODATA" type="SharpDX.Result" cpp-type="int" name="LoadedMeshHasNoData" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DERR_MOREDATA" type="SharpDX.Result" cpp-type="int" name="MoreData" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DOK_NOAUTOGEN" type="SharpDX.Result" cpp-type="int" name="NoAutomaticGeneration" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DERR_NOTAVAILABLE" type="SharpDX.Result" cpp-type="int" name="NotAvailable" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DERR_NOTFOUND" type="SharpDX.Result" cpp-type="int" name="NotFound" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DERR_OUTOFVIDEOMEMORY" type="SharpDX.Result" cpp-type="int" name="OutOfVideoMemory" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="S_PRESENT_MODE_CHANGED" type="SharpDX.Result" cpp-type="int" name="PresentModeChanged" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="S_PRESENT_OCCLUDED" type="SharpDX.Result" cpp-type="int" name="PresentOccluded" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="S_RESIDENT_IN_SHARED_MEMORY" type="SharpDX.Result" cpp-type="int" name="ResidentInSharedMemory" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DXERR_SKINNINGNOTSUPPORTED" type="SharpDX.Result" cpp-type="int" name="SkinningNotSupported" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3D_OK" type="SharpDX.Result" cpp-type="int" name="Success" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DXERR_TOOMANYINFLUENCES" type="SharpDX.Result" cpp-type="int" name="TooManyInfluences" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DERR_TOOMANYOPERATIONS" type="SharpDX.Result" cpp-type="int" name="TooManyOperations" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DERR_UNSUPPORTEDALPHAARG" type="SharpDX.Result" cpp-type="int" name="UnsupportedAlphaArgument" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DERR_UNSUPPORTEDALPHAOPERATION" type="SharpDX.Result" cpp-type="int" name="UnsupportedAlphaOperation" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DERR_UNSUPPORTEDCOLORARG" type="SharpDX.Result" cpp-type="int" name="UnsupportedColorArgument" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DERR_UNSUPPORTEDCOLOROPERATION" type="SharpDX.Result" cpp-type="int" name="UnsupportedColorOperation" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DERR_UNSUPPORTEDFACTORVALUE" type="SharpDX.Result" cpp-type="int" name="UnsupportedFactorValue" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DERR_UNSUPPORTEDTEXTUREFILTER" type="SharpDX.Result" cpp-type="int" name="UnsupportedTextureFilter" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DERR_WASSTILLDRAWING" type="SharpDX.Result" cpp-type="int" name="WasStillDrawing" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+    <const from-macro="D3DERR_WRONGTEXTUREFORMAT" type="SharpDX.Result" cpp-type="int" name="WrongTextureFormat" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
+
     <create class="D3D9" />
     <create class="D3DX9" />
 
@@ -2278,6 +2317,8 @@
     <map method="IDirect3DDevice9::DrawTriPatch" name="DrawTrianglePatch" visibility="internal"/>
     <map param="pNumSegs" attribute="in buffer"/>
     <map param="pTriPatchInfo" type="void"/>
+
+    <map method="IDirect3DDevice9::TestCooperativeLevel" check="false"/>
 
     <map method="IDirect3DVertexBuffer9::Lock" visibility="internal" name="Lock_" />
     <map param="ppbData" attribute="out" />
