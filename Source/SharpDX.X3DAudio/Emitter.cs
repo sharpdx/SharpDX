@@ -55,20 +55,22 @@ namespace SharpDX.X3DAudio
             // Method to free unmanaged allocation
             internal unsafe void __MarshalFree()
             {
-                if (ChannelAzimuthsPointer != IntPtr.Zero)
-                    Marshal.FreeHGlobal(ChannelAzimuthsPointer);
-                if (VolumeCurvePointer != IntPtr.Zero)
-                    Marshal.FreeHGlobal(VolumeCurvePointer);
-                if (LFECurvePointer != IntPtr.Zero)
-                    Marshal.FreeHGlobal(LFECurvePointer);
-                if (LPFDirectCurvePointer != IntPtr.Zero)
-                    Marshal.FreeHGlobal(LPFDirectCurvePointer);
-                if (LPFReverbCurvePointer != IntPtr.Zero)
-                    Marshal.FreeHGlobal(LPFReverbCurvePointer);
-                if (ReverbCurvePointer != IntPtr.Zero)
-                    Marshal.FreeHGlobal(ReverbCurvePointer);
-                if (VolumeCurvePointer != IntPtr.Zero)
-                    Marshal.FreeHGlobal(VolumeCurvePointer);
+                // FreeHGlobal is crashing? Does X3DAudio perform deallocation?
+
+                //if (ChannelAzimuthsPointer != IntPtr.Zero)
+                //    Marshal.FreeHGlobal(ChannelAzimuthsPointer);
+                //if (VolumeCurvePointer != IntPtr.Zero)
+                //    Marshal.FreeHGlobal(VolumeCurvePointer);
+                //if (LFECurvePointer != IntPtr.Zero)
+                //    Marshal.FreeHGlobal(LFECurvePointer);
+                //if (LPFDirectCurvePointer != IntPtr.Zero)
+                //    Marshal.FreeHGlobal(LPFDirectCurvePointer);
+                //if (LPFReverbCurvePointer != IntPtr.Zero)
+                //    Marshal.FreeHGlobal(LPFReverbCurvePointer);
+                //if (ReverbCurvePointer != IntPtr.Zero)
+                //    Marshal.FreeHGlobal(ReverbCurvePointer);
+                //if (VolumeCurvePointer != IntPtr.Zero)
+                //    Marshal.FreeHGlobal(VolumeCurvePointer);
             }
         }
 

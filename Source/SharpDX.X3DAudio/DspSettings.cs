@@ -75,8 +75,14 @@ namespace SharpDX.X3DAudio
         // Method to marshal from managed struct tot native
         internal unsafe void __MarshalTo(ref __Native @ref)
         {
-            @ref.MatrixCoefficientsPointer = Marshal.AllocHGlobal(SourceChannelCount * DestinationChannelCount * sizeof(float));
-            @ref.DelayTimesPointer = Marshal.AllocHGlobal(DestinationChannelCount * sizeof(float));
+            int size = SourceChannelCount * DestinationChannelCount * sizeof(float);
+            @ref.MatrixCoefficientsPointer = Marshal.AllocHGlobal(size);
+            Utilities.ClearMemory(@ref.MatrixCoefficientsPointer, 0, size);
+
+            size = DestinationChannelCount * sizeof(float);
+            @ref.DelayTimesPointer = Marshal.AllocHGlobal(size);
+            Utilities.ClearMemory(@ref.DelayTimesPointer, 0, size);
+
             @ref.SrcChannelCount = this.SourceChannelCount;
             @ref.DstChannelCount = this.DestinationChannelCount;
             @ref.LPFDirectCoefficient = this.LpfDirectCoefficient;
