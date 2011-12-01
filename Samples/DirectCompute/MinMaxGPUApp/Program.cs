@@ -53,19 +53,41 @@ namespace MinMaxGPUApp
 
             const int Width = 1024;
             const int Height = 1024;
+            const int Count = 1000;
 
             // Create random buffer
             var random = new Random();
             var randbomBuffer = new DataStream(sizeof(float) * Width * Height, true, true);
-            var min = float.MaxValue;
-            var max = float.MinValue;
             for (int i = 0; i < Width * Height; i++)
             {
                 var value = (float)random.NextDouble();
-                if (value < min) min = value;
-                if (value > max) max = value;
                 randbomBuffer.Write(value);
             }
+
+
+            var clock = new Stopwatch();
+            var min = float.MaxValue;
+            var max = float.MinValue;
+            unsafe
+            {
+                var buffer = (float*)randbomBuffer.DataPointer;
+                clock.Start();
+                for (int j = 0; j < Count; j++)
+                {
+                    min = float.MaxValue;
+                    max = float.MinValue;
+                    for (int i = 0; i < Width * Height; i++)
+                    {
+                        var value = buffer[i];
+                        if (value < min) min = value;
+                        if (value > max) max = value;
+                    }
+                }
+                clock.Stop();
+            }
+            Console.WriteLine("CPU MinMax: {0} / {1} {2}ms", min, max, clock.ElapsedMilliseconds);
+
+
 
             // Create random 2D texture 
             var texture = ToDispose(new Texture2D(
@@ -103,8 +125,6 @@ namespace MinMaxGPUApp
                 }));
 
 
-            Console.WriteLine("CPU MinMax: {0} / {1}", min, max);
-
             var gpuProfiler = new GPUProfiler();
             gpuProfiler.Initialize(device);
             double elapsedTime = 0.0f;
@@ -121,7 +141,7 @@ namespace MinMaxGPUApp
                     {
 
                         gpuProfiler.Begin(context);
-                        for (int i = 0; i < 1000; i++)
+                        for (int i = 0; i < Count; i++)
                         {
                             processor.Reduce(context, textureView);
                         }
