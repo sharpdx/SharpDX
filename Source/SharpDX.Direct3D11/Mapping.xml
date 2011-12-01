@@ -85,7 +85,7 @@
     <const from-macro="D3D11_IA_(.*)" class="SharpDX.Direct3D11.InputAssemblerStage" type="int" name="$1" />
     <const from-macro="D3D11_IA_(.*)" class="SharpDX.Direct3D11.InputAssemblerStage" type="int" name="$1" />
 
-
+    <const from-macro="D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT" class="SharpDX.Direct3D11.Device" type="int" name="MultisampleCountMaximum" />
 
     <const from-macro="D3D11_SDK_VERSION" class="SharpDX.Direct3D11.D3D11" type="int" name="SdkVersion" />
 
