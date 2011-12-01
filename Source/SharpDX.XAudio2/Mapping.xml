@@ -51,13 +51,30 @@
       <create-cpp enum="XAUDIO2_WINDOWS_PROCESSOR_SPECIFIER" macro="Processor[0-9]+|XAUDIO2_ANY_PROCESSOR|XAUDIO2_DEFAULT_PROCESSOR" />
     </ifdef>
     
-    <const from-macro="XAUDIO2_LOOP_INFINITE" class="SharpDX.XAudio2.AudioBuffer" type="int" name="LoopInfinite" />
-
     <ifndef name="WIN8">
       <const from-guid="CLSID_XAudio2.*" class="SharpDX.XAudio2.XAudio2" type="System.Guid">new System.Guid("$1")</const>
       <const from-guid="IID_IXAudio2" class="SharpDX.XAudio2.XAudio2" type="System.Guid">new System.Guid("$1")</const>
     </ifndef>
-    
+
+    <const from-macro="XAUDIO2_MAX_BUFFER_BYTES" type="int" cpp-type="int" name="MaximumBufferBytes" class="SharpDX.XAudio2.XAudio2" visibility="public const">unchecked((int)$1)</const>
+    <const from-macro="XAUDIO2_MAX_QUEUED_BUFFERS" type="int" cpp-type="int" name="MaximumQueuedBuffers" class="SharpDX.XAudio2.XAudio2" visibility="public const" />
+    <const from-macro="XAUDIO2_MAX_AUDIO_CHANNELS" type="int" cpp-type="int" name="MaximumAudioChannels" class="SharpDX.XAudio2.XAudio2" visibility="public const" />
+    <const from-macro="XAUDIO2_MIN_SAMPLE_RATE" type="int" cpp-type="int" name="MinimumSampleRate" class="SharpDX.XAudio2.XAudio2" visibility="public const" />
+    <const from-macro="XAUDIO2_MAX_SAMPLE_RATE" type="int" cpp-type="int" name="MaximumSampleRate" class="SharpDX.XAudio2.XAudio2" visibility="public const" />
+    <const from-macro="XAUDIO2_MAX_VOLUME_LEVEL" type="float" cpp-type="float" name="MaximumVolumeLevel" class="SharpDX.XAudio2.XAudio2" visibility="public const" />
+    <const from-macro="XAUDIO2_MIN_FREQ_RATIO" type="float" cpp-type="float" name="MinimumFrequencyRatio" class="SharpDX.XAudio2.XAudio2" visibility="public const" />
+    <const from-macro="XAUDIO2_MAX_FREQ_RATIO" type="float" cpp-type="float" name="MaximumFrequencyRatio" class="SharpDX.XAudio2.XAudio2" visibility="public const" />
+    <const from-macro="XAUDIO2_DEFAULT_FREQ_RATIO" type="float" cpp-type="float" name="DefaultFrequencyRatio" class="SharpDX.XAudio2.XAudio2" visibility="public const" />
+    <const from-macro="XAUDIO2_MAX_FILTER_ONEOVERQ" type="float" cpp-type="float" name="MaximumFilterOneOverQ" class="SharpDX.XAudio2.XAudio2" visibility="public const" />
+    <const from-macro="XAUDIO2_MAX_FILTER_FREQUENCY" type="float" cpp-type="float" name="MaximumFilterFrequency" class="SharpDX.XAudio2.XAudio2" visibility="public const" />
+    <const from-macro="XAUDIO2_MAX_LOOP_COUNT" type="int" cpp-type="int" name="MaximumLoopCount" class="SharpDX.XAudio2.XAudio2" visibility="public const" />
+    <const from-macro="XAUDIO2_COMMIT_NOW" type="int" cpp-type="int" name="CommitNow" class="SharpDX.XAudio2.XAudio2" visibility="public const" />
+    <const from-macro="XAUDIO2_COMMIT_ALL" type="int" cpp-type="int" name="CommitAll" class="SharpDX.XAudio2.XAudio2" visibility="public const" />
+    <const from-macro="XAUDIO2_NO_LOOP_REGION" type="int" cpp-type="int" name="NoLoopRegion" class="SharpDX.XAudio2.XAudio2" visibility="public const" />
+    <const from-macro="XAUDIO2_LOOP_INFINITE" type="int" cpp-type="int" name="LoopInfinite" class="SharpDX.XAudio2.AudioBuffer" visibility="public const" />
+    <const from-macro="XAUDIO2_DEFAULT_CHANNELS" type="int" cpp-type="int" name="DefaultChannels" class="SharpDX.XAudio2.XAudio2" visibility="public const" />
+    <const from-macro="XAUDIO2_DEFAULT_SAMPLERATE" type="int" cpp-type="int" name="DefaultSampleRate" class="SharpDX.XAudio2.XAudio2" visibility="public const" />
+
     <create class="XAudio2Functions" />
     
     <!-- Warning, gccxml cannot parse thoe CLSID - Need to declare them manually
