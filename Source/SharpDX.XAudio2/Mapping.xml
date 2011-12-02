@@ -108,6 +108,11 @@
     <map enum-item="XAUDIO2_ANY_PROCESSOR" name="AnyProcessor" />
     <map enum-item="XAUDIO2_DEFAULT_PROCESSOR" name="DefaultProcessor" />
 
+    <map enum-item="XAUDIO2_VOICE_NOPITCH" name="NoPitch"/>
+    <map enum-item="XAUDIO2_VOICE_NOSRC" name="NoSampleRateConversion"/>
+    <map enum-item="XAUDIO2_VOICE_USEFILTER" name="UseFilter"/>
+    <map enum-item="XAUDIO2_VOICE_MUSIC" name="Music"/>
+
     <!--
     // *****************************************************************
     // XAudio2 Structures
@@ -127,6 +132,7 @@
     <map field="XAUDIO2_SEND_DESCRIPTOR::Flags" type="XAUDIO2_VOICE_SEND_FLAGS" />
     <map field="XAUDIO2_SEND_DESCRIPTOR::pOutputVoice" name="OutputVoicePointer" />
     <map field="XAUDIO2_SEND_DESCRIPTOR::pOutputVoice" visibility="internal" />
+    <map field="XAUDIO2_VOICE_DETAILS::CreationFlags" type="XAUDIO2_VOICE_FLAGS" />
     <map struct="XAUDIO2_VOICE_SENDS" visibility="internal" />
     <map struct="XAUDIO2_VOICE_SENDS" name="VoiceSendDescriptors" />
     <map field="XAUDIO2_VOICE_SENDS::pSends" name="SendPointer" />
@@ -136,7 +142,7 @@
     <map struct="XAUDIO2_BUFFER_WMA" visibility="internal"/>
     <map field="XAUDIO2_BUFFER_WMA::pDecodedPacketCumulativeBytes" name="DecodedPacketCumulativeBytesPointer" />
     <map field="XAUDIO2_VOICE_STATE::pCurrentBufferContext" name="Context" />
-    <map field="XAUDIO2_VOICE_DETAILS::InputChannels" name="InputChanneCount" />
+    <map field="XAUDIO2_VOICE_DETAILS::InputChannels" name="InputChannelCount" />
     <map field="XAUDIO2_EFFECT_DESCRIPTOR::OutputChannels" name="OutputChannelCount" />
     <map field="XAUDIO2_EFFECT_DESCRIPTOR::pEffect" name="EffectPointer" />
     <map field="XAUDIO2_EFFECT_DESCRIPTOR::pEffect" visibility="internal" />
@@ -145,7 +151,6 @@
     <map field="XAUDIO2FX_VOLUMEMETER_LEVELS::pRMSLevels" name="RmsLevelsPointer" />
     <map field="XAUDIO2FX_VOLUMEMETER_LEVELS::pRMSLevels" visibility="internal" />
     <map struct="XAUDIO2_EFFECT_DESCRIPTOR" native="true" struct-to-class="true" marshal="false" new="false" marshalto="true" />
-
 
     <!--
     // *****************************************************************
