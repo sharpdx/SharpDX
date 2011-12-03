@@ -55,15 +55,20 @@ namespace MinMaxGPUApp
             const int Height = 1024;
             const int Count = 1000;
 
+            Console.WriteLine("Texture Size: ({0},{1}) - Count: {2}", Width, Height, Width * Height);
+            Console.WriteLine();
+
             // Create random buffer
             var random = new Random();
+            float maxScale = (float)((byte)random.Next());
             var randbomBuffer = new DataStream(sizeof(float) * Width * Height, true, true);
             for (int i = 0; i < Width * Height; i++)
             {
                 var value = (float)random.NextDouble();
+                if (value < 0.1 || value > 0.9)
+                    value = value * (float)random.NextDouble() * maxScale;
                 randbomBuffer.Write(value);
             }
-
 
             var clock = new Stopwatch();
             var min = float.MaxValue;
@@ -87,8 +92,6 @@ namespace MinMaxGPUApp
             }
             Console.WriteLine("CPU MinMax: {0} / {1} {2}ms", min, max, clock.ElapsedMilliseconds);
 
-
-
             // Create random 2D texture 
             var texture = ToDispose(new Texture2D(
                 device,
@@ -107,35 +110,17 @@ namespace MinMaxGPUApp
                 }, new DataRectangle(randbomBuffer.DataPointer, sizeof(float) * Width)));
             var textureView = ToDispose(new ShaderResourceView(device, texture));
 
-            // Create result 2D texture to readback by CPU
-            var textureReadback = ToDispose(new Texture2D(
-                device,
-                new Texture2DDescription
-                {
-                    ArraySize = 1,
-                    BindFlags = BindFlags.None,
-                    CpuAccessFlags = CpuAccessFlags.Read,
-                    Format = Format.R32G32_Float,
-                    Width = 1,
-                    Height = 1,
-                    MipLevels = 1,
-                    OptionFlags = ResourceOptionFlags.None,
-                    SampleDescription = new SampleDescription(1, 0),
-                    Usage = ResourceUsage.Staging
-                }));
-
-
             var gpuProfiler = new GPUProfiler();
             gpuProfiler.Initialize(device);
             double elapsedTime = 0.0f;
 
-            var pixelShaderMinMax = ToDispose(new PixelShaderMinMax());
-            pixelShaderMinMax.Initialize(device);
+            var pixelShaderMinMax = ToDispose(new MipMapMinMax());
             pixelShaderMinMax.Size = new Size(Width, Height);
+            pixelShaderMinMax.Initialize(device);
 
-            var blendMinMax = ToDispose(new BlendMinMax());
-            blendMinMax.Initialize(device);
+            var blendMinMax = ToDispose(new VertexBlendMinMax());
             blendMinMax.Size = new Size(Width, Height);
+            blendMinMax.Initialize(device);
 
             var testRunner = new Action<IMinMaxProcessor>( (processor) =>
                     {
@@ -148,20 +133,28 @@ namespace MinMaxGPUApp
                         gpuProfiler.End(context);
 
                         context.Flush();
-                        processor.Copy(context, textureReadback);
-                        DataStream result;
-                        context.MapSubresource(textureReadback, 0, MapMode.Read, MapFlags.None, out result);
-                        var minMaxFactor = processor.MinMaxFactor;
-                        var newMin =  minMaxFactor.X * result.ReadFloat();
-                        var newMax = minMaxFactor.Y * result.ReadFloat();
-                        context.UnmapSubresource(textureReadback, 0);
+                        float newMin;
+                        float newMax;
+                        processor.GetResults(context, out newMin, out newMax);
 
                         elapsedTime = gpuProfiler.GetElapsedMilliseconds(context);
-                        Console.WriteLine("GPU {0}: {1} / {2} in {3}ms", processor.GetType().Name, newMin, newMax, elapsedTime);
+                        Console.WriteLine("GPU {0}: {1} / {2} in {3}ms", processor, newMin, newMax, elapsedTime);
                     });
 
-            testRunner(pixelShaderMinMax);
-            testRunner(blendMinMax);
+            Console.WriteLine();
+            for (int i = 1; i < 4; i++)
+            {
+                pixelShaderMinMax.ReduceFactor = i;
+                testRunner(pixelShaderMinMax);
+            }
+
+            Console.WriteLine();
+
+            for (int i = 5; i < 10; i++)
+            {
+                blendMinMax.ReduceFactor = i;
+                testRunner(blendMinMax);
+            }
 
             // Dispose all resource created
             Dispose();

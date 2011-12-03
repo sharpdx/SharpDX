@@ -68,9 +68,9 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BlendMinMax.cs" />
+    <Compile Include="VertexBlendMinMax.cs" />
     <Compile Include="IMinMaxProcessor.cs" />
-    <Compile Include="PixelShaderMinMax.cs" />
+    <Compile Include="MipMapMinMax.cs" />
     <Compile Include="GPUProfiler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

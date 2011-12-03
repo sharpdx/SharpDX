@@ -13,7 +13,7 @@ namespace MinMaxGPUApp
 
         Size Size { get; set; }
 
-        void Copy(DeviceContext context, Texture2D destination);
+        void GetResults(DeviceContext context, out float min, out float max);
 
         void Reduce(DeviceContext context, ShaderResourceView from);
     }

@@ -20,48 +20,115 @@
 Texture2D<float> FromTexture : register(t0);
 Texture2D<float2> MinMaxTexture : register(t0);
 SamplerState ColorSampler : register(s0);
-static const int Width = 1024;
-static const int Height = 1024;
-static const int BatchCount = 128;
+static const int Width = WIDTH;
+static const int Height = HEIGHT;
+static const int BatchCount = MINMAX_BATCH_COUNT;
 static const int WidthStride = Width/BatchCount;
 
-float4 MinMaxVS( float2 pos : POSITION, out float2 coords : TEXCOORD0  ) : SV_POSITION
+float4 MipMapMinMaxVS( float2 pos : POSITION, out float2 coords : TEXCOORD0  ) : SV_POSITION
 {
     coords = float2(pos.x * .5f  + .5f, -pos.y * .5f + .5f);
 	return float4(pos, 0.0f, 1.0f);
 }
 
-float2 MinMaxBeginPS( float4 pos : SV_POSITION, float2 coords : TEXCOORD0 ) : SV_Target
-{
-	float value1 = FromTexture.SampleLevel(ColorSampler, coords, 0);
-	float value2 = FromTexture.SampleLevel(ColorSampler, coords, 0, int2(1,0));
-	float value3 = FromTexture.SampleLevel(ColorSampler, coords, 0, int2(0,1));
-	float value4 = FromTexture.SampleLevel(ColorSampler, coords, 0, int2(1,1));
-	return float2(min(min(value1.x,value2.x),min(value3.x,value4.x)), max(max(value1.x,value2.x),max(value3.x,value4.x)));
-}
-
-float2 MinMaxPS( float4 pos : SV_POSITION, float2 coords : TEXCOORD0 ) : SV_Target
-{
-	float2 value1 = MinMaxTexture.SampleLevel(ColorSampler, coords, 0);
-	float2 value2 = MinMaxTexture.SampleLevel(ColorSampler, coords, 0, int2(1,0));
-	float2 value3 = MinMaxTexture.SampleLevel(ColorSampler, coords, 0, int2(0,1));
-	float2 value4 = MinMaxTexture.SampleLevel(ColorSampler, coords, 0, int2(1,1));
-	return float2(min(min(value1.x,value2.x),min(value3.x,value4.x)), max(max(value1.y,value2.y),max(value3.y,value4.y)));
-}
-
-float4 MinMaxBlendVS( uint vertexId : SV_VertexID, out float2 minmax : MINMAX  ) : SV_POSITION
-{
-    minmax = float2(-2, -2);
+float2 MipMapMinMaxSampleBegin(float2 coords, int size) {
+	float2 minmax;
 	[unroll]
-	for(int i = 0; i < BatchCount; i++) {
-		float value = FromTexture.Load(uint3((vertexId % WidthStride) * BatchCount + i, vertexId / WidthStride,0));
-		minmax.x = max(-value, minmax.x);
-		minmax.y = max( value, minmax.y);
+	for(int i = 0; i < size; i++) {
+		[unroll]
+		for(int j = 0; j < size; j++)  {
+			if (i == 0 && j == 0 ) {
+				float value = FromTexture.SampleLevel(ColorSampler, coords, 0);
+				minmax = float2(value, value);
+			}
+			else 
+			{
+				float value = FromTexture.SampleLevel(ColorSampler, coords, 0, int2(i,j));
+				minmax = float2(min(value, minmax.x), max(value, minmax.y));
+			}
+		}
+	}
+	return minmax;
+}
+
+float2 MipMapMinMaxSample(float2 coords, int size) {
+	float2 minmax;
+	[unroll]
+	for(int i = 0; i < size; i++) {
+		[unroll]
+		for(int j = 0; j < size; j++)  {
+			if (i == 0 && j == 0 ) {
+				minmax = MinMaxTexture.SampleLevel(ColorSampler, coords, 0);
+			}
+			else 
+			{
+				float2 value = MinMaxTexture.SampleLevel(ColorSampler, coords, 0, int2(i,j));
+				minmax = float2(min(value.x, minmax.x), max(value.y, minmax.y));
+			}
+		}
+	}
+	return minmax;
+}
+
+float2 MipMapMinMaxBegin1PS( float4 pos : SV_POSITION, float2 coords : TEXCOORD0 ) : SV_Target
+{
+	return MipMapMinMaxSampleBegin(coords, 2);
+}
+
+float2 MipMapMinMax1PS( float4 pos : SV_POSITION, float2 coords : TEXCOORD0 ) : SV_Target
+{
+	return MipMapMinMaxSample(coords, 2);
+}
+
+float2 MipMapMinMaxBegin2PS( float4 pos : SV_POSITION, float2 coords : TEXCOORD0 ) : SV_Target
+{
+	return MipMapMinMaxSampleBegin(coords, 4);
+}
+
+float2 MipMapMinMax2PS( float4 pos : SV_POSITION, float2 coords : TEXCOORD0 ) : SV_Target
+{
+	return MipMapMinMaxSample(coords, 4);
+}
+
+float2 MipMapMinMaxBegin3PS( float4 pos : SV_POSITION, float2 coords : TEXCOORD0 ) : SV_Target
+{
+	return MipMapMinMaxSampleBegin(coords, 8);
+}
+
+float2 MipMapMinMax3PS( float4 pos : SV_POSITION, float2 coords : TEXCOORD0 ) : SV_Target
+{
+	return MipMapMinMaxSample(coords, 8);
+}
+
+float4 VertexBlendMinMaxVS( uint vertexId : SV_VertexID, out float4 minmax : MINMAX  ) : SV_POSITION
+{
+    minmax = float4(0,0,0,0);
+	[unroll]
+	for(int i = 0; i < BatchCount/2; i++) {
+		uint3 sampleCoord = uint3((vertexId % WidthStride) * BatchCount + i*2, vertexId / WidthStride,0);
+		float value = FromTexture.Load(sampleCoord);
+		if (i == 0) {
+			minmax.x = -value;
+			minmax.y = value;
+			sampleCoord.x = sampleCoord.x + 1;
+			value = FromTexture.Load(sampleCoord);
+			minmax.z = -value;
+			minmax.w = value;
+		}
+		else
+		{
+			minmax.x = max(-value, minmax.x);
+			minmax.y = max( value, minmax.y);
+			sampleCoord.x = sampleCoord.x + 1;
+			value = FromTexture.Load(sampleCoord);
+			minmax.z = max(-value, minmax.z);
+			minmax.w = max( value, minmax.w);
+		}
 	}
 	return float4(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
-float4 MinMaxBlendPS( float4 pos : SV_POSITION, float2 minmax : MINMAX  ) : SV_Target
+float4 VertexBlendMinMaxPS( float4 pos : SV_POSITION, float4 minmax : MINMAX  ) : SV_Target
 {
-	return float4(minmax, 0.0f, 1.0f);
+	return minmax;
 }

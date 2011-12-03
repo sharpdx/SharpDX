@@ -26,10 +26,10 @@ namespace SharpDX.Direct3D
         /// </summary>
         /// <param name = "name"></param>
         /// <param name = "definition"></param>
-        public ShaderMacro(string name, string definition)
+        public ShaderMacro(string name, object definition)
         {
             Name = name;
-            Definition = definition;
+            Definition = definition == null ? null : definition.ToString();
         }
     }
 }

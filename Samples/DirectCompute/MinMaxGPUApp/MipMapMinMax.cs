@@ -29,16 +29,17 @@ using SharpDX.Direct3D11;
 
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
+using MapFlags = SharpDX.Direct3D11.MapFlags;
 
 namespace MinMaxGPUApp
 {
-    public class PixelShaderMinMax : Component, IMinMaxProcessor
+    public class MipMapMinMax : Component, IMinMaxProcessor
     {
         private VertexShader vertexShader;
 
-        private PixelShader pixelShaderMinMaxBegin;
+        private PixelShader[] pixelShaderMinMaxBegin;
 
-        private PixelShader pixelShaderMinMax;
+        private PixelShader[] pixelShaderMinMax;
 
         private InputLayout layout;
 
@@ -60,11 +61,53 @@ namespace MinMaxGPUApp
 
         public Vector2 MinMaxFactor { get { return new Vector2(1.0f, 1.0f); } }
 
+        private int reduceFactor;
+
+        private Texture2D textureReadback;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MipMapMinMax"/> class.
+        /// </summary>
+        public MipMapMinMax()
+        {
+            ReduceFactor = 1;
+        }
+
+        /// <summary>
+        /// Gets or sets the reduce factor.
+        /// </summary>
+        /// <value>
+        /// The reduce factor.
+        /// </value>
+        /// <remarks>
+        /// This reprensents the number of pixels (2^ReduceFactor * 2^ReduceFactor) that will be used to sample the source texture.
+        /// </remarks>
+        public int ReduceFactor
+        {
+            get
+            {
+                return reduceFactor;
+            }
+            set
+            {
+                if (value < 1 && value < 4) throw new ArgumentException("Value must be in the range [1,3]");
+                reduceFactor = value;
+            }
+        }
+
+        /// <inheritdoc/>
         public void Initialize(Device device)
         {
             this.device = device;
+            var macros = new[]
+                    {
+                        new ShaderMacro("WIDTH", Size.Width),
+                        new ShaderMacro("HEIGHT", Size.Height),
+                        new ShaderMacro("MINMAX_BATCH_COUNT", 1),
+                    };
+
             // Compile Vertex and Pixel shaders
-            var bytecode = ShaderBytecode.CompileFromFile("minmax.hlsl", "MinMaxVS", "vs_4_0", ShaderFlags.Debug);
+            var bytecode = ShaderBytecode.CompileFromFile("minmax.hlsl", "MipMapMinMaxVS", "vs_4_0", ShaderFlags.None, EffectFlags.None, macros);
             vertexShader = ToDispose(new VertexShader(device, bytecode));
             // Layout from VertexShader input signature
             layout = ToDispose(new InputLayout(device,ShaderSignature.GetInputSignature(bytecode), new[] {
@@ -72,13 +115,18 @@ namespace MinMaxGPUApp
                         }));
             bytecode.Dispose();
 
-            bytecode = ShaderBytecode.CompileFromFile("minmax.hlsl", "MinMaxBeginPS", "ps_4_0", ShaderFlags.Debug);
-            pixelShaderMinMaxBegin = ToDispose(new PixelShader(device, bytecode));
-            bytecode.Dispose();
+            pixelShaderMinMaxBegin = new PixelShader[3];
+            pixelShaderMinMax = new PixelShader[3];
+            for (int i = 0; i < 3; i++)
+            {
+                bytecode = ShaderBytecode.CompileFromFile("minmax.hlsl", "MipMapMinMaxBegin" + (i + 1) + "PS", "ps_4_0", ShaderFlags.None, EffectFlags.None, macros);
+                pixelShaderMinMaxBegin[i] = ToDispose(new PixelShader(device, bytecode));
+                bytecode.Dispose();
 
-            bytecode = ShaderBytecode.CompileFromFile("minmax.hlsl", "MinMaxPS", "ps_4_0", ShaderFlags.Debug);
-            pixelShaderMinMax = ToDispose(new PixelShader(device, bytecode));
-            bytecode.Dispose();
+                bytecode = ShaderBytecode.CompileFromFile("minmax.hlsl", "MipMapMinMax" + (i + 1) + "PS", "ps_4_0", ShaderFlags.None, EffectFlags.None, macros);
+                pixelShaderMinMax[i]= ToDispose(new PixelShader(device, bytecode));
+                bytecode.Dispose();
+            }
 
             // Instantiate Vertex buiffer from vertex data
             vertices = ToDispose(Buffer.Create(device,BindFlags.VertexBuffer, new[] { -1.0f, 1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f, -1.0f, }));
@@ -96,6 +144,32 @@ namespace MinMaxGPUApp
                             MinimumLod = 0,
                             MaximumLod = 16,
                         }));
+            // Create result 2D texture to readback by CPU
+            textureReadback = ToDispose(new Texture2D(
+                device,
+                new Texture2DDescription
+                {
+                    ArraySize = 1,
+                    BindFlags = BindFlags.None,
+                    CpuAccessFlags = CpuAccessFlags.Read,
+                    Format = Format.R32G32_Float,
+                    Width = 1,
+                    Height = 1,
+                    MipLevels = 1,
+                    OptionFlags = ResourceOptionFlags.None,
+                    SampleDescription = new SampleDescription(1, 0),
+                    Usage = ResourceUsage.Staging
+                }));
+        }
+
+        public void GetResults(DeviceContext context, out float min, out float max)
+        {
+            context.CopySubresourceRegion(texture2DMinMax, texture2DMinMaxResourceView.Length - 1, null, textureReadback, 0, 0, 0, 0);
+            DataStream result;
+            context.MapSubresource(textureReadback, 0, MapMode.Read, MapFlags.None, out result);
+            min = result.ReadFloat();
+            max = result.ReadFloat();
+            context.UnmapSubresource(textureReadback, 0);
         }
 
         public Size Size
@@ -159,13 +233,11 @@ namespace MinMaxGPUApp
             }
         }
 
-        public void Copy(DeviceContext context, Texture2D destination)
-        {
-            context.CopySubresourceRegion(texture2DMinMax, texture2DMinMaxRenderView.Length - 1, null, destination, 0, 0, 0, 0);
-        }
+        private int passCount = 0;
 
         public void Reduce(DeviceContext context, ShaderResourceView from)
         {
+            PixHelper.BeginEvent("MinMax");
             UpdateMinMaxTextures();
 
             context.InputAssembler.InputLayout = layout;
@@ -174,26 +246,52 @@ namespace MinMaxGPUApp
             context.VertexShader.Set(vertexShader);
 
             var viewport = new Viewport(0, 0, Size.Width, Size.Height);
-            for (int i = 0; i < texture2DMinMaxResourceView.Length; i++)
+
+            int maxLevels = texture2DMinMaxResourceView.Length;
+
+            int lastSampleLevel = maxLevels % ReduceFactor;
+
+            int levels = maxLevels / ReduceFactor;
+
+            passCount = levels + (lastSampleLevel > 0 ? 1 : 0);
+            for (int i = 0; i < passCount; i++)
             {
-                viewport.Width = Math.Max(((int)viewport.Width) / 2, 1);
-                viewport.Height = Math.Max(((int)viewport.Height) / 2, 1);
+                int shaderIndex = ReduceFactor;
+                int levelIndex = (i+1) * ReduceFactor - 1;
+                viewport.Width = Math.Max(((int)Size.Width) / (1 << (levelIndex + 1)), 1);
+                viewport.Height = Math.Max(((int)Size.Height) / (1 << (levelIndex + 1)), 1);
 
-                PixHelper.BeginEvent("MinMax Level {0} Size: ({1},{2})", i, viewport.Width, viewport.Height);
+                PixHelper.BeginEvent("MinMax Level {0} Size: ({1},{2})", levelIndex, viewport.Width, viewport.Height);
 
-                context.PixelShader.Set(i == 0 ? pixelShaderMinMaxBegin : pixelShaderMinMax);
+                // Special case when last level is different from ReduceFactor size
+                if (i == levels)
+                {
+                    levelIndex = maxLevels - 1;
+                    shaderIndex = lastSampleLevel;
+                    viewport.Width = 1;
+                    viewport.Height = 1;
+                }
+
+                context.PixelShader.Set(i == 0 ? pixelShaderMinMaxBegin[shaderIndex - 1] : pixelShaderMinMax[shaderIndex - 1]);
                 context.PixelShader.SetSampler(0, sampler);
                 context.PixelShader.SetShaderResource(0, from);
                 context.Rasterizer.SetViewports(viewport);
-                context.ClearRenderTargetView(texture2DMinMaxRenderView[i], Colors.Black);
-                context.OutputMerger.SetTargets(texture2DMinMaxRenderView[i]);
+                context.ClearRenderTargetView(texture2DMinMaxRenderView[levelIndex], Colors.Black);
+                context.OutputMerger.SetTargets(texture2DMinMaxRenderView[levelIndex]);
                 context.Draw(4, 0);
                 context.PixelShader.SetShaderResource(0, null);
                 context.OutputMerger.ResetTargets();
-                from = texture2DMinMaxResourceView[i];
+                from = texture2DMinMaxResourceView[levelIndex];
 
                 PixHelper.EndEvent();
             }
+            PixHelper.EndEvent();
+        }
+
+        public override string ToString()
+        {
+            var samplerSize = 1 << ReduceFactor;
+            return string.Format("{0} {1}x{1} (PassCount {2})", GetType().Name, samplerSize, passCount);
         }
     }
 }

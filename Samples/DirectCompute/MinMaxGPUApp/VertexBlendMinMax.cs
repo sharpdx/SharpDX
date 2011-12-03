@@ -29,12 +29,13 @@ using SharpDX.Direct3D11;
 
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
+using MapFlags = SharpDX.Direct3D11.MapFlags;
 
 namespace MinMaxGPUApp
 {
-    public class BlendMinMax : Component, IMinMaxProcessor
+    public class VertexBlendMinMax : Component, IMinMaxProcessor
     {
-        private VertexShader vertexShader;
+        private VertexShader[] vertexShaders;
         private PixelShader pixelShaderMinMax;
         private Device device;
         private Texture2D texture2DMinMax;
@@ -47,30 +48,69 @@ namespace MinMaxGPUApp
 
         public Vector2 MinMaxFactor { get { return new Vector2(-1.0f, 1.0f);} }
 
+        private int reduceFactor;
+
+        private Texture2D textureReadback;
+
+        public VertexBlendMinMax()
+        {
+            ReduceFactor = 7;
+        }
+
+        public int ReduceFactor
+        {
+            get
+            {
+                return reduceFactor;
+            }
+            set
+            {
+                if (value < 0 || value > 9) throw new ArgumentException("ReduceFactor must be in the range [0,9]");
+                reduceFactor = value;
+            }
+        }
+
         public void Initialize(Device device)
         {
-            this.device = device;
-            // Compile Vertex and Pixel shaders
-            var bytecode = ShaderBytecode.CompileFromFile("minmax.hlsl", "MinMaxBlendVS", "vs_4_0", ShaderFlags.Debug);
-            vertexShader = ToDispose(new VertexShader(device, bytecode));
-            bytecode.Dispose();
+            var macros = new[]
+                    {
+                        new ShaderMacro("WIDTH", Size.Width),
+                        new ShaderMacro("HEIGHT", Size.Height),
+                        new ShaderMacro("MINMAX_BATCH_COUNT", 0),
+                    };
 
-            bytecode = ShaderBytecode.CompileFromFile("minmax.hlsl", "MinMaxBlendPS", "ps_4_0", ShaderFlags.Debug);
+            this.device = device;
+
+            ShaderBytecode bytecode;
+            vertexShaders = new VertexShader[10];
+            for (int i = 0; i < 10; i++)
+            {
+                int batchCount = 1 << i;
+                macros[2] = new ShaderMacro("MINMAX_BATCH_COUNT", batchCount < 2 ? 2 : batchCount);
+            
+                // Compile Vertex and Pixel shaders
+                bytecode = ShaderBytecode.CompileFromFile("minmax.hlsl", "VertexBlendMinMaxVS", "vs_4_0", ShaderFlags.Debug, EffectFlags.None, macros);
+                vertexShaders[i] = ToDispose(new VertexShader(device, bytecode));
+                bytecode.Dispose();
+            }
+
+            bytecode = ShaderBytecode.CompileFromFile("minmax.hlsl", "VertexBlendMinMaxPS", "ps_4_0", ShaderFlags.Debug, EffectFlags.None, macros);
             pixelShaderMinMax = ToDispose(new PixelShader(device, bytecode));
             bytecode.Dispose();
 
             var blendStateDesc = new BlendStateDescription();
             blendStateDesc.AlphaToCoverageEnable = false;
             blendStateDesc.IndependentBlendEnable = false;
-            blendStateDesc.RenderTarget[0].BlendOperation = BlendOperation.Maximum;
-            blendStateDesc.RenderTarget[0].DestinationBlend = BlendOption.One;
             blendStateDesc.RenderTarget[0].IsBlendEnabled = true;
-            blendStateDesc.RenderTarget[0].RenderTargetWriteMask = ColorWriteMaskFlags.Red | ColorWriteMaskFlags.Green;
-            blendStateDesc.RenderTarget[0].SourceAlphaBlend = BlendOption.One;
+            blendStateDesc.RenderTarget[0].RenderTargetWriteMask = ColorWriteMaskFlags.All;
+
+            blendStateDesc.RenderTarget[0].BlendOperation = BlendOperation.Maximum;
             blendStateDesc.RenderTarget[0].SourceBlend = BlendOption.One;
-            blendStateDesc.RenderTarget[0].DestinationAlphaBlend = BlendOption.One;
             blendStateDesc.RenderTarget[0].DestinationBlend = BlendOption.One;
+
             blendStateDesc.RenderTarget[0].AlphaBlendOperation = BlendOperation.Maximum;
+            blendStateDesc.RenderTarget[0].SourceAlphaBlend = BlendOption.One;
+            blendStateDesc.RenderTarget[0].DestinationAlphaBlend = BlendOption.One;
             
             blendState = ToDispose(new BlendState(device, blendStateDesc));
 
@@ -80,7 +120,7 @@ namespace MinMaxGPUApp
                 ArraySize = 1,
                 BindFlags = BindFlags.RenderTarget,
                 CpuAccessFlags = CpuAccessFlags.None,
-                Format = Format.R32G32_Float,
+                Format = Format.R32G32B32A32_Float,
                 Width = 1,
                 Height = 1,
                 MipLevels = 1,
@@ -103,20 +143,51 @@ namespace MinMaxGPUApp
             depthStateDesc.FrontFace.DepthFailOperation = StencilOperation.Zero;
             depthStateDesc.FrontFace.FailOperation = StencilOperation.Zero;
             depthStateDesc.FrontFace.PassOperation = StencilOperation.Zero;
-
-
+            
             depthStencilState = ToDispose(new DepthStencilState(device, depthStateDesc));
 
 
             // Create shader resource views and render target views
             texture2DMinMaxRenderView = ToDispose(new RenderTargetView(device, texture2DMinMax));
+
+            // Create result 2D texture to readback by CPU
+            textureReadback = ToDispose(new Texture2D(
+                device,
+                new Texture2DDescription
+                {
+                    ArraySize = 1,
+                    BindFlags = BindFlags.None,
+                    CpuAccessFlags = CpuAccessFlags.Read,
+                    Format = Format.R32G32B32A32_Float,
+                    Width = 1,
+                    Height = 1,
+                    MipLevels = 1,
+                    OptionFlags = ResourceOptionFlags.None,
+                    SampleDescription = new SampleDescription(1, 0),
+                    Usage = ResourceUsage.Staging
+                }));
+        }
+
+        public void GetResults(DeviceContext context, out float min, out float max)
+        {
+            context.CopySubresourceRegion(texture2DMinMax, 0, null, textureReadback, 0, 0, 0, 0);
+            DataStream result;
+            context.MapSubresource(textureReadback, 0, MapMode.Read, MapFlags.None, out result);
+            min = -result.ReadFloat();
+            max = result.ReadFloat();
+            min = Math.Min(min, -result.ReadFloat());
+            max = Math.Max(max, result.ReadFloat());
+            context.UnmapSubresource(textureReadback, 0);            
         }
 
         public Size Size { get; set; }
 
-        public void Copy(DeviceContext context, Texture2D destination)
+        private int NumberOfVertices
         {
-            context.CopySubresourceRegion(texture2DMinMax, 0, null, destination, 0, 0, 0, 0);
+            get
+            {
+                return Size.Width * Size.Height / (1 << ReduceFactor) / 2;
+            }
         }
 
         public void Reduce(DeviceContext context, ShaderResourceView from)
@@ -126,18 +197,24 @@ namespace MinMaxGPUApp
             context.InputAssembler.PrimitiveTopology = PrimitiveTopology.PointList;
             context.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(null, 0, 0));
             context.VertexShader.SetShaderResource(0, from);
-            context.VertexShader.Set(vertexShader);
+            context.VertexShader.Set(vertexShaders[ReduceFactor]);
             context.PixelShader.Set(pixelShaderMinMax);
             context.Rasterizer.SetViewports(new Viewport(0, 0, 1, 1));
-            context.ClearRenderTargetView(texture2DMinMaxRenderView, new Color4(float.MinValue, float.MinValue, 0.0f, 1.0f));
+            context.ClearRenderTargetView(texture2DMinMaxRenderView, new Color4(float.MinValue, float.MinValue, float.MinValue, float.MinValue));
             context.OutputMerger.SetTargets(texture2DMinMaxRenderView);
             context.OutputMerger.SetBlendState(blendState, Colors.Black, -1);
             context.OutputMerger.SetDepthStencilState(depthStencilState, 0);
             // context.Draw(Size.Width * Size.Height, 0);
-            context.Draw(Size.Width * Size.Height / 128, 0);
+            context.Draw(NumberOfVertices, 0);
             context.VertexShader.SetShaderResource(0, null);
             context.OutputMerger.ResetTargets();
             PixHelper.EndEvent();
+        }
+
+        public override string ToString()
+        {
+            var samplerSize = 1 << ReduceFactor;
+            return string.Format("{0} {1}x1 (VertexCount {2})", GetType().Name, samplerSize, NumberOfVertices);
         }
     }
 }
