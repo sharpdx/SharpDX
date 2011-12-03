@@ -89,6 +89,17 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Return the sizeof an array of struct. Equivalent to sizeof operator but works on generics too.
+        /// </summary>
+        /// <typeparam name="T">a struct</typeparam>
+        /// <param name="array">The array of struct to evaluate.</param>
+        /// <returns>sizeof in bytes of this array of struct</returns>
+        public static int SizeOf<T>(T[] array) where T : struct
+        {
+            return array == null ? 0 : array.Length * SharpDX.Interop.SizeOf<T>();
+        }
+
+        /// <summary>
         /// Pins the specified source and call an action with the pinned pointer.
         /// </summary>
         /// <typeparam name="T">The type of the structure to pin</typeparam>

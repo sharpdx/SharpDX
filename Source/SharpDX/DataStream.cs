@@ -85,19 +85,20 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref = "SharpDX.DataStream" /> class, using a managed buffer as a backing store.
+        /// Initializes a new instance of the <see cref="SharpDX.DataStream"/> class, using a managed buffer as a backing store.
         /// </summary>
-        /// <param name = "userBuffer">A managed array to be used as a backing store.</param>
-        /// <param name = "canRead">
-        ///   <c>true</c> if reading from the buffer should be allowed; otherwise, <c>false</c>.</param>
-        /// <param name = "canWrite">
-        ///   <c>true</c> if writing to the buffer should be allowed; otherwise, <c>false</c>.</param>
-        public static DataStream Create<T>(T[] userBuffer, bool canRead, bool canWrite) where T : struct
+        /// <typeparam name="T"></typeparam>
+        /// <param name="userBuffer">A managed array to be used as a backing store.</param>
+        /// <param name="canRead"><c>true</c> if reading from the buffer should be allowed; otherwise, <c>false</c>.</param>
+        /// <param name="canWrite"><c>true</c> if writing to the buffer should be allowed; otherwise, <c>false</c>.</param>
+        /// <param name="makeCopy">if set to <c>true</c> [make copy].</param>
+        /// <returns></returns>
+        public static DataStream Create<T>(T[] userBuffer, bool canRead, bool canWrite, bool makeCopy = false) where T : struct
         {
             if (userBuffer == null)
                 throw new ArgumentNullException("userBuffer");
 
-            return new DataStream(GCHandle.Alloc(userBuffer, GCHandleType.Pinned), userBuffer.Length * Utilities.SizeOf<T>(), canRead, canWrite);
+            return new DataStream(GCHandle.Alloc(userBuffer, GCHandleType.Pinned), Utilities.SizeOf(userBuffer), canRead, canWrite, makeCopy);
         }
 
         /// <summary>
@@ -144,12 +145,21 @@ namespace SharpDX
             }
         }
 
-
-        internal unsafe DataStream(GCHandle handle, int sizeInBytes, bool canRead, bool canWrite)
+        internal unsafe DataStream(GCHandle handle, int sizeInBytes, bool canRead, bool canWrite, bool makeCopy)
         {
             System.Diagnostics.Debug.Assert(sizeInBytes > 0);
-            _gCHandle = handle;
-            _buffer = (sbyte*)handle.AddrOfPinnedObject();
+            if (makeCopy)
+            {
+                _buffer = (sbyte*)Marshal.AllocHGlobal(sizeInBytes);
+                Utilities.CopyMemory((IntPtr)_buffer, handle.AddrOfPinnedObject(), sizeInBytes);
+                handle.Free();
+            }
+            else
+            {
+                _gCHandle = handle;
+                _buffer = (sbyte*)handle.AddrOfPinnedObject();
+            }
+
             _size = sizeInBytes;
             _canRead = canRead;
             _canWrite = canWrite;
