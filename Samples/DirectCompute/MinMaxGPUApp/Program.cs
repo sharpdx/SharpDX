@@ -66,31 +66,9 @@ namespace MinMaxGPUApp
             {
                 var value = (float)random.NextDouble();
                 if (value < 0.1 || value > 0.9)
-                    value = value * (float)random.NextDouble() * maxScale;
+                    value = value * (float)random.NextDouble() * maxScale * ((value < 0.1) ? maxScale : 1.0f);
                 randbomBuffer.Write(value);
             }
-
-            var clock = new Stopwatch();
-            var min = float.MaxValue;
-            var max = float.MinValue;
-            unsafe
-            {
-                var buffer = (float*)randbomBuffer.DataPointer;
-                clock.Start();
-                for (int j = 0; j < Count; j++)
-                {
-                    min = float.MaxValue;
-                    max = float.MinValue;
-                    for (int i = 0; i < Width * Height; i++)
-                    {
-                        var value = buffer[i];
-                        if (value < min) min = value;
-                        if (value > max) max = value;
-                    }
-                }
-                clock.Stop();
-            }
-            Console.WriteLine("CPU MinMax: {0} / {1} {2}ms", min, max, clock.ElapsedMilliseconds);
 
             // Create random 2D texture 
             var texture = ToDispose(new Texture2D(
@@ -113,6 +91,9 @@ namespace MinMaxGPUApp
             var gpuProfiler = new GPUProfiler();
             gpuProfiler.Initialize(device);
             double elapsedTime = 0.0f;
+
+            Console.WriteLine("Compiling Shaders...");
+            Console.WriteLine();
 
             var pixelShaderMinMax = ToDispose(new MipMapMinMax());
             pixelShaderMinMax.Size = new Size(Width, Height);
@@ -141,6 +122,33 @@ namespace MinMaxGPUApp
                         Console.WriteLine("GPU {0}: {1} / {2} in {3}ms", processor, newMin, newMax, elapsedTime);
                     });
 
+            Console.WriteLine("Running Tests...");
+            Console.WriteLine();
+
+            var clock = new Stopwatch();
+            var min = float.MaxValue;
+            var max = float.MinValue;
+            unsafe
+            {
+                var buffer = (float*)randbomBuffer.DataPointer;
+                clock.Start();
+                //for (int j = 0; j < Count; j++)
+                for (int j = 0; j < Count; j++)
+                {
+                    min = float.MaxValue;
+                    max = float.MinValue;
+                    for (int i = 0; i < Width * Height; i++)
+                    {
+                        var value = buffer[i];
+                        if (value < min) min = value;
+                        if (value > max) max = value;
+                    }
+                }
+                clock.Stop();
+            }
+            Console.WriteLine("CPU MinMax: {0} / {1} {2}ms", min, max, clock.ElapsedMilliseconds);
+            
+            
             Console.WriteLine();
             for (int i = 1; i < 4; i++)
             {

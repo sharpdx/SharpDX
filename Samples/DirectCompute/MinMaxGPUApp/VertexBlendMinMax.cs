@@ -102,7 +102,7 @@ namespace MinMaxGPUApp
             blendStateDesc.AlphaToCoverageEnable = false;
             blendStateDesc.IndependentBlendEnable = false;
             blendStateDesc.RenderTarget[0].IsBlendEnabled = true;
-            blendStateDesc.RenderTarget[0].RenderTargetWriteMask = ColorWriteMaskFlags.All;
+            blendStateDesc.RenderTarget[0].RenderTargetWriteMask = ColorWriteMaskFlags.Red | ColorWriteMaskFlags.Green;
 
             blendStateDesc.RenderTarget[0].BlendOperation = BlendOperation.Maximum;
             blendStateDesc.RenderTarget[0].SourceBlend = BlendOption.One;
@@ -120,7 +120,7 @@ namespace MinMaxGPUApp
                 ArraySize = 1,
                 BindFlags = BindFlags.RenderTarget,
                 CpuAccessFlags = CpuAccessFlags.None,
-                Format = Format.R32G32B32A32_Float,
+                Format = Format.R32G32_Float,
                 Width = 1,
                 Height = 1,
                 MipLevels = 1,
@@ -128,7 +128,6 @@ namespace MinMaxGPUApp
                 SampleDescription = new SampleDescription(1, 0),
                 Usage = ResourceUsage.Default
             }));
-
 
             var depthStateDesc = new DepthStencilStateDescription();
             depthStateDesc.BackFace.Comparison = Comparison.Less;
@@ -158,7 +157,7 @@ namespace MinMaxGPUApp
                     ArraySize = 1,
                     BindFlags = BindFlags.None,
                     CpuAccessFlags = CpuAccessFlags.Read,
-                    Format = Format.R32G32B32A32_Float,
+                    Format = Format.R32G32_Float,
                     Width = 1,
                     Height = 1,
                     MipLevels = 1,
@@ -175,8 +174,6 @@ namespace MinMaxGPUApp
             context.MapSubresource(textureReadback, 0, MapMode.Read, MapFlags.None, out result);
             min = -result.ReadFloat();
             max = result.ReadFloat();
-            min = Math.Min(min, -result.ReadFloat());
-            max = Math.Max(max, result.ReadFloat());
             context.UnmapSubresource(textureReadback, 0);            
         }
 
