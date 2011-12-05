@@ -89,12 +89,12 @@ namespace MinMaxGPUApp
                 macros[2] = new ShaderMacro("MINMAX_BATCH_COUNT", batchCount < 2 ? 2 : batchCount);
             
                 // Compile Vertex and Pixel shaders
-                bytecode = ShaderBytecode.CompileFromFile("minmax.hlsl", "VertexBlendMinMaxVS", "vs_4_0", ShaderFlags.Debug, EffectFlags.None, macros);
+                bytecode = ShaderBytecode.CompileFromFile("minmax.hlsl", "VertexBlendMinMaxVS", "vs_4_0", ShaderFlags.None, EffectFlags.None, macros);
                 vertexShaders[i] = ToDispose(new VertexShader(device, bytecode));
                 bytecode.Dispose();
             }
 
-            bytecode = ShaderBytecode.CompileFromFile("minmax.hlsl", "VertexBlendMinMaxPS", "ps_4_0", ShaderFlags.Debug, EffectFlags.None, macros);
+            bytecode = ShaderBytecode.CompileFromFile("minmax.hlsl", "VertexBlendMinMaxPS", "ps_4_0", ShaderFlags.None, EffectFlags.None, macros);
             pixelShaderMinMax = ToDispose(new PixelShader(device, bytecode));
             bytecode.Dispose();
 
@@ -183,13 +183,13 @@ namespace MinMaxGPUApp
         {
             get
             {
-                return Size.Width * Size.Height / (1 << ReduceFactor) / 2;
+                return Size.Width * Size.Height / (1 << ReduceFactor);
             }
         }
 
         public void Reduce(DeviceContext context, ShaderResourceView from)
         {
-            PixHelper.BeginEvent("MinMax Blend");
+            PixHelper.BeginEvent("MinMax Blend {0}x1 ({1})", 1 << ReduceFactor, NumberOfVertices);
             context.InputAssembler.InputLayout = null;
             context.InputAssembler.PrimitiveTopology = PrimitiveTopology.PointList;
             context.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(null, 0, 0));

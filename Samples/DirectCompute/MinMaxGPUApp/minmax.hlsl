@@ -43,7 +43,7 @@ float2 MipMapMinMaxSampleBegin(float2 coords, int size) {
 			}
 			else 
 			{
-				float value = FromTexture.SampleLevel(ColorSampler, coords, 0, int2(i,j));
+				float value = FromTexture.SampleLevel(ColorSampler, coords, 0, int2(j,i));
 				minmax = float2(min(value, minmax.x), max(value, minmax.y));
 			}
 		}
@@ -62,7 +62,7 @@ float2 MipMapMinMaxSample(float2 coords, int size) {
 			}
 			else 
 			{
-				float2 value = MinMaxTexture.SampleLevel(ColorSampler, coords, 0, int2(i,j));
+				float2 value = MinMaxTexture.SampleLevel(ColorSampler, coords, 0, int2(j,i));
 				minmax = float2(min(value.x, minmax.x), max(value.y, minmax.y));
 			}
 		}
@@ -100,29 +100,25 @@ float2 MipMapMinMax3PS( float4 pos : SV_POSITION, float2 coords : TEXCOORD0 ) : 
 	return MipMapMinMaxSample(coords, 8);
 }
 
-float4 VertexBlendMinMaxVS( uint vertexId : SV_VertexID, out nointerpolation float4 minmax : MINMAX  ) : SV_POSITION
+float4 VertexBlendMinMaxVS( uint vertexId : SV_VertexID, out float2 minmax : MINMAX  ) : SV_POSITION
 {
-    minmax = float4(0,0,0,0);
+    minmax = float2(0,0);
 	[unroll]
-	for(int i = 0; i < BatchCount/2; i++) {
-		uint2 sampleCoord = uint2((vertexId % WidthStride) * BatchCount + i*2, vertexId / WidthStride);
-		float2 value = float2(FromTexture[sampleCoord], FromTexture[sampleCoord + uint2(1, 0)]);
+	for(int i = 0; i < BatchCount; i++) {
+		uint2 sampleCoord = uint2((vertexId % WidthStride) * BatchCount + i, vertexId / WidthStride);
+		float value = FromTexture[sampleCoord];
 		if (i == 0) {
 			minmax.xy = value.xx;
-			minmax.zw = value.yy;
 		}
 		else
 		{
-			minmax.x = min( value.x, minmax.x);
-			minmax.y = min( value.y, minmax.y);
-			minmax.z = max( value.x, minmax.z);
-			minmax.w = max( value.y, minmax.w);
+			minmax = float2(min(value, minmax.x), max(value, minmax.y));
 		}
 	}
 	return float4(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
-float4 VertexBlendMinMaxPS( float4 pos : SV_POSITION, nointerpolation float4 minmax : MINMAX  ) : SV_Target
+float4 VertexBlendMinMaxPS( float4 pos : SV_POSITION, float2 minmax : MINMAX  ) : SV_Target
 {
-	return float4(-min(minmax.x, minmax.y), max(minmax.z, minmax.w), 0.0, 1.0);
+	return float4(-minmax.x, minmax.y, 0.0, 0.0);
 }

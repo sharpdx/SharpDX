@@ -237,7 +237,7 @@ namespace MinMaxGPUApp
 
         public void Reduce(DeviceContext context, ShaderResourceView from)
         {
-            PixHelper.BeginEvent("MinMax");
+            PixHelper.BeginEvent("MinMax {0}x{0}", 1 << ReduceFactor);
             UpdateMinMaxTextures();
 
             context.InputAssembler.InputLayout = layout;
@@ -276,7 +276,7 @@ namespace MinMaxGPUApp
                 context.PixelShader.SetSampler(0, sampler);
                 context.PixelShader.SetShaderResource(0, from);
                 context.Rasterizer.SetViewports(viewport);
-                context.ClearRenderTargetView(texture2DMinMaxRenderView[levelIndex], Colors.Black);
+                //context.ClearRenderTargetView(texture2DMinMaxRenderView[levelIndex], Colors.Black);
                 context.OutputMerger.SetTargets(texture2DMinMaxRenderView[levelIndex]);
                 context.Draw(4, 0);
                 context.PixelShader.SetShaderResource(0, null);
