@@ -160,6 +160,8 @@ namespace MinMaxGPUApp
                     SampleDescription = new SampleDescription(1, 0),
                     Usage = ResourceUsage.Staging
                 }));
+
+            UpdateMinMaxTextures();
         }
 
         public void GetResults(DeviceContext context, out float min, out float max)
@@ -238,7 +240,6 @@ namespace MinMaxGPUApp
         public void Reduce(DeviceContext context, ShaderResourceView from)
         {
             PixHelper.BeginEvent("MinMax {0}x{0}", 1 << ReduceFactor);
-            UpdateMinMaxTextures();
 
             context.InputAssembler.InputLayout = layout;
             context.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleStrip;

@@ -133,7 +133,7 @@ namespace MinMaxGPUApp
                 var buffer = (float*)randbomBuffer.DataPointer;
                 clock.Start();
                 //for (int j = 0; j < Count; j++)
-                for (int j = 0; j < Count; j++)
+                for (int j = 0; j < 1; j++)
                 {
                     min = float.MaxValue;
                     max = float.MinValue;
@@ -158,7 +158,7 @@ namespace MinMaxGPUApp
 
             Console.WriteLine();
 
-            for (int i = 5; i < 10; i++)
+            for (int i = 2; i < 6; i++)
             {
                 blendMinMax.ReduceFactor = i;
                 testRunner(blendMinMax);
