@@ -99,15 +99,9 @@ namespace MinMaxGPUApp
         public void Initialize(Device device)
         {
             this.device = device;
-            var macros = new[]
-                    {
-                        new ShaderMacro("WIDTH", Size.Width),
-                        new ShaderMacro("HEIGHT", Size.Height),
-                        new ShaderMacro("MINMAX_BATCH_COUNT", 1),
-                    };
 
             // Compile Vertex and Pixel shaders
-            var bytecode = ShaderBytecode.CompileFromFile("minmax.hlsl", "MipMapMinMaxVS", "vs_4_0", ShaderFlags.None, EffectFlags.None, macros);
+            var bytecode = ShaderBytecode.CompileFromFile("minmax.hlsl", "MipMapMinMaxVS", "vs_4_0");
             vertexShader = ToDispose(new VertexShader(device, bytecode));
             // Layout from VertexShader input signature
             layout = ToDispose(new InputLayout(device,ShaderSignature.GetInputSignature(bytecode), new[] {
@@ -119,11 +113,11 @@ namespace MinMaxGPUApp
             pixelShaderMinMax = new PixelShader[3];
             for (int i = 0; i < 3; i++)
             {
-                bytecode = ShaderBytecode.CompileFromFile("minmax.hlsl", "MipMapMinMaxBegin" + (i + 1) + "PS", "ps_4_0", ShaderFlags.None, EffectFlags.None, macros);
+                bytecode = ShaderBytecode.CompileFromFile("minmax.hlsl", "MipMapMinMaxBegin" + (i + 1) + "PS", "ps_4_0");
                 pixelShaderMinMaxBegin[i] = ToDispose(new PixelShader(device, bytecode));
                 bytecode.Dispose();
 
-                bytecode = ShaderBytecode.CompileFromFile("minmax.hlsl", "MipMapMinMax" + (i + 1) + "PS", "ps_4_0", ShaderFlags.None, EffectFlags.None, macros);
+                bytecode = ShaderBytecode.CompileFromFile("minmax.hlsl", "MipMapMinMax" + (i + 1) + "PS", "ps_4_0");
                 pixelShaderMinMax[i]= ToDispose(new PixelShader(device, bytecode));
                 bytecode.Dispose();
             }

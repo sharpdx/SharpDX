@@ -20,9 +20,6 @@
 Texture2D<float> FromTexture : register(t0);
 Texture2D<float2> MinMaxTexture : register(t0);
 SamplerState ColorSampler : register(s0);
-static const uint Width = WIDTH;
-static const uint Height = HEIGHT;
-static const uint BatchSize = MINMAX_BATCH_COUNT;
 
 float4 MipMapMinMaxVS( float2 pos : POSITION, out float2 coords : TEXCOORD0  ) : SV_POSITION
 {
@@ -99,80 +96,3 @@ float2 MipMapMinMax3PS( float4 pos : SV_POSITION, float2 coords : TEXCOORD0 ) : 
 	return MipMapMinMaxSample(coords, 8);
 }
 
-
-struct VS_OUTPUT { 
-	float2 minmax : MINMAX;
-};
-
-static const uint VertexPerRow = Width/BatchSize;
-VS_OUTPUT VertexBlendMinMaxVS( uint vertexId : SV_VertexID)
-{
-	VS_OUTPUT output;
-    output.minmax = float2(0,0);
-	uint2 sampleCoord = uint2((vertexId % VertexPerRow) * BatchSize, vertexId / VertexPerRow);
-	[unroll]
-	for(uint i = 0; i < BatchSize; i++) {
-		float value = FromTexture[sampleCoord + uint2(i, 0)];
-		if (i == 0) {
-			output.minmax.xy = value.xx;
-		}
-		else
-		{
-			output.minmax = float2(min(value, output.minmax.x), max(value, output.minmax.y));
-		}
-	}
-	return output;
-}
-
-//static const uint VertexPerRow = Width/BatchSize;
-//VS_OUTPUT VertexBlendMinMaxVS( uint vertexId : SV_VertexID)
-//{
-	//VS_OUTPUT output;
-//
-    //output.minmax = float2(0,0);
-	//uint2 sampleCoord = uint2(vertexId % VertexPerRow, vertexId / VertexPerRow) * BatchSize;
-	//for(uint i = 0; i < BatchSize; i++) {
-		//[unroll]
-		//for(uint j = 0; j < BatchSize; j++) {
-			//float value = FromTexture[sampleCoord + uint2(j,i)];
-			//if (i == 0 && j == 0) {
-				//output.minmax.xy = value.xx;
-			//}
-			//else
-			//{
-				//output.minmax = float2(min(value, output.minmax.x), max(value, output.minmax.y));
-			//}
-		//}
-	//}
-	//output.pos = float4(0, 0, 0, 1);
-	//return output;
-//}
-//
-struct GS_OUTPUT { 
-	float4 pos : SV_POSITION;
-	nointerpolation float2 minmax : MINMAX;
-};
-
-[maxvertexcount(1)]
-void VertexBlendMinMaxGS( InputPatch<VS_OUTPUT,32> input, inout PointStream<GS_OUTPUT> stream )
-{
-	GS_OUTPUT output;
-	output.pos = float4(0, 0, 0, 1);
-	[unroll]
-	for(int i = 0; i < BatchSize; i++) {
-		if (i == 0 ) {
-			output.minmax = input[0].minmax;
-		}
-		else
-		{
-			output.minmax = float2(min(input[i].minmax.x, output.minmax.x), max(input[i].minmax.y, output.minmax.y));
-		}
-	}
-	stream.Append(output);
-	stream.RestartStrip();
-}
-
-float4 VertexBlendMinMaxPS( float4 pos : SV_POSITION, nointerpolation float2 minmax : MINMAX  ) : SV_Target
-{
-	return float4(-minmax.x, minmax.y, 0.0, 0.0);
-}

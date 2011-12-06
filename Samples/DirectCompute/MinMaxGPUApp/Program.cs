@@ -99,10 +99,6 @@ namespace MinMaxGPUApp
             pixelShaderMinMax.Size = new Size(Width, Height);
             pixelShaderMinMax.Initialize(device);
 
-            var blendMinMax = ToDispose(new VertexBlendMinMax());
-            blendMinMax.Size = new Size(Width, Height);
-            blendMinMax.Initialize(device);
-
             var testRunner = new Action<IMinMaxProcessor>( (processor) =>
                     {
 
@@ -132,8 +128,8 @@ namespace MinMaxGPUApp
             {
                 var buffer = (float*)randbomBuffer.DataPointer;
                 clock.Start();
-                //for (int j = 0; j < Count; j++)
-                for (int j = 0; j < 1; j++)
+                for (int j = 0; j < Count; j++)
+                //for (int j = 0; j < 1; j++)
                 {
                     min = float.MaxValue;
                     max = float.MinValue;
@@ -157,12 +153,6 @@ namespace MinMaxGPUApp
             }
 
             Console.WriteLine();
-
-            for (int i = 2; i < 6; i++)
-            {
-                blendMinMax.ReduceFactor = i;
-                testRunner(blendMinMax);
-            }
 
             // Dispose all resource created
             Dispose();
