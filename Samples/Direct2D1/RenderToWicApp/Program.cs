@@ -77,6 +77,9 @@ namespace RenderToWicApp
 
             bitmapFrameEncode.Commit();
             encoder.Commit();
+
+            bitmapFrameEncode.Dispose();
+            encoder.Dispose();
             stream.Dispose();
 
             System.Diagnostics.Process.Start(Path.GetFullPath(Path.Combine(Environment.CurrentDirectory,filename)));
