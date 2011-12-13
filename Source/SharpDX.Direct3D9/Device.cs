@@ -177,11 +177,11 @@ namespace SharpDX.Direct3D9
         /// <param name="vertexData">The vertex data.</param>
         /// <param name="vertexStride">The vertex stride.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
-        public Result DrawIndexedUserPrimitives<S, T>(PrimitiveType primitiveType, int minimumVertexIndex, int vertexCount, int primitiveCount, S[] indexData, Format indexDataFormat, T[] vertexData, int vertexStride)
+        public Result DrawIndexedUserPrimitives<S, T>(PrimitiveType primitiveType, int minimumVertexIndex, int vertexCount, int primitiveCount, S[] indexData, Format indexDataFormat, T[] vertexData)
             where S : struct
             where T : struct
         {
-            return DrawIndexedUserPrimitives(primitiveType, 0, 0, minimumVertexIndex, vertexCount, primitiveCount, indexData, indexDataFormat, vertexData, vertexStride);
+            return DrawIndexedUserPrimitives(primitiveType, 0, 0, minimumVertexIndex, vertexCount, primitiveCount, indexData, indexDataFormat, vertexData);
         }
 
         /// <summary>
@@ -199,11 +199,11 @@ namespace SharpDX.Direct3D9
         /// <param name="vertexData">The vertex data.</param>
         /// <param name="vertexStride">The vertex stride.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
-        public Result DrawIndexedUserPrimitives<S, T>(PrimitiveType primitiveType, int startIndex, int minimumVertexIndex, int vertexCount, int primitiveCount, S[] indexData, Format indexDataFormat, T[] vertexData, int vertexStride)
+        public Result DrawIndexedUserPrimitives<S, T>(PrimitiveType primitiveType, int startIndex, int minimumVertexIndex, int vertexCount, int primitiveCount, S[] indexData, Format indexDataFormat, T[] vertexData)
             where S : struct
             where T : struct
         {
-            return DrawIndexedUserPrimitives(primitiveType, startIndex, 0, minimumVertexIndex, vertexCount, primitiveCount, indexData, indexDataFormat, vertexData, vertexStride);
+            return DrawIndexedUserPrimitives(primitiveType, startIndex, 0, minimumVertexIndex, vertexCount, primitiveCount, indexData, indexDataFormat, vertexData);
         }
 
         /// <summary>
@@ -222,13 +222,13 @@ namespace SharpDX.Direct3D9
         /// <param name="vertexData">The vertex data.</param>
         /// <param name="vertexStride">The vertex stride.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
-        public Result DrawIndexedUserPrimitives<S, T>(PrimitiveType primitiveType, int startIndex, int startVertex, int minimumVertexIndex, int vertexCount, int primitiveCount, S[] indexData, Format indexDataFormat, T[] vertexData, int vertexStride)
+        public Result DrawIndexedUserPrimitives<S, T>(PrimitiveType primitiveType, int startIndex, int startVertex, int minimumVertexIndex, int vertexCount, int primitiveCount, S[] indexData, Format indexDataFormat, T[] vertexData)
             where S : struct
             where T : struct
         {
             unsafe
             {
-                return DrawIndexedPrimitiveUP(primitiveType, minimumVertexIndex, vertexCount, primitiveCount, (IntPtr)Interop.Fixed(ref indexData[startIndex]), indexDataFormat, (IntPtr)Interop.Fixed(ref vertexData[startVertex]), vertexStride);
+                return DrawIndexedPrimitiveUP(primitiveType, minimumVertexIndex, vertexCount, primitiveCount, (IntPtr)Interop.Fixed(ref indexData[startIndex]), indexDataFormat, (IntPtr)Interop.Fixed(ref vertexData[startVertex]), Utilities.SizeOf<T>());
             }            
         }
 
@@ -304,11 +304,12 @@ namespace SharpDX.Direct3D9
         /// <param name="primitiveType">Type of the primitive.</param>
         /// <param name="primitiveCount">The primitive count.</param>
         /// <param name="data">The data.</param>
-        /// <param name="vertexStreamZeroStride">The vertex stream zero stride.</param>
-        /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
-        public Result DrawUserPrimitives<T>(PrimitiveType primitiveType, int primitiveCount, T[] data, int vertexStreamZeroStride = 0) where T : struct
+        /// <returns>
+        /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
+        /// </returns>
+        public Result DrawUserPrimitives<T>(PrimitiveType primitiveType, int primitiveCount, T[] data) where T : struct
         {
-            return DrawUserPrimitives(primitiveType, 0, primitiveCount, data, vertexStreamZeroStride);
+            return DrawUserPrimitives(primitiveType, 0, primitiveCount, data);
         }
 
         /// <summary>
@@ -319,13 +320,14 @@ namespace SharpDX.Direct3D9
         /// <param name="startIndex">The start index.</param>
         /// <param name="primitiveCount">The primitive count.</param>
         /// <param name="data">The data.</param>
-        /// <param name="vertexStreamZeroStride">The vertex stream zero stride.</param>
-        /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
-        public Result DrawUserPrimitives<T>(PrimitiveType primitiveType, int startIndex, int primitiveCount, T[] data, int vertexStreamZeroStride = 0) where T : struct
+        /// <returns>
+        /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
+        /// </returns>
+        public Result DrawUserPrimitives<T>(PrimitiveType primitiveType, int startIndex, int primitiveCount, T[] data) where T : struct
         {
             unsafe
             {
-                return DrawPrimitiveUP(primitiveType, primitiveCount, (IntPtr)Interop.Fixed(ref data[startIndex]), vertexStreamZeroStride);
+                return DrawPrimitiveUP(primitiveType, primitiveCount, (IntPtr)Interop.Fixed(ref data[startIndex]), Utilities.SizeOf<T>());
             }    
         }
 
