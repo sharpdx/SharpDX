@@ -127,6 +127,18 @@ namespace SharpDX.Direct3D11
         }
 
         /// <summary>
+        /// Binds a single viewport to the rasterizer stage.
+        /// </summary>
+        /// <param name="viewport">The viewport.</param>
+        public void SetViewports(Viewport viewport)
+        {
+            unsafe
+            {
+                SetViewports(1, new IntPtr(&viewport));
+            }
+        }
+
+        /// <summary>
         ///   Binds a set of viewports to the rasterizer stage.
         /// </summary>
         /// <param name = "viewports">The set of viewports to bind.</param>

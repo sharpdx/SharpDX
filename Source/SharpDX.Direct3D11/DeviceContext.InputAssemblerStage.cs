@@ -31,7 +31,13 @@ namespace SharpDX.Direct3D11
         /// <param name = "vertexBufferBinding">A binding for the input vertex buffer.</param>
         public void SetVertexBuffers(int slot, VertexBufferBinding vertexBufferBinding)
         {
-            SetVertexBuffers(slot, new[] { vertexBufferBinding });
+            unsafe
+            {
+                int stride = vertexBufferBinding.Stride;
+                int offset = vertexBufferBinding.Offset;
+                IntPtr pVertexBuffers = vertexBufferBinding.Buffer == null ? IntPtr.Zero : vertexBufferBinding.Buffer.NativePointer;
+                SetVertexBuffers(slot, 1, new IntPtr(&pVertexBuffers), new IntPtr(&stride), new IntPtr(&offset));
+            }
         }
 
         /// <summary>
@@ -41,16 +47,20 @@ namespace SharpDX.Direct3D11
         /// <param name = "vertexBufferBindings">An array of bindings for input vertex buffers.</param>
         public void SetVertexBuffers(int firstSlot, params VertexBufferBinding[] vertexBufferBindings)
         {
-            Buffer[] vertexBuffers = new Buffer[vertexBufferBindings.Length];
-            int[] strides = new int[vertexBufferBindings.Length];
-            int[] offsets = new int[vertexBufferBindings.Length];
-            for (int i = 0; i < vertexBufferBindings.Length; i++)
+            unsafe
             {
-                vertexBuffers[i] = vertexBufferBindings[i].Buffer;
-                strides[i] = vertexBufferBindings[i].Stride;
-                offsets[i] = vertexBufferBindings[i].Offset;
+                int length = vertexBufferBindings.Length;
+                IntPtr* vertexBuffers = stackalloc IntPtr[length];
+                var strides = stackalloc int[length];
+                var offsets = stackalloc int[length];
+                for (int i = 0; i < vertexBufferBindings.Length; i++)
+                {
+                    vertexBuffers[i] = (vertexBufferBindings[i].Buffer == null) ? IntPtr.Zero : vertexBufferBindings[i].Buffer.NativePointer;
+                    strides[i] = vertexBufferBindings[i].Stride;
+                    offsets[i] = vertexBufferBindings[i].Offset;
+                }
+                SetVertexBuffers(firstSlot, length, new IntPtr(vertexBuffers), new IntPtr(strides), new IntPtr(offsets));
             }
-            SetVertexBuffers(firstSlot, vertexBuffers, strides, offsets);
         }
 
         /// <summary>
@@ -64,18 +74,12 @@ namespace SharpDX.Direct3D11
         {
             unsafe
             {
-                IntPtr* vertexBuffersOut_ = (IntPtr*)0;
-                if (vertexBuffers != null)
-                {
-                    IntPtr* vertexBuffersOut__ = stackalloc IntPtr[vertexBuffers.Length];
-                    vertexBuffersOut_ = vertexBuffersOut__;
-                    for (int i = 0; i < vertexBuffers.Length; i++)
-                        vertexBuffersOut_[i] = (vertexBuffers[i] == null) ? IntPtr.Zero : vertexBuffers[i].NativePointer;
-                }
+                IntPtr* pVertexBuffers = stackalloc IntPtr[vertexBuffers.Length];
+                for (int i = 0; i < vertexBuffers.Length; i++)
+                    pVertexBuffers[i] = (vertexBuffers[i] == null) ? IntPtr.Zero : vertexBuffers[i].NativePointer;
                 fixed (void* stridesRef_ = stridesRef)
                 fixed (void* offsetsRef_ = offsetsRef)
-                    SharpDX.Direct3D11.LocalInterop.Callivoid(
-                        _nativePointer, slot, vertexBuffers != null ? vertexBuffers.Length : 0, vertexBuffersOut_, stridesRef_, offsetsRef_, ((void**)(*(void**)_nativePointer))[18]);
+                    SetVertexBuffers(slot, vertexBuffers.Length, new IntPtr(pVertexBuffers), (IntPtr)stridesRef_, (IntPtr)offsetsRef_);
             }
         }
     }
