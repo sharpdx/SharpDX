@@ -96,7 +96,7 @@ namespace SharpDX.Direct3D10
         public DataRectangle Map(int mipSlice, MapMode mode, MapFlags flags)
         {
             var desc = Description;
-            int subresource = CalculateSubresourceIndex(mipSlice, 0, desc.MipLevels);
+            int subresource = CalculateSubResourceIndex(mipSlice, 0, desc.MipLevels);
 
             DataRectangle mappedTexture2D;
             Map(subresource, mode, flags, out mappedTexture2D);
@@ -116,7 +116,7 @@ namespace SharpDX.Direct3D10
         public DataRectangle Map(int mipSlice, MapMode mode, MapFlags flags, out DataStream dataStream)
         {
             var desc = Description;
-            int subresource = CalculateSubresourceIndex(mipSlice, 0, desc.MipLevels);
+            int subresource = CalculateSubResourceIndex(mipSlice, 0, desc.MipLevels);
             int mipHeight = GetMipSize(mipSlice, desc.Height);
 
             DataRectangle mappedTexture2D;

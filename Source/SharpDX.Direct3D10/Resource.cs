@@ -244,7 +244,7 @@ namespace SharpDX.Direct3D10
         /// <param name="arraySlice">The index of the desired array slice.</param>
         /// <param name="mipLevels">The total number of mip levels.</param>
         /// <returns>The subresource index (equivalent to mipSlice + (arraySlice * mipLevels)).</returns>
-        public static int CalculateSubresourceIndex(int mipSlice, int arraySlice, int mipLevels)
+        public static int CalculateSubResourceIndex(int mipSlice, int arraySlice, int mipLevels)
         {
             return ((arraySlice * mipLevels) + mipSlice);
         }

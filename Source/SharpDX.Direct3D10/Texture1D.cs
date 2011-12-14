@@ -78,7 +78,7 @@ namespace SharpDX.Direct3D10
         public DataStream Map(int mipSlice, MapMode mode, MapFlags flags)
         {
             var desc = Description;
-		    int subresource = CalculateSubresourceIndex( mipSlice, 0, desc.MipLevels );
+		    int subresource = CalculateSubResourceIndex( mipSlice, 0, desc.MipLevels );
 		    int mipWidth = GetMipSize( mipSlice, desc.Width );
 		    int bufferSize = (int)(mipWidth * FormatHelper.SizeOfInBytes(desc.Format));
 

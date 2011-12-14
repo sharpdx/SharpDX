@@ -69,7 +69,7 @@ namespace SharpDX.Direct3D10
         public DataBox Map(int mipSlice, MapMode mode, MapFlags flags)
         {
             var desc = Description;
-            int subresource = CalculateSubresourceIndex(mipSlice, 0, desc.MipLevels);
+            int subresource = CalculateSubResourceIndex(mipSlice, 0, desc.MipLevels);
 
             DataBox mappedTexture3D;
             Map(subresource, mode, flags, out mappedTexture3D);
@@ -90,7 +90,7 @@ namespace SharpDX.Direct3D10
         public DataBox Map(int mipSlice, MapMode mode, MapFlags flags, out DataStream dataStream)
         {
             var desc = Description;
-            int subresource = CalculateSubresourceIndex(mipSlice, 0, desc.MipLevels);
+            int subresource = CalculateSubResourceIndex(mipSlice, 0, desc.MipLevels);
 
             DataBox mappedTexture3D;
             Map(subresource, mode, flags, out mappedTexture3D);
