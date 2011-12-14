@@ -32,6 +32,7 @@
   <include file="dcommon.h" attach="true"/>
   <include file="d2d1.h" attach="true" />
   <ifdef name="WIN8">
+    <include file="d2d1effects.h" attach="true" />
     <include file="d2d1_1.h" attach="true" />
     <include file="d2d1effectauthor.h" attach="true" />
   </ifdef>
@@ -39,7 +40,20 @@
   <naming />
   
   <extension>
+    <context>sharpdx-direct2d1-ext</context>
+    <context>dcommon</context>
+    <context>d2d1</context>
+    <context>d2d1_1</context>
+    <context>d2d1effects</context>
+    <context>d2d1effectauthor</context>
+    
+    <const from-guid="CLSID_D2D1([A-Z].*)" class="SharpDX.Direct2D1.Effect" type="System.Guid" name="$1">new System.Guid("$1")</const>
+    <const from-guid="CLSID_D2D12DAffineTransform" class="SharpDX.Direct2D1.Effect" type="System.Guid" name="AffineTransform2D">new System.Guid("$1")</const>
+    <const from-guid="CLSID_D2D13DPerspectiveTransform" class="SharpDX.Direct2D1.Effect" type="System.Guid" name="PerspectiveTransform3D">new System.Guid("$1")</const>
+    <const from-guid="CLSID_D2D13DTransform" class="SharpDX.Direct2D1.Effect" type="System.Guid" name="Transform3D">new System.Guid("$1")</const>
+
     <create class="D2D1" />
+    <context-clear />
   </extension>
   
   <bindings>
@@ -59,6 +73,7 @@
     <context>dcommon</context>
     <context>d2d1</context>
     <context>d2d1_1</context>
+    <context>d2d1effects</context>
     <context>d2d1effectauthor</context>
 
     <!--
@@ -76,6 +91,70 @@
     <map enum-item="D2D1_CHANNEL_DEPTH_1" name-tmp="One" />
     <map enum-item="D2D1_CHANNEL_DEPTH_4" name-tmp="Four" />
 
+    <map enum="D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE" name="AffineTransform2DInterpolationMode"/>
+    <map enum="D2D1_2DAFFINETRANSFORM_PROP" name="AffineTransform2DProperties"/>
+    <map enum="D2D1_3DPERSPECTIVETRANSFORM_INTERPOLATION_MODE" name="PerspectiveTransform3DInteroplationMode"/>
+    <map enum="D2D1_3DPERSPECTIVETRANSFORM_PROP" name="PerspectiveTransform3DProperties"/>
+    <map enum="D2D1_3DTRANSFORM_INTERPOLATION_MODE" name="Transform3DInterpolationMode"/>
+    <map enum="D2D1_3DTRANSFORM_PROP" name="Transform3DProperties"/>
+    <map enum="D2D1_ARITHMETICCOMPOSITE_PROP" name="ArithmeticCompositeProperties"/>
+    <map enum="D2D1_ATLAS_PROP" name="AtlasProperties"/>
+    <map enum="D2D1_BITMAPSOURCE_ALPHA_MODE" name="BitmapSourceAlphaMode"/>
+    <map enum="D2D1_BITMAPSOURCE_INTERPOLATION_MODE" name="BitmapSourceInterpolationMode"/>
+    <map enum="D2D1_BITMAPSOURCE_PROP" name="BitmapSourceProperties"/>
+    <map enum="D2D1_BLEND_PROP" name="BlendProperties"/>
+    <map enum="D2D1_BORDER_PROP" name="BorderProperties"/>
+    <map enum="D2D1_BRIGHTNESS_PROP" name="BrightnessProperties"/>
+    <map enum="D2D1_COLORMANAGEMENT_ALPHA_MODE" name="ColorManagementAlphaMode"/>
+    <map enum="D2D1_COLORMANAGEMENT_PROP" name="ColorManagementProperties"/>
+    <map enum="D2D1_COLORMANAGEMENT_RENDERING_INTENT" name="ColorManagementRenderingIntent"/>
+    <map enum="D2D1_COLORMATRIX_ALPHA_MODE" name="ColorMatrixAlphaMode"/>
+    <map enum="D2D1_COLORMATRIX_PROP" name="ColorMatrixProperties"/>
+    <map enum="D2D1_CONVOLVEMATRIX_PROP" name="ConvoleMatrixProperties"/>
+    <map enum="D2D1_CONVOLVEMATRIX_SCALE_MODE" name="ConvoleMatrixScaleMode"/>
+    <map enum="D2D1_CROP_PROP" name="CropProperties"/>
+    <map enum="D2D1_DIRECTIONALBLUR_OPTIMIZATION" name="DirectionalBlurOptimization"/>
+    <map enum="D2D1_DIRECTIONALBLUR_PROP" name="DirectionalBlurProperties"/>
+    <map enum="D2D1_DISCRETETRANSFER_PROP" name="DiscreteTransferProperties"/>
+    <map enum="D2D1_DISPLACEMENTMAP_PROP" name="DisplacementMapProperties"/>
+    <map enum="D2D1_DISPLACEMENTMAP_X_CHANNEL_SELECT" name="DisplacementMapSelectChannelX"/>
+    <map enum="D2D1_DISPLACEMENTMAP_Y_CHANNEL_SELECT" name="DisplacementMapSelectChannelY"/>
+    <map enum="D2D1_DISTANTDIFFUSE_PROP" name="DistantDiffuseProperties"/>
+    <map enum="D2D1_DISTANTDIFFUSE_SCALE_MODE" name="DistantDiffuseScaleMode"/>
+    <map enum="D2D1_DISTANTSPECULAR_PROP" name="DistantSpecularProperties"/>
+    <map enum="D2D1_DISTANTSPECULAR_SCALE_MODE" name="DistantSpecularScaleMode"/>
+    <map enum="D2D1_DPICOMPENSATION_INTERPOLATION_MODE" name="DpiCompensationInterpolationMode"/>
+    <map enum="D2D1_DPICOMPENSATION_PROP" name="DpiCompensationProperties"/>
+    <map enum="D2D1_ENUM_0" name="InterpolationModeDefinition"/>
+    <map enum-item="D2D1_INTERPOLATION_MODE_DEFINITION_(.*)" name-tmp="$1"/>
+    <map enum="D2D1_FLOOD_PROP" name="FloodProperties"/>
+    <map enum="D2D1_GAMMATRANSFER_PROP" name="GammaTransferProperties"/>
+    <map enum="D2D1_GAUSSIANBLUR_OPTIMIZATION" name="GaussianBlurOptimization"/>
+    <map enum="D2D1_GAUSSIANBLUR_PROP" name="GaussianBlurProperties"/>
+    <map enum="D2D1_HIGHQUALITYSCALE_PROP" name="HighQualityScaleProperties"/>
+    <map enum="D2D1_HISTOGRAM_PROP" name="HistogramProperties"/>
+    <map enum="D2D1_HUEROTATION_PROP" name="HueRotationProperties"/>
+    <map enum="D2D1_LINEARTRANSFER_PROP" name="LinearTransferProperties"/>
+    <map enum="D2D1_MORPHOLOGY_PROP" name="MorphologyProperties"/>
+    <map enum="D2D1_POINTDIFFUSE_PROP" name="PointDiffuseProperties"/>
+    <map enum="D2D1_POINTDIFFUSE_SCALE_MODE" name="PointDiffuseScaleMode"/>
+    <map enum="D2D1_POINTSPECULAR_PROP" name="PointSpecularProperties"/>
+    <map enum="D2D1_POINTSPECULAR_SCALE_MODE" name="PointSpecularScaleMode"/>
+
+    <map enum="D2D1_SATURATION_PROP" name="SaturationProperties"/>
+    <map enum="D2D1_SHADOW_PROP" name="ShadowProperties"/>
+    <map enum="D2D1_SPOTDIFFUSE_PROP" name="SpotDiffuseProperties"/>
+    <map enum="D2D1_SPOTDIFFUSE_SCALE_MODE" name="SpotDiffuseScaleMode"/>
+    <map enum="D2D1_SPOTSPECULAR_PROP" name="SpotSpecularProperties"/>
+    <map enum="D2D1_SPOTSPECULAR_SCALE_MODE" name="SpotSpecularScaleMode"/>
+    <map enum="D2D1_SUBPROPERTY" name="SubProperty"/>
+    <map enum="D2D1_TABLETRANSFER_PROP" name="TableTransferProperties"/>
+    <map enum="D2D1_TILE_PROP" name="TileProperties"/>
+    <map enum="D2D1_TURBULENCE_PROP" name="TurbulenceProperties"/>
+
+    <map enum="D2D1_LAYER_OPTIONS" flags="true"/>
+    <map enum="D2D1_LAYER_OPTIONS1" flags="true"/>
+
     <!-- For dcommon -->
     <map enum="DWRITE(.+)" name-tmp="$1" />
 
@@ -86,6 +165,8 @@
     -->
     <map struct="D2D1(.*)" name-tmp="$1" />
     <map field="D2D1_BLEND_DESCRIPTION::blendFactor" type="SHARPDX_COLOR4" array="0"/>
+    <map struct="D2D1_BITMAP_PROPERTIES1" struct-to-class="true"/>
+    <map field="D2D1_BITMAP_PROPERTIES1::colorContext" name="ColorContextPointer" visibility="internal"/>
 
     <!--
     // *****************************************************************
@@ -120,7 +201,24 @@
     <map param="ID2D(\d+)Factory::CreateDxgiSurfaceRenderTarget::renderTarget" attribute="out fast"/>
     <map param="ID2D(\d+)Factory::CreateDCRenderTarget::dcRenderTarget" attribute="out fast"/>
     <map param="ID2D(\d+)Factory::CreateWicBitmapRenderTarget::renderTarget" attribute="out fast"/>
-    
+
+    <map method="ID2D\dDevice::Create.*" visibility="internal"/>
+    <map param="ID2D\dDevice::CreateDeviceContext::deviceContext" attribute="out fast"/>
+    <map param="ID2D\dDevice::CreatePrintControl::printControl" attribute="out fast"/>
+
+    <map method="ID2D\dDeviceContext::Create.*" visibility="internal"/>
+    <map param="ID2D\dDeviceContext::CreateBitmap::bitmap" attribute="out fast"/>
+    <map param="ID2D\dDeviceContext::CreateBitmapBrush::bitmapBrush" attribute="out fast"/>
+    <map param="ID2D\dDeviceContext::CreateBitmapFromDxgiSurface::bitmap1" attribute="out fast"/>
+    <map param="ID2D\dDeviceContext::CreateColorContext::colorContext" attribute="out fast"/>
+    <map param="ID2D\dDeviceContext::CreateColorContextFromFilename::colorContext" attribute="out fast"/>
+    <map param="ID2D\dDeviceContext::CreateColorContextFromWicColorContext::colorContext" attribute="out fast"/>
+    <map param="ID2D\dDeviceContext::CreateCommandList::commandList" attribute="out fast"/>
+    <map param="ID2D\dDeviceContext::CreateEffect::effect" attribute="out fast"/>
+    <map param="ID2D\dDeviceContext::CreateGradientStopCollection::gradientStopCollection1" attribute="out fast"/>
+    <map param="ID2D\dDeviceContext::CreateImageBrush::imageBrush" attribute="out fast"/>
+
+    <map param="ID2D\dDeviceContext::CreateBitmapFromWicBitmap::bitmapProperties" attribute="in optional"/>
 
     <map method="ID2D1Geometry::CombineWithGeometry" name="Combine" />
     <map method="ID2D1Geometry::CompareWithGeometry" name="Compare" />

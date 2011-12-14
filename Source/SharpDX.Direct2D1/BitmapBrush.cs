@@ -29,7 +29,7 @@ namespace SharpDX.Direct2D1
         /// </summary>	
         /// <param name="renderTarget">an instance of <see cref = "SharpDX.Direct2D1.RenderTarget" /></param>
         /// <param name="bitmap">The bitmap contents of the new brush.</param>
-        /// <unmanaged>HRESULT CreateBitmapBrush([In] ID2D1Bitmap* bitmap,[In, Optional] const D2D1_BITMAP_BRUSH_PROPERTIES* bitmapBrushProperties,[In, Optional] const D2D1_BRUSH_PROPERTIES* brushProperties,[Out] ID2D1BitmapBrush** bitmapBrush)</unmanaged>
+        /// <unmanaged>HRESULT ID2D1RenderTarget::CreateBitmapBrush([In] ID2D1Bitmap* bitmap,[In, Optional] const D2D1_BITMAP_BRUSH_PROPERTIES* bitmapBrushProperties,[In, Optional] const D2D1_BRUSH_PROPERTIES* brushProperties,[Out, Fast] ID2D1BitmapBrush** bitmapBrush)</unmanaged>	
         public BitmapBrush(RenderTarget renderTarget, SharpDX.Direct2D1.Bitmap bitmap)
             : this(renderTarget, bitmap, null, null)
         {
@@ -41,7 +41,7 @@ namespace SharpDX.Direct2D1
         /// <param name="renderTarget">an instance of <see cref = "SharpDX.Direct2D1.RenderTarget" /></param>
         /// <param name="bitmap">The bitmap contents of the new brush.</param>
         /// <param name="bitmapBrushProperties">The extend modes and interpolation mode of the new brush, or NULL. If this parameter is NULL, the brush defaults to the <see cref="SharpDX.Direct2D1.ExtendMode.Clamp"/> horizontal and vertical extend modes and the <see cref="SharpDX.Direct2D1.BitmapInterpolationMode.Linear"/> interpolation mode. </param>
-        /// <unmanaged>HRESULT CreateBitmapBrush([In] ID2D1Bitmap* bitmap,[In, Optional] const D2D1_BITMAP_BRUSH_PROPERTIES* bitmapBrushProperties,[In, Optional] const D2D1_BRUSH_PROPERTIES* brushProperties,[Out] ID2D1BitmapBrush** bitmapBrush)</unmanaged>
+        /// <unmanaged>HRESULT ID2D1RenderTarget::CreateBitmapBrush([In] ID2D1Bitmap* bitmap,[In, Optional] const D2D1_BITMAP_BRUSH_PROPERTIES* bitmapBrushProperties,[In, Optional] const D2D1_BRUSH_PROPERTIES* brushProperties,[Out, Fast] ID2D1BitmapBrush** bitmapBrush)</unmanaged>	
         public BitmapBrush(RenderTarget renderTarget, SharpDX.Direct2D1.Bitmap bitmap, SharpDX.Direct2D1.BitmapBrushProperties bitmapBrushProperties)
             : this(renderTarget, bitmap, bitmapBrushProperties, null)
         {
@@ -53,8 +53,9 @@ namespace SharpDX.Direct2D1
         /// <param name="renderTarget">an instance of <see cref = "SharpDX.Direct2D1.RenderTarget" /></param>
         /// <param name="bitmap">The bitmap contents of the new brush.</param>
         /// <param name="brushProperties">The opacity and transform of the new brush, or NULL. If this parameter is NULL, the brush defaults to an opacity of 1.0f and its transform is the identity matrix.</param>
-        /// <unmanaged>HRESULT CreateBitmapBrush([In] ID2D1Bitmap* bitmap,[In, Optional] const D2D1_BITMAP_BRUSH_PROPERTIES* bitmapBrushProperties,[In, Optional] const D2D1_BRUSH_PROPERTIES* brushProperties,[Out] ID2D1BitmapBrush** bitmapBrush)</unmanaged>
-        public BitmapBrush(RenderTarget renderTarget, SharpDX.Direct2D1.Bitmap bitmap, SharpDX.Direct2D1.BrushProperties brushProperties) : this(renderTarget, bitmap, null, brushProperties)
+        /// <unmanaged>HRESULT ID2D1RenderTarget::CreateBitmapBrush([In] ID2D1Bitmap* bitmap,[In, Optional] const D2D1_BITMAP_BRUSH_PROPERTIES* bitmapBrushProperties,[In, Optional] const D2D1_BRUSH_PROPERTIES* brushProperties,[Out, Fast] ID2D1BitmapBrush** bitmapBrush)</unmanaged>	
+        public BitmapBrush(RenderTarget renderTarget, SharpDX.Direct2D1.Bitmap bitmap, SharpDX.Direct2D1.BrushProperties brushProperties)
+            : this(renderTarget, bitmap, null, brushProperties)
         {
         }
 
@@ -65,8 +66,9 @@ namespace SharpDX.Direct2D1
         /// <param name="bitmap">The bitmap contents of the new brush.</param>
         /// <param name="bitmapBrushProperties">The extend modes and interpolation mode of the new brush, or NULL. If this parameter is NULL, the brush defaults to the <see cref="SharpDX.Direct2D1.ExtendMode.Clamp"/> horizontal and vertical extend modes and the <see cref="SharpDX.Direct2D1.BitmapInterpolationMode.Linear"/> interpolation mode. </param>
         /// <param name="brushProperties">The opacity and transform of the new brush, or NULL. If this parameter is NULL, the brush defaults to an opacity of 1.0f and its transform is the identity matrix.</param>
-        /// <unmanaged>HRESULT CreateBitmapBrush([In] ID2D1Bitmap* bitmap,[In, Optional] const D2D1_BITMAP_BRUSH_PROPERTIES* bitmapBrushProperties,[In, Optional] const D2D1_BRUSH_PROPERTIES* brushProperties,[Out] ID2D1BitmapBrush** bitmapBrush)</unmanaged>
-        public BitmapBrush(RenderTarget renderTarget, SharpDX.Direct2D1.Bitmap bitmap, SharpDX.Direct2D1.BitmapBrushProperties? bitmapBrushProperties, SharpDX.Direct2D1.BrushProperties? brushProperties) : base(IntPtr.Zero)
+        /// <unmanaged>HRESULT ID2D1RenderTarget::CreateBitmapBrush([In] ID2D1Bitmap* bitmap,[In, Optional] const D2D1_BITMAP_BRUSH_PROPERTIES* bitmapBrushProperties,[In, Optional] const D2D1_BRUSH_PROPERTIES* brushProperties,[Out, Fast] ID2D1BitmapBrush** bitmapBrush)</unmanaged>	
+        public BitmapBrush(RenderTarget renderTarget, SharpDX.Direct2D1.Bitmap bitmap, SharpDX.Direct2D1.BitmapBrushProperties? bitmapBrushProperties, SharpDX.Direct2D1.BrushProperties? brushProperties)
+            : base(IntPtr.Zero)
         {
             renderTarget.CreateBitmapBrush(bitmap, bitmapBrushProperties, brushProperties, this);
         }

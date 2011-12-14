@@ -47,6 +47,21 @@ namespace SharpDX.Direct2D1
         {
             D2D1.CreateDeviceContext(surface, creationProperties, this);
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DeviceContext"/> class using an existing <see cref="Device"/>.
+        /// </summary>
+        /// <param name="device">The device.</param>
+        /// <param name="options">The options to be applied to the created device context.</param>
+        /// <remarks>
+        /// The new device context will not have a  selected target bitmap. The caller must create and select a bitmap as the target surface of the context.
+        /// </remarks>
+        /// <unmanaged>HRESULT ID2D1Device::CreateDeviceContext([In] D2D1_DEVICE_CONTEXT_OPTIONS options,[Out] ID2D1DeviceContext** deviceContext)</unmanaged>
+        public DeviceContext(Device device, DeviceContextOptions options)
+            : base(IntPtr.Zero)
+        {
+            device.CreateDeviceContext(options, this);
+        }
     }
 }
 #endif

@@ -31,7 +31,7 @@ namespace SharpDX.Direct2D1
         /// </summary>	
         /// <param name="renderTarget">an instance of <see cref = "SharpDX.Direct2D1.RenderTarget" /></param>
         /// <param name="size">The dimension of the bitmap to create in pixels.</param>
-        /// <unmanaged>HRESULT CreateBitmap([None] D2D1_SIZE_U size,[In, Optional] const void* srcData,[None] UINT32 pitch,[In] const D2D1_BITMAP_PROPERTIES* bitmapProperties,[Out] ID2D1Bitmap** bitmap)</unmanaged>
+        /// <unmanaged>HRESULT ID2D1RenderTarget::CreateBitmap([In] D2D_SIZE_U size,[In, Optional] const void* srcData,[In] unsigned int pitch,[In] const D2D1_BITMAP_PROPERTIES* bitmapProperties,[Out, Fast] ID2D1Bitmap** bitmap)</unmanaged>	
         public Bitmap(RenderTarget renderTarget, System.Drawing.Size size)
             : this(renderTarget, size, null, 0, new BitmapProperties(new PixelFormat(Format.Unknown, AlphaMode.Unknown)))
         {
@@ -43,7 +43,7 @@ namespace SharpDX.Direct2D1
         /// <param name="renderTarget">an instance of <see cref = "SharpDX.Direct2D1.RenderTarget" /></param>
         /// <param name="size">The dimension of the bitmap to create in pixels.</param>
         /// <param name="bitmapProperties">The pixel format and dots per inch (DPI) of the bitmap to create.</param>
-        /// <unmanaged>HRESULT CreateBitmap([None] D2D1_SIZE_U size,[In, Optional] const void* srcData,[None] UINT32 pitch,[In] const D2D1_BITMAP_PROPERTIES* bitmapProperties,[Out] ID2D1Bitmap** bitmap)</unmanaged>
+        /// <unmanaged>HRESULT ID2D1RenderTarget::CreateBitmap([In] D2D_SIZE_U size,[In, Optional] const void* srcData,[In] unsigned int pitch,[In] const D2D1_BITMAP_PROPERTIES* bitmapProperties,[Out, Fast] ID2D1Bitmap** bitmap)</unmanaged>	
         public Bitmap(RenderTarget renderTarget, System.Drawing.Size size, SharpDX.Direct2D1.BitmapProperties bitmapProperties)
             : this(renderTarget, size, null, 0, bitmapProperties)
         {
@@ -56,7 +56,7 @@ namespace SharpDX.Direct2D1
         /// <param name="size">The dimension of the bitmap to create in pixels.</param>
         /// <param name="dataStream">A pointer to the memory location of the image data, or NULL to create an uninitialized bitmap.</param>
         /// <param name="pitch">The byte count of each scanline, which is equal to (the image width in pixels * the number of bytes per pixel) + memory padding. If srcData is NULL, this value is ignored. (Note that pitch is also sometimes called stride.)</param>
-        /// <unmanaged>HRESULT CreateBitmap([None] D2D1_SIZE_U size,[In, Optional] const void* srcData,[None] UINT32 pitch,[In] const D2D1_BITMAP_PROPERTIES* bitmapProperties,[Out] ID2D1Bitmap** bitmap)</unmanaged>
+        /// <unmanaged>HRESULT ID2D1RenderTarget::CreateBitmap([In] D2D_SIZE_U size,[In, Optional] const void* srcData,[In] unsigned int pitch,[In] const D2D1_BITMAP_PROPERTIES* bitmapProperties,[Out, Fast] ID2D1Bitmap** bitmap)</unmanaged>	
         public Bitmap(RenderTarget renderTarget, System.Drawing.Size size, DataStream dataStream, int pitch)
             : this(renderTarget, size, dataStream, pitch, new BitmapProperties(new PixelFormat(Format.Unknown, AlphaMode.Unknown)))
         {
@@ -70,7 +70,7 @@ namespace SharpDX.Direct2D1
         /// <param name="dataStream">A pointer to the memory location of the image data, or NULL to create an uninitialized bitmap.</param>
         /// <param name="pitch">The byte count of each scanline, which is equal to (the image width in pixels * the number of bytes per pixel) + memory padding. If srcData is NULL, this value is ignored. (Note that pitch is also sometimes called stride.)</param>
         /// <param name="bitmapProperties">The pixel format and dots per inch (DPI) of the bitmap to create.</param>
-        /// <unmanaged>HRESULT CreateBitmap([None] D2D1_SIZE_U size,[In, Optional] const void* srcData,[None] UINT32 pitch,[In] const D2D1_BITMAP_PROPERTIES* bitmapProperties,[Out] ID2D1Bitmap** bitmap)</unmanaged>
+        /// <unmanaged>HRESULT ID2D1RenderTarget::CreateBitmap([In] D2D_SIZE_U size,[In, Optional] const void* srcData,[In] unsigned int pitch,[In] const D2D1_BITMAP_PROPERTIES* bitmapProperties,[Out, Fast] ID2D1Bitmap** bitmap)</unmanaged>	
         public Bitmap(RenderTarget renderTarget, System.Drawing.Size size, DataStream dataStream, int pitch, SharpDX.Direct2D1.BitmapProperties bitmapProperties)
             : base(IntPtr.Zero)
         {
@@ -83,7 +83,7 @@ namespace SharpDX.Direct2D1
         /// </summary>	
         /// <param name="renderTarget">an instance of <see cref = "SharpDX.Direct2D1.RenderTarget" /></param>
         /// <param name="bitmap">An <see cref="SharpDX.Direct2D1.Bitmap"/> that contains the data to share with the new ID2D1Bitmap. For more information, see the Remarks section.</param>
-        /// <unmanaged>HRESULT CreateSharedBitmap([In] REFIID riid,[InOut] void* data,[In, Optional] const D2D1_BITMAP_PROPERTIES* bitmapProperties,[Out] ID2D1Bitmap** bitmap)</unmanaged>
+        /// <unmanaged>HRESULT ID2D1RenderTarget::CreateSharedBitmap([In] const GUID&amp; riid,[In] void* data,[In, Optional] const D2D1_BITMAP_PROPERTIES* bitmapProperties,[Out, Fast] ID2D1Bitmap** bitmap)</unmanaged>	
         public Bitmap(RenderTarget renderTarget, Bitmap bitmap)
             : this(renderTarget, bitmap, null)
         {
@@ -95,7 +95,7 @@ namespace SharpDX.Direct2D1
         /// <param name="renderTarget">an instance of <see cref = "SharpDX.Direct2D1.RenderTarget" /></param>
         /// <param name="bitmap">An <see cref="SharpDX.Direct2D1.Bitmap"/> that contains the data to share with the new ID2D1Bitmap. For more information, see the Remarks section.</param>
         /// <param name="bitmapProperties">The pixel format  and DPI of the bitmap to create . The <see cref="SharpDX.DXGI.Format"/> portion of the pixel format  must match the <see cref="SharpDX.DXGI.Format"/> of data or the method will fail, but the alpha modes don't have to match. To prevent a  mismatch, you can pass NULL or the value obtained from the {{D2D1::PixelFormat}} helper function. The DPI settings do not have to match those of data. If both dpiX and dpiY are  0.0f, the default DPI, 96, is used.</param>
-        /// <unmanaged>HRESULT CreateSharedBitmap([In] REFIID riid,[InOut] void* data,[In, Optional] const D2D1_BITMAP_PROPERTIES* bitmapProperties,[Out] ID2D1Bitmap** bitmap)</unmanaged>
+        /// <unmanaged>HRESULT ID2D1RenderTarget::CreateSharedBitmap([In] const GUID&amp; riid,[In] void* data,[In, Optional] const D2D1_BITMAP_PROPERTIES* bitmapProperties,[Out, Fast] ID2D1Bitmap** bitmap)</unmanaged>	
         public Bitmap(RenderTarget renderTarget, Bitmap bitmap, SharpDX.Direct2D1.BitmapProperties? bitmapProperties)
             : base(IntPtr.Zero)
         {
@@ -107,7 +107,7 @@ namespace SharpDX.Direct2D1
         /// </summary>	
         /// <param name="renderTarget">an instance of <see cref = "SharpDX.Direct2D1.RenderTarget" /></param>
         /// <param name="surface">An <see cref="SharpDX.DXGI.Surface"/> that contains the data to share with the new ID2D1Bitmap. For more information, see the Remarks section.</param>
-        /// <unmanaged>HRESULT CreateSharedBitmap([In] REFIID riid,[InOut] void* data,[In, Optional] const D2D1_BITMAP_PROPERTIES* bitmapProperties,[Out] ID2D1Bitmap** bitmap)</unmanaged>
+        /// <unmanaged>HRESULT ID2D1RenderTarget::CreateSharedBitmap([In] const GUID&amp; riid,[In] void* data,[In, Optional] const D2D1_BITMAP_PROPERTIES* bitmapProperties,[Out, Fast] ID2D1Bitmap** bitmap)</unmanaged>	
         public Bitmap(RenderTarget renderTarget, Surface surface)
             : this(renderTarget, surface, null)
         {
@@ -119,7 +119,7 @@ namespace SharpDX.Direct2D1
         /// <param name="renderTarget">an instance of <see cref = "SharpDX.Direct2D1.RenderTarget" /></param>
         /// <param name="surface">An <see cref="SharpDX.DXGI.Surface"/> that contains the data to share with the new ID2D1Bitmap. For more information, see the Remarks section.</param>
         /// <param name="bitmapProperties">The pixel format  and DPI of the bitmap to create . The <see cref="SharpDX.DXGI.Format"/> portion of the pixel format  must match the <see cref="SharpDX.DXGI.Format"/> of data or the method will fail, but the alpha modes don't have to match. To prevent a  mismatch, you can pass NULL or the value obtained from the {{D2D1::PixelFormat}} helper function. The DPI settings do not have to match those of data. If both dpiX and dpiY are  0.0f, the default DPI, 96, is used.</param>
-        /// <unmanaged>HRESULT CreateSharedBitmap([In] REFIID riid,[InOut] void* data,[In, Optional] const D2D1_BITMAP_PROPERTIES* bitmapProperties,[Out] ID2D1Bitmap** bitmap)</unmanaged>
+        /// <unmanaged>HRESULT ID2D1RenderTarget::CreateSharedBitmap([In] const GUID&amp; riid,[In] void* data,[In, Optional] const D2D1_BITMAP_PROPERTIES* bitmapProperties,[Out, Fast] ID2D1Bitmap** bitmap)</unmanaged>	
         public Bitmap(RenderTarget renderTarget, Surface surface, SharpDX.Direct2D1.BitmapProperties? bitmapProperties)
             : base(IntPtr.Zero)
         {
@@ -133,8 +133,8 @@ namespace SharpDX.Direct2D1
         /// <param name="renderTarget">The render target.</param>
         /// <param name="wicBitmapSource">A reference to a <see cref="SharpDX.WIC.BitmapSource"/> wic bitmap.</param>
         /// <returns></returns>
-        /// <unmanaged>HRESULT CreateSharedBitmap([In] REFIID riid,[InOut] void* data,[In, Optional] const D2D1_BITMAP_PROPERTIES* bitmapProperties,[Out] ID2D1Bitmap** bitmap)</unmanaged>
-        public static Bitmap FromWicBitmapSource(RenderTarget renderTarget, WIC.BitmapSource wicBitmapSource)
+        /// <unmanaged>HRESULT ID2D1RenderTarget::CreateBitmapFromWicBitmap([In] IWICBitmapSource* wicBitmapSource,[In, Optional] const D2D1_BITMAP_PROPERTIES* bitmapProperties,[Out] ID2D1Bitmap** bitmap)</unmanaged>	
+        public static Bitmap FromWicBitmap(RenderTarget renderTarget, WIC.BitmapSource wicBitmapSource)
         {
             Bitmap bitmap;
             renderTarget.CreateBitmapFromWicBitmap(wicBitmapSource, null, out bitmap);
@@ -148,8 +148,8 @@ namespace SharpDX.Direct2D1
         /// <param name="wicBitmap">The wic bitmap.</param>
         /// <param name="bitmapProperties">The bitmap properties.</param>
         /// <returns></returns>
-        /// <unmanaged>HRESULT CreateSharedBitmap([In] REFIID riid,[InOut] void* data,[In, Optional] const D2D1_BITMAP_PROPERTIES* bitmapProperties,[Out] ID2D1Bitmap** bitmap)</unmanaged>
-        public static Bitmap FromWicBitmap(RenderTarget renderTarget, WIC.Bitmap wicBitmap, SharpDX.Direct2D1.BitmapProperties bitmapProperties)
+        /// <unmanaged>HRESULT ID2D1RenderTarget::CreateBitmapFromWicBitmap([In] IWICBitmapSource* wicBitmapSource,[In, Optional] const D2D1_BITMAP_PROPERTIES* bitmapProperties,[Out] ID2D1Bitmap** bitmap)</unmanaged>	
+        public static Bitmap FromWicBitmap(RenderTarget renderTarget, WIC.BitmapSource wicBitmap, SharpDX.Direct2D1.BitmapProperties bitmapProperties)
         {
             Bitmap bitmap;
             renderTarget.CreateBitmapFromWicBitmap(wicBitmap, bitmapProperties, out bitmap);

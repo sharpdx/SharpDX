@@ -17,6 +17,11 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Bitmap1.cs" />
+    <Compile Include="BitmapBrush1.cs" />
+    <Compile Include="BitmapProperties1.cs" />
+    <Compile Include="CommandList.cs" />
+    <Compile Include="Effect.cs" />
     <Compile Include="Factory1.cs" />
     <Compile Include="Device.cs" />
     <Compile Include="DeviceContext.cs" />
@@ -24,6 +29,7 @@
     <Compile Include="Generated\WIC\Functions.cs" />
     <Compile Include="Generated\WIC\Interfaces.cs" />
     <Compile Include="Generated\WIC\Structures.cs" />
+    <Compile Include="PrintControl.cs" />
     <Compile Include="WicRenderTarget.cs" />
     <Compile Include="DirectWrite\BitmapRenderTarget.cs" />
     <Compile Include="DirectWrite\EllipsisTrimming.cs" />
