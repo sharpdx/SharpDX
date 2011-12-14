@@ -152,12 +152,15 @@
 <#+								}
 							}
 						} else {#>
-                <#= param.PublicType.QualifiedName #>.__Native <#= param.TempName #> = <#= ((CsStruct)param.PublicType).GetConstructor() #>;
+                var <#= param.TempName #> = <#= ((CsStruct)param.PublicType).GetConstructor() #>;
 <#+							if ((param.IsRefIn || param.IsRef || param.IsIn) && param.HasNativeValueType) {
 								if (param.IsStaticMarshal) {#>
                 <#= param.PublicType.QualifiedName #>.__MarshalTo(ref <#= param.Name #>, ref <#= param.TempName #>);
 <#+							
-								} else {#>
+								} else {
+									if (param.IsOptionnal && param.IsStructClass) {#>
+                if (<#= param.Name #> != null)
+<#+									}#>
                 <#= param.Name #>.__MarshalTo(ref <#= param.TempName #>);
 <#+
 								} 
