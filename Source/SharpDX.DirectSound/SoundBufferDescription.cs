@@ -63,26 +63,6 @@ namespace SharpDX.DirectSound
             @ref.__MarshalFree();
         }
 
-		// Method to marshal from native to managed struct
-        internal unsafe void __MarshalFrom(ref __Native @ref)
-        {            
-            this.Size = @ref.Size;
-            this.Flags = @ref.Flags;
-            this.BufferBytes = @ref.BufferBytes;
-            this.Reserved = @ref.Reserved;
-            if (@ref.pFormat != IntPtr.Zero)
-            {
-                WaveFormat.__Native nativeWaveFormat = default(WaveFormat.__Native);
-                Utilities.Read<WaveFormat.__Native>(@ref.pFormat, ref nativeWaveFormat);
-                Format = new WaveFormat();
-                Format.__MarshalFrom(ref nativeWaveFormat);
-            }
-            else
-            {
-                this.Format = null;
-            }
-            this.AlgorithmFor3D = @ref.AlgorithmFor3D;
-        }
         // Method to marshal from managed struct tot native
         internal unsafe void __MarshalTo(ref __Native @ref)
         {
@@ -90,19 +70,9 @@ namespace SharpDX.DirectSound
             @ref.Flags = this.Flags;
             @ref.BufferBytes = this.BufferBytes;
             @ref.Reserved = this.Reserved;
-            if (this.Format != null)
-            {
-                @ref.pFormat = Marshal.AllocHGlobal(sizeof(WaveFormat.__Native));
-                WaveFormat.__Native nativeWaveFormat = default(WaveFormat.__Native);
-                Format.__MarshalTo(ref nativeWaveFormat);
-                Utilities.Write<WaveFormat.__Native>(@ref.pFormat, ref nativeWaveFormat);
-            } else
-            {
-                @ref.pFormat = IntPtr.Zero;
-            }
+            @ref.pFormat = WaveFormat.MarshalToPtr(Format);
             @ref.AlgorithmFor3D = this.AlgorithmFor3D;		
 		}
-
 
         internal static __Native __NewNative()
         {

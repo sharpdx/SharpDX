@@ -19,6 +19,10 @@
 // THE SOFTWARE.
 using System;
 
+using System.Runtime.InteropServices;
+
+using SharpDX.Multimedia;
+
 namespace SharpDX.DirectSound
 {
     public partial class SoundBuffer
@@ -115,6 +119,29 @@ namespace SharpDX.DirectSound
             using (var notifier = QueryInterface<SoundBufferNotifier>())
             {
                 return notifier.SetNotificationPositions(positions.Length, positions);
+            }
+        }
+
+        /// <summary>
+        /// Sets the new format for the primary sound buffer.
+        /// </summary>
+        /// <value>
+        /// The wave format.
+        /// </value>
+        /// <include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='IDirectSoundBuffer::SetFormat']/*"/>
+        /// <unmanaged>HRESULT IDirectSoundBuffer::SetFormat([In] const WAVEFORMATEX* pcfxFormat)</unmanaged>
+        public SharpDX.Multimedia.WaveFormat Format
+        {
+            set
+            {
+                var ptr = WaveFormat.MarshalToPtr(value);
+                try
+                {
+                    SetFormat(ptr);
+                } finally
+                {
+                    Marshal.FreeHGlobal(ptr);
+                }
             }
         }
     }

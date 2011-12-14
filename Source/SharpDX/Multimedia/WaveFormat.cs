@@ -270,6 +270,8 @@ namespace SharpDX.Multimedia
         /// <returns></returns>
         public unsafe static WaveFormat MarshalFromPtr(IntPtr pointer)
         {
+            if (pointer == IntPtr.Zero) return null;
+
             WaveFormat waveFormat;
             switch (*(WaveFormatEncoding*)pointer)
             {
@@ -304,6 +306,7 @@ namespace SharpDX.Multimedia
         /// <returns>IntPtr to WaveFormat structure (needs to be freed by callee)</returns>
         public static IntPtr MarshalToPtr(WaveFormat format)
         {
+            if (format == null) return IntPtr.Zero;
             return format.MarshalToPtr();
         }
 

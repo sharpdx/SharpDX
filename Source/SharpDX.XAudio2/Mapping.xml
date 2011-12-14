@@ -176,6 +176,7 @@
     <map param="IXAudio2::CreateSubmixVoice::ppSubmixVoice" attribute="out fast" />
     <map param="IXAudio2::CreateSourceVoice::Flags" type="XAUDIO2_VOICE_FLAGS" />
     <map param="IXAudio2::CreateSubmixVoice::Flags" type="XAUDIO2_VOICE_SEND_FLAGS" />
+    <map param="IXAudio2::CreateSourceVoice::pSourceFormat" type="void" />
     <map method="IXAudio2Voice::SetEffectChain" visibility="internal" property="false" />
 
     <map method="IXAudio2SourceVoice::Start" visibility="internal" />

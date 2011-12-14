@@ -317,6 +317,8 @@
     <map method="IDirectSound8::VerifyCertification" visibility="internal" />
     <map method="IDirectSound3DBuffer::.*" visibility="internal" />
     <map method="IDirectSound3DListener::[GS].*" visibility="internal" />
+    <map method="IDirectSoundBuffer::SetFormat" property="false" visibility="internal"/>
+    <map param="pcfxFormat" type="void"/>
 
     <!--
     // *****************************************************************

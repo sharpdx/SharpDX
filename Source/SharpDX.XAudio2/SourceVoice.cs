@@ -19,6 +19,10 @@
 // THE SOFTWARE.
 using System;
 
+using System.Runtime.InteropServices;
+
+using SharpDX.Multimedia;
+
 namespace SharpDX.XAudio2
 {
     public partial class SourceVoice
@@ -105,7 +109,14 @@ namespace SharpDX.XAudio2
         public SourceVoice(XAudio2 device, SharpDX.Multimedia.WaveFormat sourceFormat, SharpDX.XAudio2.VoiceFlags flags, float maxFrequencyRatio, VoiceCallback callback)
             : base(IntPtr.Zero)
         {
-            device.CreateSourceVoice_(this, ref sourceFormat, flags, maxFrequencyRatio, callback == null ? IntPtr.Zero : VoiceShadow.ToIntPtr(callback), null, null);
+            var waveformatPtr = WaveFormat.MarshalToPtr(sourceFormat);
+            try
+            {
+                device.CreateSourceVoice_(this, waveformatPtr, flags, maxFrequencyRatio, callback == null ? IntPtr.Zero : VoiceShadow.ToIntPtr(callback), null, null);
+            } finally
+            {
+                Marshal.FreeHGlobal(waveformatPtr);
+            }
         }
 
         /// <summary>	
@@ -122,7 +133,14 @@ namespace SharpDX.XAudio2
             : base(IntPtr.Zero)
         {
             voiceCallbackImpl = new VoiceCallbackImpl(this);
-            device.CreateSourceVoice_(this, ref sourceFormat, flags, maxFrequencyRatio, enableCallbackEvents ? VoiceShadow.ToIntPtr(voiceCallbackImpl) : IntPtr.Zero, null, null);
+            var waveformatPtr = WaveFormat.MarshalToPtr(sourceFormat);
+            try
+            {
+                device.CreateSourceVoice_(this, waveformatPtr, flags, maxFrequencyRatio, enableCallbackEvents ? VoiceShadow.ToIntPtr(voiceCallbackImpl) : IntPtr.Zero, null, null);
+            } finally
+            {
+                Marshal.FreeHGlobal(waveformatPtr);                
+            }
         }
 
         /// <summary>	
