@@ -89,7 +89,7 @@
     <map enum="DSBCAPS_FLAGS" name="BufferFlags" />
     <map enum="DSBPLAY_FLAGS" name="PlayFlags" />
     <map enum="DSBSTATUS_FLAGS" name="BufferStatus" />
-    <map enum="DSBLOCK_ENUM" name="LockFlags" />    
+    <map enum="DSBLOCK_ENUM" name="LockFlags" none="true"/>    
     <map enum="DSCBSTATUS_FLAGS" name="CaptureBufferStatusFlags" />
     <map enum="DSSCL_ENUM" name="CooperativeLevel" />
     <map enum="DS3DMODE" name="Mode3D" />
