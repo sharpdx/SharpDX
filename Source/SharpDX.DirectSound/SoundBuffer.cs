@@ -82,7 +82,7 @@ namespace SharpDX.DirectSound
         /// <param name="flags">The flags.</param>
         public void Write<T>(T[] data, int bufferOffset, LockFlags flags) where T : struct
         {
-            this.Write<T>(data, 0, 0, bufferOffset, flags);
+            this.Write<T>(data, 0, data.Length, bufferOffset, flags);
         }
 
         /// <summary>
