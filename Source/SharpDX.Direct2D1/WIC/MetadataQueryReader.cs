@@ -20,7 +20,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
+using System.IO;
+
 using SharpDX.Win32;
 
 namespace SharpDX.WIC
@@ -53,7 +54,7 @@ namespace SharpDX.WIC
                     var temp = stackalloc char[count];
                     GetLocation(count, (IntPtr)temp, out count);
 
-                    return new string(temp, 0, count);
+                    return new string(temp, 0, count-1);
                 }
             }
         }
@@ -71,25 +72,41 @@ namespace SharpDX.WIC
                 byte* variant = stackalloc byte[512];
                 var pointer = new IntPtr(variant);
                 GetMetadataByName(name, pointer);
-                var value = Marshal.GetObjectForNativeVariant(pointer);
 
-                // TODO Implement this part correctly for Win8
-#if !WIN8
+                var varianStruct = (Variant*)variant;
+                object value = varianStruct->Value;
+
                 // If object is a ComObject, try to instantiate a MetaDataQueryReader
-                if (value is MarshalByRefObject)
-                {
-                    var temp = new ComObject(Marshal.GetIUnknownForObject(value));
-                    try
-                    {
-                        value = temp.QueryInterface<MetadataQueryReader>();
-                    } catch (Exception ex)
-                    {
-                        return value;
-                    }
-                }
-#endif
+                if (value is ComObject)
+                    value = ((ComObject)value).QueryInterfaceOrNull<MetadataQueryReader>();
+
                 return value;
             }
         }
+
+        /// <summary>
+        /// Dumps all metadatas.
+        /// </summary>
+        /// <param name="writer">The text writer output.</param>
+        /// <param name="level">The level of tabulations.</param>
+        /// <remarks>
+        /// This is a simple helper method to dump metadata stored in this instance.
+        /// </remarks>
+        public void Dump(TextWriter writer, int level = 0)
+        {
+            // See Native Image Format Metadata Queries : http://msdn.microsoft.com/en-us/library/windows/desktop/ee719904%28v=VS.85%29.aspx
+            foreach (var name in Enumerator)
+            {
+                var value = GetMetadataByName(name);
+                for (int i = 0; i < level; i++)
+                    writer.Write("    ");
+                var valueStr = value is MetadataQueryReader ? "..." : "" + (value is Array ? Utilities.Join(",", ((Array)value).GetEnumerator()) : value is IntPtr ? string.Format("0x{0:X}", value) : value);
+
+                writer.WriteLine("{0} = {1}", name, valueStr);
+
+                if (value is MetadataQueryReader)
+                    ((MetadataQueryReader)value).Dump(writer, level + 1);
+            }
+        }            
     }
 }

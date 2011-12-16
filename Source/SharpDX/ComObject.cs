@@ -48,22 +48,46 @@ namespace SharpDX
         /// </summary>
         /// <param name = "guid">GUID query interface</param>
         /// <param name = "outPtr">output object associated with this GUID, IntPtr.Zero in interface is not supported</param>
+        /// <exception cref="SharpDXException">If this object doesn't support the interface</exception>
         public virtual void QueryInterface(Guid guid, out IntPtr outPtr)
         {
             var result = ((IUnknown) this).QueryInterface(ref guid, out outPtr);
             result.CheckError();
         }
 
+        /// <summary>
+        ///   Query Interface for a particular GUID.
+        /// </summary>
+        /// <param name = "guid">GUID query interface</param>
+        /// <exception cref="SharpDXException">If this object doesn't support the interface</exception>
+        public virtual IntPtr QueryInterfaceOrNull(Guid guid)
+        {
+            var pointer = IntPtr.Zero;
+            ((IUnknown)this).QueryInterface(ref guid, out pointer);
+            return pointer;
+        }
+
         ///<summary>
         /// Query Interface for a particular interface support.
         ///</summary>
         ///<typeparam name="T"></typeparam>
-        ///<returns></returns>
+        ///<returns>An instance of the queried interface</returns>
+        /// <exception cref="SharpDXException">If this object doesn't support the interface</exception>
         public virtual T QueryInterface<T>() where T : ComObject
         {
             IntPtr parentPtr;
             this.QueryInterface(Utilities.GetGuidFromType(typeof(T)), out parentPtr);
             return FromPointer<T>(parentPtr);
+        }
+
+        ///<summary>
+        /// Query Interface for a particular interface support.
+        ///</summary>
+        ///<returns>An instance of the queried interface or null if it is not supported</returns>
+        ///<returns></returns>
+        public virtual T QueryInterfaceOrNull<T>() where T : ComObject
+        {
+            return FromPointer<T>(QueryInterfaceOrNull(Utilities.GetGuidFromType(typeof(T))));
         }
 
         ///<summary>

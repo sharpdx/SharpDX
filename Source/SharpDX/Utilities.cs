@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -359,6 +360,20 @@ namespace SharpDX
             return string.Join(separator, Array.ConvertAll(array, from => from.ToString()));
         }
 
+        /// <summary>
+        /// String helper join method to display an enumrable of object as a single string.
+        /// </summary>
+        /// <param name="separator">The separator.</param>
+        /// <param name="elements">The enumerable.</param>
+        /// <returns>a string with array elements serparated by the seperator</returns>
+        public static string Join(string separator, IEnumerable elements)
+        {
+            var elementList = new List<string>();
+            foreach (var element in elements)
+                elementList.Add(element.ToString());
+
+            return string.Join(separator, Array.ConvertAll(elementList.ToArray(), from => from.ToString()));
+        }
 
         /// <summary>
         /// String helper join method to display an enumrable of object as a single string.
@@ -366,11 +381,11 @@ namespace SharpDX
         /// <param name="separator">The separator.</param>
         /// <param name="elements">The enumerable.</param>
         /// <returns>a string with array elements serparated by the seperator</returns>
-        public static string Join<T>(string separator, IEnumerable<T> elements)
+        public static string Join(string separator, IEnumerator elements)
         {
             var elementList = new List<string>();
-            foreach (var element in elements)
-                elementList.Add(element.ToString());
+            while (elements.MoveNext())
+                elementList.Add(elements.Current.ToString());
 
             return string.Join(separator, Array.ConvertAll(elementList.ToArray(), from => from.ToString()));
         }

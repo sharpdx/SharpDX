@@ -97,19 +97,8 @@ namespace EncodeDecode
             var bitmapFrameDecode = decoder.GetFrame(0);
             var queryReader = bitmapFrameDecode.MetadataQueryReader;
 
-            // Test by reading the MetadataQueryreader
-            var app0 = (MetadataQueryReader)queryReader.GetMetadataByName("/app0");
-            foreach (var name in app0.Enumerator)
-            {
-                try
-                {
-                    Console.WriteLine("/app0 {0} = {1}", name, app0.GetMetadataByName(name));
-                } catch (Exception ex)
-                {
-                    Console.WriteLine("Error while getting metadata /app0{0} : {1}", name, ex.Message);
-                }
-            }
-
+            // Dump MetadataQueryreader
+            queryReader.Dump(Console.Out);
             queryReader.Dispose();
 
             bitmapFrameDecode.Dispose();
