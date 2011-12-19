@@ -21,9 +21,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
+using System.Text;
+
 using SharpDX.Direct3D;
 using System.Reflection;
 
@@ -348,7 +351,6 @@ namespace SharpDX
             return iunknownPtr == IntPtr.Zero ? null : Marshal.GetObjectForIUnknown(iunknownPtr);
         }
 
-#if !WIN8
         /// <summary>
         /// String helper join method to display an array of object as a single string.
         /// </summary>
@@ -357,7 +359,16 @@ namespace SharpDX
         /// <returns>a string with array elements serparated by the seperator</returns>
         public static string Join<T>(string separator, T[] array)
         {
-            return string.Join(separator, Array.ConvertAll(array, from => from.ToString()));
+            var text = new StringBuilder();
+            if (array != null)
+            {
+                for (int i = 0; i < array.Length; i++)
+                {
+                    if (i > 0) text.Append(separator);
+                    text.Append(array[i]);
+                }
+            }
+            return text.ToString();
         }
 
         /// <summary>
@@ -372,7 +383,14 @@ namespace SharpDX
             foreach (var element in elements)
                 elementList.Add(element.ToString());
 
-            return string.Join(separator, Array.ConvertAll(elementList.ToArray(), from => from.ToString()));
+            var text = new StringBuilder();
+            for (int i = 0; i < elementList.Count; i++)
+            {
+                var element = elementList[i];
+                if (i > 0) text.Append(separator);
+                text.Append(element);
+            }
+            return text.ToString();
         }
 
         /// <summary>
@@ -387,9 +405,16 @@ namespace SharpDX
             while (elements.MoveNext())
                 elementList.Add(elements.Current.ToString());
 
-            return string.Join(separator, Array.ConvertAll(elementList.ToArray(), from => from.ToString()));
+            var text = new StringBuilder();
+            for (int i = 0; i < elementList.Count; i++)
+            {
+                var element = elementList[i];
+                if (i > 0) text.Append(separator);
+                text.Append(element);
+            }
+            return text.ToString();
         }
-#endif
+
         [Flags]
         public enum CLSCTX : uint
         {
