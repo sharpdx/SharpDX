@@ -27,8 +27,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly:AssemblyVersion("2.0.2")]
-[assembly:AssemblyFileVersion("2.0.2")]
+[assembly:AssemblyVersion("2.0.3")]
+[assembly:AssemblyFileVersion("2.0.3")]
 
 #if DEBUG
 [assembly:AssemblyConfiguration("Debug")]
