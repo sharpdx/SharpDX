@@ -23,6 +23,7 @@
 <project name="SharpDX Build" default="help">
   <property name="project.name" value="SharpDX"/>
   <property name="project.sname" value="sharpdx"/>
+  <property name="signed" value="false"/>
   <property name="win8" value="false"/>
   <property name="keeppdb" value="false"/>
   <property name="keepexe" value="false"/>
@@ -34,11 +35,12 @@
   <target name="setup" descriptio="Loads the version for the project">
     <!-- Load version from source code SharedAssemblyInfo.cs -->
     <loadfile file="Source/SharedAssemblyInfo.cs" property="assembly_version_file" />
-	<property name="win8-postfix" value=""/>
-	<property name="win8-postfix" value="-Win8Preview" if="${win8}"/>
+	  <property name="version-postfix" value=""/>
+  	<property name="version-postfix" value="-Win8Preview" if="${win8}"/>
+    <property name="version-postfix" value="-Signed" if="${signed}"/>
     <regex pattern="AssemblyVersion\(.(?'assembly_version'\d+\.\d+.\d+)" input="${assembly_version_file}" />
-    <property name="output_bin_zip" value="${project.name}${win8-postfix}-Bin-${assembly_version}.zip"/>
-    <property name="output_bin_and_samples_zip" value="${project.name}${win8-postfix}-BinAndSamples-${assembly_version}.zip"/>
+    <property name="output_bin_zip" value="${project.name}${version-postfix}-Bin-${assembly_version}.zip"/>
+    <property name="output_bin_and_samples_zip" value="${project.name}${version-postfix}-BinAndSamples-${assembly_version}.zip"/>
 
     <!-- Setup configuration -->
     <property name="configuration" value="Release" unless="${win8}"/>
@@ -93,13 +95,14 @@
     <echo message="Usage MakeSharpDX.cmd target"/>
     <echo message=""/>
     <echo message="Target can have the following value:"/>
-    <echo message="     clean = Full cleanup"/>
-    <echo message="      win8 = Build Win8 Assemblies (DirectX11.1 + Metro samples)"/>
-    <echo message="     build = Build Standard Assemblies (DirectX11)"/>
-    <echo message="     zip   = Zip assemblies and samplles (Run 'build' target before this)"/>
-    <echo message="     nuget = Build Nuget Packages (Run 'build' target before this)"/>
-    <echo message="nuget-push = Publish Nuget packages (Run 'nuget' target before this)"/>
-    <echo message="      full = Run build+zip nuget win8+zip"/>
+    <echo message="       clean = Full cleanup"/>
+    <echo message="        win8 = Build Win8 Assemblies (DirectX11.1 + Metro samples)"/>
+    <echo message="       build = Build Standard Assemblies (DirectX11)"/>
+    <echo message="build_signed = Build Standard Assemblies (DirectX11)"/>
+    <echo message="         zip = Zip assemblies and samplles (Run 'build' target before this)"/>
+    <echo message="       nuget = Build Nuget Packages (Run 'build' target before this)"/>
+    <echo message="  nuget-push = Publish Nuget packages (Run 'nuget' target before this)"/>
+    <echo message="        full = Run build+zip nuget win8+zip"/>
   </target>
 
   <!-- Full clean and build -->
@@ -107,13 +110,20 @@
 	<call target="build"/>
 	<call target="zip"/>
 	<call target="nuget"/>
-	<call target="win8"/>
+  <call target="build_signed"/>
+  <call target="zip"/>
+  <call target="win8"/>
 	<call target="zip"/>
   </target>
 
   <!-- Win8 build -->
   <target name="win8" description="Build Win8 targets.">
     <property name="win8" value="true"/>
+    <call target="build"/>
+  </target>
+
+  <target name="build_signed" description="Build Signed targets.">
+    <property name="signed" value="true"/>
     <call target="build"/>
   </target>
 
@@ -183,6 +193,7 @@
       <arg value="/t:Build"/>
       <arg value="/p:Configuration=${configuration}"/>
       <arg value='/p:Platform="Any CPU"'/>
+      <arg value='/p:SharpDXSign=${signed}'/>
       <arg value="${project.name}.sln" />
     </exec>
   </target>
