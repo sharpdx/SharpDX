@@ -118,6 +118,7 @@
 
   <!-- Win8 build -->
   <target name="win8" description="Build Win8 targets.">
+    <property name="signed" value="false"/>
     <property name="win8" value="true"/>
     <call target="build"/>
   </target>
