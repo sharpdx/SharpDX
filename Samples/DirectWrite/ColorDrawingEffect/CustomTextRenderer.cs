@@ -45,7 +45,8 @@ namespace ColorDrawingEffect
             var geometrySink = pathGeometry.Open();
 
             var fontFace = glyphRun.FontFace;
-            fontFace.GetGlyphRunOutline(glyphRun.FontSize, glyphRun.Indices, glyphRun.Advances, glyphRun.Offsets, glyphRun.IsSideways, glyphRun.BidiLevel % 2 != 0, geometrySink);
+            if (glyphRun.Indices.Length > 0)
+                fontFace.GetGlyphRunOutline(glyphRun.FontSize, glyphRun.Indices, glyphRun.Advances, glyphRun.Offsets, glyphRun.IsSideways, glyphRun.BidiLevel % 2 != 0, geometrySink);
             geometrySink.Close();
             geometrySink.Dispose();
             fontFace.Dispose();

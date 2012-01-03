@@ -86,19 +86,22 @@ namespace SharpDX.DirectWrite
             if (@ref.GlyphIndices != IntPtr.Zero)
             {
                 Indices = new short[GlyphCount];
-                Utilities.Read(@ref.GlyphIndices, Indices, 0, GlyphCount);
+                if (GlyphCount > 0)
+                    Utilities.Read(@ref.GlyphIndices, Indices, 0, GlyphCount);
             }
 
             if (@ref.GlyphAdvances != IntPtr.Zero)
             {
                 Advances = new float[GlyphCount];
-                Utilities.Read(@ref.GlyphAdvances, Advances, 0, GlyphCount);
+                if (GlyphCount > 0)
+                    Utilities.Read(@ref.GlyphAdvances, Advances, 0, GlyphCount);
             }
 
             if (@ref.GlyphOffsets != IntPtr.Zero)
             {
                 Offsets = new GlyphOffset[GlyphCount];
-                Utilities.Read(@ref.GlyphOffsets, Offsets, 0, GlyphCount);
+                if (GlyphCount > 0)
+                    Utilities.Read(@ref.GlyphOffsets, Offsets, 0, GlyphCount);
             }
             this._IsSideways = @ref._IsSideways;
             this.BidiLevel = @ref.BidiLevel;
@@ -117,7 +120,8 @@ namespace SharpDX.DirectWrite
             {
                 @ref.GlyphCount = this.Indices.Length;
                 @ref.GlyphIndices = Marshal.AllocHGlobal(this.Indices.Length*sizeof (short));
-                Utilities.Write(@ref.GlyphIndices, Indices, 0, this.Indices.Length);
+                if (this.Indices.Length > 0)
+                    Utilities.Write(@ref.GlyphIndices, Indices, 0, this.Indices.Length);
             }
 
             if (this.Advances != null)
@@ -126,7 +130,8 @@ namespace SharpDX.DirectWrite
                     throw new InvalidOperationException(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Invalid length for array Advances [{0}] and Indices [{1}]. Indices, Advances and Offsets array must have same size - or may be null", this.Advances.Length, @ref.GlyphCount));
                 @ref.GlyphCount = this.Advances.Length;
                 @ref.GlyphAdvances = Marshal.AllocHGlobal(this.Advances.Length * sizeof(float));
-                Utilities.Write(@ref.GlyphAdvances, Advances, 0, this.Advances.Length);
+                if (this.Advances.Length > 0)
+                    Utilities.Write(@ref.GlyphAdvances, Advances, 0, this.Advances.Length);
             } 
 
             if (this.Offsets != null)
@@ -135,7 +140,8 @@ namespace SharpDX.DirectWrite
                     throw new InvalidOperationException( string.Format(System.Globalization.CultureInfo.InvariantCulture, "Invalid length for array Offsets [{0}]. Indices, Advances and Offsets array must have same size (Current is [{1}]- or may be null", this.Offsets.Length, @ref.GlyphCount));
                 @ref.GlyphCount = this.Offsets.Length;
                 @ref.GlyphOffsets = Marshal.AllocHGlobal(this.Offsets.Length * sizeof(GlyphOffset));
-                Utilities.Write(@ref.GlyphOffsets, Offsets, 0, this.Offsets.Length);
+                if (this.Offsets.Length > 0)
+                    Utilities.Write(@ref.GlyphOffsets, Offsets, 0, this.Offsets.Length);
             }
 
             if (@ref.GlyphCount < 0)
