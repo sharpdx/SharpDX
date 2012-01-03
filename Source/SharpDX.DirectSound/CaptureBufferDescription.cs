@@ -93,7 +93,7 @@ namespace SharpDX.DirectSound
             this.Flags = @ref.Flags;
             this.BufferBytes = @ref.BufferBytes;
             this.Reserved = @ref.Reserved;
-            this.Format = WaveFormat.MarshalFromPtr(@ref.FormatPointer);
+            this.Format = WaveFormat.MarshalFrom(@ref.FormatPointer);
             this.EffectCount = @ref.EffectCount;
             if (EffectCount > 0)
             {

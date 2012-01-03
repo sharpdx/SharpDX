@@ -266,30 +266,50 @@ namespace SharpDX.Multimedia
         /// <summary>
         /// Helper function to retrieve a WaveFormat structure from a pointer
         /// </summary>
-        /// <param name="pointer">WaveFormat structure</param>
-        /// <returns></returns>
-        public unsafe static WaveFormat MarshalFromPtr(IntPtr pointer)
+        /// <param name="rawdata">Buffer to the WaveFormat rawdata</param>
+        /// <returns>WaveFormat structure</returns>
+        public unsafe static WaveFormat MarshalFrom(byte[] rawdata)
+        {
+            fixed (void* pRawData = rawdata)
+                return MarshalFrom((IntPtr)pRawData);
+        }
+
+        /// <summary>
+        /// Helper function to retrieve a WaveFormat structure from a pointer
+        /// </summary>
+        /// <param name="pointer">Pointer to the WaveFormat rawdata</param>
+        /// <returns>WaveFormat structure</returns>
+        public unsafe static WaveFormat MarshalFrom(IntPtr pointer)
         {
             if (pointer == IntPtr.Zero) return null;
 
-            WaveFormat waveFormat;
-            switch (*(WaveFormatEncoding*)pointer)
+            var pcmWaveFormat = *(__PcmNative*)pointer;
+            var encoding = pcmWaveFormat.waveFormatTag;
+
+            // Load simple PcmWaveFormat if channels <= 2 and encoding is Pcm, IeeFloat, Wmaudio2, Wmaudio3
+            // See http://msdn.microsoft.com/en-us/library/microsoft.directx_sdk.xaudio2.waveformatex%28v=vs.85%29.aspx
+            if (pcmWaveFormat.channels <= 2 && (encoding == WaveFormatEncoding.Pcm || encoding == WaveFormatEncoding.IeeeFloat || encoding == WaveFormatEncoding.Wmaudio2 || encoding == WaveFormatEncoding.Wmaudio3))
             {
-                case WaveFormatEncoding.Pcm:
-                    waveFormat = new WaveFormat();
-                    waveFormat.__MarshalFrom(ref *(__PcmNative*)pointer);
-                    break;
-                case WaveFormatEncoding.Extensible:
-                    var waveFormatExtensible = new WaveFormatExtensible();
-                    waveFormatExtensible.__MarshalFrom(ref *(WaveFormatExtensible.__Native*)pointer);
-                    waveFormat = waveFormatExtensible;
-                    break;
-                default:
-                    waveFormat = new WaveFormat();
-                    waveFormat.__MarshalFrom(ref *(__Native*)pointer);
-                    break;
+                var waveFormat = new WaveFormat();
+                waveFormat.__MarshalFrom(ref pcmWaveFormat);
+                return waveFormat;
             }
-            return waveFormat;
+
+            if (encoding == WaveFormatEncoding.Extensible)
+            {
+                var waveFormat = new WaveFormatExtensible();
+                waveFormat.__MarshalFrom(ref *(WaveFormatExtensible.__Native*)pointer);
+                return waveFormat;
+            }
+
+            if (encoding == WaveFormatEncoding.Adpcm)
+            {
+                var waveFormat = new WaveFormatAdpcm();
+                waveFormat.__MarshalFrom(ref *(WaveFormatAdpcm.__Native*)pointer);
+                return waveFormat;
+            }
+
+            throw new InvalidOperationException(string.Format("Unsupported WaveFormat [{0}]", encoding));
         }
 
         protected unsafe virtual IntPtr MarshalToPtr()

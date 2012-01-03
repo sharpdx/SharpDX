@@ -89,7 +89,7 @@ namespace SharpDX.DirectSound
                     int sizeOfInputStructure = Utilities.SizeOf<WaveFormatExtensible.__Native>();
                     int sizeOfStructureReturned;
                     GetFormat(new IntPtr(&native), sizeOfInputStructure, out sizeOfStructureReturned);
-                    return WaveFormat.MarshalFromPtr(new IntPtr(&native));
+                    return WaveFormat.MarshalFrom(new IntPtr(&native));
                 }
             }
         }

@@ -66,7 +66,7 @@ namespace SharpDX.XAPO
             this.Format = null;
             this.FormatPointer = @ref.FormatPointer;
             if (this.FormatPointer != IntPtr.Zero)
-                this.Format = WaveFormat.MarshalFromPtr(this.FormatPointer);
+                this.Format = WaveFormat.MarshalFrom(this.FormatPointer);
             this.MaxFrameCount = @ref.MaxFrameCount;
         }
 
@@ -77,7 +77,7 @@ namespace SharpDX.XAPO
             this.Format = null;
             this.FormatPointer = @ref->FormatPointer;
             if (this.FormatPointer != IntPtr.Zero)
-                this.Format = WaveFormat.MarshalFromPtr(this.FormatPointer);
+                this.Format = WaveFormat.MarshalFrom(this.FormatPointer);
             this.MaxFrameCount = @ref->MaxFrameCount;
         }
     }

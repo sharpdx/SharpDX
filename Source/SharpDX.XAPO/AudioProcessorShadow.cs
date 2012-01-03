@@ -104,8 +104,8 @@ namespace SharpDX.XAPO
                     var shadow = ToShadow<AudioProcessorShadow>(thisObject);
                     var callback = (AudioProcessor)shadow.Callback;
 
-                    WaveFormat outputFormat = WaveFormat.MarshalFromPtr(pOutputFormat);
-                    WaveFormat requestedInputFormat = WaveFormat.MarshalFromPtr(pRequestedInputFormat);
+                    WaveFormat outputFormat = WaveFormat.MarshalFrom(pOutputFormat);
+                    WaveFormat requestedInputFormat = WaveFormat.MarshalFrom(pRequestedInputFormat);
 
                     WaveFormat supportedInputFormat;
                     var result = callback.IsInputFormatSupported(outputFormat, requestedInputFormat, out supportedInputFormat);
@@ -139,8 +139,8 @@ namespace SharpDX.XAPO
                     var shadow = ToShadow<AudioProcessorShadow>(thisObject);
                     var callback = (AudioProcessor)shadow.Callback;
 
-                    WaveFormat inputFormat = WaveFormat.MarshalFromPtr(pInputFormat);
-                    WaveFormat requestedOutputFormat = WaveFormat.MarshalFromPtr(pRequestedOutputFormat);
+                    WaveFormat inputFormat = WaveFormat.MarshalFrom(pInputFormat);
+                    WaveFormat requestedOutputFormat = WaveFormat.MarshalFrom(pRequestedOutputFormat);
 
                     WaveFormat supportedOutputFormat;
                     var result = callback.IsOutputFormatSupported(inputFormat, requestedOutputFormat, out supportedOutputFormat);

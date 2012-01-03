@@ -77,39 +77,13 @@ namespace SharpDX.Multimedia
             if (fmtChunk.Size < sizeof(WaveFormat.__PcmNative))
                 ThrowInvalidFileFormat();
 
-            var pcmWaveFormat = fmtChunk.GetDataAs<WaveFormat.__PcmNative>();
-            var encoding = pcmWaveFormat.waveFormatTag;
-
-            // Load simple PcmWaveFormat if channels <= 2 and encoding is Pcm, IeeFloat, Wmaudio2, Wmaudio3
-            // See http://msdn.microsoft.com/en-us/library/microsoft.directx_sdk.xaudio2.waveformatex%28v=vs.85%29.aspx
-            if (pcmWaveFormat.channels <= 2 && (encoding == WaveFormatEncoding.Pcm || encoding == WaveFormatEncoding.IeeeFloat || encoding == WaveFormatEncoding.Wmaudio2 || encoding == WaveFormatEncoding.Wmaudio3))
+            try
             {
-                var waveFormat = new WaveFormat();
-                waveFormat.__MarshalFrom(ref pcmWaveFormat);
-                Format = waveFormat;
+                Format = WaveFormat.MarshalFrom(fmtChunk.GetData());
             }
-            else if (encoding == WaveFormatEncoding.Extensible)
+            catch (InvalidOperationException ex)
             {
-                if (fmtChunk.Size < sizeof(WaveFormatExtensible.__Native))
-                    ThrowInvalidFileFormat();
-
-                var waveFormat = new WaveFormatExtensible();
-                var waveFormatNative = fmtChunk.GetDataAs<WaveFormatExtensible.__Native>();
-                waveFormat.__MarshalFrom(ref waveFormatNative);
-                Format = waveFormat;
-            }
-            else if (encoding == WaveFormatEncoding.Adpcm)
-            {
-                if (fmtChunk.Size < sizeof(WaveFormatAdpcm.__Native))
-                    ThrowInvalidFileFormat();
-
-                var waveFormat = new WaveFormatAdpcm();
-                var waveFormatNative = fmtChunk.GetDataAs<WaveFormatAdpcm.__Native>();
-                waveFormat.__MarshalFrom(ref waveFormatNative);
-                Format = waveFormat;
-            } else
-            {
-                ThrowInvalidFileFormat();
+                ThrowInvalidFileFormat(ex);
             }
 
             // If XWMA
@@ -146,9 +120,9 @@ namespace SharpDX.Multimedia
             input.Position = startPositionOfData;
         }
 
-        protected void ThrowInvalidFileFormat()
+        protected void ThrowInvalidFileFormat(Exception nestedException = null)
         {
-            throw new InvalidOperationException("Invalid " + FileFormatName + " file format");
+            throw new InvalidOperationException("Invalid " + FileFormatName + " file format", nestedException);
         }
 
         /// <summary>
