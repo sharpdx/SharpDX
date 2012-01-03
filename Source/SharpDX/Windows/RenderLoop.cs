@@ -91,8 +91,14 @@ namespace SharpDX.Windows
             {
                 _form = form;
                 _windowHandle = form.Handle;
+                _form.FormClosed += form_FormClosed;
                 _ptrToDefaultWndProc = Win32Native.GetWindowLong(new HandleRef(this, _windowHandle), Win32Native.WindowLongType.WndProc);
                 _isAlive = true;
+            }
+
+            private void form_FormClosed(object sender, FormClosedEventArgs e)
+            {
+                _isAlive = false;
             }
 
             /// <summary>
@@ -136,8 +142,10 @@ namespace SharpDX.Windows
                         Win32Native.TranslateMessage(ref msg);
                         Win32Native.DispatchMessage(ref msg);
                     }
-                    renderCallback();
+                    if (_isAlive)
+                        renderCallback();
                 }
+                _form.FormClosed -= form_FormClosed;
             }
         }
     }
