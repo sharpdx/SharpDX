@@ -35,8 +35,15 @@ namespace SharpDX.Direct3D9
         {
             FromTemp(D3D9.Create9(D3D9.SdkVersion));
             Adapters = new AdapterCollection(this);
+        }
+
+        /// <summary>
+        /// Checks the version of D3DX runtime against the version of this library..
+        /// </summary>
+        public static void CheckVersion()
+        {
             if (!D3DX.CheckVersion())
-                throw new SharpDXException("Direct3DX9 was not found. Install latest DirectX redistributable runtimes from Microsoft");
+                throw new SharpDXException("Direct3DX9 was not found. Install latest DirectX redistributable runtimes from Microsoft");            
         }
 
         /// <summary>

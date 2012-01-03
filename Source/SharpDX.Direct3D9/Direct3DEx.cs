@@ -37,8 +37,6 @@ namespace SharpDX.Direct3D9
             D3D9.Create9Ex(D3D9.SdkVersion, this);
             Adapters = new AdapterCollection(this);
             AdaptersEx = new AdapterExCollection(this);
-            if (!D3DX.CheckVersion())
-                throw new SharpDXException("Direct3DX9 was not found. Install latest DirectX redistributable runtimes from Microsoft");
         }
 
         /// <summary>
