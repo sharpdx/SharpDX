@@ -7,7 +7,15 @@ namespace SharpDX
     /// </summary>
     public abstract class DisposeBase : IDisposable
     {
-        protected bool IsDisposed;
+        /// <summary>
+        /// Occurs when this instance is starting to be disposed.
+        /// </summary>
+        public event EventHandler<EventArgs> Disposing;
+
+        /// <summary>
+        /// Occurs when this instance is fully disposed.
+        /// </summary>
+        public event EventHandler<EventArgs> Disposed;
 
         /// <summary>
         /// Releases unmanaged resources and performs other cleanup operations before the
@@ -20,6 +28,14 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Gets a value indicating whether this instance is disposed.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is disposed; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsDisposed { get; private set; }
+
+        /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose()
@@ -27,9 +43,13 @@ namespace SharpDX
             // TODO Should we throw an exception if this method is called more than once?
             if (!IsDisposed)
             {
+                if (Disposing != null) Disposing(this, EventArgs.Empty);
+
                 Dispose(true);
                 GC.SuppressFinalize(this);
                 IsDisposed = true;
+
+                if (Disposed != null) Disposed(this, EventArgs.Empty);
             }
         }
 
