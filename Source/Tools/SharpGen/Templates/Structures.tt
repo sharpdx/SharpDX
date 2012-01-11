@@ -181,6 +181,12 @@ foreach (var sharpStruct in Namespace.Structs)
             public <#= sharpStructItem.MarshalType.QualifiedName #> <#= sharpStructItem.Name #>;
 <#+
 					for(int i = 1; i < sharpStructItem.ArrayDimensionValue; i++) {
+		if (sharpStruct.ExplicitLayout) {
+			int arrayItemOffset = sharpStructItem.Offset + (sharpStructItem.SizeOf / sharpStructItem.ArrayDimensionValue ) * i;
+#>
+            [FieldOffset(<#= arrayItemOffset #>)]
+<#+			
+		}
 #>
             <#= sharpStructItem.MarshalType.QualifiedName #> __<#= sharpStructItem.Name #><#= i #>;
 <#+
