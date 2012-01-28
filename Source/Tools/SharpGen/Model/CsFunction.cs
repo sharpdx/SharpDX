@@ -17,6 +17,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using SharpGen.Config;
 using SharpGen.CppModel;
 
 namespace SharpGen.Model
@@ -33,6 +35,12 @@ namespace SharpGen.Model
             {
                 return 8;
             }
+        }
+
+        protected override void UpdateFromTag(MappingRule tag)
+        {
+            base.UpdateFromTag(tag);
+            UseDllImport = !tag.UseDllImport.HasValue || tag.UseDllImport.Value;
         }
 
         public string DllName { get; set; }

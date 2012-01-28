@@ -106,6 +106,15 @@ namespace SharpGen.Model
                 CheckReturnType = tag.MethodCheckReturnType.Value;
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [use DLL import].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [use DLL import]; otherwise, <c>false</c>.
+        /// </value>
+        /// <remarks>Only used by function</remarks>
+        public bool UseDllImport { get; set; }
+
         public bool AllowProperty { get; set; }
 
         public int Offset { get; set; }

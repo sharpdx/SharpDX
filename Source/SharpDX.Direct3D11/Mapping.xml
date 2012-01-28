@@ -234,7 +234,7 @@
       <map function="D3DX11(.+)W" name-tmp="$1" />
       <map function="D3DX11.*" dll='"#(D3DX11_DLL_A)"' group="SharpDX.Direct3D11.D3DX11" />
       <map param="D3DX11CreateEffectFromMemory::ppEffect" attribute="out fast" />
-      <map function="D3DX11CreateEffectFromMemory" dll='IntPtr.Size == 4?"sharpdx_direct3d11_effects_x86.dll":"sharpdx_direct3d11_effects_x64.dll"' group="SharpDX.Direct3D11.D3DX11Effects" />
+      <map function="D3DX11CreateEffectFromMemory" dllimport="false" dll='IntPtr.Size == 4?"sharpdx_direct3d11_effects_x86.dll":"sharpdx_direct3d11_effects_x64.dll"' group="SharpDX.Direct3D11.D3DX11Effects" />
     </ifndef>
 
     <!--

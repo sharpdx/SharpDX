@@ -24,7 +24,11 @@
 		var maxParam = method.ParameterCount;		
 		// IF Function, else method
 		if (method is CsFunction) {
+			if (method.UseDllImport) {
+#><#= method.CastStart #><#= method.CppElementName #>_(<#+
+			} else {
 #><#= method.CastStart #><#= method.Assembly.QualifiedName #>.LocalInterop.<#= method.Interop.Name #>(<#+
+			}
 			if (method.IsReturnStructLarge) {#>(void*)&__result__<#+ if (maxParam > 0) {#>, <#+} }
 
 		} else {
@@ -38,8 +42,10 @@
 			#><#= param.CallName #><#+				
 		}
 		if (method is CsFunction) {
-			if (maxParam > 0 || method.IsReturnStructLarge) {#>, <#+}
-			#>(void*)<#= method.CppElementName #>_<#+
+			if (!method.UseDllImport) {
+				if (maxParam > 0 || method.IsReturnStructLarge) {#>, <#+}
+				#>(void*)<#= method.CppElementName #>_<#+
+			}
 		} else {
 			#>,((void**)(*(void**)_nativePointer))[<#= method.Offset #>]<#+
 		}

@@ -212,6 +212,14 @@ namespace SharpGen.Config
         public string FunctionDllName { get; set; }
 
         /// <summary>
+        /// By default true for dll import
+        /// </summary>
+        [XmlIgnore]
+        public bool? UseDllImport { get; set; }
+        [XmlAttribute("dllimport")]
+        public bool _UseDllImport_ { get { return UseDllImport.Value; } set { UseDllImport = value; } } public bool ShouldSerialize_UseDllImport_() { return UseDllImport != null; }
+
+        /// <summary>
         /// DLL name attached to a function
         /// </summary>
         [XmlAttribute("macro-dll")]

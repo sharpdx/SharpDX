@@ -43,7 +43,7 @@ namespace SharpGen.Model
 
             foreach (var cSharpFunction in Functions)
             {
-                if (!functionNames.Contains(cSharpFunction.DllName))
+                if (!functionNames.Contains(cSharpFunction.DllName) && !cSharpFunction.UseDllImport)
                     functionNames.Add(cSharpFunction.DllName);
             }
             return functionNames;
