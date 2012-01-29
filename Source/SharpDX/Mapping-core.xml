@@ -133,12 +133,12 @@
     <context-clear/>
 
     <define enum="System.IO.SeekOrigin" sizeof="4" />
-    <define struct="System.Drawing.Rectangle" sizeof="16" />
-    <define struct="System.Drawing.RectangleF" sizeof="16" />
-    <define struct="System.Drawing.SizeF" sizeof="8" />
-    <define struct="System.Drawing.Size" sizeof="8" />
-    <define struct="System.Drawing.PointF" sizeof="8" />
-    <define struct="System.Drawing.Point" sizeof="8" />
+    <define struct="SharpDX.DrawingRectangle" sizeof="16" />
+    <define struct="SharpDX.DrawingRectangleF" sizeof="16" />
+    <define struct="SharpDX.DrawingSizeF" sizeof="8" />
+    <define struct="SharpDX.DrawingSize" sizeof="8" />
+    <define struct="SharpDX.DrawingPointF" sizeof="8" />
+    <define struct="SharpDX.DrawingPoint" sizeof="8" />
     <define struct="SharpDX.Result" sizeof="4" />
     <define struct="SharpDX.PointerSize" sizeof="8" />
     <define struct="SharpDX.Matrix" sizeof="64" />
@@ -226,7 +226,7 @@
     <bind from="WAVEFORMATEX" to="SharpDX.Multimedia.WaveFormat" />
     <bind from="tWAVEFORMATEX" to="SharpDX.Multimedia.WaveFormat" />    
     <bind from="WAVEFORMATEXTENSIBLE" to="SharpDX.Multimedia.WaveFormatExtensible" />
-    <bind from="POINT" to="System.Drawing.Point" />
+    <bind from="POINT" to="SharpDX.DrawingPoint" />
     <bind from="RECT" to="SharpDX.Rectangle" />
     <bind from="BOOL" to="System.Boolean" marshal="System.Int32" />
     <bind from="HACCEL" to="System.IntPtr"/>    
@@ -246,7 +246,7 @@
     <bind from="GUID" to="System.Guid" />
     <bind from="COLORREF" to="SharpDX.Color4" />
     <bind from="__function__stdcall" to="SharpDX.FunctionCallback" />
-    <bind from="SIZE" to="System.Drawing.Size" />
+    <bind from="SIZE" to="SharpDX.DrawingSize" />
     <bind from="SIZE_T" to="SharpDX.PointerSize" marshal="System.IntPtr"/>
     <bind from="SSIZE_T" to="SharpDX.PointerSize" marshal="System.IntPtr"/>
 

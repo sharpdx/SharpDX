@@ -82,7 +82,7 @@ namespace SharpDX.WIC
         /// <param name="output">The output.</param>
         /// <returns></returns>
         /// <unmanaged>HRESULT IWICBitmapSourceTransform::CopyPixels([In, Optional] const WICRect* prc,[In] unsigned int uiWidth,[In] unsigned int uiHeight,[In, Optional] GUID* pguidDstFormat,[In] WICBitmapTransformOptions dstTransform,[In] unsigned int nStride,[In] unsigned int cbBufferSize,[In] void* pbBuffer)</unmanaged>
-        public SharpDX.Result CopyPixels(System.Drawing.Rectangle rectangle, int width, int height, System.Guid guidDstFormat, SharpDX.WIC.BitmapTransformOptions dstTransform, int stride, DataStream output)
+        public SharpDX.Result CopyPixels(DrawingRectangle rectangle, int width, int height, System.Guid guidDstFormat, SharpDX.WIC.BitmapTransformOptions dstTransform, int stride, DataStream output)
         {
             return CopyPixels(rectangle, width, height, guidDstFormat, dstTransform, stride, (int) output.Length,
                        output.DataPointer);
@@ -94,7 +94,7 @@ namespace SharpDX.WIC
         /// <param name="size">The size.</param>
         /// <returns></returns>
         /// <unmanaged>HRESULT IWICBitmapSourceTransform::GetClosestSize([InOut] unsigned int* puiWidth,[InOut] unsigned int* puiHeight)</unmanaged>
-        public SharpDX.Result GetClosestSize(ref System.Drawing.Size size)
+        public SharpDX.Result GetClosestSize(ref DrawingSize size)
         {
             int width = size.Width;
             int height = size.Height;

@@ -272,16 +272,6 @@ namespace SharpDX
 #endif
         }
 
-        public static void ConvertRECTToRectangle(ref System.Drawing.Rectangle rect)
-        {
-            rect = new System.Drawing.Rectangle(rect.X, rect.Y, rect.Width - rect.X, rect.Height - rect.Y);
-        }
-
-        public static void ConvertRectangleToRect(ref System.Drawing.Rectangle rect)
-        {
-            rect = new System.Drawing.Rectangle(rect.X, rect.Y, rect.Width - rect.X, rect.Height - rect.Y);
-        }
-
         /// <summary>
         /// Converts a pointer to a null-terminating string up to maxLength characters to a .Net string.
         /// </summary>
@@ -415,67 +405,6 @@ namespace SharpDX
             return text.ToString();
         }
 
-        [Flags]
-        public enum CLSCTX : uint
-        {
-            ClsctxInprocServer = 0x1,
-            ClsctxInprocHandler = 0x2,
-            ClsctxLocalServer = 0x4,
-            ClsctxInprocServer16 = 0x8,
-            ClsctxRemoteServer = 0x10,
-            ClsctxInprocHandler16 = 0x20,
-            ClsctxReserved1 = 0x40,
-            ClsctxReserved2 = 0x80,
-            ClsctxReserved3 = 0x100,
-            ClsctxReserved4 = 0x200,
-            ClsctxNoCodeDownload = 0x400,
-            ClsctxReserved5 = 0x800,
-            ClsctxNoCustomMarshal = 0x1000,
-            ClsctxEnableCodeDownload = 0x2000,
-            ClsctxNoFailureLog = 0x4000,
-            ClsctxDisableAaa = 0x8000,
-            ClsctxEnableAaa = 0x10000,
-            ClsctxFromDefaultContext = 0x20000,
-            ClsctxInproc = ClsctxInprocServer | ClsctxInprocHandler,
-            ClsctxServer = ClsctxInprocServer | ClsctxLocalServer | ClsctxRemoteServer,
-            ClsctxAll = ClsctxServer | ClsctxInprocHandler
-        }
-
-        [DllImport("ole32.dll", ExactSpelling = true, EntryPoint = "CoCreateInstance", PreserveSig = true)]
-        private static extern Result CoCreateInstance([In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid, IntPtr pUnkOuter, CLSCTX dwClsContext, [In, MarshalAs(UnmanagedType.LPStruct)] Guid riid, out IntPtr comObject);
-
-        internal static void CreateComInstance(Guid clsid, CLSCTX clsctx, Guid riid, ComObject comObject)
-        {
-            IntPtr pointer;
-            var result = CoCreateInstance(clsid, IntPtr.Zero, clsctx, riid, out pointer);
-            result.CheckError();
-            comObject.NativePointer = pointer;
-        }
-
-        /// <summary>Determines the concurrency model used for incoming calls to objects created by this thread. This concurrency model can be either apartment-threaded or multi-threaded.</summary>
-        public enum CoInit
-        {
-            /// <summary>
-            /// Initializes the thread for apartment-threaded object concurrency.
-            /// </summary>
-            MultiThreaded = 0x0,
-
-            /// <summary>
-            /// Initializes the thread for multi-threaded object concurrency.
-            /// </summary>
-            ApartmentThreaded = 0x2,
-
-            /// <summary>
-            /// Disables DDE for OLE1 support.
-            /// </summary>
-            DisableOle1Dde = 0x4,
-
-            /// <summary>
-            /// Trade memory for speed.
-            /// </summary>
-            SpeedOverMemory = 0x8
-        }
-
         /// <summary>
         /// Converts a blob to a string.
         /// </summary>
@@ -538,6 +467,67 @@ namespace SharpDX
             }
             return buffer;
         }
+#if !WIN8
+        [Flags]
+        public enum CLSCTX : uint
+        {
+            ClsctxInprocServer = 0x1,
+            ClsctxInprocHandler = 0x2,
+            ClsctxLocalServer = 0x4,
+            ClsctxInprocServer16 = 0x8,
+            ClsctxRemoteServer = 0x10,
+            ClsctxInprocHandler16 = 0x20,
+            ClsctxReserved1 = 0x40,
+            ClsctxReserved2 = 0x80,
+            ClsctxReserved3 = 0x100,
+            ClsctxReserved4 = 0x200,
+            ClsctxNoCodeDownload = 0x400,
+            ClsctxReserved5 = 0x800,
+            ClsctxNoCustomMarshal = 0x1000,
+            ClsctxEnableCodeDownload = 0x2000,
+            ClsctxNoFailureLog = 0x4000,
+            ClsctxDisableAaa = 0x8000,
+            ClsctxEnableAaa = 0x10000,
+            ClsctxFromDefaultContext = 0x20000,
+            ClsctxInproc = ClsctxInprocServer | ClsctxInprocHandler,
+            ClsctxServer = ClsctxInprocServer | ClsctxLocalServer | ClsctxRemoteServer,
+            ClsctxAll = ClsctxServer | ClsctxInprocHandler
+        }
+
+        [DllImport("ole32.dll", ExactSpelling = true, EntryPoint = "CoCreateInstance", PreserveSig = true)]
+        private static extern Result CoCreateInstance([In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid, IntPtr pUnkOuter, CLSCTX dwClsContext, [In, MarshalAs(UnmanagedType.LPStruct)] Guid riid, out IntPtr comObject);
+
+        internal static void CreateComInstance(Guid clsid, CLSCTX clsctx, Guid riid, ComObject comObject)
+        {
+            IntPtr pointer;
+            var result = CoCreateInstance(clsid, IntPtr.Zero, clsctx, riid, out pointer);
+            result.CheckError();
+            comObject.NativePointer = pointer;
+        }
+
+        /// <summary>Determines the concurrency model used for incoming calls to objects created by this thread. This concurrency model can be either apartment-threaded or multi-threaded.</summary>
+        public enum CoInit
+        {
+            /// <summary>
+            /// Initializes the thread for apartment-threaded object concurrency.
+            /// </summary>
+            MultiThreaded = 0x0,
+
+            /// <summary>
+            /// Initializes the thread for multi-threaded object concurrency.
+            /// </summary>
+            ApartmentThreaded = 0x2,
+
+            /// <summary>
+            /// Disables DDE for OLE1 support.
+            /// </summary>
+            DisableOle1Dde = 0x4,
+
+            /// <summary>
+            /// Trade memory for speed.
+            /// </summary>
+            SpeedOverMemory = 0x8
+        }
 
         /// <summary>
         /// Loads a native library.
@@ -571,7 +561,7 @@ namespace SharpDX
         }
         [DllImport("kernel32", EntryPoint = "GetProcAddress", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
         static extern IntPtr GetProcAddress_(IntPtr hModule, string procName);
-
+#endif
 
         [DllImport("kernel32.dll", EntryPoint = "CloseHandle", SetLastError = true)]
         internal static extern bool CloseHandle(IntPtr handle);

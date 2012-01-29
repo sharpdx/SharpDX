@@ -17,7 +17,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System.Drawing;
 
 namespace SharpDX.Direct2D1
 {
@@ -29,7 +28,7 @@ namespace SharpDX.Direct2D1
         /// <param name="center">The center.</param>
         /// <param name="radiusX">The radius X.</param>
         /// <param name="radiusY">The radius Y.</param>
-        public Ellipse(PointF center, float radiusX, float radiusY)
+        public Ellipse(DrawingPointF center, float radiusX, float radiusY)
         {
             Point = center;
             RadiusX = radiusX;

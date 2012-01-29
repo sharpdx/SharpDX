@@ -57,12 +57,12 @@
   </extension>
   
   <bindings>
-    <bind from="D2D_SIZE_F" to="System.Drawing.SizeF" />
-    <bind from="D2D_SIZE_U" to="System.Drawing.Size" />
+    <bind from="D2D_SIZE_F" to="SharpDX.DrawingSizeF" />
+    <bind from="D2D_SIZE_U" to="SharpDX.DrawingSize" />
     <bind from="D2D_RECT_U" to="SharpDX.Rectangle" />
     <bind from="D2D_RECT_F" to="SharpDX.RectangleF" />
-    <bind from="D2D_POINT_2F" to="System.Drawing.PointF" />
-    <bind from="D2D_POINT_2U" to="System.Drawing.Point" />
+    <bind from="D2D_POINT_2F" to="SharpDX.DrawingPointF" />
+    <bind from="D2D_POINT_2U" to="SharpDX.DrawingPoint" />
     <bind from="D2D_COLOR_F" to="SharpDX.Color4" />
     <bind from="D2D_MATRIX_3X2_F" to="SharpDX.Matrix3x2" />
     <bind from="IPrintDocumentPackageTarget" to="SharpDX.ComObject" />

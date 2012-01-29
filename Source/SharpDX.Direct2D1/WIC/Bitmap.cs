@@ -19,8 +19,10 @@
 // THE SOFTWARE.
 
 using System;
+#if !WIN8
 using System.Drawing;
 using System.Drawing.Imaging;
+#endif
 using System.Runtime.InteropServices;
 
 namespace SharpDX.WIC
@@ -77,7 +79,7 @@ namespace SharpDX.WIC
         /// <param name="bitmapSource">The bitmap source.</param>
         /// <param name="rectangle">The rectangle.</param>
         /// <unmanaged>HRESULT IWICImagingFactory::CreateBitmapFromSourceRect([In, Optional] IWICBitmapSource* pIBitmapSource,[In] unsigned int x,[In] unsigned int y,[In] unsigned int width,[In] unsigned int height,[Out, Fast] IWICBitmap** ppIBitmap)</unmanaged>
-        public Bitmap(ImagingFactory factory, SharpDX.WIC.BitmapSource bitmapSource, System.Drawing.Rectangle rectangle)
+        public Bitmap(ImagingFactory factory, SharpDX.WIC.BitmapSource bitmapSource, DrawingRectangle rectangle)
             : base(IntPtr.Zero)
         {
             factory.CreateBitmapFromSourceRect(bitmapSource, rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height, this);

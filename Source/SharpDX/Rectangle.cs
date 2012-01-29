@@ -146,7 +146,7 @@ namespace SharpDX
         {
             return (((this.Left ^ ((this.Top << 13) | (this.Top >> 0x13))) ^ ((this.Bottom << 0x1a) | (this.Bottom>> 6))) ^ ((this.Right<< 7) | (this.Right >> 0x19)));
         }
-
+#if WinFormsInterop
         /// <summary>
         /// Performs an implicit conversion from <see cref="System.Drawing.Rectangle"/> to <see cref="SharpDX.Rectangle"/>.
         /// </summary>
@@ -166,7 +166,7 @@ namespace SharpDX
         {
             return new System.Drawing.Rectangle(input.Left, input.Top, input.Right-input.Left, input.Bottom-input.Top);
         }
-
+#endif
         /// <summary>
         /// Implements the operator ==.
         /// </summary>

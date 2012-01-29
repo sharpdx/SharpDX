@@ -52,7 +52,7 @@
   </extension>
 
   <bindings>
-    <bind from="WICRect" to="System.Drawing.Rectangle"/>
+    <bind from="WICRect" to="SharpDX.DrawingRectangle"/>
   </bindings>
 
   <mapping>

@@ -17,7 +17,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System.Drawing;
 
 namespace SharpDX.Direct2D1
 {
@@ -33,12 +32,12 @@ namespace SharpDX.Direct2D1
             SetSegmentFlags_(vertexFlags);
         }
 
-        public void BeginFigure(PointF startPoint, FigureBegin figureBegin)
+        public void BeginFigure(DrawingPointF startPoint, FigureBegin figureBegin)
         {
             BeginFigure_(startPoint, figureBegin);
         }
 
-        public void AddLines(PointF[] ointsRef)
+        public void AddLines(DrawingPointF[] ointsRef)
         {
             AddLines_(ointsRef, ointsRef.Length);
         }

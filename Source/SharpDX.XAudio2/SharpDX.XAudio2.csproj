@@ -10,7 +10,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>

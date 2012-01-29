@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.Drawing;
 using System.Runtime.InteropServices;
 
 namespace SharpDX.Direct2D1
@@ -71,8 +70,8 @@ namespace SharpDX.Direct2D1
             }
 
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            private delegate void BeginFigureDelegate(IntPtr thisPtr, System.Drawing.PointF startPoint, SharpDX.Direct2D1.FigureBegin figureBegin);
-            private static void BeginFigureImpl(IntPtr thisPtr, System.Drawing.PointF startPoint, SharpDX.Direct2D1.FigureBegin figureBegin)
+            private delegate void BeginFigureDelegate(IntPtr thisPtr, DrawingPointF startPoint, SharpDX.Direct2D1.FigureBegin figureBegin);
+            private static void BeginFigureImpl(IntPtr thisPtr, DrawingPointF startPoint, SharpDX.Direct2D1.FigureBegin figureBegin)
             {
                 var shadow = ToShadow<SimplifiedGeometrySinkShadow>(thisPtr);
                 var callback = (SimplifiedGeometrySink)shadow.Callback;
@@ -87,7 +86,7 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<SimplifiedGeometrySinkShadow>(thisPtr);
                     var callback = (SimplifiedGeometrySink)shadow.Callback;
-                    var managedPoints = new PointF[pointsCount];
+                    var managedPoints = new DrawingPointF[pointsCount];
                     Utilities.Read(points, managedPoints, 0, pointsCount);
                     callback.AddLines(managedPoints);
                 }

@@ -26,13 +26,13 @@ namespace SharpDX.WIC
         /// Gets the size.
         /// </summary>
         /// <unmanaged>HRESULT IWICBitmapLock::GetSize([Out] unsigned int* puiWidth,[Out] unsigned int* puiHeight)</unmanaged>	
-        public System.Drawing.Size Size
+        public DrawingSize Size
         {
             get
             {
                 int width, height;
                 GetSize(out width, out height);
-                return new System.Drawing.Size(width, height);
+                return new DrawingSize(width, height);
             }
         }
 

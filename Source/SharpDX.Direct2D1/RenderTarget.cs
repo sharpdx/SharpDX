@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.Drawing;
 using SharpDX.DirectWrite;
 using SharpDX.DXGI;
 
@@ -173,7 +172,7 @@ namespace SharpDX.Direct2D1
         /// <param name="point1">The end point of the line, in device-independent pixels. </param>
         /// <param name="brush">The brush used to paint the line's stroke. </param>
         /// <unmanaged>void ID2D1RenderTarget::DrawLine([None] D2D1_POINT_2F point0,[None] D2D1_POINT_2F point1,[In] ID2D1Brush* brush,[None] float strokeWidth,[In, Optional] ID2D1StrokeStyle* strokeStyle)</unmanaged>
-        public void DrawLine(PointF point0, PointF point1, Brush brush)
+        public void DrawLine(DrawingPointF point0, DrawingPointF point1, Brush brush)
         {
             DrawLine(point0, point1, brush, StrokeWidth, null);
         }
@@ -189,7 +188,7 @@ namespace SharpDX.Direct2D1
         /// <param name="brush">The brush used to paint the line's stroke. </param>
         /// <param name="strokeWidth">A value greater than or equal to 0.0f that specifies the width of the stroke. If this parameter isn't specified, it defaults to 1.0f.  The stroke is centered on the line. </param>
         /// <unmanaged>void ID2D1RenderTarget::DrawLine([None] D2D1_POINT_2F point0,[None] D2D1_POINT_2F point1,[In] ID2D1Brush* brush,[None] float strokeWidth,[In, Optional] ID2D1StrokeStyle* strokeStyle)</unmanaged>
-        public void DrawLine(PointF point0, PointF point1, Brush brush, float strokeWidth)
+        public void DrawLine(DrawingPointF point0, DrawingPointF point1, Brush brush, float strokeWidth)
         {
             DrawLine(point0, point1, brush, strokeWidth, null);
         }
@@ -329,7 +328,7 @@ namespace SharpDX.Direct2D1
         /// <param name="textLayout">The formatted text to draw. Any drawing effects that do not inherit from <see cref="T:SharpDX.Direct2D1.Resource" /> are ignored. If there are drawing effects that inherit from ID2D1Resource that are not brushes, this method fails and the render target is put in an error state.  </param>
         /// <param name="defaultForegroundBrush">The brush used to paint any text in textLayout that does not already have a brush associated with it as a drawing effect (specified by the <see cref="M:SharpDX.DirectWrite.TextLayout.SetDrawingEffect(SharpDX.ComObject,SharpDX.DirectWrite.TextRange)" /> method).  </param>
         /// <unmanaged>void ID2D1RenderTarget::DrawTextLayout([None] D2D1_POINT_2F origin,[In] IDWriteTextLayout* textLayout,[In] ID2D1Brush* defaultForegroundBrush,[None] D2D1_DRAW_TEXT_OPTIONS options)</unmanaged>
-        public void DrawTextLayout(PointF origin, TextLayout textLayout, Brush defaultForegroundBrush)
+        public void DrawTextLayout(DrawingPointF origin, TextLayout textLayout, Brush defaultForegroundBrush)
         {
             DrawTextLayout(origin, textLayout, defaultForegroundBrush, DrawTextOptions.None);
         }
@@ -414,14 +413,14 @@ namespace SharpDX.Direct2D1
         /// This method specifies the mapping from pixel space to device-independent space  for the render target.  If both dpiX and dpiY are 0, the factory-read system DPI is chosen. If one parameter is zero and the other unspecified, the DPI is not changed. For <see cref="WindowRenderTarget"/>, the DPI defaults to the most recently factory-read system DPI. The default value for all other render targets is 96 DPI.   	
         /// </remarks>	
         /// <unmanaged>void ID2D1RenderTarget::SetDpi([None] float dpiX,[None] float dpiY)</unmanaged>
-        public SizeF DotsPerInch
+        public DrawingSizeF DotsPerInch
         {
             get
             {
                 float y;
                 float x;
                 GetDpi(out x, out y);
-                return new SizeF(x, y);
+                return new DrawingSizeF(x, y);
             }
             set
             {

@@ -46,7 +46,7 @@ namespace SharpDX.Direct2D1
         /// <param name="renderTarget">an instance of <see cref = "SharpDX.Direct2D1.RenderTarget" /></param>
         /// <param name="size">If (0, 0) is specified, no backing store is created behind the layer resource. The layer resource is allocated to the minimum size when {{PushLayer}} is called.</param>
         /// <unmanaged>HRESULT CreateLayer([In, Optional] const D2D1_SIZE_F* size,[Out] ID2D1Layer** layer)</unmanaged>
-        public Layer(RenderTarget renderTarget, System.Drawing.SizeF? size) : base(IntPtr.Zero)
+        public Layer(RenderTarget renderTarget, DrawingSizeF? size) : base(IntPtr.Zero)
         {
             renderTarget.CreateLayer(size, this);
         }

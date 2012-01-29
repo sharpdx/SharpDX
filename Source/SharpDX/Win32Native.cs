@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Security;
 
@@ -108,7 +107,7 @@ namespace SharpDX
             public IntPtr wParam;
             public IntPtr lParam;
             public uint time;
-            public Point p;
+            public DrawingPoint p;
         }
 
         [DllImport("user32.dll", EntryPoint = "PeekMessage"), SuppressUnmanagedCodeSecurity]

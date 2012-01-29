@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.Drawing;
 using System.IO;
 using SharpDX.DXGI;
 
@@ -32,7 +31,7 @@ namespace SharpDX.Direct2D1
         /// <param name="renderTarget">an instance of <see cref = "SharpDX.Direct2D1.RenderTarget" /></param>
         /// <param name="size">The dimension of the bitmap to create in pixels.</param>
         /// <unmanaged>HRESULT ID2D1RenderTarget::CreateBitmap([In] D2D_SIZE_U size,[In, Optional] const void* srcData,[In] unsigned int pitch,[In] const D2D1_BITMAP_PROPERTIES* bitmapProperties,[Out, Fast] ID2D1Bitmap** bitmap)</unmanaged>	
-        public Bitmap(RenderTarget renderTarget, System.Drawing.Size size)
+        public Bitmap(RenderTarget renderTarget, DrawingSize size)
             : this(renderTarget, size, null, 0, new BitmapProperties(new PixelFormat(Format.Unknown, AlphaMode.Unknown)))
         {
         }
@@ -44,7 +43,7 @@ namespace SharpDX.Direct2D1
         /// <param name="size">The dimension of the bitmap to create in pixels.</param>
         /// <param name="bitmapProperties">The pixel format and dots per inch (DPI) of the bitmap to create.</param>
         /// <unmanaged>HRESULT ID2D1RenderTarget::CreateBitmap([In] D2D_SIZE_U size,[In, Optional] const void* srcData,[In] unsigned int pitch,[In] const D2D1_BITMAP_PROPERTIES* bitmapProperties,[Out, Fast] ID2D1Bitmap** bitmap)</unmanaged>	
-        public Bitmap(RenderTarget renderTarget, System.Drawing.Size size, SharpDX.Direct2D1.BitmapProperties bitmapProperties)
+        public Bitmap(RenderTarget renderTarget, DrawingSize size, SharpDX.Direct2D1.BitmapProperties bitmapProperties)
             : this(renderTarget, size, null, 0, bitmapProperties)
         {
         }
@@ -57,7 +56,7 @@ namespace SharpDX.Direct2D1
         /// <param name="dataStream">A pointer to the memory location of the image data, or NULL to create an uninitialized bitmap.</param>
         /// <param name="pitch">The byte count of each scanline, which is equal to (the image width in pixels * the number of bytes per pixel) + memory padding. If srcData is NULL, this value is ignored. (Note that pitch is also sometimes called stride.)</param>
         /// <unmanaged>HRESULT ID2D1RenderTarget::CreateBitmap([In] D2D_SIZE_U size,[In, Optional] const void* srcData,[In] unsigned int pitch,[In] const D2D1_BITMAP_PROPERTIES* bitmapProperties,[Out, Fast] ID2D1Bitmap** bitmap)</unmanaged>	
-        public Bitmap(RenderTarget renderTarget, System.Drawing.Size size, DataStream dataStream, int pitch)
+        public Bitmap(RenderTarget renderTarget, DrawingSize size, DataStream dataStream, int pitch)
             : this(renderTarget, size, dataStream, pitch, new BitmapProperties(new PixelFormat(Format.Unknown, AlphaMode.Unknown)))
         {
         }
@@ -71,7 +70,7 @@ namespace SharpDX.Direct2D1
         /// <param name="pitch">The byte count of each scanline, which is equal to (the image width in pixels * the number of bytes per pixel) + memory padding. If srcData is NULL, this value is ignored. (Note that pitch is also sometimes called stride.)</param>
         /// <param name="bitmapProperties">The pixel format and dots per inch (DPI) of the bitmap to create.</param>
         /// <unmanaged>HRESULT ID2D1RenderTarget::CreateBitmap([In] D2D_SIZE_U size,[In, Optional] const void* srcData,[In] unsigned int pitch,[In] const D2D1_BITMAP_PROPERTIES* bitmapProperties,[Out, Fast] ID2D1Bitmap** bitmap)</unmanaged>	
-        public Bitmap(RenderTarget renderTarget, System.Drawing.Size size, DataStream dataStream, int pitch, SharpDX.Direct2D1.BitmapProperties bitmapProperties)
+        public Bitmap(RenderTarget renderTarget, DrawingSize size, DataStream dataStream, int pitch, SharpDX.Direct2D1.BitmapProperties bitmapProperties)
             : base(IntPtr.Zero)
         {
             renderTarget.CreateBitmap(size, dataStream == null ? IntPtr.Zero : dataStream.PositionPointer, pitch, bitmapProperties, this);
@@ -181,7 +180,7 @@ namespace SharpDX.Direct2D1
         /// <param name="destinationPoint">In the current bitmap, the upper-left corner of the area to which the region specified by srcRect is copied. </param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code. </returns>
         /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromBitmap([In, Optional] const D2D1_POINT_2U* destPoint,[In] ID2D1Bitmap* bitmap,[In, Optional] const D2D1_RECT_U* srcRect)</unmanaged>
-        public Result FromBitmap(Bitmap sourceBitmap, Point destinationPoint)
+        public Result FromBitmap(Bitmap sourceBitmap, DrawingPoint destinationPoint)
         {
             return CopyFromBitmap(destinationPoint, sourceBitmap, null);
         }
@@ -197,7 +196,7 @@ namespace SharpDX.Direct2D1
         /// <param name="destinationPoint">In the current bitmap, the upper-left corner of the area to which the region specified by srcRect is copied. </param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code. </returns>
         /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromBitmap([In, Optional] const D2D1_POINT_2U* destPoint,[In] ID2D1Bitmap* bitmap,[In, Optional] const D2D1_RECT_U* srcRect)</unmanaged>
-        public Result FromBitmap(Bitmap sourceBitmap, Point destinationPoint, Rectangle sourceArea)
+        public Result FromBitmap(Bitmap sourceBitmap, DrawingPoint destinationPoint, Rectangle sourceArea)
         {
             return CopyFromBitmap(destinationPoint, sourceBitmap, sourceArea);
         }
@@ -294,7 +293,7 @@ namespace SharpDX.Direct2D1
         /// <param name="destinationPoint">In the current bitmap, the upper-left corner of the area to which the region specified by srcRect is copied. </param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code. </returns>
         /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromRenderTarget([In, Optional] const D2D1_POINT_2U* destPoint,[In] ID2D1RenderTarget* renderTarget,[In, Optional] const D2D1_RECT_U* srcRect)</unmanaged>
-        public Result FromRenderTarget(RenderTarget renderTarget, Point destinationPoint)
+        public Result FromRenderTarget(RenderTarget renderTarget, DrawingPoint destinationPoint)
         {
             return CopyFromRenderTarget(destinationPoint, renderTarget, null);
         }
@@ -310,7 +309,7 @@ namespace SharpDX.Direct2D1
         /// <param name="sourceArea">The area of renderTarget to copy. </param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code. </returns>
         /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromRenderTarget([In, Optional] const D2D1_POINT_2U* destPoint,[In] ID2D1RenderTarget* renderTarget,[In, Optional] const D2D1_RECT_U* srcRect)</unmanaged>
-        public Result FromRenderTarget(RenderTarget renderTarget, Point destinationPoint, Rectangle sourceArea)
+        public Result FromRenderTarget(RenderTarget renderTarget, DrawingPoint destinationPoint, Rectangle sourceArea)
         {
             return CopyFromRenderTarget(destinationPoint, renderTarget, sourceArea);
         }
@@ -352,14 +351,14 @@ namespace SharpDX.Direct2D1
         /// Return the dots per inch (DPI) of the bitmap.	
         /// </summary>	
         /// <value>The dots per inch (DPI) of the bitma.</value>
-        public SizeF DotsPerInch
+        public DrawingSizeF DotsPerInch
         {
             get
             {
                 float y;
                 float x;
                 GetDpi(out x, out y);
-                return new SizeF(x, y);
+                return new DrawingSizeF(x, y);
             }
         }
     }

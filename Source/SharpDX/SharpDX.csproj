@@ -11,8 +11,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' " />
+    <Reference Include="System.Drawing" Condition=" '$(SharpDXWin8)' == 'false'" />
+    <Reference Include="System.Windows.Forms" Condition=" '$(SharpDXWin8)' == 'false'" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
@@ -23,7 +23,13 @@
     <Compile Include="BoundingSphere.cs" />
     <Compile Include="CallbackBase.cs" />
     <Compile Include="ComArray.cs" />
+    <Compile Include="DrawingSizeF.cs" />
+    <Compile Include="DrawingSize.cs" />
+    <Compile Include="DrawingPointF.cs" />
+    <Compile Include="DrawingPoint.cs" />
+    <Compile Include="DrawingRectangleF.cs" />
     <Compile Include="Direct3D\PixHelper.cs" />
+    <Compile Include="DrawingRectangle.cs" />
     <Compile Include="IO\NativeFile.cs" />
     <Compile Include="IO\NativeFileStream.cs" />
     <Compile Include="IO\NativeFileAccess.cs" />

@@ -26,7 +26,7 @@ namespace SharpDX.Direct2D1
         /// </summary>	
         /// <param name="point">The end point of the line to draw.</param>
         /// <unmanaged>void AddLine([None] D2D1_POINT_2F point)</unmanaged>
-        void AddLine(System.Drawing.PointF point);
+        void AddLine(DrawingPointF point);
 
 
         /// <summary>	

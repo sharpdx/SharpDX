@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Drawing;
 
 namespace SharpDX.WIC
 {
@@ -28,13 +27,13 @@ namespace SharpDX.WIC
         /// Gets the size.
         /// </summary>
         /// <unmanaged>HRESULT IWICBitmapSource::GetSize([Out] unsigned int* puiWidth,[Out] unsigned int* puiHeight)</unmanaged>
-        public System.Drawing.Size Size
+        public DrawingSize Size
         {
             get
             {
                 int width, height;
                 GetSize(out width, out height);
-                return new System.Drawing.Size(width,height);
+                return new DrawingSize(width, height);
             }
         }
 
@@ -46,7 +45,7 @@ namespace SharpDX.WIC
         /// <param name="output">The output stream.</param>
         /// <returns></returns>
         /// <unmanaged>HRESULT IWICBitmapSource::CopyPixels([In, Optional] const WICRect* prc,[In] unsigned int cbStride,[In] unsigned int cbBufferSize,[In] void* pbBuffer)</unmanaged>
-        public SharpDX.Result CopyPixels(System.Drawing.Rectangle rectangle, int stride, DataStream output)
+        public SharpDX.Result CopyPixels(DrawingRectangle rectangle, int stride, DataStream output)
         {
             return CopyPixels(rectangle, stride, (int) output.Length, output.DataPointer);
         }

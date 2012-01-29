@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.Drawing;
 
 namespace SharpDX.Direct2D1
 {
@@ -63,14 +62,14 @@ namespace SharpDX.Direct2D1
         /// <remarks>	
         /// Use this method to obtain the system DPI when setting physical pixel values, such as when you specify the size of a window. 	
         /// </remarks>	
-        public SizeF DesktopDpi
+        public DrawingSizeF DesktopDpi
         {
             get
             {
                 float y;
                 float x;
                 GetDesktopDpi(out x, out y);
-                return new SizeF(x, y);
+                return new DrawingSizeF(x, y);
             }
         }
     }

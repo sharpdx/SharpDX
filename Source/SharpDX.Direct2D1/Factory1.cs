@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 #if WIN8
-using System.Drawing;
 
 namespace SharpDX.Direct2D1
 {

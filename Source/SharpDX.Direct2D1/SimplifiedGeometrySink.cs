@@ -53,7 +53,7 @@ namespace SharpDX.Direct2D1
         /// <param name="startPoint">The point at which to begin the new figure.</param>
         /// <param name="figureBegin">Whether the new figure should be hollow or filled.</param>
         /// <unmanaged>void BeginFigure([None] D2D1_POINT_2F startPoint,[None] D2D1_FIGURE_BEGIN figureBegin)</unmanaged>
-        void BeginFigure(System.Drawing.PointF startPoint, SharpDX.Direct2D1.FigureBegin figureBegin);
+        void BeginFigure(DrawingPointF startPoint, SharpDX.Direct2D1.FigureBegin figureBegin);
 
 
         /// <summary>	
@@ -61,7 +61,7 @@ namespace SharpDX.Direct2D1
         /// </summary>	
         /// <param name="ointsRef">A pointer to an array of one or more points that describe the lines to draw. A line is drawn from the geometry sink's current point (the end point of the last segment drawn or the location specified by {{BeginFigure}}) to the first point in the array. if the array contains additional points, a line is drawn from the first point to the second point in the array, from the second point to the third point, and so on.   </param>
         /// <unmanaged>void AddLines([In, Buffer] const D2D1_POINT_2F* points,[None] UINT pointsCount)</unmanaged>
-        void AddLines(System.Drawing.PointF[] ointsRef);
+        void AddLines(DrawingPointF[] ointsRef);
 
 
         /// <summary>	
