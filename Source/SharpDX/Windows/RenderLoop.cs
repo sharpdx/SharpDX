@@ -74,6 +74,19 @@ namespace SharpDX.Windows
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the render loop should use a custom windows event handler (default false).
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if the render loop should use a custom windows event handler (default false); otherwise, <c>false</c>.
+        /// </value>
+        /// <remarks>
+        /// By default, RenderLoop is using <see cref="Application.DoEvents"/> to process windows event message. Set this parameter to true to use a custom event handler that could
+        /// lead to better performance. Note that using a custom windows event message handler is not compatible with <see cref="Application.AddMessageFilter"/> or any other features
+        /// that are part of <see cref="Application"/>.
+        /// </remarks>
+        public static bool UseCustomDoEvents { get; set; }
+
+        /// <summary>
         /// ProxyNativeWindow, used only to detect if the original window is destroyed
         /// </summary>
         private class ProxyNativeWindow
@@ -129,18 +142,29 @@ namespace SharpDX.Windows
                 // Main rendering loop);
                 while (_isAlive)
                 {
-                    Win32Native.NativeMessage msg;
-                    while (Win32Native.PeekMessage(out msg, _windowHandle, 0, 0, 0) != 0)
+                    if (UseCustomDoEvents)
                     {
-                        if (Win32Native.GetMessage(out msg, _windowHandle, 0, 0) == -1)
+                        // Previous code not compatible with Application.AddMessageFilter but faster then DoEvents
+                        Win32Native.NativeMessage msg;
+                        while (Win32Native.PeekMessage(out msg, _windowHandle, 0, 0, 0) != 0)
                         {
-                            throw new InvalidOperationException(String.Format(CultureInfo.InvariantCulture,
-                                "An error happened in rendering loop while processing windows messages. Error: {0}",
-                                Marshal.GetLastWin32Error()));
-                        }
+                            if (Win32Native.GetMessage(out msg, _windowHandle, 0, 0) == -1)
+                            {
+                                throw new InvalidOperationException(String.Format(CultureInfo.InvariantCulture,
+                                    "An error happened in rendering loop while processing windows messages. Error: {0}",
+                                    Marshal.GetLastWin32Error()));
+                            }
 
-                        Win32Native.TranslateMessage(ref msg);
-                        Win32Native.DispatchMessage(ref msg);
+                            Win32Native.TranslateMessage(ref msg);
+                            Win32Native.DispatchMessage(ref msg);
+                        }
+                    }
+                    else
+                    {
+                        // Revert back to Application.DoEvents in order to support Application.AddMessageFilter
+                        // Seems that DoEvents is compatible with Mono unlike Application.Run that was not running
+                        // correctly.
+                        Application.DoEvents();
                     }
                     if (_isAlive)
                         renderCallback();
