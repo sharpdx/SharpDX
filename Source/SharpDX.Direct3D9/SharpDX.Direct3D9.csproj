@@ -47,6 +47,13 @@
     <Compile Include="EffectPool.cs" />
     <Compile Include="Fill3DCallback.cs" />
     <Compile Include="EffectHandle.cs" />
+    <Compile Include="Font.cs" />
+    <Compile Include="FontCharacterSet.cs" />
+    <Compile Include="FontDrawFlags.cs" />
+    <Compile Include="FontPitchAndFamily.cs" />
+    <Compile Include="FontPrecision.cs" />
+    <Compile Include="FontQuality.cs" />
+    <Compile Include="FontWeight.cs" />
     <Compile Include="Generated\Enumerations.cs" />
     <Compile Include="Generated\Functions.cs" />
     <Compile Include="Generated\Interfaces.cs" />
@@ -64,6 +71,7 @@
     <Compile Include="Query.cs" />
     <Compile Include="Resource.cs" />
     <Compile Include="ShaderBytecode.cs" />
+    <Compile Include="Sprite.cs" />
     <Compile Include="StateBlock.cs" />
     <Compile Include="Surface.cs" />
     <Compile Include="SwapChain.cs" />

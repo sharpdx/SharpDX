@@ -271,7 +271,7 @@
     <map method="ID3DX10Font::GetTextMetricsW" name="GetTextMetrics" />
     <map method="ID3DX10Font::PreloadTextW" name="PreloadText" />
     <map method="ID3DX10Font::DrawTextW" name="DrawText" />
-    <map method="ID3DX10Font::GetDC" name="GetDisplayDeviceContext" />
+    <map method="ID3DX10Font::GetDC" name="GetDeviceContext" />
     <map method="ID3DX10Font::DrawTextW" visibility="internal" />
     <map method="ID3DX10Font::PreloadTextW" visibility="internal" />
     <map param="ID3DX10Font::GetDevice::ppDevice" attribute="out" />
@@ -282,6 +282,7 @@
     <map param="ID3DX10Font::GetGlyphData::ppTexture" attribute="out" />
     <map param="ID3DX10Font::GetGlyphData::pBlackBox" attribute="out" />
     <map param="ID3DX10Font::GetGlyphData::pCellInc" attribute="out" />
+    <map param="ID3DX10Font::DrawTextW::pRect" type="void" />    
     <map param="ID3DX10Sprite::GetViewTransform::pViewTransform" attribute="out" />
     <map param="ID3DX10Sprite::GetProjectionTransform::pProjectionTransform" attribute="out" />
     <map param="ID3DX10Sprite::GetDevice::ppDevice" attribute="out" />

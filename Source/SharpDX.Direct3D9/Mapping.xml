@@ -683,6 +683,12 @@
     <const from-macro="D3DERR_WASSTILLDRAWING" type="SharpDX.Result" cpp-type="int" name="WasStillDrawing" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
     <const from-macro="D3DERR_WRONGTEXTUREFORMAT" type="SharpDX.Result" cpp-type="int" name="WrongTextureFormat" class="SharpDX.Direct3D9.ResultCode" visibility="public static readonly" />
 
+    <define enum="SharpDX.Direct3D9.FontWeight" sizeof="4" />
+    <define enum="SharpDX.Direct3D9.FontQuality" sizeof="1" />
+    <define enum="SharpDX.Direct3D9.FontPrecision" sizeof="1" />
+    <define enum="SharpDX.Direct3D9.FontCharacterSet" sizeof="1" />
+    <define enum="SharpDX.Direct3D9.FontPitchAndFamily" sizeof="1" />
+
     <create class="D3D9" />
     <create class="D3DX9" />
 
@@ -694,8 +700,13 @@
   <bindings>
     <bind from="PALETTEENTRY" to="SharpDX.Direct3D9.PaletteEntry"/>
     <bind from="ID3DXBuffer" to="SharpDX.Direct3D.Blob"/>
-    <bind from="D3DXHANDLE" to="SharpDX.Direct3D9.EffectHandle" marshal="System.IntPtr"/>    
-  </bindings>
+    <bind from="D3DXHANDLE" to="SharpDX.Direct3D9.EffectHandle" marshal="System.IntPtr"/>
+    <bind from="D3DX9_FONT_WEIGHT" to="SharpDX.Direct3D9.FontWeight" />
+    <bind from="D3DX9_FONT_QUALITY" to="SharpDX.Direct3D9.FontQuality" />
+    <bind from="D3DX9_FONT_PRECISION" to="SharpDX.Direct3D9.FontPrecision" />
+    <bind from="D3DX9_FONT_CHARSET" to="SharpDX.Direct3D9.FontCharacterSet" />
+    <bind from="D3DX9_FONT_PITCHFAMILY" to="SharpDX.Direct3D9.FontPitchAndFamily" />
+    </bindings>
 
   <!-- D3D9 mapping -->
   <mapping>
@@ -1979,6 +1990,13 @@
     <remove struct="D3DXSHCOMPRESSQUALITYTYPE" />
     <remove struct="D3DXSHGPUSIMOPT" />
 
+    <map struct="D3DXFONT_DESCW" name="FontDescription" />
+    <map field="D3DXFONT_DESCW::Weight" type="D3DX9_FONT_WEIGHT" />
+    <map field="D3DXFONT_DESCW::Quality" type="D3DX9_FONT_QUALITY" />
+    <map field="D3DXFONT_DESCW::OutputPrecision" type="D3DX9_FONT_PRECISION" />
+    <map field="D3DXFONT_DESCW::CharSet" name="CharacterSet" type="D3DX9_FONT_CHARSET" />
+    <map field="D3DXFONT_DESCW::PitchAndFamily" type="D3DX9_FONT_PITCHFAMILY" />
+
     <map struct="D3DRESOURCESTATS" name="ResourceStats"/>
     <map field="D3DRESOURCESTATS::ApproxBytesDownloaded" name="ApproximateBytesDownloaded"/>
     <map field="D3DRESOURCESTATS::NumEvicts" name="NumberEvicted"/>
@@ -2146,9 +2164,6 @@
     <map interface="IDirect3D9" name="Direct3D" />
     <map interface="IDirect3DDevice9Ex" name="DeviceEx" />
     <map interface="ID3DXSPMesh" name="SimplificationMesh" />
-    <remove method="ID3DXFont::GetDescA" />
-    <map method="ID3DXFont::GetTextMetricsA" visibility="internal" />
-    <map method="ID3DXFont::GetTextMetricsW" visibility="internal" />
 
     <map param="IDirect3D9::CreateDevice::ppReturnedDeviceInterface" attribute="out fast"/>
     <map method="IDirect3D9::GetAdapterIdentifier" visibility="internal" />
@@ -2459,14 +2474,20 @@
     <map param="IDirect3DCryptoSession9::GetEncryptionBltKey::pReadbackKey" attribute="out" />
     <map param="ID3DXSprite::GetDevice::ppDevice" attribute="out" />
     <map param="ID3DXSprite::GetTransform::pTransform" attribute="out" />
+
+    <remove method="ID3DXFont::.*A" />
+    <map method="ID3DXFont::GetTextMetricsW" visibility="internal" />
+    <map method="ID3DXFont::GetDC" name="GetDeviceContext" />
+    <map method="ID3DXFont::PreloadTextW" visibility="internal" />
+
     <map param="ID3DXFont::GetDevice::ppDevice" attribute="out" />
-    <map param="ID3DXFont::GetDescA::pDesc" attribute="out" />
     <map param="ID3DXFont::GetDescW::pDesc" attribute="out" />
-    <map param="ID3DXFont::GetTextMetricsA::pTextMetrics" attribute="out" />
     <map param="ID3DXFont::GetTextMetricsW::pTextMetrics" attribute="out" />
     <map param="ID3DXFont::GetGlyphData::ppTexture" attribute="out" />
     <map param="ID3DXFont::GetGlyphData::pBlackBox" attribute="out" />
     <map param="ID3DXFont::GetGlyphData::pCellInc" attribute="out" />
+    <map param="ID3DXFont::DrawTextW::pRect" type="void" />
+
     <map param="ID3DXRenderToSurface::GetDevice::ppDevice" attribute="out" />
     <map param="ID3DXRenderToSurface::GetDesc::pDesc" attribute="out" />
     <map param="ID3DXRenderToEnvMap::GetDevice::ppDevice" attribute="out" />
@@ -2616,16 +2637,24 @@
     <remove function="D3DXCreateFontIndirectA" />
     <remove function="D3DXSHPRTCompSplitMeshSC" />
     <remove function="D3DXCreateTextureGutterHelper" />
-    <map function="D3DXCreateFontIndirectW" name="CreateFontIndirect" />
     <map function="D3D9(.*)" name-tmp="$1" dll='"d3d9.dll"' group="SharpDX.Direct3D9.D3D9" />
     <map function="Direct3D(.*)" name-tmp="$1" dll='"d3d9.dll"' group="SharpDX.Direct3D9.D3D9" />
+    <map function="D3DX(.*)" name-tmp="$1" dll='"d3dx9_#(D3DX_SDK_VERSION).dll"' group="SharpDX.Direct3D9.D3DX9" />
     <map function="D3DX9(.*)" name-tmp="$1" dll='"d3dx9_#(D3DX_SDK_VERSION).dll"' group="SharpDX.Direct3D9.D3DX9" />
-    <map function="D3DX([^0-9].*)" name-tmp="$1" dll='"d3dx9_#(D3DX_SDK_VERSION).dll"' group="SharpDX.Direct3D9.D3DX9" />
     <map function="D3DPERF(.*)" name-tmp="$1" dll='"d3dx9_#(D3DX_SDK_VERSION).dll"' group="SharpDX.Direct3D9.D3DX9" />
     <map param="Direct3DCreate9Ex::arg1" attribute="out fast"/>
 
+    <remove function="D3DX.*A"/>
+
     <map param="D3DX.*::FVF" type="D3DFVF"/>
     <map param="D3DX.*::pDecl" attribute="in buffer"/>
+
+    <map function="D3DXCreateFontIndirectW" name="CreateFontIndirect" />
+    <map function="D3DXCreateFontW" name="CreateFont" />
+
+    <map param="D3DXCreateFontW::ppFont" attribute="out fast"/>
+    <map param="D3DXCreateFontIndirectW::ppFont" attribute="out fast"/>
+    <map param="D3DXCreateSprite::ppSprite" attribute="out fast"/>
 
     <map function="D3DXDeclaratorFromFVF" check="false"/>
     <map param="D3DXDeclaratorFromFVF::pDeclarator" attribute="in buffer"/>
@@ -2670,9 +2699,6 @@
     
     <map param="D3DXCreate(Cube|Volume)?TextureFromFileExW::pSrcInfo" type="void"/>
     <map param="D3DXCreate(Cube|Volume)?TextureFromFileExW::pPalette" attribute="out buffer"/>
-
-
-
 
     <map param="D3DXComputeNormalMap::pSrcPalette" attribute="out buffer"/>
 

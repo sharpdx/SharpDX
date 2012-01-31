@@ -58,7 +58,7 @@ namespace DisplayFontApp
             font = new Font(Device, fontDescription);
 
             // Measure the text to display
-            fontDimension = font.Measure(null, DisplayText, new Rectangle(0, 0, 800, 600), FontDrawFlags.Center | FontDrawFlags.VerticalCenter);
+            fontDimension = font.MeasureText(null, DisplayText, new Rectangle(0, 0, 800, 600), FontDrawFlags.Center | FontDrawFlags.VerticalCenter);
 
             xDir = 1;
             yDir = 1;
