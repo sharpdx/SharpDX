@@ -76,7 +76,7 @@ namespace SharpDX.Direct3D9
 
             Lock(offsetToLock, sizeToLock, out pOut, lockFlags);
 
-            return new DataStream(pOut, sizeToLock, (lockFlags & LockFlags.ReadOnly) == 0, true);
+            return new DataStream(pOut, sizeToLock, true, (lockFlags & LockFlags.ReadOnly) == 0);
         }
     }
 }

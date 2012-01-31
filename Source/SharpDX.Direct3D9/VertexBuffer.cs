@@ -77,7 +77,7 @@ namespace SharpDX.Direct3D9
             {
                 sizeToLock = Description.SizeInBytes;
             }
-            return new DataStream(bufferPointer, sizeToLock, true, true);
+            return new DataStream(bufferPointer, sizeToLock, true, (lockFlags & LockFlags.ReadOnly) == 0 );
         }
 
     }
