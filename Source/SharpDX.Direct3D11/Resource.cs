@@ -91,6 +91,19 @@ namespace SharpDX.Direct3D11
             return D3DX11.LoadTextureFromTexture(context, source, loadInformation, destination);
         }
 
+        /// <summary>	
+        /// Generates mipmap chain using a particular texture filter for this texture instance.
+        /// </summary>	
+        /// <param name="deviceContext"><para>A reference to an <see cref="SharpDX.Direct3D11.DeviceContext"/> object.</para></param>	
+        /// <param name="sourceLevel"><para>The mipmap level whose data is used to generate the rest of the mipmap chain.</para></param>	
+        /// <param name="mipFilter"><para>Flags controlling how each miplevel is filtered (or D3DX11_DEFAULT for <see cref="SharpDX.Direct3D11.FilterFlags.Linear"/>). See <see cref="SharpDX.Direct3D11.FilterFlags"/>.</para></param>	
+        /// <returns>The return value is one of the values listed in Direct3D 11 Return Codes.</returns>	
+        /// <unmanaged>HRESULT D3DX11FilterTexture([In] ID3D11DeviceContext* pContext,[In] ID3D11Resource* pTexture,[In] unsigned int SrcLevel,[In] unsigned int MipFilter)</unmanaged>	
+        public Result FilterTexture(DeviceContext deviceContext, int sourceLevel, FilterFlags mipFilter)
+        {
+            return D3DX11.FilterTexture(deviceContext, this, sourceLevel, (int)mipFilter);
+        }
+
         /// <summary>
         ///   Saves a texture to file.
         /// </summary>

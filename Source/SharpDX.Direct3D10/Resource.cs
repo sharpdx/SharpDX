@@ -217,14 +217,13 @@ namespace SharpDX.Direct3D10
         /// <summary>	
         /// Generates mipmap chain using a particular texture filter.	
         /// </summary>	
-        /// <param name="texture">The texture object to be filtered. See <see cref="SharpDX.Direct3D10.Resource"/>. </param>
         /// <param name="sourceLevel">The mipmap level whose data is used to generate the rest of the mipmap chain. </param>
         /// <param name="mipFilter">Flags controlling how each miplevel is filtered (or D3DX10_DEFAULT for D3DX10_FILTER_BOX). See <see cref="SharpDX.Direct3D10.FilterFlags"/>. </param>
         /// <returns>The return value is one of the values listed in {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT D3DX10FilterTexture([None] ID3D10Resource* pTexture,[None] int SrcLevel,[None] int MipFilter)</unmanaged>
-        public static Result FilterTexture(Resource texture, int sourceLevel, FilterFlags mipFilter)
+        public Result FilterTexture(int sourceLevel, FilterFlags mipFilter)
         {
-            return D3DX10.FilterTexture(texture, sourceLevel, (int) mipFilter);
+            return D3DX10.FilterTexture(this, sourceLevel, (int) mipFilter);
         }
 #endif
 
