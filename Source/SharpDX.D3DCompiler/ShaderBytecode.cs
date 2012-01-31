@@ -725,23 +725,85 @@ namespace SharpDX.D3DCompiler
             return result;
         }
 
-        // TODO Decompress, how to use it?
-        //public ShaderBytecode[] Decompress()
-        //{
-        //    D3D.DecompressShaders(BufferPointer, BufferSize, ??? )
-        //}
+        /// <summary>	
+        /// Decompresses all shaders from a compressed set.	
+        /// </summary>	
+        /// <returns>Returns an array of decompresss shader bytecode.</returns>	
+        /// <unmanaged>HRESULT D3DDecompressShaders([In, Buffer] const void* pSrcData,[In] SIZE_T SrcDataSize,[In] unsigned int uNumShaders,[In] unsigned int uStartIndex,[In, Buffer, Optional] unsigned int* pIndices,[In] unsigned int uFlags,[Out, Buffer] ID3D10Blob** ppShaders,[Out, Optional] unsigned int* pTotalShaders)</unmanaged>	
+        public ShaderBytecode[] Decompress()
+        {
+            //First we call D3D.DecompressShaders with empty parameters to get the number of shaders in the compressed byte code (totalShadersRef)
+            //I set shadersBlobs to an array of one null blob just to make shadersOut_ parameter in DecompressShaders function valid 
+            //which dosn't seem to accept zero pointer, I didn't find any other work around.
+            Blob[] shadersBlobs = new Blob[1];
+            int totalShadersRef;
+            D3D.DecompressShaders(BufferPointer, BufferSize, 0, 0, null, 0, shadersBlobs, out totalShadersRef);
+
+            //Then we call D3D.DecompressShaders again and we know how much shaders we will get
+            return Decompress(0, totalShadersRef);
+        }
+
+        /// <summary>	
+        /// Decompresses one or more shaders from a compressed set.	
+        /// </summary>	
+        /// <param name="numShaders"><para>The number of shaders to decompress.</para></param>	
+        /// <param name="startIndex"><para>The index of the first shader to decompress.</para></param>	
+        /// <returns>Returns an array of decompresss shader bytecode.</returns>	
+        /// <unmanaged>HRESULT D3DDecompressShaders([In, Buffer] const void* pSrcData,[In] SIZE_T SrcDataSize,[In] unsigned int uNumShaders,[In] unsigned int uStartIndex,[In, Buffer, Optional] unsigned int* pIndices,[In] unsigned int uFlags,[Out, Buffer] ID3D10Blob** ppShaders,[Out, Optional] unsigned int* pTotalShaders)</unmanaged>	
+        public ShaderBytecode[] Decompress(int startIndex, int numShaders)
+        {
+            if (numShaders == 0)
+                return null;
+            var shadersBlobs = new Blob[numShaders];
+            int totalShadersRef;
+            D3D.DecompressShaders(BufferPointer, BufferSize, numShaders, startIndex, null, 0, shadersBlobs, out totalShadersRef);
+
+            //The size of shadersBlobs will not change
+            //if the compressed shader contains less than requested in numShaders, null entries will apear in the result array
+            var shadersByteArr = new ShaderBytecode[shadersBlobs.Length];
+            for (int i = 0; i < shadersBlobs.Length; i++)
+                if (shadersBlobs[i] != null)
+                    shadersByteArr[i] = new ShaderBytecode(shadersBlobs[i]);
+
+            return shadersByteArr;
+        }
+
+        /// <summary>	
+        /// Decompresses one or more shaders from a compressed set.	
+        /// </summary>	
+        /// <param name="indices"><para>An array of indexes that represent the shaders to decompress.</para></param>	
+        /// <returns>Returns an array of decompresss shader bytecode.</returns>	
+        /// <unmanaged>HRESULT D3DDecompressShaders([In, Buffer] const void* pSrcData,[In] SIZE_T SrcDataSize,[In] unsigned int uNumShaders,[In] unsigned int uStartIndex,[In, Buffer, Optional] unsigned int* pIndices,[In] unsigned int uFlags,[Out, Buffer] ID3D10Blob** ppShaders,[Out, Optional] unsigned int* pTotalShaders)</unmanaged>	
+        public ShaderBytecode[] Decompress(int[] indices)
+        {
+            if (indices.Length == 0)
+                return null;
+            var shadersBlobs = new Blob[indices.Length];
+            int totalShadersRef;
+            D3D.DecompressShaders(BufferPointer, BufferSize, indices.Length, 0, indices, 0, shadersBlobs, out totalShadersRef);
+
+            //The size of shadersBlobs will not change
+            //if the compressed shader contains less than requested in numShaders, null entries will apear in the result array
+            var shadersByteArr = new ShaderBytecode[shadersBlobs.Length];
+            for (int i = 0; i < shadersBlobs.Length; i++)
+                if (shadersBlobs[i] != null)
+                    shadersByteArr[i] = new ShaderBytecode(shadersBlobs[i]);
+
+            return shadersByteArr;
+        }
 
         /// <summary>
         /// Gets this instance is composed of compressed shaders.
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if this instance is compressed; otherwise, <c>false</c>.
+        ///     <c>true</c> if this instance is compressed; otherwise, <c>false</c>.
         /// </value>
         public bool IsCompressed
         {
             get;
             private set;
         }
+
         /// <summary>
         ///   Disassembles compiled HLSL code back into textual source.
         /// </summary>
