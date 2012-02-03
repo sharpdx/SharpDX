@@ -17,6 +17,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System;
 using System.Runtime.InteropServices;
 
 namespace SharpDX
@@ -27,7 +29,7 @@ namespace SharpDX
     /// Although automatic casting from a to System.Drawing.Rectangle is provided by this class.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct RectangleF
+    public struct RectangleF : IEquatable<RectangleF>
     {
         private float _left;
         private float _top;
@@ -100,13 +102,30 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Gets or sets the left position.
+        /// </summary>
+        /// <value>The left position.</value>
+        public float X
+        {
+            get { return _left; }
+        }
+
+        /// <summary>
+        /// Gets or sets the top position.
+        /// </summary>
+        /// <value>The top position.</value>
+        public float Y
+        {
+            get { return _top; }
+        }
+
+        /// <summary>
         /// Gets or sets the width.
         /// </summary>
         /// <value>The width.</value>
         public float Width
         {
             get { return Right - Left; }
-            set { Right = Left + value; }
         }
 
         /// <summary>
@@ -116,7 +135,6 @@ namespace SharpDX
         public float Height
         {
             get { return Bottom - Top; }
-            set { Top = Bottom + value; }
         }
 
         /// <summary>
@@ -128,12 +146,18 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object obj)
         {
-            if (!(obj is RectangleF))
-            {
-                return false;
-            }
-            RectangleF rectangle = (RectangleF)obj;
-            return ((((rectangle.Left == this.Left) && (rectangle.Right == this.Right)) && (rectangle.Bottom == this.Bottom)) && (rectangle.Top == this.Top));
+            if (ReferenceEquals(null, obj)) return false;
+            if (obj.GetType() != typeof(RectangleF)) return false;
+            return Equals((RectangleF)obj);
+        }
+
+        /// <inheritdoc/>
+        public bool Equals(RectangleF other)
+        {
+            return (float)Math.Abs(other.Left - Left) < MathUtil.ZeroTolerance &&
+                   (float)Math.Abs(other.Right - Right) < MathUtil.ZeroTolerance &&
+                   (float)Math.Abs(other.Top - Top) < MathUtil.ZeroTolerance &&
+                   (float)Math.Abs(other.Bottom - Bottom) < MathUtil.ZeroTolerance;
         }
 
         /// <summary>
@@ -144,7 +168,14 @@ namespace SharpDX
         /// </returns>
         public override int GetHashCode()
         {
-            return (((((int)this.Left) ^ (((int)this.Top) << 13) | (((int)this.Top) >> 0x13))) ^ ((((int)this.Bottom) << 0x1a) | (((int)this.Bottom) >> 6))) ^ ((((int)this.Right) << 7) | (((int)this.Right) >> 0x19));
+            unchecked
+            {
+                int result = _left.GetHashCode();
+                result = (result * 397) ^ _top.GetHashCode();
+                result = (result * 397) ^ _right.GetHashCode();
+                result = (result * 397) ^ _bottom.GetHashCode();
+                return result;
+            }
         }
 #if WinFormsInterop
         /// <summary>
@@ -175,7 +206,7 @@ namespace SharpDX
         /// <returns>The result of the operator.</returns>
         public static bool operator ==(RectangleF left, RectangleF right)
         {
-            return ((((left.Left == right.Left) && (left.Right == right.Right)) && (left.Top == right.Top)) && (left.Bottom == right.Bottom));
+            return left.Equals(right);
         }
 
         /// <summary>

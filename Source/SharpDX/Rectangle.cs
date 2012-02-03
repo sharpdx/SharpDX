@@ -17,6 +17,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System;
 using System.Runtime.InteropServices;
 
 namespace SharpDX
@@ -27,7 +29,7 @@ namespace SharpDX
     /// Although automatic casting from a to System.Drawing.Rectangle is provided by this class.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct Rectangle
+    public struct Rectangle : IEquatable<Rectangle>
     {
         private int _left;
         private int _top;
@@ -100,13 +102,30 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Gets or sets the left position.
+        /// </summary>
+        /// <value>The left position.</value>
+        public int X
+        {
+            get { return _left; }
+        }
+
+        /// <summary>
+        /// Gets or sets the top position.
+        /// </summary>
+        /// <value>The top position.</value>
+        public int Y
+        {
+            get { return _top; }
+        }
+
+        /// <summary>
         /// Gets or sets the width.
         /// </summary>
         /// <value>The width.</value>
         public int Width
         {
             get { return Right - Left; }
-            set { Right = Left + value; }
         }
 
         /// <summary>
@@ -116,7 +135,6 @@ namespace SharpDX
         public int Height
         {
             get { return Bottom - Top; }
-            set { Top = Bottom + value; }
         }
 
         /// <summary>
@@ -128,12 +146,14 @@ namespace SharpDX
         /// </returns>
         public override bool Equals(object obj)
         {
-            if (!(obj is Rectangle))
-            {
-                return false;
-            }
-            Rectangle rectangle = (Rectangle)obj;
-            return ((((rectangle.Left == this.Left) && (rectangle.Right == this.Right)) && (rectangle.Bottom == this.Bottom)) && (rectangle.Top == this.Top));
+            if (ReferenceEquals(null, obj)) return false;
+            if (obj.GetType() != typeof(Rectangle)) return false;
+            return Equals((Rectangle)obj);
+        }
+
+        public bool Equals(Rectangle other)
+        {
+            return other._left == _left && other._top == _top && other._right == _right && other._bottom == _bottom;
         }
 
         /// <summary>
@@ -144,7 +164,14 @@ namespace SharpDX
         /// </returns>
         public override int GetHashCode()
         {
-            return (((this.Left ^ ((this.Top << 13) | (this.Top >> 0x13))) ^ ((this.Bottom << 0x1a) | (this.Bottom>> 6))) ^ ((this.Right<< 7) | (this.Right >> 0x19)));
+            unchecked
+            {
+                int result = _left;
+                result = (result * 397) ^ _top;
+                result = (result * 397) ^ _right;
+                result = (result * 397) ^ _bottom;
+                return result;
+            }
         }
 #if WinFormsInterop
         /// <summary>
@@ -175,7 +202,7 @@ namespace SharpDX
         /// <returns>The result of the operator.</returns>
         public static bool operator ==(Rectangle left, Rectangle right)
         {
-            return ((((left.Left == right.Left) && (left.Right == right.Right)) && (left.Top == right.Top)) && (left.Bottom == right.Bottom));
+            return left.Equals(right);
         }
 
         /// <summary>
