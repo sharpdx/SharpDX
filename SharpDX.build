@@ -28,8 +28,10 @@
   <property name="keeppdb" value="false"/>
   <property name="keepexe" value="false"/>
   <property name="cleandir" value="./"/>
+  <property name="nightly-builds" value=""/>
 
-  <!-- Load NantGoogleTask  <loadtasks assembly="External\NantGoogleCode\NantGoogleCode.dll" /> -->
+  <!-- Load NantGoogleTask  -->
+  <loadtasks assembly="External\NantGoogleCode\NantGoogleCode.dll" />
   
   <!-- Prints the version -->
   <target name="setup" descriptio="Loads the version for the project">
@@ -39,8 +41,8 @@
   	<property name="version-postfix" value="-Win8Preview" if="${win8}"/>
     <property name="version-postfix" value="-Signed" if="${signed}"/>
     <regex pattern="AssemblyVersion\(.(?'assembly_version'\d+\.\d+.\d+)" input="${assembly_version_file}" />
-    <property name="output_bin_zip" value="${project.name}${version-postfix}-Bin-${assembly_version}.zip"/>
-    <property name="output_bin_and_samples_zip" value="${project.name}${version-postfix}-BinAndSamples-${assembly_version}.zip"/>
+    <property name="output_bin_zip" value="${project.name}${version-postfix}-Bin-${assembly_version}${nightly-builds}.zip"/>
+    <property name="output_bin_and_samples_zip" value="${project.name}${version-postfix}-BinAndSamples-${assembly_version}${nightly-builds}.zip"/>
 
     <!-- Setup configuration -->
     <property name="configuration" value="Release" unless="${win8}"/>
@@ -79,16 +81,19 @@
     <property name="cleandir" value="./"/>
   </target>
 
-  <!-- Release and upload the zip to googlecode 
-  <target name="release" description="Release the targets">
+  <!-- Release and upload the zip to googlecode -->
+  <target name="publish" description="Release nightly-builds">
     <call target="version"/>
     <loadfile file="googlecode_password.txt" property="googlecode_password" />
 
-	<gcupload labels="Type-Archive,Featured" username="alx.xoofx@gmail.com" password="${googlecode_password}" projectname="${project.sname}" filename="${output_bin_zip}" targetfilename="${output_bin_zip}" summary="${output_bin_zip} uploaded"/>
+	<if test="${file-exists(output_bin_zip)}">
+		<gcupload labels="Type-Archive,Featured" username="alx.xoofx@gmail.com" password="${googlecode_password}" projectname="${project.sname}" filename="${output_bin_zip}" targetfilename="${output_bin_zip}" summary="${output_bin_zip} uploaded"/>
+	</if>
 
-	<gcupload labels="Type-Archive,Featured" username="alx.xoofx@gmail.com" password="${googlecode_password}" projectname="${project.sname}" filename="${output_bin_and_samples_zip}" targetfilename="${output_bin_and_samples_zip}" summary="${output_bin_and_samples_zip} uploaded"/>      
+	<if test="${file-exists(output_bin_and_samples_zip)}">
+		<gcupload labels="Type-Archive,Featured" username="alx.xoofx@gmail.com" password="${googlecode_password}" projectname="${project.sname}" filename="${output_bin_and_samples_zip}" targetfilename="${output_bin_and_samples_zip}" summary="${output_bin_and_samples_zip} uploaded"/>      
+	</if>
   </target>
-  -->
 
   <!-- Full clean and build -->
   <target name="help" description="Prints help about this build." >
@@ -114,6 +119,15 @@
   <call target="zip"/>
   <call target="win8"/>
 	<call target="zip"/>
+  </target>
+  
+    <!-- Full clean and build -->
+  <target name="nightly-builds" description="Full nighly-builds targets.">
+    <property name="nightly-builds" value="${string::pad-left(datetime::get-year(datetime::now()),4,0)}${string::pad-left(datetime::get-month(datetime::now()),2,0)}${string::pad-left(datetime::get-day(datetime::now()),2,0)}"/>
+    <property name="signed" value="false"/>
+    <property name="win8" value="true"/>
+    <call target="build"/>
+	<call target="publish"/>
   </target>
 
   <!-- Win8 build -->
