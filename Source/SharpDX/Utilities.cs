@@ -467,7 +467,7 @@ namespace SharpDX
             }
             return buffer;
         }
-#if !WIN8
+
         [Flags]
         public enum CLSCTX : uint
         {
@@ -529,6 +529,9 @@ namespace SharpDX
             SpeedOverMemory = 0x8
         }
 
+        [DllImport("kernel32.dll", EntryPoint = "CloseHandle", SetLastError = true)]
+        internal static extern bool CloseHandle(IntPtr handle);
+#if !WIN8
         /// <summary>
         /// Loads a native library.
         /// </summary>
@@ -562,8 +565,5 @@ namespace SharpDX
         [DllImport("kernel32", EntryPoint = "GetProcAddress", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
         static extern IntPtr GetProcAddress_(IntPtr hModule, string procName);
 #endif
-
-        [DllImport("kernel32.dll", EntryPoint = "CloseHandle", SetLastError = true)]
-        internal static extern bool CloseHandle(IntPtr handle);
     }
 }
