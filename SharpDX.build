@@ -113,7 +113,7 @@
 	
 	<property name="publish-description" value="Last commit included ${git-last-commit}"/>
 	
-	<echo message="${publish-description"/>
+	<echo message="${publish-description}"/>
   </target>
 
   <!-- Full clean and build -->
