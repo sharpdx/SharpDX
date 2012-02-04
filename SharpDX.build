@@ -30,6 +30,7 @@
   <property name="cleandir" value="./"/>
   <property name="build-date" value=""/>
   <property name="nightly-builds" value="false"/>
+  <property name="publish-description" value=""/>
 
   <!-- Load NantGoogleTask  -->
   <loadtasks assembly="External\NantGoogleCode\NantGoogleCode.dll" />
@@ -93,6 +94,26 @@
 	<if test="${file::exists(output_bin_and_samples_zip)}">
 		<gcupload labels="Type-Archive" username="alx.xoofx@gmail.com" password="${googlecode_password}" projectname="sharpdx-nightly-builds" filename="${output_bin_and_samples_zip}" targetfilename="${output_bin_and_samples_zip}" summary="${output_bin_and_samples_zip} uploaded"/>      
 	</if>
+  </target>
+  
+  <target name="git-sync" description="Synchronize with git">
+	<!-- Rebase from Git -->
+	<exec program="git.exe">
+		<arg value="pull" />
+		<arg value="--rebase" />
+		<arg value="origin" />
+	</exec>
+	<!-- Rebase from Git -->
+	<exec program="git.exe" output="git-last-commit.txt">
+		<arg value="log" />
+		<arg value="--format=%H" />
+	</exec>
+
+    <loadfile file="git-last-commit.txt" property="git-last-commit" />
+	
+	<property name="publish-description" value="Last commit included ${git-last-commit}"/>
+	
+	<echo message="${publish-description"/>
   </target>
 
   <!-- Full clean and build -->
