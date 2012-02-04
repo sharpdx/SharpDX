@@ -28,7 +28,8 @@
   <property name="keeppdb" value="false"/>
   <property name="keepexe" value="false"/>
   <property name="cleandir" value="./"/>
-  <property name="nightly-builds" value=""/>
+  <property name="build-date" value=""/>
+  <property name="nightly-builds" value="false"/>
 
   <!-- Load NantGoogleTask  -->
   <loadtasks assembly="External\NantGoogleCode\NantGoogleCode.dll" />
@@ -41,8 +42,8 @@
   	<property name="version-postfix" value="-Win8Preview" if="${win8}"/>
     <property name="version-postfix" value="-Signed" if="${signed}"/>
     <regex pattern="AssemblyVersion\(.(?'assembly_version'\d+\.\d+.\d+)" input="${assembly_version_file}" />
-    <property name="output_bin_zip" value="${project.name}${version-postfix}-Bin-${assembly_version}${nightly-builds}.zip"/>
-    <property name="output_bin_and_samples_zip" value="${project.name}${version-postfix}-BinAndSamples-${assembly_version}${nightly-builds}.zip"/>
+    <property name="output_bin_zip" value="${project.name}${version-postfix}-Bin-${assembly_version}${build-date}.zip"/>
+    <property name="output_bin_and_samples_zip" value="${project.name}${version-postfix}-BinAndSamples-${assembly_version}${build-date}.zip"/>
 
     <!-- Setup configuration -->
     <property name="configuration" value="Release" unless="${win8}"/>
@@ -83,15 +84,14 @@
 
   <!-- Release and upload the zip to googlecode -->
   <target name="publish" description="Release nightly-builds">
-    <call target="version"/>
     <loadfile file="googlecode_password.txt" property="googlecode_password" />
 
-	<if test="${file-exists(output_bin_zip)}">
-		<gcupload labels="Type-Archive,Featured" username="alx.xoofx@gmail.com" password="${googlecode_password}" projectname="${project.sname}" filename="${output_bin_zip}" targetfilename="${output_bin_zip}" summary="${output_bin_zip} uploaded"/>
+	<if test="${file::exists(output_bin_zip)}">
+		<gcupload labels="Type-Archive" username="alx.xoofx@gmail.com" password="${googlecode_password}" projectname="sharpdx-nightly-builds" filename="${output_bin_zip}" targetfilename="${output_bin_zip}" summary="${output_bin_zip} uploaded"/>
 	</if>
 
-	<if test="${file-exists(output_bin_and_samples_zip)}">
-		<gcupload labels="Type-Archive,Featured" username="alx.xoofx@gmail.com" password="${googlecode_password}" projectname="${project.sname}" filename="${output_bin_and_samples_zip}" targetfilename="${output_bin_and_samples_zip}" summary="${output_bin_and_samples_zip} uploaded"/>      
+	<if test="${file::exists(output_bin_and_samples_zip)}">
+		<gcupload labels="Type-Archive" username="alx.xoofx@gmail.com" password="${googlecode_password}" projectname="sharpdx-nightly-builds" filename="${output_bin_and_samples_zip}" targetfilename="${output_bin_and_samples_zip}" summary="${output_bin_and_samples_zip} uploaded"/>      
 	</if>
   </target>
 
@@ -99,47 +99,61 @@
   <target name="help" description="Prints help about this build." >
     <echo message="Usage MakeSharpDX.cmd target"/>
     <echo message=""/>
-    <echo message="Target can have the following value:"/>
+    <echo message="Target to call before build/zip:"/>
+    <echo message="      normal = Prepare for normal build"/>
+    <echo message="      signed = Prepare for signed build"/>
+    <echo message="        win8 = Prepare for Win8 build (DirectX11.1 + Metro samples)"/>
+	
     <echo message="       clean = Full cleanup"/>
-    <echo message="        win8 = Build Win8 Assemblies (DirectX11.1 + Metro samples)"/>
     <echo message="       build = Build Standard Assemblies (DirectX11)"/>
-    <echo message="build_signed = Build Standard Assemblies (DirectX11)"/>
     <echo message="         zip = Zip assemblies and samplles (Run 'build' target before this)"/>
     <echo message="       nuget = Build Nuget Packages (Run 'build' target before this)"/>
     <echo message="  nuget-push = Publish Nuget packages (Run 'nuget' target before this)"/>
-    <echo message="        full = Run build+zip nuget win8+zip"/>
+    <echo message="        full = Run build+zip nuget normal+win8+zip"/>
   </target>
 
   <!-- Full clean and build -->
   <target name="full" description="Full build targets.">
+	<call target="normal"/>
 	<call target="build"/>
 	<call target="zip"/>
+	<call target="publish" if="${nightly-builds}"/>
+	
 	<call target="nuget"/>
-  <call target="build_signed"/>
-  <call target="zip"/>
-  <call target="win8"/>
+
+	<call target="signed"/>
+	<call target="build"/>
 	<call target="zip"/>
+	<call target="publish" if="${nightly-builds}"/>
+	
+	<call target="win8"/>
+	<call target="build"/>
+	<call target="zip"/>
+	<call target="publish" if="${nightly-builds}"/>
   </target>
   
     <!-- Full clean and build -->
   <target name="nightly-builds" description="Full nighly-builds targets.">
-    <property name="nightly-builds" value="${string::pad-left(datetime::get-year(datetime::now()),4,0)}${string::pad-left(datetime::get-month(datetime::now()),2,0)}${string::pad-left(datetime::get-day(datetime::now()),2,0)}"/>
-    <property name="signed" value="false"/>
-    <property name="win8" value="true"/>
-    <call target="build"/>
-	<call target="publish"/>
+	<property name="nightly-builds" value="true"/>
+    <property name="build-date" value="_${string::pad-left(datetime::get-year(datetime::now()),4,0)}${string::pad-left(datetime::get-month(datetime::now()),2,0)}${string::pad-left(datetime::get-day(datetime::now()),2,0)}"/>
   </target>
+  
+  <!-- Normal build -->
+  <target name="normal" description="Build Win8 targets.">
+    <property name="signed" value="false"/>
+    <property name="win8" value="false"/>
+  </target>  
 
   <!-- Win8 build -->
   <target name="win8" description="Build Win8 targets.">
     <property name="signed" value="false"/>
     <property name="win8" value="true"/>
-    <call target="build"/>
   </target>
 
-  <target name="build_signed" description="Build Signed targets.">
+  <!-- Signed build -->
+  <target name="signed" description="Build Signed targets.">
     <property name="signed" value="true"/>
-    <call target="build"/>
+    <property name="win8" value="false"/>
   </target>
 
   <!-- Nuget Package build -->
