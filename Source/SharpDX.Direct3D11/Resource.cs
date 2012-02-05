@@ -77,6 +77,70 @@ namespace SharpDX.Direct3D11
             return FromPointer<T>(temp);
         }
 
+        /// <summary>
+        ///   Loads a texture from an image file.
+        /// </summary>
+        /// <param name = "device">The device used to load the texture.</param>
+        /// <param name = "fileName">Path to the file on disk.</param>
+        /// <param name = "loadInfo">Specifies information used to load the texture.</param>
+        /// <returns>The loaded texture object.</returns>
+        public static Resource FromFile(Device device, string fileName, ImageLoadInformation loadInfo)
+        {
+            IntPtr temp;
+            Result resultOut;
+            D3DX11.CreateTextureFromFile(device, fileName, loadInfo, IntPtr.Zero, out temp, out resultOut);
+
+            var resource = new Resource(temp);
+            try
+            {
+                switch (resource.Dimension)
+                {
+                    case ResourceDimension.Texture1D:
+                        return FromPointer<Texture1D>(temp);
+                    case ResourceDimension.Texture2D:
+                        return FromPointer<Texture2D>(temp);
+                    case ResourceDimension.Texture3D:
+                        return FromPointer<Texture3D>(temp);
+                }
+            }
+            finally
+            {
+                resource.NativePointer = IntPtr.Zero;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        ///   Loads a texture from an image file.
+        /// </summary>
+        /// <param name = "device">The device used to load the texture.</param>
+        /// <param name = "fileName">Path to the file on disk.</param>
+        /// <returns>The loaded texture object.</returns>
+        public static Resource FromFile(Device device, string fileName)
+        {
+            IntPtr temp;
+            Result resultOut;
+            D3DX11.CreateTextureFromFile(device, fileName, null, IntPtr.Zero, out temp, out resultOut);
+
+            var resource = new Resource(temp);
+            try
+            {
+                switch (resource.Dimension)
+                {
+                    case ResourceDimension.Texture1D: return FromPointer<Texture1D>(temp);
+                    case ResourceDimension.Texture2D: return FromPointer<Texture2D>(temp);
+                    case ResourceDimension.Texture3D: return FromPointer<Texture3D>(temp);
+                }
+            }
+            finally
+            {
+                resource.NativePointer = IntPtr.Zero;
+            }
+
+            return null;
+        }
+
         /// <summary>	
         /// Load a texture from a texture.	
         /// </summary>
@@ -172,6 +236,88 @@ namespace SharpDX.Direct3D11
         }
 
         /// <summary>
+        ///   Loads a texture from an image in memory.
+        /// </summary>
+        /// <param name = "device">The device used to load the texture.</param>
+        /// <param name = "memory">Array of memory containing the image data to load.</param>
+        /// <returns>The loaded texture object.</returns>
+        public static Resource FromMemory(Device device, byte[] memory)
+        {
+            unsafe
+            {
+                System.Diagnostics.Debug.Assert(memory != null);
+                System.Diagnostics.Debug.Assert(memory.Length > 0);
+                IntPtr temp;
+                Result resultOut;
+                fixed (void* pBuffer = &memory[0])
+                    D3DX11.CreateTextureFromMemory(
+                        device,
+                        (IntPtr)pBuffer,
+                        memory.Length,
+                        null,
+                        IntPtr.Zero,
+                        out temp,
+                        out resultOut);
+
+                var resource = new Resource(temp);
+                try
+                {
+                    switch (resource.Dimension)
+                    {
+                        case ResourceDimension.Texture1D:
+                            return FromPointer<Texture1D>(temp);
+                        case ResourceDimension.Texture2D:
+                            return FromPointer<Texture2D>(temp);
+                        case ResourceDimension.Texture3D:
+                            return FromPointer<Texture3D>(temp);
+                    }
+                }
+                finally
+                {
+                    resource.NativePointer = IntPtr.Zero;
+                }
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        ///   Loads a texture from an image in memory.
+        /// </summary>
+        /// <param name = "device">The device used to load the texture.</param>
+        /// <param name = "memory">Array of memory containing the image data to load.</param>
+        /// <param name = "loadInfo">Specifies information used to load the texture.</param>
+        /// <returns>The loaded texture object.</returns>
+        public static Resource FromMemory(Device device, byte[] memory, ImageLoadInformation loadInfo)
+        {
+            unsafe
+            {
+                System.Diagnostics.Debug.Assert(memory != null);
+                System.Diagnostics.Debug.Assert(memory.Length > 0);
+                IntPtr temp;
+                Result resultOut;
+                fixed (void* pBuffer = &memory[0])
+                    D3DX11.CreateTextureFromMemory(device, (IntPtr)pBuffer, memory.Length, loadInfo, IntPtr.Zero,
+                                                   out temp, out resultOut);
+                var resource = new Resource(temp);
+                try
+                {
+                    switch (resource.Dimension)
+                    {
+                        case ResourceDimension.Texture1D: return FromPointer<Texture1D>(temp);
+                        case ResourceDimension.Texture2D: return FromPointer<Texture2D>(temp);
+                        case ResourceDimension.Texture3D: return FromPointer<Texture3D>(temp);
+                    }
+                }
+                finally
+                {
+                    resource.NativePointer = IntPtr.Zero;
+                }
+                return null;
+            }
+        }
+
+        /// <summary>
         ///   Loads a texture from a stream of data.
         /// </summary>
         /// <param name = "device">The device used to load the texture.</param>
@@ -197,6 +343,33 @@ namespace SharpDX.Direct3D11
         {
             byte[] buffer = Utilities.ReadStream(stream, ref sizeInBytes);
             return FromMemory<T>(device, buffer, loadInfo);
+        }
+
+        /// <summary>
+        ///   Loads a texture from a stream of data.
+        /// </summary>
+        /// <param name = "device">The device used to load the texture.</param>
+        /// <param name = "stream">A stream containing the image data to load.</param>
+        /// <param name = "sizeInBytes">Size of the image to load.</param>
+        /// <returns>The loaded texture object.</returns>
+        public static Resource FromStream(Device device, Stream stream, int sizeInBytes)
+        {
+            byte[] buffer = Utilities.ReadStream(stream, ref sizeInBytes);
+            return FromMemory(device, buffer);
+        }
+
+        /// <summary>
+        ///   Loads a texture from a stream of data.
+        /// </summary>
+        /// <param name = "device">The device used to load the texture.</param>
+        /// <param name = "stream">A stream containing the image data to load.</param>
+        /// <param name = "sizeInBytes">Size of the image to load.</param>
+        /// <param name = "loadInfo">Specifies information used to load the texture.</param>
+        /// <returns>The loaded texture object.</returns>
+        public static Resource FromStream(Device device, Stream stream, int sizeInBytes, ImageLoadInformation loadInfo)
+        {
+            byte[] buffer = Utilities.ReadStream(stream, ref sizeInBytes);
+            return FromMemory(device, buffer, loadInfo);
         }
 
         /// <summary>
