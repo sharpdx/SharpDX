@@ -54,7 +54,7 @@ namespace SharpDX.Win32
                 try
                 {
                     var shadow = ToShadow<ComStreamBaseShadow>(thisPtr);
-                    var callback = ((ComStreamBase) shadow.Callback);
+                    var callback = ((IStream) shadow.Callback);
                     bytesRead = callback.Read(buffer, sizeOfBytes);
                 }
                 catch (SharpDXException exception)
@@ -78,7 +78,7 @@ namespace SharpDX.Win32
                 try
                 {
                     var shadow = ToShadow<ComStreamBaseShadow>(thisPtr);
-                    var callback = ((ComStreamBase)shadow.Callback);
+                    var callback = ((IStream)shadow.Callback);
                     bytesWrite = callback.Write(buffer, sizeOfBytes);
                 }
                 catch (SharpDXException exception)

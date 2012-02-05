@@ -28,6 +28,8 @@ namespace SharpDX.WIC
 {
     public partial class WICStream
     {
+        private ComStreamProxy streamProxy;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="WICStream"/> class from a file.
         /// </summary>
@@ -50,11 +52,13 @@ namespace SharpDX.WIC
         /// <param name="stream">The stream.</param>
         /// <unmanaged>HRESULT IWICImagingFactory::CreateStream([Out, Fast] IWICStream** ppIWICStream)</unmanaged>	
         /// <unmanaged>HRESULT IWICStream::InitializeFromFilename([In] const wchar_t* wzFileName,[In] unsigned int dwDesiredAccess)</unmanaged>	
-        public WICStream(ImagingFactory factory, IStream stream)
+        public WICStream(ImagingFactory factory, Stream stream)
             : base(IntPtr.Zero)
         {
             factory.CreateStream(this);
-            InitializeFromIStream_(ToIntPtr(stream));
+            streamProxy = new ComStreamProxy(stream);
+            var istreamPtr = ComStreamShadow.ToIntPtr(streamProxy);
+            InitializeFromIStream_(istreamPtr);
         }
 
         /// <summary>
@@ -69,6 +73,17 @@ namespace SharpDX.WIC
         {
             factory.CreateStream(this);
             InitializeFromMemory(dataStream.DataPointer, (int)dataStream.Length);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (streamProxy != null)
+            {
+                streamProxy.Dispose();
+                streamProxy = null;
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

@@ -122,6 +122,7 @@
     <Compile Include="Vector3.cs" />
     <Compile Include="Vector4.cs" />
     <Compile Include="Win32\ComStream.cs" />
+    <Compile Include="Win32\ComStreamProxy.cs" />
     <Compile Include="Win32\ComStreamShadow.cs" />
     <Compile Include="Win32\ComStreamBaseShadow.cs" />
     <Compile Include="Win32\ErrorCode.cs" />
