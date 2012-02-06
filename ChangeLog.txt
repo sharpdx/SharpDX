@@ -1,14 +1,101 @@
 SharpDX Change Log
 ==================
 
-2011-11-22 Release SharpDX 2.0.2 Beta2
-* This version is including several bug fixes, performance enhancement, Win8 certification for Metro style App and generated XML for API documentation. 
-* Check the release notes for a complete list of the changes
+--------------------------
+Release Notes (2011-11-22)
+--------------------------
+SharpDX beta3 (2.0.3)
 
-2011-09-24 Release SharpDX 2.0 Beta
-* Major release!
-* New APIs for Direct3D9 (not finished yet for Beta but WPF Interop is working), DirectInput, RawInput, XInput, X3DAudio, XACT3, WIC (integrated with Direct2D1).
-* New APIs preview for upcomming Win8/DirectX11.1 (D3DCompiler 44, DXGI 1.2, Direct3D11.1, Direct2D1.1) and including support for DirectX Metro application in C#/.Net!
+ * Build 
+    - Bugfix for Win8 Build under VS2011
+    - Add signed assembly build
+ * Core
+    - Add new Utilities.ClearMemory method using initblk opcode 
+    - Bugfix issue #101, with DataStream.Create<T> method for creating DataStream from array
+ * Direct2D
+    - Add Factory1 for Win8
+    - Add Bitmap1, BitmapProperties1, CommandList, DeviceContext, Effect classes and constructors for Win8. 
+ * Direct3D(9/10/11)
+    - Bugfix for issue #94, by removing release of allocated string
+ * Direct3D10/11
+    - Bugfix on Resource.FromFile<T> and FromMemory<T> methods to avoid premature dispose
+ * Direct3D9
+    - Bugfix issue #99, Suppress check for Device.TestCooperativeLevel. Add ResultCode D3D HRESULT error codes 
+    - Bugfix issue #105, DrawUserPrimitives/DrawIndexedUserPrimitives by using correct size of vertex 
+ * Direct3D10
+    - Bugfix issue #108, Correct typo for method Resource.CalculateSubResourceIndex 
+ * Direct3D11    
+    - Add faster specialized methods for InputAssemblerStage, RasterizerStage 
+    - Bugfix issue #95, Add constant D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT to Device.MultisampleCountMaximum 
+ * DirectSound 
+    - Bugfix issue #109, Add None to LockFlags 
+    - Bugfix issue #110, SoundBuffer.Write should use data.Length instead of 0 
+ * XAudio2/DirectSound
+    - Bugfix WaveFormatExtensible marshalling     
+ * XAudio2
+     - Add new constants for XAudio2 class (XAUDIO2_MAX_BUFFER_BYTES, XAUDIO2_MAX_QUEUED_BUFFERS... etc.)
+    - Bugfix issue #100, Rename field VoiceDetails.InputChannelCount. Rename correctly VoiceFlags and add type VoiceFlags to VoiceDetails.CreationFlags 
+ * X3DAudio
+    - Bugfix issue #96, Remove FreeHGlobal from Emitter.
+ * WIC
+    - Bugfix Add better handling of MetadataQueryReader metadatas
+    - Bugfix issue #104, with sample RenderToWicApp by disposing the encoder.
+    
+SharpDX beta2 (2.0.2)
+
+* This version is including several bug fixes, performance enhancement, Win8 certification for Metro style App and generated XML for API documentation.
+ * Win8 Certification Support 
+    - SharpDX on Win8 is now compiled with .NET 4.5 Core profile and is passing successfully Windows Metro Style App certification. 
+ * Build 
+    - Improve build system to support cross .NET framework compilation from 2.0 to 4.5.
+    - In order to compile SharpDX for Win8, you need to have Visual Studio 2011, but you can compile from Visual Studio 2010 under Win7 and Win8.
+    - Fix build for path containing spaces.
+    - Turn-on by default generated XML documentation from MSDN
+ * Core
+    - Breaking changes in the API for Color4. Using more natural (red,green,blue,alpha) constructor instead of (alpha,red,green,blue). All usages are fixed. Add new Colors class to list predefined colors in the same way System.Drawing.Color
+    - Add SharpDX.IO.NativeFileStream to allow direct FileStream access from Win8
+    - Bugfix for methods using out array of com objects
+    - Rename SharpDX.Size to SharpDX.PointerSize
+    - Add new ComArray<T> class to support faster marshalling of array of ComObject for several methods in the API (mainly Direct3D11)
+ * Direct3D
+    - Add explicit DebugName property on all Device, DeviceChild for DXGI, Direct3D9, Direct3D10, and Direct3D11.
+    - Add new SharpDX.Direct3D.PIXHelper class and methods begin-end/marker providing usefull information under PIX debugger.
+ * Direct3D9 
+    - Add support for all main APIs (Only XFile/Mesh loading is not supported)
+ * Direct3D10/11
+    - Add Equals method to InputElement
+    - Remove result check from Device.CheckFormatSupport. Add None value to FormatSupport. 
+ * Direct3D11
+    - Add optimized methods for DeviceContext.CommonShaderStage.SetSampler(s)/SetShaderResource(s)/SetConstantBuffer(s)
+    - Add MultiCube sample for multithreading and deferred context benchmark. See http://code4k.blogspot.com/2011/11/direct3d11-multithreading-micro.html
+    - Use a common pattern for Texture1D, Texture2D, Texture3D constructors 
+    - Add DeviceContext.IsAvailableData for Begin/End Query statistics. Add new GetData method.
+    - Add method DeviceContext.OutputMerger.ResetTargets to unset all binded Targets
+ * Direct2D1
+    - Move Matrix3x2 from Direct2D to SharpDX core assembly
+ * DirectInput
+    - ForceFeedback is now enabled.
+    - Sliders are now using correct flags
+    - Keyboard state is now properly returned.
+ * DXGI
+    - Change DXGIError to class using SharpDX.Result fields 
+ * RawInput 
+    - Fix wrong layout of RawMouse structure
+    - Add RawInput access from non-winform application like WPF
+    - Fix invalid values for WheelData/Buttons in MouseInfoInputEventArgs
+ * XAudio2
+    - Fix error for XAudio2 dll loading under Win8 
+ * XInput
+    - Add XGamePadApp sample
+    - Fix UserIndex enumeration and Controller.IsConnected method.
+
+--------------------------
+Release Notes (2011-09-24)
+--------------------------
+SharpDX goes 2.0 beta
+
+* Adding missing DirectX APIs including Direct3D9 (not finished yet for Beta but WPF Interop is working), DirectInput, RawInput, XInput, X3DAudio, XACT3, WIC (integrated with Direct2D1).
+* API Support for upcomming Win8/DirectX11.1 (D3DCompiler 44, DXGI 1.2, Direct3D11.1, Direct2D1.1) and including support for DirectX Metro application in C#/.Net!
 * New Samples (Direct3D10 WPF Interop, Direct3D11 MiniCube, WIC RenderToTarget, WIC EncodeDecode, XAudio2 play XWMA,ADPCM,WAV)
 * New 2 Samples for Win8/Metro Preview (MiniCube and port of Win8 C++ DirectX Tutorial)
 * NuGet Package available for all SharpDX 2.0 assemblies with symbols (enabling "source step into" debugging)
@@ -16,23 +103,35 @@ SharpDX Change Log
 * Interop performance slightly improved for method calls.
 * Full rewrite of SharpGen, the core technology of SharpDX, a genuine C# code generator directly from C++ Headers using now gccxml. SharpGen is now able to parse all Windows headers!
 
-2011-02-17 Release SharpDX 1.3
+--------------------------
+Release Notes (2011-02-17)
+--------------------------
+Release SharpDX 1.3
 * Bugfix #17 [D3D10] Texture2D.Map and Texture3D.Map were mapping incorrectly texture into memory
 * Bugfix #18 [D3D10] Device and Device1 constructors were overriding any DriverType argument with DriverType.Hardware 
 * Bugfix #19 [D3D11] Some methods in ComputeShader.SetUnorderedAccessView were not handling correctly last parameter uavInitialCounts (must be filled of -1)
 * Bugfix in Mono [Core] Mono sizeof<T> IL instruction was not working preventing all DataStream class and other marshal scenarios to work. The bugfix is now available in Mono 2.10 version!
 * Enhancement [Core] MessagePump was renamed to RenderLoop class and rewritten in order to run under Mono.
 
-2011-02-05 Release SharpDX 1.2.2
+--------------------------
+Release Notes (2011-02-05)
+--------------------------
+Release SharpDX 1.2.2
 * Bugfix [Core] MessagePump.Run was unstable while adding Mono support. Revert to previous code.
 * Bugfix #16 [D3D10/D3D11] SetShaderResource/SetConstantBuffer/SetSampler didn't handle null correctly
 * Bugfix #15 [DirectWrite] Constructor StrokeStyle(Factory factory, StrokeStyleProperties properties) was not working (need to pass null for dashes instead of float[0]) 
 * Bugfix #12 [Core] TypeConverters are now working with Vector3,Vector4 
 
-2011-01-27 Release SharpDX 1.2.1
+--------------------------
+Release Notes (2011-01-27)
+--------------------------
+Release SharpDX 1.2.1
 * Bugfix #14 [Core] Interop.Read/Write was broken on 32bit system
 
-2011-01-26 Release SharpDX 1.2 - Happy new year!
+--------------------------
+Release Notes (2011-01-26)
+--------------------------
+Release SharpDX 1.2 - Happy new year!
 * New [Core] SharpDX is now compatible with Mono! (Although, there is a bug in Mono that prevents to use directly Application.Idle and Winform for Direct3D rendering but could be addressed with another solution)
 * Fix [Generator] Less verbose warning when documentation plugin is not available
 * New [Generator] New native interop system without using any dynamic assembly. SharpDX interop is faster than previous version, easier to integrate with MonoLinker and Obfuscator.
@@ -47,7 +146,10 @@ SharpDX Change Log
 * New [DirectWrite] Added missing method FontFace.GetGlyphRunOutline
 * New [DirectWrite] Added FontFace missing property on GlyphRun
 
-2010-12-19 Release SharpDX 1.1
+--------------------------
+Release Notes (2010-12-19)
+--------------------------
+Release SharpDX 1.1
 * [Core] Upgrade SharpDX to support .Net Frameworks 2.0 / 3.5 / 4.0
 * [Core] Add DataBuffer for read/write random access to unmanaged memory
 * [Core] Add DataStream specialized typed Read and Write methods for faster access
@@ -63,6 +165,9 @@ SharpDX Change Log
 * [Generator] Use a lightweight T4 engine implementation to remove T4 engine dependency
 * [Generator] Refactoring of various class in order to prepare next Generator version
 
-2010-11-30 Release SharpDX 1.0
+--------------------------
+Release Notes (2010-11-30)
+--------------------------
+Release SharpDX 1.0
 * Initial version. 
 * Supports for Direct3D10, Direct3D10.1, Direct3D11, Direct2D1, DirectWrite, D3DCompiler, DXGI 1.0, DXGI 1.1, DirectSound, XAudio2, XAPO. 
