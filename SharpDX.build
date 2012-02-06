@@ -116,12 +116,6 @@
     </exec>
 
     <if test="${publish}">
-      <copy file="git-current-publish-commit.txt" tofile="git-last-publish-commit.txt"/>
-      <loadfile file="git-last-publish-commit.txt" property="git-last-publish-commit" />
-
-      <!-- rev-list -1 v2.0 -->
-      <!-- push "origin" tag last_stable -->
-
       <!-- Setup last tags-->
       <property name="publish-last-tag" value="last_stable"/>
       <!-- Use Special tag for nightly-builds -->
@@ -136,7 +130,8 @@
         <arg value="--format=&quot;%H %s&quot;" />
       </exec>
       <loadfile file="git-last-commit.txt" property="git-last-commit" />
-
+      <delete file="git-last-commit.txt"/>
+      
       <exec program="git">
         <arg value="tag" />
         <arg value="${assembly_version}" />
