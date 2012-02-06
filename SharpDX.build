@@ -124,7 +124,7 @@
       </if>
 
       <!-- Rebase from Git -->
-      <exec program="git" output="git-last-commit.txt">
+      <exec program="git.exe" output="git-last-commit.txt">
         <arg value="log" />
         <arg value="-1" />
         <arg value="--format=&quot;%H %s&quot;" />
@@ -132,12 +132,12 @@
       <loadfile file="git-last-commit.txt" property="git-last-commit" />
       <delete file="git-last-commit.txt"/>
       
-      <exec program="git">
+      <exec program="git.exe">
         <arg value="tag" />
         <arg value="${assembly_version}" />
       </exec>
 
-      <exec program="git">
+      <exec program="git.exe">
         <arg value="push" />
         <arg value="origin" />
         <arg value="tag" />
