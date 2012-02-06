@@ -137,12 +137,14 @@
         <arg value="${assembly_version}" />
       </exec>
 
+	  <!-- This is asking for user/password WTF?!
       <exec program="git.exe">
         <arg value="push" />
         <arg value="origin" />
         <arg value="tag" />
         <arg value="${assembly_version}" />
       </exec>
+	  -->
 
       <property name="publish-summary" value="Last commit -> ${git-last-commit}"/>
     </if>
