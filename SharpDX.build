@@ -125,7 +125,7 @@
 
       <!-- Rebase from Git -->
       <exec program="git" output="git-last-commit.txt">
-        <arg value="rev-list" />
+        <arg value="log" />
         <arg value="-1" />
         <arg value="--format=&quot;%H %s&quot;" />
       </exec>
