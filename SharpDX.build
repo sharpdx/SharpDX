@@ -234,7 +234,7 @@
       </in>
       <do>
         <echo message="Nuget on ${path::get-directory-name(filename)}"/>
-        <exec program="nuget.exe" workingdir="${path::get-directory-name(filename)}" failonerror="false">
+        <exec program="nuget.exe" workingdir="${path::get-directory-name(filename)}">
           <arg value="pack" />
           <arg value="-Symbols" />
           <!-- <arg value="-Verbose" /> -->
@@ -257,7 +257,7 @@
       </in>
       <do>
         <echo message="Nuget push  ${filename}"/>
-        <exec program="nuget.exe">
+        <exec program="nuget.exe" failonerror="false">
           <arg value="push" />
           <arg value="${filename}" />
         </exec>
