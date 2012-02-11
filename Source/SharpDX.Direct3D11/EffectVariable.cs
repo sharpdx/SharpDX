@@ -183,6 +183,19 @@ namespace SharpDX.Direct3D11
         }
 
         /// <summary>	
+        /// Get an interface variable.
+        /// </summary>	
+        /// <returns>A reference to a <see cref="SharpDX.Direct3D11.EffectInterfaceVariable"/>. </returns>
+        /// <unmanaged>ID3D11EffectClassInstanceVariable* ID3D11EffectVariable::AsInterface()</unmanaged>
+        public SharpDX.Direct3D11.EffectInterfaceVariable AsInterface()
+        {
+            var temp = AsInterface_();
+            if (temp == null || !temp.IsValid)
+                return null;
+            return temp;
+        }
+
+        /// <summary>	
         /// Get an unordered access view variable.
         /// </summary>	
         /// <returns>A reference to a <see cref="SharpDX.Direct3D11.EffectUnorderedAccessViewVariable"/>. </returns>
