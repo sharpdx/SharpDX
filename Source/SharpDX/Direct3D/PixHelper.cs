@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -40,6 +40,21 @@ namespace SharpDX.Direct3D
         }
 
         /// <summary>
+        /// Marks the beginning of a user-defined event. PIX can use this event to trigger an action.
+        /// </summary>
+        /// <param name="color">The Event color.</param>
+        /// <param name="name">The Event formatted Name.</param>
+        /// <param name="parameters">The parameters to use for the formatted name.</param>
+        /// <returns>
+        /// The zero-based level of the hierarchy that this event is starting in. If an error occurs, the return value will be negative.
+        /// </returns>
+        /// <unmanaged>D3DPERF_BeginEvent</unmanaged>
+        public static int BeginEvent(Color color, string name, params object[] parameters)
+        {
+            return D3DPERF_BeginEvent(color.ToArgb(), string.Format(name, parameters));
+        }
+
+        /// <summary>
         /// Mark the end of a user-defined event. PIX can use this event to trigger an action.
         /// </summary>
         /// <returns>The level of the hierarchy in which the event is ending. If an error occurs, this value is negative.</returns>
@@ -58,6 +73,18 @@ namespace SharpDX.Direct3D
         public static void SetMarker(Color color, string name)
         {
             D3DPERF_SetMarker(color.ToArgb(), name);
+        }
+
+        /// <summary>
+        /// Mark an instantaneous event. PIX can use this event to trigger an action.
+        /// </summary>
+        /// <param name="color">The color.</param>
+        /// <param name="name">The name to format.</param>
+        /// <param name="parameters">The parameters to use to format the name.</param>
+        /// <unmanaged>D3DPERF_SetMarker</unmanaged>
+        public static void SetMarker(Color color, string name, params object[] parameters)
+        {
+            D3DPERF_SetMarker(color.ToArgb(), string.Format(name, parameters));
         }
 
         /// <summary>

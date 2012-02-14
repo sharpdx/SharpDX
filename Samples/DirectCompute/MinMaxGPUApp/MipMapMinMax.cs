@@ -233,7 +233,7 @@ namespace MinMaxGPUApp
 
         public void Reduce(DeviceContext context, ShaderResourceView from)
         {
-            PixHelper.BeginEvent("MinMax {0}x{0}", 1 << ReduceFactor);
+            PixHelper.BeginEvent(Color.Green, "MinMax {0}x{0}", 1 << ReduceFactor);
 
             context.InputAssembler.InputLayout = layout;
             context.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleStrip;
@@ -256,7 +256,7 @@ namespace MinMaxGPUApp
                 viewport.Width = Math.Max(((int)Size.Width) / (1 << (levelIndex + 1)), 1);
                 viewport.Height = Math.Max(((int)Size.Height) / (1 << (levelIndex + 1)), 1);
 
-                PixHelper.BeginEvent("MinMax Level {0} Size: ({1},{2})", levelIndex, viewport.Width, viewport.Height);
+                PixHelper.BeginEvent(Color.GreenYellow, "MinMax Level {0} Size: ({1},{2})", levelIndex, viewport.Width, viewport.Height);
 
                 // Special case when last level is different from ReduceFactor size
                 if (i == levels)
