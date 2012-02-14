@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 #if !WIN8
+using System.Drawing;
 using System.Runtime.InteropServices;
 namespace SharpDX.Direct3D
 {
@@ -29,16 +30,13 @@ namespace SharpDX.Direct3D
         /// <summary>
         /// Marks the beginning of a user-defined event. PIX can use this event to trigger an action.
         /// </summary>
+        /// <param name="color">The Event color.</param>
         /// <param name="name">The Event Name.</param>
-        /// <param name="stringParameters">The string parameters.</param>
-        /// <returns>
-        /// The zero-based level of the hierarchy that this event is starting in. If an error occurs, the return value will be negative.
-        /// </returns>
+        /// <returns>The zero-based level of the hierarchy that this event is starting in. If an error occurs, the return value will be negative.</returns>
         /// <unmanaged>D3DPERF_BeginEvent</unmanaged>
-        public static int BeginEvent(string name, params object[] stringParameters)
+        public static int BeginEvent(Color color, string name)
         {
-            // Color seems to be unused by PIX
-            return D3DPERF_BeginEvent(0xff000000, stringParameters == null || stringParameters.Length == 0 ? name : string.Format(name, stringParameters));
+            return D3DPERF_BeginEvent(color.ToArgb(), name);
         }
 
         /// <summary>
@@ -54,13 +52,12 @@ namespace SharpDX.Direct3D
         /// <summary>
         /// Mark an instantaneous event. PIX can use this event to trigger an action.
         /// </summary>
+        /// <param name="color">The color.</param>
         /// <param name="name">The name.</param>
-        /// <param name="stringParameters">The string parameters.</param>
         /// <unmanaged>D3DPERF_SetMarker</unmanaged>
-        public static void SetMarker(string name, params object[] stringParameters)
+        public static void SetMarker(Color color, string name)
         {
-            // Color seems to be unused by PIX
-            D3DPERF_SetMarker(0xff000000, stringParameters == null || stringParameters.Length == 0 ? name : string.Format(name, stringParameters));
+            D3DPERF_SetMarker(color.ToArgb(), name);
         }
 
         /// <summary>
@@ -89,13 +86,13 @@ namespace SharpDX.Direct3D
         }
 
         [DllImport("d3d9.dll", EntryPoint = "D3DPERF_BeginEvent", CharSet = CharSet.Unicode)]
-        private extern static int D3DPERF_BeginEvent( uint color, string name );
+        private extern static int D3DPERF_BeginEvent( int color, string name );
 
         [DllImport("d3d9.dll", EntryPoint = "D3DPERF_EndEvent", CharSet = CharSet.Unicode)]
         private extern static int D3DPERF_EndEvent();
 
         [DllImport("d3d9.dll", EntryPoint = "D3DPERF_SetMarker", CharSet = CharSet.Unicode)]
-        private extern static void D3DPERF_SetMarker( uint color, string wszName );
+        private extern static void D3DPERF_SetMarker( int color, string wszName );
 
         [DllImport("d3d9.dll", EntryPoint = "D3DPERF_SetOptions", CharSet = CharSet.Unicode)]
         private extern static void D3DPERF_SetOptions( int options);
