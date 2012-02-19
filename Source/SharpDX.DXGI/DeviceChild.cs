@@ -70,7 +70,6 @@ namespace SharpDX.DXGI
                 {
                     var namePtr = Marshal.StringToHGlobalAnsi(value);
                     SetPrivateData(CommonGuid.DebugObjectName, value.Length, namePtr);
-                    Marshal.Release(namePtr);
                 }
             }
         }

@@ -58,7 +58,6 @@ namespace SharpDX.Direct3D11
                 {
                     var namePtr = Marshal.StringToHGlobalAnsi(value);
                     SetPrivateData(CommonGuid.DebugObjectName, value.Length, namePtr);
-                    Marshal.Release(namePtr);
                 }
             }
         }        
