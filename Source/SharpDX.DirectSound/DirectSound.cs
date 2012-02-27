@@ -45,7 +45,7 @@ namespace SharpDX.DirectSound
         /// Verifies the certification.
         /// </summary>
         /// <returns>Return true if the driver is certified</returns>
-        public bool IsCeritified
+        public bool IsCertified
         {
             get
             {
