@@ -248,6 +248,68 @@ namespace SharpDX.Direct3D11
         }
 
         /// <summary>
+        /// Performs a forward FFT.
+        /// </summary>
+        /// <param name="inputBufferRef">Pointer to <see cref="SharpDX.Direct3D11.UnorderedAccessView"/> onto the input buffer.</param>
+        /// <returns>
+        /// Returns the computation in a temp buffers; in addition, the last buffer written to is returned.
+        /// </returns>
+        /// <unmanaged>HRESULT ID3DX11FFT::ForwardTransform([In] const ID3D11UnorderedAccessView* pInputBuffer,[InOut] void** ppOutputBuffer)</unmanaged>
+        /// <remarks>
+        /// ForwardTransform can be called after buffers have been attached to the context using <see cref="SharpDX.Direct3D11.FastFourierTransform.AttachBuffersAndPrecompute"/>. The combination of pInputBuffer and *ppOuputBuffer can be one of the temp buffers.The format of complex data is interleaved components (for example, (Real0, Imag0),  (Real1, Imag1) ... , and so on). Data is stored in row major order.
+        /// </remarks>
+        public SharpDX.Direct3D11.UnorderedAccessView ForwardTransform(SharpDX.Direct3D11.UnorderedAccessView inputBufferRef)
+        {
+            IntPtr returnView = IntPtr.Zero;
+            ForwardTransform(inputBufferRef, ref returnView);
+            return new UnorderedAccessView(returnView);
+        }
+
+        /// <summary>	
+        /// Performs an inverse FFT.	
+        /// </summary>	
+        /// <param name="inputBufferRef"><para>Pointer to <see cref="SharpDX.Direct3D11.UnorderedAccessView"/> onto the input buffer.</para></param>	
+        /// <returns>
+        /// Returns the computation in a temp buffers; in addition, the last buffer written to is returned.
+        /// </returns>
+        /// <unmanaged>HRESULT ID3DX11FFT::InverseTransform([In] const ID3D11UnorderedAccessView* pInputBuffer,[InOut] void** ppOutputBuffer)</unmanaged>	
+        public SharpDX.Direct3D11.UnorderedAccessView InverseTransform(SharpDX.Direct3D11.UnorderedAccessView inputBufferRef)
+        {
+            IntPtr returnView = IntPtr.Zero;
+            InverseTransform(inputBufferRef, ref returnView);
+            return new UnorderedAccessView(returnView);
+        }
+
+        /// <summary>
+        /// Performs a forward FFT.
+        /// </summary>
+        /// <param name="inputBufferRef">Pointer to <see cref="SharpDX.Direct3D11.UnorderedAccessView"/> onto the input buffer.</param>
+        /// <param name="outputBufferView"><para>Buffer <see cref="SharpDX.Direct3D11.UnorderedAccessView"/> reference used as the output buffer.</para></param>	
+        /// <returns>Returns one of the return codes described in the topic Direct3D 11 Return Codes.</returns>	
+        /// <unmanaged>HRESULT ID3DX11FFT::ForwardTransform([In] const ID3D11UnorderedAccessView* pInputBuffer,[InOut] void** ppOutputBuffer)</unmanaged>
+        /// <remarks>
+        /// ForwardTransform can be called after buffers have been attached to the context using <see cref="SharpDX.Direct3D11.FastFourierTransform.AttachBuffersAndPrecompute"/>. The combination of pInputBuffer and *ppOuputBuffer can be one of the temp buffers.The format of complex data is interleaved components (for example, (Real0, Imag0),  (Real1, Imag1) ... , and so on). Data is stored in row major order.
+        /// </remarks>
+        public SharpDX.Result ForwardTransform(SharpDX.Direct3D11.UnorderedAccessView inputBufferRef, SharpDX.Direct3D11.UnorderedAccessView outputBufferView)
+        {
+            IntPtr outputView = outputBufferView.NativePointer;
+            return ForwardTransform(inputBufferRef, ref outputView);
+        }
+
+        /// <summary>	
+        /// Performs an inverse FFT.	
+        /// </summary>	
+        /// <param name="inputBufferRef"><para>Pointer to <see cref="SharpDX.Direct3D11.UnorderedAccessView"/> onto the input buffer.</para></param>	
+        /// <param name="outputBufferView"><para>Buffer <see cref="SharpDX.Direct3D11.UnorderedAccessView"/> reference used as the output buffer.</para></param>	
+        /// <returns>Returns one of the return codes described in the topic Direct3D 11 Return Codes.</returns>	
+        /// <unmanaged>HRESULT ID3DX11FFT::InverseTransform([In] const ID3D11UnorderedAccessView* pInputBuffer,[InOut] void** ppOutputBuffer)</unmanaged>	
+        public SharpDX.Result InverseTransform(SharpDX.Direct3D11.UnorderedAccessView inputBufferRef, SharpDX.Direct3D11.UnorderedAccessView outputBufferView)
+        {
+            IntPtr outputView = outputBufferView.NativePointer;
+            return InverseTransform(inputBufferRef, ref outputView);
+        }
+
+        /// <summary>
         /// Gets the buffer requirements.
         /// </summary>
         /// <value>The buffer requirements.</value>

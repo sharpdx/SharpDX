@@ -204,8 +204,13 @@
     <map method="ID3D11DeviceContext::CopySubresourceRegion" visibility="internal" name="CopySubresourceRegion_" />
     <map method="ID3D11DeviceContext::ResolveSubresource" visibility="internal" name="ResolveSubresource_" />
     <map method="ID3D11Resource::GetType" name="GetDimension" />
-    
+
     <map method="ID3DX11FFT::AttachBuffersAndPrecompute" visibility="internal" />
+    <map method="ID3DX11FFT::ForwardTransform" visibility="internal" />
+    <map param="ppOutputBuffer" type="void" />
+    <map method="ID3DX11FFT::InverseTransform" visibility="internal" />
+    <map param="ppOutputBuffer" type="void" />
+
     <map method="ID3DX11Scan::.*" property="false" />
     <map method="ID3DX11Scan::Scan" name="PerformScan" />
     <map method="ID3DX11Scan::Multiscan" name="PerformMultiscan" />
