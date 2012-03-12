@@ -37,6 +37,15 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ComObject"/> class from a IUnknown object.
+        /// </summary>
+        /// <param name="iunknowObject">Reference to a IUnknown object</param>
+        public ComObject(object iunknowObject)
+        {
+            NativePointer = Marshal.GetIUnknownForObject(iunknowObject);
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ComObject"/> class.
         /// </summary>
         protected ComObject()

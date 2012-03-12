@@ -152,15 +152,13 @@
     <map enum-item="D3DX11_FFT_DIM_MASK_(.*)" name="Dimension$1" />
     <map enum="D3DX11_FFT_CREATE_FLAG" name="FastFourierTransformCreationFlags" />
 
-    <map enum-item="D3D11_SHADER_MIN_PRECISION_8_AND_10_BIT" name="Bit8And10"/>
+    <map enum-item="D3D11_SHADER_MIN_PRECISION_10_BIT" name="Bit10"/>    
     <map enum-item="D3D11_SHADER_MIN_PRECISION_16_BIT" name="Bit16"/>
     <map enum-item="D3D11_VIDEO_PROCESSOR_ITELECINE_CAPS_([0-9]+)" name="Value$1"/>
 
     <map enum-item="D3D11_VIDEO_PROCESSOR_ROTATION_90" name="Rotation90"/>
     <map enum-item="D3D11_VIDEO_PROCESSOR_ROTATION_180" name="Rotation180"/>
     <map enum-item="D3D11_VIDEO_PROCESSOR_ROTATION_270" name="Rotation270"/>
-
-    
 
     <!--
     // *****************************************************************

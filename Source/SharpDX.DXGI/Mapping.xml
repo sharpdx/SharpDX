@@ -195,7 +195,8 @@
     <map param="pWindowHandle" return="true" />
     <map param="IDXGIFactory::MakeWindowAssociation::Flags" type="DXGI_MWA_FLAGS" />
 
-    <map param="IDXGIFactory2::.*::ppSwapChain" return="true"/>
+    <map param="IDXGIFactory2::Create.*" visibility="internal"/>
+    <map param="IDXGIFactory2::Create.*::ppSwapChain" attribute="out fast"/>
 
     <map method="IDXGIKeyedMutex::(.*)Sync" name="$1" />
     

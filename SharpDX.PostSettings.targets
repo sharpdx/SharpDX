@@ -8,20 +8,31 @@
     <DocumentationFile>bin\Win8Release\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <ResolveReferencesDependsOn>
-      $(ResolveReferencesDependsOn);
-      ImplicitlyExpandTargetFramework
-    </ResolveReferencesDependsOn>
-  </PropertyGroup>
+    <PropertyGroup>
+      <ResolveReferencesDependsOn>
+        $(ResolveReferencesDependsOn);
+        ImplicitlyExpandTargetFramework;
+      </ResolveReferencesDependsOn>
 
-  <Target Name="ImplicitlyExpandTargetFramework" Condition="'$(ImplicitlyExpandTargetFramework)' == 'true'">
+      <ImplicitlyExpandTargetFrameworkDependsOn>
+        $(ImplicitlyExpandTargetFrameworkDependsOn);
+        GetReferenceAssemblyPaths
+      </ImplicitlyExpandTargetFrameworkDependsOn>
+    </PropertyGroup>
+
+    <Target Name="ImplicitlyExpandTargetFramework"
+        Condition="'$(ImplicitlyExpandTargetFramework)' == 'true'"
+        DependsOnTargets="$(ImplicitlyExpandTargetFrameworkDependsOn)"
+    >
     <ItemGroup>
-      <ReferencePath Include="$(FrameworkPathOverride)\*.dll">
+      <ReferenceAssemblyPaths Include="$(_TargetFrameworkDirectories)"/>
+      <ReferencePath Include="%(ReferenceAssemblyPaths.Identity)*.dll">
         <WinMDFile>false</WinMDFile>
         <CopyLocal>false</CopyLocal>
+        <ReferenceGroupingDisplayName>$(TargetFrameworkMonikerDisplayName)</ReferenceGroupingDisplayName>
         <ReferenceGrouping>$(TargetFrameworkMoniker)</ReferenceGrouping>
         <ResolvedFrom>ImplicitlyExpandTargetFramework</ResolvedFrom>
+        <IsSystemReference>True</IsSystemReference>
       </ReferencePath>
     </ItemGroup>
 
