@@ -204,6 +204,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniCubeTexture.sample", "S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Win8MiniCube.sample", "Samples\Win8\Win8MiniCube\Win8MiniCube.sample.csproj", "{73484A2E-D30F-48D1-9BF9-EFF03C2FA994}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Win8", "Win8", "{1D318B02-0FF2-4D6E-B0EA-934E9E1F6354}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Win8MiniCube.sample", "Samples\Win8\Win8MiniCube\Win8MiniCube.sample.csproj", "{73484A2E-D30F-48D1-9BF9-EFF03C2FA994}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -17,6 +17,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Adapter.cs" />
+    <Compile Include="SwapChain1.cs" />
     <Compile Include="Device.cs" />
     <Compile Include="DeviceChild.cs" />
     <Compile Include="DXGIObject.cs" />
