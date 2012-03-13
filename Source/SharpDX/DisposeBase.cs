@@ -17,6 +17,7 @@ namespace SharpDX
         /// </summary>
         public event EventHandler<EventArgs> Disposed;
 
+#if !WIN8
         /// <summary>
         /// Releases unmanaged resources and performs other cleanup operations before the
         /// <see cref="DisposeBase"/> is reclaimed by garbage collection.
@@ -26,6 +27,7 @@ namespace SharpDX
             // Finalizer calls Dispose(false)
             Dispose(false);
         }
+#endif
 
         /// <summary>
         /// Gets a value indicating whether this instance is disposed.
@@ -46,7 +48,9 @@ namespace SharpDX
                 if (Disposing != null) Disposing(this, EventArgs.Empty);
 
                 Dispose(true);
+#if !WIN8
                 GC.SuppressFinalize(this);
+#endif
                 IsDisposed = true;
 
                 if (Disposed != null) Disposed(this, EventArgs.Empty);
