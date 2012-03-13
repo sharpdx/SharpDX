@@ -53,7 +53,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Query Interface for a particular GUID.
+        /// Query this instance for a particular COM GUID/interface support.
         /// </summary>
         /// <param name = "guid">GUID query interface</param>
         /// <param name = "outPtr">output object associated with this GUID, IntPtr.Zero in interface is not supported</param>
@@ -65,7 +65,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Query Interface for a particular GUID.
+        ///   Query instance for a particular COM GUID/interface support.
         /// </summary>
         /// <param name = "guid">GUID query interface</param>
         /// <exception cref="SharpDXException">If this object doesn't support the interface</exception>
@@ -77,9 +77,9 @@ namespace SharpDX
         }
 
         ///<summary>
-        /// Query Interface for a particular interface support.
+        /// Query this instance for a particular COM interface support.
         ///</summary>
-        ///<typeparam name="T"></typeparam>
+        ///<typeparam name="T">The type of the COM interface to query</typeparam>
         ///<returns>An instance of the queried interface</returns>
         /// <exception cref="SharpDXException">If this object doesn't support the interface</exception>
         public virtual T QueryInterface<T>() where T : ComObject
@@ -87,6 +87,20 @@ namespace SharpDX
             IntPtr parentPtr;
             this.QueryInterface(Utilities.GetGuidFromType(typeof(T)), out parentPtr);
             return FromPointer<T>(parentPtr);
+        }
+
+        /// <summary>
+        /// Queries a managed object for a particular COM interface support.
+        /// </summary>
+        ///<typeparam name="T">The type of the COM interface to query</typeparam>
+        /// <param name="comObject">The managed COM object.</param>
+        ///<returns>An instance of the queried interface</returns>
+        public static T QueryInterface<T>(object comObject) where T : ComObject
+        {
+            using (var tempObject = new ComObject(Marshal.GetIUnknownForObject(comObject)))
+            {
+                return tempObject.QueryInterface<T>();
+            }
         }
 
         ///<summary>
