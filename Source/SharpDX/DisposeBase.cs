@@ -25,7 +25,7 @@ namespace SharpDX
         ~DisposeBase()
         {
             // Finalizer calls Dispose(false)
-            Dispose(false);
+            CheckAndDispose(false);
         }
 #endif
 
@@ -42,14 +42,23 @@ namespace SharpDX
         /// </summary>
         public void Dispose()
         {
+            CheckAndDispose(true);
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        private void CheckAndDispose(bool disposing)
+        {
             // TODO Should we throw an exception if this method is called more than once?
             if (!IsDisposed)
             {
                 if (Disposing != null) Disposing(this, EventArgs.Empty);
 
-                Dispose(true);
+                Dispose(disposing);
 #if !WIN8
-                GC.SuppressFinalize(this);
+                if (disposing)
+                    GC.SuppressFinalize(this);
 #endif
                 IsDisposed = true;
 
