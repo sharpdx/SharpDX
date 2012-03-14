@@ -2298,6 +2298,8 @@
 
     <map param="IDirect3DDevice9::SetPaletteEntries::pEntries" attribute="in buffer" />
 
+    <map param="IDirect3DDevice9::SetClipPlane::pPlane" type="SHARPDX_VECTOR4" />
+
     <map method="IDirect3DDevice9::SetPixelShaderConstant.*" visibility="internal"/>
     <map param="IDirect3DDevice9::SetPixelShaderConstant[BFI]::pConstantData" type="void" attribute="in"/>
 
