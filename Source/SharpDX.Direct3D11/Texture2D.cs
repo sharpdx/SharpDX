@@ -82,6 +82,35 @@ namespace SharpDX.Direct3D11
         {
             return D3DX11.ComputeNormalMap(context, source, flags, channel, amplitude, destination);
         }
+
+        /// <summary>	
+        /// Projects a function represented in a cube map into spherical harmonics.	
+        /// </summary>	
+        /// <param name="context"><para>A reference to an <see cref="SharpDX.Direct3D11.DeviceContext"/> object.</para></param>	
+        /// <param name="cubeMap"><para>A reference to an <see cref="SharpDX.Direct3D11.Texture2D"/> that represents a cubemap that is going to be projected into spherical harmonics.</para></param>	
+        /// <param name="order"><para>Order of the SH evaluation, generates Order^2 coefficients whose degree is Order-1. Valid range is between 2 and 6.</para></param>	
+        /// <returns>An array of SH Vector for red, green and blue components with a length Order^2.</returns>	
+        /// <unmanaged>HRESULT D3DX11SHProjectCubeMap([In] ID3D11DeviceContext* pContext,[In] unsigned int Order,[In] ID3D11Texture2D* pCubeMap,[Out, Buffer] float* pROut,[Out, Buffer, Optional] float* pGOut,[Out, Buffer, Optional] float* pBOut)</unmanaged>	
+        public static Color3[] SHProjectCubeMap(DeviceContext context, Texture2D cubeMap, int order)
+        {
+            if (order < 2 || order > 6)
+                throw new ArgumentException("Invalid range for SH order. Must be in the range [2,6]");
+
+            int length = order * order;
+            var redSH = new float[length];
+            var greenSH = new float[length];
+            var blueSH = new float[length];
+
+            D3DX11.SHProjectCubeMap(context, order, cubeMap, redSH, greenSH, blueSH);
+            var result = new Color3[length];
+            for (int i = 0; i < result.Length; i++)
+            {
+                result[i].Red = redSH[i];
+                result[i].Green = greenSH[i];
+                result[i].Blue = blueSH[i];
+            }
+            return result;
+        }
 #endif
   }
 }
