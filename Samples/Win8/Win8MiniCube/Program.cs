@@ -281,7 +281,7 @@ namespace Win8MiniCube
                             {
                                 var pCom = new ComObject(window);
                                 // Creates the swap chain 
-                                swapChain = new SwapChain1(dxgiFactory2, device, pCom, desc);
+                                swapChain = dxgiFactory2.CreateSwapChainForCoreWindow(device, pCom, ref desc, null);
                             }
                         }
                     }
