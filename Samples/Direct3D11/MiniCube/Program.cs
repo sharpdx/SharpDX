@@ -56,6 +56,9 @@ namespace MiniCube
                 Usage = Usage.RenderTargetOutput
             };
 
+            // Used for debugging dispose object references
+            // Configuration.EnableObjectTracking = true;
+
             // Create Device and SwapChain
             Device device;
             SwapChain swapChain;
@@ -71,17 +74,15 @@ namespace MiniCube
             var renderView = new RenderTargetView(device, backBuffer);
 
             // Compile Vertex and Pixel shaders
-            var vertexShaderByteCode = ShaderBytecode.CompileFromFile("MiniCube.fx", "VS", "vs_4_0", ShaderFlags.None, EffectFlags.None);
-            vertexShaderByteCode.Save("MiniCube_VS.fxo");
-
+            var vertexShaderByteCode = ShaderBytecode.CompileFromFile("MiniCube.fx", "VS", "vs_4_0");
             var vertexShader = new VertexShader(device, vertexShaderByteCode);
 
-            var pixelShaderByteCode = ShaderBytecode.CompileFromFile("MiniCube.fx", "PS", "ps_4_0", ShaderFlags.None, EffectFlags.None);
-            pixelShaderByteCode.Save("MiniCube_PS.fxo");
+            var pixelShaderByteCode = ShaderBytecode.CompileFromFile("MiniCube.fx", "PS", "ps_4_0");
             var pixelShader = new PixelShader(device, pixelShaderByteCode);
 
+            var signature = ShaderSignature.GetInputSignature(vertexShaderByteCode);
             // Layout from VertexShader input signature
-            var layout = new InputLayout(device, ShaderSignature.GetInputSignature(vertexShaderByteCode), new[]
+            var layout = new InputLayout(device, signature, new[]
                     {
                         new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
                         new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0)
@@ -195,12 +196,16 @@ namespace MiniCube
             });
 
             // Release all resources
+            signature.Dispose();
             vertexShaderByteCode.Dispose();
             vertexShader.Dispose();
             pixelShaderByteCode.Dispose();
             pixelShader.Dispose();
             vertices.Dispose();
             layout.Dispose();
+            contantBuffer.Dispose();
+            depthBuffer.Dispose();
+            depthView.Dispose();
             renderView.Dispose();
             backBuffer.Dispose();
             context.ClearState();
