@@ -200,6 +200,7 @@ namespace SharpGen.Generator
                 var paramTag = cppParameter.GetTagOrDefault<MappingRule>();
 
                 bool hasArray = cppParameter.IsArray || ((cppAttribute & ParamAttribute.Buffer) != 0);
+                bool hasParams = (cppAttribute & ParamAttribute.Params) == ParamAttribute.Params;
                 bool isOptional = (cppAttribute & ParamAttribute.Optional) != 0;
 
                 var paramMethod = Manager.GetCsType<CsParameter>(cppParameter);
@@ -328,6 +329,7 @@ namespace SharpGen.Generator
                 paramMethod.HasPointer = hasPointer;
                 paramMethod.Attribute = parameterAttribute;
                 paramMethod.IsArray = hasArray;
+                paramMethod.HasParams = hasParams;
                 paramMethod.HasPointer = hasPointer;
                 paramMethod.PublicType = publicType;
                 paramMethod.MarshalType = marshalType;

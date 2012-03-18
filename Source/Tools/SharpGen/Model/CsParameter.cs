@@ -37,6 +37,8 @@ namespace SharpGen.Model
 
         public CsParameterAttribute Attribute { get; set; }
 
+        public bool HasParams { get; set; }
+
         public bool IsOptionnal { get; set; }
 
         public bool IsUsedAsReturnType { get; set; }
@@ -185,6 +187,10 @@ namespace SharpGen.Model
                 {
                     if (!(IsRefInValueTypeOptional || IsRefInValueTypeByValue) && !IsStructClass)
                         builder.Append("ref ");
+                } 
+                else if (HasParams && IsArray)
+                {
+                    builder.Append("params ");
                 }
 
                 if (IsRefIn && IsValueType && !IsArray && IsOptionnal && !IsStructClass)
