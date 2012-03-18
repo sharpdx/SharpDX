@@ -380,8 +380,7 @@ namespace SharpDX.D3DCompiler
         {
             unsafe
             {
-                ShaderBytecode bytecode;
-                bool hasErrors = false;
+                var resultCode = Result.Ok;
 
                 Blob blobForCode = null;
                 Blob blobForErrors = null;
@@ -408,7 +407,7 @@ namespace SharpDX.D3DCompiler
                 {
                     if (blobForErrors != null)
                     {
-                        hasErrors = true;
+                        resultCode = ex.ResultCode;
                         if (Configuration.ThrowOnShaderCompileError)
                             throw new CompilationException(ex.ResultCode, Utilities.BlobToString(blobForErrors));
                     }
@@ -418,7 +417,7 @@ namespace SharpDX.D3DCompiler
                     }
                 }
 
-                return new CompilationResult(blobForCode != null ? new ShaderBytecode(blobForCode) : null, hasErrors, Utilities.BlobToString(blobForErrors));
+                return new CompilationResult(blobForCode != null ? new ShaderBytecode(blobForCode) : null, resultCode, Utilities.BlobToString(blobForErrors));
             }
         }
 #else
@@ -643,8 +642,7 @@ namespace SharpDX.D3DCompiler
         {
             unsafe
             {
-                ShaderBytecode bytecode;
-                bool hasErrors = false;
+                var resultCode = Result.Ok;
 
                 Blob blobForCode = null;
                 Blob blobForErrors = null;
@@ -688,7 +686,7 @@ namespace SharpDX.D3DCompiler
                 {
                     if (blobForErrors != null)
                     {
-                        hasErrors = true;
+                        resultCode = ex.ResultCode;
                         if (Configuration.ThrowOnShaderCompileError)
                             throw new CompilationException(ex.ResultCode, Utilities.BlobToString(blobForErrors));
                     }
@@ -698,7 +696,7 @@ namespace SharpDX.D3DCompiler
                     }
                 }
 
-                return new CompilationResult(blobForCode != null ? new ShaderBytecode(blobForCode) : null, hasErrors, Utilities.BlobToString(blobForErrors));
+                return new CompilationResult(blobForCode != null ? new ShaderBytecode(blobForCode) : null, resultCode, Utilities.BlobToString(blobForErrors));
             }
         }
 

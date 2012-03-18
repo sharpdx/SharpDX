@@ -29,10 +29,10 @@ namespace SharpDX.D3DCompiler
         /// Initializes a new instance of the <see cref="CompilationResult"/> class.
         /// </summary>
         /// <param name="bytecode">The bytecode.</param>
-        /// <param name="hasErrors">if set to <c>true</c> [has errors].</param>
+        /// <param name="resultCode">The result code.</param>
         /// <param name="message">The message.</param>
-        public CompilationResult(ShaderBytecode bytecode, bool hasErrors, string message)
-            : base(bytecode, hasErrors, message)
+        public CompilationResult(ShaderBytecode bytecode, Result resultCode, string message)
+            : base(bytecode, resultCode, message)
         {
         }
 
