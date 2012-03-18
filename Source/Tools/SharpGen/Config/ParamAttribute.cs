@@ -42,6 +42,8 @@ namespace SharpGen.Config
         /// Fast flag used for Out parameter.
         /// </summary>
         [EnumMember, XmlEnum("fast")]
-        Fast = 0x20
+        Fast = 0x20,
+        [EnumMember, XmlEnum("params")]     // params setup buffer and params
+        Params = 0x48,
     }
 }
