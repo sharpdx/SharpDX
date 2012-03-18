@@ -170,7 +170,7 @@ namespace SharpDX.Direct3D9
         /// <param name="flags">Compilation options.</param>
         /// <returns>A <see cref="SharpDX.Direct3D9.ShaderBytecode" /> object representing the raw shader stream.</returns>
         /// <unmanaged>HRESULT D3DXAssembleShader([In] const void* pSrcData,[In] unsigned int SrcDataLen,[In, Buffer] const D3DXMACRO* pDefines,[In] ID3DXInclude* pInclude,[In] unsigned int Flags,[In] ID3DXBuffer** ppShader,[In] ID3DXBuffer** ppErrorMsgs)</unmanaged>
-        public static ShaderBytecode Assemble(byte[] sourceData, ShaderFlags flags)
+        public static CompilationResult Assemble(byte[] sourceData, ShaderFlags flags)
         {
             return Assemble(sourceData, null, null, flags);            
         }
@@ -180,9 +180,9 @@ namespace SharpDX.Direct3D9
         /// </summary>
         /// <param name="sourceData">The source shader data.</param>
         /// <param name="flags">Compilation options.</param>
-        /// <returns>A <see cref="SharpDX.Direct3D9.ShaderBytecode" /> object representing the raw shader stream.</returns>
+        /// <returns>A <see cref="SharpDX.Direct3D9.CompilationResult" /> object representing the raw shader stream.</returns>
         /// <unmanaged>HRESULT D3DXAssembleShader([In] const void* pSrcData,[In] unsigned int SrcDataLen,[In, Buffer] const D3DXMACRO* pDefines,[In] ID3DXInclude* pInclude,[In] unsigned int Flags,[In] ID3DXBuffer** ppShader,[In] ID3DXBuffer** ppErrorMsgs)</unmanaged>
-        public static ShaderBytecode Assemble(string sourceData, ShaderFlags flags)
+        public static CompilationResult Assemble(string sourceData, ShaderFlags flags)
         {
             return Assemble(sourceData, null, null, flags);
         }
@@ -194,9 +194,9 @@ namespace SharpDX.Direct3D9
         /// <param name="defines">Macro definitions.</param>
         /// <param name="includeFile">An <see cref="SharpDX.Direct3D9.Include" /> interface to use for handling #include directives.</param>
         /// <param name="flags">Compilation options.</param>
-        /// <returns>A <see cref="SharpDX.Direct3D9.ShaderBytecode" /> object representing the raw shader stream.</returns>
+        /// <returns>A <see cref="SharpDX.Direct3D9.CompilationResult" /> object representing the raw shader stream.</returns>
         /// <unmanaged>HRESULT D3DXAssembleShader([In] const void* pSrcData,[In] unsigned int SrcDataLen,[In, Buffer] const D3DXMACRO* pDefines,[In] ID3DXInclude* pInclude,[In] unsigned int Flags,[In] ID3DXBuffer** ppShader,[In] ID3DXBuffer** ppErrorMsgs)</unmanaged>
-        public static ShaderBytecode Assemble(string sourceData, Macro[] defines, Include includeFile, ShaderFlags flags)
+        public static CompilationResult Assemble(string sourceData, Macro[] defines, Include includeFile, ShaderFlags flags)
         {
             return Assemble(Encoding.ASCII.GetBytes(sourceData), defines, includeFile, flags);
         }
@@ -208,13 +208,13 @@ namespace SharpDX.Direct3D9
         /// <param name="defines">Macro definitions.</param>
         /// <param name="includeFile">An <see cref="SharpDX.Direct3D9.Include" /> interface to use for handling #include directives.</param>
         /// <param name="flags">Compilation options.</param>
-        /// <returns>A <see cref="SharpDX.Direct3D9.ShaderBytecode" /> object representing the raw shader stream.</returns>
+        /// <returns>A <see cref="SharpDX.Direct3D9.CompilationResult" /> object representing the raw shader stream.</returns>
         /// <unmanaged>HRESULT D3DXAssembleShader([In] const void* pSrcData,[In] unsigned int SrcDataLen,[In, Buffer] const D3DXMACRO* pDefines,[In] ID3DXInclude* pInclude,[In] unsigned int Flags,[In] ID3DXBuffer** ppShader,[In] ID3DXBuffer** ppErrorMsgs)</unmanaged>
-        public static ShaderBytecode Assemble(byte[] sourceData, Macro[] defines, Include includeFile, ShaderFlags flags)
+        public static CompilationResult Assemble(byte[] sourceData, Macro[] defines, Include includeFile, ShaderFlags flags)
         {
             unsafe
             {
-                ShaderBytecode bytecode;
+                var resultCode = Result.Ok;
 
                 Blob blobForCode = null;
                 Blob blobForErrors = null;
@@ -234,14 +234,19 @@ namespace SharpDX.Direct3D9
                 catch (SharpDXException ex)
                 {
                     if (blobForErrors != null)
-                        throw new CompilationException(ex.ResultCode, Utilities.BlobToString(blobForErrors));
-                    throw;
+                    {
+                        resultCode = ex.ResultCode;
+                        if (Configuration.ThrowOnShaderCompileError)
+                            throw new CompilationException(ex.ResultCode, Utilities.BlobToString(blobForErrors));
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
 
-                bytecode = new ShaderBytecode(blobForCode);
-
-                return bytecode;
-            }            
+                return new CompilationResult(blobForCode != null ? new ShaderBytecode(blobForCode) : null, resultCode, Utilities.BlobToString(blobForErrors));
+            }       
         }
 
         /// <summary>
@@ -249,8 +254,8 @@ namespace SharpDX.Direct3D9
         /// </summary>
         /// <param name="fileName">Name of the shader file.</param>
         /// <param name="flags">Compilation options.</param>
-        /// <returns>A <see cref="SharpDX.Direct3D9.ShaderBytecode" /> object representing the raw shader stream.</returns>
-        public static ShaderBytecode AssembleFromFile(string fileName, ShaderFlags flags)
+        /// <returns>A <see cref="SharpDX.Direct3D9.CompilationResult" /> object representing the raw shader stream.</returns>
+        public static CompilationResult AssembleFromFile(string fileName, ShaderFlags flags)
         {
             return AssembleFromFile(fileName, null, null, flags);
         }
@@ -263,9 +268,9 @@ namespace SharpDX.Direct3D9
         /// <param name="includeFile">An <see cref="SharpDX.Direct3D9.Include"/> interface to use for handling #include directives.</param>
         /// <param name="flags">Compilation options.</param>
         /// <returns>
-        /// A <see cref="SharpDX.Direct3D9.ShaderBytecode"/> object representing the raw shader stream.
+        /// A <see cref="SharpDX.Direct3D9.CompilationResult"/> object representing the raw shader stream.
         /// </returns>
-        public static ShaderBytecode AssembleFromFile(string fileName, Macro[] defines, Include includeFile, ShaderFlags flags)
+        public static CompilationResult AssembleFromFile(string fileName, Macro[] defines, Include includeFile, ShaderFlags flags)
         {
             return Assemble(File.ReadAllText(fileName), defines, includeFile, flags);
         }
@@ -280,7 +285,7 @@ namespace SharpDX.Direct3D9
         /// The compiled shader bytecode, or <c>null</c> if the method fails.
         /// </returns>
         /// <unmanaged>HRESULT D3DXCompileShader([In] const char* pSrcData,[In] unsigned int SrcDataLen,[In] const D3DXMACRO* pDefines,[In] ID3DXInclude* pInclude,[In] const char* pFunctionName,[In] const char* pProfile,[In] unsigned int Flags,[In] ID3DXBuffer** ppShader,[In] ID3DXBuffer** ppErrorMsgs,[In] ID3DXConstantTable** ppConstantTable)</unmanaged>
-        public static ShaderBytecode Compile(string shaderSource, string profile, ShaderFlags shaderFlags)
+        public static CompilationResult Compile(string shaderSource, string profile, ShaderFlags shaderFlags)
         {
             if (string.IsNullOrEmpty(shaderSource))
             {
@@ -299,7 +304,7 @@ namespace SharpDX.Direct3D9
         /// The compiled shader bytecode, or <c>null</c> if the method fails.
         /// </returns>
         /// <unmanaged>HRESULT D3DXCompileShader([In] const char* pSrcData,[In] unsigned int SrcDataLen,[In] const D3DXMACRO* pDefines,[In] ID3DXInclude* pInclude,[In] const char* pFunctionName,[In] const char* pProfile,[In] unsigned int Flags,[In] ID3DXBuffer** ppShader,[In] ID3DXBuffer** ppErrorMsgs,[In] ID3DXConstantTable** ppConstantTable)</unmanaged>
-        public static ShaderBytecode Compile(byte[] shaderSource, string profile, ShaderFlags shaderFlags)
+        public static CompilationResult Compile(byte[] shaderSource, string profile, ShaderFlags shaderFlags)
         {
             return Compile(shaderSource, null, profile, shaderFlags, null, null);
         }
@@ -315,7 +320,7 @@ namespace SharpDX.Direct3D9
         /// The compiled shader bytecode, or <c>null</c> if the method fails.
         /// </returns>
         /// <unmanaged>HRESULT D3DXCompileShader([In] const char* pSrcData,[In] unsigned int SrcDataLen,[In] const D3DXMACRO* pDefines,[In] ID3DXInclude* pInclude,[In] const char* pFunctionName,[In] const char* pProfile,[In] unsigned int Flags,[In] ID3DXBuffer** ppShader,[In] ID3DXBuffer** ppErrorMsgs,[In] ID3DXConstantTable** ppConstantTable)</unmanaged>
-        public static ShaderBytecode Compile(string shaderSource, string entryPoint, string profile, ShaderFlags shaderFlags)
+        public static CompilationResult Compile(string shaderSource, string entryPoint, string profile, ShaderFlags shaderFlags)
         {
             if (string.IsNullOrEmpty(shaderSource))
             {
@@ -335,7 +340,7 @@ namespace SharpDX.Direct3D9
         /// The compiled shader bytecode, or <c>null</c> if the method fails.
         /// </returns>
         /// <unmanaged>HRESULT D3DXCompileShader([In] const char* pSrcData,[In] unsigned int SrcDataLen,[In] const D3DXMACRO* pDefines,[In] ID3DXInclude* pInclude,[In] const char* pFunctionName,[In] const char* pProfile,[In] unsigned int Flags,[In] ID3DXBuffer** ppShader,[In] ID3DXBuffer** ppErrorMsgs,[In] ID3DXConstantTable** ppConstantTable)</unmanaged>
-        public static ShaderBytecode Compile(byte[] shaderSource, string entryPoint, string profile, ShaderFlags shaderFlags)
+        public static CompilationResult Compile(byte[] shaderSource, string entryPoint, string profile, ShaderFlags shaderFlags)
         {
             return Compile(shaderSource, entryPoint, profile, shaderFlags, null, null);
         }
@@ -352,7 +357,7 @@ namespace SharpDX.Direct3D9
         /// The compiled shader bytecode, or <c>null</c> if the method fails.
         /// </returns>
         /// <unmanaged>HRESULT D3DXCompileShader([In] const char* pSrcData,[In] unsigned int SrcDataLen,[In] const D3DXMACRO* pDefines,[In] ID3DXInclude* pInclude,[In] const char* pFunctionName,[In] const char* pProfile,[In] unsigned int Flags,[In] ID3DXBuffer** ppShader,[In] ID3DXBuffer** ppErrorMsgs,[In] ID3DXConstantTable** ppConstantTable)</unmanaged>
-        public static ShaderBytecode Compile(string shaderSource, string profile, ShaderFlags shaderFlags, Macro[] defines, Include include)
+        public static CompilationResult Compile(string shaderSource, string profile, ShaderFlags shaderFlags, Macro[] defines, Include include)
         {
             if (string.IsNullOrEmpty(shaderSource))
             {
@@ -373,7 +378,7 @@ namespace SharpDX.Direct3D9
         /// The compiled shader bytecode, or <c>null</c> if the method fails.
         /// </returns>
         /// <unmanaged>HRESULT D3DXCompileShader([In] const char* pSrcData,[In] unsigned int SrcDataLen,[In] const D3DXMACRO* pDefines,[In] ID3DXInclude* pInclude,[In] const char* pFunctionName,[In] const char* pProfile,[In] unsigned int Flags,[In] ID3DXBuffer** ppShader,[In] ID3DXBuffer** ppErrorMsgs,[In] ID3DXConstantTable** ppConstantTable)</unmanaged>
-        public static ShaderBytecode Compile(byte[] shaderSource, string profile, ShaderFlags shaderFlags, Macro[] defines, Include include)
+        public static CompilationResult Compile(byte[] shaderSource, string profile, ShaderFlags shaderFlags, Macro[] defines, Include include)
         {
             return Compile(shaderSource, null, profile, shaderFlags, defines, include);
         }
@@ -391,7 +396,7 @@ namespace SharpDX.Direct3D9
         /// The compiled shader bytecode, or <c>null</c> if the method fails.
         /// </returns>
         /// <unmanaged>HRESULT D3DXCompileShader([In] const char* pSrcData,[In] unsigned int SrcDataLen,[In] const D3DXMACRO* pDefines,[In] ID3DXInclude* pInclude,[In] const char* pFunctionName,[In] const char* pProfile,[In] unsigned int Flags,[In] ID3DXBuffer** ppShader,[In] ID3DXBuffer** ppErrorMsgs,[In] ID3DXConstantTable** ppConstantTable)</unmanaged>
-        public static ShaderBytecode Compile(string shaderSource, string entryPoint, string profile, ShaderFlags shaderFlags, Macro[] defines, Include include)
+        public static CompilationResult Compile(string shaderSource, string entryPoint, string profile, ShaderFlags shaderFlags, Macro[] defines, Include include)
         {
             if (string.IsNullOrEmpty(shaderSource))
             {
@@ -412,7 +417,7 @@ namespace SharpDX.Direct3D9
         /// The compiled shader bytecode, or <c>null</c> if the method fails.
         /// </returns>
         /// <unmanaged>HRESULT D3DXCompileShader([In] const char* pSrcData,[In] unsigned int SrcDataLen,[In] const D3DXMACRO* pDefines,[In] ID3DXInclude* pInclude,[In] const char* pFunctionName,[In] const char* pProfile,[In] unsigned int Flags,[In] ID3DXBuffer** ppShader,[In] ID3DXBuffer** ppErrorMsgs,[In] ID3DXConstantTable** ppConstantTable)</unmanaged>
-        public static ShaderBytecode CompileFromFile(string fileName, string profile, ShaderFlags shaderFlags = ShaderFlags.None, Macro[] defines = null, Include include = null)
+        public static CompilationResult CompileFromFile(string fileName, string profile, ShaderFlags shaderFlags = ShaderFlags.None, Macro[] defines = null, Include include = null)
         {
             return CompileFromFile(fileName, null, profile, shaderFlags, defines, include);
         }
@@ -430,7 +435,7 @@ namespace SharpDX.Direct3D9
         /// The compiled shader bytecode, or <c>null</c> if the method fails.
         /// </returns>
         /// <unmanaged>HRESULT D3DXCompileShader([In] const char* pSrcData,[In] unsigned int SrcDataLen,[In] const D3DXMACRO* pDefines,[In] ID3DXInclude* pInclude,[In] const char* pFunctionName,[In] const char* pProfile,[In] unsigned int Flags,[In] ID3DXBuffer** ppShader,[In] ID3DXBuffer** ppErrorMsgs,[In] ID3DXConstantTable** ppConstantTable)</unmanaged>
-        public static ShaderBytecode CompileFromFile(string fileName, string entryPoint, string profile, ShaderFlags shaderFlags = ShaderFlags.None, Macro[] defines = null, Include include = null)
+        public static CompilationResult CompileFromFile(string fileName, string entryPoint, string profile, ShaderFlags shaderFlags = ShaderFlags.None, Macro[] defines = null, Include include = null)
         {
             if (fileName == null)
             {
@@ -461,11 +466,11 @@ namespace SharpDX.Direct3D9
         /// The compiled shader bytecode, or <c>null</c> if the method fails.
         /// </returns>
         /// <unmanaged>HRESULT D3DXCompileShader([In] const char* pSrcData,[In] unsigned int SrcDataLen,[In] const D3DXMACRO* pDefines,[In] ID3DXInclude* pInclude,[In] const char* pFunctionName,[In] const char* pProfile,[In] unsigned int Flags,[In] ID3DXBuffer** ppShader,[In] ID3DXBuffer** ppErrorMsgs,[In] ID3DXConstantTable** ppConstantTable)</unmanaged>
-        public static ShaderBytecode Compile(byte[] shaderSource, string entryPoint, string profile, ShaderFlags shaderFlags, Macro[] defines, Include include)
+        public static CompilationResult Compile(byte[] shaderSource, string entryPoint, string profile, ShaderFlags shaderFlags, Macro[] defines, Include include)
         {
             unsafe
             {
-                ShaderBytecode bytecode;
+                var resultCode = Result.Ok;
 
                 Blob blobForCode = null;
                 Blob blobForErrors = null;
@@ -485,22 +490,27 @@ namespace SharpDX.Direct3D9
                             out blobForCode,
                             out blobForErrors,
                             out constantTable);
-                }
+                } 
                 catch (SharpDXException ex)
                 {
                     if (blobForErrors != null)
-                        throw new CompilationException(ex.ResultCode, Utilities.BlobToString(blobForErrors));
-                    throw;
-                } 
+                    {
+                        resultCode = ex.ResultCode;
+                        if (Configuration.ThrowOnShaderCompileError)
+                            throw new CompilationException(ex.ResultCode, Utilities.BlobToString(blobForErrors));
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
                 finally
                 {
                     if (constantTable != null)
                         constantTable.Dispose();
                 }
 
-                bytecode = new ShaderBytecode(blobForCode);
-
-                return bytecode;
+                return new CompilationResult(blobForCode != null ? new ShaderBytecode(blobForCode) : null, resultCode, Utilities.BlobToString(blobForErrors));
             }
         }
 
