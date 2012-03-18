@@ -32,12 +32,12 @@ namespace SharpDX
         /// Initializes a new instance of the <see cref="CompilationResultBase{T}"/> class.
         /// </summary>
         /// <param name="bytecode">The bytecode.</param>
-        /// <param name="hasErrors">if set to <c>true</c> [has errors].</param>
+        /// <param name="resultCode">Result code from compilation.</param>
         /// <param name="message">The message.</param>
-        public CompilationResultBase(T bytecode, bool hasErrors = false, string message = null)
+        public CompilationResultBase(T bytecode, Result resultCode, string message = null)
         {
             Bytecode = bytecode;
-            HasErrors = hasErrors;
+            ResultCode = resultCode;
             Message = message;
         }
 
@@ -47,12 +47,23 @@ namespace SharpDX
         public T Bytecode { get; private set; }
 
         /// <summary>
+        /// Gets the result code from the compilation.
+        /// </summary>
+        public Result ResultCode { get; private set; }
+
+        /// <summary>
         /// Gets a value indicating whether this instance has errors.
         /// </summary>
         /// <value>
         /// 	<c>true</c> if this instance has errors; otherwise, <c>false</c>.
         /// </value>
-        public bool HasErrors { get; private set; }
+        public bool HasErrors
+        {
+            get
+            {
+                return ResultCode.Failure;
+            }
+        }
 
         /// <summary>
         /// Gets the message.
