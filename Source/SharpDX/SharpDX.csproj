@@ -23,6 +23,7 @@
     <Compile Include="BoundingSphere.cs" />
     <Compile Include="CallbackBase.cs" />
     <Compile Include="ComArray.cs" />
+    <Compile Include="CompilationResultBase.cs" />
     <Compile Include="DrawingSizeF.cs" />
     <Compile Include="DrawingSize.cs" />
     <Compile Include="DrawingPointF.cs" />
