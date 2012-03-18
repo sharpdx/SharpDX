@@ -43,6 +43,8 @@ namespace SharpDX.Direct3D11
         public HullShader(Device device, ShaderBytecode shaderBytecode, ClassLinkage linkage)
             : base(IntPtr.Zero)
         {
+            if (shaderBytecode == null) throw new ArgumentNullException("shaderBytecode", "ShaderBytecode cannot be null");
+
             device.CreateHullShader(shaderBytecode.BufferPointer,
                                     shaderBytecode.BufferSize, linkage, this);
         }

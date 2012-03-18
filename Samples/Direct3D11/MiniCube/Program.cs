@@ -59,6 +59,9 @@ namespace MiniCube
             // Used for debugging dispose object references
             // Configuration.EnableObjectTracking = true;
 
+            // Disable throws on shader compilation errors
+            //Configuration.ThrowOnShaderCompileError = false;
+
             // Create Device and SwapChain
             Device device;
             SwapChain swapChain;

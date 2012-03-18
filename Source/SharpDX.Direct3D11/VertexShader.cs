@@ -42,6 +42,8 @@ namespace SharpDX.Direct3D11
         public VertexShader(Device device, ShaderBytecode shaderBytecode, ClassLinkage linkage)
             : base(IntPtr.Zero)
         {
+            if (shaderBytecode == null) throw new ArgumentNullException("shaderBytecode", "ShaderBytecode cannot be null");
+
             device.CreateVertexShader(shaderBytecode.BufferPointer,
                                       shaderBytecode.BufferSize, linkage, this);
         }

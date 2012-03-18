@@ -412,6 +412,7 @@ namespace SharpDX
         /// <returns>A string extracted from a blob.</returns>
         public static string BlobToString(Blob blob)
         {
+            if (blob == null) return null;
             string output;
 #if WIN8
             output = Marshal.PtrToStringAnsi(blob.BufferPointer);
