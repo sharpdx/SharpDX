@@ -2335,6 +2335,8 @@
     <map param="pNumSegs" attribute="in buffer"/>
     <map param="pTriPatchInfo" type="void"/>
 
+    <map param="IDirect3DDevice9::Reset::pPresentationParameters" attribute="in out params"/>
+
     <map method="IDirect3DDevice9::TestCooperativeLevel" check="false"/>
 
     <map method="IDirect3DVertexBuffer9::Lock" visibility="internal" name="Lock_" />
