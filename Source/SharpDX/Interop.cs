@@ -45,6 +45,16 @@ namespace SharpDX
             throw new NotImplementedException();
         }
 
+        public static unsafe void* Cast<T>(ref T data) where T : struct
+        {
+            throw new NotImplementedException();
+        }
+
+        public static TCAST[] CastArray<TCAST,T>(T[] arrayData) where T : struct where TCAST : struct
+        {
+            throw new NotImplementedException();
+        }
+
         public static unsafe void memcpy(void* pDest, void* pSrc, int count)
         {
             throw new NotImplementedException();    
