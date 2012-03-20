@@ -131,6 +131,47 @@ namespace SharpCli
             ilProcessor.Replace(fixedtoPatch, ldlocFixed);
         }
 
+
+        /// <summary>
+        /// Creates the cast  method with the following signature:
+        /// <code>
+        /// public static unsafe void* Cast&lt;T&gt;(ref T data) where T : struct
+        /// </code>
+        /// </summary>
+        /// <param name="method">The method cast.</param>
+        private void CreateCastMethod(MethodDefinition method)
+        {
+            method.Body.Instructions.Clear();
+            method.Body.InitLocals = true;
+
+            var gen = method.Body.GetILProcessor();
+
+            gen.Emit(OpCodes.Ldarg_0);
+
+            // Ret
+            gen.Emit(OpCodes.Ret);
+        }
+
+        /// <summary>
+        /// Creates the cast  method with the following signature:
+        /// <code>
+        /// public static TCAST[] CastArray&lt;TCAST, T&gt;(T[] arrayData) where T : struct where TCAST : struct
+        /// </code>
+        /// </summary>
+        /// <param name="method">The method cast array.</param>
+        private void CreateCastArrayMethod(MethodDefinition method)
+        {
+            method.Body.Instructions.Clear();
+            method.Body.InitLocals = true;
+
+            var gen = method.Body.GetILProcessor();
+
+            gen.Emit(OpCodes.Ldarg_0);
+
+            // Ret
+            gen.Emit(OpCodes.Ret);
+        }
+
         private void ReplaceFixedArrayStatement(MethodDefinition method, ILProcessor ilProcessor, Instruction fixedtoPatch)
         {
             var paramT = method.GenericParameters[0];
@@ -442,6 +483,14 @@ namespace SharpCli
                 else if (method.Name == "SizeOf")
                 {
                     CreateSizeOfStructGeneric(method);
+                }
+                else if (method.Name == "Cast")
+                {
+                    CreateCastMethod(method);
+                }
+                else if (method.Name == "CastArray")
+                {
+                    CreateCastArrayMethod(method);
                 }
                 else if (method.Name == "Read")
                 {

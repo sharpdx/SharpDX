@@ -59,4 +59,8 @@ using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("SharpDX.Framework.Graphics")]
 
+#if DEBUG
+[assembly: InternalsVisibleTo("SharpDX.Tests")]
+#endif
+
 #endif
