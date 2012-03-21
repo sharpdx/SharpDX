@@ -395,8 +395,8 @@ namespace SharpCli
             gen.Emit(OpCodes.Ldarg_0);
             gen.Emit(OpCodes.Ldarg_1);
             gen.Emit(OpCodes.Ldarg_2);
-
-            EmitCpblk(methodCopyStruct, gen);
+            gen.Emit(OpCodes.Unaligned, (byte)1);       // unaligned to 1
+            gen.Emit(OpCodes.Cpblk);
 
             // Ret
             gen.Emit(OpCodes.Ret);
@@ -405,11 +405,11 @@ namespace SharpCli
         /// <summary>
         /// Creates the memset method with the following signature:
         /// <code>
-        /// public static unsafe void memset(void* pDest, int value, int count)
+        /// public static unsafe void memset(void* pDest, byte value, int count)
         /// </code>
         /// </summary>
         /// <param name="methodSetStruct">The method set struct.</param>
-        private void CreateMemset(MethodDefinition methodSetStruct, bool isX64)
+        private void CreateMemset(MethodDefinition methodSetStruct)
         {
             methodSetStruct.Body.Instructions.Clear();
 
@@ -418,8 +418,7 @@ namespace SharpCli
             gen.Emit(OpCodes.Ldarg_0);
             gen.Emit(OpCodes.Ldarg_1);
             gen.Emit(OpCodes.Ldarg_2);
-            if (isX64)
-                gen.Emit(OpCodes.Conv_I8);       //  for x64 platform
+            gen.Emit(OpCodes.Unaligned, (byte)1);       // unaligned to 1
             gen.Emit(OpCodes.Initblk);
 
             // Ret
@@ -454,7 +453,7 @@ namespace SharpCli
             //gen.Emit(OpCodes.Sizeof, voidType);
             //gen.Emit(OpCodes.Ldc_I4_8);
             //gen.Emit(OpCodes.Bne_Un_S, cpblk);
-            gen.Emit(OpCodes.Unaligned, (byte)1);       // unaligned to 1 if x64 platform
+            gen.Emit(OpCodes.Unaligned, (byte)1);       // unaligned to 1
             gen.Append(cpblk);
             
         }
@@ -472,13 +471,9 @@ namespace SharpCli
                 {
                     CreateMemcpy(method);
                 }
-                else if (method.Name == "memsetx86")
+                else if (method.Name == "memset")
                 {
-                    CreateMemset(method, false);
-                }
-                else if (method.Name == "memsetx64")
-                {
-                    CreateMemset(method, true);
+                    CreateMemset(method);
                 }
                 else if (method.Name == "SizeOf")
                 {

@@ -70,15 +70,11 @@ namespace SharpDX
         /// <param name="dest">The dest.</param>
         /// <param name="value">The value.</param>
         /// <param name="sizeInBytesToClear">The size in bytes to clear.</param>
-        public static void ClearMemory(IntPtr dest, int value, int sizeInBytesToClear)
+        public static void ClearMemory(IntPtr dest, byte value, int sizeInBytesToClear)
         {
             unsafe
             {
-                // TODO plug in Interop a pluggable CopyMemory using cpblk or memcpy based on architecture
-                if (sizeof(void*) == 8)
-                    Interop.memsetx64((void*)dest, value, sizeInBytesToClear);
-                else
-                    Interop.memsetx86((void*)dest, value, sizeInBytesToClear);
+                Interop.memset((void*)dest, value, sizeInBytesToClear);
             }
         }
 
