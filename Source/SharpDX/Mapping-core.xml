@@ -158,6 +158,7 @@
 
     <define struct="SharpDX.DataRectangle" sizeof="12" />
     <define struct="SharpDX.DataBox" sizeof="16" />
+    <define struct="SharpDX.Bool4" sizeof="16" />
     <define struct="SharpDX.Int4" sizeof="16" />
     <define struct="SharpDX.Rectangle" sizeof="16" />
     <define struct="SharpDX.RectangleF" sizeof="16" />
@@ -190,6 +191,7 @@
     <bind from="bool" to="System.Boolean" />
 
     <!-- SharpDX bindings -->
+    <bind from="SHARPDX_BOOL4" to="SharpDX.Bool4" />
     <bind from="SHARPDX_INT4" to="SharpDX.Int4" />
     <bind from="SHARPDX_COLOR4" to="SharpDX.Color4" />
     <bind from="SHARPDX_VECTOR4" to="SharpDX.Vector4" />
