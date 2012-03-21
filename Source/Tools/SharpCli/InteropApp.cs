@@ -479,7 +479,7 @@ namespace SharpCli
                 {
                     CreateSizeOfStructGeneric(method);
                 }
-                else if (method.Name == "Cast")
+                else if ((method.Name == "Cast") || (method.Name == "CastOut"))
                 {
                     CreateCastMethod(method);
                 }

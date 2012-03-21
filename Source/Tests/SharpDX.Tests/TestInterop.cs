@@ -31,6 +31,16 @@ namespace SharpDX.Tests
     [Description("Tests SharpDX.Interop")]
     public class TestInterop
     {
+
+        private void Modify(out RawMatrix matrix)
+        {
+            matrix = new RawMatrix
+            {
+                Row1 = new RawVector4 { X = 1.0f, Y = 2.0f, Z = 3.0f, W = 4.0f },
+                Row4 = new RawVector4 { X = 5.0f, Y = 6.0f, Z = 7.0f, W = 8.0f },
+            };
+        }
+
         [Test]
         public unsafe void TestCast()
         {
@@ -45,6 +55,12 @@ namespace SharpDX.Tests
 
             Assert.True(toMatrix.Row1 == new Vector4 { X = 1.0f, Y = 2.0f, Z = 3.0f, W = 4.0f });
             Assert.True(toMatrix.Row4 == new Vector4 { X = 5.0f, Y = 6.0f, Z = 7.0f, W = 8.0f });
+
+            // Check CastOut: output a Matrix by using a function that is requiring a RawMatrix type
+            Matrix temp;
+            Modify(out *(RawMatrix*)Interop.CastOut(out temp));
+            Assert.True(temp.Row1 == new Vector4 { X = 1.0f, Y = 2.0f, Z = 3.0f, W = 4.0f });
+            Assert.True(temp.Row4 == new Vector4 { X = 5.0f, Y = 6.0f, Z = 7.0f, W = 8.0f });
         }
 
         [Test]

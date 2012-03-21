@@ -18,11 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Diagnostics;
 
 namespace SharpDX.Direct3D10
 {
     public partial class EffectVectorVariable
     {
+        private const string VectorInvalidSize = "Invalid Vector size: Must be 16 bytes or 4 x 4 bytes";
+
         /// <summary>	
         /// Get a four-component vector that contains integer data.	
         /// </summary>	
@@ -52,11 +55,24 @@ namespace SharpDX.Direct3D10
         /// </summary>	
         /// <returns>a four-component vector that contains boolean data. </returns>
         /// <unmanaged>HRESULT ID3D10EffectVectorVariable::GetBoolVector([Out, Buffer] BOOL* pData)</unmanaged>
-        public bool[] GetBoolVector()
+        public Bool4 GetBoolVector()
         {
-            var temp = new int[4];
-            GetBoolVector(temp);
-            return Utilities.ConvertToBoolArray(temp);
+            Bool4 temp;
+            GetBoolVector(out temp);
+            return temp;
+        }
+
+        /// <summary>	
+        /// Get a four-component vector.	
+        /// </summary>	
+        /// <typeparam name="T">Type of the four-component vector</typeparam>
+        /// <returns>a four-component vector. </returns>
+        /// <unmanaged>HRESULT ID3D10EffectVectorVariable::GetFloatVector([Out, Buffer] BOOL* pData)</unmanaged>
+        public unsafe T GetVector<T>() where T : struct
+        {
+            T temp;
+            GetIntVector(out *(Int4*)Interop.CastOut(out temp));
+            return temp;
         }
 
         /// <summary>	
@@ -79,6 +95,44 @@ namespace SharpDX.Direct3D10
         public SharpDX.Result Set(SharpDX.Vector4[] array)
         {
             return Set(array, 0, array.Length);
+        }
+
+        /// <summary>
+        /// Set an array of four-component vectors that contain floating-point data.
+        /// </summary>
+        /// <typeparam name="T">Type of the four-component vector</typeparam>
+        /// <param name="array">A reference to the start of the data to set.</param>
+        /// <returns>
+        /// Returns one of the following {{Direct3D 10 Return Codes}}.
+        /// </returns>
+        /// <unmanaged>HRESULT ID3D10EffectVectorVariable::SetFloatVectorArray([In, Buffer] float* pData,[None] int Offset,[None] int Count)</unmanaged>
+        public SharpDX.Result Set<T>(T[] array) where T : struct
+        {
+            Trace.Assert(Utilities.SizeOf<T>() == 16, VectorInvalidSize);
+            return Set(Interop.CastArray<Vector4, T>(array), 0, array.Length);
+        }
+
+        /// <summary>	
+        /// Set a x-component vector.	
+        /// </summary>	
+        /// <param name="value">A reference to the first component. </param>
+        /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
+        /// <unmanaged>HRESULT ID3D10EffectVectorVariable::SetFloatVector([In] float* pData)</unmanaged>
+        public SharpDX.Result Set<T>(T value) where T : struct
+        {
+            return Set(ref value);
+        }
+
+        /// <summary>	
+        /// Set a x-component vector.	
+        /// </summary>	
+        /// <param name="value">A reference to the first component. </param>
+        /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
+        /// <unmanaged>HRESULT ID3D10EffectVectorVariable::SetFloatVector([In] float* pData)</unmanaged>
+        public unsafe SharpDX.Result Set<T>(ref T value) where T : struct
+        {
+            Trace.Assert(Utilities.SizeOf<T>() <= 16, VectorInvalidSize);
+            return SetRawValue(new IntPtr(Interop.Fixed(ref value)), 0, Utilities.SizeOf<T>());
         }
 
         /// <summary>	
@@ -138,19 +192,6 @@ namespace SharpDX.Direct3D10
         }
 
         /// <summary>	
-        /// Set an array of four-component vectors that contain boolean data.	
-        /// </summary>	
-        /// <param name="array">A reference to the start of the data to set. </param>
-        /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
-        /// <unmanaged>HRESULT ID3D10EffectVectorVariable::SetBoolVectorArray([In, Buffer] BOOL* pData,[None] int Offset,[None] int Count)</unmanaged>
-        public SharpDX.Result Set(bool[] array)
-        {
-            if ((array.Length & 3) != 0) throw new ArgumentException("Array length must be a multiple of 4", "array");
-            var temp = Utilities.ConvertToIntArray(array);
-            return Set(temp, 0, temp.Length);
-        }
-        
-        /// <summary>	
         /// Get an array of four-component vectors that contain integer data.	
         /// </summary>	
         /// <param name="count">The number of array elements to set. </param>
@@ -160,7 +201,7 @@ namespace SharpDX.Direct3D10
         {
             var temp = new Int4[count];
             GetIntVectorArray(temp, 0, count);
-            return temp;            
+            return temp;
         }
 
         /// <summary>	
@@ -173,7 +214,7 @@ namespace SharpDX.Direct3D10
         {
             var temp = new SharpDX.Vector4[count];
             GetFloatVectorArray(temp, 0, count);
-            return temp;            
+            return temp;
         }
 
         /// <summary>	
@@ -182,11 +223,25 @@ namespace SharpDX.Direct3D10
         /// <param name="count">The number of array elements to set. </param>
         /// <returns>an array of four-component vectors that contain boolean data.	 </returns>
         /// <unmanaged>HRESULT ID3D10EffectVectorVariable::GetBoolVectorArray([Out, Buffer] BOOL* pData,[None] int Offset,[None] int Count)</unmanaged>
-        public bool[] GetBoolVectorArray(int count)
+        public Bool4[] GetBoolVectorArray(int count)
         {
-            var temp = new int[count*4];
+            var temp = new Bool4[count];
             GetBoolVectorArray(temp, 0, count);
-            return Utilities.ConvertToBoolArray(temp);
-        }    
+            return temp;
+        }
+
+
+        /// <summary>	
+        /// Get an array of four-component vectors that contain boolean data.	
+        /// </summary>	
+        /// <param name="count">The number of array elements to set. </param>
+        /// <returns>an array of four-component vectors that contain boolean data.	 </returns>
+        /// <unmanaged>HRESULT ID3D10EffectVectorVariable::GetBoolVectorArray([Out, Buffer] BOOL* pData,[None] int Offset,[None] int Count)</unmanaged>
+        public T[] GetVectorArray<T>(int count) where T : struct
+        {
+            var temp = new T[count];
+            GetIntVectorArray(Interop.CastArray<Int4, T>(temp), 0, count);
+            return temp;
+        }
     }
 }

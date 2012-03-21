@@ -437,19 +437,21 @@
     <map method="ID3DX?(\d+)EffectDepthStencilViewVariable::SetDepthStencil" visibility="public" />
     <map param="ID3DX?(\d+)EffectDepthStencilViewVariable::GetDepthStencilArray::ppResources" attribute="out buffer" />
     <map param="ID3DX?(\d+)EffectDepthStencilViewVariable::SetDepthStencilArray::ppResources" attribute="in buffer" />
+    
     <map method="ID3DX?(\d+)EffectMatrixVariable::.*" visibility="internal" property="false" />
-    <map method="ID3DX?(\d+)EffectMatrixVariable::GetMatrix" visibility="public" />
-    <map method="ID3DX?(\d+)EffectMatrixVariable::GetMatrixTranspose" visibility="public" />
+    <map method="ID3DX?(\d+)EffectMatrixVariable::GetMatrix" visibility="internal" />
+    <map method="ID3DX?(\d+)EffectMatrixVariable::GetMatrixTranspose" visibility="internal" />
     <map method="ID3DX?(\d+)EffectMatrixVariable::SetMatrix" visibility="public" />
     <map method="ID3DX?(\d+)EffectMatrixVariable::SetMatrixTranspose" visibility="public" />
     <map param="ID3DX?(\d+)EffectMatrixVariable::SetMatrix::pData" type="SHARPDX_MATRIX" attribute="in" />
     <map param="pData" type="SHARPDX_MATRIX" attribute="in" />
     <map param="ID3DX?(\d+)EffectMatrixVariable::SetMatrixArray::pData" type="SHARPDX_MATRIX" attribute="in buffer" />
     <map param="ID3DX?(\d+)EffectMatrixVariable::SetMatrixTransposeArray::pData" type="SHARPDX_MATRIX" attribute="in buffer" />
-    <map param="ID3DX?(\d+)EffectMatrixVariable::GetMatrix::pData" type="SHARPDX_MATRIX" attribute="out" return="true" />
+    <map param="ID3DX?(\d+)EffectMatrixVariable::GetMatrix::pData" type="SHARPDX_MATRIX" attribute="out" />
     <map param="ID3DX?(\d+)EffectMatrixVariable::GetMatrixArray::pData" type="SHARPDX_MATRIX" attribute="out buffer" />
-    <map param="ID3DX?(\d+)EffectMatrixVariable::GetMatrixTranspose::pData" type="SHARPDX_MATRIX" attribute="out" return="true" />
+    <map param="ID3DX?(\d+)EffectMatrixVariable::GetMatrixTranspose::pData" type="SHARPDX_MATRIX" attribute="out"/>
     <map param="ID3DX?(\d+)EffectMatrixVariable::GetMatrixTransposeArray::pData" type="SHARPDX_MATRIX" attribute="out buffer" />
+    
     <map param="ID3DX?(\d+)EffectPass::GetDesc::pDesc" attribute="out" />
     <map param="ID3DX?(\d+)EffectPass::GetVertexShaderDesc::pDesc" attribute="out" />
     <map param="ID3DX?(\d+)EffectPass::GetGeometryShaderDesc::pDesc" attribute="out" />
@@ -492,9 +494,11 @@
     <map param="ID3DX?(\d+)EffectStringVariable::GetString::ppString" type="void" attribute="out" />
     <map param="ID3DX?(\d+)EffectStringVariable::GetStringArray::ppStrings" type="void" attribute="out buffer" />
     <map method="ID3DX?(\d+)EffectVariable::(As.*)" visibility="internal" name="$2_" />
-    <map method="ID3DX?(\d+)EffectVectorVariable::.*" visibility="internal" property="false" />
+    
+    <map method="ID3DX?(\d+)EffectVectorVariable::.*" visibility="internal" property="false" />    
     <map method="ID3DX?(\d+)EffectVectorVariable::SetIntVector" visibility="public" />
     <map method="ID3DX?(\d+)EffectVectorVariable::SetFloatVector" visibility="public" />
+    <map method="ID3DX?(\d+)EffectVectorVariable::SetBoolVector" visibility="public" />
     <map param="ID3DX?(\d+)EffectVectorVariable::GetIntVector::pData" type="SHARPDX_INT4" attribute="out" />
     <map param="ID3DX?(\d+)EffectVectorVariable::GetFloatVector::pData" type="SHARPDX_VECTOR4" attribute="out" />
     <map param="ID3DX?(\d+)EffectVectorVariable::GetIntVectorArray::pData" type="SHARPDX_INT4" attribute="out buffer" />
@@ -502,12 +506,12 @@
     <map param="ID3DX?(\d+)EffectVectorVariable::SetIntVectorArray::pData" type="SHARPDX_INT4" attribute="in buffer" />
     <map param="ID3DX?(\d+)EffectVectorVariable::SetFloatVectorArray::pData" type="SHARPDX_VECTOR4" attribute="in buffer" />
     <map param="ID3DX?(\d+)EffectVectorVariable::SetIntVector::pData" type="SHARPDX_INT4" attribute="in" />
-    <map param="pData" type="SHARPDX_VECTOR4" attribute="in" />
     <map method="ID3DX?(\d+)EffectVectorVariable::Set.*" name="Set" />
-    <map param="ID3DX?(\d+)EffectVectorVariable::GetBoolVector::pData" attribute="out buffer" />
-    <map param="ID3DX?(\d+)EffectVectorVariable::GetBoolVectorArray::pData" attribute="out buffer" />
-    <map param="ID3DX?(\d+)EffectVectorVariable::SetBoolVector::pData" attribute="in buffer" />
-    <map param="ID3DX?(\d+)EffectVectorVariable::SetBoolVectorArray::pData" attribute="in buffer" />
+    <map param="ID3DX?(\d+)EffectVectorVariable::GetBoolVector::pData" type="SHARPDX_BOOL4" attribute="out" />
+    <map param="ID3DX?(\d+)EffectVectorVariable::GetBoolVectorArray::pData" type="SHARPDX_BOOL4" attribute="out buffer" />
+    <map param="ID3DX?(\d+)EffectVectorVariable::SetBoolVector::pData" type="SHARPDX_BOOL4" attribute="in" />
+    <map param="ID3DX?(\d+)EffectVectorVariable::SetBoolVectorArray::pData" type="SHARPDX_BOOL4" attribute="in buffer" />
+    
     <map param="ID3DX?(\d+)EffectTechnique::GetDesc::pDesc" attribute="out" />
     <map param="ID3DX?(\d+)Effect::GetDevice::ppDevice" attribute="out" />
     <map param="ID3DX?(\d+)Effect::GetDesc::pDesc" attribute="out" />
