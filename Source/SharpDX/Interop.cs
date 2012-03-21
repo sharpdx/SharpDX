@@ -60,12 +60,7 @@ namespace SharpDX
             throw new NotImplementedException();    
         }
 
-        public static unsafe void memsetx86(void* pDest, int value, int count)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static unsafe void memsetx64(void* pDest, int value, int count)
+        public static unsafe void memset(void* pDest, byte value, int count)
         {
             throw new NotImplementedException();
         }

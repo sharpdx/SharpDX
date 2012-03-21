@@ -17,6 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System;
+
 using NUnit.Framework;
 
 namespace SharpDX.Tests
@@ -44,6 +47,41 @@ namespace SharpDX.Tests
             Assert.True(toMatrix.Row4 == new Vector4 { X = 5.0f, Y = 6.0f, Z = 7.0f, W = 8.0f });
         }
 
+        [Test]
+        public unsafe void TestCpBlk()
+        {
+            // Assume that allocation is linear on the stack, and matrix1 is located 
+            // between matrix0 & matrix2
+            var matrix0 = new Matrix
+                {
+                    Row1 = new Vector4 { X = 1.0f, Y = 2.0f, Z = 3.0f, W = 4.0f },
+                    Row4 = new Vector4 { X = 5.0f, Y = 6.0f, Z = 7.0f, W = 8.0f },
+                };
+            var matrix1 = new Matrix();
+
+            // Clear matrix1 only. matrix0 and matrix2 should not be modified
+            Utilities.CopyMemory(new IntPtr(&matrix1), new IntPtr(&matrix0), Utilities.SizeOf<Matrix>());
+
+            Assert.True(matrix1.Row1 == new Vector4 { X = 1.0f, Y = 2.0f, Z = 3.0f, W = 4.0f });
+            Assert.True(matrix1.Row4 == new Vector4 { X = 5.0f, Y = 6.0f, Z = 7.0f, W = 8.0f });
+        }
+
+        [Test]
+        public unsafe void TestInitBlk()
+        {
+            // Assume that allocation is linear on the stack, and matrix1 is located 
+            // between matrix0 & matrix2
+            var matrix0 = new Matrix { M44 = 1.0f };
+            var matrix1 = new Matrix() { M11 = 2.0f };
+            var matrix2 = new Matrix { M11 = 1.0f };
+
+            // Clear matrix1 only. matrix0 and matrix2 should not be modified
+            Utilities.ClearMemory(new IntPtr(&matrix1), 0, Utilities.SizeOf<Matrix>());
+
+            Assert.True(matrix0.M44 == 1.0f);
+            Assert.True(matrix1.M11 == 0.0f);
+            Assert.True(matrix2.M11 == 1.0f);
+        }
 
         [Test]
         public unsafe void TestCastArray()
