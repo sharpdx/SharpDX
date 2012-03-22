@@ -380,11 +380,12 @@
     <map interface="IStream" name="IStream" callback-visibility="public" callback="true" callback-dual="true" callback-name="ComStream"/>
     <map param="IStream::Seek::dwOrigin" type="SHARPDX_SEEKORIGIN"/>
     <map param="IStream::Seek::plibNewPosition" return="true"/>
-    <map param="IStream::CopyTo::pcbRead" return="true"/>
+    <map param="IStream::CopyTo::pcbRead" attribute="out" return="true"/>
+    <map param="IStream::CopyTo::pcbWritten" attribute="out"/>
     <map param="IStream::Commit::grfCommitFlags" type="STGC"/>
     <map param="IStream::.*::dwLockType" type="LOCKTYPE"/>
     <map method="IStream::Stat" name="GetStatistics" />
-    <map param="IStream::Stat::pstatstg" return="true"/>
+    <map param="IStream::Stat::pstatstg" attribute="out" return="true"/>
     <map param="IStream::Stat::grfStatFlag" type="STATFLAG"/>
     <map param="IStream::Clone::ppstm" return="true"/>
     <map method="IStream::.*" keep-implement-public="true"/>

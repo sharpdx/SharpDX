@@ -28,7 +28,7 @@ namespace SharpDX
     /// </summary>
     internal partial class Win32Native
     {
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
         public class LogFont
         {
             public int lfHeight;
@@ -146,10 +146,10 @@ namespace SharpDX
             return GetWindowLong64(hWnd, index);
         }
 
-        [DllImport("user32.dll", EntryPoint = "GetWindowLong", CharSet = CharSet.Auto)]
+        [DllImport("user32.dll", EntryPoint = "GetWindowLong", CharSet = CharSet.Ansi)]
         private static extern IntPtr GetWindowLong32(HandleRef hwnd, WindowLongType index);
 
-        [DllImport("user32.dll", EntryPoint = "GetWindowLongPtr", CharSet = CharSet.Auto)]
+        [DllImport("user32.dll", EntryPoint = "GetWindowLongPtr", CharSet = CharSet.Ansi)]
         private static extern IntPtr GetWindowLong64(HandleRef hwnd, WindowLongType index);
 
         public static IntPtr SetWindowLong(HandleRef hwnd, WindowLongType index, WndProc wndProc)
@@ -161,19 +161,19 @@ namespace SharpDX
             return SetWindowLongPtr64(hwnd, index, wndProc);
         }
 
-        [DllImport("user32.dll", EntryPoint = "SetWindowLong", CharSet = CharSet.Auto)]
+        [DllImport("user32.dll", EntryPoint = "SetWindowLong", CharSet = CharSet.Ansi)]
         private static extern IntPtr SetWindowLong32(HandleRef hwnd, WindowLongType index, WndProc wndProc);
 
-        [DllImport("user32.dll", EntryPoint = "SetWindowLongPtr", CharSet = CharSet.Auto)]
+        [DllImport("user32.dll", EntryPoint = "SetWindowLongPtr", CharSet = CharSet.Ansi)]
         private static extern IntPtr SetWindowLongPtr64(HandleRef hwnd, WindowLongType index, WndProc wndProc);
 
-        [DllImport("user32.dll", EntryPoint = "CallWindowProc", CharSet = CharSet.Auto)]
+        [DllImport("user32.dll", EntryPoint = "CallWindowProc", CharSet = CharSet.Ansi)]
         public static extern IntPtr CallWindowProc(IntPtr wndProc, IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam);
 
         [DllImport("user32.dll", EntryPoint = "GetClientRect")]
         public static extern bool GetClientRect(IntPtr hWnd, out Rectangle lpRect);
 
-        [DllImport("kernel32.dll", EntryPoint = "GetModuleHandle", CharSet = CharSet.Auto)]
+        [DllImport("kernel32.dll", EntryPoint = "GetModuleHandle", CharSet = CharSet.Ansi)]
         public static extern IntPtr GetModuleHandle(string lpModuleName);
 #endif
     }

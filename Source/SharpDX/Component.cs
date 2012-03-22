@@ -83,6 +83,7 @@ namespace SharpDX
             ToDisposeAuto();
         }
 
+#if !WIN8
         /// <summary>
         /// Releases unmanaged resources and performs other cleanup operations before the
         /// <see cref="Component"/> is reclaimed by garbage collection.
@@ -95,7 +96,7 @@ namespace SharpDX
                 IsDisposed = true;
             }
         }
-
+#endif
         /// <summary>
         /// Gets the name of this component.
         /// </summary>
@@ -126,7 +127,9 @@ namespace SharpDX
                 Dispose(true);
                 IsDisposed = true;
             }
+#if !WIN8
             GC.SuppressFinalize(this);
+#endif
         }
 
         /// <summary>

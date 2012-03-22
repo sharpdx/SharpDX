@@ -56,13 +56,14 @@
         #define DXGI_ERROR_DRIVER_INTERNAL_ERROR        MAKE_DXGI_HRESULT(32)
         #define DXGI_ERROR_NONEXCLUSIVE                 MAKE_DXGI_HRESULT(33)
         #define DXGI_ERROR_NOT_CURRENTLY_AVAILABLE      MAKE_DXGI_HRESULT(34)
-        #define DXGI_ERROR_REMOTE_CLIENT_DISCONNECTED   MAKE_DXGI_HRESULT(35)
+        #define DXGI_ERROR_REMOTE_CLIENT_DISCONNECTED   MAKE_DXGI_HRESULT(35)        
         #define DXGI_ERROR_REMOTE_OUTOFMEMORY           MAKE_DXGI_HRESULT(36)
       </post>
     </ifdef>
   </include>
   <ifdef name="WIN8">
     <include id="dxgi1_2" file="dxgi1_2.h" attach="true" />
+    <include id="windows.ui.xaml.media.dxinterop" file="windows.ui.xaml.media.dxinterop.h" attach="true" />
   </ifdef>
   
   <context-set id="dxgi-all">
@@ -72,6 +73,7 @@
     <context>dxgiformat</context>
     <context>dxgitype</context>
     <context>dxgi1_2</context>
+    <context>windows.ui.xaml.media.dxinterop</context>
   </context-set>
 
   <!-- DXGI global naming -->
@@ -187,15 +189,15 @@
     <map param="ppSwapChain" attribute="out fast"/>
     
     <map param="IDXGIFactory::CreateSoftwareAdapter::ppAdapter" return="true" />
-    <map method="IDXGIFactory::EnumAdapters" name="GetAdapter" />
-    <map param="ppAdapter" return="true" />
-    <map method="IDXGIFactory1::EnumAdapters1" name="GetAdapter1" />
-    <map param="ppAdapter" return="true" />
+    <map method="IDXGIFactory::EnumAdapters" name="GetAdapter" visibility="internal" check="false"/>
+    <map method="IDXGIFactory1::EnumAdapters1" name="GetAdapter1" visibility="internal" check="false"/>
     <map method="IDXGIFactory::GetWindowAssociation" property="false" />
     <map param="pWindowHandle" return="true" />
     <map param="IDXGIFactory::MakeWindowAssociation::Flags" type="DXGI_MWA_FLAGS" />
 
-    <map param="IDXGIFactory2::.*::ppSwapChain" return="true"/>
+    <!--<map param="IDXGIFactory2::Create.*" visibility="internal"/>-->
+    <!--<map param="IDXGIFactory2::Create.*::ppSwapChain" attribute="out fast"/>-->
+    <map param="IDXGIFactory2::Create.*::ppSwapChain" return="true"/>
 
     <map method="IDXGIKeyedMutex::(.*)Sync" name="$1" />
     

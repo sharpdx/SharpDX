@@ -40,7 +40,11 @@ namespace SharpDX.Win32
         /// <param name="ptrToIEnumString">The PTR to I enum string.</param>
         public ComStringEnumerator(IntPtr ptrToIEnumString)
         {
+#if WIN8
+            enumString = (IEnumString)Marshal.GetObjectForIUnknown(ptrToIEnumString);
+#else
             enumString = (IEnumString)Marshal.GetTypedObjectForIUnknown(ptrToIEnumString, typeof(IEnumString));
+#endif
         }
 
         public void Dispose()

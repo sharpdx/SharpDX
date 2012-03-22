@@ -27,10 +27,11 @@ using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using SharpDX.IO;
+using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
-using Windows.ApplicationModel.Infrastructure;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
+using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 using Device1 = SharpDX.Direct3D11.Device1;
 
@@ -41,7 +42,7 @@ namespace Win8MiniCube
     /// </summary>
     internal static class App
     {
-        class SharpDXMiniCubeViewProvider : IViewProvider
+        class SharpDXMiniCubeViewProvider : IFrameworkView
         {
             CoreWindow window;
             Device1 device;
@@ -54,16 +55,17 @@ namespace Win8MiniCube
             int width;
             int height;
 
-            /// <inheritdoc/>
-            public void Initialize(CoreWindow window, CoreApplicationView applicationView)
+            public void Initialize(CoreApplicationView applicationView)
+            {
+            }
+
+            public void SetWindow(CoreWindow window)
             {
                 this.window = window;
             }
 
-            /// <inheritdoc/>
             public void Load(string entryPoint)
             {
-
             }
 
             /// <inheritdoc/>
@@ -198,7 +200,7 @@ namespace Win8MiniCube
                     context.OutputMerger.SetTargets(depthView, renderView);
 
                     // Clear the views
-                    context.ClearRenderTargetView(renderView, new Color4(1.0f, 0.0f, 0.0f, 0.0f));
+                    context.ClearRenderTargetView(renderView, Colors.Black);
                     context.ClearDepthStencilView(depthView, DepthStencilClearFlags.Depth, 1.0f, 0);
 
                     // Calculate WorldViewProj
@@ -216,6 +218,16 @@ namespace Win8MiniCube
                     // 60Hz, by sleeping the application on Present until the screen is refreshed.
                     swapChain.Present(1, PresentFlags.None);
                 }          
+            }
+
+            void IFrameworkView.Uninitialize()
+            {
+                Uninitialize();
+            }
+
+            void IFrameworkView.Run()
+            {
+                Run();
             }
 
             /// <inheritdoc/>
@@ -260,17 +272,19 @@ namespace Win8MiniCube
                         SwapEffect = SwapEffect.FlipSequential,
                     };
 
-                    var dxgiDevice2 = device.QueryInterface<Device2>();
-
-                    dxgiDevice2.MaximumFrameLatency = 1;
-
-                    var dxgiAdapter = dxgiDevice2.Adapter;
-                    var dxgiFactory2 = dxgiAdapter.GetParent<Factory2>();
-
-                    var pCom = new ComObject(Marshal.GetIUnknownForObject(window));
-                    
-                    // Creates the swap chain
-                    swapChain = dxgiFactory2.CreateSwapChainForImmersiveWindow(device, pCom, ref desc, null);
+                    using (var dxgiDevice2 = device.QueryInterface<Device2>())
+                    {
+                        dxgiDevice2.MaximumFrameLatency = 1;
+                        using (var dxgiAdapter = dxgiDevice2.Adapter)
+                        {
+                            using (var dxgiFactory2 = dxgiAdapter.GetParent<Factory2>())
+                            {
+                                var pCom = new ComObject(window);
+                                // Creates the swap chain 
+                                swapChain = dxgiFactory2.CreateSwapChainForCoreWindow(device, pCom, ref desc, null);
+                            }
+                        }
+                    }
                 }
 
                 // New RenderTargetView from the backbuffer
@@ -300,9 +314,9 @@ namespace Win8MiniCube
             }
         }
 
-        class SharpDXMiniCubeViewProviderFactory : IViewProviderFactory
+        class SharpDXMiniCubeViewProviderFactory : IFrameworkViewSource
         {
-            public IViewProvider CreateViewProvider()
+            public IFrameworkView CreateView()
             {
                 return new SharpDXMiniCubeViewProvider();
             }
