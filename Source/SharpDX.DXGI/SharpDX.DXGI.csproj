@@ -17,6 +17,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Adapter.cs" />
+    <Compile Include="IVirtualSurfaceImageSourceNative.cs" />
     <Compile Include="Device.cs" />
     <Compile Include="DeviceChild.cs" />
     <Compile Include="DXGIObject.cs" />
@@ -28,6 +29,8 @@
     <Compile Include="Generated\Interfaces.cs" />
     <Compile Include="Generated\LocalInterop.cs" />
     <Compile Include="Generated\Structures.cs" />
+    <Compile Include="IVirtualSurfaceUpdatesCallbackNative.cs" />
+    <Compile Include="IVirtualSurfaceUpdatesCallbackNativeNative.cs" />
     <Compile Include="ModeDescription.cs" />
     <Compile Include="Output.cs" />
     <Compile Include="OutputDuplication.cs" />
@@ -37,6 +40,7 @@
     <Compile Include="Surface.cs" />
     <Compile Include="Surface1.cs" />
     <Compile Include="SwapChain.cs" />
+    <Compile Include="VirtualSurfaceUpdatesCallbackNativeShadow.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpDX\SharpDX.csproj">

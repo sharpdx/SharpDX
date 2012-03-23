@@ -218,6 +218,15 @@
 
     <map method="IDXGIOutputDuplication::MapDesktopSurface" visibility="internal"/>
 
+    <ifdef name="WIN8">
+      <map interface="IVirtualSurfaceUpdatesCallbackNative" visibility="internal" callback="true" callback-dual="true" />
+      <map method="IVirtualSurfaceImageSourceNative::RegisterForUpdatesNeeded" visibility="internal"/>
+
+      <map method="IVirtualSurfaceImageSourceNative::GetUpdateRectCount" visibility="internal" property="false"/>
+      <map param="IVirtualSurfaceImageSourceNative::GetUpdateRectCount::pCount" return="true"/>
+      <map method="IVirtualSurfaceImageSourceNative::GetUpdateRects" visibility="internal"/>
+    </ifdef>
+
     <!--
     // *****************************************************************
     // DXGI Functions
