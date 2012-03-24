@@ -596,9 +596,7 @@ Global
 		{D507F2FE-2345-434D-9991-879E4EC40AB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D507F2FE-2345-434D-9991-879E4EC40AB9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D507F2FE-2345-434D-9991-879E4EC40AB9}.Win8Debug|Any CPU.ActiveCfg = Win8Debug|Any CPU
-		{D507F2FE-2345-434D-9991-879E4EC40AB9}.Win8Debug|Any CPU.Build.0 = Win8Debug|Any CPU
 		{D507F2FE-2345-434D-9991-879E4EC40AB9}.Win8Release|Any CPU.ActiveCfg = Win8Release|Any CPU
-		{D507F2FE-2345-434D-9991-879E4EC40AB9}.Win8Release|Any CPU.Build.0 = Win8Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
