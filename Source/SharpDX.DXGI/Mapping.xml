@@ -166,6 +166,9 @@
 
     <map struct="DXGI_MAPPED_RECT" visibility="internal" />
 
+    <map struct="DXGI_PRESENT_PARAMETERS" native="true" marshal="true" marshalto="true"/>
+    <map field="DXGI_PRESENT_PARAMETERS::.*" visibility="internal"/>
+
     <!--
     // *****************************************************************
     // DXGI Interfaces
@@ -225,6 +228,10 @@
       <map method="IVirtualSurfaceImageSourceNative::GetUpdateRectCount" visibility="internal" property="false"/>
       <map param="IVirtualSurfaceImageSourceNative::GetUpdateRectCount::pCount" return="true"/>
       <map method="IVirtualSurfaceImageSourceNative::GetUpdateRects" visibility="internal"/>
+
+      <map method="IDXGISwapChain1::Present1" visibility="internal"/>
+      <map param="IDXGISwapChain1::Present1::pPresentParameters" type="void"/>
+      <map param="IDXGISwapChain1::Present1::PresentFlags" type="DXGI_PRESENT_FLAGS" />
     </ifdef>
 
     <!--
