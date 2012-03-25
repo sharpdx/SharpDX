@@ -5,10 +5,10 @@
             Version="1.0.0.0" />
 
   <Properties>
-    <DisplayName>Win8MiniCube</DisplayName>
+    <DisplayName>MiniCube</DisplayName>
     <PublisherDisplayName>alexandre</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
-    <Description>Win8MiniCube</Description>
+    <Description>MiniCube</Description>
   </Properties>
 
   <Prerequisites>
@@ -23,12 +23,12 @@
   <Applications>
     <Application Id="App"
         Executable="$targetnametoken$.exe"
-        EntryPoint="Win8MiniCube.App">
+        EntryPoint="MiniCube.App">
         <VisualElements
-            DisplayName="Win8MiniCube"
+            DisplayName="MiniCube"
             Logo="Images\Logo.png"
             SmallLogo="Images\SmallLogo.png"
-            Description="Win8MiniCube"
+            Description="MiniCube"
             ForegroundText="light"
             BackgroundColor="#222222">
             <DefaultTile ShowName="allLogos" />

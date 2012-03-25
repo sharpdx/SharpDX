@@ -1,0 +1,15 @@
+﻿<SwapChainBackgroundPanel
+    x:Class="MiniCubeXaml.DirectXPanelXaml"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MiniCubeXaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"    
+    d:DesignWidth="1280"
+    d:DesignHeight="800">
+    <Button x:Name="showButton" Content="Show Cube" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="149" Click="Button_Click_1"/>
+    <Slider HorizontalAlignment="Left" Height="39" Margin="198,10,0,0" VerticalAlignment="Top" Width="461" ValueChanged="Slider_ValueChanged_1" Value="50"/>
+
+
+</SwapChainBackgroundPanel>

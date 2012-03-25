@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
+  <Identity Name="79f009a5-9ab8-4fe4-9fdb-be2c629b927c" Publisher="CN=Alexandre" Version="1.0.0.0" />
+  <Properties>
+    <DisplayName>MiniCubeXaml</DisplayName>
+    <PublisherDisplayName>Alexandre</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+    <Description>MiniCubeXaml</Description>
+  </Properties>
+  <Prerequisites>
+    <OSMinVersion>6.2</OSMinVersion>
+    <OSMaxVersionTested>6.2</OSMaxVersionTested>
+  </Prerequisites>
+  <Resources>
+    <Resource Language="x-generate" />
+  </Resources>
+  <Applications>
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="MiniCubeXaml.App">
+      <VisualElements DisplayName="MiniCubeXaml" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="Rotating cube into a XAML panel" ForegroundText="light" BackgroundColor="#222222">
+        <DefaultTile ShowName="allLogos" />
+        <SplashScreen Image="Assets\SplashScreen.png" />
+      </VisualElements>
+    </Application>
+  </Applications>
+  <Capabilities>
+    <Capability Name="internetClient" />
+  </Capabilities>
+</Package>

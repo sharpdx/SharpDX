@@ -7,8 +7,8 @@
     <ProjectGuid>{73484A2E-D30F-48D1-9BF9-EFF03C2FA994}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Win8MiniCube</RootNamespace>
-    <AssemblyName>Win8MiniCube</AssemblyName>
+    <RootNamespace>MiniCube</RootNamespace>
+    <AssemblyName>MiniCube</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -34,6 +34,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\Common\DirectXBase.cs">
+      <Link>DirectXBase.cs</Link>
+    </Compile>
+    <Compile Include="CubeRenderer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -48,6 +52,9 @@
     </Reference>
     <Reference Include="SharpDX.D3DCompiler">
       <HintPath>..\..\..\Source\SharpDX.D3DCompiler\Bin\Win8$(Configuration)\SharpDX.D3DCompiler.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct2D1">
+      <HintPath>..\..\..\Source\SharpDX.Direct2D1\Bin\Win8$(Configuration)\SharpDX.Direct2D1.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D11">
       <HintPath>..\..\..\Source\SharpDX.Direct3D11\Bin\Win8$(Configuration)\SharpDX.Direct3D11.dll</HintPath>
