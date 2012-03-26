@@ -222,6 +222,8 @@
     <map method="IDXGIOutputDuplication::MapDesktopSurface" visibility="internal"/>
 
     <ifdef name="WIN8">
+      <map param="ISurfaceImageSourceNative::BeginDraw::pSurface" return="true"/>
+      
       <map interface="IVirtualSurfaceUpdatesCallbackNative" visibility="internal" callback="true" callback-dual="true" />
       <map method="IVirtualSurfaceImageSourceNative::RegisterForUpdatesNeeded" visibility="internal"/>
 
