@@ -241,8 +241,8 @@ namespace SharpDX.Win8
 
             // Direct2D needs the dxgi version of the backbuffer surface pointer.
             // Get a D2D surface from the DXGI back buffer to use as the D2D render target.
-            using (var dxgiBAckBuffer = swapChain.GetBackBuffer<SharpDX.DXGI.Surface>(0))
-                d2dTargetBitmap = new SharpDX.Direct2D1.Bitmap1(d2dContext, dxgiBAckBuffer, bitmapProperties);
+            using (var dxgiBackBuffer = swapChain.GetBackBuffer<SharpDX.DXGI.Surface>(0))
+                d2dTargetBitmap = new SharpDX.Direct2D1.Bitmap1(d2dContext, dxgiBackBuffer, bitmapProperties);
 
             // So now we can set the Direct2D render target.
             d2dContext.Target = d2dTargetBitmap;

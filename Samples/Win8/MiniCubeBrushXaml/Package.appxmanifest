@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
+
+  <Identity Name="23cb59fc-0adf-404e-a599-5021c96ab8e7"
+            Publisher="CN=Alexandre"
+            Version="1.0.0.0" />
+
+  <Properties>
+    <DisplayName>MiniCubeBrushXaml</DisplayName>
+    <PublisherDisplayName>Alexandre</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+    <Description>MiniCubeBrushXaml</Description>
+  </Properties>
+
+  <Prerequisites>
+    <OSMinVersion>6.2</OSMinVersion>
+    <OSMaxVersionTested>6.2</OSMaxVersionTested>
+  </Prerequisites>
+
+  <Resources>
+    <Resource Language="x-generate"/>
+  </Resources>
+
+  <Applications>
+    <Application Id="App"
+        Executable="$targetnametoken$.exe"
+        EntryPoint="MiniCubeBrushXaml.App">
+        <VisualElements
+            DisplayName="MiniCubeBrushXaml"
+            Logo="Assets\Logo.png"
+            SmallLogo="Assets\SmallLogo.png"
+            Description="MiniCubeBrushXaml"
+            ForegroundText="light"
+            BackgroundColor="#222222">
+            <DefaultTile ShowName="allLogos" />
+            <SplashScreen Image="Assets\SplashScreen.png" />
+        </VisualElements>
+    </Application>
+  </Applications>
+  <Capabilities>
+    <Capability Name="internetClient" />
+  </Capabilities>
+</Package>
