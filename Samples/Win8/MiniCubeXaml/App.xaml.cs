@@ -21,6 +21,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using CommonDX;
+using MiniCube;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -43,7 +45,9 @@ namespace MiniCubeXaml
     /// </summary>
     sealed partial class App : Application
     {
-        private CubeRendererXaml cubeRenderer;
+        DeviceManager deviceManager;
+        SwapChainBackgroundPanelTarget coreWindowTarget;
+        CubeRenderer cubeRenderer;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -68,20 +72,34 @@ namespace MiniCubeXaml
                 //TODO: Load state from previously suspended application
             }
 
-            cubeRenderer = new CubeRendererXaml();
+            // Safely dispose any previous instance
+            // Creates a new DeviceManager (Direct3D, Direct2D, DirectWrite, WIC)
+            deviceManager = new DeviceManager();
+
+            // New CubeRenderer
+            cubeRenderer = new CubeRenderer();
             cubeRenderer.ShowCube = false;
 
             // Place the frame in the current Window and ensure that it is active
-            Window.Current.Content = new DirectXPanelXaml(cubeRenderer);
+            var swapchainPanel = new DirectXPanelXaml(cubeRenderer);
+            Window.Current.Content = swapchainPanel;
             Window.Current.Activate();
 
-            cubeRenderer.Initialize(Window.Current.CoreWindow, DisplayProperties.LogicalDpi);
+            // Use CoreWindowTarget as the rendering target (Initialize SwapChain, RenderTargetView, DepthStencilView, BitmapTarget)
+            coreWindowTarget = new SwapChainBackgroundPanelTarget(swapchainPanel);
+
+            // Add Initializer to device manager
+            deviceManager.OnInitialize += coreWindowTarget.Initialize;
+            deviceManager.OnInitialize += cubeRenderer.Initialize;
+
+            // Render the cube within the CoreWindow
+            coreWindowTarget.OnRender += cubeRenderer.Render;
+
+            // Initialize the device manager and all registered deviceManager.OnInitialize 
+            deviceManager.Initialize(DisplayProperties.LogicalDpi);
 
             // Setup rendering callback
             CompositionTarget.Rendering += CompositionTarget_Rendering;
-
-            // Callback on SizeChanged
-            Window.Current.CoreWindow.SizeChanged += CoreWindow_SizeChanged;
 
             // Callback on DpiChanged
             DisplayProperties.LogicalDpiChanged += DisplayProperties_LogicalDpiChanged;
@@ -89,18 +107,13 @@ namespace MiniCubeXaml
 
         void DisplayProperties_LogicalDpiChanged(object sender)
         {
-            cubeRenderer.Dpi = DisplayProperties.LogicalDpi;
-        }
-
-        void CoreWindow_SizeChanged(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.WindowSizeChangedEventArgs args)
-        {
-            cubeRenderer.UpdateForWindowSizeChange();
+            deviceManager.Dpi = DisplayProperties.LogicalDpi;
         }
 
         void CompositionTarget_Rendering(object sender, object e)
         {
-            cubeRenderer.Render();
-            cubeRenderer.Present();
+            coreWindowTarget.RenderAll();
+            coreWindowTarget.Present();
         }
 
         /// <summary>

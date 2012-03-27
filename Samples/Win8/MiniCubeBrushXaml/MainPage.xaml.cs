@@ -21,10 +21,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using CommonDX;
+using MiniCube;
 using SharpDX;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
+using Windows.UI.Core;
+using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -43,10 +47,12 @@ namespace MiniCubeBrushXaml
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private CubeRendererBrushXaml cubeRenderer;
         private ImageBrush d3dBrush;
-        private SurfaceImageSource d3dImageSource;
-        private SharpDX.DXGI.ISurfaceImageSourceNative d3dImageSourceNative;
+        private DeviceManager deviceManager;
+        private SurfaceImageSourceTarget target;
+        private CubeRenderer cubeRenderer; 
+        private DragHandler d3dDragHandler;
+        private DragHandler d2dDragHandler;
 
         /// <summary>
         /// Initialize a new instance of <see cref="MainPage"/>
@@ -63,13 +69,36 @@ namespace MiniCubeBrushXaml
         /// property is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            cubeRenderer = new CubeRendererBrushXaml();
+            d3dDragHandler = new DragHandler(d3dCanvas) { CursorOver = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.SizeAll, 1) };
+            d2dDragHandler = new DragHandler(d2dCanvas) { CursorOver = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.SizeAll, 1) };
 
             d3dBrush = new ImageBrush();
             d3dRectangle.Fill = d3dBrush;
+            d2dRectangle.Fill = d3dBrush;
 
-            // Initialize our DirectXBase without a window
-            cubeRenderer.Initialize(null, DisplayProperties.LogicalDpi);
+            // Safely dispose any previous instance
+            // Creates a new DeviceManager (Direct3D, Direct2D, DirectWrite, WIC)
+            deviceManager = new DeviceManager();
+
+            // New CubeRenderer
+            cubeRenderer = new CubeRenderer();
+
+            int pixelWidth = (int)(d3dRectangle.Width * DisplayProperties.LogicalDpi / 96.0);
+            int pixelHeight = (int)(d3dRectangle.Height * DisplayProperties.LogicalDpi / 96.0);
+
+            // Use CoreWindowTarget as the rendering target (Initialize SwapChain, RenderTargetView, DepthStencilView, BitmapTarget)
+            target = new SurfaceImageSourceTarget(pixelWidth, pixelHeight);
+            d3dBrush.ImageSource = target.ImageSource;
+
+            // Add Initializer to device manager
+            deviceManager.OnInitialize += target.Initialize;
+            deviceManager.OnInitialize += cubeRenderer.Initialize;
+
+            // Render the cube within the CoreWindow
+            target.OnRender += cubeRenderer.Render;
+
+            // Initialize the device manager and all registered deviceManager.OnInitialize 
+            deviceManager.Initialize(DisplayProperties.LogicalDpi);
 
             // Setup rendering callback
             CompositionTarget.Rendering += CompositionTarget_Rendering;
@@ -80,29 +109,12 @@ namespace MiniCubeBrushXaml
 
         void DisplayProperties_LogicalDpiChanged(object sender)
         {
-            cubeRenderer.Dpi = DisplayProperties.LogicalDpi;
+            deviceManager.Dpi = DisplayProperties.LogicalDpi;
         }
 
         void CompositionTarget_Rendering(object sender, object e)
         {
-            int pixelWidth = (int)(d3dRectangle.Width * DisplayProperties.LogicalDpi / 96.0);
-            int pixelHeight = (int)(d3dRectangle.Height * DisplayProperties.LogicalDpi / 96.0);
-            if (d3dImageSource == null)
-            {
-                d3dImageSource = new SurfaceImageSource(pixelWidth, pixelHeight );
-                d3dImageSourceNative = ComObject.As<SharpDX.DXGI.ISurfaceImageSourceNative>(d3dImageSource);
-                d3dImageSourceNative.Device = cubeRenderer.Device.QueryInterface<SharpDX.DXGI.Device>();
-                d3dBrush.ImageSource = d3dImageSource;
-            }
-           
-            DrawingPoint point;
-            var regionToDraw = new Rectangle(0, 0, pixelWidth, pixelHeight);
-            using (var surface = d3dImageSourceNative.BeginDraw(regionToDraw, out point))
-            {
-                cubeRenderer.BrushSurface = surface;
-                cubeRenderer.Render();
-            }
-            d3dImageSourceNative.EndDraw();
+            target.RenderAll();
         }
     }
 }

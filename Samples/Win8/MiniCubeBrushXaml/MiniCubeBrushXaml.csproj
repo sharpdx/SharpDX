@@ -124,9 +124,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Common\DirectXBase.cs">
-      <Link>DirectXBase.cs</Link>
-    </Compile>
     <Compile Include="..\MiniCube\CubeRenderer.cs">
       <Link>CubeRenderer.cs</Link>
     </Compile>
@@ -138,7 +135,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CubeRendererBrushXaml.cs" />
+    <Compile Include="DragHandler.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>

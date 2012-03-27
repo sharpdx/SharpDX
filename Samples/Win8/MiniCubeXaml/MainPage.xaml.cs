@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using MiniCube;
 using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
@@ -44,8 +45,8 @@ namespace MiniCubeXaml
     /// </summary>
     public sealed partial class DirectXPanelXaml : SwapChainBackgroundPanel
     {
-        private CubeRendererXaml cubeRenderer;
-        public DirectXPanelXaml(CubeRendererXaml cubeRenderer)
+        private CubeRenderer cubeRenderer;
+        public DirectXPanelXaml(CubeRenderer cubeRenderer)
         {
             this.cubeRenderer = cubeRenderer;
             this.InitializeComponent();

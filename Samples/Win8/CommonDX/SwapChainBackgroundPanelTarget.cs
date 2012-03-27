@@ -24,32 +24,62 @@ using System.Text;
 using System.Threading.Tasks;
 using SharpDX;
 using SharpDX.DXGI;
-using MiniCube;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace MiniCubeXaml
+namespace CommonDX
 {
-    /// <summary>
-    /// CubeRenderer to a XAML panel.
-    /// </summary>
-    /// <remarks>
-    /// This class only overrides the swap chain description and creation methods.
-    /// </remarks>
-    public class CubeRendererXaml : CubeRenderer
+    public class SwapChainBackgroundPanelTarget : SwapChainTargetBase
     {
+        private SwapChainBackgroundPanel panel;
+        private ISwapChainBackgroundPanelNative nativePanel;
+
+        public SwapChainBackgroundPanelTarget(SwapChainBackgroundPanel panel)
+        {
+            this.panel = panel;
+            nativePanel = ComObject.As<ISwapChainBackgroundPanelNative>(panel);
+
+            // Register event on Window Size Changed
+            // So that resources dependent size can be resized
+            Window.Current.CoreWindow.SizeChanged += CoreWindow_SizeChanged;
+        }
+
+        void CoreWindow_SizeChanged(CoreWindow sender, WindowSizeChangedEventArgs args)
+        {
+            UpdateForSizeChange();
+        }
+
+        protected override Windows.Foundation.Rect CurrentControlBounds
+        {
+            get { return new Windows.Foundation.Rect(0, 0, panel.RenderSize.Width, panel.RenderSize.Height); }
+        }
+
+        protected override int Width
+        {
+            get
+            {
+                var currentWindow = Window.Current.CoreWindow;
+                return (int)(currentWindow.Bounds.Width * DeviceManager.Dpi / 96.0); // Returns 0 to fill the CoreWindow 
+            }
+        }
+
+        protected override int Height
+        {
+            get
+            {
+                var currentWindow = Window.Current.CoreWindow;
+                return (int)(currentWindow.Bounds.Height * DeviceManager.Dpi / 96.0); // Returns 0 to fill the CoreWindow 
+            }
+        }
+
         protected override SwapChainDescription1 CreateSwapChainDescription()
         {
             // Get the default descirption.
             var desc = base.CreateSwapChainDescription();
 
-            // Can not use 0 to get the default on Composition SwapChain
-            desc.Width = (int)(window.Bounds.Width * dpi / 96.0);    
-            desc.Height = (int)(window.Bounds.Height * dpi / 96.0);
-
-            // Required to be STRETCH for Composition 
-            desc.Scaling = Scaling.Stretch; 
-
+            // Required to be STRETCH for XAML Composition 
+            desc.Scaling = Scaling.Stretch;
             return desc;
         }
 
@@ -59,8 +89,7 @@ namespace MiniCubeXaml
             var swapChain = factory.CreateSwapChainForComposition(device, ref desc, null);
 
             // Associate the SwapChainBackgroundPanel with the swap chain
-            using (var panelNative = ComObject.As<ISwapChainBackgroundPanelNative>(Window.Current.Content as SwapChainBackgroundPanel))
-                panelNative.SwapChain = swapChain;
+            nativePanel.SwapChain = swapChain;
 
             // Returns the new swap chain
             return swapChain;

@@ -1,39 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="a4568cf5-fbda-4241-8c39-ee7fe42f3437"
-            Publisher="CN=alexandre"
-            Version="1.0.0.0" />
-
+  <Identity Name="a4568cf5-fbda-4241-8c39-ee7fe42f3438" Publisher="CN=alexandre" Version="1.0.0.0" />
   <Properties>
     <DisplayName>MiniCube</DisplayName>
     <PublisherDisplayName>alexandre</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
     <Description>MiniCube</Description>
   </Properties>
-
   <Prerequisites>
     <OSMinVersion>6.2</OSMinVersion>
     <OSMaxVersionTested>6.2</OSMaxVersionTested>
   </Prerequisites>
-
   <Resources>
-    <Resource Language="x-generate"/>
+    <Resource Language="x-generate" />
   </Resources>
-
   <Applications>
-    <Application Id="App"
-        Executable="$targetnametoken$.exe"
-        EntryPoint="MiniCube.App">
-        <VisualElements
-            DisplayName="MiniCube"
-            Logo="Images\Logo.png"
-            SmallLogo="Images\SmallLogo.png"
-            Description="MiniCube"
-            ForegroundText="light"
-            BackgroundColor="#222222">
-            <DefaultTile ShowName="allLogos" />
-            <SplashScreen Image="Images\SplashScreen.png" />
-        </VisualElements>
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="MiniCube.App">
+      <VisualElements DisplayName="MiniCube" Logo="Images\Logo.png" SmallLogo="Images\SmallLogo.png" Description="MiniCube" ForegroundText="light" BackgroundColor="#222222">
+        <DefaultTile ShowName="allLogos" />
+        <SplashScreen Image="Images\SplashScreen.png" />
+      </VisualElements>
     </Application>
   </Applications>
   <Capabilities>

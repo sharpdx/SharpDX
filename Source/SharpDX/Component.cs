@@ -193,7 +193,7 @@ namespace SharpDX
                     for (int i = Disposables.Count - 1; i >= 0; i--)
                     {
                         Disposables[i].Dispose();
-                        RemoveDispose(Disposables[i]);
+                        RemoveToDispose(Disposables[i]);
                     }
                 Disposables = null;
             }
@@ -224,11 +224,28 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Dispose a disposable object and set the reference to null. Removes this object from the ToDispose list.
+        /// </summary>
+        /// <param name="objectToDispose">Object to dispose.</param>
+        protected internal void SafeDispose<T>(ref T objectToDispose) where T : class
+        {
+            var toDispose = (IDisposable)objectToDispose;
+
+            if (toDispose != null)
+            {
+                RemoveToDispose(objectToDispose);
+                // Dispose the comonent
+                toDispose.Dispose();
+                objectToDispose = null;
+            }
+        }
+
+        /// <summary>
         /// Removes a disposable object to the list of the objects to dispose.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="toDisposeArg">To dispose.</param>
-        protected internal void RemoveDispose<T>(T toDisposeArg) where T : class
+        protected internal void RemoveToDispose<T>(T toDisposeArg) where T : class
         {
             var toDispose = (IDisposable)toDisposeArg;
             if (Disposables.Contains(toDispose))

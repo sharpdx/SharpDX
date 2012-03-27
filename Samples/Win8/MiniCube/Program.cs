@@ -21,6 +21,7 @@ using System;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using CommonDX;
 using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D;
@@ -32,9 +33,6 @@ using Windows.ApplicationModel.Core;
 using Windows.Graphics.Display;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
-using Buffer = SharpDX.Direct3D11.Buffer;
-using Device = SharpDX.Direct3D11.Device;
-using Device1 = SharpDX.Direct3D11.Device1;
 
 namespace MiniCube
 {
@@ -43,14 +41,15 @@ namespace MiniCube
     /// </summary>
     internal static class App
     {
-        class SharpDXMiniCubeViewProvider : IFrameworkView
+        class SharpDXMiniCubeViewProvider : Component, IFrameworkView
         {
+            DeviceManager deviceManager;
+            CoreWindowTarget coreWindowTarget;
             CubeRenderer cubeRenderer;
             CoreWindow window;
 
             public SharpDXMiniCubeViewProvider()
             {
-                cubeRenderer = new CubeRenderer();
             }
 
             /// <inheritdoc/>
@@ -63,7 +62,29 @@ namespace MiniCube
             {
                 this.window = window;
 
-                cubeRenderer.Initialize(window, DisplayProperties.LogicalDpi);
+                // Safely dispose any previous instance
+                SafeDispose(ref deviceManager);
+                SafeDispose(ref coreWindowTarget);
+                SafeDispose(ref cubeRenderer);
+
+                // Creates a new DeviceManager (Direct3D, Direct2D, DirectWrite, WIC)
+                deviceManager = ToDispose(new DeviceManager());
+
+                // Use CoreWindowTarget as the rendering target (Initialize SwapChain, RenderTargetView, DepthStencilView, BitmapTarget)
+                coreWindowTarget = ToDispose(new CoreWindowTarget(window));
+
+                // New CubeRenderer
+                cubeRenderer = ToDispose(new CubeRenderer());
+
+                // Add Initializer to device manager
+                deviceManager.OnInitialize += coreWindowTarget.Initialize;
+                deviceManager.OnInitialize += cubeRenderer.Initialize;
+
+                // Render the cube within the CoreWindow
+                coreWindowTarget.OnRender += cubeRenderer.Render;
+
+                // Initialize the device manager and all registered deviceManager.OnInitialize 
+                deviceManager.Initialize(DisplayProperties.LogicalDpi);
             }
 
             /// <inheritdoc/>
@@ -74,7 +95,6 @@ namespace MiniCube
             /// <inheritdoc/>
             public void Run()
             {
-                window.SizeChanged += OnWindowSizeChanged;
                 DisplayProperties.LogicalDpiChanged += DisplayProperties_LogicalDpiChanged;
 
                 // Specify the cursor type as the standard arrow cursor.
@@ -93,25 +113,16 @@ namespace MiniCube
                         break;
 
                     // Render the cube
-                    cubeRenderer.Render();
+                    coreWindowTarget.RenderAll();
 
                     // Present the cube
-                    cubeRenderer.Present();
+                    coreWindowTarget.Present();
                 }          
             }
 
             void DisplayProperties_LogicalDpiChanged(object sender)
             {
-                cubeRenderer.Dpi = DisplayProperties.LogicalDpi;
-            }
-
-            // This method is called whenever the application window size changes.
-            void OnWindowSizeChanged(
-                CoreWindow sender,
-                WindowSizeChangedEventArgs args
-                )
-            {
-                cubeRenderer.UpdateForWindowSizeChange();
+                deviceManager.Dpi = DisplayProperties.LogicalDpi;
             }
 
             public void Uninitialize()

@@ -23,6 +23,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommonDX;
 using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D;
@@ -36,11 +37,14 @@ namespace MiniCube
     /// <summary>
     /// Simple renderer of a colored rotating cube.
     /// </summary>
-    public class CubeRenderer : SharpDX.Win8.DirectXBase
+    public class CubeRenderer : Component
     {
-        private SharpDX.Direct3D11.Buffer contantBuffer;
-
+        private SharpDX.Direct3D11.Buffer constantBuffer;
+        private InputLayout layout;
+        private VertexBufferBinding vertexBufferBinding;
         private Stopwatch clock;
+        private VertexShader vertexShader;
+        private PixelShader pixelShader;
 
         /// <summary>
         /// Initializes a new instance of <see cref="CubeRenderer"/>
@@ -55,10 +59,14 @@ namespace MiniCube
 
         public float Scale { get; set; }
 
-        /// <inheritdoc/>
-        protected override void CreateDeviceResources()
+        public virtual void Initialize(DeviceManager devices)
         {
-            base.CreateDeviceResources();
+            // Remove previous buffer
+            SafeDispose(ref constantBuffer);
+
+            // Setup local variables
+            var d3dDevice = devices.DeviceDirect3D;
+            var d3dContext = devices.ContextDirect3D;
 
             var path = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
 
@@ -69,7 +77,7 @@ namespace MiniCube
             ShaderBytecode vertexShaderByteCode;
             using (var stream = new NativeFileStream(path + "\\MiniCube_VS.fxo", NativeFileMode.Open, NativeFileAccess.Read))
                 vertexShaderByteCode = ShaderBytecode.Load(stream);
-            var vertexShader = new VertexShader(d3dDevice, vertexShaderByteCode);
+            vertexShader = new VertexShader(d3dDevice, vertexShaderByteCode);
 
             // Because d3dcompiler_44.dll is not in the path, use precompiled fx files
             // var pixelShaderByteCode = ShaderBytecode.CompileFromFile("MiniCube.fx", "PS", "ps_4_0", ShaderFlags.None, EffectFlags.None);
@@ -77,17 +85,14 @@ namespace MiniCube
             ShaderBytecode pixelShaderByteCode;
             using (var stream = new NativeFileStream(path + "\\MiniCube_PS.fxo", NativeFileMode.Open, NativeFileAccess.Read))
                 pixelShaderByteCode = ShaderBytecode.Load(stream);
-            var pixelShader = new PixelShader(d3dDevice, pixelShaderByteCode);
+            pixelShader = new PixelShader(d3dDevice, pixelShaderByteCode);
 
             // Layout from VertexShader input signature
-            var layout = new InputLayout(d3dDevice, vertexShaderByteCode, new[]
+            layout = new InputLayout(d3dDevice, vertexShaderByteCode, new[]
                     {
                         new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
                         new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0)
                     });
-
-            // After the D3D device is created, create additional application resources.
-            // CreateWindowSizeDependentResources();
 
             // Instantiate Vertex buffer from vertex data
             var vertices = SharpDX.Direct3D11.Buffer.Create(d3dDevice, BindFlags.VertexBuffer, new[]
@@ -135,25 +140,21 @@ namespace MiniCube
                                       new Vector4( 1.0f,  1.0f,  1.0f, 1.0f), new Vector4(0.0f, 1.0f, 1.0f, 1.0f),
                             });
 
-            // Create Constant Buffer
-            contantBuffer = new SharpDX.Direct3D11.Buffer(d3dDevice, Utilities.SizeOf<Matrix>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0);
+            vertexBufferBinding = new VertexBufferBinding(vertices, Utilities.SizeOf<Vector4>() * 2, 0);
 
-            // Setup all stages that are constant for this scene
-            d3dContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(vertices, Utilities.SizeOf<Vector4>() * 2, 0));
-            d3dContext.InputAssembler.InputLayout = layout;
-            d3dContext.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
-            d3dContext.VertexShader.SetConstantBuffer(0, contantBuffer);
-            d3dContext.VertexShader.Set(vertexShader);
-            d3dContext.PixelShader.Set(pixelShader);
+            // Create Constant Buffer
+            constantBuffer = ToDispose(new SharpDX.Direct3D11.Buffer(d3dDevice, Utilities.SizeOf<Matrix>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0));
 
             clock = new Stopwatch();
             clock.Start();
         }
 
-        public override void Render()
+        public virtual void Render(TargetBase render)
         {
-            float width = (float)renderTargetSize.Width;
-            float height = (float)renderTargetSize.Height;
+            var d3dContext = render.DeviceManager.ContextDirect3D;
+
+            float width = (float)render.RenderTargetSize.Width;
+            float height = (float)render.RenderTargetSize.Height;
 
             // Prepare matrices
             var view = Matrix.LookAtLH(new Vector3(0, 0, -5), new Vector3(0, 0, 0), Vector3.UnitY);
@@ -162,12 +163,13 @@ namespace MiniCube
 
             var time = (float)(clock.ElapsedMilliseconds / 1000.0);
 
+
             // Set targets (This is mandatory in the loop)
-            d3dContext.OutputMerger.SetTargets(depthStencilView, renderTargetView);
+            d3dContext.OutputMerger.SetTargets(render.DepthStencilView, render.RenderTargetView);
 
             // Clear the views
-            d3dContext.ClearRenderTargetView(renderTargetView, Colors.Black);
-            d3dContext.ClearDepthStencilView(depthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
+            d3dContext.ClearRenderTargetView(render.RenderTargetView, Colors.Black);
+            d3dContext.ClearDepthStencilView(render.DepthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
 
             if (ShowCube)
             {
@@ -175,8 +177,16 @@ namespace MiniCube
                 var worldViewProj = Matrix.Scaling(Scale) * Matrix.RotationX(time) * Matrix.RotationY(time * 2.0f) * Matrix.RotationZ(time * .7f) * viewProj;
                 worldViewProj.Transpose();
 
+                // Setup the pipeline
+                d3dContext.InputAssembler.SetVertexBuffers(0, vertexBufferBinding);
+                d3dContext.InputAssembler.InputLayout = layout;
+                d3dContext.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
+                d3dContext.VertexShader.SetConstantBuffer(0, constantBuffer);
+                d3dContext.VertexShader.Set(vertexShader);
+                d3dContext.PixelShader.Set(pixelShader);
+
                 // Update Constant Buffer
-                d3dContext.UpdateSubresource(ref worldViewProj, contantBuffer, 0);
+                d3dContext.UpdateSubresource(ref worldViewProj, constantBuffer, 0);
 
                 // Draw the cube
                 d3dContext.Draw(36, 0);

@@ -34,9 +34,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\Common\DirectXBase.cs">
-      <Link>DirectXBase.cs</Link>
-    </Compile>
     <Compile Include="CubeRenderer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
