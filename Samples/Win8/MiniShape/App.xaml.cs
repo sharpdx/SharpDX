@@ -22,7 +22,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CommonDX;
-using MiniCube;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -38,7 +37,7 @@ using Windows.UI.Xaml.Navigation;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=234227
 
-namespace MiniCubeXaml
+namespace MiniShape
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
@@ -47,7 +46,7 @@ namespace MiniCubeXaml
     {
         DeviceManager deviceManager;
         SwapChainBackgroundPanelTarget target;
-        CubeRenderer cubeRenderer;
+        ShapeRenderer renderer;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -72,28 +71,27 @@ namespace MiniCubeXaml
                 //TODO: Load state from previously suspended application
             }
 
+            // Place the frame in the current Window and ensure that it is active
+            var swapChainPanel = new MainPage();
+            Window.Current.Content = swapChainPanel;
+            Window.Current.Activate();
+
             // Safely dispose any previous instance
             // Creates a new DeviceManager (Direct3D, Direct2D, DirectWrite, WIC)
             deviceManager = new DeviceManager();
 
             // New CubeRenderer
-            cubeRenderer = new CubeRenderer();
-            cubeRenderer.ShowCube = false;
-
-            // Place the frame in the current Window and ensure that it is active
-            var swapchainPanel = new DirectXPanelXaml(cubeRenderer);
-            Window.Current.Content = swapchainPanel;
-            Window.Current.Activate();
+            renderer = new ShapeRenderer();
 
             // Use CoreWindowTarget as the rendering target (Initialize SwapChain, RenderTargetView, DepthStencilView, BitmapTarget)
-            target = new SwapChainBackgroundPanelTarget(swapchainPanel);
+            target = new SwapChainBackgroundPanelTarget(swapChainPanel);
 
             // Add Initializer to device manager
             deviceManager.OnInitialize += target.Initialize;
-            deviceManager.OnInitialize += cubeRenderer.Initialize;
+            deviceManager.OnInitialize += renderer.Initialize;
 
             // Render the cube within the CoreWindow
-            target.OnRender += cubeRenderer.Render;
+            target.OnRender += renderer.Render;
 
             // Initialize the device manager and all registered deviceManager.OnInitialize 
             deviceManager.Initialize(DisplayProperties.LogicalDpi);

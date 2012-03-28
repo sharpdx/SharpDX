@@ -27,10 +27,17 @@ using Windows.UI.Core;
 
 namespace CommonDX
 {
+    /// <summary>
+    /// Target to render to a <see cref="CoreWindow"/>
+    /// </summary>
     public class CoreWindowTarget : SwapChainTargetBase
     {
         protected CoreWindow window;
 
+        /// <summary>
+        /// Initialzies a new <see cref="CoreWindowTarget"/> instance.
+        /// </summary>
+        /// <param name="window"></param>
         public CoreWindowTarget(CoreWindow window)
         {
             this.window = window;
@@ -63,6 +70,7 @@ namespace CommonDX
 
         protected override SharpDX.DXGI.SwapChain1 CreateSwapChain(SharpDX.DXGI.Factory2 factory, SharpDX.Direct3D11.Device1 device, SharpDX.DXGI.SwapChainDescription1 desc)
         {
+            // Creates a SwapChain from a CoreWindow pointer
             using (var comWindow = new ComObject(window))
                 return factory.CreateSwapChainForCoreWindow(device, comWindow, ref desc, null);
         }

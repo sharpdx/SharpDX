@@ -31,6 +31,7 @@
 
   <include file="dcommon.h" attach="true"/>
   <include file="d2d1.h" attach="true" />
+  <include file="d2derr.h" attach="true" />
   <ifdef name="WIN8">
     <include file="d2d1effects.h" attach="true" />
     <include file="d2d1_1.h" attach="true" />
@@ -43,6 +44,7 @@
     <context>sharpdx-direct2d1-ext</context>
     <context>dcommon</context>
     <context>d2d1</context>
+    <context>d2derr</context>
     <context>d2d1_1</context>
     <context>d2d1effects</context>
     <context>d2d1effectauthor</context>
@@ -52,6 +54,9 @@
     <const from-guid="CLSID_D2D13DPerspectiveTransform" class="SharpDX.Direct2D1.Effect" type="System.Guid" name="PerspectiveTransform3D">new System.Guid("$1")</const>
     <const from-guid="CLSID_D2D13DTransform" class="SharpDX.Direct2D1.Effect" type="System.Guid" name="Transform3D">new System.Guid("$1")</const>
 
+    <create class="ResultCode" visibility="public"/>
+    <const from-macro="D2DERR_(.*)" type="SharpDX.Result" cpp-type="int" name="$1" class="SharpDX.Direct2D1.ResultCode" visibility="public static readonly" />
+    
     <create class="D2D1" />
     <context-clear />
   </extension>
@@ -72,6 +77,7 @@
   <mapping>
     <context>sharpdx-direct2d1-ext</context>
     <context>dcommon</context>
+    <context>d2derr</context>
     <context>d2d1</context>
     <context>d2d1_1</context>
     <context>d2d1effects</context>
@@ -187,7 +193,12 @@
     <map interface="ID2D1DCRenderTarget" name="DeviceContextRenderTarget" />
     <map method="ID2D1DCRenderTarget::BindDC" name="BindDeviceContext" />
     <map method="ID2D1Factory::GetDesktopDpi" visibility="internal" />
-    <map method="ID2D(\d+)Factory::Create.*" visibility="internal" />
+    <map method="ID2D(\d+)Factory\d?::Create.*" visibility="internal" />
+
+    <map param="ID2D1Factory1::CreateDevice::d2dDevice" attribute="out fast"/>
+    <map param="ID2D1Factory1::CreateStrokeStyle::strokeStyle" attribute="out fast"/>
+    <map param="ID2D1Factory1::CreatePathGeometry::pathGeometry" attribute="out fast"/>
+    <map param="ID2D1Factory1::CreateDrawingStateBlock::drawingStateBlock" attribute="out fast"/>
 
     <!-- Create Fast out arguments for all Create.* methods -->
     <map param="ID2D(\d+)Factory::CreateRectangleGeometry::rectangleGeometry" attribute="out fast"/>

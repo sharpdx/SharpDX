@@ -46,6 +46,21 @@ namespace SharpDX.Direct2D1
         {
             D2D1.CreateDevice(device, creationProperties, this);
         }        
+
+        /// <summary>	
+        /// Initializes a new instance of the <see cref="Device"/> class.
+        /// </summary>	
+        /// <param name="factory"><para>The <see cref="Factory1"/> object used when creating  the <see cref="SharpDX.Direct2D1.Device"/>. </para></param>	
+        /// <param name="dxgiDevice"><para>The <see cref="SharpDX.DXGI.Device"/> object used when creating  the <see cref="SharpDX.Direct2D1.Device"/>. </para></param>	
+        /// <remarks>	
+        /// Each call to CreateDevice returns a unique <see cref="SharpDX.Direct2D1.Device"/> object.The <see cref="SharpDX.DXGI.Device"/> object is obtained by calling QueryInterface on an ID3D10Device or an ID3D11Device.	
+        /// </remarks>	
+        /// <unmanaged>HRESULT ID2D1Factory1::CreateDevice([In] IDXGIDevice* dxgiDevice,[Out] ID2D1Device** d2dDevice)</unmanaged>	
+        public Device(Factory1 factory, SharpDX.DXGI.Device device)
+            : base(IntPtr.Zero)
+        {
+            factory.CreateDevice(device, this);
+        }        
     }
 }
 #endif

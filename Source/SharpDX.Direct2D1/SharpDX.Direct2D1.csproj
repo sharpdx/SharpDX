@@ -174,7 +174,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Mapping-direct2d1.xml" />
+    <None Include="Mapping-direct2d1.xml">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="DirectWrite\Mapping.xml">
       <SubType>Designer</SubType>
     </None>

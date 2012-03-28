@@ -30,14 +30,26 @@ using Windows.UI.Xaml.Controls;
 
 namespace CommonDX
 {
+    /// <summary>
+    /// Target to render to a <see cref="SwapChainBackgroundPanel"/>.
+    /// </summary>
+    /// <remarks>
+    /// This class should be use when efficient DirectX-XAML interop is required.
+    /// </remarks>
     public class SwapChainBackgroundPanelTarget : SwapChainTargetBase
     {
         private SwapChainBackgroundPanel panel;
         private ISwapChainBackgroundPanelNative nativePanel;
 
+        /// <summary>
+        /// Initializes a new <see cref="SwapChainBackgroundPanelTarget"/> instance
+        /// </summary>
+        /// <param name="panel">The <see cref="SwapChainBackgroundPanel"/> to render to</param>
         public SwapChainBackgroundPanelTarget(SwapChainBackgroundPanel panel)
         {
             this.panel = panel;
+
+            // Gets the native panel
             nativePanel = ComObject.As<ISwapChainBackgroundPanelNative>(panel);
 
             // Register event on Window Size Changed
@@ -59,8 +71,9 @@ namespace CommonDX
         {
             get
             {
+                // Unlike CoreWindow, Width/Height of the SwapChain must be specified
                 var currentWindow = Window.Current.CoreWindow;
-                return (int)(currentWindow.Bounds.Width * DeviceManager.Dpi / 96.0); // Returns 0 to fill the CoreWindow 
+                return (int)(currentWindow.Bounds.Width * DeviceManager.Dpi / 96.0); 
             }
         }
 
@@ -68,6 +81,7 @@ namespace CommonDX
         {
             get
             {
+                // Unlike CoreWindow, Width/Height of the SwapChain must be specified
                 var currentWindow = Window.Current.CoreWindow;
                 return (int)(currentWindow.Bounds.Height * DeviceManager.Dpi / 96.0); // Returns 0 to fill the CoreWindow 
             }
@@ -78,7 +92,9 @@ namespace CommonDX
             // Get the default descirption.
             var desc = base.CreateSwapChainDescription();
 
-            // Required to be STRETCH for XAML Composition 
+            // Apart for the width and height, the other difference
+            // in the SwapChainDescription is that Scaling must be 
+            // set to Stretch for XAML Composition 
             desc.Scaling = Scaling.Stretch;
             return desc;
         }

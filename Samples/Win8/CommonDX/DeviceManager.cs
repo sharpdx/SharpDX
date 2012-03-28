@@ -29,13 +29,18 @@ using Windows.UI.Core;
 namespace CommonDX
 {
     /// <summary>
-    /// This class is a straight conversion of the C++ DirectXBase class found 
-    /// from Windows 8 Metro-Style App Samples.
+    /// This class handles device creation for Direct2D, Direct3D, DirectWrite
+    /// and WIC.
     /// </summary>
     /// <remarks>
-    /// The difference between the original samples is that the swap chain
-    /// description can be overrided in a separate method, as well as the
-    /// creation of the swap chain.
+    /// SharpDX CommonDX is inspired from the DirectXBase C++ class from Win8
+    /// Metro samples, but the design is slightly improved in order to reuse 
+    /// components more easily. 
+    /// <see cref="DeviceManager"/> is responsible for device creation.
+    /// <see cref="TargetBase"/> is responsible for rendering, render target 
+    /// creation.
+    /// Initialization and Rendering is event driven based, allowing a better
+    /// reuse of different components.
     /// </remarks>
     public class DeviceManager : Component
     {
@@ -156,7 +161,7 @@ namespace CommonDX
             // Retrieve the Direct3D 11.1 device amd device context
             var creationFlags = SharpDX.Direct3D11.DeviceCreationFlags.BgraSupport;
 #if DEBUG
-            // creationFlags |= SharpDX.Direct3D11.DeviceCreationFlags.Debug;
+            creationFlags |= SharpDX.Direct3D11.DeviceCreationFlags.Debug;
 #endif
             using (var defaultDevice = new SharpDX.Direct3D11.Device(DriverType.Hardware, creationFlags))
                 d3dDevice = defaultDevice.QueryInterface<SharpDX.Direct3D11.Device1>();
@@ -167,7 +172,7 @@ namespace CommonDX
 
             // Create Direct2D device
             using (var dxgiDevice = d3dDevice.QueryInterface<SharpDX.DXGI.Device>())
-                d2dDevice = ToDispose(new SharpDX.Direct2D1.Device(dxgiDevice));
+                d2dDevice = ToDispose(new SharpDX.Direct2D1.Device(d2dFactory, dxgiDevice));
 
             // Create Direct2D context
             d2dContext = ToDispose(new SharpDX.Direct2D1.DeviceContext(d2dDevice, SharpDX.Direct2D1.DeviceContextOptions.None));
@@ -176,6 +181,10 @@ namespace CommonDX
         /// <summary>
         /// Gets or sets the DPI.
         /// </summary>
+        /// <remarks>
+        /// This method will fire the event <see cref="OnDpiChanged"/>
+        /// if the dpi is modified.
+        /// </remarks>
         public virtual float Dpi
         {
             get

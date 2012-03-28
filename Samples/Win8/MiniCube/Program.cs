@@ -44,7 +44,7 @@ namespace MiniCube
         class SharpDXMiniCubeViewProvider : Component, IFrameworkView
         {
             DeviceManager deviceManager;
-            CoreWindowTarget coreWindowTarget;
+            CoreWindowTarget target;
             CubeRenderer cubeRenderer;
             CoreWindow window;
 
@@ -64,24 +64,24 @@ namespace MiniCube
 
                 // Safely dispose any previous instance
                 SafeDispose(ref deviceManager);
-                SafeDispose(ref coreWindowTarget);
+                SafeDispose(ref target);
                 SafeDispose(ref cubeRenderer);
 
                 // Creates a new DeviceManager (Direct3D, Direct2D, DirectWrite, WIC)
                 deviceManager = ToDispose(new DeviceManager());
 
                 // Use CoreWindowTarget as the rendering target (Initialize SwapChain, RenderTargetView, DepthStencilView, BitmapTarget)
-                coreWindowTarget = ToDispose(new CoreWindowTarget(window));
+                target = ToDispose(new CoreWindowTarget(window));
 
                 // New CubeRenderer
                 cubeRenderer = ToDispose(new CubeRenderer());
 
                 // Add Initializer to device manager
-                deviceManager.OnInitialize += coreWindowTarget.Initialize;
+                deviceManager.OnInitialize += target.Initialize;
                 deviceManager.OnInitialize += cubeRenderer.Initialize;
 
                 // Render the cube within the CoreWindow
-                coreWindowTarget.OnRender += cubeRenderer.Render;
+                target.OnRender += cubeRenderer.Render;
 
                 // Initialize the device manager and all registered deviceManager.OnInitialize 
                 deviceManager.Initialize(DisplayProperties.LogicalDpi);
@@ -113,10 +113,10 @@ namespace MiniCube
                         break;
 
                     // Render the cube
-                    coreWindowTarget.RenderAll();
+                    target.RenderAll();
 
                     // Present the cube
-                    coreWindowTarget.Present();
+                    target.Present();
                 }          
             }
 

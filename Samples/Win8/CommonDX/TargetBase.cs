@@ -26,34 +26,86 @@ using SharpDX;
 
 namespace CommonDX
 {
+    /// <summary>
+    /// This class is an abstract class responsible to maintain a list of 
+    /// render task, render target view / depth stencil view and Direct2D 
+    /// render target.
+    /// </summary>
+    /// <remarks>
+    /// SharpDX CommonDX is inspired from the DirectXBase C++ class from Win8
+    /// Metro samples, but the design is slightly improved in order to reuse 
+    /// components more easily. 
+    /// <see cref="DeviceManager"/> is responsible for device creation.
+    /// <see cref="TargetBase"/> is responsible for rendering, render target 
+    /// creation.
+    /// Initialization and Rendering is event driven based, allowing a better
+    /// reuse of different components.
+    /// </remarks>
     public abstract class TargetBase : Component
     {
-        // DirectXBase
+        protected SharpDX.Direct3D11.RenderTargetView renderTargetView;
+        protected SharpDX.Direct3D11.DepthStencilView depthStencilView;
+        protected SharpDX.Direct2D1.Bitmap1 bitmapTarget;
+
+        /// <summary>
+        /// Gets the <see cref="DeviceManager"/> attached to this instance.
+        /// </summary>
         public DeviceManager DeviceManager { get; private set; }
 
-        // Rendertargets for Direct3D 
-        protected SharpDX.Direct3D11.RenderTargetView renderTargetView;
+        /// <summary>
+        /// Gets the Direct3D RenderTargetView used by this target.
+        /// </summary>
         public SharpDX.Direct3D11.RenderTargetView RenderTargetView { get { return renderTargetView; } }
 
-        protected SharpDX.Direct3D11.DepthStencilView depthStencilView;
+        /// <summary>
+        /// Gets the Direct3D DepthStencilView used by this target.
+        /// </summary>
         public SharpDX.Direct3D11.DepthStencilView DepthStencilView { get { return depthStencilView; } }
 
-        // RenderTarget for Direct2D
-        protected SharpDX.Direct2D1.Bitmap1 bitmapTarget;
+        /// <summary>
+        /// Gets the Direct2D RenderTarget used by this target.
+        /// </summary>
         public SharpDX.Direct2D1.Bitmap1 BitmapTarget2D { get { return bitmapTarget; } }
 
+        /// <summary>
+        /// Gets the size in pixels of the Direct3D RenderTarget
+        /// </summary>
         public Windows.Foundation.Size RenderTargetSize { get; protected set; }
 
+        /// <summary>
+        /// Gets the bounds of the control linked to this render target
+        /// </summary>
         public Windows.Foundation.Rect ControlBounds { get; protected set; }
 
+        /// <summary>
+        /// Gets the current bounds of the control linked to this render target
+        /// </summary>
+        protected abstract Windows.Foundation.Rect CurrentControlBounds
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Event fired when size of the underlying control is changed
+        /// </summary>
         public event Action<TargetBase> OnSizeChanged;
 
+        /// <summary>
+        /// Event fired when rendering is performed by this target
+        /// </summary>
         public event Action<TargetBase> OnRender;
 
+        /// <summary>
+        /// Initializes a new <see cref="TargetBase"/> instance 
+        /// </summary>
         public TargetBase()
         {
         }
 
+        /// <summary>
+        /// Initializes this instance.
+        /// </summary>
+        /// <param name="deviceManager">The device manager</param>
         public virtual void Initialize(DeviceManager deviceManager) {
             this.DeviceManager = deviceManager;
 
@@ -62,11 +114,9 @@ namespace CommonDX
             deviceManager.OnDpiChanged += devices_OnDpiChanged;
         }
 
-        protected abstract Windows.Foundation.Rect CurrentControlBounds
-        {
-            get;
-        }
-
+        /// <summary>
+        /// Notifies for size changed
+        /// </summary>
         public virtual void UpdateForSizeChange()
         {
             var newBounds = CurrentControlBounds;
@@ -83,6 +133,9 @@ namespace CommonDX
             }
         }
 
+        /// <summary>
+        /// Render all events registered on event <see cref="OnRender"/>
+        /// </summary>
         public virtual void RenderAll()
         {
             if (OnRender != null)
