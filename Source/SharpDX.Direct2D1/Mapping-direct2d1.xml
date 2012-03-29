@@ -31,6 +31,7 @@
 
   <include file="dcommon.h" attach="true"/>
   <include file="d2d1.h" attach="true" />
+  <include file="wincodec.h"/>
   <include file="d2derr.h" attach="true" />
   <ifdef name="WIN8">
     <include file="d2d1effects.h" attach="true" />
