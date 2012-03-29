@@ -162,6 +162,8 @@
     <map enum="D2D1_LAYER_OPTIONS" flags="true"/>
     <map enum="D2D1_LAYER_OPTIONS1" flags="true"/>
 
+    <map enum-item="D2D1_COLOR_SPACE_SCRGB" name="ScRgb"/>
+
     <!-- For dcommon -->
     <map enum="DWRITE(.+)" name-tmp="$1" />
 
@@ -174,6 +176,9 @@
     <map field="D2D1_BLEND_DESCRIPTION::blendFactor" type="SHARPDX_COLOR4" array="0"/>
     <map struct="D2D1_BITMAP_PROPERTIES1" struct-to-class="true"/>
     <map field="D2D1_BITMAP_PROPERTIES1::colorContext" name="ColorContextPointer" visibility="internal"/>
+
+    <map field="D2D1_LAYER_PARAMETERS1::geometricMask" visibility="internal" name="geometricMask_"/>
+    <map field="D2D1_LAYER_PARAMETERS1::opacityBrush" visibility="internal" name="opacityBrush_"/>
 
     <!--
     // *****************************************************************
@@ -199,6 +204,9 @@
     <map param="ID2D1Factory1::CreateStrokeStyle::strokeStyle" attribute="out fast"/>
     <map param="ID2D1Factory1::CreatePathGeometry::pathGeometry" attribute="out fast"/>
     <map param="ID2D1Factory1::CreateDrawingStateBlock::drawingStateBlock" attribute="out fast"/>
+
+    <map method="ID2D1Factory1::GetRegisteredEffects" visibility="internal"/>
+    <map param="ID2D1Factory1::GetEffectProperties::properties" return="true"/>
 
     <!-- Create Fast out arguments for all Create.* methods -->
     <map param="ID2D(\d+)Factory::CreateRectangleGeometry::rectangleGeometry" attribute="out fast"/>
@@ -273,6 +281,15 @@
 
     <!--<map param="ID2D1EffectContext::CreateColorContextFromWicColorContext::wicColorContext" type="IUnknown"/>
     <map param="ID2D1EffectContext::CreateColorContextFromWicColorContext::colorContext" type="IUnknown"/>-->
+
+    <map param="ID2D1DeviceContext::GetImageLocalBounds::localBounds" return="true"/>
+    <map param="ID2D1DeviceContext::GetImageWorldBounds::worldBounds" return="true"/>
+    <map param="ID2D1DeviceContext::GetGlyphRunWorldBounds::bounds" return="true"/>
+
+    <map method="ID2D1DeviceContext::GetEffectInvalidRectangleCount" visibility="internal"/>
+    <map param="ID2D1DeviceContext::GetEffectInvalidRectangleCount::rectangleCount" return="true"/>
+    <map method="ID2D1DeviceContext::GetEffectInvalidRectangles" visibility="internal"/>
+    <map method="ID2D1DeviceContext::GetEffectRequiredInputRectangles" visibility="internal"/>
 
     <map method="ID2D1Factory1::RegisterEffectFromString" visibility="internal"/>
     

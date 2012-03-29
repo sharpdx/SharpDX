@@ -17,6 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System;
+
 #if WIN8
 
 namespace SharpDX.Direct2D1
@@ -45,6 +48,23 @@ namespace SharpDX.Direct2D1
         public Factory1(FactoryType factoryType, DebugLevel debugLevel)
             : base(factoryType, debugLevel)
         {
+        }
+
+        /// <summary>	
+        /// Get the effects registered
+        /// </summary>	
+        /// <unmanaged>HRESULT ID2D1Factory1::GetRegisteredEffects([Out, Buffer, Optional] GUID* effects,[In] unsigned int effectsCount,[Out, Optional] unsigned int* effectsReturned,[Out, Optional] unsigned int* effectsRegistered)</unmanaged>	
+        public Guid[] RegisteredEffects
+        {
+            get
+            {
+                int effectReturned;
+                int effectRegistered;
+                GetRegisteredEffects(null, 0, out effectReturned, out effectRegistered);
+                var guids = new Guid[effectRegistered];
+                GetRegisteredEffects(guids, guids.Length, out effectReturned, out effectRegistered);
+                return guids;
+            }
         }
     }
 }
