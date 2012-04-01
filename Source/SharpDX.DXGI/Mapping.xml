@@ -217,7 +217,7 @@
     <map method="IDXGISwapChain::GetBuffer" visibility="internal" />
     <map param="IDXGISwapChain::Present::Flags" type="DXGI_PRESENT_FLAGS" />
     <map method="IDXGISwapChain::GetFullscreenState" visibility="internal" />
-    <map param="IDXGISwapChain::ResizeBuffers::swapChainFlags" type="DXGI_SWAP_CHAIN_FLAG" />
+    <map param="IDXGISwapChain::ResizeBuffers::SwapChainFlags" type="DXGI_SWAP_CHAIN_FLAG" />
 
     <map method="IDXGIOutputDuplication::MapDesktopSurface" visibility="internal"/>
 

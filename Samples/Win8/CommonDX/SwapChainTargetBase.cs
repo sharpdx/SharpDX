@@ -111,7 +111,7 @@ namespace CommonDX
             // If the swap chain already exists, resize it.
             if (swapChain != null)
             {
-                swapChain.ResizeBuffers(2, Width, Height, SharpDX.DXGI.Format.B8G8R8A8_UNorm, 0);
+                swapChain.ResizeBuffers(2, Width, Height, SharpDX.DXGI.Format.B8G8R8A8_UNorm, SharpDX.DXGI.SwapChainFlags.None);
             }
             // Otherwise, create a new one.
             else
