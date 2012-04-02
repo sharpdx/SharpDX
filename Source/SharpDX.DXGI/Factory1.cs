@@ -83,7 +83,8 @@ namespace SharpDX.DXGI
             {
                 Adapter1 adapter;
                 var result = GetAdapter1(nbAdapters, out adapter);
-                adapter.Dispose();
+                if (adapter != null)
+                    adapter.Dispose();
                 if (result.Code == DXGIError.NotFound)
                     break;
                 nbAdapters++;
