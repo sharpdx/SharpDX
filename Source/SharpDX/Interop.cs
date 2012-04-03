@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Reflection;
 
 namespace SharpDX
 {
@@ -95,6 +96,12 @@ namespace SharpDX
         public static unsafe void* Write<T>(void* pDest, T[] data, int offset, int count) where T : struct
         {
             throw new NotImplementedException();
+        }
+
+        [Obfuscation(Feature = "SharpDX.ModuleInit")]
+        public static void ModuleInit()
+        {
+            // Console.WriteLine("SharpDX Initialized");
         }
     }
 }

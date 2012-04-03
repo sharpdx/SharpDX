@@ -20,6 +20,7 @@
 using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace SharpDX
 {
@@ -153,11 +154,7 @@ namespace SharpDX
         /// </returns>
         public override string ToString()
         {
-#if !WIN8
-            if (_methodGetErrorDescription != null)
-                return _methodGetErrorDescription.Invoke(null, new object[] {_code}).ToString();
-#endif
-            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "Unknown error (HRESULT = 0x{0:X})", _code);
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "Error (HRESULT = 0x{0:X}): {1}", _code, GetDescriptionFromResultCode(_code));
         }
 
         /// <summary>
@@ -171,20 +168,24 @@ namespace SharpDX
             }
         }
 
-#if !WIN8		
-        static Result()
+        private static string GetDescriptionFromResultCode(int resultCode)
         {
-            _methodGetErrorDescription = null;
-            try
-            {
-                var assembly = Assembly.LoadFrom("SharpDX.Diagnostics.dll");
-                _methodGetErrorDescription = assembly.GetType("SharpDX.Diagnostics.ErrorManager").GetMethod("GetErrorMessage", BindingFlags.Static | BindingFlags.Public);
-            }
-            catch (Exception)
-            {                
-            }
+            const int FORMAT_MESSAGE_ALLOCATE_BUFFER = 0x00000100;
+            const int FORMAT_MESSAGE_IGNORE_INSERTS  = 0x00000200;
+            const int FORMAT_MESSAGE_FROM_SYSTEM    = 0x00001000;
+
+            IntPtr buffer = IntPtr.Zero;
+            FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, IntPtr.Zero, resultCode, 0, ref buffer, 0, IntPtr.Zero);
+            var description = Marshal.PtrToStringUni(buffer);
+            Marshal.FreeHGlobal(buffer);
+            if (description == null)
+                description = "Unknow error";
+            return description;
         }
-#endif
+
+        [DllImport("kernel32.dll", EntryPoint = "FormatMessageW")]
+        private static extern uint FormatMessageW(int dwFlags, IntPtr lpSource, int dwMessageId, int dwLanguageId, ref IntPtr lpBuffer, int nSize, IntPtr Arguments);
+
         /// <summary>
         /// Result code Ok
         /// </summary>

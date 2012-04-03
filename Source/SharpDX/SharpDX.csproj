@@ -25,6 +25,7 @@
     <Compile Include="ComArray.cs" />
     <Compile Include="CompilationResultBase.cs" />
     <Compile Include="Bool4.cs" />
+    <Compile Include="ResultExtended.cs" />
     <Compile Include="DrawingSizeF.cs" />
     <Compile Include="DrawingSize.cs" />
     <Compile Include="DrawingPointF.cs" />

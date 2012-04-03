@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -28,6 +29,8 @@ using Microsoft.Build.Utilities;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Pdb;
+
+using MethodAttributes = Mono.Cecil.MethodAttributes;
 
 namespace SharpCli
 {
@@ -41,6 +44,54 @@ namespace SharpCli
     public class InteropApp
     {
         private List<TypeDefinition> classToRemoveList = new List<TypeDefinition>();
+        AssemblyDefinition assembly;
+        private TypeReference voidType;
+        private TypeReference voidPointerType;
+        private TypeReference intType;
+
+        /// <summary>
+        /// Creates a module init for a C# assembly.
+        /// </summary>
+        /// <param name="method">The method to add to the module init.</param>
+        private void CreateModuleInit(MethodDefinition method)
+        {
+            const MethodAttributes ModuleInitAttributes = MethodAttributes.Static
+                                                          | MethodAttributes.Assembly
+                                                          | MethodAttributes.SpecialName
+                                                          | MethodAttributes.RTSpecialName;
+
+            var moduleType = assembly.MainModule.GetType("<Module>");
+
+            // Get or create ModuleInit method
+            var cctor = moduleType.Methods.FirstOrDefault(moduleTypeMethod => moduleTypeMethod.Name == ".cctor");
+            if (cctor == null)
+            {
+                cctor = new MethodDefinition(".cctor", ModuleInitAttributes, method.ReturnType);
+                moduleType.Methods.Add(cctor);
+            }
+
+            bool isCallAlreadyDone = cctor.Body.Instructions.Any(instruction => instruction.OpCode == OpCodes.Call && instruction.Operand == method);
+
+            // If the method is not called, we can add it
+            if (!isCallAlreadyDone)
+            {
+                var ilProcessor = cctor.Body.GetILProcessor();
+                var retInstruction = cctor.Body.Instructions.FirstOrDefault(instruction => instruction.OpCode == OpCodes.Ret);
+                var callMethod = ilProcessor.Create(OpCodes.Call, method);
+
+                if (retInstruction == null)
+                {
+                    // If a ret instruction is not present, add the method call and ret
+                    ilProcessor.Append(callMethod);
+                    ilProcessor.Emit(OpCodes.Ret);
+                }
+                else
+                {
+                    // If a ret instruction is already present, just add the method to call before
+                    ilProcessor.InsertBefore(retInstruction, callMethod);
+                }
+            }
+        }
 
         /// <summary>
         /// Creates the write method with the following signature: 
@@ -450,12 +501,37 @@ namespace SharpCli
         private void EmitCpblk(MethodDefinition method, ILProcessor gen)
         {
             var cpblk = gen.Create(OpCodes.Cpblk);
-            //gen.Emit(OpCodes.Sizeof, voidType);
+            //gen.Emit(OpCodes.Sizeof, voidPointerType);
             //gen.Emit(OpCodes.Ldc_I4_8);
             //gen.Emit(OpCodes.Bne_Un_S, cpblk);
             gen.Emit(OpCodes.Unaligned, (byte)1);       // unaligned to 1
             gen.Append(cpblk);
             
+        }
+
+        private List<string>  GetSharpDXAttributes(MethodDefinition method)
+        {
+            var attributes = new List<string>();
+            foreach (var customAttribute in method.CustomAttributes)
+            {
+                if (customAttribute.AttributeType.FullName == typeof(ObfuscationAttribute).FullName)
+                {
+                    foreach (var arg in customAttribute.Properties)
+                    {
+                        if (arg.Name == "Feature" && arg.Argument.Value != null)
+                        {
+                            var customValue = arg.Argument.Value.ToString();
+                            if (customValue.StartsWith("SharpDX."))
+                            {
+                                attributes.Add(customValue);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return attributes;
         }
 
         /// <summary>
@@ -465,6 +541,14 @@ namespace SharpCli
         bool PatchMethod(MethodDefinition method)
         {
             bool isSharpJit = false;
+
+            var attributes = this.GetSharpDXAttributes(method);
+            if (attributes.Contains("SharpDX.ModuleInit"))
+            {
+                CreateModuleInit(method);
+            }
+            return true;
+
             if (method.DeclaringType.Name == "Interop")
             {
                 if (method.Name == "memcpy")
@@ -495,6 +579,13 @@ namespace SharpCli
                         CreateReadRangeMethod(method);
                 }
                 else if (method.Name == "Write")
+                {
+                    if (method.Parameters.Count == 2)
+                        CreateWriteMethod(method);
+                    else
+                        CreateWriteRangeMethod(method);
+                }
+                else if (method.Name == "ModuleInit")
                 {
                     if (method.Parameters.Count == 2)
                         CreateWriteMethod(method);
@@ -646,7 +737,7 @@ namespace SharpCli
             }
 
             // Read Assembly
-            var assembly = AssemblyDefinition.ReadAssembly(file, readerParameters);
+            assembly = AssemblyDefinition.ReadAssembly(file, readerParameters);
 
             foreach (var assemblyNameReference in assembly.MainModule.AssemblyReferences)
             {
@@ -679,7 +770,7 @@ namespace SharpCli
 
             // Import void* and int32 from assembly using mscorlib specific version (2.0 or 4.0 depending on assembly)
             voidType = mscorlibAssembly.MainModule.GetType("System.Void");
-            voidType = new PointerType(assembly.MainModule.Import(voidType));
+            voidPointerType = new PointerType(assembly.MainModule.Import(voidType));
             intType = assembly.MainModule.Import( mscorlibAssembly.MainModule.GetType("System.Int32"));
 
             // Remove CompilationRelaxationsAttribute
@@ -712,10 +803,6 @@ namespace SharpCli
             Log("SharpDX patch done for assembly [{0}]", file);
             return true;
         }
-
-        private TypeReference voidType;
-        private TypeReference intType;
-
         /// <summary>
         /// Main of this program.
         /// </summary>
