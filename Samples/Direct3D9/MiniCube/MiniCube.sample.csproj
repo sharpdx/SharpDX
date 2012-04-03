@@ -66,10 +66,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Source\SharpDX.Diagnostics\SharpDX.Diagnostics.csproj">
-      <Project>{003655D0-CC78-411F-AD2D-655E03927827}</Project>
-      <Name>SharpDX.Diagnostics</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\Source\SharpDX.Direct3D9\SharpDX.Direct3D9.csproj">
       <Project>{B4D984DF-85B8-4BBF-8C3B-5CEF905F40D9}</Project>
       <Name>SharpDX.Direct3D9</Name>

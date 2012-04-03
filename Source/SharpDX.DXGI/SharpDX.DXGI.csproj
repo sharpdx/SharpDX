@@ -32,6 +32,7 @@
     <Compile Include="IVirtualSurfaceUpdatesCallbackNative.cs" />
     <Compile Include="IVirtualSurfaceUpdatesCallbackNativeNative.cs" />
     <Compile Include="ModeDescription.cs" />
+    <Compile Include="ModuleInit.cs" />
     <Compile Include="Output.cs" />
     <Compile Include="OutputDuplication.cs" />
     <Compile Include="PresentParameters.cs" />

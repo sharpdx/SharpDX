@@ -71,10 +71,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Source\SharpDX.Diagnostics\SharpDX.Diagnostics.csproj">
-      <Project>{003655D0-CC78-411F-AD2D-655E03927827}</Project>
-      <Name>SharpDX.Diagnostics</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\Source\SharpDX.XInput\SharpDX.XInput.csproj">
       <Project>{764D7CE5-F78B-432E-A849-E40BA44522D6}</Project>
       <Name>SharpDX.XInput</Name>

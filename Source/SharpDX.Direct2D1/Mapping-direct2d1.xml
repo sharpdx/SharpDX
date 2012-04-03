@@ -56,8 +56,8 @@
     <const from-guid="CLSID_D2D13DTransform" class="SharpDX.Direct2D1.Effect" type="System.Guid" name="Transform3D">new System.Guid("$1")</const>
 
     <create class="ResultCode" visibility="public"/>
-    <const from-macro="D2DERR_(.*)" type="SharpDX.Result" cpp-type="int" name="$1" class="SharpDX.Direct2D1.ResultCode" visibility="public static readonly" />
-    
+    <const from-macro="D2DERR_(.*)" type="SharpDX.ResultDescriptor" cpp-type="int" name="$1" class="SharpDX.Direct2D1.ResultCode" visibility="public static readonly">new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+
     <create class="D2D1" />
     <context-clear />
   </extension>

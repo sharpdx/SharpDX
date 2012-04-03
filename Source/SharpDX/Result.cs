@@ -27,13 +27,14 @@ namespace SharpDX
     /// <summary>
     /// Result structure for COM methods.
     /// </summary>
+#if !WIN8
+    [Serializable]
+#endif
     [StructLayout(LayoutKind.Sequential)]
     public struct Result : IEquatable<Result>
     {
         private int _code;
-#if !WIN8
-        private static MethodInfo _methodGetErrorDescription;
-#endif
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Result"/> struct.
         /// </summary>
@@ -85,6 +86,16 @@ namespace SharpDX
         /// <param name="result">The result.</param>
         /// <returns>The result of the conversion.</returns>
         public static implicit operator Result(int result)
+        {
+            return new Result(result);
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="System.UInt32"/> to <see cref="SharpDX.Result"/>.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static implicit operator Result(uint result)
         {
             return new Result(result);
         }
@@ -154,7 +165,7 @@ namespace SharpDX
         /// </returns>
         public override string ToString()
         {
-            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "Error (HRESULT = 0x{0:X}): {1}", _code, GetDescriptionFromResultCode(_code));
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "HRESULT = 0x{0:X}", _code);
         }
 
         /// <summary>
@@ -167,24 +178,6 @@ namespace SharpDX
                 throw new SharpDXException(this);
             }
         }
-
-        private static string GetDescriptionFromResultCode(int resultCode)
-        {
-            const int FORMAT_MESSAGE_ALLOCATE_BUFFER = 0x00000100;
-            const int FORMAT_MESSAGE_IGNORE_INSERTS  = 0x00000200;
-            const int FORMAT_MESSAGE_FROM_SYSTEM    = 0x00001000;
-
-            IntPtr buffer = IntPtr.Zero;
-            FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, IntPtr.Zero, resultCode, 0, ref buffer, 0, IntPtr.Zero);
-            var description = Marshal.PtrToStringUni(buffer);
-            Marshal.FreeHGlobal(buffer);
-            if (description == null)
-                description = "Unknow error";
-            return description;
-        }
-
-        [DllImport("kernel32.dll", EntryPoint = "FormatMessageW")]
-        private static extern uint FormatMessageW(int dwFlags, IntPtr lpSource, int dwMessageId, int dwLanguageId, ref IntPtr lpBuffer, int nSize, IntPtr Arguments);
 
         /// <summary>
         /// Result code Ok

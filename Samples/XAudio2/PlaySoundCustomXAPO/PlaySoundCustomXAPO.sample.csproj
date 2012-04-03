@@ -77,10 +77,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Source\SharpDX.Diagnostics\SharpDX.Diagnostics.csproj">
-      <Project>{8ECEF885-63EC-4A82-A219-4AB312D1B097}</Project>
-      <Name>SharpDX.Diagnostics</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\Source\SharpDX.XAPO\SharpDX.XAPO.csproj">
       <Project>{3000DCA4-0973-4E39-B2AA-56751DCB04CC}</Project>
       <Name>SharpDX.XAPO</Name>

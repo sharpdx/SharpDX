@@ -12,7 +12,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' "/>
+    <Reference Include="System.Windows.Forms" Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' " />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
@@ -53,6 +53,7 @@
     <Compile Include="JoystickUpdate.cs" />
     <Compile Include="KeyboardState.cs" />
     <Compile Include="KeyboardUpdate.cs" />
+    <Compile Include="ModuleInit.cs" />
     <Compile Include="MouseState.cs" />
     <Compile Include="JoystickState.cs" />
     <Compile Include="Generated\LocalInterop.cs" />

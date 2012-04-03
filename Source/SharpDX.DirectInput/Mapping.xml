@@ -348,48 +348,48 @@
 
     <!-- class SharpDX.DirectInput.ResultCode -->
     <create class="ResultCode" visibility="public sealed"/>    
-    <const from-macro="DI_OK" type="SharpDX.Result" cpp-type="int" name="Ok" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DI_NOTATTACHED" type="SharpDX.Result" cpp-type="int" name="NotAttached" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DI_BUFFEROVERFLOW" type="SharpDX.Result" cpp-type="int" name="BufferOverflow" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DI_PROPNOEFFECT" type="SharpDX.Result" cpp-type="int" name="PropertyHadNoEffect" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DI_NOEFFECT" type="SharpDX.Result" cpp-type="int" name="NoEffect" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DI_POLLEDDEVICE" type="SharpDX.Result" cpp-type="int" name="PolledDevice" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DI_DOWNLOADSKIPPED" type="SharpDX.Result" cpp-type="int" name="DownloadSkipped" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DI_EFFECTRESTARTED" type="SharpDX.Result" cpp-type="int" name="EffectRestarted" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DI_TRUNCATED" type="SharpDX.Result" cpp-type="int" name="Truncated" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DI_SETTINGSNOTSAVED" type="SharpDX.Result" cpp-type="int" name="SettingsNotSaved" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DI_TRUNCATEDANDRESTARTED" type="SharpDX.Result" cpp-type="int" name="TruncatedAndRestarted" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DI_WRITEPROTECT" type="SharpDX.Result" cpp-type="int" name="WriteProtect" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_READONLY" type="SharpDX.Result" cpp-type="int" name="ReadOnly" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_NOTFOUND" type="SharpDX.Result" cpp-type="int" name="NotFound" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_MAPFILEFAIL" type="SharpDX.Result" cpp-type="int" name="MapFileFail" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_ALREADYINITIALIZED" type="SharpDX.Result" cpp-type="int" name="AlreadyInitialized" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_INCOMPLETEEFFECT" type="SharpDX.Result" cpp-type="int" name="IncompleteEffect" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_INVALIDPARAM" type="SharpDX.Result" cpp-type="int" name="InvalidParam" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_EFFECTPLAYING" type="SharpDX.Result" cpp-type="int" name="EffectPlaying" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_NOTINITIALIZED" type="SharpDX.Result" cpp-type="int" name="NotInitialized" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_NOTACQUIRED" type="SharpDX.Result" cpp-type="int" name="NotAcquired" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_HANDLEEXISTS" type="SharpDX.Result" cpp-type="int" name="HandleExists" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_HASEFFECTS" type="SharpDX.Result" cpp-type="int" name="HasEffects" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_OLDDIRECTINPUTVERSION" type="SharpDX.Result" cpp-type="int" name="OldDirectInputVersion" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_NOAGGREGATION" type="SharpDX.Result" cpp-type="int" name="NoAggregation" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_MOREDATA" type="SharpDX.Result" cpp-type="int" name="MoreData" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_DEVICEFULL" type="SharpDX.Result" cpp-type="int" name="DeviceFull" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_REPORTFULL" type="SharpDX.Result" cpp-type="int" name="ReportFull" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_NOTDOWNLOADED" type="SharpDX.Result" cpp-type="int" name="NotDownloaded" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_NOTBUFFERED" type="SharpDX.Result" cpp-type="int" name="NotBuffered" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_OBJECTNOTFOUND" type="SharpDX.Result" cpp-type="int" name="ObjectNotFound" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_INSUFFICIENTPRIVS" type="SharpDX.Result" cpp-type="int" name="InsufficientPrivileges" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_NOINTERFACE" type="SharpDX.Result" cpp-type="int" name="NoInterface" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_OUTOFMEMORY" type="SharpDX.Result" cpp-type="int" name="OutOfMemory" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_DEVICENOTREG" type="SharpDX.Result" cpp-type="int" name="DeviceNotRegistered" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_GENERIC" type="SharpDX.Result" cpp-type="int" name="Generic" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_OTHERAPPHASPRIO" type="SharpDX.Result" cpp-type="int" name="OtherApplicationHasPriority" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_NOTEXCLUSIVEACQUIRED" type="SharpDX.Result" cpp-type="int" name="NotExclusiveAcquired" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_INPUTLOST" type="SharpDX.Result" cpp-type="int" name="InputLost" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_BETADIRECTINPUTVERSION" type="SharpDX.Result" cpp-type="int" name="BetaDirectInputVersion" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_BADDRIVERVER" type="SharpDX.Result" cpp-type="int" name="BadDriverVersion" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
-    <const from-macro="DIERR_(.*)" type="SharpDX.Result" cpp-type="int" name="$1" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" />
+    <const from-macro="DI_OK" type="SharpDX.ResultDescriptor" cpp-type="int" name="Ok" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DI_NOTATTACHED" type="SharpDX.ResultDescriptor" cpp-type="int" name="NotAttached" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DI_BUFFEROVERFLOW" type="SharpDX.ResultDescriptor" cpp-type="int" name="BufferOverflow" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DI_PROPNOEFFECT" type="SharpDX.ResultDescriptor" cpp-type="int" name="PropertyHadNoEffect" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DI_NOEFFECT" type="SharpDX.ResultDescriptor" cpp-type="int" name="NoEffect" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DI_POLLEDDEVICE" type="SharpDX.ResultDescriptor" cpp-type="int" name="PolledDevice" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DI_DOWNLOADSKIPPED" type="SharpDX.ResultDescriptor" cpp-type="int" name="DownloadSkipped" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DI_EFFECTRESTARTED" type="SharpDX.ResultDescriptor" cpp-type="int" name="EffectRestarted" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DI_TRUNCATED" type="SharpDX.ResultDescriptor" cpp-type="int" name="Truncated" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DI_SETTINGSNOTSAVED" type="SharpDX.ResultDescriptor" cpp-type="int" name="SettingsNotSaved" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DI_TRUNCATEDANDRESTARTED" type="SharpDX.ResultDescriptor" cpp-type="int" name="TruncatedAndRestarted" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DI_WRITEPROTECT" type="SharpDX.ResultDescriptor" cpp-type="int" name="WriteProtect" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_READONLY" type="SharpDX.ResultDescriptor" cpp-type="int" name="ReadOnly" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_NOTFOUND" type="SharpDX.ResultDescriptor" cpp-type="int" name="NotFound" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_MAPFILEFAIL" type="SharpDX.ResultDescriptor" cpp-type="int" name="MapFileFail" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_ALREADYINITIALIZED" type="SharpDX.ResultDescriptor" cpp-type="int" name="AlreadyInitialized" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_INCOMPLETEEFFECT" type="SharpDX.ResultDescriptor" cpp-type="int" name="IncompleteEffect" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_INVALIDPARAM" type="SharpDX.ResultDescriptor" cpp-type="int" name="InvalidParam" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_EFFECTPLAYING" type="SharpDX.ResultDescriptor" cpp-type="int" name="EffectPlaying" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_NOTINITIALIZED" type="SharpDX.ResultDescriptor" cpp-type="int" name="NotInitialized" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_NOTACQUIRED" type="SharpDX.ResultDescriptor" cpp-type="int" name="NotAcquired" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_HANDLEEXISTS" type="SharpDX.ResultDescriptor" cpp-type="int" name="HandleExists" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_HASEFFECTS" type="SharpDX.ResultDescriptor" cpp-type="int" name="HasEffects" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_OLDDIRECTINPUTVERSION" type="SharpDX.ResultDescriptor" cpp-type="int" name="OldDirectInputVersion" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_NOAGGREGATION" type="SharpDX.ResultDescriptor" cpp-type="int" name="NoAggregation" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_MOREDATA" type="SharpDX.ResultDescriptor" cpp-type="int" name="MoreData" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_DEVICEFULL" type="SharpDX.ResultDescriptor" cpp-type="int" name="DeviceFull" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_REPORTFULL" type="SharpDX.ResultDescriptor" cpp-type="int" name="ReportFull" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_NOTDOWNLOADED" type="SharpDX.ResultDescriptor" cpp-type="int" name="NotDownloaded" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_NOTBUFFERED" type="SharpDX.ResultDescriptor" cpp-type="int" name="NotBuffered" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_OBJECTNOTFOUND" type="SharpDX.ResultDescriptor" cpp-type="int" name="ObjectNotFound" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_INSUFFICIENTPRIVS" type="SharpDX.ResultDescriptor" cpp-type="int" name="InsufficientPrivileges" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_NOINTERFACE" type="SharpDX.ResultDescriptor" cpp-type="int" name="NoInterface" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_OUTOFMEMORY" type="SharpDX.ResultDescriptor" cpp-type="int" name="OutOfMemory" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_DEVICENOTREG" type="SharpDX.ResultDescriptor" cpp-type="int" name="DeviceNotRegistered" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_GENERIC" type="SharpDX.ResultDescriptor" cpp-type="int" name="Generic" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_OTHERAPPHASPRIO" type="SharpDX.ResultDescriptor" cpp-type="int" name="OtherApplicationHasPriority" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_NOTEXCLUSIVEACQUIRED" type="SharpDX.ResultDescriptor" cpp-type="int" name="NotExclusiveAcquired" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_INPUTLOST" type="SharpDX.ResultDescriptor" cpp-type="int" name="InputLost" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_BETADIRECTINPUTVERSION" type="SharpDX.ResultDescriptor" cpp-type="int" name="BetaDirectInputVersion" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_BADDRIVERVER" type="SharpDX.ResultDescriptor" cpp-type="int" name="BadDriverVersion" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+    <const from-macro="DIERR_(.*)" type="SharpDX.ResultDescriptor" cpp-type="int" name="$1" class="SharpDX.DirectInput.ResultCode" visibility="public static readonly" >new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
 
     <!-- class SharpDX.DirectInput.RolePlayingControls -->
     <create class="RolePlayingControls" visibility="public"/>

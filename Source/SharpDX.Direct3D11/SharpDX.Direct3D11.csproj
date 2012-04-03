@@ -70,6 +70,7 @@
     <Compile Include="InputElement.cs" />
     <Compile Include="InputLayout.cs" />
     <Compile Include="Message.cs" />
+    <Compile Include="ModuleInit.cs" />
     <Compile Include="PixelShader.cs" />
     <Compile Include="Predicate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

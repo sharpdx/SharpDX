@@ -31,15 +31,14 @@ namespace SharpDX
 #endif
     public class SharpDXException : Exception
     {
-        private Result m_Result;
+        private ResultDescriptor descriptor;
 
         /// <summary>
         ///   Initializes a new instance of the <see cref = "T:SharpDX.SharpDXException" /> class.
         /// </summary>
-        public SharpDXException()
-            : base("A SharpDX exception occurred.")
+        public SharpDXException() : base("A SharpDX exception occurred.")
         {
-            this.m_Result = Result.Fail;
+            this.descriptor = ResultDescriptor.Find(Result.Fail);
         }
 
         /// <summary>
@@ -47,8 +46,18 @@ namespace SharpDX
         /// </summary>
         /// <param name = "result">The result code that caused this exception.</param>
         public SharpDXException(Result result)
-            : this(result, result.ToString())
+            : this(ResultDescriptor.Find(result))
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:SharpDX.SharpDXException"/> class.
+        /// </summary>
+        /// <param name="descriptor">The result descriptor.</param>
+        public SharpDXException(ResultDescriptor descriptor)
+            : base(descriptor.ToString())
+        {
+            this.descriptor = descriptor;
         }
 
         /// <summary>
@@ -59,7 +68,7 @@ namespace SharpDX
         public SharpDXException(Result result, string message)
             : base(message)
         {
-            this.m_Result = result;
+            this.descriptor = ResultDescriptor.Find(result);
         }
 
         /// <summary>
@@ -71,7 +80,7 @@ namespace SharpDX
         public SharpDXException(Result result, string message, params object[] args)
             : base(string.Format(CultureInfo.InvariantCulture, message, args))
         {
-            this.m_Result = result;
+            this.descriptor = ResultDescriptor.Find(result);
         }
 
         /// <summary>
@@ -92,7 +101,7 @@ namespace SharpDX
         public SharpDXException(string message, Exception innerException, params object[] args)
             : base(string.Format(CultureInfo.InvariantCulture, message, args), innerException)
         {
-            this.m_Result = Result.Fail;
+            this.descriptor = ResultDescriptor.Find(Result.Fail);
         }
 
         /// <summary>
@@ -101,7 +110,16 @@ namespace SharpDX
         /// </summary>
         public Result ResultCode
         {
-            get { return this.m_Result; }
+            get { return this.descriptor.Result; }
+        }
+
+        /// <summary>
+        ///   Gets the <see cref = "T:SharpDX.Result">Result code</see> for the exception. This value indicates
+        ///   the specific type of failure that occured within SharpDX.
+        /// </summary>
+        public ResultDescriptor Descriptor
+        {
+            get { return this.descriptor; }
         }
     }
 }

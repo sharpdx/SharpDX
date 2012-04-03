@@ -33,6 +33,7 @@
     <Compile Include="GradientStopCollection1.cs" />
     <Compile Include="ImageBrush.cs" />
     <Compile Include="LayerParameters1.cs" />
+    <Compile Include="ModuleInit.cs" />
     <Compile Include="PathGeometry1.cs" />
     <Compile Include="PrintControl.cs" />
     <Compile Include="StrokeStyle1.cs" />

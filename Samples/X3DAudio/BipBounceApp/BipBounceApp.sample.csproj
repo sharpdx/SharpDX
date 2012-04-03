@@ -76,10 +76,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Source\SharpDX.Diagnostics\SharpDX.Diagnostics.csproj">
-      <Project>{003655D0-CC78-411F-AD2D-655E03927827}</Project>
-      <Name>SharpDX.Diagnostics</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\Source\SharpDX.X3DAudio\SharpDX.X3DAudio.csproj">
       <Project>{046C5D40-A52E-4442-88A9-1A5DDF370A5E}</Project>
       <Name>SharpDX.X3DAudio</Name>

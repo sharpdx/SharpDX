@@ -1,6 +1,4 @@
-<?xml version="1.0"?>
-<!--
-// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,22 +17,25 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
--->
-<package >
-  <metadata>
-    <id>SharpDX.Diagnostics</id>
-    <version>$version$</version>
-    <title>$title$</title>
-    <authors>$author$</authors>
-    <owners>$author$</owners>
-    <licenseUrl>http://sharpdx.org/License.txt</licenseUrl>
-    <projectUrl>http://sharpdx.org</projectUrl>
-    <iconUrl>http://sharpdx.org/logo_100x100.png</iconUrl>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>$description$</description>
-    <copyright>Copyright (c) 2010-2011 Alexandre Mutel</copyright>
-    <tags>SharpDX DirectX Direct3D MDX 3D Diagnostics</tags>
-    <!-- Release notes for this version-->
-    <releaseNotes></releaseNotes>
-  </metadata>
-</package>
+
+namespace SharpDX.Direct3D11
+{
+    /// <summary>
+    /// Internal class used to initialize this assembly.
+    /// </summary>
+    class ModuleInit
+    {
+        /// <summary>
+        /// Initializes this assembly.
+        /// </summary>
+        /// <remarks>
+        /// This method is called when the assembly is loaded.
+        /// </remarks>
+        [Tag("SharpDX.ModuleInit")]
+        internal static void Setup()
+        {
+            // Register automatically Resultcode
+            ResultDescriptor.RegisterProvider(typeof(ResultCode));
+        }
+    }
+}

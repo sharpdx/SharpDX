@@ -124,10 +124,6 @@
       <Project>{361D3F81-A48A-47F2-80DF-CA4F9536CB4E}</Project>
       <Name>SharpDX.D3DCompiler</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Source\SharpDX.Diagnostics\SharpDX.Diagnostics.csproj">
-      <Project>{003655D0-CC78-411F-AD2D-655E03927827}</Project>
-      <Name>SharpDX.Diagnostics</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\Source\SharpDX.Direct3D10\SharpDX.Direct3D10.csproj">
       <Project>{618AFA87-81A8-4B1C-8876-5457D49F2DEF}</Project>
       <Name>SharpDX.Direct3D10</Name>

@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TestResultDescriptor.cs" />
     <Compile Include="RawMatrix.cs" />
     <Compile Include="RawVector4.cs" />
     <Compile Include="TestInterop.cs" />
@@ -50,6 +51,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\SharpDX.Direct3D11\SharpDX.Direct3D11.csproj">
+      <Project>{736DFB52-1AFE-4EFF-9710-89046AB5B1F9}</Project>
+      <Name>SharpDX.Direct3D11</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SharpDX.DXGI\SharpDX.DXGI.csproj">
+      <Project>{3FC6DE77-B412-4101-9E64-6B9AA831179B}</Project>
+      <Name>SharpDX.DXGI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\SharpDX\SharpDX.csproj">
       <Project>{D0BCD56A-41C4-4A4E-8590-26864CED07FF}</Project>
       <Name>SharpDX</Name>
