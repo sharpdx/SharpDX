@@ -514,20 +514,10 @@ namespace SharpCli
             var attributes = new List<string>();
             foreach (var customAttribute in method.CustomAttributes)
             {
-                if (customAttribute.AttributeType.FullName == typeof(ObfuscationAttribute).FullName)
+                if (customAttribute.AttributeType.FullName == "SharpDX.TagAttribute")
                 {
-                    foreach (var arg in customAttribute.Properties)
-                    {
-                        if (arg.Name == "Feature" && arg.Argument.Value != null)
-                        {
-                            var customValue = arg.Argument.Value.ToString();
-                            if (customValue.StartsWith("SharpDX."))
-                            {
-                                attributes.Add(customValue);
-                                break;
-                            }
-                        }
-                    }
+                    var value = customAttribute.ConstructorArguments[0].Value;
+                    attributes.Add(value == null ? string.Empty : value.ToString());
                 }
             }
 
@@ -547,7 +537,6 @@ namespace SharpCli
             {
                 CreateModuleInit(method);
             }
-            return true;
 
             if (method.DeclaringType.Name == "Interop")
             {
@@ -579,13 +568,6 @@ namespace SharpCli
                         CreateReadRangeMethod(method);
                 }
                 else if (method.Name == "Write")
-                {
-                    if (method.Parameters.Count == 2)
-                        CreateWriteMethod(method);
-                    else
-                        CreateWriteRangeMethod(method);
-                }
-                else if (method.Name == "ModuleInit")
                 {
                     if (method.Parameters.Count == 2)
                         CreateWriteMethod(method);

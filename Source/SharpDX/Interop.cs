@@ -98,7 +98,7 @@ namespace SharpDX
             throw new NotImplementedException();
         }
 
-        [Obfuscation(Feature = "SharpDX.ModuleInit")]
+        [Tag("SharpDX.ModuleInit")]
         public static void ModuleInit()
         {
             // Console.WriteLine("SharpDX Initialized");

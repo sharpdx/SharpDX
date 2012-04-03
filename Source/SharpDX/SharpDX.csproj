@@ -109,6 +109,7 @@
     <Compile Include="Multimedia\WaveFormat.cs" />
     <Compile Include="Multimedia\WaveFormatExtensible.cs" />
     <Compile Include="NamespaceDoc.cs" />
+    <Compile Include="TagAttribute.cs" />
     <Compile Include="Win32Native.cs" />
     <Compile Include="Plane.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
