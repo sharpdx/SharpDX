@@ -97,10 +97,10 @@
     <create-cpp enum="DXGI_ENUM_MODES_FLAGS" macro="DXGI_ENUM_MODES_.*" />
     <create-cpp enum="DXGI_MWA_FLAGS" macro="DXGI_MWA_.*" />
     
-    <create class="DXGIError" visibility="public"/>
-    <const from-macro="DXGI_ERROR_(.*)" type="SharpDX.Result" cpp-type="int" name="$1" class="SharpDX.DXGI.DXGIError" visibility="public static readonly" />
+    <create class="ResultCode" visibility="public"/>
+    <const from-macro="DXGI_ERROR_(.*)" type="SharpDX.ResultExtended" cpp-type="int" name="$1" class="SharpDX.DXGI.ResultCode" visibility="public static readonly">new SharpDX.ResultExtended($1, "$3", "$0", "$2")</const>
 
-    <create-cpp enum="DXGI_STATUS" macro="DXGI_STATUS_.*" />
+      <create-cpp enum="DXGI_STATUS" macro="DXGI_STATUS_.*" />
     <create class="DXGI" />
 
     <context-clear/>

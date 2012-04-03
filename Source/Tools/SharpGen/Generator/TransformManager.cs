@@ -1227,11 +1227,25 @@ namespace SharpGen.Generator
         {
             var constantDefinitions = CppModule.Find<CppConstant>(macroRegexp);
             Regex regex = new Regex(macroRegexp);
-            Regex regexValue = new Regex("^(.*)$");
+
+            // $0: Name of the C++ macro
+            // $1: Value of the C++ macro
+            // $2: Name of the C#
+            // $3: Name of current namespace
+            if (valueMap != null)
+            {
+                valueMap = valueMap.Replace("{", "{{");
+                valueMap = valueMap.Replace("}", "}}");
+                valueMap = valueMap.Replace("$0", "{0}");
+                valueMap = valueMap.Replace("$1", "{1}");
+                valueMap = valueMap.Replace("$2", "{2}");
+                valueMap = valueMap.Replace("$3", "{3}");                
+            }
+
             foreach (var macroDef in constantDefinitions)
             {
                 string finalFieldName = fieldName == null ? macroDef.Name : NamingRules.ConvertToPascalCase(regex.Replace(macroDef.Name, fieldName), false);
-                string finalValue = valueMap == null ? macroDef.Value : regexValue.Replace(macroDef.Value, valueMap);
+                string finalValue = valueMap == null ? macroDef.Value : string.Format(valueMap, macroDef.Name, macroDef.Value, finalFieldName, CurrentNamespaceName);
                 AddConstantToCSharpType(macroDef, fullNameCSharpType, type, finalFieldName, finalValue).Visibility = visibility.HasValue
                                                                                                                          ? visibility.Value
                                                                                                                          : Visibility.Public | Visibility.Const;
@@ -1241,7 +1255,7 @@ namespace SharpGen.Generator
             foreach (var guidDef in guidDefinitions)
             {
                 string finalFieldName = fieldName == null ? guidDef.Name : NamingRules.ConvertToPascalCase(regex.Replace(guidDef.Name, fieldName), false);
-                string finalValue = valueMap == null ? guidDef.Guid.ToString() : regexValue.Replace(guidDef.Guid.ToString(), valueMap);
+                string finalValue = valueMap == null ? guidDef.Guid.ToString() : string.Format(valueMap, guidDef.Name, guidDef.Guid.ToString(), finalFieldName, CurrentNamespaceName);
                 AddConstantToCSharpType(guidDef, fullNameCSharpType, type, finalFieldName, finalValue).Visibility = visibility.HasValue
                                                                                                                         ? visibility.Value
                                                                                                                         : Visibility.Public | Visibility.Static |

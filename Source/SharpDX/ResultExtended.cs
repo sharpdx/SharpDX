@@ -140,6 +140,32 @@ namespace SharpDX
             return left.Result.Code != right.Code;
         }
 
+        /// <summary>
+        /// Implements the operator ==.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator ==(ResultExtended left, int right)
+        {
+            if (left == null)
+                return false;
+            return left.Result.Code == right;
+        }
+
+        /// <summary>
+        /// Implements the operator !=.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator !=(ResultExtended left, int right)
+        {
+            if (left == null)
+                return false;
+            return left.Result.Code != right;
+        }
+
         /// <inheritdoc/>
         public override string ToString()
         {

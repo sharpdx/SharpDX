@@ -103,7 +103,7 @@ namespace SharpDX.DXGI
                 }
                 catch (SharpDXException exception)
                 {
-                    if (exception.ResultCode.Code == DXGIError.NotFound)
+                    if (exception.ResultCode == ResultCode.NotFound)
                         break;
                     throw;
                 }
