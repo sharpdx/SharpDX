@@ -89,8 +89,8 @@ namespace CommonDX
 
                 // If the device was removed either by a disconnect or a driver upgrade, we 
                 // must completely reinitialize the renderer.
-                if (ex.ResultCode == SharpDX.DXGI.DXGIError.DeviceRemoved
-                    || ex.ResultCode == SharpDX.DXGI.DXGIError.DeviceReset)
+                if (ex.ResultCode == SharpDX.DXGI.ResultCode.DeviceRemoved
+                    || ex.ResultCode == SharpDX.DXGI.ResultCode.DeviceReset)
                     DeviceManager.Initialize(DeviceManager.Dpi);
                 else
                     throw;
