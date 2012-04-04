@@ -22,10 +22,14 @@ namespace SharpDX.Direct3D
     public partial struct ShaderMacro
     {
         /// <summary>
-        ///   Default Constructor for a ShaderMacro
+        /// Initializes a new instance of the <see cref="ShaderMacro"/> struct. 
         /// </summary>
-        /// <param name = "name"></param>
-        /// <param name = "definition"></param>
+        /// <param name="name">
+        /// The name.
+        /// </param>
+        /// <param name="definition">
+        /// The definition.
+        /// </param>
         public ShaderMacro(string name, object definition)
         {
             Name = name;

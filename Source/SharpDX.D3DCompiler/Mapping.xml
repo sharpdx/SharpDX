@@ -183,7 +183,9 @@
     <map param="D3DStripShader::uStripFlags" type="D3DCOMPILER_STRIP_FLAGS" />
     <map param="D3DCompile::pDefines" attribute="in buffer optional" />
     <map param="D3DPreprocess::pDefines" attribute="in buffer optional" />
-
+    <map function="D3DGet.*SignatureBlob" check="false" />
+    <map function="D3DStripShader" check="false" />
+    
     <map param="D3DGetTraceInstructionOffsets::pOffsets" attribute="out" return="true"/>
     <map param="D3DGetTraceInstructionOffsets::pTotalInsts" attribute="out"/>
     <map param="D3DCompile2::SecondaryDataFlags" type="D3DCOMPILE_SECDATA_FLAGS"/>

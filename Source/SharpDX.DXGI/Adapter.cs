@@ -18,18 +18,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Collections.Generic;
 
 namespace SharpDX.DXGI
 {
     public partial class Adapter
     {
 
-        /// <summary>	
-        /// Checks to see if a device interface for a graphics component is supported by the system.	
-        /// </summary>	
-        /// <param name="type">The GUID of the interface of the device version for which support is being checked. For example, typeof(ID3D10Device).GUID. </param>
+        /// <summary>
+        /// Gets all outputs from this adapter.
+        /// </summary>
+        public Output[] Outputs
+        {
+            get
+            {
+                var outputs = new List<Output>();
+                do
+                {
+                    Output output;
+                    var result = GetOutput(outputs.Count, out output);
+                    if (result == ResultCode.NotFound || output == null)
+                        break;
+                    outputs.Add(output);
+                } while (true);
+                return outputs.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Checks to see if a device interface for a graphics component is supported by the system.
+        /// </summary>
+        /// <param name="type">The GUID of the interface of the device version for which support is being checked. For example, typeof(ID3D10Device).GUID.</param>
         /// <returns>
-        /// 	<c>true</c> if the interface is supported; otherwise, <c>false</c>.
+        ///   <c>true</c> if the interface is supported; otherwise, <c>false</c>.
         /// </returns>
         /// <unmanaged>HRESULT IDXGIAdapter::CheckInterfaceSupport([In] GUID* InterfaceName,[Out] __int64* pUMDVersion)</unmanaged>
         public bool IsInterfaceSupported(Type type)
@@ -38,12 +59,12 @@ namespace SharpDX.DXGI
             return IsInterfaceSupported(type, out userModeVersion);
         }
 
-        /// <summary>	
-        /// Checks to see if a device interface for a graphics component is supported by the system.	
-        /// </summary>	
+        /// <summary>
+        /// Checks to see if a device interface for a graphics component is supported by the system.
+        /// </summary>
         /// <typeparam name="T">the interface of the device version for which support is being checked.</typeparam>
         /// <returns>
-        /// 	<c>true</c> if the interface is supported; otherwise, <c>false</c>.
+        ///   <c>true</c> if the interface is supported; otherwise, <c>false</c>.
         /// </returns>
         public bool IsInterfaceSupported<T>() where T : ComObject
         {
@@ -51,62 +72,68 @@ namespace SharpDX.DXGI
             return IsInterfaceSupported(typeof(T), out userModeVersion);
         }
 
-        /// <summary>	
-        /// Checks to see if a device interface for a graphics component is supported by the system.	
-        /// </summary>	
+        /// <summary>
+        /// Checks to see if a device interface for a graphics component is supported by the system.
+        /// </summary>
         /// <typeparam name="T">the interface of the device version for which support is being checked.</typeparam>
         /// <param name="userModeVersion">The user mode driver version of InterfaceName. This is only returned if the interface is supported.</param>
         /// <returns>
-        /// 	<c>true</c> if the interface is supported; otherwise, <c>false</c>.
+        ///   <c>true</c> if the interface is supported; otherwise, <c>false</c>.
         /// </returns>
         public bool IsInterfaceSupported<T>(out long userModeVersion) where T : ComObject
         {
             return IsInterfaceSupported(typeof (T), out userModeVersion);
         }
 
-        /// <summary>	
-        /// Checks to see if a device interface for a graphics component is supported by the system.	
-        /// </summary>	
-        /// <param name="type">The GUID of the interface of the device version for which support is being checked. For example, typeof(ID3D10Device).GUID. </param>
+        /// <summary>
+        /// Checks to see if a device interface for a graphics component is supported by the system.
+        /// </summary>
+        /// <param name="type">The GUID of the interface of the device version for which support is being checked. For example, typeof(ID3D10Device).GUID.</param>
         /// <param name="userModeVersion">The user mode driver version of InterfaceName. This is only returned if the interface is supported.</param>
         /// <returns>
-        /// 	<c>true</c> if the interface is supported; otherwise, <c>false</c>.
+        ///   <c>true</c> if the interface is supported; otherwise, <c>false</c>.
         /// </returns>
         /// <unmanaged>HRESULT IDXGIAdapter::CheckInterfaceSupport([In] GUID* InterfaceName,[Out] __int64* pUMDVersion)</unmanaged>
         public bool IsInterfaceSupported(Type type, out long userModeVersion)
         {
-            try
-            {
-                CheckInterfaceSupport(Utilities.GetGuidFromType(type), out userModeVersion);
-            }
-            catch (SharpDXException)
-            {
-                userModeVersion = 0;
-                return false;
-            }
-            return true;
+            return CheckInterfaceSupport(Utilities.GetGuidFromType(type), out userModeVersion).Success;
+        }
+
+        /// <summary>
+        /// Gets an adapter (video card) outputs.
+        /// </summary>
+        /// <param name="outputIndex">The index of the output.</param>
+        /// <returns>
+        /// An instance of <see cref="Output"/> 
+        /// </returns>
+        /// <unmanaged>HRESULT IDXGIAdapter::EnumOutputs([In] unsigned int Output,[Out] IDXGIOutput** ppOutput)</unmanaged>
+        /// <remarks>
+        /// When the EnumOutputs method succeeds and fills the ppOutput parameter with the address of the reference to the output interface, EnumOutputs increments the output interface's reference count. To avoid a memory leak, when you finish using the  output interface, call the Release method to decrement the reference count.EnumOutputs first returns the output on which the desktop primary is displayed. This adapter corresponds with an index of zero. EnumOutputs then returns other outputs.
+        /// </remarks>
+        /// <exception cref="SharpDXException">if the index is greater than the number of outputs, result code <see cref="SharpDX.DXGI.ResultCode.NotFound"/></exception>
+        [Obsolete("Use Adapeter.Outputs property instead")]
+        public SharpDX.DXGI.Output GetOutput(int outputIndex)
+        {
+            Output output;
+            GetOutput(outputIndex, out output).CheckError();
+            return output;
         }
 
         /// <summary>
         ///   Return the number of available outputs from this adapter.
         /// </summary>
         /// <returns>The number of outputs</returns>
+        [Obsolete("Use Adapeter.Outputs property instead")]
         public int GetOutputCount()
         {
             var nbOutputs = 0;
             do
             {
-                try
-                {
-                    var output = GetOutput(nbOutputs);
-                    output.Dispose();
-                }
-                catch (SharpDXException exception)
-                {
-                    if (exception.ResultCode == ResultCode.NotFound)
-                        break;
-                    throw;
-                }
+                Output output;
+                var result = GetOutput(nbOutputs, out output);
+                if (result == ResultCode.NotFound || output == null)
+                    break;
+                output.Dispose();
                 nbOutputs++;
             } while (true);
             return nbOutputs;

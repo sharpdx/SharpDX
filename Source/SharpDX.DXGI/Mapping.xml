@@ -180,10 +180,9 @@
 
     <map method=".*::GetPrivateData" check="false"/>
 
-    <map method="IDXGIAdapter::EnumOutputs" name="GetOutput" />
-    <map param="ppOutput" return="true" />
+    <map method="IDXGIAdapter::EnumOutputs" name="GetOutput" visibility="internal" check="false"/>
     
-    <map method="IDXGIAdapter::CheckInterfaceSupport" visibility="internal" />
+    <map method="IDXGIAdapter::CheckInterfaceSupport" visibility="internal" check="false"/>
     
     <map method="IDXGIDevice::CreateSurface" visibility="internal" />
     <map method="IDXGIDevice::QueryResourceResidency" visibility="internal" />

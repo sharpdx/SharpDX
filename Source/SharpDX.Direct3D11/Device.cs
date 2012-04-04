@@ -29,28 +29,32 @@ namespace SharpDX.Direct3D11
         private DeviceContext _immediateContext;
 
         /// <summary>
-        ///   Constructor for a D3D11 Device. See <see cref = "SharpDX.Direct3D11.D3D11.CreateDevice" /> for more information.
+        /// Initializes a new instance of the <see cref="Device"/> class. 
         /// </summary>
-        /// <param name = "driverType"></param>
+        /// <param name="driverType">
+        /// Type of the driver.
+        /// </param>
         public Device(DriverType driverType)
             : this(driverType, DeviceCreationFlags.None)
         {
         }
 
         /// <summary>
-        ///   Constructor for a D3D11 Device. See <see cref = "SharpDX.Direct3D11.D3D11.CreateDevice" /> for more information.
+        /// Initializes a new instance of the <see cref="Device"/> class. 
         /// </summary>
-        /// <param name = "adapter"></param>
+        /// <param name="adapter">
+        /// The adapter.
+        /// </param>
         public Device(Adapter adapter)
             : this(adapter, DeviceCreationFlags.None)
         {
         }
 
         /// <summary>
-        ///   Constructor for a D3D11 Device. See <see cref = "SharpDX.Direct3D11.D3D11.CreateDevice" /> for more information.
+        /// Constructor for a D3D11 Device. See <see cref="SharpDX.Direct3D11.D3D11.CreateDevice"/> for more information.
         /// </summary>
-        /// <param name = "driverType"></param>
-        /// <param name = "flags"></param>
+        /// <param name="driverType">Type of the driver.</param>
+        /// <param name="flags">The flags.</param>
         public Device(DriverType driverType, DeviceCreationFlags flags)
         {
             CreateDevice(null, driverType, flags, null);
@@ -88,21 +92,6 @@ namespace SharpDX.Direct3D11
             CreateDevice(adapter, DriverType.Unknown, flags, featureLevels);
         }
 
-        /// <summary>
-        ///   Internal CreateDevice
-        /// </summary>
-        /// <param name = "adapter"></param>
-        /// <param name = "driverType"></param>
-        /// <param name = "flags"></param>
-        /// <param name = "featureLevels"></param>
-        private void CreateDevice(Adapter adapter, DriverType driverType, DeviceCreationFlags flags,
-                                  FeatureLevel[] featureLevels)
-        {
-            FeatureLevel selectedLevel;
-            D3D11.CreateDevice(adapter, driverType, IntPtr.Zero, flags, featureLevels,
-                               featureLevels == null ? 0 : featureLevels.Length, D3D11.SdkVersion, this,
-                               out selectedLevel, out _immediateContext);
-        }
 #if !WIN8
 
         /// <summary>
@@ -213,21 +202,6 @@ namespace SharpDX.Direct3D11
             private set { _immediateContext = value; }
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (_immediateContext != null)
-                {
-                    _immediateContext.ClearState();
-                    _immediateContext.Flush();
-                    _immediateContext.Dispose();
-                    _immediateContext = null;
-                }                
-            }
-            base.Dispose(disposing);
-        }
-
         /// <summary>
         /// Get the type, name, units of measure, and a description of an existing counter.	
         /// </summary>
@@ -310,14 +284,8 @@ namespace SharpDX.Direct3D11
             {
                 FeatureDataFormatSupport2 support = default(FeatureDataFormatSupport2);
                 support.InFormat = format;
-                try
-                {
-                    CheckFeatureSupport(Feature.ComputeShaders, new IntPtr(&support), Utilities.SizeOf<FeatureDataFormatSupport2>());
-                }
-                catch (Exception)
-                {
+                if (CheckFeatureSupport(Feature.ComputeShaders, new IntPtr(&support), Utilities.SizeOf<FeatureDataFormatSupport2>()).Failure)
                     return ComputeShaderFormatSupport.None;
-                }
                 return support.OutFormatSupport2;
             }
         }
@@ -326,8 +294,10 @@ namespace SharpDX.Direct3D11
         /// Check if this device is supporting a feature.
         /// </summary>
         /// <param name="feature">The feature to check.</param>
-        /// <returns>Returns true if this device supports this feature, otherwise false.</returns>
-        public bool CheckFeatureSupport( Feature feature )
+        /// <returns>
+        /// Returns true if this device supports this feature, otherwise false.
+        /// </returns>
+        public bool CheckFeatureSupport(Feature feature)
         {
             unsafe
             {
@@ -337,30 +307,16 @@ namespace SharpDX.Direct3D11
                         {
                             FeatureDataDoubles support;
 
-                            try
-                            {
-                                CheckFeatureSupport(Feature.ShaderDoubles, new IntPtr(&support), Utilities.SizeOf<FeatureDataDoubles>());
-                            }
-                            catch (Exception)
-                            {
+                            if (CheckFeatureSupport(Feature.ShaderDoubles, new IntPtr(&support), Utilities.SizeOf<FeatureDataDoubles>()).Failure)
                                 return false;
-                            }
                             return support.DoublePrecisionFloatShaderOps;
                         }
                     case Feature.ComputeShaders:
                     case Feature.D3D10XHardwareOptions:
                         {
                             FeatureDataD3D10XHardwareOptions support;
-
-                            try
-                            {
-                                CheckFeatureSupport(Feature.D3D10XHardwareOptions, new IntPtr(&support), Utilities.SizeOf<FeatureDataD3D10XHardwareOptions>());
-                            }
-                            catch (Exception)
-                            {
+                            if (CheckFeatureSupport(Feature.D3D10XHardwareOptions, new IntPtr(&support), Utilities.SizeOf<FeatureDataD3D10XHardwareOptions>()).Failure)
                                 return false;
-                            }
-
                             return support.ComputeShadersPlusRawAndStructuredBuffersViaShader4X;
                         }
                     default:
@@ -374,21 +330,15 @@ namespace SharpDX.Direct3D11
         /// </summary>
         /// <param name="supportsConcurrentResources">Support concurrent resources.</param>
         /// <param name="supportsCommandLists">Support command lists.</param>
-        /// <returns>A <see cref = "T:SharpDX.Result" /> object describing the result of the operation.</returns>
+        /// <returns>
+        /// A <see cref="T:SharpDX.Result"/> object describing the result of the operation.
+        /// </returns>
         public Result CheckThreadingSupport( out bool supportsConcurrentResources, out bool supportsCommandLists )
         {
             unsafe
             {
-                FeatureDataThreading support = default(FeatureDataThreading);
-                Result result;
-                try
-                {
-                    result = CheckFeatureSupport(Feature.Threading, new IntPtr(&support), Utilities.SizeOf<FeatureDataThreading>());
-                }
-                catch (SharpDXException ex)
-                {
-                    result = ex.ResultCode;
-                }
+                var support = default(FeatureDataThreading);
+                var result = CheckFeatureSupport(Feature.Threading, new IntPtr(&support), Utilities.SizeOf<FeatureDataThreading>());
 
                 if (result.Failure)
                 {
@@ -400,6 +350,7 @@ namespace SharpDX.Direct3D11
                     supportsConcurrentResources = support.DriverConcurrentCreates;
                     supportsCommandLists = support.DriverCommandLists;
                 }
+
                 return result;
             }
         }
@@ -451,7 +402,7 @@ namespace SharpDX.Direct3D11
                     var switchToRef = QueryInterface<SwitchToRef>();
                     return switchToRef.UseRef;
                 }
-                catch (Exception)
+                catch (SharpDXException)
                 {
                     return false;
                 }
@@ -493,6 +444,37 @@ namespace SharpDX.Direct3D11
                     // Warning, allocated string should not be released!
                 }
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_immediateContext != null)
+                {
+                    _immediateContext.ClearState();
+                    _immediateContext.Flush();
+                    _immediateContext.Dispose();
+                    _immediateContext = null;
+                }
+            }
+            base.Dispose(disposing);
+        }
+
+        /// <summary>
+        ///   Internal CreateDevice
+        /// </summary>
+        /// <param name = "adapter"></param>
+        /// <param name = "driverType"></param>
+        /// <param name = "flags"></param>
+        /// <param name = "featureLevels"></param>
+        private void CreateDevice(Adapter adapter, DriverType driverType, DeviceCreationFlags flags,
+                                  FeatureLevel[] featureLevels)
+        {
+            FeatureLevel selectedLevel;
+            D3D11.CreateDevice(adapter, driverType, IntPtr.Zero, flags, featureLevels,
+                               featureLevels == null ? 0 : featureLevels.Length, D3D11.SdkVersion, this,
+                               out selectedLevel, out _immediateContext);
         }
     }
 }

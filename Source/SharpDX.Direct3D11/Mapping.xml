@@ -195,7 +195,7 @@
     <map method="ID3D11Debug::(.*)FeatureMask" visibility="internal" property="false" name="$1FeatureFlags" />
     <map param="ID3D11ClassLinkage::GetClassInstance::ppInstance" return="true" />
     <map method="ID3D11Debug::(.*)PresentPerRenderOpDelay" name="$1PresentDelay" />
-    <map method="ID3D11Device::CheckFeatureSupport" visibility="internal" />
+    <map method="ID3D11Device::CheckFeatureSupport" visibility="internal" check="false"/>
     <map param="ID3D11DeviceContext::GetPredication::ppPredicate" return="true" />
     <map method="ID3D11DeviceContext::CS.*UnorderedAccessViews" visibility="internal" />
     <map method="ID3D11DeviceContext::CopyResource" visibility="internal" name="CopyResource_" />

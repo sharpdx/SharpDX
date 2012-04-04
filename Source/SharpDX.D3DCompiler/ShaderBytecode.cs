@@ -1126,18 +1126,13 @@ namespace SharpDX.D3DCompiler
         /// </summary>
         /// <param name = "flags">Options specifying what to remove from the shader.</param>
         /// <returns>A string containing any errors that may have occurred.</returns>
+        /// <unmanaged>HRESULT D3DStripShader([In, Buffer] const void* pShaderBytecode,[In] SIZE_T BytecodeLength,[In] D3DCOMPILER_STRIP_FLAGS uStripFlags,[Out] ID3D10Blob** ppStrippedBlob)</unmanaged>
         public ShaderBytecode Strip(StripFlags flags)
         {
-            try
-            {
-                Blob blob;
-                D3D.StripShader(BufferPointer, BufferSize, flags, out blob);
-                return new ShaderBytecode(blob);
-            }
-            catch (SharpDXException)
-            {
+            Blob blob;
+            if (D3D.StripShader(BufferPointer, BufferSize, flags, out blob).Failure)
                 return null;
-            }
+            return new ShaderBytecode(blob);
         }
 
         /// <summary>

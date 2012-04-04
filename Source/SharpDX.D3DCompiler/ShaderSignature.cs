@@ -80,18 +80,12 @@ namespace SharpDX.D3DCompiler
         /// </summary>
         /// <param name = "shaderBytecode">The bytecode of the compiled shader or effect.</param>
         /// <returns>The input and output signatures of the shader or effect.</returns>
+        /// <unmanaged>HRESULT D3DGetInputAndOutputSignatureBlob([In, Buffer] const void* pSrcData,[In] SIZE_T SrcDataSize,[Out] ID3D10Blob** ppSignatureBlob)</unmanaged>
         public static ShaderSignature GetInputOutputSignature(ShaderBytecode shaderBytecode)
         {
             Blob shaderSignature;
-            try
-            {
-                D3D.GetInputAndOutputSignatureBlob(shaderBytecode.BufferPointer,
-                                                   shaderBytecode.BufferSize, out shaderSignature);
-            }
-            catch (SharpDXException)
-            {
+            if (D3D.GetInputAndOutputSignatureBlob(shaderBytecode.BufferPointer, shaderBytecode.BufferSize, out shaderSignature).Failure)
                 return null;
-            }
             return new ShaderSignature(shaderSignature);
         }
 
@@ -100,18 +94,12 @@ namespace SharpDX.D3DCompiler
         /// </summary>
         /// <param name = "shaderBytecode">The bytecode of the compiled shader or effect.</param>
         /// <returns>The input signature of the shader or effect.</returns>
+        /// <unmanaged>HRESULT D3DGetInputSignatureBlob([In, Buffer] const void* pSrcData,[In] SIZE_T SrcDataSize,[Out] ID3D10Blob** ppSignatureBlob)</unmanaged>
         public static ShaderSignature GetInputSignature(ShaderBytecode shaderBytecode)
         {
             Blob shaderSignature;
-            try
-            {
-                D3D.GetInputSignatureBlob(shaderBytecode.BufferPointer,
-                                          shaderBytecode.BufferSize, out shaderSignature);
-            }
-            catch (SharpDXException)
-            {
+            if (D3D.GetInputSignatureBlob(shaderBytecode.BufferPointer, shaderBytecode.BufferSize, out shaderSignature).Failure)
                 return null;
-            }
             return new ShaderSignature(shaderSignature);
         }
 
@@ -120,18 +108,12 @@ namespace SharpDX.D3DCompiler
         /// </summary>
         /// <param name = "shaderBytecode">The bytecode of the compiled shader or effect.</param>
         /// <returns>The output signature of the shader or effect.</returns>
+        /// <unmanaged>HRESULT D3DGetOutputSignatureBlob([In, Buffer] const void* pSrcData,[In] SIZE_T SrcDataSize,[Out] ID3D10Blob** ppSignatureBlob)</unmanaged>
         public static ShaderSignature GetOutputSignature(ShaderBytecode shaderBytecode)
         {
             Blob shaderSignature;
-            try
-            {
-                D3D.GetOutputSignatureBlob(shaderBytecode.BufferPointer,
-                                           shaderBytecode.BufferSize, out shaderSignature);
-            }
-            catch (SharpDXException)
-            {
+            if (D3D.GetOutputSignatureBlob(shaderBytecode.BufferPointer, shaderBytecode.BufferSize, out shaderSignature).Failure)
                 return null;
-            }
             return new ShaderSignature(shaderSignature);
         }
 
