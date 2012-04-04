@@ -244,12 +244,16 @@
     // D3D11 Functions
     // *****************************************************************
     -->
+    <ifdef name="WIN8">
+      <remove function="D3D11CreateDeviceAndSwapChain"/>
+    </ifdef>
+    
     <map function="D3D11(.+)" name-tmp="$1" />
     <map function="D3D11.*" dll='"d3d11.dll"' group="SharpDX.Direct3D11.D3D11" />
     <map param="D3D11CreateDevice::ppDevice" attribute="out fast" />
 
     <remove function="ID3D11DeviceContext1_.*"/>
-    
+
     <ifndef name="WIN8">
       <map function="D3DX11(.+)" name-tmp="$1" />
       <map function="D3DX11(.+)W" name-tmp="$1" />

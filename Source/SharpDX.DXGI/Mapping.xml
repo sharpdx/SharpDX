@@ -241,6 +241,10 @@
     // DXGI Functions
     // *****************************************************************
     -->
+
+    <ifdef name="WIN8">
+      <remove function="CreateDXGIFactory"/>
+    </ifdef>
     <map function="CreateDXGIFactory.*" dll='"dxgi.dll"' group="SharpDX.DXGI.DXGI" />
     <map param="CreateDXGIFactory.*?::ppFactory" attribute="out" />
     

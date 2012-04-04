@@ -103,6 +103,7 @@ namespace SharpDX.Direct3D11
                                featureLevels == null ? 0 : featureLevels.Length, D3D11.SdkVersion, this,
                                out selectedLevel, out _immediateContext);
         }
+#if !WIN8
 
         /// <summary>
         ///   Initializes a new instance of the <see cref = "T:SharpDX.Direct3D11.Device" /> class along with a new <see cref = "T:SharpDX.DXGI.SwapChain" /> used for rendering.
@@ -193,6 +194,7 @@ namespace SharpDX.Direct3D11
 
             return result;
         }
+#endif
 
         /// <summary>
         ///   Get the imediate <see cref = "SharpDX.Direct3D11.DeviceContext" /> attached to this Device.

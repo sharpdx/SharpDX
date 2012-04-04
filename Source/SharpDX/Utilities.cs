@@ -491,6 +491,39 @@ namespace SharpDX
             ClsctxAll = ClsctxServer | ClsctxInprocHandler
         }
 
+#if WIN8
+        [StructLayout(LayoutKind.Sequential)]
+        public struct MultiQueryInterface
+        {
+            public IntPtr InterfaceIID;
+            public IntPtr IUnknownPointer;
+            public Result ResultCode;
+        };
+
+        // TODO THIS IS NOT TESTED under WIN8
+        [DllImport("ole32.dll", ExactSpelling = true, EntryPoint = "CoCreateInstanceFromApp", PreserveSig = true)]
+        private static extern Result CoCreateInstanceFromApp([In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid, 
+            IntPtr pUnkOuter, 
+            CLSCTX dwClsContext, 
+            IntPtr reserved,
+            int countMultiQuery,
+            ref MultiQueryInterface query);
+
+        internal unsafe static void CreateComInstance(Guid clsid, CLSCTX clsctx, Guid riid, ComObject comObject)
+        {
+            MultiQueryInterface localQuery = new MultiQueryInterface()
+            {
+                InterfaceIID = new IntPtr(&riid),
+                IUnknownPointer = IntPtr.Zero,
+                ResultCode = 0,
+            };
+
+            var result = CoCreateInstanceFromApp(clsid, IntPtr.Zero, clsctx, IntPtr.Zero, 1, ref localQuery);
+            result.CheckError();
+            localQuery.ResultCode.CheckError();
+            comObject.NativePointer = localQuery.IUnknownPointer;
+        }
+#else
         [DllImport("ole32.dll", ExactSpelling = true, EntryPoint = "CoCreateInstance", PreserveSig = true)]
         private static extern Result CoCreateInstance([In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid, IntPtr pUnkOuter, CLSCTX dwClsContext, [In, MarshalAs(UnmanagedType.LPStruct)] Guid riid, out IntPtr comObject);
 
@@ -501,6 +534,7 @@ namespace SharpDX
             result.CheckError();
             comObject.NativePointer = pointer;
         }
+#endif
 
         /// <summary>Determines the concurrency model used for incoming calls to objects created by this thread. This concurrency model can be either apartment-threaded or multi-threaded.</summary>
         public enum CoInit

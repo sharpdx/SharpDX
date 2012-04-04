@@ -26,6 +26,7 @@ namespace SharpDX.DXGI
 {
     public partial class Factory
     {
+#if !WIN8
         /// <summary>
         ///   Default Constructor for Factory
         /// </summary>
@@ -35,7 +36,6 @@ namespace SharpDX.DXGI
             DXGI.CreateDXGIFactory(Utilities.GetGuidFromType(GetType()), out factoryPtr);
             NativePointer = factoryPtr;
         }
-#if !WIN8
         /// <summary>	
         /// Create an adapter interface that represents a software adapter.	
         /// </summary>	
