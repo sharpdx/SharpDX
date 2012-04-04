@@ -36,6 +36,7 @@ namespace SharpDX
         private static readonly object LockDescriptor = new object();
         private static readonly List<Type> RegisteredDescriptorProvider = new List<Type>();
         private static readonly Dictionary<Result, ResultDescriptor> Descriptors = new Dictionary<Result, ResultDescriptor>();
+        private const string UnknownText = "Unknown";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResultDescriptor"/> class.
@@ -44,10 +45,11 @@ namespace SharpDX
         /// <param name="module">The module (ex: SharpDX.Direct2D1).</param>
         /// <param name="apiCode">The API code (ex: D2D1_ERR_...).</param>
         /// <param name="description">The description of the result code if any.</param>
-        public ResultDescriptor(Result code, string module, string apiCode, string description)
+        public ResultDescriptor(Result code, string module, string nativeApiCode, string apiCode, string description = null)
         {
             Result = code;
             Module = module;
+            NativeApiCode = nativeApiCode;
             ApiCode = apiCode;
             Description = description;
         }
@@ -63,14 +65,19 @@ namespace SharpDX
         public string Module { get; private set; }
 
         /// <summary>
-        /// Gets the API code (ex: D2D1_ERR_...)
+        /// Gets the native API code (ex: D2D1_ERR_ ...)
+        /// </summary>
+        public string NativeApiCode { get; private set; }
+
+        /// <summary>
+        /// Gets the API code (ex: DemiceRemoved ...)
         /// </summary>
         public string ApiCode { get; private set; }
 
         /// <summary>
         /// Gets the description of the result code if any.
         /// </summary>
-        public string Description { get; private set; }
+        public string Description { get; set; }
 
         /// <summary>
         /// Determines whether the specified <see cref="ResultDescriptor"/> is equal to this instance.
@@ -115,7 +122,7 @@ namespace SharpDX
         /// <inheritdoc/>
         public override string ToString()
         {
-            return string.Format("HRESULT: [0x{0:X}], Module: [{1}], ApiCode: [{2}], Message: {3}", this.Result.Code, this.Module, this.ApiCode, this.Description);
+            return string.Format("HRESULT: [0x{0:X}], Module: [{1}], ApiCode: [{2}/{3}], Message: {4}", this.Result.Code, this.Module, this.NativeApiCode, this.ApiCode, this.Description);
         }
 
         /// <summary>
@@ -180,29 +187,30 @@ namespace SharpDX
         public static ResultDescriptor Find(Result result)
         {
             ResultDescriptor descriptor;
-            // Check if a Win32 description exist
-            var description = GetDescriptionFromResultCode(result.Code);
-            if (description != null)
+
+            // Check also SharpDX registered result descriptors
+            lock (LockDescriptor)
             {
-                descriptor = new ResultDescriptor(result, "Unknown", "Unknown", description);
-            }
-            else
-            {
-                // Otherwise, check for SharpDX registered result descriptors
-                lock (LockDescriptor)
+                if (RegisteredDescriptorProvider.Count > 0)
                 {
-                    if (RegisteredDescriptorProvider.Count > 0)
+                    foreach (var type in RegisteredDescriptorProvider)
                     {
-                        foreach (var type in RegisteredDescriptorProvider)
-                        {
-                            AddDescriptorsFromType(type);
-                        }
-                        RegisteredDescriptorProvider.Clear();
+                        AddDescriptorsFromType(type);
                     }
-                    if (!Descriptors.TryGetValue(result, out descriptor))
-                    {
-                        descriptor = new ResultDescriptor(result, "Unknown", "Unknown", "Unknown error");
-                    }
+                    RegisteredDescriptorProvider.Clear();
+                }
+                if (!Descriptors.TryGetValue(result, out descriptor))
+                {
+                    descriptor = new ResultDescriptor(result, UnknownText, UnknownText, UnknownText);
+                }
+
+                // If description is null, than we try to add description from Win32 GetDescriptionFromResultCode
+                // Or we use unknown description
+                if (descriptor.Description == null)
+                {
+                    // Check if a Win32 description exist
+                    var description = GetDescriptionFromResultCode(result.Code);
+                    descriptor.Description = description ?? UnknownText;
                 }
             }
 
