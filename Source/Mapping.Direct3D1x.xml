@@ -394,7 +394,9 @@
     <map method="ID3D(\d+)DeviceContext::RSSetViewports" visibility="internal" />
     <map param="ID3D(\d+)DeviceContext::RSSetViewports::pViewports" type="void" />
     <map param="ID3D(\d+)DeviceContext::OMGetBlendState::BlendFactor" type="SHARPDX_COLOR4" pointer="*" array="0" />
-    <map param="ID3D(\d+)DeviceContext::OMSetBlendState::BlendFactor" type="SHARPDX_COLOR4" pointer="*" array="0" />
+    <map param="ID3D(\d+)DeviceContext::OMSetBlendState::BlendFactor" type="SHARPDX_COLOR4" pointer="*" array="0" default="null"/>
+    <map param="ID3D(\d+)DeviceContext::OMSetBlendState::SampleMask" default="-1"/>
+    <map param="ID3D(\d+)DeviceContext::OMSetDepthStencilState::StencilRef" default="0"/>
     <map param="ID3D(\d+)DeviceContext::[A-Z][A-Z]GetShader::pNumClassInstances" attribute="inout" />
     <map method="ID3D(\d+)DeviceContext::Map" name="MapSubresource" />
     <map param="pMappedResource" return="true" />

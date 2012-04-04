@@ -352,6 +352,21 @@ namespace SharpDX.Direct3D11
                 SetRenderTargets(numViews, (IntPtr)renderTargetViewsPtr, depthStencilViewRef);
             }
         }
+       
+        /// <summary>	
+        /// Set the blend state of the output-merger stage.	
+        /// </summary>	
+        /// <param name="blendStateRef"><para>Pointer to a blend-state interface (see <see cref="SharpDX.Direct3D11.BlendState"/>). Passing in <c>null</c> implies a default blend state. See remarks for further details.</para></param>	
+        /// <param name="blendFactor"><para>Array of blend factors, one for each RGBA component. This requires a blend state object that specifies the <see cref="SharpDX.Direct3D11.BlendOption.BlendFactor"/> option.</para></param>	
+        /// <param name="sampleMask"><para>32-bit sample coverage. The default value is 0xffffffff. See remarks.</para></param>	
+        /// <remarks>	
+        /// Blend state is used by the output-merger stage to determine how to blend together two pixel values. The two values are commonly the current pixel value and the pixel value already in the output render target. Use the blend operation to control where the two pixel values come from and how they are mathematically combined.To create a blend-state interface, call <see cref="SharpDX.Direct3D11.Device.CreateBlendState"/>.Passing in <c>null</c> for the blend-state interface indicates to the runtime to set a default blending state.  The following table indicates the default blending parameters.StateDefault Value AlphaToCoverageEnableFALSE BlendEnableFALSE[8] SrcBlendD3D11_BLEND_ONE DstBlendD3D11_BLEND_ZERO BlendOpD3D11_BLEND_OP_ADD SrcBlendAlphaD3D11_BLEND_ONE DstBlendAlphaD3D11_BLEND_ZERO BlendOpAlphaD3D11_BLEND_OP_ADD RenderTargetWriteMask[8]<see cref="SharpDX.Direct3D11.ColorWriteMaskFlags.All"/>[8]?A sample mask determines which samples get updated in all the active render targets. The mapping of bits in a sample mask to samples in a multisample render target is the responsibility of an individual application. A sample mask is always applied; it is independent of whether multisampling is enabled, and does not depend on whether an application uses multisample render targets.The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10.	
+        /// </remarks>	
+        /// <unmanaged>void ID3D11DeviceContext::OMSetBlendState([In, Optional] ID3D11BlendState* pBlendState,[In, Optional] const SHARPDX_COLOR4* BlendFactor,[In] unsigned int SampleMask)</unmanaged>	
+        public void SetBlendState(SharpDX.Direct3D11.BlendState blendStateRef, SharpDX.Color4? blendFactor = null, uint sampleMask = 0xFFFFFFFF)
+        {
+            SetBlendState(blendStateRef, blendFactor, checked((int)sampleMask));
+        }
 
         /// <summary>
         /// Gets or sets the blend factor.
