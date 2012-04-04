@@ -11,6 +11,12 @@ namespace SharpGen.Config
             MethodCheckReturnType = true;
         }
 
+        /// <summary>
+        /// Default Value for parameters
+        /// </summary>
+        [XmlAttribute("default")]
+        public string DefaultValue { get; set; }
+
         [XmlIgnore]
         public bool? MethodCheckReturnType { get; set; }
         [XmlAttribute("check")]

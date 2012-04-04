@@ -83,6 +83,7 @@ namespace SharpGen.Model
                                tag = new MappingRule();
                                element.Tag = tag;
                            }
+                           if (fromTag.DefaultValue != null) tag.DefaultValue = fromTag.DefaultValue;
                            if (fromTag.MethodCheckReturnType.HasValue) tag.MethodCheckReturnType = fromTag.MethodCheckReturnType;
                            if (fromTag.Visibility.HasValue) tag.Visibility = fromTag.Visibility;
                            if (fromTag.NativeCallbackVisibility.HasValue) tag.NativeCallbackVisibility = fromTag.NativeCallbackVisibility;

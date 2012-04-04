@@ -48,6 +48,8 @@ namespace SharpGen.Model
             get { return _isFast && IsOut; }
         }
 
+        public string DefaultValue { get; set; }
+
         private const int SizeOfLimit = 16;
 
         protected override void UpdateFromTag(MappingRule tag)
@@ -57,6 +59,7 @@ namespace SharpGen.Model
                 IsUsedAsReturnType = tag.ParameterUsedAsReturnType.Value;
             if (tag.ParameterAttribute.HasValue && (tag.ParameterAttribute.Value & ParamAttribute.Fast) != 0)
                 _isFast = true;
+            DefaultValue = tag.DefaultValue;
         }
 
         public bool IsFixed

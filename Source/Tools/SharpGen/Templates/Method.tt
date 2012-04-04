@@ -103,7 +103,8 @@
 		int i = 0;
 		int maxParam = method.PublicParameterCount;
 		foreach (var param in method.PublicParameters) {
-			#><#= param.ParamName #><#+				
+			#><#= param.ParamName #><#+	
+			if (param.DefaultValue != null) {#> = <#= param.DefaultValue #><#+}
 			if ((i+1)<maxParam) {#>, <#+}
 			i++;
 		}
