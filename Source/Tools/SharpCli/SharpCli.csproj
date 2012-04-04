@@ -60,8 +60,6 @@
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Build.Framework" />
-    <Reference Include="Microsoft.Build.Utilities.v3.5" />
     <Reference Include="Mono.Cecil">
       <HintPath>..\..\..\External\Mono.Cecil\Mono.Cecil.dll</HintPath>
     </Reference>
@@ -75,7 +73,6 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="InteropApp.cs" />
-    <Compile Include="InteropBuilderTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -91,8 +88,8 @@
     <Delete Files="@(ReferenceCopyLocalPaths->'$(TargetTaskDir)%(Filename)%(Extension)')" TreatErrorsAsWarnings="true" />
     <!-- Copy References -->
     <Copy SourceFiles="@(ReferenceCopyLocalPaths)" DestinationFiles="@(ReferenceCopyLocalPaths->'$(TargetTaskDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" ContinueOnError="true" />
-    <!-- Copy InteropBuilder -->
-    <Copy Condition="!Exists('$(TargetTaskPath)')" SourceFiles="$(TargetPath)" DestinationFiles="$(TargetTaskPath)" />
+    <!-- Copy SharpCLI -->
+    <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(TargetTaskPath)" />
     <Message Importance="high" Text="Copying SharpCli Task from $(TargetPath) to $(TargetTaskPath)" />
   </Target>
   <PropertyGroup>

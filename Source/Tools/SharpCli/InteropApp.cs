@@ -24,8 +24,6 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Pdb;
@@ -804,29 +802,18 @@ namespace SharpCli
 
         public void Log(string message, params object[] parameters)
         {
-            if ( Logger != null )
-                Logger.LogMessage(MessageImportance.High, message, parameters);
-            else
-                Console.WriteLine(message, parameters);
+            Console.WriteLine(message, parameters);
         }
 
         public void LogError(string message, params object[] parameters)
         {
-            if (Logger != null)
-                Logger.LogError(message, parameters);
-            else
-                Console.WriteLine(message, parameters);
+            Console.WriteLine(message, parameters);
         }
 
         public void LogError(Exception ex)
         {
-            if (Logger != null)
-                Logger.LogErrorFromException(ex, true);
-            else
-                Console.WriteLine(ex.ToString());
+            Console.WriteLine(ex.ToString());
         }
-
-        public TaskLoggingHelper Logger { get; set; }
 
         /// <summary>
         /// FileTime.

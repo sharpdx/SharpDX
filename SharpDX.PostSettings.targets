@@ -45,9 +45,12 @@
     </ItemGroup>
   </Target>
 
-  <UsingTask AssemblyFile="$(SolutionDir)Source\Bin\SharpCli.exe" TaskName="SharpCli.InteropBuilderTask" />
+  <!-- Don't use anymore task, as msbuild is keeping a lock on the file on the 1st build and we are not able to reapply SharpCLI once it is created
+   <UsingTask AssemblyFile="$(SolutionDir)Source\Bin\SharpCli.exe" TaskName="SharpCli.InteropBuilderTask" /> -->
+
   <Target Name="AfterBuild">
-    <InteropBuilderTask FileName="$(TargetPath)"/>
+    <Exec Command='"$(SolutionDir)\Source\Bin\SharpCLI.exe" "$(TargetPath)"'/>
+    <!-- <InteropBuilderTask FileName="$(TargetPath)"/> -->
 
     <Message Text="Signing Assembly $(TargetPath)"/>
 
