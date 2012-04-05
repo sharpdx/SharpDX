@@ -223,16 +223,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpDX.DXGI\SharpDX.DXGI.csproj">
-      <Project>{D4D38A41-0729-4606-A54E-EB0B0E07C836}</Project>
-      <Name>SharpDX.DXGI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SharpDX\SharpDX.csproj">
-      <Project>{CE5194D5-30A4-43A4-BF7A-7AC0C1988224}</Project>
-      <Name>SharpDX</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Mapping-direct2d1.xml">
       <SubType>Designer</SubType>
     </None>
@@ -249,6 +239,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Documentation\CodeComments.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharpDX.DXGI\SharpDX.DXGI.csproj">
+      <Project>{3fc6de77-b412-4101-9e64-6b9aa831179b}</Project>
+      <Name>SharpDX.DXGI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpDX\SharpDX.csproj">
+      <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
+      <Name>SharpDX</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />

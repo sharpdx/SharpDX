@@ -93,20 +93,6 @@
     <Compile Include="Viewport.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpDX.D3DCompiler\SharpDX.D3DCompiler.csproj">
-      <Project>{2BC0D3FF-D3B0-44F2-8ECE-37768BF3E812}</Project>
-      <Name>SharpDX.D3DCompiler</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SharpDX.DXGI\SharpDX.DXGI.csproj">
-      <Project>{D4D38A41-0729-4606-A54E-EB0B0E07C836}</Project>
-      <Name>SharpDX.DXGI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SharpDX\SharpDX.csproj">
-      <Project>{CE5194D5-30A4-43A4-BF7A-7AC0C1988224}</Project>
-      <Name>SharpDX</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_effects_x64.dll">
       <Link>sharpdx_direct3d11_effects_x64.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -122,6 +108,20 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="SharpDX.Direct3D11.nuspec" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharpDX.D3DCompiler\SharpDX.D3DCompiler.csproj">
+      <Project>{361d3f81-a48a-47f2-80df-ca4f9536cb4e}</Project>
+      <Name>SharpDX.D3DCompiler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpDX.DXGI\SharpDX.DXGI.csproj">
+      <Project>{3fc6de77-b412-4101-9e64-6b9aa831179b}</Project>
+      <Name>SharpDX.DXGI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpDX\SharpDX.csproj">
+      <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
+      <Name>SharpDX</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />

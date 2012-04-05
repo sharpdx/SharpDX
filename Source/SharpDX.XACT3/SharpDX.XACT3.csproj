@@ -42,21 +42,21 @@
     <Compile Include="WaveNotification.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpDX.XAudio2\SharpDX.XAudio2.csproj">
-      <Project>{4995127E-0B8E-45B8-80C4-6BAC1BBE3783}</Project>
-      <Name>SharpDX.XAudio2</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SharpDX\SharpDX.csproj">
-      <Project>{D0BCD56A-41C4-4A4E-8590-26864CED07FF}</Project>
-      <Name>SharpDX</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Documentation\CodeComments.xml" />
     <None Include="Mapping.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SharpDX.XACT3.nuspec" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharpDX.XAudio2\SharpDX.XAudio2.csproj">
+      <Project>{4995127e-0b8e-45b8-80c4-6bac1bbe3783}</Project>
+      <Name>SharpDX.XAudio2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpDX\SharpDX.csproj">
+      <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
+      <Name>SharpDX</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
