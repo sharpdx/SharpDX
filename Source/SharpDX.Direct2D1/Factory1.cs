@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 
 #if WIN8
 
@@ -65,6 +66,34 @@ namespace SharpDX.Direct2D1
                 GetRegisteredEffects(guids, guids.Length, out effectReturned, out effectRegistered);
                 return guids;
             }
+        }
+
+        /// <summary>
+        /// Register a <see cref="CustomEffect"/> factory.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="effectFactory"></param>
+        public void RegisterEffect<T>(Func<T> effectFactory) where T : CustomEffect
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Register a <see cref="CustomEffect"/>.
+        /// </summary>
+        /// <typeparam name="T">Type of <see </typeparam>
+        public void RegisterEffect<T>() where T : CustomEffect, new()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Unregsiter a <see cref="CustomEffect"/>.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public void UnRegisterEffect<T>() where T : CustomEffect
+        {
+            throw new NotImplementedException();
         }
     }
 }
