@@ -8,8 +8,9 @@
     mc:Ignorable="d"    
     d:DesignWidth="1280"
     d:DesignHeight="800">
-    <Button x:Name="showButton" Content="Show Cube" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="149" Click="Button_Click_1"/>
-    <Slider HorizontalAlignment="Left" Height="39" Margin="198,10,0,0" VerticalAlignment="Top" Width="461" ValueChanged="Slider_ValueChanged_1" Value="50"/>
+    <Button x:Name="showButton" Content="Hide Cube" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="149" Click="Button_Click_1"/>
+    <Slider HorizontalAlignment="Left" Height="39" Margin="164,10,0,0" VerticalAlignment="Top" Width="461" ValueChanged="Slider_ValueChanged_1" Value="50"/>
+    <CheckBox x:Name="checkBoxDirect2D" Content="Show Direct2D Overlay" HorizontalAlignment="Left" Height="39" Margin="630,5,0,0" VerticalAlignment="Top" Width="223" Checked="checkBoxDirect2D_Checked" Unchecked="checkBoxDirect2D_Unchecked"/>
 
 
 </SwapChainBackgroundPanel>

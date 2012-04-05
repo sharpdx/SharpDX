@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using MiniCube;
+using MiniShape;
 using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
@@ -46,9 +47,11 @@ namespace MiniCubeXaml
     public sealed partial class DirectXPanelXaml : SwapChainBackgroundPanel
     {
         private CubeRenderer cubeRenderer;
-        public DirectXPanelXaml(CubeRenderer cubeRenderer)
+        private ShapeRenderer shapeRenderer;
+        public DirectXPanelXaml(CubeRenderer cubeRenderer, ShapeRenderer shapeRenderer)
         {
             this.cubeRenderer = cubeRenderer;
+            this.shapeRenderer = shapeRenderer;
             this.InitializeComponent();
         }
 
@@ -61,6 +64,16 @@ namespace MiniCubeXaml
         private void Slider_ValueChanged_1(object sender, RangeBaseValueChangedEventArgs e)
         {
             cubeRenderer.Scale = (float)(e.NewValue / 50.0);
+        }
+
+        private void checkBoxDirect2D_Checked(object sender, RoutedEventArgs e)
+        {
+            shapeRenderer.Show = true;
+        }
+
+        private void checkBoxDirect2D_Unchecked(object sender, RoutedEventArgs e)
+        {
+            shapeRenderer.Show = false;
         }
     }
 }

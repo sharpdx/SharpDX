@@ -23,6 +23,7 @@ using System.IO;
 using System.Linq;
 using CommonDX;
 using MiniCube;
+using MiniShape;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -48,6 +49,7 @@ namespace MiniCubeXaml
         DeviceManager deviceManager;
         SwapChainBackgroundPanelTarget target;
         CubeRenderer cubeRenderer;
+        ShapeRenderer shapeRenderer;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -78,10 +80,13 @@ namespace MiniCubeXaml
 
             // New CubeRenderer
             cubeRenderer = new CubeRenderer();
-            cubeRenderer.ShowCube = false;
+            cubeRenderer.ShowCube = true;
+            shapeRenderer = new ShapeRenderer();
+            shapeRenderer.Show = false;
+            shapeRenderer.EnableClear = false;
 
             // Place the frame in the current Window and ensure that it is active
-            var swapchainPanel = new DirectXPanelXaml(cubeRenderer);
+            var swapchainPanel = new DirectXPanelXaml(cubeRenderer, shapeRenderer);
             Window.Current.Content = swapchainPanel;
             Window.Current.Activate();
 
@@ -91,9 +96,11 @@ namespace MiniCubeXaml
             // Add Initializer to device manager
             deviceManager.OnInitialize += target.Initialize;
             deviceManager.OnInitialize += cubeRenderer.Initialize;
+            deviceManager.OnInitialize += shapeRenderer.Initialize;
 
             // Render the cube within the CoreWindow
             target.OnRender += cubeRenderer.Render;
+            target.OnRender += shapeRenderer.Render;
 
             // Initialize the device manager and all registered deviceManager.OnInitialize 
             deviceManager.Initialize(DisplayProperties.LogicalDpi);

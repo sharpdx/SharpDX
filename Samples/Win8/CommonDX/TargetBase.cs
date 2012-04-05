@@ -68,9 +68,14 @@ namespace CommonDX
         public SharpDX.Direct2D1.Bitmap1 BitmapTarget2D { get { return bitmapTarget; } }
 
         /// <summary>
+        /// Gets the bounds of the control linked to this render target
+        /// </summary>
+        public Windows.Foundation.Rect RenderTargetBounds { get; protected set; }
+
+        /// <summary>
         /// Gets the size in pixels of the Direct3D RenderTarget
         /// </summary>
-        public Windows.Foundation.Size RenderTargetSize { get; protected set; }
+        public Windows.Foundation.Size RenderTargetSize { get { return new Windows.Foundation.Size(RenderTargetBounds.Width, RenderTargetBounds.Height); } }
 
         /// <summary>
         /// Gets the bounds of the control linked to this render target

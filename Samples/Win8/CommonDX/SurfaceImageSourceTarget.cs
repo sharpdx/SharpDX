@@ -126,13 +126,29 @@ namespace CommonDX
                     }))
                         viewData.DepthStencilView = ToDispose(new SharpDX.Direct3D11.DepthStencilView(DeviceManager.DeviceDirect3D, depthBuffer, new SharpDX.Direct3D11.DepthStencilViewDescription() { Dimension = SharpDX.Direct3D11.DepthStencilViewDimension.Texture2D }));
 
+                    // Now we set up the Direct2D render target bitmap linked to the swapchain. 
+                    // Whenever we render to this bitmap, it will be directly rendered to the 
+                    // swapchain associated with the window.
+                    var bitmapProperties = new SharpDX.Direct2D1.BitmapProperties1(
+                        new SharpDX.Direct2D1.PixelFormat(SharpDX.DXGI.Format.B8G8R8A8_UNorm, SharpDX.Direct2D1.AlphaMode.Premultiplied),
+                        DeviceManager.Dpi,
+                        DeviceManager.Dpi,
+                        SharpDX.Direct2D1.BitmapOptions.Target | SharpDX.Direct2D1.BitmapOptions.CannotDraw);
+
+                    // Direct2D needs the dxgi version of the backbuffer surface pointer.
+                    // Get a D2D surface from the DXGI back buffer to use as the D2D render target.
+                    viewData.BitmapTarget = ToDispose(new SharpDX.Direct2D1.Bitmap1(DeviceManager.ContextDirect2D, surface, bitmapProperties));
+
                     // Create a viewport descriptor of the full window size.
                     viewData.Viewport = new SharpDX.Direct3D11.Viewport(position.X, position.Y, (float)viewData.RenderTargetSize.Width - position.X, (float)viewData.RenderTargetSize.Height - position.Y, 0.0f, 1.0f);
                 }
 
                 renderTargetView = viewData.RenderTargetView;
                 depthStencilView = viewData.DepthStencilView;
-                RenderTargetSize = viewData.RenderTargetSize;
+                RenderTargetBounds = new Rect(viewData.Viewport.TopLeftX, viewData.Viewport.TopLeftY, viewData.Viewport.Width, viewData.Viewport.Height);
+                bitmapTarget = viewData.BitmapTarget;
+
+                DeviceManager.ContextDirect2D.Target = viewData.BitmapTarget;
 
                 // Set the current viewport using the descriptor.
                 DeviceManager.ContextDirect3D.Rasterizer.SetViewports(viewData.Viewport);
@@ -151,6 +167,7 @@ namespace CommonDX
         {
             public SharpDX.Direct3D11.RenderTargetView RenderTargetView;
             public SharpDX.Direct3D11.DepthStencilView DepthStencilView;
+            public SharpDX.Direct2D1.Bitmap1 BitmapTarget;
             public SharpDX.Direct3D11.Viewport Viewport;
             public Size RenderTargetSize;
         }

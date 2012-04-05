@@ -127,6 +127,9 @@
     <Compile Include="..\MiniCube\CubeRenderer.cs">
       <Link>CubeRenderer.cs</Link>
     </Compile>
+    <Compile Include="..\MiniShape\ShapeRenderer.cs">
+      <Link>ShapeRenderer.cs</Link>
+    </Compile>
     <Compile Include="Common\BindableBase.cs" />
     <Compile Include="Common\BooleanToVisibilityConverter.cs" />
     <Compile Include="Common\BooleanNegationConverter.cs" />

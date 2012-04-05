@@ -53,7 +53,10 @@ namespace MiniCube
         {
             Scale = 1.0f;
             ShowCube = true;
+            EnableClear = true;
         }
+
+        public bool EnableClear { get; set; }
 
         public bool ShowCube { get; set; }
 
@@ -168,8 +171,11 @@ namespace MiniCube
             d3dContext.OutputMerger.SetTargets(render.DepthStencilView, render.RenderTargetView);
 
             // Clear the views
-            d3dContext.ClearRenderTargetView(render.RenderTargetView, Colors.Black);
             d3dContext.ClearDepthStencilView(render.DepthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
+            if (EnableClear)
+            {
+                d3dContext.ClearRenderTargetView(render.RenderTargetView, Colors.Black);
+            }
 
             if (ShowCube)
             {

@@ -23,6 +23,7 @@ using System.IO;
 using System.Linq;
 using CommonDX;
 using MiniCube;
+using MiniShape;
 using SharpDX;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -48,9 +49,12 @@ namespace MiniCubeBrushXaml
     public sealed partial class MainPage : Page
     {
         private ImageBrush d3dBrush;
+        private ImageBrush d2dBrush;
         private DeviceManager deviceManager;
-        private SurfaceImageSourceTarget target;
-        private CubeRenderer cubeRenderer; 
+        private SurfaceImageSourceTarget d3dTarget;
+        private SurfaceImageSourceTarget d2dTarget;
+        private CubeRenderer cubeRenderer;
+        private ShapeRenderer shapeRenderer;
         private DragHandler d3dDragHandler;
         private DragHandler d2dDragHandler;
 
@@ -74,7 +78,9 @@ namespace MiniCubeBrushXaml
 
             d3dBrush = new ImageBrush();
             d3dRectangle.Fill = d3dBrush;
-            d2dRectangle.Fill = d3dBrush;
+
+            d2dBrush = new ImageBrush();
+            d2dRectangle.Fill = d2dBrush;
 
             // Safely dispose any previous instance
             // Creates a new DeviceManager (Direct3D, Direct2D, DirectWrite, WIC)
@@ -82,20 +88,27 @@ namespace MiniCubeBrushXaml
 
             // New CubeRenderer
             cubeRenderer = new CubeRenderer();
+            shapeRenderer = new ShapeRenderer();
 
             int pixelWidth = (int)(d3dRectangle.Width * DisplayProperties.LogicalDpi / 96.0);
             int pixelHeight = (int)(d3dRectangle.Height * DisplayProperties.LogicalDpi / 96.0);
 
             // Use CoreWindowTarget as the rendering target (Initialize SwapChain, RenderTargetView, DepthStencilView, BitmapTarget)
-            target = new SurfaceImageSourceTarget(pixelWidth, pixelHeight);
-            d3dBrush.ImageSource = target.ImageSource;
+            d3dTarget = new SurfaceImageSourceTarget(pixelWidth, pixelHeight);
+            d3dBrush.ImageSource = d3dTarget.ImageSource;
+
+            d2dTarget = new SurfaceImageSourceTarget(pixelWidth, pixelHeight);
+            d2dBrush.ImageSource = d2dTarget.ImageSource;
 
             // Add Initializer to device manager
-            deviceManager.OnInitialize += target.Initialize;
+            deviceManager.OnInitialize += d3dTarget.Initialize;
+            deviceManager.OnInitialize += d2dTarget.Initialize;
             deviceManager.OnInitialize += cubeRenderer.Initialize;
+            deviceManager.OnInitialize += shapeRenderer.Initialize;
 
             // Render the cube within the CoreWindow
-            target.OnRender += cubeRenderer.Render;
+            d3dTarget.OnRender += cubeRenderer.Render;
+            d2dTarget.OnRender += shapeRenderer.Render;
 
             // Initialize the device manager and all registered deviceManager.OnInitialize 
             deviceManager.Initialize(DisplayProperties.LogicalDpi);
@@ -114,7 +127,8 @@ namespace MiniCubeBrushXaml
 
         void CompositionTarget_Rendering(object sender, object e)
         {
-            target.RenderAll();
+            d3dTarget.RenderAll();
+            d2dTarget.RenderAll();
         }
     }
 }
