@@ -1032,6 +1032,34 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Transforms a 4D vector by the given <see cref="SharpDX.Matrix5x4"/>.
+        /// </summary>
+        /// <param name="vector">The source vector.</param>
+        /// <param name="transform">The transformation <see cref="SharpDX.Matrix5x4"/>.</param>
+        /// <param name="result">When the method completes, contains the transformed <see cref="SharpDX.Vector4"/>.</param>
+        public static void Transform(ref Vector4 vector, ref Matrix5x4 transform, out Vector4 result)
+        {
+            result = new Vector4(
+                (vector.X * transform.M11) + (vector.Y * transform.M21) + (vector.Z * transform.M31) + (vector.W * transform.M41) + transform.M51,
+                (vector.X * transform.M12) + (vector.Y * transform.M22) + (vector.Z * transform.M32) + (vector.W * transform.M42) + transform.M52,
+                (vector.X * transform.M13) + (vector.Y * transform.M23) + (vector.Z * transform.M33) + (vector.W * transform.M43) + transform.M53,
+                (vector.X * transform.M14) + (vector.Y * transform.M24) + (vector.Z * transform.M34) + (vector.W * transform.M44) + transform.M54);
+        }
+
+        /// <summary>
+        /// Transforms a 4D vector by the given <see cref="SharpDX.Matrix5x4"/>.
+        /// </summary>
+        /// <param name="vector">The source vector.</param>
+        /// <param name="transform">The transformation <see cref="SharpDX.Matrix5x4"/>.</param>
+        /// <returns>The transformed <see cref="SharpDX.Vector4"/>.</returns>
+        public static Vector4 Transform(Vector4 vector, Matrix5x4 transform)
+        {
+            Vector4 result;
+            Transform(ref vector, ref transform, out result);
+            return result;
+        }
+
+        /// <summary>
         /// Transforms an array of 4D vectors by the given <see cref="SharpDX.Matrix"/>.
         /// </summary>
         /// <param name="source">The array of vectors to transform.</param>

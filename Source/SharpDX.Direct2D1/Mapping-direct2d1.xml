@@ -109,6 +109,7 @@
     <map enum="D2D1_ATLAS_PROP" name="AtlasProperties"/>
     <map enum="D2D1_BITMAPSOURCE_ALPHA_MODE" name="BitmapSourceAlphaMode"/>
     <map enum="D2D1_BITMAPSOURCE_INTERPOLATION_MODE" name="BitmapSourceInterpolationMode"/>
+    <map enum="D2D1_BITMAPSOURCE_ORIENTATION" name="BitmapSourceOrientation"/>
     <map enum="D2D1_BITMAPSOURCE_PROP" name="BitmapSourceProperties"/>
     <map enum="D2D1_BLEND_PROP" name="BlendProperties"/>
     <map enum="D2D1_BORDER_PROP" name="BorderProperties"/>
@@ -118,6 +119,7 @@
     <map enum="D2D1_COLORMANAGEMENT_RENDERING_INTENT" name="ColorManagementRenderingIntent"/>
     <map enum="D2D1_COLORMATRIX_ALPHA_MODE" name="ColorMatrixAlphaMode"/>
     <map enum="D2D1_COLORMATRIX_PROP" name="ColorMatrixProperties"/>
+    <map enum="D2D1_COMPOSITE_PROP" name="CompositeProperties"/>
     <map enum="D2D1_CONVOLVEMATRIX_PROP" name="ConvoleMatrixProperties"/>
     <map enum="D2D1_CONVOLVEMATRIX_SCALE_MODE" name="ConvoleMatrixScaleMode"/>
     <map enum="D2D1_CROP_PROP" name="CropProperties"/>
@@ -148,7 +150,7 @@
     <map enum="D2D1_POINTDIFFUSE_SCALE_MODE" name="PointDiffuseScaleMode"/>
     <map enum="D2D1_POINTSPECULAR_PROP" name="PointSpecularProperties"/>
     <map enum="D2D1_POINTSPECULAR_SCALE_MODE" name="PointSpecularScaleMode"/>
-
+    <map enum="D2D1_SCALE_PROP" name="ScaleProperties"/>    
     <map enum="D2D1_SATURATION_PROP" name="SaturationProperties"/>
     <map enum="D2D1_SHADOW_PROP" name="ShadowProperties"/>
     <map enum="D2D1_SPOTDIFFUSE_PROP" name="SpotDiffuseProperties"/>
@@ -293,6 +295,14 @@
     <map method="ID2D1DeviceContext::GetEffectRequiredInputRectangles" visibility="internal"/>
 
     <map method="ID2D1Factory1::RegisterEffectFromString" visibility="internal"/>
+    
+    <map method="ID2D1Properties::GetPropertyName" visibility="internal"/>
+    <map method="ID2D1Properties::GetPropertyNameLength" visibility="internal"/>
+
+    <map param="ID2D1Properties::[GS]etValue.*::data" type="void"/>
+    <map param="ID2D1Properties::GetSubProperties::subProperties" return="true"/>
+    
+    <map param="ID2D1Effect::GetInput::input" return="true"/>
     
     <!--
     // *****************************************************************

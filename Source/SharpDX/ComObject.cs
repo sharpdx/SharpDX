@@ -104,6 +104,20 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Queries a managed object for a particular COM interface support.
+        /// </summary>
+        ///<typeparam name="T">The type of the COM interface to query</typeparam>
+        /// <param name="iunknownPtr">The managed COM object.</param>
+        ///<returns>An instance of the queried interface</returns>
+        public static T As<T>(IntPtr iunknownPtr) where T : ComObject
+        {
+            using (var tempObject = new ComObject(iunknownPtr))
+            {
+                return tempObject.QueryInterface<T>();
+            }
+        }
+
+        /// <summary>
         /// Safely dispose a referencem if not null, and set it to null after dispose.
         /// </summary>
         ///<typeparam name="T">The type of COM interface to dispose</typeparam>
