@@ -7,6 +7,9 @@
     <ProjectGuid>{D0BCD56A-41C4-4A4E-8590-26864CED07FF}</ProjectGuid>
     <RootNamespace>SharpDX</RootNamespace>
     <AssemblyName>SharpDX</AssemblyName>
+    <!-- Disable FastUpToDate check in order to let VS to always run BeforeBuild. 
+    Related to this issue http://connect.microsoft.com/VisualStudio/feedback/details/735718/visual-studio-2011-beta-is-incorrectly-building-solution -->
+    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -169,6 +172,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
+
   <Target Name="BeforeBuild">
     <Exec Command="&quot;$(SolutionDir)Source\Tools\SharpGen\RunGenerator.bat&quot; $(ConfigurationName)" />
   </Target>

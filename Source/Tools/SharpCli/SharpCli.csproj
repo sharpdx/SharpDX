@@ -13,6 +13,9 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <!-- Disable FastUpToDate check in order to let VS to always run BeforeBuild. 
+    Related to this issue http://connect.microsoft.com/VisualStudio/feedback/details/735718/visual-studio-2011-beta-is-incorrectly-building-solution -->
+    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
