@@ -78,6 +78,11 @@ namespace SharpDX
             throw new NotImplementedException();
         }
 
+        public static unsafe void* ReadOut<T>(void* pSrc, out T data) where T : struct
+        {
+            throw new NotImplementedException();
+        }
+
         public static unsafe void* Read<T>(void* pSrc, T[] data, int offset, int count) where T : struct
         {
             throw new NotImplementedException();

@@ -22,16 +22,13 @@
     <Compile Include="BitmapProperties1.cs" />
     <Compile Include="CommandList.cs" />
     <Compile Include="PropertyBindingAttribute.cs" />
-    <Compile Include="EffectInputAttribute.cs" />
-    <Compile Include="EffectDescriptionAttribute.cs" />
-    <Compile Include="EffectCategoryAttribute.cs" />
-    <Compile Include="EffectDisplayNameAttribute.cs" />
+    <Compile Include="CustomEffectInputAttribute.cs" />
+    <Compile Include="CustomEffectAttribute.cs" />
     <Compile Include="CustomEffectBase.cs" />
     <Compile Include="CustomEffectFactory.cs" />
     <Compile Include="CustomEffectNative.cs" />
     <Compile Include="CustomEffectShadow.cs" />
     <Compile Include="CustomEffect.cs" />
-    <Compile Include="EffectAuthorAttribute.cs" />
     <Compile Include="PropertyBinding.cs" />
     <Compile Include="DrawingStateBlock1.cs" />
     <Compile Include="Effect.cs" />
@@ -88,6 +85,7 @@
     <Compile Include="PathGeometry1.cs" />
     <Compile Include="PrintControl.cs" />
     <Compile Include="Properties.cs" />
+    <Compile Include="PropertyTypeHelper.cs" />
     <Compile Include="StrokeStyle1.cs" />
     <Compile Include="WicRenderTarget.cs" />
     <Compile Include="DirectWrite\BitmapRenderTarget.cs" />

@@ -166,6 +166,21 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Reads the specified T data from a memory location.
+        /// </summary>
+        /// <typeparam name="T">Type of a data to read</typeparam>
+        /// <param name="source">Memory location to read from.</param>
+        /// <param name="data">The data write to.</param>
+        /// <returns>source pointer + sizeof(T)</returns>
+        public static IntPtr ReadOut<T>(IntPtr source, out T data) where T : struct
+        {
+            unsafe
+            {
+                return (IntPtr)SharpDX.Interop.ReadOut<T>((void*)source, out data);
+            }
+        }
+
+        /// <summary>
         /// Reads the specified array T[] data from a memory location.
         /// </summary>
         /// <typeparam name="T">Type of a data to read</typeparam>

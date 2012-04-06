@@ -33,7 +33,7 @@ namespace SharpDX.Direct2D1
         /// <summary>	
         /// Creates any resources used repeatedly during subsequent rendering calls.
         /// </summary>	
-        /// <param name="effectContext"><para>An internal factory interface that creates and returns effect author?centric types.</para></param>	
+        /// <param name="effectContext"><para>An internal factory interface that creates and returns effect author centric types.</para></param>	
         /// <param name="transformGraph">No documentation.</param>	
         /// <remarks>	
         /// This moves resource creation cost to the CreateEffect call, rather than during rendering.If the implementation fails this call, the corresponding <see cref="SharpDX.Direct2D1.DeviceContext.CreateEffect"/> call also fails.The following example shows an effect implementing an initialize method.	

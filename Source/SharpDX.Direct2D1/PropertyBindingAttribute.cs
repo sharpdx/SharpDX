@@ -25,43 +25,31 @@ using System.Text;
 namespace SharpDX.Direct2D1
 {
     /// <summary>
-    /// Input attribute for <see cref="CustomEffect"/> description.
+    /// Metadata description for <see cref="CustomEffect"/> property binding.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, Inherited = true)]
     public class PropertyBindingAttribute : Attribute
     {
-        private string displayName;
-        private string min;
-        private string max;
-        private string defaultValue;
+        private int order;
 
         /// <summary>
         /// Initializes a new instance of <see cref="PropertyBindingAttribute"/> attribute.
         /// </summary>
-        /// <param name="displayName">Display name</param>
-        /// <param name="min">Minimum value</param>
-        /// <param name="max">Maximum value</param>
-        /// <param name="defaultValue">Default value</param>
-        public PropertyBindingAttribute(string displayName, string min, string max, string defaultValue)
+        /// <param name="order">Order of the property</param>
+        public PropertyBindingAttribute(int order)
         {
-            this.displayName = displayName;
-            this.min = min;
-            this.max = max;
-            this.defaultValue = defaultValue;
+            this.order = order;
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="PropertyBindingAttribute"/> attribute.
+        /// Gets the order of this property.
         /// </summary>
-        /// <param name="min">Minimum value</param>
-        /// <param name="max">Maximum value</param>
-        /// <param name="defaultValue">Default value</param>
-        public PropertyBindingAttribute(string min, string max, string defaultValue)
+        public int Order
         {
-            this.displayName = displayName;
-            this.min = min;
-            this.max = max;
-            this.defaultValue = defaultValue;
+            get
+            {
+                return order;
+            }
         }
 
         /// <summary>
@@ -69,43 +57,44 @@ namespace SharpDX.Direct2D1
         /// </summary>
         public string DisplayName
         {
-            get
-            {
-                return displayName;
-            }
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets the Type of the property.
+        /// </summary>
+        public PropertyType Type
+        {
+            get;
+            set;
         }
 
         /// <summary>
         /// Gets the Min value.
         /// </summary>
-        public string Min
+        public object Min
         {
-            get
-            {
-                return min;
-            }
+            get;
+            set;
         }
 
         /// <summary>
         /// Gets the Max value.
         /// </summary>
-        public string Max
+        public object Max
         {
-            get
-            {
-                return max;
-            }
+            get;
+            set;
         }
 
         /// <summary>
         /// Gets the Default value.
         /// </summary>
-        public string Default
+        public object Default
         {
-            get
-            {
-                return defaultValue;
-            }
+            get;
+            set;
         }
     }
 }

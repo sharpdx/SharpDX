@@ -25,32 +25,30 @@ using System.Text;
 namespace SharpDX.Direct2D1
 {
     /// <summary>
-    /// Input attribute for <see cref="CustomEffect"/> description.
+    /// Global attribute for <see cref="CustomEffect"/> description.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, Inherited = true, AllowMultiple = true)]
-    public class EffectInputAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Class, Inherited = true)]
+    public class CustomEffectAttribute : Attribute
     {
-        private string input;
+        /// <summary>
+        /// Gets the DisplayName name.
+        /// </summary>
+        public string DisplayName { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="EffectInputAttribute"/> attribute.
+        /// Gets the Description name.
         /// </summary>
-        /// <param name="input"></param>
-        public EffectInputAttribute(string input)
-        {
-            this.input = input;
-        }
+        public string Description { get; set; }
 
         /// <summary>
-        /// Gets the Input name.
+        /// Gets the Category name.
         /// </summary>
-        public string Input
-        {
-            get
-            {
-                return input;
-            }
-        }
+        public string Category { get; set; }
+
+        /// <summary>
+        /// Gets the Author name.
+        /// </summary>
+        public string Author { get; set; }
     }
 }
 #endif

@@ -298,7 +298,8 @@
     <map method="ID2D1DeviceContext::GetEffectRequiredInputRectangles" visibility="internal"/>
 
     <map method="ID2D1Factory1::RegisterEffectFromString" visibility="internal"/>
-    
+    <map method="ID2D1Factory1::UnregisterEffect" visibility="internal"/>
+
     <map method="ID2D1Properties::GetPropertyName" visibility="internal"/>
     <map method="ID2D1Properties::GetPropertyNameLength" visibility="internal"/>
 

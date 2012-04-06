@@ -558,7 +558,7 @@ namespace SharpCli
                 {
                     CreateCastArrayMethod(method);
                 }
-                else if (method.Name == "Read")
+                else if (method.Name == "Read" || (method.Name == "ReadOut"))
                 {
                     if (method.Parameters.Count == 2)
                         CreateReadMethod(method);

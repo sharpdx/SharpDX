@@ -17,16 +17,20 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+#if WIN8
 
 using System;
+using System.Reflection;
 using System.Collections.Generic;
 
-#if WIN8
 
 namespace SharpDX.Direct2D1
 {
     public partial class Factory1
     {
+        private Dictionary<Guid, CustomEffectFactory> registeredEffects = new Dictionary<Guid, CustomEffectFactory>();
+
+
         /// <summary>
         /// Default Constructor for a <see cref = "SharpDX.Direct2D1.Factory1" />.
         /// </summary>
@@ -75,7 +79,17 @@ namespace SharpDX.Direct2D1
         /// <param name="effectFactory"></param>
         public void RegisterEffect<T>(Func<T> effectFactory) where T : CustomEffect
         {
-            throw new NotImplementedException();
+            CustomEffectFactory factory;
+            var guid = typeof(T).GetTypeInfo().GUID;
+            lock (registeredEffects)
+            {
+                if (registeredEffects.ContainsKey(guid))
+                    throw new ArgumentException("An effect is already registered with this GUID", "effectFactory");
+
+                factory = new CustomEffectFactory(() => effectFactory(), typeof(T));
+                registeredEffects.Add(guid, factory);
+            }
+            RegisterEffectFromString(guid, factory.ToXml(), factory.Bindings, factory.Bindings.Length, factory.NativePointer);
         }
 
         /// <summary>
@@ -84,7 +98,18 @@ namespace SharpDX.Direct2D1
         /// <typeparam name="T">Type of <see </typeparam>
         public void RegisterEffect<T>() where T : CustomEffect, new()
         {
-            throw new NotImplementedException();
+            CustomEffectFactory factory;
+            var guid = typeof(T).GetTypeInfo().GUID;
+            lock (registeredEffects)
+            {
+                if (registeredEffects.ContainsKey(guid))
+                    throw new ArgumentException("An effect is already registered with this GUID", "effectFactory");
+
+                factory = new CustomEffectFactory(() => new T(), typeof(T));
+                registeredEffects.Add(guid, factory);
+            }
+
+            RegisterEffectFromString(guid, factory.ToXml(), factory.Bindings, factory.Bindings.Length, factory.NativePointer);
         }
 
         /// <summary>
@@ -93,7 +118,19 @@ namespace SharpDX.Direct2D1
         /// <typeparam name="T"></typeparam>
         public void UnRegisterEffect<T>() where T : CustomEffect
         {
-            throw new NotImplementedException();
+            CustomEffectFactory factory;
+            var guid = typeof(T).GetTypeInfo().GUID;
+
+            lock (registeredEffects)
+            {
+                if (registeredEffects.TryGetValue(guid, out factory))
+                {
+                    // factory.Dispose();
+                    registeredEffects.Remove(guid);
+                }
+            }
+
+            UnregisterEffect(guid);
         }
     }
 }

@@ -18,7 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Reflection;
 
 namespace SharpDX
 {
@@ -30,23 +32,57 @@ namespace SharpDX
         private int count = 1;
         private static Guid IID_IUnknown = new Guid("00000000-0000-0000-C000-000000000046");
 
+#if WIN8
+        HashSet<Guid> supportedGuids = new HashSet<Guid>();
+#else
+        List<Guid> supportedGuids = new List<Guid>();
+#endif
+
+        private void FindAllGuids(Type type)
+        {
+            if (type == null || type == typeof(object))
+                return;
+
+            var guid = Utilities.GetGuidFromType(type);
+            if (!supportedGuids.Contains(guid))
+            {
+                supportedGuids.Add(guid);
+
+#if WIN8
+                var typeInfo = type.GetTypeInfo();
+                foreach (var baseInterface in typeInfo.ImplementedInterfaces)
+                {
+                    FindAllGuids(baseInterface);
+                }
+
+#else
+                var typeInfo = type;
+                foreach (var baseInterface in type.GetInterfaces())
+                {
+                    FindAllGuids(baseInterface);
+                }
+
+#endif
+                FindAllGuids(typeInfo.BaseType);
+            }
+        }
+
         protected virtual int QueryInterfaceImpl(IntPtr thisObject, ref Guid guid, out IntPtr output)
         {
-            if (guid == Utilities.GetGuidFromType(GetType()))
+            lock (supportedGuids)
             {
-                AddRefImpl(thisObject);
-                output = thisObject;
-                return Result.Ok.Code;
+                if (supportedGuids.Count == 0)
+                    FindAllGuids(Callback.GetType());
+
+                // Check guid from all inherited interfaces/types
+                if (supportedGuids.Contains(guid))
+                {
+                    AddRefImpl(thisObject);
+                    output = thisObject;
+                    return Result.Ok.Code;
+                }
             }
 
-            if (guid == Utilities.GetGuidFromType(Callback.GetType()))
-            {
-                AddRefImpl(thisObject);
-                output = thisObject;
-                return Result.Ok.Code;
-            }
-
-            // TODO add resolving GUID from inherited interface?
             if (guid == IID_IUnknown)
             {
                 AddRefImpl(thisObject);
@@ -59,12 +95,14 @@ namespace SharpDX
 
         protected virtual int AddRefImpl(IntPtr thisObject)
         {
+            // TODO: Add interlocked
             count++;
             return count;
         }
 
         protected virtual int ReleaseImpl(IntPtr thisObject)
         {
+            // TODO: Add interlocked
             count--;
             return count;
         }
