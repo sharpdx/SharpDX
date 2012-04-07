@@ -1556,7 +1556,7 @@ extern "C" {
 //
 //----------------------------------------------------------------------------
 
-#ifdef _M_X64
+#if (defined(_M_X64) || defined(_M_ARM))
 __declspec(dllexport) HRESULT WINAPI D3DX11CreateEffectFromMemory(CONST void *pData, SIZE_T DataLength, UINT FXFlags, ID3D11Device *pDevice, ID3DX11Effect **ppEffect);
 #else
 HRESULT WINAPI D3DX11CreateEffectFromMemory(CONST void *pData, SIZE_T DataLength, UINT FXFlags, ID3D11Device *pDevice, ID3DX11Effect **ppEffect);
