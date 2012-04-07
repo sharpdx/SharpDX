@@ -17,7 +17,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if !WIN8
 using System;
 using System.Diagnostics;
 
@@ -109,7 +108,9 @@ namespace SharpDX.Direct3D11
         /// <unmanaged>HRESULT ID3D11EffectVectorVariable::SetFloatVectorArray([In, Buffer] float* pData,[None] int Offset,[None] int Count)</unmanaged>
         public SharpDX.Result Set<T>(T[] array) where T : struct
         {
+#if !WIN8
             Trace.Assert(Utilities.SizeOf<T>() == 16, VectorInvalidSize);
+#endif
             return Set(Interop.CastArray<Vector4,T>(array), 0, array.Length);
         }
 
@@ -132,7 +133,9 @@ namespace SharpDX.Direct3D11
         /// <unmanaged>HRESULT ID3D11EffectVectorVariable::SetFloatVector([In] float* pData)</unmanaged>
         public unsafe SharpDX.Result Set<T>(ref T value) where T : struct
         {
+#if !WIN8
             Trace.Assert(Utilities.SizeOf<T>() <= 16, VectorInvalidSize);
+#endif
             return SetRawValue(new IntPtr(Interop.Fixed(ref value)), 0, Utilities.SizeOf<T>());
         }
 
@@ -246,4 +249,3 @@ namespace SharpDX.Direct3D11
         }    
     }
 }
-#endif

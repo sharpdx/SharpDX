@@ -51,7 +51,6 @@
     <include file="d3d11_1.h" />
   </ifdef>
   <include file="d3d11sdklayers.h" />
-
   
   <ifndef name="WIN8">
     <include file="d3dx11.h" />
@@ -59,9 +58,9 @@
     <include file="d3dx11tex.h" />
     <include file="d3dx11async.h" />
     <include file="d3dcsx.h" />
-    <include file="d3dx11effect.h"/>
   </ifndef>
-  
+  <include file="d3dx11effect.h"/>
+
   <naming />
   <binding/>
   <extensions />
@@ -93,8 +92,8 @@
       <context>d3dx11tex</context>
       <context>d3dx11async</context>
       <context>d3dcsx</context>
-      <context>d3dx11effect</context>
     </ifndef>
+    <context>d3dx11effect</context>
     <!--
     // *****************************************************************
     // D3D1x Enumerations

@@ -577,7 +577,7 @@ namespace SharpDX
 
         [DllImport("kernel32.dll", EntryPoint = "CloseHandle", SetLastError = true)]
         internal static extern bool CloseHandle(IntPtr handle);
-#if !WIN8
+
         /// <summary>
         /// Loads a native library.
         /// </summary>
@@ -591,8 +591,14 @@ namespace SharpDX
                 throw new SharpDXException(dllName);
             return result;
         }
+
+#if WIN8
+        [DllImport("kernel32", EntryPoint = "LoadPackagedLibrary", SetLastError = true)]
+        static extern IntPtr LoadLibrary_(string lpFileName, int reserved = 0);
+#else
         [DllImport("kernel32", EntryPoint = "LoadLibrary", SetLastError = true, CharSet = CharSet.Ansi)]
         static extern IntPtr LoadLibrary_(string lpFileName);
+#endif
 
         /// <summary>
         /// Gets the proc address of a dll.
@@ -610,6 +616,5 @@ namespace SharpDX
         }
         [DllImport("kernel32", EntryPoint = "GetProcAddress", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
         static extern IntPtr GetProcAddress_(IntPtr hModule, string procName);
-#endif
     }
 }
