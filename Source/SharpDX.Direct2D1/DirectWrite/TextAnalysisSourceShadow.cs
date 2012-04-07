@@ -55,7 +55,7 @@ namespace SharpDX.DirectWrite
         /// <returns>A pointer to a shadow c++ callback</returns>
         public static IntPtr ToIntPtr(TextAnalysisSource callback)
         {
-            return ToIntPtr<TextAnalysisSourceShadow, TextAnalysisSource>(callback);
+            return ToIntPtr<TextAnalysisSource>(callback);
         }
 
         private class TextAnalysisSourceVtbl : ComObjectVtbl

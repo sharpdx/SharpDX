@@ -36,7 +36,7 @@ namespace SharpDX.Direct2D1
         /// <returns>A pointer to the unmanaged geomerty sink counterpart</returns>
         public static IntPtr ToIntPtr(TessellationSink tessellationSink)
         {
-            return ToIntPtr<TessellationSinkShadow, TessellationSink>(tessellationSink);
+            return ToIntPtr<TessellationSink>(tessellationSink);
         }
 
         public class TessellationSinkVtbl : ComObjectVtbl

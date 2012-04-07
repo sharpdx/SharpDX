@@ -21,6 +21,7 @@ using System;
 
 namespace SharpDX.XAPO
 {
+    [Shadow(typeof(ParameterProviderShadow))]
     internal partial interface ParameterProvider
     {
         /// <summary>	

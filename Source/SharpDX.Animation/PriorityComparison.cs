@@ -20,6 +20,7 @@
 
 namespace SharpDX.Animation
 {
+    [Shadow(typeof(PriorityComparisonShadow))]
     internal partial interface PriorityComparison
     {
         /// <summary>	

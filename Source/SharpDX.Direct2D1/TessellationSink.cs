@@ -20,6 +20,7 @@
 
 namespace SharpDX.Direct2D1
 {
+    [ShadowAttribute(typeof(TessellationSinkShadow))]
     public partial interface TessellationSink
     {
         /// <summary>	

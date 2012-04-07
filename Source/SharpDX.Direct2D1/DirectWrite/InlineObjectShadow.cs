@@ -36,7 +36,7 @@ namespace SharpDX.DirectWrite
         /// <returns>A pointer to a shadow c++ callback</returns>
         public static IntPtr ToIntPtr(InlineObject callback)
         {
-            return ToIntPtr<InlineObjectShadow, InlineObject>(callback);
+            return ToIntPtr<InlineObject>(callback);
         }
 
         private class InlineObjectVtbl : ComObjectVtbl

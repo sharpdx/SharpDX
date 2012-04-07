@@ -20,6 +20,7 @@
 
 namespace SharpDX.Animation
 {
+    [Shadow(typeof(ManagerEventHandlerShadow))]
     internal partial interface ManagerEventHandler
     {
         /// <unmanaged>HRESULT IUIAnimationManagerEventHandler::OnManagerStatusChanged([In] UI_ANIMATION_MANAGER_STATUS newStatus,[In] UI_ANIMATION_MANAGER_STATUS previousStatus)</unmanaged>	

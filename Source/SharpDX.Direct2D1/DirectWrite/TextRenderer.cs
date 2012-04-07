@@ -23,6 +23,7 @@ using SharpDX.Direct2D1;
 
 namespace SharpDX.DirectWrite
 {
+    [ShadowAttribute(typeof(TextRendererShadow))]
     public partial interface TextRenderer
     {
         /// <summary>	

@@ -21,6 +21,7 @@ using System;
 
 namespace SharpDX.DirectWrite
 {
+    [ShadowAttribute(typeof(InlineObjectShadow))]
     public partial interface InlineObject
     {
         /// <summary>	

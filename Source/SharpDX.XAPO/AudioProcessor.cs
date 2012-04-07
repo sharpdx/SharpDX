@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 namespace SharpDX.XAPO
 {
+    [Shadow(typeof(AudioProcessorShadow))]
     public partial interface AudioProcessor
     {
         /// <summary>	
