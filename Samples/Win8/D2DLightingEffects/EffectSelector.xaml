@@ -1,0 +1,278 @@
+﻿<UserControl
+    x:Class="D2DLightingEffects.EffectSelector"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:D2DLightingEffects"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    x:Name="LayoutControl" >
+
+    <Grid x:Name="LayoutRoot" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <!-- Row for Sample Overlay -->
+            <RowDefinition Height="*"/>
+            <!-- Row for lighting effect properties -->
+        </Grid.RowDefinitions>
+
+        <!-- The VisualStateManager hides/shows the UI controls in response to the application being snapped -->
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="SnappedStates">
+                <VisualState x:Name="UnsnappedState">
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetName="EffectControls" Storyboard.TargetProperty="(UIElement.Opacity)" Duration="00:00:00.25" To="1">
+                            <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseIn" />
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="EffectControls">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <DoubleAnimation Storyboard.TargetName="Header" Storyboard.TargetProperty="(UIElement.Opacity)" Duration="00:00:00.25" To="1">
+                            <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseIn" />
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="Header">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="SnappedState">
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetName="EffectControls" Storyboard.TargetProperty="(UIElement.Opacity)" Duration="00:00:00.25" To="0">
+                            <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseIn" />
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="EffectControls">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:1" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <DoubleAnimation Storyboard.TargetName="Header" Storyboard.TargetProperty="(UIElement.Opacity)" Duration="00:00:00.25" To="0">
+                            <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseIn" />
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="Header">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:1" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+            <VisualStateGroup x:Name="SurfaceStates">
+                <VisualState x:Name="SpecularState">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="SpecularConstantLabel">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="SpecularConstant">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="SpecularExponentLabel">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="SpecularExponent">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="DiffuseConstantLabel">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="DiffuseConstant">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="DiffuseState">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="SpecularConstantLabel">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="SpecularConstant">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="SpecularExponentLabel">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="SpecularExponent">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="DiffuseConstantLabel">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="DiffuseConstant">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+            <VisualStateGroup x:Name="LightTypeStates">
+                <VisualState x:Name="PointState">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="LightPositionZLabel">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="LightPositionZ">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="SpotFocusLabel">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="SpotFocus">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="LimitingConeAngleLabel">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="LimitingConeAngle">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="AzimuthLabel">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="Azimuth">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="ElevationLabel">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="Elevation">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="SpotState">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="LightPositionZLabel">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="LightPositionZ">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="SpotFocusLabel">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="SpotFocus">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="LimitingConeAngleLabel">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="LimitingConeAngle">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="AzimuthLabel">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="Azimuth">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="ElevationLabel">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="Elevation">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="DistantState">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="LightPositionZLabel">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="LightPositionZ">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="SpotFocusLabel">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="SpotFocus">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="LimitingConeAngleLabel">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="LimitingConeAngle">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="AzimuthLabel">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="Azimuth">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="ElevationLabel">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="Elevation">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+
+
+        <Grid x:Name="EffectControls" Grid.Row="1" Margin="20" HorizontalAlignment="Left" Width="400" Background="#33000000" VerticalAlignment="Top">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="180" />
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="10" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Effect Selector Drop Down -->
+            <ComboBox x:Name="cboEffectSelector" SelectionChanged="OnEffectSelectorSelectionChanged" Margin="0,10,0,5"  HorizontalAlignment="Left" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="0" Height="30" Width="380">
+                <ComboBoxItem>Point-Specular</ComboBoxItem>
+                <ComboBoxItem>Spot-Specular</ComboBoxItem>
+                <ComboBoxItem>Distant-Specular</ComboBoxItem>
+                <ComboBoxItem>Point-Diffuse</ComboBoxItem>
+                <ComboBoxItem>Spot-Diffuse</ComboBoxItem>
+                <ComboBoxItem>Distant-Diffuse</ComboBoxItem>
+            </ComboBox>
+            <!-- End Effect Selector Drop Down -->
+
+            <!-- Effect Property Sliders. Some properties will never be displayed at the same time 
+                 (e.g. an effect can not have both a DiffuseConstant and a SpecularConstant property,
+                 so the sliders are listed in the same row to reduce the overall number of rows. -->
+            <Slider Grid.Row="1" Grid.Column="2" x:Name="LightPositionZ"    ValueChanged="OnLightPositionZValueChanged"    StepFrequency="0.1" Minimum="0" Maximum="250" Style="{StaticResource EffectPropertySliderStyle}" />
+            <Slider Grid.Row="2" Grid.Column="2" x:Name="SpecularConstant"  ValueChanged="OnSpecularConstantValueChanged"  StepFrequency="0.1" Minimum="1" Maximum="10" Style="{StaticResource EffectPropertySliderStyle}" />
+            <Slider Grid.Row="2" Grid.Column="2" x:Name="DiffuseConstant"   ValueChanged="OnDiffuseConstantValueChanged"   StepFrequency="0.1" Minimum="1" Maximum="10" Style="{StaticResource EffectPropertySliderStyle}" />
+            <Slider Grid.Row="3" Grid.Column="2" x:Name="SpecularExponent"  ValueChanged="OnSpecularExponentValueChanged"  StepFrequency="0.1" Minimum="1" Maximum="10" Style="{StaticResource EffectPropertySliderStyle}" />
+            <Slider Grid.Row="4" Grid.Column="2" x:Name="SpotFocus"         ValueChanged="OnSpotFocusValueChanged"         StepFrequency="0.1" Minimum="0" Maximum="100" Style="{StaticResource EffectPropertySliderStyle}" />
+            <Slider Grid.Row="4" Grid.Column="2" x:Name="Azimuth"           ValueChanged="OnAzimuthValueChanged"           StepFrequency="0.1" Minimum="0" Maximum="360" Style="{StaticResource EffectPropertySliderStyle}" />
+            <Slider Grid.Row="5" Grid.Column="2" x:Name="LimitingConeAngle" ValueChanged="OnLimitingConeAngleValueChanged" StepFrequency="0.1" Minimum="0" Maximum="90" Style="{StaticResource EffectPropertySliderStyle}" />
+            <Slider Grid.Row="5" Grid.Column="2" x:Name="Elevation"         ValueChanged="OnElevationValueChanged"         StepFrequency="0.1" Minimum="0" Maximum="360" Style="{StaticResource EffectPropertySliderStyle}" />
+            <Slider Grid.Row="6" Grid.Column="2" x:Name="SurfaceScale"      ValueChanged="OnSurfaceScaleValueChanged"      StepFrequency="0.1" Minimum="0" Maximum="10" Style="{StaticResource EffectPropertySliderStyle}" />
+            <!-- End Effect Property Sliders -->
+
+            <!-- Effect Property Labels -->
+            <TextBlock Grid.Row="1" Grid.Column="1" x:Name="LightPositionZLabel"    Text="Light Position (Z-Axis)" Style="{StaticResource EffectPropertyStyle}" />
+            <TextBlock Grid.Row="2" Grid.Column="1" x:Name="SpecularConstantLabel"  Text="Specular Constant"       Style="{StaticResource EffectPropertyStyle}" />
+            <TextBlock Grid.Row="2" Grid.Column="1" x:Name="DiffuseConstantLabel"   Text="Diffuse Constant"        Style="{StaticResource EffectPropertyStyle}" />
+            <TextBlock Grid.Row="3" Grid.Column="1" x:Name="SpecularExponentLabel"  Text="Specular Exponent"       Style="{StaticResource EffectPropertyStyle}" />
+            <TextBlock Grid.Row="4" Grid.Column="1" x:Name="SpotFocusLabel"         Text="Spot Focus"              Style="{StaticResource EffectPropertyStyle}" />
+            <TextBlock Grid.Row="4" Grid.Column="1" x:Name="AzimuthLabel"           Text="Azimuth"                 Style="{StaticResource EffectPropertyStyle}" />
+            <TextBlock Grid.Row="5" Grid.Column="1" x:Name="LimitingConeAngleLabel" Text="Limiting Cone Angle"     Style="{StaticResource EffectPropertyStyle}" />
+            <TextBlock Grid.Row="5" Grid.Column="1" x:Name="ElevationLabel"         Text="Elevation"               Style="{StaticResource EffectPropertyStyle}" />
+            <TextBlock Grid.Row="6" Grid.Column="1" x:Name="SurfaceScaleLabel"      Text="Surface Scale"           Style="{StaticResource EffectPropertyStyle}" />
+            <!-- End Effect Property Labels -->
+
+            <Button x:Name="RestoreDefaults" Click="OnRestoreDefaultsClick" Grid.Row="7" Grid.Column="2" Margin="0,0,-3,6"  HorizontalAlignment="Right" Content="Restore Defaults" />
+            <Button x:Name="butHome" Click="butHome_Click" Grid.Row="7" Grid.Column="1" Margin="0,0,0,0"  HorizontalAlignment="left" Content="Home" />
+        </Grid>
+    </Grid>
+</UserControl>

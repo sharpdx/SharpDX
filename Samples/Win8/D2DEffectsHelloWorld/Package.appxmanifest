@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
+
+  <Identity Name="942fbb5a-d692-4869-af42-895d1dc8d8f8"
+            Publisher="CN=Jose"
+            Version="1.0.0.0" />
+
+  <Properties>
+    <DisplayName>D2DEffectsHelloWorld</DisplayName>
+    <PublisherDisplayName>Jose</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+    <Description>D2DEffectsHelloWorld</Description>
+  </Properties>
+
+  <Prerequisites>
+    <OSMinVersion>6.2</OSMinVersion>
+    <OSMaxVersionTested>6.2</OSMaxVersionTested>
+  </Prerequisites>
+
+  <Resources>
+    <Resource Language="x-generate"/>
+  </Resources>
+
+  <Applications>
+    <Application Id="App"
+        Executable="$targetnametoken$.exe"
+        EntryPoint="D2DEffectsHelloWorld.App">
+        <VisualElements
+            DisplayName="D2DEffectsHelloWorld"
+            Logo="Assets\Logo.png"
+            SmallLogo="Assets\SmallLogo.png"
+            Description="D2DEffectsHelloWorld"
+            ForegroundText="light"
+            BackgroundColor="#222222">
+            <DefaultTile ShowName="allLogos" />
+            <SplashScreen Image="Assets\SplashScreen.png" />
+        </VisualElements>
+    </Application>
+  </Applications>
+  <Capabilities>
+    <Capability Name="internetClient" />
+  </Capabilities>
+</Package>
