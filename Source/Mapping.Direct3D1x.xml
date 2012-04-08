@@ -58,8 +58,8 @@
     <include file="d3dx11tex.h" />
     <include file="d3dx11async.h" />
     <include file="d3dcsx.h" />
+    <include file="d3dx11effect.h"/>
   </ifndef>
-  <include file="d3dx11effect.h"/>
 
   <naming />
   <binding/>
@@ -92,8 +92,8 @@
       <context>d3dx11tex</context>
       <context>d3dx11async</context>
       <context>d3dcsx</context>
+      <context>d3dx11effect</context>
     </ifndef>
-    <context>d3dx11effect</context>
     <!--
     // *****************************************************************
     // D3D1x Enumerations

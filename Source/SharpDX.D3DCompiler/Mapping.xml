@@ -172,7 +172,7 @@
     // D3DCompiler Functions
     // *****************************************************************
     -->
-    <map function="D3D(.*)" dllimport="false" name-tmp="$1" />
+    <map function="D3D(.*)" name-tmp="$1" />
     <map function="D3D[^1].*"  dll='"#(D3DCOMPILER_DLL_A)"' group="SharpDX.D3DCompiler.D3D" />
     <map function="D3DCreateBlob" dll='"#(D3DCOMPILER_DLL_A)"' group="SharpDX.Direct3D.D3DCommon" />
     <map param="D3DCreateBlob::ppBlob" attribute="out fast"/>
