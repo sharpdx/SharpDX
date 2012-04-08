@@ -23,6 +23,7 @@ namespace SharpDX.XAudio2
     /// The IXAudio2EngineCallback interface contains methods that notify the client when certain events happen in the <see cref="SharpDX.XAudio2.XAudio2"/> engine. This interface should be implemented by the XAudio2 client. XAudio2 calls these methods via an interface pointer provided by the client, using either the {{XAudio2Create}} or <see cref="SharpDX.XAudio2.XAudio2.Initialize"/> method. Methods in this interface return void, rather than an HRESULT.	
     /// </summary>	
     /// <unmanaged>IXAudio2EngineCallback</unmanaged>
+    [Shadow(typeof(EngineShadow))]
     internal partial interface EngineCallback
     {
         /// <summary>	

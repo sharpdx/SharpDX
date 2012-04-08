@@ -21,6 +21,7 @@ using System.IO;
 
 namespace SharpDX.Direct3D9
 {
+    [Shadow(typeof(IncludeShadow))]
     public partial interface Include
     {
         /// <summary>

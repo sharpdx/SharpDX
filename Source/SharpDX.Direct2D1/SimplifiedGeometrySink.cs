@@ -20,6 +20,7 @@
 
 namespace SharpDX.Direct2D1
 {
+    [ShadowAttribute(typeof(SimplifiedGeometrySinkShadow))]
     public partial interface SimplifiedGeometrySink
     {
         /// <summary>	

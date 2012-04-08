@@ -309,8 +309,18 @@
     <map param="ID2D1Effect::GetInput::input" return="true"/>
     
     <map interface="ID2D1EffectImpl" name="CustomEffect" callback="true" callback-dual="true" />
+    
+    <map method="ID2D1EffectContext::GetDpi" visibility="internal"/>
 
-  <!--
+    <map method="ID2D1EffectContext::Create.*" visibility="internal"/>
+    <map param="ID2D1EffectContext::CreateEffect::effect" attribute="out fast"/>
+    <map method="ID2D1EffectContext::GetMaximumSupportedFeatureLevel" visibility="internal"/>
+    <map param="ID2D1EffectContext::GetMaximumSupportedFeatureLevel::maximumSupportedFeatureLevel" return="true"/>
+
+    <map interface="ID2D1TransformNode" callback-visibility="public" callback="true" callback-dual="true" />
+    <map interface="ID2D1Transform" callback-visibility="public" callback="true" callback-dual="true" />
+
+    <!--
     // *****************************************************************
     // D2D1 Functions
     // *****************************************************************

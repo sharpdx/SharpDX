@@ -28,6 +28,7 @@ namespace SharpDX.Direct2D1
     /// Custom Effect interface. Equivalent of C++ ID2D1EffectImpl.
     /// </summary>
     /// <unmanaged>ID2D1EffectImpl</unmanaged>	
+    [ShadowAttribute(typeof(CustomEffectShadow))]
     public partial interface CustomEffect
     {
         /// <summary>	

@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,13 +17,32 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
-namespace SharpDX.Animation
+#if WIN8
+using System;
+namespace SharpDX.Direct2D1
 {
-    [Shadow(typeof(ManagerEventHandlerShadow))]
-    internal partial interface ManagerEventHandler
+    public partial class TransformNodeNative
     {
-        /// <unmanaged>HRESULT IUIAnimationManagerEventHandler::OnManagerStatusChanged([In] UI_ANIMATION_MANAGER_STATUS newStatus,[In] UI_ANIMATION_MANAGER_STATUS previousStatus)</unmanaged>	
-        void OnManagerStatusChanged(SharpDX.Animation.ManagerStatus newStatus, SharpDX.Animation.ManagerStatus previousStatus);
+        /// <inheritdoc/>
+        public SharpDX.Rectangle[] InputRectangles
+        {
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        /// <inheritdoc/>
+        public void MapOutputRectangleToInputRectangles(SharpDX.Rectangle outputRect, SharpDX.Rectangle[] inputRects)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public SharpDX.Rectangle MapInputRectanglesToOutputRectangle(SharpDX.Rectangle[] inputRects)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
+#endif

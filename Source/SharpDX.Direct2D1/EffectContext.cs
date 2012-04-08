@@ -17,33 +17,38 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if !WIN8
+#if WIN8
 using System;
-using SharpDX.D3DCompiler;
+using System.Reflection;
 
-namespace SharpDX.Direct3D11
+namespace SharpDX.Direct2D1
 {
-    public partial class Effect
+    public partial class EffectContext
     {
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="Effect"/> class.
+        /// Gets the DPI.
         /// </summary>
-        /// <param name="device">The device.</param>
-        /// <param name="effectByteCode">The effect byte code.</param>
-        public Effect(Device device, ShaderBytecode effectByteCode) : this(device, effectByteCode, EffectFlags.None)
+        public DrawingPointF Dpi
         {
+            get
+            {
+                DrawingPointF dpi;
+                GetDpi(out dpi.X, out dpi.Y);
+                return dpi;
+            }
+            /// <unmanaged>HRESULT ID2D1EffectContext::GetMaximumSupportedFeatureLevel([In, Buffer] const D3D_FEATURE_LEVEL* featureLevels,[In] unsigned int featureLevelsCount,[Out] D3D_FEATURE_LEVEL* maximumSupportedFeatureLevel)</unmanaged>	
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Effect"/> class.
+        /// Gets the maximum feature level supported by this instance.
         /// </summary>
-        /// <param name="device">The device.</param>
-        /// <param name="effectByteCode">The effect byte code.</param>
-        /// <param name="fxFlags">Effect compile options</param>
-        public Effect(Device device, ShaderBytecode effectByteCode, EffectFlags fxFlags)
+        /// <param name="featureLevels">An array of feature levels</param>
+        /// <returns>The maximum feature level selected from the array</returns>
+        public SharpDX.Direct3D.FeatureLevel GetMaximumSupportedFeatureLevel(SharpDX.Direct3D.FeatureLevel[] featureLevels)
         {
-            D3DX11Effects.CreateEffectFromMemory(effectByteCode.BufferPointer, effectByteCode.BufferSize, (int)fxFlags, device, this);
+            return GetMaximumSupportedFeatureLevel(featureLevels, featureLevels.Length);
         }
-   }
+    }
 }
 #endif

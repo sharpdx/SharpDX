@@ -21,6 +21,7 @@ using System;
 
 namespace SharpDX.DirectWrite
 {
+    [ShadowAttribute(typeof(FontFileEnumeratorShadow))]
     public partial interface FontFileEnumerator
     {
         /// <summary>	

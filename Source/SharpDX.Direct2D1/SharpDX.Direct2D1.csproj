@@ -21,6 +21,13 @@
     <Compile Include="BitmapBrush1.cs" />
     <Compile Include="BitmapProperties1.cs" />
     <Compile Include="CommandList.cs" />
+    <Compile Include="TransformShadow.cs" />
+    <Compile Include="TransformNative.cs" />
+    <Compile Include="Transform.cs" />
+    <Compile Include="TransformNodeNative.cs" />
+    <Compile Include="TransformNodeShadow.cs" />
+    <Compile Include="TransformNode.cs" />
+    <Compile Include="EffectContext.cs" />
     <Compile Include="PropertyBindingAttribute.cs" />
     <Compile Include="CustomEffectInputAttribute.cs" />
     <Compile Include="CustomEffectAttribute.cs" />

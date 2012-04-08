@@ -57,7 +57,7 @@ namespace SharpDX.Direct3D9
         /// <returns>A pointer to a shadow c++ callback</returns>
         public static IntPtr ToIntPtr(Include callback)
         {
-            return ToIntPtr<IncludeShadow, Include>(callback);
+            return ToIntPtr<Include>(callback);
         }
 
         /// <summary>
