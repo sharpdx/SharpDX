@@ -18,12 +18,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+#if !WIN8
 using SharpDX.D3DCompiler;
-
+#endif
 namespace SharpDX.Direct3D11
 {
     public partial class DomainShader
     {
+        /// <summary>
+        ///   Initializes a new instance of the <see cref = "T:SharpDX.Direct3D11.DomainShader" /> class.
+        /// </summary>
+        /// <param name = "device">The device used to create the shader.</param>
+        /// <param name = "shaderBytecode">The compiled shader bytecode.</param>
+        public DomainShader(Device device, byte[] shaderBytecode)
+            : this(device, shaderBytecode, null)
+        {
+        }
+
+        /// <summary>
+        ///   Initializes a new instance of the <see cref = "T:SharpDX.Direct3D11.DomainShader" /> class.
+        /// </summary>
+        /// <param name = "device">The device used to create the shader.</param>
+        /// <param name = "shaderBytecode">The compiled shader bytecode.</param>
+        /// <param name = "linkage">A dynamic class linkage interface.</param>
+        public DomainShader(Device device, byte[] shaderBytecode, ClassLinkage linkage)
+            : base(IntPtr.Zero)
+        {
+            if (shaderBytecode == null) throw new ArgumentNullException("shaderBytecode", "ShaderBytecode cannot be null");
+
+            unsafe
+            {
+                fixed (void* pBuffer = shaderBytecode)
+                    device.CreateDomainShader((IntPtr)pBuffer, shaderBytecode.Length, linkage, this);
+            }
+        }
+#if !WIN8
         /// <summary>
         ///   Initializes a new instance of the <see cref = "T:SharpDX.Direct3D11.DomainShader" /> class.
         /// </summary>
@@ -48,5 +77,6 @@ namespace SharpDX.Direct3D11
             device.CreateDomainShader(shaderBytecode.BufferPointer,
                                       shaderBytecode.BufferSize, linkage, this);
         }
+#endif        
     }
 }
