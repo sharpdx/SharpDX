@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
+
+  <Identity Name="ee99edfd-1a96-4495-8f8e-2c4f5b2cb741"
+            Publisher="CN=Jose"
+            Version="1.0.0.0" />
+
+  <Properties>
+    <DisplayName>CustomPixelShaderEffect</DisplayName>
+    <PublisherDisplayName>Jose</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+    <Description>CustomPixelShaderEffect</Description>
+  </Properties>
+
+  <Prerequisites>
+    <OSMinVersion>6.2</OSMinVersion>
+    <OSMaxVersionTested>6.2</OSMaxVersionTested>
+  </Prerequisites>
+
+  <Resources>
+    <Resource Language="x-generate"/>
+  </Resources>
+
+  <Applications>
+    <Application Id="App"
+        Executable="$targetnametoken$.exe"
+        EntryPoint="CustomPixelShaderEffect.App">
+        <VisualElements
+            DisplayName="CustomPixelShaderEffect"
+            Logo="Assets\Logo.png"
+            SmallLogo="Assets\SmallLogo.png"
+            Description="CustomPixelShaderEffect"
+            ForegroundText="light"
+            BackgroundColor="#222222">
+            <DefaultTile ShowName="allLogos" />
+            <SplashScreen Image="Assets\SplashScreen.png" />
+        </VisualElements>
+    </Application>
+  </Applications>
+  <Capabilities>
+    <Capability Name="internetClient" />
+  </Capabilities>
+</Package>
