@@ -25,7 +25,6 @@ using System.Text;
 using System.Threading.Tasks;
 using CommonDX;
 using SharpDX;
-using SharpDX.D3DCompiler;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
@@ -73,22 +72,12 @@ namespace MiniCube
 
             var path = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
 
-            // Compile Vertex and Pixel shaders
-            // Because d3dcompiler_44.dll is not in the path, use precompiled fx files
-            // var vertexShaderByteCode = ShaderBytecode.CompileFromFile("MiniCube.fx", "VS", "vs_4_0", ShaderFlags.None, EffectFlags.None);
-            // vertexShaderByteCode.Save("MiniCube_VS.fxo");
-            ShaderBytecode vertexShaderByteCode;
-            using (var stream = new NativeFileStream(path + "\\MiniCube_VS.fxo", NativeFileMode.Open, NativeFileAccess.Read))
-                vertexShaderByteCode = ShaderBytecode.Load(stream);
+            // Loads vertex shader bytecode
+            var vertexShaderByteCode = NativeFile.ReadAllBytes(path + "\\MiniCube_VS.fxo");
             vertexShader = new VertexShader(d3dDevice, vertexShaderByteCode);
 
-            // Because d3dcompiler_44.dll is not in the path, use precompiled fx files
-            // var pixelShaderByteCode = ShaderBytecode.CompileFromFile("MiniCube.fx", "PS", "ps_4_0", ShaderFlags.None, EffectFlags.None);
-            // pixelShaderByteCode.Save("MiniCube_PS.fxo");
-            ShaderBytecode pixelShaderByteCode;
-            using (var stream = new NativeFileStream(path + "\\MiniCube_PS.fxo", NativeFileMode.Open, NativeFileAccess.Read))
-                pixelShaderByteCode = ShaderBytecode.Load(stream);
-            pixelShader = new PixelShader(d3dDevice, pixelShaderByteCode);
+            // Loads pixel shader bytecode
+            pixelShader = new PixelShader(d3dDevice, NativeFile.ReadAllBytes(path + "\\MiniCube_PS.fxo"));
 
             // Layout from VertexShader input signature
             layout = new InputLayout(d3dDevice, vertexShaderByteCode, new[]
