@@ -49,6 +49,75 @@ namespace SharpDX.Direct2D1
         {
             return GetMaximumSupportedFeatureLevel(featureLevels, featureLevels.Length);
         }
+
+        /// <summary>	
+        /// Loads a pixel shader.
+        /// </summary>	
+        /// <param name="shaderId">An unique identifier associated with the shader bytecode.</param>	
+        /// <param name="shaderBytecode">The bytecode of the shader.</param>	
+        /// <unmanaged>HRESULT ID2D1EffectContext::LoadPixelShader([In] const GUID&amp; shaderId,[In, Buffer] const unsigned char* shaderBuffer,[In] unsigned int shaderBufferCount)</unmanaged>	
+        public void LoadPixelShader(System.Guid shaderId, byte[] shaderBytecode)
+        {
+            LoadPixelShader(shaderId, shaderBytecode, shaderBytecode.Length);
+        }
+
+        /// <summary>	
+        /// Loads a vertex shader.
+        /// </summary>	
+        /// <param name="shaderId">An unique identifier associated with the shader bytecode.</param>	
+        /// <param name="shaderBytecode">The bytecode of the shader.</param>	
+        /// <unmanaged>HRESULT ID2D1EffectContext::LoadVertexShader([In] const GUID&amp; resourceId,[In, Buffer] const unsigned char* shaderBuffer,[In] unsigned int shaderBufferCount)</unmanaged>	
+        public void LoadVertexShader(System.Guid shaderId, byte[] shaderBytecode)
+        {
+            LoadVertexShader(shaderId, shaderBytecode, shaderBytecode.Length);
+        }
+
+        /// <summary>	
+        /// Loads a compute shader.
+        /// </summary>	
+        /// <param name="shaderId">An unique identifier associated with the shader bytecode.</param>	
+        /// <param name="shaderBytecode">The bytecode of the shader.</param>	
+        /// <unmanaged>HRESULT ID2D1EffectContext::LoadComputeShader([In] const GUID&amp; resourceId,[In, Buffer] const unsigned char* shaderBuffer,[In] unsigned int shaderBufferCount)</unmanaged>	
+        public void LoadComputeShader(System.Guid shaderId, byte[] shaderBytecode)
+        {
+            LoadComputeShader(shaderId, shaderBytecode, shaderBytecode.Length);
+        }
+
+
+        /// <summary>
+        /// Check if this device is supporting a feature.
+        /// </summary>
+        /// <param name="feature">The feature to check.</param>
+        /// <returns>
+        /// Returns true if this device supports this feature, otherwise false.
+        /// </returns>
+        public bool CheckFeatureSupport(Feature feature)
+        {
+            unsafe
+            {
+                switch (feature)
+                {
+                    case Feature.Doubles:
+                        {
+                            FeatureDataDoubles support;
+
+                            if (CheckFeatureSupport(Feature.Doubles, new IntPtr(&support), Utilities.SizeOf<FeatureDataDoubles>()).Failure)
+                                return false;
+                            return support.DoublePrecisionFloatShaderOps;
+                        }
+                    case Feature.D3D10XHardwareOptions:
+                        {
+                            FeatureDataD3D10XHardwareOptions support;
+                            if (CheckFeatureSupport(Feature.D3D10XHardwareOptions, new IntPtr(&support), Utilities.SizeOf<FeatureDataD3D10XHardwareOptions>()).Failure)
+                                return false;
+                            return support.ComputeShadersPlusRawAndStructuredBuffersViaShader4X;
+                        }
+                    default:
+                        throw new SharpDXException("Unsupported Feature. Use specialized CheckXXX methods");
+                }
+            }
+        }
+
     }
 }
 #endif

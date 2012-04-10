@@ -131,6 +131,22 @@ namespace SharpDX.Direct2D1
             return bitmap;
         }
 
+        /// <summary>
+        /// Maps the given bitmap into memory.
+        /// </summary>
+        /// <param name="options"><para>The options used in mapping the bitmap into memory.</para></param>	
+        /// <returns>a reference to the rectangle that is mapped into memory</returns>	
+        /// <remarks>	
+        /// The bitmap must have been created with the <see cref="SharpDX.Direct2D1.MapOptions.Read"/> flag specified.The caller should try to unmap the memory as quickly as is feasable to release occupied DMA aperture memory.	
+        /// </remarks>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID2D1Bitmap1::Map']/*"/>	
+        /// <unmanaged>HRESULT ID2D1Bitmap1::Map([In] D2D1_MAP_OPTIONS options,[Out] D2D1_MAPPED_RECT* mappedRect)</unmanaged>	
+        public DataRectangle Map(SharpDX.Direct2D1.MapOptions options)
+        {
+            MappedRect mappedRect;
+            Map(options, out mappedRect);
+            return new DataRectangle(mappedRect.Bits, mappedRect.Pitch);
+        }
     }
 }
 #endif

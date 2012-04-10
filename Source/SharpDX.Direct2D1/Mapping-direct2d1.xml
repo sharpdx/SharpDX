@@ -185,7 +185,31 @@
 
     <map struct="D2D1_PROPERTY_BINDING" struct-to-class="true" visibility="internal"/>
     <map field="D2D1_PROPERTY_BINDING::[gs]etFunction" visibility="internal"/>
-  
+
+    <map struct="D2D1_RESOURCE_TEXTURE_PROPERTIES" struct-to-class="true" marshalto="true"/>
+    <map struct="D2D1_VERTEX_BUFFER_PROPERTIES" struct-to-class="true" marshalto="true"/>
+    <map field="D2D1_VERTEX_BUFFER_PROPERTIES::data" name="DataPointer" visibility="internal"/>
+    <map field="D2D1_VERTEX_BUFFER_PROPERTIES::byteWidth" name="SizeInBytes" visibility="internal"/>
+
+    <map struct="D2D1_CUSTOM_VERTEX_BUFFER_PROPERTIES" struct-to-class="true" marshalto="true"/>
+    <map field="D2D1_CUSTOM_VERTEX_BUFFER_PROPERTIES::shaderBufferWithInputSignature" visibility="internal"/>
+    <map field="D2D1_CUSTOM_VERTEX_BUFFER_PROPERTIES::shaderBufferSize" visibility="internal"/>
+    <map field="D2D1_CUSTOM_VERTEX_BUFFER_PROPERTIES::elementCount" visibility="internal"/>
+    <map field="D2D1_CUSTOM_VERTEX_BUFFER_PROPERTIES::inputElements" name="InputElementsPointer" visibility="internal"/>
+
+    <map field="D2D1_RESOURCE_TEXTURE_PROPERTIES::extents" name="ExtentsPointer" visibility="internal"/>
+    <map field="D2D1_RESOURCE_TEXTURE_PROPERTIES::extendModes" name="ExtendModesPointer" visibility="internal"/>
+
+    <map struct="D2D1_INPUT_ELEMENT_DESC" name="InputElement" marshalto="true"/>
+    <map field="D2D1_INPUT_ELEMENT_DESC::inputSlot" name="Slot"/>
+
+    <map struct="D2D1_FEATURE_DATA_.*" visibility="internal"/>
+
+    <map struct="D2D1_EFFECT_INPUT_DESCRIPTION" struct-to-class="true" />
+    <map field="D2D1_EFFECT_INPUT_DESCRIPTION::effect" name="EffectPointer"/>
+
+    <map struct="D2D1_MAPPED_RECT" visibility="internal"/>
+    
     <!--
     // *****************************************************************
     // D2D1 Interfaces
@@ -320,6 +344,35 @@
     <map interface="ID2D1TransformNode" callback-visibility="public" callback="true" callback-dual="true" />
     <map interface="ID2D1Transform" callback-visibility="public" callback="true" callback-dual="true" />
 
+    <map method="ID2D1EffectContext::CreateTransformNodeFromEffect" visibility="public"/>
+    <map param="ID2D1EffectContext::CreateTransformNodeFromEffect::transformNode" return="true"/>
+
+    <map param="ID2D1EffectContext::CreateBlendTransform::transform" attribute="out fast"/>
+    <map param="ID2D1EffectContext::CreateBorderTransform::transform" attribute="out fast"/>
+    <map param="ID2D1EffectContext::CreateOffsetTransform::transform" attribute="out fast"/>
+    <map param="ID2D1EffectContext::CreateBoundsAdjustmentTransform::transform" attribute="out fast"/>
+
+    <map method="ID2D1EffectContext::Load.*Shader" visibility="internal"/>
+
+    <map param="ID2D1EffectContext::CreateResourceTexture::resourceTexture" attribute="out fast"/>
+    <map param="ID2D1EffectContext::CreateResourceTexture::resourceTextureProperties" type="void" />
+
+    <map param="ID2D1EffectContext::FindResourceTexture::resourceTexture" return="true" />
+    <map param="ID2D1EffectContext::FindVertexBuffer::buffer" return="true" />
+
+    <map param="ID2D1EffectContext::CreateVertexBuffer::customVertexBufferProperties" type="void" />
+    <map param="ID2D1EffectContext::CreateVertexBuffer::buffer" attribute="out fast" />
+
+    <map param="ID2D1EffectContext::CreateColorContext.*::colorContext" attribute="out fast" />
+
+    <map method="ID2D1EffectContext::CheckFeatureSupport" visibility="internal" />
+
+    <map method="ID2D1ColorContext::GetProfileSize" visibility="internal"/>
+    <map method="ID2D1ColorContext::GetProfile" visibility="internal"/>
+
+    <map method="ID2D1Bitmap1::Map" visibility="internal"/>
+    
+    
     <!--
     // *****************************************************************
     // D2D1 Functions
