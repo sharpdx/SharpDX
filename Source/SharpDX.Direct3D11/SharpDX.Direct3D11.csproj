@@ -22,6 +22,10 @@
     <Compile Include="ClassInstance.cs" />
     <Compile Include="ClassLinkage.cs" />
     <Compile Include="ComputeShader.cs" />
+    <Compile Include="BlendState1.cs" />
+    <Compile Include="Device1.cs" />
+    <Compile Include="RaterizerState1.cs" />
+    <Compile Include="DeviceContext1.cs" />
     <Compile Include="Counter.cs" />
     <Compile Include="CounterMetadata.cs" />
     <Compile Include="Debug.cs" />

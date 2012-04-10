@@ -239,6 +239,15 @@
     <map method="ID3DX11EffectUnorderedAccessViewVariable::GetUnorderedAccessViewArray" visibility="internal"/>
     <map param="ppResources" attribute="out buffer"/>
 
+    <map interface="ID3DDeviceContextState" name="DeviceContextState"/>
+    <map interface="ID3DUserDefinedAnnotation" name="UserDefinedAnnotation"/>
+
+    <map param="ID3D11Device1::CreateDeviceContextState::Flags" type="D3D11_1_CREATE_DEVICE_CONTEXT_STATE_FLAG"/>
+
+    <map method="ID3D11Device1::OpenSharedResourceByName" visibility="internal" />
+
+    <map param="ID3D11Device1::OpenSharedResourceByName::dwDesiredAccess" type="DXGI_SHARED_RESOURCE_FLAGS" />
+    
     <!--
     // *****************************************************************
     // D3D11 Functions
