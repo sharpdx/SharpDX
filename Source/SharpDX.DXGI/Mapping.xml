@@ -96,11 +96,12 @@
     <create-cpp enum="DXGI_MAP_FLAGS" macro="DXGI_MAP_.*" />
     <create-cpp enum="DXGI_ENUM_MODES_FLAGS" macro="DXGI_ENUM_MODES_.*" />
     <create-cpp enum="DXGI_MWA_FLAGS" macro="DXGI_MWA_.*" />
-    
+    <create-cpp enum="DXGI_SHARED_RESOURCE_FLAGS" macro="DXGI_SHARED_RESOURCE_.*" />
+
     <create class="ResultCode" visibility="public"/>
     <const from-macro="DXGI_ERROR_(.*)" type="SharpDX.ResultDescriptor" cpp-type="int" name="$1" class="SharpDX.DXGI.ResultCode" visibility="public static readonly">new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
 
-      <create-cpp enum="DXGI_STATUS" macro="DXGI_STATUS_.*" />
+    <create-cpp enum="DXGI_STATUS" macro="DXGI_STATUS_.*" />
     <create class="DXGI" />
 
     <context-clear/>
@@ -219,6 +220,13 @@
     <map param="IDXGISwapChain::ResizeBuffers::SwapChainFlags" type="DXGI_SWAP_CHAIN_FLAG" />
 
     <map method="IDXGIOutputDuplication::MapDesktopSurface" visibility="internal"/>
+
+    <map method="IDXGIResource1::CreateSubresourceSurface" visibility="internal"/>
+    <map param="IDXGIResource1::CreateSubresourceSurface::ppSurface" attribute="out fast"/>
+
+    <map method="IDXGIResource1::CreateSharedHandle" visibility="internal"/>
+    <map param="IDXGIResource1::CreateSharedHandle::dwAccess" type="DXGI_SHARED_RESOURCE_FLAGS"/>
+    <map param="IDXGIResource1::CreateSharedHandle::pHandle" return="true"/>
 
     <ifdef name="WIN8">
       <map param="ISurfaceImageSourceNative::BeginDraw::pSurface" return="true"/>
