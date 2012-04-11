@@ -49,7 +49,7 @@
     </pre>
   </include>
 
-  <ifdef name="WIN8">
+  <ifdef name="DIRECT3D11_1">
     <include file="audiosessiontypes.h" attach="true" namespace="SharpDX.Multimedia" output="Multimedia"/>
   </ifdef>
 

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 using System;
-#if !WIN8
+#if !WIN8METRO
 using System.Drawing;
 using System.Drawing.Imaging;
 #endif
@@ -85,7 +85,7 @@ namespace SharpDX.WIC
             factory.CreateBitmapFromSourceRect(bitmapSource, rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height, this);
         }
 
-#if !WIN8
+#if !WIN8METRO
         /// <summary>
         /// Initializes a new instance of the <see cref="Bitmap"/> class from a <see cref="Icon"/>.
         /// </summary>

@@ -52,7 +52,7 @@ namespace SharpDX
     /// <summary>
     /// Represents a color in the form of rgb.
     /// </summary>
-#if !WIN8
+#if !WIN8METRO
     [Serializable]
 #endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]

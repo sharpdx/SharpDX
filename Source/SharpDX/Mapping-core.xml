@@ -24,7 +24,7 @@
   <namespace>SharpDX</namespace>
   <assembly>SharpDX</assembly>
 
-  <ifdef name="WIN8">
+  <ifdef name="DIRECT3D11_1">
     <include file="objidlbase.h" namespace="SharpDX.Win32" output="Win32">
       <attach>STATSTG</attach>
       <attach>tagLOCKTYPE</attach>
@@ -34,7 +34,7 @@
     </include>
   </ifdef>
 
-  <ifndef name="WIN8">
+  <ifndef name="DIRECT3D11_1">
     <include file="objidl.h" namespace="SharpDX.Win32" output="Win32">
       <attach>STATSTG</attach>
       <attach>tagLOCKTYPE</attach>
@@ -348,10 +348,10 @@
     <map method=".*::GetGlyphIndicesW" name="GetGlyphIndices" />
 
     <!-- Map IStream -->
-    <ifdef name="WIN8">
+    <ifdef name="DIRECT3D11_1">
       <context>objidlbase</context>
     </ifdef>
-    <ifndef name="WIN8">
+    <ifndef name="DIRECT3D11_1">
       <context>objidl</context>
     </ifndef>
 

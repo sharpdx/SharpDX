@@ -26,7 +26,7 @@ namespace SharpDX
     /// <summary>
     ///   Represents a four dimensional mathematical vector of bool.
     /// </summary>
-#if !WIN8
+#if !WIN8METRO
     [Serializable]
 #endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]

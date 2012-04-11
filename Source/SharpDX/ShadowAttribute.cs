@@ -57,7 +57,7 @@ namespace SharpDX
         /// <returns>The associated shadow attribute or null if no shadow attribute were found</returns>
         public static ShadowAttribute Get(Type type)
         {
-#if WIN8
+#if WIN8METRO
             return type.GetTypeInfo().GetCustomAttribute<ShadowAttribute>();
 #else
             var customAttributes = type.GetCustomAttributes(typeof(ShadowAttribute), false);

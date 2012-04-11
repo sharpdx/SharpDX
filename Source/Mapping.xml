@@ -22,7 +22,7 @@
 -->
 <config id="sharpdx-root" xmlns="urn:SharpGen.Config">
 
-  <ifdef name="WIN8">
+  <ifdef name="DIRECT3D11_1">
     <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\overrides\shared</include-dir>
     <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\overrides\um</include-dir>
     <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc11\overrides</include-dir>
@@ -31,7 +31,7 @@
     <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot;Include\um</include-dir>
   </ifdef>
 
-  <ifndef name="WIN8">
+  <ifndef name="DIRECT3D11_1">
     <!-- Add DirectX SDK by default -->
     <include-dir>$(DXSDK_DIR)\include</include-dir>
   </ifndef>
@@ -64,7 +64,7 @@ enum __SAL_YesNo {};
   <file>SharpDX.Direct3D10\Mapping.xml</file>
   <file>SharpDX.Direct3D11\Mapping.xml</file>
   <file>SharpDX.Direct2D1\Mapping.xml</file>
-  <ifndef name="WIN8">
+  <ifndef name="DIRECT3D11_1">
     <file>SharpDX.DirectInput\Mapping.xml</file>
     <file>SharpDX.Direct3D9\Mapping.xml</file>
     <file>SharpDX.DirectSound\Mapping.xml</file>

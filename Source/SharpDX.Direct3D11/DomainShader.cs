@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-#if !WIN8
+#if !WIN8METRO
 using SharpDX.D3DCompiler;
 #endif
 namespace SharpDX.Direct3D11
@@ -52,7 +52,7 @@ namespace SharpDX.Direct3D11
                     device.CreateDomainShader((IntPtr)pBuffer, shaderBytecode.Length, linkage, this);
             }
         }
-#if !WIN8
+#if !WIN8METRO
         /// <summary>
         ///   Initializes a new instance of the <see cref = "T:SharpDX.Direct3D11.DomainShader" /> class.
         /// </summary>

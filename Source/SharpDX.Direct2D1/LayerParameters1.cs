@@ -20,7 +20,7 @@
 
 using System;
 
-#if WIN8
+#if DIRECT3D11_1
 namespace SharpDX.Direct2D1
 {
     public partial struct LayerParameters1

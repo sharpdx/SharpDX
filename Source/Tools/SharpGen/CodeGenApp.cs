@@ -152,10 +152,15 @@ namespace SharpGen
 
             Logger.Message("Loading config files...");
 
-#if WIN8
+#if WIN8METRO
             // Load configuration
-            Macros.Add("WIN8");
+            Macros.Add("WIN8METRO");
 #endif
+#if DIRECT3D11_1
+            // Load configuration
+            Macros.Add("DIRECT3D11_1");
+#endif
+
             Config = ConfigFile.Load(_configRootPath, Macros.ToArray());
             var latestConfigTime = ConfigFile.GetLatestTimestamp(Config.ConfigFilesLoaded);
 

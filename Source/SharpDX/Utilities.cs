@@ -276,7 +276,7 @@ namespace SharpDX
         /// <returns>The guid associated with this type</returns>
         public static Guid GetGuidFromType(Type type)
         {
-#if WIN8
+#if WIN8METRO
             return type.GetTypeInfo().GUID;
 #else
             return type.GUID;
@@ -291,7 +291,7 @@ namespace SharpDX
         /// <returns></returns>
         public static string PtrToStringAnsi(IntPtr pointer, int maxLength)
         {
-#if WIN8
+#if WIN8METRO
             return Marshal.PtrToStringAnsi(pointer, maxLength);
 #else
             unsafe
@@ -313,7 +313,7 @@ namespace SharpDX
         /// <returns></returns>
         public static string PtrToStringUni(IntPtr pointer, int maxLength)
         {
-#if WIN8
+#if WIN8METRO
             return Marshal.PtrToStringUni(pointer, maxLength);
 #else
             unsafe
@@ -425,7 +425,7 @@ namespace SharpDX
         {
             if (blob == null) return null;
             string output;
-#if WIN8
+#if WIN8METRO
             output = Marshal.PtrToStringAnsi(blob.BufferPointer);
 #else
             unsafe
@@ -506,7 +506,7 @@ namespace SharpDX
             ClsctxAll = ClsctxServer | ClsctxInprocHandler
         }
 
-#if WIN8
+#if WIN8METRO
         [StructLayout(LayoutKind.Sequential)]
         public struct MultiQueryInterface
         {
@@ -515,7 +515,7 @@ namespace SharpDX
             public Result ResultCode;
         };
 
-        // TODO THIS IS NOT TESTED under WIN8
+        // TODO THIS IS NOT TESTED under WIN8METRO
         [DllImport("ole32.dll", ExactSpelling = true, EntryPoint = "CoCreateInstanceFromApp", PreserveSig = true)]
         private static extern Result CoCreateInstanceFromApp([In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid, 
             IntPtr pUnkOuter, 
@@ -592,7 +592,7 @@ namespace SharpDX
             return result;
         }
 
-#if WIN8
+#if WIN8METRO
         [DllImport("kernel32", EntryPoint = "LoadPackagedLibrary", SetLastError = true)]
         static extern IntPtr LoadLibrary_(string lpFileName, int reserved = 0);
 #else

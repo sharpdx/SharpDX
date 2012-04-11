@@ -89,7 +89,7 @@ namespace SharpDX.IO
             }
         }
 
-#if WIN8
+#if WIN8METRO
         /// <summary>
         /// Creates the specified lp file name.
         /// </summary>
@@ -178,7 +178,7 @@ namespace SharpDX.IO
         [DllImport("kernel32.dll", EntryPoint = "SetEndOfFile", SetLastError = true, CharSet = CharSet.Ansi)]
         internal static extern bool SetEndOfFile(IntPtr handle);
 
-#if WIN8
+#if WIN8METRO
 
         private enum FILE_INFO_BY_HANDLE_CLASS : int
         {

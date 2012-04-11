@@ -92,7 +92,7 @@ namespace SharpDX.Direct3D11
             CreateDevice(adapter, DriverType.Unknown, flags, featureLevels);
         }
 
-#if !WIN8
+#if !WIN8METRO
 
         /// <summary>
         ///   Initializes a new instance of the <see cref = "T:SharpDX.Direct3D11.Device" /> class along with a new <see cref = "T:SharpDX.DXGI.SwapChain" /> used for rendering.
@@ -389,7 +389,7 @@ namespace SharpDX.Direct3D11
             device.Dispose();
             return outputLevel;
         }
-#if !WIN8
+#if !DIRECT3D11_1
         /// <summary>
         /// Gets a value indicating whether the current device is using the reference rasterizer.
         /// </summary>

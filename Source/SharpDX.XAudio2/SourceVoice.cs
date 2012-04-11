@@ -153,7 +153,7 @@ namespace SharpDX.XAudio2
             return this.Start(0, 0);
         }
 
-#if WIN8
+#if DIRECT3D11_1
         /// <summary>
         /// Gets the state.
         /// </summary>

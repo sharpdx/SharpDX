@@ -24,7 +24,7 @@ namespace SharpDX.D3DCompiler
 {
     internal partial class LocalInterop
     {
-#if !WIN8
+#if !WIN8METRO
         public static unsafe int CalliFuncint(void* arg0, void* arg1, void* arg2, void* arg3, void* arg4, int arg5, int arg6, void* arg7, void* arg8, void* funcPtr) { throw new NotImplementedException(); }
 #endif
     }

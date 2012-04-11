@@ -44,7 +44,7 @@ namespace SharpDX.IO
         /// <param name="share">The share mode.</param>
         public NativeFileStream(string fileName, NativeFileMode fileMode, NativeFileAccess access, NativeFileShare share = NativeFileShare.Read)
         {
-#if WIN8
+#if WIN8METRO
             handle = NativeFile.Create(fileName, access, share, fileMode, IntPtr.Zero);
 #else
             handle = NativeFile.Create(fileName, access, share, IntPtr.Zero, fileMode, NativeFileOptions.None, IntPtr.Zero);
@@ -157,7 +157,7 @@ namespace SharpDX.IO
             get
             {
                 long length;
-                // TODO implement WIN8 replacement
+                // TODO implement DIRECT3D11_1 replacement
                 if (!NativeFile.GetFileSizeEx(handle, out length))
                     throw new IOException("Unable to get file length", Marshal.GetLastWin32Error());
                 return length;
