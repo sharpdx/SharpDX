@@ -25,6 +25,14 @@
     <Compile Include="BorderTransform.cs" />
     <Compile Include="BoundsAdjustmentTransform.cs" />
     <Compile Include="ColorContext.cs" />
+    <Compile Include="ComputeInformation.cs" />
+    <Compile Include="AnalysisTransform.cs" />
+    <Compile Include="CommandSink.cs" />
+    <Compile Include="CommandSinkShadow.cs" />
+    <Compile Include="CommandSinkNative.cs" />
+    <Compile Include="LayerParameters.cs" />
+    <Compile Include="TransformGraph.cs" />
+    <Compile Include="DrawInformation.cs" />
     <Compile Include="EffectInputDescription.cs" />
     <Compile Include="InputElement.cs" />
     <Compile Include="VertexBuffer.cs" />

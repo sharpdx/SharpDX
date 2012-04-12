@@ -21,27 +21,27 @@
 using System;
 namespace SharpDX.Direct2D1
 {
-    public partial class TransformNodeNative
+    public partial class TransformNative
     {
         /// <inheritdoc/>
         public SharpDX.Rectangle[] InputRectangles
         {
             set
             {
-                throw new NotImplementedException();
+                this.SetInputRects_(value, value.Length);
             }
         }
 
         /// <inheritdoc/>
         public void MapOutputRectangleToInputRectangles(SharpDX.Rectangle outputRect, SharpDX.Rectangle[] inputRects)
         {
-            throw new NotImplementedException();
+            MapOutputRectToInputRects_(outputRect, inputRects, inputRects.Length);
         }
 
         /// <inheritdoc/>
         public SharpDX.Rectangle MapInputRectanglesToOutputRectangle(SharpDX.Rectangle[] inputRects)
         {
-            throw new NotImplementedException();
+            return MapInputRectsToOutputRect_(inputRects, inputRects.Length);
         }
     }
 }

@@ -17,35 +17,12 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if DIRECT3D11_1
 using System;
 
 namespace SharpDX.Direct2D1
 {
-    public partial struct LayerParameters1
+    public partial struct LayerParameters
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LayerParameters1"/> struct.
-        /// </summary>
-        /// <param name="contentBounds">The content bounds.</param>
-        /// <param name="geometryMask">The geometry mask.</param>
-        /// <param name="maskAntialiasMode">The mask antialias mode.</param>
-        /// <param name="maskTransform">The mask transform.</param>
-        /// <param name="opacity">The opacity.</param>
-        /// <param name="opacityBrush">The opacity brush.</param>
-        /// <param name="layerOptions">The layer options.</param>
-        public LayerParameters1(RectangleF contentBounds, Geometry geometryMask, AntialiasMode maskAntialiasMode, Matrix3x2 maskTransform, float opacity, Brush opacityBrush, LayerOptions1 layerOptions)
-            : this()
-        {
-            ContentBounds = contentBounds;
-            geometricMask_ = geometryMask.NativePointer;
-            MaskAntialiasMode = maskAntialiasMode;
-            MaskTransform = maskTransform;
-            Opacity = opacity;
-            opacityBrush_ = opacityBrush.NativePointer;
-            LayerOptions = layerOptions;
-        }
-
         /// <summary>
         /// Sets the geometric mask.
         /// </summary>
@@ -57,7 +34,7 @@ namespace SharpDX.Direct2D1
         {
             set
             {
-                geometricMask_ = value.NativePointer;
+                GeometricMaskPointer = value.NativePointer;
             }
         }
 
@@ -72,9 +49,8 @@ namespace SharpDX.Direct2D1
         {
             set
             {
-                opacityBrush_ = value.NativePointer;
+                OpacityBrushPointer= value.NativePointer;
             }
         }
     }
 }
-#endif
