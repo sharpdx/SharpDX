@@ -26,7 +26,7 @@ namespace SharpDX.Direct2D1
     /// <summary>
     /// Internal Transform Callback
     /// </summary>
-    internal class TransformShadow : SharpDX.ComObjectShadow
+    internal class TransformShadow : TransformNodeShadow
     {
         private static readonly TransformVtbl Vtbl = new TransformVtbl(0);
 
