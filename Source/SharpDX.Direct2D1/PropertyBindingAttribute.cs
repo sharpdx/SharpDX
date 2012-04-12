@@ -31,9 +31,9 @@ namespace SharpDX.Direct2D1
     public class PropertyBindingAttribute : Attribute
     {
         private int order;
-        private object min;
-        private object max;
-        private object defaultValue;
+        private string min;
+        private string max;
+        private string defaultValue;
 
         /// <summary>
         /// Initializes a new instance of <see cref="PropertyBindingAttribute"/> attribute.
@@ -42,9 +42,12 @@ namespace SharpDX.Direct2D1
         /// <param name="min">Minimum value of this property</param>
         /// <param name="max">Maximum value of this property</param>
         /// <param name="defaultValue">Default value of this property</param>
-        public PropertyBindingAttribute(int order, object min, object max, object defaultValue)
+        public PropertyBindingAttribute(int order, string min, string max, string defaultValue)
         {
             this.order = order;
+            this.min = min;
+            this.max = max;
+            this.defaultValue = defaultValue; 
         }
 
         /// <summary>
@@ -79,7 +82,7 @@ namespace SharpDX.Direct2D1
         /// <summary>
         /// Gets the Min value.
         /// </summary>
-        public object Min
+        public string Min
         {
             get { return min; }
         }
@@ -87,7 +90,7 @@ namespace SharpDX.Direct2D1
         /// <summary>
         /// Gets the Max value.
         /// </summary>
-        public object Max
+        public string Max
         {
             get { return max; }
         }
@@ -95,7 +98,7 @@ namespace SharpDX.Direct2D1
         /// <summary>
         /// Gets the Default value.
         /// </summary>
-        public object Default
+        public string Default
         {
             get { return defaultValue; }
         }
