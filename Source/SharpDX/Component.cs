@@ -72,7 +72,7 @@ namespace SharpDX
         /// <param name="name">The name attached to this component</param>
         protected internal Component(string name)
         {
-#if WIN8
+#if WIN8METRO
             Name = name ?? GetType().GetTypeInfo().Name;
 #else
             Name = name ?? GetType().Name;
@@ -83,7 +83,7 @@ namespace SharpDX
             ToDisposeAuto();
         }
 
-#if !WIN8
+#if !WIN8METRO
         /// <summary>
         /// Releases unmanaged resources and performs other cleanup operations before the
         /// <see cref="Component"/> is reclaimed by garbage collection.
@@ -127,7 +127,7 @@ namespace SharpDX
                 Dispose(true);
                 IsDisposed = true;
             }
-#if !WIN8
+#if !WIN8METRO
             GC.SuppressFinalize(this);
 #endif
         }

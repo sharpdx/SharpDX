@@ -66,7 +66,7 @@ namespace SharpDX.XAudio2
         public XAudio2(XAudio2Flags flags, ProcessorSpecifier processorSpecifier)
             : base(IntPtr.Zero)
         {
-#if !WIN8
+#if !DIRECT3D11_1
             Guid clsid = (flags == XAudio2Flags.DebugEngine) ? CLSID_XAudio2_Debug : CLSID_XAudio2;
 
             // Initialize for multithreaded
@@ -89,7 +89,7 @@ namespace SharpDX.XAudio2
             RegisterForCallbacks_(engineShadowPtr);
         }
 
-#if !WIN8
+#if !DIRECT3D11_1
         /// <summary>	
         /// Returns information about an audio output device.	
         /// </summary>	

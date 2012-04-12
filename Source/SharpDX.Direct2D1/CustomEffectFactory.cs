@@ -17,7 +17,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if WIN8
+#if DIRECT3D11_1
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -121,8 +121,8 @@ namespace SharpDX.Direct2D1
             var customEffectTypeInfo = customEffectType.GetTypeInfo();
 
             // Add 
-            var customEffectAttribute = customEffectTypeInfo.GetCustomAttribute<CustomEffectAttribute>(true);           
-            effect.Add(CreateXmlProperty("DisplayName", "string", customEffectAttribute != null ? customEffectAttribute.DisplayName : string.Empty));
+            var customEffectAttribute = customEffectTypeInfo.GetCustomAttribute<CustomEffectAttribute>(true);
+            effect.Add(CreateXmlProperty("DisplayName", "string", customEffectAttribute != null ? customEffectAttribute.DisplayName : customEffectTypeInfo.Name));
             effect.Add(CreateXmlProperty("Author", "string", customEffectAttribute != null ? customEffectAttribute.Author : string.Empty));
             effect.Add(CreateXmlProperty("Category", "string", customEffectAttribute != null ? customEffectAttribute.Category : string.Empty));
             effect.Add(CreateXmlProperty("Description", "string", customEffectAttribute != null ? customEffectAttribute.Description : string.Empty));

@@ -17,7 +17,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if WIN8
+#if DIRECT3D11_1
 using System;
 using System.Reflection;
 
@@ -40,6 +40,19 @@ namespace SharpDX.Direct2D1
         {
             deviceContext.CreateEffect(effectId, this);
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Effect"/> class.
+        /// </summary>
+        /// <param name="effectContext">The effect context.</param>
+        /// <param name="effectId"><para>The class ID of the effect to create.</para></param>	
+        /// <returns>No documentation.</returns>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID2D1EffectContext::CreateEffect']/*"/>	
+        /// <unmanaged>HRESULT ID2D1EffectContext::CreateEffect([In] const GUID&amp; effectId,[Out] ID2D1Effect** effect)</unmanaged>	
+        public Effect(EffectContext effectContext, System.Guid effectId) : base(IntPtr.Zero)
+        {
+            effectContext.CreateEffect(effectId, this);
+        }
     }
 
     /// <summary>
@@ -59,6 +72,18 @@ namespace SharpDX.Direct2D1
         /// <unmanaged>HRESULT ID2D1DeviceContext::CreateEffect([In] const GUID&amp; effectId,[Out, Fast] ID2D1Effect** effect)</unmanaged>	
         public Effect(DeviceContext deviceContext)
             : base(deviceContext, typeof(T).GetTypeInfo().GUID)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Effect"/> class.
+        /// </summary>
+        /// <param name="effectContext">The effect context.</param>
+        /// <returns>No documentation.</returns>	
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID2D1EffectContext::CreateEffect']/*"/>	
+        /// <unmanaged>HRESULT ID2D1EffectContext::CreateEffect([In] const GUID&amp; effectId,[Out] ID2D1Effect** effect)</unmanaged>	
+        public Effect(EffectContext effectContext)
+            : base(effectContext, typeof(T).GetTypeInfo().GUID)
         {
         }
     }

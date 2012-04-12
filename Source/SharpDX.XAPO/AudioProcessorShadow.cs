@@ -12,7 +12,6 @@ namespace SharpDX.XAPO
     internal class AudioProcessorShadow : ComObjectShadow
     {
         private static readonly AudioProcessorVtbl Vtbl = new AudioProcessorVtbl();
-        private IntPtr parameterProviderShadow;
 
         /// <summary>
         /// Return a pointer to the unamanged version of this callback.
@@ -21,29 +20,7 @@ namespace SharpDX.XAPO
         /// <returns>A pointer to a shadow c++ callback</returns>
         public static IntPtr ToIntPtr(AudioProcessor callback)
         {
-            return ToIntPtr<AudioProcessorShadow, AudioProcessor>(callback);
-        }
-
-        protected override void Initialize(ICallbackable callbackInstance)
-        {
-            base.Initialize(callbackInstance);
-            if (callbackInstance is ParameterProvider)
-                parameterProviderShadow = ParameterProviderShadow.ToIntPtr((ParameterProvider)callbackInstance);
-        }
-
-        protected override int QueryInterfaceImpl(IntPtr thisPointer, ref Guid guid, out IntPtr output)
-        {
-            if (guid == Utilities.GetGuidFromType(typeof(ParameterProvider)))
-            {
-                if (parameterProviderShadow != IntPtr.Zero)
-                {
-                    output = parameterProviderShadow;
-                    return Result.Ok.Code;
-                }
-                output = IntPtr.Zero;
-                return Result.NoInterface.Code;
-            }
-            return base.QueryInterfaceImpl(thisPointer, ref guid, out output);
+            return ToIntPtr<AudioProcessor>(callback);
         }
 
         public class AudioProcessorVtbl : ComObjectVtbl

@@ -17,7 +17,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if WIN8
+#if WIN8METRO
 using System;
 using System.Runtime.InteropServices;
 
@@ -37,7 +37,7 @@ namespace SharpDX.DXGI
         /// <returns>A pointer to the unmanaged geomerty sink counterpart</returns>
         public static IntPtr ToIntPtr(IVirtualSurfaceUpdatesCallbackNative virtualSurfaceUpdatesCallbackNative)
         {
-            return ToIntPtr<VirtualSurfaceUpdatesCallbackNativeShadow, IVirtualSurfaceUpdatesCallbackNative>(virtualSurfaceUpdatesCallbackNative);
+            return ToIntPtr<IVirtualSurfaceUpdatesCallbackNative>(virtualSurfaceUpdatesCallbackNative);
         }
 
         public class VirtualSurfaceUpdatesCallbackNativeVtbl : ComObjectVtbl

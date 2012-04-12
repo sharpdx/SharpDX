@@ -20,6 +20,7 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace SharpDX.IO
 {
@@ -28,8 +29,67 @@ namespace SharpDX.IO
     /// </summary>
     public class NativeFile 
     {
+        /// <summary>
+        /// Opens a binary file, reads the contents of the file into a byte array, and then closes the file.
+        /// </summary>
+        /// <param name="path">The file to open for reading. </param>
+        /// <returns>A byte array containing the contents of the file.</returns>
+        public static byte[] ReadAllBytes(string path)
+        {
+            byte[] buffer;
+            using (var stream = new NativeFileStream(path, NativeFileMode.Open, NativeFileAccess.Read))
+            {
+                int offset = 0;
+                long length = stream.Length;
+                if (length > 0x7fffffffL)
+                {
+                    throw new IOException("File too long");
+                }
 
-#if WIN8
+                int count = (int)length;
+                buffer = new byte[count];
+
+                while (count > 0)
+                {
+                    int num4 = stream.Read(buffer, offset, count);
+                    if (num4 == 0)
+                    {
+                        throw new EndOfStreamException();
+                    }
+                    offset += num4;
+                    count -= num4;
+                }
+            }
+            return buffer;
+        }
+
+        /// <summary>
+        /// Opens a text file, reads all lines of the file, and then closes the file.
+        /// </summary>
+        /// <param name="path">The file to open for reading. </param>
+        /// <returns>A string containing all lines of the file.</returns>
+        public static string ReadAllText(string path)
+        {
+            return ReadAllText(path, Encoding.UTF8);
+        }
+
+        /// <summary>
+        /// Opens a text file, reads all lines of the file, and then closes the file.
+        /// </summary>
+        /// <param name="path">The file to open for reading. </param>
+        /// <returns>A string containing all lines of the file.</returns>
+        public static string ReadAllText(string path, Encoding encoding)
+        {
+            using (var stream = new NativeFileStream(path, NativeFileMode.Open, NativeFileAccess.Read))
+            {
+                using (StreamReader reader = new StreamReader(stream, encoding, true, 0x400))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+        }
+
+#if WIN8METRO
         /// <summary>
         /// Creates the specified lp file name.
         /// </summary>
@@ -118,7 +178,7 @@ namespace SharpDX.IO
         [DllImport("kernel32.dll", EntryPoint = "SetEndOfFile", SetLastError = true, CharSet = CharSet.Ansi)]
         internal static extern bool SetEndOfFile(IntPtr handle);
 
-#if WIN8
+#if WIN8METRO
 
         private enum FILE_INFO_BY_HANDLE_CLASS : int
         {

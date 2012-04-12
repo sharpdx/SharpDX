@@ -18,7 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+#if !WIN8METRO
 using SharpDX.D3DCompiler;
+#endif
 
 namespace SharpDX.Direct3D11
 {
@@ -29,7 +31,36 @@ namespace SharpDX.Direct3D11
         /// </summary>
         /// <param name = "device">The device used to create the shader.</param>
         /// <param name = "shaderBytecode">The compiled shader bytecode.</param>
-        public VertexShader(Device device, ShaderBytecode shaderBytecode) : this(device, shaderBytecode, null)
+        public VertexShader(Device device, byte[] shaderBytecode) : this(device, shaderBytecode, null)
+        {
+        }
+
+        /// <summary>
+        ///   Initializes a new instance of the <see cref = "T:SharpDX.Direct3D11.VertexShader" /> class.
+        /// </summary>
+        /// <param name = "device">The device used to create the shader.</param>
+        /// <param name = "shaderBytecode">The compiled shader bytecode.</param>
+        /// <param name = "linkage">A dynamic class linkage interface.</param>
+        public VertexShader(Device device, byte[] shaderBytecode, ClassLinkage linkage)
+            : base(IntPtr.Zero)
+        {
+            if (shaderBytecode == null) throw new ArgumentNullException("shaderBytecode", "ShaderBytecode cannot be null");
+
+            unsafe
+            {
+                fixed (void* pBuffer = shaderBytecode)
+                    device.CreateVertexShader((IntPtr)pBuffer, shaderBytecode.Length, linkage, this);
+            }
+        }
+
+#if !WIN8METRO
+        /// <summary>
+        ///   Initializes a new instance of the <see cref = "T:SharpDX.Direct3D11.VertexShader" /> class.
+        /// </summary>
+        /// <param name = "device">The device used to create the shader.</param>
+        /// <param name = "shaderBytecode">The compiled shader bytecode.</param>
+        public VertexShader(Device device, ShaderBytecode shaderBytecode)
+            : this(device, shaderBytecode, null)
         {
         }
 
@@ -47,5 +78,6 @@ namespace SharpDX.Direct3D11
             device.CreateVertexShader(shaderBytecode.BufferPointer,
                                       shaderBytecode.BufferSize, linkage, this);
         }
+#endif
     }
 }

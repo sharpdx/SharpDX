@@ -21,6 +21,7 @@ using System;
 
 namespace SharpDX.DirectWrite
 {
+    [ShadowAttribute(typeof(FontCollectionLoaderShadow))]
     public partial interface FontCollectionLoader
     {
         /// <summary>	

@@ -125,7 +125,7 @@ namespace SharpDX.WIC
             factory.CreateDecoderFromFilename(filename, guidVendorRef, (int)desiredAccess, metadataOptions, this);
         }
 
-#if !WIN8
+#if !WIN8METRO
         /// <summary>
         /// Initializes a new instance of the <see cref="BitmapDecoder"/> class from a filestream.
         /// </summary>

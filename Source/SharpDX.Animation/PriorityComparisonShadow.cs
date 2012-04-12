@@ -38,7 +38,7 @@ namespace SharpDX.Animation
         /// <returns>A pointer to a shadow c++ callback</returns>
         public static IntPtr ToIntPtr(PriorityComparison callback)
         {
-            return ToIntPtr<PriorityComparisonShadow, PriorityComparison>(callback);
+            return ToIntPtr<PriorityComparison>(callback);
         }
 
         public class PriorityComparisonVtbl : ComObjectVtbl

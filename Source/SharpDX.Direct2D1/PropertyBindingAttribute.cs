@@ -17,7 +17,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if WIN8
+#if DIRECT3D11_1
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -31,12 +31,18 @@ namespace SharpDX.Direct2D1
     public class PropertyBindingAttribute : Attribute
     {
         private int order;
+        private object min;
+        private object max;
+        private object defaultValue;
 
         /// <summary>
         /// Initializes a new instance of <see cref="PropertyBindingAttribute"/> attribute.
         /// </summary>
         /// <param name="order">Order of the property</param>
-        public PropertyBindingAttribute(int order)
+        /// <param name="min">Minimum value of this property</param>
+        /// <param name="max">Maximum value of this property</param>
+        /// <param name="defaultValue">Default value of this property</param>
+        public PropertyBindingAttribute(int order, object min, object max, object defaultValue)
         {
             this.order = order;
         }
@@ -75,8 +81,7 @@ namespace SharpDX.Direct2D1
         /// </summary>
         public object Min
         {
-            get;
-            set;
+            get { return min; }
         }
 
         /// <summary>
@@ -84,8 +89,7 @@ namespace SharpDX.Direct2D1
         /// </summary>
         public object Max
         {
-            get;
-            set;
+            get { return max; }
         }
 
         /// <summary>
@@ -93,8 +97,7 @@ namespace SharpDX.Direct2D1
         /// </summary>
         public object Default
         {
-            get;
-            set;
+            get { return defaultValue; }
         }
     }
 }

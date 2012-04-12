@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-#if !WIN8
+#if !WIN8METRO
 using System.Drawing;
 #endif
 using System.Runtime.InteropServices;
@@ -69,7 +69,7 @@ namespace SharpDX.DirectWrite
                 return isSystemFont;                
             }
         } 
-#if !WIN8
+#if !WIN8METRO
         /// <summary>	
         /// Creates a font object that matches the properties specified by the LOGFONT structure. 	
         /// </summary>	

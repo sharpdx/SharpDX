@@ -42,7 +42,7 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
-#if !WIN8
+#if !WIN8METRO
 using System;
 using System.Collections;
 using System.ComponentModel;

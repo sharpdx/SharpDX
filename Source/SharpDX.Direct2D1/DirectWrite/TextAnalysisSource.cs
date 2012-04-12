@@ -21,6 +21,7 @@ using System;
 
 namespace SharpDX.DirectWrite
 {
+    [ShadowAttribute(typeof(TextAnalysisSourceShadow))]
     public partial interface TextAnalysisSource
     {
         /// <summary>	

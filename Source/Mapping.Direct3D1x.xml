@@ -37,7 +37,7 @@
   <include file="d3d10sdklayers.h" />
   <include file="d3d10shader.h" />
   
-  <ifndef name="WIN8">
+  <ifndef name="DIRECT3D11_1">
     <include file="d3dx10.h" />
     <include file="d3dx10core.h" />
     <include file="d3dx10tex.h" />
@@ -47,19 +47,19 @@
   
   <!-- D3D11 includes -->
   <include file="d3d11.h" />
-  <ifdef name="WIN8">
+  <ifdef name="DIRECT3D11_1">
     <include file="d3d11_1.h" />
   </ifdef>
   <include file="d3d11sdklayers.h" />
   
-  <ifndef name="WIN8">
+  <ifndef name="DIRECT3D11_1">
     <include file="d3dx11.h" />
     <include file="d3dx11core.h" />
     <include file="d3dx11tex.h" />
     <include file="d3dx11async.h" />
     <include file="d3dcsx.h" />
+    <include file="d3dx11effect.h"/>
   </ifndef>
-  <include file="d3dx11effect.h"/>
 
   <naming />
   <binding/>
@@ -73,7 +73,7 @@
     <context>d3d10misc</context>
     <context>d3d10sdklayers</context>
     <context>d3d10shader</context>
-    <ifndef name="WIN8">
+    <ifndef name="DIRECT3D11_1">
       <context>d3dx10</context>
       <context>d3dx10core</context>
       <context>d3dx10tex</context>
@@ -82,18 +82,18 @@
     </ifndef>
     
     <context>d3d11</context>
-    <ifdef name="WIN8">
+    <ifdef name="DIRECT3D11_1">
       <context>d3d11_1</context>
     </ifdef>
-    <ifndef name="WIN8">
+    <ifndef name="DIRECT3D11_1">
       <context>d3dx11</context>
       <context>d3d11sdklayers</context>
       <context>d3dx11core</context>
       <context>d3dx11tex</context>
       <context>d3dx11async</context>
       <context>d3dcsx</context>
+      <context>d3dx11effect</context>
     </ifndef>
-    <context>d3dx11effect</context>
     <!--
     // *****************************************************************
     // D3D1x Enumerations
@@ -339,10 +339,10 @@
     <map method="ID3D(\d+)Device::CheckCounter" visibility="internal"/>
     <map method="ID3D(\d+)Device1?::Create.*" visibility="internal" />
     <map param="ID3D(\d+)Device1?::Create.*::pp.*" attribute="out fast" />
-    <map method="ID3D(\d+)Device::GetImmediateContext" visibility="internal" property="false" />
+    <map method="ID3D(\d+)Device1?::GetImmediateContext1?" visibility="internal" property="false" />
     <remove method="ID3D(\d+)Device::.*TextFilterSize" />
     <map method="ID3D(\d+)Device::GetPredication" visibility="internal" />
-    <map method="ID3D(\d+)Device::OpenSharedResource" visibility="internal" />
+    <map method="ID3D(\d+)Device1?::OpenSharedResource1?" visibility="internal" />
     <map method="ID3D(\d+)Device::UpdateSubresource" visibility="internal" />
     <map interface="ID3D(\d+)View" name="ResourceView" />
     <map param="ID3D(\d+)Device::CreateTexture[0-9]D::pInitialData" attribute="in buffer optional" />

@@ -34,12 +34,10 @@
   
   <!-- D3D11 includes -->
   <include file="d3d11.h" attach="true"/>
-  <ifdef name="WIN8">
+  <ifdef name="DIRECT3D11_1">
     <include file="d3d11_1.h" attach="true" />
-    <!-- D3D11 Effects includes -->
-    <include file="d3dx11effect.h" attach="true" />
   </ifdef>
-  <ifndef name="WIN8">
+  <ifndef name="DIRECT3D11_1">
     <include file="d3dx11.h" attach="true">
       <post>
 
@@ -69,11 +67,10 @@
     <context>sharpdx-direct3d11</context>
     <context>sharpdx-direct3d11-ext</context>
     <context>d3d11</context>
-    <ifdef name="WIN8">
+    <ifdef name="DIRECT3D11_1">
       <context>d3d11_1</context>
-      <context>d3dx11effect</context>
     </ifdef>
-    <ifndef name="WIN8">
+    <ifndef name="DIRECT3D11_1">
       <context>d3dx11</context>
       <context>d3d11sdklayers</context>
       <context>d3dx11core</context>
@@ -242,12 +239,21 @@
     <map method="ID3DX11EffectUnorderedAccessViewVariable::GetUnorderedAccessViewArray" visibility="internal"/>
     <map param="ppResources" attribute="out buffer"/>
 
+    <map interface="ID3DDeviceContextState" name="DeviceContextState"/>
+    <map interface="ID3DUserDefinedAnnotation" name="UserDefinedAnnotation"/>
+
+    <map param="ID3D11Device1::CreateDeviceContextState::Flags" type="D3D11_1_CREATE_DEVICE_CONTEXT_STATE_FLAG"/>
+
+    <map method="ID3D11Device1::OpenSharedResourceByName" visibility="internal" />
+
+    <map param="ID3D11Device1::OpenSharedResourceByName::dwDesiredAccess" type="DXGI_SHARED_RESOURCE_FLAGS" />
+    
     <!--
     // *****************************************************************
     // D3D11 Functions
     // *****************************************************************
     -->
-    <ifdef name="WIN8">
+    <ifdef name="DIRECT3D11_1">
       <remove function="D3D11CreateDeviceAndSwapChain"/>
     </ifdef>
     
@@ -257,19 +263,11 @@
 
     <remove function="ID3D11DeviceContext1_.*"/>
 
-    <map function="D3DX11(.+)" name-tmp="$1" />
-    <map function="D3DX11(.+)W" name-tmp="$1" />
-    <ifndef name="WIN8">
+    <ifndef name="DIRECT3D11_1">
+      <map function="D3DX11(.+)" name-tmp="$1" />
+      <map function="D3DX11(.+)W" name-tmp="$1" />
       <map function="D3DX11.*" dll='"#(D3DX11_DLL_A)"' group="SharpDX.Direct3D11.D3DX11" />
-    </ifndef>>
-    <map param="D3DX11CreateEffectFromMemory::ppEffect" attribute="out fast" />
-
-    <ifdef name="WIN8">
-      <!--TODO: We need to introduce selector for ARM architecture. How can safely determine the platform? -->
-      <map function="D3DX11CreateEffectFromMemory" dllimport="false" dll='IntPtr.Size == 4?"sharpdx_direct3d11_1_effects_x86.dll":"sharpdx_direct3d11_1_effects_x64.dll"' group="SharpDX.Direct3D11.D3DX11Effects" />
-    </ifdef>
-
-    <ifndef name="WIN8">
+      <map param="D3DX11CreateEffectFromMemory::ppEffect" attribute="out fast" />
       <map function="D3DX11CreateEffectFromMemory" dllimport="false" dll='IntPtr.Size == 4?"sharpdx_direct3d11_effects_x86.dll":"sharpdx_direct3d11_effects_x64.dll"' group="SharpDX.Direct3D11.D3DX11Effects" />
     </ifndef>
 
@@ -278,7 +276,7 @@
     // D3D11 Constants
     // *****************************************************************
     -->
-    <ifndef name="WIN8">
+    <ifndef name="DIRECT3D11_1">
       <context-clear />
       <context>d3dcsx</context>
       <map function="D3DX11.*" dll='"#(D3DCSX_DLL_A)"' group="SharpDX.Direct3D11.D3DCSX" />

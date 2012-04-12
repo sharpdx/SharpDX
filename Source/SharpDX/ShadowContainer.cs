@@ -18,43 +18,123 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Reflection;
 using System.Collections.Generic;
 
 namespace SharpDX
 {
+    /// <summary>
+    /// The ShadowContainer is the main container used internally to keep references to all native COM/C++ callbacks.
+    /// It is stored in the property <see cref="ICallbackable.Shadow"/>.
+    /// </summary>
     internal class ShadowContainer : DisposeBase
     {
-        private readonly List<Entry> entries;
-        
-        private struct Entry
+        private readonly Dictionary<Guid, CppObjectShadow> guidToShadow = new Dictionary<Guid, CppObjectShadow>();
+
+        private static readonly Dictionary<Type, List<Type>> typeToShadowTypes = new Dictionary<Type, List<Type>>();
+
+        public void Initialize(ICallbackable callbackable)
         {
-            public Entry(Type type, CppObjectShadow shadow)
+            callbackable.Shadow = this;
+
+            var type = callbackable.GetType();
+            List<Type> slimInterfaces;
+
+            // Cache reflection on COM interface inheritance
+            lock (typeToShadowTypes)
             {
-                Type = type;
-                Shadow = shadow;
+                if (!typeToShadowTypes.TryGetValue(type, out slimInterfaces))
+                {
+#if WIN8METRO
+                    var interfaces = type.GetTypeInfo().ImplementedInterfaces;
+#else
+                    var interfaces = type.GetInterfaces();
+#endif
+                    slimInterfaces = new List<Type>();
+                    slimInterfaces.AddRange(interfaces);
+                    typeToShadowTypes.Add(type, slimInterfaces);
+
+                    // First pass to identify most detailled interfaces
+                    foreach (var item in interfaces)
+                    {
+                        // Only process interfaces that are using shadow
+                        var shadowAttribute = ShadowAttribute.Get(item);
+                        if (shadowAttribute == null)
+                        {
+                            slimInterfaces.Remove(item);
+                            continue;
+                        }
+
+                        // Keep only final interfaces and not intermediate.
+#if WIN8METRO
+                        var inheritList = item.GetTypeInfo().ImplementedInterfaces;
+#else
+                        var inheritList = item.GetInterfaces();
+#endif
+                        foreach (var inheritInterface in inheritList)
+                        {
+                            slimInterfaces.Remove(inheritInterface);
+                        }
+                    }
+                }
             }
 
-            public Type Type;
+            CppObjectShadow iunknownShadow = null;
 
-            public CppObjectShadow Shadow;
+            // Second pass to instantiate shadow
+            foreach (var item in slimInterfaces)
+            {
+                // Only process interfaces that are using shadow
+                var shadowAttribute = ShadowAttribute.Get(item);
+
+                // Initialize the shadow with the callback
+                var shadow = (CppObjectShadow)Activator.CreateInstance(shadowAttribute.Type);
+                shadow.Initialize(callbackable);
+
+                // Take the first shadow as the main IUnknown
+                if (iunknownShadow == null)
+                {
+                    iunknownShadow = shadow;
+                    // Add IUnknown as a supported interface
+                    guidToShadow.Add(ComObjectShadow.IID_IUnknown, iunknownShadow);
+                }
+
+                guidToShadow.Add(Utilities.GetGuidFromType(item), shadow);
+
+                // Associate also inherited interface to this shadow
+#if WIN8METRO
+                var inheritList = item.GetTypeInfo().ImplementedInterfaces;
+#else
+                var inheritList = item.GetInterfaces();
+#endif
+                foreach (var inheritInterface in inheritList)
+                {
+                    var inheritShadowAttribute = ShadowAttribute.Get(inheritInterface);
+                    if (inheritShadowAttribute == null)
+                        continue;
+
+                    // Use same shadow as derived
+                    guidToShadow.Add(Utilities.GetGuidFromType(inheritInterface), shadow);
+                }
+            }
         }
 
-        public ShadowContainer()
+        internal IntPtr Find(Type type)
         {
-            entries = new List<Entry>(3);
+            return Find(Utilities.GetGuidFromType(type));
         }
 
-        internal CppObjectShadow Find(Type type)
+        internal IntPtr Find(Guid guidType)
         {
-            for (int i = 0; i < entries.Count; i++)
-                if (ReferenceEquals(entries[i].Type,type))
-                    return entries[i].Shadow;
-            return null;
+            var shadow = FindShadow(guidType);
+            return (shadow == null) ? IntPtr.Zero : shadow.NativePointer;
         }
 
-        internal void Add(Type type, CppObjectShadow shadow)
+        internal CppObjectShadow FindShadow(Guid guidType)
         {
-            entries.Add(new Entry(type, shadow));
+            CppObjectShadow shadow;
+            guidToShadow.TryGetValue(guidType, out shadow);
+            return shadow;
         }
 
         // The bulk of the clean-up code is implemented in Dispose(bool)
@@ -62,9 +142,9 @@ namespace SharpDX
         {
             if (disposing)
             {
-                foreach (var comObjectCallbackNative in entries)
-                    comObjectCallbackNative.Shadow.Dispose();
-                entries.Clear();
+                foreach (var comObjectCallbackNative in guidToShadow.Values)
+                    comObjectCallbackNative.Dispose();
+                guidToShadow.Clear();
             }
         }
     }

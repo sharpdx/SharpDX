@@ -30,7 +30,7 @@ namespace SharpDX
     /// Represents a 4x4 mathematical Matrix5x4.
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-#if !WIN8
+#if !WIN8METRO
     [Serializable]
 #endif
     public struct Matrix5x4 : IEquatable<Matrix5x4>, IFormattable

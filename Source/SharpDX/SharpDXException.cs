@@ -26,7 +26,7 @@ namespace SharpDX
     ///   The base class for errors that occur in SharpDX.
     /// </summary>
     /// <unmanaged>None</unmanaged>
-#if !WIN8
+#if !WIN8METRO
     [Serializable]
 #endif
     public class SharpDXException : Exception

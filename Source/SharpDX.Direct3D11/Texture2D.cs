@@ -66,7 +66,7 @@ namespace SharpDX.Direct3D11
             return CalculateSubResourceIndex(mipSlice, arraySlice, desc.MipLevels);
         }
 
-#if !WIN8
+#if !DIRECT3D11_1
         /// <summary>
         ///   Converts a height map into a normal map. The (x,y,z) components of each normal are mapped to the (r,g,b) channels of the output texture.
         /// </summary>

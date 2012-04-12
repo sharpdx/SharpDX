@@ -21,6 +21,7 @@ using System;
 
 namespace SharpDX.DirectWrite
 {
+    [ShadowAttribute(typeof(PixelSnappingShadow))]
     public partial interface PixelSnapping
     {
         /// <summary>

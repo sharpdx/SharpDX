@@ -17,7 +17,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if WIN8
+#if DIRECT3D11_1
 using System;
 using System.Runtime.InteropServices;
 
@@ -37,7 +37,7 @@ namespace SharpDX.Direct2D1
         /// <returns>A pointer to a shadow c++ callback</returns>
         public static IntPtr ToIntPtr(CustomEffect callback)
         {
-            return ToIntPtr<CustomEffectShadow, CustomEffect>(callback);
+            return ToIntPtr<CustomEffect>(callback);
         }
 
         public class CustomEffectVtbl : ComObjectVtbl

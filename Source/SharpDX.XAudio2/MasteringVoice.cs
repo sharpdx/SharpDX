@@ -33,7 +33,7 @@ namespace SharpDX.XAudio2
         /// <param name="inputSampleRate">[in]  Sample rate of the input audio data of the mastering voice. This rate must be a multiple of XAUDIO2_QUANTUM_DENOMINATOR. InputSampleRate must be between XAUDIO2_MIN_SAMPLE_RATE and XAUDIO2_MAX_SAMPLE_RATE. InputSampleRate can be set to XAUDIO2_DEFAULT_SAMPLERATE, with the default being determined by the current platform. Windows  Windows XP defaults to 44100. Windows Vista and Windows 7 default to the setting specified in the Sound Control Panel. The default for this setting is 44100 (or 48000 if required by the driver).  Xbox 360  Defaults to 48000.  </param>
         /// <param name="deviceIndex">[in]  Index of the output device that will be sent input by the mastering voice. Specifying the default value of 0 causes XAudio2 to select the global default audio device. </param>
         /// <unmanaged>HRESULT IXAudio2::CreateMasteringVoice([Out] IXAudio2MasteringVoice** ppMasteringVoice,[None] UINT32 InputChannels,[None] UINT32 InputSampleRate,[None] UINT32 Flags,[None] UINT32 DeviceIndex,[In, Optional] const XAUDIO2_EFFECT_CHAIN* pEffectChain)</unmanaged>
-#if WIN8
+#if DIRECT3D11_1
         public MasteringVoice(XAudio2 device, int inputChannels = 2, int inputSampleRate = 44100, string deviceId = null)
             : base(IntPtr.Zero)
         {

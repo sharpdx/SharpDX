@@ -17,7 +17,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if WIN8
+#if DIRECT3D11_1
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -30,6 +30,23 @@ namespace SharpDX.Direct2D1
     [AttributeUsage(AttributeTargets.Class, Inherited = true)]
     public class CustomEffectAttribute : Attribute
     {
+        private string description;
+        private string category;
+        private string author;
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="CustomEffectAttribute"/> class.
+        /// </summary>
+        /// <param name="description">Description of the custom effect</param>
+        /// <param name="category">Category of the custom effect</param>
+        /// <param name="author">Author of the custom effect</param>
+        public CustomEffectAttribute(string description, string category, string author)
+        {
+            this.description = description;
+            this.category = category;
+            this.author = author;
+        }
+
         /// <summary>
         /// Gets the DisplayName name.
         /// </summary>
@@ -38,17 +55,17 @@ namespace SharpDX.Direct2D1
         /// <summary>
         /// Gets the Description name.
         /// </summary>
-        public string Description { get; set; }
+        public string Description { get { return description; } }
 
         /// <summary>
         /// Gets the Category name.
         /// </summary>
-        public string Category { get; set; }
+        public string Category { get { return category; } }
 
         /// <summary>
         /// Gets the Author name.
         /// </summary>
-        public string Author { get; set; }
+        public string Author { get { return author; } }
     }
 }
 #endif

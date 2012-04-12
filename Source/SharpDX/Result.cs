@@ -27,7 +27,7 @@ namespace SharpDX
     /// <summary>
     /// Result structure for COM methods.
     /// </summary>
-#if !WIN8
+#if !WIN8METRO
     [Serializable]
 #endif
     [StructLayout(LayoutKind.Sequential)]

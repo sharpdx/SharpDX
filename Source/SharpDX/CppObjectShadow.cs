@@ -30,7 +30,7 @@ namespace SharpDX
         /// <summary>
         /// Gets the callback.
         /// </summary>
-        public object Callback { get; private set; }
+        public ICallbackable Callback { get; private set; }
 
         /// <summary>
         /// Gets the VTBL associated with this shadow instance.
@@ -41,7 +41,7 @@ namespace SharpDX
         /// Initializes the specified shadow instance from a vtbl and a callback.
         /// </summary>
         /// <param name="callbackInstance">The callback.</param>
-        protected virtual void Initialize(ICallbackable callbackInstance)
+        public virtual void Initialize(ICallbackable callbackInstance)
         {
             this.Callback = callbackInstance;
 
@@ -56,13 +56,11 @@ namespace SharpDX
         /// <summary>
         /// Return the unmanaged pointer from a tuple <see cref="CppObjectShadow"/> and <see cref="ICallbackable"/> instances.
         /// </summary>
-        /// <typeparam name="TShadow">The type of the shadow.</typeparam>
         /// <typeparam name="TCallback">The type of the callback.</typeparam>
         /// <param name="callback">The callback.</param>
         /// <returns>A pointer to the unamanaged C++ object of the callback</returns>
-        protected static IntPtr ToIntPtr<TShadow, TCallback>(ICallbackable callback)
-            where TShadow : CppObjectShadow, new()
-            where TCallback : class, ICallbackable
+        public static IntPtr ToIntPtr<TCallback>(ICallbackable callback)
+            where TCallback : ICallbackable
         {
             // If callback is null, then return a null pointer
             if (callback == null)
@@ -77,27 +75,18 @@ namespace SharpDX
             if (shadowContainer == null)
             {
                 shadowContainer = new ShadowContainer();
-                callback.Shadow = shadowContainer;
+                shadowContainer.Initialize(callback);
             }
 
-            // Get the Shadow from the specified interface
-            var shadow = shadowContainer.Find(typeof(TCallback));
-            if (shadow == null)
-            {
-                shadow = new TShadow();
-                shadow.Initialize(callback);
-                shadowContainer.Add(typeof(TCallback), shadow);
-            }
-
-            return shadow.NativePointer;
+            return shadowContainer.Find(typeof(TCallback));
         }
 
-        protected override void Dispose(bool disposing)
+        protected unsafe override void Dispose(bool disposing)
         {
             if (NativePointer != IntPtr.Zero)
             {
                 // Free the GCHandle
-                GCHandle.FromIntPtr(Marshal.ReadIntPtr(NativePointer, IntPtr.Size)).Free();
+                GCHandle.FromIntPtr(*(((IntPtr*)NativePointer) + 1)).Free();
 
                 // Free instance
                 Marshal.FreeHGlobal(NativePointer);
@@ -109,8 +98,10 @@ namespace SharpDX
 
         internal static T ToShadow<T>(IntPtr thisPtr) where T : CppObjectShadow
         {
-            var handle = GCHandle.FromIntPtr(Marshal.ReadIntPtr(thisPtr, IntPtr.Size));
-            return (T) handle.Target;
+            unsafe
+            {
+                return (T)GCHandle.FromIntPtr(*(((IntPtr*)thisPtr) + 1)).Target;
+            }
         }
     }
 }

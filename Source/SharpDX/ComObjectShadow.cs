@@ -18,9 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Reflection;
+using System.Threading;
 
 namespace SharpDX
 {
@@ -30,63 +29,15 @@ namespace SharpDX
     internal abstract class ComObjectShadow : CppObjectShadow
     {
         private int count = 1;
-        private static Guid IID_IUnknown = new Guid("00000000-0000-0000-C000-000000000046");
+        public static Guid IID_IUnknown = new Guid("00000000-0000-0000-C000-000000000046");
 
-#if WIN8
-        HashSet<Guid> supportedGuids = new HashSet<Guid>();
-#else
-        List<Guid> supportedGuids = new List<Guid>();
-#endif
-
-        private void FindAllGuids(Type type)
+        protected int QueryInterfaceImpl(IntPtr thisObject, ref Guid guid, out IntPtr output)
         {
-            if (type == null || type == typeof(object))
-                return;
-
-            var guid = Utilities.GetGuidFromType(type);
-            if (!supportedGuids.Contains(guid))
+            var shadow = (ComObjectShadow)((ShadowContainer)Callback.Shadow).FindShadow(guid);
+            if (shadow != null)
             {
-                supportedGuids.Add(guid);
-
-#if WIN8
-                var typeInfo = type.GetTypeInfo();
-                foreach (var baseInterface in typeInfo.ImplementedInterfaces)
-                {
-                    FindAllGuids(baseInterface);
-                }
-
-#else
-                var typeInfo = type;
-                foreach (var baseInterface in type.GetInterfaces())
-                {
-                    FindAllGuids(baseInterface);
-                }
-
-#endif
-                FindAllGuids(typeInfo.BaseType);
-            }
-        }
-
-        protected virtual int QueryInterfaceImpl(IntPtr thisObject, ref Guid guid, out IntPtr output)
-        {
-            lock (supportedGuids)
-            {
-                if (supportedGuids.Count == 0)
-                    FindAllGuids(Callback.GetType());
-
-                // Check guid from all inherited interfaces/types
-                if (supportedGuids.Contains(guid))
-                {
-                    AddRefImpl(thisObject);
-                    output = thisObject;
-                    return Result.Ok.Code;
-                }
-            }
-
-            if (guid == IID_IUnknown)
-            {
-                AddRefImpl(thisObject);
-                output = thisObject;
+                shadow.AddRefImpl(thisObject);
+                output = shadow.NativePointer;
                 return Result.Ok.Code;
             }
             output = IntPtr.Zero;
@@ -95,21 +46,17 @@ namespace SharpDX
 
         protected virtual int AddRefImpl(IntPtr thisObject)
         {
-            // TODO: Add interlocked
-            count++;
-            return count;
+            return Interlocked.Increment(ref count);
         }
 
         protected virtual int ReleaseImpl(IntPtr thisObject)
         {
-            // TODO: Add interlocked
-            count--;
-            return count;
+            return Interlocked.Decrement(ref count);
         }
 
-        internal abstract class ComObjectVtbl : CppObjectVtbl
+        internal class ComObjectVtbl : CppObjectVtbl
         {
-            protected ComObjectVtbl(int numberOfCallbackMethods)
+            public ComObjectVtbl(int numberOfCallbackMethods)
                 : base(numberOfCallbackMethods + 3)
             {
                 unsafe

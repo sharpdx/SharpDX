@@ -28,7 +28,7 @@ namespace SharpDX
     /// <summary>
     /// Descriptor used to provide detailed message for a particular <see cref="Result"/>.
     /// </summary>
-#if !WIN8
+#if !WIN8METRO
     [Serializable]
 #endif
     public sealed class ResultDescriptor
@@ -219,7 +219,7 @@ namespace SharpDX
 
         private static void AddDescriptorsFromType(Type type)
         {
-#if WIN8
+#if WIN8METRO
             foreach(var field in type.GetTypeInfo().DeclaredFields)
             {
                 if (field.FieldType == typeof(ResultDescriptor) && field.IsPublic && field.IsStatic)

@@ -47,9 +47,6 @@
     <Reference Include="SharpDX">
       <HintPath>..\..\..\Source\SharpDX\Bin\Win8$(Configuration)\SharpDX.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.D3DCompiler">
-      <HintPath>..\..\..\Source\SharpDX.D3DCompiler\Bin\Win8$(Configuration)\SharpDX.D3DCompiler.dll</HintPath>
-    </Reference>
     <Reference Include="SharpDX.Direct2D1">
       <HintPath>..\..\..\Source\SharpDX.Direct2D1\Bin\Win8$(Configuration)\SharpDX.Direct2D1.dll</HintPath>
     </Reference>
@@ -78,7 +75,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CommonDX\CommonDX.csproj">
+    <ProjectReference Include="..\CommonDX\CommonDX.sample.csproj">
       <Project>{45cd76a3-e21e-47a3-8bfd-9a1241aadb9d}</Project>
       <Name>CommonDX</Name>
     </ProjectReference>

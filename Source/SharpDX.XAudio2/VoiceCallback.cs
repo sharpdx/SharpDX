@@ -21,6 +21,7 @@ using System;
 
 namespace SharpDX.XAudio2
 {
+    [Shadow(typeof(VoiceShadow))]
     public partial interface VoiceCallback
     {
         /// <summary>	

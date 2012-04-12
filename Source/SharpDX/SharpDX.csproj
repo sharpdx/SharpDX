@@ -28,6 +28,7 @@
     <Compile Include="ComArray.cs" />
     <Compile Include="CompilationResultBase.cs" />
     <Compile Include="Bool4.cs" />
+    <Compile Include="ShadowAttribute.cs" />
     <Compile Include="Matrix5x4.cs" />
     <Compile Include="ResultDescriptor.cs" />
     <Compile Include="DrawingSizeF.cs" />
@@ -144,8 +145,12 @@
     <Compile Include="Win32\VariantElementType.cs" />
     <Compile Include="Win32\VariantType.cs" />
     <Compile Include="Windows\RenderLoop.cs" />
-    <Compile Include="Windows\RenderControl.cs" />
-    <Compile Include="Windows\RenderForm.cs" />
+    <Compile Include="Windows\RenderControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Windows\RenderForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Colors.cs" />
@@ -172,7 +177,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
-
   <Target Name="BeforeBuild">
     <Exec Command="&quot;$(SolutionDir)Source\Tools\SharpGen\RunGenerator.bat&quot; $(ConfigurationName)" />
   </Target>

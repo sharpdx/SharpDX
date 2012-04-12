@@ -37,7 +37,7 @@ namespace SharpDX.DirectWrite
         /// <returns>A pointer to a shadow c++ callback</returns>
         public static IntPtr ToIntPtr(FontFileStream callback)
         {
-            return ToIntPtr<FontFileStreamShadow, FontFileStream>(callback);
+            return ToIntPtr<FontFileStream>(callback);
         }
 
         private class FontFileStreamVtbl : ComObjectVtbl

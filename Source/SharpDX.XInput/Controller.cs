@@ -128,7 +128,7 @@ namespace SharpDX.XInput
             }
         }
 
-#if !WIN8
+#if !DIRECT3D11_1
         /// <summary>
         /// Gets the sound render GUID.
         /// </summary>

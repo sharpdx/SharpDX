@@ -56,7 +56,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Win8Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;WIN8</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;WIN8METRO;DIRECT3D11_1</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>
     </DocumentationFile>
@@ -69,7 +69,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Release|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Win8Release</OutputPath>
-    <DefineConstants>TRACE;WIN8</DefineConstants>
+    <DefineConstants>TRACE;WIN8METRO;DIRECT3D11_1</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>bin\Win8Release\$(AssemblyName).xml</DocumentationFile>
     <Optimize>true</Optimize>

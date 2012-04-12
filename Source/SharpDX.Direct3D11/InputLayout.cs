@@ -18,12 +18,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using SharpDX.D3DCompiler;
 
+#if !WIN8METRO
+using SharpDX.D3DCompiler;
+#endif
 namespace SharpDX.Direct3D11
 {
     public partial class InputLayout
     {
+        /// <summary>
+        ///   Initializes a new instance of the <see cref = "T:SharpDX.Direct3D11.InputLayout" /> object to describe the
+        ///   input-buffer data for the input-assembler stage.
+        /// </summary>
+        /// <unmanaged>ID3D11Device::CreateInputLayout</unmanaged>
+        /// <param name = "device">The device used to create the layout.</param>
+        /// <param name = "elements">An array of input elements describing the layout of the input data.</param>
+        /// <param name = "shaderBytecode">The compiled shader used to validate the input elements.</param>
+        public InputLayout(Device device, byte[] shaderBytecode, InputElement[] elements)
+            : base(IntPtr.Zero)
+        {
+            unsafe
+            {
+                fixed (void* pBuffer = shaderBytecode)
+                    device.CreateInputLayout(elements, elements.Length, (IntPtr)pBuffer, shaderBytecode.Length,  this);
+            }
+        }
+
+#if !WIN8METRO    
         /// <summary>
         ///   Initializes a new instance of the <see cref = "T:SharpDX.Direct3D11.InputLayout" /> object to describe the
         ///   input-buffer data for the input-assembler stage.
@@ -53,5 +74,6 @@ namespace SharpDX.Direct3D11
             device.CreateInputLayout(elements, elements.Length, shaderSignature.BufferPointer,
                                      shaderSignature.BufferSize, this);
         }
+#endif
     }
 }

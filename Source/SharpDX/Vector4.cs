@@ -53,7 +53,7 @@ namespace SharpDX
     /// Represents a four dimensional mathematical vector.
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-#if !WIN8
+#if !WIN8METRO
     [Serializable]
     [TypeConverter(typeof(SharpDX.Design.Vector4Converter))]
 #endif

@@ -1,1 +1,0 @@
-"%WindowsSdkDir%\bin\x86\fxc.exe" /%*

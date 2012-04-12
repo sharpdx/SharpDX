@@ -150,7 +150,7 @@ namespace SharpDX.D3DCompiler
         /// </value>
         public SharpDX.PointerSize BufferSize { get; set; }
 
-#if WIN8
+#if WIN8METRO
         /// <summary>
         /// Compiles the provided shader or effect source.
         /// </summary>
@@ -843,7 +843,7 @@ namespace SharpDX.D3DCompiler
             return Utilities.BlobToString(output);
         }
 
-#if WIN8
+#if WIN8METRO
         /// <summary>
         ///   Disassembles a region of a compiled HLSL code back into textual source.
         /// </summary>
@@ -893,7 +893,7 @@ namespace SharpDX.D3DCompiler
             return new ShaderBytecode(blob);
         }
 
-#if WIN8
+#if WIN8METRO
         /// <summary>
         /// Sets information in a compilation result.
         /// </summary>
@@ -1061,7 +1061,7 @@ namespace SharpDX.D3DCompiler
                     Marshal.FreeHGlobal(shaderSourcePtr);
             }
         }
-#if !WIN8
+#if !WIN8METRO
         /// <summary>
         ///   Preprocesses a shader or effect from a file on disk.
         /// </summary>
@@ -1152,7 +1152,7 @@ namespace SharpDX.D3DCompiler
         {
             return new ShaderBytecode(stream);
         }
-#if !WIN8
+#if !WIN8METRO
         /// <summary>
         ///   Read a compiled shader bytecode from a Stream and return a ShaderBytecode
         /// </summary>
