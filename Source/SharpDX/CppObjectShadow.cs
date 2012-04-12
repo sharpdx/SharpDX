@@ -81,12 +81,12 @@ namespace SharpDX
             return shadowContainer.Find(typeof(TCallback));
         }
 
-        protected override void Dispose(bool disposing)
+        protected unsafe override void Dispose(bool disposing)
         {
             if (NativePointer != IntPtr.Zero)
             {
                 // Free the GCHandle
-                GCHandle.FromIntPtr(Marshal.ReadIntPtr(NativePointer, IntPtr.Size)).Free();
+                GCHandle.FromIntPtr(*(((IntPtr*)NativePointer) + 1)).Free();
 
                 // Free instance
                 Marshal.FreeHGlobal(NativePointer);
@@ -98,8 +98,10 @@ namespace SharpDX
 
         internal static T ToShadow<T>(IntPtr thisPtr) where T : CppObjectShadow
         {
-            var handle = GCHandle.FromIntPtr(Marshal.ReadIntPtr(thisPtr, IntPtr.Size));
-            return (T) handle.Target;
+            unsafe
+            {
+                return (T)GCHandle.FromIntPtr(*(((IntPtr*)thisPtr) + 1)).Target;
+            }
         }
     }
 }
