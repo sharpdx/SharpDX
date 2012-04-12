@@ -91,7 +91,6 @@ namespace D2DCustomPixelShaderEffect
 
         public virtual void Render(TargetBase target)
         {
-            return;
             if (!Show)
                 return;
 
@@ -106,14 +105,11 @@ namespace D2DCustomPixelShaderEffect
 
             context2D.Clear(Colors.Transparent);
 
-            var rippleImage = _rippleEffect.QueryInterface<Image>();
-            context2D.DrawImage(rippleImage, InterpolationMode.Linear, CompositeMode.DestinationAtop);
-            rippleImage.Dispose();
-
+            using (var rippleImage = _rippleEffect.QueryInterface<Image>())
+                context2D.DrawImage(rippleImage, InterpolationMode.Linear, CompositeMode.DestinationAtop);
+            
             context2D.EndDraw();
         }
-
-
 
         private SharpDX.WIC.FormatConverter DecodeImage()
         {
@@ -164,8 +160,8 @@ namespace D2DCustomPixelShaderEffect
             // Effect 2 : PointSpecular
             var effect = new Effect<RippleEffect>(_deviceManager.ContextDirect2D);
 
-            var bitmap = bitmapSourceEffect.QueryInterface<Image>();
-            effect.SetInput(0, bitmap, true);
+            using (var bitmap = bitmapSourceEffect.QueryInterface<Image>())
+                effect.SetInput(0, bitmap, true);
 
             return effect;
         }
