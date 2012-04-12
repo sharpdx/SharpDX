@@ -4,7 +4,7 @@ using System;
 using SharpDX.D3DCompiler;
 using SharpDX.IO;
 
-namespace CustomPixelShaderEffect
+namespace D2DCustomPixelShaderEffect
 {
     class RippleEffect : CustomEffect
     {

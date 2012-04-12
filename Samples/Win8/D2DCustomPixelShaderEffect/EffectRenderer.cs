@@ -29,7 +29,7 @@ using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 using Matrix = SharpDX.Matrix;
 
-namespace CustomPixelShaderEffect
+namespace D2DCustomPixelShaderEffect
 {
     public class EffectRenderer : Component
     {

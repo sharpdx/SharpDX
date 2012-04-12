@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Documents;
 
-namespace CustomPixelShaderEffect.Common
+namespace D2DCustomPixelShaderEffect.Common
 {
     /// <summary>
     /// Wrapper for <see cref="RichTextBlock"/> that creates as many additional overflow

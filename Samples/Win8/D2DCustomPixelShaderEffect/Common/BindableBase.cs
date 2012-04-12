@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Windows.UI.Xaml.Data;
 
-namespace CustomPixelShaderEffect.Common
+namespace D2DCustomPixelShaderEffect.Common
 {
     /// <summary>
     /// Implementation of <see cref="INotifyPropertyChanged"/> to simplify models.

@@ -8,7 +8,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace CustomPixelShaderEffect.Common
+namespace D2DCustomPixelShaderEffect.Common
 {
     /// <summary>
     /// Typical implementation of Page that provides several important conveniences:

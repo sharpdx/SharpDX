@@ -6,10 +6,10 @@
             Version="1.0.0.0" />
 
   <Properties>
-    <DisplayName>CustomPixelShaderEffect</DisplayName>
+    <DisplayName>D2DCustomPixelShaderEffect</DisplayName>
     <PublisherDisplayName>Jose</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
-    <Description>CustomPixelShaderEffect</Description>
+    <Description>D2DCustomPixelShaderEffect</Description>
   </Properties>
 
   <Prerequisites>
@@ -24,12 +24,12 @@
   <Applications>
     <Application Id="App"
         Executable="$targetnametoken$.exe"
-        EntryPoint="CustomPixelShaderEffect.App">
+        EntryPoint="D2DCustomPixelShaderEffect.App">
         <VisualElements
-            DisplayName="CustomPixelShaderEffect"
+            DisplayName="D2DCustomPixelShaderEffect"
             Logo="Assets\Logo.png"
             SmallLogo="Assets\SmallLogo.png"
-            Description="CustomPixelShaderEffect"
+            Description="D2DCustomPixelShaderEffect"
             ForegroundText="light"
             BackgroundColor="#222222">
             <DefaultTile ShowName="allLogos" />

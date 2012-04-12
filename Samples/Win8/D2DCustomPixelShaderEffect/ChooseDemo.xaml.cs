@@ -14,12 +14,12 @@ using Windows.UI.Xaml.Navigation;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
 
-namespace CustomPixelShaderEffect
+namespace D2DCustomPixelShaderEffect
 {
     /// <summary>
     /// A basic page that provides characteristics common to most applications.
     /// </summary>
-    public sealed partial class ChooseDemo : CustomPixelShaderEffect.Common.LayoutAwarePage
+    public sealed partial class ChooseDemo : D2DCustomPixelShaderEffect.Common.LayoutAwarePage
     {
         public ChooseDemo()
         {

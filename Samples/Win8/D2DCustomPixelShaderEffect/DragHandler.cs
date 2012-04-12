@@ -27,7 +27,7 @@ using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 
-namespace CustomPixelShaderEffect
+namespace D2DCustomPixelShaderEffect
 {
     /// <summary>
     /// A <see cref="UIElement"/> handler to add drag behavior.

@@ -7,12 +7,12 @@
     <ProjectGuid>{A6F35710-283E-4B31-8899-015BE69B86B0}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CustomPixelShaderEffect</RootNamespace>
-    <AssemblyName>CustomPixelShaderEffect</AssemblyName>
+    <RootNamespace>D2DCustomPixelShaderEffect</RootNamespace>
+    <AssemblyName>D2DCustomPixelShaderEffect</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>CustomPixelShaderEffect_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>D2DCustomPixelShaderEffect_TemporaryKey.pfx</PackageCertificateKeyFile>
     <PackageCertificateThumbprint>582F1E96A79095CF9365078454B07DE24210F7F1</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -152,7 +152,7 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="Common\ReadMe.txt" />
-    <None Include="CustomPixelShaderEffect_TemporaryKey.pfx" />
+    <None Include="D2DCustomPixelShaderEffect_TemporaryKey.pfx" />
     <Content Include="Assets\SydneyOperaHouse002.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
