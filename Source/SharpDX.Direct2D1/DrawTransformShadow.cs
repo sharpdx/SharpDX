@@ -24,40 +24,49 @@ using System.Runtime.InteropServices;
 namespace SharpDX.Direct2D1
 {
     /// <summary>
-    /// Internal TransformNode Callback
+    /// Internal DrawTransform Callback
     /// </summary>
-    internal class TransformNodeShadow : SharpDX.ComObjectShadow
+    internal class DrawTransformShadow : SharpDX.ComObjectShadow
     {
-        private static readonly TransformNodeVtbl Vtbl = new TransformNodeVtbl(0);
+        private static readonly DrawTransformVtbl Vtbl = new DrawTransformVtbl(0);
 
         /// <summary>
         /// Return a pointer to the unamanged version of this callback.
         /// </summary>
         /// <param name="callback">The callback.</param>
         /// <returns>A pointer to a shadow c++ callback</returns>
-        public static IntPtr ToIntPtr(TransformNode callback)
+        public static IntPtr ToIntPtr(DrawTransform callback)
         {
-            return ToIntPtr<TransformNode>(callback);
+            return ToIntPtr<DrawTransform>(callback);
         }
 
-        public class TransformNodeVtbl : ComObjectVtbl
+        public class DrawTransformVtbl : TransformShadow.TransformVtbl
         {
-            public TransformNodeVtbl(int methods) : base(1 + methods)
+            public DrawTransformVtbl(int methods) : base(1 + methods)
             {
-                AddMethod(new GetInputCountDelegate(GetInputCountImpl));
+                AddMethod(new SetDrawInfoDelegate(SetDrawInfoImpl));
             }
 
-            /// <unmanaged>unsigned int ID2D1TransformNode::GetInputCount()</unmanaged>	
-            /* public int GetInputCount() */
-
-            /// <unmanaged>HRESULT ID2D1EffectImpl::Initialize([In] ID2D1EffectContext* effectContext,[In] ID2D1TransformGraph* transformGraph)</unmanaged>	
+            /// <unmanaged>HRESULT ID2D1DrawTransform::SetDrawInfo([In] ID2D1DrawInfo* drawInfo)</unmanaged>	
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            private delegate int GetInputCountDelegate(IntPtr thisPtr);
-            private static int GetInputCountImpl(IntPtr thisPtr)
+            private delegate int SetDrawInfoDelegate(IntPtr thisPtr, IntPtr drawInfo);
+            private static int SetDrawInfoImpl(IntPtr thisPtr, IntPtr drawInfo)
             {
-                var shadow = ToShadow<TransformNodeShadow>(thisPtr);
-                var callback = (TransformNode)shadow.Callback;
-                return callback.InputCount;
+                try
+                {
+                    var shadow = ToShadow<DrawTransformShadow>(thisPtr);
+                    var callback = (DrawTransform)shadow.Callback;
+                    callback.SetDrawInformation(new DrawInformation(drawInfo));
+                }
+                catch (SharpDXException exception)
+                {
+                    return exception.ResultCode.Code;
+                }
+                catch (Exception)
+                {
+                    return Result.Fail.Code;
+                }
+                return Result.Ok.Code;
             }
        }
 

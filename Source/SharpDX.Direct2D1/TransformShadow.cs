@@ -28,7 +28,7 @@ namespace SharpDX.Direct2D1
     /// </summary>
     internal class TransformShadow : SharpDX.ComObjectShadow
     {
-        private static readonly TransformVtbl Vtbl = new TransformVtbl();
+        private static readonly TransformVtbl Vtbl = new TransformVtbl(0);
 
         /// <summary>
         /// Return a pointer to the unamanged version of this callback.
@@ -40,9 +40,9 @@ namespace SharpDX.Direct2D1
             return ToIntPtr<Transform>(callback);
         }
 
-        public class TransformVtbl : ComObjectVtbl
+        public class TransformVtbl : TransformNodeShadow.TransformNodeVtbl
         {
-            public TransformVtbl() : base(3)
+            public TransformVtbl(int methods) : base(3 + methods)
             {
                 AddMethod(new SetInputRectsDelegate(SetInputRectsImpl));
                 AddMethod(new MapOutputRectToInputRectsDelegate(MapOutputRectToInputRectsImpl));

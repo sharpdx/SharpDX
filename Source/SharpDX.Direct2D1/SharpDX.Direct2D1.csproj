@@ -30,6 +30,15 @@
     <Compile Include="CommandSink.cs" />
     <Compile Include="CommandSinkShadow.cs" />
     <Compile Include="CommandSinkNative.cs" />
+    <Compile Include="ComputeTransform.cs" />
+    <Compile Include="ComputeTransformNative.cs" />
+    <Compile Include="ComputeTransformShadow.cs" />
+    <Compile Include="SourceTransformShadow.cs" />
+    <Compile Include="SourceTransformNative.cs" />
+    <Compile Include="SourceTransform.cs" />
+    <Compile Include="DrawTransformShadow.cs" />
+    <Compile Include="DrawTransformNative.cs" />
+    <Compile Include="DrawTransform.cs" />
     <Compile Include="LayerParameters.cs" />
     <Compile Include="TransformGraph.cs" />
     <Compile Include="DrawInformation.cs" />
