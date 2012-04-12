@@ -28,6 +28,7 @@
     <Compile Include="ComArray.cs" />
     <Compile Include="CompilationResultBase.cs" />
     <Compile Include="Bool4.cs" />
+    <Compile Include="Int3.cs" />
     <Compile Include="ShadowAttribute.cs" />
     <Compile Include="Matrix5x4.cs" />
     <Compile Include="ResultDescriptor.cs" />
