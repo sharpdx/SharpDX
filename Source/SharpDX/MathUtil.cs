@@ -45,7 +45,7 @@
 
 namespace SharpDX
 {
-    internal class MathUtil
+    public class MathUtil
     {
         /// <summary>
         /// The value for which all absolute numbers smaller than are considered equal to zero.
@@ -196,6 +196,18 @@ namespace SharpDX
         public static float RadiansToDegrees(float radian)
         {
             return radian * (180.0f / Pi);
+        }
+
+        /// <summary>
+        /// Clamp a value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        public static float Clamp(float value, float min, float max)
+        {
+            return value < min ? min : value > max ? max : value;
         }
     }
 }
