@@ -3,161 +3,159 @@ using SharpDX;
 using System;
 using SharpDX.D3DCompiler;
 using SharpDX.IO;
+using System.Runtime.InteropServices;
 
 namespace D2DCustomPixelShaderEffect
 {
-    class RippleEffect : CustomEffect
+    [CustomEffect("Adds a ripple effect that can be animated", "Stylize", "SharpDX")]
+    [CustomEffectInput("Source")]
+    public class RippleEffect : CustomEffectBase, DrawTransform
     {
-
-        private Guid GUID_RipplePixelShader = Guid.NewGuid();
-
-        private DrawTransform _drawTransform;
-
-        private float _frequency;
-        public float Frequency {
-            get { return _frequency; }
-            set { _frequency = value; } 
-        }
-
-        private float _phase;
-        public float Phase
-        {
-            get { return _phase; }
-            set { _phase = value; }
-        }
-
-        private float _amplitude;
-        public float Amplitude
-        {
-            get { return _amplitude; }
-            set { _amplitude = value; }
-        }
-
-        private DrawingPointF _center;
-        public DrawingPointF Center
-        {
-            get { return _center; }
-            set { _center = value; }
-        }
-
+        private static readonly Guid GUID_RipplePixelShader = Guid.NewGuid();
+        private DrawInformation drawInformation;
+        private RippleEffectConstantBuffer constants;
 
         public RippleEffect()
         {
-            
         }
 
-
-
-
-//        public static void Register(SharpDX.Direct2D1.Factory1 factory){
-            
-//            string pszXml = @"
-//                <?xml version='1.0'?>
-//                <Effect>
-//                    <!-- System Properties -->
-//                    <Property name='DisplayName' type='string' value='Ripple'/>
-//                    <Property name='Author' type='string' value='Microsoft Corporation'/>
-//                    <Property name='Category' type='string' value='Stylize'/>
-//                    <Property name='Description' type='string' value='Adds a ripple effect that can be animated'/>
-//
-//                    <Inputs>
-//                        <Input name='Source'/>
-//                    </Inputs>
-//
-//                    <!-- Custom Properties go here -->
-//                    <Property name='Frequency' type='float'>
-//                        <Property name='DisplayName' type='string' value='Frequency'/>
-//                        <Property name='Min' type='float' value='0.0' />
-//                        <Property name='Max' type='float' value='1000.0' />
-//                        <Property name='Default' type='float' value='0.0' />
-//                    </Property>
-//
-//                    <Property name='Phase' type='float'>
-//                        <Property name='DisplayName' type='string' value='Phase'/>
-//                        <Property name='Min' type='float' value='-100.0' />
-//                        <Property name='Max' type='float' value='100.0' />
-//                        <Property name='Default' type='float' value='0.0' />
-//                    </Property>
-//
-//                    <Property name='Amplitude' type='float'>
-//                        <Property name='DisplayName' type='string' value='Amplitude'/>
-//                        <Property name='Min' type='float' value='0.0001' />
-//                        <Property name='Max' type='float' value='1000.0' />
-//                        <Property name='Default' type='float' value='0.0' />
-//                    </Property>
-//
-//                    <Property name='Spread' type='float'>
-//                        <Property name='DisplayName' type='string' value='Spread'/>
-//                        <Property name='Min' type='float' value='0.0001' />
-//                        <Property name='Max' type='float' value='1000.0' />
-//                        <Property name='Default' type='float' value='0.0' />
-//                    </Property>
-//
-//                    <Property name='Center' type='vector2'>
-//                        <Property name='DisplayName' type='string' value='Center'/>
-//                        <Property name='Min' type='vector2' value='(-2000.0, -2000.0)' />
-//                        <Property name='Max' type='vector2' value='(2000.0, 2000.0)' />
-//                        <Property name='Default' type='vector2' value='(0.0, 0.0)' />
-//                    </Property>
-//                </Effect>
-//                ";
-
-     
-
-//        }
-
-
-
-
-
-
-        public void Initialize(EffectContext effectContext, TransformGraph transformGraph)
-        {
-            byte[] data;
-
-
-            var path = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
-
-
-            using (var stream = new NativeFileStream(path + "\\Ripple.cso", NativeFileMode.Open, NativeFileAccess.Read))
-            {
-                data = new byte[stream.Length];
-                stream.Read(data, 0, (int)stream.Length);
-            }
-
-
-
-            transformGraph.SingleTransformNode = _drawTransform;
-
-            effectContext.LoadPixelShader(
-                GUID_RipplePixelShader, data, data.Length);
-        }
-
-        public void PrepareForRender(ChangeType changeType)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetGraph(TransformGraph transformGraph)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IDisposable Shadow
+        [PropertyBinding(0, "0.0", "1000.0", "0.0")]
+        public float Frequency
         {
             get
             {
-                throw new NotImplementedException();
+                return constants.Frequency;
             }
             set
             {
-                throw new NotImplementedException();
+                constants.Frequency = MathUtil.Clamp(value, 0.0f, 1000.0f);
+                UpdateConstants();
             }
         }
 
-        public void Dispose()
+        [PropertyBinding(1, "-100.0", "100.0", "0.0")]
+        public float Phase
         {
-            throw new NotImplementedException();
+            get
+            {
+                return constants.Phase;
+            }
+            set
+            {
+                constants.Phase = MathUtil.Clamp(value, -100.0f, 100.0f);
+            }
+        }
+
+        [PropertyBinding(2, "0.0001", "1000.0", "0.0")]
+        public float Amplitude
+        {
+            get
+            {
+                return constants.Amplitude;
+            }
+            set
+            {
+                constants.Amplitude = MathUtil.Clamp(value, 0.0001f, 1000.0f);
+            }
+        }
+
+        [PropertyBinding(3, "0.0001", "1000.0", "0.0")]
+        public float Spread
+        {
+            get
+            {
+                return constants.Spread;
+            }
+            set
+            {
+                constants.Spread = MathUtil.Clamp(value, 0.0001f, 1000.0f);
+            }
+        }
+
+        [PropertyBinding(4, "(-2000.0, -2000.0)", "(2000.0, 2000.0)", "(0.0, 0.0)")]
+        public DrawingPointF Center
+        {
+            get
+            {
+                return constants.Center;
+            }
+            set
+            {
+                constants.Center = value;
+            }
+        }
+
+        public override void Initialize(EffectContext effectContext, TransformGraph transformGraph)
+        {
+            transformGraph.SetSingleTransformNode(this);
+
+            var path = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
+            effectContext.LoadPixelShader(GUID_RipplePixelShader, NativeFile.ReadAllBytes(path + "\\Ripple.cso"));
+        }
+
+        public override void PrepareForRender(ChangeType changeType)
+        {
+            UpdateConstants();
+        }
+
+        public override void SetGraph(TransformGraph transformGraph)
+        {
+            // TODO: Map NotImplementedException to this SharpDXException
+            throw new SharpDXException(Result.NotImplemented);
+        }
+
+        public void SetDrawInformation(DrawInformation drawInfo)
+        {
+            this.drawInformation = drawInfo;
+
+            drawInformation.SetPixelShader(GUID_RipplePixelShader, PixelOptions.None);
+            drawInformation.SetInputDescription(0, new InputDescription(Filter.MinimumMagLinearMipPoint, 1));
+        }
+
+        public Rectangle[] InputRectangles
+        {
+            set {}
+        }
+
+        public Rectangle MapInputRectanglesToOutputRectangle(Rectangle[] inputRects)
+        {
+            if (inputRects.Length != 1)
+                throw new SharpDXException(Result.InvalidArg);
+            return inputRects[0];
+        }
+
+        public void MapOutputRectangleToInputRectangles(Rectangle outputRect, Rectangle[] inputRects)
+        {
+            int expansion = (int)Math.Round(constants.Amplitude);
+            if (inputRects.Length != 1)
+                throw new SharpDXException(Result.InvalidArg);
+            inputRects[0].Left = outputRect.Left - expansion;
+            inputRects[0].Top = outputRect.Top - expansion;
+            inputRects[0].Right = outputRect.Right + expansion;
+            inputRects[0].Bottom = outputRect.Bottom + expansion;
+        }
+
+        public int InputCount
+        {
+            get { return 1; }
+        }
+
+        private void UpdateConstants()
+        {
+            if (drawInformation != null)
+            {
+                drawInformation.SetPixelConstantBuffer(ref constants);
+            }
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct RippleEffectConstantBuffer
+        {
+            public float Frequency;
+            public float Phase;
+            public float Amplitude;
+            public float Spread;
+            public DrawingPointF Center;
         }
     }
 }

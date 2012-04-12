@@ -37,10 +37,7 @@ namespace D2DCustomPixelShaderEffect
         private SharpDX.WIC.FormatConverter _formatConverter;
 
         private Brush sceneColorBrush;
-        private SharpDX.Direct2D1.CustomEffect _effectGraph;
-
-
-        private RippleEffect _rippleEffect;
+        private SharpDX.Direct2D1.Effect _rippleEffect;
         
         private Windows.UI.Xaml.UIElement _root;
         private Windows.UI.Xaml.DependencyObject _rootParent;
@@ -98,7 +95,7 @@ namespace D2DCustomPixelShaderEffect
             if (!Show)
                 return;
 
-            if (_effectGraph == null) return;
+            if (_rippleEffect == null) return;
 
             var context2D = target.DeviceManager.ContextDirect2D;
 
@@ -109,8 +106,9 @@ namespace D2DCustomPixelShaderEffect
 
             context2D.Clear(Colors.Transparent);
 
-            //context2D.DrawImage(_effectGraph.Output, InterpolationMode.Linear, CompositeMode.DestinationAtop);
-
+            var rippleImage = _rippleEffect.QueryInterface<Image>();
+            context2D.DrawImage(rippleImage, InterpolationMode.Linear, CompositeMode.DestinationAtop);
+            rippleImage.Dispose();
 
             context2D.EndDraw();
         }
@@ -148,7 +146,7 @@ namespace D2DCustomPixelShaderEffect
 
 
 
-        private SharpDX.Direct2D1.CustomEffect CreateEffectGraph(SharpDX.WIC.FormatConverter formatConverter, Vector2 scale)
+        private SharpDX.Direct2D1.Effect CreateEffectGraph(SharpDX.WIC.FormatConverter formatConverter, Vector2 scale)
         {
             // Setup local variables
             var d2dDevice = _deviceManager.DeviceDirect2D;
@@ -164,19 +162,18 @@ namespace D2DCustomPixelShaderEffect
             
 
             // Effect 2 : PointSpecular
-            _rippleEffect = new RippleEffect();
+            var effect = new Effect<RippleEffect>(_deviceManager.ContextDirect2D);
 
-            
-            return _rippleEffect;
+            var bitmap = bitmapSourceEffect.QueryInterface<Image>();
+            effect.SetInput(0, bitmap, true);
 
+            return effect;
         }
-
-
 
         private void UpdateEffectGraph()
         {
             
-            _effectGraph = CreateEffectGraph(
+            _rippleEffect = CreateEffectGraph(
                                 _formatConverter,
                                 Scale
                               );
