@@ -63,7 +63,7 @@ namespace SharpDX.Direct2D1
         public void SetEffectInput(int index, Effect effect, bool invalidate = true)
         {
             using (var output = effect.Output)
-                SetInput(index, outout, invalidate);
+                SetInput(index, output, invalidate);
         }
     }
 

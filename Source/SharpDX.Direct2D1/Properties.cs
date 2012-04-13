@@ -894,17 +894,6 @@ namespace SharpDX.Direct2D1
         /// <param name="index">Index of the property</param>
         /// <param name="value">Value of the property</param>
         /// <unmanaged>HRESULT ID2D1Properties::SetValue([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
-        public unsafe void SetValue(int index, DrawingRectangleF value)
-        {
-            SetValue(index, PropertyType.Vector4, new IntPtr(&value), sizeof(DrawingRectangleF));
-        }
-
-        /// <summary>
-        /// Sets the named property to the given value.
-        /// </summary>
-        /// <param name="index">Index of the property</param>
-        /// <param name="value">Value of the property</param>
-        /// <unmanaged>HRESULT ID2D1Properties::SetValue([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
         public unsafe void SetValue(int index, Matrix3x2 value)
         {
             SetValue(index, PropertyType.Matrix3x2, new IntPtr(&value), sizeof(Matrix3x2));
