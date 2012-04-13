@@ -38,9 +38,13 @@ namespace D2DCustomPixelShaderEffect
 
         private Brush sceneColorBrush;
         private SharpDX.Direct2D1.Effect _rippleEffect;
-        
+        private SharpDX.Direct2D1.Effects.BitmapSourceEffect bitmapSourceEffect;
+
         private Windows.UI.Xaml.UIElement _root;
         private Windows.UI.Xaml.DependencyObject _rootParent;
+        private Stopwatch clock;
+        private DrawingSize imageSize;
+        private DrawingSize screenSize;
 
         public EffectRenderer(Windows.UI.Xaml.UIElement rootForPointerEvents, Windows.UI.Xaml.UIElement rootOfLayout)
         {
@@ -49,20 +53,17 @@ namespace D2DCustomPixelShaderEffect
             EnableClear = false;
             Show = true;
 
-            _root.PointerMoved += root_PointerMoved;
+            clock = new Stopwatch();
+
+            _root.PointerMoved += _root_PointerMoved;
+            _root.PointerPressed += _root_PointerPressed;
+            _root.PointerReleased += _root_PointerReleased;
         }
-
-
 
         public bool EnableClear { get; set; }
 
         public bool Show { get; set; }
-        public Vector2 Scale { get; set; }
         public Vector3 PointsAt { get; set; }
-
-
-
-
 
         public virtual void Initialize(DeviceManager deviceManager)
         {
@@ -72,22 +73,38 @@ namespace D2DCustomPixelShaderEffect
             //GET IMAGE DATA
             _formatConverter = DecodeImage();
 
-            //DEFAULTS MAY NEED THIS DATA
-            var size = deviceManager.ContextDirect2D.Size;
-            int pixelWidth = (int)(size.Width * Windows.Graphics.Display.DisplayProperties.LogicalDpi / 96.0);
-            int pixelHeight = (int)(size.Height * Windows.Graphics.Display.DisplayProperties.LogicalDpi / 96.0);
-
-
             //CREATE EFFECT-GRAPH USING IMAGE DATA
-            Scale = new Vector2(0.8f, 0.8f);
-
-            PointsAt = new Vector3(pixelWidth / 2, pixelHeight / 2, 0.0f);
-
-
             UpdateEffectGraph();
-
         }
 
+        private void Update()
+        {
+            float delta = clock.ElapsedMilliseconds / 1000.0f;
+
+            if (!clock.IsRunning || delta > 4)
+            {
+                delta = 4;
+                clock.Stop();
+            }
+
+            _rippleEffect.SetValue((int)RippleProperties.Frequency, 140.0f - delta * 30.0f);
+
+            _rippleEffect.SetValue((int)RippleProperties.Phase, -delta * 20.0f);
+
+            _rippleEffect.SetValue((int)RippleProperties.Amplitude, 60.0f - delta * 15.0f);
+
+            _rippleEffect.SetValue((int)RippleProperties.Spread, 0.01f + delta / 10.0f);
+        }
+
+        private void UpdateSize(TargetBase target)
+        {
+            var localSize = new DrawingSize((int)target.RenderTargetSize.Width, (int)target.RenderTargetSize.Height);
+            if (localSize != screenSize)
+            {
+                screenSize = localSize;
+                bitmapSourceEffect.ScaleSource = new Vector2((float)screenSize.Width / imageSize.Width, (float)screenSize.Height / imageSize.Height);
+            }
+        }
 
         public virtual void Render(TargetBase target)
         {
@@ -96,17 +113,18 @@ namespace D2DCustomPixelShaderEffect
 
             if (_rippleEffect == null) return;
 
+            UpdateSize(target);
+
             var context2D = target.DeviceManager.ContextDirect2D;
+
+            Update();
 
             context2D.BeginDraw();
 
             if (EnableClear)
-                context2D.Clear(Colors.Black);
+                context2D.Clear(Colors.CornflowerBlue);
 
-            context2D.Clear(Colors.Transparent);
-
-            using (var rippleImage = _rippleEffect.QueryInterface<Image>())
-                context2D.DrawImage(rippleImage, InterpolationMode.Linear, CompositeMode.DestinationAtop);
+            context2D.DrawImage(_rippleEffect);
             
             context2D.EndDraw();
         }
@@ -117,7 +135,7 @@ namespace D2DCustomPixelShaderEffect
 
             SharpDX.WIC.BitmapDecoder bitmapDecoder = new SharpDX.WIC.BitmapDecoder(
                                                                                         _deviceManager.WICFactory,
-                                                                                        @"Assets\SydneyOperaHouse002.png",
+                                                                                        @"Assets\Nepal.jpg",
                                                                                         SharpDX.IO.NativeFileAccess.Read,
                                                                                         SharpDX.WIC.DecodeOptions.CacheOnDemand
                                                                                     );
@@ -135,75 +153,74 @@ namespace D2DCustomPixelShaderEffect
                 null, 
                 0.0f, 
                 SharpDX.WIC.BitmapPaletteType.Custom
-                ); 
+                );
+
+            imageSize = formatConverter.Size;
             
             return formatConverter;
         }
 
-
-
-        private SharpDX.Direct2D1.Effect CreateEffectGraph(SharpDX.WIC.FormatConverter formatConverter, Vector2 scale)
+        private void CreateEffectGraph(SharpDX.WIC.FormatConverter formatConverter)
         {
             // Setup local variables
             var d2dDevice = _deviceManager.DeviceDirect2D;
             var d2dContext = _deviceManager.ContextDirect2D;
 
             // Effect 1 : BitmapSource - take decoded image data and get a BitmapSource from it
-            SharpDX.Direct2D1.Effects.BitmapSourceEffect bitmapSourceEffect = new SharpDX.Direct2D1.Effects.BitmapSourceEffect(d2dContext);
-            bitmapSourceEffect.ScaleSource = scale;
+            bitmapSourceEffect = new SharpDX.Direct2D1.Effects.BitmapSourceEffect(d2dContext);
             bitmapSourceEffect.WicBitmapSource = formatConverter;
-            //bitmapSourceEffect.Cached = true; // Because the image will not be changing, we should cache the effect for performance reasons.
-
-            _deviceManager.FactoryDirect2D.RegisterEffect<RippleEffect>();
+            bitmapSourceEffect.Cached = true; // Because the image will not be changing, we should cache the effect for performance reasons.
             
-
             // Effect 2 : PointSpecular
-            var effect = new Effect<RippleEffect>(_deviceManager.ContextDirect2D);
-
-            using (var bitmap = bitmapSourceEffect.QueryInterface<Image>())
-                effect.SetInput(0, bitmap, true);
-
-            return effect;
+            _deviceManager.FactoryDirect2D.RegisterEffect<RippleEffect>();
+            _rippleEffect = new Effect<RippleEffect>(_deviceManager.ContextDirect2D);
+            _rippleEffect.SetInputEffect(0, bitmapSourceEffect);
         }
 
         private void UpdateEffectGraph()
         {
             
-            _rippleEffect = CreateEffectGraph(
-                                _formatConverter,
-                                Scale
-                              );
+            CreateEffectGraph(_formatConverter);
         }
 
         private void UpdatePointer(float x, float y)
         {
 
             PointsAt = new Vector3(x, y, 0);
-            //_rippleEffect.LightPosition = PointsAt;
-            
+            _rippleEffect.SetValue((int)RippleProperties.Center, new DrawingPointF(x, y));
         }
 
+        private bool pointerPressed = false;
 
-        void root_PointerMoved(object sender, Windows.UI.Xaml.Input.PointerEventArgs e)
+        void _root_PointerPressed(object sender, Windows.UI.Xaml.Input.PointerEventArgs e)
+        {
+            pointerPressed = true;
+            SetRipplePosition(e);
+        }
+
+        void _root_PointerMoved(object sender, Windows.UI.Xaml.Input.PointerEventArgs e)
+        {
+            if (pointerPressed)
+                SetRipplePosition(e);
+        }
+
+        void _root_PointerReleased(object sender, Windows.UI.Xaml.Input.PointerEventArgs e)
+        {
+            pointerPressed = false;
+        }
+
+        private void SetRipplePosition(Windows.UI.Xaml.Input.PointerEventArgs e)
         {
             var newPosition = e.GetCurrentPoint(null);
 
-            
             var gtRoot = ((Windows.UI.Xaml.UIElement)_rootParent).TransformToVisual(_root);
             var rootPosition = gtRoot.TransformPoint(new Windows.Foundation.Point(newPosition.Position.X, newPosition.Position.Y));
 
 
             UpdatePointer((float)rootPosition.X, (float)rootPosition.Y);
 
-        }
+            clock.Restart();
 
-
-
-
-
-
-
-
-
+       }
     }
 }

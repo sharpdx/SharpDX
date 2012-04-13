@@ -19,7 +19,7 @@ namespace D2DCustomPixelShaderEffect
         {
         }
 
-        [PropertyBinding(0, "0.0", "1000.0", "0.0")]
+        [PropertyBinding((int)RippleProperties.Frequency, "0.0", "1000.0", "0.0")]
         public float Frequency
         {
             get
@@ -33,7 +33,7 @@ namespace D2DCustomPixelShaderEffect
             }
         }
 
-        [PropertyBinding(1, "-100.0", "100.0", "0.0")]
+        [PropertyBinding((int)RippleProperties.Phase, "-100.0", "100.0", "0.0")]
         public float Phase
         {
             get
@@ -46,7 +46,7 @@ namespace D2DCustomPixelShaderEffect
             }
         }
 
-        [PropertyBinding(2, "0.0001", "1000.0", "0.0")]
+        [PropertyBinding((int)RippleProperties.Amplitude, "0.0001", "1000.0", "0.0")]
         public float Amplitude
         {
             get
@@ -59,7 +59,7 @@ namespace D2DCustomPixelShaderEffect
             }
         }
 
-        [PropertyBinding(3, "0.0001", "1000.0", "0.0")]
+        [PropertyBinding((int)RippleProperties.Spread, "0.0001", "1000.0", "0.0")]
         public float Spread
         {
             get
@@ -72,7 +72,7 @@ namespace D2DCustomPixelShaderEffect
             }
         }
 
-        [PropertyBinding(4, "(-2000.0, -2000.0)", "(2000.0, 2000.0)", "(0.0, 0.0)")]
+        [PropertyBinding((int)RippleProperties.Center, "(-2000.0, -2000.0)", "(2000.0, 2000.0)", "(0.0, 0.0)")]
         public DrawingPointF Center
         {
             get
