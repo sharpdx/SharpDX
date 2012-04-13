@@ -31,6 +31,12 @@ namespace EnumDevicesApp
         //[STAThread]
         static void Main()
         {
+            MainForJoystick();
+            //MainForKeyboard();
+        }
+
+        static void MainForJoystick()
+        {
             // Initialize DirectInput
             var directInput = new DirectInput();
 
@@ -52,7 +58,7 @@ namespace EnumDevicesApp
                 Console.ReadKey();
                 Environment.Exit(1);
             }
-           
+
             // Instantiate the joystick
             var joystick = new Joystick(directInput, joystickGuid);
 
@@ -78,5 +84,33 @@ namespace EnumDevicesApp
                     Console.WriteLine(state);
             }
         }
+
+
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        //[STAThread]
+        static void MainForKeyboard()
+        {
+            // Initialize DirectInput
+            var directInput = new DirectInput();
+
+            // Instantiate the joystick
+            var keyboard = new Keyboard(directInput);
+
+            // Acquire the joystick
+            keyboard.Properties.BufferSize = 128;
+            keyboard.Acquire();
+
+            // Poll events from joystick
+            while (true)
+            {
+                keyboard.Poll();
+                var datas = keyboard.GetBufferedData();
+                foreach (var state in datas)
+                    Console.WriteLine(state);
+            }
+        }
+
     }
 }
