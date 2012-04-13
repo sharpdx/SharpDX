@@ -53,6 +53,18 @@ namespace SharpDX.Direct2D1
         {
             effectContext.CreateEffect(effectId, this);
         }
+
+        /// <summary>
+        /// Sets the input by using the output of a given effect.
+        /// </summary>
+        /// <param name="index">Index of the input</param>
+        /// <param name="effect">Effect output to use as input</param>
+        /// <param name="invalidate">To invalidate</param>
+        public void SetEffectInput(int index, Effect effect, bool invalidate = true)
+        {
+            using (var output = effect.Output)
+                SetInput(index, outout, invalidate);
+        }
     }
 
     /// <summary>
