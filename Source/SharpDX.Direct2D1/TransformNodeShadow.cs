@@ -48,8 +48,6 @@ namespace SharpDX.Direct2D1
             }
 
             /// <unmanaged>unsigned int ID2D1TransformNode::GetInputCount()</unmanaged>	
-            /* public int GetInputCount() */
-
             /// <unmanaged>HRESULT ID2D1EffectImpl::Initialize([In] ID2D1EffectContext* effectContext,[In] ID2D1TransformGraph* transformGraph)</unmanaged>	
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
             private delegate int GetInputCountDelegate(IntPtr thisPtr);

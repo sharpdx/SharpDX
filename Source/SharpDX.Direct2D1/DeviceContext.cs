@@ -65,12 +65,39 @@ namespace SharpDX.Direct2D1
         /// <summary>	
         /// No documentation.	
         /// </summary>	
+        /// <param name="effect">No documentation.</param>	
+        /// <param name="targetOffset">No documentation.</param>	
+        /// <param name="interpolationMode">No documentation.</param>	
+        /// <param name="compositeMode">No documentation.</param>	
+        /// <unmanaged>void ID2D1DeviceContext::DrawImage([In] ID2D1Image* image,[In, Optional] const D2D_POINT_2F* targetOffset,[In, Optional] const D2D_RECT_F* imageRectangle,[In] D2D1_INTERPOLATION_MODE interpolationMode,[In] D2D1_COMPOSITE_MODE compositeMode)</unmanaged>	
+        public void DrawImage(SharpDX.Direct2D1.Effect effect, SharpDX.DrawingPointF targetOffset, SharpDX.Direct2D1.InterpolationMode interpolationMode = InterpolationMode.Linear, SharpDX.Direct2D1.CompositeMode compositeMode = CompositeMode.SourceOver)
+        {
+            using (var output = effect.Output)
+                DrawImage(output, targetOffset, null, interpolationMode, compositeMode);
+        }
+
+        /// <summary>
+        /// No documentation.
+        /// </summary>
+        /// <param name="image">No documentation.</param>
+        /// <param name="interpolationMode">No documentation.</param>
+        /// <param name="compositeMode">No documentation.</param>
+        /// <unmanaged>void ID2D1DeviceContext::DrawImage([In] ID2D1Image* image,[In, Optional] const D2D_POINT_2F* targetOffset,[In, Optional] const D2D_RECT_F* imageRectangle,[In] D2D1_INTERPOLATION_MODE interpolationMode,[In] D2D1_COMPOSITE_MODE compositeMode)</unmanaged>
+        public void DrawImage(SharpDX.Direct2D1.Effect effect, SharpDX.Direct2D1.InterpolationMode interpolationMode = InterpolationMode.Linear, SharpDX.Direct2D1.CompositeMode compositeMode = CompositeMode.SourceOver)
+        {
+            using (var output = effect.Output)
+                DrawImage(output, null, null, interpolationMode, compositeMode);
+        }
+        
+        /// <summary>	
+        /// No documentation.	
+        /// </summary>	
         /// <param name="image">No documentation.</param>	
         /// <param name="targetOffset">No documentation.</param>	
         /// <param name="interpolationMode">No documentation.</param>	
         /// <param name="compositeMode">No documentation.</param>	
         /// <unmanaged>void ID2D1DeviceContext::DrawImage([In] ID2D1Image* image,[In, Optional] const D2D_POINT_2F* targetOffset,[In, Optional] const D2D_RECT_F* imageRectangle,[In] D2D1_INTERPOLATION_MODE interpolationMode,[In] D2D1_COMPOSITE_MODE compositeMode)</unmanaged>	
-        public void DrawImage(SharpDX.Direct2D1.Image image, SharpDX.DrawingPointF targetOffset, SharpDX.Direct2D1.InterpolationMode interpolationMode, SharpDX.Direct2D1.CompositeMode compositeMode)
+        public void DrawImage(SharpDX.Direct2D1.Image image, SharpDX.DrawingPointF targetOffset, SharpDX.Direct2D1.InterpolationMode interpolationMode = InterpolationMode.Linear, SharpDX.Direct2D1.CompositeMode compositeMode = CompositeMode.SourceOver)
         {
             DrawImage(image, targetOffset, null, interpolationMode, compositeMode);
         }
@@ -82,7 +109,7 @@ namespace SharpDX.Direct2D1
         /// <param name="interpolationMode">No documentation.</param>
         /// <param name="compositeMode">No documentation.</param>
         /// <unmanaged>void ID2D1DeviceContext::DrawImage([In] ID2D1Image* image,[In, Optional] const D2D_POINT_2F* targetOffset,[In, Optional] const D2D_RECT_F* imageRectangle,[In] D2D1_INTERPOLATION_MODE interpolationMode,[In] D2D1_COMPOSITE_MODE compositeMode)</unmanaged>
-        public void DrawImage(SharpDX.Direct2D1.Image image, SharpDX.Direct2D1.InterpolationMode interpolationMode, SharpDX.Direct2D1.CompositeMode compositeMode)
+        public void DrawImage(SharpDX.Direct2D1.Image image, SharpDX.Direct2D1.InterpolationMode interpolationMode = InterpolationMode.Linear, SharpDX.Direct2D1.CompositeMode compositeMode = CompositeMode.SourceOver)
         {
             DrawImage(image, null, null, interpolationMode, compositeMode);
         }

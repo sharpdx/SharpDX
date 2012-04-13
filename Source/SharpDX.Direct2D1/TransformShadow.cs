@@ -83,8 +83,9 @@ namespace SharpDX.Direct2D1
                     var shadow = ToShadow<TransformShadow>(thisPtr);
                     var callback = (Transform)shadow.Callback;
                     var inputRectangles = new SharpDX.Rectangle[inputRectsCount];
+                    Utilities.Read(inputRects, inputRectangles, 0, inputRectsCount);
                     callback.MapOutputRectangleToInputRectangles(*(SharpDX.Rectangle*)outputRect, inputRectangles);
-                    Utilities.Write(outputRect, inputRectangles, 0, inputRectsCount);
+                    Utilities.Write(inputRects, inputRectangles, 0, inputRectsCount);
                 }
                 catch (SharpDXException exception)
                 {

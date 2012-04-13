@@ -27,6 +27,21 @@ namespace SharpDX.Direct2D1
 {
     public partial class Properties
     {
+        /// <summary>
+        /// Gets or sets Cached property.
+        /// </summary>
+        public bool Cached
+        {
+            get
+            {
+                return GetBoolValue((int)Property.Cached);
+            }
+            set
+            {
+                SetValue((int)Property.Cached, value);
+            }
+        }
+
         /// <summary>	
         /// Gets the number of characters for the given property name.
         /// </summary>	
