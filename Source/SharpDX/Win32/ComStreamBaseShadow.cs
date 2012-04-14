@@ -57,13 +57,9 @@ namespace SharpDX.Win32
                     var callback = ((IStream) shadow.Callback);
                     bytesRead = callback.Read(buffer, sizeOfBytes);
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -81,13 +77,9 @@ namespace SharpDX.Win32
                     var callback = ((IStream)shadow.Callback);
                     bytesWrite = callback.Write(buffer, sizeOfBytes);
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }

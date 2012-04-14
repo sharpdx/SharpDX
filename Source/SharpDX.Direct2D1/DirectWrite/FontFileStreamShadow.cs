@@ -63,13 +63,9 @@ namespace SharpDX.DirectWrite
                     var callback = (FontFileStream)shadow.Callback; 
                     callback.ReadFileFragment(out fragmentStart, fileOffset, fragmentSize, out fragmentContext);
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -96,13 +92,9 @@ namespace SharpDX.DirectWrite
                     var callback = (FontFileStream)shadow.Callback;
                     fileSize = callback.GetFileSize();
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -118,13 +110,9 @@ namespace SharpDX.DirectWrite
                     var callback = (FontFileStream)shadow.Callback;
                     lastWriteTime = callback.GetLastWriteTime();
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }

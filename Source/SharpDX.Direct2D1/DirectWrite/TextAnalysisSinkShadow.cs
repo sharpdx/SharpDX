@@ -63,13 +63,9 @@ namespace SharpDX.DirectWrite
                     var callback = (TextAnalysisSink)shadow.Callback; 
                     callback.SetScriptAnalysis(textPosition, textLength, *scriptAnalysis);
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -88,13 +84,9 @@ namespace SharpDX.DirectWrite
                     Utilities.Read(pLineBreakpoints, lineBreakpoints, 0, textLength);
                     callback.SetLineBreakpoints(textPosition, textLength, lineBreakpoints);
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -110,13 +102,9 @@ namespace SharpDX.DirectWrite
                     var callback = (TextAnalysisSink)shadow.Callback;
                     callback.SetBidiLevel(textPosition, textLength, explicitLevel, resolvedLevel);
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -132,13 +120,9 @@ namespace SharpDX.DirectWrite
                     var callback = (TextAnalysisSink)shadow.Callback;
                     callback.SetNumberSubstitution(textPosition, textLength, new NumberSubstitution(numberSubstitution));
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }

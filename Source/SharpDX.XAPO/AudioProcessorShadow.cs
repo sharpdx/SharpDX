@@ -59,13 +59,9 @@ namespace SharpDX.XAPO
                     callback.RegistrationProperties.__MarshalTo(ref temp);
                     Utilities.Write(output, ref temp);
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -95,13 +91,9 @@ namespace SharpDX.XAPO
                     // return XAPO_E_FORMAT_UNSUPPORTED if fail
                     return result ? Result.Ok.Code : unchecked((int)0x88970001);
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
             }
 
@@ -130,13 +122,9 @@ namespace SharpDX.XAPO
                     // return XAPO_E_FORMAT_UNSUPPORTED if fail
                     return result ? Result.Ok.Code : unchecked((int)0x88970001);
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
             }
 
@@ -151,13 +139,9 @@ namespace SharpDX.XAPO
                     var callback = (AudioProcessor)shadow.Callback;
                     callback.Initialize(new DataStream(ptr, dataSize, true, true));
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -203,13 +187,9 @@ namespace SharpDX.XAPO
 
                     return callback.LockForProcess(inputLockedParameters, ouputLockedParameters).Code;
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
             }
 

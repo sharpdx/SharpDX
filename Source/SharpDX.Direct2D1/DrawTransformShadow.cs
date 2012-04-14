@@ -58,13 +58,9 @@ namespace SharpDX.Direct2D1
                     var callback = (DrawTransform)shadow.Callback;
                     callback.SetDrawInformation(new DrawInformation(drawInfo));
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }

@@ -69,13 +69,9 @@ namespace SharpDX.DirectWrite
                     var textRendererCallback = ToShadow<TextRendererShadow>(renderer); 
                     callback.Draw(GCHandle.FromIntPtr(clientDrawingContextPtr).Target, (TextRenderer)textRendererCallback.Callback, originX, originY, isSideways != 0, isRightToLeft != 0, (ComObject)Utilities.GetObjectForIUnknown(clientDrawingEffectPtr));
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -91,13 +87,9 @@ namespace SharpDX.DirectWrite
                     var callback = (InlineObject)shadow.Callback;
                     *pMetrics = callback.Metrics;
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -113,13 +105,9 @@ namespace SharpDX.DirectWrite
                     var callback = (InlineObject)shadow.Callback;
                     *pOverhangs = callback.OverhangMetrics;
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -140,13 +128,9 @@ namespace SharpDX.DirectWrite
                     var callback = (InlineObject)shadow.Callback;
                     callback.GetBreakConditions(out breakConditionBefore, out breakConditionAfter);
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }

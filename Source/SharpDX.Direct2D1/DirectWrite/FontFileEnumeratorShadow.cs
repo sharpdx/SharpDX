@@ -63,13 +63,9 @@ namespace SharpDX.DirectWrite
                     var callback = (FontFileEnumerator)shadow.Callback; 
                     hasCurrentFile = callback.MoveNext() ? 1 : 0;
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -90,13 +86,9 @@ namespace SharpDX.DirectWrite
                     var callback = (FontFileEnumerator)shadow.Callback;
                     fontFile = callback.CurrentFontFile.NativePointer;
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }

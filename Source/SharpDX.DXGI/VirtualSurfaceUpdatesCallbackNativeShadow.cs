@@ -57,13 +57,9 @@ namespace SharpDX.DXGI
                     var callback = (IVirtualSurfaceUpdatesCallbackNative)shadow.Callback;
                     callback.UpdatesNeeded();
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }

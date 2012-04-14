@@ -91,13 +91,9 @@ namespace SharpDX.Direct2D1
                     var callback = (CommandSink)shadow.Callback;
                     callback.BeginDraw();
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -111,13 +107,9 @@ namespace SharpDX.Direct2D1
                     var callback = (CommandSink)shadow.Callback;
                     callback.EndDraw();
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -133,13 +125,9 @@ namespace SharpDX.Direct2D1
                     var callback = (CommandSink)shadow.Callback;
                     callback.AntialiasMode = antialiasMode;
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -155,13 +143,9 @@ namespace SharpDX.Direct2D1
                     var callback = (CommandSink)shadow.Callback;
                     callback.SetTags(tag1, tag2);
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -177,13 +161,9 @@ namespace SharpDX.Direct2D1
                     var callback = (CommandSink)shadow.Callback;
                     callback.TextAntialiasMode = textAntialiasMode;
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -199,13 +179,9 @@ namespace SharpDX.Direct2D1
                     var callback = (CommandSink)shadow.Callback;
                     callback.TextRenderingParams = new DirectWrite.RenderingParams(textRenderingParams);
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -221,13 +197,9 @@ namespace SharpDX.Direct2D1
                     var callback = (CommandSink)shadow.Callback;
                     callback.Transform = *(SharpDX.Matrix3x2*)transform;
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -246,13 +218,9 @@ namespace SharpDX.Direct2D1
                     var callback = (CommandSink)shadow.Callback;
                     callback.PrimitiveBlend = primitiveBlend;
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }            
@@ -271,13 +239,9 @@ namespace SharpDX.Direct2D1
                     var callback = (CommandSink)shadow.Callback;
                     callback.UnitMode = unitMode;
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -293,13 +257,9 @@ namespace SharpDX.Direct2D1
                     var callback = (CommandSink)shadow.Callback;
                     callback.Clear( color == IntPtr.Zero ? (Color4?)null : *(Color4*)color);
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -322,13 +282,9 @@ namespace SharpDX.Direct2D1
                     callback.DrawGlyphRun(baselineOrigin, glyphRun, glyphRunDescription, new Brush(foregroundBrush), measuringMode);
 
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 finally
                 {
@@ -348,13 +304,9 @@ namespace SharpDX.Direct2D1
                     var callback = (CommandSink)shadow.Callback;
                     callback.DrawLine(point0, point1, new Brush(brush), strokeWidth, new StrokeStyle(strokeStyle));
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -370,13 +322,9 @@ namespace SharpDX.Direct2D1
                     var callback = (CommandSink)shadow.Callback;
                     callback.DrawGeometry(new Geometry(geometry),  new Brush(brush), strokeWidth, new StrokeStyle(strokeStyle));
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -392,13 +340,9 @@ namespace SharpDX.Direct2D1
                     var callback = (CommandSink)shadow.Callback;
                     callback.DrawRectangle(*(SharpDX.RectangleF*)rect, new Brush(brush), strokeWidth, new StrokeStyle(strokeStyle));
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -419,13 +363,9 @@ namespace SharpDX.Direct2D1
                         sourceRectangle == IntPtr.Zero ? (SharpDX.RectangleF?) null : *(SharpDX.RectangleF*)sourceRectangle, 
                         erspectiveTransformRef == IntPtr.Zero ? (SharpDX.Matrix?) null : *(SharpDX.Matrix*)erspectiveTransformRef);
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -445,13 +385,9 @@ namespace SharpDX.Direct2D1
                         interpolationMode,
                         compositeMode);
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -468,13 +404,9 @@ namespace SharpDX.Direct2D1
                     callback.DrawGdiMetafile(new GdiMetafile(gdiMetafile), 
                         targetOffset == IntPtr.Zero ? (SharpDX.DrawingPointF?) null: *(SharpDX.DrawingPointF*)targetOffset);
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -495,13 +427,9 @@ namespace SharpDX.Direct2D1
                     var callback = (CommandSink)shadow.Callback;
                     callback.FillMesh(new Mesh(mesh), new Brush(brush));
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -519,13 +447,9 @@ namespace SharpDX.Direct2D1
                         destinationRectangle == IntPtr.Zero ? (SharpDX.RectangleF?)null : *(SharpDX.RectangleF*)destinationRectangle,
                         sourceRectangle == IntPtr.Zero ? (SharpDX.RectangleF?)null : *(SharpDX.RectangleF*)sourceRectangle);
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -541,13 +465,9 @@ namespace SharpDX.Direct2D1
                     var callback = (CommandSink)shadow.Callback;
                     callback.FillGeometry(new Geometry(geometry), new Brush(brush), new Brush(opacityBrush));
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -563,13 +483,9 @@ namespace SharpDX.Direct2D1
                     var callback = (CommandSink)shadow.Callback;
                     callback.FillRectangle(*(SharpDX.RectangleF*)rect, new Brush(brush));
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -593,13 +509,9 @@ namespace SharpDX.Direct2D1
                     var callback = (CommandSink)shadow.Callback;
                     callback.PushAxisAlignedClip(*(SharpDX.RectangleF*)clipRect, antialiasMode);
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -620,13 +532,9 @@ namespace SharpDX.Direct2D1
                     var callback = (CommandSink)shadow.Callback;
                     callback.PushLayer(ref *(LayerParameters1*)layerParameters1, layer == IntPtr.Zero ? null : new Layer(layer));
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -643,13 +551,9 @@ namespace SharpDX.Direct2D1
                     var callback = (CommandSink)shadow.Callback;
                     callback.PopAxisAlignedClip();
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -666,13 +570,9 @@ namespace SharpDX.Direct2D1
                     var callback = (CommandSink)shadow.Callback;
                     callback.PopLayer();
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }

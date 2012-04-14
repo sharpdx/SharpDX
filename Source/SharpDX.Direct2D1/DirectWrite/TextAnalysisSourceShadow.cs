@@ -89,13 +89,9 @@ namespace SharpDX.DirectWrite
                         shadow.allocatedStrings.Add(textString);
                     }
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -120,13 +116,9 @@ namespace SharpDX.DirectWrite
                         shadow.allocatedStrings.Add(textString);
                     }
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -159,13 +151,9 @@ namespace SharpDX.DirectWrite
                         shadow.allocatedStrings.Add(textString);
                     }
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -184,13 +172,9 @@ namespace SharpDX.DirectWrite
                     var numberSubstitution = callback.GetNumberSubstitution(textPosition, out textLength);
                     numberSubstitutionPtr = (numberSubstitution == null) ? IntPtr.Zero : numberSubstitution.NativePointer;
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }

@@ -56,13 +56,9 @@ namespace SharpDX.DirectWrite
                     var callback = (PixelSnapping) shadow.Callback;
                     isDisabled = callback.IsPixelSnappingDisabled(GCHandle.FromIntPtr(clientDrawingContextPtr).Target) ? 1 : 0;
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -125,13 +121,9 @@ namespace SharpDX.DirectWrite
                     var callback = (PixelSnapping)shadow.Callback;
                     pixelPerDip = callback.GetPixelsPerDip(GCHandle.FromIntPtr(clientDrawingContextPtr).Target);
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }

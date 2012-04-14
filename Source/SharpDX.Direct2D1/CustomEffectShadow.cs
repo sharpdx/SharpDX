@@ -60,13 +60,9 @@ namespace SharpDX.Direct2D1
                     var callback = (CustomEffect)shadow.Callback;
                     callback.Initialize(new EffectContext(effectContext), new TransformGraph(transformationGraph));
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -83,13 +79,9 @@ namespace SharpDX.Direct2D1
                     var callback = (CustomEffect)shadow.Callback;
                     callback.PrepareForRender(changeType);
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -110,13 +102,9 @@ namespace SharpDX.Direct2D1
                     var callback = (CustomEffect)shadow.Callback;
                     callback.SetGraph(new TransformGraph(transformGraph));
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }

@@ -60,13 +60,9 @@ namespace SharpDX.Direct2D1
                     var callback = (SourceTransform)shadow.Callback;
                     callback.SetRenderInformation(new RenderInformation(renderInfo));
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -82,13 +78,9 @@ namespace SharpDX.Direct2D1
                     var callback = (SourceTransform)shadow.Callback;
                     callback.Draw(new Bitmap1(target), *(SharpDX.Rectangle*)drawRect, targetOrigin);
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }

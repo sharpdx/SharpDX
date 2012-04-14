@@ -68,13 +68,9 @@ namespace SharpDX.DirectWrite
                     var enumerator = callback.CreateEnumeratorFromKey(shadow._factory, new DataStream(collectionKey, collectionKeySize, true, true));
                     fontFileEnumerator = FontFileEnumeratorShadow.ToIntPtr(enumerator);
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }

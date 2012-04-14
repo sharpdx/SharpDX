@@ -59,13 +59,9 @@ namespace SharpDX.Animation
                     var callback = (ManagerEventHandler)shadow.Callback;
                     callback.OnManagerStatusChanged(previousStatus, newStatus);
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }

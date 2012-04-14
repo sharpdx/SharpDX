@@ -81,6 +81,26 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Performs an implicit conversion from <see cref="SharpDX.Result"/> to <see cref="System.Int32"/>.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static explicit operator int(Result result)
+        {
+            return result.Code;
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="SharpDX.Result"/> to <see cref="System.UInt32"/>.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static explicit operator uint(Result result)
+        {
+            return checked((uint)result.Code);
+        }
+
+        /// <summary>
         /// Performs an implicit conversion from <see cref="System.Int32"/> to <see cref="SharpDX.Result"/>.
         /// </summary>
         /// <param name="result">The result.</param>
@@ -177,6 +197,16 @@ namespace SharpDX
             {
                 throw new SharpDXException(this);
             }
+        }
+
+        /// <summary>
+        /// Gets a <see cref="Result"/> from an <see cref="Exception"/>.
+        /// </summary>
+        /// <param name="ex">The exception</param>
+        /// <returns>The associated result code</returns>
+        public static Result GetResultFromException(Exception ex)
+        {
+            return new Result(Marshal.GetHRForException(ex));
         }
 
         /// <summary>

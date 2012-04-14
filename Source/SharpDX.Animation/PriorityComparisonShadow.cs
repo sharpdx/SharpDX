@@ -61,13 +61,9 @@ namespace SharpDX.Animation
                     var callback = (PriorityComparison)shadow.Callback;
                     return callback.HasPriority(scheduledStoryboard, newStoryboard, priorityEffect) ? Result.Ok : Result.False;
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
             }
         }

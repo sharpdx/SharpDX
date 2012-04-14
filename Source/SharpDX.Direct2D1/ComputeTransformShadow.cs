@@ -59,13 +59,9 @@ namespace SharpDX.Direct2D1
                     var callback = (ComputeTransform)shadow.Callback;
                     callback.SetComputeInformation(new ComputeInformation(computeInfo));
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -85,13 +81,9 @@ namespace SharpDX.Direct2D1
                     dimY = result.Y;
                     dimZ = result.Z;
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }

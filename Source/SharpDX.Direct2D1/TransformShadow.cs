@@ -62,13 +62,9 @@ namespace SharpDX.Direct2D1
                     Utilities.Read(inputRects, inputRectangles, 0, inputRectsCount);
                     callback.InputRectangles = inputRectangles;
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -87,13 +83,9 @@ namespace SharpDX.Direct2D1
                     callback.MapOutputRectangleToInputRectangles(*(SharpDX.Rectangle*)outputRect, inputRectangles);
                     Utilities.Write(inputRects, inputRectangles, 0, inputRectsCount);
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }
@@ -111,13 +103,9 @@ namespace SharpDX.Direct2D1
                     Utilities.Read(inputRects, inputRectangles, 0, inputRectsCount);
                     *(SharpDX.Rectangle*)outputRect =  callback.MapInputRectanglesToOutputRectangle(inputRectangles);
                 }
-                catch (SharpDXException exception)
+                catch (Exception exception)
                 {
-                    return exception.ResultCode.Code;
-                }
-                catch (Exception)
-                {
-                    return Result.Fail.Code;
+                    return (int)SharpDX.Result.GetResultFromException(exception);
                 }
                 return Result.Ok.Code;
             }

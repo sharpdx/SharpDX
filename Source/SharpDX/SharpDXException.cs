@@ -39,6 +39,7 @@ namespace SharpDX
         public SharpDXException() : base("A SharpDX exception occurred.")
         {
             this.descriptor = ResultDescriptor.Find(Result.Fail);
+            HResult = (int)Result.Fail;
         }
 
         /// <summary>
@@ -48,6 +49,7 @@ namespace SharpDX
         public SharpDXException(Result result)
             : this(ResultDescriptor.Find(result))
         {
+            HResult = (int)result;
         }
 
         /// <summary>
@@ -58,6 +60,7 @@ namespace SharpDX
             : base(descriptor.ToString())
         {
             this.descriptor = descriptor;
+            HResult = (int)descriptor.Result;
         }
 
         /// <summary>
@@ -69,6 +72,7 @@ namespace SharpDX
             : base(message)
         {
             this.descriptor = ResultDescriptor.Find(result);
+            HResult = (int)result;
         }
 
         /// <summary>
@@ -81,6 +85,7 @@ namespace SharpDX
             : base(string.Format(CultureInfo.InvariantCulture, message, args))
         {
             this.descriptor = ResultDescriptor.Find(result);
+            HResult = (int)result;
         }
 
         /// <summary>
@@ -102,6 +107,7 @@ namespace SharpDX
             : base(string.Format(CultureInfo.InvariantCulture, message, args), innerException)
         {
             this.descriptor = ResultDescriptor.Find(Result.Fail);
+            HResult = (int)Result.Fail;
         }
 
         /// <summary>
