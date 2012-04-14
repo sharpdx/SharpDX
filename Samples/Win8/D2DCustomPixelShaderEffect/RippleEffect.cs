@@ -1,4 +1,23 @@
-﻿using SharpDX.Direct2D1;
+﻿// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+using SharpDX.Direct2D1;
 using SharpDX;
 using System;
 using SharpDX.D3DCompiler;
@@ -7,6 +26,14 @@ using System.Runtime.InteropServices;
 
 namespace D2DCustomPixelShaderEffect
 {
+    /// <summary>
+    /// RippleEffect sample, port from "Direct2D custom image effects sample" C++
+    /// sample from Win8 pack samples.
+    /// </summary>
+    /// <remarks>
+    /// Unlike the C++ samples, we don't need to declare the metadata in XML but
+    /// we are using here .NET attributes.
+    /// </remarks>
     [CustomEffect("Adds a ripple effect that can be animated", "Stylize", "SharpDX")]
     [CustomEffectInput("Source")]
     public class RippleEffect : CustomEffectBase, DrawTransform
@@ -15,10 +42,16 @@ namespace D2DCustomPixelShaderEffect
         private DrawInformation drawInformation;
         private RippleEffectConstantBuffer constants;
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="RippleEffect"/> lcass.
+        /// </summary>
         public RippleEffect()
         {
         }
 
+        /// <summary>
+        /// Gets or sets the Frequency.
+        /// </summary>
         [PropertyBinding((int)RippleProperties.Frequency, "0.0", "1000.0", "0.0")]
         public float Frequency
         {
@@ -33,6 +66,9 @@ namespace D2DCustomPixelShaderEffect
             }
         }
 
+        /// <summary>
+        /// Gets or sets the phase.
+        /// </summary>
         [PropertyBinding((int)RippleProperties.Phase, "-100.0", "100.0", "0.0")]
         public float Phase
         {
@@ -46,6 +82,9 @@ namespace D2DCustomPixelShaderEffect
             }
         }
 
+        /// <summary>
+        /// Gets or sets the amplitude.
+        /// </summary>
         [PropertyBinding((int)RippleProperties.Amplitude, "0.0001", "1000.0", "0.0")]
         public float Amplitude
         {
@@ -59,6 +98,9 @@ namespace D2DCustomPixelShaderEffect
             }
         }
 
+        /// <summary>
+        /// Gets or sets the spread.
+        /// </summary>
         [PropertyBinding((int)RippleProperties.Spread, "0.0001", "1000.0", "0.0")]
         public float Spread
         {
@@ -72,6 +114,9 @@ namespace D2DCustomPixelShaderEffect
             }
         }
 
+        /// <summary>
+        /// Gets or sets the center of the ripple effect.
+        /// </summary>
         [PropertyBinding((int)RippleProperties.Center, "(-2000.0, -2000.0)", "(2000.0, 2000.0)", "(0.0, 0.0)")]
         public DrawingPointF Center
         {
@@ -85,6 +130,7 @@ namespace D2DCustomPixelShaderEffect
             }
         }
 
+        /// <inheritdoc/>
         public override void Initialize(EffectContext effectContext, TransformGraph transformGraph)
         {
             transformGraph.SetSingleTransformNode(this);
@@ -93,15 +139,16 @@ namespace D2DCustomPixelShaderEffect
             effectContext.LoadPixelShader(GUID_RipplePixelShader, NativeFile.ReadAllBytes(path + "\\Ripple.cso"));
         }
 
+        /// <inheritdoc/>
         public override void PrepareForRender(ChangeType changeType)
         {
             UpdateConstants();
         }
 
+        /// <inheritdoc/>
         public override void SetGraph(TransformGraph transformGraph)
         {
-            // TODO: Map NotImplementedException to this SharpDXException
-            throw new SharpDXException(Result.NotImplemented);
+            throw new NotImplementedException();
         }
 
         public void SetDrawInformation(DrawInformation drawInfo)
@@ -120,7 +167,7 @@ namespace D2DCustomPixelShaderEffect
         public Rectangle MapInputRectanglesToOutputRectangle(Rectangle[] inputRects)
         {
             if (inputRects.Length != 1)
-                throw new SharpDXException(Result.InvalidArg);
+                throw new ArgumentException("InputRects must be length of 1", "inputRects");
             return inputRects[0];
         }
 
@@ -128,7 +175,7 @@ namespace D2DCustomPixelShaderEffect
         {
             int expansion = (int)Math.Round(constants.Amplitude);
             if (inputRects.Length != 1)
-                throw new SharpDXException(Result.InvalidArg);
+                throw new ArgumentException("InputRects must be length of 1", "inputRects");
             inputRects[0].Left = outputRect.Left - expansion;
             inputRects[0].Top = outputRect.Top - expansion;
             inputRects[0].Right = outputRect.Right + expansion;
@@ -148,6 +195,9 @@ namespace D2DCustomPixelShaderEffect
             }
         }
 
+        /// <summary>
+        /// Internal structure used for the constant buffer.
+        /// </summary>
         [StructLayout(LayoutKind.Sequential)]
         private struct RippleEffectConstantBuffer
         {

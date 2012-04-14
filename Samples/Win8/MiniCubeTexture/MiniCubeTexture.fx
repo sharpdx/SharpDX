@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,23 +17,34 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace D2DCustomPixelShaderEffect
+struct VS_IN
 {
-    /// <summary>
-    /// Constants used to set properties for Ripple custom effect.
-    /// </summary>
-    public enum RippleProperties : int
-    {
-        Frequency = 0,
-        Phase = 1,
-        Amplitude = 2,
-        Spread = 3,
-        Center = 4
-    }
+	float4 pos : POSITION;
+	float2 tex : TEXCOORD;
+};
+
+struct PS_IN
+{
+	float4 pos : SV_POSITION;
+	float2 tex : TEXCOORD;
+};
+
+float4x4 worldViewProj;
+
+Texture2D picture : register(t0);
+SamplerState pictureSampler : register(s0);
+
+PS_IN VS( VS_IN input )
+{
+	PS_IN output = (PS_IN)0;
+	
+	output.pos = mul(input.pos, worldViewProj);
+	output.tex = input.tex;
+	
+	return output;
+}
+
+float4 PS( PS_IN input ) : SV_Target
+{
+	return picture.Sample(pictureSampler, input.tex);
 }
