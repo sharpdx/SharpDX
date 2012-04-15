@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -100,7 +100,7 @@ namespace SharpDocPak
 
             var options = new OptionSet()
                               {
-                                  "Copyright (c) 2010-2011 SharpDX - Alexandre Mutel",
+                                  "Copyright (c) 2010-2012 SharpDX - Alexandre Mutel",
                                   "Usage: SharpDocPak [-p|-u|-l] [options]*",
                                   "Html Documentation exe packer/viewer",
                                   "",

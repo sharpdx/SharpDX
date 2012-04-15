@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,7 @@
 // Original code from SlimMath project. http://code.google.com/p/slimmath/
 // Greetings to SlimDX Group. Original code published with the following license:
 // -----------------------------------------------------------------------------
-// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
