@@ -20,7 +20,7 @@
 using SharpDX.Direct2D1;
 using SharpDX;
 using System;
-using SharpDX.D3DCompiler;
+
 using SharpDX.IO;
 using System.Runtime.InteropServices;
 

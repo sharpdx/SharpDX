@@ -4,16 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A6F35710-283E-4B31-8899-015BE69B86B0}</ProjectGuid>
+    <ProjectGuid>{948A61DA-DD75-4268-BFA1-26832BBE13F9}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>D2DCustomPixelShaderEffect</RootNamespace>
-    <AssemblyName>D2DCustomPixelShaderEffect</AssemblyName>
+    <RootNamespace>D2DCustomVertexShaderEffect</RootNamespace>
+    <AssemblyName>D2DCustomVertexShaderEffect</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>D2DCustomPixelShaderEffect_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>582F1E96A79095CF9365078454B07DE24210F7F1</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>D2DCustomVertexShaderEffect_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>CD6765CA205B4427E4CCB048FA2E207FBDCE76F7</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -24,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE;NETFX_CORE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -133,8 +134,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DragHandler.cs" />
     <Compile Include="EffectRenderer.cs" />
+    <Compile Include="DragHandler.cs" />
     <Compile Include="MP-SCBP.xaml.cs">
       <DependentUpon>MP-SCBP.xaml</DependentUpon>
     </Compile>
@@ -142,8 +143,8 @@
       <DependentUpon>MP-SIS.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RippleEffect.cs" />
-    <Compile Include="RippleProperties.cs" />
+    <Compile Include="WaveEffect.cs" />
+    <Compile Include="WaveProperties.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -152,10 +153,10 @@
     <Content Include="Assets\Nepal.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Ripple.hlsl" />
+    <Content Include="WaveEffect.hlsl" />
     <None Include="Common\ReadMe.txt" />
-    <None Include="D2DCustomPixelShaderEffect_TemporaryKey.pfx" />
-    <Content Include="Ripple.cso">
+    <None Include="D2DCustomVertexShaderEffect_TemporaryKey.pfx" />
+    <Content Include="WaveEffect.cso">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -205,10 +206,6 @@
     <VisualStudioVersion>11.0</VisualStudioVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>REM cd $(ProjectDir)
-REM fxc /Tps_4_0_level_9_1 /Emain /FoRipple.cso Ripple.hlsl</PreBuildEvent>
-  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
