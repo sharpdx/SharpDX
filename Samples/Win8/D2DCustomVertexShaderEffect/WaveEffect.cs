@@ -82,80 +82,44 @@ namespace D2DCustomVertexShaderEffect
             //transformGraph.SetSingleTransformNode(this);
 
             var path = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
-            byte[] data = NativeFile.ReadAllBytes(path + "\\WaveEffect.cso");
-            effectContext.LoadVertexShader(GUID_WaveVertexShader, data);
+            byte[] vertexShaderBytecode = NativeFile.ReadAllBytes(path + "\\WaveEffect.cso");
+            effectContext.LoadVertexShader(GUID_WaveVertexShader, vertexShaderBytecode);
 
+            // Only generate the vertex buffer if it has not already been initialized.
+            vertexBuffer = effectContext.FindVertexBuffer(GUID_WaveVertexBuffer);
             
             if (vertexBuffer == null)
             {
                 //InitializeVertexBuffer(effectContext);
 
-                VERTEXS mesh = GenerateMesh();
+                var mesh = GenerateMesh();
 
                 // Updating geometry every time the effect is rendered can be costly, so it is 
                 // recommended that vertex buffer remain static if possible (which it is in this
                 // sample effect).
-                //D2D1_VERTEX_BUFFER_PROPERTIES vbProp = { 0 };
-                //vbProp.byteWidth = sizeof(VERTEX) * m_numVertices;
-                //vbProp.data = reinterpret_cast<BYTE*>(mesh);
-                //vbProp.inputCount = 1;
-                //vbProp.usage = D2D1_VERTEX_USAGE_STATIC;
-                VertexBufferProperties vbProp = new VertexBufferProperties();
-                vbProp.InputCount = 1;
-                vbProp.Usage = VertexUsage.Static;
-                //vbProp.SetVertexConstantBuffer<VERTEXS>(mesh);
-                //vbProp.Data = new DataStream(
-                //vbProp.byteWidth = sizeof(VERTEX) * m_numVertices;
-
-                SharpDX.Direct2D1.InputElement[] vertexLayout = 
+                using (var stream = DataStream.Create(mesh, true, true))
                 {
-                    new InputElement("MESH_POSITION", 0, SharpDX.DXGI.Format.R32G32_Float,0,0),
-                };
+                    var vbProp = new VertexBufferProperties(1, VertexUsage.Static, stream);
 
+                    var cvbProp = new CustomVertexBufferProperties(vertexShaderBytecode, new[] {
+                        new InputElement("MESH_POSITION", 0, SharpDX.DXGI.Format.R32G32_Float,0,0),
+                    }, Utilities.SizeOf<Vector2>());
 
-                //D2D1_CUSTOM_VERTEX_BUFFER_PROPERTIES cvbProp = { 0 };
-                //cvbProp.elementCount = ARRAYSIZE(vertexLayout);
-                //cvbProp.inputElements = vertexLayout;
-                //cvbProp.stride = sizeof(VERTEX);
-                //cvbProp.shaderBufferWithInputSignature = data->Data;
-                //cvbProp.shaderBufferSize = data->Length;
-                CustomVertexBufferProperties cvbProp = new CustomVertexBufferProperties();
-                cvbProp.InputElements = vertexLayout;
-                cvbProp.Stride = Utilities.SizeOf<VERTEX>();
-                cvbProp.InputSignature = new byte[0];
-
-                // The GUID is optional, and is provided here to register the geometry globally.
-                // As mentioned above, this avoids duplication if multiple versions of the effect
-                // are created. 
-                //hr = effectContext->CreateVertexBuffer(
-                //    &vbProp,
-                //    &GUID_WaveTransformVertexBuffer,
-                //    &cvbProp,
-                //    &m_vertexBuffer);
-                vertexBuffer = new VertexBuffer(effectContext, GUID_WaveVertexShader, vbProp, cvbProp);
-
-
-                Array.Clear(mesh.Vertex, 0, mesh.Vertex.Length);
-
-   
-
+                    // The GUID is optional, and is provided here to register the geometry globally.
+                    // As mentioned above, this avoids duplication if multiple versions of the effect
+                    // are created. 
+                    vertexBuffer = new VertexBuffer(effectContext, GUID_WaveVertexBuffer, vbProp, cvbProp);
+                }
             }
 
-
             transformGraph.SetSingleTransformNode(this);
-
         }
 
-
-
-        private VERTEXS GenerateMesh()
+        private Vector2[] GenerateMesh()
         {
-            VERTEXS returnMesh;
-
             numberOfVertices = 6 * TESSELLATION_AMOUNT * TESSELLATION_AMOUNT;
 
-            returnMesh.Vertex = new VERTEX[numberOfVertices];
-
+            var mesh = new Vector2[numberOfVertices]; 
 
             float offset = 1.0f / TESSELLATION_AMOUNT;
 
@@ -172,23 +136,22 @@ namespace D2DCustomVertexShaderEffect
                     // they are the only variable part of the geometry. In the vertex shader, z is generated
                     // based on x, and w is defined to be '1'. The actual coordinates here range from 0 to 1,
                     // these values are scaled up based on the size of the image in the vertex shader.
-
-                    returnMesh.Vertex[index].X = i * offset;
-                    returnMesh.Vertex[index].Y = j * offset;
-                    returnMesh.Vertex[index + 1].X = i * offset;
-                    returnMesh.Vertex[index + 1].Y = j * offset + offset;
-                    returnMesh.Vertex[index + 2].X = i * offset + offset;
-                    returnMesh.Vertex[index + 2].Y = j * offset;
-                    returnMesh.Vertex[index + 3].X = i * offset + offset;
-                    returnMesh.Vertex[index + 3].Y = j * offset;
-                    returnMesh.Vertex[index + 4].X = i * offset;
-                    returnMesh.Vertex[index + 4].Y = j * offset + offset;
-                    returnMesh.Vertex[index + 5].X = i * offset + offset;
-                    returnMesh.Vertex[index + 5].Y = j * offset + offset;
+                    mesh[index].X = i * offset;
+                    mesh[index].Y = j * offset;
+                    mesh[index + 1].X = i * offset;
+                    mesh[index + 1].Y = j * offset + offset;
+                    mesh[index + 2].X = i * offset + offset;
+                    mesh[index + 2].Y = j * offset;
+                    mesh[index + 3].X = i * offset + offset;
+                    mesh[index + 3].Y = j * offset;
+                    mesh[index + 4].X = i * offset;
+                    mesh[index + 4].Y = j * offset + offset;
+                    mesh[index + 5].X = i * offset + offset;
+                    mesh[index + 5].Y = j * offset + offset;
                 }
             }
 
-            return returnMesh;
+            return mesh;
         }
 
         public override void PrepareForRender(ChangeType changeType)
@@ -199,7 +162,7 @@ namespace D2DCustomVertexShaderEffect
         public override void SetGraph(TransformGraph transformGraph)
         {
             // TODO: Map NotImplementedException to this SharpDXException
-            throw new SharpDXException(Result.NotImplemented);
+            throw new NotImplementedException();
         }
 
         public void SetDrawInformation(DrawInformation drawInfo)
@@ -229,8 +192,6 @@ namespace D2DCustomVertexShaderEffect
 
             }
         }
-
-
 
         private Rectangle[] _inputRectangles;
 
@@ -263,8 +224,7 @@ namespace D2DCustomVertexShaderEffect
         public Rectangle MapInputRectanglesToOutputRectangle(Rectangle[] inputRects)
         {
             if (inputRects.Length != 1)
-                throw new SharpDXException(Result.InvalidArg);
-
+                throw new ArgumentException("InputRects must be length of 1", "inputRects");
 
             long inputRectHeight = inputRects[0].Bottom - inputRects[0].Top;
             long inputRectWidth = inputRects[0].Right - inputRects[0].Left;
@@ -301,7 +261,7 @@ namespace D2DCustomVertexShaderEffect
         {
             //int expansion = (int)Math.Round(constants.Amplitude);
             if (inputRects.Length != 1)
-                throw new SharpDXException(Result.InvalidArg);
+                throw new ArgumentException("InputRects must be length of 1", "inputRects");
 
             inputRects[0] = InputRectangles[0];
 
@@ -317,9 +277,9 @@ namespace D2DCustomVertexShaderEffect
             // Update constant buffer 1 (the first constant buffer available to the effect)
             // with the progress, angle, and size values.
 
-            //constants.Matrix = Matrix.RotationX(3); 
-            //constants.SizeX = SizeX;
-            //constants.SizeY = SizeY;
+            constants.Matrix = Matrix.RotationX(3); 
+            constants.SizeX = SizeX;
+            constants.SizeY = SizeY;
             constants.WaveOffset = WaveOffset;
             constants.AngleX = AngleX;
             constants.AngleY = AngleY;
@@ -335,24 +295,12 @@ namespace D2DCustomVertexShaderEffect
         [StructLayout(LayoutKind.Sequential)]
         private struct WaveEffectConstantBuffer
         {
+            public Matrix Matrix;
+            public float SizeX;
+            public float SizeY;
             public float WaveOffset;
             public float AngleX;
             public float AngleY;
-
-            //public Matrix Matrix;
-            //public float SizeX;
-            //public float SizeY;
         }
-
-        private struct VERTEX
-        {
-            public float X , Y;
-        }
-
-        private struct VERTEXS
-        {
-            public VERTEX[] Vertex;
-        }
-
     }
 }
