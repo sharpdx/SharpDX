@@ -31,7 +31,7 @@
     <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots\KitsRoot;Include\um</include-dir>
   </ifdef>
 
-  <ifndef name="DIRECT3D11_1">
+  <ifndef name="WIN8METRO">
     <!-- Add DirectX SDK by default -->
     <include-dir>$(DXSDK_DIR)\include</include-dir>
   </ifndef>

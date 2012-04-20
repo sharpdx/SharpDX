@@ -83,7 +83,7 @@ namespace SharpDX.Direct2D1
         /// </remarks>	
         /// <unmanaged>HRESULT ID2D1DeviceContext::CreateEffect([In] const GUID&amp; effectId,[Out, Fast] ID2D1Effect** effect)</unmanaged>	
         public Effect(DeviceContext deviceContext)
-            : base(deviceContext, typeof(T).GetTypeInfo().GUID)
+            : base(deviceContext, Utilities.GetGuidFromType(typeof(T)))
         {
         }
 
@@ -95,7 +95,7 @@ namespace SharpDX.Direct2D1
         /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID2D1EffectContext::CreateEffect']/*"/>	
         /// <unmanaged>HRESULT ID2D1EffectContext::CreateEffect([In] const GUID&amp; effectId,[Out] ID2D1Effect** effect)</unmanaged>	
         public Effect(EffectContext effectContext)
-            : base(effectContext, typeof(T).GetTypeInfo().GUID)
+            : base(effectContext, Utilities.GetGuidFromType(typeof(T)))
         {
         }
     }

@@ -34,7 +34,7 @@ namespace SharpDX.Direct2D1
         /// </summary>
         /// <param name="propertyType">The property type</param>
         /// <returns>A string representing this property type.</returns>
-        public static string ConvertToString(this PropertyType propertyType)
+        public static string ConvertToString(PropertyType propertyType)
         {
             string propText;
             switch (propertyType)

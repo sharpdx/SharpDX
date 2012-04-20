@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TestGetterSetter.cs" />
     <Compile Include="TestResultDescriptor.cs" />
     <Compile Include="RawMatrix.cs" />
     <Compile Include="RawVector4.cs" />

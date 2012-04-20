@@ -80,7 +80,7 @@ namespace SharpDX.Direct2D1
         public void RegisterEffect<T>(Func<T> effectFactory) where T : CustomEffect
         {
             CustomEffectFactory factory;
-            var guid = typeof(T).GetTypeInfo().GUID;
+            var guid = Utilities.GetGuidFromType(typeof(T));
             lock (registeredEffects)
             {
                 if (registeredEffects.ContainsKey(guid))
@@ -99,7 +99,7 @@ namespace SharpDX.Direct2D1
         public void RegisterEffect<T>() where T : CustomEffect, new()
         {
             CustomEffectFactory factory;
-            var guid = typeof(T).GetTypeInfo().GUID;
+            var guid = Utilities.GetGuidFromType(typeof(T));
             lock (registeredEffects)
             {
                 if (registeredEffects.ContainsKey(guid))
@@ -119,7 +119,7 @@ namespace SharpDX.Direct2D1
         public void UnRegisterEffect<T>() where T : CustomEffect
         {
             CustomEffectFactory factory;
-            var guid = typeof(T).GetTypeInfo().GUID;
+            var guid = Utilities.GetGuidFromType(typeof(T));
 
             lock (registeredEffects)
             {

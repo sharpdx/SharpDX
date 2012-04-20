@@ -3,7 +3,11 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DocumentationFile>bin\Release\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
-  
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'D3D11_1Release|AnyCPU' ">
+    <DocumentationFile>bin\D3D11_1Release\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Release|AnyCPU'">
     <DocumentationFile>bin\Win8Release\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>

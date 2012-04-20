@@ -249,7 +249,7 @@
     // *****************************************************************
     -->
 
-    <ifdef name="DIRECT3D11_1">
+    <ifdef name="WIN8METRO">
       <remove function="CreateDXGIFactory"/>
     </ifdef>
     <map function="CreateDXGIFactory.*" dll='"dxgi.dll"' group="SharpDX.DXGI.DXGI" />

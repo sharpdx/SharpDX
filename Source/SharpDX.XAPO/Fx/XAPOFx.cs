@@ -23,7 +23,7 @@ namespace SharpDX.XAPO.Fx
 {
     internal partial class XAPOFx
     {
-#if WIN8METRO
+#if DIRECT3D11_1
         internal static Guid CLSID_FXEQ = new Guid("F5E01117-D6C4-485A-A3F5-695196F3DBFA");
         internal static Guid CLSID_FXMasteringLimiter = new Guid("C4137916-2BE1-46FD-8599-441536F49856");
         internal static Guid CLSID_FXReverb = new Guid("7D9ACA56-CB68-4807-B632-B137352E8596");

@@ -158,6 +158,18 @@ namespace SharpDX
             return FromPointer<T>(QueryInterfaceOrNull(Utilities.GetGuidFromType(typeof(T))));
         }
 
+        /// <summary>
+        /// Performs an explicit conversion from <see cref="System.IntPtr"/> to <see cref="SharpDX.ComObject"/>.
+        /// </summary>
+        /// <param name="nativePointer">The native pointer.</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
+        public static explicit operator ComObject(IntPtr nativePointer)
+        {
+            return nativePointer == IntPtr.Zero ? null : new ComObject(nativePointer);
+        }
+
         ///<summary>
         /// Query Interface for a particular interface support and attach to the given instance.
         ///</summary>

@@ -649,6 +649,7 @@ namespace SharpDX.D3DCompiler
 
                 try
                 {
+#if !DIRECT3D11_1
                     if ((shaderFlags & Effect10) != 0)
                     {
                         shaderFlags ^= Effect10;
@@ -666,6 +667,7 @@ namespace SharpDX.D3DCompiler
                                 out blobForErrors);
                     }
                     else
+#endif
                     {
                         fixed (void* pData = &shaderSource[0])
                             D3D.Compile(

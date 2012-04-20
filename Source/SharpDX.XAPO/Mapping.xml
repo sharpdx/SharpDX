@@ -102,7 +102,7 @@
     <map interface="IXAPO(.*)" name="$1" />
     <map interface="IXAPO" name="AudioProcessor" />
     <map interface="IXAPOParameters" name="ParameterProvider" />
-    <map interface="IXAPO" callback-visibility="public abstract" callback="true" callback-dual="true" />
+    <map interface="IXAPO" callback-visibility="public" callback="true" callback-dual="true" />
     <map interface="IXAPOParameters" callback-visibility="internal" callback="true" callback-dual="true" />
     <map interface="IXAPOParameters" visibility="internal" />
     <map param="IXAPO::LockForProcess::pInputLockedParameters" attribute="in buffer" />

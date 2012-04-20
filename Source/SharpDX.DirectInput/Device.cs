@@ -24,7 +24,7 @@ using System.Windows.Forms;
 
 namespace SharpDX.DirectInput
 {
-    public abstract partial class Device
+    public partial class Device
     {
         private DeviceProperties _properties;
 

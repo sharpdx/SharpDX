@@ -37,7 +37,7 @@
   <ifdef name="DIRECT3D11_1">
     <include file="d3d11_1.h" attach="true" />
   </ifdef>
-  <ifndef name="DIRECT3D11_1">
+  <ifndef name="WIN8METRO">
     <include file="d3dx11.h" attach="true">
       <post>
 
@@ -59,8 +59,8 @@
     <include file="d3dcsx.h" attach="true" />
     <!-- D3D11 Effects includes -->
     <include file="d3dx11effect.h" attach="true" />
-  </ifndef>   
-    
+  </ifndef>
+
   <naming />
 
   <context-set id="d3d11-all">
@@ -70,7 +70,7 @@
     <ifdef name="DIRECT3D11_1">
       <context>d3d11_1</context>
     </ifdef>
-    <ifndef name="DIRECT3D11_1">
+    <ifndef name="WIN8METRO">
       <context>d3dx11</context>
       <context>d3d11sdklayers</context>
       <context>d3dx11core</context>
@@ -253,7 +253,7 @@
     // D3D11 Functions
     // *****************************************************************
     -->
-    <ifdef name="DIRECT3D11_1">
+    <ifdef name="WIN8METRO">
       <remove function="D3D11CreateDeviceAndSwapChain"/>
     </ifdef>
     
@@ -263,7 +263,7 @@
 
     <remove function="ID3D11DeviceContext1_.*"/>
 
-    <ifndef name="DIRECT3D11_1">
+    <ifndef name="WIN8METRO">
       <map function="D3DX11(.+)" name-tmp="$1" />
       <map function="D3DX11(.+)W" name-tmp="$1" />
       <map function="D3DX11.*" dll='"#(D3DX11_DLL_A)"' group="SharpDX.Direct3D11.D3DX11" />
@@ -276,7 +276,7 @@
     // D3D11 Constants
     // *****************************************************************
     -->
-    <ifndef name="DIRECT3D11_1">
+    <ifndef name="WIN8METRO">
       <context-clear />
       <context>d3dcsx</context>
       <map function="D3DX11.*" dll='"#(D3DCSX_DLL_A)"' group="SharpDX.Direct3D11.D3DCSX" />

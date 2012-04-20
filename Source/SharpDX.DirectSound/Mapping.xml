@@ -294,7 +294,7 @@
     <map param="IDirectSound.*::pdw(.*)" name-tmp="$1" />
     <map param="IDirectSound.*::fl(.*)" name-tmp="$1" />
     <map param="IDirectSound.*::l(.*)" name-tmp="$1" />
-    <map interface="IDirectSoundBuffer" visibility="public abstract" />
+    <map interface="IDirectSoundBuffer" visibility="public" />
     <map method="IDirectSoundBuffer::Play" visibility="internal" />
     <map param="dwFlags" type="DSBPLAY_FLAGS" />
     <map method="IDirectSoundBuffer8::SetFX" visibility="internal" name="SetEffect" />

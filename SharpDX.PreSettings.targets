@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release'  ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release'  Or '$(Configuration)' == 'D3D11_1Debug' Or '$(Configuration)' == 'D3D11_1Release'">
     <SharpDXWin8>false</SharpDXWin8>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
@@ -44,8 +44,37 @@
     <DocumentationFile>bin\Release\$(AssemblyName).xml</DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'D3D11_1Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\D3D11_1Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;DIRECT3D11_1;WinFormsInterop</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'D3D11_1Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\D3D11_1Release</OutputPath>
+    <DefineConstants>TRACE;DIRECT3D11_1;WinFormsInterop</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DocumentationFile>bin\D3D11_1Release\$(AssemblyName).xml</DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' And '$(SharpDXSign)' == 'true'">
     <DefineConstants>TRACE;WinFormsInterop;SHARPDX_SIGNED</DefineConstants>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(SolutionDir)sharpdx.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'D3D11_1Release|AnyCPU' And '$(SharpDXSign)' == 'true'">
+    <DefineConstants>TRACE;DIRECT3D11_1;WinFormsInterop;SHARPDX_SIGNED</DefineConstants>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>$(SolutionDir)sharpdx.snk</AssemblyOriginatorKeyFile>
     <DelaySign>true</DelaySign>
@@ -56,7 +85,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Win8Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;WIN8METRO;DIRECT3D11_1</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;WIN8METRO;NET35Plus;DIRECT3D11_1</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>
     </DocumentationFile>
@@ -69,7 +98,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Release|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Win8Release</OutputPath>
-    <DefineConstants>TRACE;WIN8METRO;DIRECT3D11_1</DefineConstants>
+    <DefineConstants>TRACE;WIN8METRO;NET35Plus;DIRECT3D11_1</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>bin\Win8Release\$(AssemblyName).xml</DocumentationFile>
     <Optimize>true</Optimize>

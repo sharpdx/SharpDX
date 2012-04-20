@@ -7,7 +7,7 @@ namespace SharpDX.XAPO
     /// <summary>
     /// Native Accessor to an existing AudioProcessor instance
     /// </summary>
-    public abstract partial class AudioProcessorNative
+    public partial class AudioProcessorNative
     {
         /// <summary>	
         /// Returns the registration properties of an XAPO.	

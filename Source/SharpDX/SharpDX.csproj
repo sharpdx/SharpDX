@@ -46,7 +46,7 @@
     <Compile Include="IO\NativeFileMode.cs" />
     <Compile Include="IO\NativeFileShare.cs" />
     <Compile Include="Matrix3x2.cs" />
-    <Compile Include="Properties\Resources.Designer.cs" Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' ">
+    <Compile Include="Properties\Resources.Designer.cs" Condition=" '$(SharpDXWin8)' == 'false'">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
@@ -146,12 +146,8 @@
     <Compile Include="Win32\VariantElementType.cs" />
     <Compile Include="Win32\VariantType.cs" />
     <Compile Include="Windows\RenderLoop.cs" />
-    <Compile Include="Windows\RenderControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Windows\RenderForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Windows\RenderControl.cs" />
+    <Compile Include="Windows\RenderForm.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Colors.cs" />

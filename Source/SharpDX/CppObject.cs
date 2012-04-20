@@ -76,6 +76,18 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Performs an explicit conversion from <see cref="SharpDX.CppObject"/> to <see cref="System.IntPtr"/>.
+        /// </summary>
+        /// <param name="cppObject">The CPP object.</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
+        public static explicit operator IntPtr(CppObject cppObject)
+        {
+            return cppObject == null ? IntPtr.Zero : cppObject.NativePointer;
+        }
+
+        /// <summary>
         /// Initializes this instance with a pointer from a temporary object and set the pointer of the temporary  
         /// object to IntPtr.Zero.
         /// </summary>

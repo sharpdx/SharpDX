@@ -20,11 +20,14 @@
 #if DIRECT3D11_1
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Reflection;
 using System.Runtime.InteropServices;
+#if WIN8METRO
 using System.Xml.Linq;
+#endif
 
 namespace SharpDX.Direct2D1
 {
@@ -48,7 +51,7 @@ namespace SharpDX.Direct2D1
             this.customEffectType = customEffectType;
 
             // Gets the guid of this class
-            Guid = customEffectType.GetTypeInfo().GUID;
+            Guid = Utilities.GetGuidFromType(customEffectType);
 
             unsafe
             {
@@ -84,7 +87,11 @@ namespace SharpDX.Direct2D1
         private void InitializeBindings()
         {
             var bindings = new List<PropertyBinding>();
+#if WIN8METRO
             foreach (var propertyInfo in customEffectType.GetTypeInfo().DeclaredProperties)
+#else
+            foreach (var propertyInfo in customEffectType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+#endif
             {
                 var binding = PropertyBinding.Get(customEffectType, propertyInfo);
                 if (binding != null) 
@@ -118,17 +125,21 @@ namespace SharpDX.Direct2D1
             var effect = new XElement("Effect");
             xml.Add(effect);
 
+#if WIN8METRO
             var customEffectTypeInfo = customEffectType.GetTypeInfo();
+#else
+            var customEffectTypeInfo = customEffectType;
+#endif
 
             // Add 
-            var customEffectAttribute = customEffectTypeInfo.GetCustomAttribute<CustomEffectAttribute>(true);
+            var customEffectAttribute = Utilities.GetCustomAttribute<CustomEffectAttribute>(customEffectTypeInfo, true);
             effect.Add(CreateXmlProperty("DisplayName", "string", customEffectAttribute != null ? customEffectAttribute.DisplayName : customEffectTypeInfo.Name));
             effect.Add(CreateXmlProperty("Author", "string", customEffectAttribute != null ? customEffectAttribute.Author : string.Empty));
             effect.Add(CreateXmlProperty("Category", "string", customEffectAttribute != null ? customEffectAttribute.Category : string.Empty));
             effect.Add(CreateXmlProperty("Description", "string", customEffectAttribute != null ? customEffectAttribute.Description : string.Empty));
 
             var inputs = new XElement("Inputs");
-            var inputAttributes = customEffectTypeInfo.GetCustomAttributes<CustomEffectInputAttribute>(true);
+            var inputAttributes = Utilities.GetCustomAttributes<CustomEffectInputAttribute>(customEffectTypeInfo, true);
             foreach(var inputAttribute in inputAttributes) {
                 var inputXml = new XElement("Input");
                 inputXml.SetAttributeValue("name", inputAttribute.Input);
@@ -170,6 +181,134 @@ namespace SharpDX.Direct2D1
             }
             return Result.Ok.Code;
         }
+
+#if !WIN8METRO
+        // Because we don't want any depdencies on Linq, used a minimalist compatible code to serialize XML
+        private enum SaveOptions
+        {
+            None
+        }
+
+        private class XNode
+        {
+            private List<XNode> nodes = new List<XNode>();
+
+            public bool HasChildren
+            {
+                get
+                {
+                    return nodes.Count > 0;
+                }
+            }
+
+            public IEnumerable<XNode> Children
+            {
+                get
+                {
+                    return nodes;
+                }
+            }
+
+            public void Add(XNode node)
+            {
+                nodes.Add(node);
+            }
+
+            public override string ToString()
+            {
+                return ToString(SaveOptions.None);
+            }
+
+            public string ToString(SaveOptions options)
+            {
+                var builder = new StringBuilder();
+                ToString(builder);
+                return builder.ToString();
+            }
+
+            protected virtual void ToString(StringBuilder builder)
+            {
+                foreach (var node in Children)
+                {
+                    node.ToString(builder);
+                }
+            }
+        }
+
+        private class XDocument : XNode
+        {
+
+        }
+
+        private class XElement : XNode
+        {
+            private List<XElementAttribute> attributes = new List<XElementAttribute>();
+
+            public XElement()
+            {
+            }
+
+            public XElement(string name)
+            {
+                Name = name;
+            }
+
+            public string Name { get; set; }
+
+
+            public void SetAttributeValue(string name, object value)
+            {
+                attributes.Add(new XElementAttribute(name, value));
+            }
+
+            protected override void ToString(StringBuilder builder)
+            {
+                builder.AppendFormat("<{0}", Name);
+                if (attributes.Count > 0)
+                {
+                    foreach (var xElementAttribute in attributes)
+                    {
+                        builder.Append(" ");
+                        xElementAttribute.ToString(builder);
+                    }
+                }
+                if (HasChildren)
+                {
+                    builder.AppendLine(">");
+                    base.ToString(builder);
+                    builder.AppendFormat("</{0}>", Name);
+                    builder.AppendLine();
+                }
+                else
+                {
+                    builder.AppendLine("/>");
+                }
+            }
+        }
+
+        private class XElementAttribute
+        {
+            public XElementAttribute()
+            {
+            }
+
+            public XElementAttribute(string name, object value)
+            {
+                Name = name;
+                Value = value;
+            }
+
+            public string Name { get; set; }
+
+            public object Value { get; set; }
+
+            public void ToString(StringBuilder builder)
+            {
+                builder.AppendFormat("{0}='{1}'", Name, Value);
+            }
+        }
+#endif
+
     }
 }
 #endif

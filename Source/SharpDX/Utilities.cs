@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
+using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
@@ -32,6 +33,32 @@ using System.Reflection;
 
 namespace SharpDX
 {
+
+#if !NET35Plus
+    /// <summary>
+    /// Encapsulates a method that has no parameters and returns a value of the type specified by the TResult parameter.
+    /// </summary>
+    /// <typeparam name="TResult">The type of the return value of the method that this delegate encapsulates. This type parameter is covariant. That is, you can use either the type you specified or any type that is more derived. </typeparam>
+    /// <returns>The return value of the method that this delegate encapsulates.</returns>
+    public delegate TResult Func<out TResult>();
+#endif
+
+    /// <summary>
+    /// A Delegate to get a property value from an object.
+    /// </summary>
+    /// <typeparam name="T">Type of the getter</typeparam>
+    /// <param name="obj">The obj to get the property from</param>
+    /// <param name="value">The value to get</param>
+    public delegate void GetValueFastDelegate<T>(object obj, out T value);
+
+    /// <summary>
+    /// A Delegate to set a property value to an object.
+    /// </summary>
+    /// <typeparam name="T">Type of the setter</typeparam>
+    /// <param name="obj">The obj to set the property from</param>
+    /// <param name="value">The value to set</param>
+    public delegate void SetValueFastDelegate<T>(object obj, ref T value);
+
     /// <summary>
     /// Utility class.
     /// </summary>
@@ -478,6 +505,295 @@ namespace SharpDX
                 } while (bytesRead < readLength);
             }
             return buffer;
+        }
+
+        /// <summary>
+        /// Gets the custom attribute.
+        /// </summary>
+        /// <typeparam name="T">Type of the custom attribute</typeparam>
+        /// <param name="memberInfo">The member info.</param>
+        /// <param name="inherited">if set to <c>true</c> [inherited].</param>
+        /// <returns>The custom attribute or null if not found</returns>
+        public static T GetCustomAttribute<T>(MemberInfo memberInfo, bool inherited = false) where T : Attribute
+        {
+#if WIN8METRO
+            return memberInfo.GetCustomAttribute<T>(inherited);
+#else
+            var result = memberInfo.GetCustomAttributes(typeof(T), inherited);
+            if (result.Length == 0)
+                return default(T);
+            return (T)result[0];
+#endif
+        }
+
+        /// <summary>
+        /// Gets the custom attributes.
+        /// </summary>
+        /// <typeparam name="T">Type of the custom attribute</typeparam>
+        /// <param name="memberInfo">The member info.</param>
+        /// <param name="inherited">if set to <c>true</c> [inherited].</param>
+        /// <returns>The custom attribute or null if not found</returns>
+        public static IEnumerable<T> GetCustomAttributes<T>(MemberInfo memberInfo, bool inherited = false) where T : Attribute
+        {
+#if WIN8METRO
+            return memberInfo.GetCustomAttributes<T>(inherited);
+#else
+            var result = memberInfo.GetCustomAttributes(typeof(T), inherited);
+            if (result.Length == 0)
+                return new T[0];
+            var typedResult = new T[result.Length];
+            Array.Copy(result, typedResult, result.Length);
+            return typedResult;
+#endif
+        }
+
+        /// <summary>
+        /// Determines whether fromType can be assigned to toType.
+        /// </summary>
+        /// <param name="toType">To type.</param>
+        /// <param name="fromType">From type.</param>
+        /// <returns>
+        ///   <c>true</c> if [is assignable from] [the specified to type]; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsAssignableFrom(Type toType, Type fromType)
+        {
+#if WIN8METRO
+            return toType.GetTypeInfo().IsAssignableFrom(fromType.GetTypeInfo());
+#else
+            return toType.IsAssignableFrom(fromType);
+#endif
+        }
+
+        /// <summary>
+        /// Determines whether the specified type to test is an enum.
+        /// </summary>
+        /// <param name="typeToTest">The type to test.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified type to test is an enum; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsEnum(Type typeToTest)
+        {
+#if WIN8METRO
+            return typeToTest.GetTypeInfo().IsEnum;
+#else
+            return typeToTest.IsEnum;
+#endif
+        }
+
+        private static MethodInfo GetMethod(Type type, string name, Type[] typeArgs) {
+#if WIN8METRO
+
+            foreach( var method in type.GetTypeInfo().GetDeclaredMethods(name)) {
+                if ( method.GetParameters().Length == typeArgs.Length) {
+                    var parameters = method.GetParameters();
+                    bool methodFound = true;
+                    for (int i = 0; i < typeArgs.Length; i++)
+			        {
+                        if (parameters[i].ParameterType != typeArgs[i]) {
+                            methodFound = false;
+                            break;
+                        }
+                    }
+                    if (methodFound) {
+                        return method;
+                    }
+                }
+            }
+            return null;
+#else
+            return type.GetMethod(name, typeArgs);
+#endif
+        }
+
+        /// <summary>
+        /// Builds a fast property getter from a type and a property info.
+        /// </summary>
+        /// <typeparam name="T">Type of the getter</typeparam>
+        /// <param name="customEffectType">Type of the custom effect.</param>
+        /// <param name="propertyInfo">The property info to get the value from.</param>
+        /// <returns>A compiled delegate </returns>
+        public static GetValueFastDelegate<T> BuildPropertyGetter<T>(Type customEffectType, PropertyInfo propertyInfo)
+        {
+            var typeT = typeof(T);
+            var propertyType = propertyInfo.PropertyType;
+            var method = new DynamicMethod("GetValueDelegate", typeof(void), new[] { typeof(object), typeT.MakeByRefType() });
+
+            var ilGenerator = method.GetILGenerator();
+            ilGenerator.Emit(OpCodes.Ldarg_1);
+            ilGenerator.Emit(OpCodes.Ldarg_0);
+            ilGenerator.Emit(OpCodes.Castclass, customEffectType);
+#if WIN8METRO
+            ilGenerator.EmitCall(OpCodes.Callvirt, propertyInfo.GetMethod, null);
+#else
+            ilGenerator.EmitCall(OpCodes.Callvirt, propertyInfo.GetGetMethod(), null);
+#endif
+
+            if (typeT == typeof(byte) || typeT == typeof(sbyte))
+            {
+                ilGenerator.Emit(OpCodes.Stind_I1);
+            }
+            else if (typeT == typeof(short) || typeT == typeof(ushort))
+            {
+                ilGenerator.Emit(OpCodes.Stind_I2);
+            }
+            else if (typeT == typeof(int) || typeT == typeof(uint))
+            {
+                // If property type is bool, convert it to int first
+                if (propertyType == typeof(bool))
+                {
+                    ilGenerator.EmitCall(OpCodes.Call,  Utilities.GetMethod(typeof(Convert), "ToInt32", new[] { typeof(bool) }), null);
+                }
+                ilGenerator.Emit(OpCodes.Stind_I4);
+            }
+            else if (typeT == typeof(long) || typeT == typeof(ulong))
+            {
+                ilGenerator.Emit(OpCodes.Stind_I8);
+            }
+            else if (typeT == typeof(float))
+            {
+                ilGenerator.Emit(OpCodes.Stind_R4);
+            }
+            else if (typeT == typeof(double))
+            {
+                ilGenerator.Emit(OpCodes.Stind_R8);
+            }
+            else
+            {
+                var castMethod = FindExplicitConverstion(propertyType, typeT);
+                if (castMethod != null)
+                {
+                    ilGenerator.EmitCall(OpCodes.Call, castMethod, null);
+                }
+                ilGenerator.Emit(OpCodes.Stobj, typeof(T));
+            }
+            ilGenerator.Emit(OpCodes.Ret);
+            return (GetValueFastDelegate<T>)method.CreateDelegate(typeof(GetValueFastDelegate<T>));
+        }
+
+        /// <summary>
+        /// Builds a fast property setter from a type and a property info.
+        /// </summary>
+        /// <typeparam name="T">Type of the setter</typeparam>
+        /// <param name="customEffectType">Type of the custom effect.</param>
+        /// <param name="propertyInfo">The property info to set the value to.</param>
+        /// <returns>A compiled delegate</returns>
+        public static SetValueFastDelegate<T> BuildPropertySetter<T>(Type customEffectType, PropertyInfo propertyInfo)
+        {
+            var typeT = typeof(T);
+            var propertyType = propertyInfo.PropertyType;
+            var method = new DynamicMethod("SetValueDelegate", typeof(void), new[] { typeof(object), typeT.MakeByRefType() });
+
+            //L_0000: nop 
+            //L_0001: ldarg.0 
+            //L_0002: castclass TestEmitGetSet.MyCustomEffect
+            //L_0007: ldarg.1 
+            //L_0008: ldind.i4 
+            //L_0009: callvirt instance void TestEmitGetSet.MyCustomEffect::set_Toto(int32)
+            //L_000e: nop 
+            //L_000f: ret 
+
+            var ilGenerator = method.GetILGenerator();
+            ilGenerator.Emit(OpCodes.Ldarg_0);
+            ilGenerator.Emit(OpCodes.Castclass, customEffectType);
+            ilGenerator.Emit(OpCodes.Ldarg_1);
+
+            if (typeT == typeof(byte) || typeT == typeof(sbyte))
+            {
+                ilGenerator.Emit(OpCodes.Ldind_I1);
+            }
+            else if (typeT == typeof(short) || typeT == typeof(ushort))
+            {
+                ilGenerator.Emit(OpCodes.Ldind_I2);
+            }
+            else if (typeT == typeof(int) || typeT == typeof(uint))
+            {
+                ilGenerator.Emit(OpCodes.Ldind_I4);
+                // If property type is bool, convert it to int first
+                if (propertyType == typeof(bool))
+                {
+                    ilGenerator.EmitCall(OpCodes.Call, Utilities.GetMethod(typeof(Convert),"ToBoolean", new[] { typeT }), null);
+                }
+            }
+            else if (typeT == typeof(long) || typeT == typeof(ulong))
+            {
+                ilGenerator.Emit(OpCodes.Ldind_I8);
+            }
+            else if (typeT == typeof(float))
+            {
+                ilGenerator.Emit(OpCodes.Ldind_R4);
+            }
+            else if (typeT == typeof(double))
+            {
+                ilGenerator.Emit(OpCodes.Ldind_R8);
+            }
+            else
+            {
+                ilGenerator.Emit(OpCodes.Ldobj, typeof(T));
+
+                var castMethod = FindExplicitConverstion(typeT, propertyType);
+                if (castMethod != null)
+                {
+                    ilGenerator.EmitCall(OpCodes.Call, castMethod, null);
+                }
+            }
+
+#if WIN8METRO
+            ilGenerator.EmitCall(OpCodes.Callvirt, propertyInfo.SetMethod, null);
+#else
+            ilGenerator.EmitCall(OpCodes.Callvirt, propertyInfo.GetSetMethod(), null);
+#endif
+
+            ilGenerator.Emit(OpCodes.Ret);
+            return (SetValueFastDelegate<T>)method.CreateDelegate(typeof(SetValueFastDelegate<T>));
+        }
+
+        /// <summary>
+        /// Finds an explicit converstion between a source type and a target type
+        /// </summary>
+        /// <param name="sourceType">Type of the source.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <returns>The method to perform the conversion. null if not found</returns>
+        private static MethodInfo FindExplicitConverstion(Type sourceType, Type targetType)
+        {
+            // No need for cast for similar source and target type
+            if (sourceType == targetType)
+                return null;
+
+            var methods = new List<MethodInfo>();
+
+            var tempType = sourceType;
+            while (tempType != null)
+            {
+#if WIN8METRO
+                methods.AddRange(tempType.GetTypeInfo().DeclaredMethods); //target methods will be favored in the search
+                tempType = tempType.GetTypeInfo().BaseType;
+#else
+                methods.AddRange(tempType.GetMethods(BindingFlags.Static | BindingFlags.Public)); //target methods will be favored in the search
+                tempType = tempType.BaseType;
+#endif
+            }
+
+            tempType = targetType;
+            while (tempType != null)
+            {
+#if WIN8METRO
+                methods.AddRange(tempType.GetTypeInfo().DeclaredMethods); //target methods will be favored in the search
+                tempType = tempType.GetTypeInfo().BaseType;
+#else
+                methods.AddRange(tempType.GetMethods(BindingFlags.Static | BindingFlags.Public)); //target methods will be favored in the search
+                tempType = tempType.BaseType;
+#endif
+            }
+
+            foreach (MethodInfo mi in methods)
+            {
+                if (mi.Name == "op_Explicit") //will return target and take one parameter
+                    if (mi.ReturnType == targetType)
+                        if (IsAssignableFrom(mi.GetParameters()[0].ParameterType, sourceType))
+                            return mi;
+            }
+
+            return null;
         }
 
         [Flags]

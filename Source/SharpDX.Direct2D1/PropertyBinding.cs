@@ -21,8 +21,6 @@
 using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Linq.Expressions;
-using System.Xml.Linq;
 
 namespace SharpDX.Direct2D1
 {
@@ -41,7 +39,7 @@ namespace SharpDX.Direct2D1
         {
             get
             {
-                return Attribute.Type.ConvertToString();
+                return PropertyTypeHelper.ConvertToString(Attribute.Type);
             }
         }
 
@@ -49,7 +47,7 @@ namespace SharpDX.Direct2D1
 
         public static PropertyBinding Get(Type customEffectType, PropertyInfo propertyInfo)
         {
-            var bindingAttr = propertyInfo.GetCustomAttribute<PropertyBindingAttribute>(true);
+            var bindingAttr = Utilities.GetCustomAttribute<PropertyBindingAttribute>(propertyInfo, true);
             if (bindingAttr == null)
                 return null;
 
@@ -57,7 +55,6 @@ namespace SharpDX.Direct2D1
             binding.Attribute = bindingAttr;
 
             var propType = propertyInfo.PropertyType;
-            var propTypeInfo = propType.GetTypeInfo();
 
             var effectPropType = PropertyType.Unknown;
 
@@ -137,13 +134,13 @@ namespace SharpDX.Direct2D1
                 binding.nativeGetSet = new NativeGetSetValue<Matrix5x4>(customEffectType, propertyInfo);
                 effectPropType = PropertyType.Matrix5x4;
             }
-            else if (propTypeInfo.IsEnum)
+            else if (Utilities.IsEnum(propType))
             {
                 // For enum, we are using int as a transient value
                 binding.nativeGetSet = new NativeGetSetValue<int>(customEffectType, propertyInfo);
                 effectPropType = PropertyType.Enum;
             }
-            else if (typeof(ComObject).GetTypeInfo().IsAssignableFrom(propTypeInfo))
+            else if (Utilities.IsAssignableFrom(typeof(ComObject), propType))
             {
                 // For ComObject we are using IntPtr as a transient value
                 binding.nativeGetSet = new NativeGetSetValue<IntPtr>(customEffectType, propertyInfo);
@@ -181,16 +178,10 @@ namespace SharpDX.Direct2D1
             protected Type customEffectType;
             protected PropertyInfo propertyInfo;
 
-            protected ParameterExpression customEffectParam;
-            protected Expression propertyAccessor;
-
             public NativeGetSet(Type customEffectType, PropertyInfo propertyInfo)
             {
                 this.customEffectType = customEffectType;
                 this.propertyInfo = propertyInfo;
-                this.customEffectParam = Expression.Parameter(typeof(CustomEffect));
-                var castParam = Expression.Convert(customEffectParam, customEffectType);
-                this.propertyAccessor = Expression.Property(castParam, propertyInfo);
             }
 
             public IntPtr GetFunctionPtr
@@ -208,55 +199,22 @@ namespace SharpDX.Direct2D1
 
         public class NativeGetSetValue<T> : NativeGetSet where T : struct
         {
-            private delegate void GetValueDelegate(CustomEffect effect, out T value);
-            private delegate void SetValueDelegate(CustomEffect effect, ref T value);
-
-            private GetValueDelegate getter;
-            private SetValueDelegate setter;
-
-            protected ParameterExpression valueParam;
+            private GetValueFastDelegate<T> getter;
+            private SetValueFastDelegate<T> setter;
 
             public NativeGetSetValue(Type customEffectType, PropertyInfo propertyInfo)
                 : base(customEffectType, propertyInfo)
             {
-                this.valueParam = Expression.Parameter(typeof(T).MakeByRefType());
-
                 if (propertyInfo.CanRead)
                 {
-                    // void GetValueDelegate(CustomEffect effect, out T value) {
-                    //      value = (T)effect.Property;
-                    // }
-                    Expression convertExpression;
-                    if (propertyInfo.PropertyType == typeof(bool))
-                    {
-                        // Convert bool to int: effect.Property ? 1 : 0
-                        convertExpression = Expression.Condition(propertyAccessor, Expression.Constant(1), Expression.Constant(0));
-                    }
-                    else
-                    {
-                        convertExpression = Expression.Convert(propertyAccessor, typeof(T));
-                    }
-                    getter = Expression.Lambda<GetValueDelegate>(Expression.Assign(valueParam, convertExpression), customEffectParam, valueParam).Compile();
+                    getter = Utilities.BuildPropertyGetter<T>(customEffectType, propertyInfo);
                     getterNative = new NativeGetFunctionDelegate(NativeGetInt);
                     GetFunctionPtr = Marshal.GetFunctionPointerForDelegate(getterNative);
                 }
 
                 if (propertyInfo.CanWrite)
                 {
-                    // void SetValueDelegate(CustomEffect effect, ref T value) {
-                    //      effect.Property = (PropertyType)value;
-                    // }
-                    Expression convertExpression;
-                    if (propertyInfo.PropertyType == typeof(bool))
-                    {
-                        // Convert int to bool: value != 0
-                        convertExpression = Expression.NotEqual(valueParam, Expression.Constant(0));
-                    }
-                    else
-                    {
-                        convertExpression = Expression.Convert(valueParam, propertyInfo.PropertyType);
-                    }
-                    setter = Expression.Lambda<SetValueDelegate>(Expression.Assign(propertyAccessor, convertExpression), customEffectParam, valueParam).Compile();
+                    setter = Utilities.BuildPropertySetter<T>(customEffectType, propertyInfo);
                     setterNative = new NativeSetFunctionDelegate(NativeSetInt);
                     SetFunctionPtr = Marshal.GetFunctionPointerForDelegate(setterNative);
                 }
