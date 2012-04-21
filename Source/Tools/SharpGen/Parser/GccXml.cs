@@ -128,7 +128,7 @@ namespace SharpGen.Parser
         /// </summary>
         private readonly List<Regex> _filterErrors;
 
-#if DIRECT3D11_1
+#if DIRECTX11_1
         private const string VsVersion = "11.0";
 #else
         private const string VsVersion = "10.0";
@@ -184,7 +184,7 @@ namespace SharpGen.Parser
                         File.WriteAllText(GccXmlGccOptionsFile, "-dDI -E");
 
                         var arguments = ""; // "--gccxml-gcc-options " + GccXmlGccOptionsFile;
-#if DIRECT3D11_1
+#if DIRECTX11_1
                         // Overrides settings for gccxml for compiling Win8 version
                         arguments += " --gccxml-config \"" + Path.Combine(Path.GetDirectoryName(ExecutablePath), @"..\share\gccxml-0.9\vc11\gccxml_config") + "\"";
 #endif
@@ -329,7 +329,7 @@ namespace SharpGen.Parser
                     File.Delete(xmlFile);
 
                     var arguments = ""; // "--gccxml-gcc-options " + GccXmlGccOptionsFile;
-#if DIRECT3D11_1
+#if DIRECTX11_1
                     // Overrides settings for gccxml for compiling Win8 version
                     arguments += " --gccxml-config \"" + Path.Combine(Path.GetDirectoryName(ExecutablePath), @"..\share\gccxml-0.9\vc11\gccxml_config") + "\"";
 #endif

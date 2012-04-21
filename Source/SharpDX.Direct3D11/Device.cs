@@ -389,7 +389,7 @@ namespace SharpDX.Direct3D11
             device.Dispose();
             return outputLevel;
         }
-#if !DIRECT3D11_1
+#if !DIRECTX11_1
         /// <summary>
         /// Gets a value indicating whether the current device is using the reference rasterizer.
         /// </summary>

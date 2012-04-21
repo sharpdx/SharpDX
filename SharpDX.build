@@ -23,8 +23,12 @@
 <project name="SharpDX Build" default="help">
   <property name="project.name" value="SharpDX"/>
   <property name="project.sname" value="sharpdx"/>
-  <property name="signed" value="false"/>
-  <property name="win8" value="false"/>
+
+  <property name="build_normal" value="false"/>
+  <property name="build_signed" value="false"/>
+  <property name="build_win8" value="false"/>
+  <property name="build_dx11_1" value="false"/>
+
   <property name="keeppdb" value="false"/>
   <property name="keepexe" value="false"/>
   <property name="cleandir" value="./"/>
@@ -42,16 +46,20 @@
   <target name="setup" descriptio="Loads the version for the project">
     <!-- Load version from source code SharedAssemblyInfo.cs -->
     <loadfile file="Source/SharedAssemblyInfo.cs" property="assembly_version_file" />
-    <property name="version-postfix" value=""/>
-    <property name="version-postfix" value="-Win8Preview" if="${win8}"/>
-    <property name="version-postfix" value="-Signed" if="${signed}"/>
+
+    <property name="version-postfix" value="" if="${build_normal}"/>
+    <property name="version-postfix" value="-Win8Beta" if="${build_win8}"/>
+    <property name="version-postfix" value="-Signed" if="${build_signed}"/>
+    <property name="version-postfix" value="-DirectX11_1" if="${build_dx11_1}"/>
+
     <regex pattern="AssemblyVersion\(.(?'assembly_version'\d+\.\d+.\d+)" input="${assembly_version_file}" />
     <property name="output_bin_zip" value="${project.name}${version-postfix}-Bin-${assembly_version}${build-date}.zip"/>
     <property name="output_bin_and_samples_zip" value="${project.name}${version-postfix}-BinAndSamples-${assembly_version}${build-date}.zip"/>
 
     <!-- Setup configuration -->
-    <property name="configuration" value="Release" unless="${win8}"/>
-    <property name="configuration" value="Win8Release" if="${win8}"/>
+    <property name="configuration" value="Release" if="${build_normal}"/>
+    <property name="configuration" value="Win8Release" if="${build_win8}"/>
+    <property name="configuration" value="DIRECTX11_1Release" if="${build_dx11_1}"/>
 
     <echo message="${project.name} version from file is ${assembly_version}"/>
   </target>
@@ -158,9 +166,10 @@
     <echo message="     publish = Prepare build for publish"/>
     <echo message=""/>
     <echo message="Target to call before build/zip:"/>
-    <echo message="      normal = Prepare for normal build"/>
-    <echo message="      signed = Prepare for signed build"/>
-    <echo message="        win8 = Prepare for Win8 build (DirectX11.1 + Metro samples)"/>
+    <echo message="      normal = Prepare for normal build (Framework .NET 2.0+)"/>
+    <echo message="      signed = Prepare for signed build (Framework .NET 2.0+)"/>
+    <echo message="        win8 = Prepare for DirectX11.1 Win8 Metro build (Framework .NET 4.5Core)"/>
+    <echo message="      dx11_1 = Prepare for DirectX11.1 desktop build (Framework .NET 2.0+)"/>
     <echo message=""/>
     <echo message="       clean = Full cleanup"/>
     <echo message="       build = Build Standard Assemblies"/>
@@ -194,6 +203,11 @@
     <call target="build"/>
     <call target="zip"/>
     <call target="publish-code" if="${publish}"/>
+
+    <call target="dx11_1"/>
+    <call target="build"/>
+    <call target="zip"/>
+    <call target="publish-code" if="${publish}"/>
   </target>
 
   <!-- Full clean and build -->
@@ -206,20 +220,34 @@
 
   <!-- Normal build -->
   <target name="normal" description="Build Win8 targets.">
-    <property name="signed" value="false"/>
-    <property name="win8" value="false"/>
+    <property name="build_normal" value="true"/>
+    <property name="build_signed" value="false"/>
+    <property name="build_win8" value="false"/>
+    <property name="build_dx11_1" value="false"/>
   </target>
 
   <!-- Win8 build -->
   <target name="win8" description="Build Win8 targets.">
-    <property name="signed" value="false"/>
-    <property name="win8" value="true"/>
+    <property name="build_normal" value="false"/>
+    <property name="build_signed" value="false"/>
+    <property name="build_win8" value="true"/>
+    <property name="build_dx11_1" value="false"/>
   </target>
 
-  <!-- Signed build -->
+  <!-- Normal Signed build -->
   <target name="signed" description="Build Signed targets.">
-    <property name="signed" value="true"/>
-    <property name="win8" value="false"/>
+    <property name="build_normal" value="true"/>
+    <property name="build_signed" value="true"/>
+    <property name="build_win8" value="false"/>
+    <property name="build_dx11_1" value="false"/>
+  </target>
+
+  <!-- Direct3D11.1 build -->
+  <target name="dx11_1" description="Build d3d11.1 targets.">
+    <property name="build_normal" value="false"/>
+    <property name="build_signed" value="false"/>
+    <property name="build_win8" value="false"/>
+    <property name="build_dx11_1" value="true"/>
   </target>
 
   <!-- Nuget Package build -->
@@ -288,7 +316,7 @@
       <arg value="/t:Build"/>
       <arg value="/p:Configuration=${configuration}"/>
       <arg value='/p:Platform="Any CPU"'/>
-      <arg value='/p:SharpDXSign=${signed}'/>
+      <arg value='/p:SharpDXSign=${build_signed}'/>
       <arg value="${project.name}.sln" />
     </exec>
   </target>
@@ -325,14 +353,14 @@
     <zip ziplevel="9" zipfile="${output_bin_and_samples_zip}">
       <fileset basedir="..">
         <include name="${project.name}/Bin/**" />
-        <include name="${project.name}/Samples/**" unless="${win8}"/>
-        <include name="${project.name}/Samples/*Win8*" if="${win8}"/>
-        <include name="${project.name}/Samples/Win8/**" if="${win8}"/>
+        <include name="${project.name}/Samples/**" unless="${build_win8}"/>
+        <include name="${project.name}/Samples/*Win8*" if="${build_win8}"/>
+        <include name="${project.name}/Samples/Win8/**" if="${build_win8}"/>
         <include name="${project.name}/*.txt"/>
         <exclude name="${project.name}/googlecode_password.txt"/>
         <exclude name="${project.name}/Samples/**/*.sample.csproj"/>
-        <exclude name="${project.name}/Samples/*Win8*" unless="${win8}"/>
-        <exclude name="${project.name}/Samples/Win8/**" unless="${win8}"/>
+        <exclude name="${project.name}/Samples/*Win8*" unless="${build_win8}"/>
+        <exclude name="${project.name}/Samples/Win8/**" unless="${build_win8}"/>
         <exclude name="${project.name}/**/*.pdb"/>
       </fileset>
     </zip>

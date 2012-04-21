@@ -40,7 +40,7 @@ namespace SharpDX.Direct3D11
             return swapChain.GetBackBuffer<T>(index);
         }
 
-#if !DIRECT3D11_1
+#if !DIRECTX11_1
         /// <summary>
         ///   Loads a texture from an image file.
         /// </summary>

@@ -156,9 +156,9 @@ namespace SharpGen
             // Load configuration
             Macros.Add("WIN8METRO");
 #endif
-#if DIRECT3D11_1
+#if DIRECTX11_1
             // Load configuration
-            Macros.Add("DIRECT3D11_1");
+            Macros.Add("DIRECTX11_1");
 #endif
 
             Config = ConfigFile.Load(_configRootPath, Macros.ToArray());

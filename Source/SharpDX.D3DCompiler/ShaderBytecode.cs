@@ -649,7 +649,7 @@ namespace SharpDX.D3DCompiler
 
                 try
                 {
-#if !DIRECT3D11_1
+#if !DIRECTX11_1
                     if ((shaderFlags & Effect10) != 0)
                     {
                         shaderFlags ^= Effect10;

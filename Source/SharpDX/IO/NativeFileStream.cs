@@ -157,7 +157,7 @@ namespace SharpDX.IO
             get
             {
                 long length;
-                // TODO implement DIRECT3D11_1 replacement
+                // TODO implement DIRECTX11_1 replacement
                 if (!NativeFile.GetFileSizeEx(handle, out length))
                     throw new IOException("Unable to get file length", Marshal.GetLastWin32Error());
                 return length;

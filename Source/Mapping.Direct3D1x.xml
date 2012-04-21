@@ -37,7 +37,7 @@
   <include file="d3d10sdklayers.h" />
   <include file="d3d10shader.h" />
   
-  <ifndef name="DIRECT3D11_1">
+  <ifndef name="DIRECTX11_1">
     <include file="d3dx10.h" />
     <include file="d3dx10core.h" />
     <include file="d3dx10tex.h" />
@@ -47,7 +47,7 @@
   
   <!-- D3D11 includes -->
   <include file="d3d11.h" />
-  <ifdef name="DIRECT3D11_1">
+  <ifdef name="DIRECTX11_1">
     <include file="d3d11_1.h" />
   </ifdef>
   <include file="d3d11sdklayers.h" />
@@ -74,7 +74,7 @@
     <context>d3d10misc</context>
     <context>d3d10sdklayers</context>
     <context>d3d10shader</context>
-    <ifndef name="DIRECT3D11_1">
+    <ifndef name="DIRECTX11_1">
       <context>d3dx10</context>
       <context>d3dx10core</context>
       <context>d3dx10tex</context>
@@ -83,7 +83,7 @@
     </ifndef>
     
     <context>d3d11</context>
-    <ifdef name="DIRECT3D11_1">
+    <ifdef name="DIRECTX11_1">
       <context>d3d11_1</context>
     </ifdef>
     <ifndef name="WIN8METRO">

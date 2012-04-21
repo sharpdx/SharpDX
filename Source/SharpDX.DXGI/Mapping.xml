@@ -29,7 +29,7 @@
   <include id="dxgi" file="dxgi.h" attach="true" />
   <include id="dxgiformat" file="dxgiformat.h" attach="true" />
   <include id="dxgitype" file="dxgitype.h" attach="true">
-    <ifdef name="DIRECT3D11_1">
+    <ifdef name="DIRECTX11_1">
       <post>
         #define _FACDXGI    0x87a
         #define MAKE_DXGI_HRESULT(code) MAKE_HRESULT(1, _FACDXGI, code)
@@ -61,7 +61,7 @@
       </post>
     </ifdef>
   </include>
-  <ifdef name="DIRECT3D11_1">
+  <ifdef name="DIRECTX11_1">
     <include id="dxgi1_2" file="dxgi1_2.h" attach="true" />
     <include id="windows.ui.xaml.media.dxinterop" file="windows.ui.xaml.media.dxinterop.h" attach="true" />
   </ifdef>
@@ -228,7 +228,7 @@
     <map param="IDXGIResource1::CreateSharedHandle::dwAccess" type="DXGI_SHARED_RESOURCE_FLAGS"/>
     <map param="IDXGIResource1::CreateSharedHandle::pHandle" return="true"/>
 
-    <ifdef name="DIRECT3D11_1">
+    <ifdef name="DIRECTX11_1">
       <map param="ISurfaceImageSourceNative::BeginDraw::pSurface" return="true"/>
       
       <map interface="IVirtualSurfaceUpdatesCallbackNative" visibility="internal" callback="true" callback-dual="true" />
