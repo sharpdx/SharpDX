@@ -46,12 +46,8 @@ namespace D2DCustomVertexShaderEffect
     public sealed partial class MPSCBP : SwapChainBackgroundPanel
     {
         private DeviceManager deviceManager;
-
         private SwapChainBackgroundPanelTarget d2dTarget;
-
-
         private EffectRenderer effectRenderer;
-
 
         public MPSCBP()
         {
@@ -81,7 +77,5 @@ namespace D2DCustomVertexShaderEffect
             d2dTarget.RenderAll();
             d2dTarget.Present();
         }
-
-
     }
 }

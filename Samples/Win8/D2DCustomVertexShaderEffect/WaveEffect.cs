@@ -26,7 +26,7 @@ namespace D2DCustomVertexShaderEffect
         private WaveEffectConstantBuffer constants;
 
         private VertexBuffer   vertexBuffer;
-        private uint numberOfVertices;
+        private int numberOfVertices;
 
 
         public WaveEffect()
@@ -42,7 +42,7 @@ namespace D2DCustomVertexShaderEffect
             }
             set
             {
-                constants.WaveOffset = MathUtil.Clamp(value, 0.0f, 1.0f);
+                constants.WaveOffset = value;
                 UpdateConstants();
             }
         }
@@ -72,6 +72,10 @@ namespace D2DCustomVertexShaderEffect
                 constants.AngleY = MathUtil.Clamp(value, 0.0f, 1.0f);
             }
         }
+
+        private Rectangle inputRectangle;
+        private float SizeX { get; set; }
+        private float SizeY { get; set; }
 
         //EffectContext _effectContext;
         public override void Initialize(EffectContext effectContext, TransformGraph transformGraph)
@@ -123,7 +127,6 @@ namespace D2DCustomVertexShaderEffect
 
             float offset = 1.0f / TESSELLATION_AMOUNT;
 
-
             for (int i = 0; i < TESSELLATION_AMOUNT; i++)
             {
                 for (int j = TESSELLATION_AMOUNT - 1; j >= 0; j--)
@@ -167,43 +170,29 @@ namespace D2DCustomVertexShaderEffect
 
         public void SetDrawInformation(DrawInformation drawInfo)
         {
-            try
-            {
-                this.drawInformation = drawInfo;
-            }
-            catch (Exception ex){
+            this.drawInformation = drawInfo;
 
-                var m = ex.Message;
-            }
-
-            if (numberOfVertices > 0)
-            {
-                VertexRange range;
-                range.StartVertex = 0;
-                range.VertexCount = (int)numberOfVertices;
-
-                drawInformation.SetVertexProcessing(
-                    vertexBuffer,
-                    VertexOptions.UseDepthBuffer,
-                    null,
-                    range,
-                    GUID_WaveVertexShader
-                    );
-
-            }
+            drawInformation.SetVertexProcessing(
+               vertexBuffer,
+               VertexOptions.UseDepthBuffer,
+               null,
+               new VertexRange(0, numberOfVertices),
+               GUID_WaveVertexShader
+               );
         }
-
-        private Rectangle[] _inputRectangles;
 
         public Rectangle[] InputRectangles
         {
             set
             {
-                _inputRectangles = value;
+                if (value == null || value.Length != 1)
+                    throw new ArgumentException("inputRectangles must be length of 1", "inputRectangles");
+
+                inputRectangle = value[0];
 
                 // Store the size of the rect so we can pass it into the vertex shader later.
-                int newSizeX = _inputRectangles[0].Right - _inputRectangles[0].Left;
-                int newSizeY = _inputRectangles[0].Bottom - _inputRectangles[0].Top;
+                int newSizeX = inputRectangle.Right - inputRectangle.Left;
+                int newSizeY = inputRectangle.Bottom - inputRectangle.Top;
 
                 if (SizeX != newSizeX || SizeY != newSizeY)
                 {
@@ -212,14 +201,8 @@ namespace D2DCustomVertexShaderEffect
 
                     UpdateConstants();
                 }
-
             }
-            get { return _inputRectangles; }
         }
-
-        float SizeX { get; set; }
-
-        float SizeY { get; set; }
 
         public Rectangle MapInputRectanglesToOutputRectangle(Rectangle[] inputRects)
         {
@@ -263,8 +246,7 @@ namespace D2DCustomVertexShaderEffect
             if (inputRects.Length != 1)
                 throw new ArgumentException("InputRects must be length of 1", "inputRects");
 
-            inputRects[0] = InputRectangles[0];
-
+            inputRects[0] = inputRectangle;
         }
 
         public int InputCount
@@ -289,10 +271,9 @@ namespace D2DCustomVertexShaderEffect
             {
                 drawInformation.SetVertexConstantBuffer(ref constants);
             }
-
         }
 
-        [StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
         private struct WaveEffectConstantBuffer
         {
             public Matrix Matrix;

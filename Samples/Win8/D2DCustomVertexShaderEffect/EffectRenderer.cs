@@ -45,19 +45,36 @@ namespace D2DCustomVertexShaderEffect
         private Stopwatch clock;
         private DrawingSize imageSize;
         private DrawingSize screenSize;
+        private float angleX;
+        private float angleY;
+
+        private Windows.UI.Input.GestureRecognizer gestureRecognizer;
 
         public EffectRenderer(Windows.UI.Xaml.UIElement rootForPointerEvents, Windows.UI.Xaml.UIElement rootOfLayout)
         {
             _root = rootForPointerEvents;
             _rootParent = rootOfLayout;
-            EnableClear = false;
+            EnableClear = true;
             Show = true;
 
             clock = new Stopwatch();
 
-            _root.PointerMoved += _root_PointerMoved;
+            gestureRecognizer = new Windows.UI.Input.GestureRecognizer();
+            gestureRecognizer.GestureSettings = Windows.UI.Input.GestureSettings.ManipulationTranslateX |
+                Windows.UI.Input.GestureSettings.ManipulationTranslateY |
+                Windows.UI.Input.GestureSettings.ManipulationTranslateInertia;
+            gestureRecognizer.ManipulationUpdated += gestureRecognizer_ManipulationUpdated;
+
             _root.PointerPressed += _root_PointerPressed;
             _root.PointerReleased += _root_PointerReleased;
+            //_root.PointerEntered += _root_PointerPressed;
+            //_root.PointerExited += _root_PointerReleased;
+            _root.PointerMoved += _root_PointerMoved;
+            _root.PointerWheelChanged += _root_PointerWheelChanged;
+            angleX = 0.16f;
+            angleY = 1.2f;
+
+            clock.Start();
         }
 
         public bool EnableClear { get; set; }
@@ -76,27 +93,13 @@ namespace D2DCustomVertexShaderEffect
             //CREATE EFFECT-GRAPH USING IMAGE DATA
             UpdateEffectGraph();
 
+            UpdateAngle(0.0f, 0.0f);
         }
 
         private void Update()
         {
-            return;
-
             float delta = clock.ElapsedMilliseconds / 1000.0f;
-
-            if (!clock.IsRunning || delta > 4)
-            {
-                delta = 4;
-                clock.Stop();
-            }
-
-            _waveEffect.SetValue((int)WaveProperties.WaveOffset, 140.0f - delta * 30.0f);
-
-            _waveEffect.SetValue((int)WaveProperties.AngleX, -delta * 20.0f);
-
-            _waveEffect.SetValue((int)WaveProperties.AngleY, 60.0f - delta * 15.0f);
-
-            _waveEffect.SetValue((int)WaveProperties.Force, 0.01f + delta / 10.0f);
+            _waveEffect.SetValue((int)WaveProperties.WaveOffset, delta);
         }
 
         private void UpdateSize(TargetBase target)
@@ -178,54 +181,55 @@ namespace D2DCustomVertexShaderEffect
             _deviceManager.FactoryDirect2D.RegisterEffect<WaveEffect>();
             _waveEffect = new Effect<WaveEffect>(_deviceManager.ContextDirect2D);
             _waveEffect.SetInputEffect(0, bitmapSourceEffect);
-
-            
         }
 
         private void UpdateEffectGraph()
         {
-            
             CreateEffectGraph(_formatConverter);
         }
 
-        private void UpdatePointer(float x, float y)
-        {
-
-            PointsAt = new Vector3(x, y, 0);
-            //_rippleEffect.SetValue((int)WaveProperties.Center, new DrawingPointF(x, y));
-        }
-
-        private bool pointerPressed = false;
-
         void _root_PointerPressed(object sender, Windows.UI.Xaml.Input.PointerEventArgs e)
         {
-            pointerPressed = true;
-            SetRipplePosition(e);
+            try
+            {
+                var test = e.GetCurrentPoint(null);
+                double posX = test.Position.X;
+                double posY = test.Position.Y;
+                gestureRecognizer.ProcessDownEvent(test);
+            }
+            catch (Exception ex)
+            {
+                // We got somtines an exception saying that the value is not in the expected range, WHHHYYY?
+            }
         }
 
         void _root_PointerMoved(object sender, Windows.UI.Xaml.Input.PointerEventArgs e)
         {
-            if (pointerPressed)
-                SetRipplePosition(e);
+            gestureRecognizer.ProcessMoveEvents(e.GetIntermediatePoints(null));
         }
 
         void _root_PointerReleased(object sender, Windows.UI.Xaml.Input.PointerEventArgs e)
         {
-            pointerPressed = false;
+            gestureRecognizer.ProcessUpEvent(e.GetCurrentPoint(null));
         }
 
-        private void SetRipplePosition(Windows.UI.Xaml.Input.PointerEventArgs e)
+        void _root_PointerWheelChanged(object sender, Windows.UI.Xaml.Input.PointerEventArgs e)
         {
-            var newPosition = e.GetCurrentPoint(null);
+            gestureRecognizer.ProcessMouseWheelEvent(e.GetCurrentPoint(null), false, true);
+        }
 
-            var gtRoot = ((Windows.UI.Xaml.UIElement)_rootParent).TransformToVisual(_root);
-            var rootPosition = gtRoot.TransformPoint(new Windows.Foundation.Point(newPosition.Position.X, newPosition.Position.Y));
+        void gestureRecognizer_ManipulationUpdated(Windows.UI.Input.GestureRecognizer sender, Windows.UI.Input.ManipulationUpdatedEventArgs args)
+        {
+            UpdateAngle((float)args.Delta.Translation.X, (float)args.Delta.Translation.Y);
+        }
 
+        private void UpdateAngle(float deltaX, float deltaY)
+        {
+            angleX += (float)deltaX * .01f;
+            angleY += (float)deltaY * .01f;
 
-            UpdatePointer((float)rootPosition.X, (float)rootPosition.Y);
-
-            clock.Restart();
-
-       }
+            _waveEffect.SetValue((int)WaveProperties.AngleX, angleX);
+            _waveEffect.SetValue((int)WaveProperties.AngleY, angleY);
+        }
     }
 }

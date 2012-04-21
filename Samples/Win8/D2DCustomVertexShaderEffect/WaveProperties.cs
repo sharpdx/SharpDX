@@ -11,6 +11,5 @@ namespace D2DCustomVertexShaderEffect
         WaveOffset = 0,
         AngleX = 1,
         AngleY = 2,
-        Force = 3
     }
 }
