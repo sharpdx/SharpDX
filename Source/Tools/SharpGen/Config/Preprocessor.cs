@@ -42,6 +42,8 @@ namespace SharpGen.Config
             XNamespace ns = ConfigFile.NS;
 
             var list = doc.Descendants(ns + "ifndef").ToList();
+            // Work on deepest first
+            list.Reverse();
             foreach (var ifndef in list)
             {
                 var attr = ifndef.Attribute("name");
@@ -62,6 +64,8 @@ namespace SharpGen.Config
             }
 
             list = doc.Descendants(ns + "ifdef").ToList();
+            // Work on deepest first
+            list.Reverse();
             foreach (var ifdef in list)
             {
                 var attr = ifdef.Attribute("name");
