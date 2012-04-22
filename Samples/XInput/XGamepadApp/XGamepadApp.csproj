@@ -15,7 +15,7 @@
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -39,9 +39,6 @@
     <Reference Include="SharpDX, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Bin\SharpDX.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Diagnostics">
-      <HintPath>..\..\..\Bin\SharpDX.Diagnostics.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.XInput, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

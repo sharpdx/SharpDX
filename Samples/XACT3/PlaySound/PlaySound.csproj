@@ -38,9 +38,6 @@
     <Reference Include="SharpDX.Direct2D1">
       <HintPath>..\..\..\Bin\SharpDX.Direct2D1.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.Diagnostics">
-      <HintPath>..\..\..\Bin\SharpDX.Diagnostics.dll</HintPath>
-    </Reference>
     <Reference Include="SharpDX.XACT3">
       <HintPath>..\..\..\Bin\SharpDX.XACT3.dll</HintPath>
     </Reference>

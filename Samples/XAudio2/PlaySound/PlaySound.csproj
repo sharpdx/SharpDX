@@ -35,9 +35,6 @@
     <Reference Include="SharpDX">
       <HintPath>..\..\..\Bin\SharpDX.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.Diagnostics">
-      <HintPath>..\..\..\Bin\SharpDX.Diagnostics.dll</HintPath>
-    </Reference>
     <Reference Include="SharpDX.XAPO">
       <HintPath>..\..\..\Bin\SharpDX.XAPO.dll</HintPath>
     </Reference>

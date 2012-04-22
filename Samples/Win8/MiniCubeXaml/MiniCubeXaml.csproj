@@ -4,16 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FAB64B59-1B9F-4505-99CA-3D42ECD9E429}</ProjectGuid>
+    <ProjectGuid>{B475FCC5-2933-49F8-A5FB-FB4B1B36E02C}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>D2DEffectsHelloWorld</RootNamespace>
-    <AssemblyName>D2DEffectsHelloWorld</AssemblyName>
+    <RootNamespace>MiniCubeXaml</RootNamespace>
+    <AssemblyName>MiniCubeXaml</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>D2DEffectsHelloWorld_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>9FE6E45BE45E51B6A5FAF9EAE7330A8CC93E4FDA</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>XAMLInteropApp_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>07436D096263A3946F528B2F5C45AB974FE36D1D</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -107,7 +107,6 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <Reference Include="SharpDX">
       <HintPath>..\..\..\Bin\SharpDX.dll</HintPath>
     </Reference>
@@ -122,6 +121,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\MiniCube\CubeRenderer.cs">
+      <Link>CubeRenderer.cs</Link>
+    </Compile>
+    <Compile Include="..\MiniShape\ShapeRenderer.cs">
+      <Link>ShapeRenderer.cs</Link>
+    </Compile>
     <Compile Include="Common\BindableBase.cs" />
     <Compile Include="Common\BooleanToVisibilityConverter.cs" />
     <Compile Include="Common\BooleanNegationConverter.cs" />
@@ -130,13 +135,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MP-SIS.xaml.cs">
-      <DependentUpon>MP-SIS.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="DragHandler.cs" />
-    <Compile Include="EffectRenderer.cs" />
-    <Compile Include="MP-SCBP.xaml.cs">
-      <DependentUpon>MP-SCBP.xaml</DependentUpon>
+    <Compile Include="MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -144,8 +144,16 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="..\MiniCube\MiniCube_PS.fxo">
+      <Link>MiniCube_PS.fxo</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\MiniCube\MiniCube_VS.fxo">
+      <Link>MiniCube_VS.fxo</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Common\ReadMe.txt" />
-    <None Include="D2DEffectsHelloWorld_TemporaryKey.pfx" />
+    <None Include="MiniCubeXaml_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Logo.png">
@@ -160,9 +168,6 @@
     <Content Include="Assets\StoreLogo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\SydneyOperaHouse002.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -173,13 +178,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="MP-SIS.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="MainPage.xaml">
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="MP-SCBP.xaml">
       <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>

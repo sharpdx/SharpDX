@@ -66,9 +66,6 @@
     <Reference Include="SharpDX">
       <HintPath>..\..\..\Bin\SharpDX.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.Diagnostics">
-      <HintPath>..\..\..\Bin\SharpDX.Diagnostics.dll</HintPath>
-    </Reference>
     <Reference Include="SharpDX.X3DAudio">
       <HintPath>..\..\..\Bin\SharpDX.X3DAudio.dll</HintPath>
     </Reference>

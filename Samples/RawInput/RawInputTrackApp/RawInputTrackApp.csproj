@@ -40,9 +40,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Bin\SharpDX.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.Diagnostics">
-      <HintPath>..\..\..\Bin\SharpDX.Diagnostics.dll</HintPath>
-    </Reference>
     <Reference Include="SharpDX.RawInput">
       <HintPath>..\..\..\Bin\SharpDX.RawInput.dll</HintPath>
     </Reference>

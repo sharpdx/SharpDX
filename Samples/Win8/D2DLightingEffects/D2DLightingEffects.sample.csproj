@@ -4,16 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FAB64B59-1B9F-4505-99CA-3D42ECD9E429}</ProjectGuid>
+    <ProjectGuid>{04C428FE-B2A9-4B6C-909E-110ADDE42B39}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>D2DEffectsHelloWorld</RootNamespace>
-    <AssemblyName>D2DEffectsHelloWorld</AssemblyName>
+    <RootNamespace>D2DLightingEffects</RootNamespace>
+    <AssemblyName>D2DLightingEffects</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>D2DEffectsHelloWorld_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>9FE6E45BE45E51B6A5FAF9EAE7330A8CC93E4FDA</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>D2DLightingEffects_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>52575949779ECC889AE81A7696018CBA18678B0B</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -109,19 +109,22 @@
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <Reference Include="SharpDX">
-      <HintPath>..\..\..\Bin\SharpDX.dll</HintPath>
+      <HintPath>..\..\..\Source\SharpDX\Bin\Win8$(Configuration)\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct2D1">
-      <HintPath>..\..\..\Bin\SharpDX.Direct2D1.dll</HintPath>
+      <HintPath>..\..\..\Source\SharpDX.Direct2D1\Bin\Win8$(Configuration)\SharpDX.Direct2D1.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D11">
-      <HintPath>..\..\..\Bin\SharpDX.Direct3D11.dll</HintPath>
+      <HintPath>..\..\..\Source\SharpDX.Direct3D11\Bin\Win8$(Configuration)\SharpDX.Direct3D11.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.DXGI">
-      <HintPath>..\..\..\Bin\SharpDX.DXGI.dll</HintPath>
+      <HintPath>..\..\..\Source\SharpDX.DXGI\Bin\Win8$(Configuration)\SharpDX.DXGI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChooseDemo.xaml.cs">
+      <DependentUpon>ChooseDemo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Common\BindableBase.cs" />
     <Compile Include="Common\BooleanToVisibilityConverter.cs" />
     <Compile Include="Common\BooleanNegationConverter.cs" />
@@ -130,13 +133,16 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MP-SIS.xaml.cs">
-      <DependentUpon>MP-SIS.xaml</DependentUpon>
-    </Compile>
     <Compile Include="DragHandler.cs" />
     <Compile Include="EffectRenderer.cs" />
+    <Compile Include="EffectSelector.xaml.cs">
+      <DependentUpon>EffectSelector.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MP-SCBP.xaml.cs">
       <DependentUpon>MP-SCBP.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MP-SIS.xaml.cs">
+      <DependentUpon>MP-SIS.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -145,9 +151,12 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="Common\ReadMe.txt" />
-    <None Include="D2DEffectsHelloWorld_TemporaryKey.pfx" />
+    <None Include="D2DLightingEffects_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\heightmap.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\Logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -160,24 +169,29 @@
     <Content Include="Assets\StoreLogo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\SydneyOperaHouse002.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="ChooseDemo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Common\StandardStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="MP-SIS.xaml">
+    <Page Include="EffectSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MP-SCBP.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="MP-SCBP.xaml">
+    <Page Include="MP-SIS.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -4,19 +4,18 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FAB64B59-1B9F-4505-99CA-3D42ECD9E429}</ProjectGuid>
-    <OutputType>AppContainerExe</OutputType>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{45CD76A3-E21E-47A3-8BFD-9A1241AADB9D}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>D2DEffectsHelloWorld</RootNamespace>
-    <AssemblyName>D2DEffectsHelloWorld</AssemblyName>
+    <RootNamespace>CommonDX</RootNamespace>
+    <AssemblyName>CommonDX</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>D2DEffectsHelloWorld_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>9FE6E45BE45E51B6A5FAF9EAE7330A8CC93E4FDA</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -26,7 +25,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -107,7 +105,6 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <Reference Include="SharpDX">
       <HintPath>..\..\..\Bin\SharpDX.dll</HintPath>
     </Reference>
@@ -122,71 +119,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\BindableBase.cs" />
-    <Compile Include="Common\BooleanToVisibilityConverter.cs" />
-    <Compile Include="Common\BooleanNegationConverter.cs" />
-    <Compile Include="Common\LayoutAwarePage.cs" />
-    <Compile Include="Common\RichTextColumns.cs" />
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MP-SIS.xaml.cs">
-      <DependentUpon>MP-SIS.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="DragHandler.cs" />
-    <Compile Include="EffectRenderer.cs" />
-    <Compile Include="MP-SCBP.xaml.cs">
-      <DependentUpon>MP-SCBP.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="CoreWindowTarget.cs" />
+    <Compile Include="DeviceManager.cs" />
+    <Compile Include="SurfaceImageSourceTarget.cs" />
+    <Compile Include="SwapChainBackgroundPanelTarget.cs" />
+    <Compile Include="TargetBase.cs" />
+    <Compile Include="SwapChainTargetBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <AppxManifest Include="Package.appxmanifest">
-      <SubType>Designer</SubType>
-    </AppxManifest>
-    <None Include="Common\ReadMe.txt" />
-    <None Include="D2DEffectsHelloWorld_TemporaryKey.pfx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Assets\Logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\SmallLogo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\SplashScreen.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\StoreLogo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\SydneyOperaHouse002.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Page Include="Common\StandardStyles.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="MP-SIS.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="MP-SCBP.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CommonDX\CommonDX.sample.csproj">
-      <Project>{45cd76a3-e21e-47a3-8bfd-9a1241aadb9d}</Project>
-      <Name>CommonDX.sample</Name>
-    </ProjectReference>
+    <Compile Include="TextureLoader.cs" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>

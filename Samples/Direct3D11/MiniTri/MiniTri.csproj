@@ -15,7 +15,7 @@
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -32,11 +32,12 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
-    <ItemGroup>
+  <ItemGroup>
     <Reference Include="SharpDX">
       <HintPath>..\..\..\Bin\SharpDX.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.D3DCompiler">
+    <Reference Include="SharpDX.D3DCompiler, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Bin\SharpDX.D3DCompiler.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D11">
@@ -44,9 +45,6 @@
     </Reference>
     <Reference Include="SharpDX.DXGI">
       <HintPath>..\..\..\Bin\SharpDX.DXGI.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Diagnostics">
-      <HintPath>..\..\..\Bin\SharpDX.Diagnostics.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

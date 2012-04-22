@@ -60,9 +60,6 @@
     <Reference Include="SharpDX.D3DCompiler">
       <HintPath>..\..\..\Bin\SharpDX.D3DCompiler.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.Diagnostics">
-      <HintPath>..\..\..\Bin\SharpDX.Diagnostics.dll</HintPath>
-    </Reference>
     <Reference Include="SharpDX.Direct3D10">
       <HintPath>..\..\..\Bin\SharpDX.Direct3D10.dll</HintPath>
     </Reference>

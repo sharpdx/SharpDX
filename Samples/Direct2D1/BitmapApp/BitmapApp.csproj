@@ -37,9 +37,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Bin\SharpDX.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.Diagnostics">
-      <HintPath>..\..\..\Bin\SharpDX.Diagnostics.dll</HintPath>
-    </Reference>
     <Reference Include="SharpDX.Direct2D1, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Bin\SharpDX.Direct2D1.dll</HintPath>

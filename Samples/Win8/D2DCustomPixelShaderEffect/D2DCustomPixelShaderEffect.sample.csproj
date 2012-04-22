@@ -4,16 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FAB64B59-1B9F-4505-99CA-3D42ECD9E429}</ProjectGuid>
+    <ProjectGuid>{A6F35710-283E-4B31-8899-015BE69B86B0}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>D2DEffectsHelloWorld</RootNamespace>
-    <AssemblyName>D2DEffectsHelloWorld</AssemblyName>
+    <RootNamespace>D2DCustomPixelShaderEffect</RootNamespace>
+    <AssemblyName>D2DCustomPixelShaderEffect</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>D2DEffectsHelloWorld_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>9FE6E45BE45E51B6A5FAF9EAE7330A8CC93E4FDA</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>D2DCustomPixelShaderEffect_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>582F1E96A79095CF9365078454B07DE24210F7F1</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -109,19 +109,22 @@
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <Reference Include="SharpDX">
-      <HintPath>..\..\..\Bin\SharpDX.dll</HintPath>
+      <HintPath>..\..\..\Source\SharpDX\Bin\Win8$(Configuration)\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct2D1">
-      <HintPath>..\..\..\Bin\SharpDX.Direct2D1.dll</HintPath>
+      <HintPath>..\..\..\Source\SharpDX.Direct2D1\Bin\Win8$(Configuration)\SharpDX.Direct2D1.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D11">
-      <HintPath>..\..\..\Bin\SharpDX.Direct3D11.dll</HintPath>
+      <HintPath>..\..\..\Source\SharpDX.Direct3D11\Bin\Win8$(Configuration)\SharpDX.Direct3D11.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.DXGI">
-      <HintPath>..\..\..\Bin\SharpDX.DXGI.dll</HintPath>
+      <HintPath>..\..\..\Source\SharpDX.DXGI\Bin\Win8$(Configuration)\SharpDX.DXGI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChooseDemo.xaml.cs">
+      <DependentUpon>ChooseDemo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Common\BindableBase.cs" />
     <Compile Include="Common\BooleanToVisibilityConverter.cs" />
     <Compile Include="Common\BooleanNegationConverter.cs" />
@@ -130,22 +133,31 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MP-SIS.xaml.cs">
-      <DependentUpon>MP-SIS.xaml</DependentUpon>
-    </Compile>
     <Compile Include="DragHandler.cs" />
     <Compile Include="EffectRenderer.cs" />
     <Compile Include="MP-SCBP.xaml.cs">
       <DependentUpon>MP-SCBP.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MP-SIS.xaml.cs">
+      <DependentUpon>MP-SIS.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RippleEffect.cs" />
+    <Compile Include="RippleProperties.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="Assets\Nepal.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Ripple.hlsl" />
     <None Include="Common\ReadMe.txt" />
-    <None Include="D2DEffectsHelloWorld_TemporaryKey.pfx" />
+    <None Include="D2DCustomPixelShaderEffect_TemporaryKey.pfx" />
+    <Content Include="Ripple.cso">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Logo.png">
@@ -160,24 +172,25 @@
     <Content Include="Assets\StoreLogo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\SydneyOperaHouse002.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="ChooseDemo.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Common\StandardStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="MP-SIS.xaml">
+    <Page Include="MP-SCBP.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="MP-SCBP.xaml">
+    <Page Include="MP-SIS.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -192,6 +205,10 @@
     <VisualStudioVersion>11.0</VisualStudioVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>REM cd $(ProjectDir)
+REM fxc /Tps_4_0_level_9_1 /Emain /FoRipple.cso Ripple.hlsl</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

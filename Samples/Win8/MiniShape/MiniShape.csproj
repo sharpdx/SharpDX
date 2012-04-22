@@ -4,16 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FAB64B59-1B9F-4505-99CA-3D42ECD9E429}</ProjectGuid>
+    <ProjectGuid>{6745DD9B-5888-4B23-85B5-94611E439343}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>D2DEffectsHelloWorld</RootNamespace>
-    <AssemblyName>D2DEffectsHelloWorld</AssemblyName>
+    <RootNamespace>MiniShape</RootNamespace>
+    <AssemblyName>MiniShape</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>D2DEffectsHelloWorld_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>9FE6E45BE45E51B6A5FAF9EAE7330A8CC93E4FDA</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>MiniShape_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>2C12AE597F693EF79FDC9D113221536A39EE5822</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -107,7 +107,6 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <Reference Include="SharpDX">
       <HintPath>..\..\..\Bin\SharpDX.dll</HintPath>
     </Reference>
@@ -122,6 +121,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <ProjectReference Include="..\CommonDX\CommonDX.sample.csproj">
+      <Project>{45cd76a3-e21e-47a3-8bfd-9a1241aadb9d}</Project>
+      <Name>CommonDX.sample</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Common\BindableBase.cs" />
     <Compile Include="Common\BooleanToVisibilityConverter.cs" />
     <Compile Include="Common\BooleanNegationConverter.cs" />
@@ -130,22 +136,18 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MP-SIS.xaml.cs">
-      <DependentUpon>MP-SIS.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="DragHandler.cs" />
-    <Compile Include="EffectRenderer.cs" />
-    <Compile Include="MP-SCBP.xaml.cs">
-      <DependentUpon>MP-SCBP.xaml</DependentUpon>
+    <Compile Include="MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShapeRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="Common\ReadMe.txt" />
-    <None Include="D2DEffectsHelloWorld_TemporaryKey.pfx" />
+    <None Include="MiniShape_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Logo.png">
@@ -160,9 +162,6 @@
     <Content Include="Assets\StoreLogo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\SydneyOperaHouse002.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -173,20 +172,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="MP-SIS.xaml">
+    <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="MP-SCBP.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CommonDX\CommonDX.sample.csproj">
-      <Project>{45cd76a3-e21e-47a3-8bfd-9a1241aadb9d}</Project>
-      <Name>CommonDX.sample</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
