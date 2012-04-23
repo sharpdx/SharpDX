@@ -358,6 +358,7 @@ namespace SharpDX.Direct3D11
         /// <param name="subresource">The destination subresource.</param>
         /// <param name="rowPitch">The row pitch.</param>
         /// <param name="depthPitch">The depth pitch.</param>
+        /// <unmanaged>void ID3D11DeviceContext::UpdateSubresource([In] ID3D11Resource* pDstResource,[In] unsigned int DstSubresource,[In, Optional] const D3D11_BOX* pDstBox,[In] const void* pSrcData,[In] unsigned int SrcRowPitch,[In] unsigned int SrcDepthPitch)</unmanaged>	
         public void UpdateSubresource<T>(ref T data, Resource resource, int subresource = 0, int rowPitch = 0, int depthPitch = 0) where T : struct
         {
             unsafe
@@ -375,6 +376,7 @@ namespace SharpDX.Direct3D11
         /// <param name="subresource">The destination subresource.</param>
         /// <param name="rowPitch">The row pitch.</param>
         /// <param name="depthPitch">The depth pitch.</param>
+        /// <unmanaged>void ID3D11DeviceContext::UpdateSubresource([In] ID3D11Resource* pDstResource,[In] unsigned int DstSubresource,[In, Optional] const D3D11_BOX* pDstBox,[In] const void* pSrcData,[In] unsigned int SrcRowPitch,[In] unsigned int SrcDepthPitch)</unmanaged>	
         public void UpdateSubresource<T>(T[] data, Resource resource, int subresource = 0, int rowPitch = 0, int depthPitch = 0) where T : struct
         {
             unsafe
@@ -389,6 +391,7 @@ namespace SharpDX.Direct3D11
         /// <param name = "source">The source data.</param>
         /// <param name = "resource">The destination resource.</param>
         /// <param name = "subresource">The destination subresource.</param>
+        /// <unmanaged>void ID3D11DeviceContext::UpdateSubresource([In] ID3D11Resource* pDstResource,[In] unsigned int DstSubresource,[In, Optional] const D3D11_BOX* pDstBox,[In] const void* pSrcData,[In] unsigned int SrcRowPitch,[In] unsigned int SrcDepthPitch)</unmanaged>	
         public void UpdateSubresource(DataBox source, Resource resource, int subresource = 0)
         {
             UpdateSubresource(resource, subresource, null, source.DataPointer, source.RowPitch, source.SlicePitch);
@@ -401,6 +404,7 @@ namespace SharpDX.Direct3D11
         /// <param name = "resource">The destination resource.</param>
         /// <param name = "subresource">The destination subresource.</param>
         /// <param name = "region">The destination region within the resource.</param>
+        /// <unmanaged>void ID3D11DeviceContext::UpdateSubresource([In] ID3D11Resource* pDstResource,[In] unsigned int DstSubresource,[In, Optional] const D3D11_BOX* pDstBox,[In] const void* pSrcData,[In] unsigned int SrcRowPitch,[In] unsigned int SrcDepthPitch)</unmanaged>	
         public void UpdateSubresource(DataBox source, Resource resource, int subresource, ResourceRegion region)
         {
             UpdateSubresource(resource, subresource, region, source.DataPointer, source.RowPitch, source.SlicePitch);
