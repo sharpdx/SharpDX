@@ -64,6 +64,7 @@
     <Compile Include="Include.cs" />
     <Compile Include="IncludeShadow.cs" />
     <Compile Include="IndexBuffer.cs" />
+    <Compile Include="Line.cs" />
     <Compile Include="Macro.cs" />
     <Compile Include="ModuleInit.cs" />
     <Compile Include="PaletteEntry.cs" />

@@ -2631,7 +2631,9 @@
     <map param="ID3DXAnimationController::GetAnimationSet::ppAnimationSet" attribute="out" />
     <map param="ID3DXAnimationController::GetTrackAnimationSet::ppAnimSet" attribute="out" />
 
-    
+    <map method="ID3DXLine::DrawTransform" visibility="internal" />
+    <map param="ID3DXLine::DrawTransform::pVertexList" type="void" attribute="in" />
+
     <!--
     // *****************************************************************
     // D3D9 Functions
@@ -2682,6 +2684,8 @@
     <map function="D3DXTriPatchSize" check="false"/>
     <map param="D3DXTriPatchSize::pdwTriangles" attribute="out"/>
     <map param="D3DXTriPatchSize::pdwVertices" attribute="out"/>
+
+    <map param="D3DXCreateLine::ppLine" attribute="fast out"/>
 
     <map param="D3DXCheckCubeTextureRequirements::pSize" attribute="inout"/>
     <map param="D3DXCheckCubeTextureRequirements::pNumMipLevels" attribute="inout"/>
