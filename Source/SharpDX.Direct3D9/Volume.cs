@@ -27,6 +27,34 @@ namespace SharpDX.Direct3D9
 {
     public partial class Volume
     {
+        /// <summary>	
+        /// Loads a volume from memory.	
+        /// </summary>	
+        /// <param name="destPaletteRef"><para>Pointer to a  <see cref="SharpDX.Direct3D9.PaletteEntry"/> structure, the destination palette of 256 colors or <c>null</c>.</para></param>	
+        /// <param name="destBox"><para>Pointer to a <see cref="SharpDX.Direct3D9.Box"/> structure. Specifies the destination box. Set this parameter to <c>null</c> to specify the entire volume.</para></param>	
+        /// <param name="srcMemoryPointer"><para>Pointer to the top-left corner of the source volume in memory.</para></param>	
+        /// <param name="srcFormat"><para>Member of the <see cref="SharpDX.Direct3D9.Format"/> enumerated type, the pixel format of the source volume.</para></param>	
+        /// <param name="srcRowPitch"><para>Pitch of source image, in bytes. For DXT formats (compressed texture formats), this number should represent the size of one row of cells, in bytes.</para></param>	
+        /// <param name="srcSlicePitch"><para>Pitch of source image, in bytes. For DXT formats (compressed texture formats), this number should represent the size of one slice of cells, in bytes.</para></param>	
+        /// <param name="srcPaletteRef"><para>Pointer to a <see cref="SharpDX.Direct3D9.PaletteEntry"/> structure, the source palette of 256 colors or <c>null</c>.</para></param>	
+        /// <param name="srcBox"><para>Pointer to a <see cref="SharpDX.Direct3D9.Box"/> structure. Specifies the source box. <c>null</c> is not a valid value for this parameter.</para></param>	
+        /// <param name="filter"><para>A combination of one or more <see cref="SharpDX.Direct3D9.Filter"/> controlling how the image is filtered. Specifying D3DX_DEFAULT for this parameter is the equivalent of specifying <see cref="SharpDX.Direct3D9.Filter.Triangle"/> | <see cref="SharpDX.Direct3D9.Filter.Dither"/>.</para></param>	
+        /// <param name="colorKey"><para> <see cref="SharpDX.Color4"/> value to replace with transparent black, or 0 to disable the colorkey. This is always a 32-bit ARGB color, independent of the source image format. Alpha is significant and should usually be set to FF for opaque color keys. Thus, for opaque black, the value would be equal to 0xFF000000.</para></param>	
+        /// <returns>If the function succeeds, the return value is <see cref="SharpDX.Direct3D9.ResultCode.Success"/>. If the function fails, the return value can be one of the following values: <see cref="SharpDX.Direct3D9.ResultCode.InvalidCall"/>, D3DXERR_INVALIDDATA.</returns>	
+        /// <remarks>	
+        /// Writing to a non-level-zero surface of the volume texture will not cause the dirty rectangle to be updated. If <see cref="SharpDX.Direct3D9.D3DX9.LoadVolumeFromMemory"/> is called and the texture was not already dirty (this is unlikely under normal usage scenarios), the application needs to explicitly call <see cref="SharpDX.Direct3D9.VolumeTexture.AddDirtyBox"/> on the volume texture.	
+        /// </remarks>	
+        /// <unmanaged>HRESULT D3DXLoadVolumeFromMemory([In] IDirect3DVolume9* pDestVolume,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestBox,[In] const void* pSrcMemory,[In] D3DFORMAT SrcFormat,[In] unsigned int SrcRowPitch,[In] unsigned int SrcSlicePitch,[In, Buffer] const PALETTEENTRY* pSrcPalette,[In] const void* pSrcBox,[In] D3DX_FILTER Filter,[In] int ColorKey)</unmanaged>	
+        public unsafe void LoadFromMemory(SharpDX.Direct3D9.PaletteEntry[] destPaletteRef, Box? destBox, System.IntPtr srcMemoryPointer, SharpDX.Direct3D9.Format srcFormat, int srcRowPitch, int srcSlicePitch, SharpDX.Direct3D9.PaletteEntry[] srcPaletteRef, Box srcBox, SharpDX.Direct3D9.Filter filter, Color4 colorKey)
+        {
+            Box localDestBox;
+            if (destBox.HasValue)
+                localDestBox = destBox.Value;
+
+            D3DX9.LoadVolumeFromMemory(
+                this, destPaletteRef, new IntPtr(&localDestBox), srcMemoryPointer, srcFormat, srcRowPitch, srcSlicePitch, srcPaletteRef, new IntPtr(&srcBox), filter, colorKey.ToArgb());
+        }
+
         /// <summary>
         /// Loads a volume from a file on the disk.
         /// </summary>
