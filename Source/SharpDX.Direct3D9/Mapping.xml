@@ -2634,6 +2634,8 @@
     <map method="ID3DXLine::DrawTransform" visibility="internal" />
     <map param="ID3DXLine::DrawTransform::pVertexList" type="void" attribute="in" />
 
+    <map param="ID3DXSprite::Begin::Flags" type="D3DXSPRITE" default="SpriteFlags.None"/>
+
     <!--
     // *****************************************************************
     // D3D9 Functions
