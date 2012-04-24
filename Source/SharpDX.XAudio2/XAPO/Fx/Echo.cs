@@ -1,5 +1,3 @@
-<?xml version="1.0"?>
-<!--
 // Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,25 +17,22 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
--->
-<package >
-  <metadata>
-    <id>SharpDX.XAudio2</id>
-    <version>$version$</version>
-    <title>$title$</title>
-    <authors>$author$</authors>
-    <owners>$author$</owners>
-    <licenseUrl>http://sharpdx.org/License.txt</licenseUrl>
-    <projectUrl>http://sharpdx.org</projectUrl>
-    <iconUrl>http://sharpdx.org/logo_100x100.png</iconUrl>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>$description$</description>
-    <copyright>Copyright (c) 2010-2011 Alexandre Mutel</copyright>
-    <tags>SharpDX DirectX Direct3D MDX XAudio2 XAPO</tags>
-    <!-- Release notes for this version-->
-    <releaseNotes></releaseNotes>
-    <dependencies>
-      <dependency id="SharpDX" version="$version$"/>
-    </dependencies>
-  </metadata>
-</package>
+using System;
+
+namespace SharpDX.XAPO.Fx
+{
+    /// <summary>
+    /// An Echo XAPO AudioProcessor
+    /// </summary>
+    public partial class Echo : AudioProcessorParamNative<EchoParameters>
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Echo"/> class.
+        /// </summary>
+        public Echo()
+            : base(IntPtr.Zero)
+        {
+            XAPOFx.CreateFX(XAPOFx.CLSID_FXEcho, this);
+        }
+    }
+}

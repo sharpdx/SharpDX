@@ -1,5 +1,3 @@
-<?xml version="1.0"?>
-<!--
 // Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,25 +17,22 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
--->
-<package >
-  <metadata>
-    <id>SharpDX.XAPO</id>
-    <version>$version$</version>
-    <title>$title$</title>
-    <authors>$author$</authors>
-    <owners>$author$</owners>
-    <licenseUrl>http://sharpdx.org/License.txt</licenseUrl>
-    <projectUrl>http://sharpdx.org</projectUrl>
-    <iconUrl>http://sharpdx.org/logo_100x100.png</iconUrl>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>$description$</description>
-    <copyright>Copyright (c) 2010-2011 Alexandre Mutel</copyright>
-    <tags>SharpDX DirectX Direct3D MDX XAPO XAudio2</tags>
-    <!-- Release notes for this version-->
-    <releaseNotes></releaseNotes>
-    <dependencies>
-      <dependency id="SharpDX" version="$version$"/>
-    </dependencies>
-  </metadata>
-</package>
+using System;
+
+namespace SharpDX.XAPO.Fx
+{
+    /// <summary>
+    /// A Reverb XAPO AudioProcessor
+    /// </summary>
+    public partial class Reverb : AudioProcessorParamNative<ReverbParameters>
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Reverb"/> class.
+        /// </summary>
+        public Reverb()
+            : base(IntPtr.Zero)
+        {
+            XAPOFx.CreateFX(XAPOFx.CLSID_FXReverb, this);
+        }
+    }
+}

@@ -62,10 +62,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Source\SharpDX.XAPO\SharpDX.XAPO.csproj">
-      <Project>{947851F3-93A5-4FCF-93CF-60232FB7F56F}</Project>
-      <Name>SharpDX.XAPO</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\Source\SharpDX.XAudio2\SharpDX.XAudio2.csproj">
       <Project>{4995127E-0B8E-45B8-80C4-6BAC1BBE3783}</Project>
       <Name>SharpDX.XAudio2</Name>

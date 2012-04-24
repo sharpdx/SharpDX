@@ -71,7 +71,6 @@ enum __SAL_YesNo {};
     <file>SharpDX.X3DAudio\Mapping.xml</file>
     <file>SharpDX.XACT3\Mapping.xml</file>
   </ifndef>
-  <file>SharpDX.XAPO\Mapping.xml</file>
   <file>SharpDX.XAudio2\Mapping.xml</file>
   <file>SharpDX.XInput\Mapping.xml</file>
   <file>SharpDX.RawInput\Mapping.xml</file>

@@ -38,9 +38,6 @@
     <Reference Include="SharpDX.Direct2D1">
       <HintPath>..\..\..\Bin\SharpDX.Direct2D1.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.XAPO">
-      <HintPath>..\..\..\Bin\SharpDX.XAPO.dll</HintPath>
-    </Reference>
     <Reference Include="SharpDX.XAudio2">
       <HintPath>..\..\..\Bin\SharpDX.XAudio2.dll</HintPath>
     </Reference>

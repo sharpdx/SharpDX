@@ -41,9 +41,6 @@
     <Reference Include="SharpDX.XACT3">
       <HintPath>..\..\..\Bin\SharpDX.XACT3.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.XAPO">
-      <HintPath>..\..\..\Bin\SharpDX.XAPO.dll</HintPath>
-    </Reference>
     <Reference Include="SharpDX.XAudio2">
       <HintPath>..\..\..\Bin\SharpDX.XAudio2.dll</HintPath>
     </Reference>

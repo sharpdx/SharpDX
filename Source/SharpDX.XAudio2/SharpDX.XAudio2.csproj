@@ -29,11 +29,32 @@
     <Compile Include="Generated\Interfaces.cs" />
     <Compile Include="Generated\LocalInterop.cs" />
     <Compile Include="Generated\Structures.cs" />
+    <Compile Include="Generated\XAPO\Enumerations.cs" />
+    <Compile Include="Generated\XAPO\Functions.cs" />
+    <Compile Include="Generated\XAPO\Fx\Enumerations.cs" />
+    <Compile Include="Generated\XAPO\Fx\Functions.cs" />
+    <Compile Include="Generated\XAPO\Fx\Interfaces.cs" />
+    <Compile Include="Generated\XAPO\Fx\Structures.cs" />
+    <Compile Include="Generated\XAPO\Interfaces.cs" />
+    <Compile Include="Generated\XAPO\Structures.cs" />
     <Compile Include="MasteringVoice.cs" />
     <Compile Include="SourceVoice.cs" />
     <Compile Include="SubmixVoice.cs" />
     <Compile Include="Voice.cs" />
     <Compile Include="VoiceShadow.cs" />
+    <Compile Include="XAPO\AudioProcessor.cs" />
+    <Compile Include="XAPO\AudioProcessorBase.cs" />
+    <Compile Include="XAPO\AudioProcessorNative.cs" />
+    <Compile Include="XAPO\AudioProcessorParamNative.cs" />
+    <Compile Include="XAPO\AudioProcessorShadow.cs" />
+    <Compile Include="XAPO\Fx\Echo.cs" />
+    <Compile Include="XAPO\Fx\Equalizer.cs" />
+    <Compile Include="XAPO\Fx\MasteringLimiter.cs" />
+    <Compile Include="XAPO\Fx\Reverb.cs" />
+    <Compile Include="XAPO\Fx\XAPOFx.cs" />
+    <Compile Include="XAPO\LockParameters.cs" />
+    <Compile Include="XAPO\ParameterProvider.cs" />
+    <Compile Include="XAPO\ParameterProviderShadow.cs" />
     <Compile Include="XAudio2.cs" />
     <Compile Include="Fx\Reverb.cs" />
     <Compile Include="Fx\VolumeMeter.cs" />
@@ -48,14 +69,14 @@
     <None Include="SharpDX.XAudio2.nuspec" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpDX.XAPO\SharpDX.XAPO.csproj">
-      <Project>{947851f3-93a5-4fcf-93cf-60232fb7f56f}</Project>
-      <Name>SharpDX.XAPO</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SharpDX\SharpDX.csproj">
       <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
       <Name>SharpDX</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Mapping-xaudio2.xml" />
+    <Content Include="XAPO\Mapping.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
