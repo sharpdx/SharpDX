@@ -30,7 +30,7 @@ namespace SharpDX.Direct3D10
         /// <param name="device">A reference to the device (see <see cref="SharpDX.Direct3D10.Device"/>) that will draw the sprite. </param>
         /// <param name="bufferSize">The size of the vertex buffer, in number of sprites, that will be sent to the device when <see cref="SharpDX.Direct3D10.Sprite.Flush"/> or <see cref="DrawSpritesBuffered(SpriteInstance[])"/> is called. This should be a small number if you know you will be rendering a small number of sprites at a time (to save memory) and a large number if you know you will be rendering a large number of sprites at a time. The maximum value is 4096. If 0 is specified, the vertex buffer size will automatically be set to 4096. </param>
         /// <unmanaged>HRESULT D3DX10CreateSprite([None] ID3D10Device* pDevice,[None] int cDeviceBufferSize,[None] LPD3DX10SPRITE* ppSprite)</unmanaged>
-        public Sprite(Device device, int bufferSize)
+        public Sprite(Device device, int bufferSize = 0)
         {
             D3DX10.CreateSprite(device, bufferSize, this);
         }
