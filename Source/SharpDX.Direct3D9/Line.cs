@@ -37,6 +37,38 @@ namespace SharpDX.Direct3D9
         }
 
         /// <summary>	
+        /// Draws a line strip in screen space. Input is in the form of an array that defines points (of <see cref="SharpDX.Vector2"/>) on the line strip.	
+        /// </summary>	
+        /// <param name="vertices">No documentation.</param>	
+        /// <param name="color">No documentation.</param>	
+        /// <unmanaged>HRESULT ID3DXLine::Draw([In] const void* pVertexList,[In] unsigned int dwVertexListCount,[In] D3DCOLOR Color)</unmanaged>	
+        public void Draw(SharpDX.Vector2[] vertices, SharpDX.Color4 color)
+        {
+            unsafe
+            {
+                fixed (void* pVertexListRef = vertices)
+                    Draw((IntPtr)pVertexListRef, vertices.Length, color);
+            }
+        }
+
+        /// <summary>	
+        /// Draws a line strip in screen space. Input is in the form of an array that defines points (of <see cref="SharpDX.Vector2"/>) on the line strip.	
+        /// </summary>	
+        /// <param name="vertices">No documentation.</param>	
+        /// <param name="color">No documentation.</param>	
+        /// <unmanaged>HRESULT ID3DXLine::Draw([In] const void* pVertexList,[In] unsigned int dwVertexListCount,[In] D3DCOLOR Color)</unmanaged>	
+        public void Draw<T>(T[] vertices, SharpDX.Color4 color) where T : struct
+        {
+            unsafe
+            {
+                if (Utilities.SizeOf<T>() != sizeof(Vector3))
+                    throw new ArgumentException("Invalid size for T. Must be 3 floats (12 bytes)");
+
+                Draw((IntPtr)Interop.Fixed(vertices), vertices.Length, color);
+            }
+        }
+
+        /// <summary>	
         /// Draws a line strip in screen space with a specified input transformation matrix.	
         /// </summary>	
         /// <param name="vertices"><para>Array of vertices that make up the line. See <see cref="SharpDX.Vector3"/>.</para></param>	
