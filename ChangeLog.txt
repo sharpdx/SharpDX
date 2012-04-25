@@ -2,6 +2,214 @@ SharpDX Change Log
 ==================
 
 --------------------------
+Release Notes (2012-04-??)
+--------------------------
+SharpDX 2.1.0 
+
+- Add full support for Windows 8 Consumer Preview / Beta. SharpDX assemblies are passing certification successfully.
+- Add DirectX/XAML interop for Windows 8 Metro App by supporting interfaces ISurfaceImageSourceNative, IVirtualSurfaceImageSourceNative, IVirtualSurfaceUpdatesCallbackNative and ISwapChainBackgroundPanelNative.
+- Add full support for Direct2D1 Effects and Custom user Effects for DirectX11.1/Win8 Metro
+- Add several Win8 Metro Samples (Direct3D11.1 and Direct2D1), thanks to Jose Fajardo for his great contributions.
+- SharpDX binaries are now splitted into 4 distributions:
+  - Normal, available for desktop application, based on DirectX SDK/Runtime June 2010
+  - Signed, signed normal assemblies
+  - DirectX11.1, available for desktop application, based on Windows 8 Consumer Preview
+  - Win8Metro, available for metro application, based on Windows 8 Consumer Preview
+- SharpDX.XAPO is now integrated into SharpDX.XAudio2 assembly.
+- SharpDX.Diagnostics is now integrated into SharpDX assembly.
+- Lots of improvements and bug fixes, check the following details
+
+****************
+*** Core API ***
+****************
+
+- Add ComObject As<T> and Dispose<T> static methods
+- Add ComObject.QueryInterface static method for Win8
+- Add Int3 struct
+- Add NativeFile.ReadAllBytes and ReadAllText methods
+- Add method MathUtil.Clamp
+- Fix issue #139 Check IsDisposed in Disposable finalizer
+- Fix issue #158. Initblk should use unaligned and an int for the size under x64 as well as x86.
+- Fix issue #164. Minor breaking changes: SharpDX.Diagnostics is removed. Description message for COM/HRESULT errors is now natively integrated into SharpDX. SharpDX.DXGI.DXGIError is renamed to ResultCode in order to be consistent with other APIs
+- Improves error diagnostics under Win8, in ResultDescriptor, full description is now used from Win32 FormatMessageW as well as SharpDX knownledge of Api code.
+- Major refactoring of COM callback internals (aka in SharpDX as Shadow classes) in order to support multiple COM inheritance
+- Use common function to map Exception to HResult code. Modify SharpDXException to set Exception.HResult property
+- Use custom TagAttribute as ObfuscationAttribute is not available under overstripped 4.5 Core profile Win8 (!)
+- Use optimized code for CppObjectShadow.Dispose/ToShadow methods
+
+- Remove internal usage of try/catch SharpDXException in favor of Result.Failure check
+- Remove System.GC usage for Win8
+
+********************
+*** Graphics API ***
+********************
+
+[All DXGI/Direct3D]
+- Fix issue #136 Remove invalid call to Marshal.Release in all DebugName property setters
+
+[D3DCompiler]
+- Add CompilationResult for ShaderBytecode.Compile in order to be able to return warnings, as well as errors if Configuration.ThrowOnShaderCompilationError is setup to false
+- Fix loading using LoadLibrary/GetProcessAddress under Win8
+- Use Result instead of HasErrors for shader CompilationResult
+
+[DXGI] 
+- Add new methods for DXGI 1.2 Win8
+- Add support for DirectX/XAML Win8 Interop with ISurfaceImageSourceNative, IVirtualSurfaceImageSourceNative, IVirtualSurfaceUpdatesCallbackNative and ISwapChainBackgroundPanelNative
+- Fix PresentParameters to appear only in Win8 build
+- Fix issue #162. Use SwapChainFlags enum for last parameter
+- Fix issue #163. Check for null before disposing an adapter in DXGI.Factory(1).GetAdapterCount(1)
+- Remove CheckError on EnumAdapters. Add convenience method for gettings adapters from factories
+- Start to use new ResultDescriptor
+
+[Direct2D1]
+- Add Effect.SetInputEffect method
+- Add TranformNode / Transform callbacks for Win8
+- Add all builtin effects for Win8
+- Add constructor for InputDescription. Change PropertyBindingAttribute to use string for min,max,default
+- Add constructor for VertexRange
+- Add missing factory.Create and deviceContext.Create object constructors for Direct2D Win8 Metro
+- Add support for ComputeTransform, DrawTransform, SourceTransform
+- Add support for Direct2D1.1 custom effects
+- Add support for DrawingPointF, DrawingRectangleF, RectangleF for custom effect property bindings
+- Add support for TransformGraph, ComputeInformation, DrawInformation, CommandList, CommandSink for Direct3D11.1 / Win8Metro
+- Fix compilation errors introduce- by previous commit
+- Fix #define for non-Win8 metro compilation
+- Fix a bug in TransformShadow and add several convenience methods
+- Fix build issue for SharpDX standard introduced by Win8 build
+- Improved mapping for Win8 API, not finished
+- Set some CustomEffect attributes parameter mandatory
+- Start to add CustomEffect support under Win8
+- XXXTransformShadow must inherit from other shadows
+
+[Dircet3D10] 
+- Add bufferSize = 0 for Sprite constructor
+- Fix issue #153. Effects is now providing an agnostic math API
+
+[Direct3D11 / Direct3D11.1]
+- Add new methods for Direct3D11.1 Win8
+- Add reference to native Direct3D11.1 effects dll for x86/x64 platform
+- Add dlls for Effects11 under Direct3D11.1 for x86, x64 and ARM
+- Fix issue #152. Add Texture2D.SHProjectCubeMap  function
+- Fix issue #153. Effects is now providing an agnostic math API
+- Fix issue #134. Add method EffectVariable.AsInterface()
+- Fix issue #138. Add additional methods InvertTransform and ForwardTransform to FastFourrierTransform class
+- Fix issue #165. Add support for uint sampleMask. Add default value to -1
+- Make CompilationResultBase abstract
+- Remove dependency to D3DCompiler under Win8 Metro
+- Update doc for DeviceContext.UpdateSubresource
+- Disable Effects framework in Win8 as d3dcompiler won't be allowed at runtime anyway
+
+[Direct3D9]
+- Add CompilationResult to ShaderBytecode
+- Add support for Line
+- Add SpriteFlags to Sprite.Begin
+- Fix issue #143. Device.SetClipPlane is now using a Vector4 for the plane definition
+- Fix issue #156. Reset is now accepting an array of PresentationParameters
+- Fix issue #157. Add LoadVolumeFromMemory on Volume object
+
+[Direct3D]
+- Revert back old version of PixHelper as Color parameter seems to be used by NSight profiler (but not by PIX)
+
+[WIC]
+- Add constructor for ImagingFactory2 Win8
+
+*****************
+*** Input API ***
+*****************
+
+[DirectInput]
+- Add Keyboard sample
+
+******************
+*** Sounds API ***
+******************
+
+[DirectSound]
+- Fix issue #137. Fix typo for property DirectSound.IsCertified
+
+[XAPO]
+- Add SharpDX.XAPO to XAudio2. XAPO is no longer an individual assembly but is now part of SharpDX.XAudio2 assembly.
+- Fix certification issue for XAPO on Win8 Metro
+
+***************
+*** Samples ***
+***************
+
+- Add simple sample with texture mapping on a rotating cube
+- Add Direct2D MiniShape sample for Win8 Metro, unifinished.
+- Add Direct2D sample for Win8. Integrate Direct2D in XAML interop samples.
+- Add MiniCubeBrushXaml Win8 samples. Not finished yet.
+- Add XAML-DirectX interop MiniCubeXaml sample for Win8 Metro. Refactor code to use DirectXBase as in C++ samples
+- Remove all references to D3DCompiler in Win8
+- Remove fxc.bat
+- Remove old SharpDX.Diagnostics from all samples. Add missing D3D9 samples. Clean Win 8 samples
+- Rename CustomPixelShader sample to D2DCustomPixelShaderEffect
+- Change Win8 samples to use a common infrastructure
+- Fix Dispose in MiniCube program
+- Fix D2DCustomPixelShader
+- Fix D2DCustomPixelShaderEffect RippleEffect sample for Win8 Metro \o/
+- Fix Direct2D1 Custom Vertex Shader for Win8
+- Fix Win8 samples with changes from DXGIError renamed to ResultCode
+- Fix solution for Win8 samples
+- Update Direct2D1 RippleEffect sample.
+- Update samples for Win8 Metro. Add Direct3D11 CubeTexture sample
+
+*****************
+*** Internals ***
+*****************
+
+[Build] 
+- Fix build for all versions: Normal, Signed, Win8Beta and DirectX11.1 Desktop
+- Fix build for configurations D3D11_1Debug/D3D11_1Release Direct3D11.1 without Metro
+- Fix build for nuget-publish to continue even if symbolsource.org returns errors
+- Fix problem after merge from master. Add back hidusage.h file
+- Make distinction between Win8Metro (Net4.5 Core + Win8 Metro app certification restrictions) and Direct3D11.1 by using respective #define during build
+- Add DisableFastUpToDateCheck to allow SharpGen to be called at each build. Fix VS2011 build issue
+- Update build to support Direct3D11.1 assemblies outside Win8 Metro
+
+[SharpCLI]
+- Remove usage of MsBuild custom task for assembly patching, as MsBuild lock SharpCLI task and cannot be updated for each build. Projects are now using directly the SharpCLI command line which is mush safer.
+
+[SharpGen] 
+- Fix xml preprocessor that was not working with nested ifdef/ifndef. Now preprocess run on deepest rules first
+- Add support for parameter default values
+- Handle C# params qualifier for array in code generator
+
+--------------------------
+Release Notes (2012-02-06)
+--------------------------
+
+SharpDX 2.0.4
+
+ * Build
+    - Add build infrastructure for nightly-builds
+ * SharpDX
+    - Bugfix #111, add proper handling of BlockAlign, SamplerPerBlock, AverageBytesPerSecond  for WaveFormatAdpcm
+    - Bugfix #115, Add Disposing, Disposed events to DisposeBase. Change IsDisposed to public.
+    - Bugfix RenderLoop.Run is not running after FormClosed event in order to enable clean Dispose on Form
+    - Bugfix issue #131. Remove setters for Width/Height in Rectangle/RectangleF. Add X,Y properties. Improve RectangleF equals method.
+    - Bugfix issue #132. Provides a IStream implementation and a proxy to System.IO.Stream
+    - Fix Win8 build
+    - Fix issue #128. RenderLoop is using default Application.DoEvents in order to support Application.AddMessageFilter (use by RawInput). Old custom windows event message handler is available by setting RenderLoop.UseCustomDoEvents. RenderLoop is still compatible with Mono.
+    - Remove dependency to System.Drawing to improve Win8 certification
+ * D3DCompiler
+    - Bugfix issue #122. Integrate ShaderBytecode.Decompress methods from Fadi Alsamman
+ * Direct3D11
+    - Bugfix issue #122. Integrate ShaderBytecode.Decompress methods from Fadi Alsamman
+    - Bugfix issue #130. Add standard error codes to  SharpDX.Direct3D11.ResultCode
+    - Integrate patch from issue #133. New methods FromXXX to load resources without using generics.
+    - Bugfix issue #129. Add FilterTexture method to Resource.
+ * Direct3D9
+    - Bugfix #116, Remove D3DXCheckVersion call from Direct3D(Ex) constructors in order to remove dependency to D3DX runtime
+    - Bugfix issue #123. Add Font and Sprite support. Add Direct3D9 DisplayFontApp sample.
+    - Bugfix issue #127. Set DataStream CanRead/CanWrite according to LockFlags.ReadOnly
+ * DirectWrite
+    - Bugfix #113 Handle empty indices/offsets/advances marshaling in GlyphRun
+ * SharpGen
+    - Fix issue #120, add better support for union with fixed arrays
+    - Use DllImport for all interop functions because Win8 Certification doesn't allow usage of custom LoadLibrary/GetProcAddress
+
+--------------------------
 Release Notes (2011-11-22)
 --------------------------
 SharpDX beta3 (2.0.3)
