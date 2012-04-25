@@ -60,15 +60,17 @@ namespace D2DEffectsHelloWorld
 
 
             effectRenderer = new EffectRenderer();
+            var fpsRenderer = new FpsRenderer();
 
             d2dTarget = new SwapChainBackgroundPanelTarget(rootSCBP);
             d2dTarget.OnRender += effectRenderer.Render;
+            d2dTarget.OnRender += fpsRenderer.Render;
 
             deviceManager = new DeviceManager();
-            deviceManager.OnInitialize += effectRenderer.Initialize;
             deviceManager.OnInitialize += d2dTarget.Initialize;
-
-            
+            deviceManager.OnInitialize += effectRenderer.Initialize;
+            deviceManager.OnInitialize += fpsRenderer.Initialize;
+           
             deviceManager.Initialize(DisplayProperties.LogicalDpi);
 
             // Setup rendering callback

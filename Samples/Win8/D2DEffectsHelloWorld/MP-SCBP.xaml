@@ -9,11 +9,11 @@
     >
 
 
-    <TextBlock Text="Blur" Foreground="White" Margin="120,20,0,0" FontSize="18" HorizontalAlignment="Left" VerticalAlignment="Top" />
-    <Slider HorizontalAlignment="Left" Height="39" Margin="164,10,0,0" VerticalAlignment="Top" Width="461" ValueChanged="BlurDeviationChanged" Maximum="10" LargeChange="1"/>
+    <TextBlock Text="Blur" Foreground="White" Margin="121,55,0,0" FontSize="18" HorizontalAlignment="Left" VerticalAlignment="Top" />
+    <Slider HorizontalAlignment="Left" Height="39" Margin="165,45,0,0" VerticalAlignment="Top" Width="461" ValueChanged="BlurDeviationChanged" Maximum="10" LargeChange="1"/>
 
-    <TextBlock Text="Scale" Foreground="White" Margin="120,94,0,0" FontSize="18" HorizontalAlignment="Left" VerticalAlignment="Top" />
-    <Slider HorizontalAlignment="Left" Height="39" Margin="164,84,0,0" VerticalAlignment="Top" Width="461" ValueChanged="ScaleChanged"  Maximum="1.2" Minimum="0.6" Value="0.7" SmallChange="0.02" LargeChange="0.02" StepFrequency="0.01"/>
+    <TextBlock Text="Scale" Foreground="White" Margin="121,129,0,0" FontSize="18" HorizontalAlignment="Left" VerticalAlignment="Top" />
+    <Slider HorizontalAlignment="Left" Height="39" Margin="165,119,0,0" VerticalAlignment="Top" Width="461" ValueChanged="ScaleChanged"  Maximum="1.2" Minimum="0.6" Value="0.7" SmallChange="0.02" LargeChange="0.02" StepFrequency="0.01"/>
 
 
 

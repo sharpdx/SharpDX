@@ -74,13 +74,16 @@ namespace MiniCube
 
                 // New CubeRenderer
                 cubeRenderer = ToDispose(new CubeRenderer());
+                var fpsRenderer = new FpsRenderer();
 
                 // Add Initializer to device manager
                 deviceManager.OnInitialize += target.Initialize;
                 deviceManager.OnInitialize += cubeRenderer.Initialize;
+                deviceManager.OnInitialize += fpsRenderer.Initialize;
 
                 // Render the cube within the CoreWindow
                 target.OnRender += cubeRenderer.Render;
+                target.OnRender += fpsRenderer.Render;
 
                 // Initialize the device manager and all registered deviceManager.OnInitialize 
                 deviceManager.Initialize(DisplayProperties.LogicalDpi);

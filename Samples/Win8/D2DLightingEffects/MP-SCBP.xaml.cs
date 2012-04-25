@@ -49,7 +49,6 @@ namespace D2DLightingEffects
 
         private SwapChainBackgroundPanelTarget d2dTarget;
 
-
         private EffectRenderer effectRenderer;
 
 
@@ -59,16 +58,18 @@ namespace D2DLightingEffects
 
 
             effectRenderer = new EffectRenderer(root, root);
-            cboEffectSelector.Init(effectRenderer);
+            var fpsRenderer = new FpsRenderer();
 
+            cboEffectSelector.Init(effectRenderer);
 
             d2dTarget = new SwapChainBackgroundPanelTarget(root);
             d2dTarget.OnRender += effectRenderer.Render;
+            d2dTarget.OnRender += fpsRenderer.Render;
 
             deviceManager = new DeviceManager();
-            deviceManager.OnInitialize += effectRenderer.Initialize;
             deviceManager.OnInitialize += d2dTarget.Initialize;
-
+            deviceManager.OnInitialize += effectRenderer.Initialize;
+            deviceManager.OnInitialize += fpsRenderer.Initialize;
             
             deviceManager.Initialize(DisplayProperties.LogicalDpi);
 

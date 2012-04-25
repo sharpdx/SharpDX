@@ -82,6 +82,7 @@ namespace MiniShape
 
             // New CubeRenderer
             renderer = new ShapeRenderer();
+            var fpsRenderer = new FpsRenderer();
 
             // Use CoreWindowTarget as the rendering target (Initialize SwapChain, RenderTargetView, DepthStencilView, BitmapTarget)
             target = new SwapChainBackgroundPanelTarget(swapChainPanel);
@@ -89,9 +90,11 @@ namespace MiniShape
             // Add Initializer to device manager
             deviceManager.OnInitialize += target.Initialize;
             deviceManager.OnInitialize += renderer.Initialize;
+            deviceManager.OnInitialize += fpsRenderer.Initialize;
 
             // Render the cube within the CoreWindow
             target.OnRender += renderer.Render;
+            target.OnRender += fpsRenderer.Render;
 
             // Initialize the device manager and all registered deviceManager.OnInitialize 
             deviceManager.Initialize(DisplayProperties.LogicalDpi);
