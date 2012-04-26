@@ -29,8 +29,9 @@ namespace SharpDX.Direct2D1
         /// </summary>	
         /// <param name="factory">an instance of <see cref = "SharpDX.Direct2D1.Factory" /></param>
         /// <param name="properties">a definition for this render target</param>
-        public StrokeStyle(Factory factory, StrokeStyleProperties properties) : this(factory, properties, null)
+        public StrokeStyle(Factory factory, StrokeStyleProperties properties) : base(IntPtr.Zero)
         {
+            factory.CreateStrokeStyle(ref properties, null, 0, this);
         }
 
         /// <summary>
