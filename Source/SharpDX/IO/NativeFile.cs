@@ -27,7 +27,7 @@ namespace SharpDX.IO
     /// <summary>
     /// Windows File Helper.
     /// </summary>
-    public class NativeFile 
+    public static class NativeFile 
     {
         /// <summary>
         /// Opens a binary file, reads the contents of the file into a byte array, and then closes the file.

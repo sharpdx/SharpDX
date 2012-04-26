@@ -26,6 +26,68 @@ namespace SharpDoc.Model
     /// </summary>
     public class NProperty : NMember
     {
-        
+        /// <summary>
+        /// Gets or sets the type of the property.
+        /// </summary>
+        /// <value>The type of the return.</value>
+        public NTypeReference PropertyType { get; set; }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance has get method.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance has get method; otherwise, <c>false</c>.
+        /// </value>
+        public bool HasGetMethod
+        {
+            get
+            {
+                return GetMethod != null;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance has set method.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance has set method; otherwise, <c>false</c>.
+        /// </value>
+        public bool HasSetMethod
+        {
+            get
+            {
+                return SetMethod != null;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the get method.
+        /// </summary>
+        /// <value>
+        /// The get method.
+        /// </value>
+        public NMethod GetMethod { get; set; }
+
+        /// <summary>
+        /// Gets or sets the set method.
+        /// </summary>
+        /// <value>
+        /// The set method.
+        /// </value>
+        public NMethod SetMethod { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value description.
+        /// </summary>
+        /// <value>
+        /// The value description.
+        /// </value>
+        public string ValueDescription { get; set; }
+
+        protected internal override void OnDocNodeUpdate()
+        {
+            base.OnDocNodeUpdate();
+            ValueDescription = DocFromTag("value");
+        }
     }
 }

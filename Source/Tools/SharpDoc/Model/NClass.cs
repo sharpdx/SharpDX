@@ -27,9 +27,13 @@ namespace SharpDoc.Model
     /// </summary>
     public class NClass : NType
     {
-        public override string TypeName
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NClass"/> class.
+        /// </summary>
+        public NClass()
         {
-            get { return "Class"; }
+            TypeName = "class";
+            Category = "Class";
         }
     }
 }

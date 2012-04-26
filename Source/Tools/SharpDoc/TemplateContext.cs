@@ -183,14 +183,14 @@ namespace SharpDoc
         {
             get
             {
-                if (Topic != null)
-                    return Topic;
                 if (Type != null)
                     return Type;
                 if (Namespace != null)
                     return Namespace;
                 if (Assembly != null)
                     return Assembly;
+                if (Topic != null)
+                    return Topic;
                 return null;
             }
         }

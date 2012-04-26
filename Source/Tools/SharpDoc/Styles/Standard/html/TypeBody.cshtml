@@ -26,6 +26,7 @@
 @using System.Text;
 @model SharpDoc.TemplateContext
 @Import("Section")
+@Import("SeeAlso")
 @{    
     // Initialize complex inheritance flag 
     // Check if this type has a complex inheritance   
@@ -91,29 +92,33 @@
 @Include("TypeBodyMembersHeader")
 
 <div class="members">
-@if (self.HasConstructors)
-    @Helpers.Section.Dump("Constructors", self.Constructors, true)
+@if (!(self is NDelegate))
+{
+	@if (self.HasConstructors)
+        @Helpers.Section.Dump("Constructors", self.Constructors, true);
 
-@if (self.HasFields)
-    @Helpers.Section.Dump("Fields", self.Fields, true)
+	@if (self.HasFields)
+        @Helpers.Section.Dump("Fields", self.Fields, true);
 
-@if (self.HasProperties)
-    @Helpers.Section.Dump("Properties", self.Properties, true)
+	@if (self.HasProperties)
+        @Helpers.Section.Dump("Properties", self.Properties, true);
 
-@if (self.HasMethods)
-    @Helpers.Section.Dump("Methods", self.Methods, true)
+	@if (self.HasMethods)
+        @Helpers.Section.Dump("Methods", self.Methods, true);
         
-@if (self.HasOperators)
-    @Helpers.Section.Dump("Operators", self.Operators, true)
+	@if (self.HasOperators)
+        @Helpers.Section.Dump("Operators", self.Operators, true);
 
-@if (self.HasEvents)
-    @Helpers.Section.Dump("Events", self.Events, true)
-
-@if (!string.IsNullOrEmpty(self.Remarks)) 
+	@if (self.HasEvents)
+		Helpers.Section.Dump("Events", self.Events, true);
+}
+@if (!string.IsNullOrEmpty(self.Remarks))
     @Helpers.Section.Dump("Remarks", TagExpand(self.Remarks))
 
 @if (self is NClass && HasComplexInheritance)
-    @Helpers.Section.Dump("section_full_inheritance", "Inheritance Hierarchy", DumpInheritance(true).ToString())   
+    @Helpers.Section.Dump("section_full_inheritance", "Inheritance Hierarchy", DumpInheritance(true).ToString())
+	
+@Helpers.SeeAlso.Dump(self)
 </div>
 <!-- Temporary space -->
 <br />

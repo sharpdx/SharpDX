@@ -47,10 +47,23 @@
         if (type.IsFinal) text.Append("sealed ");
 
         // Append type (class, struct, interface, enum, delegate)
-        text.Append(type.TypeName.ToLower()).Append(" ");
+        text.Append(type.TypeName).Append(" ");
+
+        var deleg = type as NDelegate;
+
+		if (deleg != null)
+        {
+            text.Append(Escape(deleg.Invoke.ReturnType.Name));
+            text.Append(" ");
+        }
 
         // Append the name
         text.Append(Escape(type.Name));
+
+		if (deleg != null)
+        {
+            DumpParameters(text, deleg.Invoke.Parameters);
+        }
 
         bool hasBase = type is NClass && type.Bases.Count > 1;
         if (hasBase)
@@ -71,6 +84,67 @@
         return text.ToString();
     }
 
+    /// <summary>
+    /// Dump the C# syntax of a type property
+    /// </summary>
+    /// <param name="prop"></param>
+    /// <returns></returns>
+    protected string DumpProperty(NProperty prop)
+    {
+        var text = new StringBuilder();
+
+        // Append visibility
+        text.Append(prop.VisibilityFullName).Append(" ");
+		
+		// Append Type
+        text.Append(prop.PropertyType.Name).Append(" ");
+
+		// Append Name
+		text.Append(prop.Name).Append(" { ");
+
+		if (prop.HasGetMethod)
+        {
+			if (prop.Visibility != prop.GetMethod.Visibility)
+                text.Append(prop.GetMethod.VisibilityName).Append(" ");
+            text.Append("get;");
+        }
+
+		if (prop.HasSetMethod)
+        {
+			if (prop.HasGetMethod)
+			    text.Append(" ");
+			if (prop.Visibility != prop.SetMethod.Visibility)
+                text.Append(prop.SetMethod.VisibilityName).Append(" ");
+            text.Append("set;");
+        }
+
+        text.Append(" }").AppendLine();
+
+        return text.ToString();
+    }    
+
+    /// <summary>
+    /// Dump the C# syntax of a type property
+    /// </summary>
+    /// <param name="field"></param>
+    /// <returns></returns>
+    protected string DumpField(NField field)
+    {
+        var text = new StringBuilder();
+
+        // Append visibility
+        text.Append(field.VisibilityFullName).Append(" ");
+
+        // Append the return type
+	    text.Append(Escape(field.FieldType.Name)).Append(" ");
+        
+        // Append the name
+        text.Append(Escape(field.Name));
+		
+        // TODO add generic constraints here
+
+        return text.ToString();
+    }    
 
     /// <summary>
     /// Dump the C# syntax of a type method
@@ -86,37 +160,46 @@
             text.Append("[").Append(attribute).Append("]").AppendLine();
 
         // Append visibility
-        text.Append(method.VisibilityName).Append(" ");
-        if (method.IsStatic) text.Append("static ");
-        if (method.IsAbstract) text.Append("abstract ");
-        if (method.IsFinal) text.Append("sealed ");
+        text.Append(method.VisibilityFullName).Append(" ");
 
         // Append the return type
-        text.Append(Escape(method.ReturnType.Name)).Append(" ");
+		if (!(method is NConstructor))
+	        text.Append(Escape(method.ReturnType.Name)).Append(" ");
         
         // Append the name
-        text.Append(Escape(method.Name)).Append("(");
+        text.Append(Escape(method.Name));
 
-        if (method.Parameters.Count > 0)
-        {
-            text.AppendLine();
-            for (int i = 0; i < method.Parameters.Count; i++)
-            {
-                if (i > 0)
-                    text.Append(", ").AppendLine();
-                text.Append("\t").Append(Escape(method.Parameters[i].ParameterType.Name)).Append(" ").Append(Escape(method.Parameters[i].Name));
-            }
-            text.AppendLine();
-        }
-        text.Append(")");
+        DumpParameters(text, method.Parameters);
 
         // TODO add generic constraints here
 
         return text.ToString();
     }    
-    
-}
 
+    /// <summary>
+    /// Dump the C# syntax of a type method
+    /// </summary>
+    /// <param name="method"></param>
+    /// <returns></returns>
+    protected void DumpParameters(StringBuilder text, List<NParameter> parameters)
+    {
+        text.Append("(");
+        if (parameters.Count > 0)
+        {
+            text.AppendLine();
+            for (int i = 0; i < parameters.Count; i++)
+            {
+                if (i > 0)
+                    text.Append(", ").AppendLine();
+                var parameter = parameters[i];
+                text.Append("\t");
+                text.Append(Escape(parameter.ParameterTypeName)).Append(" ").Append(Escape(parameter.Name));
+            }
+            text.AppendLine();
+        }
+        text.Append(")");
+    }   
+}
 
 @helper Dump(NMember member)
 {
@@ -126,5 +209,13 @@
     } else if (member is NMethod)
     {
         @DumpMethod((NMethod)member);
+    }
+	else if (member is NProperty)
+    {
+        @DumpProperty((NProperty)member);
+    }
+	else if (member is NField)
+    {
+        @DumpField((NField)member);
     }
 }

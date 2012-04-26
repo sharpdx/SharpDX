@@ -25,7 +25,7 @@ namespace SharpDX
     /// <summary>
     /// Global configuration.
     /// </summary>
-    public class Configuration
+    public static class Configuration
     {
         /// <summary>
         /// Enables or disables object tracking. Default is disabled (false).

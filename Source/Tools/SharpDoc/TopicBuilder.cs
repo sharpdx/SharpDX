@@ -95,7 +95,7 @@ namespace SharpDoc
                         foreach (var type in @namespace.Types)
                         {
                             var typeTopic = new NTopic(type);
-                            typeTopic.Name = type.Name + " " + type.TypeName;
+                            typeTopic.Name = type.Name + " " + type.Category;
                             type.TopicLink = typeTopic;
                             namespaceTopic.SubTopics.Add(typeTopic);
                         }

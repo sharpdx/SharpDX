@@ -26,6 +26,12 @@ namespace SharpDoc.Model
     public class NField : NMember
     {
         /// <summary>
+        /// Gets or sets the type of the field.
+        /// </summary>
+        /// <value>The type of the field.</value>
+        public NTypeReference FieldType { get; set; }
+
+        /// <summary>
         /// Gets or sets the value affected to this field. Only valid for enums.
         /// </summary>
         /// <value>The value.</value>

@@ -27,9 +27,13 @@ namespace SharpDoc.Model
     /// </summary>
     public class NInterface : NType
     {
-        public override string TypeName
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NInterface"/> class.
+        /// </summary>
+        public NInterface()
         {
-            get { return "Interface"; }
+            TypeName = "interface";
+            Category = "Interface";
         }
     }
 }

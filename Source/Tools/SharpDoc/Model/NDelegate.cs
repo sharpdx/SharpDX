@@ -24,8 +24,38 @@ namespace SharpDoc.Model
     /// <summary>
     /// A delegate documentation.
     /// </summary>
-    public class NDelegate : NMember
+    public class NDelegate : NType
     {
-        
+        private NMethod invoke;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NDelegate"/> class.
+        /// </summary>
+        public NDelegate()
+        {
+            TypeName = "delegate";
+            Category = "Delegate";
+        }
+
+        /// <summary>
+        /// Gets the invoke method for this delegate.
+        /// </summary>
+        public NMethod Invoke
+        {
+            get
+            {
+                if (invoke == null)
+                {
+                    foreach (var nMethod in Methods)
+                    {
+                        if (nMethod.Name == "Invoke")
+                        {
+                            invoke = nMethod;
+                        }
+                    }
+                }
+                return invoke;
+            }
+        }
     }
 }

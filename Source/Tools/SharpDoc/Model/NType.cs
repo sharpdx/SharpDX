@@ -101,6 +101,15 @@ namespace SharpDoc.Model
         }
 
         /// <summary>
+        /// Gets the methods.
+        /// </summary>
+        /// <value>The methods.</value>
+        public IEnumerable<NMethod> MethodsAndConstructors
+        {
+            get { return MembersAs<NMethod>(); }
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating whether this instance has operators.
         /// </summary>
         /// <value>
@@ -172,7 +181,7 @@ namespace SharpDoc.Model
         /// Gets the type name of this type.
         /// </summary>
         /// <value>The name of the type.</value>
-        public abstract string TypeName { get; }
+        public string TypeName { get; protected set; }
 
         /// <summary>
         /// Returns a <see cref="System.String"/> that represents this instance.

@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace SharpDoc.Model
 {
@@ -151,6 +152,24 @@ namespace SharpDoc.Model
                         return "internal";
                 }
                 return "";
+            }
+        }
+
+        /// <summary>
+        /// Gets the name of the visibility.
+        /// </summary>
+        /// <value>
+        /// The name of the visibility.
+        /// </value>
+        public string VisibilityFullName
+        {
+            get
+            {
+                var text = new StringBuilder(VisibilityName);
+                if (IsStatic) text.Append("static ");
+                if (IsAbstract) text.Append("abstract ");
+                if (IsFinal) text.Append("sealed ");
+                return text.ToString();
             }
         }
 

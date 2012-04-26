@@ -27,9 +27,13 @@ namespace SharpDoc.Model
     /// </summary>
     public class NEnum : NType
     {
-        public override string TypeName
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NEnum"/> class.
+        /// </summary>
+        public NEnum()
         {
-            get { return "Enumeration"; }
+            TypeName = "enum";
+            Category = "Enumeration";
         }
     }
 }

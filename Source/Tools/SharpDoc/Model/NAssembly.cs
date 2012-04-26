@@ -32,6 +32,7 @@ namespace SharpDoc.Model
         public NAssembly()
         {
             Namespaces = new List<NNamespace>();
+            Category = "Assembly";
         }
 
         /// <summary>

@@ -124,6 +124,10 @@
 	width:16px;
 }
 
+.sharpdoc .grouptab {
+    margin-bottom: 13px;
+}
+
 .sharpdoc .content .section .members div.icon.privclass
 {
 	background-image:url("../images/privclass.gif");
@@ -339,7 +343,7 @@
 .sharpdoc .content .section div.title
 {
 	margin-bottom:19px;
-	margin-top:19px;
+	margin-top:9px;
 }
 
 .sharpdoc .content .section div.toggle_icon
@@ -584,6 +588,11 @@ a:link
 h1.content-title:hover
 {
 	cursor:pointer;
+}
+
+h4.sdoc-subheading {
+    margin-top: 0px;
+    margin-bottom: 7px;
 }
 
 html,body

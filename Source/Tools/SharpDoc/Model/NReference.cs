@@ -51,5 +51,13 @@ namespace SharpDoc.Model
         /// </summary>
         /// <value>The full name.</value>
         public string FullName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the category.
+        /// </summary>
+        /// <value>
+        /// The category.
+        /// </value>
+        public string Category { get; set; }
     }
 }

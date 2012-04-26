@@ -171,6 +171,7 @@
     <Compile Include="TopicBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Styles\Standard\html\SyntaxProperty.cshtml" />
     <None Include="Styles\Standard\html\SeeAlso.cshtml" />
     <None Include="Styles\Standard\MainClassLibrary.cshtml" />
     <None Include="Styles\Standard\MainTopic.cshtml" />

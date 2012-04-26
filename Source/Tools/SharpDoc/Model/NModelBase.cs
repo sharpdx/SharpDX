@@ -62,6 +62,14 @@ namespace SharpDoc.Model
         public string FullName { get; set; }
 
         /// <summary>
+        /// Gets or sets the category.
+        /// </summary>
+        /// <value>
+        /// The category.
+        /// </value>
+        public string Category { get; protected set; }
+
+        /// <summary>
         /// Gets or sets the <see cref="XmlNode"/> extracted from the code comments 
         /// for a particular member.
         /// </summary>

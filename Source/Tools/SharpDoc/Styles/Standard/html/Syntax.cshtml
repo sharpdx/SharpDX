@@ -25,6 +25,7 @@
 @model SharpDoc.TemplateContext
 @using SharpDoc.Model
 @Import("SyntaxMethod")
+@Import("SyntaxProperty")
 @Import("TabCode")
 @Import("SyntaxCodeCSharp")
 @Import("SyntaxCodeVB")
@@ -41,11 +42,19 @@
         "C++", Helpers.SyntaxCodeCpp.Dump(member),
         "F#",  Helpers.SyntaxCodeFSharp.Dump(member),
     });
-        
+    
     if (member is NMethod)
     {
     @Helpers.SyntaxMethod.Dump((NMethod)member);
     }
+    else if (member is NProperty)
+    {
+    @Helpers.SyntaxProperty.Dump((NProperty)member);
+    }   
+    else if (member is NDelegate)
+    {
+    @Helpers.SyntaxMethod.Dump(((NDelegate)member).Invoke);
+    }   
     else if (member is NType)
     {
     <p>The @member.Name type exposes the following members.</p>

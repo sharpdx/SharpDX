@@ -139,7 +139,7 @@
                 {
                     <td class="icon-col">@GetIcons(member)</td>
                 }
-                <td class="name-col">@ToUrl(member,displayName,true)</td>
+                <td class="name-col">@ToUrl(member,displayName, !(Model.CurrentContext is NEnum))</td>
                 <td class="desc-col">@TagExpand(member.Description)&nbsp;</td>
             </tr>
         }            

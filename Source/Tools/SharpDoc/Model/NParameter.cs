@@ -65,6 +65,23 @@ namespace SharpDoc.Model
         /// <value>The parent method.</value>
         public NMethod ParentMethod { get; set; }
 
+
+        public string ParameterTypeName
+        {
+            get
+            {
+                return string.Format("{0}{1}", IsOut ? IsIn ? "ref " : "out " : "", ParameterType.Name.TrimEnd('&', '%'));
+            }
+        }
+
+        public string ParameterTypeFullName
+        {
+            get
+            {
+                return string.Format("{0}{1}", IsOut ? IsIn ? "ref " : "out " : "", ParameterType.FullName.TrimEnd('&', '%'));
+            }
+        }
+
         protected internal override void OnDocNodeUpdate()
         {
             // Don't call base, as we need to get param description from param tag

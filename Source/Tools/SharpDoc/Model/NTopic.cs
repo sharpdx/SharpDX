@@ -94,6 +94,19 @@ namespace SharpDoc.Model
         public string FullName { get; set; }
 
         /// <summary>
+        /// Gets or sets the category.
+        /// </summary>
+        /// <value>
+        /// The category.
+        /// </value>
+        public string Category { 
+            get
+            {
+                return "Article";
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the name of the file that contains the documentation.
         /// </summary>
         /// <value>The name of the file.</value>

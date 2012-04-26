@@ -156,14 +156,20 @@ namespace SharpDoc
                 type = NewInstance<NStruct>(typeDef);
                 type.MemberType = NMemberType.Struct;
             }
+            else if (MonoCecilHelper.IsDelegate(typeDef))
+            {
+                type = NewInstance<NDelegate>(typeDef);
+                type.MemberType = NMemberType.Delegate;
+            }
             else if (typeDef.IsClass)
             {
                 type = NewInstance<NClass>(typeDef);
                 type.MemberType = NMemberType.Class;
-            } else
+            }
+            else
             {
                 type = null;
-                type.MemberType = NMemberType.Delegate;                
+                type.MemberType = NMemberType.Delegate;
             }
             _registry.Register(@namespace.Assembly, type);
             @namespace.AddType(type);
@@ -272,7 +278,7 @@ namespace SharpDoc
             }
 
             // Tag methods that are overriden
-            foreach (var method in type.Methods)
+            foreach (var method in type.MethodsAndConstructors)
             {
                 var id = DocIdHelper.StripXmlId(method.Id);
                 if (counters.ContainsKey(id) && counters[id] > 0)
@@ -302,6 +308,8 @@ namespace SharpDoc
             if (methodDef.IsConstructor)
             {
                 method = NewInstance<NConstructor>(methodDef);
+                // Constructors must have typename instead of .ctor
+                method.Name = method.DeclaringType.Name;
             }
             else if (methodDef.IsSpecialName && methodDef.Name.StartsWith(MethodOperatorPrefix))
             {
@@ -369,34 +377,47 @@ namespace SharpDoc
         /// </summary>
         /// <param name="parent">The parent.</param>
         /// <param name="methodDef">The method def.</param>
-        private void AddMethod(NType parent, MethodDefinition methodDef)
+        /// <param name="isProperty">if set to <c>true</c> [is property].</param>
+        /// <returns></returns>
+        private NMethod AddMethod(NMember parent, MethodDefinition methodDef, bool isProperty = false)
         {
             // Don't add getter and setters for properties and events
-            if (methodDef.IsSpecialName && (methodDef.IsGetter || methodDef.IsSetter || methodDef.IsAddOn || methodDef.IsRemoveOn) )
-                return;
+            if (methodDef == null || (!isProperty && methodDef.IsSpecialName && (methodDef.IsGetter || methodDef.IsSetter || methodDef.IsAddOn || methodDef.IsRemoveOn)))
+                return null;
 
             var method = CreateMethodFromDefinition(methodDef);
-            _registry.Register(parent.Namespace.Assembly, method);
-            parent.AddMember(method);
 
-            if (method is NConstructor)
+            // If not a get/set then handle it
+            if (!isProperty)
             {
-                method.Name = parent.Name;
-                parent.HasConstructors = true;
-            }
-            else if (method is NOperator)
-            {
-                parent.HasOperators= true;
-            }
-            else
-            {
-                parent.HasMethods = true;
+                _registry.Register(parent.Namespace.Assembly, method);
+                parent.AddMember(method);
+
+                var parentType = parent as NType;
+                if (parentType != null)
+                {
+                    if (method is NConstructor)
+                    {
+                        method.Name = parent.Name;
+                        parentType.HasConstructors = true;
+                    }
+                    else if (method is NOperator)
+                    {
+                        parentType.HasOperators = true;
+                    }
+                    else
+                    {
+                        parentType.HasMethods = true;
+                    }
+                }
             }
 
             // Add SeeAlso
             method.SeeAlsos.Add(new NSeeAlso(parent));
             method.SeeAlsos.Add(new NSeeAlso(parent.Namespace));
             method.SeeAlsos.Add(new NSeeAlso(parent.Namespace.Assembly));
+
+            return method;
         }
 
         private static string ReplacePrimitive(string name, string fullName)
@@ -498,7 +519,7 @@ namespace SharpDoc
                 {
                     var genericParameter = self.GenericParameters[i];
                     if (i > 0)
-                        builder.Append(",");
+                        builder.Append(", ");
                     builder.Append(genericParameter.Name);
                 }
                 builder.Append(">");
@@ -520,12 +541,12 @@ namespace SharpDoc
             {
                 var parameter = parameters[i];
                 if (i > 0)
-                    builder.Append(",");                    
+                    builder.Append(", ");                    
                 if (parameter.ParameterType.IsSentinel)
                 {
-                    builder.Append("...,");
+                    builder.Append("..., ");
                 }
-                builder.Append(parameter.ParameterType.Name);
+                builder.Append(parameter.ParameterTypeName);
                 if (parameter.ParameterType.IsPointer)
                     builder.Append("*");
             }
@@ -575,12 +596,17 @@ namespace SharpDoc
             var field = NewInstance<NField>(fieldDef);
             _registry.Register(parent.Namespace.Assembly, field);
             field.MemberType = NMemberType.Field;
+            field.FieldType = GetTypeReference(fieldDef.FieldType);
 
             if (fieldDef.Constant != null )
                 field.ConstantValue = GetTextFromValue(fieldDef.Constant);
 
             parent.AddMember(field);
             parent.HasFields = true;
+
+            field.SeeAlsos.Add(new NSeeAlso(parent));
+            field.SeeAlsos.Add(new NSeeAlso(parent.Namespace));
+            field.SeeAlsos.Add(new NSeeAlso(parent.Namespace.Assembly));
         }
 
         /// <summary>
@@ -592,9 +618,19 @@ namespace SharpDoc
         {
             var property = NewInstance<NProperty>(propertyDef);
             _registry.Register(parent.Namespace.Assembly, property);
+            property.Namespace = parent.Namespace;
+
             property.MemberType = NMemberType.Property;
+            property.PropertyType = GetTypeReference(propertyDef.PropertyType);
+            property.GetMethod = AddMethod(property, propertyDef.GetMethod, true);
+            property.SetMethod = AddMethod(property, propertyDef.SetMethod, true);
+
             parent.AddMember(property);
             parent.HasProperties = true;
+
+            property.SeeAlsos.Add(new NSeeAlso(parent));
+            property.SeeAlsos.Add(new NSeeAlso(parent.Namespace));
+            property.SeeAlsos.Add(new NSeeAlso(parent.Namespace.Assembly));
         }
 
         /// <summary>

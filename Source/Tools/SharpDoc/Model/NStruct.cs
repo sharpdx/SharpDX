@@ -27,9 +27,13 @@ namespace SharpDoc.Model
     /// </summary>
     public class NStruct : NType
     {
-        public override string TypeName
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NStruct"/> class.
+        /// </summary>
+        public NStruct()
         {
-            get { return "Structure"; }
+            TypeName = "struct";
+            Category = "Structure";
         }
     }
 }

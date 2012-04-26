@@ -314,6 +314,25 @@ namespace SharpDoc
 
             return type.BaseType.Resolve();
         }
- 
+
+        public static TypeDefinition GetBaseTypeAfterSystemObject(TypeDefinition type)
+        {
+            var baseType = GetBaseType(type);
+            if (baseType == null)
+                return type;
+
+            if (baseType.FullName == "System.Object")
+                return type;
+
+            return GetBaseTypeAfterSystemObject(baseType);
+        }
+
+        public static bool IsDelegate(TypeDefinition type)
+        {
+            var baseType = GetBaseTypeAfterSystemObject(type);
+            if (baseType == null)
+                return false;
+            return (baseType.FullName == "System.Delegate");
+        }
     }
 }

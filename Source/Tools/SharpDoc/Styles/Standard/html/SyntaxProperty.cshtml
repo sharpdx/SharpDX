@@ -22,50 +22,25 @@
 // Override this template to modify the global behavior for each Dump functions
 // -------------------------------------------------------------------------------
 *@
-@using SharpDoc.Model
-@using System.Text;
 @model SharpDoc.TemplateContext
-@Import("Section")
+@using SharpDoc.Model
 
 @functions {
 
-    public string SeeAlsoToText(NModelBase element)
-    {
-        var text = new StringBuilder();
-
-        var groups = new List<string>() {"Reference"};
-        
-        foreach(var seealso in element.SeeAlsos)
-        {
-            if (!groups.Contains(seealso.GroupName))
-                groups.Add(seealso.GroupName);
-        }
-
-        foreach (var groupName in groups)
-        {
-            text.AppendFormat("<h4 class='sdoc-subheading'>{0}</h4>", groupName).AppendLine();
-            
-            foreach(var seealso in element.SeeAlsos)
-            {
-                if (seealso.GroupName != groupName)
-                    continue;
-
-                text.AppendLine("<div class='seeAlsoStyle'>");
-                text.AppendFormat(ToUrl(seealso.LinkItem, seealso.LinkItem.Name + " " + seealso.LinkItem.Category, false, null, false));
-                text.AppendLine("</div>");
-            }
-        }
-        return text.ToString();
+    public string ParamTypeUrl(NParameter param) {
+        return ToUrl(param.ParameterType, param.ParameterTypeFullName, true);
     }
 }
 
 <!-- 
-// Dumps members
+    // Dumps members
 -->
-@helper Dump(NModelBase element)
+@helper Dump(NProperty property)
 {
-   @if(element.SeeAlsos.Count > 0)
-   {
-       @Helpers.Section.Dump("See Also", SeeAlsoToText(element))
-   }
+    <div id="sdoc-parameters">        
+    <h4 class="sdoc-subheading">Property Value</h4>
+		<span>Type: @ToUrl(property.PropertyType, property.PropertyType.FullName, false, null, false)<br />
+		@TagExpand(property.ValueDescription)
+		</span>            
+    </div>
 }

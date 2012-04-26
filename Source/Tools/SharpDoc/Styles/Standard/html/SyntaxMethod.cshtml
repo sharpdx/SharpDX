@@ -28,28 +28,32 @@
 @functions {
 
     public string ParamTypeUrl(NParameter param) {
-        return ToUrl(param.ParameterType, param.ParameterType.FullName, true);
+        return ToUrl(param.ParameterType, param.ParameterTypeFullName, true);
     }
 }
 
 <!-- 
-// Dumps members
+    // Dumps members
 -->
 @helper Dump(NMethod method)
 {
     <div id="sdoc-parameters">        
-        <h4 class="sdoc-subheading">Parameters</h4>
-    @foreach(var param in method.Parameters) {
-        <dl>
-            <dt>
-                <span class="sdoc-parameter">@param.Name</span>
-            </dt>
-            <dd>
-                <span>Type: @ParamTypeUrl(param)<br />
-                @TagExpand(param.Description)
-                </span>            
-            </dd>
-        </dl>
+    @if (method.Parameters.Count > 0)
+    {
+    <h4 class="sdoc-subheading">Parameters</h4>
+		@foreach (var param in method.Parameters)
+		{
+			<dl>
+				<dt>
+					<span class="sdoc-parameter">@param.Name</span>
+				</dt>
+				<dd>
+					<span>Type: @ParamTypeUrl(param)<br />
+						@TagExpand(param.Description)
+					</span>            
+				</dd>
+			</dl>
+		}
     }
     @if (method.ReturnType.Name != "void") {
         <h4 class="sdoc-subheading">Return Value</h4>

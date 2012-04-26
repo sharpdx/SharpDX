@@ -39,6 +39,7 @@ namespace SharpDoc.Model
             Name = name;
             FullName = name;
             Types = new List<NType>();
+            Category = "Namespace";
         }
 
         /// <summary>
