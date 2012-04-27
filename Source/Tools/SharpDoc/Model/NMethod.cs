@@ -97,7 +97,7 @@ namespace SharpDoc.Model
         protected internal override void OnDocNodeUpdate()
         {
             base.OnDocNodeUpdate();
-            ReturnDescription = DocFromTag("returns");
+            ReturnDescription = NDocumentApi.GetTag(DocNode, "returns");
 
             // Update DocNode for parameters
             foreach (var parameter in Parameters)

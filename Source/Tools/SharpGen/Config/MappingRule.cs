@@ -14,6 +14,18 @@ namespace SharpGen.Config
         /// <summary>
         /// Default Value for parameters
         /// </summary>
+        [XmlAttribute("assembly")]
+        public string Assembly { get; set; }
+
+        /// <summary>
+        /// Default Value for parameters
+        /// </summary>
+        [XmlAttribute("namespace")]
+        public string Namespace { get; set; }
+
+        /// <summary>
+        /// Default Value for parameters
+        /// </summary>
         [XmlAttribute("default")]
         public string DefaultValue { get; set; }
 

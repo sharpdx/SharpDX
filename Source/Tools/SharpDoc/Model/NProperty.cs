@@ -87,7 +87,7 @@ namespace SharpDoc.Model
         protected internal override void OnDocNodeUpdate()
         {
             base.OnDocNodeUpdate();
-            ValueDescription = DocFromTag("value");
+            ValueDescription = NDocumentApi.GetTag(DocNode, "value");
         }
     }
 }

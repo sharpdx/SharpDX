@@ -47,7 +47,7 @@ namespace SharpDX.XInput
         public BatteryInformation GetBatteryInformation(BatteryDeviceType batteryDeviceType)
         {
             BatteryInformation temp;            
-            var result =  ErrorCode.ToResult(XInput.XInputGetBatteryInformation((int)userIndex, batteryDeviceType, out temp));
+            var result =  ErrorCodeHelper.ToResult(XInput.XInputGetBatteryInformation((int)userIndex, batteryDeviceType, out temp));
             result.CheckError();
             return temp;
         }
@@ -61,7 +61,7 @@ namespace SharpDX.XInput
         public Capabilities GetCapabilities(DeviceQueryType deviceQueryType)
         {
             Capabilities temp;
-            var result = ErrorCode.ToResult(XInput.XInputGetCapabilities((int)userIndex, deviceQueryType, out temp));
+            var result = ErrorCodeHelper.ToResult(XInput.XInputGetCapabilities((int)userIndex, deviceQueryType, out temp));
             result.CheckError();
             return temp;
         }
@@ -75,7 +75,7 @@ namespace SharpDX.XInput
         /// <unmanaged>unsigned int XInputGetKeystroke([In] XUSER_INDEX dwUserIndex,[In] unsigned int dwReserved,[Out] XINPUT_KEYSTROKE* pKeystroke)</unmanaged>	
         public Result GetKeystroke(DeviceQueryType deviceQueryType, out Keystroke keystroke)
         {
-            var result = ErrorCode.ToResult(XInput.XInputGetKeystroke((int)userIndex, (int)deviceQueryType, out keystroke));
+            var result = ErrorCodeHelper.ToResult(XInput.XInputGetKeystroke((int)userIndex, (int)deviceQueryType, out keystroke));
             result.CheckError();
             return result;
         }
@@ -87,7 +87,7 @@ namespace SharpDX.XInput
         public State GetState()
         {
             State temp;
-            var result = ErrorCode.ToResult(XInput.XInputGetState((int)userIndex, out temp));
+            var result = ErrorCodeHelper.ToResult(XInput.XInputGetState((int)userIndex, out temp));
             result.CheckError();
             return temp;
         }
@@ -108,7 +108,7 @@ namespace SharpDX.XInput
         /// <returns></returns>
         public Result SetVibration(Vibration vibration)
         {
-            var result = ErrorCode.ToResult(XInput.XInputSetState((int)userIndex, vibration));
+            var result = ErrorCodeHelper.ToResult(XInput.XInputSetState((int)userIndex, vibration));
             result.CheckError();
             return result;
         }
@@ -124,7 +124,7 @@ namespace SharpDX.XInput
             get
             {
                 State temp;
-                return XInput.XInputGetState((int)userIndex, out temp) == ErrorCode.Success;
+                return XInput.XInputGetState((int)userIndex, out temp) == (int)ErrorCode.Success;
             }
         }
 

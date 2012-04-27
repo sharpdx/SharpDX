@@ -200,7 +200,8 @@ namespace SharpDoc
             }
 
             // Delete output directory first
-            Directory.Delete(context.OutputDirectory, true);
+            if (Directory.Exists(context.OutputDirectory))
+                Directory.Delete(context.OutputDirectory, true);
 
             Razor.SetTemplateBase(typeof(TemplateHelperBase));
             Razor.AddResolver(context);

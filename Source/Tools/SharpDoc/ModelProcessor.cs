@@ -19,6 +19,8 @@
 // THE SOFTWARE.
 using System;
 using System.Collections.Generic;
+using System.Linq;
+
 using SharpCore.Logging;
 using SharpDoc.Model;
 
@@ -83,31 +85,17 @@ namespace SharpDoc
             }
 
             // Sort assemblies
-            Assemblies.Sort((from, to) => from.Name.CompareTo(to.Name));
+            Assemblies.Sort((from, to) => string.CompareOrdinal(@from.Name, to.Name));
 
             // Perform additionnal step by adding direct descendants for each class);
             foreach (var assembly in Assemblies)
             {
                 // Sort namespaces
-                assembly.Namespaces.Sort((from, to) => from.Name.CompareTo(to.Name));
+                assembly.Namespaces.Sort((from, to) => string.CompareOrdinal(@from.Name, to.Name));
 
                 foreach (var @namespace in assembly.Namespaces)
                 {
-                    foreach (var type in @namespace.Types)
-                    {
-                        if (type is NClass)
-                        {
-                            var directParent = type.Bases[0];
-                            var baseModel = Registry.FindById(directParent.Id, assembly) as NType;
-                            // If not found from current assembly, find from other assemblies
-                            // TODO this is not correct. Correct behavior requires to iterate
-                            // on assembly dependencies.
-                            if (baseModel == null)
-                                baseModel = Registry.FindById(directParent.Id) as NType;
-                            if (baseModel != null)
-                                baseModel.Descendants.Add(type);
-                        }
-                    }
+                    ProcessDescendants(assembly, @namespace.Types);
                 }
             }
 
@@ -116,11 +104,114 @@ namespace SharpDoc
             {
                 foreach (var @namespace in assembly.Namespaces)
                 {
-                    foreach (var type in @namespace.Types)
+                    FlattenHierarchy(@namespace.Types);
+                }
+            }
+        }
+
+        private NClass ProcessInheritance(NClass type, NAssembly assemblyContext = null)
+        {
+            var directParent = type.Bases[0];
+            var baseModel = (NClass)this.FindType(directParent.Id, assemblyContext);
+
+            if (type.AllMembers.Count > 0)
+                return baseModel;
+
+            type.AllMembers.AddRange(type.Members);
+
+            if (baseModel != null)
+            {
+                this.ProcessInheritance(baseModel);
+
+                var newMembers = new List<INMemberReference>();
+                foreach (var nMemberReference in baseModel.AllMembers)
+                {
+                    // Don't add constructor as inherited member
+                    if (nMemberReference is NConstructor)
+                        continue;
+                    
+                    bool addInheritedMember = true;
+
+                    foreach (var currentMember in type.AllMembers)
                     {
-                        if (type is NClass)
-                            FlattenHierarchy(type, type);
+                        var method = currentMember as NMethod;
+
+                        // Don't add method that are overriden
+                        if (method != null && method.Overrides != null && nMemberReference is NMethod)
+                        {
+                            if (method.Overrides.Id == nMemberReference.Id)
+                            {
+                                addInheritedMember = false;
+                                break;
+                            }
+                        }
                     }
+
+                    if (addInheritedMember)
+                    {
+                        if (nMemberReference is NMethod)
+                            type.HasMethods = true;
+                        else if (nMemberReference is NProperty)
+                            type.HasProperties = true;
+                        else if (nMemberReference is NEvent)
+                            type.HasEvents = true;
+
+                        newMembers.Add(nMemberReference);
+                    }
+                }
+
+                type.AllMembers.AddRange(newMembers);
+                type.AllMembers.Sort((from, to) => string.CompareOrdinal(@from.Name, to.Name));
+            }
+
+            foreach (var nsubClass in type.Members.OfType<NClass>())
+            {
+                ProcessInheritance(nsubClass);
+            }
+
+            return baseModel;
+        }
+
+        private NType FindType(string id, NAssembly assemblyContext)
+        {
+            var baseModel = Registry.FindById(id, assemblyContext) as NType;
+
+            // If not found from current assembly, find from other assemblies
+            // TODO this is not correct. Correct behavior requires to iterate
+            // on assembly dependencies.
+            if (baseModel == null)
+                baseModel = Registry.FindById(id) as NType;
+
+            return baseModel;
+        }
+
+
+
+        private void ProcessDescendants(NAssembly assembly, IEnumerable<NType> types)
+        {
+            foreach (var type in types)
+            {
+                var nClass = type as NClass;
+                if (nClass != null)
+                {
+                    // Process inheritance first
+                    var baseModel = this.ProcessInheritance(nClass);
+                    if (baseModel != null)
+                        baseModel.Descendants.Add(type);
+
+                    this.ProcessDescendants(assembly, type.Members.OfType<NType>());
+                }
+            }
+        }
+
+        private void FlattenHierarchy(IEnumerable<NType> types)
+        {
+            foreach (var type in types)
+            {
+                if (type is NClass)
+                {
+                    FlattenHierarchy(type, type);
+                    FlattenHierarchy(type.Members.OfType<NType>());
                 }
             }
         }

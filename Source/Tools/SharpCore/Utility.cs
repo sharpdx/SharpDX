@@ -19,7 +19,10 @@
 // THE SOFTWARE.
 
 using System;
+using System.IO;
 using System.Text.RegularExpressions;
+
+using Microsoft.Win32;
 
 namespace SharpCore
 {
@@ -50,6 +53,38 @@ namespace SharpCore
         public static bool IsValidFilename(string fileName)
         {
             return !RegexInvalidPathChars.IsMatch(fileName);
+        }
+
+        public static string GetProperDirectoryCapitalization(DirectoryInfo dirInfo)
+        {
+            // Code from http://stackoverflow.com/questions/478826/c-sharp-filepath-recasing
+            var parentDirInfo = dirInfo.Parent;
+            if (null == parentDirInfo)
+                return dirInfo.Name;
+            return Path.Combine(GetProperDirectoryCapitalization(parentDirInfo),
+                                parentDirInfo.GetDirectories(dirInfo.Name)[0].Name);
+        }
+
+        public static string GetProperFilePathCapitalization(string filename)
+        {
+            // Code from http://stackoverflow.com/questions/478826/c-sharp-filepath-recasing
+            var fileInfo = new FileInfo(filename);
+            DirectoryInfo dirInfo = fileInfo.Directory;
+            return Path.Combine(GetProperDirectoryCapitalization(dirInfo),
+                                dirInfo.GetFiles(fileInfo.Name)[0].Name);
+        }
+
+        private static string frameworkRootDirectory = null;
+
+        public static string GetFrameworkRootDirectory()
+        {
+            if (frameworkRootDirectory == null)
+            {
+
+                // Retrieve the install root path for the framework
+                frameworkRootDirectory = Path.GetFullPath(Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\.NetFramework", false).GetValue("InstallRoot").ToString());
+            }
+            return frameworkRootDirectory;
         }
     }
 }

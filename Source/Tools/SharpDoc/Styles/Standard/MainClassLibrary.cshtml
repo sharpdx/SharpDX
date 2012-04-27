@@ -53,10 +53,14 @@
                 Model.Type = type;
                 Model.WriteToFile("html\\" + @type.NormalizedId + Param.FileExt, Parse("Type"));
 
-                foreach (var member in type.Members)
+                // Enum-item are not going to be generated
+                if (!(type is NEnum))
                 {
-                    Model.Member = member;
-                    Model.WriteToFile("html\\" + @member.NormalizedId + Param.FileExt, Parse("Member"));
+                    foreach (var member in type.Members)
+                    {
+                        Model.Member = member;
+                        Model.WriteToFile("html\\" + @member.NormalizedId + Param.FileExt, Parse("Member"));
+                    }
                 }
                 Model.Member = null;
                 Model.Type = null;

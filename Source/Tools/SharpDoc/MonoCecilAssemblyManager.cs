@@ -38,14 +38,14 @@ namespace SharpDoc
         {
             AssemblySources = new List<NAssemblySource>();
             AssemblyReferences = new List<AssemblyDefinition>();
-            AssemblyDocSources = new List<XmlDocument>();
+            AssemblyDocSources = new List<NDocumentApi>();
         }
 
         private List<AssemblyDefinition> AssemblyReferences { get; set; }
 
         private List<NAssemblySource> AssemblySources { get; set; }
 
-        private List<XmlDocument> AssemblyDocSources { get; set; }
+        private List<NDocumentApi> AssemblyDocSources { get; set; }
 
         /// <summary>
         /// Loads all <see cref="Sources"/> and <see cref="References"/>.
@@ -73,12 +73,12 @@ namespace SharpDoc
             foreach (var assemblySource in AssemblySources)
             {
                 int countXmlDocFound = 0;
-                XmlDocument docFound = null;
+                NDocumentApi docFound = null;
                 string assemblyName = ((AssemblyDefinition) assemblySource.Assembly).Name.Name;
                 foreach (var doc in AssemblyDocSources)
                 {
 
-                    var node = doc.SelectSingleNode("/doc/assembly/name");
+                    var node = doc.Document.SelectSingleNode("/doc/assembly/name");
                     if (assemblyName == node.InnerText.Trim())
                     {
                         docFound = doc;
@@ -129,10 +129,9 @@ namespace SharpDoc
 
         private void LoadAssemblyDocumentation(string source)
         {
-            var xmlDoc = new XmlDocument();
-            xmlDoc.Load(source);
+            var xmlDoc = NDocumentApi.Load(source);
 
-            var node = xmlDoc.SelectSingleNode("/doc/assembly/name");
+            var node = xmlDoc.Document.SelectSingleNode("/doc/assembly/name");
             if (node == null)
                 Logger.Fatal("Not valid xml documentation for source [{0}]", source);
 

@@ -877,13 +877,22 @@ namespace SharpGen.Generator
         /// <returns>The attached namespace for this C++ element.</returns>
         internal CsNamespace ResolveNamespace(CppElement element)
         {
+            CsNamespace ns;
+
+            var tag = element.GetTagOrDefault<MappingRule>();
+
+            // If a type is redispatched to another namespace
+            if (!string.IsNullOrEmpty(tag.Assembly) && !string.IsNullOrEmpty(tag.Namespace))
+            {
+                return GetOrCreateNamespace(tag.Assembly, tag.Namespace);
+            }
+
             foreach (var regExp in _mapTypeToNamespace)
             {
                 if (regExp.Key.Match(element.Name).Success)
                     return regExp.Value;
             }
 
-            CsNamespace ns;
             if (!_mapIncludeToNamespace.TryGetValue(element.ParentInclude.Name, out ns))
             {
                 Logger.Fatal("Unable to find namespace for element [{0}] from include [{1}]", element, element.ParentInclude.Name);

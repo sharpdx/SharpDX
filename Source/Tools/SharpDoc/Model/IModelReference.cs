@@ -22,7 +22,7 @@ namespace SharpDoc.Model
     /// <summary>
     /// A base model used to identify a type, member.
     /// </summary>
-    public interface IModelReference
+    public interface IModelReference : IComment
     {
         /// <summary>
         /// Gets or sets the XML generated commment ID.

@@ -114,6 +114,7 @@
     </Compile>
     <Compile Include="AssemblyDoc.cs" />
     <Compile Include="ConfigDocPak.cs" />
+    <Compile Include="Model\NDocumentApi.cs" />
     <Compile Include="Model\NSeeAlso.cs" />
     <Compile Include="MonoCecilAssemblyManager.cs" />
     <Compile Include="ConfigParam.cs" />

@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml;
 using System.Xml.Serialization;
 using SharpCore;
 using SharpCore.Logging;
@@ -133,6 +134,15 @@ namespace SharpDoc.Model
         /// <value>The sub topics.</value>
         [XmlElement("topic")]
         public List<NTopic> SubTopics { get; set; }
+
+        /// <inheritdoc/>
+        public XmlNode DocNode { get; set; }
+
+        /// <inheritdoc/>
+        public string Description { get; set; }
+
+        /// <inheritdoc/>
+        public string Remarks { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether this instance is class library.
@@ -328,5 +338,6 @@ namespace SharpDoc.Model
         {
             return string.Format(System.Globalization.CultureInfo.InvariantCulture, "Id: {0}, NormalizedId: {1}, Name: {2}, FullName: {3}, FileName: {4}, SubTopics.Count: {5}", Id, NormalizedId, Name, FullName, FileName, SubTopics.Count);
         }
+
     }
 }

@@ -41,7 +41,7 @@ namespace SharpDoc.Model
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         /// <param name="document">The document.</param>
-        public NAssemblySource(object assembly, XmlDocument document)
+        public NAssemblySource(object assembly, NDocumentApi document)
         {
             Assembly = assembly;
             Document = document;
@@ -64,20 +64,7 @@ namespace SharpDoc.Model
         /// Gets or sets the XML document that contains code comments.
         /// </summary>
         /// <value>The document.</value>
-        public XmlDocument Document { get; set; }
-
-        /// <summary>
-        /// Finds a member doc from the <see cref="Document"/>.
-        /// </summary>
-        /// <param name="memberId">The member id.</param>
-        /// <returns>A node of the member if found or otherwise, null.</returns>
-        public XmlNode FindMemberDoc(string memberId)
-        {
-            var node = Document.SelectSingleNode("/doc/members/member[@name='" + memberId + "']");
-            if (node == null)
-                return null;
-            return node;
-        }
+        public NDocumentApi Document { get; set; }
     }
 
 

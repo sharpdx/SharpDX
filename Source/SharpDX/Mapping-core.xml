@@ -127,9 +127,7 @@
     <context>sharpdx-core-ext</context>
     <context>sharpdx-core</context>
     <context>winerror</context>
-    <create class="SharpDX.Win32.ErrorCode" visibility="public sealed"/>
-    <!--<const from-macro="ERROR_(.*)" type="SharpDX.Result" cpp-type="int" name="$1" class="SharpDX.Win32.ResultCode" visibility="public static readonly" />-->
-    <const from-macro="ERROR_(.*)" type="int" cpp-type="int" name="$1" class="SharpDX.Win32.ErrorCode" visibility="public const" />
+    <create-cpp enum="SHARPDX_ERRORCODE" macro="ERROR_(.*)" />
     <context-clear/>
 
     <define enum="System.IO.SeekOrigin" sizeof="4" />
@@ -305,7 +303,13 @@
 
   <!-- SharpDX global mapping -->
   <mapping>
+    <context>sharpdx-core-ext</context>
+    <context>sharpdx-core</context>
+    <context>winerror</context>
+    <map enum="SHARPDX_ERRORCODE" assembly="SharpDX" namespace="SharpDX.Win32" name="ErrorCode"/>
+    <map enum-item="ERROR_(.*)" name-tmp="$1"/>
     <context-clear/>
+
     <!--
     // *****************************************************************
     // Global documentation link

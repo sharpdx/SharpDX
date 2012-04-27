@@ -22,7 +22,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml;
+
 using Mono.Cecil;
+
+using SharpCore;
 using SharpCore.Logging;
 using SharpDoc.Model;
 
@@ -38,6 +42,9 @@ namespace SharpDoc
         private const string AssemblyDocClass = "AssemblyDoc";
         private const string NamespaceDocClass = "NamespaceDoc";
         private const string MethodOperatorPrefix = "op_";
+        private Dictionary<string, NDocumentApi> mapModuleToDoc = new Dictionary<string, NDocumentApi>();
+        private Dictionary<string, IModelReference>  membersCache = new Dictionary<string, IModelReference>();
+
 
         /// <summary>
         /// Loads from an assembly source definition all types to document.
@@ -59,13 +66,13 @@ namespace SharpDoc
             assembly.Id = "A:" + assembly.Name;
             assembly.NormalizedId = DocIdHelper.StripXmlId(assembly.Id);
             assembly.Version = assemblyDefinition.Name.Version.ToString();
-            assembly.FileName = Path.GetFileName(assemblySource.Filename);
+            assembly.FileName = Path.GetFileName(Utility.GetProperFilePathCapitalization(assemblySource.Filename));
             _registry.Register(assembly, assembly);
 
             Logger.Message("Processing assembly [{0}]", assembly.FullName);
 
             // Apply documentation from AssemblyDoc special class
-            assembly.DocNode = _source.FindMemberDoc("T:" + assembly.Name + "." + AssemblyDocClass);
+            assembly.DocNode = _source.Document.FindMemberDoc("T:" + assembly.Name + "." + AssemblyDocClass);
 
             var namespaces = new Dictionary<string, NNamespace>();
             foreach (var module in assemblyDefinition.Modules)
@@ -120,7 +127,7 @@ namespace SharpDoc
             _registry.Register(assembly, @namespace);
 
             // Apply documentation on namespace from NamespaceDoc special class
-            @namespace.DocNode = _source.FindMemberDoc("T:" + name + "." + NamespaceDocClass);
+            @namespace.DocNode = _source.Document.FindMemberDoc("T:" + name + "." + NamespaceDocClass);
 
             // Add See Alsos
             @namespace.SeeAlsos.Add( new NSeeAlso(@namespace.Assembly) );
@@ -204,6 +211,19 @@ namespace SharpDoc
             type.IsAbstract = typeDef.IsAbstract;
             type.IsFinal = typeDef.IsSealed;
 
+            // Revert back declaration abstract sealed class are actually declared as static class 
+            if (type is NClass && type.IsAbstract && type.IsFinal)
+            {
+                type.IsStatic = true;
+                type.IsAbstract = false;
+                type.IsFinal = false;
+            }
+            else if (type is NEnum || type is NStruct)
+            {
+                // We know that enum is sealed, so don't duplicate it
+                type.IsFinal = false;
+            }
+
             // Reconstruct StructLayout attribute
             if (typeDef.IsExplicitLayout || typeDef.IsSequentialLayout)
             {
@@ -245,19 +265,19 @@ namespace SharpDoc
             //    type.Visibility = NVisibility.ProtectedInternal;
 
             // Add methods, constructors, operators. Todo add configurable filter
-            foreach (var method in typeDef.Methods.Where(method => method.IsPublic || method.IsFamilyOrAssembly))
+            foreach (var method in typeDef.Methods.Where(this.IsMemberToDisplay))
                 AddMethod(type, method);
 
             // Add fields. Todo add configurable filter
-            foreach (var field in typeDef.Fields.Where(field => field.IsPublic || field.IsFamilyOrAssembly))
+            foreach (var field in typeDef.Fields.Where(this.IsMemberToDisplay))
                 AddField(type, field);
 
             // Add events. Todo add configurable filter
-            foreach (var eventInfo in typeDef.Events.Where(eventInfo => eventInfo.AddMethod.IsPublic || eventInfo.AddMethod.IsFamilyOrAssembly))
+            foreach (var eventInfo in typeDef.Events.Where(this.IsMemberToDisplay))
                 AddEvent(type, eventInfo);
 
             // Add properties Todo add configurable filter
-            foreach (var property in typeDef.Properties.Where(property => (property.GetMethod != null && (property.GetMethod.IsPublic || property.GetMethod.IsFamilyOrAssembly)) || (property.SetMethod != null && (property.SetMethod.IsPublic || property.SetMethod.IsFamilyOrAssembly))))
+            foreach (var property in typeDef.Properties.Where(this.IsMemberToDisplay))
                 AddProperty(type, property);
 
             // Recalculate a NormalizedId based on the number of overriding methods.
@@ -297,6 +317,37 @@ namespace SharpDoc
         }
 
         /// <summary>
+        /// Determines whether [is member to display] [the specified member ref].
+        /// </summary>
+        /// <param name="memberRef">The member ref.</param>
+        /// <returns>
+        ///   <c>true</c> if [is member to display] [the specified member ref]; otherwise, <c>false</c>.
+        /// </returns>
+        private bool IsMemberToDisplay(MemberReference memberRef)
+        {
+            // TODO Mono.Cecil doesn't provide a standard way to access public/protected access
+            // So this is a temporary hardcoded workaround, though we must be able to select the level to display (public/protected/private...etc.)
+
+            var method = memberRef as MethodDefinition;
+            if (method != null && (method.IsPublic || method.IsFamilyOrAssembly || method.IsFamily))
+                return true;
+
+            var field = memberRef as FieldDefinition;
+            if (field != null && (field.IsPublic || field.IsFamilyOrAssembly || field.IsFamily))
+                return true;
+
+            var eventInfo = memberRef as EventDefinition;
+            if (eventInfo != null && (eventInfo.AddMethod.IsPublic || eventInfo.AddMethod.IsFamilyOrAssembly || eventInfo.AddMethod.IsFamily))
+                return true;
+
+            var property = memberRef as PropertyDefinition;
+            if (property != null && (
+                (property.GetMethod != null && (property.GetMethod.IsPublic || property.GetMethod.IsFamilyOrAssembly || property.GetMethod.IsFamily)) || (property.SetMethod != null && (property.SetMethod.IsPublic || property.SetMethod.IsFamilyOrAssembly || property.SetMethod.IsFamily))))
+                return true;
+            return false;
+        }
+
+        /// <summary>
         /// Creates a method from a method definition.
         /// </summary>
         /// <param name="methodDef">The method def.</param>
@@ -305,9 +356,11 @@ namespace SharpDoc
         {
             NMethod method;
 
+            // Create the associated type
             if (methodDef.IsConstructor)
             {
                 method = NewInstance<NConstructor>(methodDef);
+
                 // Constructors must have typename instead of .ctor
                 method.Name = method.DeclaringType.Name;
             }
@@ -319,16 +372,9 @@ namespace SharpDoc
             else
             {
                 method = NewInstance<NMethod>(methodDef);
-
-                //// Methods with generic parameters, override the name by adding the generics
-                //if (method.GenericParameters.Count > 0)
-                //{
-                //    var newMethodName = new StringBuilder(method.Name);
-                //    BuildMethodSignatureGenericParameters(method, newMethodName);
-                //    method.Name = newMethodName.ToString();
-                //}
             }
 
+            // Setup visibility
             method.IsVirtual = methodDef.IsVirtual;
             method.IsStatic = methodDef.IsStatic;
             method.IsFinal = methodDef.IsFinal;
@@ -447,43 +493,100 @@ namespace SharpDoc
             return name;
         }
 
-        private void FillTypeReference(INMemberReference typeReference, TypeReference typeDef)
+        private void LoadSystemAssemblyDoc(INMemberReference memberRef, MemberReference typeReference)
         {
-            typeReference.Id = DocIdHelper.GetXmlId(typeDef);
-            typeReference.NormalizedId = DocIdHelper.StripXmlId(typeReference.Id);
-            typeReference.Name = ReplacePrimitive(typeDef.Name, typeDef.FullName);
-            typeReference.FullName = typeDef.FullName;
-            typeReference.IsGenericInstance = typeDef.IsGenericInstance;
-            typeReference.IsGenericParameter = typeDef.IsGenericParameter;
-            typeReference.IsArray = typeDef.IsArray;
-            typeReference.IsPointer = typeDef.IsPointer;
-            typeReference.IsSentinel = typeDef.IsSentinel;
-            FillGenericParameters(typeReference, typeDef);
-
-            // Handle generic instance
-            var genericInstanceDef = typeDef as GenericInstanceType;
-
-            if (genericInstanceDef != null )
+            NDocumentApi doc = null;
+            var assemblyPath = Path.GetFullPath(typeReference.Module.FullyQualifiedName);
+            if (!mapModuleToDoc.TryGetValue(assemblyPath, out doc))
             {
-                typeReference.ElementType = GetTypeReference(genericInstanceDef.ElementType);
-
-                if (genericInstanceDef.GenericArguments.Count > 0)
+                var frameworkPath = Utility.GetFrameworkRootDirectory();
+                if (assemblyPath.StartsWith(frameworkPath))
                 {
-                    foreach (var genericArgumentDef in genericInstanceDef.GenericArguments)
-                    {
-                        var genericArgument = new NTypeReference();
-                        FillTypeReference(genericArgument, genericArgumentDef);
-                        typeReference.GenericArguments.Add(genericArgument);
-                    }
-                    // Remove `number from Name
-                    typeReference.Name = BuildGenericName(typeDef.Name, typeReference.GenericArguments);
-                    typeReference.FullName = BuildGenericName(typeDef.FullName, typeReference.GenericArguments);
+                    var assemblyName = Path.GetFileNameWithoutExtension(assemblyPath);
+                    var assemblyDirectory = Path.GetDirectoryName(assemblyPath);
+
+                    // TODO: improve replace
+                    assemblyDirectory = assemblyDirectory.Replace(@"\Framework64\", @"\Framework\");
+
+                    var assemblyXml = Path.Combine(Path.Combine(assemblyDirectory, "en"), assemblyName + ".xml");
+                    doc = NDocumentApi.Load(assemblyXml);
                 }
-            } else if (typeReference.GenericParameters.Count > 0)
+                mapModuleToDoc.Add(assemblyPath, doc);
+            }
+
+            if (doc != null)
             {
-                // If generic parameters, than rewrite the name/fullname
-                typeReference.Name = BuildGenericName(typeDef.Name, typeReference.GenericParameters);
-                typeReference.FullName = BuildGenericName(typeDef.FullName, typeReference.GenericParameters);
+                memberRef.DocNode = doc.FindMemberDoc(memberRef.Id);
+            }
+        }
+
+        private void FillMemberReference(INMemberReference memberRef, MemberReference cecilMemberRef)
+        {
+            memberRef.Id = DocIdHelper.GetXmlId(cecilMemberRef);
+            memberRef.NormalizedId = DocIdHelper.StripXmlId(memberRef.Id);
+            memberRef.Name = ReplacePrimitive(cecilMemberRef.Name, cecilMemberRef.FullName);
+            memberRef.FullName = cecilMemberRef.FullName;
+
+            // Load system documentation if needed
+            LoadSystemAssemblyDoc(memberRef, cecilMemberRef);
+
+            var typeDef = cecilMemberRef as TypeReference;
+            if (typeDef != null)
+            {
+                memberRef.IsGenericInstance = typeDef.IsGenericInstance;
+                memberRef.IsGenericParameter = typeDef.IsGenericParameter;
+                memberRef.IsArray = typeDef.IsArray;
+                memberRef.IsPointer = typeDef.IsPointer;
+                memberRef.IsSentinel = typeDef.IsSentinel;
+                FillGenericParameters(memberRef, typeDef);
+
+                // Handle generic instance
+                var genericInstanceDef = typeDef as GenericInstanceType;
+
+                if (genericInstanceDef != null)
+                {
+                    memberRef.ElementType = GetTypeReference(genericInstanceDef.ElementType);
+
+                    if (genericInstanceDef.GenericArguments.Count > 0)
+                    {
+                        foreach (var genericArgumentDef in genericInstanceDef.GenericArguments)
+                        {
+                            var genericArgument = new NTypeReference();
+                            FillMemberReference(genericArgument, genericArgumentDef);
+                            memberRef.GenericArguments.Add(genericArgument);
+                        }
+
+                        // Remove `number from Name
+                        memberRef.Name = BuildGenericName(typeDef.Name, memberRef.GenericArguments);
+                        memberRef.FullName = BuildGenericName(typeDef.FullName, memberRef.GenericArguments);
+                    }
+                }
+                else if (memberRef.GenericParameters.Count > 0)
+                {
+                    // If generic parameters, than rewrite the name/fullname
+                    memberRef.Name = BuildGenericName(typeDef.Name, memberRef.GenericParameters);
+                    memberRef.FullName = BuildGenericName(typeDef.FullName, memberRef.GenericParameters);
+                }
+            }
+            else
+            {
+                var genericParameterProvider = cecilMemberRef as IGenericParameterProvider;
+                if (genericParameterProvider != null)
+                {
+                    this.FillGenericParameters(memberRef, genericParameterProvider);
+                    memberRef.Name = BuildGenericName(memberRef.Name, memberRef.GenericParameters);
+                    memberRef.FullName = BuildGenericName(memberRef.FullName, memberRef.GenericParameters);
+                }
+            }
+
+            var member = memberRef as NMember;
+
+            // Add custom attributes for this member
+            if (member != null && cecilMemberRef is ICustomAttributeProvider)
+            {
+                var attributes = ((ICustomAttributeProvider)cecilMemberRef).CustomAttributes;
+                foreach (var customAttribute in attributes)
+                    member.Attributes.Add(CustomAttributeToString(customAttribute));
             }
         }
 
@@ -493,7 +596,7 @@ namespace SharpDoc
                 return null;
 
             var typeReference = new NTypeReference();
-            FillTypeReference(typeReference, typeDef);
+            this.FillMemberReference(typeReference, typeDef);
             return typeReference;
         }
 
@@ -560,7 +663,7 @@ namespace SharpDoc
         /// <param name="parameterDef">The parameter def.</param>
         private void AddParameter(NMethod method, ParameterDefinition parameterDef)
         {
-            var parameter = new NParameter {Name = parameterDef.Name};
+            var parameter = new NParameter { Name = parameterDef.Name };
             parameter.FullName = parameter.Name;
             parameter.IsIn = parameterDef.IsIn;
             parameter.IsOut = parameterDef.IsOut;
@@ -579,9 +682,17 @@ namespace SharpDoc
         {
             var @event = NewInstance<NEvent>(eventDef);
             _registry.Register(parent.Namespace.Assembly, @event);
+
             @event.MemberType = NMemberType.Event;
+            @event.EventType = this.GetTypeReference(eventDef.EventType);
+
             parent.AddMember(@event);
             parent.HasEvents = true;
+
+            // Add SeeAlso
+            @event.SeeAlsos.Add(new NSeeAlso(parent));
+            @event.SeeAlsos.Add(new NSeeAlso(parent.Namespace));
+            @event.SeeAlsos.Add(new NSeeAlso(parent.Namespace.Assembly));
         }
 
         /// <summary>
@@ -643,28 +754,9 @@ namespace SharpDoc
         {
             var id = DocIdHelper.GetXmlId(memberRef);
             var member = new T {Name = memberRef.Name, FullName = memberRef.FullName, Id = id, NormalizedId = DocIdHelper.StripXmlId(id)};
-            member.DocNode = _source.FindMemberDoc(member.Id);
+            member.DocNode = _source.Document.FindMemberDoc(member.Id);
             member.DeclaringType = GetTypeReference(memberRef.DeclaringType);
-
-            if (memberRef is TypeReference) 
-            {
-                FillTypeReference(member, (TypeReference) memberRef);
-            }
-            else if (memberRef is IGenericParameterProvider)
-            {
-                FillGenericParameters(member, (IGenericParameterProvider) memberRef);
-                member.Name = BuildGenericName(member.Name, member.GenericParameters);
-                member.FullName = BuildGenericName(member.FullName, member.GenericParameters);
-            }
-
-            // Add custom attributes for this member
-            if (memberRef is ICustomAttributeProvider)
-            {
-                var attributes = ((ICustomAttributeProvider) memberRef).CustomAttributes;
-                foreach (var customAttribute in attributes)
-                    member.Attributes.Add(CustomAttributeToString(customAttribute));
-            }
-
+            this.FillMemberReference(member, memberRef);
             // Add generic parameter contraints
             return member;
         }
@@ -775,7 +867,7 @@ namespace SharpDoc
                                                HasNotNullableValueTypeConstraint = genericParameterDef.HasNotNullableValueTypeConstraint,
                                                HasReferenceTypeConstraint = genericParameterDef.HasReferenceTypeConstraint
                                            };
-                FillTypeReference(genericParameter, genericParameterDef);
+                this.FillMemberReference(genericParameter, genericParameterDef);
 
                 // Fill constraint
                 foreach (var constraint in genericParameterDef.Constraints)

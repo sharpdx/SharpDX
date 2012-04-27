@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Xml;
 
 namespace SharpDoc.Model
 {
@@ -26,6 +27,8 @@ namespace SharpDoc.Model
     /// </summary>
     public class NReference : IModelReference
     {
+        private XmlNode _docNode;
+
         /// <summary>
         /// Gets or sets the XML generated commment ID.
         /// See http://msdn.microsoft.com/en-us/library/fsbx0t7x.aspx for more information.
@@ -59,5 +62,45 @@ namespace SharpDoc.Model
         /// The category.
         /// </value>
         public string Category { get; set; }
+
+        /// <summary>
+        /// Gets or sets the <see cref="XmlNode"/> extracted from the code comments 
+        /// for a particular member.
+        /// </summary>
+        /// <value>The XmlNode doc.</value>
+        public XmlNode DocNode
+        {
+            get { return _docNode; }
+            set
+            {
+                _docNode = value;
+                OnDocNodeUpdate();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the description extracted from the &lt;summary&gt; tag of the <see cref="IComment.DocNode"/>.
+        /// </summary>
+        /// <value>The description.</value>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Gets or sets the remarks extracted from the &lt;remarks&gt; tag of the <see cref="IComment.DocNode"/>.
+        /// </summary>
+        /// <value>The remarks.</value>
+        public string Remarks { get; set; }
+
+
+        /// <summary>
+        /// Called when <see cref="DocNode"/> is updated.
+        /// </summary>
+        protected internal virtual void OnDocNodeUpdate()
+        {
+            if (DocNode != null)
+            {
+                Description = NDocumentApi.GetTag(DocNode, DocTag.Summary);
+                Remarks = NDocumentApi.GetTag(DocNode, DocTag.Remarks);
+            }
+        }
     }
 }

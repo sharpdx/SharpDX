@@ -25,6 +25,20 @@ namespace SharpDoc.Model
     /// </summary>
     public class NEvent : NMember
     {
-        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NEvent"/> class.
+        /// </summary>
+        public NEvent()
+        {
+            Category = "event";
+        }
+
+        /// <summary>
+        /// Gets or sets the type of the event.
+        /// </summary>
+        /// <value>
+        /// The type of the event.
+        /// </value>
+        public NTypeReference EventType { get; set; }
     }
 }

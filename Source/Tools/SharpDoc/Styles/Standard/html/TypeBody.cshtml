@@ -54,7 +54,7 @@
             builder.Append(string.Concat(Enumerable.Repeat(levelText, lastLevel)));
             if (item.Item2.Id == Model.Type.Id)
             {
-                builder.Append(Escape(item.Item2.FullName) + "<br />");
+                builder.Append("<strong>").Append(Escape(item.Item2.FullName)).Append("</strong><br/>");
             }
             else
             {
@@ -98,19 +98,19 @@
         @Helpers.Section.Dump("Constructors", self.Constructors, true);
 
 	@if (self.HasFields)
-        @Helpers.Section.Dump("Fields", self.Fields, true);
+        @Helpers.Section.Dump("Fields", self.Fields, true, self);
 
 	@if (self.HasProperties)
-        @Helpers.Section.Dump("Properties", self.Properties, true);
+        @Helpers.Section.Dump("Properties", self.AllProperties, true, self);
 
 	@if (self.HasMethods)
-        @Helpers.Section.Dump("Methods", self.Methods, true);
+        @Helpers.Section.Dump("Methods", self.AllMethods, true, self);
         
-	@if (self.HasOperators)
-        @Helpers.Section.Dump("Operators", self.Operators, true);
-
 	@if (self.HasEvents)
-		Helpers.Section.Dump("Events", self.Events, true);
+        @Helpers.Section.Dump("Events", self.AllEvents, true, self);
+
+    @if (self.HasOperators)
+        @Helpers.Section.Dump("Operators", self.Operators, true, self);
 }
 @if (!string.IsNullOrEmpty(self.Remarks))
     @Helpers.Section.Dump("Remarks", TagExpand(self.Remarks))

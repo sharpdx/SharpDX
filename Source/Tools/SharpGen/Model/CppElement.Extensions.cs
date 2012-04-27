@@ -77,12 +77,14 @@ namespace SharpGen.Model
         {
             return (pathREgex, element) =>
                        {
-                           MappingRule tag = element.Tag as MappingRule;
+                           var tag = element.Tag as MappingRule;
                            if (tag == null)
                            {
                                tag = new MappingRule();
                                element.Tag = tag;
                            }
+                           if (fromTag.Assembly != null) tag.Assembly = fromTag.Assembly;
+                           if (fromTag.Namespace != null) tag.Namespace = fromTag.Namespace;
                            if (fromTag.DefaultValue != null) tag.DefaultValue = fromTag.DefaultValue;
                            if (fromTag.MethodCheckReturnType.HasValue) tag.MethodCheckReturnType = fromTag.MethodCheckReturnType;
                            if (fromTag.Visibility.HasValue) tag.Visibility = fromTag.Visibility;

@@ -116,10 +116,18 @@
         <div class="icon @iconName.Item1" title="@iconName.Item2"></div>
     }
 }
-<!-- 
+!-- 
 // Dumps members
 -->
 @helper Dump(IEnumerable<NModelBase> members, bool showIcons)
+{
+    @Dump(members, showIcons, null);
+}
+
+<!-- 
+// Dumps members
+-->
+@helper Dump(IEnumerable<NModelBase> members, bool showIcons, IModelReference context)
     {
     <div class="members">
         <table class="members">
@@ -133,14 +141,41 @@
             </tr>
         @foreach (var member in members)
         {
-            var displayName = (member is NMethod && ((NMethod)member).HasOverrides)? ((NMethod)member).Signature : member.Name;
+            string displayName = member.Name;
+            string overrideDesc = null;
+            var memberRef = member as INMemberReference;
+
+            if (context != null && memberRef != null && memberRef.DeclaringType.Id != context.Id)
+            {
+                overrideDesc = string.Format("(Inherited from {0}.)", ToUrl(memberRef.DeclaringType, memberRef.DeclaringType.Name, true));
+            }
+            
+            var method = member as NMethod;
+            if (method != null)
+            {
+                if (method.HasOverrides)
+                    displayName = method.Signature;
+
+                if (overrideDesc == null)
+                {
+
+                    if (method.Overrides != null)
+                    {
+                        var baseMethodName = string.Format("{0}.{1}()", method.Overrides.DeclaringType.Name, method.Overrides.Name);
+                        overrideDesc = string.Format("(Overrides {0})", ToUrl(method.Overrides, baseMethodName, true));
+                    }
+                }
+            }
+            
+            overrideDesc = overrideDesc ?? string.Empty;
+            
             <tr>
                 @if (showIcons)
                 {
                     <td class="icon-col">@GetIcons(member)</td>
                 }
-                <td class="name-col">@ToUrl(member,displayName, !(Model.CurrentContext is NEnum))</td>
-                <td class="desc-col">@TagExpand(member.Description)&nbsp;</td>
+                <td class="name-col">@ToUrl(member, displayName, !(Model.CurrentContext is NEnum))</td>
+                <td class="desc-col">@TagExpand(member.Description)&nbsp;@overrideDesc</td>
             </tr>
         }            
         </table>

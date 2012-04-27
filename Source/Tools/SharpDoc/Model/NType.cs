@@ -37,7 +37,16 @@ namespace SharpDoc.Model
             Descendants = new List<INMemberReference>();
             FlattenedHierarchy = new List<Tuple<int, INMemberReference>>();
             Interfaces = new List<NMemberReference>();
+            AllMembers = new List<INMemberReference>();
         }
+
+        /// <summary>
+        /// Gets or sets all members (members of this instance + inherited members).
+        /// </summary>
+        /// <value>
+        /// All members.
+        /// </value>
+        public List<INMemberReference> AllMembers { get; set; }
 
         /// <summary>
         /// Gets or sets all base types for this type.
@@ -101,6 +110,15 @@ namespace SharpDoc.Model
         }
 
         /// <summary>
+        /// Gets the all methods of this instance and inherited).
+        /// </summary>
+        /// <value>The methods.</value>
+        public IEnumerable<NMethod> AllMethods
+        {
+            get { return AllMembers.Where(member => member.GetType() == typeof(NMethod)).Cast<NMethod>().ToList(); }
+        }
+
+        /// <summary>
         /// Gets the methods.
         /// </summary>
         /// <value>The methods.</value>
@@ -161,6 +179,15 @@ namespace SharpDoc.Model
         }
 
         /// <summary>
+        /// Gets the properties.
+        /// </summary>
+        /// <value>The properties.</value>
+        public IEnumerable<NProperty> AllProperties
+        {
+            get { return AllMembers.OfType<NProperty>(); }
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating whether this instance has events.
         /// </summary>
         /// <value>
@@ -175,6 +202,15 @@ namespace SharpDoc.Model
         public IEnumerable<NEvent> Events
         {
             get { return MembersAs<NEvent>(); }
+        }
+
+        /// <summary>
+        /// Gets the events.
+        /// </summary>
+        /// <value>The events.</value>
+        public IEnumerable<NEvent> AllEvents
+        {
+            get { return AllMembers.OfType<NEvent>(); }
         }
 
         /// <summary>

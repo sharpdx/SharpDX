@@ -166,9 +166,9 @@ namespace SharpDoc.Model
             get
             {
                 var text = new StringBuilder(VisibilityName);
-                if (IsStatic) text.Append("static ");
-                if (IsAbstract) text.Append("abstract ");
-                if (IsFinal) text.Append("sealed ");
+                if (IsStatic) text.Append(" static");
+                if (IsAbstract) text.Append(" abstract");
+                if (IsFinal) text.Append(" sealed");
                 return text.ToString();
             }
         }

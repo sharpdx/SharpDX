@@ -26,7 +26,7 @@ namespace SharpDoc.Model
     /// <summary>
     /// Base class for <see cref="IModelReference"/>.
     /// </summary>
-    public abstract class NModelBase : IModelReference, IComment, IEquatable<NModelBase>
+    public abstract class NModelBase : IModelReference, IEquatable<NModelBase>
     {
         private XmlNode _docNode;
 
@@ -117,26 +117,9 @@ namespace SharpDoc.Model
         {
             if (DocNode != null)
             {
-                Description = DocFromTag(DocTag.Summary);
-                Remarks = DocFromTag(DocTag.Remarks);
+                Description = NDocumentApi.GetTag(DocNode, DocTag.Summary);
+                Remarks = NDocumentApi.GetTag(DocNode, DocTag.Remarks);
             }
-        }
-
-        /// <summary>
-        /// Extract a comment from tag inside the <see cref="DocNode"/> associated
-        /// to this element.
-        /// </summary>
-        /// <param name="tagName">Name of the tag.</param>
-        /// <returns></returns>
-        public string DocFromTag(string tagName)
-        {
-            if (DocNode != null)
-            {
-                var selectedNode = DocNode.SelectSingleNode(tagName);
-                if (selectedNode != null)
-                    return selectedNode.InnerXml.Trim();
-            }
-            return null;
         }
 
         /// <summary>

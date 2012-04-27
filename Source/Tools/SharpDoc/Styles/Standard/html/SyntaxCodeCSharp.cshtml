@@ -121,7 +121,29 @@
         text.Append(" }").AppendLine();
 
         return text.ToString();
-    }    
+    }
+
+
+    /// <summary>
+    /// Dump the C# syntax of an event
+    /// </summary>
+    /// <param name="nEvent"></param>
+    /// <returns></returns>
+    protected string DumpEvent(NEvent nEvent)
+    {
+        var text = new StringBuilder();
+
+        // Append visibility
+        text.Append(nEvent.VisibilityFullName).Append(" ");
+
+        // Append Type
+        text.Append(Escape(nEvent.EventType.Name)).Append(" ");
+
+        // Append Name
+        text.Append(Escape(nEvent.Name));
+
+        return text.ToString();
+    }        
 
     /// <summary>
     /// Dump the C# syntax of a type property
@@ -209,6 +231,10 @@
     } else if (member is NMethod)
     {
         @DumpMethod((NMethod)member);
+    }
+    else if (member is NEvent)
+    {
+        @DumpEvent((NEvent)member);
     }
 	else if (member is NProperty)
     {

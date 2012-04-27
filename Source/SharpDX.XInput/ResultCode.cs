@@ -30,7 +30,7 @@ namespace SharpDX.XInput
         /// <summary>
         /// Device is not connected
         /// </summary>
-        public static readonly Result NotConnected = ErrorCode.ToResult(ErrorCode.DeviceNotConnected);
+        public static readonly Result NotConnected = ErrorCodeHelper.ToResult(ErrorCode.DeviceNotConnected);
     }
 }
 

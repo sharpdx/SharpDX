@@ -70,6 +70,11 @@
     @Dump(name, Helpers.Members.Dump(members, showIcons).ToString())
 }
 
+@helper Dump(string name, IEnumerable<NModelBase> members, bool showIcons, IModelReference context)
+{
+    @Dump(name, Helpers.Members.Dump(members, showIcons, context).ToString())
+}
+
 @helper DumpSyntax(NMember member)
 {
     @Dump("Syntax", Helpers.Syntax.Dump(member).ToString())   
