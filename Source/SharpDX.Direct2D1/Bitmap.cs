@@ -225,7 +225,9 @@ namespace SharpDX.Direct2D1
         /// <param name="memory">The data to copy. </param>
         /// <param name="pitch">The stride, or pitch, of the source bitmap stored in srcData. The stride is the byte count of a scanline (one row of pixels in memory). The stride can be computed from the following formula: pixel width * bytes per pixel + memory padding. </param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code. </returns>
-        /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromMemory([In, Optional] const D2D1_RECT_U* dstRect,[In] const void* srcData,[None] int pitch)</unmanaged>
+        /// <msdn-id>dd371155</msdn-id>	
+        /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromMemory([In, Optional] const D2D_RECT_U* dstRect,[In] const void* srcData,[In] unsigned int pitch)</unmanaged>	
+        /// <unmanaged-short>ID2D1Bitmap::CopyFromMemory</unmanaged-short>	
         public Result FromMemory(byte[] memory, int pitch)
         {
             unsafe
@@ -240,11 +242,33 @@ namespace SharpDX.Direct2D1
         /// <remarks>	
         /// This method does not update the size of the current bitmap. If the contents of the source bitmap do not fit in the current bitmap, this method fails. Also, note that this method does not perform format conversion; the two bitmap formats should match.  Passing this method invalid input, such as an invalid destination rectangle, can produce unpredictable results, such as a distorted image or device failure. Calling this method may cause the current batch to flush if the bitmap is active in the batch. If the batch that was flushed does not complete successfully, this method fails. However, this method does not clear the error state of the render target on which the batch was flushed. The failing <see cref="int"/> and tag state will be returned at the next call to {{EndDraw}} or {{Flush}}.  	
         /// </remarks>	
+        /// <param name="memory">The data to copy. </param>
+        /// <param name="pitch">The stride, or pitch, of the source bitmap stored in srcData. The stride is the byte count of a scanline (one row of pixels in memory). The stride can be computed from the following formula: pixel width * bytes per pixel + memory padding. </param>
+        /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code. </returns>
+        /// <msdn-id>dd371155</msdn-id>	
+        /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromMemory([In, Optional] const D2D_RECT_U* dstRect,[In] const void* srcData,[In] unsigned int pitch)</unmanaged>	
+        /// <unmanaged-short>ID2D1Bitmap::CopyFromMemory</unmanaged-short>	
+        public Result FromMemory<T>(T[] memory, int pitch) where T : struct
+        {
+            unsafe
+            {
+                return CopyFromMemory(null, (IntPtr)Interop.Fixed(memory), pitch);
+            }
+        }
+
+        /// <summary>	
+        /// Copies the specified region from memory into the current bitmap. 	
+        /// </summary>	
+        /// <remarks>	
+        /// This method does not update the size of the current bitmap. If the contents of the source bitmap do not fit in the current bitmap, this method fails. Also, note that this method does not perform format conversion; the two bitmap formats should match.  Passing this method invalid input, such as an invalid destination rectangle, can produce unpredictable results, such as a distorted image or device failure. Calling this method may cause the current batch to flush if the bitmap is active in the batch. If the batch that was flushed does not complete successfully, this method fails. However, this method does not clear the error state of the render target on which the batch was flushed. The failing <see cref="int"/> and tag state will be returned at the next call to {{EndDraw}} or {{Flush}}.  	
+        /// </remarks>	
         /// <param name="pointer">The data to copy. </param>
         /// <param name="pitch">The stride, or pitch, of the source bitmap stored in srcData. The stride is the byte count of a scanline (one row of pixels in memory). The stride can be computed from the following formula: pixel width * bytes per pixel + memory padding. </param>
         /// <param name="destinationArea">In the current bitmap, the upper-left corner of the area to which the region specified by srcRect is copied. </param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code. </returns>
-        /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromMemory([In, Optional] const D2D1_RECT_U* dstRect,[In] const void* srcData,[None] int pitch)</unmanaged>
+        /// <msdn-id>dd371155</msdn-id>	
+        /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromMemory([In, Optional] const D2D_RECT_U* dstRect,[In] const void* srcData,[In] unsigned int pitch)</unmanaged>	
+        /// <unmanaged-short>ID2D1Bitmap::CopyFromMemory</unmanaged-short>	
         public Result FromMemory(IntPtr pointer, int pitch, Rectangle destinationArea)
         {
             return CopyFromMemory(destinationArea, pointer, pitch);
@@ -260,12 +284,35 @@ namespace SharpDX.Direct2D1
         /// <param name="pitch">The stride, or pitch, of the source bitmap stored in srcData. The stride is the byte count of a scanline (one row of pixels in memory). The stride can be computed from the following formula: pixel width * bytes per pixel + memory padding. </param>
         /// <param name="destinationArea">In the current bitmap, the upper-left corner of the area to which the region specified by srcRect is copied. </param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code. </returns>
-        /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromMemory([In, Optional] const D2D1_RECT_U* dstRect,[In] const void* srcData,[None] int pitch)</unmanaged>
+        /// <msdn-id>dd371155</msdn-id>	
+        /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromMemory([In, Optional] const D2D_RECT_U* dstRect,[In] const void* srcData,[In] unsigned int pitch)</unmanaged>	
+        /// <unmanaged-short>ID2D1Bitmap::CopyFromMemory</unmanaged-short>	
         public Result FromMemory(byte[] memory, int pitch, Rectangle destinationArea)
         {
             unsafe
             {
                 fixed (void* pMemory = &memory[0]) return CopyFromMemory(destinationArea, new IntPtr(pMemory), pitch);
+            }
+        }
+
+        /// <summary>	
+        /// Copies the specified region from memory into the current bitmap. 	
+        /// </summary>	
+        /// <remarks>	
+        /// This method does not update the size of the current bitmap. If the contents of the source bitmap do not fit in the current bitmap, this method fails. Also, note that this method does not perform format conversion; the two bitmap formats should match.  Passing this method invalid input, such as an invalid destination rectangle, can produce unpredictable results, such as a distorted image or device failure. Calling this method may cause the current batch to flush if the bitmap is active in the batch. If the batch that was flushed does not complete successfully, this method fails. However, this method does not clear the error state of the render target on which the batch was flushed. The failing <see cref="int"/> and tag state will be returned at the next call to {{EndDraw}} or {{Flush}}.  	
+        /// </remarks>	
+        /// <param name="memory">The data to copy. </param>
+        /// <param name="pitch">The stride, or pitch, of the source bitmap stored in srcData. The stride is the byte count of a scanline (one row of pixels in memory). The stride can be computed from the following formula: pixel width * bytes per pixel + memory padding. </param>
+        /// <param name="destinationArea">In the current bitmap, the upper-left corner of the area to which the region specified by srcRect is copied. </param>
+        /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code. </returns>
+        /// <msdn-id>dd371155</msdn-id>	
+        /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromMemory([In, Optional] const D2D_RECT_U* dstRect,[In] const void* srcData,[In] unsigned int pitch)</unmanaged>	
+        /// <unmanaged-short>ID2D1Bitmap::CopyFromMemory</unmanaged-short>	
+        public Result FromMemory<T>(T[] memory, int pitch, Rectangle destinationArea) where T : struct
+        {
+            unsafe
+            {
+                return CopyFromMemory(destinationArea, (IntPtr)Interop.Fixed(memory), pitch);
             }
         }
 
