@@ -41,6 +41,7 @@ namespace SharpGen.Config
             Depends = new List<string>();
             Files = new List<string>();
             References = new List<ConfigFile>();
+            IncludeProlog = new List<string>();
             IncludeDirs = new List<IncludeDirRule>();
             Variables = new List<KeyValue>();
             Naming = new List<NamingRule>();
@@ -168,7 +169,7 @@ namespace SharpGen.Config
         public List<IncludeDirRule> IncludeDirs { get; set; }
 
         [XmlElement("include-prolog")]
-        public string IncludeProlog { get; set; }
+        public List<string> IncludeProlog { get; set; }
 
         [XmlElement("include")]
         public List<IncludeRule> Includes { get; set; }

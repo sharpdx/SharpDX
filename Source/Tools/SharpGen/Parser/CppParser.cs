@@ -137,8 +137,11 @@ namespace SharpGen.Parser
                     _gccxml.IncludeDirectoryList.Add(includeDir);
 
                 // Append prolog
-                if (!string.IsNullOrEmpty(configFile.IncludeProlog))
-                    prolog.Append(configFile.IncludeProlog);
+                foreach (var includeProlog in configFile.IncludeProlog)
+                {
+                    if (!string.IsNullOrEmpty(includeProlog))
+                        prolog.Append(includeProlog);                    
+                }
 
                 // Prepare bindings
                 // TODO test duplicate bindings
@@ -162,7 +165,7 @@ namespace SharpGen.Parser
                     isWithInclude = true;
 
                 // Build prolog
-                if (!string.IsNullOrEmpty(configFile.IncludeProlog))
+                if (configFile.IncludeProlog.Count > 0)
                     isWithInclude = true;
 
                 if (configFile.Includes.Count > 0)

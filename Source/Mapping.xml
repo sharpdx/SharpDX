@@ -37,46 +37,31 @@
   </ifndef>
 
   <var name="FILTER_PASTING_ERROR">error: pasting .*a valid preprocessing token</var>  
-  
-  <!-- Include prolog for GCC-XML -->
-  <ifndef name="WIN8METRO">
-    <include-prolog>
-      // Use unicode
-      #define UNICODE
-      // for SAL annotations
-      #define _PREFAST_
-      enum __SAL_YesNo {};
-      // To force GUID to be declared
-      #define INITGUID
-      // Wrap all declspec with gccxml
-      #define __declspec(x) __attribute__((gccxml(#x)))
-      // For XAudio2 patch
-      #define __unaligned __attribute((__unaligned))
-    </include-prolog>
-  </ifndef>
-  
+   
   <!-- For Win8 we need to force to use include headers for MetroApp only -->
   <ifdef name="WIN8METRO">
     <include-prolog>
-      // For Win8 we need to force to use include headers for MetroApp only (THIS IS THE ONLY DIFFERENCE WITH STANDARD PROLOG)
+      // For Win8 we need to force to use include headers for MetroApp only
       #define WINAPI_FAMILY WINAPI_PARTITION_APP
-      
-      // Use unicode
-      #define UNICODE
-      // for SAL annotations
-      #define _PREFAST_
-      enum __SAL_YesNo {};
-      // To force GUID to be declared
-      #define INITGUID
-      // Wrap all declspec with gccxml
-      #define __declspec(x) __attribute__((gccxml(#x)))
-      // For XAudio2 patch
-      #define __unaligned __attribute((__unaligned))
     </include-prolog>
-  </ifdef>  
+  </ifdef>
+
+  <!-- Include prolog for GCC-XML -->
+  <include-prolog>
+    // Use unicode
+    #define UNICODE
+    // for SAL annotations
+    #define _PREFAST_
+    enum __SAL_YesNo {};
+    // To force GUID to be declared
+    #define INITGUID
+    // Wrap all declspec with gccxml
+    #define __declspec(x) __attribute__((gccxml(#x)))
+    // For XAudio2 patch
+    #define __unaligned __attribute((__unaligned))
+  </include-prolog>
 
   <!-- Reference Mapping Files -->
-
 
   <file>SharpDX\Mapping.xml</file>
   <file>SharpDX.Animation\Mapping.xml</file>
