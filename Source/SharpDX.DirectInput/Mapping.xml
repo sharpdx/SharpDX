@@ -31,6 +31,7 @@
       #define FIELD_OFFSET(type, field) __builtin_offsetof(type,field)
     </pre>
     <post>
+      
       // Add JoystickOffsets predefined values
       #define DIJOFS_SLIDER0 DIJOFS_SLIDER(0)
       #define DIJOFS_SLIDER1 DIJOFS_SLIDER(1)
@@ -804,7 +805,7 @@
     <remove struct="CPOINT"/>
     
     <!-- Structure mapped by hand-->
-    <remove struct="DIJOYSTATE2"/>
+    <remove struct="DIJOYSTATE2"/>    
     <remove struct="DIMOUSESTATE2"/>
     <remove struct="DIOBJECTDATAFORMAT"/> 
 

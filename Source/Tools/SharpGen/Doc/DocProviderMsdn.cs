@@ -1,14 +1,18 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Xml;
 using HtmlAgilityPack;
 using ICSharpCode.SharpZipLib.Zip;
+
+using Microsoft.JScript;
 
 using SharpCore;
 using SharpCore.MTPS;
@@ -401,9 +405,16 @@ namespace SharpGen.Doc
             if (element == null)
                 return item;
 
-            var firstNode = element.ChildNodes.FindFirst("p");
-            if (firstNode != null)
-                item.Description = ParseNode(firstNode);
+            var headerNodes = element.Descendants("p");
+            foreach (var firstNode in headerNodes)
+            {
+                var description = ParseNode(firstNode);
+                if (!description.StartsWith("Applies to") && !description.StartsWith("[This documentation"))
+                {
+                    item.Description = description;
+                    break;
+                }
+            }
 
             HtmlNode firstElement = element.ChildNodes.FindFirst("dl");
             if (firstElement != null)
@@ -461,7 +472,7 @@ namespace SharpGen.Doc
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns></returns>
-        private static string GetDocumentationFromMsdn(string name)
+        public static string GetDocumentationFromMsdn(string name)
         {
 
             var shortId = GetShortId(name);
@@ -504,6 +515,8 @@ namespace SharpGen.Doc
 
         private static Regex matchId = new Regex(@"/([a-zA-Z0-9]+)(\(.+\).*|\.[a-zA-Z]+)?$");
 
+        private static JScriptEval jScriptEval = new JScriptEval();
+
         public static string GetShortId(string name)
         {
             try
@@ -515,31 +528,20 @@ namespace SharpGen.Doc
                 if (string.IsNullOrEmpty(result))
                     return string.Empty;
 
-                var doc = new HtmlDocument();
-                doc.LoadHtml(result);
-
-                var nodes = doc.DocumentNode.SelectNodes("//div[@class='ResultItem']//td[@class='result']/a");
-
-                // Select 1st node
-                foreach (var node in nodes)
+                var indexOfResults = result.IndexOf("var results", System.StringComparison.Ordinal);
+                if (indexOfResults > 0)
                 {
-                    var text = HttpUtility.HtmlDecode(node.InnerText);
-                    if (text.Contains(name))
-                    {
-                        var hrefAttribute = node.Attributes["href"];
-                        if (hrefAttribute != null)
-                        {
-                            var contentUrl = hrefAttribute.Value;
-                            var match = matchId.Match(contentUrl);
-                            if (match.Success)
-                                return match.Groups[1].Value;
-                        }
-                    }
+                    var endOfLine = result.IndexOf('\n', indexOfResults);
+                    var urlResult = (JSObject)jScriptEval.Eval(result.Substring(indexOfResults, endOfLine - indexOfResults));
+                    var contentUrl = ((JSObject)((ArrayObject)((JSObject)urlResult["data"])["results"])[0])["url"].ToString();
+                    var match = matchId.Match(contentUrl);
+                    if (match.Success)
+                        return match.Groups[1].Value;
                 }
             } 
             catch (Exception ex)
             {
-                Logger.Warning("Unable to get id for [{0}]", name);
+                Logger.Warning("Unable to get id for [{0}] (Reason: {1})", name, ex.Message);
             }
 
             return string.Empty;
@@ -604,5 +606,52 @@ namespace SharpGen.Doc
             }
             return string.Empty;
         }
+
+
+        /// <summary>
+        /// Exposes the JScrip eval function as a .net method.
+        /// This uses the "safe" JScript.Eval so no disk, or network access is allowed.
+        /// </summary>
+        private class JScriptEval
+        {
+            private readonly object evaluator;
+            private readonly Type evaluatorType;
+
+            public JScriptEval()
+            {
+                var compiler = new JScriptCodeProvider();
+                var parameters = new CompilerParameters { GenerateInMemory = true };
+                string jscriptSource =
+                    @"package Evaluator
+{
+    class Evaluator
+    {
+        public function Eval(expr : String) 
+        { 
+            return eval(expr); 
+        }
+    }
+}";
+                var results = compiler.CompileAssemblyFromSource(parameters, jscriptSource);
+
+                var assembly = results.CompiledAssembly;
+                evaluatorType = assembly.GetType("Evaluator.Evaluator");
+                evaluator = Activator.CreateInstance(evaluatorType);
+            }
+
+            public object Eval(String ecmaScript)
+            {
+                //ecmaScript = WrapInBrackets(ecmaScript);
+
+                return evaluatorType.InvokeMember(
+                    "Eval",
+                    BindingFlags.InvokeMethod,
+                    null,
+                    evaluator,
+                    new object[] { ecmaScript }
+                    );
+            }
+        }
+
     }
 }
