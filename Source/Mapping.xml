@@ -39,19 +39,41 @@
   <var name="FILTER_PASTING_ERROR">error: pasting .*a valid preprocessing token</var>  
   
   <!-- Include prolog for GCC-XML -->
-  <include-prolog>
-// Use unicode
-#define UNICODE
-// for SAL annotations
-#define _PREFAST_
-enum __SAL_YesNo {};
-// To force GUID to be declared
-#define INITGUID
-// Wrap all declspec with gccxml
-#define __declspec(x) __attribute__((gccxml(#x)))
-// For XAudio2 patch
-#define __unaligned __attribute((__unaligned))
-  </include-prolog>
+  <ifndef name="WIN8METRO">
+    <include-prolog>
+      // Use unicode
+      #define UNICODE
+      // for SAL annotations
+      #define _PREFAST_
+      enum __SAL_YesNo {};
+      // To force GUID to be declared
+      #define INITGUID
+      // Wrap all declspec with gccxml
+      #define __declspec(x) __attribute__((gccxml(#x)))
+      // For XAudio2 patch
+      #define __unaligned __attribute((__unaligned))
+    </include-prolog>
+  </ifndef>
+  
+  <!-- For Win8 we need to force to use include headers for MetroApp only -->
+  <ifdef name="WIN8METRO">
+    <include-prolog>
+      // For Win8 we need to force to use include headers for MetroApp only (THIS IS THE ONLY DIFFERENCE WITH STANDARD PROLOG)
+      #define WINAPI_FAMILY WINAPI_PARTITION_APP
+      
+      // Use unicode
+      #define UNICODE
+      // for SAL annotations
+      #define _PREFAST_
+      enum __SAL_YesNo {};
+      // To force GUID to be declared
+      #define INITGUID
+      // Wrap all declspec with gccxml
+      #define __declspec(x) __attribute__((gccxml(#x)))
+      // For XAudio2 patch
+      #define __unaligned __attribute((__unaligned))
+    </include-prolog>
+  </ifdef>  
 
   <!-- Reference Mapping Files -->
 
@@ -61,7 +83,9 @@ enum __SAL_YesNo {};
   <file>SharpDX.DXGI\Mapping.xml</file>
   <file>SharpDX.D3DCompiler\Mapping.xml</file>  
   <file>Mapping.Direct3D1x.xml</file>
-  <file>SharpDX.Direct3D10\Mapping.xml</file>
+  <ifndef name="WIN8METRO">
+    <file>SharpDX.Direct3D10\Mapping.xml</file>
+  </ifndef>    
   <file>SharpDX.Direct3D11\Mapping.xml</file>
   <file>SharpDX.Direct2D1\Mapping.xml</file>
   <ifndef name="DIRECTX11_1">

@@ -28,6 +28,9 @@ namespace SharpDX.DXGI
         /// <summary>
         /// Gets all outputs from this adapter.
         /// </summary>
+        /// <msdn-id>bb174525</msdn-id>	
+        /// <unmanaged>HRESULT IDXGIAdapter::EnumOutputs([In] unsigned int Output,[Out] IDXGIOutput** ppOutput)</unmanaged>	
+        /// <unmanaged-short>IDXGIAdapter::EnumOutputs</unmanaged-short>	
         public Output[] Outputs
         {
             get
@@ -52,7 +55,9 @@ namespace SharpDX.DXGI
         /// <returns>
         ///   <c>true</c> if the interface is supported; otherwise, <c>false</c>.
         /// </returns>
-        /// <unmanaged>HRESULT IDXGIAdapter::CheckInterfaceSupport([In] GUID* InterfaceName,[Out] __int64* pUMDVersion)</unmanaged>
+        /// <msdn-id>Bb174524</msdn-id>	
+        /// <unmanaged>HRESULT IDXGIAdapter::CheckInterfaceSupport([In] const GUID&amp; InterfaceName,[Out] LARGE_INTEGER* pUMDVersion)</unmanaged>	
+        /// <unmanaged-short>IDXGIAdapter::CheckInterfaceSupport</unmanaged-short>	
         public bool IsInterfaceSupported(Type type)
         {
             long userModeVersion;
@@ -66,6 +71,9 @@ namespace SharpDX.DXGI
         /// <returns>
         ///   <c>true</c> if the interface is supported; otherwise, <c>false</c>.
         /// </returns>
+        /// <msdn-id>Bb174524</msdn-id>	
+        /// <unmanaged>HRESULT IDXGIAdapter::CheckInterfaceSupport([In] const GUID&amp; InterfaceName,[Out] LARGE_INTEGER* pUMDVersion)</unmanaged>	
+        /// <unmanaged-short>IDXGIAdapter::CheckInterfaceSupport</unmanaged-short>	
         public bool IsInterfaceSupported<T>() where T : ComObject
         {
             long userModeVersion;
@@ -80,6 +88,9 @@ namespace SharpDX.DXGI
         /// <returns>
         ///   <c>true</c> if the interface is supported; otherwise, <c>false</c>.
         /// </returns>
+        /// <msdn-id>Bb174524</msdn-id>	
+        /// <unmanaged>HRESULT IDXGIAdapter::CheckInterfaceSupport([In] const GUID&amp; InterfaceName,[Out] LARGE_INTEGER* pUMDVersion)</unmanaged>	
+        /// <unmanaged-short>IDXGIAdapter::CheckInterfaceSupport</unmanaged-short>	
         public bool IsInterfaceSupported<T>(out long userModeVersion) where T : ComObject
         {
             return IsInterfaceSupported(typeof (T), out userModeVersion);
@@ -93,7 +104,9 @@ namespace SharpDX.DXGI
         /// <returns>
         ///   <c>true</c> if the interface is supported; otherwise, <c>false</c>.
         /// </returns>
-        /// <unmanaged>HRESULT IDXGIAdapter::CheckInterfaceSupport([In] GUID* InterfaceName,[Out] __int64* pUMDVersion)</unmanaged>
+        /// <msdn-id>Bb174524</msdn-id>	
+        /// <unmanaged>HRESULT IDXGIAdapter::CheckInterfaceSupport([In] const GUID&amp; InterfaceName,[Out] LARGE_INTEGER* pUMDVersion)</unmanaged>	
+        /// <unmanaged-short>IDXGIAdapter::CheckInterfaceSupport</unmanaged-short>	
         public bool IsInterfaceSupported(Type type, out long userModeVersion)
         {
             return CheckInterfaceSupport(Utilities.GetGuidFromType(type), out userModeVersion).Success;
@@ -111,6 +124,9 @@ namespace SharpDX.DXGI
         /// When the EnumOutputs method succeeds and fills the ppOutput parameter with the address of the reference to the output interface, EnumOutputs increments the output interface's reference count. To avoid a memory leak, when you finish using the  output interface, call the Release method to decrement the reference count.EnumOutputs first returns the output on which the desktop primary is displayed. This adapter corresponds with an index of zero. EnumOutputs then returns other outputs.
         /// </remarks>
         /// <exception cref="SharpDXException">if the index is greater than the number of outputs, result code <see cref="SharpDX.DXGI.ResultCode.NotFound"/></exception>
+        /// <msdn-id>bb174525</msdn-id>	
+        /// <unmanaged>HRESULT IDXGIAdapter::EnumOutputs([In] unsigned int Output,[Out] IDXGIOutput** ppOutput)</unmanaged>	
+        /// <unmanaged-short>IDXGIAdapter::EnumOutputs</unmanaged-short>	
         [Obsolete("Use Adapeter.Outputs property instead")]
         public SharpDX.DXGI.Output GetOutput(int outputIndex)
         {
@@ -123,6 +139,9 @@ namespace SharpDX.DXGI
         ///   Return the number of available outputs from this adapter.
         /// </summary>
         /// <returns>The number of outputs</returns>
+        /// <msdn-id>bb174525</msdn-id>	
+        /// <unmanaged>HRESULT IDXGIAdapter::EnumOutputs([In] unsigned int Output,[Out] IDXGIOutput** ppOutput)</unmanaged>	
+        /// <unmanaged-short>IDXGIAdapter::EnumOutputs</unmanaged-short>	
         [Obsolete("Use Adapeter.Outputs property instead")]
         public int GetOutputCount()
         {

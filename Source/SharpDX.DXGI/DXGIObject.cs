@@ -23,10 +23,14 @@ namespace SharpDX.DXGI
 {
     public partial class DXGIObject
     {
-        ///<summary>
-        ///</summary>
-        ///<typeparam name = "T"></typeparam>
-        ///<returns></returns>
+        /// <summary>
+        /// Gets the parent of the object.
+        /// </summary>
+        /// <typeparam name="T">Type of the parent object</typeparam>
+        /// <returns>Returns the parent object based on the GUID of the type of the parent object.</returns>
+        /// <msdn-id>bb174542</msdn-id>
+        /// <unmanaged>HRESULT IDXGIObject::GetParent([In] const GUID&amp; riid,[Out] void** ppParent)</unmanaged>
+        /// <unmanaged-short>IDXGIObject::GetParent</unmanaged-short>
         public T GetParent<T>() where T : ComObject
         {
             IntPtr temp;

@@ -29,13 +29,15 @@
 
   <!-- D3D10 includes -->
   <!-- d3d10_1.h must be included before d3d10.h -->
-  <include file="d3d10_1.h" />
-  <include file="d3d10.h" />
-  <include file="d3d10_1shader.h" />
-  <include file="d3d10effect.h" />
-  <include file="d3d10misc.h" />
-  <include file="d3d10sdklayers.h" />
-  <include file="d3d10shader.h" />
+  <ifndef name="WIN8METRO">
+    <include file="d3d10_1.h" />
+    <include file="d3d10.h" />
+    <include file="d3d10_1shader.h" />
+    <include file="d3d10effect.h" />
+    <include file="d3d10misc.h" />
+    <include file="d3d10sdklayers.h" />
+    <include file="d3d10shader.h" />
+  </ifndef>
   
   <ifndef name="DIRECTX11_1">
     <include file="d3dx10.h" />

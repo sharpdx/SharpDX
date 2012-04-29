@@ -228,6 +228,15 @@
     <map param="IDXGIResource1::CreateSharedHandle::dwAccess" type="DXGI_SHARED_RESOURCE_FLAGS"/>
     <map param="IDXGIResource1::CreateSharedHandle::pHandle" return="true"/>
 
+    <ifdef name="WIN8METRO">
+      <map method="IDXGIOutput1::DuplicateOutput" visibility="internal"/>
+      <map param="IDXGIOutput1::DuplicateOutput::ppOutputDuplication" type="void"/>
+    </ifdef>
+
+    <ifndef name="WIN8METRO">
+      <map param="IDXGIOutput1::DuplicateOutput::ppOutputDuplication" return="true"/>
+    </ifndef>
+
     <ifdef name="DIRECTX11_1">
       <map param="ISurfaceImageSourceNative::BeginDraw::pSurface" return="true"/>
       

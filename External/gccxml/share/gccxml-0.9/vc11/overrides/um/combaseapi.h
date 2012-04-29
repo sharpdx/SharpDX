@@ -1203,6 +1203,7 @@ CoCreateInstanceFromApp(
 
 #if (WINAPI_FAMILY == WINAPI_FAMILY_APP)
 
+/*
 __inline _Check_return_ HRESULT CoCreateInstance(
     _In_     REFCLSID rclsid, 
     _In_opt_ LPUNKNOWN pUnkOuter,
@@ -1242,6 +1243,7 @@ __inline _Check_return_ HRESULT CoCreateInstanceEx(
 {
     return CoCreateInstanceFromApp(Clsid, punkOuter, dwClsCtx, pServerInfo, dwCount, pResults);
 }
+*/
 
 #endif // (WINAPI_FAMILY == WINAPI_FAMILY_APP)
 #pragma endregion
