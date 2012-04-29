@@ -54,6 +54,7 @@ namespace SharpDoc.Model
                     var xmlDoc = new XmlDocument();
                     xmlDoc.Load(path);
                     doc = new NDocumentApi { Document = xmlDoc };
+                    doc.Initialize();
                 }
                 catch (Exception ex)
                 {
@@ -61,7 +62,7 @@ namespace SharpDoc.Model
             }
             return doc;
         }
-        
+      
         /// <summary>
         /// Finds a member doc from the <see cref="Document"/>.
         /// </summary>
@@ -70,12 +71,7 @@ namespace SharpDoc.Model
         public XmlNode FindMemberDoc(string memberId)
         {
             XmlNode node;
-            if (!cacheNodes.TryGetValue(memberId, out node))
-            {
-                node = this.Document.SelectSingleNode("/doc/members/member[@name='" + memberId + "']");
-                cacheNodes.Add(memberId, node);
-            }
-
+            cacheNodes.TryGetValue(memberId, out node);
             return node;
         }
 
@@ -98,6 +94,24 @@ namespace SharpDoc.Model
             }
 
             return null;
+        }
+
+        private void Initialize()
+        {
+            var items = this.Document.SelectNodes("/doc/members/member");
+            if (items != null)
+            {
+                for (int i = 0; i < items.Count; i++)
+                {
+                    var node = items[i];
+                    if (node.Attributes != null)
+                    {
+                        var nameAttr = node.Attributes["name"];
+                        if (nameAttr != null)
+                            cacheNodes.Add(nameAttr.Value, node);
+                    }
+                }
+            }
         }
     }
 }

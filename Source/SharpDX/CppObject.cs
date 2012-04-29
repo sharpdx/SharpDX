@@ -109,14 +109,14 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Method called when the NativePointer is updated.
+        /// Method called when <see cref="NativePointer"/> is going to be update.
         /// </summary>
         protected virtual void NativePointerUpdating()
         {
         }
 
         /// <summary>
-        /// Method called when the NativePointer is updated.
+        /// Method called when the <see cref="NativePointer"/> is updated.
         /// </summary>
         protected virtual void NativePointerUpdated(IntPtr oldNativePointer)
         {

@@ -1452,6 +1452,7 @@ namespace SharpGen.Parser
                 foreach (CppEnum cppEnum in cppInclude.Enums)
                 {
                     DocItem docItem = docProvider.FindDocumentation(cppEnum.Name);
+                    cppEnum.Id = docItem.Id;
                     cppEnum.Description = docItem.Description;
                     cppEnum.Remarks = docItem.Remarks;
 
@@ -1466,7 +1467,10 @@ namespace SharpGen.Parser
                     foreach (CppEnumItem cppEnumItem in cppEnum.EnumItems)
                     {
                         if (i < count)
+                        {
+                            cppEnumItem.Id = docItem.Id;
                             cppEnumItem.Description = docItem.Items[i];
+                        }
                         else break;
                         i++;
                     }
@@ -1475,6 +1479,7 @@ namespace SharpGen.Parser
                 foreach (CppStruct cppStruct in cppInclude.Structs)
                 {
                     DocItem docItem = docProvider.FindDocumentation(cppStruct.Name);
+                    cppStruct.Id = docItem.Id;
                     cppStruct.Description = docItem.Description;
                     cppStruct.Remarks = docItem.Remarks;
 
@@ -1485,10 +1490,13 @@ namespace SharpGen.Parser
                         Logger.Warning("Invalid number of fields in documentation for Struct {0}", cppStruct.Name);
                     int count = Math.Min(cppStruct.Items.Count, docItem.Items.Count);
                     int i = 0;
-                    foreach (CppField cppEnumItem in cppStruct.Fields)
+                    foreach (CppField cppField in cppStruct.Fields)
                     {
                         if (i < count)
-                            cppEnumItem.Description = docItem.Items[i];
+                        {
+                            cppField.Id = cppStruct.Id;
+                            cppField.Description = docItem.Items[i];
+                        }
                         else break;
                         i++;
                     }
@@ -1497,7 +1505,9 @@ namespace SharpGen.Parser
                 foreach (CppInterface cppInterface in cppInclude.Interfaces)
                 {
                     DocItem docItem = docProvider.FindDocumentation(cppInterface.Name);
+                    cppInterface.Id = docItem.Id;
                     cppInterface.Description = docItem.Description;
+                    cppInterface.Remarks = docItem.Remarks;
 
                     if (cppInterface.IsEmpty)
                         continue;
@@ -1506,6 +1516,7 @@ namespace SharpGen.Parser
                     {
                         string methodName = cppInterface.Name + "::" + cppMethod.Name;
                         DocItem methodDocItem = docProvider.FindDocumentation(methodName);
+                        cppMethod.Id = methodDocItem.Id;
                         cppMethod.Description = methodDocItem.Description;
                         cppMethod.Remarks = methodDocItem.Remarks;
                         cppMethod.ReturnType.Description = methodDocItem.Return;
@@ -1531,6 +1542,7 @@ namespace SharpGen.Parser
                 foreach (CppFunction cppFunction in cppInclude.Functions)
                 {
                     DocItem docItem = docProvider.FindDocumentation(cppFunction.Name);
+                    cppFunction.Id = docItem.Id;
                     cppFunction.Description = docItem.Description;
                     cppFunction.Remarks = docItem.Remarks;
                     cppFunction.ReturnType.Description = docItem.Return;

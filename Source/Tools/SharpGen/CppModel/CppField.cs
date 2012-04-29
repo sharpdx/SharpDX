@@ -45,6 +45,11 @@ namespace SharpGen.CppModel
         [XmlAttribute("bitoffset")]
         public int BitOffset { get; set; }
 
+        public override string ToShortString()
+        {
+            return string.Format("{0} {1}", TypeName, Name);
+        }
+
         /// <summary>
         /// Equalses the specified other.
         /// </summary>

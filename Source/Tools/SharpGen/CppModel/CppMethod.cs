@@ -102,5 +102,17 @@ namespace SharpGen.CppModel
             builder.Append(")");
             return builder.ToString();
         }
+
+        public override string ToShortString()
+        {
+            var builder = new StringBuilder();
+            if (Parent is CppInterface)
+            {
+                builder.Append(Parent.Name);
+                builder.Append("::");
+            }
+            builder.Append(Name);
+            return builder.ToString();
+        }
     }
 }

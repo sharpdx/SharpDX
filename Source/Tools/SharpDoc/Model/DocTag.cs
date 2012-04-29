@@ -27,6 +27,11 @@ namespace SharpDoc.Model
     public static class DocTag
     {
         /// <summary>
+        /// SharpDX unamanged tag &lt;unmanaged&gt; tag.
+        /// </summary>
+        public const string UnManaged = "unmanaged";
+
+        /// <summary>
         /// &lt;summary&gt; tag.
         /// </summary>
         public const string Summary = "summary";

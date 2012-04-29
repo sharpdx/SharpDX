@@ -398,6 +398,12 @@ namespace SharpDoc
 
                 // implements
                 method.Implements = GetMethodReference(MonoCecilHelper.GetBaseMethodInInterfaceHierarchy(methodDef));
+
+                // If this method doesn't have any documentation, use inherited documentation
+                if (string.IsNullOrEmpty(method.Description))
+                {
+                    method.DocNode = method.Overrides != null ? method.Overrides.DocNode : method.Implements != null ? method.Implements.DocNode : method.DocNode;
+                }
             }
 
             method.ReturnType = GetTypeReference(methodDef.ReturnType);
@@ -509,6 +515,7 @@ namespace SharpDoc
                     assemblyDirectory = assemblyDirectory.Replace(@"\Framework64\", @"\Framework\");
 
                     var assemblyXml = Path.Combine(Path.Combine(assemblyDirectory, "en"), assemblyName + ".xml");
+                    Logger.Message("Load system documentation [{0}]", assemblyName);
                     doc = NDocumentApi.Load(assemblyXml);
                 }
                 mapModuleToDoc.Add(assemblyPath, doc);
@@ -586,7 +593,7 @@ namespace SharpDoc
             {
                 var attributes = ((ICustomAttributeProvider)cecilMemberRef).CustomAttributes;
                 foreach (var customAttribute in attributes)
-                    member.Attributes.Add(CustomAttributeToString(customAttribute));
+                    member.Attributes.Add(CustomAttributeToString(member, customAttribute));
             }
         }
 
@@ -792,10 +799,16 @@ namespace SharpDoc
         /// </summary>
         /// <param name="customAttribute">The custom attribute.</param>
         /// <returns></returns>
-        private static string CustomAttributeToString(CustomAttribute customAttribute)
+        private static string CustomAttributeToString(NMember member, CustomAttribute customAttribute)
         {
             var builder = new StringBuilder();
             builder.Append(customAttribute.AttributeType.Name);
+
+            // Setup Obsolete flag
+            if (customAttribute.AttributeType.Name == "ObsoleteAttribute")
+            {
+                member.IsObsolete = true;
+            }
 
             if (customAttribute.HasConstructorArguments || customAttribute.HasProperties)
             {

@@ -27,6 +27,7 @@
 @model SharpDoc.TemplateContext
 @Import("Section")
 @Import("SeeAlso")
+@Import("TypeBodyMembersHeader")
 @{
     var self = Model.Member;
 }
@@ -37,7 +38,7 @@
 <strong>Namespace: </strong>@ToUrl(Model.Namespace)<br />
 <strong>Assembly: </strong>@ToUrl(Model.Assembly) (@Model.Assembly.FileName @Model.Assembly.Version)<br />
       
-@Include("TypeBodyMembersHeader")
+@Helpers.TypeBodyMembersHeader.Dump(self)
 
 @* Dump Syntax section *@
 @Helpers.Section.DumpSyntax(self)

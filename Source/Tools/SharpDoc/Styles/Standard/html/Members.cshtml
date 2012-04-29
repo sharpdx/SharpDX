@@ -23,99 +23,12 @@
 // -------------------------------------------------------------------------------
 *@
 @model SharpDoc.TemplateContext
+@using System.Collections.Generic
+@using System.Linq
+@using System.Dynamic
 @using SharpDoc.Model
-@functions {
+@Import("MembersRow")
 
-    /// <summary>
-    /// Get icon html class and title from a member (private/public...etc.)
-    /// </summary>
-    /// <param name="member"></param>
-    /// <returns></returns>
-    public static IEnumerable<Tuple<string, string>> GetIconList(NModelBase memberRef)
-    {
-        if (!(memberRef is NMember))
-            return Enumerable.Empty<Tuple<string, string>>();
-        var member = (NMember)memberRef;
-        
-        var icon = "";
-        var name = "";
-        switch (member.Visibility)
-        {
-            case NVisibility.Public:
-                icon = "pub";
-                name = "Public";
-                break;
-            case NVisibility.Protected:
-                icon = "prot";
-                name = "Protected";
-                break;
-            case NVisibility.Private:
-                icon = "priv";
-                name = "Private";
-                break;
-            case NVisibility.ProtectedInternal:
-                icon = "priv";
-                name = "Protected Internal";
-                break;
-            case NVisibility.Internal:
-                icon = "priv";
-                name = "Internal";
-                break;
-        }
-
-        switch (member.MemberType)
-        {
-            case NMemberType.Class:
-                icon += "class";
-                break;
-            case NMemberType.Struct:
-                icon += "structure";
-                break;
-            case NMemberType.Enum:
-                icon += "enum";
-                break;
-            case NMemberType.Interface:
-                icon += "interface";
-                break;
-            case NMemberType.Constructor:
-            case NMemberType.Method:
-                icon += "method";
-                break;
-            case NMemberType.Operator:
-                icon += "operator";
-                break;
-            case NMemberType.Property:
-                icon += "property";
-                break;
-            case NMemberType.Field:
-                icon += "field";
-                break;
-            case NMemberType.Event:
-                icon += "event";
-                break;
-            case NMemberType.Delegate:
-                icon += "delegate";
-                break;
-        }
-
-        name += " " + member.TypeMember;
-
-        var icons = new List<Tuple<string, string>> {new Tuple<string, string>(icon, name)};
-        if (member is NMethod && ((NMethod) member).IsStatic)
-            icons.Add(new Tuple<string, string>("static", "Static"));
-        return icons;
-    }
-}
-
-<!-- 
-// Returns an icon div element from a member
--->
-@helper GetIcons(NModelBase member) {
-    foreach (var iconName in GetIconList(member))
-    {
-        <div class="icon @iconName.Item1" title="@iconName.Item2"></div>
-    }
-}
 !-- 
 // Dumps members
 -->
@@ -127,27 +40,23 @@
 <!-- 
 // Dumps members
 -->
-@helper Dump(IEnumerable<NModelBase> members, bool showIcons, IModelReference context)
+@helper Dump(IEnumerable<NModelBase> membersIt, bool showIcons, IModelReference context)
     {
+        dynamic rowContext = new ExpandoObject();
+        var members = membersIt.ToList();
+		@Helpers.MembersRow.Prepare(members, rowContext);
     <div class="members">
         <table class="members">
-            <tr>
-                @if (showIcons)
-                {
-                    <th class="icon-col">&nbsp;</th>
-                }
-                <th class="name-col">Name</th>
-                <th class="desc-col">Description</th>
-            </tr>
+        <tr>@Helpers.MembersRow.DumpHeader(showIcons, rowContext)</tr>
         @foreach (var member in members)
         {
             string displayName = member.Name;
-            string overrideDesc = null;
+            string postDesc = null;
             var memberRef = member as INMemberReference;
 
             if (context != null && memberRef != null && memberRef.DeclaringType.Id != context.Id)
             {
-                overrideDesc = string.Format("(Inherited from {0}.)", ToUrl(memberRef.DeclaringType, memberRef.DeclaringType.Name, true));
+                postDesc = string.Format("(Inherited from {0}.)", ToUrl(memberRef.DeclaringType, memberRef.DeclaringType.Name, true));
             }
             
             var method = member as NMethod;
@@ -156,27 +65,24 @@
                 if (method.HasOverrides)
                     displayName = method.Signature;
 
-                if (overrideDesc == null)
+                if (postDesc == null)
                 {
-
                     if (method.Overrides != null)
                     {
                         var baseMethodName = string.Format("{0}.{1}()", method.Overrides.DeclaringType.Name, method.Overrides.Name);
-                        overrideDesc = string.Format("(Overrides {0})", ToUrl(method.Overrides, baseMethodName, true));
+                        postDesc = string.Format("(Overrides {0})", ToUrl(method.Overrides, baseMethodName, true));
+                    } 
+					else if (method.Implements != null)
+                    {
+                        var baseMethodName = string.Format("{0}.{1}()", method.Implements.DeclaringType.Name, method.Implements.Name);
+                        postDesc = string.Format("(Implements {0})", ToUrl(method.Implements, baseMethodName, true));
                     }
                 }
             }
             
-            overrideDesc = overrideDesc ?? string.Empty;
+            postDesc = postDesc ?? string.Empty;
             
-            <tr>
-                @if (showIcons)
-                {
-                    <td class="icon-col">@GetIcons(member)</td>
-                }
-                <td class="name-col">@ToUrl(member, displayName, !(Model.CurrentContext is NEnum))</td>
-                <td class="desc-col">@TagExpand(member.Description)&nbsp;@overrideDesc</td>
-            </tr>
+            <tr>@Helpers.MembersRow.DumpRow(member, showIcons, displayName, postDesc, rowContext)</tr>
         }            
         </table>
         <a href="#top">Top</a>

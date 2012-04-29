@@ -91,6 +91,30 @@ namespace SharpDoc.Model
         public string Description { get; set; }
 
         /// <summary>
+        /// Gets or sets the un managed API.
+        /// </summary>
+        /// <value>
+        /// The un managed API.
+        /// </value>
+        public string UnManagedApi { get; set; }
+
+        /// <summary>
+        /// Gets or sets the un managed API.
+        /// </summary>
+        /// <value>
+        /// The un managed API.
+        /// </value>
+        public string UnManagedShortApi { get; set; }
+
+        /// <summary>
+        /// Gets or sets the MSDN id.
+        /// </summary>
+        /// <value>
+        /// The MSDN id.
+        /// </value>
+        public string MsdnId { get; set; }
+
+        /// <summary>
         /// Gets or sets the remarks extracted from the &lt;remarks&gt; tag of the <see cref="IComment.DocNode"/>.
         /// </summary>
         /// <value>The remarks.</value>
@@ -111,6 +135,22 @@ namespace SharpDoc.Model
         public List<NSeeAlso> SeeAlsos { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this instance is obsolete.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is obsolete; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsObsolete { get; set; }
+
+        /// <summary>
+        /// Gets or sets the obsolete message.
+        /// </summary>
+        /// <value>
+        /// The obsolete message.
+        /// </value>
+        public string ObsoleteMessage { get; set; }
+
+        /// <summary>
         /// Called when <see cref="DocNode"/> is updated.
         /// </summary>
         protected internal virtual void OnDocNodeUpdate()
@@ -119,6 +159,9 @@ namespace SharpDoc.Model
             {
                 Description = NDocumentApi.GetTag(DocNode, DocTag.Summary);
                 Remarks = NDocumentApi.GetTag(DocNode, DocTag.Remarks);
+                UnManagedApi = NDocumentApi.GetTag(DocNode, "unmanaged");
+                UnManagedShortApi = NDocumentApi.GetTag(DocNode, "unmanaged-short");
+                MsdnId = NDocumentApi.GetTag(DocNode, "msdn-id");
             }
         }
 

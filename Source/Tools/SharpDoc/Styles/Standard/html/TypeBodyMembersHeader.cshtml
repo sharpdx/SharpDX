@@ -23,3 +23,18 @@
 // inside a Type body
 // -------------------------------------------------------------------------------
 *@
+@using SharpDoc.Model
+@using System.Text;
+@model SharpDoc.TemplateContext
+@helper Dump(NModelBase member)
+{
+	@if (!string.IsNullOrEmpty(@member.UnManagedApi))
+     {
+         <strong>Unmanaged: </strong><a href="http://msdn.microsoft.com/en-us/library/@(member.MsdnId).aspx" target="_blank">@member.UnManagedApi</a><br />
+         <span style="font-style:italic">Documentation for unmanaged references are generated from <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ee663274%28v=vs.85%29.aspx" target="_blank">MSDN documentation</a>. Please refer to the original documentation for further details.</span><br />
+     }
+}
+
+
+
+

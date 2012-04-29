@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using Mono.Options;
@@ -149,9 +150,13 @@ namespace SharpDoc
             // Force loading of dynamics for RazorEngine
             bool loaded = typeof(Microsoft.CSharp.RuntimeBinder.Binder).Assembly != null;
 
+            var clock = Stopwatch.StartNew();
+
             // Process the assemblies
             var modelProcessor = new ModelProcessor {AssemblyManager = new MonoCecilAssemblyManager(), ModelBuilder = new MonoCecilModelBuilder()};
             modelProcessor.Run(Config);
+
+            var timeForModelProcessor = clock.ElapsedMilliseconds;
 
             if (Logger.HasErrors)
                 Logger.Fatal("Too many errors in config file. Check previous message.");
@@ -209,7 +214,13 @@ namespace SharpDoc
             context.UseStyle(Config.StyleName);
           
             context.Parse(StyleDefinition.DefaultBootableTemplateName);
-        
+
+            var timeForWriting = clock.ElapsedMilliseconds - timeForModelProcessor;
+
+            Logger.Message("Total time: {0:F1}s", clock.ElapsedMilliseconds / 1000.0f);
+            Logger.Message("Time for assembly processing: {0:F1}s", timeForModelProcessor/1000.0f);
+            Logger.Message("Time for writing content: {0:F1}s", timeForWriting/1000.0f);
+
             if ((Config.OutputType & OutputType.DocPak) != 0 )
                 GenerateDocPak();
         }

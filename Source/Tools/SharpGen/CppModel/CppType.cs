@@ -92,6 +92,11 @@ namespace SharpGen.CppModel
             return builder.ToString();
         }
 
+        public override string ToShortString()
+        {
+            return TypeName;
+        }
+
         public bool Equals(CppType other)
         {
             if (ReferenceEquals(null, other)) return false;

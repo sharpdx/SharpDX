@@ -49,6 +49,15 @@ namespace SharpGen.CppModel
         public string Name { get; set; }
 
         /// <summary>
+        /// Gets or sets the id.
+        /// </summary>
+        /// <value>
+        /// The id.
+        /// </value>
+        [XmlElement("id")]
+        public string Id { get; set; }
+
+        /// <summary>
         /// Gets or sets the description.
         /// </summary>
         /// <value>The description.</value>
@@ -406,6 +415,11 @@ namespace SharpGen.CppModel
         public override string ToString()
         {
             return GetType().Name + " [" + Name + "]";
+        }
+
+        public virtual string ToShortString()
+        {
+            return Name;
         }
     }
 }

@@ -228,6 +228,7 @@ namespace SharpGen.Model
                 _cppElement = value;
                 if (_cppElement != null )
                 {
+                    MsdnId = string.IsNullOrEmpty(CppElement.Id) ? MsdnId : CppElement.Id;
                     Description = string.IsNullOrEmpty(CppElement.Description) ? Description : CppElement.Description;
                     Remarks = string.IsNullOrEmpty(CppElement.Remarks) ? Remarks : CppElement.Remarks;
 
@@ -265,6 +266,14 @@ namespace SharpGen.Model
         ///   Packing alignement for this structure (Default is 0 => Platform default)
         /// </summary>
         public int Align { get; set; }
+
+        /// <summary>
+        /// Gets or sets the MSDN doc id.
+        /// </summary>
+        /// <value>
+        /// The id.
+        /// </value>
+        public string MsdnId { get; set; }
 
         /// <summary>
         /// Gets or sets the description documentation.
@@ -325,7 +334,14 @@ namespace SharpGen.Model
 
                 docItems.Add(DocIncludeDirective);
                 if (CppElement != null)
+                {
+                    if (MsdnId != null)
+                    {
+                        docItems.Add("<msdn-id>" + Utilities.EscapeXml(MsdnId) + "</msdn-id>");
+                    }
                     docItems.Add("<unmanaged>" + Utilities.EscapeXml(DocUnmanagedName) + "</unmanaged>");
+                    docItems.Add("<unmanaged-short>" + Utilities.EscapeXml(DocUnmanagedShortName) + "</unmanaged-short>");
+                }
 
                 return docItems;
             }
@@ -338,7 +354,12 @@ namespace SharpGen.Model
             get { return CppElementName; }
         }
 
-            /// <summary>
+        public virtual string DocUnmanagedShortName
+        {
+            get { return CppElementName; }
+        }
+
+        /// <summary>
         /// Gets the description as a single line of documentation.
         /// </summary>
         /// <value>The single doc.</value>

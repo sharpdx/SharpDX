@@ -27,6 +27,7 @@
 @model SharpDoc.TemplateContext
 @Import("Section")
 @Import("SeeAlso")
+@Import("TypeBodyMembersHeader")
 @{    
     // Initialize complex inheritance flag 
     // Check if this type has a complex inheritance   
@@ -86,10 +87,10 @@
 <strong>Assembly: </strong>@ToUrl(Model.Assembly) (@Model.Assembly.FileName @Model.Assembly.Version)<br />
 <strong>Namespace: </strong>@ToUrl(Model.Namespace)<br />
 
+@Helpers.TypeBodyMembersHeader.Dump(self)
+
 @if (self is NType)
-    @Helpers.Section.DumpSyntax(self)   
-         
-@Include("TypeBodyMembersHeader")
+    @Helpers.Section.DumpSyntax(self)           
 
 <div class="members">
 @if (!(self is NDelegate))

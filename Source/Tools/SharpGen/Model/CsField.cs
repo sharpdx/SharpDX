@@ -38,6 +38,11 @@ namespace SharpGen.Model
             get { return CppElement != null ? CppElement.ToString() : "???"; }
         }
 
+        public override string DocUnmanagedShortName
+        {
+            get { return CppElement != null ? CppElement.ToShortString() : "???"; }
+        }
+
         public bool IsFixedArrayOfStruct
         {
             get

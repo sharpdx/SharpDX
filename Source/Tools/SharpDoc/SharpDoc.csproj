@@ -172,6 +172,8 @@
     <Compile Include="TopicBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Styles\Standard\html\Members.cshtml" />
+    <None Include="Styles\Standard\html\MembersRow.cshtml" />
     <None Include="Styles\Standard\html\SyntaxProperty.cshtml" />
     <None Include="Styles\Standard\html\SeeAlso.cshtml" />
     <None Include="Styles\Standard\MainClassLibrary.cshtml" />
@@ -200,7 +202,7 @@
     <None Include="Styles\Standard\html\LibraryBody.cshtml" />
     <None Include="Styles\Standard\html\Library.cshtml" />
     <None Include="Styles\Standard\html\TocBody.cshtml" />
-    <None Include="Styles\Standard\html\Members.cshtml" />
+    <None Include="Styles\Standard\html\Icons.cshtml" />
     <None Include="Styles\Standard\html\PageHeadScriptLink.cshtml" />
     <None Include="Styles\Standard\html\PageBody.cshtml" />
     <None Include="Styles\Standard\html\Page.cshtml" />

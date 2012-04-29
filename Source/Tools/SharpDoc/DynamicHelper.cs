@@ -24,6 +24,8 @@ using System.Linq.Expressions;
 using System.Reflection;
 using RazorEngine.Templating;
 
+using SharpCore.Logging;
+
 namespace SharpDoc
 {
     internal class DynamicHelper : IDynamicMetaObjectProvider
@@ -73,6 +75,12 @@ namespace SharpDoc
             public override DynamicMetaObject BindInvokeMember(InvokeMemberBinder binder, DynamicMetaObject[] args)
             {
                 var dictionary = (DynamicHelper)Value;
+
+                if (!dictionary.Methods.ContainsKey(binder.Name))
+                {
+                    Logger.Error("Unable to find method [{0}]", binder.Name);
+                    return null;
+                }
 
                 var  helperMethodInstanceList = dictionary.Methods[binder.Name];
                 HelperMethod helperMethodInstance = null;

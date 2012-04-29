@@ -58,6 +58,9 @@ namespace SharpDX
         /// <param name = "guid">GUID query interface</param>
         /// <param name = "outPtr">output object associated with this GUID, IntPtr.Zero in interface is not supported</param>
         /// <exception cref="SharpDXException">If this object doesn't support the interface</exception>
+        /// <msdn-id>ms682521</msdn-id>
+        /// <unmanaged>IUnknown::QueryInterface</unmanaged>	
+        /// <unmanaged-short>IUnknown::QueryInterface</unmanaged-short>
         public virtual void QueryInterface(Guid guid, out IntPtr outPtr)
         {
             var result = ((IUnknown) this).QueryInterface(ref guid, out outPtr);
@@ -69,6 +72,9 @@ namespace SharpDX
         /// </summary>
         /// <param name = "guid">GUID query interface</param>
         /// <exception cref="SharpDXException">If this object doesn't support the interface</exception>
+        /// <msdn-id>ms682521</msdn-id>
+        /// <unmanaged>IUnknown::QueryInterface</unmanaged>	
+        /// <unmanaged-short>IUnknown::QueryInterface</unmanaged-short>
         public virtual IntPtr QueryInterfaceOrNull(Guid guid)
         {
             var pointer = IntPtr.Zero;
@@ -82,6 +88,9 @@ namespace SharpDX
         ///<typeparam name="T">The type of the COM interface to query</typeparam>
         ///<returns>An instance of the queried interface</returns>
         /// <exception cref="SharpDXException">If this object doesn't support the interface</exception>
+        /// <msdn-id>ms682521</msdn-id>
+        /// <unmanaged>IUnknown::QueryInterface</unmanaged>	
+        /// <unmanaged-short>IUnknown::QueryInterface</unmanaged-short>
         public virtual T QueryInterface<T>() where T : ComObject
         {
             IntPtr parentPtr;
@@ -90,11 +99,14 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Queries a managed object for a particular COM interface support.
+        /// Queries a managed object for a particular COM interface support (This method is a shortcut to <see cref="QueryInterface"/>)
         /// </summary>
         ///<typeparam name="T">The type of the COM interface to query</typeparam>
         /// <param name="comObject">The managed COM object.</param>
         ///<returns>An instance of the queried interface</returns>
+        /// <msdn-id>ms682521</msdn-id>
+        /// <unmanaged>IUnknown::QueryInterface</unmanaged>	
+        /// <unmanaged-short>IUnknown::QueryInterface</unmanaged-short>
         public static T As<T>(object comObject) where T : ComObject
         {
             using (var tempObject = new ComObject(Marshal.GetIUnknownForObject(comObject)))
@@ -104,11 +116,14 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Queries a managed object for a particular COM interface support.
+        /// Queries a managed object for a particular COM interface support (This method is a shortcut to <see cref="QueryInterface"/>)
         /// </summary>
         ///<typeparam name="T">The type of the COM interface to query</typeparam>
         /// <param name="iunknownPtr">The managed COM object.</param>
         ///<returns>An instance of the queried interface</returns>
+        /// <msdn-id>ms682521</msdn-id>
+        /// <unmanaged>IUnknown::QueryInterface</unmanaged>	
+        /// <unmanaged-short>IUnknown::QueryInterface</unmanaged-short>
         public static T As<T>(IntPtr iunknownPtr) where T : ComObject
         {
             using (var tempObject = new ComObject(iunknownPtr))
@@ -140,6 +155,9 @@ namespace SharpDX
         ///<typeparam name="T">The type of the COM interface to query</typeparam>
         /// <param name="comObject">The managed COM object.</param>
         ///<returns>An instance of the queried interface</returns>
+        /// <msdn-id>ms682521</msdn-id>
+        /// <unmanaged>IUnknown::QueryInterface</unmanaged>	
+        /// <unmanaged-short>IUnknown::QueryInterface</unmanaged-short>
         public static T QueryInterface<T>(object comObject) where T : ComObject
         {
             using (var tempObject = new ComObject(Marshal.GetIUnknownForObject(comObject)))
@@ -153,6 +171,9 @@ namespace SharpDX
         ///</summary>
         ///<returns>An instance of the queried interface or null if it is not supported</returns>
         ///<returns></returns>
+        /// <msdn-id>ms682521</msdn-id>
+        /// <unmanaged>IUnknown::QueryInterface</unmanaged>	
+        /// <unmanaged-short>IUnknown::QueryInterface</unmanaged-short>
         public virtual T QueryInterfaceOrNull<T>() where T : ComObject
         {
             return FromPointer<T>(QueryInterfaceOrNull(Utilities.GetGuidFromType(typeof(T))));
@@ -203,6 +224,9 @@ namespace SharpDX
         /// Releases unmanaged and - optionally - managed resources
         /// </summary>
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        /// <msdn-id>ms682317</msdn-id>
+        /// <unmanaged>IUnknown::Release</unmanaged>	
+        /// <unmanaged-short>IUnknown::Release</unmanaged-short>
         protected unsafe override void Dispose(bool disposing)
         {
             // Only dispose non-zero object

@@ -138,6 +138,15 @@ namespace SharpGen.Model
             get { return CppSignature; }
         }
 
+        public override string DocUnmanagedShortName
+        {
+            get
+            {
+                if (CppElement != null) return CppElement.ToShortString();
+                return null;
+            }
+        }
+
         public bool CheckReturnType { get; set; }
 
         public bool HasReturnType
