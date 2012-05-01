@@ -172,6 +172,13 @@
     <Compile Include="TopicBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Styles\SharpDXWeb\html\Header.cshtml" />
+    <None Include="Styles\SharpDXWeb\html\Page.cshtml" />
+    <None Include="Styles\SharpDXWeb\html\WriteToFunction.cshtml" />
+    <None Include="Styles\Standard\html\ClassLibraryBuilder.cshtml" />
+    <None Include="Styles\Standard\html\WriteToFunction.cshtml" />
+    <None Include="Styles\Standard\html\PageIdFunction.cshtml" />
+    <None Include="Styles\Standard\html\TopicBuilder.cshtml" />
     <None Include="Styles\Standard\html\Members.cshtml" />
     <None Include="Styles\Standard\html\MembersRow.cshtml" />
     <None Include="Styles\Standard\html\SyntaxProperty.cshtml" />
@@ -209,7 +216,7 @@
     <None Include="Styles\Standard\html\PageHead.cshtml" />
     <None Include="Styles\Standard\html\TagResolver.cshtml" />
     <None Include="Styles\Standard\images\table-header-bg.png" />
-    <None Include="Styles\Standard\css\default.css" />
+    <None Include="Styles\Standard\css\sharpdoc.css" />
     <None Include="Styles\Standard\html\Namespace.cshtml" />
     <None Include="Styles\Standard\images\privclass.gif" />
     <None Include="Styles\Standard\images\privdelegate.gif" />
@@ -270,6 +277,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="SharpDoc.ico" />
+    <None Include="Styles\SharpDXWeb\css\sharpdoc.css" />
+    <Content Include="Styles\SharpDXWeb\style.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Styles\SharpDX\style.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Styles\Standard\style.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -370,7 +384,9 @@ copy  "$(TargetPath)" "$(SolutionDir)Build\Tools\Bin\"
 copy  "$(TargetDir)*.dll" "$(SolutionDir)Build\Tools\Bin\"
 rmdir /S /Q  "$(SolutionDir)Build\Tools\Styles"
 mkdir "$(SolutionDir)Build\Tools\Styles"
-xcopy /E "$(ProjectDir)Styles" "$(SolutionDir)Build\Tools\Styles\"</PostBuildEvent>
+xcopy /Y /E "$(ProjectDir)Styles" "$(SolutionDir)Build\Tools\Styles\"
+xcopy /Y /E "$(ProjectDir)Styles\SharpDXWeb\css\sharpdoc.css" "$(SolutionDir)..\SharpDX-Web\www\templates\rt_kinetic\css\"
+xcopy /Y /E "$(ProjectDir)Styles\Standard\js\sharpdoc.js" "$(SolutionDir)..\SharpDX-Web\www\templates\rt_kinetic\js\"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -25,6 +25,14 @@ namespace SharpDoc.Model
     public interface IModelReference : IComment
     {
         /// <summary>
+        /// Gets or sets the unique index of this node.
+        /// </summary>
+        /// <value>
+        /// The unique index.
+        /// </value>
+        int Index { get; set; }
+
+        /// <summary>
         /// Gets or sets the XML generated commment ID.
         /// See http://msdn.microsoft.com/en-us/library/fsbx0t7x.aspx for more information.
         /// </summary>
@@ -36,7 +44,15 @@ namespace SharpDoc.Model
         /// can be used for filename.
         /// </summary>
         /// <value>The file id.</value>
-        string NormalizedId { get; set; }
+        string PageId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the page title.
+        /// </summary>
+        /// <value>
+        /// The page title.
+        /// </value>
+        string PageTitle { get; set; }
 
         /// <summary>
         /// Gets or sets the name of this instance.

@@ -65,6 +65,14 @@ namespace SharpDoc
         public IModelBuilder ModelBuilder { get; set; }
 
         /// <summary>
+        /// Gets or sets the calculate page id.
+        /// </summary>
+        /// <value>
+        /// The calculate page id.
+        /// </value>
+        public Func<IModelReference, string> PageIdFunction { get; set; } 
+
+        /// <summary>
         /// Runs this instance.
         /// </summary>
         public void Run(Config config)
@@ -74,6 +82,9 @@ namespace SharpDoc
 
             if (ModelBuilder == null)
                 throw new InvalidOperationException("ModelBuilder must be set");
+
+            // Setup the PageId function
+            ModelBuilder.PageIdFunction = PageIdFunction;
 
             var assemblySources = AssemblyManager.Load(config);
 
@@ -111,9 +122,13 @@ namespace SharpDoc
 
         private NClass ProcessInheritance(NClass type, NAssembly assemblyContext = null)
         {
-            var directParent = type.Bases[0];
-            var baseModel = (NClass)this.FindType(directParent.Id, assemblyContext);
-
+            NClass baseModel = null;
+            if (type.Bases.Count > 0)
+            {
+                var directParent = type.Bases[0];
+                baseModel = (NClass)this.FindType(directParent.Id, assemblyContext);
+            }
+            
             if (type.AllMembers.Count > 0)
                 return baseModel;
 

@@ -41,11 +41,6 @@ namespace SharpDoc
         private MsdnRegistry _msnRegistry;
 
         /// <summary>
-        /// Provides a delegate to transform a link into a url
-        /// </summary>
-        public delegate string LinkResolverDelegate(LinkDescriptor link);
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="TemplateContext"/> class.
         /// </summary>
         public TemplateContext()
@@ -161,7 +156,101 @@ namespace SharpDoc
         /// Gets or sets the link resolver.
         /// </summary>
         /// <value>The link resolver.</value>
-        public LinkResolverDelegate LinkResolver { get; set; }
+        public Func<LinkDescriptor, string> LinkResolver { get; set; }
+
+        /// <summary>
+        /// Gets or sets the page id function.
+        /// </summary>
+        /// <value>
+        /// The page id function.
+        /// </value>
+        public Func<IModelReference, string> PageIdFunction { get; set; }
+
+        /// <summary>
+        /// Gets or sets the write to function.
+        /// </summary>
+        /// <value>
+        /// The write to function.
+        /// </value>
+        public Action<IModelReference, string> WriteTo { get; set; }
+
+        /// <summary>
+        /// Gets or sets the config.
+        /// </summary>
+        /// <value>
+        /// The config.
+        /// </value>
+        public Config Config { get; set; }
+
+        private ModelProcessor modelProcessor;
+        private TopicBuilder topicBuilder;
+
+        /// <summary>
+        /// Initializes this instance.
+        /// </summary>
+        public void Initialize()
+        {
+            Config.FilePath = Config.FilePath ?? Path.Combine(Environment.CurrentDirectory, "unknown.xml");
+
+            OutputDirectory = Config.AbsoluteOutputDirectory;
+
+            // Set title
+            Param.DocumentationTitle = Config.Title;
+
+            // Add parameters
+            if (Config.Parameters.Count > 0)
+            {
+                var dictionary = (DynamicParam)Param;
+                foreach (var configParam in Config.Parameters)
+                {
+                    dictionary.Properties.Remove(configParam.Name);
+                    dictionary.Properties.Add(configParam.Name, configParam.value);
+                }
+            }
+
+            // Add styles
+            if (Config.StyleParameters.Count > 0)
+            {
+                var dictionary = (IDictionary<string, object>)Style;
+                foreach (var configParam in Config.StyleParameters)
+                {
+                    dictionary.Remove(configParam.Name);
+                    dictionary.Add(configParam.Name, configParam.value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Processes the assemblies.
+        /// </summary>
+        public void ProcessAssemblies()
+        {
+            // Process the assemblies
+            modelProcessor = new ModelProcessor { AssemblyManager = new MonoCecilAssemblyManager(), ModelBuilder = new MonoCecilModelBuilder(), PageIdFunction = PageIdFunction };
+            modelProcessor.Run(Config);
+
+            if (Logger.HasErrors)
+                Logger.Fatal("Too many errors in config file. Check previous message.");
+
+            Assemblies = new List<NAssembly>(modelProcessor.Assemblies);
+            Registry = modelProcessor.Registry;
+        }
+
+        /// <summary>
+        /// Processes the topics.
+        /// </summary>
+        public void ProcessTopics()
+        {
+            // Build the topics
+            topicBuilder = new TopicBuilder() { Assemblies = modelProcessor.Assemblies, Registry = modelProcessor.Registry};
+            topicBuilder.Run(Config, PageIdFunction);
+
+            if (Logger.HasErrors)
+                Logger.Fatal("Too many errors in config file. Check previous message.");
+
+            RootTopic = topicBuilder.RootTopic;
+            SearchTopic = topicBuilder.SearchTopic;
+        }
 
         /// <summary>
         /// Finds the topic by id.
@@ -221,7 +310,7 @@ namespace SharpDoc
         /// <returns></returns>
         public string ToUrl(string id, string linkName = null, bool forceLocal = false, string attributes = null, IModelReference localReference = null, bool useSelf = true)
         {
-            var linkDescriptor = new LinkDescriptor { Type = LinkType.None };
+            var linkDescriptor = new LinkDescriptor { Type = LinkType.None, Index = -1 };
             var typeReference = localReference as NTypeReference;
             NTypeReference genericInstance = null;
             bool isGenericInstance = typeReference != null && typeReference.IsGenericInstance;
@@ -245,6 +334,7 @@ namespace SharpDoc
                 // For local references, use short name
                 linkDescriptor.Name = linkDescriptor.LocalReference.Name;
                 linkDescriptor.Type = LinkType.Local;
+                linkDescriptor.Index = linkDescriptor.LocalReference.Index;
                 if (!forceLocal && CurrentContext != null && linkDescriptor.LocalReference is NMember)
                 {
                     var declaringType = ((NMember) linkDescriptor.LocalReference).DeclaringType;
@@ -271,6 +361,7 @@ namespace SharpDoc
                     linkDescriptor.Name = reference.FullName;                    
                 }
             }
+
             if (LinkResolver == null)
             {
                 Logger.Warning("Model.LinkResolver must be set");
@@ -424,24 +515,8 @@ namespace SharpDoc
                 string dirPath = Path.GetDirectoryName(newpath);
                 if (!Directory.Exists(dirPath))
                     Directory.CreateDirectory(dirPath);
-                File.Copy(filePath, newpath);
+                File.Copy(filePath, newpath, true);
             }
-        }
-
-        /// <summary>
-        /// Write a content to an output file.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="content">The content.</param>
-        public void WriteToFile(string name, string content)
-        {
-            string path = Path.Combine(OutputDirectory, name);
-
-            string dirPath = Path.GetDirectoryName(path);
-            if (!Directory.Exists(dirPath))
-                Directory.CreateDirectory(dirPath);
-
-            File.WriteAllText(path, content);
         }
 
         // private List<>

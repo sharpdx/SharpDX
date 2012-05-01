@@ -37,7 +37,7 @@
        
         Logger.Message("Generate documentation for assembly [{0}]", assembly.Name);
 
-        Model.WriteToFile("html\\" + assembly.NormalizedId + Param.FileExt, Parse("Assembly"));
+        Model.WriteTo(assembly, Parse("Assembly"));
         
         foreach (var @namespace in assembly.Namespaces)
         {
@@ -45,13 +45,13 @@
             Model.Namespace = @namespace;
             Model.Type = null;
 
-            Model.WriteToFile("html\\" + @namespace.NormalizedId + Param.FileExt, Parse("Namespace"));
+            Model.WriteTo(@namespace, Parse("Namespace"));
 
             foreach (var type in @namespace.Types)
             {
                 Model.Topic = type.TopicLink;
                 Model.Type = type;
-                Model.WriteToFile("html\\" + @type.NormalizedId + Param.FileExt, Parse("Type"));
+                Model.WriteTo(@type, Parse("Type"));
 
                 // Enum-item are not going to be generated
                 if (!(type is NEnum))
@@ -59,7 +59,7 @@
                     foreach (var member in type.Members)
                     {
                         Model.Member = member;
-                        Model.WriteToFile("html\\" + @member.NormalizedId + Param.FileExt, Parse("Member"));
+                        Model.WriteTo(@member, Parse("Member"));
                     }
                 }
                 Model.Member = null;

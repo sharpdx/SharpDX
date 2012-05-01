@@ -58,11 +58,13 @@ namespace SharpDoc.Model
         public NTopic(IModelReference reference)
         {
             Id = reference.Id;
-            NormalizedId = reference.NormalizedId;
+            PageId = reference.PageId;
             Name = reference.Name;
             FullName = reference.FullName;
             SubTopics = new List<NTopic>();
         }
+
+        public int Index { get; set; }
 
         /// <summary>
         /// Gets or sets the XML generated commment ID.
@@ -77,8 +79,17 @@ namespace SharpDoc.Model
         /// can be used for filename.
         /// </summary>
         /// <value>The file id.</value>
-        [XmlAttribute("fileid")]
-        public string NormalizedId { get; set; }
+        [XmlAttribute("page-id")]
+        public string PageId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the page title.
+        /// </summary>
+        /// <value>
+        /// The page title.
+        /// </value>
+        [XmlAttribute("page-title")]
+        public string PageTitle { get; set; }
 
         /// <summary>
         /// Gets or sets the name of this instance.
@@ -231,7 +242,7 @@ namespace SharpDoc.Model
         /// Loads the content of this topic.
         /// </summary>
         /// <param name="rootPath">The root path.</param>
-        public void Init(string rootPath)
+        public void Init(string rootPath, Func<IModelReference, string> pageIdFunction)
         {
             // Check that id is valid
             if (string.IsNullOrEmpty(Id))
@@ -255,11 +266,14 @@ namespace SharpDoc.Model
             if (string.IsNullOrEmpty(FullName))
                 FullName = Name;
 
+            if (string.IsNullOrEmpty(PageTitle))
+                PageTitle = Name;
+
             rootPath = rootPath ?? "";
 
             // Initialize sub topics
             foreach(var topic in SubTopics)
-                topic.Init(rootPath);
+                topic.Init(rootPath, pageIdFunction);
 
             if (Id != ClassLibraryTopicId)
             {
@@ -274,8 +288,6 @@ namespace SharpDoc.Model
                     string filePath = null;
                     try
                     {
-                        if (string.IsNullOrEmpty(NormalizedId))
-                            NormalizedId = Path.GetFileNameWithoutExtension(FileName);
                         filePath = Path.Combine(rootPath, FileName);
                         Content = File.ReadAllText(filePath);
                     }
@@ -286,12 +298,12 @@ namespace SharpDoc.Model
                 }
             }
 
-            if (string.IsNullOrEmpty(NormalizedId))
-                NormalizedId = DocIdHelper.StripXmlId(Id);
+            if (string.IsNullOrEmpty(PageId))
+                PageId = pageIdFunction(this);
 
             // Check that NormalizeId is a valid filename
-            if (!Utility.IsValidFilename(NormalizedId))
-                Logger.Error("Invalid fileid/normalizedId [{0}] for topic [{1}]. Fileid must contain valid filename chars", NormalizedId, this);
+            if (!Utility.IsValidFilename(PageId))
+                Logger.Error("Invalid fileid/normalizedId [{0}] for topic [{1}]. Fileid must contain valid filename chars", PageId, this);
         }
 
         /// <summary>
@@ -305,7 +317,7 @@ namespace SharpDoc.Model
                 return new NTopic()
                            {
                                Id = ClassLibraryTopicId,
-                               NormalizedId = "ClassLibrary",
+                               PageId = "ClassLibrary",
                                Name = "Class Library"
                            };
             }
@@ -322,7 +334,7 @@ namespace SharpDoc.Model
                 return new NTopic()
                 {
                     Id = SearchResultsTopicId,
-                    NormalizedId = "SearchResults",
+                    PageId = "SearchResults",
                     Name = "Search results"
                 };
             }
@@ -336,7 +348,7 @@ namespace SharpDoc.Model
         /// </returns>
         public override string ToString()
         {
-            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "Id: {0}, NormalizedId: {1}, Name: {2}, FullName: {3}, FileName: {4}, SubTopics.Count: {5}", Id, NormalizedId, Name, FullName, FileName, SubTopics.Count);
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "Id: {0}, PageId: {1}, Name: {2}, FullName: {3}, FileName: {4}, SubTopics.Count: {5}", Id, PageId, Name, FullName, FileName, SubTopics.Count);
         }
 
     }

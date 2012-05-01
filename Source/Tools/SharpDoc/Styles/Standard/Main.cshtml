@@ -36,6 +36,12 @@
     // Installs the Link Resolver
     Include("LinkResolver");
     
+    // Installs the PageId function
+    Include("PageIdFunction");
+
+    // Installs the WriteTo function
+    Include("WriteToFunction");
+
     // Defines default parameters
     Include("Param");
 
@@ -45,15 +51,24 @@
     Model.CopyDirectoryContent("images");
     Model.CopyDirectoryContent("syntaxhighlighter");
     
-    // Write root index.html (which is just a redirect)
-    Model.WriteToFile("index" + Param.FileExt, Parse("Root"));
-        
+    // Generates ClassLibrary
+    Include("ClassLibraryBuilder");
+
     // Generates topics
+    Include("TopicBuilder");
+
+    // Write root index.html (which is just a redirect)
+    Model.WriteTo(null, Parse("Root"));
+
+    // Write topics
     Include("MainTopic");
     
-    // Generates class library (if any)
+    // Writes Class library
     Include("MainClassLibrary");
     
-    // Generates Epilog
+	// Generates Epilog
     Include("MainEnd");    
+
+	// Write null, null to WriteFunction in order to cleanup things
+    Model.WriteTo(null, null);
 }

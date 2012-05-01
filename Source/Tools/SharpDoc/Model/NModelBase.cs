@@ -35,6 +35,8 @@ namespace SharpDoc.Model
             SeeAlsos = new List<NSeeAlso>();
         }
 
+        public int Index { get; set; }
+
         /// <summary>
         /// Gets or sets the XML generated commment ID.
         /// See http://msdn.microsoft.com/en-us/library/fsbx0t7x.aspx for more information.
@@ -47,7 +49,25 @@ namespace SharpDoc.Model
         /// can be used for filename.
         /// </summary>
         /// <value>The file id.</value>
-        public string NormalizedId { get; set; }
+        public string PageId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the page title.
+        /// </summary>
+        /// <value>
+        /// The page title.
+        /// </value>
+        public string PageTitle
+        {
+            get
+            {
+                return Name + " " + Category;
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
 
         /// <summary>
         /// Gets or sets the name of this instance.

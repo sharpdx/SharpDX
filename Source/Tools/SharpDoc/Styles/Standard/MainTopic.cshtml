@@ -56,7 +56,8 @@
             topic.Name = Param.ClassLibraryName ?? topic.Name;
             topic.FullName = topic.FullName ?? topic.Name;
         }
-        Model.WriteToFile("html\\" + topic.NormalizedId + Param.FileExt, Parse(templateName));
+
+        Model.WriteTo(topic, Parse(templateName));
 
         foreach (var subTopic in topic.SubTopics)
             WriteTopic(subTopic);

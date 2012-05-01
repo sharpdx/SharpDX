@@ -45,6 +45,7 @@ namespace SharpDoc
         private Dictionary<string, NDocumentApi> mapModuleToDoc = new Dictionary<string, NDocumentApi>();
         private Dictionary<string, IModelReference>  membersCache = new Dictionary<string, IModelReference>();
 
+        public Func<IModelReference, string> PageIdFunction { get; set; }
 
         /// <summary>
         /// Loads from an assembly source definition all types to document.
@@ -64,7 +65,7 @@ namespace SharpDoc
             var assembly = new NAssembly {Name = assemblyDefinition.Name.Name};
             assembly.FullName = assembly.Name;
             assembly.Id = "A:" + assembly.Name;
-            assembly.NormalizedId = DocIdHelper.StripXmlId(assembly.Id);
+            assembly.PageId = PageIdFunction(assembly);
             assembly.Version = assemblyDefinition.Name.Version.ToString();
             assembly.FileName = Path.GetFileName(Utility.GetProperFilePathCapitalization(assemblySource.Filename));
             _registry.Register(assembly, assembly);
@@ -108,7 +109,7 @@ namespace SharpDoc
             namespaceNames.Sort();
 
             foreach (var namespaceName in namespaceNames)
-                namespaces[namespaceName].Types.Sort((left, right) => left.NormalizedId.CompareTo(right.NormalizedId));
+                namespaces[namespaceName].Types.Sort((left, right) => left.PageId.CompareTo(right.PageId));
 
             return assembly;
         }
@@ -123,7 +124,7 @@ namespace SharpDoc
         {
             var @namespace = new NNamespace(name) {Assembly = assembly, Id = "N:" + name};
             @namespace.FullName = @namespace.Name;
-            @namespace.NormalizedId = DocIdHelper.StripXmlId(@namespace.Id);      
+            @namespace.PageId = PageIdFunction(@namespace);      
             _registry.Register(assembly, @namespace);
 
             // Apply documentation on namespace from NamespaceDoc special class
@@ -280,11 +281,11 @@ namespace SharpDoc
             foreach (var property in typeDef.Properties.Where(this.IsMemberToDisplay))
                 AddProperty(type, property);
 
-            // Recalculate a NormalizedId based on the number of overriding methods.
+            // Recalculate a PageId based on the number of overriding methods.
             var counters = new Dictionary<string, int>();
             foreach (var member in type.Members)
             {
-                string id =  DocIdHelper.StripXmlId(member.Id);
+                string id =  PageIdFunction(member);
 
                 if (!counters.ContainsKey(id))
                     counters.Add(id, 0);
@@ -294,13 +295,13 @@ namespace SharpDoc
                     id = id + "_" + counters[id];
                 }
 
-                member.NormalizedId = id;
+                member.PageId = id;
             }
 
             // Tag methods that are overriden
             foreach (var method in type.MethodsAndConstructors)
             {
-                var id = DocIdHelper.StripXmlId(method.Id);
+                var id = PageIdFunction(method);
                 if (counters.ContainsKey(id) && counters[id] > 0)
                     method.HasOverrides = true;
             }
@@ -530,7 +531,7 @@ namespace SharpDoc
         private void FillMemberReference(INMemberReference memberRef, MemberReference cecilMemberRef)
         {
             memberRef.Id = DocIdHelper.GetXmlId(cecilMemberRef);
-            memberRef.NormalizedId = DocIdHelper.StripXmlId(memberRef.Id);
+            memberRef.PageId = PageIdFunction(memberRef);
             memberRef.Name = ReplacePrimitive(cecilMemberRef.Name, cecilMemberRef.FullName);
             memberRef.FullName = cecilMemberRef.FullName;
 
@@ -760,7 +761,8 @@ namespace SharpDoc
         private T NewInstance<T>(MemberReference memberRef) where T : NMember, new()
         {
             var id = DocIdHelper.GetXmlId(memberRef);
-            var member = new T {Name = memberRef.Name, FullName = memberRef.FullName, Id = id, NormalizedId = DocIdHelper.StripXmlId(id)};
+            var member = new T {Name = memberRef.Name, FullName = memberRef.FullName, Id = id};
+            member.PageId = PageIdFunction(member);
             member.DocNode = _source.Document.FindMemberDoc(member.Id);
             member.DeclaringType = GetTypeReference(memberRef.DeclaringType);
             this.FillMemberReference(member, memberRef);

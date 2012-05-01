@@ -84,7 +84,7 @@ namespace SharpDoc
     /// Helper class to transform a member reference (type, method...etc) to an xml doc Id
     /// according to http://msdn.microsoft.com/en-us/library/fsbx0t7x.aspx
     /// </summary>
-    internal class DocIdHelper
+    public class DocIdHelper
     {
         /// <summary>
         /// Strips a XML doc id by replacing characters that cannot be used for a filename

@@ -26,4 +26,5 @@
 @using System.Text;
 @model SharpDoc.TemplateContext
 @Import("Page")
-@Helpers.Page.Dump(Model.Topic.Name, "SearchBody")
+@if (Param.UseSearchBox)
+    @Helpers.Page.Dump(Model.Topic.Name, "SearchBody")

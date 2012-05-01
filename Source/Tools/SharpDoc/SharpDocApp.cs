@@ -152,57 +152,15 @@ namespace SharpDoc
 
             var clock = Stopwatch.StartNew();
 
-            // Process the assemblies
-            var modelProcessor = new ModelProcessor {AssemblyManager = new MonoCecilAssemblyManager(), ModelBuilder = new MonoCecilModelBuilder()};
-            modelProcessor.Run(Config);
-
-            var timeForModelProcessor = clock.ElapsedMilliseconds;
-
-            if (Logger.HasErrors)
-                Logger.Fatal("Too many errors in config file. Check previous message.");
-
-            // Build the topics
-            var topicBuilder = new TopicBuilder() {Assemblies = modelProcessor.Assemblies, Registry = modelProcessor.Registry, RootTopic = Config.RootTopic};
-            topicBuilder.Run();
-
             // New instance of a tempalte context used by the RazorEngine
             var context = new TemplateContext
             {
-                Assemblies = new List<NAssembly>(modelProcessor.Assemblies),
-                Registry = modelProcessor.Registry,
-                RootTopic = topicBuilder.RootTopic,
-                SearchTopic = topicBuilder.SearchTopic,
+                Config = Config,
                 StyleManager = StyleManager,
-                OutputDirectory =  Config.AbsoluteOutputDirectory
             };
 
-            if (Logger.HasErrors)
-                Logger.Fatal("Too many errors in config file. Check previous message.");
-
-            // Set title
-            context.Param.DocumentationTitle = Config.Title;
-
-            // Add parameters
-            if (Config.Parameters.Count > 0)
-            {
-                var dictionary = (DynamicParam) context.Param;
-                foreach (var configParam in Config.Parameters)
-                {                   
-                    dictionary.Properties.Remove(configParam.Name);
-                    dictionary.Properties.Add(configParam.Name, configParam.value);
-                }
-            }
-
-            // Add styles
-            if (Config.StyleParameters.Count > 0)
-            {
-                var dictionary = (IDictionary<string, object>)context.Style;
-                foreach (var configParam in Config.StyleParameters)
-                {
-                    dictionary.Remove(configParam.Name);
-                    dictionary.Add(configParam.Name, configParam.value);
-                }
-            }
+            // Setup the context based on the config and StyleManager
+            context.Initialize();
 
             // Delete output directory first
             if (Directory.Exists(context.OutputDirectory))
@@ -215,11 +173,9 @@ namespace SharpDoc
           
             context.Parse(StyleDefinition.DefaultBootableTemplateName);
 
-            var timeForWriting = clock.ElapsedMilliseconds - timeForModelProcessor;
-
             Logger.Message("Total time: {0:F1}s", clock.ElapsedMilliseconds / 1000.0f);
-            Logger.Message("Time for assembly processing: {0:F1}s", timeForModelProcessor/1000.0f);
-            Logger.Message("Time for writing content: {0:F1}s", timeForWriting/1000.0f);
+            //Logger.Message("Time for assembly processing: {0:F1}s", timeForModelProcessor/1000.0f);
+            //Logger.Message("Time for writing content: {0:F1}s", timeForWriting/1000.0f);
 
             if ((Config.OutputType & OutputType.DocPak) != 0 )
                 GenerateDocPak();

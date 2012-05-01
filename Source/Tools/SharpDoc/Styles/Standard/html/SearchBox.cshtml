@@ -25,7 +25,7 @@
 @using SharpDoc.Model
 @using System.Text;
 @model SharpDoc.TemplateContext                
-<form name="sharpdoc-search" id="sharpdoc-search" class="sharpdoc-search" action="@Model.SearchTopic.NormalizedId@Param.FileExt" method="get">
+<form name="sharpdoc-search" id="sharpdoc-search" class="sharpdoc-search" action="@Model.SearchTopic.PageId@Param.FileExt" method="get">
 	<div class="sharpdoc-search-wrapper">
 		<input id="sharpdoc-search-str" name="query" type="text" class="inputbox" value="@Param.SearchBox" onclick="SearchBoxFocus(this,true);" onblur="SearchBoxFocus(this,false);" />
 	</div>

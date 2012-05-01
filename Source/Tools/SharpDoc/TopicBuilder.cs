@@ -17,7 +17,11 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System;
 using System.Collections.Generic;
+using System.IO;
+
 using SharpCore.Logging;
 using SharpDoc.Model;
 
@@ -55,8 +59,14 @@ namespace SharpDoc
         /// <summary>
         /// Build topics for Assemblies, Namespaces and Types in order to use them in the TOC
         /// </summary>
-        public void Run()
+        public void Run(Config config, Func<IModelReference, string> pageIdFunction)
         {
+            RootTopic = config.RootTopic;
+
+            // Load an existing root topic
+            if (RootTopic != null)
+                RootTopic.Init(Path.GetDirectoryName(config.FilePath), pageIdFunction);
+
             // If there are any assemblies, we have to generate class library topics
             if (Assemblies.Count >= 0)
             {

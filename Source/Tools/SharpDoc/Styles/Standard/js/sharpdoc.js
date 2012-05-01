@@ -117,8 +117,8 @@ function SplitPane(splitPaneId, splitPaneToggleId, splitPaneResizerId) {
 
     // Use localstorage to store toggle state
     if (supports_local_storage()) {
-        if (localStorage.getItem('sharpdoc-toggle')) {
-            var value = localStorage.getItem('sharpdoc-toggle');
+        if (localStorage.getItem('sharpdoc-resize')) {
+            var value = localStorage.getItem('sharpdoc-resize');
             if (value == 0) {
                 splitPaneToggle.set('class', 'expand');
                 paneLeft.setStyle('display','none');

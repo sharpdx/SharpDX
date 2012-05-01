@@ -156,9 +156,6 @@ namespace SharpDoc
             var deserializer = new XmlSerializer(typeof(Config));
             var config = (Config)deserializer.Deserialize(new StringReader(File.ReadAllText(file)));
             config.FilePath = file;
-            // Load all Topics content
-            if (config.RootTopic != null)
-                config.RootTopic.Init(Path.GetDirectoryName(file));
             return config;
         }
 

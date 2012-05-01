@@ -26,6 +26,15 @@ namespace SharpDoc
     /// </summary>
     public class LinkDescriptor
     {
+
+        /// <summary>
+        /// Gets or sets the index.
+        /// </summary>
+        /// <value>
+        /// The index.
+        /// </value>
+        public int Index { get; set; }
+
         /// <summary>
         /// Gets or sets the id linked.
         /// </summary>

@@ -19,18 +19,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.       
 // -------------------------------------------------------------------------------
-// Override this to perform setup before generating all templates
+// Override this template to modify the generated html footer for all body
 // -------------------------------------------------------------------------------
 *@
-@using SharpDoc.Model
-@model SharpDoc.TemplateContext
-@{    
-    //// Code example:
-    // Param.Copyright = "Copyright &copy; 2010-2012 SharpDX - Alexandre Mutel";
-    Param.UseSearchBox = Param.UseSearchBox ?? false;
-    Param.RootLink = Param.RootLink ?? "";
-    Param.FileExt = Param.FileExt ?? ".htm";
-    Param.DocumentationTitle = Param.DocumentationTitle ?? "Documentation";
-    Param.SearchBox = Param.SearchBox ?? "Search a term...";    
+@model SharpDoc.TemplateContext;
+@using SharpDoc.Model;
+@Import("PageHead");
+@Import("PageBody");
+@helper Dump(string title, string bodyTemplateName)
+    {
+    @Helpers.PageBody.Dump(bodyTemplateName)
 }
 

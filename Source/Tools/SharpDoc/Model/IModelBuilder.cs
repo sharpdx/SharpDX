@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+
 namespace SharpDoc.Model
 {
     /// <summary>
@@ -25,6 +27,14 @@ namespace SharpDoc.Model
     /// </summary>
     public interface IModelBuilder
     {
+        /// <summary>
+        /// Gets or sets the calculate page id.
+        /// </summary>
+        /// <value>
+        /// The calculate page id.
+        /// </value>
+        Func<IModelReference, string> PageIdFunction { get; set; } 
+
         /// <summary>
         /// Loads from an assembly source definition all types to document. 
         /// </summary>

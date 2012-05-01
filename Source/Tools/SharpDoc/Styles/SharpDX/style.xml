@@ -1,4 +1,5 @@
-﻿@*
+<?xml version="1.0"?>
+<!--
 // Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -17,20 +18,18 @@
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.       
-// -------------------------------------------------------------------------------
-// Override this to perform setup before generating all templates
-// -------------------------------------------------------------------------------
-*@
-@using SharpDoc.Model
-@model SharpDoc.TemplateContext
-@{    
-    //// Code example:
-    // Param.Copyright = "Copyright &copy; 2010-2012 SharpDX - Alexandre Mutel";
-    Param.UseSearchBox = Param.UseSearchBox ?? false;
-    Param.RootLink = Param.RootLink ?? "";
-    Param.FileExt = Param.FileExt ?? ".htm";
-    Param.DocumentationTitle = Param.DocumentationTitle ?? "Documentation";
-    Param.SearchBox = Param.SearchBox ?? "Search a term...";    
-}
+// THE SOFTWARE.
+// *****************************************************************************
+// Standard Style description
+// *****************************************************************************
+-->
+<style xmlns="SharpDoc">
+  <!-- Name of this style. Must match the parent directory name. -->
+  <name>SharpDX</name>
 
+  <!-- Description for this style -->
+  <description>SharpDX style</description>
+
+  <!-- This style doesn't inherit from a base style -->
+  <inherit>Standard</inherit>
+</style>

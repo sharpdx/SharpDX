@@ -29,6 +29,8 @@ namespace SharpDoc.Model
     {
         private XmlNode _docNode;
 
+        public int Index { get; set; }
+
         /// <summary>
         /// Gets or sets the XML generated commment ID.
         /// See http://msdn.microsoft.com/en-us/library/fsbx0t7x.aspx for more information.
@@ -41,7 +43,15 @@ namespace SharpDoc.Model
         /// can be used for filename.
         /// </summary>
         /// <value>The file id.</value>
-        public string NormalizedId { get; set; }
+        public string PageId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the page title.
+        /// </summary>
+        /// <value>
+        /// The page title.
+        /// </value>
+        public string PageTitle { get; set; }
 
         /// <summary>
         /// Gets or sets the name of this instance.

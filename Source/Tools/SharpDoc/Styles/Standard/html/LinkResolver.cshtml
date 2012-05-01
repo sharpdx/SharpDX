@@ -38,7 +38,7 @@
                 return string.Format("<strong>{0}</strong>", Escape(link.Name));
                 break;
             case LinkType.Local:
-                url = string.Format("{0}{1}", link.LocalReference.NormalizedId, Param.FileExt);
+                url = string.Format("{0}{1}{2}", Param.RootLink, link.LocalReference.PageId, Param.FileExt);
                 break;
             case LinkType.Msdn:
                 url = link.Location;
