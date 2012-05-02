@@ -72,7 +72,8 @@ namespace SharpDX.Win32
 
         public Result SetSize(long newSize)
         {
-            throw new NotImplementedException();
+            // Should the sourceStream be "resized" (by moving the position back and forth?)
+            return Result.Ok;
         }
 
         public unsafe long CopyTo(IStream streamDest, long numberOfBytesToCopy, out long bytesWritten)
@@ -97,7 +98,8 @@ namespace SharpDX.Win32
 
         public Result Commit(CommitFlags commitFlags)
         {
-            throw new NotImplementedException();
+            sourceStream.Flush();
+            return Result.Ok;
         }
 
         public Result Revert()

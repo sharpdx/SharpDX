@@ -21,6 +21,7 @@ using System.IO;
 
 namespace SharpDX.Win32
 {
+    [Shadow(typeof(ComStreamShadow))]
     public partial interface IStream
     {
         /// <summary>

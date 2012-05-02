@@ -23,7 +23,7 @@ using System.Reflection;
 namespace SharpDX
 {
     /// <summary>
-    /// A general purpose tag attribute.
+    /// Shadow attribute used to associate a COM callbackable interface to its Shadow implementation.
     /// </summary>
     [AttributeUsage(AttributeTargets.Interface)]
     internal class ShadowAttribute : Attribute
