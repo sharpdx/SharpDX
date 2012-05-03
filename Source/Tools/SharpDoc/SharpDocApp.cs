@@ -22,6 +22,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Text;
+
 using Mono.Options;
 using RazorEngine;
 using SharpCore.Logging;
@@ -149,7 +151,7 @@ namespace SharpDoc
         {
             // Force loading of dynamics for RazorEngine
             bool loaded = typeof(Microsoft.CSharp.RuntimeBinder.Binder).Assembly != null;
-
+            
             var clock = Stopwatch.StartNew();
 
             // New instance of a tempalte context used by the RazorEngine

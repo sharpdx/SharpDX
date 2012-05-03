@@ -120,7 +120,7 @@ namespace SharpDoc
             }
         }
 
-        private NClass ProcessInheritance(NClass type, NAssembly assemblyContext = null)
+        private NClass ProcessInheritance(NType type, NAssembly assemblyContext = null)
         {
             NClass baseModel = null;
             if (type.Bases.Count > 0)
@@ -179,7 +179,7 @@ namespace SharpDoc
                 type.AllMembers.Sort((from, to) => string.CompareOrdinal(@from.Name, to.Name));
             }
 
-            foreach (var nsubClass in type.Members.OfType<NClass>())
+            foreach (var nsubClass in type.Members.OfType<NType>())
             {
                 ProcessInheritance(nsubClass);
             }
@@ -200,17 +200,16 @@ namespace SharpDoc
             return baseModel;
         }
 
-
-
         private void ProcessDescendants(NAssembly assembly, IEnumerable<NType> types)
         {
             foreach (var type in types)
             {
+                // Process inheritance first
+                var baseModel = this.ProcessInheritance(type);
+
                 var nClass = type as NClass;
                 if (nClass != null)
                 {
-                    // Process inheritance first
-                    var baseModel = this.ProcessInheritance(nClass);
                     if (baseModel != null)
                         baseModel.Descendants.Add(type);
 

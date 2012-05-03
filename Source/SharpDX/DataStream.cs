@@ -54,7 +54,6 @@ namespace SharpDX
     /// <summary>
     ///   Provides a stream interface to a buffer located in unmanaged memory.
     /// </summary>
-    /// <unmanaged>None</unmanaged>
     public class DataStream : Stream
     {
         private unsafe sbyte* _buffer;

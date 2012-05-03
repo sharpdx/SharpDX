@@ -29,7 +29,6 @@ namespace SharpDoc.Model
     {
         private readonly Dictionary<string, Dictionary<string, IModelReference>> _mapIdToModelElement;
         private const string TopicContainer = "__topics__";
-        private int index;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MemberRegistry"/> class.
@@ -153,9 +152,7 @@ namespace SharpDoc.Model
                 Logger.Warning("Id [{0}] already registered", modelReference.Id);
                 return;
             }
-            modelReference.Index = index;
             idToRef.Add(modelReference.Id, modelReference);
-            index++;
         }
     }
 }

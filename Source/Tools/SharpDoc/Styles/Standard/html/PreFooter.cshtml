@@ -1,4 +1,5 @@
-﻿@*
+﻿@using System.Globalization
+@*
 // Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,53 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.       
 // -------------------------------------------------------------------------------
-// Override this template to modify the global behavior for each Dump functions
+// Override this template to modify the generated html footer for all body
 // -------------------------------------------------------------------------------
 *@
-@using SharpDoc.Model
-@using System.Text;
-@model SharpDoc.TemplateContext
-@Import("Section")
-
-@functions {
-
-    public string SeeAlsoToText(NModelBase element)
-    {
-        var text = new StringBuilder();
-
-        var groups = new List<string>() {"Reference"};
-        
-        foreach(var seealso in element.SeeAlsos)
-        {
-            if (!groups.Contains(seealso.GroupName))
-                groups.Add(seealso.GroupName);
-        }
-
-        foreach (var groupName in groups)
-        {
-            text.AppendFormat("<h4 class='sdoc-subheading'>{0}</h4>", groupName).AppendLine();
-            
-            foreach(var seealso in element.SeeAlsos)
-            {
-                if (seealso.GroupName != groupName)
-                    continue;
-
-                text.AppendLine("<div class='seeAlsoStyle'>");
-                text.AppendFormat(ToUrl(seealso.LinkItem, seealso.LinkItem.PageTitle, false, null, false));
-                text.AppendLine("</div>");
-            }
-        }
-        return text.ToString();
-    }
-}
-
-<!-- 
-// Dumps members
--->
-@helper Dump(NModelBase element)
-{
-   @if(element.SeeAlsos.Count > 0)
-   {
-       @Helpers.Section.Dump("See Also", SeeAlsoToText(element))
-   }
-}
+<div style="float:right;"><strong>Last Update: </strong>@DateTime.Now.ToString("MMM yyyy", CultureInfo.InvariantCulture)</div>
+<div style="clear: both;"></div>

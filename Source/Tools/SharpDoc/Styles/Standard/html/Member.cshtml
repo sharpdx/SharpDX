@@ -25,4 +25,4 @@
 @using SharpDoc.Model
 @model SharpDoc.TemplateContext
 @Import("Page")
-@Helpers.Page.Dump(Model.Member.DeclaringType.Name + "." + Model.Member.Name + " " + Model.Member.TypeMember + " (" + @Model.Assembly.Name + ")", "MemberBody")
+@Helpers.Page.Dump(Model.Member.PageTitle, "MemberBody")

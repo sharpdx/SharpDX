@@ -283,6 +283,12 @@
 	background-image:url("../images/static.gif");
 }
 
+.sharpdoc .content .section .members table {
+    table-layout:fixed;    
+    width:100%;
+	word-wrap: break-word;
+}
+
 .sharpdoc .content .section .members td
 {
 	border-color:#bbb;
@@ -324,6 +330,13 @@
 .sharpdoc .content .section .members th.name-col
 {
 	width:15%;
+}
+
+.sharpdoc .content .section .members td.unman-col
+{
+	width:15%;
+    font-family: monospace;
+    font-size: 1.0em;
 }
 
 .sharpdoc .content .section a.title

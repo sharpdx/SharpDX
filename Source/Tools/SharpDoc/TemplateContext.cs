@@ -333,6 +333,7 @@ namespace SharpDoc
             {
                 // For local references, use short name
                 linkDescriptor.Name = linkDescriptor.LocalReference.Name;
+                linkDescriptor.PageId = linkDescriptor.LocalReference.PageId;
                 linkDescriptor.Type = LinkType.Local;
                 linkDescriptor.Index = linkDescriptor.LocalReference.Index;
                 if (!forceLocal && CurrentContext != null && linkDescriptor.LocalReference is NMember)
@@ -358,7 +359,7 @@ namespace SharpDoc
                 } else
                 {
                     linkDescriptor.Type = LinkType.None;
-                    linkDescriptor.Name = reference.FullName;                    
+                    linkDescriptor.Name = reference.Name;                    
                 }
             }
 

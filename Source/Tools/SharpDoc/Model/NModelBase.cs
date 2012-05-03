@@ -57,17 +57,7 @@ namespace SharpDoc.Model
         /// <value>
         /// The page title.
         /// </value>
-        public string PageTitle
-        {
-            get
-            {
-                return Name + " " + Category;
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
+        public string PageTitle { get; set; }
 
         /// <summary>
         /// Gets or sets the name of this instance.

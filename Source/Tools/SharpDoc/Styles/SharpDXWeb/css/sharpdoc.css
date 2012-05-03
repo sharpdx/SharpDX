@@ -68,7 +68,7 @@
 
 .sdoc-subheading
 {
-	color:#3F529C;
+	color:#AB2727;
 	font-size:1em;
 	font-weight:bold;
 }
@@ -96,7 +96,7 @@
 	height:23px;
 	position:relative;
 	right:1px;
-	top:43px;
+	top:16px;
 	width:7px;
 	z-index:300;
 }
@@ -283,7 +283,15 @@
 {
 	background-image:url("../images/static.gif");
 }
+.sharpdoc .content {
+  word-wrap: break-word; /* Internet Explorer 5.5+, 6, 7, 8 compability-mode */
+  word-break: break-all; /* Internet Explorer 8 */
+}
 
+.sharpdoc .content .section .members table {
+    table-layout:fixed;    
+    width:100%;
+}
 .sharpdoc .content .section .members td
 {
 	border-color:#bbb;
@@ -305,14 +313,18 @@
 
 .sharpdoc .content .section .members th
 {
-	background:url(../images/table-header-bg.png) repeat-x;
+    background: #4D88C2;
+    color: white;
+    text-shadow: 0px -1px 1px #444;
+
+	/* background:url(../images/table-header-bg.png) repeat-x; */
 	border-color:#bbb;
 	border-style:solid;
 	border-width:1px;
-	font-size:1.077em;
-	font-style:normal;
-	font-weight:normal;
-	height:21px;
+	font-size: 1.4em;
+	font-style: normal;
+	font-weight: lighter;
+	height:24px;
 	padding:4px;
 	text-align:left;
 }
@@ -324,7 +336,14 @@
 
 .sharpdoc .content .section .members th.name-col
 {
-	width:15%;
+	width:20%;
+}
+
+.sharpdoc .content .section .members td.unman-col
+{
+	width:20%;
+    font-family: monospace;
+    font-size: 0.9em;
 }
 
 .sharpdoc .content .section a.title
@@ -345,6 +364,11 @@
 {
 	margin-bottom:19px;
 	margin-top:9px;
+}
+
+.sharpdoc div.origin {
+	margin-bottom:8px;
+	margin-top:8px;
 }
 
 .sharpdoc .content .section div.toggle_icon
@@ -368,9 +392,9 @@
 
 .sharpdoc .content .section span.title
 {
-	color:#3f529c;
-	font-size:0.6em;
-	font-weight:bold;
+	color:#AB2727;
+	font-size:0.9em;
+	/* font-weight:bold; */
 	padding-left:6px;
 	padding-top:15px;
 	word-break:break-all;
@@ -468,10 +492,9 @@
 
 .sharpdoc .top-title,.sharpdoc .content-title
 {
-	color:#3f529c;
-	font-size:1.77em;
-	font-weight:bold;
-	left:-10px;
+	color:#AB2727;
+	font-size:2.0em;
+    margin-left: 8px;	
 }
 
 .sharpdoc a.highlight
@@ -512,6 +535,10 @@
 {
 	padding-left:1em;
 	padding-right:1em;
+}
+
+#sdoc-parameters dd {
+    margin-left: 40px;
 }
 
 .tabcontent
@@ -582,7 +609,7 @@
 
 .sharpdoc a:link
 {
-	color:#1364C4;
+	/* color:#1364C4; */
 	text-decoration:none;
 }
 
@@ -600,10 +627,11 @@ h1.content-title:hover
 }
 
 h4.sdoc-subheading {
-    margin-top: 0px;
+    margin-top: 7px;
     margin-bottom: 7px;
 }
 
+/*
 html,body
 {
 	font-family:'Segoe UI',Verdana,Arial;
@@ -611,3 +639,4 @@ html,body
 	height:100%;
 	margin:0;
 }
+*/

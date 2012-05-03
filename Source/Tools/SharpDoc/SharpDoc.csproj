@@ -103,7 +103,6 @@
       <HintPath>..\..\..\External\RazorEngine\System.Web.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -176,6 +175,7 @@
     <None Include="Styles\SharpDXWeb\html\Page.cshtml" />
     <None Include="Styles\SharpDXWeb\html\WriteToFunction.cshtml" />
     <None Include="Styles\Standard\html\ClassLibraryBuilder.cshtml" />
+    <None Include="Styles\Standard\html\PreFooter.cshtml" />
     <None Include="Styles\Standard\html\WriteToFunction.cshtml" />
     <None Include="Styles\Standard\html\PageIdFunction.cshtml" />
     <None Include="Styles\Standard\html\TopicBuilder.cshtml" />

@@ -36,7 +36,7 @@ namespace SharpDoc.Model
         /// <summary>
         /// Id for the default class library topic
         /// </summary>
-        public const string ClassLibraryTopicId = "X:ClassLibrary";
+        public const string ClassLibraryTopicId = "X:ClassLibraryReference";
 
         /// <summary>
         /// Id for the default search results topic
@@ -49,6 +49,7 @@ namespace SharpDoc.Model
         public NTopic()
         {
             SubTopics = new List<NTopic>();
+            Category = "Article";
         }
 
         /// <summary>
@@ -58,13 +59,14 @@ namespace SharpDoc.Model
         public NTopic(IModelReference reference)
         {
             Id = reference.Id;
+            Index = reference.Index;
             PageId = reference.PageId;
+            PageTitle = reference.PageTitle;
             Name = reference.Name;
             FullName = reference.FullName;
+            Category = reference.Category;
             SubTopics = new List<NTopic>();
         }
-
-        public int Index { get; set; }
 
         /// <summary>
         /// Gets or sets the XML generated commment ID.
@@ -73,6 +75,15 @@ namespace SharpDoc.Model
         /// <value>The id.</value>
         [XmlAttribute("id")]
         public string Id { get; set; }
+
+        /// <summary>
+        /// Gets or sets the unique index of this node.
+        /// </summary>
+        /// <value>
+        /// The unique index.
+        /// </value>
+        [XmlAttribute("index")]
+        public int Index { get; set; }
 
         /// <summary>
         /// Gets or sets the normalized id. This is a normalized version of the <see cref="IModelReference.Id"/> that
@@ -111,12 +122,8 @@ namespace SharpDoc.Model
         /// <value>
         /// The category.
         /// </value>
-        public string Category { 
-            get
-            {
-                return "Article";
-            }
-        }
+        [XmlAttribute("category")]
+        public string Category { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the file that contains the documentation.
@@ -124,6 +131,13 @@ namespace SharpDoc.Model
         /// <value>The name of the file.</value>
         [XmlAttribute("filename")]
         public string FileName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the sub topics.
+        /// </summary>
+        /// <value>The sub topics.</value>
+        [XmlElement("topic")]
+        public List<NTopic> SubTopics { get; set; }
 
         /// <summary>
         /// Gets or sets the html content. This is loaded from the filename.
@@ -140,19 +154,24 @@ namespace SharpDoc.Model
         public NTopic Parent { get; set; }
 
         /// <summary>
-        /// Gets or sets the sub topics.
+        /// Gets or sets the class node.
         /// </summary>
-        /// <value>The sub topics.</value>
-        [XmlElement("topic")]
-        public List<NTopic> SubTopics { get; set; }
+        /// <value>
+        /// The class node.
+        /// </value>
+        [XmlIgnore]
+        public NModelBase AttachedClassNode { get; set; }
 
         /// <inheritdoc/>
+        [XmlIgnore]
         public XmlNode DocNode { get; set; }
 
         /// <inheritdoc/>
+        [XmlIgnore]
         public string Description { get; set; }
 
         /// <inheritdoc/>
+        [XmlIgnore]
         public string Remarks { get; set; }
 
         /// <summary>
@@ -189,6 +208,19 @@ namespace SharpDoc.Model
             if (Id == topicId)
                 return this;
             return FindTopicById(SubTopics, topicId);
+        }
+
+        /// <summary>
+        /// Fors the each topic.
+        /// </summary>
+        /// <param name="topicFunction">The topic function.</param>
+        public void ForEachTopic(Action<NTopic> topicFunction)
+        {
+            topicFunction(this);
+            foreach (var subTopic in SubTopics)
+            {
+                subTopic.ForEachTopic(topicFunction);
+            }
         }
 
         /// <summary>
@@ -301,9 +333,9 @@ namespace SharpDoc.Model
             if (string.IsNullOrEmpty(PageId))
                 PageId = pageIdFunction(this);
 
-            // Check that NormalizeId is a valid filename
+            // Check that PageId is a valid filename
             if (!Utility.IsValidFilename(PageId))
-                Logger.Error("Invalid fileid/normalizedId [{0}] for topic [{1}]. Fileid must contain valid filename chars", PageId, this);
+                Logger.Error("Invalid PageId [{0}] for topic [{1}]. Fileid must contain valid filename chars", PageId, this);
         }
 
         /// <summary>
@@ -316,9 +348,11 @@ namespace SharpDoc.Model
             {
                 return new NTopic()
                            {
+                               Index = 0,
                                Id = ClassLibraryTopicId,
-                               PageId = "ClassLibrary",
-                               Name = "Class Library"
+                               PageId = "api",
+                               Name = "Class Library Reference",
+                               PageTitle = "Class Library Reference",
                            };
             }
         }
@@ -334,8 +368,9 @@ namespace SharpDoc.Model
                 return new NTopic()
                 {
                     Id = SearchResultsTopicId,
-                    PageId = "SearchResults",
-                    Name = "Search results"
+                    PageId = "search-results",
+                    Name = "Search results",
+                    PageTitle = "Search results",
                 };
             }
         }

@@ -28,7 +28,7 @@ namespace SharpDX.Diagnostics
     /// <summary>
     /// Track all allocated objects.
     /// </summary>
-    public class ObjectTracker
+    public static class ObjectTracker
     {
         private static readonly Dictionary<IntPtr, List<ObjectReference>> ObjectReferences = new Dictionary<IntPtr, List<ObjectReference>>();
 

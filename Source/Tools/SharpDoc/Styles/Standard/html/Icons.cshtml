@@ -101,7 +101,7 @@
         name += " " + member.TypeMember;
 
         var icons = new List<Tuple<string, string>> {new Tuple<string, string>(icon, name)};
-        if (member is NMethod && ((NMethod) member).IsStatic)
+        if (member.IsStatic)
             icons.Add(new Tuple<string, string>("static", "Static"));
         return icons;
     }

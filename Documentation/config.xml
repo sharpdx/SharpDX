@@ -43,7 +43,7 @@
   <!-- Links to topics -->
   <topic id="SharpDX" filename="index.html" name="SharpDX Documentation" >
     <!-- Special topic X:ClassLibrary to include generated class library references-->
-    <topic id="X:ClassLibrary" name="SharpDX Class Library" />
+    <topic id="X:ClassLibraryReference" page-id="api" name="Class Library Reference" index="" />
   </topic>
 
   <!-- List the assemblies to include for the class library-->

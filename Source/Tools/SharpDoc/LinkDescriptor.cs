@@ -42,6 +42,12 @@ namespace SharpDoc
         public string Id { get; set; }
 
         /// <summary>
+        /// Gets or sets the id linked.
+        /// </summary>
+        /// <value>The id.</value>
+        public string PageId { get; set; }
+
+        /// <summary>
         /// Gets or sets the name.
         /// </summary>
         /// <value>The name.</value>

@@ -26,6 +26,14 @@ namespace SharpDoc.Model
     public class NField : NMember
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="NField"/> class.
+        /// </summary>
+        public NField()
+        {
+            Category = "Field";
+        }
+
+        /// <summary>
         /// Gets or sets the type of the field.
         /// </summary>
         /// <value>The type of the field.</value>

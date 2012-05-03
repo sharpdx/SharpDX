@@ -43,6 +43,14 @@ namespace SharpDoc.Model
         public NTypeReference DeclaringType { get; set; }
 
         /// <summary>
+        /// Gets or sets the namespace.
+        /// </summary>
+        /// <value>
+        /// The namespace.
+        /// </value>
+        public NNamespace Namespace { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether this instance is an array.
         /// </summary>
         /// <value>

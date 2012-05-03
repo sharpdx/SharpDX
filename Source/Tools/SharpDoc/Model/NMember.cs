@@ -231,5 +231,10 @@ namespace SharpDoc.Model
             member.Parent = this;
             Members.Add(member);
         }
+
+        public override string ToString()
+        {
+            return string.Format("{0}", FullName);
+        }
     }
 }

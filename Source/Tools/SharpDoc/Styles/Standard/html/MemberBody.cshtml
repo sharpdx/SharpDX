@@ -31,14 +31,16 @@
 @{
     var self = Model.Member;
 }
-<h1 id="#top" class="content-title">@(self.DeclaringType.Name).@self.Name @self.TypeMember</h1>
+<h1 id="#top" class="content-title">@Escape(@self.PageTitle)</h1>
         
 <div class="summary"><p>@TagExpand(self.Description)</p></div>
 
+<div class="origin">
 <strong>Namespace: </strong>@ToUrl(Model.Namespace)<br />
 <strong>Assembly: </strong>@ToUrl(Model.Assembly) (@Model.Assembly.FileName @Model.Assembly.Version)<br />
       
 @Helpers.TypeBodyMembersHeader.Dump(self)
+</div>
 
 @* Dump Syntax section *@
 @Helpers.Section.DumpSyntax(self)

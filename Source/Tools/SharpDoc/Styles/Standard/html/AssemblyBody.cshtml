@@ -25,6 +25,7 @@
 @using SharpDoc.Model
 @model SharpDoc.TemplateContext
 @Import("Section")
+@Import("SeeAlso")
 @{
     var self = Model.Assembly;
 }
@@ -32,7 +33,9 @@
         
 <div class="summary"><p>@TagExpand(self.Description)</p></div>
 
+<div class="origin">
 <strong>Assembly: </strong>@Model.Assembly.FullName (@Model.Assembly.FileName @Model.Assembly.Version)<br />
+</div>
 
 <div class="members">
     @Helpers.Section.Dump("Namespaces", self.Namespaces, false)
@@ -41,3 +44,4 @@
 @if (!string.IsNullOrEmpty(self.Remarks)) 
     @Helpers.Section.Dump("Remarks", TagExpand(self.Remarks))
 
+@Helpers.SeeAlso.Dump(self)	

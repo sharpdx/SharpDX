@@ -66,6 +66,7 @@ namespace SharpDoc
             assembly.FullName = assembly.Name;
             assembly.Id = "A:" + assembly.Name;
             assembly.PageId = PageIdFunction(assembly);
+            assembly.PageTitle = assembly.Name + " " + assembly.Category;
             assembly.Version = assemblyDefinition.Name.Version.ToString();
             assembly.FileName = Path.GetFileName(Utility.GetProperFilePathCapitalization(assemblySource.Filename));
             _registry.Register(assembly, assembly);
@@ -124,7 +125,9 @@ namespace SharpDoc
         {
             var @namespace = new NNamespace(name) {Assembly = assembly, Id = "N:" + name};
             @namespace.FullName = @namespace.Name;
-            @namespace.PageId = PageIdFunction(@namespace);      
+            @namespace.PageId = PageIdFunction(@namespace);
+            @namespace.PageTitle = @namespace.Name + " " + @namespace.Category + " (" + assembly.Name + ")";
+
             _registry.Register(assembly, @namespace);
 
             // Apply documentation on namespace from NamespaceDoc special class
@@ -151,27 +154,27 @@ namespace SharpDoc
             NType type;
             if (typeDef.IsInterface)
             {
-                type = NewInstance<NInterface>(typeDef);
+                type = NewInstance<NInterface>(@namespace, typeDef);
                 type.MemberType = NMemberType.Interface;
             }
             else if (typeDef.IsEnum)
             {
-                type = NewInstance<NEnum>(typeDef);
+                type = NewInstance<NEnum>(@namespace, typeDef);
                 type.MemberType = NMemberType.Enum;
             }
             else if (typeDef.IsValueType)
             {
-                type = NewInstance<NStruct>(typeDef);
+                type = NewInstance<NStruct>(@namespace, typeDef);
                 type.MemberType = NMemberType.Struct;
             }
             else if (MonoCecilHelper.IsDelegate(typeDef))
             {
-                type = NewInstance<NDelegate>(typeDef);
+                type = NewInstance<NDelegate>(@namespace, typeDef);
                 type.MemberType = NMemberType.Delegate;
             }
             else if (typeDef.IsClass)
             {
-                type = NewInstance<NClass>(typeDef);
+                type = NewInstance<NClass>(@namespace, typeDef);
                 type.MemberType = NMemberType.Class;
             }
             else
@@ -219,7 +222,7 @@ namespace SharpDoc
                 type.IsAbstract = false;
                 type.IsFinal = false;
             }
-            else if (type is NEnum || type is NStruct)
+            else if (type is NEnum || type is NStruct || type is NDelegate)
             {
                 // We know that enum is sealed, so don't duplicate it
                 type.IsFinal = false;
@@ -309,12 +312,21 @@ namespace SharpDoc
             // Sort members
             type.Members.Sort((left, right) => left.Name.CompareTo(right.Name));
 
+            // For enumeration, we are only using MsdnId from enum
+            if (type is NEnum)
+            {
+                foreach (var field in type.Fields)
+                    field.MsdnId = type.MsdnId;
+            }
+
             type.SeeAlsos.Add(new NSeeAlso(@namespace));
             type.SeeAlsos.Add(new NSeeAlso(@namespace.Assembly));
 
             // Add nested types to the global namespace.
             foreach (var nestedType in typeDef.NestedTypes)
                 AddType(@namespace, nestedType);
+
+            UpdatePageTitle(type);
         }
 
         /// <summary>
@@ -353,26 +365,26 @@ namespace SharpDoc
         /// </summary>
         /// <param name="methodDef">The method def.</param>
         /// <returns>A NMethod</returns>
-        private NMethod CreateMethodFromDefinition(MethodDefinition methodDef)
+        private NMethod CreateMethodFromDefinition(NNamespace @namespace, MethodDefinition methodDef)
         {
             NMethod method;
 
             // Create the associated type
             if (methodDef.IsConstructor)
             {
-                method = NewInstance<NConstructor>(methodDef);
+                method = NewInstance<NConstructor>(@namespace, methodDef);
 
                 // Constructors must have typename instead of .ctor
                 method.Name = method.DeclaringType.Name;
             }
             else if (methodDef.IsSpecialName && methodDef.Name.StartsWith(MethodOperatorPrefix))
             {
-                method = NewInstance<NOperator>(methodDef);
+                method = NewInstance<NOperator>(@namespace, methodDef);
                 method.Name = method.Name.Substring(MethodOperatorPrefix.Length, method.Name.Length - MethodOperatorPrefix.Length);
             }
             else
             {
-                method = NewInstance<NMethod>(methodDef);
+                method = NewInstance<NMethod>(@namespace, methodDef);
             }
 
             // Setup visibility
@@ -395,10 +407,10 @@ namespace SharpDoc
             if (method.IsVirtual)
             {
                 // overrides
-                method.Overrides = GetMethodReference(MonoCecilHelper.GetBaseMethodInTypeHierarchy(methodDef));
+                method.Overrides = GetMethodReference(@namespace, MonoCecilHelper.GetBaseMethodInTypeHierarchy(methodDef));
 
                 // implements
-                method.Implements = GetMethodReference(MonoCecilHelper.GetBaseMethodInInterfaceHierarchy(methodDef));
+                method.Implements = GetMethodReference(@namespace, MonoCecilHelper.GetBaseMethodInInterfaceHierarchy(methodDef));
 
                 // If this method doesn't have any documentation, use inherited documentation
                 if (string.IsNullOrEmpty(method.Description))
@@ -430,18 +442,18 @@ namespace SharpDoc
         /// </summary>
         /// <param name="parent">The parent.</param>
         /// <param name="methodDef">The method def.</param>
-        /// <param name="isProperty">if set to <c>true</c> [is property].</param>
+        /// <param name="isSpecialMethod">if set to <c>true</c> [is property].</param>
         /// <returns></returns>
-        private NMethod AddMethod(NMember parent, MethodDefinition methodDef, bool isProperty = false)
+        private NMethod AddMethod(NMember parent, MethodDefinition methodDef, bool isSpecialMethod = false)
         {
             // Don't add getter and setters for properties and events
-            if (methodDef == null || (!isProperty && methodDef.IsSpecialName && (methodDef.IsGetter || methodDef.IsSetter || methodDef.IsAddOn || methodDef.IsRemoveOn)))
+            if (methodDef == null || (!isSpecialMethod && methodDef.IsSpecialName && (methodDef.IsGetter || methodDef.IsSetter || methodDef.IsAddOn || methodDef.IsRemoveOn)))
                 return null;
 
-            var method = CreateMethodFromDefinition(methodDef);
+            var method = CreateMethodFromDefinition(parent.Namespace, methodDef);
 
             // If not a get/set then handle it
-            if (!isProperty)
+            if (!isSpecialMethod)
             {
                 _registry.Register(parent.Namespace.Assembly, method);
                 parent.AddMember(method);
@@ -470,6 +482,8 @@ namespace SharpDoc
             method.SeeAlsos.Add(new NSeeAlso(parent.Namespace));
             method.SeeAlsos.Add(new NSeeAlso(parent.Namespace.Assembly));
 
+            UpdatePageTitle(method);
+
             return method;
         }
 
@@ -497,6 +511,8 @@ namespace SharpDoc
                 return "float";
             if (fullName == typeof(double).FullName)
                 return "double";
+            if (fullName == typeof(object).FullName)
+                return "object";
             return name;
         }
 
@@ -608,11 +624,11 @@ namespace SharpDoc
             return typeReference;
         }
 
-        private INMemberReference GetMethodReference(MethodDefinition methodDef)
+        private INMemberReference GetMethodReference(NNamespace @namespace, MethodDefinition methodDef)
         {
             if (methodDef == null)
                 return null;
-            return CreateMethodFromDefinition(methodDef);
+            return CreateMethodFromDefinition(@namespace, methodDef);
         }
 
 
@@ -688,7 +704,7 @@ namespace SharpDoc
         /// <param name="eventDef">The event def.</param>
         private void AddEvent(NType parent, EventDefinition eventDef)
         {
-            var @event = NewInstance<NEvent>(eventDef);
+            var @event = NewInstance<NEvent>(parent.Namespace, eventDef);
             _registry.Register(parent.Namespace.Assembly, @event);
 
             @event.MemberType = NMemberType.Event;
@@ -697,10 +713,22 @@ namespace SharpDoc
             parent.AddMember(@event);
             parent.HasEvents = true;
 
+            var addMethod = AddMethod(@event, eventDef.AddMethod, true);
+            var removeMethod = AddMethod(@event, eventDef.RemoveMethod, true);
+
+            // Setup visibility based on event add/remove methods
+            var refMethod = addMethod ?? removeMethod;
+            @event.Visibility = refMethod.Visibility;
+            @event.IsStatic = refMethod.IsStatic;
+            @event.IsFinal = refMethod.IsFinal;
+            @event.IsAbstract = refMethod.IsAbstract;
+
             // Add SeeAlso
             @event.SeeAlsos.Add(new NSeeAlso(parent));
             @event.SeeAlsos.Add(new NSeeAlso(parent.Namespace));
             @event.SeeAlsos.Add(new NSeeAlso(parent.Namespace.Assembly));
+
+            UpdatePageTitle(@event);
         }
 
         /// <summary>
@@ -712,10 +740,24 @@ namespace SharpDoc
         {
             if (fieldDef.IsSpecialName)
                 return;
-            var field = NewInstance<NField>(fieldDef);
+            var field = NewInstance<NField>(parent.Namespace, fieldDef);
             _registry.Register(parent.Namespace.Assembly, field);
             field.MemberType = NMemberType.Field;
             field.FieldType = GetTypeReference(fieldDef.FieldType);
+
+            // Setup visibility
+            field.IsStatic = fieldDef.IsStatic;
+
+            if (fieldDef.IsPublic)
+                field.Visibility = NVisibility.Public;
+            else if (fieldDef.IsPrivate)
+                field.Visibility = NVisibility.Private;
+            else if (fieldDef.IsAssembly)
+                field.Visibility = NVisibility.Internal;
+            else if (fieldDef.IsFamily)
+                field.Visibility = NVisibility.Protected;
+            else if (fieldDef.IsFamilyOrAssembly)
+                field.Visibility = NVisibility.ProtectedInternal;
 
             if (fieldDef.Constant != null )
                 field.ConstantValue = GetTextFromValue(fieldDef.Constant);
@@ -726,6 +768,8 @@ namespace SharpDoc
             field.SeeAlsos.Add(new NSeeAlso(parent));
             field.SeeAlsos.Add(new NSeeAlso(parent.Namespace));
             field.SeeAlsos.Add(new NSeeAlso(parent.Namespace.Assembly));
+
+            UpdatePageTitle(field);
         }
 
         /// <summary>
@@ -735,7 +779,7 @@ namespace SharpDoc
         /// <param name="propertyDef">The property def.</param>
         private void AddProperty(NType parent, PropertyDefinition propertyDef)
         {
-            var property = NewInstance<NProperty>(propertyDef);
+            var property = NewInstance<NProperty>(parent.Namespace, propertyDef);
             _registry.Register(parent.Namespace.Assembly, property);
             property.Namespace = parent.Namespace;
 
@@ -747,9 +791,18 @@ namespace SharpDoc
             parent.AddMember(property);
             parent.HasProperties = true;
 
+            // Setup visibility based on method
+            var refMethod = property.GetMethod ?? property.SetMethod;
+            property.Visibility = refMethod.Visibility;
+            property.IsStatic = refMethod.IsStatic;
+            property.IsFinal = refMethod.IsFinal;
+            property.IsAbstract = refMethod.IsAbstract;
+
             property.SeeAlsos.Add(new NSeeAlso(parent));
             property.SeeAlsos.Add(new NSeeAlso(parent.Namespace));
             property.SeeAlsos.Add(new NSeeAlso(parent.Namespace.Assembly));
+
+            UpdatePageTitle(property);
         }
 
         /// <summary>
@@ -758,16 +811,22 @@ namespace SharpDoc
         /// <typeparam name="T"></typeparam>
         /// <param name="memberRef">The type def.</param>
         /// <returns></returns>
-        private T NewInstance<T>(MemberReference memberRef) where T : NMember, new()
+        private T NewInstance<T>(NNamespace @nameSpace, MemberReference memberRef) where T : NMember, new()
         {
             var id = DocIdHelper.GetXmlId(memberRef);
             var member = new T {Name = memberRef.Name, FullName = memberRef.FullName, Id = id};
             member.PageId = PageIdFunction(member);
             member.DocNode = _source.Document.FindMemberDoc(member.Id);
             member.DeclaringType = GetTypeReference(memberRef.DeclaringType);
+            member.Namespace = @nameSpace;
             this.FillMemberReference(member, memberRef);
             // Add generic parameter contraints
             return member;
+        }
+
+        private void UpdatePageTitle(NMember member)
+        {
+            member.PageTitle = (member.DeclaringType != null ? member.DeclaringType.Name + "." : string.Empty) + member.Name + " " + member.Category + " (" + member.Namespace.FullName + ")";           
         }
 
         /// <summary>

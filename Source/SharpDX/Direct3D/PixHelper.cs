@@ -25,7 +25,7 @@ namespace SharpDX.Direct3D
     /// <summary>
     /// Helper class for PIX.
     /// </summary>
-    public partial class PixHelper
+    public static class PixHelper
     {
         /// <summary>
         /// Marks the beginning of a user-defined event. PIX can use this event to trigger an action.

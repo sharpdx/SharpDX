@@ -30,7 +30,7 @@ namespace SharpDoc.Model
         /// </summary>
         public NEvent()
         {
-            Category = "event";
+            Category = "Event";
         }
 
         /// <summary>

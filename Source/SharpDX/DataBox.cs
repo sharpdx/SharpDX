@@ -25,7 +25,6 @@ namespace SharpDX
     /// <summary>
     /// Provides access to data organized in 3D.
     /// </summary>
-    /// <unmanaged>None</unmanaged>
     [StructLayout(LayoutKind.Sequential)]
     public struct DataBox
     {

@@ -187,5 +187,10 @@ namespace SharpDoc.Model
                 return ((Name != null ? Name.GetHashCode() : 0)*397) ^ (Assembly != null ? Assembly.GetHashCode() : 0);
             }
         }
+
+        public override string ToString()
+        {
+            return string.Format("{0}", Name);
+        }
     }
 }

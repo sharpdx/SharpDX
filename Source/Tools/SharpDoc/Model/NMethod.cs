@@ -32,6 +32,7 @@ namespace SharpDoc.Model
         public NMethod()
         {
             Parameters = new List<NParameter>();
+            Category = "Method";
         }
 
         /// <summary>

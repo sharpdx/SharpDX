@@ -27,6 +27,14 @@ namespace SharpDoc.Model
     public class NProperty : NMember
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="NProperty"/> class.
+        /// </summary>
+        public NProperty()
+        {
+            Category = "Property";
+        }
+
+        /// <summary>
         /// Gets or sets the type of the property.
         /// </summary>
         /// <value>The type of the return.</value>

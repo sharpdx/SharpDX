@@ -71,16 +71,20 @@ namespace SharpDoc
         private static string GetNameFromFullName(string fullname)
         {
             int index;
-            int indexOfMethod = fullname.IndexOf("(");
+            int indexOfMethod = fullname.IndexOf('(');
+            int length;
             if (indexOfMethod > 0)
             {
-                index = fullname.LastIndexOf(".", indexOfMethod);
-            } else
+                index = 0;
+                length = indexOfMethod;
+            }
+            else
             {
-                index = fullname.LastIndexOf(".");
+                index = fullname.LastIndexOf('.') + 1;
+                length = fullname.Length - index - 1;
             }
 
-            return index > 0 ? fullname.Substring(index + 1, fullname.Length - index - 1) : fullname;                
+            return index >= 0 ? fullname.Substring(index, length) : fullname;                
         }
     }
 }

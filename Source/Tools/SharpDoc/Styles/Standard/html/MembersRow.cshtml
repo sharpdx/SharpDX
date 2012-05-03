@@ -65,7 +65,7 @@
     <td class="name-col">@ToUrl(member, displayName, !(Model.CurrentContext is NEnum))</td>
 	@if (rowContext.DisplayUnmanagedColumn)
      {
-         <td class="name-col"><a target="_blank" href="http://msdn.microsoft.com/en-us/library/@(member.MsdnId).aspx">@member.UnManagedShortApi</a></td>
+         <td class="unman-col"><a target="_blank" href="http://msdn.microsoft.com/en-us/library/@(member.MsdnId).aspx">@member.UnManagedShortApi</a></td>
      }
     <td class="desc-col">@TagExpand(member.Description)&nbsp;@postDesc</td>
 }

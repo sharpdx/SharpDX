@@ -77,18 +77,18 @@
 @{
     var self = Model.Type;
 }
-<h1 id="#top" class="content-title">@self.Name @self.TypeName</h1>
+<h1 id="#top" class="content-title">@Escape(@self.PageTitle)</h1>
         
 <div class="summary"><p>@TagExpand(self.Description)</p></div>
 
 @if (self is NClass)
     @Helpers.Section.Dump("section_partial_inheritance", "Inheritance Hierarchy", DumpInheritance(!HasComplexInheritance).ToString())   
-<p></p>
+<br/>
+<div class="origin">
 <strong>Assembly: </strong>@ToUrl(Model.Assembly) (@Model.Assembly.FileName @Model.Assembly.Version)<br />
 <strong>Namespace: </strong>@ToUrl(Model.Namespace)<br />
-
 @Helpers.TypeBodyMembersHeader.Dump(self)
-
+</div>
 @if (self is NType)
     @Helpers.Section.DumpSyntax(self)           
 

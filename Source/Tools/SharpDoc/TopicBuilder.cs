@@ -67,11 +67,13 @@ namespace SharpDoc
             if (RootTopic != null)
                 RootTopic.Init(Path.GetDirectoryName(config.FilePath), pageIdFunction);
 
+            NTopic topicLibrary = null;
+
             // If there are any assemblies, we have to generate class library topics
             if (Assemblies.Count >= 0)
             {
                 // Find if a ClassLibrary topic is referenced in the config topic
-                var topicLibrary = (RootTopic != null) ? RootTopic.FindTopicById(NTopic.ClassLibraryTopicId) : null;
+                topicLibrary = (RootTopic != null) ? RootTopic.FindTopicById(NTopic.ClassLibraryTopicId) : null;
                 if (topicLibrary == null)
                 {
                     // If no class library topic found, create a new one
@@ -81,45 +83,81 @@ namespace SharpDoc
                     else
                         RootTopic.SubTopics.Add(topicLibrary);
                 }
+            }
 
-                if (topicLibrary == null)
-                {
-                    Logger.Fatal("Cannot find topic [{0}] for class library ", NTopic.ClassLibraryTopicId);
-                    return;
-                }
+            if (RootTopic == null)
+            {
+                Logger.Fatal("No root topic assigned/ no topic for class library ");
+                return;
+            }
 
-                foreach (var assembly in Assemblies)
-                {
-                    var assemblyTopic = new NTopic(assembly);
-                    assemblyTopic.Name = assembly.Name + " Assembly";
-                    assembly.TopicLink = assemblyTopic;
-                    topicLibrary.SubTopics.Add(assemblyTopic);
-
-                    foreach (var @namespace in assembly.Namespaces)
+            // Calculate starting index for class library based on index from topics
+            int index = 0;
+            var indices = new HashSet<int>();
+            var topicToReindex = new List<NTopic>();
+            RootTopic.ForEachTopic(
+                topic =>
                     {
-                        var namespaceTopic = new NTopic(@namespace);
-                        namespaceTopic.Name = @namespace.Name + " Namespace";
-                        @namespace.TopicLink = namespaceTopic;
-                        assemblyTopic.SubTopics.Add(namespaceTopic);
-
-                        foreach (var type in @namespace.Types)
+                        if (indices.Contains(topic.Index))
                         {
-                            var typeTopic = new NTopic(type);
-                            typeTopic.Name = type.Name + " " + type.Category;
-                            type.TopicLink = typeTopic;
-                            namespaceTopic.SubTopics.Add(typeTopic);
+                            Logger.Warning("Index [{0}] for Topic [{0}] is already used. Need to reassign a new index.", topic.Index, topic.Name);
+                            topicToReindex.Add(topic);
+                        }
+                        else
+                        {
+                            indices.Add(topic.Index);
+                            index = Math.Max(index, topic.Index);
+                        }
+                    });
+            index++;
+            foreach (var topicToIndex in topicToReindex)
+            {
+                topicToIndex.Index = index++;
+            }
+
+            // Process aseemblies
+            foreach (var assembly in Assemblies)
+            {
+                // Affect new Index based on previous topics
+                assembly.Index = index++;
+                var assemblyTopic = new NTopic(assembly) { Name = assembly.Name + " Assembly", AttachedClassNode = assembly };
+                assembly.TopicLink = assemblyTopic;
+                topicLibrary.SubTopics.Add(assemblyTopic);
+                assembly.SeeAlsos.Add(new NSeeAlso(topicLibrary));
+
+                foreach (var @namespace in assembly.Namespaces)
+                {
+                    // Affect new Index based on previous topics
+                    @namespace.Index = index++;
+                    var namespaceTopic = new NTopic(@namespace) { Name = @namespace.Name + " Namespace", AttachedClassNode = @namespace };
+                    @namespace.TopicLink = namespaceTopic;
+                    assemblyTopic.SubTopics.Add(namespaceTopic);
+                    @namespace.SeeAlsos.Add(new NSeeAlso(topicLibrary));
+
+                    foreach (var type in @namespace.Types)
+                    {
+                        // Affect new Index based on previous topics
+                        type.Index = index++;
+                        var typeTopic = new NTopic(type) { Name = type.Name + " " + type.Category, AttachedClassNode = type };
+                        type.TopicLink = typeTopic;
+                        namespaceTopic.SubTopics.Add(typeTopic);
+                        type.SeeAlsos.Add(new NSeeAlso(topicLibrary));
+
+                        // We don't process fields for enums
+                        if (!(type is NEnum))
+                        {
+                            foreach (var member in type.Members)
+                            {
+                                // Affect new Index based on previous topics
+                                member.Index = index++;
+                            }
                         }
                     }
                 }
             }
 
-            if (RootTopic == null)
-            {
-                Logger.Fatal("Not root topic defined");
-                return;
-            }
-
             SearchTopic = NTopic.DefaultSearchResultsTopic;
+            SearchTopic.Index = index++;
 
             // Add SearchTopic to the root topic
             RootTopic.SubTopics.Add(SearchTopic);

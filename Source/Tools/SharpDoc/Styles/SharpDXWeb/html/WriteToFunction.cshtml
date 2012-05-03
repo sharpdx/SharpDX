@@ -20,14 +20,14 @@
 // THE SOFTWARE.       
 *@
 @model SharpDoc.TemplateContext
+@using System.IO.Compression
+@using System.Text
+@using System.Text.RegularExpressions
 @using SharpDoc.Model
 @using System.IO;
 @using SharpDoc;
 @functions {
-
-        private const int IndexStart = 1000;
-
-        private const string JoomlaContentUrl = "index.php?option=com_content&amp;Itemid=109&amp;catid=13&amp;id={0}&amp;lang=en&amp;view=article";
+    private const string JoomlaContentUrl = "index.php?option=com_sharpdoc&amp;Itemid=109&amp;id={0}";
 
 	public static string SqlEscapeString(string text)
     {
@@ -38,6 +38,23 @@
         return text;
     }
 
+	public static string GetPageId(string pageId)
+    {
+		// Use lower case for pages
+        pageId = pageId.Replace("_", "-");
+        pageId = pageId.ToLowerInvariant();
+        return pageId;
+    }
+
+	public static string GetShortUrl(string pageId, int index)
+    {
+		// For Index == 0, URL is documentation
+        var urlShort = "documentation";
+		if (index > 0)
+            urlShort += "/" + GetPageId(pageId);
+        return urlShort;
+    }
+
     public void WriteToSql(IModelReference member, string content)
     {
         var writer = (StreamWriter)Model.Param.SqlWriter;
@@ -46,69 +63,70 @@
         {
 			if (content == null)
             {
-                writer.WriteLine(@"
-SET @s = CONCAT(""ALTER TABLE `sdx_assets` 	AUTO_INCREMENT="",@sdx_assets_max_id);
-PREPARE stmt FROM @s;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;
-SET @s = CONCAT(""ALTER TABLE `sdx_content` 	AUTO_INCREMENT="",@sdx_content_max_id);
-PREPARE stmt FROM @s;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;				
-");				
+                Sqlsdx_sh404sef_urls.AppendLine(";");
+                Sqlsdx_doc.AppendLine(";");
+                Sqlsdx_sh404sef_urls.AppendLine("ALTER TABLE `sdx_sh404sef_urls` CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT FIRST;");
+
+                writer.Write(Sqlsdx_sh404sef_urls);
+                writer.Write(Sqlsdx_doc);
 				writer.Flush();
             }
-            return;
+		   return;
         }
 
-        var memberIndex = member.Index + IndexStart;
-        var url = string.Format(JoomlaContentUrl, member.Index + IndexStart);
-		
 		// Use lower case for pages
-        var pageId = member.PageId;
-        pageId = pageId.Replace("_", "-");
-        pageId = pageId.ToLowerInvariant();
+        var pageId = GetPageId(member.PageId);
+        var memberIndex = member.Index;
+		var urlShort = GetShortUrl(member.PageId, member.Index);
+        var urlLong = string.Format(JoomlaContentUrl, memberIndex);
 
-        writer.WriteLine(@"
-INSERT INTO `sdx_sh404sef_urls` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) 
-VALUES (" + memberIndex + @", 0, 0, 'documentation/" + pageId + @"', '" + url + @"', '0000-00-00');
+        var contentBuffer = Encoding.ASCII.GetBytes(content);
+        var memoryStream = new MemoryStream();
+		using (var gz = new DeflateStream(memoryStream, CompressionMode.Compress, false))
+        {
+			gz.Write(contentBuffer, 0, contentBuffer.Length);
+		}
+        var contentGZipBase64 = Convert.ToBase64String(memoryStream.ToArray());
+	
 
-INSERT INTO
-  sdx_assets (
-  id,
-  parent_id, 
-  lft, 
-  rgt, 
-  level, 
-  name, 
-  title, 
-  rules)
-VALUES(
-  " + memberIndex + @",
-  @new_jos_banners_parent_id, 
-  @new_jos_assets_id_last_lft:=@new_jos_assets_id_last_lft+2, 
-  @new_jos_assets_id_last_lft+1, 
-  4, 
-  CONCAT('com_content.article.', @new_jos_assets_last_inc:=@new_jos_assets_last_inc+1),
-  '" + member.PageTitle + @"',
-  '{""core.create"":[],""core.delete"":[],""core.edit"":[],""core.edit.state"":[],""core.edit.own"":[]}'
-);
+		if (CountInserts == 0)
+        {
+            Sqlsdx_sh404sef_urls.Append(@"INSERT INTO `sdx_sh404sef_urls` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES ");
+            Sqlsdx_doc.Append(@"INSERT INTO `sdx_doc` (`id`,`title`,`alias`,`maintext`) VALUES ");
+        }
+		else
+        {
+            Sqlsdx_sh404sef_urls.Append(",");
+            Sqlsdx_doc.Append(",");
+        }
 
-INSERT INTO sdx_content 
-(`id`, `asset_id`, `title`, `alias`, `title_alias`, `introtext`, `fulltext`, `state`, `sectionid`, `mask`, `catid`, `created`, `created_by`, `created_by_alias`, `modified`, `modified_by`, `checked_out`, `checked_out_time`, `publish_up`, `publish_down`, `images`, `urls`, `attribs`, `version`, `parentid`, `ordering`, `metakey`, `metadesc`, `access`, `hits`, `metadata`, `featured`, `language`, `xreference`) VALUES
-(" + memberIndex + @"," + memberIndex + @", '" + SqlEscapeString(member.PageTitle) + @"', '" + pageId + @"', '', '" + SqlEscapeString(content) + @"', '', 1, 0, 0, 13, '2012-04-23 21:25:14', 42, '', '0000-00-00 00:00:00', 0, 0, '0000-00-00 00:00:00', '2012-04-23 21:25:14', '0000-00-00 00:00:00', '{}', '{}', '{}', 1, 0, 0, '', '', 1, 0, '{}', 0, '*', '');");
+        Sqlsdx_sh404sef_urls.AppendLine(@" (" + memberIndex + @", 0, 0, '" + urlShort + @"', '" + urlLong + @"', '0000-00-00')");
+		Sqlsdx_doc.AppendLine(@" (" + memberIndex + @",'" + SqlEscapeString(member.PageTitle) + @"','" + pageId + @"','" + contentGZipBase64 + @"') ");
 
-		writer.Flush();
+        CountInserts++;
+		if (CountInserts == 50)
+        {
+            Sqlsdx_sh404sef_urls.AppendLine(";");
+            Sqlsdx_doc.AppendLine(";");
+            CountInserts = 0;
+        }
     }
 
     public Func<LinkDescriptor, string> PreviousLinkResolver { get; set; }
 
+    public int CountInserts { get; set; }
+
+    public StringBuilder Sqlsdx_sh404sef_urls { get; set; }
+
+    public StringBuilder Sqlsdx_doc { get; set; }
+
     public string LinkToSqlDb(LinkDescriptor link)
     {
         string url = null;
+		
         switch (link.Type) {
             case LinkType.Local:
-                url = string.Format(JoomlaContentUrl, link.Index + IndexStart);
+                url = GetShortUrl(link.PageId, link.Index);
                 break;
             default:
                 return PreviousLinkResolver(link);
@@ -130,23 +148,19 @@ INSERT INTO sdx_content
     {
         File.Delete(fileName);
     }
-    var writer = new StreamWriter(new FileStream(fileName, FileMode.CreateNew, FileAccess.Write));
+    var writer = new StreamWriter(new FileStream(fileName, FileMode.CreateNew, FileAccess.Write), Encoding.ASCII);
     Model.Param.SqlWriter = writer;
 
 	writer.WriteLine(@"
-ALTER TABLE `sdx_sh404sef_urls` 	AUTO_INCREMENT=0;
+SET SESSION sql_mode='NO_AUTO_VALUE_ON_ZERO';
+ALTER TABLE `sdx_sh404sef_urls` CHANGE COLUMN `id` `id` INT(11) NOT NULL FIRST;
 TRUNCATE TABLE `sdx_sh404sef_urls`;	
-delete a, b from sdx_assets as a, sdx_content as b where a.id = b.asset_id and b.catid = 13 and b.title != 'Documentation';
-SET @sdx_assets_max_id=(SELECT MAX(id) FROM sdx_assets)+1;
-SET @sdx_content_max_id=(SELECT MAX(id) FROM sdx_content)+1;
-  SET @new_jos_assets_last_inc=(
-  SELECT (SUBSTRING_INDEX(name, '.', -1)*1) AS lastcatid
-  FROM sdx_assets WHERE name LIKE 'com_content.article.%'
-  ORDER BY lastcatid DESC LIMIT 0,1);
-SET @new_jos_assets_last_inc=(SELECT IFNULL(@new_jos_assets_last_inc, 0));
-SET @new_jos_assets_id_last_lft=(SELECT MAX(lft) FROM sdx_assets);
-SET @new_jos_banners_parent_id=54;
+TRUNCATE TABLE `sdx_doc`;	
 ");
+
+	Sqlsdx_sh404sef_urls = new StringBuilder();
+
+	Sqlsdx_doc = new StringBuilder();
 
     Model.WriteTo = WriteToSql;
 }
