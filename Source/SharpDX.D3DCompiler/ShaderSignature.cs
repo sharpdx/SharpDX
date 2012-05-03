@@ -51,28 +51,79 @@ namespace SharpDX.D3DCompiler
     /// <summary>
     ///   Represents a shader signature.
     /// </summary>
-    public class ShaderSignature : Blob
+    public class ShaderSignature : DisposeBase
     {
-        private DataStream _data; 
+        private DataStream _data;
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref = "T:SharpDX.D3DCompiler.ShaderSignature" /> class.
+        /// Initializes a new instance of the <see cref="T:SharpDX.D3DCompiler.ShaderSignature"/> class.
         /// </summary>
-        /// <param name = "ptr">A pointer to a Blob object.</param>
-        public ShaderSignature(IntPtr ptr)
-            : base(ptr)
+        /// <param name="ptr">A pointer to a shader signature bytecode.</param>
+        /// <param name="size">The size.</param>
+        public ShaderSignature(IntPtr ptr, int size)
         {
-            _data = new DataStream(this);
+            _data = new DataStream(ptr, size, true, true);
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref = "T:SharpDX.D3DCompiler.ShaderSignature" /> class.
+        /// Initializes a new instance of the <see cref="T:SharpDX.D3DCompiler.ShaderSignature"/> class.
         /// </summary>
-        /// <param name = "ptr">A pointer to a Blob object.</param>
-        private ShaderSignature(Blob blob) : base(IntPtr.Zero)
+        /// <param name="blob">The BLOB.</param>
+        public ShaderSignature(Blob blob)
         {
-            FromTemp(blob);
-            _data = new DataStream(this);
+            _data = new DataStream(blob);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:SharpDX.D3DCompiler.ShaderSignature"/> class.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        public ShaderSignature(DataStream data)
+        {
+            _data = data;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:SharpDX.D3DCompiler.ShaderSignature"/> class.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <param name="makeACopy">if set to <c>true</c> [make A copy] else the buffer is pinned.</param>
+        public ShaderSignature(byte[] data, bool makeACopy = true)
+        {
+            _data = DataStream.Create(data, true, true, makeACopy);
+        }
+
+        /// <summary>
+        /// Gets the buffer pointer.
+        /// </summary>
+        public IntPtr BufferPointer
+        {
+            get
+            {
+                return Data.DataPointer;
+            }
+        }
+
+        /// <summary>
+        /// Gets the size of the buffer.
+        /// </summary>
+        /// <value>
+        /// The size of the buffer.
+        /// </value>
+        public int BufferSize
+        {
+            get
+            {
+                return (int)Data.Length;
+            }
+        }
+
+        /// <summary>
+        ///   Gets the raw data of the shader signature.
+        /// </summary>
+        public DataStream Data
+        {
+            get { return _data; }
         }
 
         /// <summary>
@@ -80,7 +131,9 @@ namespace SharpDX.D3DCompiler
         /// </summary>
         /// <param name = "shaderBytecode">The bytecode of the compiled shader or effect.</param>
         /// <returns>The input and output signatures of the shader or effect.</returns>
-        /// <unmanaged>HRESULT D3DGetInputAndOutputSignatureBlob([In, Buffer] const void* pSrcData,[In] SIZE_T SrcDataSize,[Out] ID3D10Blob** ppSignatureBlob)</unmanaged>
+        /// <msdn-id>dd607329</msdn-id>	
+        /// <unmanaged>HRESULT D3DGetInputAndOutputSignatureBlob([In, Buffer] const void* pSrcData,[In] SIZE_T SrcDataSize,[Out] ID3D10Blob** ppSignatureBlob)</unmanaged>	
+        /// <unmanaged-short>D3DGetInputAndOutputSignatureBlob</unmanaged-short>	
         public static ShaderSignature GetInputOutputSignature(ShaderBytecode shaderBytecode)
         {
             Blob shaderSignature;
@@ -94,7 +147,9 @@ namespace SharpDX.D3DCompiler
         /// </summary>
         /// <param name = "shaderBytecode">The bytecode of the compiled shader or effect.</param>
         /// <returns>The input signature of the shader or effect.</returns>
-        /// <unmanaged>HRESULT D3DGetInputSignatureBlob([In, Buffer] const void* pSrcData,[In] SIZE_T SrcDataSize,[Out] ID3D10Blob** ppSignatureBlob)</unmanaged>
+        /// <msdn-id>dd607330</msdn-id>	
+        /// <unmanaged>HRESULT D3DGetInputSignatureBlob([In, Buffer] const void* pSrcData,[In] SIZE_T SrcDataSize,[Out] ID3D10Blob** ppSignatureBlob)</unmanaged>	
+        /// <unmanaged-short>D3DGetInputSignatureBlob</unmanaged-short>	
         public static ShaderSignature GetInputSignature(ShaderBytecode shaderBytecode)
         {
             Blob shaderSignature;
@@ -109,6 +164,9 @@ namespace SharpDX.D3DCompiler
         /// <param name = "shaderBytecode">The bytecode of the compiled shader or effect.</param>
         /// <returns>The output signature of the shader or effect.</returns>
         /// <unmanaged>HRESULT D3DGetOutputSignatureBlob([In, Buffer] const void* pSrcData,[In] SIZE_T SrcDataSize,[Out] ID3D10Blob** ppSignatureBlob)</unmanaged>
+        /// <msdn-id>dd607331</msdn-id>	
+        /// <unmanaged>HRESULT D3DGetOutputSignatureBlob([In, Buffer] const void* pSrcData,[In] SIZE_T SrcDataSize,[Out] ID3D10Blob** ppSignatureBlob)</unmanaged>	
+        /// <unmanaged-short>D3DGetOutputSignatureBlob</unmanaged-short>	
         public static ShaderSignature GetOutputSignature(ShaderBytecode shaderBytecode)
         {
             Blob shaderSignature;
@@ -116,13 +174,15 @@ namespace SharpDX.D3DCompiler
                 return null;
             return new ShaderSignature(shaderSignature);
         }
-
-        /// <summary>
-        ///   Gets the raw data of the shader signature.
-        /// </summary>
-        public DataStream Data
+        
+        protected override void Dispose(bool disposing)
         {
-            get { return _data; }
+            if (disposing)
+            {
+                if (_data != null)
+                    _data.Dispose();
+                _data = null;
+            }
         }
     }
 }
