@@ -109,7 +109,7 @@ namespace SharpCli
             // local(0) int
             method.Body.Variables.Add(new VariableDefinition(intType));
             // local(1) T*
-            method.Body.Variables.Add(new VariableDefinition(new PinnedType(new PointerType(paramT))));
+            method.Body.Variables.Add(new VariableDefinition(new PinnedType(new ByReferenceType(paramT))));
 
             // Push (0) pDest for memcpy
             gen.Emit(OpCodes.Ldarg_0);
@@ -147,7 +147,7 @@ namespace SharpCli
             var paramT = method.GenericParameters[0];
             // Preparing locals
             // local(0) T*
-            method.Body.Variables.Add(new VariableDefinition("pin", new PinnedType(new PointerType(paramT))));
+            method.Body.Variables.Add(new VariableDefinition("pin", new PinnedType(new ByReferenceType(paramT))));
 
             int index = method.Body.Variables.Count - 1;
 
@@ -226,7 +226,7 @@ namespace SharpCli
             var paramT = method.GenericParameters[0];
             // Preparing locals
             // local(0) T*
-            method.Body.Variables.Add(new VariableDefinition("pin", new PinnedType(new PointerType(paramT))));
+            method.Body.Variables.Add(new VariableDefinition("pin", new PinnedType(new ByReferenceType(paramT))));
 
             int index = method.Body.Variables.Count - 1;
 
@@ -282,7 +282,7 @@ namespace SharpCli
             // local(0) int
             method.Body.Variables.Add(new VariableDefinition(intType));
             // local(1) T*
-            method.Body.Variables.Add(new VariableDefinition(new PinnedType(new PointerType(paramT))));
+            method.Body.Variables.Add(new VariableDefinition(new PinnedType(new ByReferenceType(paramT))));
 
             // Push (0) pDest for memcpy
             gen.Emit(OpCodes.Ldarg_0);
@@ -339,7 +339,7 @@ namespace SharpCli
             method.Body.Variables.Add(new VariableDefinition(intType));
             // local(1) T*
 
-            method.Body.Variables.Add(new VariableDefinition(new PinnedType(new PointerType(paramT))));
+            method.Body.Variables.Add(new VariableDefinition(new PinnedType(new ByReferenceType(paramT))));
 
             // fixed (void* pinnedData = &data[offset])
             gen.Emit(OpCodes.Ldarg_1);
@@ -390,7 +390,7 @@ namespace SharpCli
             // local(0) int
             method.Body.Variables.Add(new VariableDefinition(intType));
             // local(1) T*
-            method.Body.Variables.Add(new VariableDefinition(new PinnedType(new PointerType(paramT))));
+            method.Body.Variables.Add(new VariableDefinition(new PinnedType(new ByReferenceType(paramT))));
 
             // fixed (void* pinnedData = &data[offset])
             gen.Emit(OpCodes.Ldarg_1);
