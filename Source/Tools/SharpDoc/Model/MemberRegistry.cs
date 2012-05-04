@@ -102,9 +102,9 @@ namespace SharpDoc.Model
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         /// <param name="modelReference">The model element.</param>
-        public void Register(NAssembly assembly, IModelReference modelReference)
+        public bool Register(NAssembly assembly, IModelReference modelReference)
         {
-            Register(assembly.Id, modelReference);
+            return Register(assembly.Id, modelReference);
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace SharpDoc.Model
         /// </summary>
         /// <param name="containerId">The container id.</param>
         /// <param name="modelReference">The model element.</param>
-        private void Register(string containerId, IModelReference modelReference)
+        private bool Register(string containerId, IModelReference modelReference)
         {
             Dictionary<string, IModelReference> idToRef;
             if (!_mapIdToModelElement.TryGetValue(containerId, out idToRef))
@@ -149,10 +149,10 @@ namespace SharpDoc.Model
 
             if (idToRef.ContainsKey(modelReference.Id))
             {
-                Logger.Warning("Id [{0}] already registered", modelReference.Id);
-                return;
+                return false;
             }
             idToRef.Add(modelReference.Id, modelReference);
+            return true;
         }
     }
 }

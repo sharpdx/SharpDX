@@ -48,6 +48,7 @@
 	{
 		<th class="icon-col">&nbsp;</th>
 	}
+	<th class="platicon-col">Platforms</th>
     <th class="name-col">Name</th>
 	@if (rowContext.DisplayUnmanagedColumn)
      {
@@ -62,6 +63,7 @@
     {
         <td class="icon-col">@Helpers.Icons.GetIcons(member)</td>
     }
+    <td class="platicon-col">@Helpers.Icons.GetPlatformIcons(member)</td>
     <td class="name-col">@ToUrl(member, displayName, !(Model.CurrentContext is NEnum))</td>
 	@if (rowContext.DisplayUnmanagedColumn)
      {

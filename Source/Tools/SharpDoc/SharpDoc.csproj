@@ -157,6 +157,7 @@
     <Compile Include="Model\NType.cs" />
     <Compile Include="Model\NEnum.cs" />
     <Compile Include="MonoCecilHelper.cs" />
+    <Compile Include="ConfigSource.cs" />
     <Compile Include="OutputType.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -284,6 +285,15 @@
     <Content Include="Styles\SharpDX\style.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Styles\Standard\images\copyright-bg.png" />
+    <Content Include="Styles\Standard\images\default.png" />
+    <Content Include="Styles\Standard\images\footer-bg.png" />
+    <Content Include="Styles\Standard\images\header-bg.png" />
+    <Content Include="Styles\Standard\images\search-icon.png" />
+    <Content Include="Styles\Standard\images\spinner.gif" />
+    <Content Include="Styles\Standard\images\toggle.png" />
+    <Content Include="Styles\Standard\images\win8desktop.png" />
+    <Content Include="Styles\Standard\images\win8metro.png" />
     <Content Include="Styles\Standard\style.xml">
       <SubType>Designer</SubType>
     </Content>

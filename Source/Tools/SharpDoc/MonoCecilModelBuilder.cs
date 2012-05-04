@@ -47,6 +47,10 @@ namespace SharpDoc
 
         public Func<IModelReference, string> PageIdFunction { get; set; }
 
+        private string CurrentMergeGroup { get; set; }
+
+        private NAssembly CurrentAssembly { get; set; }
+
         /// <summary>
         /// Loads from an assembly source definition all types to document.
         /// </summary>
@@ -57,60 +61,73 @@ namespace SharpDoc
         /// </returns>
         public NAssembly LoadFrom(NAssemblySource assemblySource, MemberRegistry memberRegistry)
         {
+            CurrentMergeGroup = assemblySource.MergeGroup;
+
             _source = assemblySource;
             _registry = memberRegistry;
 
             var assemblyDefinition = (AssemblyDefinition)assemblySource.Assembly;
 
-            var assembly = new NAssembly {Name = assemblyDefinition.Name.Name};
-            assembly.FullName = assembly.Name;
-            assembly.Id = "A:" + assembly.Name;
-            assembly.PageId = PageIdFunction(assembly);
-            assembly.PageTitle = assembly.Name + " " + assembly.Category;
-            assembly.Version = assemblyDefinition.Name.Version.ToString();
-            assembly.FileName = Path.GetFileName(Utility.GetProperFilePathCapitalization(assemblySource.Filename));
-            _registry.Register(assembly, assembly);
+            var assemblyName = assemblyDefinition.Name.Name;
+            var assemblyId = "A:" + assemblyName;
 
-            Logger.Message("Processing assembly [{0}]", assembly.FullName);
+            var assembly = (NAssembly)_registry.FindById(assemblyId);
+            // If new assembly
+            if (assembly == null)
+            {
+                assembly = new NAssembly { Name = assemblyName };
+                assembly.FullName = assembly.Name;
+                assembly.Id = assemblyId;
+                assembly.PageId = PageIdFunction(assembly);
+                assembly.PageTitle = assembly.Name + " " + assembly.Category;
+                assembly.Version = assemblyDefinition.Name.Version.ToString();
+                assembly.FileName = Path.GetFileName(Utility.GetProperFilePathCapitalization(assemblySource.Filename));
 
-            // Apply documentation from AssemblyDoc special class
-            assembly.DocNode = _source.Document.FindMemberDoc("T:" + assembly.Name + "." + AssemblyDocClass);
+                // Apply documentation from AssemblyDoc special class
+                assembly.DocNode = _source.Document.FindMemberDoc("T:" + assembly.Name + "." + AssemblyDocClass);
 
-            var namespaces = new Dictionary<string, NNamespace>();
+                _registry.Register(assembly, assembly);
+            }
+            assembly.SetApiGroup(CurrentMergeGroup, true);
+            CurrentAssembly = assembly;
+
+            Logger.Message("Processing assembly [{0}] [{1}]", assembly.FullName, CurrentMergeGroup);
+
+            // Process namespaces
+            // Namespaces are created only if a type is actually public
             foreach (var module in assemblyDefinition.Modules)
             {
                 foreach (var type in module.Types)
                 {
-                    NNamespace parentNamespace;
+                    // Todo add configurable filter
+                    if (!type.IsPublic)
+                        continue;
 
                     // Skip empty namespaces and special <Module>
                     if (string.IsNullOrEmpty(type.Namespace) || type.Namespace.StartsWith("<"))
                         continue;
 
                     // Create naemespace
-                    if (!namespaces.TryGetValue(type.Namespace, out parentNamespace))
-                    {
-                        parentNamespace = AddNamespace(assembly, type.Namespace);
-                        namespaces.Add(type.Namespace, parentNamespace);
-                    }
+                    var parentNamespace = AddNamespace(assembly, type.Namespace);
+                    parentNamespace.SetApiGroup(CurrentMergeGroup, true);
 
                     AddType(parentNamespace, type);
                 }
             }
 
-            // Remove empty namespaces
-            foreach (var removeNamespace in namespaces.Values)
-            {
-                if (removeNamespace.Types.Count == 0)
-                    assembly.Namespaces.Remove(removeNamespace);
-            }
+            //// Remove empty namespaces
+            //foreach (var removeNamespace in namespaces.Values)
+            //{
+            //    if (removeNamespace.Types.Count == 0)
+            //        assembly.Namespaces.Remove(removeNamespace);
+            //}
 
             // Sort namespace in alphabetical order
-            var namespaceNames = new List<string>(namespaces.Keys);
-            namespaceNames.Sort();
 
-            foreach (var namespaceName in namespaceNames)
-                namespaces[namespaceName].Types.Sort((left, right) => left.PageId.CompareTo(right.PageId));
+            //@assembly.Namespaces.Sort((left, right) => left.PageId.CompareTo(right.PageId));
+
+            //foreach (var namespaceName in @assembly.Namespaces)
+            //    namespaces[namespaceName].Types.Sort((left, right) => left.PageId.CompareTo(right.PageId));
 
             return assembly;
         }
@@ -123,20 +140,28 @@ namespace SharpDoc
         /// <returns></returns>
         private NNamespace AddNamespace(NAssembly assembly, string name)
         {
-            var @namespace = new NNamespace(name) {Assembly = assembly, Id = "N:" + name};
-            @namespace.FullName = @namespace.Name;
-            @namespace.PageId = PageIdFunction(@namespace);
-            @namespace.PageTitle = @namespace.Name + " " + @namespace.Category + " (" + assembly.Name + ")";
+            var namespaceId = "N:" + name;
 
-            _registry.Register(assembly, @namespace);
+            var @namespace = (NNamespace)_registry.FindById(namespaceId, CurrentAssembly);
 
-            // Apply documentation on namespace from NamespaceDoc special class
-            @namespace.DocNode = _source.Document.FindMemberDoc("T:" + name + "." + NamespaceDocClass);
+            if (@namespace == null)
+            {
+                @namespace = new NNamespace(name) { Assembly = assembly, Id = "N:" + name };
+                @namespace.FullName = @namespace.Name;
+                @namespace.PageId = PageIdFunction(@namespace);
+                @namespace.PageTitle = @namespace.Name + " " + @namespace.Category + " (" + assembly.Name + ")";
 
-            // Add See Alsos
-            @namespace.SeeAlsos.Add( new NSeeAlso(@namespace.Assembly) );
+                _registry.Register(assembly, @namespace);
 
-            assembly.Namespaces.Add(@namespace);
+                // Apply documentation on namespace from NamespaceDoc special class
+                @namespace.DocNode = _source.Document.FindMemberDoc("T:" + name + "." + NamespaceDocClass);
+
+                // Add See Alsos
+                @namespace.SeeAlsos.Add(new NSeeAlso(@namespace.Assembly));
+
+                assembly.Namespaces.Add(@namespace);
+            }
+
             return @namespace;
         }
 
@@ -151,122 +176,130 @@ namespace SharpDoc
             if (!typeDef.IsPublic)
                 return;
 
-            NType type;
-            if (typeDef.IsInterface)
-            {
-                type = NewInstance<NInterface>(@namespace, typeDef);
-                type.MemberType = NMemberType.Interface;
-            }
-            else if (typeDef.IsEnum)
-            {
-                type = NewInstance<NEnum>(@namespace, typeDef);
-                type.MemberType = NMemberType.Enum;
-            }
-            else if (typeDef.IsValueType)
-            {
-                type = NewInstance<NStruct>(@namespace, typeDef);
-                type.MemberType = NMemberType.Struct;
-            }
-            else if (MonoCecilHelper.IsDelegate(typeDef))
-            {
-                type = NewInstance<NDelegate>(@namespace, typeDef);
-                type.MemberType = NMemberType.Delegate;
-            }
-            else if (typeDef.IsClass)
-            {
-                type = NewInstance<NClass>(@namespace, typeDef);
-                type.MemberType = NMemberType.Class;
-            }
-            else
-            {
-                type = null;
-                type.MemberType = NMemberType.Delegate;
-            }
-            _registry.Register(@namespace.Assembly, type);
-            @namespace.AddType(type);
-            
-            // Add reference to all base types
-            var baseTypeDefinition = typeDef;
-            do
-            {
-                baseTypeDefinition = MonoCecilHelper.GetBaseType(baseTypeDefinition);
-                if (baseTypeDefinition != null)
-                    type.Bases.Add(GetTypeReference(baseTypeDefinition));
-            } while (baseTypeDefinition != null);
+            var typeId = DocIdHelper.GetXmlId(typeDef);
+            var type = (NType)_registry.FindById(typeId, CurrentAssembly);
 
-            // Flattened hierarchy initialized with all base types
-            // Derived types will be added at a later pass, when types in all asemblies 
-            // will be discovered.
-            var reverseBases = new List<INMemberReference>(type.Bases);
-            reverseBases.Reverse();
-            for (int i = 0; i < reverseBases.Count; i++)
-                type.FlattenedHierarchy.Add(new Tuple<int, INMemberReference>(i, reverseBases[i]));
-            // Add this type itself to its flattened hierarchy
-            type.FlattenedHierarchy.Add(new Tuple<int, INMemberReference>(reverseBases.Count, type));
-
-            // Add reference to inherited interfaces
-            foreach (var typeReference in typeDef.Interfaces)
-                type.Interfaces.Add(GetTypeReference(typeReference));
-
-            if (typeDef.IsPublic)
-                type.Visibility = NVisibility.Public;
-            else if (typeDef.IsNotPublic)
-                type.Visibility = NVisibility.Private;
-            type.IsAbstract = typeDef.IsAbstract;
-            type.IsFinal = typeDef.IsSealed;
-
-            // Revert back declaration abstract sealed class are actually declared as static class 
-            if (type is NClass && type.IsAbstract && type.IsFinal)
+            // If this is a new type create and register it
+            if (type == null)
             {
-                type.IsStatic = true;
-                type.IsAbstract = false;
-                type.IsFinal = false;
-            }
-            else if (type is NEnum || type is NStruct || type is NDelegate)
-            {
-                // We know that enum is sealed, so don't duplicate it
-                type.IsFinal = false;
-            }
-
-            // Reconstruct StructLayout attribute
-            if (typeDef.IsExplicitLayout || typeDef.IsSequentialLayout)
-            {
-                var layout = new StringBuilder();
-                layout.Append("StructLayoutAttribute(");
-                if (typeDef.IsExplicitLayout)
-                    layout.Append("LayoutKind.Explicit");
-                else if (typeDef.IsSequentialLayout)
-                    layout.Append("LayoutKind.Sequential");
+                if (typeDef.IsInterface)
+                {
+                    type = NewInstance<NInterface>(@namespace, typeDef);
+                    type.MemberType = NMemberType.Interface;
+                }
+                else if (typeDef.IsEnum)
+                {
+                    type = NewInstance<NEnum>(@namespace, typeDef);
+                    type.MemberType = NMemberType.Enum;
+                }
+                else if (typeDef.IsValueType)
+                {
+                    type = NewInstance<NStruct>(@namespace, typeDef);
+                    type.MemberType = NMemberType.Struct;
+                }
+                else if (MonoCecilHelper.IsDelegate(typeDef))
+                {
+                    type = NewInstance<NDelegate>(@namespace, typeDef);
+                    type.MemberType = NMemberType.Delegate;
+                }
+                else if (typeDef.IsClass)
+                {
+                    type = NewInstance<NClass>(@namespace, typeDef);
+                    type.MemberType = NMemberType.Class;
+                }
                 else
-                    layout.Append("LayoutKind.Auto");
+                {
+                    throw new InvalidOperationException(string.Format("Unsupported type [{0}]", typeDef.FullName));
+                }
 
-                if (typeDef.IsUnicodeClass)
-                    layout.Append(", CharSet = CharSet.Unicode");
-                else if (typeDef.IsAnsiClass)
-                    layout.Append(", CharSet = CharSet.Ansi");
-                else if (typeDef.IsAutoClass)
-                    layout.Append(", CharSet = CharSet.Auto");
+                _registry.Register(@namespace.Assembly, type);
+                @namespace.AddType(type);
 
-                if (typeDef.PackingSize != 0)
-                    layout.Append(", Pack = ").Append(typeDef.PackingSize);
+                // Add reference to all base types
+                var baseTypeDefinition = typeDef;
+                do
+                {
+                    baseTypeDefinition = MonoCecilHelper.GetBaseType(baseTypeDefinition);
+                    if (baseTypeDefinition != null)
+                        type.Bases.Add(GetTypeReference(baseTypeDefinition));
+                } while (baseTypeDefinition != null);
 
-                if (typeDef.ClassSize != 0)
-                    layout.Append(", Size = ").Append(typeDef.ClassSize);
+                // Flattened hierarchy initialized with all base types
+                // Derived types will be added at a later pass, when types in all asemblies 
+                // will be discovered.
+                var reverseBases = new List<INMemberReference>(type.Bases);
+                reverseBases.Reverse();
+                for (int i = 0; i < reverseBases.Count; i++)
+                    type.FlattenedHierarchy.Add(new Tuple<int, INMemberReference>(i, reverseBases[i]));
+                // Add this type itself to its flattened hierarchy
+                type.FlattenedHierarchy.Add(new Tuple<int, INMemberReference>(reverseBases.Count, type));
 
-                layout.Append(")");
-                type.Attributes.Add(layout.ToString());
+                // Add reference to inherited interfaces
+                foreach (var typeReference in typeDef.Interfaces)
+                    type.Interfaces.Add(GetTypeReference(typeReference));
+
+                if (typeDef.IsPublic)
+                    type.Visibility = NVisibility.Public;
+                else if (typeDef.IsNotPublic)
+                    type.Visibility = NVisibility.Private;
+                type.IsAbstract = typeDef.IsAbstract;
+                type.IsFinal = typeDef.IsSealed;
+
+                // Revert back declaration abstract sealed class are actually declared as static class 
+                if (type is NClass && type.IsAbstract && type.IsFinal)
+                {
+                    type.IsStatic = true;
+                    type.IsAbstract = false;
+                    type.IsFinal = false;
+                }
+                else if (type is NEnum || type is NStruct || type is NDelegate)
+                {
+                    // We know that enum is sealed, so don't duplicate it
+                    type.IsFinal = false;
+                }
+
+                // Reconstruct StructLayout attribute
+                if (typeDef.IsExplicitLayout || typeDef.IsSequentialLayout)
+                {
+                    var layout = new StringBuilder();
+                    layout.Append("StructLayoutAttribute(");
+                    if (typeDef.IsExplicitLayout)
+                        layout.Append("LayoutKind.Explicit");
+                    else if (typeDef.IsSequentialLayout)
+                        layout.Append("LayoutKind.Sequential");
+                    else
+                        layout.Append("LayoutKind.Auto");
+
+                    if (typeDef.IsUnicodeClass)
+                        layout.Append(", CharSet = CharSet.Unicode");
+                    else if (typeDef.IsAnsiClass)
+                        layout.Append(", CharSet = CharSet.Ansi");
+                    else if (typeDef.IsAutoClass)
+                        layout.Append(", CharSet = CharSet.Auto");
+
+                    if (typeDef.PackingSize != 0)
+                        layout.Append(", Pack = ").Append(typeDef.PackingSize);
+
+                    if (typeDef.ClassSize != 0)
+                        layout.Append(", Size = ").Append(typeDef.ClassSize);
+
+                    layout.Append(")");
+                    type.Attributes.Add(layout.ToString());
+                }
+
+                // Reconstruct Serializable attribute
+                if (typeDef.IsSerializable)
+                    type.Attributes.Add("SerializableAttribute");
+
+                type.SeeAlsos.Add(new NSeeAlso(@namespace));
+                type.SeeAlsos.Add(new NSeeAlso(@namespace.Assembly));
             }
 
-            // Reconstruct Serializable attribute
-            if (typeDef.IsSerializable)
-                type.Attributes.Add("SerializableAttribute");
+            // Add current group
+            type.SetApiGroup(CurrentMergeGroup, true);
 
-            //else if (typeDef.IsAssembly)
-            //   type.Visibility = NVisibility.Internal;
-            //else if (typeDef.IsFamily)
-            //    type.Visibility = NVisibility.Protected;
-            //else if (typeDef.IsFamilyOrAssembly)
-            //    type.Visibility = NVisibility.ProtectedInternal;
+            // Because a type in a different assemblies can have new methods/properties/fields...etc.
+            // We need to check that there is no new members
 
             // Add methods, constructors, operators. Todo add configurable filter
             foreach (var method in typeDef.Methods.Where(this.IsMemberToDisplay))
@@ -318,9 +351,6 @@ namespace SharpDoc
                 foreach (var field in type.Fields)
                     field.MsdnId = type.MsdnId;
             }
-
-            type.SeeAlsos.Add(new NSeeAlso(@namespace));
-            type.SeeAlsos.Add(new NSeeAlso(@namespace.Assembly));
 
             // Add nested types to the global namespace.
             foreach (var nestedType in typeDef.NestedTypes)
@@ -455,34 +485,42 @@ namespace SharpDoc
             // If not a get/set then handle it
             if (!isSpecialMethod)
             {
-                _registry.Register(parent.Namespace.Assembly, method);
-                parent.AddMember(method);
+                var oldMethod = (NMethod)_registry.FindById(method.Id, CurrentAssembly);
+                method = oldMethod ?? method;
 
-                var parentType = parent as NType;
-                if (parentType != null)
+                if (oldMethod == null)
                 {
-                    if (method is NConstructor)
+                    _registry.Register(parent.Namespace.Assembly, method);
+                    parent.AddMember(method);
+
+                    var parentType = parent as NType;
+                    if (parentType != null)
                     {
-                        method.Name = parent.Name;
-                        parentType.HasConstructors = true;
+                        if (method is NConstructor)
+                        {
+                            method.Name = parent.Name;
+                            parentType.HasConstructors = true;
+                        }
+                        else if (method is NOperator)
+                        {
+                            parentType.HasOperators = true;
+                        }
+                        else
+                        {
+                            parentType.HasMethods = true;
+                        }
                     }
-                    else if (method is NOperator)
-                    {
-                        parentType.HasOperators = true;
-                    }
-                    else
-                    {
-                        parentType.HasMethods = true;
-                    }
+
+                    // Add SeeAlso
+                    method.SeeAlsos.Add(new NSeeAlso(parent));
+                    method.SeeAlsos.Add(new NSeeAlso(parent.Namespace));
+                    method.SeeAlsos.Add(new NSeeAlso(parent.Namespace.Assembly));
+
+                    UpdatePageTitle(method);
                 }
             }
 
-            // Add SeeAlso
-            method.SeeAlsos.Add(new NSeeAlso(parent));
-            method.SeeAlsos.Add(new NSeeAlso(parent.Namespace));
-            method.SeeAlsos.Add(new NSeeAlso(parent.Namespace.Assembly));
-
-            UpdatePageTitle(method);
+            method.SetApiGroup(CurrentMergeGroup, true);
 
             return method;
         }
@@ -704,31 +742,39 @@ namespace SharpDoc
         /// <param name="eventDef">The event def.</param>
         private void AddEvent(NType parent, EventDefinition eventDef)
         {
-            var @event = NewInstance<NEvent>(parent.Namespace, eventDef);
-            _registry.Register(parent.Namespace.Assembly, @event);
+            var eventId = DocIdHelper.GetXmlId(eventDef);
+            var @event = (NEvent)_registry.FindById(eventId, CurrentAssembly);
 
-            @event.MemberType = NMemberType.Event;
-            @event.EventType = this.GetTypeReference(eventDef.EventType);
+            if (@event == null)
+            {
+                @event = NewInstance<NEvent>(parent.Namespace, eventDef);
+                _registry.Register(parent.Namespace.Assembly, @event);
 
-            parent.AddMember(@event);
-            parent.HasEvents = true;
+                @event.MemberType = NMemberType.Event;
+                @event.EventType = this.GetTypeReference(eventDef.EventType);
 
-            var addMethod = AddMethod(@event, eventDef.AddMethod, true);
-            var removeMethod = AddMethod(@event, eventDef.RemoveMethod, true);
+                parent.AddMember(@event);
+                parent.HasEvents = true;
 
-            // Setup visibility based on event add/remove methods
-            var refMethod = addMethod ?? removeMethod;
-            @event.Visibility = refMethod.Visibility;
-            @event.IsStatic = refMethod.IsStatic;
-            @event.IsFinal = refMethod.IsFinal;
-            @event.IsAbstract = refMethod.IsAbstract;
+                var addMethod = AddMethod(@event, eventDef.AddMethod, true);
+                var removeMethod = AddMethod(@event, eventDef.RemoveMethod, true);
 
-            // Add SeeAlso
-            @event.SeeAlsos.Add(new NSeeAlso(parent));
-            @event.SeeAlsos.Add(new NSeeAlso(parent.Namespace));
-            @event.SeeAlsos.Add(new NSeeAlso(parent.Namespace.Assembly));
+                // Setup visibility based on event add/remove methods
+                var refMethod = addMethod ?? removeMethod;
+                @event.Visibility = refMethod.Visibility;
+                @event.IsStatic = refMethod.IsStatic;
+                @event.IsFinal = refMethod.IsFinal;
+                @event.IsAbstract = refMethod.IsAbstract;
 
-            UpdatePageTitle(@event);
+                // Add SeeAlso
+                @event.SeeAlsos.Add(new NSeeAlso(parent));
+                @event.SeeAlsos.Add(new NSeeAlso(parent.Namespace));
+                @event.SeeAlsos.Add(new NSeeAlso(parent.Namespace.Assembly));
+
+                UpdatePageTitle(@event);
+            }
+
+            @event.SetApiGroup(CurrentMergeGroup, true);
         }
 
         /// <summary>
@@ -740,36 +786,45 @@ namespace SharpDoc
         {
             if (fieldDef.IsSpecialName)
                 return;
-            var field = NewInstance<NField>(parent.Namespace, fieldDef);
-            _registry.Register(parent.Namespace.Assembly, field);
-            field.MemberType = NMemberType.Field;
-            field.FieldType = GetTypeReference(fieldDef.FieldType);
 
-            // Setup visibility
-            field.IsStatic = fieldDef.IsStatic;
+            var fieldId = DocIdHelper.GetXmlId(fieldDef);
+            var field = (NField)_registry.FindById(fieldId, CurrentAssembly);
 
-            if (fieldDef.IsPublic)
-                field.Visibility = NVisibility.Public;
-            else if (fieldDef.IsPrivate)
-                field.Visibility = NVisibility.Private;
-            else if (fieldDef.IsAssembly)
-                field.Visibility = NVisibility.Internal;
-            else if (fieldDef.IsFamily)
-                field.Visibility = NVisibility.Protected;
-            else if (fieldDef.IsFamilyOrAssembly)
-                field.Visibility = NVisibility.ProtectedInternal;
+            if (field == null)
+            {
+                field = NewInstance<NField>(parent.Namespace, fieldDef);
+                _registry.Register(parent.Namespace.Assembly, field);
+                field.MemberType = NMemberType.Field;
+                field.FieldType = GetTypeReference(fieldDef.FieldType);
 
-            if (fieldDef.Constant != null )
-                field.ConstantValue = GetTextFromValue(fieldDef.Constant);
+                // Setup visibility
+                field.IsStatic = fieldDef.IsStatic;
 
-            parent.AddMember(field);
-            parent.HasFields = true;
+                if (fieldDef.IsPublic)
+                    field.Visibility = NVisibility.Public;
+                else if (fieldDef.IsPrivate)
+                    field.Visibility = NVisibility.Private;
+                else if (fieldDef.IsAssembly)
+                    field.Visibility = NVisibility.Internal;
+                else if (fieldDef.IsFamily)
+                    field.Visibility = NVisibility.Protected;
+                else if (fieldDef.IsFamilyOrAssembly)
+                    field.Visibility = NVisibility.ProtectedInternal;
 
-            field.SeeAlsos.Add(new NSeeAlso(parent));
-            field.SeeAlsos.Add(new NSeeAlso(parent.Namespace));
-            field.SeeAlsos.Add(new NSeeAlso(parent.Namespace.Assembly));
+                if (fieldDef.Constant != null)
+                    field.ConstantValue = GetTextFromValue(fieldDef.Constant);
 
-            UpdatePageTitle(field);
+                parent.AddMember(field);
+                parent.HasFields = true;
+
+                field.SeeAlsos.Add(new NSeeAlso(parent));
+                field.SeeAlsos.Add(new NSeeAlso(parent.Namespace));
+                field.SeeAlsos.Add(new NSeeAlso(parent.Namespace.Assembly));
+
+                UpdatePageTitle(field);
+            }
+
+            field.SetApiGroup(CurrentMergeGroup, true);
         }
 
         /// <summary>
@@ -779,30 +834,38 @@ namespace SharpDoc
         /// <param name="propertyDef">The property def.</param>
         private void AddProperty(NType parent, PropertyDefinition propertyDef)
         {
-            var property = NewInstance<NProperty>(parent.Namespace, propertyDef);
-            _registry.Register(parent.Namespace.Assembly, property);
-            property.Namespace = parent.Namespace;
+            var propertyId = DocIdHelper.GetXmlId(propertyDef);
+            var property = (NProperty)_registry.FindById(propertyId, CurrentAssembly);
 
-            property.MemberType = NMemberType.Property;
-            property.PropertyType = GetTypeReference(propertyDef.PropertyType);
-            property.GetMethod = AddMethod(property, propertyDef.GetMethod, true);
-            property.SetMethod = AddMethod(property, propertyDef.SetMethod, true);
+            if (property == null)
+            {
+                property = NewInstance<NProperty>(parent.Namespace, propertyDef);
+                _registry.Register(parent.Namespace.Assembly, property);
+                property.Namespace = parent.Namespace;
 
-            parent.AddMember(property);
-            parent.HasProperties = true;
+                property.MemberType = NMemberType.Property;
+                property.PropertyType = GetTypeReference(propertyDef.PropertyType);
+                property.GetMethod = AddMethod(property, propertyDef.GetMethod, true);
+                property.SetMethod = AddMethod(property, propertyDef.SetMethod, true);
 
-            // Setup visibility based on method
-            var refMethod = property.GetMethod ?? property.SetMethod;
-            property.Visibility = refMethod.Visibility;
-            property.IsStatic = refMethod.IsStatic;
-            property.IsFinal = refMethod.IsFinal;
-            property.IsAbstract = refMethod.IsAbstract;
+                parent.AddMember(property);
+                parent.HasProperties = true;
 
-            property.SeeAlsos.Add(new NSeeAlso(parent));
-            property.SeeAlsos.Add(new NSeeAlso(parent.Namespace));
-            property.SeeAlsos.Add(new NSeeAlso(parent.Namespace.Assembly));
+                // Setup visibility based on method
+                var refMethod = property.GetMethod ?? property.SetMethod;
+                property.Visibility = refMethod.Visibility;
+                property.IsStatic = refMethod.IsStatic;
+                property.IsFinal = refMethod.IsFinal;
+                property.IsAbstract = refMethod.IsAbstract;
 
-            UpdatePageTitle(property);
+                property.SeeAlsos.Add(new NSeeAlso(parent));
+                property.SeeAlsos.Add(new NSeeAlso(parent.Namespace));
+                property.SeeAlsos.Add(new NSeeAlso(parent.Namespace.Assembly));
+
+                UpdatePageTitle(property);
+            }
+
+            property.SetApiGroup(CurrentMergeGroup, true);
         }
 
         /// <summary>

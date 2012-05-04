@@ -47,14 +47,14 @@
     <!-- Load version from source code SharedAssemblyInfo.cs -->
     <loadfile file="Source/SharedAssemblyInfo.cs" property="assembly_version_file" />
 
-    <property name="version-postfix" value="" if="${build_normal}"/>
-    <property name="version-postfix" value="-Win8Beta" if="${build_win8}"/>
-    <property name="version-postfix" value="-Signed" if="${build_signed}"/>
-    <property name="version-postfix" value="-DirectX11_1" if="${build_dx11_1}"/>
+    <property name="version-dir" value="Standard" if="${build_normal}"/>
+    <property name="version-dir" value="Signed" if="${build_signed}"/>
+    <property name="version-dir" value="Win8Metro" if="${build_win8}"/>
+    <property name="version-dir" value="Win8Desktop" if="${build_dx11_1}"/>
 
     <regex pattern="AssemblyVersion\(.(?'assembly_version'\d+\.\d+.\d+)" input="${assembly_version_file}" />
-    <property name="output_bin_zip" value="${project.name}${version-postfix}-Bin-${assembly_version}${build-date}.zip"/>
-    <property name="output_bin_and_samples_zip" value="${project.name}${version-postfix}-BinAndSamples-${assembly_version}${build-date}.zip"/>
+    <property name="output_bin_zip" value="${project.name}-Bin-${assembly_version}${build-date}.zip"/>
+    <property name="output_bin_and_samples_zip" value="${project.name}-Full-${assembly_version}${build-date}.zip"/>
 
     <!-- Setup configuration -->
     <property name="configuration" value="Release" if="${build_normal}"/>
@@ -86,6 +86,7 @@
         <include name="**/*.bak" />
         <include name="**/*.user" />
         <include name="**/_ReSharper.*/**" />
+        <exclude name="**/Build/**" />
         <exclude name="**/External/**" />
         <exclude name="**/.git/**" />
       </fileset>
@@ -189,25 +190,23 @@
   <target name="full" description="Full build targets.">
     <call target="normal"/>
     <call target="build"/>
-    <call target="zip"/>
     <call target="publish-code" if="${publish}"/>
 
-    <call target="nuget"/>
+    <!-- <call target="nuget"/> -->
 
     <call target="signed"/>
     <call target="build"/>
-    <call target="zip"/>
     <call target="publish-code" if="${publish}"/>
 
     <call target="win8"/>
     <call target="build"/>
-    <call target="zip"/>
     <call target="publish-code" if="${publish}"/>
 
     <call target="dx11_1"/>
     <call target="build"/>
-    <call target="zip"/>
     <call target="publish-code" if="${publish}"/>
+
+    <call target="zip"/>
   </target>
 
   <!-- Full clean and build -->
@@ -319,6 +318,18 @@
       <arg value='/p:SharpDXSign=${build_signed}'/>
       <arg value="${project.name}.sln" />
     </exec>
+
+    <!-- Create Bin Output Directory -->
+    <delete dir="Bin/${version-dir}"/>
+    <mkdir dir="Bin/${version-dir}"/>
+
+    <copy flatten="true" todir="Bin/${version-dir}">
+      <fileset basedir="Source/">
+        <include name="SharpDX.*/Bin/${configuration}/*.dll" />
+        <include name="SharpDX.*/Bin/${configuration}/*.xml" />
+      </fileset>
+    </copy>
+
   </target>
 
   <!-- Main zip task -->
@@ -326,45 +337,34 @@
     <!-- Setup based on config -->
     <call target="setup"/>
 
-    <!-- Create Bin Output Directory -->
-    <delete dir="Bin"/>
-    <mkdir dir="Bin"/>
-
-    <copy flatten="true" todir="Bin">
-      <fileset basedir="Source/">
-        <include name="SharpDX.*/Bin/${configuration}/*.dll" />
-        <include name="SharpDX.*/Bin/${configuration}/*.xml" />
-      </fileset>
-    </copy>
-
     <property name="cleandir" value="Samples"/>
     <call target="clean"/>
 
+    <!-- Create Samples Output Directory -->
+    <delete dir="Build/Samples"/>
+
+    <copy todir="Build/">
+      <fileset>
+        <include name="Bin/**"/>
+        <include name="Samples/**"/>
+        <include name="*.txt"/>
+        <exclude name="googlecode_password.txt"/>
+      </fileset>
+    </copy>
 
     <zip ziplevel="9" zipfile="${output_bin_zip}">
-      <fileset basedir="..">
-        <include name="${project.name}/Bin/**" />
-        <include name="${project.name}/*.txt"/>
-        <exclude name="${project.name}/googlecode_password.txt"/>
-        <exclude name="${project.name}/**/*.pdb"/>
+      <fileset basedir="Build">
+        <include name="**" />
+        <exclude name="Samples/**"/>
+        <exclude name="Tools/**"/>
       </fileset>
     </zip>
 
     <zip ziplevel="9" zipfile="${output_bin_and_samples_zip}">
-      <fileset basedir="..">
-        <include name="${project.name}/Bin/**" />
-        <include name="${project.name}/Samples/**" unless="${build_win8}"/>
-        <include name="${project.name}/Samples/*Win8*" if="${build_win8}"/>
-        <include name="${project.name}/Samples/Win8/**" if="${build_win8}"/>
-        <include name="${project.name}/*.txt"/>
-        <exclude name="${project.name}/googlecode_password.txt"/>
-        <exclude name="${project.name}/Samples/**/*.sample.csproj"/>
-        <exclude name="${project.name}/Samples/*Win8*" unless="${build_win8}"/>
-        <exclude name="${project.name}/Samples/Win8/**" unless="${build_win8}"/>
-        <exclude name="${project.name}/**/*.pdb"/>
+      <fileset basedir="Build">
+        <include name="**" />
       </fileset>
     </zip>
-
   </target>
 
 </project>

@@ -26,6 +26,8 @@ using System.Text;
 
 using Mono.Options;
 using RazorEngine;
+using RazorEngine.Templating;
+
 using SharpCore.Logging;
 using SharpDoc.Model;
 using SharpDocPak;
@@ -80,6 +82,8 @@ namespace SharpDoc
         {
             var showHelp = false;
 
+            var files = new List<string>();
+
             var options = new OptionSet()
                               {
                                   "Copyright (c) 2010-2012 SharpDX - Alexandre Mutel",
@@ -108,7 +112,7 @@ namespace SharpDoc
                                           }
                                       },
                                   {"d|style-dir=", "Add a style directory", opt => Config.StyleDirectories.Add(opt) },
-                                  {"s|style=", "Specify the style to use [default: Standard]", opt => Config.StyleName = opt},
+                                  {"s|style=", "Specify the style to use [default: Standard]", opt => Config.StyleNames.Add(opt)},
                                   {"o|output=", "Specify the output directory [default: Output]", opt => Config.OutputDirectory = opt},
                                   {"r|references=", "Add reference assemblies in order to load source assemblies", opt => Config.References.Add(opt)},
                                   "",
@@ -116,7 +120,7 @@ namespace SharpDoc
                                   "",
                                   "[Assembly1.dll Assembly1.xml...] Source files, if a config file is not specified, load source assembly and xml from the specified list of files",
                                   // default
-                                  {"<>", opt => Config.Sources.AddRange(opt.Split(' ', '\t')) },
+                                  {"<>", opt => files.AddRange(opt.Split(' ', '\t')) },
                               };           
             try
             {
@@ -136,12 +140,39 @@ namespace SharpDoc
                 Environment.Exit(0);
             }
 
+            // Add files from command line
+            if (files.Count > 0)
+            {
+                foreach (var file in files)
+                {
+                    var configSource = new ConfigSource();
+                    var ext = Path.GetExtension(file);
+                    if (ext != null && ext.ToLower() == ".xml")
+                    {
+                        configSource.DocumentationPath = file;
+                    }
+                    else
+                    {
+                        configSource.AssemblyPath = file;
+                    }
+
+                    Config.Sources.Add(configSource);
+                }
+            }
+
             if (Config.Sources.Count == 0)
                 UsageError("At least one option is missing. Either a valid config file (-config) or a direct list of assembly/xml files must be specified");
 
+            // Add default style Standard if none is defined
+            if (Config.StyleNames.Count == 0)
+                Config.StyleNames.Add("Standard");
+
             // Verify the validity of the style
-            if (!StyleManager.StyleExist(Config.StyleName))
-                UsageError("Style [{0}] does not exist. Use --help to have a list of available styles.", Config.StyleName);
+            foreach (var styleName in Config.StyleNames)
+            {
+                if (!StyleManager.StyleExist(styleName))
+                    UsageError("Style [{0}] does not exist. Use --help to have a list of available styles.", styleName);
+            }
         }
 
         /// <summary>
@@ -168,12 +199,13 @@ namespace SharpDoc
             if (Directory.Exists(context.OutputDirectory))
                 Directory.Delete(context.OutputDirectory, true);
 
-            Razor.SetTemplateBase(typeof(TemplateHelperBase));
-            Razor.AddResolver(context);
-
-            context.UseStyle(Config.StyleName);
-          
-            context.Parse(StyleDefinition.DefaultBootableTemplateName);
+            // Verify the validity of the style
+            foreach (var styleName in Config.StyleNames)
+            {
+                Logger.Message("Generate documentation for style [{0}]", styleName);
+                context.UseStyle(styleName);
+                context.Parse(StyleDefinition.DefaultBootableTemplateName);
+            }
 
             Logger.Message("Total time: {0:F1}s", clock.ElapsedMilliseconds / 1000.0f);
             //Logger.Message("Time for assembly processing: {0:F1}s", timeForModelProcessor/1000.0f);

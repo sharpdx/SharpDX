@@ -21,32 +21,118 @@
 // THE SOFTWARE.
 // *****************************************************************************
 // Config file for SharpDX documentation
-// NOTE This is a test file
 // *****************************************************************************
 -->
 <config xmlns="SharpDoc">
   <!-- Title of the generated documentation -->
   <title>SharpDX Documentation</title>
 
-  <!-- Generate default and docpak -->
-  <output-type>docpak</output-type>
-
-  <!-- Configure docpak -->
-  <docpak name="SharpDXDoc">
-    <!-- Add an index to unmanaged tags -->
-    <tagindex id="unmanaged" xpath="//html/head/title" name="Unmanaged"/>
-  </docpak>
-  
-  <!-- Defines the style used -->
+  <!-- Defines the styles used. Apply first SharpDXWeb and after Standard style -->
+  <style>SharpDXWeb</style>
   <style>Standard</style>
 
-  <!-- Links to topics -->
+  <!-- Generate default and docpak -->
+  <output-dir>..\Build\Documetation\</output-dir>
+
+  <!-- Configure docpak - DISABLE by default
+  <output-type>docpak</output-type>
+  <docpak name="SharpDXDoc">
+    // Add an index to unmanaged tags
+    <tagindex id="unmanaged" xpath="//html/head/title" name="Unmanaged"/>
+  </docpak>
+  -->
+
+  <!-- Topics -->
   <topic id="SharpDX" filename="index.html" name="SharpDX Documentation" >
-    <!-- Special topic X:ClassLibrary to include generated class library references-->
-    <topic id="X:ClassLibraryReference" page-id="api" name="Class Library Reference" index="" />
+
+    <topic id="X:WhatsNew" filnename="news.html" page-id="news" name="What's new?"/>
+
+    <!-- Documentation for Programming Guide -->
+    <topic id="X:ProgrammingGuide" filename="guide.html" page-id="guide" name="Programming Guide">
+
+      <topic id="X:ProgrammingGuide.Overview" filename="guide-overview.html" page-id="overview" name="Overview">
+        <topic id="X:ProgrammingGuide.ManagedUnmanaged" filnename="guide-managed-unmanaged.html" page-id="managed-unmanaged" name="Managed and Unmanaged API"/>
+        <topic id="X:ProgrammingGuide.ComLifecycles" filnename="guide-com-lifecycles.html" page-id="com-lifecycles" name="Managing COM object lifecycles"/>
+        <topic id="X:ProgrammingGuide.ApiPhilosophy" filnename="guide-api-philosophy.html" page-id="api-philosophy" name="Philosophy of SharpDX API"/>
+      </topic>
+
+      <topic id="X:ProgrammingGuide.GettingStarted" filename="guideadvanced.html" page-id="getting-started" name="Getting Started"/>
+
+      <topic id="X:ProgrammingGuide.Deployment" filename="deployment.html" page-id="deployment" name="Deployment"/>
+
+      <topic id="X:ProgrammingGuide.Advanced" filename="guide-advanced.html" page-id="advanced" name="Advanced">
+
+        <topic id="X:ProgrammingGuide.Advanced.RenderingLoop" filename="guide-advanced-rendering-loop.html" page-id="advanced-rendering-loop" name="Rendering Loop"/>
+        <topic id="X:ProgrammingGuide.Advanced.Callbackable" filename="guide-advanced-callbackable.html" page-id="advanced-callbackable" name="Callback C++ and ICallbackable Interface"/>
+        <topic id="X:ProgrammingGuide.Advanced.PerformanceTips" filename="guide-advanced-performance-tips.html" page-id="advanced-performance-tips" name="Performance Tips"/>
+        <topic id="X:ProgrammingGuide.Advanced.DebuggingTips" filename="guide-advanced-debugging-tips.html" page-id="advanced-debugging-tips" name="Debugging Tips"/>
+        <topic id="X:ProgrammingGuide.Advanced.ObfuscationILMerge" filename="guide-advanced-obfuscation-ilmerge.html" page-id="advanced-obfuscation-ilmerge" name="Obfuscation and ILMerge"/>
+
+      </topic>
+    </topic>
+
+    <!-- Documentation for Tutorials -->
+    <topic id="X:Tutorials" filename="tutorials.html" page-id="tutorials" name="Tutorials">
+      <topic id="X:Tutorials.Tutorial1" filename="tutorial1.html" page-id="tutorial1" name="Tutorial 1 : Window setup"/>
+      <topic id="X:Tutorials.Tutorial2" filename="tutorial2.html" page-id="tutorial2" name="Tutorial 2 : Direct3D11 setup"/>
+      <topic id="X:Tutorials.Tutorial3" filename="tutorial3.html" page-id="tutorial3" name="Tutorial 3 : Direct3D11 MiniCube Sample"/>
+    </topic>
+
+    <!-- Special topic X:ClassLibrary to include generated class library references. No filename to setup as it is generated -->
+    <topic id="X:ClassLibraryReference" page-id="api" name="Class Library Reference" index="100"/>
+
+    <!-- Documentation for Tools -->
+    <topic id="X:Tools" filename="tools.html" page-id="tools" name="Tools">
+      <topic id="X:Tools.SharpGen" filename="tools-sharpgen.html" page-id="sharpgen" name="SharpGen"/>
+      <topic id="X:Tools.SharpDoc" filename="tools-sharpdoc.html" page-id="sharpdoc" name="SharpDoc"/>
+      <topic id="X:Tools.SharpCli" filename="tools-sharpcli.html" page-id="sharpcli" name="SharpCli"/>
+      <topic id="X:Tools.SharpPak" filename="tools-sharppak.html" page-id="sharppak" name="SharpPak"/>
+    </topic>
+
+    <!-- Documentation for Internals code in SharpDX -->
+    <topic id="X:Internals" filename="internals.html" page-id="internals" name="Internals">
+      <topic id="X:Internals.CppToSharpCodeGenerator" filename="tools-cpp-to-csharp.html" page-id="cpp-to-csharp" name="Principles of the C++ to C# Code Generator"/>
+    </topic>
+
+    <topic id="X:KnownIssues" filnename="issues.html" page-id="known-issues" name="Known Issues"/>
+
+    <topic id="X:Licensing" filnename="licensing.html" page-id="licensing" name="Licensing"/>
+
   </topic>
 
   <!-- List the assemblies to include for the class library-->
-  <source>..\Temp\TestLibraryDoc\TestLibraryDoc\Bin\Debug\TestLibraryDoc.dll</source>
-  <source>..\Temp\TestLibraryDoc\TestLibraryDoc\Bin\Debug\TestLibraryDoc.xml</source>
+  
+  <!-- Standard Binaries -->
+  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard\SharpDX.xml">..\Bin\Standard\SharpDX.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard\SharpDX.DXGI.xml">..\Bin\Standard\SharpDX.DXGI.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard\SharpDX.D3DCompiler.xml">..\Bin\Standard\SharpDX.D3DCompiler.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard\SharpDX.DirectInput.xml">..\Bin\Standard\SharpDX.DirectInput.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard\SharpDX.DirectSound.xml">..\Bin\Standard\SharpDX.DirectSound.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard\SharpDX.RawInput.xml">..\Bin\Standard\SharpDX.RawInput.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard\SharpDX.X3DAudio.xml">..\Bin\Standard\SharpDX.X3DAudio.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard\SharpDX.XACT3.xml">..\Bin\Standard\SharpDX.XACT3.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard\SharpDX.XAudio2.xml">..\Bin\Standard\SharpDX.XAudio2.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard\SharpDX.XInput.xml">..\Bin\Standard\SharpDX.XInput.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard\SharpDX.Direct3D9.xml">..\Bin\Standard\SharpDX.Direct3D9.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard\SharpDX.Direct3D10.xml">..\Bin\Standard\SharpDX.Direct3D10.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard\SharpDX.Direct3D11.xml">..\Bin\Standard\SharpDX.Direct3D11.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard\SharpDX.Direct2D1.xml">..\Bin\Standard\SharpDX.Direct2D1.dll</source>
+
+  <!-- Win8Metro Binaries -->
+  <source api="win8metro|Windows 8 Metro - DirectX11.1 - .NET 4.5 Core" xml="..\Bin\Win8Metro\SharpDX.xml">..\Bin\Win8Metro\SharpDX.dll</source>
+  <source api="win8metro|Windows 8 Metro - DirectX11.1 - .NET 4.5 Core" xml="..\Bin\Win8Metro\SharpDX.DXGI.xml">..\Bin\Win8Metro\SharpDX.DXGI.dll</source>
+  <source api="win8metro|Windows 8 Metro - DirectX11.1 - .NET 4.5 Core" xml="..\Bin\Win8Metro\SharpDX.D3DCompiler.xml">..\Bin\Win8Metro\SharpDX.D3DCompiler.dll</source>
+  <source api="win8metro|Windows 8 Metro - DirectX11.1 - .NET 4.5 Core" xml="..\Bin\Win8Metro\SharpDX.XAudio2.xml">..\Bin\Win8Metro\SharpDX.XAudio2.dll</source>
+  <source api="win8metro|Windows 8 Metro - DirectX11.1 - .NET 4.5 Core" xml="..\Bin\Win8Metro\SharpDX.XInput.xml">..\Bin\Win8Metro\SharpDX.XInput.dll</source>
+  <source api="win8metro|Windows 8 Metro - DirectX11.1 - .NET 4.5 Core" xml="..\Bin\Win8Metro\SharpDX.Direct3D11.xml">..\Bin\Win8Metro\SharpDX.Direct3D11.dll</source>
+  <source api="win8metro|Windows 8 Metro - DirectX11.1 - .NET 4.5 Core" xml="..\Bin\Win8Metro\SharpDX.Direct2D1.xml">..\Bin\Win8Metro\SharpDX.Direct2D1.dll</source>
+
+  <!-- Win7/8Desktop DirectX11.1 Binaries -->
+  <source api="win8desktop|Windows 7/8 Desktop - DirectX11.1 - .NET 2.0+" xml="..\Bin\Win8Desktop\SharpDX.xml">..\Bin\Win8Desktop\SharpDX.dll</source>
+  <source api="win8desktop|Windows 7/8 Desktop - DirectX11.1 - .NET 2.0+" xml="..\Bin\Win8Desktop\SharpDX.DXGI.xml">..\Bin\Win8Desktop\SharpDX.DXGI.dll</source>
+  <source api="win8desktop|Windows 7/8 Desktop - DirectX11.1 - .NET 2.0+" xml="..\Bin\Win8Desktop\SharpDX.D3DCompiler.xml">..\Bin\Win8Desktop\SharpDX.D3DCompiler.dll</source>
+  <source api="win8desktop|Windows 7/8 Desktop - DirectX11.1 - .NET 2.0+" xml="..\Bin\Win8Desktop\SharpDX.XAudio2.xml">..\Bin\Win8Desktop\SharpDX.XAudio2.dll</source>
+  <source api="win8desktop|Windows 7/8 Desktop - DirectX11.1 - .NET 2.0+" xml="..\Bin\Win8Desktop\SharpDX.XInput.xml">..\Bin\Win8Desktop\SharpDX.XInput.dll</source>
+  <source api="win8desktop|Windows 7/8 Desktop - DirectX11.1 - .NET 2.0+" xml="..\Bin\Win8Desktop\SharpDX.Direct3D11.xml">..\Bin\Win8Desktop\SharpDX.Direct3D11.dll</source>
+  <source api="win8desktop|Windows 7/8 Desktop - DirectX11.1 - .NET 2.0+" xml="..\Bin\Win8Desktop\SharpDX.Direct2D1.xml">..\Bin\Win8Desktop\SharpDX.Direct2D1.dll</source>
 </config>

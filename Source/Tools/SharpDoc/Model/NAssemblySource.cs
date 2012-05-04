@@ -30,6 +30,13 @@ namespace SharpDoc.Model
         /// <summary>
         /// Initializes a new instance of the <see cref="NAssemblySource"/> class.
         /// </summary>
+        public NAssemblySource()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NAssemblySource"/> class.
+        /// </summary>
         /// <param name="assembly">The assembly.</param>
         public NAssemblySource(object assembly)
         {
@@ -59,6 +66,14 @@ namespace SharpDoc.Model
         /// </summary>
         /// <value>The filename.</value>
         public string Filename {get; set; }
+
+        /// <summary>
+        /// Gets or sets the merge group.
+        /// </summary>
+        /// <value>
+        /// The merge group.
+        /// </value>
+        public string MergeGroup { get; set; }
 
         /// <summary>
         /// Gets or sets the XML document that contains code comments.

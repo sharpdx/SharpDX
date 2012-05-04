@@ -92,7 +92,10 @@ namespace SharpDoc
             foreach (var assemblySource in assemblySources)
             {
                 var assembly = ModelBuilder.LoadFrom(assemblySource, Registry);
-                Assemblies.Add(assembly);
+                if (Assemblies.FirstOrDefault(checkAssembly => assembly.Id == checkAssembly.Id) == null)
+                {
+                    Assemblies.Add(assembly);
+                }
             }
 
             // Sort assemblies

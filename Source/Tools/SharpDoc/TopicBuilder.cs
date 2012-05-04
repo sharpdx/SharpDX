@@ -100,7 +100,7 @@ namespace SharpDoc
                     {
                         if (indices.Contains(topic.Index))
                         {
-                            Logger.Warning("Index [{0}] for Topic [{0}] is already used. Need to reassign a new index.", topic.Index, topic.Name);
+                            Logger.Warning("Index [{0}] for Topic [{1}] is already used. Need to reassign a new index.", topic.Index, topic.Name);
                             topicToReindex.Add(topic);
                         }
                         else
@@ -150,6 +150,7 @@ namespace SharpDoc
                             {
                                 // Affect new Index based on previous topics
                                 member.Index = index++;
+                                member.SeeAlsos.Add(new NSeeAlso(topicLibrary));
                             }
                         }
                     }

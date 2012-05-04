@@ -105,6 +105,29 @@
             icons.Add(new Tuple<string, string>("static", "Static"));
         return icons;
     }
+
+    /// <summary>
+    /// Get icon html class and title from a member (private/public...etc.)
+    /// </summary>
+    /// <returns></returns>
+    public static IEnumerable<Tuple<string, string>> GetPlatformIconList(NModelBase member)
+    {
+        var icons = new List<Tuple<string, string>>();
+
+        foreach (var groupName in member.Groups)
+        {
+            var groupIconName = groupName;
+            var groupMessageName = groupName;
+            int indexOf = groupName.IndexOf('|');
+			if (indexOf > 0)
+            {
+                groupIconName = groupName.Substring(0, indexOf);
+                groupMessageName = groupName.Substring(indexOf + 1, groupName.Length - indexOf - 1);
+            }
+			icons.Add(new Tuple<string, string>(groupIconName, groupMessageName));                
+        }
+        return icons;
+    }
 }
 
 <!-- 
@@ -112,6 +135,13 @@
 -->
 @helper GetIcons(NModelBase member) {
     foreach (var iconName in GetIconList(member))
+    {
+        <div class="icon @iconName.Item1" title="@iconName.Item2"></div>
+    }
+}
+
+@helper GetPlatformIcons(NModelBase member) {
+    foreach (var iconName in GetPlatformIconList(member))
     {
         <div class="icon @iconName.Item1" title="@iconName.Item2"></div>
     }

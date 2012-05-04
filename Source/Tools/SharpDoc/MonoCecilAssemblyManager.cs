@@ -17,8 +17,11 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using Mono.Cecil;
 using SharpCore.Logging;
@@ -38,17 +41,14 @@ namespace SharpDoc
         {
             AssemblySources = new List<NAssemblySource>();
             AssemblyReferences = new List<AssemblyDefinition>();
-            AssemblyDocSources = new List<NDocumentApi>();
         }
 
         private List<AssemblyDefinition> AssemblyReferences { get; set; }
 
         private List<NAssemblySource> AssemblySources { get; set; }
 
-        private List<NDocumentApi> AssemblyDocSources { get; set; }
-
         /// <summary>
-        /// Loads all <see cref="Sources"/> and <see cref="References"/>.
+        /// Loads all assembly sources/xml doc and references
         /// </summary>
         public List<NAssemblySource> Load(Config config)
         {
@@ -65,69 +65,124 @@ namespace SharpDoc
                 }
             }
 
+
+            var configPath = Path.GetDirectoryName(Path.GetFullPath(config.FilePath));
             // Load all sources
             foreach (var source in config.Sources)
+            {
+                // Setup full path
+                source.AssemblyPath = Path.Combine(configPath, source.AssemblyPath);
+                source.DocumentationPath = Path.Combine(configPath, source.DocumentationPath);
+                source.MergeGroup = source.MergeGroup ?? "default";
                 Load(source);
+            }
+
+            var finalSources = new List<NAssemblySource>();
 
             // Check that all source assemblies have valid Xml associated with it
-            foreach (var assemblySource in AssemblySources)
+            foreach (var assemblySource in AssemblySources.Where(node => node.Assembly != null))
             {
                 int countXmlDocFound = 0;
                 NDocumentApi docFound = null;
                 string assemblyName = ((AssemblyDefinition) assemblySource.Assembly).Name.Name;
-                foreach (var doc in AssemblyDocSources)
-                {
 
-                    var node = doc.Document.SelectSingleNode("/doc/assembly/name");
+                var docSources = new List<NAssemblySource>();
+                if (assemblySource.Document != null)
+                    docSources.Add(assemblySource);
+                docSources.AddRange( AssemblySources.Where(node => node.Assembly == null) );
+
+                foreach (var doc in docSources)
+                {
+                    var node = doc.Document.Document.SelectSingleNode("/doc/assembly/name");
                     if (assemblyName == node.InnerText.Trim())
                     {
-                        docFound = doc;
+                        docFound = doc.Document;
                         countXmlDocFound++;
                     }
                 }
+
                 if (countXmlDocFound == 0)
                     Logger.Fatal("Unable to find documentation for assembly [{0}]", assemblyName);
                 else if (countXmlDocFound > 1)
                     Logger.Fatal("Cannot load from multiple ([{0}]) documentation sources for assembly [{1}]", countXmlDocFound, assemblyName);
 
                 assemblySource.Document = docFound;
+                finalSources.Add(assemblySource);
+
             }
-            return AssemblySources;
+            return finalSources;
         }
 
-        private void Load(string source)
+        private HashSet<string> searchPaths = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
+
+        private void Load(ConfigSource configSource)
         {
-            if (!File.Exists(source))
+            NAssemblySource assemblySource = null;
+
+            if (configSource.AssemblyPath != null)
             {
-                Logger.Error("Assembly file [{0}] not found", source);
-                return;
+                // Check Parameters
+                if (!File.Exists(configSource.AssemblyPath))
+                {
+                    Logger.Error("Assembly file [{0}] not found", configSource.AssemblyPath);
+                    return;
+                }
+
+                var extension = Path.GetExtension(configSource.AssemblyPath);
+                if (extension != null && (extension.ToLower() == ".dll" || extension.ToLower() == ".exe"))
+                {
+                    assemblySource = LoadAssembly(configSource.AssemblyPath);
+                    assemblySource.MergeGroup = configSource.MergeGroup;
+                    AssemblySources.Add(assemblySource);
+                }
+                else
+                {
+                    Logger.Fatal("Invalid Assembly source [{0}]. Must be either an Assembly", configSource.AssemblyPath);
+                }
             }
 
-            var extension = Path.GetExtension(source);
+            if (configSource.DocumentationPath != null)
+            {
+                if (!File.Exists(configSource.DocumentationPath))
+                {
+                    Logger.Error("Documentation file [{0}] not found", configSource.DocumentationPath);
+                    return;
+                }
 
-            if (extension != null && (extension.ToLower() == ".dll" || extension.ToLower() == ".exe"))
-            {
-                LoadAssembly(source);
-            }
-            else if (extension != null && extension.ToLower() == ".xml")
-            {
-                LoadAssemblyDocumentation(source);
-            } else
-            {
-                Logger.Fatal("Invalid Assembly source [{0]}]. Must be either an Assembly or a Xml comment file", source);
+                var extension = Path.GetExtension(configSource.DocumentationPath);
+                if (extension != null && extension.ToLower() == ".xml")
+                {
+                    if (assemblySource == null)
+                    {
+                        assemblySource = new NAssemblySource();
+                        AssemblySources.Add(assemblySource);
+                    }
+
+                    assemblySource.Document = LoadAssemblyDocumentation(configSource.DocumentationPath);
+                }
+                else
+                {
+                    Logger.Fatal("Invalid Assembly source [{0}]. Must be either a Xml comment file", configSource.DocumentationPath);
+                }
             }
         }
 
-        private void LoadAssembly(string source)
+        private NAssemblySource LoadAssembly(string source)
         {
-            var parameters = new ReaderParameters(ReadingMode.Immediate);
-            parameters.AssemblyResolver = this;
+            var dirPath = Path.GetDirectoryName(source);
+            if (!searchPaths.Contains(dirPath))
+            {
+                searchPaths.Add(dirPath);
+                AddSearchDirectory(dirPath);
+            }
+
+            var parameters = new ReaderParameters(ReadingMode.Immediate) { AssemblyResolver = this };
             var assemblyDefinition = AssemblyDefinition.ReadAssembly(source, parameters);
             var assemblySource = new NAssemblySource(assemblyDefinition) {Filename = source};
-            AssemblySources.Add(assemblySource);
+            return assemblySource;
         }
 
-        private void LoadAssemblyDocumentation(string source)
+        private NDocumentApi LoadAssemblyDocumentation(string source)
         {
             var xmlDoc = NDocumentApi.Load(source);
 
@@ -135,7 +190,7 @@ namespace SharpDoc
             if (node == null)
                 Logger.Fatal("Not valid xml documentation for source [{0}]", source);
 
-            AssemblyDocSources.Add(xmlDoc);
+            return xmlDoc;
         }
 
         public override AssemblyDefinition Resolve(AssemblyNameReference name, ReaderParameters parameters)

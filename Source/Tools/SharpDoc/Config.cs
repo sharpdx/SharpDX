@@ -38,9 +38,9 @@ namespace SharpDoc
         /// </summary>
         public Config()
         {
-            StyleName = "Standard";
+            StyleNames = new List<string>();
             OutputDirectory = "Output";
-            Sources = new List<string>();
+            Sources = new List<ConfigSource>();
             References = new List<string>();
             Parameters = new List<ConfigParam>();
             StyleParameters = new List<ConfigParam>();
@@ -90,7 +90,7 @@ namespace SharpDoc
         /// </summary>
         /// <value>The sources file.</value>
         [XmlElement("source")]
-        public List<string> Sources { get; set; }
+        public List<ConfigSource> Sources { get; set; }
 
         /// <summary>
         /// Gets or sets a list assembly references.
@@ -118,7 +118,7 @@ namespace SharpDoc
         /// </summary>
         /// <value>The name of the style.</value>
         [XmlElement("style")]
-        public string StyleName { get; set; }
+        public List<string> StyleNames { get; set; }
 
         /// <summary>
         /// Gets or sets styles override.

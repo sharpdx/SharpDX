@@ -283,6 +283,23 @@
 	background-image:url("../images/static.gif");
 }
 
+.sharpdoc .content .section .members div.icon.default
+{
+	background-image:url("../images/default.png");
+}
+
+.sharpdoc .content .section .members div.icon.win8metro
+{
+	background-image:url("../images/win8metro.png");
+}
+
+.sharpdoc .content .section .members div.icon.win8desktop
+{
+	background-image:url("../images/win8desktop.png");
+}
+
+
+
 .sharpdoc .content .section .members table {
     table-layout:fixed;    
     width:100%;
@@ -325,6 +342,11 @@
 .sharpdoc .content .section .members th.icon-col,td.icon-col
 {
 	width:55px;
+}
+
+.sharpdoc .content .section .members th.platicon-col,td.platicon-col
+{
+	width:80px;
 }
 
 .sharpdoc .content .section .members th.name-col

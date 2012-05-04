@@ -33,6 +33,7 @@ namespace SharpDoc.Model
         protected NModelBase()
         {
             SeeAlsos = new List<NSeeAlso>();
+            Groups = new List<string>();
         }
 
         public int Index { get; set; }
@@ -144,6 +145,34 @@ namespace SharpDoc.Model
         /// </value>
         public List<NSeeAlso> SeeAlsos { get; set; }
 
+        /// <summary>
+        /// Gets or sets the group apis.
+        /// </summary>
+        /// <value>
+        /// The group apis.
+        /// </value>
+        public List<string> Groups { get; private set; }
+
+        /// <summary>
+        /// Sets the API group.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="state">if set to <c>true</c> [state].</param>
+        public void SetApiGroup(string name, bool state)
+        {
+            if (state)
+            {
+                if (!Groups.Contains(name))
+                {
+                    Groups.Add(name);
+                }
+            }
+            else
+            {
+                Groups.Remove(name);
+            }
+        }
+        
         /// <summary>
         /// Gets or sets a value indicating whether this instance is obsolete.
         /// </summary>

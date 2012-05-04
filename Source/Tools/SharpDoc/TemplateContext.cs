@@ -24,6 +24,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using RazorEngine;
+using RazorEngine.Compilation;
 using RazorEngine.Templating;
 using SharpCore;
 using SharpCore.Logging;
@@ -39,6 +40,11 @@ namespace SharpDoc
         private const string StyleDirectory = "Styles";
         private List<TagExpandItem> _regexItems;
         private MsdnRegistry _msnRegistry;
+        private bool assembliesProcessed;
+        private bool topicsProcessed;
+
+        private ICompilerServiceFactory razorCompiler;
+        private TemplateService razor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TemplateContext"/> class.
@@ -225,31 +231,42 @@ namespace SharpDoc
         /// </summary>
         public void ProcessAssemblies()
         {
-            // Process the assemblies
-            modelProcessor = new ModelProcessor { AssemblyManager = new MonoCecilAssemblyManager(), ModelBuilder = new MonoCecilModelBuilder(), PageIdFunction = PageIdFunction };
-            modelProcessor.Run(Config);
+            if (!assembliesProcessed)
+            {
+                // Process the assemblies
+                modelProcessor = new ModelProcessor { AssemblyManager = new MonoCecilAssemblyManager(), ModelBuilder = new MonoCecilModelBuilder(), PageIdFunction = PageIdFunction };
+                modelProcessor.Run(Config);
 
-            if (Logger.HasErrors)
-                Logger.Fatal("Too many errors in config file. Check previous message.");
+                if (Logger.HasErrors)
+                    Logger.Fatal("Too many errors in config file. Check previous message.");
 
-            Assemblies = new List<NAssembly>(modelProcessor.Assemblies);
-            Registry = modelProcessor.Registry;
+                Assemblies = new List<NAssembly>(modelProcessor.Assemblies);
+                Registry = modelProcessor.Registry;
+
+                assembliesProcessed = true;
+            }
         }
+
 
         /// <summary>
         /// Processes the topics.
         /// </summary>
         public void ProcessTopics()
         {
-            // Build the topics
-            topicBuilder = new TopicBuilder() { Assemblies = modelProcessor.Assemblies, Registry = modelProcessor.Registry};
-            topicBuilder.Run(Config, PageIdFunction);
+            if (!topicsProcessed)
+            {
+                // Build the topics
+                topicBuilder = new TopicBuilder() { Assemblies = modelProcessor.Assemblies, Registry = modelProcessor.Registry };
+                topicBuilder.Run(Config, PageIdFunction);
 
-            if (Logger.HasErrors)
-                Logger.Fatal("Too many errors in config file. Check previous message.");
+                if (Logger.HasErrors)
+                    Logger.Fatal("Too many errors in config file. Check previous message.");
 
-            RootTopic = topicBuilder.RootTopic;
-            SearchTopic = topicBuilder.SearchTopic;
+                RootTopic = topicBuilder.RootTopic;
+                SearchTopic = topicBuilder.SearchTopic;
+
+                topicsProcessed = true;
+            }
         }
 
         /// <summary>
@@ -402,8 +419,15 @@ namespace SharpDoc
         /// <returns></returns>
         internal void UseStyle(string styleName)
         {
+            razorCompiler = new DefaultCompilerServiceFactory();
+            razor = new TemplateService(razorCompiler.CreateCompilerService(Language.CSharp, false, null), null);
+            razor.SetTemplateBase(typeof(TemplateHelperBase));
+            razor.AddResolver(this);
+
             if (!StyleManager.StyleExist(styleName))
                 Logger.Fatal("Cannot us style [{0}]. Style doesn't exist", styleName);
+
+            StyleDirectories.Clear();
 
             var includeBaseStyle = new List<string>();
 
@@ -597,7 +621,7 @@ namespace SharpDoc
             try
             {
                 string template = GetTemplate(templateName, out location);
-                return Razor.Parse(template, this, templateName, location);
+                return razor.Parse(template, this, templateName, location);
             }
             catch (TemplateCompilationException ex)
             {
