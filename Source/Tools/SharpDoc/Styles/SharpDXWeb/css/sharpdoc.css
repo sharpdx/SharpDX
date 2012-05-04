@@ -441,7 +441,7 @@
 
 .sharpdoc .pane_resizer
 {
-	border-left:1px dotted #666666;
+	border-left:1px solid #EEE;
 	cursor:col-resize;
 	vertical-align:top;
 	width:8px;
@@ -512,12 +512,31 @@
 	width:5px;
 }
 
-.sharpdoc .top-title,.sharpdoc .content-title
-{
-	color:#AB2727;
-	font-size:2.0em;
-    margin-left: 8px;	
+.sharpdoc div.top-title, .sharpdoc div.content-title {
+    float: left;
+	margin-left: 8px;
 }
+
+.sharpdoc div.content-title {
+	margin-top: 0px;
+}
+
+.sharpdoc div.content-header {
+    float: right;
+	margin-top: 20px;
+}
+
+.sharpdoc h1.top-title, .sharpdoc h1.content-title {
+	color:#AB2727;
+	font-size:2.0em; 
+}
+
+.sharpdoc h1.content-title:hover
+{
+	cursor:pointer;
+}
+
+
 
 .sharpdoc a.highlight
 {
@@ -641,11 +660,6 @@
 
 .sharpdoc ul {
     list-style-type: none;
-}
-
-h1.content-title:hover
-{
-	cursor:pointer;
 }
 
 h4.sdoc-subheading {

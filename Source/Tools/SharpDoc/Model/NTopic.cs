@@ -20,8 +20,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Serialization;
+
+using HtmlAgilityPack;
+
 using SharpCore;
 using SharpCore.Logging;
 
@@ -132,12 +137,31 @@ namespace SharpDoc.Model
         [XmlAttribute("filename")]
         public string FileName { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [use page id URL].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [use page id URL]; otherwise, <c>false</c>.
+        /// </value>
+        [XmlAttribute("on-url")]
+        public bool IsPageIdOnUrl { get; set; }
+
         /// <summary>
         /// Gets or sets the sub topics.
         /// </summary>
         /// <value>The sub topics.</value>
         [XmlElement("topic")]
         public List<NTopic> SubTopics { get; set; }
+
+        /// <summary>
+        /// Gets or sets the parameters.
+        /// </summary>
+        /// <value>
+        /// The parameters.
+        /// </value>
+        [XmlElement("param")]
+        public List<ConfigParam> Parameters { get; set; }
 
         /// <summary>
         /// Gets or sets the html content. This is loaded from the filename.
@@ -173,6 +197,9 @@ namespace SharpDoc.Model
         /// <inheritdoc/>
         [XmlIgnore]
         public string Remarks { get; set; }
+
+        [XmlIgnore]
+        public Config Config { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether this instance is class library.
@@ -274,7 +301,7 @@ namespace SharpDoc.Model
         /// Loads the content of this topic.
         /// </summary>
         /// <param name="rootPath">The root path.</param>
-        public void Init(string rootPath, Func<IModelReference, string> pageIdFunction)
+        public void Init()
         {
             // Check that id is valid
             if (string.IsNullOrEmpty(Id))
@@ -293,7 +320,6 @@ namespace SharpDoc.Model
                 }
             }
 
-
             // Copy Name to Fullname if empty
             if (string.IsNullOrEmpty(FullName))
                 FullName = Name;
@@ -301,11 +327,34 @@ namespace SharpDoc.Model
             if (string.IsNullOrEmpty(PageTitle))
                 PageTitle = Name;
 
+            var rootPath = Path.GetDirectoryName(Config.FilePath);
             rootPath = rootPath ?? "";
 
             // Initialize sub topics
             foreach(var topic in SubTopics)
-                topic.Init(rootPath, pageIdFunction);
+                topic.Init();
+
+            // Create non existing topic files based on template
+            if (Config.TopicTemplate != null && File.Exists(Config.TopicTemplate))
+            {
+                var regex = new Regex(@"(\$\w+)");
+
+                if (FileName != null && !File.Exists(FileName))
+                {
+                    var content = File.ReadAllText(Config.TopicTemplate);
+
+                    content = regex.Replace(
+                        content,
+                        match =>
+                            {
+                                var propertyName = match.Groups[1].Value.Substring(1);
+                                var value = this.GetType().GetProperty(propertyName).GetValue(this, null);
+                                return value == null ? string.Empty : value.ToString();
+                            });
+
+                    File.WriteAllText(FileName, content);
+                }
+            }
 
             if (Id != ClassLibraryTopicId)
             {
@@ -321,7 +370,24 @@ namespace SharpDoc.Model
                     try
                     {
                         filePath = Path.Combine(rootPath, FileName);
-                        Content = File.ReadAllText(filePath);
+
+                        var rawContent = File.ReadAllText(filePath);
+                        var htmlDocument = new HtmlDocument();
+                        //            htmlDocument.Load("Documentation\\d3d11-ID3D11Device-CheckCounter.html");
+                        htmlDocument.LoadHtml(rawContent);
+
+                        // Override title
+                        var titleNode = htmlDocument.DocumentNode.SelectSingleNode("html/head/title");
+                        if (titleNode != null)
+                        {
+                            PageTitle = titleNode.InnerText;
+                            Name = titleNode.InnerText;
+                        }
+
+                        // Get body
+                        var bodyNode = htmlDocument.DocumentNode.Descendants("body").FirstOrDefault();
+                        Content = bodyNode == null ? rawContent : bodyNode.InnerHtml;
+                        Content = Content.Trim();
                     }
                     catch (Exception ex)
                     {
@@ -329,13 +395,6 @@ namespace SharpDoc.Model
                     }
                 }
             }
-
-            if (string.IsNullOrEmpty(PageId))
-                PageId = pageIdFunction(this);
-
-            // Check that PageId is a valid filename
-            if (!Utility.IsValidFilename(PageId))
-                Logger.Error("Invalid PageId [{0}] for topic [{1}]. Fileid must contain valid filename chars", PageId, this);
         }
 
         /// <summary>

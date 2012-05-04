@@ -24,7 +24,7 @@
 @using SharpDoc;
 @functions {
     public string CustomPageId(IModelReference page) {        
-        return DocIdHelper.StripXmlId(page.Id);
+        return page.PageId ?? DocIdHelper.StripXmlId(page.Id);
     }
 }
 

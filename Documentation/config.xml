@@ -34,6 +34,9 @@
   <!-- Generate default and docpak -->
   <output-dir>..\Build\Documetation\</output-dir>
 
+  <!-- If a new topic is referenced but the file is not yet created, use sharpdoc-template.html file as a template -->
+  <topic-template>sharpdx-template.html</topic-template>
+
   <!-- Configure docpak - DISABLE by default
   <output-type>docpak</output-type>
   <docpak name="SharpDXDoc">
@@ -43,60 +46,77 @@
   -->
 
   <!-- Topics -->
-  <topic id="SharpDX" filename="index.html" name="SharpDX Documentation" >
+  <topic id="SharpDX" filename="00-index.html" page-id="index" name="SharpDX Documentation" >
 
-    <topic id="X:WhatsNew" filnename="news.html" page-id="news" name="What's new?"/>
+    <!-- Use to specify Joomla SubMenu -->
+    <param name="ItemId">109</param>
+
+    <topic id="X:WhatsNew" filename="01-news.html" page-id="news" name="What's new?"/>
 
     <!-- Documentation for Programming Guide -->
-    <topic id="X:ProgrammingGuide" filename="guide.html" page-id="guide" name="Programming Guide">
+    <topic id="X:ProgrammingGuide" filename="02-guide.html" page-id="guide" name="Programming Guide" on-url="true" >
 
-      <topic id="X:ProgrammingGuide.Overview" filename="guide-overview.html" page-id="overview" name="Overview">
-        <topic id="X:ProgrammingGuide.ManagedUnmanaged" filnename="guide-managed-unmanaged.html" page-id="managed-unmanaged" name="Managed and Unmanaged API"/>
-        <topic id="X:ProgrammingGuide.ComLifecycles" filnename="guide-com-lifecycles.html" page-id="com-lifecycles" name="Managing COM object lifecycles"/>
-        <topic id="X:ProgrammingGuide.ApiPhilosophy" filnename="guide-api-philosophy.html" page-id="api-philosophy" name="Philosophy of SharpDX API"/>
+      <!-- Use to specify Joomla SubMenu -->
+      <param name="ItemId">150</param>
+      
+      <topic id="X:ProgrammingGuide.Overview" filename="03-guide-overview.html" page-id="overview" name="Overview">
+        <topic id="X:ProgrammingGuide.ManagedUnmanaged" filename="03-guide-overview-managed-unmanaged.html" page-id="managed-unmanaged" name="Managed and Unmanaged API"/>
+        <topic id="X:ProgrammingGuide.ComLifecycles" filename="03-guide-overview-com-lifecycles.html" page-id="com-lifecycles" name="Managing COM object lifecycles"/>
+        <topic id="X:ProgrammingGuide.ApiPhilosophy" filename="03-guide-overview-api-philosophy.html" page-id="api-philosophy" name="Philosophy of SharpDX API"/>
       </topic>
 
-      <topic id="X:ProgrammingGuide.GettingStarted" filename="guideadvanced.html" page-id="getting-started" name="Getting Started"/>
+      <topic id="X:ProgrammingGuide.GettingStarted" filename="04-guide-advanced.html" page-id="getting-started" name="Getting Started"/>
 
-      <topic id="X:ProgrammingGuide.Deployment" filename="deployment.html" page-id="deployment" name="Deployment"/>
+      <topic id="X:ProgrammingGuide.Deployment" filename="05-guide-deployment.html" page-id="deployment" name="Deployment"/>
 
-      <topic id="X:ProgrammingGuide.Advanced" filename="guide-advanced.html" page-id="advanced" name="Advanced">
-
-        <topic id="X:ProgrammingGuide.Advanced.RenderingLoop" filename="guide-advanced-rendering-loop.html" page-id="advanced-rendering-loop" name="Rendering Loop"/>
-        <topic id="X:ProgrammingGuide.Advanced.Callbackable" filename="guide-advanced-callbackable.html" page-id="advanced-callbackable" name="Callback C++ and ICallbackable Interface"/>
-        <topic id="X:ProgrammingGuide.Advanced.PerformanceTips" filename="guide-advanced-performance-tips.html" page-id="advanced-performance-tips" name="Performance Tips"/>
-        <topic id="X:ProgrammingGuide.Advanced.DebuggingTips" filename="guide-advanced-debugging-tips.html" page-id="advanced-debugging-tips" name="Debugging Tips"/>
-        <topic id="X:ProgrammingGuide.Advanced.ObfuscationILMerge" filename="guide-advanced-obfuscation-ilmerge.html" page-id="advanced-obfuscation-ilmerge" name="Obfuscation and ILMerge"/>
-
+      <topic id="X:ProgrammingGuide.Advanced" filename="06-guide-advanced.html" page-id="advanced" name="Advanced">
+        <topic id="X:ProgrammingGuide.Advanced.RenderingLoop" filename="06-guide-advanced-rendering-loop.html" page-id="advanced-rendering-loop" name="Rendering Loop"/>
+        <topic id="X:ProgrammingGuide.Advanced.Callbackable" filename="06-guide-advanced-callbackable.html" page-id="advanced-callbackable" name="Callback C++ and ICallbackable Interface"/>
+        <topic id="X:ProgrammingGuide.Advanced.PerformanceTips" filename="06-guide-advanced-performance-tips.html" page-id="advanced-performance-tips" name="Performance Tips"/>
+        <topic id="X:ProgrammingGuide.Advanced.DebuggingTips" filename="06-guide-advanced-debugging-tips.html" page-id="advanced-debugging-tips" name="Debugging Tips"/>
+        <topic id="X:ProgrammingGuide.Advanced.ObfuscationILMerge" filename="06-guide-advanced-obfuscation-ilmerge.html" page-id="advanced-obfuscation-ilmerge" name="Obfuscation and ILMerge"/>
       </topic>
     </topic>
 
     <!-- Documentation for Tutorials -->
-    <topic id="X:Tutorials" filename="tutorials.html" page-id="tutorials" name="Tutorials">
-      <topic id="X:Tutorials.Tutorial1" filename="tutorial1.html" page-id="tutorial1" name="Tutorial 1 : Window setup"/>
-      <topic id="X:Tutorials.Tutorial2" filename="tutorial2.html" page-id="tutorial2" name="Tutorial 2 : Direct3D11 setup"/>
-      <topic id="X:Tutorials.Tutorial3" filename="tutorial3.html" page-id="tutorial3" name="Tutorial 3 : Direct3D11 MiniCube Sample"/>
+    <topic id="X:Tutorials" filename="10-tutorials.html" page-id="tutorials" name="Tutorials" on-url="true">
+
+      <!-- Use to specify Joomla SubMenu -->
+      <param name="ItemId">151</param>
+
+      <topic id="X:Tutorials.Tutorial1" filename="11-tutorial1.html" page-id="tutorial1" name="Tutorial 1 : Window setup"/>
+      <topic id="X:Tutorials.Tutorial2" filename="11-tutorial2.html" page-id="tutorial2" name="Tutorial 2 : Direct3D11 setup"/>
+      <topic id="X:Tutorials.Tutorial3" filename="11-tutorial3.html" page-id="tutorial3" name="Tutorial 3 : Direct3D11 MiniCube Sample"/>
     </topic>
 
     <!-- Special topic X:ClassLibrary to include generated class library references. No filename to setup as it is generated -->
-    <topic id="X:ClassLibraryReference" page-id="api" name="Class Library Reference" index="100"/>
+    <topic id="X:ClassLibraryReference" page-id="api" name="Class Library Reference" index="100" on-url="true">
+      <!-- Use to specify Joomla SubMenu -->
+      <param name="ItemId">152</param>
+    </topic>
 
     <!-- Documentation for Tools -->
-    <topic id="X:Tools" filename="tools.html" page-id="tools" name="Tools">
-      <topic id="X:Tools.SharpGen" filename="tools-sharpgen.html" page-id="sharpgen" name="SharpGen"/>
-      <topic id="X:Tools.SharpDoc" filename="tools-sharpdoc.html" page-id="sharpdoc" name="SharpDoc"/>
-      <topic id="X:Tools.SharpCli" filename="tools-sharpcli.html" page-id="sharpcli" name="SharpCli"/>
-      <topic id="X:Tools.SharpPak" filename="tools-sharppak.html" page-id="sharppak" name="SharpPak"/>
+    <topic id="X:Tools" filename="20-tools.html" page-id="tools" name="Tools" on-url="true">
+      <!-- Use to specify Joomla SubMenu -->
+      <param name="ItemId">153</param>
+
+      <topic id="X:Tools.SharpGen" filename="20-tools-sharpgen.html" page-id="sharpgen" name="SharpGen"/>
+      <topic id="X:Tools.SharpDoc" filename="20-tools-sharpdoc.html" page-id="sharpdoc" name="SharpDoc"/>
+      <topic id="X:Tools.SharpCli" filename="20-tools-sharpcli.html" page-id="sharpcli" name="SharpCli"/>
+      <topic id="X:Tools.SharpPak" filename="20-tools-sharppak.html" page-id="sharppak" name="SharpPak"/>
     </topic>
 
     <!-- Documentation for Internals code in SharpDX -->
-    <topic id="X:Internals" filename="internals.html" page-id="internals" name="Internals">
-      <topic id="X:Internals.CppToSharpCodeGenerator" filename="tools-cpp-to-csharp.html" page-id="cpp-to-csharp" name="Principles of the C++ to C# Code Generator"/>
+    <topic id="X:Internals" filename="30-internals.html" page-id="internals" name="Internals" on-url="true">
+      <!-- Use to specify Joomla SubMenu -->
+      <param name="ItemId">154</param>
+      
+      <topic id="X:Internals.CppToSharpCodeGenerator" filename="30-internals-cpp-to-csharp.html" page-id="cpp-to-csharp" name="Principles of the C++ to C# Code Generator"/>
     </topic>
 
-    <topic id="X:KnownIssues" filnename="issues.html" page-id="known-issues" name="Known Issues"/>
+    <topic id="X:KnownIssues" filename="40-issues.html" page-id="known-issues" name="Known Issues"/>
 
-    <topic id="X:Licensing" filnename="licensing.html" page-id="licensing" name="Licensing"/>
+    <topic id="X:Licensing" filename="50-licensing.html" page-id="licensing" name="Licensing"/>
 
   </topic>
 

@@ -30,6 +30,9 @@
   <!-- Description for this style -->
   <description>Default style</description>
 
+  <param name="RootLink"></param>
+  <param name="FileExt">.htm</param>
+
   <!-- This style doesn't inherit from a base style -->
   <inherit/>
 </style>

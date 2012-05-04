@@ -68,7 +68,7 @@ foreach (var sharpInterface in Namespace.Interfaces)
         }
 
 		/// <summary>
-		/// Performs an explicit conversion from <see cref="System.IntPtr"/> to <see cref="<#= sharpInterface.QualifiedName #>"/>. (This method is a shortcut to <see cref="NativePointer"/>) 
+		/// Performs an explicit conversion from <see cref="System.IntPtr"/> to <see cref="<#= sharpInterface.QualifiedName #>"/>. (This method is a shortcut to <see cref="SharpDX.CppObject.NativePointer"/>) 
 		/// </summary>
 		/// <param name="nativePointer">The native pointer.</param>
 		/// <returns>

@@ -27,7 +27,7 @@
 @using System.IO;
 @using SharpDoc;
 @functions {
-    private const string JoomlaContentUrl = "index.php?option=com_sharpdoc&amp;Itemid=109&amp;id={0}";
+    private const string JoomlaContentUrl = "index.php?option=com_sharpdoc&amp;Itemid={0}&amp;id={1}";
 
 	public static string SqlEscapeString(string text)
     {
@@ -46,12 +46,42 @@
         return pageId;
     }
 
-	public static string GetShortUrl(string pageId, int index)
+	public NTopic GetParentTopicUrl(IModelReference member)
+    {
+		// Use topic PageId as url
+        var topic = member as NTopic;
+		if (topic != null)
+        {
+            while (topic != null && !topic.IsPageIdOnUrl)
+            {
+                topic = topic.Parent;
+            }
+        }
+		else
+        {
+            topic = Model.ClassLibraryTopic;
+        }
+        return topic;
+    }
+
+	public string GetShortUrl(IModelReference member, int index)
     {
 		// For Index == 0, URL is documentation
         var urlShort = "documentation";
+
 		if (index > 0)
+        {
+	        var topic = GetParentTopicUrl(member);
+
+			// Don't append twice topic PageId
+			if (topic != null && !ReferenceEquals(topic, member))
+            {
+                urlShort += "/" + topic.PageId;
+            }
+
+            var pageId = GetPageId(member.PageId);
             urlShort += "/" + GetPageId(pageId);
+        }
         return urlShort;
     }
 
@@ -77,8 +107,22 @@
 		// Use lower case for pages
         var pageId = GetPageId(member.PageId);
         var memberIndex = member.Index;
-		var urlShort = GetShortUrl(member.PageId, member.Index);
-        var urlLong = string.Format(JoomlaContentUrl, memberIndex);
+
+		// Calculate Short url
+		var urlShort = GetShortUrl(member, member.Index);
+
+		// Calculate Long url
+        var topic = GetParentTopicUrl(member);
+        var itemId = "109";
+		if (topic != null && memberIndex > 0)
+        {
+            var topicParamItemId = topic.Parameters.FirstOrDefault(topicParam => topicParam.Name == "ItemId");
+			if (topicParamItemId != null)
+            {
+                itemId = topicParamItemId.value;
+            }
+        }
+        var urlLong = string.Format(JoomlaContentUrl, itemId, memberIndex);
 
         var contentBuffer = Encoding.ASCII.GetBytes(content);
         var memoryStream = new MemoryStream();
@@ -125,8 +169,8 @@
         string url = null;
 		
         switch (link.Type) {
-            case LinkType.Local:
-                url = GetShortUrl(link.PageId, link.Index);
+            case LinkType.Local:			
+                url = GetShortUrl(link.LocalReference, link.Index);
                 break;
             default:
                 return PreviousLinkResolver(link);
@@ -139,9 +183,6 @@
 	// Replace default link resolver and use a special one for local links
     PreviousLinkResolver = Model.LinkResolver;
     Model.LinkResolver = LinkToSqlDb;
-
-	Param.FileExt = "";
-	Param.RootLink = "/documentation/";
 
     const string fileName = "sharpdx-joomla.sql";
 	if (File.Exists(fileName))

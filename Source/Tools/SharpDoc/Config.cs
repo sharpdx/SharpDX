@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using SharpDoc.Model;
 
@@ -147,6 +148,15 @@ namespace SharpDoc
         public ConfigDocPak DocPak { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether [use template doc].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [use template doc]; otherwise, <c>false</c>.
+        /// </value>
+        [XmlElement("topic-template")]
+        public string TopicTemplate { get; set; }
+
+        /// <summary>
         /// Loads the specified config file.
         /// </summary>
         /// <param name="file">The config file.</param>
@@ -156,6 +166,14 @@ namespace SharpDoc
             var deserializer = new XmlSerializer(typeof(Config));
             var config = (Config)deserializer.Deserialize(new StringReader(File.ReadAllText(file)));
             config.FilePath = file;
+
+            // Update Config for all topics
+            if (config.RootTopic != null)
+            {
+                config.RootTopic.ForEachTopic(topic => topic.Config = config);
+                config.RootTopic.Init();
+            }
+
             return config;
         }
 

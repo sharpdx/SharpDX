@@ -111,6 +111,14 @@ namespace SharpDoc
         public NTopic SearchTopic { get; set;}
 
         /// <summary>
+        /// Gets or sets the class library topic.
+        /// </summary>
+        /// <value>
+        /// The class library topic.
+        /// </value>
+        public NTopic ClassLibraryTopic { get; set; }
+
+        /// <summary>
         /// Gets or sets the assemblies.
         /// </summary>
         /// <value>The assemblies.</value>
@@ -264,6 +272,7 @@ namespace SharpDoc
 
                 RootTopic = topicBuilder.RootTopic;
                 SearchTopic = topicBuilder.SearchTopic;
+                ClassLibraryTopic = topicBuilder.ClassLibraryTopic;
 
                 topicsProcessed = true;
             }
@@ -445,6 +454,16 @@ namespace SharpDoc
                 var toRemove = new List<StyleDefinition>();
                 foreach (var style in styles)
                 {
+                    // Apply parameter inherited from style
+                    if (style.Name == styleName)
+                    {
+                        foreach (var parameter in style.Parameters)
+                        {
+                            ((DynamicParam)Param).Properties.Remove(parameter.Name);
+                            ((DynamicParam)Param).Properties.Add(parameter.Name, parameter.value);
+                        }
+                    }
+
                     if (includeBaseStyle.Contains(style.Name))
                     {
                         toRemove.Add(style);

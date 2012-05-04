@@ -95,7 +95,7 @@
 	height:23px;
 	position:relative;
 	right:1px;
-	top:43px;
+	top:30px;
 	width:7px;
 	z-index:300;
 }
@@ -500,12 +500,29 @@
 	width:5px;
 }
 
-.sharpdoc .top-title,.sharpdoc .content-title
-{
+.sharpdoc div.top-title, .sharpdoc div.content-title {
+    float: left;
+	margin-left: 10px;
+}
+
+.sharpdoc div.content-title {
+	margin-top: 10px;
+}
+
+.sharpdoc div.content-header {
+    float: right;
+	margin-top: 30px;
+}
+
+.sharpdoc h1.top-title, .sharpdoc h1.content-title {
 	color:#3f529c;
 	font-size:1.77em;
-	font-weight:bold;
-	left:-10px;
+	font-weight:bold;   
+}
+
+.sharpdoc h1.content-title:hover
+{
+	cursor:pointer;
 }
 
 .sharpdoc a.highlight

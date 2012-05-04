@@ -39,7 +39,7 @@
             <tbody>
                 <tr class="sharpdoc-header">
                     <td colspan="3" class="cell">
-                        @Include("Header")
+                        @Include("PageHeader")
                     </td>                
                 </tr>
                 <tr>
@@ -53,14 +53,15 @@
                 </td>
                 <td id="pane_content" class="pane_content">
                     <div class="content">
+				        @Include("ContentHeader")
                         @Include(bodyTemplateName)
+		                @Include("ContentFooter")
                     </div>
-                    @Include("PreFooter")
                 </td>
                 </tr>
                 <tr class="sharpdoc-footer">
                     <td colspan="3" class="cell">
-                        @Include("Footer")
+                        @Include("PageFooter")
                     </td>                
                 </tr>
             </tbody>

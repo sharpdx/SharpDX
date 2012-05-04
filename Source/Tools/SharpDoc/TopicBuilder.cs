@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
+using SharpCore;
 using SharpCore.Logging;
 using SharpDoc.Model;
 
@@ -48,13 +49,18 @@ namespace SharpDoc
         /// Gets or sets the root topic.
         /// </summary>
         /// <value>The root topic.</value>
-        public NTopic RootTopic { get; set; }
+        public NTopic RootTopic { get; private set; }
+
+        /// <summary>
+        /// Gets the class library topic.
+        /// </summary>
+        public NTopic ClassLibraryTopic { get; private set; }
 
         /// <summary>
         /// Gets or sets the search topic.
         /// </summary>
         /// <value>The search topic.</value>
-        public NTopic SearchTopic { get; set; }
+        public NTopic SearchTopic { get; private set; }
 
         /// <summary>
         /// Build topics for Assemblies, Namespaces and Types in order to use them in the TOC
@@ -65,7 +71,17 @@ namespace SharpDoc
 
             // Load an existing root topic
             if (RootTopic != null)
-                RootTopic.Init(Path.GetDirectoryName(config.FilePath), pageIdFunction);
+            {
+                RootTopic.ForEachTopic(
+                    topic =>
+                        {
+                            topic.PageId = pageIdFunction(topic);
+
+                            // Check that PageId is a valid filename
+                            if (!Utility.IsValidFilename(topic.PageId))
+                                Logger.Error("Invalid PageId [{0}] for topic [{1}]. Fileid must contain valid filename chars", topic.PageId, this);
+                        });
+            }
 
             NTopic topicLibrary = null;
 
@@ -83,6 +99,7 @@ namespace SharpDoc
                     else
                         RootTopic.SubTopics.Add(topicLibrary);
                 }
+                ClassLibraryTopic = topicLibrary;
             }
 
             if (RootTopic == null)
@@ -100,7 +117,8 @@ namespace SharpDoc
                     {
                         if (indices.Contains(topic.Index))
                         {
-                            Logger.Warning("Index [{0}] for Topic [{1}] is already used. Need to reassign a new index.", topic.Index, topic.Name);
+                            // Silently reassign an index, as index is no longer important
+                            //Logger.Warning("Index [{0}] for Topic [{1}] is already used. Need to reassign a new index.", topic.Index, topic.Name);
                             topicToReindex.Add(topic);
                         }
                         else

@@ -196,8 +196,13 @@ namespace SharpDoc
             context.Initialize();
 
             // Delete output directory first
-            if (Directory.Exists(context.OutputDirectory))
-                Directory.Delete(context.OutputDirectory, true);
+            try
+            {
+                if (Directory.Exists(context.OutputDirectory))
+                    Directory.Delete(context.OutputDirectory, true);
+            } catch
+            {
+            }
 
             // Verify the validity of the style
             foreach (var styleName in Config.StyleNames)

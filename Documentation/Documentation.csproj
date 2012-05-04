@@ -50,10 +50,38 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="00-index.html" />
+    <Content Include="01-news.html" />
+    <Content Include="02-guide.html" />
+    <Content Include="03-guide-overview-api-philosophy.html" />
+    <Content Include="03-guide-overview-com-lifecycles.html" />
+    <Content Include="03-guide-overview-managed-unmanaged.html" />
+    <Content Include="03-guide-overview.html" />
+    <Content Include="04-guide-advanced.html" />
+    <Content Include="05-guide-deployment.html" />
+    <Content Include="06-guide-advanced-callbackable.html" />
+    <Content Include="06-guide-advanced-debugging-tips.html" />
+    <Content Include="06-guide-advanced-obfuscation-ilmerge.html" />
+    <Content Include="06-guide-advanced-performance-tips.html" />
+    <Content Include="06-guide-advanced-rendering-loop.html" />
+    <Content Include="06-guide-advanced.html" />
+    <Content Include="10-tutorials.html" />
+    <Content Include="11-tutorial1.html" />
+    <Content Include="11-tutorial2.html" />
+    <Content Include="11-tutorial3.html" />
+    <Content Include="20-tools-sharpcli.html" />
+    <Content Include="20-tools-sharpdoc.html" />
+    <Content Include="20-tools-sharpgen.html" />
+    <Content Include="20-tools-sharppak.html" />
+    <Content Include="20-tools.html" />
+    <Content Include="30-internals-cpp-to-csharp.html" />
+    <Content Include="30-internals.html" />
+    <Content Include="40-issues.html" />
+    <Content Include="50-licensing.html" />
     <Content Include="config.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="index.html" />
+    <Content Include="sharpdx-template.html" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

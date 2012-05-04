@@ -17,6 +17,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 
@@ -55,6 +57,15 @@ namespace SharpDoc
         /// <value>The style base.</value>
         [XmlElement("inherit")]
         public string BaseStyle { get; set; }
+
+        /// <summary>
+        /// Gets or sets the parameters.
+        /// </summary>
+        /// <value>
+        /// The parameters.
+        /// </value>
+        [XmlElement("param")]
+        public List<ConfigParam> Parameters { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether this instance has base style.
