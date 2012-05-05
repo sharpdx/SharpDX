@@ -27,6 +27,7 @@
 @model SharpDoc.TemplateContext
 @Import("Section")
 @Import("SeeAlso")
+@Import("Version")
 @Import("TypeBodyMembersHeader")
 @{    
     // Initialize complex inheritance flag 
@@ -122,6 +123,8 @@
 @if (self is NClass && HasComplexInheritance)
     @Helpers.Section.Dump("section_full_inheritance", "Inheritance Hierarchy", DumpInheritance(true).ToString())
 	
+@Helpers.Version.Dump(self)
+
 @Helpers.SeeAlso.Dump(self)
 </div>
 <!-- Temporary space -->

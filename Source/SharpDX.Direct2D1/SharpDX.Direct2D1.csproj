@@ -17,6 +17,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AssemblyDoc.cs" />
     <Compile Include="Bitmap1.cs" />
     <Compile Include="BitmapBrush1.cs" />
     <Compile Include="BitmapProperties1.cs" />
@@ -33,6 +34,9 @@
     <Compile Include="ComputeTransform.cs" />
     <Compile Include="ComputeTransformNative.cs" />
     <Compile Include="ComputeTransformShadow.cs" />
+    <Compile Include="DirectWrite\NamespaceDoc.cs" />
+    <Compile Include="Effects\NamespaceDoc.cs" />
+    <Compile Include="NamespaceDoc.cs" />
     <Compile Include="VertexRange.cs" />
     <Compile Include="InputDescription.cs" />
     <Compile Include="SourceTransformShadow.cs" />
@@ -234,6 +238,7 @@
     <Compile Include="WIC\JpegBitmapEncoder.cs" />
     <Compile Include="WIC\MetadataQueryReader.cs" />
     <Compile Include="WIC\MetadataQueryWriter.cs" />
+    <Compile Include="WIC\NamespaceDoc.cs" />
     <Compile Include="WIC\Palette.cs" />
     <Compile Include="WIC\PixelFormat.cs" />
     <Compile Include="WIC\PixelFormatInfo.cs" />

@@ -17,6 +17,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AssemblyDoc.cs" />
     <Compile Include="Asynchronous.cs" />
     <Compile Include="BlendState.cs" />
     <Compile Include="BlendState1.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Mesh.cs" />
     <Compile Include="MeshBuffer.cs" />
     <Compile Include="Message.cs" />
+    <Compile Include="NamespaceDoc.cs" />
     <Compile Include="PixelShader.cs" />
     <Compile Include="Predicate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

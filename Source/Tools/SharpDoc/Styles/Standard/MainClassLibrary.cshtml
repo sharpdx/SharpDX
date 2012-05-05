@@ -35,7 +35,7 @@
         Model.Namespace = null;
         Model.Type = null;
        
-        Logger.Message("Generate documentation for assembly [{0}]", assembly.Name);
+        Logger.Message("Generating documentation for assembly [{0}]", assembly.Name);
 
         Model.WriteTo(assembly, Parse("Assembly"));
         

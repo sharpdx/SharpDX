@@ -53,8 +53,8 @@
     <property name="version-dir" value="Win8Desktop" if="${build_dx11_1}"/>
 
     <regex pattern="AssemblyVersion\(.(?'assembly_version'\d+\.\d+.\d+)" input="${assembly_version_file}" />
-    <property name="output_bin_zip" value="${project.name}-Bin-${assembly_version}${build-date}.zip"/>
-    <property name="output_bin_and_samples_zip" value="${project.name}-Full-${assembly_version}${build-date}.zip"/>
+    <property name="output_bin_zip" value="${project.name}-Bin-${assembly_version}${build-date}.7z"/>
+    <property name="output_bin_and_samples_zip" value="${project.name}-Full-${assembly_version}${build-date}.7z"/>
 
     <!-- Setup configuration -->
     <property name="configuration" value="Release" if="${build_normal}"/>
@@ -174,11 +174,12 @@
     <echo message=""/>
     <echo message="       clean = Full cleanup"/>
     <echo message="       build = Build Standard Assemblies"/>
+    <echo message="         doc = Generates documentation (Run 'build' target before this)"/>
     <echo message="         zip = Zip assemblies and samplles (Run 'build' target before this)"/>
     <echo message="       nuget = Build Nuget Packages (Run 'build' target before this)"/>
     <echo message="  nuget-push = Publish Nuget packages (Run 'nuget' target before this)"/>
     <echo message=""/>
-    <echo message="        full = Run build+zip nuget normal+win8+zip"/>
+    <echo message="        full = Run build+doc+zip for all targets (normal, signed, win8, dx11_1)"/>
     <echo message=""/>
     <echo message="Example:"/>
     <echo message="- Build Win8 build only = MakeSharpDX.cmd win8 build"/>
@@ -205,6 +206,8 @@
     <call target="dx11_1"/>
     <call target="build"/>
     <call target="publish-code" if="${publish}"/>
+
+    <call target="doc"/>
 
     <call target="zip"/>
   </target>
@@ -332,6 +335,20 @@
 
   </target>
 
+  <!-- Documentation  -->
+  <target name="doc" description="Generates documentation">
+    <!-- Setup based on config -->
+    <call target="setup"/>
+
+    <!-- Create Bin Output Directory -->
+    <delete dir="Build/Documentation"/>
+
+    <exec program="Source/Tools/SharpDoc/Bin/Release/sharpdoc.exe" workingdir="Documentation">
+      <arg value="--config=config.xml"/>
+      <arg value="--output=..\Build\Documentation"/>
+    </exec>
+  </target>  
+
   <!-- Main zip task -->
   <target name="zip" description="Build all targets.">
     <!-- Setup based on config -->
@@ -352,19 +369,24 @@
       </fileset>
     </copy>
 
-    <zip ziplevel="9" zipfile="${output_bin_zip}">
-      <fileset basedir="Build">
-        <include name="**" />
-        <exclude name="Samples/**"/>
-        <exclude name="Tools/**"/>
-      </fileset>
-    </zip>
+    <delete dir="${output_bin_zip}"/>
+    <exec program="External/7-Zip/7z.exe" workingdir="Build">
+      <arg value="a"/>
+      <arg value="-r"/>
+      <arg value="..\${output_bin_zip}"/>
+      <arg value="Bin\*.*"/>
+      <arg value="ChangeLog.txt"/>
+      <arg value="License.txt"/>
+      <arg value="ReleaseNotes.txt"/>
+    </exec>
 
-    <zip ziplevel="9" zipfile="${output_bin_and_samples_zip}">
-      <fileset basedir="Build">
-        <include name="**" />
-      </fileset>
-    </zip>
+    <delete dir="${output_bin_and_samples_zip}"/>
+    <exec program="External/7-Zip/7z.exe" workingdir="Build">
+      <arg value="a"/>
+      <arg value="-r"/>
+      <arg value="..\${output_bin_and_samples_zip}"/>
+      <arg value="*.*"/>
+    </exec>
   </target>
 
 </project>

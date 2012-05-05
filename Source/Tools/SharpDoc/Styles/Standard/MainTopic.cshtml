@@ -57,7 +57,7 @@
             topic.FullName = topic.FullName ?? topic.Name;
         }
 
-        Logger.Message("Generate documentation for topic [{0}] from file [{1}]", topic.Name, topic.FileName);
+        Logger.Message("Generating documentation for topic [{0}] from file [{1}]", topic.Name, topic.FileName);
         Model.WriteTo(topic, Parse(templateName));
 
         foreach (var subTopic in topic.SubTopics)

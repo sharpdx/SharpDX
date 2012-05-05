@@ -181,6 +181,7 @@
     <None Include="Styles\SharpDXWeb\html\WriteToFunction.cshtml" />
     <None Include="Styles\Standard\html\ClassLibraryBuilder.cshtml" />
     <None Include="Styles\Standard\html\ContentFooter.cshtml" />
+    <None Include="Styles\Standard\html\Version.cshtml" />
     <None Include="Styles\Standard\html\PageHeader.cshtml" />
     <None Include="Styles\Standard\html\WriteToFunction.cshtml" />
     <None Include="Styles\Standard\html\PageIdFunction.cshtml" />

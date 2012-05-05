@@ -16,6 +16,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AssemblyDoc.cs" />
     <Compile Include="DistanceCurve.cs" />
     <Compile Include="Emitter.cs" />
     <Compile Include="DspSettings.cs" />
@@ -25,6 +26,7 @@
     <Compile Include="Listener.cs" />
     <Compile Include="Generated\LocalInterop.cs" />
     <Compile Include="Generated\Structures.cs" />
+    <Compile Include="NamespaceDoc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="X3DAudio.cs" />
     <Compile Include="X3DAudioHandle.cs" />

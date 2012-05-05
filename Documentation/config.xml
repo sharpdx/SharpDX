@@ -32,7 +32,7 @@
   <style>Standard</style>
 
   <!-- Generate default and docpak -->
-  <output-dir>..\Build\Documetation\</output-dir>
+  <output-dir>..\Build\Documentation\</output-dir>
 
   <!-- If a new topic is referenced but the file is not yet created, use sharpdoc-template.html file as a template -->
   <topic-template>sharpdx-template.html</topic-template>

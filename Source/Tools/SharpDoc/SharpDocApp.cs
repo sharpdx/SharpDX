@@ -207,7 +207,9 @@ namespace SharpDoc
             // Verify the validity of the style
             foreach (var styleName in Config.StyleNames)
             {
-                Logger.Message("Generate documentation for style [{0}]", styleName);
+                Logger.Message("-------------------------------------------------------------------------------");
+                Logger.Message("Generating documentation using [{0}] style", styleName);
+                Logger.Message("-------------------------------------------------------------------------------");
                 context.UseStyle(styleName);
                 context.Parse(StyleDefinition.DefaultBootableTemplateName);
             }

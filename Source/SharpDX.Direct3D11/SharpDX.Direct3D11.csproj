@@ -16,6 +16,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AssemblyDoc.cs" />
     <Compile Include="BlendState.cs" />
     <Compile Include="Buffer.cs" />
     <Compile Include="BufferDescription.cs" />
@@ -24,6 +25,7 @@
     <Compile Include="ComputeShader.cs" />
     <Compile Include="BlendState1.cs" />
     <Compile Include="Device1.cs" />
+    <Compile Include="NamespaceDoc.cs" />
     <Compile Include="RaterizerState1.cs" />
     <Compile Include="DeviceContext1.cs" />
     <Compile Include="Counter.cs" />

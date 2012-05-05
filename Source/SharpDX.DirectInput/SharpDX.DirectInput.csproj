@@ -18,6 +18,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AssemblyDoc.cs" />
     <Compile Include="Capabilities.cs" />
     <Compile Include="ConditionSet.cs" />
     <Compile Include="ConstantForce.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="DataObjectFormat.cs" />
     <Compile Include="MouseOffset.cs" />
     <Compile Include="MouseUpdate.cs" />
+    <Compile Include="NamespaceDoc.cs" />
     <Compile Include="ObjectDataFormatFlags.cs" />
     <Compile Include="DeviceObjectId.cs" />
     <Compile Include="ObjectGuid.cs" />

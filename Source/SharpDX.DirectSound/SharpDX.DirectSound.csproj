@@ -16,6 +16,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AssemblyDoc.cs" />
     <Compile Include="Buffer3DSettings.cs" />
     <Compile Include="Capabilities.cs" />
     <Compile Include="CaptureBuffer.cs" />
@@ -31,6 +32,7 @@
     <Compile Include="DirectSoundCapture.cs" />
     <Compile Include="Distortion.cs" />
     <Compile Include="Echo.cs" />
+    <Compile Include="NamespaceDoc.cs" />
     <Compile Include="SoundBuffer3D.cs" />
     <Compile Include="SoundBufferEffectDescription.cs" />
     <Compile Include="EnumDelegateCallback.cs" />

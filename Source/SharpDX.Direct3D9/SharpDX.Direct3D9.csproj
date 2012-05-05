@@ -20,6 +20,7 @@
     <Compile Include="AdapterCollection.cs" />
     <Compile Include="AdapterDetails.cs" />
     <Compile Include="AdapterInformation.cs" />
+    <Compile Include="AssemblyDoc.cs" />
     <Compile Include="BaseEffect.cs" />
     <Compile Include="BaseTexture.cs" />
     <Compile Include="BoneCombination.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Line.cs" />
     <Compile Include="Macro.cs" />
     <Compile Include="ModuleInit.cs" />
+    <Compile Include="NamespaceDoc.cs" />
     <Compile Include="PaletteEntry.cs" />
     <Compile Include="PixelShader.cs" />
     <Compile Include="PresentParameters.cs" />

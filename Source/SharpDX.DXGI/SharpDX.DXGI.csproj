@@ -17,6 +17,8 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Adapter.cs" />
+    <Compile Include="AssemblyDoc.cs" />
+    <Compile Include="NamespaceDoc.cs" />
     <Compile Include="Surface2.cs" />
     <Compile Include="Resource1.cs" />
     <Compile Include="IVirtualSurfaceImageSourceNative.cs" />

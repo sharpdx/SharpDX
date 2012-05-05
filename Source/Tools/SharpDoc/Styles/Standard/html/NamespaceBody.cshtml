@@ -26,6 +26,7 @@
 @model SharpDoc.TemplateContext
 @Import("Section")
 @Import("SeeAlso")
+@Import("Version")
 @{
     var self = Model.Namespace;
 }
@@ -55,6 +56,9 @@
 
 @if (!string.IsNullOrEmpty(self.Remarks)) 
     @Helpers.Section.Dump("Remarks",TagExpand(self.Remarks))
-	
+
+@Helpers.Version.Dump(self)
+
 @Helpers.SeeAlso.Dump(self)	
+
 
