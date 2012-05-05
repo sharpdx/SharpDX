@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System.Reflection;
+using System.Resources;
 using System.Runtime.InteropServices;
 
 [assembly:AssemblyCompany("Alexandre Mutel")]
@@ -29,6 +30,8 @@ using System.Runtime.InteropServices;
 
 [assembly:AssemblyVersion("2.1.0")]
 [assembly:AssemblyFileVersion("2.1.0")]
+
+[assembly: NeutralResourcesLanguage("en")]
 
 #if DEBUG
 [assembly:AssemblyConfiguration("Debug")]
