@@ -20,7 +20,7 @@
 namespace SharpDX
 {
     /// <summary>
-    /// These are the namespace comments for <c>SharpDX</c>.
+    /// The <see cref="SharpDX"/> namespace contains fundamental classes used by SharpDX.
     /// </summary>
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     class NamespaceDoc
