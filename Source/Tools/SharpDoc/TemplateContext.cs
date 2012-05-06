@@ -537,13 +537,33 @@ namespace SharpDoc
         /// using inheritance directory.
         /// </summary>
         /// <param name="directoryName">Name of the directory.</param>
-        public void CopyDirectoryContent(string directoryName)
+        public void CopyStyleContent(string directoryName)
         {
             foreach (var templateDirectory in StyleDirectories)
             {
                 string filePath = Path.Combine(templateDirectory, directoryName);
                 if (Directory.Exists(filePath))
                     CopyDirectory(filePath, Path.Combine(OutputDirectory, directoryName));
+            }
+        }
+
+        /// <summary>
+        /// Copies the content of a local directory to the destination html directory.
+        /// </summary>
+        /// <param name="directoryNameOrFile">Name of the src directory.</param>
+        public void CopyLocalContent(string directoryNameOrFile, string toDirectory)
+        {
+            var fileOrDir = Path.Combine(Path.GetDirectoryName(Config.FilePath), directoryNameOrFile);
+            var absoulteDirectory = Path.Combine(Config.AbsoluteOutputDirectory, toDirectory);
+
+            if (File.Exists(fileOrDir))
+            {
+                Logger.Message("Copying file from [{0}] to [{1}]", directoryNameOrFile, toDirectory);
+                File.Copy(fileOrDir, absoulteDirectory, true);
+            }
+            else
+            {
+                CopyDirectory(fileOrDir, absoulteDirectory);
             }
         }
 
@@ -559,6 +579,8 @@ namespace SharpDoc
                 string dirPath = Path.GetDirectoryName(newpath);
                 if (!Directory.Exists(dirPath))
                     Directory.CreateDirectory(dirPath);
+
+                Logger.Message("Copying file from [{0}] to [{1}]", subPath, newpath);                
                 File.Copy(filePath, newpath, true);
             }
         }

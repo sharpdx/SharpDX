@@ -86,6 +86,9 @@
   <ItemGroup>
     <Reference Include="System" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="images\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>REM $(SolutionDir)Source\Tools\SharpDoc\Bin\$(ConfigurationName)\SharpDoc.exe --config config.xml</PreBuildEvent>

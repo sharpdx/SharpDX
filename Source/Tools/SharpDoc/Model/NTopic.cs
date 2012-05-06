@@ -54,6 +54,7 @@ namespace SharpDoc.Model
         public NTopic()
         {
             SubTopics = new List<NTopic>();
+            Resources = new List<string>();
             Category = "Article";
         }
 
@@ -71,6 +72,7 @@ namespace SharpDoc.Model
             FullName = reference.FullName;
             Category = reference.Category;
             SubTopics = new List<NTopic>();
+            Resources = new List<string>();
         }
 
         /// <summary>
@@ -162,6 +164,15 @@ namespace SharpDoc.Model
         /// </value>
         [XmlElement("param")]
         public List<ConfigParam> Parameters { get; set; }
+
+        /// <summary>
+        /// Gets or sets the attached resources.
+        /// </summary>
+        /// <value>
+        /// The attached resources.
+        /// </value>
+        [XmlElement("resource")]
+        public List<string> Resources { get; set; }
 
         /// <summary>
         /// Gets or sets the html content. This is loaded from the filename.

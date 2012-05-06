@@ -48,6 +48,9 @@
   <!-- Topics -->
   <topic id="SharpDX" filename="00-index.html" page-id="index" name="SharpDX Documentation" >
 
+    <!-- Copy the whole content of images to the output html/images directory -->
+    <resource>images</resource>
+    
     <!-- Use to specify Joomla SubMenu -->
     <param name="ItemId">109</param>
 

@@ -26,12 +26,36 @@
 @functions {
     public void WriteToFile(IModelReference member, string content)
     {
+        var model = (TemplateContext)Model;
+
 		if (member == null && content == null)
             return;
 
+		// When writing root, we are also copying directories and resources attached to topics
+		if (member == null)
+        {
+
+			// Copy directories
+			model.CopyStyleContent("css");
+			model.CopyStyleContent("js");
+			model.CopyStyleContent("images");
+			model.CopyStyleContent("syntaxhighlighter");
+
+			// Copy resource from topics
+            var rootTopic = model.RootTopic;
+            rootTopic.ForEachTopic(topic =>
+                {
+                    foreach (var resource in topic.Resources)
+                    {
+						model.CopyLocalContent(resource, "html");
+                    }
+                }
+                );
+        }
+
         string pageId = member != null ? member.PageId : "index";
 
-        string path = Path.Combine(member == null ? Model.OutputDirectory : Path.Combine(Model.OutputDirectory, "html"), pageId) + Param.FileExt;
+        string path = Path.Combine(member == null ? model.OutputDirectory : Path.Combine(model.OutputDirectory, "html"), pageId) + Param.FileExt;
 
 		string dirPath = Path.GetDirectoryName(path);
 		if (!Directory.Exists(dirPath))

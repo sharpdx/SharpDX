@@ -187,7 +187,7 @@ namespace SharpDoc
         /// <param name="directory">The directory.</param>
         public void CopyDirectoryContent(string directory)
         {
-            @Model.CopyDirectoryContent(directory);
+            @Model.CopyStyleContent(directory);
         }
 
         /// <summary>
