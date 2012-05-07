@@ -598,6 +598,28 @@ namespace SharpDX
             result = Contains(frustum.GetCorners()) != ContainmentType.Disjoint;
         }
 
+        /// <summary>
+        /// Get the width of the frustum at specified depth.
+        /// </summary>
+        /// <param name="depth">the depth at which to calculate frustum width.</param>
+        /// <returns>With of the frustum at the specified depth</returns>
+        public float GetWidthAtDepth(float depth)
+        {
+            float hAngle = (float)((Math.PI / 2.0 - Math.Acos(Vector3.Dot(pNear.Normal, pLeft.Normal))));
+            return (float)(Math.Tan(hAngle) * depth * 2);
+        }
+
+        /// <summary>
+        /// Get the height of the frustum at specified depth.
+        /// </summary>
+        /// <param name="depth">the depth at which to calculate frustum height.</param>
+        /// <returns>Height of the frustum at the specified depth</returns>
+        public float GetHeightAtDepth(float depth)
+        {
+            float vAngle = (float)((Math.PI / 2.0 - Math.Acos(Vector3.Dot(pNear.Normal, pTop.Normal))));
+            return (float)(Math.Tan(vAngle) * depth * 2);
+        }
+
         private BoundingFrustum GetInsideOutClone()
         {
             var frustum = this;
