@@ -50,9 +50,6 @@ namespace SharpDX.DXGI
                 case Format.R1_UNorm:
                     return 1;
                 case Format.A8_UNorm:
-                case Format.B8G8R8A8_Typeless:
-                case Format.B8G8R8A8_UNorm:
-                case Format.B8G8R8A8_UNorm_SRgb:
                 case Format.R8_SInt:
                 case Format.R8_SNorm:
                 case Format.R8_Typeless:
@@ -106,6 +103,9 @@ namespace SharpDX.DXGI
                 case Format.R8G8B8A8_UInt:
                 case Format.R8G8B8A8_UNorm:
                 case Format.R8G8B8A8_UNorm_SRgb:
+                case Format.B8G8R8A8_Typeless:
+                case Format.B8G8R8A8_UNorm:
+                case Format.B8G8R8A8_UNorm_SRgb:
                 case Format.R9G9B9E5_Sharedexp:
                 case Format.X24_Typeless_G8_UInt:
                 case Format.X32_Typeless_G8X24_UInt:
