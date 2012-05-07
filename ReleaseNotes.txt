@@ -1,5 +1,5 @@
 --------------------------
-Release Notes (2012-04-??)
+Release Notes (2012-05-07)
 --------------------------
 SharpDX 2.1.0 
 
@@ -25,6 +25,8 @@ SharpDX 2.1.0
 - Add Int3 struct
 - Add NativeFile.ReadAllBytes and ReadAllText methods
 - Add method MathUtil.Clamp
+- Add new class XNA BoundingFrustum equivalent struct (Thanks to Fadi Alsamman)
+- Fix issue #182, possible interop pin corruption while GC is running (Thanks to Arseny Kapoulkine)
 - Fix issue #139 Check IsDisposed in Disposable finalizer
 - Fix issue #158. Initblk should use unaligned and an int for the size under x64 as well as x86.
 - Fix issue #164. Minor breaking changes: SharpDX.Diagnostics is removed. Description message for COM/HRESULT errors is now natively integrated into SharpDX. SharpDX.DXGI.DXGIError is renamed to ResultCode in order to be consistent with other APIs
