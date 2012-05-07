@@ -543,7 +543,7 @@ namespace SharpDoc
             {
                 string filePath = Path.Combine(templateDirectory, directoryName);
                 if (Directory.Exists(filePath))
-                    CopyDirectory(filePath, Path.Combine(OutputDirectory, directoryName));
+                    CopyDirectory(filePath, OutputDirectory, true);
             }
         }
 
@@ -553,7 +553,7 @@ namespace SharpDoc
         /// <param name="directoryNameOrFile">Name of the src directory.</param>
         public void CopyLocalContent(string directoryNameOrFile, string toDirectory)
         {
-            var fileOrDir = Path.Combine(Path.GetDirectoryName(Config.FilePath), directoryNameOrFile);
+            var fileOrDir = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(Config.FilePath), directoryNameOrFile));
             var absoulteDirectory = Path.Combine(Config.AbsoluteOutputDirectory, toDirectory);
 
             if (File.Exists(fileOrDir))
@@ -563,18 +563,18 @@ namespace SharpDoc
             }
             else
             {
-                CopyDirectory(fileOrDir, absoulteDirectory);
+                CopyDirectory(fileOrDir, absoulteDirectory, true);
             }
         }
 
-        private void CopyDirectory(string from, string to)
+        private void CopyDirectory(string from, string to, bool includeFromDir = false)
         {
             // string source, destination; - folder paths 
-            int pathLen = from.Length + 1;
-
+            int basePathIndex = (includeFromDir ? from.Trim('/','\\').LastIndexOf('\\') : from.Length) + 1;
+            
             foreach (string filePath in Directory.GetFiles(from, "*.*", SearchOption.AllDirectories))
             {
-                string subPath = filePath.Substring(pathLen);
+                string subPath = filePath.Substring(basePathIndex);
                 string newpath = Path.Combine(to, subPath);
                 string dirPath = Path.GetDirectoryName(newpath);
                 if (!Directory.Exists(dirPath))
