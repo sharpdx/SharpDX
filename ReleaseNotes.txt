@@ -1,17 +1,22 @@
 --------------------------
-Release Notes (2012-05-07)
+Release Notes (2012-05-10)
 --------------------------
 SharpDX 2.1.0 
 
+********************
+*** Top Features ***
+********************
+- New website available at http://sharpdx.org
+- New Documentation repository available including a comprehensive Class Library Reference.
 - Add full support for Windows 8 Consumer Preview / Beta. SharpDX assemblies are passing certification successfully.
 - Add DirectX/XAML interop for Windows 8 Metro App by supporting interfaces ISurfaceImageSourceNative, IVirtualSurfaceImageSourceNative, IVirtualSurfaceUpdatesCallbackNative and ISwapChainBackgroundPanelNative.
 - Add full support for Direct2D1 Effects and Custom user Effects for DirectX11.1/Win8 Metro
 - Add several Win8 Metro Samples (Direct3D11.1 and Direct2D1), thanks to Jose Fajardo for his great contributions.
 - SharpDX binaries are now splitted into 4 distributions:
-  - Normal, available for desktop application, based on DirectX SDK/Runtime June 2010
-  - Signed, signed normal assemblies
-  - DirectX11.1, available for desktop application, based on Windows 8 Consumer Preview
-  - Win8Metro, available for metro application, based on Windows 8 Consumer Preview
+  - Standard, available for desktop application, based on DirectX SDK/Runtime June 2010 with .NET 2.0 to 4.5 support
+  - Signed, signed normal assemblies with .NET 2.0 to 4.5 support
+  - Win8Desktop, available for desktop application, based on Windows 8 Consumer Preview with .NET 2.0 to 4.5 support
+  - Win8Metro, available for metro application, based on Windows 8 Consumer Preview with .NET 4.5 Core profile support
 - SharpDX.XAPO is now integrated into SharpDX.XAudio2 assembly.
 - SharpDX.Diagnostics is now integrated into SharpDX assembly.
 - Lots of improvements and bug fixes, check the following details

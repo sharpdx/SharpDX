@@ -54,7 +54,10 @@
     <!-- Use to specify Joomla SubMenu -->
     <param name="ItemId">109</param>
 
-    <topic id="X:WhatsNew" filename="01-news.html" page-id="news" name="What's new?"/>
+    <topic id="X:WhatsNew" filename="01-news.html" page-id="news" name="What's new?">
+      <!-- This topic is not available for the SharpDX web documentation, as it is a duplicate of the web site -->
+      <exclude>SharpDXWeb</exclude>
+    </topic>
 
     <!-- Documentation for Programming Guide -->
     <topic id="X:ProgrammingGuide" filename="02-guide.html" page-id="guide" name="Programming Guide" on-url="true" >
@@ -119,7 +122,10 @@
 
     <topic id="X:KnownIssues" filename="40-issues.html" page-id="known-issues" name="Known Issues"/>
 
-    <topic id="X:Licensing" filename="50-licensing.html" page-id="licensing" name="Licensing"/>
+    <topic id="X:Licensing" filename="50-licensing.html" page-id="licensing" name="Licensing">
+      <!-- This topic is not available for the SharpDX web documentation, as it is a duplicate of the web site -->
+      <exclude>SharpDXWeb</exclude>
+    </topic>
 
   </topic>
 

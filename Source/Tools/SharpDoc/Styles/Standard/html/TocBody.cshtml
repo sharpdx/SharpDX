@@ -30,6 +30,11 @@
         // Don't list the search topic unless its selected
         if (topic.IsSearchResult && Model.Topic.Id != topic.Id)
             return;
+        
+        // Topics that are not available for a particular style are removed from TOC
+        if (topic.Excludes.Contains(Model.CurrentStyleName))
+            return;
+        
         var topicLink = topic;
 
 		// Special cases for an assembly with a single namespace

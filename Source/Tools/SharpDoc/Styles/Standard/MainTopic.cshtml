@@ -50,6 +50,10 @@
         if (isInClassLibrary && !topic.IsSearchResult)
             return;
 
+        // Topics that are not available for a particular style are removed from TOC
+        if (topic.Excludes.Contains(Model.CurrentStyleName))
+            return;        
+
         // If this is the main class library, change me name            
         if (topic.IsClassLibrary)
         {

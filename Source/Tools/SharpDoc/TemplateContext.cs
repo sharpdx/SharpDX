@@ -189,6 +189,14 @@ namespace SharpDoc
         public Action<IModelReference, string> WriteTo { get; set; }
 
         /// <summary>
+        /// Gets or sets the name of the current style.
+        /// </summary>
+        /// <value>
+        /// The name of the current style.
+        /// </value>
+        public string CurrentStyleName { get; set; }
+
+        /// <summary>
         /// Gets or sets the config.
         /// </summary>
         /// <value>
@@ -435,6 +443,8 @@ namespace SharpDoc
 
             if (!StyleManager.StyleExist(styleName))
                 Logger.Fatal("Cannot us style [{0}]. Style doesn't exist", styleName);
+
+            CurrentStyleName = styleName;
 
             StyleDirectories.Clear();
 

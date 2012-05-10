@@ -55,6 +55,7 @@ namespace SharpDoc.Model
         {
             SubTopics = new List<NTopic>();
             Resources = new List<string>();
+            Excludes = new List<string>();
             Category = "Article";
         }
 
@@ -64,6 +65,9 @@ namespace SharpDoc.Model
         /// <param name="reference">The reference.</param>
         public NTopic(IModelReference reference)
         {
+            SubTopics = new List<NTopic>();
+            Resources = new List<string>();
+            Excludes = new List<string>();
             Id = reference.Id;
             Index = reference.Index;
             PageId = reference.PageId;
@@ -71,8 +75,6 @@ namespace SharpDoc.Model
             Name = reference.Name;
             FullName = reference.FullName;
             Category = reference.Category;
-            SubTopics = new List<NTopic>();
-            Resources = new List<string>();
         }
 
         /// <summary>
@@ -164,6 +166,15 @@ namespace SharpDoc.Model
         /// </value>
         [XmlElement("param")]
         public List<ConfigParam> Parameters { get; set; }
+
+        /// <summary>
+        /// Gets or sets the excludes.
+        /// </summary>
+        /// <value>
+        /// The excludes.
+        /// </value>
+        [XmlElement("exclude")]
+        public List<string> Excludes { get; set; }
 
         /// <summary>
         /// Gets or sets the attached resources.
