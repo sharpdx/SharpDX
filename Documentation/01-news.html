@@ -62,12 +62,9 @@
     <li>Fix issue #162. Use SwapChainFlags enum for last parameter</li>
     <li>Fix issue #163. Check for null before disposing an adapter in DXGI.Factory(1).GetAdapterCount(1)</li>
     <li>Remove CheckError on EnumAdapters. Add convenience method for gettings adapters from factories</li>
-    <li>Start to use new ResultDescriptor</li>
 </ul>
 <h3 class="title">Direct2D1</h3>
 <ul>
-    <li>Add Effect.SetInputEffect method</li>
-    <li>Add TranformNode / Transform callbacks for Win8</li>
     <li>Add all builtin effects for Win8</li>
     <li>Add constructor for InputDescription. Change PropertyBindingAttribute to use string for min,max,default</li>
     <li>Add constructor for VertexRange</li>
@@ -76,14 +73,6 @@
     <li>Add support for Direct2D1.1 custom effects</li>
     <li>Add support for DrawingPointF, DrawingRectangleF, RectangleF for custom effect property bindings</li>
     <li>Add support for TransformGraph, ComputeInformation, DrawInformation, CommandList, CommandSink for Direct3D11.1 / Win8Metro</li>
-    <li>Fix compilation errors introduce- by previous commit</li>
-    <li>Fix #define for non-Win8 metro compilation</li>
-    <li>Fix a bug in TransformShadow and add several convenience methods</li>
-    <li>Fix build issue for SharpDX standard introduced by Win8 build</li>
-    <li>Improved mapping for Win8 API, not finished</li>
-    <li>Set some CustomEffect attributes parameter mandatory</li>
-    <li>Start to add CustomEffect support under Win8</li>
-    <li>XXXTransformShadow must inherit from other shadows</li>
 </ul>
 <h3 class="title">Dircet3D10</h3>
 <ul>
@@ -100,9 +89,7 @@
     <li>Fix issue #134. Add method EffectVariable.AsInterface()</li>
     <li>Fix issue #138. Add additional methods InvertTransform and ForwardTransform to FastFourrierTransform class</li>
     <li>Fix issue #165. Add support for uint sampleMask. Add default value to -1</li>
-    <li>Make CompilationResultBase abstract</li>
     <li>Remove dependency to D3DCompiler under Win8 Metro</li>
-    <li>Update doc for DeviceContext.UpdateSubresource</li>
     <li>Disable Effects framework in Win8 as d3dcompiler won't be allowed at runtime anyway</li>
 </ul>
 <h3 class="title">Direct3D9</h3>
@@ -140,27 +127,14 @@
 <h2 class="title">Samples API</h2>
 <ul>
     <li>Add simple sample with texture mapping on a rotating cube</li>
-    <li>Add Direct2D MiniShape sample for Win8 Metro, unifinished.</li>
-    <li>Add Direct2D sample for Win8. Integrate Direct2D in XAML interop samples.</li>
-    <li>Add MiniCubeBrushXaml Win8 samples. Not finished yet.</li>
-    <li>Add XAML-DirectX interop MiniCubeXaml sample for Win8 Metro. Refactor code to use DirectXBase as in C++ samples</li>
+    <li>Add 10 Direct2D XAML interop samples for Win8 Metro.</li>
     <li>Remove all references to D3DCompiler in Win8</li>
-    <li>Remove old SharpDX.Diagnostics from all samples. Add missing D3D9 samples. Clean Win 8 samples</li>
-    <li>Rename CustomPixelShader sample to D2DCustomPixelShaderEffect</li>
-    <li>Change Win8 samples to use a common infrastructure</li>
     <li>Fix Dispose in MiniCube program</li>
-    <li>Fix D2DCustomPixelShader</li>
-    <li>Fix D2DCustomPixelShaderEffect RippleEffect sample for Win8 Metro \o/</li>
-    <li>Fix Direct2D1 Custom Vertex Shader for Win8</li>
-    <li>Fix Win8 samples with changes from DXGIError renamed to ResultCode</li>
-    <li>Fix solution for Win8 samples</li>
-    <li>Update Direct2D1 RippleEffect sample.</li>
-    <li>Update samples for Win8 Metro. Add Direct3D11 CubeTexture sample</li>
 </ul>
 <h2 class="title">Internals Tools</h2>
 <h3 class="title">Build</h3>
 <ul>
-    <li>Fix build for all versions: Normal, Signed, Win8Beta and DirectX11.1 Desktop</li>
+    <li>Fix build for all versions: Standard, Signed, Win8Metro, Win8Desktop</li>
     <li>Fix build for configurations D3D11_1Debug/D3D11_1Release Direct3D11.1 without Metro</li>
     <li>Fix build for nuget-publish to continue even if symbolsource.org returns errors</li>
     <li>Fix problem after merge from master. Add back hidusage.h file</li>
@@ -182,5 +156,7 @@
 <ul>
     <li>Add full featured documentation generator, with platform information, managed-unmanaged cross referencing, custom topics.</li>
 </ul>
+<h2 class="title">Known issues</h2>
+<p>Nuget packages are broken and will be released shortly.</p>
     </body>
 </html>

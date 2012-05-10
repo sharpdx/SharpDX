@@ -132,20 +132,20 @@
   <!-- List the assemblies to include for the class library-->
   
   <!-- Standard Binaries -->
-  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard\SharpDX.xml">..\Bin\Standard\SharpDX.dll</source>
-  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard\SharpDX.DXGI.xml">..\Bin\Standard\SharpDX.DXGI.dll</source>
-  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard\SharpDX.D3DCompiler.xml">..\Bin\Standard\SharpDX.D3DCompiler.dll</source>
-  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard\SharpDX.DirectInput.xml">..\Bin\Standard\SharpDX.DirectInput.dll</source>
-  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard\SharpDX.DirectSound.xml">..\Bin\Standard\SharpDX.DirectSound.dll</source>
-  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard\SharpDX.RawInput.xml">..\Bin\Standard\SharpDX.RawInput.dll</source>
-  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard\SharpDX.X3DAudio.xml">..\Bin\Standard\SharpDX.X3DAudio.dll</source>
-  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard\SharpDX.XACT3.xml">..\Bin\Standard\SharpDX.XACT3.dll</source>
-  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard\SharpDX.XAudio2.xml">..\Bin\Standard\SharpDX.XAudio2.dll</source>
-  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard\SharpDX.XInput.xml">..\Bin\Standard\SharpDX.XInput.dll</source>
-  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard\SharpDX.Direct3D9.xml">..\Bin\Standard\SharpDX.Direct3D9.dll</source>
-  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard\SharpDX.Direct3D10.xml">..\Bin\Standard\SharpDX.Direct3D10.dll</source>
-  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard\SharpDX.Direct3D11.xml">..\Bin\Standard\SharpDX.Direct3D11.dll</source>
-  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard\SharpDX.Direct2D1.xml">..\Bin\Standard\SharpDX.Direct2D1.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard-net20\SharpDX.xml">..\Bin\Standard-net20\SharpDX.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard-net20\SharpDX.DXGI.xml">..\Bin\Standard-net20\SharpDX.DXGI.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard-net20\SharpDX.D3DCompiler.xml">..\Bin\Standard-net20\SharpDX.D3DCompiler.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard-net20\SharpDX.DirectInput.xml">..\Bin\Standard-net20\SharpDX.DirectInput.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard-net20\SharpDX.DirectSound.xml">..\Bin\Standard-net20\SharpDX.DirectSound.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard-net20\SharpDX.RawInput.xml">..\Bin\Standard-net20\SharpDX.RawInput.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard-net20\SharpDX.X3DAudio.xml">..\Bin\Standard-net20\SharpDX.X3DAudio.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard-net20\SharpDX.XACT3.xml">..\Bin\Standard-net20\SharpDX.XACT3.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard-net20\SharpDX.XAudio2.xml">..\Bin\Standard-net20\SharpDX.XAudio2.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard-net20\SharpDX.XInput.xml">..\Bin\Standard-net20\SharpDX.XInput.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard-net20\SharpDX.Direct3D9.xml">..\Bin\Standard-net20\SharpDX.Direct3D9.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard-net20\SharpDX.Direct3D10.xml">..\Bin\Standard-net20\SharpDX.Direct3D10.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard-net20\SharpDX.Direct3D11.xml">..\Bin\Standard-net20\SharpDX.Direct3D11.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard-net20\SharpDX.Direct2D1.xml">..\Bin\Standard-net20\SharpDX.Direct2D1.dll</source>
 
   <!-- Win8Metro Binaries -->
   <source api="win8metro|Windows 8 Metro - DirectX11.1 - .NET 4.5 Core" xml="..\Bin\Win8Metro\SharpDX.xml">..\Bin\Win8Metro\SharpDX.dll</source>
@@ -157,11 +157,11 @@
   <source api="win8metro|Windows 8 Metro - DirectX11.1 - .NET 4.5 Core" xml="..\Bin\Win8Metro\SharpDX.Direct2D1.xml">..\Bin\Win8Metro\SharpDX.Direct2D1.dll</source>
 
   <!-- Win7/8Desktop DirectX11.1 Binaries -->
-  <source api="win8desktop|Windows 7/8 Desktop - DirectX11.1 - .NET 2.0+" xml="..\Bin\Win8Desktop\SharpDX.xml">..\Bin\Win8Desktop\SharpDX.dll</source>
-  <source api="win8desktop|Windows 7/8 Desktop - DirectX11.1 - .NET 2.0+" xml="..\Bin\Win8Desktop\SharpDX.DXGI.xml">..\Bin\Win8Desktop\SharpDX.DXGI.dll</source>
-  <source api="win8desktop|Windows 7/8 Desktop - DirectX11.1 - .NET 2.0+" xml="..\Bin\Win8Desktop\SharpDX.D3DCompiler.xml">..\Bin\Win8Desktop\SharpDX.D3DCompiler.dll</source>
-  <source api="win8desktop|Windows 7/8 Desktop - DirectX11.1 - .NET 2.0+" xml="..\Bin\Win8Desktop\SharpDX.XAudio2.xml">..\Bin\Win8Desktop\SharpDX.XAudio2.dll</source>
-  <source api="win8desktop|Windows 7/8 Desktop - DirectX11.1 - .NET 2.0+" xml="..\Bin\Win8Desktop\SharpDX.XInput.xml">..\Bin\Win8Desktop\SharpDX.XInput.dll</source>
-  <source api="win8desktop|Windows 7/8 Desktop - DirectX11.1 - .NET 2.0+" xml="..\Bin\Win8Desktop\SharpDX.Direct3D11.xml">..\Bin\Win8Desktop\SharpDX.Direct3D11.dll</source>
-  <source api="win8desktop|Windows 7/8 Desktop - DirectX11.1 - .NET 2.0+" xml="..\Bin\Win8Desktop\SharpDX.Direct2D1.xml">..\Bin\Win8Desktop\SharpDX.Direct2D1.dll</source>
+  <source api="win8desktop|Windows 7/8 Desktop - DirectX11.1 - .NET 2.0+" xml="..\Bin\Win8Desktop-net20\SharpDX.xml">..\Bin\Win8Desktop-net20\SharpDX.dll</source>
+  <source api="win8desktop|Windows 7/8 Desktop - DirectX11.1 - .NET 2.0+" xml="..\Bin\Win8Desktop-net20\SharpDX.DXGI.xml">..\Bin\Win8Desktop-net20\SharpDX.DXGI.dll</source>
+  <source api="win8desktop|Windows 7/8 Desktop - DirectX11.1 - .NET 2.0+" xml="..\Bin\Win8Desktop-net20\SharpDX.D3DCompiler.xml">..\Bin\Win8Desktop-net20\SharpDX.D3DCompiler.dll</source>
+  <source api="win8desktop|Windows 7/8 Desktop - DirectX11.1 - .NET 2.0+" xml="..\Bin\Win8Desktop-net20\SharpDX.XAudio2.xml">..\Bin\Win8Desktop-net20\SharpDX.XAudio2.dll</source>
+  <source api="win8desktop|Windows 7/8 Desktop - DirectX11.1 - .NET 2.0+" xml="..\Bin\Win8Desktop-net20\SharpDX.XInput.xml">..\Bin\Win8Desktop-net20\SharpDX.XInput.dll</source>
+  <source api="win8desktop|Windows 7/8 Desktop - DirectX11.1 - .NET 2.0+" xml="..\Bin\Win8Desktop-net20\SharpDX.Direct3D11.xml">..\Bin\Win8Desktop-net20\SharpDX.Direct3D11.dll</source>
+  <source api="win8desktop|Windows 7/8 Desktop - DirectX11.1 - .NET 2.0+" xml="..\Bin\Win8Desktop-net20\SharpDX.Direct2D1.xml">..\Bin\Win8Desktop-net20\SharpDX.Direct2D1.dll</source>
 </config>
