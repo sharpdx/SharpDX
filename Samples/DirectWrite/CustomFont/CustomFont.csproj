@@ -37,15 +37,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SharpDX, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\Bin\SharpDX.dll</HintPath>
+      <HintPath>..\..\..\Bin\Standard-net20\SharpDX.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="SharpDX.Direct2D1, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\Bin\SharpDX.Direct2D1.dll</HintPath>
+      <HintPath>..\..\..\Bin\Standard-net20\SharpDX.Direct2D1.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="SharpDX.DXGI, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\Bin\SharpDX.DXGI.dll</HintPath>
+      <HintPath>..\..\..\Bin\Standard-net20\SharpDX.DXGI.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="System" />

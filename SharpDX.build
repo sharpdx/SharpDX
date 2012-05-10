@@ -47,10 +47,10 @@
     <!-- Load version from source code SharedAssemblyInfo.cs -->
     <loadfile file="Source/SharedAssemblyInfo.cs" property="assembly_version_file" />
 
-    <property name="version-dir" value="Standard" if="${build_normal}"/>
-    <property name="version-dir" value="Signed" if="${build_signed}"/>
+    <property name="version-dir" value="Standard-net20" if="${build_normal}"/>
+    <property name="version-dir" value="Signed-net20" if="${build_signed}"/>
     <property name="version-dir" value="Win8Metro" if="${build_win8}"/>
-    <property name="version-dir" value="Win8Desktop" if="${build_dx11_1}"/>
+    <property name="version-dir" value="Win8Desktop-net20" if="${build_dx11_1}"/>
 
     <regex pattern="AssemblyVersion\(.(?'assembly_version'\d+\.\d+.\d+)" input="${assembly_version_file}" />
     <property name="output_bin_zip" value="${project.name}-Bin-${assembly_version}${build-date}.7z"/>
@@ -191,25 +191,23 @@
   <target name="full" description="Full build targets.">
     <call target="normal"/>
     <call target="build"/>
-    <call target="publish-code" if="${publish}"/>
 
     <!-- <call target="nuget"/> -->
 
     <call target="signed"/>
     <call target="build"/>
-    <call target="publish-code" if="${publish}"/>
 
     <call target="win8"/>
     <call target="build"/>
-    <call target="publish-code" if="${publish}"/>
 
     <call target="dx11_1"/>
     <call target="build"/>
-    <call target="publish-code" if="${publish}"/>
 
     <call target="doc"/>
 
     <call target="zip"/>
+
+    <call target="publish-code" if="${publish}"/>
   </target>
 
   <!-- Full clean and build -->
@@ -365,6 +363,8 @@
         <include name="Bin/**"/>
         <include name="Samples/**"/>
         <include name="*.txt"/>
+        <exclude name="Samples/Win8/Win8Demos.sln"/>
+        <exclude name="**/*.sample.csproj"/>
         <exclude name="googlecode_password.txt"/>
       </fileset>
     </copy>
