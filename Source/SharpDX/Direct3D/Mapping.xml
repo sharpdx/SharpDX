@@ -36,7 +36,9 @@
 
     <const from-guid="WKPDID_D3DDebugObjectName" class="SharpDX.Direct3D.CommonGuid" type="System.Guid" name="DebugObjectName">new System.Guid("$1")</const>
 
-    <create class="D3DCommon" />
+    <ifndef name="WIN8METRO">    
+      <create class="D3DCommon" />
+    </ifndef>      
     <create class="CommonGuid" visibility="public" />
 
     <context-clear/>
