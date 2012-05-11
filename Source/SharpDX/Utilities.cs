@@ -30,6 +30,10 @@ using System.Text;
 
 using SharpDX.Direct3D;
 using System.Reflection;
+#if WIN8METRO
+using System.Linq;
+using System.Linq.Expressions;
+#endif
 
 namespace SharpDX
 {
@@ -614,6 +618,25 @@ namespace SharpDX
         /// <returns>A compiled delegate </returns>
         public static GetValueFastDelegate<T> BuildPropertyGetter<T>(Type customEffectType, PropertyInfo propertyInfo)
         {
+#if WIN8METRO
+
+            var valueParam = Expression.Parameter(typeof(T).MakeByRefType());
+            var objectParam = Expression.Parameter(typeof(object));
+            var castParam = Expression.Convert(objectParam, customEffectType);
+            var propertyAccessor = Expression.Property(castParam, propertyInfo);
+
+            Expression convertExpression;
+            if (propertyInfo.PropertyType == typeof(bool))
+            {
+                // Convert bool to int: effect.Property ? 1 : 0
+                convertExpression = Expression.Condition(propertyAccessor, Expression.Constant(1), Expression.Constant(0));
+            }
+            else
+            {
+                convertExpression = Expression.Convert(propertyAccessor, typeof(T));
+            }
+            return Expression.Lambda<GetValueFastDelegate<T>>(Expression.Assign(valueParam, convertExpression), objectParam, valueParam).Compile();
+#else
             var typeT = typeof(T);
             var propertyType = propertyInfo.PropertyType;
             var method = new DynamicMethod("GetValueDelegate", typeof(void), new[] { typeof(object), typeT.MakeByRefType() });
@@ -622,11 +645,7 @@ namespace SharpDX
             ilGenerator.Emit(OpCodes.Ldarg_1);
             ilGenerator.Emit(OpCodes.Ldarg_0);
             ilGenerator.Emit(OpCodes.Castclass, customEffectType);
-#if WIN8METRO
-            ilGenerator.EmitCall(OpCodes.Callvirt, propertyInfo.GetMethod, null);
-#else
             ilGenerator.EmitCall(OpCodes.Callvirt, propertyInfo.GetGetMethod(), null);
-#endif
 
             if (typeT == typeof(byte) || typeT == typeof(sbyte))
             {
@@ -668,6 +687,7 @@ namespace SharpDX
             }
             ilGenerator.Emit(OpCodes.Ret);
             return (GetValueFastDelegate<T>)method.CreateDelegate(typeof(GetValueFastDelegate<T>));
+#endif
         }
 
         /// <summary>
@@ -679,6 +699,25 @@ namespace SharpDX
         /// <returns>A compiled delegate</returns>
         public static SetValueFastDelegate<T> BuildPropertySetter<T>(Type customEffectType, PropertyInfo propertyInfo)
         {
+#if WIN8METRO
+            var valueParam = Expression.Parameter(typeof(T).MakeByRefType());
+            var objectParam = Expression.Parameter(typeof(object));
+            var castParam = Expression.Convert(objectParam, customEffectType);
+            var propertyAccessor = Expression.Property(castParam, propertyInfo);
+
+            Expression convertExpression;
+            if (propertyInfo.PropertyType == typeof(bool))
+            {
+                // Convert int to bool: value != 0
+                convertExpression = Expression.NotEqual(valueParam, Expression.Constant(0));
+            }
+            else
+            {
+                convertExpression = Expression.Convert(valueParam, propertyInfo.PropertyType);
+            }
+            return Expression.Lambda<SetValueFastDelegate<T>>(Expression.Assign(propertyAccessor, convertExpression), objectParam, valueParam).Compile();
+#else
+
             var typeT = typeof(T);
             var propertyType = propertyInfo.PropertyType;
             var method = new DynamicMethod("SetValueDelegate", typeof(void), new[] { typeof(object), typeT.MakeByRefType() });
@@ -737,14 +776,11 @@ namespace SharpDX
                 }
             }
 
-#if WIN8METRO
-            ilGenerator.EmitCall(OpCodes.Callvirt, propertyInfo.SetMethod, null);
-#else
             ilGenerator.EmitCall(OpCodes.Callvirt, propertyInfo.GetSetMethod(), null);
-#endif
 
             ilGenerator.Emit(OpCodes.Ret);
             return (SetValueFastDelegate<T>)method.CreateDelegate(typeof(SetValueFastDelegate<T>));
+#endif
         }
 
         /// <summary>
