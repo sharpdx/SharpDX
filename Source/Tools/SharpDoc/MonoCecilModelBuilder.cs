@@ -317,34 +317,6 @@ namespace SharpDoc
             foreach (var property in typeDef.Properties.Where(this.IsMemberToDisplay))
                 AddProperty(type, property);
 
-            // Recalculate a PageId based on the number of overriding methods.
-            var counters = new Dictionary<string, int>();
-            foreach (var member in type.Members)
-            {
-                string id =  PageIdFunction(member);
-
-                if (!counters.ContainsKey(id))
-                    counters.Add(id, 0);
-                else
-                {
-                    counters[id]++;
-                    id = id + "_" + counters[id];
-                }
-
-                member.PageId = id;
-            }
-
-            // Tag methods that are overriden
-            foreach (var method in type.MethodsAndConstructors)
-            {
-                var id = PageIdFunction(method);
-                if (counters.ContainsKey(id) && counters[id] > 0)
-                    method.HasOverrides = true;
-            }
-
-            // Sort members
-            type.Members.Sort((left, right) => left.Name.CompareTo(right.Name));
-
             // For enumeration, we are only using MsdnId from enum
             if (type is NEnum)
             {

@@ -118,6 +118,8 @@ namespace SharpDoc
             {
                 foreach (var @namespace in assembly.Namespaces)
                 {
+                    @namespace.Types.Sort((from, to) => string.CompareOrdinal(@from.Name, to.Name));
+
                     FlattenHierarchy(@namespace.Types);
                 }
             }
@@ -179,7 +181,45 @@ namespace SharpDoc
                 }
 
                 type.AllMembers.AddRange(newMembers);
-                type.AllMembers.Sort((from, to) => string.CompareOrdinal(@from.Name, to.Name));
+            }
+
+            // Order elements
+            type.AllMembers.Sort((from, to) => string.CompareOrdinal(@from.Name, to.Name));
+
+            // Recalculate a PageId based on the number of overriding methods.
+            var counters = new Dictionary<string, int>();
+            var overrides = new Dictionary<string, int>();
+            foreach (var member in type.AllMembers.OfType<NMethod>())
+            {
+                string id = PageIdFunction(member);
+
+                // Count overrides
+                if (!overrides.ContainsKey(member.Name))
+                {
+                    overrides.Add(member.Name, 0);
+                }
+                else
+                {
+                    overrides[member.Name]++;
+                }
+
+                // Change only Id that are overlapping
+                if (!counters.ContainsKey(id))
+                    counters.Add(id, 0);
+                else
+                {
+                    counters[id]++;
+                    id = id + "_" + counters[id];
+                }
+
+                member.PageId = id;
+            }
+
+            // Tag methods that are overriden
+            foreach (var method in type.AllMembers.OfType<NMethod>())
+            {
+                if (overrides.ContainsKey(method.Name) && overrides[method.Name] > 0)
+                    method.HasOverrides = true;
             }
 
             foreach (var nsubClass in type.Members.OfType<NType>())
