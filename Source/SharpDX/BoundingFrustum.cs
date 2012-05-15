@@ -242,7 +242,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creates a new frustom relaying on perspective camera parameters
+        /// Creates a new frustum relaying on perspective camera parameters
         /// </summary>
         /// <param name="cameraPos">The camera pos.</param>
         /// <param name="lookDir">The look dir.</param>
@@ -251,7 +251,7 @@ namespace SharpDX
         /// <param name="znear">The znear.</param>
         /// <param name="zfar">The zfar.</param>
         /// <param name="aspect">The aspect.</param>
-        /// <returns>The bouding frustrum calculated from perspective camera</returns>
+        /// <returns>The bouding frustum calculated from perspective camera</returns>
         public static BoundingFrustum FromCamera(Vector3 cameraPos, Vector3 lookDir, Vector3 upDir, float fov, float znear, float zfar, float aspect)
         {
             //http://knol.google.com/k/view-frustum
@@ -296,7 +296,7 @@ namespace SharpDX
             return result;
         }
         /// <summary>
-        /// Creates a new frustom relaying on perspective camera parameters
+        /// Creates a new frustum relaying on perspective camera parameters
         /// </summary>
         /// <param name="cameraParams">The camera params.</param>
         /// <returns>The bouding frustum from camera params</returns>
@@ -348,7 +348,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Checks whether a point lay inside, intersects or lay outside the frustrom.
+        /// Checks whether a point lay inside, intersects or lay outside the frustum.
         /// </summary>
         /// <param name="point">The point.</param>
         /// <returns>Type of the containment</returns>
@@ -384,7 +384,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Checks whether a point lay inside, intersects or lay outside the frustrom.
+        /// Checks whether a point lay inside, intersects or lay outside the frustum.
         /// </summary>
         /// <param name="point">The point.</param>
         /// <returns>Type of the containment</returns>
@@ -394,7 +394,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Checks whether a group of points lay totally inside the frsutrum (Contains), or lay partially inside thr frustom (Intersects), or lay outside the frustrom (Disjoint).
+        /// Checks whether a group of points lay totally inside the frustum (Contains), or lay partially inside the frustum (Intersects), or lay outside the frustum (Disjoint).
         /// </summary>
         /// <param name="points">The points.</param>
         /// <returns>Type of the containment</returns>
@@ -426,7 +426,7 @@ namespace SharpDX
                 return ContainmentType.Disjoint;
         }
         /// <summary>
-        /// Checks whether a group of points lay totally inside the frsutrum (Contains), or lay partially inside thr frustom (Intersects), or lay outside the frustrom (Disjoint).
+        /// Checks whether a group of points lay totally inside the frsutrum (Contains), or lay partially inside the frustum (Intersects), or lay outside the frustum (Disjoint).
         /// </summary>
         /// <param name="points">The points.</param>
         /// <param name="result">Type of the containment.</param>
@@ -669,7 +669,7 @@ namespace SharpDX
             inDistance = null;
             outDistance = null;
 
-            var ioFrsutrum = GetInsideOutClone();
+            var ioFrustrum = GetInsideOutClone();
 
             for (int i = 0; i < 6; i++)
             {
@@ -677,12 +677,12 @@ namespace SharpDX
                 float interDist = 0;
                 switch (i)
                 {
-                    case 0: planeIntersects = ioFrsutrum.pNear.Intersects(ref ray, out interDist); break;
-                    case 1: planeIntersects = ioFrsutrum.pFar.Intersects(ref ray, out interDist); break;
-                    case 2: planeIntersects = ioFrsutrum.pLeft.Intersects(ref ray, out interDist); break;
-                    case 3: planeIntersects = ioFrsutrum.pRight.Intersects(ref ray, out interDist); break;
-                    case 4: planeIntersects = ioFrsutrum.pTop.Intersects(ref ray, out interDist); break;
-                    case 5: planeIntersects = ioFrsutrum.pBottom.Intersects(ref ray, out interDist); break;
+                    case 0: planeIntersects = ioFrustrum.pNear.Intersects(ref ray, out interDist); break;
+                    case 1: planeIntersects = ioFrustrum.pFar.Intersects(ref ray, out interDist); break;
+                    case 2: planeIntersects = ioFrustrum.pLeft.Intersects(ref ray, out interDist); break;
+                    case 3: planeIntersects = ioFrustrum.pRight.Intersects(ref ray, out interDist); break;
+                    case 4: planeIntersects = ioFrustrum.pTop.Intersects(ref ray, out interDist); break;
+                    case 5: planeIntersects = ioFrustrum.pBottom.Intersects(ref ray, out interDist); break;
                 }
                 if (planeIntersects)
                 {
@@ -735,15 +735,15 @@ namespace SharpDX
             float hSin = (float)Math.Sin(hAngle);
             float horizontalToVerticalMapping = vSin / hSin;
 
-            var ioFrsutrum = GetInsideOutClone();
+            var ioFrustrum = GetInsideOutClone();
 
             float maxPointDist = float.MinValue;
             for (int i = 0; i < points.Length; i++)
             {
-                float pointDist = Collision.DistancePlanePoint(ref ioFrsutrum.pTop, ref points[i]);
-                pointDist = Math.Max(pointDist, Collision.DistancePlanePoint(ref ioFrsutrum.pBottom, ref points[i]));
-                pointDist = Math.Max(pointDist, Collision.DistancePlanePoint(ref ioFrsutrum.pLeft, ref points[i]) * horizontalToVerticalMapping);
-                pointDist = Math.Max(pointDist, Collision.DistancePlanePoint(ref ioFrsutrum.pRight, ref points[i]) * horizontalToVerticalMapping);
+                float pointDist = Collision.DistancePlanePoint(ref ioFrustrum.pTop, ref points[i]);
+                pointDist = Math.Max(pointDist, Collision.DistancePlanePoint(ref ioFrustrum.pBottom, ref points[i]));
+                pointDist = Math.Max(pointDist, Collision.DistancePlanePoint(ref ioFrustrum.pLeft, ref points[i]) * horizontalToVerticalMapping);
+                pointDist = Math.Max(pointDist, Collision.DistancePlanePoint(ref ioFrustrum.pRight, ref points[i]) * horizontalToVerticalMapping);
 
                 maxPointDist = Math.Max(maxPointDist, pointDist);
             }
@@ -785,10 +785,10 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Indicate whether the current BoundingFrsutrum is Orthographic.
+        /// Indicate whether the current BoundingFrustrum is Orthographic.
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if the current BoundingFrsutrum is Orthographic; otherwise, <c>false</c>.
+        /// 	<c>true</c> if the current BoundingFrustrum is Orthographic; otherwise, <c>false</c>.
         /// </value>
         public bool IsOrthographic
         {
