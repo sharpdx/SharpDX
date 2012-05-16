@@ -83,4 +83,5 @@
   <file>SharpDX.XAudio2\Mapping.xml</file>
   <file>SharpDX.XInput\Mapping.xml</file>
   <file>SharpDX.RawInput\Mapping.xml</file>
+  <!--<file>SharpDX.MediaFoundation\Mapping.xml</file>-->
 </config>

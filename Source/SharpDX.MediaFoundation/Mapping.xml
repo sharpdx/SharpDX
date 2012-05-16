@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+-->
+<config id="sharpdx-mediafoundation" depends="sharpdx-core sharpdx-direct3d9" xmlns="urn:SharpGen.Config">
+  <namespace>SharpDX.MediaFoundation</namespace>
+  <assembly>SharpDX.MediaFoundation</assembly>
+
+  <include file="dxva2api.h" attach="true">
+  <pre>
+  #define __AUDIODEFS_INCLUDED__
+  </pre>
+  </include>
+  <include file="dxvahd.h" attach="true"/>
+  <include file="evr.h" attach="true"/>
+  <include file="evr9.h" attach="true"/>
+  <include file="mfapi.h" attach="true"/>
+  <include file="mfmp2dlna.h" attach="true"/>
+  <!-- include file="mferrors.h" attach="true"/  file doesn't exist? -->
+  <include file="mfidl.h" attach="true"/>
+  <include file="mfobjects.h" attach="true"/>
+  <include file="mfplay.h" attach="true"/>
+  <include file="mfreadwrite.h" attach="true"/>
+  <include file="mftransform.h" attach="true"/>
+  <include file="mediaobj.h" attach="true"/>
+  <include file="opmapi.h" attach="true"/>
+  <include file="wmcontainer.h" attach="true"/>
+
+
+  <context-set id="mediafoundation-all">
+    <context>sharpdx-mediafoundation</context>
+    <context>sharpdx-mediafoundation-ext</context>
+    <context>dxva2api</context>
+    <context>dxvahd</context>
+    <context>evr</context>
+    <context>evr9</context>
+    <context>mfapi</context>
+    <context>mfmp2dlna</context>
+    <context>mfidl</context>
+    <context>mfobjects</context>
+    <context>mfplay</context>
+    <context>mfreadwrite</context>
+    <context>mftransform</context>
+    <context>opmapi</context>
+    <context>wmcontainer</context>
+  </context-set>
+
+
+  <extension>
+    <context id="mediafoundation-all"/>
+    
+    <define struct="SharpDX.MediaFoundation.Mpeg1VideoInformation" sizeof="32" />
+    <define struct="SharpDX.MediaFoundation.Mpeg2VideoInformation" sizeof="32" />
+    <define struct="SharpDX.MediaFoundation.VideoInformationHeader2" sizeof="32" />
+
+    <create class="MediaFactory" />
+    <create class="DXVAFactory" />
+    <context-clear />
+  </extension>
+
+  <bindings>
+    <bind from="MPEG1VIDEOINFO" to="SharpDX.MediaFoundation.Mpeg1VideoInformation"/>
+    <bind from="MPEG2VIDEOINFO" to="SharpDX.MediaFoundation.Mpeg2VideoInformation"/>
+    <bind from="VIDEOINFOHEADER2" to="SharpDX.MediaFoundation.VideoInformationHeader2"/>
+  </bindings>
+
+  <mapping>
+    <context id="mediafoundation-all"/>
+    <!--
+    // *****************************************************************
+    // MediaFoundation Enumerations
+    // *****************************************************************
+    -->
+
+    <!--
+    // *****************************************************************
+    // MediaFoundation Structures
+    // *****************************************************************
+    -->
+
+    <!--
+    // *****************************************************************
+    // MediaFoundation Interfaces
+    // *****************************************************************
+    -->
+
+    <!--
+    // *****************************************************************
+    // MediaFoundation Functions
+    // *****************************************************************
+    -->
+    <remove function="IMF.*"/>
+    <remove function="BSTR_.*"/>
+    <remove function="HWND_.*"/>
+    <remove function="LPSAFEARRAY_.*"/>
+    <map function="MF(.*)" name-tmp="$1"/>
+    <map function="MF.*" dll='"Mfplat.dll"' group="SharpDX.MediaFoundation.MediaFactory"/>
+    <map function="OPM.*" dll='"Mfplat.dll"' group="SharpDX.MediaFoundation.MediaFactory"/>
+    <map function="Create.*" dll='"Temp.dll"' group="SharpDX.MediaFoundation.MediaFactory"/>
+    <map function="DXVA2(.*)" name-tmp="$1"  dll='"Dxva2.dll"' group="SharpDX.MediaFoundation.DXVAFactory"/>
+    <map function="DXVAHD(.*)" name-tmp="$1"  dll='"Dxva2.dll"' group="SharpDX.MediaFoundation.DXVAFactory"/>
+
+    <context-clear />
+  </mapping>
+</config>
