@@ -2020,8 +2020,15 @@
     
     <map struct="D3DPRESENTSTATS" name="PresentationStatistics" />
     <map struct="D3D(.*)9" name-tmp="$1" />
+    
     <map struct="D3DXMATERIAL" name="ExtendedMaterial" />
-    <map struct="D3DXMESHCONTAINER" name="MeshContainer" />
+    <map field="D3DXMATERIAL::MatD3D" name="MaterialD3D"/>
+    <map field="D3DXMATERIAL::pTextureFilename" name="TextureFileName"/>
+
+    <map struct="D3DXMESHCONTAINER" name="MeshContainer" struct-to-class="true"/>
+    <map field="D3DXMESHCONTAINER::pMaterials" name="MaterialPointer" visibility="internal"/>
+    <map field="D3DXMESHCONTAINER::NumMaterials" name="MaterialCount" visibility="internal"/>
+
     <map struct="D3DXMESHDATA" name="MeshData" />
     <map struct="D3DXWELDEPSILONS" name="WeldEpsilons" />
     

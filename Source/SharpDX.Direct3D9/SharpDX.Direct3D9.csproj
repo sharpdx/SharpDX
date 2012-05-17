@@ -67,6 +67,7 @@
     <Compile Include="IndexBuffer.cs" />
     <Compile Include="Line.cs" />
     <Compile Include="Macro.cs" />
+    <Compile Include="MeshContainer.cs" />
     <Compile Include="ModuleInit.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="PaletteEntry.cs" />
