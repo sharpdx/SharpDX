@@ -49,7 +49,7 @@ using System.Reflection;
 
 namespace SharpDX.Design
 {
-    class FieldPropertyDescriptor : PropertyDescriptor
+    public class FieldPropertyDescriptor : PropertyDescriptor
     {
         readonly FieldInfo fieldInfo;
 
