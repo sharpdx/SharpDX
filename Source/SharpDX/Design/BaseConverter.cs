@@ -65,7 +65,15 @@ namespace SharpDX.Design
             set;
         }
 
-        internal static string ConvertFromValues<T>(ITypeDescriptorContext context, CultureInfo culture, T[] values)
+        /// <summary>
+        /// Converts values to a string.
+        /// </summary>
+        /// <typeparam name="T">Type of the value</typeparam>
+        /// <param name="context">The context.</param>
+        /// <param name="culture">The culture.</param>
+        /// <param name="values">The values.</param>
+        /// <returns>A string representing the values</returns>
+        protected static string ConvertFromValues<T>(ITypeDescriptorContext context, CultureInfo culture, T[] values)
         {
             if (culture == null)
                 culture = CultureInfo.CurrentCulture;
@@ -76,9 +84,17 @@ namespace SharpDX.Design
             return string.Join(culture.TextInfo.ListSeparator + " ", results);
         }
 
-        internal static T[] ConvertToValues<T>(ITypeDescriptorContext context, CultureInfo culture, object value)
+        /// <summary>
+        /// Converts a string to values.
+        /// </summary>
+        /// <typeparam name="T">Type of the value</typeparam>
+        /// <param name="context">The context.</param>
+        /// <param name="culture">The culture.</param>
+        /// <param name="strValue">The string value.</param>
+        /// <returns>An array of value or null if strValue is not a string.</returns>
+        protected static T[] ConvertToValues<T>(ITypeDescriptorContext context, CultureInfo culture, object strValue)
         {
-            var str = value as string;
+            var str = strValue as string;
             if (string.IsNullOrEmpty(str))
                 return null;
 
