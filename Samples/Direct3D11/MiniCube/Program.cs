@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 using System;
 using System.Diagnostics;
+using System.Windows.Forms;
 
 using SharpDX;
 using SharpDX.D3DCompiler;
@@ -71,10 +72,6 @@ namespace MiniCube
             // Ignore all windows events
             var factory = swapChain.GetParent<Factory>();
             factory.MakeWindowAssociation(form.Handle, WindowAssociationFlags.IgnoreAll);
-
-            // New RenderTargetView from the backbuffer
-            var backBuffer = Texture2D.FromSwapChain<Texture2D>(swapChain, 0);
-            var renderView = new RenderTargetView(device, backBuffer);
 
             // Compile Vertex and Pixel shaders
             var vertexShaderByteCode = ShaderBytecode.CompileFromFile("MiniCube.fx", "VS", "vs_4_0");
@@ -141,22 +138,6 @@ namespace MiniCube
             var contantBuffer = new Buffer(device, Utilities.SizeOf<Matrix>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0);
 
 
-            // Create Depth Buffer & View
-            var depthBuffer = new Texture2D(device, new Texture2DDescription()
-            {
-                Format = Format.D32_Float_S8X24_UInt,
-                ArraySize = 1,
-                MipLevels = 1,
-                Width = form.ClientSize.Width,
-                Height = form.ClientSize.Height,
-                SampleDescription = new SampleDescription(1, 0),
-                Usage = ResourceUsage.Default,
-                BindFlags = BindFlags.DepthStencil,
-                CpuAccessFlags = CpuAccessFlags.None,
-                OptionFlags = ResourceOptionFlags.None
-            });
-
-            var depthView = new DepthStencilView(device, depthBuffer);
 
             // Prepare All the stages
             context.InputAssembler.InputLayout = layout;
@@ -164,23 +145,90 @@ namespace MiniCube
             context.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(vertices, Utilities.SizeOf<Vector4>() * 2, 0));
             context.VertexShader.SetConstantBuffer(0, contantBuffer);
             context.VertexShader.Set(vertexShader);
-            context.Rasterizer.SetViewports(new Viewport(0, 0, form.ClientSize.Width, form.ClientSize.Height, 0.0f, 1.0f));
             context.PixelShader.Set(pixelShader);
-            context.OutputMerger.SetTargets(depthView, renderView);
 
             // Prepare matrices
             var view = Matrix.LookAtLH(new Vector3(0, 0, -5), new Vector3(0, 0, 0), Vector3.UnitY);
-            var proj = Matrix.PerspectiveFovLH((float)Math.PI / 4.0f, form.ClientSize.Width / (float)form.ClientSize.Height, 0.1f, 100.0f);
-            var viewProj = Matrix.Multiply(view, proj);
+            Matrix proj = Matrix.Identity;
 
             // Use clock
             var clock = new Stopwatch();
             clock.Start();
 
+            // Declare texture for rendering
+            bool userResized = true;
+            Texture2D backBuffer = null;
+            RenderTargetView renderView = null;
+            Texture2D depthBuffer = null;
+            DepthStencilView depthView = null;
+
+            // Setup handler on resize form
+            form.UserResized += (sender, args) => userResized = true;
+
+            // Setup full screen mode change F5 (Full) F4 (Window)
+            form.KeyUp += (sender, args) =>
+                {
+                    if (args.KeyCode == Keys.F5)
+                        swapChain.SetFullscreenState(true, null);
+                    else if (args.KeyCode == Keys.F4)
+                        swapChain.SetFullscreenState(false, null);
+                    else if (args.KeyCode == Keys.Escape)
+                        form.Close();
+                };
+
             // Main loop
             RenderLoop.Run(form, () =>
             {
+                // If Form resized
+                if (userResized)
+                {
+                    // Dispose all previous allocated resources
+                    ComObject.Dispose(ref backBuffer);
+                    ComObject.Dispose(ref renderView);
+                    ComObject.Dispose(ref depthBuffer);
+                    ComObject.Dispose(ref depthView);
+
+                    // Resize the backbuffer
+                    swapChain.ResizeBuffers(desc.BufferCount, form.ClientSize.Width, form.ClientSize.Height, Format.Unknown, SwapChainFlags.None);
+
+                    // Get the backbuffer from the swapchain
+                    backBuffer = Texture2D.FromSwapChain<Texture2D>(swapChain, 0);
+
+                    // Renderview on the backbuffer
+                    renderView = new RenderTargetView(device, backBuffer);
+
+                    // Create the depth buffer
+                    depthBuffer = new Texture2D(device, new Texture2DDescription()
+                    {
+                        Format = Format.D32_Float_S8X24_UInt,
+                        ArraySize = 1,
+                        MipLevels = 1,
+                        Width = form.ClientSize.Width,
+                        Height = form.ClientSize.Height,
+                        SampleDescription = new SampleDescription(1, 0),
+                        Usage = ResourceUsage.Default,
+                        BindFlags = BindFlags.DepthStencil,
+                        CpuAccessFlags = CpuAccessFlags.None,
+                        OptionFlags = ResourceOptionFlags.None
+                    });
+
+                    // Create the depth buffer view
+                    depthView = new DepthStencilView(device, depthBuffer);
+
+                    // Setup targets and viewport for rendering
+                    context.Rasterizer.SetViewports(new Viewport(0, 0, form.ClientSize.Width, form.ClientSize.Height, 0.0f, 1.0f));
+                    context.OutputMerger.SetTargets(depthView, renderView);
+
+                    // Setup new projection matrix with correct aspect ratio
+                    proj = Matrix.PerspectiveFovLH((float)Math.PI / 4.0f, form.ClientSize.Width / (float)form.ClientSize.Height, 0.1f, 100.0f);
+
+                    // We are done resizing
+                    userResized = false;
+                }
+
                 var time = clock.ElapsedMilliseconds / 1000.0f;
+
+                var viewProj = Matrix.Multiply(view, proj);
 
                 // Clear views
                 context.ClearDepthStencilView(depthView, DepthStencilClearFlags.Depth, 1.0f, 0);
