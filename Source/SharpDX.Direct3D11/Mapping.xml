@@ -226,6 +226,8 @@
     <move method="ID3D11DeviceContext::DS(.*)" to="DomainShaderStage" property="DomainShader" base="CommonShaderStage&lt;DomainShader&gt;"/>
     <move method="ID3D11DeviceContext::HS(.*)" to="HullShaderStage" property="HullShader" base="CommonShaderStage&lt;HullShader&gt;"/>
     <move method="ID3D11DeviceContext::CS(.*)" to="ComputeShaderStage" property="ComputeShader" base="CommonShaderStage&lt;ComputeShader&gt;"/>
+    
+    <map method="ID3D11DeviceChild::GetDevice" persist="true"/>
 
     <map method="ID3D11DeviceContext::OMSetRenderTargets" visibility="internal"/>
     <map param="ppRenderTargetViews" type="void" attribute="in"/>

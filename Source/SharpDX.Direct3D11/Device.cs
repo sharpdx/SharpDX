@@ -179,6 +179,14 @@ namespace SharpDX.Direct3D11
                                                            ref swapChainDescription, out swapChain, out device,
                                                            out selectedLevel, out context);
 
+
+            if (context != null)
+            {
+                // Add a reference when setting the device on the context
+                ((IUnknown)device).AddReference();
+                context.Device__ = device;
+            }
+
             device.ImmediateContext = context;
 
             return result;
@@ -475,6 +483,13 @@ namespace SharpDX.Direct3D11
             D3D11.CreateDevice(adapter, driverType, IntPtr.Zero, flags, featureLevels,
                                featureLevels == null ? 0 : featureLevels.Length, D3D11.SdkVersion, this,
                                out selectedLevel, out _immediateContext);
+
+            if (_immediateContext != null)
+            {
+                // Add a reference when setting the device on the context
+                ((IUnknown)this).AddReference();
+                _immediateContext.Device__ = this;
+            }
         }
     }
 }

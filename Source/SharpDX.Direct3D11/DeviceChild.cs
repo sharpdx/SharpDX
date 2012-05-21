@@ -60,6 +60,19 @@ namespace SharpDX.Direct3D11
                     SetPrivateData(CommonGuid.DebugObjectName, value.Length, namePtr);
                 }
             }
-        }        
+        }
+
+        protected override unsafe void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (Device__  != null)
+                {
+                    Device__.Dispose();
+                    Device__ = null;
+                }
+            }
+            base.Dispose(disposing);
+        }
     }
 }
