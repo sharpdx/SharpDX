@@ -347,7 +347,7 @@
     <remove method="ID3D(\d+)Device::.*TextFilterSize" />
     <map method="ID3D(\d+)Device::GetPredication" visibility="internal" />
     <map method="ID3D(\d+)Device1?::OpenSharedResource1?" visibility="internal" />
-    <map method="ID3D(\d+)Device::UpdateSubresource" visibility="internal" />
+    <map method="ID3D(\d+)Device::UpdateSubresource"/>
     <map interface="ID3D(\d+)View" name="ResourceView" />
     <map param="ID3D(\d+)Device::CreateTexture[0-9]D::pInitialData" attribute="in buffer optional" />
     <map method="ID3D(\d+)DeviceContext::SetVertexBuffers" visibility="internal" />
@@ -404,7 +404,7 @@
     <map method="ID3D(\d+)DeviceContext::Map" name="MapSubresource" />
     <map param="pMappedResource" return="true" />
     <map method="ID3D(\d+)DeviceContext::Unmap" name="UnmapSubresource" />
-    <map method="ID3D(\d+)DeviceContext::UpdateSubresource" visibility="internal" />
+    <map method="ID3D(\d+)DeviceContext::UpdateSubresource"/>
     <map param="ID3D(\d+)DeviceContext::Map::MapFlags" type="D3D$1_MAP_FLAG" />
     <map param="ID3D(\d+)DeviceContext::GetData::GetDataFlags" type="D3D$1_ASYNC_GETDATA_FLAG" />
     <map method="ID3D(\d+)DeviceContext::GetData" visibility="internal" name="GetDataInternal" />
