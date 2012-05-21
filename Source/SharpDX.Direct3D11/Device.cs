@@ -26,8 +26,6 @@ namespace SharpDX.Direct3D11
 {
     public partial class Device
     {
-        private DeviceContext _immediateContext;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Device"/> class. 
         /// </summary>
@@ -187,28 +185,11 @@ namespace SharpDX.Direct3D11
                 context.Device__ = device;
             }
 
-            device.ImmediateContext = context;
+            device.ImmediateContext__ = context;
 
             return result;
         }
 #endif
-
-        /// <summary>
-        ///   Get the imediate <see cref = "SharpDX.Direct3D11.DeviceContext" /> attached to this Device.
-        /// </summary>
-        public DeviceContext ImmediateContext
-        {
-            get
-            {
-                if (_immediateContext == null)
-                {
-                    GetImmediateContext(out _immediateContext);
-                }
-                return _immediateContext;
-            }
-
-            private set { _immediateContext = value; }
-        }
 
         /// <summary>
         /// Get the type, name, units of measure, and a description of an existing counter.	
@@ -458,12 +439,10 @@ namespace SharpDX.Direct3D11
         {
             if (disposing)
             {
-                if (_immediateContext != null)
+                if (ImmediateContext__ != null)
                 {
-                    _immediateContext.ClearState();
-                    _immediateContext.Flush();
-                    _immediateContext.Dispose();
-                    _immediateContext = null;
+                    ImmediateContext__.Dispose();
+                    ImmediateContext__ = null;
                 }
             }
             base.Dispose(disposing);
@@ -482,13 +461,13 @@ namespace SharpDX.Direct3D11
             FeatureLevel selectedLevel;
             D3D11.CreateDevice(adapter, driverType, IntPtr.Zero, flags, featureLevels,
                                featureLevels == null ? 0 : featureLevels.Length, D3D11.SdkVersion, this,
-                               out selectedLevel, out _immediateContext);
+                               out selectedLevel, out ImmediateContext__);
 
-            if (_immediateContext != null)
+            if (ImmediateContext__ != null)
             {
                 // Add a reference when setting the device on the context
                 ((IUnknown)this).AddReference();
-                _immediateContext.Device__ = this;
+                ImmediateContext__.Device__ = this;
             }
         }
     }

@@ -426,8 +426,6 @@ namespace SharpDX.Direct3D11
             UpdateSubresource(resource, subresource, region, source.DataPointer, source.RowPitch, source.SlicePitch);
         }
 
-
-
         /// <summary>
         /// Copies data from the CPU to to a non-mappable subresource region.
         /// </summary>
@@ -571,5 +569,17 @@ namespace SharpDX.Direct3D11
 
         private bool isCheckThreadingSupport;
         private bool supportsCommandLists;
+
+        protected override unsafe void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // When disposing an DeviceContext, performs a ClearState/Flush before.
+                ClearState();
+                Flush();
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }

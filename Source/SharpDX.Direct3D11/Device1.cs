@@ -24,23 +24,6 @@ namespace SharpDX.Direct3D11
 {
     public partial class Device1
     {
-        private DeviceContext1 immediateContext;
-
-        /// <summary>
-        /// Gets the immediate <see cref = "SharpDX.Direct3D11.DeviceContext1" /> attached to this Device.
-        /// </summary>
-        public DeviceContext1 ImmediateContext1
-        {
-            get
-            {
-                if (immediateContext == null)
-                {
-                    GetImmediateContext1(out immediateContext);
-                }
-                return immediateContext;
-            }
-        }
-
         /// <summary>	
         /// Creates a context state object that holds all Microsoft Direct3D state and some Direct3D behavior.
         /// </summary>	
@@ -293,14 +276,12 @@ namespace SharpDX.Direct3D11
         {
             if (disposing)
             {
-                if (immediateContext != null)
+                if (ImmediateContext1__ != null)
                 {
-                    immediateContext.ClearState();
-                    immediateContext.Flush();
-                    immediateContext.Dispose();
-                    immediateContext = null;
+                    ImmediateContext1__.Dispose();
+                    ImmediateContext1__ = null;
                 }
-            } 
+            }
             
             base.Dispose(disposing);
         }
