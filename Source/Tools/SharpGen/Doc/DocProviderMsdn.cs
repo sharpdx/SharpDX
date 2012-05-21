@@ -250,24 +250,21 @@ namespace SharpGen.Doc
         }
 
 
+        private static HashSet<string> HtmlPreserveTags = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase) { "dl", "dt", "dd", "p", "strong", "pre", "em", "code", "ul", "ol", "li", "table", "tr", "th", "td" };
+
         private static string ParseSubNodes(HtmlNode htmlNode, bool isRoot)
         {
             StringBuilder documentation = new StringBuilder();
 
             bool isDocClear = false;
-            bool isParagraph = false;
 
-            if (!isRoot)
+            string htmlNodeName = null;
+
+            //if (!isRoot)
             {
-                isParagraph = htmlNode.Name.ToLower() == "p";
-                if (htmlNode.Name.ToLower() == "dl")
-                    documentation.Append("<list>\r\n");
-                else if (htmlNode.Name.ToLower() == "dt")
-                    documentation.Append("<item><term>");
-                else if (htmlNode.Name.ToLower() == "dd")
-                    documentation.Append("<description>");
-                else if (isParagraph)
-                    documentation.Append("<para>");
+                htmlNodeName = htmlNode.Name.ToLower();
+                if (HtmlPreserveTags.Contains(htmlNodeName))
+                    documentation.Append("<").Append(htmlNodeName).Append(">");
             }
 
             if (htmlNode.Name == "a")
@@ -286,10 +283,10 @@ namespace SharpGen.Doc
                 }
                 return documentation.ToString();
             }
-            else if (htmlNode.Name == "pre")
-            {
-                return "\r\n<code>\r\n" + ParseSubNodes(htmlNode.FirstChild, false) + "\r\n</code>\r\n";
-            }
+            //else if (htmlNode.Name == "pre")
+            //{
+            //    return "\r\n<code>\r\n" + ParseSubNodes(htmlNode.FirstChild, false) + "\r\n</code>\r\n";
+            //}
             else if (htmlNode.NodeType == HtmlNodeType.Text)
             {
                 string text = htmlNode.InnerText;
@@ -318,16 +315,11 @@ namespace SharpGen.Doc
                 }
             }
 
-            if (!isRoot && !isDocClear)
+            //if (!isRoot && !isDocClear)
+            if (!isDocClear)
             {
-                if (htmlNode.Name.ToLower() == "dl")
-                    documentation.Append("</list>\r\n");
-                else if (htmlNode.Name.ToLower() == "dt")
-                    documentation.Append("</term>");
-                else if (htmlNode.Name.ToLower() == "dd")
-                    documentation.Append("</description></item>\r\n");
-                else if (isParagraph)
-                    documentation.Append("</para>\r\n");
+                if (HtmlPreserveTags.Contains(htmlNodeName))
+                    documentation.Append("</").Append(htmlNodeName).Append(">");
             }
 
             if (isDocClear)
