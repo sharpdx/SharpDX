@@ -350,9 +350,10 @@ namespace SharpGen.Doc
             return result;
         }
 
-        private static string GetTextUntilNextHeader(HtmlNode htmlNode)
+        private static string GetTextUntilNextHeader(HtmlNode htmlNode, bool skipFirstNode = true)
         {
-            htmlNode = htmlNode.NextSibling;
+            if (skipFirstNode)
+                htmlNode = htmlNode.NextSibling;
 
             StringBuilder builder = new StringBuilder();
             while (htmlNode != null && htmlNode.Name != "h3")
@@ -397,16 +398,8 @@ namespace SharpGen.Doc
             if (element == null)
                 return item;
 
-            var headerNodes = element.Descendants("p");
-            foreach (var firstNode in headerNodes)
-            {
-                var description = ParseNode(firstNode);
-                if (!description.StartsWith("Applies to") && !description.StartsWith("[This documentation"))
-                {
-                    item.Description = description;
-                    break;
-                }
-            }
+            var headerNode = element.ChildNodes.FindFirst("p");
+            item.Description = GetTextUntilNextHeader(headerNode, false);
 
             HtmlNode firstElement = element.ChildNodes.FindFirst("dl");
             if (firstElement != null)
