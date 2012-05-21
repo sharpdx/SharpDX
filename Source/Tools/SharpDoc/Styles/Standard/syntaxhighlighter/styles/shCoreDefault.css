@@ -188,7 +188,7 @@
   color: #008200 !important;
 }
 .syntaxhighlighter.printing .string, .syntaxhighlighter.printing .string a {
-  color: blue !important;
+  color: #a31515 !important;
 }
 .syntaxhighlighter.printing .keyword {
   color: #006699 !important;
@@ -288,7 +288,7 @@
   color: #008000 !important;
 }
 .syntaxhighlighter .string, .syntaxhighlighter .string a {
-  color: blue !important;
+  color: #a31515 !important;
 }
 .syntaxhighlighter .keyword {
   color: #0000FF !important;
