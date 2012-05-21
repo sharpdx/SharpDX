@@ -43,6 +43,8 @@ namespace SharpGen.Model
 
         public bool IsPropertyParam { get; set; }
 
+        public bool IsPersistent { get; set; }
+
         public string PrefixSetterParam
         {
             get

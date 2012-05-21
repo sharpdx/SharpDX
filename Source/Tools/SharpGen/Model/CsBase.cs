@@ -287,6 +287,7 @@ namespace SharpGen.Model
         /// <value>The remarks.</value>
         public string Remarks { get; set; }
 
+        public bool HasPersistent { get; set; }
 
         /// <summary>
         /// Gets the XML C# doc items as a list of string (contains summary and remarks tags).

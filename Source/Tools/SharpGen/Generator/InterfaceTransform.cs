@@ -450,13 +450,18 @@ namespace SharpGen.Generator
                 property.CppElement = getterOrSetter.CppElement;
                 var parent = getterOrSetter.Parent;
 
-                // If Getter has no propery, 
+                // If Getter has no property, 
                 if ((property.Getter != null && !property.Getter.AllowProperty) || (property.Setter != null && !property.Setter.AllowProperty))
                     continue;
 
                 // Update visibility for getter and setter (set to internal)
                 if (property.Getter != null)
+                {
                     property.Getter.Visibility = Visibility.Internal;
+                    property.IsPersistent = property.Getter.IsPersistent;
+                    if (property.IsPersistent)
+                        parent.HasPersistent = true;
+                }
 
                 if (property.Setter != null)
                     property.Setter.Visibility = Visibility.Internal;

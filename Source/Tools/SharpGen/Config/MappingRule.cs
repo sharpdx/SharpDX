@@ -69,6 +69,15 @@ namespace SharpGen.Config
         [XmlAttribute("property")]
         public bool _Property_ { get { return Property.Value; } set { Property = value; } } public bool ShouldSerialize_Property_() { return Property != null; }
 
+
+        /// <summary>
+        /// Used for property zith COM Objects, in order to persist the getter
+        /// </summary>
+        [XmlIgnore]
+        public bool? Persist { get; set; }
+        [XmlAttribute("persist")]
+        public bool _Persist_ { get { return Persist.Value; } set { Persist = value; } } public bool ShouldSerialize_Persist_() { return Persist != null; }
+
         /// <summary>
         /// Gets or sets the struct pack alignment.
         /// </summary>

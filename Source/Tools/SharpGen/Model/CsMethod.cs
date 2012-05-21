@@ -102,6 +102,8 @@ namespace SharpGen.Model
 
             AllowProperty = !tag.Property.HasValue || tag.Property.Value;
 
+            IsPersistent = tag.Persist.HasValue && tag.Persist.Value;
+
             if (tag.MethodCheckReturnType.HasValue)
                 CheckReturnType = tag.MethodCheckReturnType.Value;
         }
@@ -116,6 +118,8 @@ namespace SharpGen.Model
         public bool UseDllImport { get; set; }
 
         public bool AllowProperty { get; set; }
+
+        public bool IsPersistent { get; set; }
 
         public int Offset { get; set; }
 

@@ -91,6 +91,7 @@ namespace SharpGen.Model
                            if (fromTag.NativeCallbackVisibility.HasValue) tag.NativeCallbackVisibility = fromTag.NativeCallbackVisibility;
                            if (fromTag.NativeCallbackName != null) tag.NativeCallbackName = fromTag.NativeCallbackName;
                            if (fromTag.Property.HasValue) tag.Property = fromTag.Property;
+                           if (fromTag.Persist.HasValue) tag.Persist = fromTag.Persist;
                            if (fromTag.Replace != null) tag.Replace = fromTag.Replace;
                            if (fromTag.MappingName != null) 
                                tag.MappingName = RegexRename(pathREgex, element.FullName, fromTag.MappingName);

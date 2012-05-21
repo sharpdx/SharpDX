@@ -144,9 +144,15 @@ foreach (var sharpInterface in Namespace.Interfaces)
         <#= sharpProperty.VisibilityName #><#= sharpProperty.PublicType.QualifiedName #> <#= sharpProperty.Name #> {
 <#+		if (sharpProperty.IsPropertyParam) {
 			if (sharpProperty.Getter != null) {
+				if (sharpProperty.IsPersistent) {
+#>
+                get { if (<#= sharpProperty.Name #>__ == null)  <#= sharpProperty.Getter.Name #>(out <#= sharpProperty.Name #>__); return <#= sharpProperty.Name #>__; }
+<#+		
+				} else {
 #>
                 get { <#= sharpProperty.PublicType.QualifiedName #> __output__; <#= sharpProperty.Getter.Name #>(out __output__); return __output__; }
 <#+		
+				}
 			}
 			if (sharpProperty.Setter != null) {
 #>
@@ -155,9 +161,15 @@ foreach (var sharpInterface in Namespace.Interfaces)
 			}
 		} else {
 			if (sharpProperty.Getter != null) {			
+				if (sharpProperty.IsPersistent) {
+#>
+                get { return <#= sharpProperty.Name #>__ ?? <#= sharpProperty.Name #>__ = <#= sharpProperty.Getter.Name #>(); }
+<#+		
+				} else {
 #>
                 get { return <#= sharpProperty.Getter.Name #>(); }
 <#+		
+				}
 			}
 			if (sharpProperty.Setter != null) {
 #>
@@ -166,7 +178,12 @@ foreach (var sharpInterface in Namespace.Interfaces)
 			}
 		}
 #>        }
+<#+	
+		if (sharpProperty.IsPropertyParam && sharpProperty.IsPersistent) {
+#>
+			protected internal <#= sharpProperty.PublicType.QualifiedName #> <#= sharpProperty.Name #>__;
 <#+		
+		}
 	}
 		
 	// ------------------------------------------------------------------------------------------------------------
