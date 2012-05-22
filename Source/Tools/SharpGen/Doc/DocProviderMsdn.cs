@@ -350,13 +350,26 @@ namespace SharpGen.Doc
             return result;
         }
 
-        private static string GetTextUntilNextHeader(HtmlNode htmlNode, bool skipFirstNode = true)
+        private static string GetTextUntilNextHeader(HtmlNode htmlNode, bool skipFirstNode = true, params string[] untilNodes )
         {
             if (skipFirstNode)
                 htmlNode = htmlNode.NextSibling;
 
-            StringBuilder builder = new StringBuilder();
-            while (htmlNode != null && htmlNode.Name != "h3")
+            while (htmlNode != null && htmlNode.Name.ToLower() == "div")
+            {
+                htmlNode = htmlNode.FirstChild;
+            }
+            if (htmlNode == null)
+                return string.Empty;
+
+            var builder = new StringBuilder();
+            var nodes = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase) { "h3", "mtps:collapsiblearea" };
+            foreach (var untilNode in untilNodes)
+            {
+                nodes.Add(untilNode);
+            }
+
+            while (htmlNode != null && !nodes.Contains(htmlNode.Name.ToLower()))
             {
                 builder.Append(ParseNode(htmlNode));
                 htmlNode = htmlNode.NextSibling;
@@ -369,7 +382,7 @@ namespace SharpGen.Doc
         {
             while (htmlNode != null)
             {
-                if (htmlNode.Name == "div")
+                if (htmlNode.Name == "div" || htmlNode.Name.ToLower() == "mtps:collapsiblearea")
                     return ParseNode(htmlNode);
                 htmlNode = htmlNode.NextSibling;
             }
@@ -398,8 +411,8 @@ namespace SharpGen.Doc
             if (element == null)
                 return item;
 
-            var headerNode = element.ChildNodes.FindFirst("p");
-            item.Description = GetTextUntilNextHeader(headerNode, false);
+            // Get description before h3/collasiblearea and table
+            item.Description = GetTextUntilNextHeader(element.FirstChild, false, "table");
 
             HtmlNode firstElement = element.ChildNodes.FindFirst("dl");
             if (firstElement != null)
@@ -445,7 +458,9 @@ namespace SharpGen.Doc
 
                 var remarksCollection = element.SelectNodes("//a[@id='remarks']");
                 if (remarksCollection != null)
+                {
                     item.Remarks = ParseNextDiv(remarksCollection[0].NextSibling);
+                } 
             }
             return item;
         }
@@ -498,7 +513,7 @@ namespace SharpGen.Doc
 
 
 
-        private static Regex matchId = new Regex(@"/([a-zA-Z0-9]+)(\(.+\).*|\.[a-zA-Z]+)?$");
+        private static Regex matchId = new Regex(@"/([a-zA-Z0-9\._\-]+)(\(.+\).*|\.[a-zA-Z]+)?$");
 
         private static JScriptEval jScriptEval = new JScriptEval();
 

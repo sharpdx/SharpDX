@@ -22,6 +22,8 @@ using System.Threading;
 using System.Windows.Forms;
 using SharpCore.Logging;
 
+using SharpGen.Doc;
+
 namespace SharpGen
 {
     /// <summary>
