@@ -520,7 +520,7 @@ namespace SharpDX
 
             float position;
             Vector3.Dot(ref plane.Normal, ref ray.Position, out position);
-            distance = (plane.D - position) / direction;
+            distance = (-plane.D - position) / direction;
 
             if (distance < 0f)
             {
