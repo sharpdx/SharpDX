@@ -317,6 +317,17 @@
 	padding:4px;
 }
 
+.sharpdoc .content .section .members td p
+{
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+.sharpdoc .content .section .members td dd
+{
+	margin-left: 0px;
+}
+
 .sharpdoc .content .section .members td.icon-col,td.name-col,td.desc-col
 {
 	border-bottom:1px solid #C1DAD7;
