@@ -50,7 +50,7 @@ namespace SharpDX.Direct3D9
         /// <param name="sixteenBit">if set to <c>true</c> use 16bit index buffer, otherwise, use 32bit index buffer.</param>
         /// <param name="sharedHandle">The shared handle.</param>
         /// <unmanaged>HRESULT IDirect3DDevice9::CreateIndexBuffer([In] unsigned int Length,[In] unsigned int Usage,[In] D3DFORMAT Format,[In] D3DPOOL Pool,[Out, Fast] IDirect3DIndexBuffer9** ppIndexBuffer,[In] void** pSharedHandle)</unmanaged>
-        public IndexBuffer(Device device, int sizeInBytes, Usage usage, Pool pool, bool sixteenBit, out IntPtr sharedHandle)
+        public IndexBuffer(Device device, int sizeInBytes, Usage usage, Pool pool, bool sixteenBit, ref IntPtr sharedHandle)
             : base(IntPtr.Zero)
         {
             unsafe

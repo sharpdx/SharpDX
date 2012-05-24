@@ -47,7 +47,7 @@ namespace SharpDX.Direct3D9
         /// <param name="pool">The memory class into which the resource will be placed.</param>
         /// <param name="sharedHandle">The variable that will receive the shared handle for this resource.</param>
         /// <remarks>This method is only available in Direct3D9 Ex.</remarks>
-        public VertexBuffer(Device device, int sizeInBytes, Usage usage, VertexFormat format, Pool pool, out IntPtr sharedHandle) : base(IntPtr.Zero)
+        public VertexBuffer(Device device, int sizeInBytes, Usage usage, VertexFormat format, Pool pool, ref IntPtr sharedHandle) : base(IntPtr.Zero)
         {
             unsafe
             {

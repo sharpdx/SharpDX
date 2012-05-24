@@ -50,7 +50,7 @@ namespace SharpDX.Direct3D9
         /// <param name="format">The format.</param>
         /// <param name="pool">The pool.</param>
         /// <param name="sharedHandle">The shared handle.</param>
-        public CubeTexture(Device device, int edgeLength, int levelCount, Usage usage, Format format, Pool pool, out IntPtr sharedHandle) : base(IntPtr.Zero)
+        public CubeTexture(Device device, int edgeLength, int levelCount, Usage usage, Format format, Pool pool, ref IntPtr sharedHandle) : base(IntPtr.Zero)
         {
             unsafe
             {

@@ -60,7 +60,7 @@ namespace SharpDX.Direct3D9
         /// <returns>A reference to a <see cref="Surface"/>, representing the created depth-stencil surface resource. </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::CreateDepthStencilSurface([In] unsigned int Width,[In] unsigned int Height,[In] D3DFORMAT Format,[In] D3DMULTISAMPLE_TYPE MultiSample,[In] unsigned int MultisampleQuality,[In] BOOL Discard,[Out] IDirect3DSurface9** ppSurface,[In] void** pSharedHandle)</unmanaged>
         public static Surface CreateDepthStencil(
-            Device device, int width, int height, Format format, MultisampleType multisampleType, int multisampleQuality, bool discard, out IntPtr sharedHandle)
+            Device device, int width, int height, Format format, MultisampleType multisampleType, int multisampleQuality, bool discard, ref IntPtr sharedHandle)
         {
             unsafe
             {
@@ -111,7 +111,7 @@ namespace SharpDX.Direct3D9
             int multisampleQuality,
             bool discard,
             Usage usage,
-            out IntPtr sharedHandle)
+            ref IntPtr sharedHandle)
         {
             unsafe
             {
@@ -147,7 +147,7 @@ namespace SharpDX.Direct3D9
         /// <param name="sharedHandle">The shared handle.</param>
         /// <returns>A <see cref="Surface"/> created.</returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::CreateOffscreenPlainSurface([In] unsigned int Width,[In] unsigned int Height,[In] D3DFORMAT Format,[In] D3DPOOL Pool,[Out, Fast] IDirect3DSurface9** ppSurface,[In] void** pSharedHandle)</unmanaged>
-        public static Surface CreateOffscreenPlain(Device device, int width, int height, Format format, Pool pool, out IntPtr sharedHandle)
+        public static Surface CreateOffscreenPlain(Device device, int width, int height, Format format, Pool pool, ref IntPtr sharedHandle)
         {
             unsafe
             {
@@ -188,7 +188,7 @@ namespace SharpDX.Direct3D9
         /// A <see cref="Surface"/> created.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9Ex::CreateOffscreenPlainSurfaceEx([In] unsigned int Width,[In] unsigned int Height,[In] D3DFORMAT Format,[In] D3DPOOL Pool,[Out] IDirect3DSurface9** ppSurface,[In] void** pSharedHandle,[In] unsigned int Usage)</unmanaged>
-        public static Surface CreateOffscreenPlainEx(DeviceEx device, int width, int height, Format format, Pool pool, Usage usage, out IntPtr sharedHandle)
+        public static Surface CreateOffscreenPlainEx(DeviceEx device, int width, int height, Format format, Pool pool, Usage usage, ref IntPtr sharedHandle)
         {
             unsafe
             {
@@ -233,7 +233,7 @@ namespace SharpDX.Direct3D9
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::CreateRenderTarget([In] unsigned int Width,[In] unsigned int Height,[In] D3DFORMAT Format,[In] D3DMULTISAMPLE_TYPE MultiSample,[In] unsigned int MultisampleQuality,[In] BOOL Lockable,[Out] IDirect3DSurface9** ppSurface,[In] void** pSharedHandle)</unmanaged>
         public static Surface CreateRenderTarget(
-            Device device, int width, int height, Format format, MultisampleType multisampleType, int multisampleQuality, bool lockable, out IntPtr sharedHandle)
+            Device device, int width, int height, Format format, MultisampleType multisampleType, int multisampleQuality, bool lockable, ref IntPtr sharedHandle)
         {
             unsafe
             {
@@ -284,7 +284,7 @@ namespace SharpDX.Direct3D9
             int multisampleQuality,
             bool lockable,
             Usage usage,
-            out IntPtr sharedHandle)
+            ref IntPtr sharedHandle)
         {
             unsafe
             {
