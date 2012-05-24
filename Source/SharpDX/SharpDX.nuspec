@@ -56,7 +56,7 @@
     <file src="..\..\Bin\Win8Metro\SharpDX.pdb" target="lib\winrt" />
     <file src="..\..\Bin\Win8Metro\SharpDX.xml" target="lib\winrt" />
 
-    <file src="..\SharpDX\**\*.cs" target="src\SharpDX" />
+    <file src="**\*.cs" target="src" />
   </files>
 
 </package>

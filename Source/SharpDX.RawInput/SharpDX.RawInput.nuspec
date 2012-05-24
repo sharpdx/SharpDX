@@ -49,6 +49,6 @@
     <!--<file src="..\..\Bin\Standard-net40\SharpDX.dll" target="lib\net40" />-->
     <!--<file src="..\..\Bin\Standard-net40\SharpDX.xml" target="lib\net40" />-->
 
-    <file src="..\SharpDX.RawInput\**\*.cs" target="src\SharpDX.RawInput" />
+    <file src="**\*.cs" target="src" />
   </files>
 </package>

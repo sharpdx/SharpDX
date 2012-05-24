@@ -53,6 +53,6 @@
     <file src="..\..\Bin\Win8Metro\SharpDX.XAudio2.pdb" target="lib\winrt" />
     <file src="..\..\Bin\Win8Metro\SharpDX.XAudio2.xml" target="lib\winrt" />
 
-    <file src="..\SharpDX.XAudio2\**\*.cs" target="src\SharpDX.XAudio2" />
+    <file src="**\*.cs" target="src" />
   </files>
 </package>

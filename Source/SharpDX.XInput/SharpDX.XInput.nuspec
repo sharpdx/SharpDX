@@ -53,6 +53,6 @@
     <file src="..\..\Bin\Win8Metro\SharpDX.XInput.pdb" target="lib\winrt" />
     <file src="..\..\Bin\Win8Metro\SharpDX.XInput.xml" target="lib\winrt" />
 
-    <file src="..\SharpDX.XInput\**\*.cs" target="src\SharpDX.XInput" />
+    <file src="**\*.cs" target="src" />
   </files>
 </package>

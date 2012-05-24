@@ -54,6 +54,6 @@
     <file src="..\..\Bin\Win8Metro\SharpDX.Direct2D1.pdb" target="lib\winrt" />
     <file src="..\..\Bin\Win8Metro\SharpDX.Direct2D1.xml" target="lib\winrt" />
 
-    <file src="..\SharpDX.Direct2D1\**\*.cs" target="src\SharpDX.Direct2D1" />
+    <file src="**\*.cs" target="src" />
   </files>
 </package>

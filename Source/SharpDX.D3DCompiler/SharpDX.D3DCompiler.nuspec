@@ -53,6 +53,6 @@
     <file src="..\..\Bin\Win8Metro\SharpDX.D3DCompiler.pdb" target="lib\winrt" />
     <file src="..\..\Bin\Win8Metro\SharpDX.D3DCompiler.xml" target="lib\winrt" />
 
-    <file src="..\SharpDX.D3DCompiler\**\*.cs" target="src\SharpDX.D3DCompiler" />
+    <file src="**\*.cs" target="src" />
   </files>
 </package>

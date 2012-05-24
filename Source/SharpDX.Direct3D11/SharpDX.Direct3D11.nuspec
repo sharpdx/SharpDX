@@ -55,7 +55,7 @@
     <file src="..\..\Bin\Win8Metro\SharpDX.Direct3D11.pdb" target="lib\winrt" />
     <file src="..\..\Bin\Win8Metro\SharpDX.Direct3D11.xml" target="lib\winrt" />
 
-    <file src="..\SharpDX.Direct3D11\**\*.cs" target="src\SharpDX.Direct3D11" />
+    <file src="**\*.cs" target="src" />
   </files>
   
 </package>

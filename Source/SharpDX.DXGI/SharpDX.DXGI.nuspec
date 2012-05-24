@@ -53,6 +53,6 @@
     <file src="..\..\Bin\Win8Metro\SharpDX.DXGI.pdb" target="lib\winrt" />
     <file src="..\..\Bin\Win8Metro\SharpDX.DXGI.xml" target="lib\winrt" />
 
-    <file src="..\SharpDX.DXGI\**\*.cs" target="src\SharpDX.DXGI" />
+    <file src="**\*.cs" target="src" />
   </files>
 </package>

@@ -50,6 +50,6 @@
     <!--<file src="..\..\Bin\Standard-net40\SharpDX.dll" target="lib\net40" />-->
     <!--<file src="..\..\Bin\Standard-net40\SharpDX.xml" target="lib\net40" />-->
 
-    <file src="..\SharpDX.XACT3\**\*.cs" target="src\SharpDX.XACT3" />
+    <file src="**\*.cs" target="src" />
   </files>
 </package>

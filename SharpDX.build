@@ -260,6 +260,7 @@
       <in>
         <items>
           <include name="**/*.nuspec" />
+          <exclude name="**/SharpDX.Animation.nuspec" />
         </items>
       </in>
       <do>
