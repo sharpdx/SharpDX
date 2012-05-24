@@ -24,14 +24,14 @@
   <metadata>
     <id>SharpDX.X3DAudio</id>
     <version>$version$</version>
-    <title>$title$</title>
-    <authors>$author$</authors>
-    <owners>$author$</owners>
+    <title>SharpDX.X3DAudio</title>
+    <authors>Alexandre Mutel</authors>
+    <owners>Alexandre Mutel</owners>
     <licenseUrl>http://sharpdx.org/License.txt</licenseUrl>
     <projectUrl>http://sharpdx.org</projectUrl>
     <iconUrl>http://sharpdx.org/logo_100x100.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>$description$</description>
+    <description>Assembly providing DirectX - X3DAudio managed API.</description>
     <copyright>Copyright (c) 2010-2011 Alexandre Mutel</copyright>
     <tags>SharpDX DirectX Direct3D MDX X3DAudio</tags>
     <!-- Release notes for this version-->
@@ -40,4 +40,15 @@
       <dependency id="SharpDX" version="$version$"/>
     </dependencies>
   </metadata>
+
+  <files>
+    <file src="..\..\Bin\Standard-net20\SharpDX.X3DAudio.dll" target="lib\net20" />
+    <file src="..\..\Bin\Standard-net20\SharpDX.X3DAudio.pdb" target="lib\net20" />
+    <file src="..\..\Bin\Standard-net20\SharpDX.X3DAudio.xml" target="lib\net20" />
+
+    <!--<file src="..\..\Bin\Standard-net40\SharpDX.dll" target="lib\net40" />-->
+    <!--<file src="..\..\Bin\Standard-net40\SharpDX.xml" target="lib\net40" />-->
+
+    <file src="..\SharpDX.X3DAudio\**\*.cs" target="src\SharpDX.X3DAudio" />
+  </files>  
 </package>

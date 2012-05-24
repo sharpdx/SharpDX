@@ -24,14 +24,14 @@
   <metadata>
     <id>SharpDX.Direct3D11</id>
     <version>$version$</version>
-    <title>$title$</title>
-    <authors>$author$</authors>
-    <owners>$author$</owners>
+    <title>SharpDX.Direct3D11</title>
+    <authors>Alexandre Mutel</authors>
+    <owners>Alexandre Mutel</owners>
     <licenseUrl>http://sharpdx.org/License.txt</licenseUrl>
     <projectUrl>http://sharpdx.org</projectUrl>
     <iconUrl>http://sharpdx.org/logo_100x100.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>$description$</description>
+    <description>Assembly providing DirectX - Direct3D11, Direct3D11.1 and Effects11 managed API.</description>
     <copyright>Copyright (c) 2010-2011 Alexandre Mutel</copyright>
     <tags>SharpDX DirectX Direct3D MDX 3D Direct3D11 D3D11 Effects11</tags>
     <!-- Release notes for this version-->
@@ -42,4 +42,20 @@
       <dependency id="SharpDX.DXGI" version="$version$"/>
     </dependencies>
   </metadata>
+
+  <files>
+    <file src="..\..\Bin\Standard-net20\SharpDX.Direct3D11.dll" target="lib\net20" />
+    <file src="..\..\Bin\Standard-net20\SharpDX.Direct3D11.pdb" target="lib\net20" />
+    <file src="..\..\Bin\Standard-net20\SharpDX.Direct3D11.xml" target="lib\net20" />
+
+    <!--<file src="..\..\Bin\Standard-net40\SharpDX.dll" target="lib\net40" />-->
+    <!--<file src="..\..\Bin\Standard-net40\SharpDX.xml" target="lib\net40" />-->
+
+    <file src="..\..\Bin\Win8Metro\SharpDX.Direct3D11.dll" target="lib\winrt" />
+    <file src="..\..\Bin\Win8Metro\SharpDX.Direct3D11.pdb" target="lib\winrt" />
+    <file src="..\..\Bin\Win8Metro\SharpDX.Direct3D11.xml" target="lib\winrt" />
+
+    <file src="..\SharpDX.Direct3D11\**\*.cs" target="src\SharpDX.Direct3D11" />
+  </files>
+  
 </package>

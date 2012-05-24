@@ -189,11 +189,6 @@
 
   <!-- Full clean and build -->
   <target name="full" description="Full build targets.">
-    <call target="normal"/>
-    <call target="build"/>
-
-    <!-- <call target="nuget"/> -->
-
     <call target="signed"/>
     <call target="build"/>
 
@@ -202,6 +197,11 @@
 
     <call target="dx11_1"/>
     <call target="build"/>
+
+    <call target="normal"/>
+    <call target="build"/>
+
+    <call target="nuget"/>
 
     <call target="doc"/>
 
@@ -252,6 +252,8 @@
 
   <!-- Nuget Package build -->
   <target name="nuget" description="Build NuGet Packages">
+    <!-- Setup based on config -->
+    <call target="setup"/>
     <delete dir="Packages"/>
     <mkdir dir="Packages"/>
     <foreach item="File" property="filename">
@@ -269,7 +271,8 @@
           <arg value="-OutputDirectory" />
           <arg value="${project::get-base-directory()}\Packages" />
           <arg value="-Properties" />
-          <arg value="Configuration=Release" />
+          <arg value="version=${assembly_version}" />
+          <arg value="${filename}" />
         </exec>
       </do>
     </foreach>
@@ -277,6 +280,8 @@
 
   <!-- Nuget-Publish -->
   <target name="nuget-push" description="Publish NuGet Packages">
+    <!-- Setup based on config -->
+    <call target="setup"/>
     <foreach item="File" property="filename">
       <in>
         <items>
@@ -327,6 +332,7 @@
     <copy flatten="true" todir="Bin/${version-dir}">
       <fileset basedir="Source/">
         <include name="SharpDX.*/Bin/${configuration}/*.dll" />
+        <include name="SharpDX.*/Bin/${configuration}/*.pdb" />
         <include name="SharpDX.*/Bin/${configuration}/*.xml" />
       </fileset>
     </copy>
@@ -360,7 +366,8 @@
 
     <copy todir="Build/">
       <fileset>
-        <include name="Bin/**"/>
+        <include name="Bin/**/*.dll"/>
+        <include name="Bin/**/*.xml"/>
         <include name="Samples/**"/>
         <include name="*.txt"/>
         <exclude name="Samples/Win8/Win8Demos.sln"/>

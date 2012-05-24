@@ -24,17 +24,39 @@
   <metadata>
     <id>SharpDX</id>
     <version>$version$</version>
-    <title>$title$</title>
-    <authors>$author$</authors>
-    <owners>$author$</owners>
+    <title>SharpDX</title>
+    <authors>Alexandre Mutel</authors>
+    <owners>Alexandre Mutel</owners>
     <licenseUrl>http://sharpdx.org/License.txt</licenseUrl>
     <projectUrl>http://sharpdx.org</projectUrl>
     <iconUrl>http://sharpdx.org/logo_100x100.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>$description$</description>
+    <description>Core assembly for all SharpDX assemblies.</description>
     <copyright>Copyright (c) 2010-2011 Alexandre Mutel</copyright>
     <tags>SharpDX DirectX Direct3D Multimedia MDX 3D</tags>
+
     <!-- Release notes for this version-->
-    <releaseNotes></releaseNotes>	
+    <releaseNotes></releaseNotes>
+
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.Drawing" targetFramework="net20, net40" />
+      <frameworkAssembly assemblyName="System.Windows.Forms" targetFramework="net20, net40" />
+    </frameworkAssemblies>
   </metadata>
+
+  <files>
+    <file src="..\..\Bin\Standard-net20\SharpDX.dll" target="lib\net20" />
+    <file src="..\..\Bin\Standard-net20\SharpDX.pdb" target="lib\net20" />
+    <file src="..\..\Bin\Standard-net20\SharpDX.xml" target="lib\net20" />
+
+    <!--<file src="..\..\Bin\Standard-net40\SharpDX.dll" target="lib\net40" />-->
+    <!--<file src="..\..\Bin\Standard-net40\SharpDX.xml" target="lib\net40" />-->
+
+    <file src="..\..\Bin\Win8Metro\SharpDX.dll" target="lib\winrt" />
+    <file src="..\..\Bin\Win8Metro\SharpDX.pdb" target="lib\winrt" />
+    <file src="..\..\Bin\Win8Metro\SharpDX.xml" target="lib\winrt" />
+
+    <file src="..\SharpDX\**\*.cs" target="src\SharpDX" />
+  </files>
+
 </package>
