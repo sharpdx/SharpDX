@@ -120,6 +120,7 @@
     <short name="POINTLIST">PointList</short>
     <short name="TRIANGLELIST">TriangleList</short>
     <short name="TRIANGLESTRIP">TriangleStrip</short>
+    <short name="TGSM">ThreadGroupSharedMemory</short>
   </naming>
 
   <!-- SharpDX global types -->

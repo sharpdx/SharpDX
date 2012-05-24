@@ -107,7 +107,12 @@
 
     <const from-macro="D3D11_SDK_VERSION" class="SharpDX.Direct3D11.D3D11" type="int" name="SdkVersion" />
 
-    <create-cpp enum="D3D11_DEBUG_FEATURE_FLAGS" macro="D3D11_DEBUG_FEATURE_(.*)" />
+    <const from-macro="D3D11_PS_CS_UAV_REGISTER_COUNT" class="SharpDX.Direct3D11.ComputeShaderStage" type="int" name="UnorderedAccessViewSlotCount" />
+    <const from-macro="D3D11_CS_([^0-9].*)" class="SharpDX.Direct3D11.ComputeShaderStage" type="int" name="$1" />
+
+    <const from-macro="D3D11_PS_([^C][^S].*)" class="SharpDX.Direct3D11.PixelShaderStage" type="int" name="$1" />
+
+    <create-cpp enum="D3D11_DEBUG_FEATURE_FLAGS" macro="D3D11_DEBUG_FEATURE_(.*)" />    
     <create class="D3D11" />
     <create class="D3DX11" />
     <create class="D3DCSX" />
