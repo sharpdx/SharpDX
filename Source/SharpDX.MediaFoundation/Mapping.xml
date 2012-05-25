@@ -20,7 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 -->
-<config id="sharpdx-mediafoundation" depends="sharpdx-core sharpdx-direct3d9" xmlns="urn:SharpGen.Config">
+<config id="sharpdx-mediafoundation" depends="sharpdx-core" xmlns="urn:SharpGen.Config">
+<!--<config id="sharpdx-mediafoundation" depends="sharpdx-core sharpdx-direct3d9" xmlns="urn:SharpGen.Config">-->
   <namespace>SharpDX.MediaFoundation</namespace>
   <assembly>SharpDX.MediaFoundation</assembly>
 
@@ -43,7 +44,9 @@
   <include file="mediaobj.h" attach="true"/>
   <include file="opmapi.h" attach="true"/>
   <include file="wmcontainer.h" attach="true"/>
-
+  <ifdef name="WIN8METRO">
+    <include file="mfmediaengine.h" attach="true"/>
+  </ifdef>
 
   <context-set id="mediafoundation-all">
     <context>sharpdx-mediafoundation</context>
@@ -59,6 +62,7 @@
     <context>mfplay</context>
     <context>mfreadwrite</context>
     <context>mftransform</context>
+    <context>mfmediaengine</context>
     <context>opmapi</context>
     <context>wmcontainer</context>
   </context-set>
@@ -89,6 +93,15 @@
     // MediaFoundation Enumerations
     // *****************************************************************
     -->
+    <map enum-item="DXVA2_NominalRange_0_255" name="Range0_255"/>
+    <map enum-item="DXVA2_NominalRange_16_235" name="Range16_235"/>
+    <map enum-item="DXVA2_NominalRange_48_208" name="Range48_208"/>
+    <map enum-item="MFNominalRange_([0-9].*)" name="Range$1"/>
+
+    <map enum-item="MFVideoSrcContentHintFlag_16x9" name="Hint16x9"/>
+    <map enum-item="MFVideoSrcContentHintFlag_235_1" name="Hint235_1"/>
+
+    <map enum-item="DXVAHD_ITELECINE_CAPS_(.*)" name="Reverse$1"/>
 
     <!--
     // *****************************************************************
@@ -96,11 +109,43 @@
     // *****************************************************************
     -->
 
+    <map struct="MFVideoSurfaceInfo" marshalto="true"/>
+    <map struct="OPM_OMAC" marshalto="true"/>
+    
+    <map field="DXVAHD_STREAM_STATE_PALETTE_DATA::pEntries" type="void"/>
+
+    <map enum-item="MFVideoRotationFormat_(.*)" name="Angle$1"/>
+    
     <!--
     // *****************************************************************
     // MediaFoundation Interfaces
     // *****************************************************************
     -->
+    <map interface="IMF(.*)" name="$1"/>
+    <remove inteface="MFASYNCRESULT" />
+    
+    <map interface="IOPMVideoOutput" name="VideoOutput"/>
+    <map interface="IDirectX(.*)" name="DirectX$1"/>
+
+    <map interface="IDXVAHD_(.*)" name="DirectXHD$1"/>
+
+    <map interface="IDMOQualityControl" name="QualityControl"/>
+    <map interface="IDMOVideoOutputOptimizations" name="VideoOutputOptimizations"/>
+
+    <map interface="IEVR(.*)" name="$1"/>
+
+    <map interface="IMFGetService" name="ServiceProvider"/>
+
+    <map interface="IMFShutdown" name="Shutdownable"/>
+
+    <map interface="IMF2DBuffer" name="Buffer2D"/>
+    <map interface="IMF2DBuffer2" name="Buffer2D2"/>
+
+    <map param="IMFRateControl::GetRate::pfThin" attribute="out" return="true"/>
+    <map param="IMFRateControl::GetRate::pflRate" attribute="out"/>
+
+    <map method="IMFMediaEngineProtectedContent::SetContentProtectionManager" visibility="internal"/>
+    <map param="IMFMediaEngineProtectedContent::SetContentProtectionManager::pCPM" type="void"/>
 
     <!--
     // *****************************************************************
@@ -111,6 +156,17 @@
     <remove function="BSTR_.*"/>
     <remove function="HWND_.*"/>
     <remove function="LPSAFEARRAY_.*"/>
+    
+    <!-- Remove some functions with unsupported structs -->
+    <remove function="MFInitMediaTypeFromVideoInfoHeader" />
+    <remove function="MFInitMediaTypeFromMPEG1VideoInfo" />
+    <remove function="MFInitMediaTypeFromVideoInfoHeader2" />
+    <remove function="MFInitMediaTypeFromAMMediaType" />
+    <remove function="MFInitMediaTypeFromVideoInfoHeader" />
+    <remove function="MFInitMediaTypeFromMPEG2VideoInfo" />
+    <remove function="MFInitAMMediaTypeFromMFMediaType" />
+    <remove function="MFCreateAMMediaTypeFromMFMediaType"/>
+    
     <map function="MF(.*)" name-tmp="$1"/>
     <map function="MF.*" dll='"Mfplat.dll"' group="SharpDX.MediaFoundation.MediaFactory"/>
     <map function="OPM.*" dll='"Mfplat.dll"' group="SharpDX.MediaFoundation.MediaFactory"/>

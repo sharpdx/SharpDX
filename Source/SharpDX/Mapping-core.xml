@@ -169,6 +169,10 @@
     <define interface="SharpDX.Direct3D.Blob"/>
     <define interface="SharpDX.Win32.PropertyBag"/>
     <define struct="SharpDX.Win32.SecurityAttributes" sizeof="16" />
+
+    <define struct="SharpDX.Win32.Variant" sizeof="16"/>
+    <define struct="SharpDX.Win32.BitmapInfoHeader" sizeof="40"/>
+    
   </extension>
 
   <!--
@@ -262,13 +266,13 @@
     <bind from="HALF_PTR" to="SharpDX.Win32.Unsupported.HALF_PTR"/>
     <bind from="UHALF_PTR" to="SharpDX.Win32.Unsupported.UHALF_PTR"/>
     
-    <bind from="BITMAPINFOHEADER" to="SharpDX.Win32.Unsupported.BitmapInfoHeader"/>
+    <bind from="BITMAPINFOHEADER" to="SharpDX.Win32.BitmapInfoHeader"/>
     <bind from="VIDEOINFOHEADER" to="SharpDX.Win32.Unsupported.VideoInfoHeader"/>
     <bind from="AM_MEDIA_TYPE" to="SharpDX.Win32.Unsupported.AMMediaType"/>
     <bind from="RPC_MESSAGE" to="SharpDX.Win32.Unsupported.RpcMessage"/>
     <bind from="SAFEARRAY" to="SharpDX.Win32.Unsupported.SafeArray"/>
-    <bind from="VARIANT" to="SharpDX.Win32.Unsupported.Variant"/>
-    <bind from="PROPVARIANT" to="SharpDX.Win32.Unsupported.PropertyVariant"/>
+    <bind from="VARIANT" to="SharpDX.Win32.Variant"/>
+    <bind from="PROPVARIANT" to="SharpDX.Win32.Variant"/>
 
     <!-- todo create those structures -->
     <bind from="RGNDATA" to="System.IntPtr"/>

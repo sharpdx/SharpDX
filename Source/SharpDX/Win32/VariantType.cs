@@ -18,11 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+
 namespace SharpDX.Win32
 {
     /// <summary>
     /// Type of a variant
     /// </summary>
+    [Flags]
     public enum VariantType : ushort
     {
         /// <summary>

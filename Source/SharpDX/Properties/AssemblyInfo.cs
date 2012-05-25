@@ -56,6 +56,7 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("SharpDX.XAudio2")]
 [assembly: InternalsVisibleTo("SharpDX.XACT3")]
 [assembly: InternalsVisibleTo("SharpDX.WIC")]
+[assembly: InternalsVisibleTo("SharpDX.MediaFoundation")]
 
 [assembly: InternalsVisibleTo("SharpDX.Framework.Graphics")]
 
