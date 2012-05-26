@@ -1,0 +1,621 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+-->
+<config id="sharpdx-mediafoundation" depends="sharpdx-core" xmlns="urn:SharpGen.Config">
+<!--<config id="sharpdx-mediafoundation" depends="sharpdx-core sharpdx-direct3d9" xmlns="urn:SharpGen.Config">-->
+  <namespace>SharpDX.MediaFoundation</namespace>
+  <assembly>SharpDX.MediaFoundation</assembly>
+
+  <include file="evr.h" attach="true">
+    <pre>
+      #define __AUDIODEFS_INCLUDED__
+    </pre>
+  </include>
+  <include file="evr9.h" attach="true"/>
+  <include file="mfapi.h" attach="true"/>
+  <include file="mfmp2dlna.h" attach="true"/>
+  <!-- include file="mferrors.h" attach="true"/  file doesn't exist? -->
+  <include file="mfidl.h" attach="true"/>
+  <include file="mfobjects.h" attach="true"/>
+  <include file="mfplay.h" attach="true"/>
+  <include file="mfreadwrite.h" attach="true"/>
+  <include file="mftransform.h" attach="true"/>
+  <include file="mediaobj.h" attach="true"/>
+  <include file="wmcontainer.h" attach="true"/>
+  <include file="uuids.h" attach="true"/>
+  <ifdef name="WIN8METRO">
+    <include file="mfmediaengine.h" attach="true"/>
+  </ifdef>
+
+  <context-set id="mediafoundation-all">
+    <context>sharpdx-mediafoundation</context>
+    <context>sharpdx-mediafoundation-ext</context>
+    <context>evr</context>
+    <context>evr9</context>
+    <context>mfapi</context>
+    <context>mfmp2dlna</context>
+    <context>mfidl</context>
+    <context>mfobjects</context>
+    <context>mfplay</context>
+    <context>mfreadwrite</context>
+    <context>mftransform</context>
+    <context>mfmediaengine</context>
+    <context>wmcontainer</context>
+    <context>uuids</context>
+  </context-set>
+
+  <extension>
+    <context id="mediafoundation-all"/>
+    
+    <define struct="SharpDX.MediaFoundation.Mpeg1VideoInformation" sizeof="32" />
+    <define struct="SharpDX.MediaFoundation.Mpeg2VideoInformation" sizeof="32" />
+    <define struct="SharpDX.MediaFoundation.VideoInformationHeader2" sizeof="32" />
+
+    <create class="MediaAttributeKeys" />
+
+    <const from-guid="EVRConfig_AllowBatching" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="EVRConfig_AllowBatching">new System.Guid("$1")</const>
+    <const from-guid="EVRConfig_AllowDropToBob" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="EVRConfig_AllowDropToBob">new System.Guid("$1")</const>
+    <const from-guid="EVRConfig_AllowDropToHalfInterlace" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="EVRConfig_AllowDropToHalfInterlace">new System.Guid("$1")</const>
+    <const from-guid="EVRConfig_AllowDropToThrottle" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="EVRConfig_AllowDropToThrottle">new System.Guid("$1")</const>
+    <const from-guid="EVRConfig_AllowScaling" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="EVRConfig_AllowScaling">new System.Guid("$1")</const>
+    <const from-guid="EVRConfig_ForceBatching" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="EVRConfig_ForceBatching">new System.Guid("$1")</const>
+    <const from-guid="EVRConfig_ForceBob" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="EVRConfig_ForceBob">new System.Guid("$1")</const>
+    <const from-guid="EVRConfig_ForceHalfInterlace" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="EVRConfig_ForceHalfInterlace">new System.Guid("$1")</const>
+    <const from-guid="EVRConfig_ForceScaling" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="EVRConfig_ForceScaling">new System.Guid("$1")</const>
+    <const from-guid="EVRConfig_ForceThrottle" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="EVRConfig_ForceThrottle">new System.Guid("$1")</const>
+    <const from-guid="MF_ACTIVATE_CUSTOM_VIDEO_MIXER_ACTIVATE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_ACTIVATE_CUSTOM_VIDEO_MIXER_ACTIVATE">new System.Guid("$1")</const>
+    <const from-guid="MF_ACTIVATE_CUSTOM_VIDEO_MIXER_CLSID" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_ACTIVATE_CUSTOM_VIDEO_MIXER_CLSID">new System.Guid("$1")</const>
+    <const from-guid="MF_ACTIVATE_CUSTOM_VIDEO_MIXER_FLAGS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_ACTIVATE_CUSTOM_VIDEO_MIXER_FLAGS">new System.Guid("$1")</const>
+    <const from-guid="MF_ACTIVATE_CUSTOM_VIDEO_PRESENTER_ACTIVATE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_ACTIVATE_CUSTOM_VIDEO_PRESENTER_ACTIVATE">new System.Guid("$1")</const>
+    <const from-guid="MF_ACTIVATE_CUSTOM_VIDEO_PRESENTER_CLSID" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_ACTIVATE_CUSTOM_VIDEO_PRESENTER_CLSID">new System.Guid("$1")</const>
+    <const from-guid="MF_ACTIVATE_CUSTOM_VIDEO_PRESENTER_FLAGS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_ACTIVATE_CUSTOM_VIDEO_PRESENTER_FLAGS">new System.Guid("$1")</const>
+    <const from-guid="MF_ACTIVATE_MFT_LOCKED" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_ACTIVATE_MFT_LOCKED">new System.Guid("$1")</const>
+    <const from-guid="MF_ACTIVATE_VIDEO_WINDOW" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_ACTIVATE_VIDEO_WINDOW">new System.Guid("$1")</const>
+    <const from-guid="MF_ASFPROFILE_MAXPACKETSIZE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_ASFPROFILE_MAXPACKETSIZE">new System.Guid("$1")</const>
+    <const from-guid="MF_ASFPROFILE_MINPACKETSIZE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_ASFPROFILE_MINPACKETSIZE">new System.Guid("$1")</const>
+    <const from-guid="MF_ASFSTREAMCONFIG_LEAKYBUCKET1" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_ASFSTREAMCONFIG_LEAKYBUCKET1">new System.Guid("$1")</const>
+    <const from-guid="MF_ASFSTREAMCONFIG_LEAKYBUCKET2" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_ASFSTREAMCONFIG_LEAKYBUCKET2">new System.Guid("$1")</const>
+    <const from-guid="MF_AUDIO_RENDERER_ATTRIBUTE_ENDPOINT_ID" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_AUDIO_RENDERER_ATTRIBUTE_ENDPOINT_ID">new System.Guid("$1")</const>
+    <const from-guid="MF_AUDIO_RENDERER_ATTRIBUTE_ENDPOINT_ROLE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_AUDIO_RENDERER_ATTRIBUTE_ENDPOINT_ROLE">new System.Guid("$1")</const>
+    <const from-guid="MF_AUDIO_RENDERER_ATTRIBUTE_FLAGS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_AUDIO_RENDERER_ATTRIBUTE_FLAGS">new System.Guid("$1")</const>
+    <const from-guid="MF_AUDIO_RENDERER_ATTRIBUTE_SESSION_ID" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_AUDIO_RENDERER_ATTRIBUTE_SESSION_ID">new System.Guid("$1")</const>
+    <const from-guid="MF_AUDIO_RENDERER_ATTRIBUTE_STREAM_CATEGORY" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_AUDIO_RENDERER_ATTRIBUTE_STREAM_CATEGORY">new System.Guid("$1")</const>
+    <const from-guid="MF_BYTESTREAM_CONTENT_TYPE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_BYTESTREAM_CONTENT_TYPE">new System.Guid("$1")</const>
+    <const from-guid="MF_BYTESTREAM_DURATION" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_BYTESTREAM_DURATION">new System.Guid("$1")</const>
+    <const from-guid="MF_BYTESTREAM_EFFECTIVE_URL" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_BYTESTREAM_EFFECTIVE_URL">new System.Guid("$1")</const>
+    <const from-guid="MF_BYTESTREAM_IFO_FILE_URI" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_BYTESTREAM_IFO_FILE_URI">new System.Guid("$1")</const>
+    <const from-guid="MF_BYTESTREAM_LAST_MODIFIED_TIME" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_BYTESTREAM_LAST_MODIFIED_TIME">new System.Guid("$1")</const>
+    <const from-guid="MF_BYTESTREAM_ORIGIN_NAME" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_BYTESTREAM_ORIGIN_NAME">new System.Guid("$1")</const>
+    <const from-guid="MF_BYTESTREAMHANDLER_ACCEPTS_SHARE_WRITE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_BYTESTREAMHANDLER_ACCEPTS_SHARE_WRITE">new System.Guid("$1")</const>
+    <const from-guid="MF_CAPTURE_ENGINE_D3D_MANAGER Attribute" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_CAPTURE_ENGINE_D3D_MANAGER Attribute">new System.Guid("$1")</const>
+    <const from-guid="MF_CAPTURE_ENGINE_DECODER_MFT_FIELDOFUSE_UNLOCK_Attribute" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_CAPTURE_ENGINE_DECODER_MFT_FIELDOFUSE_UNLOCK_Attribute">new System.Guid("$1")</const>
+    <const from-guid="MF_CAPTURE_ENGINE_DISABLE_DXVA" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_CAPTURE_ENGINE_DISABLE_DXVA">new System.Guid("$1")</const>
+    <const from-guid="MF_CAPTURE_ENGINE_DISABLE_HARDWARE_TRANSFORMS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_CAPTURE_ENGINE_DISABLE_HARDWARE_TRANSFORMS">new System.Guid("$1")</const>
+    <const from-guid="MF_CAPTURE_ENGINE_DISABLE_LOW_LATENCY" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_CAPTURE_ENGINE_DISABLE_LOW_LATENCY">new System.Guid("$1")</const>
+    <const from-guid="MF_CAPTURE_ENGINE_ENCODER_MFT_FIELDOFUSE_UNLOCK_Attribute" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_CAPTURE_ENGINE_ENCODER_MFT_FIELDOFUSE_UNLOCK_Attribute">new System.Guid("$1")</const>
+    <const from-guid="MF_CAPTURE_ENGINE_EVENT_GENERATOR_GUID Attribute" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_CAPTURE_ENGINE_EVENT_GENERATOR_GUID Attribute">new System.Guid("$1")</const>
+    <const from-guid="MF_CAPTURE_ENGINE_EVENT_STREAM_INDEX Attribute" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_CAPTURE_ENGINE_EVENT_STREAM_INDEX Attribute">new System.Guid("$1")</const>
+    <const from-guid="MF_CAPTURE_ENGINE_MEDIASOURCE_CONFIG" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_CAPTURE_ENGINE_MEDIASOURCE_CONFIG">new System.Guid("$1")</const>
+    <const from-guid="MF_CAPTURE_ENGINE_RECORD_SINK_AUDIO_MAX_PROCESSED_SAMPLES" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_CAPTURE_ENGINE_RECORD_SINK_AUDIO_MAX_PROCESSED_SAMPLES">new System.Guid("$1")</const>
+    <const from-guid="MF_CAPTURE_ENGINE_RECORD_SINK_AUDIO_MAX_UNPROCESSED_SAMPLES" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_CAPTURE_ENGINE_RECORD_SINK_AUDIO_MAX_UNPROCESSED_SAMPLES">new System.Guid("$1")</const>
+    <const from-guid="MF_CAPTURE_ENGINE_RECORD_SINK_VIDEO_MAX_PROCESSED_SAMPLES" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_CAPTURE_ENGINE_RECORD_SINK_VIDEO_MAX_PROCESSED_SAMPLES">new System.Guid("$1")</const>
+    <const from-guid="MF_CAPTURE_ENGINE_RECORD_SINK_VIDEO_MAX_UNPROCESSED_SAMPLES" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_CAPTURE_ENGINE_RECORD_SINK_VIDEO_MAX_UNPROCESSED_SAMPLES">new System.Guid("$1")</const>
+    <const from-guid="MF_CAPTURE_ENGINE_USE_AUDIO_DEVICE_ONLY Attribute" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_CAPTURE_ENGINE_USE_AUDIO_DEVICE_ONLY Attribute">new System.Guid("$1")</const>
+    <const from-guid="MF_CAPTURE_ENGINE_USE_VIDEO_DEVICE_ONLY Attribute" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_CAPTURE_ENGINE_USE_VIDEO_DEVICE_ONLY Attribute">new System.Guid("$1")</const>
+    <const from-guid="MF_DEVICESTREAM_EXTENSION_PLUGIN_CLSID" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_DEVICESTREAM_EXTENSION_PLUGIN_CLSID">new System.Guid("$1")</const>
+    <const from-guid="MF_DEVICESTREAM_EXTENSION_PLUGIN_CONNECTION_POINT" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_DEVICESTREAM_EXTENSION_PLUGIN_CONNECTION_POINT">new System.Guid("$1")</const>
+    <const from-guid="MF_DEVICESTREAM_IMAGE_STREAM" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_DEVICESTREAM_IMAGE_STREAM">new System.Guid("$1")</const>
+    <const from-guid="MF_DEVICESTREAM_INDEPENDENT_IMAGE_STREAM" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_DEVICESTREAM_INDEPENDENT_IMAGE_STREAM">new System.Guid("$1")</const>
+    <const from-guid="MF_DEVICESTREAM_MAX_FRAME_BUFFERS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_DEVICESTREAM_MAX_FRAME_BUFFERS">new System.Guid("$1")</const>
+    <const from-guid="MF_DEVICESTREAM_STREAM_CATEGORY" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_DEVICESTREAM_STREAM_CATEGORY">new System.Guid("$1")</const>
+    <const from-guid="MF_DEVICESTREAM_STREAM_ID" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_DEVICESTREAM_STREAM_ID">new System.Guid("$1")</const>
+    <const from-guid="MF_DEVICESTREAM_TAKEPHOTO_TRIGGER" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_DEVICESTREAM_TAKEPHOTO_TRIGGER">new System.Guid("$1")</const>
+    <const from-guid="MF_DEVICESTREAM_TRANSFORM_STREAM_ID" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_DEVICESTREAM_TRANSFORM_STREAM_ID">new System.Guid("$1")</const>
+    <const from-guid="MF_DEVSOURCE_ATTRIBUTE_FRIENDLY_NAME" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_DEVSOURCE_ATTRIBUTE_FRIENDLY_NAME">new System.Guid("$1")</const>
+    <const from-guid="MF_DEVSOURCE_ATTRIBUTE_MEDIA_TYPE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_DEVSOURCE_ATTRIBUTE_MEDIA_TYPE">new System.Guid("$1")</const>
+    <const from-guid="MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE">new System.Guid("$1")</const>
+    <const from-guid="MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_AUDCAP_ENDPOINT_ID" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_AUDCAP_ENDPOINT_ID">new System.Guid("$1")</const>
+    <const from-guid="MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_AUDCAP_ROLE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_AUDCAP_ROLE">new System.Guid("$1")</const>
+    <const from-guid="MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_VIDCAP_CATEGORY" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_VIDCAP_CATEGORY">new System.Guid("$1")</const>
+    <const from-guid="MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_VIDCAP_HW_SOURCE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_VIDCAP_HW_SOURCE">new System.Guid("$1")</const>
+    <const from-guid="MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_VIDCAP_MAX_BUFFERS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_VIDCAP_MAX_BUFFERS">new System.Guid("$1")</const>
+    <const from-guid="MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_VIDCAP_SYMBOLIC_LINK" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_VIDCAP_SYMBOLIC_LINK">new System.Guid("$1")</const>
+    <const from-guid="MF_DISABLE_LOCALLY_REGISTERED_PLUGINS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_DISABLE_LOCALLY_REGISTERED_PLUGINS">new System.Guid("$1")</const>
+    <const from-guid="MF_ENABLE_3DVIDEO_OUTPUT" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_ENABLE_3DVIDEO_OUTPUT">new System.Guid("$1")</const>
+    <const from-guid="MF_EVENT_DO_THINNING" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_EVENT_DO_THINNING">new System.Guid("$1")</const>
+    <const from-guid="MF_EVENT_MFT_CONTEXT" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_EVENT_MFT_CONTEXT">new System.Guid("$1")</const>
+    <const from-guid="MF_EVENT_MFT_INPUT_STREAM_ID" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_EVENT_MFT_INPUT_STREAM_ID">new System.Guid("$1")</const>
+    <const from-guid="MF_EVENT_OUTPUT_NODE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_EVENT_OUTPUT_NODE">new System.Guid("$1")</const>
+    <const from-guid="MF_EVENT_PRESENTATION_TIME_OFFSET" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_EVENT_PRESENTATION_TIME_OFFSET">new System.Guid("$1")</const>
+    <const from-guid="MF_EVENT_SCRUBSAMPLE_TIME" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_EVENT_SCRUBSAMPLE_TIME">new System.Guid("$1")</const>
+    <const from-guid="MF_EVENT_SESSIONCAPS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_EVENT_SESSIONCAPS">new System.Guid("$1")</const>
+    <const from-guid="MF_EVENT_SESSIONCAPS_DELTA" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_EVENT_SESSIONCAPS_DELTA">new System.Guid("$1")</const>
+    <const from-guid="MF_EVENT_SOURCE_ACTUAL_START" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_EVENT_SOURCE_ACTUAL_START">new System.Guid("$1")</const>
+    <const from-guid="MF_EVENT_SOURCE_CHARACTERISTICS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_EVENT_SOURCE_CHARACTERISTICS">new System.Guid("$1")</const>
+    <const from-guid="MF_EVENT_SOURCE_CHARACTERISTICS_OLD" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_EVENT_SOURCE_CHARACTERISTICS_OLD">new System.Guid("$1")</const>
+    <const from-guid="MF_EVENT_SOURCE_FAKE_START" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_EVENT_SOURCE_FAKE_START">new System.Guid("$1")</const>
+    <const from-guid="MF_EVENT_SOURCE_PROJECTSTART" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_EVENT_SOURCE_PROJECTSTART">new System.Guid("$1")</const>
+    <const from-guid="MF_EVENT_SOURCE_TOPOLOGY_CANCELED" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_EVENT_SOURCE_TOPOLOGY_CANCELED">new System.Guid("$1")</const>
+    <const from-guid="MF_EVENT_START_PRESENTATION_TIME" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_EVENT_START_PRESENTATION_TIME">new System.Guid("$1")</const>
+    <const from-guid="MF_EVENT_START_PRESENTATION_TIME_AT_OUTPUT" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_EVENT_START_PRESENTATION_TIME_AT_OUTPUT">new System.Guid("$1")</const>
+    <const from-guid="MF_EVENT_TOPOLOGY_STATUS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_EVENT_TOPOLOGY_STATUS">new System.Guid("$1")</const>
+    <const from-guid="MF_LOCAL_PLUGIN_CONTROL_POLICY" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_LOCAL_PLUGIN_CONTROL_POLICY">new System.Guid("$1")</const>
+    <const from-guid="MF_LOW_LATENCY" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_LOW_LATENCY">new System.Guid("$1")</const>
+    <const from-guid="MF_MEDIA_ENGINE_AUDIO_CATEGORY" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MEDIA_ENGINE_AUDIO_CATEGORY">new System.Guid("$1")</const>
+    <const from-guid="MF_MEDIA_ENGINE_AUDIO_ENDPOINT_ROLE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MEDIA_ENGINE_AUDIO_ENDPOINT_ROLE">new System.Guid("$1")</const>
+    <const from-guid="MF_MEDIA_ENGINE_CALLBACK" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MEDIA_ENGINE_CALLBACK">new System.Guid("$1")</const>
+    <const from-guid="MF_MEDIA_ENGINE_CONTENT_PROTECTION_FLAGS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MEDIA_ENGINE_CONTENT_PROTECTION_FLAGS">new System.Guid("$1")</const>
+    <const from-guid="MF_MEDIA_ENGINE_CONTENT_PROTECTION_MANAGER" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MEDIA_ENGINE_CONTENT_PROTECTION_MANAGER">new System.Guid("$1")</const>
+    <const from-guid="MF_MEDIA_ENGINE_DXGI_MANAGER" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MEDIA_ENGINE_DXGI_MANAGER">new System.Guid("$1")</const>
+    <const from-guid="MF_MEDIA_ENGINE_EXTENSION" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MEDIA_ENGINE_EXTENSION">new System.Guid("$1")</const>
+    <const from-guid="MF_MEDIA_ENGINE_OPM_HWND" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MEDIA_ENGINE_OPM_HWND">new System.Guid("$1")</const>
+    <const from-guid="MF_MEDIA_ENGINE_OPM_IWINDOW" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MEDIA_ENGINE_OPM_IWINDOW">new System.Guid("$1")</const>
+    <const from-guid="MF_MEDIA_ENGINE_PLAYBACK_HWND" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MEDIA_ENGINE_PLAYBACK_HWND">new System.Guid("$1")</const>
+    <const from-guid="MF_MEDIA_ENGINE_PLAYBACK_VISUAL" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MEDIA_ENGINE_PLAYBACK_VISUAL">new System.Guid("$1")</const>
+    <const from-guid="MF_MEDIA_ENGINE_VIDEO_OUTPUT_FORMAT" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MEDIA_ENGINE_VIDEO_OUTPUT_FORMAT">new System.Guid("$1")</const>
+    <const from-guid="MF_MP2DLNA_AUDIO_BIT_RATE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MP2DLNA_AUDIO_BIT_RATE">new System.Guid("$1")</const>
+    <const from-guid="MF_MP2DLNA_ENCODE_QUALITY" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MP2DLNA_ENCODE_QUALITY">new System.Guid("$1")</const>
+    <const from-guid="MF_MP2DLNA_STATISTICS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MP2DLNA_STATISTICS">new System.Guid("$1")</const>
+    <const from-guid="MF_MP2DLNA_USE_MMCSS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MP2DLNA_USE_MMCSS">new System.Guid("$1")</const>
+    <const from-guid="MF_MP2DLNA_VIDEO_BIT_RATE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MP2DLNA_VIDEO_BIT_RATE">new System.Guid("$1")</const>
+    <const from-guid="MF_MPEG4SINK_MOOV_BEFORE_MDAT" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MPEG4SINK_MOOV_BEFORE_MDAT">new System.Guid("$1")</const>
+    <const from-guid="MF_MPEG4SINK_SPSPPS_PASSTHROUGH" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MPEG4SINK_SPSPPS_PASSTHROUGH">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_AAC_AUDIO_PROFILE_LEVEL_INDICATION" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_AAC_AUDIO_PROFILE_LEVEL_INDICATION">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_AAC_PAYLOAD_TYPE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_AAC_PAYLOAD_TYPE">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_ALL_SAMPLES_INDEPENDENT" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_ALL_SAMPLES_INDEPENDENT">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_AM_FORMAT_TYPE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_AM_FORMAT_TYPE">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_ARBITRARY_FORMAT" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_ARBITRARY_FORMAT">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_ARBITRARY_HEADER" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_ARBITRARY_HEADER">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_AUDIO_AVG_BYTES_PER_SECOND" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_AUDIO_AVG_BYTES_PER_SECOND">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_AUDIO_BITS_PER_SAMPLE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_AUDIO_BITS_PER_SAMPLE">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_AUDIO_BLOCK_ALIGNMENT" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_AUDIO_BLOCK_ALIGNMENT">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_AUDIO_CHANNEL_MASK" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_AUDIO_CHANNEL_MASK">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_AUDIO_FLOAT_SAMPLES_PER_SECOND" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_AUDIO_FLOAT_SAMPLES_PER_SECOND">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_AUDIO_FOLDDOWN_MATRIX" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_AUDIO_FOLDDOWN_MATRIX">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_AUDIO_NUM_CHANNELS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_AUDIO_NUM_CHANNELS">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_AUDIO_PREFER_WAVEFORMATEX" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_AUDIO_PREFER_WAVEFORMATEX">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_AUDIO_SAMPLES_PER_BLOCK" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_AUDIO_SAMPLES_PER_BLOCK">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_AUDIO_SAMPLES_PER_SECOND" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_AUDIO_SAMPLES_PER_SECOND">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_AUDIO_VALID_BITS_PER_SAMPLE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_AUDIO_VALID_BITS_PER_SAMPLE">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_AUDIO_WMADRC_AVGREF" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_AUDIO_WMADRC_AVGREF">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_AUDIO_WMADRC_AVGTARGET" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_AUDIO_WMADRC_AVGTARGET">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_AUDIO_WMADRC_PEAKREF" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_AUDIO_WMADRC_PEAKREF">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_AUDIO_WMADRC_PEAKTARGET" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_AUDIO_WMADRC_PEAKTARGET">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_AVG_BIT_ERROR_RATE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_AVG_BIT_ERROR_RATE">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_AVG_BITRATE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_AVG_BITRATE">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_COMPRESSED" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_COMPRESSED">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_CUSTOM_VIDEO_PRIMARIES" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_CUSTOM_VIDEO_PRIMARIES">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_DEFAULT_STRIDE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_DEFAULT_STRIDE">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_DRM_FLAGS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_DRM_FLAGS">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_DV_AAUX_CTRL_PACK_0" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_DV_AAUX_CTRL_PACK_0">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_DV_AAUX_CTRL_PACK_1" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_DV_AAUX_CTRL_PACK_1">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_DV_AAUX_SRC_PACK_0" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_DV_AAUX_SRC_PACK_0">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_DV_AAUX_SRC_PACK_1" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_DV_AAUX_SRC_PACK_1">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_DV_VAUX_CTRL_PACK" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_DV_VAUX_CTRL_PACK">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_DV_VAUX_SRC_PACK" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_DV_VAUX_SRC_PACK">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_FIXED_SIZE_SAMPLES" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_FIXED_SIZE_SAMPLES">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_FRAME_RATE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_FRAME_RATE">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_FRAME_RATE_RANGE_MAX" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_FRAME_RATE_RANGE_MAX">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_FRAME_RATE_RANGE_MIN" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_FRAME_RATE_RANGE_MIN">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_FRAME_SIZE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_FRAME_SIZE">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_GEOMETRIC_APERTURE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_GEOMETRIC_APERTURE">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_H264_CAPABILITIES" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_H264_CAPABILITIES">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_H264_DYNAMIC_RESOLUTION_SCALING" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_H264_DYNAMIC_RESOLUTION_SCALING">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_H264_LAYER_OR_VIEW_LAYOUT" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_H264_LAYER_OR_VIEW_LAYOUT">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_H264_MAX_CODEC_CONFIG_DELAY" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_H264_MAX_CODEC_CONFIG_DELAY">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_H264_MAX_MB_PER_SEC" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_H264_MAX_MB_PER_SEC">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_H264_RATE_CONTROL_MODES" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_H264_RATE_CONTROL_MODES">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_H264_SIMULCAST_SUPPORT" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_H264_SIMULCAST_SUPPORT">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_H264_SUPPORTED_RATE_CONTROL_MODES" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_H264_SUPPORTED_RATE_CONTROL_MODES">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_H264_SUPPORTED_SLICE_MODES" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_H264_SUPPORTED_SLICE_MODES">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_H264_SUPPORTED_SYNC_FRAME_TYPES" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_H264_SUPPORTED_SYNC_FRAME_TYPES">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_H264_SUPPORTED_USAGES" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_H264_SUPPORTED_USAGES">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_H264_SVC_CAPABILITIES" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_H264_SVC_CAPABILITIES">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_H264_USAGE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_H264_USAGE">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_IMAGE_LOSS_TOLERANT" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_IMAGE_LOSS_TOLERANT">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_INTERLACE_MODE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_INTERLACE_MODE">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_MAJOR_TYPE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_MAJOR_TYPE">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_MAX_KEYFRAME_SPACING" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_MAX_KEYFRAME_SPACING">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_MINIMUM_DISPLAY_APERTURE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_MINIMUM_DISPLAY_APERTURE">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_MPEG_SEQUENCE_HEADER" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_MPEG_SEQUENCE_HEADER">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_MPEG_START_TIME_CODE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_MPEG_START_TIME_CODE">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_MPEG2_CONTENT_PACKET Attribute" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_MPEG2_CONTENT_PACKET Attribute">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_MPEG2_FLAGS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_MPEG2_FLAGS">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_MPEG2_LEVEL" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_MPEG2_LEVEL">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_MPEG2_PROFILE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_MPEG2_PROFILE">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_MPEG2_STANDARD Attribute" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_MPEG2_STANDARD Attribute">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_MPEG2_TIMECODE Attribute" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_MPEG2_TIMECODE Attribute">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_MPEG4_CURRENT_SAMPLE_ENTRY" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_MPEG4_CURRENT_SAMPLE_ENTRY">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_MPEG4_SAMPLE_DESCRIPTION" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_MPEG4_SAMPLE_DESCRIPTION">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_ORIGINAL_4CC" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_ORIGINAL_4CC">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_ORIGINAL_WAVE_FORMAT_TAG" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_ORIGINAL_WAVE_FORMAT_TAG">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_PAD_CONTROL_FLAGS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_PAD_CONTROL_FLAGS">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_PALETTE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_PALETTE">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_PAN_SCAN_APERTURE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_PAN_SCAN_APERTURE">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_PAN_SCAN_ENABLED" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_PAN_SCAN_ENABLED">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_PIXEL_ASPECT_RATIO" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_PIXEL_ASPECT_RATIO">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_SAMPLE_SIZE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_SAMPLE_SIZE">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_SOURCE_CONTENT_HINT" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_SOURCE_CONTENT_HINT">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_SUBTYPE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_SUBTYPE">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_TIMESTAMP_CAN_BE_DTS Attribute" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_TIMESTAMP_CAN_BE_DTS Attribute">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_TRANSFER_FUNCTION" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_TRANSFER_FUNCTION">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_USER_DATA" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_USER_DATA">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_VIDEO_3D" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_VIDEO_3D">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_VIDEO_3D_FIRST_IS_LEFT" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_VIDEO_3D_FIRST_IS_LEFT">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_VIDEO_3D_FORMAT" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_VIDEO_3D_FORMAT">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_VIDEO_3D_LEFT_IS_BASE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_VIDEO_3D_LEFT_IS_BASE">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_VIDEO_3D_NUM_VIEWS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_VIDEO_3D_NUM_VIEWS">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_VIDEO_CHROMA_SITING" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_VIDEO_CHROMA_SITING">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_VIDEO_LIGHTING" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_VIDEO_LIGHTING">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_VIDEO_NOMINAL_RANGE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_VIDEO_NOMINAL_RANGE">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_VIDEO_PRIMARIES" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_VIDEO_PRIMARIES">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_VIDEO_ROTATION" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_VIDEO_ROTATION">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_WRAPPED_TYPE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_WRAPPED_TYPE">new System.Guid("$1")</const>
+    <const from-guid="MF_MT_YUV_MATRIX" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_MT_YUV_MATRIX">new System.Guid("$1")</const>
+    <const from-guid="MF_NALU_LENGTH_INFORMATION" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_NALU_LENGTH_INFORMATION">new System.Guid("$1")</const>
+    <const from-guid="MF_NALU_LENGTH_SET" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_NALU_LENGTH_SET">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_APP_CONTEXT" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_APP_CONTEXT">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_ASF_CODECLIST" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_ASF_CODECLIST">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_ASF_CONTENTENCRYPTION_KEYID" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_ASF_CONTENTENCRYPTION_KEYID">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_ASF_CONTENTENCRYPTION_LICENSE_URL" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_ASF_CONTENTENCRYPTION_LICENSE_URL">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_ASF_CONTENTENCRYPTION_SECRET_DATA" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_ASF_CONTENTENCRYPTION_SECRET_DATA">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_ASF_CONTENTENCRYPTION_TYPE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_ASF_CONTENTENCRYPTION_TYPE">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_ASF_CONTENTENCRYPTIONEX_ENCRYPTION_DATA" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_ASF_CONTENTENCRYPTIONEX_ENCRYPTION_DATA">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_ASF_DATA_LENGTH" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_ASF_DATA_LENGTH">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_ASF_DATA_START_OFFSET" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_ASF_DATA_START_OFFSET">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_ASF_FILEPROPERTIES_CREATION_TIME" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_ASF_FILEPROPERTIES_CREATION_TIME">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_ASF_FILEPROPERTIES_FILE_ID" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_ASF_FILEPROPERTIES_FILE_ID">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_ASF_FILEPROPERTIES_FLAGS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_ASF_FILEPROPERTIES_FLAGS">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_ASF_FILEPROPERTIES_MAX_BITRATE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_ASF_FILEPROPERTIES_MAX_BITRATE">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_ASF_FILEPROPERTIES_MAX_PACKET_SIZE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_ASF_FILEPROPERTIES_MAX_PACKET_SIZE">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_ASF_FILEPROPERTIES_MIN_PACKET_SIZE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_ASF_FILEPROPERTIES_MIN_PACKET_SIZE">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_ASF_FILEPROPERTIES_PACKETS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_ASF_FILEPROPERTIES_PACKETS">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_ASF_FILEPROPERTIES_PLAY_DURATION" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_ASF_FILEPROPERTIES_PLAY_DURATION">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_ASF_FILEPROPERTIES_PREROLL" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_ASF_FILEPROPERTIES_PREROLL">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_ASF_FILEPROPERTIES_SEND_DURATION" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_ASF_FILEPROPERTIES_SEND_DURATION">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_ASF_INFO_HAS_AUDIO" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_ASF_INFO_HAS_AUDIO">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_ASF_INFO_HAS_NON_AUDIO_VIDEO" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_ASF_INFO_HAS_NON_AUDIO_VIDEO">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_ASF_INFO_HAS_VIDEO" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_ASF_INFO_HAS_VIDEO">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_ASF_LANGLIST" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_ASF_LANGLIST">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_ASF_LANGLIST_LEGACYORDER" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_ASF_LANGLIST_LEGACYORDER">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_ASF_MARKER" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_ASF_MARKER">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_ASF_METADATA_IS_VBR" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_ASF_METADATA_IS_VBR">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_ASF_METADATA_LEAKY_BUCKET_PAIRS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_ASF_METADATA_LEAKY_BUCKET_PAIRS">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_ASF_METADATA_V8_BUFFERAVERAGE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_ASF_METADATA_V8_BUFFERAVERAGE">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_ASF_METADATA_V8_VBRPEAK" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_ASF_METADATA_V8_VBRPEAK">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_ASF_SCRIPT" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_ASF_SCRIPT">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_AUDIO_ENCODING_BITRATE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_AUDIO_ENCODING_BITRATE">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_AUDIO_ISVARIABLEBITRATE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_AUDIO_ISVARIABLEBITRATE">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_DURATION" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_DURATION">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_LAST_MODIFIED_TIME" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_LAST_MODIFIED_TIME">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_MIME_TYPE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_MIME_TYPE">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_PLAYBACK_BOUNDARY_TIME" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_PLAYBACK_BOUNDARY_TIME">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_PLAYBACK_ELEMENT_ID" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_PLAYBACK_ELEMENT_ID">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_PMPHOST_CONTEXT" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_PMPHOST_CONTEXT">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_PREFERRED_LANGUAGE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_PREFERRED_LANGUAGE">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_SAMI_STYLELIST" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_SAMI_STYLELIST">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_TOTAL_FILE_SIZE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_TOTAL_FILE_SIZE">new System.Guid("$1")</const>
+    <const from-guid="MF_PD_VIDEO_ENCODING_BITRATE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_PD_VIDEO_ENCODING_BITRATE">new System.Guid("$1")</const>
+    <const from-guid="MF_READWRITE_D3D_OPTIONAL" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_READWRITE_D3D_OPTIONAL">new System.Guid("$1")</const>
+    <const from-guid="MF_READWRITE_DISABLE_CONVERTERS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_READWRITE_DISABLE_CONVERTERS">new System.Guid("$1")</const>
+    <const from-guid="MF_READWRITE_ENABLE_HARDWARE_TRANSFORMS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_READWRITE_ENABLE_HARDWARE_TRANSFORMS">new System.Guid("$1")</const>
+    <const from-guid="MF_READWRITE_MMCSS_CLASS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_READWRITE_MMCSS_CLASS">new System.Guid("$1")</const>
+    <const from-guid="MF_READWRITE_MMCSS_CLASS_AUDIO" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_READWRITE_MMCSS_CLASS_AUDIO">new System.Guid("$1")</const>
+    <const from-guid="MF_READWRITE_MMCSS_PRIORITY" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_READWRITE_MMCSS_PRIORITY">new System.Guid("$1")</const>
+    <const from-guid="MF_READWRITE_MMCSS_PRIORITY_AUDIO" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_READWRITE_MMCSS_PRIORITY_AUDIO">new System.Guid("$1")</const>
+    <const from-guid="MF_SA_BUFFERS_PER_SAMPLE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SA_BUFFERS_PER_SAMPLE">new System.Guid("$1")</const>
+    <const from-guid="MF_SA_D3D_AWARE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SA_D3D_AWARE">new System.Guid("$1")</const>
+    <const from-guid="MF_SA_D3D11_AWARE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SA_D3D11_AWARE">new System.Guid("$1")</const>
+    <const from-guid="MF_SA_D3D11_BINDFLAGS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SA_D3D11_BINDFLAGS">new System.Guid("$1")</const>
+    <const from-guid="MF_SA_D3D11_USAGE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SA_D3D11_USAGE">new System.Guid("$1")</const>
+    <const from-guid="MF_SA_REQUIRED_SAMPLE_COUNT" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SA_REQUIRED_SAMPLE_COUNT">new System.Guid("$1")</const>
+    <const from-guid="MF_SAMPLEGRABBERSINK_IGNORE_CLOCK" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SAMPLEGRABBERSINK_IGNORE_CLOCK">new System.Guid("$1")</const>
+    <const from-guid="MF_SAMPLEGRABBERSINK_SAMPLE_TIME_OFFSET" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SAMPLEGRABBERSINK_SAMPLE_TIME_OFFSET">new System.Guid("$1")</const>
+    <const from-guid="MF_SD_ASF_EXTSTRMPROP_AVG_BUFFERSIZE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SD_ASF_EXTSTRMPROP_AVG_BUFFERSIZE">new System.Guid("$1")</const>
+    <const from-guid="MF_SD_ASF_EXTSTRMPROP_AVG_DATA_BITRATE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SD_ASF_EXTSTRMPROP_AVG_DATA_BITRATE">new System.Guid("$1")</const>
+    <const from-guid="MF_SD_ASF_EXTSTRMPROP_LANGUAGE_ID_INDEX" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SD_ASF_EXTSTRMPROP_LANGUAGE_ID_INDEX">new System.Guid("$1")</const>
+    <const from-guid="MF_SD_ASF_EXTSTRMPROP_MAX_BUFFERSIZE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SD_ASF_EXTSTRMPROP_MAX_BUFFERSIZE">new System.Guid("$1")</const>
+    <const from-guid="MF_SD_ASF_EXTSTRMPROP_MAX_DATA_BITRATE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SD_ASF_EXTSTRMPROP_MAX_DATA_BITRATE">new System.Guid("$1")</const>
+    <const from-guid="MF_SD_ASF_METADATA_DEVICE_CONFORMANCE_TEMPLATE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SD_ASF_METADATA_DEVICE_CONFORMANCE_TEMPLATE">new System.Guid("$1")</const>
+    <const from-guid="MF_SD_ASF_STREAMBITRATES_BITRATE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SD_ASF_STREAMBITRATES_BITRATE">new System.Guid("$1")</const>
+    <const from-guid="MF_SD_LANGUAGE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SD_LANGUAGE">new System.Guid("$1")</const>
+    <const from-guid="MF_SD_MUTUALLY_EXCLUSIVE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SD_MUTUALLY_EXCLUSIVE">new System.Guid("$1")</const>
+    <const from-guid="MF_SD_PROTECTED" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SD_PROTECTED">new System.Guid("$1")</const>
+    <const from-guid="MF_SD_SAMI_LANGUAGE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SD_SAMI_LANGUAGE">new System.Guid("$1")</const>
+    <const from-guid="MF_SD_STREAM_NAME" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SD_STREAM_NAME">new System.Guid("$1")</const>
+    <const from-guid="MF_SESSION_APPROX_EVENT_OCCURRENCE_TIME" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SESSION_APPROX_EVENT_OCCURRENCE_TIME">new System.Guid("$1")</const>
+    <const from-guid="MF_SESSION_CONTENT_PROTECTION_MANAGER" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SESSION_CONTENT_PROTECTION_MANAGER">new System.Guid("$1")</const>
+    <const from-guid="MF_SESSION_GLOBAL_TIME" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SESSION_GLOBAL_TIME">new System.Guid("$1")</const>
+    <const from-guid="MF_SESSION_QUALITY_MANAGER" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SESSION_QUALITY_MANAGER">new System.Guid("$1")</const>
+    <const from-guid="MF_SESSION_REMOTE_SOURCE_MODE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SESSION_REMOTE_SOURCE_MODE">new System.Guid("$1")</const>
+    <const from-guid="MF_SESSION_SERVER_CONTEXT" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SESSION_SERVER_CONTEXT">new System.Guid("$1")</const>
+    <const from-guid="MF_SESSION_TOPOLOADER" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SESSION_TOPOLOADER">new System.Guid("$1")</const>
+    <const from-guid="MF_SINK_WRITER_ASYNC_CALLBACK" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SINK_WRITER_ASYNC_CALLBACK">new System.Guid("$1")</const>
+    <const from-guid="MF_SINK_WRITER_D3D_MANAGER" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SINK_WRITER_D3D_MANAGER">new System.Guid("$1")</const>
+    <const from-guid="MF_SINK_WRITER_DISABLE_THROTTLING" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SINK_WRITER_DISABLE_THROTTLING">new System.Guid("$1")</const>
+    <const from-guid="MF_SINK_WRITER_ENCODER_CONFIG" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SINK_WRITER_ENCODER_CONFIG">new System.Guid("$1")</const>
+    <const from-guid="MF_SOURCE_READER_ASYNC_CALLBACK" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SOURCE_READER_ASYNC_CALLBACK">new System.Guid("$1")</const>
+    <const from-guid="MF_SOURCE_READER_D3D_MANAGER" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SOURCE_READER_D3D_MANAGER">new System.Guid("$1")</const>
+    <const from-guid="MF_SOURCE_READER_DISABLE_CAMERA_PLUGINS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SOURCE_READER_DISABLE_CAMERA_PLUGINS">new System.Guid("$1")</const>
+    <const from-guid="MF_SOURCE_READER_DISABLE_DXVA" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SOURCE_READER_DISABLE_DXVA">new System.Guid("$1")</const>
+    <const from-guid="MF_SOURCE_READER_DISCONNECT_MEDIASOURCE_ON_SHUTDOWN" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SOURCE_READER_DISCONNECT_MEDIASOURCE_ON_SHUTDOWN">new System.Guid("$1")</const>
+    <const from-guid="MF_SOURCE_READER_ENABLE_ADVANCED_VIDEO_PROCESSING" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SOURCE_READER_ENABLE_ADVANCED_VIDEO_PROCESSING">new System.Guid("$1")</const>
+    <const from-guid="MF_SOURCE_READER_ENABLE_TRANSCODE_ONLY_TRANSFORMS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SOURCE_READER_ENABLE_TRANSCODE_ONLY_TRANSFORMS">new System.Guid("$1")</const>
+    <const from-guid="MF_SOURCE_READER_ENABLE_VIDEO_PROCESSING" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SOURCE_READER_ENABLE_VIDEO_PROCESSING">new System.Guid("$1")</const>
+    <const from-guid="MF_SOURCE_READER_MEDIASOURCE_CHARACTERISTICS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SOURCE_READER_MEDIASOURCE_CHARACTERISTICS">new System.Guid("$1")</const>
+    <const from-guid="MF_SOURCE_READER_MEDIASOURCE_CONFIG" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SOURCE_READER_MEDIASOURCE_CONFIG">new System.Guid("$1")</const>
+    <const from-guid="MF_SOURCE_STREAM_SUPPORTS_HW_CONNECTION" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_SOURCE_STREAM_SUPPORTS_HW_CONNECTION">new System.Guid("$1")</const>
+    <const from-guid="MF_STREAM_SINK_SUPPORTS_HW_CONNECTION" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_STREAM_SINK_SUPPORTS_HW_CONNECTION">new System.Guid("$1")</const>
+    <const from-guid="MF_STREAM_SINK_SUPPORTS_ROTATION" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_STREAM_SINK_SUPPORTS_ROTATION">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPOLOGY_DISABLE_LOCAL_TRANSFORMS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPOLOGY_DISABLE_LOCAL_TRANSFORMS">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPOLOGY_DXVA_MODE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPOLOGY_DXVA_MODE">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPOLOGY_DYNAMIC_CHANGE_NOT_ALLOWED" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPOLOGY_DYNAMIC_CHANGE_NOT_ALLOWED">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPOLOGY_ENUMERATE_SOURCE_TYPES" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPOLOGY_ENUMERATE_SOURCE_TYPES">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPOLOGY_HARDWARE_MODE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPOLOGY_HARDWARE_MODE">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPOLOGY_NO_MARKIN_MARKOUT" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPOLOGY_NO_MARKIN_MARKOUT">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPOLOGY_PLAYBACK_FRAMERATE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPOLOGY_PLAYBACK_FRAMERATE">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPOLOGY_PLAYBACK_MAX_DIMS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPOLOGY_PLAYBACK_MAX_DIMS">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPOLOGY_PROJECTSTART" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPOLOGY_PROJECTSTART">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPOLOGY_PROJECTSTOP" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPOLOGY_PROJECTSTOP">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPOLOGY_RESOLUTION_STATUS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPOLOGY_RESOLUTION_STATUS">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPOLOGY_START_TIME_ON_PRESENTATION_SWITCH" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPOLOGY_START_TIME_ON_PRESENTATION_SWITCH">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPOLOGY_STATIC_PLAYBACK_OPTIMIZATIONS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPOLOGY_STATIC_PLAYBACK_OPTIMIZATIONS">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_CONNECT_METHOD" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_CONNECT_METHOD">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_D3DAWARE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_D3DAWARE">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_DECODER" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_DECODER">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_DECRYPTOR" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_DECRYPTOR">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_DISABLE_PREROLL" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_DISABLE_PREROLL">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_DISCARDABLE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_DISCARDABLE">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_DRAIN" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_DRAIN">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_ERROR_MAJORTYPE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_ERROR_MAJORTYPE">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_ERROR_SUBTYPE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_ERROR_SUBTYPE">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_ERRORCODE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_ERRORCODE">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_FLUSH" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_FLUSH">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_LOCKED" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_LOCKED">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_MARKIN_HERE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_MARKIN_HERE">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_MARKOUT_HERE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_MARKOUT_HERE">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_MEDIASTART" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_MEDIASTART">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_MEDIASTOP" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_MEDIASTOP">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_NOSHUTDOWN_ON_REMOVE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_NOSHUTDOWN_ON_REMOVE">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_PRESENTATION_DESCRIPTOR" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_PRESENTATION_DESCRIPTOR">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_PRIMARYOUTPUT" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_PRIMARYOUTPUT">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_RATELESS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_RATELESS">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_SEQUENCE_ELEMENTID" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_SEQUENCE_ELEMENTID">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_SOURCE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_SOURCE">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_STREAM_DESCRIPTOR" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_STREAM_DESCRIPTOR">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_STREAMID" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_STREAMID">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_TRANSFORM_OBJECTID" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_TRANSFORM_OBJECTID">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_WORKQUEUE_ID" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_WORKQUEUE_ID">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_WORKQUEUE_ITEM_PRIORITY" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_WORKQUEUE_ITEM_PRIORITY">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_WORKQUEUE_MMCSS_CLASS" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_WORKQUEUE_MMCSS_CLASS">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_WORKQUEUE_MMCSS_PRIORITY" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_WORKQUEUE_MMCSS_PRIORITY">new System.Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_WORKQUEUE_MMCSS_TASKID" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TOPONODE_WORKQUEUE_MMCSS_TASKID">new System.Guid("$1")</const>
+    <const from-guid="MF_TRANSCODE_ADJUST_PROFILE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TRANSCODE_ADJUST_PROFILE">new System.Guid("$1")</const>
+    <const from-guid="MF_TRANSCODE_CONTAINERTYPE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TRANSCODE_CONTAINERTYPE">new System.Guid("$1")</const>
+    <const from-guid="MF_TRANSCODE_DONOT_INSERT_ENCODER" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TRANSCODE_DONOT_INSERT_ENCODER">new System.Guid("$1")</const>
+    <const from-guid="MF_TRANSCODE_ENCODINGPROFILE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TRANSCODE_ENCODINGPROFILE">new System.Guid("$1")</const>
+    <const from-guid="MF_TRANSCODE_QUALITYVSSPEED" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TRANSCODE_QUALITYVSSPEED">new System.Guid("$1")</const>
+    <const from-guid="MF_TRANSCODE_SKIP_METADATA_TRANSFER" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TRANSCODE_SKIP_METADATA_TRANSFER">new System.Guid("$1")</const>
+    <const from-guid="MF_TRANSCODE_TOPOLOGYMODE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TRANSCODE_TOPOLOGYMODE">new System.Guid("$1")</const>
+    <const from-guid="MF_TRANSFORM_ASYNC" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TRANSFORM_ASYNC">new System.Guid("$1")</const>
+    <const from-guid="MF_TRANSFORM_ASYNC_UNLOCK" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TRANSFORM_ASYNC_UNLOCK">new System.Guid("$1")</const>
+    <const from-guid="MF_TRANSFORM_CATEGORY_Attribute" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TRANSFORM_CATEGORY_Attribute">new System.Guid("$1")</const>
+    <const from-guid="MF_TRANSFORM_FLAGS_Attribute" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_TRANSFORM_FLAGS_Attribute">new System.Guid("$1")</const>
+    <const from-guid="MF_USER_DATA_PAYLOAD" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_USER_DATA_PAYLOAD">new System.Guid("$1")</const>
+    <const from-guid="MF_VIDEO_PROCESSOR_MIRROR" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_VIDEO_PROCESSOR_MIRROR">new System.Guid("$1")</const>
+    <const from-guid="MF_VIDEO_PROCESSOR_ROTATION" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_VIDEO_PROCESSOR_ROTATION">new System.Guid("$1")</const>
+    <const from-guid="MF_VIDEODSP_MODE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_VIDEODSP_MODE">new System.Guid("$1")</const>
+    <const from-guid="MF_XVP_DISABLE_FRC" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MF_XVP_DISABLE_FRC">new System.Guid("$1")</const>
+    <const from-guid="MFASFSPLITTER_PACKET_BOUNDARY" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFASFSPLITTER_PACKET_BOUNDARY">new System.Guid("$1")</const>
+    <const from-guid="MFPROTECTION_GRAPHICS_TRANSFER_AES_ENCRYPTION" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFPROTECTION_GRAPHICS_TRANSFER_AES_ENCRYPTION">new System.Guid("$1")</const>
+    <const from-guid="MFPROTECTION_VIDEO_FRAMES" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFPROTECTION_VIDEO_FRAMES">new System.Guid("$1")</const>
+    <const from-guid="MFPROTECTIONATTRIBUTE_BEST_EFFORT" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFPROTECTIONATTRIBUTE_BEST_EFFORT">new System.Guid("$1")</const>
+    <const from-guid="MFPROTECTIONATTRIBUTE_FAIL_OVER" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFPROTECTIONATTRIBUTE_FAIL_OVER">new System.Guid("$1")</const>
+    <const from-guid="MFSampleExtension_3DVideo" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFSampleExtension_3DVideo">new System.Guid("$1")</const>
+    <const from-guid="MFSampleExtension_3DVideo_SampleFormat" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFSampleExtension_3DVideo_SampleFormat">new System.Guid("$1")</const>
+    <const from-guid="MFSampleExtension_BottomFieldFirst" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFSampleExtension_BottomFieldFirst">new System.Guid("$1")</const>
+    <const from-guid="MFSampleExtension_CleanPoint" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFSampleExtension_CleanPoint">new System.Guid("$1")</const>
+    <const from-guid="MFSampleExtension_DecodeTimestamp Attribute" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFSampleExtension_DecodeTimestamp Attribute">new System.Guid("$1")</const>
+    <const from-guid="MFSampleExtension_DerivedFromTopField" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFSampleExtension_DerivedFromTopField">new System.Guid("$1")</const>
+    <const from-guid="MFSampleExtension_DeviceTimestamp" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFSampleExtension_DeviceTimestamp">new System.Guid("$1")</const>
+    <const from-guid="MFSampleExtension_Discontinuity" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFSampleExtension_Discontinuity">new System.Guid("$1")</const>
+    <const from-guid="MFSampleExtension_FrameCorruption" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFSampleExtension_FrameCorruption">new System.Guid("$1")</const>
+    <const from-guid="MFSampleExtension_Interlaced" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFSampleExtension_Interlaced">new System.Guid("$1")</const>
+    <const from-guid="MFSampleExtension_PacketCrossOffsets" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFSampleExtension_PacketCrossOffsets">new System.Guid("$1")</const>
+    <const from-guid="MFSampleExtension_RepeatFirstField" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFSampleExtension_RepeatFirstField">new System.Guid("$1")</const>
+    <const from-guid="MFSampleExtension_SingleField" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFSampleExtension_SingleField">new System.Guid("$1")</const>
+    <const from-guid="MFSampleExtension_Token" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFSampleExtension_Token">new System.Guid("$1")</const>
+    <const from-guid="MFSampleExtension_VideoDSPMode" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFSampleExtension_VideoDSPMode">new System.Guid("$1")</const>
+    <const from-guid="MFSampleExtension_VideoEncodePictureType" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFSampleExtension_VideoEncodePictureType">new System.Guid("$1")</const>
+    <const from-guid="MFSampleExtension_VideoEncodeQP" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFSampleExtension_VideoEncodeQP">new System.Guid("$1")</const>
+    <const from-guid="MFT_CODEC_MERIT_Attribute" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFT_CODEC_MERIT_Attribute">new System.Guid("$1")</const>
+    <const from-guid="MFT_CONNECTED_STREAM_ATTRIBUTE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFT_CONNECTED_STREAM_ATTRIBUTE">new System.Guid("$1")</const>
+    <const from-guid="MFT_CONNECTED_TO_HW_STREAM" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFT_CONNECTED_TO_HW_STREAM">new System.Guid("$1")</const>
+    <const from-guid="MFT_DECODER_EXPOSE_OUTPUT_TYPES_IN_NATIVE_ORDER" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFT_DECODER_EXPOSE_OUTPUT_TYPES_IN_NATIVE_ORDER">new System.Guid("$1")</const>
+    <const from-guid="MFT_DECODER_FINAL_VIDEO_RESOLUTION_HINT" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFT_DECODER_FINAL_VIDEO_RESOLUTION_HINT">new System.Guid("$1")</const>
+    <const from-guid="MFT_ENUM_HARDWARE_URL_Attribute" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFT_ENUM_HARDWARE_URL_Attribute">new System.Guid("$1")</const>
+    <const from-guid="MFT_ENUM_HARDWARE_VENDOR_ID_Attribute" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFT_ENUM_HARDWARE_VENDOR_ID_Attribute">new System.Guid("$1")</const>
+    <const from-guid="MFT_ENUM_TRANSCODE_ONLY_ATTRIBUTE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFT_ENUM_TRANSCODE_ONLY_ATTRIBUTE">new System.Guid("$1")</const>
+    <const from-guid="MFT_FIELDOFUSE_UNLOCK_Attribute" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFT_FIELDOFUSE_UNLOCK_Attribute">new System.Guid("$1")</const>
+    <const from-guid="MFT_FRIENDLY_NAME_Attribute" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFT_FRIENDLY_NAME_Attribute">new System.Guid("$1")</const>
+    <const from-guid="MFT_HW_TIMESTAMP_WITH_QPC_Attribute" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFT_HW_TIMESTAMP_WITH_QPC_Attribute">new System.Guid("$1")</const>
+    <const from-guid="MFT_INPUT_TYPES_Attributes" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFT_INPUT_TYPES_Attributes">new System.Guid("$1")</const>
+    <const from-guid="MFT_OUTPUT_TYPES_Attributes" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFT_OUTPUT_TYPES_Attributes">new System.Guid("$1")</const>
+    <const from-guid="MFT_PREFERRED_ENCODER_PROFILE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFT_PREFERRED_ENCODER_PROFILE">new System.Guid("$1")</const>
+    <const from-guid="MFT_PREFERRED_OUTPUTTYPE_Attribute" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFT_PREFERRED_OUTPUTTYPE_Attribute">new System.Guid("$1")</const>
+    <const from-guid="MFT_PROCESS_LOCAL_Attribute" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFT_PROCESS_LOCAL_Attribute">new System.Guid("$1")</const>
+    <const from-guid="MFT_SUPPORT_3DVIDEO" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFT_SUPPORT_3DVIDEO">new System.Guid("$1")</const>
+    <const from-guid="MFT_SUPPORT_DYNAMIC_FORMAT_CHANGE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFT_SUPPORT_DYNAMIC_FORMAT_CHANGE">new System.Guid("$1")</const>
+    <const from-guid="MFT_TRANSFORM_CLSID_Attribute" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="MFT_TRANSFORM_CLSID_Attribute">new System.Guid("$1")</const>
+    <const from-guid="VIDEO_ZOOM_RECT" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="System.Guid" name="VIDEO_ZOOM_RECT">new System.Guid("$1")</const>
+
+    <create class="MediaFactory" />
+    <const from-macro="MF_VERSION" class="SharpDX.MediaFoundation.MediaFactory" type="int" name="Version" />
+
+    <context-clear />
+  </extension>
+
+  <bindings>
+    <bind from="MPEG1VIDEOINFO" to="SharpDX.MediaFoundation.Mpeg1VideoInformation"/>
+    <bind from="MPEG2VIDEOINFO" to="SharpDX.MediaFoundation.Mpeg2VideoInformation"/>
+    <bind from="VIDEOINFOHEADER2" to="SharpDX.MediaFoundation.VideoInformationHeader2"/>
+  </bindings>
+
+  <mapping>
+    <context id="mediafoundation-all"/>
+    <!--
+    // *****************************************************************
+    // MediaFoundation Enumerations
+    // *****************************************************************
+    -->
+    <map enum="MF(.*)" name-tmp="$1"/>
+
+    <remove enum-item=".*_Mask"/>
+
+    <map enum="#MF_RESOLUTION_MEDIASOURCE" name="SourceResolverFlags" none="true" flags="true"/>
+    <map enum-item="MF_RESOLUTION_(.*)" name-tmp="$1"/>
+
+    <map enum="#MF_ACTIVATE_CUSTOM_MIXER_ALLOWFAIL" name="ActivateCustomMixerFlags" none="true" flags="true"/>
+    <map enum-item="MF_ACTIVATE_CUSTOM_MIXER_ALLOWFAIL" name="AllowFail"/>
+
+    <map enum="#MF_ACTIVATE_CUSTOM_PRESENTER_ALLOWFAIL" name="ActivateCustomPresenterFlags" none="true" flags="true"/>
+    <map enum-item="MF_ACTIVATE_CUSTOM_PRESENTER_ALLOWFAIL" name="AllowFail"/>
+
+    <map enum="#MEUnknown" name="MediaEventTypes"/>
+    <map enum-item="ME(.*)" name-tmp="$1"/>
+    <map enum-item="MEWMDRM(.*)" name-tmp="WindowsMediaDRM$1"/>
+    <remove enum="MEReservedMax"/>
+
+    <map enum="#MF_SOURCE_READER_INVALID_STREAM_INDEX" name="SourceReaderIndex"/>
+    <map enum-item="MF_SOURCE_READER_(.*)" name-tmp="$1"/>
+
+    <map enum="#MF_SINK_WRITER_INVALID_STREAM_INDEX" name="SinkWriterIndex"/>
+    <map enum-item="MF_SINK_WRITER_(.*)" name-tmp="$1"/>
+
+    <map enum-item="MFNominalRange_([0-9].*)" name="Range$1"/>
+
+    <map enum-item="MFVideoSrcContentHintFlag_16x9" name="Hint16x9"/>
+    <map enum-item="MFVideoSrcContentHintFlag_235_1" name="Hint235_1"/>
+
+    <!--
+    // *****************************************************************
+    // MediaFoundation Structures
+    // *****************************************************************
+    -->
+    <map struct="MF(.*)" name-tmp="$1"/>
+
+    <map struct="MFVideoSurfaceInfo" marshalto="true"/>
+
+    <map enum-item="MFVideoRotationFormat_(.*)" name="Angle$1"/>
+    
+    <!--
+    // *****************************************************************
+    // MediaFoundation Interfaces
+    // *****************************************************************
+    -->
+    <map interface="IMF(.*)" name="$1"/>
+    <remove inteface="MFASYNCRESULT" />
+    
+    <map interface="IDMOQualityControl" name="QualityControl"/>
+    <map interface="IDMOVideoOutputOptimizations" name="VideoOutputOptimizations"/>
+
+    <map interface="IEVR(.*)" name="$1"/>
+
+    <map interface="IMFGetService" name="ServiceProvider"/>
+    <map interface="IMFShutdown" name="Shutdownable"/>
+    <map interface="IMF2DBuffer" name="Buffer2D"/>
+    <map interface="IMF2DBuffer2" name="Buffer2D2"/>
+
+    <map param="IMFRateControl::GetRate::pfThin" attribute="out" return="true"/>
+    <map param="IMFRateControl::GetRate::pflRate" attribute="out"/>
+
+    <map method="IMFMediaEngineProtectedContent::SetContentProtectionManager" visibility="internal"/>
+    <map param="IMFMediaEngineProtectedContent::SetContentProtectionManager::pCPM" type="void"/>
+
+    <map interface="IMFAttributes" name="MediaAttributes"/>
+    <map method="IMFAttributes::GetItem" visibility="internal"/>
+    <map param="IMFAttributes::GetItem::pValue" attribute="in" type="void"/>
+    <map param="IMFAttributes::GetItemType::pType" return="true"/>
+
+    <map method="IMFAttributes::CompareItem" visibility="internal"/>
+    <map param="IMFAttributes::CompareItem::pbResult" return="true"/>
+
+    <map param="IMFAttributes::Compare::pbResult" return="true"/>
+
+    <map method="IMFAttributes::GetUINT32" name="GetInt"/>
+    <map param="IMFAttributes::GetUINT32::punValue" return="true"/>
+
+    <map method="IMFAttributes::GetUINT64" name="GetLong"/>
+    <map param="IMFAttributes::GetUINT64::punValue" return="true"/>
+
+    <map param="IMFAttributes::GetDouble::pfValue" return="true"/>
+    <map param="IMFAttributes::GetGUID::pguidValue" return="true"/>
+
+    <map method="IMFAttributes::GetString.*" visibility="internal"/>
+    <map method="IMFAttributes::GetAllocatedString" visibility="internal"/>
+
+    <map param="IMFAttributes::GetBlobSize::pcbBlobSize" return="true"/>
+    <map method="IMFAttributes::GetBlob" visibility="internal"/>
+    <map method="IMFAttributes::GetAllocatedBlob" visibility="internal"/>
+
+    <map method="IMFAttributes::GetUnknown" visibility="internal"/>
+
+    <map method="IMFAttributes::SetItem" visibility="internal"/>
+
+    <map method="IMFAttributes::SetUINT32" name="Set"/>
+    <map method="IMFAttributes::SetUINT64" name="Set"/>
+    <map method="IMFAttributes::SetDouble" name="Set"/>
+    <map method="IMFAttributes::SetGUID" name="Set"/>
+    <map method="IMFAttributes::SetString" name="Set"/>
+    <map method="IMFAttributes::SetUnknown" name="Set"/>
+
+    <map method="IMFAttributes::GetItemByIndex" visibility="internal"/>
+
+    <!--
+    // *****************************************************************
+    // MediaFoundation Functions
+    // *****************************************************************
+    -->
+    <remove function="IMF.*"/>
+    <remove function="BSTR_.*"/>
+    <remove function="HWND_.*"/>
+    <remove function="LPSAFEARRAY_.*"/>
+    
+    <!-- Remove some functions with unsupported structs -->
+    <remove function="MFInitMediaTypeFromVideoInfoHeader" />
+    <remove function="MFInitMediaTypeFromMPEG1VideoInfo" />
+    <remove function="MFInitMediaTypeFromVideoInfoHeader2" />
+    <remove function="MFInitMediaTypeFromAMMediaType" />
+    <remove function="MFInitMediaTypeFromVideoInfoHeader" />
+    <remove function="MFInitMediaTypeFromMPEG2VideoInfo" />
+    <remove function="MFInitAMMediaTypeFromMFMediaType" />
+    <remove function="MFCreateAMMediaTypeFromMFMediaType"/>
+
+    <map param="MFCreateAttributes::ppMFAttributes" attribute="out fast"/>    
+
+    <map function="MF(.*)" name-tmp="$1"/>
+    <map function="MF.*" dll='"Mfplat.dll"' group="SharpDX.MediaFoundation.MediaFactory"/>
+    <map function="Create.*" dll='"Temp.dll"' group="SharpDX.MediaFoundation.MediaFactory"/>
+
+    <context-clear />
+  </mapping>
+</config>

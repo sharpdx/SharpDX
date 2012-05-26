@@ -20,11 +20,21 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AssemblyDoc.cs" />
+    <Compile Include="Generated\DirectX\Enumerations.cs" />
+    <Compile Include="Generated\DirectX\Functions.cs" />
+    <Compile Include="Generated\DirectX\Interfaces.cs" />
+    <Compile Include="Generated\DirectX\Structures.cs" />
     <Compile Include="Generated\Enumerations.cs" />
     <Compile Include="Generated\Functions.cs" />
     <Compile Include="Generated\Interfaces.cs" />
     <Compile Include="Generated\LocalInterop.cs" />
+    <Compile Include="Generated\OPM\Enumerations.cs" />
+    <Compile Include="Generated\OPM\Functions.cs" />
+    <Compile Include="Generated\OPM\Interfaces.cs" />
+    <Compile Include="Generated\OPM\Structures.cs" />
     <Compile Include="Generated\Structures.cs" />
+    <Compile Include="MediaAttributes.cs" />
+    <Compile Include="MediaManager.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -46,6 +56,21 @@
       <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
       <Name>SharpDX</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DirectX\Mapping.xml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Mapping-core.xml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="OPM\Mapping.xml">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />

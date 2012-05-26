@@ -121,6 +121,9 @@
     <short name="TRIANGLELIST">TriangleList</short>
     <short name="TRIANGLESTRIP">TriangleStrip</short>
     <short name="TGSM">ThreadGroupSharedMemory</short>
+    <short name="IUNKNOWN">IUnknown</short>
+    <short name="UINT32">UInt32</short>
+    <short name="UINT64">UInt64</short>
   </naming>
 
   <!-- SharpDX global types -->
