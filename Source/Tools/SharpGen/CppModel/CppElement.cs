@@ -298,7 +298,8 @@ namespace SharpGen.CppModel
         public IEnumerable<T> Find<T>(string regex) where T : CppElement
         {
             var cppElements = new List<T>();
-            Find(new Regex("^" + regex + "$"), cppElements, null);
+            bool modifyParent = false;
+            Find(new Regex("^" + regex + "$"), cppElements, null, ref modifyParent);
             return cppElements.OfType<T>();
         }
 
@@ -321,8 +322,10 @@ namespace SharpGen.CppModel
         public void Modify<T>(string regex, ProcessModifier modifier) where T : CppElement
         {
             var cppElements = new List<T>();
+            bool modifyParent = regex.StartsWith("#");
+            regex = regex.TrimStart('#');
             regex = "^" + regex + "$";
-            Find(new Regex(regex), cppElements, modifier);
+            Find(new Regex(regex), cppElements, modifier, ref modifyParent);
         }
 
         /// <summary>
@@ -352,24 +355,30 @@ namespace SharpGen.CppModel
         }
 
         /// <summary>
-        ///   Finds the specified elements by regex and modifier.
+        /// Finds the specified elements by regex and modifier.
         /// </summary>
-        /// <typeparam name = "T"></typeparam>
-        /// <param name = "regex">The regex.</param>
-        /// <param name = "toAdd">To add.</param>
-        /// <param name = "modifier">The modifier.</param>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="regex">The regex.</param>
+        /// <param name="toAdd">To add.</param>
+        /// <param name="modifier">The modifier.</param>
+        /// <param name="modifyParent">if set to <c>true</c> [modify parent].</param>
         /// <returns></returns>
-        private bool Find<T>(Regex regex, List<T> toAdd, ProcessModifier modifier) where T : CppElement
+        private bool Find<T>(Regex regex, List<T> toAdd, ProcessModifier modifier, ref bool modifyParent) where T : CppElement
         {
             bool isToRemove = false;
             string path = FullName;
 
-            if ((this is T) && path != null && regex.Match(path).Success)
+            var elementToModify = modifyParent ? Parent : this;
+
+            if ((elementToModify is T) && path != null && regex.Match(path).Success)
             {
                 if (toAdd != null)
-                    toAdd.Add((T) this);
+                    toAdd.Add((T)elementToModify);
+
                 if (modifier != null)
-                    isToRemove = modifier(regex, this);
+                {
+                    isToRemove = modifier(regex, elementToModify);
+                }
             }
 
             var elementsToRemove = new List<CppElement>();
@@ -383,7 +392,7 @@ namespace SharpGen.CppModel
                 // Optimized version with findContext
                 foreach (var innerElement in AllItems)
                 {
-                    if (innerElement.Find(regex, toAdd, modifier))
+                    if (innerElement.Find(regex, toAdd, modifier, ref modifyParent))
                         elementsToRemove.Add(innerElement);
                 }
             }
@@ -392,9 +401,17 @@ namespace SharpGen.CppModel
                 foreach (var innerElement in AllItems)
                 {
                     if (_findContext.Contains(innerElement.Name))
-                        if (innerElement.Find(regex, toAdd, modifier))
+                        if (innerElement.Find(regex, toAdd, modifier, ref modifyParent))
                             elementsToRemove.Add(innerElement);
                 }
+            }
+
+            // If we are removing the parent using modifyParent flag
+            // Set modifyParent to false after removing in order to avoid recursive remove of all parents
+            if (elementsToRemove.Count > 0 && modifyParent)
+            {
+                modifyParent = false;
+                return true;
             }
 
             foreach (var innerElementToRemove in elementsToRemove)
