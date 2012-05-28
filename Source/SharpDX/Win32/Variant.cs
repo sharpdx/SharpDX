@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Globalization;
 using System.Runtime.InteropServices;
 
 namespace SharpDX.Win32
@@ -48,6 +49,10 @@ namespace SharpDX.Win32
             {
                 return (VariantElementType)(vt & 0x0fff);
             }
+            set
+            {
+                vt = (ushort)((vt & 0xf000) | (ushort)value);
+            }
         }
 
         /// <summary>
@@ -58,6 +63,10 @@ namespace SharpDX.Win32
             get
             {
                 return (VariantType)(vt & 0xf000);
+            }
+            set
+            {
+                vt = (ushort)((vt & 0x0fff) | (ushort)value);
             }
         }
 
@@ -80,7 +89,11 @@ namespace SharpDX.Win32
                             case VariantElementType.Null:
                                 return null;
                             case VariantElementType.Blob:
-                                return variantValue.recordValue.RecordPointer;
+                                {
+                                    var buffer = new byte[(int)variantValue.recordValue.RecordInfo];
+                                    Utilities.Read(variantValue.recordValue.RecordPointer, buffer, 0, buffer.Length);
+                                    return buffer;
+                                }
                             case VariantElementType.Bool:
                                 return variantValue.intValue != 0;
                             case VariantElementType.Byte:
@@ -236,7 +249,81 @@ namespace SharpDX.Win32
             }
             set
             {
-                throw new NotImplementedException();
+                if (value == null)
+                {
+                    Type = VariantType.Default;
+                    ElementType = VariantElementType.Null;
+                    return;
+                }
+                var type = value.GetType();
+
+                Type = VariantType.Default;
+                if (type.IsPrimitive)
+                {
+                    if (type == typeof(int))
+                    {
+                        ElementType = VariantElementType.Int;
+                        variantValue.intValue = (int)value;
+                        return;
+                    }
+
+                    if (type == typeof(uint))
+                    {
+                        ElementType = VariantElementType.UInt;
+                        variantValue.uintValue = (uint)value;
+                        return;
+                    }
+
+                    if (type == typeof(long))
+                    {
+                        ElementType = VariantElementType.Long;
+                        variantValue.longValue= (long)value;
+                        return;
+                    }
+
+                    if (type == typeof(ulong))
+                    {
+                        ElementType = VariantElementType.ULong;
+                        variantValue.ulongValue = (ulong)value;
+                        return;
+                    }
+
+                    if (type == typeof(short))
+                    {
+                        ElementType = VariantElementType.Short;
+                        variantValue.shortValue= (short)value;
+                        return;
+                    }
+
+                    if (type == typeof(ushort))
+                    {
+                        ElementType = VariantElementType.UShort;
+                        variantValue.ushortValue = (ushort)value;
+                        return;
+                    }
+
+                    if (type == typeof(float))
+                    {
+                        ElementType = VariantElementType.Float;
+                        variantValue.floatValue = (float)value;
+                        return;
+                    }
+
+                    if (type == typeof(double))
+                    {
+                        ElementType = VariantElementType.Double;
+                        variantValue.doubleValue = (double)value;
+                        return;
+                    }
+                }
+                else if (value is ComObject)
+                {
+                    ElementType = VariantElementType.ComUnknown;
+                    variantValue.pointerValue = ((ComObject)value).NativePointer;
+                    return;
+                }
+
+                throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Type [{0}] is not handled", type.Name));
             }
         }
 
