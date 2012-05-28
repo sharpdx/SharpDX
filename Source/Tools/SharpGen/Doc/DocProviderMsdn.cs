@@ -521,7 +521,7 @@ namespace SharpGen.Doc
         {
             try
             {
-                var url = "http://social.msdn.microsoft.com/Search/en-US?query=" + HttpUtility.UrlEncode(name) + "&refinement=117&addenglish=1";
+                var url = "http://social.msdn.microsoft.com/Search/en-US?query=" + HttpUtility.UrlEncode(name) + "&addenglish=1";
 
                 var result = GetFromUrl(url);
 
