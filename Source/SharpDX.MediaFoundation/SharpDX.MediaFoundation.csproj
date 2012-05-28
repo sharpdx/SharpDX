@@ -33,6 +33,7 @@
     <Compile Include="Generated\OPM\Interfaces.cs" />
     <Compile Include="Generated\OPM\Structures.cs" />
     <Compile Include="Generated\Structures.cs" />
+    <Compile Include="MediaAttributeKey.cs" />
     <Compile Include="MediaAttributes.cs" />
     <Compile Include="MediaManager.cs" />
     <Compile Include="NamespaceDoc.cs" />
