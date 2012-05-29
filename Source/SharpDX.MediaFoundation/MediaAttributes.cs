@@ -200,22 +200,6 @@ namespace SharpDX.MediaFoundation
         }
 
         /// <summary>	
-        /// Compares item value.	
-        /// </summary>	
-        /// <param name="guidKey">No documentation.</param>	
-        /// <param name="value">No documentation.</param>	
-        /// <returns>No documentation.</returns>	
-        /// <msdn-id>ms704598</msdn-id>	
-        /// <unmanaged>HRESULT IMFAttributes::CompareItem([In] const GUID&amp; guidKey,[In] const PROPVARIANT&amp; Value,[Out] BOOL* pbResult)</unmanaged>	
-        /// <unmanaged-short>IMFAttributes::CompareItem</unmanaged-short>	
-        public unsafe bool CompareItem(System.Guid guidKey, object value)
-        {
-            var variant = new SharpDX.Win32.Variant();
-            SetValueToVariant(ref variant, value);
-            return CompareItem(guidKey, variant);
-        }
-
-        /// <summary>	
         /// <p><strong>Applies to: </strong>desktop apps | Metro style apps</p><p> Adds an attribute value with a specified key. </p>	
         /// </summary>	
         /// <param name="guidKey"><dd> <p> A <see cref="System.Guid"/> that identifies the value to set. If this key already exists, the method overwrites the old value. </p> </dd></param>	
@@ -312,44 +296,6 @@ namespace SharpDX.MediaFoundation
         public unsafe void Set<T>(MediaAttributeKey<T> guidKey, T value)
         {
             Set(guidKey.Guid, value);
-        }
-
-
-        internal static void SetValueToVariant(ref SharpDX.Win32.Variant variant, object value)
-        {
-            // TODO, add better support for all conversions
-
-            if (value is int || value is bool || value.GetType().IsEnum || value is byte || value is uint)
-            {
-                variant.Value = Convert.ToUInt32(value);
-                return;
-            }
-
-            if (value is double || value is float)
-            {
-                variant.Value = Convert.ToDouble(value);
-                return;
-            }
-
-            if (value is IntPtr)
-            {
-                variant.Value = Convert.ToUInt64(((IntPtr)value).ToInt64());
-                return;
-            }
-
-            if (value is ulong || value is long)
-            {
-                variant.Value = Convert.ToUInt64(value);
-                return;
-            }
-
-            if (value is string || value is byte[] || value is ComObject)
-            {
-                variant.Value = value;
-                return;
-            }
-
-            throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Variant value type [{0}] is not handled", value.GetType().Name));
         }
     }
 }
