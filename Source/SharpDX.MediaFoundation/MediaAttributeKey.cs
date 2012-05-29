@@ -56,102 +56,6 @@ namespace SharpDX.MediaFoundation
         /// The type.
         /// </value>
         public Type Type { get; private set; }
-
-
-        internal static object GetValueFromVariant(ref SharpDX.Win32.Variant variant)
-        {
-            var value = variant.Value;
-            if (value == null)
-                return null;
-
-            if (value is uint || value is int)
-            {
-                return (int)Convert.ChangeType(value, typeof(int));
-            }
-
-            if (value is ulong || value is long)
-            {
-                return (long)Convert.ChangeType(value, typeof(long));
-            }
-
-            if (value is double)
-            {
-                return (int)Convert.ChangeType(value, typeof(double));
-            }
-            
-            return value;
-        }
-
-        internal static T GetValueFromVariant<T>(ref SharpDX.Win32.Variant variant)
-        {
-            var value = variant.Value;
-            if (value == null)
-                return default(T);
-
-            if (value is uint || value is ulong || value is double)
-            {
-                return (T)Convert.ChangeType(value, typeof(T));
-            }
-
-            if (variant.Type == VariantType.Default && variant.ElementType == VariantElementType.ComUnknown && typeof(T).IsSubclassOf(typeof(ComObject)) )
-            {
-                return (T)value;
-            }
-
-            if (value.GetType() == typeof(T))
-            {
-                return (T)value;
-            }
-
-            throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Variant value type [{0}] is not handled", value.GetType().Name));
-        }
-
-
-        internal static void SetValueToVariant<T>(ref SharpDX.Win32.Variant variant, T value)
-        {
-            if (value is int || value is bool || value.GetType().IsEnum || value is byte || value is uint)
-            {
-                variant.Value = Convert.ToUInt32(value);
-                return;
-            }
-
-            if (value is ulong || value is IntPtr || value is long)
-            {
-                variant.Value = Convert.ToUInt64(value);
-                return;
-            }
-
-            if (value is string || value is byte[] || value is ComObject)
-            {
-                variant.Value = value;
-                return;
-            }
-
-            throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Variant value type [{0}] is not handled", value.GetType().Name));
-        }
-
-        internal static void SetValueToVariant(ref SharpDX.Win32.Variant variant, object value)
-        {
-            if (value is int || value is bool || value.GetType().IsEnum || value is byte || value is uint)
-            {
-                variant.Value = Convert.ToUInt32(value);
-                return;
-            }
-
-            if (value is ulong || value is IntPtr || value is long)
-            {
-                variant.Value = Convert.ToUInt64(value);
-                return;
-            }
-
-            if (value is string || value is byte[] || value is ComObject)
-            {
-                variant.Value = value;
-                return;
-            }
-
-            throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Variant value type [{0}] is not handled", value.GetType().Name));
-        }
     }
 
 
@@ -176,16 +80,6 @@ namespace SharpDX.MediaFoundation
         /// <param name="guid">The GUID.</param>
         public MediaAttributeKey(Guid guid) : base(guid, typeof(T))
         {
-        }
-
-        internal T GetValue(ref SharpDX.Win32.Variant variant)
-        {
-            return GetValueFromVariant<T>(ref variant);
-        }
-
-        internal void SetValue<T>(ref SharpDX.Win32.Variant variant, T value)
-        {
-            SetValueToVariant(ref variant, value);
         }
     }
 }

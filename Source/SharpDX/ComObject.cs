@@ -98,6 +98,22 @@ namespace SharpDX
             return FromPointer<T>(parentPtr);
         }
 
+        ///<summary>
+        /// Query this instance for a particular COM interface support.
+        ///</summary>
+        ///<typeparam name="T">The type of the COM interface to query</typeparam>
+        ///<returns>An instance of the queried interface</returns>
+        /// <exception cref="SharpDXException">If this object doesn't support the interface</exception>
+        /// <msdn-id>ms682521</msdn-id>
+        /// <unmanaged>IUnknown::QueryInterface</unmanaged>	
+        /// <unmanaged-short>IUnknown::QueryInterface</unmanaged-short>
+        internal virtual T QueryInterfaceUnsafe<T>()
+        {
+            IntPtr parentPtr;
+            this.QueryInterface(Utilities.GetGuidFromType(typeof(T)), out parentPtr);
+            return FromPointerUnsafe<T>(parentPtr);
+        }
+
         /// <summary>
         /// Queries a managed object for a particular COM interface support (This method is a shortcut to <see cref="QueryInterface"/>)
         /// </summary>
@@ -129,6 +145,14 @@ namespace SharpDX
             using (var tempObject = new ComObject(iunknownPtr))
             {
                 return tempObject.QueryInterface<T>();
+            }
+        }
+
+        internal static T AsUnsafe<T>(IntPtr iunknownPtr)
+        {
+            using (var tempObject = new ComObject(iunknownPtr))
+            {
+                return tempObject.QueryInterfaceUnsafe<T>();
             }
         }
 

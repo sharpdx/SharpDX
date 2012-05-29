@@ -624,32 +624,39 @@
 
     <map param="IMFAttributes::Compare::pbResult" return="true"/>
 
+    <map method="IMFAttributes::GetUINT32" visibility="internal"/>
     <map method="IMFAttributes::GetUINT32" name="GetInt"/>
     <map param="IMFAttributes::GetUINT32::punValue" return="true"/>
 
+    <map method="IMFAttributes::GetUINT64" visibility="internal"/>
     <map method="IMFAttributes::GetUINT64" name="GetLong"/>
     <map param="IMFAttributes::GetUINT64::punValue" return="true"/>
 
+    <map method="IMFAttributes::GetDouble" visibility="internal"/>
+    <map method="IMFAttributes::GetGUID" visibility="internal"/>
     <map param="IMFAttributes::GetDouble::pfValue" return="true"/>
     <map param="IMFAttributes::GetGUID::pguidValue" return="true"/>
 
     <map method="IMFAttributes::GetString.*" visibility="internal"/>
     <map method="IMFAttributes::GetAllocatedString" visibility="internal"/>
+    <map param="IMFAttributes::GetStringLength::pcchLength" return="true"/>
 
-    <map param="IMFAttributes::GetBlobSize::pcbBlobSize" return="true"/>
-    <map method="IMFAttributes::GetBlob" visibility="internal"/>
+    <map method="IMFAttributes::GetBlob.*" visibility="internal"/>
     <map method="IMFAttributes::GetAllocatedBlob" visibility="internal"/>
+    <map param="IMFAttributes::GetBlob::pBuf" type="void" attribute="in"/>
+    <map param="IMFAttributes::GetBlobSize::pcbBlobSize" return="true"/>
+    <map method="IMFAttributes::SetBlob"    visibility="internal" />
+    <map param="IMFAttributes::SetBlob::pBuf" type="void" attribute="in"/>
 
     <map method="IMFAttributes::GetUnknown" visibility="internal"/>
 
-    <map method="IMFAttributes::SetItem" visibility="internal"/>
-
-    <map method="IMFAttributes::SetUINT32" name="Set"/>
-    <map method="IMFAttributes::SetUINT64" name="Set"/>
-    <map method="IMFAttributes::SetDouble" name="Set"/>
-    <map method="IMFAttributes::SetGUID" name="Set"/>
-    <map method="IMFAttributes::SetString" name="Set"/>
-    <map method="IMFAttributes::SetUnknown" name="Set"/>
+    <map method="IMFAttributes::SetItem"    name="Set" visibility="internal" />
+    <map method="IMFAttributes::SetUINT32"  name="Set" visibility="internal" />
+    <map method="IMFAttributes::SetUINT64"  name="Set" visibility="internal" />
+    <map method="IMFAttributes::SetDouble"  name="Set" visibility="internal" />
+    <map method="IMFAttributes::SetGUID"    name="Set" visibility="internal" />
+    <map method="IMFAttributes::SetString"  name="Set" visibility="internal" />
+    <map method="IMFAttributes::SetUnknown" name="Set" visibility="internal" />
 
     <map method="IMFAttributes::GetItemByIndex" visibility="internal"/>
 

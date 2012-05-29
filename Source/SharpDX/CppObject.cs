@@ -136,5 +136,10 @@ namespace SharpDX
         {
             return (comObjectPtr == IntPtr.Zero) ? null : (T) Activator.CreateInstance(typeof (T), comObjectPtr);
         }
+
+        internal static T FromPointerUnsafe<T>(IntPtr comObjectPtr)
+        {
+            return (comObjectPtr == IntPtr.Zero) ? (T)(object)null : (T)Activator.CreateInstance(typeof(T), comObjectPtr);
+        }
     }
 }

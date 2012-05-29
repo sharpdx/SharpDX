@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TestMediaAttributes.cs" />
     <Compile Include="TestGetterSetter.cs" />
     <Compile Include="TestResultDescriptor.cs" />
     <Compile Include="RawMatrix.cs" />
@@ -59,6 +60,10 @@
     <ProjectReference Include="..\..\SharpDX.DXGI\SharpDX.DXGI.csproj">
       <Project>{3FC6DE77-B412-4101-9E64-6B9AA831179B}</Project>
       <Name>SharpDX.DXGI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SharpDX.MediaFoundation\SharpDX.MediaFoundation.csproj">
+      <Project>{CA21A201-078B-4EBE-A2AB-C3B1FFEC99F9}</Project>
+      <Name>SharpDX.MediaFoundation</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\SharpDX\SharpDX.csproj">
       <Project>{D0BCD56A-41C4-4A4E-8590-26864CED07FF}</Project>

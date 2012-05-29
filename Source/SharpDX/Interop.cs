@@ -36,12 +36,12 @@ namespace SharpDX
         /// <remarks>
         /// This is the only function in this class that is inlined in order to inline the fixed statement correctly.
         /// </remarks>
-        public static unsafe void* Fixed<T>(ref T data) where T : struct
+        public static unsafe void* Fixed<T>(ref T data) 
         {
             throw new NotImplementedException();
         }
 
-        public static unsafe void* Fixed<T>(T[] data) where T : struct
+        public static unsafe void* Fixed<T>(T[] data)
         {
             throw new NotImplementedException();
         }
@@ -88,7 +88,7 @@ namespace SharpDX
             throw new NotImplementedException();
         }
 
-        public static int SizeOf<T>() where T : struct
+        public static int SizeOf<T>()
         {
             throw new NotImplementedException();
         }
