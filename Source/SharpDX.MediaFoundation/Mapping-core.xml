@@ -20,8 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 -->
-<config id="sharpdx-mediafoundation" depends="sharpdx-core" xmlns="urn:SharpGen.Config">
-<!--<config id="sharpdx-mediafoundation" depends="sharpdx-core sharpdx-direct3d9" xmlns="urn:SharpGen.Config">-->
+<config id="sharpdx-mediafoundation" xmlns="urn:SharpGen.Config">
+  <depends>sharpdx-core</depends>
+
+  <ifdef name="DIRECTX11_1">
+    <depends>sharpdx-dxgi</depends>
+  </ifdef>
+
   <namespace>SharpDX.MediaFoundation</namespace>
   <assembly>SharpDX.MediaFoundation</assembly>
 
@@ -30,7 +35,11 @@
       #define __AUDIODEFS_INCLUDED__
     </pre>
   </include>
-  <include file="evr9.h" attach="true"/>
+
+  <ifdnef name="DIRECTX11_1">
+    <include file="evr9.h" attach="true"/>
+  </ifdnef>
+  
   <include file="mfapi.h" attach="true"/>
   <include file="mfmp2dlna.h" attach="true"/>
   <!-- include file="mferrors.h" attach="true"/  file doesn't exist? -->
@@ -578,6 +587,11 @@
 
     <map enum-item="MFVideoSrcContentHintFlag_16x9" name="Hint16x9"/>
     <map enum-item="MFVideoSrcContentHintFlag_235_1" name="Hint235_1"/>
+
+    <map enum="MF2DBuffer_LockFlags" name="Buffer2DLockFlags"/>
+    <remove enum-item="MF2DBuffer_LockFlags_ForceDWORD"/>
+
+    <map enum="MF3DVideoOutputType" name="Video3DOutputType"/>
 
     <!--
     // *****************************************************************

@@ -20,18 +20,10 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AssemblyDoc.cs" />
-    <Compile Include="Generated\DirectX\Enumerations.cs" />
-    <Compile Include="Generated\DirectX\Functions.cs" />
-    <Compile Include="Generated\DirectX\Interfaces.cs" />
-    <Compile Include="Generated\DirectX\Structures.cs" />
     <Compile Include="Generated\Enumerations.cs" />
     <Compile Include="Generated\Functions.cs" />
     <Compile Include="Generated\Interfaces.cs" />
     <Compile Include="Generated\LocalInterop.cs" />
-    <Compile Include="Generated\OPM\Enumerations.cs" />
-    <Compile Include="Generated\OPM\Functions.cs" />
-    <Compile Include="Generated\OPM\Interfaces.cs" />
-    <Compile Include="Generated\OPM\Structures.cs" />
     <Compile Include="Generated\Structures.cs" />
     <Compile Include="MediaAttributeKey.cs" />
     <Compile Include="MediaAttributes.cs" />
@@ -52,6 +44,10 @@
     <ProjectReference Include="..\SharpDX.Direct3D9\SharpDX.Direct3D9.csproj" Condition=" '$(SharpDXWin8)' == 'false'">
       <Project>{B4D984DF-85B8-4BBF-8C3B-5CEF905F40D9}</Project>
       <Name>SharpDX.Direct3D9</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpDX.DXGI\SharpDX.DXGI.csproj">
+      <Project>{3FC6DE77-B412-4101-9E64-6B9AA831179B}</Project>
+      <Name>SharpDX.DXGI</Name>
     </ProjectReference>
     <ProjectReference Include="..\SharpDX\SharpDX.csproj">
       <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>

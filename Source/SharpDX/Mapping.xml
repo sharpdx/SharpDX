@@ -20,7 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 -->
-<config id="sharpdx" depends="sharpdx-root sharpdx-core sharpdx-core-direct3d sharpdx-core-multimedia" xmlns="urn:SharpGen.Config">
+<config id="sharpdx" xmlns="urn:SharpGen.Config">
+  <depends>sharpdx-root</depends>
+  <depends>sharpdx-core</depends>
+  <depends>sharpdx-core-direct3d</depends>
+  <depends>sharpdx-core-multimedia</depends>
+
   <file>Mapping-core.xml</file>
   <file>Direct3D\Mapping.xml</file>
   <file>Multimedia\Mapping.xml</file>  

@@ -147,7 +147,7 @@ namespace SharpGen.Config
         [XmlAttribute("id")]
         public string Id { get; set; }
 
-        [XmlAttribute("depends")]
+        [XmlElement("depends")]
         public List<string> Depends { get; set; }
 
         [XmlElement("namespace")]

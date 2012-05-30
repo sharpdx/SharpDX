@@ -20,7 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 -->
-<config id="sharpdx-direct3d1x" depends="sharpdx" xmlns="urn:SharpGen.Config">
+<config id="sharpdx-direct3d1x" xmlns="urn:SharpGen.Config">
+  <depends>sharpdx</depends> 
 
   <!--  This file is a common mapping file to D3D10, D3D10.1 and D3D11 APIs -->
   

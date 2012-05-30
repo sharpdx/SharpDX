@@ -20,7 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 -->
-<config id="sharpdx-xaudio2-xapo" depends="sharpdx" xmlns="urn:SharpGen.Config">
+<config id="sharpdx-xaudio2-xapo" xmlns="urn:SharpGen.Config">
+  <depends>sharpdx</depends>
+  
   <file>XAPO\Mapping.xml</file>
   <file>Mapping-xaudio2.xml</file>
 </config>

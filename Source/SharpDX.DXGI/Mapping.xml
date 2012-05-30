@@ -20,7 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 -->
-<config id="sharpdx-dxgi" depends="sharpdx" xmlns="urn:SharpGen.Config">
+<config id="sharpdx-dxgi" xmlns="urn:SharpGen.Config">
+  <depends>sharpdx</depends>
   
   <namespace>SharpDX.DXGI</namespace>
   <assembly>SharpDX.DXGI</assembly>

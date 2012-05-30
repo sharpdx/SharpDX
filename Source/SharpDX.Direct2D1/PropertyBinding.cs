@@ -71,7 +71,7 @@ namespace SharpDX.Direct2D1
             else if (propType == typeof(uint))
             {
                 binding.nativeGetSet = new NativeGetSetValue<uint>(customEffectType, propertyInfo);
-                effectPropType = PropertyType.Uint32;
+                effectPropType = PropertyType.UInt32;
             }
             else if (propType == typeof(bool))
             {
@@ -144,7 +144,7 @@ namespace SharpDX.Direct2D1
             {
                 // For ComObject we are using IntPtr as a transient value
                 binding.nativeGetSet = new NativeGetSetValue<IntPtr>(customEffectType, propertyInfo);
-                effectPropType = PropertyType.Iunknown;
+                effectPropType = PropertyType.IUnknown;
             }
             //else if (propTypeInfo.IsArray)
             //{

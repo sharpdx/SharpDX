@@ -20,7 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 -->
-<config id="sharpdx-x3daudio" depends="sharpdx" xmlns="urn:SharpGen.Config">
+<config id="sharpdx-x3daudio" xmlns="urn:SharpGen.Config">
+  <depends>sharpdx</depends>
   
   <namespace>SharpDX.X3DAudio</namespace>
   <assembly>SharpDX.X3DAudio</assembly>

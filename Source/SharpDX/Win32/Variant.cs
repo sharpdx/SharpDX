@@ -21,6 +21,7 @@
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using System.Reflection;
 
 namespace SharpDX.Win32
 {
@@ -258,7 +259,11 @@ namespace SharpDX.Win32
                 var type = value.GetType();
 
                 Type = VariantType.Default;
+#if WIN8METRO
+                if (type.GetTypeInfo().IsPrimitive)
+#else
                 if (type.IsPrimitive)
+#endif
                 {
                     if (type == typeof(int))
                     {

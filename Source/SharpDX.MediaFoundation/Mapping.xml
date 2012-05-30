@@ -20,8 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 -->
-<config id="sharpdx-mediafoundation-all" depends="sharpdx-core sharpdx-mediafoundation sharpdx-mediafoundation-directx sharpdx-mediafoundation-opm" xmlns="urn:SharpGen.Config">
+<config id="sharpdx-mediafoundation-all" xmlns="urn:SharpGen.Config">
+  <depends>sharpdx-core</depends>
+  <depends>sharpdx-mediafoundation</depends>
+
   <file>Mapping-core.xml</file>
-  <file>DirectX\Mapping.xml</file>
-  <file>OPM\Mapping.xml</file>
+
+  <ifdnef name="DIRECTX11_1">
+    <depends>sharpdx-mediafoundation-directx</depends>
+    <depends>sharpdx-mediafoundation-opm</depends>
+    <file>DirectX\Mapping.xml</file>
+    <file>OPM\Mapping.xml</file>
+  </ifdnef>
+
 </config>

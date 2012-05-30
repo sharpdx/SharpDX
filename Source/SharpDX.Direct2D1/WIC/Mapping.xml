@@ -20,8 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 -->
-<config id="sharpdx-wic" depends="sharpdx" xmlns="urn:SharpGen.Config">
-
+<config id="sharpdx-wic" xmlns="urn:SharpGen.Config">
+  <depends>sharpdx</depends>
+  
   <namespace>SharpDX.WIC</namespace>
   <assembly>SharpDX.Direct2D1</assembly>
 

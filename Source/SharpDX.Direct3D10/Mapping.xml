@@ -20,8 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 -->
-<config id="sharpdx-direct3d10" depends="sharpdx sharpdx-dxgi sharpdx-d3dcompiler sharpdx-direct3d1x" xmlns="urn:SharpGen.Config">
-  
+<config id="sharpdx-direct3d10" xmlns="urn:SharpGen.Config">  
+  <depends>sharpdx</depends>
+  <depends>sharpdx-dxgi</depends>
+  <depends>sharpdx-d3dcompiler</depends>
+  <depends>sharpdx-direct3d1x</depends>
+
   <namespace>SharpDX.Direct3D10</namespace>
   <assembly>SharpDX.Direct3D10</assembly>
 

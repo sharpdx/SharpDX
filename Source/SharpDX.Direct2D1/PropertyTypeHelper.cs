@@ -57,7 +57,7 @@ namespace SharpDX.Direct2D1
                 case PropertyType.Int32:
                     propText = "int32";
                     break;
-                case PropertyType.Iunknown:
+                case PropertyType.IUnknown:
                     propText = "iunknown";
                     break;
                 case PropertyType.Matrix3x2:
@@ -75,7 +75,7 @@ namespace SharpDX.Direct2D1
                 case PropertyType.String:
                     propText = "string";
                     break;
-                case PropertyType.Uint32:
+                case PropertyType.UInt32:
                     propText = "uint32";
                     break;
                 case PropertyType.Unknown:

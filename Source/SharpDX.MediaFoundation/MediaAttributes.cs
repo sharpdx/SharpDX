@@ -21,6 +21,7 @@
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using System.Reflection;
 
 namespace SharpDX.MediaFoundation
 {
@@ -115,7 +116,11 @@ namespace SharpDX.MediaFoundation
                 return (T)Convert.ChangeType(GetInt(guidKey), typeof(T));
             }
 
+#if WIN8METRO
+            if (typeof(T).GetTypeInfo().IsEnum )
+#else
             if (typeof(T).IsEnum )
+#endif
             {
                 return (T)Enum.ToObject(typeof(T), GetInt(guidKey));
             }
@@ -157,7 +162,11 @@ namespace SharpDX.MediaFoundation
                 return (T)(object)buffer;
             }
 
+#if WIN8METRO
+            if (typeof(T).GetTypeInfo().IsValueType)
+#else
             if (typeof(T).IsValueType)
+#endif
             {
                 int length = GetBlobSize(guidKey);
                 if ( length != SharpDX.Interop.SizeOf<T>())
@@ -176,7 +185,11 @@ namespace SharpDX.MediaFoundation
                 return (T)(object)new ComObject(ptr);
             }
 
+#if WIN8METRO
+            if (typeof(T).GetTypeInfo().IsSubclassOf(typeof(ComObject)))
+#else
             if (typeof(T).IsSubclassOf(typeof(ComObject)))
+#endif
             {
                 IntPtr ptr;
                 GetUnknown(guidKey, Utilities.GetGuidFromType(typeof(T)), out ptr);
@@ -222,7 +235,13 @@ namespace SharpDX.MediaFoundation
             // ComObject
             // Guid
 
-            if (typeof(T) == typeof(int) || typeof(T) ==  typeof(bool) || typeof(T).IsEnum || typeof(T) == typeof(byte) || typeof(T) == typeof(uint) || typeof(T) == typeof(short) || typeof(T) == typeof(ushort) || typeof(T) == typeof(byte) || typeof(T) == typeof(sbyte))
+            if (typeof(T) == typeof(int) || typeof(T) ==  typeof(bool) || typeof(T) == typeof(byte) || typeof(T) == typeof(uint) || typeof(T) == typeof(short) || typeof(T) == typeof(ushort) || typeof(T) == typeof(byte) || typeof(T) == typeof(sbyte)
+#if WIN8METRO
+                || typeof(T).GetTypeInfo().IsEnum 
+#else
+                || typeof(T).IsEnum 
+#endif
+)
             {
                 Set(guidKey, Convert.ToInt32(value));
                 return;
@@ -266,13 +285,22 @@ namespace SharpDX.MediaFoundation
                 return;
             }
 
+
+#if WIN8METRO
+            if (typeof(T).GetTypeInfo().IsValueType)
+#else
             if (typeof(T).IsValueType)
+#endif
             {
                 SetBlob(guidKey, (IntPtr)Interop.Fixed(ref value), SharpDX.Interop.SizeOf<T>());
                 return;
             }
 
+#if WIN8METRO
+            if (typeof(T) == typeof(ComObject) || typeof(T).GetTypeInfo().IsSubclassOf(typeof(ComObject)))
+#else
             if (typeof(T) == typeof(ComObject) || typeof(T).IsSubclassOf(typeof(ComObject)))
+#endif
             {
                 Set(guidKey, ((ComObject)(object)value));
                 return;

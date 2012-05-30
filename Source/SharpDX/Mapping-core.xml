@@ -20,7 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 -->
-<config id="sharpdx-core" depends="sharpdx-root" xmlns="urn:SharpGen.Config">
+<config id="sharpdx-core" xmlns="urn:SharpGen.Config">
+  <depends>sharpdx-root</depends>
+
   <namespace>SharpDX</namespace>
   <assembly>SharpDX</assembly>
 

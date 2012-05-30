@@ -20,7 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 -->
-<config id="sharpdx-animation" depends="sharpdx" xmlns="urn:SharpGen.Config">
+<config id="sharpdx-animation" xmlns="urn:SharpGen.Config">
+  <depends>sharpdx</depends>
   
   <namespace>SharpDX.Animation</namespace>
   <assembly>SharpDX.Animation</assembly>

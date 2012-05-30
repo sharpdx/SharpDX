@@ -20,8 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 -->
-<config id="sharpdx-mediafoundation-directx" depends="sharpdx-core sharpdx-direct3d9" xmlns="urn:SharpGen.Config">
-<!--<config id="sharpdx-mediafoundation" depends="sharpdx-core sharpdx-direct3d9" xmlns="urn:SharpGen.Config">-->
+<config id="sharpdx-mediafoundation-directx" xmlns="urn:SharpGen.Config">
+  <dependency>sharpdx-core</dependency>
+  <dependency>sharpdx-direct3d9</dependency>
+  
   <namespace>SharpDX.MediaFoundation.DirectX</namespace>
   <assembly>SharpDX.MediaFoundation</assembly>
 

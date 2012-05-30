@@ -83,7 +83,7 @@ namespace SharpDX.Direct2D1
         public unsafe uint GetUIntValue(int index)
         {
             uint value;
-            this.GetValue(index, PropertyType.Uint32, new IntPtr(&value), sizeof(uint));
+            this.GetValue(index, PropertyType.UInt32, new IntPtr(&value), sizeof(uint));
             return value;
         }
 
@@ -293,7 +293,7 @@ namespace SharpDX.Direct2D1
         public unsafe T GetComObjectValue<T>(int index) where T : ComObject
         {
             IntPtr ptr;
-            this.GetValue(index, PropertyType.Iunknown, new IntPtr(&ptr), Utilities.SizeOf<IntPtr>());
+            this.GetValue(index, PropertyType.IUnknown, new IntPtr(&ptr), Utilities.SizeOf<IntPtr>());
             return ptr == IntPtr.Zero ? null : As<T>(ptr);
         }
         
@@ -319,7 +319,7 @@ namespace SharpDX.Direct2D1
         public unsafe uint GetUIntValueByName(string name)
         {
             uint value;
-            this.GetValueByName(name, PropertyType.Uint32, new IntPtr(&value), sizeof(uint));
+            this.GetValueByName(name, PropertyType.UInt32, new IntPtr(&value), sizeof(uint));
             return value;
         }
 
@@ -529,7 +529,7 @@ namespace SharpDX.Direct2D1
         public unsafe T GetComObjectValueByName<T>(string name) where T : ComObject
         {
             IntPtr ptr;
-            this.GetValueByName(name, PropertyType.Iunknown, new IntPtr(&ptr), Utilities.SizeOf<IntPtr>());
+            this.GetValueByName(name, PropertyType.IUnknown, new IntPtr(&ptr), Utilities.SizeOf<IntPtr>());
             return ptr == IntPtr.Zero ? null : As<T>(ptr);
         }
 
@@ -565,7 +565,7 @@ namespace SharpDX.Direct2D1
         /// <unmanaged>HRESULT ID2D1Properties::SetValueByName([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
         public unsafe void SetValueByName(string name, uint value)
         {
-            SetValueByName(name, PropertyType.Uint32, new IntPtr(&value), sizeof(uint));
+            SetValueByName(name, PropertyType.UInt32, new IntPtr(&value), sizeof(uint));
         }
 
         /// <summary>
@@ -745,7 +745,7 @@ namespace SharpDX.Direct2D1
         public unsafe void SetValueByName<T>(string name, T value) where T : ComObject
         {
             var pValue = value == null ? IntPtr.Zero : value.NativePointer;
-            SetValueByName(name, PropertyType.Iunknown, new IntPtr(&pValue), Utilities.SizeOf<IntPtr>());
+            SetValueByName(name, PropertyType.IUnknown, new IntPtr(&pValue), Utilities.SizeOf<IntPtr>());
         }
 
         /// <summary>
@@ -778,7 +778,7 @@ namespace SharpDX.Direct2D1
         /// <unmanaged>HRESULT ID2D1Properties::SetValue([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
         public unsafe void SetValue(int index, uint value)
         {
-            SetValue(index, PropertyType.Uint32, new IntPtr(&value), sizeof(uint));
+            SetValue(index, PropertyType.UInt32, new IntPtr(&value), sizeof(uint));
         }
 
         /// <summary>
@@ -971,7 +971,7 @@ namespace SharpDX.Direct2D1
         public unsafe void SetValue<T>(int index, T value) where T : ComObject
         {
             var pValue = value == null ? IntPtr.Zero : value.NativePointer;
-            SetValue(index, PropertyType.Iunknown, new IntPtr(&pValue), Utilities.SizeOf<IntPtr>());
+            SetValue(index, PropertyType.IUnknown, new IntPtr(&pValue), Utilities.SizeOf<IntPtr>());
         }
 
         /// <summary>
