@@ -100,7 +100,6 @@
     <OutputPath>bin\Win8Release</OutputPath>
     <DefineConstants>TRACE;WIN8METRO;NET35Plus;DIRECTX11_1</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>bin\Win8Release\$(AssemblyName).xml</DocumentationFile>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>

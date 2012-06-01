@@ -26,11 +26,11 @@
 
   <file>Mapping-core.xml</file>
 
-  <ifdnef name="DIRECTX11_1">
+  <ifndef name="DIRECTX11_1">
     <depends>sharpdx-mediafoundation-directx</depends>
     <depends>sharpdx-mediafoundation-opm</depends>
     <file>DirectX\Mapping.xml</file>
     <file>OPM\Mapping.xml</file>
-  </ifdnef>
+  </ifndef>
 
 </config>

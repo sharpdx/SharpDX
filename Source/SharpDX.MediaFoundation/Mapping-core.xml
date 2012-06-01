@@ -36,9 +36,9 @@
     </pre>
   </include>
 
-  <ifdnef name="DIRECTX11_1">
+  <ifndef name="DIRECTX11_1">
     <include file="evr9.h" attach="true"/>
-  </ifdnef>
+  </ifndef>
   
   <include file="mfapi.h" attach="true"/>
   <include file="mfmp2dlna.h" attach="true"/>

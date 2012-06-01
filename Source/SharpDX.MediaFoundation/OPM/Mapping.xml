@@ -23,9 +23,9 @@
 <config id="sharpdx-mediafoundation-opm" xmlns="urn:SharpGen.Config">
   <depends>sharpdx-core</depends>
   
-  <ifdnef name="DIRECTX11_1">
+  <ifndef name="DIRECTX11_1">
     <dependency>sharpdx-direct3d9</dependency>
-  </ifdnef>
+  </ifndef>
 
   <namespace>SharpDX.MediaFoundation.OPM</namespace>
   <assembly>SharpDX.MediaFoundation</assembly>
