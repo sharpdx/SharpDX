@@ -20,7 +20,7 @@
 
 namespace SharpDX.MediaFoundation
 {
-    public static class MediaManager
+    public static partial class MediaManager
     {
         /// <summary>
         ///   <p><strong>Applies to: </strong>desktop apps | Metro style apps</p><p>Initializes Microsoft Media Foundation.</p>

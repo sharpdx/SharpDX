@@ -38,6 +38,7 @@
     <Compile Include="FrustumCameraParams.cs" />
     <Compile Include="Int3.cs" />
     <Compile Include="IO\NamespaceDoc.cs" />
+    <Compile Include="Multimedia\AudioEndpointRole.cs" />
     <Compile Include="Multimedia\NamespaceDoc.cs" />
     <Compile Include="ShadowAttribute.cs" />
     <Compile Include="Matrix5x4.cs" />

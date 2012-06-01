@@ -130,18 +130,18 @@
       <const from-guid="MF_VIDEO_PROCESSOR_ROTATION" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="MediaAttributeKey&lt;int&gt;" name="VideoProcessorRotation">new MediaAttributeKey&lt;int&gt;("$1")</const>
       <const from-guid="MF_VIDEODSP_MODE" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="MediaAttributeKey&lt;int&gt;" name="VideodspMode">new MediaAttributeKey&lt;int&gt;("$1")</const>
       <const from-guid="MF_XVP_DISABLE_FRC" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="MediaAttributeKey&lt;bool&gt;" name="XvpDisableFrc">new MediaAttributeKey&lt;bool&gt;("$1")</const>
-      <const from-guid="MF_MEDIA_ENGINE_AUDIO_CATEGORY" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;int&gt;" name="AudioCategory">new MediaAttributeKey&lt;int&gt;("$1")</const>
-      <const from-guid="MF_MEDIA_ENGINE_AUDIO_ENDPOINT_ROLE" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;int&gt;" name="AudioEndpointRole">new MediaAttributeKey&lt;int&gt;("$1")</const>
-      <const from-guid="MF_MEDIA_ENGINE_CALLBACK" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;SharpDX.ComObject&gt;" name="Callback">new MediaAttributeKey&lt;SharpDX.ComObject&gt;("$1")</const>
-      <const from-guid="MF_MEDIA_ENGINE_CONTENT_PROTECTION_FLAGS" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;int&gt;" name="ContentProtectionFlags">new MediaAttributeKey&lt;int&gt;("$1")</const>
+      <const from-guid="MF_MEDIA_ENGINE_AUDIO_CATEGORY" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;SharpDX.Multimedia.AudioStreamCategory&gt;" name="AudioCategory">new MediaAttributeKey&lt;SharpDX.Multimedia.AudioStreamCategory&gt;("$1")</const>
+      <const from-guid="MF_MEDIA_ENGINE_AUDIO_ENDPOINT_ROLE" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;SharpDX.Multimedia.AudioEndpointRole&gt;" name="AudioEndpointRole">new MediaAttributeKey&lt;SharpDX.Multimedia.AudioEndpointRole&gt;("$1")</const>
+      <const from-guid="MF_MEDIA_ENGINE_CALLBACK" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;System.IntPtr&gt;" name="Callback">new MediaAttributeKey&lt;System.IntPtr&gt;("$1")</const>
+      <const from-guid="MF_MEDIA_ENGINE_CONTENT_PROTECTION_FLAGS" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;MediaEngineProtectionFlags&gt;" name="ContentProtectionFlags">new MediaAttributeKey&lt;MediaEngineProtectionFlags&gt;("$1")</const>
       <const from-guid="MF_MEDIA_ENGINE_CONTENT_PROTECTION_MANAGER" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;SharpDX.ComObject&gt;" name="ContentProtectionManager">new MediaAttributeKey&lt;SharpDX.ComObject&gt;("$1")</const>
-      <const from-guid="MF_MEDIA_ENGINE_DXGI_MANAGER" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;SharpDX.ComObject&gt;" name="DxgiManager">new MediaAttributeKey&lt;SharpDX.ComObject&gt;("$1")</const>
-      <const from-guid="MF_MEDIA_ENGINE_EXTENSION" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;SharpDX.ComObject&gt;" name="Extension">new MediaAttributeKey&lt;SharpDX.ComObject&gt;("$1")</const>
-      <const from-guid="MF_MEDIA_ENGINE_OPM_HWND" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;long&gt;" name="OpmHwnd">new MediaAttributeKey&lt;long&gt;("$1")</const>
+      <const from-guid="MF_MEDIA_ENGINE_DXGI_MANAGER" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;DXGIDeviceManager&gt;" name="DxgiManager">new MediaAttributeKey&lt;DXGIDeviceManager&gt;("$1")</const>
+      <const from-guid="MF_MEDIA_ENGINE_EXTENSION" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;MediaEngineExtension&gt;" name="Extension">new MediaAttributeKey&lt;MediaEngineExtension&gt;("$1")</const>
+      <const from-guid="MF_MEDIA_ENGINE_OPM_HWND" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;System.IntPtr&gt;" name="OpmHwnd">new MediaAttributeKey&lt;System.IntPtr&gt;("$1")</const>
       <const from-guid="MF_MEDIA_ENGINE_OPM_IWINDOW" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;SharpDX.ComObject&gt;" name="OpmIwindow">new MediaAttributeKey&lt;SharpDX.ComObject&gt;("$1")</const>
-      <const from-guid="MF_MEDIA_ENGINE_PLAYBACK_HWND" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;long&gt;" name="PlaybackHwnd">new MediaAttributeKey&lt;long&gt;("$1")</const>
+      <const from-guid="MF_MEDIA_ENGINE_PLAYBACK_HWND" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;System.IntPtr&gt;" name="PlaybackHwnd">new MediaAttributeKey&lt;System.IntPtr&gt;("$1")</const>
       <const from-guid="MF_MEDIA_ENGINE_PLAYBACK_VISUAL" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;SharpDX.ComObject&gt;" name="PlaybackVisual">new MediaAttributeKey&lt;SharpDX.ComObject&gt;("$1")</const>
-      <const from-guid="MF_MEDIA_ENGINE_VIDEO_OUTPUT_FORMAT" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;long&gt;" name="VideoOutputFormat">new MediaAttributeKey&lt;long&gt;("$1")</const>
+      <const from-guid="MF_MEDIA_ENGINE_VIDEO_OUTPUT_FORMAT" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;int&gt;" name="VideoOutputFormat">new MediaAttributeKey&lt;int&gt;("$1")</const>
 
       <const from-guid="MF_MPEG4SINK_MOOV_BEFORE_MDAT" class="SharpDX.MediaFoundation.Mpeg4MediaSinkAttributeKeys" type="MediaAttributeKey&lt;int&gt;" name="MoovBeforeMdat">new MediaAttributeKey&lt;int&gt;("$1")</const>
       <const from-guid="MF_MPEG4SINK_SPSPPS_PASSTHROUGH" class="SharpDX.MediaFoundation.Mpeg4MediaSinkAttributeKeys" type="MediaAttributeKey&lt;bool&gt;" name="SpsppsPassthrough">new MediaAttributeKey&lt;bool&gt;("$1")</const>
@@ -540,8 +540,10 @@
     <const from-guid="MFT_TRANSFORM_CLSID_Attribute" class="SharpDX.MediaFoundation.TransformAttributeKeys" type="MediaAttributeKey&lt;System.Guid&gt;" name="MftTransformClsidAttribute">new MediaAttributeKey&lt;System.Guid&gt;("$1")</const>
     <const from-guid="VIDEO_ZOOM_RECT" class="SharpDX.MediaFoundation.EVRAttributeKeys" type="MediaAttributeKey&lt;byte[]&gt;" name="VideoZoomRect">new MediaAttributeKey&lt;byte[]&gt;("$1")</const>
 
-    <create class="MediaFactory" />
+    <create class="MediaFactory"/>
     <const from-macro="MF_VERSION" class="SharpDX.MediaFoundation.MediaFactory" type="int" name="Version" />
+
+    <const from-guid="CLSID_MFMediaEngineClassFactory" visibility="internal" class="SharpDX.MediaFoundation.MediaEngineClassFactory" type="System.Guid" name="CLSID_MFMediaEngineClassFactory">new System.Guid("$1")</const>
 
     <context-clear />
   </extension>
@@ -674,6 +676,19 @@
 
     <map method="IMFAttributes::GetItemByIndex" visibility="internal"/>
 
+    <map method="IMFMediaEngineClassFactory::Create.*" visibility="internal"/>
+    <map param="IMFMediaEngineClassFactory::Create.*::pp.*" attribute="fast out"/>
+
+    <map param="IMFMediaEngineClassFactory::CreateInstance::dwFlags" type="MF_MEDIA_ENGINE_CREATEFLAGS" name="flags"/>
+
+    <map interface="IMFMediaEngineNotify" callback="true" visibility="internal"/>
+
+    <map method="IMFDXGIDeviceManager::ResetDevice" visibility="internal"/>
+    <map param="IMFDXGIDeviceManager::OpenDeviceHandle::phDevice" return="true"/>
+    <map method="IMFDXGIDeviceManager::UnlockDevice" visibility="internal"/>
+    <map param="IMFDXGIDeviceManager::LockDevice::ppUnkDevice" return="true"/>
+    <map param="IMFDXGIDeviceManager::GetVideoService::ppService" return="true"/>
+    
     <!--
     // *****************************************************************
     // MediaFoundation Functions
@@ -694,7 +709,8 @@
     <remove function="MFInitAMMediaTypeFromMFMediaType" />
     <remove function="MFCreateAMMediaTypeFromMFMediaType"/>
 
-    <map param="MFCreateAttributes::ppMFAttributes" attribute="out fast"/>    
+    <map param="MFCreateAttributes::ppMFAttributes" attribute="out fast"/>
+    <map param="MFCreateDXGIDeviceManager::ppDeviceManager" attribute="out fast"/>
 
     <map function="MF(.*)" name-tmp="$1"/>
     <map function="MF.*" dll='"Mfplat.dll"' group="SharpDX.MediaFoundation.MediaFactory"/>

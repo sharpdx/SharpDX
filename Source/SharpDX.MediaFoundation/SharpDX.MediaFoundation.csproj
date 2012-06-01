@@ -20,13 +20,27 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AssemblyDoc.cs" />
+    <Compile Include="DXGIDeviceManager.cs" />
+    <Compile Include="MediaEngineClassFactory.cs" />
+    <Compile Include="MediaEngineNotify.cs" />
+    <Compile Include="MediaEngineNotifyShadow.cs" />
+    <Compile Condition=" '$(SharpDXWin8)' == 'false'" Include="Generated\DirectX\Enumerations.cs" />
+    <Compile Condition=" '$(SharpDXWin8)' == 'false'" Include="Generated\DirectX\Functions.cs" />
+    <Compile Condition=" '$(SharpDXWin8)' == 'false'" Include="Generated\DirectX\Interfaces.cs" />
+    <Compile Condition=" '$(SharpDXWin8)' == 'false'" Include="Generated\DirectX\Structures.cs" />
     <Compile Include="Generated\Enumerations.cs" />
     <Compile Include="Generated\Functions.cs" />
     <Compile Include="Generated\Interfaces.cs" />
     <Compile Include="Generated\LocalInterop.cs" />
+    <Compile Condition=" '$(SharpDXWin8)' == 'false'" Include="Generated\OPM\Enumerations.cs" />
+    <Compile Condition=" '$(SharpDXWin8)' == 'false'" Include="Generated\OPM\Functions.cs" />
+    <Compile Condition=" '$(SharpDXWin8)' == 'false'" Include="Generated\OPM\Interfaces.cs" />
+    <Compile Condition=" '$(SharpDXWin8)' == 'false'" Include="Generated\OPM\Structures.cs" />
     <Compile Include="Generated\Structures.cs" />
     <Compile Include="MediaAttributeKey.cs" />
     <Compile Include="MediaAttributes.cs" />
+    <Compile Include="MediaEngine.cs" />
+    <Compile Include="MediaEngineAttributes.cs" />
     <Compile Include="MediaManager.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
