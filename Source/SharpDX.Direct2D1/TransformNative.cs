@@ -24,24 +24,21 @@ namespace SharpDX.Direct2D1
     public partial class TransformNative
     {
         /// <inheritdoc/>
-        public SharpDX.Rectangle[] InputRectangles
-        {
-            set
-            {
-                this.SetInputRects_(value, value.Length);
-            }
-        }
-
-        /// <inheritdoc/>
         public void MapOutputRectangleToInputRectangles(SharpDX.Rectangle outputRect, SharpDX.Rectangle[] inputRects)
         {
             MapOutputRectToInputRects_(outputRect, inputRects, inputRects.Length);
         }
 
         /// <inheritdoc/>
-        public SharpDX.Rectangle MapInputRectanglesToOutputRectangle(SharpDX.Rectangle[] inputRects)
+        public SharpDX.Rectangle MapInputRectanglesToOutputRectangle(SharpDX.Rectangle[] inputRects, SharpDX.Rectangle[] inputOpaqueSubRects, out SharpDX.Rectangle outputOpaqueSubRect)
         {
-            return MapInputRectsToOutputRect_(inputRects, inputRects.Length);
+            return MapInputRectsToOutputRect_(inputRects, inputOpaqueSubRects, inputRects.Length, out outputOpaqueSubRect);
+        }
+
+        /// <inheritdoc/>
+        public Rectangle MapInvalidRect(int inputIndex, Rectangle invalidInputRect)
+        {
+            return MapInvalidRect_(inputIndex, invalidInputRect);
         }
     }
 }

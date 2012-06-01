@@ -1202,19 +1202,19 @@ _Check_return_ WINOLEAPI StgCreatePropStg(
             _In_ REFFMTID fmtid,
             _In_ const CLSID* pclsid,
             _In_ DWORD grfFlags,
-            _In_ _Reserved_ DWORD dwReserved,
+            _Reserved_ DWORD dwReserved,
             _Outptr_ IPropertyStorage** ppPropStg);
 
 _Check_return_ WINOLEAPI StgOpenPropStg(
             _In_ IUnknown* pUnk,
             _In_ REFFMTID fmtid,
             _In_ DWORD grfFlags,
-            _In_ _Reserved_ DWORD dwReserved,
+            _Reserved_ DWORD dwReserved,
             _Outptr_ IPropertyStorage** ppPropStg);
 
 _Check_return_ WINOLEAPI StgCreatePropSetStg(
             _In_ IStorage* pStorage,
-            _In_ _Reserved_ DWORD dwReserved,
+            _Reserved_ DWORD dwReserved,
             _Outptr_ IPropertySetStorage** ppPropSetStg);
 
 #define CCH_MAX_PROPSTG_NAME    31
@@ -1253,7 +1253,7 @@ StgConvertVariantToProperty(
             _Out_writes_bytes_opt_(*pcb) SERIALIZEDPROPERTYVALUE* pprop,
             _Inout_ ULONG* pcb,
             _In_ PROPID pid,
-            _In_ _Reserved_ BOOLEAN fReserved,
+            _Reserved_ BOOLEAN fReserved,
             _Inout_opt_ ULONG* pcIndirect);
 
 #ifdef __cplusplus

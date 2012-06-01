@@ -351,6 +351,7 @@
     <map interface="ID2D1Transform" callback-visibility="public" callback="true" callback-dual="true" />
     
     <map param="ID2D1Transform::MapInputRectsToOutputRect::outputRect" return="true"/>
+    <map param="ID2D1Transform::MapInvalidRect::invalidOutputRect" return="true"/>
 
     <map method="ID2D1EffectContext::CreateTransformNodeFromEffect" visibility="public"/>
     <map param="ID2D1EffectContext::CreateTransformNodeFromEffect::transformNode" return="true"/>

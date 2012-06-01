@@ -1,4 +1,4 @@
-/*++ BUILD Version: 0084     Increment this if a change has global effects
+/*++ BUILD Version: 0073     Increment this if a change has global effects
 
 Copyright (c) Microsoft Corporation. All rights reserved.
 
@@ -23,13 +23,6 @@ Revision History:
 #endif
 #pragma warning(disable:4201) // named type definition in parentheses
 #pragma warning(disable:4214) // bit field types other than int
-
-#if defined(_SAL_VERSION_CHECK) && !defined(_SAL2_STRICT)
- #undef _SAL_VERSION_CHECK
- #define _WINNT_H_SAL2
- #define _SAL2_STRICT
- #define _SAL_VERSION_CHECK(_A) _SAL_VERSION_SAL2(_A)
-#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -1112,7 +1105,7 @@ typedef struct  _OBJECTID {     // size is 20
 // end_ntndis end_ntminiport
 
 #pragma region Application Family
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APPLICATION)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 // begin_ntndis begin_ntminiport
 
@@ -1122,7 +1115,7 @@ char (*RtlpNumberOf( UNALIGNED T (&)[N] ))[N];
 
 // end_ntndis end_ntminiport
 
-#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APPLICATION) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
 #pragma endregion
 
 // begin_ntndis begin_ntminiport
@@ -1363,25 +1356,27 @@ typedef EXCEPTION_ROUTINE *PEXCEPTION_ROUTINE;
 #define PRODUCT_ENTERPRISE_E                        0x00000046
 #define PRODUCT_ULTIMATE_E                          0x00000047
 #define PRODUCT_ENTERPRISE_EVALUATION               0x00000048
-#define PRODUCT_PRERELEASE                          0x0000004A
 #define PRODUCT_MULTIPOINT_STANDARD_SERVER          0x0000004C
 #define PRODUCT_MULTIPOINT_PREMIUM_SERVER           0x0000004D
 #define PRODUCT_STANDARD_EVALUATION_SERVER          0x0000004F
 #define PRODUCT_DATACENTER_EVALUATION_SERVER        0x00000050
-#define PRODUCT_PRERELEASE_ARM                      0x00000051
-#define PRODUCT_PRERELEASE_N                        0x00000052
 #define PRODUCT_ENTERPRISE_N_EVALUATION             0x00000054
-#define PRODUCT_EMBEDDEDINDUSTRY                    0x00000055
-#define PRODUCT_EMBEDDEDA                           0x00000056
-#define PRODUCT_EMBEDDEDINDUSTRYA                   0x00000057
-#define PRODUCT_EMBEDDEDAUTOMOTIVE                  0x00000058
-#define PRODUCT_EMBEDDEDE                           0x00000059
-#define PRODUCT_EMBEDDEDINDUSTRYAE                  0x0000005A
-#define PRODUCT_EMBEDDEDINDUSTRYE                   0x0000005B
-#define PRODUCT_THINPC                              0x0000005C
-#define PRODUCT_PROFESSIONAL_PLUS                   0x0000005D
+#define PRODUCT_EMBEDDED_AUTOMOTIVE                 0x00000055
+#define PRODUCT_EMBEDDED_INDUSTRY_A                 0x00000056
+#define PRODUCT_THINPC                              0x00000057
+#define PRODUCT_EMBEDDED_A                          0x00000058
+#define PRODUCT_EMBEDDED_INDUSTRY                   0x00000059
+#define PRODUCT_EMBEDDED_E                          0x0000005A
+#define PRODUCT_EMBEDDED_INDUSTRY_E                 0x0000005B
+#define PRODUCT_EMBEDDED_INDUSTRY_A_E               0x0000005C
 #define PRODUCT_STORAGE_WORKGROUP_EVALUATION_SERVER 0x0000005F
 #define PRODUCT_STORAGE_STANDARD_EVALUATION_SERVER  0x00000060
+#define PRODUCT_CORE_ARM                            0x00000061
+#define PRODUCT_CORE_N                              0x00000062
+#define PRODUCT_CORE_COUNTRYSPECIFIC                0x00000063
+#define PRODUCT_CORE_SINGLELANGUAGE                 0x00000064
+#define PRODUCT_CORE                                0x00000065
+#define PRODUCT_PROFESSIONAL_WMC                    0x00000067
 
 #define PRODUCT_UNLICENSED                          0xABCDABCD
 
@@ -1785,7 +1780,8 @@ typedef EXCEPTION_ROUTINE *PEXCEPTION_ROUTINE;
 #define SUBLANG_SWEDISH_FINLAND                     0x02    // Swedish (Finland)
 #define SUBLANG_SYRIAC_SYRIA                        0x01    // Syriac (Syria) 0x045a syr-SY
 #define SUBLANG_TAJIK_TAJIKISTAN                    0x01    // Tajik (Tajikistan) 0x0428 tg-TJ-Cyrl
-#define SUBLANG_TAMAZIGHT_ALGERIA_LATIN             0x02    // Tamazight (Latin, Algeria) 0x085f tmz-DZ-Latn
+#define SUBLANG_TAMAZIGHT_ALGERIA_LATIN             0x02    // Tamazight (Latin, Algeria) 0x085f tzm-Latn-DZ
+#define SUBLANG_TAMAZIGHT_MOROCCO_TIFINAGH          0x04    // Tamazight (Tifinagh) 0x105f tzm-Tfng-MA
 #define SUBLANG_TAMIL_INDIA                         0x01    // Tamil (India)
 #define SUBLANG_TAMIL_SRI_LANKA                     0x02    // Tamil (Sri Lanka) 0x0849 ta-LK
 #define SUBLANG_TATAR_RUSSIA                        0x01    // Tatar (Russia) 0x0444 tt-RU
@@ -2074,7 +2070,7 @@ inline ENUMTYPE &operator ^= (ENUMTYPE &a, ENUMTYPE b) { return (ENUMTYPE &)(((i
 #ifndef UMDF_USING_NTSTATUS 
 #ifndef WIN32_NO_STATUS 
 /*lint -save -e767 */  
-#define STATUS_WAIT_0                    ((DWORD   )0x00000000L)    
+#define STATUS_WAIT_0                           ((DWORD   )0x00000000L) 
 #define STATUS_ABANDONED_WAIT_0          ((DWORD   )0x00000080L)    
 #define STATUS_USER_APC                  ((DWORD   )0x000000C0L)    
 #define STATUS_TIMEOUT                   ((DWORD   )0x00000102L)    
@@ -2494,13 +2490,20 @@ _BitScanReverse64 (
 #define InterlockedCompareExchange128 _InterlockedCompareExchange128
 
 #define InterlockedExchangePointer _InterlockedExchangePointer
+#define InterlockedExchangePointerNoFence _InterlockedExchangePointer
+#define InterlockedExchangePointerAcquire _InterlockedExchangePointer
 #define InterlockedCompareExchangePointer _InterlockedCompareExchangePointer
 #define InterlockedCompareExchangePointerAcquire _InterlockedCompareExchangePointer
 #define InterlockedCompareExchangePointerRelease _InterlockedCompareExchangePointer
+#define InterlockedCompareExchangePointerNoFence _InterlockedCompareExchangePointer
 
 #define InterlockedExchangeAddSizeT(a, b) InterlockedExchangeAdd64((LONG64 *)a, b)
+#define InterlockedExchangeAddSizeTAcquire(a, b) InterlockedExchangeAdd64((LONG64 *)a, b)
+#define InterlockedExchangeAddSizeTNoFence(a, b) InterlockedExchangeAdd64((LONG64 *)a, b)
 #define InterlockedIncrementSizeT(a) InterlockedIncrement64((LONG64 *)a)
+#define InterlockedIncrementSizeTNoFence(a) InterlockedIncrement64((LONG64 *)a)
 #define InterlockedDecrementSizeT(a) InterlockedDecrement64((LONG64 *)a)
+#define InterlockedDecrementSizeTNoFence(a) InterlockedDecrement64((LONG64 *)a)
 
 SHORT
 InterlockedIncrement16 (
@@ -3526,6 +3529,17 @@ typedef SCOPE_TABLE_AMD64 SCOPE_TABLE, *PSCOPE_TABLE;
 #define RUNTIME_FUNCTION_INDIRECT 0x1
 
 //
+// Define unwind information flags.
+//
+
+#define UNW_FLAG_NHANDLER       0x0
+#define UNW_FLAG_EHANDLER       0x1
+#define UNW_FLAG_UHANDLER       0x2
+#define UNW_FLAG_CHAININFO      0x4
+
+#define UNW_FLAG_NO_EPILOGUE    0x80000000UL    // Software only flag
+
+//
 // Define unwind history table structure.
 //
 
@@ -3686,15 +3700,53 @@ typedef struct _SCOPE_TABLE_ARM {
 
 #if defined(_M_ARM) && !defined(RC_INVOKED) && !defined(MIDL_PASS) && !defined(_M_CEE_PURE)
 
-//
-// Define bit test intrinsics.
-//
-
 #include <intrin.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+//
+// Memory barriers and prefetch intrinsics.
+//
+
+#pragma intrinsic(__yield)
+#pragma intrinsic(__prefetch)
+
+#if (_MSC_FULL_VER >= 170040825)
+#pragma intrinsic(__dmb)
+#pragma intrinsic(__dsb)
+#pragma intrinsic(__isb)
+#else
+#define __dmb(x) { __emit(0xF3BF); __emit(0x8F5F); }
+#define __dsb(x) { __emit(0xF3BF); __emit(0x8F4F); }
+#define __isb(x) { __emit(0xF3BF); __emit(0x8F6F); }
+#endif
+
+#pragma intrinsic(_ReadWriteBarrier)
+#pragma intrinsic(_WriteBarrier)
+
+FORCEINLINE
+VOID
+YieldProcessor (
+    VOID
+    )
+{
+    __dmb(_ARM_BARRIER_ISHST);
+    __yield();
+}
+
+#define MemoryBarrier()             __dmb(_ARM_BARRIER_SY)
+#define PreFetchCacheLine(l,a)      __prefetch((const void *) (a))
+#define PrefetchForWrite(p)         __prefetch((const void *) (p))
+#define ReadForWriteAccess(p)       (*(p))
+
+#define _DataSynchronizationBarrier()        __dsb(_ARM_BARRIER_SY)
+#define _InstructionSynchronizationBarrier() __isb(_ARM_BARRIER_SY)
+
+//
+// Define bit test intrinsics.
+//
 
 #define BitTest _bittest
 #define BitTestAndComplement _bittestandcomplement
@@ -3798,8 +3850,6 @@ extern "C" {
 
 #define InterlockedExchangePointer _InterlockedExchangePointer
 #define InterlockedCompareExchangePointer _InterlockedCompareExchangePointer
-
-#if (_MSC_FULL_VER >= 170040825)
 
 #pragma intrinsic(_InterlockedExchange16)
 #define InterlockedExchange16 _InterlockedExchange16
@@ -3977,113 +4027,250 @@ extern "C" {
 #define InterlockedCompareExchangePointerRelease _InterlockedCompareExchangePointer_rel
 #define InterlockedCompareExchangePointerNoFence _InterlockedCompareExchangePointer_nf
 
-#else
-
-#define InterlockedAnd8Acquire _InterlockedAnd8
-#define InterlockedAnd8Release _InterlockedAnd8
-#define InterlockedAnd8NoFence _InterlockedAnd8
-#define InterlockedOr8Acquire _InterlockedOr8
-#define InterlockedOr8Release _InterlockedOr8
-#define InterlockedOr8NoFence _InterlockedOr8
-#define InterlockedXor8Acquire _InterlockedXor8
-#define InterlockedXor8Release _InterlockedXor8
-#define InterlockedXor8NoFence _InterlockedXor8
-
-#define InterlockedAndAcquire16 _InterlockedAnd16
-#define InterlockedAndRelease16 _InterlockedAnd16
-#define InterlockedAndNoFence16 _InterlockedAnd16
-#define InterlockedOrAcquire16 _InterlockedOr16
-#define InterlockedOrRelease16 _InterlockedOr16
-#define InterlockedOrNoFence16 _InterlockedOr16
-#define InterlockedXorAcquire16 _InterlockedXor16
-#define InterlockedXorRelease16 _InterlockedXor16
-#define InterlockedXorNoFence16 _InterlockedXor16
-#define InterlockedIncrementAcquire16 _InterlockedIncrement16
-#define InterlockedIncrementRelease16 _InterlockedIncrement16
-#define InterlockedIncrementNoFence16 _InterlockedIncrement16
-#define InterlockedDecrementAcquire16 _InterlockedDecrement16
-#define InterlockedDecrementRelease16 _InterlockedDecrement16
-#define InterlockedDecrementNoFence16 _InterlockedDecrement16
-#define InterlockedExchangeAcquire16 _InterlockedExchange16
-#define InterlockedExchangeNoFence16 _InterlockedExchange16
-#define InterlockedCompareExchangeAcquire16 _InterlockedCompareExchange16
-#define InterlockedCompareExchangeRelease16 _InterlockedCompareExchange16
-#define InterlockedCompareExchangeNoFence16 _InterlockedCompareExchange16
-
-#define InterlockedAndAcquire _InterlockedAnd
-#define InterlockedAndRelease _InterlockedAnd
-#define InterlockedAndNoFence _InterlockedAnd
-#define InterlockedOrAcquire _InterlockedOr
-#define InterlockedOrRelease _InterlockedOr
-#define InterlockedOrNoFence _InterlockedOr
-#define InterlockedXorAcquire _InterlockedXor
-#define InterlockedXorRelease _InterlockedXor
-#define InterlockedXorNoFence _InterlockedXor
-#define InterlockedIncrementAcquire _InterlockedIncrement
-#define InterlockedIncrementRelease _InterlockedIncrement
-#define InterlockedIncrementNoFence _InterlockedIncrement
-#define InterlockedDecrementAcquire _InterlockedDecrement
-#define InterlockedDecrementRelease _InterlockedDecrement
-#define InterlockedDecrementNoFence _InterlockedDecrement
-#define InterlockedAddAcquire _InterlockedAdd
-#define InterlockedAddRelease _InterlockedAdd
-#define InterlockedAddNoFence _InterlockedAdd
-#define InterlockedExchangeAcquire _InterlockedExchange
-#define InterlockedExchangeNoFence _InterlockedExchange
-#define InterlockedExchangeAddAcquire _InterlockedExchangeAdd
-#define InterlockedExchangeAddRelease _InterlockedExchangeAdd
-#define InterlockedExchangeAddNoFence _InterlockedExchangeAdd
-#define InterlockedCompareExchangeAcquire _InterlockedCompareExchange
-#define InterlockedCompareExchangeRelease _InterlockedCompareExchange
-#define InterlockedCompareExchangeNoFence _InterlockedCompareExchange
-
-#define InterlockedAndAcquire64 _InterlockedAnd64
-#define InterlockedAndRelease64 _InterlockedAnd64
-#define InterlockedAndNoFence64 _InterlockedAnd64
-#define InterlockedOrAcquire64 _InterlockedOr64
-#define InterlockedOrRelease64 _InterlockedOr64
-#define InterlockedOrNoFence64 _InterlockedOr64
-#define InterlockedXorAcquire64 _InterlockedXor64
-#define InterlockedXorRelease64 _InterlockedXor64
-#define InterlockedXorNoFence64 _InterlockedXor64
-#define InterlockedIncrementAcquire64 _InterlockedIncrement64
-#define InterlockedIncrementRelease64 _InterlockedIncrement64
-#define InterlockedIncrementNoFence64 _InterlockedIncrement64
-#define InterlockedDecrementAcquire64 _InterlockedDecrement64
-#define InterlockedDecrementRelease64 _InterlockedDecrement64
-#define InterlockedDecrementNoFence64 _InterlockedDecrement64
-#define InterlockedAddAcquire64 _InterlockedAdd64
-#define InterlockedAddRelease64 _InterlockedAdd64
-#define InterlockedAddNoFence64 _InterlockedAdd64
-#define InterlockedExchangeAcquire64 _InterlockedExchange64
-#define InterlockedExchangeNoFence64 _InterlockedExchange64
-#define InterlockedExchangeAddAcquire64 _InterlockedExchangeAdd64
-#define InterlockedExchangeAddRelease64 _InterlockedExchangeAdd64
-#define InterlockedExchangeAddNoFence64 _InterlockedExchangeAdd64
-#define InterlockedCompareExchangeAcquire64 _InterlockedCompareExchange64
-#define InterlockedCompareExchangeRelease64 _InterlockedCompareExchange64
-#define InterlockedCompareExchangeNoFence64 _InterlockedCompareExchange64
-
-#define InterlockedExchangePointerAcquire _InterlockedExchangePointer
-#define InterlockedExchangePointerNoFence _InterlockedExchangePointer
-#define InterlockedCompareExchangePointerAcquire _InterlockedCompareExchangePointer
-#define InterlockedCompareExchangePointerRelease _InterlockedCompareExchangePointer
-#define InterlockedCompareExchangePointerNoFence _InterlockedCompareExchangePointer
-
-#endif
-
-
-
-// begin_wudfwdmp
-
 //
-// These intrinsics are implemented by the compiler not the processor.
+// Define accessors for volatile loads and stores.
 //
 
-#pragma intrinsic(_ReadWriteBarrier)
-#pragma intrinsic(_WriteBarrier)
+#pragma intrinsic(__iso_volatile_load8)
+#pragma intrinsic(__iso_volatile_load16)
+#pragma intrinsic(__iso_volatile_load32)
+#pragma intrinsic(__iso_volatile_load64)
+#pragma intrinsic(__iso_volatile_store8)
+#pragma intrinsic(__iso_volatile_store16)
+#pragma intrinsic(__iso_volatile_store32)
+#pragma intrinsic(__iso_volatile_store64)
 
-// end_wudfwdmp
+// end_wdm end_ntndis end_ntosp end_ntminiport
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+// begin_wdm begin_ntndis begin_ntosp begin_ntminiport
+
+FORCEINLINE
+CHAR
+ReadAcquire8 (
+    _In_ _Interlocked_operand_ CHAR const volatile *Source
+    )
+
+{
+
+    CHAR Value;
+
+    Value = __iso_volatile_load8(Source);
+    __dmb(_ARM_BARRIER_ISH);
+    return Value;
+}
+
+FORCEINLINE
+CHAR
+ReadNoFence8 (
+    _In_ _Interlocked_operand_ CHAR const volatile *Source
+    )
+
+{
+
+    CHAR Value;
+
+    Value = __iso_volatile_load8(Source);
+    return Value;
+}
+
+FORCEINLINE
+VOID
+WriteRelease8 (
+    _Out_ _Interlocked_operand_ CHAR volatile *Destination,
+    _In_ CHAR Value
+    )
+
+{
+
+    __dmb(_ARM_BARRIER_ISH);
+    __iso_volatile_store8(Destination, Value);
+    return;
+}
+
+FORCEINLINE
+VOID
+WriteNoFence8 (
+    _Out_ _Interlocked_operand_ CHAR volatile *Destination,
+    _In_ CHAR Value
+    )
+
+{
+
+    __iso_volatile_store8(Destination, Value);
+    return;
+}
+
+FORCEINLINE
+SHORT
+ReadAcquire16 (
+    _In_ _Interlocked_operand_ SHORT const volatile *Source
+    )
+
+{
+
+    SHORT Value;
+
+    Value = __iso_volatile_load16(Source);
+    __dmb(_ARM_BARRIER_ISH);
+    return Value;
+}
+
+FORCEINLINE
+SHORT
+ReadNoFence16 (
+    _In_ _Interlocked_operand_ SHORT const volatile *Source
+    )
+
+{
+
+    SHORT Value;
+
+    Value = __iso_volatile_load16(Source);
+    return Value;
+}
+
+FORCEINLINE
+VOID
+WriteRelease16 (
+    _Out_ _Interlocked_operand_ SHORT volatile *Destination,
+    _In_ SHORT Value
+    )
+
+{
+
+    __dmb(_ARM_BARRIER_ISH);
+    __iso_volatile_store16(Destination, Value);
+    return;
+}
+
+FORCEINLINE
+VOID
+WriteNoFence16 (
+    _Out_ _Interlocked_operand_ SHORT volatile *Destination,
+    _In_ SHORT Value
+    )
+
+{
+
+    __iso_volatile_store16(Destination, Value);
+    return;
+}
+
+FORCEINLINE
+LONG
+ReadAcquire (
+    _In_ _Interlocked_operand_ LONG const volatile *Source
+    )
+
+{
+
+    LONG Value;
+
+    Value = __iso_volatile_load32((int *)Source);
+    __dmb(_ARM_BARRIER_ISH);
+    return Value;
+}
+
+FORCEINLINE
+LONG
+ReadNoFence (
+    _In_ _Interlocked_operand_ LONG const volatile *Source
+    )
+
+{
+
+    LONG Value;
+
+    Value = __iso_volatile_load32((int *)Source);
+    return Value;
+}
+
+FORCEINLINE
+VOID
+WriteRelease (
+    _Out_ _Interlocked_operand_ LONG volatile *Destination,
+    _In_ LONG Value
+    )
+
+{
+
+    __dmb(_ARM_BARRIER_ISH);
+    __iso_volatile_store32((int *)Destination, Value);
+    return;
+}
+
+FORCEINLINE
+VOID
+WriteNoFence (
+    _Out_ _Interlocked_operand_ LONG volatile *Destination,
+    _In_ LONG Value
+    )
+
+{
+
+    __iso_volatile_store32((int *)Destination, Value);
+    return;
+}
+
+FORCEINLINE
+LONG64
+ReadAcquire64 (
+    _In_ _Interlocked_operand_ LONG64 const volatile *Source
+    )
+
+{
+
+    LONG64 Value;
+
+    Value = __iso_volatile_load64(Source);
+    __dmb(_ARM_BARRIER_ISH);
+    return Value;
+}
+
+FORCEINLINE
+LONG64
+ReadNoFence64 (
+    _In_ _Interlocked_operand_ LONG64 const volatile *Source
+    )
+
+{
+
+    LONG64 Value;
+
+    Value = __iso_volatile_load64(Source);
+    return Value;
+}
+
+FORCEINLINE
+VOID
+WriteRelease64 (
+    _Out_ _Interlocked_operand_ LONG64 volatile *Destination,
+    _In_ LONG64 Value
+    )
+
+{
+
+    __dmb(_ARM_BARRIER_ISH);
+    __iso_volatile_store64(Destination, Value);
+    return;
+}
+
+FORCEINLINE
+VOID
+WriteNoFence64 (
+    _Out_ _Interlocked_operand_ LONG64 volatile *Destination,
+    _In_ LONG64 Value
+    )
+
+{
+
+    __iso_volatile_store64(Destination, Value);
+    return;
+}
+
+// end_wdm end_ntndis end_ntosp end_ntminiport
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+// begin_wdm begin_ntndis begin_ntosp begin_ntminiport
 
 //
 // Define coprocessor access intrinsics.  Coprocessor 15 contains
@@ -4101,34 +4288,8 @@ extern "C" {
 #pragma intrinsic(_MoveFromCoprocessor)
 
 //
-// Coprocessor registers for synchronization and memory barriers
+// Coprocessor registers for synchronization
 //
-
-// begin_wudfwdmp
-
-#pragma intrinsic(__yield)
-#pragma intrinsic(__prefetch)
-
-#if _MSC_FULL_VER >= 170040825
-#pragma intrinsic(__dmb)
-#pragma intrinsic(__dsb)
-#pragma intrinsic(__isb)
-#else
-#define __dmb(x) { __emit(0xF3BF); __emit(0x8F5F); }
-#define __dsb(x) { __emit(0xF3BF); __emit(0x8F4F); }
-#define __isb(x) { __emit(0xF3BF); __emit(0x8F6F); }
-#endif
-
-#define YieldProcessor              __yield
-#define MemoryBarrier()             __dmb(_ARM_BARRIER_SY)
-#define PreFetchCacheLine(l,a)      __prefetch((const void *) (a))
-#define PrefetchForWrite(p)         __prefetch((const void *) (p))
-#define ReadForWriteAccess(p)       (*(p))
-
-#define _DataSynchronizationBarrier()        __dsb(_ARM_BARRIER_SY)
-#define _InstructionSynchronizationBarrier() __isb(_ARM_BARRIER_SY)
-
-// end_wudfwdmp
 
 #define _InvalidateBTAC() _MoveToCoprocessor(0, CP15_BPIALL)
 
@@ -4344,6 +4505,14 @@ typedef struct DECLSPEC_ALIGN(8) _CONTEXT {
 
 typedef struct _IMAGE_ARM_RUNTIME_FUNCTION_ENTRY RUNTIME_FUNCTION, *PRUNTIME_FUNCTION;
 typedef SCOPE_TABLE_ARM SCOPE_TABLE, *PSCOPE_TABLE;
+
+//
+// Define unwind information flags.
+//
+
+#define UNW_FLAG_NHANDLER               0x0             /* any handler */
+#define UNW_FLAG_EHANDLER               0x1             /* filter handler */
+#define UNW_FLAG_UHANDLER               0x2             /* unwind handler */
 
 //
 // Define unwind history table structure.
@@ -4612,19 +4781,19 @@ __emit(
 #define InterlockedXorRelease _InterlockedXor
 #define InterlockedXorNoFence _InterlockedXor
 
-#define InterlockedIncrementNoFence _InterlockedIncrement
-#define InterlockedDecrementNoFence _InterlockedDecrement
+#define InterlockedIncrementNoFence InterlockedIncrement
+#define InterlockedDecrementNoFence InterlockedDecrement
 #define InterlockedAddAcquire _InterlockedAdd
 #define InterlockedAddRelease _InterlockedAdd
 #define InterlockedAddNoFence _InterlockedAdd
 
-#define InterlockedExchangeAcquire _InterlockedExchange
-#define InterlockedExchangeNoFence _InterlockedExchange
-#define InterlockedExchangeAddAcquire _InterlockedExchangeAdd
-#define InterlockedExchangeAddRelease _InterlockedExchangeAdd
-#define InterlockedExchangeAddNoFence _InterlockedExchangeAdd
+#define InterlockedExchangeAcquire InterlockedExchange
+#define InterlockedExchangeNoFence InterlockedExchange
+#define InterlockedExchangeAddAcquire InterlockedExchangeAdd
+#define InterlockedExchangeAddRelease InterlockedExchangeAdd
+#define InterlockedExchangeAddNoFence InterlockedExchangeAdd
 
-#define InterlockedCompareExchangeNoFence _InterlockedCompareExchange
+#define InterlockedCompareExchangeNoFence InterlockedCompareExchange
 
 //
 // Disable these two pragmas that evaluate to "sti" "cli" on x86 so that driver
@@ -7205,6 +7374,856 @@ __jump_unwind (
 
 #endif // _IA64_
 
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+// begin_wdm begin_ntminiport
+
+#if !defined(RC_INVOKED) && !defined(MIDL_PASS)
+#if defined(_M_AMD64) || defined(_M_IX86) || defined(_M_CEE_PURE)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+FORCEINLINE
+CHAR
+ReadAcquire8 (
+    _In_ _Interlocked_operand_ CHAR const volatile *Source
+    )
+
+{
+
+    CHAR Value;
+
+    Value = *Source;
+    return Value;
+}
+
+FORCEINLINE
+CHAR
+ReadNoFence8 (
+    _In_ _Interlocked_operand_ CHAR const volatile *Source
+    )
+
+{
+
+    CHAR Value;
+
+    Value = *Source;
+    return Value;
+}
+
+FORCEINLINE
+VOID
+WriteRelease8 (
+    _Out_ _Interlocked_operand_ CHAR volatile *Destination,
+    _In_ CHAR Value
+    )
+
+{
+
+    *Destination = Value;
+    return;
+}
+
+FORCEINLINE
+VOID
+WriteNoFence8 (
+    _Out_ _Interlocked_operand_ CHAR volatile *Destination,
+    _In_ CHAR Value
+    )
+
+{
+
+    *Destination = Value;
+    return;
+}
+
+FORCEINLINE
+SHORT
+ReadAcquire16 (
+    _In_ _Interlocked_operand_ SHORT const volatile *Source
+    )
+
+{
+
+    SHORT Value;
+
+    Value = *Source;
+    return Value;
+}
+
+FORCEINLINE
+SHORT
+ReadNoFence16 (
+    _In_ _Interlocked_operand_ SHORT const volatile *Source
+    )
+
+{
+
+    SHORT Value;
+
+    Value = *Source;
+    return Value;
+}
+
+FORCEINLINE
+VOID
+WriteRelease16 (
+    _Out_ _Interlocked_operand_ SHORT volatile *Destination,
+    _In_ SHORT Value
+    )
+
+{
+
+    *Destination = Value;
+    return;
+}
+
+FORCEINLINE
+VOID
+WriteNoFence16 (
+    _Out_ _Interlocked_operand_ SHORT volatile *Destination,
+    _In_ SHORT Value
+    )
+
+{
+
+    *Destination = Value;
+    return;
+}
+
+FORCEINLINE
+LONG
+ReadAcquire (
+    _In_ _Interlocked_operand_ LONG const volatile *Source
+    )
+
+{
+
+    LONG Value;
+
+    Value = *Source;
+    return Value;
+}
+
+FORCEINLINE
+LONG
+ReadNoFence (
+    _In_ _Interlocked_operand_ LONG const volatile *Source
+    )
+
+{
+
+    LONG Value;
+
+    Value = *Source;
+    return Value;
+}
+
+FORCEINLINE
+VOID
+WriteRelease (
+    _Out_ _Interlocked_operand_ LONG volatile *Destination,
+    _In_ LONG Value
+    )
+
+{
+
+    *Destination = Value;
+    return;
+}
+
+FORCEINLINE
+VOID
+WriteNoFence (
+    _Out_ _Interlocked_operand_ LONG volatile *Destination,
+    _In_ LONG Value
+    )
+
+{
+
+    *Destination = Value;
+    return;
+}
+
+FORCEINLINE
+LONG64
+ReadAcquire64 (
+    _In_ _Interlocked_operand_ LONG64 const volatile *Source
+    )
+
+{
+
+    LONG64 Value;
+
+    Value = *Source;
+    return Value;
+}
+
+FORCEINLINE
+LONG64
+ReadNoFence64 (
+    _In_ _Interlocked_operand_ LONG64 const volatile *Source
+    )
+
+{
+
+    LONG64 Value;
+
+    Value = *Source;
+    return Value;
+}
+
+FORCEINLINE
+VOID
+WriteRelease64 (
+    _Out_ _Interlocked_operand_ LONG64 volatile *Destination,
+    _In_ LONG64 Value
+    )
+
+{
+
+    *Destination = Value;
+    return;
+}
+
+FORCEINLINE
+VOID
+WriteNoFence64 (
+    _Out_ _Interlocked_operand_ LONG64 volatile *Destination,
+    _In_ LONG64 Value
+    )
+
+{
+
+    *Destination = Value;
+    return;
+}
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif // defined(_M_AMD64) || defined(_M_IX86) || defined(_M_CEE_PURE)
+
+//
+// Define "raw" operations which have no ordering or atomicity semantics.
+//
+
+FORCEINLINE
+CHAR
+ReadRaw8 (
+    _In_ _Interlocked_operand_ CHAR const volatile *Source
+    )
+
+{
+
+    CHAR Value;
+
+    Value = *(CHAR *)Source;
+    return Value;
+}
+
+FORCEINLINE
+VOID
+WriteRaw8 (
+    _Out_ _Interlocked_operand_ CHAR volatile *Destination,
+    _In_ CHAR Value
+    )
+
+{
+
+    *(CHAR *)Destination = Value;
+    return;
+}
+
+FORCEINLINE
+SHORT
+ReadRaw16 (
+    _In_ _Interlocked_operand_ SHORT const volatile *Source
+    )
+
+{
+
+    SHORT Value;
+
+    Value = *(SHORT *)Source;
+    return Value;
+}
+
+FORCEINLINE
+VOID
+WriteRaw16 (
+    _Out_ _Interlocked_operand_ SHORT volatile *Destination,
+    _In_ SHORT Value
+    )
+
+{
+
+    *(SHORT *)Destination = Value;
+    return;
+}
+
+FORCEINLINE
+LONG
+ReadRaw (
+    _In_ _Interlocked_operand_ LONG const volatile *Source
+    )
+
+{
+
+    LONG Value;
+
+    Value = *(LONG *)Source;
+    return Value;
+}
+
+FORCEINLINE
+VOID
+WriteRaw (
+    _Out_ _Interlocked_operand_ LONG volatile *Destination,
+    _In_ LONG Value
+    )
+
+{
+
+    *(LONG *)Destination = Value;
+    return;
+}
+
+FORCEINLINE
+LONG64
+ReadRaw64 (
+    _In_ _Interlocked_operand_ LONG64 const volatile *Source
+    )
+
+{
+
+    LONG64 Value;
+
+    Value = *(LONG64 *)Source;
+    return Value;
+}
+
+FORCEINLINE
+VOID
+WriteRaw64 (
+    _Out_ _Interlocked_operand_ LONG64 volatile *Destination,
+    _In_ LONG64 Value
+    )
+
+{
+
+    *(LONG64 *)Destination = Value;
+    return;
+}
+
+//
+// Define explicit read and write operations for derived types.
+//
+
+FORCEINLINE
+BYTE 
+ReadUCharAcquire (
+    _In_ _Interlocked_operand_ BYTE  const volatile *Source
+    )
+
+{
+
+    return (BYTE )ReadAcquire8((PCHAR)Source);
+}
+
+FORCEINLINE
+BYTE 
+ReadUCharNoFence (
+    _In_ _Interlocked_operand_ BYTE  const volatile *Source
+    )
+
+{
+
+    return (BYTE )ReadNoFence8((PCHAR)Source);
+}
+
+FORCEINLINE
+BYTE 
+ReadUCharRaw (
+    _In_ _Interlocked_operand_ BYTE  const volatile *Source
+    )
+
+{
+
+    return (BYTE )ReadRaw8((PCHAR)Source);
+}
+
+FORCEINLINE
+VOID
+WriteUCharRelease (
+    _Out_ _Interlocked_operand_ BYTE  volatile *Destination,
+    _In_ BYTE  Value
+    )
+
+{
+
+    WriteRelease8((PCHAR)Destination, (CHAR)Value);
+    return;
+}
+
+FORCEINLINE
+VOID
+WriteUCharNoFence (
+    _Out_ _Interlocked_operand_ BYTE  volatile *Destination,
+    _In_ BYTE  Value
+    )
+
+{
+
+    WriteNoFence8((PCHAR)Destination, (CHAR)Value);
+    return;
+}
+
+FORCEINLINE
+VOID
+WriteUCharRaw (
+    _Out_ _Interlocked_operand_ BYTE  volatile *Destination,
+    _In_ BYTE  Value
+    )
+
+{
+
+    WriteRaw8((PCHAR)Destination, (CHAR)Value);
+    return;
+}
+
+FORCEINLINE
+WORD  
+ReadUShortAcquire (
+    _In_ _Interlocked_operand_ WORD   const volatile *Source
+    )
+
+{
+
+    return (WORD  )ReadAcquire16((PSHORT)Source);
+}
+
+FORCEINLINE
+WORD  
+ReadUShortNoFence (
+    _In_ _Interlocked_operand_ WORD   const volatile *Source
+    )
+
+{
+
+    return (WORD  )ReadNoFence16((PSHORT)Source);
+}
+
+FORCEINLINE
+WORD  
+ReadUShortRaw (
+    _In_ _Interlocked_operand_ WORD   const volatile *Source
+    )
+
+{
+
+    return (WORD  )ReadRaw16((PSHORT)Source);
+}
+
+FORCEINLINE
+VOID
+WriteUShortRelease (
+    _Out_ _Interlocked_operand_ WORD   volatile *Destination,
+    _In_ WORD   Value
+    )
+
+{
+
+    WriteRelease16((PSHORT)Destination, (SHORT)Value);
+    return;
+}
+
+FORCEINLINE
+VOID
+WriteUShortNoFence (
+    _Out_ _Interlocked_operand_ WORD   volatile *Destination,
+    _In_ WORD   Value
+    )
+
+{
+
+    WriteNoFence16((PSHORT)Destination, (SHORT)Value);
+    return;
+}
+
+FORCEINLINE
+VOID
+WriteUShortRaw (
+    _Out_ _Interlocked_operand_ WORD   volatile *Destination,
+    _In_ WORD   Value
+    )
+
+{
+
+    WriteRaw16((PSHORT)Destination, (SHORT)Value);
+    return;
+}
+
+FORCEINLINE
+DWORD
+ReadULongAcquire (
+    _In_ _Interlocked_operand_ DWORD const volatile *Source
+    )
+
+{
+
+    return (DWORD)ReadAcquire((PLONG)Source);
+}
+
+FORCEINLINE
+DWORD
+ReadULongNoFence (
+    _In_ _Interlocked_operand_ DWORD const volatile *Source
+    )
+
+{
+
+    return (DWORD)ReadNoFence((PLONG)Source);
+}
+
+FORCEINLINE
+DWORD
+ReadULongRaw (
+    _In_ _Interlocked_operand_ DWORD const volatile *Source
+    )
+
+{
+
+    return (DWORD)ReadRaw((PLONG)Source);
+}
+
+FORCEINLINE
+VOID
+WriteULongRelease (
+    _Out_ _Interlocked_operand_ DWORD volatile *Destination,
+    _In_ DWORD Value
+    )
+
+{
+
+    WriteRelease((PLONG)Destination, (LONG)Value);
+    return;
+}
+
+FORCEINLINE
+VOID
+WriteULongNoFence (
+    _Out_ _Interlocked_operand_ DWORD volatile *Destination,
+    _In_ DWORD Value
+    )
+
+{
+
+    WriteNoFence((PLONG)Destination, (LONG)Value);
+    return;
+}
+
+FORCEINLINE
+VOID
+WriteULongRaw (
+    _Out_ _Interlocked_operand_ DWORD volatile *Destination,
+    _In_ DWORD Value
+    )
+
+{
+
+    WriteRaw((PLONG)Destination, (LONG)Value);
+    return;
+}
+
+FORCEINLINE
+DWORD64
+ReadULong64Acquire (
+    _In_ _Interlocked_operand_ DWORD64 const volatile *Source
+    )
+
+{
+
+    return (DWORD64)ReadAcquire64((PLONG64)Source);
+}
+
+FORCEINLINE
+DWORD64
+ReadULong64NoFence (
+    _In_ _Interlocked_operand_ DWORD64 const volatile *Source
+    )
+
+{
+
+    return (DWORD64)ReadNoFence64((PLONG64)Source);
+}
+
+FORCEINLINE
+DWORD64
+ReadULong64Raw (
+    _In_ _Interlocked_operand_ DWORD64 const volatile *Source
+    )
+
+{
+
+    return (DWORD64)ReadRaw64((PLONG64)Source);
+}
+
+FORCEINLINE
+VOID
+WriteULong64Release (
+    _Out_ _Interlocked_operand_ DWORD64 volatile *Destination,
+    _In_ DWORD64 Value
+    )
+
+{
+
+    WriteRelease64((PLONG64)Destination, (LONG64)Value);
+    return;
+}
+
+FORCEINLINE
+VOID
+WriteULong64NoFence (
+    _Out_ _Interlocked_operand_ DWORD64 volatile *Destination,
+    _In_ DWORD64 Value
+    )
+
+{
+
+    WriteNoFence64((PLONG64)Destination, (LONG64)Value);
+    return;
+}
+
+FORCEINLINE
+VOID
+WriteULong64Raw (
+    _Out_ _Interlocked_operand_ DWORD64 volatile *Destination,
+    _In_ DWORD64 Value
+    )
+
+{
+
+    WriteRaw64((PLONG64)Destination, (LONG64)Value);
+    return;
+}
+
+#define ReadSizeTAcquire ReadULongPtrAcquire
+
+#define ReadSizeTNoFence ReadULongPtrNoFence
+
+#define ReadSizeTRaw ReadULongPtrRaw
+
+#define WriteSizeTRelease WriteULongPtrRelease
+
+#define WriteSizeTNoFence WriteULongPtrNoFence
+
+#define WriteSizeTRaw WriteULongPtrRaw
+
+#if !defined(_WIN64)
+
+FORCEINLINE
+PVOID
+ReadPointerAcquire (
+    _In_ _Interlocked_operand_ PVOID const volatile *Source
+    )
+
+{
+
+    return (PVOID)ReadAcquire((PLONG)Source);
+}
+
+FORCEINLINE
+PVOID
+ReadPointerNoFence (
+    _In_ _Interlocked_operand_ PVOID const volatile *Source
+    )
+
+{
+
+    return (PVOID)ReadNoFence((PLONG)Source);
+}
+
+FORCEINLINE
+PVOID
+ReadPointerRaw (
+    _In_ _Interlocked_operand_ PVOID const volatile *Source
+    )
+
+{
+
+    return (PVOID)ReadRaw((PLONG)Source);
+}
+
+FORCEINLINE
+VOID
+WritePointerRelease (
+    _Out_ _Interlocked_operand_ PVOID volatile *Destination,
+    _In_ PVOID Value
+    )
+
+{
+
+    WriteRelease((PLONG)Destination, (LONG)Value);
+    return;
+}
+
+FORCEINLINE
+VOID
+WritePointerNoFence (
+    _Out_ _Interlocked_operand_ PVOID volatile *Destination,
+    _In_opt_ PVOID Value
+    )
+
+{
+
+    WriteNoFence((PLONG)Destination, (LONG)Value);
+    return;
+}
+
+FORCEINLINE
+VOID
+WritePointerRaw (
+    _Out_ _Interlocked_operand_ PVOID volatile *Destination,
+    _In_opt_ PVOID Value
+    )
+
+{
+
+    WriteRaw((PLONG)Destination, (LONG)Value);
+    return;
+}
+
+#define ReadLongPtrAcquire ReadAcquire
+
+#define ReadLongPtrNoFence ReadNoFence
+
+#define ReadLongPtrRaw ReadRaw
+
+#define WriteLongPtrRelease WriteRelease
+
+#define WriteLongPtrNoFence WriteNoFence
+
+#define WriteLongPtrRaw WriteRaw
+
+#define ReadULongPtrAcquire ReadULongAcquire
+
+#define ReadULongPtrNoFence ReadULongNoFence
+
+#define ReadULongPtrRaw ReadULongRaw
+
+#define WriteULongPtrRelease WriteULongRelease
+
+#define WriteULongPtrNoFence WriteULongNoFence
+
+#define WriteULongPtrRaw WriteULongRaw
+
+#else // !defined(_WIN64)
+
+FORCEINLINE
+PVOID
+ReadPointerAcquire (
+    _In_ _Interlocked_operand_ PVOID const volatile *Source
+    )
+
+{
+
+    return (PVOID)ReadAcquire64((PLONG64)Source);
+}
+
+FORCEINLINE
+PVOID
+ReadPointerNoFence (
+    _In_ _Interlocked_operand_ PVOID const volatile *Source
+    )
+
+{
+
+    return (PVOID)ReadNoFence64((PLONG64)Source);
+}
+
+FORCEINLINE
+PVOID
+ReadPointerRaw (
+    _In_ _Interlocked_operand_ PVOID const volatile *Source
+    )
+
+{
+
+    return (PVOID)ReadRaw64((PLONG64)Source);
+}
+
+FORCEINLINE
+VOID
+WritePointerRelease (
+    _Out_ _Interlocked_operand_ PVOID volatile *Destination,
+    _In_ PVOID Value
+    )
+
+{
+
+    WriteRelease64((PLONG64)Destination, (LONG64)Value);
+    return;
+}
+
+FORCEINLINE
+VOID
+WritePointerNoFence (
+    _Out_ _Interlocked_operand_ PVOID volatile *Destination,
+    _In_ PVOID Value
+    )
+
+{
+
+    WriteNoFence64((PLONG64)Destination, (LONG64)Value);
+    return;
+}
+
+FORCEINLINE
+VOID
+WritePointerRaw (
+    _Out_ _Interlocked_operand_ PVOID volatile *Destination,
+    _In_ PVOID Value
+    )
+
+{
+
+    WriteRaw64((PLONG64)Destination, (LONG64)Value);
+    return;
+}
+
+#define ReadLongPtrAcquire ReadAcquire64
+
+#define ReadLongPtrNoFence ReadNoFence64
+
+#define ReadLongPtrRaw ReadRaw64
+
+#define WriteLongPtrRelease WriteRelease64
+
+#define WriteLongPtrNoFence WriteNoFence64
+
+#define WriteLongPtrRaw WriteRaw64
+
+#define ReadULongPtrAcquire ReadULong64Acquire
+
+#define ReadULongPtrNoFence ReadULong64NoFence
+
+#define ReadULongPtrRaw ReadULong64Raw
+
+#define WriteULongPtrRelease WriteULong64Release
+
+#define WriteULongPtrNoFence WriteULong64NoFence
+
+#define WriteULongPtrRaw WriteULong64Raw
+
+#endif // !defined(_WIN64)
+
+#endif // !defined(RC_INVOKED) && !defined(MIDL_PASS)
+
+// end_ntddk end_wdm end_ntminiport
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 #if !defined(RC_INVOKED)
 
@@ -8004,6 +9023,27 @@ typedef struct _SID_AND_ATTRIBUTES_HASH {
 
 #define SECURITY_SCOPED_POLICY_ID_AUTHORITY             {0,0,0,0,0,17}
 
+//
+// Authentication Authority
+//
+
+#define SECURITY_AUTHENTICATION_AUTHORITY                  {0,0,0,0,0,18}
+#define SECURITY_AUTHENTICATION_AUTHORITY_RID_COUNT        (1L)
+#define SECURITY_AUTHENTICATION_AUTHORITY_ASSERTED_RID     (0x00000001L)
+#define SECURITY_AUTHENTICATION_SERVICE_ASSERTED_RID       (0x00000002L)
+
+//
+// Trusted Installer RIDs
+//
+
+#define SECURITY_TRUSTED_INSTALLER_RID1 956008885
+#define SECURITY_TRUSTED_INSTALLER_RID2 3418522649
+#define SECURITY_TRUSTED_INSTALLER_RID3 1831038044
+#define SECURITY_TRUSTED_INSTALLER_RID4 1853292631
+#define SECURITY_TRUSTED_INSTALLER_RID5 2271478464
+
+
+
 
 
 //
@@ -8115,6 +9155,8 @@ typedef enum {
     WinAccountCloneableControllersSid           = 100,
     WinBuiltinAccessControlAssistanceOperatorsSid = 101,
     WinBuiltinRemoteManagementUsersSid          = 102,
+    WinAuthenticationAuthorityAssertedSid       = 103,
+    WinAuthenticationServiceAssertedSid         = 104,
 } WELL_KNOWN_SID_TYPE;
 
 //
@@ -9247,7 +10289,7 @@ typedef struct _TOKEN_ACCESS_INFORMATION {
 // Valid bits for each TOKEN_AUDIT_POLICY policy mask field.
 //
 
-#define POLICY_AUDIT_SUBCATEGORY_COUNT (55)
+#define POLICY_AUDIT_SUBCATEGORY_COUNT (56)
 
 typedef struct _TOKEN_AUDIT_POLICY {
     BYTE  PerUserPolicy[((POLICY_AUDIT_SUBCATEGORY_COUNT) >> 1) + 1];
@@ -9841,6 +10883,8 @@ typedef enum _PROCESS_MITIGATION_POLICY {
     ProcessReserved1MitigationPolicy,
     ProcessStrictHandleCheckPolicy,
     ProcessSystemCallDisablePolicy,
+    ProcessMitigationOptionsMask,
+    ProcessExtensionPointDisablePolicy,
     MaxProcessMitigationPolicy
 } PROCESS_MITIGATION_POLICY, *PPROCESS_MITIGATION_POLICY;
 
@@ -9853,7 +10897,7 @@ typedef struct _PROCESS_MITIGATION_ASLR_POLICY {
     union {
         DWORD Flags;
         struct {
-            DWORD EnableStackRandomization : 1;
+            DWORD EnableBottomUpRandomization : 1;
             DWORD EnableForceRelocateImages : 1;
             DWORD EnableHighEntropy : 1;
             DWORD DisallowStrippedImages : 1;
@@ -9894,6 +10938,16 @@ typedef struct _PROCESS_MITIGATION_SYSTEM_CALL_DISABLE_POLICY {
         };
     };
 } PROCESS_MITIGATION_SYSTEM_CALL_DISABLE_POLICY, *PPROCESS_MITIGATION_SYSTEM_CALL_DISABLE_POLICY;
+
+typedef struct _PROCESS_MITIGATION_EXTENSION_POINT_DISABLE_POLICY {
+    union {
+        DWORD Flags;
+        struct {
+            DWORD DisableExtensionPoints : 1;
+            DWORD ReservedFlags : 31;
+        };
+    };
+} PROCESS_MITIGATION_EXTENSION_POINT_DISABLE_POLICY, *PPROCESS_MITIGATION_EXTENSION_POINT_DISABLE_POLICY;
 
 
 typedef struct _JOBOBJECT_BASIC_ACCOUNTING_INFORMATION {
@@ -10389,8 +11443,11 @@ typedef struct _XSTATE_FEATURE {
 } XSTATE_FEATURE, *PXSTATE_FEATURE;
 
 typedef struct _XSTATE_CONFIGURATION {
-    // Mask of enabled features
+    // Mask of all enabled features
     DWORD64 EnabledFeatures;
+
+    // Mask of volatile enabled features
+    DWORD64 EnabledVolatileFeatures;
 
     // Total size of the save area
     DWORD Size;
@@ -10470,21 +11527,23 @@ typedef struct DECLSPEC_ALIGN(16) _MEMORY_BASIC_INFORMATION64 {
 #define PAGE_GUARD            0x100     
 #define PAGE_NOCACHE          0x200     
 #define PAGE_WRITECOMBINE     0x400     
-#define MEM_COMMIT           0x1000     
-#define MEM_RESERVE          0x2000     
-#define MEM_DECOMMIT         0x4000     
-#define MEM_RELEASE          0x8000     
-#define MEM_FREE            0x10000     
-#define MEM_PRIVATE         0x20000     
-#define MEM_MAPPED          0x40000     
-#define MEM_RESET           0x80000     
-#define MEM_TOP_DOWN       0x100000     
-#define MEM_WRITE_WATCH    0x200000     
-#define MEM_PHYSICAL       0x400000     
-#define MEM_ROTATE         0x800000     
-#define MEM_RESET_UNDO    0x1000000     
-#define MEM_LARGE_PAGES  0x20000000     
-#define MEM_4MB_PAGES    0x80000000     
+#define PAGE_REVERT_TO_FILE_MAP     0x80000000     
+#define MEM_COMMIT                  0x1000      
+#define MEM_RESERVE                 0x2000      
+#define MEM_DECOMMIT                0x4000      
+#define MEM_RELEASE                 0x8000      
+#define MEM_FREE                    0x10000     
+#define MEM_PRIVATE                 0x20000     
+#define MEM_MAPPED                  0x40000     
+#define MEM_RESET                   0x80000     
+#define MEM_TOP_DOWN                0x100000    
+#define MEM_WRITE_WATCH             0x200000    
+#define MEM_PHYSICAL                0x400000    
+#define MEM_ROTATE                  0x800000    
+#define MEM_DIFFERENT_IMAGE_BASE_OK 0x800000    
+#define MEM_RESET_UNDO              0x1000000   
+#define MEM_LARGE_PAGES             0x20000000  
+#define MEM_4MB_PAGES               0x80000000  
 #define SEC_FILE           0x800000     
 #define SEC_IMAGE         0x1000000     
 #define SEC_PROTECTED_IMAGE  0x2000000  
@@ -10612,6 +11671,10 @@ typedef struct DECLSPEC_ALIGN(16) _MEMORY_BASIC_INFORMATION64 {
 #define FILE_SUPPORTS_OPEN_BY_FILE_ID       0x01000000  
 #define FILE_SUPPORTS_USN_JOURNAL           0x02000000  
 #define FILE_SUPPORTS_INTEGRITY_STREAMS     0x04000000  
+#define FILE_INVALID_FILE_ID               ((LONGLONG)-1LL) 
+typedef struct _FILE_ID_128 {                               
+    BYTE  Identifier[16];                                   
+} FILE_ID_128, *PFILE_ID_128;                               
 
 //
 // Define the file notification information structure
@@ -10637,10 +11700,46 @@ typedef union _FILE_SEGMENT_ELEMENT {
 #if (NTDDI_VERSION >= NTDDI_WIN8)
 
 //
-// Flag defintions for NtFlushBuffersFileEx
+//  Flag defintions for NtFlushBuffersFileEx
+//
+//  If none of the below flags are specified the following will occur for a
+//  given file handle:
+//      - Write any modified data for the given file from the Windows in-memory
+//        cache.
+//      - Commit all pending metadata changes for the given file from the
+//        Windows in-memory cache.
+//      - Send a SYNC command to the underlying storage device to commit all
+//        written data in the devices cache to persistent storage.
+//
+//  If a volume handle is specified:
+//      - Write all modified data for all files on the volume from the Windows
+//        in-memory cache.
+//      - Commit all pending metadata changes for all files on the volume from
+//        the Windows in-memory cache.
+//      - Send a SYNC command to the underlying storage device to commit all
+//        written data in the devices cache to persistent storage.
+//
+//  This is equivalent to how NtFlushBuffersFile has always worked.
+//
+
+//
+//  If set, this operation will write the data for the given file from the
+//  Windows in-memory cache.  This will NOT commit any associated metadata
+//  changes.  This will NOT send a SYNC to the storage device to flush its
+//  cache.  Not supported on volume handles.  Only supported by the NTFS
+//  filesystem.
 //
 
 #define FLUSH_FLAGS_FILE_DATA_ONLY     0x00000001
+
+//
+//  If set, this operation will commit both the data and metadata changes for
+//  the given file from the Windows in-memory cache.  This will NOT send a SYNC
+//  to the storage device to flush its cache.  Not supported on volume handles.
+//  Only supported by the NTFS filesystem.
+//
+
+#define FLUSH_FLAGS_NO_SYNC             0x00000002
 
 #endif  // (NTDDI_VERSION >= NTDDI_WIN8)
 
@@ -10745,7 +11844,8 @@ typedef struct _REPARSE_GUID_DATA_BUFFER {
 
 #define SCRUB_DATA_INPUT_FLAG_RESUME 0x00000001
 
-#define SCRUB_DATA_OUTPUT_FLAG_INCOMPLETE 0x00000001
+#define SCRUB_DATA_OUTPUT_FLAG_INCOMPLETE          0x00000001
+#define SCRUB_DATA_OUTPUT_FLAG_NON_USER_DATA_RANGE 0x00010000
 
 typedef struct _SCRUB_DATA_INPUT {
 
@@ -10776,7 +11876,7 @@ typedef struct _SCRUB_DATA_INPUT {
     // Reserved
     //
 
-    DWORD Reserved[5];
+    DWORD Reserved[15];
 
     //
     // Opaque data returned from the previous call to restart the
@@ -10833,10 +11933,22 @@ typedef struct _SCRUB_DATA_OUTPUT {
     DWORD NumberOfBytesRepaired;
 
     //
-    // Number of bytes skipped due to an error in the operational error range
+    // Number of bytes failed due to an error in the operational error range
     //
 
-    DWORD NumberOfBytesSkipped;
+    DWORD NumberOfBytesFailed;
+
+    //
+    // Reference number for the file system specific internal file
+    //
+
+    ULONGLONG InternalFileReference;
+
+    //
+    // Reserved
+    //
+
+    DWORD Reserved[8];
 
     //
     // Opaque data that the file system returns to the user so that
@@ -10854,7 +11966,13 @@ typedef struct _SCRUB_DATA_OUTPUT {
     BYTE  ResumeContext[816];
 
 } SCRUB_DATA_OUTPUT, *PSCRUB_DATA_OUTPUT;
+
 #endif /*_WIN32_WINNT >= 0x0602 */
+
+// begin_winioctl begin_ntosifs
+//
+//=============== END FileSystem FSCTL Structure Defintions ==================
+//
 
 //
 // I/O Completion Specific Access Rights.
@@ -11100,35 +12218,11 @@ DEFINE_GUID(GUID_VIDEO_CONSOLE_LOCK_TIMEOUT, 0x8ec4b3a5, 0x6868, 0x48c2, 0xbe, 0
 DEFINE_GUID(GUID_ADAPTIVE_POWER_BEHAVIOR_SUBGROUP, 0x8619b916, 0xe004, 0x4dd8, 0x9b, 0x66, 0xda, 0xe8, 0x6f, 0x80, 0x66, 0x98);
 
 //
-// Specifies the input timeout (in seconds) to be used when sensors are present
-// and indicate UserNotPresent. Value 0 effectively disables this feature.
-//
-// {F751D3EF-B35B-4d34-BAD1-029BFAF91186}
-DEFINE_GUID(GUID_ADAPTIVE_INPUT_TIMEOUT, 0xf751d3ef, 0xb35b, 0x4d34, 0xba, 0xd1, 0x2, 0x9b, 0xfa, 0xf9, 0x11, 0x86);
-
-//
-// Specifies the input timeout (in seconds) to be used when sensors are either 
-// not present ot indicate UserUnkown. Value 0 effectively disables this 
-// feature.
+// Specifies the input timeout (in seconds) to be used to indicate UserUnkown.
+// Value 0 effectively disables this feature.
 //
 // {5ADBBFBC-074E-4da1-BA38-DB8B36B2C8F3}
 DEFINE_GUID(GUID_NON_ADAPTIVE_INPUT_TIMEOUT, 0x5adbbfbc, 0x74e, 0x4da1, 0xba, 0x38, 0xdb, 0x8b, 0x36, 0xb2, 0xc8, 0xf3);
-
-// 
-// Specifies the video power down timeout (in seconds) to be used when sensors
-// indicate UserNotPresent. When UserUnknown is indicated the existing 
-// GUID_VIDEO_POWERDOWN_TIMEOUT timeout will be used instead. Value 0 
-// effectively disables this feature.
-//
-// {015F8E5D-6A8B-4917-9B7A-332BF82FDEAE}
-DEFINE_GUID(GUID_ADAPTIVE_VIDEO_POWERDOWN_TIMEOUT, 0x15f8e5d, 0x6a8b, 0x4917, 0x9b, 0x7a, 0x33, 0x2b, 0xf8, 0x2f, 0xde, 0xae);
-
-// 
-// Specifies whether or not the adaptive power behavior is enabled.
-//
-// {5FEE55F2-B580-4204-AA4D-297DD857BF13}
-DEFINE_GUID(GUID_ADAPTIVE_BEHAVIOR_ENABLE, 0x5fee55f2, 0xb580, 0x4204, 0xaa, 0x4d, 0x29, 0x7d, 0xd8, 0x57, 0xbf, 0x13);
-
 
 // Harddisk settings
 // -----------------
@@ -11263,18 +12357,26 @@ DEFINE_GUID( GUID_ALLOW_SYSTEM_REQUIRED, 0xA4B195F5, 0x8225, 0x47D8, 0x80, 0x12,
 //
 DEFINE_GUID( GUID_SYSTEM_BUTTON_SUBGROUP, 0x4F971E89, 0xEEBD, 0x4455, 0xA8, 0xDE, 0x9E, 0x59, 0x04, 0x0E, 0x73, 0x47 );
 
+#define POWERBUTTON_ACTION_INDEX_NOTHING    0
+#define POWERBUTTON_ACTION_INDEX_SLEEP      1
+#define POWERBUTTON_ACTION_INDEX_HIBERNATE  2
+#define POWERBUTTON_ACTION_INDEX_SHUTDOWN   3
+
+#define POWERBUTTON_ACTION_VALUE_NOTHING    0
+#define POWERBUTTON_ACTION_VALUE_SLEEP      2
+#define POWERBUTTON_ACTION_VALUE_HIBERNATE  3
+#define POWERBUTTON_ACTION_VALUE_SHUTDOWN   4
+
 // Specifies (in a POWER_ACTION_POLICY structure) the appropriate action to
 // take when the system power button is pressed.
 //
 DEFINE_GUID( GUID_POWERBUTTON_ACTION, 0x7648EFA3, 0xDD9C, 0x4E3E, 0xB5, 0x66, 0x50, 0xF9, 0x29, 0x38, 0x62, 0x80 );
-DEFINE_GUID( GUID_POWERBUTTON_ACTION_FLAGS, 0x857E7FAC, 0x034B, 0x4704, 0xAB, 0xB1, 0xBC, 0xA5, 0x4A, 0xA3, 0x14, 0x78 );
 
 //
 // Specifies (in a POWER_ACTION_POLICY structure) the appropriate action to
 // take when the system sleep button is pressed.
 //
 DEFINE_GUID( GUID_SLEEPBUTTON_ACTION, 0x96996BC0, 0xAD50, 0x47EC, 0x92, 0x3B, 0x6F, 0x41, 0x87, 0x4D, 0xD9, 0xEB );
-DEFINE_GUID( GUID_SLEEPBUTTON_ACTION_FLAGS, 0x2A160AB1, 0xB69D, 0x4743, 0xB7, 0x18, 0xBF, 0x14, 0x41, 0xD5, 0xE4, 0x93 );
 
 //
 // Specifies (in a POWER_ACTION_POLICY structure) the appropriate action to
@@ -11288,7 +12390,6 @@ DEFINE_GUID( GUID_USERINTERFACEBUTTON_ACTION, 0xA7066653, 0x8D6C, 0x40A8, 0x91, 
 // take when the system lid is closed.
 //
 DEFINE_GUID( GUID_LIDCLOSE_ACTION, 0x5CA83367, 0x6E45, 0x459F, 0xA2, 0x7B, 0x47, 0x6B, 0x1D, 0x01, 0xC9, 0x36 );
-DEFINE_GUID( GUID_LIDCLOSE_ACTION_FLAGS, 0x97E969AC, 0x0D6C, 0x4D08, 0x92, 0x7C, 0xD7, 0xBD, 0x7A, 0xD7, 0x85, 0x7B );
 DEFINE_GUID( GUID_LIDOPEN_POWERSTATE, 0x99FF10E7, 0x23B1, 0x4C07, 0xA9, 0xD1, 0x5C, 0x32, 0x06, 0xD7, 0x41, 0xB4 );
 
 
@@ -11325,55 +12426,6 @@ DEFINE_GUID( GUID_BATTERY_DISCHARGE_FLAGS_2, 0x7fd2f0c4, 0xfeb7, 0x4da3, 0x81, 0
 DEFINE_GUID( GUID_BATTERY_DISCHARGE_ACTION_3, 0x80472613, 0x9780, 0x455E, 0xB3, 0x08, 0x72, 0xD3, 0x00, 0x3C, 0xF2, 0xF8 );
 DEFINE_GUID( GUID_BATTERY_DISCHARGE_LEVEL_3, 0x58AFD5A6, 0xC2DD, 0x47D2, 0x9F, 0xBF, 0xEF, 0x70, 0xCC, 0x5C, 0x59, 0x65 );
 DEFINE_GUID( GUID_BATTERY_DISCHARGE_FLAGS_3, 0x73613ccf, 0xdbfa, 0x4279, 0x83, 0x56, 0x49, 0x35, 0xf6, 0xbf, 0x62, 0xf3 );
-
-// Memory power settings
-// ------------------------
-//
-
-// Specifies the subgroup which will contain all of the memory
-// settings for a single policy.
-//
-DEFINE_GUID( GUID_MEMORY_SETTINGS_SUBGROUP, 0xB068EFCE, 0xCAE3, 0x4925, 0x8F, 0xC6, 0xE2, 0x97, 0xCE, 0xAD, 0x30, 0x5F );
-
-DEFINE_GUID( GUID_MEMORY_RELOCATION_MB, 0xF3942F56, 0x7952, 0x4BB8, 0x99, 0x5B, 0xFE, 0x25, 0x94, 0xF8, 0x16, 0x9C );
-
-DEFINE_GUID( GUID_MEMORY_COOLING_ENABLE, 0xD8BFAEE2, 0xEDF1, 0x4E6C, 0xAD, 0xAF, 0x2F, 0xA6, 0x58, 0x24, 0xAD, 0xF5 );
-
-DEFINE_GUID( GUID_MEMORY_PFNQUERY_MB, 0x8923a63c, 0xfb4c, 0x4010, 0xbf, 0xf9, 0xbe, 0x91, 0x8e, 0x96, 0x7a, 0xdc );
-
-DEFINE_GUID( GUID_MEMORY_CHECK_INTERVAL, 0xc6f00092, 0xd313, 0x481c, 0x92, 0xeb, 0x89, 0x32, 0x13, 0x7a, 0x4, 0xd4 );
-
-DEFINE_GUID( GUID_MEMORY_TIME_PER_BIT, 0x3A5C71B4, 0xC4B9, 0x4ca6, 0xA9, 0x53, 0x39, 0x07, 0x24, 0x93, 0x7E, 0x8B );
-
-DEFINE_GUID( GUID_MEMORY_COLD_BITS, 0x082551A9, 0xEE8C, 0x483c, 0xA2, 0x8A, 0x07, 0xFA, 0xA0, 0x01, 0x7B, 0x10 );
-
-DEFINE_GUID( GUID_MEMORY_FREEPAGES_THRESHOLD, 0x88E34C03, 0x97F8, 0x42cd, 0xB5, 0xC2, 0x3A, 0x79, 0xED, 0xB3, 0x2A, 0x35 );
-
-DEFINE_GUID( GUID_MEMORY_PINNEDPAGES_THRESHOLD, 0xCFDD3EE9, 0x9D36, 0x4033, 0xBA, 0xFE, 0xCD, 0xC9, 0x54, 0x64, 0x6E, 0x01 );
-
-DEFINE_GUID( GUID_MEMORY_HOTPAGES_POWER_THRESHOLD, 0xe9f642f0, 0x4595, 0x4a88, 0xbf, 0xc2, 0x7d, 0xc8, 0x62, 0x98, 0x74, 0xc3);
-
-DEFINE_GUID( GUID_MEMORY_MONITOR_CHECK_INTERVAL, 0x9c467696, 0x4546, 0x46de, 0x8a, 0xdd, 0xc, 0xa3, 0xd0, 0x91, 0xcf, 0xf9);
-
-DEFINE_GUID( GUID_MEMORY_MONITOR_LONG_COUNT, 0x850f428f, 0x8eb, 0x477c, 0x99, 0x69, 0x34, 0xaf, 0x45, 0x68, 0x7b, 0x69);
-
-DEFINE_GUID( GUID_MEMORY_MONITOR_SHORT_COUNT, 0x49035ef7, 0x93fc, 0x4963, 0xb8, 0x84, 0x2, 0xd6, 0x38, 0xfc, 0x26, 0x44);
-
-DEFINE_GUID( GUID_MEMORY_MONITOR_CHANNEL_POWER_COUNT, 0x68ca286c, 0xfb18, 0x4bec, 0x8e, 0x12, 0x1c, 0xdc, 0x2f, 0xb4, 0x3e, 0x79);
-
-DEFINE_GUID( GUID_MEMORY_BACKOFF_FREQUENCY_THRESHOLD, 0xb472c54d, 0x79d0, 0x47ce, 0xaa, 0x6a, 0xe4, 0x19, 0xc2, 0xa4, 0xc9, 0x2e);
-
-DEFINE_GUID( GUID_MEMORY_BACKOFF_HIGH_UTILITY, 0xfc6596ed, 0x1104, 0x45a0, 0xb3, 0xa5, 0x86, 0x4d, 0xb5, 0xe, 0x93, 0xb7);
-
-DEFINE_GUID( GUID_MEMORY_BACKOFF_LOW_UTILITY, 0xc1672333, 0x71ba, 0x4bea, 0x96, 0x86, 0x95, 0x31, 0xc3, 0x75, 0xe8, 0x9d);
-
-DEFINE_GUID( GUID_MEMORY_BACKOFF_IDLE_UTILITY, 0x12c9089c, 0x10f4, 0x4751, 0x8e, 0xd2, 0xd3, 0xad, 0x25, 0x87, 0x60, 0x9f);
-
-DEFINE_GUID( GUID_MEMORY_BACKOFF_RESUME_TIMEOUT, 0x2090368e, 0xf8f1, 0x4d12, 0x91, 0x3, 0x88, 0x4b, 0x38, 0x6, 0xb2, 0xac);
-
-DEFINE_GUID( GUID_MEMORY_BACKOFF_HEATTREND_CHECK_INTERVAL, 0x121a340c, 0x46ba, 0x4842, 0xb1, 0x75, 0xce, 0x35, 0xdb, 0xcd, 0x20, 0x89);
-
-DEFINE_GUID( GUID_MEMORY_BACKOFF_HEATTREND_BREAK_COUNT, 0x553640, 0x7cda, 0x4b2e, 0x8d, 0xf5, 0x8c, 0xf4, 0x8f, 0xc0, 0xf6, 0x81);
 
 // Processor power settings
 // ------------------------
@@ -11824,7 +12876,7 @@ DEFINE_GUID( GUID_GLOBAL_USER_PRESENCE, 0x786e8a1d, 0xb427, 0x4344, 0x92, 0x7, 0
 
 //
 // Session specific notification indicating to listeners whether or not the display 
-// related to the given session is on/off
+// related to the given session is on/off/dim
 //
 // N.B. This is a session-specific notification, sent only to interactive
 //      session registrants. Session 0 and kernel mode consumers do not receive
@@ -12105,6 +13157,9 @@ typedef enum {
     ScreenOff,
     CsDeviceNotification,
     PlatformRole,
+    LastResumePerformance,
+    DisplayBurst,
+    ExitLatencySamplingPercentage,
     PowerInformationLevelMaximum
 } POWER_INFORMATION_LEVEL;
 
@@ -12168,6 +13223,15 @@ typedef struct _POWER_MONITOR_INVOCATION {
     BOOLEAN Console; 
 } POWER_MONITOR_INVOCATION, *PPOWER_MONITOR_INVOCATION;
 
+//
+// Last resume performance structure
+//
+
+typedef struct _RESUME_PERFORMANCE {
+    DWORD PostTimeMs;
+    ULONGLONG TotalResumeTimeMs;
+    ULONGLONG ResumeCompleteTimestamp;
+} RESUME_PERFORMANCE, *PRESUME_PERFORMANCE;
 
 //
 // Power Setting definitions
@@ -12602,6 +13666,7 @@ typedef struct {
 #define POWER_ACTION_UI_ALLOWED         0x00000002
 #define POWER_ACTION_OVERRIDE_APPS      0x00000004
 #define POWER_ACTION_HIBERBOOT          0x00000008
+#define POWER_ACTION_PARALLEL_MONITOR   0x00000010
 #define POWER_ACTION_PSEUDO_TRANSITION  0x08000000
 #define POWER_ACTION_LIGHTEST_FIRST     0x10000000
 #define POWER_ACTION_LOCK_CONSOLE       0x20000000
@@ -12877,7 +13942,9 @@ typedef struct {
     BOOLEAN             BatteryPresent;
     BOOLEAN             Charging;
     BOOLEAN             Discharging;
-    BOOLEAN             Spare1[4];
+    BOOLEAN             Spare1[3];
+
+    BYTE                Tag;
 
     DWORD               MaxCapacity;
     DWORD               RemainingCapacity;
@@ -13278,16 +14345,7 @@ typedef PIMAGE_NT_HEADERS32                 PIMAGE_NT_HEADERS;
 #define IMAGE_DLLCHARACTERISTICS_NO_SEH       0x0400     // Image does not use SEH.  No SE handler may reside in this image
 #define IMAGE_DLLCHARACTERISTICS_NO_BIND      0x0800     // Do not bind this image.
 #define IMAGE_DLLCHARACTERISTICS_APPCONTAINER 0x1000     // Image should execute in an AppContainer
-
-// 
-// 0x2000 is a shared bit, but without conflict. The NO_LEGACY_BIOS_DEPENDECIES 
-// is only applicable to images with the subsystem type of either 
-// IMAGE_SUBSYSTEM_EFI_APPLICATION or IMAGE_SUBSYSTEM_WINDOWS_BOOT_APPLICATION. 
-//
-
 #define IMAGE_DLLCHARACTERISTICS_WDM_DRIVER   0x2000     // Driver uses WDM model
-#define IMAGE_DLLCHARACTERISTICS_NO_LEGACY_BIOS_DEPENDENCIES   0x2000     // UEFI Application has no legacy BIOS dependencies.
-
 //                                            0x4000     // Reserved.
 #define IMAGE_DLLCHARACTERISTICS_TERMINAL_SERVER_AWARE     0x8000
 
@@ -14890,18 +15948,19 @@ typedef struct IMAGE_COR20_HEADER
 
 #include <apiset.h>
 
-#pragma region Desktop Family
-
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
-
 //
-// prototypes 
+// prototypes
 //
 
 // begin_ntifs
 
+#pragma region Desktop Family
+
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+
 
 #if (NTDDI_VERSION > NTDDI_WINXP)
+
 NTSYSAPI
 WORD  
 NTAPI
@@ -14912,10 +15971,12 @@ RtlCaptureStackBackTrace(
     _Out_opt_ PDWORD BackTraceHash
     );
 
+
 #endif
 
 
 #if (NTDDI_VERSION > NTDDI_WIN2K)
+
 NTSYSAPI
 VOID
 NTAPI
@@ -14923,9 +15984,17 @@ RtlCaptureContext(
     _Out_ PCONTEXT ContextRecord
     );
 
+
 #endif
 
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#pragma endregion
+
 // end_ntifs
+
+#pragma region Desktop Family
+
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 NTSYSAPI
 VOID
@@ -14938,7 +16007,7 @@ RtlUnwind(
     );
 
 
-#endif /* ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP ) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
 #pragma endregion
 
 
@@ -14946,7 +16015,7 @@ RtlUnwind(
 
 #pragma region Desktop Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 NTSYSAPI
 BOOLEAN
@@ -14979,9 +16048,10 @@ RtlInstallFunctionTableCallback(
     );
 
 
+// end_1_0
 
 
-#if (NTDDI_VERSION >= NTDDI_WIN8)
+#if ((NTDDI_VERSION >= NTDDI_WIN8) && !defined(_CONTRACT_GEN)) || (_APISET_RTLSUPPORT_VER > 0x0100)
 
 NTSYSAPI
 DWORD   
@@ -15013,14 +16083,16 @@ RtlDeleteGrowableFunctionTable(
     );
 
 
-#endif // (NTDDI_VERSION >= NTDDI_WIN8)
+#endif // ((NTDDI_VERSION >= NTDDI_WIN8) && !defined(_CONTRACT_GEN)) || (_APISET_RTLSUPPORT_VER > 0x0100)
 
-#endif /* ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP ) */
+// begin_1_0
+
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
 #pragma endregion
 
 #pragma region Application Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 NTSYSAPI
 PRUNTIME_FUNCTION
@@ -15032,12 +16104,12 @@ RtlLookupFunctionEntry(
     );
 
 
-#endif /* ( (WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP ) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
 #pragma endregion
 
 #pragma region Desktop Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 NTSYSAPI
 VOID
@@ -15048,12 +16120,12 @@ RtlRestoreContext(
     );
 
 
-#endif /* ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP ) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
 #pragma endregion
 
 #pragma region Application Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 NTSYSAPI
 VOID
@@ -15068,12 +16140,12 @@ RtlUnwindEx(
     );
 
 
-#endif /* ( (WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP ) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
 #pragma endregion
 
 #pragma region Desktop Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 NTSYSAPI
 PEXCEPTION_ROUTINE
@@ -15090,7 +16162,7 @@ RtlVirtualUnwind(
     );
 
 
-#endif /* ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP ) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
 #pragma endregion
 
 #endif // _AMD64_
@@ -15101,7 +16173,7 @@ RtlVirtualUnwind(
 
 #pragma region Desktop Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 NTSYSAPI
 BOOLEAN
@@ -15134,6 +16206,8 @@ RtlInstallFunctionTableCallback(
     );
 
 
+// end_1_0
+
 
 #if ((NTDDI_VERSION >= NTDDI_WIN8) && !defined(_CONTRACT_GEN)) || (_APISET_RTLSUPPORT_VER > 0x0100)
 
@@ -15147,17 +16221,6 @@ RtlAddGrowableFunctionTable(
     _In_ DWORD MaximumEntryCount,
     _In_ ULONG_PTR RangeBase,
     _In_ ULONG_PTR RangeEnd
-    );
-
-
-NTSYSAPI
-VOID
-NTAPI
-RtlReplaceGrowableFunctionTable(
-    _In_ PVOID DynamicTable,
-    _In_reads_(MaximumEntryCount) PRUNTIME_FUNCTION FunctionTable,
-    _In_ DWORD EntryCount,
-    _In_ DWORD MaximumEntryCount
     );
 
 
@@ -15180,12 +16243,14 @@ RtlDeleteGrowableFunctionTable(
 
 #endif // ((NTDDI_VERSION >= NTDDI_WIN8) && !defined(_CONTRACT_GEN)) || (_APISET_RTLSUPPORT_VER > 0x0100)
 
-#endif /* ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP ) */
+// begin_1_0
+
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
 #pragma endregion
 
 #pragma region Application Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 NTSYSAPI
 PRUNTIME_FUNCTION
@@ -15197,12 +16262,12 @@ RtlLookupFunctionEntry(
     );
 
 
-#endif /* ( (WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP ) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
 #pragma endregion
 
 #pragma region Desktop Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 NTSYSAPI
 VOID
@@ -15213,12 +16278,12 @@ RtlRestoreContext(
     );
 
 
-#endif /* ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP ) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
 #pragma endregion
 
 #pragma region Application Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 NTSYSAPI
 VOID
@@ -15233,12 +16298,12 @@ RtlUnwindEx(
     );
 
 
-#endif /* ( (WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP ) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
 #pragma endregion
 
 #pragma region Desktop Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 NTSYSAPI
 PEXCEPTION_ROUTINE
@@ -15255,7 +16320,7 @@ RtlVirtualUnwind(
     );
 
 
-#endif /* ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP ) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
 #pragma endregion
 
 #endif // _ARM_
@@ -15266,7 +16331,7 @@ RtlVirtualUnwind(
 
 #pragma region Desktop Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 _IRQL_requires_max_(PASSIVE_LEVEL)
 _Success_(return!=0)
@@ -15307,12 +16372,12 @@ RtlInstallFunctionTableCallback(
     );
 
 
-#endif /* ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP ) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
 #pragma endregion
 
 #pragma region Application Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 _IRQL_requires_max_(SYNCH_LEVEL)
 _IRQL_requires_min_(PASSIVE_LEVEL)
@@ -15326,12 +16391,12 @@ RtlLookupFunctionEntry(
     );
 
 
-#endif /* ( (WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP ) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
 #pragma endregion
 
 #pragma region Desktop Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 NTSYSAPI
 VOID
@@ -15356,7 +16421,7 @@ RtlVirtualUnwind(
     );
 
 
-#endif /* ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP ) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
 #pragma endregion
 
 #endif // _IA64_
@@ -15367,7 +16432,7 @@ RtlVirtualUnwind(
 
 #pragma region Application Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 NTSYSAPI
 VOID
@@ -15382,7 +16447,7 @@ RtlUnwindEx(
     );
 
 
-#endif /* ( (WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP ) */
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
 #pragma endregion
 
 #endif // _IA64_
@@ -15390,7 +16455,10 @@ RtlUnwindEx(
 
 #pragma region Application Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+
+
+#if !(defined(_CONTRACT_GEN) && (_APISET_RTLSUPPORT_VER <= 0x0100) && defined(_X86_))
 
 NTSYSAPI
 PVOID
@@ -15401,17 +16469,22 @@ RtlPcToFileHeader(
     );
 
 
-#endif /* ( (WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP ) */
+#endif // !(defined(_CONTRACT_GEN) && (_APISET_RTLSUPPORT_VER <= 0x0100) && defined(_X86_))
+
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */
 #pragma endregion
 
 
 #pragma region Desktop Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+
+
+#if !(defined(_CONTRACT_GEN) && (_APISET_RTLSUPPORT_VER <= 0x0100) && defined(_X86_))
 
 
 #if (NTDDI_VERSION >= NTDDI_WIN2K)
-_Must_inspect_result_
+_Check_return_
 NTSYSAPI
 SIZE_T
 NTAPI
@@ -15422,9 +16495,11 @@ RtlCompareMemory(
     );
 
 
-#endif 
+#endif
 
-#endif /* ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP ) */
+#endif // !(defined(_CONTRACT_GEN) && (_APISET_RTLSUPPORT_VER <= 0x0100) && defined(_X86_))
+
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
 #pragma endregion
 
 //
@@ -15747,17 +16822,27 @@ RtlSecureZeroMemory(
 
 #if defined(_M_AMD64)
 
-        __stosb((PBYTE )((DWORD64)vptr), 0, cnt);
+    __stosb((PBYTE )((DWORD64)vptr), 0, cnt);
 
 #else
 
     while (cnt) {
+
+#if !defined(_M_CEE) && defined(_M_ARM)
+
+        __iso_volatile_store8(vptr, 0);
+
+#else
+
         *vptr = 0;
+
+#endif
+
         vptr++;
         cnt--;
     }
 
-#endif
+#endif // _M_AMD64
 
     return ptr;
 }
@@ -15908,6 +16993,8 @@ typedef LPOSVERSIONINFOEXA LPOSVERSIONINFOEX;
 #define VER_PLATFORM_WIN32_WINDOWS      1
 #define VER_PLATFORM_WIN32_NT           2
 
+#pragma region Desktop Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 //
 //
@@ -15937,6 +17024,9 @@ VerSetConditionMask(
 #endif
 
 #endif // !defined(_WINBASE_) && !defined(MIDL_PASS)
+
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#pragma endregion
 
 //
 
@@ -15999,7 +17089,7 @@ typedef RTL_UMS_SCHEDULER_ENTRY_POINT *PRTL_UMS_SCHEDULER_ENTRY_POINT;
 
 #if !defined(IS_VALIDATION_ENABLED)
 
-#if (NTDDI_VERSION >= NTDDI_WIN7)
+#if (NTDDI_VERSION >= NTDDI_WIN8)
 
 //
 // Validation runlevel helper macro: checks if a particular level L enables the
@@ -16027,7 +17117,7 @@ typedef RTL_UMS_SCHEDULER_ENTRY_POINT *PRTL_UMS_SCHEDULER_ENTRY_POINT;
 //
 #define VRL_ENABLE_KERNEL_BREAKS    (1 << 31)
 
-#endif // (NTDDI_VERSION >= NTDDI_WIN7)
+#endif // (NTDDI_VERSION >= NTDDI_WIN8)
 
 #endif // !defined(IS_VALIDATION_ENABLED)
 
@@ -16044,6 +17134,13 @@ typedef RTL_UMS_SCHEDULER_ENTRY_POINT *PRTL_UMS_SCHEDULER_ENTRY_POINT;
 
 
 #if (NTDDI_VERSION >= NTDDI_WIN8)
+
+// end_ntosp
+
+#pragma region Desktop Family
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+
+// begin_ntosp
 
 //
 //  Crc32 and Crc64 routines that use standardized algorithms
@@ -16066,6 +17163,14 @@ RtlCrc64(
     _In_ size_t Size,
     _In_ ULONGLONG InitialCrc
     );
+	
+// end_ntosp
+   
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
+#pragma endregion
+
+// begin_ntosp
+
 #endif // (NTDDI_VERSION >= NTDDI_WIN8)
 
 
@@ -16719,6 +17824,9 @@ typedef enum _CM_ERROR_CONTROL_TYPE {
 // CM_SERVICE_VERIFIER_BOOT_LOAD - Specified if a driver should be promoted
 // while booting with verifier boot enabled.
 //
+// CM_SERVICE_WINPE_BOOT_LOAD - Specified if a driver should be promoted
+// on WinPE boot.
+//
 
 #define CM_SERVICE_NETWORK_BOOT_LOAD      0x00000001
 #define CM_SERVICE_VIRTUAL_DISK_BOOT_LOAD 0x00000002
@@ -16727,6 +17835,7 @@ typedef enum _CM_ERROR_CONTROL_TYPE {
 #define CM_SERVICE_USB3_DISK_BOOT_LOAD    0x00000010
 #define CM_SERVICE_MEASURED_BOOT_LOAD     0x00000020
 #define CM_SERVICE_VERIFIER_BOOT_LOAD     0x00000040
+#define CM_SERVICE_WINPE_BOOT_LOAD        0x00000080
 
 //
 // Mask defining the legal promotion flag values.
@@ -16738,8 +17847,268 @@ typedef enum _CM_ERROR_CONTROL_TYPE {
                                          CM_SERVICE_SD_DISK_BOOT_LOAD |       \
                                          CM_SERVICE_USB3_DISK_BOOT_LOAD |     \
                                          CM_SERVICE_MEASURED_BOOT_LOAD |      \
-                                         CM_SERVICE_VERIFIER_BOOT_LOAD)
+                                         CM_SERVICE_VERIFIER_BOOT_LOAD |      \
+                                         CM_SERVICE_WINPE_BOOT_LOAD)
 
+
+#ifndef _NTDDTAPE_WINNT_
+#define _NTDDTAPE_WINNT_
+
+//
+// IOCTL_TAPE_ERASE definitions
+//
+
+#define TAPE_ERASE_SHORT            0L
+#define TAPE_ERASE_LONG             1L
+
+typedef struct _TAPE_ERASE {
+    DWORD Type;
+    BOOLEAN Immediate;
+} TAPE_ERASE, *PTAPE_ERASE;
+
+//
+// IOCTL_TAPE_PREPARE definitions
+//
+
+#define TAPE_LOAD                   0L
+#define TAPE_UNLOAD                 1L
+#define TAPE_TENSION                2L
+#define TAPE_LOCK                   3L
+#define TAPE_UNLOCK                 4L
+#define TAPE_FORMAT                 5L
+
+typedef struct _TAPE_PREPARE {
+    DWORD Operation;
+    BOOLEAN Immediate;
+} TAPE_PREPARE, *PTAPE_PREPARE;
+
+//
+// IOCTL_TAPE_WRITE_MARKS definitions
+//
+
+#define TAPE_SETMARKS               0L
+#define TAPE_FILEMARKS              1L
+#define TAPE_SHORT_FILEMARKS        2L
+#define TAPE_LONG_FILEMARKS         3L
+
+typedef struct _TAPE_WRITE_MARKS {
+    DWORD Type;
+    DWORD Count;
+    BOOLEAN Immediate;
+} TAPE_WRITE_MARKS, *PTAPE_WRITE_MARKS;
+
+//
+// IOCTL_TAPE_GET_POSITION definitions
+//
+
+#define TAPE_ABSOLUTE_POSITION       0L
+#define TAPE_LOGICAL_POSITION        1L
+#define TAPE_PSEUDO_LOGICAL_POSITION 2L
+
+typedef struct _TAPE_GET_POSITION {
+    DWORD Type;
+    DWORD Partition;
+    LARGE_INTEGER Offset;
+} TAPE_GET_POSITION, *PTAPE_GET_POSITION;
+
+//
+// IOCTL_TAPE_SET_POSITION definitions
+//
+
+#define TAPE_REWIND                 0L
+#define TAPE_ABSOLUTE_BLOCK         1L
+#define TAPE_LOGICAL_BLOCK          2L
+#define TAPE_PSEUDO_LOGICAL_BLOCK   3L
+#define TAPE_SPACE_END_OF_DATA      4L
+#define TAPE_SPACE_RELATIVE_BLOCKS  5L
+#define TAPE_SPACE_FILEMARKS        6L
+#define TAPE_SPACE_SEQUENTIAL_FMKS  7L
+#define TAPE_SPACE_SETMARKS         8L
+#define TAPE_SPACE_SEQUENTIAL_SMKS  9L
+
+typedef struct _TAPE_SET_POSITION {
+    DWORD Method;
+    DWORD Partition;
+    LARGE_INTEGER Offset;
+    BOOLEAN Immediate;
+} TAPE_SET_POSITION, *PTAPE_SET_POSITION;
+
+//
+// IOCTL_TAPE_GET_DRIVE_PARAMS definitions
+//
+
+//
+// Definitions for FeaturesLow parameter
+//
+
+#define TAPE_DRIVE_FIXED            0x00000001
+#define TAPE_DRIVE_SELECT           0x00000002
+#define TAPE_DRIVE_INITIATOR        0x00000004
+
+#define TAPE_DRIVE_ERASE_SHORT      0x00000010
+#define TAPE_DRIVE_ERASE_LONG       0x00000020
+#define TAPE_DRIVE_ERASE_BOP_ONLY   0x00000040
+#define TAPE_DRIVE_ERASE_IMMEDIATE  0x00000080
+
+#define TAPE_DRIVE_TAPE_CAPACITY    0x00000100
+#define TAPE_DRIVE_TAPE_REMAINING   0x00000200
+#define TAPE_DRIVE_FIXED_BLOCK      0x00000400
+#define TAPE_DRIVE_VARIABLE_BLOCK   0x00000800
+
+#define TAPE_DRIVE_WRITE_PROTECT    0x00001000
+#define TAPE_DRIVE_EOT_WZ_SIZE      0x00002000
+
+#define TAPE_DRIVE_ECC              0x00010000
+#define TAPE_DRIVE_COMPRESSION      0x00020000
+#define TAPE_DRIVE_PADDING          0x00040000
+#define TAPE_DRIVE_REPORT_SMKS      0x00080000
+
+#define TAPE_DRIVE_GET_ABSOLUTE_BLK 0x00100000
+#define TAPE_DRIVE_GET_LOGICAL_BLK  0x00200000
+#define TAPE_DRIVE_SET_EOT_WZ_SIZE  0x00400000
+
+#define TAPE_DRIVE_EJECT_MEDIA      0x01000000
+#define TAPE_DRIVE_CLEAN_REQUESTS   0x02000000
+#define TAPE_DRIVE_SET_CMP_BOP_ONLY 0x04000000
+
+#define TAPE_DRIVE_RESERVED_BIT     0x80000000  //don't use this bit!
+//                                              //can't be a low features bit!
+//                                              //reserved; high features only
+
+//
+// Definitions for FeaturesHigh parameter
+//
+
+#define TAPE_DRIVE_LOAD_UNLOAD      0x80000001
+#define TAPE_DRIVE_TENSION          0x80000002
+#define TAPE_DRIVE_LOCK_UNLOCK      0x80000004
+#define TAPE_DRIVE_REWIND_IMMEDIATE 0x80000008
+
+#define TAPE_DRIVE_SET_BLOCK_SIZE   0x80000010
+#define TAPE_DRIVE_LOAD_UNLD_IMMED  0x80000020
+#define TAPE_DRIVE_TENSION_IMMED    0x80000040
+#define TAPE_DRIVE_LOCK_UNLK_IMMED  0x80000080
+
+#define TAPE_DRIVE_SET_ECC          0x80000100
+#define TAPE_DRIVE_SET_COMPRESSION  0x80000200
+#define TAPE_DRIVE_SET_PADDING      0x80000400
+#define TAPE_DRIVE_SET_REPORT_SMKS  0x80000800
+
+#define TAPE_DRIVE_ABSOLUTE_BLK     0x80001000
+#define TAPE_DRIVE_ABS_BLK_IMMED    0x80002000
+#define TAPE_DRIVE_LOGICAL_BLK      0x80004000
+#define TAPE_DRIVE_LOG_BLK_IMMED    0x80008000
+
+#define TAPE_DRIVE_END_OF_DATA      0x80010000
+#define TAPE_DRIVE_RELATIVE_BLKS    0x80020000
+#define TAPE_DRIVE_FILEMARKS        0x80040000
+#define TAPE_DRIVE_SEQUENTIAL_FMKS  0x80080000
+
+#define TAPE_DRIVE_SETMARKS         0x80100000
+#define TAPE_DRIVE_SEQUENTIAL_SMKS  0x80200000
+#define TAPE_DRIVE_REVERSE_POSITION 0x80400000
+#define TAPE_DRIVE_SPACE_IMMEDIATE  0x80800000
+
+#define TAPE_DRIVE_WRITE_SETMARKS   0x81000000
+#define TAPE_DRIVE_WRITE_FILEMARKS  0x82000000
+#define TAPE_DRIVE_WRITE_SHORT_FMKS 0x84000000
+#define TAPE_DRIVE_WRITE_LONG_FMKS  0x88000000
+
+#define TAPE_DRIVE_WRITE_MARK_IMMED 0x90000000
+#define TAPE_DRIVE_FORMAT           0xA0000000
+#define TAPE_DRIVE_FORMAT_IMMEDIATE 0xC0000000
+#define TAPE_DRIVE_HIGH_FEATURES    0x80000000  //mask for high features flag
+
+typedef struct _TAPE_GET_DRIVE_PARAMETERS {
+    BOOLEAN ECC;
+    BOOLEAN Compression;
+    BOOLEAN DataPadding;
+    BOOLEAN ReportSetmarks;
+    DWORD DefaultBlockSize;
+    DWORD MaximumBlockSize;
+    DWORD MinimumBlockSize;
+    DWORD MaximumPartitionCount;
+    DWORD FeaturesLow;
+    DWORD FeaturesHigh;
+    DWORD EOTWarningZoneSize;
+} TAPE_GET_DRIVE_PARAMETERS, *PTAPE_GET_DRIVE_PARAMETERS;
+
+//
+// IOCTL_TAPE_SET_DRIVE_PARAMETERS definitions
+//
+
+typedef struct _TAPE_SET_DRIVE_PARAMETERS {
+    BOOLEAN ECC;
+    BOOLEAN Compression;
+    BOOLEAN DataPadding;
+    BOOLEAN ReportSetmarks;
+    DWORD EOTWarningZoneSize;
+} TAPE_SET_DRIVE_PARAMETERS, *PTAPE_SET_DRIVE_PARAMETERS;
+
+//
+// IOCTL_TAPE_GET_MEDIA_PARAMETERS definitions
+//
+
+typedef struct _TAPE_GET_MEDIA_PARAMETERS {
+    LARGE_INTEGER Capacity;
+    LARGE_INTEGER Remaining;
+    DWORD BlockSize;
+    DWORD PartitionCount;
+    BOOLEAN WriteProtected;
+} TAPE_GET_MEDIA_PARAMETERS, *PTAPE_GET_MEDIA_PARAMETERS;
+
+//
+// IOCTL_TAPE_SET_MEDIA_PARAMETERS definitions
+//
+
+typedef struct _TAPE_SET_MEDIA_PARAMETERS {
+    DWORD BlockSize;
+} TAPE_SET_MEDIA_PARAMETERS, *PTAPE_SET_MEDIA_PARAMETERS;
+
+//
+// IOCTL_TAPE_CREATE_PARTITION definitions
+//
+
+#define TAPE_FIXED_PARTITIONS       0L
+#define TAPE_SELECT_PARTITIONS      1L
+#define TAPE_INITIATOR_PARTITIONS   2L
+
+typedef struct _TAPE_CREATE_PARTITION {
+    DWORD Method;
+    DWORD Count;
+    DWORD Size;
+} TAPE_CREATE_PARTITION, *PTAPE_CREATE_PARTITION;
+
+
+//
+// WMI Methods
+//
+#define TAPE_QUERY_DRIVE_PARAMETERS       0L
+#define TAPE_QUERY_MEDIA_CAPACITY         1L
+#define TAPE_CHECK_FOR_DRIVE_PROBLEM      2L
+#define TAPE_QUERY_IO_ERROR_DATA          3L
+#define TAPE_QUERY_DEVICE_ERROR_DATA      4L
+
+typedef struct _TAPE_WMI_OPERATIONS {
+   DWORD Method;
+   DWORD DataBufferSize;
+   PVOID DataBuffer;
+} TAPE_WMI_OPERATIONS, *PTAPE_WMI_OPERATIONS;
+
+//
+// Type of drive errors
+//
+typedef enum _TAPE_DRIVE_PROBLEM_TYPE {
+   TapeDriveProblemNone, TapeDriveReadWriteWarning,
+   TapeDriveReadWriteError, TapeDriveReadWarning,
+   TapeDriveWriteWarning, TapeDriveReadError,
+   TapeDriveWriteError, TapeDriveHardwareError,
+   TapeDriveUnsupportedMedia, TapeDriveScsiConnectionError,
+   TapeDriveTimetoClean, TapeDriveCleanDriveNow,
+   TapeDriveMediaLifeExpired, TapeDriveSnappedTape
+} TAPE_DRIVE_PROBLEM_TYPE;
+
+#endif
 #ifndef _NTTMAPI_
 #define _NTTMAPI_
 
@@ -17509,13 +18878,6 @@ __inline struct _TEB * NtCurrentTeb( void ) {
 
 #ifdef __cplusplus
 }
-#endif
-
-#if defined(_WINNT_H_SAL2)
- #undef _SAL2_STRICT
- #undef _WINNT_H_SAL2
- #undef _SAL_VERSION_CHECK
- #define _SAL_VERSION_CHECK(_A)
 #endif
 
 #if _MSC_VER >= 1200

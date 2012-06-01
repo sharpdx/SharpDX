@@ -32,38 +32,41 @@ namespace SharpDX.Direct2D1
     public partial interface Transform
     {
         /// <summary>	
-        /// Sets the input rectangles for this rendering pass into the transform.
+        /// <p>[This documentation is preliminary and is subject to change.]</p><p><strong>Applies to: </strong>desktop apps | Metro style apps</p><p>Allows a transform to state how it would map a rectangle requested on its output to a set of sample rectangles on its input.</p>	
         /// </summary>	
+        /// <param name="outputRect"><dd> <p>The output rectangle to which the inputs must be mapped.</p> </dd></param>	
+        /// <param name="inputRects"><dd> <p>The corresponding set of inputs. The inputs will directly correspond to the transform inputs.</p> </dd></param>	
         /// <remarks>	
-        /// Unlike the MapInputRectsToOutputRect and MapOutputRectToInputRects methods, this method is explicitly called by the renderer at a determined place in its rendering algorithm. The transform implementation may change its state based on the input rectangles and uses this information to control its rendering information.	
+        /// <p>The transform implementation must ensure that any pixel shader or software callback implementation it provides honors this calculation.</p><p>The transform implementation must regard this method as purely functional. It can base the mapped input and output rectangles on its current state as specified by the encapsulating effect properties.    However, it must not change its own state in response to this method being invoked. The DirectImage renderer implementation reserves the right to call this method at any time and in any sequence.</p>	
         /// </remarks>	
-        /// <unmanaged>HRESULT ID2D1Transform::SetInputRects([In, Buffer] const RECT* inputRects,[In] unsigned int inputRectsCount)</unmanaged>	
-        SharpDX.Rectangle[] InputRectangles { set; }
-
-        /// <summary>	
-        /// Allows a transform to state how it would map a rectangle requested on its output to a set of sample rectangles on its input.
-        /// </summary>	
-        /// <param name="outputRect"><para>The output rectangle to which the inputs must be mapped.</para></param>	
-        /// <param name="inputRects"><para>The corresponding set of inputs. The inputs will directly correspond to the transform inputs.</para></param>	
-        /// <remarks>	
-        /// The transform implementation must ensure that any pixel shader or software callback implementation it provides honors this calculation.The transform implementation must regard this method as purely functional. It can base the mapped input and output rectangles on its current state as specified by the encapsulating effect properties.    However, it must not change its own state in response to this method being invoked. The DirectImage renderer implementation reserves the right to call this method at any time and in any sequence.	
-        /// </remarks>	
+        /// <msdn-id>hh446945</msdn-id>	
         /// <unmanaged>HRESULT ID2D1Transform::MapOutputRectToInputRects([In] const RECT* outputRect,[Out, Buffer] RECT* inputRects,[In] unsigned int inputRectsCount)</unmanaged>	
+        /// <unmanaged-short>ID2D1Transform::MapOutputRectToInputRects</unmanaged-short>	
         void MapOutputRectangleToInputRectangles(SharpDX.Rectangle outputRect, SharpDX.Rectangle[] inputRects);
 
         /// <summary>	
-        /// Performs the inverse mapping to <see cref="MapOutputRectToInputRects"/>.
+        /// <p>[This documentation is preliminary and is subject to change.]</p><p><strong>Applies to: </strong>desktop apps | Metro style apps</p><p>Performs the inverse mapping to <strong>MapOutputRectToInputRects</strong>.</p>	
         /// </summary>	
-        /// <param name="inputRects">An array of input rectangles to be mapped to an output rectangle.</param>	
-        /// <param name="inputRectsCount">No documentation.</param>	
-        /// <param name="outputRect">No documentation.</param>	
-        /// <returns>If the method succeeds, it returns <see cref="SharpDX.Result.Ok"/>. If it fails, it returns an <see cref="SharpDX.Result"/> error code.</returns>	
+        /// <param name="inputRects">No documentation.</param>	
+        /// <param name="inputOpaqueSubRects">No documentation.</param>	
+        /// <returns>No outputOpaqueSubRect.</returns>	
         /// <remarks>	
-        /// The transform implementation must ensure that any pixel shader or software callback implementation it provides honors this calculation.The transform implementation must regard this method as purely functional. It can base the mapped input and output rectangles on its current state as specified by the encapsulating effect properties. However, it must not change its own state in response to this method being invoked. The Direct2D renderer implementation reserves the right to call this method at any time and in any sequence.	
+        /// <p>The transform implementation must ensure that any pixel shader or software callback implementation it provides honors this calculation.</p><p>The transform implementation must regard this method as purely functional. It can base the mapped input and output rectangles on its current state as specified by the encapsulating effect properties. However, it must not change its own state in response to this method being invoked. The Direct2D renderer implementation reserves the right to call this method at any time and in any sequence.</p>	
         /// </remarks>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID2D1Transform::MapInputRectsToOutputRect']/*"/>	
-        /// <unmanaged>HRESULT ID2D1Transform::MapInputRectsToOutputRect([In, Buffer] const RECT* inputRects,[In] unsigned int inputRectsCount,[Out] RECT* outputRect)</unmanaged>	
-        SharpDX.Rectangle MapInputRectanglesToOutputRectangle(SharpDX.Rectangle[] inputRects);
+        /// <msdn-id>hh446943</msdn-id>	
+        /// <unmanaged>HRESULT ID2D1Transform::MapInputRectsToOutputRect([In, Buffer] const RECT* inputRects,[In, Buffer] const RECT* inputOpaqueSubRects,[In] unsigned int inputRectCount,[Out] RECT* outputRect,[Out] RECT* outputOpaqueSubRect)</unmanaged>	
+        /// <unmanaged-short>ID2D1Transform::MapInputRectsToOutputRect</unmanaged-short>	
+        SharpDX.Rectangle MapInputRectanglesToOutputRectangle(SharpDX.Rectangle[] inputRects, SharpDX.Rectangle[] inputOpaqueSubRects, out SharpDX.Rectangle outputOpaqueSubRect);
+
+        /// <summary>	
+        /// No documentation.	
+        /// </summary>	
+        /// <param name="inputIndex">No documentation.</param>	
+        /// <param name="invalidInputRect">No documentation.</param>	
+        /// <returns>The rectangle invalidated.</returns>	
+        /// <unmanaged>HRESULT ID2D1Transform::MapInvalidRect([In] unsigned int inputIndex,[In] RECT invalidInputRect,[Out] RECT* invalidOutputRect)</unmanaged>	
+        /// <unmanaged-short>ID2D1Transform::MapInvalidRect</unmanaged-short>	
+        SharpDX.Rectangle MapInvalidRect(int inputIndex, SharpDX.Rectangle invalidInputRect);
     }
 }
 #endif

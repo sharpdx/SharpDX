@@ -44,29 +44,9 @@ namespace SharpDX.Direct2D1
         {
             public TransformVtbl(int methods) : base(3 + methods)
             {
-                AddMethod(new SetInputRectsDelegate(SetInputRectsImpl));
                 AddMethod(new MapOutputRectToInputRectsDelegate(MapOutputRectToInputRectsImpl));
                 AddMethod(new MapInputRectsToOutputRectDelegate(MapInputRectsToOutputRectImpl));
-            }
-
-            /// <unmanaged>HRESULT ID2D1Transform::SetInputRects([In, Buffer] const RECT* inputRects,[In] unsigned int inputRectsCount)</unmanaged>	
-            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            private delegate int SetInputRectsDelegate(IntPtr thisPtr, IntPtr inputRects, int inputRectsCount);
-            private static int SetInputRectsImpl(IntPtr thisPtr, IntPtr inputRects, int inputRectsCount)
-            {
-                try
-                {
-                    var shadow = ToShadow<TransformShadow>(thisPtr);
-                    var callback = (Transform)shadow.Callback;
-                    var inputRectangles = new SharpDX.Rectangle[inputRectsCount];
-                    Utilities.Read(inputRects, inputRectangles, 0, inputRectsCount);
-                    callback.InputRectangles = inputRectangles;
-                }
-                catch (Exception exception)
-                {
-                    return (int)SharpDX.Result.GetResultFromException(exception);
-                }
-                return Result.Ok.Code;
+                AddMethod(new MapInvalidRectDelegate(MapInvalidRectImpl));
             }
 
             /// <unmanaged>HRESULT ID2D1Transform::MapOutputRectToInputRects([In] const RECT* outputRect,[Out, Buffer] RECT* inputRects,[In] unsigned int inputRectsCount)</unmanaged>	
@@ -91,9 +71,10 @@ namespace SharpDX.Direct2D1
             }
 
             /// <unmanaged>HRESULT ID2D1Transform::MapInputRectsToOutputRect([In, Buffer] const RECT* inputRects,[In] unsigned int inputRectsCount,[Out] RECT* outputRect)</unmanaged>	
+            /// <unmanaged>HRESULT ID2D1Transform::MapInputRectsToOutputRect([In, Buffer] const RECT* inputRects,[In, Buffer] const RECT* inputOpaqueSubRects,[In] unsigned int inputRectCount,[Out] RECT* outputRect,[Out] RECT* outputOpaqueSubRect)</unmanaged>	
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            private delegate int MapInputRectsToOutputRectDelegate(IntPtr thisPtr, IntPtr inputRects, int inputRectsCount, IntPtr outputRect);
-            private unsafe static int MapInputRectsToOutputRectImpl(IntPtr thisPtr, IntPtr inputRects, int inputRectsCount, IntPtr outputRect)
+            private delegate int MapInputRectsToOutputRectDelegate(IntPtr thisPtr, IntPtr inputRects, IntPtr inputOpaqueSubRects, int inputRectsCount, IntPtr outputRect, IntPtr outputOpaqueSubRect);
+            private unsafe static int MapInputRectsToOutputRectImpl(IntPtr thisPtr, IntPtr inputRects, IntPtr inputOpaqueSubRects, int inputRectsCount, IntPtr outputRect, IntPtr outputOpaqueSubRect)
             {
                 try
                 {
@@ -101,7 +82,27 @@ namespace SharpDX.Direct2D1
                     var callback = (Transform)shadow.Callback;
                     var inputRectangles = new SharpDX.Rectangle[inputRectsCount];
                     Utilities.Read(inputRects, inputRectangles, 0, inputRectsCount);
-                    *(SharpDX.Rectangle*)outputRect =  callback.MapInputRectanglesToOutputRectangle(inputRectangles);
+                    var inputOpaqueSubRectangles = new SharpDX.Rectangle[inputRectsCount];
+                    Utilities.Read(inputOpaqueSubRects, inputOpaqueSubRectangles, 0, inputRectsCount);
+                    *(SharpDX.Rectangle*)outputRect = callback.MapInputRectanglesToOutputRectangle(inputRectangles, inputOpaqueSubRectangles, out *(Rectangle*)outputOpaqueSubRect);
+                }
+                catch (Exception exception)
+                {
+                    return (int)SharpDX.Result.GetResultFromException(exception);
+                }
+                return Result.Ok.Code;
+            }
+
+            /// <unmanaged>HRESULT ID2D1Transform::MapInvalidRect([In] unsigned int inputIndex,[In] RECT invalidInputRect,[Out] RECT* invalidOutputRect)</unmanaged>	
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            private delegate int MapInvalidRectDelegate(IntPtr thisPtr, int inputIndex, IntPtr invalidInputRect, IntPtr invalidOutputRect);
+            private unsafe static int MapInvalidRectImpl(IntPtr thisPtr, int inputIndex, IntPtr invalidInputRect, IntPtr invalidOutputRect)
+            {
+                try
+                {
+                    var shadow = ToShadow<TransformShadow>(thisPtr);
+                    var callback = (Transform)shadow.Callback;
+                    *(Rectangle*)invalidOutputRect = callback.MapInvalidRect(inputIndex, *(Rectangle*)invalidInputRect);
                 }
                 catch (Exception exception)
                 {

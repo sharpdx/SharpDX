@@ -1,3 +1,4 @@
+ 
 // begin_1_0
 /*#!perl
 MapHeaderToDll("combaseapi.h", "combaseapi.dll");
@@ -24,11 +25,7 @@ IgnoreFunction("DllCanUnloadNow"); # client function prototyped (like WinMain)
 //
 //----------------------------------------------------------------------------
 
-#ifdef _CONTRACT_GEN
-#include <nt.h>
-#include <ntrtl.h>
-#include <nturtl.h>
-#endif
+
 #include <apiset.h>
 #include <apisetcconv.h>
 
@@ -102,7 +99,7 @@ IgnoreFunction("DllCanUnloadNow"); # client function prototyped (like WinMain)
 
 #pragma region Application Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 /****** Interface Declaration ***********************************************/
 
@@ -242,7 +239,7 @@ IgnoreFunction("DllCanUnloadNow"); # client function prototyped (like WinMain)
 //
 extern "C++"
 {
-    template<typename T> _Post_equal_to_(pp) void** IID_PPV_ARGS_Helper(T** pp) 
+    template<typename T> _Post_equal_to_(pp) _Post_satisfies_(return == pp) void** IID_PPV_ARGS_Helper(T** pp) 
     {
 #pragma prefast(suppress: 6269, "Tool issue with unused static_cast")
         //static_cast<IUnknown*>(*pp);    // make sure everyone derives from IUnknown
@@ -401,14 +398,14 @@ typedef enum tagCOINITBASE
 #include <cguid.h>
 #endif
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 #pragma endregion
 
 /****** STD Object API Prototypes *****************************************/
 
 #pragma region Desktop Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 _Check_return_ WINOLEAPI
 CoGetMalloc(
@@ -417,12 +414,12 @@ CoGetMalloc(
     );
 
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 #pragma endregion
 
 #pragma region Application Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 _Check_return_ WINOLEAPI
 CreateStreamOnHGlobal(
@@ -447,12 +444,12 @@ CoUninitialize(
     );
 
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 #pragma endregion
 
 #pragma region Desktop Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 WINOLEAPI_(DWORD)
 CoGetCurrentProcess(
@@ -460,7 +457,7 @@ CoGetCurrentProcess(
     );
 
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 #pragma endregion
 
 // DCOM
@@ -468,7 +465,7 @@ CoGetCurrentProcess(
 
 #pragma region Application Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 /* #!perl PoundIf("CoInitializeEx", "(_WIN32_WINNT >= 0x0400 ) || defined(_WIN32_DCOM)");
 */
@@ -479,12 +476,12 @@ CoInitializeEx(
     );
 
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 #pragma endregion
 
 #pragma region Desktop Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 /* #!perl PoundIf("CoGetCallerTID", "(_WIN32_WINNT >= 0x0400 ) || defined(_WIN32_DCOM)");
 */
@@ -495,12 +492,12 @@ CoGetCallerTID(
 
 
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 #pragma endregion
 
 #pragma region Application Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
  
 /* #!perl PoundIf("CoGetCurrentLogicalThreadId", "(_WIN32_WINNT >= 0x0400 ) || defined(_WIN32_DCOM)");
 */
@@ -510,7 +507,7 @@ CoGetCurrentLogicalThreadId(
     );
 
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 #pragma endregion
 
 #endif // DCOM
@@ -520,7 +517,7 @@ CoGetCurrentLogicalThreadId(
 
 #pragma region Application Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 _Check_return_ WINOLEAPI
 CoGetContextToken(
@@ -528,12 +525,12 @@ CoGetContextToken(
     );
 
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 #pragma endregion
 
 #pragma region Desktop Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 _Check_return_ WINOLEAPI
 CoGetDefaultContext(
@@ -543,14 +540,14 @@ CoGetDefaultContext(
     );
 
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 #pragma endregion
 
 #endif
 
 #pragma region Application Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 // definition for Win7 new APIs
 
@@ -566,7 +563,7 @@ CoGetApartmentType(
 
 #endif
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 #pragma endregion
 
 // definition for Win8 new APIs
@@ -576,7 +573,7 @@ CoGetApartmentType(
 
 #pragma region Application Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 typedef struct tagServerInformation
 {
@@ -585,12 +582,12 @@ typedef struct tagServerInformation
     UINT64 ui64ServerAddress;
 } ServerInformation, *PServerInformation;
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 #pragma endregion
 
 #pragma region Desktop Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 _Check_return_ WINOLEAPI
 CoDecodeProxy(
@@ -600,21 +597,21 @@ CoDecodeProxy(
     );
 
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 #pragma endregion
 
 #pragma region Application Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 DECLARE_HANDLE(CO_MTA_USAGE_COOKIE);
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 #pragma endregion
 
 #pragma region Desktop Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 _Check_return_ WINOLEAPI
 CoIncrementMTAUsage(
@@ -626,29 +623,13 @@ CoDecrementMTAUsage(
     _In_ CO_MTA_USAGE_COOKIE Cookie
     );
 
-               WINOLEAPI
-CoWaitMTACompletion(
-    VOID
-    );
-
-
-WINOLEAPI_(void)
-CoEnterApplicationThreadLifetimeLoop(
-    );
-
-
-WINOLEAPI
-CoGetApplicationThreadReference(
-    _Outptr_ IUnknown ** ppThreadReference
-    );
-
 
 WINOLEAPI
 CoWaitForMultipleObjects(
     _In_ DWORD dwFlags,
     _In_ DWORD dwTimeout,
     _In_ ULONG cHandles,
-    _In_reads_(cHandles) const LPHANDLE pHandles,
+    _In_reads_(cHandles) const HANDLE * pHandles,
     _Out_ LPDWORD lpdwindex
     );
 
@@ -659,14 +640,14 @@ CoAllowUnmarshalerCLSID(
     );
 
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 #pragma endregion
 
 #endif 
 
 #pragma region Application Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 _Check_return_ WINOLEAPI
 CoGetObjectContext(
@@ -675,12 +656,12 @@ CoGetObjectContext(
     );
 
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 #pragma endregion
 
 #pragma region Desktop Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 /* register/revoke/get class objects */
 
@@ -693,12 +674,12 @@ CoGetClassObject(
     _Outptr_ LPVOID FAR * ppv
     );
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 #pragma endregion
 
 #pragma region Application Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 _Check_return_ WINOLEAPI
 CoRegisterClassObject(
@@ -725,6 +706,13 @@ CoSuspendClassObjects(
     );
 
 
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#pragma endregion
+
+#pragma region Desktop Family
+
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+
 WINOLEAPI_(ULONG)
 CoAddRefServerProcess(
     void
@@ -736,13 +724,6 @@ CoReleaseServerProcess(
     void
     );
 
-
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP )
-#pragma endregion
-
-#pragma region Desktop Family
-
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
 
 _Check_return_ WINOLEAPI
 CoGetPSClsid(
@@ -764,12 +745,12 @@ CoRegisterSurrogate(
     );
 
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 #pragma endregion
 
 #pragma region Application Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 /* marshaling interface pointers */
 
@@ -801,12 +782,12 @@ CoUnmarshalInterface(
     );
 
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 #pragma endregion
 
 #pragma region Desktop Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 WINOLEAPI
 CoMarshalHresult(
@@ -821,12 +802,12 @@ CoUnmarshalHresult(
     );
 
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 #pragma endregion
 
 #pragma region Application Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 _Check_return_ WINOLEAPI
 CoReleaseMarshalData(
@@ -840,12 +821,12 @@ CoDisconnectObject(
     );
 
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 #pragma endregion
 
 #pragma region Desktop Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 _Check_return_ WINOLEAPI
 CoLockObjectExternal(
@@ -855,12 +836,12 @@ CoLockObjectExternal(
     );
 
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 #pragma endregion
 
 #pragma region Application Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 _Check_return_ WINOLEAPI
 CoGetStandardMarshal(
@@ -874,12 +855,12 @@ CoGetStandardMarshal(
 
 
                     
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 #pragma endregion
 
 #pragma region Desktop Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 _Check_return_ WINOLEAPI
 CoGetStdMarshalEx(
@@ -889,12 +870,12 @@ CoGetStdMarshalEx(
     );
 
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 #pragma endregion
 
 #pragma region Application Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 /* flags for CoGetStdMarshalEx */
 typedef enum tagSTDMSHLFLAGS
@@ -904,12 +885,12 @@ typedef enum tagSTDMSHLFLAGS
 } STDMSHLFLAGS;
 
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 #pragma endregion
 
 #pragma region Desktop Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 WINOLEAPI_(BOOL)
 CoIsHandlerConnected(
@@ -918,12 +899,12 @@ CoIsHandlerConnected(
 
 
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 #pragma endregion
 
 #pragma region Application Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 // Apartment model inter-thread interface passing helpers
 _Check_return_ WINOLEAPI
@@ -966,7 +947,7 @@ CoFreeUnusedLibrariesEx(
 
 #endif
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 #pragma endregion
 
 
@@ -974,7 +955,7 @@ CoFreeUnusedLibrariesEx(
 
 #pragma region Desktop Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 _Check_return_ WINOLEAPI
 CoDisconnectContext(
@@ -982,7 +963,7 @@ CoDisconnectContext(
     );
 
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 #pragma endregion
 
 #endif
@@ -992,7 +973,7 @@ CoDisconnectContext(
 
 #pragma region Application Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 /* Call Security. */
 
@@ -1012,12 +993,12 @@ CoInitializeSecurity(
     );
 
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 #pragma endregion
 
 #pragma region Desktop Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 /* #!perl PoundIf("CoGetCallContext", "(_WIN32_WINNT >= 0x0400 ) || defined(_WIN32_DCOM)");
 */
@@ -1106,12 +1087,12 @@ CoQueryAuthenticationServices(
     );
 
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 #pragma endregion
 
 #pragma region Application Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 /* #!perl PoundIf("CoSwitchCallContext", "(_WIN32_WINNT >= 0x0400 ) || defined(_WIN32_DCOM)");
 */
@@ -1128,7 +1109,7 @@ CoSwitchCallContext(
 #define COM_RIGHTS_ACTIVATE_LOCAL 8
 #define COM_RIGHTS_ACTIVATE_REMOTE 16
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 #pragma endregion
 
 
@@ -1136,7 +1117,7 @@ CoSwitchCallContext(
 
 #pragma region Desktop Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 /* helper for creating instances */
 
@@ -1170,7 +1151,7 @@ CoCreateInstanceEx(
 
 #endif // DCOM
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 #pragma endregion
 
 
@@ -1178,7 +1159,7 @@ CoCreateInstanceEx(
   
 #pragma region Application Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 /* #!perl PoundIf("CoCreateInstanceFromApp", "(_WIN32_WINNT >= 0x0602)");
 */
@@ -1193,7 +1174,7 @@ CoCreateInstanceFromApp(
     );
 
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 #pragma endregion
 
 #endif
@@ -1227,6 +1208,8 @@ __inline _Check_return_ HRESULT CoCreateInstance(
 #ifdef _PREFAST_
     if (SUCCEEDED(hr) && SUCCEEDED(OneQI.hr))
         _Analysis_assume_(OneQI.pItf != NULL);
+    else
+        _Analysis_assume_(OneQI.pItf = NULL);
 #endif
 
     *ppv = OneQI.pItf;
@@ -1254,7 +1237,7 @@ __inline _Check_return_ HRESULT CoCreateInstanceEx(
 
 #pragma region Desktop Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 /* #!perl PoundIf("CoGetCancelObject", "(_WIN32_WINNT >= 0x0500 ) || defined(_WIN32_DCOM)");
 */
@@ -1307,14 +1290,14 @@ CoDisableCallCancellation(
     );
 
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 #pragma endregion
 
 #endif
 
 #pragma region Application Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 /* other helpers */
 
@@ -1343,12 +1326,12 @@ IIDFromString(
     );
 
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 #pragma endregion
 
 #pragma region Desktop Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 _Check_return_ WINOLEAPI
 ProgIDFromCLSID(
@@ -1363,12 +1346,12 @@ CLSIDFromProgID(
     );
 
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 #pragma endregion
 
 #pragma region Application Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 _Check_return_ WINOLEAPI_(int)
 StringFromGUID2(
@@ -1409,7 +1392,7 @@ FreePropVariantArray(
     );
 
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 #pragma endregion
 
 // DCOM
@@ -1417,20 +1400,20 @@ FreePropVariantArray(
 
 #pragma region Desktop Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 #pragma endregion
 
 #endif // DCOM
 
-#pragma region Application Family
-
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP)
-
 // DCOM
 #if (_WIN32_WINNT >= 0x0400) || defined(_WIN32_DCOM)
 /* Synchronization API */
+
+#pragma region Desktop Family
+
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 /* #!perl PoundIf("CoWaitForMultipleHandles", "(_WIN32_WINNT >= 0x0400 ) || defined(_WIN32_DCOM)");
 */
@@ -1444,59 +1427,93 @@ CoWaitForMultipleHandles(
     );
 
 
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+#pragma endregion
+
+#pragma region Application Family
+
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+
 /* Flags for Synchronization API and Classes */
 
 typedef enum tagCOWAIT_FLAGS
 {
+  COWAIT_DEFAULT = 0,
   COWAIT_WAITALL = 1,
   COWAIT_ALERTABLE = 2,
   COWAIT_INPUTAVAILABLE = 4,
+
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#pragma endregion
+
+#pragma region Desktop Family
+
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+
   COWAIT_DISPATCH_CALLS = 8,
   COWAIT_DISPATCH_WINDOW_MESSAGES = 0x10,
-  // REAL_COWAIT_ENABLECALLREENTRANCY, COWAIT_ENABLEWINDOWMESSAGES and COWAIT_ENABLECALLREENTRANCY will be removed. 
-  // Use COWAIT_DISPATCH_CALLS and COWAIT_DISPATCH_WINDOW_MESSAGES.
 
-  // REAL_COWAIT_ENABLECALLREENTRANCY can be used when ENABLEWINDOWMESSAGES is not intended
-  REAL_COWAIT_ENABLECALLREENTRANCY = COWAIT_DISPATCH_CALLS, 
-  COWAIT_ENABLEWINDOWMESSAGES = COWAIT_DISPATCH_WINDOW_MESSAGES,
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+#pragma endregion
 
-  // Temporarily making COWAIT_ENABLECALLREENTRANCY include the new ENABLEWINDOWMESSAGES flag so that CoWaitForMultipleHandles replacing a
-  // message loop will continue to get message loop parity behavior.
-  COWAIT_ENABLECALLREENTRANCY = 0x18,                
+#pragma region Application Family
+
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+
 }COWAIT_FLAGS;
+
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#pragma endregion
 
 
 #if (NTDDI_VERSION >= NTDDI_WIN8)
+
+#pragma region Application Family
+
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
 typedef enum CWMO_FLAGS
 {
   CWMO_DEFAULT = 0,
   CWMO_DISPATCH_CALLS = 1,
-  CWMO_DISPATCH_WINDOW_MESSAGES = 2,
-  // CWMO_ENABLE_CALL_REENTRANCY, REAL_CWMO_ENABLE_CALL_REENTRANCY and CWMO_ENABLE_WINDOW_MESSAGES will be removed. 
-  // Use CWMO_DISPATCH_CALLS and CWMO_DISPATCH_WINDOW_MESSAGES.
 
-  // REAL_CWMO_ENABLE_CALL_REENTRANCY can be used when ENABLE_WINDOW_MESSAGES is not intended
-  REAL_CWMO_ENABLE_CALL_REENTRANCY = CWMO_DISPATCH_CALLS,
-  CWMO_ENABLE_WINDOW_MESSAGES = CWMO_DISPATCH_WINDOW_MESSAGES,
-
-  // Temporarily making CWMO_ENABLE_CALL_REENTRANCY include the new ENABLE_WINDOW_MESSAGES flag so that CoWaitForMultipleObjects replacing a
-  // message loop will continue to get message loop parity behavior.
-  CWMO_ENABLE_CALL_REENTRANCY = 3,    
-} CWMO_FLAGS;
-
-#endif // (NTDDI_VERSION >= NTDDI_WIN8)
-
-#define CWMO_MAX_HANDLES 56
-
-#endif // DCOM
-
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 #pragma endregion
 
 #pragma region Desktop Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+
+  CWMO_DISPATCH_WINDOW_MESSAGES = 2,
+
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+#pragma endregion
+
+#pragma region Application Family
+
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+
+} CWMO_FLAGS;
+
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#pragma endregion
+
+#endif // (NTDDI_VERSION >= NTDDI_WIN8)
+
+#pragma region Application Family
+
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+
+#define CWMO_MAX_HANDLES 56
+
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#pragma endregion
+
+#endif // DCOM
+
+#pragma region Desktop Family
+
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 _Check_return_ WINOLEAPI
 CoGetTreatAsClass(
@@ -1505,7 +1522,7 @@ CoGetTreatAsClass(
     );
 
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 #pragma endregion
 
 /* for flushing OLESCM remote binding handles */
@@ -1515,7 +1532,7 @@ CoGetTreatAsClass(
 
 #pragma region Desktop Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
 /* #!perl
     PoundIf("CoInvalidateRemoteMachineBindings", "_WIN32_WINNT >= 0x0501");
@@ -1526,14 +1543,14 @@ CoInvalidateRemoteMachineBindings(
     );
 
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_DESKTOP) == WINAPI_PARTITION_DESKTOP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 #pragma endregion
 
 #endif
 
 #pragma region Application Family
 
-#if ((WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP)
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 
  
 /* the server dlls must define their DllGetClassObject and DllCanUnloadNow
@@ -1581,7 +1598,7 @@ CoTaskMemFree(
 #include <poppack.h>
 #endif // RC_INVOKED
 
-#endif // ( (WINAPI_FAMILY & WINAPI_PARTITION_APP) == WINAPI_PARTITION_APP )
+#endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
 #pragma endregion
 
 // end_1_0

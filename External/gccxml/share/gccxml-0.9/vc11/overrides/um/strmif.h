@@ -1924,7 +1924,7 @@ EXTERN_C const IID IID_IEnumFilters;
             /* [annotation][out] */ 
             _Out_writes_to_(cFilters, *pcFetched)  IBaseFilter **ppFilter,
             /* [annotation][out] */ 
-            _Out_  ULONG *pcFetched) = 0;
+            _Out_opt_  ULONG *pcFetched) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE Skip( 
             /* [in] */ ULONG cFilters) = 0;
@@ -1962,7 +1962,7 @@ EXTERN_C const IID IID_IEnumFilters;
             /* [annotation][out] */ 
             _Out_writes_to_(cFilters, *pcFetched)  IBaseFilter **ppFilter,
             /* [annotation][out] */ 
-            _Out_  ULONG *pcFetched);
+            _Out_opt_  ULONG *pcFetched);
         
         HRESULT ( STDMETHODCALLTYPE *Skip )( 
             IEnumFilters * This,
@@ -10103,10 +10103,7 @@ EXTERN_C const IID IID_IAMBufferNegotiation;
 /* interface __MIDL_itf_strmif_0000_0056 */
 /* [local] */ 
 
-#pragma warning(push)
-#pragma warning(disable:4001) 
 #pragma once
-#pragma warning(pop)
 #pragma region Desktop Family
 #pragma region Desktop Family
 #pragma endregion

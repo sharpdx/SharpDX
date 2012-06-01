@@ -1,12 +1,18 @@
-/********************************************************************************
-* Copyright (c) Microsoft Corporation. All Rights Reserved.
-* 
-* File: concurrencysal.h
+/***
+*concurrencysal.h - markers for documenting the concurrent semantics of APIs
 *
-* This file contains macros for Concurrency SAL annotations. Definitions
-* starting with _Internal are low level macros that are subject to change. 
-* Users should not use those low level macros directly.
-*******************************************************************************/
+*       Copyright (c) Microsoft Corporation. All rights reserved.
+*
+*Purpose:
+*       This file contains macros for Concurrency SAL annotations. Definitions
+*       starting with _Internal are low level macros that are subject to change. 
+*       Users should not use those low level macros directly.
+*       [ANSI]
+*
+*       [Public]
+*
+****/
+
 #ifndef CONCURRENCYSAL_H
 #define CONCURRENCYSAL_H
 
@@ -16,7 +22,7 @@
 extern "C" {
 #endif  // ]
 
-#if !defined(__midl) && defined(_PREFAST_) && _MSC_VER >= 1000 && !defined(_SDV_)
+#if !defined(__midl) && defined(_PREFAST_) && _MSC_VER >= 1000 && !defined(_SDV_) /*IFSTRIP=IGN*/
 
 __ANNOTATION(SAL_guarded_by(__deferTypecheck void *));
 __ANNOTATION(SAL_write_guarded_by(__deferTypecheck void *));
@@ -119,14 +125,8 @@ extern int _Global_critical_region_;
 #define _Csalcat1_(x,y) x##y
 #define _Csalcat2_(x,y) _Csalcat1_(x,y)
 
-/*
- * _Set_lock_level_order_ will be deprecated; it will be replaced by _Lock_level_order_
- */
-#define _Set_lock_level_order_(a,b) \
-    extern _Internal_lock_level_order_(a,b) void _Sal_order_##a##_##b(__nullterminated char*a, __nullterminated char*b); \
-    static __inline void CSALCAT2(CSAL_LockOrder,__COUNTER__)(void){_Sal_order_##a##_##b(#a,#b);}
 #define _Lock_level_order_(a,b) \
-    extern _Internal_lock_level_order_(a,b) void _Sal_order_##a##_##b(__nullterminated char*a, __nullterminated char*b); \
+    extern _Internal_lock_level_order_(a,b) void _Sal_order_##a##_##b(_In_z_ char*a, _In_z_ char*b); \
     static __inline void CSALCAT2(CSAL_LockOrder,__COUNTER__)(void){_Sal_order_##a##_##b(#a,#b);}
 
 /*
@@ -154,9 +154,15 @@ extern _Post_same_lock_(*plock1, *plock2) void _Internal_same_lock_(void* plock1
 #define _Analysis_assume_lock_not_held_(lock) _Internal_lock_not_held_((void*)(&(lock)))
 #define _Analysis_assume_same_lock_(lock1, lock2) _Internal_same_lock_((void*)(&(lock1)), (void*)(&(lock2)))
 
+/*
+ * _Function_ignore_lock_checking_ may be deprecated in future versions of SAL
+ */
 #define _Function_ignore_lock_checking_(lock) _Pre_ _SA_annotes1(SAL_ignore_lock_match,lock)
 extern _Function_ignore_lock_checking_(*plock) void _Internal_suppress_lock_checking_(void* plock);
 
+/*
+ * _Analysis_suppress_lock_checking_ may be deprecated in future versions of SAL
+ */
 #define _Analysis_suppress_lock_checking_(lock) _Internal_suppress_lock_checking_((void*)(&(lock)));
 
 #define _Benign_race_begin_ __pragma(warning(push)) __pragma(warning(disable:26100 26101 26150 26130 26180 26131 26181 28112))
@@ -168,18 +174,13 @@ extern _Function_ignore_lock_checking_(*plock) void _Internal_suppress_lock_chec
 /*
  * lock kinds
  */
-#define _Create_lock_kind_(kind) _Internal_create_CSAL_identifier_(kind)
-
-/*
- * _Set_lock_kind_ will be deprecated; it will be replaced by _Has_lock_kind_
- */
-#define _Set_lock_kind_(kind) _SA_annotes1(SAL_has_lock_property,#kind)
 #define _Has_lock_kind_(kind) _SA_annotes1(SAL_has_lock_property,#kind)
 
-/*********************************************************************************
+
+/*
  * Old spelling
  * Note: the old version may be deprecated in the future!!!
- ********************************************************************************/
+ */
 extern int __system_interlock;
 extern int __system_cancel_spinlock;
 extern int __system_critical_region;
@@ -232,7 +233,7 @@ extern int __system_critical_region;
 #define CSALCAT2(x,y) CSALCAT1(x,y)
 
 #define __lock_level_order(a,b) \
-    extern __internal_lock_level_order(a,b) void __sal_order_##a##_##b(__nullterminated char*a, __nullterminated char*b); \
+    extern __internal_lock_level_order(a,b) void __sal_order_##a##_##b(__in_z char*a, __in_z char*b); \
     static __inline void CSALCAT2(CSAL_LockOrder,__COUNTER__)(void){__sal_order_##a##_##b(#a,#b);}
 
 /*
@@ -292,7 +293,6 @@ extern __function_ignore_lock_checking(*plock) void __internal_suppress_lock_che
 #define _Internal_lock_level_order_(a,b)
 #define _Csalcat1_(x,y)
 #define _Csalcat2_(x,y)
-#define _Set_lock_level_order_(a,b)
 #define _Lock_level_order_(a,b)
 #define _No_competing_thread_
 #define _Analysis_assume_lock_acquired_(lock)
@@ -309,13 +309,11 @@ extern __function_ignore_lock_checking(*plock) void __internal_suppress_lock_che
 #define _No_competing_thread_begin_ __pragma(warning(push))
 #define _No_competing_thread_end_ __pragma(warning(pop))
 
-#define _Create_lock_kind_(kind)
-#define _Set_lock_kind_(kind)
 #define _Has_lock_kind_(kind)
 
-/*******************************************************************************
+/*
  * Old spelling: will be deprecated
- ******************************************************************************/
+ */
 #define __guarded_by(lock)
 #define __write_guarded_by(lock)
 #define __interlocked
