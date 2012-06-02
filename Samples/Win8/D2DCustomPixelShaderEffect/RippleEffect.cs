@@ -133,10 +133,9 @@ namespace D2DCustomPixelShaderEffect
         /// <inheritdoc/>
         public override void Initialize(EffectContext effectContext, TransformGraph transformGraph)
         {
-            transformGraph.SetSingleTransformNode(this);
-
             var path = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
             effectContext.LoadPixelShader(GUID_RipplePixelShader, NativeFile.ReadAllBytes(path + "\\Ripple.cso"));
+            transformGraph.SetSingleTransformNode(this);
         }
 
         /// <inheritdoc/>
@@ -159,15 +158,16 @@ namespace D2DCustomPixelShaderEffect
             drawInformation.SetInputDescription(0, new InputDescription(Filter.MinimumMagLinearMipPoint, 1));
         }
 
-        public Rectangle[] InputRectangles
+        public Rectangle MapInvalidRect(int inputIndex, Rectangle invalidInputRect)
         {
-            set {}
+            return invalidInputRect;
         }
 
-        public Rectangle MapInputRectanglesToOutputRectangle(Rectangle[] inputRects)
+        public Rectangle MapInputRectanglesToOutputRectangle(Rectangle[] inputRects, Rectangle[] inputOpaqueSubRects, out Rectangle outputOpaqueSubRect)
         {
             if (inputRects.Length != 1)
                 throw new ArgumentException("InputRects must be length of 1", "inputRects");
+            outputOpaqueSubRect = default(Rectangle);
             return inputRects[0];
         }
 

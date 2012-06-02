@@ -129,7 +129,6 @@ namespace D2DCustomPixelShaderEffect.Common
             if (this._layoutAwareControls == null)
             {
                 // Start listening to view state changes when there are controls interested in updates
-                ApplicationView.GetForCurrentView().ViewStateChanged += this.ViewStateChanged;
                 Window.Current.SizeChanged += this.WindowSizeChanged;
                 this._layoutAwareControls = new List<Control>();
             }
@@ -137,11 +136,6 @@ namespace D2DCustomPixelShaderEffect.Common
 
             // Set the initial visual state of the control
             VisualStateManager.GoToState(control, DetermineVisualState(ApplicationView.Value), false);
-        }
-
-        private void ViewStateChanged(ApplicationView sender, ApplicationViewStateChangedEventArgs e)
-        {
-            this.InvalidateVisualState(e.ViewState);
         }
 
         private void WindowSizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
@@ -169,7 +163,6 @@ namespace D2DCustomPixelShaderEffect.Common
             {
                 // Stop listening to view state changes when no controls are interested in updates
                 this._layoutAwareControls = null;
-                ApplicationView.GetForCurrentView().ViewStateChanged -= this.ViewStateChanged;
                 Window.Current.SizeChanged -= this.WindowSizeChanged;
             }
         }

@@ -133,7 +133,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DragHandler.cs" />
     <Compile Include="EffectRenderer.cs" />
     <Compile Include="MP-SCBP.xaml.cs">
       <DependentUpon>MP-SCBP.xaml</DependentUpon>

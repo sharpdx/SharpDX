@@ -188,7 +188,7 @@ namespace D2DCustomVertexShaderEffect
             CreateEffectGraph(_formatConverter);
         }
 
-        void _root_PointerPressed(object sender, Windows.UI.Xaml.Input.PointerEventArgs e)
+        void _root_PointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             try
             {
@@ -203,17 +203,17 @@ namespace D2DCustomVertexShaderEffect
             }
         }
 
-        void _root_PointerMoved(object sender, Windows.UI.Xaml.Input.PointerEventArgs e)
+        void _root_PointerMoved(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             gestureRecognizer.ProcessMoveEvents(e.GetIntermediatePoints(null));
         }
 
-        void _root_PointerReleased(object sender, Windows.UI.Xaml.Input.PointerEventArgs e)
+        void _root_PointerReleased(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             gestureRecognizer.ProcessUpEvent(e.GetCurrentPoint(null));
         }
 
-        void _root_PointerWheelChanged(object sender, Windows.UI.Xaml.Input.PointerEventArgs e)
+        void _root_PointerWheelChanged(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             gestureRecognizer.ProcessMouseWheelEvent(e.GetCurrentPoint(null), false, true);
         }

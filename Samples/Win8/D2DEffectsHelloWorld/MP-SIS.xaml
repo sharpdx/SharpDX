@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{StaticResource ApplicationPageBackgroundBrush}">
+    <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
         <Canvas x:Name="d2dCanvas" HorizontalAlignment="Left" Height="401.27" Margin="734.111,194.865,0,0" VerticalAlignment="Top" Width="398.778" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
             <Canvas.RenderTransform>
                 <CompositeTransform Rotation="30"/>

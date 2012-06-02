@@ -192,24 +192,24 @@ namespace D2DCustomPixelShaderEffect
 
         private bool pointerPressed = false;
 
-        void _root_PointerPressed(object sender, Windows.UI.Xaml.Input.PointerEventArgs e)
+        void _root_PointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             pointerPressed = true;
             SetRipplePosition(e);
         }
 
-        void _root_PointerMoved(object sender, Windows.UI.Xaml.Input.PointerEventArgs e)
+        void _root_PointerMoved(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             if (pointerPressed)
                 SetRipplePosition(e);
         }
 
-        void _root_PointerReleased(object sender, Windows.UI.Xaml.Input.PointerEventArgs e)
+        void _root_PointerReleased(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             pointerPressed = false;
         }
 
-        private void SetRipplePosition(Windows.UI.Xaml.Input.PointerEventArgs e)
+        private void SetRipplePosition(Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             var newPosition = e.GetCurrentPoint(null);
 

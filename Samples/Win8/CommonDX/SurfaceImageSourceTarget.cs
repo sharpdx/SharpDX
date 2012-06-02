@@ -77,7 +77,7 @@ namespace CommonDX
         protected override Windows.Foundation.Rect CurrentControlBounds
         {
             get { 
-                return new Windows.Foundation.Rect(0, 0, surfaceImageSource.PixelWidth, surfaceImageSource.PixelHeight); 
+                return new Windows.Foundation.Rect(0, 0, pixelWidth, pixelHeight); 
             }
         }
 

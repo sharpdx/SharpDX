@@ -57,7 +57,6 @@ namespace D2DCustomPixelShaderEffect
         {
             this.InitializeComponent();
 
-
             effectRenderer = new EffectRenderer(root, root);
             var fpsRenderer = new FpsRenderer();
 
@@ -69,7 +68,7 @@ namespace D2DCustomPixelShaderEffect
             deviceManager.OnInitialize += d2dTarget.Initialize;
             deviceManager.OnInitialize += effectRenderer.Initialize;
             deviceManager.OnInitialize += fpsRenderer.Initialize;
-            
+
             deviceManager.Initialize(DisplayProperties.LogicalDpi);
 
             // Setup rendering callback

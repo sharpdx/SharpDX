@@ -116,6 +116,7 @@ namespace D2DCustomVertexShaderEffect
                 }
             }
 
+            PrepareForRender(ChangeType.Properties|ChangeType.Context);
             transformGraph.SetSingleTransformNode(this);
         }
 
@@ -181,38 +182,34 @@ namespace D2DCustomVertexShaderEffect
                );
         }
 
-        public Rectangle[] InputRectangles
+        public Rectangle MapInvalidRect(int inputIndex, Rectangle invalidInputRect)
         {
-            set
-            {
-                if (value == null || value.Length != 1)
-                    throw new ArgumentException("inputRectangles must be length of 1", "inputRectangles");
-
-                inputRectangle = value[0];
-
-                // Store the size of the rect so we can pass it into the vertex shader later.
-                int newSizeX = inputRectangle.Right - inputRectangle.Left;
-                int newSizeY = inputRectangle.Bottom - inputRectangle.Top;
-
-                if (SizeX != newSizeX || SizeY != newSizeY)
-                {
-                    SizeX = newSizeX;
-                    SizeY = newSizeY;
-
-                    UpdateConstants();
-                }
-            }
+            return invalidInputRect;
         }
 
-        public Rectangle MapInputRectanglesToOutputRectangle(Rectangle[] inputRects)
+        public Rectangle MapInputRectanglesToOutputRectangle(Rectangle[] inputRects, Rectangle[] inputOpaqueSubRects, out Rectangle outputOpaqueSubRect)
         {
             if (inputRects.Length != 1)
                 throw new ArgumentException("InputRects must be length of 1", "inputRects");
 
+            var inputRectangle = inputRects[0];
+
+            // Store the size of the rect so we can pass it into the vertex shader later.
+            int newSizeX = inputRectangle.Right - inputRectangle.Left;
+            int newSizeY = inputRectangle.Bottom - inputRectangle.Top;
+
+            if (SizeX != newSizeX || SizeY != newSizeY)
+            {
+                SizeX = newSizeX;
+                SizeY = newSizeY;
+
+                UpdateConstants();
+            }
+
             long inputRectHeight = inputRects[0].Bottom - inputRects[0].Top;
             long inputRectWidth = inputRects[0].Right - inputRects[0].Left;
 
-            Rectangle outputRect = new Rectangle();
+            var outputRect = new Rectangle();
 
             // waveAngleOffset is the point where the wave is perpendicular to the screen.
             if (AngleY > waveAngleOffset)
@@ -236,6 +233,8 @@ namespace D2DCustomVertexShaderEffect
                 outputRect.Left = (int)(inputRects[0].Left + (inputRectWidth * waveMarginLeft) + (inputRectWidth * AngleX));
                 outputRect.Right = (int)(inputRects[0].Right - (inputRectWidth * waveMarginRight));
             }
+
+            outputOpaqueSubRect = default(Rectangle);
 
             return outputRect;
         }

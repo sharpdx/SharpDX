@@ -255,7 +255,7 @@ namespace D2DLightingEffects
         }
 
 
-        void root_PointerMoved(object sender, Windows.UI.Xaml.Input.PointerEventArgs e)
+        void root_PointerMoved(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             var newPosition = e.GetCurrentPoint(null);
 

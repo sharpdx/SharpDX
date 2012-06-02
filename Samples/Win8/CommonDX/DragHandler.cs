@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,9 +25,10 @@ using System.Threading.Tasks;
 using Windows.UI.Core;
 using Windows.UI.Input;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 
-namespace D2DCustomVertexShaderEffect
+namespace CommonDX
 {
     /// <summary>
     /// A <see cref="UIElement"/> handler to add drag behavior.
@@ -60,18 +61,18 @@ namespace D2DCustomVertexShaderEffect
 
         }
 
-        protected virtual void uiElement_PointerPressed(object sender, Windows.UI.Xaml.Input.PointerEventArgs e)
+        protected virtual void uiElement_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             moveD3dCanvas = true;
             lastPos = e.GetCurrentPoint(null);
         }
 
-        protected virtual void uiElement_PointerReleased(object sender, Windows.UI.Xaml.Input.PointerEventArgs e)
+        protected virtual void uiElement_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
             moveD3dCanvas = false;
         }
 
-        protected virtual void uiElement_PointerMoved(object sender, Windows.UI.Xaml.Input.PointerEventArgs e)
+        protected virtual void uiElement_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
             if (moveD3dCanvas)
             {
@@ -98,13 +99,13 @@ namespace D2DCustomVertexShaderEffect
             }
         }
 
-        protected virtual void uiElement_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerEventArgs e)
+        protected virtual void uiElement_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
             lastCursor = Window.Current.CoreWindow.PointerCursor;
             Window.Current.CoreWindow.PointerCursor = CursorOver;
         }
 
-        protected virtual void uiElement_PointerExited(object sender, Windows.UI.Xaml.Input.PointerEventArgs e)
+        protected virtual void uiElement_PointerExited(object sender, PointerRoutedEventArgs e)
         {
             Window.Current.CoreWindow.PointerCursor = lastCursor;
         }
