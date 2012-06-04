@@ -41,7 +41,12 @@
     <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc10\Include</include-dir>
     <include-dir override="true">$(THIS_CONFIG_PATH)\..\External\gccxml\share\gccxml-0.9\vc10\PlatformSDK</include-dir>
     <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\10.0\Setup\VC\ProductDir;Include</include-dir>
-    <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.1\InstallationFolder;Include</include-dir>
+    <ifdef name="WINSDK_71">
+      <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.1\InstallationFolder;Include</include-dir>
+    </ifdef>
+    <ifdef name="WINSDK_70a">
+      <include-dir>=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.0a\InstallationFolder;Include</include-dir>
+    </ifdef>
   </ifndef> 
 
   <var name="FILTER_PASTING_ERROR">error: pasting .*a valid preprocessing token</var>  

@@ -304,6 +304,20 @@ namespace SharpGen.Parser
             return vsVersion;
         }
 
+        public static string GetWindowsFramework7Version(params string[] versions)
+        {
+            var key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
+            foreach (var version in versions)
+            {
+                var subKey = key.OpenSubKey(@"SOFTWARE\Microsoft\Microsoft SDKs\Windows\v" + version);
+                if (subKey != null)
+                    return version;
+            }
+
+            Logger.Exit("Missing Windows SDK [{0}]. Download SDK 7.1 from: http://www.microsoft.com/en-us/download/details.aspx?id=8279", string.Join("/", versions));
+            return null;
+        }
+
         /// <summary>
         /// Processes the specified header headerFile.
         /// </summary>

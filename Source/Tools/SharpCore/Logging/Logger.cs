@@ -287,11 +287,12 @@ namespace SharpCore.Logging
         /// <param name="parameters">The parameters.</param>
         public static void Exit(string reason, params object[] parameters)
         {
+            string message = string.Format(reason, parameters);
             if (ProgressReport != null)
-                ProgressReport.FatalExit(string.Format(reason, parameters));
+                ProgressReport.FatalExit(message);
 
             if (LoggerOutput != null)
-                LoggerOutput.Exit(reason, 1);
+                LoggerOutput.Exit(message, 1);
         }
 
         /// <summary>

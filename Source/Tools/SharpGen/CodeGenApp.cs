@@ -160,6 +160,15 @@ namespace SharpGen
 #if DIRECTX11_1
             // Load configuration
             Macros.Add("DIRECTX11_1");
+#else
+            if (GccXml.GetWindowsFramework7Version("7.0a", "7.1") == "7.0a")
+            {
+                Macros.Add("WINSDK_70a");
+            }
+            else
+            {
+                Macros.Add("WINSDK_71");
+            }
 #endif
             Config = ConfigFile.Load(_configRootPath, Macros.ToArray());
             var latestConfigTime = ConfigFile.GetLatestTimestamp(Config.ConfigFilesLoaded);
