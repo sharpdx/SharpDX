@@ -528,6 +528,8 @@ namespace SharpGen.Generator
             int indexToGenerate = 0;
             var templateNames = new[] { "Enumerations", "Structures", "Interfaces", "Functions", "LocalInterop" };
 
+            var directoryToCreate = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
+
             // Iterates on templates
             foreach (string templateName in templateNames)
             {
@@ -553,9 +555,28 @@ namespace SharpGen.Generator
 
                     string generatedDirectoryForAssembly = Path.Combine(csAssembly.RootDirectory, "Generated");
 
+                    // Remove the generated directory before creating it
+                    if (!directoryToCreate.Contains(generatedDirectoryForAssembly))
+                    {
+                        directoryToCreate.Add(generatedDirectoryForAssembly);
+                        if (Directory.Exists(generatedDirectoryForAssembly))
+                        {
+                            foreach(var oldGeneratedFile in Directory.EnumerateFiles(generatedDirectoryForAssembly, "*.cs", SearchOption.AllDirectories))
+                            {
+                                try
+                                {
+
+                                    File.Delete(oldGeneratedFile);
+                                }
+                                catch (Exception ex)
+                                {
+                                }
+                            }
+                        }
+                    }
+
                     if (!Directory.Exists(generatedDirectoryForAssembly))
                         Directory.CreateDirectory(generatedDirectoryForAssembly);
-
 
                     Logger.Message("Process Assembly {0} => {1}", csAssembly.Name, generatedDirectoryForAssembly);
 
