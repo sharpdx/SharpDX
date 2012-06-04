@@ -26,6 +26,7 @@ using Mono.Options;
 using SharpCore.Logging;
 using SharpGen.Config;
 using SharpGen.Generator;
+using SharpGen.Parser;
 
 namespace SharpGen
 {
@@ -160,7 +161,6 @@ namespace SharpGen
             // Load configuration
             Macros.Add("DIRECTX11_1");
 #endif
-
             Config = ConfigFile.Load(_configRootPath, Macros.ToArray());
             var latestConfigTime = ConfigFile.GetLatestTimestamp(Config.ConfigFilesLoaded);
 

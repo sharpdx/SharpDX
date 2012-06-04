@@ -128,12 +128,6 @@ namespace SharpGen.Parser
         /// </summary>
         private readonly List<Regex> _filterErrors;
 
-#if DIRECTX11_1
-        private const string VsVersion = "11.0";
-#else
-        private const string VsVersion = "10.0";
-#endif
-
         /// <summary>
         /// Initializes a new instance of the <see cref="GccXml"/> class.
         /// </summary>
@@ -163,7 +157,7 @@ namespace SharpGen.Parser
         {
             Logger.RunInContext("gccxml", () =>
                     {
-                        CheckVisualStudioVersion();
+                        string vsVersion = GetVisualStudioVersion();
 
                         if (!File.Exists(ExecutablePath))
                             Logger.Fatal("gccxml.exe not found from path: [{0}]", ExecutablePath);
@@ -184,10 +178,8 @@ namespace SharpGen.Parser
                         File.WriteAllText(GccXmlGccOptionsFile, "-dDI -E");
 
                         var arguments = ""; // "--gccxml-gcc-options " + GccXmlGccOptionsFile;
-#if DIRECTX11_1
                         // Overrides settings for gccxml for compiling Win8 version
-                        arguments += " --gccxml-config \"" + Path.Combine(Path.GetDirectoryName(ExecutablePath), @"..\share\gccxml-0.9\vc11\gccxml_config") + "\"";
-#endif
+                        arguments += " --gccxml-config \"" + Path.Combine(Path.GetDirectoryName(ExecutablePath), @"..\share\gccxml-0.9\vc" + vsVersion + @"\gccxml_config") + "\"";
                         
                         arguments += " -E --gccxml-gcc-options " + GccXmlGccOptionsFile;
                         foreach (var directory in GetIncludePaths())
@@ -284,14 +276,32 @@ namespace SharpGen.Parser
             return paths;
         }
 
-        private void CheckVisualStudioVersion()
+        private static bool CheckVisualStudioVersion(string vsVersion)
         {
             var key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
-            var subKey = key.OpenSubKey(@"SOFTWARE\Microsoft\VisualStudio\" + VsVersion + @"\Setup\VC");
-            if (subKey == null)
+            var subKey = key.OpenSubKey(@"SOFTWARE\Microsoft\VisualStudio\" + vsVersion + @".0\Setup\VC");
+            return subKey != null;
+        }
+
+        public static string ResolveVisualStudioVersion(params string[] versions)
+        {
+            foreach (var version in versions)
             {
-                Logger.Exit("Visual Studio {0} with C++ not found. SharpDX requires this version to generate code from C++", VsVersion);
-            } 
+                if (CheckVisualStudioVersion(version))
+                    return version;
+            }
+            Logger.Exit("Visual Studio [{0}] with C++ not found. SharpDX requires this version to generate code from C++", string.Join("/", versions));
+            return null;
+        }
+
+        public static string GetVisualStudioVersion()
+        {
+#if DIRECTX11_1
+            string vsVersion = ResolveVisualStudioVersion("11");
+#else
+            string vsVersion = ResolveVisualStudioVersion("10");
+#endif
+            return vsVersion;
         }
 
         /// <summary>
@@ -304,8 +314,9 @@ namespace SharpGen.Parser
             StreamReader result = null;
 
             Logger.RunInContext("gccxml", () =>
-                {
-                    CheckVisualStudioVersion();
+                    {
+
+                    string vsVersion = GetVisualStudioVersion();
 
                     // Absolutize executable path
                     ExecutablePath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, ExecutablePath));
@@ -329,10 +340,9 @@ namespace SharpGen.Parser
                     File.Delete(xmlFile);
 
                     var arguments = ""; // "--gccxml-gcc-options " + GccXmlGccOptionsFile;
-#if DIRECTX11_1
+
                     // Overrides settings for gccxml for compiling Win8 version
-                    arguments += " --gccxml-config \"" + Path.Combine(Path.GetDirectoryName(ExecutablePath), @"..\share\gccxml-0.9\vc11\gccxml_config") + "\"";
-#endif
+                    arguments += " --gccxml-config \"" + Path.Combine(Path.GetDirectoryName(ExecutablePath), @"..\share\gccxml-0.9\vc" + vsVersion + @"\gccxml_config") + "\"";
 
                     arguments += " -fxml=" + xmlFile;
                     foreach (var directory in GetIncludePaths())
