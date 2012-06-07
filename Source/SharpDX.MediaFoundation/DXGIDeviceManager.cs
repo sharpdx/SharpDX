@@ -35,7 +35,9 @@ namespace SharpDX.MediaFoundation
         /// <unmanaged-short>MFCreateDXGIDeviceManager</unmanaged-short>	
         public DXGIDeviceManager()
         {
-            MediaFactory.CreateDXGIDeviceManager(out ResetToken, this);
+            int resetToken;
+            MediaFactory.CreateDXGIDeviceManager(out resetToken, this);
+            ResetToken = resetToken;
         }
 
         /// <summary>	

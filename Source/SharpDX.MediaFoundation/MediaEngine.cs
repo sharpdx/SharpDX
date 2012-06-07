@@ -41,15 +41,15 @@ namespace SharpDX.MediaFoundation
             attributes = attributes ?? new MediaEngineAttributes();
 
             // Setup by default the MediaEngine notify as it is mandatory
-            var notifier = new MediaEngineNotifyImpl(this);
+            mediaEngineNotifyImpl = new MediaEngineNotifyImpl(this);
             try
             {
-                attributes.Set(MediaEngineAttributeKeys.Callback, MediaEngineNotifyShadow.ToIntPtr(notifier));
+                attributes.Set(MediaEngineAttributeKeys.Callback, MediaEngineNotifyShadow.ToIntPtr(mediaEngineNotifyImpl));
                 factory.CreateInstance(createFlags, attributes, this);
-                mediaEngineNotifyImpl = notifier;
             } catch
             {
-                notifier.Dispose();
+                mediaEngineNotifyImpl.Dispose();
+                mediaEngineNotifyImpl = null;
                 throw;
             }
         }

@@ -159,7 +159,7 @@ namespace CommonDX
             // Allocate new references
             // Enable compatibility with Direct2D
             // Retrieve the Direct3D 11.1 device amd device context
-            var creationFlags = SharpDX.Direct3D11.DeviceCreationFlags.BgraSupport;
+            var creationFlags = SharpDX.Direct3D11.DeviceCreationFlags.VideoSupport | SharpDX.Direct3D11.DeviceCreationFlags.BgraSupport;
 #if DEBUG
             creationFlags |= SharpDX.Direct3D11.DeviceCreationFlags.Debug;
 #endif
