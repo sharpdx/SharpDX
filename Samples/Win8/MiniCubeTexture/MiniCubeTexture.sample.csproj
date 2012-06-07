@@ -166,6 +166,10 @@
     <VisualStudioVersion>11.0</VisualStudioVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>$(ProjectDir)\..\fxc.bat /Tvs_4_0_level_9_1 /EVS /Fo $(ProjectDir)\MiniCubeTexture_VS.fxo $(ProjectDir)\MiniCubeTexture.fx 
+$(ProjectDir)\..\fxc.bat /Tps_4_0_level_9_1 /EPS /Fo $(ProjectDir)\MiniCubeTexture_PS.fxo $(ProjectDir)\MiniCubeTexture.fx</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

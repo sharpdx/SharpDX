@@ -82,8 +82,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>REM $(ProjectDir)\fxc.bat /Tvs_4_0 /EVS /Fo$(ProjectDir)\MiniCube_VS.fxo $(ProjectDir)\MiniCube.fx 
-REM $(ProjectDir)\fxc.bat /Tps_4_0 /EPS /Fo$(ProjectDir)\MiniCube_PS.fxo $(ProjectDir)\MiniCube.fx</PreBuildEvent>
+    <PreBuildEvent>$(ProjectDir)\..\fxc.bat /Tvs_4_0_level_9_1 /EVS /Fo $(ProjectDir)\MiniCube_VS.fxo $(ProjectDir)\MiniCube.fx 
+$(ProjectDir)\..\fxc.bat /Tps_4_0_level_9_1 /EPS /Fo $(ProjectDir)\MiniCube_PS.fxo $(ProjectDir)\MiniCube.fx</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

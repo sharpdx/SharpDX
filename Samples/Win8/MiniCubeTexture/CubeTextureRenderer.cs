@@ -155,8 +155,8 @@ namespace MiniCubeTexture
                 ComparisonFunction = Comparison.Never,
                 MaximumAnisotropy = 16,
                 MipLodBias = 0,
-                MinimumLod = 0,
-                MaximumLod = 16,
+                MinimumLod =-float.MaxValue,
+                MaximumLod = float.MaxValue
             });
 
             clock = new Stopwatch();
