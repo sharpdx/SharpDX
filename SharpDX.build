@@ -21,6 +21,8 @@
 -->
 <!-- Nant Build file for SharpDX -->
 <project name="SharpDX Build" default="help">
+  <include buildfile="NantExtensions.include"/>
+
   <property name="project.name" value="SharpDX"/>
   <property name="project.sname" value="sharpdx"/>
 
@@ -208,6 +210,25 @@
     <call target="zip"/>
 
     <call target="publish-code" if="${publish}"/>
+  </target>
+
+  <!-- Internal task to patch all samples and convert csproj -->
+  <target name="patch-samples" description="Patch Samples Files">
+    <foreach item="File" property="csproj-path">
+      <in>
+        <items>
+          <include name="Samples/**/*.sample.csproj" />
+        </items>
+      </in>
+      <do>
+        <property name="csproj-path-dest" value="${path::combine(path::get-directory-name(csproj-path),path::get-file-name-without-extension(path::get-file-name-without-extension(csproj-path)))}.csproj"/>
+        <property name="csproj-str" value="${file::read(csproj-path)}"/>
+        <property name="csproj-win8" value="${string::contains(csproj-path-dest,'Win8')}"/>
+        <if test="${csproj-win8}">
+          <echo message="Create file on  ${csproj-path-dest} ${file::write(csproj-path-dest, regex::replace(csproj-str, '\\Source\\.*?Configuration\)', '\Bin\Win8Metro')) }"/>
+        </if>
+      </do>
+    </foreach>
   </target>
 
   <!-- Full clean and build -->
