@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -133,7 +133,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DragHandler.cs" />
     <Compile Include="EffectRenderer.cs" />
     <Compile Include="MP-SCBP.xaml.cs">
       <DependentUpon>MP-SCBP.xaml</DependentUpon>
@@ -206,8 +205,7 @@
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>REM cd $(ProjectDir)
-REM fxc /Tps_4_0_level_9_1 /Emain /FoRipple.cso Ripple.hlsl</PreBuildEvent>
+    <PreBuildEvent>$(ProjectDir)\..\fxc.bat /Tps_4_0_level_9_1 /Emain /Fo $(ProjectDir)\Ripple.cso $(ProjectDir)\Ripple.hlsl</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

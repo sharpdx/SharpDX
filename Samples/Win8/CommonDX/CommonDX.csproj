@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -114,6 +114,9 @@
     <Reference Include="SharpDX.Direct3D11">
       <HintPath>..\..\..\Bin\Win8Metro\SharpDX.Direct3D11.dll</HintPath>
     </Reference>
+    <Reference Include="SharpDX.MediaFoundation">
+      <HintPath>..\..\..\Bin\Win8Metro\SharpDX.MediaFoundation.dll</HintPath>
+    </Reference>
     <Reference Include="SharpDX.DXGI">
       <HintPath>..\..\..\Bin\Win8Metro\SharpDX.DXGI.dll</HintPath>
     </Reference>
@@ -121,7 +124,9 @@
   <ItemGroup>
     <Compile Include="CoreWindowTarget.cs" />
     <Compile Include="DeviceManager.cs" />
+    <Compile Include="DragHandler.cs" />
     <Compile Include="FpsRenderer.cs" />
+    <Compile Include="MediaPlayer.cs" />
     <Compile Include="SurfaceImageSourceTarget.cs" />
     <Compile Include="SwapChainBackgroundPanelTarget.cs" />
     <Compile Include="TargetBase.cs" />
