@@ -20,7 +20,7 @@
 namespace SharpDX.XAudio2
 {
     /// <summary>
-    /// The <see cref="A:SharpDX.XAudio2"/> assembly provides managed XAudio2 API.
+    /// The <see cref="A:SharpDX.XAudio2"/> assembly provides managed <see cref="N:SharpDX.XAudio2"/> and <see cref="N:SharpDX.X3DAudio"/> APIs.
     /// </summary>
     /// <msdn-id>hh405049</msdn-id>
     /// <unmanaged>XAudio2</unmanaged>	

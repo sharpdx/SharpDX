@@ -30,6 +30,10 @@
     <Compile Include="Generated\Interfaces.cs" />
     <Compile Include="Generated\LocalInterop.cs" />
     <Compile Include="Generated\Structures.cs" />
+    <Compile Include="Generated\X3DAudio\Enumerations.cs" />
+    <Compile Include="Generated\X3DAudio\Functions.cs" />
+    <Compile Include="Generated\X3DAudio\Interfaces.cs" />
+    <Compile Include="Generated\X3DAudio\Structures.cs" />
     <Compile Include="Generated\XAPO\Enumerations.cs" />
     <Compile Include="Generated\XAPO\Functions.cs" />
     <Compile Include="Generated\XAPO\Fx\Enumerations.cs" />
@@ -44,6 +48,13 @@
     <Compile Include="SubmixVoice.cs" />
     <Compile Include="Voice.cs" />
     <Compile Include="VoiceShadow.cs" />
+    <Compile Include="X3DAudio\DistanceCurve.cs" />
+    <Compile Include="X3DAudio\DspSettings.cs" />
+    <Compile Include="X3DAudio\Emitter.cs" />
+    <Compile Include="X3DAudio\Listener.cs" />
+    <Compile Include="X3DAudio\NamespaceDoc.cs" />
+    <Compile Include="X3DAudio\X3DAudio.cs" />
+    <Compile Include="X3DAudio\X3DAudioHandle.cs" />
     <Compile Include="XAPO\AudioProcessor.cs" />
     <Compile Include="XAPO\AudioProcessorBase.cs" />
     <Compile Include="XAPO\AudioProcessorNative.cs" />
@@ -78,6 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Mapping-xaudio2.xml" />
+    <Content Include="X3DAudio\Mapping.xml" />
     <Content Include="XAPO\Mapping.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

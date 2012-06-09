@@ -90,7 +90,6 @@
     <file>SharpDX.DirectInput\Mapping.xml</file>
     <file>SharpDX.Direct3D9\Mapping.xml</file>
     <file>SharpDX.DirectSound\Mapping.xml</file>
-    <file>SharpDX.X3DAudio\Mapping.xml</file>
     <file>SharpDX.XACT3\Mapping.xml</file>
   </ifndef>
   <file>SharpDX.XAudio2\Mapping.xml</file>

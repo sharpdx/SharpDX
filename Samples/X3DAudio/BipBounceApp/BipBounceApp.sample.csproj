@@ -64,10 +64,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -76,10 +73,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Source\SharpDX.X3DAudio\SharpDX.X3DAudio.csproj">
-      <Project>{046C5D40-A52E-4442-88A9-1A5DDF370A5E}</Project>
-      <Name>SharpDX.X3DAudio</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\Source\SharpDX.XAudio2\SharpDX.XAudio2.csproj">
       <Project>{4995127E-0B8E-45B8-80C4-6BAC1BBE3783}</Project>
       <Name>SharpDX.XAudio2</Name>
