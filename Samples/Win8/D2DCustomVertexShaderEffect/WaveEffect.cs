@@ -192,7 +192,7 @@ namespace D2DCustomVertexShaderEffect
             if (inputRects.Length != 1)
                 throw new ArgumentException("InputRects must be length of 1", "inputRects");
 
-            var inputRectangle = inputRects[0];
+            inputRectangle = inputRects[0];
 
             // Store the size of the rect so we can pass it into the vertex shader later.
             int newSizeX = inputRectangle.Right - inputRectangle.Left;
