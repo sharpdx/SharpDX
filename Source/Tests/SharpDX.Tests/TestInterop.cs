@@ -119,6 +119,26 @@ namespace SharpDX.Tests
             ValidateArray(toMatrices);
         }
 
+        [Test]
+        public unsafe void TestPin()
+        {
+            Matrix test = Matrix.Identity;
+            Matrix test2 = Matrix.Zero;
+            Matrix test3 = Matrix.Identity;
+            test3.M44 = 0;
+            Write((IntPtr)(&test2), test, 48);
+
+            Assert.AreEqual(test2, test3);
+        }
+
+        private void Write<T>(IntPtr dest, T value, int sizeInBytes) where T : struct
+        {
+            Utilities.Pin<T>(ref value, (ptr) =>
+            {
+                Utilities.CopyMemory(dest, ptr, sizeInBytes);
+            });
+        }
+
         private void ValidateArray(Matrix[] values)
         {
             Assert.True(values[0].Row1 == new Vector4 { X = 1.0f, Y = 2.0f, Z = 3.0f, W = 4.0f });
