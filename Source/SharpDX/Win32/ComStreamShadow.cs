@@ -60,15 +60,20 @@ namespace SharpDX.Win32
             /// <unmanaged>HRESULT IStream::Seek([In] LARGE_INTEGER dlibMove,[In] SHARPDX_SEEKORIGIN dwOrigin,[Out, Optional] ULARGE_INTEGER* plibNewPosition)</unmanaged>	
             /* public long Seek(long dlibMove, System.IO.SeekOrigin dwOrigin) */
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            private delegate int SeekDelegate(IntPtr thisPtr, long offset, SeekOrigin origin, out long newPosition);
-            private static int SeekImpl(IntPtr thisPtr, long offset, SeekOrigin origin, out long newPosition)
+            private unsafe delegate int SeekDelegate(IntPtr thisPtr, long offset, SeekOrigin origin, IntPtr newPosition);
+            private unsafe static int SeekImpl(IntPtr thisPtr, long offset, SeekOrigin origin, IntPtr newPosition)
             {
-                newPosition = 0;
                 try
                 {
                     var shadow = ToShadow<ComStreamShadow>(thisPtr);
                     var callback = ((IStream)shadow.Callback);
-                    newPosition = callback.Seek(offset, origin);
+                    long position = callback.Seek(offset, origin);
+
+                    // pointer can be null, so we need to test it
+                    if (newPosition != IntPtr.Zero)
+                    {
+                         *(long*)newPosition = position;
+                    }
                 }
                 catch (Exception exception)
                 {

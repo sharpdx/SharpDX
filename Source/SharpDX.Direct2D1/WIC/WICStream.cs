@@ -36,8 +36,8 @@ namespace SharpDX.WIC
         /// <param name="factory">The factory.</param>
         /// <param name="fileName">Name of the file.</param>
         /// <param name="fileAccess">The file access.</param>
+        /// <msdn-id>ee690325</msdn-id>	
         /// <unmanaged>HRESULT IWICImagingFactory::CreateStream([Out, Fast] IWICStream** ppIWICStream)</unmanaged>	
-        /// <unmanaged>HRESULT IWICStream::InitializeFromFilename([In] const wchar_t* wzFileName,[In] unsigned int dwDesiredAccess)</unmanaged>	
         public WICStream(ImagingFactory factory, string fileName, NativeFileAccess fileAccess)
             : base(IntPtr.Zero)
         {
@@ -50,8 +50,9 @@ namespace SharpDX.WIC
         /// </summary>
         /// <param name="factory">The factory.</param>
         /// <param name="stream">The stream.</param>
-        /// <unmanaged>HRESULT IWICImagingFactory::CreateStream([Out, Fast] IWICStream** ppIWICStream)</unmanaged>	
-        /// <unmanaged>HRESULT IWICStream::InitializeFromFilename([In] const wchar_t* wzFileName,[In] unsigned int dwDesiredAccess)</unmanaged>	
+        /// <msdn-id>ee719789</msdn-id>	
+        /// <unmanaged>HRESULT IWICStream::InitializeFromIStream([In, Optional] IStream* pIStream)</unmanaged>	
+        /// <unmanaged-short>IWICStream::InitializeFromIStream</unmanaged-short>	
         public WICStream(ImagingFactory factory, Stream stream)
             : base(IntPtr.Zero)
         {
@@ -66,8 +67,9 @@ namespace SharpDX.WIC
         /// </summary>
         /// <param name="factory">The factory.</param>
         /// <param name="dataStream">The unmanaged memory stream.</param>
-        /// <unmanaged>HRESULT IWICImagingFactory::CreateStream([Out, Fast] IWICStream** ppIWICStream)</unmanaged>	
-        /// <unmanaged>HRESULT IWICStream::InitializeFromFilename([In] const wchar_t* wzFileName,[In] unsigned int dwDesiredAccess)</unmanaged>	
+        /// <msdn-id>ee719792</msdn-id>	
+        /// <unmanaged>HRESULT IWICStream::InitializeFromMemory([In] void* pbBuffer,[In] unsigned int cbBufferSize)</unmanaged>	
+        /// <unmanaged-short>IWICStream::InitializeFromMemory</unmanaged-short>	
         public WICStream(ImagingFactory factory, DataStream dataStream)
             : base(IntPtr.Zero)
         {
