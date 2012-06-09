@@ -41,6 +41,7 @@ namespace CommonDX
         private int pixelHeight;
         private SurfaceImageSource surfaceImageSource;
         private ISurfaceImageSourceNative surfaceImageSourceNative;
+        private DrawingPoint position;
 
         /// <summary>
         /// Initialzes a new <see cref="SurfaceImageSourceTarget"/> instance.
@@ -81,12 +82,16 @@ namespace CommonDX
             }
         }
 
+        /// <summary>
+        /// Gets the relative position to use to draw on the surface.
+        /// </summary>
+        public DrawingPoint DrawingPosition { get { return position; } }
+
         /// <inveritdoc/>
         public override void RenderAll()
         {
             SurfaceViewData viewData;
 
-            DrawingPoint position;
             var regionToDraw = new SharpDX.Rectangle(0, 0, pixelWidth, pixelHeight);
 
             // Unlike other targets, we can only get the DXGI surface to render to
