@@ -138,7 +138,6 @@
   <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard-net20\SharpDX.DirectInput.xml">..\Bin\Standard-net20\SharpDX.DirectInput.dll</source>
   <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard-net20\SharpDX.DirectSound.xml">..\Bin\Standard-net20\SharpDX.DirectSound.dll</source>
   <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard-net20\SharpDX.RawInput.xml">..\Bin\Standard-net20\SharpDX.RawInput.dll</source>
-  <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard-net20\SharpDX.X3DAudio.xml">..\Bin\Standard-net20\SharpDX.X3DAudio.dll</source>
   <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard-net20\SharpDX.XACT3.xml">..\Bin\Standard-net20\SharpDX.XACT3.dll</source>
   <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard-net20\SharpDX.XAudio2.xml">..\Bin\Standard-net20\SharpDX.XAudio2.dll</source>
   <source api="default|All Windows Desktop - .NET 2.0+" xml="..\Bin\Standard-net20\SharpDX.XInput.xml">..\Bin\Standard-net20\SharpDX.XInput.dll</source>
