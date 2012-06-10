@@ -718,6 +718,7 @@ namespace SharpCli
 
             // Read Assembly
             assembly = AssemblyDefinition.ReadAssembly(file, readerParameters);
+            ((BaseAssemblyResolver)assembly.MainModule.AssemblyResolver).AddSearchDirectory(Path.GetDirectoryName(file));
 
             foreach (var assemblyNameReference in assembly.MainModule.AssemblyReferences)
             {
@@ -789,15 +790,24 @@ namespace SharpCli
         /// <param name="args">The args.</param>
         static void Main(string[] args)
         {
-            if (args.Length != 1)
+            try
             {
-                Console.WriteLine("{0} file_path is expecting one file argument", Assembly.GetExecutingAssembly().GetName().Name);
+                if (args.Length != 1)
+                {
+                    Console.WriteLine("{0} file_path is expecting one file argument",
+                                      Assembly.GetExecutingAssembly().GetName().Name);
+                    Environment.Exit(1);
+                }
+
+                string file = args[0];
+                var program = new InteropApp();
+                program.PatchFile(file);
+            } 
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
                 Environment.Exit(1);
             }
-
-            string file = args[0];
-            var program = new InteropApp();
-            program.PatchFile(file);
         }
 
         public void Log(string message, params object[] parameters)
