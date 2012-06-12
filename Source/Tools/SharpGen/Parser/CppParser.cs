@@ -758,6 +758,10 @@ namespace SharpGen.Parser
                 {
                     cppCallingConvention = CppCallingConvention.StdCall;
                 }
+                else if (newItem.StartsWith("__cdecl__"))
+                {
+                    cppCallingConvention = CppCallingConvention.CDecl;
+                }
                 else if (newItem.StartsWith("uuid("))
                 {
                     guid = newItem.Trim(')').Substring("uuid(".Length).Trim('"');

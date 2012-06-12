@@ -66,6 +66,24 @@ namespace SharpGen.Model
             }
         }
 
+        public string CallingConvention
+        {
+            get
+            {
+                switch (((CppMethod)CppElement).CallingConvention)
+                {
+                    case CppCallingConvention.StdCall:
+                        return "StdCall";
+                    case CppCallingConvention.CDecl:
+                        return "Cdecl";
+                    case CppCallingConvention.ThisCall:
+                        return "ThisCall";
+                }
+                // By default
+                return "StdCall";
+            }
+        }
+
         protected override void FillDocItems(List<string> docItems)
         {
             foreach (var param in PublicParameters)

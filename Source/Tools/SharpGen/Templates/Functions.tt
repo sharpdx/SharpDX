@@ -59,7 +59,7 @@ foreach (var sharpFunctionGroup in Namespace.Classes)
 		if (sharpFunction.UseDllImport) {
 			var interopFunction = sharpFunction.Interop;
 #>
-        [DllImport(<#= sharpFunction.DllName #>, EntryPoint = "<#= sharpFunction.CppElementName #>")]
+        [DllImport(<#= sharpFunction.DllName #>, EntryPoint = "<#= sharpFunction.CppElementName #>", CallingConvention = CallingConvention.<#= sharpFunction.CallingConvention #>)]
 #if !WIN8METRO
 		[System.Security.SuppressUnmanagedCodeSecurityAttribute]
 #endif
