@@ -33,29 +33,12 @@ namespace SharpDX.Direct3D10
         /// </summary>
         /// <param name="device">The device.</param>
         /// <param name="effectByteCode">The effect byte code.</param>
-        public Effect(Device device, ShaderBytecode effectByteCode) : this(device, effectByteCode, EffectFlags.None, null)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Effect"/> class.
-        /// </summary>
-        /// <param name="device">The device.</param>
-        /// <param name="effectByteCode">The effect byte code.</param>
-        /// <param name="fxFlags">Effect compile options</param>
-        public Effect(Device device, ShaderBytecode effectByteCode, EffectFlags fxFlags) : this(device, effectByteCode, fxFlags, null) {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Effect"/> class.
-        /// </summary>
-        /// <param name="device">The device.</param>
-        /// <param name="effectByteCode">The effect byte code.</param>
         /// <param name="fxFlags">Effect compile options</param>
         /// <param name="effectPool">Optional. A reference to an memory space for effect variables that are shared across effects (see <see cref="SharpDX.Direct3D10.EffectPool"/>).</param>
-        public Effect(Device device, ShaderBytecode effectByteCode, EffectFlags fxFlags, EffectPool effectPool) 
+        public unsafe Effect(Device device, byte[] effectByteCode, EffectFlags fxFlags = EffectFlags.None, EffectPool effectPool = null) 
         {
-            D3D10.CreateEffectFromMemory(effectByteCode.BufferPointer, effectByteCode.BufferSize, (int)fxFlags, device, effectPool, this);
+            fixed (void* ptr = effectByteCode)
+                D3D10.CreateEffectFromMemory((IntPtr)ptr, effectByteCode.Length, (int)fxFlags, device, effectPool, this);
         }
   }
 }

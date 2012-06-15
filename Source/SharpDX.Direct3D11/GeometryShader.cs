@@ -18,9 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-#if !WIN8METRO
-using SharpDX.D3DCompiler;
-#endif
+
 namespace SharpDX.Direct3D11
 {
     public partial class GeometryShader
@@ -30,18 +28,8 @@ namespace SharpDX.Direct3D11
         /// </summary>
         /// <param name = "device">The device used to create the shader.</param>
         /// <param name = "shaderBytecode">The compiled shader bytecode.</param>
-        public GeometryShader(Device device, byte[] shaderBytecode)
-            : this(device, shaderBytecode, null)
-        {
-        }
-
-        /// <summary>
-        ///   Initializes a new instance of the <see cref = "T:SharpDX.Direct3D11.GeometryShader" /> class.
-        /// </summary>
-        /// <param name = "device">The device used to create the shader.</param>
-        /// <param name = "shaderBytecode">The compiled shader bytecode.</param>
         /// <param name = "linkage">A dynamic class linkage interface.</param>
-        public GeometryShader(Device device, byte[] shaderBytecode, ClassLinkage linkage)
+        public GeometryShader(Device device, byte[] shaderBytecode, ClassLinkage linkage = null)
             : base(IntPtr.Zero)
         {
             if (shaderBytecode == null) throw new ArgumentNullException("shaderBytecode", "ShaderBytecode cannot be null");
@@ -61,23 +49,9 @@ namespace SharpDX.Direct3D11
         /// <param name = "elements">An array of <see cref = "T:SharpDX.Direct3D11.StreamOutputElement" /> instances describing the layout of the output buffers.</param>
         /// <param name = "bufferedStrides">An array of buffer strides; each stride is the size of an element for that buffer.</param>
         /// <param name = "rasterizedStream">The index number of the stream to be sent to the rasterizer stage. Set to NoRasterizedStream if no stream is to be rasterized.</param>
-        public GeometryShader(Device device, byte[] shaderBytecode, StreamOutputElement[] elements,
-                              int[] bufferedStrides, int rasterizedStream)
-            : this(device, shaderBytecode, elements, bufferedStrides, rasterizedStream, null)
-        {
-        }
-
-        /// <summary>
-        ///   Initializes a new instance of the <see cref = "T:SharpDX.Direct3D11.GeometryShader" /> class.
-        /// </summary>
-        /// <param name = "device">The device used to create the shader.</param>
-        /// <param name = "shaderBytecode">The compiled shader bytecode.</param>
-        /// <param name = "elements">An array of <see cref = "T:SharpDX.Direct3D11.StreamOutputElement" /> instances describing the layout of the output buffers.</param>
-        /// <param name = "bufferedStrides">An array of buffer strides; each stride is the size of an element for that buffer.</param>
-        /// <param name = "rasterizedStream">The index number of the stream to be sent to the rasterizer stage. Set to NoRasterizedStream if no stream is to be rasterized.</param>
         /// <param name = "linkage">A dynamic class linkage interface.</param>
         public GeometryShader(Device device, byte[] shaderBytecode, StreamOutputElement[] elements,
-                              int[] bufferedStrides, int rasterizedStream, ClassLinkage linkage)
+                              int[] bufferedStrides, int rasterizedStream, ClassLinkage linkage = null)
             : base(IntPtr.Zero)
         {
             unsafe
@@ -88,64 +62,5 @@ namespace SharpDX.Direct3D11
                                                                 linkage, this);
             }
         }
-#if !WIN8METRO
-                /// <summary>
-        ///   Initializes a new instance of the <see cref = "T:SharpDX.Direct3D11.GeometryShader" /> class.
-        /// </summary>
-        /// <param name = "device">The device used to create the shader.</param>
-        /// <param name = "shaderBytecode">The compiled shader bytecode.</param>
-        public GeometryShader(Device device, ShaderBytecode shaderBytecode)
-            : this(device, shaderBytecode, null)
-        {
-        }
-
-        /// <summary>
-        ///   Initializes a new instance of the <see cref = "T:SharpDX.Direct3D11.GeometryShader" /> class.
-        /// </summary>
-        /// <param name = "device">The device used to create the shader.</param>
-        /// <param name = "shaderBytecode">The compiled shader bytecode.</param>
-        /// <param name = "linkage">A dynamic class linkage interface.</param>
-        public GeometryShader(Device device, ShaderBytecode shaderBytecode, ClassLinkage linkage)
-            : base(IntPtr.Zero)
-        {
-            if (shaderBytecode == null) throw new ArgumentNullException("shaderBytecode", "ShaderBytecode cannot be null");
-
-            device.CreateGeometryShader(shaderBytecode.BufferPointer,
-                                        shaderBytecode.BufferSize, linkage, this);
-        }
-
-        /// <summary>
-        ///   Initializes a new instance of the <see cref = "T:SharpDX.Direct3D11.GeometryShader" /> class.
-        /// </summary>
-        /// <param name = "device">The device used to create the shader.</param>
-        /// <param name = "shaderBytecode">The compiled shader bytecode.</param>
-        /// <param name = "elements">An array of <see cref = "T:SharpDX.Direct3D11.StreamOutputElement" /> instances describing the layout of the output buffers.</param>
-        /// <param name = "bufferedStrides">An array of buffer strides; each stride is the size of an element for that buffer.</param>
-        /// <param name = "rasterizedStream">The index number of the stream to be sent to the rasterizer stage. Set to NoRasterizedStream if no stream is to be rasterized.</param>
-        public GeometryShader(Device device, ShaderBytecode shaderBytecode, StreamOutputElement[] elements,
-                              int[] bufferedStrides, int rasterizedStream)
-            : this(device, shaderBytecode, elements, bufferedStrides, rasterizedStream, null)
-        {
-        }
-
-        /// <summary>
-        ///   Initializes a new instance of the <see cref = "T:SharpDX.Direct3D11.GeometryShader" /> class.
-        /// </summary>
-        /// <param name = "device">The device used to create the shader.</param>
-        /// <param name = "shaderBytecode">The compiled shader bytecode.</param>
-        /// <param name = "elements">An array of <see cref = "T:SharpDX.Direct3D11.StreamOutputElement" /> instances describing the layout of the output buffers.</param>
-        /// <param name = "bufferedStrides">An array of buffer strides; each stride is the size of an element for that buffer.</param>
-        /// <param name = "rasterizedStream">The index number of the stream to be sent to the rasterizer stage. Set to NoRasterizedStream if no stream is to be rasterized.</param>
-        /// <param name = "linkage">A dynamic class linkage interface.</param>
-        public GeometryShader(Device device, ShaderBytecode shaderBytecode, StreamOutputElement[] elements,
-                              int[] bufferedStrides, int rasterizedStream, ClassLinkage linkage) : base(IntPtr.Zero)
-        {
-            device.CreateGeometryShaderWithStreamOutput(shaderBytecode.BufferPointer,
-                                                        shaderBytecode.BufferSize, elements, elements.Length,
-                                                        bufferedStrides, bufferedStrides.Length, rasterizedStream,
-                                                        linkage, this);
-        }
-#endif
-
     }
 }

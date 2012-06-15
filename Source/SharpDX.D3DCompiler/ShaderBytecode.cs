@@ -56,11 +56,8 @@ namespace SharpDX.D3DCompiler
     ///   Represents the compiled bytecode of a shader or effect.
     /// </summary>
     /// <unmanaged>Blob</unmanaged>
-    public class ShaderBytecode : DisposeBase
+    public class ShaderBytecode : IDisposable
     {
-        private bool isOwner;
-        private Blob blob;
-
         /// <summary>
         /// Use this ShaderFlags constant in order to compile an effect with old D3D10CompileEffectFromMemory.
         /// </summary>
@@ -72,7 +69,8 @@ namespace SharpDX.D3DCompiler
         /// <param name = "data">A <see cref = "T:SharpDX.DataStream" /> containing the compiled bytecode.</param>
         public ShaderBytecode(DataStream data)
         {
-            CreateFromPointer(data.DataPointer, (int) data.Length);
+            Data = new byte[data.Length];
+            data.Read(Data, 0, Data.Length);
         }
 
         /// <summary>
@@ -85,7 +83,7 @@ namespace SharpDX.D3DCompiler
 
             byte[] localBuffer = new byte[size];
             data.Read(localBuffer, 0, size);
-            CreateFromBuffer(localBuffer);
+            Data = localBuffer;
         }
 
         /// <summary>
@@ -94,7 +92,7 @@ namespace SharpDX.D3DCompiler
         /// <param name="buffer">The buffer.</param>
         public ShaderBytecode(byte[] buffer)
         {
-            CreateFromBuffer(buffer);
+            Data = buffer;
         }
 
         /// <summary>
@@ -104,8 +102,8 @@ namespace SharpDX.D3DCompiler
         /// <param name = "sizeInBytes">size of the bytecode</param>
         public ShaderBytecode(IntPtr buffer, int sizeInBytes)
         {
-            BufferPointer = buffer;
-            BufferSize = sizeInBytes;
+            Data = new byte[sizeInBytes];
+            Utilities.Read(buffer, Data, 0, Data.Length);
         }
 
         /// <summary>
@@ -114,41 +112,15 @@ namespace SharpDX.D3DCompiler
         /// <param name="blob">The BLOB.</param>
         protected internal ShaderBytecode(Blob blob)
         {
-            this.blob = blob;
-            BufferPointer = blob.BufferPointer;
-            BufferSize = blob.BufferSize;
-        }
-
-        private void CreateFromBuffer(byte[] buffer)
-        {
-            unsafe
-            {
-                fixed (void* pBuffer = &buffer[0])
-                    CreateFromPointer((IntPtr) pBuffer, buffer.Length);
-            }
-        }
-
-        private void CreateFromPointer(IntPtr buffer, int sizeInBytes)
-        {
-            // D3DCommon.CreateBlob(sizeInBytes, this);
-            BufferPointer = Marshal.AllocHGlobal(sizeInBytes);
-            BufferSize = sizeInBytes;
-            isOwner = true;
-            Utilities.CopyMemory(BufferPointer, buffer, sizeInBytes);
+            Data = new byte[blob.BufferSize];
+            Utilities.Read(blob.BufferPointer, Data, 0, Data.Length);
+            blob.Dispose();
         }
 
         /// <summary>
         /// Gets the buffer pointer.
         /// </summary>
-        public System.IntPtr BufferPointer { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the size of the buffer.
-        /// </summary>
-        /// <value>
-        /// The size of the buffer.
-        /// </value>
-        public SharpDX.PointerSize BufferSize { get; set; }
+        public byte[] Data { get; private set; }
 
 #if WIN8METRO
         /// <summary>
@@ -721,17 +693,29 @@ namespace SharpDX.D3DCompiler
         /// <unmanaged>HRESULT D3DCompressShaders([In] int uNumShaders,[In, Buffer] D3D_SHADER_DATA* pShaderData,[In] int uFlags,[Out] ID3DBlob** ppCompressedData)</unmanaged>
         public static ShaderBytecode Compress(ShaderBytecode[] shaderBytecodes)
         {
-            // D3D.CompressShaders()
-            ShaderData[] temp = new ShaderData[shaderBytecodes.Length];
-            for (int i = 0; i < temp.Length; i++)
-            {
-                temp[i] = new ShaderData {BytecodePtr = shaderBytecodes[i].BufferPointer, BytecodeLength = shaderBytecodes[i].BufferSize};
-            }
             Blob blob;
-            D3D.CompressShaders(shaderBytecodes.Length, temp, 1, out blob);
-            var result = new ShaderBytecode(blob);
-            result.IsCompressed = true;
-            return result;
+            // D3D.CompressShaders()
+            var temp = new ShaderData[shaderBytecodes.Length];
+            var handles = new GCHandle[shaderBytecodes.Length];
+            try
+            {
+                for (int i = 0; i < temp.Length; i++)
+                {
+                    handles[i] = GCHandle.Alloc(shaderBytecodes[i].Data, GCHandleType.Pinned);
+
+                    temp[i] = new ShaderData
+                                  {
+                                      BytecodePtr = handles[i].AddrOfPinnedObject(),
+                                      BytecodeLength = shaderBytecodes[i].Data.Length
+                                  };
+                }
+                D3D.CompressShaders(shaderBytecodes.Length, temp, 1, out blob);
+            } finally
+            {
+                foreach (var gcHandle in handles)
+                    gcHandle.Free();
+            }
+            return new ShaderBytecode(blob) {IsCompressed = true};
         }
 
         /// <summary>	
@@ -739,14 +723,15 @@ namespace SharpDX.D3DCompiler
         /// </summary>	
         /// <returns>Returns an array of decompresss shader bytecode.</returns>	
         /// <unmanaged>HRESULT D3DDecompressShaders([In, Buffer] const void* pSrcData,[In] SIZE_T SrcDataSize,[In] unsigned int uNumShaders,[In] unsigned int uStartIndex,[In, Buffer, Optional] unsigned int* pIndices,[In] unsigned int uFlags,[Out, Buffer] ID3D10Blob** ppShaders,[Out, Optional] unsigned int* pTotalShaders)</unmanaged>	
-        public ShaderBytecode[] Decompress()
+        public unsafe ShaderBytecode[] Decompress()
         {
             //First we call D3D.DecompressShaders with empty parameters to get the number of shaders in the compressed byte code (totalShadersRef)
             //I set shadersBlobs to an array of one null blob just to make shadersOut_ parameter in DecompressShaders function valid 
             //which dosn't seem to accept zero pointer, I didn't find any other work around.
-            Blob[] shadersBlobs = new Blob[1];
+            var shadersBlobs = new Blob[1];
             int totalShadersRef;
-            D3D.DecompressShaders(BufferPointer, BufferSize, 0, 0, null, 0, shadersBlobs, out totalShadersRef);
+            fixed(void* bufferPtr = Data)
+                D3D.DecompressShaders((IntPtr)bufferPtr, Data.Length, 0, 0, null, 0, shadersBlobs, out totalShadersRef);
 
             //Then we call D3D.DecompressShaders again and we know how much shaders we will get
             return Decompress(0, totalShadersRef);
@@ -759,13 +744,14 @@ namespace SharpDX.D3DCompiler
         /// <param name="startIndex"><para>The index of the first shader to decompress.</para></param>	
         /// <returns>Returns an array of decompresss shader bytecode.</returns>	
         /// <unmanaged>HRESULT D3DDecompressShaders([In, Buffer] const void* pSrcData,[In] SIZE_T SrcDataSize,[In] unsigned int uNumShaders,[In] unsigned int uStartIndex,[In, Buffer, Optional] unsigned int* pIndices,[In] unsigned int uFlags,[Out, Buffer] ID3D10Blob** ppShaders,[Out, Optional] unsigned int* pTotalShaders)</unmanaged>	
-        public ShaderBytecode[] Decompress(int startIndex, int numShaders)
+        public unsafe ShaderBytecode[] Decompress(int startIndex, int numShaders)
         {
             if (numShaders == 0)
                 return null;
             var shadersBlobs = new Blob[numShaders];
             int totalShadersRef;
-            D3D.DecompressShaders(BufferPointer, BufferSize, numShaders, startIndex, null, 0, shadersBlobs, out totalShadersRef);
+            fixed (void* bufferPtr = Data)
+                D3D.DecompressShaders((IntPtr)bufferPtr, Data.Length, numShaders, startIndex, null, 0, shadersBlobs, out totalShadersRef);
 
             //The size of shadersBlobs will not change
             //if the compressed shader contains less than requested in numShaders, null entries will apear in the result array
@@ -783,13 +769,14 @@ namespace SharpDX.D3DCompiler
         /// <param name="indices"><para>An array of indexes that represent the shaders to decompress.</para></param>	
         /// <returns>Returns an array of decompresss shader bytecode.</returns>	
         /// <unmanaged>HRESULT D3DDecompressShaders([In, Buffer] const void* pSrcData,[In] SIZE_T SrcDataSize,[In] unsigned int uNumShaders,[In] unsigned int uStartIndex,[In, Buffer, Optional] unsigned int* pIndices,[In] unsigned int uFlags,[Out, Buffer] ID3D10Blob** ppShaders,[Out, Optional] unsigned int* pTotalShaders)</unmanaged>	
-        public ShaderBytecode[] Decompress(int[] indices)
+        public unsafe ShaderBytecode[] Decompress(int[] indices)
         {
             if (indices.Length == 0)
                 return null;
             var shadersBlobs = new Blob[indices.Length];
             int totalShadersRef;
-            D3D.DecompressShaders(BufferPointer, BufferSize, indices.Length, 0, indices, 0, shadersBlobs, out totalShadersRef);
+            fixed (void* bufferPtr = Data)
+                D3D.DecompressShaders((IntPtr)bufferPtr, Data.Length, indices.Length, 0, indices, 0, shadersBlobs, out totalShadersRef);
 
             //The size of shadersBlobs will not change
             //if the compressed shader contains less than requested in numShaders, null entries will apear in the result array
@@ -838,10 +825,11 @@ namespace SharpDX.D3DCompiler
         /// <param name = "flags">Flags affecting the output of the disassembly.</param>
         /// <param name = "comments">Commenting information to embed in the disassembly.</param>
         /// <returns>The textual source of the shader or effect.</returns>
-        public string Disassemble(DisassemblyFlags flags, string comments)
+        public unsafe string Disassemble(DisassemblyFlags flags, string comments)
         {
             Blob output;
-            D3D.Disassemble(BufferPointer, BufferSize, flags, comments, out output);
+            fixed (void* bufferPtr = Data)
+                D3D.Disassemble((IntPtr)bufferPtr, Data.Length, flags, comments, out output);
             return Utilities.BlobToString(output);
         }
 
@@ -856,10 +844,11 @@ namespace SharpDX.D3DCompiler
         /// <param name="finishByteOffsetRef">The finish byte offset ref.</param>
         /// <returns>The textual source of the shader or effect.</returns>
         /// <unmanaged>HRESULT D3DDisassembleRegion([In, Buffer] const void* pSrcData,[In] SIZE_T SrcDataSize,[In] unsigned int Flags,[In, Optional] const char* szComments,[In] SIZE_T StartByteOffset,[In] SIZE_T NumInsts,[Out, Optional] SIZE_T* pFinishByteOffset,[Out] ID3D10Blob** ppDisassembly)</unmanaged>	
-        public string DisassembleRegion(DisassemblyFlags flags, string comments, PointerSize startByteOffset, PointerSize numberOfInstructions, out SharpDX.PointerSize finishByteOffsetRef)
+        public unsafe string DisassembleRegion(DisassemblyFlags flags, string comments, PointerSize startByteOffset, PointerSize numberOfInstructions, out SharpDX.PointerSize finishByteOffsetRef)
         {
             Blob output;
-            D3D.DisassembleRegion(BufferPointer, BufferSize, (int)flags, comments, startByteOffset, numberOfInstructions, out finishByteOffsetRef, out output);
+            fixed (void* bufferPtr = Data)
+                D3D.DisassembleRegion((IntPtr)bufferPtr, Data.Length, (int)flags, comments, startByteOffset, numberOfInstructions, out finishByteOffsetRef, out output);
             return Utilities.BlobToString(output);
         }
 
@@ -873,9 +862,10 @@ namespace SharpDX.D3DCompiler
         /// <param name="totalInstsRef">The total insts ref.</param>
         /// <returns>An offset</returns>
         /// <unmanaged>HRESULT D3DGetTraceInstructionOffsets([In, Buffer] const void* pSrcData,[In] SIZE_T SrcDataSize,[In] unsigned int Flags,[In] SIZE_T StartInstIndex,[In] SIZE_T NumInsts,[Out, Buffer, Optional] SIZE_T* pOffsets,[Out, Optional] SIZE_T* pTotalInsts)</unmanaged>
-        public PointerSize GetTraceInstructionOffsets(bool isIncludingNonExecutableCode, PointerSize startInstIndex, PointerSize numInsts, out SharpDX.PointerSize totalInstsRef)
+        public unsafe PointerSize GetTraceInstructionOffsets(bool isIncludingNonExecutableCode, PointerSize startInstIndex, PointerSize numInsts, out SharpDX.PointerSize totalInstsRef)
         {
-            return D3D.GetTraceInstructionOffsets(BufferPointer, BufferSize, isIncludingNonExecutableCode ? 1 : 0, startInstIndex, numInsts, out totalInstsRef);
+            fixed (void* bufferPtr = Data)
+                return D3D.GetTraceInstructionOffsets((IntPtr)bufferPtr, Data.Length, isIncludingNonExecutableCode ? 1 : 0, startInstIndex, numInsts, out totalInstsRef);
         }
 #endif
 
@@ -888,10 +878,11 @@ namespace SharpDX.D3DCompiler
         /// <param name="part">A <see cref="SharpDX.D3DCompiler.ShaderBytecodePart"/>-typed value that specifies the part of the buffer to retrieve. </param>
         /// <returns>Returns the extracted part. </returns>
         /// <unmanaged>HRESULT D3DGetBlobPart([In, Buffer] const void* pSrcData,[In] SIZE_T SrcDataSize,[In] D3D_BLOB_PART Part,[In] int Flags,[Out] ID3DBlob** ppPart)</unmanaged>
-        public ShaderBytecode GetPart(ShaderBytecodePart part)
+        public unsafe ShaderBytecode GetPart(ShaderBytecodePart part)
         {
             Blob blob;
-            D3D.GetBlobPart(this.BufferPointer, this.BufferSize, part, 0, out blob);
+            fixed (void* bufferPtr = Data)
+                D3D.GetBlobPart((IntPtr)bufferPtr, Data.Length, part, 0, out blob);
             return new ShaderBytecode(blob);
         }
 
@@ -903,10 +894,11 @@ namespace SharpDX.D3DCompiler
         /// <param name="partData">The part data.</param>
         /// <returns>The new shader in which the new part data is set.</returns>
         /// <unmanaged>HRESULT D3DSetBlobPart([In, Buffer] const void* pSrcData,[In] SIZE_T SrcDataSize,[In] D3D_BLOB_PART Part,[In] unsigned int Flags,[In, Buffer] const void* pPart,[In] SIZE_T PartSize,[Out] ID3D10Blob** ppNewShader)</unmanaged>
-        public ShaderBytecode SetPart(ShaderBytecodePart part, DataStream partData)
+        public unsafe ShaderBytecode SetPart(ShaderBytecodePart part, DataStream partData)
         {
             Blob blob;
-            D3D.SetBlobPart(BufferPointer, BufferSize, part, 0, partData.DataPointer, (int)partData.Length, out blob);
+            fixed (void* bufferPtr = Data)
+                D3D.SetBlobPart((IntPtr)bufferPtr, Data.Length, part, 0, partData.DataPointer, (int)partData.Length, out blob);
             return new ShaderBytecode(blob);
         }
 #endif
@@ -928,22 +920,9 @@ namespace SharpDX.D3DCompiler
         /// <param name="stream">The stream.</param>
         public void Save(Stream stream)
         {
-            if (BufferSize == 0) return;
+            if (Data.Length == 0) return;
 
-            var buffer = new byte[BufferSize];
-            Utilities.Read(BufferPointer, buffer, 0, buffer.Length);
-            stream.Write(buffer, 0, buffer.Length);
-        }
-
-        /// <summary>
-        /// Froms the pointer.
-        /// </summary>
-        /// <param name="pointer">The pointer.</param>
-        /// <returns></returns>
-        public static ShaderBytecode FromPointer(IntPtr pointer)
-        {
-            // TODO: check that pointer is a blob?
-            return new ShaderBytecode(new Blob(pointer));
+            stream.Write(Data, 0, Data.Length);
         }
 
         /// <summary>
@@ -1129,20 +1108,23 @@ namespace SharpDX.D3DCompiler
         /// <param name = "flags">Options specifying what to remove from the shader.</param>
         /// <returns>A string containing any errors that may have occurred.</returns>
         /// <unmanaged>HRESULT D3DStripShader([In, Buffer] const void* pShaderBytecode,[In] SIZE_T BytecodeLength,[In] D3DCOMPILER_STRIP_FLAGS uStripFlags,[Out] ID3D10Blob** ppStrippedBlob)</unmanaged>
-        public ShaderBytecode Strip(StripFlags flags)
+        public unsafe ShaderBytecode Strip(StripFlags flags)
         {
             Blob blob;
-            if (D3D.StripShader(BufferPointer, BufferSize, flags, out blob).Failure)
+            fixed (void* bufferPtr = Data)
+            if (D3D.StripShader((IntPtr)bufferPtr, Data.Length, flags, out blob).Failure)
                 return null;
             return new ShaderBytecode(blob);
         }
 
         /// <summary>
-        ///   Gets the raw data of the compiled bytecode.
+        /// Cast this <see cref="ShaderBytecode"/> to the underlying byte buffer.
         /// </summary>
-        public DataStream Data
+        /// <param name="shaderBytecode"></param>
+        /// <returns>A byte buffer</returns>
+        public static implicit operator byte[](ShaderBytecode shaderBytecode)
         {
-            get { return new DataStream(BufferPointer, BufferSize, true, true); }
+            return shaderBytecode.Data;
         }
 
         /// <summary>
@@ -1184,22 +1166,9 @@ namespace SharpDX.D3DCompiler
             return macroArray;
         }
 
-        protected override void Dispose(bool disposing)
+        public void Dispose()
         {
-            if (disposing)
-            {
-                if (blob != null)
-                {
-                    blob.Dispose();
-                    blob = null;
-                }
-            }
-            if (isOwner && BufferPointer != IntPtr.Zero)
-            {
-                Marshal.FreeHGlobal(BufferPointer);
-                BufferPointer = IntPtr.Zero;
-                BufferSize = 0;
-            }
+            // Just to keep backward compatibility
         }
     }
 }

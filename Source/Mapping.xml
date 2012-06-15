@@ -85,6 +85,9 @@
     <file>SharpDX.Direct3D10\Mapping.xml</file>
   </ifndef>    
   <file>SharpDX.Direct3D11\Mapping.xml</file>
+  <ifndef name="WIN8METRO">
+    <file>SharpDX.Direct3D11.Effects\Mapping.xml</file>
+  </ifndef>
   <file>SharpDX.Direct2D1\Mapping.xml</file>
   <ifndef name="DIRECTX11_1">
     <file>SharpDX.DirectInput\Mapping.xml</file>

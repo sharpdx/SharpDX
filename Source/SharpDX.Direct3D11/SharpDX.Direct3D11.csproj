@@ -43,24 +43,6 @@
     <Compile Include="DeviceContext.OutputMergerStage.cs" />
     <Compile Include="DeviceContext.RasterizerStage.cs" />
     <Compile Include="DomainShader.cs" />
-    <Compile Include="Effect.cs" />
-    <Compile Include="EffectBlendVariable.cs" />
-    <Compile Include="EffectDepthStencilVariable.cs" />
-    <Compile Include="EffectDepthStencilViewVariable.cs" />
-    <Compile Include="EffectMatrixVariable.cs" />
-    <Compile Include="EffectPass.cs" />
-    <Compile Include="EffectPassDescription.cs" />
-    <Compile Include="EffectPassShaderDescription.cs" />
-    <Compile Include="EffectRasterizerVariable.cs" />
-    <Compile Include="EffectRenderTargetViewVariable.cs" />
-    <Compile Include="EffectSamplerVariable.cs" />
-    <Compile Include="EffectScalarVariable.cs" />
-    <Compile Include="EffectShaderDescription.cs" />
-    <Compile Include="EffectShaderResourceVariable.cs" />
-    <Compile Include="EffectStringVariable.cs" />
-    <Compile Include="EffectUnorderedAccessViewVariable.cs" />
-    <Compile Include="EffectVariable.cs" />
-    <Compile Include="EffectVectorVariable.cs" />
     <Compile Include="FastFourierTransform.cs" />
     <Compile Include="Generated\Enumerations.cs" />
     <Compile Include="Generated\Functions.cs" />
@@ -99,26 +81,6 @@
     <Compile Include="Viewport.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_1_effects_arm.dll" Condition=" '$(SharpDXWin8)' == 'false'">
-      <Link>sharpdx_direct3d11_1_effects_arm.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_1_effects_x64.dll" Condition=" '$(SharpDXWin8)' == 'false'">
-      <Link>sharpdx_direct3d11_1_effects_x64.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_1_effects_x86.dll" Condition=" '$(SharpDXWin8)' == 'false'">
-      <Link>sharpdx_direct3d11_1_effects_x86.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_effects_x64.dll" Condition=" '$(SharpDXWin8)' == 'false'">
-      <Link>sharpdx_direct3d11_effects_x64.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\External\Effects11\Bin\sharpdx_direct3d11_effects_x86.dll" Condition=" '$(SharpDXWin8)' == 'false'">
-      <Link>sharpdx_direct3d11_effects_x86.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Include="Documentation\CodeComments.xml" />
     <None Include="Mapping.xml">
       <SubType>Designer</SubType>
@@ -128,10 +90,6 @@
     <None Include="SharpDX.Direct3D11.nuspec" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpDX.D3DCompiler\SharpDX.D3DCompiler.csproj" Condition=" '$(SharpDXWin8)' == 'false'">
-      <Project>{361d3f81-a48a-47f2-80df-ca4f9536cb4e}</Project>
-      <Name>SharpDX.D3DCompiler</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SharpDX.DXGI\SharpDX.DXGI.csproj">
       <Project>{3fc6de77-b412-4101-9e64-6b9aa831179b}</Project>
       <Name>SharpDX.DXGI</Name>

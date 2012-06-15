@@ -75,6 +75,10 @@
       <Project>{361D3F81-A48A-47F2-80DF-CA4F9536CB4E}</Project>
       <Name>SharpDX.D3DCompiler</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Source\SharpDX.Direct3D11.Effects\SharpDX.Direct3D11.Effects.csproj">
+      <Project>{bbb50a46-3291-4c62-b884-d1ab64f71ea5}</Project>
+      <Name>SharpDX.Direct3D11.Effects</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Source\SharpDX.Direct3D11\SharpDX.Direct3D11.csproj">
       <Project>{736DFB52-1AFE-4EFF-9710-89046AB5B1F9}</Project>
       <Name>SharpDX.Direct3D11</Name>

@@ -19,9 +19,6 @@
 // THE SOFTWARE.
 using System;
 
-#if !WIN8METRO
-using SharpDX.D3DCompiler;
-#endif
 namespace SharpDX.Direct3D11
 {
     public partial class HullShader
@@ -31,18 +28,8 @@ namespace SharpDX.Direct3D11
         /// </summary>
         /// <param name = "device">The device used to create the shader.</param>
         /// <param name = "shaderBytecode">The compiled shader bytecode.</param>
-        public HullShader(Device device, byte[] shaderBytecode)
-            : this(device, shaderBytecode, null)
-        {
-        }
-
-        /// <summary>
-        ///   Initializes a new instance of the <see cref = "T:SharpDX.Direct3D11.HullShader" /> class.
-        /// </summary>
-        /// <param name = "device">The device used to create the shader.</param>
-        /// <param name = "shaderBytecode">The compiled shader bytecode.</param>
         /// <param name = "linkage">A dynamic class linkage interface.</param>
-        public HullShader(Device device, byte[] shaderBytecode, ClassLinkage linkage)
+        public HullShader(Device device, byte[] shaderBytecode, ClassLinkage linkage = null)
             : base(IntPtr.Zero)
         {
             if (shaderBytecode == null) throw new ArgumentNullException("shaderBytecode", "ShaderBytecode cannot be null");
@@ -53,32 +40,5 @@ namespace SharpDX.Direct3D11
                     device.CreateHullShader((IntPtr)pBuffer, shaderBytecode.Length, linkage, this);
             }
         }
-
-#if !WIN8METRO
-        /// <summary>
-        ///   Initializes a new instance of the <see cref = "T:SharpDX.Direct3D11.HullShader" /> class.
-        /// </summary>
-        /// <param name = "device">The device used to create the shader.</param>
-        /// <param name = "shaderBytecode">The compiled shader bytecode.</param>
-        public HullShader(Device device, ShaderBytecode shaderBytecode)
-            : this(device, shaderBytecode, null)
-        {
-        }
-
-        /// <summary>
-        ///   Initializes a new instance of the <see cref = "T:SharpDX.Direct3D11.HullShader" /> class.
-        /// </summary>
-        /// <param name = "device">The device used to create the shader.</param>
-        /// <param name = "shaderBytecode">The compiled shader bytecode.</param>
-        /// <param name = "linkage">A dynamic class linkage interface.</param>
-        public HullShader(Device device, ShaderBytecode shaderBytecode, ClassLinkage linkage)
-            : base(IntPtr.Zero)
-        {
-            if (shaderBytecode == null) throw new ArgumentNullException("shaderBytecode", "ShaderBytecode cannot be null");
-
-            device.CreateHullShader(shaderBytecode.BufferPointer,
-                                    shaderBytecode.BufferSize, linkage, this);
-        }
-#endif
     }
 }

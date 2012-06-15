@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using SharpDX.D3DCompiler;
 
 namespace SharpDX.Direct3D10
 {
@@ -29,11 +28,11 @@ namespace SharpDX.Direct3D10
         /// </summary>
         /// <param name = "device">The device used to create the shader.</param>
         /// <param name = "shaderBytecode">The compiled shader bytecode.</param>
-        public PixelShader(Device device, ShaderBytecode shaderBytecode)
+        public unsafe PixelShader(Device device, byte[] shaderBytecode)
             : base(IntPtr.Zero)
         {
-            device.CreatePixelShader(shaderBytecode.BufferPointer,
-                                     shaderBytecode.BufferSize, this);
+            fixed (void* ptr = shaderBytecode)
+                device.CreatePixelShader((IntPtr)ptr, shaderBytecode.Length, this);
         }
     }
 }

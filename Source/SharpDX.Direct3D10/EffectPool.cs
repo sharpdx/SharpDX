@@ -29,19 +29,11 @@ namespace SharpDX.Direct3D10
         /// </summary>
         /// <param name="device">The device.</param>
         /// <param name="effectByteCode">The effect byte code.</param>
-        public EffectPool(Device device, ShaderBytecode effectByteCode) : this(device, effectByteCode, EffectFlags.None)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EffectPool"/> class.
-        /// </summary>
-        /// <param name="device">The device.</param>
-        /// <param name="effectByteCode">The effect byte code.</param>
         /// <param name="fxFlags">Effect compile options</param>
-        public EffectPool(Device device, ShaderBytecode effectByteCode, EffectFlags fxFlags) 
+        public unsafe EffectPool(Device device, byte[] effectByteCode, EffectFlags fxFlags = EffectFlags.None) 
         {
-            D3D10.CreateEffectPoolFromMemory(effectByteCode.BufferPointer, effectByteCode.BufferSize, (int)fxFlags, device, this);
+            fixed (void* ptr = effectByteCode)
+                D3D10.CreateEffectPoolFromMemory((IntPtr)ptr, effectByteCode.Length, (int)fxFlags, device, this);
         }
     }
 }

@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using SharpDX.D3DCompiler;
 
 namespace SharpDX.Direct3D10
 {
@@ -29,11 +28,11 @@ namespace SharpDX.Direct3D10
         /// </summary>
         /// <param name = "device">The device used to create the shader.</param>
         /// <param name = "shaderBytecode">The compiled shader bytecode.</param>
-        public GeometryShader(Device device, ShaderBytecode shaderBytecode)
+        public unsafe GeometryShader(Device device, byte[] shaderBytecode)
             : base(IntPtr.Zero)
         {
-            device.CreateGeometryShader(shaderBytecode.BufferPointer,
-                                        shaderBytecode.BufferSize, this);
+            fixed (void* ptr = shaderBytecode)
+                device.CreateGeometryShader((IntPtr)ptr, shaderBytecode.Length, this);
         }
 
         /// <summary>
@@ -43,11 +42,11 @@ namespace SharpDX.Direct3D10
         /// <param name = "shaderBytecode">The compiled shader bytecode.</param>
         /// <param name = "elements">An array of <see cref = "T:SharpDX.Direct3D10.StreamOutputElement" /> instances describing the layout of the output buffers.</param>
         /// <param name = "outputStreamStride">The size, in bytes, of each element in the array pointed to by pSODeclaration. This parameter is only used when the output slot is 0 for all entries in pSODeclaration.</param>
-        public GeometryShader(Device device, ShaderBytecode shaderBytecode, StreamOutputElement[] elements, int outputStreamStride)
+        public unsafe GeometryShader(Device device, byte[] shaderBytecode, StreamOutputElement[] elements, int outputStreamStride)
             : base(IntPtr.Zero)
         {
-            device.CreateGeometryShaderWithStreamOutput(shaderBytecode.BufferPointer,
-                                                        shaderBytecode.BufferSize, elements, elements.Length, outputStreamStride, this);
+            fixed (void* ptr = shaderBytecode)
+                device.CreateGeometryShaderWithStreamOutput((IntPtr)ptr, shaderBytecode.Length, elements, elements.Length, outputStreamStride, this);
         }
     }
 }

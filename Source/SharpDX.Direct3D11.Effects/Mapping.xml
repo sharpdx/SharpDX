@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+-->
+<config id="sharpdx-direct3d11-effects" xmlns="urn:SharpGen.Config">
+  <depends>sharpdx</depends>
+  <depends>sharpdx-dxgi</depends>
+  <depends>sharpdx-d3dcompiler</depends>
+  <depends>sharpdx-direct3d11</depends>
+
+  <assembly>SharpDX.Direct3D11.Effects</assembly>
+  <namespace>SharpDX.Direct3D11</namespace>
+
+  <!-- Add Effects11 include directory-->
+  <include-dir>$(THIS_CONFIG_PATH)\..\..\External\Effects11\Inc</include-dir>
+  
+  <include-prolog>
+    #define D3D11_NO_HELPERS
+  </include-prolog>
+  
+  <!-- D3D11 includes -->
+  <ifndef name="WIN8METRO">
+    <include file="d3dx11effect.h" attach="true" />
+  </ifndef>
+
+  <naming />
+
+  <context-set id="d3d11-effects-all">
+    <context>sharpdx-direct3d11-effects</context>
+    <context>sharpdx-direct3d11-effects-ext</context>
+    <ifndef name="WIN8METRO">
+      <context>d3dx11effect</context>
+    </ifndef>
+  </context-set>
+
+  <!-- D3D11 extensions -->
+  <extension>
+    <context id="d3d11-effects-all"/>
+
+    <create-cpp enum="D3DX11_EFFECT_VARIABLE_FLAGS" macro="D3DX11_EFFECT_VARIABLE_(.*)" />
+    <create class="D3DX11Effects" />    
+
+    <context-clear />
+  </extension>
+
+  <!-- D3D11 mapping -->
+  <mapping>
+    <context id="d3d11-effects-all"/>
+
+    <!--
+    // *****************************************************************
+    // D3D11 Enumerations
+    // *****************************************************************
+    -->
+
+
+    <!--
+    // *****************************************************************
+    // D3D11 Struct
+    // *****************************************************************
+    -->
+    <map enum="D3DX11_EFFECT_VARIABLE_FLAGS" name="EffectVariableFlags" />
+    <map field="D3DX11_EFFECT_SHADER_DESC::SODecls" visibility="internal" type="void"/>
+    <!--<map field="D3DX11_EFFECT_SHADER_DESC::SODecls" visibility="internal" type="void" array="0"/>-->
+    
+    <!--
+    // *****************************************************************
+    // D3D11 Interfaces
+    // *****************************************************************
+    -->
+    <map method="ID3DX11EffectUnorderedAccessViewVariable::.*" property="false"/>
+    <map method="ID3DX11EffectUnorderedAccessViewVariable::Set.*" name="Set"/>
+    <map param="ID3DX11EffectUnorderedAccessViewVariable::GetUnorderedAccessView::ppResource" return="true"/>
+    <map method="ID3DX11EffectUnorderedAccessViewVariable::SetUnorderedAccessViewArray" visibility="internal"/>
+    <map param="ppResources" attribute="in buffer"/>
+    <map method="ID3DX11EffectUnorderedAccessViewVariable::GetUnorderedAccessViewArray" visibility="internal"/>
+    <map param="ppResources" attribute="out buffer"/>
+
+    <!--
+    // *****************************************************************
+    // D3D11 Functions
+    // *****************************************************************
+    -->
+    <ifndef name="WIN8METRO">
+      <map function="D3DX11(.+)" name-tmp="$1" />
+      <map function="D3DX11(.+)W" name-tmp="$1" />
+      <map param="D3DX11CreateEffectFromMemory::ppEffect" attribute="out fast" />
+      <ifdef name="DIRECTX11_1">
+        <map function="D3DX11CreateEffectFromMemory" dllimport="false" dll='IntPtr.Size == 4?"sharpdx_direct3d11_1_effects_x86.dll":"sharpdx_direct3d11_1_effects_x64.dll"' group="SharpDX.Direct3D11.D3DX11Effects" />
+      </ifdef>
+      <ifndef name="DIRECTX11_1">
+        <map function="D3DX11CreateEffectFromMemory" dllimport="false" dll='IntPtr.Size == 4?"sharpdx_direct3d11_effects_x86.dll":"sharpdx_direct3d11_effects_x64.dll"' group="SharpDX.Direct3D11.D3DX11Effects" />
+      </ifndef>
+    </ifndef>
+
+    <!--
+    // *****************************************************************
+    // D3D11 Constants
+    // *****************************************************************
+    -->
+
+    <context-clear />
+  </mapping>
+</config>

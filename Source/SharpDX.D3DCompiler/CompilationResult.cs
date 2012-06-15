@@ -47,5 +47,17 @@ namespace SharpDX.D3DCompiler
         {
             return input.Bytecode;
         }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="SharpDX.D3DCompiler.CompilationResult"/> to byte array
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
+        public static implicit operator byte[](CompilationResult input)
+        {
+            return input.Bytecode;
+        }
     }
 }

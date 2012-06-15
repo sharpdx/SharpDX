@@ -61,8 +61,6 @@
     <include file="d3dx11tex.h" attach="true" />
     <include file="d3dx11async.h" attach="true" />
     <include file="d3dcsx.h" attach="true" />
-    <!-- D3D11 Effects includes -->
-    <include file="d3dx11effect.h" attach="true" />
   </ifndef>
 
   <naming />
@@ -81,7 +79,6 @@
       <context>d3dx11tex</context>
       <context>d3dx11async</context>
       <context>d3dcsx</context>
-      <context>d3dx11effect</context>
     </ifndef>
   </context-set>
 
@@ -120,9 +117,6 @@
     <create class="D3D11" />
     <create class="D3DX11" />
     <create class="D3DCSX" />
-
-    <create-cpp enum="D3DX11_EFFECT_VARIABLE_FLAGS" macro="D3DX11_EFFECT_VARIABLE_(.*)" />
-    <create class="D3DX11Effects" />    
 
     <context-clear />
   </extension>
@@ -242,14 +236,6 @@
     <map param="ppRenderTargetViews" type="void" attribute="in"/>
     <map method="ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews" visibility="internal"/>
 
-    <map method="ID3DX11EffectUnorderedAccessViewVariable::.*" property="false"/>
-    <map method="ID3DX11EffectUnorderedAccessViewVariable::Set.*" name="Set"/>
-    <map param="ID3DX11EffectUnorderedAccessViewVariable::GetUnorderedAccessView::ppResource" return="true"/>
-    <map method="ID3DX11EffectUnorderedAccessViewVariable::SetUnorderedAccessViewArray" visibility="internal"/>
-    <map param="ppResources" attribute="in buffer"/>
-    <map method="ID3DX11EffectUnorderedAccessViewVariable::GetUnorderedAccessViewArray" visibility="internal"/>
-    <map param="ppResources" attribute="out buffer"/>
-
     <map interface="ID3DDeviceContextState" name="DeviceContextState"/>
     <map interface="ID3DUserDefinedAnnotation" name="UserDefinedAnnotation"/>
 
@@ -279,12 +265,6 @@
       <map function="D3DX11(.+)W" name-tmp="$1" />
       <map function="D3DX11.*" dll='"#(D3DX11_DLL_A)"' group="SharpDX.Direct3D11.D3DX11" />
       <map param="D3DX11CreateEffectFromMemory::ppEffect" attribute="out fast" />
-      <ifdef name="DIRECTX11_1">
-        <map function="D3DX11CreateEffectFromMemory" dllimport="false" dll='IntPtr.Size == 4?"sharpdx_direct3d11_1_effects_x86.dll":"sharpdx_direct3d11_1_effects_x64.dll"' group="SharpDX.Direct3D11.D3DX11Effects" />
-      </ifdef>
-      <ifndef name="DIRECTX11_1">
-        <map function="D3DX11CreateEffectFromMemory" dllimport="false" dll='IntPtr.Size == 4?"sharpdx_direct3d11_effects_x86.dll":"sharpdx_direct3d11_effects_x64.dll"' group="SharpDX.Direct3D11.D3DX11Effects" />
-      </ifndef>
     </ifndef>
 
     <!--

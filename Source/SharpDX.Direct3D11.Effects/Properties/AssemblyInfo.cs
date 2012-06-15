@@ -17,33 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if !WIN8METRO
-using System;
-using SharpDX.D3DCompiler;
 
-namespace SharpDX.Direct3D11
-{
-    public partial class Effect
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Effect"/> class.
-        /// </summary>
-        /// <param name="device">The device.</param>
-        /// <param name="effectByteCode">The effect byte code.</param>
-        public Effect(Device device, ShaderBytecode effectByteCode) : this(device, effectByteCode, EffectFlags.None)
-        {
-        }
+using System.Reflection;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Effect"/> class.
-        /// </summary>
-        /// <param name="device">The device.</param>
-        /// <param name="effectByteCode">The effect byte code.</param>
-        /// <param name="fxFlags">Effect compile options</param>
-        public Effect(Device device, ShaderBytecode effectByteCode, EffectFlags fxFlags)
-        {
-            D3DX11Effects.CreateEffectFromMemory(effectByteCode.BufferPointer, effectByteCode.BufferSize, (int)fxFlags, device, this);
-        }
-   }
-}
-#endif
+[assembly: AssemblyProduct("SharpDX.Direct3D11.Effects")]
+[assembly: AssemblyTitle("SharpDX.Direct3D11.Effects")]
+[assembly: AssemblyDescription("Assembly providing DirectX - Effects11 managed API for Direct3D11")]

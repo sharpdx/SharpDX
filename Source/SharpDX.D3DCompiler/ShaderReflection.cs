@@ -27,10 +27,11 @@ namespace SharpDX.D3DCompiler
         ///   Initializes a new instance of the <see cref = "T:SharpDX.D3DCompiler.ShaderReflection" /> class from a <see cref = "T:SharpDX.D3DCompiler.ShaderBytecode" />.
         /// </summary>
         /// <param name = "shaderBytecode"></param>
-        public ShaderReflection(ShaderBytecode shaderBytecode)
+        public unsafe ShaderReflection(byte[] shaderBytecode)
         {
             IntPtr temp;
-            D3D.Reflect(shaderBytecode.BufferPointer, shaderBytecode.BufferSize, Utilities.GetGuidFromType(GetType()), out temp);
+            fixed (void* ptr = shaderBytecode)
+                D3D.Reflect((IntPtr)ptr, shaderBytecode.Length, Utilities.GetGuidFromType(GetType()), out temp);
             NativePointer = temp;
         }
     }

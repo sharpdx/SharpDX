@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using SharpDX.D3DCompiler;
 
 namespace SharpDX.Direct3D10
 {
@@ -32,26 +31,11 @@ namespace SharpDX.Direct3D10
         /// <param name = "device">The device used to create the layout.</param>
         /// <param name = "elements">An array of input elements describing the layout of the input data.</param>
         /// <param name = "shaderBytecode">The compiled shader used to validate the input elements.</param>
-        public InputLayout(Device device, ShaderBytecode shaderBytecode, InputElement[] elements)
+        public unsafe InputLayout(Device device, byte[] shaderBytecode, InputElement[] elements)
             : base(IntPtr.Zero)
         {
-            device.CreateInputLayout(elements, elements.Length, shaderBytecode.BufferPointer,
-                                     shaderBytecode.BufferSize, this);
-        }
-
-        /// <summary>
-        ///   Initializes a new instance of the <see cref = "T:SharpDX.Direct3D10.InputLayout" /> object to describe the
-        ///   input-buffer data for the input-assembler stage.
-        /// </summary>
-        /// <unmanaged>ID3D10Device::CreateInputLayout</unmanaged>
-        /// <param name = "device">The device used to create the layout.</param>
-        /// <param name = "elements">An array of input elements describing the layout of the input data.</param>
-        /// <param name = "shaderSignature">The shader signature used to validate the input elements.</param>
-        public InputLayout(Device device, ShaderSignature shaderSignature, InputElement[] elements)
-            : base(IntPtr.Zero)
-        {
-            device.CreateInputLayout(elements, elements.Length, shaderSignature.BufferPointer,
-                                     shaderSignature.BufferSize, this);
+            fixed (void* ptr = shaderBytecode)
+                device.CreateInputLayout(elements, elements.Length, (IntPtr)ptr, shaderBytecode.Length, this);
         }
     }
 }
