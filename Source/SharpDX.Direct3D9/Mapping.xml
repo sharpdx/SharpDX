@@ -2503,6 +2503,10 @@
 
     <map param="ID3DXRenderToSurface::GetDevice::ppDevice" attribute="out" />
     <map param="ID3DXRenderToSurface::GetDesc::pDesc" attribute="out" />
+
+    <map param="ID3DXRenderToSurface::EndScene::MipFilter" type="D3DX_FILTER" />
+
+
     <map param="ID3DXRenderToEnvMap::GetDevice::ppDevice" attribute="out" />
     <map param="ID3DXRenderToEnvMap::GetDesc::pDesc" attribute="out" />
     <map param="ID3DXLine::GetDevice::ppDevice" attribute="out" />
@@ -2785,6 +2789,8 @@
 
     <map param="D3DXSaveTextureToFile.*::ppDestBuf" return="true" attribute="out"/>
     <map param="D3DXSaveTextureToFile.*::pSrcPalette" attribute="in buffer"/>
+
+    <map param="D3DXCreateRenderToSurface::ppRenderToSurface"  attribute="out fast"/>
 
     <context-clear />
   </mapping>
