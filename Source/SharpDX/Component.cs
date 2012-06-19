@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace SharpDX
 {
@@ -36,13 +35,8 @@ namespace SharpDX
         /// <summary>
         /// Occurs while this component is disposing and before it is disposed.
         /// </summary>
-        public event EventHandler<EventArgs> Disposing;
-
-        /// <summary>
-        /// Thread local storage for ToDispose Collectors.
-        /// </summary>
-        [ThreadStatic]
-        private static Stack<Component> _collectors;
+        //internal event EventHandler<EventArgs> Disposing;
+        private string name;
 
         /// <summary>
         /// Gets or sets the disposables.
@@ -62,46 +56,27 @@ namespace SharpDX
         /// Initializes a new instance of the <see cref="Component"/> class.
         /// </summary>
         protected internal Component()
-            : this(null)
         {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Component"/> class.
-        /// </summary>
-        /// <param name="name">The name attached to this component</param>
-        protected internal Component(string name)
-        {
-#if WIN8METRO
-            Name = name ?? GetType().GetTypeInfo().Name;
-#else
-            Name = name ?? GetType().Name;
-#endif
             Disposables = new List<IDisposable>();
-
-            // Try to ToDispose this component on the latest active collector
-            ToDisposeAuto();
         }
 
-#if !WIN8METRO
-        /// <summary>
-        /// Releases unmanaged resources and performs other cleanup operations before the
-        /// <see cref="Component"/> is reclaimed by garbage collection.
-        /// </summary>
-        ~Component()
-        {
-            if (!IsDisposed)
-            {
-                Dispose(false);
-                IsDisposed = true;
-            }
-        }
-#endif
         /// <summary>
         /// Gets the name of this component.
         /// </summary>
         /// <value>The name.</value>
-        public string Name { get; protected set; }
+        public string Name
+        {
+            get { return name; }
+            set
+            {
+                name = value;
+                OnNameChanged();
+            }
+        }
+
+        protected virtual void OnNameChanged()
+        {
+        }
 
         /// <summary>
         /// Gets or sets the tag associated to this object.
@@ -127,52 +102,6 @@ namespace SharpDX
                 Dispose(true);
                 IsDisposed = true;
             }
-#if !WIN8METRO
-            GC.SuppressFinalize(this);
-#endif
-        }
-
-        /// <summary>
-        /// Use this component as the collector for new components created in the current thread.
-        /// </summary>
-        /// <remarks>
-        /// The collector push on the stack is local to the current executing thread.
-        /// </remarks>
-        protected internal void PushCollector()
-        {
-            if (_collectors == null)
-                _collectors = new Stack<Component>();
-
-            _collectors.Push(this);
-        }
-
-        /// <summary>
-        /// Unuse this component as the collector for new components created in the current thread.
-        /// </summary>
-        /// <remarks>
-        /// The collector push on the stack is local to the current executing thread.
-        /// </remarks>
-        protected internal void PopCollector()
-        {
-            // No component collector
-            // TODO throw an exception here?
-            if (_collectors == null || _collectors.Count == 0)
-                return;
-            _collectors.Pop();
-
-            // Remove the created stack if there are no more collectors
-            if (_collectors.Count == 0)
-                _collectors = null;
-        }
-
-        /// <summary>
-        /// Try to add this component to the latest component that started PushCollector
-        /// </summary>
-        private void ToDisposeAuto()
-        {
-            // If a current ToDispose collector is set, than add this component to this collector
-            if (_collectors != null && _collectors.Count > 0)
-                _collectors.Peek().ToDispose(this);
         }
 
         /// <summary>
@@ -183,8 +112,8 @@ namespace SharpDX
         private void Dispose(bool disposeManagedResources)
         {
             // Notify listeners
-            if (Disposing != null)
-                Disposing(this, EventArgs.Empty);
+            //if (Disposing != null)
+            //    Disposing(this, EventArgs.Empty);
 
             if (disposeManagedResources)
             {

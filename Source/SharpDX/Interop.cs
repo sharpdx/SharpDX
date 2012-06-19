@@ -88,6 +88,11 @@ namespace SharpDX
             throw new NotImplementedException();
         }
 
+        public static unsafe void* Read2D<T>(void* pSrc, T[,] data, int offset, int count) where T : struct
+        {
+            throw new NotImplementedException();
+        }
+
         public static int SizeOf<T>()
         {
             throw new NotImplementedException();
@@ -99,6 +104,11 @@ namespace SharpDX
         }
 
         public static unsafe void* Write<T>(void* pDest, T[] data, int offset, int count) where T : struct
+        {
+            throw new NotImplementedException();
+        }
+
+        public static unsafe void* Write2D<T>(void* pDest, T[,] data, int offset, int count) where T : struct
         {
             throw new NotImplementedException();
         }

@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\SharpDX.PreSettings.targets" />
+  <PropertyGroup>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{53EF08A7-4224-434C-A62C-F29807C1C750}</ProjectGuid>
+    <RootNamespace>SharpDX.Toolkit.Graphics</RootNamespace>
+    <AssemblyName>SharpDX.Toolkit.Graphics</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Buffer.cs" />
+    <Compile Include="StructuredBuffer.cs" />
+    <Compile Include="ConstantBuffer.cs" />
+    <Compile Include="Effect.cs" />
+    <Compile Include="EffectBytecode.cs" />
+    <Compile Include="EffectContext.cs" />
+    <Compile Include="GraphicsDevice.cs" />
+    <Compile Include="GraphicsDeviceContext.cs" />
+    <Compile Include="GraphicsResource.cs" />
+    <Compile Include="IPixelData.cs" />
+    <Compile Include="PixelDatas.cs" />
+    <Compile Include="PixelFormat.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RenderTarget1D.cs" />
+    <Compile Include="RenderTarget2D.cs" />
+    <Compile Include="Texture.cs" />
+    <Compile Include="Texture1D.cs" />
+    <Compile Include="Texture2D.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\SharpDX.D3DCompiler\SharpDX.D3DCompiler.csproj" Condition=" '$(SharpDXWin8)' == 'false'">
+      <Project>{361d3f81-a48a-47f2-80df-ca4f9536cb4e}</Project>
+      <Name>SharpDX.D3DCompiler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SharpDX.Direct3D11\SharpDX.Direct3D11.csproj">
+      <Project>{736dfb52-1afe-4eff-9710-89046ab5b1f9}</Project>
+      <Name>SharpDX.Direct3D11</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SharpDX.DXGI\SharpDX.DXGI.csproj">
+      <Project>{3fc6de77-b412-4101-9e64-6b9aa831179b}</Project>
+      <Name>SharpDX.DXGI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SharpDX\SharpDX.csproj">
+      <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
+      <Name>SharpDX</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

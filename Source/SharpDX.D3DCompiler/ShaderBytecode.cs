@@ -691,7 +691,7 @@ namespace SharpDX.D3DCompiler
         /// <param name="shaderBytecodes">An array of <see cref="SharpDX.D3DCompiler.ShaderBytecode"/> structures that describe the set of shaders to compress. </param>
         /// <returns>A compressed <see cref="SharpDX.D3DCompiler.ShaderBytecode"/>. </returns>
         /// <unmanaged>HRESULT D3DCompressShaders([In] int uNumShaders,[In, Buffer] D3D_SHADER_DATA* pShaderData,[In] int uFlags,[Out] ID3DBlob** ppCompressedData)</unmanaged>
-        public static ShaderBytecode Compress(ShaderBytecode[] shaderBytecodes)
+        public static ShaderBytecode Compress(params ShaderBytecode[] shaderBytecodes)
         {
             Blob blob;
             // D3D.CompressShaders()

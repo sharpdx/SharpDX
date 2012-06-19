@@ -558,14 +558,14 @@ namespace SharpCli
                 {
                     CreateCastArrayMethod(method);
                 }
-                else if (method.Name == "Read" || (method.Name == "ReadOut"))
+                else if (method.Name == "Read" || (method.Name == "ReadOut") || (method.Name == "Read2D"))
                 {
                     if (method.Parameters.Count == 2)
                         CreateReadMethod(method);
                     else
                         CreateReadRangeMethod(method);
                 }
-                else if (method.Name == "Write")
+                else if (method.Name == "Write" || (method.Name == "Write2D"))
                 {
                     if (method.Parameters.Count == 2)
                         CreateWriteMethod(method);
