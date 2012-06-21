@@ -24,7 +24,6 @@
     <Compile Include="EffectBytecode.cs" />
     <Compile Include="EffectContext.cs" />
     <Compile Include="GraphicsDevice.cs" />
-    <Compile Include="GraphicsDeviceContext.cs" />
     <Compile Include="GraphicsResource.cs" />
     <Compile Include="IPixelData.cs" />
     <Compile Include="PixelDatas.cs" />

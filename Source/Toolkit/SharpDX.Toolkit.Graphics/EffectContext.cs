@@ -24,14 +24,13 @@ namespace SharpDX.Toolkit.Graphics
 {
     public class EffectContext : Component
     {
-        private readonly GraphicsDeviceContext context;
+        private readonly GraphicsDevice context;
         private readonly DeviceContext nativeContext;
 
-        public EffectContext(Effect effect, GraphicsDeviceContext context)
+        public EffectContext(Effect effect, GraphicsDevice context)
         {
             this.Effect = effect;
             this.context = context;
-            this.nativeContext = context;
         }
 
         public readonly Effect Effect;

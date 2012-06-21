@@ -61,12 +61,12 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        public void Begin(GraphicsDeviceContext context)
+        public void Begin(GraphicsDevice context)
         {
 
         }
 
-        public void End(GraphicsDeviceContext context)
+        public void End(GraphicsDevice context)
         {
             
         }
