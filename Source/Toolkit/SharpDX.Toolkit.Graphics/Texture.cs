@@ -83,27 +83,6 @@ namespace SharpDX.Toolkit.Graphics
             return from.unorderedAccessView;
         }
 
-        protected static DataRectangle[] Pin<T>(int width, PixelFormat format, T[][] initialTextures, out GCHandle[] handles)
-        {
-            var dataRectangles = new DataRectangle[initialTextures.Length];
-            handles = new GCHandle[initialTextures.Length];
-            for (int i = 0; i < initialTextures.Length; i++)
-            {
-                var initialTexture = initialTextures[i];
-                var handle = GCHandle.Alloc(initialTexture, GCHandleType.Pinned);
-                handles[i] = handle;
-                dataRectangles[i].DataPointer = handle.AddrOfPinnedObject();
-                dataRectangles[i].Pitch = width * format.SizeInBytes;
-            }
-            return dataRectangles;
-        }
-
-        protected static void UnPin(GCHandle[] handles)
-        {
-            for (int i = 0; i < handles.Length; i++)
-                handles[i].Free();
-        }
-
         protected override void OnNameChanged()
         {
             base.OnNameChanged();

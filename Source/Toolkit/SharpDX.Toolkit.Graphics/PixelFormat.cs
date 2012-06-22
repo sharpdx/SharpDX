@@ -32,6 +32,9 @@ namespace SharpDX.Toolkit.Graphics
     /// Because <see cref="PixelFormat"/> is directly convertible to <see cref="SharpDX.DXGI.Format"/>, you can use it inplace where <see cref="SharpDX.DXGI.Format"/> is required
     /// and vice-versa.
     /// </remarks>
+    /// <msdn-id>bb173059</msdn-id>	
+    /// <unmanaged>DXGI_FORMAT</unmanaged>	
+    /// <unmanaged-short>DXGI_FORMAT</unmanaged-short>	
     [StructLayout(LayoutKind.Sequential, Size = 4)]
     public struct PixelFormat
     {

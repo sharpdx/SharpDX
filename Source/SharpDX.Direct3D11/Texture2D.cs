@@ -28,6 +28,9 @@ namespace SharpDX.Direct3D11
         /// </summary>
         /// <param name = "device">The device with which to associate the texture.</param>
         /// <param name = "description">The description of the texture.</param>
+        /// <msdn-id>ff476521</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
         public Texture2D(Device device, Texture2DDescription description)
             : base(IntPtr.Zero)
         {
@@ -40,6 +43,9 @@ namespace SharpDX.Direct3D11
         /// <param name = "device">The device with which to associate the texture.</param>
         /// <param name = "description">The description of the texture.</param>
         /// <param name = "data">An array of initial texture data for each subresource.</param>
+        /// <msdn-id>ff476521</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
         public Texture2D(Device device, Texture2DDescription description, params DataRectangle[] data)
             : base(IntPtr.Zero)
         {

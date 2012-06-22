@@ -29,6 +29,9 @@ namespace SharpDX.Direct3D11
         /// </summary>
         /// <param name = "device">The device with which to associate the texture.</param>
         /// <param name = "description">The description of the texture.</param>
+        /// <msdn-id>ff476520</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
         public Texture1D(Device device, Texture1DDescription description)
             : base(IntPtr.Zero)
         {
@@ -41,6 +44,9 @@ namespace SharpDX.Direct3D11
         /// <param name = "device">The device with which to associate the texture.</param>
         /// <param name = "description">The description of the texture.</param>
         /// <param name = "data">An array of initial texture data for each subresource.</param>
+        /// <msdn-id>ff476520</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
         public Texture1D(Device device, Texture1DDescription description, params DataStream[] data)
             : base(IntPtr.Zero)
         {
@@ -50,6 +56,29 @@ namespace SharpDX.Direct3D11
                 subResourceDatas = new DataBox[data.Length];
                 for (int i = 0; i < subResourceDatas.Length; i++)
                     subResourceDatas[i].DataPointer = data[i].DataPointer;
+
+            }
+            device.CreateTexture1D(ref description, subResourceDatas, this);
+        }
+
+        /// <summary>
+        ///   Initializes a new instance of the <see cref = "T:SharpDX.Direct3D11.Texture1D" /> class.
+        /// </summary>
+        /// <param name = "device">The device with which to associate the texture.</param>
+        /// <param name = "description">The description of the texture.</param>
+        /// <param name = "data">An array of initial texture data for each subresource.</param>
+        /// <msdn-id>ff476520</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
+        public Texture1D(Device device, Texture1DDescription description, params IntPtr[] data)
+            : base(IntPtr.Zero)
+        {
+            DataBox[] subResourceDatas = null;
+            if (data != null && data.Length > 0)
+            {
+                subResourceDatas = new DataBox[data.Length];
+                for (int i = 0; i < subResourceDatas.Length; i++)
+                    subResourceDatas[i].DataPointer = data[i];
 
             }
             device.CreateTexture1D(ref description, subResourceDatas, this);
