@@ -167,6 +167,9 @@ namespace SharpDX.Direct3D11
         /// <param name="source">A reference to the source resource (see <see cref="SharpDX.Direct3D11.Resource"/>). </param>
         /// <param name="destination">A reference to the destination resource (see <see cref="SharpDX.Direct3D11.Resource"/>). </param>
         /// <unmanaged>void ID3D11DeviceContext::CopyResource([In] ID3D11Resource* pDstResource,[In] ID3D11Resource* pSrcResource)</unmanaged>
+        /// <msdn-id>ff476392</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::CopyResource([In] ID3D11Resource* pDstResource,[In] ID3D11Resource* pSrcResource)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::CopyResource</unmanaged-short>	
         public void CopyResource(Resource source, Resource destination)
         {
             CopyResource_(destination, source);

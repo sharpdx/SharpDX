@@ -40,7 +40,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476520</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        protected Texture1D(Texture1DDescription description)
+        internal Texture1D(Texture1DDescription description)
             : this(GraphicsDevice.Current, description)
         {
         }
@@ -54,10 +54,10 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476520</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        protected Texture1D(GraphicsDevice device, Texture1DDescription description, params IntPtr[] mipMapTextures)
+        internal Texture1D(GraphicsDevice device, Texture1DDescription description, params IntPtr[] mipMapTextures)
         {
             Description = description;
-            Initialize(device, new Direct3D11.Texture1D(device, description, mipMapTextures), Description.BindFlags);
+            Initialize(device, new Direct3D11.Texture1D(device, description, mipMapTextures));
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476520</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        protected Texture1D(Direct3D11.Texture1D texture)
+        internal Texture1D(Direct3D11.Texture1D texture)
             : this(GraphicsDevice.Current, texture)
         {
         }
@@ -80,10 +80,10 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476520</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        protected Texture1D(GraphicsDevice device, Direct3D11.Texture1D texture)
+        internal Texture1D(GraphicsDevice device, Direct3D11.Texture1D texture)
         {
             Description = texture.Description;
-            Initialize(device, texture, Description.BindFlags);
+            Initialize(device, texture);
         }
 
         /// <summary>The description.</summary>
@@ -103,7 +103,7 @@ namespace SharpDX.Toolkit.Graphics
             return new Texture1D(GraphicsDevice, Description);
         }
 
-        public override GraphicsResource ToStaging()
+        public Texture1D ToStaging()
         {
             var stagingDesc = Description;
             stagingDesc.BindFlags = BindFlags.None;
@@ -272,6 +272,21 @@ namespace SharpDX.Toolkit.Graphics
                 desc.BindFlags |= BindFlags.UnorderedAccess;
             }
             return desc;
+        }
+
+        public override ShaderResourceView GetShaderResourceView(ViewSlice viewSlice, int arrayIndex, int mipIndex)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override RenderTargetView GetRenderTargetView(ViewSlice viewSlice, int arraySlice, int mipMapSlice)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override UnorderedAccessView GetUnorderedAccessView(int arraySlice, int mipMapSlice)
+        {
+            throw new NotImplementedException();
         }
     }
 }

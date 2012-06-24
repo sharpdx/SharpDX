@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using SharpDX.Direct3D11;
 
@@ -29,32 +31,48 @@ namespace SharpDX.Toolkit.Graphics
     /// <typeparam name="T">Type of the <see cref="N:SharpDX.Direct3D11"/> texture resource.</typeparam>
     public abstract class Texture<T> : GraphicsResource<T> where T : Resource
     {
-        private ShaderResourceView shaderResourceView;
-        private RenderTargetView renderTargetView;
-        private UnorderedAccessView unorderedAccessView;
+        protected ShaderResourceView[] ShaderResourceViews;
+        protected RenderTargetView[] RenderTargetViews;
+        protected UnorderedAccessView[] UnorderedAccessViews;
 
-        protected void Initialize(GraphicsDevice deviceArg, T resource, BindFlags bindFlags)
+        protected override void Initialize(GraphicsDevice deviceArg, Resource resource)
         {
-            this.Initialize(deviceArg, resource);
-
-            if ((bindFlags & BindFlags.ShaderResource) != 0)
-            {
-                this.shaderResourceView = new ShaderResourceView(this.GraphicsDevice, this.Resource);
-                ToDispose(shaderResourceView);
-            }
-
-            if ((bindFlags & BindFlags.RenderTarget) != 0)
-            {
-                this.renderTargetView = new RenderTargetView(this.GraphicsDevice, this.Resource);
-                ToDispose(renderTargetView);
-            }
-
-            if ((bindFlags & BindFlags.UnorderedAccess) != 0)
-            {
-                this.unorderedAccessView = new UnorderedAccessView(this.GraphicsDevice, this.Resource);
-                ToDispose(unorderedAccessView);
-            }
+            base.Initialize(deviceArg, resource);
+            InitializeViews();
         }
+
+        /// <summary>
+        /// Initializes the views provided by this texture.
+        /// </summary>
+        protected virtual void InitializeViews()
+        {
+        }
+
+        /// <summary>
+        /// Gets a specific <see cref="ShaderResourceView" /> from this texture.
+        /// </summary>
+        /// <param name="viewSlice">Type of the view slice.</param>
+        /// <param name="arrayIndex">The texture array slice index.</param>
+        /// <param name="mipIndex">The mip map slice index.</param>
+        /// <returns>An <see cref="ShaderResourceView" /></returns>
+        public abstract ShaderResourceView GetShaderResourceView(ViewSlice viewSlice, int arrayIndex, int mipIndex);
+
+        /// <summary>
+        /// Gets a specific <see cref="RenderTargetView" /> from this texture.
+        /// </summary>
+        /// <param name="viewSlice">Type of the view slice.</param>
+        /// <param name="arraySlice">The texture array slice index.</param>
+        /// <param name="mipMapSlice">The mip map slice index.</param>
+        /// <returns>An <see cref="RenderTargetView" /></returns>
+        public abstract RenderTargetView GetRenderTargetView(ViewSlice viewSlice, int arraySlice, int mipMapSlice);
+
+        /// <summary>
+        /// Gets a specific <see cref="UnorderedAccessView"/> from this texture.
+        /// </summary>
+        /// <param name="arraySlice">The texture array slice index.</param>
+        /// <param name="mipMapSlice">The mip map slice index.</param>
+        /// <returns>An <see cref="UnorderedAccessView"/></returns>
+        public abstract UnorderedAccessView GetUnorderedAccessView(int arraySlice, int mipMapSlice);
 
         /// <summary>
         /// ShaderResourceView casting operator.
@@ -62,7 +80,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="from">Source for the.</param>
         public static implicit operator ShaderResourceView(Texture<T> from)
         {
-            return from.shaderResourceView;
+            return from.ShaderResourceViews != null ? from.ShaderResourceViews[0] : null;
         }
 
         /// <summary>
@@ -71,7 +89,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="from">Source for the.</param>
         public static implicit operator RenderTargetView(Texture<T> from)
         {
-            return from.renderTargetView;
+            return from.RenderTargetViews != null ? from.RenderTargetViews[0] : null;
         }
 
         /// <summary>
@@ -80,7 +98,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="from">Source for the.</param>
         public static implicit operator UnorderedAccessView(Texture<T> from)
         {
-            return from.unorderedAccessView;
+            return from.UnorderedAccessViews != null ? from.UnorderedAccessViews[0] : null;
         }
 
         protected override void OnNameChanged()
@@ -89,12 +107,35 @@ namespace SharpDX.Toolkit.Graphics
             if (GraphicsDevice.IsDebugMode)
             {
                 this.Resource.DebugName = Name;
-                if (shaderResourceView != null)
-                    shaderResourceView.DebugName = Name == null ? null : string.Format("{0} SRV", Name);
-                if (renderTargetView != null)
-                    renderTargetView.DebugName = Name == null ? null : string.Format("{0} RTV", Name);
-                if (unorderedAccessView != null)
-                    unorderedAccessView.DebugName = Name == null ? null : string.Format("{0} UAV", Name);
+                if (ShaderResourceViews != null)
+                {
+                    for (int i = 0; i < ShaderResourceViews.Length; i++)
+                    {
+                        var shaderResourceView = ShaderResourceViews[i];
+                        if (shaderResourceView != null)
+                            shaderResourceView.DebugName = Name == null ? null : string.Format("{0} SRV[{1}]", i, Name);
+                    }
+                }
+
+                if (RenderTargetViews != null)
+                {
+                    for (int i = 0; i < RenderTargetViews.Length; i++)
+                    {
+                        var renderTargetView = RenderTargetViews[i];
+                        if (renderTargetView != null)
+                            renderTargetView.DebugName = Name == null ? null : string.Format("{0} RTV[{1}]", i, Name);
+                    }
+                }
+
+                if (UnorderedAccessViews != null)
+                {
+                    for (int i = 0; i < UnorderedAccessViews.Length; i++)
+                    {
+                        var unorderedAccessView = UnorderedAccessViews[i];
+                        if (unorderedAccessView != null)
+                            unorderedAccessView.DebugName = Name == null ? null : string.Format("{0} UAV[{1}]", i, Name);
+                    }
+                }
             }
         }
     }

@@ -79,7 +79,7 @@ namespace SharpDX.Toolkit.Graphics
             return new StructuredBuffer(nativeBuffer, sizeOfStruct);
         }
 
-        public override GraphicsResource ToStaging()
+        public StructuredBuffer ToStaging()
         {
             var stagingDesc = Description;
             stagingDesc.BindFlags = BindFlags.None;

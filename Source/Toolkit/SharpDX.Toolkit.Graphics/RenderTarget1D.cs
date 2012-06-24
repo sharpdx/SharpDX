@@ -89,16 +89,6 @@ namespace SharpDX.Toolkit.Graphics
             return new RenderTarget1D(GraphicsDevice, Description);
         }
 
-        public override GraphicsResource ToStaging()
-        {
-            var stagingDesc = Description;
-            stagingDesc.BindFlags = BindFlags.None;
-            stagingDesc.CpuAccessFlags = CpuAccessFlags.Read;
-            stagingDesc.Usage = ResourceUsage.Staging;
-            stagingDesc.OptionFlags = ResourceOptionFlags.None;
-            return new RenderTarget1D(this.GraphicsDevice, stagingDesc);
-        }
-
         /// <summary>
         /// Creates a new texture from a <see cref="Texture1DDescription"/>.
         /// </summary>

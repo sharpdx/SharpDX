@@ -26,19 +26,11 @@ namespace SharpDX.Toolkit.Graphics
         protected GraphicsDevice GraphicsDevice;
         protected Resource Resource;
 
-        protected void Initialize(GraphicsDevice deviceLocal, Resource resource)
+        protected virtual void Initialize(GraphicsDevice deviceLocal, Resource resource)
         {
             GraphicsDevice = deviceLocal;
             Resource = ToDispose(resource);
         }
-
-        /// <summary>
-        /// Converts this object to a staging resource.
-        /// </summary>
-        /// <returns>
-        /// This object as a staging resource.
-        /// </returns>
-        public abstract GraphicsResource ToStaging();
 
         /// <summary>
         /// Implicit casting operator to <see cref="Direct3D11.Resource"/>
@@ -76,10 +68,10 @@ namespace SharpDX.Toolkit.Graphics
     {
         protected new T Resource;
 
-        protected void Initialize(GraphicsDevice deviceLocal, T resource)
+        protected override void Initialize(GraphicsDevice deviceLocal, Resource resource)
         {
             base.Initialize(deviceLocal, resource);
-            Resource = resource;
+            Resource = (T)resource;
         }
     }
 }

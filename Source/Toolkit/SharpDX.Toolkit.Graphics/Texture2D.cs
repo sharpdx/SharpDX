@@ -24,68 +24,30 @@ using SharpDX.Direct3D11;
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    /// This class is a frontend to <see cref="SharpDX.Direct3D11.Texture2D"/>.
+    /// A Texture 2D frontend to <see cref="SharpDX.Direct3D11.Texture2D"/>.
     /// </summary>
-    public class Texture2D : Texture<Direct3D11.Texture2D>
+    public class Texture2D : Texture2DBase
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Texture2D" /> class.
-        /// </summary>
-        /// <param name="description">The description.</param>
-        /// <param name="dataRectangles">A variable-length parameters list containing data rectangles.</param>
-        /// <msdn-id>ff476521</msdn-id>
-        ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
-        ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
-        protected Texture2D(Texture2DDescription description, params DataRectangle[] dataRectangles)
-            : this(GraphicsDevice.Current, description, dataRectangles)
+        internal Texture2D(Texture2DDescription description, params DataRectangle[] dataRectangles) : base(description, dataRectangles)
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Texture2D" /> class.
-        /// </summary>
-        /// <param name="device">The device local.</param>
-        /// <param name="description">The description.</param>
-        /// <param name="dataRectangles">A variable-length parameters list containing data rectangles.</param>
-        /// <msdn-id>ff476521</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
-        protected Texture2D(GraphicsDevice device, Texture2DDescription description, params DataRectangle[] dataRectangles)
-        {
-            Description = description;
-            Initialize(device, new Direct3D11.Texture2D(device, description, dataRectangles), Description.BindFlags);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Texture2D" /> class.
-        /// </summary>
-        /// <param name="texture">The texture.</param>
-        /// <msdn-id>ff476521</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
-        protected Texture2D(Direct3D11.Texture2D texture)
-            : this(GraphicsDevice.Current, texture)
+        internal Texture2D(GraphicsDevice device, Texture2DDescription description, params DataRectangle[] dataRectangles) : base(device, description, dataRectangles)
         {
         }
 
-        /// <summary>
-        /// Specialised constructor for use only by derived classes.
-        /// </summary>
-        /// <param name="device">The device.</param>
-        /// <param name="texture">The texture.</param>
-        /// <msdn-id>ff476521</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
-        protected Texture2D(GraphicsDevice device, Direct3D11.Texture2D texture)
+        internal Texture2D(Direct3D11.Texture2D texture) : base(texture)
         {
-            Description = texture.Description;
-            Initialize(device, texture, Description.BindFlags);
         }
 
-        /// <summary>
-        /// The description.
-        /// </summary>
-        public Texture2DDescription Description { get; private set; }
+        internal Texture2D(GraphicsDevice device, Direct3D11.Texture2D texture) : base(device, texture)
+        {
+        }
+
+        public override RenderTargetView GetRenderTargetView(ViewSlice viewSlice, int arraySlice, int mipMapSlice)
+        {
+            throw new System.NotSupportedException();
+        }
 
         /// <summary>
         /// Makes a copy of this texture.
@@ -96,19 +58,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>
         /// A copy of this texture.
         /// </returns>
-        public Texture2D Clone()
+        public override Texture2DBase Clone()
         {
             return new Texture2D(GraphicsDevice, Description);
-        }
-
-        public override GraphicsResource ToStaging()
-        {
-            var stagingDesc = Description;
-            stagingDesc.BindFlags = BindFlags.None;
-            stagingDesc.CpuAccessFlags = CpuAccessFlags.Read;
-            stagingDesc.Usage = ResourceUsage.Staging;
-            stagingDesc.OptionFlags = ResourceOptionFlags.None;
-            return new Texture2D(this.GraphicsDevice, stagingDesc);
         }
 
         /// <summary>
@@ -147,93 +99,19 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         /// <param name="format">Describes the format to use.</param>
-        /// <param name="mipCount">(optional) number of mips.</param>
-        /// <returns>
-        /// A new instance of <see cref="Texture2D"/> class.
-        /// </returns>
-        /// <msdn-id>ff476521</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
-        public static Texture2D New(int width, int height, PixelFormat format, int mipCount = 1)
-        {
-            return New(width, height, format, ResourceUsage.Default, false, mipCount);
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="Texture2D"/>.
-        /// </summary>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
-        /// <param name="format">Describes the format to use.</param>
-        /// <param name="mipCount">(optional) number of mips.</param>
-        /// <returns>
-        /// A new instance of <see cref="Texture2D"/> class.
-        /// </returns>
-        /// <msdn-id>ff476521</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
-        public static Texture2D New(int width, int height, PixelFormat format, bool isUnorderedReadWrite, int mipCount = 1)
-        {
-            return New(width, height, format, ResourceUsage.Default, isUnorderedReadWrite, mipCount);
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="Texture2D"/>.
-        /// </summary>
-        /// <typeparam name="T">Type of the data contained in the mip map textures.</typeparam>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
-        /// <param name="format">Describes the format to use.</param>
-        /// <param name="mipMapTextures">A variable-length parameters list containing mip map textures.</param>
-        /// <returns>
-        /// A new instance of <see cref="Texture2D"/> class.
-        /// </returns>
-        /// <msdn-id>ff476521</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
-        public static Texture2D New<T>(int width, int height, PixelFormat format, params T[][] mipMapTextures)
-        {
-            return New(width, height, format, ResourceUsage.Immutable, false, mipMapTextures);
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="Texture2D"/>.
-        /// </summary>
-        /// <typeparam name="T">Type of the data contained in the mip map textures.</typeparam>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
-        /// <param name="format">Describes the format to use.</param>
-        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
-        /// <param name="mipMapTextures">A variable-length parameters list containing mip map textures.</param>
-        /// <returns>
-        /// A new instance of <see cref="Texture2D"/> class.
-        /// </returns>
-        /// <msdn-id>ff476521</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
-        public static Texture2D New<T>(int width, int height, PixelFormat format, bool isUnorderedReadWrite, params T[][] mipMapTextures)
-        {
-            return New(width, height, format, isUnorderedReadWrite ? ResourceUsage.Default : ResourceUsage.Immutable, isUnorderedReadWrite, mipMapTextures);
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="Texture2D"/>.
-        /// </summary>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
-        /// <param name="format">Describes the format to use.</param>
         /// <param name="usage">The usage.</param>
         /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
         /// <param name="mipCount">(optional) number of mips.</param>
+        /// <param name="arraySize">Size of the texture 2D array, default to 1.</param>
         /// <returns>
         /// A new instance of <see cref="Texture2D"/> class.
         /// </returns>
         /// <msdn-id>ff476521</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
-        public static Texture2D New(int width, int height, PixelFormat format, ResourceUsage usage, bool isUnorderedReadWrite = false, int mipCount = 1)
+        public static Texture2D New(int width, int height, PixelFormat format, bool isUnorderedReadWrite = false, int mipCount = 1, int arraySize = 1, ResourceUsage usage = ResourceUsage.Default)
         {
-            return new Texture2D(NewDescription(width, height, format, isUnorderedReadWrite, mipCount, usage));
+            return new Texture2D(NewDescription(width, height, format, isUnorderedReadWrite, mipCount, 1, usage));
         }
 
         /// <summary>
@@ -245,61 +123,24 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="format">Describes the format to use.</param>
         /// <param name="usage">The usage.</param>
         /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
-        /// <param name="mipMapTextures">The mip map textures.</param>
+        /// <param name="mipMapTextures">The mip map textures. See remarks</param>
         /// <returns>A new instance of <see cref="Texture2D" /> class.</returns>
         /// <msdn-id>ff476521</msdn-id>
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
-        public static Texture2D New<T>(int width, int height, PixelFormat format, ResourceUsage usage, bool isUnorderedReadWrite = false, params T[][] mipMapTextures)
+        /// <remarks>
+        /// The first dimension of mipMapTextures describes the number of is an array ot Texture2D Array
+        /// 
+        /// 
+        /// </remarks>
+        public static Texture2D New<T>(int width, int height, PixelFormat format, T[][] mipMapTextures, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
         {
+            usage = isUnorderedReadWrite ? ResourceUsage.Default : usage;
             GCHandle[] handles;
             var dataRectangles = Pin(width, format, mipMapTextures, out handles);
-            var texture = new Texture2D(NewDescription(width, height, format, isUnorderedReadWrite, mipMapTextures.Length, usage), dataRectangles);
+            var texture = new Texture2D(NewDescription(width, height, format, isUnorderedReadWrite, mipMapTextures.Length, 1, usage), dataRectangles);
             UnPin(handles);
             return texture;
-        }
-
-        protected static DataRectangle[] Pin<T>(int width, PixelFormat format, T[][] initialTextures, out GCHandle[] handles)
-        {
-            var dataRectangles = new DataRectangle[initialTextures.Length];
-            handles = new GCHandle[initialTextures.Length];
-            for (int i = 0; i < initialTextures.Length; i++)
-            {
-                var initialTexture = initialTextures[i];
-                var handle = GCHandle.Alloc(initialTexture, GCHandleType.Pinned);
-                handles[i] = handle;
-                dataRectangles[i].DataPointer = handle.AddrOfPinnedObject();
-                dataRectangles[i].Pitch = width * format.SizeInBytes;
-            }
-            return dataRectangles;
-        }
-
-        protected static void UnPin(GCHandle[] handles)
-        {
-            for (int i = 0; i < handles.Length; i++)
-                handles[i].Free();
-        }
-
-        protected static Texture2DDescription NewDescription(int width, int height, PixelFormat format, bool isReadWrite = false, int mipCount = 1, ResourceUsage usage = ResourceUsage.Default)
-        {
-            var desc = new Texture2DDescription()
-                           {
-                               Width = width,
-                               Height = height,
-                               ArraySize = 1,
-                               SampleDescription = new DXGI.SampleDescription(1, 0),
-                               BindFlags = BindFlags.ShaderResource,
-                               Format = format,
-                               MipLevels = mipCount,
-                               Usage = usage,
-                               CpuAccessFlags = GetCputAccessFlagsFromUsage(usage)
-                           };
-
-            if (isReadWrite)
-            {
-                desc.BindFlags |= BindFlags.UnorderedAccess;
-            }
-            return desc;
         }
     }
 }

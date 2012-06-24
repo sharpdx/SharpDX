@@ -34,6 +34,8 @@
     <Compile Include="Texture.cs" />
     <Compile Include="Texture1D.cs" />
     <Compile Include="Texture2D.cs" />
+    <Compile Include="Texture2DBase.cs" />
+    <Compile Include="ViewSlice.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SharpDX.D3DCompiler\SharpDX.D3DCompiler.csproj" Condition=" '$(SharpDXWin8)' == 'false'">

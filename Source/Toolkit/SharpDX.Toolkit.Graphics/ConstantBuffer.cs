@@ -60,7 +60,7 @@ namespace SharpDX.Toolkit.Graphics
             return New(Utilities.SizeOf<T>());
         }
 
-        public override GraphicsResource ToStaging()
+        public ConstantBuffer ToStaging()
         {
             var stagingDesc = Description;
             stagingDesc.BindFlags = BindFlags.None;

@@ -229,23 +229,6 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Reads the specified array T[] data from a memory location.
-        /// </summary>
-        /// <typeparam name="T">Type of a data to read</typeparam>
-        /// <param name="source">Memory location to read from.</param>
-        /// <param name="data">The data write to.</param>
-        /// <param name="offset">The offset in the array to write to.</param>
-        /// <param name="count">The number of T element to read from the memory location</param>
-        /// <returns>source pointer + sizeof(T) * count</returns>
-        public static IntPtr Read<T>(IntPtr source, T[,] data, int offset, int count) where T : struct
-        {
-            unsafe
-            {
-                return (IntPtr)SharpDX.Interop.Read2D<T>((void*)source, data, offset, count);
-            }
-        }
-
-        /// <summary>
         /// Writes the specified T data to a memory location.
         /// </summary>
         /// <typeparam name="T">Type of a data to write</typeparam>
@@ -274,23 +257,6 @@ namespace SharpDX
             unsafe
             {
                 return (IntPtr)SharpDX.Interop.Write<T>((void*)destination, data, offset, count);
-            }
-        }
-
-        /// <summary>
-        /// Writes the specified array T[] data to a memory location.
-        /// </summary>
-        /// <typeparam name="T">Type of a data to write</typeparam>
-        /// <param name="destination">Memory location to write to.</param>
-        /// <param name="data">The array of T data to write.</param>
-        /// <param name="offset">The offset in the array to read from.</param>
-        /// <param name="count">The number of T element to write to the memory location</param>
-        /// <returns>destination pointer + sizeof(T) * count</returns>
-        public static IntPtr Write<T>(IntPtr destination, T[,] data, int offset, int count) where T : struct
-        {
-            unsafe
-            {
-                return (IntPtr)SharpDX.Interop.Write2D<T>((void*)destination, data, offset, count);
             }
         }
 
