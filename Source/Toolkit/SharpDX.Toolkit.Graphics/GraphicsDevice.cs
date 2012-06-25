@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Collections.Generic;
 using System.IO;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
@@ -31,7 +32,7 @@ namespace SharpDX.Toolkit.Graphics
     {
         internal Device Device;
         internal DeviceContext Context;
-        private byte[] copyTempBuffer;
+        private readonly Dictionary<PixelFormat,int> maximumMSAASampleCount = new Dictionary<PixelFormat, int>();
 
         [ThreadStatic]
         private static GraphicsDevice current;
@@ -76,27 +77,60 @@ namespace SharpDX.Toolkit.Graphics
             FeatureLevel = Device.FeatureLevel;
         }
 
+        /// <summary>
+        /// Gets the maximum MSAA sample count for a particular <see cref="PixelFormat"/>.
+        /// </summary>
+        /// <param name="pixelFormat">The pixelFormat.</param>
+        /// <returns>The maximum multisample count for this pixel pixelFormat</returns>
+        public int GetMaximumMSAASampleCount(PixelFormat pixelFormat)
+        {
+            int maxCount;
+            if (!maximumMSAASampleCount.TryGetValue(pixelFormat, out maxCount))
+            {
+                maxCount = 1;
+                for (int i = 1; i < 32; i++)
+                    if (Device.CheckMultisampleQualityLevels(pixelFormat, i) != 0)
+                        maxCount = i;
+
+                maximumMSAASampleCount[pixelFormat] = maxCount;
+            }
+            return maxCount;
+        }
+
+
+        /// <summary>
+        /// Creates a new device from a <see cref="SharpDX.Direct3D11.Device"/>.
+        /// </summary>
+        /// <param name="device">The device.</param>
+        /// <returns>A new instance of <see cref="GraphicsDevice"/></returns>
         public static GraphicsDevice New(Device device)
         {
             return new GraphicsDevice(device);
         }
 
+        /// <summary>
+        /// Creates a new <see cref="GraphicsDevice"/>.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="featureLevels">The feature levels.</param>
+        /// <returns>A new instance of <see cref="GraphicsDevice"/></returns>
         public static GraphicsDevice New(DriverType type = DriverType.Hardware, DeviceCreationFlags flags = DeviceCreationFlags.None, params FeatureLevel[] featureLevels)
         {
             return new GraphicsDevice(type, flags, featureLevels);
         }
 
         /// <summary>
-        /// Creates a new deferred <see cref="GraphicsDeviceContext"/>.
+        /// Creates a new deferred <see cref="GraphicsDevice"/>.
         /// </summary>
-        /// <returns>A deferred <see cref="GraphicsDeviceContext"/></returns>
+        /// <returns>A deferred <see cref="GraphicsDevice"/></returns>
         public GraphicsDevice NewDeferred()
         {
             return new GraphicsDevice(this, new DeviceContext(Device));
         }
 
         /// <summary>
-        /// Gets the <see cref="GraphicsDeviceContext"/> for immediate rendering.
+        /// Gets the <see cref="GraphicsDevice"/> for immediate rendering.
         /// </summary>
         public readonly GraphicsDevice MainDevice;
 
