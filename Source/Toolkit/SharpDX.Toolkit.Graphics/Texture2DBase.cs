@@ -133,7 +133,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>
         /// See unmanaged documentation for usage and restrictions.
         /// </remarks>
-        public void Copy(Texture2DBase toTexture)
+        public void CopyTo(Texture2DBase toTexture)
         {
             var context = (DeviceContext)GraphicsDevice.Current;
             context.CopyResource(this, toTexture);
@@ -153,7 +153,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </remarks>
         public TData[] GetData<TData>(int subResourceIndex = 0) where TData : struct
         {
-            var toData = new TData[Utilities.SizeOf<TData>() * Description.Width * Description.Height];
+            var toData = new TData[this.CalculateElementWidth<TData>() * Description.Height];
             GetData(toData, subResourceIndex);
             return toData;
         }
@@ -204,12 +204,8 @@ namespace SharpDX.Toolkit.Graphics
         public unsafe void GetData<TData>(Texture2DBase stagingTexture, TData[] toData, int subResourceIndex = 0) where TData : struct
         {
             // Check size validity of data to copy to
-            int dataStride = Utilities.SizeOf<TData>() * Description.Width;
-            if (dataStride != StrideInBytes)
-                throw new ArgumentException("Size of TData must be same size than actual pixel format");
-
-            if (toData.Length != (Description.Width * Description.Height))
-                throw new ArgumentException("Length of TData must equal to Width * Height");
+            if ((toData.Length * Utilities.SizeOf<TData>()) != (StrideInBytes * Description.Height))
+                throw new ArgumentException("Length of TData is not compatible with Width * Height * Pixel size in bytes");
             
             var context = (DeviceContext)GraphicsDevice.Current;
             // Copy the texture to a staging resource
@@ -217,6 +213,8 @@ namespace SharpDX.Toolkit.Graphics
 
             try
             {
+                int width = this.CalculateElementWidth<TData>();
+
                 // Map the staging resource to a CPU accessible memory
                 var box = context.MapSubresource(stagingTexture, subResourceIndex, MapMode.Read, MapFlags.None);
 
@@ -233,9 +231,9 @@ namespace SharpDX.Toolkit.Graphics
 
                     for (int i = 0; i < Description.Height; i++)
                     {
-                        Utilities.Read((IntPtr) sourcePtr, toData, offsetStride, Description.Width);
+                        Utilities.Read((IntPtr) sourcePtr, toData, offsetStride, width);
                         sourcePtr += box.RowPitch;
-                        offsetStride += Description.Width;
+                        offsetStride += width;
                     }
                 }
             } 
@@ -264,12 +262,9 @@ namespace SharpDX.Toolkit.Graphics
             var context = (DeviceContext)GraphicsDevice.Current;
 
             // Check size validity of data to copy to
-            int dataStride = Utilities.SizeOf<TData>() * Description.Width;
-            if (dataStride != StrideInBytes)
-                throw new ArgumentException("Size of TData must be same size than actual pixel format");
+            if ((fromData.Length * Utilities.SizeOf<TData>()) != (StrideInBytes * Description.Height))
+                throw new ArgumentException("Length of TData is not compatible with Width * Height * Pixel size in bytes");
 
-            if (fromData.Length != (Description.Width * Description.Height))
-                throw new ArgumentException("Length of TData must equal to Width * Height");
 
             // Check that this is not an immutable resource
             if (Description.Usage == ResourceUsage.Immutable)
@@ -288,6 +283,7 @@ namespace SharpDX.Toolkit.Graphics
 
                 try
                 {
+                    int width = this.CalculateElementWidth<TData>();
                     var box = context.MapSubresource(this, subResourceIndex, MapMode.WriteDiscard,
                                                      MapFlags.None);
                     // The fast way: If same stride, we can directly copy the whole texture in one shot
@@ -303,9 +299,9 @@ namespace SharpDX.Toolkit.Graphics
 
                         for (int i = 0; i < Description.Height; i++)
                         {
-                            Utilities.Write((IntPtr) destPtr, fromData, offsetStride, Description.Width);
+                            Utilities.Write((IntPtr)destPtr, fromData, offsetStride, width);
                             destPtr += box.RowPitch;
-                            offsetStride += Description.Width;
+                            offsetStride += width;
                         }
 
                     }
@@ -391,9 +387,7 @@ namespace SharpDX.Toolkit.Graphics
                 }
 
                 srv = new ShaderResourceView(this.GraphicsDevice, this.Resource, srvDescription);
-                ShaderResourceViews[srvIndex] = srv;
-
-                ToDispose(srv);
+                ShaderResourceViews[srvIndex] = ToDispose(srv);
             }
 
             return srv;
@@ -432,8 +426,7 @@ namespace SharpDX.Toolkit.Graphics
                 }
 
                 uav = new UnorderedAccessView(GraphicsDevice, Resource, uavDescription);
-                UnorderedAccessViews[uavIndex] = uav;
-                ToDispose(uav);
+                UnorderedAccessViews[uavIndex] = ToDispose(uav);
             }
 
             return uav;
@@ -543,6 +536,21 @@ namespace SharpDX.Toolkit.Graphics
                 desc.BindFlags |= BindFlags.UnorderedAccess;
             }
             return desc;
+        }
+
+        /// <summary>
+        /// Calculates the width of the element.
+        /// </summary>
+        /// <typeparam name="TData">The type of the T data.</typeparam>
+        /// <returns>The width</returns>
+        /// <exception cref="System.ArgumentException">If the size is invalid</exception>
+        private int CalculateElementWidth<TData>() where TData : struct
+        {
+            var dataStrideInBytes = Utilities.SizeOf<TData>() * Description.Width;
+            var width = ((double)StrideInBytes / dataStrideInBytes) * Description.Width;
+            if (Math.Abs(width - (int)width) > double.Epsilon)
+                throw new ArgumentException("sizeof(TData) / sizeof(Format) * Width is not an integer");
+            return (int)width;
         }
     }
 }
