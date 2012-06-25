@@ -102,9 +102,7 @@ namespace SharpDX.Toolkit.Graphics
                 }
 
                 rtv = new RenderTargetView(GraphicsDevice, Resource, rtvDescription);
-                RenderTargetViews[rtvIndex] = rtv;
-
-                ToDispose(rtv);
+                RenderTargetViews[rtvIndex] = ToDispose(rtv);
             }
 
             return rtv;
@@ -158,7 +156,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476521</msdn-id>
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
-        public static RenderTarget2D New(int width, int height, PixelFormat format, int mipCount = 1, int arraySize = 1, bool isUnorderedReadWrite = false)
+        public static RenderTarget2D New(int width, int height, PixelFormat format, bool isUnorderedReadWrite = false, int mipCount = 1, int arraySize = 1)
         {
             return new RenderTarget2D(NewDescription(width, height, format, isUnorderedReadWrite, mipCount, 1));
         }
