@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,24 +17,28 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if WIN8METRO
+using System.Runtime.InteropServices;
 
+#if DIRECTX11_1
 namespace SharpDX.MediaFoundation
 {
-    [Shadow(typeof(MediaEngineNotifyShadow))]
-    internal partial interface MediaEngineNotify
+    public partial class MediaEngineEx
     {
         /// <summary>	
-        /// <p>[This documentation is preliminary and is subject to change.]</p><p><strong>Applies to: </strong>desktop apps | Metro style apps</p><p>Notifies the application when a playback event occurs.</p>	
+        /// <p>[This documentation is preliminary and is subject to change.]</p><p><strong>Applies to: </strong>desktop apps | Metro style apps</p><p>Opens a media resource from a byte stream.</p>	
         /// </summary>	
-        /// <param name="mediaEngineEvent"><dd> <p>A member of the <strong><see cref="SharpDX.MediaFoundation.MediaEngineEvent"/></strong> enumeration that specifies the event.</p> </dd></param>	
-        /// <param name="param1"><dd> <p>The first event parameter. The meaning of this parameter depends on the event code.</p> </dd></param>	
-        /// <param name="param2"><dd> <p>The second event parameter. The meaning of this parameter depends on the event code.</p> </dd></param>	
+        /// <param name="byteStreamRef"><dd> <p>A reference to the <strong><see cref="SharpDX.MediaFoundation.IByteStream"/></strong> interface of the byte stream.</p> </dd></param>	
+        /// <param name="uRLRef"><dd> <p>The URL of the byte stream.</p> </dd></param>	
         /// <returns><p>If this method succeeds, it returns <strong><see cref="SharpDX.Result.Ok"/></strong>. Otherwise, it returns an <strong><see cref="SharpDX.Result"/></strong> error code.</p></returns>	
-        /// <msdn-id>hh447963</msdn-id>	
-        /// <unmanaged>HRESULT IMFMediaEngineNotify::EventNotify([In] unsigned int event,[In] ULONG_PTR param1,[In] unsigned int param2)</unmanaged>	
-        /// <unmanaged-short>IMFMediaEngineNotify::EventNotify</unmanaged-short>	
-        void OnPlaybackEvent(MediaEngineEvent mediaEngineEvent, long param1, int param2);
+        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IMFMediaEngineEx::SetSourceFromByteStream']/*"/>	
+        /// <msdn-id>hh447956</msdn-id>	
+        /// <unmanaged>HRESULT IMFMediaEngineEx::SetSourceFromByteStream([In] IMFByteStream* pByteStream,[In] wchar_t* pURL)</unmanaged>	
+        /// <unmanaged-short>IMFMediaEngineEx::SetSourceFromByteStream</unmanaged-short>	
+        public void SetSourceFromByteStream(ByteStream byteStream, string url)
+        {
+            //var urlBstr = Marshal.StringToBSTR(url);
+            SetSourceFromByteStream_(byteStream.NativePointer, url);
+        }
     }
 }
 #endif

@@ -225,6 +225,18 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Converts the color into a packed integer.
+        /// </summary>
+        /// <returns>A packed integer containing all four color components.</returns>
+        public void ToArgb(out byte r, out byte g, out byte b, out byte a)
+        {
+            a = (byte)(Alpha * 255.0f);
+            r = (byte)(Red * 255.0f);
+            g = (byte)(Green * 255.0f);
+            b = (byte)(Blue * 255.0f);
+        }
+
+        /// <summary>
         /// Converts the color into a three component vector.
         /// </summary>
         /// <returns>A three component vector containing the red, green, and blue components of the color.</returns>

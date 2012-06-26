@@ -35,16 +35,18 @@ namespace SharpDX.MediaFoundation
         /// <param name="factory"></param>
         /// <param name="attributes"></param>
         /// <param name="createFlags"> </param>
-        public MediaEngine(MediaEngineClassFactory factory, MediaEngineAttributes attributes = null, MediaEngineCreateflags createFlags = MediaEngineCreateflags.None)
+        public MediaEngine(MediaEngineClassFactory factory, MediaEngineAttributes attributes = null, MediaEngineCreateflags createFlags = MediaEngineCreateflags.None, MediaEngineNotifyDelegate playbackCallback = null)
         {
             // Create engine attributes if null
             attributes = attributes ?? new MediaEngineAttributes();
+
+            PlaybackEvent = playbackCallback;
 
             // Setup by default the MediaEngine notify as it is mandatory
             mediaEngineNotifyImpl = new MediaEngineNotifyImpl(this);
             try
             {
-                attributes.Set(MediaEngineAttributeKeys.Callback, MediaEngineNotifyShadow.ToIntPtr(mediaEngineNotifyImpl));
+                attributes.Set(MediaEngineAttributeKeys.Callback, new ComObject(MediaEngineNotifyShadow.ToIntPtr(mediaEngineNotifyImpl)));
                 factory.CreateInstance(createFlags, attributes, this);
             } catch
             {
@@ -58,6 +60,23 @@ namespace SharpDX.MediaFoundation
         /// Media engine playback event.
         /// </summary>
         public event MediaEngineNotifyDelegate PlaybackEvent;
+
+
+        /// <summary>	
+        /// <p>[This documentation is preliminary and is subject to change.]</p><p><strong>Applies to: </strong>desktop apps | Metro style apps</p><p>Queries the Media Engine to find out whether a new video frame is ready.</p>	
+        /// </summary>	
+        /// <param name="ptsRef"><dd> <p>If a new frame is ready, receives the presentation time of the frame.</p> </dd></param>	
+        /// <returns>true if new video frame is ready for display.</returns>	
+        /// <remarks>	
+        /// <p>In frame-server mode, the application should call this method whenever a vertical blank occurs in the display device. If the method returns <strong><see cref="SharpDX.Result.Ok"/></strong>, call <strong><see cref="SharpDX.MediaFoundation.MediaEngine.TransferVideoFrame"/></strong> to blit the frame to the render target. If the method returns <strong>S_FALSE</strong>, wait for the next vertical blank and call the method again.</p><p>Do not call this method in rendering mode or audio-only mode. </p>	
+        /// </remarks>	
+        /// <msdn-id>hh448006</msdn-id>	
+        /// <unmanaged>HRESULT IMFMediaEngine::OnVideoStreamTick([Out] longlong* pPts)</unmanaged>	
+        /// <unmanaged-short>IMFMediaEngine::OnVideoStreamTick</unmanaged-short>	
+        public bool OnVideoStreamTick(out long ptsRef)
+        {
+            return OnVideoStreamTick_(out ptsRef).Success;
+        }
 
         protected override unsafe void Dispose(bool disposing)
         {

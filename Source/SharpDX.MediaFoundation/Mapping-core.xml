@@ -71,13 +71,14 @@
     <context>wmcontainer</context>
     <context>uuids</context>
   </context-set>
-
+  
   <extension>
     <context id="mediafoundation-all"/>
     
     <define struct="SharpDX.MediaFoundation.Mpeg1VideoInformation" sizeof="32" />
     <define struct="SharpDX.MediaFoundation.Mpeg2VideoInformation" sizeof="32" />
     <define struct="SharpDX.MediaFoundation.VideoInformationHeader2" sizeof="32" />
+    <define enum="SharpDX.MediaFoundation.ResourceCharacteristics" sizeof="4" />
 
     <!--
     // *****************************************************************
@@ -132,7 +133,7 @@
       <const from-guid="MF_XVP_DISABLE_FRC" class="SharpDX.MediaFoundation.MediaAttributeKeys" type="MediaAttributeKey&lt;bool&gt;" name="XvpDisableFrc">new MediaAttributeKey&lt;bool&gt;("$1")</const>
       <const from-guid="MF_MEDIA_ENGINE_AUDIO_CATEGORY" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;SharpDX.Multimedia.AudioStreamCategory&gt;" name="AudioCategory">new MediaAttributeKey&lt;SharpDX.Multimedia.AudioStreamCategory&gt;("$1")</const>
       <const from-guid="MF_MEDIA_ENGINE_AUDIO_ENDPOINT_ROLE" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;SharpDX.Multimedia.AudioEndpointRole&gt;" name="AudioEndpointRole">new MediaAttributeKey&lt;SharpDX.Multimedia.AudioEndpointRole&gt;("$1")</const>
-      <const from-guid="MF_MEDIA_ENGINE_CALLBACK" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;System.IntPtr&gt;" name="Callback">new MediaAttributeKey&lt;System.IntPtr&gt;("$1")</const>
+      <const from-guid="MF_MEDIA_ENGINE_CALLBACK" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;SharpDX.ComObject&gt;" name="Callback">new MediaAttributeKey&lt;SharpDX.ComObject&gt;("$1")</const>
       <const from-guid="MF_MEDIA_ENGINE_CONTENT_PROTECTION_FLAGS" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;MediaEngineProtectionFlags&gt;" name="ContentProtectionFlags">new MediaAttributeKey&lt;MediaEngineProtectionFlags&gt;("$1")</const>
       <const from-guid="MF_MEDIA_ENGINE_CONTENT_PROTECTION_MANAGER" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;SharpDX.ComObject&gt;" name="ContentProtectionManager">new MediaAttributeKey&lt;SharpDX.ComObject&gt;("$1")</const>
       <const from-guid="MF_MEDIA_ENGINE_DXGI_MANAGER" class="SharpDX.MediaFoundation.MediaEngineAttributeKeys" type="MediaAttributeKey&lt;DXGIDeviceManager&gt;" name="DxgiManager">new MediaAttributeKey&lt;DXGIDeviceManager&gt;("$1")</const>
@@ -552,6 +553,7 @@
     <bind from="MPEG1VIDEOINFO" to="SharpDX.MediaFoundation.Mpeg1VideoInformation"/>
     <bind from="MPEG2VIDEOINFO" to="SharpDX.MediaFoundation.Mpeg2VideoInformation"/>
     <bind from="VIDEOINFOHEADER2" to="SharpDX.MediaFoundation.VideoInformationHeader2"/>
+    <bind from="RESOURCE_CHARACTERISTICS" to="SharpDX.MediaFoundation.ResourceCharacteristics"/>
   </bindings>
 
   <mapping>
@@ -605,7 +607,13 @@
     <map struct="MFVideoSurfaceInfo" marshalto="true"/>
 
     <map enum-item="MFVideoRotationFormat_(.*)" name="Angle$1"/>
-    
+
+    <map struct="MFARGB" name="ColorBgra"/>
+    <map field="MFARGB::rgbRed" name="Red"/>
+    <map field="MFARGB::rgbBlue" name="Blue"/>
+    <map field="MFARGB::rgbGreen" name="Green"/>
+    <map field="MFARGB::rgbAlpha" name="Alpha"/>
+
     <!--
     // *****************************************************************
     // MediaFoundation Interfaces
@@ -688,7 +696,17 @@
     <map method="IMFDXGIDeviceManager::UnlockDevice" visibility="internal"/>
     <map param="IMFDXGIDeviceManager::LockDevice::ppUnkDevice" return="true"/>
     <map param="IMFDXGIDeviceManager::GetVideoService::ppService" return="true"/>
-    
+
+    <map interface="IMFByteStream" name="IByteStream" callback-visibility="public" callback="true" callback-dual="true" callback-name="ByteStream"/>
+
+    <map param="IMFByteStream::*.*::pb" type="void" attribute="in"/>
+
+    <map param="IMFByteStream::Begin[RW].*::punkState" type="void"/>
+
+    <map param="IMFMediaEngineEx::GetResourceCharacteristics::pCharacteristics" type="RESOURCE_CHARACTERISTICS"/>
+
+    <map method="IMFMediaEngine::OnVideoStreamTick" name="OnVideoStreamTick_" check="false" visibility="internal"/>
+
     <!--
     // *****************************************************************
     // MediaFoundation Functions
@@ -711,6 +729,7 @@
 
     <map param="MFCreateAttributes::ppMFAttributes" attribute="out fast"/>
     <map param="MFCreateDXGIDeviceManager::ppDeviceManager" attribute="out fast"/>
+    <map param="MFCreateMFByteStreamOnStreamEx::ppByteStream" attribute="out fast"/>
 
     <map function="MF(.*)" name-tmp="$1"/>
     <map function="MF.*" dll='"Mfplat.dll"' group="SharpDX.MediaFoundation.MediaFactory"/>
