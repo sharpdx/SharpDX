@@ -82,6 +82,9 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="pixelFormat">The pixelFormat.</param>
         /// <returns>The maximum multisample count for this pixel pixelFormat</returns>
+        /// <msdn-id>ff476499</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CheckMultisampleQualityLevels([In] DXGI_FORMAT Format,[In] unsigned int SampleCount,[Out] unsigned int* pNumQualityLevels)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CheckMultisampleQualityLevels</unmanaged-short>	
         public int GetMaximumMSAASampleCount(PixelFormat pixelFormat)
         {
             int maxCount;
@@ -96,7 +99,6 @@ namespace SharpDX.Toolkit.Graphics
             }
             return maxCount;
         }
-
 
         /// <summary>
         /// Creates a new device from a <see cref="SharpDX.Direct3D11.Device"/>.

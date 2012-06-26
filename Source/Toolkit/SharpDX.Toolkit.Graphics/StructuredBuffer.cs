@@ -60,7 +60,7 @@ namespace SharpDX.Toolkit.Graphics
 
         public static StructuredBuffer New(int sizeInBytes, int structureSizeInBytes, bool isReadWrite = false)
         {
-            var description = NewDescription(sizeInBytes, BindFlags.ShaderResource, isReadWrite, structureSizeInBytes, ResourceUsage.Dynamic, ResourceOptionFlags.BufferStructured);
+            var description = NewDescription(sizeInBytes, BindFlags.ShaderResource, isReadWrite, structureSizeInBytes, ResourceUsage.Default, ResourceOptionFlags.BufferStructured);
             return new StructuredBuffer(description);
         }
 
