@@ -23,13 +23,29 @@ namespace SharpDX.Toolkit.Graphics
 {
     public abstract class GraphicsResource : Component
     {
-        protected GraphicsDevice GraphicsDevice;
-        protected Resource Resource;
+        protected internal GraphicsDevice GraphicsDevice;
+        protected internal Resource Resource;
 
         protected virtual void Initialize(GraphicsDevice deviceLocal, Resource resource)
         {
             GraphicsDevice = deviceLocal;
             Resource = ToDispose(resource);
+        }
+
+        /// <summary>
+        /// Copies the content of this resource to another <see cref="GraphicsResource"/>.
+        /// </summary>
+        /// <param name="toTexture">The texture to receive the copy.</param>
+        /// <remarks>
+        /// See unmanaged documentation for usage and restrictions.
+        /// </remarks>
+        /// <msdn-id>ff476392</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::CopyResource([In] ID3D11Resource* pDstResource,[In] ID3D11Resource* pSrcResource)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::CopyResource</unmanaged-short>	
+        public void CopyTo(GraphicsResource toTexture)
+        {
+            var context = (DeviceContext)GraphicsDevice.Current;
+            context.CopyResource(this, toTexture);
         }
 
         /// <summary>

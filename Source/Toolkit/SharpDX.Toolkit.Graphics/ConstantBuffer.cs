@@ -60,7 +60,7 @@ namespace SharpDX.Toolkit.Graphics
             return New(Utilities.SizeOf<T>());
         }
 
-        public ConstantBuffer ToStaging()
+        public override Buffer ToStaging()
         {
             var stagingDesc = Description;
             stagingDesc.BindFlags = BindFlags.None;

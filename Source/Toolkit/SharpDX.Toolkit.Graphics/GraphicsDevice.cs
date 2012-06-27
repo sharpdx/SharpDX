@@ -100,6 +100,38 @@ namespace SharpDX.Toolkit.Graphics
             return maxCount;
         }
 
+        /// <summary>	
+        /// <p>Clears an unordered access resource with bit-precise values.</p>	
+        /// </summary>	
+        /// <param name="view">The buffer to clear.</param>	
+        /// <param name="value">The value used to clear.</param>	
+        /// <remarks>	
+        /// <p>This API copies the lower ni bits from each array element i to the corresponding channel, where ni is the number of bits in  the ith channel of the resource format (for example, R8G8B8_FLOAT has 8 bits for the first 3 channels). This works on any UAV with no format conversion.  For a raw or structured buffer view, only the first array element value is used.</p>	
+        /// </remarks>	
+        /// <msdn-id>ff476391</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::ClearUnorderedAccessViewUint([In] ID3D11UnorderedAccessView* pUnorderedAccessView,[In] const unsigned int* Values)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::ClearUnorderedAccessViewUint</unmanaged-short>	
+        public void Clear(UnorderedAccessView view, int value)
+        {
+            Context.ClearUnorderedAccessView(view, value);
+        }
+
+        /// <summary>	
+        /// Clears an unordered access resource with a float value.
+        /// </summary>	
+        /// <param name="view">The buffer to clear.</param>	
+        /// <param name="value">The value used to clear.</param>	
+        /// <remarks>	
+        /// <p>This API works on FLOAT, UNORM, and SNORM unordered access views (UAVs), with format conversion from FLOAT to *NORM where appropriate. On other UAVs, the operation is invalid and the call will not reach the driver.</p>	
+        /// </remarks>	
+        /// <msdn-id>ff476390</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::ClearUnorderedAccessViewFloat([In] ID3D11UnorderedAccessView* pUnorderedAccessView,[In] const float* Values)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::ClearUnorderedAccessViewFloat</unmanaged-short>	
+        public void Clear(UnorderedAccessView view, float value)
+        {
+            Context.ClearUnorderedAccessView(view, value);
+        }
+
         /// <summary>
         /// Creates a new device from a <see cref="SharpDX.Direct3D11.Device"/>.
         /// </summary>

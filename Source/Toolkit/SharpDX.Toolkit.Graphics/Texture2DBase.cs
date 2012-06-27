@@ -124,22 +124,6 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Copies the content of this texture to another <see cref="Texture2DBase"/>.
-        /// </summary>
-        /// <param name="toTexture">The texture to receive the copy.</param>
-        /// <msdn-id>ff476392</msdn-id>	
-        /// <unmanaged>void ID3D11DeviceContext::CopyResource([In] ID3D11Resource* pDstResource,[In] ID3D11Resource* pSrcResource)</unmanaged>	
-        /// <unmanaged-short>ID3D11DeviceContext::CopyResource</unmanaged-short>	
-        /// <remarks>
-        /// See unmanaged documentation for usage and restrictions.
-        /// </remarks>
-        public void CopyTo(Texture2DBase toTexture)
-        {
-            var context = (DeviceContext)GraphicsDevice.Current;
-            context.CopyResource(this, toTexture);
-        }
-
-        /// <summary>
         /// Gets the content of this texture to an array of data.
         /// </summary>
         /// <typeparam name="TData">The type of the T data.</typeparam>
@@ -265,22 +249,13 @@ namespace SharpDX.Toolkit.Graphics
             if ((fromData.Length * Utilities.SizeOf<TData>()) != (StrideInBytes * Description.Height))
                 throw new ArgumentException("Length of TData is not compatible with Width * Height * Pixel size in bytes");
 
-
-            // Check that this is not an immutable resource
-            if (Description.Usage == ResourceUsage.Immutable)
-                throw new ArgumentException("Cannot set data on a resource declared with usage ResourceUsage.Immutable");
-
             // If this texture is declared as default usage, we can only use UpdateSubresource, which is not optimal but better than nothing
-            if (Description.Usage == ResourceUsage.Default)
+            if (Description.Usage == ResourceUsage.Default || Description.Usage == ResourceUsage.Immutable)
             {
                 context.UpdateSubresource(fromData, this, subResourceIndex, StrideInBytes);
             }
             else
             {
-                // Check that this texture has CpuAccessFlags.Write flags
-                if ((Description.CpuAccessFlags & CpuAccessFlags.Write) == 0)
-                    throw new ArgumentException("CpuAccessFlags for this texture is not set to CpuAccessFlags.Write");
-
                 try
                 {
                     int width = this.CalculateElementWidth<TData>();
