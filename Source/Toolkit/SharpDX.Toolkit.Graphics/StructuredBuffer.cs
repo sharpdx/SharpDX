@@ -17,66 +17,114 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System;
+
+using SharpDX.DXGI;
+using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public class StructuredBuffer : Buffer
+    public class StructuredBuffer : BufferBase
     {
-        protected StructuredBuffer(BufferDescription description)
-            : this(GraphicsDevice.Current, description)
+
+        protected StructuredBuffer(BufferDescription description, UnorderedAccessViewBufferFlags viewFlags = UnorderedAccessViewBufferFlags.None)
+            : this(GraphicsDevice.Current, description, viewFlags)
         {
         }
 
-        protected StructuredBuffer(Direct3D11.Buffer buffer, int structureStride)
-            : this(GraphicsDevice.Current, buffer, structureStride)
+        protected StructuredBuffer(Direct3D11.Buffer buffer, int structureStride, UnorderedAccessViewBufferFlags viewFlags = UnorderedAccessViewBufferFlags.None)
+            : this(GraphicsDevice.Current, buffer, structureStride, viewFlags)
         {
         }
 
-        protected StructuredBuffer(GraphicsDevice deviceLocal, BufferDescription description)
-            : base(deviceLocal, description, PixelFormat.Unknown)
+        protected StructuredBuffer(GraphicsDevice deviceLocal, BufferDescription description, UnorderedAccessViewBufferFlags viewFlags = UnorderedAccessViewBufferFlags.None)
+            : base(deviceLocal, description)
         {
+            ViewFlags = viewFlags;
             Count = description.SizeInBytes / description.StructureByteStride;
         }
 
-        protected StructuredBuffer(GraphicsDevice deviceLocal, Direct3D11.Buffer nativeBuffer, int structureStride)
-            : base(deviceLocal, nativeBuffer, PixelFormat.Unknown, structureStride)
+        protected StructuredBuffer(GraphicsDevice deviceLocal, Direct3D11.Buffer nativeBuffer, int structureStride, UnorderedAccessViewBufferFlags viewFlags = UnorderedAccessViewBufferFlags.None)
+            : base(deviceLocal, nativeBuffer, structureStride)
         {
             var description = nativeBuffer.Description;
+            ViewFlags = viewFlags;
             Count = description.SizeInBytes / description.StructureByteStride;
         }
 
-        public int Count { get; private set; }
+        public readonly UnorderedAccessViewBufferFlags ViewFlags;
+
+        public readonly int Count;
 
         public StructuredBuffer Clone()
         {
-            return new StructuredBuffer(GraphicsDevice, Description);
+            return new StructuredBuffer(GraphicsDevice, Description, ViewFlags);
         }
 
-        public static StructuredBuffer New(BufferDescription description)
+        public static StructuredBuffer New(BufferDescription description, UnorderedAccessViewBufferFlags viewFlags = UnorderedAccessViewBufferFlags.None)
         {
-            return new StructuredBuffer(description);
+            return new StructuredBuffer(description, viewFlags);
         }
 
-        public static StructuredBuffer New(int sizeInBytes, int structureSizeInBytes, bool isReadWrite = false)
+        public static StructuredBuffer New(int sizeInBytes, int structureSizeInBytes, bool isReadWrite = false, UnorderedAccessViewBufferFlags viewFlags = UnorderedAccessViewBufferFlags.None)
         {
             var description = NewDescription(sizeInBytes, BindFlags.ShaderResource, isReadWrite, structureSizeInBytes, ResourceUsage.Default, ResourceOptionFlags.BufferStructured);
-            return new StructuredBuffer(description);
+            return new StructuredBuffer(description, viewFlags);
         }
 
-        public static StructuredBuffer New<T>(int countElements, bool isReadWrite = false) where T : struct
+        public static StructuredBuffer New<T>(int countElements, bool isReadWrite = false, UnorderedAccessViewBufferFlags viewFlags = UnorderedAccessViewBufferFlags.None) where T : struct
         {
             int sizeOfStruct = Utilities.SizeOf<T>();
             var description = NewDescription(sizeOfStruct * countElements, BindFlags.ShaderResource, isReadWrite, sizeOfStruct, ResourceUsage.Default, ResourceOptionFlags.BufferStructured);
-            return new StructuredBuffer(description);
+            return new StructuredBuffer(description, viewFlags);
         }
 
-        public static StructuredBuffer New<T>(T[] elements, bool isReadWrite = false) where T : struct
+        public static StructuredBuffer New<T>(T[] elements, bool isReadWrite = false, UnorderedAccessViewBufferFlags viewFlags = UnorderedAccessViewBufferFlags.None) where T : struct
         {
             int sizeOfStruct = Utilities.SizeOf<T>();
             var description = NewDescription(sizeOfStruct * elements.Length, BindFlags.ShaderResource, isReadWrite, sizeOfStruct, ResourceUsage.Default, ResourceOptionFlags.BufferStructured);
             var nativeBuffer = Direct3D11.Buffer.Create(GraphicsDevice.Current, elements, description);
-            return new StructuredBuffer(nativeBuffer, sizeOfStruct);
+            return new StructuredBuffer(nativeBuffer, sizeOfStruct, viewFlags);
+        }
+
+        protected override void InitializeViews()
+        {
+            var bindFlags = Description.BindFlags;
+
+            if ((bindFlags & BindFlags.ShaderResource) != 0)
+            {
+                var description = new ShaderResourceViewDescription
+                {
+                    Format = Format.Unknown,
+                    Dimension = ShaderResourceViewDimension.Buffer,
+                    Buffer =
+                    {
+                        ElementCount = this.Description.SizeInBytes / this.Description.StructureByteStride,
+                        ElementOffset = 0
+                    }
+                };
+
+                this.shaderResourceView = ToDispose(new ShaderResourceView(this.GraphicsDevice, this.Resource, description));
+            }
+
+            if ((bindFlags & BindFlags.UnorderedAccess) != 0)
+            {
+                var description = new UnorderedAccessViewDescription()
+                {
+                    Format = Format.Unknown,
+                    Dimension = UnorderedAccessViewDimension.Buffer,
+                    Buffer =
+                    {
+                        ElementCount = this.Description.SizeInBytes / this.Description.StructureByteStride,
+                        FirstElement = 0,
+                        Flags = ViewFlags
+                    },
+                };
+
+                this.unorderedAccessView = ToDispose(new UnorderedAccessView(this.GraphicsDevice, this.Resource, description));
+            }
         }
 
         /// <summary>
@@ -104,14 +152,14 @@ namespace SharpDX.Toolkit.Graphics
         }
 
 
-        public override Buffer ToStaging()
+        public override BufferBase ToStaging()
         {
             var stagingDesc = Description;
             stagingDesc.BindFlags = BindFlags.None;
             stagingDesc.CpuAccessFlags = CpuAccessFlags.Read;
             stagingDesc.Usage = ResourceUsage.Staging;
             stagingDesc.OptionFlags = ResourceOptionFlags.None;
-            return new StructuredBuffer(this.GraphicsDevice, stagingDesc);
+            return new StructuredBuffer(this.GraphicsDevice, stagingDesc, ViewFlags);
         }
     }
 }

@@ -17,13 +17,11 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System;
-
 using SharpDX.Direct3D11;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public class ConstantBuffer : Buffer
+    public class ConstantBuffer : BufferBase
     {
         protected ConstantBuffer(BufferDescription description)
             : this(GraphicsDevice.Current, description)
@@ -31,12 +29,12 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         protected ConstantBuffer(GraphicsDevice deviceLocal, BufferDescription description)
-            : base(deviceLocal, description, PixelFormat.Unknown)
+            : base(deviceLocal, description)
         {
         }
 
         protected ConstantBuffer(GraphicsDevice deviceLocal, Direct3D11.Buffer nativeBuffer)
-            : base(deviceLocal, nativeBuffer, PixelFormat.Unknown)
+            : base(deviceLocal, nativeBuffer)
         {
         }
 
@@ -60,7 +58,11 @@ namespace SharpDX.Toolkit.Graphics
             return New(Utilities.SizeOf<T>());
         }
 
-        public override Buffer ToStaging()
+        protected override void InitializeViews()
+        {
+        }
+
+        public override BufferBase ToStaging()
         {
             var stagingDesc = Description;
             stagingDesc.BindFlags = BindFlags.None;

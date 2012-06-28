@@ -17,7 +17,7 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Buffer.cs" />
+    <Compile Include="BufferBase.cs" />
     <Compile Include="StructuredBuffer.cs" />
     <Compile Include="ConstantBuffer.cs" />
     <Compile Include="Effect.cs" />

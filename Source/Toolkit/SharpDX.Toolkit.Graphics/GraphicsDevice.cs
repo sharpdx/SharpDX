@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 using System;
 using System.Collections.Generic;
-using System.IO;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 
@@ -133,6 +132,20 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
+        /// Copies the content of this resource to another <see cref="GraphicsResource" />.
+        /// </summary>
+        /// <param name="fromResource">The resource to copy from.</param>
+        /// <param name="toResource">The resource to copy to.</param>
+        /// <remarks>See the unmanaged documentation for usage and restrictions.</remarks>
+        /// <msdn-id>ff476392</msdn-id>
+        /// <unmanaged>void ID3D11DeviceContext::CopyResource([In] ID3D11Resource* pDstResource,[In] ID3D11Resource* pSrcResource)</unmanaged>
+        /// <unmanaged-short>ID3D11DeviceContext::CopyResource</unmanaged-short>
+        public void Copy(Direct3D11.Resource fromResource, Direct3D11.Resource toResource)
+        {
+            Context.CopyResource(fromResource, toResource);
+        }
+
+        /// <summary>
         /// Creates a new device from a <see cref="SharpDX.Direct3D11.Device"/>.
         /// </summary>
         /// <param name="device">The device.</param>
@@ -194,6 +207,334 @@ namespace SharpDX.Toolkit.Graphics
             current = this;
         }
 
+        /// <summary>
+        /// Gets the content of this texture to an array of data.
+        /// </summary>
+        /// <typeparam name="TData">The type of the T data.</typeparam>
+        /// <param name="buffer">The buffer to get the data from.</param>
+        /// <param name="subResourceIndex">Index of the subresource to copy from.</param>
+        /// <remarks>
+        /// This method creates internally a stagging resource, copies to it and map it to memory. Use method with explicit staging resource
+        /// for optimal performances.
+        /// </remarks>
+        /// <msdn-id>ff476457</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
+        public TData[] GetData<TData>(BufferBase buffer, int subResourceIndex = 0) where TData : struct
+        {
+            var toData = new TData[buffer.Description.SizeInBytes / Utilities.SizeOf<TData>()];
+            GetData(buffer, toData, subResourceIndex);
+            return toData;
+        }
+
+        /// <summary>
+        /// Copies the content of this texture to an array of data.
+        /// </summary>
+        /// <param name="buffer">The buffer to get the data from.</param>
+        /// <typeparam name="TData">The type of the T data.</typeparam>
+        /// <param name="toData">The destination buffer to receive a copy of the texture datas.</param>
+        /// <param name="subResourceIndex">Index of the subresource to copy from.</param>
+        /// <remarks>
+        /// This method creates internally a stagging resource if this texture is not already a stagging resouce, copies to it and map it to memory. Use method with explicit staging resource
+        /// for optimal performances.
+        /// </remarks>
+        /// <msdn-id>ff476457</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
+        public void GetData<TData>(BufferBase buffer, TData[] toData, int subResourceIndex = 0) where TData : struct
+        {
+            // Get data from this resource
+            if (buffer.Description.Usage == ResourceUsage.Staging)
+            {
+                // Directly if this is a staging resource
+                GetData(buffer, buffer, toData, subResourceIndex);
+            }
+            else
+            {
+                // Unefficient way to use the Copy method using dynamic staging texture
+                using (var throughStaging = buffer.ToStaging())
+                    GetData(buffer, throughStaging, toData, subResourceIndex);
+            }
+        }
+
+        /// <summary>
+        /// Copies the content of this texture from GPU memory to an array of data on CPU memory using a specific staging resource.
+        /// </summary>
+        /// <typeparam name="TData">The type of the T data.</typeparam>
+        /// <param name="buffer">The buffer to get the data from.</param>
+        /// <param name="stagingTexture">The staging buffer used to transfer the buffer.</param>
+        /// <param name="toData">To data.</param>
+        /// <param name="subResourceIndex">Index of the sub resource.</param>
+        /// <exception cref="System.ArgumentException">When strides is different from optimal strides, and TData is not the same size as the pixel format, or Width * Height != toData.Length</exception>
+        /// <remarks>
+        /// See the unmanaged documentation for usage and restrictions.
+        /// </remarks>
+        /// <msdn-id>ff476457</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
+        public void GetData<TData>(BufferBase buffer, BufferBase stagingTexture, TData[] toData, int subResourceIndex = 0) where TData : struct
+        {
+            // Check size validity of data to copy to
+            if ((toData.Length * Utilities.SizeOf<TData>()) > buffer.Description.SizeInBytes)
+                throw new ArgumentException("Length of TData is larger than size of buffer");
+
+            // Copy the texture to a staging resource
+            Context.CopyResource(buffer, stagingTexture);
+
+            // Map the staging resource to a CPU accessible memory
+            var box = Context.MapSubresource(stagingTexture, subResourceIndex, MapMode.Read, Direct3D11.MapFlags.None);
+            Utilities.Read(box.DataPointer, toData, 0, toData.Length);
+            // Make sure that we unmap the resource in case of an exception
+            Context.UnmapSubresource(stagingTexture, subResourceIndex);
+        }
+
+        /// <summary>
+        /// Copies the content an array of data on CPU memory to this texture into GPU memory.
+        /// </summary>
+        /// <typeparam name="TData">The type of the T data.</typeparam>
+        /// <param name="buffer">The buffer to set the data to.</param>
+        /// <param name="fromData">The data to copy from.</param>
+        /// <param name="offsetInBytes">The offset in bytes to write to.</param>
+        /// <param name="subResourceIndex">Index of the sub resource.</param>
+        /// <exception cref="System.ArgumentException"></exception>
+        /// <remarks>See the unmanaged documentation for usage and restrictions.</remarks>
+        /// <msdn-id>ff476457</msdn-id>
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
+        public unsafe void SetData<TData>(BufferBase buffer, ref TData fromData, int offsetInBytes = 0, int subResourceIndex = 0) where TData : struct
+        {
+            // Check size validity of data to copy to
+            if (Utilities.SizeOf<TData>() > buffer.Description.SizeInBytes)
+                throw new ArgumentException("Length of TData is larger than size of buffer");
+
+            // Offset in bytes is set to 0 for constant buffers
+            offsetInBytes = (buffer.Description.BindFlags & BindFlags.ConstantBuffer) != 0 ? 0 : offsetInBytes;
+
+            // If this texture is declared as default usage, we can only use UpdateSubresource, which is not optimal but better than nothing
+            if (buffer.Description.Usage == ResourceUsage.Default || buffer.Description.Usage == ResourceUsage.Immutable)
+            {
+                // Setup the dest region inside the buffer
+                var destRegion = new ResourceRegion(offsetInBytes, 0, 0, offsetInBytes + Utilities.SizeOf<TData>(), 1, 1);
+                Context.UpdateSubresource(ref fromData, buffer, subResourceIndex, 0, 0, (buffer.Description.BindFlags & BindFlags.ConstantBuffer) != 0 ? (ResourceRegion?)null : destRegion);
+            }
+            else
+            {
+                try
+                {
+                    var box = Context.MapSubresource(buffer, subResourceIndex, MapMode.WriteDiscard, Direct3D11.MapFlags.None);
+                    Utilities.Write((IntPtr)((byte*)box.DataPointer + offsetInBytes), ref fromData);
+                }
+                finally
+                {
+                    Context.UnmapSubresource(buffer, subResourceIndex);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Copies the content an array of data on CPU memory to this texture into GPU memory.
+        /// </summary>
+        /// <typeparam name="TData">The type of the T data.</typeparam>
+        /// <param name="buffer">The buffer to set the data to.</param>
+        /// <param name="fromData">The data to copy from.</param>
+        /// <param name="offsetInBytes">The offset in bytes to write to.</param>
+        /// <param name="subResourceIndex">Index of the sub resource.</param>
+        /// <exception cref="System.ArgumentException"></exception>
+        /// <remarks>See the unmanaged documentation for usage and restrictions.</remarks>
+        /// <msdn-id>ff476457</msdn-id>
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
+        public unsafe void SetData<TData>(BufferBase buffer, TData[] fromData, int offsetInBytes = 0, int subResourceIndex = 0) where TData : struct
+        {
+            // Check size validity of data to copy to
+            if ((fromData.Length * Utilities.SizeOf<TData>()) > buffer.Description.SizeInBytes)
+                throw new ArgumentException("Length of TData is larger than size of buffer");
+
+            // If this texture is declared as default usage, we can only use UpdateSubresource, which is not optimal but better than nothing
+            if (buffer.Description.Usage == ResourceUsage.Default || buffer.Description.Usage == ResourceUsage.Immutable)
+            {
+                // Setup the dest region inside the buffer
+                var destRegion = new ResourceRegion(offsetInBytes, 0, 0, offsetInBytes + fromData.Length * Utilities.SizeOf<TData>(), 1, 1);
+                Context.UpdateSubresource(fromData, buffer, subResourceIndex, 0, 0, (buffer.Description.BindFlags & BindFlags.ConstantBuffer) != 0 ? (ResourceRegion?)null : destRegion);
+            }
+            else
+            {
+                try
+                {
+                    var box = Context.MapSubresource(buffer, subResourceIndex, MapMode.WriteDiscard, Direct3D11.MapFlags.None);
+                    Utilities.Write((IntPtr)((byte*)box.DataPointer + offsetInBytes), fromData, 0, fromData.Length);
+                }
+                finally
+                {
+                    Context.UnmapSubresource(buffer, subResourceIndex);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the content of this texture to an array of data.
+        /// </summary>
+        /// <typeparam name="TData">The type of the T data.</typeparam>
+        /// <param name="texture">The texture.</param>
+        /// <param name="subResourceIndex">Index of the subresource to copy from.</param>
+        /// <returns></returns>
+        /// <msdn-id>ff476457</msdn-id>
+        ///   <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
+        ///   <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
+        /// <remarks>This method creates internally a stagging resource, copies to it and map it to memory. Use method with explicit staging resource
+        /// for optimal performances.</remarks>
+        public TData[] GetData<TData>(Texture2DBase texture, int subResourceIndex = 0) where TData : struct
+        {
+            var toData = new TData[CalculateElementWidth<TData>(texture) * texture.Description.Height];
+            GetData(texture, toData, subResourceIndex);
+            return toData;
+        }
+
+        /// <summary>
+        /// Copies the content of this texture to an array of data.
+        /// </summary>
+        /// <typeparam name="TData">The type of the T data.</typeparam>
+        /// <param name="toData">The destination buffer to receive a copy of the texture datas.</param>
+        /// <param name="subResourceIndex">Index of the subresource to copy from.</param>
+        /// <msdn-id>ff476457</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
+        /// <remarks>
+        /// This method creates internally a stagging resource if this texture is not already a stagging resouce, copies to it and map it to memory. Use method with explicit staging resource
+        /// for optimal performances.
+        /// </remarks>
+        public void GetData<TData>(Texture2DBase texture, TData[] toData, int subResourceIndex = 0) where TData : struct
+        {
+            // Get data from this resource
+            if (texture.Description.Usage == ResourceUsage.Staging)
+            {
+                // Directly if this is a staging resource
+                GetData(texture, texture, toData, subResourceIndex);
+            }
+            else
+            {
+                // Unefficient way to use the Copy method using dynamic staging texture
+                using (var throughStaging = texture.ToStaging())
+                    GetData(texture, throughStaging, toData, subResourceIndex);
+            }
+        }
+
+        /// <summary>
+        /// Copies the content of this texture from GPU memory to an array of data on CPU memory using a specific staging resource.
+        /// </summary>
+        /// <typeparam name="TData">The type of the T data.</typeparam>
+        /// <param name="texture">The texture to get the data from.</param>
+        /// <param name="stagingTexture">The staging texture used to transfer the texture to.</param>
+        /// <param name="toData">To data.</param>
+        /// <param name="subResourceIndex">Index of the sub resource.</param>
+        /// <exception cref="System.ArgumentException">When strides is different from optimal strides, and TData is not the same size as the pixel format, or Width * Height != toData.Length</exception>
+        /// <msdn-id>ff476457</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
+        /// <remarks>
+        /// See unmanaged documentation for usage and restrictions.
+        /// </remarks>
+        public unsafe void GetData<TData>(Texture2DBase texture, Texture2DBase stagingTexture, TData[] toData, int subResourceIndex = 0) where TData : struct
+        {
+            // Check size validity of data to copy to
+            if ((toData.Length * Utilities.SizeOf<TData>()) != (texture.StrideInBytes * texture.Description.Height))
+                throw new ArgumentException("Length of TData is not compatible with Width * Height * Pixel size in bytes");
+
+            // Copy the texture to a staging resource
+            Context.CopyResource(texture, stagingTexture);
+
+            try
+            {
+                int width = CalculateElementWidth<TData>(texture);
+
+                // Map the staging resource to a CPU accessible memory
+                var box = Context.MapSubresource(stagingTexture, subResourceIndex, MapMode.Read, MapFlags.None);
+
+                // The fast way: If same stride, we can directly copy the whole texture in one shot
+                if (box.RowPitch == texture.StrideInBytes)
+                {
+                    Utilities.Read(box.DataPointer, toData, 0, toData.Length);
+                }
+                else
+                {
+                    // Otherwise, the long way by copying each scanline
+                    int offsetStride = 0;
+                    var sourcePtr = (byte*)box.DataPointer;
+
+                    for (int i = 0; i < texture.Description.Height; i++)
+                    {
+                        Utilities.Read((IntPtr)sourcePtr, toData, offsetStride, width);
+                        sourcePtr += box.RowPitch;
+                        offsetStride += width;
+                    }
+                }
+            }
+            finally
+            {
+                // Make sure that we unmap the resource in case of an exception
+                Context.UnmapSubresource(stagingTexture, subResourceIndex);
+            }
+        }
+
+        /// <summary>
+        /// Copies the content an array of data on CPU memory to this texture into GPU memory.
+        /// </summary>
+        /// <typeparam name="TData">The type of the T data.</typeparam>
+        /// <param name="texture">The texture to set the data to.</param>
+        /// <param name="fromData">The data to copy from.</param>
+        /// <param name="subResourceIndex">Index of the sub resource.</param>
+        /// <exception cref="System.ArgumentException">When strides is different from optimal strides, and TData is not the same size as the pixel format, or Width * Height != toData.Length</exception>
+        /// <msdn-id>ff476457</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
+        /// <remarks>
+        /// See unmanaged documentation for usage and restrictions.
+        /// </remarks>
+        public unsafe void SetData<TData>(Texture2DBase texture, TData[] fromData, int subResourceIndex = 0) where TData : struct
+        {
+            // Check size validity of data to copy to
+            if ((fromData.Length * Utilities.SizeOf<TData>()) != (texture.StrideInBytes * texture.Description.Height))
+                throw new ArgumentException("Length of TData is not compatible with Width * Height * Pixel size in bytes");
+
+            // If this texture is declared as default usage, we can only use UpdateSubresource, which is not optimal but better than nothing
+            if (texture.Description.Usage == ResourceUsage.Default || texture.Description.Usage == ResourceUsage.Immutable)
+            {
+                Context.UpdateSubresource(fromData, texture, subResourceIndex, texture.StrideInBytes);
+            }
+            else
+            {
+                try
+                {
+                    int width = CalculateElementWidth<TData>(texture);
+                    var box = Context.MapSubresource(texture, subResourceIndex, MapMode.WriteDiscard,
+                                                     MapFlags.None);
+                    // The fast way: If same stride, we can directly copy the whole texture in one shot
+                    if (box.RowPitch == texture.StrideInBytes)
+                    {
+                        Utilities.Write(box.DataPointer, fromData, 0, fromData.Length);
+                    }
+                    else
+                    {
+                        // Otherwise, the long way by copying each scanline
+                        int offsetStride = 0;
+                        var destPtr = (byte*)box.DataPointer;
+
+                        for (int i = 0; i < texture.Description.Height; i++)
+                        {
+                            Utilities.Write((IntPtr)destPtr, fromData, offsetStride, width);
+                            destPtr += box.RowPitch;
+                            offsetStride += width;
+                        }
+
+                    }
+                }
+                finally
+                {
+                    Context.UnmapSubresource(texture, subResourceIndex);
+                }
+            }
+        }
+
         public static implicit operator Device(GraphicsDevice from)
         {
             return from.Device;
@@ -202,6 +543,21 @@ namespace SharpDX.Toolkit.Graphics
         public static implicit operator DeviceContext(GraphicsDevice from)
         {
             return from.Context;
+        }
+
+        /// <summary>
+        /// Calculates the width of the element.
+        /// </summary>
+        /// <typeparam name="TData">The type of the T data.</typeparam>
+        /// <returns>The width</returns>
+        /// <exception cref="System.ArgumentException">If the size is invalid</exception>
+        private int CalculateElementWidth<TData>(Texture2DBase texture) where TData : struct
+        {
+            var dataStrideInBytes = Utilities.SizeOf<TData>() * texture.Description.Width;
+            var width = ((double)texture.StrideInBytes / dataStrideInBytes) * texture.Description.Width;
+            if (Math.Abs(width - (int)width) > double.Epsilon)
+                throw new ArgumentException("sizeof(TData) / sizeof(Format) * Width is not an integer");
+            return (int)width;
         }
     }
 }
