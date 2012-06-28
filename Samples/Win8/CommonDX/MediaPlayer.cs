@@ -33,8 +33,10 @@ namespace CommonDX
     public class MediaPlayer
     {
         private DXGIDeviceManager dxgiDeviceManager;
+        private MediaEngine mediaEngine;
         private MediaEngineEx mediaEngineEx;
         private SharpDX.DXGI.Output dxgiOutput;
+        private CoreWindowTarget targetBase;
 
         private bool isEndOfStream;
         private bool isTimerStopped;
@@ -42,13 +44,40 @@ namespace CommonDX
 
         public MediaPlayer()
         {
-            BackgroundColor = Colors.Black;
+            BackgroundColor = Colors.Transparent;
+            isTimerStopped = true;
         }
 
-        public virtual void Initialize(SharpDX.Direct3D11.Device device)
+        /// <summary>
+        /// Gets whether this media player is playing a video or audio.
+        /// </summary>
+        public bool IsPlaying { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the background color used to display the video.
+        /// </summary>
+        public Color4 BackgroundColor { get; set; }
+
+        /// <summary>
+        /// Event fired when a new video frame has been transfered to <see cref="VideoTextureDestination"/>.
+        /// </summary>
+        public event Action OnNewVideoFrameAvailable;
+
+        /// <summary>
+        /// Gets or sets the url used to play the stream.
+        /// </summary>
+        public string Url { get; set; }
+
+        private ByteStream byteStream;
+        private ComObject streamCom;
+        
+        
+        public virtual void Initialize(SharpDX.Direct3D11.Device device, CoreWindowTarget targetBase)
         {
             lock (lockObject)
             {
+                this.targetBase = targetBase;
+
                 // Startup MediaManager
                 MediaManager.Startup();
 
@@ -64,8 +93,8 @@ namespace CommonDX
                                      };
 
                 using (var factory = new MediaEngineClassFactory())
-                using (var mediaEngine = new MediaEngine(factory, attributes, MediaEngineCreateflags.WaitforstableState, OnMediaEngineEvent))
-                    mediaEngineEx = mediaEngine.QueryInterface<MediaEngineEx>();
+                    mediaEngine = new MediaEngine(factory, attributes, MediaEngineCreateflags.WaitforstableState, OnMediaEngineEvent);                
+                mediaEngineEx = mediaEngine.QueryInterface<MediaEngineEx>();
             }
         }
 
@@ -80,35 +109,10 @@ namespace CommonDX
             }
         }
 
-        /// <summary>
-        /// Gets whether this media player is playing a video or audio.
-        /// </summary>
-        public bool IsPlaying { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the background color used to display the video.
-        /// </summary>
-        public Color4 BackgroundColor { get; set; }
-
-
-        /// <summary>
-        /// Gets or sets the texture that will receive the video frame.
-        /// </summary>
-        public SharpDX.Direct3D11.Texture2D VideoTextureDestination { get; set; }
-
-        /// <summary>
-        /// Event fired when a new video frame has been transfered to <see cref="VideoTextureDestination"/>.
-        /// </summary>
-        public event Action OnNewVideoFrameAvailable;
-
-        /// <summary>
-        /// Gets or sets the url used to play the stream.
-        /// </summary>
-        public string Url { get; set; }
-
         public void SetBytestream(IRandomAccessStream streamHandle)
         {
-            var byteStream = new ByteStream(ComObject.As<ComObject>(streamHandle));
+            streamCom = new ComObject(streamHandle);
+            byteStream = new ByteStream(streamCom);
             mediaEngineEx.SetSourceFromByteStream(byteStream, Url);
         }
 
@@ -128,11 +132,10 @@ namespace CommonDX
                 if (isEndOfStream)
                 {
                     PlaybackPosition = 0;
-                    IsPlaying = false;
+                    IsPlaying = true;
                 }
                 else
                 {
-                    IsPlaying = true;
                     mediaEngineEx.Play();
                 }
 
@@ -328,12 +331,19 @@ namespace CommonDX
         {
             lock(lockObject)
             {
-                if (mediaEngineEx != null && VideoTextureDestination != null)
+                if (mediaEngineEx != null)
                 {
                     long pts;
                     if (mediaEngineEx.OnVideoStreamTick(out pts))
                     {
-                        mediaEngineEx.TransferVideoFrame(VideoTextureDestination, null, new Rectangle(), (ColorBgra)BackgroundColor);
+                        var backBuffer = targetBase.SwapChain.GetBackBuffer<SharpDX.Direct3D11.Texture2D>(0);
+
+                        var desc = backBuffer.Description;
+                        var region = new Rectangle(0, 0, desc.Width, desc.Height);
+
+                        mediaEngineEx.TransferVideoFrame(backBuffer, null, region, (ColorBgra)BackgroundColor);
+
+                        targetBase.Present();
 
                         var onNewVideoFrameAvailable = OnNewVideoFrameAvailable;
                         if (onNewVideoFrameAvailable != null) onNewVideoFrameAvailable();
@@ -365,7 +375,7 @@ namespace CommonDX
                 case MediaEngineEvent.Ended:
                     if (mediaEngineEx.HasVideo())
                     {
-                        //StopTimer();
+                        StopTimer();
                     }
                     isEndOfStream = true;
                     break;

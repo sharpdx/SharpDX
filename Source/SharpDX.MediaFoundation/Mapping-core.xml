@@ -707,6 +707,8 @@
 
     <map method="IMFMediaEngine::OnVideoStreamTick" name="OnVideoStreamTick_" check="false" visibility="internal"/>
 
+    <map param="IMFMediaEngineEx::SetSourceFromByteStream::pURL" type="void"/>
+
     <!--
     // *****************************************************************
     // MediaFoundation Functions

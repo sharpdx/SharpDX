@@ -57,6 +57,8 @@ namespace CommonDX
         /// </summary>
         public SharpDX.Direct3D11.RenderTargetView RenderTargetView { get { return renderTargetView; } }
 
+        public SharpDX.Direct3D11.Texture2D BackBuffer { get; protected set; }
+
         /// <summary>
         /// Gets the Direct3D DepthStencilView used by this target.
         /// </summary>
@@ -82,6 +84,8 @@ namespace CommonDX
         /// </summary>
         public Windows.Foundation.Rect ControlBounds { get; protected set; }
 
+
+        
         /// <summary>
         /// Gets the current bounds of the control linked to this render target
         /// </summary>

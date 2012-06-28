@@ -23,6 +23,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SharpDX;
+using SharpDX.DXGI;
 
 namespace CommonDX
 {
@@ -65,6 +66,11 @@ namespace CommonDX
             {
                 return (int)(ControlBounds.Height * DeviceManager.Dpi / 96.0);
             }
+        }
+
+        public SwapChain1 SwapChain
+        {
+            get { return swapChain; }
         }
 
         /// <summary>
@@ -137,13 +143,13 @@ namespace CommonDX
             }
 
             // Obtain the backbuffer for this window which will be the final 3D rendertarget.
-            using (var backBuffer = SharpDX.Direct3D11.Texture2D.FromSwapChain<SharpDX.Direct3D11.Texture2D>(swapChain, 0))
+            BackBuffer = SharpDX.Direct3D11.Texture2D.FromSwapChain<SharpDX.Direct3D11.Texture2D>(swapChain, 0);
             {
                 // Create a view interface on the rendertarget to use on bind.
-                renderTargetView = ToDispose(new SharpDX.Direct3D11.RenderTargetView(d3dDevice, backBuffer));
+                renderTargetView = ToDispose(new SharpDX.Direct3D11.RenderTargetView(d3dDevice, BackBuffer));
 
                 // Cache the rendertarget dimensions in our helper class for convenient use.
-                var backBufferDesc = backBuffer.Description;
+                var backBufferDesc = BackBuffer.Description;
                 RenderTargetBounds = new Windows.Foundation.Rect(0, 0, backBufferDesc.Width, backBufferDesc.Height);
             }
 
@@ -207,7 +213,7 @@ namespace CommonDX
                 Format = SharpDX.DXGI.Format.B8G8R8A8_UNorm,
                 Stereo = false,
                 SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0),
-                Usage = SharpDX.DXGI.Usage.RenderTargetOutput,
+                Usage = SharpDX.DXGI.Usage.BackBuffer | SharpDX.DXGI.Usage.RenderTargetOutput,
                 // Use two buffers to enable flip effect.
                 BufferCount = 2,
                 Scaling = SharpDX.DXGI.Scaling.None,

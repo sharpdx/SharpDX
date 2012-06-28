@@ -17,6 +17,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+using System;
 using System.Runtime.InteropServices;
 
 #if DIRECTX11_1
@@ -30,14 +31,20 @@ namespace SharpDX.MediaFoundation
         /// <param name="byteStreamRef"><dd> <p>A reference to the <strong><see cref="SharpDX.MediaFoundation.IByteStream"/></strong> interface of the byte stream.</p> </dd></param>	
         /// <param name="uRLRef"><dd> <p>The URL of the byte stream.</p> </dd></param>	
         /// <returns><p>If this method succeeds, it returns <strong><see cref="SharpDX.Result.Ok"/></strong>. Otherwise, it returns an <strong><see cref="SharpDX.Result"/></strong> error code.</p></returns>	
-        /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IMFMediaEngineEx::SetSourceFromByteStream']/*"/>	
         /// <msdn-id>hh447956</msdn-id>	
         /// <unmanaged>HRESULT IMFMediaEngineEx::SetSourceFromByteStream([In] IMFByteStream* pByteStream,[In] wchar_t* pURL)</unmanaged>	
         /// <unmanaged-short>IMFMediaEngineEx::SetSourceFromByteStream</unmanaged-short>	
         public void SetSourceFromByteStream(ByteStream byteStream, string url)
         {
-            //var urlBstr = Marshal.StringToBSTR(url);
-            SetSourceFromByteStream_(byteStream.NativePointer, url);
+            var bstrUrl = Marshal.StringToBSTR(url);
+            try
+            {
+                //var urlBstr = Marshal.StringToBSTR(url);
+                SetSourceFromByteStream_(byteStream.NativePointer, bstrUrl);
+            } finally
+            {
+                Marshal.FreeBSTR(bstrUrl);
+            }
         }
     }
 }

@@ -160,9 +160,8 @@ namespace CommonDX
             // Enable compatibility with Direct2D
             // Retrieve the Direct3D 11.1 device amd device context
             var creationFlags = SharpDX.Direct3D11.DeviceCreationFlags.VideoSupport | SharpDX.Direct3D11.DeviceCreationFlags.BgraSupport;
-#if DEBUG
-            creationFlags |= SharpDX.Direct3D11.DeviceCreationFlags.Debug;
-#endif
+
+            // Decomment this line to have Debug. Unfortunately, debug is sometimes crashing applications, so it is disable by default
             using (var defaultDevice = new SharpDX.Direct3D11.Device(DriverType.Hardware, creationFlags))
                 d3dDevice = defaultDevice.QueryInterface<SharpDX.Direct3D11.Device1>();
             featureLevel = d3dDevice.FeatureLevel;
