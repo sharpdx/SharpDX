@@ -29,7 +29,7 @@ namespace SharpDX.Toolkit.Graphics
     /// Base class for texture resources.
     /// </summary>
     /// <typeparam name="T">Type of the <see cref="N:SharpDX.Direct3D11"/> texture resource.</typeparam>
-    public abstract class Texture<T> : GraphicsResource<T> where T : Resource
+    public abstract class Texture : GraphicsResource
     {
         protected ShaderResourceView[] ShaderResourceViews;
         protected RenderTargetView[] RenderTargetViews;
@@ -78,7 +78,7 @@ namespace SharpDX.Toolkit.Graphics
         /// ShaderResourceView casting operator.
         /// </summary>
         /// <param name="from">Source for the.</param>
-        public static implicit operator ShaderResourceView(Texture<T> from)
+        public static implicit operator ShaderResourceView(Texture from)
         {
             return from.ShaderResourceViews != null ? from.ShaderResourceViews[0] : null;
         }
@@ -87,7 +87,7 @@ namespace SharpDX.Toolkit.Graphics
         /// RenderTargetView casting operator.
         /// </summary>
         /// <param name="from">Source for the.</param>
-        public static implicit operator RenderTargetView(Texture<T> from)
+        public static implicit operator RenderTargetView(Texture from)
         {
             return from.RenderTargetViews != null ? from.RenderTargetViews[0] : null;
         }
@@ -96,7 +96,7 @@ namespace SharpDX.Toolkit.Graphics
         /// UnorderedAccessView casting operator.
         /// </summary>
         /// <param name="from">Source for the.</param>
-        public static implicit operator UnorderedAccessView(Texture<T> from)
+        public static implicit operator UnorderedAccessView(Texture from)
         {
             return from.UnorderedAccessViews != null ? from.UnorderedAccessViews[0] : null;
         }
@@ -106,7 +106,6 @@ namespace SharpDX.Toolkit.Graphics
             base.OnNameChanged();
             if (GraphicsDevice.IsDebugMode)
             {
-                this.Resource.DebugName = Name;
                 if (ShaderResourceViews != null)
                 {
                     for (int i = 0; i < ShaderResourceViews.Length; i++)

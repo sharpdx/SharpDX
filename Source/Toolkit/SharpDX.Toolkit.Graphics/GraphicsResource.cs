@@ -77,19 +77,4 @@ namespace SharpDX.Toolkit.Graphics
         }
 
     }
-
-    /// <summary>
-    /// Generic base class for all <see cref="GraphicsResource"/>.
-    /// </summary>
-    /// <typeparam name="T">Type of the <see cref="N:SharpDX.Direct3D11"/> class</typeparam>
-    public abstract class GraphicsResource<T> : GraphicsResource where T : Resource
-    {
-        protected new T Resource;
-
-        protected override void Initialize(GraphicsDevice deviceLocal, Resource resource)
-        {
-            base.Initialize(deviceLocal, resource);
-            Resource = (T)resource;
-        }
-    }
 }

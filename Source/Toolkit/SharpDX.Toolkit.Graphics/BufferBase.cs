@@ -97,9 +97,9 @@ namespace SharpDX.Toolkit.Graphics
             base.OnNameChanged();
             if (GraphicsDevice.IsDebugMode)
             {
-                this.Resource.DebugName = Name;
                 if (ShaderResourceView != null)
                     ShaderResourceView.DebugName = Name == null ? null : string.Format("{0} SRV", Name);
+
                 if (UnorderedAccessView != null)
                     UnorderedAccessView.DebugName = Name == null ? null : string.Format("{0} UAV", Name);
             }

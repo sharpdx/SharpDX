@@ -31,8 +31,10 @@ namespace SharpDX.Toolkit.Graphics
     /// <msdn-id>ff476633</msdn-id>	
     /// <unmanaged>ID3D11Texture1D</unmanaged>	
     /// <unmanaged-short>ID3D11Texture1D</unmanaged-short>	
-    public class Texture1D : Texture<Direct3D11.Texture1D>
+    public class Texture1D : Texture
     {
+        protected readonly new Direct3D11.Texture1D Resource;
+
         /// <summary>
         /// Specialised constructor for use only by derived classes.
         /// </summary>
@@ -57,7 +59,8 @@ namespace SharpDX.Toolkit.Graphics
         internal Texture1D(GraphicsDevice device, Texture1DDescription description, params IntPtr[] mipMapTextures)
         {
             Description = description;
-            Initialize(device, new Direct3D11.Texture1D(device, description, mipMapTextures));
+            Resource = new Direct3D11.Texture1D(device, description, mipMapTextures);
+            Initialize(device, Resource);
         }
 
         /// <summary>
@@ -83,6 +86,7 @@ namespace SharpDX.Toolkit.Graphics
         internal Texture1D(GraphicsDevice device, Direct3D11.Texture1D texture)
         {
             Description = texture.Description;
+            Resource = texture;
             Initialize(device, texture);
         }
 

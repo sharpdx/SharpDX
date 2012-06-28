@@ -28,8 +28,10 @@ namespace SharpDX.Toolkit.Graphics
     /// <summary>
     /// Abstract class frontend to <see cref="SharpDX.Direct3D11.Texture2D"/>.
     /// </summary>
-    public abstract class Texture2DBase : Texture<Direct3D11.Texture2D>
+    public abstract class Texture2DBase : Texture
     {
+        protected readonly new Direct3D11.Texture2D Resource;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Texture2DBase" /> class.
         /// </summary>
@@ -57,7 +59,8 @@ namespace SharpDX.Toolkit.Graphics
             Description = description;
             // Precalculates the stride
             StrideInBytes = Description.Width * ((PixelFormat) Description.Format).SizeInBytes;
-            Initialize(device, new Direct3D11.Texture2D(device, description, dataRectangles));
+            Resource = new Direct3D11.Texture2D(device, description, dataRectangles);
+            Initialize(device, Resource);
         }
 
         /// <summary>
@@ -84,7 +87,8 @@ namespace SharpDX.Toolkit.Graphics
         {
             Description = texture.Description;
             StrideInBytes = Description.Width * ((PixelFormat)Description.Format).SizeInBytes;
-            Initialize(device, texture);
+            Resource = texture;
+            Initialize(device, Resource);
         }
 
         /// <summary>

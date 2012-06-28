@@ -28,6 +28,11 @@ namespace SharpDX.Toolkit.Graphics
         {
         }
 
+        protected ConstantBuffer(Direct3D11.Buffer nativeBuffer)
+            : this(GraphicsDevice.Current, nativeBuffer)
+        {
+        }
+
         protected ConstantBuffer(GraphicsDevice deviceLocal, BufferDescription description)
             : base(deviceLocal, description)
         {
@@ -46,6 +51,11 @@ namespace SharpDX.Toolkit.Graphics
         public static ConstantBuffer New(BufferDescription description)
         {
             return new ConstantBuffer(description);
+        }
+
+        public static ConstantBuffer New(Buffer buffer)
+        {
+            return new ConstantBuffer(buffer);
         }
 
         public static ConstantBuffer New(int sizeInBytes)

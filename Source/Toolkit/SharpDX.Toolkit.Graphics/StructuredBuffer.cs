@@ -135,30 +135,6 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        ///// <summary>
-        ///// Implicit casting operator to <see cref="Direct3D11.Resource"/>
-        ///// </summary>
-        ///// <param name="from">The GraphicsResource to convert from.</param>
-        //public static implicit operator Direct3D11.Resource(StructuredBuffer from)
-        //{
-        //    return from.Resource;
-        //}
-
-        //public static implicit operator Direct3D11.Buffer(StructuredBuffer from)
-        //{
-        //    return (Direct3D11.Buffer)from.Resource;
-        //}
-
-        //public static implicit operator ShaderResourceView(StructuredBuffer from)
-        //{
-        //    return from.shaderResourceView;
-        //}
-
-        //public static implicit operator UnorderedAccessView(StructuredBuffer from)
-        //{
-        //    return from.unorderedAccessView;
-        //}
-
         public override BufferBase ToStaging()
         {
             var stagingDesc = Description;

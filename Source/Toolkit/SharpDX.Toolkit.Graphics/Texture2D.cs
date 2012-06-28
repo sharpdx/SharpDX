@@ -28,7 +28,8 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public class Texture2D : Texture2DBase
     {
-        internal Texture2D(Texture2DDescription description, params DataRectangle[] dataRectangles) : base(description, dataRectangles)
+        internal Texture2D(Texture2DDescription description, params DataRectangle[] dataRectangles)
+            : base(description, dataRectangles)
         {
         }
 
