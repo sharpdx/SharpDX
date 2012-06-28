@@ -311,7 +311,7 @@ namespace SharpDX.Toolkit.Graphics
             offsetInBytes = (buffer.Description.BindFlags & BindFlags.ConstantBuffer) != 0 ? 0 : offsetInBytes;
 
             // If this texture is declared as default usage, we can only use UpdateSubresource, which is not optimal but better than nothing
-            if (buffer.Description.Usage == ResourceUsage.Default || buffer.Description.Usage == ResourceUsage.Immutable)
+            if (buffer.Description.Usage == ResourceUsage.Default)
             {
                 // Setup the dest region inside the buffer
                 var destRegion = new ResourceRegion(offsetInBytes, 0, 0, offsetInBytes + Utilities.SizeOf<TData>(), 1, 1);
@@ -351,7 +351,7 @@ namespace SharpDX.Toolkit.Graphics
                 throw new ArgumentException("Length of TData is larger than size of buffer");
 
             // If this texture is declared as default usage, we can only use UpdateSubresource, which is not optimal but better than nothing
-            if (buffer.Description.Usage == ResourceUsage.Default || buffer.Description.Usage == ResourceUsage.Immutable)
+            if (buffer.Description.Usage == ResourceUsage.Default)
             {
                 // Setup the dest region inside the buffer
                 var destRegion = new ResourceRegion(offsetInBytes, 0, 0, offsetInBytes + fromData.Length * Utilities.SizeOf<TData>(), 1, 1);
@@ -497,7 +497,7 @@ namespace SharpDX.Toolkit.Graphics
                 throw new ArgumentException("Length of TData is not compatible with Width * Height * Pixel size in bytes");
 
             // If this texture is declared as default usage, we can only use UpdateSubresource, which is not optimal but better than nothing
-            if (texture.Description.Usage == ResourceUsage.Default || texture.Description.Usage == ResourceUsage.Immutable)
+            if (texture.Description.Usage == ResourceUsage.Default)
             {
                 Context.UpdateSubresource(fromData, texture, subResourceIndex, texture.StrideInBytes);
             }
