@@ -21,11 +21,19 @@ using SharpDX.Direct3D11;
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>
+    /// Base class for all <see cref="GraphicsResource"/>.
+    /// </summary>
     public abstract class GraphicsResource : Component
     {
         protected internal GraphicsDevice GraphicsDevice;
         protected internal Resource Resource;
 
+        /// <summary>
+        /// Initializes the specified device local.
+        /// </summary>
+        /// <param name="deviceLocal">The device local.</param>
+        /// <param name="resource">The resource.</param>
         protected virtual void Initialize(GraphicsDevice deviceLocal, Resource resource)
         {
             GraphicsDevice = deviceLocal;
@@ -41,6 +49,11 @@ namespace SharpDX.Toolkit.Graphics
             return from.Resource;
         }
 
+        /// <summary>
+        /// Gets the CPU access flags from the <see cref="ResourceUsage"/>.
+        /// </summary>
+        /// <param name="usage">The usage.</param>
+        /// <returns>The CPU access flags</returns>
         protected static CpuAccessFlags GetCputAccessFlagsFromUsage(ResourceUsage usage)
         {
             switch (usage)
@@ -53,17 +66,22 @@ namespace SharpDX.Toolkit.Graphics
             return CpuAccessFlags.None;
         }
 
+        /// <summary>
+        /// Called when name changed for this component.
+        /// </summary>
         protected override void OnNameChanged()
         {
             base.OnNameChanged();
             if (GraphicsDevice.IsDebugMode)
-            {
                 this.Resource.DebugName = Name;
-            }
         }
 
     }
 
+    /// <summary>
+    /// Generic base class for all <see cref="GraphicsResource"/>.
+    /// </summary>
+    /// <typeparam name="T">Type of the <see cref="N:SharpDX.Direct3D11"/> class</typeparam>
     public abstract class GraphicsResource<T> : GraphicsResource where T : Resource
     {
         protected new T Resource;

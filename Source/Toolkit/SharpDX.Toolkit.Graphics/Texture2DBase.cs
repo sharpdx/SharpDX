@@ -108,7 +108,6 @@ namespace SharpDX.Toolkit.Graphics
         /// </returns>
         public abstract Texture2DBase Clone();
 
-
         /// <summary>
         /// Makes a copy of this texture.
         /// </summary>

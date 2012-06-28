@@ -26,6 +26,9 @@ using SharpDX.Direct3D11;
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>
+    /// A Structured Buffer frontend to <see cref="SharpDX.Direct3D11.Buffer"/>.
+    /// </summary>
     public class StructuredBuffer : BufferBase
     {
 
@@ -34,8 +37,8 @@ namespace SharpDX.Toolkit.Graphics
         {
         }
 
-        protected StructuredBuffer(Direct3D11.Buffer buffer, int structureStride, UnorderedAccessViewBufferFlags viewFlags = UnorderedAccessViewBufferFlags.None)
-            : this(GraphicsDevice.Current, buffer, structureStride, viewFlags)
+        protected StructuredBuffer(Direct3D11.Buffer buffer, UnorderedAccessViewBufferFlags viewFlags = UnorderedAccessViewBufferFlags.None)
+            : this(GraphicsDevice.Current, buffer, viewFlags)
         {
         }
 
@@ -46,8 +49,8 @@ namespace SharpDX.Toolkit.Graphics
             Count = description.SizeInBytes / description.StructureByteStride;
         }
 
-        protected StructuredBuffer(GraphicsDevice deviceLocal, Direct3D11.Buffer nativeBuffer, int structureStride, UnorderedAccessViewBufferFlags viewFlags = UnorderedAccessViewBufferFlags.None)
-            : base(deviceLocal, nativeBuffer, structureStride)
+        protected StructuredBuffer(GraphicsDevice deviceLocal, Direct3D11.Buffer nativeBuffer, UnorderedAccessViewBufferFlags viewFlags = UnorderedAccessViewBufferFlags.None)
+            : base(deviceLocal, nativeBuffer)
         {
             var description = nativeBuffer.Description;
             ViewFlags = viewFlags;
@@ -68,6 +71,11 @@ namespace SharpDX.Toolkit.Graphics
             return new StructuredBuffer(description, viewFlags);
         }
 
+        public static StructuredBuffer New(SharpDX.Direct3D11.Buffer buffer, UnorderedAccessViewBufferFlags viewFlags = UnorderedAccessViewBufferFlags.None)
+        {
+            return new StructuredBuffer(buffer, viewFlags);
+        }
+
         public static StructuredBuffer New(int sizeInBytes, int structureSizeInBytes, bool isReadWrite = false, UnorderedAccessViewBufferFlags viewFlags = UnorderedAccessViewBufferFlags.None)
         {
             var description = NewDescription(sizeInBytes, BindFlags.ShaderResource, isReadWrite, structureSizeInBytes, ResourceUsage.Default, ResourceOptionFlags.BufferStructured);
@@ -86,7 +94,7 @@ namespace SharpDX.Toolkit.Graphics
             int sizeOfStruct = Utilities.SizeOf<T>();
             var description = NewDescription(sizeOfStruct * elements.Length, BindFlags.ShaderResource, isReadWrite, sizeOfStruct, ResourceUsage.Default, ResourceOptionFlags.BufferStructured);
             var nativeBuffer = Direct3D11.Buffer.Create(GraphicsDevice.Current, elements, description);
-            return new StructuredBuffer(nativeBuffer, sizeOfStruct, viewFlags);
+            return new StructuredBuffer(nativeBuffer, viewFlags);
         }
 
         protected override void InitializeViews()
@@ -106,7 +114,7 @@ namespace SharpDX.Toolkit.Graphics
                     }
                 };
 
-                this.shaderResourceView = ToDispose(new ShaderResourceView(this.GraphicsDevice, this.Resource, description));
+                this.ShaderResourceView = ToDispose(new ShaderResourceView(this.GraphicsDevice, this.Resource, description));
             }
 
             if ((bindFlags & BindFlags.UnorderedAccess) != 0)
@@ -123,34 +131,33 @@ namespace SharpDX.Toolkit.Graphics
                     },
                 };
 
-                this.unorderedAccessView = ToDispose(new UnorderedAccessView(this.GraphicsDevice, this.Resource, description));
+                this.UnorderedAccessView = ToDispose(new UnorderedAccessView(this.GraphicsDevice, this.Resource, description));
             }
         }
 
-        /// <summary>
-        /// Implicit casting operator to <see cref="Direct3D11.Resource"/>
-        /// </summary>
-        /// <param name="from">The GraphicsResource to convert from.</param>
-        public static implicit operator Direct3D11.Resource(StructuredBuffer from)
-        {
-            return from.Resource;
-        }
+        ///// <summary>
+        ///// Implicit casting operator to <see cref="Direct3D11.Resource"/>
+        ///// </summary>
+        ///// <param name="from">The GraphicsResource to convert from.</param>
+        //public static implicit operator Direct3D11.Resource(StructuredBuffer from)
+        //{
+        //    return from.Resource;
+        //}
 
-        public static implicit operator Direct3D11.Buffer(StructuredBuffer from)
-        {
-            return (Direct3D11.Buffer)from.Resource;
-        }
+        //public static implicit operator Direct3D11.Buffer(StructuredBuffer from)
+        //{
+        //    return (Direct3D11.Buffer)from.Resource;
+        //}
 
-        public static implicit operator ShaderResourceView(StructuredBuffer from)
-        {
-            return from.shaderResourceView;
-        }
+        //public static implicit operator ShaderResourceView(StructuredBuffer from)
+        //{
+        //    return from.shaderResourceView;
+        //}
 
-        public static implicit operator UnorderedAccessView(StructuredBuffer from)
-        {
-            return from.unorderedAccessView;
-        }
-
+        //public static implicit operator UnorderedAccessView(StructuredBuffer from)
+        //{
+        //    return from.unorderedAccessView;
+        //}
 
         public override BufferBase ToStaging()
         {
