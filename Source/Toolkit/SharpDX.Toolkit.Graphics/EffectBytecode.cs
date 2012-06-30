@@ -1,3 +1,4 @@
+
 // Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,15 +21,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using SharpDX.D3DCompiler;
+//using SharpDX.D3DCompiler;
 using SharpDX.Direct3D;
 
 namespace SharpDX.Toolkit.Graphics
 {
     public class EffectBytecode
     {
-        private static readonly string[] StageParameters = new string[] { "vs", "ds", "hs", "gs", "ps", "cs" };
+/*        private static readonly string[] StageParameters = new string[] { "vs", "ds", "hs", "gs", "ps", "cs" };
         internal ShaderBytecode[] Bytecodes = new ShaderBytecode[StageParameters.Length];
 
         public static EffectBytecode Compile(string sourceCode, string effectName, FeatureLevel level, string sourceFileName, ShaderFlags flags = ShaderFlags.None, params ShaderMacro[] macros)
@@ -89,5 +89,6 @@ namespace SharpDX.Toolkit.Graphics
 
             return effectBytecode;
         }
+ */
     }
 }

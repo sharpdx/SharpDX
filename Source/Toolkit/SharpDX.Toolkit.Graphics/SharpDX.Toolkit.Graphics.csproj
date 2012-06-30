@@ -33,7 +33,6 @@
     <Compile Include="Texture1DBase.cs" />
     <Compile Include="Effect.cs" />
     <Compile Include="EffectBytecode.cs" />
-    <Compile Include="EffectContext.cs" />
     <Compile Include="GraphicsDevice.cs" />
     <Compile Include="GraphicsResource.cs" />
     <Compile Include="IPixelData.cs" />

@@ -24,6 +24,7 @@ namespace SharpDX.Toolkit.Graphics
 {
     public class Effect : Component
     {
+/*
         internal readonly VertexShader VertexShader;
         internal readonly DomainShader DomainShader;
         internal readonly HullShader HullShader;
@@ -70,5 +71,6 @@ namespace SharpDX.Toolkit.Graphics
         {
             
         }
+ */ 
     }
 }
