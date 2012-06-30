@@ -52,27 +52,27 @@ namespace SharpDX.Toolkit.Graphics
         /// Gets a specific <see cref="ShaderResourceView" /> from this texture.
         /// </summary>
         /// <param name="viewSlice">Type of the view slice.</param>
-        /// <param name="arrayIndex">The texture array slice index.</param>
+        /// <param name="arrayOrDepthSlice">The texture array slice index.</param>
         /// <param name="mipIndex">The mip map slice index.</param>
         /// <returns>An <see cref="ShaderResourceView" /></returns>
-        public abstract ShaderResourceView GetShaderResourceView(ViewSlice viewSlice, int arrayIndex, int mipIndex);
+        public abstract ShaderResourceView GetShaderResourceView(ViewSlice viewSlice, int arrayOrDepthSlice, int mipIndex);
 
         /// <summary>
         /// Gets a specific <see cref="RenderTargetView" /> from this texture.
         /// </summary>
         /// <param name="viewSlice">Type of the view slice.</param>
-        /// <param name="arraySlice">The texture array slice index.</param>
+        /// <param name="arrayOrDepthSlice">The texture array slice index.</param>
         /// <param name="mipMapSlice">The mip map slice index.</param>
         /// <returns>An <see cref="RenderTargetView" /></returns>
-        public abstract RenderTargetView GetRenderTargetView(ViewSlice viewSlice, int arraySlice, int mipMapSlice);
+        public abstract RenderTargetView GetRenderTargetView(ViewSlice viewSlice, int arrayOrDepthSlice, int mipMapSlice);
 
         /// <summary>
         /// Gets a specific <see cref="UnorderedAccessView"/> from this texture.
         /// </summary>
-        /// <param name="arraySlice">The texture array slice index.</param>
+        /// <param name="arrayOrDepthSlice">The texture array slice index.</param>
         /// <param name="mipMapSlice">The mip map slice index.</param>
         /// <returns>An <see cref="UnorderedAccessView"/></returns>
-        public abstract UnorderedAccessView GetUnorderedAccessView(int arraySlice, int mipMapSlice);
+        public abstract UnorderedAccessView GetUnorderedAccessView(int arrayOrDepthSlice, int mipMapSlice);
 
         /// <summary>
         /// ShaderResourceView casting operator.

@@ -1,0 +1,168 @@
+﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+using SharpDX.Direct3D11;
+
+namespace SharpDX.Toolkit.Graphics
+{
+    public partial class Buffer
+    {
+        /// <summary>
+        /// Structured buffer helper methods.
+        /// </summary>
+        public static class Structured
+        {
+            /// <summary>
+            /// Creates a new Structured buffer accessible as a <see cref="ShaderResourceView" /> and optionaly as a <see cref="UnorderedAccessView" />.
+            /// </summary>
+            /// <param name="sizeInBytes">The size in bytes of this buffer.</param>
+            /// <param name="elementSize">Size of the struct.</param>
+            /// <param name="isUnorderedAccess">if set to <c>true</c> [is unordered access].</param>
+            /// <returns>A Structured buffer</returns>
+            public static Buffer New(int sizeInBytes, int elementSize, bool isUnorderedAccess = false)
+            {
+                var bufferFlags = BufferFlags.StructuredBuffer | BufferFlags.ShaderResource;
+
+                if (isUnorderedAccess)
+                    bufferFlags |= BufferFlags.UnorderedAccess;
+
+                return Buffer.New(sizeInBytes, elementSize, bufferFlags);
+            }
+
+            /// <summary>
+            /// Creates a new Structured buffer <see cref="ResourceUsage.Default" /> uasge.
+            /// </summary>
+            /// <typeparam name="T">Type of the Structured buffer to get the sizeof from</typeparam>
+            /// <param name="value">The value to initialize the Structured buffer.</param>
+            /// <param name="isUnorderedAccess">if set to <c>true</c> [is unordered access].</param>
+            /// <returns>A Structured buffer</returns>
+            public static Buffer New<T>(T[] value, bool isUnorderedAccess = false) where T : struct
+            {
+                var bufferFlags = BufferFlags.StructuredBuffer | BufferFlags.ShaderResource;
+
+                if (isUnorderedAccess)
+                    bufferFlags |= BufferFlags.UnorderedAccess;
+
+                return Buffer.New(value, bufferFlags);
+            }
+
+            /// <summary>
+            /// Creates a new Structured buffer <see cref="ResourceUsage.Default" /> uasge.
+            /// </summary>
+            /// <param name="value">The value to initialize the Structured buffer.</param>
+            /// <param name="elementSize">Size of the element.</param>
+            /// <param name="isUnorderedAccess">if set to <c>true</c> [is unordered access].</param>
+            /// <returns>A Structured buffer</returns>
+            public static Buffer New(DataPointer value, int elementSize, bool isUnorderedAccess = false)
+            {
+                var bufferFlags = BufferFlags.StructuredBuffer | BufferFlags.ShaderResource;
+
+                if (isUnorderedAccess)
+                    bufferFlags |= BufferFlags.UnorderedAccess;
+
+                return Buffer.New(value, elementSize, bufferFlags);
+            }
+        }
+
+        /// <summary>
+        /// StructuredAppend buffer helper methods.
+        /// </summary>
+        public static class StructuredAppend
+        {
+            /// <summary>
+            /// Creates a new StructuredAppend buffer accessible as a <see cref="ShaderResourceView" /> and as a <see cref="UnorderedAccessView" />.
+            /// </summary>
+            /// <param name="sizeInBytes">The size in bytes of this buffer.</param>
+            /// <param name="elementSize">Size of the struct.</param>
+            /// <returns>A StructuredAppend buffer</returns>
+            public static Buffer New(int sizeInBytes, int elementSize)
+            {
+                const BufferFlags bufferFlags = BufferFlags.StructuredAppendBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess;
+                return Buffer.New(sizeInBytes, elementSize, bufferFlags);
+            }
+
+            /// <summary>
+            /// Creates a new StructuredAppend buffer <see cref="ResourceUsage.Default" /> uasge.
+            /// </summary>
+            /// <typeparam name="T">Type of the StructuredAppend buffer to get the sizeof from</typeparam>
+            /// <param name="value">The value to initialize the StructuredAppend buffer.</param>
+            /// <returns>A StructuredAppend buffer</returns>
+            public static Buffer New<T>(T[] value) where T : struct
+            {
+                const BufferFlags bufferFlags = BufferFlags.StructuredAppendBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess;
+                return Buffer.New(value, bufferFlags);
+            }
+
+            /// <summary>
+            /// Creates a new StructuredAppend buffer <see cref="ResourceUsage.Default" /> uasge.
+            /// </summary>
+            /// <param name="value">The value to initialize the StructuredAppend buffer.</param>
+            /// <param name="elementSize">Size of the element.</param>
+            /// <returns>A StructuredAppend buffer</returns>
+            public static Buffer New(DataPointer value, int elementSize)
+            {
+                const BufferFlags bufferFlags = BufferFlags.StructuredAppendBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess;
+                return Buffer.New(value, elementSize, bufferFlags);
+            }
+        }
+
+        /// <summary>
+        /// StructuredCounter buffer helper methods.
+        /// </summary>
+        public static class StructuredCounter
+        {
+            /// <summary>
+            /// Creates a new StructuredCounter buffer accessible as a <see cref="ShaderResourceView" /> and as a <see cref="UnorderedAccessView" />.
+            /// </summary>
+            /// <param name="sizeInBytes">The size in bytes of this buffer.</param>
+            /// <param name="elementSize">Size of the struct.</param>
+            /// <returns>A StructuredCounter buffer</returns>
+            public static Buffer New(int sizeInBytes, int elementSize)
+            {
+                const BufferFlags bufferFlags = BufferFlags.StructuredCounterBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess;
+                return Buffer.New(sizeInBytes, elementSize, bufferFlags);
+            }
+
+            /// <summary>
+            /// Creates a new StructuredCounter buffer <see cref="ResourceUsage.Default" /> uasge.
+            /// </summary>
+            /// <typeparam name="T">Type of the StructuredCounter buffer to get the sizeof from</typeparam>
+            /// <param name="value">The value to initialize the StructuredCounter buffer.</param>
+            /// <returns>A StructuredCounter buffer</returns>
+            public static Buffer New<T>(T[] value) where T : struct
+            {
+                const BufferFlags bufferFlags = BufferFlags.StructuredCounterBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess;
+                return Buffer.New(value, bufferFlags);
+            }
+
+            /// <summary>
+            /// Creates a new StructuredCounter buffer <see cref="ResourceUsage.Default" /> uasge.
+            /// </summary>
+            /// <param name="value">The value to initialize the StructuredCounter buffer.</param>
+            /// <param name="elementSize">Size of the element.</param>
+            /// <returns>A StructuredCounter buffer</returns>
+            public static Buffer New(DataPointer value, int elementSize)
+            {
+                const BufferFlags bufferFlags = BufferFlags.StructuredCounterBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess;
+                return Buffer.New(value, elementSize, bufferFlags);
+            }
+        }
+    }
+}

@@ -17,6 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System.Runtime.InteropServices;
+
 using SharpDX.Direct3D11;
 
 namespace SharpDX.Toolkit.Graphics
@@ -66,6 +69,13 @@ namespace SharpDX.Toolkit.Graphics
             return CpuAccessFlags.None;
         }
 
+        protected override void Dispose(bool disposeManagedResources)
+        {
+            base.Dispose(disposeManagedResources);
+            if (disposeManagedResources)
+                Resource = null;
+        }
+
         /// <summary>
         /// Called when name changed for this component.
         /// </summary>
@@ -76,5 +86,16 @@ namespace SharpDX.Toolkit.Graphics
                 this.Resource.DebugName = Name;
         }
 
+        protected static void UnPin(GCHandle[] handles)
+        {
+            if (handles != null)
+            {
+                for (int i = 0; i < handles.Length; i++)
+                {
+                    if (handles[i].IsAllocated)
+                        handles[i].Free();
+                }
+            }
+        }
     }
 }

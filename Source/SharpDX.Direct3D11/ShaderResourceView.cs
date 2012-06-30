@@ -29,7 +29,9 @@ namespace SharpDX.Direct3D11
         /// </summary>
         /// <param name = "device">The device to use when creating this <see cref = "T:SharpDX.Direct3D11.ShaderResourceView" />.</param>
         /// <param name = "resource">The resource that represents the render-target surface. This surface must have been created with the <see cref = "T:SharpDX.Direct3D11.BindFlags">ShaderResource</see> flag.</param>
-        /// <unmanaged>ID3D11Device::CreateShaderResourceView</unmanaged>
+        /// <msdn-id>ff476519</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateShaderResourceView([In] ID3D11Resource* pResource,[In, Optional] const D3D11_SHADER_RESOURCE_VIEW_DESC* pDesc,[Out, Fast] ID3D11ShaderResourceView** ppSRView)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CreateShaderResourceView</unmanaged-short>	
         public ShaderResourceView(Device device, Resource resource)
             : base(IntPtr.Zero)
         {
@@ -42,7 +44,9 @@ namespace SharpDX.Direct3D11
         /// <param name = "device">The device to use when creating this <see cref = "T:SharpDX.Direct3D11.ShaderResourceView" />.</param>
         /// <param name = "resource">The resource that represents the render-target surface. This surface must have been created with the <see cref = "T:SharpDX.Direct3D11.BindFlags">ShaderResource</see> flag.</param>
         /// <param name = "description">A structure describing the <see cref = "T:SharpDX.Direct3D11.ShaderResourceView" /> to be created.</param>
-        /// <unmanaged>ID3D11Device::CreateShaderResourceView</unmanaged>
+        /// <msdn-id>ff476519</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateShaderResourceView([In] ID3D11Resource* pResource,[In, Optional] const D3D11_SHADER_RESOURCE_VIEW_DESC* pDesc,[Out, Fast] ID3D11ShaderResourceView** ppSRView)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CreateShaderResourceView</unmanaged-short>	
         public ShaderResourceView(Device device, Resource resource, ShaderResourceViewDescription description)
             : base(IntPtr.Zero)
         {

@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="SharpDX.Toolkit.Graphics.GraphicsResource" Collapsed="true">
+    <Position X="8.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAoAAAAQAAAAAAAAAQAAAAAAAAAAAEAAAAAAA=</HashCode>
+      <FileName>GraphicsResource.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpDX.Toolkit.Graphics.Texture" Collapsed="true">
+    <Position X="5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgCAAAABAAAAQAAAAAABAFAAAAAAQAAQAAoAAAAAAI=</HashCode>
+      <FileName>Texture.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpDX.Toolkit.Graphics.Texture1DBase" Collapsed="true">
+    <Position X="1.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAEQIAAgBAAAAAACCAEAAAAAAAAAAAAIAAAAABA=</HashCode>
+      <FileName>Texture1DBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpDX.Toolkit.Graphics.Texture1D" Collapsed="true">
+    <Position X="0.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAABI=</HashCode>
+      <FileName>Texture1D.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpDX.Toolkit.Graphics.RenderTarget1D" Collapsed="true">
+    <Position X="2.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAACAAAAAABAAAAAAAAAAAAAAAAAAAABI=</HashCode>
+      <FileName>RenderTarget1D.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpDX.Toolkit.Graphics.RenderTarget2D" Collapsed="true">
+    <Position X="7.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAACAAAAAABAAAAAAAAAAAAAAAAAAAABI=</HashCode>
+      <FileName>RenderTarget2D.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpDX.Toolkit.Graphics.Texture2D" Collapsed="true">
+    <Position X="9.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAABI=</HashCode>
+      <FileName>Texture2D.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpDX.Toolkit.Graphics.Texture2DBase" Collapsed="true">
+    <Position X="8.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQACAAEQIAAgBAAAAAACDAEAAAAAAAAAAAAIAAAAABA=</HashCode>
+      <FileName>Texture2DBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpDX.Toolkit.Graphics.Texture3D" Collapsed="true">
+    <Position X="5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAABI=</HashCode>
+      <FileName>Texture3D.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpDX.Toolkit.Graphics.Texture3DBase" Collapsed="true">
+    <Position X="5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQACAAEQIAAgBAAAAAACDAEAAAAAAAAAAAAIAAAAABA=</HashCode>
+      <FileName>Texture3DBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpDX.Toolkit.Graphics.Buffer" Collapsed="true">
+    <Position X="11.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgCAADQBAAoASAAAAAADARABAAAQAAgAQAIAAAAABI=</HashCode>
+      <FileName>Buffer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

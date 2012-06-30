@@ -45,7 +45,7 @@ namespace SharpDX.Toolkit.Graphics
         {
         }
 
-        public override RenderTargetView GetRenderTargetView(ViewSlice viewSlice, int arraySlice, int mipMapSlice)
+        public override RenderTargetView GetRenderTargetView(ViewSlice viewSlice, int arrayOrDepthSlice, int mipMapSlice)
         {
             throw new System.NotSupportedException();
         }
@@ -137,11 +137,17 @@ namespace SharpDX.Toolkit.Graphics
         public static Texture2D New<T>(int width, int height, PixelFormat format, T[][] mipMapTextures, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
         {
             usage = isUnorderedReadWrite ? ResourceUsage.Default : usage;
-            GCHandle[] handles;
-            var dataRectangles = Pin(width, format, mipMapTextures, out handles);
-            var texture = new Texture2D(NewDescription(width, height, format, isUnorderedReadWrite, mipMapTextures.Length, 1, usage), dataRectangles);
-            UnPin(handles);
-            return texture;
+            GCHandle[] handles = null;
+            try
+            {
+                var dataRectangles = Pin(width, format, mipMapTextures, out handles);
+                var texture = new Texture2D(NewDescription(width, height, format, isUnorderedReadWrite, mipMapTextures.Length, 1, usage), dataRectangles);
+                return texture;
+            }
+            finally
+            {
+                UnPin(handles);
+            }
         }
     }
 }

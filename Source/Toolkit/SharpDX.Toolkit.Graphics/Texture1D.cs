@@ -20,78 +20,36 @@
 
 using System;
 using System.Runtime.InteropServices;
-
 using SharpDX.Direct3D11;
 
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    /// This class is a frontend to <see cref="SharpDX.Direct3D11.Texture1D"/>.
+    /// A Texture 1D frontend to <see cref="SharpDX.Direct3D11.Texture1D"/>.
     /// </summary>
-    /// <msdn-id>ff476633</msdn-id>	
-    /// <unmanaged>ID3D11Texture1D</unmanaged>	
-    /// <unmanaged-short>ID3D11Texture1D</unmanaged-short>	
-    public class Texture1D : Texture
+    public class Texture1D : Texture1DBase
     {
-        protected readonly new Direct3D11.Texture1D Resource;
-
-        /// <summary>
-        /// Specialised constructor for use only by derived classes.
-        /// </summary>
-        /// <param name="description">The description.</param>
-        /// <msdn-id>ff476520</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        internal Texture1D(Texture1DDescription description)
-            : this(GraphicsDevice.Current, description)
+        internal Texture1D(Texture1DDescription description, params IntPtr[] dataRectangles)
+            : base(description, dataRectangles)
         {
         }
 
-        /// <summary>
-        /// Specialised constructor for use only by derived classes.
-        /// </summary>
-        /// <param name="device">The graphics device.</param>
-        /// <param name="description">The description.</param>
-        /// <param name="mipMapTextures">A variable-length parameters list containing mip map textures.</param>
-        /// <msdn-id>ff476520</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        internal Texture1D(GraphicsDevice device, Texture1DDescription description, params IntPtr[] mipMapTextures)
-        {
-            Description = description;
-            Resource = new Direct3D11.Texture1D(device, description, mipMapTextures);
-            Initialize(device, Resource);
-        }
-
-        /// <summary>
-        /// Specialised constructor for use only by derived classes.
-        /// </summary>
-        /// <param name="texture">The texture.</param>
-        /// <msdn-id>ff476520</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        internal Texture1D(Direct3D11.Texture1D texture)
-            : this(GraphicsDevice.Current, texture)
+        internal Texture1D(GraphicsDevice device, Texture1DDescription description, params IntPtr[] dataRectangles) : base(device, description, dataRectangles)
         {
         }
 
-        /// <summary>
-        /// Specialised constructor for use only by derived classes.
-        /// </summary>
-        /// <param name="device">The device.</param>
-        /// <param name="texture">The texture.</param>
-        /// <msdn-id>ff476520</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        internal Texture1D(GraphicsDevice device, Direct3D11.Texture1D texture)
+        internal Texture1D(Direct3D11.Texture1D texture) : base(texture)
         {
-            Description = texture.Description;
-            Resource = texture;
-            Initialize(device, texture);
         }
 
-        /// <summary>The description.</summary>
-        public Texture1DDescription Description { get; private set; }
+        internal Texture1D(GraphicsDevice device, Direct3D11.Texture1D texture) : base(device, texture)
+        {
+        }
+
+        public override RenderTargetView GetRenderTargetView(ViewSlice viewSlice, int arrayOrDepthSlice, int mipMapSlice)
+        {
+            throw new System.NotSupportedException();
+        }
 
         /// <summary>
         /// Makes a copy of this texture.
@@ -102,19 +60,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>
         /// A copy of this texture.
         /// </returns>
-        public Texture1D Clone()
+        public override Texture1DBase Clone()
         {
             return new Texture1D(GraphicsDevice, Description);
-        }
-
-        public Texture1D ToStaging()
-        {
-            var stagingDesc = Description;
-            stagingDesc.BindFlags = BindFlags.None;
-            stagingDesc.CpuAccessFlags = CpuAccessFlags.Read;
-            stagingDesc.Usage = ResourceUsage.Staging;
-            stagingDesc.OptionFlags = ResourceOptionFlags.None;
-            return new Texture1D(this.GraphicsDevice, stagingDesc);
         }
 
         /// <summary>
@@ -126,7 +74,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </returns>
         /// <msdn-id>ff476520</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
+        /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>		
         public static Texture1D New(Texture1DDescription description)
         {
             return new Texture1D(description);
@@ -150,147 +98,53 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Creates a new <see cref="Texture1D"/>.
         /// </summary>
-        /// <param name="width">Width in pixel of the texture.</param>
+        /// <param name="width">The width.</param>
         /// <param name="format">Describes the format to use.</param>
-        /// <param name="mipCount">(optional)number of mips.</param>
+        /// <param name="usage">The usage.</param>
+        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
+        /// <param name="mipCount">(optional) number of mips.</param>
+        /// <param name="arraySize">Size of the texture 2D array, default to 1.</param>
         /// <returns>
         /// A new instance of <see cref="Texture1D"/> class.
         /// </returns>
         /// <msdn-id>ff476520</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        public static Texture1D New(int width, PixelFormat format, int mipCount = 1)
+        public static Texture1D New(int width, PixelFormat format, bool isUnorderedReadWrite = false, int mipCount = 1, int arraySize = 1, ResourceUsage usage = ResourceUsage.Default)
         {
-            return New(width, format, ResourceUsage.Default, false, mipCount);
+            return new Texture1D(NewDescription(width, format, isUnorderedReadWrite, mipCount, 1, usage));
         }
 
         /// <summary>
-        /// Creates a new <see cref="Texture1D"/>.
+        /// Creates a new <see cref="Texture1D" />.
         /// </summary>
-        /// <returns>
-        /// A new instance of <see cref="Texture1D"/> class.
-        /// </returns>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="width">The width.</param>
+        /// <param name="format">Describes the format to use.</param>
+        /// <param name="usage">The usage.</param>
+        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
+        /// <param name="mipMapTextures">The mip map textures. See remarks</param>
+        /// <returns>A new instance of <see cref="Texture1D" /> class.</returns>
+        /// <remarks>
+        /// The first dimension of mipMapTextures describes the number of is an array ot Texture1D Array
+        /// </remarks>
         /// <msdn-id>ff476520</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        public static Texture1D New(int width, PixelFormat format, bool isReadWrite, int mipCount = 1)
+        public static Texture1D New<T>(int width, PixelFormat format, T[][] mipMapTextures, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
         {
-            return New(width, format, ResourceUsage.Default, isReadWrite, mipCount);
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="Texture1D"/>.
-        /// </summary>
-        /// <returns>
-        /// A new instance of <see cref="Texture1D"/> class.
-        /// </returns>
-        /// <msdn-id>ff476520</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        public static Texture1D New<T>(int width, PixelFormat format, params T[][] mipMapTextures)
-        {
-            return New(width, format, ResourceUsage.Immutable, false, mipMapTextures);
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="Texture1D"/>.
-        /// </summary>
-        /// <returns>
-        /// A new instance of <see cref="Texture1D"/> class.
-        /// </returns>
-        /// <msdn-id>ff476520</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        public static Texture1D New<T>(int width, PixelFormat format, bool isReadWrite, params T[][] mipMapTextures)
-        {
-            return New(width, format, isReadWrite ? ResourceUsage.Default : ResourceUsage.Immutable, isReadWrite, mipMapTextures);
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="Texture1D"/>.
-        /// </summary>
-        /// <returns>
-        /// A new instance of <see cref="Texture1D"/> class.
-        /// </returns>
-        /// <msdn-id>ff476520</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        public static Texture1D New(int width, PixelFormat format, ResourceUsage usage, bool isReadWrite = false, int mipCount = 1)
-        {
-            return new Texture1D(NewDescription(width, format, isReadWrite, mipCount, usage));
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="Texture1D"/>.
-        /// </summary>
-        /// <returns>
-        /// A new instance of <see cref="Texture1D"/> class.
-        /// </returns>
-        /// <msdn-id>ff476520</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        public static Texture1D New<T>(int width, PixelFormat format, ResourceUsage usage, bool isReadWrite = false, params T[][] mipMapTextures)
-        {
-            GCHandle[] handles;
-            var dataRectangles = Pin(mipMapTextures, out handles);
-            var texture = new Texture1D(GraphicsDevice.Current, NewDescription(width, format, isReadWrite, mipMapTextures.Length, usage), dataRectangles);
-            UnPin(handles);
-            return texture;
-        }
-
-        protected static IntPtr[] Pin<T>(T[][] mipMapTextures, out GCHandle[] handles)
-        {
-            var pinnedPointers = new IntPtr[mipMapTextures.Length];
-            handles = new GCHandle[mipMapTextures.Length];
-            for (int i = 0; i < mipMapTextures.Length; i++)
+            usage = isUnorderedReadWrite ? ResourceUsage.Default : usage;
+            GCHandle[] handles = null;
+            try
             {
-                var initialTexture = mipMapTextures[i];
-                var handle = GCHandle.Alloc(initialTexture, GCHandleType.Pinned);
-                handles[i] = handle;
-                pinnedPointers[i] = handle.AddrOfPinnedObject();
+                var dataRectangles = Pin(mipMapTextures, out handles);
+                var texture = new Texture1D(NewDescription(width, format, isUnorderedReadWrite, mipMapTextures.Length, 1, usage), dataRectangles);
+                return texture;
             }
-            return pinnedPointers;
-        }
-
-        protected static void UnPin(GCHandle[] handles)
-        {
-            for (int i = 0; i < handles.Length; i++)
-                handles[i].Free();
-        }
-
-        protected static Texture1DDescription NewDescription(int width, PixelFormat format, bool isReadWrite = false, int mipCount = 1, ResourceUsage usage = ResourceUsage.Default)
-        {
-            var desc = new Texture1DDescription() {
-                Width = width,
-                ArraySize = 1,
-                BindFlags = BindFlags.ShaderResource,
-                Format = format,
-                MipLevels = mipCount,
-                Usage = usage,
-                OptionFlags = ResourceOptionFlags.None,
-                CpuAccessFlags = GetCputAccessFlagsFromUsage(usage)
-            };
-
-            if (isReadWrite)
+            finally
             {
-                desc.BindFlags |= BindFlags.UnorderedAccess;
+                UnPin(handles);
             }
-            return desc;
-        }
-
-        public override ShaderResourceView GetShaderResourceView(ViewSlice viewSlice, int arrayIndex, int mipIndex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override RenderTargetView GetRenderTargetView(ViewSlice viewSlice, int arraySlice, int mipMapSlice)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override UnorderedAccessView GetUnorderedAccessView(int arraySlice, int mipMapSlice)
-        {
-            throw new NotImplementedException();
         }
     }
 }

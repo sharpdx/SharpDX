@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{4E0E6A4D-930D-4660-8DE0-E30FF1F9F4A9}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SharpDX.Toolkit.Graphics.Tests</RootNamespace>
     <AssemblyName>SharpDX.Toolkit.Graphics.Tests</AssemblyName>
@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework">
       <HintPath>..\..\..\External\NUnit\nunit.framework.dll</HintPath>
@@ -44,6 +47,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TestBuffer.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="TestTexture2D.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -663,5 +663,15 @@ namespace SharpDX
         {
             get { return _size; }
         }
+
+        /// <summary>
+        /// Performs an explicit conversion from <see cref="SharpDX.DataBuffer"/> to <see cref="SharpDX.DataPointer"/>.
+        /// </summary>
+        /// <param name="from">The from value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static implicit operator DataPointer(DataBuffer from)
+        {
+            return new DataPointer(from.DataPointer, (int)from.Size);
+        }
     }
 }

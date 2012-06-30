@@ -1153,5 +1153,15 @@ namespace SharpDX
         {
             get { return (_size - _position); }
         }
+
+        /// <summary>
+        /// Performs an explicit conversion from <see cref="SharpDX.DataStream"/> to <see cref="SharpDX.DataPointer"/>.
+        /// </summary>
+        /// <param name="from">The from value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static implicit operator DataPointer(DataStream from)
+        {
+            return new DataPointer(from.PositionPointer, (int)from.RemainingLength);
+        }
     }
 }

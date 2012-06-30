@@ -28,6 +28,9 @@ namespace SharpDX.Direct3D11
         /// </summary>
         /// <param name = "device">The device with which to associate the buffer.</param>
         /// <param name = "description">The description of the buffer.</param>
+        /// <msdn-id>ff476501</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateBuffer([In] const D3D11_BUFFER_DESC* pDesc,[In, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Buffer** ppBuffer)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>	
         public Buffer(Device device, BufferDescription description)
             : base(IntPtr.Zero)
         {
@@ -40,10 +43,28 @@ namespace SharpDX.Direct3D11
         /// <param name = "device">The device with which to associate the buffer.</param>
         /// <param name = "data">Initial data used to initialize the buffer.</param>
         /// <param name = "description">The description of the buffer.</param>
+        /// <msdn-id>ff476501</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateBuffer([In] const D3D11_BUFFER_DESC* pDesc,[In, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Buffer** ppBuffer)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>	
         public Buffer(Device device, DataStream data, BufferDescription description)
             : base(IntPtr.Zero)
         {
             device.CreateBuffer(ref description, new DataBox(data.DataPointer, 0, 0), this);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:SharpDX.Direct3D11.Buffer" /> class.
+        /// </summary>
+        /// <param name="device">The device with which to associate the buffer.</param>
+        /// <param name="dataPointer">The data pointer.</param>
+        /// <param name="description">The description of the buffer.</param>
+        /// <msdn-id>ff476501</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateBuffer([In] const D3D11_BUFFER_DESC* pDesc,[In, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Buffer** ppBuffer)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>	
+        public Buffer(Device device, IntPtr dataPointer, BufferDescription description)
+            : base(IntPtr.Zero)
+        {
+            device.CreateBuffer(ref description, dataPointer != IntPtr.Zero ? new DataBox(dataPointer, 0, 0) : (DataBox?)null, this);
         }
 
         /// <summary>
@@ -56,6 +77,9 @@ namespace SharpDX.Direct3D11
         /// <param name = "accessFlags">Flags specifying how the buffer will be accessible from the CPU.</param>
         /// <param name = "optionFlags">Miscellaneous resource options.</param>
         /// <param name = "structureByteStride">The size (in bytes) of the structure element for structured buffers.</param>
+        /// <msdn-id>ff476501</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateBuffer([In] const D3D11_BUFFER_DESC* pDesc,[In, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Buffer** ppBuffer)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>	
         public Buffer(Device device, int sizeInBytes, ResourceUsage usage, BindFlags bindFlags,
                       CpuAccessFlags accessFlags, ResourceOptionFlags optionFlags, int structureByteStride)
             : base(IntPtr.Zero)
@@ -84,6 +108,9 @@ namespace SharpDX.Direct3D11
         /// <param name = "accessFlags">Flags specifying how the buffer will be accessible from the CPU.</param>
         /// <param name = "optionFlags">Miscellaneous resource options.</param>
         /// <param name = "structureByteStride">The size (in bytes) of the structure element for structured buffers.</param>
+        /// <msdn-id>ff476501</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateBuffer([In] const D3D11_BUFFER_DESC* pDesc,[In, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Buffer** ppBuffer)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>	
         public Buffer(Device device, DataStream data, int sizeInBytes, ResourceUsage usage, BindFlags bindFlags,
                       CpuAccessFlags accessFlags, ResourceOptionFlags optionFlags, int structureByteStride)
             : base(IntPtr.Zero)
@@ -113,6 +140,9 @@ namespace SharpDX.Direct3D11
         /// <param name="optionFlags">Miscellaneous resource options.</param>
         /// <param name="structureByteStride">The size (in bytes) of the structure element for structured buffers.</param>
         /// <returns>An initialized buffer</returns>
+        /// <msdn-id>ff476501</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateBuffer([In] const D3D11_BUFFER_DESC* pDesc,[In, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Buffer** ppBuffer)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>	
         public static Buffer Create<T>(
             Device device,
             BindFlags bindFlags,
@@ -156,6 +186,9 @@ namespace SharpDX.Direct3D11
         /// <param name="optionFlags">Miscellaneous resource options.</param>
         /// <param name="structureByteStride">The size (in bytes) of the structure element for structured buffers.</param>
         /// <returns>An initialized buffer</returns>
+        /// <msdn-id>ff476501</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateBuffer([In] const D3D11_BUFFER_DESC* pDesc,[In, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Buffer** ppBuffer)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>	
         public static Buffer Create<T>(Device device, BindFlags bindFlags, T[] data, int sizeInBytes = 0, ResourceUsage usage = ResourceUsage.Default, CpuAccessFlags accessFlags = CpuAccessFlags.None, ResourceOptionFlags optionFlags = ResourceOptionFlags.None, int structureByteStride = 0) where T : struct 
         {
             var buffer = new Buffer(IntPtr.Zero);
@@ -190,6 +223,9 @@ namespace SharpDX.Direct3D11
         /// <remarks>
         /// If the <see cref="BufferDescription.SizeInBytes"/> is at 0, sizeof(T) is used.
         /// </remarks>
+        /// <msdn-id>ff476501</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateBuffer([In] const D3D11_BUFFER_DESC* pDesc,[In, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Buffer** ppBuffer)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>	
         public static Buffer Create<T>(Device device, ref T data, BufferDescription description) where T : struct
         {
             var buffer = new Buffer(IntPtr.Zero);
@@ -216,6 +252,9 @@ namespace SharpDX.Direct3D11
         /// <remarks>
         /// If the <see cref="BufferDescription.SizeInBytes"/> is at 0, sizeof(T) * data.Length is used.
         /// </remarks>
+        /// <msdn-id>ff476501</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateBuffer([In] const D3D11_BUFFER_DESC* pDesc,[In, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Buffer** ppBuffer)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>	
         public static Buffer Create<T>(Device device, T[] data, BufferDescription description) where T : struct
         {
             var buffer = new Buffer(IntPtr.Zero);

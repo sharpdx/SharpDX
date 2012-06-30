@@ -58,7 +58,7 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        public override RenderTargetView GetRenderTargetView(ViewSlice viewSlice, int arrayIndex, int mipIndex)
+        public override RenderTargetView GetRenderTargetView(ViewSlice viewSlice, int arrayOrDepthSlice, int mipIndex)
         {
             if ((Description.BindFlags & BindFlags.RenderTarget) == 0)
                 return null;
@@ -68,44 +68,47 @@ namespace SharpDX.Toolkit.Graphics
 
             int arrayCount;
             int mipCount;
-            GetViewSliceBounds(viewSlice, ref arrayIndex, ref mipIndex, out arrayCount, out mipCount);
+            GetViewSliceBounds(viewSlice, ref arrayOrDepthSlice, ref mipIndex, out arrayCount, out mipCount);
 
-            var rtvIndex = GetViewIndex(viewSlice, arrayIndex, mipIndex);
-            var rtv = RenderTargetViews[rtvIndex];
+            var rtvIndex = GetViewIndex(viewSlice, arrayOrDepthSlice, mipIndex);
 
-            // Creates the shader resource view
-            if (rtv == null)
+            lock (RenderTargetViews)
             {
-                // Create the render target view
-                var rtvDescription = new RenderTargetViewDescription() { Format = Description.Format };
+                var rtv = RenderTargetViews[rtvIndex];
 
-                if (Description.ArraySize > 1)
+                // Creates the shader resource view
+                if (rtv == null)
                 {
-                    rtvDescription.Dimension = Description.SampleDescription.Count > 1 ? RenderTargetViewDimension.Texture2DMultisampledArray : RenderTargetViewDimension.Texture2DArray;
-                    if (Description.SampleDescription.Count > 1)
+                    // Create the render target view
+                    var rtvDescription = new RenderTargetViewDescription() { Format = Description.Format };
+
+                    if (Description.ArraySize > 1)
                     {
-                        rtvDescription.Texture2DMSArray.ArraySize = arrayCount;
-                        rtvDescription.Texture2DMSArray.FirstArraySlice = arrayIndex;
+                        rtvDescription.Dimension = Description.SampleDescription.Count > 1 ? RenderTargetViewDimension.Texture2DMultisampledArray : RenderTargetViewDimension.Texture2DArray;
+                        if (Description.SampleDescription.Count > 1)
+                        {
+                            rtvDescription.Texture2DMSArray.ArraySize = arrayCount;
+                            rtvDescription.Texture2DMSArray.FirstArraySlice = arrayOrDepthSlice;
+                        }
+                        else
+                        {
+                            rtvDescription.Texture2DArray.ArraySize = arrayCount;
+                            rtvDescription.Texture2DArray.FirstArraySlice = arrayOrDepthSlice;
+                            rtvDescription.Texture2DArray.MipSlice = mipIndex;
+                        }
                     }
                     else
                     {
-                        rtvDescription.Texture2DArray.ArraySize = arrayCount;
-                        rtvDescription.Texture2DArray.FirstArraySlice = arrayIndex;
-                        rtvDescription.Texture2DArray.MipSlice = mipIndex;
+                        rtvDescription.Dimension = Description.SampleDescription.Count > 1 ? RenderTargetViewDimension.Texture2DMultisampled : RenderTargetViewDimension.Texture2D;
+                        if (Description.SampleDescription.Count <= 1)
+                            rtvDescription.Texture2D.MipSlice = mipIndex;
                     }
-                }
-                else
-                {
-                    rtvDescription.Dimension = Description.SampleDescription.Count > 1 ? RenderTargetViewDimension.Texture2DMultisampled : RenderTargetViewDimension.Texture2D;
-                    if (Description.SampleDescription.Count <= 1)
-                        rtvDescription.Texture2D.MipSlice = mipIndex;
-                }
 
-                rtv = new RenderTargetView(GraphicsDevice, Resource, rtvDescription);
-                RenderTargetViews[rtvIndex] = ToDispose(rtv);
+                    rtv = new RenderTargetView(GraphicsDevice, Resource, rtvDescription);
+                    RenderTargetViews[rtvIndex] = ToDispose(rtv);
+                }
+                return rtv;
             }
-
-            return rtv;
         }
 
         public override Texture2DBase Clone()
@@ -176,11 +179,17 @@ namespace SharpDX.Toolkit.Graphics
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
         public static RenderTarget2D New<T>(int width, int height, PixelFormat format, T[][] mipMapTextures, bool isUnorderedReadWrite = false) where T : struct
         {
-            GCHandle[] handles;
-            var dataRectangles = Pin(width, format, mipMapTextures, out handles);
-            var texture = new RenderTarget2D(NewDescription(width, height, format, isUnorderedReadWrite, mipMapTextures.Length, 1), dataRectangles);
-            UnPin(handles);
-            return texture;
+            GCHandle[] handles = null;
+            try
+            {
+                var dataRectangles = Pin(width, format, mipMapTextures, out handles);
+                var texture = new RenderTarget2D(NewDescription(width, height, format, isUnorderedReadWrite, mipMapTextures.Length, 1), dataRectangles);
+                return texture;
+            }
+            finally
+            {
+                UnPin(handles);
+            }
         }
 
         protected static Texture2DDescription NewDescription(int width, int height, PixelFormat format, bool isReadWrite, int mipCount, int arraySize)

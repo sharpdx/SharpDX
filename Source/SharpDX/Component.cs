@@ -109,7 +109,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="disposeManagedResources">If true, managed resources should be
         /// disposed of in addition to unmanaged resources.</param>
-        private void Dispose(bool disposeManagedResources)
+        protected virtual void Dispose(bool disposeManagedResources)
         {
             // Notify listeners
             //if (Disposing != null)

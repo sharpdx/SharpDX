@@ -17,30 +17,15 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
-using SharpDX.Direct3D11;
 
 namespace SharpDX.Toolkit.Graphics.Tests
 {
-    /// <summary>
-    /// Tests for <see cref="Texture2DBase"/>
-    /// </summary>
-    [TestFixture]
-    [Description("Tests SharpDX.Toolkit.Graphics.Texture2D")]
-    public unsafe class TestTexture2D
+    public class Program
     {
-        [Test]
-        public void TestConstructors()
+        public static void Main(string[] args)
         {
-            var device = GraphicsDevice.New();
-            
-            // TODO
-
-
+            var test = new TestBuffer();
+            test.AllTest();
         }
     }
 }
