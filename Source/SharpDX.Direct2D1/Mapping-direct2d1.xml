@@ -164,8 +164,7 @@
     <map enum="D2D1_TILE_PROP" name="TileProperties"/>
     <map enum="D2D1_TURBULENCE_PROP" name="TurbulenceProperties"/>
 
-    <map enum="D2D1_LAYER_OPTIONS" flags="true"/>
-    <map enum="D2D1_LAYER_OPTIONS1" flags="true"/>
+    <map enum="D2D1_.*_OPTIONS1?" flags="true"/>
 
     <map enum-item="D2D1_COLOR_SPACE_SCRGB" name="ScRgb"/>
 
