@@ -125,6 +125,17 @@
     <map enum-item="WICSectionAccessLevel(.*)" name="$1"/>
     <map enum-item="WICSectionAccessLevel(.*)" name="$1"/>
 
+    <map enum="WICBitmapTransformOptions" flags="true"/>
+    <map enum="WICComponentEnumerateOptions" flags="true"/>
+    <map enum="WICComponentSigning" flags="true"/>
+    <map enum="WICComponentType" flags="true"/>
+    <map enum="WICNamedWhitePoint" flags="true"/>
+    <map enum="WICProgressNotification" flags="true"/>
+    <map enum="WICProgressOperation" flags="true"/>
+    <map enum="WICBitmapTransformOptions" flags="true"/>
+    <map enum="WICBitmapTransformOptions" flags="true"/>
+    <map enum="WICBitmapTransformOptions" flags="true"/>
+    <map enum="WICBitmapTransformOptions" flags="true"/>
 
     <!--
     // *****************************************************************
