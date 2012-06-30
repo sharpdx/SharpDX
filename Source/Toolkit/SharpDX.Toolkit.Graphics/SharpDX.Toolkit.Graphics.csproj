@@ -25,6 +25,7 @@
     <Compile Include="Buffer.Structured.cs" />
     <Compile Include="Buffer.Raw.cs" />
     <Compile Include="Buffer.Argument.cs" />
+    <Compile Include="GraphicsDeviceFeatures.cs" />
     <Compile Include="RenderTarget1D.cs" />
     <Compile Include="Texture3D.cs" />
     <Compile Include="Texture3DBase.cs" />

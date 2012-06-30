@@ -46,6 +46,15 @@ namespace SharpDX.Toolkit.Graphics
         {
         }
 
+        /// <summary>
+        /// RenderTargetView casting operator.
+        /// </summary>
+        /// <param name="from">Source for the.</param>
+        public static implicit operator RenderTargetView(RenderTarget1D from)
+        {
+            return from.RenderTargetViews != null ? from.RenderTargetViews[0] : null;
+        }
+
         protected override void InitializeViews()
         {
             // Perform default initialization

@@ -84,15 +84,6 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// RenderTargetView casting operator.
-        /// </summary>
-        /// <param name="from">Source for the.</param>
-        public static implicit operator RenderTargetView(Texture from)
-        {
-            return from.RenderTargetViews != null ? from.RenderTargetViews[0] : null;
-        }
-
-        /// <summary>
         /// UnorderedAccessView casting operator.
         /// </summary>
         /// <param name="from">Source for the.</param>

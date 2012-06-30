@@ -25,13 +25,12 @@ using SharpDX.Direct3D11;
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    /// This class is a frontend to <see cref="SharpDX.Direct3D11.Device"/> and <see cref="SharpDX.Direct3D11.DeviceContext"/>
+    /// This class is a frontend to <see cref="SharpDX.Direct3D11.Device" /> and <see cref="SharpDX.Direct3D11.DeviceContext" />
     /// </summary>
     public class GraphicsDevice : Component
     {
         internal Device Device;
         internal DeviceContext Context;
-        private readonly Dictionary<PixelFormat,int> maximumMSAASampleCount = new Dictionary<PixelFormat, int>();
 
         [ThreadStatic]
         private static GraphicsDevice current;
@@ -53,7 +52,7 @@ namespace SharpDX.Toolkit.Graphics
             IsDebugMode = (Device.CreationFlags & (int)DeviceCreationFlags.Debug) != 0;
             MainDevice = this;
             Context = Device.ImmediateContext;
-            FeatureLevel = Device.FeatureLevel;
+            Features = new GraphicsDeviceFeatures(Device);
             AttachToCurrentThread();
         }
 
@@ -63,7 +62,7 @@ namespace SharpDX.Toolkit.Graphics
             IsDebugMode = (Device.CreationFlags & (int)DeviceCreationFlags.Debug) != 0;
             MainDevice = this;
             Context = Device.ImmediateContext;
-            FeatureLevel = Device.FeatureLevel;
+            Features = new GraphicsDeviceFeatures(Device);
             AttachToCurrentThread();
         }
 
@@ -73,34 +72,49 @@ namespace SharpDX.Toolkit.Graphics
             IsDebugMode = (Device.CreationFlags & (int)DeviceCreationFlags.Debug) != 0;
             MainDevice = mainDevice;
             Context = deferredContext;
-            FeatureLevel = Device.FeatureLevel;
+            Features = new GraphicsDeviceFeatures(Device);
         }
 
-        /// <summary>
-        /// Gets the maximum MSAA sample count for a particular <see cref="PixelFormat"/>.
-        /// </summary>
-        /// <param name="pixelFormat">The pixelFormat.</param>
-        /// <returns>The maximum multisample count for this pixel pixelFormat</returns>
-        /// <msdn-id>ff476499</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CheckMultisampleQualityLevels([In] DXGI_FORMAT Format,[In] unsigned int SampleCount,[Out] unsigned int* pNumQualityLevels)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CheckMultisampleQualityLevels</unmanaged-short>	
-        public int GetMaximumMSAASampleCount(PixelFormat pixelFormat)
-        {
-            int maxCount;
-            if (!maximumMSAASampleCount.TryGetValue(pixelFormat, out maxCount))
-            {
-                maxCount = 1;
-                for (int i = 1; i < 32; i++)
-                    if (Device.CheckMultisampleQualityLevels(pixelFormat, i) != 0)
-                        maxCount = i;
 
-                maximumMSAASampleCount[pixelFormat] = maxCount;
-            }
-            return maxCount;
+        /// <summary>
+        /// Gets the features supported by this <see cref="GraphicsDevice"/>.
+        /// </summary>
+        public readonly GraphicsDeviceFeatures Features;
+
+        /// <summary>
+        /// Clears a render target view by setting all the elements in a render target to one value.
+        /// </summary>
+        /// <param name="renderTargetView">The render target view.</param>
+        /// <param name="colorRGBA">A 4-component array that represents the color to fill the render target with.</param>
+        /// <remarks><p>Applications that wish to clear a render target to a specific integer value bit pattern should render a screen-aligned quad instead of using this method.  The reason for this is because this method accepts as input a floating point value, which may not have the same bit pattern as the original integer.</p><table> <tr><td> <p>Differences between Direct3D 9 and Direct3D 11/10:</p> <p>Unlike Direct3D 9, the full extent of the resource view is always cleared. Viewport and scissor settings are not applied.</p> </td></tr> </table><p>?</p></remarks>
+        /// <msdn-id>ff476388</msdn-id>
+        /// <unmanaged>void ID3D11DeviceContext::ClearRenderTargetView([In] ID3D11RenderTargetView* pRenderTargetView,[In] const SHARPDX_COLOR4* ColorRGBA)</unmanaged>
+        /// <unmanaged-short>ID3D11DeviceContext::ClearRenderTargetView</unmanaged-short>
+        public void Clear(SharpDX.Direct3D11.RenderTargetView renderTargetView, Color4 colorRGBA)
+        {
+            Context.ClearRenderTargetView(renderTargetView, colorRGBA);
         }
 
         /// <summary>	
-        /// <p>Clears an unordered access resource with bit-precise values.</p>	
+        /// Clears the depth-stencil resource.
+        /// </summary>	
+        /// <param name="depthStencilView"><dd>  <p>Pointer to the depth stencil to be cleared.</p> </dd></param>	
+        /// <param name="clearFlags"><dd>  <p>Identify the type of data to clear (see <strong><see cref="SharpDX.Direct3D11.DepthStencilClearFlags"/></strong>).</p> </dd></param>	
+        /// <param name="depth"><dd>  <p>Clear the depth buffer with this value. This value will be clamped between 0 and 1.</p> </dd></param>	
+        /// <param name="stencil"><dd>  <p>Clear the stencil buffer with this value.</p> </dd></param>	
+        /// <remarks>	
+        /// <table> <tr><td> <p>Differences between Direct3D 9 and Direct3D 11/10:</p> <p>Unlike Direct3D 9, the full extent of the resource view is always cleared. Viewport and scissor settings are not applied.</p> </td></tr> </table><p>?</p>	
+        /// </remarks>	
+        /// <msdn-id>ff476387</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::ClearDepthStencilView([In] ID3D11DepthStencilView* pDepthStencilView,[In] D3D11_CLEAR_FLAG ClearFlags,[In] float Depth,[In] unsigned char Stencil)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::ClearDepthStencilView</unmanaged-short>	
+        public void Clear(SharpDX.Direct3D11.DepthStencilView depthStencilView, SharpDX.Direct3D11.DepthStencilClearFlags clearFlags, float depth, byte stencil)
+        {
+            Context.ClearDepthStencilView(depthStencilView, clearFlags, depth, stencil);
+        }
+
+        /// <summary>	
+        /// Clears an unordered access resource with bit-precise values.	
         /// </summary>	
         /// <param name="view">The buffer to clear.</param>	
         /// <param name="value">The value used to clear.</param>	
@@ -180,11 +194,6 @@ namespace SharpDX.Toolkit.Graphics
         /// Gets the <see cref="GraphicsDevice"/> for immediate rendering.
         /// </summary>
         public readonly GraphicsDevice MainDevice;
-
-        /// <summary>
-        /// Gets the <see cref="FeatureLevel"/> for this device.
-        /// </summary>
-        public readonly FeatureLevel FeatureLevel;
 
         /// <summary>
         /// Gets whether this <see cref="GraphicsDevice"/> is running in debug.
