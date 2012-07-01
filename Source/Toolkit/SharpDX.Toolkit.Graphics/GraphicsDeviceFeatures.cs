@@ -29,9 +29,12 @@ namespace SharpDX.Toolkit.Graphics
     /// <summary>
     /// Features supported by a <see cref="GraphicsDevice"/>.
     /// </summary>
+    /// <remarks>
+    /// This class gives also features for a particular format, using the operator this[dxgiFormat] on this structure.
+    /// </remarks>
     public struct GraphicsDeviceFeatures
     {
-        private readonly Dictionary<DXGI.Format, FeaturesPerFormat> mapFeaturesPerFormat;
+        private readonly FeaturesPerFormat[] mapFeaturesPerFormat;
 
         /// <summary>
         /// <see cref="Format"/> to exclude from the features test.
@@ -40,7 +43,7 @@ namespace SharpDX.Toolkit.Graphics
 
         internal GraphicsDeviceFeatures(Direct3D11.Device device)
         {
-            mapFeaturesPerFormat = new Dictionary<DXGI.Format, FeaturesPerFormat>();
+            mapFeaturesPerFormat = new FeaturesPerFormat[256];
 
             // Check global features
             Level = device.FeatureLevel;
@@ -71,7 +74,7 @@ namespace SharpDX.Toolkit.Graphics
                     }
                 }
 
-                mapFeaturesPerFormat.Add(dxgiFormat, new FeaturesPerFormat(dxgiFormat, maximumMSAA, computeShaderFormatSupport, formatSupport));
+                mapFeaturesPerFormat[(int)dxgiFormat] = new FeaturesPerFormat(dxgiFormat, maximumMSAA, computeShaderFormatSupport, formatSupport);
             }
         }
 
@@ -85,12 +88,12 @@ namespace SharpDX.Toolkit.Graphics
         public FeatureLevel Level;
 
         /// <summary>
-        /// Boolean indicating if this device supports compute shaders.
+        /// Boolean indicating if this device supports compute shaders, unordered access on structured buffers and raw structured buffers.
         /// </summary>
         public readonly bool HasComputeShaders;
 
         /// <summary>
-        /// Boolean indicating if this device supports double precision calculations.
+        /// Boolean indicating if this device supports shaders double precision calculations.
         /// </summary>
         public readonly bool HasDoublePrecision;
 
@@ -105,13 +108,13 @@ namespace SharpDX.Toolkit.Graphics
         public readonly bool HasMultiThreadingCommandLists;
 
         /// <summary>
-        /// Gets the features supported for specific <see cref="SharpDX.DXGI.Format"/>.
+        /// Gets the <see cref="FeaturesPerFormat" /> for the specified <see cref="SharpDX.DXGI.Format" />.
         /// </summary>
-        /// <param name="format">The DXGI format.</param>
-        /// <returns>The features supported by this format.</returns>
-        public FeaturesPerFormat GetFeaturesForFormat(DXGI.Format format)
+        /// <param name="dxgiFormat">The dxgi format.</param>
+        /// <returns>Features for the specific format.</returns>
+        public FeaturesPerFormat this[SharpDX.DXGI.Format dxgiFormat]
         {
-            return mapFeaturesPerFormat[format];
+            get { return this.mapFeaturesPerFormat[(int)dxgiFormat]; }
         }
 
         /// <summary>
