@@ -159,7 +159,7 @@ namespace SharpDX.Toolkit.Graphics
         ///   <unmanaged-short>ID3D11Device::CreateTexture3D</unmanaged-short>
         public static RenderTarget3D New(int width, int height, int depth,  PixelFormat format, bool isUnorderedReadWrite = false, int mipCount = 1, int arraySize = 1)
         {
-            return new RenderTarget3D(NewDescription(width, height, depth, format, isUnorderedReadWrite, mipCount, ResourceUsage.Default));
+            return new RenderTarget3D(NewRenderTargetDescription(width, height, depth, format, isUnorderedReadWrite, mipCount, ResourceUsage.Default));
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="height">The height.</param>
         /// <param name="depth">The depth.</param>
         /// <param name="format">Describes the format to use.</param>
-        /// <param name="mipMapTextureArray">The mip map textures with arraySize = 1. See remarks</param>
+        /// <param name="textureData">The texture data for the 1st mipmap. See remarks</param>
         /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
         /// <param name="usage">The usage.</param>
         /// <returns>A new instance of <see cref="RenderTarget3D" /> class.</returns>
@@ -178,9 +178,9 @@ namespace SharpDX.Toolkit.Graphics
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture3D([In] const D3D11_TEXTURE3D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture3D** ppTexture3D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture3D</unmanaged-short>
         /// <remarks>The first dimension of mipMapTextures is the number of mipmaps, the second is the texture data for a particular mipmap.</remarks>
-        public static RenderTarget3D New<T>(int width, int height, int depth, PixelFormat format, T[] mipMapTextureArray, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
+        public static RenderTarget3D New<T>(int width, int height, int depth, PixelFormat format, T[] textureData, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
         {
-            return New(width, height, depth, format, new[] { mipMapTextureArray }, isUnorderedReadWrite, usage);
+            return New(width, height, depth, format, new[] { textureData }, isUnorderedReadWrite, usage);
         }
 
         /// <summary>
@@ -191,7 +191,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="height">The height.</param>
         /// <param name="depth">The depth.</param>
         /// <param name="format">Describes the format to use.</param>
-        /// <param name="mipMapTextureArray">The mip map textures with texture array. See remarks</param>
+        /// <param name="mipMapTexture">The mip map textures. See remarks</param>
         /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
         /// <param name="usage">The usage.</param>
         /// <returns>A new instance of <see cref="RenderTarget3D" /> class.</returns>
@@ -199,14 +199,14 @@ namespace SharpDX.Toolkit.Graphics
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture3D([In] const D3D11_TEXTURE3D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture3D** ppTexture3D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture3D</unmanaged-short>
         /// <remarks>The first dimension of mipMapTextures describes the number of array (RenderTarget3D Array), second dimension is the mipmap, the third is the texture data for a particular mipmap.</remarks>
-        public static RenderTarget3D New<T>(int width, int height, int depth, PixelFormat format, T[][] mipMapTextureArray, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
+        public static RenderTarget3D New<T>(int width, int height, int depth, PixelFormat format, T[][] mipMapTexture, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
         {
             usage = isUnorderedReadWrite ? ResourceUsage.Default : usage;
             GCHandle[] handles = null;
             try
             {
-                var dataRectangles = Pin(width, height, format, mipMapTextureArray, out handles);
-                var texture = new RenderTarget3D(NewDescription(width, height, depth, format, isUnorderedReadWrite, mipMapTextureArray.Length, usage), dataRectangles);
+                var dataRectangles = Pin(width, height, format, mipMapTexture, out handles);
+                var texture = new RenderTarget3D(NewRenderTargetDescription(width, height, depth, format, isUnorderedReadWrite, mipMapTexture.Length, usage), dataRectangles);
                 return texture;
             }
             finally
@@ -215,9 +215,9 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        protected new static Texture3DDescription NewDescription(int width, int height, int depth, PixelFormat format, bool isReadWrite, int mipCount, ResourceUsage usage)
+        protected static Texture3DDescription NewRenderTargetDescription(int width, int height, int depth, PixelFormat format, bool isReadWrite, int mipCount, ResourceUsage usage)
         {
-            var desc = Texture3DBase.NewDescription(width, height, depth, format, isReadWrite, mipCount, ResourceUsage.Default);
+            var desc = Texture3DBase.NewDescription(width, height, depth, format, isReadWrite, mipCount, usage);
             desc.BindFlags |= BindFlags.RenderTarget;
             return desc;
         }

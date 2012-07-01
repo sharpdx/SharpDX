@@ -160,7 +160,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
         public static RenderTarget1D New(int width, PixelFormat format, bool isUnorderedReadWrite = false, int mipCount = 1, int arraySize = 1)
         {
-            return new RenderTarget1D(NewDescription(width, format, isUnorderedReadWrite, mipCount, 1));
+            return new RenderTarget1D(NewRenderTargetDescription(width, format, isUnorderedReadWrite, mipCount, 1, ResourceUsage.Default));
         }
 
         /// <summary>
@@ -228,7 +228,7 @@ namespace SharpDX.Toolkit.Graphics
             try
             {
                 var dataRectangles = Pin(mipMapTextureArray, out handles);
-                var texture = new RenderTarget1D(NewDescription(width, format, isUnorderedReadWrite, mipMapTextureArray[0].Length, mipMapTextureArray.Length, usage), dataRectangles);
+                var texture = new RenderTarget1D(NewRenderTargetDescription(width, format, isUnorderedReadWrite, mipMapTextureArray[0].Length, mipMapTextureArray.Length, usage), dataRectangles);
                 return texture;
             }
             finally
@@ -237,9 +237,9 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        protected static Texture1DDescription NewDescription(int width, PixelFormat format, bool isReadWrite, int mipCount, int arraySize)
+        protected static Texture1DDescription NewRenderTargetDescription(int width, PixelFormat format, bool isReadWrite, int mipCount, int arraySize, ResourceUsage usage)
         {
-            var desc = Texture1DBase.NewDescription(width, format, isReadWrite, mipCount, arraySize, ResourceUsage.Default);
+            var desc = Texture1DBase.NewDescription(width, format, isReadWrite, mipCount, arraySize, usage);
             desc.BindFlags |= BindFlags.RenderTarget;
             return desc;
         }

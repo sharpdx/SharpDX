@@ -20,7 +20,7 @@
 
 using System;
 using System.Runtime.InteropServices;
-
+using SharpDX.DXGI;
 using SharpDX.Direct3D11;
 
 namespace SharpDX.Toolkit.Graphics
@@ -161,16 +161,17 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         /// <param name="format">Describes the format to use.</param>
+        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
         /// <param name="mipCount">(optional) number of mips.</param>
         /// <param name="arraySize">Size of the texture 2D array, default to 1.</param>
-        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
+        /// <param name="multisampleCount">The multisample count.</param>
         /// <returns>A new instance of <see cref="RenderTarget2D" /> class.</returns>
-        /// <msdn-id>ff476521</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
-        public static RenderTarget2D New(int width, int height, PixelFormat format, bool isUnorderedReadWrite = false, int mipCount = 1, int arraySize = 1)
+        /// <msdn-id>ff476521</msdn-id>
+        ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
+        ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
+        public static RenderTarget2D New(int width, int height, PixelFormat format, bool isUnorderedReadWrite = false, int mipCount = 1, int arraySize = 1, int multisampleCount = 1)
         {
-            return new RenderTarget2D(NewDescription(width, height, format, isUnorderedReadWrite, mipCount, 1));
+            return new RenderTarget2D(NewRenderTargetDescription(width, height, format, isUnorderedReadWrite, mipCount, 1, multisampleCount, ResourceUsage.Default));
         }
 
         /// <summary>
@@ -241,7 +242,7 @@ namespace SharpDX.Toolkit.Graphics
             try
             {
                 var dataRectangles = Pin(width, format, mipMapTextureArray, out handles);
-                var texture = new RenderTarget2D(NewDescription(width, height, format, isUnorderedReadWrite, mipMapTextureArray[0].Length, mipMapTextureArray.Length, usage), dataRectangles);
+                var texture = new RenderTarget2D(NewRenderTargetDescription(width, height, format, isUnorderedReadWrite, mipMapTextureArray[0].Length, mipMapTextureArray.Length, 1, usage), dataRectangles);
                 return texture;
             }
             finally
@@ -250,10 +251,14 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        protected static Texture2DDescription NewDescription(int width, int height, PixelFormat format, bool isReadWrite, int mipCount, int arraySize)
+        protected static Texture2DDescription NewRenderTargetDescription(int width, int height, PixelFormat format, bool isReadWrite, int mipCount, int arraySize, int multiSampleCount, ResourceUsage usage)
         {
-            var desc = Texture2DBase.NewDescription(width, height, format, isReadWrite, mipCount, arraySize, ResourceUsage.Default);
+            var desc = Texture2DBase.NewDescription(width, height, format, isReadWrite, mipCount, arraySize, usage);
             desc.BindFlags |= BindFlags.RenderTarget;
+
+            // Sets the MSAA
+            int maximumMSAA = GraphicsDevice.Current.Features[format].MaximumMSAA;
+            desc.SampleDescription.Count = Math.Max(1, Math.Min(multiSampleCount, maximumMSAA));
             return desc;
         }
     }
