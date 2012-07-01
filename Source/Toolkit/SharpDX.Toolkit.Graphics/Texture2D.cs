@@ -116,7 +116,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Creates a new <see cref="Texture2D" />.
+        /// Creates a new <see cref="Texture2D" /> with a single level of mipmap.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="width">The width.</param>
@@ -124,24 +124,66 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="format">Describes the format to use.</param>
         /// <param name="usage">The usage.</param>
         /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
-        /// <param name="mipMapTextures">The mip map textures. See remarks</param>
+        /// <param name="textureData">The texture data for a single mipmap and a single array slice. See remarks</param>
         /// <returns>A new instance of <see cref="Texture2D" /> class.</returns>
         /// <msdn-id>ff476521</msdn-id>
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
         /// <remarks>
-        /// The first dimension of mipMapTextures describes the number of is an array ot Texture2D Array
-        /// 
-        /// 
+        /// Each value in textureData is a pixel in the destination texture.
         /// </remarks>
-        public static Texture2D New<T>(int width, int height, PixelFormat format, T[][] mipMapTextures, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
+        public static Texture2D New<T>(int width, int height, PixelFormat format, T[] textureData, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
+        {
+            return New(width, height, format, new[] { new [] { textureData } }, isUnorderedReadWrite, usage);
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="Texture2D" /> with mipmaps.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="format">Describes the format to use.</param>
+        /// <param name="usage">The usage.</param>
+        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
+        /// <param name="mipMapTextureArray">The mip map textures with arraySize = 1. See remarks</param>
+        /// <returns>A new instance of <see cref="Texture2D" /> class.</returns>
+        /// <msdn-id>ff476521</msdn-id>
+        ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
+        ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
+        /// <remarks>
+        /// The first dimension of mipMapTextures is the number of mipmaps, the second is the texture data for a particular mipmap.
+        /// </remarks>
+        public static Texture2D New<T>(int width, int height, PixelFormat format, T[][] mipMapTextureArray, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
+        {
+            return New(width, height, format, new[] {mipMapTextureArray}, isUnorderedReadWrite, usage);
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="Texture2D" /> array with a mipmaps for each array slice.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="format">Describes the format to use.</param>
+        /// <param name="usage">The usage.</param>
+        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
+        /// <param name="mipMapTextureArray">The mip map textures with texture array. See remarks</param>
+        /// <returns>A new instance of <see cref="Texture2D" /> class.</returns>
+        /// <msdn-id>ff476521</msdn-id>
+        ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
+        ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
+        /// <remarks>
+        /// The first dimension of mipMapTextures describes the number of array (Texture2D Array), second dimension is the mipmap, the third is the texture data for a particular mipmap.
+        /// </remarks>
+        public static Texture2D New<T>(int width, int height, PixelFormat format, T[][][] mipMapTextureArray, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
         {
             usage = isUnorderedReadWrite ? ResourceUsage.Default : usage;
             GCHandle[] handles = null;
             try
             {
-                var dataRectangles = Pin(width, format, mipMapTextures, out handles);
-                var texture = new Texture2D(NewDescription(width, height, format, isUnorderedReadWrite, mipMapTextures.Length, 1, usage), dataRectangles);
+                var dataRectangles = Pin(width, format, mipMapTextureArray, out handles);
+                var texture = new Texture2D(NewDescription(width, height, format, isUnorderedReadWrite, mipMapTextureArray[0].Length, mipMapTextureArray.Length, usage), dataRectangles);
                 return texture;
             }
             finally

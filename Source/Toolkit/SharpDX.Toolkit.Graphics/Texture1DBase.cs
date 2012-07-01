@@ -255,16 +255,30 @@ namespace SharpDX.Toolkit.Graphics
             return (((int)viewSlice) * Description.ArraySize + arrayIndex) * Description.MipLevels + mipIndex;
         }
         
-        protected static IntPtr[] Pin<T>(T[][] initialTextures, out GCHandle[] handles) where T : struct
+        protected static IntPtr[] Pin<T>(T[][][] initialTextures, out GCHandle[] handles) where T : struct
         {
-            var dataRectangles = new IntPtr[initialTextures.Length];
-            handles = new GCHandle[initialTextures.Length];
+            int mipMapLength = -1;
+            foreach (var t in initialTextures)
+            {
+                if (mipMapLength < 0)
+                    mipMapLength = t.Length;
+                else if (mipMapLength != t.Length)
+                    throw new ArgumentNullException("TextureDatas must have same number of mipmaps for each slice of array", "initialTextures");
+            }
+
+            var dataRectangles = new IntPtr[initialTextures.Length * mipMapLength];
+            handles = new GCHandle[initialTextures.Length * mipMapLength];
+
             for (int i = 0; i < initialTextures.Length; i++)
             {
-                var initialTexture = initialTextures[i];
-                var handle = GCHandle.Alloc(initialTexture, GCHandleType.Pinned);
-                handles[i] = handle;
-                dataRectangles[i] = handle.AddrOfPinnedObject();
+                for (int j = 0; j < mipMapLength; j++)
+                {
+                    var textureIndex = i * mipMapLength + j;
+                    var initialTexture = initialTextures[i][j];
+                    var handle = GCHandle.Alloc(initialTexture, GCHandleType.Pinned);
+                    handles[textureIndex] = handle;
+                    dataRectangles[textureIndex] = handle.AddrOfPinnedObject();
+                }
             }
             return dataRectangles;
         }

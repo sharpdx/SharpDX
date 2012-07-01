@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.Collections.Generic;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 
@@ -46,6 +45,21 @@ namespace SharpDX.Toolkit.Graphics
             internal ComputeShader ComputeShader;
         };
 
+        /// <summary>
+        /// Gets the features supported by this <see cref="GraphicsDevice"/>.
+        /// </summary>
+        public readonly GraphicsDeviceFeatures Features;
+
+        /// <summary>
+        /// Gets the <see cref="GraphicsDevice"/> for immediate rendering.
+        /// </summary>
+        public readonly GraphicsDevice MainDevice;
+
+        /// <summary>
+        /// Gets whether this <see cref="GraphicsDevice"/> is running in debug.
+        /// </summary>
+        public readonly bool IsDebugMode;
+
         protected GraphicsDevice(DriverType type = DriverType.Hardware, DeviceCreationFlags flags = DeviceCreationFlags.None, params FeatureLevel[] featureLevels)
         {
             Device = ToDispose(featureLevels.Length > 0 ? new Device(type, flags, featureLevels) : new Device(type, flags));
@@ -72,14 +86,16 @@ namespace SharpDX.Toolkit.Graphics
             IsDebugMode = (Device.CreationFlags & (int)DeviceCreationFlags.Debug) != 0;
             MainDevice = mainDevice;
             Context = deferredContext;
-            Features = new GraphicsDeviceFeatures(Device);
+            Features = mainDevice.Features;
         }
 
-
         /// <summary>
-        /// Gets the features supported by this <see cref="GraphicsDevice"/>.
+        /// Gets the <see cref="GraphicsDevice"/> attached to the current thread.
         /// </summary>
-        public readonly GraphicsDeviceFeatures Features;
+        public static GraphicsDevice Current
+        {
+            get { return current; }
+        }
 
         /// <summary>
         /// Clears a render target view by setting all the elements in a render target to one value.
@@ -188,24 +204,6 @@ namespace SharpDX.Toolkit.Graphics
         public GraphicsDevice NewDeferred()
         {
             return new GraphicsDevice(this, new DeviceContext(Device));
-        }
-
-        /// <summary>
-        /// Gets the <see cref="GraphicsDevice"/> for immediate rendering.
-        /// </summary>
-        public readonly GraphicsDevice MainDevice;
-
-        /// <summary>
-        /// Gets whether this <see cref="GraphicsDevice"/> is running in debug.
-        /// </summary>
-        public readonly bool IsDebugMode;
-
-        /// <summary>
-        /// Gets the <see cref="GraphicsDevice"/> attached to the current thread.
-        /// </summary>
-        public static GraphicsDevice Current
-        {
-            get { return current; }
         }
 
         /// <summary>
