@@ -27,6 +27,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Raw buffer helper methods.
         /// </summary>
+        /// <remarks>
+        /// Example in HLSL: ByteAddressBuffer or RWByteAddressBuffer for raw buffers supporting unordered access.
+        /// </remarks>
         public static class Raw
         {
             /// <summary>

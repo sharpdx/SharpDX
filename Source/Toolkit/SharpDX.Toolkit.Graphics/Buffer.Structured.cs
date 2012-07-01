@@ -27,6 +27,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Structured buffer helper methods.
         /// </summary>
+        /// <remarks>
+        /// Example in HLSL: StructuredBuffer&lt;float4&gt; or RWStructuredBuffer&lt;float4&gt for structured buffers supporting unordered access.
+        /// </remarks>
         public static class Structured
         {
             /// <summary>
@@ -34,7 +37,7 @@ namespace SharpDX.Toolkit.Graphics
             /// </summary>
             /// <param name="sizeInBytes">The size in bytes of this buffer.</param>
             /// <param name="elementSize">Size of the struct.</param>
-            /// <param name="isUnorderedAccess">if set to <c>true</c> [is unordered access].</param>
+            /// <param name="isUnorderedAccess">if set to <c>true</c> this buffer supports unordered access (RW in HLSL).</param>
             /// <returns>A Structured buffer</returns>
             public static Buffer New(int sizeInBytes, int elementSize, bool isUnorderedAccess = false)
             {
@@ -51,7 +54,7 @@ namespace SharpDX.Toolkit.Graphics
             /// </summary>
             /// <typeparam name="T">Type of the Structured buffer to get the sizeof from</typeparam>
             /// <param name="value">The value to initialize the Structured buffer.</param>
-            /// <param name="isUnorderedAccess">if set to <c>true</c> [is unordered access].</param>
+            /// <param name="isUnorderedAccess">if set to <c>true</c> this buffer supports unordered access (RW in HLSL).</param>
             /// <returns>A Structured buffer</returns>
             public static Buffer New<T>(T[] value, bool isUnorderedAccess = false) where T : struct
             {
@@ -68,7 +71,7 @@ namespace SharpDX.Toolkit.Graphics
             /// </summary>
             /// <param name="value">The value to initialize the Structured buffer.</param>
             /// <param name="elementSize">Size of the element.</param>
-            /// <param name="isUnorderedAccess">if set to <c>true</c> [is unordered access].</param>
+            /// <param name="isUnorderedAccess">if set to <c>true</c> this buffer supports unordered access (RW in HLSL).</param>
             /// <returns>A Structured buffer</returns>
             public static Buffer New(DataPointer value, int elementSize, bool isUnorderedAccess = false)
             {
@@ -84,6 +87,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// StructuredAppend buffer helper methods.
         /// </summary>
+        /// <remarks>
+        /// Example in HLSL: AppendStructuredBuffer&lt;float4&gt; or ConsumeStructuredBuffer&lt;float4&gt.
+        /// </remarks>
         public static class StructuredAppend
         {
             /// <summary>
@@ -126,6 +132,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// StructuredCounter buffer helper methods.
         /// </summary>
+        /// <remarks>
+        /// Example in HLSL: StructuredBuffer&lt;float4&gt; or RWStructuredBuffer&lt;float4&gt for structured buffers supporting unordered access.
+        /// </remarks>
         public static class StructuredCounter
         {
             /// <summary>
