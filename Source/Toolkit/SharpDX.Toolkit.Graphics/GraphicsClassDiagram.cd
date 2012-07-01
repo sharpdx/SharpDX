@@ -70,8 +70,66 @@
       <FileName>Texture3DBase.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="SharpDX.Toolkit.Graphics.Buffer" Collapsed="true">
-    <Position X="12" Y="3.5" Width="1.5" />
+  <Class Name="SharpDX.Toolkit.Graphics.Buffer">
+    <Position X="13.5" Y="3.5" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="SharpDX.Toolkit.Graphics.Buffer.Typed" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Buffer.Typed.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="SharpDX.Toolkit.Graphics.Buffer.StructuredCounter" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Buffer.Structured.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="SharpDX.Toolkit.Graphics.Buffer.Vertex" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Buffer.Vertex.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="SharpDX.Toolkit.Graphics.Buffer.Index" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Buffer.Index.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="SharpDX.Toolkit.Graphics.Buffer.Argument" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Buffer.Argument.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="SharpDX.Toolkit.Graphics.Buffer.Cosntant" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Buffer.Constant.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="SharpDX.Toolkit.Graphics.Buffer.Structured" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Buffer.Structured.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="SharpDX.Toolkit.Graphics.Buffer.StructuredAppend" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Buffer.Structured.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Struct Name="SharpDX.Toolkit.Graphics.Buffer.RenderTargetKey" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Buffer.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Struct>
+      <Class Name="SharpDX.Toolkit.Graphics.Buffer.Raw" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Buffer.Raw.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
     <TypeIdentifier>
       <HashCode>AAgCAADQFCAgASAAAAAADARABCAAQAAgAQAIAAAAABI=</HashCode>
       <FileName>Buffer.Argument.cs</FileName>
