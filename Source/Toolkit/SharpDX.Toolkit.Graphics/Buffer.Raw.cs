@@ -33,25 +33,27 @@ namespace SharpDX.Toolkit.Graphics
         public static class Raw
         {
             /// <summary>
-            /// Creates a new Raw buffer <see cref="ResourceUsage.Default"/> uasge.
+            /// Creates a new Raw buffer <see cref="ResourceUsage.Default" /> uasge.
             /// </summary>
             /// <param name="size">The size in bytes.</param>
+            /// <param name="additionalBindings">The additional bindings (for example, to create a combined raw/index buffer, pass <see cref="BufferFlags.IndexBuffer" />)</param>
             /// <param name="usage">The usage.</param>
             /// <returns>A Raw buffer</returns>
-            public static Buffer New(int size, ResourceUsage usage = ResourceUsage.Default)
+            public static Buffer New(int size, BufferFlags additionalBindings = BufferFlags.None, ResourceUsage usage = ResourceUsage.Default)
             {
-                return Buffer.New(size, BufferFlags.RawBuffer, usage);
+                return Buffer.New(size, BufferFlags.RawBuffer | additionalBindings, usage);
             }
 
             /// <summary>
             /// Creates a new Raw buffer <see cref="ResourceUsage.Default"/> uasge.
             /// </summary>
             /// <typeparam name="T">Type of the Raw buffer to get the sizeof from</typeparam>
+            /// <param name="additionalBindings">The additional bindings (for example, to create a combined raw/index buffer, pass <see cref="BufferFlags.IndexBuffer" />)</param>
             /// <param name="usage">The usage.</param>
             /// <returns>A Raw buffer</returns>
-            public static Buffer New<T>(ResourceUsage usage = ResourceUsage.Default) where T : struct
+            public static Buffer New<T>(BufferFlags additionalBindings = BufferFlags.None, ResourceUsage usage = ResourceUsage.Default) where T : struct
             {
-                return Buffer.New(Utilities.SizeOf<T>(), BufferFlags.RawBuffer, usage);
+                return Buffer.New(Utilities.SizeOf<T>(), BufferFlags.RawBuffer | additionalBindings, usage);
             }
 
             /// <summary>
@@ -59,11 +61,12 @@ namespace SharpDX.Toolkit.Graphics
             /// </summary>
             /// <typeparam name="T">Type of the Raw buffer to get the sizeof from</typeparam>
             /// <param name="value">The value to initialize the Raw buffer.</param>
+            /// <param name="additionalBindings">The additional bindings (for example, to create a combined raw/index buffer, pass <see cref="BufferFlags.IndexBuffer" />)</param>
             /// <param name="usage">The usage of this resource.</param>
             /// <returns>A Raw buffer</returns>
-            public static Buffer New<T>(ref T value, ResourceUsage usage = ResourceUsage.Default) where T : struct
+            public static Buffer New<T>(ref T value, BufferFlags additionalBindings = BufferFlags.None, ResourceUsage usage = ResourceUsage.Default) where T : struct
             {
-                return Buffer.New(ref value, BufferFlags.RawBuffer, usage);
+                return Buffer.New(ref value, BufferFlags.RawBuffer | additionalBindings, usage);
             }
 
             /// <summary>
@@ -71,22 +74,24 @@ namespace SharpDX.Toolkit.Graphics
             /// </summary>
             /// <typeparam name="T">Type of the Raw buffer to get the sizeof from</typeparam>
             /// <param name="value">The value to initialize the Raw buffer.</param>
+            /// <param name="additionalBindings">The additional bindings (for example, to create a combined raw/index buffer, pass <see cref="BufferFlags.IndexBuffer" />)</param>
             /// <param name="usage">The usage of this resource.</param>
             /// <returns>A Raw buffer</returns>
-            public static Buffer New<T>(T[] value, ResourceUsage usage = ResourceUsage.Default) where T : struct
+            public static Buffer New<T>(T[] value, BufferFlags additionalBindings = BufferFlags.None, ResourceUsage usage = ResourceUsage.Default) where T : struct
             {
-                return Buffer.New(value, BufferFlags.RawBuffer, usage);
+                return Buffer.New(value, BufferFlags.RawBuffer | additionalBindings, usage);
             }
 
             /// <summary>
             /// Creates a new Raw buffer <see cref="ResourceUsage.Default"/> uasge.
             /// </summary>
             /// <param name="value">The value to initialize the Raw buffer.</param>
+            /// <param name="additionalBindings">The additional bindings (for example, to create a combined raw/index buffer, pass <see cref="BufferFlags.IndexBuffer" />)</param>
             /// <param name="usage">The usage of this resource.</param>
             /// <returns>A Raw buffer</returns>
-            public static Buffer New(DataPointer value, ResourceUsage usage = ResourceUsage.Default)
+            public static Buffer New(DataPointer value, BufferFlags additionalBindings = BufferFlags.None, ResourceUsage usage = ResourceUsage.Default)
             {
-                return Buffer.New(value, 0, BufferFlags.RawBuffer, usage);
+                return Buffer.New(value, 0, BufferFlags.RawBuffer | additionalBindings, usage);
             }
         }
     }
