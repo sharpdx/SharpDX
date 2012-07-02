@@ -31,5 +31,10 @@ namespace SharpDX.DXGI
             this.Count = count;
             this.Quality = quality;
         }
+
+        public override string ToString()
+        {
+            return string.Format("{{{0}, {1}}}", this.Count, this.Quality);
+        }
     }
 }
