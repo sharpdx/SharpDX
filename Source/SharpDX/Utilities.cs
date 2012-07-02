@@ -279,11 +279,11 @@ namespace SharpDX
         /// </summary>
         /// <param name="array">The array.</param>
         /// <returns></returns>
-        public static int[] ConvertToIntArray(bool[] array)
+        public static Bool[] ConvertToIntArray(bool[] array)
         {
-            var temp = new int[array.Length];
+            var temp = new Bool[array.Length];
             for (int i = 0; i < temp.Length; i++)
-                temp[i] = array[i] ? 1 : 0;
+                temp[i] = array[i];
             return temp;
         }
 
@@ -292,11 +292,11 @@ namespace SharpDX
         /// </summary>
         /// <param name="array">The array.</param>
         /// <returns></returns>
-        public static bool[] ConvertToBoolArray(int[] array)
+        public static bool[] ConvertToBoolArray(Bool[] array)
         {
             var temp = new bool[array.Length];
             for (int i = 0; i < temp.Length; i++)
-                temp[i] = array[i] != 0;
+                temp[i] = array[i];
             return temp;
         }
 

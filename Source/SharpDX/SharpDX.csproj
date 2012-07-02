@@ -24,6 +24,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Angle.cs" />
+    <Compile Include="Bool.cs" />
     <Compile Include="BoundingBox.cs" />
     <Compile Include="BoundingFrustum.cs" />
     <Compile Include="BoundingSphere.cs" />

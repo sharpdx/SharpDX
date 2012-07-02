@@ -55,7 +55,7 @@ namespace SharpDX.DirectWrite
             public IntPtr GlyphIndices;
             public IntPtr GlyphAdvances;
             public IntPtr GlyphOffsets;
-            public int _IsSideways;
+            public Bool IsSideways;
             public int BidiLevel;
             // Method to free native struct
             internal unsafe void __MarshalFree()
@@ -103,7 +103,7 @@ namespace SharpDX.DirectWrite
                 if (GlyphCount > 0)
                     Utilities.Read(@ref.GlyphOffsets, Offsets, 0, GlyphCount);
             }
-            this._IsSideways = @ref._IsSideways;
+            this.IsSideways = @ref.IsSideways;
             this.BidiLevel = @ref.BidiLevel;
         }
         // Method to marshal from managed struct tot native
@@ -150,7 +150,7 @@ namespace SharpDX.DirectWrite
             // Update GlyphCount only for debug purpose
             this.GlyphCount = @ref.GlyphCount;
 
-            @ref._IsSideways = this._IsSideways;
+            @ref.IsSideways = this.IsSideways;
             @ref.BidiLevel = this.BidiLevel;
         }
     }

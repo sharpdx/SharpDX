@@ -54,8 +54,8 @@ namespace SharpDX.Direct3D9
             MultiSampleQuality = multiSampleQuality;
             SwapEffect = swapEffect;
             DeviceWindowHandle = deviceWindowHandle;
-            _Windowed = windowed?1:0;
-            _EnableAutoDepthStencil = enableAutoDepthStencil?1:0;
+            Windowed = windowed;
+            EnableAutoDepthStencil = enableAutoDepthStencil;
             AutoDepthStencilFormat = autoDepthStencilFormat;
             PresentFlags = presentFlags;
             FullScreenRefreshRateInHz = fullScreenRefreshRateInHz;

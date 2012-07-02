@@ -134,7 +134,7 @@ namespace SharpDX.DirectWrite
                 tableData = null;
                 IntPtr tableDataPtr = IntPtr.Zero;
                 int tableDataSize;
-                bool exists;
+                Bool exists;
                 TryGetFontTable(openTypeTableTag, new IntPtr(&tableDataPtr), out tableDataSize, out tableContext, out exists);
                 if (tableDataPtr != IntPtr.Zero)
                     tableData = new DataStream(tableDataPtr, tableDataSize, true, true);

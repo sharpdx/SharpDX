@@ -43,7 +43,7 @@ namespace SharpDX.XAudio2
         {
             EffectPointer = IntPtr.Zero;
             Effect = effect;
-            _InitialState = 1;
+            InitialState = true;
             OutputChannelCount = outputChannelCount;
         }
 

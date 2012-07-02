@@ -372,7 +372,7 @@ namespace SharpDX.Direct3D9
                 }
                 else
                 {
-                    var result = new int[count];
+                    var result = new Bool[count];
                     fixed (void* pResult = result)
                         GetPixelShaderConstantB(startRegister, (IntPtr)pResult, count);
                     return Utilities.ConvertToBoolArray(result);
@@ -537,7 +537,7 @@ namespace SharpDX.Direct3D9
                 }
                 else
                 {
-                    var result = new int[count];
+                    var result = new Bool[count];
                     fixed (void* pResult = result)
                         GetVertexShaderConstantB(startRegister, (IntPtr)pResult, count);
                     return Utilities.ConvertToBoolArray(result);

@@ -159,9 +159,9 @@
     <define struct="SharpDX.Win32Native.TextMetricA" sizeof="32"/> <!-- TODO calculate sizeof -->
     <define struct="SharpDX.Win32Native.LogFont" sizeof="32"/> <!-- TODO calculate sizeof -->
 
-
     <define struct="SharpDX.DataRectangle" sizeof="12" />
     <define struct="SharpDX.DataBox" sizeof="16" />
+    <define struct="SharpDX.Bool" sizeof="4" />
     <define struct="SharpDX.Bool4" sizeof="16" />
     <define struct="SharpDX.Int3" sizeof="12" />
     <define struct="SharpDX.Int4" sizeof="16" />
@@ -240,7 +240,7 @@
     <bind from="WAVEFORMATEXTENSIBLE" to="SharpDX.Multimedia.WaveFormatExtensible" />
     <bind from="POINT" to="SharpDX.DrawingPoint" />
     <bind from="RECT" to="SharpDX.Rectangle" />
-    <bind from="BOOL" to="System.Boolean" marshal="System.Int32" />
+    <bind from="BOOL" to="SharpDX.Bool"/>
     <bind from="HACCEL" to="System.IntPtr"/>    
     <bind from="HWND" to="System.IntPtr"/>
     <bind from="HDC" to="System.IntPtr"/>

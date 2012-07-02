@@ -160,7 +160,7 @@ namespace SharpDX.Direct3D11
         /// <unmanaged>HRESULT ID3D10EffectScalarVariable::GetBool([Out] BOOL* pValue)</unmanaged>
         public bool GetBool()
         {
-            bool temp;
+            Bool temp;
             GetBool(out temp);
             return temp;
         }
@@ -197,7 +197,7 @@ namespace SharpDX.Direct3D11
         /// <unmanaged>HRESULT ID3D10EffectScalarVariable::GetBoolArray([Out, Buffer] BOOL* pData,[None] int Offset,[None] int Count)</unmanaged>
         public bool[] GetBoolArray(int offset, int count)
         {
-            int[] temp = new int[count];
+            Bool[] temp = new Bool[count];
             GetBoolArray(temp, offset, count);
             return Utilities.ConvertToBoolArray(temp);
         }        

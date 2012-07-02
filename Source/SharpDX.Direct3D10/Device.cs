@@ -180,7 +180,9 @@ namespace SharpDX.Direct3D10
         public Predicate GetPredication(out bool predicateValue)
         {
             Predicate temp;
-            GetPredication(out temp, out predicateValue);
+            Bool tempPredicateValue;
+            GetPredication(out temp, out tempPredicateValue);
+            predicateValue = tempPredicateValue;
             return temp;
         }
 

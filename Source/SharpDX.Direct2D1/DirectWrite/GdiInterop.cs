@@ -63,7 +63,7 @@ namespace SharpDX.DirectWrite
             {
                 int sizeOfLogFont = Marshal.SizeOf(logFont);
                 byte* nativeLogFont = stackalloc byte[sizeOfLogFont];
-                bool isSystemFont;
+                Bool isSystemFont;
                 ConvertFontToLOGFONT(font, new IntPtr(nativeLogFont), out isSystemFont);
                 Marshal.PtrToStructure(new IntPtr(nativeLogFont), logFont);
                 return isSystemFont;                

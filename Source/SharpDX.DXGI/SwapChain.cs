@@ -65,7 +65,7 @@ namespace SharpDX.DXGI
         {
             get
             {
-                bool isFullScreen;
+                Bool isFullScreen;
                 Output output;
                 GetFullscreenState(out isFullScreen, out output);
                 if (output != null)
