@@ -33,7 +33,7 @@ namespace SharpDX.Toolkit.Graphics
         {
         }
 
-        internal Texture2D(GraphicsDevice device, Texture2DDescription description, params DataRectangle[] dataRectangles) : base(device, description, dataRectangles)
+        internal Texture2D(GraphicsDevice device, Texture2DDescription description2D, params DataRectangle[] dataRectangles) : base(device, description2D, dataRectangles)
         {
         }
 
@@ -59,9 +59,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>
         /// A copy of this texture.
         /// </returns>
-        public override Texture2DBase Clone()
+        public override Texture Clone()
         {
-            return new Texture2D(GraphicsDevice, Description);
+            return new Texture2D(GraphicsDevice, this.Description);
         }
 
         /// <summary>
@@ -95,24 +95,40 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Creates a new <see cref="Texture2D"/>.
+        /// Creates a new <see cref="Texture2D" /> with a single mipmap.
         /// </summary>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         /// <param name="format">Describes the format to use.</param>
-        /// <param name="usage">The usage.</param>
         /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
-        /// <param name="mipCount">(optional) number of mips.</param>
         /// <param name="arraySize">Size of the texture 2D array, default to 1.</param>
-        /// <returns>
-        /// A new instance of <see cref="Texture2D"/> class.
-        /// </returns>
-        /// <msdn-id>ff476521</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
-        public static Texture2D New(int width, int height, PixelFormat format, bool isUnorderedReadWrite = false, int mipCount = 1, int arraySize = 1, ResourceUsage usage = ResourceUsage.Default)
+        /// <param name="usage">The usage.</param>
+        /// <returns>A new instance of <see cref="Texture2D" /> class.</returns>
+        /// <msdn-id>ff476521</msdn-id>
+        ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
+        ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
+        public static Texture2D New(int width, int height, PixelFormat format, bool isUnorderedReadWrite = false, int arraySize = 1, ResourceUsage usage = ResourceUsage.Default)
         {
-            return new Texture2D(NewDescription(width, height, format, isUnorderedReadWrite, mipCount, 1, usage));
+            return New(width, height, false, format, isUnorderedReadWrite, arraySize, usage);
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="Texture2D" />.
+        /// </summary>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="format">Describes the format to use.</param>
+        /// <param name="mipCount">Number of mipmaps, set to true to have all mipmaps, set to an int >=1 for a particular mipmap count.</param>
+        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
+        /// <param name="arraySize">Size of the texture 2D array, default to 1.</param>
+        /// <param name="usage">The usage.</param>
+        /// <returns>A new instance of <see cref="Texture2D" /> class.</returns>
+        /// <msdn-id>ff476521</msdn-id>
+        ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
+        ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
+        public static Texture2D New(int width, int height, MipMap mipCount, PixelFormat format, bool isUnorderedReadWrite = false, int arraySize = 1, ResourceUsage usage = ResourceUsage.Default)
+        {
+            return new Texture2D(NewDescription(width, height, format, isUnorderedReadWrite, mipCount, arraySize, usage));
         }
 
         /// <summary>

@@ -354,7 +354,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             });
 
             // Check rtv
-            var rtv = rawBuffer.GetRenderTargetView(PixelFormat.UInt.R32, 16);
+            var rtv = rawBuffer.GetRenderTargetView(PixelFormat.R32.UInt, 16);
             Assert.AreNotEqual(rtv, null);
 
             var rtvDescription = rtv.Description;

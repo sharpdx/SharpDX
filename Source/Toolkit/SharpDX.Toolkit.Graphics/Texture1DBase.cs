@@ -36,11 +36,23 @@ namespace SharpDX.Toolkit.Graphics
         /// Initializes a new instance of the <see cref="Texture1DBase" /> class.
         /// </summary>
         /// <param name="description">The description.</param>
+        /// <msdn-id>ff476520</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
+        protected internal Texture1DBase(Texture1DDescription description)
+            : this(GraphicsDevice.Current, description)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Texture1DBase" /> class.
+        /// </summary>
+        /// <param name="description">The description.</param>
         /// <param name="dataRectangles">A variable-length parameters list containing data rectangles.</param>
         /// <msdn-id>ff476520</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        protected internal Texture1DBase(Texture1DDescription description, params IntPtr[] dataRectangles)
+        protected internal Texture1DBase(Texture1DDescription description, IntPtr[] dataRectangles)
             : this(GraphicsDevice.Current, description, dataRectangles)
         {
         }
@@ -49,15 +61,30 @@ namespace SharpDX.Toolkit.Graphics
         /// Initializes a new instance of the <see cref="Texture1DBase" /> class.
         /// </summary>
         /// <param name="device">The device local.</param>
-        /// <param name="description">The description.</param>
+        /// <param name="description1D">The description.</param>
+        /// <msdn-id>ff476520</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
+        protected internal Texture1DBase(GraphicsDevice device, Texture1DDescription description1D)
+            : base(description1D)
+        {
+            Resource = new Direct3D11.Texture1D(device, description1D);
+            Initialize(device, Resource);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Texture1DBase" /> class.
+        /// </summary>
+        /// <param name="device">The device local.</param>
+        /// <param name="description1D">The description.</param>
         /// <param name="dataRectangles">A variable-length parameters list containing data rectangles.</param>
         /// <msdn-id>ff476520</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        protected internal Texture1DBase(GraphicsDevice device, Texture1DDescription description, params IntPtr[] dataRectangles)
+        protected internal Texture1DBase(GraphicsDevice device, Texture1DDescription description1D, IntPtr[] dataRectangles)
+            : base(description1D)
         {
-            Description = description;
-            Resource = new Direct3D11.Texture1D(device, description, dataRectangles);
+            Resource = new Direct3D11.Texture1D(device, description1D, dataRectangles);
             Initialize(device, Resource);
         }
 
@@ -82,49 +109,19 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
         protected internal Texture1DBase(GraphicsDevice device, Direct3D11.Texture1D texture)
+            : base(texture.Description)
         {
-            Description = texture.Description;
             Resource = texture;
             Initialize(device, Resource);
-        }
-
-        /// <summary>
-        /// The description of this <see cref="Texture1DBase"/>.
-        /// </summary>
-        public readonly Texture1DDescription Description;
-
-        /// <summary>
-        /// Makes a copy of this texture.
-        /// </summary>
-        /// <remarks>
-        /// This method doesn't copy the content of the texture.
-        /// </remarks>
-        /// <returns>
-        /// A copy of this texture.
-        /// </returns>
-        public abstract Texture1DBase Clone();
-
-        /// <summary>
-        /// Makes a copy of this texture.
-        /// </summary>
-        /// <remarks>
-        /// This method doesn't copy the content of the texture.
-        /// </remarks>
-        /// <returns>
-        /// A copy of this texture.
-        /// </returns>
-        public T Clone<T>() where T : Texture1DBase
-        {
-            return (T)Clone();
         }
 
         /// <summary>
         /// Return an equivalent staging texture CPU read-writable from this instance.
         /// </summary>
         /// <returns></returns>
-        public Texture1D ToStaging()
+        public override Texture ToStaging()
         {
-            var stagingDesc = Description;
+            var stagingDesc = this.Description;
             stagingDesc.BindFlags = BindFlags.None;
             stagingDesc.CpuAccessFlags = CpuAccessFlags.Read | CpuAccessFlags.Write;
             stagingDesc.Usage = ResourceUsage.Staging;
@@ -134,7 +131,7 @@ namespace SharpDX.Toolkit.Graphics
 
         public override ShaderResourceView GetShaderResourceView(ViewSlice viewSlice, int arrayOrDepthSlice, int mipIndex)
         {
-            if ((Description.BindFlags & BindFlags.ShaderResource) == 0)
+            if ((this.Description.BindFlags & BindFlags.ShaderResource) == 0)
                 return null;
 
             int arrayCount;
@@ -151,10 +148,10 @@ namespace SharpDX.Toolkit.Graphics
                 if (srv == null)
                 {
                     // Create the view
-                    var srvDescription = new ShaderResourceViewDescription() { Format = Description.Format };
+                    var srvDescription = new ShaderResourceViewDescription() { Format = this.Description.Format };
 
                     // Initialize for texture arrays or texture cube
-                    if (Description.ArraySize > 1)
+                    if (this.Description.ArraySize > 1)
                     {
                         // Else regular Texture1D
                         srvDescription.Dimension = ShaderResourceViewDimension.Texture1DArray;
@@ -177,7 +174,7 @@ namespace SharpDX.Toolkit.Graphics
 
         public override UnorderedAccessView GetUnorderedAccessView(int arrayOrDepthSlice, int mipIndex)
         {
-            if ((Description.BindFlags & BindFlags.UnorderedAccess) == 0)
+            if ((this.Description.BindFlags & BindFlags.UnorderedAccess) == 0)
                 return null;
 
             int arrayCount;
@@ -194,11 +191,11 @@ namespace SharpDX.Toolkit.Graphics
                 if (uav == null)
                 {
                     var uavDescription = new UnorderedAccessViewDescription() {
-                        Format = Description.Format,
-                        Dimension = Description.ArraySize > 1 ? UnorderedAccessViewDimension.Texture1DArray : UnorderedAccessViewDimension.Texture1D
+                        Format = this.Description.Format,
+                        Dimension = this.Description.ArraySize > 1 ? UnorderedAccessViewDimension.Texture1DArray : UnorderedAccessViewDimension.Texture1D
                     };
 
-                    if (Description.ArraySize > 1)
+                    if (this.Description.ArraySize > 1)
                     {
                         uavDescription.Texture1DArray.ArraySize = arrayCount;
                         uavDescription.Texture1DArray.FirstArraySlice = arrayOrDepthSlice;
@@ -215,46 +212,7 @@ namespace SharpDX.Toolkit.Graphics
                 return uav;
             }
         }
-        
-        protected void GetViewSliceBounds(ViewSlice viewSlice, ref int arrayIndex, ref int mipIndex, out int arrayCount, out int mipCount)
-        {
-            switch (viewSlice)
-            {
-                case ViewSlice.Full:
-                    arrayIndex = 0;
-                    mipIndex = 0;
-                    arrayCount = Description.ArraySize;
-                    mipCount = Description.MipLevels;
-                    break;
-                case ViewSlice.Single:
-                    arrayCount = 1;
-                    mipCount = 1;
-                    break;
-                case ViewSlice.ArrayBand:
-                    arrayCount = Description.ArraySize - arrayIndex;
-                    mipCount = 1;
-                    break;
-                case ViewSlice.MipBand:
-                    arrayCount = 1;
-                    mipCount = Description.MipLevels - mipIndex;
-                    break;
-                default:
-                    arrayCount = 0;
-                    mipCount = 0;
-                    break;
-            }
-        }
-
-        protected int GetViewCount()
-        {
-            return GetViewIndex((ViewSlice)4, Description.ArraySize, Description.MipLevels);
-        }
-
-        protected int GetViewIndex(ViewSlice viewSlice, int arrayIndex, int mipIndex)
-        {
-            return (((int)viewSlice) * Description.ArraySize + arrayIndex) * Description.MipLevels + mipIndex;
-        }
-        
+               
         protected static IntPtr[] Pin<T>(T[][][] initialTextures, out GCHandle[] handles) where T : struct
         {
             int mipMapLength = -1;
@@ -291,7 +249,7 @@ namespace SharpDX.Toolkit.Graphics
                                ArraySize = arraySize,
                                BindFlags = BindFlags.ShaderResource,
                                Format = format,
-                               MipLevels = mipCount,
+                               MipLevels = CalculateMipMapCount(mipCount, width),
                                Usage = usage,
                                CpuAccessFlags = GetCputAccessFlagsFromUsage(usage)
                            };

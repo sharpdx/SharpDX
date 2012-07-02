@@ -55,23 +55,17 @@ namespace SharpDX.Toolkit.Graphics
             foreach (var format in Enum.GetValues(typeof(DXGI.Format)))
             {
                 var dxgiFormat = (DXGI.Format) format;
-                int maximumMSAA = 1;
+                var maximumMSAA = MSAALevel.None;
                 var computeShaderFormatSupport = ComputeShaderFormatSupport.None;
                 var formatSupport = FormatSupport.None;
 
                 if (!ObsoleteFormatToExcludes.Contains(dxgiFormat))
                 {
-                    try
-                    {
-                        maximumMSAA = GetMaximumMSAASampleCount(device, dxgiFormat);
-                        if (HasComputeShaders)
-                            computeShaderFormatSupport = device.CheckComputeShaderFormatSupport(dxgiFormat);
+                    maximumMSAA = GetMaximumMSAASampleCount(device, dxgiFormat);
+                    if (HasComputeShaders)
+                        computeShaderFormatSupport = device.CheckComputeShaderFormatSupport(dxgiFormat);
 
-                        formatSupport = device.CheckFormatSupport(dxgiFormat);
-                    }
-                    catch
-                    {
-                    }
+                    formatSupport = device.CheckFormatSupport(dxgiFormat);
                 }
 
                 mapFeaturesPerFormat[(int)dxgiFormat] = new FeaturesPerFormat(dxgiFormat, maximumMSAA, computeShaderFormatSupport, formatSupport);
@@ -126,15 +120,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476499</msdn-id>
         ///   <unmanaged>HRESULT ID3D11Device::CheckMultisampleQualityLevels([In] DXGI_FORMAT Format,[In] unsigned int SampleCount,[Out] unsigned int* pNumQualityLevels)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CheckMultisampleQualityLevels</unmanaged-short>
-        private static int GetMaximumMSAASampleCount(Direct3D11.Device device, PixelFormat pixelFormat)
+        private static MSAALevel GetMaximumMSAASampleCount(Direct3D11.Device device, PixelFormat pixelFormat)
         {
             int maxCount = 1;
-            for (int i = 1; i < 32; i++)
+            for (int i = 1; i <= 8; i *= 2)
             {
                 if (device.CheckMultisampleQualityLevels(pixelFormat, i) != 0)
                     maxCount = i;
             }
-            return maxCount;
+            return (MSAALevel)maxCount;
         }
 
         /// <summary>
@@ -142,10 +136,10 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public struct FeaturesPerFormat
         {
-            internal FeaturesPerFormat(Format format, int maximumMsaa, ComputeShaderFormatSupport computeShaderFormatSupport, FormatSupport formatSupport)
+            internal FeaturesPerFormat(Format format, MSAALevel maximumMSAALevel, ComputeShaderFormatSupport computeShaderFormatSupport, FormatSupport formatSupport)
             {
                 Format = format;
-                MaximumMSAA = maximumMsaa;
+                this.MSAALevelMax = maximumMSAALevel;
                 ComputeShaderFormatSupport = computeShaderFormatSupport;
                 FormatSupport = formatSupport;
             }
@@ -158,7 +152,7 @@ namespace SharpDX.Toolkit.Graphics
             /// <summary>
             /// Gets the maximum MSAA sample count for a particular <see cref="PixelFormat"/>.
             /// </summary>
-            public readonly int MaximumMSAA;
+            public readonly MSAALevel MSAALevelMax;
 
             /// <summary>	
             /// Gets the unordered resource support options for a compute shader resource.	
@@ -175,7 +169,7 @@ namespace SharpDX.Toolkit.Graphics
 
             public override string ToString()
             {
-                return string.Format("Format: {0}, MaximumMSAA: {1}, ComputeShaderFormatSupport: {2}, FormatSupport: {3}", Format, MaximumMSAA, ComputeShaderFormatSupport, FormatSupport);
+                return string.Format("Format: {0}, MSAALevelMax: {1}, ComputeShaderFormatSupport: {2}, FormatSupport: {3}", Format, this.MSAALevelMax, ComputeShaderFormatSupport, FormatSupport);
             }
         }
 

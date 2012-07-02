@@ -34,17 +34,6 @@ namespace SharpDX.Toolkit.Graphics
         [ThreadStatic]
         private static GraphicsDevice current;
 
-        internal readonly StageStatus CurrentStage;
-        internal struct StageStatus
-        {
-            internal VertexShader VertexShader;
-            internal DomainShader DomainShader;
-            internal HullShader HullShader;
-            internal GeometryShader GeometryShader;
-            internal PixelShader PixelShader;
-            internal ComputeShader ComputeShader;
-        };
-
         /// <summary>
         /// Gets the features supported by this <see cref="GraphicsDevice"/>.
         /// </summary>
@@ -176,6 +165,84 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>	
+        /// Copy a region from a source resource to a destination resource.	
+        /// </summary>	
+        /// <remarks>	
+        /// The source box must be within the size of the source resource. The destination offsets, (x, y, and z) allow the source box to be offset when writing into the destination resource; however, the dimensions of the source box and the offsets must be within the size of the resource. If the resources are buffers, all coordinates are in bytes; if the resources are textures, all coordinates are in texels. {{D3D11CalcSubresource}} is a helper function for calculating subresource indexes. CopySubresourceRegion performs the copy on the GPU (similar to a memcpy by the CPU). As a consequence, the source and destination resources:  Must be different subresources (although they can be from the same resource). Must be the same type. Must have compatible DXGI formats (identical or from the same type group). For example, a DXGI_FORMAT_R32G32B32_FLOAT texture can be copied to an DXGI_FORMAT_R32G32B32_UINT texture since both of these formats are in the DXGI_FORMAT_R32G32B32_TYPELESS group. May not be currently mapped.  CopySubresourceRegion only supports copy; it does not support any stretch, color key, blend, or format conversions. An application that needs to copy an entire resource should use <see cref="SharpDX.Direct3D11.DeviceContext.CopyResource_"/> instead. CopySubresourceRegion is an asynchronous call which may be added to the command-buffer queue, this attempts to remove pipeline stalls that may occur when copying data. See performance considerations for more details. Note??If you use CopySubresourceRegion with a depth-stencil buffer or a multisampled resource, you must copy the whole subresource. In this situation, you must pass 0 to the DstX, DstY, and DstZ parameters and NULL to the pSrcBox parameter. In addition, source and destination resources, which are represented by the pSrcResource and pDstResource parameters, should have identical sample count values. Example The following code snippet copies a box (located at (120,100),(200,220)) from a source texture into a reqion (10,20),(90,140) in a destination texture. 	
+        /// <code> D3D11_BOX sourceRegion;	
+        /// sourceRegion.left = 120;	
+        /// sourceRegion.right = 200;	
+        /// sourceRegion.top = 100;	
+        /// sourceRegion.bottom = 220;	
+        /// sourceRegion.front = 0;	
+        /// sourceRegion.back = 1; pd3dDeviceContext-&gt;CopySubresourceRegion( pDestTexture, 0, 10, 20, 0, pSourceTexture, 0, &amp;sourceRegion ); </code>	
+        /// 	
+        ///  Notice, that for a 2D texture, front and back are set to 0 and 1 respectively. 	
+        /// </remarks>	
+        /// <param name="source">A reference to the source resource (see <see cref="SharpDX.Direct3D11.Resource"/>). </param>
+        /// <param name="sourceSubresource">Source subresource index. </param>
+        /// <param name="destination">A reference to the destination resource (see <see cref="SharpDX.Direct3D11.Resource"/>). </param>
+        /// <param name="destinationSubResource">Destination subresource index. </param>
+        /// <param name="dstX">The x-coordinate of the upper left corner of the destination region. </param>
+        /// <param name="dstY">The y-coordinate of the upper left corner of the destination region. For a 1D subresource, this must be zero. </param>
+        /// <param name="dstZ">The z-coordinate of the upper left corner of the destination region. For a 1D or 2D subresource, this must be zero. </param>
+        /// <msdn-id>ff476394</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::CopySubresourceRegion([In] ID3D11Resource* pDstResource,[In] unsigned int DstSubresource,[In] unsigned int DstX,[In] unsigned int DstY,[In] unsigned int DstZ,[In] ID3D11Resource* pSrcResource,[In] unsigned int SrcSubresource,[In, Optional] const D3D11_BOX* pSrcBox)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::CopySubresourceRegion</unmanaged-short>	
+        public void Copy(SharpDX.Direct3D11.Resource source, int sourceSubresource, SharpDX.Direct3D11.Resource destination, int destinationSubResource, int dstX = 0, int dstY = 0, int dstZ = 0)
+        {
+            Context.CopySubresourceRegion(source, sourceSubresource, null, destination, destinationSubResource, dstX, dstY, dstZ);
+        }
+
+        /// <summary>	
+        /// Copy a region from a source resource to a destination resource.	
+        /// </summary>	
+        /// <remarks>	
+        /// The source box must be within the size of the source resource. The destination offsets, (x, y, and z) allow the source box to be offset when writing into the destination resource; however, the dimensions of the source box and the offsets must be within the size of the resource. If the resources are buffers, all coordinates are in bytes; if the resources are textures, all coordinates are in texels. {{D3D11CalcSubresource}} is a helper function for calculating subresource indexes. CopySubresourceRegion performs the copy on the GPU (similar to a memcpy by the CPU). As a consequence, the source and destination resources:  Must be different subresources (although they can be from the same resource). Must be the same type. Must have compatible DXGI formats (identical or from the same type group). For example, a DXGI_FORMAT_R32G32B32_FLOAT texture can be copied to an DXGI_FORMAT_R32G32B32_UINT texture since both of these formats are in the DXGI_FORMAT_R32G32B32_TYPELESS group. May not be currently mapped.  CopySubresourceRegion only supports copy; it does not support any stretch, color key, blend, or format conversions. An application that needs to copy an entire resource should use <see cref="SharpDX.Direct3D11.DeviceContext.CopyResource_"/> instead. CopySubresourceRegion is an asynchronous call which may be added to the command-buffer queue, this attempts to remove pipeline stalls that may occur when copying data. See performance considerations for more details. Note??If you use CopySubresourceRegion with a depth-stencil buffer or a multisampled resource, you must copy the whole subresource. In this situation, you must pass 0 to the DstX, DstY, and DstZ parameters and NULL to the pSrcBox parameter. In addition, source and destination resources, which are represented by the pSrcResource and pDstResource parameters, should have identical sample count values. Example The following code snippet copies a box (located at (120,100),(200,220)) from a source texture into a reqion (10,20),(90,140) in a destination texture. 	
+        /// <code> D3D11_BOX sourceRegion;	
+        /// sourceRegion.left = 120;	
+        /// sourceRegion.right = 200;	
+        /// sourceRegion.top = 100;	
+        /// sourceRegion.bottom = 220;	
+        /// sourceRegion.front = 0;	
+        /// sourceRegion.back = 1; pd3dDeviceContext-&gt;CopySubresourceRegion( pDestTexture, 0, 10, 20, 0, pSourceTexture, 0, &amp;sourceRegion ); </code>	
+        /// 	
+        ///  Notice, that for a 2D texture, front and back are set to 0 and 1 respectively. 	
+        /// </remarks>	
+        /// <param name="source">A reference to the source resource (see <see cref="SharpDX.Direct3D11.Resource"/>). </param>
+        /// <param name="sourceSubresource">Source subresource index. </param>
+        /// <param name="sourceRegion">A reference to a 3D box (see <see cref="SharpDX.Direct3D11.ResourceRegion"/>) that defines the source subresources that can be copied. If NULL, the entire source subresource is copied. The box must fit within the source resource. </param>
+        /// <param name="destination">A reference to the destination resource (see <see cref="SharpDX.Direct3D11.Resource"/>). </param>
+        /// <param name="destinationSubResource">Destination subresource index. </param>
+        /// <param name="dstX">The x-coordinate of the upper left corner of the destination region. </param>
+        /// <param name="dstY">The y-coordinate of the upper left corner of the destination region. For a 1D subresource, this must be zero. </param>
+        /// <param name="dstZ">The z-coordinate of the upper left corner of the destination region. For a 1D or 2D subresource, this must be zero. </param>
+        /// <msdn-id>ff476394</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::CopySubresourceRegion([In] ID3D11Resource* pDstResource,[In] unsigned int DstSubresource,[In] unsigned int DstX,[In] unsigned int DstY,[In] unsigned int DstZ,[In] ID3D11Resource* pSrcResource,[In] unsigned int SrcSubresource,[In, Optional] const D3D11_BOX* pSrcBox)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::CopySubresourceRegion</unmanaged-short>	
+        public void Copy(SharpDX.Direct3D11.Resource source, int sourceSubresource, SharpDX.Direct3D11.ResourceRegion sourceRegion, SharpDX.Direct3D11.Resource destination, int destinationSubResource, int dstX = 0, int dstY = 0, int dstZ = 0)
+        {
+            Context.CopySubresourceRegion(source, sourceSubresource, sourceRegion, destination, destinationSubResource, dstX, dstY, dstZ);
+        }
+
+        /// <summary>	
+        /// Copy a multisampled resource into a non-multisampled resource.	
+        /// </summary>	
+        /// <remarks>	
+        /// This API is most useful when re-using the resulting rendertarget of one render pass as an input to a second render pass. The source and destination resources must be the same resource type and have the same dimensions. In addition, they must have compatible formats. There are three scenarios for this:  ScenarioRequirements Source and destination are prestructured and typedBoth the source and destination must have identical formats and that format must be specified in the Format parameter. One resource is prestructured and typed and the other is prestructured and typelessThe typed resource must have a format that is compatible with the typeless resource (i.e. the typed resource is DXGI_FORMAT_R32_FLOAT and the typeless resource is DXGI_FORMAT_R32_TYPELESS). The format of the typed resource must be specified in the Format parameter. Source and destination are prestructured and typelessBoth the source and desintation must have the same typeless format (i.e. both must have DXGI_FORMAT_R32_TYPELESS), and the Format parameter must specify a format that is compatible with the source and destination (i.e. if both are DXGI_FORMAT_R32_TYPELESS then DXGI_FORMAT_R32_FLOAT could be specified in the Format parameter). For example, given the DXGI_FORMAT_R16G16B16A16_TYPELESS format:  The source (or dest) format could be DXGI_FORMAT_R16G16B16A16_UNORM The dest (or source) format could be DXGI_FORMAT_R16G16B16A16_FLOAT    ? 	
+        /// </remarks>	
+        /// <param name="source">Source resource. Must be multisampled. </param>
+        /// <param name="sourceSubresource">&gt;The source subresource of the source resource. </param>
+        /// <param name="destination">Destination resource. Must be a created with the <see cref="SharpDX.Direct3D11.ResourceUsage.Default"/> flag and be single-sampled. See <see cref="SharpDX.Direct3D11.Resource"/>. </param>
+        /// <param name="destinationSubresource">A zero-based index, that identifies the destination subresource. Use {{D3D11CalcSubresource}} to calculate the index. </param>
+        /// <param name="format">A <see cref="SharpDX.DXGI.Format"/> that indicates how the multisampled resource will be resolved to a single-sampled resource.  See remarks. </param>
+        /// <unmanaged>void ID3D11DeviceContext::ResolveSubresource([In] ID3D11Resource* pDstResource,[In] int DstSubresource,[In] ID3D11Resource* pSrcResource,[In] int SrcSubresource,[In] DXGI_FORMAT Format)</unmanaged>
+        public void Copy(SharpDX.Direct3D11.Resource source, int sourceSubresource, SharpDX.Direct3D11.Resource destination, int destinationSubresource, SharpDX.DXGI.Format format)
+        {
+            Context.ResolveSubresource(source, sourceSubresource, destination, destinationSubresource, format);
+        }
+
+        /// <summary>	
         /// <p>Copies data from a buffer holding variable length data.</p>	
         /// </summary>	
         /// <param name="sourceView"><dd>  <p>Pointer to an <strong><see cref="SharpDX.Direct3D11.UnorderedAccessView"/></strong> of a Structured Buffer resource created with either  <strong><see cref="SharpDX.Direct3D11.UnorderedAccessViewBufferFlags.Append"/></strong> or <strong><see cref="SharpDX.Direct3D11.UnorderedAccessViewBufferFlags.Counter"/></strong> specified  when the UAV was created.   These types of resources have hidden counters tracking "how many" records have  been written.</p> </dd></param>	
@@ -184,7 +251,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476393</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::CopyStructureCount([In] ID3D11Buffer* pDstBuffer,[In] unsigned int DstAlignedByteOffset,[In] ID3D11UnorderedAccessView* pSrcView)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::CopyStructureCount</unmanaged-short>	
-        public void CopyStructureCount(SharpDX.Direct3D11.UnorderedAccessView sourceView, SharpDX.Direct3D11.Buffer destinationBuffer, int offsetInBytes = 0)
+        public void CopyCount(SharpDX.Direct3D11.UnorderedAccessView sourceView, SharpDX.Direct3D11.Buffer destinationBuffer, int offsetInBytes = 0)
         {
             Context.CopyStructureCount(destinationBuffer, offsetInBytes, sourceView);
         }
@@ -412,7 +479,6 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <typeparam name="TData">The type of the T data.</typeparam>
         /// <param name="buffer">The buffer to get the data from.</param>
-        /// <param name="subResourceIndex">Index of the subresource to copy from.</param>
         /// <remarks>
         /// This method creates internally a stagging resource, copies to it and map it to memory. Use method with explicit staging resource
         /// for optimal performances.
@@ -420,10 +486,10 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476457</msdn-id>	
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
-        public TData[] GetData<TData>(Buffer buffer, int subResourceIndex = 0) where TData : struct
+        public TData[] GetData<TData>(Buffer buffer) where TData : struct
         {
             var toData = new TData[buffer.Description.SizeInBytes / Utilities.SizeOf<TData>()];
-            GetData(buffer, toData, subResourceIndex);
+            GetData(buffer, toData);
             return toData;
         }
 
@@ -433,7 +499,6 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="buffer">The buffer to get the data from.</param>
         /// <typeparam name="TData">The type of the T data.</typeparam>
         /// <param name="toData">The destination buffer to receive a copy of the texture datas.</param>
-        /// <param name="subResourceIndex">Index of the subresource to copy from.</param>
         /// <remarks>
         /// This method creates internally a stagging resource if this texture is not already a stagging resouce, copies to it and map it to memory. Use method with explicit staging resource
         /// for optimal performances.
@@ -441,20 +506,79 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476457</msdn-id>	
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
-        public void GetData<TData>(Buffer buffer, TData[] toData, int subResourceIndex = 0) where TData : struct
+        public void GetData<TData>(Buffer buffer, TData[] toData) where TData : struct
         {
             // Get data from this resource
             if (buffer.Description.Usage == ResourceUsage.Staging)
             {
                 // Directly if this is a staging resource
-                GetData(buffer, buffer, toData, subResourceIndex);
+                GetData(buffer, buffer, toData);
             }
             else
             {
                 // Unefficient way to use the Copy method using dynamic staging texture
                 using (var throughStaging = buffer.ToStaging())
-                    GetData(buffer, throughStaging, toData, subResourceIndex);
+                    GetData(buffer, throughStaging, toData);
             }
+        }
+
+        /// <summary>
+        /// Copies the content of this texture to an array of data.
+        /// </summary>
+        /// <param name="buffer">The buffer to get the data from.</param>
+        /// <typeparam name="TData">The type of the T data.</typeparam>
+        /// <param name="toData">The destination buffer to receive a copy of the texture datas.</param>
+        /// <remarks>
+        /// This method creates internally a stagging resource if this texture is not already a stagging resouce, copies to it and map it to memory. Use method with explicit staging resource
+        /// for optimal performances.
+        /// </remarks>
+        /// <msdn-id>ff476457</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
+        public void GetData<TData>(Buffer buffer, ref TData toData) where TData : struct
+        {
+            // Get data from this resource
+            if (buffer.Description.Usage == ResourceUsage.Staging)
+            {
+                // Directly if this is a staging resource
+                GetData(buffer, buffer, ref toData);
+            }
+            else
+            {
+                // Unefficient way to use the Copy method using dynamic staging texture
+                using (var throughStaging = buffer.ToStaging())
+                    GetData(buffer, throughStaging, ref toData);
+            }
+        }
+
+        /// <summary>
+        /// Copies the content of this texture from GPU memory to an array of data on CPU memory using a specific staging resource.
+        /// </summary>
+        /// <typeparam name="TData">The type of the T data.</typeparam>
+        /// <param name="buffer">The buffer to get the data from.</param>
+        /// <param name="stagingTexture">The staging buffer used to transfer the buffer.</param>
+        /// <param name="toData">To data.</param>
+        /// <exception cref="System.ArgumentException">When strides is different from optimal strides, and TData is not the same size as the pixel format, or Width * Height != toData.Length</exception>
+        /// <remarks>
+        /// See the unmanaged documentation for usage and restrictions.
+        /// </remarks>
+        /// <msdn-id>ff476457</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
+        public void GetData<TData>(Buffer buffer, Buffer stagingTexture, ref TData toData) where TData : struct
+        {
+            // Check size validity of data to copy to
+            if (Utilities.SizeOf<TData>() > buffer.Description.SizeInBytes)
+                throw new ArgumentException("Length of TData is larger than size of buffer");
+
+            // Copy the texture to a staging resource
+            Context.CopyResource(buffer, stagingTexture);
+
+            // Map the staging resource to a CPU accessible memory
+            var box = Context.MapSubresource(stagingTexture, 0, MapMode.Read, Direct3D11.MapFlags.None);
+            Utilities.Read(box.DataPointer, ref toData);
+            // Make sure that we unmap the resource in case of an exception
+            Context.UnmapSubresource(stagingTexture, 0);
         }
 
         /// <summary>
@@ -472,7 +596,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476457</msdn-id>	
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
-        public void GetData<TData>(Buffer buffer, Buffer stagingTexture, TData[] toData, int subResourceIndex = 0) where TData : struct
+        public void GetData<TData>(Buffer buffer, Buffer stagingTexture, TData[] toData) where TData : struct
         {
             // Check size validity of data to copy to
             if ((toData.Length * Utilities.SizeOf<TData>()) > buffer.Description.SizeInBytes)
@@ -482,10 +606,10 @@ namespace SharpDX.Toolkit.Graphics
             Context.CopyResource(buffer, stagingTexture);
 
             // Map the staging resource to a CPU accessible memory
-            var box = Context.MapSubresource(stagingTexture, subResourceIndex, MapMode.Read, Direct3D11.MapFlags.None);
+            var box = Context.MapSubresource(stagingTexture, 0, MapMode.Read, Direct3D11.MapFlags.None);
             Utilities.Read(box.DataPointer, toData, 0, toData.Length);
             // Make sure that we unmap the resource in case of an exception
-            Context.UnmapSubresource(stagingTexture, subResourceIndex);
+            Context.UnmapSubresource(stagingTexture, 0);
         }
 
         /// <summary>
@@ -495,13 +619,12 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="buffer">The buffer to set the data to.</param>
         /// <param name="fromData">The data to copy from.</param>
         /// <param name="offsetInBytes">The offset in bytes to write to.</param>
-        /// <param name="subResourceIndex">Index of the sub resource.</param>
         /// <exception cref="System.ArgumentException"></exception>
         /// <remarks>See the unmanaged documentation for usage and restrictions.</remarks>
         /// <msdn-id>ff476457</msdn-id>
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
-        public unsafe void SetData<TData>(Buffer buffer, ref TData fromData, int offsetInBytes = 0, int subResourceIndex = 0) where TData : struct
+        public unsafe void SetData<TData>(Buffer buffer, ref TData fromData, int offsetInBytes = 0) where TData : struct
         {
             // Check size validity of data to copy to
             if (Utilities.SizeOf<TData>() > buffer.Description.SizeInBytes)
@@ -515,18 +638,21 @@ namespace SharpDX.Toolkit.Graphics
             {
                 // Setup the dest region inside the buffer
                 var destRegion = new ResourceRegion(offsetInBytes, 0, 0, offsetInBytes + Utilities.SizeOf<TData>(), 1, 1);
-                Context.UpdateSubresource(ref fromData, buffer, subResourceIndex, 0, 0, (buffer.Description.BindFlags & BindFlags.ConstantBuffer) != 0 ? (ResourceRegion?)null : destRegion);
+                Context.UpdateSubresource(ref fromData, buffer, 0, 0, 0, (buffer.Description.BindFlags & BindFlags.ConstantBuffer) != 0 ? (ResourceRegion?)null : destRegion);
             }
             else
             {
+                if (offsetInBytes > 0)
+                    throw new ArgumentException("offset is only supported for textured declared with ResourceUsage.Default", "offsetInBytes");
+
                 try
                 {
-                    var box = Context.MapSubresource(buffer, subResourceIndex, MapMode.WriteDiscard, Direct3D11.MapFlags.None);
+                    var box = Context.MapSubresource(buffer, 0, MapMode.WriteDiscard, Direct3D11.MapFlags.None);
                     Utilities.Write((IntPtr)((byte*)box.DataPointer + offsetInBytes), ref fromData);
                 }
                 finally
                 {
-                    Context.UnmapSubresource(buffer, subResourceIndex);
+                    Context.UnmapSubresource(buffer, 0);
                 }
             }
         }
@@ -538,13 +664,12 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="buffer">The buffer to set the data to.</param>
         /// <param name="fromData">The data to copy from.</param>
         /// <param name="offsetInBytes">The offset in bytes to write to.</param>
-        /// <param name="subResourceIndex">Index of the sub resource.</param>
         /// <exception cref="System.ArgumentException"></exception>
         /// <remarks>See the unmanaged documentation for usage and restrictions.</remarks>
         /// <msdn-id>ff476457</msdn-id>
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
-        public unsafe void SetData<TData>(Buffer buffer, TData[] fromData, int offsetInBytes = 0, int subResourceIndex = 0) where TData : struct
+        public unsafe void SetData<TData>(Buffer buffer, TData[] fromData, int offsetInBytes = 0) where TData : struct
         {
             // Check size validity of data to copy to
             if ((fromData.Length * Utilities.SizeOf<TData>()) > buffer.Description.SizeInBytes)
@@ -555,18 +680,21 @@ namespace SharpDX.Toolkit.Graphics
             {
                 // Setup the dest region inside the buffer
                 var destRegion = new ResourceRegion(offsetInBytes, 0, 0, offsetInBytes + fromData.Length * Utilities.SizeOf<TData>(), 1, 1);
-                Context.UpdateSubresource(fromData, buffer, subResourceIndex, 0, 0, (buffer.Description.BindFlags & BindFlags.ConstantBuffer) != 0 ? (ResourceRegion?)null : destRegion);
+                Context.UpdateSubresource(fromData, buffer, 0, 0, 0, (buffer.Description.BindFlags & BindFlags.ConstantBuffer) != 0 ? (ResourceRegion?)null : destRegion);
             }
             else
             {
+                if (offsetInBytes > 0)
+                    throw new ArgumentException("offset is only supported for textured declared with ResourceUsage.Default", "offsetInBytes");
+
                 try
                 {
-                    var box = Context.MapSubresource(buffer, subResourceIndex, MapMode.WriteDiscard, Direct3D11.MapFlags.None);
-                    Utilities.Write((IntPtr)((byte*)box.DataPointer + offsetInBytes), fromData, 0, fromData.Length);
+                    var box = Context.MapSubresource(buffer, 0, MapMode.WriteDiscard, Direct3D11.MapFlags.None);
+                    Utilities.Write(box.DataPointer, fromData, 0, fromData.Length);
                 }
                 finally
                 {
-                    Context.UnmapSubresource(buffer, subResourceIndex);
+                    Context.UnmapSubresource(buffer, 0);
                 }
             }
         }
@@ -575,18 +703,19 @@ namespace SharpDX.Toolkit.Graphics
         /// Gets the content of this texture to an array of data.
         /// </summary>
         /// <typeparam name="TData">The type of the T data.</typeparam>
-        /// <param name="texture">The texture.</param>
-        /// <param name="subResourceIndex">Index of the subresource to copy from.</param>
-        /// <returns></returns>
+        /// <param name="texture">The texture to get the data from.</param>
+        /// <param name="arrayOrDepthSlice">The array slice index. This value must be set to 0 for Texture 3D.</param>
+        /// <param name="mipSlice">The mip slice index.</param>
+        /// <returns>The texture data.</returns>
         /// <msdn-id>ff476457</msdn-id>
         ///   <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
         ///   <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
         /// <remarks>This method creates internally a stagging resource, copies to it and map it to memory. Use method with explicit staging resource
         /// for optimal performances.</remarks>
-        public TData[] GetData<TData>(Texture2DBase texture, int subResourceIndex = 0) where TData : struct
+        public TData[] GetData<TData>(Texture texture, int arrayOrDepthSlice = 0, int mipSlice = 0) where TData : struct
         {
-            var toData = new TData[CalculateElementWidth<TData>(texture) * texture.Description.Height];
-            GetData(texture, toData, subResourceIndex);
+            var toData = new TData[texture.CalculatePixelDataCount<TData>(mipSlice)];
+            GetData(texture, toData, arrayOrDepthSlice, mipSlice);
             return toData;
         }
 
@@ -594,28 +723,28 @@ namespace SharpDX.Toolkit.Graphics
         /// Copies the content of this texture to an array of data.
         /// </summary>
         /// <typeparam name="TData">The type of the T data.</typeparam>
+        /// <param name="texture">The texture to get the data from.</param>
         /// <param name="toData">The destination buffer to receive a copy of the texture datas.</param>
-        /// <param name="subResourceIndex">Index of the subresource to copy from.</param>
-        /// <msdn-id>ff476457</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
-        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
-        /// <remarks>
-        /// This method creates internally a stagging resource if this texture is not already a stagging resouce, copies to it and map it to memory. Use method with explicit staging resource
-        /// for optimal performances.
-        /// </remarks>
-        public void GetData<TData>(Texture2DBase texture, TData[] toData, int subResourceIndex = 0) where TData : struct
+        /// <param name="arraySlice">The array slice index. This value must be set to 0 for Texture 3D.</param>
+        /// <param name="mipSlice">The mip slice index.</param>
+        /// <msdn-id>ff476457</msdn-id>
+        ///   <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
+        ///   <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
+        /// <remarks>This method creates internally a stagging resource if this texture is not already a stagging resouce, copies to it and map it to memory. Use method with explicit staging resource
+        /// for optimal performances.</remarks>
+        public void GetData<TData>(Texture texture, TData[] toData, int arraySlice = 0, int mipSlice = 0) where TData : struct
         {
             // Get data from this resource
             if (texture.Description.Usage == ResourceUsage.Staging)
             {
                 // Directly if this is a staging resource
-                GetData(texture, texture, toData, subResourceIndex);
+                GetData(texture, texture, toData, arraySlice, mipSlice);
             }
             else
             {
                 // Unefficient way to use the Copy method using dynamic staging texture
                 using (var throughStaging = texture.ToStaging())
-                    GetData(texture, throughStaging, toData, subResourceIndex);
+                    GetData(texture, throughStaging, toData, arraySlice, mipSlice);
             }
         }
 
@@ -626,7 +755,8 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="texture">The texture to get the data from.</param>
         /// <param name="stagingTexture">The staging texture used to transfer the texture to.</param>
         /// <param name="toData">To data.</param>
-        /// <param name="subResourceIndex">Index of the sub resource.</param>
+        /// <param name="arraySlice">The array slice index. This value must be set to 0 for Texture 3D.</param>
+        /// <param name="mipSlice">The mip slice index.</param>
         /// <exception cref="System.ArgumentException">When strides is different from optimal strides, and TData is not the same size as the pixel format, or Width * Height != toData.Length</exception>
         /// <msdn-id>ff476457</msdn-id>	
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
@@ -634,24 +764,45 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>
         /// See unmanaged documentation for usage and restrictions.
         /// </remarks>
-        public unsafe void GetData<TData>(Texture2DBase texture, Texture2DBase stagingTexture, TData[] toData, int subResourceIndex = 0) where TData : struct
+        public unsafe void GetData<TData>(Texture texture, Texture stagingTexture, TData[] toData, int arraySlice = 0, int mipSlice = 0) where TData : struct
         {
-            // Check size validity of data to copy to
-            if ((toData.Length * Utilities.SizeOf<TData>()) != (texture.RowStride * texture.Description.Height))
-                throw new ArgumentException("Length of TData is not compatible with Width * Height * Pixel size in bytes");
+            // Actual width for this particular mipSlice
+            int width = texture.CalculateWidth<TData>(mipSlice);
+            int height = Texture.CalculateMipSize(texture.Description.Height, mipSlice);
+            int depth = Texture.CalculateMipSize(texture.Description.Depth, mipSlice);
 
-            // Copy the texture to a staging resource
-            Context.CopyResource(texture, stagingTexture);
+            // Calculate depth stride based on mipmap level
+            var rowStride = width * Utilities.SizeOf<TData>();
+            // Depth Stride
+            var textureDepthStride = rowStride * height;
+
+            // Size Of Input data
+            int sizeOfInputData = toData.Length * Utilities.SizeOf<TData>();
+
+            // Size Of actual texture data
+            int sizeOfTextureData = textureDepthStride * depth;
+
+            // Check size validity of data to copy to
+            if (sizeOfInputData != sizeOfTextureData)
+                throw new ArgumentException(string.Format("Size of TData ({0} bytes) is not compatible expected size ({1} bytes) : Width * Height * Depth * sizeof(TData) / sizeof(PixelFormat) size in bytes", sizeOfInputData, sizeOfTextureData));
+
+            // Copy the actual content of the texture to the staging resource
+            if (!ReferenceEquals(texture, stagingTexture))
+                Copy(texture, stagingTexture);
+
+            // Calculate the subResourceIndex for a Texture2D
+            int subResourceIndex = arraySlice * texture.Description.MipLevels + mipSlice;
 
             try
             {
-                int width = CalculateElementWidth<TData>(texture);
-
                 // Map the staging resource to a CPU accessible memory
                 var box = Context.MapSubresource(stagingTexture, subResourceIndex, MapMode.Read, MapFlags.None);
 
+                // If depth == 1 (Texture1D, Texture2D or TextureCube), then depthStride is not used
+                var boxDepthStride = texture.Description.Depth == 1 ? box.SlicePitch : textureDepthStride;
+
                 // The fast way: If same stride, we can directly copy the whole texture in one shot
-                if (box.RowPitch == texture.RowStride)
+                if (box.RowPitch == rowStride && boxDepthStride == textureDepthStride)
                 {
                     Utilities.Read(box.DataPointer, toData, 0, toData.Length);
                 }
@@ -659,13 +810,21 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     // Otherwise, the long way by copying each scanline
                     int offsetStride = 0;
-                    var sourcePtr = (byte*)box.DataPointer;
+                    var sourcePerDepthPtr = (byte*)box.DataPointer;
 
-                    for (int i = 0; i < texture.Description.Height; i++)
+                    // Iterate on all depths
+                    for (int j = 0; j < depth; j++)
                     {
-                        Utilities.Read((IntPtr)sourcePtr, toData, offsetStride, width);
-                        sourcePtr += box.RowPitch;
-                        offsetStride += width;
+                        var sourcePtr = sourcePerDepthPtr;
+                        // Iterate on each line
+                        for (int i = 0; i < height; i++)
+                        {
+                            // Copy a single row
+                            Utilities.Read((IntPtr) sourcePtr, toData, offsetStride, width);
+                            sourcePtr += box.RowPitch;
+                            offsetStride += width;
+                        }
+                        sourcePerDepthPtr += box.SlicePitch;
                     }
                 }
             }
@@ -682,7 +841,8 @@ namespace SharpDX.Toolkit.Graphics
         /// <typeparam name="TData">The type of the T data.</typeparam>
         /// <param name="texture">The texture to set the data to.</param>
         /// <param name="fromData">The data to copy from.</param>
-        /// <param name="subResourceIndex">Index of the sub resource.</param>
+        /// <param name="arraySlice">The array slice index. This value must be set to 0 for Texture 3D.</param>
+        /// <param name="mipSlice">The mip slice index.</param>
         /// <exception cref="System.ArgumentException">When strides is different from optimal strides, and TData is not the same size as the pixel format, or Width * Height != toData.Length</exception>
         /// <msdn-id>ff476457</msdn-id>	
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
@@ -690,26 +850,49 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>
         /// See unmanaged documentation for usage and restrictions.
         /// </remarks>
-        public unsafe void SetData<TData>(Texture2DBase texture, TData[] fromData, int subResourceIndex = 0) where TData : struct
+        public unsafe void SetData<TData>(Texture texture, TData[] fromData, int arraySlice = 0, int mipSlice = 0) where TData : struct
         {
+            // Actual width for this particular mipSlice
+            int width = texture.CalculateWidth<TData>(mipSlice);
+            int height = Texture.CalculateMipSize(texture.Description.Height, mipSlice);
+            int depth = Texture.CalculateMipSize(texture.Description.Depth, mipSlice);
+
+            // Calculate depth stride based on mipmap level
+            var rowStride = width * Utilities.SizeOf<TData>();
+
+            // Depth Stride
+            var textureDepthStride = rowStride * height;
+
+            // Size Of Input data
+            int sizeOfInputData = fromData.Length * Utilities.SizeOf<TData>();
+
+            // Size Of actual texture data
+            int sizeOfTextureData = textureDepthStride * depth;
+
             // Check size validity of data to copy to
-            if ((fromData.Length * Utilities.SizeOf<TData>()) != (texture.RowStride * texture.Description.Height))
-                throw new ArgumentException("Length of TData is not compatible with Width * Height * Pixel size in bytes");
+            if (sizeOfInputData != sizeOfTextureData)
+                throw new ArgumentException(string.Format("Size of TData ({0} bytes) is not compatible expected size ({1} bytes) : Width * Height * Depth * sizeof(TData) / sizeof(PixelFormat) size in bytes", sizeOfInputData, sizeOfTextureData));
+
+            // Calculate the subResourceIndex for a Texture2D
+            int subResourceIndex = arraySlice * texture.Description.MipLevels + mipSlice;
 
             // If this texture is declared as default usage, we can only use UpdateSubresource, which is not optimal but better than nothing
             if (texture.Description.Usage == ResourceUsage.Default)
             {
-                Context.UpdateSubresource(fromData, texture, subResourceIndex, texture.RowStride);
+                Context.UpdateSubresource(fromData, texture, subResourceIndex, texture.RowStride, texture.DepthStride);
             }
             else
             {
                 try
                 {
-                    int width = CalculateElementWidth<TData>(texture);
-                    var box = Context.MapSubresource(texture, subResourceIndex, MapMode.WriteDiscard,
-                                                     MapFlags.None);
+                    var box = Context.MapSubresource(texture, subResourceIndex, MapMode.WriteDiscard, MapFlags.None);
+
+
+                    // If depth == 1 (Texture1D, Texture2D or TextureCube), then depthStride is not used
+                    var boxDepthStride = texture.Description.Depth == 1 ? box.SlicePitch : textureDepthStride;
+
                     // The fast way: If same stride, we can directly copy the whole texture in one shot
-                    if (box.RowPitch == texture.RowStride)
+                    if (box.RowPitch == rowStride && boxDepthStride == textureDepthStride)
                     {
                         Utilities.Write(box.DataPointer, fromData, 0, fromData.Length);
                     }
@@ -717,13 +900,20 @@ namespace SharpDX.Toolkit.Graphics
                     {
                         // Otherwise, the long way by copying each scanline
                         int offsetStride = 0;
-                        var destPtr = (byte*)box.DataPointer;
+                        var destPerDepthPtr = (byte*)box.DataPointer;
 
-                        for (int i = 0; i < texture.Description.Height; i++)
+                        // Iterate on all depths
+                        for (int j = 0; j < depth; j++)
                         {
-                            Utilities.Write((IntPtr)destPtr, fromData, offsetStride, width);
-                            destPtr += box.RowPitch;
-                            offsetStride += width;
+                            var destPtr = destPerDepthPtr;
+                            // Iterate on each line
+                            for (int i = 0; i < height; i++)
+                            {
+                                Utilities.Write((IntPtr) destPtr, fromData, offsetStride, width);
+                                destPtr += box.RowPitch;
+                                offsetStride += width;
+                            }
+                            destPerDepthPtr += box.SlicePitch;
                         }
 
                     }
@@ -734,7 +924,7 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
         }
-
+        
         public static implicit operator Device(GraphicsDevice from)
         {
             return from.Device;
@@ -743,21 +933,6 @@ namespace SharpDX.Toolkit.Graphics
         public static implicit operator DeviceContext(GraphicsDevice from)
         {
             return from.Context;
-        }
-
-        /// <summary>
-        /// Calculates the width of the element.
-        /// </summary>
-        /// <typeparam name="TData">The type of the T data.</typeparam>
-        /// <returns>The width</returns>
-        /// <exception cref="System.ArgumentException">If the size is invalid</exception>
-        private int CalculateElementWidth<TData>(Texture2DBase texture) where TData : struct
-        {
-            var dataStrideInBytes = Utilities.SizeOf<TData>() * texture.Description.Width;
-            var width = ((double)texture.RowStride / dataStrideInBytes) * texture.Description.Width;
-            if (Math.Abs(width - (int)width) > double.Epsilon)
-                throw new ArgumentException("sizeof(TData) / sizeof(Format) * Width is not an integer");
-            return (int)width;
         }
     }
 }

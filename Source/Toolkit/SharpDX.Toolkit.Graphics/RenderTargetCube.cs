@@ -26,29 +26,29 @@ using SharpDX.Direct3D11;
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    /// A RenderTarget2D frontend to <see cref="SharpDX.Direct3D11.Texture2D"/>.
+    /// A RenderTargetCube frontend to <see cref="SharpDX.Direct3D11.Texture2D"/>.
     /// </summary>
     /// <remarks>
     /// This class instantiates a <see cref="Texture2D"/> with the binding flags <see cref="BindFlags.RenderTarget"/>.
     /// This class is also castable to <see cref="RenderTargetView"/>.
     /// </remarks>
-    public class RenderTarget2D : Texture2DBase
+    public class RenderTargetCube : Texture2DBase
     {
-        internal RenderTarget2D(Texture2DDescription description) : base(description)
+        internal RenderTargetCube(Texture2DDescription description, params DataRectangle[] dataRectangles) : base(description, dataRectangles)
         {
         }
 
-        internal RenderTarget2D(GraphicsDevice device, Texture2DDescription description2D)
-            : base(device, description2D)
+        internal RenderTargetCube(GraphicsDevice device, Texture2DDescription description2D, params DataRectangle[] dataRectangles)
+            : base(device, description2D, dataRectangles)
         {
         }
 
-        internal RenderTarget2D(Direct3D11.Texture2D texture)
+        internal RenderTargetCube(Direct3D11.Texture2D texture)
             : base(texture)
         {
         }
 
-        internal RenderTarget2D(GraphicsDevice device, Direct3D11.Texture2D texture)
+        internal RenderTargetCube(GraphicsDevice device, Direct3D11.Texture2D texture)
             : base(device, texture)
         {
         }
@@ -57,7 +57,7 @@ namespace SharpDX.Toolkit.Graphics
         /// RenderTargetView casting operator.
         /// </summary>
         /// <param name="from">Source for the.</param>
-        public static implicit operator RenderTargetView(RenderTarget2D from)
+        public static implicit operator RenderTargetView(RenderTargetCube from)
         {
             return from.RenderTargetViews != null ? from.RenderTargetViews[0] : null;
         }
@@ -96,29 +96,15 @@ namespace SharpDX.Toolkit.Graphics
                 if (rtv == null)
                 {
                     // Create the render target view
-                    var rtvDescription = new RenderTargetViewDescription() { Format = this.Description.Format };
-
-                    if (this.Description.ArraySize > 1)
-                    {
-                        rtvDescription.Dimension = this.Description.SampleDescription.Count > 1 ? RenderTargetViewDimension.Texture2DMultisampledArray : RenderTargetViewDimension.Texture2DArray;
-                        if (this.Description.SampleDescription.Count > 1)
-                        {
-                            rtvDescription.Texture2DMSArray.ArraySize = arrayCount;
-                            rtvDescription.Texture2DMSArray.FirstArraySlice = arrayOrDepthSlice;
+                    var rtvDescription = new RenderTargetViewDescription {
+                        Format = this.Description.Format,
+                        Dimension = RenderTargetViewDimension.Texture2DArray,
+                        Texture2DArray = {
+                            ArraySize = arrayCount,
+                            FirstArraySlice = arrayOrDepthSlice,
+                            MipSlice = mipIndex
                         }
-                        else
-                        {
-                            rtvDescription.Texture2DArray.ArraySize = arrayCount;
-                            rtvDescription.Texture2DArray.FirstArraySlice = arrayOrDepthSlice;
-                            rtvDescription.Texture2DArray.MipSlice = mipIndex;
-                        }
-                    }
-                    else
-                    {
-                        rtvDescription.Dimension = this.Description.SampleDescription.Count > 1 ? RenderTargetViewDimension.Texture2DMultisampled : RenderTargetViewDimension.Texture2D;
-                        if (this.Description.SampleDescription.Count <= 1)
-                            rtvDescription.Texture2D.MipSlice = mipIndex;
-                    }
+                    };
 
                     rtv = new RenderTargetView(GraphicsDevice, Resource, rtvDescription);
                     RenderTargetViews[rtvIndex] = ToDispose(rtv);
@@ -129,99 +115,75 @@ namespace SharpDX.Toolkit.Graphics
 
         public override Texture Clone()
         {
-            return new RenderTarget2D(GraphicsDevice, this.Description);
+            return new RenderTargetCube(GraphicsDevice, this.Description);
         }
 
         /// <summary>
-        /// Creates a new <see cref="RenderTarget2D"/> from a <see cref="Texture2DDescription"/>.
+        /// Creates a new <see cref="RenderTargetCube"/> from a <see cref="Texture2DDescription"/>.
         /// </summary>
         /// <param name="description">The description.</param>
         /// <returns>
-        /// A new instance of <see cref="RenderTarget2D"/> class.
+        /// A new instance of <see cref="RenderTargetCube"/> class.
         /// </returns>
         /// <msdn-id>ff476521</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
-        public static RenderTarget2D New(Texture2DDescription description)
+        public static RenderTargetCube New(Texture2DDescription description)
         {
-            return new RenderTarget2D(description);
+            return new RenderTargetCube(description);
         }
 
         /// <summary>
-        /// Creates a new <see cref="RenderTarget2D"/> from a <see cref="Direct3D11.Texture2D"/>.
+        /// Creates a new <see cref="RenderTargetCube"/> from a <see cref="Direct3D11.Texture2D"/>.
         /// </summary>
         /// <param name="texture">The native texture <see cref="Direct3D11.Texture2D"/>.</param>
         /// <returns>
-        /// A new instance of <see cref="RenderTarget2D"/> class.
+        /// A new instance of <see cref="RenderTargetCube"/> class.
         /// </returns>
         /// <msdn-id>ff476521</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
-        public static RenderTarget2D New(Direct3D11.Texture2D texture)
+        public static RenderTargetCube New(Direct3D11.Texture2D texture)
         {
-            return new RenderTarget2D(texture);
+            return new RenderTargetCube(texture);
         }
 
         /// <summary>
-        /// Creates a new <see cref="RenderTarget2D" /> with a single mipmap.
+        /// Creates a new <see cref="RenderTargetCube" /> with a single mipmap.
         /// </summary>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
+        /// <param name="size">The size (in pixels) of the top-level faces of the cube texture.</param>
         /// <param name="format">Describes the format to use.</param>
         /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
-        /// <param name="arraySize">Size of the texture 2D array, default to 1.</param>
-        /// <returns>A new instance of <see cref="RenderTarget2D" /> class.</returns>
+        /// <returns>A new instance of <see cref="RenderTargetCube" /> class.</returns>
         /// <msdn-id>ff476521</msdn-id>
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
-        public static RenderTarget2D New(int width, int height, PixelFormat format, bool isUnorderedReadWrite = false, int arraySize = 1)
+        public static RenderTargetCube New(int size, PixelFormat format, bool isUnorderedReadWrite = false)
         {
-            return New(width, height, false, format, isUnorderedReadWrite, arraySize);
+            return New(size, false, format, isUnorderedReadWrite);
         }
 
         /// <summary>
-        /// Creates a new <see cref="RenderTarget2D" />.
+        /// Creates a new <see cref="RenderTargetCube" />.
         /// </summary>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
+        /// <param name="size">The size (in pixels) of the top-level faces of the cube texture.</param>
         /// <param name="mipCount">Number of mipmaps, set to true to have all mipmaps, set to an int >=1 for a particular mipmap count.</param>
         /// <param name="format">Describes the format to use.</param>
         /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
-        /// <param name="arraySize">Size of the texture 2D array, default to 1.</param>
-        /// <returns>A new instance of <see cref="RenderTarget2D" /> class.</returns>
+        /// <returns>A new instance of <see cref="RenderTargetCube" /> class.</returns>
         /// <msdn-id>ff476521</msdn-id>
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
-        public static RenderTarget2D New(int width, int height, MipMap mipCount, PixelFormat format, bool isUnorderedReadWrite = false, int arraySize = 1)
+        public static RenderTargetCube New(int size, MipMap mipCount, PixelFormat format, bool isUnorderedReadWrite = false)
         {
-            return new RenderTarget2D(NewRenderTargetDescription(width, height, format, isUnorderedReadWrite, mipCount, arraySize, MSAALevel.None));
+            return new RenderTargetCube(NewRenderTargetDescription(size, format, isUnorderedReadWrite, mipCount));
         }
 
-        /// <summary>
-        /// Creates a new <see cref="RenderTarget2D" /> using multisampling.
-        /// </summary>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
-        /// <param name="format">Describes the format to use.</param>
-        /// <param name="arraySize">Size of the texture 2D array, default to 1.</param>
-        /// <param name="multiSampleCount">The multisample count.</param>
-        /// <returns>A new instance of <see cref="RenderTarget2D" /> class.</returns>
-        /// <msdn-id>ff476521</msdn-id>
-        ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
-        ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
-        public static RenderTarget2D New(int width, int height, MSAALevel multiSampleCount, PixelFormat format, int arraySize = 1)
+        protected static Texture2DDescription NewRenderTargetDescription(int size, PixelFormat format, bool isReadWrite, int mipCount)
         {
-            return new RenderTarget2D(NewRenderTargetDescription(width, height, format, false, 1, arraySize, multiSampleCount));
-        }
-
-        protected static Texture2DDescription NewRenderTargetDescription(int width, int height, PixelFormat format, bool isReadWrite, int mipCount, int arraySize, MSAALevel multiSampleCount)
-        {
-            var desc = Texture2DBase.NewDescription(width, height, format, isReadWrite, mipCount, arraySize, ResourceUsage.Default);
+            var desc = Texture2DBase.NewDescription(size, size, format, isReadWrite, mipCount, 6, ResourceUsage.Default);
+            desc.OptionFlags = ResourceOptionFlags.TextureCube;
             desc.BindFlags |= BindFlags.RenderTarget;
-
-            // Sets the MSAALevel
-            int maximumMSAA = (int)GraphicsDevice.Current.Features[format].MSAALevelMax;
-            desc.SampleDescription.Count = Math.Max(1, Math.Min((int)multiSampleCount, maximumMSAA));
             return desc;
         }
     }

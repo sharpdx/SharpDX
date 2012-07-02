@@ -25,14 +25,21 @@ using SharpDX.Direct3D11;
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>
+    /// A RenderTarget1D frontend to <see cref="SharpDX.Direct3D11.Texture1D"/>.
+    /// </summary>
+    /// <remarks>
+    /// This class instantiates a <see cref="Texture1D"/> with the binding flags <see cref="BindFlags.RenderTarget"/>.
+    /// This class is also castable to <see cref="RenderTargetView"/>.
+    /// </remarks>
     public class RenderTarget1D : Texture1DBase
     {
-        internal RenderTarget1D(Texture1DDescription description, params IntPtr[] dataRectangles) : base(description, dataRectangles)
+        internal RenderTarget1D(Texture1DDescription description) : base(description)
         {
         }
 
-        internal RenderTarget1D(GraphicsDevice device, Texture1DDescription description, params IntPtr[] dataRectangles)
-            : base(device, description, dataRectangles)
+        internal RenderTarget1D(GraphicsDevice device, Texture1DDescription description1D)
+            : base(device, description1D)
         {
         }
 
@@ -60,7 +67,7 @@ namespace SharpDX.Toolkit.Graphics
             // Perform default initialization
             base.InitializeViews();
 
-            if ((Description.BindFlags & BindFlags.RenderTarget) != 0)
+            if ((this.Description.BindFlags & BindFlags.RenderTarget) != 0)
             {
                 RenderTargetViews = new RenderTargetView[GetViewCount()];
                 GetRenderTargetView(ViewSlice.Full, 0, 0);
@@ -69,7 +76,7 @@ namespace SharpDX.Toolkit.Graphics
 
         public override RenderTargetView GetRenderTargetView(ViewSlice viewSlice, int arrayOrDepthSlice, int mipIndex)
         {
-            if ((Description.BindFlags & BindFlags.RenderTarget) == 0)
+            if ((this.Description.BindFlags & BindFlags.RenderTarget) == 0)
                 return null;
 
             if (viewSlice == ViewSlice.MipBand)
@@ -89,9 +96,9 @@ namespace SharpDX.Toolkit.Graphics
                 if (rtv == null)
                 {
                     // Create the render target view
-                    var rtvDescription = new RenderTargetViewDescription() { Format = Description.Format };
+                    var rtvDescription = new RenderTargetViewDescription() { Format = this.Description.Format };
 
-                    if (Description.ArraySize > 1)
+                    if (this.Description.ArraySize > 1)
                     {
                         rtvDescription.Dimension = RenderTargetViewDimension.Texture1DArray;
                         rtvDescription.Texture1DArray.ArraySize = arrayCount;
@@ -111,9 +118,9 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        public override Texture1DBase Clone()
+        public override Texture Clone()
         {
-            return new RenderTarget1D(GraphicsDevice, Description);
+            return new RenderTarget1D(GraphicsDevice, this.Description);
         }
 
         /// <summary>
@@ -147,99 +154,41 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
+        /// Creates a new <see cref="RenderTarget1D" /> with a single mipmap.
+        /// </summary>
+        /// <param name="width">The width.</param>
+        /// <param name="format">Describes the format to use.</param>
+        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
+        /// <param name="arraySize">Size of the texture 1D array, default to 1.</param>
+        /// <returns>A new instance of <see cref="RenderTarget1D" /> class.</returns>
+        /// <msdn-id>ff476520</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
+        public static RenderTarget1D New(int width, PixelFormat format, bool isUnorderedReadWrite = false, int arraySize = 1)
+        {
+            return New(width, false, format, isUnorderedReadWrite, arraySize);
+        }
+
+        /// <summary>
         /// Creates a new <see cref="RenderTarget1D" />.
         /// </summary>
         /// <param name="width">The width.</param>
+        /// <param name="mipCount">Number of mipmaps, set to true to have all mipmaps, set to an int >=1 for a particular mipmap count.</param>
         /// <param name="format">Describes the format to use.</param>
-        /// <param name="mipCount">(optional) number of mips.</param>
+        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
         /// <param name="arraySize">Size of the texture 1D array, default to 1.</param>
-        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
         /// <returns>A new instance of <see cref="RenderTarget1D" /> class.</returns>
         /// <msdn-id>ff476520</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        public static RenderTarget1D New(int width, PixelFormat format, bool isUnorderedReadWrite = false, int mipCount = 1, int arraySize = 1)
+        public static RenderTarget1D New(int width, MipMap mipCount, PixelFormat format, bool isUnorderedReadWrite = false, int arraySize = 1)
         {
-            return new RenderTarget1D(NewRenderTargetDescription(width, format, isUnorderedReadWrite, mipCount, 1, ResourceUsage.Default));
+            return new RenderTarget1D(NewRenderTargetDescription(width, format, isUnorderedReadWrite, mipCount, arraySize));
         }
 
-        /// <summary>
-        /// Creates a new <see cref="RenderTarget1D" /> with a single level of mipmap.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="width">The width.</param>
-        /// <param name="format">Describes the format to use.</param>
-        /// <param name="usage">The usage.</param>
-        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
-        /// <param name="textureData">The texture data for a single mipmap and a single array slice. See remarks</param>
-        /// <returns>A new instance of <see cref="RenderTarget1D" /> class.</returns>
-        /// <msdn-id>ff476520</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        /// <remarks>
-        /// Each value in textureData is a pixel in the destination texture.
-        /// </remarks>
-        public static RenderTarget1D New<T>(int width, PixelFormat format, T[] textureData, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
+        protected static Texture1DDescription NewRenderTargetDescription(int width, PixelFormat format, bool isReadWrite, int mipCount, int arraySize)
         {
-            return New(width, format, new[] { new[] { textureData } }, isUnorderedReadWrite, usage);
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="RenderTarget1D" /> with mipmaps.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="width">The width.</param>
-        /// <param name="format">Describes the format to use.</param>
-        /// <param name="usage">The usage.</param>
-        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
-        /// <param name="mipMapTextureArray">The mip map textures with arraySize = 1. See remarks</param>
-        /// <returns>A new instance of <see cref="RenderTarget1D" /> class.</returns>
-        /// <msdn-id>ff476520</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        /// <remarks>
-        /// The first dimension of mipMapTextures is the number of mipmaps, the second is the texture data for a particular mipmap.
-        /// </remarks>
-        public static RenderTarget1D New<T>(int width, PixelFormat format, T[][] mipMapTextureArray, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
-        {
-            return New(width, format, new[] { mipMapTextureArray }, isUnorderedReadWrite, usage);
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="RenderTarget1D" /> array with mipmaps for each array slice.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="width">The width.</param>
-        /// <param name="format">Describes the format to use.</param>
-        /// <param name="usage">The usage.</param>
-        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
-        /// <param name="mipMapTextureArray">The mip map textures with texture array. See remarks</param>
-        /// <returns>A new instance of <see cref="RenderTarget1D" /> class.</returns>
-        /// <msdn-id>ff476520</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        /// <remarks>
-        /// The first dimension of mipMapTextures describes the number of array (RenderTarget1D Array), second dimension is the mipmap, the third is the texture data for a particular mipmap.
-        /// </remarks>
-        public static RenderTarget1D New<T>(int width, PixelFormat format, T[][][] mipMapTextureArray, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
-        {
-            usage = isUnorderedReadWrite ? ResourceUsage.Default : usage;
-            GCHandle[] handles = null;
-            try
-            {
-                var dataRectangles = Pin(mipMapTextureArray, out handles);
-                var texture = new RenderTarget1D(NewRenderTargetDescription(width, format, isUnorderedReadWrite, mipMapTextureArray[0].Length, mipMapTextureArray.Length, usage), dataRectangles);
-                return texture;
-            }
-            finally
-            {
-                UnPin(handles);
-            }
-        }
-
-        protected static Texture1DDescription NewRenderTargetDescription(int width, PixelFormat format, bool isReadWrite, int mipCount, int arraySize, ResourceUsage usage)
-        {
-            var desc = Texture1DBase.NewDescription(width, format, isReadWrite, mipCount, arraySize, usage);
+            var desc = Texture1DBase.NewDescription(width, format, isReadWrite, mipCount, arraySize, ResourceUsage.Default);
             desc.BindFlags |= BindFlags.RenderTarget;
             return desc;
         }

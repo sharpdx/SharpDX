@@ -36,11 +36,23 @@ namespace SharpDX.Toolkit.Graphics
         /// Initializes a new instance of the <see cref="Texture3DBase" /> class.
         /// </summary>
         /// <param name="description">The description.</param>
+        /// <msdn-id>ff476522</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateTexture3D([In] const D3D11_TEXTURE3D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture3D** ppTexture3D)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CreateTexture3D</unmanaged-short>	
+        protected internal Texture3DBase(Texture3DDescription description)
+            : this(GraphicsDevice.Current, description)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Texture3DBase" /> class.
+        /// </summary>
+        /// <param name="description">The description.</param>
         /// <param name="dataRectangles">A variable-length parameters list containing data rectangles.</param>
         /// <msdn-id>ff476522</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture3D([In] const D3D11_TEXTURE3D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture3D** ppTexture3D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture3D</unmanaged-short>	
-        protected internal Texture3DBase(Texture3DDescription description, params DataBox[] dataRectangles)
+        protected internal Texture3DBase(Texture3DDescription description,  DataBox[] dataRectangles)
             : this(GraphicsDevice.Current, description, dataRectangles)
         {
         }
@@ -49,18 +61,30 @@ namespace SharpDX.Toolkit.Graphics
         /// Initializes a new instance of the <see cref="Texture3DBase" /> class.
         /// </summary>
         /// <param name="device">The device local.</param>
-        /// <param name="description">The description.</param>
+        /// <param name="description3D">The description.</param>
+        /// <msdn-id>ff476522</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateTexture3D([In] const D3D11_TEXTURE3D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture3D** ppTexture3D)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CreateTexture3D</unmanaged-short>	
+        protected internal Texture3DBase(GraphicsDevice device, Texture3DDescription description3D)
+            : base(description3D)
+        {
+            Resource = new Direct3D11.Texture3D(device, description3D);
+            Initialize(device, Resource);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Texture3DBase" /> class.
+        /// </summary>
+        /// <param name="device">The device local.</param>
+        /// <param name="description3D">The description.</param>
         /// <param name="dataRectangles">A variable-length parameters list containing data rectangles.</param>
         /// <msdn-id>ff476522</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture3D([In] const D3D11_TEXTURE3D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture3D** ppTexture3D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture3D</unmanaged-short>	
-        protected internal Texture3DBase(GraphicsDevice device, Texture3DDescription description, params DataBox[] dataRectangles)
+        protected internal Texture3DBase(GraphicsDevice device, Texture3DDescription description3D, DataBox[] dataRectangles)
+            : base(description3D)
         {
-            Description = description;
-            // Precalculates the stride
-            RowStride = Description.Width * ((PixelFormat)Description.Format).SizeInBytes;
-            DepthStride = RowStride * Description.Height;
-            Resource = new Direct3D11.Texture3D(device, description, dataRectangles);
+            Resource = new Direct3D11.Texture3D(device, description3D, dataRectangles);
             Initialize(device, Resource);
         }
 
@@ -85,61 +109,19 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture3D([In] const D3D11_TEXTURE3D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture3D** ppTexture3D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture3D</unmanaged-short>	
         protected internal Texture3DBase(GraphicsDevice device, Direct3D11.Texture3D texture)
+            : base(texture.Description)
         {
-            Description = texture.Description;
-            RowStride = Description.Width * ((PixelFormat)Description.Format).SizeInBytes;
-            DepthStride = RowStride * Description.Height;
             Resource = texture;
             Initialize(device, Resource);
-        }
-
-        /// <summary>
-        /// The description of this <see cref="Texture3DBase"/>.
-        /// </summary>
-        public readonly Texture3DDescription Description;
-
-        /// <summary>
-        /// The stride - number of bytes per row - in bytes.
-        /// </summary>
-        public readonly int RowStride;
-
-        /// <summary>
-        /// The stride - number of bytes per row - in bytes.
-        /// </summary>
-        public readonly int DepthStride;
-
-        /// <summary>
-        /// Makes a copy of this texture.
-        /// </summary>
-        /// <remarks>
-        /// This method doesn't copy the content of the texture.
-        /// </remarks>
-        /// <returns>
-        /// A copy of this texture.
-        /// </returns>
-        public abstract Texture3DBase Clone();
-
-        /// <summary>
-        /// Makes a copy of this texture.
-        /// </summary>
-        /// <remarks>
-        /// This method doesn't copy the content of the texture.
-        /// </remarks>
-        /// <returns>
-        /// A copy of this texture.
-        /// </returns>
-        public T Clone<T>() where T : Texture3DBase
-        {
-            return (T)Clone();
         }
 
         /// <summary>
         /// Return an equivalent staging texture CPU read-writable from this instance.
         /// </summary>
         /// <returns></returns>
-        public Texture3D ToStaging()
+        public override Texture ToStaging()
         {
-            var stagingDesc = Description;
+            var stagingDesc = this.Description;
             stagingDesc.BindFlags = BindFlags.None;
             stagingDesc.CpuAccessFlags = CpuAccessFlags.Read | CpuAccessFlags.Write;
             stagingDesc.Usage = ResourceUsage.Staging;
@@ -149,7 +131,7 @@ namespace SharpDX.Toolkit.Graphics
 
         public override ShaderResourceView GetShaderResourceView(ViewSlice viewSlice, int arrayOrDepthSlice, int mipIndex)
         {
-            if ((Description.BindFlags & BindFlags.ShaderResource) == 0)
+            if ((this.Description.BindFlags & BindFlags.ShaderResource) == 0)
                 return null;
 
             int arrayCount;
@@ -167,7 +149,7 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     // Create the view
                     var srvDescription = new ShaderResourceViewDescription {
-                        Format = Description.Format,
+                        Format = this.Description.Format,
                         Dimension = ShaderResourceViewDimension.Texture3D,
                         Texture3D = {
                             MipLevels = mipCount,
@@ -184,7 +166,7 @@ namespace SharpDX.Toolkit.Graphics
 
         public override UnorderedAccessView GetUnorderedAccessView(int zSlice, int mipIndex)
         {
-            if ((Description.BindFlags & BindFlags.UnorderedAccess) == 0)
+            if ((this.Description.BindFlags & BindFlags.UnorderedAccess) == 0)
                 return null;
 
             int sliceCount;
@@ -201,7 +183,7 @@ namespace SharpDX.Toolkit.Graphics
                 if (uav == null)
                 {
                     var uavDescription = new UnorderedAccessViewDescription() {
-                        Format = Description.Format,
+                        Format = this.Description.Format,
                         Dimension = UnorderedAccessViewDimension.Texture3D,
                         Texture3D = {
                             FirstWSlice = zSlice,
@@ -222,7 +204,7 @@ namespace SharpDX.Toolkit.Graphics
             base.InitializeViews();
 
             // Creates the shader resource view
-            if ((Description.BindFlags & BindFlags.ShaderResource) != 0)
+            if ((this.Description.BindFlags & BindFlags.ShaderResource) != 0)
             {
                 ShaderResourceViews = new ShaderResourceView[GetViewCount()];
 
@@ -231,7 +213,7 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             // Creates the unordered access view
-            if ((Description.BindFlags & BindFlags.UnorderedAccess) != 0)
+            if ((this.Description.BindFlags & BindFlags.UnorderedAccess) != 0)
             {
                 // Initialize the unordered access views
                 UnorderedAccessViews = new UnorderedAccessView[GetViewCount()];
@@ -241,45 +223,6 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
         
-        protected void GetViewSliceBounds(ViewSlice viewSlice, ref int zSliceIndex, ref int mipIndex, out int zCount, out int mipCount)
-        {
-            switch (viewSlice)
-            {
-                case ViewSlice.Full:
-                    zSliceIndex = 0;
-                    mipIndex = 0;
-                    zCount = Description.Depth;
-                    mipCount = Description.MipLevels;
-                    break;
-                case ViewSlice.Single:
-                    zCount = 1;
-                    mipCount = 1;
-                    break;
-                case ViewSlice.ArrayBand:
-                    zCount = Description.Depth - zSliceIndex;
-                    mipCount = 1;
-                    break;
-                case ViewSlice.MipBand:
-                    zCount = 1;
-                    mipCount = Description.MipLevels - mipIndex;
-                    break;
-                default:
-                    zCount = 0;
-                    mipCount = 0;
-                    break;
-            }
-        }
-
-        protected int GetViewCount()
-        {
-            return GetViewIndex((ViewSlice)4, Description.Depth, Description.MipLevels);
-        }
-
-        protected int GetViewIndex(ViewSlice viewSlice, int zSliceIndex, int mipIndex)
-        {
-            return (((int)viewSlice) * Description.Depth + zSliceIndex) * Description.MipLevels + mipIndex;
-        }
-
         protected static DataBox[] Pin<T>(int width, int height, PixelFormat format, T[][] initialTextures, out GCHandle[] handles) where T : struct
         {
             var dataRectangles = new DataBox[initialTextures.Length];
@@ -305,7 +248,7 @@ namespace SharpDX.Toolkit.Graphics
                                Depth = depth,
                                BindFlags = BindFlags.ShaderResource,
                                Format = format,
-                               MipLevels = mipCount,
+                               MipLevels = CalculateMipMapCount(mipCount, width, height, depth),
                                Usage = usage,
                                CpuAccessFlags = GetCputAccessFlagsFromUsage(usage),
                                OptionFlags = ResourceOptionFlags.None

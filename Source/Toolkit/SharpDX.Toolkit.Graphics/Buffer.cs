@@ -527,7 +527,7 @@ namespace SharpDX.Toolkit.Graphics
                 if (elementSize != 2 && elementSize != 4)
                     throw new ArgumentException("Element size must be set to sizeof(short) = 2 or sizeof(int) = 4 for index buffer if index buffer is bound to a ShaderResource", "elementSize");
 
-                viewFormat = elementSize == 2 ? PixelFormat.UInt.R16 : PixelFormat.UInt.R32;
+                viewFormat = elementSize == 2 ? PixelFormat.R16.UInt: PixelFormat.R32.UInt;
             }
             return viewFormat;
         }
@@ -590,8 +590,8 @@ namespace SharpDX.Toolkit.Graphics
             
             if (((BufferFlags & BufferFlags.RawBuffer) != 0))
             {
-                srvFormat = PixelFormat.Typeless.R32;
-                uavFormat = PixelFormat.Typeless.R32;
+                srvFormat = PixelFormat.R32.Typeless;
+                uavFormat = PixelFormat.R32.Typeless;
             }
 
             if ((bindFlags & BindFlags.ShaderResource) != 0)

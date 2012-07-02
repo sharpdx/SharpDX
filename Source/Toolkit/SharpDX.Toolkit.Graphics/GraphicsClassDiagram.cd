@@ -35,11 +35,11 @@
       <FileName>RenderTarget1D.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="SharpDX.Toolkit.Graphics.RenderTarget2D" Collapsed="true">
-    <Position X="7" Y="6.25" Width="1.5" />
+  <Class Name="SharpDX.Toolkit.Graphics.RenderTargetCube" Collapsed="true">
+    <Position X="7" Y="7.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAACAAAAAABAAAAAAAAAAAQAAAAAAAADI=</HashCode>
-      <FileName>RenderTarget2D.cs</FileName>
+      <FileName>RenderTargetCube.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SharpDX.Toolkit.Graphics.Texture2D" Collapsed="true">
@@ -140,6 +140,20 @@
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAACAAAAAABAAAAAAAAAAAQAAAAAAAADI=</HashCode>
       <FileName>RenderTarget3D.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpDX.Toolkit.Graphics.TextureCube" Collapsed="true">
+    <Position X="4.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAQAAAAAAAAAAAAAAAAAAAAAAAABI=</HashCode>
+      <FileName>TextureCube.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpDX.Toolkit.Graphics.RenderTarget2D" Collapsed="true">
+    <Position X="7" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAAAABAAAAAAAAAAAQAAAAAAAADI=</HashCode>
+      <FileName>RenderTarget2D.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

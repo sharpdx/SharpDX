@@ -64,7 +64,7 @@ namespace SharpDX.Toolkit.Graphics
                 case ResourceUsage.Dynamic:
                     return CpuAccessFlags.Write;
                 case ResourceUsage.Staging:
-                    return CpuAccessFlags.Read;
+                    return CpuAccessFlags.Read | CpuAccessFlags.Write;
             }
             return CpuAccessFlags.None;
         }

@@ -36,11 +36,23 @@ namespace SharpDX.Toolkit.Graphics
         /// Initializes a new instance of the <see cref="Texture2DBase" /> class.
         /// </summary>
         /// <param name="description">The description.</param>
+        /// <msdn-id>ff476521</msdn-id>
+        ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
+        ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
+        protected internal Texture2DBase(Texture2DDescription description)
+            : this(GraphicsDevice.Current, description)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Texture2DBase" /> class.
+        /// </summary>
+        /// <param name="description">The description.</param>
         /// <param name="dataRectangles">A variable-length parameters list containing data rectangles.</param>
         /// <msdn-id>ff476521</msdn-id>
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
-        protected internal Texture2DBase(Texture2DDescription description, params DataRectangle[] dataRectangles)
+        protected internal Texture2DBase(Texture2DDescription description, DataRectangle[] dataRectangles)
             : this(GraphicsDevice.Current, description, dataRectangles)
         {
         }
@@ -49,17 +61,30 @@ namespace SharpDX.Toolkit.Graphics
         /// Initializes a new instance of the <see cref="Texture2DBase" /> class.
         /// </summary>
         /// <param name="device">The device local.</param>
-        /// <param name="description">The description.</param>
+        /// <param name="description2D">The description.</param>
+        /// <msdn-id>ff476521</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
+        protected internal Texture2DBase(GraphicsDevice device, Texture2DDescription description2D)
+            : base(description2D)
+        {
+            Resource = new Direct3D11.Texture2D(device, description2D);
+            Initialize(device, Resource);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Texture2DBase" /> class.
+        /// </summary>
+        /// <param name="device">The device local.</param>
+        /// <param name="description2D">The description.</param>
         /// <param name="dataRectangles">A variable-length parameters list containing data rectangles.</param>
         /// <msdn-id>ff476521</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
-        protected internal Texture2DBase(GraphicsDevice device, Texture2DDescription description, params DataRectangle[] dataRectangles)
+        protected internal Texture2DBase(GraphicsDevice device, Texture2DDescription description2D, DataRectangle[] dataRectangles)
+            : base(description2D)
         {
-            Description = description;
-            // Precalculates the stride
-            this.RowStride = Description.Width * ((PixelFormat) Description.Format).SizeInBytes;
-            Resource = new Direct3D11.Texture2D(device, description, dataRectangles);
+            Resource = new Direct3D11.Texture2D(device, description2D, dataRectangles);
             Initialize(device, Resource);
         }
 
@@ -84,55 +109,19 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
         protected internal Texture2DBase(GraphicsDevice device, Direct3D11.Texture2D texture)
+            : base(texture.Description)
         {
-            Description = texture.Description;
-            this.RowStride = Description.Width * ((PixelFormat)Description.Format).SizeInBytes;
             Resource = texture;
             Initialize(device, Resource);
-        }
-
-        /// <summary>
-        /// The description of this <see cref="Texture2DBase"/>.
-        /// </summary>
-        public readonly Texture2DDescription Description;
-
-        /// <summary>
-        /// The stride in bytes (number of bytes per row).
-        /// </summary>
-        public readonly int RowStride;
-
-        /// <summary>
-        /// Makes a copy of this texture.
-        /// </summary>
-        /// <remarks>
-        /// This method doesn't copy the content of the texture.
-        /// </remarks>
-        /// <returns>
-        /// A copy of this texture.
-        /// </returns>
-        public abstract Texture2DBase Clone();
-
-        /// <summary>
-        /// Makes a copy of this texture.
-        /// </summary>
-        /// <remarks>
-        /// This method doesn't copy the content of the texture.
-        /// </remarks>
-        /// <returns>
-        /// A copy of this texture.
-        /// </returns>
-        public T Clone<T>() where T : Texture2DBase
-        {
-            return (T)Clone();
         }
 
         /// <summary>
         /// Return an equivalent staging texture CPU read-writable from this instance.
         /// </summary>
         /// <returns></returns>
-        public Texture2D ToStaging()
+        public override Texture ToStaging()
         {
-            var stagingDesc = Description;
+            var stagingDesc = this.Description;
             stagingDesc.BindFlags = BindFlags.None;
             stagingDesc.CpuAccessFlags = CpuAccessFlags.Read | CpuAccessFlags.Write;
             stagingDesc.Usage = ResourceUsage.Staging;
@@ -142,7 +131,7 @@ namespace SharpDX.Toolkit.Graphics
 
         public override ShaderResourceView GetShaderResourceView(ViewSlice viewSlice, int arrayOrDepthSlice, int mipIndex)
         {
-            if ((Description.BindFlags & BindFlags.ShaderResource) == 0)
+            if ((this.Description.BindFlags & BindFlags.ShaderResource) == 0)
                 return null;
 
             int arrayCount;
@@ -159,13 +148,13 @@ namespace SharpDX.Toolkit.Graphics
                 if (srv == null)
                 {
                     // Create the view
-                    var srvDescription = new ShaderResourceViewDescription() { Format = Description.Format };
+                    var srvDescription = new ShaderResourceViewDescription() { Format = this.Description.Format };
 
                     // Initialize for texture arrays or texture cube
-                    if (Description.ArraySize > 1)
+                    if (this.Description.ArraySize > 1)
                     {
                         // If texture cube
-                        if ((Description.OptionFlags & ResourceOptionFlags.TextureCube) != 0)
+                        if ((this.Description.OptionFlags & ResourceOptionFlags.TextureCube) != 0)
                         {
                             srvDescription.Dimension = ShaderResourceViewDimension.TextureCube;
                             srvDescription.TextureCube.MipLevels = mipCount;
@@ -174,10 +163,10 @@ namespace SharpDX.Toolkit.Graphics
                         else
                         {
                             // Else regular Texture2D
-                            srvDescription.Dimension = Description.SampleDescription.Count > 1 ? ShaderResourceViewDimension.Texture2DMultisampledArray : ShaderResourceViewDimension.Texture2DArray;
+                            srvDescription.Dimension = this.Description.SampleDescription.Count > 1 ? ShaderResourceViewDimension.Texture2DMultisampledArray : ShaderResourceViewDimension.Texture2DArray;
 
                             // Multisample?
-                            if (Description.SampleDescription.Count > 1)
+                            if (this.Description.SampleDescription.Count > 1)
                             {
                                 srvDescription.Texture2DMSArray.ArraySize = arrayCount;
                                 srvDescription.Texture2DMSArray.FirstArraySlice = arrayOrDepthSlice;
@@ -193,8 +182,8 @@ namespace SharpDX.Toolkit.Graphics
                     }
                     else
                     {
-                        srvDescription.Dimension = Description.SampleDescription.Count > 1 ? ShaderResourceViewDimension.Texture2DMultisampled : ShaderResourceViewDimension.Texture2D;
-                        if (Description.SampleDescription.Count <= 1)
+                        srvDescription.Dimension = this.Description.SampleDescription.Count > 1 ? ShaderResourceViewDimension.Texture2DMultisampled : ShaderResourceViewDimension.Texture2D;
+                        if (this.Description.SampleDescription.Count <= 1)
                         {
                             srvDescription.Texture2D.MipLevels = mipCount;
                             srvDescription.Texture2D.MostDetailedMip = mipIndex;
@@ -211,7 +200,7 @@ namespace SharpDX.Toolkit.Graphics
 
         public override UnorderedAccessView GetUnorderedAccessView(int arrayOrDepthSlice, int mipIndex)
         {
-            if ((Description.BindFlags & BindFlags.UnorderedAccess) == 0)
+            if ((this.Description.BindFlags & BindFlags.UnorderedAccess) == 0)
                 return null;
 
             int arrayCount;
@@ -226,11 +215,11 @@ namespace SharpDX.Toolkit.Graphics
             {
                 var uavDescription = new UnorderedAccessViewDescription()
                 {
-                    Format = Description.Format,
-                    Dimension = Description.ArraySize > 1 ? UnorderedAccessViewDimension.Texture2DArray : UnorderedAccessViewDimension.Texture2D
+                    Format = this.Description.Format,
+                    Dimension = this.Description.ArraySize > 1 ? UnorderedAccessViewDimension.Texture2DArray : UnorderedAccessViewDimension.Texture2D
                 };
 
-                if (Description.ArraySize > 1)
+                if (this.Description.ArraySize > 1)
                 {
                     uavDescription.Texture2DArray.ArraySize = arrayCount;
                     uavDescription.Texture2DArray.FirstArraySlice = arrayOrDepthSlice;
@@ -253,7 +242,7 @@ namespace SharpDX.Toolkit.Graphics
             base.InitializeViews();
 
             // Creates the shader resource view
-            if ((Description.BindFlags & BindFlags.ShaderResource) != 0)
+            if ((this.Description.BindFlags & BindFlags.ShaderResource) != 0)
             {
                 ShaderResourceViews = new ShaderResourceView[GetViewCount()];
 
@@ -262,7 +251,7 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             // Creates the unordered access view
-            if ((Description.BindFlags & BindFlags.UnorderedAccess) != 0)
+            if ((this.Description.BindFlags & BindFlags.UnorderedAccess) != 0)
             {
                 // Initialize the unordered access views
                 UnorderedAccessViews = new UnorderedAccessView[GetViewCount()];
@@ -270,45 +259,6 @@ namespace SharpDX.Toolkit.Graphics
                 // Pre initialize by default the view on the first array/mipmap
                 GetUnorderedAccessView(0, 0);
             }
-        }
-        
-        protected void GetViewSliceBounds(ViewSlice viewSlice, ref int arrayIndex, ref int mipIndex, out int arrayCount, out int mipCount)
-        {
-            switch (viewSlice)
-            {
-                case ViewSlice.Full:
-                    arrayIndex = 0;
-                    mipIndex = 0;
-                    arrayCount = Description.ArraySize;
-                    mipCount = Description.MipLevels;
-                    break;
-                case ViewSlice.Single:
-                    arrayCount = 1;
-                    mipCount = 1;
-                    break;
-                case ViewSlice.ArrayBand:
-                    arrayCount = Description.ArraySize - arrayIndex;
-                    mipCount = 1;
-                    break;
-                case ViewSlice.MipBand:
-                    arrayCount = 1;
-                    mipCount = Description.MipLevels - mipIndex;
-                    break;
-                default:
-                    arrayCount = 0;
-                    mipCount = 0;
-                    break;
-            }
-        }
-
-        protected int GetViewCount()
-        {
-            return GetViewIndex((ViewSlice)4, Description.ArraySize, Description.MipLevels);
-        }
-
-        protected int GetViewIndex(ViewSlice viewSlice, int arrayIndex, int mipIndex)
-        {
-            return (((int)viewSlice) * Description.ArraySize + arrayIndex) * Description.MipLevels + mipIndex;
         }
         
         protected static DataRectangle[] Pin<T>(int width, PixelFormat format, T[][][] initialTextures, out GCHandle[] handles) where T : struct
@@ -350,7 +300,7 @@ namespace SharpDX.Toolkit.Graphics
                                SampleDescription = new DXGI.SampleDescription(1, 0),
                                BindFlags = BindFlags.ShaderResource,
                                Format = format,
-                               MipLevels = mipCount,
+                               MipLevels = CalculateMipMapCount(mipCount, width, height),
                                Usage = usage,
                                CpuAccessFlags = GetCputAccessFlagsFromUsage(usage)
                            };

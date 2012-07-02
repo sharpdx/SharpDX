@@ -18,18 +18,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace SharpDX.Toolkit.Graphics.Tests
+namespace SharpDX.Toolkit.Graphics
 {
-    public class Program
+    /// <summary>
+    /// Multisample count level.
+    /// </summary>
+    public enum MSAALevel
     {
-        public static void Main(string[] args)
-        {
-            var test = new TestBuffer();
-            test.AllTest();
+        /// <summary>
+        /// No multisample.
+        /// </summary>
+        None = 1,
 
-            //var testTexture2D = new TestTexture2D();
-            //testTexture2D.TestConstructors();
+        /// <summary>
+        /// Multisample count of 2 pixels.
+        /// </summary>
+        X2 = 2,
 
-        }
+        /// <summary>
+        /// Multisample count of 4 pixels.
+        /// </summary>
+        X4 = 4,
+
+        /// <summary>
+        /// Multisample count of 8 pixels.
+        /// </summary>
+        X8 = 8
     }
 }
