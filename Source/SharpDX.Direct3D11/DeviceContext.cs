@@ -198,7 +198,9 @@ namespace SharpDX.Direct3D11
         /// <param name="dstX">The x-coordinate of the upper left corner of the destination region. </param>
         /// <param name="dstY">The y-coordinate of the upper left corner of the destination region. For a 1D subresource, this must be zero. </param>
         /// <param name="dstZ">The z-coordinate of the upper left corner of the destination region. For a 1D or 2D subresource, this must be zero. </param>
-        /// <unmanaged>void ID3D11DeviceContext::CopySubresourceRegion([In] ID3D11Resource* pDstResource,[In] int DstSubresource,[In] int DstX,[In] int DstY,[In] int DstZ,[In] ID3D11Resource* pSrcResource,[In] int SrcSubresource,[In, Optional] const D3D11_BOX* pSrcBox)</unmanaged>
+        /// <msdn-id>ff476394</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::CopySubresourceRegion([In] ID3D11Resource* pDstResource,[In] unsigned int DstSubresource,[In] unsigned int DstX,[In] unsigned int DstY,[In] unsigned int DstZ,[In] ID3D11Resource* pSrcResource,[In] unsigned int SrcSubresource,[In, Optional] const D3D11_BOX* pSrcBox)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::CopySubresourceRegion</unmanaged-short>	
         public void CopySubresourceRegion(SharpDX.Direct3D11.Resource source, int sourceSubresource, SharpDX.Direct3D11.ResourceRegion? sourceRegion, SharpDX.Direct3D11.Resource destination, int destinationSubResource, int dstX = 0, int dstY = 0, int dstZ = 0)
         {
             CopySubresourceRegion_(destination, destinationSubResource, dstX, dstY, dstZ, source, sourceSubresource, sourceRegion);
