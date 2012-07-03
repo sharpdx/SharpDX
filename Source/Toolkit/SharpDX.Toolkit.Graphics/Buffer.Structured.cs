@@ -35,18 +35,30 @@ namespace SharpDX.Toolkit.Graphics
             /// <summary>
             /// Creates a new Structured buffer accessible as a <see cref="ShaderResourceView" /> and optionaly as a <see cref="UnorderedAccessView" />.
             /// </summary>
-            /// <param name="sizeInBytes">The size in bytes of this buffer.</param>
+            /// <param name="count">The number of element in this buffer.</param>
             /// <param name="elementSize">Size of the struct.</param>
             /// <param name="isUnorderedAccess">if set to <c>true</c> this buffer supports unordered access (RW in HLSL).</param>
             /// <returns>A Structured buffer</returns>
-            public static Buffer New(int sizeInBytes, int elementSize, bool isUnorderedAccess = false)
+            public static Buffer New(int count, int elementSize, bool isUnorderedAccess = false)
             {
                 var bufferFlags = BufferFlags.StructuredBuffer | BufferFlags.ShaderResource;
 
                 if (isUnorderedAccess)
                     bufferFlags |= BufferFlags.UnorderedAccess;
 
-                return Buffer.New(sizeInBytes, elementSize, bufferFlags);
+                return Buffer.New(count * elementSize, elementSize, bufferFlags);
+            }
+
+            /// <summary>
+            /// Creates a new Structured buffer accessible as a <see cref="ShaderResourceView" /> and optionaly as a <see cref="UnorderedAccessView" />.
+            /// </summary>
+            /// <typeparam name="T">Type of the element in the structured buffer</typeparam>
+            /// <param name="count">The number of element in this buffer.</param>
+            /// <param name="isUnorderedAccess">if set to <c>true</c> this buffer supports unordered access (RW in HLSL).</param>
+            /// <returns>A Structured buffer</returns>
+            public static Buffer New<T>(int count, bool isUnorderedAccess = false) where T : struct
+            {
+                return New(count, Utilities.SizeOf<T>(), isUnorderedAccess);
             }
 
             /// <summary>
@@ -95,13 +107,24 @@ namespace SharpDX.Toolkit.Graphics
             /// <summary>
             /// Creates a new StructuredAppend buffer accessible as a <see cref="ShaderResourceView" /> and as a <see cref="UnorderedAccessView" />.
             /// </summary>
-            /// <param name="sizeInBytes">The size in bytes of this buffer.</param>
+            /// <param name="count">The number of element in this buffer.</param>
             /// <param name="elementSize">Size of the struct.</param>
             /// <returns>A StructuredAppend buffer</returns>
-            public static Buffer New(int sizeInBytes, int elementSize)
+            public static Buffer New(int count, int elementSize)
             {
                 const BufferFlags bufferFlags = BufferFlags.StructuredAppendBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess;
-                return Buffer.New(sizeInBytes, elementSize, bufferFlags);
+                return Buffer.New(count * elementSize, elementSize, bufferFlags);
+            }
+
+            /// <summary>
+            /// Creates a new StructuredAppend buffer accessible as a <see cref="ShaderResourceView" /> and optionaly as a <see cref="UnorderedAccessView" />.
+            /// </summary>
+            /// <typeparam name="T">Type of the element in the structured buffer</typeparam>
+            /// <param name="count">The number of element in this buffer.</param>
+            /// <returns>A Structured buffer</returns>
+            public static Buffer New<T>(int count) where T : struct
+            {
+                return New(count, Utilities.SizeOf<T>());
             }
 
             /// <summary>
@@ -140,13 +163,24 @@ namespace SharpDX.Toolkit.Graphics
             /// <summary>
             /// Creates a new StructuredCounter buffer accessible as a <see cref="ShaderResourceView" /> and as a <see cref="UnorderedAccessView" />.
             /// </summary>
-            /// <param name="sizeInBytes">The size in bytes of this buffer.</param>
+            /// <param name="count">The number of element in this buffer.</param>
             /// <param name="elementSize">Size of the struct.</param>
             /// <returns>A StructuredCounter buffer</returns>
-            public static Buffer New(int sizeInBytes, int elementSize)
+            public static Buffer New(int count, int elementSize)
             {
                 const BufferFlags bufferFlags = BufferFlags.StructuredCounterBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess;
-                return Buffer.New(sizeInBytes, elementSize, bufferFlags);
+                return Buffer.New(count * elementSize, elementSize, bufferFlags);
+            }
+
+            /// <summary>
+            /// Creates a new StructuredCounter buffer accessible as a <see cref="ShaderResourceView" /> and optionaly as a <see cref="UnorderedAccessView" />.
+            /// </summary>
+            /// <typeparam name="T">Type of the element in the structured buffer</typeparam>
+            /// <param name="count">The number of element in this buffer.</param>
+            /// <returns>A Structured buffer</returns>
+            public static Buffer New<T>(int count) where T : struct
+            {
+                return New(count, Utilities.SizeOf<T>());
             }
 
             /// <summary>
