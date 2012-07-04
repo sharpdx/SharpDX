@@ -26,6 +26,8 @@
     <Compile Include="Buffer.Raw.cs" />
     <Compile Include="Buffer.Argument.cs" />
     <Compile Include="Buffer.Typed.cs" />
+    <Compile Include="DepthFormat.cs" />
+    <Compile Include="DepthStencilBuffer.cs" />
     <Compile Include="RenderTargetCube.cs" />
     <Compile Include="MipMap.cs" />
     <Compile Include="MSAALevel.cs" />

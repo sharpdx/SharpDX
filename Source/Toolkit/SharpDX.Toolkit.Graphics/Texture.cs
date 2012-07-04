@@ -79,6 +79,18 @@ namespace SharpDX.Toolkit.Graphics
             return (int)Math.Ceiling((double)size / (1 << mipLevel));            
         }
 
+
+        /// <summary>
+        /// Gets the absolute sub-resource index from the array and mip slice.
+        /// </summary>
+        /// <param name="arraySlice">The array slice index.</param>
+        /// <param name="mipSlice">The mip slice index.</param>
+        /// <returns>A value equals to arraySlice * Description.MipLevels + mipSlice.</returns>
+        public int GetSubResourceIndex(int arraySlice, int mipSlice)
+        {
+            return arraySlice * Description.MipLevels + mipSlice;
+        }
+
         /// <summary>
         /// Calculates the expected width of a texture using a specified type.
         /// </summary>

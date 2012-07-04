@@ -129,6 +129,11 @@ namespace SharpDX.Toolkit.Graphics
             return new Texture2D(this.GraphicsDevice, stagingDesc);            
         }
 
+        protected virtual DXGI.Format GetDefaultViewFormat()
+        {
+            return this.Description.Format;
+        }
+
         public override ShaderResourceView GetShaderResourceView(ViewSlice viewSlice, int arrayOrDepthSlice, int mipIndex)
         {
             if ((this.Description.BindFlags & BindFlags.ShaderResource) == 0)
@@ -148,7 +153,7 @@ namespace SharpDX.Toolkit.Graphics
                 if (srv == null)
                 {
                     // Create the view
-                    var srvDescription = new ShaderResourceViewDescription() { Format = this.Description.Format };
+                    var srvDescription = new ShaderResourceViewDescription() { Format = GetDefaultViewFormat() };
 
                     // Initialize for texture arrays or texture cube
                     if (this.Description.ArraySize > 1)

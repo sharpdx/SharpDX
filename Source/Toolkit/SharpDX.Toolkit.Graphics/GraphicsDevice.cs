@@ -791,7 +791,7 @@ namespace SharpDX.Toolkit.Graphics
                 Copy(texture, stagingTexture);
 
             // Calculate the subResourceIndex for a Texture2D
-            int subResourceIndex = arraySlice * texture.Description.MipLevels + mipSlice;
+            int subResourceIndex = texture.GetSubResourceIndex(arraySlice, mipSlice);
 
             try
             {
@@ -874,7 +874,7 @@ namespace SharpDX.Toolkit.Graphics
                 throw new ArgumentException(string.Format("Size of TData ({0} bytes) is not compatible expected size ({1} bytes) : Width * Height * Depth * sizeof(TData) / sizeof(PixelFormat) size in bytes", sizeOfInputData, sizeOfTextureData));
 
             // Calculate the subResourceIndex for a Texture2D
-            int subResourceIndex = arraySlice * texture.Description.MipLevels + mipSlice;
+            int subResourceIndex = texture.GetSubResourceIndex(arraySlice, mipSlice);
 
             // If this texture is declared as default usage, we can only use UpdateSubresource, which is not optimal but better than nothing
             if (texture.Description.Usage == ResourceUsage.Default)
