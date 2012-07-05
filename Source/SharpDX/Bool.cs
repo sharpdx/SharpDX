@@ -103,5 +103,10 @@ namespace SharpDX
         {
             return new Bool(boolValue);
         }
+
+        public override string ToString()
+        {
+            return string.Format("{0}", boolValue != 0);
+        }
     }
 }

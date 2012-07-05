@@ -12,11 +12,13 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.XML" />
+    <Reference Include="System.Drawing" Condition=" '$(SharpDXWin8)' == 'false'" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="BlendState.cs" />
     <Compile Include="Buffer.cs" />
     <Compile Include="Buffer.Constant.cs" />
     <Compile Include="BufferFlags.cs" />
@@ -26,6 +28,7 @@
     <Compile Include="Buffer.Raw.cs" />
     <Compile Include="Buffer.Argument.cs" />
     <Compile Include="Buffer.Typed.cs" />
+    <Compile Include="GraphicsState.cs" />
     <Compile Include="DepthFormat.cs" />
     <Compile Include="DepthStencilBuffer.cs" />
     <Compile Include="RenderTargetCube.cs" />
