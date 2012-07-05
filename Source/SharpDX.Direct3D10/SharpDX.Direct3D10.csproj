@@ -26,7 +26,7 @@
     <Compile Include="Device.InputAssembler.cs" />
     <Compile Include="Counter.cs" />
     <Compile Include="CounterMetadata.cs" />
-    <Compile Include="Debug.cs" />
+    <Compile Include="DeviceDebug.cs" />
     <Compile Include="DepthStencilState.cs" />
     <Compile Include="DepthStencilView.cs" />
     <Compile Include="Device.CommonShaderStage.cs" />

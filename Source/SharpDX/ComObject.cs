@@ -223,7 +223,7 @@ namespace SharpDX
         protected void QueryInterfaceFrom<T>(T fromObject) where T : ComObject
         {
             IntPtr parentPtr;
-            fromObject.QueryInterface(Utilities.GetGuidFromType(typeof(T)), out parentPtr);
+            fromObject.QueryInterface(Utilities.GetGuidFromType(this.GetType()), out parentPtr);
             NativePointer = parentPtr;
         }
 

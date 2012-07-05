@@ -536,6 +536,7 @@
     <map param="ID3D(\d+).*::Map::MapFlags" type="D3D$1_MAP_FLAG" />
     <map method="ID3DX?(\d+)EffectPass::Apply" visibility="internal" />
     <map method="ID3DX(\d*)Font::GetTextMetrics.*" visibility="internal" />
+    <map interface="ID3D(\d+)Debug" name="DeviceDebug"/>
 
     <!--
     // *****************************************************************
