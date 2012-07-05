@@ -2649,6 +2649,11 @@
     
     <map param="ID3DXSprite::Begin::Flags" type="D3DXSPRITE" default="SpriteFlags.None"/>
 
+    <map method="ID3DXSprite::Draw" visibility="internal"/>
+    <map param="ID3DXSprite::Draw::pSrcRect" type="void"/>
+    <map param="ID3DXSprite::Draw::pCenter" type="void"/>
+    <map param="ID3DXSprite::Draw::pPosition" type="void"/>
+
     <!--
     // *****************************************************************
     // D3D9 Functions
