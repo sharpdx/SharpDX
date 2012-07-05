@@ -23,8 +23,11 @@ using SharpDX.Direct3D11;
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    /// BlendState is equivalent to the 
+    /// BlendState is equivalent to <see cref="SharpDX.Direct3D11.BlendState"/>.
     /// </summary>
+    /// <remarks>
+    /// This class provides default stock blend states and easier constructors. It is also associating the <see cref="BlendFactor"/> and <see cref="MultiSampleMask"/> into the same object.
+    /// </remarks>
     public class BlendState : GraphicsState
     {
         /// <summary>
