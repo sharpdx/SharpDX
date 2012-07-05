@@ -52,7 +52,7 @@
     <Compile Include="TextureCube.cs" />
     <Compile Include="Texture2DBase.cs" />
     <Compile Include="TextureDescription.cs" />
-    <Compile Include="ViewSlice.cs" />
+    <Compile Include="SelectView.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SharpDX.D3DCompiler\SharpDX.D3DCompiler.csproj" Condition=" '$(SharpDXWin8)' == 'false'">

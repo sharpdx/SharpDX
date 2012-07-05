@@ -45,7 +45,7 @@ namespace SharpDX.Toolkit.Graphics
         {
         }
 
-        public override RenderTargetView GetRenderTargetView(ViewSlice viewSlice, int arrayOrDepthSlice, int mipMapSlice)
+        public override RenderTargetView GetRenderTargetView(SelectView selectView, int arrayOrDepthSlice, int mipMapSlice)
         {
             throw new System.NotSupportedException();
         }

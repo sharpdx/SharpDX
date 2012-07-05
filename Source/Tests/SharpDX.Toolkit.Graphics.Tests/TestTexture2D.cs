@@ -45,7 +45,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             var r1d1 = RenderTarget1D.New(512, true, PixelFormat.R8G8B8A8.UNorm);
 
             for (int i = 0; i < r1d1.Description.MipLevels; i++)
-                device.Clear(r1d1.GetRenderTargetView(ViewSlice.Single, 0, i), new Color4((float)(i+1) / r1d1.Description.MipLevels));
+                device.Clear(r1d1.GetRenderTargetView(SelectView.Single, 0, i), new Color4((float)(i+1) / r1d1.Description.MipLevels));
 
             for (int i = 0; i < r1d1.Description.MipLevels; i++)
             {
@@ -67,7 +67,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
 
 
             for(int i = 0; i < r3d1.Description.Depth/2; i++)
-                device.Clear(r3d1.GetRenderTargetView(ViewSlice.Single, i, 1), new Color4((float)i / r3d1.Description.Depth));
+                device.Clear(r3d1.GetRenderTargetView(SelectView.Single, i, 1), new Color4((float)i / r3d1.Description.Depth));
 
             var textureData0 = device.GetData<PixelData.R8G8B8A8>(r3d1, 0, 1);
 

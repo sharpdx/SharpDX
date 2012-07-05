@@ -157,7 +157,7 @@ namespace SharpDX.Toolkit.Graphics
             return buffer.depthStencilView;
         }
 
-        public override RenderTargetView GetRenderTargetView(ViewSlice viewSlice, int arrayOrDepthSlice, int mipIndex)
+        public override RenderTargetView GetRenderTargetView(SelectView selectView, int arrayOrDepthSlice, int mipIndex)
         {
             throw new NotSupportedException("DepthStencilBuffer doesn't support rendert target view");
         }

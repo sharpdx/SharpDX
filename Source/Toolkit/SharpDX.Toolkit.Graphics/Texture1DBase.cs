@@ -129,16 +129,16 @@ namespace SharpDX.Toolkit.Graphics
             return new Texture1D(this.GraphicsDevice, stagingDesc);            
         }
 
-        public override ShaderResourceView GetShaderResourceView(ViewSlice viewSlice, int arrayOrDepthSlice, int mipIndex)
+        public override ShaderResourceView GetShaderResourceView(SelectView selectView, int arrayOrDepthSlice, int mipIndex)
         {
             if ((this.Description.BindFlags & BindFlags.ShaderResource) == 0)
                 return null;
 
             int arrayCount;
             int mipCount;
-            GetViewSliceBounds(viewSlice, ref arrayOrDepthSlice, ref mipIndex, out arrayCount, out mipCount);
+            GetViewSliceBounds(selectView, ref arrayOrDepthSlice, ref mipIndex, out arrayCount, out mipCount);
 
-            var srvIndex = GetViewIndex(viewSlice, arrayOrDepthSlice, mipIndex);
+            var srvIndex = GetViewIndex(selectView, arrayOrDepthSlice, mipIndex);
 
             lock (ShaderResourceViews)
             {
@@ -179,9 +179,9 @@ namespace SharpDX.Toolkit.Graphics
 
             int arrayCount;
             int mipCount;
-            GetViewSliceBounds(ViewSlice.Single, ref arrayOrDepthSlice, ref mipIndex, out arrayCount, out mipCount);
+            GetViewSliceBounds(SelectView.Single, ref arrayOrDepthSlice, ref mipIndex, out arrayCount, out mipCount);
 
-            var uavIndex = GetViewIndex(ViewSlice.Single, arrayOrDepthSlice, mipIndex);
+            var uavIndex = GetViewIndex(SelectView.Single, arrayOrDepthSlice, mipIndex);
 
             lock (UnorderedAccessViews)
             {
