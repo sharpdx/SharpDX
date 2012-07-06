@@ -93,7 +93,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="from">Source for the.</param>
         public static implicit operator RenderTargetView(DepthStencilBuffer from)
         {
-            return from.RenderTargetViews != null ? from.RenderTargetViews[0] : null;
+            return from == null ? null : from.RenderTargetViews != null ? from.RenderTargetViews[0] : null;
         }
 
         protected override void InitializeViews()
@@ -154,7 +154,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="buffer">Source for the.</param>
         public static implicit operator DepthStencilView(DepthStencilBuffer buffer)
         {
-            return buffer.depthStencilView;
+            return buffer == null ? null : buffer.depthStencilView;
         }
 
         public override RenderTargetView GetRenderTargetView(SelectView selectView, int arrayOrDepthSlice, int mipIndex)

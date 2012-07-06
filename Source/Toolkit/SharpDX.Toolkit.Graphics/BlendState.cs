@@ -49,6 +49,11 @@ namespace SharpDX.Toolkit.Graphics
         /// A built-in state object with settings for opaque blend, that is overwriting the source with the destination data.
         /// </summary>
         public static readonly BlendState Opaque = New("BlendState.Opaque", BlendOption.One, BlendOption.Zero);
+
+        /// <summary>
+        /// A built-in default state object (no blending).
+        /// </summary>
+        public static readonly BlendState Default = New("Default", BlendStateDescription.Default());
         
         /// <summary>
         /// Gets the description of this blend state.
@@ -120,7 +125,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks><p>An application can create up to 4096 unique blend-state objects. For each object created, the runtime checks to see if a previous object  has the same state. If such a previous object exists, the runtime will return a reference to previous instance instead of creating a duplicate object.</p></remarks>
         public static BlendState New(RenderTargetBlendDescription renderTargetBlend0, Color4 blendFactor, int mask = -1)
         {
-            var description = GetDefaultDescription();
+            var description = BlendStateDescription.Default();
             description.RenderTarget[0] = renderTargetBlend0;
 
             return new BlendState(description, blendFactor, mask);
@@ -202,6 +207,22 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// <p>Create a blend-state object that encapsules blend state for the output-merger stage.</p>
         /// </summary>
+        /// <param name="name">Name of this blend state.</param>
+        /// <param name="description"><dd>  <p>Pointer to a blend-state description (see <strong><see cref="SharpDX.Direct3D11.BlendStateDescription" /></strong>).</p> </dd></param>
+        /// <param name="mask">The mask.</param>
+        /// <returns>A new <see cref="BlendState"/> instance.</returns>
+        /// <msdn-id>ff476500</msdn-id>
+        ///   <unmanaged>HRESULT ID3D11Device::CreateBlendState([In] const D3D11_BLEND_DESC* pBlendStateDesc,[Out, Fast] ID3D11BlendState** ppBlendState)</unmanaged>
+        ///   <unmanaged-short>ID3D11Device::CreateBlendState</unmanaged-short>
+        /// <remarks><p>An application can create up to 4096 unique blend-state objects. For each object created, the runtime checks to see if a previous object  has the same state. If such a previous object exists, the runtime will return a reference to previous instance instead of creating a duplicate object.</p></remarks>
+        public static BlendState New(string name, BlendStateDescription description, int mask = -1)
+        {
+            return new BlendState(description, Colors.White, mask) {Name = name};
+        }
+
+        /// <summary>
+        /// <p>Create a blend-state object that encapsules blend state for the output-merger stage.</p>
+        /// </summary>
         /// <param name="description"><dd>  <p>Pointer to a blend-state description (see <strong><see cref="SharpDX.Direct3D11.BlendStateDescription" /></strong>).</p> </dd></param>
         /// <param name="blendFactor">The blend factor.</param>
         /// <param name="mask">The mask.</param>
@@ -226,12 +247,12 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="from">The GraphicsState to convert from.</param>
         public static implicit operator Direct3D11.BlendState(BlendState from)
         {
-            return (Direct3D11.BlendState) from.GetOrCreateState();
+            return (Direct3D11.BlendState) (from == null ? null : from.GetOrCreateState());
         }
 
         private static BlendState New(string name, BlendOption sourceBlend, BlendOption destinationBlend)
         {
-            var description = GetDefaultDescription();
+            var description = BlendStateDescription.Default();
 
             description.RenderTarget[0].IsBlendEnabled = true;
             description.RenderTarget[0].SourceBlend = sourceBlend;
@@ -240,34 +261,6 @@ namespace SharpDX.Toolkit.Graphics
             description.RenderTarget[0].DestinationAlphaBlend = destinationBlend;
 
             return new BlendState(description, Colors.White, -1) {Name = name};
-        }
-
-        /// <summary>
-        /// Sets default values for this instance.
-        /// </summary>
-        private static BlendStateDescription GetDefaultDescription()
-        {
-            var description = new BlendStateDescription()
-                                                    {
-                                                        AlphaToCoverageEnable = false,
-                                                        IndependentBlendEnable = false,
-                                                    };
-            var renderTargets = description.RenderTarget;
-            for (int i = 0; i < renderTargets.Length; i++)
-            {
-                renderTargets[i].IsBlendEnabled = false;
-                renderTargets[i].SourceBlend = BlendOption.One;
-                renderTargets[i].DestinationBlend = BlendOption.Zero;
-                renderTargets[i].BlendOperation = BlendOperation.Add;
-
-                renderTargets[i].SourceAlphaBlend = BlendOption.One;
-                renderTargets[i].DestinationAlphaBlend = BlendOption.Zero;
-                renderTargets[i].AlphaBlendOperation = BlendOperation.Add;
-
-                renderTargets[i].RenderTargetWriteMask = ColorWriteMaskFlags.All;
-            }
-
-            return description;
         }
     }
 }

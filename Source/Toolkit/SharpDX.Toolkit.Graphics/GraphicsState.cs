@@ -56,7 +56,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="from">The GraphicsState to convert from.</param>
         public static implicit operator DeviceChild(GraphicsState from)
         {
-            return from.GetOrCreateState();
+            return from == null ? null : from.GetOrCreateState();
         }
 
         protected abstract DeviceChild CreateState();

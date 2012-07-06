@@ -49,7 +49,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="from">The GraphicsResource to convert from.</param>
         public static implicit operator Resource(GraphicsResource from)
         {
-            return from.Resource;
+            return from == null ? null : from.Resource;
         }
 
         /// <summary>

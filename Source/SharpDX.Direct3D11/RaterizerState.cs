@@ -23,24 +23,34 @@ namespace SharpDX.Direct3D11
 {
     public partial class RasterizerState
     {
-        /// <summary>
-        ///   Constructs a new <see cref = "T:SharpDX.Direct3D11.RasterizerState" /> based on the specified description.
-        /// </summary>
+        /// <summary>	
+        /// <p>Create a rasterizer state object that tells the rasterizer stage how to behave.</p>	
+        /// </summary>	
         /// <param name = "device">The device with which to associate the state object.</param>
-        /// <param name = "description">The state description.</param>
-        /// <returns>The newly created object.</returns>
+        /// <param name="description">A rasterizer state description</param>	
+        /// <remarks>	
+        /// <p>4096 unique rasterizer state objects can be created on a device at a time.</p><p>If an application attempts to create a rasterizer-state interface with the same state as an existing interface, the same interface will be returned and the total number of unique rasterizer state objects will stay the same.</p>	
+        /// </remarks>	
+        /// <msdn-id>ff476516</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateRasterizerState([In] const D3D11_RASTERIZER_DESC* pRasterizerDesc,[Out, Fast] ID3D11RasterizerState** ppRasterizerState)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CreateRasterizerState</unmanaged-short>	
         public RasterizerState(Device device, RasterizerStateDescription description)
             : base(IntPtr.Zero)
         {
             device.CreateRasterizerState(ref description, this);
         }
 
-        /// <summary>
-        ///   Constructs a new <see cref = "T:SharpDX.Direct3D11.RasterizerState" /> based on the specified description.
-        /// </summary>
+        /// <summary>	
+        /// <p>Create a rasterizer state object that tells the rasterizer stage how to behave.</p>	
+        /// </summary>	
         /// <param name = "device">The device with which to associate the state object.</param>
-        /// <param name = "description">The state description.</param>
-        /// <returns>The newly created object.</returns>
+        /// <param name="description">A rasterizer state description</param>	
+        /// <remarks>	
+        /// <p>4096 unique rasterizer state objects can be created on a device at a time.</p><p>If an application attempts to create a rasterizer-state interface with the same state as an existing interface, the same interface will be returned and the total number of unique rasterizer state objects will stay the same.</p>	
+        /// </remarks>	
+        /// <msdn-id>ff476516</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateRasterizerState([In] const D3D11_RASTERIZER_DESC* pRasterizerDesc,[Out, Fast] ID3D11RasterizerState** ppRasterizerState)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CreateRasterizerState</unmanaged-short>	
         public RasterizerState(Device device, ref RasterizerStateDescription description)
             : base(IntPtr.Zero)
         {

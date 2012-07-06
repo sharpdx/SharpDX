@@ -59,7 +59,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="from">Source for the.</param>
         public static implicit operator RenderTargetView(RenderTargetCube from)
         {
-            return from.RenderTargetViews != null ? from.RenderTargetViews[0] : null;
+            return from == null ? null : from.RenderTargetViews != null ? from.RenderTargetViews[0] : null;
         }
 
         protected override void InitializeViews()

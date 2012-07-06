@@ -25,13 +25,50 @@ namespace SharpDX.Direct3D11
     public partial struct BlendStateDescription
     {
         /// <summary>
+        /// Returns default values for <see cref="BlendStateDescription"/>. 
+        /// </summary>
+        /// <remarks>
+        /// See MSDN documentation for default values.
+        /// </remarks>
+        public static BlendStateDescription Default()
+        {
+            var description = new BlendStateDescription()
+            {
+                AlphaToCoverageEnable = false,
+                IndependentBlendEnable = false,
+            };
+            var renderTargets = description.RenderTarget;
+            for (int i = 0; i < renderTargets.Length; i++)
+            {
+                renderTargets[i].IsBlendEnabled = false;
+                renderTargets[i].SourceBlend = BlendOption.One;
+                renderTargets[i].DestinationBlend = BlendOption.Zero;
+                renderTargets[i].BlendOperation = BlendOperation.Add;
+
+                renderTargets[i].SourceAlphaBlend = BlendOption.One;
+                renderTargets[i].DestinationAlphaBlend = BlendOption.Zero;
+                renderTargets[i].AlphaBlendOperation = BlendOperation.Add;
+
+                renderTargets[i].RenderTargetWriteMask = ColorWriteMaskFlags.All;
+            }
+
+            return description;
+        }
+
+        /// <summary>
         /// Clones this instance.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A copy of this instance.</returns>
+        /// <remarks>
+        /// Because this structure contains an array, it is not possible to modify it without making an explicit clone method.
+        /// </remarks>
         public BlendStateDescription Clone()
         {
             var description = new BlendStateDescription {AlphaToCoverageEnable = AlphaToCoverageEnable, IndependentBlendEnable = IndependentBlendEnable};
-            Array.Copy(RenderTarget, description.RenderTarget, RenderTarget.Length);
+            var sourceRenderTargets = RenderTarget;
+            var destRenderTargets = description.RenderTarget;
+            for (int i = 0; i < sourceRenderTargets.Length; i++)
+                destRenderTargets[i] = sourceRenderTargets[i];
             return description;
         }
     }

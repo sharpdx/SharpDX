@@ -924,15 +924,467 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
         }
-        
+
+        private BlendState currentBlendState;
+        private Color4 currentBlendFactor = Colors.White;
+        private int currentMultiSampleMask = -1;
+
+        private DepthStencilState currentDepthStencilState;
+        private int currentDepthStencilReference = 0;
+
+        private RasterizerState currentRasterizerState;
+
+
+        /// <summary>	
+        /// <p>Set the blend state of the output-merger stage.</p>	
+        /// </summary>	
+        /// <param name="blendState"><dd>  <p>Pointer to a blend-state interface (see <strong><see cref="SharpDX.Direct3D11.BlendState"/></strong>). Passing in <strong><c>null</c></strong> implies a default blend state. See remarks for further details.</p> </dd></param>	
+        /// <remarks>	
+        /// <p>Blend state is used by the output-merger stage to determine how to blend together two pixel values. The two values are commonly the current pixel value and the pixel value already in the output render target. Use the <strong>blend operation</strong> to control where the two pixel values come from and how they are mathematically combined.</p><p>To create a blend-state interface, call <strong><see cref="SharpDX.Direct3D11.Device.CreateBlendState"/></strong>.</p><p>Passing in <strong><c>null</c></strong> for the blend-state interface indicates to the runtime to set a default blending state.  The following table indicates the default blending parameters.</p><table> <tr><th>State</th><th>Default Value</th></tr> <tr><td>AlphaToCoverageEnable</td><td><strong><see cref="SharpDX.Result.False"/></strong></td></tr> <tr><td>BlendEnable</td><td><strong><see cref="SharpDX.Result.False"/></strong>[8]</td></tr> <tr><td>SrcBlend</td><td><see cref="SharpDX.Direct3D11.BlendOption.One"/></td></tr> <tr><td>DstBlend</td><td><see cref="SharpDX.Direct3D11.BlendOption.Zero"/></td></tr> <tr><td>BlendOp</td><td><see cref="SharpDX.Direct3D11.BlendOperation.Add"/></td></tr> <tr><td>SrcBlendAlpha</td><td><see cref="SharpDX.Direct3D11.BlendOption.One"/></td></tr> <tr><td>DstBlendAlpha</td><td><see cref="SharpDX.Direct3D11.BlendOption.Zero"/></td></tr> <tr><td>BlendOpAlpha</td><td><see cref="SharpDX.Direct3D11.BlendOperation.Add"/></td></tr> <tr><td>RenderTargetWriteMask[8]</td><td><see cref="SharpDX.Direct3D11.ColorWriteMaskFlags.All"/>[8]</td></tr> </table><p>?</p><p>A sample mask determines which samples get updated in all the active render targets. The mapping of bits in a sample mask to samples in a multisample render target is the responsibility of an individual application. A sample mask is always applied; it is independent of whether multisampling is enabled, and does not depend on whether an application uses multisample render targets.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10. </p>	
+        /// </remarks>	
+        /// <msdn-id>ff476462</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::OMSetBlendState([In, Optional] ID3D11BlendState* pBlendState,[In, Optional] const SHARPDX_COLOR4* BlendFactor,[In] unsigned int SampleMask)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::OMSetBlendState</unmanaged-short>	
+        public void SetBlendState(BlendState blendState)
+        {
+            // If same instance, avoid a unmanaged to managed transition.
+            if (ReferenceEquals(currentBlendState, blendState) && currentBlendFactor == blendState.BlendFactor && currentMultiSampleMask == blendState.MultiSampleMask)
+                return;
+
+            if (blendState == null)
+            {
+                Context.OutputMerger.SetBlendState(null, null, -1);
+            }
+            else
+            {
+                Context.OutputMerger.SetBlendState(blendState, blendState.BlendFactor, blendState.MultiSampleMask);
+            }
+
+            if (blendState == null)
+            {
+                Context.OutputMerger.SetBlendState(null, Colors.White, -1);
+                currentBlendState = null;
+                currentBlendFactor = Colors.White;
+                currentMultiSampleMask = -1;
+            }
+            else
+            {
+                Context.OutputMerger.SetBlendState(blendState, blendState.BlendFactor, blendState.MultiSampleMask);
+                currentBlendState = blendState;
+                currentBlendFactor = blendState.BlendFactor;
+                currentMultiSampleMask = blendState.MultiSampleMask;
+            }
+        }
+
+        /// <summary>	
+        /// <p>Set the blend state of the output-merger stage.</p>	
+        /// </summary>	
+        /// <param name="blendState"><dd>  <p>Pointer to a blend-state interface (see <strong><see cref="SharpDX.Direct3D11.BlendState"/></strong>). Passing in <strong><c>null</c></strong> implies a default blend state. See remarks for further details.</p> </dd></param>
+        /// <param name="blendFactor"><dd>  <p>Array of blend factors, one for each RGBA component. This requires a blend state object that specifies the <strong><see cref="SharpDX.Direct3D11.BlendOption.BlendFactor"/></strong> option.</p> </dd></param>	
+        /// <param name="multiSampleMask"><dd>  <p>32-bit sample coverage. The default value is 0xffffffff. See remarks.</p> </dd></param>	
+        /// <remarks>	
+        /// <p>Blend state is used by the output-merger stage to determine how to blend together two pixel values. The two values are commonly the current pixel value and the pixel value already in the output render target. Use the <strong>blend operation</strong> to control where the two pixel values come from and how they are mathematically combined.</p><p>To create a blend-state interface, call <strong><see cref="SharpDX.Direct3D11.Device.CreateBlendState"/></strong>.</p><p>Passing in <strong><c>null</c></strong> for the blend-state interface indicates to the runtime to set a default blending state.  The following table indicates the default blending parameters.</p><table> <tr><th>State</th><th>Default Value</th></tr> <tr><td>AlphaToCoverageEnable</td><td><strong><see cref="SharpDX.Result.False"/></strong></td></tr> <tr><td>BlendEnable</td><td><strong><see cref="SharpDX.Result.False"/></strong>[8]</td></tr> <tr><td>SrcBlend</td><td><see cref="SharpDX.Direct3D11.BlendOption.One"/></td></tr> <tr><td>DstBlend</td><td><see cref="SharpDX.Direct3D11.BlendOption.Zero"/></td></tr> <tr><td>BlendOp</td><td><see cref="SharpDX.Direct3D11.BlendOperation.Add"/></td></tr> <tr><td>SrcBlendAlpha</td><td><see cref="SharpDX.Direct3D11.BlendOption.One"/></td></tr> <tr><td>DstBlendAlpha</td><td><see cref="SharpDX.Direct3D11.BlendOption.Zero"/></td></tr> <tr><td>BlendOpAlpha</td><td><see cref="SharpDX.Direct3D11.BlendOperation.Add"/></td></tr> <tr><td>RenderTargetWriteMask[8]</td><td><see cref="SharpDX.Direct3D11.ColorWriteMaskFlags.All"/>[8]</td></tr> </table><p>?</p><p>A sample mask determines which samples get updated in all the active render targets. The mapping of bits in a sample mask to samples in a multisample render target is the responsibility of an individual application. A sample mask is always applied; it is independent of whether multisampling is enabled, and does not depend on whether an application uses multisample render targets.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10. </p>	
+        /// </remarks>	
+        /// <msdn-id>ff476462</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::OMSetBlendState([In, Optional] ID3D11BlendState* pBlendState,[In, Optional] const SHARPDX_COLOR4* BlendFactor,[In] unsigned int SampleMask)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::OMSetBlendState</unmanaged-short>	
+        public void SetBlendState(BlendState blendState, Color4 blendFactor, int multiSampleMask = -1)
+        {
+            // If same instance, avoid a unmanaged to managed transition.
+            if (ReferenceEquals(currentBlendState, blendState) && currentBlendFactor == blendFactor && currentMultiSampleMask == multiSampleMask)
+                return;
+
+            if (blendState == null)
+            {
+                Context.OutputMerger.SetBlendState(null, blendFactor, multiSampleMask);
+                currentBlendState = null;
+            }
+            else
+            {
+                Context.OutputMerger.SetBlendState(blendState, blendFactor, multiSampleMask);
+                currentBlendState = blendState;
+            }
+
+            currentBlendFactor = blendFactor;
+            currentMultiSampleMask = multiSampleMask;
+        }
+
+        /// <summary>	
+        /// <p>Set the blend state of the output-merger stage.</p>	
+        /// </summary>	
+        /// <param name="blendState"><dd>  <p>Pointer to a blend-state interface (see <strong><see cref="SharpDX.Direct3D11.BlendState"/></strong>). Passing in <strong><c>null</c></strong> implies a default blend state. See remarks for further details.</p> </dd></param>
+        /// <param name="blendFactor"><dd>  <p>Array of blend factors, one for each RGBA component. This requires a blend state object that specifies the <strong><see cref="SharpDX.Direct3D11.BlendOption.BlendFactor"/></strong> option.</p> </dd></param>	
+        /// <param name="multiSampleMask"><dd>  <p>32-bit sample coverage. The default value is 0xffffffff. See remarks.</p> </dd></param>	
+        /// <remarks>	
+        /// <p>Blend state is used by the output-merger stage to determine how to blend together two pixel values. The two values are commonly the current pixel value and the pixel value already in the output render target. Use the <strong>blend operation</strong> to control where the two pixel values come from and how they are mathematically combined.</p><p>To create a blend-state interface, call <strong><see cref="SharpDX.Direct3D11.Device.CreateBlendState"/></strong>.</p><p>Passing in <strong><c>null</c></strong> for the blend-state interface indicates to the runtime to set a default blending state.  The following table indicates the default blending parameters.</p><table> <tr><th>State</th><th>Default Value</th></tr> <tr><td>AlphaToCoverageEnable</td><td><strong><see cref="SharpDX.Result.False"/></strong></td></tr> <tr><td>BlendEnable</td><td><strong><see cref="SharpDX.Result.False"/></strong>[8]</td></tr> <tr><td>SrcBlend</td><td><see cref="SharpDX.Direct3D11.BlendOption.One"/></td></tr> <tr><td>DstBlend</td><td><see cref="SharpDX.Direct3D11.BlendOption.Zero"/></td></tr> <tr><td>BlendOp</td><td><see cref="SharpDX.Direct3D11.BlendOperation.Add"/></td></tr> <tr><td>SrcBlendAlpha</td><td><see cref="SharpDX.Direct3D11.BlendOption.One"/></td></tr> <tr><td>DstBlendAlpha</td><td><see cref="SharpDX.Direct3D11.BlendOption.Zero"/></td></tr> <tr><td>BlendOpAlpha</td><td><see cref="SharpDX.Direct3D11.BlendOperation.Add"/></td></tr> <tr><td>RenderTargetWriteMask[8]</td><td><see cref="SharpDX.Direct3D11.ColorWriteMaskFlags.All"/>[8]</td></tr> </table><p>?</p><p>A sample mask determines which samples get updated in all the active render targets. The mapping of bits in a sample mask to samples in a multisample render target is the responsibility of an individual application. A sample mask is always applied; it is independent of whether multisampling is enabled, and does not depend on whether an application uses multisample render targets.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10. </p>	
+        /// </remarks>	
+        /// <msdn-id>ff476462</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::OMSetBlendState([In, Optional] ID3D11BlendState* pBlendState,[In, Optional] const SHARPDX_COLOR4* BlendFactor,[In] unsigned int SampleMask)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::OMSetBlendState</unmanaged-short>	
+        public void SetBlendState(BlendState blendState, SharpDX.Color4 blendFactor, uint multiSampleMask = 0xFFFFFFFF)
+        {
+            SetBlendState(blendState, blendFactor, checked((int)multiSampleMask));
+        }
+
+        /// <summary>	
+        /// Sets the depth-stencil state of the output-merger stage.
+        /// </summary>	
+        /// <param name="depthStencilState"><dd>  <p>Pointer to a depth-stencil state interface (see <strong><see cref="SharpDX.Direct3D11.DepthStencilState"/></strong>) to bind to the device. Set this to <strong><c>null</c></strong> to use the default state listed in <strong><see cref="SharpDX.Direct3D11.DepthStencilStateDescription"/></strong>.</p> </dd></param>	
+        /// <param name="stencilReference"><dd>  <p>Reference value to perform against when doing a depth-stencil test. See remarks.</p> </dd></param>	
+        /// <remarks>	
+        /// <p>To create a depth-stencil state interface, call <strong><see cref="SharpDX.Direct3D11.Device.CreateDepthStencilState"/></strong>.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10. </p>	
+        /// </remarks>	
+        /// <msdn-id>ff476463</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::OMSetDepthStencilState([In, Optional] ID3D11DepthStencilState* pDepthStencilState,[In] unsigned int StencilRef)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::OMSetDepthStencilState</unmanaged-short>	
+        public void SetDepthStencilState(DepthStencilState depthStencilState, int stencilReference = 0)
+        {
+            // If same instance, avoid a unmanaged to managed transition.
+            if (ReferenceEquals(currentDepthStencilState, depthStencilState) && currentDepthStencilReference == stencilReference)
+                return;
+
+            Context.OutputMerger.SetDepthStencilState(depthStencilState, stencilReference);
+
+            // Set new current state
+            currentDepthStencilState = depthStencilState;
+            currentDepthStencilReference = stencilReference;
+        }
+
+
+        /// <summary>	
+        /// <p>Set the <strong>rasterizer state</strong> for the rasterizer stage of the pipeline.</p>	
+        /// </summary>	
+        /// <param name="rasterizerState">The rasterizser state to set on this device.</param>	
+        /// <msdn-id>ff476479</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::RSSetState([In, Optional] ID3D11RasterizerState* pRasterizerState)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::RSSetState</unmanaged-short>	
+        public void SetRasterizerState(RasterizerState rasterizerState)
+        {
+            // If same instance, avoid a unmanaged to managed transition.
+            if (ReferenceEquals(currentRasterizerState, rasterizerState))
+                return;
+            Context.Rasterizer.State = rasterizerState;
+
+            // Set new current state
+            currentRasterizerState = rasterizerState;
+        }
+
+        /// <summary>
+        /// Binds a single scissor rectangle to the rasterizer stage.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="top">The top.</param>
+        /// <param name="right">The right.</param>
+        /// <param name="bottom">The bottom.</param>
+        /// <remarks>	
+        /// <p>All scissor rects must be set atomically as one operation. Any scissor rects not defined by the call are disabled.</p><p>The scissor rectangles will only be used if ScissorEnable is set to true in the rasterizer state (see <strong><see cref="SharpDX.Direct3D11.RasterizerStateDescription"/></strong>).</p><p>Which scissor rectangle to use is determined by the SV_ViewportArrayIndex semantic output by a geometry shader (see shader semantic syntax). If a geometry shader does not make use of the SV_ViewportArrayIndex semantic then Direct3D will use the first scissor rectangle in the array.</p><p>Each scissor rectangle in the array corresponds to a viewport in an array of viewports (see <strong><see cref="SharpDX.Direct3D11.RasterizerStage.SetViewports"/></strong>).</p>	
+        /// </remarks>	
+        /// <msdn-id>ff476478</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::RSSetScissorRects([In] unsigned int NumRects,[In, Buffer, Optional] const void* pRects)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::RSSetScissorRects</unmanaged-short>	
+        public void SetScissorRectangles(int left, int top, int right, int bottom)
+        {
+            Context.Rasterizer.SetScissorRectangle(left, top, right, bottom);
+        }
+
+        /// <summary>
+        ///   Binds a set of scissor rectangles to the rasterizer stage.
+        /// </summary>
+        /// <param name = "scissorRectangles">The set of scissor rectangles to bind.</param>
+        /// <remarks>	
+        /// <p>All scissor rects must be set atomically as one operation. Any scissor rects not defined by the call are disabled.</p><p>The scissor rectangles will only be used if ScissorEnable is set to true in the rasterizer state (see <strong><see cref="SharpDX.Direct3D11.RasterizerStateDescription"/></strong>).</p><p>Which scissor rectangle to use is determined by the SV_ViewportArrayIndex semantic output by a geometry shader (see shader semantic syntax). If a geometry shader does not make use of the SV_ViewportArrayIndex semantic then Direct3D will use the first scissor rectangle in the array.</p><p>Each scissor rectangle in the array corresponds to a viewport in an array of viewports (see <strong><see cref="SharpDX.Direct3D11.RasterizerStage.SetViewports"/></strong>).</p>	
+        /// </remarks>	
+        /// <msdn-id>ff476478</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::RSSetScissorRects([In] unsigned int NumRects,[In, Buffer, Optional] const void* pRects)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::RSSetScissorRects</unmanaged-short>	
+        public void SetScissorRectangles(params Rectangle[] scissorRectangles)
+        {
+            Context.Rasterizer.SetScissorRectangles(scissorRectangles);
+        }
+
+        /// <summary>
+        /// Binds a single viewport to the rasterizer stage.
+        /// </summary>
+        /// <param name="x">The x coord of the viewport.</param>
+        /// <param name="y">The x coord of the viewport.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="minZ">The min Z.</param>
+        /// <param name="maxZ">The max Z.</param>
+        /// <remarks>	
+        /// <p></p><p>All viewports must be set atomically as one operation. Any viewports not defined by the call are disabled.</p><p>Which viewport to use is determined by the SV_ViewportArrayIndex semantic output by a geometry shader; if a geometry shader does not specify the semantic, Direct3D will use the first viewport in the array.</p>	
+        /// </remarks>	
+        /// <msdn-id>ff476480</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::RSSetViewports([In] unsigned int NumViewports,[In, Buffer, Optional] const void* pViewports)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::RSSetViewports</unmanaged-short>	
+        public void SetViewports(float x, float y, float width, float height, float minZ = 0.0f, float maxZ = 1.0f)
+        {
+            Context.Rasterizer.SetViewport(x, y, width, height, minZ, maxZ);
+        }
+
+        /// <summary>
+        /// Binds a single viewport to the rasterizer stage.
+        /// </summary>
+        /// <param name="viewport">The viewport.</param>
+        /// <remarks>	
+        /// <p></p><p>All viewports must be set atomically as one operation. Any viewports not defined by the call are disabled.</p><p>Which viewport to use is determined by the SV_ViewportArrayIndex semantic output by a geometry shader; if a geometry shader does not specify the semantic, Direct3D will use the first viewport in the array.</p>	
+        /// </remarks>	
+        /// <msdn-id>ff476480</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::RSSetViewports([In] unsigned int NumViewports,[In, Buffer, Optional] const void* pViewports)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::RSSetViewports</unmanaged-short>	
+        public void SetViewports(Viewport viewport)
+        {
+            Context.Rasterizer.SetViewports(viewport);
+        }
+
+        /// <summary>
+        ///   Binds a set of viewports to the rasterizer stage.
+        /// </summary>
+        /// <param name = "viewports">The set of viewports to bind.</param>
+        /// <remarks>	
+        /// <p></p><p>All viewports must be set atomically as one operation. Any viewports not defined by the call are disabled.</p><p>Which viewport to use is determined by the SV_ViewportArrayIndex semantic output by a geometry shader; if a geometry shader does not specify the semantic, Direct3D will use the first viewport in the array.</p>	
+        /// </remarks>	
+        /// <msdn-id>ff476480</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::RSSetViewports([In] unsigned int NumViewports,[In, Buffer, Optional] const void* pViewports)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::RSSetViewports</unmanaged-short>	
+        public void SetViewports(params Viewport[] viewports)
+        {
+            Context.Rasterizer.SetViewports(viewports);
+        }
+
+        /// <summary>
+        ///   Unbinds all depth-stencil buffer and render targets from the output-merger stage.
+        /// </summary>
+        /// <msdn-id>ff476464</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargets([In] unsigned int NumViews,[In] const void** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargets</unmanaged-short>	
+        public void ResetTargets()
+        {
+            Context.OutputMerger.ResetTargets();
+        }
+
+        /// <summary>	
+        /// <p>Bind one or more render targets atomically and the depth-stencil buffer to the output-merger stage.</p>	
+        /// </summary>	
+        /// <param name = "renderTargetViews">A set of render target views to bind.</param>
+        /// <remarks>	
+        /// <p>The maximum number of active render targets a device can have active at any given time is set by a #define in D3D11.h called  D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT. It is invalid to try to set the same subresource to multiple render target slots.  Any render targets not defined by this call are set to <strong><c>null</c></strong>.</p><p>If any subresources are also currently bound for reading in a different stage or writing (perhaps in a different part of the pipeline),  those bind points will be set to <strong><c>null</c></strong>, in order to prevent the same subresource from being read and written simultaneously in a single rendering operation.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10. </p><p>If the render-target views were created from an array resource type, then all of the render-target views must have the same array size.   This restriction also applies to the depth-stencil view, its array size must match that of the render-target views being bound.</p><p>The pixel shader must be able to simultaneously render to at least eight separate render targets. All of these render targets must access the same type of resource: Buffer, Texture1D, Texture1DArray, Texture2D, Texture2DArray, Texture3D, or TextureCube. All render targets must have the same size in all dimensions (width and height, and depth for 3D or array size for *Array types). If render targets use multisample anti-aliasing, all bound render targets and depth buffer must be the same form of multisample resource (that is, the sample counts must be the same). Each render target can have a different data format. These render target formats are not required to have identical bit-per-element counts.</p><p>Any combination of the eight slots for render targets can have a render target set or not set.</p><p>The same resource view cannot be bound to multiple render target slots simultaneously. However, you can set multiple non-overlapping resource views of a single resource as simultaneous multiple render targets.</p>	
+        /// </remarks>	
+        /// <msdn-id>ff476464</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargets([In] unsigned int NumViews,[In] const void** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargets</unmanaged-short>	
+        public void SetRenderTargets(params RenderTargetView[] renderTargetViews)
+        {
+            Context.OutputMerger.SetTargets(renderTargetViews);
+        }
+
+        /// <summary>	
+        ///   Binds a single render target to the output-merger stage.
+        /// </summary>	
+        /// <param name = "renderTargetView">A view of the render target to bind.</param>
+        /// <remarks>	
+        /// <p>The maximum number of active render targets a device can have active at any given time is set by a #define in D3D11.h called  D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT. It is invalid to try to set the same subresource to multiple render target slots.  Any render targets not defined by this call are set to <strong><c>null</c></strong>.</p><p>If any subresources are also currently bound for reading in a different stage or writing (perhaps in a different part of the pipeline),  those bind points will be set to <strong><c>null</c></strong>, in order to prevent the same subresource from being read and written simultaneously in a single rendering operation.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10. </p><p>If the render-target views were created from an array resource type, then all of the render-target views must have the same array size.   This restriction also applies to the depth-stencil view, its array size must match that of the render-target views being bound.</p><p>The pixel shader must be able to simultaneously render to at least eight separate render targets. All of these render targets must access the same type of resource: Buffer, Texture1D, Texture1DArray, Texture2D, Texture2DArray, Texture3D, or TextureCube. All render targets must have the same size in all dimensions (width and height, and depth for 3D or array size for *Array types). If render targets use multisample anti-aliasing, all bound render targets and depth buffer must be the same form of multisample resource (that is, the sample counts must be the same). Each render target can have a different data format. These render target formats are not required to have identical bit-per-element counts.</p><p>Any combination of the eight slots for render targets can have a render target set or not set.</p><p>The same resource view cannot be bound to multiple render target slots simultaneously. However, you can set multiple non-overlapping resource views of a single resource as simultaneous multiple render targets.</p>	
+        /// </remarks>	
+        /// <msdn-id>ff476464</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargets([In] unsigned int NumViews,[In] const void** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargets</unmanaged-short>	
+        public void SetRenderTargets(RenderTargetView renderTargetView)
+        {
+            Context.OutputMerger.SetTargets(renderTargetView);
+        }
+
+        /// <summary>
+        ///   Binds a depth-stencil buffer and a set of render targets to the output-merger stage.
+        /// </summary>
+        /// <param name = "depthStencilView">A view of the depth-stencil buffer to bind.</param>
+        /// <param name = "renderTargetViews">A set of render target views to bind.</param>
+        /// <remarks>	
+        /// <p>The maximum number of active render targets a device can have active at any given time is set by a #define in D3D11.h called  D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT. It is invalid to try to set the same subresource to multiple render target slots.  Any render targets not defined by this call are set to <strong><c>null</c></strong>.</p><p>If any subresources are also currently bound for reading in a different stage or writing (perhaps in a different part of the pipeline),  those bind points will be set to <strong><c>null</c></strong>, in order to prevent the same subresource from being read and written simultaneously in a single rendering operation.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10. </p><p>If the render-target views were created from an array resource type, then all of the render-target views must have the same array size.   This restriction also applies to the depth-stencil view, its array size must match that of the render-target views being bound.</p><p>The pixel shader must be able to simultaneously render to at least eight separate render targets. All of these render targets must access the same type of resource: Buffer, Texture1D, Texture1DArray, Texture2D, Texture2DArray, Texture3D, or TextureCube. All render targets must have the same size in all dimensions (width and height, and depth for 3D or array size for *Array types). If render targets use multisample anti-aliasing, all bound render targets and depth buffer must be the same form of multisample resource (that is, the sample counts must be the same). Each render target can have a different data format. These render target formats are not required to have identical bit-per-element counts.</p><p>Any combination of the eight slots for render targets can have a render target set or not set.</p><p>The same resource view cannot be bound to multiple render target slots simultaneously. However, you can set multiple non-overlapping resource views of a single resource as simultaneous multiple render targets.</p>	
+        /// </remarks>	
+        /// <msdn-id>ff476464</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargets([In] unsigned int NumViews,[In] const void** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargets</unmanaged-short>	
+        public void SetRenderTargets(DepthStencilView depthStencilView, params RenderTargetView[] renderTargetViews)
+        {
+            Context.OutputMerger.SetTargets(depthStencilView, renderTargetViews);
+        }
+
+        /// <summary>
+        ///   Binds a depth-stencil buffer and a single render target to the output-merger stage.
+        /// </summary>
+        /// <param name = "depthStencilView">A view of the depth-stencil buffer to bind.</param>
+        /// <param name = "renderTargetView">A view of the render target to bind.</param>
+        /// <remarks>	
+        /// <p>The maximum number of active render targets a device can have active at any given time is set by a #define in D3D11.h called  D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT. It is invalid to try to set the same subresource to multiple render target slots.  Any render targets not defined by this call are set to <strong><c>null</c></strong>.</p><p>If any subresources are also currently bound for reading in a different stage or writing (perhaps in a different part of the pipeline),  those bind points will be set to <strong><c>null</c></strong>, in order to prevent the same subresource from being read and written simultaneously in a single rendering operation.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10. </p><p>If the render-target views were created from an array resource type, then all of the render-target views must have the same array size.   This restriction also applies to the depth-stencil view, its array size must match that of the render-target views being bound.</p><p>The pixel shader must be able to simultaneously render to at least eight separate render targets. All of these render targets must access the same type of resource: Buffer, Texture1D, Texture1DArray, Texture2D, Texture2DArray, Texture3D, or TextureCube. All render targets must have the same size in all dimensions (width and height, and depth for 3D or array size for *Array types). If render targets use multisample anti-aliasing, all bound render targets and depth buffer must be the same form of multisample resource (that is, the sample counts must be the same). Each render target can have a different data format. These render target formats are not required to have identical bit-per-element counts.</p><p>Any combination of the eight slots for render targets can have a render target set or not set.</p><p>The same resource view cannot be bound to multiple render target slots simultaneously. However, you can set multiple non-overlapping resource views of a single resource as simultaneous multiple render targets.</p>	
+        /// </remarks>	
+        /// <msdn-id>ff476464</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargets([In] unsigned int NumViews,[In] const void** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargets</unmanaged-short>	
+        public void SetRenderTargets(DepthStencilView depthStencilView, RenderTargetView renderTargetView)
+        {
+            Context.OutputMerger.SetTargets(depthStencilView, renderTargetView);
+        }
+
+        /// <summary>
+        ///   Binds a set of unordered access views and a single render target to the output-merger stage.
+        /// </summary>
+        /// <param name = "startSlot">Index into a zero-based array to begin setting unordered access views.</param>
+        /// <param name = "unorderedAccessViews">A set of unordered access views to bind.</param>
+        /// <param name = "renderTargetView">A view of the render target to bind.</param>
+        /// <msdn-id>ff476465</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews([In] unsigned int NumRTVs,[In, Buffer, Optional] const ID3D11RenderTargetView** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView,[In] unsigned int UAVStartSlot,[In] unsigned int NumUAVs,[In, Buffer, Optional] const ID3D11UnorderedAccessView** ppUnorderedAccessViews,[In, Buffer, Optional] const unsigned int* pUAVInitialCounts)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews</unmanaged-short>	
+        public void SetRenderTargetsAndUnorderedAccess(
+            RenderTargetView renderTargetView,
+            int startSlot,
+            UnorderedAccessView[] unorderedAccessViews)
+        {
+            Context.OutputMerger.SetTargets(renderTargetView, startSlot, unorderedAccessViews);
+        }
+
+        /// <summary>
+        ///   Binds a set of unordered access views and a set of render targets to the output-merger stage.
+        /// </summary>
+        /// <param name = "startSlot">Index into a zero-based array to begin setting unordered access views.</param>
+        /// <param name = "unorderedAccessViews">A set of unordered access views to bind.</param>
+        /// <param name = "renderTargetViews">A set of render target views to bind.</param>
+        /// <msdn-id>ff476465</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews([In] unsigned int NumRTVs,[In, Buffer, Optional] const ID3D11RenderTargetView** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView,[In] unsigned int UAVStartSlot,[In] unsigned int NumUAVs,[In, Buffer, Optional] const ID3D11UnorderedAccessView** ppUnorderedAccessViews,[In, Buffer, Optional] const unsigned int* pUAVInitialCounts)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews</unmanaged-short>	
+        public void SetRenderTargetsAndUnorderedAccess(
+            int startSlot,
+            UnorderedAccessView[] unorderedAccessViews,
+            params RenderTargetView[] renderTargetViews)
+        {
+            Context.OutputMerger.SetTargets(startSlot, unorderedAccessViews, renderTargetViews);
+        }
+
+        /// <summary>
+        ///   Binds a depth-stencil buffer, a set of unordered access views, and a single render target to the output-merger stage.
+        /// </summary>
+        /// <param name = "depthStencilView">A view of the depth-stencil buffer to bind.</param>
+        /// <param name = "startSlot">Index into a zero-based array to begin setting unordered access views.</param>
+        /// <param name = "unorderedAccessViews">A set of unordered access views to bind.</param>
+        /// <param name = "renderTargetView">A view of the render target to bind.</param>
+        /// <msdn-id>ff476465</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews([In] unsigned int NumRTVs,[In, Buffer, Optional] const ID3D11RenderTargetView** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView,[In] unsigned int UAVStartSlot,[In] unsigned int NumUAVs,[In, Buffer, Optional] const ID3D11UnorderedAccessView** ppUnorderedAccessViews,[In, Buffer, Optional] const unsigned int* pUAVInitialCounts)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews</unmanaged-short>	
+        public void SetRenderTargetsAndUnorderedAccess(
+            DepthStencilView depthStencilView,
+            RenderTargetView renderTargetView,
+            int startSlot,
+            UnorderedAccessView[] unorderedAccessViews)
+        {
+            Context.OutputMerger.SetTargets(depthStencilView, renderTargetView, startSlot, unorderedAccessViews);
+        }
+
+        /// <summary>
+        ///   Binds a depth-stencil buffer, a set of unordered access views, and a set of render targets to the output-merger stage.
+        /// </summary>
+        /// <param name = "depthStencilView">A view of the depth-stencil buffer to bind.</param>
+        /// <param name = "startSlot">Index into a zero-based array to begin setting unordered access views.</param>
+        /// <param name = "unorderedAccessViews">A set of unordered access views to bind.</param>
+        /// <param name = "renderTargetViews">A set of render target views to bind.</param>
+        /// <msdn-id>ff476465</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews([In] unsigned int NumRTVs,[In, Buffer, Optional] const ID3D11RenderTargetView** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView,[In] unsigned int UAVStartSlot,[In] unsigned int NumUAVs,[In, Buffer, Optional] const ID3D11UnorderedAccessView** ppUnorderedAccessViews,[In, Buffer, Optional] const unsigned int* pUAVInitialCounts)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews</unmanaged-short>	
+        public void SetRenderTargetsAndUnorderedAccess(
+            DepthStencilView depthStencilView,
+            int startSlot,
+            UnorderedAccessView[] unorderedAccessViews,
+            params RenderTargetView[] renderTargetViews)
+        {
+            Context.OutputMerger.SetTargets(depthStencilView, startSlot, unorderedAccessViews, renderTargetViews);
+        }
+
+        /// <summary>
+        ///   Binds a set of unordered access views and a single render target to the output-merger stage.
+        /// </summary>
+        /// <param name = "startSlot">Index into a zero-based array to begin setting unordered access views.</param>
+        /// <param name = "unorderedAccessViews">A set of unordered access views to bind.</param>
+        /// <param name = "renderTargetView">A view of the render target to bind.</param>
+        /// <param name = "initialLengths">An array of Append/Consume buffer offsets. A value of -1 indicates the current offset should be kept. Any other values set the hidden counter for that Appendable/Consumeable UAV.</param>
+        /// <msdn-id>ff476465</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews([In] unsigned int NumRTVs,[In, Buffer, Optional] const ID3D11RenderTargetView** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView,[In] unsigned int UAVStartSlot,[In] unsigned int NumUAVs,[In, Buffer, Optional] const ID3D11UnorderedAccessView** ppUnorderedAccessViews,[In, Buffer, Optional] const unsigned int* pUAVInitialCounts)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews</unmanaged-short>	
+        public void SetRenderTargetsAndUnorderedAccess(
+            RenderTargetView renderTargetView,
+            int startSlot,
+            UnorderedAccessView[] unorderedAccessViews,
+            int[] initialLengths)
+        {
+            Context.OutputMerger.SetTargets(renderTargetView, startSlot, unorderedAccessViews, initialLengths);
+        }
+
+        /// <summary>
+        /// Binds a set of unordered access views and a set of render targets to the output-merger stage.
+        /// </summary>
+        /// <param name = "startSlot">Index into a zero-based array to begin setting unordered access views.</param>
+        /// <param name = "unorderedAccessViews">A set of unordered access views to bind.</param>
+        /// <param name = "renderTargetViews">A set of render target views to bind.</param>
+        /// <param name = "initialLengths">An array of Append/Consume buffer offsets. A value of -1 indicates the current offset should be kept. Any other values set the hidden counter for that Appendable/Consumeable UAV.</param>
+        /// <msdn-id>ff476465</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews([In] unsigned int NumRTVs,[In, Buffer, Optional] const ID3D11RenderTargetView** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView,[In] unsigned int UAVStartSlot,[In] unsigned int NumUAVs,[In, Buffer, Optional] const ID3D11UnorderedAccessView** ppUnorderedAccessViews,[In, Buffer, Optional] const unsigned int* pUAVInitialCounts)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews</unmanaged-short>	
+        public void SetRenderTargetsAndUnorderedAccess(
+            int startSlot,
+            UnorderedAccessView[] unorderedAccessViews,
+            int[] initialLengths,
+            params RenderTargetView[] renderTargetViews)
+        {
+            Context.OutputMerger.SetTargets(startSlot, unorderedAccessViews, initialLengths, renderTargetViews);
+        }
+
+        /// <summary>
+        /// Binds a depth-stencil buffer, a set of unordered access views, and a single render target to the output-merger stage.
+        /// </summary>
+        /// <param name = "depthStencilView">A view of the depth-stencil buffer to bind.</param>
+        /// <param name = "startSlot">Index into a zero-based array to begin setting unordered access views.</param>
+        /// <param name = "unorderedAccessViews">A set of unordered access views to bind.</param>
+        /// <param name = "renderTargetView">A view of the render target to bind.</param>
+        /// <param name = "initialLengths">An array of Append/Consume buffer offsets. A value of -1 indicates the current offset should be kept. Any other values set the hidden counter for that Appendable/Consumeable UAV.</param>
+        /// <msdn-id>ff476465</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews([In] unsigned int NumRTVs,[In, Buffer, Optional] const ID3D11RenderTargetView** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView,[In] unsigned int UAVStartSlot,[In] unsigned int NumUAVs,[In, Buffer, Optional] const ID3D11UnorderedAccessView** ppUnorderedAccessViews,[In, Buffer, Optional] const unsigned int* pUAVInitialCounts)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews</unmanaged-short>	
+        public void SetRenderTargetsAndUnorderedAccess(
+            DepthStencilView depthStencilView,
+            RenderTargetView renderTargetView,
+            int startSlot,
+            UnorderedAccessView[] unorderedAccessViews,
+            int[] initialLengths)
+        {
+            Context.OutputMerger.SetTargets(depthStencilView, renderTargetView, startSlot, unorderedAccessViews, initialLengths);
+        }
+
+        /// <summary>
+        /// Binds a depth-stencil buffer, a set of unordered access views, and a set of render targets to the output-merger stage.
+        /// </summary>
+        /// <param name = "depthStencilView">A view of the depth-stencil buffer to bind.</param>
+        /// <param name = "startSlot">Index into a zero-based array to begin setting unordered access views.</param>
+        /// <param name = "unorderedAccessViews">A set of unordered access views to bind.</param>
+        /// <param name = "renderTargetViews">A set of render target views to bind.</param>
+        /// <param name = "initialLengths">An array of Append/Consume buffer offsets. A value of -1 indicates the current offset should be kept. Any other values set the hidden counter for that Appendable/Consumeable UAV.</param>
+        /// <msdn-id>ff476465</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews([In] unsigned int NumRTVs,[In, Buffer, Optional] const ID3D11RenderTargetView** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView,[In] unsigned int UAVStartSlot,[In] unsigned int NumUAVs,[In, Buffer, Optional] const ID3D11UnorderedAccessView** ppUnorderedAccessViews,[In, Buffer, Optional] const unsigned int* pUAVInitialCounts)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews</unmanaged-short>	
+        public void SetRenderTargetsAndUnorderedAccess(
+            DepthStencilView depthStencilView,
+            int startSlot,
+            UnorderedAccessView[] unorderedAccessViews,
+            int[] initialLengths,
+            params RenderTargetView[] renderTargetViews)
+        {
+            Context.OutputMerger.SetTargets(depthStencilView, startSlot, unorderedAccessViews, initialLengths, renderTargetViews);
+        }
+
         public static implicit operator Device(GraphicsDevice from)
         {
-            return from.Device;
+            return from == null ? null : from.Device;
         }
 
         public static implicit operator DeviceContext(GraphicsDevice from)
         {
-            return from.Context;
+            return from == null ? null : from.Context;
         }
     }
 }

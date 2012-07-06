@@ -29,6 +29,9 @@ namespace SharpDX.Direct3D11
         /// <param name = "device">The device with which to associate the state object.</param>
         /// <param name = "description">The state description.</param>
         /// <returns>The newly created object.</returns>
+        /// <msdn-id>ff476506</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateDepthStencilState([In] const D3D11_DEPTH_STENCIL_DESC* pDepthStencilDesc,[Out, Fast] ID3D11DepthStencilState** ppDepthStencilState)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CreateDepthStencilState</unmanaged-short>	
         public DepthStencilState(Device device, DepthStencilStateDescription description)
             : base(IntPtr.Zero)
         {
@@ -41,6 +44,9 @@ namespace SharpDX.Direct3D11
         /// <param name = "device">The device with which to associate the state object.</param>
         /// <param name = "description">The state description.</param>
         /// <returns>The newly created object.</returns>
+        /// <msdn-id>ff476506</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateDepthStencilState([In] const D3D11_DEPTH_STENCIL_DESC* pDepthStencilDesc,[Out, Fast] ID3D11DepthStencilState** ppDepthStencilState)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CreateDepthStencilState</unmanaged-short>	
         public DepthStencilState(Device device, ref DepthStencilStateDescription description)
             : base(IntPtr.Zero)
         {

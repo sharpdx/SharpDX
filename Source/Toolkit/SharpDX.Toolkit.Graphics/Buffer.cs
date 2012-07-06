@@ -632,7 +632,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="from">The GraphicsResource to convert from.</param>
         public static implicit operator Direct3D11.Resource(Buffer from)
         {
-            return from.Resource;
+            return from == null ? null : from.Resource;
         }
 
         /// <summary>
@@ -642,7 +642,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>The result of the operator.</returns>
         public static implicit operator Direct3D11.Buffer(Buffer from)
         {
-            return (Direct3D11.Buffer)from.Resource;
+            return (Direct3D11.Buffer)(from == null ? null : from.Resource);
         }
 
         /// <summary>
@@ -652,7 +652,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>The result of the operator.</returns>
         public static implicit operator ShaderResourceView(Buffer from)
         {
-            return from.shaderResourceView;
+            return from == null ? null : from.shaderResourceView;
         }
 
         /// <summary>
@@ -662,7 +662,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>The result of the operator.</returns>
         public static implicit operator UnorderedAccessView(Buffer from)
         {
-            return from.unorderedAccessView;
+            return from == null ? null : from.unorderedAccessView;
         }        
 
         private struct RenderTargetKey : IEquatable<RenderTargetKey>

@@ -171,7 +171,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="from">Source for the.</param>
         public static implicit operator ShaderResourceView(Texture from)
         {
-            return from.ShaderResourceViews != null ? from.ShaderResourceViews[0] : null;
+            return from == null ? null : from.ShaderResourceViews != null ? from.ShaderResourceViews[0] : null;
         }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="from">Source for the.</param>
         public static implicit operator UnorderedAccessView(Texture from)
         {
-            return from.UnorderedAccessViews != null ? from.UnorderedAccessViews[0] : null;
+            return from == null ? null : from.UnorderedAccessViews != null ? from.UnorderedAccessViews[0] : null;
         }
 
         /// <summary>
