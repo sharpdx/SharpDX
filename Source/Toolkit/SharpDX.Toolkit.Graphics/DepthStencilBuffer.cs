@@ -87,15 +87,6 @@ namespace SharpDX.Toolkit.Graphics
             HasReadOnlyView = InitializeViewsDelayed(out ReadOnlyView);
         }
 
-        /// <summary>
-        /// RenderTargetView casting operator.
-        /// </summary>
-        /// <param name="from">Source for the.</param>
-        public static implicit operator RenderTargetView(DepthStencilBuffer from)
-        {
-            return from == null ? null : from.RenderTargetViews != null ? from.RenderTargetViews[0] : null;
-        }
-
         protected override void InitializeViews()
         {
             // Override this, because we need the DepthFormat setup in order to initialize this class

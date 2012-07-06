@@ -49,6 +49,16 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public readonly bool IsDebugMode;
 
+        // Current states
+
+        private BlendState currentBlendState;
+        private Color4 currentBlendFactor = Colors.White;
+        private int currentMultiSampleMask = -1;
+        private DepthStencilState currentDepthStencilState;
+        private int currentDepthStencilReference = 0;
+        private RasterizerState currentRasterizerState;
+        private PrimitiveTopology currentPrimitiveTopology;
+      
         protected GraphicsDevice(DriverType type = DriverType.Hardware, DeviceCreationFlags flags = DeviceCreationFlags.None, params FeatureLevel[] featureLevels)
         {
             Device = ToDispose(featureLevels.Length > 0 ? new Device(type, flags, featureLevels) : new Device(type, flags));
@@ -56,6 +66,7 @@ namespace SharpDX.Toolkit.Graphics
             MainDevice = this;
             Context = Device.ImmediateContext;
             Features = new GraphicsDeviceFeatures(Device);
+
             AttachToCurrentThread();
         }
 
@@ -270,9 +281,23 @@ namespace SharpDX.Toolkit.Graphics
             Context.ClearState();
         }
 
+        private PrimitiveTopology PrimitiveType
+        {
+            get { return currentPrimitiveTopology; }
+            set
+            {
+                if (currentPrimitiveTopology != value)
+                {
+                    Context.InputAssembler.PrimitiveTopology = value;
+                    currentPrimitiveTopology = value;
+                }
+            }
+        }
+
         /// <summary>	
         /// <p>Draw indexed, non-instanced primitives.</p>	
-        /// </summary>	
+        /// </summary>
+        /// <param name="primitiveType">Type of the primitive to draw.</param>
         /// <param name="indexCount"><dd>  <p>Number of indices to draw.</p> </dd></param>	
         /// <param name="startIndexLocation"><dd>  <p>The location of the first index read by the GPU from the index buffer.</p> </dd></param>	
         /// <param name="baseVertexLocation"><dd>  <p>A value added to each index before reading a vertex from the vertex buffer.</p> </dd></param>	
@@ -282,14 +307,16 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476409</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::DrawIndexed([In] unsigned int IndexCount,[In] unsigned int StartIndexLocation,[In] int BaseVertexLocation)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::DrawIndexed</unmanaged-short>	
-        public void DrawIndexed(int indexCount, int startIndexLocation = 0, int baseVertexLocation = 0)
+        public void DrawIndexed(PrimitiveType primitiveType, int indexCount, int startIndexLocation = 0, int baseVertexLocation = 0)
         {
+            PrimitiveType = primitiveType;
             Context.DrawIndexed(indexCount, startIndexLocation, baseVertexLocation);
         }
 
         /// <summary>	
         /// <p>Draw non-indexed, non-instanced primitives.</p>	
-        /// </summary>	
+        /// </summary>
+        /// <param name="primitiveType">Type of the primitive to draw.</param>
         /// <param name="vertexCount"><dd>  <p>Number of vertices to draw.</p> </dd></param>	
         /// <param name="startVertexLocation"><dd>  <p>Index of the first vertex, which is usually an offset in a vertex buffer; it could also be used as the first vertex id generated for a shader parameter marked with the <strong>SV_TargetId</strong> system-value semantic.</p> </dd></param>	
         /// <remarks>	
@@ -298,14 +325,16 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476407</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::Draw([In] unsigned int VertexCount,[In] unsigned int StartVertexLocation)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::Draw</unmanaged-short>	
-        public void Draw(int vertexCount, int startVertexLocation = 0)
+        public void Draw(PrimitiveType primitiveType, int vertexCount, int startVertexLocation = 0)
         {
+            PrimitiveType = primitiveType;
             Context.Draw(vertexCount, startVertexLocation);
         }
 
         /// <summary>	
         /// <p>Draw indexed, instanced primitives.</p>	
         /// </summary>	
+        /// <param name="primitiveType">Type of the primitive to draw.</param>
         /// <param name="indexCountPerInstance"><dd>  <p>Number of indices read from the index buffer for each instance.</p> </dd></param>	
         /// <param name="instanceCount"><dd>  <p>Number of instances to draw.</p> </dd></param>	
         /// <param name="startIndexLocation"><dd>  <p>The location of the first index read by the GPU from the index buffer.</p> </dd></param>	
@@ -317,14 +346,16 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476410</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::DrawIndexedInstanced([In] unsigned int IndexCountPerInstance,[In] unsigned int InstanceCount,[In] unsigned int StartIndexLocation,[In] int BaseVertexLocation,[In] unsigned int StartInstanceLocation)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::DrawIndexedInstanced</unmanaged-short>	
-        public void DrawIndexedInstanced(int indexCountPerInstance, int instanceCount, int startIndexLocation = 0, int baseVertexLocation = 0, int startInstanceLocation = 0)
+        public void DrawIndexedInstanced(PrimitiveType primitiveType, int indexCountPerInstance, int instanceCount, int startIndexLocation = 0, int baseVertexLocation = 0, int startInstanceLocation = 0)
         {
+            PrimitiveType = primitiveType;
             Context.DrawIndexedInstanced(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
         }
 
         /// <summary>	
         /// <p>Draw non-indexed, instanced primitives.</p>	
         /// </summary>	
+        /// <param name="primitiveType">Type of the primitive to draw.</param>
         /// <param name="vertexCountPerInstance"><dd>  <p>Number of vertices to draw.</p> </dd></param>	
         /// <param name="instanceCount"><dd>  <p>Number of instances to draw.</p> </dd></param>	
         /// <param name="startVertexLocation"><dd>  <p>Index of the first vertex.</p> </dd></param>	
@@ -335,28 +366,32 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476412</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::DrawInstanced([In] unsigned int VertexCountPerInstance,[In] unsigned int InstanceCount,[In] unsigned int StartVertexLocation,[In] unsigned int StartInstanceLocation)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::DrawInstanced</unmanaged-short>	
-        public void DrawInstanced(int vertexCountPerInstance, int instanceCount, int startVertexLocation = 0, int startInstanceLocation = 0)
+        public void DrawInstanced(PrimitiveType primitiveType, int vertexCountPerInstance, int instanceCount, int startVertexLocation = 0, int startInstanceLocation = 0)
         {
+            PrimitiveType = primitiveType;
             Context.DrawInstanced(vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation);
         }
 
         /// <summary>	
         /// <p>Draw geometry of an unknown size.</p>	
         /// </summary>	
+        /// <param name="primitiveType">Type of the primitive to draw.</param>
         /// <remarks>	
         /// <p>A draw API submits work to the rendering pipeline. This API submits work of an unknown size that was processed by the input assembler, vertex shader, and stream-output stages;  the work may or may not have gone through the geometry-shader stage.</p><p>After data has been streamed out to stream-output stage buffers, those buffers can be again bound to the Input Assembler stage at input slot 0 and DrawAuto will draw them without the application needing to know the amount of data that was written to the buffers. A measurement of the amount of data written to the SO stage buffers is maintained internally when the data is streamed out. This means that the CPU does not need to fetch the measurement before re-binding the data that was streamed as input data. Although this amount is tracked internally, it is still the responsibility of applications to use input layouts to describe the format of the data in the SO stage buffers so that the layouts are available when the buffers are again bound to the input assembler.</p><p>The following diagram shows the DrawAuto process.</p><p></p><p>Calling DrawAuto does not change the state of the streaming-output buffers that were bound again as inputs.</p><p>DrawAuto only works when drawing with one input buffer bound as an input to the IA stage at slot 0. Applications must create the SO buffer resource with both binding flags, <strong><see cref="SharpDX.Direct3D11.BindFlags.VertexBuffer"/></strong> and <strong><see cref="SharpDX.Direct3D11.BindFlags.StreamOutput"/></strong>.</p><p>This API does not support indexing or instancing.</p><p>If an application needs to retrieve the size of the streaming-output buffer, it can query for statistics on streaming output by using <strong><see cref="SharpDX.Direct3D11.QueryType.StreamOutputStatistics"/></strong>.</p>	
         /// </remarks>	
         /// <msdn-id>ff476408</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::DrawAuto()</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::DrawAuto</unmanaged-short>	
-        public void DrawAuto()
+        public void DrawAuto(PrimitiveType primitiveType)
         {
+            PrimitiveType = primitiveType;
             Context.DrawAuto();
         }
 
         /// <summary>	
         /// <p>Draw indexed, instanced, GPU-generated primitives.</p>	
         /// </summary>	
+        /// <param name="primitiveType">Type of the primitive to draw.</param>
         /// <param name="argumentsBuffer"><dd>  <p>A reference to an <strong><see cref="SharpDX.Direct3D11.Buffer"/></strong>, which is a buffer containing the GPU generated primitives.</p> </dd></param>	
         /// <param name="alignedByteOffsetForArgs"><dd>  <p>Offset in <em>pBufferForArgs</em> to the start of the GPU generated primitives.</p> </dd></param>	
         /// <remarks>	
@@ -365,14 +400,16 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476411</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::DrawIndexedInstancedIndirect([In] ID3D11Buffer* pBufferForArgs,[In] unsigned int AlignedByteOffsetForArgs)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::DrawIndexedInstancedIndirect</unmanaged-short>	
-        public void DrawIndexedInstanced(SharpDX.Direct3D11.Buffer argumentsBuffer, int alignedByteOffsetForArgs = 0)
+        public void DrawIndexedInstanced(PrimitiveType primitiveType, SharpDX.Direct3D11.Buffer argumentsBuffer, int alignedByteOffsetForArgs = 0)
         {
+            PrimitiveType = primitiveType;
             Context.DrawIndexedInstancedIndirect(argumentsBuffer, alignedByteOffsetForArgs);
         }
 
         /// <summary>	
         /// <p>Draw instanced, GPU-generated primitives.</p>	
         /// </summary>	
+        /// <param name="primitiveType">Type of the primitive to draw.</param>
         /// <param name="argumentsBuffer"><dd>  <p>A reference to an <strong><see cref="SharpDX.Direct3D11.Buffer"/></strong>, which is a buffer containing the GPU generated primitives.</p> </dd></param>	
         /// <param name="alignedByteOffsetForArgs"><dd>  <p>Offset in <em>pBufferForArgs</em> to the start of the GPU generated primitives.</p> </dd></param>	
         /// <remarks>	
@@ -381,8 +418,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476413</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::DrawInstancedIndirect([In] ID3D11Buffer* pBufferForArgs,[In] unsigned int AlignedByteOffsetForArgs)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::DrawInstancedIndirect</unmanaged-short>	
-        public void DrawInstanced(SharpDX.Direct3D11.Buffer argumentsBuffer, int alignedByteOffsetForArgs = 0)
+        public void DrawInstanced(PrimitiveType primitiveType, SharpDX.Direct3D11.Buffer argumentsBuffer, int alignedByteOffsetForArgs = 0)
         {
+            PrimitiveType = primitiveType;
             Context.DrawIndexedInstancedIndirect(argumentsBuffer, alignedByteOffsetForArgs);
         }
 
@@ -925,16 +963,6 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        private BlendState currentBlendState;
-        private Color4 currentBlendFactor = Colors.White;
-        private int currentMultiSampleMask = -1;
-
-        private DepthStencilState currentDepthStencilState;
-        private int currentDepthStencilReference = 0;
-
-        private RasterizerState currentRasterizerState;
-
-
         /// <summary>	
         /// <p>Set the blend state of the output-merger stage.</p>	
         /// </summary>	
@@ -1049,7 +1077,6 @@ namespace SharpDX.Toolkit.Graphics
             currentDepthStencilState = depthStencilState;
             currentDepthStencilReference = stencilReference;
         }
-
 
         /// <summary>	
         /// <p>Set the <strong>rasterizer state</strong> for the rasterizer stage of the pipeline.</p>	
@@ -1375,6 +1402,76 @@ namespace SharpDX.Toolkit.Graphics
             params RenderTargetView[] renderTargetViews)
         {
             Context.OutputMerger.SetTargets(depthStencilView, startSlot, unorderedAccessViews, initialLengths, renderTargetViews);
+        }
+
+        /// <summary>	
+        /// <p>Bind an index buffer to the input-assembler stage.</p>	
+        /// </summary>	
+        /// <param name="indexBuffer"><dd>  <p>A reference to an <strong><see cref="SharpDX.Direct3D11.Buffer"/></strong> object, that contains indices. The index buffer must have been created with  the <strong><see cref="SharpDX.Direct3D11.BindFlags.IndexBuffer"/></strong> flag.</p> </dd></param>	
+        /// <param name="is32Bit">Set to true if indices are 32-bit values (integer size) or false if they are 16-bit values (short size)</param>	
+        /// <param name="offset">Offset (in bytes) from the start of the index buffer to the first index to use. Default to 0</param>	
+        /// <remarks>	
+        /// <p>For information about creating index buffers, see How to: Create an Index Buffer.</p><p>Calling this method using a buffer that is currently bound for writing (i.e. bound to the stream output pipeline stage) will effectively bind  <strong><c>null</c></strong> instead because a buffer cannot be bound as both an input and an output at the same time.</p><p>The debug layer will generate a warning whenever a resource is prevented from being bound simultaneously as an input and an output, but this will  not prevent invalid data from being used by the runtime.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10. </p>	
+        /// </remarks>	
+        /// <msdn-id>ff476453</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::IASetIndexBuffer([In, Optional] ID3D11Buffer* pIndexBuffer,[In] DXGI_FORMAT Format,[In] unsigned int Offset)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::IASetIndexBuffer</unmanaged-short>	
+        public void SetIndexBuffer(Buffer indexBuffer, bool is32Bit, int offset = 0)
+        {
+            Context.InputAssembler.SetIndexBuffer(indexBuffer, is32Bit ? DXGI.Format.R32_UInt : DXGI.Format.R16_UInt, offset);
+        }
+
+        public void SetInputLayout(InputLayout inputLayout)
+        {
+            Context.InputAssembler.InputLayout = inputLayout;
+        }
+
+        /// <summary>
+        /// <p>Bind a single vertex buffer to the input-assembler stage.</p>	
+        /// </summary>	
+        /// <param name="slot"><dd>  <p>The first input slot for binding. The first vertex buffer is explicitly bound to the start slot; this causes each additional vertex buffer in the array to be implicitly bound to each subsequent input slot. The maximum of 16 or 32 input slots (ranges from 0 to <see cref="SharpDX.Direct3D11.InputAssemblerStage.VertexInputResourceSlotCount"/> - 1) are available; the maximum number of input slots depends on the feature level.</p> </dd></param>	
+        /// <param name="vertexBufferBinding"><dd>  <p>A <see cref="SharpDX.Direct3D11.VertexBufferBinding"/>. The vertex buffer must have been created with the <strong><see cref="SharpDX.Direct3D11.BindFlags.VertexBuffer"/></strong> flag.</p> </dd></param>        /// <remarks>	
+        /// <p>For information about creating vertex buffers, see Create a Vertex Buffer.</p><p>Calling this method using a buffer that is currently bound for writing (i.e. bound to the stream output pipeline stage) will effectively bind <strong><c>null</c></strong> instead because a buffer cannot be bound as both an input and an output at the same time.</p><p>The debug layer will generate a warning whenever a resource is prevented from being bound simultaneously as an input and an output, but this will not prevent invalid data from being used by the runtime.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10. </p>	
+        /// </remarks>	
+        /// <msdn-id>ff476456</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::IASetVertexBuffers([In] unsigned int StartSlot,[In] unsigned int NumBuffers,[In, Buffer] const void* ppVertexBuffers,[In, Buffer] const void* pStrides,[In, Buffer] const void* pOffsets)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::IASetVertexBuffers</unmanaged-short>	
+        public void SetVertexBuffers(int slot, VertexBufferBinding vertexBufferBinding)
+        {
+            Context.InputAssembler.SetVertexBuffers(slot, vertexBufferBinding);
+        }
+
+        /// <summary>
+        /// <p>Bind an array of vertex buffers to the input-assembler stage.</p>	
+        /// </summary>	
+        /// <param name="firstSlot"><dd>  <p>The first input slot for binding. The first vertex buffer is explicitly bound to the start slot; this causes each additional vertex buffer in the array to be implicitly bound to each subsequent input slot. The maximum of 16 or 32 input slots (ranges from 0 to <see cref="SharpDX.Direct3D11.InputAssemblerStage.VertexInputResourceSlotCount"/> - 1) are available; the maximum number of input slots depends on the feature level.</p> </dd></param>	
+        /// <param name="vertexBufferBindings"><dd>  <p>A reference to an array of <see cref="SharpDX.Direct3D11.VertexBufferBinding"/>. The vertex buffers must have been created with the <strong><see cref="SharpDX.Direct3D11.BindFlags.VertexBuffer"/></strong> flag.</p> </dd></param>        /// <remarks>	
+        /// <p>For information about creating vertex buffers, see Create a Vertex Buffer.</p><p>Calling this method using a buffer that is currently bound for writing (i.e. bound to the stream output pipeline stage) will effectively bind <strong><c>null</c></strong> instead because a buffer cannot be bound as both an input and an output at the same time.</p><p>The debug layer will generate a warning whenever a resource is prevented from being bound simultaneously as an input and an output, but this will not prevent invalid data from being used by the runtime.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10. </p>	
+        /// </remarks>	
+        /// <msdn-id>ff476456</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::IASetVertexBuffers([In] unsigned int StartSlot,[In] unsigned int NumBuffers,[In, Buffer] const void* ppVertexBuffers,[In, Buffer] const void* pStrides,[In, Buffer] const void* pOffsets)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::IASetVertexBuffers</unmanaged-short>	
+        public void SetVertexBuffers(int firstSlot, params VertexBufferBinding[] vertexBufferBindings)
+        {
+            Context.InputAssembler.SetVertexBuffers(firstSlot, vertexBufferBindings);
+        }
+
+        /// <summary>
+        /// <p>Bind an array of vertex buffers to the input-assembler stage.</p>	
+        /// </summary>	
+        /// <param name="slot"><dd>  <p>The first input slot for binding. The first vertex buffer is explicitly bound to the start slot; this causes each additional vertex buffer in the array to be implicitly bound to each subsequent input slot. The maximum of 16 or 32 input slots (ranges from 0 to <see cref="SharpDX.Direct3D11.InputAssemblerStage.VertexInputResourceSlotCount"/> - 1) are available; the maximum number of input slots depends on the feature level.</p> </dd></param>	
+        /// <param name="vertexBuffers"><dd>  <p>A reference to an array of vertex buffers (see <strong><see cref="SharpDX.Direct3D11.Buffer"/></strong>). The vertex buffers must have been created with the <strong><see cref="SharpDX.Direct3D11.BindFlags.VertexBuffer"/></strong> flag.</p> </dd></param>	
+        /// <param name="stridesRef"><dd>  <p>Pointer to an array of stride values; one stride value for each buffer in the vertex-buffer array. Each stride is the size (in bytes) of the elements that are to be used from that vertex buffer.</p> </dd></param>	
+        /// <param name="offsetsRef"><dd>  <p>Pointer to an array of offset values; one offset value for each buffer in the vertex-buffer array. Each offset is the number of bytes between the first element of a vertex buffer and the first element that will be used.</p> </dd></param>	
+        /// <remarks>	
+        /// <p>For information about creating vertex buffers, see Create a Vertex Buffer.</p><p>Calling this method using a buffer that is currently bound for writing (i.e. bound to the stream output pipeline stage) will effectively bind <strong><c>null</c></strong> instead because a buffer cannot be bound as both an input and an output at the same time.</p><p>The debug layer will generate a warning whenever a resource is prevented from being bound simultaneously as an input and an output, but this will not prevent invalid data from being used by the runtime.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10. </p>	
+        /// </remarks>	
+        /// <msdn-id>ff476456</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::IASetVertexBuffers([In] unsigned int StartSlot,[In] unsigned int NumBuffers,[In, Buffer] const void* ppVertexBuffers,[In, Buffer] const void* pStrides,[In, Buffer] const void* pOffsets)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::IASetVertexBuffers</unmanaged-short>	
+        public void SetVertexBuffers(int slot, SharpDX.Direct3D11.Buffer[] vertexBuffers, int[] stridesRef, int[] offsetsRef)
+        {
+            Context.InputAssembler.SetVertexBuffers(slot, vertexBuffers, stridesRef, offsetsRef);
         }
 
         public static implicit operator Device(GraphicsDevice from)

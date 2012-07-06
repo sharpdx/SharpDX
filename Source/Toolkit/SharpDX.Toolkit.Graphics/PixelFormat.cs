@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.Runtime.InteropServices;
 
 using SharpDX.DXGI;
@@ -28,16 +29,16 @@ namespace SharpDX.Toolkit.Graphics
     /// PixelFormat is equivalent to <see cref="SharpDX.DXGI.Format"/>.
     /// </summary>
     /// <remarks>
+    /// This structure is implicitly castable to and from <see cref="SharpDX.DXGI.Format"/>, you can use it inplace where <see cref="SharpDX.DXGI.Format"/> is required
+    /// and vice-versa.
     /// Usage is slightly different from <see cref="SharpDX.DXGI.Format"/>, as you have to select the type of the pixel format first (<see cref="Typeless"/>, <see cref="SInt"/>...etc)
     /// and then access the available pixel formats for this type. Example: PixelFormat.UNorm.R8.
-    /// Because <see cref="PixelFormat"/> is directly convertible to <see cref="SharpDX.DXGI.Format"/>, you can use it inplace where <see cref="SharpDX.DXGI.Format"/> is required
-    /// and vice-versa.
     /// </remarks>
     /// <msdn-id>bb173059</msdn-id>	
     /// <unmanaged>DXGI_FORMAT</unmanaged>	
     /// <unmanaged-short>DXGI_FORMAT</unmanaged-short>	
     [StructLayout(LayoutKind.Sequential, Size = 4)]
-    public struct PixelFormat
+    public struct PixelFormat : IEquatable<PixelFormat>
     {
         /// <summary>
         /// Gets the value as a <see cref="SharpDX.DXGI.Format"/> enum.
@@ -397,6 +398,32 @@ namespace SharpDX.Toolkit.Graphics
         public static implicit operator PixelFormat(Format from)
         {
             return new PixelFormat(from);
+        }
+
+        public bool Equals(PixelFormat other)
+        {
+            return Value.Equals(other.Value);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is PixelFormat && Equals((PixelFormat) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Value.GetHashCode();
+        }
+
+        public static bool operator ==(PixelFormat left, PixelFormat right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(PixelFormat left, PixelFormat right)
+        {
+            return !left.Equals(right);
         }
     }
 }
