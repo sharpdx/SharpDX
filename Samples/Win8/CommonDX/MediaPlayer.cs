@@ -35,17 +35,15 @@ namespace CommonDX
         private DXGIDeviceManager dxgiDeviceManager;
         private MediaEngine mediaEngine;
         private MediaEngineEx mediaEngineEx;
-        private SharpDX.DXGI.Output dxgiOutput;
-        private CoreWindowTarget targetBase;
 
         private bool isEndOfStream;
-        private bool isTimerStopped;
+        private bool isVideoStopped;
         private readonly object lockObject = new object();
 
         public MediaPlayer()
         {
             BackgroundColor = Colors.Transparent;
-            isTimerStopped = true;
+            isVideoStopped = true;
         }
 
         /// <summary>
@@ -59,31 +57,28 @@ namespace CommonDX
         public Color4 BackgroundColor { get; set; }
 
         /// <summary>
-        /// Event fired when a new video frame has been transfered to <see cref="VideoTextureDestination"/>.
-        /// </summary>
-        public event Action OnNewVideoFrameAvailable;
-
-        /// <summary>
         /// Gets or sets the url used to play the stream.
         /// </summary>
         public string Url { get; set; }
 
+        /// <summary>
+        /// Output Video texture (must be <see cref="SharpDX.DXGI.Format.B8G8R8A8_UNorm"/>)
+        /// </summary>
+        public SharpDX.Direct3D11.Texture2D OutputVideoTexture;
+
         private ByteStream byteStream;
         private ComObject streamCom;
         
-        
-        public virtual void Initialize(SharpDX.Direct3D11.Device device, CoreWindowTarget targetBase)
+        public virtual void Initialize(DeviceManager deviceManager)
         {
             lock (lockObject)
             {
-                this.targetBase = targetBase;
-
                 // Startup MediaManager
                 MediaManager.Startup();
 
                 // Create a DXGI Device Manager
                 dxgiDeviceManager = new DXGIDeviceManager();
-                dxgiDeviceManager.ResetDevice(device);
+                dxgiDeviceManager.ResetDevice(deviceManager.DeviceDirect3D);
 
                 // Setup Media Engine attributes
                 var attributes = new MediaEngineAttributes
@@ -98,11 +93,37 @@ namespace CommonDX
             }
         }
 
+        public virtual void OnRender(TargetBase targetBase)
+        {
+            lock (lockObject)
+            {
+                if (isVideoStopped)
+                    return;
+
+                if (mediaEngineEx != null)
+                {
+                    long pts;
+                    if (mediaEngineEx.OnVideoStreamTick(out pts))
+                    {
+                        var backBuffer = OutputVideoTexture ?? targetBase.BackBuffer;
+
+                        if (backBuffer != null)
+                        {
+                            var desc = backBuffer.Description;
+                            var region = new Rectangle(0, 0, desc.Width, desc.Height);
+
+                            mediaEngineEx.TransferVideoFrame(backBuffer, null, region, BackgroundColor);
+                        }
+                    }
+                }
+            }
+        }
+
         public void Shutdown()
         {
             lock (lockObject)
             {
-                StopTimer();
+                StopVideo();
 
                 if (mediaEngineEx != null)
                     mediaEngineEx.Shutdown();
@@ -123,11 +144,8 @@ namespace CommonDX
         {
             if (mediaEngineEx != null)
             {
-                if (mediaEngineEx.HasVideo() && isTimerStopped)
-                {
-                    // Start the Timer thread
-                    StartTimer();
-                }
+                if (mediaEngineEx.HasVideo() && isVideoStopped)
+                    isVideoStopped = false;
 
                 if (isEndOfStream)
                 {
@@ -293,63 +311,10 @@ namespace CommonDX
             }
         }
 
-        private void StartTimer()
+        private void StopVideo()
         {
-            var factory = new SharpDX.DXGI.Factory1();
-            dxgiOutput = factory.Adapters[0].Outputs[0];
-            isTimerStopped = false;
-
-            Task.Run(delegate
-                         {
-                             while (true)
-                             {
-                                 if (isTimerStopped)
-                                 {
-                                     break;
-                                 }
-
-                                 try
-                                 {
-                                     dxgiOutput.WaitForVerticalBlank();
-                                     OnTimer();
-                                 }
-                                 catch (Exception ex)
-                                 {
-                                     break;
-                                 }
-                             }
-                         });
-        }
-
-        private void StopTimer()
-        {
-            isTimerStopped = true;
+            isVideoStopped = true;
             IsPlaying = false;
-        }
-
-        private void OnTimer()
-        {
-            lock(lockObject)
-            {
-                if (mediaEngineEx != null)
-                {
-                    long pts;
-                    if (mediaEngineEx.OnVideoStreamTick(out pts))
-                    {
-                        var backBuffer = targetBase.SwapChain.GetBackBuffer<SharpDX.Direct3D11.Texture2D>(0);
-
-                        var desc = backBuffer.Description;
-                        var region = new Rectangle(0, 0, desc.Width, desc.Height);
-
-                        mediaEngineEx.TransferVideoFrame(backBuffer, null, region, (ColorBgra)BackgroundColor);
-
-                        targetBase.Present();
-
-                        var onNewVideoFrameAvailable = OnNewVideoFrameAvailable;
-                        if (onNewVideoFrameAvailable != null) onNewVideoFrameAvailable();
-                    }
-                }
-            }
         }
 
         protected virtual void OnMediaEngineEvent(MediaEngineEvent mediaEvent, long param1, int param2)
@@ -375,7 +340,7 @@ namespace CommonDX
                 case MediaEngineEvent.Ended:
                     if (mediaEngineEx.HasVideo())
                     {
-                        StopTimer();
+                        StopVideo();
                     }
                     isEndOfStream = true;
                     break;

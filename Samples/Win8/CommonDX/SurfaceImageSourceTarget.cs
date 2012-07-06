@@ -108,11 +108,11 @@ namespace CommonDX
 
                     // Allocate a new renderTargetView if size is different
                     // Cache the rendertarget dimensions in our helper class for convenient use.
-                    using (var backBuffer = surface.QueryInterface<SharpDX.Direct3D11.Texture2D>())
+                    viewData.BackBuffer = surface.QueryInterface<SharpDX.Direct3D11.Texture2D>();
                     {
-                        var desc = backBuffer.Description;
+                        var desc = viewData.BackBuffer.Description;
                         viewData.RenderTargetSize = new Size(desc.Width, desc.Height);
-                        viewData.RenderTargetView = ToDispose(new SharpDX.Direct3D11.RenderTargetView(DeviceManager.DeviceDirect3D, backBuffer));
+                        viewData.RenderTargetView = ToDispose(new SharpDX.Direct3D11.RenderTargetView(DeviceManager.DeviceDirect3D, viewData.BackBuffer));
                     }
 
                     // Create a descriptor for the depth/stencil buffer.
@@ -148,6 +148,7 @@ namespace CommonDX
                     viewData.Viewport = new SharpDX.Direct3D11.Viewport(position.X, position.Y, (float)viewData.RenderTargetSize.Width - position.X, (float)viewData.RenderTargetSize.Height - position.Y, 0.0f, 1.0f);
                 }
 
+                BackBuffer = viewData.BackBuffer;
                 renderTargetView = viewData.RenderTargetView;
                 depthStencilView = viewData.DepthStencilView;
                 RenderTargetBounds = new Rect(viewData.Viewport.TopLeftX, viewData.Viewport.TopLeftY, viewData.Viewport.Width, viewData.Viewport.Height);
@@ -170,6 +171,7 @@ namespace CommonDX
         /// </summary>
         class SurfaceViewData
         {
+            public SharpDX.Direct3D11.Texture2D BackBuffer;
             public SharpDX.Direct3D11.RenderTargetView RenderTargetView;
             public SharpDX.Direct3D11.DepthStencilView DepthStencilView;
             public SharpDX.Direct2D1.Bitmap1 BitmapTarget;
