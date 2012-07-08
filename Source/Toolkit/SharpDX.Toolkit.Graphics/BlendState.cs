@@ -71,7 +71,7 @@ namespace SharpDX.Toolkit.Graphics
         public readonly int MultiSampleMask;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Buffer" /> class.
+        /// Initializes a new instance of the <see cref="BlendState" /> class.
         /// </summary>
         /// <param name="description">The description.</param>
         /// <param name="blendFactor">The blend factor.</param>
@@ -82,7 +82,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Buffer" /> class.
+        /// Initializes a new instance of the <see cref="BlendState" /> class.
         /// </summary>
         /// <param name="deviceLocal">The device local.</param>
         /// <param name="description">The description.</param>
@@ -97,7 +97,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Buffer" /> class.
+        /// Initializes a new instance of the <see cref="BlendState" /> class.
         /// </summary>
         /// <param name="deviceLocal">The device local.</param>
         /// <param name="nativeState">State of the native.</param>

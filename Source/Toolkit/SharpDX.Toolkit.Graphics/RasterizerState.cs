@@ -56,7 +56,7 @@ namespace SharpDX.Toolkit.Graphics
         public readonly RasterizerStateDescription Description;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Buffer" /> class.
+        /// Initializes a new instance of the <see cref="RasterizerState" /> class.
         /// </summary>
         /// <param name="description">The description.</param>
         private RasterizerState(RasterizerStateDescription description)
@@ -65,7 +65,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Buffer" /> class.
+        /// Initializes a new instance of the <see cref="RasterizerState" /> class.
         /// </summary>
         /// <param name="deviceLocal">The device local.</param>
         /// <param name="description">The description.</param>
@@ -76,7 +76,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Buffer" /> class.
+        /// Initializes a new instance of the <see cref="RasterizerState" /> class.
         /// </summary>
         /// <param name="deviceLocal">The device local.</param>
         /// <param name="nativeState">State of the native.</param>
@@ -88,15 +88,14 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>	
-        /// Create a depth-stencil state object that encapsulates depth-stencil test information for the output-merger stage.
+        /// <p>Create a rasterizer state object that tells the rasterizer stage how to behave.</p>	
         /// </summary>	
         /// <param name="rasterizerState">An existing <see cref="Direct3D11.RasterizerState"/> instance.</param>	
-        /// <returns>A new instance of <see cref="RasterizerState"/></returns>	
         /// <remarks>	
-        /// <p>4096 unique depth-stencil state objects can be created on a device at a time.</p><p>If an application attempts to create a depth-stencil-state interface with the same state as an existing interface, the same interface will be returned and the total number of unique depth-stencil state objects will stay the same.</p>	
+        /// <p>4096 unique rasterizer state objects can be created on a device at a time.</p><p>If an application attempts to create a rasterizer-state interface with the same state as an existing interface, the same interface will be returned and the total number of unique rasterizer state objects will stay the same.</p>	
         /// </remarks>	
-        /// <msdn-id>ff476506</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateRasterizerState([In] const D3D11_DEPTH_STENCIL_DESC* pDepthStencilDesc,[Out, Fast] ID3D11RasterizerState** ppRasterizerState)</unmanaged>	
+        /// <msdn-id>ff476516</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateRasterizerState([In] const D3D11_RASTERIZER_DESC* pRasterizerDesc,[Out, Fast] ID3D11RasterizerState** ppRasterizerState)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateRasterizerState</unmanaged-short>	
         public static RasterizerState New(Direct3D11.RasterizerState rasterizerState)
         {
@@ -104,15 +103,14 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>	
-        /// Create a depth-stencil state object that encapsulates depth-stencil test information for the output-merger stage.
+        /// <p>Create a rasterizer state object that tells the rasterizer stage how to behave.</p>	
         /// </summary>	
-        /// <param name="description">A depth-stencil state description</param>	
-        /// <returns>A new instance of <see cref="RasterizerState"/></returns>	
+        /// <param name="description">A rasterizer state description</param>	
         /// <remarks>	
-        /// <p>4096 unique depth-stencil state objects can be created on a device at a time.</p><p>If an application attempts to create a depth-stencil-state interface with the same state as an existing interface, the same interface will be returned and the total number of unique depth-stencil state objects will stay the same.</p>	
+        /// <p>4096 unique rasterizer state objects can be created on a device at a time.</p><p>If an application attempts to create a rasterizer-state interface with the same state as an existing interface, the same interface will be returned and the total number of unique rasterizer state objects will stay the same.</p>	
         /// </remarks>	
-        /// <msdn-id>ff476506</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateRasterizerState([In] const D3D11_DEPTH_STENCIL_DESC* pDepthStencilDesc,[Out, Fast] ID3D11RasterizerState** ppRasterizerState)</unmanaged>	
+        /// <msdn-id>ff476516</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateRasterizerState([In] const D3D11_RASTERIZER_DESC* pRasterizerDesc,[Out, Fast] ID3D11RasterizerState** ppRasterizerState)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateRasterizerState</unmanaged-short>	
         public static RasterizerState New(RasterizerStateDescription description)
         {
@@ -120,16 +118,15 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>	
-        /// Create a depth-stencil state object that encapsulates depth-stencil test information for the output-merger stage.
-        /// </summary>
+        /// <p>Create a rasterizer state object that tells the rasterizer stage how to behave.</p>	
+        /// </summary>	
         /// <param name="name">Name of this depth stencil state.</param>
-        /// <param name="description">A depth-stencil state description</param>	
-        /// <returns>A new instance of <see cref="RasterizerState"/></returns>	
+        /// <param name="description">A rasterizer state description</param>	
         /// <remarks>	
-        /// <p>4096 unique depth-stencil state objects can be created on a device at a time.</p><p>If an application attempts to create a depth-stencil-state interface with the same state as an existing interface, the same interface will be returned and the total number of unique depth-stencil state objects will stay the same.</p>	
+        /// <p>4096 unique rasterizer state objects can be created on a device at a time.</p><p>If an application attempts to create a rasterizer-state interface with the same state as an existing interface, the same interface will be returned and the total number of unique rasterizer state objects will stay the same.</p>	
         /// </remarks>	
-        /// <msdn-id>ff476506</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateRasterizerState([In] const D3D11_DEPTH_STENCIL_DESC* pDepthStencilDesc,[Out, Fast] ID3D11RasterizerState** ppRasterizerState)</unmanaged>	
+        /// <msdn-id>ff476516</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateRasterizerState([In] const D3D11_RASTERIZER_DESC* pRasterizerDesc,[Out, Fast] ID3D11RasterizerState** ppRasterizerState)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateRasterizerState</unmanaged-short>	
         public static RasterizerState New(string name, RasterizerStateDescription description)
         {

@@ -51,7 +51,7 @@ namespace SharpDX.Toolkit.Graphics
         public readonly DepthStencilStateDescription Description;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Buffer" /> class.
+        /// Initializes a new instance of the <see cref="DepthStencilState" /> class.
         /// </summary>
         /// <param name="description">The description.</param>
         private DepthStencilState(DepthStencilStateDescription description)
@@ -60,7 +60,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Buffer" /> class.
+        /// Initializes a new instance of the <see cref="DepthStencilState" /> class.
         /// </summary>
         /// <param name="deviceLocal">The device local.</param>
         /// <param name="description">The description.</param>
@@ -71,7 +71,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Buffer" /> class.
+        /// Initializes a new instance of the <see cref="DepthStencilState" /> class.
         /// </summary>
         /// <param name="deviceLocal">The device local.</param>
         /// <param name="nativeState">State of the native.</param>
