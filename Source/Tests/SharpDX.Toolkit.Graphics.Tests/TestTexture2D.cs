@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 
 namespace SharpDX.Toolkit.Graphics.Tests
@@ -36,7 +37,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
         [Test]
         public void TestConstructors()
         {
-            var device = GraphicsDevice.New();
+            var device = GraphicsDevice.New(DriverType.Hardware, DeviceCreationFlags.Debug);
 
             var r1d0 = RenderTarget1D.New(512, PixelFormat.R8G8B8A8.UNorm);
             
@@ -45,7 +46,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             var r1d1 = RenderTarget1D.New(512, true, PixelFormat.R8G8B8A8.UNorm);
 
             for (int i = 0; i < r1d1.Description.MipLevels; i++)
-                device.Clear(r1d1.GetRenderTargetView(SelectView.Single, 0, i), new Color4((float)(i+1) / r1d1.Description.MipLevels));
+                device.Clear(r1d1.GetRenderTargetView(ViewType.Single, 0, i), new Color4((float)(i+1) / r1d1.Description.MipLevels));
 
             for (int i = 0; i < r1d1.Description.MipLevels; i++)
             {
@@ -67,7 +68,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
 
 
             for(int i = 0; i < r3d1.Description.Depth/2; i++)
-                device.Clear(r3d1.GetRenderTargetView(SelectView.Single, i, 1), new Color4((float)i / r3d1.Description.Depth));
+                device.Clear(r3d1.GetRenderTargetView(ViewType.Single, i, 1), new Color4((float)i / r3d1.Description.Depth));
 
             var textureData0 = device.GetData<PixelData.R8G8B8A8>(r3d1, 0, 1);
 

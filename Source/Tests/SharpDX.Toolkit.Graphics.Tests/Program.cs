@@ -24,11 +24,11 @@ namespace SharpDX.Toolkit.Graphics.Tests
     {
         public static void Main(string[] args)
         {
-            var test = new TestBuffer();
-            test.AllTest();
+            //var test = new TestBuffer();
+            //test.AllTest();
 
-            //var testTexture2D = new TestTexture2D();
-            //testTexture2D.TestConstructors();
+            var testTexture2D = new TestTexture2D();
+            testTexture2D.TestConstructors();
 
         }
     }

@@ -70,23 +70,23 @@ namespace SharpDX.Toolkit.Graphics
             if ((this.Description.BindFlags & BindFlags.RenderTarget) != 0)
             {
                 RenderTargetViews = new RenderTargetView[GetViewCount()];
-                GetRenderTargetView(SelectView.Full, 0, 0);
+                GetRenderTargetView(ViewType.Full, 0, 0);
             }
         }
 
-        public override RenderTargetView GetRenderTargetView(SelectView selectView, int arrayOrDepthSlice, int mipIndex)
+        public override RenderTargetView GetRenderTargetView(ViewType viewType, int arrayOrDepthSlice, int mipIndex)
         {
             if ((this.Description.BindFlags & BindFlags.RenderTarget) == 0)
                 return null;
 
-            if (selectView == SelectView.MipBand)
+            if (viewType == ViewType.MipBand)
                 throw new NotSupportedException("ViewSlice.MipBand is not supported for render targets");
 
             int arrayCount;
             int mipCount;
-            GetViewSliceBounds(selectView, ref arrayOrDepthSlice, ref mipIndex, out arrayCount, out mipCount);
+            GetViewSliceBounds(viewType, ref arrayOrDepthSlice, ref mipIndex, out arrayCount, out mipCount);
 
-            var rtvIndex = GetViewIndex(selectView, arrayOrDepthSlice, mipIndex);
+            var rtvIndex = GetViewIndex(viewType, arrayOrDepthSlice, mipIndex);
 
             lock (RenderTargetViews)
             {

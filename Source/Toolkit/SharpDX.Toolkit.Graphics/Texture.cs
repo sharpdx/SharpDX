@@ -139,20 +139,20 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Gets a specific <see cref="ShaderResourceView" /> from this texture.
         /// </summary>
-        /// <param name="selectView">Type of the view slice.</param>
+        /// <param name="viewType">Type of the view slice.</param>
         /// <param name="arrayOrDepthSlice">The texture array slice index.</param>
         /// <param name="mipIndex">The mip map slice index.</param>
         /// <returns>An <see cref="ShaderResourceView" /></returns>
-        public abstract ShaderResourceView GetShaderResourceView(SelectView selectView, int arrayOrDepthSlice, int mipIndex);
+        public abstract ShaderResourceView GetShaderResourceView(ViewType viewType, int arrayOrDepthSlice, int mipIndex);
 
         /// <summary>
         /// Gets a specific <see cref="RenderTargetView" /> from this texture.
         /// </summary>
-        /// <param name="selectView">Type of the view slice.</param>
+        /// <param name="viewType">Type of the view slice.</param>
         /// <param name="arrayOrDepthSlice">The texture array slice index.</param>
         /// <param name="mipMapSlice">The mip map slice index.</param>
         /// <returns>An <see cref="RenderTargetView" /></returns>
-        public abstract RenderTargetView GetRenderTargetView(SelectView selectView, int arrayOrDepthSlice, int mipMapSlice);
+        public abstract RenderTargetView GetRenderTargetView(ViewType viewType, int arrayOrDepthSlice, int mipMapSlice);
 
         /// <summary>
         /// Gets a specific <see cref="UnorderedAccessView"/> from this texture.
@@ -196,27 +196,27 @@ namespace SharpDX.Toolkit.Graphics
             return requestedLevel  == 0 ? maxMipMap : Math.Min(requestedLevel, maxMipMap);
         }
 
-        internal void GetViewSliceBounds(SelectView selectView, ref int arrayOrDepthIndex, ref int mipIndex, out int arrayOrDepthCount, out int mipCount)
+        internal void GetViewSliceBounds(ViewType viewType, ref int arrayOrDepthIndex, ref int mipIndex, out int arrayOrDepthCount, out int mipCount)
         {
             int arrayOrDepthSize = this.Description.Depth > 1 ? this.Description.Depth : this.Description.ArraySize;
 
-            switch (selectView)
+            switch (viewType)
             {
-                case SelectView.Full:
+                case ViewType.Full:
                     arrayOrDepthIndex = 0;
                     mipIndex = 0;
                     arrayOrDepthCount = arrayOrDepthSize;
                     mipCount = this.Description.MipLevels;
                     break;
-                case SelectView.Single:
+                case ViewType.Single:
                     arrayOrDepthCount = 1;
                     mipCount = 1;
                     break;
-                case SelectView.ArrayBand:
+                case ViewType.ArrayBand:
                     arrayOrDepthCount = arrayOrDepthSize - arrayOrDepthIndex;
                     mipCount = 1;
                     break;
-                case SelectView.MipBand:
+                case ViewType.MipBand:
                     arrayOrDepthCount = 1;
                     mipCount = arrayOrDepthSize - mipIndex;
                     break;
@@ -230,13 +230,13 @@ namespace SharpDX.Toolkit.Graphics
         internal int GetViewCount()
         {
             int arrayOrDepthSize = this.Description.Depth > 1 ? this.Description.Depth : this.Description.ArraySize;
-            return GetViewIndex((SelectView)4, arrayOrDepthSize, this.Description.MipLevels);
+            return GetViewIndex((ViewType)4, arrayOrDepthSize, this.Description.MipLevels);
         }
 
-        internal int GetViewIndex(SelectView selectView, int arrayOrDepthIndex, int mipIndex)
+        internal int GetViewIndex(ViewType viewType, int arrayOrDepthIndex, int mipIndex)
         {
             int arrayOrDepthSize = this.Description.Depth > 1 ? this.Description.Depth : this.Description.ArraySize;
-            return (((int)selectView) * arrayOrDepthSize + arrayOrDepthIndex) * this.Description.MipLevels + mipIndex;
+            return (((int)viewType) * arrayOrDepthSize + arrayOrDepthIndex) * this.Description.MipLevels + mipIndex;
         }
 
         protected override void OnNameChanged()

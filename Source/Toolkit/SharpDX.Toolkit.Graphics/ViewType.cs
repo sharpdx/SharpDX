@@ -25,7 +25,7 @@ namespace SharpDX.Toolkit.Graphics
     /// <remarks>
     /// This selection model is taken from Nuaj by Patapom (http://wiki.patapom.com/index.php/Nuaj)
     /// </remarks>
-    public enum SelectView
+    public enum ViewType
     {
         /// <summary>
         /// Gets a texture view for the whole texture for all mips/arrays dimensions.
