@@ -28,6 +28,10 @@
     <Compile Include="Buffer.Raw.cs" />
     <Compile Include="Buffer.Argument.cs" />
     <Compile Include="Buffer.Typed.cs" />
+    <Compile Include="VertexPositionTexture.cs" />
+    <Compile Include="VertexPositionNormalTexture.cs" />
+    <Compile Include="VertexPositionColorTexture.cs" />
+    <Compile Include="IVertexType.cs" />
     <Compile Include="SamplerState.cs" />
     <Compile Include="PrimitiveType.cs" />
     <Compile Include="RasterizerState.cs" />
@@ -58,6 +62,7 @@
     <Compile Include="TextureCube.cs" />
     <Compile Include="Texture2DBase.cs" />
     <Compile Include="TextureDescription.cs" />
+    <Compile Include="VertexPositionColor.cs" />
     <Compile Include="ViewType.cs" />
   </ItemGroup>
   <ItemGroup>
