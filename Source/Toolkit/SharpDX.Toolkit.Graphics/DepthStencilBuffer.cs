@@ -119,8 +119,8 @@ namespace SharpDX.Toolkit.Graphics
             // Create the Depth Stencil View
             depthStencilView = new SharpDX.Direct3D11.DepthStencilView(GraphicsDevice, Resource, depthStencilViewDescription);
 
-            // ReadOnly for feature level under Direct3D11
-            if (GraphicsDevice.Features.Level == FeatureLevel.Level_11_0)
+            // ReadOnly for feature level Direct3D11
+            if (GraphicsDevice.Features.Level >= FeatureLevel.Level_11_0)
             {
                 // Create a Depth stencil view on this texture2D
                 depthStencilViewDescription.Flags = DepthStencilViewFlags.ReadOnlyDepth;
