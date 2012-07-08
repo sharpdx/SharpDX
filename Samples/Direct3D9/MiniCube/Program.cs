@@ -121,7 +121,7 @@ namespace MiniCube
             {
                 var time = clock.ElapsedMilliseconds / 1000.0f;
 
-                device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+                device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Colors.Black, 1.0f, 0);
                 device.BeginScene();
 
                 effect.Technique = technique;

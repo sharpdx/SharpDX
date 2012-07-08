@@ -55,7 +55,7 @@ namespace MiniTri
     struct Vertex
     {
         public Vector4 Position;
-        public int Color;
+        public SharpDX.Color Color;
     }
 
     /// <summary>
@@ -71,9 +71,9 @@ namespace MiniTri
 
             var vertices = new VertexBuffer(device, 3 * 20, Usage.WriteOnly, VertexFormat.None, Pool.Managed);
             vertices.Lock(0, 0, LockFlags.None).WriteRange(new[] {
-                new Vertex() { Color = Color.Red.ToArgb(), Position = new Vector4(400.0f, 100.0f, 0.5f, 1.0f) },
-                new Vertex() { Color = Color.Blue.ToArgb(), Position = new Vector4(650.0f, 500.0f, 0.5f, 1.0f) },
-                new Vertex() { Color = Color.Green.ToArgb(), Position = new Vector4(150.0f, 500.0f, 0.5f, 1.0f) }
+                new Vertex() { Color = Colors.Red, Position = new Vector4(400.0f, 100.0f, 0.5f, 1.0f) },
+                new Vertex() { Color = Colors.Blue, Position = new Vector4(650.0f, 500.0f, 0.5f, 1.0f) },
+                new Vertex() { Color = Colors.Green, Position = new Vector4(150.0f, 500.0f, 0.5f, 1.0f) }
             });
             vertices.Unlock();
 
@@ -87,7 +87,7 @@ namespace MiniTri
 
             RenderLoop.Run(form, () =>
             {
-                device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, (Color4)Color.Black, 1.0f, 0);
+                device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Colors.Black, 1.0f, 0);
                 device.BeginScene();
 
                 device.SetStreamSource(0, vertices, 0, 20);
