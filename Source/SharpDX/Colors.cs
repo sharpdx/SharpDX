@@ -26,6 +26,11 @@ namespace SharpDX
     public static class Colors
     {
         /// <summary>
+        /// Zero color.
+        /// </summary>
+        public static readonly Color4 Zero = new Color4(0x00000000);
+
+        /// <summary>
         /// Transparent color.
         /// </summary>
         public static readonly Color4 Transparent = new Color4(0x00FFFFFF);
