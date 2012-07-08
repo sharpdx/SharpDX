@@ -130,5 +130,10 @@ namespace SharpDX
             return new System.Drawing.Size(input.Width, input.Height);
         }
 #endif
+
+        public override string ToString()
+        {
+            return string.Format("({0},{1})", Width, Height);
+        }
     }
 }

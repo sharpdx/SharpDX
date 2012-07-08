@@ -130,5 +130,10 @@ namespace SharpDX
             return new System.Drawing.Point(input.X, input.Y);
         }
 #endif
+
+        public override string ToString()
+        {
+            return string.Format("({0},{1})", X, Y);
+        }
     }
 }

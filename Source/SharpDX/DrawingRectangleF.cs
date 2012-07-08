@@ -148,5 +148,10 @@ namespace SharpDX
             return new System.Drawing.RectangleF(input.X, input.Y, input.Width, input.Height);
         }
 #endif
+
+        public override string ToString()
+        {
+            return string.Format("(X: {0} Y: {1} W: {2} H: {3})", X, Y, Width, Height);
+        }
     }
 }
