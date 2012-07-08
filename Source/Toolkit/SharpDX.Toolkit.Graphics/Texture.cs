@@ -64,9 +64,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Initializes the views provided by this texture.
         /// </summary>
-        protected virtual void InitializeViews()
-        {
-        }
+        protected abstract void InitializeViews();
 
         /// <summary>
         /// Calculates the size of the mip.
@@ -74,11 +72,10 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="size">The size.</param>
         /// <param name="mipLevel">The mip level.</param>
         /// <returns>Returns ceiling(size / (2 ^ mipLevel)) </returns>
-        public static int CalculateMipSize(int size, int mipLevel)
+        internal static int CalculateMipSize(int size, int mipLevel)
         {
             return (int)Math.Ceiling((double)size / (1 << mipLevel));            
         }
-
 
         /// <summary>
         /// Gets the absolute sub-resource index from the array and mip slice.

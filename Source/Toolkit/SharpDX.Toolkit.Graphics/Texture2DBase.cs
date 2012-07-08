@@ -31,6 +31,7 @@ namespace SharpDX.Toolkit.Graphics
     public abstract class Texture2DBase : Texture
     {
         protected readonly new Direct3D11.Texture2D Resource;
+        private DXGI.Surface dxgiSurface;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Texture2DBase" /> class.
@@ -242,10 +243,18 @@ namespace SharpDX.Toolkit.Graphics
             return uav;
         }
 
+        /// <summary>
+        /// <see cref="SharpDX.DXGI.Surface"/> casting operator.
+        /// </summary>
+        /// <param name="from">From the Texture1D.</param>
+        public static implicit operator SharpDX.DXGI.Surface(Texture2DBase from)
+        {
+            // Don't bother with multithreading here
+            return from == null ? null : from.dxgiSurface ?? (from.dxgiSurface = from.ToDispose(from.Resource.QueryInterface<DXGI.Surface>()));
+        }
+
         protected override void InitializeViews()
         {
-            base.InitializeViews();
-
             // Creates the shader resource view
             if ((this.Description.BindFlags & BindFlags.ShaderResource) != 0)
             {

@@ -31,6 +31,7 @@ namespace SharpDX.Toolkit.Graphics
     public abstract class Texture1DBase : Texture
     {
         protected readonly new Direct3D11.Texture1D Resource;
+        private DXGI.Surface dxgiSurface;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Texture1DBase" /> class.
@@ -163,6 +164,8 @@ namespace SharpDX.Toolkit.Graphics
                     else
                     {
                         srvDescription.Dimension = ShaderResourceViewDimension.Texture1D;
+                        srvDescription.Texture1D.MipLevels = mipCount;
+                        srvDescription.Texture1D.MostDetailedMip = mipIndex;
                     }
 
                     srv = new ShaderResourceView(this.GraphicsDevice, this.Resource, srvDescription);
@@ -210,6 +213,38 @@ namespace SharpDX.Toolkit.Graphics
                     UnorderedAccessViews[uavIndex] = ToDispose(uav);
                 }
                 return uav;
+            }
+        }
+
+        /// <summary>
+        /// <see cref="SharpDX.DXGI.Surface"/> casting operator.
+        /// </summary>
+        /// <param name="from">From the Texture1D.</param>
+        public static implicit operator SharpDX.DXGI.Surface(Texture1DBase from)
+        {
+            // Don't bother with multithreading here
+            return from == null ? null : from.dxgiSurface ?? (from.dxgiSurface = from.ToDispose(from.Resource.QueryInterface<DXGI.Surface>()));
+        }
+
+        protected override void InitializeViews()
+        {
+            // Creates the shader resource view
+            if ((this.Description.BindFlags & BindFlags.ShaderResource) != 0)
+            {
+                ShaderResourceViews = new ShaderResourceView[GetViewCount()];
+
+                // Pre initialize by default the view on the first array/mipmap
+                GetShaderResourceView(SelectView.Full, 0, 0);
+            }
+
+            // Creates the unordered access view
+            if ((this.Description.BindFlags & BindFlags.UnorderedAccess) != 0)
+            {
+                // Initialize the unordered access views
+                UnorderedAccessViews = new UnorderedAccessView[GetViewCount()];
+
+                // Pre initialize by default the view on the first array/mipmap
+                GetUnorderedAccessView(0, 0);
             }
         }
                

@@ -201,8 +201,6 @@ namespace SharpDX.Toolkit.Graphics
 
         protected override void InitializeViews()
         {
-            base.InitializeViews();
-
             // Creates the shader resource view
             if ((this.Description.BindFlags & BindFlags.ShaderResource) != 0)
             {
