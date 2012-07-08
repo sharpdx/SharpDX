@@ -28,7 +28,7 @@ namespace SharpDX.Toolkit.Graphics
     /// <msdn-id>ff476375</msdn-id>	
     /// <unmanaged>ID3D11DepthStencilState</unmanaged>	
     /// <unmanaged-short>ID3D11DepthStencilState</unmanaged-short>	
-    public class DepthStencilState : GraphicsState
+    public class DepthStencilState : GraphicsResource
     {
         /// <summary>
         /// A built-in state object with default settings for using a depth stencil buffer.
@@ -67,7 +67,7 @@ namespace SharpDX.Toolkit.Graphics
         private DepthStencilState(GraphicsDevice deviceLocal, DepthStencilStateDescription description)
         {
             Description = description;
-            Initialize(deviceLocal);
+            Initialize(deviceLocal, null);
         }
 
         /// <summary>
@@ -78,8 +78,8 @@ namespace SharpDX.Toolkit.Graphics
         private DepthStencilState(GraphicsDevice deviceLocal, Direct3D11.DepthStencilState nativeState)
         {
             Description = nativeState.Description;
-            State = ToDispose(nativeState);
-            Initialize(deviceLocal);
+            Resource = ToDispose(nativeState);
+            Initialize(deviceLocal, null);
         }
 
         /// <summary>	
@@ -131,7 +131,7 @@ namespace SharpDX.Toolkit.Graphics
             return new DepthStencilState(description) {Name = name};
         }
 
-        protected override DeviceChild CreateState()
+        protected override DeviceChild CreateResource()
         {
             return new Direct3D11.DepthStencilState(GraphicsDevice, Description);
         }
@@ -142,7 +142,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="from">The GraphicsState to convert from.</param>
         public static implicit operator Direct3D11.DepthStencilState(DepthStencilState from)
         {
-            return (Direct3D11.DepthStencilState) (from == null ? null : from.GetOrCreateState());
+            return (Direct3D11.DepthStencilState) (from == null ? null : from.GetOrCreateResource());
         }
 
         private static DepthStencilState New(string name, bool depthEnable, bool depthWriteEnable)

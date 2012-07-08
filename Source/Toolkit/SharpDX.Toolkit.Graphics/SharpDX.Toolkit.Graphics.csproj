@@ -31,7 +31,6 @@
     <Compile Include="PrimitiveType.cs" />
     <Compile Include="RasterizerState.cs" />
     <Compile Include="DepthStencilState.cs" />
-    <Compile Include="GraphicsState.cs" />
     <Compile Include="DepthFormat.cs" />
     <Compile Include="DepthStencilBuffer.cs" />
     <Compile Include="RenderTargetCube.cs" />

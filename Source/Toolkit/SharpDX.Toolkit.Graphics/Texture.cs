@@ -55,7 +55,7 @@ namespace SharpDX.Toolkit.Graphics
             DepthStride = RowStride * this.Description.Height;
         }
 
-        protected override void Initialize(GraphicsDevice deviceArg, Resource resource)
+        protected override void Initialize(GraphicsDevice deviceArg, DeviceChild resource)
         {
             base.Initialize(deviceArg, resource);
             InitializeViews();

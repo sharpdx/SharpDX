@@ -175,7 +175,7 @@ namespace SharpDX.Toolkit.Graphics
                         if (((BufferFlags & BufferFlags.RawBuffer) == BufferFlags.RawBuffer))
                             description.BufferEx.Flags |= ShaderResourceViewExtendedBufferFlags.Raw;
 
-                        srv = ToDispose(new ShaderResourceView(this.GraphicsDevice, this.Resource, description));
+                        srv = ToDispose(new ShaderResourceView(this.GraphicsDevice, (Direct3D11.Resource)this.Resource, description));
                     }
                 }
             }
@@ -212,7 +212,7 @@ namespace SharpDX.Toolkit.Graphics
                             }
                         };
 
-                        srv = ToDispose(new RenderTargetView(this.GraphicsDevice, this.Resource, description));
+                        srv = ToDispose(new RenderTargetView(this.GraphicsDevice, (Direct3D11.Resource)this.Resource, description));
                     }
                 }
             }
@@ -622,7 +622,7 @@ namespace SharpDX.Toolkit.Graphics
                 if (((BufferFlags & BufferFlags.StructuredCounterBuffer) == BufferFlags.StructuredCounterBuffer))
                     description.Buffer.Flags |= UnorderedAccessViewBufferFlags.Counter;
 
-                this.unorderedAccessView = ToDispose(new UnorderedAccessView(this.GraphicsDevice, this.Resource, description));
+                this.unorderedAccessView = ToDispose(new UnorderedAccessView(this.GraphicsDevice, (Direct3D11.Resource)this.Resource, description));
             }
         }
         
@@ -632,7 +632,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="from">The GraphicsResource to convert from.</param>
         public static implicit operator Direct3D11.Resource(Buffer from)
         {
-            return from == null ? null : from.Resource;
+            return from == null ? null : (Direct3D11.Resource)from.Resource;
         }
 
         /// <summary>

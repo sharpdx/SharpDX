@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.Runtime.InteropServices;
 
 using SharpDX.Direct3D11;
@@ -29,18 +30,25 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public abstract class GraphicsResource : Component
     {
-        protected internal GraphicsDevice GraphicsDevice;
-        protected internal Resource Resource;
+        private readonly object lockCreate = new object();
+        private bool isResourceInitialized;
+        internal GraphicsDevice GraphicsDevice;
+        internal DeviceChild Resource;
 
         /// <summary>
         /// Initializes the specified device local.
         /// </summary>
         /// <param name="deviceLocal">The device local.</param>
         /// <param name="resource">The resource.</param>
-        protected virtual void Initialize(GraphicsDevice deviceLocal, Resource resource)
+        protected virtual void Initialize(GraphicsDevice deviceLocal, DeviceChild resource)
         {
             GraphicsDevice = deviceLocal;
-            Resource = ToDispose(resource);
+
+            if (deviceLocal != null )
+            {
+                Resource = resource == null ? CreateResource() : ToDispose(resource);
+                isResourceInitialized = true;
+            }
         }
 
         /// <summary>
@@ -49,7 +57,28 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="from">The GraphicsResource to convert from.</param>
         public static implicit operator Resource(GraphicsResource from)
         {
-            return from == null ? null : from.Resource;
+            return from == null ? null : (Resource)from.Resource;
+        }
+
+        protected virtual DeviceChild CreateResource()
+        {
+            throw new InvalidOperationException("Cannot delay-create Resource for this type");
+        }
+
+        protected DeviceChild GetOrCreateResource()
+        {
+            if (isResourceInitialized)
+                return Resource;
+
+            lock (lockCreate)
+            {
+                if (Resource == null)
+                {
+                    GraphicsDevice = GraphicsDevice.Current;
+                    Resource = ToDispose(CreateResource());
+                }
+            }
+            return Resource;
         }
 
         /// <summary>

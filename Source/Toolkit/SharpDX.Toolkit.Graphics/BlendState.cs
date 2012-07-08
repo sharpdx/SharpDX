@@ -28,7 +28,7 @@ namespace SharpDX.Toolkit.Graphics
     /// <remarks>
     /// This class provides default stock blend states and easier constructors. It is also associating the <see cref="BlendFactor"/> and <see cref="MultiSampleMask"/> into the same object.
     /// </remarks>
-    public class BlendState : GraphicsState
+    public class BlendState : GraphicsResource
     {
         /// <summary>
         /// A built-in state object with settings for additive blend, that is adding the destination data to the source data without using alpha.
@@ -93,7 +93,7 @@ namespace SharpDX.Toolkit.Graphics
             Description = description;
             BlendFactor = blendFactor;
             MultiSampleMask = mask;
-            Initialize(deviceLocal);
+            Initialize(deviceLocal, null);
         }
 
         /// <summary>
@@ -108,8 +108,8 @@ namespace SharpDX.Toolkit.Graphics
             Description = nativeState.Description;
             BlendFactor = blendFactor;
             MultiSampleMask = mask;
-            State = ToDispose(nativeState);
-            Initialize(deviceLocal);
+            Resource = ToDispose(nativeState);
+            Initialize(deviceLocal, null);
         }
 
         /// <summary>
@@ -236,7 +236,7 @@ namespace SharpDX.Toolkit.Graphics
             return new BlendState(description, blendFactor, mask);
         }
 
-        protected override DeviceChild CreateState()
+        protected override DeviceChild CreateResource()
         {
             return new Direct3D11.BlendState(GraphicsDevice, Description);
         }
@@ -247,7 +247,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="from">The GraphicsState to convert from.</param>
         public static implicit operator Direct3D11.BlendState(BlendState from)
         {
-            return (Direct3D11.BlendState) (from == null ? null : from.GetOrCreateState());
+            return (Direct3D11.BlendState) (from == null ? null : from.GetOrCreateResource());
         }
 
         private static BlendState New(string name, BlendOption sourceBlend, BlendOption destinationBlend)

@@ -28,7 +28,7 @@ namespace SharpDX.Toolkit.Graphics
     /// <msdn-id>ff476580</msdn-id>	
     /// <unmanaged>ID3D11RasterizerState</unmanaged>	
     /// <unmanaged-short>ID3D11RasterizerState</unmanaged-short>	
-    public class RasterizerState : GraphicsState
+    public class RasterizerState : GraphicsResource
     {
         /// <summary>
         /// Built-in raterizer state object with settings for culling primitives with clockwise winding order (front facing).
@@ -72,7 +72,7 @@ namespace SharpDX.Toolkit.Graphics
         private RasterizerState(GraphicsDevice deviceLocal, RasterizerStateDescription description)
         {
             Description = description;
-            Initialize(deviceLocal);
+            Initialize(deviceLocal, null);
         }
 
         /// <summary>
@@ -83,8 +83,8 @@ namespace SharpDX.Toolkit.Graphics
         private RasterizerState(GraphicsDevice deviceLocal, Direct3D11.RasterizerState nativeState)
         {
             Description = nativeState.Description;
-            State = ToDispose(nativeState);
-            Initialize(deviceLocal);
+            Resource = ToDispose(nativeState);
+            Initialize(deviceLocal, null);
         }
 
         /// <summary>	
@@ -136,7 +136,7 @@ namespace SharpDX.Toolkit.Graphics
             return new RasterizerState(description) {Name = name};
         }
         
-        protected override DeviceChild CreateState()
+        protected override DeviceChild CreateResource()
         {
             return new Direct3D11.RasterizerState(GraphicsDevice, Description);
         }
@@ -147,7 +147,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="from">The GraphicsState to convert from.</param>
         public static implicit operator Direct3D11.RasterizerState(RasterizerState from)
         {
-            return (Direct3D11.RasterizerState) (from == null ? null : from.GetOrCreateState());
+            return (Direct3D11.RasterizerState) (from == null ? null : from.GetOrCreateResource());
         }
 
         private static RasterizerState New(string name, CullMode mode)

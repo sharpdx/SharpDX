@@ -3,21 +3,21 @@
   <Class Name="SharpDX.Toolkit.Graphics.GraphicsResource" Collapsed="true">
     <Position X="8.5" Y="2" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAACAAAAoCAAAQAAAAAAAAAQAAAAAAAAAAAEAAAAAAA=</HashCode>
+      <HashCode>AAACAAAAoCAAAQAAAAAAAAgQAAAAAAAEAAAEAgAAQAA=</HashCode>
       <FileName>GraphicsResource.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SharpDX.Toolkit.Graphics.Texture" Collapsed="true">
     <Position X="6" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAgCAAAABAAAAQAAAAAABAFAAAAAAQAAAAAoAAAAAAI=</HashCode>
+      <HashCode>AQoCAQEBBAAgBQAAACAADAFAAAAAAQAAAAAoACAAABI=</HashCode>
       <FileName>Texture.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SharpDX.Toolkit.Graphics.Texture1DBase" Collapsed="true">
     <Position X="1.75" Y="5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AQAAAAEQIAAgBAAAAAACCAEAAAAAAAAAAAAIAAAAABA=</HashCode>
+      <HashCode>AAAAAEAQIAAAAAAAAAACDAEAAAAAAAAAAAAIAAAAAAE=</HashCode>
       <FileName>Texture1DBase.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -52,7 +52,7 @@
   <Class Name="SharpDX.Toolkit.Graphics.Texture2DBase" Collapsed="true">
     <Position X="6" Y="5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AQACAAEQIAAgBAAAAAACDAEAAAAAAAAAAAAIAAAAABA=</HashCode>
+      <HashCode>AAAAAEAQIAAAAAAAAAACDAEIAAAAAAAAAAAIAAAAAAE=</HashCode>
       <FileName>Texture2DBase.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -66,12 +66,12 @@
   <Class Name="SharpDX.Toolkit.Graphics.Texture3DBase" Collapsed="true">
     <Position X="10.25" Y="5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AQACAAEQIAAgBAAAAAACDAEAAAAAAAAAAAAIAAAAABA=</HashCode>
+      <HashCode>AAAAAAAQIAAAAAAAAAACDAEAAAAAAAAAAAAIAAAAAAA=</HashCode>
       <FileName>Texture3DBase.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SharpDX.Toolkit.Graphics.Buffer">
-    <Position X="13.5" Y="3.5" Width="2" />
+    <Position X="13.25" Y="3.5" Width="2" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
@@ -154,6 +154,27 @@
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAACAAAAAABAAAAAAAAAAAQAAAAAAAADI=</HashCode>
       <FileName>RenderTarget2D.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpDX.Toolkit.Graphics.BlendState" Collapsed="true">
+    <Position X="15.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgICAIAAgAIAAAAAAAAAAEAAAAAgAIIAg=</HashCode>
+      <FileName>BlendState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpDX.Toolkit.Graphics.DepthStencilState" Collapsed="true">
+    <Position X="17.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAoACAAAAAAIAAAAAAAAAAAAAAAAgEAAAA=</HashCode>
+      <FileName>DepthStencilState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpDX.Toolkit.Graphics.RasterizerState" Collapsed="true">
+    <Position X="19.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgACEAAAAAIAAAAAQAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>RasterizerState.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />
