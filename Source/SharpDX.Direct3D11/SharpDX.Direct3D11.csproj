@@ -72,6 +72,7 @@
     <Compile Include="Resource.cs" />
     <Compile Include="ResourceRegion.cs" />
     <Compile Include="SamplerState.cs" />
+    <Compile Include="SamplerStateDescription.cs" />
     <Compile Include="Scan.cs" />
     <Compile Include="SegmentedScan.cs" />
     <Compile Include="ShaderResourceView.cs" />
