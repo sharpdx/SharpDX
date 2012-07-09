@@ -20,7 +20,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using SharpDX.Direct3D11;
 
 namespace SharpDX.Toolkit.Graphics
 {
@@ -28,7 +27,7 @@ namespace SharpDX.Toolkit.Graphics
     /// Describes a custom vertex format structure that contains position and color information. 
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct VertexPositionColor : IVertexType, IEquatable<VertexPositionColor>
+    public struct VertexPositionColor : IEquatable<VertexPositionColor>
     {
         /// <summary>
         /// Initializes a new <see cref="VertexPositionColor"/> instance.
@@ -44,23 +43,14 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// XYZ position.
         /// </summary>
+        [VertexElement("SV_Position")]
         public Vector3 Position;
 
         /// <summary>
         /// The vertex color.
         /// </summary>
+        [VertexElement("COLOR")]
         public Color Color;
-
-        public InputElement[] VertexDeclaration
-        {
-            get { return InputElements; }
-        }
-
-        private static readonly InputElement[] InputElements = new[]
-                                                          {
-                                                              new InputElement("POSITION", 0, PixelFormat.R32G32B32.Float, 0),
-                                                              new InputElement("COLOR", 0, PixelFormat.R8G8B8A8.UNorm, 0),
-                                                          };
 
         public bool Equals(VertexPositionColor other)
         {

@@ -28,10 +28,13 @@
     <Compile Include="Buffer.Raw.cs" />
     <Compile Include="Buffer.Argument.cs" />
     <Compile Include="Buffer.Typed.cs" />
+    <Compile Include="VertexLayout.cs" />
+    <Compile Include="VertexElementAttribute.cs" />
+    <Compile Include="VertexDeclaration.cs" />
+    <Compile Include="VertexElement.cs" />
     <Compile Include="VertexPositionTexture.cs" />
     <Compile Include="VertexPositionNormalTexture.cs" />
     <Compile Include="VertexPositionColorTexture.cs" />
-    <Compile Include="IVertexType.cs" />
     <Compile Include="SamplerState.cs" />
     <Compile Include="PrimitiveType.cs" />
     <Compile Include="RasterizerState.cs" />
