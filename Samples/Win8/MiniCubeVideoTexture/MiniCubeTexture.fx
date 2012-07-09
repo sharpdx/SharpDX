@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,37 +17,34 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
-#if DIRECTX11_1
-namespace SharpDX.MediaFoundation
+struct VS_IN
 {
-    public partial struct ColorBgra
-    {
-        /// <summary>
-        /// Creates a new instance of <see cref="ColorBgra"/>.
-        /// </summary>
-        /// <param name="color"></param>
-        public ColorBgra(Color4 color)
-        {
-            // Don't know why, but the colors are mapped differently????
-            // Green => Red
-            // Blue => Green
-            // Red => Blue
-            // Alpha => Alpha
-            color.ToArgb(out Green, out Blue, out Red, out Alpha);
-        }
+	float4 pos : POSITION;
+	float2 tex : TEXCOORD;
+};
 
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Color4"/> to <see cref="ColorBgra"/>.
-        /// </summary>
-        /// <param name="from">The value.</param>
-        /// <returns>
-        /// The result of the conversion.
-        /// </returns>
-        public static implicit operator ColorBgra(Color4 from)
-        {
-            return new ColorBgra(from);
-        }
-    }
+struct PS_IN
+{
+	float4 pos : SV_POSITION;
+	float2 tex : TEXCOORD;
+};
+
+float4x4 worldViewProj;
+
+Texture2D picture : register(t0);
+SamplerState pictureSampler : register(s0);
+
+PS_IN VS( VS_IN input )
+{
+	PS_IN output = (PS_IN)0;
+
+	output.pos = mul(input.pos, worldViewProj);
+	output.tex = input.tex;
+	
+	return output;
 }
-#endif
+
+float4 PS( PS_IN input ) : SV_Target
+{
+	return picture.Sample(pictureSampler, input.tex);
+}
