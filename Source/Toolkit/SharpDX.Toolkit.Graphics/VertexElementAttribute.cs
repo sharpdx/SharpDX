@@ -82,7 +82,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="semanticIndex">Index of the semantic.</param>
         /// <param name="format">The format.</param>
         /// <param name="alignedByteOffset">The aligned byte offset.</param>
-        public VertexElementAttribute(string semanticName, int semanticIndex, Format format, int alignedByteOffset = -1)
+        public VertexElementAttribute(string semanticName, int semanticIndex, Format format, int alignedByteOffset = VertexElement.AppendAligned)
         {
             this.semanticName = semanticName;
             this.semanticIndex = semanticIndex;

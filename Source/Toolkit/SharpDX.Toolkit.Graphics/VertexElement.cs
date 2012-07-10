@@ -19,6 +19,8 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using SharpDX.DXGI;
 
@@ -44,7 +46,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <returns>A value used to align input elements.</returns>
         /// <unmanaged>D3D11_APPEND_ALIGNED_ELEMENT</unmanaged>
-        public static readonly int AppendAligned = -1;
+        public const int AppendAligned = -1;
 
         internal static readonly Regex MatchSemanticIndex = new Regex(@"(.*)(\d+)$");
 
@@ -79,7 +81,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="semanticIndex">Index of the semantic.</param>
         /// <param name="format">The format.</param>
         /// <param name="alignedByteOffset">The aligned byte offset.</param>
-        public VertexElement(string semanticName, int semanticIndex, Format format, int alignedByteOffset = -1) : this()
+        public VertexElement(string semanticName, int semanticIndex, Format format, int alignedByteOffset = AppendAligned) : this()
         {
             SemanticName = semanticName;
             SemanticIndex = semanticIndex;
@@ -121,7 +123,7 @@ namespace SharpDX.Toolkit.Graphics
 
         public bool Equals(VertexElement other)
         {
-            return string.Equals(SemanticName, other.SemanticName) && SemanticIndex == other.SemanticIndex && Format.Equals(other.Format) && AlignedByteOffset == other.AlignedByteOffset;
+            return string.Compare(SemanticName, other.SemanticName, StringComparison.InvariantCultureIgnoreCase) == 0 && SemanticIndex == other.SemanticIndex && Format.Equals(other.Format) && AlignedByteOffset == other.AlignedByteOffset;
         }
 
         public override bool Equals(object obj)
@@ -155,6 +157,38 @@ namespace SharpDX.Toolkit.Graphics
         public override string ToString()
         {
             return string.Format("{0}{1},{2},{3}", SemanticName, SemanticIndex == 0 ? string.Empty : string.Empty + SemanticIndex, Format, AlignedByteOffset);
+        }
+
+        public VertexElement[] FromType<T>() where T : struct
+        {
+            return FromType(typeof(T));
+        }
+
+        public VertexElement[] FromType(Type type)
+        {
+            if (type == null)
+                throw new ArgumentNullException("type");
+
+            if (!type.IsValueType)
+                throw new ArgumentException("Type must be a value type");
+
+            var vertexElements = new List<VertexElement>();
+            foreach (var field in type.GetFields(BindingFlags.Instance | BindingFlags.Public))
+            {
+                var attributes = Utilities.GetCustomAttributes<VertexElementAttribute>(field);
+                bool isVertexElementFound = false;
+                foreach (var vertexElementAttribute in attributes)
+                {
+                    isVertexElementFound = true;
+                    vertexElements.Add(new VertexElement(vertexElementAttribute.SemanticName, vertexElementAttribute.SemanticIndex, vertexElementAttribute.Format, vertexElementAttribute.AlignedByteOffset));
+                    break;
+                }
+
+                if (!isVertexElementFound)
+                    throw new ArgumentException(string.Format("Field {0} from type {1} doesn't have a [VertexElement] attribute", field.Name, type.Name), "type");
+            }
+
+            return vertexElements.ToArray();
         }
     }
 }
