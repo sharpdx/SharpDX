@@ -22,6 +22,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using SharpDX.D3DCompiler;
+using SharpDX.DXGI;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 
@@ -39,6 +41,40 @@ namespace SharpDX.Toolkit.Graphics.Tests
         {
             var device = GraphicsDevice.New(DriverType.Hardware, DeviceCreationFlags.Debug);
 
+
+            var bytecode = ShaderBytecode.Compile(@"
+struct Toto {
+    float4 Position : SV_POSITION;
+    float4 Test : TEST;
+    float4 Test1 : TEST1;
+    float4 Test2 : TEST2;
+};
+
+float4 main(Toto toto) : SV_POSITION
+{
+  return toto.Position + toto.Test + toto.Test1 + toto.Test2;
+}
+", "main", "vs_4_0");
+
+            var vertexSignature = ShaderSignature.GetInputSignature(bytecode);
+
+            var layout = VertexLayout.New(vertexSignature, new[]
+                                           {
+                                               new VertexElement("SV_POSITION", Format.R32G32B32A32_Float),
+                                               new VertexElement("TEST", Format.R32G32B32A32_Float),
+                                               new VertexElement("TEST1", Format.R32G32B32A32_Float),
+                                               new VertexElement("TEST2", Format.R32G32B32A32_Float),
+                                           });
+
+            var layout2 = VertexLayout.New(vertexSignature, new[]
+                                           {
+                                               new VertexElement("SV_POSITION", Format.R32G32B32A32_Float),
+                                               new VertexElement("TEST", Format.R32G32B32A32_Float),
+                                               new VertexElement("TEST1", Format.R32G32B32A32_Float),
+                                               new VertexElement("TEST2", Format.R32G32B32A32_Float),
+                                           });
+
+
             var r1d0 = RenderTarget1D.New(512, PixelFormat.R8G8B8A8.UNorm);
             
             
@@ -50,7 +86,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
 
             for (int i = 0; i < r1d1.Description.MipLevels; i++)
             {
-                var testData = device.GetData<PixelData.R8G8B8A8>(r1d1, 0, i);
+                var testData = device.GetContent<PixelData.R8G8B8A8>(r1d1, 0, i);
                 Console.WriteLine(testData[0]);
             }
 
@@ -70,7 +106,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             for(int i = 0; i < r3d1.Description.Depth/2; i++)
                 device.Clear(r3d1.GetRenderTargetView(ViewType.Single, i, 1), new Color4((float)i / r3d1.Description.Depth));
 
-            var textureData0 = device.GetData<PixelData.R8G8B8A8>(r3d1, 0, 1);
+            var textureData0 = device.GetContent<PixelData.R8G8B8A8>(r3d1, 0, 1);
 
 
             var rcu0 = RenderTargetCube.New(512, PixelFormat.R8G8B8A8.UNorm);

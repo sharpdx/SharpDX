@@ -524,10 +524,10 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476457</msdn-id>	
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
-        public TData[] GetData<TData>(Buffer buffer) where TData : struct
+        public TData[] GetContent<TData>(Buffer buffer) where TData : struct
         {
             var toData = new TData[buffer.Description.SizeInBytes / Utilities.SizeOf<TData>()];
-            GetData(buffer, toData);
+            GetContent(buffer, toData);
             return toData;
         }
 
@@ -544,19 +544,19 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476457</msdn-id>	
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
-        public void GetData<TData>(Buffer buffer, TData[] toData) where TData : struct
+        public void GetContent<TData>(Buffer buffer, TData[] toData) where TData : struct
         {
             // Get data from this resource
             if (buffer.Description.Usage == ResourceUsage.Staging)
             {
                 // Directly if this is a staging resource
-                GetData(buffer, buffer, toData);
+                GetContent(buffer, buffer, toData);
             }
             else
             {
                 // Unefficient way to use the Copy method using dynamic staging texture
                 using (var throughStaging = buffer.ToStaging())
-                    GetData(buffer, throughStaging, toData);
+                    GetContent(buffer, throughStaging, toData);
             }
         }
 
@@ -573,19 +573,19 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476457</msdn-id>	
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
-        public void GetData<TData>(Buffer buffer, ref TData toData) where TData : struct
+        public void GetContent<TData>(Buffer buffer, ref TData toData) where TData : struct
         {
             // Get data from this resource
             if (buffer.Description.Usage == ResourceUsage.Staging)
             {
                 // Directly if this is a staging resource
-                GetData(buffer, buffer, ref toData);
+                GetContent(buffer, buffer, ref toData);
             }
             else
             {
                 // Unefficient way to use the Copy method using dynamic staging texture
                 using (var throughStaging = buffer.ToStaging())
-                    GetData(buffer, throughStaging, ref toData);
+                    GetContent(buffer, throughStaging, ref toData);
             }
         }
 
@@ -603,9 +603,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476457</msdn-id>	
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
-        public unsafe void GetData<TData>(Buffer buffer, Buffer stagingTexture, ref TData toData) where TData : struct
+        public unsafe void GetContent<TData>(Buffer buffer, Buffer stagingTexture, ref TData toData) where TData : struct
         {
-            GetData(buffer, stagingTexture, new DataPointer(Interop.Fixed(ref toData), Utilities.SizeOf<TData>()));
+            GetContent(buffer, stagingTexture, new DataPointer(Interop.Fixed(ref toData), Utilities.SizeOf<TData>()));
         }
 
         /// <summary>
@@ -622,9 +622,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476457</msdn-id>	
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
-        public unsafe void GetData<TData>(Buffer buffer, Buffer stagingTexture, TData[] toData) where TData : struct
+        public unsafe void GetContent<TData>(Buffer buffer, Buffer stagingTexture, TData[] toData) where TData : struct
         {
-            GetData(buffer, stagingTexture, new DataPointer(Interop.Fixed(toData), toData.Length * Utilities.SizeOf<TData>()));
+            GetContent(buffer, stagingTexture, new DataPointer(Interop.Fixed(toData), toData.Length * Utilities.SizeOf<TData>()));
         }
 
         /// <summary>
@@ -640,7 +640,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476457</msdn-id>	
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
-        public void GetData(Buffer buffer, Buffer stagingTexture, DataPointer toData)
+        public void GetContent(Buffer buffer, Buffer stagingTexture, DataPointer toData)
         {
             // Check size validity of data to copy to
             if (toData.Size > buffer.Description.SizeInBytes)
@@ -668,9 +668,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476457</msdn-id>
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
-        public unsafe void SetData<TData>(Buffer buffer, ref TData fromData, int offsetInBytes = 0) where TData : struct
+        public unsafe void SetContent<TData>(Buffer buffer, ref TData fromData, int offsetInBytes = 0) where TData : struct
         {
-            SetData(buffer, new DataPointer(Interop.Fixed(ref fromData), Utilities.SizeOf<TData>()), offsetInBytes);
+            SetContent(buffer, new DataPointer(Interop.Fixed(ref fromData), Utilities.SizeOf<TData>()), offsetInBytes);
         }
 
         /// <summary>
@@ -685,9 +685,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476457</msdn-id>
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
-        public unsafe void SetData<TData>(Buffer buffer, TData[] fromData, int offsetInBytes = 0) where TData : struct
+        public unsafe void SetContent<TData>(Buffer buffer, TData[] fromData, int offsetInBytes = 0) where TData : struct
         {
-            SetData(buffer, new DataPointer(Interop.Fixed(fromData), (fromData.Length * Utilities.SizeOf<TData>())), offsetInBytes);
+            SetContent(buffer, new DataPointer(Interop.Fixed(fromData), (fromData.Length * Utilities.SizeOf<TData>())), offsetInBytes);
         }
 
         /// <summary>
@@ -701,7 +701,7 @@ namespace SharpDX.Toolkit.Graphics
         ///   <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
         ///   <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
         /// <remarks>See the unmanaged documentation for usage and restrictions.</remarks>
-        public void SetData(Buffer buffer, DataPointer fromData, int offsetInBytes = 0)
+        public void SetContent(Buffer buffer, DataPointer fromData, int offsetInBytes = 0)
         {
             // Check size validity of data to copy to
             if (fromData.Size > buffer.Description.SizeInBytes)
@@ -752,10 +752,10 @@ namespace SharpDX.Toolkit.Graphics
         ///   <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
         /// <remarks>This method creates internally a stagging resource, copies to it and map it to memory. Use method with explicit staging resource
         /// for optimal performances.</remarks>
-        public TData[] GetData<TData>(Texture texture, int arrayOrDepthSlice = 0, int mipSlice = 0) where TData : struct
+        public TData[] GetContent<TData>(Texture texture, int arrayOrDepthSlice = 0, int mipSlice = 0) where TData : struct
         {
             var toData = new TData[texture.CalculatePixelDataCount<TData>(mipSlice)];
-            GetData(texture, toData, arrayOrDepthSlice, mipSlice);
+            GetContent(texture, toData, arrayOrDepthSlice, mipSlice);
             return toData;
         }
 
@@ -772,19 +772,19 @@ namespace SharpDX.Toolkit.Graphics
         ///   <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
         /// <remarks>This method creates internally a stagging resource if this texture is not already a stagging resouce, copies to it and map it to memory. Use method with explicit staging resource
         /// for optimal performances.</remarks>
-        public void GetData<TData>(Texture texture, TData[] toData, int arraySlice = 0, int mipSlice = 0) where TData : struct
+        public void GetContent<TData>(Texture texture, TData[] toData, int arraySlice = 0, int mipSlice = 0) where TData : struct
         {
             // Get data from this resource
             if (texture.Description.Usage == ResourceUsage.Staging)
             {
                 // Directly if this is a staging resource
-                GetData(texture, texture, toData, arraySlice, mipSlice);
+                GetContent(texture, texture, toData, arraySlice, mipSlice);
             }
             else
             {
                 // Unefficient way to use the Copy method using dynamic staging texture
                 using (var throughStaging = texture.ToStaging())
-                    GetData(texture, throughStaging, toData, arraySlice, mipSlice);
+                    GetContent(texture, throughStaging, toData, arraySlice, mipSlice);
             }
         }
 
@@ -804,27 +804,45 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>
         /// See unmanaged documentation for usage and restrictions.
         /// </remarks>
-        public unsafe void GetData<TData>(Texture texture, Texture stagingTexture, TData[] toData, int arraySlice = 0, int mipSlice = 0) where TData : struct
+        public unsafe void GetContent<TData>(Texture texture, Texture stagingTexture, TData[] toData, int arraySlice = 0, int mipSlice = 0) where TData : struct
+        {
+            GetContent(texture, stagingTexture, new DataPointer((IntPtr)Interop.Fixed(toData), toData.Length * Utilities.SizeOf<TData>()), arraySlice, mipSlice);
+        }
+
+        /// <summary>
+        /// Copies the content of this texture from GPU memory to a pointer on CPU memory using a specific staging resource.
+        /// </summary>
+        /// <param name="texture">The texture to get the data from.</param>
+        /// <param name="stagingTexture">The staging texture used to transfer the texture to.</param>
+        /// <param name="toData">The pointer to data in CPU memory.</param>
+        /// <param name="arraySlice">The array slice index. This value must be set to 0 for Texture 3D.</param>
+        /// <param name="mipSlice">The mip slice index.</param>
+        /// <exception cref="System.ArgumentException">When strides is different from optimal strides, and TData is not the same size as the pixel format, or Width * Height != toData.Length</exception>
+        /// <msdn-id>ff476457</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
+        /// <remarks>
+        /// See unmanaged documentation for usage and restrictions.
+        /// </remarks>
+        public unsafe void GetContent(Texture texture, Texture stagingTexture, DataPointer toData, int arraySlice = 0, int mipSlice = 0)
         {
             // Actual width for this particular mipSlice
-            int width = texture.CalculateWidth<TData>(mipSlice);
+            int width = Texture.CalculateMipSize(texture.Description.Width, mipSlice);
             int height = Texture.CalculateMipSize(texture.Description.Height, mipSlice);
             int depth = Texture.CalculateMipSize(texture.Description.Depth, mipSlice);
 
             // Calculate depth stride based on mipmap level
-            var rowStride = width * Utilities.SizeOf<TData>();
+            var rowStride = width * texture.Description.Format.SizeInBytes;
+
             // Depth Stride
             var textureDepthStride = rowStride * height;
-
-            // Size Of Input data
-            int sizeOfInputData = toData.Length * Utilities.SizeOf<TData>();
 
             // Size Of actual texture data
             int sizeOfTextureData = textureDepthStride * depth;
 
             // Check size validity of data to copy to
-            if (sizeOfInputData != sizeOfTextureData)
-                throw new ArgumentException(string.Format("Size of TData ({0} bytes) is not compatible expected size ({1} bytes) : Width * Height * Depth * sizeof(TData) / sizeof(PixelFormat) size in bytes", sizeOfInputData, sizeOfTextureData));
+            if (toData.Size != sizeOfTextureData)
+                throw new ArgumentException(string.Format("Size of toData ({0} bytes) is not compatible expected size ({1} bytes) : Width * Height * Depth * sizeof(PixelFormat) size in bytes", toData.Size, sizeOfTextureData));
 
             // Copy the actual content of the texture to the staging resource
             if (!ReferenceEquals(texture, stagingTexture))
@@ -844,13 +862,13 @@ namespace SharpDX.Toolkit.Graphics
                 // The fast way: If same stride, we can directly copy the whole texture in one shot
                 if (box.RowPitch == rowStride && boxDepthStride == textureDepthStride)
                 {
-                    Utilities.Read(box.DataPointer, toData, 0, toData.Length);
+                    Utilities.CopyMemory(toData.Pointer, box.DataPointer, sizeOfTextureData);
                 }
                 else
                 {
                     // Otherwise, the long way by copying each scanline
-                    int offsetStride = 0;
                     var sourcePerDepthPtr = (byte*)box.DataPointer;
+                    var destPtr = (byte*)toData.Pointer;
 
                     // Iterate on all depths
                     for (int j = 0; j < depth; j++)
@@ -860,9 +878,9 @@ namespace SharpDX.Toolkit.Graphics
                         for (int i = 0; i < height; i++)
                         {
                             // Copy a single row
-                            Utilities.Read((IntPtr) sourcePtr, toData, offsetStride, width);
+                            Utilities.CopyMemory(new IntPtr(destPtr), new IntPtr(sourcePtr), rowStride);
                             sourcePtr += box.RowPitch;
-                            offsetStride += width;
+                            destPtr += rowStride;
                         }
                         sourcePerDepthPtr += box.SlicePitch;
                     }
@@ -890,28 +908,44 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>
         /// See unmanaged documentation for usage and restrictions.
         /// </remarks>
-        public unsafe void SetData<TData>(Texture texture, TData[] fromData, int arraySlice = 0, int mipSlice = 0) where TData : struct
+        public unsafe void SetContent<TData>(Texture texture, TData[] fromData, int arraySlice = 0, int mipSlice = 0) where TData : struct
+        {
+            SetContent(texture, new DataPointer((IntPtr)Interop.Fixed(fromData), fromData.Length * Utilities.SizeOf<TData>()), arraySlice, mipSlice);
+        }
+
+        /// <summary>
+        /// Copies the content an data on CPU memory to this texture into GPU memory.
+        /// </summary>
+        /// <param name="texture">The texture to set the data to.</param>
+        /// <param name="fromData">The data to copy from.</param>
+        /// <param name="arraySlice">The array slice index. This value must be set to 0 for Texture 3D.</param>
+        /// <param name="mipSlice">The mip slice index.</param>
+        /// <exception cref="System.ArgumentException">When strides is different from optimal strides, and TData is not the same size as the pixel format, or Width * Height != toData.Length</exception>
+        /// <msdn-id>ff476457</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
+        /// <remarks>
+        /// See unmanaged documentation for usage and restrictions.
+        /// </remarks>
+        public unsafe void SetContent(Texture texture, DataPointer fromData, int arraySlice = 0, int mipSlice = 0)
         {
             // Actual width for this particular mipSlice
-            int width = texture.CalculateWidth<TData>(mipSlice);
+            int width = Texture.CalculateMipSize(texture.Description.Width, mipSlice);
             int height = Texture.CalculateMipSize(texture.Description.Height, mipSlice);
             int depth = Texture.CalculateMipSize(texture.Description.Depth, mipSlice);
 
             // Calculate depth stride based on mipmap level
-            var rowStride = width * Utilities.SizeOf<TData>();
+            var rowStride = width * texture.Description.Format.SizeInBytes;
 
             // Depth Stride
             var textureDepthStride = rowStride * height;
-
-            // Size Of Input data
-            int sizeOfInputData = fromData.Length * Utilities.SizeOf<TData>();
 
             // Size Of actual texture data
             int sizeOfTextureData = textureDepthStride * depth;
 
             // Check size validity of data to copy to
-            if (sizeOfInputData != sizeOfTextureData)
-                throw new ArgumentException(string.Format("Size of TData ({0} bytes) is not compatible expected size ({1} bytes) : Width * Height * Depth * sizeof(TData) / sizeof(PixelFormat) size in bytes", sizeOfInputData, sizeOfTextureData));
+            if (fromData.Size != sizeOfTextureData)
+                throw new ArgumentException(string.Format("Size of toData ({0} bytes) is not compatible expected size ({1} bytes) : Width * Height * Depth * sizeof(PixelFormat) size in bytes", fromData.Size, sizeOfTextureData));
 
             // Calculate the subResourceIndex for a Texture2D
             int subResourceIndex = texture.GetSubResourceIndex(arraySlice, mipSlice);
@@ -919,7 +953,7 @@ namespace SharpDX.Toolkit.Graphics
             // If this texture is declared as default usage, we can only use UpdateSubresource, which is not optimal but better than nothing
             if (texture.Description.Usage == ResourceUsage.Default)
             {
-                Context.UpdateSubresource(fromData, texture, subResourceIndex, texture.RowStride, texture.DepthStride);
+                Context.UpdateSubresource(new DataBox(fromData.Pointer, texture.RowStride, texture.DepthStride), texture, subResourceIndex);
             }
             else
             {
@@ -934,13 +968,14 @@ namespace SharpDX.Toolkit.Graphics
                     // The fast way: If same stride, we can directly copy the whole texture in one shot
                     if (box.RowPitch == rowStride && boxDepthStride == textureDepthStride)
                     {
-                        Utilities.Write(box.DataPointer, fromData, 0, fromData.Length);
+                        Utilities.CopyMemory(box.DataPointer, fromData.Pointer, sizeOfTextureData);
                     }
                     else
                     {
                         // Otherwise, the long way by copying each scanline
                         int offsetStride = 0;
                         var destPerDepthPtr = (byte*)box.DataPointer;
+                        var sourcePtr = (byte*)fromData.Pointer;
 
                         // Iterate on all depths
                         for (int j = 0; j < depth; j++)
@@ -949,9 +984,9 @@ namespace SharpDX.Toolkit.Graphics
                             // Iterate on each line
                             for (int i = 0; i < height; i++)
                             {
-                                Utilities.Write((IntPtr) destPtr, fromData, offsetStride, width);
+                                Utilities.CopyMemory((IntPtr)destPtr, fromData.Pointer, rowStride);
                                 destPtr += box.RowPitch;
-                                offsetStride += width;
+                                sourcePtr += rowStride;
                             }
                             destPerDepthPtr += box.SlicePitch;
                         }
@@ -964,6 +999,8 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
         }
+
+
 
         /// <summary>	
         /// <p>Set the blend state of the output-merger stage.</p>	
