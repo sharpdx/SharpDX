@@ -41,6 +41,17 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="DataPointer" /> struct.
+        /// </summary>
+        /// <param name="pointer">The pointer.</param>
+        /// <param name="size">The size.</param>
+        public unsafe DataPointer(void* pointer, int size)
+        {
+            Pointer = (IntPtr)pointer;
+            Size = size;
+        }
+
+        /// <summary>
         /// Pointer to the buffer.
         /// </summary>
         public IntPtr Pointer;
