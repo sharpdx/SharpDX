@@ -143,6 +143,20 @@ namespace SharpDX.Toolkit.Graphics
         public SharpDX.Direct3D11.ResourceOptionFlags OptionFlags;
 
         /// <summary>
+        /// Gets the staging description for this instance..
+        /// </summary>
+        /// <returns>A Staging description</returns>
+        public TextureDescription ToStaging()
+        {
+            var copy = this;
+            copy.BindFlags = BindFlags.None;
+            copy.CpuAccessFlags = CpuAccessFlags.Read | CpuAccessFlags.Write;
+            copy.Usage = ResourceUsage.Staging;
+            copy.OptionFlags = ResourceOptionFlags.None;
+            return copy;
+        }
+
+        /// <summary>
         /// Performs an explicit conversion from <see cref="Texture2DDescription"/> to <see cref="TextureDescription"/>.
         /// </summary>
         /// <param name="description">The texture description.</param>

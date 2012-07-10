@@ -122,12 +122,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns></returns>
         public override Texture ToStaging()
         {
-            var stagingDesc = this.Description;
-            stagingDesc.BindFlags = BindFlags.None;
-            stagingDesc.CpuAccessFlags = CpuAccessFlags.Read | CpuAccessFlags.Write;
-            stagingDesc.Usage = ResourceUsage.Staging;
-            stagingDesc.OptionFlags = ResourceOptionFlags.None;
-            return new Texture1D(this.GraphicsDevice, stagingDesc);            
+            return new Texture1D(this.GraphicsDevice, this.Description.ToStaging());
         }
 
         public override ShaderResourceView GetShaderResourceView(ViewType viewType, int arrayOrDepthSlice, int mipIndex)

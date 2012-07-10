@@ -122,12 +122,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns></returns>
         public override Texture ToStaging()
         {
-            var stagingDesc = this.Description;
-            stagingDesc.BindFlags = BindFlags.None;
-            stagingDesc.CpuAccessFlags = CpuAccessFlags.Read | CpuAccessFlags.Write;
-            stagingDesc.Usage = ResourceUsage.Staging;
-            stagingDesc.OptionFlags = ResourceOptionFlags.None;
-            return new Texture2D(this.GraphicsDevice, stagingDesc);            
+            return new Texture2D(this.GraphicsDevice, this.Description.ToStaging());            
         }
 
         protected virtual DXGI.Format GetDefaultViewFormat()
