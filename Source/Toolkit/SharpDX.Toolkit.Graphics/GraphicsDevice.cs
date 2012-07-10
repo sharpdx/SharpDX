@@ -603,20 +603,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476457</msdn-id>	
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
-        public void GetData<TData>(Buffer buffer, Buffer stagingTexture, ref TData toData) where TData : struct
+        public unsafe void GetData<TData>(Buffer buffer, Buffer stagingTexture, ref TData toData) where TData : struct
         {
-            // Check size validity of data to copy to
-            if (Utilities.SizeOf<TData>() > buffer.Description.SizeInBytes)
-                throw new ArgumentException("Length of TData is larger than size of buffer");
-
-            // Copy the texture to a staging resource
-            Context.CopyResource(buffer, stagingTexture);
-
-            // Map the staging resource to a CPU accessible memory
-            var box = Context.MapSubresource(stagingTexture, 0, MapMode.Read, Direct3D11.MapFlags.None);
-            Utilities.Read(box.DataPointer, ref toData);
-            // Make sure that we unmap the resource in case of an exception
-            Context.UnmapSubresource(stagingTexture, 0);
+            GetData(buffer, stagingTexture, new DataPointer(Interop.Fixed(ref toData), Utilities.SizeOf<TData>()));
         }
 
         /// <summary>
@@ -626,7 +615,6 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="buffer">The buffer to get the data from.</param>
         /// <param name="stagingTexture">The staging buffer used to transfer the buffer.</param>
         /// <param name="toData">To data.</param>
-        /// <param name="subResourceIndex">Index of the sub resource.</param>
         /// <exception cref="System.ArgumentException">When strides is different from optimal strides, and TData is not the same size as the pixel format, or Width * Height != toData.Length</exception>
         /// <remarks>
         /// See the unmanaged documentation for usage and restrictions.
@@ -634,10 +622,28 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476457</msdn-id>	
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
-        public void GetData<TData>(Buffer buffer, Buffer stagingTexture, TData[] toData) where TData : struct
+        public unsafe void GetData<TData>(Buffer buffer, Buffer stagingTexture, TData[] toData) where TData : struct
+        {
+            GetData(buffer, stagingTexture, new DataPointer(Interop.Fixed(toData), toData.Length * Utilities.SizeOf<TData>()));
+        }
+
+        /// <summary>
+        /// Copies the content of this texture from GPU memory to a CPU memory using a specific staging resource.
+        /// </summary>
+        /// <param name="buffer">The buffer to get the data from.</param>
+        /// <param name="stagingTexture">The staging buffer used to transfer the buffer.</param>
+        /// <param name="toData">To data pointer.</param>
+        /// <exception cref="System.ArgumentException">When strides is different from optimal strides, and TData is not the same size as the pixel format, or Width * Height != toData.Length</exception>
+        /// <remarks>
+        /// See the unmanaged documentation for usage and restrictions.
+        /// </remarks>
+        /// <msdn-id>ff476457</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
+        public void GetData(Buffer buffer, Buffer stagingTexture, DataPointer toData)
         {
             // Check size validity of data to copy to
-            if ((toData.Length * Utilities.SizeOf<TData>()) > buffer.Description.SizeInBytes)
+            if (toData.Size > buffer.Description.SizeInBytes)
                 throw new ArgumentException("Length of TData is larger than size of buffer");
 
             // Copy the texture to a staging resource
@@ -645,7 +651,7 @@ namespace SharpDX.Toolkit.Graphics
 
             // Map the staging resource to a CPU accessible memory
             var box = Context.MapSubresource(stagingTexture, 0, MapMode.Read, Direct3D11.MapFlags.None);
-            Utilities.Read(box.DataPointer, toData, 0, toData.Length);
+            Utilities.CopyMemory(box.DataPointer, toData.Pointer, toData.Size);
             // Make sure that we unmap the resource in case of an exception
             Context.UnmapSubresource(stagingTexture, 0);
         }
@@ -664,35 +670,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
         public unsafe void SetData<TData>(Buffer buffer, ref TData fromData, int offsetInBytes = 0) where TData : struct
         {
-            // Check size validity of data to copy to
-            if (Utilities.SizeOf<TData>() > buffer.Description.SizeInBytes)
-                throw new ArgumentException("Length of TData is larger than size of buffer");
-
-            // Offset in bytes is set to 0 for constant buffers
-            offsetInBytes = (buffer.Description.BindFlags & BindFlags.ConstantBuffer) != 0 ? 0 : offsetInBytes;
-
-            // If this texture is declared as default usage, we can only use UpdateSubresource, which is not optimal but better than nothing
-            if (buffer.Description.Usage == ResourceUsage.Default)
-            {
-                // Setup the dest region inside the buffer
-                var destRegion = new ResourceRegion(offsetInBytes, 0, 0, offsetInBytes + Utilities.SizeOf<TData>(), 1, 1);
-                Context.UpdateSubresource(ref fromData, buffer, 0, 0, 0, (buffer.Description.BindFlags & BindFlags.ConstantBuffer) != 0 ? (ResourceRegion?)null : destRegion);
-            }
-            else
-            {
-                if (offsetInBytes > 0)
-                    throw new ArgumentException("offset is only supported for textured declared with ResourceUsage.Default", "offsetInBytes");
-
-                try
-                {
-                    var box = Context.MapSubresource(buffer, 0, MapMode.WriteDiscard, Direct3D11.MapFlags.None);
-                    Utilities.Write((IntPtr)((byte*)box.DataPointer + offsetInBytes), ref fromData);
-                }
-                finally
-                {
-                    Context.UnmapSubresource(buffer, 0);
-                }
-            }
+            SetData(buffer, new DataPointer(Interop.Fixed(ref fromData), Utilities.SizeOf<TData>()), offsetInBytes);
         }
 
         /// <summary>
@@ -709,16 +687,40 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
         public unsafe void SetData<TData>(Buffer buffer, TData[] fromData, int offsetInBytes = 0) where TData : struct
         {
+            SetData(buffer, new DataPointer(Interop.Fixed(fromData), (fromData.Length * Utilities.SizeOf<TData>())), offsetInBytes);
+        }
+
+        /// <summary>
+        /// Copies the content an array of data on CPU memory to this texture into GPU memory.
+        /// </summary>
+        /// <param name="buffer">The buffer to set the data to.</param>
+        /// <param name="fromData">A data pointer.</param>
+        /// <param name="offsetInBytes">The offset in bytes to write to.</param>
+        /// <exception cref="System.ArgumentException"></exception>
+        /// <msdn-id>ff476457</msdn-id>
+        ///   <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
+        ///   <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
+        /// <remarks>See the unmanaged documentation for usage and restrictions.</remarks>
+        public void SetData(Buffer buffer, DataPointer fromData, int offsetInBytes = 0)
+        {
             // Check size validity of data to copy to
-            if ((fromData.Length * Utilities.SizeOf<TData>()) > buffer.Description.SizeInBytes)
-                throw new ArgumentException("Length of TData is larger than size of buffer");
+            if (fromData.Size > buffer.Description.SizeInBytes)
+                throw new ArgumentException("Size of data to upload larger than size of buffer");
 
             // If this texture is declared as default usage, we can only use UpdateSubresource, which is not optimal but better than nothing
             if (buffer.Description.Usage == ResourceUsage.Default)
             {
                 // Setup the dest region inside the buffer
-                var destRegion = new ResourceRegion(offsetInBytes, 0, 0, offsetInBytes + fromData.Length * Utilities.SizeOf<TData>(), 1, 1);
-                Context.UpdateSubresource(fromData, buffer, 0, 0, 0, (buffer.Description.BindFlags & BindFlags.ConstantBuffer) != 0 ? (ResourceRegion?)null : destRegion);
+                if ((buffer.Description.BindFlags & BindFlags.ConstantBuffer) != 0)
+                {
+                    Context.UpdateSubresource(new DataBox(fromData.Pointer, 0, 0), buffer);                                                        
+                }
+                else
+                {
+                    var destRegion = new ResourceRegion(offsetInBytes, 0, 0, offsetInBytes + fromData.Size, 1, 1);
+                    Context.UpdateSubresource(new DataBox(fromData.Pointer, 0, 0), buffer, 0, destRegion);                                    
+                }
+
             }
             else
             {
@@ -728,7 +730,7 @@ namespace SharpDX.Toolkit.Graphics
                 try
                 {
                     var box = Context.MapSubresource(buffer, 0, MapMode.WriteDiscard, Direct3D11.MapFlags.None);
-                    Utilities.Write(box.DataPointer, fromData, 0, fromData.Length);
+                    Utilities.CopyMemory(box.DataPointer, fromData.Pointer, fromData.Size);
                 }
                 finally
                 {
@@ -923,7 +925,7 @@ namespace SharpDX.Toolkit.Graphics
             {
                 try
                 {
-                    var box = Context.MapSubresource(texture, subResourceIndex, MapMode.WriteDiscard, MapFlags.None);
+                    var box = Context.MapSubresource(texture, subResourceIndex, texture.Description.Usage == ResourceUsage.Dynamic ? MapMode.WriteDiscard : MapMode.Write, MapFlags.None);
 
 
                     // If depth == 1 (Texture1D, Texture2D or TextureCube), then depthStride is not used
@@ -978,15 +980,6 @@ namespace SharpDX.Toolkit.Graphics
             // If same instance, avoid a unmanaged to managed transition.
             if (ReferenceEquals(currentBlendState, blendState) && currentBlendFactor == blendState.BlendFactor && currentMultiSampleMask == blendState.MultiSampleMask)
                 return;
-
-            if (blendState == null)
-            {
-                Context.OutputMerger.SetBlendState(null, null, -1);
-            }
-            else
-            {
-                Context.OutputMerger.SetBlendState(blendState, blendState.BlendFactor, blendState.MultiSampleMask);
-            }
 
             if (blendState == null)
             {
@@ -1090,6 +1083,7 @@ namespace SharpDX.Toolkit.Graphics
             // If same instance, avoid a unmanaged to managed transition.
             if (ReferenceEquals(currentRasterizerState, rasterizerState))
                 return;
+
             Context.Rasterizer.State = rasterizerState;
 
             // Set new current state
