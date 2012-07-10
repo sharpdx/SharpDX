@@ -176,11 +176,10 @@ namespace SharpDX.Direct3D11
         /// <param name = "format">The format the texture will be saved as.</param>
         /// <param name = "fileName">Name of the destination output file where the texture will be saved.</param>
         /// <returns>A <see cref = "T:SharpDX.Result" /> object describing the result of the operation.</returns>
-        public static Result ToFile<T>(DeviceContext context, T texture, ImageFileFormat format, string fileName)
-            where T : Resource
+        public static Result ToFile(DeviceContext context, Resource texture, ImageFileFormat format, string fileName)
         {
-            System.Diagnostics.Debug.Assert(typeof(T) == typeof(Texture1D) || typeof(T) == typeof(Texture2D) ||
-                         typeof(T) == typeof(Texture3D));
+            //System.Diagnostics.Debug.Assert(typeof(T) == typeof(Texture1D) || typeof(T) == typeof(Texture2D) ||
+            //             typeof(T) == typeof(Texture3D));
 
             return D3DX11.SaveTextureToFile(context, texture, format, fileName);
         }
