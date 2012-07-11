@@ -123,7 +123,7 @@ namespace SharpDX.Toolkit.Graphics
 
         public bool Equals(VertexElement other)
         {
-            return string.Compare(SemanticName, other.SemanticName, StringComparison.InvariantCultureIgnoreCase) == 0 && SemanticIndex == other.SemanticIndex && Format.Equals(other.Format) && AlignedByteOffset == other.AlignedByteOffset;
+            return string.Compare(SemanticName, other.SemanticName, StringComparison.OrdinalIgnoreCase) == 0 && SemanticIndex == other.SemanticIndex && Format == other.Format && AlignedByteOffset == other.AlignedByteOffset;
         }
 
         public override bool Equals(object obj)
@@ -169,11 +169,20 @@ namespace SharpDX.Toolkit.Graphics
             if (type == null)
                 throw new ArgumentNullException("type");
 
+#if WIN8METRO
+            if (!type.GetTypeInfo().IsValueType)
+                throw new ArgumentException("Type must be a value type");
+#else
             if (!type.IsValueType)
                 throw new ArgumentException("Type must be a value type");
+#endif
 
             var vertexElements = new List<VertexElement>();
+#if WIN8METRO
+            foreach (var field in type.GetTypeInfo().DeclaredFields)
+#else
             foreach (var field in type.GetFields(BindingFlags.Instance | BindingFlags.Public))
+#endif
             {
                 var attributes = Utilities.GetCustomAttributes<VertexElementAttribute>(field);
                 bool isVertexElementFound = false;
