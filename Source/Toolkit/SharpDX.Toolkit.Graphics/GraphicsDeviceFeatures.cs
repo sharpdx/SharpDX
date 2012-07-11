@@ -49,7 +49,7 @@ namespace SharpDX.Toolkit.Graphics
             Level = device.FeatureLevel;
             HasComputeShaders = device.CheckFeatureSupport(Feature.ComputeShaders);
             HasDoublePrecision = device.CheckFeatureSupport(Feature.ShaderDoubles);
-            device.CheckThreadingSupport(out HasMultiThreadingConcurrentResources, out HasMultiThreadingCommandLists);
+            device.CheckThreadingSupport(out HasMultiThreadingConcurrentResources, out this.HasDriverCommandLists);
 
             // Check features for each DXGI.Format
             foreach (var format in Enum.GetValues(typeof(DXGI.Format)))
@@ -99,7 +99,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Boolean indicating if this device supports command lists in multithreading scenarios.
         /// </summary>
-        public readonly bool HasMultiThreadingCommandLists;
+        public readonly bool HasDriverCommandLists;
 
         /// <summary>
         /// Gets the <see cref="FeaturesPerFormat" /> for the specified <see cref="SharpDX.DXGI.Format" />.
@@ -175,7 +175,7 @@ namespace SharpDX.Toolkit.Graphics
 
         public override string ToString()
         {
-            return string.Format("Level: {0}, HasComputeShaders: {1}, HasDoublePrecision: {2}, HasMultiThreadingConcurrentResources: {3}, HasMultiThreadingCommandLists: {4}", Level, HasComputeShaders, HasDoublePrecision, HasMultiThreadingConcurrentResources, HasMultiThreadingCommandLists);
+            return string.Format("Level: {0}, HasComputeShaders: {1}, HasDoublePrecision: {2}, HasMultiThreadingConcurrentResources: {3}, HasDriverCommandLists: {4}", Level, HasComputeShaders, HasDoublePrecision, HasMultiThreadingConcurrentResources, this.HasDriverCommandLists);
         }
     }
 }

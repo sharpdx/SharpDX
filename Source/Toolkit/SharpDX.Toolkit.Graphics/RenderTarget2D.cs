@@ -30,11 +30,12 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     /// <remarks>
     /// This class instantiates a <see cref="Texture2D"/> with the binding flags <see cref="BindFlags.RenderTarget"/>.
-    /// This class is also castable to <see cref="RenderTargetView"/>.
+    /// This class is also castable to <see cref="Direct3D11.RenderTargetView"/>.
     /// </remarks>
     public class RenderTarget2D : Texture2DBase
     {
-        internal RenderTarget2D(Texture2DDescription description) : base(description)
+        internal RenderTarget2D(Texture2DDescription description)
+            : this(GraphicsDevice.Current, description)
         {
         }
 
@@ -44,7 +45,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         internal RenderTarget2D(Direct3D11.Texture2D texture)
-            : base(texture)
+            : this(GraphicsDevice.Current, texture)
         {
         }
 
@@ -59,7 +60,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="from">Source for the.</param>
         public static implicit operator RenderTargetView(RenderTarget2D from)
         {
-            return from == null ? null : from.RenderTargetViews != null ? from.RenderTargetViews[0] : null;
+            return from == null ? null : from.renderTargetViews != null ? from.renderTargetViews[0] : null;
         }
 
         protected override void InitializeViews()
@@ -69,12 +70,12 @@ namespace SharpDX.Toolkit.Graphics
 
             if ((this.Description.BindFlags & BindFlags.RenderTarget) != 0)
             {
-                RenderTargetViews = new RenderTargetView[GetViewCount()];
+                this.renderTargetViews = new RenderTargetView[GetViewCount()];
                 GetRenderTargetView(ViewType.Full, 0, 0);
             }
         }
 
-        public override RenderTargetView GetRenderTargetView(ViewType viewType, int arrayOrDepthSlice, int mipIndex)
+        internal override RenderTargetView GetRenderTargetView(ViewType viewType, int arrayOrDepthSlice, int mipIndex)
         {
             if ((this.Description.BindFlags & BindFlags.RenderTarget) == 0)
                 return null;
@@ -88,9 +89,9 @@ namespace SharpDX.Toolkit.Graphics
 
             var rtvIndex = GetViewIndex(viewType, arrayOrDepthSlice, mipIndex);
 
-            lock (RenderTargetViews)
+            lock (this.renderTargetViews)
             {
-                var rtv = RenderTargetViews[rtvIndex];
+                var rtv = this.renderTargetViews[rtvIndex];
 
                 // Creates the shader resource view
                 if (rtv == null)
@@ -121,7 +122,7 @@ namespace SharpDX.Toolkit.Graphics
                     }
 
                     rtv = new RenderTargetView(GraphicsDevice, Resource, rtvDescription);
-                    RenderTargetViews[rtvIndex] = ToDispose(rtv);
+                    this.renderTargetViews[rtvIndex] = ToDispose(rtv);
                 }
                 return rtv;
             }

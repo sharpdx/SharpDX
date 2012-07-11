@@ -49,6 +49,11 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public readonly bool IsDebugMode;
 
+        /// <summary>
+        /// Gets whether this <see cref="GraphicsDevice"/> is a deferred context.
+        /// </summary>
+        public readonly bool IsDeferred;
+
         // Current states
 
         private BlendState currentBlendState;
@@ -58,6 +63,8 @@ namespace SharpDX.Toolkit.Graphics
         private int currentDepthStencilReference = 0;
         private RasterizerState currentRasterizerState;
         private PrimitiveTopology currentPrimitiveTopology;
+
+        private readonly bool needWorkAroundForUpdateSubResource;
       
         protected GraphicsDevice(DriverType type = DriverType.Hardware, DeviceCreationFlags flags = DeviceCreationFlags.None, params FeatureLevel[] featureLevels)
         {
@@ -65,8 +72,8 @@ namespace SharpDX.Toolkit.Graphics
             IsDebugMode = (Device.CreationFlags & (int)DeviceCreationFlags.Debug) != 0;
             MainDevice = this;
             Context = Device.ImmediateContext;
+            IsDeferred = false;
             Features = new GraphicsDeviceFeatures(Device);
-
             AttachToCurrentThread();
         }
 
@@ -76,6 +83,7 @@ namespace SharpDX.Toolkit.Graphics
             IsDebugMode = (Device.CreationFlags & (int)DeviceCreationFlags.Debug) != 0;
             MainDevice = this;
             Context = Device.ImmediateContext;
+            IsDeferred = false;
             Features = new GraphicsDeviceFeatures(Device);
             AttachToCurrentThread();
         }
@@ -86,7 +94,10 @@ namespace SharpDX.Toolkit.Graphics
             IsDebugMode = (Device.CreationFlags & (int)DeviceCreationFlags.Debug) != 0;
             MainDevice = mainDevice;
             Context = deferredContext;
+            IsDeferred = true;
             Features = mainDevice.Features;
+            // Setup the workaround flag
+            needWorkAroundForUpdateSubResource = IsDeferred && !Features.HasDriverCommandLists;
         }
 
         /// <summary>
@@ -283,7 +294,6 @@ namespace SharpDX.Toolkit.Graphics
 
         private PrimitiveTopology PrimitiveType
         {
-            get { return currentPrimitiveTopology; }
             set
             {
                 if (currentPrimitiveTopology != value)
@@ -901,6 +911,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="fromData">The data to copy from.</param>
         /// <param name="arraySlice">The array slice index. This value must be set to 0 for Texture 3D.</param>
         /// <param name="mipSlice">The mip slice index.</param>
+        /// <param name="region">Destination region</param>
         /// <exception cref="System.ArgumentException">When strides is different from optimal strides, and TData is not the same size as the pixel format, or Width * Height != toData.Length</exception>
         /// <msdn-id>ff476457</msdn-id>	
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
@@ -908,9 +919,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>
         /// See unmanaged documentation for usage and restrictions.
         /// </remarks>
-        public unsafe void SetContent<TData>(Texture texture, TData[] fromData, int arraySlice = 0, int mipSlice = 0) where TData : struct
+        public unsafe void SetContent<TData>(Texture texture, TData[] fromData, int arraySlice = 0, int mipSlice = 0, ResourceRegion? region = null) where TData : struct
         {
-            SetContent(texture, new DataPointer((IntPtr)Interop.Fixed(fromData), fromData.Length * Utilities.SizeOf<TData>()), arraySlice, mipSlice);
+            SetContent(texture, new DataPointer((IntPtr)Interop.Fixed(fromData), fromData.Length * Utilities.SizeOf<TData>()), arraySlice, mipSlice, region);
         }
 
         /// <summary>
@@ -920,6 +931,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="fromData">The data to copy from.</param>
         /// <param name="arraySlice">The array slice index. This value must be set to 0 for Texture 3D.</param>
         /// <param name="mipSlice">The mip slice index.</param>
+        /// <param name="region">Destination region</param>
         /// <exception cref="System.ArgumentException">When strides is different from optimal strides, and TData is not the same size as the pixel format, or Width * Height != toData.Length</exception>
         /// <msdn-id>ff476457</msdn-id>	
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
@@ -927,15 +939,38 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>
         /// See unmanaged documentation for usage and restrictions.
         /// </remarks>
-        public unsafe void SetContent(Texture texture, DataPointer fromData, int arraySlice = 0, int mipSlice = 0)
+        public unsafe void SetContent(Texture texture, DataPointer fromData, int arraySlice = 0, int mipSlice = 0, ResourceRegion? region = null)
         {
-            // Actual width for this particular mipSlice
+            if (region.HasValue && texture.Description.Usage != ResourceUsage.Default)
+                throw new ArgumentException("Region is only supported for textures with ResourceUsage.Default");
+
             int width = Texture.CalculateMipSize(texture.Description.Width, mipSlice);
             int height = Texture.CalculateMipSize(texture.Description.Height, mipSlice);
             int depth = Texture.CalculateMipSize(texture.Description.Depth, mipSlice);
 
+            // If we are using a region, then check that parameters are fine
+            if (region.HasValue)
+            {
+                int newWidth = region.Value.Right - region.Value.Left;
+                int newHeight = region.Value.Bottom - region.Value.Top;
+                int newDepth = region.Value.Back - region.Value.Front;
+                if (newWidth > width)
+                    throw new ArgumentException(string.Format("Region width [{0}] cannot be greater than mipmap width [{1}]", newWidth, width), "region");
+                if (newHeight > height)
+                    throw new ArgumentException(string.Format("Region height [{0}] cannot be greater than mipmap height [{1}]", newHeight, height), "region");
+                if (newDepth > depth)
+                    throw new ArgumentException(string.Format("Region depth [{0}] cannot be greater than mipmap depth [{1}]", newDepth, depth), "region");
+
+                width = newWidth;
+                height = newHeight;
+                depth = newDepth;
+            }
+            
+            // Size per pixel
+            var sizePerElement = texture.Description.Format.SizeInBytes;
+
             // Calculate depth stride based on mipmap level
-            var rowStride = width * texture.Description.Format.SizeInBytes;
+            var rowStride = width * sizePerElement;
 
             // Depth Stride
             var textureDepthStride = rowStride * height;
@@ -947,20 +982,43 @@ namespace SharpDX.Toolkit.Graphics
             if (fromData.Size != sizeOfTextureData)
                 throw new ArgumentException(string.Format("Size of toData ({0} bytes) is not compatible expected size ({1} bytes) : Width * Height * Depth * sizeof(PixelFormat) size in bytes", fromData.Size, sizeOfTextureData));
 
-            // Calculate the subResourceIndex for a Texture2D
+            // Calculate the subResourceIndex for a Texture
             int subResourceIndex = texture.GetSubResourceIndex(arraySlice, mipSlice);
 
-            // If this texture is declared as default usage, we can only use UpdateSubresource, which is not optimal but better than nothing
+            // If this texture is declared as default usage, we use UpdateSubresource that supports sub resource region.
             if (texture.Description.Usage == ResourceUsage.Default)
             {
-                Context.UpdateSubresource(new DataBox(fromData.Pointer, texture.RowStride, texture.DepthStride), texture, subResourceIndex);
+                // If using a specific region, we need to handle this case
+                if (region.HasValue)
+                {
+                    var regionValue = region.Value;
+                    var sourceDataPtr = fromData.Pointer;
+
+                    // Workaround when using region with a deferred context and a device that does not support CommandList natively
+                    // see http://blogs.msdn.com/b/chuckw/archive/2010/07/28/known-issue-direct3d-11-updatesubresource-and-deferred-contexts.aspx
+                    if (needWorkAroundForUpdateSubResource)
+                    {
+                        if (texture.IsBlockCompressed)
+                        {
+                            regionValue.Left /= 4;
+                            regionValue.Right /= 4;
+                            regionValue.Top /= 4;
+                            regionValue.Bottom /= 4;
+                        }
+                        sourceDataPtr = new IntPtr((byte*)sourceDataPtr - (regionValue.Front * textureDepthStride) - (regionValue.Top * rowStride) - (regionValue.Left * sizePerElement));
+                    }
+                    Context.UpdateSubresource(new DataBox(sourceDataPtr, rowStride, textureDepthStride), texture, subResourceIndex, regionValue);
+                }
+                else
+                {
+                    Context.UpdateSubresource(new DataBox(fromData.Pointer, rowStride, textureDepthStride), texture, subResourceIndex);
+                }
             }
             else
             {
                 try
                 {
                     var box = Context.MapSubresource(texture, subResourceIndex, texture.Description.Usage == ResourceUsage.Dynamic ? MapMode.WriteDiscard : MapMode.Write, MapFlags.None);
-
 
                     // If depth == 1 (Texture1D, Texture2D or TextureCube), then depthStride is not used
                     var boxDepthStride = texture.Description.Depth == 1 ? box.SlicePitch : textureDepthStride;
@@ -973,7 +1031,6 @@ namespace SharpDX.Toolkit.Graphics
                     else
                     {
                         // Otherwise, the long way by copying each scanline
-                        int offsetStride = 0;
                         var destPerDepthPtr = (byte*)box.DataPointer;
                         var sourcePtr = (byte*)fromData.Pointer;
 
@@ -984,7 +1041,7 @@ namespace SharpDX.Toolkit.Graphics
                             // Iterate on each line
                             for (int i = 0; i < height; i++)
                             {
-                                Utilities.CopyMemory((IntPtr)destPtr, fromData.Pointer, rowStride);
+                                Utilities.CopyMemory((IntPtr)destPtr, (IntPtr)sourcePtr, rowStride);
                                 destPtr += box.RowPitch;
                                 sourcePtr += rowStride;
                             }

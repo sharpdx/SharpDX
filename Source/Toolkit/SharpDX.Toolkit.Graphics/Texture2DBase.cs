@@ -130,7 +130,7 @@ namespace SharpDX.Toolkit.Graphics
             return this.Description.Format;
         }
 
-        public override ShaderResourceView GetShaderResourceView(ViewType viewType, int arrayOrDepthSlice, int mipIndex)
+        internal override ShaderResourceView GetShaderResourceView(ViewType viewType, int arrayOrDepthSlice, int mipIndex)
         {
             if ((this.Description.BindFlags & BindFlags.ShaderResource) == 0)
                 return null;
@@ -141,9 +141,9 @@ namespace SharpDX.Toolkit.Graphics
 
             var srvIndex = GetViewIndex(viewType, arrayOrDepthSlice, mipIndex);
 
-            lock (ShaderResourceViews)
+            lock (this.shaderResourceViews)
             {
-                var srv = ShaderResourceViews[srvIndex];
+                var srv = this.shaderResourceViews[srvIndex];
 
                 // Creates the shader resource view
                 if (srv == null)
@@ -192,14 +192,14 @@ namespace SharpDX.Toolkit.Graphics
                     }
 
                     srv = new ShaderResourceView(this.GraphicsDevice, this.Resource, srvDescription);
-                    ShaderResourceViews[srvIndex] = ToDispose(srv);
+                    this.shaderResourceViews[srvIndex] = ToDispose(srv);
                 }
 
                 return srv;
             }
         }
 
-        public override UnorderedAccessView GetUnorderedAccessView(int arrayOrDepthSlice, int mipIndex)
+        internal override UnorderedAccessView GetUnorderedAccessView(int arrayOrDepthSlice, int mipIndex)
         {
             if ((this.Description.BindFlags & BindFlags.UnorderedAccess) == 0)
                 return null;
@@ -209,7 +209,7 @@ namespace SharpDX.Toolkit.Graphics
             GetViewSliceBounds(ViewType.Single, ref arrayOrDepthSlice, ref mipIndex, out arrayCount, out mipCount);
 
             var uavIndex = GetViewIndex(ViewType.Single, arrayOrDepthSlice, mipIndex);
-            var uav = UnorderedAccessViews[uavIndex];
+            var uav = this.unorderedAccessViews[uavIndex];
 
             // Creates the unordered access view
             if (uav == null)
@@ -232,7 +232,7 @@ namespace SharpDX.Toolkit.Graphics
                 }
 
                 uav = new UnorderedAccessView(GraphicsDevice, Resource, uavDescription);
-                UnorderedAccessViews[uavIndex] = ToDispose(uav);
+                this.unorderedAccessViews[uavIndex] = ToDispose(uav);
             }
 
             return uav;
@@ -253,7 +253,7 @@ namespace SharpDX.Toolkit.Graphics
             // Creates the shader resource view
             if ((this.Description.BindFlags & BindFlags.ShaderResource) != 0)
             {
-                ShaderResourceViews = new ShaderResourceView[GetViewCount()];
+                this.shaderResourceViews = new ShaderResourceView[GetViewCount()];
 
                 // Pre initialize by default the view on the first array/mipmap
                 GetShaderResourceView(ViewType.Full, 0, 0);
@@ -263,7 +263,7 @@ namespace SharpDX.Toolkit.Graphics
             if ((this.Description.BindFlags & BindFlags.UnorderedAccess) != 0)
             {
                 // Initialize the unordered access views
-                UnorderedAccessViews = new UnorderedAccessView[GetViewCount()];
+                this.unorderedAccessViews = new UnorderedAccessView[GetViewCount()];
 
                 // Pre initialize by default the view on the first array/mipmap
                 GetUnorderedAccessView(0, 0);

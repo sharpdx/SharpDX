@@ -82,7 +82,7 @@ float4 main(Toto toto) : SV_POSITION
             var r1d1 = RenderTarget1D.New(512, true, PixelFormat.R8G8B8A8.UNorm);
 
             for (int i = 0; i < r1d1.Description.MipLevels; i++)
-                device.Clear(r1d1.GetRenderTargetView(ViewType.Single, 0, i), new Color4((float)(i+1) / r1d1.Description.MipLevels));
+                device.Clear(r1d1.RenderTargetView[ViewType.Single, 0, i], new Color4((float)(i+1) / r1d1.Description.MipLevels));
 
             for (int i = 0; i < r1d1.Description.MipLevels; i++)
             {
@@ -104,7 +104,7 @@ float4 main(Toto toto) : SV_POSITION
 
 
             for(int i = 0; i < r3d1.Description.Depth/2; i++)
-                device.Clear(r3d1.GetRenderTargetView(ViewType.Single, i, 1), new Color4((float)i / r3d1.Description.Depth));
+                device.Clear(r3d1.RenderTargetView[ViewType.Single, i, 1], new Color4((float)i / r3d1.Description.Depth));
 
             var textureData0 = device.GetContent<PixelData.R8G8B8A8>(r3d1, 0, 1);
 
