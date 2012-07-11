@@ -52,8 +52,8 @@ namespace CommonDX
         {
             this.pixelWidth = pixelWidth;
             this.pixelHeight = pixelHeight;
-            this.surfaceImageSource = new SurfaceImageSource(pixelWidth, pixelHeight);
-            surfaceImageSourceNative = ComObject.As<SharpDX.DXGI.ISurfaceImageSourceNative>(surfaceImageSource);
+            this.surfaceImageSource = ToDispose(new SurfaceImageSource(pixelWidth, pixelHeight));
+            surfaceImageSourceNative = ToDispose(ComObject.As<SharpDX.DXGI.ISurfaceImageSourceNative>(surfaceImageSource));
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace CommonDX
         public override void Initialize(DeviceManager deviceManager)
         {
             base.Initialize(deviceManager);
-            surfaceImageSourceNative.Device = DeviceManager.DeviceDirect3D.QueryInterface<SharpDX.DXGI.Device>();
+            surfaceImageSourceNative.Device = ToDispose(DeviceManager.DeviceDirect3D.QueryInterface<SharpDX.DXGI.Device>());
         }
 
         /// <inveritdoc/>
