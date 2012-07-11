@@ -28,6 +28,8 @@
     <Compile Include="Buffer.Raw.cs" />
     <Compile Include="Buffer.Argument.cs" />
     <Compile Include="Buffer.Typed.cs" />
+    <Compile Include="DisplayMode.cs" />
+    <Compile Include="GraphicsAdapter.cs" />
     <Compile Include="UnorderedAccessViewSelector.cs" />
     <Compile Include="ShaderResourceViewSelector.cs" />
     <Compile Include="RenderTargetViewSelector.cs" />

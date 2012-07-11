@@ -65,10 +65,21 @@ namespace SharpDX.Toolkit.Graphics
         private PrimitiveTopology currentPrimitiveTopology;
 
         private readonly bool needWorkAroundForUpdateSubResource;
-      
-        protected GraphicsDevice(DriverType type = DriverType.Hardware, DeviceCreationFlags flags = DeviceCreationFlags.None, params FeatureLevel[] featureLevels)
+
+        protected GraphicsDevice(DriverType type, DeviceCreationFlags flags = DeviceCreationFlags.None, params FeatureLevel[] featureLevels)
         {
             Device = ToDispose(featureLevels.Length > 0 ? new Device(type, flags, featureLevels) : new Device(type, flags));
+            IsDebugMode = (Device.CreationFlags & (int)DeviceCreationFlags.Debug) != 0;
+            MainDevice = this;
+            Context = Device.ImmediateContext;
+            IsDeferred = false;
+            Features = new GraphicsDeviceFeatures(Device);
+            AttachToCurrentThread();
+        }
+
+        protected GraphicsDevice(GraphicsAdapter adapter, DeviceCreationFlags flags = DeviceCreationFlags.None, params FeatureLevel[] featureLevels)
+        {
+            Device = ToDispose(featureLevels.Length > 0 ? new Device(adapter, flags, featureLevels) : new Device(adapter, flags));
             IsDebugMode = (Device.CreationFlags & (int)DeviceCreationFlags.Debug) != 0;
             MainDevice = this;
             Context = Device.ImmediateContext;
@@ -502,7 +513,22 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>A new instance of <see cref="GraphicsDevice"/></returns>
         public static GraphicsDevice New(DriverType type = DriverType.Hardware, DeviceCreationFlags flags = DeviceCreationFlags.None, params FeatureLevel[] featureLevels)
         {
+            if (type == DriverType.Hardware)
+                return new GraphicsDevice(GraphicsAdapter.Default, flags, featureLevels);
+
             return new GraphicsDevice(type, flags, featureLevels);
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="GraphicsDevice"/>.
+        /// </summary>
+        /// <param name="adapter">The graphics adapter to use.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="featureLevels">The feature levels.</param>
+        /// <returns>A new instance of <see cref="GraphicsDevice"/></returns>
+        public static GraphicsDevice New(GraphicsAdapter adapter, DeviceCreationFlags flags = DeviceCreationFlags.None, params FeatureLevel[] featureLevels)
+        {
+            return new GraphicsDevice(adapter, flags, featureLevels);
         }
 
         /// <summary>
