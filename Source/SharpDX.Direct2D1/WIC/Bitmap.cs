@@ -103,12 +103,16 @@ namespace SharpDX.WIC
         /// <param name="height">The height.</param>
         /// <param name="pixelFormat">The pixel format.</param>
         /// <param name="pixelDatas">The pixel datas.</param>
+        /// <param name="stride">Stride of a row of pixels (number of bytes per row). By default the stride is == 0, and calculated by taking the sizeof(T) * width.</param>
         /// <msdn-id>ee690291</msdn-id>	
         /// <unmanaged>HRESULT IWICImagingFactory::CreateBitmapFromMemory([In] unsigned int uiWidth,[In] unsigned int uiHeight,[In] const GUID&amp; pixelFormat,[In] unsigned int cbStride,[In] unsigned int cbBufferSize,[In] void* pbBuffer,[Out, Fast] IWICBitmap** ppIBitmap)</unmanaged>	
         /// <unmanaged-short>IWICImagingFactory::CreateBitmapFromMemory</unmanaged-short>	
-        public unsafe static Bitmap New<T>(ImagingFactory factory, int width, int height, System.Guid pixelFormat, T[] pixelDatas) where T : struct
+        public unsafe static Bitmap New<T>(ImagingFactory factory, int width, int height, System.Guid pixelFormat, T[] pixelDatas, int stride = 0) where T : struct
         {
-            return new Bitmap(factory, width, height, pixelFormat, new DataRectangle((IntPtr)Interop.Fixed(pixelDatas), width * Utilities.SizeOf<T>()));
+            if (stride == 0)
+                stride = width * Utilities.SizeOf<T>();
+
+            return new Bitmap(factory, width, height, pixelFormat, new DataRectangle((IntPtr)Interop.Fixed(pixelDatas), stride));
         }
 
 #if !WIN8METRO
