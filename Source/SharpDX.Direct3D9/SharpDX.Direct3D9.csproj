@@ -87,6 +87,7 @@
     <Compile Include="VertexBuffer.cs" />
     <Compile Include="VertexDeclaration.cs" />
     <Compile Include="VertexElement.cs" />
+    <Compile Include="VertexFormatHelper.cs" />
     <Compile Include="VertexShader.cs" />
     <Compile Include="Viewport.cs" />
     <Compile Include="Volume.cs" />
