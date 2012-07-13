@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
+ // Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -47,7 +47,7 @@ namespace SharpDX.Direct3D9
             //#define D3DFVF_TEXCOORDSIZE4(CoordIndex) (D3DFVF_TEXTUREFORMAT4 << (CoordIndex*2 + 16))
             //#define D3DFVF_TEXCOORDSIZE1(CoordIndex) (D3DFVF_TEXTUREFORMAT1 << (CoordIndex*2 + 16))
             int textureFormat;
-            switch (coordIndex)
+            switch (size)
             {
                 case 1:
                     textureFormat = 3;
