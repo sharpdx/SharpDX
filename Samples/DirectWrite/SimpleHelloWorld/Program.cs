@@ -47,14 +47,14 @@ namespace SimpleHelloWorld
 
             ClientRectangle = new RectangleF(0, 0, demoConfiguration.Width, demoConfiguration.Height);
 
-            SceneColorBrush.Color = Colors.Black;               
+            SceneColorBrush.Color = Color.Black;               
         }
 
         protected override void Draw(DemoTime time)
         {
             base.Draw(time);
 
-            RenderTarget2D.Clear(Colors.White);
+            RenderTarget2D.Clear(Color.White);
 
             RenderTarget2D.DrawText("Hello World using DirectWrite!", TextFormat, ClientRectangle, SceneColorBrush);
         }

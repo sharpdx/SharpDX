@@ -55,7 +55,7 @@ namespace CommonDX
 
         public virtual void Initialize(DeviceManager deviceManager)
         {
-            sceneColorBrush = new SolidColorBrush(deviceManager.ContextDirect2D, Colors.White);
+            sceneColorBrush = new SolidColorBrush(deviceManager.ContextDirect2D, Color.White);
             textFormat = new TextFormat(deviceManager.FactoryDirectWrite, "Calibri", 20) { TextAlignment = TextAlignment.Leading, ParagraphAlignment = ParagraphAlignment.Center };
             clock = Stopwatch.StartNew();
             deviceManager.ContextDirect2D.TextAntialiasMode = TextAntialiasMode.Grayscale;

@@ -56,7 +56,7 @@ namespace D2DEffectsHelloWorld
         public virtual void Initialize(DeviceManager deviceManager)
         {
             _deviceManager = deviceManager;
-            sceneColorBrush = new SolidColorBrush(deviceManager.ContextDirect2D, Colors.White);
+            sceneColorBrush = new SolidColorBrush(deviceManager.ContextDirect2D, Color.White);
             
             //GET IMAGE DATA
             _formatConverter = DecodeImage();
@@ -84,9 +84,9 @@ namespace D2DEffectsHelloWorld
             context2D.BeginDraw();
 
             if (EnableClear)
-                context2D.Clear(Colors.Black);
+                context2D.Clear(Color.Black);
 
-            context2D.Clear(Colors.Transparent);
+            context2D.Clear(Color.Transparent);
 
             context2D.DrawImage(_effectGraph.Output, InterpolationMode.Linear, CompositeMode.DestinationAtop);
 

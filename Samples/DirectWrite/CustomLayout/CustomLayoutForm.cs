@@ -97,7 +97,7 @@ namespace CustomLayout
                 TextAntialiasMode = TextAntialiasMode.Cleartype
             };
 
-            brush = new SolidColorBrush(RenderTarget2D, Colors.Black);
+            brush = new SolidColorBrush(RenderTarget2D, Color.Black);
         }
 
         private void LogException(Exception ex)
@@ -136,7 +136,7 @@ namespace CustomLayout
             {
                 RenderTarget2D.BeginDraw();
 
-                RenderTarget2D.Clear(Colors.White);
+                RenderTarget2D.Clear(Color.White);
 
                 flowLayoutSink.DrawGlyphRuns(RenderTarget2D, brush);
 

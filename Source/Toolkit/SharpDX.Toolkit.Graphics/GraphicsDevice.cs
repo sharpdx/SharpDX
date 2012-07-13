@@ -57,7 +57,7 @@ namespace SharpDX.Toolkit.Graphics
         // Current states
 
         private BlendState currentBlendState;
-        private Color4 currentBlendFactor = Colors.White;
+        private Color4 currentBlendFactor = Color.White;
         private int currentMultiSampleMask = -1;
         private DepthStencilState currentDepthStencilState;
         private int currentDepthStencilReference = 0;
@@ -1103,9 +1103,9 @@ namespace SharpDX.Toolkit.Graphics
 
             if (blendState == null)
             {
-                Context.OutputMerger.SetBlendState(null, Colors.White, -1);
+                Context.OutputMerger.SetBlendState(null, Color.White, -1);
                 currentBlendState = null;
-                currentBlendFactor = Colors.White;
+                currentBlendFactor = Color.White;
                 currentMultiSampleMask = -1;
             }
             else

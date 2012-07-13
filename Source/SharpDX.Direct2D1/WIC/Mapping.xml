@@ -272,7 +272,9 @@
     <!--IWICPalette-->
     <map method="IWICPalette::Initialize.*" name="Initialize"/>
     <map method="IWICPalette::InitializeCustom" visibility="internal"/>
+    <map param="IWICPalette::InitializeCustom::pColors" type="void"/>
     <map method="IWICPalette::GetColors" visibility="internal"/>
+    <map param="IWICPalette::GetColors::pColors" type="void"/>
 
     <!--IWICPixelFormatInfo-->
     <map method="IWICPixelFormatInfo::GetChannelMask" visibility="internal"/>

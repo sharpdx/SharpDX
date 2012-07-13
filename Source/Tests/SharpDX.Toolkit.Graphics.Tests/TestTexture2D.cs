@@ -39,6 +39,10 @@ namespace SharpDX.Toolkit.Graphics.Tests
         [Test]
         public void TestConstructors()
         {
+            var defaultAdapter = GraphicsAdapter.Default;
+
+
+
             var device = GraphicsDevice.New(DriverType.Hardware, DeviceCreationFlags.Debug);
 
 

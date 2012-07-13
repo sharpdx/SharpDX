@@ -63,7 +63,7 @@ namespace ColorDrawingEffect
 
             var transformedGeometry = new TransformedGeometry(_d2DFactory, pathGeometry, matrix);
 
-            var  brushColor = Colors.Black;
+            var  brushColor = Color.Black;
 
             if (clientDrawingEffect != null && clientDrawingEffect is ColorDrawingEffect)
                 brushColor = (clientDrawingEffect as ColorDrawingEffect).Color;
@@ -100,7 +100,7 @@ namespace ColorDrawingEffect
             };
             var transformedGeometry = new TransformedGeometry(_d2DFactory, rectangleGeometry, matrix);
             
-            var  brushColor = Colors.Black;
+            var  brushColor = Color.Black;
 
             if (clientDrawingEffect != null && clientDrawingEffect is ColorDrawingEffect)
                 brushColor = (clientDrawingEffect as ColorDrawingEffect).Color;
@@ -132,7 +132,7 @@ namespace ColorDrawingEffect
             };
             var transformedGeometry = new TransformedGeometry(_d2DFactory, rectangleGeometry, matrix);
 
-            var brushColor = Colors.Black;
+            var brushColor = Color.Black;
             if (clientDrawingEffect != null && clientDrawingEffect is ColorDrawingEffect)
                 brushColor = (clientDrawingEffect as ColorDrawingEffect).Color;
 

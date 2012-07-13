@@ -30,47 +30,27 @@ namespace SharpDX
     [Serializable]
 #endif
     [StructLayout(LayoutKind.Sequential, Size = 4)]
-    public struct Color : IEquatable<Color>, IFormattable
+    public partial struct Color : IEquatable<Color>, IFormattable
     {
         /// <summary>
         /// The red component of the color.
         /// </summary>
-        public byte Red;
-
-        /// <summary>
-        /// Gets or sets the red component of the color.
-        /// </summary>
-        public byte R { get { return Red; } set { Red = value; } }
+        public byte R;
 
         /// <summary>
         /// The green component of the color.
         /// </summary>
-        public byte Green;
-
-        /// <summary>
-        /// Gets or sets the green component of the color.
-        /// </summary>
-        public byte G { get { return Green; } set { Green = value; } }
+        public byte G;
 
         /// <summary>
         /// The blue component of the color.
         /// </summary>
-        public byte Blue;
-
-        /// <summary>
-        /// Gets or sets the blue component of the color.
-        /// </summary>
-        public byte B { get { return Blue; } set { Blue = value; } }
+        public byte B;
 
         /// <summary>
         /// The alpha component of the color.
         /// </summary>
-        public byte Alpha;
-
-        /// <summary>
-        /// Gets or sets the alpha component of the color.
-        /// </summary>
-        public byte A { get { return Alpha; } set { Alpha = value; } }
+        public byte A;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SharpDX.Color"/> struct.
@@ -78,7 +58,7 @@ namespace SharpDX
         /// <param name="value">The value that will be assigned to all components.</param>
         public Color(byte value)
         {
-            Alpha = Red = Green = Blue = value;
+            A = R = G = B = value;
         }
 
         /// <summary>
@@ -87,7 +67,7 @@ namespace SharpDX
         /// <param name="value">The value that will be assigned to all components.</param>
         public Color(float value)
         {
-            Alpha = Red = Green = Blue = ToByte(value);
+            A = R = G = B = ToByte(value);
         }
 
         /// <summary>
@@ -99,10 +79,10 @@ namespace SharpDX
         /// <param name="alpha">The alpha component of the color.</param>
         public Color(byte red, byte green, byte blue, byte alpha)
         {
-            Red = red;
-            Green = green;
-            Blue = blue;
-            Alpha = alpha;
+            R = red;
+            G = green;
+            B = blue;
+            A = alpha;
         }
 
         /// <summary>
@@ -114,10 +94,10 @@ namespace SharpDX
         /// <param name="alpha">The alpha component of the color.</param>
         public Color(float red, float green, float blue, float alpha)
         {
-            Red = ToByte(red);
-            Green = ToByte(green);
-            Blue = ToByte(blue);
-            Alpha = ToByte(alpha);
+            R = ToByte(red);
+            G = ToByte(green);
+            B = ToByte(blue);
+            A = ToByte(alpha);
         }
 
         /// <summary>
@@ -126,10 +106,10 @@ namespace SharpDX
         /// <param name="value">The red, green, blue, and alpha components of the color.</param>
         public Color(Vector4 value)
         {
-            Red = ToByte(value.X);
-            Green = ToByte(value.Y);
-            Blue = ToByte(value.Z);
-            Alpha = ToByte(value.W);
+            R = ToByte(value.X);
+            G = ToByte(value.Y);
+            B = ToByte(value.Z);
+            A = ToByte(value.W);
         }
 
         /// <summary>
@@ -139,10 +119,10 @@ namespace SharpDX
         /// <param name="alpha">The alpha component of the color.</param>
         public Color(Vector3 value, float alpha)
         {
-            Red = ToByte(value.X);
-            Green = ToByte(value.Y);
-            Blue = ToByte(value.Z);
-            Alpha = ToByte(alpha);
+            R = ToByte(value.X);
+            G = ToByte(value.Y);
+            B = ToByte(value.Z);
+            A = ToByte(alpha);
         }
 
         /// <summary>
@@ -151,10 +131,10 @@ namespace SharpDX
         /// <param name="argb">A packed integer containing all four color components.</param>
         public Color(uint argb)
         {
-            Alpha = (byte)((argb >> 24) & 255);
-            Red = (byte)((argb >> 16) & 255);
-            Green = (byte)((argb >> 8) & 255);
-            Blue = (byte)(argb & 255);
+            A = (byte)((argb >> 24) & 255);
+            R = (byte)((argb >> 16) & 255);
+            G = (byte)((argb >> 8) & 255);
+            B = (byte)(argb & 255);
         }
 
         /// <summary>
@@ -163,10 +143,10 @@ namespace SharpDX
         /// <param name="argb">A packed integer containing all four color components.</param>
         public Color(int argb)
         {
-            Alpha = (byte)((argb >> 24) & 255);
-            Red = (byte)((argb >> 16) & 255);
-            Green = (byte)((argb >> 8) & 255);
-            Blue = (byte)(argb & 255);
+            A = (byte)((argb >> 24) & 255);
+            R = (byte)((argb >> 16) & 255);
+            G = (byte)((argb >> 8) & 255);
+            B = (byte)(argb & 255);
         }
 
         /// <summary>
@@ -182,10 +162,10 @@ namespace SharpDX
             if (values.Length != 4)
                 throw new ArgumentOutOfRangeException("values", "There must be four and only four input values for Color.");
 
-            Alpha = ToByte(values[0]);
-            Red = ToByte(values[1]);
-            Green = ToByte(values[2]);
-            Blue = ToByte(values[3]);
+            A = ToByte(values[0]);
+            R = ToByte(values[1]);
+            G = ToByte(values[2]);
+            B = ToByte(values[3]);
         }
 
         /// <summary>
@@ -201,10 +181,10 @@ namespace SharpDX
             if (values.Length != 4)
                 throw new ArgumentOutOfRangeException("values", "There must be four and only four input values for Color.");
 
-            Alpha = values[0];
-            Red = values[1];
-            Green = values[2];
-            Blue = values[3];
+            A = values[0];
+            R = values[1];
+            G = values[2];
+            B = values[3];
         }
 
         /// <summary>
@@ -214,16 +194,16 @@ namespace SharpDX
         /// <param name="index">The index of the component to access. Use 0 for the alpha component, 1 for the red component, 2 for the green component, and 3 for the blue component.</param>
         /// <returns>The value of the component at the specified index.</returns>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the <paramref name="index"/> is out of the range [0, 3].</exception>
-        public float this[int index]
+        public byte this[int index]
         {
             get
             {
                 switch (index)
                 {
-                    case 0: return Alpha / 255.0f;
-                    case 1: return Red / 255.0f;
-                    case 2: return Green / 255.0f;
-                    case 3: return Blue / 255.0f;
+                    case 0: return A;
+                    case 1: return R;
+                    case 2: return G;
+                    case 3: return B;
                 }
 
                 throw new ArgumentOutOfRangeException("index", "Indices for Color run from 0 to 3, inclusive.");
@@ -233,10 +213,10 @@ namespace SharpDX
             {
                 switch (index)
                 {
-                    case 0: Alpha = ToByte(value); break;
-                    case 1: Red = ToByte(value); break;
-                    case 2: Green = ToByte(value); break;
-                    case 3: Blue = ToByte(value); break;
+                    case 0: A = value; break;
+                    case 1: R = value; break;
+                    case 2: G = value; break;
+                    case 3: B = value; break;
                     default: throw new ArgumentOutOfRangeException("index", "Indices for Color run from 0 to 3, inclusive.");
                 }
             }
@@ -248,10 +228,10 @@ namespace SharpDX
         /// <returns>A packed integer containing all four color components.</returns>
         public int ToArgb()
         {
-            int value = Blue;
-            value |= Green << 8;
-            value |= Red << 16;
-            value |= Alpha << 24;
+            int value = B;
+            value |= G << 8;
+            value |= R << 16;
+            value |= A << 24;
 
             return (int)value;
         }
@@ -262,7 +242,16 @@ namespace SharpDX
         /// <returns>A three component vector containing the red, green, and blue components of the color.</returns>
         public Vector3 ToVector3()
         {
-            return new Vector3(Red / 255.0f, Green / 255.0f, Blue / 255.0f);
+            return new Vector3(R / 255.0f, G / 255.0f, B / 255.0f);
+        }
+
+        /// <summary>
+        /// Converts the color into a three component color.
+        /// </summary>
+        /// <returns>A three component color containing the red, green, and blue components of the color.</returns>
+        public Color3 ToColor3()
+        {
+            return new Color3(R / 255.0f, G / 255.0f, B / 255.0f);
         }
 
         /// <summary>
@@ -271,16 +260,16 @@ namespace SharpDX
         /// <returns>A four component vector containing all four color components.</returns>
         public Vector4 ToVector4()
         {
-            return new Vector4(Red / 255.0f, Green / 255.0f, Blue / 255.0f, Alpha / 255.0f);
+            return new Vector4(R / 255.0f, G / 255.0f, B / 255.0f, A / 255.0f);
         }
 
         /// <summary>
         /// Creates an array containing the elements of the color.
         /// </summary>
         /// <returns>A four-element array containing the components of the color.</returns>
-        public float[] ToArray()
+        public byte[] ToArray()
         {
-            return new float[] { Alpha / 255.0f, Red / 255.0f, Green / 255.0f, Blue / 255.0f };
+            return new [] { A, R , G, B };
         }
 
         /// <summary>
@@ -291,10 +280,10 @@ namespace SharpDX
         /// <param name="result">When the method completes, completes the sum of the two colors.</param>
         public static void Add(ref Color left, ref Color right, out Color result)
         {
-            result.Alpha = (byte)(left.Alpha + right.Alpha);
-            result.Red = (byte)(left.Red + right.Red);
-            result.Green = (byte)(left.Green + right.Green);
-            result.Blue = (byte)(left.Blue + right.Blue);
+            result.A = (byte)(left.A + right.A);
+            result.R = (byte)(left.R + right.R);
+            result.G = (byte)(left.G + right.G);
+            result.B = (byte)(left.B + right.B);
         }
 
         /// <summary>
@@ -305,7 +294,7 @@ namespace SharpDX
         /// <returns>The sum of the two colors.</returns>
         public static Color Add(Color left, Color right)
         {
-            return new Color(left.Red + right.Red, left.Green + right.Green, left.Blue + right.Blue, left.Alpha + right.Alpha);
+            return new Color(left.R + right.R, left.G + right.G, left.B + right.B, left.A + right.A);
         }
 
         /// <summary>
@@ -316,10 +305,10 @@ namespace SharpDX
         /// <param name="result">WHen the method completes, contains the difference of the two colors.</param>
         public static void Subtract(ref Color left, ref Color right, out Color result)
         {
-            result.Alpha = (byte)(left.Alpha - right.Alpha);
-            result.Red = (byte)(left.Red - right.Red);
-            result.Green = (byte)(left.Green - right.Green);
-            result.Blue = (byte)(left.Blue - right.Blue);
+            result.A = (byte)(left.A - right.A);
+            result.R = (byte)(left.R - right.R);
+            result.G = (byte)(left.G - right.G);
+            result.B = (byte)(left.B - right.B);
         }
 
         /// <summary>
@@ -330,7 +319,7 @@ namespace SharpDX
         /// <returns>The difference of the two colors.</returns>
         public static Color Subtract(Color left, Color right)
         {
-            return new Color(left.Red - right.Red, left.Green - right.Green, left.Blue - right.Blue, left.Alpha - right.Alpha);
+            return new Color(left.R - right.R, left.G - right.G, left.B - right.B, left.A - right.A);
         }
 
         /// <summary>
@@ -341,10 +330,10 @@ namespace SharpDX
         /// <param name="result">When the method completes, contains the modulated color.</param>
         public static void Modulate(ref Color left, ref Color right, out Color result)
         {
-            result.Alpha = (byte)(left.Alpha * right.Alpha / 255.0f);
-            result.Red = (byte)(left.Red * right.Red / 255.0f);
-            result.Green = (byte)(left.Green * right.Green / 255.0f);
-            result.Blue = (byte)(left.Blue * right.Blue / 255.0f);
+            result.A = (byte)(left.A * right.A / 255.0f);
+            result.R = (byte)(left.R * right.R / 255.0f);
+            result.G = (byte)(left.G * right.G / 255.0f);
+            result.B = (byte)(left.B * right.B / 255.0f);
         }
 
         /// <summary>
@@ -355,7 +344,7 @@ namespace SharpDX
         /// <returns>The modulated color.</returns>
         public static Color Modulate(Color left, Color right)
         {
-            return new Color(left.Red * right.Red, left.Green * right.Green, left.Blue * right.Blue, left.Alpha * right.Alpha);
+            return new Color(left.R * right.R, left.G * right.G, left.B * right.B, left.A * right.A);
         }
 
         /// <summary>
@@ -366,10 +355,10 @@ namespace SharpDX
         /// <param name="result">When the method completes, contains the scaled color.</param>
         public static void Scale(ref Color value, float scale, out Color result)
         {
-            result.Alpha = (byte)(value.Alpha * scale);
-            result.Red = (byte)(value.Red * scale);
-            result.Green = (byte)(value.Green * scale);
-            result.Blue = (byte)(value.Blue * scale);
+            result.A = (byte)(value.A * scale);
+            result.R = (byte)(value.R * scale);
+            result.G = (byte)(value.G * scale);
+            result.B = (byte)(value.B * scale);
         }
 
         /// <summary>
@@ -380,7 +369,7 @@ namespace SharpDX
         /// <returns>The scaled color.</returns>
         public static Color Scale(Color value, float scale)
         {
-            return new Color(value.Red / 255.0f * scale, value.Green / 255.0f * scale, value.Blue / 255.0f * scale, value.Alpha / 255.0f * scale);
+            return new Color((byte)(value.R * scale), (byte)(value.G * scale), (byte)(value.B * scale), (byte)(value.A * scale));
         }
 
         /// <summary>
@@ -390,10 +379,10 @@ namespace SharpDX
         /// <param name="result">When the method completes, contains the negated color.</param>
         public static void Negate(ref Color value, out Color result)
         {
-            result.Alpha = (byte)(255 - value.Alpha);
-            result.Red = (byte)(255 - value.Red);
-            result.Green = (byte)(255 - value.Green);
-            result.Blue = (byte)(255 - value.Blue);
+            result.A = (byte)(255 - value.A);
+            result.R = (byte)(255 - value.R);
+            result.G = (byte)(255 - value.G);
+            result.B = (byte)(255 - value.B);
         }
 
         /// <summary>
@@ -403,7 +392,7 @@ namespace SharpDX
         /// <returns>The negated color.</returns>
         public static Color Negate(Color value)
         {
-            return new Color(1.0f - value.Red / 255.0f, 1.0f - value.Green / 255.0f, 1.0f - value.Blue / 255.0f, 1.0f - value.Alpha / 255.0f);
+            return new Color(255 - value.R, 255 - value.G, 255 - value.B, 255 - value.A);
         }
 
         /// <summary>
@@ -415,21 +404,21 @@ namespace SharpDX
         /// <param name="result">When the method completes, contains the clamped value.</param>
         public static void Clamp(ref Color value, ref Color min, ref Color max, out Color result)
         {
-            byte alpha = value.Alpha;
-            alpha = (alpha > max.Alpha) ? max.Alpha : alpha;
-            alpha = (alpha < min.Alpha) ? min.Alpha : alpha;
+            byte alpha = value.A;
+            alpha = (alpha > max.A) ? max.A : alpha;
+            alpha = (alpha < min.A) ? min.A : alpha;
 
-            byte red = value.Red;
-            red = (red > max.Red) ? max.Red : red;
-            red = (red < min.Red) ? min.Red : red;
+            byte red = value.R;
+            red = (red > max.R) ? max.R : red;
+            red = (red < min.R) ? min.R : red;
 
-            byte green = value.Green;
-            green = (green > max.Green) ? max.Green : green;
-            green = (green < min.Green) ? min.Green : green;
+            byte green = value.G;
+            green = (green > max.G) ? max.G : green;
+            green = (green < min.G) ? min.G : green;
 
-            byte blue = value.Blue;
-            blue = (blue > max.Blue) ? max.Blue : blue;
-            blue = (blue < min.Blue) ? min.Blue : blue;
+            byte blue = value.B;
+            blue = (blue > max.B) ? max.B : blue;
+            blue = (blue < min.B) ? min.B : blue;
 
             result = new Color(red, green, blue, alpha);
         }
@@ -462,10 +451,10 @@ namespace SharpDX
         /// </remarks>
         public static void Lerp(ref Color start, ref Color end, float amount, out Color result)
         {
-            result.Alpha = (byte)(start.Alpha + amount * (end.Alpha - start.Alpha));
-            result.Red = (byte)(start.Red + amount * (end.Red - start.Red));
-            result.Green = (byte)(start.Green + amount * (end.Green - start.Green));
-            result.Blue = (byte)(start.Blue + amount * (end.Blue - start.Blue));
+            result.A = (byte)(start.A + amount * (end.A - start.A));
+            result.R = (byte)(start.R + amount * (end.R - start.R));
+            result.G = (byte)(start.G + amount * (end.G - start.G));
+            result.B = (byte)(start.B + amount * (end.B - start.B));
         }
 
         /// <summary>
@@ -483,10 +472,10 @@ namespace SharpDX
         public static Color Lerp(Color start, Color end, float amount)
         {
             return new Color(
-                (byte)(start.Red + amount * (end.Red - start.Red)),
-                (byte)(start.Green + amount * (end.Green - start.Green)),
-                (byte)(start.Blue + amount * (end.Blue - start.Blue)),
-                (byte)(start.Alpha + amount * (end.Alpha - start.Alpha)));
+                (byte)(start.R + amount * (end.R - start.R)),
+                (byte)(start.G + amount * (end.G - start.G)),
+                (byte)(start.B + amount * (end.B - start.B)),
+                (byte)(start.A + amount * (end.A - start.A)));
         }
 
         /// <summary>
@@ -501,10 +490,10 @@ namespace SharpDX
             amount = (amount > 1.0f) ? 1.0f : ((amount < 0.0f) ? 0.0f : amount);
             amount = (amount * amount) * (3.0f - (2.0f * amount));
 
-            result.Alpha = (byte)(start.Alpha + ((end.Alpha - start.Alpha) * amount));
-            result.Red = (byte)(start.Red + ((end.Red - start.Red) * amount));
-            result.Green = (byte)(start.Green + ((end.Green - start.Green) * amount));
-            result.Blue = (byte)(start.Blue + ((end.Blue - start.Blue) * amount));
+            result.A = (byte)(start.A + ((end.A - start.A) * amount));
+            result.R = (byte)(start.R + ((end.R - start.R) * amount));
+            result.G = (byte)(start.G + ((end.G - start.G) * amount));
+            result.B = (byte)(start.B + ((end.B - start.B) * amount));
         }
 
         /// <summary>
@@ -520,10 +509,10 @@ namespace SharpDX
             amount = (amount * amount) * (3.0f - (2.0f * amount));
 
             return new Color(                
-                (byte)(start.Red + ((end.Red - start.Red) * amount)),
-                (byte)(start.Green + ((end.Green - start.Green) * amount)),
-                (byte)(start.Blue + ((end.Blue - start.Blue) * amount)),
-                (byte)(start.Alpha + ((end.Alpha - start.Alpha) * amount)));
+                (byte)(start.R + ((end.R - start.R) * amount)),
+                (byte)(start.G + ((end.G - start.G) * amount)),
+                (byte)(start.B + ((end.B - start.B) * amount)),
+                (byte)(start.A + ((end.A - start.A) * amount)));
         }
 
         /// <summary>
@@ -534,10 +523,10 @@ namespace SharpDX
         /// <param name="result">When the method completes, contains an new color composed of the largest components of the source colorss.</param>
         public static void Max(ref Color left, ref Color right, out Color result)
         {
-            result.Alpha = (left.Alpha > right.Alpha) ? left.Alpha : right.Alpha;
-            result.Red = (left.Red > right.Red) ? left.Red : right.Red;
-            result.Green = (left.Green > right.Green) ? left.Green : right.Green;
-            result.Blue = (left.Blue > right.Blue) ? left.Blue : right.Blue;
+            result.A = (left.A > right.A) ? left.A : right.A;
+            result.R = (left.R > right.R) ? left.R : right.R;
+            result.G = (left.G > right.G) ? left.G : right.G;
+            result.B = (left.B > right.B) ? left.B : right.B;
         }
 
         /// <summary>
@@ -561,10 +550,10 @@ namespace SharpDX
         /// <param name="result">When the method completes, contains an new color composed of the smallest components of the source colors.</param>
         public static void Min(ref Color left, ref Color right, out Color result)
         {
-            result.Alpha = (left.Alpha < right.Alpha) ? left.Alpha : right.Alpha;
-            result.Red = (left.Red < right.Red) ? left.Red : right.Red;
-            result.Green = (left.Green < right.Green) ? left.Green : right.Green;
-            result.Blue = (left.Blue < right.Blue) ? left.Blue : right.Blue;
+            result.A = (left.A < right.A) ? left.A : right.A;
+            result.R = (left.R < right.R) ? left.R : right.R;
+            result.G = (left.G < right.G) ? left.G : right.G;
+            result.B = (left.B < right.B) ? left.B : right.B;
         }
 
         /// <summary>
@@ -588,10 +577,10 @@ namespace SharpDX
         /// <param name="result">When the method completes, contains the adjusted color.</param>
         public static void AdjustContrast(ref Color value, float contrast, out Color result)
         {
-            result.Alpha = value.Alpha;
-            result.Red = ToByte(0.5f + contrast * (value.Red / 255.0f - 0.5f));
-            result.Green = ToByte(0.5f + contrast * (value.Green / 255.0f - 0.5f));
-            result.Blue = ToByte(0.5f + contrast * (value.Blue / 255.0f - 0.5f));
+            result.A = value.A;
+            result.R = ToByte(0.5f + contrast * (value.R / 255.0f - 0.5f));
+            result.G = ToByte(0.5f + contrast * (value.G / 255.0f - 0.5f));
+            result.B = ToByte(0.5f + contrast * (value.B / 255.0f - 0.5f));
         }
 
         /// <summary>
@@ -603,10 +592,10 @@ namespace SharpDX
         public static Color AdjustContrast(Color value, float contrast)
         {
             return new Color(                
-                ToByte(0.5f + contrast * (value.Red / 255.0f - 0.5f)),
-                ToByte(0.5f + contrast * (value.Green / 255.0f - 0.5f)),
-                ToByte(0.5f + contrast * (value.Blue / 255.0f- 0.5f)),
-                value.Alpha);
+                ToByte(0.5f + contrast * (value.R / 255.0f - 0.5f)),
+                ToByte(0.5f + contrast * (value.G / 255.0f - 0.5f)),
+                ToByte(0.5f + contrast * (value.B / 255.0f- 0.5f)),
+                value.A);
         }
 
         /// <summary>
@@ -617,12 +606,12 @@ namespace SharpDX
         /// <param name="result">When the method completes, contains the adjusted color.</param>
         public static void AdjustSaturation(ref Color value, float saturation, out Color result)
         {
-            float grey = value.Red  / 255.0f * 0.2125f + value.Green / 255.0f * 0.7154f + value.Blue / 255.0f * 0.0721f;
+            float grey = value.R  / 255.0f * 0.2125f + value.G / 255.0f * 0.7154f + value.B / 255.0f * 0.0721f;
 
-            result.Alpha = value.Alpha;
-            result.Red = ToByte(grey + saturation * (value.Red / 255.0f - grey));
-            result.Green = ToByte(grey + saturation * (value.Green / 255.0f- grey));
-            result.Blue = ToByte(grey + saturation * (value.Blue / 255.0f - grey));
+            result.A = value.A;
+            result.R = ToByte(grey + saturation * (value.R / 255.0f - grey));
+            result.G = ToByte(grey + saturation * (value.G / 255.0f- grey));
+            result.B = ToByte(grey + saturation * (value.B / 255.0f - grey));
         }
 
         /// <summary>
@@ -633,13 +622,13 @@ namespace SharpDX
         /// <returns>The adjusted color.</returns>
         public static Color AdjustSaturation(Color value, float saturation)
         {
-            float grey = value.Red / 255.0f * 0.2125f + value.Green / 255.0f * 0.7154f + value.Blue / 255.0f * 0.0721f;
+            float grey = value.R / 255.0f * 0.2125f + value.G / 255.0f * 0.7154f + value.B / 255.0f * 0.0721f;
 
             return new Color(                
-                ToByte(grey + saturation * (value.Red / 255.0f - grey)),
-                ToByte(grey + saturation * (value.Green / 255.0f - grey)),
-                ToByte(grey + saturation * (value.Blue / 255.0f - grey)),
-                value.Alpha);
+                ToByte(grey + saturation * (value.R / 255.0f - grey)),
+                ToByte(grey + saturation * (value.G / 255.0f - grey)),
+                ToByte(grey + saturation * (value.B / 255.0f - grey)),
+                value.A);
         }
 
         /// <summary>
@@ -650,7 +639,7 @@ namespace SharpDX
         /// <returns>The sum of the two colors.</returns>
         public static Color operator +(Color left, Color right)
         {
-            return new Color(left.Red + right.Red, left.Green + right.Green, left.Blue + right.Blue, left.Alpha + right.Alpha);
+            return new Color(left.R + right.R, left.G + right.G, left.B + right.B, left.A + right.A);
         }
 
         /// <summary>
@@ -671,7 +660,7 @@ namespace SharpDX
         /// <returns>The difference of the two colors.</returns>
         public static Color operator -(Color left, Color right)
         {
-            return new Color(left.Red - right.Red, left.Green - right.Green, left.Blue - right.Blue, left.Alpha - right.Alpha);
+            return new Color(left.R - right.R, left.G - right.G, left.B - right.B, left.A - right.A);
         }
 
         /// <summary>
@@ -681,7 +670,7 @@ namespace SharpDX
         /// <returns>A negated color.</returns>
         public static Color operator -(Color value)
         {
-            return new Color(-value.Red, -value.Green, -value.Blue, -value.Alpha);
+            return new Color(-value.R, -value.G, -value.B, -value.A);
         }
 
         /// <summary>
@@ -692,7 +681,7 @@ namespace SharpDX
         /// <returns>The scaled color.</returns>
         public static Color operator *(float scale, Color value)
         {
-            return new Color((byte)(value.Red * scale), (byte)(value.Green * scale), (byte)(value.Blue * scale), (byte)(value.Alpha * scale));
+            return new Color((byte)(value.R * scale), (byte)(value.G * scale), (byte)(value.B * scale), (byte)(value.A * scale));
         }
 
         /// <summary>
@@ -703,7 +692,7 @@ namespace SharpDX
         /// <returns>The scaled color.</returns>
         public static Color operator *(Color value, float scale)
         {
-            return new Color((byte)(value.Red * scale), (byte)(value.Green * scale), (byte)(value.Blue * scale), (byte)(value.Alpha * scale));
+            return new Color((byte)(value.R * scale), (byte)(value.G * scale), (byte)(value.B * scale), (byte)(value.A * scale));
         }
 
         /// <summary>
@@ -714,7 +703,7 @@ namespace SharpDX
         /// <returns>The modulated color.</returns>
         public static Color operator *(Color left, Color right)
         {
-            return new Color((byte)(left.Red * right.Red / 255.0f), (byte)(left.Green * right.Green / 255.0f), (byte)(left.Blue * right.Blue / 255.0f), (byte)(left.Alpha * right.Alpha / 255.0f));
+            return new Color((byte)(left.R * right.R / 255.0f), (byte)(left.G * right.G / 255.0f), (byte)(left.B * right.B / 255.0f), (byte)(left.A * right.A / 255.0f));
         }
 
         /// <summary>
@@ -746,7 +735,7 @@ namespace SharpDX
         /// <returns>The result of the conversion.</returns>
         public static explicit operator Color3(Color value)
         {
-            return new Color3(value.Red, value.Green, value.Blue);
+            return new Color3(value.R, value.G, value.B);
         }
 
         /// <summary>
@@ -756,7 +745,7 @@ namespace SharpDX
         /// <returns>The result of the conversion.</returns>
         public static explicit operator Vector3(Color value)
         {
-            return new Vector3(value.Red / 255.0f, value.Green / 255.0f, value.Blue / 255.0f);
+            return new Vector3(value.R / 255.0f, value.G / 255.0f, value.B / 255.0f);
         }
 
         /// <summary>
@@ -766,7 +755,7 @@ namespace SharpDX
         /// <returns>The result of the conversion.</returns>
         public static explicit operator Vector4(Color value)
         {
-            return new Vector4(value.Red / 255.0f, value.Green / 255.0f, value.Blue / 255.0f, value.Alpha / 255.0f);
+            return new Vector4(value.R / 255.0f, value.G / 255.0f, value.B / 255.0f, value.A / 255.0f);
         }
 
         /// <summary>
@@ -774,9 +763,9 @@ namespace SharpDX
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator Color4(Color value)
+        public static implicit operator Color4(Color value)
         {
-            return new Color4(value.Red/255.0f, value.Green/255.0f, value.Blue/255.0f, value.Alpha/255.0f);
+            return new Color4(value.R/255.0f, value.G/255.0f, value.B/255.0f, value.A/255.0f);
         }
 
         /// <summary>
@@ -787,6 +776,16 @@ namespace SharpDX
         public static explicit operator Color(Vector3 value)
         {
             return new Color(value.X, value.Y, value.Z, 1.0f);
+        }
+
+        /// <summary>
+        /// Performs an explicit conversion from <see cref="SharpDX.Color3"/> to <see cref="SharpDX.Color"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static explicit operator Color(Color3 value)
+        {
+            return new Color(value.Red, value.Green, value.Blue, 1.0f);
         }
 
         /// <summary>
@@ -816,7 +815,7 @@ namespace SharpDX
         /// <returns>
         /// The result of the conversion.
         /// </returns>
-        public static implicit operator int(Color value)
+        public static explicit operator int(Color value)
         {
             return value.ToArgb();
         }
@@ -828,7 +827,7 @@ namespace SharpDX
         /// <returns>
         /// The result of the conversion.
         /// </returns>
-        public static implicit operator Color(int value)
+        public static explicit operator Color(int value)
         {
             return new Color(value);
         }
@@ -841,7 +840,7 @@ namespace SharpDX
         /// </returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.CurrentCulture, "Alpha:{0} Red:{1} Green:{2} Blue:{3}", Alpha, Red, Green, Blue);
+            return string.Format(CultureInfo.CurrentCulture, "A:{0} R:{1} G:{2} B:{3}", A, R, G, B);
         }
 
         /// <summary>
@@ -856,8 +855,8 @@ namespace SharpDX
             if (format == null)
                 return ToString();
 
-            return string.Format(CultureInfo.CurrentCulture, "Alpha:{0} Red:{1} Green:{2} Blue:{3}", Alpha.ToString(format, CultureInfo.CurrentCulture),
-                Red.ToString(format, CultureInfo.CurrentCulture), Green.ToString(format, CultureInfo.CurrentCulture), Blue.ToString(format, CultureInfo.CurrentCulture));
+            return string.Format(CultureInfo.CurrentCulture, "A:{0} R:{1} G:{2} B:{3}", A.ToString(format, CultureInfo.CurrentCulture),
+                R.ToString(format, CultureInfo.CurrentCulture), G.ToString(format, CultureInfo.CurrentCulture), B.ToString(format, CultureInfo.CurrentCulture));
         }
 
         /// <summary>
@@ -869,7 +868,7 @@ namespace SharpDX
         /// </returns>
         public string ToString(IFormatProvider formatProvider)
         {
-            return string.Format(formatProvider, "Alpha:{0} Red:{1} Green:{2} Blue:{3}", Alpha, Red, Green, Blue);
+            return string.Format(formatProvider, "A:{0} R:{1} G:{2} B:{3}", A, R, G, B);
         }
 
         /// <summary>
@@ -885,8 +884,8 @@ namespace SharpDX
             if (format == null)
                 return ToString(formatProvider);
 
-            return string.Format(formatProvider, "Alpha:{0} Red:{1} Green:{2} Blue:{3}", Alpha.ToString(format, formatProvider),
-                Red.ToString(format, formatProvider), Green.ToString(format, formatProvider), Blue.ToString(format, formatProvider));
+            return string.Format(formatProvider, "A:{0} R:{1} G:{2} B:{3}", A.ToString(format, formatProvider),
+                R.ToString(format, formatProvider), G.ToString(format, formatProvider), B.ToString(format, formatProvider));
         }
 
         /// <summary>
@@ -897,7 +896,7 @@ namespace SharpDX
         /// </returns>
         public override int GetHashCode()
         {
-            return Alpha.GetHashCode() + Red.GetHashCode() + Green.GetHashCode() + Blue.GetHashCode();
+            return A.GetHashCode() + R.GetHashCode() + G.GetHashCode() + B.GetHashCode();
         }
 
         /// <summary>
@@ -909,7 +908,7 @@ namespace SharpDX
         /// </returns>
         public bool Equals(Color other)
         {
-            return Alpha == other.Alpha && Red == other.Red && Green == other.Green && Blue == other.Blue;
+            return R == other.R && G == other.G && B == other.B && A == other.A;
         }
 
         /// <summary>
@@ -940,10 +939,10 @@ namespace SharpDX
         {
             return new System.Windows.Media.Color()
             {
-                A = (byte)(255f * value.Alpha),
-                R = (byte)(255f * value.Red),
-                G = (byte)(255f * value.Green),
-                B = (byte)(255f * value.Blue)
+                A = (byte)(255f * value.A),
+                R = (byte)(255f * value.R),
+                G = (byte)(255f * value.G),
+                B = (byte)(255f * value.B)
             };
         }
 
@@ -956,10 +955,10 @@ namespace SharpDX
         {
             return new Color()
             {
-                Alpha = (float)value.A / 255f,
-                Red = (float)value.R / 255f,
-                Green = (float)value.G / 255f,
-                Blue = (float)value.B / 255f
+                A = (float)value.A / 255f,
+                R = (float)value.R / 255f,
+                G = (float)value.G / 255f,
+                B = (float)value.B / 255f
             };
         }
 #endif
@@ -972,7 +971,7 @@ namespace SharpDX
         /// <returns>The result of the conversion.</returns>
         public static implicit operator System.Drawing.Color(Color value)
         {
-            return System.Drawing.Color.FromArgb(value.Alpha, value.Red, value.Green, value.Blue);
+            return System.Drawing.Color.FromArgb(value.A, value.R, value.G, value.B);
         }
 
         /// <summary>

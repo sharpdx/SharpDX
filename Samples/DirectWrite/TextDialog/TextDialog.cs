@@ -28,6 +28,7 @@ using SharpDX.DirectWrite;
 using SharpDX.DXGI;
 
 using AlphaMode = SharpDX.Direct2D1.AlphaMode;
+using Color = SharpDX.Color;
 using Factory = SharpDX.Direct2D1.Factory;
 using FontStyle = SharpDX.DirectWrite.FontStyle;
 
@@ -96,7 +97,7 @@ namespace TextDialog
             RenderTarget2D.AntialiasMode = AntialiasMode.PerPrimitive;
             RenderTarget2D.TextAntialiasMode = TextAntialiasMode.Cleartype;
 
-            SceneColorBrush = new SolidColorBrush(RenderTarget2D, Colors.Black);            
+            SceneColorBrush = new SolidColorBrush(RenderTarget2D, Color.Black);            
         }
 
         /// <summary>
@@ -263,7 +264,7 @@ namespace TextDialog
             {
                 RenderTarget2D.BeginDraw();
 
-                RenderTarget2D.Clear(Colors.White);
+                RenderTarget2D.Clear(Color.White);
 
                 RenderTarget2D.DrawTextLayout(new PointF(0, 0), CurrentTextLayout, SceneColorBrush);
 

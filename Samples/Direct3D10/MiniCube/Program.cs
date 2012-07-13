@@ -177,7 +177,7 @@ namespace MiniCube
                     context.OutputMerger.SetTargets(depthView, renderView);
 
                     context.ClearDepthStencilView(depthView, DepthStencilClearFlags.Depth, 1.0f, 0);
-                    context.ClearRenderTargetView(renderView, Colors.Black);
+                    context.ClearRenderTargetView(renderView, Color.Black);
 
                     // Update WorldViewProj Matrix
                     var worldViewProj = Matrix.RotationX(time) * Matrix.RotationY(time * 2) * Matrix.RotationZ(time * .7f) * viewProj;

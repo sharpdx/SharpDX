@@ -68,7 +68,7 @@ namespace D2DCustomPixelShaderEffect
         public virtual void Initialize(DeviceManager deviceManager)
         {
             _deviceManager = deviceManager;
-            sceneColorBrush = new SolidColorBrush(deviceManager.ContextDirect2D, Colors.White);
+            sceneColorBrush = new SolidColorBrush(deviceManager.ContextDirect2D, Color.White);
             
             //GET IMAGE DATA
             _formatConverter = DecodeImage();
@@ -122,7 +122,7 @@ namespace D2DCustomPixelShaderEffect
             context2D.BeginDraw();
 
             if (EnableClear)
-                context2D.Clear(Colors.CornflowerBlue);
+                context2D.Clear(Color.CornflowerBlue);
 
             context2D.DrawImage(_rippleEffect);
             

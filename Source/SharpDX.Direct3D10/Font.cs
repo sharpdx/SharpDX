@@ -133,7 +133,7 @@ namespace SharpDX.Direct3D10
         public unsafe SharpDX.Rectangle MeasureText(Sprite sprite, string text, SharpDX.Rectangle rect, FontDrawFlags drawFlags)
         {
             // DT_CALCRECT
-            DrawText(sprite, text, text.Length, new IntPtr(&rect), ((int)drawFlags) | 0x400, Colors.White);
+            DrawText(sprite, text, text.Length, new IntPtr(&rect), ((int)drawFlags) | 0x400, Color.White);
             return rect;
         }
 
@@ -150,7 +150,7 @@ namespace SharpDX.Direct3D10
         public unsafe SharpDX.Rectangle MeasureText(Sprite sprite, string text, SharpDX.Rectangle rect, FontDrawFlags drawFlags, out int textHeight)
         {
             // DT_CALCRECT
-            textHeight = DrawText(sprite, text, text.Length, new IntPtr(&rect), ((int)drawFlags) | 0x400, Colors.White);
+            textHeight = DrawText(sprite, text, text.Length, new IntPtr(&rect), ((int)drawFlags) | 0x400, Color.White);
             return rect;
         }
     }

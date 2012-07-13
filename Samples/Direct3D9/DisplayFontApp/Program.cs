@@ -65,7 +65,7 @@ namespace DisplayFontApp
 
             RenderLoop.Run(form, () =>
             {
-                device.Clear(ClearFlags.Target, Colors.Black, 1.0f, 0);
+                device.Clear(ClearFlags.Target, Color.Black, 1.0f, 0);
                 device.BeginScene();
 
                 // Make the text boucing on the screen limits
@@ -85,7 +85,7 @@ namespace DisplayFontApp
                 fontDimension.Right += (int)xDir;
 
                 // Draw the text
-                font.DrawText(null, displayText, fontDimension, FontDrawFlags.Center | FontDrawFlags.VerticalCenter, Colors.White);
+                font.DrawText(null, displayText, fontDimension, FontDrawFlags.Center | FontDrawFlags.VerticalCenter, Color.White);
 
                 device.EndScene();
                 device.Present();

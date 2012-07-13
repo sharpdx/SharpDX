@@ -73,7 +73,7 @@ namespace MiniCubeTexture
             // Remove previous buffer
             SafeDispose(ref constantBuffer);
 
-            mediaPlayer.BackgroundColor = Colors.Gray;
+            mediaPlayer.BackgroundColor = Color.Gray;
 
             // Initialize the MediaPlayer
             mediaPlayer.Initialize(devices);
@@ -175,7 +175,7 @@ namespace MiniCubeTexture
                 AddressU = TextureAddressMode.Clamp,
                 AddressV = TextureAddressMode.Clamp,
                 AddressW = TextureAddressMode.Clamp,
-                BorderColor = Colors.Black,
+                BorderColor = Color.Black,
                 ComparisonFunction = Comparison.Never,
                 MaximumAnisotropy = 16,
                 MipLodBias = 0,
@@ -216,7 +216,7 @@ namespace MiniCubeTexture
             d3dContext.ClearDepthStencilView(render.DepthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
             if (EnableClear)
             {
-                d3dContext.ClearRenderTargetView(render.RenderTargetView, Colors.Black);
+                d3dContext.ClearRenderTargetView(render.RenderTargetView, Color.Black);
             }
 
             if (ShowCube)

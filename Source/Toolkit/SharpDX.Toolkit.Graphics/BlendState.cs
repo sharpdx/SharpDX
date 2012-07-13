@@ -143,7 +143,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks><p>An application can create up to 4096 unique blend-state objects. For each object created, the runtime checks to see if a previous object  has the same state. If such a previous object exists, the runtime will return a reference to previous instance instead of creating a duplicate object.</p></remarks>
         public static BlendState New(RenderTargetBlendDescription renderTargetBlend0, int mask = -1)
         {
-            return New(renderTargetBlend0, Colors.White, mask);
+            return New(renderTargetBlend0, Color.White, mask);
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks><p>An application can create up to 4096 unique blend-state objects. For each object created, the runtime checks to see if a previous object  has the same state. If such a previous object exists, the runtime will return a reference to previous instance instead of creating a duplicate object.</p></remarks>
         public static BlendState New(BlendOption sourceBlend, BlendOption destinationBlend, BlendOperation blendOperation, BlendOption sourceAlphaBlend, BlendOption destinationAlphaBlend, BlendOperation alphaBlendOperation, ColorWriteMaskFlags renderTargetWriteMask = ColorWriteMaskFlags.All, int mask = -1)
         {
-            return New(sourceBlend, destinationBlend, blendOperation, sourceAlphaBlend, destinationAlphaBlend, alphaBlendOperation, renderTargetWriteMask, Colors.White, mask);            
+            return New(sourceBlend, destinationBlend, blendOperation, sourceAlphaBlend, destinationAlphaBlend, alphaBlendOperation, renderTargetWriteMask, Color.White, mask);            
         }
 
         /// <summary>
@@ -201,7 +201,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks><p>An application can create up to 4096 unique blend-state objects. For each object created, the runtime checks to see if a previous object  has the same state. If such a previous object exists, the runtime will return a reference to previous instance instead of creating a duplicate object.</p></remarks>
         public static BlendState New(BlendStateDescription description, int mask = -1)
         {
-            return new BlendState(description, Colors.White, mask);
+            return new BlendState(description, Color.White, mask);
         }
 
         /// <summary>
@@ -217,7 +217,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks><p>An application can create up to 4096 unique blend-state objects. For each object created, the runtime checks to see if a previous object  has the same state. If such a previous object exists, the runtime will return a reference to previous instance instead of creating a duplicate object.</p></remarks>
         public static BlendState New(string name, BlendStateDescription description, int mask = -1)
         {
-            return new BlendState(description, Colors.White, mask) {Name = name};
+            return new BlendState(description, Color.White, mask) {Name = name};
         }
 
         /// <summary>
@@ -260,7 +260,7 @@ namespace SharpDX.Toolkit.Graphics
             description.RenderTarget[0].SourceAlphaBlend = sourceBlend;
             description.RenderTarget[0].DestinationAlphaBlend = destinationBlend;
 
-            return new BlendState(description, Colors.White, -1) {Name = name};
+            return new BlendState(description, Color.White, -1) {Name = name};
         }
     }
 }

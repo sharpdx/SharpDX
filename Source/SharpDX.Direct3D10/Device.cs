@@ -67,21 +67,6 @@ namespace SharpDX.Direct3D10
             CreateDevice(adapter, DriverType.Hardware, flags);
         }
 
-
-        /// <summary>	
-        /// Set all the elements in a render target to one value.	
-        /// </summary>	
-        /// <remarks>	
-        /// Applications that wish to clear a render target to a specific integer value bit pattern should render a screen-aligned quad instead of using this method.  The reason for this is because this method accepts as input a floating point value, which may not have the same bit pattern as the original integer.   Differences between Direct3D 9 and Direct3D 10: Unlike Direct3D 9, the full extent of the resource view is always cleared. Viewport and scissor settings are not applied.   ? 	
-        /// </remarks>	
-        /// <param name="renderTargetViewRef">Pointer to the rendertarget. </param>
-        /// <param name="color">A 4-component array that represents the color to fill the render target with. </param>
-        /// <unmanaged>void ID3D10Device::ClearRenderTargetView([In] ID3D10RenderTargetView* pRenderTargetView,[In] const float* ColorRGBA)</unmanaged>
-        public void ClearRenderTargetView(SharpDX.Direct3D10.RenderTargetView renderTargetViewRef, Color color)
-        {
-            ClearRenderTargetView(renderTargetViewRef, (Color4) color);
-        }
-
         private void CreateDevice(Adapter adapter, DriverType driverType, DeviceCreationFlags flags)
         {
             D3D10.CreateDevice(adapter, driverType, IntPtr.Zero, flags, D3D10.SdkVersion, this);

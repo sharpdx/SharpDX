@@ -42,7 +42,7 @@ namespace CommonDX
 
         public MediaPlayer()
         {
-            BackgroundColor = Colors.Transparent;
+            BackgroundColor = Color.Transparent;
             isVideoStopped = true;
         }
 

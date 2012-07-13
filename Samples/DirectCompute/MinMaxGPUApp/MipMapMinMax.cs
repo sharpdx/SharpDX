@@ -28,6 +28,7 @@ using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 
 using Buffer = SharpDX.Direct3D11.Buffer;
+using Color = SharpDX.Color;
 using Device = SharpDX.Direct3D11.Device;
 using MapFlags = SharpDX.Direct3D11.MapFlags;
 
@@ -131,7 +132,7 @@ namespace MinMaxGPUApp
                             AddressU = TextureAddressMode.Wrap,
                             AddressV = TextureAddressMode.Wrap,
                             AddressW = TextureAddressMode.Wrap,
-                            BorderColor = Colors.Black,
+                            BorderColor = Color.Black,
                             ComparisonFunction = Comparison.Never,
                             MaximumAnisotropy = 16,
                             MipLodBias = 0,
@@ -233,7 +234,7 @@ namespace MinMaxGPUApp
 
         public void Reduce(DeviceContext context, ShaderResourceView from)
         {
-            PixHelper.BeginEvent(Colors.Green, "MinMax {0}x{0}", 1 << ReduceFactor);
+            PixHelper.BeginEvent(Color.Green, "MinMax {0}x{0}", 1 << ReduceFactor);
 
             context.InputAssembler.InputLayout = layout;
             context.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleStrip;
@@ -256,7 +257,7 @@ namespace MinMaxGPUApp
                 viewport.Width = Math.Max(((int)Size.Width) / (1 << (levelIndex + 1)), 1);
                 viewport.Height = Math.Max(((int)Size.Height) / (1 << (levelIndex + 1)), 1);
 
-                PixHelper.BeginEvent(Colors.GreenYellow, "MinMax Level {0} Size: ({1},{2})", levelIndex, viewport.Width, viewport.Height);
+                PixHelper.BeginEvent(Color.GreenYellow, "MinMax Level {0} Size: ({1},{2})", levelIndex, viewport.Width, viewport.Height);
 
                 // Special case when last level is different from ReduceFactor size
                 if (i == levels)

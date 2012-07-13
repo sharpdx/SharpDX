@@ -52,7 +52,7 @@ namespace SharpDX.Samples
             RenderTarget2D.AntialiasMode = AntialiasMode.PerPrimitive;
 
 
-            SceneColorBrush = new SolidColorBrush(RenderTarget2D, Colors.White);
+            SceneColorBrush = new SolidColorBrush(RenderTarget2D, Color.White);
         }
 
         protected override void BeginDraw()

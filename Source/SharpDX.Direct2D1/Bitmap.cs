@@ -428,10 +428,10 @@ namespace SharpDX.Direct2D1
         /// <param name="length">Length in bytes of the data to copy from the stream.</param>
         /// <param name="pitch">The stride, or pitch, of the source bitmap stored in srcData. The stride is the byte count of a scanline (one row of pixels in memory). The stride can be computed from the following formula: pixel width * bytes per pixel + memory padding. </param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code. </returns>
-        /// <msdn-id>dd371158</msdn-id>	
-        /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromRenderTarget([In, Optional] const D2D_POINT_2U* destPoint,[In] ID2D1RenderTarget* renderTarget,[In, Optional] const D2D_RECT_U* srcRect)</unmanaged>	
-        /// <unmanaged-short>ID2D1Bitmap::CopyFromRenderTarget</unmanaged-short>	
-        public Result FromStream(Stream stream, int pitch, int length)
+        /// <msdn-id>dd371155</msdn-id>	
+        /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromMemory([In, Optional] const D2D_RECT_U* dstRect,[In] const void* srcData,[In] unsigned int pitch)</unmanaged>	
+        /// <unmanaged-short>ID2D1Bitmap::CopyFromMemory</unmanaged-short>	
+        public Result CopyFromStream(Stream stream, int pitch, int length)
         {
             return CopyFromMemory(Utilities.ReadStream(stream, ref length), pitch);
         }
@@ -447,10 +447,10 @@ namespace SharpDX.Direct2D1
         /// <param name="pitch">The stride, or pitch, of the source bitmap stored in srcData. The stride is the byte count of a scanline (one row of pixels in memory). The stride can be computed from the following formula: pixel width * bytes per pixel + memory padding. </param>
         /// <param name="destinationArea">In the current bitmap, the upper-left corner of the area to which the region specified by srcRect is copied. </param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code. </returns>
-        /// <msdn-id>dd371158</msdn-id>	
-        /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromRenderTarget([In, Optional] const D2D_POINT_2U* destPoint,[In] ID2D1RenderTarget* renderTarget,[In, Optional] const D2D_RECT_U* srcRect)</unmanaged>	
-        /// <unmanaged-short>ID2D1Bitmap::CopyFromRenderTarget</unmanaged-short>	
-        public Result FromStream(Stream stream, int pitch, int length, Rectangle destinationArea)
+        /// <msdn-id>dd371155</msdn-id>	
+        /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromMemory([In, Optional] const D2D_RECT_U* dstRect,[In] const void* srcData,[In] unsigned int pitch)</unmanaged>	
+        /// <unmanaged-short>ID2D1Bitmap::CopyFromMemory</unmanaged-short>	
+        public Result CopyFromStream(Stream stream, int pitch, int length, Rectangle destinationArea)
         {
             return CopyFromMemory(Utilities.ReadStream(stream, ref length), pitch, destinationArea);
         }

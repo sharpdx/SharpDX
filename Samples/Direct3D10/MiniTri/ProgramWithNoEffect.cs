@@ -104,7 +104,7 @@ namespace MiniTri
             // Main loop
             RenderLoop.Run(form, () =>
                                       {
-                                          device.ClearRenderTargetView(renderView, Colors.Black);
+                                          device.ClearRenderTargetView(renderView, Color.Black);
                                           device.Draw(3, 0);
                                           swapChain.Present(0, PresentFlags.None);
                                       });

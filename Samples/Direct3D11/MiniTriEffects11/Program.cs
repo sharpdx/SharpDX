@@ -126,7 +126,7 @@ namespace MiniTri
             // Main loop
             RenderLoop.Run(form, () =>
             {
-                context.ClearRenderTargetView(renderView, Colors.Black);
+                context.ClearRenderTargetView(renderView, Color.Black);
                 for (int i = 0; i < technique.Description.PassCount; ++i)
                 {
                     pass.Apply(context);

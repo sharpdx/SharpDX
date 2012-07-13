@@ -693,7 +693,7 @@ namespace SharpDX.Direct3D9
                 pool,
                 (int)filter,
                 (int)mipFilter,
-                colorKey,
+                (Color)colorKey,
                 imageInformation,
                 palette,
                 out cubeVolumeTexture);
@@ -735,7 +735,7 @@ namespace SharpDX.Direct3D9
                 pool,
                 (int)filter,
                 (int)mipFilter,
-                colorKey,
+                (Color)colorKey,
                 imageInformation,
                 palette,
                 out cubeVolumeTexture);

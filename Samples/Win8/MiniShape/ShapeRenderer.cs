@@ -51,7 +51,7 @@ namespace MiniShape
         public virtual void Initialize(DeviceManager deviceManager)
         {
 
-            sceneColorBrush = new SolidColorBrush(deviceManager.ContextDirect2D, Colors.White);
+            sceneColorBrush = new SolidColorBrush(deviceManager.ContextDirect2D, Color.White);
 
             clock = Stopwatch.StartNew();
         }
@@ -66,7 +66,7 @@ namespace MiniShape
             context2D.BeginDraw();
 
             if (EnableClear)
-                context2D.Clear(Colors.Black);
+                context2D.Clear(Color.Black);
 
             var sizeX = (float)target.RenderTargetBounds.Width;
             var sizeY = (float)target.RenderTargetBounds.Height;

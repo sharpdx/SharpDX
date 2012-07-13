@@ -32,6 +32,7 @@ using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using SharpDX.Windows;
 using Buffer = SharpDX.Direct3D11.Buffer;
+using Color = SharpDX.Color;
 using Device = SharpDX.Direct3D11.Device;
 using MapFlags = SharpDX.Direct3D11.MapFlags;
 
@@ -320,7 +321,7 @@ namespace MultiCube
                 if (contextIndex == 0)
                 {
                     contextPerThread[0].ClearDepthStencilView(depthView, DepthStencilClearFlags.Depth, 1.0f, 0);
-                    contextPerThread[0].ClearRenderTargetView(renderView, Colors.Black);
+                    contextPerThread[0].ClearRenderTargetView(renderView, Color.Black);
                 }
 
                 int count = currentState.CountCubes;

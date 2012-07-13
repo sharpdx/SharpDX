@@ -83,7 +83,7 @@ namespace MiniRect
             var d2dRenderTarget = new RenderTarget(d2dFactory, surface,
                                                             new RenderTargetProperties(new PixelFormat(Format.Unknown, AlphaMode.Premultiplied)));
 
-            var solidColorBrush = new SolidColorBrush(d2dRenderTarget, Colors.White);
+            var solidColorBrush = new SolidColorBrush(d2dRenderTarget, Color.White);
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -92,7 +92,7 @@ namespace MiniRect
             RenderLoop.Run(form, () =>
                                       {
                                           d2dRenderTarget.BeginDraw();
-                                          d2dRenderTarget.Clear(Colors.Black);
+                                          d2dRenderTarget.Clear(Color.Black);
                                           solidColorBrush.Color = new Color4(1, 1, 1, (float)Math.Abs(Math.Cos(stopwatch.ElapsedMilliseconds * .001)));
                                           d2dRenderTarget.FillGeometry(rectangleGeometry, solidColorBrush, null);
                                           d2dRenderTarget.EndDraw();

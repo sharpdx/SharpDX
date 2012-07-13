@@ -34,7 +34,7 @@ namespace SharpDX.Direct3D
         /// <param name="name">The Event Name.</param>
         /// <returns>The zero-based level of the hierarchy that this event is starting in. If an error occurs, the return value will be negative.</returns>
         /// <unmanaged>D3DPERF_BeginEvent</unmanaged>
-        public static int BeginEvent(Color color, string name)
+        public static int BeginEvent(System.Drawing.Color color, string name)
         {
             return D3DPERF_BeginEvent(color.ToArgb(), name);
         }
@@ -49,7 +49,7 @@ namespace SharpDX.Direct3D
         /// The zero-based level of the hierarchy that this event is starting in. If an error occurs, the return value will be negative.
         /// </returns>
         /// <unmanaged>D3DPERF_BeginEvent</unmanaged>
-        public static int BeginEvent(Color color, string name, params object[] parameters)
+        public static int BeginEvent(System.Drawing.Color color, string name, params object[] parameters)
         {
             return D3DPERF_BeginEvent(color.ToArgb(), string.Format(name, parameters));
         }
@@ -70,7 +70,7 @@ namespace SharpDX.Direct3D
         /// <param name="color">The color.</param>
         /// <param name="name">The name.</param>
         /// <unmanaged>D3DPERF_SetMarker</unmanaged>
-        public static void SetMarker(Color color, string name)
+        public static void SetMarker(System.Drawing.Color color, string name)
         {
             D3DPERF_SetMarker(color.ToArgb(), name);
         }
@@ -82,7 +82,7 @@ namespace SharpDX.Direct3D
         /// <param name="name">The name to format.</param>
         /// <param name="parameters">The parameters to use to format the name.</param>
         /// <unmanaged>D3DPERF_SetMarker</unmanaged>
-        public static void SetMarker(Color color, string name, params object[] parameters)
+        public static void SetMarker(System.Drawing.Color color, string name, params object[] parameters)
         {
             D3DPERF_SetMarker(color.ToArgb(), string.Format(name, parameters));
         }

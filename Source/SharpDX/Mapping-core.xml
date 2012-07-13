@@ -150,6 +150,7 @@
     <define struct="SharpDX.Vector2" sizeof="8" />
     <define struct="SharpDX.Vector3" sizeof="12" />
     <define struct="SharpDX.Vector4" sizeof="16" />
+    <define struct="SharpDX.Color" sizeof="4" />
     <define struct="SharpDX.Color3" sizeof="12" />
     <define struct="SharpDX.Color4" sizeof="16" />
     <define struct="SharpDX.Quaternion" sizeof="16" />
@@ -219,7 +220,7 @@
     <bind from="D3DXVECTOR4" to="SharpDX.Vector4" />
     <bind from="D3DXQUATERNION" to="SharpDX.Quaternion" />
     <bind from="D3DXPLANE" to="SharpDX.Plane" />
-    <bind from="D3DCOLOR" to="SharpDX.Color4" marshal="System.Int32"/>
+    <bind from="D3DCOLOR" to="SharpDX.Color"/>
     <bind from="D3DXFLOAT16" to="System.Int32" />
     <bind from="D3DXVECTOR2_16F" to="System.Int32" />
     <bind from="D3DXVECTOR3_16F" to="System.Int32" />

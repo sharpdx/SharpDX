@@ -40,7 +40,7 @@ namespace SharpDX.Direct3D11
                            MipLodBias = 0.0f,
                            MaximumAnisotropy = 16,
                            ComparisonFunction = Comparison.Never,
-                           BorderColor = Colors.Zero,
+                           BorderColor = new Color4(0,0,0,0),
                        };
         }
     }

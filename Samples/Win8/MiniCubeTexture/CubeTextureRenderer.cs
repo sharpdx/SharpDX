@@ -151,7 +151,7 @@ namespace MiniCubeTexture
                 AddressU = TextureAddressMode.Wrap,
                 AddressV = TextureAddressMode.Wrap,
                 AddressW = TextureAddressMode.Wrap,
-                BorderColor = Colors.Black,
+                BorderColor = Color.Black,
                 ComparisonFunction = Comparison.Never,
                 MaximumAnisotropy = 16,
                 MipLodBias = 0,
@@ -185,7 +185,7 @@ namespace MiniCubeTexture
             d3dContext.ClearDepthStencilView(render.DepthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
             if (EnableClear)
             {
-                d3dContext.ClearRenderTargetView(render.RenderTargetView, Colors.Black);
+                d3dContext.ClearRenderTargetView(render.RenderTargetView, Color.Black);
             }
 
             if (ShowCube)
