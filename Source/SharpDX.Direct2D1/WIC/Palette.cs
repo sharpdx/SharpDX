@@ -58,13 +58,19 @@ namespace SharpDX.WIC
             {
                 unsafe
                 {
-                    int actualCount = 0;
-                    GetColors(actualCount, null, out actualCount);
+                    //http://msdn.microsoft.com/en-us/library/windows/desktop/ee719741(v=vs.85).aspx
+                    int actualCount;
+                    int count = this.ColorCount;
+                    var rawColors = new int[count];
+                    GetColors(count, rawColors, out actualCount);
                     if (actualCount == 0)
                         return new Color4[0];
+                    else if (count != actualCount)
+                    {
+                        rawColors = new int[actualCount];
+                        GetColors(actualCount, rawColors, out actualCount);
+                    }
 
-                    var rawColors = new int[actualCount];
-                    GetColors(actualCount, rawColors, out actualCount);
                     var result = new Color4[actualCount];
                     for (int i = 0; i < rawColors.Length; i++)
                         result[i] = new Color4(rawColors[i]);

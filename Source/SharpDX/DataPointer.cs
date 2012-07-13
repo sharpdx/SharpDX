@@ -30,6 +30,11 @@ namespace SharpDX
     public struct DataPointer : IEquatable<DataPointer>
     {
         /// <summary>
+        /// Gets an Empty Data Pointer.
+        /// </summary>
+        public static readonly DataPointer Zero = new DataPointer(IntPtr.Zero, 0);
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DataPointer" /> struct.
         /// </summary>
         /// <param name="pointer">The pointer.</param>

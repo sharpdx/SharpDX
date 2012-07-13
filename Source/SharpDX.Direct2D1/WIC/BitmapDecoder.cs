@@ -28,6 +28,8 @@ namespace SharpDX.WIC
 {
     public partial class BitmapDecoder
     {
+        private WICStream internalWICStream;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BitmapDecoder"/> class from a <see cref="BitmapDecoderInfo"/>.
         /// </summary>
@@ -79,12 +81,39 @@ namespace SharpDX.WIC
         /// </summary>
         /// <param name="factory">The factory.</param>
         /// <param name="streamRef">The stream ref.</param>
+        /// <param name="metadataOptions">The metadata options.</param>
+        /// <unmanaged>HRESULT IWICImagingFactory::CreateDecoderFromStream([In, Optional] IStream* pIStream,[In, Optional] const GUID* pguidVendor,[In] WICDecodeOptions metadataOptions,[Out, Fast] IWICBitmapDecoder** ppIDecoder)</unmanaged>
+        public BitmapDecoder(ImagingFactory factory, Stream streamRef, SharpDX.WIC.DecodeOptions metadataOptions)
+        {
+            internalWICStream = new WICStream(factory, streamRef);
+            factory.CreateDecoderFromStream_(ComStream.ToIntPtr(internalWICStream), null, metadataOptions, this);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BitmapDecoder"/> class from a <see cref="IStream"/>.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="streamRef">The stream ref.</param>
         /// <param name="guidVendorRef">The GUID vendor ref.</param>
         /// <param name="metadataOptions">The metadata options.</param>
         /// <unmanaged>HRESULT IWICImagingFactory::CreateDecoderFromStream([In, Optional] IStream* pIStream,[In, Optional] const GUID* pguidVendor,[In] WICDecodeOptions metadataOptions,[Out, Fast] IWICBitmapDecoder** ppIDecoder)</unmanaged>
         public BitmapDecoder(ImagingFactory factory, IStream streamRef, System.Guid guidVendorRef, SharpDX.WIC.DecodeOptions metadataOptions)
         {
             factory.CreateDecoderFromStream_(ComStream.ToIntPtr(streamRef), guidVendorRef, metadataOptions, this);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BitmapDecoder"/> class from a <see cref="IStream"/>.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="streamRef">The stream ref.</param>
+        /// <param name="guidVendorRef">The GUID vendor ref.</param>
+        /// <param name="metadataOptions">The metadata options.</param>
+        /// <unmanaged>HRESULT IWICImagingFactory::CreateDecoderFromStream([In, Optional] IStream* pIStream,[In, Optional] const GUID* pguidVendor,[In] WICDecodeOptions metadataOptions,[Out, Fast] IWICBitmapDecoder** ppIDecoder)</unmanaged>
+        public BitmapDecoder(ImagingFactory factory, Stream streamRef, System.Guid guidVendorRef, SharpDX.WIC.DecodeOptions metadataOptions)
+        {
+            internalWICStream = new WICStream(factory, streamRef);
+            factory.CreateDecoderFromStream_(ComStream.ToIntPtr(internalWICStream), guidVendorRef, metadataOptions, this);
         }
 
         /// <summary>
@@ -193,7 +222,22 @@ namespace SharpDX.WIC
         /// <unmanaged>HRESULT IWICBitmapDecoder::Initialize([In, Optional] IStream* pIStream,[In] WICDecodeOptions cacheOptions)</unmanaged>
         public SharpDX.Result Initialize(IStream stream, SharpDX.WIC.DecodeOptions cacheOptions)
         {
+            if (this.internalWICStream != null)
+                throw new InvalidOperationException("This instance is already intialized with an existing stream");
             return Initialize_(ComStream.ToIntPtr(stream), cacheOptions);
         }
+
+
+        protected override unsafe void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (disposing)
+            {
+                if (this.internalWICStream != null)
+                    internalWICStream.Dispose();
+                internalWICStream = null;
+            }
+        }
+
     }
 }

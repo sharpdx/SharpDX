@@ -25,6 +25,10 @@ namespace SharpDX.WIC
 {
     public partial class BitmapEncoder
     {
+        private ImagingFactory factory;
+        private WICStream internalWICStream;
+
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BitmapEncoder"/> class.
         /// </summary>
@@ -33,6 +37,7 @@ namespace SharpDX.WIC
         /// <unmanaged>HRESULT IWICImagingFactory::CreateEncoder([In] const GUID&amp; guidContainerFormat,[In, Optional] const GUID* pguidVendor,[Out] IWICBitmapEncoder** ppIEncoder)</unmanaged>	
         public BitmapEncoder(ImagingFactory factory, Guid containerFormatGuid)
         {
+            this.factory = factory;
             factory.CreateEncoder(containerFormatGuid, null, this);
         }
 
@@ -45,7 +50,70 @@ namespace SharpDX.WIC
         /// <unmanaged>HRESULT IWICImagingFactory::CreateEncoder([In] const GUID&amp; guidContainerFormat,[In, Optional] const GUID* pguidVendor,[Out] IWICBitmapEncoder** ppIEncoder)</unmanaged>	
         public BitmapEncoder(ImagingFactory factory, Guid containerFormatGuid, System.Guid guidVendorRef)
         {
+            this.factory = factory;
             factory.CreateEncoder(containerFormatGuid, guidVendorRef, this);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BitmapEncoder"/> class.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="containerFormatGuid">The container format GUID. List from <see cref="ContainerFormatGuids"/> </param>
+        /// <param name="stream">A stream to use as the output of this bitmap encoder.</param>
+        /// <unmanaged>HRESULT IWICImagingFactory::CreateEncoder([In] const GUID&amp; guidContainerFormat,[In, Optional] const GUID* pguidVendor,[Out] IWICBitmapEncoder** ppIEncoder)</unmanaged>	
+        public BitmapEncoder(ImagingFactory factory, Guid containerFormatGuid, WICStream stream = null)
+        {
+            this.factory = factory;
+            factory.CreateEncoder(containerFormatGuid, null, this);
+            if (stream != null)
+                Initialize(stream);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BitmapEncoder"/> class.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="containerFormatGuid">The container format GUID. List from <see cref="ContainerFormatGuids"/> </param>
+        /// <param name="stream">A stream to use as the output of this bitmap encoder.</param>
+        /// <unmanaged>HRESULT IWICImagingFactory::CreateEncoder([In] const GUID&amp; guidContainerFormat,[In, Optional] const GUID* pguidVendor,[Out] IWICBitmapEncoder** ppIEncoder)</unmanaged>	
+        public BitmapEncoder(ImagingFactory factory, Guid containerFormatGuid, System.IO.Stream stream = null)
+        {
+            this.factory = factory;
+            factory.CreateEncoder(containerFormatGuid, null, this);
+            if (stream != null)
+                Initialize(stream);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BitmapEncoder"/> class.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="containerFormatGuid">The container format GUID. List from <see cref="ContainerFormatGuids"/></param>
+        /// <param name="guidVendorRef">The GUID vendor ref.</param>
+        /// <param name="stream">A stream to use as the output of this bitmap encoder.</param>
+        /// <unmanaged>HRESULT IWICImagingFactory::CreateEncoder([In] const GUID&amp; guidContainerFormat,[In, Optional] const GUID* pguidVendor,[Out] IWICBitmapEncoder** ppIEncoder)</unmanaged>	
+        public BitmapEncoder(ImagingFactory factory, Guid containerFormatGuid, System.Guid guidVendorRef, WICStream stream = null)
+        {
+            this.factory = factory;
+            factory.CreateEncoder(containerFormatGuid, guidVendorRef, this);
+            if (stream != null)
+                Initialize(stream);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BitmapEncoder"/> class.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="containerFormatGuid">The container format GUID. List from <see cref="ContainerFormatGuids"/></param>
+        /// <param name="guidVendorRef">The GUID vendor ref.</param>
+        /// <param name="stream">A stream to use as the output of this bitmap encoder.</param>
+        /// <unmanaged>HRESULT IWICImagingFactory::CreateEncoder([In] const GUID&amp; guidContainerFormat,[In, Optional] const GUID* pguidVendor,[Out] IWICBitmapEncoder** ppIEncoder)</unmanaged>	
+        public BitmapEncoder(ImagingFactory factory, Guid containerFormatGuid, System.Guid guidVendorRef, System.IO.Stream stream = null)
+        {
+            this.factory = factory;
+            factory.CreateEncoder(containerFormatGuid, guidVendorRef, this);
+            if (stream != null)
+                Initialize(stream);
         }
 
         /// <summary>
@@ -56,7 +124,23 @@ namespace SharpDX.WIC
         /// <unmanaged>HRESULT IWICBitmapEncoder::Initialize([In, Optional] IStream* pIStream,[In] WICBitmapEncoderCacheOption cacheOption)</unmanaged>	
         public SharpDX.Result Initialize(IStream stream)
         {
+            if (this.internalWICStream != null)
+                throw new InvalidOperationException("This instance is already intialized with an existing stream");
             return Initialize_(ComStream.ToIntPtr(stream), SharpDX.WIC.BitmapEncoderCacheOption.NoCache);
+        }
+
+        /// <summary>
+        /// Initializes the encoder with the provided stream.
+        /// </summary>
+        /// <param name="stream">The stream to use for initialization.</param>
+        /// <returns>If the method succeeds, it returns <see cref="Result.Ok"/>. Otherwise, it throws an exception.</returns>
+        /// <unmanaged>HRESULT IWICBitmapEncoder::Initialize([In, Optional] IStream* pIStream,[In] WICBitmapEncoderCacheOption cacheOption)</unmanaged>	
+        public SharpDX.Result Initialize(System.IO.Stream stream)
+        {
+            if (this.internalWICStream != null)
+                throw new InvalidOperationException("This instance is already intialized with an existing stream");
+            this.internalWICStream = new WICStream(factory, stream);
+            return Initialize_(ComStream.ToIntPtr(this.internalWICStream), SharpDX.WIC.BitmapEncoderCacheOption.NoCache);
         }
 
         /// <summary>
@@ -68,6 +152,17 @@ namespace SharpDX.WIC
         public SharpDX.Result SetColorContexts(SharpDX.WIC.ColorContext[] colorContextOut)
         {
             return SetColorContexts(colorContextOut != null ? colorContextOut.Length : 0, colorContextOut);
+        }
+
+        protected override unsafe void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (disposing)
+            {
+                if (this.internalWICStream != null)
+                    internalWICStream.Dispose();
+                internalWICStream = null;
+            }
         }
     }
 }

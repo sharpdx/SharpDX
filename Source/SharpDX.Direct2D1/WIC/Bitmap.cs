@@ -37,8 +37,11 @@ namespace SharpDX.WIC
         /// <param name="height">The height.</param>
         /// <param name="pixelFormat">The pixel format. <see cref="PixelFormat"/> for a list of valid formats. </param>
         /// <param name="option">The option.</param>
-        /// <unmanaged>HRESULT IWICImagingFactory::CreateBitmap([In] unsigned int uiWidth,[In] unsigned int uiHeight,[In] const GUID&amp; pixelFormat,[In] WICBitmapCreateCacheOption option,[Out, Fast] IWICBitmap** ppIBitmap)</unmanaged>
-        public Bitmap(ImagingFactory factory, int width, int height, System.Guid pixelFormat, SharpDX.WIC.BitmapCreateCacheOption option) : base(IntPtr.Zero)
+        /// <msdn-id>ee690282</msdn-id>	
+        /// <unmanaged>HRESULT IWICImagingFactory::CreateBitmap([In] unsigned int uiWidth,[In] unsigned int uiHeight,[In] const GUID&amp; pixelFormat,[In] WICBitmapCreateCacheOption option,[Out, Fast] IWICBitmap** ppIBitmap)</unmanaged>	
+        /// <unmanaged-short>IWICImagingFactory::CreateBitmap</unmanaged-short>	
+        public Bitmap(ImagingFactory factory, int width, int height, System.Guid pixelFormat, SharpDX.WIC.BitmapCreateCacheOption option)
+            : base(IntPtr.Zero)
         {
             factory.CreateBitmap(width, height, pixelFormat, option, this);
         }
@@ -51,13 +54,15 @@ namespace SharpDX.WIC
         /// <param name="height">The height.</param>
         /// <param name="pixelFormat">The pixel format.</param>
         /// <param name="dataRectangle">The data rectangle.</param>
-        /// <unmanaged>HRESULT IWICImagingFactory::CreateBitmapFromMemory([In] unsigned int uiWidth,[In] unsigned int uiHeight,[In] const GUID&amp; pixelFormat,[In] unsigned int cbStride,[In] unsigned int cbBufferSize,[In] void* pbBuffer,[Out, Fast] IWICBitmap** ppIBitmap)</unmanaged>
-        public Bitmap(ImagingFactory factory, int width, int height, System.Guid pixelFormat, DataRectangle dataRectangle) : base(IntPtr.Zero)
+        /// <msdn-id>ee690291</msdn-id>	
+        /// <unmanaged>HRESULT IWICImagingFactory::CreateBitmapFromMemory([In] unsigned int uiWidth,[In] unsigned int uiHeight,[In] const GUID&amp; pixelFormat,[In] unsigned int cbStride,[In] unsigned int cbBufferSize,[In] void* pbBuffer,[Out, Fast] IWICBitmap** ppIBitmap)</unmanaged>	
+        /// <unmanaged-short>IWICImagingFactory::CreateBitmapFromMemory</unmanaged-short>	
+        public Bitmap(ImagingFactory factory, int width, int height, System.Guid pixelFormat, DataRectangle dataRectangle)
+            : base(IntPtr.Zero)
         {
             int sizeInByte = height*dataRectangle.Pitch;
             factory.CreateBitmapFromMemory(width, height, pixelFormat, dataRectangle.Pitch, sizeInByte,
                                            dataRectangle.DataPointer, this);
-
         }
 
         /// <summary>
@@ -66,8 +71,11 @@ namespace SharpDX.WIC
         /// <param name="factory">The factory.</param>
         /// <param name="bitmapSource">The bitmap source ref.</param>
         /// <param name="option">The option.</param>
-        /// <unmanaged>HRESULT IWICImagingFactory::CreateBitmapFromSource([In, Optional] IWICBitmapSource* pIBitmapSource,[In] WICBitmapCreateCacheOption option,[Out, Fast] IWICBitmap** ppIBitmap)</unmanaged>
-        public Bitmap(ImagingFactory factory, SharpDX.WIC.BitmapSource bitmapSource, SharpDX.WIC.BitmapCreateCacheOption option) : base(IntPtr.Zero)
+        /// <msdn-id>ee690293</msdn-id>	
+        /// <unmanaged>HRESULT IWICImagingFactory::CreateBitmapFromSource([In, Optional] IWICBitmapSource* pIBitmapSource,[In] WICBitmapCreateCacheOption option,[Out, Fast] IWICBitmap** ppIBitmap)</unmanaged>	
+        /// <unmanaged-short>IWICImagingFactory::CreateBitmapFromSource</unmanaged-short>	
+        public Bitmap(ImagingFactory factory, SharpDX.WIC.BitmapSource bitmapSource, SharpDX.WIC.BitmapCreateCacheOption option)
+            : base(IntPtr.Zero)
         {
             factory.CreateBitmapFromSource(bitmapSource, option, this);
         }
@@ -78,11 +86,29 @@ namespace SharpDX.WIC
         /// <param name="factory">The factory.</param>
         /// <param name="bitmapSource">The bitmap source.</param>
         /// <param name="rectangle">The rectangle.</param>
-        /// <unmanaged>HRESULT IWICImagingFactory::CreateBitmapFromSourceRect([In, Optional] IWICBitmapSource* pIBitmapSource,[In] unsigned int x,[In] unsigned int y,[In] unsigned int width,[In] unsigned int height,[Out, Fast] IWICBitmap** ppIBitmap)</unmanaged>
+        /// <msdn-id>ee690294</msdn-id>	
+        /// <unmanaged>HRESULT IWICImagingFactory::CreateBitmapFromSourceRect([In, Optional] IWICBitmapSource* pIBitmapSource,[In] unsigned int x,[In] unsigned int y,[In] unsigned int width,[In] unsigned int height,[Out, Fast] IWICBitmap** ppIBitmap)</unmanaged>	
+        /// <unmanaged-short>IWICImagingFactory::CreateBitmapFromSourceRect</unmanaged-short>	
         public Bitmap(ImagingFactory factory, SharpDX.WIC.BitmapSource bitmapSource, DrawingRectangle rectangle)
             : base(IntPtr.Zero)
         {
             factory.CreateBitmapFromSourceRect(bitmapSource, rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height, this);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Bitmap"/> class from an array of pixel datas.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="pixelFormat">The pixel format.</param>
+        /// <param name="pixelDatas">The pixel datas.</param>
+        /// <msdn-id>ee690291</msdn-id>	
+        /// <unmanaged>HRESULT IWICImagingFactory::CreateBitmapFromMemory([In] unsigned int uiWidth,[In] unsigned int uiHeight,[In] const GUID&amp; pixelFormat,[In] unsigned int cbStride,[In] unsigned int cbBufferSize,[In] void* pbBuffer,[Out, Fast] IWICBitmap** ppIBitmap)</unmanaged>	
+        /// <unmanaged-short>IWICImagingFactory::CreateBitmapFromMemory</unmanaged-short>	
+        public unsafe static Bitmap New<T>(ImagingFactory factory, int width, int height, System.Guid pixelFormat, T[] pixelDatas) where T : struct
+        {
+            return new Bitmap(factory, width, height, pixelFormat, new DataRectangle((IntPtr)Interop.Fixed(pixelDatas), width * Utilities.SizeOf<T>()));
         }
 
 #if !WIN8METRO

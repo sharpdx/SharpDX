@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.IO;
 
 namespace SharpDX.WIC
 {
@@ -49,9 +50,41 @@ namespace SharpDX.WIC
         /// Initializes a new instance of the <see cref="TiffBitmapEncoder"/> class.
         /// </summary>
         /// <param name="factory">The factory.</param>
+        /// <param name="stream">The output stream.</param>
+        public TiffBitmapEncoder(ImagingFactory factory, Stream stream = null)
+            : base(factory, ContainerFormatGuids.Tiff, stream)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TiffBitmapEncoder"/> class.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
         /// <param name="guidVendorRef">The GUID vendor ref.</param>
-        public TiffBitmapEncoder(ImagingFactory factory, Guid guidVendorRef)
-            : base(factory, ContainerFormatGuids.Tiff, guidVendorRef)
+        /// <param name="stream">The output stream.</param>
+        public TiffBitmapEncoder(ImagingFactory factory, Guid guidVendorRef, Stream stream = null)
+            : base(factory, ContainerFormatGuids.Tiff, guidVendorRef, stream)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TiffBitmapEncoder"/> class.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="stream">The output stream.</param>
+        public TiffBitmapEncoder(ImagingFactory factory, WICStream stream = null)
+            : base(factory, ContainerFormatGuids.Tiff, stream)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TiffBitmapEncoder"/> class.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="guidVendorRef">The GUID vendor ref.</param>
+        /// <param name="stream">The output stream.</param>
+        public TiffBitmapEncoder(ImagingFactory factory, Guid guidVendorRef, WICStream stream = null)
+            : base(factory, ContainerFormatGuids.Tiff, guidVendorRef, stream)
         {
         }
     }

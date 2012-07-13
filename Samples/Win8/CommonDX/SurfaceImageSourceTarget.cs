@@ -52,7 +52,7 @@ namespace CommonDX
         {
             this.pixelWidth = pixelWidth;
             this.pixelHeight = pixelHeight;
-            this.surfaceImageSource = ToDispose(new SurfaceImageSource(pixelWidth, pixelHeight));
+            this.surfaceImageSource = new SurfaceImageSource(pixelWidth, pixelHeight);
             surfaceImageSourceNative = ToDispose(ComObject.As<SharpDX.DXGI.ISurfaceImageSourceNative>(surfaceImageSource));
         }
 
@@ -108,7 +108,7 @@ namespace CommonDX
 
                     // Allocate a new renderTargetView if size is different
                     // Cache the rendertarget dimensions in our helper class for convenient use.
-                    viewData.BackBuffer = surface.QueryInterface<SharpDX.Direct3D11.Texture2D>();
+                    viewData.BackBuffer = ToDispose(surface.QueryInterface<SharpDX.Direct3D11.Texture2D>());
                     {
                         var desc = viewData.BackBuffer.Description;
                         viewData.RenderTargetSize = new Size(desc.Width, desc.Height);

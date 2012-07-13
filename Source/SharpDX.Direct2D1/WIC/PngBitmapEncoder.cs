@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.IO;
 
 namespace SharpDX.WIC
 {
@@ -49,9 +50,41 @@ namespace SharpDX.WIC
         /// Initializes a new instance of the <see cref="PngBitmapEncoder"/> class.
         /// </summary>
         /// <param name="factory">The factory.</param>
+        /// <param name="stream">The output stream.</param>
+        public PngBitmapEncoder(ImagingFactory factory, Stream stream = null)
+            : base(factory, ContainerFormatGuids.Png, stream)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PngBitmapEncoder"/> class.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
         /// <param name="guidVendorRef">The GUID vendor ref.</param>
-        public PngBitmapEncoder(ImagingFactory factory, Guid guidVendorRef)
-            : base(factory, ContainerFormatGuids.Png, guidVendorRef)
+        /// <param name="stream">The output stream.</param>
+        public PngBitmapEncoder(ImagingFactory factory, Guid guidVendorRef, Stream stream = null)
+            : base(factory, ContainerFormatGuids.Png, guidVendorRef, stream)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PngBitmapEncoder"/> class.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="stream">The output stream.</param>
+        public PngBitmapEncoder(ImagingFactory factory, WICStream stream = null)
+            : base(factory, ContainerFormatGuids.Png, stream)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PngBitmapEncoder"/> class.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="guidVendorRef">The GUID vendor ref.</param>
+        /// <param name="stream">The output stream.</param>
+        public PngBitmapEncoder(ImagingFactory factory, Guid guidVendorRef, WICStream stream = null)
+            : base(factory, ContainerFormatGuids.Png, guidVendorRef, stream)
         {
         }
     }

@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.IO;
 
 namespace SharpDX.WIC
 {
@@ -31,7 +32,8 @@ namespace SharpDX.WIC
         /// Initializes a new instance of the <see cref="JpegBitmapEncoder"/> class.
         /// </summary>
         /// <param name="nativePtr">The native PTR.</param>
-        public JpegBitmapEncoder(IntPtr nativePtr) : base(nativePtr)
+        public JpegBitmapEncoder(IntPtr nativePtr)
+            : base(nativePtr)
         {
         }
 
@@ -39,7 +41,18 @@ namespace SharpDX.WIC
         /// Initializes a new instance of the <see cref="JpegBitmapEncoder"/> class.
         /// </summary>
         /// <param name="factory">The factory.</param>
-        public JpegBitmapEncoder(ImagingFactory factory) : base(factory, ContainerFormatGuids.Jpeg)
+        public JpegBitmapEncoder(ImagingFactory factory)
+            : base(factory, ContainerFormatGuids.Jpeg)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JpegBitmapEncoder"/> class.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="stream">The output stream.</param>
+        public JpegBitmapEncoder(ImagingFactory factory, Stream stream = null)
+            : base(factory, ContainerFormatGuids.Jpeg, stream)
         {
         }
 
@@ -48,8 +61,30 @@ namespace SharpDX.WIC
         /// </summary>
         /// <param name="factory">The factory.</param>
         /// <param name="guidVendorRef">The GUID vendor ref.</param>
-        public JpegBitmapEncoder(ImagingFactory factory, Guid guidVendorRef)
-            : base(factory, ContainerFormatGuids.Jpeg, guidVendorRef)
+        /// <param name="stream">The output stream.</param>
+        public JpegBitmapEncoder(ImagingFactory factory, Guid guidVendorRef, Stream stream = null)
+            : base(factory, ContainerFormatGuids.Jpeg, guidVendorRef, stream)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JpegBitmapEncoder"/> class.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="stream">The output stream.</param>
+        public JpegBitmapEncoder(ImagingFactory factory, WICStream stream = null)
+            : base(factory, ContainerFormatGuids.Jpeg, stream)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JpegBitmapEncoder"/> class.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="guidVendorRef">The GUID vendor ref.</param>
+        /// <param name="stream">The output stream.</param>
+        public JpegBitmapEncoder(ImagingFactory factory, Guid guidVendorRef, WICStream stream = null)
+            : base(factory, ContainerFormatGuids.Jpeg, guidVendorRef, stream)
         {
         }
     }
