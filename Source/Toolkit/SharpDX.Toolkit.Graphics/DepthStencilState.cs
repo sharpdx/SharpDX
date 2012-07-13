@@ -55,7 +55,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="description">The description.</param>
         private DepthStencilState(DepthStencilStateDescription description)
-            : this(GraphicsDevice.Current, description)
+            : this(GraphicsDevice.CurrentSafe, description)
         {
         }
 
@@ -95,7 +95,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11Device::CreateDepthStencilState</unmanaged-short>	
         public static DepthStencilState New(Direct3D11.DepthStencilState depthStencilState)
         {
-            return new DepthStencilState(GraphicsDevice.Current, depthStencilState);
+            return new DepthStencilState(GraphicsDevice.CurrentSafe, depthStencilState);
         }
 
         /// <summary>	

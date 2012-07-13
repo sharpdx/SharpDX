@@ -77,7 +77,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="blendFactor">The blend factor.</param>
         /// <param name="mask">The mask.</param>
         private BlendState(BlendStateDescription description, Color4 blendFactor, int mask)
-            : this(GraphicsDevice.Current, description, blendFactor, mask)
+            : this(GraphicsDevice.CurrentSafe, description, blendFactor, mask)
         {
         }
 

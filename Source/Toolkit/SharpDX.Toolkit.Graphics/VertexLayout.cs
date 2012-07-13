@@ -49,7 +49,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="descriptions">The description.</param>
         private VertexLayout(VertexDeclarationSet descriptions)
-            : this(GraphicsDevice.Current, descriptions)
+            : this(GraphicsDevice.CurrentSafe, descriptions)
         {
         }
 

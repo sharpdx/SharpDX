@@ -81,17 +81,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             Device = ToDispose(featureLevels.Length > 0 ? new Device(adapter, flags, featureLevels) : new Device(adapter, flags));
             IsDebugMode = (Device.CreationFlags & (int)DeviceCreationFlags.Debug) != 0;
-            MainDevice = this;
-            Context = Device.ImmediateContext;
-            IsDeferred = false;
-            Features = new GraphicsDeviceFeatures(Device);
-            AttachToCurrentThread();
-        }
-
-        protected GraphicsDevice(Device device)
-        {
-            Device = ToDispose(device);
-            IsDebugMode = (Device.CreationFlags & (int)DeviceCreationFlags.Debug) != 0;
+            Adapter = adapter;
             MainDevice = this;
             Context = Device.ImmediateContext;
             IsDeferred = false;
@@ -112,11 +102,28 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
+        /// Gets the adapter associated with this device.
+        /// </summary>
+        public readonly GraphicsAdapter Adapter;
+
+        /// <summary>
         /// Gets the <see cref="GraphicsDevice"/> attached to the current thread.
         /// </summary>
         public static GraphicsDevice Current
         {
             get { return current; }
+        }
+
+        /// <summary>
+        /// Gets the <see cref="GraphicsDevice"/> attached to the current thread.
+        /// </summary>
+        internal static GraphicsDevice CurrentSafe
+        {
+            get
+            {
+                if (current == null) throw new InvalidOperationException("A GraphicsDevice is not initialized or not attached to the current thread.");
+                return current;
+            }
         }
 
         /// <summary>
@@ -492,16 +499,6 @@ namespace SharpDX.Toolkit.Graphics
         public void Flush()
         {
             Context.Flush();
-        }
-
-        /// <summary>
-        /// Creates a new device from a <see cref="SharpDX.Direct3D11.Device"/>.
-        /// </summary>
-        /// <param name="device">The device.</param>
-        /// <returns>A new instance of <see cref="GraphicsDevice"/></returns>
-        public static GraphicsDevice New(Device device)
-        {
-            return new GraphicsDevice(device);
         }
 
         /// <summary>

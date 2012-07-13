@@ -35,7 +35,7 @@ namespace SharpDX.Toolkit.Graphics
     public class RenderTarget2D : Texture2DBase
     {
         internal RenderTarget2D(Texture2DDescription description)
-            : this(GraphicsDevice.Current, description)
+            : this(GraphicsDevice.CurrentSafe, description)
         {
         }
 
@@ -45,7 +45,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         internal RenderTarget2D(Direct3D11.Texture2D texture)
-            : this(GraphicsDevice.Current, texture)
+            : this(GraphicsDevice.CurrentSafe, texture)
         {
         }
 
@@ -221,7 +221,7 @@ namespace SharpDX.Toolkit.Graphics
             desc.BindFlags |= BindFlags.RenderTarget;
 
             // Sets the MSAALevel
-            int maximumMSAA = (int)GraphicsDevice.Current.Features[format].MSAALevelMax;
+            int maximumMSAA = (int)GraphicsDevice.CurrentSafe.Features[format].MSAALevelMax;
             desc.SampleDescription.Count = Math.Max(1, Math.Min((int)multiSampleCount, maximumMSAA));
             return desc;
         }

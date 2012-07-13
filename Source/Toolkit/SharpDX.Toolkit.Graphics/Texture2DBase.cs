@@ -41,7 +41,7 @@ namespace SharpDX.Toolkit.Graphics
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
         protected internal Texture2DBase(Texture2DDescription description)
-            : this(GraphicsDevice.Current, description)
+            : this(GraphicsDevice.CurrentSafe, description)
         {
         }
 
@@ -54,7 +54,7 @@ namespace SharpDX.Toolkit.Graphics
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
         protected internal Texture2DBase(Texture2DDescription description, DataRectangle[] dataRectangles)
-            : this(GraphicsDevice.Current, description, dataRectangles)
+            : this(GraphicsDevice.CurrentSafe, description, dataRectangles)
         {
         }
 
@@ -97,7 +97,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
         protected internal Texture2DBase(Direct3D11.Texture2D texture)
-            : this(GraphicsDevice.Current, texture)
+            : this(GraphicsDevice.CurrentSafe, texture)
         {
         }
 
