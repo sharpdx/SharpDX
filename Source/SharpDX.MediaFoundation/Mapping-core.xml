@@ -51,7 +51,7 @@
   <include file="mediaobj.h" attach="true"/>
   <include file="wmcontainer.h" attach="true"/>
   <include file="uuids.h" attach="true"/>
-  <ifdef name="WIN8METRO">
+  <ifdef name="DIRECTX11_1">
     <include file="mfmediaengine.h" attach="true"/>
   </ifdef>
 
@@ -92,7 +92,7 @@
     <create visibility="public static" class="ByteStreamAttributeKeys" />
     <create visibility="public static" class="CaptureDeviceAttributeKeys" />
 
-    <ifdef name="WIN8METRO">
+    <ifdef name="DIRECTX11_1">
       <create visibility="public static" class="CaptureEngineAttributeKeys" />
       <create visibility="public static" class="DeviceStreamAttributeKeys" />
       <create visibility="public static" class="MediaAttributeKeys" />
@@ -728,6 +728,20 @@
     <remove function="MFInitMediaTypeFromMPEG2VideoInfo" />
     <remove function="MFInitAMMediaTypeFromMFMediaType" />
     <remove function="MFCreateAMMediaTypeFromMFMediaType"/>
+
+    <ifdef name="WIN8METRO">
+      <remove function="MFCreateAggregateSource"/>
+      <remove function="MFCreateProtectedEnvironmentAccess"/>
+      <remove function="MFCreateSinkWriterFromMediaSink"/>
+      <remove function="MFCreateSinkWriterFromURL"/>
+      <remove function="MFCreateSourceReaderFromByteStream"/>
+      <remove function="MFCreateSourceReaderFromMediaSource"/>
+      <remove function="MFCreateSourceReaderFromURL"/>
+      <remove function="MFGetLocalId"/>
+      <remove function="MFGetService"/>
+      <remove function="MFGetSystemId"/>
+      <remove function="MFLoadSignedLibrary"/>
+    </ifdef>    
 
     <map param="MFCreateAttributes::ppMFAttributes" attribute="out fast"/>
     <map param="MFCreateDXGIDeviceManager::ppDeviceManager" attribute="out fast"/>

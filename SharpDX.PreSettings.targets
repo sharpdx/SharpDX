@@ -8,19 +8,23 @@
     <OutputType>Library</OutputType>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release'">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Net20Debug' Or '$(Configuration)' == 'Net20Release'">
     <SharpDXWin8>false</SharpDXWin8>
     <DirectX11_1>false</DirectX11_1>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
+    <TargetFrameworkProfile></TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Net40Debug' Or '$(Configuration)' == 'Net40Release'">
+    <SharpDXWin8>false</SharpDXWin8>
+    <DirectX11_1>false</DirectX11_1>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'DIRECTX11_1Debug' Or '$(Configuration)' == 'DIRECTX11_1Release'">
     <SharpDXWin8>false</SharpDXWin8>
     <DirectX11_1>true</DirectX11_1>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Win8Debug' Or '$(Configuration)' == 'Win8Release'  ">
     <SharpDXWin8>true</SharpDXWin8>
@@ -30,27 +34,50 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetPlatformVersion>8.0</TargetPlatformVersion>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Net20Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>pdbonly</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Net20Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;WinFormsInterop</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Net20Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
+    <OutputPath>bin\Net20Release</OutputPath>
     <DefineConstants>TRACE;WinFormsInterop</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <DocumentationFile>bin\Release\$(AssemblyName).xml</DocumentationFile>
+    <DocumentationFile>bin\Net20Release\$(AssemblyName).xml</DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Net40Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Net40Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;WinFormsInterop</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Net40Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Net40Release</OutputPath>
+    <DefineConstants>TRACE;WinFormsInterop</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DocumentationFile>bin\Net40Release\$(AssemblyName).xml</DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DIRECTX11_1Debug|AnyCPU' ">
@@ -76,7 +103,13 @@
     <DocumentationFile>bin\DIRECTX11_1Release\$(AssemblyName).xml</DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' And '$(SharpDXSign)' == 'true'">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Net20Release|AnyCPU' And '$(SharpDXSign)' == 'true'">
+    <DefineConstants>TRACE;WinFormsInterop;SHARPDX_SIGNED</DefineConstants>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(SolutionDir)sharpdx.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Net40Release|AnyCPU' And '$(SharpDXSign)' == 'true'">
     <DefineConstants>TRACE;WinFormsInterop;SHARPDX_SIGNED</DefineConstants>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>$(SolutionDir)sharpdx.snk</AssemblyOriginatorKeyFile>

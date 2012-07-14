@@ -46,8 +46,9 @@
     <file src="..\..\Bin\Standard-net20\SharpDX.DirectInput.pdb" target="lib\net20" />
     <file src="..\..\Bin\Standard-net20\SharpDX.DirectInput.xml" target="lib\net20" />
 
-    <!--<file src="..\..\Bin\Standard-net40\SharpDX.dll" target="lib\net40" />-->
-    <!--<file src="..\..\Bin\Standard-net40\SharpDX.xml" target="lib\net40" />-->
+    <file src="..\..\Bin\Standard-net40\SharpDX.DirectInput.dll" target="lib\net40" />
+    <file src="..\..\Bin\Standard-net40\SharpDX.DirectInput.pdb" target="lib\net40" />
+    <file src="..\..\Bin\Standard-net40\SharpDX.DirectInput.xml" target="lib\net40" />
 
     <file src="**\*.cs" target="src" />
   </files>

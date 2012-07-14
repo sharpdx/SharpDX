@@ -26,10 +26,8 @@
   <property name="project.name" value="SharpDX"/>
   <property name="project.sname" value="sharpdx"/>
 
-  <property name="build_normal" value="false"/>
+  <property name="build_type" value="net20"/>
   <property name="build_signed" value="false"/>
-  <property name="build_win8" value="false"/>
-  <property name="build_dx11_1" value="false"/>
 
   <property name="keeppdb" value="false"/>
   <property name="keepexe" value="false"/>
@@ -49,26 +47,30 @@
     <!-- Load version from source code SharedAssemblyInfo.cs -->
     <loadfile file="Source/SharedAssemblyInfo.cs" property="assembly_version_file" />
 
-    <property name="version-dir" value="Standard-net20" if="${build_normal}"/>
-    <property name="version-dir" value="Signed-net20" if="${build_signed}"/>
-    <property name="version-dir" value="Win8Metro" if="${build_win8}"/>
-    <property name="version-dir" value="Win8Desktop-net20" if="${build_dx11_1}"/>
+    <property name="version-dir" value="Standard-net20" if="${build_type == 'net20'}"/>
+    <property name="version-dir" value="Standard-net40" if="${build_type == 'net40'}"/>
+    <property name="version-dir" value="Signed-net20" if="${build_type == 'net20' and build_signed}"/>
+    <property name="version-dir" value="Signed-net40" if="${build_type == 'net40' and build_signed}"/>
+    <property name="version-dir" value="Win8Metro" if="${build_type == 'win8'}"/>
+    <property name="version-dir" value="Win8Desktop-net40" if="${build_type == 'dx11_1'}"/>
 
     <regex pattern="AssemblyVersion\(.(?'assembly_version'\d+\.\d+.\d+)" input="${assembly_version_file}" />
     <property name="output_bin_zip" value="${project.name}-Bin-${assembly_version}${build-date}.7z"/>
     <property name="output_bin_and_samples_zip" value="${project.name}-Full-${assembly_version}${build-date}.7z"/>
 
     <!-- Setup configuration -->
-    <property name="configuration" value="Release" if="${build_normal}"/>
-    <property name="configuration" value="Win8Release" if="${build_win8}"/>
-    <property name="configuration" value="DIRECTX11_1Release" if="${build_dx11_1}"/>
+    <property name="configuration" value="Net20Release" if="${build_type == 'net20'}"/>
+    <property name="configuration" value="Net40Release" if="${build_type == 'net40'}"/>
+    <property name="configuration" value="Win8Release"  if="${build_type == 'win8'}"/>
+    <property name="configuration" value="DIRECTX11_1Release" if="${build_type == 'dx11_1'}"/>
 
     <echo message="${project.name} version from file is ${assembly_version}"/>
   </target>
 
   <!-- Clean all directories -->
   <target name="clean" description="Delete all previously compiled binaries.">
-    <delete>
+    <echo message="Remove binaries from directory ${cleandir} (keepexe ${keepexe}, keeppdb ${keeppdb})"/>
+    <delete verbose='true'>
       <fileset basedir="${cleandir}">
         <include name="**/Bin/*.exe" unless="${keepexe}"/>
         <include name="**/Bin/*.dll" unless="${keepexe}"/>
@@ -80,6 +82,10 @@
         <include name="**/Bin/*.check" />
         <include name="**/Debug/**" />
         <include name="**/Release/**" />
+        <include name="**/Net20Debug/**" />
+        <include name="**/Net40Debug/**" />
+        <include name="**/Net20Release/**" />
+        <include name="**/Net40Release/**" />
         <include name="**/Win8Debug/**" />
         <include name="**/Win8Release/**" />
         <include name="**/obj/**" />
@@ -169,8 +175,10 @@
     <echo message="     publish = Prepare build for publish"/>
     <echo message=""/>
     <echo message="Target to call before build/zip:"/>
-    <echo message="      normal = Prepare for normal build (Framework .NET 2.0+)"/>
-    <echo message="      signed = Prepare for signed build (Framework .NET 2.0+)"/>
+    <echo message="      net20  = Prepare for net20  build (Framework .NET 2.0+)"/>
+    <echo message="      net40  = Prepare for net40  build (Framework .NET 4.0+)"/>
+    <echo message="signed-net20 = Prepare for signed build (Framework .NET 2.0+)"/>
+    <echo message="signed-net40 = Prepare for signed build (Framework .NET 4.0+)"/>
     <echo message="        win8 = Prepare for DirectX11.1 Win8 Metro build (Framework .NET 4.5Core)"/>
     <echo message="      dx11_1 = Prepare for DirectX11.1 desktop build (Framework .NET 2.0+)"/>
     <echo message=""/>
@@ -191,16 +199,25 @@
 
   <!-- Full clean and build -->
   <target name="full" description="Full build targets.">
-    <call target="signed"/>
+
+    <!-- Build Signed target first -->
+    <call target="signed-net20"/>
     <call target="build"/>
 
+    <call target="signed-net40"/>
+    <call target="build"/>
+
+    <!-- Build All Unsigned target first -->
     <call target="win8"/>
     <call target="build"/>
 
     <call target="dx11_1"/>
     <call target="build"/>
 
-    <call target="normal"/>
+    <call target="net20"/>
+    <call target="build"/>
+
+    <call target="net40"/>
     <call target="build"/>
 
     <call target="nuget"/>
@@ -210,6 +227,34 @@
     <call target="zip"/>
 
     <call target="publish-code" if="${publish}"/>
+  </target>
+
+  <target name="net20" description="Build net20 targets">
+    <property name="build_type" value="net20"/>
+    <property name="build_signed" value="false"/>
+  </target>
+  <target name="net40" description="Build net40 targets">
+    <property name="build_type" value="net40"/>
+    <property name="build_signed" value="false"/>
+  </target>
+
+  <target name="signed-net20" description="Build signed-net20 targets">
+    <property name="build_type" value="net20"/>
+    <property name="build_signed" value="true"/>
+  </target>
+  <target name="signed-net40" description="Build signed-net40 targets">
+    <property name="build_type" value="net40"/>
+    <property name="build_signed" value="true"/>
+  </target>
+
+  <target name="win8" description="Build win8 targets">
+    <property name="build_type" value="win8"/>
+    <property name="build_signed" value="false"/>
+  </target>
+
+  <target name="dx11_1" description="Build dx11_1 targets">
+    <property name="build_type" value="dx11_1"/>
+    <property name="build_signed" value="false"/>
   </target>
 
   <!-- Internal task to patch all samples and convert csproj -->
@@ -237,38 +282,6 @@
     <property name="publish-project-name" value="sharpdx-nightly-builds"/>
     <property name="publish-labels" value="Type-Archive"/>
     <property name="build-date" value="_${string::pad-left(datetime::get-year(datetime::now()),4,0)}${string::pad-left(datetime::get-month(datetime::now()),2,0)}${string::pad-left(datetime::get-day(datetime::now()),2,0)}"/>
-  </target>
-
-  <!-- Normal build -->
-  <target name="normal" description="Build Win8 targets.">
-    <property name="build_normal" value="true"/>
-    <property name="build_signed" value="false"/>
-    <property name="build_win8" value="false"/>
-    <property name="build_dx11_1" value="false"/>
-  </target>
-
-  <!-- Win8 build -->
-  <target name="win8" description="Build Win8 targets.">
-    <property name="build_normal" value="false"/>
-    <property name="build_signed" value="false"/>
-    <property name="build_win8" value="true"/>
-    <property name="build_dx11_1" value="false"/>
-  </target>
-
-  <!-- Normal Signed build -->
-  <target name="signed" description="Build Signed targets.">
-    <property name="build_normal" value="true"/>
-    <property name="build_signed" value="true"/>
-    <property name="build_win8" value="false"/>
-    <property name="build_dx11_1" value="false"/>
-  </target>
-
-  <!-- Direct3D11.1 build -->
-  <target name="dx11_1" description="Build d3d11.1 targets.">
-    <property name="build_normal" value="false"/>
-    <property name="build_signed" value="false"/>
-    <property name="build_win8" value="false"/>
-    <property name="build_dx11_1" value="true"/>
   </target>
 
   <!-- Nuget Package build -->
@@ -380,7 +393,9 @@
     <!-- Setup based on config -->
     <call target="setup"/>
 
-    <property name="cleandir" value="Samples"/>
+    <property name="cleandir" value="Samples/"/>
+    <property name="keeppdb" value="false"/>
+    <property name="keepexe" value="false"/>
     <call target="clean"/>
 
     <!-- Create Samples Output Directory -->
@@ -398,7 +413,7 @@
       </fileset>
     </copy>
 
-    <delete dir="${output_bin_zip}"/>
+    <delete file="${output_bin_zip}"/>
     <exec program="External/7-Zip/7z.exe" workingdir="Build">
       <arg value="a"/>
       <arg value="-r"/>
@@ -409,7 +424,7 @@
       <arg value="ReleaseNotes.txt"/>
     </exec>
 
-    <delete dir="${output_bin_and_samples_zip}"/>
+    <delete file="${output_bin_and_samples_zip}"/>
     <exec program="External/7-Zip/7z.exe" workingdir="Build">
       <arg value="a"/>
       <arg value="-r"/>

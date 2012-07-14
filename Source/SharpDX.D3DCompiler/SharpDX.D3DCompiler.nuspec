@@ -46,8 +46,9 @@
     <file src="..\..\Bin\Standard-net20\SharpDX.D3DCompiler.pdb" target="lib\net20" />
     <file src="..\..\Bin\Standard-net20\SharpDX.D3DCompiler.xml" target="lib\net20" />
 
-    <!--<file src="..\..\Bin\Standard-net40\SharpDX.dll" target="lib\net40" />-->
-    <!--<file src="..\..\Bin\Standard-net40\SharpDX.xml" target="lib\net40" />-->
+    <file src="..\..\Bin\Standard-net40\SharpDX.D3DCompiler.dll" target="lib\net40" />
+    <file src="..\..\Bin\Standard-net40\SharpDX.D3DCompiler.pdb" target="lib\net40" />
+    <file src="..\..\Bin\Standard-net40\SharpDX.D3DCompiler.xml" target="lib\net40" />
 
     <file src="..\..\Bin\Win8Metro\SharpDX.D3DCompiler.dll" target="lib\winrt" />
     <file src="..\..\Bin\Win8Metro\SharpDX.D3DCompiler.pdb" target="lib\winrt" />

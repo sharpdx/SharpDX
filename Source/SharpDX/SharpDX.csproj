@@ -163,12 +163,8 @@
     <Compile Include="Win32\VariantType.cs" />
     <Compile Include="Windows\NamespaceDoc.cs" />
     <Compile Include="Windows\RenderLoop.cs" />
-    <Compile Include="Windows\RenderControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Windows\RenderForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Windows\RenderControl.cs" />
+    <Compile Include="Windows\RenderForm.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Color.Palette.cs" />

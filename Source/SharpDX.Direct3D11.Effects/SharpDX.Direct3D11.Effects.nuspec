@@ -49,12 +49,15 @@
     <file src="..\..\Bin\Standard-net20\SharpDX.Direct3D11.Effects.pdb" target="lib\net20" />
     <file src="..\..\Bin\Standard-net20\SharpDX.Direct3D11.Effects.xml" target="lib\net20" />
 
-    <!--<file src="..\..\Bin\Standard-net40\SharpDX.dll" target="lib\net40" />-->
-    <!--<file src="..\..\Bin\Standard-net40\SharpDX.xml" target="lib\net40" />-->
+    <file src="..\..\Bin\Standard-net20\sharpdx_direct3d11_effects_x86.dll" target="lib\net20" />
+    <file src="..\..\Bin\Standard-net20\sharpdx_direct3d11_effects_x64.dll" target="lib\net20" />
 
-    <file src="..\..\Bin\Win8Metro\SharpDX.Direct3D11.Effects.dll" target="lib\winrt" />
-    <file src="..\..\Bin\Win8Metro\SharpDX.Direct3D11.Effects.pdb" target="lib\winrt" />
-    <file src="..\..\Bin\Win8Metro\SharpDX.Direct3D11.Effects.xml" target="lib\winrt" />
+    <file src="..\..\Bin\Standard-net40\SharpDX.Direct3D11.Effects.dll" target="lib\net40" />
+    <file src="..\..\Bin\Standard-net40\SharpDX.Direct3D11.Effects.pdb" target="lib\net40" />
+    <file src="..\..\Bin\Standard-net40\SharpDX.Direct3D11.Effects.xml" target="lib\net40" />
+
+    <file src="..\..\Bin\Standard-net40\sharpdx_direct3d11_effects_x86.dll" target="lib\net40" />
+    <file src="..\..\Bin\Standard-net40\sharpdx_direct3d11_effects_x64.dll" target="lib\net40" />
 
     <file src="**\*.cs" target="src" />
   </files>

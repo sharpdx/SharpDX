@@ -38,7 +38,7 @@ namespace MiniCube
     /// </summary>
     internal static class Program
     {
-        [STAThread]
+  //      [STAThread]
         private static void Main()
         {
             var form = new RenderForm("SharpDX - MiniCube Direct3D11 Sample");
