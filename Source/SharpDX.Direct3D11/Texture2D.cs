@@ -64,6 +64,21 @@ namespace SharpDX.Direct3D11
             device.CreateTexture2D(ref description, subResourceDatas, this);
         }
 
+        /// <summary>
+        ///   Initializes a new instance of the <see cref = "T:SharpDX.Direct3D11.Texture2D" /> class.
+        /// </summary>
+        /// <param name = "device">The device with which to associate the texture.</param>
+        /// <param name = "description">The description of the texture.</param>
+        /// <param name = "data">An array of initial texture data for each subresource.</param>
+        /// <msdn-id>ff476521</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
+        public Texture2D(Device device, Texture2DDescription description, DataBox[] data)
+            : base(IntPtr.Zero)
+        {
+            device.CreateTexture2D(ref description, data, this);
+        }
+
         /// <inheritdoc/>
         public override int CalculateSubResourceIndex(int mipSlice, int arraySlice, out int mipSize)
         {
