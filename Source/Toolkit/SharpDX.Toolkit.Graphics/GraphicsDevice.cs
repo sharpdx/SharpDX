@@ -127,6 +127,12 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
+        /// Gets or sets the current presenter use by the <see cref="Present"/> method.
+        /// </summary>
+        /// <value>The current presenter.</value>
+        public GraphicsPresenter CurrentPresenter { get; set; }
+
+        /// <summary>
         /// Clears a render target view by setting all the elements in a render target to one value.
         /// </summary>
         /// <param name="renderTargetView">The render target view.</param>
@@ -1583,6 +1589,23 @@ namespace SharpDX.Toolkit.Graphics
         public void SetVertexBuffers(int slot, SharpDX.Direct3D11.Buffer[] vertexBuffers, int[] stridesRef, int[] offsetsRef)
         {
             Context.InputAssembler.SetVertexBuffers(slot, vertexBuffers, stridesRef, offsetsRef);
+        }
+
+        /// <summary>
+        /// Presents the Backbuffer to the screen.
+        /// </summary>
+        /// <remarks>
+        /// This method is only working if a <see cref="GraphicsPresenter"/> is set on this device using <see cref="CurrentPresenter"/> property.
+        /// </remarks>
+        /// <msdn-id>bb174576</msdn-id>	
+        /// <unmanaged>HRESULT IDXGISwapChain::Present([In] unsigned int SyncInterval,[In] DXGI_PRESENT_FLAGS Flags)</unmanaged>	
+        /// <unmanaged-short>IDXGISwapChain::Present</unmanaged-short>	
+        public void Present()
+        {
+            if (CurrentPresenter == null)
+                throw new InvalidOperationException("No presenter currently setup for this instance. CurrentPresenter is null");
+
+            CurrentPresenter.Present();
         }
 
         public static implicit operator Device(GraphicsDevice from)

@@ -35,7 +35,6 @@ namespace SharpDX.Toolkit.Graphics
     public class GraphicsAdapter : Component
     {
         private static readonly Component staticCollector;
-        private static readonly SharpDX.DXGI.Factory1 factory;
         private readonly Adapter1 adapter;
         private readonly int adapterOrdinal;
         private AdapterDescription1 adapterDescription;
@@ -55,10 +54,10 @@ namespace SharpDX.Toolkit.Graphics
             staticCollector = new Component();
 
             // DXGI Factory
-            factory = new Factory1();
-            staticCollector.ToDispose(factory);
+            Factory = new Factory1();
+            staticCollector.ToDispose(Factory);
 
-            int countAdapters = factory.GetAdapterCount1();
+            int countAdapters = Factory.GetAdapterCount1();
             var adapters = new List<GraphicsAdapter>();
             for (int i = 0; i < countAdapters; i++)
             {
@@ -78,7 +77,7 @@ namespace SharpDX.Toolkit.Graphics
         private GraphicsAdapter(int adapterOrdinal)
         {
             this.adapterOrdinal = adapterOrdinal;
-            adapter = ToDispose(factory.GetAdapter1(adapterOrdinal));
+            adapter = ToDispose(Factory.GetAdapter1(adapterOrdinal));
             Description = adapter.Description1;
             outputs = adapter.Outputs;
             SupportedDisplayModes = new DisplayMode[0];
@@ -95,6 +94,11 @@ namespace SharpDX.Toolkit.Graphics
                     ToDispose(output);
             }
         }
+
+        /// <summary>
+        /// Gets the <see cref="Factory1"/> used by all GraphicsAdapter.
+        /// </summary>
+        public static readonly SharpDX.DXGI.Factory1 Factory;
 
         /// <summary>
         /// Return the description of this adapter
@@ -187,7 +191,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="from">Source for the.</param>
         public static implicit operator Factory1(GraphicsAdapter from)
         {
-            return factory;
+            return Factory;
         }
 
         /// <summary>

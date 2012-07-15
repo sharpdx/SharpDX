@@ -33,7 +33,11 @@ namespace SharpDX.DXGI
         /// <param name="device">A reference to the device that will write 2D images to the swap chain. </param>
         /// <param name="description">A reference to the swap-chain description (see <see cref="SharpDX.DXGI.SwapChainDescription"/>).</param>
         /// <unmanaged>HRESULT IDXGIFactory::CreateSwapChain([In] IUnknown* pDevice,[In] DXGI_SWAP_CHAIN_DESC* pDesc,[Out] IDXGISwapChain** ppSwapChain)</unmanaged>
-        public SwapChain(Factory factory, ComObject device, SwapChainDescription description) : base(IntPtr.Zero)
+        /// <msdn-id>bb174537</msdn-id>	
+        /// <unmanaged>HRESULT IDXGIFactory::CreateSwapChain([In] IUnknown* pDevice,[In] DXGI_SWAP_CHAIN_DESC* pDesc,[Out, Fast] IDXGISwapChain** ppSwapChain)</unmanaged>	
+        /// <unmanaged-short>IDXGIFactory::CreateSwapChain</unmanaged-short>	
+        public SwapChain(Factory factory, ComObject device, SwapChainDescription description)
+            : base(IntPtr.Zero)
         {
             factory.CreateSwapChain(device, ref description, this);
         }
@@ -46,7 +50,9 @@ namespace SharpDX.DXGI
         /// <returns>
         /// Returns a reference to a back-buffer interface.
         /// </returns>
-        /// <unmanaged>HRESULT IDXGISwapChain::GetBuffer([None] int Buffer,[In] GUID* riid,[Out] void** ppSurface)</unmanaged>
+        /// <msdn-id>bb174570</msdn-id>	
+        /// <unmanaged>HRESULT IDXGISwapChain::GetBuffer([In] unsigned int Buffer,[In] const GUID&amp; riid,[Out] void** ppSurface)</unmanaged>	
+        /// <unmanaged-short>IDXGISwapChain::GetBuffer</unmanaged-short>	
         public T GetBackBuffer<T>(int index) where T : ComObject
         {
             IntPtr temp;
@@ -54,13 +60,15 @@ namespace SharpDX.DXGI
             return FromPointer<T>(temp);
         }
 
-
         /// <summary>
         /// Gets or sets a value indicating whether the swapchain is in fullscreen.
         /// </summary>
         /// <value>
         /// 	<c>true</c> if this swapchain is in fullscreen; otherwise, <c>false</c>.
         /// </value>
+        /// <msdn-id>bb174574</msdn-id>	
+        /// <unmanaged>HRESULT IDXGISwapChain::GetFullscreenState([Out] BOOL* pFullscreen,[Out] IDXGIOutput** ppTarget)</unmanaged>	
+        /// <unmanaged-short>IDXGISwapChain::GetFullscreenState</unmanaged-short>	
         public bool IsFullScreen
         {
             get
