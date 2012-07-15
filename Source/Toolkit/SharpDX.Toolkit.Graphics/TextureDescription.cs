@@ -36,6 +36,11 @@ namespace SharpDX.Toolkit.Graphics
     [StructLayout(LayoutKind.Sequential)]
     public struct TextureDescription
     {
+        /// <summary>
+        /// The dimension of a texture.
+        /// </summary>
+        public TextureDimension Dimension;
+
         /// <summary>	
         /// <dd> <p>Texture width (in texels). The  range is from 1 to <see cref="SharpDX.Direct3D11.Resource.MaximumTexture1DSize"/> (16384). However, the range is actually constrained by the feature level at which you create the rendering device. For more information about restrictions, see Remarks.</p> </dd>	
         /// </summary>	
@@ -164,6 +169,7 @@ namespace SharpDX.Toolkit.Graphics
         public static implicit operator TextureDescription(Texture1DDescription description)
         {
             return new TextureDescription() {
+                Dimension = TextureDimension.Texture1D,
                 Width = description.Width,
                 Height = 1,
                 Depth = 1,
@@ -205,8 +211,13 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>The result of the conversion.</returns>
         public static implicit operator TextureDescription(Texture2DDescription description)
         {
+            var dimension = (description.ArraySize == 6 && (description.OptionFlags & ResourceOptionFlags.TextureCube) != 0)
+                                ? TextureDimension.TextureCube
+                                : TextureDimension.Texture2D;
+
             return new TextureDescription()
             {
+                Dimension = dimension,
                 Width = description.Width,
                 Height = description.Height,
                 Depth = 1,
@@ -252,6 +263,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             return new TextureDescription()
             {
+                Dimension =  TextureDimension.Texture3D,
                 Width = description.Width,
                 Height = description.Height,
                 Depth = description.Depth,

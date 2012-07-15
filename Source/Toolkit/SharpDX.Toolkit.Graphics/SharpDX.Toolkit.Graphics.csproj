@@ -33,6 +33,7 @@
     <Compile Include="GraphicsPresenter.cs" />
     <Compile Include="PresentationParameters.cs" />
     <Compile Include="PresentInterval.cs" />
+    <Compile Include="TextureDimension.cs" />
     <Compile Include="UnorderedAccessViewSelector.cs" />
     <Compile Include="ShaderResourceViewSelector.cs" />
     <Compile Include="RenderTargetViewSelector.cs" />
