@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Collections.Generic;
+using System.Security.Policy;
 
 namespace SharpDX.DXGI
 {
@@ -26,6 +28,7 @@ namespace SharpDX.DXGI
     /// </summary>
     public static class FormatHelper
     {
+        private static readonly int[] sizeOfInBits = new int[256];
 
         /// <summary>
         /// Calculates the size of a <see cref="Format"/> in bytes.
@@ -44,117 +47,136 @@ namespace SharpDX.DXGI
         /// <returns>size of in bits</returns>
         public static int SizeOfInBits(Format format)
         {
-            // Size from doc http://msdn.microsoft.com/en-us/library/bb173059%28VS.85%29.aspx
-            switch (format)
-            {
-                case Format.R1_UNorm:
-                    return 1;
-                case Format.A8_UNorm:
-                case Format.R8_SInt:
-                case Format.R8_SNorm:
-                case Format.R8_Typeless:
-                case Format.R8_UInt:
-                case Format.R8_UNorm:
-                    return 8;
-                case Format.B5G5R5A1_UNorm:
-                case Format.B5G6R5_UNorm:
-                case Format.D16_UNorm:
-                case Format.R16_Float:
-                case Format.R16_SInt:
-                case Format.R16_SNorm:
-                case Format.R16_Typeless:
-                case Format.R16_UInt:
-                case Format.R16_UNorm:
-                case Format.R8G8_SInt:
-                case Format.R8G8_SNorm:
-                case Format.R8G8_Typeless:
-                case Format.R8G8_UInt:
-                case Format.R8G8_UNorm:
-                    return 16;
-                case Format.B8G8R8X8_Typeless:
-                case Format.B8G8R8X8_UNorm:
-                case Format.B8G8R8X8_UNorm_SRgb:
-                case Format.D24_UNorm_S8_UInt:
-                case Format.D32_Float:
-                case Format.D32_Float_S8X24_UInt:
-                case Format.G8R8_G8B8_UNorm:
-                case Format.R10G10B10_Xr_Bias_A2_UNorm:
-                case Format.R10G10B10A2_Typeless:
-                case Format.R10G10B10A2_UInt:
-                case Format.R10G10B10A2_UNorm:
-                case Format.R11G11B10_Float:
-                case Format.R16G16_Float:
-                case Format.R16G16_SInt:
-                case Format.R16G16_SNorm:
-                case Format.R16G16_Typeless:
-                case Format.R16G16_UInt:
-                case Format.R16G16_UNorm:
-                case Format.R24_UNorm_X8_Typeless:
-                case Format.R24G8_Typeless:
-                case Format.R32_Float:
-                case Format.R32_Float_X8X24_Typeless:
-                case Format.R32_SInt:
-                case Format.R32_Typeless:
-                case Format.R32_UInt:
-                case Format.R8G8_B8G8_UNorm:
-                case Format.R8G8B8A8_SInt:
-                case Format.R8G8B8A8_SNorm:
-                case Format.R8G8B8A8_Typeless:
-                case Format.R8G8B8A8_UInt:
-                case Format.R8G8B8A8_UNorm:
-                case Format.R8G8B8A8_UNorm_SRgb:
-                case Format.B8G8R8A8_Typeless:
-                case Format.B8G8R8A8_UNorm:
-                case Format.B8G8R8A8_UNorm_SRgb:
-                case Format.R9G9B9E5_Sharedexp:
-                case Format.X24_Typeless_G8_UInt:
-                case Format.X32_Typeless_G8X24_UInt:
-                    return 32;
-                case Format.BC1_Typeless:
-                case Format.BC1_UNorm:
-                case Format.BC1_UNorm_SRgb:
-                case Format.BC4_SNorm:
-                case Format.BC4_Typeless:
-                case Format.BC4_UNorm:
-                case Format.R16G16B16A16_Float:
-                case Format.R16G16B16A16_SInt:
-                case Format.R16G16B16A16_SNorm:
-                case Format.R16G16B16A16_Typeless:
-                case Format.R16G16B16A16_UInt:
-                case Format.R16G16B16A16_UNorm:
-                case Format.R32G32_Float:
-                case Format.R32G32_SInt:
-                case Format.R32G32_Typeless:
-                case Format.R32G32_UInt:
-                case Format.R32G8X24_Typeless:
-                    return 64;
-                case Format.R32G32B32_Float:
-                case Format.R32G32B32_SInt:
-                case Format.R32G32B32_Typeless:
-                case Format.R32G32B32_UInt:
-                    return 96;
-                case Format.BC2_Typeless:
-                case Format.BC2_UNorm:
-                case Format.BC2_UNorm_SRgb:
-                case Format.BC3_Typeless:
-                case Format.BC3_UNorm:
-                case Format.BC3_UNorm_SRgb:
-                case Format.BC5_SNorm:
-                case Format.BC5_Typeless:
-                case Format.BC5_UNorm:
-                case Format.BC6H_Sf16:
-                case Format.BC6H_Typeless:
-                case Format.BC6H_Uf16:
-                case Format.BC7_Typeless:
-                case Format.BC7_UNorm:
-                case Format.BC7_UNorm_SRgb:
-                case Format.R32G32B32A32_Float:
-                case Format.R32G32B32A32_SInt:
-                case Format.R32G32B32A32_Typeless:
-                case Format.R32G32B32A32_UInt:
-                    return 128;
-            }
-            throw new ArgumentException(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Unknown size for DXGI Format [{0}] ", format));
+            return sizeOfInBits[(int) format];
+        }
+
+        /// <summary>
+        /// Static initializer to speed up size calculation (not sure the JIT is enough "smart" for this kind of thing).
+        /// </summary>
+        static FormatHelper()
+        {
+            InitFormat(new[] { Format.R1_UNorm }, 1);
+
+            InitFormat(new[] { Format.A8_UNorm, Format.R8_SInt, Format.R8_SNorm, Format.R8_Typeless, Format.R8_UInt, Format.R8_UNorm }, 8);
+
+            InitFormat(new[] { 
+                Format.B5G5R5A1_UNorm,
+                Format.B5G6R5_UNorm,
+                Format.D16_UNorm,
+                Format.R16_Float,
+                Format.R16_SInt,
+                Format.R16_SNorm,
+                Format.R16_Typeless,
+                Format.R16_UInt,
+                Format.R16_UNorm,
+                Format.R8G8_SInt,
+                Format.R8G8_SNorm,
+                Format.R8G8_Typeless,
+                Format.R8G8_UInt,
+                Format.R8G8_UNorm
+            }, 16);
+
+            InitFormat(new[] { 
+                Format.B8G8R8X8_Typeless,
+                Format.B8G8R8X8_UNorm,
+                Format.B8G8R8X8_UNorm_SRgb,
+                Format.D24_UNorm_S8_UInt,
+                Format.D32_Float,
+                Format.D32_Float_S8X24_UInt,
+                Format.G8R8_G8B8_UNorm,
+                Format.R10G10B10_Xr_Bias_A2_UNorm,
+                Format.R10G10B10A2_Typeless,
+                Format.R10G10B10A2_UInt,
+                Format.R10G10B10A2_UNorm,
+                Format.R11G11B10_Float,
+                Format.R16G16_Float,
+                Format.R16G16_SInt,
+                Format.R16G16_SNorm,
+                Format.R16G16_Typeless,
+                Format.R16G16_UInt,
+                Format.R16G16_UNorm,
+                Format.R24_UNorm_X8_Typeless,
+                Format.R24G8_Typeless,
+                Format.R32_Float,
+                Format.R32_Float_X8X24_Typeless,
+                Format.R32_SInt,
+                Format.R32_Typeless,
+                Format.R32_UInt,
+                Format.R8G8_B8G8_UNorm,
+                Format.R8G8B8A8_SInt,
+                Format.R8G8B8A8_SNorm,
+                Format.R8G8B8A8_Typeless,
+                Format.R8G8B8A8_UInt,
+                Format.R8G8B8A8_UNorm,
+                Format.R8G8B8A8_UNorm_SRgb,
+                Format.B8G8R8A8_Typeless,
+                Format.B8G8R8A8_UNorm,
+                Format.B8G8R8A8_UNorm_SRgb,
+                Format.R9G9B9E5_Sharedexp,
+                Format.X24_Typeless_G8_UInt,
+                Format.X32_Typeless_G8X24_UInt,
+            }, 32);
+
+            InitFormat(new[] { 
+                Format.R16G16B16A16_Float,
+                Format.R16G16B16A16_SInt,
+                Format.R16G16B16A16_SNorm,
+                Format.R16G16B16A16_Typeless,
+                Format.R16G16B16A16_UInt,
+                Format.R16G16B16A16_UNorm,
+                Format.R32G32_Float,
+                Format.R32G32_SInt,
+                Format.R32G32_Typeless,
+                Format.R32G32_UInt,
+                Format.R32G8X24_Typeless,
+            }, 64);
+
+            InitFormat(new[] { 
+                Format.R32G32B32_Float,
+                Format.R32G32B32_SInt,
+                Format.R32G32B32_Typeless,
+                Format.R32G32B32_UInt,
+            }, 96);
+
+            InitFormat(new[] { 
+                Format.R32G32B32A32_Float,
+                Format.R32G32B32A32_SInt,
+                Format.R32G32B32A32_Typeless,
+                Format.R32G32B32A32_UInt,
+            }, 128);
+
+            InitFormat(new[] { 
+                Format.BC1_Typeless,
+                Format.BC1_UNorm,
+                Format.BC1_UNorm_SRgb,
+                Format.BC4_SNorm,
+                Format.BC4_Typeless,
+                Format.BC4_UNorm,
+            }, 4);
+
+            InitFormat(new[] { 
+                Format.BC2_Typeless,
+                Format.BC2_UNorm,
+                Format.BC2_UNorm_SRgb,
+                Format.BC3_Typeless,
+                Format.BC3_UNorm,
+                Format.BC3_UNorm_SRgb,
+                Format.BC5_SNorm,
+                Format.BC5_Typeless,
+                Format.BC5_UNorm,
+                Format.BC6H_Sf16,
+                Format.BC6H_Typeless,
+                Format.BC6H_Uf16,
+                Format.BC7_Typeless,
+                Format.BC7_UNorm,
+                Format.BC7_UNorm_SRgb,
+            }, 8);
+        }
+
+        private static void InitFormat(IEnumerable<Format> formats, int bitCount)
+        {
+            foreach (var format in formats)
+                sizeOfInBits[(int)format] = bitCount;
         }
     }
 }
