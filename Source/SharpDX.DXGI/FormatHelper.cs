@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 using System;
 using System.Collections.Generic;
-using System.Security.Policy;
 
 namespace SharpDX.DXGI
 {
@@ -51,6 +50,210 @@ namespace SharpDX.DXGI
         }
 
         /// <summary>
+        /// Returns true if the <see cref="Format"/> is valid.
+        /// </summary>
+        /// <param name="format">A format to validate</param>
+        /// <returns>True if the <see cref="Format"/> is valid.</returns>
+        public static bool IsValid( Format format )
+        {
+#if DIRECTX11_1
+            return ( (int)(format) >= 1 && (int)(format) <= 115 );
+#else
+            return ((int) (format) >= 1 && (int) (format) <= 99);
+#endif
+        }
+
+        /// <summary>
+        /// Returns true if the <see cref="Format"/> is a compressed format.
+        /// </summary>
+        /// <param name="fmt">The format to check for compressed.</param>
+        /// <returns>True if the <see cref="Format"/> is a compressed format</returns>
+        public static bool IsCompressed( Format fmt )
+        {
+            switch (fmt)
+            {
+                case Format.BC1_Typeless:
+                case Format.BC1_UNorm:
+                case Format.BC1_UNorm_SRgb:
+                case Format.BC2_Typeless:
+                case Format.BC2_UNorm:
+                case Format.BC2_UNorm_SRgb:
+                case Format.BC3_Typeless:
+                case Format.BC3_UNorm:
+                case Format.BC3_UNorm_SRgb:
+                case Format.BC4_Typeless:
+                case Format.BC4_UNorm:
+                case Format.BC4_SNorm:
+                case Format.BC5_Typeless:
+                case Format.BC5_UNorm:
+                case Format.BC5_SNorm:
+                case Format.BC6H_Typeless:
+                case Format.BC6H_Uf16:
+                case Format.BC6H_Sf16:
+                case Format.BC7_Typeless:
+                case Format.BC7_UNorm:
+                case Format.BC7_UNorm_SRgb:
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="Format"/> is packed.
+        /// </summary>
+        /// <param name="fmt">The DXGI Format.</param>
+        /// <returns><c>true</c> if the specified <see cref="Format"/> is packed; otherwise, <c>false</c>.</returns>
+        public static bool IsPacked( Format fmt )
+        {
+            return ((fmt == Format.R8G8_B8G8_UNorm) || (fmt == Format.G8R8_G8B8_UNorm));
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="Format"/> is video.
+        /// </summary>
+        /// <param name="fmt">The <see cref="Format"/>.</param>
+        /// <returns><c>true</c> if the specified <see cref="Format"/> is video; otherwise, <c>false</c>.</returns>
+        public static bool IsVideo( Format fmt )
+        {
+#if DIRECTX11_1
+            switch ( fmt )
+            {
+                case Format.AYUV:
+                case Format.Y410:
+                case Format.Y416:
+                case Format.NV12:
+                case Format.P010:
+                case Format.P016:
+                case Format.YUY2:
+                case Format.Y210:
+                case Format.Y216:
+                case Format.NV11:
+                    // These video formats can be used with the 3D pipeline through special view mappings
+                    return true;
+
+                case Format.Opaque420:
+                case Format.AI44:
+                case Format.IA44:
+                case Format.P8:
+                case Format.A8P8:
+                    // These are limited use video formats not usable in any way by the 3D pipeline
+                    return true;
+
+                default:
+                    return false;
+                }
+#else
+            // !DXGI_1_2_FORMATS
+            return false;
+#endif
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="Format"/> is a SRGB format.
+        /// </summary>
+        /// <param name="fmt">The <see cref="Format"/>.</param>
+        /// <returns><c>true</c> if the specified <see cref="Format"/> is a SRGB format; otherwise, <c>false</c>.</returns>
+        public static bool IsSRgb( Format fmt )
+        {
+            switch (fmt)
+            {
+                case Format.R8G8B8A8_UNorm_SRgb:
+                case Format.BC1_UNorm_SRgb:
+                case Format.BC2_UNorm_SRgb:
+                case Format.BC3_UNorm_SRgb:
+                case Format.B8G8R8A8_UNorm_SRgb:
+                case Format.B8G8R8X8_UNorm_SRgb:
+                case Format.BC7_UNorm_SRgb:
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="Format"/> is typeless.
+        /// </summary>
+        /// <param name="fmt">The <see cref="Format"/>.</param>
+        /// <returns><c>true</c> if the specified <see cref="Format"/> is typeless; otherwise, <c>false</c>.</returns>
+        public static bool IsTypeless( Format fmt )
+        {
+            switch (fmt)
+            {
+                case Format.R32G32B32A32_Typeless:
+                case Format.R32G32B32_Typeless:
+                case Format.R16G16B16A16_Typeless:
+                case Format.R32G32_Typeless:
+                case Format.R32G8X24_Typeless:
+                case Format.R32_Float_X8X24_Typeless:
+                case Format.X32_Typeless_G8X24_UInt:
+                case Format.R10G10B10A2_Typeless:
+                case Format.R8G8B8A8_Typeless:
+                case Format.R16G16_Typeless:
+                case Format.R32_Typeless:
+                case Format.R24G8_Typeless:
+                case Format.R24_UNorm_X8_Typeless:
+                case Format.X24_Typeless_G8_UInt:
+                case Format.R8G8_Typeless:
+                case Format.R16_Typeless:
+                case Format.R8_Typeless:
+                case Format.BC1_Typeless:
+                case Format.BC2_Typeless:
+                case Format.BC3_Typeless:
+                case Format.BC4_Typeless:
+                case Format.BC5_Typeless:
+                case Format.B8G8R8A8_Typeless:
+                case Format.B8G8R8X8_Typeless:
+                case Format.BC6H_Typeless:
+                case Format.BC7_Typeless:
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// Computes the scanline count (number of scanlines).
+        /// </summary>
+        /// <param name="fmt">The <see cref="Format"/>.</param>
+        /// <param name="height">The height.</param>
+        /// <returns>The scanline count.</returns>
+        public static int ComputeScanlineCount(Format fmt, int height)
+        {
+            switch (fmt)
+            {
+                case Format.BC1_Typeless:
+                case Format.BC1_UNorm:
+                case Format.BC1_UNorm_SRgb:
+                case Format.BC2_Typeless:
+                case Format.BC2_UNorm:
+                case Format.BC2_UNorm_SRgb:
+                case Format.BC3_Typeless:
+                case Format.BC3_UNorm:
+                case Format.BC3_UNorm_SRgb:
+                case Format.BC4_Typeless:
+                case Format.BC4_UNorm:
+                case Format.BC4_SNorm:
+                case Format.BC5_Typeless:
+                case Format.BC5_UNorm:
+                case Format.BC5_SNorm:
+                case Format.BC6H_Typeless:
+                case Format.BC6H_Uf16:
+                case Format.BC6H_Sf16:
+                case Format.BC7_Typeless:
+                case Format.BC7_UNorm:
+                case Format.BC7_UNorm_SRgb:
+                    return Math.Max(1, (height + 3) / 4);
+
+                default:
+                    return height;
+            }
+        }
+
+        /// <summary>
         /// Static initializer to speed up size calculation (not sure the JIT is enough "smart" for this kind of thing).
         /// </summary>
         static FormatHelper()
@@ -73,7 +276,10 @@ namespace SharpDX.DXGI
                 Format.R8G8_SNorm,
                 Format.R8G8_Typeless,
                 Format.R8G8_UInt,
-                Format.R8G8_UNorm
+                Format.R8G8_UNorm,
+#if DIRECTX11_1
+                Format.B4G4R4A4_UNorm,
+#endif
             }, 16);
 
             InitFormat(new[] { 

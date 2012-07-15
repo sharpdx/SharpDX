@@ -85,6 +85,11 @@
     <short name="(A(\d).*)">$1</short>
     <short name="(X(\d).*)">$1</short>
     <short name="(BC(\d).*)">$1</short>
+    <short name="(AYUV)">$1</short>
+    <short name="(YUY2)">$1</short>
+    <short name="(NV\d+)">$1</short>
+    <short name="(AI\d+)">$1</short>
+    <short name="(IA\d+)">$1</short>
   </naming>
 
   <!-- DXGI types -->

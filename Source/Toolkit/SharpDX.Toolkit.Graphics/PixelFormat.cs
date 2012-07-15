@@ -390,40 +390,6 @@ namespace SharpDX.Toolkit.Graphics
             #endregion
         }
 
-        /// <summary>
-        /// Gets a boolean indicating whether this <see cref="PixelFormat"/> is a block compress format (BC1, BC2, BC3, BC4, BC5, BC6H, BC7)
-        /// </summary>
-        public bool IsBlockCompressed
-        {
-            get
-            {
-                switch (Value)
-                {
-                    case DXGI.Format.BC1_Typeless:
-                    case DXGI.Format.BC1_UNorm:
-                    case DXGI.Format.BC1_UNorm_SRgb:
-                    case DXGI.Format.BC2_Typeless:
-                    case DXGI.Format.BC2_UNorm:
-                    case DXGI.Format.BC2_UNorm_SRgb:
-                    case DXGI.Format.BC3_Typeless:
-                    case DXGI.Format.BC3_UNorm:
-                    case DXGI.Format.BC3_UNorm_SRgb:
-                    case DXGI.Format.BC4_SNorm:
-                    case DXGI.Format.BC4_Typeless:
-                    case DXGI.Format.BC4_UNorm:
-                    case DXGI.Format.BC5_SNorm:
-                    case DXGI.Format.BC5_Typeless:
-                    case DXGI.Format.BC5_UNorm:
-                    case DXGI.Format.BC6H_Typeless:
-                    case DXGI.Format.BC7_Typeless:
-                    case DXGI.Format.BC7_UNorm:
-                    case DXGI.Format.BC7_UNorm_SRgb:
-                        return true;
-                }
-                return false;
-            }
-        }
-
         public static implicit operator Format(PixelFormat from)
         {
             return from.Value;

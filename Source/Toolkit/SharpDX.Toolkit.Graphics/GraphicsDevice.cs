@@ -18,8 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using SharpDX.DXGI;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
+using Device = SharpDX.Direct3D11.Device;
+using MapFlags = SharpDX.Direct3D11.MapFlags;
 
 namespace SharpDX.Toolkit.Graphics
 {
@@ -871,7 +874,7 @@ namespace SharpDX.Toolkit.Graphics
             int depth = Texture.CalculateMipSize(texture.Description.Depth, mipSlice);
 
             // Calculate depth stride based on mipmap level
-            var rowStride = width * texture.Description.Format.SizeInBytes;
+            var rowStride = (int)(width * FormatHelper.SizeOfInBytes(texture.Description.Format));
 
             // Depth Stride
             var textureDepthStride = rowStride * height;
@@ -996,7 +999,7 @@ namespace SharpDX.Toolkit.Graphics
             }
             
             // Size per pixel
-            var sizePerElement = texture.Description.Format.SizeInBytes;
+            var sizePerElement = (int)FormatHelper.SizeOfInBytes(texture.Description.Format);
 
             // Calculate depth stride based on mipmap level
             var rowStride = width * sizePerElement;

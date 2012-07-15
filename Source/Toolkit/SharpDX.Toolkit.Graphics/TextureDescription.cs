@@ -102,7 +102,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476252</msdn-id>	
         /// <unmanaged>DXGI_FORMAT Format</unmanaged>	
         /// <unmanaged-short>DXGI_FORMAT Format</unmanaged-short>	
-        public PixelFormat Format;
+        public DXGI.Format Format;
 
         /// <summary>	
         /// <dd> <p>Structure that specifies multisampling parameters for the texture. See <strong><see cref="SharpDX.DXGI.SampleDescription"/></strong>.</p> </dd>	

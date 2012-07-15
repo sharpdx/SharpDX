@@ -18,23 +18,57 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.Globalization;
+using System.Runtime.InteropServices;
 
 namespace SharpDX.Multimedia
 {
     /// <summary>
     /// A FourCC descriptor.
     /// </summary>
-    public struct FourCC
+    [StructLayout(LayoutKind.Sequential, Size = 4)]
+    public struct FourCC : IEquatable<FourCC>
     {
-        private string value;
+        private readonly uint value;
 
         /// <summary>
-        /// Gets the value.
+        /// Initializes a new instance of the <see cref="FourCC" /> struct.
         /// </summary>
-        public string Value
+        /// <param name="fourCC">The fourCC value as a string .</param>
+        public FourCC(string fourCC)
         {
-            get { return value; }
+            if (fourCC.Length != 4)
+                throw new ArgumentException(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Invalid length for FourCC(\"{0}\". Must be be 4 characters long ", fourCC), "fourCC");
+            this.value = ((uint)fourCC[3]) << 24 | ((uint)fourCC[2]) << 16 | ((uint)fourCC[1]) << 8 | ((uint)fourCC[0]);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FourCC" /> struct.
+        /// </summary>
+        /// <param name="byte1">The byte1.</param>
+        /// <param name="byte2">The byte2.</param>
+        /// <param name="byte3">The byte3.</param>
+        /// <param name="byte4">The byte4.</param>
+        public FourCC(char byte1, char byte2, char byte3, char byte4)
+        {
+            this.value = ((uint)byte4) << 24 | ((uint)byte3) << 16 | ((uint)byte2) << 8 | ((uint)byte1);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FourCC" /> struct.
+        /// </summary>
+        /// <param name="fourCC">The fourCC value as an uint.</param>
+        public FourCC(uint fourCC)
+        {
+            this.value = fourCC;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FourCC" /> struct.
+        /// </summary>
+        /// <param name="fourCC">The fourCC value as an int.</param>
+        public FourCC(int fourCC)
+        {
+            this.value = checked((uint)fourCC);
         }
 
         /// <summary>
@@ -46,31 +80,19 @@ namespace SharpDX.Multimedia
         /// </returns>
         public static implicit operator uint(FourCC d)
         {
-            return ToFourCC(d.Value);
+            return d.value;
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Multimedia.FourCC"/> to <see cref="System.String"/>.
+        /// Performs an implicit conversion from <see cref="SharpDX.Multimedia.FourCC"/> to <see cref="System.Int32"/>.
         /// </summary>
         /// <param name="d">The d.</param>
         /// <returns>
         /// The result of the conversion.
         /// </returns>
-        public static implicit operator string(FourCC d)
+        public static implicit operator int(FourCC d)
         {
-            return d.Value;
-        }
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="System.String"/> to <see cref="SharpDX.Multimedia.FourCC"/>.
-        /// </summary>
-        /// <param name="d">The d.</param>
-        /// <returns>
-        /// The result of the conversion.
-        /// </returns>
-        public static implicit operator FourCC(string d)
-        {
-            return new FourCC { value = d };
+            return checked((int)d.value);
         }
 
         /// <summary>
@@ -82,46 +104,80 @@ namespace SharpDX.Multimedia
         /// </returns>
         public static implicit operator FourCC(uint d)
         {
-            return FromFourCC(d);
+            return new FourCC(d);
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents this instance.
+        /// Performs an implicit conversion from <see cref="System.Int32"/> to <see cref="SharpDX.Multimedia.FourCC"/>.
         /// </summary>
+        /// <param name="d">The d.</param>
         /// <returns>
-        /// A <see cref="System.String"/> that represents this instance.
+        /// The result of the conversion.
         /// </returns>
+        public static implicit operator FourCC(int d)
+        {
+            return new FourCC(d);
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="SharpDX.Multimedia.FourCC"/> to <see cref="System.String"/>.
+        /// </summary>
+        /// <param name="d">The d.</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
+        public static implicit operator string(FourCC d)
+        {
+            return d.ToString();
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="System.String"/> to <see cref="SharpDX.Multimedia.FourCC"/>.
+        /// </summary>
+        /// <param name="d">The d.</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
+        public static implicit operator FourCC(string d)
+        {
+            return new FourCC(d);
+        }
+
         public override string ToString()
         {
-            return Value;
+            return new string(new[]
+                                  {
+                                      (char) (value & 0xFF),
+                                      (char) ((value >> 8) & 0xFF),
+                                      (char) ((value >> 16) & 0xFF),
+                                      (char) ((value >> 24) & 0xFF),
+                                  });
         }
 
-        /// <summary>
-        /// Converts a FourCC integer to a string
-        /// </summary>
-        /// <param name="fourCC">The FourCC.</param>
-        /// <returns>A FourCC string</returns>
-        private static string FromFourCC(uint fourCC)
+        public bool Equals(FourCC other)
         {
-            return new string(new []
-                               {
-                                   (char) (fourCC & 0xFF),
-                                   (char) ((fourCC >> 8) & 0xFF),
-                                   (char) ((fourCC >> 16) & 0xFF),
-                                   (char) ((fourCC >> 24) & 0xFF),
-                               });
+            return value == other.value;
         }
 
-        /// <summary>
-        /// Convert a FourCC string to int
-        /// </summary>
-        /// <param name="fourCC">The fourCC.</param>
-        /// <returns>an integer version of the FourCC</returns>
-        private static uint ToFourCC(string fourCC)
+        public override bool Equals(object obj)
         {
-            if (fourCC.Length != 4)
-                throw new ArgumentException(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Invalid length for FourCC(\"{0}\". Must be be 4 characters long ", fourCC), "fourCC");
-            return ((uint)fourCC[3]) << 24 | ((uint)fourCC[2]) << 16 | ((uint)fourCC[1]) << 8 | ((uint)fourCC[0]);
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is FourCC && Equals((FourCC) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (int) value;
+        }
+
+        public static bool operator ==(FourCC left, FourCC right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(FourCC left, FourCC right)
+        {
+            return !left.Equals(right);
         }
     }
 }

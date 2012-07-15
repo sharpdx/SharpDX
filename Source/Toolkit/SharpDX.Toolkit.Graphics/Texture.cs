@@ -19,7 +19,9 @@
 // THE SOFTWARE.
 
 using System;
+using SharpDX.DXGI;
 using SharpDX.Direct3D11;
+using DeviceChild = SharpDX.Direct3D11.DeviceChild;
 
 namespace SharpDX.Toolkit.Graphics
 {
@@ -71,7 +73,7 @@ namespace SharpDX.Toolkit.Graphics
         protected Texture(TextureDescription description)
         {
             Description = description;
-            IsBlockCompressed = description.Format.IsBlockCompressed;
+            IsBlockCompressed = FormatHelper.IsCompressed(description.Format);
             RowStride = this.Description.Width * ((PixelFormat)this.Description.Format).SizeInBytes;
             DepthStride = RowStride * this.Description.Height;
             ShaderResourceView = new ShaderResourceViewSelector(this);
