@@ -34,11 +34,11 @@ namespace SharpDX.Direct3D10
         /// <param name="destWeightsRef">A list of the amount of influence the bone has on each vertex. These values correspond to the values in pDestIndices, such that pDestWeights[i] corresponds to pDestIndices[i].f </param>
         /// <returns>If the method succeeds, the return value is S_OK. If the method fails, the return value can be: E_INVALIDARG or E_OUTOFMEMORY. </returns>
         /// <unmanaged>HRESULT ID3DX10SkinInfo::GetBoneInfluences([None] int BoneIndex,[None] int Offset,[None] int Count,[Out, Buffer] int* pDestIndices,[Out, Buffer] float* pDestWeights)</unmanaged>
-        public Result GetBoneInfluences(int boneIndex, int offset, int count, out int[] destIndicesRef, out float[] destWeightsRef)
+        public void GetBoneInfluences(int boneIndex, int offset, int count, out int[] destIndicesRef, out float[] destWeightsRef)
         {
             destIndicesRef = new int[count];
             destWeightsRef = new float[count];
-            return GetBoneInfluences(boneIndex, offset, count, destIndicesRef, destWeightsRef);
+            GetBoneInfluences(boneIndex, offset, count, destIndicesRef, destWeightsRef);
         }
     }
 }

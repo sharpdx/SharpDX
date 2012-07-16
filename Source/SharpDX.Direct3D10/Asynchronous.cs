@@ -71,7 +71,8 @@ namespace SharpDX.Direct3D10
             {
                 try
                 {
-                    return GetData(IntPtr.Zero, 0, 0).Code == 0;
+                    GetData(IntPtr.Zero, 0, 0);
+                    return true;
                 }
                 catch (SharpDXException)
                 {

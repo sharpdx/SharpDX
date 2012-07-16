@@ -17,35 +17,17 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
-using System;
-
-namespace SharpDX.Win32
+namespace SharpDX.Animation
 {
-    public partial class ComStream
+    public partial class Timer
     {
-        /// <summary>
-        /// Copies a specified number of bytes from the current seek pointer in the stream to the current seek pointer in another stream.
-        /// </summary>
-        /// <param name="streamDest">The stream destination.</param>
-        /// <param name="numberOfBytesToCopy">The number of bytes to copy.</param>
-        /// <param name="bytesWritten">The bytes written.</param>
-        /// <returns>The number of bytes read from this instance</returns>
-        public long CopyTo(IStream streamDest, long numberOfBytesToCopy, out long bytesWritten)
+        /// <summary>	
+        /// <p> Determines whether the timer is currently enabled.</p>	
+        /// </summary>	
+        /// <returns>true if the timer is enabled</returns>
+        public bool IsEnabled
         {
-            CopyTo_(ToIntPtr(streamDest), numberOfBytesToCopy, out bytesWritten);
-            return bytesWritten;
-        }
-
-        /// <summary>
-        /// Gets a com pointer to the underlying <see cref="IStream"/> object.
-        /// </summary>
-        /// <param name="stream">The stream.</param>
-        /// <returns>A Com pointer</returns>
-        public static IntPtr ToIntPtr(IStream stream)
-        {
-            return ComStreamShadow.ToIntPtr(stream);
+            get { return IsEnabled_().Success; }
         }
     }
 }
-

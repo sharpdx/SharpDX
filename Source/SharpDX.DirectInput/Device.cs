@@ -216,9 +216,9 @@ namespace SharpDX.DirectInput
         /// Runs the DirectInput control panel associated with this device. If the device does not have a control panel associated with it, the default device control panel is launched.
         /// </summary>
         /// <returns>A <see cref = "T:SharpDX.Result" /> object describing the result of the operation.</returns>
-        public Result RunControlPanel()
+        public void RunControlPanel()
         {
-            return RunControlPanel(IntPtr.Zero, 0);
+            RunControlPanel(IntPtr.Zero, 0);
         }
 
         /// <summary>
@@ -226,9 +226,9 @@ namespace SharpDX.DirectInput
         /// </summary>
         /// <param name="parent">The parent control.</param>
         /// <returns>A <see cref = "T:SharpDX.Result" /> object describing the result of the operation.</returns>
-        public Result RunControlPanel(Control parent)
+        public void RunControlPanel(Control parent)
         {
-            return RunControlPanel(parent.Handle, 0);
+            RunControlPanel(parent.Handle, 0);
         }
 
 
@@ -261,9 +261,9 @@ namespace SharpDX.DirectInput
         ///  <para>Applications must call this method before acquiring the device by using the <see cref="SharpDX.DirectInput.Device"/> method.</para>	
         /// </remarks>	
         /// <unmanaged>HRESULT IDirectInputDevice8W::SetCooperativeLevel([In] HWND arg0,[In] DISCL arg1)</unmanaged>	
-        public Result SetCooperativeLevel(Control control, CooperativeLevel level)
+        public void SetCooperativeLevel(Control control, CooperativeLevel level)
         {
-            return SetCooperativeLevel(control.Handle, level);
+            SetCooperativeLevel(control.Handle, level);
         }
 
         /// <summary>
@@ -271,9 +271,9 @@ namespace SharpDX.DirectInput
         /// </summary>
         /// <param name="eventHandle">Handle to the event that is to be set when the device state changes. DirectInput uses the Microsoft Win32 SetEvent function on the handle when the state of the device changes. If the eventHandle parameter is null, notification is disabled.</param>
         /// <returns>A <see cref = "T:SharpDX.Result" /> object describing the result of the operation.</returns>
-        public Result SetNotification(WaitHandle eventHandle)
+        public void SetNotification(WaitHandle eventHandle)
         {
-            return SetEventNotification(eventHandle!=null?eventHandle.SafeWaitHandle.DangerousGetHandle():IntPtr.Zero);            
+            SetEventNotification(eventHandle!=null?eventHandle.SafeWaitHandle.DangerousGetHandle():IntPtr.Zero);            
         }
 
         /// <summary>
@@ -282,9 +282,9 @@ namespace SharpDX.DirectInput
         /// <param name="fileName">Name of the file.</param>
         /// <param name="effects">The effects.</param>
         /// <returns>A <see cref = "T:SharpDX.Result" /> object describing the result of the operation.</returns>
-        public Result WriteEffectsToFile(string fileName, EffectFile[] effects)
+        public void WriteEffectsToFile(string fileName, EffectFile[] effects)
         {
-            return WriteEffectsToFile(fileName, effects, false);
+            WriteEffectsToFile(fileName, effects, false);
         }
 
         /// <summary>
@@ -294,9 +294,9 @@ namespace SharpDX.DirectInput
         /// <param name="effects">The effects.</param>
         /// <param name="includeNonstandardEffects">if set to <c>true</c> [include nonstandard effects].</param>
         /// <returns>A <see cref = "T:SharpDX.Result" /> object describing the result of the operation.</returns>
-        public Result WriteEffectsToFile(string fileName, EffectFile[] effects, bool includeNonstandardEffects)
+        public void WriteEffectsToFile(string fileName, EffectFile[] effects, bool includeNonstandardEffects)
         {
-            return WriteEffectToFile(fileName, effects.Length, effects, (int)(includeNonstandardEffects?EffectFileFlags.IncludeNonStandard:0));
+            WriteEffectToFile(fileName, effects.Length, effects, (int)(includeNonstandardEffects?EffectFileFlags.IncludeNonStandard:0));
         }
 
         /// <summary>

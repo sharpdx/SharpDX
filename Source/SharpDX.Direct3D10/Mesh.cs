@@ -132,10 +132,9 @@ namespace SharpDX.Direct3D10
         /// <param name="vertexRemap">An array of index for each vertex that specifies how the new vertices map to the old vertices. This remap is useful if you need to alter external data based on the new vertex mapping. </param>
         /// <returns>The return value is one of the values listed in {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3DX10Mesh::Optimize([None] int Flags,[Out, Buffer, Optional] int* pFaceRemap,[In] LPD3D10BLOB* ppVertexRemap)</unmanaged>
-        public Result Optimize(MeshOptimizeFlags flags, out int[] faceRemap, out int[] vertexRemap)
+        public void Optimize(MeshOptimizeFlags flags, out int[] faceRemap, out int[] vertexRemap)
         {
 
-            Result result;
             IntPtr blobPtr;
             DataStream dataStream = null;
             unsafe
@@ -143,7 +142,7 @@ namespace SharpDX.Direct3D10
                 try
                 {
                     faceRemap = new int[FaceCount];
-                    result = Optimize((int)flags, faceRemap, new IntPtr(&blobPtr));
+                    Optimize((int)flags, faceRemap, new IntPtr(&blobPtr));
                     dataStream = new DataStream(new Blob(blobPtr));
                     vertexRemap = dataStream.ReadRange<int>(VertexCount);
                     dataStream.Dispose();
@@ -157,7 +156,6 @@ namespace SharpDX.Direct3D10
                     throw;
                 }
             }
-            return result;
         }
 
         /// <summary>	
@@ -166,9 +164,9 @@ namespace SharpDX.Direct3D10
         /// <param name="data">The adjacency data to set </param>
         /// <returns>The return value is one of the values listed in {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3DX10Mesh::SetAdjacencyData([In] const int* pAdjacency)</unmanaged>
-        public Result SetAdjacencyData(DataStream data)
+        public void SetAdjacencyData(DataStream data)
         {
-            return SetAdjacencyData(data.PositionPointer);
+            SetAdjacencyData(data.PositionPointer);
         }
 
         /// <summary>	
@@ -177,9 +175,9 @@ namespace SharpDX.Direct3D10
         /// <param name="data">The attribute data to set. </param>
         /// <returns>The return value is one of the values listed in {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3DX10Mesh::SetAttributeData([In] const int* pData)</unmanaged>
-        public Result SetAttributeData(DataStream data)
+        public void SetAttributeData(DataStream data)
         {
-            return SetAttributeData(data.PositionPointer);
+            SetAttributeData(data.PositionPointer);
         }
 
         /// <summary>
@@ -191,9 +189,9 @@ namespace SharpDX.Direct3D10
         /// <param name="data">an array of <see cref="MeshAttributeRange"/> structures, representing the entries in the mesh attribute table. </param>
         /// <returns>The return value is one of the values listed in {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3DX10Mesh::SetAttributeTable([In, Buffer] const D3DX10_ATTRIBUTE_RANGE* pAttribTable,[None] int cAttribTableSize)</unmanaged>
-        public Result SetAttributeTable(MeshAttributeRange[] data)
+        public void SetAttributeTable(MeshAttributeRange[] data)
         {
-            return SetAttributeTable(data, data.Length);
+            SetAttributeTable(data, data.Length);
         }
 
         /// <summary>	
@@ -203,9 +201,9 @@ namespace SharpDX.Direct3D10
         /// <param name="count">The number of indices in pData. </param>
         /// <returns>The return value is one of the values listed in {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3DX10Mesh::SetIndexData([None] const void* pData,[None] int cIndices)</unmanaged>
-        public Result SetIndexData(DataStream data, int count)
+        public void SetIndexData(DataStream data, int count)
         {
-            return SetIndexData(data.PositionPointer, count);
+            SetIndexData(data.PositionPointer, count);
         }
 
         /// <summary>	
@@ -214,9 +212,9 @@ namespace SharpDX.Direct3D10
         /// <param name="data">The point rep data to set. </param>
         /// <returns>The return value is one of the values listed in {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3DX10Mesh::SetPointRepData([None] const int* pPointReps)</unmanaged>
-        public Result SetPointRepresentationData(DataStream data)
+        public void SetPointRepresentationData(DataStream data)
         {
-            return SetPointRepData(data.PositionPointer);
+            SetPointRepData(data.PositionPointer);
         }
 
         /// <summary>	
@@ -226,9 +224,9 @@ namespace SharpDX.Direct3D10
         /// <param name="data">The vertex data to set. </param>
         /// <returns>The return value is one of the values listed in {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3DX10Mesh::SetVertexData([None] int iBuffer,[None] const void* pData)</unmanaged>
-        public Result SetVertexData(int index, DataStream data)
+        public void SetVertexData(int index, DataStream data)
         {
-            return SetVertexData(index, data.PositionPointer);
+            SetVertexData(index, data.PositionPointer);
         }
     }
 }

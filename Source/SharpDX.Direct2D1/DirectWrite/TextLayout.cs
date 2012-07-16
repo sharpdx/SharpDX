@@ -90,9 +90,9 @@ namespace SharpDX.DirectWrite
         /// <param name="originY">The y-coordinate of the layout's top side.</param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.</returns>
         /// <unmanaged>HRESULT Draw([None] void* clientDrawingContext,[None] IDWriteTextRenderer* renderer,[None] FLOAT originX,[None] FLOAT originY)</unmanaged>
-        public SharpDX.Result Draw(TextRenderer renderer, float originX, float originY)
+        public void Draw(TextRenderer renderer, float originX, float originY)
         {
-            return Draw(null, renderer, originX, originY);
+            Draw(null, renderer, originX, originY);
         }
 
         /// <summary>	
@@ -107,18 +107,16 @@ namespace SharpDX.DirectWrite
         /// <param name="originY">The y-coordinate of the layout's top side.</param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.</returns>
         /// <unmanaged>HRESULT Draw([None] void* clientDrawingContext,[None] IDWriteTextRenderer* renderer,[None] FLOAT originX,[None] FLOAT originY)</unmanaged>
-        public SharpDX.Result Draw(object clientDrawingContext, TextRenderer renderer, float originX, float originY) {
+        public void Draw(object clientDrawingContext, TextRenderer renderer, float originX, float originY) {
             var handle = GCHandle.Alloc(clientDrawingContext);
-            Result result;
             try
             {
-                result = this.Draw_(GCHandle.ToIntPtr(handle), TextRendererShadow.ToIntPtr(renderer), originX, originY);
+                this.Draw_(GCHandle.ToIntPtr(handle), TextRendererShadow.ToIntPtr(renderer), originX, originY);
             }
             finally
             {
                 if (handle.IsAllocated) handle.Free();
             }
-            return result;
         }
 
         /// <summary>	
@@ -158,13 +156,12 @@ namespace SharpDX.DirectWrite
         /// <param name="textRange">The text range to which this change applies. </param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code. </returns>
         /// <unmanaged>HRESULT IDWriteTextLayout::SetDrawingEffect([None] IUnknown* drawingEffect,[None] DWRITE_TEXT_RANGE textRange)</unmanaged>
-        public SharpDX.Result SetDrawingEffect(SharpDX.ComObject drawingEffect, SharpDX.DirectWrite.TextRange textRange)
+        public void SetDrawingEffect(SharpDX.ComObject drawingEffect, SharpDX.DirectWrite.TextRange textRange)
         {
             var drawingEffectPtr = Utilities.GetIUnknownForObject(drawingEffect);
-            var result = SetDrawingEffect_(drawingEffectPtr, textRange);
+            SetDrawingEffect_(drawingEffectPtr, textRange);
             if (drawingEffectPtr != IntPtr.Zero)
                 Marshal.Release(drawingEffectPtr);
-            return result;
         }
 
         /// <summary>	
@@ -442,9 +439,9 @@ namespace SharpDX.DirectWrite
         /// <param name="textRange">Text range to which this change applies. </param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code. </returns>
         /// <unmanaged>HRESULT IDWriteTextLayout::SetInlineObject([None] IDWriteInlineObject* inlineObject,[None] DWRITE_TEXT_RANGE textRange)</unmanaged>
-        public SharpDX.Result SetInlineObject(InlineObject inlineObject, SharpDX.DirectWrite.TextRange textRange)
+        public void SetInlineObject(InlineObject inlineObject, SharpDX.DirectWrite.TextRange textRange)
         {
-            return SetInlineObject_(InlineObjectShadow.ToIntPtr(inlineObject), textRange);
+            SetInlineObject_(InlineObjectShadow.ToIntPtr(inlineObject), textRange);
         }
     }
 }

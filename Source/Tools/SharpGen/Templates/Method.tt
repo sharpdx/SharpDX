@@ -354,8 +354,8 @@
 				if (method.HasPublicReturnType) {
 					if ((method.ReturnType.PublicType.Name == Global.Name +".Result") && method.CheckReturnType) {#>
                 __result__.CheckError();
-                return <#= method.ReturnName #>;
-<#+					} else {#>
+<#+					}
+					if (method.HasReturnTypeParameter || method.ForceReturnType || !method.HideReturnType) {#>
                 return <#= method.ReturnName #>;
 <#+					}
 				}

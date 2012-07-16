@@ -122,11 +122,11 @@ namespace SharpDX.WIC
         /// <param name="stream">The stream to use for initialization.</param>
         /// <returns>If the method succeeds, it returns <see cref="Result.Ok"/>. Otherwise, it throws an exception.</returns>
         /// <unmanaged>HRESULT IWICBitmapEncoder::Initialize([In, Optional] IStream* pIStream,[In] WICBitmapEncoderCacheOption cacheOption)</unmanaged>	
-        public SharpDX.Result Initialize(IStream stream)
+        public void Initialize(IStream stream)
         {
             if (this.internalWICStream != null)
                 throw new InvalidOperationException("This instance is already intialized with an existing stream");
-            return Initialize_(ComStream.ToIntPtr(stream), SharpDX.WIC.BitmapEncoderCacheOption.NoCache);
+            Initialize_(ComStream.ToIntPtr(stream), SharpDX.WIC.BitmapEncoderCacheOption.NoCache);
         }
 
         /// <summary>
@@ -135,12 +135,12 @@ namespace SharpDX.WIC
         /// <param name="stream">The stream to use for initialization.</param>
         /// <returns>If the method succeeds, it returns <see cref="Result.Ok"/>. Otherwise, it throws an exception.</returns>
         /// <unmanaged>HRESULT IWICBitmapEncoder::Initialize([In, Optional] IStream* pIStream,[In] WICBitmapEncoderCacheOption cacheOption)</unmanaged>	
-        public SharpDX.Result Initialize(System.IO.Stream stream)
+        public void Initialize(System.IO.Stream stream)
         {
             if (this.internalWICStream != null)
                 throw new InvalidOperationException("This instance is already intialized with an existing stream");
             this.internalWICStream = new WICStream(factory, stream);
-            return Initialize_(ComStream.ToIntPtr(this.internalWICStream), SharpDX.WIC.BitmapEncoderCacheOption.NoCache);
+            Initialize_(ComStream.ToIntPtr(this.internalWICStream), SharpDX.WIC.BitmapEncoderCacheOption.NoCache);
         }
 
         /// <summary>
@@ -149,9 +149,9 @@ namespace SharpDX.WIC
         /// <param name="colorContextOut">The color contexts to set for the encoder.</param>
         /// <returns>If the method succeeds, it returns <see cref="Result.Ok"/>. Otherwise, it throws an exception.</returns>
         /// <unmanaged>HRESULT IWICBitmapEncoder::SetColorContexts([In] unsigned int cCount,[In, Buffer] IWICColorContext** ppIColorContext)</unmanaged>
-        public SharpDX.Result SetColorContexts(SharpDX.WIC.ColorContext[] colorContextOut)
+        public void SetColorContexts(SharpDX.WIC.ColorContext[] colorContextOut)
         {
-            return SetColorContexts(colorContextOut != null ? colorContextOut.Length : 0, colorContextOut);
+            SetColorContexts(colorContextOut != null ? colorContextOut.Length : 0, colorContextOut);
         }
 
         protected override unsafe void Dispose(bool disposing)

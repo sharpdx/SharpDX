@@ -30,9 +30,9 @@ namespace SharpDX.XAudio2
         /// <param name="effectIndex">[in]  Zero-based index of an effect in the effect chain of the voice. </param>
         /// <returns>No documentation.</returns>
         /// <unmanaged>HRESULT IXAudio2Voice::EnableEffect([None] UINT32 EffectIndex,[None] UINT32 OperationSet)</unmanaged>
-        public SharpDX.Result EnableEffect(int effectIndex)
+        public void EnableEffect(int effectIndex)
         {
-            return EnableEffect(effectIndex, 0);
+            EnableEffect(effectIndex, 0);
         }
 
         /// <summary>	
@@ -41,9 +41,9 @@ namespace SharpDX.XAudio2
         /// <param name="effectIndex">[in]  Zero-based index of an effect in the effect chain of the voice. </param>
         /// <returns>No documentation.</returns>
         /// <unmanaged>HRESULT IXAudio2Voice::DisableEffect([None] UINT32 EffectIndex,[None] UINT32 OperationSet)</unmanaged>
-        public SharpDX.Result DisableEffect(int effectIndex)
+        public void DisableEffect(int effectIndex)
         {
-            return DisableEffect(effectIndex, 0);
+            DisableEffect(effectIndex, 0);
         }
 
         /// <summary>	
@@ -71,12 +71,12 @@ namespace SharpDX.XAudio2
         /// <param name="effectParameters">[out]  Returns the current values of the effect-specific parameters. </param>
         /// <returns>No documentation.</returns>
         /// <unmanaged>HRESULT IXAudio2Voice::GetEffectParameters([None] UINT32 EffectIndex,[Out, Buffer] void* pParameters,[None] UINT32 ParametersByteSize)</unmanaged>
-        public SharpDX.Result GetEffectParameters(int effectIndex, byte[] effectParameters)
+        public void GetEffectParameters(int effectIndex, byte[] effectParameters)
         {
             unsafe
             {
                 fixed (void* pEffectParameter = &effectParameters[0])
-                    return GetEffectParameters(effectIndex, (IntPtr)pEffectParameter, effectParameters.Length);
+                    GetEffectParameters(effectIndex, (IntPtr)pEffectParameter, effectParameters.Length);
             }
         }
 
@@ -87,9 +87,9 @@ namespace SharpDX.XAudio2
         /// <param name="effectParameter">[in]  Returns the current values of the effect-specific parameters. </param>
         /// <returns>No documentation.</returns>
         /// <unmanaged>HRESULT IXAudio2Voice::SetEffectParameters([None] UINT32 EffectIndex,[In, Buffer] const void* pParameters,[None] UINT32 ParametersByteSize,[None] UINT32 OperationSet)</unmanaged>
-        public SharpDX.Result SetEffectParameters(int effectIndex, byte[] effectParameter)
+        public void SetEffectParameters(int effectIndex, byte[] effectParameter)
         {
-            return SetEffectParameters(effectIndex, effectParameter, 0);
+            SetEffectParameters(effectIndex, effectParameter, 0);
         }
 
         /// <summary>	
@@ -100,12 +100,12 @@ namespace SharpDX.XAudio2
         /// <param name="operationSet">[in]  Identifies this call as part of a deferred batch. See the {{XAudio2 Operation Sets}} overview  for more information. </param>
         /// <returns>No documentation.</returns>
         /// <unmanaged>HRESULT IXAudio2Voice::SetEffectParameters([None] UINT32 EffectIndex,[In, Buffer] const void* pParameters,[None] UINT32 ParametersByteSize,[None] UINT32 OperationSet)</unmanaged>
-        public SharpDX.Result SetEffectParameters(int effectIndex, byte[] effectParameter, int operationSet)
+        public void SetEffectParameters(int effectIndex, byte[] effectParameter, int operationSet)
         {
             unsafe
             {
                 fixed (void* pEffectParameter = &effectParameter[0])
-                    return SetEffectParameters(effectIndex, (IntPtr)pEffectParameter, effectParameter.Length, operationSet);
+                    SetEffectParameters(effectIndex, (IntPtr)pEffectParameter, effectParameter.Length, operationSet);
             }
         }
 
@@ -116,9 +116,9 @@ namespace SharpDX.XAudio2
         /// <param name="effectParameter">[in]  Returns the current values of the effect-specific parameters. </param>
         /// <returns>No documentation.</returns>
         /// <unmanaged>HRESULT IXAudio2Voice::SetEffectParameters([None] UINT32 EffectIndex,[In, Buffer] const void* pParameters,[None] UINT32 ParametersByteSize,[None] UINT32 OperationSet)</unmanaged>
-        public SharpDX.Result SetEffectParameters<T>(int effectIndex, T effectParameter) where T : struct
+        public void SetEffectParameters<T>(int effectIndex, T effectParameter) where T : struct
         {
-            return this.SetEffectParameters<T>(effectIndex, effectParameter, 0);
+            this.SetEffectParameters<T>(effectIndex, effectParameter, 0);
         }
 
         /// <summary>	
@@ -129,13 +129,13 @@ namespace SharpDX.XAudio2
         /// <param name="operationSet">[in]  Identifies this call as part of a deferred batch. See the {{XAudio2 Operation Sets}} overview  for more information. </param>
         /// <returns>No documentation.</returns>
         /// <unmanaged>HRESULT IXAudio2Voice::SetEffectParameters([None] UINT32 EffectIndex,[In, Buffer] const void* pParameters,[None] UINT32 ParametersByteSize,[None] UINT32 OperationSet)</unmanaged>
-        public SharpDX.Result SetEffectParameters<T>(int effectIndex, T effectParameter, int operationSet) where T : struct
+        public void SetEffectParameters<T>(int effectIndex, T effectParameter, int operationSet) where T : struct
         {
             unsafe
             {
                 byte* pEffectParameter = stackalloc byte[Utilities.SizeOf<T>()];
                 Utilities.Write((IntPtr)pEffectParameter, ref effectParameter);
-                return SetEffectParameters(effectIndex, (IntPtr) pEffectParameter, Utilities.SizeOf<T>(), operationSet);
+                SetEffectParameters(effectIndex, (IntPtr) pEffectParameter, Utilities.SizeOf<T>(), operationSet);
             }
         }
 
@@ -145,7 +145,7 @@ namespace SharpDX.XAudio2
         /// <param name="effectDescriptors">[in, optional]  an array of <see cref="SharpDX.XAudio2.EffectDescriptor"/> structure that describes the new effect chain to use. If NULL is passed, the current effect chain is removed. If array is non null, its length must be at least of 1. </param>
         /// <returns>No documentation.</returns>
         /// <unmanaged>HRESULT IXAudio2Voice::SetEffectChain([In, Optional] const XAUDIO2_EFFECT_CHAIN* pEffectChain)</unmanaged>
-        public Result SetEffectChain(params EffectDescriptor[] effectDescriptors)
+        public void SetEffectChain(params EffectDescriptor[] effectDescriptors)
         {
             unsafe
             {
@@ -159,10 +159,10 @@ namespace SharpDX.XAudio2
                     fixed (void* pEffectDescriptors = &effectDescriptorNatives[0])
                     {
                         tempSendDescriptor.EffectDescriptorPointer = (IntPtr)pEffectDescriptors;
-                        return SetEffectChain(tempSendDescriptor);
+                        SetEffectChain(tempSendDescriptor);
                     }
                 }
-                return SetEffectChain((EffectChain?)null);
+                SetEffectChain((EffectChain?)null);
             }
 
         }
@@ -173,7 +173,7 @@ namespace SharpDX.XAudio2
         /// <param name="outputVoices">[in]  Array of <see cref="VoiceSendDescriptor"/> structure pointers to destination voices. If outputVoices is NULL, the voice will send its output to the current mastering voice. To set the voice to not send its output anywhere set an array of lenvth 0. All of the voices in a send list must have the same input sample rate, see {{XAudio2 Sample Rate Conversions}} for additional information. </param>
         /// <returns>No documentation.</returns>
         /// <unmanaged>HRESULT IXAudio2Voice::SetOutputVoices([In, Optional] const XAUDIO2_VOICE_SENDS* pSendList)</unmanaged>
-        public Result SetOutputVoices(params VoiceSendDescriptor[] outputVoices)
+        public void SetOutputVoices(params VoiceSendDescriptor[] outputVoices)
         {
             unsafe
             {
@@ -184,10 +184,10 @@ namespace SharpDX.XAudio2
                     fixed (void* pVoiceSendDescriptors = &outputVoices[0])
                     {
                         tempSendDescriptor.SendPointer = (IntPtr)pVoiceSendDescriptors;
-                        return SetOutputVoices(tempSendDescriptor);
+                        SetOutputVoices(tempSendDescriptor);
                     }
                 }
-                return SetOutputVoices((VoiceSendDescriptors?)null);
+                SetOutputVoices((VoiceSendDescriptors?)null);
             }
         }
 
@@ -199,9 +199,9 @@ namespace SharpDX.XAudio2
         /// <param name="levelMatrixRef">[in]  Array of [SourceChannels ? DestinationChannels] volume levels sent to the destination voice. The level sent from source channel S to destination channel D is specified in the form pLevelMatrix[SourceChannels ? D + S]. For example, when rendering two-channel stereo input into 5.1 output that is weighted toward the front channels?but is absent from the center and low-frequency channels?the matrix might have the values shown in the following table.  OutputLeft InputRight Input Left1.00.0 Right0.01.0 Front Center0.00.0 LFE0.00.0 Rear Left0.80.0 Rear Right0.00.8  Note that the left and right input are fully mapped to the output left and right channels; 80 percent of the left and right input is mapped to the rear left and right channels. See Remarks for more information on volume levels. </param>
         /// <returns>No documentation.</returns>
         /// <unmanaged>HRESULT IXAudio2Voice::SetOutputMatrix([In, Optional] IXAudio2Voice* pDestinationVoice,[None] UINT32 SourceChannels,[None] UINT32 DestinationChannels,[In, Buffer] const float* pLevelMatrix,[None] UINT32 OperationSet)</unmanaged>
-        public SharpDX.Result SetOutputMatrix(int sourceChannels, int destinationChannels, float[] levelMatrixRef)
+        public void SetOutputMatrix(int sourceChannels, int destinationChannels, float[] levelMatrixRef)
         {
-            return this.SetOutputMatrix(sourceChannels, destinationChannels, levelMatrixRef, 0);
+            this.SetOutputMatrix(sourceChannels, destinationChannels, levelMatrixRef, 0);
         }
 
 
@@ -214,9 +214,9 @@ namespace SharpDX.XAudio2
         /// <param name="levelMatrixRef">[in]  Array of [SourceChannels ? DestinationChannels] volume levels sent to the destination voice. The level sent from source channel S to destination channel D is specified in the form pLevelMatrix[SourceChannels ? D + S]. For example, when rendering two-channel stereo input into 5.1 output that is weighted toward the front channels?but is absent from the center and low-frequency channels?the matrix might have the values shown in the following table.  OutputLeft InputRight Input Left1.00.0 Right0.01.0 Front Center0.00.0 LFE0.00.0 Rear Left0.80.0 Rear Right0.00.8  Note that the left and right input are fully mapped to the output left and right channels; 80 percent of the left and right input is mapped to the rear left and right channels. See Remarks for more information on volume levels. </param>
         /// <returns>No documentation.</returns>
         /// <unmanaged>HRESULT IXAudio2Voice::SetOutputMatrix([In, Optional] IXAudio2Voice* pDestinationVoice,[None] UINT32 SourceChannels,[None] UINT32 DestinationChannels,[In, Buffer] const float* pLevelMatrix,[None] UINT32 OperationSet)</unmanaged>
-        public SharpDX.Result SetOutputMatrix(SharpDX.XAudio2.Voice destinationVoiceRef, int sourceChannels, int destinationChannels, float[] levelMatrixRef)
+        public void SetOutputMatrix(SharpDX.XAudio2.Voice destinationVoiceRef, int sourceChannels, int destinationChannels, float[] levelMatrixRef)
         {
-            return this.SetOutputMatrix(destinationVoiceRef, sourceChannels, destinationChannels, levelMatrixRef, 0);
+            this.SetOutputMatrix(destinationVoiceRef, sourceChannels, destinationChannels, levelMatrixRef, 0);
         }
 
         /// <summary>	
@@ -228,9 +228,9 @@ namespace SharpDX.XAudio2
         /// <param name="operationSet">[in]  Identifies this call as part of a deferred batch. See the {{XAudio2 Operation Sets}} overview for more information. </param>
         /// <returns>No documentation.</returns>
         /// <unmanaged>HRESULT IXAudio2Voice::SetOutputMatrix([In, Optional] IXAudio2Voice* pDestinationVoice,[None] UINT32 SourceChannels,[None] UINT32 DestinationChannels,[In, Buffer] const float* pLevelMatrix,[None] UINT32 OperationSet)</unmanaged>
-        public SharpDX.Result SetOutputMatrix(int sourceChannels, int destinationChannels, float[] levelMatrixRef, int operationSet)
+        public void SetOutputMatrix(int sourceChannels, int destinationChannels, float[] levelMatrixRef, int operationSet)
         {
-            return this.SetOutputMatrix(null, sourceChannels, destinationChannels, levelMatrixRef, operationSet);
+            this.SetOutputMatrix(null, sourceChannels, destinationChannels, levelMatrixRef, operationSet);
         }
     }
 }

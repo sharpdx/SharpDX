@@ -82,12 +82,12 @@ namespace SharpDX.Direct3D9
         /// </summary>
         /// <param name="callback">A function that is used to fill the texture.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
-        public Result Fill(Fill3DCallback callback)
+        public void Fill(Fill3DCallback callback)
         {
             var handle = GCHandle.Alloc(callback);
             try
             {
-                return D3DX9.FillCubeTexture(this, FillCallbackHelper.Native3DCallbackPtr, GCHandle.ToIntPtr(handle));
+                D3DX9.FillCubeTexture(this, FillCallbackHelper.Native3DCallbackPtr, GCHandle.ToIntPtr(handle));
             } 
             finally
             {
@@ -100,9 +100,9 @@ namespace SharpDX.Direct3D9
         /// </summary>
         /// <param name="shader">A texture shader object that is used to fill the texture.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
-        public Result Fill(TextureShader shader)
+        public void Fill(TextureShader shader)
         {
-            return D3DX9.FillCubeTextureTX(this, shader);
+            D3DX9.FillCubeTextureTX(this, shader);
         }
 
         /// <summary>
@@ -190,9 +190,9 @@ namespace SharpDX.Direct3D9
         /// <param name="faceType">Type of the face.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT IDirect3DCubeTexture9::AddDirtyRect([In] D3DCUBEMAP_FACES FaceType,[In] const void* pDirtyRect)</unmanaged>
-        public SharpDX.Result AddDirtyRectangle(SharpDX.Direct3D9.CubeMapFace faceType)
+        public void AddDirtyRectangle(SharpDX.Direct3D9.CubeMapFace faceType)
         {
-            return AddDirtyRectangle(faceType, IntPtr.Zero);
+            AddDirtyRectangle(faceType, IntPtr.Zero);
         }
 
         /// <summary>
@@ -202,11 +202,11 @@ namespace SharpDX.Direct3D9
         /// <param name="dirtyRectRef">The dirty rect ref.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT IDirect3DCubeTexture9::AddDirtyRect([In] D3DCUBEMAP_FACES FaceType,[In] const void* pDirtyRect)</unmanaged>
-        public SharpDX.Result AddDirtyRectangle(SharpDX.Direct3D9.CubeMapFace faceType, Rectangle dirtyRectRef)
+        public void AddDirtyRectangle(SharpDX.Direct3D9.CubeMapFace faceType, Rectangle dirtyRectRef)
         {
             unsafe
             {
-                return AddDirtyRectangle(faceType, new IntPtr(&dirtyRectRef));
+                AddDirtyRectangle(faceType, new IntPtr(&dirtyRectRef));
             }
         }
 

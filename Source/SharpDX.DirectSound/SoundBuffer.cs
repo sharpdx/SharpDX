@@ -28,9 +28,9 @@ namespace SharpDX.DirectSound
     public partial class SoundBuffer
     {
         /// <unmanaged>HRESULT IDirectSoundBuffer::Play([None] int dwReserved1,[None] int dwPriority,[None] int dwFlags)</unmanaged>
-        public SharpDX.Result Play(int priority, SharpDX.DirectSound.PlayFlags flags)
+        public void Play(int priority, SharpDX.DirectSound.PlayFlags flags)
         {
-            return Play(0, priority, flags);
+            Play(0, priority, flags);
         }
 
 
@@ -65,12 +65,12 @@ namespace SharpDX.DirectSound
         /// <param name="dataPart2"> Address of the value retrieved in the ppvAudioPtr2 parameter of the IDirectSoundBuffer8::Lock method. </param>
         /// <returns>No documentation.</returns>
         /// <unmanaged>HRESULT IDirectSoundBuffer::Unlock([In, Buffer] void* pvAudioPtr1,[None] int dwAudioBytes1,[In, Buffer, Optional] void* pvAudioPtr2,[None] int dwAudioBytes2)</unmanaged>
-        public SharpDX.Result Unlock(DataStream dataPart1, DataStream dataPart2)
+        public void Unlock(DataStream dataPart1, DataStream dataPart2)
         {
             if (dataPart2 != null)
-                return Unlock(dataPart1.DataPointer, (int)dataPart1.Length, dataPart2.DataPointer, (int)dataPart2.Length);
+                Unlock(dataPart1.DataPointer, (int)dataPart1.Length, dataPart2.DataPointer, (int)dataPart2.Length);
             else
-                return Unlock(dataPart1.DataPointer, (int)dataPart1.Length, IntPtr.Zero, 0);
+                Unlock(dataPart1.DataPointer, (int)dataPart1.Length, IntPtr.Zero, 0);
         }
 
         /// <summary>
@@ -114,11 +114,11 @@ namespace SharpDX.DirectSound
         /// </summary>
         /// <param name="positions">The positions.</param>
         /// <returns></returns>
-        public Result SetNotificationPositions(NotificationPosition[] positions)
+        public void SetNotificationPositions(NotificationPosition[] positions)
         {
             using (var notifier = QueryInterface<SoundBufferNotifier>())
             {
-                return notifier.SetNotificationPositions(positions.Length, positions);
+                notifier.SetNotificationPositions(positions.Length, positions);
             }
         }
 

@@ -32,9 +32,9 @@ namespace SharpDX.Direct2D1
         /// </remarks>	
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code. </returns>
         /// <unmanaged>HRESULT ID2D1GdiInteropRenderTarget::ReleaseDC([In, Optional] const RECT* update)</unmanaged>
-        public SharpDX.Result ReleaseDC()
+        public void ReleaseDC()
         {
-            return ReleaseDC(null);
+            ReleaseDC(null);
         }
     }
 }

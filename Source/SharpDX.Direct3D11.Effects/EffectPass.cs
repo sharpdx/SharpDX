@@ -27,9 +27,9 @@ namespace SharpDX.Direct3D11
         /// </summary>	
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}.</returns>
         /// <unmanaged>HRESULT Apply([None] UINT Flags)</unmanaged>
-        public Result Apply(DeviceContext context)
+        public void Apply(DeviceContext context)
         {
-            return Apply(0, context);
+            Apply(0, context);
         }
     }
 }

@@ -74,9 +74,9 @@ namespace SharpDX.Direct3D9
         /// <param name="stringRef">Pointer to a string of characters to be loaded into video memory. If the compiler settings require Unicode, the data type LPCTSTR resolves to LPCWSTR; otherwise, the data type resolves to LPCSTR. See Remarks. </param>
         /// <returns>If the method succeeds, the return value is S_OK. If the method fails, the return value can be one of the following: D3DERR_INVALIDCALL, D3DXERR_INVALIDDATA. </returns>
         /// <unmanaged>HRESULT ID3DX10Font::PreloadTextW([None] const wchar_t* pString,[None] int Count)</unmanaged>
-        public SharpDX.Result PreloadText(string stringRef)
+        public void PreloadText(string stringRef)
         {
-            return PreloadText(stringRef, stringRef.Length);
+            PreloadText(stringRef, stringRef.Length);
         }
 
         /// <summary>	

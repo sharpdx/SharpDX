@@ -34,9 +34,9 @@ namespace SharpDX.DXGI
         /// <param name="closestMatch">The mode that most closely matches pModeToMatch. </param>
         /// <returns>Returns one of the following <see cref="SharpDX.DXGI.DXGIError"/>. </returns>
         /// <unmanaged>HRESULT IDXGIOutput::FindClosestMatchingMode([In] const DXGI_MODE_DESC* pModeToMatch,[Out] DXGI_MODE_DESC* pClosestMatch,[In, Optional] IUnknown* pConcernedDevice)</unmanaged>
-        public SharpDX.Result GetClosestMatchingMode(SharpDX.ComObject device, SharpDX.DXGI.ModeDescription modeToMatch, out SharpDX.DXGI.ModeDescription closestMatch)
+        public void GetClosestMatchingMode(SharpDX.ComObject device, SharpDX.DXGI.ModeDescription modeToMatch, out SharpDX.DXGI.ModeDescription closestMatch)
         {
-            return FindClosestMatchingMode(ref modeToMatch, out closestMatch, device);
+            FindClosestMatchingMode(ref modeToMatch, out closestMatch, device);
         }
 
         /// <summary>	

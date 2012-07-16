@@ -31,5 +31,14 @@ namespace SharpDX.Animation
         {
             factory.CreateTransition(interpolator, this);
         }
+
+        /// <summary>	
+        /// <p>Determines whether a transition's duration is currently known.</p>	
+        /// </summary>	
+        /// <returns>True if the duration is known</returns>
+        public bool IsDurationKnown
+        {
+            get { return IsDurationKnown_().Success; }
+        }
     }
 }

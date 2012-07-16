@@ -185,12 +185,13 @@ namespace SharpDX.XAPO
                         ouputLockedParameters[i] = param;
                     }
 
-                    return callback.LockForProcess(inputLockedParameters, ouputLockedParameters).Code;
+                    callback.LockForProcess(inputLockedParameters, ouputLockedParameters);
                 }
                 catch (Exception exception)
                 {
                     return (int)SharpDX.Result.GetResultFromException(exception);
                 }
+                return 0;
             }
 
             /// <summary>	

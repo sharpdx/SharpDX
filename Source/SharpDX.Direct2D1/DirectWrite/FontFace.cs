@@ -154,14 +154,14 @@ namespace SharpDX.DirectWrite
         /// <param name="geometrySink">A reference to the interface that is called back to perform outline drawing operations. </param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code. </returns>
         /// <unmanaged>HRESULT IDWriteFontFace::GetGlyphRunOutline([None] float emSize,[In, Buffer] const short* glyphIndices,[In, Buffer, Optional] const float* glyphAdvances,[In, Buffer, Optional] const DWRITE_GLYPH_OFFSET* glyphOffsets,[None] int glyphCount,[None] BOOL isSideways,[None] BOOL isRightToLeft,[None] IDWriteGeometrySink* geometrySink)</unmanaged>
-        public Result GetGlyphRunOutline(float emSize, short[] glyphIndices, float[] glyphAdvances, GlyphOffset[] glyphOffsets, bool isSideways, bool isRightToLeft, SimplifiedGeometrySink geometrySink)
+        public void GetGlyphRunOutline(float emSize, short[] glyphIndices, float[] glyphAdvances, GlyphOffset[] glyphOffsets, bool isSideways, bool isRightToLeft, SimplifiedGeometrySink geometrySink)
         {
             IntPtr ptr;
             if ( geometrySink is GeometrySink)
                 ptr = GeometrySinkShadow.ToIntPtr((GeometrySink)geometrySink);
             else
                 ptr = SimplifiedGeometrySinkShadow.ToIntPtr(geometrySink);
-            return GetGlyphRunOutline_(emSize, glyphIndices, glyphAdvances, glyphOffsets, glyphIndices.Length, isSideways, isRightToLeft, ptr);
+            GetGlyphRunOutline_(emSize, glyphIndices, glyphAdvances, glyphOffsets, glyphIndices.Length, isSideways, isRightToLeft, ptr);
         }
     }
 }

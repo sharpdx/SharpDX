@@ -41,9 +41,9 @@ namespace SharpDX.WIC
         /// <param name="dataStream">The data stream.</param>
         /// <returns></returns>
         /// <unmanaged>HRESULT IWICColorContext::InitializeFromMemory([In] const void* pbBuffer,[In] unsigned int cbBufferSize)</unmanaged>
-        public SharpDX.Result InitializeFromMemory(DataStream dataStream)
+        public void InitializeFromMemory(DataStream dataStream)
         {
-            return InitializeFromMemory(dataStream.DataPointer, (int) dataStream.Length);
+            InitializeFromMemory(dataStream.DataPointer, (int) dataStream.Length);
         }
 
         /// <summary>

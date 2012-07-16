@@ -72,11 +72,11 @@ namespace SharpDX.DirectSound
         /// </summary>
         /// <param name="positions">The positions.</param>
         /// <returns></returns>
-        public Result SetNotificationPositions(NotificationPosition[] positions)
+        public void SetNotificationPositions(NotificationPosition[] positions)
         {
             using (var notifier = QueryInterface<SoundBufferNotifier>())
             {
-                return notifier.SetNotificationPositions(positions.Length, positions);
+                notifier.SetNotificationPositions(positions.Length, positions);
             }
         }
     }

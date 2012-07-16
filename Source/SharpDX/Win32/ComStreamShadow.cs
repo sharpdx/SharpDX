@@ -93,7 +93,7 @@ namespace SharpDX.Win32
                 {
                     var shadow = ToShadow<ComStreamShadow>(thisPtr);
                     var callback = ((IStream)shadow.Callback);
-                    result = callback.SetSize(newSize);
+                    callback.SetSize(newSize);
                 }
                 catch (SharpDXException exception)
                 {
@@ -138,7 +138,7 @@ namespace SharpDX.Win32
                 {
                     var shadow = ToShadow<ComStreamShadow>(thisPtr);
                     var callback = ((IStream)shadow.Callback);
-                    result = callback.Commit(flags);
+                    callback.Commit(flags);
                 }
                 catch (SharpDXException exception)
                 {
@@ -162,7 +162,7 @@ namespace SharpDX.Win32
                 {
                     var shadow = ToShadow<ComStreamShadow>(thisPtr);
                     var callback = ((IStream)shadow.Callback);
-                    result = callback.Revert();
+                    callback.Revert();
                 }
                 catch (SharpDXException exception)
                 {
@@ -186,7 +186,7 @@ namespace SharpDX.Win32
                 {
                     var shadow = ToShadow<ComStreamShadow>(thisPtr);
                     var callback = ((IStream)shadow.Callback);
-                    result = callback.LockRegion(offset, numberOfBytes, lockType);
+                    callback.LockRegion(offset, numberOfBytes, lockType);
                 }
                 catch (SharpDXException exception)
                 {
@@ -211,7 +211,7 @@ namespace SharpDX.Win32
                 {
                     var shadow = ToShadow<ComStreamShadow>(thisPtr);
                     var callback = ((IStream)shadow.Callback);
-                    result = callback.UnlockRegion(offset, numberOfBytes, lockType);
+                    callback.UnlockRegion(offset, numberOfBytes, lockType);
                 }
                 catch (SharpDXException exception)
                 {

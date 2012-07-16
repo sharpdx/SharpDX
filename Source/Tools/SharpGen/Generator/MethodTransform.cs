@@ -193,6 +193,11 @@ namespace SharpGen.Generator
             method.Offset = cppMethod.Offset;
             method.ReturnType = Manager.GetCsType<CsMarshalBase>(cppMethod.ReturnType);
 
+            if (method.CheckReturnType && method.ReturnType.PublicType != null && method.ReturnType.PublicType.QualifiedName == "SharpDX.Result")
+            {
+                method.HideReturnType = true;
+            }
+
             // Iterates on parameters to convert them to C# parameters
             foreach (var cppParameter in cppMethod.Parameters)
             {

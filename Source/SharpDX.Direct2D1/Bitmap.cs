@@ -206,9 +206,9 @@ namespace SharpDX.Direct2D1
         /// <msdn-id>dd371152</msdn-id>	
         /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromBitmap([In, Optional] const D2D_POINT_2U* destPoint,[In] ID2D1Bitmap* bitmap,[In, Optional] const D2D_RECT_U* srcRect)</unmanaged>	
         /// <unmanaged-short>ID2D1Bitmap::CopyFromBitmap</unmanaged-short>	
-        public Result CopyFromBitmap(Bitmap sourceBitmap)
+        public void CopyFromBitmap(Bitmap sourceBitmap)
         {
-            return CopyFromBitmap(null, sourceBitmap, null);
+            CopyFromBitmap(null, sourceBitmap, null);
         }
 
         /// <summary>	
@@ -223,9 +223,9 @@ namespace SharpDX.Direct2D1
         /// <msdn-id>dd371152</msdn-id>	
         /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromBitmap([In, Optional] const D2D_POINT_2U* destPoint,[In] ID2D1Bitmap* bitmap,[In, Optional] const D2D_RECT_U* srcRect)</unmanaged>	
         /// <unmanaged-short>ID2D1Bitmap::CopyFromBitmap</unmanaged-short>	
-        public Result CopyFromBitmap(Bitmap sourceBitmap, DrawingPoint destinationPoint)
+        public void CopyFromBitmap(Bitmap sourceBitmap, DrawingPoint destinationPoint)
         {
-            return CopyFromBitmap(destinationPoint, sourceBitmap, null);
+            CopyFromBitmap(destinationPoint, sourceBitmap, null);
         }
 
         /// <summary>	
@@ -241,9 +241,9 @@ namespace SharpDX.Direct2D1
         /// <msdn-id>dd371152</msdn-id>	
         /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromBitmap([In, Optional] const D2D_POINT_2U* destPoint,[In] ID2D1Bitmap* bitmap,[In, Optional] const D2D_RECT_U* srcRect)</unmanaged>	
         /// <unmanaged-short>ID2D1Bitmap::CopyFromBitmap</unmanaged-short>	
-        public Result CopyFromBitmap(Bitmap sourceBitmap, DrawingPoint destinationPoint, Rectangle sourceArea)
+        public void CopyFromBitmap(Bitmap sourceBitmap, DrawingPoint destinationPoint, Rectangle sourceArea)
         {
-            return CopyFromBitmap(destinationPoint, sourceBitmap, sourceArea);
+            CopyFromBitmap(destinationPoint, sourceBitmap, sourceArea);
         }
 
         /// <summary>	
@@ -258,9 +258,9 @@ namespace SharpDX.Direct2D1
         /// <msdn-id>dd371155</msdn-id>	
         /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromMemory([In, Optional] const D2D_RECT_U* dstRect,[In] const void* srcData,[In] unsigned int pitch)</unmanaged>	
         /// <unmanaged-short>ID2D1Bitmap::CopyFromMemory</unmanaged-short>	
-        public Result CopyFromMemory(IntPtr pointer, int pitch)
+        public void CopyFromMemory(IntPtr pointer, int pitch)
         {
-            return CopyFromMemory(null, pointer, pitch);
+            CopyFromMemory(null, pointer, pitch);
         }
 
         /// <summary>	
@@ -275,11 +275,11 @@ namespace SharpDX.Direct2D1
         /// <msdn-id>dd371155</msdn-id>	
         /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromMemory([In, Optional] const D2D_RECT_U* dstRect,[In] const void* srcData,[In] unsigned int pitch)</unmanaged>	
         /// <unmanaged-short>ID2D1Bitmap::CopyFromMemory</unmanaged-short>	
-        public Result CopyFromMemory(byte[] memory, int pitch)
+        public void CopyFromMemory(byte[] memory, int pitch)
         {
             unsafe
             {
-                fixed (void* pMemory = &memory[0]) return CopyFromMemory(null, new IntPtr(pMemory), pitch);
+                fixed (void* pMemory = &memory[0]) CopyFromMemory(null, new IntPtr(pMemory), pitch);
             }
         }
 
@@ -295,7 +295,7 @@ namespace SharpDX.Direct2D1
         /// <msdn-id>dd371155</msdn-id>	
         /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromMemory([In, Optional] const D2D_RECT_U* dstRect,[In] const void* srcData,[In] unsigned int pitch)</unmanaged>	
         /// <unmanaged-short>ID2D1Bitmap::CopyFromMemory</unmanaged-short>	
-        public Result CopyFromMemory<T>(T[] memory, int pitch = 0) where T : struct
+        public void CopyFromMemory<T>(T[] memory, int pitch = 0) where T : struct
         {
             unsafe
             {
@@ -303,7 +303,7 @@ namespace SharpDX.Direct2D1
                 if (pitch == 0)
                     pitch = (int)(Size.Width * Utilities.SizeOf<T>() / this.DotsPerInch.Width);
 
-                return CopyFromMemory(null, (IntPtr)Interop.Fixed(memory), pitch);
+                CopyFromMemory(null, (IntPtr)Interop.Fixed(memory), pitch);
             }
         }
 
@@ -320,9 +320,9 @@ namespace SharpDX.Direct2D1
         /// <msdn-id>dd371155</msdn-id>	
         /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromMemory([In, Optional] const D2D_RECT_U* dstRect,[In] const void* srcData,[In] unsigned int pitch)</unmanaged>	
         /// <unmanaged-short>ID2D1Bitmap::CopyFromMemory</unmanaged-short>	
-        public Result CopyFromMemory(IntPtr pointer, int pitch, Rectangle destinationArea)
+        public void CopyFromMemory(IntPtr pointer, int pitch, Rectangle destinationArea)
         {
-            return CopyFromMemory(destinationArea, pointer, pitch);
+            CopyFromMemory(destinationArea, pointer, pitch);
         }
 
         /// <summary>	
@@ -338,11 +338,11 @@ namespace SharpDX.Direct2D1
         /// <msdn-id>dd371155</msdn-id>	
         /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromMemory([In, Optional] const D2D_RECT_U* dstRect,[In] const void* srcData,[In] unsigned int pitch)</unmanaged>	
         /// <unmanaged-short>ID2D1Bitmap::CopyFromMemory</unmanaged-short>	
-        public Result CopyFromMemory(byte[] memory, int pitch, Rectangle destinationArea)
+        public void CopyFromMemory(byte[] memory, int pitch, Rectangle destinationArea)
         {
             unsafe
             {
-                fixed (void* pMemory = &memory[0]) return CopyFromMemory(destinationArea, new IntPtr(pMemory), pitch);
+                fixed (void* pMemory = &memory[0]) CopyFromMemory(destinationArea, new IntPtr(pMemory), pitch);
             }
         }
 
@@ -359,11 +359,11 @@ namespace SharpDX.Direct2D1
         /// <msdn-id>dd371155</msdn-id>	
         /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromMemory([In, Optional] const D2D_RECT_U* dstRect,[In] const void* srcData,[In] unsigned int pitch)</unmanaged>	
         /// <unmanaged-short>ID2D1Bitmap::CopyFromMemory</unmanaged-short>	
-        public Result CopyFromMemory<T>(T[] memory, int pitch, Rectangle destinationArea) where T : struct
+        public void CopyFromMemory<T>(T[] memory, int pitch, Rectangle destinationArea) where T : struct
         {
             unsafe
             {
-                return CopyFromMemory(destinationArea, (IntPtr)Interop.Fixed(memory), pitch);
+                CopyFromMemory(destinationArea, (IntPtr)Interop.Fixed(memory), pitch);
             }
         }
 
@@ -378,9 +378,9 @@ namespace SharpDX.Direct2D1
         /// <msdn-id>dd371158</msdn-id>	
         /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromRenderTarget([In, Optional] const D2D_POINT_2U* destPoint,[In] ID2D1RenderTarget* renderTarget,[In, Optional] const D2D_RECT_U* srcRect)</unmanaged>	
         /// <unmanaged-short>ID2D1Bitmap::CopyFromRenderTarget</unmanaged-short>	
-        public Result CopyFromRenderTarget(RenderTarget renderTarget)
+        public void CopyFromRenderTarget(RenderTarget renderTarget)
         {
-            return CopyFromRenderTarget(null, renderTarget, null);
+            CopyFromRenderTarget(null, renderTarget, null);
         }
 
         /// <summary>	
@@ -395,9 +395,9 @@ namespace SharpDX.Direct2D1
         /// <msdn-id>dd371158</msdn-id>	
         /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromRenderTarget([In, Optional] const D2D_POINT_2U* destPoint,[In] ID2D1RenderTarget* renderTarget,[In, Optional] const D2D_RECT_U* srcRect)</unmanaged>	
         /// <unmanaged-short>ID2D1Bitmap::CopyFromRenderTarget</unmanaged-short>	
-        public Result CopyFromRenderTarget(RenderTarget renderTarget, DrawingPoint destinationPoint)
+        public void CopyFromRenderTarget(RenderTarget renderTarget, DrawingPoint destinationPoint)
         {
-            return CopyFromRenderTarget(destinationPoint, renderTarget, null);
+            CopyFromRenderTarget(destinationPoint, renderTarget, null);
         }
 
         /// <summary>	
@@ -413,9 +413,9 @@ namespace SharpDX.Direct2D1
         /// <msdn-id>dd371158</msdn-id>	
         /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromRenderTarget([In, Optional] const D2D_POINT_2U* destPoint,[In] ID2D1RenderTarget* renderTarget,[In, Optional] const D2D_RECT_U* srcRect)</unmanaged>	
         /// <unmanaged-short>ID2D1Bitmap::CopyFromRenderTarget</unmanaged-short>	
-        public Result CopyFromRenderTarget(RenderTarget renderTarget, DrawingPoint destinationPoint, Rectangle sourceArea)
+        public void CopyFromRenderTarget(RenderTarget renderTarget, DrawingPoint destinationPoint, Rectangle sourceArea)
         {
-            return CopyFromRenderTarget(destinationPoint, renderTarget, sourceArea);
+            CopyFromRenderTarget(destinationPoint, renderTarget, sourceArea);
         }
 
         /// <summary>	
@@ -431,9 +431,9 @@ namespace SharpDX.Direct2D1
         /// <msdn-id>dd371155</msdn-id>	
         /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromMemory([In, Optional] const D2D_RECT_U* dstRect,[In] const void* srcData,[In] unsigned int pitch)</unmanaged>	
         /// <unmanaged-short>ID2D1Bitmap::CopyFromMemory</unmanaged-short>	
-        public Result CopyFromStream(Stream stream, int pitch, int length)
+        public void CopyFromStream(Stream stream, int pitch, int length)
         {
-            return CopyFromMemory(Utilities.ReadStream(stream, ref length), pitch);
+            CopyFromMemory(Utilities.ReadStream(stream, ref length), pitch);
         }
 
         /// <summary>	
@@ -450,9 +450,9 @@ namespace SharpDX.Direct2D1
         /// <msdn-id>dd371155</msdn-id>	
         /// <unmanaged>HRESULT ID2D1Bitmap::CopyFromMemory([In, Optional] const D2D_RECT_U* dstRect,[In] const void* srcData,[In] unsigned int pitch)</unmanaged>	
         /// <unmanaged-short>ID2D1Bitmap::CopyFromMemory</unmanaged-short>	
-        public Result CopyFromStream(Stream stream, int pitch, int length, Rectangle destinationArea)
+        public void CopyFromStream(Stream stream, int pitch, int length, Rectangle destinationArea)
         {
-            return CopyFromMemory(Utilities.ReadStream(stream, ref length), pitch, destinationArea);
+            CopyFromMemory(Utilities.ReadStream(stream, ref length), pitch, destinationArea);
         }
 
         /// <summary>	

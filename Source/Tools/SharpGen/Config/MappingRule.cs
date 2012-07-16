@@ -261,7 +261,7 @@ namespace SharpGen.Config
         public ParamAttribute _ParameterAttribute_ { get { return ParameterAttribute.Value; } set { ParameterAttribute = value; } } public bool ShouldSerialize_ParameterAttribute_() { return ParameterAttribute != null; }
 
         /// <summary>
-        /// Parameter is tagged to be used as a return type
+        /// For Method, true means that the return type should be returned in any case. For Parameter is tagged to be used as a return type
         /// </summary>
         [XmlIgnore]
         public bool? ParameterUsedAsReturnType { get; set; }

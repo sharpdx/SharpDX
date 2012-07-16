@@ -36,7 +36,7 @@ namespace SharpDX.Win32
         /// Changes the size of the stream object.
         /// </summary>
         /// <param name="newSize">The new size.</param>
-        Result SetSize(long newSize);
+        void SetSize(long newSize);
 
         /// <summary>
         /// Copies a specified number of bytes from the current seek pointer in the stream to the current seek pointer in another stream.
@@ -51,12 +51,12 @@ namespace SharpDX.Win32
         /// Commit method ensures that any changes made to a stream object open in transacted mode are reflected in the parent storage. If the stream object is open in direct mode, Commit has no effect other than flushing all memory buffers to the next-level storage object. The COM compound file implementation of streams does not support opening streams in transacted mode.
         /// </summary>
         /// <param name="commitFlags">The GRF commit flags.</param>
-        Result Commit(CommitFlags commitFlags);
+        void Commit(CommitFlags commitFlags);
 
         /// <summary>
         /// Discards all changes that have been made to a transacted stream since the last <see cref="Commit"/> call. 
         /// </summary>
-        Result Revert();
+        void Revert();
 
         /// <summary>
         /// Restricts access to a specified range of bytes in the stream.
@@ -64,7 +64,7 @@ namespace SharpDX.Win32
         /// <param name="offset">The offset.</param>
         /// <param name="numberOfBytesToLock">The number of bytes to lock.</param>
         /// <param name="dwLockType">Type of the dw lock.</param>
-        Result LockRegion(long offset, long numberOfBytesToLock, LockType dwLockType);
+        void LockRegion(long offset, long numberOfBytesToLock, LockType dwLockType);
 
         /// <summary>
         /// Unlocks access to a specified range of bytes in the stream.
@@ -72,7 +72,7 @@ namespace SharpDX.Win32
         /// <param name="offset">The offset.</param>
         /// <param name="numberOfBytesToLock">The number of bytes to lock.</param>
         /// <param name="dwLockType">Type of the dw lock.</param>
-        Result UnlockRegion(long offset, long numberOfBytesToLock, LockType dwLockType);
+        void UnlockRegion(long offset, long numberOfBytesToLock, LockType dwLockType);
 
         /// <summary>
         /// Gets the statistics.

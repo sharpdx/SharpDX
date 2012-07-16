@@ -709,6 +709,8 @@
 
     <map param="IMFMediaEngineEx::SetSourceFromByteStream::pURL" type="void"/>
 
+    <map method="IMFAsyncResult::GetStatus" return="true" check="false"/>
+
     <!--
     // *****************************************************************
     // MediaFoundation Functions

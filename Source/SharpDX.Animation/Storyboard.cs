@@ -37,9 +37,9 @@ namespace SharpDX.Animation
 
         /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IUIAnimationStoryboard::RepeatBetweenKeyframes']/*"/>	
         /// <unmanaged>HRESULT IUIAnimationStoryboard::RepeatBetweenKeyframes([In] __MIDL___MIDL_itf_UIAnimation_0000_0002_0003* startKeyframe,[In] __MIDL___MIDL_itf_UIAnimation_0000_0002_0003* endKeyframe,[In] int repetitionCount)</unmanaged>	
-        public SharpDX.Result RepeatBetweenKeyframes(SharpDX.Animation.KeyFrame startKeyframe, SharpDX.Animation.KeyFrame endKeyframe, RepeatCount repetitionCount)
+        public void RepeatBetweenKeyframes(SharpDX.Animation.KeyFrame startKeyframe, SharpDX.Animation.KeyFrame endKeyframe, RepeatCount repetitionCount)
         {
-            return RepeatBetweenKeyframes(startKeyframe, endKeyframe, (int)repetitionCount);
+            RepeatBetweenKeyframes(startKeyframe, endKeyframe, (int)repetitionCount);
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace SharpDX.Animation
         /// <param name="id">The id.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT IUIAnimationStoryboard::SetTag([In, Optional] void* object,[In] unsigned int id)</unmanaged>
-        public SharpDX.Result SetTag(object @object, int id)
+        public void SetTag(object @object, int id)
         {
             // Free any previous tag set
             IntPtr tagObjectPtr = IntPtr.Zero;
@@ -58,7 +58,7 @@ namespace SharpDX.Animation
             if (tagObjectPtr != IntPtr.Zero)
                 GCHandle.FromIntPtr(tagObjectPtr).Free();
 
-            return SetTag(GCHandle.ToIntPtr(GCHandle.Alloc(@object)), id);
+            SetTag(GCHandle.ToIntPtr(GCHandle.Alloc(@object)), id);
         }
 
         /// <summary>
@@ -70,12 +70,11 @@ namespace SharpDX.Animation
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IUIAnimationStoryboard::GetTag([Out, Optional] void** object,[Out, Optional] unsigned int* id)</unmanaged>
-        public SharpDX.Result GetTag(out object @object, out int id)
+        public void GetTag(out object @object, out int id)
         {
             IntPtr tagObjectPtr;
-            var result = GetTag(out tagObjectPtr, out id);
+            GetTag(out tagObjectPtr, out id);
             @object = GCHandle.FromIntPtr(tagObjectPtr).Target;
-            return result;
         }
     }
 }

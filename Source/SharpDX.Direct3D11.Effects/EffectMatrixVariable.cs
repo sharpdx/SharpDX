@@ -32,9 +32,9 @@ namespace SharpDX.Direct3D11
         /// <param name="matrix"> A pointer to the first element in the matrix. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D11EffectMatrixVariable::SetMatrix([In] float* pData)</unmanaged>
-        public SharpDX.Result SetMatrix<T>(T matrix) where T : struct
+        public void SetMatrix<T>(T matrix) where T : struct
         {
-            return SetMatrix(ref matrix);
+            SetMatrix(ref matrix);
         }
 
         /// <summary>	
@@ -73,12 +73,12 @@ namespace SharpDX.Direct3D11
         /// <param name="matrix"> A pointer to the first element in the matrix. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D11EffectMatrixVariable::SetMatrix([In] float* pData)</unmanaged>
-        public unsafe SharpDX.Result SetMatrix<T>(ref T matrix) where T : struct
+        public unsafe void SetMatrix<T>(ref T matrix) where T : struct
         {
 #if !WIN8METRO
             Trace.Assert(Utilities.SizeOf<T>() <= 64, MatrixInvalidSize);
 #endif
-            return SetMatrix(ref *(Matrix*)Interop.Fixed(ref matrix));
+            SetMatrix(ref *(Matrix*)Interop.Fixed(ref matrix));
         }
 
         /// <summary>	
@@ -87,9 +87,9 @@ namespace SharpDX.Direct3D11
         /// <param name="matrixArray"> A pointer to the first matrix. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D11EffectMatrixVariable::SetMatrixArray([In, Buffer] float* pData,[None] int Offset,[None] int Count)</unmanaged>
-        public SharpDX.Result SetMatrix<T>(T[] matrixArray) where T : struct
+        public void SetMatrix<T>(T[] matrixArray) where T : struct
         {
-            return SetMatrix(matrixArray, 0);
+            SetMatrix(matrixArray, 0);
         }
 
         /// <summary>	
@@ -99,12 +99,12 @@ namespace SharpDX.Direct3D11
         /// <param name="offset"> The number of matrix elements to skip from the start of the array. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D11EffectMatrixVariable::SetMatrixArray([In, Buffer] float* pData,[None] int Offset,[None] int Count)</unmanaged>
-        public SharpDX.Result SetMatrix<T>(T[] matrixArray, int offset) where T : struct
+        public void SetMatrix<T>(T[] matrixArray, int offset) where T : struct
         {
 #if !WIN8METRO
             Trace.Assert(Utilities.SizeOf<T>() == 64, MatrixInvalidSize);
 #endif
-            return SetMatrixArray(Interop.CastArray<Matrix, T>(matrixArray), offset, matrixArray.Length);
+            SetMatrixArray(Interop.CastArray<Matrix, T>(matrixArray), offset, matrixArray.Length);
         }
 
         /// <summary>	
@@ -141,9 +141,9 @@ namespace SharpDX.Direct3D11
         /// <param name="matrix"> A pointer to the first element of a matrix. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D11EffectMatrixVariable::SetMatrixTranspose([In] float* pData)</unmanaged>
-        public SharpDX.Result SetMatrixTranspose<T>(T matrix) where T : struct
+        public void SetMatrixTranspose<T>(T matrix) where T : struct
         {
-            return SetMatrixTranspose(ref matrix);
+            SetMatrixTranspose(ref matrix);
         }
 
         /// <summary>	
@@ -155,12 +155,12 @@ namespace SharpDX.Direct3D11
         /// <param name="matrix"> A pointer to the first element of a matrix. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D11EffectMatrixVariable::SetMatrixTranspose([In] float* pData)</unmanaged>
-        public unsafe SharpDX.Result SetMatrixTranspose<T>(ref T matrix) where T : struct
+        public unsafe void SetMatrixTranspose<T>(ref T matrix) where T : struct
         {
 #if !WIN8METRO
             Trace.Assert(Utilities.SizeOf<T>() <= 64, MatrixInvalidSize);
 #endif
-            return SetMatrixTranspose(ref *(Matrix*)Interop.Cast(ref matrix));
+            SetMatrixTranspose(ref *(Matrix*)Interop.Cast(ref matrix));
         }
 
         /// <summary>	
@@ -172,9 +172,9 @@ namespace SharpDX.Direct3D11
         /// <param name="matrixArray"> A pointer to an array of matrices. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D11EffectMatrixVariable::SetMatrixTransposeArray([In] float* pData,[None] int Offset,[None] int Count)</unmanaged>
-        public SharpDX.Result SetMatrixTranspose<T>(T[] matrixArray) where T : struct
+        public void SetMatrixTranspose<T>(T[] matrixArray) where T : struct
         {
-            return SetMatrixTranspose(matrixArray, 0);
+            SetMatrixTranspose(matrixArray, 0);
         }
 
         /// <summary>	
@@ -187,9 +187,9 @@ namespace SharpDX.Direct3D11
         /// <param name="offset"> The offset (in number of matrices) between the start of the array and the first matrix to set. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D11EffectMatrixVariable::SetMatrixTransposeArray([In] float* pData,[None] int Offset,[None] int Count)</unmanaged>
-        public SharpDX.Result SetMatrixTranspose<T>(T[] matrixArray, int offset) where T : struct
+        public void SetMatrixTranspose<T>(T[] matrixArray, int offset) where T : struct
         {
-            return SetMatrixTransposeArray(Interop.CastArray<Matrix, T>(matrixArray), offset, matrixArray.Length);
+            SetMatrixTransposeArray(Interop.CastArray<Matrix, T>(matrixArray), offset, matrixArray.Length);
         }
 
         /// <summary>	

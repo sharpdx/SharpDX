@@ -160,9 +160,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9Ex::PresentEx([In] const void* pSourceRect,[In] const void* pDestRect,[In] HWND hDestWindowOverride,[In] const RGNDATA* pDirtyRegion,[In] unsigned int dwFlags)</unmanaged>
-        public Result PresentEx(Present flags)
+        public void PresentEx(Present flags)
         {
-            return PresentEx(IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, (int)flags);
+            PresentEx(IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, (int)flags);
         }
 
         /// <summary>
@@ -175,9 +175,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9Ex::PresentEx([In] const void* pSourceRect,[In] const void* pDestRect,[In] HWND hDestWindowOverride,[In] const RGNDATA* pDirtyRegion,[In] unsigned int dwFlags)</unmanaged>
-        public Result PresentEx(Present flags, Rectangle sourceRectangle, Rectangle destinationRectangle)
+        public void PresentEx(Present flags, Rectangle sourceRectangle, Rectangle destinationRectangle)
         {
-            return PresentEx(flags, sourceRectangle, destinationRectangle, IntPtr.Zero);
+            PresentEx(flags, sourceRectangle, destinationRectangle, IntPtr.Zero);
         }
 
         /// <summary>
@@ -191,11 +191,11 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9Ex::PresentEx([In] const void* pSourceRect,[In] const void* pDestRect,[In] HWND hDestWindowOverride,[In] const RGNDATA* pDirtyRegion,[In] unsigned int dwFlags)</unmanaged>
-        public Result PresentEx(Present flags, Rectangle sourceRectangle, Rectangle destinationRectangle, IntPtr windowOverride)
+        public void PresentEx(Present flags, Rectangle sourceRectangle, Rectangle destinationRectangle, IntPtr windowOverride)
         {
             unsafe
             {
-                return PresentEx(new IntPtr(&sourceRectangle), new IntPtr(&destinationRectangle), windowOverride, IntPtr.Zero, (int)flags);
+                PresentEx(new IntPtr(&sourceRectangle), new IntPtr(&destinationRectangle), windowOverride, IntPtr.Zero, (int)flags);
             }
         }
 
@@ -211,14 +211,14 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9Ex::PresentEx([In] const void* pSourceRect,[In] const void* pDestRect,[In] HWND hDestWindowOverride,[In] const RGNDATA* pDirtyRegion,[In] unsigned int dwFlags)</unmanaged>
-        public Result PresentEx(Present flags, Rectangle sourceRectangle, Rectangle destinationRectangle, IntPtr windowOverride, Region region)
+        public void PresentEx(Present flags, Rectangle sourceRectangle, Rectangle destinationRectangle, IntPtr windowOverride, Region region)
         {
             unsafe
             {
                 var graphics = Graphics.FromHwnd(windowOverride);
                 var regionPtr = region.GetHrgn(graphics);
                 graphics.Dispose();
-                return PresentEx(new IntPtr(&sourceRectangle), new IntPtr(&destinationRectangle), windowOverride, regionPtr, (int)flags);
+                PresentEx(new IntPtr(&sourceRectangle), new IntPtr(&destinationRectangle), windowOverride, regionPtr, (int)flags);
             }            
         }
 
@@ -230,9 +230,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9Ex::ResetEx([In] D3DPRESENT_PARAMETERS* pPresentationParameters,[In] void* pFullscreenDisplayMode)</unmanaged>
-        public SharpDX.Result ResetEx(ref SharpDX.Direct3D9.PresentParameters presentationParametersRef)
+        public void ResetEx(ref SharpDX.Direct3D9.PresentParameters presentationParametersRef)
         {
-            return ResetEx(ref presentationParametersRef, IntPtr.Zero);
+            ResetEx(ref presentationParametersRef, IntPtr.Zero);
         }
 
         /// <summary>
@@ -244,11 +244,11 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DDevice9Ex::ResetEx([In] D3DPRESENT_PARAMETERS* pPresentationParameters,[In] void* pFullscreenDisplayMode)</unmanaged>
-        public SharpDX.Result ResetEx(ref SharpDX.Direct3D9.PresentParameters presentationParametersRef, DisplayModeEx fullScreenDisplayMode)
+        public void ResetEx(ref SharpDX.Direct3D9.PresentParameters presentationParametersRef, DisplayModeEx fullScreenDisplayMode)
         {
             unsafe
             {
-                return ResetEx(ref presentationParametersRef, new IntPtr(&fullScreenDisplayMode));
+                ResetEx(ref presentationParametersRef, new IntPtr(&fullScreenDisplayMode));
             }
         }
     }

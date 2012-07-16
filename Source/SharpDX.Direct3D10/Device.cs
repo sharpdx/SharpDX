@@ -81,11 +81,11 @@ namespace SharpDX.Direct3D10
         /// <param name = "device">When the method completes, contains the created device instance.</param>
         /// <param name = "swapChain">When the method completes, contains the created swap chain instance.</param>
         /// <returns>A <see cref = "T:SharpDX.Result" /> object describing the result of the operation.</returns>
-        public static Result CreateWithSwapChain(DriverType driverType, DeviceCreationFlags flags,
+        public static void CreateWithSwapChain(DriverType driverType, DeviceCreationFlags flags,
                                                  SwapChainDescription swapChainDescription, out Device device,
                                                  out SwapChain swapChain)
         {
-            return CreateWithSwapChain(null, driverType, flags, swapChainDescription, out device, out swapChain);
+            CreateWithSwapChain(null, driverType, flags, swapChainDescription, out device, out swapChain);
         }
 
         /// <summary>
@@ -97,22 +97,21 @@ namespace SharpDX.Direct3D10
         /// <param name = "device">When the method completes, contains the created device instance.</param>
         /// <param name = "swapChain">When the method completes, contains the created swap chain instance.</param>
         /// <returns>A <see cref = "T:SharpDX.Result" /> object describing the result of the operation.</returns>
-        public static Result CreateWithSwapChain(Adapter adapter, DeviceCreationFlags flags,
+        public static void CreateWithSwapChain(Adapter adapter, DeviceCreationFlags flags,
                                                  SwapChainDescription swapChainDescription, out Device device,
                                                  out SwapChain swapChain)
         {
-            return CreateWithSwapChain(adapter, DriverType.Hardware, flags, swapChainDescription, out device, out swapChain);
+            CreateWithSwapChain(adapter, DriverType.Hardware, flags, swapChainDescription, out device, out swapChain);
         }
 
 
         /// <summary>
         ///   This overload has been deprecated. Use one of the alternatives that does not take both an adapter and a driver type.
         /// </summary>
-        internal static Result CreateWithSwapChain(Adapter adapter, DriverType driverType, DeviceCreationFlags flags, SwapChainDescription swapChainDescription, out Device device, out SwapChain swapChain)
+        internal static void CreateWithSwapChain(Adapter adapter, DriverType driverType, DeviceCreationFlags flags, SwapChainDescription swapChainDescription, out Device device, out SwapChain swapChain)
         {
-            Result result = D3D10.CreateDeviceAndSwapChain(adapter, driverType, IntPtr.Zero, flags, D3D10.SdkVersion,
+            D3D10.CreateDeviceAndSwapChain(adapter, driverType, IntPtr.Zero, flags, D3D10.SdkVersion,
                                                            ref swapChainDescription, out swapChain, out device);
-            return result;
         }
 
         /// <summary>

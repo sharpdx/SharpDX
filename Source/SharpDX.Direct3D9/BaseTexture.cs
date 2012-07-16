@@ -32,9 +32,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXFilterTexture([In] IDirect3DBaseTexture9* pBaseTexture,[In, Buffer] const PALETTEENTRY* pPalette,[In] unsigned int SrcLevel,[In] D3DX_FILTER Filter)</unmanaged>
-        public Result FilterTexture(int sourceLevel, Filter filter)
+        public void FilterTexture(int sourceLevel, Filter filter)
         {
-            return D3DX9.FilterTexture(this, null, sourceLevel, filter);
+            D3DX9.FilterTexture(this, null, sourceLevel, filter);
         }
 
         /// <summary>
@@ -47,9 +47,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXFilterTexture([In] IDirect3DBaseTexture9* pBaseTexture,[In, Buffer] const PALETTEENTRY* pPalette,[In] unsigned int SrcLevel,[In] D3DX_FILTER Filter)</unmanaged>	
-        public Result FilterTexture(int sourceLevel, Filter filter, PaletteEntry[] palette)
+        public void FilterTexture(int sourceLevel, Filter filter, PaletteEntry[] palette)
         {
-            return D3DX9.FilterTexture(this, palette, sourceLevel, filter);
+            D3DX9.FilterTexture(this, palette, sourceLevel, filter);
         }
 
         /// <summary>
@@ -62,9 +62,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXSaveTextureToFileW([In] const wchar_t* pDestFile,[In] D3DXIMAGE_FILEFORMAT DestFormat,[In] IDirect3DBaseTexture9* pSrcTexture,[In, Buffer] const PALETTEENTRY* pSrcPalette)</unmanaged>
-        public static Result ToFile(BaseTexture texture, string fileName, ImageFileFormat format)
+        public static void ToFile(BaseTexture texture, string fileName, ImageFileFormat format)
         {
-            return D3DX9.SaveTextureToFileW(fileName, format, texture, null);
+            D3DX9.SaveTextureToFileW(fileName, format, texture, null);
         }
 
         /// <summary>
@@ -76,9 +76,9 @@ namespace SharpDX.Direct3D9
         /// <param name="palette">The palette.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT D3DXSaveTextureToFileW([In] const wchar_t* pDestFile,[In] D3DXIMAGE_FILEFORMAT DestFormat,[In] IDirect3DBaseTexture9* pSrcTexture,[In, Buffer] const PALETTEENTRY* pSrcPalette)</unmanaged>
-        public static Result ToFile(BaseTexture texture, string fileName, ImageFileFormat format, PaletteEntry[] palette)
+        public static void ToFile(BaseTexture texture, string fileName, ImageFileFormat format, PaletteEntry[] palette)
         {
-            return D3DX9.SaveTextureToFileW(fileName, format, texture, palette);            
+            D3DX9.SaveTextureToFileW(fileName, format, texture, palette);            
         }
 
         /// <summary>

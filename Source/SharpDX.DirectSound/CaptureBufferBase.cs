@@ -125,12 +125,12 @@ namespace SharpDX.DirectSound
         /// <param name="dataPart2"> Address of the value retrieved in the ppvAudioPtr2 parameter of the IDirectSoundBuffer8::Lock method. </param>
         /// <returns>No documentation.</returns>
         /// <unmanaged>HRESULT IDirectSoundBuffer::Unlock([In, Buffer] void* pvAudioPtr1,[None] int dwAudioBytes1,[In, Buffer, Optional] void* pvAudioPtr2,[None] int dwAudioBytes2)</unmanaged>
-        public SharpDX.Result Unlock(DataStream dataPart1, DataStream dataPart2)
+        public void Unlock(DataStream dataPart1, DataStream dataPart2)
         {
             if (dataPart2 != null)
-                return Unlock(dataPart1.DataPointer, (int)dataPart1.Length, dataPart2.DataPointer, (int)dataPart2.Length);
+                Unlock(dataPart1.DataPointer, (int)dataPart1.Length, dataPart2.DataPointer, (int)dataPart2.Length);
             else
-                return Unlock(dataPart1.DataPointer, (int)dataPart1.Length, IntPtr.Zero, 0);
+                Unlock(dataPart1.DataPointer, (int)dataPart1.Length, IntPtr.Zero, 0);
         }
 
         /// <summary>

@@ -89,17 +89,16 @@ namespace SharpDX.DirectInput
             return value;
         }
 
-        public Result GetCurrentState(ref T data)
+        public void GetCurrentState(ref T data)
         {
             unsafe
             {
                 int size = Utilities.SizeOf<TRaw>();
                 byte* pTemp = stackalloc byte[size*2];
                 TRaw temp = default(TRaw);
-                var result = GetDeviceState(size, (IntPtr)pTemp);
+                GetDeviceState(size, (IntPtr)pTemp);
                 Utilities.Read((IntPtr)pTemp, ref temp);
                 data.MarshalFrom(ref temp);
-                return result;
             }
         }
 

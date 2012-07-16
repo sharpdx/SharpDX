@@ -16,6 +16,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AnimationTimer.cs" />
     <Compile Include="Transition.cs" />
     <Compile Include="TransitionLibrary.cs" />
     <Compile Include="KeyFrame.cs" />

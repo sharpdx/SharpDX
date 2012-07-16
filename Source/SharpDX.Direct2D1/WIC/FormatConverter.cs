@@ -39,9 +39,9 @@ namespace SharpDX.WIC
         /// <param name="sourceRef">The source ref.</param>
         /// <param name="dstFormat">The destination format.</param>
         /// <returns></returns>
-        public SharpDX.Result Initialize(SharpDX.WIC.BitmapSource sourceRef, System.Guid dstFormat)
+        public void Initialize(SharpDX.WIC.BitmapSource sourceRef, System.Guid dstFormat)
         {
-            return Initialize(sourceRef, dstFormat, BitmapDitherType.None, null, 0.0, BitmapPaletteType.Custom);
+            Initialize(sourceRef, dstFormat, BitmapDitherType.None, null, 0.0, BitmapPaletteType.Custom);
         }
 
         /// <summary>

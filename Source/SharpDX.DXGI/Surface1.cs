@@ -31,9 +31,9 @@ namespace SharpDX.DXGI
         /// </remarks>	
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code. </returns>
         /// <unmanaged>HRESULT IDXGISurface1::ReleaseDC([In, Optional] RECT* pDirtyRect)</unmanaged>
-        public Result ReleaseDC()
+        public void ReleaseDC()
         {
-            return ReleaseDC_(null);
+            ReleaseDC_(null);
         }
 
         /// <summary>	
@@ -45,9 +45,9 @@ namespace SharpDX.DXGI
         /// <param name="dirtyRect">A reference to a <see cref="SharpDX.Rectangle"/> structure that identifies the dirty region of the surface.   A dirty region is any part of the surface that you have used for GDI rendering and that you want to preserve.  This is used as a performance hint to graphics subsystem in certain scenarios.  Do not use this parameter to restrict rendering to the specified rectangular region. The area specified by the <see cref="SharpDX.Rectangle"/> will be used as a performance hint to indicate what areas have been manipulated by GDI rendering. </param>
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code. </returns>
         /// <unmanaged>HRESULT IDXGISurface1::ReleaseDC([In, Optional] RECT* pDirtyRect)</unmanaged>
-        public SharpDX.Result ReleaseDC(SharpDX.Rectangle dirtyRect)
+        public void ReleaseDC(SharpDX.Rectangle dirtyRect)
         {
-            return ReleaseDC_(dirtyRect);
+            ReleaseDC_(dirtyRect);
         }
     }
 }

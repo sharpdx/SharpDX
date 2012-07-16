@@ -74,9 +74,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT ID3DXConstantTable::SetBool([In] IDirect3DDevice9* pDevice,[In] D3DXHANDLE hConstant,[In] BOOL b)</unmanaged>
-        public Result SetValue(Device device, EffectHandle effectHandle, bool value)
+        public void SetValue(Device device, EffectHandle effectHandle, bool value)
         {
-            return SetBool(device, effectHandle, value);
+            SetBool(device, effectHandle, value);
         }
 
         /// <summary>
@@ -89,9 +89,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT ID3DXConstantTable::SetFloat([In] IDirect3DDevice9* pDevice,[In] D3DXHANDLE hConstant,[In] float f)</unmanaged>
-        public Result SetValue(Device device, EffectHandle effectHandle, float value)
+        public void SetValue(Device device, EffectHandle effectHandle, float value)
         {
-            return SetFloat(device, effectHandle, value);
+            SetFloat(device, effectHandle, value);
         }
 
         /// <summary>
@@ -104,9 +104,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT ID3DXConstantTable::SetInt([In] IDirect3DDevice9* pDevice,[In] D3DXHANDLE hConstant,[In] int n)</unmanaged>
-        public Result SetValue(Device device, EffectHandle effectHandle, int value)
+        public void SetValue(Device device, EffectHandle effectHandle, int value)
         {
-            return SetInt(device, effectHandle, value);
+            SetInt(device, effectHandle, value);
         }
 
         /// <summary>
@@ -119,9 +119,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT ID3DXConstantTable::SetMatrix([In] IDirect3DDevice9* pDevice,[In] D3DXHANDLE hConstant,[In] const D3DXMATRIX* pMatrix)</unmanaged>
-        public Result SetValue(Device device, EffectHandle effectHandle, Matrix value)
+        public void SetValue(Device device, EffectHandle effectHandle, Matrix value)
         {
-            return SetMatrix(device, effectHandle, ref value);
+            SetMatrix(device, effectHandle, ref value);
         }
 
         /// <summary>
@@ -134,9 +134,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT ID3DXConstantTable::SetVector([In] IDirect3DDevice9* pDevice,[In] D3DXHANDLE hConstant,[In] const D3DXVECTOR4* pVector)</unmanaged>
-        public Result SetValue(Device device, EffectHandle effectHandle, Vector4 value)
+        public void SetValue(Device device, EffectHandle effectHandle, Vector4 value)
         {
-            return SetVector(device, effectHandle, value);
+            SetVector(device, effectHandle, value);
         }
 
         /// <summary>
@@ -150,11 +150,11 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT ID3DXConstantTable::SetValue([In] IDirect3DDevice9* pDevice,[In] D3DXHANDLE hConstant,[In] const void* pData,[In] unsigned int Bytes)</unmanaged>
-        public Result SetValue<T>(Device device, EffectHandle effectHandle, T value) where T : struct
+        public void SetValue<T>(Device device, EffectHandle effectHandle, T value) where T : struct
         {
             unsafe
             {
-                return SetValue(device, effectHandle, (IntPtr)Interop.Fixed(ref value), Utilities.SizeOf<T>());
+                SetValue(device, effectHandle, (IntPtr)Interop.Fixed(ref value), Utilities.SizeOf<T>());
             }
         }
 
@@ -166,10 +166,10 @@ namespace SharpDX.Direct3D9
         /// <param name="values">The values.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT ID3DXConstantTable::SetBoolArray([In] IDirect3DDevice9* pDevice,[In] D3DXHANDLE hConstant,[In, Buffer] const BOOL* pb,[In] unsigned int Count)</unmanaged>
-        public Result SetValue(Device device, EffectHandle effectHandle, bool[] values)
+        public void SetValue(Device device, EffectHandle effectHandle, bool[] values)
         {
             var tempArray = Utilities.ConvertToIntArray(values);
-            return SetBoolArray(device, effectHandle, tempArray, values.Length);
+            SetBoolArray(device, effectHandle, tempArray, values.Length);
         }
 
         /// <summary>
@@ -180,9 +180,9 @@ namespace SharpDX.Direct3D9
         /// <param name="values">The values.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT ID3DXConstantTable::SetFloatArray([In] IDirect3DDevice9* pDevice,[In] D3DXHANDLE hConstant,[In, Buffer] const float* pf,[In] unsigned int Count)</unmanaged>
-        public Result SetValue(Device device, EffectHandle effectHandle, float[] values)
+        public void SetValue(Device device, EffectHandle effectHandle, float[] values)
         {
-            return SetFloatArray(device, effectHandle, values, values.Length);
+            SetFloatArray(device, effectHandle, values, values.Length);
         }
 
         /// <summary>
@@ -193,9 +193,9 @@ namespace SharpDX.Direct3D9
         /// <param name="values">The values.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT ID3DXConstantTable::SetIntArray([In] IDirect3DDevice9* pDevice,[In] D3DXHANDLE hConstant,[In, Buffer] const int* pn,[In] unsigned int Count)</unmanaged>
-        public Result SetValue(Device device, EffectHandle effectHandle, int[] values)
+        public void SetValue(Device device, EffectHandle effectHandle, int[] values)
         {
-            return SetIntArray(device, effectHandle, values, values.Length);
+            SetIntArray(device, effectHandle, values, values.Length);
         }
 
         /// <summary>
@@ -206,9 +206,9 @@ namespace SharpDX.Direct3D9
         /// <param name="values">The values.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT ID3DXConstantTable::SetMatrixArray([In] IDirect3DDevice9* pDevice,[In] D3DXHANDLE hConstant,[In, Buffer] const D3DXMATRIX* pMatrix,[In] unsigned int Count)</unmanaged>
-        public Result SetValue(Device device, EffectHandle effectHandle, Matrix[] values)
+        public void SetValue(Device device, EffectHandle effectHandle, Matrix[] values)
         {
-            return SetMatrixArray(device, effectHandle, values, values.Length);
+            SetMatrixArray(device, effectHandle, values, values.Length);
         }
 
         /// <summary>
@@ -219,9 +219,9 @@ namespace SharpDX.Direct3D9
         /// <param name="values">The values.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT ID3DXConstantTable::SetVectorArray([In] IDirect3DDevice9* pDevice,[In] D3DXHANDLE hConstant,[In, Buffer] const D3DXVECTOR4* pVector,[In] unsigned int Count)</unmanaged>
-        public Result SetValue(Device device, EffectHandle effectHandle, Vector4[] values)
+        public void SetValue(Device device, EffectHandle effectHandle, Vector4[] values)
         {
-            return SetVectorArray(device, effectHandle, values, values.Length);
+            SetVectorArray(device, effectHandle, values, values.Length);
         }
 
         /// <summary>
@@ -235,11 +235,11 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT ID3DXConstantTable::SetValue([In] IDirect3DDevice9* pDevice,[In] D3DXHANDLE hConstant,[In] const void* pData,[In] unsigned int Bytes)</unmanaged>
-        public Result SetValue<T>(Device device, EffectHandle effectHandle, T[] values) where T : struct
+        public void SetValue<T>(Device device, EffectHandle effectHandle, T[] values) where T : struct
         {
             unsafe
             {
-                return SetValue(device, effectHandle, (IntPtr)Interop.Fixed(values), Utilities.SizeOf<T>() * values.Length);
+                SetValue(device, effectHandle, (IntPtr)Interop.Fixed(values), Utilities.SizeOf<T>() * values.Length);
             }
         }
     }

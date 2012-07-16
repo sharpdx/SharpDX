@@ -81,9 +81,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT ID3DXBaseEffect::SetBool([In] D3DXHANDLE hConstant,[In] BOOL b)</unmanaged>
-        public Result SetValue(EffectHandle effectHandle, bool value)
+        public void SetValue(EffectHandle effectHandle, bool value)
         {
-            return SetBool(effectHandle, value);
+            SetBool(effectHandle, value);
         }
 
         /// <summary>
@@ -95,9 +95,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT ID3DXBaseEffect::SetFloat([In] D3DXHANDLE hConstant,[In] float f)</unmanaged>
-        public Result SetValue(EffectHandle effectHandle, float value)
+        public void SetValue(EffectHandle effectHandle, float value)
         {
-            return SetFloat(effectHandle, value);
+            SetFloat(effectHandle, value);
         }
 
         /// <summary>
@@ -109,9 +109,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT ID3DXBaseEffect::SetInt([In] D3DXHANDLE hConstant,[In] int n)</unmanaged>
-        public Result SetValue(EffectHandle effectHandle, int value)
+        public void SetValue(EffectHandle effectHandle, int value)
         {
-            return SetInt(effectHandle, value);
+            SetInt(effectHandle, value);
         }
 
         /// <summary>
@@ -123,9 +123,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT ID3DXBaseEffect::SetMatrix([In] D3DXHANDLE hConstant,[In] const D3DXMATRIX* pMatrix)</unmanaged>
-        public Result SetValue(EffectHandle effectHandle, Matrix value)
+        public void SetValue(EffectHandle effectHandle, Matrix value)
         {
-            return SetMatrix(effectHandle, ref value);
+            SetMatrix(effectHandle, ref value);
         }
 
         /// <summary>
@@ -137,9 +137,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT ID3DXBaseEffect::SetVector([In] D3DXHANDLE hConstant,[In] const D3DXVECTOR4* pVector)</unmanaged>
-        public Result SetValue(EffectHandle effectHandle, Vector4 value)
+        public void SetValue(EffectHandle effectHandle, Vector4 value)
         {
-            return SetVector(effectHandle, value);
+            SetVector(effectHandle, value);
         }
 
         /// <summary>
@@ -152,11 +152,11 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT ID3DXBaseEffect::SetValue([In] D3DXHANDLE hConstant,[In] const void* pData,[In] unsigned int Bytes)</unmanaged>
-        public Result SetValue<T>(EffectHandle effectHandle, T value) where T : struct
+        public void SetValue<T>(EffectHandle effectHandle, T value) where T : struct
         {
             unsafe
             {
-                return SetValue(effectHandle, (IntPtr)Interop.Fixed(ref value), Utilities.SizeOf<T>());
+                SetValue(effectHandle, (IntPtr)Interop.Fixed(ref value), Utilities.SizeOf<T>());
             }
         }
 
@@ -169,10 +169,10 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT ID3DXBaseEffect::SetBoolArray([In] D3DXHANDLE hConstant,[In, Buffer] const BOOL* pb,[In] unsigned int Count)</unmanaged>
-        public Result SetValue(EffectHandle effectHandle, bool[] values)
+        public void SetValue(EffectHandle effectHandle, bool[] values)
         {
             var tempArray = Utilities.ConvertToIntArray(values);
-            return SetBoolArray(effectHandle, tempArray, values.Length);
+            SetBoolArray(effectHandle, tempArray, values.Length);
         }
 
         /// <summary>
@@ -184,9 +184,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT ID3DXBaseEffect::SetFloatArray([In] D3DXHANDLE hConstant,[In, Buffer] const float* pf,[In] unsigned int Count)</unmanaged>
-        public Result SetValue(EffectHandle effectHandle, float[] values)
+        public void SetValue(EffectHandle effectHandle, float[] values)
         {
-            return SetFloatArray(effectHandle, values, values.Length);
+            SetFloatArray(effectHandle, values, values.Length);
         }
 
         /// <summary>
@@ -198,9 +198,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT ID3DXBaseEffect::SetIntArray([In] D3DXHANDLE hConstant,[In, Buffer] const int* pn,[In] unsigned int Count)</unmanaged>
-        public Result SetValue(EffectHandle effectHandle, int[] values)
+        public void SetValue(EffectHandle effectHandle, int[] values)
         {
-            return SetIntArray(effectHandle, values, values.Length);
+            SetIntArray(effectHandle, values, values.Length);
         }
 
         /// <summary>
@@ -212,9 +212,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT ID3DXBaseEffect::SetMatrixArray([In] D3DXHANDLE hConstant,[In, Buffer] const D3DXMATRIX* pMatrix,[In] unsigned int Count)</unmanaged>
-        public Result SetValue(EffectHandle effectHandle, Matrix[] values)
+        public void SetValue(EffectHandle effectHandle, Matrix[] values)
         {
-            return SetMatrixArray(effectHandle, values, values.Length);
+            SetMatrixArray(effectHandle, values, values.Length);
         }
 
         /// <summary>
@@ -226,9 +226,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT ID3DXBaseEffect::SetVectorArray([In] D3DXHANDLE hConstant,[In, Buffer] const D3DXVECTOR4* pVector,[In] unsigned int Count)</unmanaged>
-        public Result SetValue(EffectHandle effectHandle, Vector4[] values)
+        public void SetValue(EffectHandle effectHandle, Vector4[] values)
         {
-            return SetVectorArray(effectHandle, values, values.Length);
+            SetVectorArray(effectHandle, values, values.Length);
         }
 
         /// <summary>
@@ -241,11 +241,11 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT ID3DXBaseEffect::SetValue([In] D3DXHANDLE hConstant,[In] const void* pData,[In] unsigned int Bytes)</unmanaged>
-        public Result SetValue<T>(EffectHandle effectHandle, T[] values) where T : struct
+        public void SetValue<T>(EffectHandle effectHandle, T[] values) where T : struct
         {
             unsafe
             {
-                return SetValue(effectHandle, (IntPtr)Interop.Fixed(values), Utilities.SizeOf<T>() * values.Length);
+                SetValue(effectHandle, (IntPtr)Interop.Fixed(values), Utilities.SizeOf<T>() * values.Length);
             }
         }
     }

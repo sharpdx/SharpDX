@@ -98,10 +98,10 @@ namespace SharpDX.Direct3D11
         /// <param name = "channel">One or more flag specifying the source of height information.</param>
         /// <param name = "amplitude">Constant value multiplier that increases (or decreases) the values in the normal map. Higher values usually make bumps more visible, lower values usually make bumps less visible.</param>
         /// <returns>A <see cref = "T:SharpDX.Result" /> object describing the result of the operation.</returns>
-        public static Result ComputeNormalMap(DeviceContext context, Texture2D source, Texture2D destination,
+        public static void ComputeNormalMap(DeviceContext context, Texture2D source, Texture2D destination,
                                               NormalMapFlags flags, Channel channel, float amplitude)
         {
-            return D3DX11.ComputeNormalMap(context, source, flags, channel, amplitude, destination);
+            D3DX11.ComputeNormalMap(context, source, flags, channel, amplitude, destination);
         }
 
         /// <summary>	

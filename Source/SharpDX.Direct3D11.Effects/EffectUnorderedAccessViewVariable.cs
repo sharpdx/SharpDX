@@ -28,9 +28,9 @@ namespace SharpDX.Direct3D11
         /// <param name="view">The view.</param>
         /// <returns>A <see cref = "T:SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT ID3DX11EffectUnorderedAccessViewVariable::SetUnorderedAccessViewArray([In, Buffer] ID3D11UnorderedAccessView** ppResources,[In] unsigned int Offset,[In] unsigned int Count)</unmanaged>
-        public SharpDX.Result Set(UnorderedAccessView[] view)
+        public void Set(UnorderedAccessView[] view)
         {
-            return Set(view, 0);
+            Set(view, 0);
         }
 
         /// <summary>
@@ -40,9 +40,9 @@ namespace SharpDX.Direct3D11
         /// <param name="offset">The offset.</param>
         /// <returns>A <see cref = "T:SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT ID3DX11EffectUnorderedAccessViewVariable::SetUnorderedAccessViewArray([In, Buffer] ID3D11UnorderedAccessView** ppResources,[In] unsigned int Offset,[In] unsigned int Count)</unmanaged>
-        public SharpDX.Result Set(UnorderedAccessView[] dataRef, int offset)
+        public void Set(UnorderedAccessView[] dataRef, int offset)
         {
-            return Set(dataRef, offset, dataRef.Length);
+            Set(dataRef, offset, dataRef.Length);
         }
 
         /// <summary>
@@ -51,9 +51,9 @@ namespace SharpDX.Direct3D11
         /// <param name="dataRef">The data ref.</param>
         /// <returns>A <see cref = "T:SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT ID3DX11EffectUnorderedAccessViewVariable::SetUnorderedAccessViewArray([In, Buffer] ID3D11UnorderedAccessView** ppResources,[In] unsigned int Offset,[In] unsigned int Count)</unmanaged>
-        public SharpDX.Result Set(SharpDX.ComArray<UnorderedAccessView> dataRef)
+        public void Set(SharpDX.ComArray<UnorderedAccessView> dataRef)
         {
-            return Set(dataRef, 0, dataRef.Length);
+            Set(dataRef, 0, dataRef.Length);
         }
 
         /// <summary>
@@ -63,9 +63,9 @@ namespace SharpDX.Direct3D11
         /// <param name="offset">The offset.</param>
         /// <returns>A <see cref = "T:SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT ID3DX11EffectUnorderedAccessViewVariable::SetUnorderedAccessViewArray([In, Buffer] ID3D11UnorderedAccessView** ppResources,[In] unsigned int Offset,[In] unsigned int Count)</unmanaged>
-        public SharpDX.Result Set(SharpDX.ComArray<UnorderedAccessView> dataRef, int offset)
+        public void Set(SharpDX.ComArray<UnorderedAccessView> dataRef, int offset)
         {
-            return Set(dataRef, offset, dataRef.Length);
+            Set(dataRef, offset, dataRef.Length);
         }
 
         /// <summary>

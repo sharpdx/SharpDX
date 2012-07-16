@@ -72,10 +72,8 @@ namespace SharpDX.Win32
             return sourceStream.Seek(offset, origin);
         }
 
-        public Result SetSize(long newSize)
+        public void SetSize(long newSize)
         {
-            // Should the sourceStream be "resized" (by moving the position back and forth?)
-            return Result.Ok;
         }
 
         public unsafe long CopyTo(IStream streamDest, long numberOfBytesToCopy, out long bytesWritten)
@@ -98,23 +96,22 @@ namespace SharpDX.Win32
             return bytesWritten;
         }
 
-        public Result Commit(CommitFlags commitFlags)
+        public void Commit(CommitFlags commitFlags)
         {
             sourceStream.Flush();
-            return Result.Ok;
         }
 
-        public Result Revert()
+        public void Revert()
         {
             throw new NotImplementedException();
         }
 
-        public Result LockRegion(long offset, long numberOfBytesToLock, LockType dwLockType)
+        public void LockRegion(long offset, long numberOfBytesToLock, LockType dwLockType)
         {
             throw new NotImplementedException();
         }
 
-        public Result UnlockRegion(long offset, long numberOfBytesToLock, LockType dwLockType)
+        public void UnlockRegion(long offset, long numberOfBytesToLock, LockType dwLockType)
         {
             throw new NotImplementedException();
         }

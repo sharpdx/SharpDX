@@ -124,6 +124,9 @@ namespace SharpGen.Model
 
             if (tag.MethodCheckReturnType.HasValue)
                 CheckReturnType = tag.MethodCheckReturnType.Value;
+
+            if (tag.ParameterUsedAsReturnType.HasValue)
+                ForceReturnType = tag.ParameterUsedAsReturnType.Value;
         }
 
         /// <summary>
@@ -170,6 +173,10 @@ namespace SharpGen.Model
         }
 
         public bool CheckReturnType { get; set; }
+
+        public bool ForceReturnType { get; set; }
+
+        public bool HideReturnType { get; set; }
 
         public bool HasReturnType
         {
@@ -237,6 +244,19 @@ namespace SharpGen.Model
 
         public CsMarshalBase ReturnType { get; set; }
 
+
+        /// <summary>
+        /// Return the Public return type. If a out parameter is used as a public return type
+        /// then use the type of the out parameter for the public api
+        /// </summary>
+        public bool HasReturnTypeParameter
+        {
+            get
+            {
+                return Parameters.Any(param => param.IsUsedAsReturnType);
+            }
+        }
+
         /// <summary>
         /// Return the Public return type. If a out parameter is used as a public return type
         /// then use the type of the out parameter for the public api
@@ -250,6 +270,10 @@ namespace SharpGen.Model
                     if (param.IsUsedAsReturnType)
                         return param.PublicType.QualifiedName;
                 }
+
+                if (HideReturnType && !ForceReturnType)
+                    return "void";
+
                 return ReturnType.PublicType.QualifiedName;
             }
         }

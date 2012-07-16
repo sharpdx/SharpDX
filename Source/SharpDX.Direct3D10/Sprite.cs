@@ -41,9 +41,9 @@ namespace SharpDX.Direct3D10
         /// <param name="sprites">The array of sprites to draw. See <see cref="SharpDX.Direct3D10.SpriteInstance"/>. </param>
         /// <returns>If the method succeeds, the return value is S_OK. If the method fails, the return value can be one of the following: D3DERR_INVALIDCALL, D3DXERR_INVALIDDATA. </returns>
         /// <unmanaged>HRESULT ID3DX10Sprite::DrawSpritesBuffered([None] D3DX10_SPRITE* pSprites,[None] int cSprites)</unmanaged>
-        public SharpDX.Result DrawSpritesBuffered(SharpDX.Direct3D10.SpriteInstance[] sprites)
+        public void DrawSpritesBuffered(SharpDX.Direct3D10.SpriteInstance[] sprites)
         {
-            return DrawSpritesBuffered(sprites, sprites.Length);
+            DrawSpritesBuffered(sprites, sprites.Length);
         }
 
         /// <summary>	
@@ -52,9 +52,9 @@ namespace SharpDX.Direct3D10
         /// <param name="sprites">The array of sprites to draw. See <see cref="SharpDX.Direct3D10.SpriteInstance"/>. </param>
         /// <returns>If the method succeeds, the return value is S_OK. If the method fails, the return value can be one of the following: D3DERR_INVALIDCALL, D3DXERR_INVALIDDATA. </returns>
         /// <unmanaged>HRESULT ID3DX10Sprite::DrawSpritesImmediate([In, Buffer] D3DX10_SPRITE* pSprites,[None] int cSprites,[None] int cbSprite,[None] int flags)</unmanaged>
-        public SharpDX.Result DrawSpritesImmediate(SharpDX.Direct3D10.SpriteInstance[] sprites)
+        public void DrawSpritesImmediate(SharpDX.Direct3D10.SpriteInstance[] sprites)
         {
-            return DrawSpritesImmediate(sprites, sprites.Length, Utilities.SizeOf<SpriteInstance>(), 0);
+            DrawSpritesImmediate(sprites, sprites.Length, Utilities.SizeOf<SpriteInstance>(), 0);
         }
     }
 }

@@ -30,9 +30,9 @@ namespace SharpDX.Direct3D11
         /// <param name="value">A reference to the variable. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D10EffectScalarVariable::SetFloat([None] float Value)</unmanaged>
-        public SharpDX.Result Set(float value)
+        public void Set(float value)
         {
-            return SetFloat(value);
+            SetFloat(value);
         }
 
         /// <summary>	
@@ -41,9 +41,9 @@ namespace SharpDX.Direct3D11
         /// <param name="dataRef">A reference to the start of the data to set. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D10EffectScalarVariable::SetFloatArray([In, Buffer] float* pData,[None] int Offset,[None] int Count)</unmanaged>
-        public SharpDX.Result Set(float[] dataRef)
+        public void Set(float[] dataRef)
         {
-            return Set(dataRef, 0);
+            Set(dataRef, 0);
         }
 
         /// <summary>	
@@ -53,9 +53,9 @@ namespace SharpDX.Direct3D11
         /// <param name="offset">Must be set to 0; this is reserved for future use.  </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D10EffectScalarVariable::SetFloatArray([In, Buffer] float* pData,[None] int Offset,[None] int Count)</unmanaged>
-        public SharpDX.Result Set(float[] dataRef, int offset)
+        public void Set(float[] dataRef, int offset)
         {
-            return SetFloatArray(dataRef, offset, dataRef.Length);
+            SetFloatArray(dataRef, offset, dataRef.Length);
         }
 
         /// <summary>	
@@ -89,9 +89,9 @@ namespace SharpDX.Direct3D11
         /// <param name="value">A reference to the variable. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D10EffectScalarVariable::SetInt([None] int Value)</unmanaged>
-        public SharpDX.Result Set(int value)
+        public void Set(int value)
         {
-            return SetInt(value);
+            SetInt(value);
         }
 
         /// <summary>	
@@ -100,9 +100,9 @@ namespace SharpDX.Direct3D11
         /// <param name="dataRef">A reference to the start of the data to set. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D10EffectScalarVariable::SetIntArray([In, Buffer] int* pData,[None] int Offset,[None] int Count)</unmanaged>
-        public SharpDX.Result Set(int[] dataRef)
+        public void Set(int[] dataRef)
         {
-            return Set(dataRef, 0);
+            Set(dataRef, 0);
         }
 
         /// <summary>	
@@ -112,9 +112,9 @@ namespace SharpDX.Direct3D11
         /// <param name="offset">Must be set to 0; this is reserved for future use.  </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D10EffectScalarVariable::SetIntArray([In, Buffer] int* pData,[None] int Offset,[None] int Count)</unmanaged>
-        public SharpDX.Result Set(int[] dataRef, int offset)
+        public void Set(int[] dataRef, int offset)
         {
-            return SetIntArray(dataRef, offset, dataRef.Length);
+            SetIntArray(dataRef, offset, dataRef.Length);
         }
 
         /// <summary>	
@@ -148,9 +148,9 @@ namespace SharpDX.Direct3D11
         /// <param name="value">A reference to the variable. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D10EffectScalarVariable::SetBool([None] BOOL Value)</unmanaged>
-        public SharpDX.Result Set(bool value)
+        public void Set(bool value)
         {
-            return SetBool(value);
+            SetBool(value);
         }
 
         /// <summary>	
@@ -171,9 +171,9 @@ namespace SharpDX.Direct3D11
         /// <param name="dataRef">A reference to the start of the data to set. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D10EffectScalarVariable::SetBoolArray([In, Buffer] BOOL* pData,[None] int Offset,[None] int Count)</unmanaged>
-        public SharpDX.Result Set(bool[] dataRef)
+        public void Set(bool[] dataRef)
         {
-            return Set(dataRef, 0);
+            Set(dataRef, 0);
         }
 
         /// <summary>	
@@ -183,9 +183,9 @@ namespace SharpDX.Direct3D11
         /// <param name="offset">Must be set to 0; this is reserved for future use.  </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D10EffectScalarVariable::SetBoolArray([In, Buffer] BOOL* pData,[None] int Offset,[None] int Count)</unmanaged>
-        public SharpDX.Result Set(bool[] dataRef, int offset)        
+        public void Set(bool[] dataRef, int offset)        
         {
-            return SetBoolArray(Utilities.ConvertToIntArray(dataRef), offset, dataRef.Length);
+            SetBoolArray(Utilities.ConvertToIntArray(dataRef), offset, dataRef.Length);
         }
 
         /// <summary>	

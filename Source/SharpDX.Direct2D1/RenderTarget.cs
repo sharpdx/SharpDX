@@ -340,11 +340,11 @@ namespace SharpDX.Direct2D1
         /// Drawing operations can only be issued between a {{BeginDraw}} and EndDraw call.BeginDraw and EndDraw are use to indicate that a render target is in use by the Direct2D system. Different implementations of <see cref="SharpDX.Direct2D1.RenderTarget"/> might behave differently when {{BeginDraw}} is called. An <see cref="SharpDX.Direct2D1.BitmapRenderTarget"/> may be locked between BeginDraw/EndDraw calls, a DXGI surface render target might be acquired on BeginDraw and released on EndDraw, while an <see cref="WindowRenderTarget"/> may begin batching at BeginDraw and may present on EndDraw, for example. The BeginDraw method must be called before rendering operations can be called, though state-setting and state-retrieval operations can be performed even outside of {{BeginDraw}}/EndDraw. After {{BeginDraw}} is called, a render target will normally build up a batch of rendering commands, but defer processing of these commands until either an internal buffer is full, the {{Flush}} method is called, or until EndDraw is called. The EndDraw method causes any batched drawing operations to complete, and then returns an HRESULT indicating the success of the operations and, optionally, the tag state of the render target at the time the error occurred. The EndDraw method always succeeds: it should not be called twice even if a previous EndDraw resulted in a failing HRESULT. If EndDraw is called without a matched call to {{BeginDraw}}, it returns an error indicating that BeginDraw must be called before EndDraw. Calling BeginDraw twice on a render target puts the target into an error state where nothing further is drawn, and returns an appropriate HRESULT and error information when EndDraw is called.	
         /// </remarks>	
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code and sets tag1 and tag2 to the tags that were active when the error occurred. </returns>
-        public SharpDX.Result EndDraw()
+        public void EndDraw()
         {
             long tag1;
             long tag2;
-            return EndDraw(out tag1, out tag2);
+            EndDraw(out tag1, out tag2);
         }
 
         /// <summary>	
@@ -399,11 +399,11 @@ namespace SharpDX.Direct2D1
         /// </remarks>	
         /// <returns>If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code and sets tag1 and tag2 to the tags that were active when the error occurred. If no error occurred, this method sets the error tag state to be (0,0). </returns>
         /// <unmanaged>HRESULT ID2D1RenderTarget::Flush([Out, Optional] D2D1_TAG* tag1,[Out, Optional] D2D1_TAG* tag2)</unmanaged>
-        public Result Flush()
+        public void Flush()
         {
             long tag1;
             long tag2;
-            return Flush(out tag1, out tag2);
+            Flush(out tag1, out tag2);
         }
 
         /// <summary>	

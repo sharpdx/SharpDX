@@ -141,6 +141,9 @@
     <map param="IUIAnimationVariable::SetTag::object" type="void"/>
     <map param="IUIAnimationVariable::GetTag::object" type="void"/>
 
+    <map method="IUIAnimationTimer::IsEnabled" return="true" check="false" property="false" name="IsEnabled_" visibility="internal"/>
+    <map method="IUIAnimationTransition::IsDurationKnown" return="true" check="false" property="false" name="IsDurationKnown_" visibility="internal"/>
+
     <!--
     // *****************************************************************
     // Animation Functions

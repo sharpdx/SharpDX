@@ -30,9 +30,9 @@ namespace SharpDX.Direct3D11
         /// <param name="resourcesRef">Set an array of render-target-view interfaces. See <see cref="SharpDX.Direct3D11.RenderTargetView"/>. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D10EffectRenderTargetViewVariable::SetRenderTargetArray([In, Buffer] ID3D10RenderTargetView** ppResources,[None] int Offset,[None] int Count)</unmanaged>
-        public SharpDX.Result SetRenderTargetArray(SharpDX.Direct3D11.RenderTargetView[] resourcesRef)
+        public void SetRenderTargetArray(SharpDX.Direct3D11.RenderTargetView[] resourcesRef)
         {
-            return SetRenderTargetArray(resourcesRef, 0);
+            SetRenderTargetArray(resourcesRef, 0);
         }
 
         /// <summary>	
@@ -42,9 +42,9 @@ namespace SharpDX.Direct3D11
         /// <param name="offset">The zero-based array index to store the first interface. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D10EffectRenderTargetViewVariable::SetRenderTargetArray([In, Buffer] ID3D10RenderTargetView** ppResources,[None] int Offset,[None] int Count)</unmanaged>
-        public SharpDX.Result SetRenderTargetArray(SharpDX.Direct3D11.RenderTargetView[] resourcesRef, int offset)
+        public void SetRenderTargetArray(SharpDX.Direct3D11.RenderTargetView[] resourcesRef, int offset)
         {
-            return SetRenderTargetArray(resourcesRef, offset, resourcesRef.Length);
+            SetRenderTargetArray(resourcesRef, offset, resourcesRef.Length);
         }
 
         /// <summary>	

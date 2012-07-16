@@ -30,9 +30,9 @@ namespace SharpDX.Direct3D11
         /// <param name="resourcesRef"> A pointer to an array of depth-stencil-view interfaces. See <see cref="SharpDX.Direct3D11.DepthStencilView"/>. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D10EffectDepthStencilViewVariable::SetDepthStencilArray([In, Buffer] ID3D10DepthStencilView** ppResources,[None] int Offset,[None] int Count)</unmanaged>
-        public SharpDX.Result SetDepthStencilArray(SharpDX.Direct3D11.DepthStencilView[] resourcesRef)
+        public void SetDepthStencilArray(SharpDX.Direct3D11.DepthStencilView[] resourcesRef)
         {
-            return SetDepthStencilArray(resourcesRef, 0, resourcesRef.Length);
+            SetDepthStencilArray(resourcesRef, 0, resourcesRef.Length);
         }
 
         /// <summary>	
@@ -42,9 +42,9 @@ namespace SharpDX.Direct3D11
         /// <param name="offset"> The zero-based array index to set the first interface. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D10EffectDepthStencilViewVariable::SetDepthStencilArray([In, Buffer] ID3D10DepthStencilView** ppResources,[None] int Offset,[None] int Count)</unmanaged>
-        public SharpDX.Result SetDepthStencilArray(SharpDX.Direct3D11.DepthStencilView[] resourcesRef, int offset)
+        public void SetDepthStencilArray(SharpDX.Direct3D11.DepthStencilView[] resourcesRef, int offset)
         {
-            return SetDepthStencilArray(resourcesRef, offset, resourcesRef.Length-offset);
+            SetDepthStencilArray(resourcesRef, offset, resourcesRef.Length-offset);
         }
 
         /// <summary>	

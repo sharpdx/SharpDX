@@ -79,11 +79,11 @@ namespace SharpDX.WIC
         /// <param name="name">The name of the metadata.</param>
         /// <param name="value">The value.</param>
         /// <returns></returns>
-        public unsafe SharpDX.Result SetMetadataByName(string name, object value)
+        public unsafe void SetMetadataByName(string name, object value)
         {
             byte* variant = stackalloc byte[512];
             Marshal.GetNativeVariantForObject(value, (IntPtr)variant);
-            return SetMetadataByName(name, (IntPtr) variant);
+            SetMetadataByName(name, (IntPtr) variant);
         }
     }
 }

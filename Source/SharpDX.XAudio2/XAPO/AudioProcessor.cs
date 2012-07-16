@@ -73,7 +73,7 @@ namespace SharpDX.XAPO
         /// <param name="outputLockedParameters"> Array of output <see cref="SharpDX.XAPO.LockParameters"/> structures.pOutputLockedParameters may be NULL if OutputLockedParameterCount is 0, otherwise itmust have OutputLockedParameterCount elements.</param>
         /// <returns>No documentation.</returns>
         /// <unmanaged>HRESULT IXAPO::LockForProcess([None] UINT32 InputLockedParameterCount,[In, Buffer, Optional] const XAPO_LOCKFORPROCESS_BUFFER_PARAMETERS* pInputLockedParameters,[None] UINT32 OutputLockedParameterCount,[In, Buffer, Optional] const XAPO_LOCKFORPROCESS_BUFFER_PARAMETERS* pOutputLockedParameters)</unmanaged>
-        Result LockForProcess(SharpDX.XAPO.LockParameters[] inputLockedParameters, SharpDX.XAPO.LockParameters[] outputLockedParameters);
+        void LockForProcess(SharpDX.XAPO.LockParameters[] inputLockedParameters, SharpDX.XAPO.LockParameters[] outputLockedParameters);
 
         /// <summary>	
         /// Deallocates variables that were allocated with the {{LockForProcess}} method.	

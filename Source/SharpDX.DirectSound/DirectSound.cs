@@ -60,13 +60,12 @@ namespace SharpDX.DirectSound
         /// </summary>
         /// <param name="speakerSet" />
         /// <param name="geometry" />
-        public Result GetSpeakerConfiguration(out SpeakerConfiguration speakerSet, out SpeakerGeometry geometry)
+        public void GetSpeakerConfiguration(out SpeakerConfiguration speakerSet, out SpeakerGeometry geometry)
         {
             int speakerConfig;
-            Result result = GetSpeakerConfiguration(out speakerConfig);
+            GetSpeakerConfiguration(out speakerConfig);
             speakerSet = (SpeakerConfiguration)(speakerConfig & 0xFFFF);
             geometry = (SpeakerGeometry)(speakerConfig >> 16);
-            return result;            
         }
 
         /// <summary>
@@ -74,9 +73,9 @@ namespace SharpDX.DirectSound
         /// </summary>
         /// <param name="speakerSet" />
         /// <param name="geometry" />
-        public Result SetSpeakerConfiguration(SpeakerConfiguration speakerSet, SpeakerGeometry geometry)
+        public void SetSpeakerConfiguration(SpeakerConfiguration speakerSet, SpeakerGeometry geometry)
         {
-            return SetSpeakerConfiguration(((int)speakerSet) | (((int)geometry) << 16));
+            SetSpeakerConfiguration(((int)speakerSet) | (((int)geometry) << 16));
         }
 
         /// <summary>

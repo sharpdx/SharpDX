@@ -150,9 +150,9 @@ namespace SharpDX.Direct3D11
         /// <param name="loadInformation">Pointer to texture loading parameters. See <see cref="SharpDX.Direct3D11.TextureLoadInformation"/>. </param>
         /// <returns>The return value is one of the values listed in {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT D3DX10LoadTextureFromTexture([None] ID3D10Resource* pSrcTexture,[None] D3DX10_TEXTURE_LOAD_INFO* pLoadInfo,[None] ID3D10Resource* pDstTexture)</unmanaged>
-        public static Result LoadTextureFromTexture(DeviceContext context, Resource source, Resource destination, TextureLoadInformation loadInformation)
+        public static void LoadTextureFromTexture(DeviceContext context, Resource source, Resource destination, TextureLoadInformation loadInformation)
         {
-            return D3DX11.LoadTextureFromTexture(context, source, loadInformation, destination);
+            D3DX11.LoadTextureFromTexture(context, source, loadInformation, destination);
         }
 
         /// <summary>	
@@ -163,9 +163,9 @@ namespace SharpDX.Direct3D11
         /// <param name="mipFilter"><para>Flags controlling how each miplevel is filtered (or D3DX11_DEFAULT for <see cref="SharpDX.Direct3D11.FilterFlags.Linear"/>). See <see cref="SharpDX.Direct3D11.FilterFlags"/>.</para></param>	
         /// <returns>The return value is one of the values listed in Direct3D 11 Return Codes.</returns>	
         /// <unmanaged>HRESULT D3DX11FilterTexture([In] ID3D11DeviceContext* pContext,[In] ID3D11Resource* pTexture,[In] unsigned int SrcLevel,[In] unsigned int MipFilter)</unmanaged>	
-        public Result FilterTexture(DeviceContext deviceContext, int sourceLevel, FilterFlags mipFilter)
+        public void FilterTexture(DeviceContext deviceContext, int sourceLevel, FilterFlags mipFilter)
         {
-            return D3DX11.FilterTexture(deviceContext, this, sourceLevel, (int)mipFilter);
+            D3DX11.FilterTexture(deviceContext, this, sourceLevel, (int)mipFilter);
         }
 
         /// <summary>
@@ -176,12 +176,12 @@ namespace SharpDX.Direct3D11
         /// <param name = "format">The format the texture will be saved as.</param>
         /// <param name = "fileName">Name of the destination output file where the texture will be saved.</param>
         /// <returns>A <see cref = "T:SharpDX.Result" /> object describing the result of the operation.</returns>
-        public static Result ToFile(DeviceContext context, Resource texture, ImageFileFormat format, string fileName)
+        public static void ToFile(DeviceContext context, Resource texture, ImageFileFormat format, string fileName)
         {
             //System.Diagnostics.Debug.Assert(typeof(T) == typeof(Texture1D) || typeof(T) == typeof(Texture2D) ||
             //             typeof(T) == typeof(Texture3D));
 
-            return D3DX11.SaveTextureToFile(context, texture, format, fileName);
+            D3DX11.SaveTextureToFile(context, texture, format, fileName);
         }
 
         /// <summary>
@@ -379,14 +379,14 @@ namespace SharpDX.Direct3D11
         /// <param name = "format">The format the texture will be saved as.</param>
         /// <param name = "stream">Destination memory stream where the image will be saved.</param>
         /// <returns>A <see cref = "T:SharpDX.Result" /> object describing the result of the operation.</returns>
-        public static Result ToStream<T>(DeviceContext context, T texture, ImageFileFormat format, Stream stream)
+        public static void ToStream<T>(DeviceContext context, T texture, ImageFileFormat format, Stream stream)
             where T : Resource
         {
             System.Diagnostics.Debug.Assert(typeof (T) == typeof (Texture1D) || typeof (T) == typeof (Texture2D) ||
                          typeof (T) == typeof (Texture3D));
 
             Blob blob;
-            Result result = D3DX11.SaveTextureToMemory(context, texture, format, out blob, 0);
+            D3DX11.SaveTextureToMemory(context, texture, format, out blob, 0);
 
             IntPtr bufferPtr = blob.BufferPointer;
             int blobSize = blob.BufferSize;
@@ -396,8 +396,6 @@ namespace SharpDX.Direct3D11
                 stream.WriteByte(Marshal.ReadByte(bufferPtr, byteIndex));
 
             blob.Dispose();
-
-            return result;
         }
 #endif
 

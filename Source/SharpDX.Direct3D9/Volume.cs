@@ -66,9 +66,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXLoadVolumeFromFileW([In] IDirect3DVolume9* pDestVolume,[In] const PALETTEENTRY* pDestPalette,[In] const D3DBOX* pDestBox,[In] const wchar_t* pSrcFile,[In] const D3DBOX* pSrcBox,[In] unsigned int Filter,[In] D3DCOLOR ColorKey,[In] D3DXIMAGE_INFO* pSrcInfo)</unmanaged>
-        public static Result FromFile(Volume volume, string fileName, Filter filter, int colorKey)
+        public static void FromFile(Volume volume, string fileName, Filter filter, int colorKey)
         {
-            return D3DX9.LoadVolumeFromFileW(volume, null, IntPtr.Zero, fileName, IntPtr.Zero, filter, colorKey, IntPtr.Zero);
+            D3DX9.LoadVolumeFromFileW(volume, null, IntPtr.Zero, fileName, IntPtr.Zero, filter, colorKey, IntPtr.Zero);
         }
 
         /// <summary>
@@ -84,11 +84,11 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXLoadVolumeFromFileW([In] IDirect3DVolume9* pDestVolume,[In] const PALETTEENTRY* pDestPalette,[In] const D3DBOX* pDestBox,[In] const wchar_t* pSrcFile,[In] const D3DBOX* pSrcBox,[In] unsigned int Filter,[In] D3DCOLOR ColorKey,[In] D3DXIMAGE_INFO* pSrcInfo)</unmanaged>
-        public static Result FromFile(Volume volume, string fileName, Filter filter, int colorKey, Box sourceBox, Box destinationBox)
+        public static void FromFile(Volume volume, string fileName, Filter filter, int colorKey, Box sourceBox, Box destinationBox)
         {
             unsafe
             {
-                return D3DX9.LoadVolumeFromFileW(volume, null, new IntPtr(&destinationBox), fileName, new IntPtr(&sourceBox), filter, colorKey, IntPtr.Zero);
+                D3DX9.LoadVolumeFromFileW(volume, null, new IntPtr(&destinationBox), fileName, new IntPtr(&sourceBox), filter, colorKey, IntPtr.Zero);
             }
         }
 
@@ -106,10 +106,10 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXLoadVolumeFromFileW([In] IDirect3DVolume9* pDestVolume,[In] const PALETTEENTRY* pDestPalette,[In] const D3DBOX* pDestBox,[In] const wchar_t* pSrcFile,[In] const D3DBOX* pSrcBox,[In] unsigned int Filter,[In] D3DCOLOR ColorKey,[In] D3DXIMAGE_INFO* pSrcInfo)</unmanaged>
-        public static Result FromFile(Volume volume, string fileName, Filter filter, int colorKey, Box sourceBox, Box destinationBox, out ImageInformation imageInformation)
+        public static void FromFile(Volume volume, string fileName, Filter filter, int colorKey, Box sourceBox, Box destinationBox, out ImageInformation imageInformation)
         {
 
-            return FromFile(volume, fileName, filter, colorKey, sourceBox, destinationBox, null, out imageInformation);
+            FromFile(volume, fileName, filter, colorKey, sourceBox, destinationBox, null, out imageInformation);
         }
 
         /// <summary>
@@ -127,12 +127,12 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXLoadVolumeFromFileW([In] IDirect3DVolume9* pDestVolume,[In] const PALETTEENTRY* pDestPalette,[In] const D3DBOX* pDestBox,[In] const wchar_t* pSrcFile,[In] const D3DBOX* pSrcBox,[In] unsigned int Filter,[In] D3DCOLOR ColorKey,[In] D3DXIMAGE_INFO* pSrcInfo)</unmanaged>
-        public static Result FromFile(Volume volume, string fileName, Filter filter, int colorKey, Box sourceBox, Box destinationBox, PaletteEntry[] palette, out ImageInformation imageInformation)
+        public static void FromFile(Volume volume, string fileName, Filter filter, int colorKey, Box sourceBox, Box destinationBox, PaletteEntry[] palette, out ImageInformation imageInformation)
         {
             unsafe
             {
                 fixed (void* pImageInformation = &imageInformation)
-                    return D3DX9.LoadVolumeFromFileW(volume, palette, new IntPtr(&destinationBox), fileName, new IntPtr(&sourceBox), filter, colorKey, (IntPtr)pImageInformation);
+                    D3DX9.LoadVolumeFromFileW(volume, palette, new IntPtr(&destinationBox), fileName, new IntPtr(&sourceBox), filter, colorKey, (IntPtr)pImageInformation);
             }
         }
 
@@ -147,12 +147,12 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXLoadVolumeFromFileInMemory([In] IDirect3DVolume9* pDestVolume,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestBox,[In] const void* pSrcData,[In] unsigned int SrcDataSize,[In] const void* pSrcBox,[In] D3DX_FILTER Filter,[In] int ColorKey,[In] void* pSrcInfo)</unmanaged>
-        public static Result FromFileInMemory(Volume volume, byte[] memory, Filter filter, int colorKey)
+        public static void FromFileInMemory(Volume volume, byte[] memory, Filter filter, int colorKey)
         {
             unsafe
             {
                 fixed (void* pMemory = memory)
-                    return D3DX9.LoadVolumeFromFileInMemory(volume, null, IntPtr.Zero, (IntPtr)pMemory, memory.Length, IntPtr.Zero, filter, colorKey, IntPtr.Zero);
+                    D3DX9.LoadVolumeFromFileInMemory(volume, null, IntPtr.Zero, (IntPtr)pMemory, memory.Length, IntPtr.Zero, filter, colorKey, IntPtr.Zero);
             }
         }
 
@@ -169,12 +169,12 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXLoadVolumeFromFileInMemory([In] IDirect3DVolume9* pDestVolume,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestBox,[In] const void* pSrcData,[In] unsigned int SrcDataSize,[In] const void* pSrcBox,[In] D3DX_FILTER Filter,[In] int ColorKey,[In] void* pSrcInfo)</unmanaged>
-        public static Result FromFileInMemory(Volume volume, byte[] memory, Filter filter, int colorKey, Box sourceBox, Box destinationBox)
+        public static void FromFileInMemory(Volume volume, byte[] memory, Filter filter, int colorKey, Box sourceBox, Box destinationBox)
         {
             unsafe
             {
                 fixed (void* pMemory = memory)
-                    return D3DX9.LoadVolumeFromFileInMemory(volume, null, new IntPtr(&destinationBox), (IntPtr)pMemory, memory.Length, new IntPtr(&sourceBox), filter, colorKey, IntPtr.Zero);
+                    D3DX9.LoadVolumeFromFileInMemory(volume, null, new IntPtr(&destinationBox), (IntPtr)pMemory, memory.Length, new IntPtr(&sourceBox), filter, colorKey, IntPtr.Zero);
             }
         }
 
@@ -192,9 +192,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXLoadVolumeFromFileInMemory([In] IDirect3DVolume9* pDestVolume,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestBox,[In] const void* pSrcData,[In] unsigned int SrcDataSize,[In] const void* pSrcBox,[In] D3DX_FILTER Filter,[In] int ColorKey,[In] void* pSrcInfo)</unmanaged>
-        public static Result FromFileInMemory(Volume volume, byte[] memory, Filter filter, int colorKey, Box sourceBox, Box destinationBox, out ImageInformation imageInformation)
+        public static void FromFileInMemory(Volume volume, byte[] memory, Filter filter, int colorKey, Box sourceBox, Box destinationBox, out ImageInformation imageInformation)
         {
-            return FromFileInMemory(volume, memory, filter, colorKey, sourceBox, destinationBox, null, out imageInformation);
+            FromFileInMemory(volume, memory, filter, colorKey, sourceBox, destinationBox, null, out imageInformation);
         }
 
         /// <summary>
@@ -212,13 +212,13 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXLoadVolumeFromFileInMemory([In] IDirect3DVolume9* pDestVolume,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestBox,[In] const void* pSrcData,[In] unsigned int SrcDataSize,[In] const void* pSrcBox,[In] D3DX_FILTER Filter,[In] int ColorKey,[In] void* pSrcInfo)</unmanaged>
-        public static Result FromFileInMemory(Volume volume, byte[] memory, Filter filter, int colorKey, Box sourceBox, Box destinationBox, PaletteEntry[] palette, out ImageInformation imageInformation)
+        public static void FromFileInMemory(Volume volume, byte[] memory, Filter filter, int colorKey, Box sourceBox, Box destinationBox, PaletteEntry[] palette, out ImageInformation imageInformation)
         {
             unsafe
             {
                 fixed (void* pMemory = memory)
                     fixed (void* pImageInformation = &imageInformation)
-                        return D3DX9.LoadVolumeFromFileInMemory(volume, palette, new IntPtr(&destinationBox), (IntPtr)pMemory, memory.Length, new IntPtr(&sourceBox), filter, colorKey, (IntPtr)pImageInformation);
+                        D3DX9.LoadVolumeFromFileInMemory(volume, palette, new IntPtr(&destinationBox), (IntPtr)pMemory, memory.Length, new IntPtr(&sourceBox), filter, colorKey, (IntPtr)pImageInformation);
             }
         }
 
@@ -233,10 +233,10 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXLoadVolumeFromFileInMemory([In] IDirect3DVolume9* pDestVolume,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestBox,[In] const void* pSrcData,[In] unsigned int SrcDataSize,[In] const void* pSrcBox,[In] D3DX_FILTER Filter,[In] int ColorKey,[In] void* pSrcInfo)</unmanaged>
-        public static Result FromFileInStream(Volume volume, Stream stream, Filter filter, int colorKey)
+        public static void FromFileInStream(Volume volume, Stream stream, Filter filter, int colorKey)
         {
 
-            return CreateFromFileInStream(volume, stream, filter, colorKey, IntPtr.Zero, IntPtr.Zero, null, IntPtr.Zero);
+            CreateFromFileInStream(volume, stream, filter, colorKey, IntPtr.Zero, IntPtr.Zero, null, IntPtr.Zero);
         }
 
         /// <summary>
@@ -252,11 +252,11 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXLoadVolumeFromFileInMemory([In] IDirect3DVolume9* pDestVolume,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestBox,[In] const void* pSrcData,[In] unsigned int SrcDataSize,[In] const void* pSrcBox,[In] D3DX_FILTER Filter,[In] int ColorKey,[In] void* pSrcInfo)</unmanaged>
-        public static Result FromFileInStream(Volume volume, Stream stream, Filter filter, int colorKey, Box sourceBox, Box destinationBox)
+        public static void FromFileInStream(Volume volume, Stream stream, Filter filter, int colorKey, Box sourceBox, Box destinationBox)
         {
             unsafe
             {
-                return CreateFromFileInStream(volume, stream, filter, colorKey, new IntPtr(&sourceBox), new IntPtr(&destinationBox), null, IntPtr.Zero);
+                CreateFromFileInStream(volume, stream, filter, colorKey, new IntPtr(&sourceBox), new IntPtr(&destinationBox), null, IntPtr.Zero);
             }
         }
 
@@ -274,10 +274,10 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXLoadVolumeFromFileInMemory([In] IDirect3DVolume9* pDestVolume,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestBox,[In] const void* pSrcData,[In] unsigned int SrcDataSize,[In] const void* pSrcBox,[In] D3DX_FILTER Filter,[In] int ColorKey,[In] void* pSrcInfo)</unmanaged>
-        public static Result FromFileInStream(Volume volume, Stream stream, Filter filter, int colorKey, Box sourceBox, Box destinationBox, out ImageInformation imageInformation)
+        public static void FromFileInStream(Volume volume, Stream stream, Filter filter, int colorKey, Box sourceBox, Box destinationBox, out ImageInformation imageInformation)
         {
 
-            return FromFileInStream(volume, stream, filter, colorKey, sourceBox, destinationBox, null, out imageInformation);
+            FromFileInStream(volume, stream, filter, colorKey, sourceBox, destinationBox, null, out imageInformation);
         }
 
         /// <summary>
@@ -293,25 +293,25 @@ namespace SharpDX.Direct3D9
         /// <param name="imageInformation">The image information.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT D3DXLoadVolumeFromFileInMemory([In] IDirect3DVolume9* pDestVolume,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestBox,[In] const void* pSrcData,[In] unsigned int SrcDataSize,[In] const void* pSrcBox,[In] D3DX_FILTER Filter,[In] int ColorKey,[In] void* pSrcInfo)</unmanaged>
-        public static Result FromFileInStream(Volume volume, Stream stream, Filter filter, int colorKey, Box sourceBox, Box destinationBox, PaletteEntry[] palette, out ImageInformation imageInformation)
+        public static void FromFileInStream(Volume volume, Stream stream, Filter filter, int colorKey, Box sourceBox, Box destinationBox, PaletteEntry[] palette, out ImageInformation imageInformation)
         {
             unsafe
             {
                 fixed (void* pImageInformation = &imageInformation)
-                    return CreateFromFileInStream(volume, stream, filter, colorKey, new IntPtr(&sourceBox), new IntPtr(&destinationBox), palette, (IntPtr)pImageInformation);
+                    CreateFromFileInStream(volume, stream, filter, colorKey, new IntPtr(&sourceBox), new IntPtr(&destinationBox), palette, (IntPtr)pImageInformation);
             }
         }
 
-        private static Result CreateFromFileInStream(Volume volume, Stream stream, Filter filter, int colorKey, IntPtr sourceBox, IntPtr destinationBox, PaletteEntry[] palette, IntPtr imageInformation)
+        private static void CreateFromFileInStream(Volume volume, Stream stream, Filter filter, int colorKey, IntPtr sourceBox, IntPtr destinationBox, PaletteEntry[] palette, IntPtr imageInformation)
         {
 
             unsafe
             {
                 if (stream is DataStream)
-                    return D3DX9.LoadVolumeFromFileInMemory(volume, palette, destinationBox, ((DataStream)stream).DataPointer, (int)stream.Length, sourceBox, filter, colorKey, (IntPtr)imageInformation);
+                    D3DX9.LoadVolumeFromFileInMemory(volume, palette, destinationBox, ((DataStream)stream).DataPointer, (int)stream.Length, sourceBox, filter, colorKey, (IntPtr)imageInformation);
                 var data = Utilities.ReadStream(stream);
                 fixed (void* pData = data)
-                    return D3DX9.LoadVolumeFromFileInMemory(volume, palette, destinationBox, (IntPtr)pData, data.Length, sourceBox, filter, colorKey, (IntPtr)imageInformation);
+                    D3DX9.LoadVolumeFromFileInMemory(volume, palette, destinationBox, (IntPtr)pData, data.Length, sourceBox, filter, colorKey, (IntPtr)imageInformation);
             }
         }
 
@@ -326,9 +326,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXLoadVolumeFromVolume([In] IDirect3DVolume9* pDestVolume,[In] const PALETTEENTRY* pDestPalette,[In] const D3DBOX* pDestBox,[In] IDirect3DVolume9* pSrcVolume,[In] const PALETTEENTRY* pSrcPalette,[In] const D3DBOX* pSrcBox,[In] unsigned int Filter,[In] D3DCOLOR ColorKey)</unmanaged>
-        public static Result FromVolume(Volume destinationVolume, Volume sourceVolume, Filter filter, int colorKey)
+        public static void FromVolume(Volume destinationVolume, Volume sourceVolume, Filter filter, int colorKey)
         {
-            return D3DX9.LoadVolumeFromVolume(destinationVolume, null, IntPtr.Zero, sourceVolume, null, IntPtr.Zero, filter, colorKey);
+            D3DX9.LoadVolumeFromVolume(destinationVolume, null, IntPtr.Zero, sourceVolume, null, IntPtr.Zero, filter, colorKey);
         }
 
         /// <summary>
@@ -344,9 +344,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXLoadVolumeFromVolume([In] IDirect3DVolume9* pDestVolume,[In] const PALETTEENTRY* pDestPalette,[In] const D3DBOX* pDestBox,[In] IDirect3DVolume9* pSrcVolume,[In] const PALETTEENTRY* pSrcPalette,[In] const D3DBOX* pSrcBox,[In] unsigned int Filter,[In] D3DCOLOR ColorKey)</unmanaged>
-        public static Result FromVolume(Volume destinationVolume, Volume sourceVolume, Filter filter, int colorKey, Box sourceBox, Box destinationBox)
+        public static void FromVolume(Volume destinationVolume, Volume sourceVolume, Filter filter, int colorKey, Box sourceBox, Box destinationBox)
         {
-            return FromVolume(destinationVolume, sourceVolume, filter, colorKey, sourceBox, destinationBox, null, null);
+            FromVolume(destinationVolume, sourceVolume, filter, colorKey, sourceBox, destinationBox, null, null);
         }
 
         /// <summary>
@@ -362,11 +362,11 @@ namespace SharpDX.Direct3D9
         /// <param name="sourcePalette">The source palette.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT D3DXLoadVolumeFromVolume([In] IDirect3DVolume9* pDestVolume,[In] const PALETTEENTRY* pDestPalette,[In] const D3DBOX* pDestBox,[In] IDirect3DVolume9* pSrcVolume,[In] const PALETTEENTRY* pSrcPalette,[In] const D3DBOX* pSrcBox,[In] unsigned int Filter,[In] D3DCOLOR ColorKey)</unmanaged>
-        public static Result FromVolume(Volume destinationVolume, Volume sourceVolume, Filter filter, int colorKey, Box sourceBox, Box destinationBox, PaletteEntry[] destinationPalette, PaletteEntry[] sourcePalette)
+        public static void FromVolume(Volume destinationVolume, Volume sourceVolume, Filter filter, int colorKey, Box sourceBox, Box destinationBox, PaletteEntry[] destinationPalette, PaletteEntry[] sourcePalette)
         {
             unsafe
             {
-                return D3DX9.LoadVolumeFromVolume(destinationVolume, destinationPalette, new IntPtr(&destinationBox), sourceVolume, sourcePalette, new IntPtr(&sourceBox), filter, colorKey);
+                D3DX9.LoadVolumeFromVolume(destinationVolume, destinationPalette, new IntPtr(&destinationBox), sourceVolume, sourcePalette, new IntPtr(&sourceBox), filter, colorKey);
             }
         }
 
@@ -413,9 +413,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXSaveVolumeToFileW([In] const wchar_t* pDestFile,[In] D3DXIMAGE_FILEFORMAT DestFormat,[In] IDirect3DVolume9* pSrcVolume,[In] const PALETTEENTRY* pSrcPalette,[In] const D3DBOX* pSrcBox)</unmanaged>
-        public static Result ToFile(Volume volume, string fileName, ImageFileFormat format)
+        public static void ToFile(Volume volume, string fileName, ImageFileFormat format)
         {
-            return D3DX9.SaveVolumeToFileW(fileName, format, volume, null, IntPtr.Zero);
+            D3DX9.SaveVolumeToFileW(fileName, format, volume, null, IntPtr.Zero);
         }
 
         /// <summary>
@@ -429,9 +429,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT D3DXSaveVolumeToFileW([In] const wchar_t* pDestFile,[In] D3DXIMAGE_FILEFORMAT DestFormat,[In] IDirect3DVolume9* pSrcVolume,[In] const PALETTEENTRY* pSrcPalette,[In] const D3DBOX* pSrcBox)</unmanaged>
-        public static Result ToFile(Volume volume, string fileName, ImageFileFormat format, Box box)
+        public static void ToFile(Volume volume, string fileName, ImageFileFormat format, Box box)
         {
-            return ToFile(volume, fileName, format, box, null);
+            ToFile(volume, fileName, format, box, null);
         }
 
         /// <summary>
@@ -444,11 +444,11 @@ namespace SharpDX.Direct3D9
         /// <param name="palette">The palette.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT D3DXSaveVolumeToFileW([In] const wchar_t* pDestFile,[In] D3DXIMAGE_FILEFORMAT DestFormat,[In] IDirect3DVolume9* pSrcVolume,[In] const PALETTEENTRY* pSrcPalette,[In] const D3DBOX* pSrcBox)</unmanaged>
-        public static Result ToFile(Volume volume, string fileName, ImageFileFormat format, Box box, PaletteEntry[] palette)
+        public static void ToFile(Volume volume, string fileName, ImageFileFormat format, Box box, PaletteEntry[] palette)
         {
             unsafe
             {
-                return D3DX9.SaveVolumeToFileW(fileName, format, volume, palette, new IntPtr(&box));
+                D3DX9.SaveVolumeToFileW(fileName, format, volume, palette, new IntPtr(&box));
             }
         }
 

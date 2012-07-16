@@ -227,34 +227,38 @@ namespace CustomLayout
 
             // Get the glyphs from the text, retrying if needed.
             int tries = 0;
-            do
+            while (tries < 2)// We'll give it two chances.
             {
                 short[] call_glyphClusters_ = new short[glyphClusters_.Length - textStart];
                 short[] call_glyphIndices_ = new short[glyphIndices_.Length - glyphStart];
 
-                var result = textAnalyzer.GetGlyphs(
-                    text_.Substring(textStart, textLength),
-                    textLength,
-                    fontFace_,
-                    run.isSideways,
-                    (run.bidiLevel % 2 == 1),
-                    run.script,
-                    localName_,
-                    run.isNumberSubstituted ? numberSubstitution_ : null,
-                    null,
-                    null,
-                    maxGlyphCount,
-                    call_glyphClusters_,
-                    textProps,
-                    call_glyphIndices_,
-                    glyphProps,
-                    out actualGlyphCount);
-                Array.Copy(call_glyphClusters_, 0, glyphClusters_, textStart, call_glyphClusters_.Length);
-                Array.Copy(call_glyphIndices_, 0, glyphIndices_, glyphStart, call_glyphIndices_.Length);
-                tries++;
-                //if (result!=SharpDX.Result.OutOfMemory)
-                if (result != SharpDX.Result.Ok)
+                bool isDone = false;
+                try
                 {
+                    textAnalyzer.GetGlyphs(
+                        text_.Substring(textStart, textLength),
+                        textLength,
+                        fontFace_,
+                        run.isSideways,
+                        (run.bidiLevel % 2 == 1),
+                        run.script,
+                        localName_,
+                        run.isNumberSubstituted ? numberSubstitution_ : null,
+                        null,
+                        null,
+                        maxGlyphCount,
+                        call_glyphClusters_,
+                        textProps,
+                        call_glyphIndices_,
+                        glyphProps,
+                        out actualGlyphCount);
+                    Array.Copy(call_glyphClusters_, 0, glyphClusters_, textStart, call_glyphClusters_.Length);
+                    Array.Copy(call_glyphIndices_, 0, glyphIndices_, glyphStart, call_glyphIndices_.Length);
+                    isDone = true;
+                }
+                finally
+                {
+                    tries++;
                     // Try again using a larger buffer.
                     maxGlyphCount = EstimateGlyphCount(maxGlyphCount);
                     int totalGlyphsArrayCount = glyphStart + maxGlyphCount;
@@ -262,10 +266,9 @@ namespace CustomLayout
                     glyphProps = new ShapingGlyphProperties[maxGlyphCount];
                     glyphIndices_ = new short[totalGlyphsArrayCount];
                 }
-                else
+                if (isDone)
                     break;
             }
-            while (tries < 2);// We'll give it two chances.
 
             // Get the placement of the all the glyphs.
             if (glyphAdvances_.Length < glyphStart + actualGlyphCount)
@@ -290,7 +293,7 @@ namespace CustomLayout
             GlyphOffset[] call2_glyphOffsets_ = new GlyphOffset[glyphOffsets_.Length - glyphStart];
             Array.Copy(glyphOffsets_, glyphStart, call2_glyphOffsets_, 0, call2_glyphOffsets_.Length);
 
-            var result2 = textAnalyzer.GetGlyphPlacements(
+            textAnalyzer.GetGlyphPlacements(
                 text_.Substring(textStart, textLength),
                 call2_glyphClusters_,
                 textProps,

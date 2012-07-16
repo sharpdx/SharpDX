@@ -56,9 +56,9 @@ namespace SharpDX.WIC
         /// <param name="colorContextOut">The color contexts to set for the encoder.</param>
         /// <returns>If the method succeeds, it returns <see cref="Result.Ok"/>. Otherwise, it throws an exception.</returns>
         /// <unmanaged>HRESULT IWICBitmapFrameEncode::SetColorContexts([In] unsigned int cCount,[In, Buffer] IWICColorContext** ppIColorContext)</unmanaged>	
-        public SharpDX.Result SetColorContexts(SharpDX.WIC.ColorContext[] colorContextOut)
+        public void SetColorContexts(SharpDX.WIC.ColorContext[] colorContextOut)
         {
-            return SetColorContexts(colorContextOut != null ? colorContextOut.Length : 0, colorContextOut);
+            SetColorContexts(colorContextOut != null ? colorContextOut.Length : 0, colorContextOut);
         }
 
 
@@ -69,14 +69,14 @@ namespace SharpDX.WIC
         /// <param name="buffer">The buffer.</param>
         /// <returns></returns>
         /// <unmanaged>HRESULT IWICBitmapFrameEncode::WritePixels([In] unsigned int lineCount,[In] unsigned int cbStride,[In] unsigned int cbBufferSize,[In, Buffer] unsigned char* pbPixels)</unmanaged>
-        public SharpDX.Result WritePixels(int lineCount, DataRectangle buffer)
+        public void WritePixels(int lineCount, DataRectangle buffer)
         {
-            return WritePixels(lineCount, buffer.Pitch, lineCount*buffer.Pitch, buffer.DataPointer);
+            WritePixels(lineCount, buffer.Pitch, lineCount*buffer.Pitch, buffer.DataPointer);
         }
 
-        public SharpDX.Result WriteSource(SharpDX.WIC.BitmapSource bitmapSource)
+        public void WriteSource(SharpDX.WIC.BitmapSource bitmapSource)
         {
-            return WriteSource(bitmapSource, null);
+            WriteSource(bitmapSource, null);
         }
     }
 }

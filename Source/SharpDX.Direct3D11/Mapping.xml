@@ -204,6 +204,8 @@
     <map method="ID3D11DeviceContext::CopyResource" visibility="internal" name="CopyResource_" />
     <map method="ID3D11DeviceContext::CopySubresourceRegion" visibility="internal" name="CopySubresourceRegion_" />
     <map method="ID3D11DeviceContext::ResolveSubresource" visibility="internal" name="ResolveSubresource_" />
+    <map method="ID3D11DeviceContext::GetData" check="false" />
+    
     <map method="ID3D11Resource::GetType" name="GetDimension" />
 
     <map method="ID3DX11FFT::AttachBuffersAndPrecompute" visibility="internal" />
@@ -244,7 +246,9 @@
     <map method="ID3D11Device1::OpenSharedResourceByName" visibility="internal" />
 
     <map param="ID3D11Device1::OpenSharedResourceByName::dwDesiredAccess" type="DXGI_SHARED_RESOURCE_FLAGS" />
-    
+
+    <map method="ID3D11Device::GetDeviceRemovedReason" return="true"/>
+
     <!--
     // *****************************************************************
     // D3D11 Functions

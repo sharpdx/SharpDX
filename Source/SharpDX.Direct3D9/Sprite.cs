@@ -48,9 +48,9 @@ namespace SharpDX.Direct3D9
         /// <msdn-id>bb174251</msdn-id>	
         /// <unmanaged>HRESULT ID3DXSprite::Draw([In] IDirect3DTexture9* pTexture,[In] const RECT* pSrcRect,[In] const D3DXVECTOR3* pCenter,[In] const D3DXVECTOR3* pPosition,[In] D3DCOLOR Color)</unmanaged>	
         /// <unmanaged-short>ID3DXSprite::Draw</unmanaged-short>	
-        public SharpDX.Result Draw(SharpDX.Direct3D9.Texture textureRef, SharpDX.Color4 color)
+        public void Draw(SharpDX.Direct3D9.Texture textureRef, SharpDX.Color4 color)
         {
-            return Draw(textureRef, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, color);
+            Draw(textureRef, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, color);
         }
 
         /// <summary>	
@@ -68,7 +68,7 @@ namespace SharpDX.Direct3D9
         /// <msdn-id>bb174251</msdn-id>	
         /// <unmanaged>HRESULT ID3DXSprite::Draw([In] IDirect3DTexture9* pTexture,[In] const RECT* pSrcRect,[In] const D3DXVECTOR3* pCenter,[In] const D3DXVECTOR3* pPosition,[In] D3DCOLOR Color)</unmanaged>	
         /// <unmanaged-short>ID3DXSprite::Draw</unmanaged-short>	
-        public unsafe SharpDX.Result Draw(SharpDX.Direct3D9.Texture textureRef, SharpDX.Color4 color, SharpDX.Rectangle? srcRectRef = null, SharpDX.Vector3? centerRef = null, SharpDX.Vector3? positionRef = null)
+        public unsafe void Draw(SharpDX.Direct3D9.Texture textureRef, SharpDX.Color4 color, SharpDX.Rectangle? srcRectRef = null, SharpDX.Vector3? centerRef = null, SharpDX.Vector3? positionRef = null)
         {
             SharpDX.Rectangle localRect = default(Rectangle);
             SharpDX.Vector3 localCenter;
@@ -79,7 +79,7 @@ namespace SharpDX.Direct3D9
                 localCenter = centerRef.Value;
             if (positionRef.HasValue)
                 localPosition = positionRef.Value;
-            return Draw(textureRef, srcRectRef.HasValue ? (IntPtr)(void*)&localRect : IntPtr.Zero, centerRef.HasValue ? (IntPtr)(void*)&localCenter : IntPtr.Zero, positionRef.HasValue ? (IntPtr)(void*)&localPosition : IntPtr.Zero, color);
+            Draw(textureRef, srcRectRef.HasValue ? (IntPtr)(void*)&localRect : IntPtr.Zero, centerRef.HasValue ? (IntPtr)(void*)&localCenter : IntPtr.Zero, positionRef.HasValue ? (IntPtr)(void*)&localPosition : IntPtr.Zero, color);
         }
     }
 }

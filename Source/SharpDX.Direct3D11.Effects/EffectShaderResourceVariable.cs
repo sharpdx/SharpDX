@@ -30,9 +30,9 @@ namespace SharpDX.Direct3D11
         /// <param name="resourcesRef">The address of an array of shader-resource-view interfaces. See <see cref="SharpDX.Direct3D11.ShaderResourceView"/>. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D10EffectShaderResourceVariable::SetResourceArray([None] ID3D10ShaderResourceView** ppResources,[None] int Offset,[None] int Count)</unmanaged>
-        public SharpDX.Result SetResourceArray(SharpDX.Direct3D11.ShaderResourceView[] resourcesRef)
+        public void SetResourceArray(SharpDX.Direct3D11.ShaderResourceView[] resourcesRef)
         {
-            return SetResourceArray(resourcesRef, 0);
+            SetResourceArray(resourcesRef, 0);
         }
 
         /// <summary>	
@@ -42,9 +42,9 @@ namespace SharpDX.Direct3D11
         /// <param name="offset">The zero-based array index to get the first interface. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D10EffectShaderResourceVariable::SetResourceArray([None] ID3D10ShaderResourceView** ppResources,[None] int Offset,[None] int Count)</unmanaged>
-        public SharpDX.Result SetResourceArray(SharpDX.Direct3D11.ShaderResourceView[] resourcesRef, int offset)
+        public void SetResourceArray(SharpDX.Direct3D11.ShaderResourceView[] resourcesRef, int offset)
         {
-            return SetResourceArray(resourcesRef, offset, resourcesRef.Length);
+            SetResourceArray(resourcesRef, offset, resourcesRef.Length);
         }
 
         /// <summary>	

@@ -148,9 +148,9 @@ namespace SharpDX.XAudio2
         /// </summary>	
         /// <returns>No documentation.</returns>
         /// <unmanaged>HRESULT IXAudio2SourceVoice::Start([None] UINT32 Flags,[None] UINT32 OperationSet)</unmanaged>
-        public SharpDX.Result Start()
+        public void Start()
         {
-            return this.Start(0, 0);
+            this.Start(0, 0);
         }
 
 #if DIRECTX11_1
@@ -171,9 +171,9 @@ namespace SharpDX.XAudio2
         /// </summary>
         /// <param name="ratio">The ratio.</param>
         /// <returns></returns>
-        public SharpDX.Result SetFrequencyRatio(float ratio)
+        public void SetFrequencyRatio(float ratio)
         {
-            return SetFrequencyRatio(ratio, 0);
+            SetFrequencyRatio(ratio, 0);
         }
 
         /// <summary>	
@@ -182,19 +182,19 @@ namespace SharpDX.XAudio2
         /// <param name="operationSet">[in]  Identifies this call as part of a deferred batch. See the {{XAudio2 Operation Sets}} overview for more information. </param>
         /// <returns>No documentation.</returns>
         /// <unmanaged>HRESULT IXAudio2SourceVoice::Start([None] UINT32 Flags,[None] UINT32 OperationSet)</unmanaged>
-        public SharpDX.Result Start(int operationSet)
+        public void Start(int operationSet)
         {
-            return this.Start(0, operationSet);
+            this.Start(0, operationSet);
         }
 
-        public SharpDX.Result Stop()
+        public void Stop()
         {
-            return this.Stop(PlayFlags.None, 0);
+            this.Stop(PlayFlags.None, 0);
         }
 
-        public SharpDX.Result Stop(int operationSet)
+        public void Stop(int operationSet)
         {
-            return this.Stop(PlayFlags.None, operationSet);
+            this.Stop(PlayFlags.None, operationSet);
         }
 
         /// <summary>	
@@ -205,7 +205,7 @@ namespace SharpDX.XAudio2
         /// <returns>No documentation.</returns>	
         /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IXAudio2SourceVoice::SubmitSourceBuffer']/*"/>	
         /// <unmanaged>HRESULT IXAudio2SourceVoice::SubmitSourceBuffer([In] const XAUDIO2_BUFFER* pBuffer,[In, Optional] const XAUDIO2_BUFFER_WMA* pBufferWMA)</unmanaged>	
-        public SharpDX.Result SubmitSourceBuffer(SharpDX.XAudio2.AudioBuffer bufferRef, uint[] decodedXMWAPacketInfo)
+        public void SubmitSourceBuffer(SharpDX.XAudio2.AudioBuffer bufferRef, uint[] decodedXMWAPacketInfo)
         {
             unsafe
             {
@@ -216,10 +216,10 @@ namespace SharpDX.XAudio2
                     {
                         bufferWmaRef.PacketCount = decodedXMWAPacketInfo.Length;
                         bufferWmaRef.DecodedPacketCumulativeBytesPointer = (IntPtr)pBuffer;
-                        return SubmitSourceBuffer(bufferRef, new IntPtr(&bufferWmaRef));
+                        SubmitSourceBuffer(bufferRef, new IntPtr(&bufferWmaRef));
                     }
                 }
-                return SubmitSourceBuffer(bufferRef, IntPtr.Zero);
+                SubmitSourceBuffer(bufferRef, IntPtr.Zero);
             }
         }
 

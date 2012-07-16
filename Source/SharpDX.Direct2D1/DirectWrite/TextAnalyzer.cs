@@ -45,9 +45,9 @@ namespace SharpDX.DirectWrite
         /// If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.
         /// </returns>
         /// <unmanaged>HRESULT IDWriteTextAnalyzer::AnalyzeScript([None] IDWriteTextAnalysisSource* analysisSource,[None] int textPosition,[None] int textLength,[None] IDWriteTextAnalysisSink* analysisSink)</unmanaged>
-        public SharpDX.Result AnalyzeScript(TextAnalysisSource analysisSource, int textPosition, int textLength, TextAnalysisSink analysisSink)
+        public void AnalyzeScript(TextAnalysisSource analysisSource, int textPosition, int textLength, TextAnalysisSink analysisSink)
         {
-            return AnalyzeScript__(TextAnalysisSourceShadow.ToIntPtr(analysisSource), textPosition, textLength, TextAnalysisSinkShadow.ToIntPtr(analysisSink));
+            AnalyzeScript__(TextAnalysisSourceShadow.ToIntPtr(analysisSource), textPosition, textLength, TextAnalysisSinkShadow.ToIntPtr(analysisSink));
         }
 
         /// <summary>
@@ -64,9 +64,9 @@ namespace SharpDX.DirectWrite
         /// <remarks>
         /// While the function can handle multiple paragraphs, the text range should not arbitrarily split the middle of paragraphs. Otherwise, the returned levels may be wrong, because the Bidi algorithm is meant to apply to the paragraph as a whole.
         /// </remarks>
-        public SharpDX.Result AnalyzeBidi(TextAnalysisSource analysisSource, int textPosition, int textLength, TextAnalysisSink analysisSink)
+        public void AnalyzeBidi(TextAnalysisSource analysisSource, int textPosition, int textLength, TextAnalysisSink analysisSink)
         {
-            return AnalyzeBidi__(TextAnalysisSourceShadow.ToIntPtr(analysisSource), textPosition, textLength, TextAnalysisSinkShadow.ToIntPtr(analysisSink));
+            AnalyzeBidi__(TextAnalysisSourceShadow.ToIntPtr(analysisSource), textPosition, textLength, TextAnalysisSinkShadow.ToIntPtr(analysisSink));
         }
 
         /// <summary>
@@ -83,9 +83,9 @@ namespace SharpDX.DirectWrite
         /// <remarks>
         /// Although the function can handle multiple ranges of differing number substitutions, the text ranges should not arbitrarily split the middle of numbers. Otherwise, it will treat the numbers separately and will not translate any intervening punctuation.
         /// </remarks>
-        public SharpDX.Result AnalyzeNumberSubstitution(TextAnalysisSource analysisSource, int textPosition, int textLength, TextAnalysisSink analysisSink)
+        public void AnalyzeNumberSubstitution(TextAnalysisSource analysisSource, int textPosition, int textLength, TextAnalysisSink analysisSink)
         {
-            return AnalyzeNumberSubstitution__(TextAnalysisSourceShadow.ToIntPtr(analysisSource), textPosition, textLength, TextAnalysisSinkShadow.ToIntPtr(analysisSink));
+            AnalyzeNumberSubstitution__(TextAnalysisSourceShadow.ToIntPtr(analysisSource), textPosition, textLength, TextAnalysisSinkShadow.ToIntPtr(analysisSink));
         }
 
         /// <summary>
@@ -102,9 +102,9 @@ namespace SharpDX.DirectWrite
         /// <remarks>
         /// Although the function can handle multiple paragraphs, the text range should not arbitrarily split the middle of paragraphs, unless the specified text span is considered a whole unit. Otherwise, the returned properties for the first and last characters will inappropriately allow breaks.
         /// </remarks>
-        public SharpDX.Result AnalyzeLineBreakpoints(TextAnalysisSource analysisSource, int textPosition, int textLength, TextAnalysisSink analysisSink)
+        public void AnalyzeLineBreakpoints(TextAnalysisSource analysisSource, int textPosition, int textLength, TextAnalysisSink analysisSink)
         {
-            return AnalyzeLineBreakpoints__(TextAnalysisSourceShadow.ToIntPtr(analysisSource), textPosition, textLength, TextAnalysisSinkShadow.ToIntPtr(analysisSink));
+            AnalyzeLineBreakpoints__(TextAnalysisSourceShadow.ToIntPtr(analysisSource), textPosition, textLength, TextAnalysisSinkShadow.ToIntPtr(analysisSink));
         }
 
         /// <summary>
@@ -130,13 +130,13 @@ namespace SharpDX.DirectWrite
         /// If the method succeeds, it returns <see cref="Result.Ok"/>.
         /// </returns>
         /// <unmanaged>HRESULT IDWriteTextAnalyzer::GetGlyphs([In, Buffer] const wchar_t* textString,[In] unsigned int textLength,[In] IDWriteFontFace* fontFace,[In] BOOL isSideways,[In] BOOL isRightToLeft,[In] const DWRITE_SCRIPT_ANALYSIS* scriptAnalysis,[In, Buffer, Optional] const wchar_t* localeName,[In, Optional] IDWriteNumberSubstitution* numberSubstitution,[In, Optional] const void** features,[In, Buffer, Optional] const unsigned int* featureRangeLengths,[In] unsigned int featureRanges,[In] unsigned int maxGlyphCount,[Out, Buffer] unsigned short* clusterMap,[Out, Buffer] DWRITE_SHAPING_TEXT_PROPERTIES* textProps,[Out, Buffer] unsigned short* glyphIndices,[Out, Buffer] DWRITE_SHAPING_GLYPH_PROPERTIES* glyphProps,[Out] unsigned int* actualGlyphCount)</unmanaged>
-        public SharpDX.Result GetGlyphs(string textString, int textLength, SharpDX.DirectWrite.FontFace fontFace, bool isSideways, bool isRightToLeft, SharpDX.DirectWrite.ScriptAnalysis scriptAnalysis, string localeName, SharpDX.DirectWrite.NumberSubstitution numberSubstitution, FontFeature[][] features, int[] featureRangeLengths, int maxGlyphCount, short[] clusterMap, SharpDX.DirectWrite.ShapingTextProperties[] textProps, short[] glyphIndices, SharpDX.DirectWrite.ShapingGlyphProperties[] glyphProps, out int actualGlyphCount)
+        public void GetGlyphs(string textString, int textLength, SharpDX.DirectWrite.FontFace fontFace, bool isSideways, bool isRightToLeft, SharpDX.DirectWrite.ScriptAnalysis scriptAnalysis, string localeName, SharpDX.DirectWrite.NumberSubstitution numberSubstitution, FontFeature[][] features, int[] featureRangeLengths, int maxGlyphCount, short[] clusterMap, SharpDX.DirectWrite.ShapingTextProperties[] textProps, short[] glyphIndices, SharpDX.DirectWrite.ShapingGlyphProperties[] glyphProps, out int actualGlyphCount)
         {
 
             var pFeatures = AllocateFeatures(features);
             try
             {
-                return GetGlyphs(
+                GetGlyphs(
                     textString,
                     textLength,
                     fontFace,
@@ -184,12 +184,12 @@ namespace SharpDX.DirectWrite
         /// If the method succeeds, it returns <see cref="Result.Ok"/>.
         /// </returns>
         /// <unmanaged>HRESULT IDWriteTextAnalyzer::GetGlyphPlacements([In, Buffer] const wchar_t* textString,[In, Buffer] const unsigned short* clusterMap,[In, Buffer] DWRITE_SHAPING_TEXT_PROPERTIES* textProps,[In] unsigned int textLength,[In, Buffer] const unsigned short* glyphIndices,[In, Buffer] const DWRITE_SHAPING_GLYPH_PROPERTIES* glyphProps,[In] unsigned int glyphCount,[In] IDWriteFontFace* fontFace,[In] float fontEmSize,[In] BOOL isSideways,[In] BOOL isRightToLeft,[In] const DWRITE_SCRIPT_ANALYSIS* scriptAnalysis,[In, Buffer, Optional] const wchar_t* localeName,[In, Optional] const void** features,[In, Buffer, Optional] const unsigned int* featureRangeLengths,[In] unsigned int featureRanges,[Out, Buffer] float* glyphAdvances,[Out, Buffer] DWRITE_GLYPH_OFFSET* glyphOffsets)</unmanaged>
-        public SharpDX.Result GetGlyphPlacements(string textString, short[] clusterMap, SharpDX.DirectWrite.ShapingTextProperties[] textProps, int textLength, short[] glyphIndices, SharpDX.DirectWrite.ShapingGlyphProperties[] glyphProps, int glyphCount, SharpDX.DirectWrite.FontFace fontFace, float fontEmSize, bool isSideways, bool isRightToLeft, SharpDX.DirectWrite.ScriptAnalysis scriptAnalysis, string localeName, FontFeature[][] features, int[] featureRangeLengths, float[] glyphAdvances, SharpDX.DirectWrite.GlyphOffset[] glyphOffsets)
+        public void GetGlyphPlacements(string textString, short[] clusterMap, SharpDX.DirectWrite.ShapingTextProperties[] textProps, int textLength, short[] glyphIndices, SharpDX.DirectWrite.ShapingGlyphProperties[] glyphProps, int glyphCount, SharpDX.DirectWrite.FontFace fontFace, float fontEmSize, bool isSideways, bool isRightToLeft, SharpDX.DirectWrite.ScriptAnalysis scriptAnalysis, string localeName, FontFeature[][] features, int[] featureRangeLengths, float[] glyphAdvances, SharpDX.DirectWrite.GlyphOffset[] glyphOffsets)
         {
             var pFeatures = AllocateFeatures(features);
             try
             {
-                return GetGlyphPlacements(
+                GetGlyphPlacements(
                     textString,
                     clusterMap,
                     textProps,
@@ -243,12 +243,12 @@ namespace SharpDX.DirectWrite
         /// If the method succeeds, it returns <see cref="Result.Ok"/>.
         /// </returns>
         /// <unmanaged>HRESULT IDWriteTextAnalyzer::GetGdiCompatibleGlyphPlacements([In, Buffer] const wchar_t* textString,[In, Buffer] const unsigned short* clusterMap,[In, Buffer] DWRITE_SHAPING_TEXT_PROPERTIES* textProps,[In] unsigned int textLength,[In, Buffer] const unsigned short* glyphIndices,[In, Buffer] const DWRITE_SHAPING_GLYPH_PROPERTIES* glyphProps,[In] unsigned int glyphCount,[In] IDWriteFontFace* fontFace,[In] float fontEmSize,[In] float pixelsPerDip,[In, Optional] const DWRITE_MATRIX* transform,[In] BOOL useGdiNatural,[In] BOOL isSideways,[In] BOOL isRightToLeft,[In] const DWRITE_SCRIPT_ANALYSIS* scriptAnalysis,[In, Buffer, Optional] const wchar_t* localeName,[In, Optional] const void** features,[In, Buffer, Optional] const unsigned int* featureRangeLengths,[In] unsigned int featureRanges,[Out, Buffer] float* glyphAdvances,[Out, Buffer] DWRITE_GLYPH_OFFSET* glyphOffsets)</unmanaged>
-        public SharpDX.Result GetGdiCompatibleGlyphPlacements(string textString, short[] clusterMap, SharpDX.DirectWrite.ShapingTextProperties[] textProps, int textLength, short[] glyphIndices, SharpDX.DirectWrite.ShapingGlyphProperties[] glyphProps, int glyphCount, SharpDX.DirectWrite.FontFace fontFace, float fontEmSize, float pixelsPerDip, SharpDX.DirectWrite.Matrix? transform, bool useGdiNatural, bool isSideways, bool isRightToLeft, SharpDX.DirectWrite.ScriptAnalysis scriptAnalysis, string localeName, FontFeature[][] features, int[] featureRangeLengths, float[] glyphAdvances, SharpDX.DirectWrite.GlyphOffset[] glyphOffsets)
+        public void GetGdiCompatibleGlyphPlacements(string textString, short[] clusterMap, SharpDX.DirectWrite.ShapingTextProperties[] textProps, int textLength, short[] glyphIndices, SharpDX.DirectWrite.ShapingGlyphProperties[] glyphProps, int glyphCount, SharpDX.DirectWrite.FontFace fontFace, float fontEmSize, float pixelsPerDip, SharpDX.DirectWrite.Matrix? transform, bool useGdiNatural, bool isSideways, bool isRightToLeft, SharpDX.DirectWrite.ScriptAnalysis scriptAnalysis, string localeName, FontFeature[][] features, int[] featureRangeLengths, float[] glyphAdvances, SharpDX.DirectWrite.GlyphOffset[] glyphOffsets)
         {
             var pFeatures = AllocateFeatures(features);
             try
             {
-                return GetGdiCompatibleGlyphPlacements(
+                GetGdiCompatibleGlyphPlacements(
                     textString,
                     clusterMap,
                     textProps,

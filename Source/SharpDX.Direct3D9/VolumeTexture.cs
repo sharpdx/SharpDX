@@ -95,12 +95,12 @@ namespace SharpDX.Direct3D9
         /// <param name="callback">A function that is used to fill the texture.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT D3DXFillVolumeTexture([In] IDirect3DVolumeTexture9* pVolumeTexture,[In] __function__stdcall* pFunction,[In] void* pData)</unmanaged>
-        public Result Fill(Fill3DCallback callback)
+        public void Fill(Fill3DCallback callback)
         {
             var handle = GCHandle.Alloc(callback);
             try
             {
-                return D3DX9.FillVolumeTexture(this, FillCallbackHelper.Native2DCallbackPtr, GCHandle.ToIntPtr(handle));
+                D3DX9.FillVolumeTexture(this, FillCallbackHelper.Native2DCallbackPtr, GCHandle.ToIntPtr(handle));
             }
             finally
             {
@@ -114,9 +114,9 @@ namespace SharpDX.Direct3D9
         /// <param name="shader">A texture shader object that is used to fill the texture.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT D3DXFillVolumeTextureTX([In] IDirect3DVolumeTexture9* pVolumeTexture,[In] ID3DXVolumeTextureShader* pVolumeTextureShader)</unmanaged>
-        public Result Fill(TextureShader shader)
+        public void Fill(TextureShader shader)
         {
-            return D3DX9.FillVolumeTextureTX(this, shader);
+            D3DX9.FillVolumeTextureTX(this, shader);
         }
 
         /// <summary>
@@ -163,9 +163,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DVolumeTexture9::AddDirtyBox([In] const void* pDirtyBox)</unmanaged>	
-        public SharpDX.Result AddDirtyBox()
+        public void AddDirtyBox()
         {
-            return AddDirtyBox(IntPtr.Zero);
+            AddDirtyBox(IntPtr.Zero);
         }
 
         /// <summary>
@@ -176,11 +176,11 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DVolumeTexture9::AddDirtyBox([In] const void* pDirtyBox)</unmanaged>	
-        public SharpDX.Result AddDirtyBox(Box directBoxRef)
+        public void AddDirtyBox(Box directBoxRef)
         {
             unsafe
             {
-                return AddDirtyBox(new IntPtr(&directBoxRef));
+                AddDirtyBox(new IntPtr(&directBoxRef));
             }
         }
 

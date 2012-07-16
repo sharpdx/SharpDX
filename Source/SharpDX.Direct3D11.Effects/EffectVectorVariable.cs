@@ -82,9 +82,9 @@ namespace SharpDX.Direct3D11
         /// <param name="array">A reference to the start of the data to set. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D11EffectVectorVariable::SetIntVectorArray([In, Buffer] int* pData,[None] int Offset,[None] int Count)</unmanaged>
-        public SharpDX.Result Set(SharpDX.Int4[] array)
+        public void Set(SharpDX.Int4[] array)
         {
-            return Set(array, 0, array.Length);
+            Set(array, 0, array.Length);
         }
 
         /// <summary>	
@@ -93,9 +93,9 @@ namespace SharpDX.Direct3D11
         /// <param name="array">A reference to the start of the data to set. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D11EffectVectorVariable::SetFloatVectorArray([In, Buffer] float* pData,[None] int Offset,[None] int Count)</unmanaged>
-        public SharpDX.Result Set(SharpDX.Vector4[] array)
+        public void Set(SharpDX.Vector4[] array)
         {
-            return Set(array, 0, array.Length);
+            Set(array, 0, array.Length);
         }
 
         /// <summary>
@@ -107,12 +107,12 @@ namespace SharpDX.Direct3D11
         /// Returns one of the following {{Direct3D 10 Return Codes}}.
         /// </returns>
         /// <unmanaged>HRESULT ID3D11EffectVectorVariable::SetFloatVectorArray([In, Buffer] float* pData,[None] int Offset,[None] int Count)</unmanaged>
-        public SharpDX.Result Set<T>(T[] array) where T : struct
+        public void Set<T>(T[] array) where T : struct
         {
 #if !WIN8METRO
             Trace.Assert(Utilities.SizeOf<T>() == 16, VectorInvalidSize);
 #endif
-            return Set(Interop.CastArray<Vector4,T>(array), 0, array.Length);
+            Set(Interop.CastArray<Vector4,T>(array), 0, array.Length);
         }
 
         /// <summary>	
@@ -121,9 +121,9 @@ namespace SharpDX.Direct3D11
         /// <param name="value">A reference to the first component. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D11EffectVectorVariable::SetFloatVector([In] float* pData)</unmanaged>
-        public SharpDX.Result Set<T>(T value) where T : struct
+        public void Set<T>(T value) where T : struct
         {
-            return Set(ref value);
+            Set(ref value);
         }
 
         /// <summary>	
@@ -132,12 +132,12 @@ namespace SharpDX.Direct3D11
         /// <param name="value">A reference to the first component. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D11EffectVectorVariable::SetFloatVector([In] float* pData)</unmanaged>
-        public unsafe SharpDX.Result Set<T>(ref T value) where T : struct
+        public unsafe void Set<T>(ref T value) where T : struct
         {
 #if !WIN8METRO
             Trace.Assert(Utilities.SizeOf<T>() <= 16, VectorInvalidSize);
 #endif
-            return SetRawValue(new IntPtr(Interop.Fixed(ref value)), 0, Utilities.SizeOf<T>());
+            SetRawValue(new IntPtr(Interop.Fixed(ref value)), 0, Utilities.SizeOf<T>());
         }
 
         /// <summary>	
@@ -146,11 +146,11 @@ namespace SharpDX.Direct3D11
         /// <param name="value">A reference to the first component. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D11EffectVectorVariable::SetFloatVector([In] float* pData)</unmanaged>
-        public SharpDX.Result Set(SharpDX.Vector2 value)
+        public void Set(SharpDX.Vector2 value)
         {
             unsafe
             {
-                return SetRawValue(new IntPtr(&value), 0, Utilities.SizeOf<SharpDX.Vector2>());
+                SetRawValue(new IntPtr(&value), 0, Utilities.SizeOf<SharpDX.Vector2>());
             }
         }
 
@@ -160,11 +160,11 @@ namespace SharpDX.Direct3D11
         /// <param name="value">A reference to the first component. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D11EffectVectorVariable::SetFloatVector([In] float* pData)</unmanaged>
-        public SharpDX.Result Set(SharpDX.Vector3 value)
+        public void Set(SharpDX.Vector3 value)
         {
             unsafe
             {
-                return SetRawValue(new IntPtr(&value), 0, Utilities.SizeOf<SharpDX.Vector3>());
+                SetRawValue(new IntPtr(&value), 0, Utilities.SizeOf<SharpDX.Vector3>());
             }
         }
 
@@ -174,11 +174,11 @@ namespace SharpDX.Direct3D11
         /// <param name="value">A reference to the first component. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D11EffectVectorVariable::SetFloatVector([In] float* pData)</unmanaged>
-        public SharpDX.Result Set(SharpDX.Color4 value)
+        public void Set(SharpDX.Color4 value)
         {
             unsafe
             {
-                return SetRawValue(new IntPtr(&value), 0, Utilities.SizeOf<SharpDX.Color4>());
+                SetRawValue(new IntPtr(&value), 0, Utilities.SizeOf<SharpDX.Color4>());
             }
         }
 
@@ -188,11 +188,11 @@ namespace SharpDX.Direct3D11
         /// <param name="array">A reference to the start of the data to set. </param>
         /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
         /// <unmanaged>HRESULT ID3D11EffectVectorVariable::SetFloatVectorArray([In, Buffer] float* pData,[None] int Offset,[None] int Count)</unmanaged>
-        public SharpDX.Result Set(SharpDX.Color4[] array)
+        public void Set(SharpDX.Color4[] array)
         {
             unsafe
             {
-                fixed (void* pArray = &array[0]) return SetRawValue((IntPtr)pArray, 0, array.Length * Utilities.SizeOf<SharpDX.Color4>());
+                fixed (void* pArray = &array[0]) SetRawValue((IntPtr)pArray, 0, array.Length * Utilities.SizeOf<SharpDX.Color4>());
             }
         }
       

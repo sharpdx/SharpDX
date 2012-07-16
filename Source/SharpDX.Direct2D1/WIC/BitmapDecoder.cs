@@ -220,11 +220,11 @@ namespace SharpDX.WIC
         /// <param name="cacheOptions">The cache options.</param>
         /// <returns>If the method succeeds, it returns <see cref="Result.Ok"/>. Otherwise, it throws an exception.</returns>
         /// <unmanaged>HRESULT IWICBitmapDecoder::Initialize([In, Optional] IStream* pIStream,[In] WICDecodeOptions cacheOptions)</unmanaged>
-        public SharpDX.Result Initialize(IStream stream, SharpDX.WIC.DecodeOptions cacheOptions)
+        public void Initialize(IStream stream, SharpDX.WIC.DecodeOptions cacheOptions)
         {
             if (this.internalWICStream != null)
                 throw new InvalidOperationException("This instance is already intialized with an existing stream");
-            return Initialize_(ComStream.ToIntPtr(stream), cacheOptions);
+            Initialize_(ComStream.ToIntPtr(stream), cacheOptions);
         }
 
 

@@ -36,9 +36,9 @@ namespace SharpDX.Direct3D11
         /// This method does no conversion or type checking; it is therefore a very quick way to access array items.
         /// </remarks>
         /// <unmanaged>HRESULT ID3D11EffectVariable::SetRawValue([None] void* pData,[None] int Offset,[None] int Count)</unmanaged>
-        public SharpDX.Result SetRawValue(DataStream data, int count)
+        public void SetRawValue(DataStream data, int count)
         {
-            return SetRawValue(data.PositionPointer, 0, count);
+            SetRawValue(data.PositionPointer, 0, count);
         }
 
         /// <summary>	

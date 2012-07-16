@@ -71,29 +71,21 @@ namespace CustomLayout
 
             breakpoints_ = new List<LineBreakpoint>();
 
+            textAnalyzer.AnalyzeLineBreakpoints(this, 0, text_.Length, this);
+            textAnalyzer.AnalyzeBidi(this, 0, text_.Length, this);
+            textAnalyzer.AnalyzeScript(this, 0, text_.Length, this);
+            textAnalyzer.AnalyzeNumberSubstitution(this, 0, text_.Length, this);
              //Call each of the analyzers in sequence, recording their results.
-            if ((textAnalyzer.AnalyzeLineBreakpoints(this, 0, text_.Length, this) == Result.Ok) &&
-                (textAnalyzer.AnalyzeBidi(this, 0, text_.Length, this) == Result.Ok) &&
-                (textAnalyzer.AnalyzeScript(this, 0, text_.Length, this) == Result.Ok) &&
-                (textAnalyzer.AnalyzeNumberSubstitution(this, 0, text_.Length, this) == Result.Ok))
-            {
+            breakpoints = new LineBreakpoint[breakpoints_.Count];
+            breakpoints_.CopyTo(breakpoints);
 
-                breakpoints = new LineBreakpoint[breakpoints_.Count];
-                breakpoints_.CopyTo(breakpoints);
-
-                // Resequence the resulting runs in order before returning to caller.
-                runs = new Run[runs_.Count];
-                int nextRunIndex = 0;
-                for (int i = 0; i < runs_.Count; i++)
-                {
-                    runs[i] = runs_[nextRunIndex].AsRun;
-                    nextRunIndex = runs_[nextRunIndex].nextRunIndex;
-                }
-            }
-            else
+            // Resequence the resulting runs in order before returning to caller.
+            runs = new Run[runs_.Count];
+            int nextRunIndex = 0;
+            for (int i = 0; i < runs_.Count; i++)
             {
-                runs = new Run[0];
-                breakpoints = new LineBreakpoint[0];
+                runs[i] = runs_[nextRunIndex].AsRun;
+                nextRunIndex = runs_[nextRunIndex].nextRunIndex;
             }
         }
 

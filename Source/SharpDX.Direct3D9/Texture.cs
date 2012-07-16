@@ -96,9 +96,9 @@ namespace SharpDX.Direct3D9
         /// <param name="amplitude">The amplitude.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT D3DXComputeNormalMap([In] IDirect3DTexture9* pTexture,[In] IDirect3DTexture9* pSrcTexture,[Out, Buffer] const PALETTEENTRY* pSrcPalette,[In] unsigned int Flags,[In] unsigned int Channel,[In] float Amplitude)</unmanaged>
-        public static Result ComputeNormalMap(Texture texture, Texture sourceTexture, NormalMapFlags flags, Channel channel, float amplitude)
+        public static void ComputeNormalMap(Texture texture, Texture sourceTexture, NormalMapFlags flags, Channel channel, float amplitude)
         {
-            return D3DX9.ComputeNormalMap(texture, sourceTexture, null, (int)flags, (int)channel, amplitude);
+            D3DX9.ComputeNormalMap(texture, sourceTexture, null, (int)flags, (int)channel, amplitude);
         }
 
         /// <summary>
@@ -112,9 +112,9 @@ namespace SharpDX.Direct3D9
         /// <param name="amplitude">The amplitude.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT D3DXComputeNormalMap([In] IDirect3DTexture9* pTexture,[In] IDirect3DTexture9* pSrcTexture,[Out, Buffer] const PALETTEENTRY* pSrcPalette,[In] unsigned int Flags,[In] unsigned int Channel,[In] float Amplitude)</unmanaged>
-        public static Result ComputeNormalMap(Texture texture, Texture sourceTexture, PaletteEntry[] palette, NormalMapFlags flags, Channel channel, float amplitude)
+        public static void ComputeNormalMap(Texture texture, Texture sourceTexture, PaletteEntry[] palette, NormalMapFlags flags, Channel channel, float amplitude)
         {
-            return D3DX9.ComputeNormalMap(texture, sourceTexture, palette, (int)flags, (int)channel, amplitude);
+            D3DX9.ComputeNormalMap(texture, sourceTexture, palette, (int)flags, (int)channel, amplitude);
         }
 
         /// <summary>
@@ -123,12 +123,12 @@ namespace SharpDX.Direct3D9
         /// <param name="callback">A function that is used to fill the texture.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT D3DXFillTexture([In] IDirect3DTexture9* pTexture,[In] __function__stdcall* pFunction,[In] void* pData)</unmanaged>
-        public Result Fill(Fill2DCallback callback)
+        public void Fill(Fill2DCallback callback)
         {
             var handle = GCHandle.Alloc(callback);
             try
             {
-                return D3DX9.FillTexture(this, FillCallbackHelper.Native2DCallbackPtr, GCHandle.ToIntPtr(handle));
+                D3DX9.FillTexture(this, FillCallbackHelper.Native2DCallbackPtr, GCHandle.ToIntPtr(handle));
             }
             finally
             {
@@ -142,9 +142,9 @@ namespace SharpDX.Direct3D9
         /// <param name="shader">A texture shader object that is used to fill the texture.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT D3DXFillTextureTX([In] IDirect3DTexture9* pTexture,[In] ID3DXTextureShader* pTextureShader)</unmanaged>
-        public Result Fill(TextureShader shader)
+        public void Fill(TextureShader shader)
         {
-            return D3DX9.FillTextureTX(this, shader);
+            D3DX9.FillTextureTX(this, shader);
         }
 
         /// <summary>
@@ -232,9 +232,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DTexture9::AddDirtyRect([In] const void* pDirtyRect)</unmanaged>
-        public SharpDX.Result AddDirtyRectangle()
+        public void AddDirtyRectangle()
         {
-            return AddDirtyRectangle(IntPtr.Zero);
+            AddDirtyRectangle(IntPtr.Zero);
         }
 
         /// <summary>
@@ -245,11 +245,11 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT IDirect3DTexture9::AddDirtyRect([In] const void* pDirtyRect)</unmanaged>
-        public SharpDX.Result AddDirtyRectangle(Rectangle dirtyRectRef)
+        public void AddDirtyRectangle(Rectangle dirtyRectRef)
         {
             unsafe
             {
-                return AddDirtyRectangle(new IntPtr(&dirtyRectRef));
+                AddDirtyRectangle(new IntPtr(&dirtyRectRef));
             }
         }
 

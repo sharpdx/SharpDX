@@ -114,6 +114,9 @@
     <map param="IXAPO::LockForProcess::pOutputLockedParameters" attribute="in buffer" />
     <map param="IXAPO::Process::pOutputProcessParameters" attribute="in buffer" />
 
+    <map method="IXAPO::IsInputFormatSupported" check="false" />
+    <map method="IXAPO::IsOutputFormatSupported" check="false" />
+
     <!--
     // *****************************************************************
     // XAPO Functions

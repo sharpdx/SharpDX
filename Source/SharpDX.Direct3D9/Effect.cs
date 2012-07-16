@@ -375,9 +375,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT ID3DXEffect::SetRawValue([In] D3DXHANDLE hParameter,[In] const void* pData,[In] unsigned int ByteOffset,[In] unsigned int Bytes)</unmanaged>
-        public Result SetRawValue(EffectHandle handle, float[] data)
+        public void SetRawValue(EffectHandle handle, float[] data)
         {
-            return SetRawValue(handle, data, 0, data.Length);
+            SetRawValue(handle, data, 0, data.Length);
         }
 
         /// <summary>
@@ -389,9 +389,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT ID3DXEffect::SetRawValue([In] D3DXHANDLE hParameter,[In] const void* pData,[In] unsigned int ByteOffset,[In] unsigned int Bytes)</unmanaged>
-        public Result SetRawValue(EffectHandle handle, DataStream data)
+        public void SetRawValue(EffectHandle handle, DataStream data)
         {
-            return SetRawValue(handle, data, 0, (int)data.Length);
+            SetRawValue(handle, data, 0, (int)data.Length);
         }
 
         /// <summary>
@@ -405,9 +405,9 @@ namespace SharpDX.Direct3D9
         /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
         /// </returns>
         /// <unmanaged>HRESULT ID3DXEffect::SetRawValue([In] D3DXHANDLE hParameter,[In] const void* pData,[In] unsigned int ByteOffset,[In] unsigned int Bytes)</unmanaged>
-        public Result SetRawValue(EffectHandle handle, DataStream data, int offset, int countInBytes)
+        public void SetRawValue(EffectHandle handle, DataStream data, int offset, int countInBytes)
         {
-            return SetRawValue(handle, (IntPtr)data.DataPointer, offset, countInBytes);             
+            SetRawValue(handle, (IntPtr)data.DataPointer, offset, countInBytes);             
         }
 
         /// <summary>
@@ -419,12 +419,12 @@ namespace SharpDX.Direct3D9
         /// <param name="count">The count.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT ID3DXEffect::SetRawValue([In] D3DXHANDLE hParameter,[In] const void* pData,[In] unsigned int ByteOffset,[In] unsigned int Bytes)</unmanaged>	
-        public Result SetRawValue(EffectHandle handle, float[] data, int startIndex, int count)
+        public void SetRawValue(EffectHandle handle, float[] data, int startIndex, int count)
         {
             unsafe
             {
                 fixed (void* pData = &data[startIndex])
-                return SetRawValue(handle, (IntPtr)pData, 0, count << 2); 
+                SetRawValue(handle, (IntPtr)pData, 0, count << 2); 
             }
         }
 
