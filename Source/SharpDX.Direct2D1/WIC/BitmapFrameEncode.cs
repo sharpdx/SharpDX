@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.ComponentModel;
 
 namespace SharpDX.WIC
 {
@@ -61,17 +62,40 @@ namespace SharpDX.WIC
             SetColorContexts(colorContextOut != null ? colorContextOut.Length : 0, colorContextOut);
         }
 
-
-        /// <summary>
-        /// Encodes the frame scanlines.
-        /// </summary>
-        /// <param name="lineCount">The line count.</param>
-        /// <param name="buffer">The buffer.</param>
-        /// <returns></returns>
-        /// <unmanaged>HRESULT IWICBitmapFrameEncode::WritePixels([In] unsigned int lineCount,[In] unsigned int cbStride,[In] unsigned int cbBufferSize,[In, Buffer] unsigned char* pbPixels)</unmanaged>
+        /// <summary>	
+        /// <p>Encodes the frame scanlines.</p>	
+        /// </summary>	
+        /// <param name="lineCount"><dd>  <p>The number of lines to encode.</p> </dd></param>	
+        /// <param name="buffer">A data buffer containing the pixels to copy from.</param>	
+        /// <remarks>	
+        /// <p>Successive <strong>WritePixels</strong> calls are assumed to be sequential scanline access in the output image.</p>	
+        /// </remarks>	
+        /// <msdn-id>ee690158</msdn-id>	
+        /// <unmanaged>HRESULT IWICBitmapFrameEncode::WritePixels([In] unsigned int lineCount,[In] unsigned int cbStride,[In] unsigned int cbBufferSize,[In, Buffer] void* pbPixels)</unmanaged>	
+        /// <unmanaged-short>IWICBitmapFrameEncode::WritePixels</unmanaged-short>	
         public void WritePixels(int lineCount, DataRectangle buffer)
         {
             WritePixels(lineCount, buffer.Pitch, lineCount*buffer.Pitch, buffer.DataPointer);
+        }
+
+        /// <summary>	
+        /// <p>Encodes the frame scanlines.</p>	
+        /// </summary>	
+        /// <param name="lineCount"><dd>  <p>The number of lines to encode.</p> </dd></param>	
+        /// <param name="stride"><dd>  <p>The <em>stride</em> of the image pixels.</p> </dd></param>	
+        /// <param name="pixelBuffer"><dd>  <p>A reference to the pixel buffer.</p> </dd></param>	
+        /// <remarks>	
+        /// <p>Successive <strong>WritePixels</strong> calls are assumed to be sequential scanline access in the output image.</p>	
+        /// </remarks>	
+        /// <msdn-id>ee690158</msdn-id>	
+        /// <unmanaged>HRESULT IWICBitmapFrameEncode::WritePixels([In] unsigned int lineCount,[In] unsigned int cbStride,[In] unsigned int cbBufferSize,[In, Buffer] void* pbPixels)</unmanaged>	
+        /// <unmanaged-short>IWICBitmapFrameEncode::WritePixels</unmanaged-short>	
+        public unsafe void WritePixels<T>(int lineCount, int stride, T[] pixelBuffer) where T : struct
+        {
+            if ((lineCount * stride) > (Utilities.SizeOf<T>() * pixelBuffer.Length))
+                throw new ArgumentException("lineCount * stride must be <= to sizeof(pixelBuffer)");
+
+            WritePixels(lineCount, stride, lineCount * stride, (IntPtr)Interop.Fixed(pixelBuffer));
         }
 
         public void WriteSource(SharpDX.WIC.BitmapSource bitmapSource)
