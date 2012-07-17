@@ -29,9 +29,9 @@ namespace SharpDX.XAPO.Fx
         internal static Guid CLSID_FXReverb = new Guid("7D9ACA56-CB68-4807-B632-B137352E8596");
         internal static Guid CLSID_FXEcho = new Guid("5039D740-F736-449A-84D3-A56202557B87");
 
-        public static SharpDX.Result CreateFX(System.Guid clsid, SharpDX.ComObject effectRef)
+        public static void CreateFX(System.Guid clsid, SharpDX.ComObject effectRef)
         {
-            return CreateFX(clsid, effectRef, IntPtr.Zero, 0);
+            CreateFX(clsid, effectRef, IntPtr.Zero, 0);
         }
 #endif
         ///// <summary>Constant None.</summary>

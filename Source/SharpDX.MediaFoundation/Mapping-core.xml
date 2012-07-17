@@ -711,6 +711,8 @@
 
     <map method="IMFAsyncResult::GetStatus" return="true" check="false"/>
 
+    <map method="IMFMediaError::GetExtendedErrorCode" check="false"/>
+    
     <!--
     // *****************************************************************
     // MediaFoundation Functions
