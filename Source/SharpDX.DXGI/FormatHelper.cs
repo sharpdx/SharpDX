@@ -28,6 +28,9 @@ namespace SharpDX.DXGI
     public static class FormatHelper
     {
         private static readonly int[] sizeOfInBits = new int[256];
+        private static readonly bool[] compressedFormats = new bool[256];
+        private static readonly bool[] srgbFormats = new bool[256];
+        private static readonly bool[] typelessFormats = new bool[256];
 
         /// <summary>
         /// Calculates the size of a <see cref="Format"/> in bytes.
@@ -68,36 +71,9 @@ namespace SharpDX.DXGI
         /// </summary>
         /// <param name="fmt">The format to check for compressed.</param>
         /// <returns>True if the <see cref="Format"/> is a compressed format</returns>
-        public static bool IsCompressed( Format fmt )
+        public static bool IsCompressed(Format fmt)
         {
-            switch (fmt)
-            {
-                case Format.BC1_Typeless:
-                case Format.BC1_UNorm:
-                case Format.BC1_UNorm_SRgb:
-                case Format.BC2_Typeless:
-                case Format.BC2_UNorm:
-                case Format.BC2_UNorm_SRgb:
-                case Format.BC3_Typeless:
-                case Format.BC3_UNorm:
-                case Format.BC3_UNorm_SRgb:
-                case Format.BC4_Typeless:
-                case Format.BC4_UNorm:
-                case Format.BC4_SNorm:
-                case Format.BC5_Typeless:
-                case Format.BC5_UNorm:
-                case Format.BC5_SNorm:
-                case Format.BC6H_Typeless:
-                case Format.BC6H_Uf16:
-                case Format.BC6H_Sf16:
-                case Format.BC7_Typeless:
-                case Format.BC7_UNorm:
-                case Format.BC7_UNorm_SRgb:
-                    return true;
-
-                default:
-                    return false;
-            }
+            return compressedFormats[(int) fmt];
         }
 
         /// <summary>
@@ -157,20 +133,7 @@ namespace SharpDX.DXGI
         /// <returns><c>true</c> if the specified <see cref="Format"/> is a SRGB format; otherwise, <c>false</c>.</returns>
         public static bool IsSRgb( Format fmt )
         {
-            switch (fmt)
-            {
-                case Format.R8G8B8A8_UNorm_SRgb:
-                case Format.BC1_UNorm_SRgb:
-                case Format.BC2_UNorm_SRgb:
-                case Format.BC3_UNorm_SRgb:
-                case Format.B8G8R8A8_UNorm_SRgb:
-                case Format.B8G8R8X8_UNorm_SRgb:
-                case Format.BC7_UNorm_SRgb:
-                    return true;
-
-                default:
-                    return false;
-            }
+            return srgbFormats[(int) fmt];
         }
 
         /// <summary>
@@ -180,39 +143,7 @@ namespace SharpDX.DXGI
         /// <returns><c>true</c> if the specified <see cref="Format"/> is typeless; otherwise, <c>false</c>.</returns>
         public static bool IsTypeless( Format fmt )
         {
-            switch (fmt)
-            {
-                case Format.R32G32B32A32_Typeless:
-                case Format.R32G32B32_Typeless:
-                case Format.R16G16B16A16_Typeless:
-                case Format.R32G32_Typeless:
-                case Format.R32G8X24_Typeless:
-                case Format.R32_Float_X8X24_Typeless:
-                case Format.X32_Typeless_G8X24_UInt:
-                case Format.R10G10B10A2_Typeless:
-                case Format.R8G8B8A8_Typeless:
-                case Format.R16G16_Typeless:
-                case Format.R32_Typeless:
-                case Format.R24G8_Typeless:
-                case Format.R24_UNorm_X8_Typeless:
-                case Format.X24_Typeless_G8_UInt:
-                case Format.R8G8_Typeless:
-                case Format.R16_Typeless:
-                case Format.R8_Typeless:
-                case Format.BC1_Typeless:
-                case Format.BC2_Typeless:
-                case Format.BC3_Typeless:
-                case Format.BC4_Typeless:
-                case Format.BC5_Typeless:
-                case Format.B8G8R8A8_Typeless:
-                case Format.B8G8R8X8_Typeless:
-                case Format.BC6H_Typeless:
-                case Format.BC7_Typeless:
-                    return true;
-
-                default:
-                    return false;
-            }
+            return typelessFormats[(int) fmt];
         }
 
         /// <summary>
@@ -377,12 +308,90 @@ namespace SharpDX.DXGI
                 Format.BC7_UNorm,
                 Format.BC7_UNorm_SRgb,
             }, 8);
+
+
+            // Init compressed formats
+            InitDefaults(new[]
+                             {
+                                 Format.BC1_Typeless,
+                                 Format.BC1_UNorm,
+                                 Format.BC1_UNorm_SRgb,
+                                 Format.BC2_Typeless,
+                                 Format.BC2_UNorm,
+                                 Format.BC2_UNorm_SRgb,
+                                 Format.BC3_Typeless,
+                                 Format.BC3_UNorm,
+                                 Format.BC3_UNorm_SRgb,
+                                 Format.BC4_Typeless,
+                                 Format.BC4_UNorm,
+                                 Format.BC4_SNorm,
+                                 Format.BC5_Typeless,
+                                 Format.BC5_UNorm,
+                                 Format.BC5_SNorm,
+                                 Format.BC6H_Typeless,
+                                 Format.BC6H_Uf16,
+                                 Format.BC6H_Sf16,
+                                 Format.BC7_Typeless,
+                                 Format.BC7_UNorm,
+                                 Format.BC7_UNorm_SRgb,
+                             }, compressedFormats);
+
+            // Init srgb formats
+            InitDefaults(new[]
+                             {
+                                 Format.R8G8B8A8_UNorm_SRgb,
+                                 Format.BC1_UNorm_SRgb,
+                                 Format.BC2_UNorm_SRgb,
+                                 Format.BC3_UNorm_SRgb,
+                                 Format.B8G8R8A8_UNorm_SRgb,
+                                 Format.B8G8R8X8_UNorm_SRgb,
+                                 Format.BC7_UNorm_SRgb,
+                             }, srgbFormats);
+
+            // Init typeless formats
+            InitDefaults(new[]
+                             {
+                                 Format.R32G32B32A32_Typeless,
+                                 Format.R32G32B32_Typeless,
+                                 Format.R16G16B16A16_Typeless,
+                                 Format.R32G32_Typeless,
+                                 Format.R32G8X24_Typeless,
+                                 Format.R32_Float_X8X24_Typeless,
+                                 Format.X32_Typeless_G8X24_UInt,
+                                 Format.R10G10B10A2_Typeless,
+                                 Format.R8G8B8A8_Typeless,
+                                 Format.R16G16_Typeless,
+                                 Format.R32_Typeless,
+                                 Format.R24G8_Typeless,
+                                 Format.R24_UNorm_X8_Typeless,
+                                 Format.X24_Typeless_G8_UInt,
+                                 Format.R8G8_Typeless,
+                                 Format.R16_Typeless,
+                                 Format.R8_Typeless,
+                                 Format.BC1_Typeless,
+                                 Format.BC2_Typeless,
+                                 Format.BC3_Typeless,
+                                 Format.BC4_Typeless,
+                                 Format.BC5_Typeless,
+                                 Format.B8G8R8A8_Typeless,
+                                 Format.B8G8R8X8_Typeless,
+                                 Format.BC6H_Typeless,
+                                 Format.BC7_Typeless,
+                             }, typelessFormats);
+
+
         }
 
         private static void InitFormat(IEnumerable<Format> formats, int bitCount)
         {
             foreach (var format in formats)
                 sizeOfInBits[(int)format] = bitCount;
+        }
+
+        private static void InitDefaults(IEnumerable<Format> formats, bool[] outputArray)
+        {
+            foreach (var format in formats)
+                outputArray[(int)format] = true;
         }
     }
 }
