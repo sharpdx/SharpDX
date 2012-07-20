@@ -689,11 +689,12 @@ namespace SharpDX.Toolkit.Graphics
                 throw new ArgumentException("Length of TData is larger than size of buffer");
 
             // Copy the texture to a staging resource
-            Context.CopyResource(buffer, stagingTexture);
+            if (!ReferenceEquals(buffer, stagingTexture))
+                Context.CopyResource(buffer, stagingTexture);
 
             // Map the staging resource to a CPU accessible memory
             var box = Context.MapSubresource(stagingTexture, 0, MapMode.Read, Direct3D11.MapFlags.None);
-            Utilities.CopyMemory(box.DataPointer, toData.Pointer, toData.Size);
+            Utilities.CopyMemory(toData.Pointer, box.DataPointer, toData.Size);
             // Make sure that we unmap the resource in case of an exception
             Context.UnmapSubresource(stagingTexture, 0);
         }
@@ -762,7 +763,6 @@ namespace SharpDX.Toolkit.Graphics
                     var destRegion = new ResourceRegion(offsetInBytes, 0, 0, offsetInBytes + fromData.Size, 1, 1);
                     Context.UpdateSubresource(new DataBox(fromData.Pointer, 0, 0), buffer, 0, destRegion);                                    
                 }
-
             }
             else
             {
