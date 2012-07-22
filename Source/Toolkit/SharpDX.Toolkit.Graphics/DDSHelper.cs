@@ -71,6 +71,7 @@
 // particular purpose and non-infringement.
 
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using SharpDX.DXGI;
 using SharpDX.Direct3D11;
@@ -1009,10 +1010,14 @@ namespace SharpDX.Toolkit.Graphics
                     cpFlags |= Texture.PitchFlags.Bpp8;
             }
 
-            var image = new Image(metadata, cpFlags, pDDS, offset, handle, true);
-
             // If source image == dest image and no swizzle/alpha is required, we can return it as-is
-            var isCopyNeeded = (convFlags & (ConversionFlags.Expand | ConversionFlags.CopyMemory)) !=0 || ((cpFlags & Texture.PitchFlags.LegacyDword) != 0);
+            var isCopyNeeded = (convFlags & (ConversionFlags.Expand | ConversionFlags.CopyMemory)) != 0 || ((cpFlags & Texture.PitchFlags.LegacyDword) != 0);
+
+            var image = new Image(metadata, cpFlags, pDDS, offset, handle, !isCopyNeeded);
+
+            // Size must be inferior to destination size.
+            Debug.Assert(size <= image.TotalSizeInBytes);
+
             if (!isCopyNeeded && (convFlags & (ConversionFlags.Swizzle | ConversionFlags.NoAlpha)) == 0)
                 return image;
 
@@ -1083,7 +1088,8 @@ namespace SharpDX.Toolkit.Graphics
                     d >>= 1;
             }
 
-            return image;
+            // Return the imageDst or the original image
+            return isCopyNeeded ? imageDst : image;
         }
 
 

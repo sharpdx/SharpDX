@@ -93,6 +93,11 @@ namespace SharpDX.Toolkit.Graphics
         public readonly PixelBuffer[] PixelBuffers;
 
         /// <summary>
+        /// Gets the total number of bytes occupied by this image in memory.
+        /// </summary>
+        public readonly int TotalSizeInBytes;
+
+        /// <summary>
         /// Pointer to the buffer.
         /// </summary>
         private readonly IntPtr buffer;
@@ -160,8 +165,7 @@ namespace SharpDX.Toolkit.Graphics
 
             // Calculate mipmaps
             int pixelBufferCount;
-            int pixelSizeInBytes;
-            CalculateImageArray(description, pitchFlags, out pixelBufferCount, out pixelSizeInBytes);
+            CalculateImageArray(description, pitchFlags, out pixelBufferCount, out TotalSizeInBytes);
 
             // Allocate all pixel buffers
             PixelBuffers = new PixelBuffer[pixelBufferCount];
@@ -173,12 +177,12 @@ namespace SharpDX.Toolkit.Graphics
 
             if (dataPointer == IntPtr.Zero)
             {
-                buffer = Utilities.AllocateMemory(pixelSizeInBytes);
+                buffer = Utilities.AllocateMemory(TotalSizeInBytes);
                 offset = 0;
                 this.bufferIsDisposable = true;
             }
 
-            SetupImageArray((IntPtr)((byte*)buffer + offset), pixelSizeInBytes, description, pitchFlags, PixelBuffers);
+            SetupImageArray((IntPtr)((byte*)buffer + offset), TotalSizeInBytes, description, pitchFlags, PixelBuffers);
 
             Description = description;
         }
@@ -276,6 +280,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="dataBuffer">Pointer to an unmanaged memory. If <see cref="makeACopy"/> is false, this buffer must be allocated with <see cref="Utilities.AllocateMemory"/>.</param>
         /// <param name="makeACopy">True to copy the content of the buffer to a new allocated buffer, false otherwhise.</param>
         /// <returns>An new image.</returns>
+        /// <remarks>If <see cref="makeACopy"/> is set to false, the returned image is now the holder of the unmanaged pointer and will release it on Dispose. </remarks>
         public static Image Load(DataPointer dataBuffer, bool makeACopy = false)
         {
             return Load(dataBuffer.Pointer, dataBuffer.Size, makeACopy);
@@ -286,8 +291,9 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="dataPointer">Pointer to an unmanaged memory. If <see cref="makeACopy"/> is false, this buffer must be allocated with <see cref="Utilities.AllocateMemory"/>.</param>
         /// <param name="dataSize">Size of the unmanaged buffer.</param>
-        /// <param name="makeACopy">True to copy the content of the buffer to a new allocated buffer, false otherwhise.</param>
+        /// <param name="makeACopy">True to copy the content of the buffer to a new allocated buffer, false otherwise.</param>
         /// <returns>An new image.</returns>
+        /// <remarks>If <see cref="makeACopy"/> is set to false, the returned image is now the holder of the unmanaged pointer and will release it on Dispose. </remarks>
         public static Image Load(IntPtr dataPointer, int dataSize, bool makeACopy = false)
         {
             return DDSHelper.LoadFromDDSMemory(dataPointer, dataSize, makeACopy ? DDSFlags.CopyMemory : DDSFlags.None);
@@ -296,11 +302,10 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Loads an image from a managed buffer.
         /// </summary>
-        /// <param name="buffer">Reference to a managed buffer. If <see cref="makeACopy"/> is false, this constructor could pinned the buffer, otherwise false to make a copy.</param>
-        /// <param name="makeACopy">True to copy the content of the buffer to a new allocated buffer, false otherwhise.</param>
+        /// <param name="buffer">Reference to a managed buffer.</param>
         /// <returns>An new image.</returns>
         /// <remarks>This method support the following format: <c>dds, bmp, jpg, png, gif, tiff, wmp, tga</c>.</remarks>
-        public unsafe static Image Load(byte[] buffer, bool makeACopy = false)
+        public unsafe static Image Load(byte[] buffer)
         {
             if (buffer == null)
                 throw new ArgumentNullException("buffer");
@@ -308,7 +313,7 @@ namespace SharpDX.Toolkit.Graphics
             int size = buffer.Length;
 
             // If buffer is allocated on Larget Object Heap, then we are going to pin it instead of making a copy.
-            if ( !makeACopy && size > (85 * 1024))
+            if (size > (85 * 1024))
             {
                 var handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
                 return DDSHelper.LoadFromDDSMemory(handle.AddrOfPinnedObject(), size, DDSFlags.None, handle);
@@ -340,27 +345,33 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>This method support the following format: <c>dds, bmp, jpg, png, gif, tiff, wmp, tga</c>.</remarks>
         public static Image Load(string fileName)
         {
-            var stream = new NativeFileStream(fileName, NativeFileMode.Open, NativeFileAccess.Read);
-            int size = (int) stream.Length;
-            var memoryPtr = Utilities.AllocateMemory(size);
+            NativeFileStream stream = null;
+            IntPtr memoryPtr = IntPtr.Zero;
+            int size;
             try
             {
+                stream = new NativeFileStream(fileName, NativeFileMode.Open, NativeFileAccess.Read);
+                size = (int)stream.Length;
+                memoryPtr = Utilities.AllocateMemory(size);
                 stream.Read(memoryPtr, 0, size);
             }
             catch (Exception ex)
             {
-                Utilities.FreeMemory(memoryPtr);
+                if (memoryPtr != IntPtr.Zero)
+                    Utilities.FreeMemory(memoryPtr);
                 throw;
             }
             finally
             {
                 try
                 {
-                    stream.Close();
+                    if (stream != null)
+                        stream.Close();
                 } catch {}
             }
 
-            return Load(memoryPtr, size);
+            // If everything was fine, load the image from memory
+            return Load(memoryPtr, size, false);
         }
 
         private static ImageDescription CreateDescription(TextureDimension dimension, int width, int height, int depth, MipMapCount mipMapCount, PixelFormat format, int arraySize)

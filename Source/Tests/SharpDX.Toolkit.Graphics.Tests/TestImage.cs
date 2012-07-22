@@ -50,10 +50,27 @@ namespace SharpDX.Toolkit.Graphics.Tests
         [Test]
         public void TestLoadDDS()
         {
-            foreach (var file in Directory.EnumerateFiles(Path.Combine(dxsdkDir, @"Samples\Media"), "*.dds", SearchOption.AllDirectories))
+            var testMemoryBefore = GC.GetTotalMemory(false);
+            const int Count = 100;
+            for (int i = 0; i < Count; i++)
             {
-                var image = Image.Load(file);
-                Console.WriteLine("{0}: {1}", file, image.Description);
+                int imageCount = 0;
+                foreach (var file in Directory.EnumerateFiles(Path.Combine(dxsdkDir, @"Samples\Media"), "*.dds", SearchOption.AllDirectories))
+                {
+                    var image = Image.Load(file);
+                    //Console.WriteLine("{0}: {1}", file, image.Description);
+                    image.Dispose();
+
+                    var buffer = File.ReadAllBytes(file);
+                    image = Image.Load(buffer);
+                    image.Dispose();
+
+                    imageCount++;
+                }
+                GC.Collect();
+                GC.WaitForFullGCComplete();
+                var testMemoryAfter = GC.GetTotalMemory(true);
+                Console.WriteLine("Loaded {0} x 2 DDS image from DirectXSDK test {1}/{2} Memory: {3} bytes", imageCount, i, Count, testMemoryAfter - testMemoryBefore);
             }
         }
     }
