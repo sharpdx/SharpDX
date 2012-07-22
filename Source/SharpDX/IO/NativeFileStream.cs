@@ -52,16 +52,20 @@ namespace SharpDX.IO
             if (handle == new IntPtr(-1))
                 throw new IOException(string.Format(CultureInfo.InvariantCulture, "Unable to open file {0}", fileName), Marshal.GetLastWin32Error());
 
-            // TODO setup correctly canRead, canWrite, canSeek flags
-            canRead = true;
-            canWrite = true;
+            canRead = 0 != (access & NativeFileAccess.Read);
+            canWrite = 0 != (access & NativeFileAccess.Write);
+
+            // TODO how setup correctly canSeek flags? 
+            // Kernel32.GetFileType(SafeFileHandle handle); is not available on Win8Metro
             canSeek = true;
+
         }
 
         /// <inheritdoc/>
         public override void Flush()
         {
-            // TODO implement flush
+            if (!NativeFile.FlushFileBuffers(handle))
+                throw new IOException("Unable to flush stream", Marshal.GetLastWin32Error());
         }
 
         /// <inheritdoc/>
@@ -96,10 +100,33 @@ namespace SharpDX.IO
         /// <inheritdoc/>
         public override int Read(byte[] buffer, int offset, int count)
         {
+            if (buffer == null)
+                throw new ArgumentNullException("buffer");
+
+            unsafe
+            {
+                fixed (void* pbuffer = buffer)
+                    return Read((IntPtr) pbuffer, offset, count);
+            }
+        }
+
+        /// <summary>
+        /// Reads a block of bytes from the stream and writes the data in a given buffer.
+        /// </summary>
+        /// <param name="buffer">When this method returns, contains the specified buffer with the values between offset and (offset + count - 1) replaced by the bytes read from the current source. </param>
+        /// <param name="offset">The byte offset in array at which the read bytes will be placed. </param>
+        /// <param name="count">The maximum number of bytes to read. </param>
+        /// <exception cref="ArgumentNullException">array is null. </exception>
+        /// <returns>The total number of bytes read into the buffer. This might be less than the number of bytes requested if that number of bytes are not currently available, or zero if the end of the stream is reached.</returns>
+        public int Read(IntPtr buffer, int offset, int count)
+        {
+            if (buffer == IntPtr.Zero)
+                throw new ArgumentNullException("buffer");
+
             int numberOfBytesRead;
             unsafe
             {
-                fixed (void* pbuffer = &buffer[offset])
+                void* pbuffer = (byte*) buffer + offset;
                 {
                     if (!NativeFile.ReadFile(handle, (IntPtr)pbuffer, count, out numberOfBytesRead, IntPtr.Zero))
                         throw new IOException("Unable to read from file", Marshal.GetLastWin32Error());
@@ -112,10 +139,31 @@ namespace SharpDX.IO
         /// <inheritdoc/>
         public override void Write(byte[] buffer, int offset, int count)
         {
+            if (buffer == null)
+                throw new ArgumentNullException("buffer");
+
+            unsafe
+            {
+                fixed (void* pbuffer = buffer)
+                    Write((IntPtr)pbuffer, offset, count);
+            }
+        }
+
+        /// <summary>
+        /// Writes a block of bytes to this stream using data from a buffer.
+        /// </summary>
+        /// <param name="buffer">The buffer containing data to write to the stream.</param>
+        /// <param name="offset">The zero-based byte offset in buffer at which to begin copying bytes to the current stream. </param>
+        /// <param name="count">The number of bytes to be written to the current stream. </param>
+        public void Write(IntPtr buffer, int offset, int count)
+        {
+            if (buffer == IntPtr.Zero)
+                throw new ArgumentNullException("buffer");
+
             int numberOfBytesWritten;
             unsafe
             {
-                fixed (void* pbuffer = &buffer[offset])
+                void* pbuffer = (byte*) buffer + offset;
                 {
                     if (!NativeFile.WriteFile(handle, (IntPtr)pbuffer, count, out numberOfBytesWritten, IntPtr.Zero))
                         throw new IOException("Unable to write to file", Marshal.GetLastWin32Error());
@@ -157,7 +205,6 @@ namespace SharpDX.IO
             get
             {
                 long length;
-                // TODO implement DIRECTX11_1 replacement
                 if (!NativeFile.GetFileSizeEx(handle, out length))
                     throw new IOException("Unable to get file length", Marshal.GetLastWin32Error());
                 return length;
