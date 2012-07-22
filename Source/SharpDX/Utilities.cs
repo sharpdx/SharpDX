@@ -96,6 +96,43 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Compares two block of memory.
+        /// </summary>
+        /// <param name="from">The pointer to compare from.</param>
+        /// <param name="against">The pointer to compare against.</param>
+        /// <param name="sizeToCompare">The size in bytes to compare.</param>
+        /// <returns>True if the buffers are equivalent, false otherwise.</returns>
+        public unsafe static bool CompareMemory(IntPtr from, IntPtr against, int sizeToCompare)
+        {
+            var pSrc = (byte*)from;
+            var pDst = (byte*)against;
+
+            // Compare 8 bytes.
+            int numberOf = sizeToCompare >> 8;
+            while (numberOf > 0)
+            {
+                if (*(long*)pSrc != *(long*)pDst)
+                    return false;
+                pSrc += 8;
+                pDst += 8;
+                numberOf--;
+            }
+
+            // Compare remaining bytes.
+            numberOf = sizeToCompare & 7;
+            while (numberOf > 0)
+            {
+                if (*pSrc != *pDst)
+                    return false;
+                pSrc++;
+                pDst++;
+                numberOf--;
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Clears the memory.
         /// </summary>
         /// <param name="dest">The dest.</param>
