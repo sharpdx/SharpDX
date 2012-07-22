@@ -130,7 +130,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476522</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture3D([In] const D3D11_TEXTURE3D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture3D** ppTexture3D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture3D</unmanaged-short>	
-        public static Texture3D New(int width, int height, int depth, MipMap mipCount, PixelFormat format, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Default)
+        public static Texture3D New(int width, int height, int depth, MipMapCount mipCount, PixelFormat format, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Default)
         {
             return new Texture3D(NewDescription(width, height, depth, format, isUnorderedReadWrite, mipCount, usage));
         }

@@ -33,6 +33,8 @@
     <Compile Include="DisplayMode.cs" />
     <Compile Include="GraphicsAdapter.cs" />
     <Compile Include="GraphicsPresenter.cs" />
+    <Compile Include="Image.cs" />
+    <Compile Include="PixelBuffer.cs" />
     <Compile Include="PresentationParameters.cs" />
     <Compile Include="PresentInterval.cs" />
     <Compile Include="TextureDimension.cs" />
@@ -53,7 +55,7 @@
     <Compile Include="DepthFormat.cs" />
     <Compile Include="DepthStencilBuffer.cs" />
     <Compile Include="RenderTargetCube.cs" />
-    <Compile Include="MipMap.cs" />
+    <Compile Include="MipMapCount.cs" />
     <Compile Include="MSAALevel.cs" />
     <Compile Include="Texture2D.cs" />
     <Compile Include="RenderTarget3D.cs" />

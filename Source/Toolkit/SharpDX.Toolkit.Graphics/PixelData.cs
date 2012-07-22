@@ -46,31 +46,17 @@ namespace SharpDX.Toolkit.Graphics
                 get { return PixelFormat.R8.UNorm; }
             }
 
-            public void Write(byte red, byte green, byte blue, byte alpha)
+            public Color4 Value
             {
-                R = red;
+                get { return new Color4(R/255.0f, 0, 0, 1.0f); }
+                set { R = ToByte(value.Red); }
             }
 
-            public void Write(byte alpha)
+            public Color Value32Bpp
             {
+                get { return new Color(R, 0, 0, 1); }
+                set { R = value.R; }
             }
-
-            public void Write(Color4 color)
-            {
-                R = ToByte(color.Red);
-            }
-
-            public void Write(float alpha)
-            {
-            }
-
-            public float Red { get { return R/255.0f; } }
-
-            public float Green { get { return 0.0f; } }
-
-            public float Blue { get { return 0.0f; } }
-
-            public float Alpha { get { return 1.0f; } }
 
             public override string ToString()
             {
@@ -91,33 +77,25 @@ namespace SharpDX.Toolkit.Graphics
                 get { return PixelFormat.R8G8.UNorm; }
             }
 
-            public void Write(byte red, byte green, byte blue, byte alpha)
+            public Color4 Value
             {
-                R = red;
-                G = green;
+                get { return new Color4(R / 255.0f, G / 255.0f, 0, 1.0f); }
+                set
+                {
+                    R = ToByte(value.Red);
+                    G = ToByte(value.Green);
+                }
             }
 
-            public void Write(byte alpha)
+            public Color Value32Bpp
             {
+                get { return new Color(R, G, 0, 1); }
+                set
+                {
+                    R = value.R;
+                    G = value.G;
+                }
             }
-
-            public void Write(Color4 color)
-            {
-                R = ToByte(color.Red);
-                G = ToByte(color.Green);
-            }
-
-            public void Write(float alpha)
-            {
-            }
-
-            public float Red { get { return R / 255.0f; } }
-
-            public float Green { get { return G / 255.0f; } }
-
-            public float Blue { get { return 0.0f; } }
-
-            public float Alpha { get { return 1.0f; } }
 
             public override string ToString()
             {
@@ -138,38 +116,29 @@ namespace SharpDX.Toolkit.Graphics
                 get { return PixelFormat.R8G8B8A8.UNorm; }
             }
 
-            public void Write(byte red, byte green, byte blue, byte alpha)
+            public Color4 Value
             {
-                R = red;
-                G = green;
-                B = blue;
-                A = alpha;
+                get { return new Color4(R / 255.0f, G / 255.0f, B / 255.0f, A / 255.0f); }
+                set
+                {
+                    R = ToByte(value.Red);
+                    G = ToByte(value.Green);
+                    B = ToByte(value.Blue);
+                    A = ToByte(value.Alpha);
+                }
             }
 
-            public void Write(byte alpha)
+            public Color Value32Bpp
             {
-                A = alpha;
+                get { return new Color(R, G, B, A); }
+                set
+                {
+                    R = value.R;
+                    G = value.G;
+                    B = value.B;
+                    A = value.A;
+                }
             }
-
-            public void Write(Color4 color)
-            {
-                R = ToByte(color.Red);
-                G = ToByte(color.Green);
-                B = ToByte(color.Blue);
-                A = ToByte(color.Alpha);
-            }
-
-            public void Write(float alpha)
-            {
-            }
-
-            public float Red { get { return R / 255.0f; } }
-
-            public float Green { get { return G / 255.0f; } }
-
-            public float Blue { get { return B / 255.0f; } }
-
-            public float Alpha { get { return A / 255.0f; } }
 
             public override string ToString()
             {
@@ -190,31 +159,17 @@ namespace SharpDX.Toolkit.Graphics
                 get { return PixelFormat.R16.UNorm; }
             }
 
-            public void Write(byte red, byte green, byte blue, byte alpha)
+            public Color4 Value
             {
-                R = new Half(red / 255.0f);
+                get { return new Color4(R / 255.0f, 0, 0, 1.0f); }
+                set { R = new Half(value.Red); }
             }
 
-            public void Write(byte alpha)
+            public Color Value32Bpp
             {
+                get { return new Color(R, 0, 0, 1); }
+                set { R = new Half(value.R / 255.0f); }
             }
-
-            public void Write(Color4 color)
-            {
-                R = new Half(color.Red);
-            }
-
-            public void Write(float alpha)
-            {
-            }
-
-            public float Red { get { return R / 255.0f; } }
-
-            public float Green { get { return 0.0f; } }
-
-            public float Blue { get { return 0.0f; } }
-
-            public float Alpha { get { return 1.0f; } }
 
             public override string ToString()
             {
@@ -235,33 +190,26 @@ namespace SharpDX.Toolkit.Graphics
                 get { return PixelFormat.R16G16.UNorm; }
             }
 
-            public void Write(byte red, byte green, byte blue, byte alpha)
+            public Color4 Value
             {
-                R = new Half(red / 255.0f);
-                G = new Half(green / 255.0f);
+                get { return new Color4(R / 255.0f, G / 255.0f, 0, 1.0f); }
+                set
+                {
+                    R = new Half(value.Red);
+                    G = new Half(value.Green);
+                }
+
             }
 
-            public void Write(byte alpha)
+            public Color Value32Bpp
             {
+                get { return new Color(R, G, 0, 1); }
+                set
+                {
+                    R = new Half(value.R / 255.0f);
+                    G = new Half(value.G / 255.0f);
+                }
             }
-
-            public void Write(Color4 color)
-            {
-                R = new Half(color.Red);
-                G = new Half(color.Green);
-            }
-
-            public void Write(float alpha)
-            {
-            }
-
-            public float Red { get { return R / 255.0f; } }
-
-            public float Green { get { return G / 255.0f; } }
-
-            public float Blue { get { return 0.0f; } }
-
-            public float Alpha { get { return 1.0f; } }
 
             public override string ToString()
             {
@@ -282,38 +230,30 @@ namespace SharpDX.Toolkit.Graphics
                 get { return PixelFormat.R16G16B16A16.UNorm; }
             }
 
-            public void Write(byte red, byte green, byte blue, byte alpha)
+            public Color4 Value
             {
-                R = new Half(red / 255.0f);
-                G = new Half(green / 255.0f);
-                B = new Half(blue / 255.0f);
-                A = new Half(alpha / 255.0f);
+                get { return new Color4(R / 255.0f, G / 255.0f, B / 255.0f, A / 255.0f); }
+                set
+                {
+                    R = new Half(value.Red);
+                    G = new Half(value.Green);
+                    B = new Half(value.Blue);
+                    A = new Half(value.Alpha);
+                }
+
             }
 
-            public void Write(byte alpha)
+            public Color Value32Bpp
             {
-                A = new Half(alpha / 255.0f);
+                get { return new Color(R, G, B, A); }
+                set
+                {
+                    R = new Half(value.R / 255.0f);
+                    G = new Half(value.G / 255.0f);
+                    B = new Half(value.B / 255.0f);
+                    A = new Half(value.A / 255.0f);
+                }
             }
-
-            public void Write(Color4 color)
-            {
-                R = new Half(color.Red);
-                G = new Half(color.Green);
-                B = new Half(color.Blue);
-                A = new Half(color.Alpha);
-            }
-
-            public void Write(float alpha)
-            {
-            }
-
-            public float Red { get { return R / 255.0f; } }
-
-            public float Green { get { return G / 255.0f; } }
-
-            public float Blue { get { return B / 255.0f; } }
-
-            public float Alpha { get { return A / 255.0f; } }
 
             public override string ToString()
             {

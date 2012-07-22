@@ -31,51 +31,13 @@ namespace SharpDX.Toolkit.Graphics
         PixelFormat Format { get; }
 
         /// <summary>
-        /// Writes LDR pixel.
+        /// Gets or sets the color on this pixel data as a HDR <see cref="Color4"/> (128 bit, 4 x floats) .
         /// </summary>
-        /// <param name="red"The red component></param>
-        /// <param name="green">The green component</param>
-        /// <param name="blue">The blue component</param>
-        /// <param name="alpha">The alpha component</param>
-        void Write(byte red, byte green, byte blue, byte alpha);
+        Color4 Value { get; set; }
 
         /// <summary>
-        /// Writes LDR alpha pixel.
+        /// Gets or sets the color on this pixel data as a LDR <see cref="Color"/> (32 bit, 1 x int) .
         /// </summary>
-        /// <param name="alpha">The alpha component.</param>
-        void Write(byte alpha);
-
-
-        /// <summary>
-        /// Writes HDR pixel
-        /// </summary>
-        /// <param name="color">RGBA color as <see cref="Color4"/></param>
-        void Write(Color4 color);
-
-        /// <summary>
-        /// Writes HDR alpha pixel
-        /// </summary>
-        /// <param name="alpha">The alpha component</param>
-        void Write(float alpha);
-
-        /// <summary>
-        /// Gets the red component.
-        /// </summary>
-        float Red { get; }
-
-        /// <summary>
-        /// Gets the green component.
-        /// </summary>
-        float Green { get; }
-
-        /// <summary>
-        /// Gets the blue component.
-        /// </summary>
-        float Blue { get; }
-
-        /// <summary>
-        /// Gets the alpha component.
-        /// </summary>
-        float Alpha { get; }
+        Color Value32Bpp { get; set; }
     }
 }

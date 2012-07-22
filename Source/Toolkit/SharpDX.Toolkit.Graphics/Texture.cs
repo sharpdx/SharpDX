@@ -92,15 +92,96 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         protected abstract void InitializeViews();
 
+
         /// <summary>
-        /// Calculates the size of the mip.
+        /// Calculates the number of miplevels for a Texture 1D.
         /// </summary>
-        /// <param name="size">The size.</param>
-        /// <param name="mipLevel">The mip level.</param>
-        /// <returns>Returns ceiling(size / (2 ^ mipLevel)) </returns>
-        internal static int CalculateMipSize(int size, int mipLevel)
+        /// <param name="width">The width of the texture.</param>
+        /// <param name="mipLevels">A <see cref="MipMapCount"/>, set to true to calculates all mipmaps, to false to calculate only 1 miplevel, or > 1 to calculate a specific amount of levels.</param>
+        /// <returns>The number of miplevels.</returns>
+        public static int CalculateMipLevels(int width, MipMapCount mipLevels)
         {
-            return (int)Math.Ceiling((double)size / (1 << mipLevel));            
+            if (mipLevels > 1)
+            {
+                int maxMips = CountMips(width);
+                if (mipLevels > maxMips)
+                    throw new InvalidOperationException(String.Format("MipLevels must be <= {0}", maxMips));
+            }
+            else if (mipLevels == 0)
+            {
+                mipLevels = CountMips(width);
+            }
+            else
+            {
+                mipLevels = 1;
+            }
+            return mipLevels;
+        }
+
+        /// <summary>
+        /// Calculates the number of miplevels for a Texture 2D.
+        /// </summary>
+        /// <param name="width">The width of the texture.</param>
+        /// <param name="height">The height of the texture.</param>
+        /// <param name="mipLevels">A <see cref="MipMapCount"/>, set to true to calculates all mipmaps, to false to calculate only 1 miplevel, or > 1 to calculate a specific amount of levels.</param>
+        /// <returns>The number of miplevels.</returns>
+        public static int CalculateMipLevels(int width, int height, MipMapCount mipLevels)
+        {
+            if (mipLevels > 1)
+            {
+                int maxMips = CountMips(width, height);
+                if (mipLevels > maxMips)
+                    throw new InvalidOperationException(String.Format("MipLevels must be <= {0}", maxMips));
+            }
+            else if (mipLevels == 0)
+            {
+                mipLevels = CountMips(width, height);
+            }
+            else
+            {
+                mipLevels = 1;
+            }
+            return mipLevels;
+        }
+
+        /// <summary>
+        /// Calculates the number of miplevels for a Texture 2D.
+        /// </summary>
+        /// <param name="width">The width of the texture.</param>
+        /// <param name="height">The height of the texture.</param>
+        /// <param name="depth">The depth of the texture.</param>
+        /// <param name="mipLevels">A <see cref="MipMapCount"/>, set to true to calculates all mipmaps, to false to calculate only 1 miplevel, or > 1 to calculate a specific amount of levels.</param>
+        /// <returns>The number of miplevels.</returns>
+        public static int CalculateMipLevels(int width, int height, int depth, MipMapCount mipLevels)
+        {
+            if (mipLevels > 1)
+            {
+                if (!IsPow2(width) || !IsPow2(height) || !IsPow2(depth))
+                    throw new InvalidOperationException("Width/Height/Depth must be power of 2");
+
+                int maxMips = CountMips(width, height, depth);
+                if (mipLevels > maxMips)
+                    throw new InvalidOperationException(String.Format("MipLevels must be <= {0}", maxMips));
+            }
+            else if (mipLevels == 0)
+            {
+                if (!IsPow2(width) || !IsPow2(height) || !IsPow2(depth))
+                    throw new InvalidOperationException("Width/Height/Depth must be power of 2");
+
+                mipLevels = CountMips(width, height, depth);
+            }
+            else
+            {
+                mipLevels = 1;
+            }
+            return mipLevels;
+        }
+
+        public static int CalculateMipSize(int width, int mipLevel)
+        {
+            mipLevel = Math.Min(mipLevel, CountMips(width));
+            width = width >> mipLevel;
+            return width > 0 ? width : 1;
         }
 
         /// <summary>
@@ -127,7 +208,7 @@ namespace SharpDX.Toolkit.Graphics
 
             var dataStrideInBytes = Utilities.SizeOf<TData>() * widthOnMip;
             var width = ((double)rowStride / dataStrideInBytes) * widthOnMip;
-            if (Math.Abs(width - (int)width) > double.Epsilon)
+            if (Math.Abs(width - (int)width) > Double.Epsilon)
                 throw new ArgumentException("sizeof(TData) / sizeof(Format) * Width is not an integer");
 
             return (int)width;
@@ -194,7 +275,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="from">Source for the.</param>
         public static implicit operator ShaderResourceView(Texture from)
         {
-            return from == null ? null : from.shaderResourceViews != null ? from.shaderResourceViews[0] : null;
+            return @from == null ? null : @from.shaderResourceViews != null ? @from.shaderResourceViews[0] : null;
         }
 
         /// <summary>
@@ -203,7 +284,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="from">Source for the.</param>
         public static implicit operator UnorderedAccessView(Texture from)
         {
-            return from == null ? null : from.unorderedAccessViews != null ? from.unorderedAccessViews[0] : null;
+            return @from == null ? null : @from.unorderedAccessViews != null ? @from.unorderedAccessViews[0] : null;
         }
 
         /// <summary>
@@ -214,7 +295,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="height">The height.</param>
         /// <param name="depth">The depth.</param>
         /// <returns>The resulting mipmap count (clamp to [1, maxMipMapCount] for this texture)</returns>
-        internal static int CalculateMipMapCount(MipMap requestedLevel, int width, int height = 0, int depth = 0)
+        internal static int CalculateMipMapCount(MipMapCount requestedLevel, int width, int height = 0, int depth = 0)
         {
             int size = Math.Max(Math.Max(width, height), depth);
             int maxMipMap = 1 + (int)Math.Ceiling(Math.Log(size) / Math.Log(2.0));
@@ -276,7 +357,7 @@ namespace SharpDX.Toolkit.Graphics
                     {
                         var shaderResourceView = this.shaderResourceViews[i];
                         if (shaderResourceView != null)
-                            shaderResourceView.DebugName = Name == null ? null : string.Format("{0} SRV[{1}]", i, Name);
+                            shaderResourceView.DebugName = Name == null ? null : String.Format("{0} SRV[{1}]", i, Name);
                     }
                 }
 
@@ -286,7 +367,7 @@ namespace SharpDX.Toolkit.Graphics
                     {
                         var renderTargetView = this.renderTargetViews[i];
                         if (renderTargetView != null)
-                            renderTargetView.DebugName = Name == null ? null : string.Format("{0} RTV[{1}]", i, Name);
+                            renderTargetView.DebugName = Name == null ? null : String.Format("{0} RTV[{1}]", i, Name);
                     }
                 }
 
@@ -296,10 +377,162 @@ namespace SharpDX.Toolkit.Graphics
                     {
                         var unorderedAccessView = this.unorderedAccessViews[i];
                         if (unorderedAccessView != null)
-                            unorderedAccessView.DebugName = Name == null ? null : string.Format("{0} UAV[{1}]", i, Name);
+                            unorderedAccessView.DebugName = Name == null ? null : String.Format("{0} UAV[{1}]", i, Name);
                     }
                 }
             }
+        }
+
+
+
+        [Flags]
+        internal enum PitchFlags
+        {
+            None = 0x0,      // Normal operation
+            LegacyDword = 0x1,      // Assume pitch is DWORD aligned instead of BYTE aligned
+            Bpp24 = 0x10000,  // Override with a legacy 24 bits-per-pixel format size
+            Bpp16 = 0x20000,  // Override with a legacy 16 bits-per-pixel format size
+            Bpp8 = 0x40000,  // Override with a legacy 8 bits-per-pixel format size
+        };
+
+        internal static void ComputePitch(Format fmt, int width, int height, out int rowPitch, out int slicePitch, PitchFlags flags)
+        {
+            if (FormatHelper.IsCompressed(fmt))
+            {
+                int bpb = (fmt == Format.BC1_Typeless
+                             || fmt == Format.BC1_UNorm
+                             || fmt == Format.BC1_UNorm_SRgb
+                             || fmt == Format.BC4_Typeless
+                             || fmt == Format.BC4_UNorm
+                             || fmt == Format.BC4_SNorm) ? 8 : 16;
+                int nbw = Math.Max(1, (width + 3) / 4);
+                int nbh = Math.Max(1, (height + 3) / 4);
+                rowPitch = nbw * bpb;
+
+                slicePitch = rowPitch * nbh;
+            }
+            else if (FormatHelper.IsPacked(fmt))
+            {
+                rowPitch = ((width + 1) >> 1) * 4;
+
+                slicePitch = rowPitch * height;
+            }
+            else
+            {
+                int bpp;
+
+                if ((flags & PitchFlags.Bpp24) != 0)
+                    bpp = 24;
+                else if ((flags & PitchFlags.Bpp16) != 0)
+                    bpp = 16;
+                else if ((flags & PitchFlags.Bpp8) != 0)
+                    bpp = 8;
+                else
+                    bpp = FormatHelper.SizeOfInBits(fmt);
+
+                if ((flags & PitchFlags.LegacyDword) != 0)
+                {
+                    // Special computation for some incorrectly created DDS files based on
+                    // legacy DirectDraw assumptions about pitch alignment
+                    rowPitch = ((width * bpp + 31) / 32) * sizeof(int);
+                    slicePitch = rowPitch * height;
+                }
+                else
+                {
+                    rowPitch = (width * bpp + 7) / 8;
+                    slicePitch = rowPitch * height;
+                }
+            }
+        }
+
+        internal static void CalculateImageArraySize(TextureDescription metadata, PitchFlags cpFlags, out int nImages, out int pixelSize)
+        {
+            pixelSize = 0;
+            nImages = 0;
+
+            int w = metadata.Width;
+            int h = metadata.Height;
+            int d = metadata.Depth;
+
+            for (int level = 0; level < metadata.MipLevels; ++level)
+            {
+                int rowPitch, slicePitch;
+                ComputePitch(metadata.Format, w, h, out rowPitch, out slicePitch, cpFlags);
+
+                for (int slice = 0; slice < d; ++slice)
+                {
+                    pixelSize += slicePitch;
+                    ++nImages;
+                }
+
+                if (h > 1)
+                    h >>= 1;
+
+                if (w > 1)
+                    w >>= 1;
+
+                if (d > 1)
+                    d >>= 1;
+            }
+        }
+
+        private static bool IsPow2( int x )
+        {
+            return ((x != 0) && (x & (x - 1)) == 0);
+        }
+
+        private static int CountMips(int width)
+        {
+            int mipLevels = 1;
+
+            while (width > 1)
+            {
+                ++mipLevels;
+
+                if (width > 1)
+                    width >>= 1;
+            }
+
+            return mipLevels;
+        }
+
+        private static int CountMips(int width, int height)
+        {
+            int mipLevels = 1;
+
+            while (height > 1 || width > 1)
+            {
+                ++mipLevels;
+
+                if (height > 1)
+                    height >>= 1;
+
+                if (width > 1)
+                    width >>= 1;
+            }
+
+            return mipLevels;
+        }
+
+        private static int CountMips(int width, int height, int depth)
+        {
+            int mipLevels = 1;
+
+            while (height > 1 || width > 1 || depth > 1)
+            {
+                ++mipLevels;
+
+                if (height > 1)
+                    height >>= 1;
+
+                if (width > 1)
+                    width >>= 1;
+
+                if (depth > 1)
+                    depth >>= 1;
+            }
+
+            return mipLevels;
         }
     }
 }
