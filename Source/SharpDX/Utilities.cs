@@ -326,7 +326,7 @@ namespace SharpDX
         public unsafe static IntPtr AllocateMemory(int sizeInBytes, int align = 16)
         {
             var memPtr = Marshal.AllocHGlobal(sizeInBytes + 15 + IntPtr.Size);
-            var ptr = (ulong)((byte*)memPtr + sizeof(void*) + 15) & 0xFFFFFFFFFFFFFF00;
+            var ptr = (ulong)((byte*)memPtr + sizeof(void*) + 15) & 0xFFFFFFFFFFFFFFF0;
             ((IntPtr*)ptr)[-1] = memPtr;
             return new IntPtr(checked((long)ptr));
         }
