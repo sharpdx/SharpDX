@@ -73,166 +73,271 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using SharpDX.DXGI;
-using SharpDX.Direct3D11;
 using SharpDX.IO;
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>
+    /// Provides method to instantiate an image 1D/2D/3D on the CPU or to load/save an image from the disk.
+    /// </summary>
     public class Image : Component
     {
         /// <summary>
         /// Description of this image.
         /// </summary>
-        public readonly TextureDescription Description;
+        public readonly ImageDescription Description;
 
         /// <summary>
         /// Gets all pixel buffers.
         /// </summary>
         public readonly PixelBuffer[] PixelBuffers;
 
-        private readonly IntPtr mainPixelBuffer;
-        private readonly IntPtr externalDataBuffer;
-        private readonly bool releaseExternalBufferOnDispose;
-        private readonly bool isAllocatedInternally;
+        /// <summary>
+        /// Pointer to the buffer.
+        /// </summary>
+        private readonly IntPtr buffer;
 
-        internal unsafe Image(TextureDescription mdata, Texture.PitchFlags pitchFlags, IntPtr dataBuffer, int offset, bool releaseExternalBufferOnDispose = true)
+        /// <summary>
+        /// True if the buffer must be disposed.
+        /// </summary>
+        private readonly bool bufferIsDisposable;
+
+        /// <summary>
+        /// Handke != null if the buffer is a pinned managed object on the LOH (Large Object Heap).
+        /// </summary>
+        private readonly GCHandle? handle;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Image" /> class.
+        /// </summary>
+        /// <param name="description">The image description.</param>
+        /// <param name="pitchFlags">The pitch flags.</param>
+        /// <param name="dataPointer">The pointer to the data buffer.</param>
+        /// <param name="offset">The offset from the beginning of the data buffer.</param>
+        /// <param name="handle">The handle (optionnal).</param>
+        /// <param name="bufferIsDisposable">if set to <c>true</c> [buffer is disposable].</param>
+        /// <exception cref="System.InvalidOperationException">If the format is invalid, or width/height/depth/arraysize is invalid with respect to the dimension.</exception>
+        internal unsafe Image(ImageDescription description, Texture.PitchFlags pitchFlags, IntPtr dataPointer, int offset, GCHandle? handle, bool bufferIsDisposable)
         {
-            if (!FormatHelper.IsValid(mdata.Format) || FormatHelper.IsVideo(mdata.Format))
+            if (!FormatHelper.IsValid(description.Format) || FormatHelper.IsVideo(description.Format))
                 throw new InvalidOperationException("Unsupported DXGI Format");
 
-            int mipLevels = mdata.MipLevels;
+            this.handle = handle;
 
-            switch (mdata.Dimension)
+            switch (description.Dimension)
             {
                 case TextureDimension.Texture1D:
-                    if (mdata.Width <= 0 || mdata.Height != 1 || mdata.Depth != 1 || mdata.ArraySize == 0)
+                    if (description.Width <= 0 || description.Height != 1 || description.Depth != 1 || description.ArraySize == 0)
                         throw new InvalidOperationException("Invalid Width/Height/Depth/ArraySize for Image 1D");
 
                     // Check that miplevels are fine
-                    Texture.CalculateMipLevels(mdata.Width, 1, mipLevels);
+                    description.MipLevels = Texture.CalculateMipLevels(description.Width, 1, description.MipLevels);
                     break;
 
                 case TextureDimension.Texture2D:
                 case TextureDimension.TextureCube:
-                    if (mdata.Width <= 0 || mdata.Height <= 0 || mdata.Depth != 1 || mdata.ArraySize == 0)
+                    if (description.Width <= 0 || description.Height <= 0 || description.Depth != 1 || description.ArraySize == 0)
                         throw new InvalidOperationException("Invalid Width/Height/Depth/ArraySize for Image 2D");
 
-                    if (mdata.Dimension == TextureDimension.TextureCube)
-                        mdata.OptionFlags |= ResourceOptionFlags.TextureCube;
-
-
-                    if ((mdata.OptionFlags & ResourceOptionFlags.TextureCube) != 0)
+                    if (description.Dimension == TextureDimension.TextureCube)
                     {
-                        if ((mdata.ArraySize % 6) != 0)
+                        if ((description.ArraySize % 6) != 0)
                             throw new InvalidOperationException("TextureCube must have an arraysize = 6");
                     }
 
                     // Check that miplevels are fine
-                    Texture.CalculateMipLevels(mdata.Width, mdata.Height, mipLevels);
+                    description.MipLevels = Texture.CalculateMipLevels(description.Width, description.Height, description.MipLevels);
                     break;
 
                 case TextureDimension.Texture3D:
-                    if (mdata.Width <= 0 || mdata.Height <= 0 || mdata.Depth <= 0 || mdata.ArraySize != 1)
+                    if (description.Width <= 0 || description.Height <= 0 || description.Depth <= 0 || description.ArraySize != 1)
                         throw new InvalidOperationException("Invalid Width/Height/Depth/ArraySize for Image 3D");
 
                     // Check that miplevels are fine
-                    Texture.CalculateMipLevels(mdata.Width, mdata.Height, mdata.Depth, mipLevels);
+                    description.MipLevels = Texture.CalculateMipLevels(description.Width, description.Height, description.Depth, description.MipLevels);
                     break;
             }
 
             // Calculate mipmaps
             int pixelBufferCount;
             int pixelSizeInBytes;
-            CalculateImageArray(mdata, pitchFlags, out pixelBufferCount, out pixelSizeInBytes);
+            CalculateImageArray(description, pitchFlags, out pixelBufferCount, out pixelSizeInBytes);
 
             // Allocate all pixel buffers
             PixelBuffers = new PixelBuffer[pixelBufferCount];
 
             // Setup all pointers
-            this.releaseExternalBufferOnDispose = releaseExternalBufferOnDispose;
-            externalDataBuffer = dataBuffer;
-            mainPixelBuffer = (IntPtr)((byte*)dataBuffer + offset);
+            // only release buffer that is not pinned and is asked to be disposed.
+            this.bufferIsDisposable = !handle.HasValue && bufferIsDisposable;
+            this.buffer = dataPointer;
 
-            if (mainPixelBuffer == IntPtr.Zero)
+            if (dataPointer == IntPtr.Zero)
             {
-                mainPixelBuffer = Utilities.AllocateMemory(pixelSizeInBytes);
-                isAllocatedInternally = true;
+                buffer = Utilities.AllocateMemory(pixelSizeInBytes);
+                offset = 0;
+                this.bufferIsDisposable = true;
             }
 
-            SetupImageArray(mainPixelBuffer, pixelSizeInBytes, mdata, pitchFlags, PixelBuffers);
+            SetupImageArray((IntPtr)((byte*)buffer + offset), pixelSizeInBytes, description, pitchFlags, PixelBuffers);
 
-
-            Description = mdata;
+            Description = description;
         }
-
 
         protected override void Dispose(bool disposeManagedResources)
         {
-
-            if (releaseExternalBufferOnDispose)
+            if (handle.HasValue)
             {
-                Marshal.FreeHGlobal(externalDataBuffer);
-            } 
-            else if (isAllocatedInternally)
-            {
-                Utilities.FreeMemory(mainPixelBuffer);
+                handle.Value.Free();
             }
 
-
+            if (bufferIsDisposable)
+            {
+                Utilities.FreeMemory(buffer);
+            } 
+            
             base.Dispose(disposeManagedResources);
         }
 
-        public static Image New(TextureDescription description)
+        /// <summary>
+        /// Gets the databox from this image.
+        /// </summary>
+        /// <returns>The databox of this image.</returns>
+        public DataBox[] ToDataBox()
         {
-            description.BindFlags = BindFlags.None;
-            description.OptionFlags = ResourceOptionFlags.None;
-            description.SampleDescription = new SampleDescription(1, 0);
-            description.Usage = ResourceUsage.Default;
-
-            return new Image(description, Texture.PitchFlags.None, IntPtr.Zero, 0);
+            throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="Image"/> from an image description.
+        /// </summary>
+        /// <param name="description">The image description.</param>
+        /// <returns>A new image.</returns>
+        public static Image New(ImageDescription description)
+        {
+            return new Image(description, Texture.PitchFlags.None, IntPtr.Zero, 0, null, false);
+        }
+
+        /// <summary>
+        /// Creates a new instance of a 1D <see cref="Image"/>.
+        /// </summary>
+        /// <param name="width">The width.</param>
+        /// <param name="mipMapCount">The mip map count.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="arraySize">Size of the array.</param>
+        /// <returns>A new image.</returns>
         public static Image New1D(int width, MipMapCount mipMapCount, PixelFormat format, int arraySize = 1)
         {
-            return new Image(CreateDescription(TextureDimension.Texture1D, width, 1, 1, mipMapCount, format, arraySize), Texture.PitchFlags.None, IntPtr.Zero, 0);
+            return new Image(CreateDescription(TextureDimension.Texture1D, width, 1, 1, mipMapCount, format, arraySize), Texture.PitchFlags.None, IntPtr.Zero, 0, null, false);
         }
 
+        /// <summary>
+        /// Creates a new instance of a 2D <see cref="Image"/>.
+        /// </summary>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="mipMapCount">The mip map count.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="arraySize">Size of the array.</param>
+        /// <returns>A new image.</returns>
         public static Image New2D(int width, int height, MipMapCount mipMapCount, PixelFormat format, int arraySize = 1)
         {
-            return new Image(CreateDescription(TextureDimension.Texture2D, width, height, 1, mipMapCount, format, arraySize), Texture.PitchFlags.None, IntPtr.Zero, 0);
+            return new Image(CreateDescription(TextureDimension.Texture2D, width, height, 1, mipMapCount, format, arraySize), Texture.PitchFlags.None, IntPtr.Zero, 0, null, false);
         }
 
+        /// <summary>
+        /// Creates a new instance of a Cube <see cref="Image"/>.
+        /// </summary>
+        /// <param name="width">The width.</param>
+        /// <param name="mipMapCount">The mip map count.</param>
+        /// <param name="format">The format.</param>
+        /// <returns>A new image.</returns>
         public static Image NewCube(int width, MipMapCount mipMapCount, PixelFormat format)
         {
-            return new Image(CreateDescription(TextureDimension.TextureCube, width, width, 1, mipMapCount, format, 6), Texture.PitchFlags.None, IntPtr.Zero, 0);
+            return new Image(CreateDescription(TextureDimension.TextureCube, width, width, 1, mipMapCount, format, 6), Texture.PitchFlags.None, IntPtr.Zero, 0, null, false);
         }
 
+        /// <summary>
+        /// Creates a new instance of a 3D <see cref="Image"/>.
+        /// </summary>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="depth">The depth.</param>
+        /// <param name="mipMapCount">The mip map count.</param>
+        /// <param name="format">The format.</param>
+        /// <returns>A new image.</returns>
         public static Image New3D(int width, int height, int depth, MipMapCount mipMapCount, PixelFormat format)
         {
-            return new Image(CreateDescription(TextureDimension.Texture3D, width, width, depth, mipMapCount, format, 1), Texture.PitchFlags.None, IntPtr.Zero, 0);
+            return new Image(CreateDescription(TextureDimension.Texture3D, width, width, depth, mipMapCount, format, 1), Texture.PitchFlags.None, IntPtr.Zero, 0, null, false);
         }
 
+        /// <summary>
+        /// Loads an image from an unmanaged memory pointer.
+        /// </summary>
+        /// <param name="dataBuffer">Pointer to an unmanaged memory. If <see cref="makeACopy"/> is false, this buffer must be allocated with <see cref="Utilities.AllocateMemory"/>.</param>
+        /// <param name="makeACopy">True to copy the content of the buffer to a new allocated buffer, false otherwhise.</param>
+        /// <returns>An new image.</returns>
         public static Image Load(DataPointer dataBuffer, bool makeACopy = false)
         {
             return Load(dataBuffer.Pointer, dataBuffer.Size, makeACopy);
         }
 
-        public static Image Load(IntPtr memory, int size, bool makeACopy = false)
+        /// <summary>
+        /// Loads an image from an unmanaged memory pointer.
+        /// </summary>
+        /// <param name="dataPointer">Pointer to an unmanaged memory. If <see cref="makeACopy"/> is false, this buffer must be allocated with <see cref="Utilities.AllocateMemory"/>.</param>
+        /// <param name="dataSize">Size of the unmanaged buffer.</param>
+        /// <param name="makeACopy">True to copy the content of the buffer to a new allocated buffer, false otherwhise.</param>
+        /// <returns>An new image.</returns>
+        public static Image Load(IntPtr dataPointer, int dataSize, bool makeACopy = false)
         {
-            return DDSHelper.LoadFromDDSMemory(memory, size, makeACopy ? DDSFlags.CopyMemory : DDSFlags.None);
+            return DDSHelper.LoadFromDDSMemory(dataPointer, dataSize, makeACopy ? DDSFlags.CopyMemory : DDSFlags.None);
         }
 
-        public unsafe static Image Load(Stream imageStream)
+        /// <summary>
+        /// Loads an image from a managed buffer.
+        /// </summary>
+        /// <param name="buffer">Reference to a managed buffer. If <see cref="makeACopy"/> is false, this constructor could pinned the buffer, otherwise false to make a copy.</param>
+        /// <param name="makeACopy">True to copy the content of the buffer to a new allocated buffer, false otherwhise.</param>
+        /// <returns>An new image.</returns>
+        /// <remarks>This method support the following format: <c>dds, bmp, jpg, png, gif, tiff, wmp, tga</c>.</remarks>
+        public unsafe static Image Load(byte[] buffer, bool makeACopy = false)
         {
-            // Read the whole stream into memory.
-            var size = (int)(imageStream.Length - imageStream.Position);
-            var buffer = Utilities.ReadStream(imageStream);
+            if (buffer == null)
+                throw new ArgumentNullException("buffer");
+
+            int size = buffer.Length;
+
+            // If buffer is allocated on Larget Object Heap, then we are going to pin it instead of making a copy.
+            if ( !makeACopy && size > (85 * 1024))
+            {
+                var handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+                return DDSHelper.LoadFromDDSMemory(handle.AddrOfPinnedObject(), size, DDSFlags.None, handle);
+            }
+
             fixed (void* pbuffer = buffer)
             {
-                return Load((IntPtr)pbuffer, size, true);
+                return Load((IntPtr) pbuffer, size, true);
             }
         }
 
+        /// <summary>
+        /// Loads the specified image from a stream.
+        /// </summary>
+        /// <param name="imageStream">The image stream.</param>
+        /// <returns>An new image.</returns>
+        /// <remarks>This method support the following format: <c>dds, bmp, jpg, png, gif, tiff, wmp, tga</c>.</remarks>
+        public static Image Load(Stream imageStream)
+        {
+            // Read the whole stream into memory.
+            return Load(Utilities.ReadStream(imageStream));
+        }
+
+        /// <summary>
+        /// Loads the specified image from a file.
+        /// </summary>
+        /// <param name="fileName">The filename.</param>
+        /// <returns>An new image.</returns>
+        /// <remarks>This method support the following format: <c>dds, bmp, jpg, png, gif, tiff, wmp, tga</c>.</remarks>
         public static Image Load(string fileName)
         {
             var stream = new NativeFileStream(fileName, NativeFileMode.Open, NativeFileAccess.Read);
@@ -249,53 +354,51 @@ namespace SharpDX.Toolkit.Graphics
             }
             finally
             {
-                stream.Close();
+                try
+                {
+                    stream.Close();
+                } catch {}
             }
 
             return Load(memoryPtr, size);
         }
 
-        private static TextureDescription CreateDescription(TextureDimension dimension, int width, int height, int depth, MipMapCount mipMapCount, PixelFormat format, int arraySize)
+        private static ImageDescription CreateDescription(TextureDimension dimension, int width, int height, int depth, MipMapCount mipMapCount, PixelFormat format, int arraySize)
         {
-            return new TextureDescription()
+            return new ImageDescription()
                        {
                            Width = width,
                            Height = height,
                            Depth = depth,
                            ArraySize = arraySize,
-                           BindFlags = BindFlags.None,
-                           CpuAccessFlags = CpuAccessFlags.Read | CpuAccessFlags.Write,
                            Dimension = dimension,
                            Format = format,
                            MipLevels = mipMapCount,
-                           OptionFlags = ResourceOptionFlags.None,
-                           SampleDescription = new SampleDescription(1, 0),
-                           Usage = ResourceUsage.Default
                        };
         }
 
         /// <summary>
         /// Determines number of image array entries and pixel size.
         /// </summary>
-        /// <param name="metadata">Description of the image to create.</param>
-        /// <param name="cpFlags">Pitch flags.</param>
+        /// <param name="imageDesc">Description of the image to create.</param>
+        /// <param name="pitchFlags">Pitch flags.</param>
         /// <param name="mipMapCount">Output number of mipmap.</param>
         /// <param name="pixelSizeInBytes">Output total size to allocate pixel buffers for all images.</param>
-        private static void CalculateImageArray( TextureDescription metadata, Texture.PitchFlags cpFlags, out int mipMapCount, out int pixelSizeInBytes )
+        private static void CalculateImageArray( ImageDescription imageDesc, Texture.PitchFlags pitchFlags, out int mipMapCount, out int pixelSizeInBytes )
         {
             pixelSizeInBytes = 0;
             mipMapCount = 0;
 
-            for (int j = 0; j < metadata.ArraySize; j++)
+            for (int j = 0; j < imageDesc.ArraySize; j++)
             {
-                int w = metadata.Width;
-                int h = metadata.Height;
-                int d = metadata.Depth; 
+                int w = imageDesc.Width;
+                int h = imageDesc.Height;
+                int d = imageDesc.Depth; 
                 
-                for (int i = 0; i < metadata.MipLevels; i++)
+                for (int i = 0; i < imageDesc.MipLevels; i++)
                 {
                     int rowPitch, slicePitch;
-                    Texture.ComputePitch(metadata.Format, w, h, out rowPitch, out slicePitch, cpFlags);
+                    Texture.ComputePitch(imageDesc.Format, w, h, out rowPitch, out slicePitch, pitchFlags);
 
                     for (int slice = 0; slice < d; ++slice)
                     {
@@ -315,30 +418,34 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-
-//-------------------------------------------------------------------------------------
-// Fills in the image array entries
-//-------------------------------------------------------------------------------------
-        private static unsafe void SetupImageArray(IntPtr pMemory, int pixelSize, TextureDescription metadata, Texture.PitchFlags cpFlags, PixelBuffer[] mipmaps)
+        /// <summary>
+        /// Allocates PixelBuffers 
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="pixelSize"></param>
+        /// <param name="imageDesc"></param>
+        /// <param name="pitchFlags"></param>
+        /// <param name="output"></param>
+        private static unsafe void SetupImageArray(IntPtr buffer, int pixelSize, ImageDescription imageDesc, Texture.PitchFlags pitchFlags, PixelBuffer[] output)
         {
             int index = 0;
-            var pixels = (byte*)pMemory;
-            for (uint item = 0; item < metadata.ArraySize; ++item)
+            var pixels = (byte*)buffer;
+            for (uint item = 0; item < imageDesc.ArraySize; ++item)
             {
-                int w = metadata.Width;
-                int h = metadata.Height;
-                int d = metadata.Depth;
+                int w = imageDesc.Width;
+                int h = imageDesc.Height;
+                int d = imageDesc.Depth;
 
-                for (uint level = 0; level < metadata.MipLevels; ++level)
+                for (uint level = 0; level < imageDesc.MipLevels; ++level)
                 {
                     int rowPitch, slicePitch;
-                    Texture.ComputePitch(metadata.Format, w, h, out rowPitch, out slicePitch, cpFlags);
+                    Texture.ComputePitch(imageDesc.Format, w, h, out rowPitch, out slicePitch, pitchFlags);
 
                     for (uint slice = 0; slice < d; ++slice)
                     {
                         // We use the same memory organization that Direct3D 11 needs for D3D11_SUBRESOURCE_DATA
                         // with all slices of a given miplevel being continuous in memory
-                        mipmaps[index] = new PixelBuffer(w, h, d, metadata.Format, rowPitch, slicePitch, (IntPtr)pixels);
+                        output[index] = new PixelBuffer(w, h, d, imageDesc.Format, rowPitch, slicePitch, (IntPtr)pixels);
                         ++index;
 
                         pixels += slicePitch;

@@ -17,30 +17,44 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
 using System;
-using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
-using SharpDX.IO;
-using SharpDX.WIC;
+using NUnit.Framework;
 
 namespace SharpDX.Toolkit.Graphics.Tests
 {
-    public class Program
+    /// <summary>
+    /// Tests for <see cref="Texture2DBase"/>
+    /// </summary>
+    [TestFixture]
+    [Description("Tests SharpDX.Toolkit.Graphics.Image")]
+    public unsafe class TestImage
     {
-        public static void Main(string[] args)
+        private string dxsdkDir;
+
+        [TestFixtureSetUp] 
+        public void Initialize()
         {
-            //var test = new TestBuffer();
-            //test.AllTest();
+            dxsdkDir = Environment.GetEnvironmentVariable("DXSDK_DIR");
 
-            //var testTexture2D = new TestTexture2D();
-            //testTexture2D.TestConstructors();
+            if (string.IsNullOrEmpty(dxsdkDir))
+                throw new NotSupportedException("Install DirectX SDK June 2010 to run this test (DXSDK_DIR env variable is missing).");            
+        }
 
-            // Test Image
-            var testImage = new TestImage();
-            testImage.Initialize();
-            testImage.TestLoadDDS();
+        [Test]
+        public void TestConstructors()
+        {
+        }
+
+
+        [Test]
+        public void TestLoadDDS()
+        {
+            foreach (var file in Directory.EnumerateFiles(Path.Combine(dxsdkDir, @"Samples\Media"), "*.dds", SearchOption.AllDirectories))
+            {
+                var image = Image.Load(file);
+                Console.WriteLine("{0}: {1}", file, image.Description);
+            }
         }
     }
 }

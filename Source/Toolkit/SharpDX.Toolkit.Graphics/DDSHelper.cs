@@ -78,19 +78,6 @@ using SharpDX.Multimedia;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    [Flags]
-    public enum DDSFlags
-    {
-        None = 0x0,
-        LegacyDword = 0x1, // Assume pitch is DWORD aligned instead of BYTE aligned (used by some legacy DDS files)
-        NoLegacyExpansion = 0x2, // Do not implicitly convert legacy formats that result in larger pixel sizes (24 bpp, 3:3:2, A8L8, A4L4, P8, A8P8) 
-        NoR10B10G10A2Fixup = 0x4, // Do not use work-around for long-standing D3DX DDS file format issue which reversed the 10:10:10:2 color order masks
-        ForceRgb = 0x8, // Convert DXGI 1.1 BGR formats to Format.R8G8B8A8_UNorm to avoid use of optional WDDM 1.1 formats
-        No16Bpp = 0x10, // Conversions avoid use of 565, 5551, and 4444 formats and instead expand to 8888 to avoid use of optional WDDM 1.2 formats
-        CopyMemory = 0x20, // The content of the memory passed to the DDS Loader is copied to another internal buffer.
-        ForceDX10Ext = 0x10000, // Always use the 'DX10' header extension for DDS writer (i.e. don't try to write DX9 compatible DDS files)
-    };
-
     internal class DDSHelper
     {
         [Flags]
@@ -302,9 +289,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <exception cref="ArgumentException">If the argument headerPtr is null</exception>
         /// <exception cref="InvalidOperationException">If the DDS header contains invalid datas.</exception>
         /// <returns>True if the decoding is successfull, false if this is not a DDS header.</returns>
-        private static unsafe bool DecodeDDSHeader(IntPtr headerPtr, int size, DDSFlags flags, out TextureDescription description, out ConversionFlags convFlags)
+        private static unsafe bool DecodeDDSHeader(IntPtr headerPtr, int size, DDSFlags flags, out ImageDescription description, out ConversionFlags convFlags)
         {
-            description = new TextureDescription();
+            description = new ImageDescription();
             convFlags = ConversionFlags.None;
 
             if (headerPtr == IntPtr.Zero)
@@ -363,7 +350,6 @@ namespace SharpDX.Toolkit.Graphics
                     case ResourceDimension.Texture2D:
                         if ((headerDX10.MiscFlags & ResourceOptionFlags.TextureCube) != 0)
                         {
-                            description.OptionFlags |= ResourceOptionFlags.TextureCube;
                             description.ArraySize *= 6;
                             description.Dimension = TextureDimension.TextureCube;
                         }
@@ -414,7 +400,6 @@ namespace SharpDX.Toolkit.Graphics
                             throw new InvalidOperationException("Unexpected CubeMap, expecting all faces from DDS Header");
 
                         description.ArraySize = 6;
-                        description.OptionFlags |= ResourceOptionFlags.TextureCube;
                         description.Dimension = TextureDimension.TextureCube;
                     }
                     else
@@ -498,7 +483,7 @@ namespace SharpDX.Toolkit.Graphics
         //-------------------------------------------------------------------------------------
         // Encodes DDS file header (magic value, header, optional DX10 extended header)
         //-------------------------------------------------------------------------------------
-        private unsafe static void EncodeDDSHeader( TextureDescription metadata, DDSFlags flags,  IntPtr pDestination, int maxsize, out int required )
+        private unsafe static void EncodeDDSHeader( ImageDescription metadata, DDSFlags flags,  IntPtr pDestination, int maxsize, out int required )
         {
             if (metadata.ArraySize > 1)
             {
@@ -716,7 +701,7 @@ namespace SharpDX.Toolkit.Graphics
 
                 }
 
-                if ((metadata.OptionFlags & ResourceOptionFlags.TextureCube) != 0)
+                if (metadata.Dimension == TextureDimension.TextureCube)
                 {
                     ext->MiscFlags |= ResourceOptionFlags.TextureCube;
                     ext->ArraySize = metadata.ArraySize / 6;
@@ -980,15 +965,16 @@ namespace SharpDX.Toolkit.Graphics
         }
 
 
-            //-------------------------------------------------------------------------------------
-            // Load a DDS file in memory
-            //-------------------------------------------------------------------------------------
-        public unsafe static Image LoadFromDDSMemory(IntPtr pSource, int size, DDSFlags flags)
+        //-------------------------------------------------------------------------------------
+        // Load a DDS file in memory
+        //-------------------------------------------------------------------------------------
+        public unsafe static Image LoadFromDDSMemory(IntPtr pSource, int size, DDSFlags flags, GCHandle? handle = null)
         {
-
-            ConversionFlags convFlags = 0;
-            TextureDescription mdata;
-            DecodeDDSHeader(pSource, size, flags, out mdata, out convFlags);
+            ConversionFlags convFlags;
+            ImageDescription mdata;
+            // If the memory pointed is not a DDS memory, return null.
+            if (!DecodeDDSHeader(pSource, size, flags, out mdata, out convFlags))
+                return null;
 
             int offset = sizeof (uint) + Utilities.SizeOf<DDS.Header>();
             if ((convFlags & ConversionFlags.DX10) != 0)
@@ -999,18 +985,19 @@ namespace SharpDX.Toolkit.Graphics
             {
                 pal8 = (int*) ((byte*) (pSource) + offset);
                 offset += (256 * sizeof (uint));
-                if (size < offset)
-                    throw new InvalidOperationException();
             }
 
-            var image = CopyImage(pSource, offset, size - offset, mdata, (flags & DDSFlags.LegacyDword) != 0 ? Texture.PitchFlags.LegacyDword : Texture.PitchFlags.None, convFlags, pal8);
+            if (size < offset)
+                throw new InvalidOperationException();
+
+            var image = CreateImageFromDDS(pSource, offset, size - offset, mdata, (flags & DDSFlags.LegacyDword) != 0 ? Texture.PitchFlags.LegacyDword : Texture.PitchFlags.None, convFlags, pal8, handle);
             return image;
         }
 
-//-------------------------------------------------------------------------------------
-// Converts or copies image data from pPixels into scratch image data
-//-------------------------------------------------------------------------------------
-        private static unsafe Image CopyImage(IntPtr pDDS, int offset, int size, TextureDescription metadata, Texture.PitchFlags cpFlags, ConversionFlags convFlags, int* pal8)
+        //-------------------------------------------------------------------------------------
+        // Converts or copies image data from pPixels into scratch image data
+        //-------------------------------------------------------------------------------------
+        private static unsafe Image CreateImageFromDDS(IntPtr pDDS, int offset, int size, ImageDescription metadata, Texture.PitchFlags cpFlags, ConversionFlags convFlags, int* pal8, GCHandle? handle)
         {
             if ((convFlags & ConversionFlags.Expand) != 0)
             {
@@ -1022,8 +1009,14 @@ namespace SharpDX.Toolkit.Graphics
                     cpFlags |= Texture.PitchFlags.Bpp8;
             }
 
-            var image = new Image(metadata, cpFlags, pDDS, offset, true);
-            var imageDst = (convFlags & (ConversionFlags.Expand | ConversionFlags.CopyMemory)) != 0 || ((cpFlags & Texture.PitchFlags.LegacyDword) != 0) ? new Image(metadata, cpFlags, IntPtr.Zero, 0) : image;
+            var image = new Image(metadata, cpFlags, pDDS, offset, handle, true);
+
+            // If source image == dest image and no swizzle/alpha is required, we can return it as-is
+            var isCopyNeeded = (convFlags & (ConversionFlags.Expand | ConversionFlags.CopyMemory)) !=0 || ((cpFlags & Texture.PitchFlags.LegacyDword) != 0);
+            if (!isCopyNeeded && (convFlags & (ConversionFlags.Swizzle | ConversionFlags.NoAlpha)) == 0)
+                return image;
+
+            var imageDst = isCopyNeeded ? new Image(metadata, cpFlags, IntPtr.Zero, 0, null, false) : image;
 
             var images = image.PixelBuffers;
             var imagesDst = imageDst.PixelBuffers;
@@ -1034,10 +1027,6 @@ namespace SharpDX.Toolkit.Graphics
 
             int index = 0;
             int d = metadata.Depth;
-
-            // If source image == dest image and no swizzle/alpha is required, we can return it as-is
-            if (ReferenceEquals(image, imageDst) && (convFlags & (ConversionFlags.Swizzle | ConversionFlags.NoAlpha)) == 0)
-                return image;
 
             // Else we need to go through each mips/depth slice to convert all scanlines.
             for (int level = 0; level < metadata.MipLevels; ++level)

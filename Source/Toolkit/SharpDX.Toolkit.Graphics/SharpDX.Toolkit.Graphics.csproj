@@ -28,7 +28,9 @@
     <Compile Include="Buffer.Raw.cs" />
     <Compile Include="Buffer.Argument.cs" />
     <Compile Include="Buffer.Typed.cs" />
+    <Compile Include="ImageDescription.cs" />
     <Compile Include="DDS.cs" />
+    <Compile Include="DDSFlags.cs" />
     <Compile Include="DDSHelper.cs" />
     <Compile Include="DisplayMode.cs" />
     <Compile Include="GraphicsAdapter.cs" />
