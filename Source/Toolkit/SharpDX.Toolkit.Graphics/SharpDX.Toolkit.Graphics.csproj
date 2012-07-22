@@ -83,11 +83,17 @@
     <Compile Include="TextureDescription.cs" />
     <Compile Include="VertexPositionColor.cs" />
     <Compile Include="ViewType.cs" />
+    <Compile Include="WICFlags.cs" />
+    <Compile Include="WICHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SharpDX.D3DCompiler\SharpDX.D3DCompiler.csproj" Condition=" '$(SharpDXWin8)' == 'false'">
       <Project>{361d3f81-a48a-47f2-80df-ca4f9536cb4e}</Project>
       <Name>SharpDX.D3DCompiler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SharpDX.Direct2D1\SharpDX.Direct2D1.csproj">
+      <Project>{c97878f4-1510-4bba-8153-bd71da7d50d8}</Project>
+      <Name>SharpDX.Direct2D1</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\SharpDX.Direct3D11\SharpDX.Direct3D11.csproj">
       <Project>{736dfb52-1afe-4eff-9710-89046ab5b1f9}</Project>
