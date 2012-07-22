@@ -77,7 +77,7 @@ namespace SharpDX
             {
                 System.Diagnostics.Debug.Assert(sizeInBytes > 0);
 
-                _buffer = (sbyte*)Marshal.AllocHGlobal(sizeInBytes);
+                _buffer = (sbyte*)Utilities.AllocateMemory(sizeInBytes);
                 _size = sizeInBytes;
                 _ownsBuffer = true;
             }
@@ -89,7 +89,7 @@ namespace SharpDX
 
             if (makeCopy)
             {
-                _buffer = (sbyte*)Marshal.AllocHGlobal(sizeInBytes);
+                _buffer = (sbyte*)Utilities.AllocateMemory(sizeInBytes);
                 Utilities.CopyMemory((IntPtr)_buffer, (IntPtr)buffer, sizeInBytes);
             }
             else
@@ -138,7 +138,7 @@ namespace SharpDX
             {
                 if (_ownsBuffer && _buffer != (sbyte*)0)
                 {
-                    Marshal.FreeHGlobal((IntPtr)_buffer);
+                    Utilities.FreeMemory((IntPtr)_buffer);
                     _buffer = (sbyte*)0;
                 }
             }

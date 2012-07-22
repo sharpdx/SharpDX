@@ -315,6 +315,35 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Allocate an aligned memory buffer.
+        /// </summary>
+        /// <param name="sizeInBytes">Size of the buffer to allocate.</param>
+        /// <param name="align">Alignment, 16 bytes by default.</param>
+        /// <returns>A pointer to a buffer aligned.</returns>
+        /// <remarks>
+        /// To free this buffer, call <see cref="FreeMemory"/>
+        /// </remarks>
+        public unsafe static IntPtr AllocateMemory(int sizeInBytes, int align = 16)
+        {
+            var memPtr = Marshal.AllocHGlobal(sizeInBytes + 15 + IntPtr.Size);
+            var ptr = (ulong)((byte*)memPtr + sizeof(void*) + 15) & 0xFFFFFFFFFFFFFF00;
+            ((IntPtr*)ptr)[-1] = memPtr;
+            return new IntPtr(checked((long)ptr));
+        }
+
+        /// <summary>
+        /// Allocate an aligned memory buffer.
+        /// </summary>
+        /// <returns>A pointer to a buffer aligned.</returns>
+        /// <remarks>
+        /// The buffer must have been allocated with <see cref="AllocateMemory"/>
+        /// </remarks>
+        public unsafe static void FreeMemory(IntPtr alignedBuffer)
+        {
+            Marshal.FreeHGlobal(((IntPtr*) alignedBuffer)[-1]);
+        }
+
+        /// <summary>
         /// Converts a pointer to a null-terminating string up to maxLength characters to a .Net string.
         /// </summary>
         /// <param name="pointer">The pointer to an ansi null string.</param>
