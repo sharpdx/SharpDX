@@ -1172,7 +1172,12 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             // Return the imageDst or the original image
-            return isCopyNeeded ? imageDst : image;
+            if (isCopyNeeded)
+            {
+                image.Dispose();
+                image = imageDst;
+            }
+            return image;
         }
 
 
