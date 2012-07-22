@@ -36,6 +36,7 @@
     <Compile Include="GraphicsAdapter.cs" />
     <Compile Include="GraphicsPresenter.cs" />
     <Compile Include="Image.cs" />
+    <Compile Include="ImageFileType.cs" />
     <Compile Include="PixelBuffer.cs" />
     <Compile Include="PresentationParameters.cs" />
     <Compile Include="PresentInterval.cs" />

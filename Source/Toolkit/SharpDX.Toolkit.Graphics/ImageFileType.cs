@@ -17,30 +17,51 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Runtime.InteropServices;
-using SharpDX.IO;
-using SharpDX.WIC;
-
-namespace SharpDX.Toolkit.Graphics.Tests
+namespace SharpDX.Toolkit.Graphics
 {
-    public class Program
+    /// <summary>
+    /// Image file format used by <see cref="Image.Save"/>
+    /// </summary>
+    public enum ImageFileType
     {
-        public static void Main(string[] args)
-        {
-            //var test = new TestBuffer();
-            //test.AllTest();
+        /// <summary>
+        /// A DDS file.
+        /// </summary>
+        Dds,
 
-            //var testTexture2D = new TestTexture2D();
-            //testTexture2D.TestConstructors();
+        /// <summary>
+        /// A PNG file.
+        /// </summary>
+        Png,
 
-            // Test Image
-            var testImage = new TestImage();
-            testImage.Initialize();
-            testImage.TestLoadAndSaveDDS();
-        }
+        /// <summary>
+        /// A GIF file.
+        /// </summary>
+        Gif,
+
+        /// <summary>
+        /// A JPG file.
+        /// </summary>
+        Jpg,
+
+        /// <summary>
+        /// A BMP file.
+        /// </summary>
+        Bmp,
+
+        /// <summary>
+        /// A TIFF file.
+        /// </summary>
+        Tiff,
+        
+        /// <summary>
+        /// A WMP file.
+        /// </summary>
+        Wmp,
+
+        /// <summary>
+        /// A TGA File.
+        /// </summary>
+        Tga,
     }
 }

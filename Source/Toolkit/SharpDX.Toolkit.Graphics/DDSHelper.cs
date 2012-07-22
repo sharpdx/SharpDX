@@ -276,9 +276,6 @@ namespace SharpDX.Toolkit.Graphics
         }
 
 
-//-------------------------------------------------------------------------------------
-// Decodes DDS header including optional DX10 extended header
-//-------------------------------------------------------------------------------------
         /// <summary>
         /// Decodes DDS header including optional DX10 extended header
         /// </summary>
@@ -481,14 +478,22 @@ namespace SharpDX.Toolkit.Graphics
             return true;
         }
 
-        //-------------------------------------------------------------------------------------
-        // Encodes DDS file header (magic value, header, optional DX10 extended header)
-        //-------------------------------------------------------------------------------------
-        private unsafe static void EncodeDDSHeader( ImageDescription metadata, DDSFlags flags,  IntPtr pDestination, int maxsize, out int required )
+        /// <summary>
+        /// Encodes DDS file header (magic value, header, optional DX10 extended header)
+        /// </summary>
+        /// <param name="flags">Flags used for decoding the DDS header.</param>
+        /// <param name="description">Output texture description.</param>
+        /// <param name="pDestination">Pointer to the DDS output header. Can be set to IntPtr.Zero to calculated the required bytes.</param>
+        /// <param name="maxsize">The maximum size of the destination buffer.</param>
+        /// <param name="required">Output the number of bytes required to write the DDS header.</param>
+        /// <exception cref="ArgumentException">If the argument headerPtr is null</exception>
+        /// <exception cref="InvalidOperationException">If the DDS header contains invalid datas.</exception>
+        /// <returns>True if the decoding is successfull, false if this is not a DDS header.</returns>
+        private unsafe static void EncodeDDSHeader( ImageDescription description, DDSFlags flags,  IntPtr pDestination, int maxsize, out int required )
         {
-            if (metadata.ArraySize > 1)
+            if (description.ArraySize > 1)
             {
-                if ((metadata.ArraySize != 6) || (metadata.Dimension != TextureDimension.Texture2D) || (metadata.Dimension != TextureDimension.TextureCube))
+                if ((description.ArraySize != 6) || (description.Dimension != TextureDimension.Texture2D) || (description.Dimension != TextureDimension.TextureCube))
                 {
                     flags |= DDSFlags.ForceDX10Ext;
                 }
@@ -497,7 +502,7 @@ namespace SharpDX.Toolkit.Graphics
             var ddpf = default(DDS.PixelFormat);
             if ((flags & DDSFlags.ForceDX10Ext) == 0)
             {
-                switch (metadata.Format)
+                switch (description.Format)
                 {
                     case Format.R8G8B8A8_UNorm:
                         ddpf = DDS.PixelFormat.A8B8G8R8;
@@ -625,29 +630,29 @@ namespace SharpDX.Toolkit.Graphics
             header->Flags = DDS.HeaderFlags.Texture;
             header->SurfaceFlags = DDS.SurfaceFlags.Texture;
 
-            if (metadata.MipLevels > 0)
+            if (description.MipLevels > 0)
             {
                 header->Flags |= DDS.HeaderFlags.Mipmap;
-                header->MipMapCount = metadata.MipLevels;
+                header->MipMapCount = description.MipLevels;
 
                 if (header->MipMapCount > 1)
                     header->SurfaceFlags |= DDS.SurfaceFlags.Mipmap;
             }
 
-            switch (metadata.Dimension)
+            switch (description.Dimension)
             {
                 case TextureDimension.Texture1D:
-                    header->Height = metadata.Height;
+                    header->Height = description.Height;
                     header->Width = header->Depth = 1;
                     break;
 
                 case TextureDimension.Texture2D:
                 case TextureDimension.TextureCube:
-                    header->Height = metadata.Height;
-                    header->Width = metadata.Width;
+                    header->Height = description.Height;
+                    header->Width = description.Width;
                     header->Depth = 1;
 
-                    if (metadata.Dimension == TextureDimension.TextureCube)
+                    if (description.Dimension == TextureDimension.TextureCube)
                     {
                         header->SurfaceFlags |= DDS.SurfaceFlags.Cubemap;
                         header->CubemapFlags |= DDS.CubemapFlags.AllFaces;
@@ -658,16 +663,16 @@ namespace SharpDX.Toolkit.Graphics
 
                     header->Flags |= DDS.HeaderFlags.Volume;
                     header->CubemapFlags |= DDS.CubemapFlags.Volume;
-                    header->Height = metadata.Height;
-                    header->Width = metadata.Width;
-                    header->Depth = metadata.Depth;
+                    header->Height = description.Height;
+                    header->Width = description.Width;
+                    header->Depth = description.Depth;
                     break;
             }
 
             int rowPitch, slicePitch;
-            Texture.ComputePitch(metadata.Format, metadata.Width, metadata.Height, out rowPitch, out slicePitch, Texture.PitchFlags.None);
+            Texture.ComputePitch(description.Format, description.Width, description.Height, out rowPitch, out slicePitch, Texture.PitchFlags.None);
 
-            if (FormatHelper.IsCompressed(metadata.Format))
+            if (FormatHelper.IsCompressed(description.Format))
             {
                 header->Flags |= DDS.HeaderFlags.LinearSize;
                 header->PitchOrLinearSize = slicePitch;
@@ -686,8 +691,8 @@ namespace SharpDX.Toolkit.Graphics
 
                 Utilities.ClearMemory((IntPtr) ext, 0, Utilities.SizeOf<DDS.HeaderDXT10>());
 
-                ext->DXGIFormat = metadata.Format;
-                switch (metadata.Dimension)
+                ext->DXGIFormat = description.Format;
+                switch (description.Dimension)
                 {
                     case TextureDimension.Texture1D:
                         ext->ResourceDimension = ResourceDimension.Texture1D;
@@ -702,14 +707,14 @@ namespace SharpDX.Toolkit.Graphics
 
                 }
 
-                if (metadata.Dimension == TextureDimension.TextureCube)
+                if (description.Dimension == TextureDimension.TextureCube)
                 {
                     ext->MiscFlags |= ResourceOptionFlags.TextureCube;
-                    ext->ArraySize = metadata.ArraySize / 6;
+                    ext->ArraySize = description.ArraySize / 6;
                 }
                 else
                 {
-                    ext->ArraySize = metadata.ArraySize;
+                    ext->ArraySize = description.ArraySize;
                 }
             }
             else
@@ -718,10 +723,6 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        //-------------------------------------------------------------------------------------
-        // Converts an image row with optional clearing of alpha value to 1.0
-        // Returns true if supported, false if expansion case not supported
-        //-------------------------------------------------------------------------------------
         enum TEXP_LEGACY_FORMAT
         {
             UNKNOWN = 0,
@@ -757,9 +758,18 @@ namespace SharpDX.Toolkit.Graphics
             return lformat;
         }
 
-
-
-
+        /// <summary>
+        // Converts an image row with optional clearing of alpha value to 1.0
+        /// </summary>
+        /// <param name="pDestination"></param>
+        /// <param name="outSize"></param>
+        /// <param name="outFormat"></param>
+        /// <param name="pSource"></param>
+        /// <param name="inSize"></param>
+        /// <param name="inFormat"></param>
+        /// <param name="pal8"></param>
+        /// <param name="flags"></param>
+        /// <returns></returns>
         static unsafe bool LegacyExpandScanline( IntPtr pDestination, int outSize, DXGI.Format outFormat, 
                                             IntPtr pSource, int inSize, TEXP_LEGACY_FORMAT inFormat,
                                             int* pal8, ScanlineFlags flags )
@@ -965,10 +975,14 @@ namespace SharpDX.Toolkit.Graphics
             return false;
         }
 
-
-        //-------------------------------------------------------------------------------------
-        // Load a DDS file in memory
-        //-------------------------------------------------------------------------------------
+        /// <summary>
+        /// Load a DDS file in memory
+        /// </summary>
+        /// <param name="pSource"></param>
+        /// <param name="size"></param>
+        /// <param name="flags"></param>
+        /// <param name="handle"></param>
+        /// <returns></returns>
         public unsafe static Image LoadFromDDSMemory(IntPtr pSource, int size, DDSFlags flags, GCHandle? handle = null)
         {
             ConversionFlags convFlags;
@@ -996,8 +1010,77 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         //-------------------------------------------------------------------------------------
-        // Converts or copies image data from pPixels into scratch image data
+        // Save a DDS to a stream
         //-------------------------------------------------------------------------------------
+        public unsafe static void SaveToDDSStream(Image images, ImageDescription metadata, DDSFlags flags, System.IO.Stream stream)
+        {
+            // Determine memory required
+            int totalSize = 0;
+            int headerSize = 0;
+            EncodeDDSHeader(metadata, flags, IntPtr.Zero, 0, out totalSize);
+            headerSize = totalSize;
+
+            int maxSlice = 0;
+
+            for (int i = 0; i < images.PixelBuffers.Length; ++i)
+            {
+                int slice = images.PixelBuffers[i].SlicePitch;
+                totalSize += slice;
+                if (slice > maxSlice)
+                    maxSlice = slice;
+            }
+
+            Debug.Assert(totalSize > 0);
+
+            // Allocate a single temporary buffer to save the headers and each slice.
+            var buffer = new byte[Math.Max(maxSlice, headerSize)];
+
+            fixed (void* pbuffer = buffer)
+            {
+                int required;
+                EncodeDDSHeader(metadata, flags, (IntPtr) pbuffer, headerSize, out required);
+                stream.Write(buffer, 0, headerSize);
+            }
+
+            int remaining = totalSize - headerSize;
+            Debug.Assert(remaining > 0);
+
+            int index = 0;
+            for (int item = 0; item < metadata.ArraySize; ++item)
+            {
+                int d = metadata.Depth;
+
+                for (int level = 0; level < metadata.MipLevels; ++level)
+                {
+                    for (int slice = 0; slice < d; ++slice)
+                    {
+                        int pixsize = images.PixelBuffers[index].SlicePitch;
+                        Utilities.Read(images.PixelBuffers[index].Pixels, buffer, 0, pixsize);
+                        stream.Write(buffer, 0, pixsize);
+                        ++index;
+                    }
+
+                    if (d > 1)
+                        d >>= 1;
+                }
+            }
+
+            // Flush at the end of the image to be sure that the whole image was saved.
+            stream.Flush();
+        }
+
+        /// <summary>
+        /// Converts or copies image data from pPixels into scratch image data
+        /// </summary>
+        /// <param name="pDDS"></param>
+        /// <param name="offset"></param>
+        /// <param name="size"></param>
+        /// <param name="metadata"></param>
+        /// <param name="cpFlags"></param>
+        /// <param name="convFlags"></param>
+        /// <param name="pal8"></param>
+        /// <param name="handle"></param>
+        /// <returns></returns>
         private static unsafe Image CreateImageFromDDS(IntPtr pDDS, int offset, int size, ImageDescription metadata, Texture.PitchFlags cpFlags, ConversionFlags convFlags, int* pal8, GCHandle? handle)
         {
             if ((convFlags & ConversionFlags.Expand) != 0)
@@ -1013,7 +1096,7 @@ namespace SharpDX.Toolkit.Graphics
             // If source image == dest image and no swizzle/alpha is required, we can return it as-is
             var isCopyNeeded = (convFlags & (ConversionFlags.Expand | ConversionFlags.CopyMemory)) != 0 || ((cpFlags & Texture.PitchFlags.LegacyDword) != 0);
 
-            var image = new Image(metadata, cpFlags, pDDS, offset, handle, !isCopyNeeded);
+            var image = new Image(metadata, pDDS, offset, handle, !isCopyNeeded);
 
             // Size must be inferior to destination size.
             Debug.Assert(size <= image.TotalSizeInBytes);
@@ -1021,7 +1104,7 @@ namespace SharpDX.Toolkit.Graphics
             if (!isCopyNeeded && (convFlags & (ConversionFlags.Swizzle | ConversionFlags.NoAlpha)) == 0)
                 return image;
 
-            var imageDst = isCopyNeeded ? new Image(metadata, cpFlags, IntPtr.Zero, 0, null, false) : image;
+            var imageDst = isCopyNeeded ? new Image(metadata, IntPtr.Zero, 0, null, false) : image;
 
             var images = image.PixelBuffers;
             var imagesDst = imageDst.PixelBuffers;
@@ -1101,10 +1184,15 @@ namespace SharpDX.Toolkit.Graphics
             Legacy = 0x2, // Enables specific legacy format conversion cases
         };
 
-        //-------------------------------------------------------------------------------------
-        // Converts an image row with optional clearing of alpha value to 1.0
-        // Returns true if supported, false if expansion case not supported
-        //-------------------------------------------------------------------------------------
+        /// <summary>
+        /// Converts an image row with optional clearing of alpha value to 1.0
+        /// </summary>
+        /// <param name="pDestination"></param>
+        /// <param name="outSize"></param>
+        /// <param name="pSource"></param>
+        /// <param name="inSize"></param>
+        /// <param name="inFormat"></param>
+        /// <param name="flags"></param>
         private unsafe static void ExpandScanline(IntPtr pDestination, int outSize, IntPtr pSource, int inSize, DXGI.Format inFormat, ScanlineFlags flags)
         {
             switch (inFormat)

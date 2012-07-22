@@ -116,13 +116,12 @@ namespace SharpDX.Toolkit.Graphics
         /// Initializes a new instance of the <see cref="Image" /> class.
         /// </summary>
         /// <param name="description">The image description.</param>
-        /// <param name="pitchFlags">The pitch flags.</param>
         /// <param name="dataPointer">The pointer to the data buffer.</param>
         /// <param name="offset">The offset from the beginning of the data buffer.</param>
         /// <param name="handle">The handle (optionnal).</param>
         /// <param name="bufferIsDisposable">if set to <c>true</c> [buffer is disposable].</param>
         /// <exception cref="System.InvalidOperationException">If the format is invalid, or width/height/depth/arraysize is invalid with respect to the dimension.</exception>
-        internal unsafe Image(ImageDescription description, Texture.PitchFlags pitchFlags, IntPtr dataPointer, int offset, GCHandle? handle, bool bufferIsDisposable)
+        internal unsafe Image(ImageDescription description, IntPtr dataPointer, int offset, GCHandle? handle, bool bufferIsDisposable)
         {
             if (!FormatHelper.IsValid(description.Format) || FormatHelper.IsVideo(description.Format))
                 throw new InvalidOperationException("Unsupported DXGI Format");
@@ -165,7 +164,7 @@ namespace SharpDX.Toolkit.Graphics
 
             // Calculate mipmaps
             int pixelBufferCount;
-            CalculateImageArray(description, pitchFlags, out pixelBufferCount, out TotalSizeInBytes);
+            CalculateImageArray(description, Texture.PitchFlags.None, out pixelBufferCount, out TotalSizeInBytes);
 
             // Allocate all pixel buffers
             PixelBuffers = new PixelBuffer[pixelBufferCount];
@@ -182,7 +181,7 @@ namespace SharpDX.Toolkit.Graphics
                 this.bufferIsDisposable = true;
             }
 
-            SetupImageArray((IntPtr)((byte*)buffer + offset), TotalSizeInBytes, description, pitchFlags, PixelBuffers);
+            SetupImageArray((IntPtr)((byte*)buffer + offset), TotalSizeInBytes, description, Texture.PitchFlags.None, PixelBuffers);
 
             Description = description;
         }
@@ -218,7 +217,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>A new image.</returns>
         public static Image New(ImageDescription description)
         {
-            return new Image(description, Texture.PitchFlags.None, IntPtr.Zero, 0, null, false);
+            return new Image(description, IntPtr.Zero, 0, null, false);
         }
 
         /// <summary>
@@ -231,7 +230,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>A new image.</returns>
         public static Image New1D(int width, MipMapCount mipMapCount, PixelFormat format, int arraySize = 1)
         {
-            return new Image(CreateDescription(TextureDimension.Texture1D, width, 1, 1, mipMapCount, format, arraySize), Texture.PitchFlags.None, IntPtr.Zero, 0, null, false);
+            return new Image(CreateDescription(TextureDimension.Texture1D, width, 1, 1, mipMapCount, format, arraySize), IntPtr.Zero, 0, null, false);
         }
 
         /// <summary>
@@ -245,7 +244,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>A new image.</returns>
         public static Image New2D(int width, int height, MipMapCount mipMapCount, PixelFormat format, int arraySize = 1)
         {
-            return new Image(CreateDescription(TextureDimension.Texture2D, width, height, 1, mipMapCount, format, arraySize), Texture.PitchFlags.None, IntPtr.Zero, 0, null, false);
+            return new Image(CreateDescription(TextureDimension.Texture2D, width, height, 1, mipMapCount, format, arraySize), IntPtr.Zero, 0, null, false);
         }
 
         /// <summary>
@@ -257,7 +256,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>A new image.</returns>
         public static Image NewCube(int width, MipMapCount mipMapCount, PixelFormat format)
         {
-            return new Image(CreateDescription(TextureDimension.TextureCube, width, width, 1, mipMapCount, format, 6), Texture.PitchFlags.None, IntPtr.Zero, 0, null, false);
+            return new Image(CreateDescription(TextureDimension.TextureCube, width, width, 1, mipMapCount, format, 6), IntPtr.Zero, 0, null, false);
         }
 
         /// <summary>
@@ -271,7 +270,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>A new image.</returns>
         public static Image New3D(int width, int height, int depth, MipMapCount mipMapCount, PixelFormat format)
         {
-            return new Image(CreateDescription(TextureDimension.Texture3D, width, width, depth, mipMapCount, format, 1), Texture.PitchFlags.None, IntPtr.Zero, 0, null, false);
+            return new Image(CreateDescription(TextureDimension.Texture3D, width, width, depth, mipMapCount, format, 1), IntPtr.Zero, 0, null, false);
         }
 
         /// <summary>
@@ -372,6 +371,38 @@ namespace SharpDX.Toolkit.Graphics
 
             // If everything was fine, load the image from memory
             return Load(memoryPtr, size, false);
+        }
+
+        /// <summary>
+        /// Saves this instance to a file.
+        /// </summary>
+        /// <param name="fileName">The destination file.</param>
+        /// <param name="fileType">Specify the output format.</param>
+        /// <remarks>This method support the following format: <c>dds, bmp, jpg, png, gif, tiff, wmp, tga</c>.</remarks>
+        public void Save(string fileName, ImageFileType fileType)
+        {
+            using (var imageStream = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+            {
+                Save(imageStream, fileType);
+            }
+        }
+
+        /// <summary>
+        /// Saves this instance to a stream.
+        /// </summary>
+        /// <param name="imageStream">The destination stream.</param>
+        /// <param name="fileType">Specify the output format.</param>
+        /// <remarks>This method support the following format: <c>dds, bmp, jpg, png, gif, tiff, wmp, tga</c>.</remarks>
+        public void Save(Stream imageStream, ImageFileType fileType)
+        {
+            switch (fileType)
+            {
+                case ImageFileType.Dds:
+                    DDSHelper.SaveToDDSStream(this, this.Description, DDSFlags.ForceDX10Ext, imageStream);
+                    break;
+                default:
+                    throw new NotImplementedException("This file format is not yet implemented.");
+            }
         }
 
         private static ImageDescription CreateDescription(TextureDimension dimension, int width, int height, int depth, MipMapCount mipMapCount, PixelFormat format, int arraySize)
