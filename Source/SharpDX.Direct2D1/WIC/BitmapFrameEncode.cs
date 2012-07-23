@@ -67,15 +67,36 @@ namespace SharpDX.WIC
         /// </summary>	
         /// <param name="lineCount"><dd>  <p>The number of lines to encode.</p> </dd></param>	
         /// <param name="buffer">A data buffer containing the pixels to copy from.</param>	
+        /// <param name="totalSizeInBytes">Total size in bytes of pixels to write. If == 0, size is calculated with lineCount * rowStride.</param>
         /// <remarks>	
         /// <p>Successive <strong>WritePixels</strong> calls are assumed to be sequential scanline access in the output image.</p>	
         /// </remarks>	
         /// <msdn-id>ee690158</msdn-id>	
         /// <unmanaged>HRESULT IWICBitmapFrameEncode::WritePixels([In] unsigned int lineCount,[In] unsigned int cbStride,[In] unsigned int cbBufferSize,[In, Buffer] void* pbPixels)</unmanaged>	
         /// <unmanaged-short>IWICBitmapFrameEncode::WritePixels</unmanaged-short>	
-        public void WritePixels(int lineCount, DataRectangle buffer)
+        public void WritePixels(int lineCount, DataRectangle buffer, int totalSizeInBytes = 0)
         {
-            WritePixels(lineCount, buffer.Pitch, lineCount*buffer.Pitch, buffer.DataPointer);
+            WritePixels(lineCount, buffer.DataPointer, buffer.Pitch, totalSizeInBytes);
+        }
+
+        /// <summary>	
+        /// <p>Encodes the frame scanlines.</p>	
+        /// </summary>	
+        /// <param name="lineCount"><dd>  <p>The number of lines to encode.</p> </dd></param>	
+        /// <param name="buffer">A data buffer containing the pixels to copy from.</param>
+        /// <param name="rowStride">The stride of one row.</param>
+        /// <param name="totalSizeInBytes">Total size in bytes of pixels to write. If == 0, size is calculated with lineCount * rowStride.</param>
+        /// <remarks>	
+        /// <p>Successive <strong>WritePixels</strong> calls are assumed to be sequential scanline access in the output image.</p>	
+        /// </remarks>	
+        /// <msdn-id>ee690158</msdn-id>	
+        /// <unmanaged>HRESULT IWICBitmapFrameEncode::WritePixels([In] unsigned int lineCount,[In] unsigned int cbStride,[In] unsigned int cbBufferSize,[In, Buffer] void* pbPixels)</unmanaged>	
+        /// <unmanaged-short>IWICBitmapFrameEncode::WritePixels</unmanaged-short>	
+        public void WritePixels(int lineCount, IntPtr buffer, int rowStride, int totalSizeInBytes = 0)
+        {
+            if (totalSizeInBytes == 0)
+                totalSizeInBytes = lineCount * rowStride;
+            WritePixels(lineCount, rowStride, totalSizeInBytes, buffer);
         }
 
         /// <summary>	

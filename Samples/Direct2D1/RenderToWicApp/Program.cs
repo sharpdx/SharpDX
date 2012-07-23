@@ -72,7 +72,8 @@ namespace RenderToWicApp
             var bitmapFrameEncode = new BitmapFrameEncode(encoder);
             bitmapFrameEncode.Initialize();
             bitmapFrameEncode.SetSize(width, height);
-            bitmapFrameEncode.PixelFormat = SharpDX.WIC.PixelFormat.FormatDontCare;
+            var pixelFormatGuid = SharpDX.WIC.PixelFormat.FormatDontCare;
+            bitmapFrameEncode.SetPixelFormat(ref pixelFormatGuid);
             bitmapFrameEncode.WriteSource(wicBitmap);
 
             bitmapFrameEncode.Commit();

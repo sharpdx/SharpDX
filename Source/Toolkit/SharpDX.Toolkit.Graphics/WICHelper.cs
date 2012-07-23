@@ -72,6 +72,7 @@
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using SharpDX.DXGI;
 using SharpDX.WIC;
 
@@ -209,7 +210,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="guid">A WIC <see cref="WIC.PixelFormat"/> </param>
         /// <returns>A <see cref="SharpDX.DXGI.Format"/></returns>
-        public static DXGI.Format ToDXGI(Guid guid)
+        private static DXGI.Format ToDXGI(Guid guid)
         {
             for (int i = 0; i < WICToDXGIFormats.Length; ++i)
             {
@@ -226,7 +227,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="format">A <see cref="SharpDX.DXGI.Format"/></param>
         /// <param name="guid">A WIC <see cref="WIC.PixelFormat"/> Guid.</param>
         /// <returns>True if conversion succeed, false otherwise.</returns>
-        public static bool ToWIC(DXGI.Format format, out Guid guid)
+        private static bool ToWIC(DXGI.Format format, out Guid guid)
         {
             for (int i = 0; i < WICToDXGIFormats.Length; ++i)
             {
@@ -270,7 +271,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="targetGuid">A WIC <see cref="WIC.PixelFormat"/> Guid.</param>
         /// <returns>The number of bits per pixels for a WIC. If this method is failing to calculate the number of pixels, return 0.</returns>
-        public static int GetBitsPerPixel(Guid targetGuid)
+        private static int GetBitsPerPixel(Guid targetGuid)
         {
             using (var info = new ComponentInfo(Factory, targetGuid))
             {
@@ -291,7 +292,7 @@ namespace SharpDX.Toolkit.Graphics
         //-------------------------------------------------------------------------------------
         // Returns the DXGI format and optionally the WIC pixel Guid to convert to
         //-------------------------------------------------------------------------------------
-        public static DXGI.Format DetermineFormat(Guid pixelFormat, WICFlags flags, out Guid pixelFormatOut)
+        private static DXGI.Format DetermineFormat(Guid pixelFormat, WICFlags flags, out Guid pixelFormatOut)
         {
             DXGI.Format format = ToDXGI(pixelFormat);
             pixelFormatOut = Guid.Empty;
@@ -362,28 +363,26 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="pixelFormat">The pixel format.</param>
         /// <returns></returns>
         /// <exception cref="System.InvalidOperationException">If pixel format is not supported.</exception>
-        public static ImageDescription DecodeMetadata(WICFlags flags, BitmapDecoder decoder, BitmapFrameDecode frame, out Guid pixelFormat)
+        private static ImageDescription? DecodeMetadata(WICFlags flags, BitmapDecoder decoder, BitmapFrameDecode frame, out Guid pixelFormat)
         {
             var size = frame.Size;
 
             var metadata = new ImageDescription
                                {
-                                   Depth = 1,
-                                   MipLevels = 1,
                                    Dimension = TextureDimension.Texture2D,
                                    Width = size.Width,
                                    Height = size.Height,
+                                   Depth = 1,
+                                   MipLevels = 1,
                                    ArraySize = (flags & WICFlags.AllFrames) != 0 ? decoder.FrameCount : 1,
                                    Format = DetermineFormat(frame.PixelFormat, flags, out pixelFormat)
                                };
 
             if (metadata.Format == DXGI.Format.Unknown)
-                throw new InvalidOperationException("Unsupported Pixel Format");
+                return null;
 
             return metadata;
         }
-
-
 
         private static BitmapDitherType GetWICDither(WICFlags flags)
         {
@@ -452,37 +451,17 @@ namespace SharpDX.Toolkit.Graphics
                 //var pixelBuffer = image.GetImage(0, index, 0);
                 var pixelBuffer = image.PixelBuffers[index]; // TODO CHANGE PIXELBUFFERS ACCESSOR, THIS IS WRONG
 
-                var frame = decoder.GetFrame(index);
-                var pfGuid = frame.PixelFormat;
-                var size = frame.Size;
-
-                if (pfGuid == sourceGuid)
+                using (var frame = decoder.GetFrame(index))
                 {
-                    if (size.Width == metadata.Width && size.Height == metadata.Height)
-                    {
-                        // This frame does not need resized or format converted, just copy...
-                        frame.CopyPixels(pixelBuffer.RowPitch, pixelBuffer.Pixels, pixelBuffer.SlicePitch);
-                    }
-                    else
-                    {
-                        // This frame needs resizing, but not format converted
-                        using (var scaler = new BitmapScaler(Factory))
-                        {
-                            scaler.Initialize(frame, metadata.Width, metadata.Height, GetWICInterp(flags));
-                            scaler.CopyPixels(pixelBuffer.RowPitch, pixelBuffer.Pixels, pixelBuffer.SlicePitch);
-                        }
-                    }
-                }
-                else
-                {
-                    // This frame required format conversion
-                    using (var converter = new FormatConverter(Factory))
-                    {
-                        converter.Initialize(frame, pfGuid, GetWICDither(flags), null, 0, BitmapPaletteType.Custom);
+                    var pfGuid = frame.PixelFormat;
+                    var size = frame.Size;
 
+                    if (pfGuid == sourceGuid)
+                    {
                         if (size.Width == metadata.Width && size.Height == metadata.Height)
                         {
-                            converter.CopyPixels(pixelBuffer.RowPitch, pixelBuffer.Pixels, pixelBuffer.SlicePitch);
+                            // This frame does not need resized or format converted, just copy...
+                            frame.CopyPixels(pixelBuffer.RowPitch, pixelBuffer.Pixels, pixelBuffer.SlicePitch);
                         }
                         else
                         {
@@ -494,9 +473,203 @@ namespace SharpDX.Toolkit.Graphics
                             }
                         }
                     }
+                    else
+                    {
+                        // This frame required format conversion
+                        using (var converter = new FormatConverter(Factory))
+                        {
+                            converter.Initialize(frame, pfGuid, GetWICDither(flags), null, 0, BitmapPaletteType.Custom);
+
+                            if (size.Width == metadata.Width && size.Height == metadata.Height)
+                            {
+                                converter.CopyPixels(pixelBuffer.RowPitch, pixelBuffer.Pixels, pixelBuffer.SlicePitch);
+                            }
+                            else
+                            {
+                                // This frame needs resizing, but not format converted
+                                using (var scaler = new BitmapScaler(Factory))
+                                {
+                                    scaler.Initialize(frame, metadata.Width, metadata.Height, GetWICInterp(flags));
+                                    scaler.CopyPixels(pixelBuffer.RowPitch, pixelBuffer.Pixels, pixelBuffer.SlicePitch);
+                                }
+                            }
+                        }
+                    }
                 }
             }
             return image;
+        }
+
+        //-------------------------------------------------------------------------------------
+        // Load a WIC-supported file in memory
+        //-------------------------------------------------------------------------------------
+        public static Image LoadFromWICMemory( IntPtr pSource, int size, WICFlags flags)
+        {
+            // Create input stream for memory
+            using (var stream = new WICStream(Factory, new DataPointer(pSource, size)))
+            {
+                using (var decoder = new BitmapDecoder(Factory, stream, DecodeOptions.CacheOnDemand))
+                {
+                    using (var frame = decoder.GetFrame(0))
+                    {
+                        // Get metadata
+                        Guid convertGuid;
+                        var tempDesc = DecodeMetadata(flags, decoder, frame, out convertGuid);
+
+                        // If not supported.
+                        if (!tempDesc.HasValue)
+                            return null;
+
+                        var mdata = tempDesc.Value;
+
+                        if ((mdata.ArraySize > 1) && (flags & WICFlags.AllFrames) != 0)
+                        {
+                            return DecodeMultiframe(flags, mdata, decoder);
+                        }
+
+                        return DecodeSingleFrame(flags, mdata, convertGuid, frame);
+                    }
+                }
+            }
+        }
+
+        //-------------------------------------------------------------------------------------
+        // Encodes a single frame
+        //-------------------------------------------------------------------------------------
+        private static void EncodeImage( PixelBuffer image, WICFlags flags, BitmapFrameEncode frame)
+        {
+            Guid pfGuid;
+            if (! ToWIC(image.Format, out pfGuid))
+                throw new NotSupportedException("Format not supported");
+
+            frame.Initialize();
+            frame.SetSize(image.Width, image.Height);
+            frame.SetResolution(72, 72);
+            Guid targetGuid = pfGuid;
+            frame.SetPixelFormat(ref targetGuid);
+
+            if (targetGuid != pfGuid)
+            {
+                using (var source = new Bitmap(Factory, image.Width, image.Height, pfGuid, new DataRectangle(image.Pixels, image.RowPitch), image.SlicePitch))
+                {
+                    using (var converter = new FormatConverter(Factory))
+                    {
+                        converter.Initialize(source, targetGuid, GetWICDither(flags), null, 0, BitmapPaletteType.Custom);
+
+                        int bpp = GetBitsPerPixel(targetGuid);
+                        if (bpp == 0)
+                            throw new NotSupportedException("Unable to determine the Bpp for the target format");
+
+                        int rowPitch = (image.Width * bpp + 7) / 8;
+                        int slicePitch = rowPitch * image.Height;
+
+                        var temp = Utilities.AllocateMemory(slicePitch);
+                        try
+                        {
+
+                            converter.CopyPixels(rowPitch, temp, slicePitch);
+                            frame.WritePixels(image.Height, temp, rowPitch, slicePitch);
+                        }
+                        finally
+                        {
+                            //Utilities.FreeMemory(temp);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // No conversion required
+                frame.WritePixels(image.Height, image.Pixels, image.RowPitch, image.SlicePitch);
+            }
+
+            frame.Commit();
+        }
+
+
+        private static void EncodeSingleFrame( PixelBuffer pixelBuffer, WICFlags flags, Guid guidContainerFormat, Stream stream )
+        {
+            using (var encoder = new BitmapEncoder(Factory, guidContainerFormat, stream))
+            {
+                using (var frame = new BitmapFrameEncode(encoder))
+                {
+                    if (guidContainerFormat == ContainerFormatGuids.Bmp)
+                    {
+                        try
+                        {
+                            frame.Options.Set("EnableV5Header32bppBGRA", true);
+                        }
+                        catch
+                        {
+                        }
+                    }
+                    EncodeImage(pixelBuffer, flags, frame);
+                    encoder.Commit();
+                }
+            }
+        }
+
+        //-------------------------------------------------------------------------------------
+        // Encodes an image array
+        //-------------------------------------------------------------------------------------
+        private static void EncodeMultiframe( PixelBuffer[] images, int count, WICFlags flags, Guid guidContainerFormat, Stream stream )
+        {
+            if ( images.Length < 2 )
+                throw new ArgumentException("Cannot encode to multiple frame. Image doesn't have multiple frame");
+
+            using (var encoder = new BitmapEncoder(Factory, guidContainerFormat))
+            {
+                using (var eInfo = encoder.EncoderInfo)
+                {
+                    if (!eInfo.IsMultiframeSupported)
+                        throw new NotSupportedException("Cannot encode to multiple frame. Format is not supporting multiple frame");
+                }
+
+                encoder.Initialize(stream);
+
+                for (int i = 0; i < Math.Min(images.Length, count); i++)
+                {
+                    var pixelBuffer = images[i];
+                    using (var frame = new BitmapFrameEncode(encoder))
+                        EncodeImage(pixelBuffer, flags, frame);
+                }
+
+                encoder.Commit();
+            }
+        }
+
+        private static Guid GetContainerFormatFromFileType(ImageFileType fileType)
+        {
+            switch (fileType)
+            {
+                case ImageFileType.Bmp:
+                    return ContainerFormatGuids.Bmp;
+                case ImageFileType.Jpg:
+                    return ContainerFormatGuids.Jpeg;
+                case ImageFileType.Gif:
+                    return ContainerFormatGuids.Gif;
+                case ImageFileType.Png:
+                    return ContainerFormatGuids.Png;
+                case ImageFileType.Tiff:
+                    return ContainerFormatGuids.Tiff;
+                case ImageFileType.Wmp:
+                    return ContainerFormatGuids.Wmp;
+                default:
+                    throw new NotSupportedException("Format not supported");
+            }
+        }
+
+        public static void SaveToWICMemory( PixelBuffer pixelBuffer, WICFlags flags, ImageFileType fileType, Stream stream)
+        {
+            EncodeSingleFrame(pixelBuffer, flags, GetContainerFormatFromFileType(fileType), stream);
+        }
+
+        public static void SaveToWICMemory( PixelBuffer[] pixelBuffer, int count, WICFlags flags, ImageFileType fileType, Stream stream)
+        {
+            if (count > 1)
+                EncodeMultiframe(pixelBuffer, count, flags, GetContainerFormatFromFileType(fileType), stream);
+            else
+                EncodeSingleFrame(pixelBuffer[0], flags, GetContainerFormatFromFileType(fileType), stream);
         }
     }
 }

@@ -40,7 +40,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             // Test Image
             var testImage = new TestImage();
             testImage.Initialize();
-            testImage.TestLoadAndSaveDDS();
+            testImage.TestLoadAndSave();
         }
     }
 }

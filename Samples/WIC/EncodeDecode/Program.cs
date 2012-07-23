@@ -60,7 +60,8 @@ namespace EncodeDecode
             bitmapFrameEncode.Options.ImageQuality = 0.8f;
             bitmapFrameEncode.Initialize();
             bitmapFrameEncode.SetSize(width, height);
-            bitmapFrameEncode.PixelFormat = PixelFormat.Format24bppBGR;
+            var guid = PixelFormat.Format24bppBGR;
+            bitmapFrameEncode.SetPixelFormat(ref guid);
 
             // Write a pseudo-plasma to a buffer
             int stride = PixelFormat.GetStride(PixelFormat.Format24bppBGR, width);

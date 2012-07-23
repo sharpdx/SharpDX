@@ -18,8 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using NUnit.Framework;
+using SharpDX.DXGI;
 
 namespace SharpDX.Toolkit.Graphics.Tests
 {
@@ -46,34 +49,72 @@ namespace SharpDX.Toolkit.Graphics.Tests
         {
         }
 
+        private long testMemoryBefore;
 
         [Test]
-        public void TestLoadAndSaveDDS()
+        public void TestLoadAndSave()
         {
-            var testMemoryBefore = GC.GetTotalMemory(false);
-            const int Count = 100;
+
+            GC.Collect();
+            GC.WaitForFullGCComplete();
+            testMemoryBefore = GC.GetTotalMemory(true);
+
+            var files = new List<string>();
+            files.AddRange(Directory.EnumerateFiles(Path.Combine(dxsdkDir, @"Samples\Media"), "*.dds", SearchOption.AllDirectories));
+            files.AddRange(Directory.EnumerateFiles(Path.Combine(dxsdkDir, @"Samples\Media"), "*.jpg", SearchOption.AllDirectories));
+            files.AddRange(Directory.EnumerateFiles(Path.Combine(dxsdkDir, @"Samples\Media"), "*.bmp", SearchOption.AllDirectories));
+
+            const int Count = 1000;
             for (int i = 0; i < Count; i++)
             {
-                int imageCount = 0;
-                foreach (var file in Directory.EnumerateFiles(Path.Combine(dxsdkDir, @"Samples\Media"), "*.dds", SearchOption.AllDirectories))
-                { 
-                    // Load an image from a file and dispose it.
-                    var image = Image.Load(file);
-                    //Console.WriteLine("Image [{0}] => {1}", file, image.Description);
-                    image.Dispose();
+                ProcessFiles(files, ImageFileType.Dds);
+                ProcessFiles(files, ImageFileType.Jpg);
+                ProcessFiles(files, ImageFileType.Png);
+                //ProcessFiles(files, ImageFileType.Gif);
+                //ProcessFiles(files, ImageFileType.Bmp);
+                ProcessFiles(files, ImageFileType.Tiff);
+            }
+        }
 
-                    // Load an image from a buffer
-                    var buffer = File.ReadAllBytes(file);
-                    image = Image.Load(buffer);
+        private void ProcessFiles(IEnumerable<string>  files, ImageFileType intermediateFormat)
+        {
 
-                    // Write this image to a memory stream using DDS format.
-                    var tempStream = new MemoryStream();
-                    image.Save(tempStream, ImageFileType.Dds);
+            Console.WriteLine("Testing {0}", intermediateFormat);
+            int imageCount = 0;
+            foreach (var file in files)
+            {
+                // Load an image from a file and dispose it.
+                var image = Image.Load(file);
+                //Console.WriteLine("Loading file {0} : {1}", file, image.Description);
+                //Console.Out.Flush();
+                //Console.WriteLine("Image [{0}] => {1}", file, image.Description);
+                image.Dispose();
+
+                // Load an image from a buffer
+                var buffer = File.ReadAllBytes(file);
+                image = Image.Load(buffer);
+
+                // Write this image to a memory stream using DDS format.
+                var tempStream = new MemoryStream();
+                try
+                {
+                    image.Save(tempStream, intermediateFormat);
                     tempStream.Position = 0;
 
+                    // Save to a file on disk
+                    var name = Enum.GetName(typeof(ImageFileType), intermediateFormat).ToLower();
+                    image.Save(Path.ChangeExtension(Path.GetFileName(file), name), intermediateFormat);
+                }
+                catch (NotSupportedException)
+                {
+                    Assert.True(FormatHelper.IsCompressed(image.Description.Format) && intermediateFormat != ImageFileType.Dds);
+                }
+
+                if (intermediateFormat == ImageFileType.Dds)
+                {
                     // Reload the image from the memory stream.
                     var image2 = Image.Load(tempStream);
-                    
+
                     // Check that description is identical to original image loaded from the disk.
                     Assert.AreEqual(image.Description, image2.Description, "Image description is different for image [{0}]", file);
 
@@ -93,17 +134,19 @@ namespace SharpDX.Toolkit.Graphics.Tests
                         var isSameBuffer = Utilities.CompareMemory(srcPixelBuffer.Pixels, dstPixelBuffer.Pixels, srcPixelBuffer.SlicePitch);
                         Assert.True(isSameBuffer, "Content of PixelBuffer is different for index [{0}], image [{1}]", j, file);
                     }
-
-                    image.Dispose();
                     image2.Dispose();
-
-                    imageCount++;
                 }
-                GC.Collect();
-                GC.WaitForFullGCComplete();
-                var testMemoryAfter = GC.GetTotalMemory(true);
-                Console.WriteLine("Loaded {0} x 3 DDS image from DirectXSDK test {1}/{2} Memory: {3} bytes", imageCount, i, Count, testMemoryAfter - testMemoryBefore);
+
+
+                image.Dispose();
+                imageCount++;
             }
+
+
+            GC.Collect();
+            GC.WaitForFullGCComplete();
+            var testMemoryAfter = GC.GetTotalMemory(true);
+            Console.WriteLine("Loaded {0} and convert to (Dds, Jpg, Png, Gif, Bmp, Tiff) image from DirectXSDK test Memory: {1} bytes", imageCount, testMemoryAfter - testMemoryBefore);
         }
     }
 }

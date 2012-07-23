@@ -54,15 +54,16 @@ namespace SharpDX.WIC
         /// <param name="height">The height.</param>
         /// <param name="pixelFormat">The pixel format.</param>
         /// <param name="dataRectangle">The data rectangle.</param>
+        /// <param name="totalSizeInBytes">Size of the buffer in <see cref="dataRectangle"/>. If == 0, calculate the size automatically based on the height and row pitch.</param>
         /// <msdn-id>ee690291</msdn-id>	
         /// <unmanaged>HRESULT IWICImagingFactory::CreateBitmapFromMemory([In] unsigned int uiWidth,[In] unsigned int uiHeight,[In] const GUID&amp; pixelFormat,[In] unsigned int cbStride,[In] unsigned int cbBufferSize,[In] void* pbBuffer,[Out, Fast] IWICBitmap** ppIBitmap)</unmanaged>	
         /// <unmanaged-short>IWICImagingFactory::CreateBitmapFromMemory</unmanaged-short>	
-        public Bitmap(ImagingFactory factory, int width, int height, System.Guid pixelFormat, DataRectangle dataRectangle)
+        public Bitmap(ImagingFactory factory, int width, int height, System.Guid pixelFormat, DataRectangle dataRectangle, int totalSizeInBytes = 0)
             : base(IntPtr.Zero)
         {
-            int sizeInByte = height*dataRectangle.Pitch;
-            factory.CreateBitmapFromMemory(width, height, pixelFormat, dataRectangle.Pitch, sizeInByte,
-                                           dataRectangle.DataPointer, this);
+            if (totalSizeInBytes == 0)
+                totalSizeInBytes = height*dataRectangle.Pitch;
+            factory.CreateBitmapFromMemory(width, height, pixelFormat, dataRectangle.Pitch, totalSizeInBytes, dataRectangle.DataPointer, this);
         }
 
         /// <summary>

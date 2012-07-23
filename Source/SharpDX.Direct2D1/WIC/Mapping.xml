@@ -290,6 +290,9 @@
     <!--IWICStream -->
     <map method="IWICStream::InitializeFrom.*" visibility="internal"/>
 
+    <!--Don't generate properties for SetPixelFormat, as it is expecting to use by ref argument-->
+    <map method="IWICBitmapFrameEncode::SetPixelFormat" property="false"/>
+
     <!--
     // *****************************************************************
     // WIC Functions

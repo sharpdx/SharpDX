@@ -121,7 +121,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="handle">The handle (optionnal).</param>
         /// <param name="bufferIsDisposable">if set to <c>true</c> [buffer is disposable].</param>
         /// <exception cref="System.InvalidOperationException">If the format is invalid, or width/height/depth/arraysize is invalid with respect to the dimension.</exception>
-        internal unsafe Image(ImageDescription description, IntPtr dataPointer, int offset, GCHandle? handle, bool bufferIsDisposable)
+        internal unsafe Image(ImageDescription description, IntPtr dataPointer, int offset, GCHandle? handle, bool bufferIsDisposable, Texture.PitchFlags pitchFlags = Texture.PitchFlags.None)
         {
             if (!FormatHelper.IsValid(description.Format) || FormatHelper.IsVideo(description.Format))
                 throw new InvalidOperationException("Unsupported DXGI Format");
@@ -164,7 +164,7 @@ namespace SharpDX.Toolkit.Graphics
 
             // Calculate mipmaps
             int pixelBufferCount;
-            CalculateImageArray(description, Texture.PitchFlags.None, out pixelBufferCount, out TotalSizeInBytes);
+            CalculateImageArray(description, pitchFlags, out pixelBufferCount, out TotalSizeInBytes);
 
             // Allocate all pixel buffers
             PixelBuffers = new PixelBuffer[pixelBufferCount];
@@ -181,7 +181,7 @@ namespace SharpDX.Toolkit.Graphics
                 this.bufferIsDisposable = true;
             }
 
-            SetupImageArray((IntPtr)((byte*)buffer + offset), TotalSizeInBytes, description, Texture.PitchFlags.None, PixelBuffers);
+            SetupImageArray((IntPtr)((byte*)buffer + offset), TotalSizeInBytes, description, pitchFlags, PixelBuffers);
 
             Description = description;
         }
@@ -295,7 +295,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>If <see cref="makeACopy"/> is set to false, the returned image is now the holder of the unmanaged pointer and will release it on Dispose. </remarks>
         public static Image Load(IntPtr dataPointer, int dataSize, bool makeACopy = false)
         {
-            return DDSHelper.LoadFromDDSMemory(dataPointer, dataSize, makeACopy ? DDSFlags.CopyMemory : DDSFlags.None);
+            return Load(dataPointer, dataSize, makeACopy, null);
         }
 
         /// <summary>
@@ -315,7 +315,7 @@ namespace SharpDX.Toolkit.Graphics
             if (size > (85 * 1024))
             {
                 var handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
-                return DDSHelper.LoadFromDDSMemory(handle.AddrOfPinnedObject(), size, DDSFlags.None, handle);
+                return Load(handle.AddrOfPinnedObject(), size, false, handle);
             }
 
             fixed (void* pbuffer = buffer)
@@ -395,14 +395,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>This method support the following format: <c>dds, bmp, jpg, png, gif, tiff, wmp, tga</c>.</remarks>
         public void Save(Stream imageStream, ImageFileType fileType)
         {
-            switch (fileType)
-            {
-                case ImageFileType.Dds:
-                    DDSHelper.SaveToDDSStream(this, this.Description, DDSFlags.ForceDX10Ext, imageStream);
-                    break;
-                default:
-                    throw new NotImplementedException("This file format is not yet implemented.");
-            }
+            PixelBuffer.Save(PixelBuffers, this.PixelBuffers.Length, Description, imageStream, fileType);
         }
 
         private static ImageDescription CreateDescription(TextureDimension dimension, int width, int height, int depth, MipMapCount mipMapCount, PixelFormat format, int arraySize)
@@ -417,6 +410,37 @@ namespace SharpDX.Toolkit.Graphics
                            Format = format,
                            MipLevels = mipMapCount,
                        };
+        }
+
+        private static Image Load(IntPtr dataPointer, int dataSize, bool makeACopy, GCHandle? handle)
+        {
+            var image = DDSHelper.LoadFromDDSMemory(dataPointer, dataSize, makeACopy ? DDSFlags.CopyMemory : DDSFlags.None, handle);
+            if (image == null)
+            {
+                image = WICHelper.LoadFromWICMemory(dataPointer, dataSize, WICFlags.AllFrames);
+                if (image != null)
+                {
+                    // For WIC, we are not keeping the original buffer.
+                    if (!makeACopy)
+                    {
+                        if (handle.HasValue)
+                        {
+                            handle.Value.Free();
+                        }
+                        else
+                        {
+                            Utilities.FreeMemory(dataPointer);
+                        }
+                    }
+                }
+            }
+
+            // TODO ADD support for TGA
+
+            if (image == null)
+                throw new NotSupportedException("Image format not supported");
+
+            return image;
         }
 
         /// <summary>

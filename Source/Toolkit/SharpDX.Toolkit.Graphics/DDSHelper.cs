@@ -1012,7 +1012,7 @@ namespace SharpDX.Toolkit.Graphics
         //-------------------------------------------------------------------------------------
         // Save a DDS to a stream
         //-------------------------------------------------------------------------------------
-        public unsafe static void SaveToDDSStream(Image images, ImageDescription metadata, DDSFlags flags, System.IO.Stream stream)
+        public unsafe static void SaveToDDSStream(PixelBuffer[] pixelBuffers, int count, ImageDescription metadata, DDSFlags flags, System.IO.Stream stream)
         {
             // Determine memory required
             int totalSize = 0;
@@ -1022,9 +1022,9 @@ namespace SharpDX.Toolkit.Graphics
 
             int maxSlice = 0;
 
-            for (int i = 0; i < images.PixelBuffers.Length; ++i)
+            for (int i = 0; i < pixelBuffers.Length; ++i)
             {
-                int slice = images.PixelBuffers[i].SlicePitch;
+                int slice = pixelBuffers[i].SlicePitch;
                 totalSize += slice;
                 if (slice > maxSlice)
                     maxSlice = slice;
@@ -1054,8 +1054,8 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     for (int slice = 0; slice < d; ++slice)
                     {
-                        int pixsize = images.PixelBuffers[index].SlicePitch;
-                        Utilities.Read(images.PixelBuffers[index].Pixels, buffer, 0, pixsize);
+                        int pixsize = pixelBuffers[index].SlicePitch;
+                        Utilities.Read(pixelBuffers[index].Pixels, buffer, 0, pixsize);
                         stream.Write(buffer, 0, pixsize);
                         ++index;
                     }
@@ -1096,7 +1096,7 @@ namespace SharpDX.Toolkit.Graphics
             // If source image == dest image and no swizzle/alpha is required, we can return it as-is
             var isCopyNeeded = (convFlags & (ConversionFlags.Expand | ConversionFlags.CopyMemory)) != 0 || ((cpFlags & Texture.PitchFlags.LegacyDword) != 0);
 
-            var image = new Image(metadata, pDDS, offset, handle, !isCopyNeeded);
+            var image = new Image(metadata, pDDS, offset, handle, !isCopyNeeded, cpFlags);
 
             // Size must be inferior to destination size.
             Debug.Assert(size <= image.TotalSizeInBytes);
@@ -1114,61 +1114,69 @@ namespace SharpDX.Toolkit.Graphics
                 tflags |= ScanlineFlags.Legacy;
 
             int index = 0;
-            int d = metadata.Depth;
 
-            // Else we need to go through each mips/depth slice to convert all scanlines.
-            for (int level = 0; level < metadata.MipLevels; ++level)
+            int checkSize = size;
+
+            for (int arrayIndex = 0; arrayIndex < metadata.ArraySize; arrayIndex++)
             {
-                for (int slice = 0; slice < d; ++slice, ++index)
+                int d = metadata.Depth;
+                // Else we need to go through each mips/depth slice to convert all scanlines.
+                for (int level = 0; level < metadata.MipLevels; ++level)
                 {
-                    IntPtr pDest = imagesDst[index].Pixels;
-                    int dpitch = imagesDst[index].RowPitch;
-
-                    IntPtr pSrc = images[index].Pixels;
-                    int spitch = images[index].RowPitch;
-
-                    if (FormatHelper.IsCompressed(metadata.Format))
+                    for (int slice = 0; slice < d; ++slice, ++index)
                     {
-                        Utilities.CopyMemory(pDest, pSrc, Math.Min(images[index].SlicePitch, imagesDst[index].SlicePitch));
-                    }
-                    else
-                    {
-                        for (int h = 0; h < images[index].Height; ++h)
+                        IntPtr pSrc = images[index].Pixels;
+                        IntPtr pDest = imagesDst[index].Pixels;
+                        checkSize -= images[index].SlicePitch;
+                        if (checkSize < 0)
+                            throw new InvalidOperationException("Unexpected end of buffer");
+
+                        if (FormatHelper.IsCompressed(metadata.Format))
                         {
-                            if ((convFlags & ConversionFlags.Expand) != 0)
+                            Utilities.CopyMemory(pDest, pSrc, Math.Min(images[index].SlicePitch, imagesDst[index].SlicePitch));
+                        }
+                        else
+                        {
+                            int spitch = images[index].RowPitch;
+                            int dpitch = imagesDst[index].RowPitch;
+
+                            for (int h = 0; h < images[index].Height; ++h)
                             {
+                                if ((convFlags & ConversionFlags.Expand) != 0)
+                                {
 #if DIRECTX11_1
                                 if ((convFlags & (ConversionFlags.Format565 | ConversionFlags.Format5551 | ConversionFlags.Format4444)) != 0)
 #else
-                                if ((convFlags & (ConversionFlags.Format565 | ConversionFlags.Format5551)) != 0)
+                                    if ((convFlags & (ConversionFlags.Format565 | ConversionFlags.Format5551)) != 0)
 #endif
+                                    {
+                                        ExpandScanline(pDest, dpitch, pSrc, spitch, (convFlags & ConversionFlags.Format565) != 0 ? DXGI.Format.B5G6R5_UNorm : DXGI.Format.B5G5R5A1_UNorm, tflags);
+                                    }
+                                    else
+                                    {
+                                        var lformat = FindLegacyFormat(convFlags);
+                                        LegacyExpandScanline(pDest, dpitch, metadata.Format, pSrc, spitch, lformat, pal8, tflags);
+                                    }
+                                }
+                                else if ((convFlags & ConversionFlags.Swizzle) != 0)
                                 {
-                                    ExpandScanline(pDest, dpitch, pSrc, spitch, (convFlags & ConversionFlags.Format565) != 0 ? DXGI.Format.B5G6R5_UNorm : DXGI.Format.B5G5R5A1_UNorm, tflags);
+                                    SwizzleScanline(pDest, dpitch, pSrc, spitch, metadata.Format, tflags);
                                 }
                                 else
                                 {
-                                    var lformat = FindLegacyFormat(convFlags);
-                                    LegacyExpandScanline(pDest, dpitch, metadata.Format, pSrc, spitch, lformat, pal8, tflags);
+                                    if (pSrc != pDest)
+                                        CopyScanline(pDest, dpitch, pSrc, spitch, metadata.Format, tflags);
                                 }
-                            }
-                            else if ((convFlags & ConversionFlags.Swizzle) != 0)
-                            {
-                                SwizzleScanline(pDest, dpitch, pSrc, spitch, metadata.Format, tflags);
-                            }
-                            else
-                            {
-                                if (pSrc != pDest)
-                                    CopyScanline(pDest, dpitch, pSrc, spitch, metadata.Format, tflags);
-                            }
 
-                            pSrc = (IntPtr) ((byte*) pSrc + dpitch);
-                            pDest = (IntPtr) ((byte*) pDest + spitch);
+                                pSrc = (IntPtr) ((byte*) pSrc + spitch);
+                                pDest = (IntPtr) ((byte*) pDest + dpitch);
+                            }
                         }
                     }
-                }
 
-                if (d > 1)
-                    d >>= 1;
+                    if (d > 1)
+                        d >>= 1;
+                }
             }
 
             // Return the imageDst or the original image

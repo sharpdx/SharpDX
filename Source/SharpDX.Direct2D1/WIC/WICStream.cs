@@ -70,11 +70,11 @@ namespace SharpDX.WIC
         /// <msdn-id>ee719792</msdn-id>	
         /// <unmanaged>HRESULT IWICStream::InitializeFromMemory([In] void* pbBuffer,[In] unsigned int cbBufferSize)</unmanaged>	
         /// <unmanaged-short>IWICStream::InitializeFromMemory</unmanaged-short>	
-        public WICStream(ImagingFactory factory, DataStream dataStream)
+        public WICStream(ImagingFactory factory, DataPointer dataStream)
             : base(IntPtr.Zero)
         {
             factory.CreateStream(this);
-            InitializeFromMemory(dataStream.DataPointer, (int)dataStream.Length);
+            InitializeFromMemory(dataStream.Pointer, dataStream.Size);
         }
 
         protected override void Dispose(bool disposing)
