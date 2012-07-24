@@ -96,7 +96,7 @@ namespace SharpDX.Toolkit.Graphics
             switch (fileType)
             {
                 case ImageFileType.Dds:
-                    DDSHelper.SaveToDDSStream(pixelBuffers, count, description, DDSFlags.ForceDX10Ext, imageStream);
+                    DDSHelper.SaveToDDSStream(pixelBuffers, count, description, DDSFlags.None, imageStream);
                     break;
                 case ImageFileType.Gif:
                 case ImageFileType.Tiff:
