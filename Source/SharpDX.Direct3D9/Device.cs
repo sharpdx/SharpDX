@@ -1128,6 +1128,34 @@ namespace SharpDX.Direct3D9
         }
 
         /// <summary>
+        /// Sets the transform.
+        /// </summary>
+        /// <param name="state">The state.</param>
+        /// <param name="matrixRef">The matrix ref.</param>
+        /// <returns>
+        /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::SetTransform([In] D3DTRANSFORMSTATETYPE State,[In] const D3DMATRIX* pMatrix)</unmanaged>
+        public void SetTransform(SharpDX.Direct3D9.TransformState state, SharpDX.Matrix matrixRef)
+        {
+            SetTransform_((int)state, ref matrixRef);
+        }
+
+        /// <summary>
+        /// Sets the transform.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <param name="matrixRef">The matrix ref.</param>
+        /// <returns>
+        /// A <see cref="SharpDX.Result"/> object describing the result of the operation.
+        /// </returns>
+        /// <unmanaged>HRESULT IDirect3DDevice9::SetTransform([In] D3DTRANSFORMSTATETYPE State,[In] const D3DMATRIX* pMatrix)</unmanaged>
+        public void SetTransform(int index, SharpDX.Matrix matrixRef)
+        {
+            SetTransform_(index + 256, ref matrixRef);
+        }
+
+        /// <summary>
         /// Sets the vertex shader constant.
         /// </summary>
         /// <param name="startRegister">The start register.</param>
