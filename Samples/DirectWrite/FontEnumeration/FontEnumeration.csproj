@@ -40,10 +40,6 @@
       <HintPath>..\..\..\Bin\Standard-net20\SharpDX.Direct2D1.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="SharpDX.Diagnostics, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\Bin\Standard-net20\SharpDX.Diagnostics.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />

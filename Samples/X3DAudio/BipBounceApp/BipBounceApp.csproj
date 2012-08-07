@@ -66,9 +66,6 @@
     <Reference Include="SharpDX">
       <HintPath>..\..\..\Bin\Standard-net20\SharpDX.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.X3DAudio">
-      <HintPath>..\..\..\Bin\Standard-net20\SharpDX.X3DAudio.dll</HintPath>
-    </Reference>
     <Reference Include="SharpDX.XAudio2">
       <HintPath>..\..\..\Bin\Standard-net20\SharpDX.XAudio2.dll</HintPath>
     </Reference>
