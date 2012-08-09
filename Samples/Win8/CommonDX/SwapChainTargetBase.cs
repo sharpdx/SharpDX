@@ -113,6 +113,7 @@ namespace CommonDX
             SafeDispose(ref renderTargetView);
             SafeDispose(ref depthStencilView);
             SafeDispose(ref bitmapTarget);
+            SafeDispose(ref backBuffer);
 
             // If the swap chain already exists, resize it.
             if (swapChain != null)
@@ -143,7 +144,7 @@ namespace CommonDX
             }
 
             // Obtain the backbuffer for this window which will be the final 3D rendertarget.
-            BackBuffer = SharpDX.Direct3D11.Texture2D.FromSwapChain<SharpDX.Direct3D11.Texture2D>(swapChain, 0);
+            backBuffer = ToDispose(SharpDX.Direct3D11.Texture2D.FromSwapChain<SharpDX.Direct3D11.Texture2D>(swapChain, 0));
             {
                 // Create a view interface on the rendertarget to use on bind.
                 renderTargetView = ToDispose(new SharpDX.Direct3D11.RenderTargetView(d3dDevice, BackBuffer));

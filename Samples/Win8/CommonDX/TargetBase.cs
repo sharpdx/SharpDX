@@ -46,6 +46,7 @@ namespace CommonDX
         protected SharpDX.Direct3D11.RenderTargetView renderTargetView;
         protected SharpDX.Direct3D11.DepthStencilView depthStencilView;
         protected SharpDX.Direct2D1.Bitmap1 bitmapTarget;
+        protected SharpDX.Direct3D11.Texture2D backBuffer;
 
         /// <summary>
         /// Gets the <see cref="DeviceManager"/> attached to this instance.
@@ -57,7 +58,7 @@ namespace CommonDX
         /// </summary>
         public SharpDX.Direct3D11.RenderTargetView RenderTargetView { get { return renderTargetView; } }
 
-        public SharpDX.Direct3D11.Texture2D BackBuffer { get; protected set; }
+        public SharpDX.Direct3D11.Texture2D BackBuffer { get { return backBuffer; } }
 
         /// <summary>
         /// Gets the Direct3D DepthStencilView used by this target.
