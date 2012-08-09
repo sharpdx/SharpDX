@@ -48,11 +48,11 @@ namespace CommonDX
         /// </summary>
         /// <param name="pixelWidth">Width of the target in pixels</param>
         /// <param name="pixelHeight">Height of the target in pixels</param>
-        public SurfaceImageSourceTarget(int pixelWidth, int pixelHeight)
+        public SurfaceImageSourceTarget(int pixelWidth, int pixelHeight, bool supportOpacity = false)
         {
             this.pixelWidth = pixelWidth;
             this.pixelHeight = pixelHeight;
-            this.surfaceImageSource = new SurfaceImageSource(pixelWidth, pixelHeight);
+            this.surfaceImageSource = new SurfaceImageSource(pixelWidth, pixelHeight, supportOpacity);
             surfaceImageSourceNative = ToDispose(ComObject.As<SharpDX.DXGI.ISurfaceImageSourceNative>(surfaceImageSource));
         }
 
