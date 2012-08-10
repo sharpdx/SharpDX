@@ -365,7 +365,7 @@ namespace SharpDX.Toolkit.Graphics
                 try
                 {
                     if (stream != null)
-                        stream.Close();
+                        stream.Dispose();
                 } catch {}
             }
 
@@ -381,7 +381,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>This method support the following format: <c>dds, bmp, jpg, png, gif, tiff, wmp, tga</c>.</remarks>
         public void Save(string fileName, ImageFileType fileType)
         {
-            using (var imageStream = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+            using (var imageStream = new NativeFileStream(fileName, NativeFileMode.Create, NativeFileAccess.Write))
             {
                 Save(imageStream, fileType);
             }
