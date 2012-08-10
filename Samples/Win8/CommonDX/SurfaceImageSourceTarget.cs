@@ -148,7 +148,7 @@ namespace CommonDX
                     viewData.Viewport = new SharpDX.Direct3D11.Viewport(position.X, position.Y, (float)viewData.RenderTargetSize.Width - position.X, (float)viewData.RenderTargetSize.Height - position.Y, 0.0f, 1.0f);
                 }
 
-                BackBuffer = viewData.BackBuffer;
+                backBuffer = viewData.BackBuffer;
                 renderTargetView = viewData.RenderTargetView;
                 depthStencilView = viewData.DepthStencilView;
                 RenderTargetBounds = new Rect(viewData.Viewport.TopLeftX, viewData.Viewport.TopLeftY, viewData.Viewport.Width, viewData.Viewport.Height);
