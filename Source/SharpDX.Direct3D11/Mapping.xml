@@ -172,6 +172,10 @@
     <map field="D3D11_SHADER_DESC::Version" type="D3D11_SHADER_VERSION_TYPE" />
     <map field="D3D11_CLASS_INSTANCE_DESC::Created" name="IsCreated" />
     <map struct="D3D11_FEATURE_DATA_.*" visibility="internal" />
+    
+    <map struct="D3D11_FEATURE_DATA_D3D11_OPTIONS" visibility="public" />
+    <map struct="D3D11_FEATURE_DATA_SHADER_MIN_PRECISION_SUPPORT" visibility="public" />
+
     <map field="D3DX11_IMAGE_INFO::pSrcInfo" visibility="internal" />
     <map struct="D3D11_INFO_QUEUE_FILTER" name="InfoQueueFilter" />
     <map struct="D3D11_INFO_QUEUE_FILTER_DESC" name="InfoQueueFilterDescription" />

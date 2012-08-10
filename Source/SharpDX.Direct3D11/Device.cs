@@ -277,6 +277,86 @@ namespace SharpDX.Direct3D11
             }
         }
 
+#if DIRECTX11_1
+        /// <summary>	
+        /// <p>Gets information about the features <see cref="Feature.D3D11Options"/> that are supported by the current graphics driver.</p>	
+        /// </summary>	
+        /// <returns>Returns a structure <see cref="FeatureDataD3D11Options"/> </returns>	
+        /// <msdn-id>ff476497</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CheckFeatureSupport([In] D3D11_FEATURE Feature,[Out, Buffer] void* pFeatureSupportData,[In] unsigned int FeatureSupportDataSize)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CheckFeatureSupport</unmanaged-short>	
+        public FeatureDataD3D11Options CheckD3D11Feature()
+        {
+            unsafe
+            {
+                var support = default(FeatureDataD3D11Options);
+                if (CheckFeatureSupport(Feature.D3D11Options, new IntPtr(&support), Utilities.SizeOf<FeatureDataD3D11Options>()).Failure)
+                    return default(FeatureDataD3D11Options);
+                return support;
+            }
+        }
+
+        /// <summary>	
+        /// <p>Gets information about the features <see cref="Feature.ShaderMinimumPrecisionSupport"/> that are supported by the current graphics driver.</p>	
+        /// </summary>	
+        /// <returns>Returns a structure <see cref="FeatureDataShaderMinimumPrecisionSupport"/> </returns>	
+        /// <msdn-id>ff476497</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CheckFeatureSupport([In] D3D11_FEATURE Feature,[Out, Buffer] void* pFeatureSupportData,[In] unsigned int FeatureSupportDataSize)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CheckFeatureSupport</unmanaged-short>	
+        public FeatureDataShaderMinimumPrecisionSupport CheckShaderMinimumPrecisionSupport()
+        {
+            unsafe
+            {
+                var support = default(FeatureDataShaderMinimumPrecisionSupport);
+                if (CheckFeatureSupport(Feature.ShaderMinimumPrecisionSupport, new IntPtr(&support), Utilities.SizeOf<FeatureDataShaderMinimumPrecisionSupport>()).Failure)
+                    return default(FeatureDataShaderMinimumPrecisionSupport);
+                return support;
+            }
+        }
+
+        /// <summary>	
+        /// <p>Gets information about whether the driver supports the nonpowers-of-2-unconditionally feature. <strong>TRUE</strong> for hardware at Direct3D 10 and higher feature levels. </p>	
+        /// </summary>	
+        /// <returns>Returns <strong>true</strong> if this hardware supports non-powers-of-2 texture. This returns always true Direct3D 10 and higher feature levels.</returns>	
+        /// <msdn-id>ff476497</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CheckFeatureSupport([In] D3D11_FEATURE Feature,[Out, Buffer] void* pFeatureSupportData,[In] unsigned int FeatureSupportDataSize)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CheckFeatureSupport</unmanaged-short>	
+        public bool CheckFullNonPow2TextureSupport()
+        {
+            unsafe
+            {
+                var support = default(FeatureDataD3D9Options);
+                var result = CheckFeatureSupport(Feature.D3D9Options, new IntPtr(&support), Utilities.SizeOf<FeatureDataD3D9Options>());
+                if (FeatureLevel <= FeatureLevel.Level_9_3)
+                {
+                    return result.Failure;
+                }
+                if (result.Failure)
+                    return false;
+                return support.FullNonPow2TextureSupport;
+            }
+        }
+
+        /// <summary>	
+        /// <p>Gets information about whether a rendering device batches rendering commands and performs multipass rendering into tiles or bins over a render area. Certain API usage patterns that are fine TileBasedDefferredRenderers (TBDRs) can perform worse on non-TBDRs and vice versa.  Applications that are careful about rendering can be friendly to both TBDR and non-TBDR architectures.</p> 
+        /// </summary>	
+        /// <returns>Returns <strong>TRUE</strong> if the rendering device batches rendering commands and <strong><see cref="SharpDX.Result.False"/></strong> otherwise.</returns>	
+        /// <msdn-id>ff476497</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CheckFeatureSupport([In] D3D11_FEATURE Feature,[Out, Buffer] void* pFeatureSupportData,[In] unsigned int FeatureSupportDataSize)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CheckFeatureSupport</unmanaged-short>	
+        public bool CheckTileBasedDeferredRendererSupport()
+        {
+            unsafe
+            {
+                var support = default(FeatureDataArchitectureInformation);
+                if (CheckFeatureSupport(Feature.ArchitectureInformation, new IntPtr(&support), Utilities.SizeOf<FeatureDataArchitectureInformation>()).Failure)
+                    return false;
+                return support.TileBasedDeferredRenderer;
+            }
+        }
+#endif
+
+
         /// <summary>
         /// Check if this device is supporting a feature.
         /// </summary>
