@@ -932,7 +932,7 @@ namespace SharpDX.D3DCompiler
         /// <param name = "defines">A set of macros to define during preprocessing.</param>
         /// <param name = "include">An interface for handling include files.</param>
         /// <returns>The preprocessed shader source.</returns>
-        public static string Preprocess(string shaderSource, ShaderMacro[] defines = null, Include include = null)
+        public static string Preprocess(string shaderSource, ShaderMacro[] defines = null, Include include = null, string sourceFileName = "")
         {
             string errors = null;
             if (string.IsNullOrEmpty(shaderSource))
@@ -942,7 +942,7 @@ namespace SharpDX.D3DCompiler
             var shaderSourcePtr = Marshal.StringToHGlobalAnsi(shaderSource);
             try
             {
-                return Preprocess(shaderSourcePtr, shaderSource.Length, defines, include, out errors);
+                return Preprocess(shaderSourcePtr, shaderSource.Length, defines, include, out errors, sourceFileName);
             } 
             finally
             {
@@ -958,10 +958,10 @@ namespace SharpDX.D3DCompiler
         /// <param name = "defines">A set of macros to define during preprocessing.</param>
         /// <param name = "include">An interface for handling include files.</param>
         /// <returns>The preprocessed shader source.</returns>
-        public static string Preprocess(byte[] shaderSource, ShaderMacro[] defines = null, Include include = null)
+        public static string Preprocess(byte[] shaderSource, ShaderMacro[] defines = null, Include include = null, string sourceFileName = "")
         {
             string errors = null;
-            return Preprocess(shaderSource, defines, include, out errors);
+            return Preprocess(shaderSource, defines, include, out errors, sourceFileName);
         }
 
         /// <summary>
@@ -972,12 +972,12 @@ namespace SharpDX.D3DCompiler
         /// <param name = "include">An interface for handling include files.</param>
         /// <param name = "compilationErrors">When the method completes, contains a string of compilation errors, or an empty string if preprocessing succeeded.</param>
         /// <returns>The preprocessed shader source.</returns>
-        public static string Preprocess(byte[] shaderSource, ShaderMacro[] defines, Include include, out string compilationErrors)
+        public static string Preprocess(byte[] shaderSource, ShaderMacro[] defines, Include include, out string compilationErrors, string sourceFileName = "")
         {
             unsafe
             {
                 fixed (void* pData = &shaderSource[0])
-                    return Preprocess((IntPtr)pData, shaderSource.Length, defines, include, out compilationErrors);
+                    return Preprocess((IntPtr)pData, shaderSource.Length, defines, include, out compilationErrors, sourceFileName);
             }
         }
 
@@ -990,8 +990,7 @@ namespace SharpDX.D3DCompiler
         /// <param name = "include">An interface for handling include files.</param>
         /// <param name = "compilationErrors">When the method completes, contains a string of compilation errors, or an empty string if preprocessing succeeded.</param>
         /// <returns>The preprocessed shader source.</returns>
-        public static string Preprocess(IntPtr shaderSourcePtr, int shaderSourceLength, ShaderMacro[] defines, Include include,
-                                        out string compilationErrors)
+        public static string Preprocess(IntPtr shaderSourcePtr, int shaderSourceLength, ShaderMacro[] defines, Include include, out string compilationErrors, string sourceFileName = "")
         {
             unsafe
             {
@@ -1001,7 +1000,7 @@ namespace SharpDX.D3DCompiler
 
                 try
                 {
-                    D3D.Preprocess(shaderSourcePtr, shaderSourceLength, "", PrepareMacros(defines), IncludeShadow.ToIntPtr(include),
+                    D3D.Preprocess(shaderSourcePtr, shaderSourceLength, sourceFileName, PrepareMacros(defines), IncludeShadow.ToIntPtr(include),
                                     out blobForText, out blobForErrors);
                 }
                 catch (SharpDXException ex)
@@ -1025,7 +1024,7 @@ namespace SharpDX.D3DCompiler
         /// <param name = "include">An interface for handling include files.</param>
         /// <param name = "compilationErrors">When the method completes, contains a string of compilation errors, or an empty string if preprocessing succeeded.</param>
         /// <returns>The preprocessed shader source.</returns>
-        public static string Preprocess(string shaderSource, ShaderMacro[] defines, Include include, out string compilationErrors)
+        public static string Preprocess(string shaderSource, ShaderMacro[] defines, Include include, out string compilationErrors, string sourceFileName = "")
         {
             if (string.IsNullOrEmpty(shaderSource))
             {
@@ -1034,7 +1033,7 @@ namespace SharpDX.D3DCompiler
             var shaderSourcePtr = Marshal.StringToHGlobalAnsi(shaderSource);
             try
             {
-                return Preprocess(shaderSourcePtr, shaderSource.Length, defines, include, out compilationErrors);
+                return Preprocess(shaderSourcePtr, shaderSource.Length, defines, include, out compilationErrors, sourceFileName);
             }
             finally
             {
@@ -1064,7 +1063,7 @@ namespace SharpDX.D3DCompiler
             {
                 throw new ArgumentNullException("shaderSource");
             }
-            return Preprocess(Encoding.ASCII.GetBytes(str), null, null, out errors);
+            return Preprocess(Encoding.ASCII.GetBytes(str), null, null, out errors, fileName);
         }
 
         /// <summary>
