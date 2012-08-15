@@ -34,18 +34,6 @@ namespace SharpDX.Direct3D11
             public SharpDX.Direct3D11.MessageId Id;
             public System.IntPtr PDescription;
             public SharpDX.PointerSize DescriptionByteLength;
-            // Method to free unmanaged allocation
-            internal unsafe void __MarshalFree()
-            {
-                if (this.PDescription != IntPtr.Zero)
-                    Marshal.FreeHGlobal(this.PDescription);
-            }
-        }
-
-        // Method to free unmanaged allocation
-        internal unsafe void __MarshalFree(ref __Native @ref)
-        {
-            @ref.__MarshalFree();
         }
 
         // Method to marshal from native to managed struct
@@ -56,15 +44,6 @@ namespace SharpDX.Direct3D11
             this.Id = @ref.Id;
             this.Description = (@ref.PDescription == IntPtr.Zero) ? null : Marshal.PtrToStringAnsi(@ref.PDescription, @ref.DescriptionByteLength);
             this.DescriptionByteLength = @ref.DescriptionByteLength;
-        }
-        // Method to marshal from managed struct tot native
-        internal unsafe void __MarshalTo(ref __Native @ref)
-        {
-            @ref.Category = this.Category;
-            @ref.Severity = this.Severity;
-            @ref.Id = this.Id;
-            @ref.PDescription = Marshal.AllocHGlobal((int)this.DescriptionByteLength);
-            @ref.DescriptionByteLength = this.DescriptionByteLength;
         }
     }
 }

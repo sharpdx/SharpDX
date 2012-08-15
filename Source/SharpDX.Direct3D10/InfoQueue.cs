@@ -31,22 +31,16 @@ namespace SharpDX.Direct3D10
         /// <returns>No documentation.</returns>	
         /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID3D10InfoQueue::GetMessageW']/*"/>	
         /// <unmanaged>HRESULT ID3D10InfoQueue::GetMessageW([In] unsigned longlong MessageIndex,[Out, Buffer, Optional] D3D10_MESSAGE* pMessage,[InOut] SIZE_T* pMessageByteLength)</unmanaged>	
-        public Message GetMessage(long messageIndex)
+        public unsafe Message GetMessage(long messageIndex)
         {
             PointerSize messageSize = 0;
             GetMessage(messageIndex, IntPtr.Zero, ref messageSize);
 
-            var message = new Message { DescriptionByteLength = messageSize };
-            var messageNative = new Message.__Native();
-            message.__MarshalTo(ref messageNative);
+            var messagePtr = stackalloc byte[(int) messageSize];
+            GetMessage(messageIndex, new IntPtr(messagePtr), ref messageSize);
 
-            unsafe
-            {
-                GetMessage(messageIndex, new IntPtr(&messageNative), ref messageSize);
-            }
-
-            message.__MarshalFrom(ref messageNative);
-            message.__MarshalFree(ref messageNative);
+            var message = new Message();
+            message.__MarshalFrom(ref *(Message.__Native*)messagePtr);
             return message;
         }
 
