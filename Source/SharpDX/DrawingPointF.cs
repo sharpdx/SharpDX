@@ -105,6 +105,30 @@ namespace SharpDX
             return !left.Equals(right);
         }
 
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="SharpDX.Vector2"/> to <see cref="SharpDX.DrawingPointF"/>.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
+        public static implicit operator DrawingPointF(SharpDX.Vector2 input)
+        {
+            return new DrawingPointF(input.X, input.Y);
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="SharpDX.DrawingPointF"/> to <see cref="SharpDX.Vector2"/>.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
+        public static implicit operator SharpDX.Vector2(DrawingPointF input)
+        {
+            return new SharpDX.Vector2(input.X, input.Y);
+        }
+
 #if WinFormsInterop
         /// <summary>
         /// Performs an implicit conversion from <see cref="System.Drawing.PointF"/> to <see cref="SharpDX.DrawingPointF"/>.
