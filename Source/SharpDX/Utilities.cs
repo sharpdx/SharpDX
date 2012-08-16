@@ -108,7 +108,7 @@ namespace SharpDX
             var pDst = (byte*)against;
 
             // Compare 8 bytes.
-            int numberOf = sizeToCompare >> 8;
+            int numberOf = sizeToCompare >> 3;
             while (numberOf > 0)
             {
                 if (*(long*)pSrc != *(long*)pDst)
