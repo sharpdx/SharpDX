@@ -43,6 +43,9 @@
     <Compile Include="IO\NamespaceDoc.cs" />
     <Compile Include="Multimedia\AudioEndpointRole.cs" />
     <Compile Include="Multimedia\NamespaceDoc.cs" />
+    <Compile Include="Serialization\IDataSerializer.cs" />
+    <Compile Include="Serialization\SerializerContext.cs" />
+    <Compile Include="Serialization\SerializerMode.cs" />
     <Compile Include="ShadowAttribute.cs" />
     <Compile Include="Matrix5x4.cs" />
     <Compile Include="ResultDescriptor.cs" />

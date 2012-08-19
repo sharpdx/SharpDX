@@ -51,6 +51,7 @@
     <Compile Include="TestInterop.cs" />
     <Compile Include="TestNativeFileStream.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestSerialization.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SharpDX.Direct3D11\SharpDX.Direct3D11.csproj">
