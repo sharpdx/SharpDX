@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,21 +18,38 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+using SharpDX.Multimedia;
+
 namespace SharpDX.Serialization
 {
     /// <summary>
-    /// Serialization mode used by <see cref="BinarySerializer"/>.
+    /// Exceptions thrown when an invalid chunk is decoded.
     /// </summary>
-    public enum SerializerMode
+    public class InvalidChunkException : Exception
     {
         /// <summary>
-        /// Reads the data from the stream.
+        /// Initializes a new instance of the <see cref="T:System.Exception" /> class with a specified error message.
         /// </summary>
-        Read,
+        /// <param name="chunkId">The chunk id.</param>
+        /// <param name="expectedChunkId">The expected chunk id.</param>
+        public InvalidChunkException(FourCC chunkId, FourCC expectedChunkId)
+            : base(string.Format("Unexpected chunk [{0}/0x{1:X}] instead of [{2}/0x{3:X}]", chunkId, (int)chunkId, expectedChunkId, (int)expectedChunkId))
+        {
+            this.ChunkId = chunkId;
+            this.ExpectedChunkId = expectedChunkId;
+        }
 
         /// <summary>
-        /// Writes the data to the stream.
+        /// Gets the chunk id.
         /// </summary>
-        Write
+        /// <value>The chunk id.</value>
+        public FourCC ChunkId { get; private set; }
+
+        /// <summary>
+        /// Gets the expected chunk id.
+        /// </summary>
+        /// <value>The expected chunk id.</value>
+        public FourCC ExpectedChunkId { get; private set; }
     }
 }
