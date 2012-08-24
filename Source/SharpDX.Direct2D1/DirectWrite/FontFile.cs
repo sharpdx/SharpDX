@@ -90,8 +90,8 @@ namespace SharpDX.DirectWrite
             {
                 int keySize;
                 IntPtr keyPtr;
-                GetReferenceKey(new IntPtr(&keyPtr), out keySize);                
-                return new DataStream(IntPtr.Zero, keySize, true, true);
+                GetReferenceKey(new IntPtr(&keyPtr), out keySize);
+                return new DataStream(keyPtr, keySize, true, true);
             }
         }
     }
