@@ -86,6 +86,7 @@
     // D3D11 Interfaces
     // *****************************************************************
     -->
+    <map param="ID3DX11EffectGroup::GetDesc::pDesc" attribute="out"/>
     <map method="ID3DX11EffectUnorderedAccessViewVariable::.*" property="false"/>
     <map method="ID3DX11EffectUnorderedAccessViewVariable::Set.*" name="Set"/>
     <map param="ID3DX11EffectUnorderedAccessViewVariable::GetUnorderedAccessView::ppResource" return="true"/>
