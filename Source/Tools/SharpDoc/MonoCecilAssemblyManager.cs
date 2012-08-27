@@ -67,12 +67,17 @@ namespace SharpDoc
 
 
             var configPath = Path.GetDirectoryName(Path.GetFullPath(config.FilePath));
+            configPath = configPath ?? Environment.CurrentDirectory;
             // Load all sources
             foreach (var source in config.Sources)
             {
                 // Setup full path
-                source.AssemblyPath = Path.Combine(configPath, source.AssemblyPath);
-                source.DocumentationPath = Path.Combine(configPath, source.DocumentationPath);
+                if (!string.IsNullOrEmpty(source.AssemblyPath))
+                    source.AssemblyPath = Path.Combine(configPath, source.AssemblyPath);
+
+                if (!string.IsNullOrEmpty(source.DocumentationPath))
+                    source.DocumentationPath = Path.Combine(configPath, source.DocumentationPath);
+
                 source.MergeGroup = source.MergeGroup ?? "default";
                 Load(source);
             }
