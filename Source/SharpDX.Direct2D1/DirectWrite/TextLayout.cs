@@ -132,16 +132,12 @@ namespace SharpDX.DirectWrite
             var clusterMetrics = new ClusterMetrics[0];
             int clusterCount = 0;
             int maxClusterCount = 0;
-            try
+            GetClusterMetrics(clusterMetrics, clusterCount, out maxClusterCount);
+            if (maxClusterCount > 0)
             {
-                GetClusterMetrics(clusterMetrics, clusterCount, out maxClusterCount);
+                clusterMetrics = new ClusterMetrics[maxClusterCount];
+                GetClusterMetrics(clusterMetrics, maxClusterCount, out maxClusterCount);
             }
-            catch (SharpDXException)
-            {
-            }
-            clusterMetrics = new ClusterMetrics[maxClusterCount];
-            GetClusterMetrics(clusterMetrics, maxClusterCount, out maxClusterCount);
-
             return clusterMetrics;
         }
 
@@ -308,15 +304,12 @@ namespace SharpDX.DirectWrite
             var lineMetrics = new LineMetrics[0];
             int lineCount = 0;
             int maxLineCount = 0;
-            try
+            GetLineMetrics(lineMetrics, lineCount, out maxLineCount);
+            if (maxLineCount > 0)
             {
-                GetLineMetrics(lineMetrics, lineCount, out maxLineCount);
+                lineMetrics = new LineMetrics[maxLineCount];
+                GetLineMetrics(lineMetrics, maxLineCount, out maxLineCount);
             }
-            catch (SharpDXException)
-            {
-            }
-            lineMetrics = new LineMetrics[maxLineCount];
-            GetLineMetrics(lineMetrics, maxLineCount, out maxLineCount);
 
             return lineMetrics;            
         }
@@ -412,13 +405,7 @@ namespace SharpDX.DirectWrite
             var hitTestMetrics = new HitTestMetrics[0];
 
             int actualHitTestMetricsCount = 0;
-            try
-            {
-                HitTestTextRange(textPosition, textLength, originX, originY, hitTestMetrics, 0, out actualHitTestMetricsCount);
-            }
-            catch (SharpDXException)
-            {
-            }
+            HitTestTextRange(textPosition, textLength, originX, originY, hitTestMetrics, 0, out actualHitTestMetricsCount);
             if (actualHitTestMetricsCount > 0)
             {
                 hitTestMetrics = new HitTestMetrics[actualHitTestMetricsCount];

@@ -179,6 +179,10 @@
     <map method="IDWriteTextAnalyzer::Get.*Glyph.*" visibility="internal"/>
     <map param="features" type="void" attribute="in optional"/>
 
+    <map method="IDWriteTextLayout::GetLineMetrics" check="false"/>
+    <map method="IDWriteTextLayout::HitTestTextRange" check="false"/>
+    <map method="IDWriteTextLayout::GetClusterMetrics" check="false"/>
+    
     <!--
     // *****************************************************************
     // DWrite Functions
