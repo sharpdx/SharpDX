@@ -52,7 +52,7 @@ namespace SharpDX.Tests
             factory.Dispose();
             // Look for DXGI descriptor SharpDX.DXGI.ResultCode.DeviceRemoved
             var descriptor = ResultDescriptor.Find(0x887A0005);
-            Assert.AreEqual(descriptor.ApiCode, "DXGI_ERROR_DEVICE_REMOVED");
+            Assert.AreEqual(descriptor.NativeApiCode, "DXGI_ERROR_DEVICE_REMOVED");
         }
 
         [Test]
@@ -85,7 +85,7 @@ namespace SharpDX.Tests
                         });
             } catch (SharpDXException exception)
             {
-                Assert.AreEqual(exception.Descriptor.ApiCode, "DXGI_ERROR_INVALID_CALL");
+                Assert.AreEqual(exception.Descriptor.NativeApiCode, "DXGI_ERROR_INVALID_CALL");
             }
         }
     }
