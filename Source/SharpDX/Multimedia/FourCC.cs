@@ -145,13 +145,13 @@ namespace SharpDX.Multimedia
 
         public override string ToString()
         {
-            return new string(new[]
+            return string.Format("{0}(0x{1:X})", new string(new[]
                                   {
                                       (char) (value & 0xFF),
                                       (char) ((value >> 8) & 0xFF),
                                       (char) ((value >> 16) & 0xFF),
                                       (char) ((value >> 24) & 0xFF),
-                                  });
+                                  }), value);
         }
 
         public bool Equals(FourCC other)

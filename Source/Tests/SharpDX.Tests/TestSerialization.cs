@@ -97,7 +97,46 @@ namespace SharpDX.Tests
             var serializedText = SerializeXml(dataSerializedForXml);
 
             Assert.AreEqual(referenceText, serializedText);
+
+            // Check Identity references
+            Assert.AreEqual(dataSerialized.SIdentity1, dataSerialized.SIdentity11);
+            Assert.AreEqual(dataSerialized.SIdentity2, dataSerialized.SIdentity22);
+            Assert.AreEqual(dataSerialized.SIdentity3, dataSerialized.SIdentity33);
+            Assert.AreEqual(dataSerialized.SIdentity4, dataSerialized.SIdentity44);
+            Assert.AreEqual(dataSerialized.SIdentity5, dataSerialized.SIdentity55);
         }
+
+        public class TestSimpleDynamicData : IDataSerializer
+        {
+            public object A;
+            public object B;
+
+            void IDataSerializer.Serialize(BinarySerializer binarySerializer)
+            {
+                binarySerializer.EnableIdentityReference(true);
+                binarySerializer.SerializeDynamic(ref A);
+                binarySerializer.SerializeDynamic(ref B);
+                binarySerializer.EnableIdentityReference(false);
+            }
+        }
+
+        [Test]
+        public void TestSimpleDynamic()
+        {
+            var stream = new MemoryStream();
+            var rw = new BinarySerializer(stream, SerializerMode.Write);
+
+            var arrayValue = new byte[] { 1, 2, 3, 4 };
+            var dataArray = new TestSimpleDynamicData() { A = arrayValue, B = arrayValue };
+            rw.Save(dataArray);
+
+            stream.Position = 0;
+
+            var dataArrayLoaded = rw.Load<TestSimpleDynamicData>();
+
+            Assert.AreEqual(dataArrayLoaded.A, dataArrayLoaded.B);
+        }
+
 
         private string SerializeXml(TestData value)
         {
@@ -223,6 +262,18 @@ namespace SharpDX.Tests
 
             public TestNonDataSerializer R;
 
+            public TestClassData SIdentity1;
+            public string SIdentity2;
+            public byte[] SIdentity3;
+            public TestClassData[] SIdentity4;
+            public int[] SIdentity5;
+
+            public TestClassData SIdentity11;
+            public string SIdentity22;
+            public byte[] SIdentity33;
+            public TestClassData[] SIdentity44;
+            public int[] SIdentity55;
+
             void IDataSerializer.Serialize(BinarySerializer binarySerializer)
             {
                 binarySerializer.Serialize(ref A);
@@ -286,17 +337,32 @@ namespace SharpDX.Tests
                 binarySerializer.Serialize(ref OList);
 
                 // Allow null values here.
-                binarySerializer.AllowNull = true;
+                binarySerializer.EnableNullReference(true);
                 binarySerializer.Serialize(ref ONull);
                 binarySerializer.Serialize(ref OArrayNull);
                 binarySerializer.Serialize(ref OListNull);
-                binarySerializer.AllowNull = false;
+                binarySerializer.EnableNullReference(false);
 
                 binarySerializer.Serialize(ref Q);
                 binarySerializer.Serialize(ref QArray);
                 binarySerializer.Serialize(ref QList);
 
                 binarySerializer.SerializeDynamic(ref R);
+
+                // Test for identity objects
+                binarySerializer.EnableIdentityReference(true);
+                binarySerializer.Serialize(ref SIdentity1);
+                binarySerializer.Serialize(ref SIdentity2);
+                binarySerializer.Serialize(ref SIdentity3);
+                binarySerializer.Serialize(ref SIdentity4);
+                binarySerializer.Serialize(ref SIdentity5, binarySerializer.Serialize);
+
+                binarySerializer.Serialize(ref SIdentity11);
+                binarySerializer.Serialize(ref SIdentity22);
+                binarySerializer.Serialize(ref SIdentity33);
+                binarySerializer.Serialize(ref SIdentity44);
+                binarySerializer.Serialize(ref SIdentity55, binarySerializer.Serialize);
+                binarySerializer.EnableIdentityReference(false);
             }
         }
 
@@ -375,9 +441,21 @@ namespace SharpDX.Tests
             public object QArray;
             public object QList;
 
+            public object SIdentity1;
+            public object SIdentity2;
+            public object SIdentity3;
+            public object SIdentity4;
+            public object SIdentity5;
+
+            public object SIdentity11;
+            public object SIdentity22;
+            public object SIdentity33;
+            public object SIdentity44;
+            public object SIdentity55;
+            
             void IDataSerializer.Serialize(BinarySerializer binarySerializer)
             {
-                binarySerializer.AllowNull = true;
+                binarySerializer.EnableNullReference(true);
                 binarySerializer.SerializeDynamic(ref A);
                 binarySerializer.SerializeDynamic(ref AArray);
                 binarySerializer.SerializeDynamic(ref AList);
@@ -445,7 +523,23 @@ namespace SharpDX.Tests
                 binarySerializer.SerializeDynamic(ref Q);
                 binarySerializer.SerializeDynamic(ref QArray);
                 binarySerializer.SerializeDynamic(ref QList);
-                binarySerializer.AllowNull = false;
+
+                // Test for identity objects
+                binarySerializer.EnableIdentityReference(true);
+                binarySerializer.SerializeDynamic(ref SIdentity1);
+                binarySerializer.SerializeDynamic(ref SIdentity2);
+                binarySerializer.SerializeDynamic(ref SIdentity3);
+                binarySerializer.SerializeDynamic(ref SIdentity4);
+                binarySerializer.SerializeDynamic(ref SIdentity5);
+
+                binarySerializer.SerializeDynamic(ref SIdentity11);
+                binarySerializer.SerializeDynamic(ref SIdentity22);
+                binarySerializer.SerializeDynamic(ref SIdentity33);
+                binarySerializer.SerializeDynamic(ref SIdentity44);
+                binarySerializer.SerializeDynamic(ref SIdentity55);
+                binarySerializer.EnableIdentityReference(false);
+
+                binarySerializer.EnableNullReference(false);
             }
 
             public void CopyTo(TestData dest)
@@ -504,6 +598,18 @@ namespace SharpDX.Tests
                 dest.Q = (TestStructData)this.Q;
                 dest.QArray = (TestStructData[])this.QArray;
                 dest.QList = (List<TestStructData>)this.QList;
+
+                dest.SIdentity1 = (TestClassData)this.SIdentity1;
+                dest.SIdentity2 = (string)this.SIdentity2;
+                dest.SIdentity3 = (byte[])this.SIdentity3;
+                dest.SIdentity4 = (TestClassData[])this.SIdentity4;
+                dest.SIdentity5 = (int[])this.SIdentity5;
+
+                dest.SIdentity11 = (TestClassData)this.SIdentity11;
+                dest.SIdentity22 = (string)this.SIdentity22;
+                dest.SIdentity33 = (byte[])this.SIdentity33;
+                dest.SIdentity44 = (TestClassData[])this.SIdentity44;
+                dest.SIdentity55 = (int[])this.SIdentity55;
             }
 
             public void CopyFrom(TestData dest)
@@ -562,8 +668,26 @@ namespace SharpDX.Tests
                 this.Q = (TestStructData)dest.Q;
                 this.QArray = (TestStructData[])dest.QArray;
                 this.QList = (List<TestStructData>)dest.QList;
+
+                this.SIdentity1 = (TestClassData) dest.SIdentity1;
+                this.SIdentity2 = (string) dest.SIdentity2;
+                this.SIdentity3 = (byte[]) dest.SIdentity3;
+                this.SIdentity4 = (TestClassData[]) dest.SIdentity4;
+                this.SIdentity5 = (int[]) dest.SIdentity5;
+
+                this.SIdentity11 = (TestClassData)dest.SIdentity11;
+                this.SIdentity22 = (string)dest.SIdentity22;
+                this.SIdentity33 = (byte[])dest.SIdentity33;
+                this.SIdentity44 = (TestClassData[])dest.SIdentity44;
+                this.SIdentity55 = (int[])dest.SIdentity55;
             }
         }
+
+        private static readonly TestClassData SIdentity1 = new TestClassData();
+        private static readonly string SIdentity2 = new string('a', 'b');
+        private static readonly byte[] SIdentity3 = new byte[] {1, 2, 3, 4};
+        private static readonly TestClassData[] SIdentity4 = new[] { SIdentity1, SIdentity1, SIdentity1, SIdentity1 };
+        private static readonly int[] SIdentity5 = new[] {1, 2, 3, 4};
 
         private TestData dataReference = new TestData()
         {
@@ -640,6 +764,18 @@ namespace SharpDX.Tests
             QList = new List<TestStructData> { new TestStructData() { A = 1, B = 2, C = 3, D = 4 }, new TestStructData() { A = 5, B = 6, C = 7, D = 8 }, },
 
             R = new TestNonDataSerializer() { A = 1 },
+
+            SIdentity1 = SIdentity1,
+            SIdentity2 = SIdentity2,
+            SIdentity3 = SIdentity3,
+            SIdentity4 = SIdentity4,
+            SIdentity5 = SIdentity5,
+
+            SIdentity11 = SIdentity1,
+            SIdentity22 = SIdentity2,
+            SIdentity33 = SIdentity3,
+            SIdentity44 = SIdentity4,
+            SIdentity55 = SIdentity5,
         };
     }
 }

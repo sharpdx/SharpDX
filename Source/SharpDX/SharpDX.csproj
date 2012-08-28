@@ -39,6 +39,7 @@
     <Compile Include="Diagnostics\NamespaceDoc.cs" />
     <Compile Include="Direct3D\NamespaceDoc.cs" />
     <Compile Include="FrustumCameraParams.cs" />
+    <Compile Include="IdentityEqualityComparer.cs" />
     <Compile Include="Int3.cs" />
     <Compile Include="IO\NamespaceDoc.cs" />
     <Compile Include="Multimedia\AudioEndpointRole.cs" />

@@ -662,6 +662,22 @@ namespace SharpDX
 #endif
         }
 
+        /// <summary>
+        /// Determines whether the specified type to test is a valuetype.
+        /// </summary>
+        /// <param name="typeToTest">The type to test.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified type to test is a valuetype; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsValueType(Type typeToTest)
+        {
+#if WIN8METRO
+            return typeToTest.GetTypeInfo().IsValueType;
+#else
+            return typeToTest.IsValueType;
+#endif
+        }
+
         private static MethodInfo GetMethod(Type type, string name, Type[] typeArgs) {
 #if WIN8METRO
 
