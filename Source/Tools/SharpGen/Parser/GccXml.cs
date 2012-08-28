@@ -311,7 +311,15 @@ namespace SharpGen.Parser
             {
                 var subKey = key.OpenSubKey(@"SOFTWARE\Microsoft\Microsoft SDKs\Windows\v" + version);
                 if (subKey != null)
-                    return version;
+                {
+                    // Check that the include directory actually exist
+                    object directory = subKey.GetValue("InstallationFolder");
+                    if (directory != null && Directory.Exists(Path.Combine(directory.ToString(), "include")))
+                    {
+                        return version;
+                    }
+
+                }
             }
 
             Logger.Exit("Missing Windows SDK [{0}]. Download SDK 7.1 from: http://www.microsoft.com/en-us/download/details.aspx?id=8279", string.Join("/", versions));
