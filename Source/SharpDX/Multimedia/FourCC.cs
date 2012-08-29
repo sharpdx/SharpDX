@@ -68,7 +68,7 @@ namespace SharpDX.Multimedia
         /// <param name="fourCC">The fourCC value as an int.</param>
         public FourCC(int fourCC)
         {
-            this.value = checked((uint)fourCC);
+            this.value = unchecked((uint)fourCC);
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace SharpDX.Multimedia
         /// </returns>
         public static implicit operator int(FourCC d)
         {
-            return checked((int)d.value);
+            return unchecked((int)d.value);
         }
 
         /// <summary>

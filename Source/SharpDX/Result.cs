@@ -97,7 +97,7 @@ namespace SharpDX
         /// <returns>The result of the conversion.</returns>
         public static explicit operator uint(Result result)
         {
-            return checked((uint)result.Code);
+            return unchecked((uint)result.Code);
         }
 
         /// <summary>

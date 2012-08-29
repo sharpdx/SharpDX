@@ -428,7 +428,7 @@ namespace SharpDX.Direct3D11
         /// <unmanaged>void ID3D11DeviceContext::OMSetBlendState([In, Optional] ID3D11BlendState* pBlendState,[In, Optional] const SHARPDX_COLOR4* BlendFactor,[In] unsigned int SampleMask)</unmanaged>	
         public void SetBlendState(SharpDX.Direct3D11.BlendState blendStateRef, SharpDX.Color4? blendFactor = null, uint sampleMask = 0xFFFFFFFF)
         {
-            SetBlendState(blendStateRef, blendFactor, checked((int)sampleMask));
+            SetBlendState(blendStateRef, blendFactor, unchecked((int)sampleMask));
         }
 
         /// <summary>

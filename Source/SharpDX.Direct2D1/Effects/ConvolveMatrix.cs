@@ -76,11 +76,11 @@ namespace SharpDX.Direct2D1.Effects
         {
             get
             {
-                return checked((int)GetUIntValue((int)ConvoleMatrixProperties.KernelSizeX));
+                return unchecked((int)GetUIntValue((int)ConvoleMatrixProperties.KernelSizeX));
             }
             set
             {
-                SetValue((int)ConvoleMatrixProperties.KernelSizeX, checked((uint)value));
+                SetValue((int)ConvoleMatrixProperties.KernelSizeX, unchecked((uint)value));
             }
         }
 
@@ -91,11 +91,11 @@ namespace SharpDX.Direct2D1.Effects
         {
             get
             {
-                return checked((int)GetUIntValue((int)ConvoleMatrixProperties.KernelSizeY));
+                return unchecked((int)GetUIntValue((int)ConvoleMatrixProperties.KernelSizeY));
             }
             set
             {
-                SetValue((int)ConvoleMatrixProperties.KernelSizeY, checked((uint)value));
+                SetValue((int)ConvoleMatrixProperties.KernelSizeY, unchecked((uint)value));
             }
         }
 

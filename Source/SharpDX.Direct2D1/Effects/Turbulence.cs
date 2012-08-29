@@ -80,11 +80,11 @@ namespace SharpDX.Direct2D1.Effects
         {
             get
             {
-                return checked((int)GetUIntValue((int)TurbulenceProperties.NumOctaves));
+                return unchecked((int)GetUIntValue((int)TurbulenceProperties.NumOctaves));
             }
             set
             {
-                SetValue((int)TurbulenceProperties.NumOctaves, checked((uint)value));
+                SetValue((int)TurbulenceProperties.NumOctaves, unchecked((uint)value));
             }
         }
 
@@ -95,11 +95,11 @@ namespace SharpDX.Direct2D1.Effects
         {
             get
             {
-                return checked((int)GetUIntValue((int)TurbulenceProperties.Seed));
+                return unchecked((int)GetUIntValue((int)TurbulenceProperties.Seed));
             }
             set
             {
-                SetValue((int)TurbulenceProperties.Seed, checked((uint)value));
+                SetValue((int)TurbulenceProperties.Seed, unchecked((uint)value));
             }
         }
         

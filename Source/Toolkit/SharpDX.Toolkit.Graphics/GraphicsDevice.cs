@@ -1170,7 +1170,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::OMSetBlendState</unmanaged-short>	
         public void SetBlendState(BlendState blendState, SharpDX.Color4 blendFactor, uint multiSampleMask = 0xFFFFFFFF)
         {
-            SetBlendState(blendState, blendFactor, checked((int)multiSampleMask));
+            SetBlendState(blendState, blendFactor, unchecked((int)multiSampleMask));
         }
 
         /// <summary>	
