@@ -85,6 +85,7 @@
     <short name="TEXTURE3DARRAY">Texture3DArray</short>
     <short name="TEXTURE2DMS">Texture2DMultisampled</short>
     <short name="TEXTURE2DMSARRAY">Texture2DMultisampledArray</short>
+    <short name="TEXTURECUBEARRAY">TextureCubeArray</short>
     <short name="RWBUFFER">RWBuffer</short>
     <short name="RWBYTEADDRESS">RWByteAddress</short>
     <short name="UINT8">UInt8</short>
