@@ -61,11 +61,11 @@ namespace SharpDX.Windows
                 if (fontForDesignMode == null)
                     fontForDesignMode = new Font("Calibri", 24, FontStyle.Regular);
 
-                e.Graphics.Clear(Color.WhiteSmoke);
+                e.Graphics.Clear(System.Drawing.Color.WhiteSmoke);
                 string text = "SharpDX RenderControl";
                 var sizeText = e.Graphics.MeasureString(text, fontForDesignMode);
 
-                e.Graphics.DrawString(text, fontForDesignMode, new SolidBrush(Color.Black), (Width - sizeText.Width) / 2, (Height - sizeText.Height) / 2);
+                e.Graphics.DrawString(text, fontForDesignMode, new SolidBrush(System.Drawing.Color.Black), (Width - sizeText.Width) / 2, (Height - sizeText.Height) / 2);
             }
         }
     }

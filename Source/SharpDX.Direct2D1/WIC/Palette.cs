@@ -61,7 +61,7 @@ namespace SharpDX.WIC
         {
             var rawColors = new Color[colors.Length];
             for (int i = 0; i < rawColors.Length; i++)
-                rawColors[i] = colors[i];
+                rawColors[i] = (Color)colors[i];
             Initialize(rawColors);
         }
 

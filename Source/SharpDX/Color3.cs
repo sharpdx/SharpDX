@@ -109,13 +109,13 @@ namespace SharpDX
         /// <summary>
         /// Initializes a new instance of the <see cref="SharpDX.Color3"/> struct.
         /// </summary>
-        /// <param name="rgb">A packed integer containing all three color components.
+        /// <param name="rgb">A packed integer containing all three color components in RGB order.
         /// The alpha component is ignored.</param>
         public Color3(int rgb)
         {
-            Red = ((rgb >> 16) & 255) / 255.0f;
+            Blue = ((rgb >> 16) & 255) / 255.0f;
             Green = ((rgb >> 8) & 255) / 255.0f;
-            Blue = (rgb & 255) / 255.0f;
+            Red = (rgb & 255) / 255.0f;
         }
 
         /// <summary>
@@ -174,17 +174,37 @@ namespace SharpDX
         /// </summary>
         /// <returns>A packed integer containing all three color components.
         /// The alpha channel is set to 255.</returns>
-        public int ToRgb()
+        public int ToRgba()
         {
             uint a = 255;
-            uint r = (uint)(Red * 255.0f);
-            uint g = (uint)(Green * 255.0f);
-            uint b = (uint)(Blue * 255.0f);
+            uint r = (uint) (Red * 255.0f) & 255;
+            uint g = (uint) (Green * 255.0f) & 255;
+            uint b = (uint) (Blue * 255.0f) & 255;
+
+            uint value = r;
+            value |= g << 8;
+            value |= b << 16;
+            value |= a << 24;
+
+            return (int)value;
+        }
+
+        /// <summary>
+        /// Converts the color into a packed integer.
+        /// </summary>
+        /// <returns>A packed integer containing all three color components.
+        /// The alpha channel is set to 255.</returns>
+        public int ToBgra()
+        {
+            uint a = 255;
+            uint r = (uint)(Red * 255.0f) & 255;
+            uint g = (uint)(Green * 255.0f) & 255;
+            uint b = (uint)(Blue * 255.0f) & 255;
 
             uint value = b;
-            value += g << 8;
-            value += r << 16;
-            value += a << 24;
+            value |= g << 8;
+            value |= r << 16;
+            value |= a << 24;
 
             return (int)value;
         }
@@ -780,90 +800,5 @@ namespace SharpDX
 
             return Equals((Color3)value);
         }
-
-#if SlimDX1xInterop
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Color3"/> to <see cref="SlimDX.Color3"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator SlimDX.Color3(Color3 value)
-        {
-            return new SlimDX.Color3(value.Red, value.Green, value.Blue);
-        }
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="SlimDX.Color3"/> to <see cref="SharpDX.Color3"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator Color3(SlimDX.Color3 value)
-        {
-            return new Color3(value.Red, value.Green, value.Blue);
-        }
-#endif
-
-#if WPFInterop
-        /// <summary>
-        /// Performs an explicit conversion from <see cref="SharpDX.Color3"/> to <see cref="System.Windows.Media.Color"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static explicit operator System.Windows.Media.Color(Color3 value)
-        {
-            return new System.Windows.Media.Color()
-            {
-                A = 255,
-                R = (byte)(255f * value.Red),
-                G = (byte)(255f * value.Green),
-                B = (byte)(255f * value.Blue)
-            };
-        }
-
-        /// <summary>
-        /// Performs an explicit conversion from <see cref="System.Windows.Media.Color"/> to <see cref="SharpDX.Color3"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static explicit operator Color3(System.Windows.Media.Color value)
-        {
-            return new Color3()
-            {
-                Red = (float)value.R / 255f,
-                Green = (float)value.G / 255f,
-                Blue = (float)value.B / 255f
-            };
-        }
-#endif
-
-#if WinFormsInterop
-        /// <summary>
-        /// Performs an explicit conversion from <see cref="SharpDX.Color3"/> to <see cref="System.Drawing.Color"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator System.Drawing.Color(Color3 value)
-        {
-            return System.Drawing.Color.FromArgb(
-                (byte)(255f * value.Red),
-                (byte)(255f * value.Green),
-                (byte)(255f * value.Blue));
-        }
-
-        /// <summary>
-        /// Performs an explicit conversion from <see cref="System.Drawing.Color"/> to <see cref="SharpDX.Color3"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator Color3(System.Drawing.Color value)
-        {
-            return new Color3()
-            {
-                Red = (float)value.R / 255f,
-                Green = (float)value.G / 255f,
-                Blue = (float)value.B / 255f
-            };
-        }
-#endif
     }
 }

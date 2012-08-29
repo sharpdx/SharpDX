@@ -34,6 +34,7 @@
     <Compile Include="Bool4.cs" />
     <Compile Include="AssemblyDoc.cs" />
     <Compile Include="Color.cs" />
+    <Compile Include="ColorBGRA.cs" />
     <Compile Include="DataPointer.cs" />
     <Compile Include="Design\NamespaceDoc.cs" />
     <Compile Include="Diagnostics\NamespaceDoc.cs" />

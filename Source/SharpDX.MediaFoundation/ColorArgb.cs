@@ -34,7 +34,7 @@ namespace SharpDX.MediaFoundation
             // Blue => Green
             // Red => Blue
             // Alpha => Alpha
-            color.ToArgb(out Green, out Blue, out Red, out Alpha);
+            color.ToBgra(out Green, out Blue, out Red, out Alpha);
         }
 
         /// <summary>

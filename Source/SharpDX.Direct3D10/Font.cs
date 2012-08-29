@@ -118,7 +118,7 @@ namespace SharpDX.Direct3D10
         /// <unmanaged>int ID3DX10Font::DrawTextW([In] ID3DX10Sprite* pSprite,[In] const wchar_t* pString,[In] int Count,[In] RECT* pRect,[In] unsigned int Format,[In] D3DXCOLOR Color)</unmanaged>	
         public int DrawText(Sprite sprite, string text, int x, int y, Color4 color)
         {
-            return DrawText(sprite, text, new Rectangle(x, y, 0, 0), FontDrawFlags.NoClip, color.ToArgb());
+            return DrawText(sprite, text, new Rectangle(x, y, 0, 0), FontDrawFlags.NoClip, color);
         }
 
         /// <summary>

@@ -42,7 +42,7 @@ namespace SharpDX.Direct3D9
         /// <param name="vertices">No documentation.</param>	
         /// <param name="color">No documentation.</param>	
         /// <unmanaged>HRESULT ID3DXLine::Draw([In] const void* pVertexList,[In] unsigned int dwVertexListCount,[In] D3DCOLOR Color)</unmanaged>	
-        public void Draw(SharpDX.Vector2[] vertices, SharpDX.Color4 color)
+        public void Draw(SharpDX.Vector2[] vertices, SharpDX.ColorBGRA color)
         {
             unsafe
             {
@@ -57,7 +57,7 @@ namespace SharpDX.Direct3D9
         /// <param name="vertices">No documentation.</param>	
         /// <param name="color">No documentation.</param>	
         /// <unmanaged>HRESULT ID3DXLine::Draw([In] const void* pVertexList,[In] unsigned int dwVertexListCount,[In] D3DCOLOR Color)</unmanaged>	
-        public void Draw<T>(T[] vertices, SharpDX.Color4 color) where T : struct
+        public void Draw<T>(T[] vertices, SharpDX.ColorBGRA color) where T : struct
         {
             unsafe
             {
@@ -76,7 +76,7 @@ namespace SharpDX.Direct3D9
         /// <param name="color"><para>Color of the line. See <see cref="SharpDX.Color4"/>.</para></param>	
         /// <returns>If the method succeeds, the return value is <see cref="SharpDX.Direct3D9.ResultCode.Success"/>. If the method fails, the return value can be one of the following: <see cref="SharpDX.Direct3D9.ResultCode.InvalidCall"/>, D3DXERR_INVALIDDATA.</returns>	
         /// <unmanaged>HRESULT ID3DXLine::DrawTransform([In] const void* pVertexList,[In] unsigned int dwVertexListCount,[In] const D3DXMATRIX* pTransform,[In] D3DCOLOR Color)</unmanaged>	
-        public void DrawTransform(Vector3[] vertices, SharpDX.Matrix transform, SharpDX.Color4 color)
+        public void DrawTransform(Vector3[] vertices, SharpDX.Matrix transform, SharpDX.ColorBGRA color)
         {
             unsafe
             {
@@ -93,7 +93,7 @@ namespace SharpDX.Direct3D9
         /// <param name="color"><para>Color of the line. See <see cref="SharpDX.Color4"/>.</para></param>	
         /// <returns>If the method succeeds, the return value is <see cref="SharpDX.Direct3D9.ResultCode.Success"/>. If the method fails, the return value can be one of the following: <see cref="SharpDX.Direct3D9.ResultCode.InvalidCall"/>, D3DXERR_INVALIDDATA.</returns>	
         /// <unmanaged>HRESULT ID3DXLine::DrawTransform([In] const void* pVertexList,[In] unsigned int dwVertexListCount,[In] const D3DXMATRIX* pTransform,[In] D3DCOLOR Color)</unmanaged>	
-        public void DrawTransform<T>(T[] vertices, SharpDX.Matrix transform, SharpDX.Color4 color) where T : struct
+        public void DrawTransform<T>(T[] vertices, SharpDX.Matrix transform, SharpDX.ColorBGRA color) where T : struct
         {
             unsafe
             {

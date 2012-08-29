@@ -45,14 +45,14 @@ namespace SharpDX.Direct3D9
         /// Writing to a non-level-zero surface of the volume texture will not cause the dirty rectangle to be updated. If <see cref="SharpDX.Direct3D9.D3DX9.LoadVolumeFromMemory"/> is called and the texture was not already dirty (this is unlikely under normal usage scenarios), the application needs to explicitly call <see cref="SharpDX.Direct3D9.VolumeTexture.AddDirtyBox"/> on the volume texture.	
         /// </remarks>	
         /// <unmanaged>HRESULT D3DXLoadVolumeFromMemory([In] IDirect3DVolume9* pDestVolume,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestBox,[In] const void* pSrcMemory,[In] D3DFORMAT SrcFormat,[In] unsigned int SrcRowPitch,[In] unsigned int SrcSlicePitch,[In, Buffer] const PALETTEENTRY* pSrcPalette,[In] const void* pSrcBox,[In] D3DX_FILTER Filter,[In] int ColorKey)</unmanaged>	
-        public unsafe void LoadFromMemory(SharpDX.Direct3D9.PaletteEntry[] destPaletteRef, Box? destBox, System.IntPtr srcMemoryPointer, SharpDX.Direct3D9.Format srcFormat, int srcRowPitch, int srcSlicePitch, SharpDX.Direct3D9.PaletteEntry[] srcPaletteRef, Box srcBox, SharpDX.Direct3D9.Filter filter, Color4 colorKey)
+        public unsafe void LoadFromMemory(SharpDX.Direct3D9.PaletteEntry[] destPaletteRef, Box? destBox, System.IntPtr srcMemoryPointer, SharpDX.Direct3D9.Format srcFormat, int srcRowPitch, int srcSlicePitch, SharpDX.Direct3D9.PaletteEntry[] srcPaletteRef, Box srcBox, SharpDX.Direct3D9.Filter filter, ColorBGRA colorKey)
         {
             Box localDestBox;
             if (destBox.HasValue)
                 localDestBox = destBox.Value;
 
             D3DX9.LoadVolumeFromMemory(
-                this, destPaletteRef, new IntPtr(&localDestBox), srcMemoryPointer, srcFormat, srcRowPitch, srcSlicePitch, srcPaletteRef, new IntPtr(&srcBox), filter, colorKey.ToArgb());
+                this, destPaletteRef, new IntPtr(&localDestBox), srcMemoryPointer, srcFormat, srcRowPitch, srcSlicePitch, srcPaletteRef, new IntPtr(&srcBox), filter, colorKey.ToBgra());
         }
 
         /// <summary>

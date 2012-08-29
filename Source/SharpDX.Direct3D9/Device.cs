@@ -98,21 +98,7 @@ namespace SharpDX.Direct3D9
         /// <param name="stencil">The value that will be used to fill the cleared stencil buffer.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::Clear([None] int Count,[In, Buffer, Optional] const D3DRECT* pRects,[None] int Flags,[None] D3DCOLOR Color,[None] float Z,[None] int Stencil)</unmanaged>
-        public void Clear(ClearFlags clearFlags, SharpDX.Color4 color, float zdepth, int stencil)
-        {
-            this.Clear_(0, null, clearFlags, color.ToArgb(), zdepth, stencil);
-        }
-
-        /// <summary>
-        /// Clears one or more surfaces such as a render target, a stencil buffer, and a depth buffer.
-        /// </summary>
-        /// <param name="clearFlags">Flags that specify which surfaces will be cleared.</param>
-        /// <param name="color">The color that will be used to fill the cleared render target.</param>
-        /// <param name="zdepth">The value that will be used to fill the cleared depth buffer.</param>
-        /// <param name="stencil">The value that will be used to fill the cleared stencil buffer.</param>
-        /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
-        /// <unmanaged>HRESULT IDirect3DDevice9::Clear([None] int Count,[In, Buffer, Optional] const D3DRECT* pRects,[None] int Flags,[None] D3DCOLOR Color,[None] float Z,[None] int Stencil)</unmanaged>
-        public void Clear(ClearFlags clearFlags, int color, float zdepth, int stencil)
+        public void Clear(ClearFlags clearFlags, ColorBGRA color, float zdepth, int stencil)
         {
             this.Clear_(0, null, clearFlags, color, zdepth, stencil);
         }
@@ -127,24 +113,9 @@ namespace SharpDX.Direct3D9
         /// <param name="rectangles">The areas on the surfaces that will be cleared.</param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::Clear([None] int Count,[In, Buffer, Optional] const D3DRECT* pRects,[None] int Flags,[None] D3DCOLOR Color,[None] float Z,[None] int Stencil)</unmanaged>
-        public void Clear(ClearFlags clearFlags, SharpDX.Color4 color, float zdepth, int stencil, Rectangle[] rectangles)
+        public void Clear(ClearFlags clearFlags, ColorBGRA color, float zdepth, int stencil, Rectangle[] rectangles)
         {
-            this.Clear_( rectangles == null?0:rectangles.Length, rectangles, clearFlags, color.ToArgb(), zdepth, stencil);
-        }
-
-        /// <summary>
-        /// Clears one or more surfaces such as a render target, a stencil buffer, and a depth buffer.
-        /// </summary>
-        /// <param name="clearFlags">Flags that specify which surfaces will be cleared.</param>
-        /// <param name="color">The color that will be used to fill the cleared render target.</param>
-        /// <param name="zdepth">The value that will be used to fill the cleared depth buffer.</param>
-        /// <param name="stencil">The value that will be used to fill the cleared stencil buffer.</param>
-        /// <param name="rectangles">The areas on the surfaces that will be cleared.</param>
-        /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
-        /// <unmanaged>HRESULT IDirect3DDevice9::Clear([None] int Count,[In, Buffer, Optional] const D3DRECT* pRects,[None] int Flags,[None] D3DCOLOR Color,[None] float Z,[None] int Stencil)</unmanaged>
-        public void Clear(ClearFlags clearFlags, int color, float zdepth, int stencil, Rectangle[] rectangles)
-        {
-            this.Clear_(rectangles == null ? 0 : rectangles.Length, rectangles, clearFlags, color, zdepth, stencil);
+            this.Clear_( rectangles == null?0:rectangles.Length, rectangles, clearFlags, color, zdepth, stencil);
         }
 
         /// <summary>	
@@ -157,7 +128,7 @@ namespace SharpDX.Direct3D9
         /// <param name="color"> Color used for filling. </param>
         /// <returns>A <see cref="SharpDX.Result" /> object describing the result of the operation.</returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::ColorFill([None] IDirect3DSurface9* pSurface,[In, Optional] const RECT* pRect,[None] D3DCOLOR color)</unmanaged>
-        public void ColorFill(SharpDX.Direct3D9.Surface surfaceRef, SharpDX.Color4 color)
+        public void ColorFill(SharpDX.Direct3D9.Surface surfaceRef, SharpDX.ColorBGRA color)
         {
             this.ColorFill(surfaceRef, null, color);
         }

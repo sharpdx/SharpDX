@@ -50,7 +50,7 @@ using System.ComponentModel;
 namespace SharpDX
 {
     /// <summary>
-    /// Represents a color in the form of argb.
+    /// Represents a color in the form of rgba.
     /// </summary>
 #if !WIN8METRO
     [Serializable]
@@ -130,31 +130,31 @@ namespace SharpDX
         /// <summary>
         /// Initializes a new instance of the <see cref="SharpDX.Color4"/> struct.
         /// </summary>
-        /// <param name="argb">A packed integer containing all four color components.</param>
-        public Color4(uint argb)
+        /// <param name="rgba">A packed integer containing all four color components in RGBA order.</param>
+        public Color4(uint rgba)
         {
-            Alpha = ((argb >> 24) & 255) / 255.0f;
-            Red = ((argb >> 16) & 255) / 255.0f;
-            Green = ((argb >> 8) & 255) / 255.0f;
-            Blue = (argb & 255) / 255.0f;
+            Alpha = ((rgba >> 24) & 255) / 255.0f;
+            Blue = ((rgba >> 16) & 255) / 255.0f;
+            Green = ((rgba >> 8) & 255) / 255.0f;
+            Red = (rgba & 255) / 255.0f;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SharpDX.Color4"/> struct.
         /// </summary>
-        /// <param name="argb">A packed integer containing all four color components.</param>
-        public Color4(int argb)
+        /// <param name="rgba">A packed integer containing all four color components in RGBA order.</param>
+        public Color4(int rgba)
         {
-            Alpha = ((argb >> 24) & 255) / 255.0f;
-            Red = ((argb >> 16) & 255) / 255.0f;
-            Green = ((argb >> 8) & 255) / 255.0f;
-            Blue = (argb & 255) / 255.0f;
+            Alpha = ((rgba >> 24) & 255) / 255.0f;
+            Blue = ((rgba >> 16) & 255) / 255.0f;
+            Green = ((rgba >> 8) & 255) / 255.0f;
+            Red = (rgba & 255) / 255.0f;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SharpDX.Color4"/> struct.
         /// </summary>
-        /// <param name="values">The values to assign to the alpha, red, green, and blue components of the color. This must be an array with four elements.</param>
+        /// <param name="values">The values to assign to the red, green, blue, and alpha components of the color. This must be an array with four elements.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="values"/> is <c>null</c>.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="values"/> contains more or less than four elements.</exception>
         public Color4(float[] values)
@@ -164,16 +164,16 @@ namespace SharpDX
             if (values.Length != 4)
                 throw new ArgumentOutOfRangeException("values", "There must be four and only four input values for Color4.");
 
-            Alpha = values[0];
-            Red = values[1];
-            Green = values[2];
-            Blue = values[3];
+            Red = values[0];
+            Green = values[1];
+            Blue = values[2];
+            Alpha = values[3];
         }
 
         /// <summary>
         /// Gets or sets the component at the specified index.
         /// </summary>
-        /// <value>The value of the alpha, red, green, or blue component, depending on the index.</value>
+        /// <value>The value of the red, green, blue, and alpha components, depending on the index.</value>
         /// <param name="index">The index of the component to access. Use 0 for the alpha component, 1 for the red component, 2 for the green component, and 3 for the blue component.</param>
         /// <returns>The value of the component at the specified index.</returns>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the <paramref name="index"/> is out of the range [0, 3].</exception>
@@ -183,10 +183,10 @@ namespace SharpDX
             {
                 switch (index)
                 {
-                    case 0: return Alpha;
-                    case 1: return Red;
-                    case 2: return Green;
-                    case 3: return Blue;
+                    case 0: return Red;
+                    case 1: return Green;
+                    case 2: return Blue;
+                    case 3: return Alpha;
                 }
 
                 throw new ArgumentOutOfRangeException("index", "Indices for Color4 run from 0 to 3, inclusive.");
@@ -196,10 +196,10 @@ namespace SharpDX
             {
                 switch (index)
                 {
-                    case 0: Alpha = value; break;
-                    case 1: Red = value; break;
-                    case 2: Green = value; break;
-                    case 3: Blue = value; break;
+                    case 0: Red = value; break;
+                    case 1: Green = value; break;
+                    case 2: Blue = value; break;
+                    case 3: Alpha = value; break;
                     default: throw new ArgumentOutOfRangeException("index", "Indices for Color4 run from 0 to 3, inclusive.");
                 }
             }
@@ -209,17 +209,17 @@ namespace SharpDX
         /// Converts the color into a packed integer.
         /// </summary>
         /// <returns>A packed integer containing all four color components.</returns>
-        public int ToArgb()
+        public int ToBgra()
         {
-            uint a = (uint)(Alpha * 255.0f);
-            uint r = (uint)(Red * 255.0f);
-            uint g = (uint)(Green * 255.0f);
-            uint b = (uint)(Blue * 255.0f);
+            uint a = (uint)(Alpha * 255.0f) & 255;
+            uint r = (uint)(Red * 255.0f) & 255;
+            uint g = (uint)(Green * 255.0f) & 255;
+            uint b = (uint)(Blue * 255.0f) & 255;
 
             uint value = b;
-            value += g << 8;
-            value += r << 16;
-            value += a << 24;
+            value |= g << 8;
+            value |= r << 16;
+            value |= a << 24;
 
             return (int)value;
         }
@@ -228,12 +228,31 @@ namespace SharpDX
         /// Converts the color into a packed integer.
         /// </summary>
         /// <returns>A packed integer containing all four color components.</returns>
-        public void ToArgb(out byte r, out byte g, out byte b, out byte a)
+        public void ToBgra(out byte r, out byte g, out byte b, out byte a)
         {
             a = (byte)(Alpha * 255.0f);
             r = (byte)(Red * 255.0f);
             g = (byte)(Green * 255.0f);
             b = (byte)(Blue * 255.0f);
+        }
+
+        /// <summary>
+        /// Converts the color into a packed integer.
+        /// </summary>
+        /// <returns>A packed integer containing all four color components.</returns>
+        public int ToRgba()
+        {
+            uint a = (uint) (Alpha * 255.0f) & 255;
+            uint r = (uint) (Red * 255.0f) & 255;
+            uint g = (uint) (Green * 255.0f) & 255;
+            uint b = (uint) (Blue * 255.0f) & 255;
+
+            uint value = r;
+            value |= g << 8;
+            value |= b << 16;
+            value |= a << 24;
+
+            return (int)value;
         }
 
         /// <summary>
@@ -260,7 +279,7 @@ namespace SharpDX
         /// <returns>A four-element array containing the components of the color.</returns>
         public float[] ToArray()
         {
-            return new float[] { Alpha, Red, Green, Blue };
+            return new float[] { Red, Green, Blue, Alpha };
         }
 
         /// <summary>
@@ -770,25 +789,25 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Color4"/> to <see cref="System.Int32"/>.
+        /// Performs an explicit conversion from <see cref="SharpDX.Color4"/> to <see cref="System.Int32"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>
         /// The result of the conversion.
         /// </returns>
-        public static implicit operator int(Color4 value)
+        public static explicit operator int(Color4 value)
         {
-            return value.ToArgb();
+            return value.ToRgba();
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="System.Int32"/> to <see cref="SharpDX.Color4"/>.
+        /// Performs an explicit conversion from <see cref="System.Int32"/> to <see cref="SharpDX.Color4"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>
         /// The result of the conversion.
         /// </returns>
-        public static implicit operator Color4(int value)
+        public static explicit operator Color4(int value)
         {
             return new Color4(value);
         }
@@ -889,71 +908,5 @@ namespace SharpDX
 
             return Equals((Color4)value);
         }
-
-#if WPFInterop
-        /// <summary>
-        /// Performs an explicit conversion from <see cref="SharpDX.Color4"/> to <see cref="System.Windows.Media.Color"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static explicit operator System.Windows.Media.Color(Color4 value)
-        {
-            return new System.Windows.Media.Color()
-            {
-                A = (byte)(255f * value.Alpha),
-                R = (byte)(255f * value.Red),
-                G = (byte)(255f * value.Green),
-                B = (byte)(255f * value.Blue)
-            };
-        }
-
-        /// <summary>
-        /// Performs an explicit conversion from <see cref="System.Windows.Media.Color"/> to <see cref="SharpDX.Color4"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static explicit operator Color4(System.Windows.Media.Color value)
-        {
-            return new Color4()
-            {
-                Alpha = (float)value.A / 255f,
-                Red = (float)value.R / 255f,
-                Green = (float)value.G / 255f,
-                Blue = (float)value.B / 255f
-            };
-        }
-#endif
-
-#if WinFormsInterop
-        /// <summary>
-        /// Performs an explicit conversion from <see cref="SharpDX.Color4"/> to <see cref="System.Drawing.Color"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator System.Drawing.Color(Color4 value)
-        {
-            return System.Drawing.Color.FromArgb(
-                (byte)(255f * value.Alpha),
-                (byte)(255f * value.Red),
-                (byte)(255f * value.Green),
-                (byte)(255f * value.Blue));
-        }
-
-        /// <summary>
-        /// Performs an explicit conversion from <see cref="System.Drawing.Color"/> to <see cref="SharpDX.Color4"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator Color4(System.Drawing.Color value)
-        {
-            return new Color4()
-            {
-                Alpha = (float)value.A / 255f,
-                Red = (float)value.R / 255f,
-                Green = (float)value.G / 255f,
-                Blue = (float)value.B / 255f
-            };
-        }
-#endif
     }
 }

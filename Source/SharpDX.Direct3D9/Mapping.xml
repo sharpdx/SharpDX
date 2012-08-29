@@ -2187,7 +2187,6 @@
     <map param="IDirect3D9::EnumAdapterModes::pMode" return="true" attribute="out"/>
     
     <map param="IDirect3DDevice9::Clear::Flags" type="D3DCLEAR" />
-    <map param="IDirect3DDevice9::Clear::Color" type="int" />
     <map param="IDirect3DDevice9::Clear::pRects" attribute="in buffer optional" />
     <map method="IDirect3DDevice9::Clear" visibility="internal" name="Clear_" />
     <map param="IDirect3DDevice9::ColorFill::pRect" attribute="in optional" />

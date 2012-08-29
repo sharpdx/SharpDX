@@ -92,7 +92,7 @@ namespace SharpDX.Direct3D9
         /// The parameters of this method are very similar to those of the GDI DrawText function.This method supports both ANSI and Unicode strings.This method must be called inside a  BeginScene ... EndScene block. The only exception is when an application calls DrawText with DT_CALCRECT to calculate the size of a given block of text.Unless the DT_NOCLIP format is used, this method clips the text so that it does not appear outside the specified rectangle. All formatting is assumed to have multiple lines unless the DT_SINGLELINE format is specified.If the selected font is too large for the rectangle, this method does not attempt to substitute a smaller font.This method supports only fonts whose escapement and orientation are both zero.	
         /// </remarks>	
         /// <unmanaged>int ID3DXFont::DrawTextW([In] ID3DXSprite* pSprite,[In] const wchar_t* pString,[In] int Count,[In] void* pRect,[In] unsigned int Format,[In] D3DCOLOR Color)</unmanaged>	
-        public unsafe int DrawText(SharpDX.Direct3D9.Sprite sprite, string text, SharpDX.Rectangle rect, FontDrawFlags drawFlags, SharpDX.Color4 color)
+        public unsafe int DrawText(SharpDX.Direct3D9.Sprite sprite, string text, SharpDX.Rectangle rect, FontDrawFlags drawFlags, SharpDX.ColorBGRA color)
         {
 
             int value = DrawText(sprite, text, text.Length, new IntPtr(&rect), (int) drawFlags, color);
@@ -116,9 +116,9 @@ namespace SharpDX.Direct3D9
         /// <remarks>
         /// The parameters of this method are very similar to those of the GDI DrawText function.This method supports both ANSI and Unicode strings.This method must be called inside a  BeginScene ... EndScene block. The only exception is when an application calls DrawText with DT_CALCRECT to calculate the size of a given block of text.Unless the DT_NOCLIP format is used, this method clips the text so that it does not appear outside the specified rectangle. All formatting is assumed to have multiple lines unless the DT_SINGLELINE format is specified.If the selected font is too large for the rectangle, this method does not attempt to substitute a smaller font.This method supports only fonts whose escapement and orientation are both zero.
         /// </remarks>
-        public int DrawText(Sprite sprite, string text, int x, int y, Color4 color)
+        public int DrawText(Sprite sprite, string text, int x, int y, ColorBGRA color)
         {
-            return DrawText(sprite, text, new Rectangle(x, y, 0, 0), FontDrawFlags.NoClip, color.ToArgb());
+            return DrawText(sprite, text, new Rectangle(x, y, 0, 0), FontDrawFlags.NoClip, color);
         }
 
         /// <summary>
