@@ -142,7 +142,7 @@ namespace SharpDX
         /// </summary>
         /// <param name = "value">The value to be converted.</param>
         /// <returns>The converted value.</returns>
-        public static explicit operator Half(float value)
+        public static implicit operator Half(float value)
         {
             return new Half(value);
         }

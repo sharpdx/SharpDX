@@ -44,6 +44,7 @@ namespace SharpDX
         /// </summary>
         /// <value>The Y component of the vector.</value>
         public Half Y;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:SharpDX.Half2" /> structure.
         /// </summary>
@@ -65,6 +66,48 @@ namespace SharpDX
             this.Y = value;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:SharpDX.Half2" /> structure.
+        /// </summary>
+        /// <param name="x">The X component.</param>
+        /// <param name="y">The Y component.</param>
+        public Half2(float x, float y)
+        {
+            this.X = (Half)x;
+            this.Y = (Half)y;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:SharpDX.Half2" /> structure.
+        /// </summary>
+        /// <param name="value">The value to set for both the X and Y components.</param>
+        public Half2(float value)
+        {
+            var temp = (Half)value;
+            this.X = temp;
+            this.Y = temp;
+        }
+
+        /// <summary>
+        /// Performs an explicit conversion from <see cref="SharpDX.Vector2"/> to <see cref="SharpDX.Half2"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static implicit operator Half2(Vector2 value)
+        {
+            return new Half2(value.X, value.Y);
+        }
+
+        /// <summary>
+        /// Performs an explicit conversion from <see cref="SharpDX.Half2"/> to <see cref="SharpDX.Vector2"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static implicit operator Vector2(Half2 value)
+        {
+            return new Vector2(value.X, value.Y);
+        }
+        
         /// <summary>
         /// Tests for equality between two objects.
         /// </summary>

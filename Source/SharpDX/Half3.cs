@@ -74,6 +74,46 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Performs an implicit conversion from <see cref="SharpDX.Vector3"/> to <see cref="SharpDX.Half3"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static implicit operator Half3(Vector3 value)
+        {
+            return new Half3(value.X, value.Y, value.Z);
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="SharpDX.Half3"/> to <see cref="SharpDX.Vector3"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static implicit operator Vector3(Half3 value)
+        {
+            return new Vector3(value.X, value.Y, value.Z);
+        }
+
+        /// <summary>
+        /// Performs an explicit conversion from <see cref="SharpDX.Vector2"/> to <see cref="SharpDX.Half3"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static explicit operator Half3(Vector2 value)
+        {
+            return new Half3(value.X, value.Y, 0.0f);
+        }
+
+        /// <summary>
+        /// Performs an explicit conversion from <see cref="SharpDX.Half3"/> to <see cref="SharpDX.Vector2"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static explicit operator Vector2(Half3 value)
+        {
+            return new Vector2(value.X, value.Y);
+        }
+
+        /// <summary>
         /// Tests for equality between two objects.
         /// </summary>
         /// <param name="left">The first value to compare.</param>

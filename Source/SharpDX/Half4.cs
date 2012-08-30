@@ -54,6 +54,7 @@ namespace SharpDX
         /// </summary>
         /// <value>The W component of the vector.</value>
         public Half W;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:SharpDX.Half4" /> structure.
         /// </summary>
@@ -81,6 +82,94 @@ namespace SharpDX
             this.W = value;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:SharpDX.Half4" /> structure.
+        /// </summary>
+        /// <param name="x">The X component.</param>
+        /// <param name="y">The Y component.</param>
+        /// <param name="z">The Z component.</param>
+        /// <param name="w">The W component.</param>
+        public Half4(float x, float y, float z, float w)
+        {
+            this.X = (Half)x;
+            this.Y = (Half)y;
+            this.Z = (Half)z;
+            this.W = (Half)w;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:SharpDX.Half4" /> structure.
+        /// </summary>
+        /// <param name="value">The value to set for the X, Y, Z, and W components.</param>
+        public Half4(float value)
+        {
+            var temp = (Half)value;
+            this.X = temp;
+            this.Y = temp;
+            this.Z = temp;
+            this.W = temp;
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="SharpDX.Vector4"/> to <see cref="SharpDX.Half4"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static implicit operator Half4(Vector4 value)
+        {
+            return new Half4(value.X, value.Y, value.Z, value.W);
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="SharpDX.Half4"/> to <see cref="SharpDX.Vector4"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static implicit operator Vector4(Half4 value)
+        {
+            return new Vector4(value.X, value.Y, value.Z, value.W);
+        }
+
+        /// <summary>
+        /// Performs an explicit conversion from <see cref="SharpDX.Vector3"/> to <see cref="SharpDX.Half4"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static explicit operator Half4(Vector3 value)
+        {
+            return new Half4(value.X, value.Y, value.Z, 0.0f);
+        }
+
+        /// <summary>
+        /// Performs an explicit conversion from <see cref="SharpDX.Half4"/> to <see cref="SharpDX.Vector3"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static explicit operator Vector3(Half4 value)
+        {
+            return new Vector3(value.X, value.Y, value.Z);
+        }
+
+        /// <summary>
+        /// Performs an explicit conversion from <see cref="SharpDX.Vector2"/> to <see cref="SharpDX.Half4"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static explicit operator Half4(Vector2 value)
+        {
+            return new Half4(value.X, value.Y, 0.0f, 0.0f);
+        }
+
+        /// <summary>
+        /// Performs an explicit conversion from <see cref="SharpDX.Half4"/> to <see cref="SharpDX.Vector2"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static explicit operator Vector2(Half4 value)
+        {
+            return new Vector2(value.X, value.Y);
+        }
+        
         /// <summary>
         /// Tests for equality between two objects.
         /// </summary>
