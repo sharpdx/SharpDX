@@ -31,81 +31,6 @@ namespace SharpDX.Tests
     [Description("Tests SharpDX.Serialization")]
     public class TestSerialization
     {
-        [Test]
-        public void TestStatic()
-        {
-            var stream = new MemoryStream();
-            var rw = new BinarySerializer(stream, SerializerMode.Write);
-
-            rw.RegisterDynamic<TestNonDataSerializer>("TNDS", (ref object value, BinarySerializer context) =>
-                                                                  {
-                                                                      var valueRef = (TestNonDataSerializer) value;
-
-                                                                      if (context.Mode == SerializerMode.Write)
-                                                                      {
-                                                                          context.Serialize(ref valueRef.A);
-                                                                      }
-                                                                      else
-                                                                      {
-                                                                          valueRef = new TestNonDataSerializer();
-                                                                          context.Serialize(ref valueRef.A);
-                                                                          value = valueRef;
-                                                                      }
-                                                                  });
-
-            rw.Save(dataReference);
-            rw.Flush();
-
-            stream.Position = 0;
-            var dataSerialized  = rw.Load<TestData>();
-
-            var referenceText = SerializeXml(dataReference);
-            var serializedText = SerializeXml(dataSerialized);
-
-            Assert.AreEqual(referenceText, serializedText);
-        }
-
-        [Test]
-        public void TestDynamic()
-        {
-
-            var stream = new MemoryStream();
-            var rw = new BinarySerializer(stream, SerializerMode.Write);
-
-            var dynamicData = new TestDynamicData();
-            dynamicData.CopyFrom(dataReference);
-
-            rw.RegisterDynamic<TestStructData>("TSDT");
-            rw.RegisterDynamicArray<TestStructData>("TSDA");
-            rw.RegisterDynamicList<TestStructData>("TSDL");
-
-            rw.RegisterDynamic<TestClassData>("TCDT");
-            rw.RegisterDynamicArray<TestClassData>("TCDA");
-            rw.RegisterDynamicList<TestClassData>("TCDL");
-
-            rw.Save(dynamicData);
-            rw.Flush();
-
-            stream.Position = 0;
-            var dataSerialized = rw.Load<TestDynamicData>();
-
-
-            var dataSerializedForXml = new TestData();
-            dataSerialized.CopyTo(dataSerializedForXml);
-
-            var referenceText = SerializeXml(dataReference);
-            var serializedText = SerializeXml(dataSerializedForXml);
-
-            Assert.AreEqual(referenceText, serializedText);
-
-            // Check Identity references
-            Assert.AreEqual(dataSerialized.SIdentity1, dataSerialized.SIdentity11);
-            Assert.AreEqual(dataSerialized.SIdentity2, dataSerialized.SIdentity22);
-            Assert.AreEqual(dataSerialized.SIdentity3, dataSerialized.SIdentity33);
-            Assert.AreEqual(dataSerialized.SIdentity4, dataSerialized.SIdentity44);
-            Assert.AreEqual(dataSerialized.SIdentity5, dataSerialized.SIdentity55);
-        }
-
         public class TestSimpleDynamicData : IDataSerializer
         {
             public object A;
@@ -137,13 +62,92 @@ namespace SharpDX.Tests
             Assert.AreEqual(dataArrayLoaded.A, dataArrayLoaded.B);
         }
 
-
-        private string SerializeXml(TestData value)
+        private static void RegisterDynamicForTestNonDataSerializer(BinarySerializer serializer)
         {
-            var referenceSerializer = new XmlSerializer(typeof(TestData));
+            serializer.RegisterDynamic<TestNonDataSerializer>("TNDS", (ref object value, BinarySerializer context) =>
+            {
+                var valueRef = (TestNonDataSerializer)value;
+
+                if (context.Mode == SerializerMode.Write)
+                {
+                    context.Serialize(ref valueRef.A);
+                }
+                else
+                {
+                    valueRef = new TestNonDataSerializer();
+                    context.Serialize(ref valueRef.A);
+                    value = valueRef;
+                }
+            });
+            
+        }
+
+        [Test]
+        public void TestStatic()
+        {
+            var stream = new MemoryStream();
+            var rw = new BinarySerializer(stream, SerializerMode.Write);
+            RegisterDynamicForTestNonDataSerializer(rw);
+
+            rw.Save(dataReference);
+            rw.Flush();
+
+            stream.Position = 0;
+            var dataSerialized  = rw.Load<TestData>();
+
+            var referenceText = SerializeXml(dataReference);
+            var serializedText = SerializeXml(dataSerialized);
+
+            Assert.AreEqual(referenceText, serializedText);
+        }
+
+        [Test]
+        public void TestDynamic()
+        {
+
+            var stream = new MemoryStream();
+            var rw = new BinarySerializer(stream, SerializerMode.Write);
+            RegisterDynamicForTestNonDataSerializer(rw);
+
+            var dynamicData = new TestDynamicData();
+            dynamicData.CopyFrom(ref dataReference);
+
+            rw.RegisterDynamic<TestStructData>("TSDT");
+            rw.RegisterDynamicArray<TestStructData>("TSDA");
+            rw.RegisterDynamicList<TestStructData>("TSDL");
+
+            rw.RegisterDynamic<TestClassData>("TCDT");
+            rw.RegisterDynamicArray<TestClassData>("TCDA");
+            rw.RegisterDynamicList<TestClassData>("TCDL");
+
+            rw.Save(dynamicData);
+            rw.Flush();
+
+            stream.Position = 0;
+            var dataSerialized = rw.Load<TestDynamicData>();
+
+
+            var dataSerializedForXml = new TestData();
+            dataSerialized.CopyTo(ref dataSerializedForXml);
+
+            var referenceText = SerializeXml(dataReference);
+            var serializedText = SerializeXml(dataSerializedForXml);
+
+            Assert.AreEqual(referenceText, serializedText);
+
+            // Check Identity references
+            Assert.AreEqual(dataSerialized.SIdentity1, dataSerialized.SIdentity11);
+            Assert.AreEqual(dataSerialized.SIdentity2, dataSerialized.SIdentity22);
+            Assert.AreEqual(dataSerialized.SIdentity3, dataSerialized.SIdentity33);
+            Assert.AreEqual(dataSerialized.SIdentity4, dataSerialized.SIdentity44);
+            Assert.AreEqual(dataSerialized.SIdentity5, dataSerialized.SIdentity55);
+        }
+        private string SerializeXml<T>(T value)
+        {
+            var referenceSerializer = new XmlSerializer(typeof(T));
             var referenceTextWriter = new StringWriter();
             referenceSerializer.Serialize(referenceTextWriter, value);
-            return value.ToString();
+            return referenceTextWriter.ToString();
         }
 
         [Serializable]
@@ -159,6 +163,14 @@ namespace SharpDX.Tests
             }
         }
 
+        public enum MyEnum : byte
+        {
+            X = 0,
+            Y = 1,
+            Z = 2,
+            W = 3
+        }
+
         [Serializable]
         public struct TestStructData : IDataSerializer
         {
@@ -170,12 +182,15 @@ namespace SharpDX.Tests
 
             public int D;
 
+            public MyEnum E;
+
             void IDataSerializer.Serialize(BinarySerializer binarySerializer)
             {
                 binarySerializer.Serialize(ref A);
                 binarySerializer.Serialize(ref B);
                 binarySerializer.Serialize(ref C);
                 binarySerializer.Serialize(ref D);
+                binarySerializer.SerializeEnum(ref E);
             }
         }
 
@@ -441,6 +456,8 @@ namespace SharpDX.Tests
             public object QArray;
             public object QList;
 
+            public object R;
+
             public object SIdentity1;
             public object SIdentity2;
             public object SIdentity3;
@@ -524,6 +541,8 @@ namespace SharpDX.Tests
                 binarySerializer.SerializeDynamic(ref QArray);
                 binarySerializer.SerializeDynamic(ref QList);
 
+                binarySerializer.SerializeDynamic(ref R);
+
                 // Test for identity objects
                 binarySerializer.EnableIdentityReference(true);
                 binarySerializer.SerializeDynamic(ref SIdentity1);
@@ -542,7 +561,7 @@ namespace SharpDX.Tests
                 binarySerializer.EnableNullReference(false);
             }
 
-            public void CopyTo(TestData dest)
+            public void CopyTo(ref TestData dest)
             {
                 dest.A = (sbyte)this.A;
                 dest.AArray = (sbyte[])this.AArray;
@@ -599,6 +618,8 @@ namespace SharpDX.Tests
                 dest.QArray = (TestStructData[])this.QArray;
                 dest.QList = (List<TestStructData>)this.QList;
 
+                dest.R = (TestNonDataSerializer)this.R;
+
                 dest.SIdentity1 = (TestClassData)this.SIdentity1;
                 dest.SIdentity2 = (string)this.SIdentity2;
                 dest.SIdentity3 = (byte[])this.SIdentity3;
@@ -612,7 +633,7 @@ namespace SharpDX.Tests
                 dest.SIdentity55 = (int[])this.SIdentity55;
             }
 
-            public void CopyFrom(TestData dest)
+            public void CopyFrom(ref TestData dest)
             {
                 this.A = (sbyte)dest.A;
                 this.AArray = (sbyte[])dest.AArray;
@@ -669,7 +690,9 @@ namespace SharpDX.Tests
                 this.QArray = (TestStructData[])dest.QArray;
                 this.QList = (List<TestStructData>)dest.QList;
 
-                this.SIdentity1 = (TestClassData) dest.SIdentity1;
+                this.R = (TestNonDataSerializer)dest.R;
+
+                this.SIdentity1 = (TestClassData)dest.SIdentity1;
                 this.SIdentity2 = (string) dest.SIdentity2;
                 this.SIdentity3 = (byte[]) dest.SIdentity3;
                 this.SIdentity4 = (TestClassData[]) dest.SIdentity4;
@@ -759,9 +782,9 @@ namespace SharpDX.Tests
             OArrayNull = null,
             OListNull = null,
 
-            Q = new TestStructData() { A = 1, B = 2, C = 3, D = 4 },
-            QArray = new TestStructData[] { new TestStructData() { A = 1, B = 2, C = 3, D = 4 }, new TestStructData() { A = 5, B = 6, C = 7, D = 8 }, },
-            QList = new List<TestStructData> { new TestStructData() { A = 1, B = 2, C = 3, D = 4 }, new TestStructData() { A = 5, B = 6, C = 7, D = 8 }, },
+            Q = new TestStructData() { A = 1, B = 2, C = 3, D = 4, E = MyEnum.X },
+            QArray = new TestStructData[] { new TestStructData() { A = 1, B = 2, C = 3, D = 4, E = MyEnum.X }, new TestStructData() { A = 5, B = 6, C = 7, D = 8, E = MyEnum.X }, },
+            QList = new List<TestStructData> { new TestStructData() { A = 1, B = 2, C = 3, D = 4, E = MyEnum.X }, new TestStructData() { A = 5, B = 6, C = 7, D = 8, E = MyEnum.X }, },
 
             R = new TestNonDataSerializer() { A = 1 },
 

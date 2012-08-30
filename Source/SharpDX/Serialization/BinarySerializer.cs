@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using SharpDX.Multimedia;
 
@@ -343,6 +344,47 @@ namespace SharpDX.Serialization
 
             // Store ObjectRef
             if (storeObjectRef >= 0) StoreObjectRef(value, storeObjectRef);
+        }
+
+        /// <summary>
+        /// Serializes an enum value.
+        /// </summary>
+        /// <typeparam name="T">Type of the enum to serialize.</typeparam>
+        /// <param name="value">The value to serialize</param>
+        /// <exception cref="ArgumentException">If type T is not an enum.</exception>
+        /// <remarks>
+        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.
+        /// </remarks>
+        public unsafe void SerializeEnum<T>(ref T value) where T : struct, IComparable, IFormattable, IConvertible
+        {
+            if (!Utilities.IsEnum(typeof(T)))
+                throw new ArgumentException("T generic parameter must be a valid enum", "value");
+
+            var pValue = Interop.Fixed(ref value);
+
+            switch (Utilities.SizeOf<T>())
+            {
+                case 1:
+                    {
+                        Serialize(ref *(byte*)pValue);
+                        break;
+                    }
+                case 2:
+                    {
+                        Serialize(ref *(short*)pValue);
+                        break;
+                    }
+                case 4:
+                    {
+                        Serialize(ref *(int*)pValue);
+                        break;
+                    }
+                case 8:
+                    {
+                        Serialize(ref *(long*)pValue);
+                        break;
+                    }
+            }
         }
 
         /// <summary>
