@@ -17,15 +17,22 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.using System;
+
+using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
+using SharpDX.Serialization;
 
 namespace SharpDX
 {
     /// <summary>
     /// Direct2D Matrix 3x2. Use <see cref="SharpDX.Matrix"/> and implicit cast to <see cref="Matrix3x2"/>.
     /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
-    public struct Matrix3x2
+#if !WIN8METRO
+    [Serializable]
+#endif
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct Matrix3x2 : IDataSerializable
     {
         /// <summary>
         /// Element (1,1)
@@ -84,6 +91,30 @@ namespace SharpDX
             get
             {
                 return new Matrix3x2 {M11 = 1f, M22 = 1f};
+            }
+        }
+
+        /// <inheritdoc/>
+        void IDataSerializable.Serialize(BinarySerializer serializer)
+        {
+            // Write optimized version without using Serialize methods
+            if (serializer.Mode == SerializerMode.Write)
+            {
+                serializer.Writer.Write(M11);
+                serializer.Writer.Write(M12);
+                serializer.Writer.Write(M21);
+                serializer.Writer.Write(M22);
+                serializer.Writer.Write(M31);
+                serializer.Writer.Write(M32);
+            }
+            else
+            {
+                M11 = serializer.Reader.ReadSingle();
+                M12 = serializer.Reader.ReadSingle();
+                M21 = serializer.Reader.ReadSingle();
+                M22 = serializer.Reader.ReadSingle();
+                M31 = serializer.Reader.ReadSingle();
+                M32 = serializer.Reader.ReadSingle();
             }
         }
     }

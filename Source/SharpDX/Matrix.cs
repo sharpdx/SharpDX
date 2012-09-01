@@ -48,6 +48,7 @@ using System.Text;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Globalization;
+using SharpDX.Serialization;
 
 namespace SharpDX
 {
@@ -59,7 +60,7 @@ namespace SharpDX
     [Serializable]
     [TypeConverter(typeof(SharpDX.Design.MatrixConverter))]
 #endif
-    public struct Matrix : IEquatable<Matrix>, IFormattable
+    public struct Matrix : IEquatable<Matrix>, IFormattable, IDataSerializable
     {
         /// <summary>
         /// The size of the <see cref="SharpDX.Matrix"/> type, in bytes.
@@ -346,16 +347,16 @@ namespace SharpDX
             {
                 switch (index)
                 {
-                    case 0: return M11;
-                    case 1: return M12;
-                    case 2: return M13;
-                    case 3: return M14;
-                    case 4: return M21;
-                    case 5: return M22;
-                    case 6: return M23;
-                    case 7: return M24;
-                    case 8: return M31;
-                    case 9: return M32;
+                    case 0:  return M11;
+                    case 1:  return M12;
+                    case 2:  return M13;
+                    case 3:  return M14;
+                    case 4:  return M21;
+                    case 5:  return M22;
+                    case 6:  return M23;
+                    case 7:  return M24;
+                    case 8:  return M31;
+                    case 9:  return M32;
                     case 10: return M33;
                     case 11: return M34;
                     case 12: return M41;
@@ -3009,6 +3010,49 @@ namespace SharpDX
                M41.GetHashCode() + M42.GetHashCode() + M43.GetHashCode() + M44.GetHashCode();
         }
 
+        /// <inheritdoc/>
+        void IDataSerializable.Serialize(BinarySerializer serializer)
+        {
+            // Write optimized version without using Serialize methods
+            if (serializer.Mode == SerializerMode.Write)
+            {
+                serializer.Writer.Write(M11);
+                serializer.Writer.Write(M12);
+                serializer.Writer.Write(M13);
+                serializer.Writer.Write(M14);
+                serializer.Writer.Write(M21);
+                serializer.Writer.Write(M22);
+                serializer.Writer.Write(M23);
+                serializer.Writer.Write(M24);
+                serializer.Writer.Write(M31);
+                serializer.Writer.Write(M32);
+                serializer.Writer.Write(M33);
+                serializer.Writer.Write(M34);
+                serializer.Writer.Write(M41);
+                serializer.Writer.Write(M42);
+                serializer.Writer.Write(M43);
+                serializer.Writer.Write(M44);
+            }
+            else
+            {
+                M11 = serializer.Reader.ReadSingle();
+                M12 = serializer.Reader.ReadSingle();
+                M13 = serializer.Reader.ReadSingle();
+                M14 = serializer.Reader.ReadSingle();
+                M21 = serializer.Reader.ReadSingle();
+                M22 = serializer.Reader.ReadSingle();
+                M23 = serializer.Reader.ReadSingle();
+                M24 = serializer.Reader.ReadSingle();
+                M31 = serializer.Reader.ReadSingle();
+                M32 = serializer.Reader.ReadSingle();
+                M33 = serializer.Reader.ReadSingle();
+                M34 = serializer.Reader.ReadSingle();
+                M41 = serializer.Reader.ReadSingle();
+                M42 = serializer.Reader.ReadSingle();
+                M43 = serializer.Reader.ReadSingle();
+                M44 = serializer.Reader.ReadSingle();
+            }
+        }
         /// <summary>
         /// Determines whether the specified <see cref="SharpDX.Matrix"/> is equal to this instance.
         /// </summary>

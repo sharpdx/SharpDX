@@ -20,14 +20,18 @@
 
 using System;
 using System.Runtime.InteropServices;
+using SharpDX.Serialization;
 
 namespace SharpDX
 {
     /// <summary>
     /// Structure using the same layout than <see cref="System.Drawing.Point"/>.
     /// </summary>
+#if !WIN8METRO
+    [Serializable]
+#endif
     [StructLayout(LayoutKind.Sequential)]
-    public struct DrawingPoint : IEquatable<DrawingPoint>
+    public struct DrawingPoint : IEquatable<DrawingPoint>, IDataSerializable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DrawingPoint"/> struct.
@@ -134,6 +138,22 @@ namespace SharpDX
         public override string ToString()
         {
             return string.Format("({0},{1})", X, Y);
+        }
+
+        /// <inheritdoc/>
+        void IDataSerializable.Serialize(BinarySerializer serializer)
+        {
+            // Write optimized version without using Serialize methods
+            if (serializer.Mode == SerializerMode.Write)
+            {
+                serializer.Writer.Write(X);
+                serializer.Writer.Write(Y);
+            }
+            else
+            {
+                X = serializer.Reader.ReadInt32();
+                Y = serializer.Reader.ReadInt32();
+            }
         }
     }
 }

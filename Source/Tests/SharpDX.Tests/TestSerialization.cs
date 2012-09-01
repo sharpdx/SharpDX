@@ -31,17 +31,17 @@ namespace SharpDX.Tests
     [Description("Tests SharpDX.Serialization")]
     public class TestSerialization
     {
-        public class TestSimpleDynamicData : IDataSerializer
+        public class TestSimpleDynamicData : IDataSerializable
         {
             public object A;
             public object B;
 
-            void IDataSerializer.Serialize(BinarySerializer binarySerializer)
+            void IDataSerializable.Serialize(BinarySerializer serializer)
             {
-                binarySerializer.EnableIdentityReference(true);
-                binarySerializer.SerializeDynamic(ref A);
-                binarySerializer.SerializeDynamic(ref B);
-                binarySerializer.EnableIdentityReference(false);
+                serializer.EnableIdentityReference(true);
+                serializer.SerializeDynamic(ref A);
+                serializer.SerializeDynamic(ref B);
+                serializer.EnableIdentityReference(false);
             }
         }
 
@@ -60,6 +60,58 @@ namespace SharpDX.Tests
             var dataArrayLoaded = rw.Load<TestSimpleDynamicData>();
 
             Assert.AreEqual(dataArrayLoaded.A, dataArrayLoaded.B);
+        }
+
+        [Test]
+        public void TestString()
+        {
+            var stream = new MemoryStream();
+            var rw = new BinarySerializer(stream, SerializerMode.Write, Text.Encoding.ASCII);
+
+            var string1 = "0123";
+            var string2 = "4567";
+            var string3 = "ABCDEFGH";
+
+            rw.Serialize(ref string1, 4);       // (4) Serialize only 4 bytes
+            rw.Serialize(ref string2, true);    // (5) Serialize only 4 bytes + 1 null byte
+            rw.Serialize(ref string3);          // (9) Serialize all bytes with length prefix (sizeof(byte) + 8)
+            
+            // Check Expected total size
+            Assert.AreEqual(stream.Position, 4 + 5 + 9);
+
+            stream.Position = 0;
+
+            // Switch to read mode
+            rw.Mode = SerializerMode.Read;
+
+            string string11 = null;
+            string string22 = null;
+            string string33 = null;
+            rw.Serialize(ref string11, 4);       // (4) Serialize only 4 bytes
+            rw.Serialize(ref string22, true);    // (5) Serialize only 4 bytes + 1 null byte
+            rw.Serialize(ref string33);          // (9) Serialize all bytes with length prefix (sizeof(byte) + 8)
+            Assert.AreEqual(stream.Position, 4 + 5 + 9);
+
+            Assert.AreEqual(string1, string11);
+            Assert.AreEqual(string2, string22);
+            Assert.AreEqual(string3, string33);
+
+            // Check for an end of stream exception if we are trying to read a fixed length string with not enough bytes into the buffer
+            Assert.Catch<EndOfStreamException>(() =>
+                                                   {
+                                                       rw.Mode = SerializerMode.Read;
+                                                       stream.Position = 0;
+                                                       rw.Serialize(ref string1, 50);
+                                                   });
+
+            string1 = null;
+            Assert.Catch<ArgumentNullException>(() =>
+                                                    {
+                                                        rw.Mode = SerializerMode.Write;
+                                                        stream.Position = 0;
+                                                        rw.Serialize(ref string1, 4);
+                                                    });
+
         }
 
         private static void RegisterDynamicForTestNonDataSerializer(BinarySerializer serializer)
@@ -151,15 +203,15 @@ namespace SharpDX.Tests
         }
 
         [Serializable]
-        public class TestClassData : IDataSerializer
+        public class TestClassData : IDataSerializable
         {
             public byte[] A;
 
-            void IDataSerializer.Serialize(BinarySerializer binarySerializer)
+            void IDataSerializable.Serialize(BinarySerializer serializer)
             {
-                binarySerializer.BeginChunk("ABCD");
-                binarySerializer.Serialize(ref A);
-                binarySerializer.EndChunk();
+                serializer.BeginChunk("ABCD");
+                serializer.Serialize(ref A);
+                serializer.EndChunk();
             }
         }
 
@@ -172,7 +224,7 @@ namespace SharpDX.Tests
         }
 
         [Serializable]
-        public struct TestStructData : IDataSerializer
+        public struct TestStructData : IDataSerializable
         {
             public int A;
 
@@ -184,13 +236,13 @@ namespace SharpDX.Tests
 
             public MyEnum E;
 
-            void IDataSerializer.Serialize(BinarySerializer binarySerializer)
+            void IDataSerializable.Serialize(BinarySerializer serializer)
             {
-                binarySerializer.Serialize(ref A);
-                binarySerializer.Serialize(ref B);
-                binarySerializer.Serialize(ref C);
-                binarySerializer.Serialize(ref D);
-                binarySerializer.SerializeEnum(ref E);
+                serializer.Serialize(ref A);
+                serializer.Serialize(ref B);
+                serializer.Serialize(ref C);
+                serializer.Serialize(ref D);
+                serializer.SerializeEnum(ref E);
             }
         }
 
@@ -201,7 +253,7 @@ namespace SharpDX.Tests
         }
 
         [Serializable]
-        public struct TestData : IDataSerializer
+        public struct TestData : IDataSerializable
         {
             public sbyte A;
             public sbyte[] AArray;
@@ -289,100 +341,100 @@ namespace SharpDX.Tests
             public TestClassData[] SIdentity44;
             public int[] SIdentity55;
 
-            void IDataSerializer.Serialize(BinarySerializer binarySerializer)
+            void IDataSerializable.Serialize(BinarySerializer serializer)
             {
-                binarySerializer.Serialize(ref A);
-                binarySerializer.Serialize(ref AArray, binarySerializer.Serialize);
-                binarySerializer.Serialize(ref AList, binarySerializer.Serialize);
+                serializer.Serialize(ref A);
+                serializer.Serialize(ref AArray, serializer.Serialize);
+                serializer.Serialize(ref AList, serializer.Serialize);
 
-                binarySerializer.Serialize(ref B);
-                binarySerializer.Serialize(ref BArray);
-                binarySerializer.Serialize(ref BList, binarySerializer.Serialize);
+                serializer.Serialize(ref B);
+                serializer.Serialize(ref BArray);
+                serializer.Serialize(ref BList, serializer.Serialize);
 
-                binarySerializer.Serialize(ref C);
-                binarySerializer.Serialize(ref CArray, binarySerializer.Serialize);
-                binarySerializer.Serialize(ref CList, binarySerializer.Serialize);
+                serializer.Serialize(ref C);
+                serializer.Serialize(ref CArray, serializer.Serialize);
+                serializer.Serialize(ref CList, serializer.Serialize);
 
-                binarySerializer.Serialize(ref D);
-                binarySerializer.Serialize(ref DArray, binarySerializer.Serialize);
-                binarySerializer.Serialize(ref DList, binarySerializer.Serialize);
+                serializer.Serialize(ref D);
+                serializer.Serialize(ref DArray, serializer.Serialize);
+                serializer.Serialize(ref DList, serializer.Serialize);
 
-                binarySerializer.Serialize(ref E);
-                binarySerializer.Serialize(ref EArray, binarySerializer.Serialize);
-                binarySerializer.Serialize(ref EList, binarySerializer.Serialize);
+                serializer.Serialize(ref E);
+                serializer.Serialize(ref EArray, serializer.Serialize);
+                serializer.Serialize(ref EList, serializer.Serialize);
 
-                binarySerializer.Serialize(ref F);
-                binarySerializer.Serialize(ref FArray, binarySerializer.Serialize);
-                binarySerializer.Serialize(ref FList, binarySerializer.Serialize);
+                serializer.Serialize(ref F);
+                serializer.Serialize(ref FArray, serializer.Serialize);
+                serializer.Serialize(ref FList, serializer.Serialize);
 
-                binarySerializer.Serialize(ref G);
-                binarySerializer.Serialize(ref GArray, binarySerializer.Serialize);
-                binarySerializer.Serialize(ref GList, binarySerializer.Serialize);
+                serializer.Serialize(ref G);
+                serializer.Serialize(ref GArray, serializer.Serialize);
+                serializer.Serialize(ref GList, serializer.Serialize);
 
-                binarySerializer.Serialize(ref H);
-                binarySerializer.Serialize(ref HArray, binarySerializer.Serialize);
-                binarySerializer.Serialize(ref HList, binarySerializer.Serialize);
+                serializer.Serialize(ref H);
+                serializer.Serialize(ref HArray, serializer.Serialize);
+                serializer.Serialize(ref HList, serializer.Serialize);
 
-                binarySerializer.Serialize(ref I);
-                binarySerializer.Serialize(ref IArray, binarySerializer.Serialize);
-                binarySerializer.Serialize(ref IList, binarySerializer.Serialize);
+                serializer.Serialize(ref I);
+                serializer.Serialize(ref IArray, serializer.Serialize);
+                serializer.Serialize(ref IList, serializer.Serialize);
 
-                binarySerializer.Serialize(ref J);
-                binarySerializer.Serialize(ref JArray, binarySerializer.Serialize);
-                binarySerializer.Serialize(ref JList, binarySerializer.Serialize);
+                serializer.Serialize(ref J);
+                serializer.Serialize(ref JArray, serializer.Serialize);
+                serializer.Serialize(ref JList, serializer.Serialize);
 
-                binarySerializer.Serialize(ref K);
-                binarySerializer.Serialize(ref KArray, binarySerializer.Serialize);
-                binarySerializer.Serialize(ref KList, binarySerializer.Serialize);
+                serializer.Serialize(ref K);
+                serializer.Serialize(ref KArray, serializer.Serialize);
+                serializer.Serialize(ref KList, serializer.Serialize);
 
-                binarySerializer.Serialize(ref L);
-                binarySerializer.Serialize(ref LArray, binarySerializer.Serialize);
-                binarySerializer.Serialize(ref LList, binarySerializer.Serialize);
+                serializer.Serialize(ref L);
+                serializer.Serialize(ref LArray, serializer.Serialize);
+                serializer.Serialize(ref LList, serializer.Serialize);
 
-                binarySerializer.Serialize(ref M);
-                binarySerializer.Serialize(ref MArray, binarySerializer.Serialize);
-                binarySerializer.Serialize(ref MList, binarySerializer.Serialize);
+                serializer.Serialize(ref M);
+                serializer.Serialize(ref MArray, serializer.Serialize);
+                serializer.Serialize(ref MList, serializer.Serialize);
 
-                binarySerializer.Serialize(ref N);
-                binarySerializer.Serialize(ref NArray, binarySerializer.Serialize);
-                binarySerializer.Serialize(ref NList, binarySerializer.Serialize);
+                serializer.Serialize(ref N);
+                serializer.Serialize(ref NArray, serializer.Serialize);
+                serializer.Serialize(ref NList, serializer.Serialize);
 
-                binarySerializer.Serialize(ref O);
-                binarySerializer.Serialize(ref OArray);
-                binarySerializer.Serialize(ref OList);
+                serializer.Serialize(ref O);
+                serializer.Serialize(ref OArray);
+                serializer.Serialize(ref OList);
 
                 // Allow null values here.
-                binarySerializer.EnableNullReference(true);
-                binarySerializer.Serialize(ref ONull);
-                binarySerializer.Serialize(ref OArrayNull);
-                binarySerializer.Serialize(ref OListNull);
-                binarySerializer.EnableNullReference(false);
+                serializer.EnableNullReference(true);
+                serializer.Serialize(ref ONull);
+                serializer.Serialize(ref OArrayNull);
+                serializer.Serialize(ref OListNull);
+                serializer.EnableNullReference(false);
 
-                binarySerializer.Serialize(ref Q);
-                binarySerializer.Serialize(ref QArray);
-                binarySerializer.Serialize(ref QList);
+                serializer.Serialize(ref Q);
+                serializer.Serialize(ref QArray);
+                serializer.Serialize(ref QList);
 
-                binarySerializer.SerializeDynamic(ref R);
+                serializer.SerializeDynamic(ref R);
 
                 // Test for identity objects
-                binarySerializer.EnableIdentityReference(true);
-                binarySerializer.Serialize(ref SIdentity1);
-                binarySerializer.Serialize(ref SIdentity2);
-                binarySerializer.Serialize(ref SIdentity3);
-                binarySerializer.Serialize(ref SIdentity4);
-                binarySerializer.Serialize(ref SIdentity5, binarySerializer.Serialize);
+                serializer.EnableIdentityReference(true);
+                serializer.Serialize(ref SIdentity1);
+                serializer.Serialize(ref SIdentity2);
+                serializer.Serialize(ref SIdentity3);
+                serializer.Serialize(ref SIdentity4);
+                serializer.Serialize(ref SIdentity5, serializer.Serialize);
 
-                binarySerializer.Serialize(ref SIdentity11);
-                binarySerializer.Serialize(ref SIdentity22);
-                binarySerializer.Serialize(ref SIdentity33);
-                binarySerializer.Serialize(ref SIdentity44);
-                binarySerializer.Serialize(ref SIdentity55, binarySerializer.Serialize);
-                binarySerializer.EnableIdentityReference(false);
+                serializer.Serialize(ref SIdentity11);
+                serializer.Serialize(ref SIdentity22);
+                serializer.Serialize(ref SIdentity33);
+                serializer.Serialize(ref SIdentity44);
+                serializer.Serialize(ref SIdentity55, serializer.Serialize);
+                serializer.EnableIdentityReference(false);
             }
         }
 
         [Serializable]
-        public struct TestDynamicData : IDataSerializer
+        public struct TestDynamicData : IDataSerializable
         {
             public object A;
             public object AArray;
@@ -470,95 +522,95 @@ namespace SharpDX.Tests
             public object SIdentity44;
             public object SIdentity55;
             
-            void IDataSerializer.Serialize(BinarySerializer binarySerializer)
+            void IDataSerializable.Serialize(BinarySerializer serializer)
             {
-                binarySerializer.EnableNullReference(true);
-                binarySerializer.SerializeDynamic(ref A);
-                binarySerializer.SerializeDynamic(ref AArray);
-                binarySerializer.SerializeDynamic(ref AList);
+                serializer.EnableNullReference(true);
+                serializer.SerializeDynamic(ref A);
+                serializer.SerializeDynamic(ref AArray);
+                serializer.SerializeDynamic(ref AList);
 
-                binarySerializer.SerializeDynamic(ref B);
-                binarySerializer.SerializeDynamic(ref BArray);
-                binarySerializer.SerializeDynamic(ref BList);
+                serializer.SerializeDynamic(ref B);
+                serializer.SerializeDynamic(ref BArray);
+                serializer.SerializeDynamic(ref BList);
 
-                binarySerializer.SerializeDynamic(ref C);
-                binarySerializer.SerializeDynamic(ref CArray);
-                binarySerializer.SerializeDynamic(ref CList);
+                serializer.SerializeDynamic(ref C);
+                serializer.SerializeDynamic(ref CArray);
+                serializer.SerializeDynamic(ref CList);
 
-                binarySerializer.SerializeDynamic(ref D);
-                binarySerializer.SerializeDynamic(ref DArray);
-                binarySerializer.SerializeDynamic(ref DList);
+                serializer.SerializeDynamic(ref D);
+                serializer.SerializeDynamic(ref DArray);
+                serializer.SerializeDynamic(ref DList);
 
-                binarySerializer.SerializeDynamic(ref E);
-                binarySerializer.SerializeDynamic(ref EArray);
-                binarySerializer.SerializeDynamic(ref EList);
+                serializer.SerializeDynamic(ref E);
+                serializer.SerializeDynamic(ref EArray);
+                serializer.SerializeDynamic(ref EList);
 
-                binarySerializer.SerializeDynamic(ref F);
-                binarySerializer.SerializeDynamic(ref FArray);
-                binarySerializer.SerializeDynamic(ref FList);
+                serializer.SerializeDynamic(ref F);
+                serializer.SerializeDynamic(ref FArray);
+                serializer.SerializeDynamic(ref FList);
 
-                binarySerializer.SerializeDynamic(ref G);
-                binarySerializer.SerializeDynamic(ref GArray);
-                binarySerializer.SerializeDynamic(ref GList);
+                serializer.SerializeDynamic(ref G);
+                serializer.SerializeDynamic(ref GArray);
+                serializer.SerializeDynamic(ref GList);
 
-                binarySerializer.SerializeDynamic(ref H);
-                binarySerializer.SerializeDynamic(ref HArray);
-                binarySerializer.SerializeDynamic(ref HList);
+                serializer.SerializeDynamic(ref H);
+                serializer.SerializeDynamic(ref HArray);
+                serializer.SerializeDynamic(ref HList);
 
-                binarySerializer.SerializeDynamic(ref I);
-                binarySerializer.SerializeDynamic(ref IArray);
-                binarySerializer.SerializeDynamic(ref IList);
+                serializer.SerializeDynamic(ref I);
+                serializer.SerializeDynamic(ref IArray);
+                serializer.SerializeDynamic(ref IList);
 
-                binarySerializer.SerializeDynamic(ref J);
-                binarySerializer.SerializeDynamic(ref JArray);
-                binarySerializer.SerializeDynamic(ref JList);
+                serializer.SerializeDynamic(ref J);
+                serializer.SerializeDynamic(ref JArray);
+                serializer.SerializeDynamic(ref JList);
 
-                binarySerializer.SerializeDynamic(ref K);
-                binarySerializer.SerializeDynamic(ref KArray);
-                binarySerializer.SerializeDynamic(ref KList);
+                serializer.SerializeDynamic(ref K);
+                serializer.SerializeDynamic(ref KArray);
+                serializer.SerializeDynamic(ref KList);
 
-                binarySerializer.SerializeDynamic(ref L);
-                binarySerializer.SerializeDynamic(ref LArray);
-                binarySerializer.SerializeDynamic(ref LList);
+                serializer.SerializeDynamic(ref L);
+                serializer.SerializeDynamic(ref LArray);
+                serializer.SerializeDynamic(ref LList);
 
-                binarySerializer.SerializeDynamic(ref M);
-                binarySerializer.SerializeDynamic(ref MArray);
-                binarySerializer.SerializeDynamic(ref MList);
+                serializer.SerializeDynamic(ref M);
+                serializer.SerializeDynamic(ref MArray);
+                serializer.SerializeDynamic(ref MList);
 
-                binarySerializer.SerializeDynamic(ref N);
-                binarySerializer.SerializeDynamic(ref NArray);
-                binarySerializer.SerializeDynamic(ref NList);
+                serializer.SerializeDynamic(ref N);
+                serializer.SerializeDynamic(ref NArray);
+                serializer.SerializeDynamic(ref NList);
 
-                binarySerializer.SerializeDynamic(ref O);
-                binarySerializer.SerializeDynamic(ref OArray);
-                binarySerializer.SerializeDynamic(ref OList);
+                serializer.SerializeDynamic(ref O);
+                serializer.SerializeDynamic(ref OArray);
+                serializer.SerializeDynamic(ref OList);
 
-                binarySerializer.SerializeDynamic(ref ONull);
-                binarySerializer.SerializeDynamic(ref OArrayNull);
-                binarySerializer.SerializeDynamic(ref OListNull);
+                serializer.SerializeDynamic(ref ONull);
+                serializer.SerializeDynamic(ref OArrayNull);
+                serializer.SerializeDynamic(ref OListNull);
 
-                binarySerializer.SerializeDynamic(ref Q);
-                binarySerializer.SerializeDynamic(ref QArray);
-                binarySerializer.SerializeDynamic(ref QList);
+                serializer.SerializeDynamic(ref Q);
+                serializer.SerializeDynamic(ref QArray);
+                serializer.SerializeDynamic(ref QList);
 
-                binarySerializer.SerializeDynamic(ref R);
+                serializer.SerializeDynamic(ref R);
 
                 // Test for identity objects
-                binarySerializer.EnableIdentityReference(true);
-                binarySerializer.SerializeDynamic(ref SIdentity1);
-                binarySerializer.SerializeDynamic(ref SIdentity2);
-                binarySerializer.SerializeDynamic(ref SIdentity3);
-                binarySerializer.SerializeDynamic(ref SIdentity4);
-                binarySerializer.SerializeDynamic(ref SIdentity5);
+                serializer.EnableIdentityReference(true);
+                serializer.SerializeDynamic(ref SIdentity1);
+                serializer.SerializeDynamic(ref SIdentity2);
+                serializer.SerializeDynamic(ref SIdentity3);
+                serializer.SerializeDynamic(ref SIdentity4);
+                serializer.SerializeDynamic(ref SIdentity5);
 
-                binarySerializer.SerializeDynamic(ref SIdentity11);
-                binarySerializer.SerializeDynamic(ref SIdentity22);
-                binarySerializer.SerializeDynamic(ref SIdentity33);
-                binarySerializer.SerializeDynamic(ref SIdentity44);
-                binarySerializer.SerializeDynamic(ref SIdentity55);
-                binarySerializer.EnableIdentityReference(false);
+                serializer.SerializeDynamic(ref SIdentity11);
+                serializer.SerializeDynamic(ref SIdentity22);
+                serializer.SerializeDynamic(ref SIdentity33);
+                serializer.SerializeDynamic(ref SIdentity44);
+                serializer.SerializeDynamic(ref SIdentity55);
+                serializer.EnableIdentityReference(false);
 
-                binarySerializer.EnableNullReference(false);
+                serializer.EnableNullReference(false);
             }
 
             public void CopyTo(ref TestData dest)

@@ -46,7 +46,7 @@
     <Compile Include="Multimedia\AudioEndpointRole.cs" />
     <Compile Include="Multimedia\NamespaceDoc.cs" />
     <Compile Include="Serialization\InvalidChunkException.cs" />
-    <Compile Include="Serialization\IDataSerializer.cs" />
+    <Compile Include="Serialization\IDataSerializable.cs" />
     <Compile Include="Serialization\BinarySerializer.cs" />
     <Compile Include="Serialization\SerializerMode.cs" />
     <Compile Include="ShadowAttribute.cs" />
@@ -136,6 +136,7 @@
     <Compile Include="Multimedia\WaveFormatExtensible.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="TagAttribute.cs" />
+    <Compile Include="Text\ASCIIEncoding.cs" />
     <Compile Include="Win32Native.cs" />
     <Compile Include="Plane.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -199,6 +200,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
   <Target Name="BeforeBuild">

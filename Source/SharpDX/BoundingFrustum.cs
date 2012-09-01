@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 using System;
 using System.Runtime.InteropServices;
+using SharpDX.Serialization;
 
 namespace SharpDX
 {
@@ -30,15 +31,15 @@ namespace SharpDX
     [Serializable]
 #endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct BoundingFrustum : IEquatable<BoundingFrustum>
+    public struct BoundingFrustum : IEquatable<BoundingFrustum>, IDataSerializable
     {
         private Matrix pMatrix;
-        private Plane pNear;
-        private Plane pFar;
-        private Plane pLeft;
-        private Plane pRight;
-        private Plane pTop;
-        private Plane pBottom;
+        private Plane  pNear;
+        private Plane  pFar;
+        private Plane  pLeft;
+        private Plane  pRight;
+        private Plane  pTop;
+        private Plane  pBottom;
 
         /// <summary>
         /// Gets or sets the Matrix that describes this bounding frustum.
@@ -815,6 +816,18 @@ namespace SharpDX
             {
                 return (pLeft.Normal == -pRight.Normal) && (pTop.Normal == -pBottom.Normal);
             }
+        }
+
+        /// <inheritdoc/>
+        void IDataSerializable.Serialize(BinarySerializer serializer)
+        {
+            serializer.Serialize(ref pMatrix);
+            serializer.Serialize(ref pNear);
+            serializer.Serialize(ref pFar);
+            serializer.Serialize(ref pLeft);
+            serializer.Serialize(ref pRight);
+            serializer.Serialize(ref pTop);
+            serializer.Serialize(ref pBottom);
         }
     }
 }

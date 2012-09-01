@@ -20,16 +20,20 @@
 
 using System;
 using System.Runtime.InteropServices;
+using SharpDX.Serialization;
 
 namespace SharpDX
 {
     /// <summary>
     /// A boolean value stored on 4 bytes (instead of 1 in .NET).
     /// </summary>
+#if !WIN8METRO
+    [Serializable]
+#endif
     [StructLayout(LayoutKind.Sequential, Size = 4)]
-    public struct Bool : IEquatable<Bool>
+    public struct Bool : IEquatable<Bool>, IDataSerializable
     {
-        private readonly int boolValue;
+        private int boolValue;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Bool" /> class.
@@ -108,5 +112,20 @@ namespace SharpDX
         {
             return string.Format("{0}", boolValue != 0);
         }
+
+        /// <inheritdoc/>
+        void IDataSerializable.Serialize(BinarySerializer serializer)
+        {
+            // Write optimized version without using Serialize methods
+            if (serializer.Mode == SerializerMode.Write)
+            {
+                serializer.Writer.Write(boolValue);
+            }
+            else
+            {
+                boolValue = serializer.Reader.ReadInt32();
+            }
+        }
+
     }
 }

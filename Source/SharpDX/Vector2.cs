@@ -46,6 +46,7 @@ using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
+using SharpDX.Serialization;
 
 namespace SharpDX
 {
@@ -57,7 +58,7 @@ namespace SharpDX
     [Serializable]
     [TypeConverter(typeof(SharpDX.Design.Vector2Converter))]
 #endif
-    public struct Vector2 : IEquatable<Vector2>, IFormattable
+    public struct Vector2 : IEquatable<Vector2>, IFormattable, IDataSerializable
     {
         /// <summary>
         /// The size of the <see cref="SharpDX.Vector2"/> type, in bytes.
@@ -1305,6 +1306,22 @@ namespace SharpDX
         public override int GetHashCode()
         {
             return X.GetHashCode() + Y.GetHashCode();
+        }
+
+        /// <inheritdoc/>
+        void IDataSerializable.Serialize(BinarySerializer serializer)
+        {
+            // Write optimized version without using Serialize methods
+            if (serializer.Mode == SerializerMode.Write)
+            {
+                serializer.Writer.Write(X);
+                serializer.Writer.Write(Y);
+            }
+            else
+            {
+                X = serializer.Reader.ReadSingle();
+                Y = serializer.Reader.ReadSingle();
+            }
         }
 
         /// <summary>

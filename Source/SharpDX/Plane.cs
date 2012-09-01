@@ -46,6 +46,7 @@ using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
+using SharpDX.Serialization;
 
 namespace SharpDX
 {
@@ -56,7 +57,7 @@ namespace SharpDX
     [Serializable]
 #endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct Plane : IEquatable<Plane>, IFormattable
+    public struct Plane : IEquatable<Plane>, IFormattable, IDataSerializable
     {
         /// <summary>
         /// The normal vector of the plane.
@@ -736,48 +737,11 @@ namespace SharpDX
             return Equals((Plane)value);
         }
 
-#if SlimDX1xInterop
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Plane"/> to <see cref="SlimDX.Plane"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator SlimDX.Plane(Plane value)
+        /// <inheritdoc/>
+        void IDataSerializable.Serialize(BinarySerializer serializer)
         {
-            return new SlimDX.Plane(value.Normal, value.D);
+            serializer.Serialize(ref Normal);
+            serializer.Serialize(ref D);
         }
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="SlimDX.Plane"/> to <see cref="SharpDX.Plane"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator Plane(SlimDX.Plane value)
-        {
-            return new Plane(value.Normal, value.D);
-        }
-#endif
-
-#if XnaInterop
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Plane"/> to <see cref="Microsoft.Xna.Framework.Plane"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator Microsoft.Xna.Framework.Plane(Plane value)
-        {
-            return new Microsoft.Xna.Framework.Plane(value.Normal, value.D);
-        }
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="Microsoft.Xna.Framework.Plane"/> to <see cref="SharpDX.Plane"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator Plane(Microsoft.Xna.Framework.Plane value)
-        {
-            return new Plane(value.Normal, value.D);
-        }
-#endif
     }
 }

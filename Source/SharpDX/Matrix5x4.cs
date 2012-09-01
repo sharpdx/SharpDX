@@ -23,6 +23,7 @@ using System.Text;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Globalization;
+using SharpDX.Serialization;
 
 namespace SharpDX
 {
@@ -33,7 +34,7 @@ namespace SharpDX
 #if !WIN8METRO
     [Serializable]
 #endif
-    public struct Matrix5x4 : IEquatable<Matrix5x4>, IFormattable
+    public struct Matrix5x4 : IEquatable<Matrix5x4>, IFormattable, IDataSerializable
     {
         /// <summary>
         /// The size of the <see cref="SharpDX.Matrix5x4"/> type, in bytes.
@@ -1076,6 +1077,58 @@ namespace SharpDX
                 return false;
 
             return Equals((Matrix5x4)value);
+        }
+
+        /// <inheritdoc/>
+        void IDataSerializable.Serialize(BinarySerializer serializer)
+        {
+            // Write optimized version without using Serialize methods
+            if (serializer.Mode == SerializerMode.Write)
+            {
+                serializer.Writer.Write(M11);
+                serializer.Writer.Write(M12);
+                serializer.Writer.Write(M13);
+                serializer.Writer.Write(M14);
+                serializer.Writer.Write(M21);
+                serializer.Writer.Write(M22);
+                serializer.Writer.Write(M23);
+                serializer.Writer.Write(M24);
+                serializer.Writer.Write(M31);
+                serializer.Writer.Write(M32);
+                serializer.Writer.Write(M33);
+                serializer.Writer.Write(M34);
+                serializer.Writer.Write(M41);
+                serializer.Writer.Write(M42);
+                serializer.Writer.Write(M43);
+                serializer.Writer.Write(M44);
+                serializer.Writer.Write(M51);
+                serializer.Writer.Write(M52);
+                serializer.Writer.Write(M53);
+                serializer.Writer.Write(M54);
+            }
+            else
+            {
+                M11 = serializer.Reader.ReadSingle();
+                M12 = serializer.Reader.ReadSingle();
+                M13 = serializer.Reader.ReadSingle();
+                M14 = serializer.Reader.ReadSingle();
+                M21 = serializer.Reader.ReadSingle();
+                M22 = serializer.Reader.ReadSingle();
+                M23 = serializer.Reader.ReadSingle();
+                M24 = serializer.Reader.ReadSingle();
+                M31 = serializer.Reader.ReadSingle();
+                M32 = serializer.Reader.ReadSingle();
+                M33 = serializer.Reader.ReadSingle();
+                M34 = serializer.Reader.ReadSingle();
+                M41 = serializer.Reader.ReadSingle();
+                M42 = serializer.Reader.ReadSingle();
+                M43 = serializer.Reader.ReadSingle();
+                M44 = serializer.Reader.ReadSingle();
+                M51 = serializer.Reader.ReadSingle();
+                M52 = serializer.Reader.ReadSingle();
+                M53 = serializer.Reader.ReadSingle();
+                M54 = serializer.Reader.ReadSingle();
+            }
         }
     }
 }

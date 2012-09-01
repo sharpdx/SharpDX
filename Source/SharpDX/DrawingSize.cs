@@ -20,14 +20,18 @@
 
 using System;
 using System.Runtime.InteropServices;
+using SharpDX.Serialization;
 
 namespace SharpDX
 {
     /// <summary>
     /// Structure using the same layout than <see cref="System.Drawing.Size"/>.
     /// </summary>
+#if !WIN8METRO
+    [Serializable]
+#endif
     [StructLayout(LayoutKind.Sequential)]
-    public struct DrawingSize : IEquatable<DrawingSize>
+    public struct DrawingSize : IEquatable<DrawingSize>, IDataSerializable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DrawingSize"/> struct.
@@ -134,6 +138,22 @@ namespace SharpDX
         public override string ToString()
         {
             return string.Format("({0},{1})", Width, Height);
+        }
+    
+        /// <inheritdoc/>
+        void IDataSerializable.Serialize(BinarySerializer serializer)
+        {
+            // Write optimized version without using Serialize methods
+            if (serializer.Mode == SerializerMode.Write)
+            {
+                serializer.Writer.Write(Width);
+                serializer.Writer.Write(Height);
+            }
+            else
+            {
+                Width = serializer.Reader.ReadInt32();
+                Height = serializer.Reader.ReadInt32();
+            }
         }
     }
 }

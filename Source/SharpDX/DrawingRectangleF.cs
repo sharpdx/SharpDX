@@ -20,14 +20,18 @@
 
 using System;
 using System.Runtime.InteropServices;
+using SharpDX.Serialization;
 
 namespace SharpDX
 {
     /// <summary>
     /// Structure using the same layout than <see cref="System.Drawing.RectangleF"/>
     /// </summary>
+#if !WIN8METRO
+    [Serializable]
+#endif
     [StructLayout(LayoutKind.Sequential)]
-    public struct DrawingRectangleF : IEquatable<DrawingRectangleF>
+    public struct DrawingRectangleF : IEquatable<DrawingRectangleF>, IDataSerializable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DrawingRectangleF"/> struct.
@@ -152,6 +156,26 @@ namespace SharpDX
         public override string ToString()
         {
             return string.Format("(X: {0} Y: {1} W: {2} H: {3})", X, Y, Width, Height);
+        }
+
+        /// <inheritdoc/>
+        void IDataSerializable.Serialize(BinarySerializer serializer)
+        {
+            // Write optimized version without using Serialize methods
+            if (serializer.Mode == SerializerMode.Write)
+            {
+                serializer.Writer.Write(X);
+                serializer.Writer.Write(Y);
+                serializer.Writer.Write(Width);
+                serializer.Writer.Write(Height);
+            }
+            else
+            {
+                X = serializer.Reader.ReadSingle();
+                Y = serializer.Reader.ReadSingle();
+                Width = serializer.Reader.ReadSingle();
+                Height = serializer.Reader.ReadSingle();
+            }
         }
     }
 }

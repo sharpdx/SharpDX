@@ -21,6 +21,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using SharpDX.Serialization;
 
 namespace SharpDX
 {
@@ -32,7 +33,7 @@ namespace SharpDX
     [Serializable]
     [TypeConverter(typeof(SharpDX.Design.Half4Converter))]
 #endif
-    public struct Half4 : IEquatable<Half4>
+    public struct Half4 : IEquatable<Half4>, IDataSerializable
     {
         /// <summary>
         /// Gets or sets the X component of the vector.
@@ -80,34 +81,6 @@ namespace SharpDX
             this.Y = value;
             this.Z = value;
             this.W = value;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:SharpDX.Half4" /> structure.
-        /// </summary>
-        /// <param name="x">The X component.</param>
-        /// <param name="y">The Y component.</param>
-        /// <param name="z">The Z component.</param>
-        /// <param name="w">The W component.</param>
-        public Half4(float x, float y, float z, float w)
-        {
-            this.X = (Half)x;
-            this.Y = (Half)y;
-            this.Z = (Half)z;
-            this.W = (Half)w;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:SharpDX.Half4" /> structure.
-        /// </summary>
-        /// <param name="value">The value to set for the X, Y, Z, and W components.</param>
-        public Half4(float value)
-        {
-            var temp = (Half)value;
-            this.X = temp;
-            this.Y = temp;
-            this.Z = temp;
-            this.W = temp;
         }
 
         /// <summary>
@@ -203,6 +176,26 @@ namespace SharpDX
             int num2 = this.W.GetHashCode() + this.Z.GetHashCode();
             int num = this.Y.GetHashCode() + num2;
             return (this.X.GetHashCode() + num);
+        }
+
+        /// <inheritdoc/>
+        void IDataSerializable.Serialize(BinarySerializer serializer)
+        {
+            // Write optimized version without using Serialize methods
+            if (serializer.Mode == SerializerMode.Write)
+            {
+                serializer.Writer.Write(X.RawValue);
+                serializer.Writer.Write(Y.RawValue);
+                serializer.Writer.Write(Z.RawValue);
+                serializer.Writer.Write(W.RawValue);
+            }
+            else
+            {
+                X.RawValue = serializer.Reader.ReadUInt16();
+                Y.RawValue = serializer.Reader.ReadUInt16();
+                Z.RawValue = serializer.Reader.ReadUInt16();
+                W.RawValue = serializer.Reader.ReadUInt16();
+            }
         }
 
         /// <summary>

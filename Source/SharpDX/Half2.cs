@@ -21,6 +21,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using SharpDX.Serialization;
 
 namespace SharpDX
 {
@@ -32,7 +33,7 @@ namespace SharpDX
     [Serializable]
     [TypeConverter(typeof(SharpDX.Design.Half2Converter))]
 #endif
-    public struct Half2 : IEquatable<Half2>
+    public struct Half2 : IEquatable<Half2>, IDataSerializable
     {
         /// <summary>
         /// Gets or sets the X component of the vector.
@@ -64,28 +65,6 @@ namespace SharpDX
         {
             this.X = value;
             this.Y = value;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:SharpDX.Half2" /> structure.
-        /// </summary>
-        /// <param name="x">The X component.</param>
-        /// <param name="y">The Y component.</param>
-        public Half2(float x, float y)
-        {
-            this.X = (Half)x;
-            this.Y = (Half)y;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:SharpDX.Half2" /> structure.
-        /// </summary>
-        /// <param name="value">The value to set for both the X and Y components.</param>
-        public Half2(float value)
-        {
-            var temp = (Half)value;
-            this.X = temp;
-            this.Y = temp;
         }
 
         /// <summary>
@@ -140,6 +119,22 @@ namespace SharpDX
         public override int GetHashCode()
         {
             return (this.Y.GetHashCode() + this.X.GetHashCode());
+        }
+
+        /// <inheritdoc/>
+        void IDataSerializable.Serialize(BinarySerializer serializer)
+        {
+            // Write optimized version without using Serialize methods
+            if (serializer.Mode == SerializerMode.Write)
+            {
+                serializer.Writer.Write(X.RawValue);
+                serializer.Writer.Write(Y.RawValue);
+            }
+            else
+            {
+                X.RawValue = serializer.Reader.ReadUInt16();
+                Y.RawValue = serializer.Reader.ReadUInt16();
+            }
         }
 
         /// <summary>

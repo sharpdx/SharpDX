@@ -21,6 +21,7 @@ using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using SharpDX.Serialization;
 
 namespace SharpDX
 {
@@ -31,7 +32,7 @@ namespace SharpDX
     [Serializable]
 #endif
     [StructLayout(LayoutKind.Sequential)]
-    public struct Result : IEquatable<Result>
+    public struct Result : IEquatable<Result>, IDataSerializable
     {
         private int _code;
 
@@ -153,6 +154,12 @@ namespace SharpDX
         public override int GetHashCode()
         {
             return Code;
+        }
+
+        /// <inheritdoc/>
+        void IDataSerializable.Serialize(BinarySerializer serializer)
+        {
+            serializer.Serialize(ref _code);
         }
 
         /// <summary>

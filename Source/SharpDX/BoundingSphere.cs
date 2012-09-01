@@ -46,6 +46,7 @@ using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
+using SharpDX.Serialization;
 
 namespace SharpDX
 {
@@ -56,7 +57,7 @@ namespace SharpDX
     [Serializable]
 #endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct BoundingSphere : IEquatable<BoundingSphere>, IFormattable
+    public struct BoundingSphere : IEquatable<BoundingSphere>, IFormattable, IDataSerializable
     {
         /// <summary>
         /// The center of the sphere in three dimensional space.
@@ -446,48 +447,11 @@ namespace SharpDX
             return Equals((BoundingSphere)value);
         }
 
-#if SlimDX1xInterop
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.BoundingSphere"/> to <see cref="SlimDX.BoundingSphere"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator SlimDX.BoundingSphere(BoundingSphere value)
+        /// <inheritdoc/>
+        void IDataSerializable.Serialize(BinarySerializer serializer)
         {
-            return new SlimDX.BoundingSphere(value.Center, value.Radius);
+            serializer.Serialize(ref Center);
+            serializer.Serialize(ref Radius);
         }
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="SlimDX.BoundingSphere"/> to <see cref="SharpDX.BoundingSphere"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator BoundingSphere(SlimDX.BoundingSphere value)
-        {
-            return new BoundingSphere(value.Center, value.Radius);
-        }
-#endif
-
-#if SlimDX1xInterop
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.BoundingSphere"/> to <see cref="Microsoft.Xna.Framework.BoundingSphere"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator Microsoft.Xna.Framework.BoundingSphere(BoundingSphere value)
-        {
-            return new Microsoft.Xna.Framework.BoundingSphere(value.Center, value.Radius);
-        }
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="Microsoft.Xna.Framework.BoundingSphere"/> to <see cref="SharpDX.BoundingSphere"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator BoundingSphere(Microsoft.Xna.Framework.BoundingSphere value)
-        {
-            return new BoundingSphere(value.Center, value.Radius);
-        }
-#endif
     }
 }

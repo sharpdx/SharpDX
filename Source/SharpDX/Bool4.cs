@@ -20,17 +20,18 @@
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using SharpDX.Serialization;
 
 namespace SharpDX
 {
     /// <summary>
-    ///   Represents a four dimensional mathematical vector of bool.
+    ///   Represents a four dimensional mathematical vector of bool (32 bits per bool value).
     /// </summary>
 #if !WIN8METRO
     [Serializable]
 #endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct Bool4 : IEquatable<Bool4>, IFormattable
+    public struct Bool4 : IEquatable<Bool4>, IFormattable, IDataSerializable
     {
         /// <summary>
         ///   The size of the <see cref = "Bool4" /> type, in bytes.
@@ -83,7 +84,6 @@ namespace SharpDX
         ///   The W component of the vector.
         /// </summary>
         private int iW;
-
 
         /// <summary>
         ///   The X component of the vector.
@@ -358,6 +358,26 @@ namespace SharpDX
         public static implicit operator bool[](Bool4 input)
         {
             return input.ToArray();
+        }
+
+        /// <inheritdoc/>
+        void IDataSerializable.Serialize(BinarySerializer serializer)
+        {
+            // Write optimized version without using Serialize methods
+            if (serializer.Mode == SerializerMode.Write)
+            {
+                serializer.Writer.Write(iX);
+                serializer.Writer.Write(iY);
+                serializer.Writer.Write(iZ);
+                serializer.Writer.Write(iW);
+            }
+            else
+            {
+                iX = serializer.Reader.ReadInt32();
+                iY = serializer.Reader.ReadInt32();
+                iZ = serializer.Reader.ReadInt32();
+                iW = serializer.Reader.ReadInt32();
+            }
         }
     }
 }

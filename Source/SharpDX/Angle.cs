@@ -47,6 +47,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Globalization;
+using SharpDX.Serialization;
 
 
 namespace SharpDX
@@ -59,7 +60,7 @@ namespace SharpDX
 #if !WIN8METRO
     [Serializable]
 #endif
-    public struct AngleSingle : IComparable, IComparable<AngleSingle>, IEquatable<AngleSingle>, IFormattable
+    public struct AngleSingle : IComparable, IComparable<AngleSingle>, IEquatable<AngleSingle>, IFormattable, IDataSerializable
     {
         /// <summary>
         /// A value that specifies the size of a single degree.
@@ -786,6 +787,20 @@ namespace SharpDX
         public override bool Equals(object obj)
         {
             return (obj is AngleSingle) && (this == (AngleSingle)obj);
+        }
+
+        /// <inheritdoc/>
+        void IDataSerializable.Serialize(BinarySerializer serializer)
+        {
+            // Write optimized version without using Serialize methods
+            if (serializer.Mode == SerializerMode.Write)
+            {
+                serializer.Writer.Write(radiansInt);
+            }
+            else
+            {
+                radiansInt = serializer.Reader.ReadInt32();
+            }
         }
     }
 }

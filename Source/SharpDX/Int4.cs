@@ -22,6 +22,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using SharpDX;
+using SharpDX.Serialization;
 
 namespace SharpDX
 {
@@ -32,7 +33,7 @@ namespace SharpDX
     [Serializable]
 #endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct Int4 : IEquatable<Int4>, IFormattable
+    public struct Int4 : IEquatable<Int4>, IFormattable, IDataSerializable
     {
         /// <summary>
         ///   The size of the <see cref = "Int4" /> type, in bytes.
@@ -616,6 +617,26 @@ namespace SharpDX
         public override int GetHashCode()
         {
             return X.GetHashCode() + Y.GetHashCode() + Z.GetHashCode() + W.GetHashCode();
+        }
+
+        /// <inheritdoc/>
+        void IDataSerializable.Serialize(BinarySerializer serializer)
+        {
+            // Write optimized version without using Serialize methods
+            if (serializer.Mode == SerializerMode.Write)
+            {
+                serializer.Writer.Write(X);
+                serializer.Writer.Write(Y);
+                serializer.Writer.Write(Z);
+                serializer.Writer.Write(W);
+            }
+            else
+            {
+                X = serializer.Reader.ReadInt32();
+                Y = serializer.Reader.ReadInt32();
+                Z = serializer.Reader.ReadInt32();
+                W = serializer.Reader.ReadInt32();
+            }
         }
 
         /// <summary>

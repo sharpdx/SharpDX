@@ -46,6 +46,7 @@ using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
+using SharpDX.Serialization;
 
 namespace SharpDX
 {
@@ -56,7 +57,7 @@ namespace SharpDX
     [Serializable]
 #endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct BoundingBox : IEquatable<BoundingBox>, IFormattable
+    public struct BoundingBox : IEquatable<BoundingBox>, IFormattable, IDataSerializable
     {
         /// <summary>
         /// The minimum point of the box.
@@ -435,48 +436,11 @@ namespace SharpDX
             return Equals((BoundingBox)value);
         }
 
-#if SlimDX1xInterop
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.BoundingBox"/> to <see cref="SlimDX.BoundingBox"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator SlimDX.BoundingBox(BoundingBox value)
+        /// <inheritdoc/>
+        void IDataSerializable.Serialize(BinarySerializer serializer)
         {
-            return new SlimDX.BoundingBox(value.Minimum, value.Maximum);
+            serializer.Serialize(ref Minimum);
+            serializer.Serialize(ref Maximum);
         }
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="SlimDX.BoundingBox"/> to <see cref="SharpDX.BoundingBox"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator BoundingBox(SlimDX.BoundingBox value)
-        {
-            return new BoundingBox(value.Minimum, value.Maximum);
-        }
-#endif
-
-#if XnaInterop
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.BoundingBox"/> to <see cref="Microsoft.Xna.Framework.BoundingBox"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator Microsoft.Xna.Framework.BoundingBox(BoundingBox value)
-        {
-            return new Microsoft.Xna.Framework.BoundingBox(value.Minimum, value.Maximum);
-        }
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="Microsoft.Xna.Framework.BoundingBox"/> to <see cref="SharpDX.BoundingBox"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator BoundingBox(Microsoft.Xna.Framework.BoundingBox value)
-        {
-            return new BoundingBox(value.Min, value.Max);
-        }
-#endif
     }
 }

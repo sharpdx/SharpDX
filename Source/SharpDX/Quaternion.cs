@@ -48,6 +48,7 @@ using System.Text;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Globalization;
+using SharpDX.Serialization;
 
 namespace SharpDX
 {
@@ -59,7 +60,7 @@ namespace SharpDX
     [Serializable]
     [TypeConverter(typeof(SharpDX.Design.QuaternionConverter))]
 #endif
-    public struct Quaternion : IEquatable<Quaternion>, IFormattable
+    public struct Quaternion : IEquatable<Quaternion>, IFormattable, IDataSerializable
     {
         /// <summary>
         /// The size of the <see cref="SharpDX.Quaternion"/> type, in bytes.
@@ -1163,6 +1164,26 @@ namespace SharpDX
         public override int GetHashCode()
         {
             return X.GetHashCode() + Y.GetHashCode() + Z.GetHashCode() + W.GetHashCode();
+        }
+
+        /// <inheritdoc/>
+        void IDataSerializable.Serialize(BinarySerializer serializer)
+        {
+            // Write optimized version without using Serialize methods
+            if (serializer.Mode == SerializerMode.Write)
+            {
+                serializer.Writer.Write(X);
+                serializer.Writer.Write(Y);
+                serializer.Writer.Write(Z);
+                serializer.Writer.Write(W);
+            }
+            else
+            {
+                X = serializer.Reader.ReadSingle();
+                Y = serializer.Reader.ReadSingle();
+                Z = serializer.Reader.ReadSingle();
+                W = serializer.Reader.ReadSingle();
+            }
         }
 
         /// <summary>

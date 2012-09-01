@@ -22,6 +22,7 @@ using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using SharpDX.Serialization;
 
 namespace SharpDX
 {
@@ -33,7 +34,7 @@ namespace SharpDX
     [Serializable]
     [TypeConverter(typeof(SharpDX.Design.HalfConverter))]
 #endif
-    public struct Half
+    public struct Half : IDataSerializable
     {
         private ushort value;
 
@@ -199,6 +200,20 @@ namespace SharpDX
         {
             ushort num = value;
             return (((num*3)/2) ^ num);
+        }
+
+        /// <inheritdoc/>
+        void IDataSerializable.Serialize(BinarySerializer serializer)
+        {
+            // Write optimized version without using Serialize methods
+            if (serializer.Mode == SerializerMode.Write)
+            {
+                serializer.Writer.Write(value);
+            }
+            else
+            {
+                value = serializer.Reader.ReadUInt16();
+            }
         }
 
         /// <summary>

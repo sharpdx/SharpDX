@@ -21,6 +21,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using SharpDX.Serialization;
 
 namespace SharpDX
 {
@@ -32,7 +33,7 @@ namespace SharpDX
     [Serializable]
     [TypeConverter(typeof(SharpDX.Design.Half3Converter))]
 #endif
-    public struct Half3 : IEquatable<Half3>
+    public struct Half3 : IEquatable<Half3>, IDataSerializable
     {
         /// <summary>
         /// Gets or sets the X component of the vector.
@@ -146,6 +147,24 @@ namespace SharpDX
         {
             int num = this.Z.GetHashCode() + this.Y.GetHashCode();
             return (this.X.GetHashCode() + num);
+        }
+
+        /// <inheritdoc/>
+        void IDataSerializable.Serialize(BinarySerializer serializer)
+        {
+            // Write optimized version without using Serialize methods
+            if (serializer.Mode == SerializerMode.Write)
+            {
+                serializer.Writer.Write(X.RawValue);
+                serializer.Writer.Write(Y.RawValue);
+                serializer.Writer.Write(Z.RawValue);
+            }
+            else
+            {
+                X.RawValue = serializer.Reader.ReadUInt16();
+                Y.RawValue = serializer.Reader.ReadUInt16();
+                Z.RawValue = serializer.Reader.ReadUInt16();
+            }
         }
 
         /// <summary>

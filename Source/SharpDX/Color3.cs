@@ -46,6 +46,7 @@ using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
+using SharpDX.Serialization;
 
 namespace SharpDX
 {
@@ -56,7 +57,7 @@ namespace SharpDX
     [Serializable]
 #endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct Color3 : IEquatable<Color3>, IFormattable
+    public struct Color3 : IEquatable<Color3>, IFormattable, IDataSerializable
     {
         /// <summary>
         /// The red component of the color.
@@ -799,6 +800,24 @@ namespace SharpDX
                 return false;
 
             return Equals((Color3)value);
+        }
+
+        /// <inheritdoc/>
+        void IDataSerializable.Serialize(BinarySerializer serializer)
+        {
+            // Write optimized version without using Serialize methods
+            if (serializer.Mode == SerializerMode.Write)
+            {
+                serializer.Writer.Write(Red);
+                serializer.Writer.Write(Green);
+                serializer.Writer.Write(Blue);
+            }
+            else
+            {
+                Red = serializer.Reader.ReadSingle();
+                Green = serializer.Reader.ReadSingle();
+                Blue = serializer.Reader.ReadSingle();
+            }
         }
     }
 }

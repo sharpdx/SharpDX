@@ -20,6 +20,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using SharpDX.Serialization;
 
 namespace SharpDX
 {
@@ -28,8 +29,11 @@ namespace SharpDX
     /// internally storing Left,Top,Right,Bottom instead of Left,Top,Width,Height.
     /// Although automatic casting from a to System.Drawing.Rectangle is provided by this class.
     /// </summary>
+#if !WIN8METRO
+    [Serializable]
+#endif
     [StructLayout(LayoutKind.Sequential)]
-    public struct Rectangle : IEquatable<Rectangle>
+    public struct Rectangle : IEquatable<Rectangle>, IDataSerializable
     {
         private int _left;
         private int _top;
@@ -214,6 +218,26 @@ namespace SharpDX
         public static bool operator !=(Rectangle left, Rectangle right)
         {
             return !(left == right);
+        }
+
+        /// <inheritdoc/>
+        void IDataSerializable.Serialize(BinarySerializer serializer)
+        {
+            // Write optimized version without using Serialize methods
+            if (serializer.Mode == SerializerMode.Write)
+            {
+                serializer.Writer.Write(_left);
+                serializer.Writer.Write(_top);
+                serializer.Writer.Write(_right);
+                serializer.Writer.Write(_bottom);
+            }
+            else
+            {
+                _left = serializer.Reader.ReadInt32();
+                _top = serializer.Reader.ReadInt32();
+                _right = serializer.Reader.ReadInt32();
+                _bottom = serializer.Reader.ReadInt32();
+            }
         }
     }
 }

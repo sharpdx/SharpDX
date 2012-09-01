@@ -20,6 +20,7 @@
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using SharpDX.Serialization;
 
 namespace SharpDX
 {
@@ -30,7 +31,7 @@ namespace SharpDX
     [Serializable]
 #endif
     [StructLayout(LayoutKind.Sequential, Size = 4)]
-    public partial struct ColorBGRA : IEquatable<ColorBGRA>, IFormattable
+    public partial struct ColorBGRA : IEquatable<ColorBGRA>, IFormattable, IDataSerializable
     {
         /// <summary>
         /// The blue component of the color.
@@ -1118,6 +1119,20 @@ namespace SharpDX
         {
             var value = (int)(component * 255.0f);
             return (byte)(value < 0 ? 0 : value > 255 ? 255 : value);
+        }
+
+        /// <inheritdoc/>
+        void IDataSerializable.Serialize(BinarySerializer serializer)
+        {
+            // Write optimized version without using Serialize methods
+            if (serializer.Mode == SerializerMode.Write)
+            {
+                serializer.Writer.Write(ToBgra());
+            }
+            else
+            {
+                this = FromBgra(serializer.Reader.ReadInt32());
+            }
         }
     }
 }

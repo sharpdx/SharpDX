@@ -23,12 +23,12 @@ namespace SharpDX.Serialization
     /// <summary>
     /// Implement this interface to serialize datas with <see cref="BinarySerializer"/>.
     /// </summary>
-    public interface IDataSerializer
+    public interface IDataSerializable
     {
         /// <summary>
         /// Reads or writes datas from/to the given binary serializer.
         /// </summary>
-        /// <param name="binarySerializer">The binary serializer.</param>
-        void Serialize(BinarySerializer binarySerializer);
+        /// <param name="serializer">The binary serializer.</param>
+        void Serialize(BinarySerializer serializer);
     }
 }
