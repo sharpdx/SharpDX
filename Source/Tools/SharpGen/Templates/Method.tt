@@ -342,6 +342,10 @@
 								if (param.IsRef) {
 #>                <#= param.Name #>.__MarshalFrom(ref <#= param.TempName #>);
 <#+								}
+								if (param.IsOptionnal) {#>
+                if (<#= param.Name #> != null)
+<#+								}
+
 #>                <#= param.Name #>.__MarshalFree(ref <#= param.TempName #>);
 <#+							}
 						}
