@@ -327,7 +327,7 @@ namespace SharpDX.Serialization
             else
             {
                 if (previousChunk.ChunkIndexEnd != Stream.Position)
-                    throw new InvalidDataException(string.Format("Unexpected size when reading chunk [{0}]", CurrentChunk.Id));
+                    throw new IOException(string.Format("Unexpected size when reading chunk [{0}]", CurrentChunk.Id));
             }
         }
 
@@ -1155,6 +1155,26 @@ namespace SharpDX.Serialization
         }
 
         /// <summary>
+        /// Serializes a single <strong>int</strong> as a packed value (from 1 byte to 5 byte. if value &lt; 128, then 1 byte...etc.)
+        /// </summary>
+        /// <param name="value">The value to serialize</param>
+        /// <remarks>
+        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.
+        /// </remarks>
+        public void SerializePackedInt(ref int value)
+        {
+            if (Mode == SerializerMode.Write)
+            {
+                Write7BitEncodedInt(value);
+            }
+            else
+            {
+                value = Read7BitEncodedInt();
+            }
+        }
+
+
+        /// <summary>
         /// Serializes a single <strong>uint</strong> value.
         /// </summary>
         /// <param name="value">The value to serialize</param>
@@ -1395,7 +1415,7 @@ namespace SharpDX.Serialization
                 var type = (noDynamic) ? typeof (T) : value.GetType();
                 Dynamic dyn;
                 if (!dynamicMapToFourCC.TryGetValue(type, out dyn))
-                    throw new InvalidDataException(string.Format("Type [{0}] is not registered as dynamic", type));
+                    throw new IOException(string.Format("Type [{0}] is not registered as dynamic", type));
 
                 // Write the id of the object
                 if (!noDynamic)
@@ -1411,14 +1431,14 @@ namespace SharpDX.Serialization
                 {
                     var type = typeof (T);
                     if (!dynamicMapToFourCC.TryGetValue(type, out dyn))
-                        throw new InvalidDataException(string.Format("Type [{0}] is not registered as dynamic", type));
+                        throw new IOException(string.Format("Type [{0}] is not registered as dynamic", type));
                 }
                 else
                 {
                     var id = (FourCC) Reader.ReadInt32();
 
                     if (!dynamicMapToType.TryGetValue(id, out dyn))
-                        throw new InvalidDataException(string.Format("Type [{0}] is not registered as dynamic", id));
+                        throw new IOException(string.Format("Type [{0}] is not registered as dynamic", id));
                 }
 
                 value = (T) dyn.Reader(this);
@@ -2249,13 +2269,19 @@ namespace SharpDX.Serialization
                     // Figure out how many chars to process this round.
                     int charCount = (numLeft > maxChars) ? maxChars : numLeft;
                     int byteLen;
+#if WIN8METRO
+                    // This is inefficient, but .NET 4.5 Core profile doesn't give us the choice.
+                    var charArray = value.ToCharArray();
+                    byteLen = encoder.GetBytes(charArray, charStart, charCount, largeByteBuffer, 0, charCount == numLeft);
+#else
                     fixed (char* pChars = value)
                     {
                         fixed (byte* pBytes = largeByteBuffer)
                         {
-                            byteLen = encoder.GetBytes(pChars + charStart, charCount, pBytes, LargeByteBufferSize, charCount == numLeft);
+                            byteLen = encoder.GetBytes(pChars + charStart, charCount, pBytes, LargeByteBufferSize, charCount == numLeft);                           
                         }
                     }
+#endif
                     Stream.Write(largeByteBuffer, 0, byteLen);
                     charStart += charCount;
                     numLeft -= charCount;
