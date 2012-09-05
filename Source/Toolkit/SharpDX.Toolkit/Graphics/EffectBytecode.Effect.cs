@@ -18,13 +18,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Reflection;
-using System.Runtime.CompilerServices;
+using System;
+using System.Collections.Generic;
+using SharpDX.Serialization;
 
-[assembly: AssemblyProduct("SharpDX.Toolkit.Graphics")]
-[assembly: AssemblyTitle("SharpDX.Toolkit.Graphics")]
-[assembly: AssemblyDescription("SharpDX.Toolkit.Graphics assembly")]
+namespace SharpDX.Toolkit.Graphics
+{
+    public partial class EffectBytecode
+    {
+        /// <summary>
+        /// Describes an effect.
+        /// </summary>
+        public sealed class Effect : IDataSerializable
+        {
+            /// <summary>
+            /// Name of the effect.
+            /// </summary>
+            public string Name;
 
-#if DEBUG
-[assembly: InternalsVisibleTo("SharpDX.Toolkit.Graphics.Tests")]
-#endif
+            /// <summary>
+            /// List of <see cref="Technique"/>.
+            /// </summary>
+            public List<Technique> Techniques;
+
+            /// <inheritdoc/>
+            void IDataSerializable.Serialize(BinarySerializer serializer)
+            {
+                serializer.Serialize(ref Name);
+                serializer.Serialize(ref Techniques);
+            }
+        }
+    }
+}

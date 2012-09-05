@@ -11,7 +11,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.XML" />
     <Reference Include="System.Drawing" Condition=" '$(SharpDXWin8)' == 'false'" />
   </ItemGroup>
   <ItemGroup>
@@ -41,6 +40,7 @@
     <Compile Include="PresentationParameters.cs" />
     <Compile Include="PresentInterval.cs" />
     <Compile Include="TextureDimension.cs" />
+    <Compile Include="TGAHelper.cs" />
     <Compile Include="UnorderedAccessViewSelector.cs" />
     <Compile Include="ShaderResourceViewSelector.cs" />
     <Compile Include="RenderTargetViewSelector.cs" />
@@ -69,7 +69,6 @@
     <Compile Include="Texture1D.cs" />
     <Compile Include="Texture1DBase.cs" />
     <Compile Include="Effect.cs" />
-    <Compile Include="EffectBytecode.cs" />
     <Compile Include="GraphicsDevice.cs" />
     <Compile Include="GraphicsResource.cs" />
     <Compile Include="IPixelData.cs" />
@@ -87,10 +86,6 @@
     <Compile Include="WICHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SharpDX.D3DCompiler\SharpDX.D3DCompiler.csproj" Condition=" '$(SharpDXWin8)' == 'false'">
-      <Project>{361d3f81-a48a-47f2-80df-ca4f9536cb4e}</Project>
-      <Name>SharpDX.D3DCompiler</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\SharpDX.Direct2D1\SharpDX.Direct2D1.csproj">
       <Project>{c97878f4-1510-4bba-8153-bd71da7d50d8}</Project>
       <Name>SharpDX.Direct2D1</Name>
@@ -106,6 +101,10 @@
     <ProjectReference Include="..\..\SharpDX\SharpDX.csproj">
       <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
       <Name>SharpDX</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpDX.Toolkit\SharpDX.Toolkit.csproj">
+      <Project>{9ff0707c-75bb-4984-a01f-b9eaad293f6c}</Project>
+      <Name>SharpDX.Toolkit</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

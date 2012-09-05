@@ -354,7 +354,7 @@ namespace SharpDX.Toolkit.Graphics
                 memoryPtr = Utilities.AllocateMemory(size);
                 stream.Read(memoryPtr, 0, size);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 if (memoryPtr != IntPtr.Zero)
                     Utilities.FreeMemory(memoryPtr);

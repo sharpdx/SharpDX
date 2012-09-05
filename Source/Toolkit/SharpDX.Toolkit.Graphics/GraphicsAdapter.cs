@@ -37,7 +37,7 @@ namespace SharpDX.Toolkit.Graphics
         private static readonly Component staticCollector;
         private readonly Adapter1 adapter;
         private readonly int adapterOrdinal;
-        private AdapterDescription1 adapterDescription;
+        //private AdapterDescription1 adapterDescription;
         private Output[] outputs;
         private OutputDescription outputDescription;
 

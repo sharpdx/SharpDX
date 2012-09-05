@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,13 +18,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Reflection;
-using System.Runtime.CompilerServices;
+namespace SharpDX.Toolkit.Graphics
+{
+    /// <summary>
+    /// Identify a single GPU stage in the pipeline.
+    /// </summary>
+    public enum StageType : byte
+    {
+        /// <summary>
+        /// Vertex shader stage.
+        /// </summary>
+        Vertex = 0,
 
-[assembly: AssemblyProduct("SharpDX.Toolkit.Graphics")]
-[assembly: AssemblyTitle("SharpDX.Toolkit.Graphics")]
-[assembly: AssemblyDescription("SharpDX.Toolkit.Graphics assembly")]
+        /// <summary>
+        /// Domain shader stage.
+        /// </summary>
+        Domain = 1,
 
-#if DEBUG
-[assembly: InternalsVisibleTo("SharpDX.Toolkit.Graphics.Tests")]
-#endif
+        /// <summary>
+        /// Hull shader stage.
+        /// </summary>
+        Hull = 2,
+
+        /// <summary>
+        /// Geometry shader stage.
+        /// </summary>
+        Geometry = 3,
+
+        /// <summary>
+        /// Pixel shader stage.
+        /// </summary>
+        Pixel = 4,
+
+        /// <summary>
+        /// Compute shader stage.
+        /// </summary>
+        Compute = 5,
+    }
+}

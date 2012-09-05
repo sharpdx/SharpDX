@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,14 +17,26 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+namespace SharpDX.Toolkit.Diagnostics
+{
+    /// <summary>
+    /// Type of a log message.
+    /// </summary>
+    public enum LogMessageType
+    {
+        /// <summary>
+        /// Information message.
+        /// </summary>
+        Info,
 
-using System.Reflection;
-using System.Runtime.CompilerServices;
+        /// <summary>
+        /// Warning message.
+        /// </summary>
+        Warning,
 
-[assembly: AssemblyProduct("SharpDX.Toolkit.Graphics")]
-[assembly: AssemblyTitle("SharpDX.Toolkit.Graphics")]
-[assembly: AssemblyDescription("SharpDX.Toolkit.Graphics assembly")]
-
-#if DEBUG
-[assembly: InternalsVisibleTo("SharpDX.Toolkit.Graphics.Tests")]
-#endif
+        /// <summary>
+        /// Error message.
+        /// </summary>
+        Error,
+    }
+}

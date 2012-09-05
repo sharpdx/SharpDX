@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,13 +18,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Reflection;
-using System.Runtime.CompilerServices;
+using SharpDX.Serialization;
 
-[assembly: AssemblyProduct("SharpDX.Toolkit.Graphics")]
-[assembly: AssemblyTitle("SharpDX.Toolkit.Graphics")]
-[assembly: AssemblyDescription("SharpDX.Toolkit.Graphics assembly")]
+namespace SharpDX.Toolkit.Graphics
+{
+    public partial class EffectBytecode 
+    {
+        /// <summary>
+        /// An attribute defined for a <see cref="Pass"/>.
+        /// </summary>
+        public sealed class Attribute : IDataSerializable
+        {
+            /// <summary>
+            /// Name of this attribute.
+            /// </summary>
+            public string Name;
 
-#if DEBUG
-[assembly: InternalsVisibleTo("SharpDX.Toolkit.Graphics.Tests")]
-#endif
+            /// <summary>
+            /// Value of this attribute.
+            /// </summary>
+            public object Value;
+
+            /// <inheritdoc/>
+            void IDataSerializable.Serialize(BinarySerializer serializer)
+            {
+                serializer.Serialize(ref Name);
+                serializer.AllowNull = true;
+                serializer.SerializeDynamic(ref Value);
+                serializer.AllowNull = false;
+            }
+        }
+    }
+}

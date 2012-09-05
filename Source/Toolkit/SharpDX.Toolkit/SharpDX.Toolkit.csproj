@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\SharpDX.PreSettings.targets" />
+  <PropertyGroup>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9FF0707C-75BB-4984-A01F-B9EAAD293F6C}</ProjectGuid>
+    <RootNamespace>SharpDX.Toolkit</RootNamespace>
+    <AssemblyName>SharpDX.Toolkit</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Diagnostics\LogMessage.cs" />
+    <Compile Include="Diagnostics\LogMessageType.cs" />
+    <Compile Include="Diagnostics\Logger.cs" />
+    <Compile Include="Graphics\EffectBytecode.ShaderLink.cs" />
+    <Compile Include="Graphics\EffectBytecode.Signature.cs" />
+    <Compile Include="Graphics\EffectBytecode.Semantic.cs" />
+    <Compile Include="Graphics\EffectBytecode.Attribute.cs" />
+    <Compile Include="Graphics\EffectBytecode.Pipeline.cs" />
+    <Compile Include="Graphics\EffectBytecode.ConstantBuffer.cs" />
+    <Compile Include="Graphics\EffectBytecode.Pass.cs" />
+    <Compile Include="Graphics\EffectBytecode.Technique.cs" />
+    <Compile Include="Graphics\EffectBytecode.ResourceParameter.cs" />
+    <Compile Include="Graphics\EffectBytecode.ValueTypeParameter.cs" />
+    <Compile Include="Graphics\EffectBytecode.Parameter.cs" />
+    <Compile Include="Graphics\EffectBytecode.Effect.cs" />
+    <Compile Include="Graphics\EffectBytecode.Shader.cs" />
+    <Compile Include="Graphics\EffectCompilerFlags.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Graphics\StageType.cs" />
+    <Compile Include="Graphics\EffectParameterClass.cs" />
+    <Compile Include="Graphics\EffectParameterType.cs" />
+    <Compile Include="Graphics\EffectBytecode.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\SharpDX\SharpDX.csproj">
+      <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
+      <Name>SharpDX</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
