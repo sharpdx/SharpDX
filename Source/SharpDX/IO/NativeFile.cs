@@ -145,7 +145,7 @@ namespace SharpDX.IO
         internal static extern bool ReadFile(IntPtr fileHandle, IntPtr buffer, int numberOfBytesToRead, out int numberOfBytesRead, IntPtr overlapped);
 
 
-        [DllImport("kernel32.dll", EntryPoint = "ReadFile", SetLastError = true)]
+        [DllImport("kernel32.dll", EntryPoint = "FlushFileBuffers", SetLastError = true)]
         internal static extern bool FlushFileBuffers(IntPtr hFile);
 
         /// <summary>
