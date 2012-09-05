@@ -38,10 +38,10 @@ namespace SharpDX.Tests
 
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
-                serializer.EnableIdentityReference(true);
+                serializer.AllowIdentity = true;
                 serializer.SerializeDynamic(ref A);
                 serializer.SerializeDynamic(ref B);
-                serializer.EnableIdentityReference(false);
+                serializer.AllowIdentity = false;
             }
         }
 
@@ -404,11 +404,11 @@ namespace SharpDX.Tests
                 serializer.Serialize(ref OList);
 
                 // Allow null values here.
-                serializer.EnableNullReference(true);
+                serializer.AllowNull = true;
                 serializer.Serialize(ref ONull);
                 serializer.Serialize(ref OArrayNull);
                 serializer.Serialize(ref OListNull);
-                serializer.EnableNullReference(false);
+                serializer.AllowNull = false;
 
                 serializer.Serialize(ref Q);
                 serializer.Serialize(ref QArray);
@@ -417,7 +417,7 @@ namespace SharpDX.Tests
                 serializer.SerializeDynamic(ref R);
 
                 // Test for identity objects
-                serializer.EnableIdentityReference(true);
+                serializer.AllowIdentity = true;
                 serializer.Serialize(ref SIdentity1);
                 serializer.Serialize(ref SIdentity2);
                 serializer.Serialize(ref SIdentity3);
@@ -429,7 +429,7 @@ namespace SharpDX.Tests
                 serializer.Serialize(ref SIdentity33);
                 serializer.Serialize(ref SIdentity44);
                 serializer.Serialize(ref SIdentity55, serializer.Serialize);
-                serializer.EnableIdentityReference(false);
+                serializer.AllowIdentity = false;
             }
         }
 
@@ -524,7 +524,7 @@ namespace SharpDX.Tests
             
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
-                serializer.EnableNullReference(true);
+                serializer.AllowNull = true;
                 serializer.SerializeDynamic(ref A);
                 serializer.SerializeDynamic(ref AArray);
                 serializer.SerializeDynamic(ref AList);
@@ -596,7 +596,7 @@ namespace SharpDX.Tests
                 serializer.SerializeDynamic(ref R);
 
                 // Test for identity objects
-                serializer.EnableIdentityReference(true);
+                serializer.AllowIdentity = true;
                 serializer.SerializeDynamic(ref SIdentity1);
                 serializer.SerializeDynamic(ref SIdentity2);
                 serializer.SerializeDynamic(ref SIdentity3);
@@ -608,9 +608,9 @@ namespace SharpDX.Tests
                 serializer.SerializeDynamic(ref SIdentity33);
                 serializer.SerializeDynamic(ref SIdentity44);
                 serializer.SerializeDynamic(ref SIdentity55);
-                serializer.EnableIdentityReference(false);
+                serializer.AllowIdentity = false;
 
-                serializer.EnableNullReference(false);
+                serializer.AllowNull = false;
             }
 
             public void CopyTo(ref TestData dest)

@@ -78,21 +78,23 @@ namespace SharpDX.Serialization
 
         public delegate void WriteRef(object value, BinarySerializer serializer);
 
-        
+
         /// <summary>
         /// Underlying stream this instance is reading/writing to.
         /// </summary>
-        public readonly Stream Stream;
+        public Stream Stream { get; private set; }
 
         /// <summary>
         /// Reader used to directly read from the underlying stream.
         /// </summary>
-        public readonly BinaryReader Reader;
+        public BinaryReader Reader { get; private set; }
 
         /// <summary>
         /// Writer used to directly write to the underlying stream.
         /// </summary>
-        public readonly BinaryWriter Writer;
+        public BinaryWriter Writer { get; private set; }
+
+        private SerializerMode mode;
 
 
         /// <summary>
@@ -126,16 +128,14 @@ namespace SharpDX.Serialization
             // Allocate the chunk array and initial chunk.
             chunks = new Chunk[8];
             Stream = stream;
-            Reader = new BinaryReader(stream);
-            Writer = new BinaryWriter(stream);
 
+            // Setup the mode.
+            Mode = mode;
             CurrentChunk = new Chunk { ChunkIndexStart = 0 };
 
             chunks[chunkCount] = CurrentChunk;
             chunkCount++;
 
-            // Setup the mode.
-            Mode = mode;
 
             // Register all default dynamics.
             foreach (var defaultDynamic in DefaultDynamics)
@@ -146,7 +146,23 @@ namespace SharpDX.Serialization
         /// Gets or sets the serialization mode.
         /// </summary>
         /// <value>The serialization mode.</value>
-        public SerializerMode Mode { get; set; }
+        public SerializerMode Mode
+        {
+            get { return mode; }
+            set
+            {
+                mode = value;
+                // Create Reader or writer
+                if (Mode == SerializerMode.Read)
+                {
+                    Reader = Reader ?? new BinaryReader(Stream);
+                }
+                else
+                {
+                    Writer = Writer ?? new BinaryWriter(Stream);
+                }
+            }
+        }
 
         /// <summary>
         /// Gets or sets the encoding used to serialized strings.
@@ -173,30 +189,33 @@ namespace SharpDX.Serialization
         /// <summary>
         /// Enables to serializing null value. Default is <strong>false</strong>.
         /// </summary>
-        /// <param name="isAllowingNull">if set to <c>true</c> [is allowing null].</param>
-        /// <returns>Count of AllowNull. Passing true increments the count, passing false decrement it.</returns>
-        /// <exception cref="System.InvalidOperationException"></exception>
-        /// <remarks>This boolean value can be turned on/off while serializing.</remarks>
-        public int EnableNullReference(bool isAllowingNull)
+        /// <value><c>true</c> if [allow null]; otherwise, <c>false</c>.</value>
+        /// <exception cref="System.InvalidOperationException">If an invalid matching pair of true/false is detected.</exception>
+        public bool AllowNull
         {
-            allowNullCount += (isAllowingNull) ? 1 : -1;
-            if (allowNullCount < 0)
-                throw new InvalidOperationException("Invalid call to EnableNullReference. Must match true/false in pair.");
-            return allowNullCount;
+            get { return allowNullCount > 0; }
+            set
+            {
+                allowNullCount += value ? 1 : -1; 
+                if (allowNullCount < 0)
+                    throw new InvalidOperationException("Invalid call to AllowNull. Must match true/false in pair.");
+            }
         }
 
         /// <summary>
         /// Enables to serialize an object only once using object reference. Default is <strong>false</strong>.
         /// </summary>
-        /// <param name="isEnabled">if set to <c>true</c> [is enabled].</param>
-        /// <returns>Count of EnableIdentityReference. Passing true increments the count, passing false decrement it.</returns>
-        /// <exception cref="System.InvalidOperationException"></exception>
-        public int EnableIdentityReference(bool isEnabled)
+        /// <value><c>true</c> if [allow null]; otherwise, <c>false</c>.</value>
+        /// <exception cref="System.InvalidOperationException">If an invalid matching pair of true/false is detected.</exception>
+        public bool AllowIdentity
         {
-            allowIdentityReferenceCount += (isEnabled) ? 1 : -1;
-            if (allowIdentityReferenceCount < 0)
-                throw new InvalidOperationException("Invalid call to EnableIdentityReference. Must match true/false in pair.");
-            return allowIdentityReferenceCount;            
+            get { return allowIdentityReferenceCount > 0; }
+            set
+            {
+                allowIdentityReferenceCount += value ? 1 : -1;
+                if (allowIdentityReferenceCount < 0)
+                    throw new InvalidOperationException("Invalid call to AllowIdentity. Must match true/false in pair.");
+            }
         }
 
         /// <summary>
@@ -464,13 +483,13 @@ namespace SharpDX.Serialization
 
             if (Mode == SerializerMode.Write)
             {
-                Writer.Write((int) valueArray.Length);
+                Write7BitEncodedInt((int) valueArray.Length);
                 for (int i = 0; i < valueArray.Length; i++)
                     serializer(ref valueArray[i]);
             }
             else
             {
-                var count = Reader.ReadInt32();
+                var count = Read7BitEncodedInt();
                 valueArray = new T[count];
                 for (int index = 0; index < count; index++)
                     serializer(ref valueArray[index]);
@@ -530,13 +549,13 @@ namespace SharpDX.Serialization
 
             if (Mode == SerializerMode.Write)
             {
-                Writer.Write(valueArray.Length);
+                Write7BitEncodedInt(valueArray.Length);
                 for (int i = 0; i < valueArray.Length; i++)
                     Serialize(ref valueArray[i]);
             }
             else
             {
-                var count = Reader.ReadInt32();
+                var count = Read7BitEncodedInt();
                 valueArray = new T[count];
                 for (int index = 0; index < count; index++)
                     Serialize(ref valueArray[index]);
@@ -594,12 +613,12 @@ namespace SharpDX.Serialization
 
             if (Mode == SerializerMode.Write)
             {
-                Writer.Write(valueArray.Length);
+                Write7BitEncodedInt(valueArray.Length);
                 Writer.Write(valueArray);
             }
             else
             {
-                int count = Reader.ReadInt32();
+                int count = Read7BitEncodedInt();
                 valueArray = new byte[count];
                 Reader.Read(valueArray, 0, count);
             }
@@ -655,7 +674,7 @@ namespace SharpDX.Serialization
 
             if (Mode == SerializerMode.Write)
             {
-                Writer.Write(valueList.Count);
+                Write7BitEncodedInt(valueList.Count);
                 foreach (var value in valueList)
                 {
                     T localValue = value;
@@ -664,7 +683,7 @@ namespace SharpDX.Serialization
             }
             else
             {
-                var count = Reader.ReadInt32();
+                var count = Read7BitEncodedInt();
                 valueList = new List<T>(count);
                 for (int index = 0; index < count; index++)
                 {
@@ -695,7 +714,7 @@ namespace SharpDX.Serialization
 
             if (Mode == SerializerMode.Write)
             {
-                Writer.Write(valueList.Count);
+                Write7BitEncodedInt(valueList.Count);
                 foreach (var value in valueList)
                 {
                     T localValue = value;
@@ -704,7 +723,7 @@ namespace SharpDX.Serialization
             }
             else
             {
-                var count = Reader.ReadInt32();
+                var count = Read7BitEncodedInt();
                 valueList = new List<T>(count);
                 for (int i = 0; i < count; i++)
                 {
@@ -818,7 +837,7 @@ namespace SharpDX.Serialization
 
             if (Mode == SerializerMode.Write)
             {
-                Writer.Write(dictionary.Count);
+                Write7BitEncodedInt(dictionary.Count);
                 foreach (var value in dictionary)
                 {
                     TKey localKey = value.Key;
@@ -829,7 +848,7 @@ namespace SharpDX.Serialization
             }
             else
             {
-                var count = Reader.ReadInt32();
+                var count = Read7BitEncodedInt();
                 dictionary = new Dictionary<TKey, TValue>(count);
                 for (int i = 0; i < count; i++)
                 {
@@ -862,7 +881,7 @@ namespace SharpDX.Serialization
 
             if (Mode == SerializerMode.Write)
             {
-                Writer.Write(dictionary.Count);
+                Write7BitEncodedInt(dictionary.Count);
                 foreach (var value in dictionary)
                 {
                     TKey localKey = value.Key;
@@ -873,7 +892,7 @@ namespace SharpDX.Serialization
             }
             else
             {
-                var count = Reader.ReadInt32();
+                var count = Read7BitEncodedInt();
                 dictionary = new Dictionary<TKey, TValue>(count);
                 for (int i = 0; i < count; i++)
                 {
@@ -906,7 +925,7 @@ namespace SharpDX.Serialization
 
             if (Mode == SerializerMode.Write)
             {
-                Writer.Write(dictionary.Count);
+                Write7BitEncodedInt(dictionary.Count);
                 foreach (var value in dictionary)
                 {
                     TKey localKey = value.Key;
@@ -917,7 +936,7 @@ namespace SharpDX.Serialization
             }
             else
             {
-                var count = Reader.ReadInt32();
+                var count = Read7BitEncodedInt();
                 dictionary = new Dictionary<TKey, TValue>(count);
                 for (int i = 0; i < count; i++)
                 {
@@ -951,7 +970,7 @@ namespace SharpDX.Serialization
             
             if (Mode == SerializerMode.Write)
             {
-                Writer.Write(dictionary.Count);
+                Write7BitEncodedInt(dictionary.Count);
                 foreach (var value in dictionary)
                 {
                     TKey localKey = value.Key;
@@ -962,7 +981,7 @@ namespace SharpDX.Serialization
             }
             else
             {
-                var count = Reader.ReadInt32();
+                var count = Read7BitEncodedInt();
                 dictionary = new Dictionary<TKey, TValue>(count);
                 for (int i = 0; i < count; i++)
                 {
@@ -1348,7 +1367,7 @@ namespace SharpDX.Serialization
                         if (objectToPosition.TryGetValue(value, out position))
                         {
                             Writer.Write((byte)2);
-                            Writer.Write(position);
+                            Write7BitEncodedInt(position);
                             return true;
                         }
 
@@ -1381,7 +1400,7 @@ namespace SharpDX.Serialization
                                     throw new InvalidOperationException("Can't read serialized reference when SerializeReference is off");
 
                                 // Read object position from stream
-                                objectPosition = Reader.ReadInt32();
+                                objectPosition = Read7BitEncodedInt();
                                 object localValue;
                                 if (!positionToObject.TryGetValue(objectPosition, out localValue))
                                     throw new InvalidOperationException(string.Format("Can't find serialized reference at position [{0}]", objectPosition));
@@ -1531,6 +1550,13 @@ namespace SharpDX.Serialization
             return value;
         }
 
+        private static object ReaderObjectArray(BinarySerializer serializer)
+        {
+            object[] value = null;
+            serializer.Serialize(ref value, serializer.SerializeDynamic);
+            return value;
+        }
+
         private static object ReaderCharArray(BinarySerializer serializer)
         {
             char[] value = null;
@@ -1647,6 +1673,12 @@ namespace SharpDX.Serialization
             serializer.Serialize(ref valueTyped, serializer.Serialize);
         }
 
+        private static void WriterObjectArray(object value, BinarySerializer serializer)
+        {
+            var valueTyped = (object[])value;
+            serializer.Serialize(ref valueTyped, serializer.SerializeDynamic);
+        }
+
         private static void WriterByteArray(object value, BinarySerializer serializer)
         {
             var valueArray = (byte[]) value;
@@ -1731,6 +1763,13 @@ namespace SharpDX.Serialization
         {
             List<Guid> value = null;
             serializer.Serialize(ref value, serializer.Serialize);
+            return value;
+        }
+
+        private static object ReaderObjectList(BinarySerializer serializer)
+        {
+            List<object> value = null;
+            serializer.Serialize(ref value, serializer.SerializeDynamic);
             return value;
         }
 
@@ -1848,6 +1887,12 @@ namespace SharpDX.Serialization
         {
             var valueTyped = (List<Guid>) value;
             serializer.Serialize(ref valueTyped, serializer.Serialize);
+        }
+
+        private static void WriterObjectList(object value, BinarySerializer serializer)
+        {
+            var valueTyped = (List<object>)value;
+            serializer.Serialize(ref valueTyped, serializer.SerializeDynamic);
         }
 
         private static void WriterByteList(object value, BinarySerializer serializer)
@@ -2095,6 +2140,7 @@ namespace SharpDX.Serialization
                 new Dynamic {Id = 42, Type = typeof (char[]), Reader = ReaderCharArray, Writer = WriterCharArray},
                 new Dynamic {Id = 43, Type = typeof (DateTime[]), Reader = ReaderDateTimeArray, Writer = WriterDateTimeArray},
                 new Dynamic {Id = 44, Type = typeof (Guid[]), Reader = ReaderGuidArray, Writer = WriterGuidArray},
+                new Dynamic {Id = 45, Type = typeof (object[]), Reader = ReaderObjectArray, Writer = WriterObjectArray},
 
                 new Dynamic {Id = 60, Type = typeof (List<int>), Reader = ReaderIntList, Writer = WriterIntList},
                 new Dynamic {Id = 61, Type = typeof (List<uint>), Reader = ReaderUIntList, Writer = WriterUIntList},
@@ -2111,6 +2157,7 @@ namespace SharpDX.Serialization
                 new Dynamic {Id = 72, Type = typeof (List<char>), Reader = ReaderCharList, Writer = WriterCharList},
                 new Dynamic {Id = 73, Type = typeof (List<DateTime>), Reader = ReaderDateTimeList, Writer = WriterDateTimeList},
                 new Dynamic {Id = 74, Type = typeof (List<Guid>), Reader = ReaderGuidList, Writer = WriterGuidList},
+                new Dynamic {Id = 75, Type = typeof (List<object>), Reader = ReaderObjectList, Writer = WriterObjectList},
             };
 
         private Chunk CurrentChunk
