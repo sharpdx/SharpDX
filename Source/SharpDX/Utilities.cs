@@ -590,6 +590,89 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Compares two collection, element by elements.
+        /// </summary>
+        /// <param name="left">A "from" enumerator.</param>
+        /// <param name="right">A "to" enumerator.</param>
+        /// <returns>True if lists are identical. False otherwise.</returns>
+        public static bool Compare(IEnumerable left, IEnumerable right)
+        {
+            if (ReferenceEquals(left, right))
+                return true;
+            if (ReferenceEquals(left, null) || ReferenceEquals(right, null))
+                return false;
+
+            return Compare(left.GetEnumerator(), right.GetEnumerator());
+        }
+
+        /// <summary>
+        /// Compares two collection, element by elements.
+        /// </summary>
+        /// <param name="leftIt">A "from" enumerator.</param>
+        /// <param name="rightIt">A "to" enumerator.</param>
+        /// <returns>True if lists are identical. False otherwise.</returns>
+        public static bool Compare(IEnumerator leftIt, IEnumerator rightIt)
+        {
+            if (ReferenceEquals(leftIt, rightIt))
+                return true;
+            if (ReferenceEquals(leftIt, null) || ReferenceEquals(rightIt, null))
+                return false;
+
+            bool hasLeftNext;
+            bool hasRightNext;
+            while (true)
+            {
+                hasLeftNext = leftIt.MoveNext();
+                hasRightNext = rightIt.MoveNext();
+                if (!hasLeftNext || !hasRightNext)
+                    break;
+
+                if (!Equals(leftIt.Current, rightIt.Current))
+                    return false;
+            }
+
+            // If there is any left element
+            if (hasLeftNext != hasRightNext)
+                return false;
+
+            return true;
+        }
+
+        /// <summary>
+        /// Compares two collection, element by elements.
+        /// </summary>
+        /// <param name="left">The collection to compare from.</param>
+        /// <param name="right">The colllection to compare to.</param>
+        /// <returns>True if lists are identical (but no necessarely of the same time). False otherwise.</returns>
+        public static bool Compare(ICollection left, ICollection right)
+        {
+            if (ReferenceEquals(left, right))
+                return true;
+            if (ReferenceEquals(left, null) || ReferenceEquals(right, null))
+                return false;
+
+            if (left.Count != right.Count)
+                return false;
+
+            int count = 0;
+            var leftIt = left.GetEnumerator();
+            var rightIt = right.GetEnumerator();
+            while (leftIt.MoveNext() && rightIt.MoveNext())
+            {
+                if (!Equals(leftIt.Current, rightIt.Current))
+                    return false;
+                count++;
+            }
+
+            // Just double check to make sure that the iterator actually returns
+            // the exact number of elements
+            if (count != left.Count)
+                return false;
+
+            return true;
+        }
+
+        /// <summary>
         /// Gets the custom attribute.
         /// </summary>
         /// <typeparam name="T">Type of the custom attribute</typeparam>
