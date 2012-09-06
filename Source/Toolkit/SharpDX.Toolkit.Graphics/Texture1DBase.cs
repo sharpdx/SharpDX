@@ -49,12 +49,12 @@ namespace SharpDX.Toolkit.Graphics
         /// Initializes a new instance of the <see cref="Texture1DBase" /> class.
         /// </summary>
         /// <param name="description">The description.</param>
-        /// <param name="dataRectangles">A variable-length parameters list containing data rectangles.</param>
+        /// <param name="dataBox">A variable-length parameters list containing data rectangles.</param>
         /// <msdn-id>ff476520</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        protected internal Texture1DBase(Texture1DDescription description, IntPtr[] dataRectangles)
-            : this(GraphicsDevice.CurrentSafe, description, dataRectangles)
+        protected internal Texture1DBase(Texture1DDescription description, DataBox[] dataBox)
+            : this(GraphicsDevice.CurrentSafe, description, dataBox)
         {
         }
 
@@ -78,14 +78,14 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="device">The device local.</param>
         /// <param name="description1D">The description.</param>
-        /// <param name="dataRectangles">A variable-length parameters list containing data rectangles.</param>
+        /// <param name="dataBox">A variable-length parameters list containing data rectangles.</param>
         /// <msdn-id>ff476520</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        protected internal Texture1DBase(GraphicsDevice device, Texture1DDescription description1D, IntPtr[] dataRectangles)
+        protected internal Texture1DBase(GraphicsDevice device, Texture1DDescription description1D, DataBox[] dataBox)
             : base(description1D)
         {
-            Resource = new Direct3D11.Texture1D(device, description1D, dataRectangles);
+            Resource = new Direct3D11.Texture1D(device, description1D, dataBox);
             Initialize(device, Resource);
         }
 
@@ -243,7 +243,7 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
                
-        protected static IntPtr[] Pin<T>(T[][][] initialTextures, out GCHandle[] handles) where T : struct
+        protected static DataBox[] Pin<T>(T[][][] initialTextures, out GCHandle[] handles) where T : struct
         {
             int mipMapLength = -1;
             foreach (var t in initialTextures)
@@ -254,7 +254,7 @@ namespace SharpDX.Toolkit.Graphics
                     throw new ArgumentNullException("TextureDatas must have same number of mipmaps for each slice of array", "initialTextures");
             }
 
-            var dataRectangles = new IntPtr[initialTextures.Length * mipMapLength];
+            var dataRectangles = new DataBox[initialTextures.Length * mipMapLength];
             handles = new GCHandle[initialTextures.Length * mipMapLength];
 
             for (int i = 0; i < initialTextures.Length; i++)
@@ -265,7 +265,7 @@ namespace SharpDX.Toolkit.Graphics
                     var initialTexture = initialTextures[i][j];
                     var handle = GCHandle.Alloc(initialTexture, GCHandleType.Pinned);
                     handles[textureIndex] = handle;
-                    dataRectangles[textureIndex] = handle.AddrOfPinnedObject();
+                    dataRectangles[textureIndex].DataPointer = handle.AddrOfPinnedObject();
                 }
             }
             return dataRectangles;

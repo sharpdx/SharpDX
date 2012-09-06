@@ -37,10 +37,15 @@ namespace SharpDX.Toolkit.Graphics.Tests
             //var testTexture2D = new TestTexture2D();
             //testTexture2D.TestConstructors();
 
+            //// Test Image
+            //var testImage = new TestImage();
+            //testImage.Initialize();
+            //testImage.TestLoadAndSave();
+
             // Test Image
-            var testImage = new TestImage();
+            var testImage = new TestTexture();
             testImage.Initialize();
-            testImage.TestLoadAndSave();
+            testImage.TestLoadSave();
         }
     }
 }

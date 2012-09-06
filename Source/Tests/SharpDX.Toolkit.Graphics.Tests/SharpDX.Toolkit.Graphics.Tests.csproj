@@ -51,7 +51,7 @@
     <Compile Include="TestImage.cs" />
     <Compile Include="TestBuffer.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="TestTexture2D.cs" />
+    <Compile Include="TestTexture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

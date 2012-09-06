@@ -298,5 +298,49 @@ namespace SharpDX.Toolkit.Graphics
                 OptionFlags = description.OptionFlags,
             };
         }
+
+
+        /// <summary>
+        /// Performs an explicit conversion from <see cref="ImageDescription"/> to <see cref="TextureDescription"/>.
+        /// </summary>
+        /// <param name="description">The image description.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static implicit operator TextureDescription(ImageDescription description)
+        {
+            return new TextureDescription()
+            {
+                Dimension = description.Dimension,
+                Width = description.Width,
+                Height = description.Height,
+                Depth = description.Depth,
+                ArraySize = description.ArraySize,
+                MipLevels = description.MipLevels,
+                Format = description.Format,
+                SampleDescription = new SampleDescription(1, 0),
+                Usage = ResourceUsage.Default,
+                BindFlags = BindFlags.None,
+                CpuAccessFlags = CpuAccessFlags.None,
+                OptionFlags = description.Dimension == TextureDimension.TextureCube ? ResourceOptionFlags.TextureCube : ResourceOptionFlags.None,
+            };
+        }
+
+        /// <summary>
+        /// Performs an explicit conversion from <see cref="ImageDescription"/> to <see cref="TextureDescription"/>.
+        /// </summary>
+        /// <param name="description">The image description.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static implicit operator ImageDescription(TextureDescription description)
+        {
+            return new ImageDescription()
+            {
+                Dimension = description.Dimension,
+                Width = description.Width,
+                Height = description.Height,
+                Depth = description.Depth,
+                ArraySize = description.ArraySize,
+                MipLevels = description.MipLevels,
+                Format = description.Format,
+            };
+        }
     }
 }

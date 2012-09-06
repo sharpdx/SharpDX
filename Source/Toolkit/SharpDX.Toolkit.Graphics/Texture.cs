@@ -19,8 +19,10 @@
 // THE SOFTWARE.
 
 using System;
+using System.IO;
 using SharpDX.DXGI;
 using SharpDX.Direct3D11;
+using SharpDX.IO;
 using DeviceChild = SharpDX.Direct3D11.DeviceChild;
 
 namespace SharpDX.Toolkit.Graphics
@@ -288,6 +290,110 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
+        /// Loads a texture from a stream.
+        /// </summary>
+        /// <param name="stream">The stream to load the texture from.</param>
+        /// <param name="isUnorderedReadWrite">True to load the texture with unordered access enabled. Default is false.</param>
+        /// <param name="usage">Usage of the resource. Default is <see cref="ResourceUsage.Immutable"/> </param>
+        /// <returns>A texture</returns>
+        public static Texture Load(Stream stream, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
+        {
+            var image = Image.Load(stream);
+
+            switch (image.Description.Dimension)
+            {
+                case TextureDimension.Texture1D:
+                    return Texture1D.New(image, isUnorderedReadWrite, usage);
+                case TextureDimension.Texture2D:
+                    return Texture2D.New(image, isUnorderedReadWrite, usage);
+                case TextureDimension.Texture3D:
+                    return Texture3D.New(image, isUnorderedReadWrite, usage);
+                case TextureDimension.TextureCube:
+                    return TextureCube.New(image, isUnorderedReadWrite, usage);
+            }
+
+            throw new InvalidOperationException("Dimension not supported");
+        }
+
+        /// <summary>
+        /// Loads a texture from a file.
+        /// </summary>
+        /// <param name="filePath">The file to load the texture from.</param>
+        /// <param name="isUnorderedReadWrite">True to load the texture with unordered access enabled. Default is false.</param>
+        /// <param name="usage">Usage of the resource. Default is <see cref="ResourceUsage.Immutable"/> </param>
+        /// <returns>A texture</returns>
+        public static Texture Load(string filePath, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
+        {
+            using (var stream = new NativeFileStream(filePath, NativeFileMode.Open, NativeFileAccess.Read))
+                return Load(stream, isUnorderedReadWrite, usage);
+        }
+
+        /// <summary>
+        /// Saves this texture to a stream with a specified format.
+        /// </summary>
+        /// <param name="stream">The stream.</param>
+        /// <param name="fileType">Type of the image file.</param>
+        public void Save(Stream stream, ImageFileType fileType)
+        {
+            using (var staging = ToStaging())
+            {
+                Save(stream, staging, fileType);
+            }
+        }
+
+        /// <summary>
+        /// Saves this texture to a stream with a specified format.
+        /// </summary>
+        /// <param name="stream">The stream.</param>
+        /// <param name="stagingTexture">The staging texture used to temporary transfer the image from the GPU to CPU.</param>
+        /// <param name="fileType">Type of the image file.</param>
+        /// <exception cref="ArgumentException">If stagingTexture is not a staging texture.</exception>
+        public void Save(Stream stream, Texture stagingTexture, ImageFileType fileType)
+        {
+            if (stagingTexture.Description.Usage != ResourceUsage.Staging)
+                throw new ArgumentException("Invalid texture used as staging. Must have Usage = ResourceUsage.Staging", "stagingTexture");
+
+            var image = Image.New(stagingTexture.Description);
+            
+            for(int arrayIndex = 0; arrayIndex < image.Description.ArraySize; arrayIndex++)
+            {
+                for(int mipLevel = 0; mipLevel < image.Description.MipLevels; mipLevel++)
+                {
+                    var pixelBuffer = image.PixelBuffer[arrayIndex, mipLevel];
+                    GraphicsDevice.GetContent(this, stagingTexture, new DataPointer(pixelBuffer.DataPointer, pixelBuffer.BufferStride), arrayIndex, mipLevel);
+                }
+            }
+
+            image.Save(stream, fileType);
+        }
+
+        /// <summary>
+        /// Saves this texture to a file with a specified format.
+        /// </summary>
+        /// <param name="filePath">The filepath to save the texture to.</param>
+        /// <param name="fileType">Type of the image file.</param>
+        public void Save(string filePath, ImageFileType fileType)
+        {
+            using (var staging = ToStaging())
+            {
+                Save(filePath, staging, fileType);
+            }
+        }
+
+        /// <summary>
+        /// Saves this texture to a stream with a specified format.
+        /// </summary>
+        /// <param name="filePath">The filepath to save the texture to.</param>
+        /// <param name="stagingTexture">The staging texture used to temporary transfer the image from the GPU to CPU.</param>
+        /// <param name="fileType">Type of the image file.</param>
+        /// <exception cref="ArgumentException">If stagingTexture is not a staging texture.</exception>
+        public void Save(string filePath, Texture stagingTexture, ImageFileType fileType)
+        {
+            using (var stream = new NativeFileStream(filePath, NativeFileMode.Create, NativeFileAccess.Write, NativeFileShare.Write))
+                Save(stream, stagingTexture, fileType);
+        }
+
+        /// <summary>
         /// Calculates the mip map count from a requested level.
         /// </summary>
         /// <param name="requestedLevel">The requested level.</param>
@@ -301,6 +407,19 @@ namespace SharpDX.Toolkit.Graphics
             int maxMipMap = 1 + (int)Math.Ceiling(Math.Log(size) / Math.Log(2.0));
 
             return requestedLevel  == 0 ? maxMipMap : Math.Min(requestedLevel, maxMipMap);
+        }
+
+        internal static TextureDescription CreateFromImage(Image image, bool isUnorderedReadWrite, ResourceUsage usage)
+        {
+            var desc = (TextureDescription)image.Description;
+            desc.BindFlags = BindFlags.ShaderResource;
+            desc.Usage = usage;
+            desc.CpuAccessFlags = GetCputAccessFlagsFromUsage(usage);
+            if (isUnorderedReadWrite)
+            {
+                desc.BindFlags |= BindFlags.UnorderedAccess;
+            }
+            return desc;
         }
 
         internal void GetViewSliceBounds(ViewType viewType, ref int arrayOrDepthIndex, ref int mipIndex, out int arrayOrDepthCount, out int mipCount)

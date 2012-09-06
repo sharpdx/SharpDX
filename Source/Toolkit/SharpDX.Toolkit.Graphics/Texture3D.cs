@@ -18,8 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using SharpDX.Direct3D11;
+using SharpDX.IO;
 
 namespace SharpDX.Toolkit.Graphics
 {
@@ -28,12 +31,13 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public class Texture3D : Texture3DBase
     {
-        internal Texture3D(Texture3DDescription description, params DataBox[] dataRectangles)
-            : base(description, dataRectangles)
+        internal Texture3D(Texture3DDescription description, params DataBox[] dataBox)
+            : base(description, dataBox)
         {
         }
 
-        internal Texture3D(GraphicsDevice device, Texture3DDescription description3D, params DataBox[] dataRectangles) : base(device, description3D, dataRectangles)
+        internal Texture3D(GraphicsDevice device, Texture3DDescription description3D, params DataBox[] dataBox)
+            : base(device, description3D, dataBox)
         {
         }
 
@@ -190,6 +194,55 @@ namespace SharpDX.Toolkit.Graphics
             {
                 UnPin(handles);
             }
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="Texture3D" /> directly from an <see cref="Image"/>.
+        /// </summary>
+        /// <param name="image">An image in CPU memory.</param>
+        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
+        /// <param name="usage">The usage.</param>
+        /// <returns>A new instance of <see cref="Texture3D" /> class.</returns>
+        /// <msdn-id>ff476522</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateTexture3D([In] const D3D11_TEXTURE3D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture3D** ppTexture3D)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CreateTexture3D</unmanaged-short>	
+        public static Texture3D New(Image image, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
+        {
+            if (image == null) throw new ArgumentNullException("image");
+            if (image.Description.Dimension != TextureDimension.Texture3D)
+                throw new ArgumentException("Invalid image. Must be 3D", "image");
+
+            return new Texture3D(CreateFromImage(image, isUnorderedReadWrite, usage), image.ToDataBox());
+        }
+
+        /// <summary>
+        /// Loads a 3D texture from a stream.
+        /// </summary>
+        /// <param name="stream">The stream to load the texture from.</param>
+        /// <param name="isUnorderedReadWrite">True to load the texture with unordered access enabled. Default is false.</param>
+        /// <param name="usage">Usage of the resource. Default is <see cref="ResourceUsage.Immutable"/> </param>
+        /// <exception cref="ArgumentException">If the texture is not of type 3D</exception>
+        /// <returns>A texture</returns>
+        public static new Texture3D Load(Stream stream, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
+        {
+            var texture = Texture.Load(stream, isUnorderedReadWrite, usage);
+            if (!(texture is Texture3D))
+                throw new ArgumentException(string.Format("Texture is not type of [Texture3D] but [{0}]", texture.GetType().Name));
+            return (Texture3D)texture;
+        }
+
+        /// <summary>
+        /// Loads a 3D texture from a stream.
+        /// </summary>
+        /// <param name="filePath">The file to load the texture from.</param>
+        /// <param name="isUnorderedReadWrite">True to load the texture with unordered access enabled. Default is false.</param>
+        /// <param name="usage">Usage of the resource. Default is <see cref="ResourceUsage.Immutable"/> </param>
+        /// <exception cref="ArgumentException">If the texture is not of type 3D</exception>
+        /// <returns>A texture</returns>
+        public static new Texture3D Load(string filePath, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
+        {
+            using (var stream = new NativeFileStream(filePath, NativeFileMode.Open, NativeFileAccess.Read))
+                return Load(stream, isUnorderedReadWrite, usage);
         }
     }
 }

@@ -271,6 +271,7 @@ namespace SharpDX.Toolkit.Graphics
                     dataBoxArray[i].DataPointer = pixelBuffer.DataPointer;
                     dataBoxArray[i].RowPitch = pixelBuffer.RowStride;
                     dataBoxArray[i].SlicePitch = pixelBuffer.BufferStride;
+                    i++;
                 }
             }
             return dataBoxArray;

@@ -301,7 +301,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             Console.WriteLine("Loaded {0} and convert to (Dds, Jpg, Png, Gif, Bmp, Tiff) image from DirectXSDK test Memory: {1} bytes, in {2}ms", imageCount, testMemoryAfter - testMemoryBefore, time);
         }
 
-        private static void CompareImage(Image from, Image to, string file = null)
+        internal static void CompareImage(Image from, Image to, string file = null)
         {
             // Check that description is identical to original image loaded from the disk.
             Assert.AreEqual(from.Description, to.Description, "Image description is different for image [{0}]", file);

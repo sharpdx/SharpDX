@@ -19,8 +19,10 @@
 // THE SOFTWARE.
 
 using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using SharpDX.Direct3D11;
+using SharpDX.IO;
 
 namespace SharpDX.Toolkit.Graphics
 {
@@ -29,12 +31,12 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public class TextureCube : Texture2DBase
     {
-        internal TextureCube(Texture2DDescription description, params DataRectangle[] dataRectangles)
+        internal TextureCube(Texture2DDescription description, params DataBox[] dataRectangles)
             : base(description, dataRectangles)
         {
         }
 
-        internal TextureCube(GraphicsDevice device, Texture2DDescription description2D, params DataRectangle[] dataRectangles) : base(device, description2D, dataRectangles)
+        internal TextureCube(GraphicsDevice device, Texture2DDescription description2D, params DataBox[] dataBoxes) : base(device, description2D, dataBoxes)
         {
         }
 
@@ -188,6 +190,55 @@ namespace SharpDX.Toolkit.Graphics
             {
                 UnPin(handles);
             }
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="TextureCube" /> directly from an <see cref="Image"/>.
+        /// </summary>
+        /// <param name="image">An image in CPU memory.</param>
+        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
+        /// <param name="usage">The usage.</param>
+        /// <returns>A new instance of <see cref="TextureCube" /> class.</returns>
+        /// <msdn-id>ff476521</msdn-id>
+        /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
+        /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
+        public static TextureCube New(Image image, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
+        {
+            if (image == null) throw new ArgumentNullException("image");
+            if (image.Description.Dimension != TextureDimension.TextureCube)
+                throw new ArgumentException("Invalid image. Must be Cube", "image");
+
+            return new TextureCube(CreateFromImage(image, isUnorderedReadWrite, usage), image.ToDataBox());
+        }
+
+        /// <summary>
+        /// Loads a Cube texture from a stream.
+        /// </summary>
+        /// <param name="stream">The stream to load the texture from.</param>
+        /// <param name="isUnorderedReadWrite">True to load the texture with unordered access enabled. Default is false.</param>
+        /// <param name="usage">Usage of the resource. Default is <see cref="ResourceUsage.Immutable"/> </param>
+        /// <exception cref="ArgumentException">If the texture is not of type Cube</exception>
+        /// <returns>A texture</returns>
+        public static new TextureCube Load(Stream stream, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
+        {
+            var texture = Texture.Load(stream, isUnorderedReadWrite, usage);
+            if (!(texture is TextureCube))
+                throw new ArgumentException(string.Format("Texture is not type of [TextureCube] but [{0}]", texture.GetType().Name));
+            return (TextureCube)texture;
+        }
+
+        /// <summary>
+        /// Loads a Cube texture from a stream.
+        /// </summary>
+        /// <param name="filePath">The file to load the texture from.</param>
+        /// <param name="isUnorderedReadWrite">True to load the texture with unordered access enabled. Default is false.</param>
+        /// <param name="usage">Usage of the resource. Default is <see cref="ResourceUsage.Immutable"/> </param>
+        /// <exception cref="ArgumentException">If the texture is not of type Cube</exception>
+        /// <returns>A texture</returns>
+        public static new TextureCube Load(string filePath, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
+        {
+            using (var stream = new NativeFileStream(filePath, NativeFileMode.Open, NativeFileAccess.Read))
+                return Load(stream, isUnorderedReadWrite, usage);
         }
 
         protected static Texture2DDescription NewTextureCubeDescription(int size, PixelFormat format, bool isReadWrite, int mipCount, ResourceUsage usage)

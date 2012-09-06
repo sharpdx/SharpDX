@@ -34,12 +34,12 @@ namespace SharpDX.Toolkit.Graphics
     /// </remarks>
     public class RenderTargetCube : Texture2DBase
     {
-        internal RenderTargetCube(Texture2DDescription description, params DataRectangle[] dataRectangles) : base(description, dataRectangles)
+        internal RenderTargetCube(Texture2DDescription description, params DataBox[] dataRectangles) : base(description, dataRectangles)
         {
         }
 
-        internal RenderTargetCube(GraphicsDevice device, Texture2DDescription description2D, params DataRectangle[] dataRectangles)
-            : base(device, description2D, dataRectangles)
+        internal RenderTargetCube(GraphicsDevice device, Texture2DDescription description2D, params DataBox[] dataBoxes)
+            : base(device, description2D, dataBoxes)
         {
         }
 
