@@ -93,6 +93,7 @@ namespace SharpDX.Toolkit.Graphics
         private DataBox[] dataBoxArray;
         private List<int> mipMapToZIndex;
         private int zBufferCountPerArraySlice;
+        private MipMapDescription[] mipmapDescriptions;
 
         /// <summary>
         /// Provides access to all pixel buffers.
@@ -141,7 +142,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="handle">The handle (optionnal).</param>
         /// <param name="bufferIsDisposable">if set to <c>true</c> [buffer is disposable].</param>
         /// <exception cref="System.InvalidOperationException">If the format is invalid, or width/height/depth/arraysize is invalid with respect to the dimension.</exception>
-        internal unsafe Image(ImageDescription description, IntPtr dataPointer, int offset, GCHandle? handle, bool bufferIsDisposable, Texture.PitchFlags pitchFlags = Texture.PitchFlags.None)
+        internal unsafe Image(ImageDescription description, IntPtr dataPointer, int offset, GCHandle? handle, bool bufferIsDisposable, PitchFlags pitchFlags = PitchFlags.None)
         {
             Initialize(description, dataPointer, offset, handle, bufferIsDisposable, pitchFlags);
         }
@@ -159,6 +160,16 @@ namespace SharpDX.Toolkit.Graphics
             } 
             
             base.Dispose(disposeManagedResources);
+        }
+
+        /// <summary>
+        /// Gets the mipmap description of this instance for the specified mipmap level.
+        /// </summary>
+        /// <param name="mipmap">The mipmap.</param>
+        /// <returns>A description of a particular mipmap for this texture.</returns>
+        public MipMapDescription GetMipMapDescription(int mipmap)
+        {
+            return mipmapDescriptions[mipmap];
         }
 
         /// <summary>
@@ -533,7 +544,7 @@ namespace SharpDX.Toolkit.Graphics
             Graphics.PixelBuffer.Save(pixelBuffers, this.pixelBuffers.Length, Description, imageStream, fileType);
         }
 
-        internal unsafe void Initialize(ImageDescription description, IntPtr dataPointer, int offset, GCHandle? handle, bool bufferIsDisposable, Texture.PitchFlags pitchFlags = Texture.PitchFlags.None)
+        internal unsafe void Initialize(ImageDescription description, IntPtr dataPointer, int offset, GCHandle? handle, bool bufferIsDisposable, PitchFlags pitchFlags = PitchFlags.None)
         {
             if (!FormatHelper.IsValid(description.Format) || FormatHelper.IsVideo(description.Format))
                 throw new InvalidOperationException("Unsupported DXGI Format");
@@ -577,6 +588,7 @@ namespace SharpDX.Toolkit.Graphics
             // Calculate mipmaps
             int pixelBufferCount;
             this.mipMapToZIndex = CalculateImageArray(description, pitchFlags, out pixelBufferCount, out totalSizeInBytes);
+            this.mipmapDescriptions = CalculateMipMapDescription(description, pitchFlags);
             zBufferCountPerArraySlice = this.mipMapToZIndex[this.mipMapToZIndex.Count - 1];
 
             // Allocate all pixel buffers
@@ -767,6 +779,111 @@ namespace SharpDX.Toolkit.Graphics
             serializer.EndChunk();
         }
 
+        [Flags]
+        internal enum PitchFlags
+        {
+            None = 0x0,      // Normal operation
+            LegacyDword = 0x1,      // Assume pitch is DWORD aligned instead of BYTE aligned
+            Bpp24 = 0x10000,  // Override with a legacy 24 bits-per-pixel format size
+            Bpp16 = 0x20000,  // Override with a legacy 16 bits-per-pixel format size
+            Bpp8 = 0x40000,  // Override with a legacy 8 bits-per-pixel format size
+        };
+
+        internal static void ComputePitch(Format fmt, int width, int height, out int rowPitch, out int slicePitch, PitchFlags flags = PitchFlags.None)
+        {
+            if (FormatHelper.IsCompressed(fmt))
+            {
+                int bpb = (fmt == Format.BC1_Typeless
+                             || fmt == Format.BC1_UNorm
+                             || fmt == Format.BC1_UNorm_SRgb
+                             || fmt == Format.BC4_Typeless
+                             || fmt == Format.BC4_UNorm
+                             || fmt == Format.BC4_SNorm) ? 8 : 16;
+                int nbw = Math.Max(1, (width + 3) / 4);
+                int nbh = Math.Max(1, (height + 3) / 4);
+                rowPitch = nbw * bpb;
+
+                slicePitch = rowPitch * nbh;
+            }
+            else if (FormatHelper.IsPacked(fmt))
+            {
+                rowPitch = ((width + 1) >> 1) * 4;
+
+                slicePitch = rowPitch * height;
+            }
+            else
+            {
+                int bpp;
+
+                if ((flags & PitchFlags.Bpp24) != 0)
+                    bpp = 24;
+                else if ((flags & PitchFlags.Bpp16) != 0)
+                    bpp = 16;
+                else if ((flags & PitchFlags.Bpp8) != 0)
+                    bpp = 8;
+                else
+                    bpp = FormatHelper.SizeOfInBits(fmt);
+
+                if ((flags & PitchFlags.LegacyDword) != 0)
+                {
+                    // Special computation for some incorrectly created DDS files based on
+                    // legacy DirectDraw assumptions about pitch alignment
+                    rowPitch = ((width * bpp + 31) / 32) * sizeof(int);
+                    slicePitch = rowPitch * height;
+                }
+                else
+                {
+                    rowPitch = (width * bpp + 7) / 8;
+                    slicePitch = rowPitch * height;
+                }
+            }
+        }
+
+        internal static MipMapDescription[] CalculateMipMapDescription(ImageDescription metadata, PitchFlags cpFlags = PitchFlags.None)
+        {
+            int nImages;
+            int pixelSize;
+            return CalculateMipMapDescription(metadata, cpFlags, out nImages, out pixelSize);
+        }
+
+        internal static MipMapDescription[] CalculateMipMapDescription(ImageDescription metadata, PitchFlags cpFlags, out int nImages, out int pixelSize)
+        {
+            pixelSize = 0;
+            nImages = 0;
+
+            int w = metadata.Width;
+            int h = metadata.Height;
+            int d = metadata.Depth;
+
+            var mipmaps = new MipMapDescription[metadata.MipLevels];
+
+            for (int level = 0; level < metadata.MipLevels; ++level)
+            {
+                int rowPitch, slicePitch;
+                ComputePitch(metadata.Format, w, h, out rowPitch, out slicePitch, PitchFlags.None);
+
+                mipmaps[level] = new MipMapDescription(
+                    w,
+                    h,
+                    d,
+                    rowPitch,
+                    slicePitch);
+
+                pixelSize += d * slicePitch;
+                nImages += d;
+
+                if (h > 1)
+                    h >>= 1;
+
+                if (w > 1)
+                    w >>= 1;
+
+                if (d > 1)
+                    d >>= 1;
+            }
+            return mipmaps;
+        }
+
         /// <summary>
         /// Determines number of image array entries and pixel size.
         /// </summary>
@@ -774,7 +891,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="pitchFlags">Pitch flags.</param>
         /// <param name="bufferCount">Output number of mipmap.</param>
         /// <param name="pixelSizeInBytes">Output total size to allocate pixel buffers for all images.</param>
-        private static List<int> CalculateImageArray( ImageDescription imageDesc, Texture.PitchFlags pitchFlags, out int bufferCount, out int pixelSizeInBytes)
+        private static List<int> CalculateImageArray( ImageDescription imageDesc, PitchFlags pitchFlags, out int bufferCount, out int pixelSizeInBytes)
         {
             pixelSizeInBytes = 0;
             bufferCount = 0;
@@ -790,18 +907,15 @@ namespace SharpDX.Toolkit.Graphics
                 for (int i = 0; i < imageDesc.MipLevels; i++)
                 {
                     int rowPitch, slicePitch;
-                    Texture.ComputePitch(imageDesc.Format, w, h, out rowPitch, out slicePitch, pitchFlags);
+                    ComputePitch(imageDesc.Format, w, h, out rowPitch, out slicePitch, pitchFlags);
 
                     // Store the number of z-slicec per miplevels
                     if ( j == 0)
                         mipmapToZIndex.Add(bufferCount);
 
                     // Keep a trace of indices for the 1st array size, for each mip levels
-                    for (int slice = 0; slice < d; ++slice)
-                    {
-                        pixelSizeInBytes += slicePitch;
-                        ++bufferCount;
-                    }
+                    pixelSizeInBytes += d * slicePitch;
+                    bufferCount += d;
 
                     if (h > 1)
                         h >>= 1;
@@ -828,7 +942,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="imageDesc"></param>
         /// <param name="pitchFlags"></param>
         /// <param name="output"></param>
-        private static unsafe void SetupImageArray(IntPtr buffer, int pixelSize, ImageDescription imageDesc, Texture.PitchFlags pitchFlags, PixelBuffer[] output)
+        private static unsafe void SetupImageArray(IntPtr buffer, int pixelSize, ImageDescription imageDesc, PitchFlags pitchFlags, PixelBuffer[] output)
         {
             int index = 0;
             var pixels = (byte*)buffer;
@@ -841,7 +955,7 @@ namespace SharpDX.Toolkit.Graphics
                 for (uint level = 0; level < imageDesc.MipLevels; ++level)
                 {
                     int rowPitch, slicePitch;
-                    Texture.ComputePitch(imageDesc.Format, w, h, out rowPitch, out slicePitch, pitchFlags);
+                    ComputePitch(imageDesc.Format, w, h, out rowPitch, out slicePitch, pitchFlags);
 
                     for (uint zSlice = 0; zSlice < d; ++zSlice)
                     {

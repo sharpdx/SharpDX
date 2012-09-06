@@ -157,7 +157,7 @@ namespace SharpDX.Toolkit.Graphics
             copy.BindFlags = BindFlags.None;
             copy.CpuAccessFlags = CpuAccessFlags.Read | CpuAccessFlags.Write;
             copy.Usage = ResourceUsage.Staging;
-            copy.OptionFlags = ResourceOptionFlags.None;
+            copy.OptionFlags = copy.Dimension == TextureDimension.TextureCube ? ResourceOptionFlags.TextureCube : ResourceOptionFlags.None;
             return copy;
         }
 

@@ -71,6 +71,7 @@ namespace SharpDX.Toolkit.Graphics
         internal ShaderResourceView[] shaderResourceViews;
         internal RenderTargetView[] renderTargetViews;
         internal UnorderedAccessView[] unorderedAccessViews;
+        private MipMapDescription[] mipmapDescriptions;
 
         protected Texture(TextureDescription description)
         {
@@ -81,6 +82,7 @@ namespace SharpDX.Toolkit.Graphics
             ShaderResourceView = new ShaderResourceViewSelector(this);
             RenderTargetView = new RenderTargetViewSelector(this);
             UnorderedAccessView = new UnorderedAccessViewSelector(this);
+            mipmapDescriptions = Image.CalculateMipMapDescription(description);
         }
 
         protected override void Initialize(GraphicsDevice deviceArg, DeviceChild resource)
@@ -94,6 +96,15 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         protected abstract void InitializeViews();
 
+        /// <summary>
+        /// Gets the mipmap description of this instance for the specified mipmap level.
+        /// </summary>
+        /// <param name="mipmap">The mipmap.</param>
+        /// <returns>A description of a particular mipmap for this texture.</returns>
+        public MipMapDescription GetMipMapDescription(int mipmap)
+        {
+            return mipmapDescriptions[mipmap];
+        }
 
         /// <summary>
         /// Calculates the number of miplevels for a Texture 1D.
@@ -499,99 +510,6 @@ namespace SharpDX.Toolkit.Graphics
                             unorderedAccessView.DebugName = Name == null ? null : String.Format("{0} UAV[{1}]", i, Name);
                     }
                 }
-            }
-        }
-
-
-
-        [Flags]
-        internal enum PitchFlags
-        {
-            None = 0x0,      // Normal operation
-            LegacyDword = 0x1,      // Assume pitch is DWORD aligned instead of BYTE aligned
-            Bpp24 = 0x10000,  // Override with a legacy 24 bits-per-pixel format size
-            Bpp16 = 0x20000,  // Override with a legacy 16 bits-per-pixel format size
-            Bpp8 = 0x40000,  // Override with a legacy 8 bits-per-pixel format size
-        };
-
-        internal static void ComputePitch(Format fmt, int width, int height, out int rowPitch, out int slicePitch, PitchFlags flags)
-        {
-            if (FormatHelper.IsCompressed(fmt))
-            {
-                int bpb = (fmt == Format.BC1_Typeless
-                             || fmt == Format.BC1_UNorm
-                             || fmt == Format.BC1_UNorm_SRgb
-                             || fmt == Format.BC4_Typeless
-                             || fmt == Format.BC4_UNorm
-                             || fmt == Format.BC4_SNorm) ? 8 : 16;
-                int nbw = Math.Max(1, (width + 3) / 4);
-                int nbh = Math.Max(1, (height + 3) / 4);
-                rowPitch = nbw * bpb;
-
-                slicePitch = rowPitch * nbh;
-            }
-            else if (FormatHelper.IsPacked(fmt))
-            {
-                rowPitch = ((width + 1) >> 1) * 4;
-
-                slicePitch = rowPitch * height;
-            }
-            else
-            {
-                int bpp;
-
-                if ((flags & PitchFlags.Bpp24) != 0)
-                    bpp = 24;
-                else if ((flags & PitchFlags.Bpp16) != 0)
-                    bpp = 16;
-                else if ((flags & PitchFlags.Bpp8) != 0)
-                    bpp = 8;
-                else
-                    bpp = FormatHelper.SizeOfInBits(fmt);
-
-                if ((flags & PitchFlags.LegacyDword) != 0)
-                {
-                    // Special computation for some incorrectly created DDS files based on
-                    // legacy DirectDraw assumptions about pitch alignment
-                    rowPitch = ((width * bpp + 31) / 32) * sizeof(int);
-                    slicePitch = rowPitch * height;
-                }
-                else
-                {
-                    rowPitch = (width * bpp + 7) / 8;
-                    slicePitch = rowPitch * height;
-                }
-            }
-        }
-
-        internal static void CalculateImageArraySize(TextureDescription metadata, PitchFlags cpFlags, out int nImages, out int pixelSize)
-        {
-            pixelSize = 0;
-            nImages = 0;
-
-            int w = metadata.Width;
-            int h = metadata.Height;
-            int d = metadata.Depth;
-
-            for (int level = 0; level < metadata.MipLevels; ++level)
-            {
-                int rowPitch, slicePitch;
-                ComputePitch(metadata.Format, w, h, out rowPitch, out slicePitch, cpFlags);
-
-                for (int slice = 0; slice < d; ++slice)
-                {
-                    pixelSize += slicePitch;
-                    ++nImages;
-                }
-
-                if (h > 1)
-                    h >>= 1;
-
-                if (w > 1)
-                    w >>= 1;
-
-                if (d > 1)
-                    d >>= 1;
             }
         }
 

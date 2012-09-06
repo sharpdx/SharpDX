@@ -48,6 +48,14 @@ namespace SharpDX.Toolkit.Graphics.Tests
                 throw new NotSupportedException("Install DirectX SDK June 2010 to run this test (DXSDK_DIR env variable is missing).");
         }
 
+        /// <summary>
+        /// Tests the load save.
+        /// </summary>
+        /// <remarks>
+        /// This test loads several images using <see cref="Texture.Load"/> (on the GPU) and save them to the disk using <see cref="Texture.Save"/>.
+        /// The saved image is then compared with the original image to check that the whole chain (CPU -> GPU, GPU -> CPU) is passing correctly
+        /// the textures.
+        /// </remarks>
         [Test]
         public void TestLoadSave()
         {
@@ -57,8 +65,16 @@ namespace SharpDX.Toolkit.Graphics.Tests
             files.AddRange(Directory.EnumerateFiles(Path.Combine(dxsdkDir, @"Samples\Media"), "*.jpg", SearchOption.AllDirectories));
             files.AddRange(Directory.EnumerateFiles(Path.Combine(dxsdkDir, @"Samples\Media"), "*.bmp", SearchOption.AllDirectories));
 
+            var excludeList = new List<string>()
+                                  {
+                                      "RifleStock1Bump.dds"  // This file is in BC1 format but size is not a multiple of 4, so It can't be loaded as a texture, so we skip it.
+                                  };
+
             foreach (var file in files)
             {
+                if (excludeList.Contains(Path.GetFileName(file), StringComparer.InvariantCultureIgnoreCase))
+                    continue;
+
                 Console.WriteLine("Process file {0}", file);
 
                 // Load an image from a file and dispose it.
@@ -66,11 +82,15 @@ namespace SharpDX.Toolkit.Graphics.Tests
 
                 var localPath = Path.GetFileName(file);
                 texture.Save(localPath, ImageFileType.Dds);
+                texture.Dispose();
 
                 var originalImage = Image.Load(file);
                 var textureImage = Image.Load(localPath);
 
                 TestImage.CompareImage(originalImage, textureImage, file);
+
+                originalImage.Dispose();
+                textureImage.Dispose();
             }
         }
     }

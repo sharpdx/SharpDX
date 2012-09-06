@@ -868,23 +868,25 @@ namespace SharpDX.Toolkit.Graphics
         /// </remarks>
         public unsafe void GetContent(Texture texture, Texture stagingTexture, DataPointer toData, int arraySlice = 0, int mipSlice = 0)
         {
-            // Actual width for this particular mipSlice
-            int width = Texture.CalculateMipSize(texture.Description.Width, mipSlice);
-            int height = Texture.CalculateMipSize(texture.Description.Height, mipSlice);
-            int depth = Texture.CalculateMipSize(texture.Description.Depth, mipSlice);
+            // Get mipmap description for the specified mipSlice
+            var mipmap = texture.GetMipMapDescription(mipSlice);
+
+            // Copy height, depth
+            int height = mipmap.Height;
+            int depth = mipmap.Depth;
 
             // Calculate depth stride based on mipmap level
-            var rowStride = (int)(width * FormatHelper.SizeOfInBytes(texture.Description.Format));
+            int rowStride = mipmap.RowStride;
 
             // Depth Stride
-            var textureDepthStride = rowStride * height;
+            int textureDepthStride = mipmap.DepthStride;
 
-            // Size Of actual texture data
-            int sizeOfTextureData = textureDepthStride * depth;
+            // MipMap Stride
+            int mipMapSize = mipmap.MipmapSize;
 
             // Check size validity of data to copy to
-            if (toData.Size != sizeOfTextureData)
-                throw new ArgumentException(string.Format("Size of toData ({0} bytes) is not compatible expected size ({1} bytes) : Width * Height * Depth * sizeof(PixelFormat) size in bytes", toData.Size, sizeOfTextureData));
+            if (toData.Size > mipMapSize)
+                throw new ArgumentException(string.Format("Size of toData ({0} bytes) is not compatible expected size ({1} bytes) : Width * Height * Depth * sizeof(PixelFormat) size in bytes", toData.Size, mipMapSize));
 
             // Copy the actual content of the texture to the staging resource
             if (!ReferenceEquals(texture, stagingTexture))
@@ -892,7 +894,6 @@ namespace SharpDX.Toolkit.Graphics
 
             // Calculate the subResourceIndex for a Texture2D
             int subResourceIndex = texture.GetSubResourceIndex(arraySlice, mipSlice);
-
             try
             {
                 // Map the staging resource to a CPU accessible memory
@@ -904,7 +905,7 @@ namespace SharpDX.Toolkit.Graphics
                 // The fast way: If same stride, we can directly copy the whole texture in one shot
                 if (box.RowPitch == rowStride && boxDepthStride == textureDepthStride)
                 {
-                    Utilities.CopyMemory(toData.Pointer, box.DataPointer, sizeOfTextureData);
+                    Utilities.CopyMemory(toData.Pointer, box.DataPointer, mipMapSize);
                 }
                 else
                 {
@@ -976,9 +977,12 @@ namespace SharpDX.Toolkit.Graphics
             if (region.HasValue && texture.Description.Usage != ResourceUsage.Default)
                 throw new ArgumentException("Region is only supported for textures with ResourceUsage.Default");
 
-            int width = Texture.CalculateMipSize(texture.Description.Width, mipSlice);
-            int height = Texture.CalculateMipSize(texture.Description.Height, mipSlice);
-            int depth = Texture.CalculateMipSize(texture.Description.Depth, mipSlice);
+            // Get mipmap description for the specified mipSlice
+            var mipMapDesc = texture.GetMipMapDescription(mipSlice);
+
+            int width = mipMapDesc.Width;
+            int height = mipMapDesc.Height;
+            int depth = mipMapDesc.Depth;
 
             // If we are using a region, then check that parameters are fine
             if (region.HasValue)
@@ -1002,10 +1006,13 @@ namespace SharpDX.Toolkit.Graphics
             var sizePerElement = (int)FormatHelper.SizeOfInBytes(texture.Description.Format);
 
             // Calculate depth stride based on mipmap level
-            var rowStride = width * sizePerElement;
+            int rowStride;
 
             // Depth Stride
-            var textureDepthStride = rowStride * height;
+            int textureDepthStride;
+
+            // Compute Actual pitch
+            Image.ComputePitch(texture.Description.Format, width, height, out rowStride, out textureDepthStride);
 
             // Size Of actual texture data
             int sizeOfTextureData = textureDepthStride * depth;
@@ -1088,8 +1095,6 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
         }
-
-
 
         /// <summary>	
         /// <p>Set the blend state of the output-merger stage.</p>	

@@ -27,6 +27,7 @@
     <Compile Include="Buffer.Raw.cs" />
     <Compile Include="Buffer.Argument.cs" />
     <Compile Include="Buffer.Typed.cs" />
+    <Compile Include="MipMapDescription.cs" />
     <Compile Include="PixelBufferArray.cs" />
     <Compile Include="ImageDescription.cs" />
     <Compile Include="DDS.cs" />

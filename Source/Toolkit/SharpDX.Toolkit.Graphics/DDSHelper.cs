@@ -670,7 +670,7 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             int rowPitch, slicePitch;
-            Texture.ComputePitch(description.Format, description.Width, description.Height, out rowPitch, out slicePitch, Texture.PitchFlags.None);
+            Image.ComputePitch(description.Format, description.Width, description.Height, out rowPitch, out slicePitch, Image.PitchFlags.None);
 
             if (FormatHelper.IsCompressed(description.Format))
             {
@@ -1005,7 +1005,7 @@ namespace SharpDX.Toolkit.Graphics
             if (size < offset)
                 throw new InvalidOperationException();
 
-            var image = CreateImageFromDDS(pSource, offset, size - offset, mdata, (flags & DDSFlags.LegacyDword) != 0 ? Texture.PitchFlags.LegacyDword : Texture.PitchFlags.None, convFlags, pal8, handle);
+            var image = CreateImageFromDDS(pSource, offset, size - offset, mdata, (flags & DDSFlags.LegacyDword) != 0 ? Image.PitchFlags.LegacyDword : Image.PitchFlags.None, convFlags, pal8, handle);
             return image;
         }
 
@@ -1078,20 +1078,20 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="pal8"></param>
         /// <param name="handle"></param>
         /// <returns></returns>
-        private static unsafe Image CreateImageFromDDS(IntPtr pDDS, int offset, int size, ImageDescription metadata, Texture.PitchFlags cpFlags, ConversionFlags convFlags, int* pal8, GCHandle? handle)
+        private static unsafe Image CreateImageFromDDS(IntPtr pDDS, int offset, int size, ImageDescription metadata, Image.PitchFlags cpFlags, ConversionFlags convFlags, int* pal8, GCHandle? handle)
         {
             if ((convFlags & ConversionFlags.Expand) != 0)
             {
                 if ((convFlags & ConversionFlags.Format888) != 0)
-                    cpFlags |= Texture.PitchFlags.Bpp24;
+                    cpFlags |= Image.PitchFlags.Bpp24;
                 else if ((convFlags & (ConversionFlags.Format565 | ConversionFlags.Format5551 | ConversionFlags.Format4444 | ConversionFlags.Format8332 | ConversionFlags.FormatA8P8)) != 0)
-                    cpFlags |= Texture.PitchFlags.Bpp16;
+                    cpFlags |= Image.PitchFlags.Bpp16;
                 else if ((convFlags & (ConversionFlags.Format44 | ConversionFlags.Format332 | ConversionFlags.Pal8)) != 0)
-                    cpFlags |= Texture.PitchFlags.Bpp8;
+                    cpFlags |= Image.PitchFlags.Bpp8;
             }
 
             // If source image == dest image and no swizzle/alpha is required, we can return it as-is
-            var isCopyNeeded = (convFlags & (ConversionFlags.Expand | ConversionFlags.CopyMemory)) != 0 || ((cpFlags & Texture.PitchFlags.LegacyDword) != 0);
+            var isCopyNeeded = (convFlags & (ConversionFlags.Expand | ConversionFlags.CopyMemory)) != 0 || ((cpFlags & Image.PitchFlags.LegacyDword) != 0);
 
             var image = new Image(metadata, pDDS, offset, handle, !isCopyNeeded, cpFlags);
 
