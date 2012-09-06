@@ -417,18 +417,18 @@ namespace SharpDX.Toolkit.Graphics
         {
             var image = Image.New(metadata);
 
-            var pixelBuffer = image.PixelBuffers[0];
+            var pixelBuffer = image.PixelBuffer[0];
 
             if (convertGUID == Guid.Empty)
             {
-                frame.CopyPixels(pixelBuffer.RowPitch, pixelBuffer.Pixels, pixelBuffer.SlicePitch);
+                frame.CopyPixels(pixelBuffer.RowStride, pixelBuffer.DataPointer, pixelBuffer.BufferStride);
             }
             else
             {
                 using (var converter = new FormatConverter(Factory))
                 {
                     converter.Initialize(frame, convertGUID, GetWICDither(flags), null, 0, BitmapPaletteType.Custom);
-                    converter.CopyPixels(pixelBuffer.RowPitch, pixelBuffer.Pixels, pixelBuffer.SlicePitch);
+                    converter.CopyPixels(pixelBuffer.RowStride, pixelBuffer.DataPointer, pixelBuffer.BufferStride);
                 }
             }
 
@@ -448,8 +448,7 @@ namespace SharpDX.Toolkit.Graphics
 
             for (int index = 0; index < metadata.ArraySize; ++index)
             {
-                //var pixelBuffer = image.GetImage(0, index, 0);
-                var pixelBuffer = image.PixelBuffers[index]; // TODO CHANGE PIXELBUFFERS ACCESSOR, THIS IS WRONG
+                var pixelBuffer = image.PixelBuffer[index, 0];
 
                 using (var frame = decoder.GetFrame(index))
                 {
@@ -461,7 +460,7 @@ namespace SharpDX.Toolkit.Graphics
                         if (size.Width == metadata.Width && size.Height == metadata.Height)
                         {
                             // This frame does not need resized or format converted, just copy...
-                            frame.CopyPixels(pixelBuffer.RowPitch, pixelBuffer.Pixels, pixelBuffer.SlicePitch);
+                            frame.CopyPixels(pixelBuffer.RowStride, pixelBuffer.DataPointer, pixelBuffer.BufferStride);
                         }
                         else
                         {
@@ -469,7 +468,7 @@ namespace SharpDX.Toolkit.Graphics
                             using (var scaler = new BitmapScaler(Factory))
                             {
                                 scaler.Initialize(frame, metadata.Width, metadata.Height, GetWICInterp(flags));
-                                scaler.CopyPixels(pixelBuffer.RowPitch, pixelBuffer.Pixels, pixelBuffer.SlicePitch);
+                                scaler.CopyPixels(pixelBuffer.RowStride, pixelBuffer.DataPointer, pixelBuffer.BufferStride);
                             }
                         }
                     }
@@ -482,7 +481,7 @@ namespace SharpDX.Toolkit.Graphics
 
                             if (size.Width == metadata.Width && size.Height == metadata.Height)
                             {
-                                converter.CopyPixels(pixelBuffer.RowPitch, pixelBuffer.Pixels, pixelBuffer.SlicePitch);
+                                converter.CopyPixels(pixelBuffer.RowStride, pixelBuffer.DataPointer, pixelBuffer.BufferStride);
                             }
                             else
                             {
@@ -490,7 +489,7 @@ namespace SharpDX.Toolkit.Graphics
                                 using (var scaler = new BitmapScaler(Factory))
                                 {
                                     scaler.Initialize(frame, metadata.Width, metadata.Height, GetWICInterp(flags));
-                                    scaler.CopyPixels(pixelBuffer.RowPitch, pixelBuffer.Pixels, pixelBuffer.SlicePitch);
+                                    scaler.CopyPixels(pixelBuffer.RowStride, pixelBuffer.DataPointer, pixelBuffer.BufferStride);
                                 }
                             }
                         }
@@ -508,27 +507,34 @@ namespace SharpDX.Toolkit.Graphics
             // Create input stream for memory
             using (var stream = new WICStream(Factory, new DataPointer(pSource, size)))
             {
-                using (var decoder = new BitmapDecoder(Factory, stream, DecodeOptions.CacheOnDemand))
+                // If the decoder is unable to decode the image, than return null
+                BitmapDecoder decoder;
+                try
                 {
-                    using (var frame = decoder.GetFrame(0))
+                    decoder = new BitmapDecoder(Factory, stream, DecodeOptions.CacheOnDemand);
+                } catch
+                {
+                    return null;
+                }
+
+                using (var frame = decoder.GetFrame(0))
+                {
+                    // Get metadata
+                    Guid convertGuid;
+                    var tempDesc = DecodeMetadata(flags, decoder, frame, out convertGuid);
+
+                    // If not supported.
+                    if (!tempDesc.HasValue)
+                        return null;
+
+                    var mdata = tempDesc.Value;
+
+                    if ((mdata.ArraySize > 1) && (flags & WICFlags.AllFrames) != 0)
                     {
-                        // Get metadata
-                        Guid convertGuid;
-                        var tempDesc = DecodeMetadata(flags, decoder, frame, out convertGuid);
-
-                        // If not supported.
-                        if (!tempDesc.HasValue)
-                            return null;
-
-                        var mdata = tempDesc.Value;
-
-                        if ((mdata.ArraySize > 1) && (flags & WICFlags.AllFrames) != 0)
-                        {
-                            return DecodeMultiframe(flags, mdata, decoder);
-                        }
-
-                        return DecodeSingleFrame(flags, mdata, convertGuid, frame);
+                        return DecodeMultiframe(flags, mdata, decoder);
                     }
+
+                    return DecodeSingleFrame(flags, mdata, convertGuid, frame);
                 }
             }
         }
@@ -550,7 +556,7 @@ namespace SharpDX.Toolkit.Graphics
 
             if (targetGuid != pfGuid)
             {
-                using (var source = new Bitmap(Factory, image.Width, image.Height, pfGuid, new DataRectangle(image.Pixels, image.RowPitch), image.SlicePitch))
+                using (var source = new Bitmap(Factory, image.Width, image.Height, pfGuid, new DataRectangle(image.DataPointer, image.RowStride), image.BufferStride))
                 {
                     using (var converter = new FormatConverter(Factory))
                     {
@@ -572,7 +578,7 @@ namespace SharpDX.Toolkit.Graphics
                         }
                         finally
                         {
-                            //Utilities.FreeMemory(temp);
+                            Utilities.FreeMemory(temp);
                         }
                     }
                 }
@@ -580,7 +586,7 @@ namespace SharpDX.Toolkit.Graphics
             else
             {
                 // No conversion required
-                frame.WritePixels(image.Height, image.Pixels, image.RowPitch, image.SlicePitch);
+                frame.WritePixels(image.Height, image.DataPointer, image.RowStride, image.BufferStride);
             }
 
             frame.Commit();

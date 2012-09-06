@@ -41,6 +41,11 @@ namespace SharpDX.Toolkit.Graphics
         {
             public byte R;
 
+            public R8(byte r)
+            {
+                this.R = r;
+            }
+
             public PixelFormat Format
             {
                 get { return PixelFormat.R8.UNorm; }
@@ -54,7 +59,7 @@ namespace SharpDX.Toolkit.Graphics
 
             public Color Value32Bpp
             {
-                get { return new Color(R, 0, 0, 1); }
+                get { return new Color(R, 0, 0, 255); }
                 set { R = value.R; }
             }
 
@@ -89,7 +94,7 @@ namespace SharpDX.Toolkit.Graphics
 
             public Color Value32Bpp
             {
-                get { return new Color(R, G, 0, 1); }
+                get { return new Color(R, G, 0, 255); }
                 set
                 {
                     R = value.R;

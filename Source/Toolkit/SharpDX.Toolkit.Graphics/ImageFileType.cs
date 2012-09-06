@@ -20,7 +20,7 @@
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    /// Image file format used by <see cref="Image.Save"/>
+    /// Image file format used by <see cref="Image.Save(string,SharpDX.Toolkit.Graphics.ImageFileType)"/>
     /// </summary>
     public enum ImageFileType
     {
@@ -63,5 +63,13 @@ namespace SharpDX.Toolkit.Graphics
         /// A TGA File.
         /// </summary>
         Tga,
+
+        /// <summary>
+        /// A TKTX File.
+        /// </summary>
+        /// <remarks>
+        /// This is a format available with this toolkit, similar to DDS, but It doesn't require any conversion and is a straight dump of the memory pixel buffers.
+        /// </remarks>
+        Tktx,
     }
 }

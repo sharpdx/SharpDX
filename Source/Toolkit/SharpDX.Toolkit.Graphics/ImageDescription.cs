@@ -21,13 +21,18 @@
 using System;
 using System.Runtime.InteropServices;
 
+using SharpDX.Serialization;
+
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
     /// A description for <see cref="Image"/>.
     /// </summary>
+#if !WIN8METRO
+    [Serializable]
+#endif
     [StructLayout(LayoutKind.Sequential)]
-    public struct ImageDescription : IEquatable<ImageDescription>
+    public struct ImageDescription : IEquatable<ImageDescription>, IDataSerializable
     {
         /// <summary>
         /// The dimension of a texture.
@@ -121,6 +126,17 @@ namespace SharpDX.Toolkit.Graphics
                 hashCode = (hashCode * 397) ^ Format.GetHashCode();
                 return hashCode;
             }
+        }
+
+        void IDataSerializable.Serialize(BinarySerializer serializer)
+        {
+            serializer.SerializeEnum(ref Dimension);
+            serializer.Serialize(ref Width);
+            serializer.Serialize(ref Height);
+            serializer.Serialize(ref Depth);
+            serializer.Serialize(ref ArraySize);
+            serializer.Serialize(ref MipLevels);
+            serializer.SerializeEnum(ref Format);
         }
 
         public static bool operator ==(ImageDescription left, ImageDescription right)

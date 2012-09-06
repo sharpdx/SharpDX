@@ -1024,7 +1024,7 @@ namespace SharpDX.Toolkit.Graphics
 
             for (int i = 0; i < pixelBuffers.Length; ++i)
             {
-                int slice = pixelBuffers[i].SlicePitch;
+                int slice = pixelBuffers[i].BufferStride;
                 totalSize += slice;
                 if (slice > maxSlice)
                     maxSlice = slice;
@@ -1054,8 +1054,8 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     for (int slice = 0; slice < d; ++slice)
                     {
-                        int pixsize = pixelBuffers[index].SlicePitch;
-                        Utilities.Read(pixelBuffers[index].Pixels, buffer, 0, pixsize);
+                        int pixsize = pixelBuffers[index].BufferStride;
+                        Utilities.Read(pixelBuffers[index].DataPointer, buffer, 0, pixsize);
                         stream.Write(buffer, 0, pixsize);
                         ++index;
                     }
@@ -1064,9 +1064,6 @@ namespace SharpDX.Toolkit.Graphics
                         d >>= 1;
                 }
             }
-
-            // Flush at the end of the image to be sure that the whole image was saved.
-            stream.Flush();
         }
 
         /// <summary>
@@ -1106,8 +1103,8 @@ namespace SharpDX.Toolkit.Graphics
 
             var imageDst = isCopyNeeded ? new Image(metadata, IntPtr.Zero, 0, null, false) : image;
 
-            var images = image.PixelBuffers;
-            var imagesDst = imageDst.PixelBuffers;
+            var images = image.PixelBuffer;
+            var imagesDst = imageDst.PixelBuffer;
 
             ScanlineFlags tflags = (convFlags & ConversionFlags.NoAlpha) != 0 ? ScanlineFlags.SetAlpha : ScanlineFlags.None;
             if ((convFlags & ConversionFlags.Swizzle) != 0)
@@ -1125,20 +1122,20 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     for (int slice = 0; slice < d; ++slice, ++index)
                     {
-                        IntPtr pSrc = images[index].Pixels;
-                        IntPtr pDest = imagesDst[index].Pixels;
-                        checkSize -= images[index].SlicePitch;
+                        IntPtr pSrc = images[index].DataPointer;
+                        IntPtr pDest = imagesDst[index].DataPointer;
+                        checkSize -= images[index].BufferStride;
                         if (checkSize < 0)
                             throw new InvalidOperationException("Unexpected end of buffer");
 
                         if (FormatHelper.IsCompressed(metadata.Format))
                         {
-                            Utilities.CopyMemory(pDest, pSrc, Math.Min(images[index].SlicePitch, imagesDst[index].SlicePitch));
+                            Utilities.CopyMemory(pDest, pSrc, Math.Min(images[index].BufferStride, imagesDst[index].BufferStride));
                         }
                         else
                         {
-                            int spitch = images[index].RowPitch;
-                            int dpitch = imagesDst[index].RowPitch;
+                            int spitch = images[index].RowStride;
+                            int dpitch = imagesDst[index].RowStride;
 
                             for (int h = 0; h < images[index].Height; ++h)
                             {

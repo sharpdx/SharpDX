@@ -70,47 +70,67 @@
 // contributors exclude the implied warranties of merchantability, fitness for a
 // particular purpose and non-infringement.
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using SharpDX.DXGI;
 using SharpDX.IO;
+using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    /// Provides method to instantiate an image 1D/2D/3D on the CPU or to load/save an image from the disk.
+    /// Provides method to instantiate an image 1D/2D/3D supporting TextureArray and mipmaps on the CPU or to load/save an image from the disk.
     /// </summary>
-    public class Image : Component
+    public sealed class Image : Component
     {
-        /// <summary>
-        /// Description of this image.
-        /// </summary>
-        public readonly ImageDescription Description;
+        private const string MagicCodeTKTX = "TKTX";
 
         /// <summary>
-        /// Gets all pixel buffers.
+        /// Pixel buffers.
         /// </summary>
-        public readonly PixelBuffer[] PixelBuffers;
+        internal PixelBuffer[] pixelBuffers;
+        private DataBox[] dataBoxArray;
+        private List<int> mipMapToZIndex;
+        private int zBufferCountPerArraySlice;
+
+        /// <summary>
+        /// Provides access to all pixel buffers.
+        /// </summary>
+        /// <remarks>
+        /// For Texture3D, each z slice of the Texture3D has a pixelBufferArray * by the number of mipmaps.
+        /// For other textures, there is Description.MipLevels * Description.ArraySize pixel buffers.
+        /// </remarks>
+        private PixelBufferArray pixelBufferArray;
 
         /// <summary>
         /// Gets the total number of bytes occupied by this image in memory.
         /// </summary>
-        public readonly int TotalSizeInBytes;
+        private int totalSizeInBytes;
 
         /// <summary>
         /// Pointer to the buffer.
         /// </summary>
-        private readonly IntPtr buffer;
+        private IntPtr buffer;
 
         /// <summary>
         /// True if the buffer must be disposed.
         /// </summary>
-        private readonly bool bufferIsDisposable;
+        private bool bufferIsDisposable;
 
         /// <summary>
         /// Handke != null if the buffer is a pinned managed object on the LOH (Large Object Heap).
         /// </summary>
-        private readonly GCHandle? handle;
+        private GCHandle? handle;
+
+        /// <summary>
+        /// Description of this image.
+        /// </summary>
+        public ImageDescription Description;
+
+        private Image()
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Image" /> class.
@@ -123,67 +143,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <exception cref="System.InvalidOperationException">If the format is invalid, or width/height/depth/arraysize is invalid with respect to the dimension.</exception>
         internal unsafe Image(ImageDescription description, IntPtr dataPointer, int offset, GCHandle? handle, bool bufferIsDisposable, Texture.PitchFlags pitchFlags = Texture.PitchFlags.None)
         {
-            if (!FormatHelper.IsValid(description.Format) || FormatHelper.IsVideo(description.Format))
-                throw new InvalidOperationException("Unsupported DXGI Format");
-
-            this.handle = handle;
-
-            switch (description.Dimension)
-            {
-                case TextureDimension.Texture1D:
-                    if (description.Width <= 0 || description.Height != 1 || description.Depth != 1 || description.ArraySize == 0)
-                        throw new InvalidOperationException("Invalid Width/Height/Depth/ArraySize for Image 1D");
-
-                    // Check that miplevels are fine
-                    description.MipLevels = Texture.CalculateMipLevels(description.Width, 1, description.MipLevels);
-                    break;
-
-                case TextureDimension.Texture2D:
-                case TextureDimension.TextureCube:
-                    if (description.Width <= 0 || description.Height <= 0 || description.Depth != 1 || description.ArraySize == 0)
-                        throw new InvalidOperationException("Invalid Width/Height/Depth/ArraySize for Image 2D");
-
-                    if (description.Dimension == TextureDimension.TextureCube)
-                    {
-                        if ((description.ArraySize % 6) != 0)
-                            throw new InvalidOperationException("TextureCube must have an arraysize = 6");
-                    }
-
-                    // Check that miplevels are fine
-                    description.MipLevels = Texture.CalculateMipLevels(description.Width, description.Height, description.MipLevels);
-                    break;
-
-                case TextureDimension.Texture3D:
-                    if (description.Width <= 0 || description.Height <= 0 || description.Depth <= 0 || description.ArraySize != 1)
-                        throw new InvalidOperationException("Invalid Width/Height/Depth/ArraySize for Image 3D");
-
-                    // Check that miplevels are fine
-                    description.MipLevels = Texture.CalculateMipLevels(description.Width, description.Height, description.Depth, description.MipLevels);
-                    break;
-            }
-
-            // Calculate mipmaps
-            int pixelBufferCount;
-            CalculateImageArray(description, pitchFlags, out pixelBufferCount, out TotalSizeInBytes);
-
-            // Allocate all pixel buffers
-            PixelBuffers = new PixelBuffer[pixelBufferCount];
-
-            // Setup all pointers
-            // only release buffer that is not pinned and is asked to be disposed.
-            this.bufferIsDisposable = !handle.HasValue && bufferIsDisposable;
-            this.buffer = dataPointer;
-
-            if (dataPointer == IntPtr.Zero)
-            {
-                buffer = Utilities.AllocateMemory(TotalSizeInBytes);
-                offset = 0;
-                this.bufferIsDisposable = true;
-            }
-
-            SetupImageArray((IntPtr)((byte*)buffer + offset), TotalSizeInBytes, description, pitchFlags, PixelBuffers);
-
-            Description = description;
+            Initialize(description, dataPointer, offset, handle, bufferIsDisposable, pitchFlags);
         }
 
         protected override void Dispose(bool disposeManagedResources)
@@ -202,12 +162,118 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
+        /// Gets the pixel buffer for the specified array/z slice and mipmap level.
+        /// </summary>
+        /// <param name="arrayOrZSliceIndex">For 3D image, the parameter is the Z slice, otherwise it is an index into the texture array.</param>
+        /// <param name="mipmap">The mipmap.</param>
+        /// <returns>A <see cref="pixelBufferArray"/>.</returns>
+        /// <exception cref="System.ArgumentException">If arrayOrZSliceIndex or mipmap are out of range.</exception>
+        public PixelBuffer GetPixelBuffer(int arrayOrZSliceIndex, int mipmap)
+        {
+            // Check for parameters, as it is easy to mess up things...
+            if (mipmap > Description.MipLevels)
+                throw new ArgumentException("Invalid mipmap level", "mipmap");
+
+            if (Description.Dimension == TextureDimension.Texture3D)
+            {
+                if (arrayOrZSliceIndex > Description.Depth)
+                    throw new ArgumentException("Invalid z slice index", "arrayOrZSliceIndex");
+
+                // For 3D textures
+                return GetPixelBufferUnsafe(0, arrayOrZSliceIndex, mipmap);
+            }
+            
+            if (arrayOrZSliceIndex > Description.ArraySize)
+            {
+                throw new ArgumentException("Invalid array slice index", "arrayOrZSliceIndex");
+            }
+
+            // For 1D, 2D textures
+            return GetPixelBufferUnsafe(arrayOrZSliceIndex, 0, mipmap);
+        }
+
+        /// <summary>
+        /// Gets the pixel buffer for the specified array/z slice and mipmap level.
+        /// </summary>
+        /// <param name="arrayIndex">Index into the texture array. Must be set to 0 for 3D images.</param>
+        /// <param name="zIndex">Z index for 3D image. Must be set to 0 for all 1D/2D images.</param>
+        /// <param name="mipmap">The mipmap.</param>
+        /// <returns>A <see cref="pixelBufferArray"/>.</returns>
+        /// <exception cref="System.ArgumentException">If arrayIndex, zIndex or mipmap are out of range.</exception>
+        public PixelBuffer GetPixelBuffer(int arrayIndex, int zIndex, int mipmap)
+        {
+            // Check for parameters, as it is easy to mess up things...
+            if (mipmap > Description.MipLevels)
+                throw new ArgumentException("Invalid mipmap level", "mipmap");
+
+            if (arrayIndex > Description.ArraySize)
+                throw new ArgumentException("Invalid array slice index", "arrayIndex");
+
+            if (zIndex > Description.Depth)
+                throw new ArgumentException("Invalid z slice index", "zIndex");
+
+            return this.GetPixelBufferUnsafe(arrayIndex, zIndex, mipmap);
+        }
+        
+        /// <summary>
+        /// Gets a pointer to the image buffer in memory.
+        /// </summary>
+        /// <value>A pointer to the image buffer in memory.</value>
+        public IntPtr DataPointer
+        {
+            get { return this.buffer; }
+        }
+
+        /// <summary>
+        /// Provides access to all pixel buffers.
+        /// </summary>
+        /// <remarks>
+        /// For Texture3D, each z slice of the Texture3D has a pixelBufferArray * by the number of mipmaps.
+        /// For other textures, there is Description.MipLevels * Description.ArraySize pixel buffers.
+        /// </remarks>
+        public PixelBufferArray PixelBuffer
+        {
+            get { return pixelBufferArray; }
+        }
+
+        /// <summary>
+        /// Gets the total number of bytes occupied by this image in memory.
+        /// </summary>
+        public int TotalSizeInBytes
+        {
+            get { return totalSizeInBytes; }
+        }
+
+        /// <summary>
         /// Gets the databox from this image.
         /// </summary>
         /// <returns>The databox of this image.</returns>
         public DataBox[] ToDataBox()
         {
-            throw new NotImplementedException();
+            return (DataBox[])dataBoxArray.Clone();
+        }
+
+        /// <summary>
+        /// Gets the databox from this image.
+        /// </summary>
+        /// <returns>The databox of this image.</returns>
+        private DataBox[] ComputeDataBox()
+        {
+            dataBoxArray = new DataBox[Description.ArraySize * Description.MipLevels];
+            int i = 0;
+            for (int arrayIndex = 0; arrayIndex < Description.ArraySize; arrayIndex++)
+            {
+                for (int mipIndex = 0; mipIndex < Description.MipLevels; mipIndex++)
+                {
+                    // Get the first z-slize (A DataBox for a Texture3D is pointing to the whole texture).
+                    var pixelBuffer = this.GetPixelBufferUnsafe(arrayIndex, 0, mipIndex);
+
+                    dataBoxArray[i].DataPointer = pixelBuffer.DataPointer;
+                    dataBoxArray[i].RowPitch = pixelBuffer.RowStride;
+                    dataBoxArray[i].SlicePitch = pixelBuffer.BufferStride;
+                }
+            }
+            return dataBoxArray;
         }
 
         /// <summary>
@@ -217,7 +283,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>A new image.</returns>
         public static Image New(ImageDescription description)
         {
-            return new Image(description, IntPtr.Zero, 0, null, false);
+            return New(description, IntPtr.Zero);
         }
 
         /// <summary>
@@ -230,7 +296,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>A new image.</returns>
         public static Image New1D(int width, MipMapCount mipMapCount, PixelFormat format, int arraySize = 1)
         {
-            return new Image(CreateDescription(TextureDimension.Texture1D, width, 1, 1, mipMapCount, format, arraySize), IntPtr.Zero, 0, null, false);
+            return New1D(width, mipMapCount, format, arraySize, IntPtr.Zero);
         }
 
         /// <summary>
@@ -244,7 +310,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>A new image.</returns>
         public static Image New2D(int width, int height, MipMapCount mipMapCount, PixelFormat format, int arraySize = 1)
         {
-            return new Image(CreateDescription(TextureDimension.Texture2D, width, height, 1, mipMapCount, format, arraySize), IntPtr.Zero, 0, null, false);
+            return New2D(width, height, mipMapCount, format, arraySize, IntPtr.Zero);
         }
 
         /// <summary>
@@ -256,7 +322,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>A new image.</returns>
         public static Image NewCube(int width, MipMapCount mipMapCount, PixelFormat format)
         {
-            return new Image(CreateDescription(TextureDimension.TextureCube, width, width, 1, mipMapCount, format, 6), IntPtr.Zero, 0, null, false);
+            return NewCube(width, mipMapCount, format, IntPtr.Zero);
         }
 
         /// <summary>
@@ -270,7 +336,75 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>A new image.</returns>
         public static Image New3D(int width, int height, int depth, MipMapCount mipMapCount, PixelFormat format)
         {
-            return new Image(CreateDescription(TextureDimension.Texture3D, width, width, depth, mipMapCount, format, 1), IntPtr.Zero, 0, null, false);
+            return New3D(width, height, depth, mipMapCount, format, IntPtr.Zero);
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="Image"/> from an image description.
+        /// </summary>
+        /// <param name="description">The image description.</param>
+        /// <param name="dataPointer">Pointer to an existing buffer.</param>
+        /// <returns>A new image.</returns>
+        public static Image New(ImageDescription description, IntPtr dataPointer)
+        {
+            return new Image(description, dataPointer, 0, null, false);
+        }
+
+        /// <summary>
+        /// Creates a new instance of a 1D <see cref="Image"/>.
+        /// </summary>
+        /// <param name="width">The width.</param>
+        /// <param name="mipMapCount">The mip map count.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="arraySize">Size of the array.</param>
+        /// <param name="dataPointer">Pointer to an existing buffer.</param>
+        /// <returns>A new image.</returns>
+        public static Image New1D(int width, MipMapCount mipMapCount, PixelFormat format, int arraySize, IntPtr dataPointer)
+        {
+            return new Image(CreateDescription(TextureDimension.Texture1D, width, 1, 1, mipMapCount, format, arraySize), dataPointer, 0, null, false);
+        }
+
+        /// <summary>
+        /// Creates a new instance of a 2D <see cref="Image"/>.
+        /// </summary>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="mipMapCount">The mip map count.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="arraySize">Size of the array.</param>
+        /// <param name="dataPointer">Pointer to an existing buffer.</param>
+        /// <returns>A new image.</returns>
+        public static Image New2D(int width, int height, MipMapCount mipMapCount, PixelFormat format, int arraySize, IntPtr dataPointer)
+        {
+            return new Image(CreateDescription(TextureDimension.Texture2D, width, height, 1, mipMapCount, format, arraySize), dataPointer, 0, null, false);
+        }
+
+        /// <summary>
+        /// Creates a new instance of a Cube <see cref="Image"/>.
+        /// </summary>
+        /// <param name="width">The width.</param>
+        /// <param name="mipMapCount">The mip map count.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="dataPointer">Pointer to an existing buffer.</param>
+        /// <returns>A new image.</returns>
+        public static Image NewCube(int width, MipMapCount mipMapCount, PixelFormat format, IntPtr dataPointer)
+        {
+            return new Image(CreateDescription(TextureDimension.TextureCube, width, width, 1, mipMapCount, format, 6), dataPointer, 0, null, false);
+        }
+
+        /// <summary>
+        /// Creates a new instance of a 3D <see cref="Image"/>.
+        /// </summary>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="depth">The depth.</param>
+        /// <param name="mipMapCount">The mip map count.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="dataPointer">Pointer to an existing buffer.</param>
+        /// <returns>A new image.</returns>
+        public static Image New3D(int width, int height, int depth, MipMapCount mipMapCount, PixelFormat format, IntPtr dataPointer)
+        {
+            return new Image(CreateDescription(TextureDimension.Texture3D, width, width, depth, mipMapCount, format, 1), dataPointer, 0, null, false);
         }
 
         /// <summary>
@@ -395,7 +529,84 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>This method support the following format: <c>dds, bmp, jpg, png, gif, tiff, wmp, tga</c>.</remarks>
         public void Save(Stream imageStream, ImageFileType fileType)
         {
-            PixelBuffer.Save(PixelBuffers, this.PixelBuffers.Length, Description, imageStream, fileType);
+            Graphics.PixelBuffer.Save(pixelBuffers, this.pixelBuffers.Length, Description, imageStream, fileType);
+        }
+
+        internal unsafe void Initialize(ImageDescription description, IntPtr dataPointer, int offset, GCHandle? handle, bool bufferIsDisposable, Texture.PitchFlags pitchFlags = Texture.PitchFlags.None)
+        {
+            if (!FormatHelper.IsValid(description.Format) || FormatHelper.IsVideo(description.Format))
+                throw new InvalidOperationException("Unsupported DXGI Format");
+
+            this.handle = handle;
+
+            switch (description.Dimension)
+            {
+                case TextureDimension.Texture1D:
+                    if (description.Width <= 0 || description.Height != 1 || description.Depth != 1 || description.ArraySize == 0)
+                        throw new InvalidOperationException("Invalid Width/Height/Depth/ArraySize for Image 1D");
+
+                    // Check that miplevels are fine
+                    description.MipLevels = Texture.CalculateMipLevels(description.Width, 1, description.MipLevels);
+                    break;
+
+                case TextureDimension.Texture2D:
+                case TextureDimension.TextureCube:
+                    if (description.Width <= 0 || description.Height <= 0 || description.Depth != 1 || description.ArraySize == 0)
+                        throw new InvalidOperationException("Invalid Width/Height/Depth/ArraySize for Image 2D");
+
+                    if (description.Dimension == TextureDimension.TextureCube)
+                    {
+                        if ((description.ArraySize % 6) != 0)
+                            throw new InvalidOperationException("TextureCube must have an arraysize = 6");
+                    }
+
+                    // Check that miplevels are fine
+                    description.MipLevels = Texture.CalculateMipLevels(description.Width, description.Height, description.MipLevels);
+                    break;
+
+                case TextureDimension.Texture3D:
+                    if (description.Width <= 0 || description.Height <= 0 || description.Depth <= 0 || description.ArraySize != 1)
+                        throw new InvalidOperationException("Invalid Width/Height/Depth/ArraySize for Image 3D");
+
+                    // Check that miplevels are fine
+                    description.MipLevels = Texture.CalculateMipLevels(description.Width, description.Height, description.Depth, description.MipLevels);
+                    break;
+            }
+
+            // Calculate mipmaps
+            int pixelBufferCount;
+            this.mipMapToZIndex = CalculateImageArray(description, pitchFlags, out pixelBufferCount, out totalSizeInBytes);
+            zBufferCountPerArraySlice = this.mipMapToZIndex[this.mipMapToZIndex.Count - 1];
+
+            // Allocate all pixel buffers
+            pixelBuffers = new PixelBuffer[pixelBufferCount];
+            pixelBufferArray = new PixelBufferArray(this);
+
+            // Setup all pointers
+            // only release buffer that is not pinned and is asked to be disposed.
+            this.bufferIsDisposable = !handle.HasValue && bufferIsDisposable;
+            this.buffer = dataPointer;
+
+            if (dataPointer == IntPtr.Zero)
+            {
+                buffer = Utilities.AllocateMemory(totalSizeInBytes);
+                offset = 0;
+                this.bufferIsDisposable = true;
+            }
+
+            SetupImageArray((IntPtr)((byte*)buffer + offset), totalSizeInBytes, description, pitchFlags, pixelBuffers);
+
+            Description = description;
+
+            // PreCompute databoxes
+            dataBoxArray = ComputeDataBox();
+        }
+
+        private PixelBuffer GetPixelBufferUnsafe(int arrayIndex, int zIndex, int mipmap)
+        {
+            var depthIndex = this.mipMapToZIndex[mipmap];
+            var pixelBufferIndex = arrayIndex * this.zBufferCountPerArraySlice + depthIndex + zIndex;
+            return pixelBuffers[pixelBufferIndex];
         }
 
         private static ImageDescription CreateDescription(TextureDimension dimension, int width, int height, int depth, MipMapCount mipMapCount, PixelFormat format, int arraySize)
@@ -414,9 +625,11 @@ namespace SharpDX.Toolkit.Graphics
 
         private static Image Load(IntPtr dataPointer, int dataSize, bool makeACopy, GCHandle? handle)
         {
+            // Try to load DDS
             var image = DDSHelper.LoadFromDDSMemory(dataPointer, dataSize, makeACopy ? DDSFlags.CopyMemory : DDSFlags.None, handle);
             if (image == null)
             {
+                // Try to Load with WIC
                 image = WICHelper.LoadFromWICMemory(dataPointer, dataSize, WICFlags.AllFrames);
                 if (image != null)
                 {
@@ -433,6 +646,11 @@ namespace SharpDX.Toolkit.Graphics
                         }
                     }
                 }
+                else
+                {
+                    // Try to load TKTX
+                    image = LoadTKTX(dataPointer, dataSize, makeACopy, handle);
+                }
             }
 
             // TODO ADD support for TGA
@@ -444,16 +662,123 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
+        /// Offset from the beginning of the buffer where pixel buffers are stored.
+        /// This offset is used to keep data aligned on 16 bytes (if the original buffer is aligned on 16 bytes as well).
+        /// </summary>
+        private const int OffsetBufferTKTX = 48;
+
+        /// <summary>
+        /// Saves the specified pixel buffers in TKTX format.
+        /// </summary>
+        internal static Image LoadTKTX(IntPtr dataPointer, int dataSize, bool makeACopy, GCHandle? handle)
+        {
+            // Make a copy?
+            if (makeACopy)
+            {
+                var temp = Utilities.AllocateMemory(dataSize);
+                Utilities.CopyMemory(temp, dataPointer, dataSize);
+                dataPointer = temp;
+            }
+
+            // Use DataStream to load from memory pointer
+            var imageStream = new DataStream(dataPointer, dataSize, true, true);
+
+            var beginPosition = imageStream.Position;
+
+            var serializer = new BinarySerializer(imageStream, SerializerMode.Read);
+            var description = default(ImageDescription);
+
+            // Load MagicCode TKTX
+            try
+            {
+                serializer.BeginChunk(MagicCodeTKTX);
+            } catch (InvalidChunkException ex)
+            {
+                // If magic code not found, return null
+                if (ex.ExpectedChunkId == MagicCodeTKTX)
+                    return null;
+                throw;
+            }
+
+            // Read description
+            serializer.Serialize(ref description);
+
+            // Read size of pixel buffer
+            int size = 0;
+            serializer.Serialize(ref size);
+
+            // Pad to align pixel buffer on 16 bytes (fixed offset at 48 bytes from the beginning of the file).
+            var padBuffer = new byte[OffsetBufferTKTX - (int)(imageStream.Position - beginPosition)];
+            if (padBuffer.Length > 0)
+            {
+                if (imageStream.Read(padBuffer, 0, padBuffer.Length) != padBuffer.Length)
+                    throw new EndOfStreamException();
+            }
+
+            // Check that current offset is exactly our fixed offset.
+            int pixelBufferOffsets = (int)serializer.Stream.Position;
+            if (pixelBufferOffsets != OffsetBufferTKTX)
+                throw new InvalidOperationException(string.Format("Unexpected offset [{0}] for pixel buffers. Must be {1}", pixelBufferOffsets, OffsetBufferTKTX));
+
+            // Seek to the end of the stream to the number of pixel buffers
+            imageStream.Seek(size, SeekOrigin.Current);
+
+            // Close the chunk to verify that we did read the whole chunk
+            serializer.EndChunk();
+
+            return new Image(description, dataPointer, pixelBufferOffsets, handle, makeACopy);
+        }
+
+        /// <summary>
+        /// Saves the specified pixel buffers in TKTX format.
+        /// </summary>
+        /// <param name="pixelBuffers">The pixel buffers.</param>
+        /// <param name="count">The count.</param>
+        /// <param name="description">The description.</param>
+        /// <param name="imageStream">The image stream.</param>
+        internal static void SaveTKTX(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream)
+        {
+            var serializer = new BinarySerializer(imageStream, SerializerMode.Write);
+
+            var beginPosition = imageStream.Position;
+
+            // Write MagicCode for TKTX
+            serializer.BeginChunk(MagicCodeTKTX);
+
+            // Serialize Description
+            serializer.Serialize(ref description);
+
+            // Serialize Size
+            int size = 0;
+            for (int i = 0; i < count; i++)
+                size += pixelBuffers[i].BufferStride;
+            serializer.Serialize(ref size);
+
+            // Pad to align pixel buffer on 16 bytes (fixed offset at 48 bytes from the beginning of the file).
+            var padBuffer = new byte[OffsetBufferTKTX - (int) (imageStream.Position - beginPosition)];
+            if (padBuffer.Length > 0)
+                imageStream.Write(padBuffer, 0, padBuffer.Length);
+
+            // Write the whole pixel buffer
+            for (int i = 0; i < count; i++)
+                serializer.SerializeMemoryRegion(pixelBuffers[i].DataPointer, pixelBuffers[i].BufferStride);
+
+            serializer.EndChunk();
+        }
+
+        /// <summary>
         /// Determines number of image array entries and pixel size.
         /// </summary>
         /// <param name="imageDesc">Description of the image to create.</param>
         /// <param name="pitchFlags">Pitch flags.</param>
-        /// <param name="mipMapCount">Output number of mipmap.</param>
+        /// <param name="bufferCount">Output number of mipmap.</param>
         /// <param name="pixelSizeInBytes">Output total size to allocate pixel buffers for all images.</param>
-        private static void CalculateImageArray( ImageDescription imageDesc, Texture.PitchFlags pitchFlags, out int mipMapCount, out int pixelSizeInBytes )
+        private static List<int> CalculateImageArray( ImageDescription imageDesc, Texture.PitchFlags pitchFlags, out int bufferCount, out int pixelSizeInBytes)
         {
             pixelSizeInBytes = 0;
-            mipMapCount = 0;
+            bufferCount = 0;
+
+            var mipmapToZIndex = new List<int>();
 
             for (int j = 0; j < imageDesc.ArraySize; j++)
             {
@@ -466,10 +791,15 @@ namespace SharpDX.Toolkit.Graphics
                     int rowPitch, slicePitch;
                     Texture.ComputePitch(imageDesc.Format, w, h, out rowPitch, out slicePitch, pitchFlags);
 
+                    // Store the number of z-slicec per miplevels
+                    if ( j == 0)
+                        mipmapToZIndex.Add(bufferCount);
+
+                    // Keep a trace of indices for the 1st array size, for each mip levels
                     for (int slice = 0; slice < d; ++slice)
                     {
                         pixelSizeInBytes += slicePitch;
-                        ++mipMapCount;
+                        ++bufferCount;
                     }
 
                     if (h > 1)
@@ -481,7 +811,12 @@ namespace SharpDX.Toolkit.Graphics
                     if (d > 1)
                         d >>= 1;
                 }
+
+                // For the last mipmaps, store just the number of zbuffers in total
+                if (j == 0)
+                    mipmapToZIndex.Add(bufferCount);
             }
+            return mipmapToZIndex;
         }
 
         /// <summary>
@@ -507,11 +842,11 @@ namespace SharpDX.Toolkit.Graphics
                     int rowPitch, slicePitch;
                     Texture.ComputePitch(imageDesc.Format, w, h, out rowPitch, out slicePitch, pitchFlags);
 
-                    for (uint slice = 0; slice < d; ++slice)
+                    for (uint zSlice = 0; zSlice < d; ++zSlice)
                     {
                         // We use the same memory organization that Direct3D 11 needs for D3D11_SUBRESOURCE_DATA
                         // with all slices of a given miplevel being continuous in memory
-                        output[index] = new PixelBuffer(w, h, d, imageDesc.Format, rowPitch, slicePitch, (IntPtr)pixels);
+                        output[index] = new PixelBuffer(w, h, imageDesc.Format, rowPitch, slicePitch, (IntPtr)pixels);
                         ++index;
 
                         pixels += slicePitch;
@@ -528,6 +863,5 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
         }
-
    }
 }

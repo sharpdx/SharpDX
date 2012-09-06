@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using SharpDX.IO;
 using SharpDX.Multimedia;
 
 namespace SharpDX.Serialization
@@ -56,6 +57,7 @@ namespace SharpDX.Serialization
         private readonly Dictionary<Type, Dynamic> dynamicMapToFourCC;
         private readonly Dictionary<object, int> objectToPosition;
         private readonly Dictionary<int, object> positionToObject;
+        private Dictionary<object, object> mapTag;
         private int allowNullCount;
         private int allowIdentityReferenceCount;
 
@@ -63,7 +65,7 @@ namespace SharpDX.Serialization
         private System.Text.Encoding encoding;
         private System.Text.Encoder encoder;
         private System.Text.Decoder decoder;
-        private const int LargeByteBufferSize = 256;
+        private const int LargeByteBufferSize = 1024;
         private byte[] largeByteBuffer;
         private int maxChars;   // max # of chars we can put in _largeByteBuffer
         private char[] largeCharBuffer;
@@ -140,6 +142,58 @@ namespace SharpDX.Serialization
             // Register all default dynamics.
             foreach (var defaultDynamic in DefaultDynamics)
                 RegisterDynamic(defaultDynamic);
+        }
+
+        /// <summary>
+        /// Gets a tag value with the specified key.
+        /// </summary>
+        /// <param name="key">The tag key.</param>
+        /// <returns>A tag value associated to a key</returns>
+        public object GetTag(object key)
+        {
+            if (mapTag == null)
+                return null;
+            object value;
+            mapTag.TryGetValue(key, out value);
+            return value;
+        }
+
+        /// <summary>
+        /// Determines whether a tag with a specified key is already stored.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns><c>true</c> if a tag with a specified key is already stored; otherwise, <c>false</c>.</returns>
+        public bool HasTag(object key)
+        {
+            if (mapTag == null)
+                return false;
+            return mapTag.ContainsKey(key);
+        }
+
+        /// <summary>
+        /// Removes a tag with the specified key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        public void RemoveTag(object key)
+        {
+            if (mapTag == null)
+                return;
+            mapTag.Remove(key);
+        }
+
+        /// <summary>
+        /// Sets a tag value with the specified key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
+        public void SetTag(object key, object value)
+        {
+            if (mapTag == null)
+                mapTag = new Dictionary<object, object>();
+            // Always remove previous key before inserting new one
+            mapTag.Remove(key);
+            mapTag.Add(key, value);
         }
 
         /// <summary>
@@ -1192,6 +1246,78 @@ namespace SharpDX.Serialization
             }
         }
 
+        /// <summary>
+        /// Serializes a memory region.
+        /// </summary>
+        /// <param name="dataPointer">The data pointer. For read operation, this pointer must be allocated by the caller.</param>
+        /// <param name="sizeInBytes">The size in bytes. See remarks.</param>
+        /// <exception cref="System.IO.EndOfStreamException">If the end of stream was reached before reading all the bytes.</exception>
+        /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.
+        /// This method doesn't serialize the sizeInBytes of the region, so the size must be serialized serparetely.
+        /// </remarks>
+        public void SerializeMemoryRegion(IntPtr dataPointer, int sizeInBytes)
+        {
+            const int internalBufferSize = 32768;
+
+            if (largeByteBuffer == null)
+                largeByteBuffer = new byte[internalBufferSize];
+
+            if (largeByteBuffer.Length < internalBufferSize)
+                largeByteBuffer = new byte[internalBufferSize];
+
+            // Provides optimized path for special streams
+            var fileStream = Stream as NativeFileStream;
+            if (fileStream != null)
+            {
+                if (Mode == SerializerMode.Write)
+                {
+                    fileStream.Write(dataPointer, 0, sizeInBytes);
+                }
+                else
+                {
+                    fileStream.Read(dataPointer, 0, sizeInBytes);
+                }
+            }
+            else if (Stream is DataStream)
+            {
+                if (Mode == SerializerMode.Write)
+                {
+                    ((DataStream)Stream).Write(dataPointer, 0, sizeInBytes);
+                }
+                else
+                {
+                    ((DataStream)Stream).Read(dataPointer, 0, sizeInBytes);
+                }
+            }
+            else
+            {
+                if (Mode == SerializerMode.Write)
+                {
+                    var remainingSize = sizeInBytes;
+                    while (remainingSize > 0)
+                    {
+                        var maxSize = remainingSize < largeByteBuffer.Length ? remainingSize : largeByteBuffer.Length;
+                        Utilities.Read(dataPointer, largeByteBuffer, 0, maxSize);
+                        Stream.Write(largeByteBuffer, 0, maxSize);
+                        remainingSize -= maxSize;
+                    }
+                }
+                else
+                {
+                    var remainingSize = sizeInBytes;
+                    while (remainingSize > 0)
+                    {
+                        var maxSize = remainingSize < largeByteBuffer.Length ? remainingSize : largeByteBuffer.Length;
+
+                        if (Stream.Read(largeByteBuffer, 0, maxSize) != maxSize)
+                            throw new EndOfStreamException();
+                        Utilities.Write(dataPointer, largeByteBuffer, 0, maxSize);
+
+                        remainingSize -= maxSize;
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Serializes a single <strong>uint</strong> value.
