@@ -31,6 +31,12 @@ namespace SharpDX.Tests
     [Description("Tests SharpDX.Interop")]
     public class TestInterop
     {
+        [Test]
+        public unsafe void TestSizeOf()
+        {
+            Assert.AreEqual(Utilities.SizeOf<Matrix>(), 64);
+            Assert.AreEqual(Utilities.SizeOf<Vector4>(), 16);
+        }
 
         private void Modify(out RawMatrix matrix)
         {
@@ -129,6 +135,22 @@ namespace SharpDX.Tests
             Write((IntPtr)(&test2), test, 48);
 
             Assert.AreEqual(test2, test3);
+        }
+
+        [Test]
+        public unsafe void TestInline()
+        {
+            var test = Matrix.Identity;
+            var test2 = Utilities.Read<Matrix>(new IntPtr(&test));
+            Assert.AreEqual(test, test2);
+
+            var test3 = default(Matrix);
+            Utilities.Read(new IntPtr(&test), ref test3);
+            Assert.AreEqual(test, test3);
+
+            test3 = default(Matrix);
+            Utilities.ReadOut(new IntPtr(&test), out test3);
+            Assert.AreEqual(test, test3);
         }
 
         private void Write<T>(IntPtr dest, T value, int sizeInBytes) where T : struct

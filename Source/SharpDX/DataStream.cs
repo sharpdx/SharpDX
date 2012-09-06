@@ -240,7 +240,7 @@ namespace SharpDX
 
                 sbyte* from = _buffer + _position;
                 T result = default(T);
-                _position = (sbyte*) Utilities.Read((IntPtr)from, ref result) - _buffer;
+                _position = (sbyte*) Utilities.ReadAndPosition((IntPtr)from, ref result) - _buffer;
                 return result;
             }
         }
@@ -560,6 +560,15 @@ namespace SharpDX
             }
         }
 
+        /// <inheritdoc/>
+        public unsafe override int ReadByte()
+        {
+            if (_position >= Length)
+                return -1;
+
+            return _buffer[_position++];
+        }
+
         /// <summary>
         ///   Reads a sequence of bytes from the current stream and advances the position
         ///   within the stream by the number of bytes read.
@@ -578,6 +587,21 @@ namespace SharpDX
         {
             int minCount = (int)Math.Min(RemainingLength, count);
             return ReadRange(buffer, offset, minCount);
+        }
+
+        /// <summary>
+        /// Reads a sequence of bytes from the current stream and advances the current position within this stream by the number of bytes written.
+        /// </summary>
+        /// <param name="buffer">An array of bytes. This method copies <paramref name="count" /> bytes from <paramref name="buffer" /> to the current stream.</param>
+        /// <param name="offset">The zero-based byte offset in <paramref name="buffer" /> at which to begin copying bytes to the current stream.</param>
+        /// <param name="count">The number of bytes to be written to the current stream.</param>
+        public void Read(IntPtr buffer, int offset, int count)
+        {
+            unsafe
+            {
+                Utilities.CopyMemory(new IntPtr((byte*)buffer + offset), (IntPtr)(_buffer + _position), count);
+                _position += count;
+            }
         }
 
         /// <summary>
@@ -690,7 +714,7 @@ namespace SharpDX
                 throw new NotSupportedException();
             unsafe
             {
-                _position = (sbyte*) Utilities.Write((IntPtr)(_buffer + _position), ref value) - _buffer;
+                _position = (sbyte*) Utilities.WriteAndPosition((IntPtr)(_buffer + _position), ref value) - _buffer;
             }
         }
 
@@ -996,6 +1020,21 @@ namespace SharpDX
             WriteRange(buffer, offset, count);
         }
 
+        /// <summary>
+        /// When overridden in a derived class, writes a sequence of bytes to the current stream and advances the current position within this stream by the number of bytes written.
+        /// </summary>
+        /// <param name="buffer">An array of bytes. This method copies <paramref name="count" /> bytes from <paramref name="buffer" /> to the current stream.</param>
+        /// <param name="offset">The zero-based byte offset in <paramref name="buffer" /> at which to begin copying bytes to the current stream.</param>
+        /// <param name="count">The number of bytes to be written to the current stream.</param>
+        public void Write(IntPtr buffer, int offset, int count)
+        {
+            unsafe
+            {
+                Utilities.CopyMemory((IntPtr) (_buffer + _position), new IntPtr((byte*) buffer + offset), count);
+                _position += count;
+            }
+        }
+        
         /// <summary>
         ///   Writes an array of values to the current stream, and advances the current position
         ///   within this stream by the number of bytes written.

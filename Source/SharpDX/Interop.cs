@@ -78,6 +78,31 @@ namespace SharpDX
             throw new NotImplementedException();
         }
 
+        public static unsafe T ReadInline<T>(void* pSrc) where T : struct
+        {
+            throw new NotImplementedException();
+        }
+
+        public static unsafe void WriteInline<T>(void* pDest, ref T data) where T : struct
+        {
+            throw new NotImplementedException();
+        }
+
+        public static unsafe void CopyInline<T>(ref T data, void* pSrc) where T : struct
+        {
+            throw new NotImplementedException();
+        }
+
+        public static unsafe void CopyInline<T>(void* pDest, ref T srcData) where T : struct
+        {
+            throw new NotImplementedException();
+        }
+
+        public static unsafe void CopyInlineOut<T>(out T data, void* pSrc) where T : struct
+        {
+            throw new NotImplementedException();
+        }
+
         public static unsafe void* ReadOut<T>(void* pSrc, out T data) where T : struct
         {
             throw new NotImplementedException();

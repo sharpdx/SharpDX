@@ -223,13 +223,12 @@ namespace SharpDX
         /// </summary>
         /// <typeparam name="T">Type of a data to read</typeparam>
         /// <param name="source">Memory location to read from.</param>
-        /// <param name="data">The data write to.</param>
-        /// <returns>source pointer + sizeof(T)</returns>
-        public static IntPtr Read<T>(IntPtr source, ref T data) where T : struct
+        /// <returns>The data read from the memory location</returns>
+        public static T Read<T>(IntPtr source) where T : struct
         {
             unsafe
             {
-                return (IntPtr)SharpDX.Interop.Read<T>((void*) source, ref data);
+                return SharpDX.Interop.ReadInline<T>((void*)source);
             }
         }
 
@@ -240,11 +239,41 @@ namespace SharpDX
         /// <param name="source">Memory location to read from.</param>
         /// <param name="data">The data write to.</param>
         /// <returns>source pointer + sizeof(T)</returns>
-        public static IntPtr ReadOut<T>(IntPtr source, out T data) where T : struct
+        public static void Read<T>(IntPtr source, ref T data) where T : struct
         {
             unsafe
             {
-                return (IntPtr)SharpDX.Interop.ReadOut<T>((void*)source, out data);
+                SharpDX.Interop.CopyInline<T>(ref data, (void*)source);
+            }
+        }
+
+        /// <summary>
+        /// Reads the specified T data from a memory location.
+        /// </summary>
+        /// <typeparam name="T">Type of a data to read</typeparam>
+        /// <param name="source">Memory location to read from.</param>
+        /// <param name="data">The data write to.</param>
+        /// <returns>source pointer + sizeof(T)</returns>
+        public static void ReadOut<T>(IntPtr source, out T data) where T : struct
+        {
+            unsafe
+            {
+                SharpDX.Interop.CopyInlineOut<T>(out data, (void*)source);
+            }
+        }
+
+        /// <summary>
+        /// Reads the specified T data from a memory location.
+        /// </summary>
+        /// <typeparam name="T">Type of a data to read</typeparam>
+        /// <param name="source">Memory location to read from.</param>
+        /// <param name="data">The data write to.</param>
+        /// <returns>source pointer + sizeof(T)</returns>
+        public static IntPtr ReadAndPosition<T>(IntPtr source, ref T data) where T : struct
+        {
+            unsafe
+            {
+                return (IntPtr)SharpDX.Interop.Read<T>((void*)source, ref data);
             }
         }
 
@@ -272,7 +301,22 @@ namespace SharpDX
         /// <param name="destination">Memory location to write to.</param>
         /// <param name="data">The data to write.</param>
         /// <returns>destination pointer + sizeof(T)</returns>
-        public static IntPtr Write<T>(IntPtr destination, ref T data) where T : struct
+        public static void Write<T>(IntPtr destination, ref T data) where T : struct
+        {
+            unsafe
+            {
+                Interop.CopyInline((void*)destination, ref data);
+            }
+        }
+
+        /// <summary>
+        /// Writes the specified T data to a memory location.
+        /// </summary>
+        /// <typeparam name="T">Type of a data to write</typeparam>
+        /// <param name="destination">Memory location to write to.</param>
+        /// <param name="data">The data to write.</param>
+        /// <returns>destination pointer + sizeof(T)</returns>
+        public static IntPtr WriteAndPosition<T>(IntPtr destination, ref T data) where T : struct
         {
             unsafe
             {

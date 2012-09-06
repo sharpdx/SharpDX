@@ -180,6 +180,26 @@ namespace SharpCli
             ilProcessor.Replace(fixedtoPatch, ldlocFixed);
         }
 
+        private void ReplaceReadInline(MethodDefinition method, ILProcessor ilProcessor, Instruction fixedtoPatch)
+        {
+            var paramT = method.GenericParameters[0];
+            var copyInstruction = ilProcessor.Create(OpCodes.Ldobj, paramT);
+            ilProcessor.Replace(fixedtoPatch, copyInstruction);
+        }
+
+        private void ReplaceCopyInline(MethodDefinition method, ILProcessor ilProcessor, Instruction fixedtoPatch)
+        {
+            var paramT = method.GenericParameters[0];
+            var copyInstruction = ilProcessor.Create(OpCodes.Cpobj, paramT);
+            ilProcessor.Replace(fixedtoPatch, copyInstruction);
+        }
+
+        private void ReplaceSizeOfStructGeneric(MethodDefinition method, ILProcessor ilProcessor, Instruction fixedtoPatch)
+        {
+            var paramT = method.GenericParameters[0];
+            var copyInstruction = ilProcessor.Create(OpCodes.Sizeof, paramT);
+            ilProcessor.Replace(fixedtoPatch, copyInstruction);
+        }
 
         /// <summary>
         /// Creates the cast  method with the following signature:
@@ -373,6 +393,26 @@ namespace SharpCli
         }
 
         /// <summary>
+        /// Creates the read method with the following signature:
+        /// <code>
+        /// public static unsafe void Read&lt;T&gt;(void* pSrc, ref T data) where T : struct
+        /// </code>
+        /// </summary>
+        /// <param name="method">The method copy struct.</param>
+        private void CreateReadRawMethod(MethodDefinition method)
+        {
+            method.Body.Instructions.Clear();
+            method.Body.InitLocals = true;
+
+            var gen = method.Body.GetILProcessor();
+            var paramT = method.GenericParameters[0];
+
+            // Push (1) pSrc for memcpy
+            gen.Emit(OpCodes.Cpobj);
+
+        }
+
+        /// <summary>
         /// Creates the read range method with the following signature:
         /// <code>
         /// public static unsafe void* Read&lt;T&gt;(void* pSrc, T[] data, int offset, int count) where T : struct
@@ -475,23 +515,6 @@ namespace SharpCli
         }
 
         /// <summary>
-        /// Creates the size of struct generic with the following signature:
-        /// <code>
-        /// public static int SizeOf&lt;T&gt;() where T : struct
-        /// </code>
-        /// </summary>
-        /// <param name="methodCopyStruct">The method copy struct.</param>
-        private void CreateSizeOfStructGeneric(MethodDefinition methodCopyStruct)
-        {
-            methodCopyStruct.Body.Instructions.Clear();
-
-            var gen = methodCopyStruct.Body.GetILProcessor();
-            gen.Emit(OpCodes.Sizeof, methodCopyStruct.GenericParameters[0]);
-            // Ret
-            gen.Emit(OpCodes.Ret);
-        }
-
-        /// <summary>
         /// Emits the cpblk method, supporting x86 and x64 platform.
         /// </summary>
         /// <param name="method">The method.</param>
@@ -545,10 +568,6 @@ namespace SharpCli
                 else if (method.Name == "memset")
                 {
                     CreateMemset(method);
-                }
-                else if (method.Name == "SizeOf")
-                {
-                    CreateSizeOfStructGeneric(method);
                 }
                 else if ((method.Name == "Cast") || (method.Name == "CastOut"))
                 {
@@ -631,14 +650,30 @@ namespace SharpCli
                                 // Replace instruction
                                 ilProcessor.Replace(instruction, callIInstruction);
                             } 
-                            else if (methodDescription.FullName.Contains("Fixed") && methodDescription.DeclaringType.Name == "Interop") 
+                            else if (methodDescription.DeclaringType.Name == "Interop")
                             {
-                                if (methodDescription.Parameters[0].ParameterType.IsArray)
+                                if (methodDescription.FullName.Contains("Fixed"))
                                 {
-                                    ReplaceFixedArrayStatement(method, ilProcessor, instruction);
-                                } else
+                                    if (methodDescription.Parameters[0].ParameterType.IsArray)
+                                    {
+                                        ReplaceFixedArrayStatement(method, ilProcessor, instruction);
+                                    }
+                                    else
+                                    {
+                                        ReplaceFixedStatement(method, ilProcessor, instruction);
+                                    }
+                                }
+                                else if (methodDescription.Name.StartsWith("ReadInline"))
                                 {
-                                    ReplaceFixedStatement(method, ilProcessor, instruction);
+                                    this.ReplaceReadInline(method, ilProcessor, instruction);
+                                }
+                                else if (methodDescription.Name.StartsWith("CopyInline") || methodDescription.Name.StartsWith("WriteInline"))
+                                {
+                                    this.ReplaceCopyInline(method, ilProcessor, instruction);
+                                }
+                                else if (methodDescription.Name.StartsWith("SizeOf"))
+                                {
+                                    this.ReplaceSizeOfStructGeneric(method, ilProcessor, instruction);
                                 }
                             }
                         }
