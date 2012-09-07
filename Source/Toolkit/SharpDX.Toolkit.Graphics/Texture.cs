@@ -310,17 +310,23 @@ namespace SharpDX.Toolkit.Graphics
         public static Texture Load(Stream stream, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
         {
             var image = Image.Load(stream);
-
-            switch (image.Description.Dimension)
+            try
             {
-                case TextureDimension.Texture1D:
-                    return Texture1D.New(image, isUnorderedReadWrite, usage);
-                case TextureDimension.Texture2D:
-                    return Texture2D.New(image, isUnorderedReadWrite, usage);
-                case TextureDimension.Texture3D:
-                    return Texture3D.New(image, isUnorderedReadWrite, usage);
-                case TextureDimension.TextureCube:
-                    return TextureCube.New(image, isUnorderedReadWrite, usage);
+
+                switch (image.Description.Dimension)
+                {
+                    case TextureDimension.Texture1D:
+                        return Texture1D.New(image, isUnorderedReadWrite, usage);
+                    case TextureDimension.Texture2D:
+                        return Texture2D.New(image, isUnorderedReadWrite, usage);
+                    case TextureDimension.Texture3D:
+                        return Texture3D.New(image, isUnorderedReadWrite, usage);
+                    case TextureDimension.TextureCube:
+                        return TextureCube.New(image, isUnorderedReadWrite, usage);
+                }
+            } finally
+            {
+                image.Dispose();
             }
 
             throw new InvalidOperationException("Dimension not supported");
@@ -365,17 +371,23 @@ namespace SharpDX.Toolkit.Graphics
                 throw new ArgumentException("Invalid texture used as staging. Must have Usage = ResourceUsage.Staging", "stagingTexture");
 
             var image = Image.New(stagingTexture.Description);
-            
-            for(int arrayIndex = 0; arrayIndex < image.Description.ArraySize; arrayIndex++)
-            {
-                for(int mipLevel = 0; mipLevel < image.Description.MipLevels; mipLevel++)
-                {
-                    var pixelBuffer = image.PixelBuffer[arrayIndex, mipLevel];
-                    GraphicsDevice.GetContent(this, stagingTexture, new DataPointer(pixelBuffer.DataPointer, pixelBuffer.BufferStride), arrayIndex, mipLevel);
-                }
-            }
 
-            image.Save(stream, fileType);
+            try
+            {
+                for (int arrayIndex = 0; arrayIndex < image.Description.ArraySize; arrayIndex++)
+                {
+                    for (int mipLevel = 0; mipLevel < image.Description.MipLevels; mipLevel++)
+                    {
+                        var pixelBuffer = image.PixelBuffer[arrayIndex, mipLevel];
+                        GraphicsDevice.GetContent(this, stagingTexture, new DataPointer(pixelBuffer.DataPointer, pixelBuffer.BufferStride), arrayIndex, mipLevel);
+                    }
+                }
+
+                image.Save(stream, fileType);
+            } finally
+            {
+                image.Dispose();
+            }
         }
 
         /// <summary>

@@ -296,7 +296,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             clock.Stop();
 
             GC.Collect();
-            GC.WaitForFullGCComplete();
+            GC.WaitForPendingFinalizers();
             var testMemoryAfter = GC.GetTotalMemory(true);
             Console.WriteLine("Loaded {0} and convert to (Dds, Jpg, Png, Gif, Bmp, Tiff) image from DirectXSDK test Memory: {1} bytes, in {2}ms", imageCount, testMemoryAfter - testMemoryBefore, time);
         }

@@ -59,7 +59,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
         [Test]
         public void TestLoadSave()
         {
-            var device = GraphicsDevice.New(DriverType.Reference, DeviceCreationFlags.Debug);
+            var device = GraphicsDevice.New();
             var files = new List<string>();
             files.AddRange(Directory.EnumerateFiles(Path.Combine(dxsdkDir, @"Samples\Media"), "*.dds", SearchOption.AllDirectories));
             files.AddRange(Directory.EnumerateFiles(Path.Combine(dxsdkDir, @"Samples\Media"), "*.jpg", SearchOption.AllDirectories));
@@ -70,27 +70,32 @@ namespace SharpDX.Toolkit.Graphics.Tests
                                       "RifleStock1Bump.dds"  // This file is in BC1 format but size is not a multiple of 4, so It can't be loaded as a texture, so we skip it.
                                   };
 
-            foreach (var file in files)
+            for (int i = 0; i < 1000; i++)
             {
-                if (excludeList.Contains(Path.GetFileName(file), StringComparer.InvariantCultureIgnoreCase))
-                    continue;
+                foreach (var file in files)
+                {
+                    if (excludeList.Contains(Path.GetFileName(file), StringComparer.InvariantCultureIgnoreCase))
+                        continue;
 
-                Console.WriteLine("Process file {0}", file);
+                    Console.WriteLine("Process file {0}", file);
 
-                // Load an image from a file and dispose it.
-                var texture = Texture.Load(file);
+                    // Load an image from a file and dispose it.
+                    var texture = Texture.Load(file);
 
-                var localPath = Path.GetFileName(file);
-                texture.Save(localPath, ImageFileType.Dds);
-                texture.Dispose();
+                    var localPath = Path.GetFileName(file);
+                    texture.Save(localPath, ImageFileType.Dds);
+                    texture.Dispose();
 
-                var originalImage = Image.Load(file);
-                var textureImage = Image.Load(localPath);
+                    var originalImage = Image.Load(file);
+                    var textureImage = Image.Load(localPath);
 
-                TestImage.CompareImage(originalImage, textureImage, file);
+                    TestImage.CompareImage(originalImage, textureImage, file);
 
-                originalImage.Dispose();
-                textureImage.Dispose();
+                    originalImage.Dispose();
+                    textureImage.Dispose();
+                }
+                System.GC.Collect();
+                System.GC.WaitForPendingFinalizers();
             }
         }
     }
