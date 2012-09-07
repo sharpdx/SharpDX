@@ -53,7 +53,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="stream">The stream.</param>
         public void Save(Stream stream)
         {
-            var serializer = new BinarySerializer(stream, SerializerMode.Write, Text.Encoding.ASCII);
+            var serializer = GetSerializer(stream, SerializerMode.Write);
             serializer.Save(this);
         }
 
@@ -76,7 +76,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </remarks>
         public static EffectBytecode Load(Stream stream)
         {
-            var serializer = new BinarySerializer(stream, SerializerMode.Read, Text.Encoding.ASCII);
+            var serializer = GetSerializer(stream, SerializerMode.Read);
             try
             {
                 return serializer.Load<EffectBytecode>();
@@ -110,6 +110,15 @@ namespace SharpDX.Toolkit.Graphics
         {
             using (var stream = new NativeFileStream(fileName, NativeFileMode.Open, NativeFileAccess.Read))
                 return Load(stream);
+        }
+
+        private static BinarySerializer GetSerializer(Stream stream, SerializerMode mode)
+        {
+            var serializer = new BinarySerializer(stream, mode, Text.Encoding.ASCII);
+            serializer.RegisterDynamic<Vector4>();
+            serializer.RegisterDynamic<Vector3>();
+            serializer.RegisterDynamic<Vector2>();
+            return serializer;
         }
 
         /// <inheritdoc/>
