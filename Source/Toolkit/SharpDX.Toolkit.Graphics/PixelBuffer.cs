@@ -186,41 +186,7 @@ namespace SharpDX.Toolkit.Graphics
                     Format = this.format,
                     MipLevels = 1,
                 };
-            Save(new [] {this}, 1, description, imageStream, fileType);
-        }
-
-        /// <summary>
-        /// Saves this instance to a stream.
-        /// </summary>
-        /// <param name="pixelBuffers">The buffers to save.</param>
-        /// <param name="count">The number of buffers to save.</param>
-        /// <param name="description">Global description of the buffer.</param>
-        /// <param name="imageStream">The destination stream.</param>
-        /// <param name="fileType">Specify the output format.</param>
-        /// <remarks>This method support the following format: <c>dds, bmp, jpg, png, gif, tiff, wmp, tga</c>.</remarks>
-        internal static void Save(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream, ImageFileType fileType)
-        {
-            switch (fileType)
-            {
-                case ImageFileType.Dds:
-                    DDSHelper.SaveToDDSStream(pixelBuffers, count, description, DDSFlags.None, imageStream);
-                    break;
-                case ImageFileType.Gif:
-                case ImageFileType.Tiff:
-                    WICHelper.SaveToWICMemory(pixelBuffers, count, WICFlags.AllFrames, fileType, imageStream);
-                    break;
-                case ImageFileType.Bmp:
-                case ImageFileType.Jpg:
-                case ImageFileType.Png:
-                case ImageFileType.Wmp:
-                    WICHelper.SaveToWICMemory(pixelBuffers, 1, WICFlags.None, fileType, imageStream);
-                    break;
-                case ImageFileType.Tktx:
-                    Image.SaveTKTX(pixelBuffers, count, description, imageStream);
-                    break;
-                default:
-                    throw new NotSupportedException("This file format is not yet implemented.");
-            }
+            Image.Save(new [] {this}, 1, description, imageStream, fileType);
         }
 
         /// <summary>

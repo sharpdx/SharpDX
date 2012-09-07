@@ -84,6 +84,9 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public sealed class Image : Component
     {
+        public delegate Image ImageLoadDelegate(IntPtr dataPointer, int dataSize, bool makeACopy, GCHandle? handle);
+        public delegate void ImageSaveDelegate(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream);
+
         private const string MagicCodeTKTX = "TKTX";
 
         /// <summary>
@@ -94,7 +97,8 @@ namespace SharpDX.Toolkit.Graphics
         private List<int> mipMapToZIndex;
         private int zBufferCountPerArraySlice;
         private MipMapDescription[] mipmapDescriptions;
-
+        private static List<LoadSaveDelegate> loadSaveDelegates = new List<LoadSaveDelegate>();
+        
         /// <summary>
         /// Provides access to all pixel buffers.
         /// </summary>
@@ -225,7 +229,35 @@ namespace SharpDX.Toolkit.Graphics
 
             return this.GetPixelBufferUnsafe(arrayIndex, zIndex, mipmap);
         }
-        
+
+
+        /// <summary>
+        /// Registers a loader/saver for a specified image file type.
+        /// </summary>
+        /// <param name="type">The file type (use integer and explicit casting to <see cref="ImageFileType"/> to register other fileformat.</param>
+        /// <param name="loader">The loader delegate (can be null).</param>
+        /// <param name="saver">The saver delegate (can be null).</param>
+        /// <exception cref="System.ArgumentException"></exception>
+        public static void Register(ImageFileType type, ImageLoadDelegate loader, ImageSaveDelegate saver)
+        {
+            // If reference equals, then it is null
+            if (ReferenceEquals(loader, saver))
+                throw new ArgumentNullException("Can set both loader and saver to null", "loader/saver");
+
+            var newDelegate = new LoadSaveDelegate(type, loader, saver);
+            for (int i = 0; i < loadSaveDelegates.Count; i++)
+            {
+                var loadSaveDelegate = loadSaveDelegates[i];
+                if (loadSaveDelegate.FileType == type)
+                {
+                    loadSaveDelegates[i] = newDelegate;
+                    return;
+                }
+            }
+            loadSaveDelegates.Add(newDelegate);
+        }
+
+
         /// <summary>
         /// Gets a pointer to the image buffer in memory.
         /// </summary>
@@ -541,8 +573,70 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>This method support the following format: <c>dds, bmp, jpg, png, gif, tiff, wmp, tga</c>.</remarks>
         public void Save(Stream imageStream, ImageFileType fileType)
         {
-            Graphics.PixelBuffer.Save(pixelBuffers, this.pixelBuffers.Length, Description, imageStream, fileType);
+            Save(pixelBuffers, this.pixelBuffers.Length, Description, imageStream, fileType);
         }
+
+
+        /// <summary>
+        /// Loads an image from the specified pointer.
+        /// </summary>
+        /// <param name="dataPointer">The data pointer.</param>
+        /// <param name="dataSize">Size of the data.</param>
+        /// <param name="makeACopy">if set to <c>true</c> [make A copy].</param>
+        /// <param name="handle">The handle.</param>
+        /// <returns></returns>
+        /// <exception cref="System.NotSupportedException"></exception>
+        private static Image Load(IntPtr dataPointer, int dataSize, bool makeACopy, GCHandle? handle)
+        {
+            foreach (var loadSaveDelegate in loadSaveDelegates)
+            {
+                if (loadSaveDelegate.Load != null)
+                {
+                    var image = loadSaveDelegate.Load(dataPointer, dataSize, makeACopy, handle);
+                    if (image != null)
+                    {
+                        return image;
+                    }
+                }
+            }
+            throw new NotSupportedException("Image format not supported");
+        }
+
+        /// <summary>
+        /// Saves this instance to a stream.
+        /// </summary>
+        /// <param name="pixelBuffers">The buffers to save.</param>
+        /// <param name="count">The number of buffers to save.</param>
+        /// <param name="description">Global description of the buffer.</param>
+        /// <param name="imageStream">The destination stream.</param>
+        /// <param name="fileType">Specify the output format.</param>
+        /// <remarks>This method support the following format: <c>dds, bmp, jpg, png, gif, tiff, wmp, tga</c>.</remarks>
+        internal static void Save(PixelBuffer[] pixelBuffers, int count, ImageDescription description, Stream imageStream, ImageFileType fileType)
+        {
+            foreach (var loadSaveDelegate in loadSaveDelegates)
+            {
+                if (loadSaveDelegate.FileType == fileType)
+                {
+                    loadSaveDelegate.Save(pixelBuffers, count, description, imageStream);
+                    return;
+                }
+
+            }
+            throw new NotSupportedException("This file format is not yet implemented.");
+        }
+
+        static Image()
+        {
+            Register(ImageFileType.Dds,  DDSHelper.LoadFromDDSMemory, DDSHelper.SaveToDDSStream);
+            Register(ImageFileType.Gif,  WICHelper.LoadFromWICMemory, WICHelper.SaveGifToWICMemory);
+            Register(ImageFileType.Tiff, WICHelper.LoadFromWICMemory, WICHelper.SaveTiffToWICMemory);
+            Register(ImageFileType.Bmp,  WICHelper.LoadFromWICMemory, WICHelper.SaveBmpToWICMemory);
+            Register(ImageFileType.Jpg,  WICHelper.LoadFromWICMemory, WICHelper.SaveJpgToWICMemory);
+            Register(ImageFileType.Png,  WICHelper.LoadFromWICMemory, WICHelper.SavePngToWICMemory);
+            Register(ImageFileType.Wmp,  WICHelper.LoadFromWICMemory, WICHelper.SaveWmpToWICMemory);
+            Register(ImageFileType.Tktx, LoadTKTX, SaveTKTX);
+        }
+
 
         internal unsafe void Initialize(ImageDescription description, IntPtr dataPointer, int offset, GCHandle? handle, bool bufferIsDisposable, PitchFlags pitchFlags = PitchFlags.None)
         {
@@ -634,44 +728,6 @@ namespace SharpDX.Toolkit.Graphics
                            Format = format,
                            MipLevels = mipMapCount,
                        };
-        }
-
-        private static Image Load(IntPtr dataPointer, int dataSize, bool makeACopy, GCHandle? handle)
-        {
-            // Try to load DDS
-            var image = DDSHelper.LoadFromDDSMemory(dataPointer, dataSize, makeACopy ? DDSFlags.CopyMemory : DDSFlags.None, handle);
-            if (image == null)
-            {
-                // Try to Load with WIC
-                image = WICHelper.LoadFromWICMemory(dataPointer, dataSize, WICFlags.AllFrames);
-                if (image != null)
-                {
-                    // For WIC, we are not keeping the original buffer.
-                    if (!makeACopy)
-                    {
-                        if (handle.HasValue)
-                        {
-                            handle.Value.Free();
-                        }
-                        else
-                        {
-                            Utilities.FreeMemory(dataPointer);
-                        }
-                    }
-                }
-                else
-                {
-                    // Try to load TKTX
-                    image = LoadTKTX(dataPointer, dataSize, makeACopy, handle);
-                }
-            }
-
-            // TODO ADD support for TGA
-
-            if (image == null)
-                throw new NotSupportedException("Image format not supported");
-
-            return image;
         }
 
         /// <summary>
@@ -989,6 +1045,22 @@ namespace SharpDX.Toolkit.Graphics
                         d >>= 1;
                 }
             }
+        }
+
+        private class LoadSaveDelegate
+        {
+            public LoadSaveDelegate(ImageFileType fileType, ImageLoadDelegate load, ImageSaveDelegate save)
+            {
+                FileType = fileType;
+                Load = load;
+                Save = save;
+            }
+
+            public ImageFileType FileType;
+
+            public ImageLoadDelegate Load;
+
+            public ImageSaveDelegate Save;
         }
    }
 }

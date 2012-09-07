@@ -982,11 +982,12 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="pSource"></param>
         /// <param name="size"></param>
-        /// <param name="flags"></param>
         /// <param name="handle"></param>
         /// <returns></returns>
-        public unsafe static Image LoadFromDDSMemory(IntPtr pSource, int size, DDSFlags flags, GCHandle? handle = null)
+        public unsafe static Image LoadFromDDSMemory(IntPtr pSource, int size, bool makeACopy, GCHandle? handle)
         {
+            var flags = makeACopy ? DDSFlags.CopyMemory : DDSFlags.None;
+
             ConversionFlags convFlags;
             ImageDescription mdata;
             // If the memory pointed is not a DDS memory, return null.
@@ -1009,6 +1010,11 @@ namespace SharpDX.Toolkit.Graphics
 
             var image = CreateImageFromDDS(pSource, offset, size - offset, mdata, (flags & DDSFlags.LegacyDword) != 0 ? Image.PitchFlags.LegacyDword : Image.PitchFlags.None, convFlags, pal8, handle);
             return image;
+        }
+
+        public static void SaveToDDSStream(PixelBuffer[] pixelBuffers, int count, ImageDescription description, System.IO.Stream imageStream)
+        {
+            SaveToDDSStream(pixelBuffers, count, description, DDSFlags.None, imageStream);
         }
 
         //-------------------------------------------------------------------------------------
