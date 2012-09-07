@@ -23,6 +23,7 @@ using System.Diagnostics;
 using System.IO;
 using NUnit.Framework;
 using SharpDX.DXGI;
+using SharpDX.IO;
 
 namespace SharpDX.Toolkit.Graphics.Tests
 {
@@ -320,6 +321,16 @@ namespace SharpDX.Toolkit.Graphics.Tests
                 Assert.AreEqual(srcPixelBuffer.BufferStride, dstPixelBuffer.BufferStride, "SlicePitch are different for index [{0}], image [{1}]", j, file);
 
                 var isSameBuffer = Utilities.CompareMemory(srcPixelBuffer.DataPointer, dstPixelBuffer.DataPointer, srcPixelBuffer.BufferStride);
+                if (!isSameBuffer)
+                {
+                    var stream = new NativeFileStream("test_from.dds", NativeFileMode.Create, NativeFileAccess.Write, NativeFileShare.Write);
+                    stream.Write(srcPixelBuffer.DataPointer, 0, srcPixelBuffer.BufferStride);
+                    stream.Close();
+                    stream = new NativeFileStream("test_to.dds", NativeFileMode.Create, NativeFileAccess.Write, NativeFileShare.Write);
+                    stream.Write(dstPixelBuffer.DataPointer, 0, dstPixelBuffer.BufferStride);
+                    stream.Close();
+                }
+
                 Assert.True(isSameBuffer, "Content of PixelBuffer is different for index [{0}], image [{1}]", j, file);
             }
         }

@@ -33,7 +33,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="depth">The depth.</param>
         /// <param name="rowStride">The row stride.</param>
         /// <param name="depthStride">The depth stride.</param>
-        public MipMapDescription(int width, int height, int depth, int rowStride, int depthStride)
+        public MipMapDescription(int width, int height, int depth, int rowStride, int depthStride, int widthPacked, int heightPacked)
         {
             Width = width;
             Height = height;
@@ -41,6 +41,8 @@ namespace SharpDX.Toolkit.Graphics
             RowStride = rowStride;
             DepthStride = depthStride;
             MipmapSize = depthStride * depth;
+            WidthPacked = widthPacked;
+            HeightPacked = heightPacked;
         }
 
         /// <summary>
@@ -52,6 +54,16 @@ namespace SharpDX.Toolkit.Graphics
         /// Height of this mipmap.
         /// </summary>
         public readonly int Height;
+
+        /// <summary>
+        /// Width of this mipmap.
+        /// </summary>
+        public readonly int WidthPacked;
+
+        /// <summary>
+        /// Height of this mipmap.
+        /// </summary>
+        public readonly int HeightPacked;
 
         /// <summary>
         /// Depth of this mipmap.

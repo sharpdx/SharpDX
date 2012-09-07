@@ -872,7 +872,7 @@ namespace SharpDX.Toolkit.Graphics
             var mipmap = texture.GetMipMapDescription(mipSlice);
 
             // Copy height, depth
-            int height = mipmap.Height;
+            int height = mipmap.HeightPacked;
             int depth = mipmap.Depth;
 
             // Calculate depth stride based on mipmap level
@@ -1012,7 +1012,7 @@ namespace SharpDX.Toolkit.Graphics
             int textureDepthStride;
 
             // Compute Actual pitch
-            Image.ComputePitch(texture.Description.Format, width, height, out rowStride, out textureDepthStride);
+            Image.ComputePitch(texture.Description.Format, width, height, out rowStride, out textureDepthStride, out width, out height);
 
             // Size Of actual texture data
             int sizeOfTextureData = textureDepthStride * depth;

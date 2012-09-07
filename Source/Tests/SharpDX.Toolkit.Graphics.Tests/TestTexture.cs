@@ -60,8 +60,11 @@ namespace SharpDX.Toolkit.Graphics.Tests
         public void TestLoadSave()
         {
             var device = GraphicsDevice.New();
+            //var device = GraphicsDevice.New(DriverType.Hardware, DeviceCreationFlags.Debug);
+            //var deviceDebug = new DeviceDebug(device);
+
             var files = new List<string>();
-            files.AddRange(Directory.EnumerateFiles(Path.Combine(dxsdkDir, @"Samples\Media"), "*.dds", SearchOption.AllDirectories));
+            //files.AddRange(Directory.EnumerateFiles(Path.Combine(dxsdkDir, @"Samples\Media"), "*.dds", SearchOption.AllDirectories));
             files.AddRange(Directory.EnumerateFiles(Path.Combine(dxsdkDir, @"Samples\Media"), "*.jpg", SearchOption.AllDirectories));
             files.AddRange(Directory.EnumerateFiles(Path.Combine(dxsdkDir, @"Samples\Media"), "*.bmp", SearchOption.AllDirectories));
 
@@ -70,14 +73,12 @@ namespace SharpDX.Toolkit.Graphics.Tests
                                       "RifleStock1Bump.dds"  // This file is in BC1 format but size is not a multiple of 4, so It can't be loaded as a texture, so we skip it.
                                   };
 
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 100000; i++)
             {
                 foreach (var file in files)
                 {
                     if (excludeList.Contains(Path.GetFileName(file), StringComparer.InvariantCultureIgnoreCase))
                         continue;
-
-                    Console.WriteLine("Process file {0}", file);
 
                     // Load an image from a file and dispose it.
                     var texture = Texture.Load(file);
@@ -96,6 +97,14 @@ namespace SharpDX.Toolkit.Graphics.Tests
                 }
                 System.GC.Collect();
                 System.GC.WaitForPendingFinalizers();
+
+                ////if ((i % 10) == 0 )
+                //{
+                //    Console.WriteLine("------------------------------------------------------");
+                //    Console.WriteLine("Lived Ojbects");
+                //    Console.WriteLine("------------------------------------------------------");
+                //    deviceDebug.ReportLiveDeviceObjects(ReportingLevel.Detail);
+                //}
             }
         }
     }

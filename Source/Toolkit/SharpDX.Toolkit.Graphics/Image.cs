@@ -789,8 +789,11 @@ namespace SharpDX.Toolkit.Graphics
             Bpp8 = 0x40000,  // Override with a legacy 8 bits-per-pixel format size
         };
 
-        internal static void ComputePitch(Format fmt, int width, int height, out int rowPitch, out int slicePitch, PitchFlags flags = PitchFlags.None)
+        internal static void ComputePitch(Format fmt, int width, int height, out int rowPitch, out int slicePitch, out int realWidth, out int realHeight, PitchFlags flags = PitchFlags.None)
         {
+            realWidth = width;
+            realHeight = height;
+
             if (FormatHelper.IsCompressed(fmt))
             {
                 int bpb = (fmt == Format.BC1_Typeless
@@ -799,11 +802,11 @@ namespace SharpDX.Toolkit.Graphics
                              || fmt == Format.BC4_Typeless
                              || fmt == Format.BC4_UNorm
                              || fmt == Format.BC4_SNorm) ? 8 : 16;
-                int nbw = Math.Max(1, (width + 3) / 4);
-                int nbh = Math.Max(1, (height + 3) / 4);
-                rowPitch = nbw * bpb;
+                realWidth = Math.Max(1, (width + 3) / 4);
+                realHeight = Math.Max(1, (height + 3) / 4);
+                rowPitch = realWidth * bpb;
 
-                slicePitch = rowPitch * nbh;
+                slicePitch = rowPitch * realHeight;
             }
             else if (FormatHelper.IsPacked(fmt))
             {
@@ -860,14 +863,19 @@ namespace SharpDX.Toolkit.Graphics
             for (int level = 0; level < metadata.MipLevels; ++level)
             {
                 int rowPitch, slicePitch;
-                ComputePitch(metadata.Format, w, h, out rowPitch, out slicePitch, PitchFlags.None);
+                int widthPacked;
+                int heightPacked;
+                ComputePitch(metadata.Format, w, h, out rowPitch, out slicePitch, out widthPacked, out heightPacked, PitchFlags.None);
 
                 mipmaps[level] = new MipMapDescription(
                     w,
                     h,
                     d,
                     rowPitch,
-                    slicePitch);
+                    slicePitch,
+                    widthPacked,
+                    heightPacked
+                    );
 
                 pixelSize += d * slicePitch;
                 nImages += d;
@@ -907,7 +915,9 @@ namespace SharpDX.Toolkit.Graphics
                 for (int i = 0; i < imageDesc.MipLevels; i++)
                 {
                     int rowPitch, slicePitch;
-                    ComputePitch(imageDesc.Format, w, h, out rowPitch, out slicePitch, pitchFlags);
+                    int widthPacked;
+                    int heightPacked;
+                    ComputePitch(imageDesc.Format, w, h, out rowPitch, out slicePitch, out widthPacked, out heightPacked, pitchFlags);
 
                     // Store the number of z-slicec per miplevels
                     if ( j == 0)
@@ -955,7 +965,9 @@ namespace SharpDX.Toolkit.Graphics
                 for (uint level = 0; level < imageDesc.MipLevels; ++level)
                 {
                     int rowPitch, slicePitch;
-                    ComputePitch(imageDesc.Format, w, h, out rowPitch, out slicePitch, pitchFlags);
+                    int widthPacked;
+                    int heightPacked;
+                    ComputePitch(imageDesc.Format, w, h, out rowPitch, out slicePitch, out widthPacked, out heightPacked, pitchFlags);
 
                     for (uint zSlice = 0; zSlice < d; ++zSlice)
                     {

@@ -670,7 +670,9 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             int rowPitch, slicePitch;
-            Image.ComputePitch(description.Format, description.Width, description.Height, out rowPitch, out slicePitch, Image.PitchFlags.None);
+            int newWidth;
+            int newHeight;
+            Image.ComputePitch(description.Format, description.Width, description.Height, out rowPitch, out slicePitch, out newWidth, out newHeight);
 
             if (FormatHelper.IsCompressed(description.Format))
             {

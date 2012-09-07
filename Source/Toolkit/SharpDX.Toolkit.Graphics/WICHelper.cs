@@ -508,33 +508,38 @@ namespace SharpDX.Toolkit.Graphics
             using (var stream = new WICStream(Factory, new DataPointer(pSource, size)))
             {
                 // If the decoder is unable to decode the image, than return null
-                BitmapDecoder decoder;
+                BitmapDecoder decoder = null;
                 try
                 {
                     decoder = new BitmapDecoder(Factory, stream, DecodeOptions.CacheOnDemand);
-                } catch
+                    using (var frame = decoder.GetFrame(0))
+                    {
+                        // Get metadata
+                        Guid convertGuid;
+                        var tempDesc = DecodeMetadata(flags, decoder, frame, out convertGuid);
+
+                        // If not supported.
+                        if (!tempDesc.HasValue)
+                            return null;
+
+                        var mdata = tempDesc.Value;
+
+                        if ((mdata.ArraySize > 1) && (flags & WICFlags.AllFrames) != 0)
+                        {
+                            return DecodeMultiframe(flags, mdata, decoder);
+                        }
+
+                        return DecodeSingleFrame(flags, mdata, convertGuid, frame);
+                    }
+                }
+                catch
                 {
                     return null;
                 }
-
-                using (var frame = decoder.GetFrame(0))
+                finally
                 {
-                    // Get metadata
-                    Guid convertGuid;
-                    var tempDesc = DecodeMetadata(flags, decoder, frame, out convertGuid);
-
-                    // If not supported.
-                    if (!tempDesc.HasValue)
-                        return null;
-
-                    var mdata = tempDesc.Value;
-
-                    if ((mdata.ArraySize > 1) && (flags & WICFlags.AllFrames) != 0)
-                    {
-                        return DecodeMultiframe(flags, mdata, decoder);
-                    }
-
-                    return DecodeSingleFrame(flags, mdata, convertGuid, frame);
+                    if (decoder != null)
+                        decoder.Dispose();
                 }
             }
         }
