@@ -33,6 +33,7 @@ namespace SharpDX
     [Serializable]
 #endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    [DynamicSerializer("TKI4")]
     public struct Int4 : IEquatable<Int4>, IFormattable, IDataSerializable
     {
         /// <summary>

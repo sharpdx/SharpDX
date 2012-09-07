@@ -34,6 +34,7 @@ namespace SharpDX
     [Serializable]
     [TypeConverter(typeof(SharpDX.Design.HalfConverter))]
 #endif
+    [DynamicSerializer("TKH1")]
     public struct Half : IDataSerializable
     {
         private ushort value;

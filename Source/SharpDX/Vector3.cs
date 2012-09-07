@@ -54,6 +54,7 @@ namespace SharpDX
     /// Represents a three dimensional mathematical vector.
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    [DynamicSerializer("TKV3")]
 #if !WIN8METRO
     [Serializable]
     [TypeConverter(typeof(SharpDX.Design.Vector3Converter))]

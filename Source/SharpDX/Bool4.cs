@@ -31,6 +31,7 @@ namespace SharpDX
     [Serializable]
 #endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    [DynamicSerializer("TKB4")]
     public struct Bool4 : IEquatable<Bool4>, IFormattable, IDataSerializable
     {
         /// <summary>

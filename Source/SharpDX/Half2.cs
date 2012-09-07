@@ -33,6 +33,7 @@ namespace SharpDX
     [Serializable]
     [TypeConverter(typeof(SharpDX.Design.Half2Converter))]
 #endif
+    [DynamicSerializer("TKH2")]
     public struct Half2 : IEquatable<Half2>, IDataSerializable
     {
         /// <summary>

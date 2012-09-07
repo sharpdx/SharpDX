@@ -31,6 +31,7 @@ namespace SharpDX
     [Serializable]
 #endif
     [StructLayout(LayoutKind.Sequential, Size = 4)]
+    [DynamicSerializer("TKC1")]
     public partial struct Color : IEquatable<Color>, IFormattable, IDataSerializable
     {
         /// <summary>

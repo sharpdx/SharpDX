@@ -273,6 +273,19 @@ namespace SharpDX.Serialization
         }
 
         /// <summary>
+        /// Register a dynamic serializer for a particular type implementing the <see cref="IDataSerializable"/> interface and having the <see cref="DynamicSerializerAttribute"/>.
+        /// </summary>
+        /// <typeparam name="T">Type of the element to serialize.</typeparam>
+        public void RegisterDynamic<T>() where T : IDataSerializable, new()
+        {
+            var attribute = Utilities.GetCustomAttribute<DynamicSerializerAttribute>(typeof (T));
+            if (attribute == null)
+                throw new ArgumentException("Type T doesn't have DynamicSerializerAttribute", "T");
+
+            RegisterDynamic<T>(attribute.Id);
+        }
+
+        /// <summary>
         /// Register a dynamic serializer for a particular type implementing the <see cref="IDataSerializable"/> interface.
         /// </summary>
         /// <typeparam name="T">Type of the element to serialize.</typeparam>

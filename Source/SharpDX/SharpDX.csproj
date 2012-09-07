@@ -45,6 +45,7 @@
     <Compile Include="IO\NamespaceDoc.cs" />
     <Compile Include="Multimedia\AudioEndpointRole.cs" />
     <Compile Include="Multimedia\NamespaceDoc.cs" />
+    <Compile Include="Serialization\DynamicSerializerAttribute.cs" />
     <Compile Include="Serialization\InvalidChunkException.cs" />
     <Compile Include="Serialization\IDataSerializable.cs" />
     <Compile Include="Serialization\BinarySerializer.cs" />

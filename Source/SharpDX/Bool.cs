@@ -31,6 +31,7 @@ namespace SharpDX
     [Serializable]
 #endif
     [StructLayout(LayoutKind.Sequential, Size = 4)]
+    [DynamicSerializer("TKB1")]
     public struct Bool : IEquatable<Bool>, IDataSerializable
     {
         private int boolValue;
