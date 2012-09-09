@@ -23,6 +23,7 @@ using System.IO;
 using System.Text;
 using SharpDX.IO;
 using SharpDX.Multimedia;
+using System.Reflection;
 
 namespace SharpDX.Serialization
 {
@@ -278,7 +279,11 @@ namespace SharpDX.Serialization
         /// <typeparam name="T">Type of the element to serialize.</typeparam>
         public void RegisterDynamic<T>() where T : IDataSerializable, new()
         {
+#if WIN8METRO
+            var attribute = Utilities.GetCustomAttribute<DynamicSerializerAttribute>(typeof (T).GetTypeInfo());
+#else
             var attribute = Utilities.GetCustomAttribute<DynamicSerializerAttribute>(typeof (T));
+#endif
             if (attribute == null)
                 throw new ArgumentException("Type T doesn't have DynamicSerializerAttribute", "T");
 
