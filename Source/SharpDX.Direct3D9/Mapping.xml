@@ -2242,11 +2242,10 @@
     <map param="IDirect3DDevice9::GetBackBuffer::ppBackBuffer" return="true" attribute="out" />
     <map param="IDirect3DDevice9::GetRasterStatus::pRasterStatus" return="true" attribute="out" />
     <map param="IDirect3DDevice9::GetGammaRamp::pRamp" return="true" attribute="out" />
-    <map param="IDirect3DDevice9::GetFrontBufferData::pDestSurface" attribute="out" />
+    <map param="IDirect3DDevice9::GetFrontBufferData::pDestSurface" attribute="in" />
     <map param="IDirect3DDevice9::GetDepthStencilSurface::ppZStencilSurface" attribute="out" />
     <map param="IDirect3DDevice9::GetViewport::pViewport" attribute="out" />
     <map param="IDirect3DDevice9::GetMaterial::pMaterial" attribute="out" />
-    <map param="IDirect3DDevice9::GetFrontBufferData::pDestSurface" return="true" />
     <map param="IDirect3DDevice9::GetLight::arg1" return="true" attribute="out" />
 
     <map method="IDirect3DDevice9::GetLightEnable" name="IsLightEnabled" />
