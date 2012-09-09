@@ -43,6 +43,11 @@ namespace SharpDX.Toolkit.Graphics
             /// </summary>
             public List<Pass> Passes;
 
+            public override string ToString()
+            {
+                return string.Format("Technique: [{0}], Passes({1})", Name, Passes.Count);
+            }
+
             /// <inheritdoc/>
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {

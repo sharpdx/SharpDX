@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TestEffectCompiler.cs" />
     <Compile Include="TestImage.cs" />
     <Compile Include="TestBuffer.cs" />
     <Compile Include="Program.cs" />
@@ -75,9 +76,17 @@
       <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
       <Name>SharpDX</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Toolkit\SharpDX.Toolkit.Compiler\SharpDX.Toolkit.Compiler.csproj">
+      <Project>{8bfff9d1-84ec-4fba-9beb-710ecf1857a8}</Project>
+      <Name>SharpDX.Toolkit.Compiler</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Toolkit\SharpDX.Toolkit.Graphics\SharpDX.Toolkit.Graphics.csproj">
       <Project>{53ef08a7-4224-434c-a62c-f29807c1c750}</Project>
       <Name>SharpDX.Toolkit.Graphics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Toolkit\SharpDX.Toolkit\SharpDX.Toolkit.csproj">
+      <Project>{9ff0707c-75bb-4984-a01f-b9eaad293f6c}</Project>
+      <Name>SharpDX.Toolkit</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +94,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="map.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestEffect.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

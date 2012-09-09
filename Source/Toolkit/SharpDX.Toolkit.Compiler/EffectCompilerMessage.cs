@@ -17,50 +17,23 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-namespace SharpDX.Toolkit.Diagnostics
+
+using SharpDX.Toolkit.Diagnostics;
+
+namespace SharpDX.Toolkit.Graphics
 {
-    /// <summary>
-    /// Describes a log message.
-    /// </summary>
-    public class LogMessage
+    internal class EffectCompilerMessage : LogMessage
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LogMessage" /> class.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <param name="text">The text.</param>
-        public LogMessage(LogMessageType type, string text)
+        public EffectCompilerMessage(LogMessageType type, string text, SourceSpan span) : base(type, text)
         {
-            Type = type;
-            Text = text;
+            Span = span;
         }
 
-        /// <summary>
-        /// Type of message.
-        /// </summary>
-        public readonly LogMessageType Type;
-
-        /// <summary>
-        /// Text of the message.
-        /// </summary>
-        public readonly string Text;
-
-        /// <inheritdoc/>
-        public override string ToString()
-        {
-            return string.Format("{0} :{1}", Type, Text);
-        }
-    }
-
-    public class LogMessageRaw : LogMessage
-    {
-        public LogMessageRaw(LogMessageType type, string text) : base(type, text)
-        {
-        }
+        public readonly SourceSpan Span;
 
         public override string ToString()
         {
-            return Text;
+            return string.Format("{0}: {1}: {2}", Span, Type.ToString().ToLowerInvariant(), Text);
         }
     }
 }

@@ -18,8 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>
+    /// Effect Compiler flags.
+    /// </summary>
+    [Flags]
     public enum EffectCompilerFlags
     {
         /// <summary>	

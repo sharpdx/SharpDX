@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,50 +17,46 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-namespace SharpDX.Toolkit.Diagnostics
+
+using SharpDX.Toolkit.Diagnostics;
+
+namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    /// Describes a log message.
+    /// Result of a compilation.
     /// </summary>
-    public class LogMessage
+    public sealed class EffectCompilerResult
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="LogMessage" /> class.
+        /// Initializes a new instance of the <see cref="EffectCompilerResult" /> class.
         /// </summary>
-        /// <param name="type">The type.</param>
-        /// <param name="text">The text.</param>
-        public LogMessage(LogMessageType type, string text)
+        /// <param name="bytecode">The bytecode.</param>
+        /// <param name="logger">The logger.</param>
+        internal EffectCompilerResult(EffectBytecode bytecode, Logger logger)
         {
-            Type = type;
-            Text = text;
+            Bytecode = bytecode;
+            Logger = logger;
         }
 
         /// <summary>
-        /// Type of message.
+        /// Gets the bytecode.
         /// </summary>
-        public readonly LogMessageType Type;
+        /// <value>The bytecode.</value>
+        public EffectBytecode Bytecode { get; private set; }
 
         /// <summary>
-        /// Text of the message.
+        /// Gets a value indicating whether this instance has errors.
         /// </summary>
-        public readonly string Text;
-
-        /// <inheritdoc/>
-        public override string ToString()
+        /// <value><c>true</c> if this instance has errors; otherwise, <c>false</c>.</value>
+        public bool HasErrors
         {
-            return string.Format("{0} :{1}", Type, Text);
-        }
-    }
-
-    public class LogMessageRaw : LogMessage
-    {
-        public LogMessageRaw(LogMessageType type, string text) : base(type, text)
-        {
+            get { return Logger.HasErrors; }
         }
 
-        public override string ToString()
-        {
-            return Text;
-        }
+        /// <summary>
+        /// Gets the logger containing compilation messages..
+        /// </summary>
+        /// <value>The logger.</value>
+        public Logger Logger { get; private set; }
     }
 }

@@ -33,7 +33,7 @@ namespace SharpDX.Toolkit.Graphics
         public sealed class Shader : IDataSerializable
         {
             /// <summary>
-            /// Name of this shader;
+            /// Name of this shader, only valid for public shaders, else null.
             /// </summary>
             public string Name;
 
@@ -85,6 +85,11 @@ namespace SharpDX.Toolkit.Graphics
             /// </summary>
             public List<ResourceParameter> ResourceParameters;
 
+            public override string ToString()
+            {
+                return string.Format("{0}Type: {1} {2}", Name == null ? string.Empty : string.Format("Name: {0},", Name), Type, Level);
+            }
+
             /// <summary>
             /// Check if this instance is similar to another Shader.
             /// </summary>
@@ -116,7 +121,10 @@ namespace SharpDX.Toolkit.Graphics
 
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
+                serializer.AllowNull = true;
                 serializer.Serialize(ref Name);
+                serializer.AllowNull = false;
+
                 serializer.SerializeEnum(ref Type);
                 serializer.SerializeEnum(ref CompilerFlags);
                 serializer.SerializeEnum(ref Level);

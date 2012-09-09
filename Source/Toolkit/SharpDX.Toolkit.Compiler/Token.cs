@@ -18,48 +18,55 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Collections.Generic;
-using SharpDX.Serialization;
+using System;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public partial class EffectBytecode 
+    /// <summary>
+    /// Contains information about a token language.
+    /// </summary>
+    internal class Token
     {
-        /// <summary>
-        /// Describes a pass from a technique.
-        /// </summary>
-        public sealed class Pass : IDataSerializable
+        public Token()
         {
-            /// <summary>
-            /// Name of this pass.
-            /// </summary>
-            public string Name;
+        }
 
-            /// <summary>
-            /// List of <see cref="Attribute"/>.
-            /// </summary>
-            public List<Attribute> Attributes;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Token" /> struct.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="span">The span.</param>
+        public Token(TokenType type, string value, SourceSpan span)
+        {
+            Type = type;
+            Value = value;
+            Span = span;
+        }
 
-            /// <summary>
-            /// Description of the shader stage <see cref="Pipeline"/>.
-            /// </summary>
-            public Pipeline Pipeline;
+        /// <summary>
+        /// The type of the token.
+        /// </summary>
+        public TokenType Type;
 
-            public override string ToString()
-            {
-                return string.Format("Pass: [{0}], Attributes({1})", Name, Attributes.Count);
-            }
+        /// <summary>
+        /// Value of the token.
+        /// </summary>
+        public string Value;
 
-            /// <inheritdoc/>
-            void IDataSerializable.Serialize(BinarySerializer serializer)
-            {
-                serializer.AllowNull = true;
-                serializer.Serialize(ref Name);
-                serializer.AllowNull = false;
+        /// <summary>
+        /// The source span.
+        /// </summary>
+        public SourceSpan Span;
 
-                serializer.Serialize(ref Attributes);
-                serializer.Serialize(ref Pipeline);
-            }
+        public bool EqualString(string value, bool caseSensitive = false)
+        {
+            return string.Compare(Value, value, caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase) == 0;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{{{0}/{1}}}", Type, Value);
         }
     }
 }

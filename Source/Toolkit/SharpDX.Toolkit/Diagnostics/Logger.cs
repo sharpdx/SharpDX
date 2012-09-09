@@ -126,7 +126,7 @@ namespace SharpDX.Toolkit.Diagnostics
         /// Logs the message.
         /// </summary>
         /// <param name="message">The message.</param>
-        protected virtual void LogMessage(LogMessage message)
+        public virtual void LogMessage(LogMessage message)
         {
             if (message.Type == LogMessageType.Error)
                 HasErrors = true;

@@ -17,49 +17,41 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
-using System.Collections.Generic;
-using SharpDX.Serialization;
-
 namespace SharpDX.Toolkit.Graphics
 {
-    public partial class EffectBytecode 
+    /// <summary>
+    /// Location of a portion of source.
+    /// </summary>
+    internal struct SourceSpan
     {
         /// <summary>
-        /// Describes a pass from a technique.
+        /// Path of the file.
         /// </summary>
-        public sealed class Pass : IDataSerializable
+        public string FilePath;
+
+        /// <summary>
+        /// Column of the span.
+        /// </summary>
+        public int Column;
+
+        /// <summary>
+        /// Line of the span.
+        /// </summary>
+        public int Line;
+
+        /// <summary>
+        /// Absolute index in the input string.
+        /// </summary>
+        public int Index;
+
+        /// <summary>
+        /// Length of the source span in the input string.
+        /// </summary>
+        public int Length;
+
+        public override string ToString()
         {
-            /// <summary>
-            /// Name of this pass.
-            /// </summary>
-            public string Name;
-
-            /// <summary>
-            /// List of <see cref="Attribute"/>.
-            /// </summary>
-            public List<Attribute> Attributes;
-
-            /// <summary>
-            /// Description of the shader stage <see cref="Pipeline"/>.
-            /// </summary>
-            public Pipeline Pipeline;
-
-            public override string ToString()
-            {
-                return string.Format("Pass: [{0}], Attributes({1})", Name, Attributes.Count);
-            }
-
-            /// <inheritdoc/>
-            void IDataSerializable.Serialize(BinarySerializer serializer)
-            {
-                serializer.AllowNull = true;
-                serializer.Serialize(ref Name);
-                serializer.AllowNull = false;
-
-                serializer.Serialize(ref Attributes);
-                serializer.Serialize(ref Pipeline);
-            }
+            return string.Format("{0} ({1}:{2})", FilePath, Line, Column);
         }
     }
 }

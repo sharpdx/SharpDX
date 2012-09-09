@@ -21,12 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using NUnit.Framework;
-using SharpDX.D3DCompiler;
-using SharpDX.DXGI;
-using SharpDX.Direct3D;
-using SharpDX.Direct3D11;
 
 namespace SharpDX.Toolkit.Graphics.Tests
 {

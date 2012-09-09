@@ -17,41 +17,35 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
-using System;
 using System.Collections.Generic;
-using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public partial class EffectBytecode
+    class CompilerOptions
     {
-        /// <summary>
-        /// Describes an effect.
-        /// </summary>
-        public sealed class Effect : IDataSerializable
-        {
-            /// <summary>
-            /// Name of the effect.
-            /// </summary>
-            public string Name;
+        [ConsoleEx.Required]
+        [ConsoleEx.Name("Effect *.fx Files")]
+        public List<string> FxFiles = new List<string>();
 
-            /// <summary>
-            /// List of <see cref="Technique"/>.
-            /// </summary>
-            public List<Technique> Techniques;
+        [ConsoleEx.Name("D", Description = "Define macro", Value = "<id>=<text>")]
+        public readonly List<string> Defines = new List<string>();
 
-            public override string ToString()
-            {
-                return string.Format("Effect: {0}, Techniques({1})", Name, Techniques.Count);
-            }
+        [ConsoleEx.Name("I", Description = "Additional include path\n", Value = "<include>")]
+        public readonly List<string> IncludeDirs = new List<string>();
 
-            /// <inheritdoc/>
-            void IDataSerializable.Serialize(BinarySerializer serializer)
-            {
-                serializer.Serialize(ref Name);
-                serializer.Serialize(ref Techniques);
-            }
-        }
+        [ConsoleEx.Name("Fo", Description = "Output object file. default is [output.tkfxo]\n", Value = "<file>")] 
+        public string OutputFile = "output.tkfxo";
+
+        [ConsoleEx.Name("Od", Description = "Output shader with debug information and no optimization")]
+        public bool Debug;
+
+        [ConsoleEx.Name("O", Description = "Optimization level 0..3.  1 is default", Value = "<0,1,2,3>")] 
+        public int OptimizationLevel = 1;
+
+        [ConsoleEx.Name("Zpr", Description = "Pack matrices in row-major order")]
+        public bool PackRowMajor;
+
+        [ConsoleEx.Name("Zpc", Description = "Pack matrices in column-major order")]
+        public bool PackColumnMajor;
     }
 }

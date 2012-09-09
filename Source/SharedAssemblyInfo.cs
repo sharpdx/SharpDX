@@ -23,7 +23,7 @@ using System.Resources;
 using System.Runtime.InteropServices;
 
 [assembly:AssemblyCompany("Alexandre Mutel")]
-[assembly:AssemblyCopyright("Copyright © 2010-2011 Alexandre Mutel")]
+[assembly:AssemblyCopyright("Copyright © 2010-2012 Alexandre Mutel")]
 
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.IO;
 using SharpDX.IO;
 using SharpDX.Serialization;
+using SharpDX.Toolkit.Diagnostics;
 
 namespace SharpDX.Toolkit.Graphics
 {
@@ -36,6 +37,12 @@ namespace SharpDX.Toolkit.Graphics
     public sealed partial class EffectBytecode : IDataSerializable
     {
         private const string MagicCode = "TKFX";
+
+        public EffectBytecode()
+        {
+            Shaders = new List<Shader>();
+            Effects = new List<Effect>();
+        }
 
         /// <summary>
         /// List of compiled shaders.
@@ -65,6 +72,96 @@ namespace SharpDX.Toolkit.Graphics
         {
             using (var stream = new NativeFileStream(fileName, NativeFileMode.Create, NativeFileAccess.Write, NativeFileShare.Write))
                 Save(stream);
+        }
+
+
+        public int FindShader(Shader shader)
+        {
+            for (int i = 0; i < Shaders.Count; i++)
+            {
+                if (Shaders[i].IsSimilar(shader))
+                    return i;
+            }
+            return -1;
+        }
+
+        public int FindShaderByName(string name)
+        {
+            for (int i = 0; i < Shaders.Count; i++)
+            {
+                if (Shaders[i].Name == name)
+                    return i;
+            }
+            return -1;
+
+        }
+
+        /// <summary>
+        /// Merges an existing <see cref="EffectBytecode"/> into this instance.
+        /// </summary>
+        /// <param name="source">The EffectBytecode to merge.</param>
+        /// <remarks>
+        /// This method is useful to build an archive of several effects.
+        /// </remarks>
+        public void MergeFrom(EffectBytecode source)
+        {
+            foreach (var effect in source.Effects)
+            {
+                bool skipEffect = false;
+
+                // Add effect that is not already in the archive with this same name.
+                foreach (var effect2 in Effects)
+                {
+                    if (effect2.Name == effect.Name)
+                    {
+                        skipEffect = true;
+                        break;
+                    }
+                }
+
+                if (skipEffect)
+                    continue;
+                
+                Effects.Add(effect);
+
+                foreach (var technique in effect.Techniques)
+                {
+                    foreach (var pass in technique.Passes)
+                    {
+                        foreach (var shaderLink in pass.Pipeline)
+                        {
+                            if (shaderLink == null)
+                                continue;
+
+                            if (shaderLink.IsImport)
+                            {
+                                // If this is an import, we try first to resolve it directly
+                                // Else we keep the name as-is
+                                var index = FindShaderByName(shaderLink.ImportName);
+                                if (index >= 0)
+                                {
+                                    shaderLink.ImportName = null;
+                                    shaderLink.Index = index;
+                                }
+                            }
+                            else
+                            {
+                                var shader = source.Shaders[shaderLink.Index];
+                                var index = FindShader(shader);
+                                if (index >= 0)
+                                {
+                                    shaderLink.Index = index;
+                                }
+                                else
+                                {
+                                    shaderLink.Index = Shaders.Count;
+                                    Shaders.Add(shader);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>

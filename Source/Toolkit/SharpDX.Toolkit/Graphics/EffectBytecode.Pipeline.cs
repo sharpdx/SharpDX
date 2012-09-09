@@ -17,6 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System.Collections;
+using System.Collections.Generic;
 using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
@@ -26,7 +29,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Describes link to shaders for each pipeline <see cref="StageType"/>
         /// </summary>
-        public sealed class Pipeline : IDataSerializable
+        public sealed class Pipeline : IDataSerializable, IEnumerable<ShaderLink>
         {
             private ShaderLink[] links;
 
@@ -58,6 +61,17 @@ namespace SharpDX.Toolkit.Graphics
                 serializer.AllowNull = true;
                 serializer.Serialize(ref links);
                 serializer.AllowNull = false;
+            }
+
+            public IEnumerator<ShaderLink> GetEnumerator()
+            {
+                foreach (var shaderLink in links)
+                    yield return shaderLink;
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
             }
         }
     }

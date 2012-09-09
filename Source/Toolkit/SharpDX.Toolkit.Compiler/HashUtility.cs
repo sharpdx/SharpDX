@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,50 +17,27 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-namespace SharpDX.Toolkit.Diagnostics
+namespace SharpDX.Toolkit.Graphics
 {
-    /// <summary>
-    /// Describes a log message.
-    /// </summary>
-    public class LogMessage
+    internal class HashUtility
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="LogMessage" /> class.
+        /// Compute a FNV1-modified Hash from <a href="http://bretm.home.comcast.net/~bretm/hash/6.html">Fowler/Noll/Vo Hash</a> improved version.
         /// </summary>
-        /// <param name="type">The type.</param>
-        /// <param name="text">The text.</param>
-        public LogMessage(LogMessageType type, string text)
+        /// <param name="data">Data to compute the hash from.</param>
+        /// <returns>A hash value</returns>
+        public static int ComputeFNVModified(byte[] data)
         {
-            Type = type;
-            Text = text;
-        }
-
-        /// <summary>
-        /// Type of message.
-        /// </summary>
-        public readonly LogMessageType Type;
-
-        /// <summary>
-        /// Text of the message.
-        /// </summary>
-        public readonly string Text;
-
-        /// <inheritdoc/>
-        public override string ToString()
-        {
-            return string.Format("{0} :{1}", Type, Text);
-        }
-    }
-
-    public class LogMessageRaw : LogMessage
-    {
-        public LogMessageRaw(LogMessageType type, string text) : base(type, text)
-        {
-        }
-
-        public override string ToString()
-        {
-            return Text;
-        }
+            const uint p = 16777619;
+            uint hash = 2166136261;
+            foreach (byte b in data)
+                hash = (hash ^ b) * p;
+            hash += hash << 13;
+            hash ^= hash >> 7;
+            hash += hash << 3;
+            hash ^= hash >> 17;
+            hash += hash << 5;
+            return unchecked((int)hash);
+        }         
     }
 }
