@@ -19,10 +19,9 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\Shared\ConsoleEx.cs">
-      <Link>ConsoleEx.cs</Link>
+    <Compile Include="..\..\Shared\ConsoleProgram.cs">
+      <Link>ConsoleProgram.cs</Link>
     </Compile>
-    <Compile Include="CompilerOptions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

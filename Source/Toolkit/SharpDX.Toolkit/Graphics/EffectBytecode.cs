@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using SharpDX.IO;
@@ -100,11 +101,29 @@ namespace SharpDX.Toolkit.Graphics
         /// Merges an existing <see cref="EffectBytecode"/> into this instance.
         /// </summary>
         /// <param name="source">The EffectBytecode to merge.</param>
+        /// <exception cref="InvalidOperationException">If the merge failed.</exception>
         /// <remarks>
         /// This method is useful to build an archive of several effects.
         /// </remarks>
         public void MergeFrom(EffectBytecode source)
         {
+            var logger = new Logger();
+            if (!MergeFrom(source, logger))
+                throw new InvalidOperationException(Utilities.Join("\r\n",logger.Messages));
+        }
+
+        /// <summary>
+        /// Merges an existing <see cref="EffectBytecode"/> into this instance.
+        /// </summary>
+        /// <param name="source">The EffectBytecode to merge.</param>
+        /// <param name="logger">Logger used to report merging errors.</param>
+        /// <remarks>
+        /// This method is useful to build an archive of several effects.
+        /// </remarks>
+        public bool MergeFrom(EffectBytecode source, Logger logger)
+        {
+            bool isMergeOk = true;
+
             foreach (var effect in source.Effects)
             {
                 bool skipEffect = false;
@@ -150,6 +169,23 @@ namespace SharpDX.Toolkit.Graphics
                                 var index = FindShader(shader);
                                 if (index >= 0)
                                 {
+                                    var previousShader = Shaders[index];
+
+                                    if (shader.Name != null)
+                                    {
+                                        // if shader from this instance is local and shader from source is global => transform current shader to global
+                                        if (previousShader.Name == null)
+                                        {
+                                            previousShader.Name = shader.Name;
+                                        }
+                                        else if (shader.Name != previousShader.Name)
+                                        {
+                                            // If shader from this instance is global and shader from source is global => check names. If exported names are different, this is an error
+                                            logger.Error("Cannot merge shader [{0}] into this instance, as there is already a global shader with a different name [{1}]", shader.Name, previousShader.Name);
+                                            isMergeOk = false;
+                                        }
+                                    }
+
                                     shaderLink.Index = index;
                                 }
                                 else
@@ -162,6 +198,8 @@ namespace SharpDX.Toolkit.Graphics
                     }
                 }
             }
+
+            return isMergeOk;
         }
 
         /// <summary>

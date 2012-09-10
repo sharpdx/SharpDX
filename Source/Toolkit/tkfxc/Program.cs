@@ -21,24 +21,54 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using SharpDX.Direct3D;
+using SharpDX.Toolkit.Diagnostics;
 
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
     /// This is the command line front-end for <see cref="SharpDX.Toolkit.Graphics.EffectCompiler"/>.
     /// </summary>
-    class Program
+    class Program : ConsoleProgram
     {
+        [Option("Effect *.fx Files", Required = true)]
+        public List<string> FxFiles = new List<string>();
+
+        [Option("D", Description = "Define macro", Value = "<id>=<text>")]
+        public readonly List<string> Defines = new List<string>();
+
+        [Option("I", Description = "Additional include path\n", Value = "<include>")]
+        public readonly List<string> IncludeDirs = new List<string>();
+
+        [Option("Fo", Description = "Output object file. default is [output.tkfxo]\n", Value = "<file>")]
+        public string OutputFile = "output.tkfxo";
+
+        [Option("Od", Description = "Output shader with debug information and no optimization")]
+        public bool Debug;
+
+        [Option("O", Description = "Optimization level 0..3.  1 is default", Value = "<0,1,2,3>")]
+        public int OptimizationLevel = 1;
+
+        [Option("Zpr", Description = "Pack matrices in row-major order")]
+        public bool PackRowMajor;
+
+        [Option("Zpc", Description = "Pack matrices in column-major order")]
+        public bool PackColumnMajor;
+
         static void Main(string[] args)
         {
-            // ----------------------------------------------------------------
-            // Parse command line
-            // ----------------------------------------------------------------
-            var options = new CompilerOptions();
-            if (!ConsoleEx.ParseCommandLine(options, args))
-            {
+            new Program().Run(args);
+        }
+
+        void Run(string[] args)
+        {
+            // Print the exe header
+            PrintHeader();
+
+            // Parse the command line
+            if (!ParseCommandLine(args))
                 Environment.Exit(-1);
-            }
+
+            var options = this;
 
             // ----------------------------------------------------------------
             // Process macros
@@ -49,7 +79,7 @@ namespace SharpDX.Toolkit.Graphics
                 var nameValue = define.Split('=');
                 string name = nameValue[0];
                 string value = null;
-                if (nameValue.Length > 1 )
+                if (nameValue.Length > 1)
                 {
                     value = nameValue[1];
                 }
@@ -97,9 +127,9 @@ namespace SharpDX.Toolkit.Graphics
 
                 if (!File.Exists(filePath))
                 {
-                    ConsoleEx.ErrorColor();
+                    ErrorColor();
                     Console.Error.WriteLine("File [{0}] does not exist", fxFile);
-                    ConsoleEx.ResetColor();
+                    ResetColor();
                     hasErrors = true;
                     continue;
                 }
@@ -110,15 +140,15 @@ namespace SharpDX.Toolkit.Graphics
 
 
                 // If there is any warning, errors, turn Error color on
-                if (effectBytecode.Logger.Messages.Count  > 0)
+                if (effectBytecode.Logger.Messages.Count > 0)
                 {
-                    ConsoleEx.ErrorColor();
+                    ErrorColor();
                 }
-                
+
                 // Show a message error for the current file
                 if (effectBytecode.HasErrors)
                 {
-                    Console.WriteLine("Error when compiling file [{0}]", fxFile);
+                    Console.Error.WriteLine("Error when compiling file [{0}]:", fxFile);
                     hasErrors = true;
                 }
 
@@ -131,21 +161,32 @@ namespace SharpDX.Toolkit.Graphics
                 // If we have some messages, reset the color back
                 if (effectBytecode.Logger.Messages.Count > 0)
                 {
-                    ConsoleEx.ResetColor();
+                    ResetColor();
                 }
 
                 // If there is no errors, merge the result to the final archive
                 if (!hasErrors)
                 {
-                    archiveBytecode.MergeFrom(effectBytecode.Bytecode);
+                    var logger = new Logger();
+                    archiveBytecode.MergeFrom(effectBytecode.Bytecode, logger);
+
+                    // If there is any errors from 
+                    if (logger.HasErrors)
+                    {
+                        hasErrors = true;
+                        ErrorColor();
+                        foreach (var message in logger.Messages)
+                            Console.Error.WriteLine(message);
+                        ResetColor();
+                    }
                 }
             }
 
             if (hasErrors)
             {
-                ConsoleEx.ErrorColor();
-                Console.WriteLine("Compilation has errors. Process aborted.");
-                ConsoleEx.ResetColor();
+                ErrorColor();
+                Console.Error.WriteLine("Compilation has errors. Process aborted.");
+                ResetColor();
                 Environment.Exit(-1);
             }
             else
@@ -153,7 +194,7 @@ namespace SharpDX.Toolkit.Graphics
                 Console.WriteLine();
                 Console.WriteLine("Save output to [{0}]", options.OutputFile);
                 // Save the result
-                archiveBytecode.Save(options.OutputFile);                
+                archiveBytecode.Save(options.OutputFile);
             }
         }
     }

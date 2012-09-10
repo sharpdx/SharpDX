@@ -34,6 +34,7 @@ namespace SharpDX
     /// Greetings to Shawn Hargreaves, original code http://blogs.msdn.com/b/shawnhar/archive/2012/04/20/a-reusable-reflection-based-command-line-parser.aspx
     /// This is a modified version of command line parser that adds:
     /// - .NET 2.0 compatible
+    /// - Allow inheritance to simplify declaration
     /// - Print exe banner, using AssemblyTitle and AssemblyCopyright.
     /// - Better padding of options, add descriptor and value text overrides.
     /// - Add support for - and / starting options.
@@ -44,7 +45,7 @@ namespace SharpDX
     /// <remarks>
     /// This single file is intended to be directly included in the project that needs to handle command line without requiring any SharpDX assembly dependencies.
     /// </remarks>
-    internal class ConsoleEx
+    class ConsoleProgram
     {
         private const int STD_OUTPUT_HANDLE = -11;
         private static int hConsoleHandle;
@@ -60,7 +61,7 @@ namespace SharpDX
 
         private List<string> requiredUsageHelp = new List<string>();
 
-        static ConsoleEx()
+        static ConsoleProgram()
         {
             ConsoleInfo = new CONSOLE_SCREEN_BUFFER_INFO();
             ConsoleOutputLocation = new COORD();
@@ -69,10 +70,14 @@ namespace SharpDX
             OriginalColors = ConsoleInfo.wAttributes;
         }
 
-        // Constructor.
-        private ConsoleEx(object optionsObject, int padOptions = 16)
+        protected ConsoleProgram(int padOptions = 16) : this(null, padOptions)
         {
-            this.optionsObject = optionsObject;
+        }
+
+        // Constructor.
+        private ConsoleProgram(object optionsObjectArg, int padOptions = 16)
+        {
+            this.optionsObject = optionsObjectArg ?? this;
 
             // Reflect to find what commandline options are available.
             foreach (FieldInfo field in optionsObject.GetType().GetFields())
@@ -81,7 +86,7 @@ namespace SharpDX
 
                 var optionName = option.Name;
 
-                if (GetAttribute<RequiredAttribute>(field) != null)
+                if (option.Required)
                 {
                     // Record a required option.
                     requiredOptions.Enqueue(field);
@@ -114,17 +119,22 @@ namespace SharpDX
             }
         }
 
-        public static bool ParseCommandLine(object options, string[] args, int padOptions = 16)
+        public static void PrintHeader()
         {
             Console.WriteLine("{0} - {1}", GetAssemblyTitle(), Assembly.GetEntryAssembly().GetName().Version);
             Console.WriteLine("{0}", GetAssemblyCopyright());
-            Console.WriteLine();
+            Console.WriteLine();            
+        }
 
-            var cmdParser = new ConsoleEx(options, padOptions);
+        public static bool ParseCommandLine(object options, string[] args, int padOptions = 16)
+        {
+            PrintHeader();
+
+            var cmdParser = new ConsoleProgram(options, padOptions);
             return cmdParser.ParseCommandLine(args);
         }
 
-        private bool ParseCommandLine(string[] args)
+        protected bool ParseCommandLine(string[] args)
         {
             // Parse each argument in turn.
             foreach (string arg in args)
@@ -269,9 +279,9 @@ namespace SharpDX
             return null;
         }
 
-        private static NameAttribute GetOptionName(FieldInfo field)
+        private static OptionAttribute GetOptionName(FieldInfo field)
         {
-            return GetAttribute<NameAttribute>(field) ?? new NameAttribute(field.Name);
+            return GetAttribute<OptionAttribute>(field) ?? new OptionAttribute(field.Name);
         }
 
         private void ShowError(string message, params object[] args)
@@ -397,12 +407,12 @@ namespace SharpDX
 
         #endregion
 
-        #region Nested type: NameAttribute
+        #region Nested type: OptionAttribute
 
         [AttributeUsage(AttributeTargets.Field)]
-        public sealed class NameAttribute : Attribute
+        public sealed class OptionAttribute : Attribute
         {
-            public NameAttribute(string name)
+            public OptionAttribute(string name)
             {
                 this.Name = name;
             }
@@ -412,15 +422,8 @@ namespace SharpDX
             public string Description { get; set; }
 
             public string Value { get; set; }
-        }
 
-        #endregion
-
-        #region Nested type: RequiredAttribute
-
-        [AttributeUsage(AttributeTargets.Field)]
-        public sealed class RequiredAttribute : Attribute
-        {
+            public bool Required { get; set; }
         }
 
         #endregion
@@ -440,10 +443,10 @@ namespace SharpDX
     }
 
     /// <summary>
-    /// Colors used by <see cref="ConsoleEx.Color"/>
+    /// Colors used by <see cref="ConsoleProgram.Color"/>
     /// </summary>
     [Flags]
-    internal enum ConsoleColor
+    enum ConsoleColor
     {
         /// <summary>
         /// Blue foreground color.
