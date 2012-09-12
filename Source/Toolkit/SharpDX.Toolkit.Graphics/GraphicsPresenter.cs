@@ -93,7 +93,7 @@ namespace SharpDX.Toolkit.Graphics
             if (!refreshRate.HasValue)
                 refreshRate = new Rational(60, 1);
 
-            var graphicsDevice = GraphicsDevice.CurrentSafe;
+            var graphicsDevice = GraphicsDevice.CurrentSafe.MainDevice;
             var graphicsAdapter = graphicsDevice.Adapter ?? GraphicsAdapter.Default;
             var refreshRateValue = refreshRate.Value;
 
@@ -131,7 +131,7 @@ namespace SharpDX.Toolkit.Graphics
                 Flags = SwapChainFlags.None,
             };
 
-            var graphicsPresenter = new GraphicsPresenter(GraphicsDevice.CurrentSafe, new SwapChain(GraphicsAdapter.Factory, (Direct3D11.Device)graphicsDevice, description));
+            var graphicsPresenter = new GraphicsPresenter(GraphicsDevice.CurrentSafe.MainDevice, new SwapChain(GraphicsAdapter.Factory, (Direct3D11.Device)graphicsDevice, description));
             return graphicsPresenter;
         }
 #endif

@@ -20,7 +20,6 @@
 
 using System;
 using System.IO;
-using System.Runtime.InteropServices;
 using SharpDX.Direct3D11;
 using SharpDX.IO;
 
@@ -137,59 +136,58 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Creates a new <see cref="TextureCube" /> with a single mipmap.
+        /// Creates a new <see cref="TextureCube" /> from a initial data..
         /// </summary>
         /// <typeparam name="T">Type of a pixel data</typeparam>
         /// <param name="size">The size (in pixels) of the top-level faces of the cube texture.</param>
         /// <param name="format">Describes the format to use.</param>
         /// <param name="usage">The usage.</param>
         /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
-        /// <param name="textureDataPerCubeFace">The textures for a single mipmap (6 cube face). See remarks</param>
+        /// <param name="textureData">an array of 6 textures. See remarks</param>
         /// <returns>A new instance of <see cref="TextureCube" /> class.</returns>
         /// <msdn-id>ff476521</msdn-id>
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
         /// <remarks>
-        /// The first dimension of mipMapTextures is the number of mipmaps, the second is the texture data for a particular mipmap.
+        /// The first dimension of mipMapTextures describes the number of array (TextureCube Array), the second is the texture data for a particular cube face.
         /// </remarks>
-        public static TextureCube New<T>(int size, PixelFormat format, T[][] textureDataPerCubeFace, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
+        public unsafe static TextureCube New<T>(int size, PixelFormat format, T[][] textureData, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
         {
-            return New(size, format, new[] { textureDataPerCubeFace }, isUnorderedReadWrite, usage);
+            if (textureData.Length != 6)
+                throw new ArgumentException("Invalid texture datas. First dimension must be equal to 6", "textureData");
+
+            var dataBox1 = GetDataBox(format, size, size, textureData[0], (IntPtr)Interop.Fixed(textureData[0]));
+            var dataBox2 = GetDataBox(format, size, size, textureData[0], (IntPtr)Interop.Fixed(textureData[1]));
+            var dataBox3 = GetDataBox(format, size, size, textureData[0], (IntPtr)Interop.Fixed(textureData[2]));
+            var dataBox4 = GetDataBox(format, size, size, textureData[0], (IntPtr)Interop.Fixed(textureData[3]));
+            var dataBox5 = GetDataBox(format, size, size, textureData[0], (IntPtr)Interop.Fixed(textureData[4]));
+            var dataBox6 = GetDataBox(format, size, size, textureData[0], (IntPtr)Interop.Fixed(textureData[5]));
+
+            return new TextureCube(NewTextureCubeDescription(size, format, isUnorderedReadWrite, 1, usage), dataBox1, dataBox2, dataBox3, dataBox4, dataBox5, dataBox6);
         }
 
         /// <summary>
-        /// Creates a new <see cref="TextureCube" /> array with a mipmaps for each array slice.
+        /// Creates a new <see cref="TextureCube" /> from a initial data..
         /// </summary>
         /// <typeparam name="T">Type of a pixel data</typeparam>
         /// <param name="size">The size (in pixels) of the top-level faces of the cube texture.</param>
         /// <param name="format">Describes the format to use.</param>
         /// <param name="usage">The usage.</param>
         /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
-        /// <param name="mipTextureDataPerCubeFace">The mip map textures with texture array. See remarks</param>
+        /// <param name="textureData">an array of 6 textures. See remarks</param>
         /// <returns>A new instance of <see cref="TextureCube" /> class.</returns>
         /// <msdn-id>ff476521</msdn-id>
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
         /// <remarks>
-        /// The first dimension of mipMapTextures describes the number of array (TextureCube Array), second dimension is the mipmap, the third is the texture data for a particular mipmap.
+        /// The first dimension of mipMapTextures describes the number of array (TextureCube Array), the second is the texture data for a particular cube face.
         /// </remarks>
-        public static TextureCube New<T>(int size, PixelFormat format, T[][][] mipTextureDataPerCubeFace, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
+        public static TextureCube New(int size, PixelFormat format, DataBox[] textureData, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
         {
-            if (mipTextureDataPerCubeFace.Length != 6)
-                throw new ArgumentException("Invalid texture datas. First dimension must be equal to 6", "mipTextureDataPerCubeFace");
+            if (textureData.Length != 6)
+                throw new ArgumentException("Invalid texture datas. First dimension must be equal to 6", "textureData");
 
-            usage = isUnorderedReadWrite ? ResourceUsage.Default : usage;
-            GCHandle[] handles = null;
-            try
-            {
-                var dataRectangles = Pin(size, format, mipTextureDataPerCubeFace, out handles);
-                var texture = new TextureCube(NewTextureCubeDescription(size, format, isUnorderedReadWrite, mipTextureDataPerCubeFace[0].Length, usage), dataRectangles);
-                return texture;
-            }
-            finally
-            {
-                UnPin(handles);
-            }
+            return new TextureCube(NewTextureCubeDescription(size, format, isUnorderedReadWrite, 1, usage), textureData);
         }
 
         /// <summary>
@@ -208,7 +206,7 @@ namespace SharpDX.Toolkit.Graphics
             if (image.Description.Dimension != TextureDimension.TextureCube)
                 throw new ArgumentException("Invalid image. Must be Cube", "image");
 
-            return new TextureCube(CreateFromImage(image, isUnorderedReadWrite, usage), image.ToDataBox());
+            return new TextureCube(CreateTextureDescriptionFromImage(image, isUnorderedReadWrite, usage), image.ToDataBox());
         }
 
         /// <summary>
@@ -243,7 +241,7 @@ namespace SharpDX.Toolkit.Graphics
 
         protected static Texture2DDescription NewTextureCubeDescription(int size, PixelFormat format, bool isReadWrite, int mipCount, ResourceUsage usage)
         {
-            var desc = Texture2DBase.NewDescription(size, size, format, isReadWrite, mipCount, 6, usage);
+            var desc = NewDescription(size, size, format, isReadWrite, mipCount, 6, usage);
             desc.OptionFlags = ResourceOptionFlags.TextureCube;
             return desc;
         }

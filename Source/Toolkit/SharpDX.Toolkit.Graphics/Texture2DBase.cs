@@ -18,8 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using System.Runtime.InteropServices;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 
@@ -41,7 +39,7 @@ namespace SharpDX.Toolkit.Graphics
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
         protected internal Texture2DBase(Texture2DDescription description)
-            : this(GraphicsDevice.CurrentSafe, description)
+            : this(GraphicsDevice.CurrentSafe.MainDevice, description)
         {
         }
 
@@ -54,7 +52,7 @@ namespace SharpDX.Toolkit.Graphics
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
         protected internal Texture2DBase(Texture2DDescription description, DataBox[] dataBoxes)
-            : this(GraphicsDevice.CurrentSafe, description, dataBoxes)
+            : this(GraphicsDevice.CurrentSafe.MainDevice, description, dataBoxes)
         {
         }
 
@@ -97,7 +95,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
         protected internal Texture2DBase(Direct3D11.Texture2D texture)
-            : this(GraphicsDevice.CurrentSafe, texture)
+            : this(GraphicsDevice.CurrentSafe.MainDevice, texture)
         {
         }
 
@@ -269,38 +267,12 @@ namespace SharpDX.Toolkit.Graphics
                 GetUnorderedAccessView(0, 0);
             }
         }
-        
-        protected static DataBox[] Pin<T>(int width, PixelFormat format, T[][][] initialTextures, out GCHandle[] handles) where T : struct
-        {
-            int mipMapLength = -1;
-            foreach (var t in initialTextures)
-            {
-                if (mipMapLength < 0)
-                    mipMapLength = t.Length;
-                else if (mipMapLength != t.Length)
-                    throw new ArgumentNullException("Must have same number of mipmaps for each slice of array", "initialTextures");
-            }
-
-            var dataRectangles = new DataBox[initialTextures.Length * mipMapLength];
-            handles = new GCHandle[initialTextures.Length * mipMapLength];
-
-            for (int i = 0; i < initialTextures.Length; i++)
-            {
-                for (int j = 0; j < mipMapLength; j++)
-                {
-                    var textureIndex = i * mipMapLength + j;
-                    var initialTexture = initialTextures[i][j];
-                    var handle = GCHandle.Alloc(initialTexture, GCHandleType.Pinned);
-                    handles[textureIndex] = handle;
-                    dataRectangles[textureIndex].DataPointer = handle.AddrOfPinnedObject();
-                    dataRectangles[textureIndex].RowPitch = width * format.SizeInBytes;
-                }
-            }
-            return dataRectangles;
-        }
 
         protected static Texture2DDescription NewDescription(int width, int height, PixelFormat format, bool isReadWrite, int mipCount, int arraySize, ResourceUsage usage)
         {
+            if (isReadWrite)
+                usage = ResourceUsage.Default;
+
             var desc = new Texture2DDescription()
                            {
                                Width = width,

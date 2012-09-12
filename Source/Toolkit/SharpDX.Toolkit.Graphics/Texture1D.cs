@@ -143,50 +143,8 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="width">The width.</param>
         /// <param name="format">Describes the format to use.</param>
         /// <param name="usage">The usage.</param>
+        /// <param name="textureData">Texture data. Size of must be equal to sizeof(Format) * width </param>
         /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
-        /// <param name="textureData">The texture data for a single mipmap and a single array slice. See remarks</param>
-        /// <returns>A new instance of <see cref="Texture1D" /> class.</returns>
-        /// <msdn-id>ff476521</msdn-id>
-        ///   <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_Texture1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>
-        ///   <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>
-        /// <remarks>
-        /// Each value in textureData is a pixel in the destination texture.
-        /// </remarks>
-        public static Texture1D New<T>(int width, PixelFormat format, T[] textureData, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
-        {
-            return New(width, format, new[] { new[] { textureData } }, isUnorderedReadWrite, usage);
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="Texture1D" /> with mipmaps.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="width">The width.</param>
-        /// <param name="format">Describes the format to use.</param>
-        /// <param name="usage">The usage.</param>
-        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
-        /// <param name="mipMapTextureArray">The mip map textures with arraySize = 1. See remarks</param>
-        /// <returns>A new instance of <see cref="Texture1D" /> class.</returns>
-        /// <msdn-id>ff476521</msdn-id>
-        ///   <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_Texture1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>
-        ///   <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>
-        /// <remarks>
-        /// The first dimension of mipMapTextures is the number of mipmaps, the second is the texture data for a particular mipmap.
-        /// </remarks>
-        public static Texture1D New<T>(int width, PixelFormat format, T[][] mipMapTextureArray, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
-        {
-            return New(width, format, new[] { mipMapTextureArray }, isUnorderedReadWrite, usage);
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="Texture1D" /> array with mipmaps for each array slice.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="width">The width.</param>
-        /// <param name="format">Describes the format to use.</param>
-        /// <param name="usage">The usage.</param>
-        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
-        /// <param name="mipMapTextureArray">The mip map textures with texture array. See remarks</param>
         /// <returns>A new instance of <see cref="Texture1D" /> class.</returns>
         /// <msdn-id>ff476521</msdn-id>
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_Texture1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>
@@ -194,20 +152,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>
         /// The first dimension of mipMapTextures describes the number of array (Texture1D Array), second dimension is the mipmap, the third is the texture data for a particular mipmap.
         /// </remarks>
-        public static Texture1D New<T>(int width, PixelFormat format, T[][][] mipMapTextureArray, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
+        public unsafe static Texture1D New<T>(int width, PixelFormat format, T[] textureData, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
         {
-            usage = isUnorderedReadWrite ? ResourceUsage.Default : usage;
-            GCHandle[] handles = null;
-            try
-            {
-                var dataRectangles = Pin(mipMapTextureArray, out handles);
-                var texture = new Texture1D(NewDescription(width, format, isUnorderedReadWrite, mipMapTextureArray[0].Length, mipMapTextureArray.Length, usage), dataRectangles);
-                return texture;
-            }
-            finally
-            {
-                UnPin(handles);
-            }
+            return new Texture1D(NewDescription(width, format, isUnorderedReadWrite, 1, 1, usage), GetDataBox(format, width, 1, textureData, (IntPtr)Interop.Fixed(textureData)));
         }
 
         /// <summary>
@@ -226,7 +173,7 @@ namespace SharpDX.Toolkit.Graphics
             if (image.Description.Dimension != TextureDimension.Texture1D)
                 throw new ArgumentException("Invalid image. Must be 1D", "image");
 
-            return new Texture1D(CreateFromImage(image, isUnorderedReadWrite, usage), image.ToDataBox());
+            return new Texture1D(CreateTextureDescriptionFromImage(image, isUnorderedReadWrite, usage), image.ToDataBox());
         }
 
         /// <summary>

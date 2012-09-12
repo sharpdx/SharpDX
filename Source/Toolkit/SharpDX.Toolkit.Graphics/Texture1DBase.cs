@@ -18,8 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using System.Runtime.InteropServices;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 
@@ -41,7 +39,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
         protected internal Texture1DBase(Texture1DDescription description)
-            : this(GraphicsDevice.CurrentSafe, description)
+            : this(GraphicsDevice.CurrentSafe.MainDevice, description)
         {
         }
 
@@ -54,7 +52,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
         protected internal Texture1DBase(Texture1DDescription description, DataBox[] dataBox)
-            : this(GraphicsDevice.CurrentSafe, description, dataBox)
+            : this(GraphicsDevice.CurrentSafe.MainDevice, description, dataBox)
         {
         }
 
@@ -97,7 +95,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
         protected internal Texture1DBase(Direct3D11.Texture1D texture)
-            : this(GraphicsDevice.CurrentSafe, texture)
+            : this(GraphicsDevice.CurrentSafe.MainDevice, texture)
         {
         }
 
@@ -243,36 +241,10 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
                
-        protected static DataBox[] Pin<T>(T[][][] initialTextures, out GCHandle[] handles) where T : struct
-        {
-            int mipMapLength = -1;
-            foreach (var t in initialTextures)
-            {
-                if (mipMapLength < 0)
-                    mipMapLength = t.Length;
-                else if (mipMapLength != t.Length)
-                    throw new ArgumentNullException("TextureDatas must have same number of mipmaps for each slice of array", "initialTextures");
-            }
-
-            var dataRectangles = new DataBox[initialTextures.Length * mipMapLength];
-            handles = new GCHandle[initialTextures.Length * mipMapLength];
-
-            for (int i = 0; i < initialTextures.Length; i++)
-            {
-                for (int j = 0; j < mipMapLength; j++)
-                {
-                    var textureIndex = i * mipMapLength + j;
-                    var initialTexture = initialTextures[i][j];
-                    var handle = GCHandle.Alloc(initialTexture, GCHandleType.Pinned);
-                    handles[textureIndex] = handle;
-                    dataRectangles[textureIndex].DataPointer = handle.AddrOfPinnedObject();
-                }
-            }
-            return dataRectangles;
-        }
-
         protected static Texture1DDescription NewDescription(int width, PixelFormat format, bool isReadWrite, int mipCount, int arraySize, ResourceUsage usage)
         {
+            usage = isReadWrite ? ResourceUsage.Default : usage;
+
             var desc = new Texture1DDescription()
                            {
                                Width = width,

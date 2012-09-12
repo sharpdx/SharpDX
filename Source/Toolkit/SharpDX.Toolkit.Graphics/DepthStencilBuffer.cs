@@ -61,7 +61,7 @@ namespace SharpDX.Toolkit.Graphics
         public readonly DepthStencilView ReadOnlyView;
 
         internal DepthStencilBuffer(Texture2DDescription description, DepthFormat format) 
-            : this(GraphicsDevice.CurrentSafe, description, format)
+            : this(GraphicsDevice.CurrentSafe.MainDevice, description, format)
 
         {
         }
@@ -75,7 +75,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         internal DepthStencilBuffer(Direct3D11.Texture2D texture, DepthFormat format)
-            : this(GraphicsDevice.CurrentSafe, texture, format)
+            : this(GraphicsDevice.CurrentSafe.MainDevice, texture, format)
         {
         }
 
@@ -226,7 +226,7 @@ namespace SharpDX.Toolkit.Graphics
             var desc = Texture2DBase.NewDescription(width, height, DXGI.Format.Unknown, false, 1, arraySize, ResourceUsage.Default);
             desc.BindFlags |= BindFlags.DepthStencil;
             // Sets the MSAALevel
-            int maximumMSAA = (int)GraphicsDevice.CurrentSafe.Features[(DXGI.Format)format].MSAALevelMax;
+            int maximumMSAA = (int)GraphicsDevice.CurrentSafe.MainDevice.Features[(DXGI.Format)format].MSAALevelMax;
             desc.SampleDescription.Count = Math.Max(1, Math.Min((int)multiSampleCount, maximumMSAA));
 
             var typelessDepthFormat = SharpDX.DXGI.Format.Unknown;

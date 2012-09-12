@@ -70,7 +70,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="description">The description.</param>
         private SamplerState(SamplerStateDescription description)
-            : this(GraphicsDevice.CurrentSafe, description)
+            : this(GraphicsDevice.CurrentSafe.MainDevice, description)
         {
         }
 
@@ -110,7 +110,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11Device::CreateSamplerState</unmanaged-short>	
         public static SamplerState New(Direct3D11.SamplerState samplerState)
         {
-            return new SamplerState(GraphicsDevice.CurrentSafe, samplerState);
+            return new SamplerState(GraphicsDevice.CurrentSafe.MainDevice, samplerState);
         }
 
         /// <summary>	

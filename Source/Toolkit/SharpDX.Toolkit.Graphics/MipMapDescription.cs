@@ -18,12 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
     /// Describes a mipmap.
     /// </summary>
-    public class MipMapDescription
+    public class MipMapDescription : IEquatable<MipMapDescription>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MipMapDescription" /> class.
@@ -84,5 +86,63 @@ namespace SharpDX.Toolkit.Graphics
         /// Size in bytes of this whole mipmap.
         /// </summary>
         public readonly int MipmapSize;
+
+        public bool Equals(MipMapDescription other)
+        {
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
+            return this.Width == other.Width && this.Height == other.Height && this.WidthPacked == other.WidthPacked && this.HeightPacked == other.HeightPacked && this.Depth == other.Depth && this.RowStride == other.RowStride && this.MipmapSize == other.MipmapSize && this.DepthStride == other.DepthStride;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+                return false;
+            if (ReferenceEquals(this, obj))
+                return true;
+            if (obj.GetType() != this.GetType())
+                return false;
+            return Equals((MipMapDescription)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = this.Width;
+                hashCode = (hashCode * 397) ^ this.Height;
+                hashCode = (hashCode * 397) ^ this.WidthPacked;
+                hashCode = (hashCode * 397) ^ this.HeightPacked;
+                hashCode = (hashCode * 397) ^ this.Depth;
+                hashCode = (hashCode * 397) ^ this.RowStride;
+                hashCode = (hashCode * 397) ^ this.MipmapSize;
+                hashCode = (hashCode * 397) ^ this.DepthStride;
+                return hashCode;
+            }
+        }
+
+        /// <summary>
+        /// Implements the ==.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator ==(MipMapDescription left, MipMapDescription right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// Implements the !=.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator !=(MipMapDescription left, MipMapDescription right)
+        {
+            return !Equals(left, right);
+        }
     }
 }

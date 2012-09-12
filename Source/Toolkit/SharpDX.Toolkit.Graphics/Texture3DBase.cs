@@ -18,8 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using System.Runtime.InteropServices;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 
@@ -40,7 +38,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture3D([In] const D3D11_TEXTURE3D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture3D** ppTexture3D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture3D</unmanaged-short>	
         protected internal Texture3DBase(Texture3DDescription description)
-            : this(GraphicsDevice.CurrentSafe, description)
+            : this(GraphicsDevice.CurrentSafe.MainDevice, description)
         {
         }
 
@@ -53,7 +51,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture3D([In] const D3D11_TEXTURE3D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture3D** ppTexture3D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture3D</unmanaged-short>	
         protected internal Texture3DBase(Texture3DDescription description,  DataBox[] dataRectangles)
-            : this(GraphicsDevice.CurrentSafe, description, dataRectangles)
+            : this(GraphicsDevice.CurrentSafe.MainDevice, description, dataRectangles)
         {
         }
 
@@ -96,7 +94,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture3D([In] const D3D11_TEXTURE3D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture3D** ppTexture3D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture3D</unmanaged-short>	
         protected internal Texture3DBase(Direct3D11.Texture3D texture)
-            : this(GraphicsDevice.CurrentSafe, texture)
+            : this(GraphicsDevice.CurrentSafe.MainDevice, texture)
         {
         }
 
@@ -215,25 +213,12 @@ namespace SharpDX.Toolkit.Graphics
                 GetUnorderedAccessView(0, 0);
             }
         }
-        
-        protected static DataBox[] Pin<T>(int width, int height, PixelFormat format, T[][] initialTextures, out GCHandle[] handles) where T : struct
-        {
-            var dataRectangles = new DataBox[initialTextures.Length];
-            handles = new GCHandle[initialTextures.Length];
-            for (int i = 0; i < initialTextures.Length; i++)
-            {
-                var initialTexture = initialTextures[i];
-                var handle = GCHandle.Alloc(initialTexture, GCHandleType.Pinned);
-                handles[i] = handle;
-                dataRectangles[i].DataPointer = handle.AddrOfPinnedObject();
-                dataRectangles[i].RowPitch = width * format.SizeInBytes;
-                dataRectangles[i].SlicePitch = width * height * format.SizeInBytes;
-            }
-            return dataRectangles;
-        }
 
         protected static Texture3DDescription NewDescription(int width, int height, int depth, PixelFormat format, bool isReadWrite, int mipCount, ResourceUsage usage)
         {
+            if (isReadWrite)
+                usage = ResourceUsage.Default;
+            
             var desc = new Texture3DDescription()
                            {
                                Width = width,

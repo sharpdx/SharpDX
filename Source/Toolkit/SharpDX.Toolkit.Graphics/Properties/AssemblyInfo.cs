@@ -26,5 +26,5 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyDescription("SharpDX.Toolkit.Graphics assembly")]
 
 #if DEBUG
-[assembly: InternalsVisibleTo("SharpDX.Toolkit.Graphics.Tests")]
+//[assembly: InternalsVisibleTo("SharpDX.Toolkit.Graphics.Tests")]
 #endif

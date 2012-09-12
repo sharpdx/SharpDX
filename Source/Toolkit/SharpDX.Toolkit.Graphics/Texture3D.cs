@@ -20,7 +20,6 @@
 
 using System;
 using System.IO;
-using System.Runtime.InteropServices;
 using SharpDX.Direct3D11;
 using SharpDX.IO;
 
@@ -140,7 +139,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Creates a new <see cref="Texture3D" /> with a single mipmap texture data.
+        /// Creates a new <see cref="Texture3D" /> with texture data for the firs map.
         /// </summary>
         /// <typeparam name="T">Type of the data to upload to the texture</typeparam>
         /// <param name="width">The width.</param>
@@ -148,8 +147,8 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="depth">The depth.</param>
         /// <param name="format">Describes the format to use.</param>
         /// <param name="usage">The usage.</param>
+        /// <param name="textureData">The texture data, width * height * depth datas </param>
         /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
-        /// <param name="textureData">The mip map textures. See remarks</param>
         /// <returns>A new instance of <see cref="Texture3D" /> class.</returns>
         /// <remarks>
         /// The first dimension of mipMapTextures describes the number of is an array ot Texture3D Array
@@ -157,43 +156,31 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476522</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture3D([In] const D3D11_TEXTURE3D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture3D** ppTexture3D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture3D</unmanaged-short>	
-        public static Texture3D New<T>(int width, int height, int depth, PixelFormat format, T[] textureData, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
+        public unsafe static Texture3D New<T>(int width, int height, int depth, PixelFormat format, T[] textureData, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
         {
-            return New(width, height, depth, format, new[] {textureData}, isUnorderedReadWrite, usage);
+            return New(width, height, depth, 1, format, new [] { GetDataBox(format, width, 1, textureData, (IntPtr)Interop.Fixed(textureData)) }, isUnorderedReadWrite, usage);
         }
 
         /// <summary>
-        /// Creates a new <see cref="Texture3D" /> with texture data for each mipmaps.
+        /// Creates a new <see cref="Texture3D"/>.
         /// </summary>
-        /// <typeparam name="T">Type of the data to upload to the texture</typeparam>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         /// <param name="depth">The depth.</param>
+        /// <param name="mipCount">Number of mipmaps, set to true to have all mipmaps, set to an int >=1 for a particular mipmap count.</param>
         /// <param name="format">Describes the format to use.</param>
         /// <param name="usage">The usage.</param>
         /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
-        /// <param name="mipMapTextures">The mip map textures. See remarks</param>
-        /// <returns>A new instance of <see cref="Texture3D" /> class.</returns>
-        /// <remarks>
-        /// The first dimension of mipMapTextures describes the number of is an array ot Texture3D Array
-        /// </remarks>
+        /// <returns>
+        /// A new instance of <see cref="Texture3D"/> class.
+        /// </returns>
         /// <msdn-id>ff476522</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture3D([In] const D3D11_TEXTURE3D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture3D** ppTexture3D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture3D</unmanaged-short>	
-        public static Texture3D New<T>(int width, int height, int depth, PixelFormat format, T[][] mipMapTextures, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
+        public static Texture3D New(int width, int height, int depth, MipMapCount mipCount, PixelFormat format, DataBox[] textureData, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Default)
         {
-            usage = isUnorderedReadWrite ? ResourceUsage.Default : usage;
-            GCHandle[] handles = null;
-            try
-            {
-                var dataRectangles = Pin(width, height, format, mipMapTextures, out handles);
-                var texture = new Texture3D(NewDescription(width, height, depth, format, isUnorderedReadWrite, mipMapTextures.Length, usage), dataRectangles);
-                return texture;
-            }
-            finally
-            {
-                UnPin(handles);
-            }
+            // TODO Add check for number of texture datas according to width/height/depth/mipCount.
+            return new Texture3D(NewDescription(width, height, depth, format, isUnorderedReadWrite, mipCount, usage), textureData);
         }
 
         /// <summary>
@@ -212,7 +199,7 @@ namespace SharpDX.Toolkit.Graphics
             if (image.Description.Dimension != TextureDimension.Texture3D)
                 throw new ArgumentException("Invalid image. Must be 3D", "image");
 
-            return new Texture3D(CreateFromImage(image, isUnorderedReadWrite, usage), image.ToDataBox());
+            return new Texture3D(CreateTextureDescriptionFromImage(image, isUnorderedReadWrite, usage), image.ToDataBox());
         }
 
         /// <summary>

@@ -511,13 +511,24 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
+        /// Creates a new <see cref="GraphicsDevice"/> using <see cref="DriverType.Hardware"/>.
+        /// </summary>
+        /// <param name="flags">The flags.</param>
+        /// <param name="featureLevels">The feature levels.</param>
+        /// <returns>A new instance of <see cref="GraphicsDevice"/></returns>
+        public static GraphicsDevice New(DeviceCreationFlags flags = DeviceCreationFlags.None, params FeatureLevel[] featureLevels)
+        {
+            return New(DriverType.Hardware, flags, featureLevels);
+        }
+
+        /// <summary>
         /// Creates a new <see cref="GraphicsDevice"/>.
         /// </summary>
         /// <param name="type">The type.</param>
         /// <param name="flags">The flags.</param>
         /// <param name="featureLevels">The feature levels.</param>
         /// <returns>A new instance of <see cref="GraphicsDevice"/></returns>
-        public static GraphicsDevice New(DriverType type = DriverType.Hardware, DeviceCreationFlags flags = DeviceCreationFlags.None, params FeatureLevel[] featureLevels)
+        public static GraphicsDevice New(DriverType type, DeviceCreationFlags flags = DeviceCreationFlags.None, params FeatureLevel[] featureLevels)
         {
             if (type == DriverType.Hardware)
                 return new GraphicsDevice(GraphicsAdapter.Default, flags, featureLevels);

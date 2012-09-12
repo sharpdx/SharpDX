@@ -845,10 +845,10 @@ namespace SharpDX.Toolkit.Graphics
             Bpp8 = 0x40000,  // Override with a legacy 8 bits-per-pixel format size
         };
 
-        internal static void ComputePitch(Format fmt, int width, int height, out int rowPitch, out int slicePitch, out int realWidth, out int realHeight, PitchFlags flags = PitchFlags.None)
+        internal static void ComputePitch(Format fmt, int width, int height, out int rowPitch, out int slicePitch, out int widthCount, out int heightCount, PitchFlags flags = PitchFlags.None)
         {
-            realWidth = width;
-            realHeight = height;
+            widthCount = width;
+            heightCount = height;
 
             if (FormatHelper.IsCompressed(fmt))
             {
@@ -858,11 +858,11 @@ namespace SharpDX.Toolkit.Graphics
                              || fmt == Format.BC4_Typeless
                              || fmt == Format.BC4_UNorm
                              || fmt == Format.BC4_SNorm) ? 8 : 16;
-                realWidth = Math.Max(1, (width + 3) / 4);
-                realHeight = Math.Max(1, (height + 3) / 4);
-                rowPitch = realWidth * bpb;
+                widthCount = Math.Max(1, (width + 3) / 4);
+                heightCount = Math.Max(1, (height + 3) / 4);
+                rowPitch = widthCount * bpb;
 
-                slicePitch = rowPitch * realHeight;
+                slicePitch = rowPitch * heightCount;
             }
             else if (FormatHelper.IsPacked(fmt))
             {

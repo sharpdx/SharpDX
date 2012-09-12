@@ -24,12 +24,19 @@ namespace SharpDX.Direct3D11
         /// <summary>
         /// Initiailize a new instance of <see cref="ResourceRegion"/> struct.
         /// </summary>
-        /// <param name="left">Left coordinates</param>
-        /// <param name="top">Top coordinates</param>
-        /// <param name="front">Front coordinates</param>
-        /// <param name="right">Right coordinates</param>
-        /// <param name="bottom">Botoom coordinates</param>
-        /// <param name="back">Back coordinates</param>
+        /// <param name="left">Left coordinates (inclusive)</param>
+        /// <param name="top">Top coordinates (inclusive)</param>
+        /// <param name="front">Front coordinates (inclusive)</param>
+        /// <param name="right">Right coordinates (exclusive)</param>
+        /// <param name="bottom">Botoom coordinates (exclusive)</param>
+        /// <param name="back">Back coordinates (exclusive)</param>
+        /// <remarks>
+        /// <ul>
+        /// <li>For a Width of 1 pixels, (right - left) = 1 </li>
+        /// <li>For a Height of 1 pixels, (bottom - top) = 1</li>
+        /// <li>For a Depth of 1 pixels, (back - front) = 1 </li>
+        /// </ul>
+        /// </remarks>
         public ResourceRegion(int left, int top, int front, int right, int bottom, int back)
         {
             Left = left;

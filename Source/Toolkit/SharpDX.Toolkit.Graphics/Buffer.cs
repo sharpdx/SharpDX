@@ -76,7 +76,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="viewFormat">The view format.</param>
         /// <param name="dataPointer">The data pointer.</param>
         private Buffer(BufferDescription description, BufferFlags bufferFlags, PixelFormat viewFormat, IntPtr dataPointer)
-            : this(GraphicsDevice.CurrentSafe, description, bufferFlags, viewFormat, dataPointer )
+            : this(GraphicsDevice.CurrentSafe.MainDevice, description, bufferFlags, viewFormat, dataPointer )
         {
         }
 
@@ -231,7 +231,7 @@ namespace SharpDX.Toolkit.Graphics
         public static Buffer New(Buffer buffer, DXGI.Format viewFormat = SharpDX.DXGI.Format.Unknown)
         {
             var bufferType = GetBufferFlagsFromDescription(buffer.Description);
-            return new Buffer(GraphicsDevice.CurrentSafe, buffer, bufferType, viewFormat);
+            return new Buffer(GraphicsDevice.CurrentSafe.MainDevice, buffer, bufferType, viewFormat);
         }
 
         /// <summary>

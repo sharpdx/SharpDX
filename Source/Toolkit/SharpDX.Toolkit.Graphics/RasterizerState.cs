@@ -60,7 +60,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="description">The description.</param>
         private RasterizerState(RasterizerStateDescription description)
-            : this(GraphicsDevice.CurrentSafe, description)
+            : this(GraphicsDevice.CurrentSafe.MainDevice, description)
         {
         }
 
@@ -99,7 +99,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11Device::CreateRasterizerState</unmanaged-short>	
         public static RasterizerState New(Direct3D11.RasterizerState rasterizerState)
         {
-            return new RasterizerState(GraphicsDevice.CurrentSafe, rasterizerState);
+            return new RasterizerState(GraphicsDevice.CurrentSafe.MainDevice, rasterizerState);
         }
 
         /// <summary>	

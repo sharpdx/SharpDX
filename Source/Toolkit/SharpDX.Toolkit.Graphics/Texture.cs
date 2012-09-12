@@ -251,6 +251,20 @@ namespace SharpDX.Toolkit.Graphics
         public abstract Texture Clone();
 
         /// <summary>
+        /// Makes a copy of this texture with type casting.
+        /// </summary>
+        /// <remarks>
+        /// This method doesn't copy the content of the texture.
+        /// </remarks>
+        /// <returns>
+        /// A copy of this texture.
+        /// </returns>
+        public T Clone<T>() where T : Texture
+        {
+            return (T)this.Clone();
+        }
+
+        /// <summary>
         /// Return an equivalent staging texture CPU read-writable from this instance.
         /// </summary>
         /// <returns></returns>
@@ -432,16 +446,31 @@ namespace SharpDX.Toolkit.Graphics
             return requestedLevel  == 0 ? maxMipMap : Math.Min(requestedLevel, maxMipMap);
         }
 
-        internal static TextureDescription CreateFromImage(Image image, bool isUnorderedReadWrite, ResourceUsage usage)
+        protected static DataBox GetDataBox<T>(Format format, int width, int height, T[] textureData, IntPtr fixedPointer) where T : struct
+        {
+            // Check that the textureData size is correct
+            if (textureData == null) throw new ArgumentNullException("textureData");
+            int rowPitch;
+            int slicePitch;
+            int widthCount;
+            int heightCount;
+            Image.ComputePitch(format, width, height, out rowPitch, out slicePitch, out widthCount, out heightCount);
+            if (Utilities.SizeOf(textureData) != slicePitch) throw new ArgumentException("Invalid size for TextureData");
+
+            return new DataBox(fixedPointer, rowPitch, slicePitch);
+        }
+
+        internal static TextureDescription CreateTextureDescriptionFromImage(Image image, bool isUnorderedReadWrite, ResourceUsage usage)
         {
             var desc = (TextureDescription)image.Description;
             desc.BindFlags = BindFlags.ShaderResource;
             desc.Usage = usage;
-            desc.CpuAccessFlags = GetCputAccessFlagsFromUsage(usage);
             if (isUnorderedReadWrite)
             {
+                desc.Usage = ResourceUsage.Default;
                 desc.BindFlags |= BindFlags.UnorderedAccess;
             }
+            desc.CpuAccessFlags = GetCputAccessFlagsFromUsage(usage);
             return desc;
         }
 
@@ -461,13 +490,13 @@ namespace SharpDX.Toolkit.Graphics
                     arrayOrDepthCount = 1;
                     mipCount = 1;
                     break;
-                case ViewType.ArrayBand:
+                case ViewType.MipBand:
                     arrayOrDepthCount = arrayOrDepthSize - arrayOrDepthIndex;
                     mipCount = 1;
                     break;
-                case ViewType.MipBand:
+                case ViewType.ArrayBand:
                     arrayOrDepthCount = 1;
-                    mipCount = arrayOrDepthSize - mipIndex;
+                    mipCount = Description.MipLevels - mipIndex;
                     break;
                 default:
                     arrayOrDepthCount = 0;
