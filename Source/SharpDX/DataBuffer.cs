@@ -38,30 +38,40 @@ namespace SharpDX
         private readonly bool _ownsBuffer;
         private readonly long _size;
 
-        internal unsafe DataBuffer(Blob buffer)
-        {
-            System.Diagnostics.Debug.Assert(buffer.GetBufferSize() > 0);
-
-            _buffer = (sbyte*)buffer.GetBufferPointer();
-            _size = buffer.GetBufferSize();
-            _blob = buffer;
-        }
-
         /// <summary>
         /// Creates the specified user buffer.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="userBuffer">The user buffer.</param>
-        /// <param name="canRead">if set to <c>true</c> [can read].</param>
-        /// <param name="canWrite">if set to <c>true</c> [can write].</param>
-        /// <returns></returns>
-        public static DataBuffer Create<T>(T[] userBuffer, bool canRead, bool canWrite) where T : struct
+        /// <typeparam name="T">Type of the buffer.</typeparam>
+        /// <param name="userBuffer">The buffer to use as a DataBuffer.</param>
+        /// <param name="index">Index inside the buffer in terms of element count (not size in bytes).</param>
+        /// <param name="pinBuffer">True to keep the managed buffer and pin it, false will allocate unmanaged memory and make a copy of it. Default is true.</param>
+        /// <returns>An instance of a DataBuffer</returns>
+        public static DataBuffer Create<T>(T[] userBuffer, int index = 0, bool pinBuffer = true) where T : struct
         {
             unsafe
             {
                 if (userBuffer == null)
                     throw new ArgumentNullException("userBuffer");
-                return new DataBuffer(Interop.Fixed(userBuffer), userBuffer.Length, false);
+
+                if (index < 0 || index > userBuffer.Length)
+                    throw new ArgumentException("Index is out of range [0, userBuffer.Length-1]", "index");
+
+                DataBuffer buffer;
+
+                var sizeOfBuffer = Utilities.SizeOf(userBuffer);
+
+                if (pinBuffer)
+                {
+                    var handle = GCHandle.Alloc(userBuffer, GCHandleType.Pinned);
+                    var indexOffset = index * Utilities.SizeOf<T>();
+                    buffer = new DataBuffer(indexOffset + (byte*)handle.AddrOfPinnedObject(), sizeOfBuffer - indexOffset, handle);
+                }
+                else
+                {
+                    buffer = new DataBuffer(Interop.Fixed(userBuffer), sizeOfBuffer, true);
+                }
+
+                return buffer;
             }
         }
 
@@ -83,6 +93,27 @@ namespace SharpDX
             }
         }
 
+        /// <summary>
+        ///   Initializes a new instance of the <see cref = "SharpDX.DataBuffer" /> class, using an unmanaged buffer as a backing store.
+        /// </summary>
+        /// <param name = "userBuffer">A pointer to the buffer to be used as a backing store.</param>
+        /// <param name = "sizeInBytes">The size of the buffer provided, in bytes.</param>
+        public unsafe DataBuffer(IntPtr userBuffer, int sizeInBytes)
+            : this((void*)userBuffer, sizeInBytes, false)
+        {
+        }
+
+
+        internal unsafe DataBuffer(void* buffer, int sizeInBytes, GCHandle handle)
+        {
+            System.Diagnostics.Debug.Assert(sizeInBytes > 0);
+
+            _buffer = (sbyte*)buffer;
+            _size = sizeInBytes;
+            _gCHandle = handle;
+            _ownsBuffer = false;
+        }
+
         internal unsafe DataBuffer(void* buffer, int sizeInBytes, bool makeCopy)
         {
             System.Diagnostics.Debug.Assert(sizeInBytes > 0);
@@ -100,21 +131,15 @@ namespace SharpDX
             _ownsBuffer = makeCopy;
         }
 
-        /// <summary>
-        ///   Initializes a new instance of the <see cref = "SharpDX.DataBuffer" /> class, using an unmanaged buffer as a backing store.
-        /// </summary>
-        /// <param name = "userBuffer">A pointer to the buffer to be used as a backing store.</param>
-        /// <param name = "sizeInBytes">The size of the buffer provided, in bytes.</param>
-        public DataBuffer(IntPtr userBuffer, long sizeInBytes)
+        internal unsafe DataBuffer(Blob buffer)
         {
-            unsafe
-            {
-                System.Diagnostics.Debug.Assert(userBuffer != IntPtr.Zero);
-                System.Diagnostics.Debug.Assert(sizeInBytes > 0);
-                _buffer = (sbyte*)userBuffer.ToPointer();
-                _size = sizeInBytes;
-            }
+            System.Diagnostics.Debug.Assert(buffer.GetBufferSize() > 0);
+
+            _buffer = (sbyte*)buffer.GetBufferPointer();
+            _size = buffer.GetBufferSize();
+            _blob = buffer;
         }
+
 
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources

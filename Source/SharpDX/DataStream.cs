@@ -90,14 +90,36 @@ namespace SharpDX
         /// <param name="userBuffer">A managed array to be used as a backing store.</param>
         /// <param name="canRead"><c>true</c> if reading from the buffer should be allowed; otherwise, <c>false</c>.</param>
         /// <param name="canWrite"><c>true</c> if writing to the buffer should be allowed; otherwise, <c>false</c>.</param>
-        /// <param name="makeCopy">if set to <c>true</c> [make copy].</param>
+        /// <param name="index">Index inside the buffer in terms of element count (not size in bytes).</param>
+        /// <param name="pinBuffer">True to keep the managed buffer and pin it, false will allocate unmanaged memory and make a copy of it. Default is true.</param>
         /// <returns></returns>
-        public static DataStream Create<T>(T[] userBuffer, bool canRead, bool canWrite, bool makeCopy = false) where T : struct
+        public static DataStream Create<T>(T[] userBuffer, bool canRead, bool canWrite, int index = 0, bool pinBuffer = true) where T : struct
         {
-            if (userBuffer == null)
-                throw new ArgumentNullException("userBuffer");
+            unsafe
+            {
+                if (userBuffer == null)
+                    throw new ArgumentNullException("userBuffer");
 
-            return new DataStream(GCHandle.Alloc(userBuffer, GCHandleType.Pinned), Utilities.SizeOf(userBuffer), canRead, canWrite, makeCopy);
+                if (index < 0 || index > userBuffer.Length)
+                    throw new ArgumentException("Index is out of range [0, userBuffer.Length-1]", "index");
+
+                DataStream stream;
+
+                var sizeOfBuffer = Utilities.SizeOf(userBuffer);
+
+                if (pinBuffer)
+                {
+                    var handle = GCHandle.Alloc(userBuffer, GCHandleType.Pinned);
+                    var indexOffset = index * Utilities.SizeOf<T>();
+                    stream = new DataStream(indexOffset + (byte*)handle.AddrOfPinnedObject(), sizeOfBuffer - indexOffset, canRead, canWrite, handle);
+                }
+                else
+                {
+                    stream = new DataStream(Interop.Fixed(userBuffer), sizeOfBuffer, canRead, canWrite, true);
+                }
+
+                return stream;
+            }
         }
 
         /// <summary>
@@ -144,21 +166,11 @@ namespace SharpDX
             }
         }
 
-        internal unsafe DataStream(GCHandle handle, int sizeInBytes, bool canRead, bool canWrite, bool makeCopy)
+        internal unsafe DataStream(void* dataPointer, int sizeInBytes, bool canRead, bool canWrite, GCHandle handle)
         {
             System.Diagnostics.Debug.Assert(sizeInBytes > 0);
-            if (makeCopy)
-            {
-                _buffer = (sbyte*)Utilities.AllocateMemory(sizeInBytes);
-                Utilities.CopyMemory((IntPtr)_buffer, handle.AddrOfPinnedObject(), sizeInBytes);
-                handle.Free();
-            }
-            else
-            {
-                _gCHandle = handle;
-                _buffer = (sbyte*)handle.AddrOfPinnedObject();
-            }
-
+            _gCHandle = handle;
+            _buffer = (sbyte*)dataPointer;
             _size = sizeInBytes;
             _canRead = canRead;
             _canWrite = canWrite;
