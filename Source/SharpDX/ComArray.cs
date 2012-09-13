@@ -45,7 +45,7 @@ namespace SharpDX
             {
                 int length = array.Length;
                 values = new ComObject[length];
-                nativeBuffer = Marshal.AllocHGlobal(length);
+                nativeBuffer = Utilities.AllocateMemory(length);
                 for(int i = 0; i < length; i++)
                     Set(i, array[i]);
             }
@@ -58,7 +58,7 @@ namespace SharpDX
         public ComArray(int size)
         {
             values = new ComObject[size];
-            nativeBuffer = Marshal.AllocHGlobal(size);
+            nativeBuffer = Utilities.AllocateMemory(size);
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace SharpDX
             {
                 values = null;
             }
-            Marshal.FreeHGlobal(nativeBuffer);
+            Utilities.FreeMemory(nativeBuffer);
             nativeBuffer = IntPtr.Zero;
         }
 
