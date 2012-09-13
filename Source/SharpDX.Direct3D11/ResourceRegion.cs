@@ -32,9 +32,9 @@ namespace SharpDX.Direct3D11
         /// <param name="back">Back coordinates (exclusive)</param>
         /// <remarks>
         /// <ul>
-        /// <li>For a Width of 1 pixels, (right - left) = 1 </li>
-        /// <li>For a Height of 1 pixels, (bottom - top) = 1</li>
-        /// <li>For a Depth of 1 pixels, (back - front) = 1 </li>
+        /// <li>For a Width of 1 pixels, (right - left) = 1. If left = 0, right = Width. </li>
+        /// <li>For a Height of 1 pixels, (bottom - top) = 1. If top = 0, bottom = Height.</li>
+        /// <li>For a Depth of 1 pixels, (back - front) = 1. If front = 0, back = Depth. </li>
         /// </ul>
         /// </remarks>
         public ResourceRegion(int left, int top, int front, int right, int bottom, int back)
