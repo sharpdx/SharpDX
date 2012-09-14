@@ -21,7 +21,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 
 namespace SharpDX
 {
@@ -45,7 +44,7 @@ namespace SharpDX
             {
                 int length = array.Length;
                 values = new ComObject[length];
-                nativeBuffer = Utilities.AllocateMemory(length);
+                nativeBuffer = Utilities.AllocateMemory(length * Utilities.SizeOf<IntPtr>());
                 for(int i = 0; i < length; i++)
                     Set(i, array[i]);
             }
@@ -58,7 +57,7 @@ namespace SharpDX
         public ComArray(int size)
         {
             values = new ComObject[size];
-            nativeBuffer = Utilities.AllocateMemory(size);
+            nativeBuffer = Utilities.AllocateMemory(size * Utilities.SizeOf<IntPtr>());
         }
 
         /// <summary>
