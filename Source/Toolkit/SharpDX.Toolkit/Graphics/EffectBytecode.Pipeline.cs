@@ -27,7 +27,7 @@ namespace SharpDX.Toolkit.Graphics
     public partial class EffectBytecode 
     {
         /// <summary>
-        /// Describes link to shaders for each pipeline <see cref="StageType"/>
+        /// Describes link to shaders for each pipeline <see cref="EffectShaderType"/>
         /// </summary>
         public sealed class Pipeline : IDataSerializable, IEnumerable<ShaderLink>
         {
@@ -44,15 +44,15 @@ namespace SharpDX.Toolkit.Graphics
             /// <summary>
             /// Gets or sets the <see cref="ShaderLink" /> with the specified stage type.
             /// </summary>
-            /// <param name="stageType">Type of the stage.</param>
+            /// <param name="effectShaderType">Type of the stage.</param>
             /// <returns>A <see cref="ShaderLink"/></returns>
             /// <remarks>
             /// The return value can be null if there is no shaders associated for this particular stage.
             /// </remarks>
-            public ShaderLink this[StageType stageType]
+            public ShaderLink this[EffectShaderType effectShaderType]
             {
-                get { return links[(int)stageType]; }
-                set { links[(int)stageType] = value; }
+                get { return links[(int)effectShaderType]; }
+                set { links[(int)effectShaderType] = value; }
             }
 
             /// <inheritdoc/>

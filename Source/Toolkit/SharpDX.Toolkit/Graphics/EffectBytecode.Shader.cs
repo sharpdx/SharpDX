@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
 using System.Collections.Generic;
 using SharpDX.Direct3D;
 using SharpDX.Serialization;
@@ -40,7 +39,7 @@ namespace SharpDX.Toolkit.Graphics
             /// <summary>
             /// Type of this shader.
             /// </summary>
-            public StageType Type;
+            public EffectShaderType Type;
 
             /// <summary>
             /// Compiler flags used to compile this shader.

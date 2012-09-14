@@ -25,12 +25,16 @@ using System.IO;
 using System.Text;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D;
+using SharpDX.IO;
 using SharpDX.Toolkit.Diagnostics;
 
 namespace SharpDX.Toolkit.Graphics
 {
     public delegate Stream IncludeFileDelegate(bool isSystemInclude, string file);
 
+    /// <summary>
+    /// Main class used to compile a Toolkit FX file.
+    /// </summary>
     public class EffectCompiler
     {
         private static readonly Dictionary<string, ValueConverter> ValueConverters = new Dictionary<string, ValueConverter>()
@@ -68,6 +72,31 @@ namespace SharpDX.Toolkit.Graphics
         {
         }
 
+        /// <summary>
+        /// Compiles an effect from file.
+        /// </summary>
+        /// <param name="filePath">The file path.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="macros">The macros.</param>
+        /// <param name="includeDirectoryList">The include directory list.</param>
+        /// <param name="includeFileDelegate">The include file delegate.</param>
+        /// <returns>The result of compilation.</returns>
+        public static EffectCompilerResult CompileFromFile(string filePath, EffectCompilerFlags flags = EffectCompilerFlags.None, List<ShaderMacro> macros = null, List<string> includeDirectoryList = null,
+                                                   IncludeFileDelegate includeFileDelegate = null)
+        {
+            return Compile(NativeFile.ReadAllText(filePath), filePath, flags, macros, includeDirectoryList, includeFileDelegate);
+        }
+
+        /// <summary>
+        /// Compiles an effect from the specified source code and filepath.
+        /// </summary>
+        /// <param name="sourceCode">The source code.</param>
+        /// <param name="filePath">The file path.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="macros">The macros.</param>
+        /// <param name="includeDirectoryList">The include directory list.</param>
+        /// <param name="includeFileDelegate">The include file delegate.</param>
+        /// <returns>The result of compilation.</returns>
         public static EffectCompilerResult Compile(string sourceCode, string filePath, EffectCompilerFlags flags = EffectCompilerFlags.None, List<ShaderMacro> macros = null, List<string> includeDirectoryList = null,
                                                    IncludeFileDelegate includeFileDelegate = null)
         {
@@ -224,22 +253,22 @@ namespace SharpDX.Toolkit.Graphics
                     HandleProfile(expression.Value);
                     break;
                 case "VertexShader":
-                    CompileShader(StageType.Vertex, expression.Value);
+                    CompileShader(EffectShaderType.Vertex, expression.Value);
                     break;
                 case "PixelShader":
-                    CompileShader(StageType.Pixel, expression.Value);
+                    CompileShader(EffectShaderType.Pixel, expression.Value);
                     break;
                 case "GeometryShader":
-                    CompileShader(StageType.Geometry, expression.Value);
+                    CompileShader(EffectShaderType.Geometry, expression.Value);
                     break;
                 case "DomainShader":
-                    CompileShader(StageType.Domain, expression.Value);
+                    CompileShader(EffectShaderType.Domain, expression.Value);
                     break;
                 case "HullShader":
-                    CompileShader(StageType.Hull, expression.Value);
+                    CompileShader(EffectShaderType.Hull, expression.Value);
                     break;
                 case "ComputeShader":
-                    CompileShader(StageType.Compute, expression.Value);
+                    CompileShader(EffectShaderType.Compute, expression.Value);
                     break;
                 default:
                     HandleAttribute(expression);
@@ -494,7 +523,7 @@ namespace SharpDX.Toolkit.Graphics
                 logger.Error("Unexpected assignement for [Profile] attribute: expecting only [identifier (fx_4_0, fx_4_1... etc.), or number (9.3, 10.0, 11.0... etc.)]", expression.Span);
         }
 
-        private string ExtractShaderName(StageType stageType, Ast.Expression expression)
+        private string ExtractShaderName(EffectShaderType effectShaderType, Ast.Expression expression)
         {
             string shaderName = null;
 
@@ -539,7 +568,7 @@ namespace SharpDX.Toolkit.Graphics
                         return null;
                     }
 
-                    ProfileToFeatureLevel(StageTypeToString(stageType) + "_", (string) profileName, out level);
+                    ProfileToFeatureLevel(StageTypeToString(effectShaderType) + "_", (string) profileName, out level);
 
 
                     var shaderMethod = compileExpression.Arguments[1] as Ast.MethodExpression;
@@ -567,12 +596,12 @@ namespace SharpDX.Toolkit.Graphics
             return shaderName;
         }
 
-        private void CompileShader(StageType type, Ast.Expression assignValue)
+        private void CompileShader(EffectShaderType type, Ast.Expression assignValue)
         {
             CompileShader(type, ExtractShaderName(type, assignValue), assignValue.Span);
         }
 
-        private void CompileShader(StageType type, string shaderName, SourceSpan span)
+        private void CompileShader(EffectShaderType type, string shaderName, SourceSpan span)
         {
             var level = this.level;
 
@@ -726,22 +755,22 @@ namespace SharpDX.Toolkit.Graphics
                 switch (expression.Name.Text)
                 {
                     case "SetVertexShader":
-                        CompileShader(StageType.Vertex, argument);
+                        CompileShader(EffectShaderType.Vertex, argument);
                         break;
                     case "SetPixelShader":
-                        CompileShader(StageType.Pixel, argument);
+                        CompileShader(EffectShaderType.Pixel, argument);
                         break;
                     case "SetGeometryShader":
-                        CompileShader(StageType.Geometry, argument);
+                        CompileShader(EffectShaderType.Geometry, argument);
                         break;
                     case "SetDomainShader":
-                        CompileShader(StageType.Domain, argument);
+                        CompileShader(EffectShaderType.Domain, argument);
                         break;
                     case "SetHullShader":
-                        CompileShader(StageType.Hull, argument);
+                        CompileShader(EffectShaderType.Hull, argument);
                         break;
                     case "SetComputeShader":
-                        CompileShader(StageType.Compute, argument);
+                        CompileShader(EffectShaderType.Compute, argument);
                         break;
                     default:
                         logger.Warning("Unhandled method [{0}]", expression.Span, expression.Name);
@@ -754,27 +783,27 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        private static string StageTypeToString(StageType type)
+        private static string StageTypeToString(EffectShaderType type)
         {
             string profile = null;
             switch (type)
             {
-                case StageType.Vertex:
+                case EffectShaderType.Vertex:
                     profile = "vs";
                     break;
-                case StageType.Domain:
+                case EffectShaderType.Domain:
                     profile = "ds";
                     break;
-                case StageType.Hull:
+                case EffectShaderType.Hull:
                     profile = "hs";
                     break;
-                case StageType.Geometry:
+                case EffectShaderType.Geometry:
                     profile = "gs";
                     break;
-                case StageType.Pixel:
+                case EffectShaderType.Pixel:
                     profile = "ps";
                     break;
-                case StageType.Compute:
+                case EffectShaderType.Compute:
                     profile = "cs";
                     break;
             }

@@ -34,7 +34,7 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Graphics\StageType.cs" />
+    <Compile Include="Graphics\EffectShaderType.cs" />
     <Compile Include="Graphics\EffectParameterClass.cs" />
     <Compile Include="Graphics\EffectParameterType.cs" />
     <Compile Include="Graphics\EffectBytecode.cs" />

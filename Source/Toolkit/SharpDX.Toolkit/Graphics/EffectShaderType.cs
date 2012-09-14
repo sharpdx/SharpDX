@@ -23,7 +23,7 @@ namespace SharpDX.Toolkit.Graphics
     /// <summary>
     /// Identify a single GPU stage in the pipeline.
     /// </summary>
-    public enum StageType : byte
+    public enum EffectShaderType : byte
     {
         /// <summary>
         /// Vertex shader stage.
@@ -31,14 +31,14 @@ namespace SharpDX.Toolkit.Graphics
         Vertex = 0,
 
         /// <summary>
-        /// Domain shader stage.
-        /// </summary>
-        Domain = 1,
-
-        /// <summary>
         /// Hull shader stage.
         /// </summary>
-        Hull = 2,
+        Hull = 1,
+
+        /// <summary>
+        /// Domain shader stage.
+        /// </summary>
+        Domain = 2,
 
         /// <summary>
         /// Geometry shader stage.

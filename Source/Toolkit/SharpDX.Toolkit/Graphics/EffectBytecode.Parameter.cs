@@ -97,6 +97,11 @@ namespace SharpDX.Toolkit.Graphics
                 serializer.SerializeEnum(ref Class);
                 serializer.SerializeEnum(ref Type);
             }
+
+            public override string ToString()
+            {
+                return string.Format("Name: {0}, Class: {1}, Type: {2}", Name, Class, Type);
+            }
         }
     }
 }
