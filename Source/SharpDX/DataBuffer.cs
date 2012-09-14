@@ -30,13 +30,13 @@ namespace SharpDX
     /// This class doesn't validate the position read/write from. It is the responsability of the client of this class
     /// to verify that access is done within the size of the buffer.
     /// </remarks>
-    public class DataBuffer : DisposeBase
+    public class DataBuffer : Component
     {
         private unsafe sbyte* _buffer;
         private GCHandle _gCHandle;
         private Blob _blob;
         private readonly bool _ownsBuffer;
-        private readonly long _size;
+        private readonly int _size;
 
         /// <summary>
         /// Creates the specified user buffer.
@@ -167,6 +167,14 @@ namespace SharpDX
                     _buffer = (sbyte*)0;
                 }
             }
+        }
+
+        /// <summary>
+        /// Clears the buffer.
+        /// </summary>
+        public unsafe void Clear(byte value = 0)
+        {
+            Utilities.ClearMemory((IntPtr)_buffer, value, Size);
         }
 
         /// <summary>
@@ -424,7 +432,7 @@ namespace SharpDX
         {
             unsafe
             {
-                Utilities.Write((IntPtr)(_buffer + positionInBytes), ref value);
+                Interop.CopyInline(_buffer + positionInBytes, ref value);
             }
         }
 
@@ -684,7 +692,7 @@ namespace SharpDX
         ///   Gets the length in bytes of the buffer.
         /// </summary>
         /// <value>A long value representing the length of the buffer in bytes.</value>
-        public long Size
+        public int Size
         {
             get { return _size; }
         }
