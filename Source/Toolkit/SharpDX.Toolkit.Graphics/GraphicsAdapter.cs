@@ -34,7 +34,7 @@ namespace SharpDX.Toolkit.Graphics
     /// <unmanaged-short>IDXGIAdapter1</unmanaged-short>	
     public class GraphicsAdapter : Component
     {
-        private static readonly Component staticCollector;
+        private static readonly DisposableCollection StaticCollector;
         private readonly Adapter1 adapter;
         private readonly int adapterOrdinal;
         //private AdapterDescription1 adapterDescription;
@@ -51,18 +51,18 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         static GraphicsAdapter()
         {
-            staticCollector = new Component();
+            StaticCollector = new DisposableCollection();
 
             // DXGI Factory
             Factory = new Factory1();
-            staticCollector.ToDispose(Factory);
+            StaticCollector.Add(Factory);
 
             int countAdapters = Factory.GetAdapterCount1();
             var adapters = new List<GraphicsAdapter>();
             for (int i = 0; i < countAdapters; i++)
             {
                 var adapter = new GraphicsAdapter(i);
-                staticCollector.ToDispose(adapter);
+                StaticCollector.Add(adapter);
                 adapters.Add(adapter);
             }
 
@@ -199,7 +199,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         internal static void DisposeStatic()
         {
-            ((IDisposable)staticCollector).Dispose();
+            ((IDisposable)StaticCollector).Dispose();
         }
 
         /// <summary>
