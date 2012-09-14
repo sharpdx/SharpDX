@@ -384,11 +384,17 @@
     <map param="ID3D(\d+)DeviceContext::[A-Z][A-Z]SetSamplers::ppSamplers" type="void" />
     <map method="ID3D(\d+)DeviceContext::[A-Z][A-Z]SetConstantBuffers" visibility="internal override" />
     <map param="ID3D(\d+)DeviceContext::[A-Z][A-Z]SetConstantBuffers::ppConstantBuffers" type="void" />
-
+    
+    <map method="ID3D(\d+)DeviceContext::[A-Z][A-Z]SetUnorderedAccessViews" visibility="internal override" />
+    <map param="ID3D(\d+)DeviceContext::[A-Z][A-Z]SetUnorderedAccessViews::ppUnorderedAccessViews" type="void" />
+    
+    
     <map method="ID3D(\d+)DeviceContext::[A-Z][A-Z]GetShader" visibility="internal override" />
     <map method="ID3D(\d+)DeviceContext::[A-Z][A-Z]GetShaderResources" visibility="internal override" />
     <map method="ID3D(\d+)DeviceContext::[A-Z][A-Z]GetSamplers" visibility="internal override" />
     <map method="ID3D(\d+)DeviceContext::[A-Z][A-Z]GetConstantBuffers" visibility="internal override" />
+    <map method="ID3D(\d+)DeviceContext::[A-Z][A-Z]GetSamplers" visibility="internal override" />
+
     <map method="ID3D(\d+)DeviceContext::OMGet.*" visibility="internal" />
     <map method="ID3D(\d+)DeviceContext::SO.*" visibility="internal" />
     <map method="ID3D(\d+)DeviceContext::RSGetScissorRects" visibility="internal" />

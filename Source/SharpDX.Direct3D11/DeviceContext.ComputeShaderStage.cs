@@ -17,6 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System;
+
 namespace SharpDX.Direct3D11
 {
     public partial class ComputeShaderStage
@@ -89,9 +92,17 @@ namespace SharpDX.Direct3D11
         /// <param name="unorderedAccessViews">A reference to an array of <see cref="SharpDX.Direct3D11.UnorderedAccessView"/> references to be set by the method. </param>
         /// <param name="uavInitialCounts">An array of Append/Consume buffer offsets. A value of -1 indicates the current offset should be kept.   Any other values set the hidden counter for that Appendable/Consumeable UAV.  pUAVInitialCounts is only relevant for UAVs which have the <see cref="SharpDX.Direct3D11.UnorderedAccessViewBufferFlags"/> flag,  otherwise the argument is ignored. </param>
         /// <unmanaged>void CSSetUnorderedAccessViews([In] int StartSlot,[In] int NumUAVs,[In, Buffer] const ID3D11UnorderedAccessView** ppUnorderedAccessViews,[In, Buffer] const int* pUAVInitialCounts)</unmanaged>
-        public void SetUnorderedAccessViews(int startSlot, SharpDX.Direct3D11.UnorderedAccessView[] unorderedAccessViews, int[] uavInitialCounts)
+        public unsafe void SetUnorderedAccessViews(int startSlot, SharpDX.Direct3D11.UnorderedAccessView[] unorderedAccessViews, int[] uavInitialCounts)
         {
-            SetUnorderedAccessViews(startSlot, unorderedAccessViews.Length, unorderedAccessViews, uavInitialCounts);
+            IntPtr* unorderedAccessViewsOut_ = (IntPtr*)0;
+            if (unorderedAccessViews != null)
+            {
+                IntPtr* unorderedAccessViewsOut__ = stackalloc IntPtr[unorderedAccessViews.Length];
+                unorderedAccessViewsOut_ = unorderedAccessViewsOut__;
+                for (int i = 0; i < unorderedAccessViews.Length; i++)
+                    unorderedAccessViewsOut_[i] = (unorderedAccessViews[i] == null) ? IntPtr.Zero : unorderedAccessViews[i].NativePointer;
+            }
+            SetUnorderedAccessViews(startSlot, unorderedAccessViews != null ? unorderedAccessViews.Length : 0, (IntPtr)unorderedAccessViewsOut_, uavInitialCounts);
         }
     }
 }

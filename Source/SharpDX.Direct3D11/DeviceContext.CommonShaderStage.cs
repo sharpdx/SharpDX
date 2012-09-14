@@ -371,6 +371,10 @@ namespace SharpDX.Direct3D11
         }
 
         internal abstract void SetConstantBuffers(int startSlot, int numBuffers, IntPtr constantBuffersRef);
+
+        internal abstract void SetShader(DeviceChild shader, SharpDX.Direct3D11.ClassInstance[] classInstancesOut, int numClassInstances);
+
+        internal abstract void SetUnorderedAccessViews(int startSlot, int numBuffers, IntPtr unorderedAccessBuffer, int[] uavCount);
     }
 
     /// <summary>
@@ -378,8 +382,7 @@ namespace SharpDX.Direct3D11
     /// TODO: check if usage of abstract is not introducing an unacceptable overhead...
     /// </summary>
     /// <typeparam name = "T">Type of the shader</typeparam>
-    public abstract class CommonShaderStage<T> : CommonShaderStage
-        where T : ComObject
+    public abstract class CommonShaderStage<T> : CommonShaderStage where T : DeviceChild
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CommonShaderStage&lt;T&gt;"/> class.
@@ -442,6 +445,16 @@ namespace SharpDX.Direct3D11
         public void Set(T shader, SharpDX.ComArray<ClassInstance> classInstances)
         {
             SetShader(shader, classInstances, classInstances == null ? 0 : classInstances.Length);
+        }
+
+        internal override void SetShader(DeviceChild shader, SharpDX.Direct3D11.ClassInstance[] classInstancesOut, int numClassInstances)
+        {
+            SetShader((T)shader, classInstancesOut, numClassInstances);
+        }
+
+        internal override void SetUnorderedAccessViews(int startSlot, int numBuffers, IntPtr unorderedAccessBuffer, int[] uavCount)
+        {
+            throw new NotSupportedException();
         }
 
         internal abstract void SetShader(T shaderRef, SharpDX.Direct3D11.ClassInstance[] classInstancesRef, int numClassInstances);
