@@ -1321,49 +1321,5 @@ namespace SharpDX
 
             return Equals((Vector4)value);
         }
-
-#if WPFInterop
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Vector4"/> to <see cref="System.Windows.Media.Media3D.Point4D"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator System.Windows.Media.Media3D.Point4D(Vector4 value)
-        {
-            return new System.Windows.Media.Media3D.Point4D(value.X, value.Y, value.Z, value.W);
-        }
-
-        /// <summary>
-        /// Performs an explicit conversion from <see cref="System.Windows.Media.Media3D.Point4D"/> to <see cref="SharpDX.Vector4"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static explicit operator Vector4(System.Windows.Media.Media3D.Point4D value)
-        {
-            return new Vector4((float)value.X, (float)value.Y, (float)value.Z, (float)value.W);
-        }
-#endif
-
-#if XnaInterop
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Vector4"/> to <see cref="Microsoft.Xna.Framework.Vector4"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator Microsoft.Xna.Framework.Vector4(Vector4 value)
-        {
-            return new Microsoft.Xna.Framework.Vector4(value.X, value.Y, value.Z, value.W);
-        }
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="Microsoft.Xna.Framework.Vector4"/> to <see cref="SharpDX.Vector4"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator Vector4(Microsoft.Xna.Framework.Vector4 value)
-        {
-            return new Vector4(value.X, value.Y, value.Z, value.W);
-        }
-#endif
     }
 }
