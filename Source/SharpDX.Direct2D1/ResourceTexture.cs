@@ -64,7 +64,7 @@ namespace SharpDX.Direct2D1
 
             fixed (void* pExtents = resourceTextureProperties.Extents) {
                 fixed (void* pExtendModes = resourceTextureProperties.ExtendModes) {
-                    resourceTexturePropertiesNative.ExtentsPointer = (IntPtr)pExtendModes;
+                    resourceTexturePropertiesNative.ExtentsPointer = (IntPtr)pExtents;
                     resourceTexturePropertiesNative.ExtendModesPointer = (IntPtr)pExtendModes;
                     context.CreateResourceTexture(resourceId, new IntPtr(&resourceTexturePropertiesNative), data, strides, data == null ? 0 : data.Length, outTexture);
                 }
