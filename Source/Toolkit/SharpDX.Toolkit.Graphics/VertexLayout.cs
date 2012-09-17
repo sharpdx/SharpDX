@@ -47,28 +47,20 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Initializes a new instance of the <see cref="VertexLayout" /> class.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="descriptions">The description.</param>
-        private VertexLayout(VertexDeclarationSet descriptions)
-            : this(GraphicsDevice.CurrentSafe.MainDevice, descriptions)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VertexLayout" /> class.
-        /// </summary>
-        /// <param name="deviceLocal">The device local.</param>
-        /// <param name="descriptions">The description.</param>
-        private VertexLayout(GraphicsDevice deviceLocal, VertexDeclarationSet descriptions)
+        private VertexLayout(GraphicsDevice device, VertexDeclarationSet descriptions)
         {
             ShaderBytecode = descriptions.ShaderBytecode;
             VertexDeclarations = descriptions.VertexDeclarations;
-            Initialize(deviceLocal, new InputLayout(deviceLocal, ShaderBytecode, ToInputElements(descriptions.VertexDeclarations)));
+            Initialize(device.MainDevice, new InputLayout(device.MainDevice, ShaderBytecode, ToInputElements(descriptions.VertexDeclarations)));
         }
 
         /// <summary>	
         /// <p>Create a sampler-state object that encapsulates sampling information for a texture.</p>	
         /// </summary>
-        /// <param name="vertexShaderBytecode">The  </param>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
+        /// <param name="inputShaderSignature">The  </param>
         /// <param name="description">A sampler state description</param>	
         /// <returns>A new <see cref="VertexLayout"/> instance</returns>	
         /// <remarks>	
@@ -77,19 +69,19 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476518</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateVertexLayout([In] const D3D11_SAMPLER_DESC* pSamplerDesc,[Out, Fast] ID3D11VertexLayout** ppVertexLayout)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateVertexLayout</unmanaged-short>	
-        public static VertexLayout New(byte[] vertexShaderBytecode, params VertexDeclaration[] description)
+        public static VertexLayout New(GraphicsDevice device, byte[] inputShaderSignature, params VertexDeclaration[] description)
         {
             if (description == null)
                 throw new ArgumentNullException("description");
 
-            var internalDesc = new VertexDeclarationSet(vertexShaderBytecode, description);
+            var internalDesc = new VertexDeclarationSet(inputShaderSignature, description);
 
             VertexLayout vertexLayout;
             lock (VertexLayoutCache)
             {
                 if (!VertexLayoutCache.TryGetValue(internalDesc, out vertexLayout))
                 {
-                    vertexLayout = new VertexLayout(internalDesc);
+                    vertexLayout = new VertexLayout(device, internalDesc);
                     VertexLayoutCache[internalDesc] = vertexLayout;
                 }
             }

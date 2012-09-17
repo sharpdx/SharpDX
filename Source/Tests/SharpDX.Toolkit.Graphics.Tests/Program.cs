@@ -43,9 +43,12 @@ namespace SharpDX.Toolkit.Graphics.Tests
             //testImage.TestLoadAndSave();
 
             // Test Image
-            var testImage = new TestTexture();
-            testImage.Initialize();
-            testImage.TestLoadSave();
+            //var testImage = new TestTexture();
+            //testImage.Initialize();
+            //testImage.TestLoadSave();
+
+            var testCompiler = new TestEffectCompiler();
+            testCompiler.TestCompiler();
         }
     }
 }

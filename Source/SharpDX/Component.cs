@@ -30,7 +30,7 @@ namespace SharpDX
         /// Gets or sets the disposables.
         /// </summary>
         /// <value>The disposables.</value>
-        private DisposeCollector Disposables { get; set; }
+        protected DisposeCollector DisposeCollector { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Component"/> class.
@@ -85,9 +85,9 @@ namespace SharpDX
             if (disposeManagedResources)
             {
                 // Dispose all ComObjects
-                if (Disposables != null)
-                    Disposables.Dispose();
-                Disposables = null;
+                if (DisposeCollector != null)
+                    DisposeCollector.Dispose();
+                DisposeCollector = null;
             }
         }
 
@@ -99,9 +99,9 @@ namespace SharpDX
         {
             if (toDisposeArg  != null)
             {
-                if (Disposables == null)
-                    Disposables = new DisposeCollector();
-                return Disposables.Collect(toDisposeArg);
+                if (DisposeCollector == null)
+                    DisposeCollector = new DisposeCollector();
+                return DisposeCollector.Collect(toDisposeArg);
             }
             return null;
         }
@@ -112,8 +112,8 @@ namespace SharpDX
         /// <param name="objectToDispose">Object to dispose.</param>
         protected internal void RemoveAndDispose<T>(ref T objectToDispose) where T : class, IDisposable
         {
-            if (objectToDispose != null && Disposables != null)
-                Disposables.RemoveAndDispose(ref objectToDispose);
+            if (objectToDispose != null && DisposeCollector != null)
+                DisposeCollector.RemoveAndDispose(ref objectToDispose);
         }
 
         /// <summary>
@@ -123,9 +123,8 @@ namespace SharpDX
         /// <param name="toDisposeArg">To dispose.</param>
         protected internal void RemoveToDispose<T>(T toDisposeArg) where T : class, IDisposable
         {
-            if (toDisposeArg != null && Disposables != null)
-                Disposables.Remove(toDisposeArg);
-
+            if (toDisposeArg != null && DisposeCollector != null)
+                DisposeCollector.Remove(toDisposeArg);
         }
     }
 }

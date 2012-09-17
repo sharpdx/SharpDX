@@ -35,9 +35,6 @@ namespace SharpDX.Toolkit.Graphics
         internal DeviceContext Context;
         internal CommonShaderStage[] ShaderStages;
 
-        [ThreadStatic]
-        private static GraphicsDevice current;
-
         /// <summary>
         /// Gets the features supported by this <see cref="GraphicsDevice"/>.
         /// </summary>
@@ -58,8 +55,27 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public readonly bool IsDeferred;
 
-        // Current states
+        /// <summary>
+        /// Gets the registered <see cref="BlendState"/> for this graphics device.
+        /// </summary>
+        public readonly BlendStateCollection BlendStates;
 
+        /// <summary>
+        /// Gets the registered <see cref="DepthStencilState"/> for this graphics device.
+        /// </summary>
+        public readonly DepthStencilStateCollection DepthStencilStates;
+
+        /// <summary>
+        /// Gets the registered <see cref="SamplerState"/> for this graphics device.
+        /// </summary>
+        public readonly SamplerStateCollection SamplerStates;
+
+        /// <summary>
+        /// Gets the registered <see cref="RasterizerState"/> for this graphics device.
+        /// </summary>
+        public readonly RasterizerStateCollection RasterizerStates;
+
+        // Current states
         private BlendState currentBlendState;
         private Color4 currentBlendFactor = Color.White;
         private int currentMultiSampleMask = -1;
@@ -78,7 +94,13 @@ namespace SharpDX.Toolkit.Graphics
             Context = Device.ImmediateContext;
             IsDeferred = false;
             Features = new GraphicsDeviceFeatures(Device);
-            AttachToCurrentThread();
+
+            // Create all default states
+            BlendStates = new BlendStateCollection(this);
+            DepthStencilStates = new DepthStencilStateCollection(this);
+            SamplerStates = new SamplerStateCollection(this);
+            RasterizerStates = new RasterizerStateCollection(this);
+
             Initialize();
         }
 
@@ -91,7 +113,13 @@ namespace SharpDX.Toolkit.Graphics
             Context = Device.ImmediateContext;
             IsDeferred = false;
             Features = new GraphicsDeviceFeatures(Device);
-            AttachToCurrentThread();
+
+            // Create all default states
+            BlendStates = new BlendStateCollection(this);
+            DepthStencilStates = new DepthStencilStateCollection(this);
+            SamplerStates = new SamplerStateCollection(this);
+            RasterizerStates = new RasterizerStateCollection(this);
+            
             Initialize();
         }
 
@@ -103,6 +131,13 @@ namespace SharpDX.Toolkit.Graphics
             Context = deferredContext;
             IsDeferred = true;
             Features = mainDevice.Features;
+
+            // Create all default states
+            BlendStates = mainDevice.BlendStates;
+            DepthStencilStates = mainDevice.DepthStencilStates;
+            SamplerStates = mainDevice.SamplerStates;
+            RasterizerStates = mainDevice.RasterizerStates;
+
             // Setup the workaround flag
             needWorkAroundForUpdateSubResource = IsDeferred && !Features.HasDriverCommandLists;
             Initialize();
@@ -126,26 +161,6 @@ namespace SharpDX.Toolkit.Graphics
         /// Gets the adapter associated with this device.
         /// </summary>
         public readonly GraphicsAdapter Adapter;
-
-        /// <summary>
-        /// Gets the <see cref="GraphicsDevice"/> attached to the current thread.
-        /// </summary>
-        public static GraphicsDevice Current
-        {
-            get { return current; }
-        }
-
-        /// <summary>
-        /// Gets the <see cref="GraphicsDevice"/> attached to the current thread.
-        /// </summary>
-        internal static GraphicsDevice CurrentSafe
-        {
-            get
-            {
-                if (current == null) throw new InvalidOperationException("A GraphicsDevice is not initialized or not attached to the current thread.");
-                return current;
-            }
-        }
 
         /// <summary>
         /// Gets or sets the current presenter use by the <see cref="Present"/> method.
@@ -573,14 +588,6 @@ namespace SharpDX.Toolkit.Graphics
         public GraphicsDevice NewDeferred()
         {
             return new GraphicsDevice(this, new DeviceContext(Device));
-        }
-
-        /// <summary>
-        /// Attach this <see cref="GraphicsDevice"/> to the current thread.
-        /// </summary>
-        public void AttachToCurrentThread()
-        {
-            current = this;
         }
 
         /// <summary>

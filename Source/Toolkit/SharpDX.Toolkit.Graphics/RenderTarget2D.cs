@@ -34,23 +34,13 @@ namespace SharpDX.Toolkit.Graphics
     /// </remarks>
     public class RenderTarget2D : Texture2DBase
     {
-        internal RenderTarget2D(Texture2DDescription description)
-            : this(GraphicsDevice.CurrentSafe.MainDevice, description)
-        {
-        }
-
         internal RenderTarget2D(GraphicsDevice device, Texture2DDescription description2D)
-            : base(device, description2D)
-        {
-        }
-
-        internal RenderTarget2D(Direct3D11.Texture2D texture)
-            : this(GraphicsDevice.CurrentSafe.MainDevice, texture)
+            : base(device.MainDevice, description2D)
         {
         }
 
         internal RenderTarget2D(GraphicsDevice device, Direct3D11.Texture2D texture)
-            : base(device, texture)
+            : base(device.MainDevice, texture)
         {
         }
 
@@ -136,6 +126,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Creates a new <see cref="RenderTarget2D"/> from a <see cref="Texture2DDescription"/>.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="description">The description.</param>
         /// <returns>
         /// A new instance of <see cref="RenderTarget2D"/> class.
@@ -143,14 +134,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476521</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
-        public static RenderTarget2D New(Texture2DDescription description)
+        public static RenderTarget2D New(GraphicsDevice device, Texture2DDescription description)
         {
-            return new RenderTarget2D(description);
+            return new RenderTarget2D(device, description);
         }
 
         /// <summary>
         /// Creates a new <see cref="RenderTarget2D"/> from a <see cref="Direct3D11.Texture2D"/>.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="texture">The native texture <see cref="Direct3D11.Texture2D"/>.</param>
         /// <returns>
         /// A new instance of <see cref="RenderTarget2D"/> class.
@@ -158,14 +150,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476521</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
-        public static RenderTarget2D New(Direct3D11.Texture2D texture)
+        public static RenderTarget2D New(GraphicsDevice device, Direct3D11.Texture2D texture)
         {
-            return new RenderTarget2D(texture);
+            return new RenderTarget2D(device, texture);
         }
 
         /// <summary>
         /// Creates a new <see cref="RenderTarget2D" /> with a single mipmap.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         /// <param name="format">Describes the format to use.</param>
@@ -175,14 +168,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476521</msdn-id>
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
-        public static RenderTarget2D New(int width, int height, PixelFormat format, bool isUnorderedReadWrite = false, int arraySize = 1)
+        public static RenderTarget2D New(GraphicsDevice device, int width, int height, PixelFormat format, bool isUnorderedReadWrite = false, int arraySize = 1)
         {
-            return New(width, height, false, format, isUnorderedReadWrite, arraySize);
+            return New(device, width, height, false, format, isUnorderedReadWrite, arraySize);
         }
 
         /// <summary>
         /// Creates a new <see cref="RenderTarget2D" />.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         /// <param name="mipCount">Number of mipmaps, set to true to have all mipmaps, set to an int >=1 for a particular mipmap count.</param>
@@ -193,14 +187,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476521</msdn-id>
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
-        public static RenderTarget2D New(int width, int height, MipMapCount mipCount, PixelFormat format, bool isUnorderedReadWrite = false, int arraySize = 1)
+        public static RenderTarget2D New(GraphicsDevice device, int width, int height, MipMapCount mipCount, PixelFormat format, bool isUnorderedReadWrite = false, int arraySize = 1)
         {
-            return new RenderTarget2D(NewRenderTargetDescription(width, height, format, isUnorderedReadWrite, mipCount, arraySize, MSAALevel.None));
+            return new RenderTarget2D(device, NewRenderTargetDescription(device.MainDevice, width, height, format, isUnorderedReadWrite, mipCount, arraySize, MSAALevel.None));
         }
 
         /// <summary>
         /// Creates a new <see cref="RenderTarget2D" /> using multisampling.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         /// <param name="format">Describes the format to use.</param>
@@ -210,18 +205,18 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476521</msdn-id>
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
-        public static RenderTarget2D New(int width, int height, MSAALevel multiSampleCount, PixelFormat format, int arraySize = 1)
+        public static RenderTarget2D New(GraphicsDevice device, int width, int height, MSAALevel multiSampleCount, PixelFormat format, int arraySize = 1)
         {
-            return new RenderTarget2D(NewRenderTargetDescription(width, height, format, false, 1, arraySize, multiSampleCount));
+            return new RenderTarget2D(device, NewRenderTargetDescription(device.MainDevice, width, height, format, false, 1, arraySize, multiSampleCount));
         }
 
-        protected static Texture2DDescription NewRenderTargetDescription(int width, int height, PixelFormat format, bool isReadWrite, int mipCount, int arraySize, MSAALevel multiSampleCount)
+        protected static Texture2DDescription NewRenderTargetDescription(GraphicsDevice device, int width, int height, PixelFormat format, bool isReadWrite, int mipCount, int arraySize, MSAALevel multiSampleCount)
         {
             var desc = Texture2DBase.NewDescription(width, height, format, isReadWrite, mipCount, arraySize, ResourceUsage.Default);
             desc.BindFlags |= BindFlags.RenderTarget;
 
             // Sets the MSAALevel
-            int maximumMSAA = (int)GraphicsDevice.CurrentSafe.MainDevice.Features[format].MSAALevelMax;
+            int maximumMSAA = (int)device.Features[format].MSAALevelMax;
             desc.SampleDescription.Count = Math.Max(1, Math.Min((int)multiSampleCount, maximumMSAA));
             return desc;
         }

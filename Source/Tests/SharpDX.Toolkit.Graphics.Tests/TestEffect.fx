@@ -33,8 +33,18 @@ struct PS_IN
 float4x4 worldViewProj;
 
 // binded resources
-Texture2D tex;
+Texture2D tex : register(t0);
+Texture2D tex1 : register(t1);
+Texture2D tex2 : register(t2);
+Texture2D tex3 : register(t3);
 SamplerState samp;
+
+// -----------------------------------------------
+float4 VS3( uint id : SV_VERTEXID ) : SV_POSITION
+{
+	return id;
+}
+
 
 // -----------------------------------------------
 // VertexShader: VS
@@ -45,7 +55,11 @@ PS_IN VS( VS_IN input)
 	
 	if (ACTIVATE_DUMMY_CODE) 
 	{
-		output.pos = mul(input.pos, worldViewProj) + tex.SampleLevel(samp, float2(0.5, 0.5), 0);
+		output.pos = mul(input.pos, worldViewProj) + 
+			tex.SampleLevel(samp, float2(0.5, 0.5), 0) +
+			tex1.SampleLevel(samp, float2(0.5, 0.5), 0) +
+			tex2.SampleLevel(samp, float2(0.5, 0.5), 0) +
+			tex3.SampleLevel(samp, float2(0.5, 0.5), 0);			
 	}
 	else
 	{
@@ -76,7 +90,7 @@ float4 PS( PS_IN input ) : SV_Target
 
 // Test using Toolkit FX new pass format.
 // The format is specific to SharpDX Toolkit and is not compatible with legacy Direct3D9/Direct3D10/11 FX files.
-technique 
+technique
 {
 	pass t1 {
 		// Defines SM profile for all valid for all shaders compiled in this file. Can be overloaded at any time.

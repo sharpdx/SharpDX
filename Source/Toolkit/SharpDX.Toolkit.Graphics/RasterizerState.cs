@@ -31,26 +31,6 @@ namespace SharpDX.Toolkit.Graphics
     public class RasterizerState : GraphicsResource
     {
         /// <summary>
-        /// Built-in raterizer state object with settings for culling primitives with clockwise winding order (front facing).
-        /// </summary>
-        public static readonly RasterizerState CullFront = New("RasterizerState.CullFront", CullMode.Front);
-
-        /// <summary>
-        /// Built-in raterizer state object with settings for culling primitives with counter-clockwise winding order (back facing).
-        /// </summary>
-        public static readonly RasterizerState CullBack = New("RasterizerState.CullBack", CullMode.Back);
-
-        /// <summary>
-        /// Built-in raterizer state object with settings for not culling any primitives.
-        /// </summary>
-        public static readonly RasterizerState CullNone = New("RasterizerState.CullNone", CullMode.None);
-
-        /// <summary>
-        /// Built-in default raterizer state object is back facing (see <see cref="CullBack"/>).
-        /// </summary>
-        public static readonly RasterizerState Default = CullBack;
-
-        /// <summary>
         /// Gets the description of this blend state.
         /// </summary>
         public readonly RasterizerStateDescription Description;
@@ -58,38 +38,30 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Initializes a new instance of the <see cref="RasterizerState" /> class.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="description">The description.</param>
-        private RasterizerState(RasterizerStateDescription description)
-            : this(GraphicsDevice.CurrentSafe.MainDevice, description)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RasterizerState" /> class.
-        /// </summary>
-        /// <param name="deviceLocal">The device local.</param>
-        /// <param name="description">The description.</param>
-        private RasterizerState(GraphicsDevice deviceLocal, RasterizerStateDescription description)
+        private RasterizerState(GraphicsDevice device, RasterizerStateDescription description)
         {
             Description = description;
-            Initialize(deviceLocal, null);
+            Initialize(device, null);
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RasterizerState" /> class.
         /// </summary>
-        /// <param name="deviceLocal">The device local.</param>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="nativeState">State of the native.</param>
-        private RasterizerState(GraphicsDevice deviceLocal, Direct3D11.RasterizerState nativeState)
+        private RasterizerState(GraphicsDevice device, Direct3D11.RasterizerState nativeState)
         {
             Description = nativeState.Description;
             Resource = ToDispose(nativeState);
-            Initialize(deviceLocal, null);
+            Initialize(device, null);
         }
 
         /// <summary>	
         /// <p>Create a rasterizer state object that tells the rasterizer stage how to behave.</p>	
         /// </summary>	
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="rasterizerState">An existing <see cref="Direct3D11.RasterizerState"/> instance.</param>	
         /// <remarks>	
         /// <p>4096 unique rasterizer state objects can be created on a device at a time.</p><p>If an application attempts to create a rasterizer-state interface with the same state as an existing interface, the same interface will be returned and the total number of unique rasterizer state objects will stay the same.</p>	
@@ -97,14 +69,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476516</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateRasterizerState([In] const D3D11_RASTERIZER_DESC* pRasterizerDesc,[Out, Fast] ID3D11RasterizerState** ppRasterizerState)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateRasterizerState</unmanaged-short>	
-        public static RasterizerState New(Direct3D11.RasterizerState rasterizerState)
+        public static RasterizerState New(GraphicsDevice device, Direct3D11.RasterizerState rasterizerState)
         {
-            return new RasterizerState(GraphicsDevice.CurrentSafe.MainDevice, rasterizerState);
+            return new RasterizerState(device, rasterizerState);
         }
 
         /// <summary>	
         /// <p>Create a rasterizer state object that tells the rasterizer stage how to behave.</p>	
         /// </summary>	
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="description">A rasterizer state description</param>	
         /// <remarks>	
         /// <p>4096 unique rasterizer state objects can be created on a device at a time.</p><p>If an application attempts to create a rasterizer-state interface with the same state as an existing interface, the same interface will be returned and the total number of unique rasterizer state objects will stay the same.</p>	
@@ -112,14 +85,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476516</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateRasterizerState([In] const D3D11_RASTERIZER_DESC* pRasterizerDesc,[Out, Fast] ID3D11RasterizerState** ppRasterizerState)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateRasterizerState</unmanaged-short>	
-        public static RasterizerState New(RasterizerStateDescription description)
+        public static RasterizerState New(GraphicsDevice device, RasterizerStateDescription description)
         {
-            return new RasterizerState(description);
+            return new RasterizerState(device, description);
         }
 
         /// <summary>	
         /// <p>Create a rasterizer state object that tells the rasterizer stage how to behave.</p>	
         /// </summary>	
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="name">Name of this depth stencil state.</param>
         /// <param name="description">A rasterizer state description</param>	
         /// <remarks>	
@@ -128,9 +102,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476516</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateRasterizerState([In] const D3D11_RASTERIZER_DESC* pRasterizerDesc,[Out, Fast] ID3D11RasterizerState** ppRasterizerState)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateRasterizerState</unmanaged-short>	
-        public static RasterizerState New(string name, RasterizerStateDescription description)
+        public static RasterizerState New(GraphicsDevice device, string name, RasterizerStateDescription description)
         {
-            return new RasterizerState(description) {Name = name};
+            return new RasterizerState(device, description) {Name = name};
         }
         
         protected override DeviceChild CreateResource()
@@ -147,12 +121,12 @@ namespace SharpDX.Toolkit.Graphics
             return (Direct3D11.RasterizerState) (from == null ? null : from.GetOrCreateResource());
         }
 
-        private static RasterizerState New(string name, CullMode mode)
+        internal static RasterizerState New(GraphicsDevice device, string name, CullMode mode)
         {
             var description = RasterizerStateDescription.Default();
             description.CullMode = mode;
 
-            var state = New(description);
+            var state = New(device, description);
             state.Name = name;
             return state;
         }

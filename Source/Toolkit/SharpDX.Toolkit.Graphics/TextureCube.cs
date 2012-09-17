@@ -30,16 +30,7 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public class TextureCube : Texture2DBase
     {
-        internal TextureCube(Texture2DDescription description, params DataBox[] dataRectangles)
-            : base(description, dataRectangles)
-        {
-        }
-
         internal TextureCube(GraphicsDevice device, Texture2DDescription description2D, params DataBox[] dataBoxes) : base(device, description2D, dataBoxes)
-        {
-        }
-
-        internal TextureCube(Direct3D11.Texture2D texture) : base(texture)
         {
         }
 
@@ -69,6 +60,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Creates a new texture from a <see cref="Texture2DDescription"/>.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="description">The description.</param>
         /// <returns>
         /// A new instance of <see cref="TextureCube"/> class.
@@ -76,14 +68,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476521</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
-        public static TextureCube New(Texture2DDescription description)
+        public static TextureCube New(GraphicsDevice device, Texture2DDescription description)
         {
-            return new TextureCube(description);
+            return new TextureCube(device, description);
         }
 
         /// <summary>
         /// Creates a new texture from a <see cref="Direct3D11.Texture2D"/>.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="texture">The native texture <see cref="Direct3D11.Texture2D"/>.</param>
         /// <returns>
         /// A new instance of <see cref="TextureCube"/> class.
@@ -91,34 +84,34 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476521</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
-        public static TextureCube New(Direct3D11.Texture2D texture)
+        public static TextureCube New(GraphicsDevice device, Direct3D11.Texture2D texture)
         {
-            return new TextureCube(texture);
+            return new TextureCube(device, texture);
         }
-
 
         /// <summary>
         /// Creates a new <see cref="TextureCube"/>.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="size">The size (in pixels) of the top-level faces of the cube texture.</param>
         /// <param name="format">Describes the format to use.</param>
         /// <param name="usage">The usage.</param>
         /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
-        /// <param name="mipCount">(optional) number of mips.</param>
         /// <returns>
         /// A new instance of <see cref="Texture2D"/> class.
         /// </returns>
         /// <msdn-id>ff476521</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
-        public static TextureCube New(int size, PixelFormat format, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Default)
+        public static TextureCube New(GraphicsDevice device, int size, PixelFormat format, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Default)
         {
-            return New(size, false, format, isUnorderedReadWrite, usage);
+            return New(device, size, false, format, isUnorderedReadWrite, usage);
         }
 
         /// <summary>
         /// Creates a new <see cref="TextureCube"/>.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="size">The size (in pixels) of the top-level faces of the cube texture.</param>
         /// <param name="mipCount">Number of mipmaps, set to true to have all mipmaps, set to an int >=1 for a particular mipmap count.</param>
         /// <param name="format">Describes the format to use.</param>
@@ -130,15 +123,16 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476521</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
-        public static TextureCube New(int size, MipMapCount mipCount, PixelFormat format, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Default)
+        public static TextureCube New(GraphicsDevice device, int size, MipMapCount mipCount, PixelFormat format, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Default)
         {
-            return new TextureCube(NewTextureCubeDescription(size, format, isUnorderedReadWrite, mipCount, usage));
+            return new TextureCube(device, NewTextureCubeDescription(size, format, isUnorderedReadWrite, mipCount, usage));
         }
 
         /// <summary>
         /// Creates a new <see cref="TextureCube" /> from a initial data..
         /// </summary>
         /// <typeparam name="T">Type of a pixel data</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="size">The size (in pixels) of the top-level faces of the cube texture.</param>
         /// <param name="format">Describes the format to use.</param>
         /// <param name="usage">The usage.</param>
@@ -151,7 +145,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>
         /// The first dimension of mipMapTextures describes the number of array (TextureCube Array), the second is the texture data for a particular cube face.
         /// </remarks>
-        public unsafe static TextureCube New<T>(int size, PixelFormat format, T[][] textureData, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
+        public unsafe static TextureCube New<T>(GraphicsDevice device, int size, PixelFormat format, T[][] textureData, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
         {
             if (textureData.Length != 6)
                 throw new ArgumentException("Invalid texture datas. First dimension must be equal to 6", "textureData");
@@ -163,13 +157,13 @@ namespace SharpDX.Toolkit.Graphics
             var dataBox5 = GetDataBox(format, size, size, textureData[0], (IntPtr)Interop.Fixed(textureData[4]));
             var dataBox6 = GetDataBox(format, size, size, textureData[0], (IntPtr)Interop.Fixed(textureData[5]));
 
-            return new TextureCube(NewTextureCubeDescription(size, format, isUnorderedReadWrite, 1, usage), dataBox1, dataBox2, dataBox3, dataBox4, dataBox5, dataBox6);
+            return new TextureCube(device, NewTextureCubeDescription(size, format, isUnorderedReadWrite, 1, usage), dataBox1, dataBox2, dataBox3, dataBox4, dataBox5, dataBox6);
         }
 
         /// <summary>
         /// Creates a new <see cref="TextureCube" /> from a initial data..
         /// </summary>
-        /// <typeparam name="T">Type of a pixel data</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="size">The size (in pixels) of the top-level faces of the cube texture.</param>
         /// <param name="format">Describes the format to use.</param>
         /// <param name="usage">The usage.</param>
@@ -182,17 +176,18 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>
         /// The first dimension of mipMapTextures describes the number of array (TextureCube Array), the second is the texture data for a particular cube face.
         /// </remarks>
-        public static TextureCube New(int size, PixelFormat format, DataBox[] textureData, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
+        public static TextureCube New(GraphicsDevice device, int size, PixelFormat format, DataBox[] textureData, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
         {
             if (textureData.Length != 6)
                 throw new ArgumentException("Invalid texture datas. First dimension must be equal to 6", "textureData");
 
-            return new TextureCube(NewTextureCubeDescription(size, format, isUnorderedReadWrite, 1, usage), textureData);
+            return new TextureCube(device, NewTextureCubeDescription(size, format, isUnorderedReadWrite, 1, usage), textureData);
         }
 
         /// <summary>
         /// Creates a new <see cref="TextureCube" /> directly from an <see cref="Image"/>.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="image">An image in CPU memory.</param>
         /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
         /// <param name="usage">The usage.</param>
@@ -200,26 +195,27 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476521</msdn-id>
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
-        public static TextureCube New(Image image, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
+        public static TextureCube New(GraphicsDevice device, Image image, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
         {
             if (image == null) throw new ArgumentNullException("image");
             if (image.Description.Dimension != TextureDimension.TextureCube)
                 throw new ArgumentException("Invalid image. Must be Cube", "image");
 
-            return new TextureCube(CreateTextureDescriptionFromImage(image, isUnorderedReadWrite, usage), image.ToDataBox());
+            return new TextureCube(device, CreateTextureDescriptionFromImage(image, isUnorderedReadWrite, usage), image.ToDataBox());
         }
 
         /// <summary>
         /// Loads a Cube texture from a stream.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="stream">The stream to load the texture from.</param>
         /// <param name="isUnorderedReadWrite">True to load the texture with unordered access enabled. Default is false.</param>
         /// <param name="usage">Usage of the resource. Default is <see cref="ResourceUsage.Immutable"/> </param>
         /// <exception cref="ArgumentException">If the texture is not of type Cube</exception>
         /// <returns>A texture</returns>
-        public static new TextureCube Load(Stream stream, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
+        public static new TextureCube Load(GraphicsDevice device, Stream stream, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
         {
-            var texture = Texture.Load(stream, isUnorderedReadWrite, usage);
+            var texture = Texture.Load(device, stream, isUnorderedReadWrite, usage);
             if (!(texture is TextureCube))
                 throw new ArgumentException(string.Format("Texture is not type of [TextureCube] but [{0}]", texture.GetType().Name));
             return (TextureCube)texture;
@@ -228,15 +224,16 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Loads a Cube texture from a stream.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="filePath">The file to load the texture from.</param>
         /// <param name="isUnorderedReadWrite">True to load the texture with unordered access enabled. Default is false.</param>
         /// <param name="usage">Usage of the resource. Default is <see cref="ResourceUsage.Immutable"/> </param>
         /// <exception cref="ArgumentException">If the texture is not of type Cube</exception>
         /// <returns>A texture</returns>
-        public static new TextureCube Load(string filePath, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
+        public static new TextureCube Load(GraphicsDevice device, string filePath, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
         {
             using (var stream = new NativeFileStream(filePath, NativeFileMode.Open, NativeFileAccess.Read))
-                return Load(stream, isUnorderedReadWrite, usage);
+                return Load(device, stream, isUnorderedReadWrite, usage);
         }
 
         protected static Texture2DDescription NewTextureCubeDescription(int size, PixelFormat format, bool isReadWrite, int mipCount, ResourceUsage usage)

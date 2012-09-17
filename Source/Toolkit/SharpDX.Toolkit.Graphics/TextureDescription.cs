@@ -151,7 +151,7 @@ namespace SharpDX.Toolkit.Graphics
         /// Gets the staging description for this instance..
         /// </summary>
         /// <returns>A Staging description</returns>
-        public TextureDescription ToStaging()
+        public TextureDescription ToStagingDescription()
         {
             var copy = this;
             copy.BindFlags = BindFlags.None;

@@ -31,33 +31,9 @@ namespace SharpDX.Toolkit.Graphics
     public class DepthStencilState : GraphicsResource
     {
         /// <summary>
-        /// A built-in state object with default settings for using a depth stencil buffer.
-        /// </summary>
-        public static readonly DepthStencilState Default = New("DepthStencilState.Default", true, true);
-
-        /// <summary>
-        /// A built-in state object with settings for enabling a read-only depth stencil buffer.
-        /// </summary>
-        public static readonly DepthStencilState DepthRead = New("DepthStencilState.DepthRead", true, false);
-
-        /// <summary>
-        /// A built-in state object with settings for not using a depth stencil buffer.
-        /// </summary>
-        public static readonly DepthStencilState None = New("DepthStencilState.None", false, false);
-
-        /// <summary>
         /// Gets the description of this blend state.
         /// </summary>
         public readonly DepthStencilStateDescription Description;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DepthStencilState" /> class.
-        /// </summary>
-        /// <param name="description">The description.</param>
-        private DepthStencilState(DepthStencilStateDescription description)
-            : this(GraphicsDevice.CurrentSafe.MainDevice, description)
-        {
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DepthStencilState" /> class.
@@ -85,6 +61,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>	
         /// Create a depth-stencil state object that encapsulates depth-stencil test information for the output-merger stage.
         /// </summary>	
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="depthStencilState">An existing <see cref="Direct3D11.DepthStencilState"/> instance.</param>	
         /// <returns>A new instance of <see cref="DepthStencilState"/></returns>	
         /// <remarks>	
@@ -93,14 +70,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476506</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateDepthStencilState([In] const D3D11_DEPTH_STENCIL_DESC* pDepthStencilDesc,[Out, Fast] ID3D11DepthStencilState** ppDepthStencilState)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateDepthStencilState</unmanaged-short>	
-        public static DepthStencilState New(Direct3D11.DepthStencilState depthStencilState)
+        public static DepthStencilState New(GraphicsDevice device, Direct3D11.DepthStencilState depthStencilState)
         {
-            return new DepthStencilState(GraphicsDevice.CurrentSafe.MainDevice, depthStencilState);
+            return new DepthStencilState(device, depthStencilState);
         }
 
         /// <summary>	
         /// Create a depth-stencil state object that encapsulates depth-stencil test information for the output-merger stage.
         /// </summary>	
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="description">A depth-stencil state description</param>	
         /// <returns>A new instance of <see cref="DepthStencilState"/></returns>	
         /// <remarks>	
@@ -109,14 +87,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476506</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateDepthStencilState([In] const D3D11_DEPTH_STENCIL_DESC* pDepthStencilDesc,[Out, Fast] ID3D11DepthStencilState** ppDepthStencilState)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateDepthStencilState</unmanaged-short>	
-        public static DepthStencilState New(DepthStencilStateDescription description)
+        public static DepthStencilState New(GraphicsDevice device, DepthStencilStateDescription description)
         {
-            return new DepthStencilState(description);
+            return new DepthStencilState(device, description);
         }
 
         /// <summary>	
         /// Create a depth-stencil state object that encapsulates depth-stencil test information for the output-merger stage.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="name">Name of this depth stencil state.</param>
         /// <param name="description">A depth-stencil state description</param>	
         /// <returns>A new instance of <see cref="DepthStencilState"/></returns>	
@@ -126,9 +105,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476506</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateDepthStencilState([In] const D3D11_DEPTH_STENCIL_DESC* pDepthStencilDesc,[Out, Fast] ID3D11DepthStencilState** ppDepthStencilState)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateDepthStencilState</unmanaged-short>	
-        public static DepthStencilState New(string name, DepthStencilStateDescription description)
+        public static DepthStencilState New(GraphicsDevice device, string name, DepthStencilStateDescription description)
         {
-            return new DepthStencilState(description) {Name = name};
+            return new DepthStencilState(device, description) {Name = name};
         }
 
         protected override DeviceChild CreateResource()
@@ -145,13 +124,13 @@ namespace SharpDX.Toolkit.Graphics
             return (Direct3D11.DepthStencilState) (from == null ? null : from.GetOrCreateResource());
         }
 
-        private static DepthStencilState New(string name, bool depthEnable, bool depthWriteEnable)
+        internal static DepthStencilState New(GraphicsDevice device, string name, bool depthEnable, bool depthWriteEnable)
         {
             var description = DepthStencilStateDescription.Default();
             description.IsDepthEnabled = depthEnable;
             description.DepthWriteMask = depthWriteEnable ? DepthWriteMask.All : DepthWriteMask.Zero;
 
-            var state = New(description);
+            var state = New(device, description);
             state.Name = name;
             return state;
         }

@@ -1,4 +1,4 @@
-// Copyright (c) 2010 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,24 +21,34 @@
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    /// A collection of <see cref="EffectConstantBuffer"/>.
+    /// Depth-stencil state collection.
     /// </summary>
-    public class EffectConstantBufferCollection : ComponentCollection<EffectConstantBuffer>
+    public sealed class DepthStencilStateCollection : StateCollectionBase<DepthStencilState>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="EffectConstantBufferCollection" /> class.
+        /// A built-in state object with default settings for using a depth stencil buffer.
         /// </summary>
-        internal EffectConstantBufferCollection()
-        {
-        }
+        public readonly DepthStencilState Default;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EffectConstantBufferCollection" /> class.
+        /// A built-in state object with settings for enabling a read-only depth stencil buffer.
         /// </summary>
-        /// <param name="capacity">The capacity.</param>
-        internal EffectConstantBufferCollection(int capacity)
-            : base(capacity)
+        public readonly DepthStencilState DepthRead;
+
+        /// <summary>
+        /// A built-in state object with settings for not using a depth stencil buffer.
+        /// </summary>
+        public readonly DepthStencilState None;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DepthStencilStateCollection" /> class.
+        /// </summary>
+        /// <param name="device">The device.</param>
+        internal DepthStencilStateCollection(GraphicsDevice device) : base(device)
         {
+            Default = Add(DepthStencilState.New(device, "Default", true, true));
+            DepthRead = Add(DepthStencilState.New(device, "DepthRead", true, false));
+            None = Add(DepthStencilState.New(device, "None", false, false));
         }
     }
 }

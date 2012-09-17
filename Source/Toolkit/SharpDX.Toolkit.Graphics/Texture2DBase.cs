@@ -34,32 +34,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Initializes a new instance of the <see cref="Texture2DBase" /> class.
         /// </summary>
-        /// <param name="description">The description.</param>
-        /// <msdn-id>ff476521</msdn-id>
-        ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
-        ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
-        protected internal Texture2DBase(Texture2DDescription description)
-            : this(GraphicsDevice.CurrentSafe.MainDevice, description)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Texture2DBase" /> class.
-        /// </summary>
-        /// <param name="description">The description.</param>
-        /// <param name="dataBoxes">A variable-length parameters list containing data rectangles.</param>
-        /// <msdn-id>ff476521</msdn-id>
-        ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
-        ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
-        protected internal Texture2DBase(Texture2DDescription description, DataBox[] dataBoxes)
-            : this(GraphicsDevice.CurrentSafe.MainDevice, description, dataBoxes)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Texture2DBase" /> class.
-        /// </summary>
-        /// <param name="device">The device local.</param>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="description2D">The description.</param>
         /// <msdn-id>ff476521</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
@@ -68,13 +43,13 @@ namespace SharpDX.Toolkit.Graphics
             : base(description2D)
         {
             Resource = new Direct3D11.Texture2D(device, description2D);
-            Initialize(device, Resource);
+            Initialize(device.MainDevice, Resource);
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Texture2DBase" /> class.
         /// </summary>
-        /// <param name="device">The device local.</param>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="description2D">The description.</param>
         /// <param name="dataBoxes">A variable-length parameters list containing data rectangles.</param>
         /// <msdn-id>ff476521</msdn-id>	
@@ -84,25 +59,13 @@ namespace SharpDX.Toolkit.Graphics
             : base(description2D)
         {
             Resource = new Direct3D11.Texture2D(device, description2D, dataBoxes);
-            Initialize(device, Resource);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Texture2DBase" /> class.
-        /// </summary>
-        /// <param name="texture">The texture.</param>
-        /// <msdn-id>ff476521</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
-        protected internal Texture2DBase(Direct3D11.Texture2D texture)
-            : this(GraphicsDevice.CurrentSafe.MainDevice, texture)
-        {
+            Initialize(device.MainDevice, Resource);
         }
 
         /// <summary>
         /// Specialised constructor for use only by derived classes.
         /// </summary>
-        /// <param name="device">The device.</param>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="texture">The texture.</param>
         /// <msdn-id>ff476521</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
@@ -111,7 +74,7 @@ namespace SharpDX.Toolkit.Graphics
             : base(texture.Description)
         {
             Resource = texture;
-            Initialize(device, Resource);
+            Initialize(device.MainDevice, Resource);
         }
 
         /// <summary>
@@ -120,7 +83,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns></returns>
         public override Texture ToStaging()
         {
-            return new Texture2D(this.GraphicsDevice, this.Description.ToStaging());            
+            return new Texture2D(this.GraphicsDevice, this.Description.ToStagingDescription());            
         }
 
         protected virtual DXGI.Format GetDefaultViewFormat()

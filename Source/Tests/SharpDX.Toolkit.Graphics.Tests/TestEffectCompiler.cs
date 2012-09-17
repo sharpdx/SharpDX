@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.IO;
 using NUnit.Framework;
 using SharpDX.Direct3D;
@@ -35,9 +36,10 @@ namespace SharpDX.Toolkit.Graphics.Tests
         [Test]
         public void TestCompiler()
         {
-            var fileName = "TestEffect.fx";
-            var sourceCode = File.ReadAllText(fileName);
-            var result = EffectCompiler.Compile(sourceCode, fileName);
+            var device = GraphicsDevice.New();
+
+            // Compile a toolkit effect from a file
+            var result = EffectCompiler.CompileFromFile("TestEffect.fx");
 
             // Check that we don't have any errors
             Assert.False(result.HasErrors);
@@ -55,6 +57,37 @@ namespace SharpDX.Toolkit.Graphics.Tests
 
             // Check that this is the profile 10.0
             Assert.AreEqual(bytecode.Shaders[0].Level, FeatureLevel.Level_10_0);
+
+
+            // Create a bytecode group from a single bytecode
+            var effectGroup = EffectGroup.New(device, bytecode);
+
+            //var effect = effectGroup.New<BasicEffect>();
+            var effect = new Effect(device, effectGroup, "TestEffect");
+
+            //Texture2D tex : register(t0);
+            //Texture2D tex1 : register(t2);
+            //Texture2D tex2 : register(t3);
+            //Texture2D tex3 : register(t10);
+            //SamplerState samp;
+            var tex = Texture2D.New(device, 256, 256, PixelFormat.R8.UNorm);
+            var tex1 = Texture2D.New(device, 256, 256, PixelFormat.R8.UNorm);
+            var tex2 = Texture2D.New(device, 256, 256, PixelFormat.R8.UNorm);
+            var tex3 = Texture2D.New(device, 256, 256, PixelFormat.R8.UNorm);
+            var samplerState = device.SamplerStates.PointWrap;
+
+            effect.Parameters["tex"].SetResource(tex);
+            effect.Parameters["tex1"].SetResource(tex1);
+            effect.Parameters["tex2"].SetResource(tex2);
+            effect.Parameters["tex3"].SetResource(tex3);
+            effect.Parameters["samp"].SetResource(samplerState);
+
+            //effect.Parameters["World"].SetValue(Vector3.Zero);
+            //effect.Parameters["Tata"].SetResource(texture);
+
+            effect.Techniques[0].Passes[0].Apply();
+
+            Console.WriteLine(effect.Parameters.Count);
 
             // TODO ADD MORE TESTS
         }

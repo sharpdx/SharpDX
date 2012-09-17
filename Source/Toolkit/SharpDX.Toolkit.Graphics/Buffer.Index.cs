@@ -32,58 +32,63 @@ namespace SharpDX.Toolkit.Graphics
             /// <summary>
             /// Creates a new index buffer <see cref="ResourceUsage.Default"/> uasge.
             /// </summary>
+            /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="size">The size in bytes.</param>
             /// <param name="usage">The usage.</param>
             /// <returns>A index buffer</returns>
-            public static Buffer New(int size, ResourceUsage usage = ResourceUsage.Default)
+            public static Buffer New(GraphicsDevice device, int size, ResourceUsage usage = ResourceUsage.Default)
             {
-                return Buffer.New(size, BufferFlags.IndexBuffer, usage);
+                return Buffer.New(device, size, BufferFlags.IndexBuffer, usage);
             }
 
             /// <summary>
             /// Creates a new index buffer <see cref="ResourceUsage.Default"/> uasge.
             /// </summary>
             /// <typeparam name="T">Type of the index buffer to get the sizeof from</typeparam>
+            /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="usage">The usage.</param>
             /// <returns>A index buffer</returns>
-            public static Buffer New<T>(ResourceUsage usage = ResourceUsage.Default) where T : struct
+            public static Buffer New<T>(GraphicsDevice device, ResourceUsage usage = ResourceUsage.Default) where T : struct
             {
-                return Buffer.New(Utilities.SizeOf<T>(), BufferFlags.IndexBuffer, usage);
+                return Buffer.New(device, Utilities.SizeOf<T>(), BufferFlags.IndexBuffer, usage);
             }
 
             /// <summary>
             /// Creates a new index buffer <see cref="ResourceUsage.Default"/> uasge.
             /// </summary>
             /// <typeparam name="T">Type of the index buffer to get the sizeof from</typeparam>
+            /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="value">The value to initialize the index buffer.</param>
             /// <param name="usage">The usage of this resource.</param>
             /// <returns>A index buffer</returns>
-            public static Buffer New<T>(ref T value, ResourceUsage usage = ResourceUsage.Default) where T : struct
+            public static Buffer New<T>(GraphicsDevice device, ref T value, ResourceUsage usage = ResourceUsage.Default) where T : struct
             {
-                return Buffer.New(ref value, BufferFlags.IndexBuffer, usage);
+                return Buffer.New(device, ref value, BufferFlags.IndexBuffer, usage);
             }
 
             /// <summary>
             /// Creates a new index buffer <see cref="ResourceUsage.Default"/> uasge.
             /// </summary>
             /// <typeparam name="T">Type of the index buffer to get the sizeof from</typeparam>
+            /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="value">The value to initialize the index buffer.</param>
             /// <param name="usage">The usage of this resource.</param>
             /// <returns>A index buffer</returns>
-            public static Buffer New<T>(T[] value, ResourceUsage usage = ResourceUsage.Default) where T : struct
+            public static Buffer New<T>(GraphicsDevice device, T[] value, ResourceUsage usage = ResourceUsage.Default) where T : struct
             {
-                return Buffer.New(value, BufferFlags.IndexBuffer, usage);
+                return Buffer.New(device, value, BufferFlags.IndexBuffer, usage);
             }
 
             /// <summary>
             /// Creates a new index buffer <see cref="ResourceUsage.Default"/> uasge.
             /// </summary>
+            /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="value">The value to initialize the index buffer.</param>
             /// <param name="usage">The usage of this resource.</param>
             /// <returns>A index buffer</returns>
-            public static Buffer New(DataPointer value, ResourceUsage usage = ResourceUsage.Default)
+            public static Buffer New(GraphicsDevice device, DataPointer value, ResourceUsage usage = ResourceUsage.Default)
             {
-                return Buffer.New(value, 0, BufferFlags.IndexBuffer, usage);
+                return Buffer.New(device, value, 0, BufferFlags.IndexBuffer, usage);
             }
         }
     }

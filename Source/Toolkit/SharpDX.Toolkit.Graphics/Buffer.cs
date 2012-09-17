@@ -71,46 +71,34 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Initializes a new instance of the <see cref="Buffer" /> class.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="description">The description.</param>
         /// <param name="bufferFlags">Type of the buffer.</param>
         /// <param name="viewFormat">The view format.</param>
         /// <param name="dataPointer">The data pointer.</param>
-        private Buffer(BufferDescription description, BufferFlags bufferFlags, PixelFormat viewFormat, IntPtr dataPointer)
-            : this(GraphicsDevice.CurrentSafe.MainDevice, description, bufferFlags, viewFormat, dataPointer )
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Buffer" /> class.
-        /// </summary>
-        /// <param name="deviceLocal">The device local.</param>
-        /// <param name="description">The description.</param>
-        /// <param name="bufferFlags">Type of the buffer.</param>
-        /// <param name="viewFormat">The view format.</param>
-        /// <param name="dataPointer">The data pointer.</param>
-        private Buffer(GraphicsDevice deviceLocal, BufferDescription description, BufferFlags bufferFlags, PixelFormat viewFormat, IntPtr dataPointer)
+        private Buffer(GraphicsDevice device, BufferDescription description, BufferFlags bufferFlags, PixelFormat viewFormat, IntPtr dataPointer)
         {
             Description = description;
             BufferFlags = bufferFlags;
             ViewFormat = viewFormat;
             InitCountAndViewFormat(out Count, ref ViewFormat);
-            Initialize(deviceLocal, new Direct3D11.Buffer(deviceLocal, dataPointer, Description));
+            Initialize(device.MainDevice, new Direct3D11.Buffer(device.MainDevice, dataPointer, Description));
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Buffer" /> class.
         /// </summary>
-        /// <param name="deviceLocal">The device local.</param>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="nativeBuffer">The native buffer.</param>
         /// <param name="bufferFlags">Type of the buffer.</param>
         /// <param name="viewFormat">The view format.</param>
-        private Buffer(GraphicsDevice deviceLocal, Direct3D11.Buffer nativeBuffer, BufferFlags bufferFlags, PixelFormat viewFormat)
+        private Buffer(GraphicsDevice device, Direct3D11.Buffer nativeBuffer, BufferFlags bufferFlags, PixelFormat viewFormat)
         {
             Description = nativeBuffer.Description;
             BufferFlags = bufferFlags;
             ViewFormat = viewFormat;
             InitCountAndViewFormat(out Count, ref ViewFormat);
-            Initialize(deviceLocal, nativeBuffer);
+            Initialize(device, nativeBuffer);
         }
 
         /// <summary>
@@ -222,36 +210,39 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Creates a new <see cref="Buffer"/> instance.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="buffer">The original buffer to duplicate the definition from.</param>
         /// <param name="viewFormat">The view format must be specified if the buffer is declared as a shared resource view.</param>
         /// <returns>An instance of a new <see cref="Buffer"/></returns>
         /// <msdn-id>ff476501</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateBuffer([In] const D3D11_BUFFER_DESC* pDesc,[In, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Buffer** ppBuffer)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>	
-        public static Buffer New(Buffer buffer, DXGI.Format viewFormat = SharpDX.DXGI.Format.Unknown)
+        public static Buffer New(GraphicsDevice device, Buffer buffer, DXGI.Format viewFormat = SharpDX.DXGI.Format.Unknown)
         {
             var bufferType = GetBufferFlagsFromDescription(buffer.Description);
-            return new Buffer(GraphicsDevice.CurrentSafe.MainDevice, buffer, bufferType, viewFormat);
+            return new Buffer(device, buffer, bufferType, viewFormat);
         }
 
         /// <summary>
         /// Creates a new <see cref="Buffer" /> instance.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="description">The description of the buffer.</param>
         /// <param name="viewFormat">View format used if the buffer is used as a shared resource view.</param>
         /// <returns>An instance of a new <see cref="Buffer" /></returns>
         /// <msdn-id>ff476501</msdn-id>
         /// <unmanaged>HRESULT ID3D11Device::CreateBuffer([In] const D3D11_BUFFER_DESC* pDesc,[In, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Buffer** ppBuffer)</unmanaged>
         /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>
-        public static Buffer New(BufferDescription description, DXGI.Format viewFormat = SharpDX.DXGI.Format.Unknown)
+        public static Buffer New(GraphicsDevice device, BufferDescription description, DXGI.Format viewFormat = SharpDX.DXGI.Format.Unknown)
         {
             var bufferType = GetBufferFlagsFromDescription(description);
-            return new Buffer(description, bufferType, viewFormat, IntPtr.Zero);
+            return new Buffer(device, description, bufferType, viewFormat, IntPtr.Zero);
         }
 
         /// <summary>
         /// Creates a new <see cref="Buffer" /> instance.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="bufferSize">Size of the buffer in bytes.</param>
         /// <param name="bufferFlags">The buffer flags to specify the type of buffer.</param>
         /// <param name="usage">The usage.</param>
@@ -259,14 +250,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476501</msdn-id>
         /// <unmanaged>HRESULT ID3D11Device::CreateBuffer([In] const D3D11_BUFFER_DESC* pDesc,[In, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Buffer** ppBuffer)</unmanaged>
         /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>
-        public static Buffer New(int bufferSize, BufferFlags bufferFlags, ResourceUsage usage = ResourceUsage.Default)
+        public static Buffer New(GraphicsDevice device, int bufferSize, BufferFlags bufferFlags, ResourceUsage usage = ResourceUsage.Default)
         {
-            return New(bufferSize, 0, bufferFlags, PixelFormat.Unknown, usage);
+            return New(device, bufferSize, 0, bufferFlags, PixelFormat.Unknown, usage);
         }
 
         /// <summary>
         /// Creates a new <see cref="Buffer" /> instance.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="bufferSize">Size of the buffer in bytes.</param>
         /// <param name="bufferFlags">The buffer flags to specify the type of buffer.</param>
         /// <param name="viewFormat">The view format must be specified if the buffer is declared as a shared resource view.</param>
@@ -275,14 +267,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476501</msdn-id>
         /// <unmanaged>HRESULT ID3D11Device::CreateBuffer([In] const D3D11_BUFFER_DESC* pDesc,[In, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Buffer** ppBuffer)</unmanaged>
         /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>
-        public static Buffer New(int bufferSize, BufferFlags bufferFlags, DXGI.Format viewFormat, ResourceUsage usage = ResourceUsage.Default)
+        public static Buffer New(GraphicsDevice device, int bufferSize, BufferFlags bufferFlags, DXGI.Format viewFormat, ResourceUsage usage = ResourceUsage.Default)
         {
-            return New(bufferSize, 0, bufferFlags, viewFormat, usage);
+            return New(device, bufferSize, 0, bufferFlags, viewFormat, usage);
         }
 
         /// <summary>
         /// Creates a new <see cref="Buffer" /> instance.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="bufferSize">Size of the buffer in bytes.</param>
         /// <param name="elementSize">Size of an element in the buffer.</param>
         /// <param name="bufferFlags">The buffer flags to specify the type of buffer.</param>
@@ -291,14 +284,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476501</msdn-id>
         /// <unmanaged>HRESULT ID3D11Device::CreateBuffer([In] const D3D11_BUFFER_DESC* pDesc,[In, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Buffer** ppBuffer)</unmanaged>
         /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>
-        public static Buffer New(int bufferSize, int elementSize, BufferFlags bufferFlags, ResourceUsage usage = ResourceUsage.Default)
+        public static Buffer New(GraphicsDevice device, int bufferSize, int elementSize, BufferFlags bufferFlags, ResourceUsage usage = ResourceUsage.Default)
         {
-            return New(bufferSize, elementSize, bufferFlags, PixelFormat.Unknown, usage);
+            return New(device, bufferSize, elementSize, bufferFlags, PixelFormat.Unknown, usage);
         }
 
         /// <summary>
         /// Creates a new <see cref="Buffer" /> instance.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="bufferSize">Size of the buffer in bytes.</param>
         /// <param name="elementSize">Size of an element in the buffer.</param>
         /// <param name="bufferFlags">The buffer flags to specify the type of buffer.</param>
@@ -308,16 +302,17 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476501</msdn-id>
         /// <unmanaged>HRESULT ID3D11Device::CreateBuffer([In] const D3D11_BUFFER_DESC* pDesc,[In, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Buffer** ppBuffer)</unmanaged>
         /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>
-        public static Buffer New(int bufferSize, int elementSize, BufferFlags bufferFlags, DXGI.Format viewFormat, ResourceUsage usage = ResourceUsage.Default)
+        public static Buffer New(GraphicsDevice device, int bufferSize, int elementSize, BufferFlags bufferFlags, DXGI.Format viewFormat, ResourceUsage usage = ResourceUsage.Default)
         {
             viewFormat = CheckPixelFormat(bufferFlags, elementSize, viewFormat);
             var description = NewDescription(bufferSize, elementSize, bufferFlags, usage);
-            return new Buffer(description, bufferFlags, viewFormat, IntPtr.Zero);
+            return new Buffer(device, description, bufferFlags, viewFormat, IntPtr.Zero);
         }
 
         /// <summary>
         /// Creates a new <see cref="Buffer" /> instance.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <typeparam name="T">Type of the buffer, to get the sizeof from.</typeparam>
         /// <param name="value">The initial value of this buffer.</param>
         /// <param name="bufferFlags">The buffer flags to specify the type of buffer.</param>
@@ -326,14 +321,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476501</msdn-id>
         /// <unmanaged>HRESULT ID3D11Device::CreateBuffer([In] const D3D11_BUFFER_DESC* pDesc,[In, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Buffer** ppBuffer)</unmanaged>
         /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>
-        public static Buffer New<T>(ref T value, BufferFlags bufferFlags, ResourceUsage usage = ResourceUsage.Default) where T : struct
+        public static Buffer New<T>(GraphicsDevice device, ref T value, BufferFlags bufferFlags, ResourceUsage usage = ResourceUsage.Default) where T : struct
         {
-            return New(ref value, bufferFlags, PixelFormat.Unknown, usage);
+            return New(device, ref value, bufferFlags, PixelFormat.Unknown, usage);
         }
 
         /// <summary>
         /// Creates a new <see cref="Buffer" /> instance.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <typeparam name="T">Type of the buffer, to get the sizeof from.</typeparam>
         /// <param name="value">The initial value of this buffer.</param>
         /// <param name="bufferFlags">The buffer flags to specify the type of buffer.</param>
@@ -343,7 +339,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476501</msdn-id>
         /// <unmanaged>HRESULT ID3D11Device::CreateBuffer([In] const D3D11_BUFFER_DESC* pDesc,[In, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Buffer** ppBuffer)</unmanaged>
         /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>
-        public unsafe static Buffer New<T>(ref T value, BufferFlags bufferFlags, DXGI.Format viewFormat, ResourceUsage usage = ResourceUsage.Default) where T : struct
+        public unsafe static Buffer New<T>(GraphicsDevice device, ref T value, BufferFlags bufferFlags, DXGI.Format viewFormat, ResourceUsage usage = ResourceUsage.Default) where T : struct
         {
             int bufferSize = Utilities.SizeOf<T>();
             int elementSize = ((bufferFlags & BufferFlags.StructuredBuffer) != 0) ? Utilities.SizeOf<T>() : 0;
@@ -351,13 +347,14 @@ namespace SharpDX.Toolkit.Graphics
             viewFormat = CheckPixelFormat(bufferFlags, elementSize, viewFormat);
 
             var description = NewDescription(bufferSize, elementSize, bufferFlags, usage);
-            return new Buffer(description, bufferFlags, viewFormat, (IntPtr)Interop.Fixed(ref value));
+            return new Buffer(device, description, bufferFlags, viewFormat, (IntPtr)Interop.Fixed(ref value));
         }
 
         /// <summary>
         /// Creates a new <see cref="Buffer" /> instance.
         /// </summary>
         /// <typeparam name="T">Type of the buffer, to get the sizeof from.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="initialValue">The initial value of this buffer.</param>
         /// <param name="bufferFlags">The buffer flags to specify the type of buffer.</param>
         /// <param name="usage">The usage.</param>
@@ -365,15 +362,16 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476501</msdn-id>
         /// <unmanaged>HRESULT ID3D11Device::CreateBuffer([In] const D3D11_BUFFER_DESC* pDesc,[In, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Buffer** ppBuffer)</unmanaged>
         /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>
-        public static Buffer New<T>(T[] initialValue, BufferFlags bufferFlags, ResourceUsage usage = ResourceUsage.Default) where T : struct
+        public static Buffer New<T>(GraphicsDevice device, T[] initialValue, BufferFlags bufferFlags, ResourceUsage usage = ResourceUsage.Default) where T : struct
         {
-            return New(initialValue, bufferFlags, PixelFormat.Unknown, usage);
+            return New(device, initialValue, bufferFlags, PixelFormat.Unknown, usage);
         }
 
         /// <summary>
         /// Creates a new <see cref="Buffer" /> instance.
         /// </summary>
         /// <typeparam name="T">Type of the buffer, to get the sizeof from.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="initialValue">The initial value of this buffer.</param>
         /// <param name="bufferFlags">The buffer flags to specify the type of buffer.</param>
         /// <param name="viewFormat">The view format must be specified if the buffer is declared as a shared resource view.</param>
@@ -382,19 +380,20 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476501</msdn-id>
         /// <unmanaged>HRESULT ID3D11Device::CreateBuffer([In] const D3D11_BUFFER_DESC* pDesc,[In, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Buffer** ppBuffer)</unmanaged>
         /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>
-        public unsafe static Buffer New<T>(T[] initialValue, BufferFlags bufferFlags, DXGI.Format viewFormat, ResourceUsage usage = ResourceUsage.Default) where T : struct
+        public unsafe static Buffer New<T>(GraphicsDevice device, T[] initialValue, BufferFlags bufferFlags, DXGI.Format viewFormat, ResourceUsage usage = ResourceUsage.Default) where T : struct
         {
             int bufferSize = Utilities.SizeOf<T>() * initialValue.Length;
             int elementSize = Utilities.SizeOf<T>();
             viewFormat = CheckPixelFormat(bufferFlags, elementSize, viewFormat);
 
             var description = NewDescription(bufferSize, elementSize, bufferFlags, usage);
-            return new Buffer(description, bufferFlags, viewFormat, (IntPtr)Interop.Fixed(initialValue));
+            return new Buffer(device, description, bufferFlags, viewFormat, (IntPtr)Interop.Fixed(initialValue));
         }
 
         /// <summary>
         /// Creates a new <see cref="Buffer" /> instance.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="dataPointer">The data pointer.</param>
         /// <param name="elementSize">Size of the element.</param>
         /// <param name="bufferFlags">The buffer flags to specify the type of buffer.</param>
@@ -403,14 +402,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476501</msdn-id>
         /// <unmanaged>HRESULT ID3D11Device::CreateBuffer([In] const D3D11_BUFFER_DESC* pDesc,[In, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Buffer** ppBuffer)</unmanaged>
         /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>
-        public static Buffer New(DataPointer dataPointer, int elementSize, BufferFlags bufferFlags, ResourceUsage usage = ResourceUsage.Default)
+        public static Buffer New(GraphicsDevice device, DataPointer dataPointer, int elementSize, BufferFlags bufferFlags, ResourceUsage usage = ResourceUsage.Default)
         {
-            return New(dataPointer, elementSize, bufferFlags, PixelFormat.Unknown, usage);
+            return New(device, dataPointer, elementSize, bufferFlags, PixelFormat.Unknown, usage);
         }
 
         /// <summary>
         /// Creates a new <see cref="Buffer" /> instance.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="dataPointer">The data pointer.</param>
         /// <param name="elementSize">Size of the element.</param>
         /// <param name="bufferFlags">The buffer flags to specify the type of buffer.</param>
@@ -420,12 +420,12 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476501</msdn-id>
         /// <unmanaged>HRESULT ID3D11Device::CreateBuffer([In] const D3D11_BUFFER_DESC* pDesc,[In, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Buffer** ppBuffer)</unmanaged>
         /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>
-        public static Buffer New(DataPointer dataPointer, int elementSize, BufferFlags bufferFlags, DXGI.Format viewFormat, ResourceUsage usage = ResourceUsage.Default)
+        public static Buffer New(GraphicsDevice device, DataPointer dataPointer, int elementSize, BufferFlags bufferFlags, DXGI.Format viewFormat, ResourceUsage usage = ResourceUsage.Default)
         {
             int bufferSize = dataPointer.Size;
             viewFormat = CheckPixelFormat(bufferFlags, elementSize, viewFormat);
             var description = NewDescription(bufferSize, elementSize, bufferFlags, usage);
-            return new Buffer(description, bufferFlags, viewFormat, dataPointer.Pointer);
+            return new Buffer(device, description, bufferFlags, viewFormat, dataPointer.Pointer);
         }
 
         protected override void OnNameChanged()

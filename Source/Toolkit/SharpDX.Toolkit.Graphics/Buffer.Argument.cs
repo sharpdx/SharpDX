@@ -32,35 +32,38 @@ namespace SharpDX.Toolkit.Graphics
             /// <summary>
             /// Creates a new Argument buffer <see cref="ResourceUsage.Default"/> uasge.
             /// </summary>
+            /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="size">The size in bytes.</param>
             /// <param name="usage">The usage.</param>
             /// <returns>A Argument buffer</returns>
-            public static Buffer New(int size, ResourceUsage usage = ResourceUsage.Default)
+            public static Buffer New(GraphicsDevice device, int size, ResourceUsage usage = ResourceUsage.Default)
             {
-                return Buffer.New(size, BufferFlags.ArgumentBuffer, usage);
+                return Buffer.New(device, size, BufferFlags.ArgumentBuffer, usage);
             }
 
             /// <summary>
             /// Creates a new Argument buffer <see cref="ResourceUsage.Default"/> uasge.
             /// </summary>
             /// <typeparam name="T">Type of the Argument buffer to get the sizeof from</typeparam>
+            /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="usage">The usage.</param>
             /// <returns>A Argument buffer</returns>
-            public static Buffer New<T>(ResourceUsage usage = ResourceUsage.Default) where T : struct
+            public static Buffer New<T>(GraphicsDevice device, ResourceUsage usage = ResourceUsage.Default) where T : struct
             {
-                return Buffer.New(Utilities.SizeOf<T>(), BufferFlags.ArgumentBuffer, usage);
+                return Buffer.New(device, Utilities.SizeOf<T>(), BufferFlags.ArgumentBuffer, usage);
             }
 
             /// <summary>
             /// Creates a new Argument buffer <see cref="ResourceUsage.Default"/> uasge.
             /// </summary>
             /// <typeparam name="T">Type of the Argument buffer to get the sizeof from</typeparam>
+            /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="value">The value to initialize the Argument buffer.</param>
             /// <param name="usage">The usage of this resource.</param>
             /// <returns>A Argument buffer</returns>
-            public static Buffer New<T>(ref T value, ResourceUsage usage = ResourceUsage.Default) where T : struct
+            public static Buffer New<T>(GraphicsDevice device, ref T value, ResourceUsage usage = ResourceUsage.Default) where T : struct
             {
-                return Buffer.New(ref value, BufferFlags.ArgumentBuffer, usage);
+                return Buffer.New(device, ref value, BufferFlags.ArgumentBuffer, usage);
             }
         }
     }

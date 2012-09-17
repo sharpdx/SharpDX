@@ -60,23 +60,12 @@ namespace SharpDX.Toolkit.Graphics
         /// </remarks>
         public readonly DepthStencilView ReadOnlyView;
 
-        internal DepthStencilBuffer(Texture2DDescription description, DepthFormat format) 
-            : this(GraphicsDevice.CurrentSafe.MainDevice, description, format)
-
-        {
-        }
-
         internal DepthStencilBuffer(GraphicsDevice device, Texture2DDescription description2D, DepthFormat depthFormat)
             : base(device, description2D)
         {
             DepthFormat = depthFormat;
             DefaultViewFormat = ComputeViewFormat(DepthFormat, out HasStencil);
             HasReadOnlyView = InitializeViewsDelayed(out ReadOnlyView);
-        }
-
-        internal DepthStencilBuffer(Direct3D11.Texture2D texture, DepthFormat format)
-            : this(GraphicsDevice.CurrentSafe.MainDevice, texture, format)
-        {
         }
 
         internal DepthStencilBuffer(GraphicsDevice device, Direct3D11.Texture2D texture, DepthFormat depthFormat)
@@ -161,6 +150,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Creates a new <see cref="DepthStencilBuffer"/> from a <see cref="Texture2DDescription"/>.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="description">The description.</param>
         /// <returns>
         /// A new instance of <see cref="DepthStencilBuffer"/> class.
@@ -168,14 +158,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476521</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
-        public static DepthStencilBuffer New(Texture2DDescription description)
+        public static DepthStencilBuffer New(GraphicsDevice device, Texture2DDescription description)
         {
-            return new DepthStencilBuffer(description, ComputeViewFormat(description.Format));
+            return new DepthStencilBuffer(device, description, ComputeViewFormat(description.Format));
         }
 
         /// <summary>
         /// Creates a new <see cref="DepthStencilBuffer"/> from a <see cref="Direct3D11.Texture2D"/>.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="texture">The native texture <see cref="Direct3D11.Texture2D"/>.</param>
         /// <returns>
         /// A new instance of <see cref="DepthStencilBuffer"/> class.
@@ -183,14 +174,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476521</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
-        public static DepthStencilBuffer New(Direct3D11.Texture2D texture)
+        public static DepthStencilBuffer New(GraphicsDevice device, Direct3D11.Texture2D texture)
         {
-            return new DepthStencilBuffer(texture, ComputeViewFormat(texture.Description.Format));
+            return new DepthStencilBuffer(device, texture, ComputeViewFormat(texture.Description.Format));
         }
 
         /// <summary>
         /// Creates a new <see cref="DepthStencilBuffer" />.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         /// <param name="format">Describes the format to use.</param>
@@ -199,14 +191,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476521</msdn-id>
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
-        public static DepthStencilBuffer New(int width, int height, DepthFormat format, int arraySize = 1)
+        public static DepthStencilBuffer New(GraphicsDevice device, int width, int height, DepthFormat format, int arraySize = 1)
         {
-            return new DepthStencilBuffer(NewDepthStencilBufferDescription(width, height, format, MSAALevel.None, arraySize), format);
+            return new DepthStencilBuffer(device, NewDepthStencilBufferDescription(device.MainDevice, width, height, format, MSAALevel.None, arraySize), format);
         }
 
         /// <summary>
         /// Creates a new <see cref="DepthStencilBuffer" /> using multisampling.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         /// <param name="format">Describes the format to use.</param>
@@ -216,17 +209,17 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476521</msdn-id>
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
-        public static DepthStencilBuffer New(int width, int height, MSAALevel multiSampleCount, DepthFormat format, int arraySize = 1)
+        public static DepthStencilBuffer New(GraphicsDevice device, int width, int height, MSAALevel multiSampleCount, DepthFormat format, int arraySize = 1)
         {
-            return new DepthStencilBuffer(NewDepthStencilBufferDescription(width, height, format, multiSampleCount, arraySize), format);
+            return new DepthStencilBuffer(device, NewDepthStencilBufferDescription(device.MainDevice, width, height, format, multiSampleCount, arraySize), format);
         }
 
-        protected static Texture2DDescription NewDepthStencilBufferDescription(int width, int height, DepthFormat format, MSAALevel multiSampleCount, int arraySize)
+        protected static Texture2DDescription NewDepthStencilBufferDescription(GraphicsDevice device, int width, int height, DepthFormat format, MSAALevel multiSampleCount, int arraySize)
         {
             var desc = Texture2DBase.NewDescription(width, height, DXGI.Format.Unknown, false, 1, arraySize, ResourceUsage.Default);
             desc.BindFlags |= BindFlags.DepthStencil;
             // Sets the MSAALevel
-            int maximumMSAA = (int)GraphicsDevice.CurrentSafe.MainDevice.Features[(DXGI.Format)format].MSAALevelMax;
+            int maximumMSAA = (int)device.Features[(DXGI.Format)format].MSAALevelMax;
             desc.SampleDescription.Count = Math.Max(1, Math.Min((int)multiSampleCount, maximumMSAA));
 
             var typelessDepthFormat = SharpDX.DXGI.Format.Unknown;

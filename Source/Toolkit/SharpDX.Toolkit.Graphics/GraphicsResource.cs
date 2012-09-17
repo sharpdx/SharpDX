@@ -74,7 +74,6 @@ namespace SharpDX.Toolkit.Graphics
             {
                 if (Resource == null)
                 {
-                    GraphicsDevice = GraphicsDevice.CurrentSafe.MainDevice;
                     Resource = ToDispose(CreateResource());
                 }
             }

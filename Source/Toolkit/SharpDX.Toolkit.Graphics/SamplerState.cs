@@ -31,36 +31,6 @@ namespace SharpDX.Toolkit.Graphics
     public class SamplerState : GraphicsResource
     {
         /// <summary>
-        /// Default state for point filtering with texture coordinate wrapping.
-        /// </summary>
-        public static readonly SamplerState PointWrap = New("SamplerState.PointWrap", Filter.MinMagMipPoint, TextureAddressMode.Wrap);
-
-        /// <summary>
-        /// Default state for point filtering with texture coordinate clamping.
-        /// </summary>
-        public static readonly SamplerState PointClamp = New("SamplerState.PointClamp", Filter.MinMagMipPoint, TextureAddressMode.Clamp);
-
-        /// <summary>
-        /// Default state for linear filtering with texture coordinate wrapping.
-        /// </summary>
-        public static readonly SamplerState LinearWrap = New("SamplerState.LinearWrap", Filter.MinMagMipLinear, TextureAddressMode.Wrap);
-
-        /// <summary>
-        /// Default state for linear filtering with texture coordinate clamping.
-        /// </summary>
-        public static readonly SamplerState LinearClamp = New("SamplerState.LinearClamp", Filter.MinMagMipLinear, TextureAddressMode.Clamp);
-
-        /// <summary>
-        /// Default state for anisotropic filtering with texture coordinate wrapping.
-        /// </summary>
-        public static readonly SamplerState AnisotropicWrap = New("SamplerState.AnisotropicWrap", Filter.Anisotropic, TextureAddressMode.Wrap);
-
-        /// <summary>
-        /// Default state for anisotropic filtering with texture coordinate clamping.
-        /// </summary>
-        public static readonly SamplerState AnisotropicClamp = New("SamplerState.AnisotropicClamp", Filter.Anisotropic, TextureAddressMode.Clamp);
-
-        /// <summary>
         /// Gets the description of this sampler state.
         /// </summary>
         public readonly SamplerStateDescription Description;
@@ -68,38 +38,30 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Initializes a new instance of the <see cref="SamplerState" /> class.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="description">The description.</param>
-        private SamplerState(SamplerStateDescription description)
-            : this(GraphicsDevice.CurrentSafe.MainDevice, description)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SamplerState" /> class.
-        /// </summary>
-        /// <param name="deviceLocal">The device local.</param>
-        /// <param name="description">The description.</param>
-        private SamplerState(GraphicsDevice deviceLocal, SamplerStateDescription description)
+        private SamplerState(GraphicsDevice device, SamplerStateDescription description)
         {
             Description = description;
-            Initialize(deviceLocal, null);
+            Initialize(device.MainDevice, null);
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SamplerState" /> class.
         /// </summary>
-        /// <param name="deviceLocal">The device local.</param>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="nativeState">State of the native.</param>
-        private SamplerState(GraphicsDevice deviceLocal, Direct3D11.SamplerState nativeState)
+        private SamplerState(GraphicsDevice device, Direct3D11.SamplerState nativeState)
         {
             Description = nativeState.Description;
             Resource = ToDispose(nativeState);
-            Initialize(deviceLocal, null);
+            Initialize(device.MainDevice, null);
         }
 
         /// <summary>	
         /// <p>Create a sampler-state object that encapsulates sampling information for a texture.</p>	
         /// </summary>	
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="samplerState">An existing <see cref="Direct3D11.SamplerState"/> instance.</param>	
         /// <returns>A new <see cref="SamplerState"/> instance</returns>	
         /// <remarks>	
@@ -108,14 +70,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476518</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateSamplerState([In] const D3D11_SAMPLER_DESC* pSamplerDesc,[Out, Fast] ID3D11SamplerState** ppSamplerState)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateSamplerState</unmanaged-short>	
-        public static SamplerState New(Direct3D11.SamplerState samplerState)
+        public static SamplerState New(GraphicsDevice device, Direct3D11.SamplerState samplerState)
         {
-            return new SamplerState(GraphicsDevice.CurrentSafe.MainDevice, samplerState);
+            return new SamplerState(device, samplerState);
         }
 
         /// <summary>	
         /// <p>Create a sampler-state object that encapsulates sampling information for a texture.</p>	
         /// </summary>	
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="description">A sampler state description</param>	
         /// <returns>A new <see cref="SamplerState"/> instance</returns>	
         /// <remarks>	
@@ -124,14 +87,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476518</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateSamplerState([In] const D3D11_SAMPLER_DESC* pSamplerDesc,[Out, Fast] ID3D11SamplerState** ppSamplerState)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateSamplerState</unmanaged-short>	
-        public static SamplerState New(SamplerStateDescription description)
+        public static SamplerState New(GraphicsDevice device, SamplerStateDescription description)
         {
-            return new SamplerState(description);
+            return new SamplerState(device, description);
         }
 
         /// <summary>	
         /// <p>Create a sampler-state object that encapsulates sampling information for a texture.</p>	
         /// </summary>	
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="name">Name of this sampler state.</param>
         /// <param name="description">A sampler state description</param>	
         /// <returns>A new <see cref="SamplerState"/> instance</returns>	
@@ -141,9 +105,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476518</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateSamplerState([In] const D3D11_SAMPLER_DESC* pSamplerDesc,[Out, Fast] ID3D11SamplerState** ppSamplerState)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateSamplerState</unmanaged-short>	
-        public static SamplerState New(string name, SamplerStateDescription description)
+        public static SamplerState New(GraphicsDevice device, string name, SamplerStateDescription description)
         {
-            return new SamplerState(description) {Name = name};
+            return new SamplerState(device, description) {Name = name};
         }
         
         protected override DeviceChild CreateResource()
@@ -160,14 +124,14 @@ namespace SharpDX.Toolkit.Graphics
             return (Direct3D11.SamplerState) (from == null ? null : from.GetOrCreateResource());
         }
 
-        private static SamplerState New(string name, Filter filterMode, TextureAddressMode uvwMode)
+        internal static SamplerState New(GraphicsDevice device, string name, Filter filterMode, TextureAddressMode uvwMode)
         {
             var description = SamplerStateDescription.Default();
             description.Filter = filterMode;
             description.AddressU = uvwMode;
             description.AddressV = uvwMode;
             description.AddressW = uvwMode;
-            return New(name, description);
+            return New(device, name, description);
         }
     }
 }

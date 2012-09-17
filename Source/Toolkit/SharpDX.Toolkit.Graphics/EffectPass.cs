@@ -26,7 +26,7 @@ using SharpDX.Toolkit.Diagnostics;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public class EffectPass : Component
+    public class EffectPass : ComponentBase
     {
         private const int StageCount = 6;
 
@@ -53,8 +53,6 @@ namespace SharpDX.Toolkit.Graphics
         /// <value> The attributes. </value>
         public readonly EffectAttributeCollection Attributes;
 
-        private readonly DisposeCollector collector;
-
         /// <summary>
         /// The parent effect of this pass.
         /// </summary>
@@ -63,7 +61,7 @@ namespace SharpDX.Toolkit.Graphics
         private readonly EffectBytecode.Pass pass;
         private readonly GraphicsDevice graphicsDevice;
         private BlendState blendState;
-        private int blendStateSampleMask;
+        private uint blendStateSampleMask;
 
         private DepthStencilState depthStencilState;
         private bool hasBlendState = false;
@@ -89,8 +87,8 @@ namespace SharpDX.Toolkit.Graphics
                            {
                                Stages = new StageBlock[EffectPass.StageCount],
                            };
-            Attributes = new EffectAttributeCollection(pass.Attributes);
-            collector = ToDispose(new DisposeCollector());
+
+            Attributes = PrepareAttributes(pass.Attributes);
         }
 
         /// <summary>
@@ -117,7 +115,7 @@ namespace SharpDX.Toolkit.Graphics
         ///   Gets or sets the blend state sample mask.
         /// </summary>
         /// <value> The blend state sample mask. </value>
-        public int BlendStateSampleMask
+        public uint BlendStateSampleMask
         {
             get { return blendStateSampleMask; }
             set { blendStateSampleMask = value; }
@@ -540,7 +538,7 @@ namespace SharpDX.Toolkit.Graphics
             pointerBuffersOffset += singleSlotLinksOffset;
 
             // Allocate all memory
-            pipeline.GlobalSlotPointer = collector.Collect(Utilities.AllocateMemory(slotTotalMemory));
+            pipeline.GlobalSlotPointer = Effect.DisposeCollector.Collect(Utilities.AllocateMemory(slotTotalMemory));
 
             // Clear this memory
             Utilities.ClearMemory(pipeline.GlobalSlotPointer, 0, slotTotalMemory);
@@ -634,6 +632,52 @@ namespace SharpDX.Toolkit.Graphics
         private bool CompareResourceParameter(EffectBytecode.ResourceParameter left, EffectBytecode.ResourceParameter right)
         {
             return (left.Class != right.Class || left.Type != right.Type || left.Count != right.Count);
+        }
+
+
+        private EffectAttributeCollection PrepareAttributes(List<EffectBytecode.Attribute> attributes)
+        {
+            attributes = new List<EffectBytecode.Attribute>(attributes);
+
+            for (int i = 0; i < attributes.Count; i++)
+            {
+                var attribute = attributes[i];
+                bool attributeHandled = true;
+                switch (attribute.Name)
+                {
+                    case EffectBytecode.Attribute.BlendStateName:
+                        //BlendState = graphicsDevice.BlendStates[(string) attribute.Value];
+                        break;
+                    case EffectBytecode.Attribute.BlendStateColorName:
+                        BlendStateColor = (Color4) (Vector4) attribute.Value;
+                        break;
+                    case EffectBytecode.Attribute.BlendStateSampleMaskName:
+                        BlendStateSampleMask = (uint) attribute.Value;
+                        break;
+
+                    case EffectBytecode.Attribute.DepthStencilStateName:
+                        //DepthStencilState = graphicsDevice.DepthStencilStates[(string) attribute.Value];
+                        break;
+                    case EffectBytecode.Attribute.DepthStencilReferenceName:
+                        DepthStencilReference = (int) attribute.Value;
+                        break;
+
+                    case EffectBytecode.Attribute.RasterizerStateName:
+                        //RasterizerState = graphicsDevice.RasterizerStates[(string) attribute.Value];
+                        break;
+                    default:
+                        attributeHandled = false;
+                        break;
+                }
+
+                if (attributeHandled)
+                {
+                    attributes.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            return new EffectAttributeCollection(attributes);
         }
 
         #region Nested type: PipelineBlock

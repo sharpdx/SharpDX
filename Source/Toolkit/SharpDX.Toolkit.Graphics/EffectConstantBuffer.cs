@@ -35,7 +35,7 @@ namespace SharpDX.Toolkit.Graphics
         internal EffectBytecode.ConstantBuffer Description;
         private readonly int hashCode;
 
-        internal EffectConstantBuffer(EffectGroup group, EffectBytecode.ConstantBuffer description) : base(description.Size)
+        internal EffectConstantBuffer(GraphicsDevice device, EffectGroup group, EffectBytecode.ConstantBuffer description) : base(description.Size)
         {
             Name = description.Name;
             EffectGroup = group;
@@ -53,7 +53,10 @@ namespace SharpDX.Toolkit.Graphics
             // By default, all constant buffers are cleared with 0
             Clear();
 
-            nativeBuffer = ToDispose(Buffer.Cosntant.New(Size));
+            nativeBuffer = ToDispose(Buffer.Cosntant.New(device, Size));
+
+            // The buffer is considered dirty for the first usage.
+            IsDirty = true;
         }
 
         /// <summary>

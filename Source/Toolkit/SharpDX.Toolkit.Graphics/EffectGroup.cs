@@ -34,7 +34,7 @@ namespace SharpDX.Toolkit.Graphics
     {
         #region Delegates
 
-        public delegate Buffer ConstantBufferAllocatorDelegate(EffectGroup group, EffectConstantBuffer constantBuffer);
+        public delegate Buffer ConstantBufferAllocatorDelegate(GraphicsDevice device, EffectGroup group, EffectConstantBuffer constantBuffer);
 
         #endregion
 
@@ -227,7 +227,7 @@ namespace SharpDX.Toolkit.Graphics
                 if (!bufferSet.TryGetValue(bufferKey, out buffer))
                 {
                     // 4) If this buffer doesn't exist, create a new one and register it.
-                    buffer = new EffectConstantBuffer(this, bufferRaw);
+                    buffer = new EffectConstantBuffer(device, this, bufferRaw);
                     bufferSet[bufferKey] = buffer;
                 }
 
@@ -248,9 +248,9 @@ namespace SharpDX.Toolkit.Graphics
             return group;
         }
 
-        private static Buffer DefaultConstantBufferAllocator(EffectGroup group, EffectConstantBuffer constantBuffer)
+        private static Buffer DefaultConstantBufferAllocator(GraphicsDevice device, EffectGroup group, EffectConstantBuffer constantBuffer)
         {
-            return Buffer.Cosntant.New(constantBuffer.Size);
+            return Buffer.Cosntant.New(device, constantBuffer.Size);
         }
 
         #region Nested type: ConstantBufferKey

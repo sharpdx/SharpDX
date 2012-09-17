@@ -19,6 +19,11 @@
     </Compile>
     <Compile Include="BasicEffect.cs" />
     <Compile Include="BlendState.cs" />
+    <Compile Include="BlendStateCollection.cs" />
+    <Compile Include="RasterizerStateCollection.cs" />
+    <Compile Include="SamplerStateCollection.cs" />
+    <Compile Include="DepthStencilStateCollection.cs" />
+    <Compile Include="StateCollectionBase.cs" />
     <Compile Include="Buffer.cs" />
     <Compile Include="Buffer.Constant.cs" />
     <Compile Include="BufferFlags.cs" />
@@ -31,7 +36,7 @@
     <Compile Include="EffectConstantBufferCollection.cs" />
     <Compile Include="EffectAttributeCollection.cs" />
     <Compile Include="EffectConstantBuffer.cs" />
-    <Compile Include="EffectGenericCollection.cs" />
+    <Compile Include="ComponentCollection.cs" />
     <Compile Include="EffectGroup.cs" />
     <Compile Include="EffectParameter.cs" />
     <Compile Include="EffectParameterCollection.cs" />

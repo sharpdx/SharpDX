@@ -50,7 +50,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             // -----------------------------------------------------------------------------------
             // Check constant buffer creation
             // -----------------------------------------------------------------------------------
-            var constantBuffer = Buffer.New(256, BufferFlags.ConstantBuffer);
+            var constantBuffer = Buffer.New(device, 256, BufferFlags.ConstantBuffer);
             // -----------------------------------------------------------------------------------
 
             Assert.AreEqual(constantBuffer.Description, new BufferDescription()
@@ -75,7 +75,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             // -----------------------------------------------------------------------------------
             // Check vertex buffer creation
             // -----------------------------------------------------------------------------------
-            var vertexBuffer = Buffer.New(256, BufferFlags.VertexBuffer);
+            var vertexBuffer = Buffer.New(device, 256, BufferFlags.VertexBuffer);
             // -----------------------------------------------------------------------------------
 
             Assert.AreEqual(vertexBuffer.Description, new BufferDescription()
@@ -101,7 +101,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             // -----------------------------------------------------------------------------------
             // Check index buffer creation
             // -----------------------------------------------------------------------------------
-            var indexBuffer = Buffer.New(256, BufferFlags.IndexBuffer);
+            var indexBuffer = Buffer.New(device, 256, BufferFlags.IndexBuffer);
             // -----------------------------------------------------------------------------------
 
             Assert.AreEqual(indexBuffer.Description, new BufferDescription()
@@ -122,7 +122,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             // -----------------------------------------------------------------------------------
             // Check index buffer creation with shader resource view
             // -----------------------------------------------------------------------------------
-            indexBuffer = Buffer.New(256, sizeof(int), BufferFlags.IndexBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess);
+            indexBuffer = Buffer.New(device, 256, sizeof(int), BufferFlags.IndexBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess);
             // -----------------------------------------------------------------------------------
 
             Assert.AreEqual(indexBuffer.Description, new BufferDescription()
@@ -173,7 +173,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             // -----------------------------------------------------------------------------------
             // Check structured buffer creation with ShaderResourceView
             // -----------------------------------------------------------------------------------
-            var structuredBuffer = Buffer.New(512, 16, BufferFlags.StructuredBuffer | BufferFlags.ShaderResource);
+            var structuredBuffer = Buffer.New(device, 512, 16, BufferFlags.StructuredBuffer | BufferFlags.ShaderResource);
             // -----------------------------------------------------------------------------------
 
             Assert.AreEqual(structuredBuffer.Description, new BufferDescription()
@@ -212,7 +212,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             // -----------------------------------------------------------------------------------
             // Check structured buffer creation with UnorderedAccessView
             // -----------------------------------------------------------------------------------
-            structuredBuffer = Buffer.New(512, 16, BufferFlags.StructuredBuffer | BufferFlags.UnorderedAccess);
+            structuredBuffer = Buffer.New(device, 512, 16, BufferFlags.StructuredBuffer | BufferFlags.UnorderedAccess);
             // -----------------------------------------------------------------------------------
             
             // Check views
@@ -232,7 +232,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             // -----------------------------------------------------------------------------------
             // Check Append structured buffer creation with UnorderedAccessView
             // -----------------------------------------------------------------------------------
-            structuredBuffer = Buffer.New(512, 16, BufferFlags.StructuredAppendBuffer);
+            structuredBuffer = Buffer.New(device, 512, 16, BufferFlags.StructuredAppendBuffer);
             // -----------------------------------------------------------------------------------
 
             Assert.AreEqual(structuredBuffer.Description, new BufferDescription()
@@ -266,7 +266,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             // -----------------------------------------------------------------------------------
             // Check raw buffer creation with UnorderedAccess and ShaderResourceView
             // -----------------------------------------------------------------------------------
-            var rawBuffer = Buffer.New(512, BufferFlags.RawBuffer | BufferFlags.UnorderedAccess | BufferFlags.ShaderResource);
+            var rawBuffer = Buffer.New(device, 512, BufferFlags.RawBuffer | BufferFlags.UnorderedAccess | BufferFlags.ShaderResource);
             // -----------------------------------------------------------------------------------
 
             Assert.AreEqual(rawBuffer.Description, new BufferDescription()
@@ -311,7 +311,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             // -----------------------------------------------------------------------------------
             // Check raw buffer creation with IndexBuffer, VertexBuffer, RawBuffer, RenderTarget, UnorderedAccess and ShaderResourceView
             // -----------------------------------------------------------------------------------
-            rawBuffer = Buffer.New(512, sizeof(int), BufferFlags.IndexBuffer | BufferFlags.VertexBuffer | BufferFlags.RawBuffer | BufferFlags.RenderTarget | BufferFlags.UnorderedAccess | BufferFlags.ShaderResource);
+            rawBuffer = Buffer.New(device, 512, sizeof(int), BufferFlags.IndexBuffer | BufferFlags.VertexBuffer | BufferFlags.RawBuffer | BufferFlags.RenderTarget | BufferFlags.UnorderedAccess | BufferFlags.ShaderResource);
             // -----------------------------------------------------------------------------------
 
             Assert.AreEqual(rawBuffer.Description, new BufferDescription()
@@ -374,7 +374,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             // -----------------------------------------------------------------------------------
             // Check vertex buffer creation
             // -----------------------------------------------------------------------------------
-            var argumentBuffer = Buffer.New(256, BufferFlags.ArgumentBuffer);
+            var argumentBuffer = Buffer.New(device, 256, BufferFlags.ArgumentBuffer);
             // -----------------------------------------------------------------------------------
 
             Assert.AreEqual(argumentBuffer.Description, new BufferDescription()
@@ -394,7 +394,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
 
 
             // -----------------------------------------------------------------------------------
-            argumentBuffer = Buffer.New(256, BufferFlags.ArgumentBuffer | BufferFlags.RawBuffer | BufferFlags.UnorderedAccess);
+            argumentBuffer = Buffer.New(device, 256, BufferFlags.ArgumentBuffer | BufferFlags.RawBuffer | BufferFlags.UnorderedAccess);
             // -----------------------------------------------------------------------------------
 
             Assert.AreEqual(argumentBuffer.Description, new BufferDescription()

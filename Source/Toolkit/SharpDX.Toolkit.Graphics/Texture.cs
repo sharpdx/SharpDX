@@ -317,11 +317,12 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Loads a texture from a stream.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="stream">The stream to load the texture from.</param>
         /// <param name="isUnorderedReadWrite">True to load the texture with unordered access enabled. Default is false.</param>
         /// <param name="usage">Usage of the resource. Default is <see cref="ResourceUsage.Immutable"/> </param>
         /// <returns>A texture</returns>
-        public static Texture Load(Stream stream, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
+        public static Texture Load(GraphicsDevice device, Stream stream, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
         {
             var image = Image.Load(stream);
             try
@@ -330,13 +331,13 @@ namespace SharpDX.Toolkit.Graphics
                 switch (image.Description.Dimension)
                 {
                     case TextureDimension.Texture1D:
-                        return Texture1D.New(image, isUnorderedReadWrite, usage);
+                        return Texture1D.New(device, image, isUnorderedReadWrite, usage);
                     case TextureDimension.Texture2D:
-                        return Texture2D.New(image, isUnorderedReadWrite, usage);
+                        return Texture2D.New(device, image, isUnorderedReadWrite, usage);
                     case TextureDimension.Texture3D:
-                        return Texture3D.New(image, isUnorderedReadWrite, usage);
+                        return Texture3D.New(device, image, isUnorderedReadWrite, usage);
                     case TextureDimension.TextureCube:
-                        return TextureCube.New(image, isUnorderedReadWrite, usage);
+                        return TextureCube.New(device, image, isUnorderedReadWrite, usage);
                 }
             } finally
             {
@@ -353,10 +354,10 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="isUnorderedReadWrite">True to load the texture with unordered access enabled. Default is false.</param>
         /// <param name="usage">Usage of the resource. Default is <see cref="ResourceUsage.Immutable"/> </param>
         /// <returns>A texture</returns>
-        public static Texture Load(string filePath, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
+        public static Texture Load(GraphicsDevice device, string filePath, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
         {
             using (var stream = new NativeFileStream(filePath, NativeFileMode.Open, NativeFileAccess.Read))
-                return Load(stream, isUnorderedReadWrite, usage);
+                return Load(device, stream, isUnorderedReadWrite, usage);
         }
 
         /// <summary>

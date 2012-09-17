@@ -35,64 +35,68 @@ namespace SharpDX.Toolkit.Graphics
             /// <summary>
             /// Creates a new Structured buffer accessible as a <see cref="ShaderResourceView" /> and optionaly as a <see cref="UnorderedAccessView" />.
             /// </summary>
+            /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="count">The number of element in this buffer.</param>
             /// <param name="elementSize">Size of the struct.</param>
             /// <param name="isUnorderedAccess">if set to <c>true</c> this buffer supports unordered access (RW in HLSL).</param>
             /// <returns>A Structured buffer</returns>
-            public static Buffer New(int count, int elementSize, bool isUnorderedAccess = false)
+            public static Buffer New(GraphicsDevice device, int count, int elementSize, bool isUnorderedAccess = false)
             {
                 var bufferFlags = BufferFlags.StructuredBuffer | BufferFlags.ShaderResource;
 
                 if (isUnorderedAccess)
                     bufferFlags |= BufferFlags.UnorderedAccess;
 
-                return Buffer.New(count * elementSize, elementSize, bufferFlags);
+                return Buffer.New(device, count * elementSize, elementSize, bufferFlags);
             }
 
             /// <summary>
             /// Creates a new Structured buffer accessible as a <see cref="ShaderResourceView" /> and optionaly as a <see cref="UnorderedAccessView" />.
             /// </summary>
             /// <typeparam name="T">Type of the element in the structured buffer</typeparam>
+            /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="count">The number of element in this buffer.</param>
             /// <param name="isUnorderedAccess">if set to <c>true</c> this buffer supports unordered access (RW in HLSL).</param>
             /// <returns>A Structured buffer</returns>
-            public static Buffer New<T>(int count, bool isUnorderedAccess = false) where T : struct
+            public static Buffer New<T>(GraphicsDevice device, int count, bool isUnorderedAccess = false) where T : struct
             {
-                return New(count, Utilities.SizeOf<T>(), isUnorderedAccess);
+                return New(device, count, Utilities.SizeOf<T>(), isUnorderedAccess);
             }
 
             /// <summary>
             /// Creates a new Structured buffer <see cref="ResourceUsage.Default" /> uasge.
             /// </summary>
+            /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <typeparam name="T">Type of the Structured buffer to get the sizeof from</typeparam>
             /// <param name="value">The value to initialize the Structured buffer.</param>
             /// <param name="isUnorderedAccess">if set to <c>true</c> this buffer supports unordered access (RW in HLSL).</param>
             /// <returns>A Structured buffer</returns>
-            public static Buffer New<T>(T[] value, bool isUnorderedAccess = false) where T : struct
+            public static Buffer New<T>(GraphicsDevice device, T[] value, bool isUnorderedAccess = false) where T : struct
             {
                 var bufferFlags = BufferFlags.StructuredBuffer | BufferFlags.ShaderResource;
 
                 if (isUnorderedAccess)
                     bufferFlags |= BufferFlags.UnorderedAccess;
 
-                return Buffer.New(value, bufferFlags);
+                return Buffer.New(device, value, bufferFlags);
             }
 
             /// <summary>
             /// Creates a new Structured buffer <see cref="ResourceUsage.Default" /> uasge.
             /// </summary>
+            /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="value">The value to initialize the Structured buffer.</param>
             /// <param name="elementSize">Size of the element.</param>
             /// <param name="isUnorderedAccess">if set to <c>true</c> this buffer supports unordered access (RW in HLSL).</param>
             /// <returns>A Structured buffer</returns>
-            public static Buffer New(DataPointer value, int elementSize, bool isUnorderedAccess = false)
+            public static Buffer New(GraphicsDevice device, DataPointer value, int elementSize, bool isUnorderedAccess = false)
             {
                 var bufferFlags = BufferFlags.StructuredBuffer | BufferFlags.ShaderResource;
 
                 if (isUnorderedAccess)
                     bufferFlags |= BufferFlags.UnorderedAccess;
 
-                return Buffer.New(value, elementSize, bufferFlags);
+                return Buffer.New(device, value, elementSize, bufferFlags);
             }
         }
 
@@ -107,48 +111,52 @@ namespace SharpDX.Toolkit.Graphics
             /// <summary>
             /// Creates a new StructuredAppend buffer accessible as a <see cref="ShaderResourceView" /> and as a <see cref="UnorderedAccessView" />.
             /// </summary>
+            /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="count">The number of element in this buffer.</param>
             /// <param name="elementSize">Size of the struct.</param>
             /// <returns>A StructuredAppend buffer</returns>
-            public static Buffer New(int count, int elementSize)
+            public static Buffer New(GraphicsDevice device,int count, int elementSize)
             {
                 const BufferFlags bufferFlags = BufferFlags.StructuredAppendBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess;
-                return Buffer.New(count * elementSize, elementSize, bufferFlags);
+                return Buffer.New(device, count * elementSize, elementSize, bufferFlags);
             }
 
             /// <summary>
             /// Creates a new StructuredAppend buffer accessible as a <see cref="ShaderResourceView" /> and optionaly as a <see cref="UnorderedAccessView" />.
             /// </summary>
+            /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <typeparam name="T">Type of the element in the structured buffer</typeparam>
             /// <param name="count">The number of element in this buffer.</param>
             /// <returns>A Structured buffer</returns>
-            public static Buffer New<T>(int count) where T : struct
+            public static Buffer New<T>(GraphicsDevice device, int count) where T : struct
             {
-                return New(count, Utilities.SizeOf<T>());
+                return New(device, count, Utilities.SizeOf<T>());
             }
 
             /// <summary>
             /// Creates a new StructuredAppend buffer <see cref="ResourceUsage.Default" /> uasge.
             /// </summary>
+            /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <typeparam name="T">Type of the StructuredAppend buffer to get the sizeof from</typeparam>
             /// <param name="value">The value to initialize the StructuredAppend buffer.</param>
             /// <returns>A StructuredAppend buffer</returns>
-            public static Buffer New<T>(T[] value) where T : struct
+            public static Buffer New<T>(GraphicsDevice device, T[] value) where T : struct
             {
                 const BufferFlags bufferFlags = BufferFlags.StructuredAppendBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess;
-                return Buffer.New(value, bufferFlags);
+                return Buffer.New(device, value, bufferFlags);
             }
 
             /// <summary>
             /// Creates a new StructuredAppend buffer <see cref="ResourceUsage.Default" /> uasge.
             /// </summary>
+            /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="value">The value to initialize the StructuredAppend buffer.</param>
             /// <param name="elementSize">Size of the element.</param>
             /// <returns>A StructuredAppend buffer</returns>
-            public static Buffer New(DataPointer value, int elementSize)
+            public static Buffer New(GraphicsDevice device,DataPointer value, int elementSize)
             {
                 const BufferFlags bufferFlags = BufferFlags.StructuredAppendBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess;
-                return Buffer.New(value, elementSize, bufferFlags);
+                return Buffer.New(device, value, elementSize, bufferFlags);
             }
         }
 
@@ -163,48 +171,52 @@ namespace SharpDX.Toolkit.Graphics
             /// <summary>
             /// Creates a new StructuredCounter buffer accessible as a <see cref="ShaderResourceView" /> and as a <see cref="UnorderedAccessView" />.
             /// </summary>
+            /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="count">The number of element in this buffer.</param>
             /// <param name="elementSize">Size of the struct.</param>
             /// <returns>A StructuredCounter buffer</returns>
-            public static Buffer New(int count, int elementSize)
+            public static Buffer New(GraphicsDevice device,int count, int elementSize)
             {
                 const BufferFlags bufferFlags = BufferFlags.StructuredCounterBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess;
-                return Buffer.New(count * elementSize, elementSize, bufferFlags);
+                return Buffer.New(device, count * elementSize, elementSize, bufferFlags);
             }
 
             /// <summary>
             /// Creates a new StructuredCounter buffer accessible as a <see cref="ShaderResourceView" /> and optionaly as a <see cref="UnorderedAccessView" />.
             /// </summary>
             /// <typeparam name="T">Type of the element in the structured buffer</typeparam>
+            /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="count">The number of element in this buffer.</param>
             /// <returns>A Structured buffer</returns>
-            public static Buffer New<T>(int count) where T : struct
+            public static Buffer New<T>(GraphicsDevice device, int count) where T : struct
             {
-                return New(count, Utilities.SizeOf<T>());
+                return New(device, count, Utilities.SizeOf<T>());
             }
 
             /// <summary>
             /// Creates a new StructuredCounter buffer <see cref="ResourceUsage.Default" /> uasge.
             /// </summary>
             /// <typeparam name="T">Type of the StructuredCounter buffer to get the sizeof from</typeparam>
+            /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="value">The value to initialize the StructuredCounter buffer.</param>
             /// <returns>A StructuredCounter buffer</returns>
-            public static Buffer New<T>(T[] value) where T : struct
+            public static Buffer New<T>(GraphicsDevice device, T[] value) where T : struct
             {
                 const BufferFlags bufferFlags = BufferFlags.StructuredCounterBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess;
-                return Buffer.New(value, bufferFlags);
+                return Buffer.New(device, value, bufferFlags);
             }
 
             /// <summary>
             /// Creates a new StructuredCounter buffer <see cref="ResourceUsage.Default" /> uasge.
             /// </summary>
+            /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="value">The value to initialize the StructuredCounter buffer.</param>
             /// <param name="elementSize">Size of the element.</param>
             /// <returns>A StructuredCounter buffer</returns>
-            public static Buffer New(DataPointer value, int elementSize)
+            public static Buffer New(GraphicsDevice device, DataPointer value, int elementSize)
             {
                 const BufferFlags bufferFlags = BufferFlags.StructuredCounterBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess;
-                return Buffer.New(value, elementSize, bufferFlags);
+                return Buffer.New(device, value, elementSize, bufferFlags);
             }
         }
     }

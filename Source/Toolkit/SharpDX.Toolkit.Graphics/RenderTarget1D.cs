@@ -34,17 +34,8 @@ namespace SharpDX.Toolkit.Graphics
     /// </remarks>
     public class RenderTarget1D : Texture1DBase
     {
-        internal RenderTarget1D(Texture1DDescription description) : base(description)
-        {
-        }
-
         internal RenderTarget1D(GraphicsDevice device, Texture1DDescription description1D)
             : base(device, description1D)
-        {
-        }
-
-        internal RenderTarget1D(Direct3D11.Texture1D texture)
-            : base(texture)
         {
         }
 
@@ -126,6 +117,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Creates a new <see cref="RenderTarget1D"/> from a <see cref="Texture1DDescription"/>.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="description">The description.</param>
         /// <returns>
         /// A new instance of <see cref="RenderTarget1D"/> class.
@@ -133,14 +125,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476520</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        public static RenderTarget1D New(Texture1DDescription description)
+        public static RenderTarget1D New(GraphicsDevice device, Texture1DDescription description)
         {
-            return new RenderTarget1D(description);
+            return new RenderTarget1D(device, description);
         }
 
         /// <summary>
         /// Creates a new <see cref="RenderTarget1D"/> from a <see cref="Direct3D11.Texture1D"/>.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="texture">The native texture <see cref="Direct3D11.Texture1D"/>.</param>
         /// <returns>
         /// A new instance of <see cref="RenderTarget1D"/> class.
@@ -148,14 +141,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476520</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        public static RenderTarget1D New(Direct3D11.Texture1D texture)
+        public static RenderTarget1D New(GraphicsDevice device, Direct3D11.Texture1D texture)
         {
-            return new RenderTarget1D(texture);
+            return new RenderTarget1D(device, texture);
         }
 
         /// <summary>
         /// Creates a new <see cref="RenderTarget1D" /> with a single mipmap.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="width">The width.</param>
         /// <param name="format">Describes the format to use.</param>
         /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
@@ -164,14 +158,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476520</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        public static RenderTarget1D New(int width, PixelFormat format, bool isUnorderedReadWrite = false, int arraySize = 1)
+        public static RenderTarget1D New(GraphicsDevice device, int width, PixelFormat format, bool isUnorderedReadWrite = false, int arraySize = 1)
         {
-            return New(width, false, format, isUnorderedReadWrite, arraySize);
+            return New(device, width, false, format, isUnorderedReadWrite, arraySize);
         }
 
         /// <summary>
         /// Creates a new <see cref="RenderTarget1D" />.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="width">The width.</param>
         /// <param name="mipCount">Number of mipmaps, set to true to have all mipmaps, set to an int >=1 for a particular mipmap count.</param>
         /// <param name="format">Describes the format to use.</param>
@@ -181,9 +176,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476520</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        public static RenderTarget1D New(int width, MipMapCount mipCount, PixelFormat format, bool isUnorderedReadWrite = false, int arraySize = 1)
+        public static RenderTarget1D New(GraphicsDevice device, int width, MipMapCount mipCount, PixelFormat format, bool isUnorderedReadWrite = false, int arraySize = 1)
         {
-            return new RenderTarget1D(NewRenderTargetDescription(width, format, isUnorderedReadWrite, mipCount, arraySize));
+            return new RenderTarget1D(device, NewRenderTargetDescription(width, format, isUnorderedReadWrite, mipCount, arraySize));
         }
 
         protected static Texture1DDescription NewRenderTargetDescription(int width, PixelFormat format, bool isReadWrite, int mipCount, int arraySize)

@@ -30,16 +30,8 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public class Texture2D : Texture2DBase
     {
-        internal Texture2D(Texture2DDescription description, params DataBox[] dataBoxes)
-            : base(description, dataBoxes)
-        {
-        }
 
         internal Texture2D(GraphicsDevice device, Texture2DDescription description2D, params DataBox[] dataBoxes) : base(device, description2D, dataBoxes)
-        {
-        }
-
-        internal Texture2D(Direct3D11.Texture2D texture) : base(texture)
         {
         }
 
@@ -69,6 +61,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Creates a new texture from a <see cref="Texture2DDescription"/>.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="description">The description.</param>
         /// <returns>
         /// A new instance of <see cref="Texture2D"/> class.
@@ -76,14 +69,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476521</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
-        public static Texture2D New(Texture2DDescription description)
+        public static Texture2D New(GraphicsDevice device, Texture2DDescription description)
         {
-            return new Texture2D(description);
+            return new Texture2D(device, description);
         }
 
         /// <summary>
         /// Creates a new texture from a <see cref="Direct3D11.Texture2D"/>.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="texture">The native texture <see cref="Direct3D11.Texture2D"/>.</param>
         /// <returns>
         /// A new instance of <see cref="Texture2D"/> class.
@@ -91,14 +85,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476521</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
-        public static Texture2D New(Direct3D11.Texture2D texture)
+        public static Texture2D New(GraphicsDevice device, Direct3D11.Texture2D texture)
         {
-            return new Texture2D(texture);
+            return new Texture2D(device, texture);
         }
 
         /// <summary>
         /// Creates a new <see cref="Texture2D" /> with a single mipmap.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         /// <param name="format">Describes the format to use.</param>
@@ -109,14 +104,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476521</msdn-id>
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
-        public static Texture2D New(int width, int height, PixelFormat format, bool isUnorderedReadWrite = false, int arraySize = 1, ResourceUsage usage = ResourceUsage.Default)
+        public static Texture2D New(GraphicsDevice device, int width, int height, PixelFormat format, bool isUnorderedReadWrite = false, int arraySize = 1, ResourceUsage usage = ResourceUsage.Default)
         {
-            return New(width, height, false, format, isUnorderedReadWrite, arraySize, usage);
+            return New(device, width, height, false, format, isUnorderedReadWrite, arraySize, usage);
         }
 
         /// <summary>
         /// Creates a new <see cref="Texture2D" />.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         /// <param name="format">Describes the format to use.</param>
@@ -128,15 +124,16 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476521</msdn-id>
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
-        public static Texture2D New(int width, int height, MipMapCount mipCount, PixelFormat format, bool isUnorderedReadWrite = false, int arraySize = 1, ResourceUsage usage = ResourceUsage.Default)
+        public static Texture2D New(GraphicsDevice device, int width, int height, MipMapCount mipCount, PixelFormat format, bool isUnorderedReadWrite = false, int arraySize = 1, ResourceUsage usage = ResourceUsage.Default)
         {
-            return new Texture2D(NewDescription(width, height, format, isUnorderedReadWrite, mipCount, arraySize, usage));
+            return new Texture2D(device, NewDescription(width, height, format, isUnorderedReadWrite, mipCount, arraySize, usage));
         }
 
         /// <summary>
         /// Creates a new <see cref="Texture2D" /> with a single level of mipmap.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T">Type of the pixel data to upload to the texture.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         /// <param name="format">Describes the format to use.</param>
@@ -150,14 +147,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>
         /// Each value in textureData is a pixel in the destination texture.
         /// </remarks>
-        public unsafe static Texture2D New<T>(int width, int height, PixelFormat format, T[] textureData, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
+        public unsafe static Texture2D New<T>(GraphicsDevice device, int width, int height, PixelFormat format, T[] textureData, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
         {
-            return New(width, height, 1, format, new [] { GetDataBox(format, width, height, textureData, (IntPtr)Interop.Fixed(textureData)) }, isUnorderedReadWrite, 1, usage);
+            return New(device, width, height, 1, format, new [] { GetDataBox(format, width, height, textureData, (IntPtr)Interop.Fixed(textureData)) }, isUnorderedReadWrite, 1, usage);
         }
 
         /// <summary>
         /// Creates a new <see cref="Texture2D" />.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         /// <param name="format">Describes the format to use.</param>
@@ -170,14 +168,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476521</msdn-id>
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
-        public static Texture2D New(int width, int height, MipMapCount mipCount, PixelFormat format, DataBox[] textureData, bool isUnorderedReadWrite = false, int arraySize = 1, ResourceUsage usage = ResourceUsage.Default)
+        public static Texture2D New(GraphicsDevice device, int width, int height, MipMapCount mipCount, PixelFormat format, DataBox[] textureData, bool isUnorderedReadWrite = false, int arraySize = 1, ResourceUsage usage = ResourceUsage.Default)
         {
-            return new Texture2D(NewDescription(width, height, format, isUnorderedReadWrite, mipCount, arraySize, usage), textureData);
+            return new Texture2D(device, NewDescription(width, height, format, isUnorderedReadWrite, mipCount, arraySize, usage), textureData);
         }
 
         /// <summary>
         /// Creates a new <see cref="Texture2D" /> directly from an <see cref="Image"/>.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="image">An image in CPU memory.</param>
         /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
         /// <param name="usage">The usage.</param>
@@ -185,26 +184,27 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476521</msdn-id>
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
-        public static Texture2D New(Image image, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
+        public static Texture2D New(GraphicsDevice device, Image image, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
         {
             if (image == null) throw new ArgumentNullException("image");
             if (image.Description.Dimension != TextureDimension.Texture2D)
                 throw new ArgumentException("Invalid image. Must be 2D", "image");
 
-            return new Texture2D(CreateTextureDescriptionFromImage(image, isUnorderedReadWrite, usage), image.ToDataBox());
+            return new Texture2D(device, CreateTextureDescriptionFromImage(image, isUnorderedReadWrite, usage), image.ToDataBox());
         }
 
         /// <summary>
         /// Loads a 2D texture from a stream.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="stream">The stream to load the texture from.</param>
         /// <param name="isUnorderedReadWrite">True to load the texture with unordered access enabled. Default is false.</param>
         /// <param name="usage">Usage of the resource. Default is <see cref="ResourceUsage.Immutable"/> </param>
         /// <exception cref="ArgumentException">If the texture is not of type 2D</exception>
         /// <returns>A texture</returns>
-        public static new Texture2D Load(Stream stream, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
+        public static new Texture2D Load(GraphicsDevice device, Stream stream, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
         {
-            var texture = Texture.Load(stream, isUnorderedReadWrite, usage);
+            var texture = Texture.Load(device, stream, isUnorderedReadWrite, usage);
             if (!(texture is Texture2D))
                 throw new ArgumentException(string.Format("Texture is not type of [Texture2D] but [{0}]", texture.GetType().Name));
             return (Texture2D)texture;
@@ -213,15 +213,16 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Loads a 2D texture from a stream.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="filePath">The file to load the texture from.</param>
         /// <param name="isUnorderedReadWrite">True to load the texture with unordered access enabled. Default is false.</param>
         /// <param name="usage">Usage of the resource. Default is <see cref="ResourceUsage.Immutable"/> </param>
         /// <exception cref="ArgumentException">If the texture is not of type 2D</exception>
         /// <returns>A texture</returns>
-        public static new Texture2D Load(string filePath, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
+        public static new Texture2D Load(GraphicsDevice device, string filePath, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
         {
             using (var stream = new NativeFileStream(filePath, NativeFileMode.Open, NativeFileAccess.Read))
-                return Load(stream, isUnorderedReadWrite, usage);
+                return Load(device, stream, isUnorderedReadWrite, usage);
         }
     }
 }

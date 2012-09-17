@@ -27,18 +27,18 @@ namespace SharpDX.Toolkit.Graphics
     /// A generic collection for effect framework.
     /// </summary>
     /// <typeparam name="T">Type of the collection</typeparam>
-    public abstract class EffectGenericCollection<T> : IEnumerable<T> where T : ComponentBase
+    public abstract class ComponentCollection<T> : IEnumerable<T> where T : ComponentBase
     {
         internal readonly List<T> Items;
         private readonly Dictionary<string, T> mapItems;
 
-        internal EffectGenericCollection()
+        internal ComponentCollection()
         {
             Items = new List<T>();
             mapItems = new Dictionary<string, T>();
         }
 
-        internal EffectGenericCollection(int capacity)
+        internal ComponentCollection(int capacity)
         {
             Items = new List<T>(capacity);
             mapItems = new Dictionary<string, T>(capacity);
@@ -48,10 +48,11 @@ namespace SharpDX.Toolkit.Graphics
         /// Adds the specified item.
         /// </summary>
         /// <param name="item">The item.</param>
-        internal void Add(T item)
+        internal T Add(T item)
         {
             Items.Add(item);
             mapItems.Add(item.Name, item);
+            return item;
         }
 
         /// <summary>
@@ -65,6 +66,12 @@ namespace SharpDX.Toolkit.Graphics
             Items.Add(item);
             string name = item.Name;
             mapItems.Add(string.IsNullOrEmpty(prefixName) ? name : prefixName + "|" + name, item);
+        }
+
+        protected void Clear()
+        {
+            Items.Clear();
+            mapItems.Clear();
         }
 
         /// <summary>
@@ -99,7 +106,10 @@ namespace SharpDX.Toolkit.Graphics
             get
             {
                 T value;
-                mapItems.TryGetValue(name, out value);
+                if (!mapItems.TryGetValue(name, out value))
+                {
+                    value = TryToGetOnNotFound(name);
+                }
                 return value;
             }
         }
@@ -124,6 +134,11 @@ namespace SharpDX.Toolkit.Graphics
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        protected virtual T TryToGetOnNotFound(string name)
+        {
+            return null;
         }
 
         #endregion

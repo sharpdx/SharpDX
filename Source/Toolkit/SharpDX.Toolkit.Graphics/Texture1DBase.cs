@@ -34,32 +34,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Initializes a new instance of the <see cref="Texture1DBase" /> class.
         /// </summary>
-        /// <param name="description">The description.</param>
-        /// <msdn-id>ff476520</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        protected internal Texture1DBase(Texture1DDescription description)
-            : this(GraphicsDevice.CurrentSafe.MainDevice, description)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Texture1DBase" /> class.
-        /// </summary>
-        /// <param name="description">The description.</param>
-        /// <param name="dataBox">A variable-length parameters list containing data rectangles.</param>
-        /// <msdn-id>ff476520</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        protected internal Texture1DBase(Texture1DDescription description, DataBox[] dataBox)
-            : this(GraphicsDevice.CurrentSafe.MainDevice, description, dataBox)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Texture1DBase" /> class.
-        /// </summary>
-        /// <param name="device">The device local.</param>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="description1D">The description.</param>
         /// <msdn-id>ff476520</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
@@ -68,13 +43,13 @@ namespace SharpDX.Toolkit.Graphics
             : base(description1D)
         {
             Resource = new Direct3D11.Texture1D(device, description1D);
-            Initialize(device, Resource);
+            Initialize(device.MainDevice, Resource);
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Texture1DBase" /> class.
         /// </summary>
-        /// <param name="device">The device local.</param>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="description1D">The description.</param>
         /// <param name="dataBox">A variable-length parameters list containing data rectangles.</param>
         /// <msdn-id>ff476520</msdn-id>	
@@ -84,19 +59,7 @@ namespace SharpDX.Toolkit.Graphics
             : base(description1D)
         {
             Resource = new Direct3D11.Texture1D(device, description1D, dataBox);
-            Initialize(device, Resource);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Texture1DBase" /> class.
-        /// </summary>
-        /// <param name="texture">The texture.</param>
-        /// <msdn-id>ff476520</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        protected internal Texture1DBase(Direct3D11.Texture1D texture)
-            : this(GraphicsDevice.CurrentSafe.MainDevice, texture)
-        {
+            Initialize(device.MainDevice, Resource);
         }
 
         /// <summary>
@@ -111,7 +74,7 @@ namespace SharpDX.Toolkit.Graphics
             : base(texture.Description)
         {
             Resource = texture;
-            Initialize(device, Resource);
+            Initialize(device.MainDevice, Resource);
         }
 
         /// <summary>
@@ -120,7 +83,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns></returns>
         public override Texture ToStaging()
         {
-            return new Texture1D(this.GraphicsDevice, this.Description.ToStaging());
+            return new Texture1D(this.GraphicsDevice, this.Description.ToStagingDescription());
         }
 
         internal override ShaderResourceView GetShaderResourceView(ViewType viewType, int arrayOrDepthSlice, int mipIndex)

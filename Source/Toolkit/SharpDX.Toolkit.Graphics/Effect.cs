@@ -50,7 +50,7 @@ namespace SharpDX.Toolkit.Graphics
         private readonly EffectGroup group;
         private EffectBytecode.Effect effectBytecode;
 
-        public Effect(GraphicsDevice device, EffectGroup group, string effectName)
+        public Effect(GraphicsDevice device, EffectGroup group, string effectName) : base(effectName)
         {
             GraphicsDevice = device;
             ConstantBuffers = new EffectConstantBufferCollection();
@@ -98,7 +98,6 @@ namespace SharpDX.Toolkit.Graphics
         private void Initialize(EffectBytecode.Effect effectBytecode)
         {
             this.effectBytecode = effectBytecode;
-            Name = effectBytecode.Name;
 
             var logger = new Logger();
             int techniqueIndex = 0;
@@ -137,12 +136,12 @@ namespace SharpDX.Toolkit.Graphics
             //// in order to achieve better local cache coherency in resource linker
             //Parameters.Items.Sort((left, right) => (int)left.ResourceType - (int)right.ResourceType);
 
-            //for (int i = 0; i < Parameters.Items.Count; i++)
-            //    Parameters.Items[i].Index = i;
-
             // Prelink constant buffers
             foreach (var parameter in Parameters)
             {
+                // Set the default values 
+                parameter.SetDefaultValue();
+
                 if (parameter.ResourceType == EffectResourceType.ConstantBuffer)
                     parameter.SetResource(0, ConstantBuffers[parameter.Name]);
             }
@@ -155,6 +154,11 @@ namespace SharpDX.Toolkit.Graphics
                     pass.ComputeSlotLinks();
                 }
             }
+        }
+
+        internal new DisposeCollector DisposeCollector
+        {
+            get { return base.DisposeCollector; }
         }
 
         protected internal virtual void OnApply(EffectPass pass)

@@ -30,17 +30,8 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public class Texture3D : Texture3DBase
     {
-        internal Texture3D(Texture3DDescription description, params DataBox[] dataBox)
-            : base(description, dataBox)
-        {
-        }
-
         internal Texture3D(GraphicsDevice device, Texture3DDescription description3D, params DataBox[] dataBox)
             : base(device, description3D, dataBox)
-        {
-        }
-
-        internal Texture3D(Direct3D11.Texture3D texture) : base(texture)
         {
         }
 
@@ -70,6 +61,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Creates a new texture from a <see cref="Texture3DDescription"/>.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="description">The description.</param>
         /// <returns>
         /// A new instance of <see cref="Texture3D"/> class.
@@ -77,14 +69,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476522</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture3D([In] const D3D11_TEXTURE3D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture3D** ppTexture3D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture3D</unmanaged-short>	
-        public static Texture3D New(Texture3DDescription description)
+        public static Texture3D New(GraphicsDevice device, Texture3DDescription description)
         {
-            return new Texture3D(description);
+            return new Texture3D(device, description);
         }
 
         /// <summary>
         /// Creates a new texture from a <see cref="Direct3D11.Texture3D"/>.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="texture">The native texture <see cref="Direct3D11.Texture3D"/>.</param>
         /// <returns>
         /// A new instance of <see cref="Texture3D"/> class.
@@ -92,14 +85,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476522</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture3D([In] const D3D11_TEXTURE3D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture3D** ppTexture3D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture3D</unmanaged-short>	
-        public static Texture3D New(Direct3D11.Texture3D texture)
+        public static Texture3D New(GraphicsDevice device, Direct3D11.Texture3D texture)
         {
-            return new Texture3D(texture);
+            return new Texture3D(device, texture);
         }
 
         /// <summary>
         /// Creates a new <see cref="Texture3D"/> with a single mipmap.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         /// <param name="depth">The depth.</param>
@@ -112,14 +106,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476522</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture3D([In] const D3D11_TEXTURE3D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture3D** ppTexture3D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture3D</unmanaged-short>	
-        public static Texture3D New(int width, int height, int depth, PixelFormat format, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Default)
+        public static Texture3D New(GraphicsDevice device, int width, int height, int depth, PixelFormat format, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Default)
         {
-            return New(width, height, depth, false, format, isUnorderedReadWrite, usage);
+            return New(device, width, height, depth, false, format, isUnorderedReadWrite, usage);
         }
 
         /// <summary>
         /// Creates a new <see cref="Texture3D"/>.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         /// <param name="depth">The depth.</param>
@@ -133,15 +128,16 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476522</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture3D([In] const D3D11_TEXTURE3D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture3D** ppTexture3D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture3D</unmanaged-short>	
-        public static Texture3D New(int width, int height, int depth, MipMapCount mipCount, PixelFormat format, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Default)
+        public static Texture3D New(GraphicsDevice device, int width, int height, int depth, MipMapCount mipCount, PixelFormat format, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Default)
         {
-            return new Texture3D(NewDescription(width, height, depth, format, isUnorderedReadWrite, mipCount, usage));
+            return new Texture3D(device, NewDescription(width, height, depth, format, isUnorderedReadWrite, mipCount, usage));
         }
 
         /// <summary>
         /// Creates a new <see cref="Texture3D" /> with texture data for the firs map.
         /// </summary>
         /// <typeparam name="T">Type of the data to upload to the texture</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         /// <param name="depth">The depth.</param>
@@ -156,14 +152,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476522</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture3D([In] const D3D11_TEXTURE3D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture3D** ppTexture3D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture3D</unmanaged-short>	
-        public unsafe static Texture3D New<T>(int width, int height, int depth, PixelFormat format, T[] textureData, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
+        public unsafe static Texture3D New<T>(GraphicsDevice device, int width, int height, int depth, PixelFormat format, T[] textureData, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
         {
-            return New(width, height, depth, 1, format, new [] { GetDataBox(format, width, 1, textureData, (IntPtr)Interop.Fixed(textureData)) }, isUnorderedReadWrite, usage);
+            return New(device, width, height, depth, 1, format, new [] { GetDataBox(format, width, 1, textureData, (IntPtr)Interop.Fixed(textureData)) }, isUnorderedReadWrite, usage);
         }
 
         /// <summary>
         /// Creates a new <see cref="Texture3D"/>.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         /// <param name="depth">The depth.</param>
@@ -177,15 +174,16 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476522</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture3D([In] const D3D11_TEXTURE3D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture3D** ppTexture3D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture3D</unmanaged-short>	
-        public static Texture3D New(int width, int height, int depth, MipMapCount mipCount, PixelFormat format, DataBox[] textureData, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Default)
+        public static Texture3D New(GraphicsDevice device, int width, int height, int depth, MipMapCount mipCount, PixelFormat format, DataBox[] textureData, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Default)
         {
             // TODO Add check for number of texture datas according to width/height/depth/mipCount.
-            return new Texture3D(NewDescription(width, height, depth, format, isUnorderedReadWrite, mipCount, usage), textureData);
+            return new Texture3D(device, NewDescription(width, height, depth, format, isUnorderedReadWrite, mipCount, usage), textureData);
         }
 
         /// <summary>
         /// Creates a new <see cref="Texture3D" /> directly from an <see cref="Image"/>.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="image">An image in CPU memory.</param>
         /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
         /// <param name="usage">The usage.</param>
@@ -193,26 +191,27 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476522</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture3D([In] const D3D11_TEXTURE3D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture3D** ppTexture3D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture3D</unmanaged-short>	
-        public static Texture3D New(Image image, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
+        public static Texture3D New(GraphicsDevice device, Image image, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
         {
             if (image == null) throw new ArgumentNullException("image");
             if (image.Description.Dimension != TextureDimension.Texture3D)
                 throw new ArgumentException("Invalid image. Must be 3D", "image");
 
-            return new Texture3D(CreateTextureDescriptionFromImage(image, isUnorderedReadWrite, usage), image.ToDataBox());
+            return new Texture3D(device, CreateTextureDescriptionFromImage(image, isUnorderedReadWrite, usage), image.ToDataBox());
         }
 
         /// <summary>
         /// Loads a 3D texture from a stream.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="stream">The stream to load the texture from.</param>
         /// <param name="isUnorderedReadWrite">True to load the texture with unordered access enabled. Default is false.</param>
         /// <param name="usage">Usage of the resource. Default is <see cref="ResourceUsage.Immutable"/> </param>
         /// <exception cref="ArgumentException">If the texture is not of type 3D</exception>
         /// <returns>A texture</returns>
-        public static new Texture3D Load(Stream stream, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
+        public static new Texture3D Load(GraphicsDevice device, Stream stream, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
         {
-            var texture = Texture.Load(stream, isUnorderedReadWrite, usage);
+            var texture = Texture.Load(device, stream, isUnorderedReadWrite, usage);
             if (!(texture is Texture3D))
                 throw new ArgumentException(string.Format("Texture is not type of [Texture3D] but [{0}]", texture.GetType().Name));
             return (Texture3D)texture;
@@ -221,15 +220,16 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Loads a 3D texture from a stream.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="filePath">The file to load the texture from.</param>
         /// <param name="isUnorderedReadWrite">True to load the texture with unordered access enabled. Default is false.</param>
         /// <param name="usage">Usage of the resource. Default is <see cref="ResourceUsage.Immutable"/> </param>
         /// <exception cref="ArgumentException">If the texture is not of type 3D</exception>
         /// <returns>A texture</returns>
-        public static new Texture3D Load(string filePath, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
+        public static new Texture3D Load(GraphicsDevice device, string filePath, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
         {
             using (var stream = new NativeFileStream(filePath, NativeFileMode.Open, NativeFileAccess.Read))
-                return Load(stream, isUnorderedReadWrite, usage);
+                return Load(device, stream, isUnorderedReadWrite, usage);
         }
     }
 }

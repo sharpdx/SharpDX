@@ -34,17 +34,8 @@ namespace SharpDX.Toolkit.Graphics
     /// </remarks>
     public class RenderTargetCube : Texture2DBase
     {
-        internal RenderTargetCube(Texture2DDescription description, params DataBox[] dataRectangles) : base(description, dataRectangles)
-        {
-        }
-
         internal RenderTargetCube(GraphicsDevice device, Texture2DDescription description2D, params DataBox[] dataBoxes)
             : base(device, description2D, dataBoxes)
-        {
-        }
-
-        internal RenderTargetCube(Direct3D11.Texture2D texture)
-            : base(texture)
         {
         }
 
@@ -121,6 +112,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Creates a new <see cref="RenderTargetCube"/> from a <see cref="Texture2DDescription"/>.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="description">The description.</param>
         /// <returns>
         /// A new instance of <see cref="RenderTargetCube"/> class.
@@ -128,14 +120,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476521</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
-        public static RenderTargetCube New(Texture2DDescription description)
+        public static RenderTargetCube New(GraphicsDevice device, Texture2DDescription description)
         {
-            return new RenderTargetCube(description);
+            return new RenderTargetCube(device, description);
         }
 
         /// <summary>
         /// Creates a new <see cref="RenderTargetCube"/> from a <see cref="Direct3D11.Texture2D"/>.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="texture">The native texture <see cref="Direct3D11.Texture2D"/>.</param>
         /// <returns>
         /// A new instance of <see cref="RenderTargetCube"/> class.
@@ -143,14 +136,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476521</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
-        public static RenderTargetCube New(Direct3D11.Texture2D texture)
+        public static RenderTargetCube New(GraphicsDevice device, Direct3D11.Texture2D texture)
         {
-            return new RenderTargetCube(texture);
+            return new RenderTargetCube(device, texture);
         }
 
         /// <summary>
         /// Creates a new <see cref="RenderTargetCube" /> with a single mipmap.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="size">The size (in pixels) of the top-level faces of the cube texture.</param>
         /// <param name="format">Describes the format to use.</param>
         /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
@@ -158,14 +152,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476521</msdn-id>
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
-        public static RenderTargetCube New(int size, PixelFormat format, bool isUnorderedReadWrite = false)
+        public static RenderTargetCube New(GraphicsDevice device, int size, PixelFormat format, bool isUnorderedReadWrite = false)
         {
-            return New(size, false, format, isUnorderedReadWrite);
+            return New(device, size, false, format, isUnorderedReadWrite);
         }
 
         /// <summary>
         /// Creates a new <see cref="RenderTargetCube" />.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="size">The size (in pixels) of the top-level faces of the cube texture.</param>
         /// <param name="mipCount">Number of mipmaps, set to true to have all mipmaps, set to an int >=1 for a particular mipmap count.</param>
         /// <param name="format">Describes the format to use.</param>
@@ -174,9 +169,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476521</msdn-id>
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
-        public static RenderTargetCube New(int size, MipMapCount mipCount, PixelFormat format, bool isUnorderedReadWrite = false)
+        public static RenderTargetCube New(GraphicsDevice device, int size, MipMapCount mipCount, PixelFormat format, bool isUnorderedReadWrite = false)
         {
-            return new RenderTargetCube(NewRenderTargetDescription(size, format, isUnorderedReadWrite, mipCount));
+            return new RenderTargetCube(device, NewRenderTargetDescription(size, format, isUnorderedReadWrite, mipCount));
         }
 
         protected static Texture2DDescription NewRenderTargetDescription(int size, PixelFormat format, bool isReadWrite, int mipCount)

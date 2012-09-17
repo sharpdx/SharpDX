@@ -35,7 +35,7 @@ namespace SharpDX.Toolkit.Graphics
             mapNameToValue = new Dictionary<string, object>();
             foreach (var attribute in attributes)
             {
-                mapNameToValue[attribute.Name] = attribute;
+                mapNameToValue[attribute.Name] = attribute.Value;
             }
         }
 

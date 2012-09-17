@@ -35,41 +35,44 @@ namespace SharpDX.Toolkit.Graphics
             /// <summary>
             /// Creates a new Typed buffer <see cref="ResourceUsage.Default" /> uasge.
             /// </summary>
+            /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="count">The number of data with the following viewFormat.</param>
             /// <param name="viewFormat">The view format of the buffer.</param>
             /// <param name="isUnorderedAccess">if set to <c>true</c> this buffer supports unordered access (RW in HLSL).</param>
             /// <param name="usage">The usage.</param>
             /// <returns>A Typed buffer</returns>
-            public static Buffer New(int count, PixelFormat viewFormat, bool isUnorderedAccess = false, ResourceUsage usage = ResourceUsage.Default)
+            public static Buffer New(GraphicsDevice device, int count, PixelFormat viewFormat, bool isUnorderedAccess = false, ResourceUsage usage = ResourceUsage.Default)
             {
-                return Buffer.New(count * viewFormat.SizeInBytes, BufferFlags.ShaderResource | (isUnorderedAccess ? BufferFlags.UnorderedAccess : BufferFlags.None), viewFormat, usage);
+                return Buffer.New(device,count * viewFormat.SizeInBytes, BufferFlags.ShaderResource | (isUnorderedAccess ? BufferFlags.UnorderedAccess : BufferFlags.None), viewFormat, usage);
             }
 
             /// <summary>
             /// Creates a new Typed buffer <see cref="ResourceUsage.Default" /> uasge.
             /// </summary>
             /// <typeparam name="T">Type of the Typed buffer to get the sizeof from</typeparam>
+            /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="value">The value to initialize the Typed buffer.</param>
             /// <param name="viewFormat">The view format of the buffer.</param>
             /// <param name="isUnorderedAccess">if set to <c>true</c> this buffer supports unordered access (RW in HLSL).</param>
             /// <param name="usage">The usage of this resource.</param>
             /// <returns>A Typed buffer</returns>
-            public static Buffer New<T>(T[] value, PixelFormat viewFormat, bool isUnorderedAccess = false, ResourceUsage usage = ResourceUsage.Default) where T : struct
+            public static Buffer New<T>(GraphicsDevice device, T[] value, PixelFormat viewFormat, bool isUnorderedAccess = false, ResourceUsage usage = ResourceUsage.Default) where T : struct
             {
-                return Buffer.New(value, BufferFlags.ShaderResource | (isUnorderedAccess ? BufferFlags.UnorderedAccess : BufferFlags.None), viewFormat, usage);
+                return Buffer.New(device,value, BufferFlags.ShaderResource | (isUnorderedAccess ? BufferFlags.UnorderedAccess : BufferFlags.None), viewFormat, usage);
             }
 
             /// <summary>
             /// Creates a new Typed buffer <see cref="ResourceUsage.Default" /> uasge.
             /// </summary>
+            /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="value">The value to initialize the Typed buffer.</param>
             /// <param name="viewFormat">The view format of the buffer.</param>
             /// <param name="isUnorderedAccess">if set to <c>true</c> this buffer supports unordered access (RW in HLSL).</param>
             /// <param name="usage">The usage of this resource.</param>
             /// <returns>A Typed buffer</returns>
-            public static Buffer New(DataPointer value, PixelFormat viewFormat, bool isUnorderedAccess = false, ResourceUsage usage = ResourceUsage.Default)
+            public static Buffer New(GraphicsDevice device,DataPointer value, PixelFormat viewFormat, bool isUnorderedAccess = false, ResourceUsage usage = ResourceUsage.Default)
             {
-                return Buffer.New(value, 0, BufferFlags.ShaderResource | (isUnorderedAccess?BufferFlags.UnorderedAccess : BufferFlags.None), viewFormat, usage);
+                return Buffer.New(device,value, 0, BufferFlags.ShaderResource | (isUnorderedAccess?BufferFlags.UnorderedAccess : BufferFlags.None), viewFormat, usage);
             }
         }
     }

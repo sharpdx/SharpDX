@@ -23,7 +23,7 @@ namespace SharpDX.Toolkit.Graphics
     /// <summary>
     /// A collection of <see cref="EffectPass"/>.
     /// </summary>
-    public class EffectPassCollection : EffectGenericCollection<EffectPass>
+    public class EffectPassCollection : ComponentCollection<EffectPass>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EffectPassCollection" /> class.

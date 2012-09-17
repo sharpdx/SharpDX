@@ -62,7 +62,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             // -------------------------------------------------------
             
             // Create Texture1D
-            var texture = Texture1D.New(textureData.Length, PixelFormat.R8.UNorm);
+            var texture = Texture1D.New(GraphicsDevice, textureData.Length, PixelFormat.R8.UNorm);
 
             // Check description against native description
             var d3d11Texture = (Direct3D11.Texture1D)texture;
@@ -153,7 +153,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             // -----------------------------------------------------------------------------------------
             // Check for a Texture1D as an array of 6 texture with (8+1) mipmaps each, with UAV support
             // -----------------------------------------------------------------------------------------
-            var texture = Texture1D.New(256, true, PixelFormat.R8.UNorm, true, 6);
+            var texture = Texture1D.New(GraphicsDevice, 256, true, PixelFormat.R8.UNorm, true, 6);
             var mipcount = (int)Math.Log(256, 2) + 1;
 
             // Check description against native description
@@ -280,10 +280,6 @@ namespace SharpDX.Toolkit.Graphics.Tests
         [Test]
         public void TestLoadSave()
         {
-            var device = GraphicsDevice.New();
-            //var device = GraphicsDevice.New(DriverType.Hardware, DeviceCreationFlags.Debug);
-            //var deviceDebug = new DeviceDebug(device);
-
             var files = new List<string>();
             files.AddRange(Directory.EnumerateFiles(Path.Combine(dxsdkDir, @"Samples\Media"), "*.dds", SearchOption.AllDirectories));
             files.AddRange(Directory.EnumerateFiles(Path.Combine(dxsdkDir, @"Samples\Media"), "*.jpg", SearchOption.AllDirectories));
@@ -302,7 +298,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
                         continue;
 
                     // Load an image from a file and dispose it.
-                    var texture = Texture.Load(file);
+                    var texture = Texture.Load(GraphicsDevice, file);
 
                     var localPath = Path.GetFileName(file);
                     texture.Save(localPath, ImageFileType.Dds);

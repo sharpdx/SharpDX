@@ -52,6 +52,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="swapChain">The swap chain.</param>
         private GraphicsPresenter(GraphicsDevice device, SwapChain swapChain)
         {
+            device = device.MainDevice;
             this.graphicsDevice = device;
             this.swapChain = ToDispose(swapChain);
             this.swapChainDescription = swapChain.Description;
@@ -59,7 +60,7 @@ namespace SharpDX.Toolkit.Graphics
             this.PresentInterval = PresentInterval.Default;
 
             // TODO handle multiple backbuffers
-            BackBuffer = RenderTarget2D.New(swapChain.GetBackBuffer<SharpDX.Direct3D11.Texture2D>(0));
+            BackBuffer = RenderTarget2D.New(device, swapChain.GetBackBuffer<SharpDX.Direct3D11.Texture2D>(0));
         }
 
         /// <summary>
@@ -70,6 +71,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Initializes a new instance of the <see cref="GraphicsPresenter" /> class.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="width">The width in pixel of the output.</param>
         /// <param name="height">The height in pixel of the output</param>
         /// <param name="pixelFormat">The pixel format</param>
@@ -77,23 +79,22 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="usage">Usage of this presenter</param>
         /// <param name="refreshRate"> </param>
         /// <returns>A new instance of the <see cref="GraphicsPresenter" /> class.</returns>
-        public static GraphicsPresenter New(int width, int height, PixelFormat pixelFormat, System.IntPtr windowHandle, Rational? refreshRate = null, SharpDX.DXGI.Usage usage = SharpDX.DXGI.Usage.BackBuffer | SharpDX.DXGI.Usage.RenderTargetOutput)
+        public static GraphicsPresenter New(GraphicsDevice device, int width, int height, PixelFormat pixelFormat, System.IntPtr windowHandle, Rational? refreshRate = null, SharpDX.DXGI.Usage usage = SharpDX.DXGI.Usage.BackBuffer | SharpDX.DXGI.Usage.RenderTargetOutput)
         {
 #if WIN8METRO
             throw new NotImplementedException(); 
 #else
-            return NewForDesktop(width, height, pixelFormat, windowHandle, refreshRate, usage);
+            return NewForDesktop(device, width, height, pixelFormat, windowHandle, refreshRate, usage);
 #endif
         }
 
 #if !WIN8METRO
-        private static GraphicsPresenter NewForDesktop(int width, int height, PixelFormat pixelFormat, System.IntPtr windowHandle, Rational? refreshRate = null, SharpDX.DXGI.Usage usage = SharpDX.DXGI.Usage.BackBuffer | SharpDX.DXGI.Usage.RenderTargetOutput)
+        private static GraphicsPresenter NewForDesktop(GraphicsDevice graphicsDevice, int width, int height, PixelFormat pixelFormat, System.IntPtr windowHandle, Rational? refreshRate = null, SharpDX.DXGI.Usage usage = SharpDX.DXGI.Usage.BackBuffer | SharpDX.DXGI.Usage.RenderTargetOutput)
         {
             // By default, use 60Hz for displaying in full screen
             if (!refreshRate.HasValue)
                 refreshRate = new Rational(60, 1);
 
-            var graphicsDevice = GraphicsDevice.CurrentSafe.MainDevice;
             var graphicsAdapter = graphicsDevice.Adapter ?? GraphicsAdapter.Default;
             var refreshRateValue = refreshRate.Value;
 
@@ -131,7 +132,7 @@ namespace SharpDX.Toolkit.Graphics
                 Flags = SwapChainFlags.None,
             };
 
-            var graphicsPresenter = new GraphicsPresenter(GraphicsDevice.CurrentSafe.MainDevice, new SwapChain(GraphicsAdapter.Factory, (Direct3D11.Device)graphicsDevice, description));
+            var graphicsPresenter = new GraphicsPresenter(graphicsDevice, new SwapChain(GraphicsAdapter.Factory, (Direct3D11.Device)graphicsDevice, description));
             return graphicsPresenter;
         }
 #endif

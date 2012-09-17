@@ -191,6 +191,18 @@ namespace SharpDX.Toolkit.Graphics
             resourceLinker.SetResource(Offset + index, ResourceType, valueArray);
         }
 
+        internal void SetDefaultValue()
+        {
+            if (IsValueType)
+            {
+                var defaultValue = ((EffectBytecode.ValueTypeParameter) ParameterDescription).DefaultValue;
+                if (defaultValue != null)
+                {
+                    SetValue(defaultValue);
+                }
+            }
+        }
+
         public override string ToString()
         {
             return string.Format("[{0}] {1} Class: {2}, Resource: {3}, Type: {4}, IsValue: {5}, RowCount: {6}, ColumnCount: {7}, ElementCount: {8}", Index, Name, ParameterClass, ResourceType, ParameterType, IsValueType, RowCount, ColumnCount, ElementCount);
