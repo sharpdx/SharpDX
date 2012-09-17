@@ -24,6 +24,7 @@ using SharpDX.DXGI;
 using SharpDX.Direct3D11;
 using SharpDX.IO;
 using DeviceChild = SharpDX.Direct3D11.DeviceChild;
+using MapFlags = SharpDX.Direct3D11.MapFlags;
 
 namespace SharpDX.Toolkit.Graphics
 {
@@ -265,6 +266,326 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
+        /// Gets the content of this texture to an array of data.
+        /// </summary>
+        /// <typeparam name="TData">The type of the T data.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
+        /// <param name="arrayOrDepthSlice">The array slice index. This value must be set to 0 for Texture 3D.</param>
+        /// <param name="mipSlice">The mip slice index.</param>
+        /// <returns>The texture data.</returns>
+        /// <msdn-id>ff476457</msdn-id>
+        ///   <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
+        ///   <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
+        /// <remarks>This method creates internally a stagging resource, copies to it and map it to memory. Use method with explicit staging resource
+        /// for optimal performances.</remarks>
+        public TData[] GetData<TData>(GraphicsDevice device, int arrayOrDepthSlice = 0, int mipSlice = 0) where TData : struct
+        {
+            var toData = new TData[this.CalculatePixelDataCount<TData>(mipSlice)];
+            GetData(device, toData, arrayOrDepthSlice, mipSlice);
+            return toData;
+        }
+
+        /// <summary>
+        /// Copies the content of this texture to an array of data.
+        /// </summary>
+        /// <typeparam name="TData">The type of the T data.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
+        /// <param name="toData">The destination buffer to receive a copy of the texture datas.</param>
+        /// <param name="arraySlice">The array slice index. This value must be set to 0 for Texture 3D.</param>
+        /// <param name="mipSlice">The mip slice index.</param>
+        /// <msdn-id>ff476457</msdn-id>
+        ///   <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
+        ///   <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
+        /// <remarks>This method creates internally a stagging resource if this texture is not already a stagging resouce, copies to it and map it to memory. Use method with explicit staging resource
+        /// for optimal performances.</remarks>
+        public void GetData<TData>(GraphicsDevice device, TData[] toData, int arraySlice = 0, int mipSlice = 0) where TData : struct
+        {
+            // Get data from this resource
+            if (Description.Usage == ResourceUsage.Staging)
+            {
+                // Directly if this is a staging resource
+                GetData(device, this, toData, arraySlice, mipSlice);
+            }
+            else
+            {
+                // Unefficient way to use the Copy method using dynamic staging texture
+                using (var throughStaging = this.ToStaging())
+                    GetData(device, throughStaging, toData, arraySlice, mipSlice);
+            }
+        }
+
+        /// <summary>
+        /// Copies the content of this texture from GPU memory to an array of data on CPU memory using a specific staging resource.
+        /// </summary>
+        /// <typeparam name="TData">The type of the T data.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
+        /// <param name="stagingTexture">The staging texture used to transfer the texture to.</param>
+        /// <param name="toData">To data.</param>
+        /// <param name="arraySlice">The array slice index. This value must be set to 0 for Texture 3D.</param>
+        /// <param name="mipSlice">The mip slice index.</param>
+        /// <exception cref="System.ArgumentException">When strides is different from optimal strides, and TData is not the same size as the pixel format, or Width * Height != toData.Length</exception>
+        /// <msdn-id>ff476457</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
+        /// <remarks>
+        /// See unmanaged documentation for usage and restrictions.
+        /// </remarks>
+        public unsafe void GetData<TData>(GraphicsDevice device, Texture stagingTexture, TData[] toData, int arraySlice = 0, int mipSlice = 0) where TData : struct
+        {
+            GetData(device, stagingTexture, new DataPointer((IntPtr)Interop.Fixed(toData), toData.Length * Utilities.SizeOf<TData>()), arraySlice, mipSlice);
+        }
+
+        /// <summary>
+        /// Copies the content of this texture from GPU memory to a pointer on CPU memory using a specific staging resource.
+        /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
+        /// <param name="stagingTexture">The staging texture used to transfer the texture to.</param>
+        /// <param name="toData">The pointer to data in CPU memory.</param>
+        /// <param name="arraySlice">The array slice index. This value must be set to 0 for Texture 3D.</param>
+        /// <param name="mipSlice">The mip slice index.</param>
+        /// <exception cref="System.ArgumentException">When strides is different from optimal strides, and TData is not the same size as the pixel format, or Width * Height != toData.Length</exception>
+        /// <msdn-id>ff476457</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
+        /// <remarks>
+        /// See unmanaged documentation for usage and restrictions.
+        /// </remarks>
+        public unsafe void GetData(GraphicsDevice device, Texture stagingTexture, DataPointer toData, int arraySlice = 0, int mipSlice = 0)
+        {
+            var deviceContext = (Direct3D11.DeviceContext) device;
+
+            // Get mipmap description for the specified mipSlice
+            var mipmap = this.GetMipMapDescription(mipSlice);
+
+            // Copy height, depth
+            int height = mipmap.HeightPacked;
+            int depth = mipmap.Depth;
+
+            // Calculate depth stride based on mipmap level
+            int rowStride = mipmap.RowStride;
+
+            // Depth Stride
+            int textureDepthStride = mipmap.DepthStride;
+
+            // MipMap Stride
+            int mipMapSize = mipmap.MipmapSize;
+
+            // Check size validity of data to copy to
+            if (toData.Size > mipMapSize)
+                throw new ArgumentException(string.Format("Size of toData ({0} bytes) is not compatible expected size ({1} bytes) : Width * Height * Depth * sizeof(PixelFormat) size in bytes", toData.Size, mipMapSize));
+
+            // Copy the actual content of the texture to the staging resource
+            if (!ReferenceEquals(this, stagingTexture))
+                device.Copy(this, stagingTexture);
+
+            // Calculate the subResourceIndex for a Texture2D
+            int subResourceIndex = this.GetSubResourceIndex(arraySlice, mipSlice);
+            try
+            {
+                // Map the staging resource to a CPU accessible memory
+                var box = deviceContext.MapSubresource(stagingTexture, subResourceIndex, MapMode.Read, MapFlags.None);
+
+                // If depth == 1 (Texture1D, Texture2D or TextureCube), then depthStride is not used
+                var boxDepthStride = this.Description.Depth == 1 ? box.SlicePitch : textureDepthStride;
+
+                // The fast way: If same stride, we can directly copy the whole texture in one shot
+                if (box.RowPitch == rowStride && boxDepthStride == textureDepthStride)
+                {
+                    Utilities.CopyMemory(toData.Pointer, box.DataPointer, mipMapSize);
+                }
+                else
+                {
+                    // Otherwise, the long way by copying each scanline
+                    var sourcePerDepthPtr = (byte*)box.DataPointer;
+                    var destPtr = (byte*)toData.Pointer;
+
+                    // Iterate on all depths
+                    for (int j = 0; j < depth; j++)
+                    {
+                        var sourcePtr = sourcePerDepthPtr;
+                        // Iterate on each line
+                        for (int i = 0; i < height; i++)
+                        {
+                            // Copy a single row
+                            Utilities.CopyMemory(new IntPtr(destPtr), new IntPtr(sourcePtr), rowStride);
+                            sourcePtr += box.RowPitch;
+                            destPtr += rowStride;
+                        }
+                        sourcePerDepthPtr += box.SlicePitch;
+                    }
+                }
+            }
+            finally
+            {
+                // Make sure that we unmap the resource in case of an exception
+                deviceContext.UnmapSubresource(stagingTexture, subResourceIndex);
+            }
+        }
+
+        /// <summary>
+        /// Copies the content an array of data on CPU memory to this texture into GPU memory.
+        /// </summary>
+        /// <typeparam name="TData">The type of the T data.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
+        /// <param name="fromData">The data to copy from.</param>
+        /// <param name="arraySlice">The array slice index. This value must be set to 0 for Texture 3D.</param>
+        /// <param name="mipSlice">The mip slice index.</param>
+        /// <param name="region">Destination region</param>
+        /// <exception cref="System.ArgumentException">When strides is different from optimal strides, and TData is not the same size as the pixel format, or Width * Height != toData.Length</exception>
+        /// <msdn-id>ff476457</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
+        /// <remarks>
+        /// See unmanaged documentation for usage and restrictions.
+        /// </remarks>
+        public unsafe void SetData<TData>(GraphicsDevice device, TData[] fromData, int arraySlice = 0, int mipSlice = 0, ResourceRegion? region = null) where TData : struct
+        {
+            SetData(device, new DataPointer((IntPtr)Interop.Fixed(fromData), fromData.Length * Utilities.SizeOf<TData>()), arraySlice, mipSlice, region);
+        }
+
+        /// <summary>
+        /// Copies the content an data on CPU memory to this texture into GPU memory.
+        /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
+        /// <param name="fromData">The data to copy from.</param>
+        /// <param name="arraySlice">The array slice index. This value must be set to 0 for Texture 3D.</param>
+        /// <param name="mipSlice">The mip slice index.</param>
+        /// <param name="region">Destination region</param>
+        /// <exception cref="System.ArgumentException">When strides is different from optimal strides, and TData is not the same size as the pixel format, or Width * Height != toData.Length</exception>
+        /// <msdn-id>ff476457</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
+        /// <remarks>
+        /// See unmanaged documentation for usage and restrictions.
+        /// </remarks>
+        public unsafe void SetData(GraphicsDevice device, DataPointer fromData, int arraySlice = 0, int mipSlice = 0, ResourceRegion? region = null)
+        {
+            var deviceContext = (Direct3D11.DeviceContext)device;
+
+            if (region.HasValue && this.Description.Usage != ResourceUsage.Default)
+                throw new ArgumentException("Region is only supported for textures with ResourceUsage.Default");
+
+            // Get mipmap description for the specified mipSlice
+            var mipMapDesc = this.GetMipMapDescription(mipSlice);
+
+            int width = mipMapDesc.Width;
+            int height = mipMapDesc.Height;
+            int depth = mipMapDesc.Depth;
+
+            // If we are using a region, then check that parameters are fine
+            if (region.HasValue)
+            {
+                int newWidth = region.Value.Right - region.Value.Left;
+                int newHeight = region.Value.Bottom - region.Value.Top;
+                int newDepth = region.Value.Back - region.Value.Front;
+                if (newWidth > width)
+                    throw new ArgumentException(string.Format("Region width [{0}] cannot be greater than mipmap width [{1}]", newWidth, width), "region");
+                if (newHeight > height)
+                    throw new ArgumentException(string.Format("Region height [{0}] cannot be greater than mipmap height [{1}]", newHeight, height), "region");
+                if (newDepth > depth)
+                    throw new ArgumentException(string.Format("Region depth [{0}] cannot be greater than mipmap depth [{1}]", newDepth, depth), "region");
+
+                width = newWidth;
+                height = newHeight;
+                depth = newDepth;
+            }
+
+            // Size per pixel
+            var sizePerElement = (int)FormatHelper.SizeOfInBytes(this.Description.Format);
+
+            // Calculate depth stride based on mipmap level
+            int rowStride;
+
+            // Depth Stride
+            int textureDepthStride;
+
+            // Compute Actual pitch
+            Image.ComputePitch(this.Description.Format, width, height, out rowStride, out textureDepthStride, out width, out height);
+
+            // Size Of actual texture data
+            int sizeOfTextureData = textureDepthStride * depth;
+
+            // Check size validity of data to copy to
+            if (fromData.Size != sizeOfTextureData)
+                throw new ArgumentException(string.Format("Size of toData ({0} bytes) is not compatible expected size ({1} bytes) : Width * Height * Depth * sizeof(PixelFormat) size in bytes", fromData.Size, sizeOfTextureData));
+
+            // Calculate the subResourceIndex for a Texture
+            int subResourceIndex = this.GetSubResourceIndex(arraySlice, mipSlice);
+
+            // If this texture is declared as default usage, we use UpdateSubresource that supports sub resource region.
+            if (this.Description.Usage == ResourceUsage.Default)
+            {
+                // If using a specific region, we need to handle this case
+                if (region.HasValue)
+                {
+                    var regionValue = region.Value;
+                    var sourceDataPtr = fromData.Pointer;
+
+                    // Workaround when using region with a deferred context and a device that does not support CommandList natively
+                    // see http://blogs.msdn.com/b/chuckw/archive/2010/07/28/known-issue-direct3d-11-updatesubresource-and-deferred-contexts.aspx
+                    if (device.needWorkAroundForUpdateSubResource)
+                    {
+                        if (this.IsBlockCompressed)
+                        {
+                            regionValue.Left /= 4;
+                            regionValue.Right /= 4;
+                            regionValue.Top /= 4;
+                            regionValue.Bottom /= 4;
+                        }
+                        sourceDataPtr = new IntPtr((byte*)sourceDataPtr - (regionValue.Front * textureDepthStride) - (regionValue.Top * rowStride) - (regionValue.Left * sizePerElement));
+                    }
+                    deviceContext.UpdateSubresource(new DataBox(sourceDataPtr, rowStride, textureDepthStride), this, subResourceIndex, regionValue);
+                }
+                else
+                {
+                    deviceContext.UpdateSubresource(new DataBox(fromData.Pointer, rowStride, textureDepthStride), this, subResourceIndex);
+                }
+            }
+            else
+            {
+                try
+                {
+                    var box = deviceContext.MapSubresource(this, subResourceIndex, this.Description.Usage == ResourceUsage.Dynamic ? MapMode.WriteDiscard : MapMode.Write, MapFlags.None);
+
+                    // If depth == 1 (Texture1D, Texture2D or TextureCube), then depthStride is not used
+                    var boxDepthStride = this.Description.Depth == 1 ? box.SlicePitch : textureDepthStride;
+
+                    // The fast way: If same stride, we can directly copy the whole texture in one shot
+                    if (box.RowPitch == rowStride && boxDepthStride == textureDepthStride)
+                    {
+                        Utilities.CopyMemory(box.DataPointer, fromData.Pointer, sizeOfTextureData);
+                    }
+                    else
+                    {
+                        // Otherwise, the long way by copying each scanline
+                        var destPerDepthPtr = (byte*)box.DataPointer;
+                        var sourcePtr = (byte*)fromData.Pointer;
+
+                        // Iterate on all depths
+                        for (int j = 0; j < depth; j++)
+                        {
+                            var destPtr = destPerDepthPtr;
+                            // Iterate on each line
+                            for (int i = 0; i < height; i++)
+                            {
+                                Utilities.CopyMemory((IntPtr)destPtr, (IntPtr)sourcePtr, rowStride);
+                                destPtr += box.RowPitch;
+                                sourcePtr += rowStride;
+                            }
+                            destPerDepthPtr += box.SlicePitch;
+                        }
+
+                    }
+                }
+                finally
+                {
+                    deviceContext.UnmapSubresource(this, subResourceIndex);
+                }
+            }
+        }
+
+
+        /// <summary>
         /// Return an equivalent staging texture CPU read-writable from this instance.
         /// </summary>
         /// <returns></returns>
@@ -394,7 +715,7 @@ namespace SharpDX.Toolkit.Graphics
                     for (int mipLevel = 0; mipLevel < image.Description.MipLevels; mipLevel++)
                     {
                         var pixelBuffer = image.PixelBuffer[arrayIndex, mipLevel];
-                        GraphicsDevice.GetContent(this, stagingTexture, new DataPointer(pixelBuffer.DataPointer, pixelBuffer.BufferStride), arrayIndex, mipLevel);
+                        GetData(GraphicsDevice, stagingTexture, new DataPointer(pixelBuffer.DataPointer, pixelBuffer.BufferStride), arrayIndex, mipLevel);
                     }
                 }
 

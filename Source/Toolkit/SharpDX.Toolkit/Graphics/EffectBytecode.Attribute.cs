@@ -29,12 +29,12 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public sealed class Attribute : IDataSerializable
         {
-            public const string BlendStateName = "BlendState";
-            public const string BlendStateColorName = "BlendStateColor";
-            public const string BlendStateSampleMaskName = "BlendStateSampleMask";
-            public const string DepthStencilStateName = "DepthStencilState";
-            public const string DepthStencilReferenceName = "DepthStencilReference";
-            public const string RasterizerStateName = "RasterizerState";
+            public const string Blending = "Blending";
+            public const string BlendingColor = "BlendingColor";
+            public const string BlendingSampleMask = "BlendingSampleMask";
+            public const string DepthStencil = "DepthStencil";
+            public const string DepthStencilReference = "DepthStencilReference";
+            public const string Rasterizer = "Rasterizer";
 
             /// <summary>
             /// Name of this attribute.

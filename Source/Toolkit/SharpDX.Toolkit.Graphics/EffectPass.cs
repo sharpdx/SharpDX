@@ -77,7 +77,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="effect"> The effect. </param>
         /// <param name="pass"> The pass. </param>
         /// <param name="name"> The name. </param>
-        internal EffectPass(Effect effect, EffectBytecode.Pass pass, string name)
+        internal EffectPass(Logger logger, Effect effect, EffectBytecode.Pass pass, string name)
             : base(name)
         {
             this.pass = pass;
@@ -88,7 +88,7 @@ namespace SharpDX.Toolkit.Graphics
                                Stages = new StageBlock[EffectPass.StageCount],
                            };
 
-            Attributes = PrepareAttributes(pass.Attributes);
+            Attributes = PrepareAttributes(logger, pass.Attributes);
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     if (effectConstantBuffer.IsDirty)
                     {
-                        Effect.GraphicsDevice.SetContent(effectConstantBuffer, new DataPointer(effectConstantBuffer.DataPointer, effectConstantBuffer.Size));
+                        ((Buffer)effectConstantBuffer).SetData(Effect.GraphicsDevice, new DataPointer(effectConstantBuffer.DataPointer, effectConstantBuffer.Size));
                         effectConstantBuffer.IsDirty = false;
                     }
                 }
@@ -635,7 +635,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
 
-        private EffectAttributeCollection PrepareAttributes(List<EffectBytecode.Attribute> attributes)
+        private EffectAttributeCollection PrepareAttributes(Logger logger, List<EffectBytecode.Attribute> attributes)
         {
             attributes = new List<EffectBytecode.Attribute>(attributes);
 
@@ -645,25 +645,31 @@ namespace SharpDX.Toolkit.Graphics
                 bool attributeHandled = true;
                 switch (attribute.Name)
                 {
-                    case EffectBytecode.Attribute.BlendStateName:
-                        //BlendState = graphicsDevice.BlendStates[(string) attribute.Value];
+                    case EffectBytecode.Attribute.Blending:
+                        BlendState = graphicsDevice.BlendStates[(string) attribute.Value];
+                        if (BlendState == null)
+                            logger.Error("Unable to find registered BlendState [{0}]", (string)attribute.Value);
                         break;
-                    case EffectBytecode.Attribute.BlendStateColorName:
+                    case EffectBytecode.Attribute.BlendingColor:
                         BlendStateColor = (Color4) (Vector4) attribute.Value;
                         break;
-                    case EffectBytecode.Attribute.BlendStateSampleMaskName:
+                    case EffectBytecode.Attribute.BlendingSampleMask:
                         BlendStateSampleMask = (uint) attribute.Value;
                         break;
 
-                    case EffectBytecode.Attribute.DepthStencilStateName:
-                        //DepthStencilState = graphicsDevice.DepthStencilStates[(string) attribute.Value];
+                    case EffectBytecode.Attribute.DepthStencil:
+                        DepthStencilState = graphicsDevice.DepthStencilStates[(string) attribute.Value];
+                        if (DepthStencilState == null)
+                            logger.Error("Unable to find registered DepthStencilState [{0}]", (string)attribute.Value);
                         break;
-                    case EffectBytecode.Attribute.DepthStencilReferenceName:
+                    case EffectBytecode.Attribute.DepthStencilReference:
                         DepthStencilReference = (int) attribute.Value;
                         break;
 
-                    case EffectBytecode.Attribute.RasterizerStateName:
-                        //RasterizerState = graphicsDevice.RasterizerStates[(string) attribute.Value];
+                    case EffectBytecode.Attribute.Rasterizer:
+                        RasterizerState = graphicsDevice.RasterizerStates[(string) attribute.Value];
+                        if (RasterizerState == null)
+                            logger.Error("Unable to find registered RasterizerState [{0}]", (string)attribute.Value);
                         break;
                     default:
                         attributeHandled = false;

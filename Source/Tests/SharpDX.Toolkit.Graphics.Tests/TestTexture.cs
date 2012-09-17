@@ -101,12 +101,12 @@ namespace SharpDX.Toolkit.Graphics.Tests
             // Check that getting the default SRV is the same as getting the first mip/array
             Assert.AreEqual(texture.ShaderResourceView[ViewType.Full, 0, 0], d3d11SRV);
 
-            // Check GraphicsDevice.GetContent/SetContent data
+            // Check GraphicsDevice.GetData/SetData data
             // Upload the textureData to the GPU
-            GraphicsDevice.SetContent(texture, textureData);
+            texture.SetData(GraphicsDevice, textureData);
 
             // Readback data from the GPU
-            var readBackData = GraphicsDevice.GetContent<byte>(texture);
+            var readBackData = texture.GetData<byte>(GraphicsDevice);
 
             // Check that both content are equal
             Assert.True(Utilities.Compare(textureData, readBackData));
@@ -118,22 +118,22 @@ namespace SharpDX.Toolkit.Graphics.Tests
             {
                 GraphicsDevice.Copy(texture, texture2);
 
-                readBackData = GraphicsDevice.GetContent<byte>(texture2);
+                readBackData = texture2.GetData<byte>(GraphicsDevice);
 
                 // Check that both content are equal
                 Assert.True(Utilities.Compare(textureData, readBackData));
             }
 
             // -------------------------------------------------------
-            // Test SetContent using a ResourceRegion
+            // Test SetData using a ResourceRegion
             // -------------------------------------------------------
             // Set the last 4 pixels in different orders
             var smallTextureDataRegion = new byte[] { 4, 3, 2, 1 };
 
             var region = new ResourceRegion(textureData.Length - 4, 0, 0, textureData.Length, 1, 1);
-            GraphicsDevice.SetContent(texture, smallTextureDataRegion, 0, 0, region);
+            texture.SetData(GraphicsDevice, smallTextureDataRegion, 0, 0, region);
 
-            readBackData = GraphicsDevice.GetContent<byte>(texture);
+            readBackData = texture.GetData<byte>(GraphicsDevice);
 
             Array.Copy(smallTextureDataRegion, 0, textureData, textureData.Length - 4, 4);
 
@@ -236,13 +236,13 @@ namespace SharpDX.Toolkit.Graphics.Tests
             });
 
             // -------------------------------------------------------
-            // Test SetContent on last mipmap on 2nd array
+            // Test SetData on last mipmap on 2nd array
             // -------------------------------------------------------
             var textureData = new byte[] { 255 };
 
-            GraphicsDevice.SetContent(texture, textureData, 1, 8);
+            texture.SetData(GraphicsDevice, textureData, 1, 8);
 
-            var readbackData = GraphicsDevice.GetContent<byte>(texture, 1, 8);
+            var readbackData = texture.GetData<byte>(GraphicsDevice, 1, 8);
 
             Assert.AreEqual(textureData.Length, readbackData.Length);
             Assert.AreEqual(textureData[0], readbackData[0]);
@@ -261,7 +261,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
 
             // Set the value == 1
             GraphicsDevice.Clear(uav, 1);
-            readbackData = GraphicsDevice.GetContent<byte>(texture, 1, 8);
+            readbackData = texture.GetData<byte>(GraphicsDevice, 1, 8);
             Assert.AreEqual(readbackData.Length, 1);
             Assert.AreEqual(readbackData[0], 1);
 

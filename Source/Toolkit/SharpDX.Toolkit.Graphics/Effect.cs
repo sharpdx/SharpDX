@@ -117,7 +117,7 @@ namespace SharpDX.Toolkit.Graphics
                     if (string.IsNullOrEmpty(name))
                         name = string.Format("${0}", passIndex++);
 
-                    var pass = new EffectPass(this, passRaw, name);
+                    var pass = new EffectPass(logger, this, passRaw, name);
 
                     pass.Initialize(logger);
 

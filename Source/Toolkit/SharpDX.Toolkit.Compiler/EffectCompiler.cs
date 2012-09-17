@@ -243,6 +243,24 @@ namespace SharpDX.Toolkit.Graphics
                 case "Export":
                     HandleExport(expression.Value);
                     break;
+
+                case EffectBytecode.Attribute.Blending:
+                case EffectBytecode.Attribute.DepthStencil:
+                case EffectBytecode.Attribute.Rasterizer:
+                    HandleAttribute<string>(expression);
+                    break;
+
+                case EffectBytecode.Attribute.BlendingColor:
+                    HandleAttribute<Vector4>(expression);
+                    break;
+
+                case EffectBytecode.Attribute.BlendingSampleMask:
+                    HandleAttribute<uint>(expression);
+                    break;
+
+                case EffectBytecode.Attribute.DepthStencilReference:
+                    HandleAttribute<int>(expression);
+                    break;
                 case "EffectName":
                     HandleEffectName(expression.Value);
                     break;
@@ -359,6 +377,33 @@ namespace SharpDX.Toolkit.Graphics
             if (ExtractValue(expression.Value, out value))
             {
                 var attribute = new EffectBytecode.Attribute() {Name = expression.Name.Text, Value = value};
+                pass.Attributes.Add(attribute);
+            }
+        }
+
+        private void HandleAttribute<T>(Ast.AssignExpression expression)
+        {
+            // Extract the value and store it in the attribute
+            object value;
+            if (ExtractValue(expression.Value, out value))
+            {
+                if (typeof(T) == typeof(uint) && value is int)
+                {
+                    value = unchecked((uint) (int) value);
+                }
+                else
+                {
+                    try
+                    {
+                        value = Convert.ChangeType(value, typeof (T));
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error("Invalid type for attribute [{0}]. Expecting [{1}]", expression.Value.Span, expression.Name.Text, typeof (T).Name);
+                    }
+                }
+
+                var attribute = new EffectBytecode.Attribute() { Name = expression.Name.Text, Value = value };
                 pass.Attributes.Add(attribute);
             }
         }

@@ -113,6 +113,10 @@ technique
 		// to compile the shaders VS, PS
 		Preprocessor = "#define ACTIVATE_DUMMY_CODE true";
 
+		Blending = Additive;
+		BlendingColor = float4(0.5, 0.5, 0.5, 1.0);
+		BlendingSampleMask = 0xFFFFFFFF;
+
 		// Specify the pipeline (there is also all Direct3D11 other stages: DomainShader, HullShader, GeometryShader, ComputeShader).
 		VertexShader = VS; 
 		PixelShader = PS; 
