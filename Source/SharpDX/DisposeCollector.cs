@@ -19,17 +19,16 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace SharpDX
 {
     /// <summary>
-    /// A class to dispose several <see cref="IDisposable"/> instances.
+    /// A class to dispose <see cref="IDisposable"/> instances and allocated unmanaged memory.
     /// </summary>
-    public class DisposableCollection : DisposeBase, IEnumerable<IDisposable>
+    public class DisposeCollector : DisposeBase
     {
-        private List<IDisposable> disposables;
+        private List<object> disposables;
 
         /// <summary>
         /// Gets the number of elements to dispose.
@@ -47,36 +46,54 @@ namespace SharpDX
         /// disposed of in addition to unmanaged resources.</param>
         protected override void Dispose(bool disposeManagedResources)
         {
-            if (disposeManagedResources)
+            // Dispose all ComObjects
+            if (disposables != null)
             {
-                // Dispose all ComObjects
-                if (disposables != null)
-                    for (int i = disposables.Count - 1; i >= 0; i--)
+                for (int i = disposables.Count - 1; i >= 0; i--)
+                {
+                    var valueToDispose = disposables[i];
+                    if (valueToDispose is IDisposable)
                     {
-                        disposables[i].Dispose();
-                        Remove(disposables[i]);
+                        ((IDisposable) valueToDispose).Dispose();
                     }
-                disposables = null;
+                    else
+                    {
+                        Utilities.FreeMemory((IntPtr) valueToDispose);
+                    }
+                    Remove(valueToDispose);
+                }
             }
+            disposables = null;
         }
 
         /// <summary>
-        /// Adds a disposable object to the list of the objects to dispose.
+        /// Adds a <see cref="IDisposable"/> object or a <see cref="IntPtr"/> allocated using <see cref="Utilities.AllocateMemory"/> to the list of the objects to dispose.
         /// </summary>
-        /// <param name="toDisposeArg">To dispose.</param>
-        public T Add<T>(T toDisposeArg) where T : class, IDisposable
+        /// <param name="toDispose">To dispose.</param>
+        /// <exception cref="ArgumentException">If toDispose argument is not IDisposable or a valid memory pointer allocated by <see cref="Utilities.AllocateMemory"/></exception>
+        public T Collect<T>(T toDispose)
         {
-            IDisposable toDispose = toDisposeArg;
+            if (!(toDispose is IDisposable || toDispose is IntPtr))
+                throw new ArgumentException("Argument must be IDisposable or IntPtr");
+
+            // Check memory alignment
+            if (toDispose is IntPtr)
+            {
+                var memoryPtr = (IntPtr)(object)toDispose;
+                if (!Utilities.IsMemoryAligned(memoryPtr))
+                    throw new ArgumentException("Memory pointer is invalid. Memory must have been allocated with ");
+            }
+
             var toDisposeComponent = toDispose as Component;
 
             // If this is a component and It's already attached, don't add it
             if (toDisposeComponent != null && toDisposeComponent.IsAttached)
-                return toDisposeArg;
+                return toDispose;
 
-            if (toDispose != null)
+            if (!Equals(toDispose, default(T)))
             {
                 if (disposables == null)
-                    disposables = new List<IDisposable>();
+                    disposables = new List<object>();
 
                 if (!disposables.Contains(toDispose))
                 {
@@ -87,21 +104,23 @@ namespace SharpDX
                         toDisposeComponent.IsAttached = true;
                 }
             }
-            return toDisposeArg;
+            return toDispose;
         }
 
         /// <summary>
         /// Dispose a disposable object and set the reference to null. Removes this object from this instance..
         /// </summary>
         /// <param name="objectToDispose">Object to dispose.</param>
-        public void RemoveAndDispose<T>(ref T objectToDispose) where T : class, IDisposable
+        public void RemoveAndDispose<T>(ref T objectToDispose)
         {
-            if (objectToDispose != null && disposables != null)
+
+            var disposableObject = objectToDispose as IDisposable;
+            if (disposableObject != null && disposables != null)
             {
-                Remove(objectToDispose);
+                Remove(disposableObject);
                 // Dispose the comonent
-                objectToDispose.Dispose();
-                objectToDispose = null;
+                disposableObject.Dispose();
+                objectToDispose = default(T);
             }
         }
 
@@ -110,7 +129,7 @@ namespace SharpDX
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="toDisposeArg">To dispose.</param>
-        public void Remove<T>(T toDisposeArg) where T : class, IDisposable
+        public void Remove<T>(T toDisposeArg)
         {
             if (disposables != null && disposables.Contains(toDisposeArg))
             {
@@ -121,16 +140,6 @@ namespace SharpDX
                 if (toDisposeComponent != null)
                     toDisposeComponent.IsAttached = false;
             }
-        }
-
-        public IEnumerator<IDisposable> GetEnumerator()
-        {
-            return disposables.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
     }
 }

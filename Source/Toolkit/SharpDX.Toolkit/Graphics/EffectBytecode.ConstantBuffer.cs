@@ -37,11 +37,6 @@ namespace SharpDX.Toolkit.Graphics
             public string Name;
 
             /// <summary>
-            /// Slot index register to use for binding.
-            /// </summary>
-            public byte Slot;
-
-            /// <summary>
             /// Size in bytes of this constant buffer.
             /// </summary>
             public int Size;
@@ -55,7 +50,7 @@ namespace SharpDX.Toolkit.Graphics
             {
                 if (ReferenceEquals(null, other)) return false;
                 if (ReferenceEquals(this, other)) return true;
-                return string.Equals(Name, other.Name) && Slot == other.Slot && Size == other.Size && Utilities.Compare(Parameters, other.Parameters);
+                return string.Equals(Name, other.Name) && Size == other.Size && Utilities.Compare(Parameters, other.Parameters);
             }
 
             public override bool Equals(object obj)
@@ -70,7 +65,6 @@ namespace SharpDX.Toolkit.Graphics
                 unchecked
                 {
                     int hashCode = Name.GetHashCode();
-                    hashCode = (hashCode * 397) ^ Slot.GetHashCode();
                     hashCode = (hashCode * 397) ^ Size;
                     hashCode = (hashCode * 397) ^ Parameters.Count;
                     return hashCode;
@@ -92,7 +86,6 @@ namespace SharpDX.Toolkit.Graphics
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
                 serializer.Serialize(ref Name);
-                serializer.Serialize(ref Slot);
                 serializer.SerializePackedInt(ref Size);
                 serializer.Serialize(ref Parameters);
             }

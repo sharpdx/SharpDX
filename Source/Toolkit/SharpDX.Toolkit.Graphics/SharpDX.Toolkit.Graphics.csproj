@@ -17,6 +17,7 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="BasicEffect.cs" />
     <Compile Include="BlendState.cs" />
     <Compile Include="Buffer.cs" />
     <Compile Include="Buffer.Constant.cs" />
@@ -27,6 +28,19 @@
     <Compile Include="Buffer.Raw.cs" />
     <Compile Include="Buffer.Argument.cs" />
     <Compile Include="Buffer.Typed.cs" />
+    <Compile Include="EffectConstantBufferCollection.cs" />
+    <Compile Include="EffectAttributeCollection.cs" />
+    <Compile Include="EffectConstantBuffer.cs" />
+    <Compile Include="EffectGenericCollection.cs" />
+    <Compile Include="EffectGroup.cs" />
+    <Compile Include="EffectParameter.cs" />
+    <Compile Include="EffectParameterCollection.cs" />
+    <Compile Include="EffectPass.cs" />
+    <Compile Include="EffectPassCollection.cs" />
+    <Compile Include="EffectResourceLinker.cs" />
+    <Compile Include="EffectResourceType.cs" />
+    <Compile Include="EffectTechnique.cs" />
+    <Compile Include="EffectTechniqueCollection.cs" />
     <Compile Include="MipMapDescription.cs" />
     <Compile Include="PixelBufferArray.cs" />
     <Compile Include="ImageDescription.cs" />

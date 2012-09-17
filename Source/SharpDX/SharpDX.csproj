@@ -40,7 +40,7 @@
     <Compile Include="Design\NamespaceDoc.cs" />
     <Compile Include="Diagnostics\NamespaceDoc.cs" />
     <Compile Include="Direct3D\NamespaceDoc.cs" />
-    <Compile Include="DisposableCollection.cs" />
+    <Compile Include="DisposeCollector.cs" />
     <Compile Include="FrustumCameraParams.cs" />
     <Compile Include="IdentityEqualityComparer.cs" />
     <Compile Include="Int3.cs" />

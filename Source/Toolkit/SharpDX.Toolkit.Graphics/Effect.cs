@@ -18,59 +18,149 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using SharpDX.Direct3D11;
+using System;
+using SharpDX.Toolkit.Diagnostics;
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>
+    /// Main class to apply shader effects.
+    /// </summary>
     public class Effect : Component
     {
-/*
-        internal readonly VertexShader VertexShader;
-        internal readonly DomainShader DomainShader;
-        internal readonly HullShader HullShader;
-        internal readonly GeometryShader GeometryShader;
-        internal readonly PixelShader PixelShader;
-        internal readonly ComputeShader ComputeShader;
+        /// <summary>
+        ///   Gets a collection of constant buffers that are defined for this effect.
+        /// </summary>
+        public readonly EffectConstantBufferCollection ConstantBuffers;
 
-        public Effect(EffectBytecode effectBytecode)
+        internal readonly GraphicsDevice GraphicsDevice;
+
+        /// <summary>
+        ///   Gets a collection of parameters that are defined for this effect.
+        /// </summary>
+        public readonly EffectParameterCollection Parameters;
+
+        internal readonly EffectResourceLinker ResourceLinker;
+
+        /// <summary>
+        ///   Gets a collection of techniques that are defined for this effect.
+        /// </summary>
+        public readonly EffectTechniqueCollection Techniques;
+
+        private readonly EffectGroup group;
+        private EffectBytecode.Effect effectBytecode;
+
+        public Effect(GraphicsDevice device, EffectGroup group, string effectName)
         {
-            var device = GraphicsDevice.Current;
+            GraphicsDevice = device;
+            ConstantBuffers = new EffectConstantBufferCollection();
+            Parameters = new EffectParameterCollection();
+            Techniques = new EffectTechniqueCollection();
+            ResourceLinker = ToDispose(new EffectResourceLinker());
+            this.group = group;
+            Initialize(effectName);
+        }
 
-            if (effectBytecode.Bytecodes[0] != null)
+        /// <summary>
+        ///   Gets the group this effect attached to.
+        /// </summary>
+        /// <value> The group. </value>
+        public EffectGroup Group
+        {
+            get { return group; }
+        }
+
+        /// <summary>
+        ///   Occurs when the on apply is applied on a pass.
+        /// </summary>
+        /// <remarks>
+        ///   This external hook provides a way to pre-configure a pipeline when a pass is applied.
+        ///   Subclass of this class can override the method <see cref="OnApply" />.
+        /// </remarks>
+        public event Action<EffectPass> OnApplyCallback;
+
+        protected virtual void PrepareGroup()
+        {
+        }
+
+        private void Initialize(string effectName)
+        {
+            PrepareGroup();
+            var effectRaw = group.Find(effectName);
+            if (effectRaw == null)
+                throw new ArgumentException(string.Format("Unable to find effect [{0}] from the EFfectGroup", effectName), "effectName");
+            Initialize(effectRaw);
+
+            // If everything was fine, then we can register it into the group
+            group.AddEffect(this);
+        }
+
+        private void Initialize(EffectBytecode.Effect effectBytecode)
+        {
+            this.effectBytecode = effectBytecode;
+            Name = effectBytecode.Name;
+
+            var logger = new Logger();
+            int techniqueIndex = 0;
+            foreach (var techniqueRaw in effectBytecode.Techniques)
             {
-                VertexShader = new VertexShader(device, effectBytecode.Bytecodes[0]);
+                var name = techniqueRaw.Name;
+                if (string.IsNullOrEmpty(name))
+                    name = string.Format("${0}", techniqueIndex++);
+
+                var technique = new EffectTechnique(this, name);
+                Techniques.Add(technique);
+
+                int passIndex = 0;
+                foreach (var passRaw in techniqueRaw.Passes)
+                {
+                    name = passRaw.Name;
+                    if (string.IsNullOrEmpty(name))
+                        name = string.Format("${0}", passIndex++);
+
+                    var pass = new EffectPass(this, passRaw, name);
+
+                    pass.Initialize(logger);
+
+                    technique.Passes.Add(pass);
+                }
             }
-            if (effectBytecode.Bytecodes[1] != null)
+
+            // Log all the exception in a single throw
+            if (logger.HasErrors)
+                throw new InvalidOperationException(Utilities.Join("\n", logger.Messages));
+
+            // Initialize the resource linker when we are done with all pass/parameters
+            ResourceLinker.Initialize();
+
+            //// Sort all parameters by their resource types
+            //// in order to achieve better local cache coherency in resource linker
+            //Parameters.Items.Sort((left, right) => (int)left.ResourceType - (int)right.ResourceType);
+
+            //for (int i = 0; i < Parameters.Items.Count; i++)
+            //    Parameters.Items[i].Index = i;
+
+            // Prelink constant buffers
+            foreach (var parameter in Parameters)
             {
-                DomainShader = new DomainShader(device, effectBytecode.Bytecodes[1]);
+                if (parameter.ResourceType == EffectResourceType.ConstantBuffer)
+                    parameter.SetResource(0, ConstantBuffers[parameter.Name]);
             }
-            if (effectBytecode.Bytecodes[2] != null)
+
+            // Compute slot links
+            foreach (var technique in Techniques)
             {
-                HullShader = new HullShader(device, effectBytecode.Bytecodes[2]);
-            }
-            if (effectBytecode.Bytecodes[3] != null)
-            {
-                GeometryShader = new GeometryShader(device, effectBytecode.Bytecodes[3]);
-            }
-            if (effectBytecode.Bytecodes[4] != null)
-            {
-                PixelShader = new PixelShader(device, effectBytecode.Bytecodes[4]);
-            }
-            if (effectBytecode.Bytecodes[5] != null)
-            {
-                ComputeShader = new ComputeShader(device, effectBytecode.Bytecodes[5]);
+                foreach (var pass in technique.Passes)
+                {
+                    pass.ComputeSlotLinks();
+                }
             }
         }
 
-        public void Begin(GraphicsDevice context)
+        protected internal virtual void OnApply(EffectPass pass)
         {
-
+            var handler = OnApplyCallback;
+            if (handler != null) handler(pass);
         }
-
-        public void End(GraphicsDevice context)
-        {
-            
-        }
- */ 
     }
 }

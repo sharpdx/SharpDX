@@ -885,22 +885,6 @@ namespace SharpDX.Toolkit.Graphics
                 // Build resource parameter
                 var parameter = BuildResourceParameter(name, bindingDescription);
                 shader.ResourceParameters.Add(parameter);
-
-                // Handle the binding depending on the type
-                switch (bindingDescription.Type)
-                {
-                    case ShaderInputType.ConstantBuffer:
-                    case ShaderInputType.TextureBuffer:
-                        foreach (var parameterBuffer in shader.ConstantBuffers)
-                        {
-                            if (parameterBuffer.Name == name)
-                            {
-                                parameterBuffer.Slot = (byte) bindingDescription.BindPoint;
-                                break;
-                            }
-                        }
-                        break;
-                }
             }
         }
 

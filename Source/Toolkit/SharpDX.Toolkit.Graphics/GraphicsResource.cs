@@ -62,7 +62,7 @@ namespace SharpDX.Toolkit.Graphics
 
         protected virtual DeviceChild CreateResource()
         {
-            throw new InvalidOperationException("Cannot delay-create Resource for this type");
+            return null;
         }
 
         protected DeviceChild GetOrCreateResource()

@@ -414,6 +414,17 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Determines whether the specified memory pointer is aligned in memory.
+        /// </summary>
+        /// <param name="memoryPtr">The memory pointer.</param>
+        /// <param name="align">The align.</param>
+        /// <returns><c>true</c> if the specified memory pointer is aligned in memory; otherwise, <c>false</c>.</returns>
+        public static bool IsMemoryAligned(IntPtr memoryPtr, int align = 16)
+        {
+            return ((memoryPtr.ToInt64() & (align-1)) == 0);
+        }
+
+        /// <summary>
         /// Allocate an aligned memory buffer.
         /// </summary>
         /// <returns>A pointer to a buffer aligned.</returns>

@@ -30,12 +30,20 @@ namespace SharpDX
         /// Gets or sets the disposables.
         /// </summary>
         /// <value>The disposables.</value>
-        private DisposableCollection Disposables { get; set; }
+        private DisposeCollector Disposables { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Component"/> class.
         /// </summary>
         protected internal Component()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Component" /> class with an immutable name.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        protected Component(string name) : base(name)
         {
         }
 
@@ -92,8 +100,8 @@ namespace SharpDX
             if (toDisposeArg  != null)
             {
                 if (Disposables == null)
-                    Disposables = new DisposableCollection();
-                return Disposables.Add(toDisposeArg);
+                    Disposables = new DisposeCollector();
+                return Disposables.Collect(toDisposeArg);
             }
             return null;
         }

@@ -33,6 +33,7 @@ namespace SharpDX.Toolkit.Graphics
     {
         internal Device Device;
         internal DeviceContext Context;
+        internal CommonShaderStage[] ShaderStages;
 
         [ThreadStatic]
         private static GraphicsDevice current;
@@ -78,6 +79,7 @@ namespace SharpDX.Toolkit.Graphics
             IsDeferred = false;
             Features = new GraphicsDeviceFeatures(Device);
             AttachToCurrentThread();
+            Initialize();
         }
 
         protected GraphicsDevice(GraphicsAdapter adapter, DeviceCreationFlags flags = DeviceCreationFlags.None, params FeatureLevel[] featureLevels)
@@ -90,6 +92,7 @@ namespace SharpDX.Toolkit.Graphics
             IsDeferred = false;
             Features = new GraphicsDeviceFeatures(Device);
             AttachToCurrentThread();
+            Initialize();
         }
 
         protected GraphicsDevice(GraphicsDevice mainDevice, DeviceContext deferredContext)
@@ -102,6 +105,21 @@ namespace SharpDX.Toolkit.Graphics
             Features = mainDevice.Features;
             // Setup the workaround flag
             needWorkAroundForUpdateSubResource = IsDeferred && !Features.HasDriverCommandLists;
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            // Precompute shader stages
+            ShaderStages = new CommonShaderStage[]
+                               {
+                                   Context.VertexShader,
+                                   Context.HullShader,
+                                   Context.DomainShader,
+                                   Context.GeometryShader,
+                                   Context.PixelShader,
+                                   Context.ComputeShader
+                               };
         }
 
         /// <summary>
@@ -1184,7 +1202,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476462</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::OMSetBlendState([In, Optional] ID3D11BlendState* pBlendState,[In, Optional] const SHARPDX_COLOR4* BlendFactor,[In] unsigned int SampleMask)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::OMSetBlendState</unmanaged-short>	
-        public void SetBlendState(BlendState blendState, SharpDX.Color4 blendFactor, uint multiSampleMask = 0xFFFFFFFF)
+        public void SetBlendState(BlendState blendState, Color4 blendFactor, uint multiSampleMask = 0xFFFFFFFF)
         {
             SetBlendState(blendState, blendFactor, unchecked((int)multiSampleMask));
         }
