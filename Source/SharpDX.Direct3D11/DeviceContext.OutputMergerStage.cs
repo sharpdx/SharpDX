@@ -415,6 +415,148 @@ namespace SharpDX.Direct3D11
                 SetRenderTargets(numViews, (IntPtr)renderTargetViewsPtr, depthStencilViewRef);
             }
         }
+
+
+        /// <summary>	
+        /// Sets an array of views for an unordered resource.	
+        /// </summary>	
+        /// <remarks>	
+        /// </remarks>	
+        /// <param name="startSlot">Index of the first element in the zero-based array to begin setting. </param>
+        /// <param name="unorderedAccessView">A reference to an <see cref="SharpDX.Direct3D11.UnorderedAccessView"/> references to be set by the method. </param>
+        /// <msdn-id>ff476465</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews([In] unsigned int NumRTVs,[In, Buffer, Optional] const ID3D11RenderTargetView** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView,[In] unsigned int UAVStartSlot,[In] unsigned int NumUAVs,[In, Buffer, Optional] const ID3D11UnorderedAccessView** ppUnorderedAccessViews,[In, Buffer, Optional] const unsigned int* pUAVInitialCounts)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews</unmanaged-short>	
+        public void SetUnorderedAccessView(int startSlot, SharpDX.Direct3D11.UnorderedAccessView unorderedAccessView)
+        {
+            SetUnorderedAccessView(startSlot, unorderedAccessView, -1);
+        }
+
+        /// <summary>	
+        /// Sets an array of views for an unordered resource.	
+        /// </summary>	
+        /// <remarks>	
+        /// </remarks>	
+        /// <param name="startSlot">Index of the first element in the zero-based array to begin setting. </param>
+        /// <param name="unorderedAccessView">A reference to an <see cref="SharpDX.Direct3D11.UnorderedAccessView"/> references to be set by the method. </param>
+        /// <param name="uavInitialCount">An Append/Consume buffer offsets. A value of -1 indicates the current offset should be kept.   Any other values set the hidden counter for that Appendable/Consumeable UAV. uAVInitialCount is only relevant for UAVs which have the <see cref="SharpDX.Direct3D11.UnorderedAccessViewBufferFlags"/> flag,  otherwise the argument is ignored. </param>
+        /// <msdn-id>ff476465</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews([In] unsigned int NumRTVs,[In, Buffer, Optional] const ID3D11RenderTargetView** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView,[In] unsigned int UAVStartSlot,[In] unsigned int NumUAVs,[In, Buffer, Optional] const ID3D11UnorderedAccessView** ppUnorderedAccessViews,[In, Buffer, Optional] const unsigned int* pUAVInitialCounts)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews</unmanaged-short>	
+        public void SetUnorderedAccessView(int startSlot, SharpDX.Direct3D11.UnorderedAccessView unorderedAccessView, int uavInitialCount)
+        {
+            SetUnorderedAccessViews(startSlot, new[] { unorderedAccessView }, new[] { uavInitialCount });
+        }
+
+        /// <summary>	
+        /// Sets an array of views for an unordered resource.	
+        /// </summary>	
+        /// <remarks>	
+        /// </remarks>	
+        /// <param name="startSlot">Index of the first element in the zero-based array to begin setting. </param>
+        /// <param name="unorderedAccessViews">A reference to an array of <see cref="SharpDX.Direct3D11.UnorderedAccessView"/> references to be set by the method. </param>
+        /// <msdn-id>ff476465</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews([In] unsigned int NumRTVs,[In, Buffer, Optional] const ID3D11RenderTargetView** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView,[In] unsigned int UAVStartSlot,[In] unsigned int NumUAVs,[In, Buffer, Optional] const ID3D11UnorderedAccessView** ppUnorderedAccessViews,[In, Buffer, Optional] const unsigned int* pUAVInitialCounts)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews</unmanaged-short>	
+        public void SetUnorderedAccessViews(int startSlot, params SharpDX.Direct3D11.UnorderedAccessView[] unorderedAccessViews)
+        {
+            var uavInitialCounts = new int[unorderedAccessViews.Length];
+            for (int i = 0; i < unorderedAccessViews.Length; i++)
+                uavInitialCounts[i] = -1;
+            SetUnorderedAccessViews(startSlot, unorderedAccessViews, uavInitialCounts);
+        }
+
+        /// <summary>	
+        /// Sets an array of views for an unordered resource.	
+        /// </summary>	
+        /// <remarks>	
+        /// </remarks>	
+        /// <param name="startSlot">Index of the first element in the zero-based array to begin setting. </param>
+        /// <param name="unorderedAccessViews">A reference to an array of <see cref="SharpDX.Direct3D11.UnorderedAccessView"/> references to be set by the method. </param>
+        /// <param name="uavInitialCounts">An array of Append/Consume buffer offsets. A value of -1 indicates the current offset should be kept.   Any other values set the hidden counter for that Appendable/Consumeable UAV.  pUAVInitialCounts is only relevant for UAVs which have the <see cref="SharpDX.Direct3D11.UnorderedAccessViewBufferFlags"/> flag,  otherwise the argument is ignored. </param>
+        /// <msdn-id>ff476465</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews([In] unsigned int NumRTVs,[In, Buffer, Optional] const ID3D11RenderTargetView** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView,[In] unsigned int UAVStartSlot,[In] unsigned int NumUAVs,[In, Buffer, Optional] const ID3D11UnorderedAccessView** ppUnorderedAccessViews,[In, Buffer, Optional] const unsigned int* pUAVInitialCounts)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews</unmanaged-short>	
+        public unsafe void SetUnorderedAccessViews(int startSlot, SharpDX.Direct3D11.UnorderedAccessView[] unorderedAccessViews, int[] uavInitialCounts)
+        {
+            IntPtr* unorderedAccessViewsOut_ = (IntPtr*)0;
+            if (unorderedAccessViews != null)
+            {
+                IntPtr* unorderedAccessViewsOut__ = stackalloc IntPtr[unorderedAccessViews.Length];
+                unorderedAccessViewsOut_ = unorderedAccessViewsOut__;
+                for (int i = 0; i < unorderedAccessViews.Length; i++)
+                    unorderedAccessViewsOut_[i] = (unorderedAccessViews[i] == null) ? IntPtr.Zero : unorderedAccessViews[i].NativePointer;
+            }
+            SetUnorderedAccessViews(startSlot, unorderedAccessViews != null ? unorderedAccessViews.Length : 0, (IntPtr)unorderedAccessViewsOut_, uavInitialCounts);
+        }
+
+        /// <summary>	
+        /// <p>Binds resources to the output-merger stage.</p>	
+        /// </summary>	
+        /// <param name="numRTVs"><dd>  <p>Number of render-target views (<em>ppRenderTargetViews</em>) and depth-stencil view (<em>ppDepthStencilView</em>)  to bind. If you set <em>NumViews</em> to D3D11_KEEP_RENDER_TARGETS_AND_DEPTH_STENCIL (0xffffffff), this method does not modify the currently bound render-target views (RTVs) and also does not modify depth-stencil view (DSV).</p> </dd></param>	
+        /// <param name="renderTargetViewsOut"><dd>  <p>Pointer to an array of <strong><see cref="SharpDX.Direct3D11.RenderTargetView"/></strong>s, which represent render-target views. Specify <strong><c>null</c></strong> to set none.</p> </dd></param>	
+        /// <param name="depthStencilViewRef"><dd>  <p>Pointer to a <strong><see cref="SharpDX.Direct3D11.DepthStencilView"/></strong>, which represents a depth-stencil view. Specify <strong><c>null</c></strong> to set none.</p> </dd></param>	
+        /// <param name="uAVStartSlot"><dd>  <p>Index into a zero-based array to begin setting unordered-access views (ranges from 0 to <see cref="SharpDX.Direct3D11.ComputeShaderStage.UnorderedAccessViewSlotCount"/> - 1).</p> <p> For the Direct3D 11.1 runtime, which is available starting with Windows Developer Preview, this value can range from 0 to D3D11_1_UAV_SLOT_COUNT - 1. D3D11_1_UAV_SLOT_COUNT is defined as 64.</p> <p>For pixel shaders, <em>UAVStartSlot</em> should be equal to the number of render-target views being bound. </p> </dd></param>	
+        /// <param name="numUAVs"><dd>  <p>Number of unordered-access views (UAVs) in <em>ppUnorderedAccessView</em>. If you set <em>NumUAVs</em> to D3D11_KEEP_UNORDERED_ACCESS_VIEWS (0xffffffff), this method does not modify the currently bound unordered-access views.</p> <p>For the Direct3D 11.1 runtime, which is available starting with Windows Developer Preview, this value can range from 0 to D3D11_1_UAV_SLOT_COUNT - <em>UAVStartSlot</em>.</p> </dd></param>	
+        /// <param name="unorderedAccessViewsOut"><dd>  <p>Pointer to an array of <strong><see cref="SharpDX.Direct3D11.UnorderedAccessView"/></strong>s, which represent unordered-access views.</p> </dd></param>	
+        /// <param name="uAVInitialCountsRef"><dd>  <p>An array of append and consume buffer offsets. A value of -1 indicates to keep the current offset. Any other values set the hidden counter  for that appendable and consumable UAV. <em>pUAVInitialCounts</em> is  relevant only for UAVs that were created with either  <strong><see cref="SharpDX.Direct3D11.UnorderedAccessViewBufferFlags.Append"/></strong> or <strong><see cref="SharpDX.Direct3D11.UnorderedAccessViewBufferFlags.Counter"/></strong> specified  when the UAV was created; otherwise, the argument is ignored.</p> </dd></param>	
+        /// <remarks>	
+        /// <p>For pixel shaders, the render targets and unordered-access views share the same resource slots when being written out. This means that UAVs must be  given an offset so that they are placed in the slots after the render target views that are being bound. </p><p><strong>Note</strong>??RTVs, DSV, and UAVs cannot be set independently; they all need to be set at the same time.</p><p>Two RTVs conflict if they share a subresource (and therefore share the same resource).</p><p>Two UAVs conflict if they share a subresource (and therefore share the same resource).</p><p>An RTV conflicts with a UAV if they share a subresource or share a bind point.</p><p><strong>OMSetRenderTargetsAndUnorderedAccessViews</strong> operates properly in the following situations:</p><ol> <li> <p><em>NumViews</em> != D3D11_KEEP_RENDER_TARGETS_AND_DEPTH_STENCIL and <em>NumUAVs</em> != D3D11_KEEP_UNORDERED_ACCESS_VIEWS</p> <p>The following conditions must be true for <strong>OMSetRenderTargetsAndUnorderedAccessViews</strong> to succeed and for the runtime to pass the bind information to the driver:</p> <ul> <li><em>NumViews</em> &lt;= 8</li> <li><em>UAVStartSlot</em> &gt;= <em>NumViews</em></li> <li><em>UAVStartSlot</em> + <em>NumUAVs</em> &lt;= 8</li> <li>There must be no conflicts in the set of all <em>ppRenderTargetViews</em> and <em>ppUnorderedAccessView</em>.</li> <li><em>ppDepthStencilView</em> must match the render-target views. For more information about resource views, see Introduction to a Resource in Direct3D 11.</li> </ul> <p><strong>OMSetRenderTargetsAndUnorderedAccessViews</strong> performs the following tasks:</p> <ul> <li>Unbinds all currently bound conflicting resources (stream-output target resources (SOTargets), compute shader (CS) UAVs, shader-resource views (SRVs)).</li> <li>Binds <em>ppRenderTargetViews</em>, <em>ppDepthStencilView</em>, and <em>ppUnorderedAccessView</em>.</li> </ul> </li> <li> <p><em>NumViews</em> == D3D11_KEEP_RENDER_TARGETS_AND_DEPTH_STENCIL </p> <p>In this situation, <strong>OMSetRenderTargetsAndUnorderedAccessViews</strong> binds only UAVs. </p> <p>The following conditions must be true for <strong>OMSetRenderTargetsAndUnorderedAccessViews</strong> to succeed and for the runtime to pass the bind information to the driver:</p> <ul> <li><em>UAVStartSlot</em> + <em>NumUAVs</em> &lt;= 8</li> <li>There must be no conflicts in <em>ppUnorderedAccessView</em>.</li> </ul> <p><strong>OMSetRenderTargetsAndUnorderedAccessViews</strong> unbinds the following items:</p> <ul> <li>All RTVs in slots &gt;= <em>UAVStartSlot</em></li> <li>All RTVs that conflict with any UAVs in <em>ppUnorderedAccessView</em></li> <li>All currently bound resources (SOTargets, CS UAVs, SRVs) that conflict with <em>ppUnorderedAccessView</em></li> </ul> <p><strong>OMSetRenderTargetsAndUnorderedAccessViews</strong> binds <em>ppUnorderedAccessView</em>.</p> <p><strong>OMSetRenderTargetsAndUnorderedAccessViews</strong> ignores <em>ppDepthStencilView</em>, and the current depth-stencil view remains bound.</p> </li> <li> <p><em>NumUAVs</em> == D3D11_KEEP_UNORDERED_ACCESS_VIEWS</p> <p>In this situation, <strong>OMSetRenderTargetsAndUnorderedAccessViews</strong> binds only RTVs and DSV. </p> <p>The following conditions must be true for <strong>OMSetRenderTargetsAndUnorderedAccessViews</strong> to succeed and for the runtime to pass the bind information to the driver:</p> <ul> <li><em>NumViews</em> &lt;= 8</li> <li>There must be no conflicts in <em>ppRenderTargetViews</em>.</li> <li><em>ppDepthStencilView</em> must match the render-target views. For more information about resource views, see Introduction to a Resource in Direct3D 11.</li> </ul> <p><strong>OMSetRenderTargetsAndUnorderedAccessViews</strong> unbinds the following items:</p> <ul> <li>All UAVs in slots &lt; <em>NumViews</em></li> <li>All UAVs that conflict with any RTVs in <em>ppRenderTargetViews</em></li> <li>All currently bound resources (SOTargets, CS UAVs, SRVs) that conflict with <em>ppRenderTargetViews</em></li> </ul> <p><strong>OMSetRenderTargetsAndUnorderedAccessViews</strong> binds <em>ppRenderTargetViews</em> and <em>ppDepthStencilView</em>.</p> <p><strong>OMSetRenderTargetsAndUnorderedAccessViews</strong> ignores <em>UAVStartSlot</em>.</p> </li> </ol>	
+        /// </remarks>	
+        /// <msdn-id>ff476465</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews([In] unsigned int NumRTVs,[In, Buffer, Optional] const ID3D11RenderTargetView** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView,[In] unsigned int UAVStartSlot,[In] unsigned int NumUAVs,[In, Buffer, Optional] const ID3D11UnorderedAccessView** ppUnorderedAccessViews,[In, Buffer, Optional] const unsigned int* pUAVInitialCounts)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews</unmanaged-short>	
+        internal void SetRenderTargetsAndUnorderedAccessViews(int numRTVs, SharpDX.Direct3D11.RenderTargetView[] renderTargetViewsOut, SharpDX.Direct3D11.DepthStencilView depthStencilViewRef, int uAVStartSlot, int numUAVs, SharpDX.Direct3D11.UnorderedAccessView[] unorderedAccessViewsOut, int[] uAVInitialCountsRef)
+        {
+            unsafe
+            {
+                IntPtr* renderTargetViewsOut_ = (IntPtr*)0;
+                if (renderTargetViewsOut != null)
+                {
+                    IntPtr* renderTargetViewsOut__ = stackalloc IntPtr[renderTargetViewsOut.Length];
+                    renderTargetViewsOut_ = renderTargetViewsOut__;
+                    for (int i = 0; i < renderTargetViewsOut.Length; i++)
+                        renderTargetViewsOut_[i] = (renderTargetViewsOut[i] == null) ? IntPtr.Zero : renderTargetViewsOut[i].NativePointer;
+                }
+                IntPtr* unorderedAccessViewsOut_ = (IntPtr*)0;
+                if (unorderedAccessViewsOut != null)
+                {
+                    IntPtr* unorderedAccessViewsOut__ = stackalloc IntPtr[unorderedAccessViewsOut.Length];
+                    unorderedAccessViewsOut_ = unorderedAccessViewsOut__;
+                    for (int i = 0; i < unorderedAccessViewsOut.Length; i++)
+                        unorderedAccessViewsOut_[i] = (unorderedAccessViewsOut[i] == null) ? IntPtr.Zero : unorderedAccessViewsOut[i].NativePointer;
+                }
+
+                SetRenderTargetsAndUnorderedAccessViews(numRTVs, (IntPtr) renderTargetViewsOut_, depthStencilViewRef, uAVStartSlot, numUAVs, (IntPtr) unorderedAccessViewsOut_, uAVInitialCountsRef);
+            }
+        }
+
+        /// <summary>	
+        /// <p>Binds resources to the output-merger stage.</p>	
+        /// </summary>	
+        /// <param name="numRTVs"><dd>  <p>Number of render-target views (<em>ppRenderTargetViews</em>) and depth-stencil view (<em>ppDepthStencilView</em>)  to bind. If you set <em>NumViews</em> to D3D11_KEEP_RENDER_TARGETS_AND_DEPTH_STENCIL (0xffffffff), this method does not modify the currently bound render-target views (RTVs) and also does not modify depth-stencil view (DSV).</p> </dd></param>	
+        /// <param name="renderTargetViewsOut"><dd>  <p>Pointer to an array of <strong><see cref="SharpDX.Direct3D11.RenderTargetView"/></strong>s, which represent render-target views. Specify <strong><c>null</c></strong> to set none.</p> </dd></param>	
+        /// <param name="depthStencilViewRef"><dd>  <p>Pointer to a <strong><see cref="SharpDX.Direct3D11.DepthStencilView"/></strong>, which represents a depth-stencil view. Specify <strong><c>null</c></strong> to set none.</p> </dd></param>	
+        /// <param name="uAVStartSlot"><dd>  <p>Index into a zero-based array to begin setting unordered-access views (ranges from 0 to <see cref="SharpDX.Direct3D11.ComputeShaderStage.UnorderedAccessViewSlotCount"/> - 1).</p> <p> For the Direct3D 11.1 runtime, which is available starting with Windows Developer Preview, this value can range from 0 to D3D11_1_UAV_SLOT_COUNT - 1. D3D11_1_UAV_SLOT_COUNT is defined as 64.</p> <p>For pixel shaders, <em>UAVStartSlot</em> should be equal to the number of render-target views being bound. </p> </dd></param>	
+        /// <param name="numUAVs"><dd>  <p>Number of unordered-access views (UAVs) in <em>ppUnorderedAccessView</em>. If you set <em>NumUAVs</em> to D3D11_KEEP_UNORDERED_ACCESS_VIEWS (0xffffffff), this method does not modify the currently bound unordered-access views.</p> <p>For the Direct3D 11.1 runtime, which is available starting with Windows Developer Preview, this value can range from 0 to D3D11_1_UAV_SLOT_COUNT - <em>UAVStartSlot</em>.</p> </dd></param>	
+        /// <param name="unorderedAccessViewsOut"><dd>  <p>Pointer to an array of <strong><see cref="SharpDX.Direct3D11.UnorderedAccessView"/></strong>s, which represent unordered-access views.</p> </dd></param>	
+        /// <param name="uAVInitialCountsRef"><dd>  <p>An array of append and consume buffer offsets. A value of -1 indicates to keep the current offset. Any other values set the hidden counter  for that appendable and consumable UAV. <em>pUAVInitialCounts</em> is  relevant only for UAVs that were created with either  <strong><see cref="SharpDX.Direct3D11.UnorderedAccessViewBufferFlags.Append"/></strong> or <strong><see cref="SharpDX.Direct3D11.UnorderedAccessViewBufferFlags.Counter"/></strong> specified  when the UAV was created; otherwise, the argument is ignored.</p> </dd></param>	
+        /// <remarks>	
+        /// <p>For pixel shaders, the render targets and unordered-access views share the same resource slots when being written out. This means that UAVs must be  given an offset so that they are placed in the slots after the render target views that are being bound. </p><p><strong>Note</strong>??RTVs, DSV, and UAVs cannot be set independently; they all need to be set at the same time.</p><p>Two RTVs conflict if they share a subresource (and therefore share the same resource).</p><p>Two UAVs conflict if they share a subresource (and therefore share the same resource).</p><p>An RTV conflicts with a UAV if they share a subresource or share a bind point.</p><p><strong>OMSetRenderTargetsAndUnorderedAccessViews</strong> operates properly in the following situations:</p><ol> <li> <p><em>NumViews</em> != D3D11_KEEP_RENDER_TARGETS_AND_DEPTH_STENCIL and <em>NumUAVs</em> != D3D11_KEEP_UNORDERED_ACCESS_VIEWS</p> <p>The following conditions must be true for <strong>OMSetRenderTargetsAndUnorderedAccessViews</strong> to succeed and for the runtime to pass the bind information to the driver:</p> <ul> <li><em>NumViews</em> &lt;= 8</li> <li><em>UAVStartSlot</em> &gt;= <em>NumViews</em></li> <li><em>UAVStartSlot</em> + <em>NumUAVs</em> &lt;= 8</li> <li>There must be no conflicts in the set of all <em>ppRenderTargetViews</em> and <em>ppUnorderedAccessView</em>.</li> <li><em>ppDepthStencilView</em> must match the render-target views. For more information about resource views, see Introduction to a Resource in Direct3D 11.</li> </ul> <p><strong>OMSetRenderTargetsAndUnorderedAccessViews</strong> performs the following tasks:</p> <ul> <li>Unbinds all currently bound conflicting resources (stream-output target resources (SOTargets), compute shader (CS) UAVs, shader-resource views (SRVs)).</li> <li>Binds <em>ppRenderTargetViews</em>, <em>ppDepthStencilView</em>, and <em>ppUnorderedAccessView</em>.</li> </ul> </li> <li> <p><em>NumViews</em> == D3D11_KEEP_RENDER_TARGETS_AND_DEPTH_STENCIL </p> <p>In this situation, <strong>OMSetRenderTargetsAndUnorderedAccessViews</strong> binds only UAVs. </p> <p>The following conditions must be true for <strong>OMSetRenderTargetsAndUnorderedAccessViews</strong> to succeed and for the runtime to pass the bind information to the driver:</p> <ul> <li><em>UAVStartSlot</em> + <em>NumUAVs</em> &lt;= 8</li> <li>There must be no conflicts in <em>ppUnorderedAccessView</em>.</li> </ul> <p><strong>OMSetRenderTargetsAndUnorderedAccessViews</strong> unbinds the following items:</p> <ul> <li>All RTVs in slots &gt;= <em>UAVStartSlot</em></li> <li>All RTVs that conflict with any UAVs in <em>ppUnorderedAccessView</em></li> <li>All currently bound resources (SOTargets, CS UAVs, SRVs) that conflict with <em>ppUnorderedAccessView</em></li> </ul> <p><strong>OMSetRenderTargetsAndUnorderedAccessViews</strong> binds <em>ppUnorderedAccessView</em>.</p> <p><strong>OMSetRenderTargetsAndUnorderedAccessViews</strong> ignores <em>ppDepthStencilView</em>, and the current depth-stencil view remains bound.</p> </li> <li> <p><em>NumUAVs</em> == D3D11_KEEP_UNORDERED_ACCESS_VIEWS</p> <p>In this situation, <strong>OMSetRenderTargetsAndUnorderedAccessViews</strong> binds only RTVs and DSV. </p> <p>The following conditions must be true for <strong>OMSetRenderTargetsAndUnorderedAccessViews</strong> to succeed and for the runtime to pass the bind information to the driver:</p> <ul> <li><em>NumViews</em> &lt;= 8</li> <li>There must be no conflicts in <em>ppRenderTargetViews</em>.</li> <li><em>ppDepthStencilView</em> must match the render-target views. For more information about resource views, see Introduction to a Resource in Direct3D 11.</li> </ul> <p><strong>OMSetRenderTargetsAndUnorderedAccessViews</strong> unbinds the following items:</p> <ul> <li>All UAVs in slots &lt; <em>NumViews</em></li> <li>All UAVs that conflict with any RTVs in <em>ppRenderTargetViews</em></li> <li>All currently bound resources (SOTargets, CS UAVs, SRVs) that conflict with <em>ppRenderTargetViews</em></li> </ul> <p><strong>OMSetRenderTargetsAndUnorderedAccessViews</strong> binds <em>ppRenderTargetViews</em> and <em>ppDepthStencilView</em>.</p> <p><strong>OMSetRenderTargetsAndUnorderedAccessViews</strong> ignores <em>UAVStartSlot</em>.</p> </li> </ol>	
+        /// </remarks>	
+        /// <msdn-id>ff476465</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews([In] unsigned int NumRTVs,[In, Buffer, Optional] const ID3D11RenderTargetView** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView,[In] unsigned int UAVStartSlot,[In] unsigned int NumUAVs,[In, Buffer, Optional] const ID3D11UnorderedAccessView** ppUnorderedAccessViews,[In, Buffer, Optional] const unsigned int* pUAVInitialCounts)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews</unmanaged-short>	
+        internal void SetRenderTargetsAndUnorderedAccessViews(int numRTVs, SharpDX.ComArray<SharpDX.Direct3D11.RenderTargetView> renderTargetViewsOut, SharpDX.Direct3D11.DepthStencilView depthStencilViewRef, int uAVStartSlot, int numUAVs, SharpDX.ComArray<SharpDX.Direct3D11.UnorderedAccessView> unorderedAccessViewsOut, int[] uAVInitialCountsRef)
+        {
+            SetRenderTargetsAndUnorderedAccessViews(numRTVs, ((renderTargetViewsOut == null) ? IntPtr.Zero : renderTargetViewsOut.NativePointer), depthStencilViewRef, uAVStartSlot, numUAVs, ((unorderedAccessViewsOut == null) ? IntPtr.Zero : unorderedAccessViewsOut.NativePointer), uAVInitialCountsRef);
+        }
+
+        internal void SetUnorderedAccessViews(int startSlot, int numBuffers, IntPtr unorderedAccessBuffer, int[] uavCount)
+        {
+            const int D3D11_KEEP_RENDER_TARGETS_AND_DEPTH_STENCIL = -1;
+            SetRenderTargetsAndUnorderedAccessViews(D3D11_KEEP_RENDER_TARGETS_AND_DEPTH_STENCIL, IntPtr.Zero, null, startSlot, numBuffers, unorderedAccessBuffer, uavCount);
+        }
        
         /// <summary>	
         /// Set the blend state of the output-merger stage.	

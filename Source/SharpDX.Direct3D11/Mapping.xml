@@ -242,6 +242,9 @@
     <map param="ppRenderTargetViews" type="void" attribute="in"/>
     <map method="ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews" visibility="internal"/>
 
+    <map param="ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews::ppRenderTargetViews" type="void"/>
+    <map param="ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews::ppUnorderedAccessViews" type="void"/>
+
     <map interface="ID3DDeviceContextState" name="DeviceContextState"/>
     <map interface="ID3DUserDefinedAnnotation" name="UserDefinedAnnotation"/>
 
