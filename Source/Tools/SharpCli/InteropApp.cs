@@ -27,7 +27,7 @@ using System.Runtime.CompilerServices;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Pdb;
-
+using CallSite = Mono.Cecil.CallSite;
 using MethodAttributes = Mono.Cecil.MethodAttributes;
 
 namespace SharpCli
