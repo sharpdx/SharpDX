@@ -718,9 +718,23 @@ namespace SharpCli
             return File.Exists(file) && File.GetLastWriteTime(file) == File.GetLastWriteTime(fromFile);
         }
 
-
         AssemblyDefinition mscorlibAssembly;
-        
+
+        /// <summary>
+        /// Get Program Files x86
+        /// </summary>
+        /// <returns></returns>
+        static string ProgramFilesx86()
+        {
+            if (8 == IntPtr.Size
+                || (!String.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432"))))
+            {
+                return Environment.GetEnvironmentVariable("ProgramFiles(x86)");
+            }
+
+            return Environment.GetEnvironmentVariable("ProgramFiles");
+        }
+
         /// <summary>
         /// Patches the file.
         /// </summary>
@@ -771,7 +785,7 @@ namespace SharpCli
                 {
                     if (assemblyNameReference.Name == "System.Runtime")
                     {
-                        ((BaseAssemblyResolver)assembly.MainModule.AssemblyResolver).AddSearchDirectory(@"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETCore\v4.5");
+                        ((BaseAssemblyResolver)assembly.MainModule.AssemblyResolver).AddSearchDirectory( Path.Combine(ProgramFilesx86(),@"Reference Assemblies\Microsoft\Framework\.NETCore\v4.5"));
                         mscorlibAssembly = assembly.MainModule.AssemblyResolver.Resolve(assemblyNameReference);
                         break;
                     }
