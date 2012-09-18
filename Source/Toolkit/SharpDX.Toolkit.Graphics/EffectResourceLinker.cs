@@ -33,6 +33,11 @@ namespace SharpDX.Toolkit.Graphics
         private object[] resources;
 
         /// <summary>
+        /// Real object resources, as they were set on the parameter.
+        /// </summary>
+        public Buffer[] ConstantBuffers;
+
+        /// <summary>
         /// Total number of resources.
         /// </summary>
         public int Count;
@@ -48,6 +53,7 @@ namespace SharpDX.Toolkit.Graphics
         public void Initialize()
         {
             resources = new object[Count];
+            ConstantBuffers = new Buffer[Count];
             unsafe
             {
                 var ptr = Utilities.AllocateMemory(Count * sizeof(IntPtr));
@@ -70,7 +76,7 @@ namespace SharpDX.Toolkit.Graphics
             resources[resourceIndex] = value;
             unsafe
             {
-                Pointers[resourceIndex] = GetNativePointer(type, value);
+                Pointers[resourceIndex] = GetNativePointer(resourceIndex, type, value);
             }
         }
     
@@ -81,13 +87,13 @@ namespace SharpDX.Toolkit.Graphics
                 resources[resourceIndex] = value;
                 unsafe
                 {
-                    Pointers[resourceIndex] = GetNativePointer(type, value);
+                    Pointers[resourceIndex] = GetNativePointer(resourceIndex, type, value);
                 }
                 resourceIndex++;
             }
         }
 
-        private static IntPtr GetNativePointer<T>(EffectResourceType type, T value) where T : class
+        private IntPtr GetNativePointer<T>(int resourceIndex, EffectResourceType type, T value) where T : class
         {
             if (value == null)
                 return IntPtr.Zero;
@@ -98,13 +104,18 @@ namespace SharpDX.Toolkit.Graphics
                     {
                         var constantBuffer = value as EffectConstantBuffer;
                         if (constantBuffer != null)
-                            return ((Direct3D11.Buffer)constantBuffer).NativePointer;
+                        {
+                            var rawBuffer = constantBuffer;
+                            ConstantBuffers[resourceIndex] = rawBuffer;
+                            return ((Direct3D11.Buffer)rawBuffer).NativePointer;
+                        }
                         var buffer = value as Buffer;
                         if (buffer != null)
-                            return ((Direct3D11.Buffer)buffer).NativePointer;
-                        var nativeBuffer = value as Direct3D11.Buffer;
-                        if (nativeBuffer != null)
-                            return nativeBuffer.NativePointer;
+                        {
+                            var rawBuffer = buffer;
+                            ConstantBuffers[resourceIndex] = rawBuffer;
+                            return ((Direct3D11.Buffer)rawBuffer).NativePointer;
+                        }
                     }
                     break;
                 case EffectResourceType.ShaderResourceView:

@@ -58,7 +58,6 @@ namespace SharpDX.Toolkit.Graphics.Tests
             // Check that this is the profile 10.0
             Assert.AreEqual(bytecode.Shaders[0].Level, FeatureLevel.Level_10_0);
 
-
             // Create a bytecode group from a single bytecode
             var effectGroup = EffectGroup.New(device, bytecode);
 
@@ -80,6 +79,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             effect.Parameters["tex1"].SetResource(tex1);
             effect.Parameters["tex2"].SetResource(tex2);
             effect.Parameters["tex3"].SetResource(tex3);
+            effect.Parameters["worldViewProj"].SetValue(Matrix.Identity);
             effect.Parameters["samp"].SetResource(samplerState);
 
             //effect.Parameters["World"].SetValue(Vector3.Zero);

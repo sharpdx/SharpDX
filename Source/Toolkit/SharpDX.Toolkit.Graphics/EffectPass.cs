@@ -26,6 +26,9 @@ using SharpDX.Toolkit.Diagnostics;
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>
+    /// Contains rendering state for drawing with an effect; an effect can contain one or more passes. 
+    /// </summary>
     public class EffectPass : ComponentBase
     {
         private const int StageCount = 6;
@@ -56,19 +59,25 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// The parent effect of this pass.
         /// </summary>
-        public  readonly Effect Effect;
+        public readonly Effect Effect;
 
         private readonly EffectBytecode.Pass pass;
         private readonly GraphicsDevice graphicsDevice;
+
+        private PipelineBlock pipeline;
+
         private BlendState blendState;
+        private bool hasBlendState = false;
+        private Color4 blendStateColor;
+        private bool hasBlendStateColor;
         private uint blendStateSampleMask;
 
         private DepthStencilState depthStencilState;
-        private bool hasBlendState = false;
         private bool hasDepthStencilState = false;
+        private int depthStencilReference;
+        private bool hasDepthStencilReference = false;
 
         private bool hasRasterizerState = false;
-        private PipelineBlock pipeline;
         private RasterizerState rasterizerState;
 
         /// <summary>
@@ -109,7 +118,15 @@ namespace SharpDX.Toolkit.Graphics
         ///   Gets or sets the color of the blend state.
         /// </summary>
         /// <value> The color of the blend state. </value>
-        public Color4 BlendStateColor { get; set; }
+        public Color4 BlendStateColor
+        {
+            get { return blendStateColor; }
+            set
+            {
+                blendStateColor = value;
+                hasBlendStateColor = true;
+            }
+        }
 
         /// <summary>
         ///   Gets or sets the blend state sample mask.
@@ -139,7 +156,15 @@ namespace SharpDX.Toolkit.Graphics
         ///   Gets or sets the depth stencil reference.
         /// </summary>
         /// <value> The depth stencil reference. </value>
-        public int DepthStencilReference { get; set; }
+        public int DepthStencilReference
+        {
+            get { return depthStencilReference; }
+            set
+            {
+                depthStencilReference = value;
+                hasDepthStencilReference = true;
+            }
+        }
 
         /// <summary>
         ///   Gets or sets the state of the rasterizer.
@@ -168,10 +193,12 @@ namespace SharpDX.Toolkit.Graphics
         /// </remarks>
         public unsafe void Apply()
         {
+            // Give a chance to the effect callback to prepare this pass before it is actually applied.
             Effect.OnApply(this);
 
             var pLinks = pipeline.SlotLinks.Links;
             var pPointers = pipeline.PointersBuffer;
+            var constantBuffers = Effect.ResourceLinker.ConstantBuffers;
 
             // ---------------------------------------------------------------------
             // Handle sparse input resources and update their continous counterpart.
@@ -201,15 +228,16 @@ namespace SharpDX.Toolkit.Graphics
                 // ----------------------------------------------
 
                 // Upload all constant buffers to the GPU they have been modified.
-                foreach (var effectConstantBuffer in stageBlock.ConstantBuffers)
+                for (int i = 0; i < stageBlock.ConstantBufferLinks.Length; i++)
                 {
-                    if (effectConstantBuffer.IsDirty)
+                    var constantBufferLink = stageBlock.ConstantBufferLinks[i];
+                    var constantBuffer = constantBufferLink.ConstantBuffer;
+                    if (constantBuffer.IsDirty)
                     {
-                        ((Buffer)effectConstantBuffer).SetData(Effect.GraphicsDevice, new DataPointer(effectConstantBuffer.DataPointer, effectConstantBuffer.Size));
-                        effectConstantBuffer.IsDirty = false;
+                        constantBuffers[constantBufferLink.ResourceIndex].SetData(Effect.GraphicsDevice, new DataPointer(constantBuffer.DataPointer, constantBuffer.Size));
+                        constantBuffer.IsDirty = false;
                     }
                 }
-
 
                 pLinks = stageBlock.ConstantBufferSlotLinks.Links;
                 var localLink = stageBlock.ConstantBufferSlotLinks;
@@ -275,7 +303,14 @@ namespace SharpDX.Toolkit.Graphics
             // ----------------------------------------------
             if (hasBlendState)
             {
-                graphicsDevice.SetBlendState(blendState, BlendStateColor, blendStateSampleMask);
+                if (hasBlendStateColor)
+                {
+                    graphicsDevice.SetBlendState(blendState, BlendStateColor, blendStateSampleMask);
+                }
+                else
+                {
+                    graphicsDevice.SetBlendState(blendState);
+                }
             }
 
             // ----------------------------------------------
@@ -283,7 +318,14 @@ namespace SharpDX.Toolkit.Graphics
             // ----------------------------------------------
             if (hasDepthStencilState)
             {
-                graphicsDevice.SetDepthStencilState(depthStencilState, DepthStencilReference);
+                if (hasDepthStencilReference)
+                {
+                    graphicsDevice.SetDepthStencilState(depthStencilState, DepthStencilReference);
+                }
+                else
+                {
+                    graphicsDevice.SetDepthStencilState(depthStencilState);
+                }
             }
 
             // ----------------------------------------------
@@ -337,8 +379,6 @@ namespace SharpDX.Toolkit.Graphics
             stageBlock.Shader = Effect.Group.GetOrCompileShader(stageBlock.Type, stageBlock.Index);
             var shaderRaw = Effect.Group.Bytecode.Shaders[stageBlock.Index];
 
-            stageBlock.ConstantBuffers = new EffectConstantBuffer[shaderRaw.ConstantBuffers.Count];
-
             for (int i = 0; i < shaderRaw.ConstantBuffers.Count; i++)
             {
                 var constantBufferRaw = shaderRaw.ConstantBuffers[i];
@@ -375,10 +415,9 @@ namespace SharpDX.Toolkit.Graphics
                         }
                     }
                 }
-
-                // Add this constant buffer to the shaderblock
-                stageBlock.ConstantBuffers[i] = constantBuffer;
             }
+
+            var constantBufferLinks = new List<ConstantBufferLink>();
 
             // Declare all resource parameters at the effect level.
             foreach (var parameterRaw in shaderRaw.ResourceParameters)
@@ -407,6 +446,12 @@ namespace SharpDX.Toolkit.Graphics
                     parameter = previousParameter;
                 }
 
+                // For constant buffers, we need to store explicit link
+                if (parameter.ResourceType == EffectResourceType.ConstantBuffer)
+                {
+                    constantBufferLinks.Add(new ConstantBufferLink(Effect.ConstantBuffers[parameter.Name], parameter.Offset));
+                }
+
                 // Allocate slots only when needed
                 if (stageBlock.Slots == null)
                 {
@@ -424,6 +469,8 @@ namespace SharpDX.Toolkit.Graphics
                 slots.Add(range);
                 range.Links.Add(new SlotLink(resourceIndex, 0, parameterRaw.Count));
             }
+
+            stageBlock.ConstantBufferLinks = constantBufferLinks.ToArray();
 
             // Optimize the current stage block
             OptimizeSlotLinks(ref stageBlock);
@@ -764,10 +811,10 @@ namespace SharpDX.Toolkit.Graphics
 
         #region Nested type: StageBlock
 
-        private unsafe class StageBlock
+        private class StageBlock
         {
             public RawSlotLinkSet ConstantBufferSlotLinks;
-            public EffectConstantBuffer[] ConstantBuffers;
+            public ConstantBufferLink[] ConstantBufferLinks;
             public int Index;
             public RawSlotLinkSet SamplerStateSlotLinks;
 
@@ -784,6 +831,19 @@ namespace SharpDX.Toolkit.Graphics
             {
                 Type = type;
             }
+        }
+
+        private struct ConstantBufferLink
+        {
+            public ConstantBufferLink(EffectConstantBuffer constantBuffer, int resourceIndex)
+            {
+                ConstantBuffer = constantBuffer;
+                ResourceIndex = resourceIndex;
+            }
+
+            public readonly EffectConstantBuffer ConstantBuffer;
+
+            public readonly int ResourceIndex;
         }
 
         #endregion
