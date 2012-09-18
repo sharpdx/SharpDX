@@ -113,6 +113,7 @@ technique
 		// to compile the shaders VS, PS
 		Preprocessor = "#define ACTIVATE_DUMMY_CODE true";
 
+		// Test reference to registered Blending states in GraphicsDevice.BlendStates
 		Blending = Additive;
 		BlendingColor = float4(0.5, 0.5, 0.5, 1.0);
 		BlendingSampleMask = 0xFFFFFFFF;
@@ -147,6 +148,8 @@ technique
 
 		MyVariableIdent = TestIdentifier;
 		MyVariableString = "TestString";
+
+		MyVariableComplexIdentifier1 = Test::Variable::With::Namespace;
 	}
 }
 

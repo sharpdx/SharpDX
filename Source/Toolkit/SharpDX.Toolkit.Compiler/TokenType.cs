@@ -106,6 +106,11 @@ namespace SharpDX.Toolkit.Graphics
         DoubleColon,
 
         /// <summary>
+        /// A dot '.'.
+        /// </summary>
+        Dot,
+
+        /// <summary>
         /// A '&lt;'.
         /// </summary>
         LessThan,

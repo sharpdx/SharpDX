@@ -52,6 +52,7 @@ namespace SharpDX.Toolkit.Graphics
             @"(?<str>""[^""\\]*(?:\\.[^""\\]*)*"")|" +
             @"(?<prep>#)|" +
             @"(?<doublecolon>::)|" +
+            @"(?<dot>\.)|" +
             @"(?<lt>\<)|" +
             @"(?<gt>\>)|" +
             @"(?<unk>[^\s]+)",

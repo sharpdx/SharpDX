@@ -554,6 +554,72 @@ namespace SharpDX.Toolkit.Graphics
 
         private Ast.Identifier ParseIdentifier(Token token, bool allowIndexed = false)
         {
+            var identifierName = new System.Text.StringBuilder(token.Value);
+
+            // ------------------------------------------------------------
+            // Parse complex identifier XXXX::AAAA::BBBBB
+            // ------------------------------------------------------------
+            BeginPreviewToken();
+            var nextToken = NextToken();
+            EndPreviewToken();
+
+            // Dot are not supported by compiler XXXX.AAAA.BBBB
+            // if (nextToken.Type == TokenType.DoubleColon || nextToken.Type == TokenType.Dot)
+            if (nextToken.Type == TokenType.DoubleColon)
+            {
+                var identifierSeparatorType = nextToken.Type;
+                var endChar = nextToken.Type == TokenType.DoubleColon ? "::" : ".";
+
+                nextToken = NextToken();
+                identifierName.Append(nextToken.Value);
+
+                bool continueParsing = true;
+                do
+                {
+                    BeginPreviewToken();
+                    nextToken = NextToken();
+                    EndPreviewToken();
+
+                    switch (nextToken.Type)
+                    {
+                        case TokenType.Identifier:
+                            identifierName.Append(nextToken.Value);
+                            break;
+                        case TokenType.DoubleColon:
+                        case TokenType.Dot:
+                            if (identifierName[identifierName.Length - 1] == endChar[0])
+                            {
+                                Logger.Error("Unexpected token [{0}]. Expecting tokens [identifier]", nextToken.Span, endChar);
+                            }
+                            if (identifierSeparatorType != nextToken.Type)
+                            {
+                                Logger.Error("Unexpected token [{0}]. Expecting tokens [{1}]", nextToken.Span, nextToken.Value, endChar);
+                            }
+
+                            identifierName.Append(nextToken.Value);
+                            break;
+                        default:
+                            continueParsing = false;
+                            break;
+                    }
+
+                    // If can go to the next token
+                    if (continueParsing)
+                    {
+                        nextToken = NextToken();
+                    }
+                } while (continueParsing);
+
+
+                if (identifierName[identifierName.Length - 1] == endChar[0])
+                {
+                    Logger.Error("Unexpected token [{0}]. Expecting tokens [identifier]", nextToken.Span, endChar);                    
+                }
+            }
+
+            // ------------------------------------------------------------
+            // Parse optional indexer a[xxx]
+            // ------------------------------------------------------------
             if (allowIndexed)
             {
                 BeginPreviewToken();
@@ -578,11 +644,11 @@ namespace SharpDX.Toolkit.Graphics
                     }
                     ExpectNext(TokenType.RightBracket);
 
-                    return new Ast.IndexedIdentifier(token.Value, (int) expression.Value.Value) {Span = token.Span};
+                    return new Ast.IndexedIdentifier(identifierName.ToString(), (int)expression.Value.Value) { Span = token.Span };
                 }
             }
 
-            return new Ast.Identifier(token.Value) {Span = token.Span};
+            return new Ast.Identifier(identifierName.ToString()) { Span = token.Span };
         }
 
 
