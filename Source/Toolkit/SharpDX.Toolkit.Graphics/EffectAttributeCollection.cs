@@ -26,7 +26,7 @@ namespace SharpDX.Toolkit.Graphics
     /// <summary>
     /// A collection of attributes.
     /// </summary>
-    public class EffectAttributeCollection : IEnumerable<KeyValuePair<string, object>>
+    public sealed class EffectAttributeCollection : IEnumerable<KeyValuePair<string, object>>
     {
         private readonly Dictionary<string, object> mapNameToValue;
 

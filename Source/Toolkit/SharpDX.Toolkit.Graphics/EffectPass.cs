@@ -29,7 +29,7 @@ namespace SharpDX.Toolkit.Graphics
     /// <summary>
     /// Contains rendering state for drawing with an effect; an effect can contain one or more passes. 
     /// </summary>
-    public class EffectPass : ComponentBase
+    public sealed class EffectPass : ComponentBase
     {
         private const int StageCount = 6;
 

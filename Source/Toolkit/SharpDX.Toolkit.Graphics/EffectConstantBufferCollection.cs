@@ -23,7 +23,7 @@ namespace SharpDX.Toolkit.Graphics
     /// <summary>
     /// A collection of <see cref="EffectConstantBuffer"/>.
     /// </summary>
-    public class EffectConstantBufferCollection : ComponentCollection<EffectConstantBuffer>
+    public sealed class EffectConstantBufferCollection : ComponentCollection<EffectConstantBuffer>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EffectConstantBufferCollection" /> class.

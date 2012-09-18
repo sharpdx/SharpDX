@@ -23,7 +23,7 @@ namespace SharpDX.Toolkit.Graphics
     /// <summary>
     /// A collection of <see cref="EffectParameter"/>.
     /// </summary>
-    public class EffectParameterCollection : ComponentCollection<EffectParameter>
+    public sealed class EffectParameterCollection : ComponentCollection<EffectParameter>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EffectParameterCollection" /> class.

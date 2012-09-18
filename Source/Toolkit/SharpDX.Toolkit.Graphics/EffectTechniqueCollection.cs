@@ -23,7 +23,7 @@ namespace SharpDX.Toolkit.Graphics
     /// <summary>
     /// A collection of <see cref="EffectTechnique"/>.
     /// </summary>
-    public class EffectTechniqueCollection : ComponentCollection<EffectTechnique>
+    public sealed class EffectTechniqueCollection : ComponentCollection<EffectTechnique>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EffectTechniqueCollection" /> class.

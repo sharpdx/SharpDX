@@ -30,7 +30,7 @@ namespace SharpDX.Toolkit.Graphics
     /// <remarks>
     /// This class is responsible to store all bytecode, create shareable constant buffers betwen effects and reuse shader bytecode instances.
     /// </remarks>
-    public class EffectGroup : Component
+    public sealed class EffectGroup : Component
     {
         #region Delegates
 

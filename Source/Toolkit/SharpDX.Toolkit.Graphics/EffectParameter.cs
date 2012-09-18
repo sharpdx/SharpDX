@@ -26,7 +26,7 @@ namespace SharpDX.Toolkit.Graphics
     /// <remarks>
     /// A parameter can be a value type that will be set to a constant buffer, or a resource type (SRV, UAV, SamplerState).
     /// </remarks>
-    public class EffectParameter : ComponentBase
+    public sealed class EffectParameter : ComponentBase
     {
         internal readonly EffectBytecode.Parameter ParameterDescription;
         internal readonly EffectConstantBuffer buffer;

@@ -20,7 +20,10 @@
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public class EffectTechnique : ComponentBase
+    /// <summary>
+    /// Represents an effect technique. 
+    /// </summary>
+    public sealed class EffectTechnique : ComponentBase
     {
         private readonly Effect effect;
 
