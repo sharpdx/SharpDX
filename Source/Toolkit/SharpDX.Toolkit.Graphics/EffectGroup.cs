@@ -141,7 +141,18 @@ namespace SharpDX.Toolkit.Graphics
 
         internal void AddEffect(Effect effect)
         {
-            this.effects.Add(effect);
+            lock (effects)
+            {
+                this.effects.Add(effect);
+            }
+        }
+
+        internal void RemoveEffect(Effect effect)
+        {
+            lock (effects)
+            {
+                this.effects.Remove(effect);
+            }
         }
 
         internal EffectBytecode.Effect Find(string name)

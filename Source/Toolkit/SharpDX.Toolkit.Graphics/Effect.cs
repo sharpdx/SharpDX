@@ -166,5 +166,13 @@ namespace SharpDX.Toolkit.Graphics
             var handler = OnApplyCallback;
             if (handler != null) handler(pass);
         }
+
+        protected override void Dispose(bool disposeManagedResources)
+        {
+            // Remove this instance from the group
+            Group.RemoveEffect(this);
+
+            base.Dispose(disposeManagedResources);
+        }
     }
 }
