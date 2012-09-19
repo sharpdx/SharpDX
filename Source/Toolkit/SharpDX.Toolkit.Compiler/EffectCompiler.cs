@@ -110,6 +110,16 @@ namespace SharpDX.Toolkit.Graphics
             return new EffectCompilerResult(compiler.InternalCompile(sourceCode, filePath), compiler.logger);
         }
 
+        /// <summary>
+        /// Disassembles a shader HLSL bytecode to asm code.
+        /// </summary>
+        /// <param name="shader">The shader.</param>
+        /// <returns>A string containing asm code decoded from HLSL bytecode.</returns>
+        public static string DisassembleShader(EffectBytecode.Shader shader)
+        {
+            return new ShaderBytecode(shader.Bytecode).Disassemble(DisassemblyFlags.EnableColorCode | DisassemblyFlags.EnableInstructionNumbering);
+        }
+
         private EffectBytecode InternalCompile(string sourceCode, string fileName)
         {
             fileName = fileName.Replace(@"\\", @"\");

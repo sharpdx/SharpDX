@@ -31,14 +31,14 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public sealed class Pipeline : IDataSerializable, IEnumerable<ShaderLink>
         {
-            private ShaderLink[] links;
+            public ShaderLink[] Links;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="Pipeline" /> class.
             /// </summary>
             public Pipeline()
             {
-                links = new ShaderLink[6];
+                Links = new ShaderLink[6];
             }
 
             /// <summary>
@@ -51,21 +51,21 @@ namespace SharpDX.Toolkit.Graphics
             /// </remarks>
             public ShaderLink this[EffectShaderType effectShaderType]
             {
-                get { return links[(int)effectShaderType]; }
-                set { links[(int)effectShaderType] = value; }
+                get { return Links[(int)effectShaderType]; }
+                set { Links[(int)effectShaderType] = value; }
             }
 
             /// <inheritdoc/>
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
                 serializer.AllowNull = true;
-                serializer.Serialize(ref links);
+                serializer.Serialize(ref Links);
                 serializer.AllowNull = false;
             }
 
             public IEnumerator<ShaderLink> GetEnumerator()
             {
-                foreach (var shaderLink in links)
+                foreach (var shaderLink in Links)
                     yield return shaderLink;
             }
 

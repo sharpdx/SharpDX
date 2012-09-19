@@ -20,6 +20,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
+using System.Xml;
 using SharpDX.Direct3D;
 using SharpDX.Toolkit.Diagnostics;
 
@@ -30,7 +32,7 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     class Program : ConsoleProgram
     {
-        [Option("Effect *.fx Files", Required = true)]
+        [Option("Effect *.fx Files | PreCompiled Effect *.tkfxo files", Required = true)]
         public List<string> FxFiles = new List<string>();
 
         [Option("D", Description = "Define macro", Value = "<id>=<text>")]
@@ -41,6 +43,9 @@ namespace SharpDX.Toolkit.Graphics
 
         [Option("Fo", Description = "Output object file. default is [output.tkfxo]\n", Value = "<file>")]
         public string OutputFile = "output.tkfxo";
+
+        [Option("Fv", Description = "Output disassemble of fx files and tkfxo files only. No output file generated")]
+        public bool ViewOnly;
 
         [Option("Od", Description = "Output shader with debug information and no optimization")]
         public bool Debug;
@@ -115,12 +120,12 @@ namespace SharpDX.Toolkit.Graphics
             if (options.PackColumnMajor)
                 flags |= EffectCompilerFlags.PackMatrixColumnMajor;
 
-            // ----------------------------------------------------------------
-            // Process each fx files
-            // ----------------------------------------------------------------
             var archiveBytecode = new EffectBytecode();
             bool hasErrors = false;
 
+            // ----------------------------------------------------------------
+            // Process each fx files / tkfxo files
+            // ----------------------------------------------------------------
             foreach (var fxFile in options.FxFiles)
             {
                 var filePath = Path.Combine(Environment.CurrentDirectory, fxFile);
@@ -134,51 +139,53 @@ namespace SharpDX.Toolkit.Graphics
                     continue;
                 }
 
-                // Compile the fx file
-                Console.WriteLine("Compile Effect File [{0}]", filePath);
-                var effectBytecode = EffectCompiler.Compile(File.ReadAllText(filePath), filePath, flags, macros, options.IncludeDirs);
+                EffectBytecode bytecode = null;
 
-
-                // If there is any warning, errors, turn Error color on
-                if (effectBytecode.Logger.Messages.Count > 0)
+                // Try to load this file as a precompiled file
+                bytecode = EffectBytecode.Load(fxFile);
+                if (bytecode != null)
                 {
-                    ErrorColor();
+                    Console.WriteLine("Load Compiled File [{0}]", fxFile);                    
                 }
-
-                // Show a message error for the current file
-                if (effectBytecode.HasErrors)
+                else
                 {
-                    Console.Error.WriteLine("Error when compiling file [{0}]:", fxFile);
-                    hasErrors = true;
-                }
+                    // Compile the fx file
+                    Console.WriteLine("Compile Effect File [{0}]", filePath);
+                    var effectBytecode = EffectCompiler.Compile(File.ReadAllText(filePath), filePath, flags, macros, options.IncludeDirs);
 
-                // Print all messages (warning and errors)
-                foreach (var logMessage in effectBytecode.Logger.Messages)
-                {
-                    Console.WriteLine(logMessage);
-                }
+                    // If there is any warning, errors, turn Error color on
+                    if (effectBytecode.Logger.Messages.Count > 0)
+                    {
+                        ErrorColor();
+                    }
 
-                // If we have some messages, reset the color back
-                if (effectBytecode.Logger.Messages.Count > 0)
-                {
-                    ResetColor();
+                    // Show a message error for the current file
+                    if (effectBytecode.HasErrors)
+                    {
+                        Console.Error.WriteLine("Error when compiling file [{0}]:", fxFile);
+                        hasErrors = true;
+                    }
+
+                    // Print all messages (warning and errors)
+                    foreach (var logMessage in effectBytecode.Logger.Messages)
+                    {
+                        Console.WriteLine(logMessage);
+                    }
+
+                    // If we have some messages, reset the color back
+                    if (effectBytecode.Logger.Messages.Count > 0)
+                    {
+                        ResetColor();
+                    }
+
+                    bytecode = effectBytecode.Bytecode;
                 }
 
                 // If there is no errors, merge the result to the final archive
                 if (!hasErrors)
                 {
-                    var logger = new Logger();
-                    archiveBytecode.MergeFrom(effectBytecode.Bytecode, logger);
-
-                    // If there is any errors from 
-                    if (logger.HasErrors)
-                    {
+                    if (ProcessBytecode(bytecode, archiveBytecode))
                         hasErrors = true;
-                        ErrorColor();
-                        foreach (var message in logger.Messages)
-                            Console.Error.WriteLine(message);
-                        ResetColor();
-                    }
                 }
             }
 
@@ -189,13 +196,190 @@ namespace SharpDX.Toolkit.Graphics
                 ResetColor();
                 Environment.Exit(-1);
             }
-            else
+            else if (!ViewOnly)
             {
                 Console.WriteLine();
                 Console.WriteLine("Save output to [{0}]", options.OutputFile);
                 // Save the result
                 archiveBytecode.Save(options.OutputFile);
             }
+        }
+
+        private bool ProcessBytecode(EffectBytecode input, EffectBytecode merged)
+        {
+            var hasErrors = false;
+            DumpBytecode(input);
+
+            var logger = new Logger();
+            merged.MergeFrom(input, logger);
+
+            // If there is any errors from 
+            if (logger.HasErrors)
+            {
+                hasErrors = true;
+                ErrorColor();
+                foreach (var message in logger.Messages)
+                    Console.Error.WriteLine(message);
+                ResetColor();
+            }
+
+            return hasErrors;
+        }
+
+        private void DumpBytecode(EffectBytecode bytecode)
+        {
+            Console.WriteLine();
+
+            for (int i = 0; i < bytecode.Shaders.Count; i++)
+            {
+                var shader = bytecode.Shaders[i];
+
+                Color(ConsoleColor.White);
+                Console.WriteLine("--------------------------------------------------------------------------------");
+                Console.WriteLine("Shader[{0}] {1}Type: {2} Level: {3} Visibility: {4}", i, shader.Name == null ? string.Empty : string.Format("{0} ", shader.Name), shader.Type, shader.Level, shader.Name != null ? "public" : "private");
+                Console.WriteLine("--------------------------------------------------------------------------------");
+                Console.WriteLine();
+                ResetColor();
+
+                DumpHtmlToConsole(EffectCompiler.DisassembleShader(shader));
+                Console.WriteLine();
+            }
+
+            Color(ConsoleColor.White);
+            Console.WriteLine("--------------------------------------------------------------------------------");
+            Console.WriteLine("Effects");
+            Console.WriteLine("--------------------------------------------------------------------------------");
+            Console.WriteLine();
+            ResetColor();
+
+            const string tab = "    ";
+
+            foreach (var effect in bytecode.Effects)
+            {
+                Console.Write("effect");
+                Color(ConsoleColor.LightGreen);
+                Console.WriteLine(" {0}", effect.Name);
+                ResetColor();
+
+                Console.WriteLine("{");
+                foreach (var technique in effect.Techniques)
+                {
+                    Console.Write(tab + "technique");
+                    Color(ConsoleColor.LightGreen);
+                    Console.WriteLine(" {0}", technique.Name);
+                    ResetColor();
+
+                    Console.WriteLine(tab + "{");
+                    foreach (var pass in technique.Passes)
+                    {
+                        Console.Write(tab + tab + "pass");
+                        Color(ConsoleColor.LightGreen);
+                        Console.WriteLine(" {0}", pass.Name);
+                        ResetColor();
+
+                        Console.WriteLine(tab + tab + "{");
+
+                        for (int i = 0; i < pass.Pipeline.Links.Length; i++)
+                        {
+                            var shaderType = (EffectShaderType) i;
+                            var link = pass.Pipeline.Links[i];
+                            if (link == null)
+                                continue;
+
+                            Color(ConsoleColor.LightYellow);
+                            Console.Write(tab + tab + tab + "{0}", shaderType);
+                            ResetColor();
+                            Console.Write(" = ");
+                            Color(ConsoleColor.White);
+                            Console.WriteLine("{0}", link.IsImport ? link.ImportName : string.Format("Shader[{0}] => {1}", link.Index, bytecode.Shaders[link.Index].Name == null ? "private"  : "public " + bytecode.Shaders[link.Index].Name));
+                            ResetColor();
+                        }
+
+                        if (pass.Attributes.Count > 0)
+                        {
+                            Console.WriteLine();
+
+                            foreach (var attribute in pass.Attributes)
+                            {
+                                var typeName = attribute.Value != null ? attribute.Value.GetType().FullName.StartsWith("SharpDX") ? attribute.Value.GetType().FullName : null : null;
+                                Console.WriteLine(tab + tab + tab + "{0} = {1}", attribute.Name, typeName == null ? attribute.Value : string.Format("{0}({1})", typeName, attribute.Value));
+                            }
+                        }
+                        Console.WriteLine(tab + tab + "}");
+                    }
+                    Console.WriteLine(tab + "}");
+                }
+                Console.WriteLine("}");
+            }
+        }
+
+        private void DumpHtmlToConsole(string html)
+        {
+            // Remove body tag that is unclosed?
+            html = Regex.Replace(html, @"\<body.*?>", string.Empty);
+
+            // Fix <\d+ and \d+> tags
+            html = Regex.Replace(html, @"\<(\d+)", "&lt;$1");
+            html = Regex.Replace(html, @"(\d+)\>", "$1&gt;");
+           
+            using (var reader = XmlReader.Create(new StringReader(html)))
+            {
+                while (true)
+                {
+                    try
+                    {
+                        if (!reader.Read())
+                        {
+                            break;
+                        }
+                    } catch (Exception ex)
+                    {
+                        ErrorColor();
+                        Console.Out.WriteLine();
+                        Console.Error.WriteLine("Warning, cannot print dissassemble: {0}", ex.Message);
+                        ResetColor();
+                        break;
+                    }
+
+                    if (reader.NodeType == XmlNodeType.Comment)
+                        continue;
+
+                    //  Here we check the type of the node, in this case we are looking for element
+                    switch (reader.NodeType)
+                    {
+                        case XmlNodeType.Element:
+                            if (reader.Name == "font")
+                            {
+                                var color = reader.GetAttribute("color");
+                                switch (color)
+                                {
+                                    case "#ffff40":
+                                        Color(ConsoleColor.LightYellow);
+                                        break;
+                                    case "#e0e0e0":
+                                        ResetColor();
+                                        break;
+                                    case "#a0a0a0":
+                                        Color(ConsoleColor.LightGrey);
+                                        break;
+                                    case "#00ffff":
+                                        Color(ConsoleColor.LightCyan);
+                                        break;
+                                }
+                            }
+                            break;
+                        case XmlNodeType.EndElement:
+                            if (reader.Name == "font")
+                            {
+                                ResetColor();
+                            }
+                            break;
+                    }
+                    if (!string.IsNullOrEmpty(reader.Value))
+                        Console.Write(reader.Value);
+                }
+            }
+            ResetColor();
         }
     }
 }
