@@ -67,7 +67,6 @@ namespace SharpDX.Toolkit.Graphics
         private EffectData.Pass pass;
         private string preprocessorText;
         private EffectData.Technique technique;
-        private int parentPassIndex = 0;
         private int nextSubPassCount;
 
         private EffectCompiler()
@@ -224,12 +223,8 @@ namespace SharpDX.Toolkit.Graphics
 
             if (nextSubPassCount > 0)
             {
-                pass.ParentIndex = parentPassIndex + 1;
+                pass.IsSubPass = true;
                 nextSubPassCount--;
-            }
-            else
-            {
-                parentPassIndex = 0;
             }
 
             // Process all statements inside this pass.
@@ -376,8 +371,7 @@ namespace SharpDX.Toolkit.Graphics
             }
             else
             {
-                parentPassIndex = technique.Passes.Count - 1;
-                nextSubPassCount = (int) value;
+                nextSubPassCount = (int)value;
             }
         }
 

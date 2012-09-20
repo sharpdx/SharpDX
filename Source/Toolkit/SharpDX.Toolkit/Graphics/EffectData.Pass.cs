@@ -36,9 +36,9 @@ namespace SharpDX.Toolkit.Graphics
             public string Name;
 
             /// <summary>
-            /// Parent pass is an index to the parent pass. 0 if there is no parent, > 0 is the index+1 of the parent pass
+            /// True if this pass is the sub-pass of a root pass.
             /// </summary>
-            public int ParentIndex;
+            public bool IsSubPass;
 
             /// <summary>
             /// List of <see cref="Attribute"/>.
@@ -52,7 +52,7 @@ namespace SharpDX.Toolkit.Graphics
 
             public override string ToString()
             {
-                return string.Format("Pass: [{0}], Parent: {1}, Attributes({2})", Name, ParentIndex, Attributes.Count);
+                return string.Format("Pass: [{0}], SubPass: {1}, Attributes({2})", Name, IsSubPass, Attributes.Count);
             }
 
             /// <inheritdoc/>
@@ -62,7 +62,7 @@ namespace SharpDX.Toolkit.Graphics
                 serializer.Serialize(ref Name);
                 serializer.AllowNull = false;
 
-                serializer.Serialize(ref ParentIndex);
+                serializer.Serialize(ref IsSubPass);
                 serializer.Serialize(ref Attributes);
                 serializer.Serialize(ref Pipeline);
             }

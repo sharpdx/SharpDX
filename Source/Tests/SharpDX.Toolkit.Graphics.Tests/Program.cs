@@ -70,7 +70,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             //var effect = effectGroup.New<BasicEffect>();
             var effect = new Effect(device, effectGroup, "BasicEffect");
 
-            effect.Techniques[0].Passes[4].Apply();
+            effect.Techniques[0].Passes[0].Apply();
 
             Console.WriteLine(effect.ConstantBuffers.Count);
 

@@ -98,7 +98,24 @@ namespace SharpDX.Toolkit.Graphics
                            };
 
             Attributes = PrepareAttributes(logger, pass.Attributes);
+            IsSubPass = pass.IsSubPass;
+            // Don't create SubPasses collection for subpass.
+            if (!IsSubPass)
+                SubPasses = new EffectPassCollection();
         }
+
+        /// <summary>
+        /// Gets the sub-pass attached to a global pass.
+        /// </summary>
+        /// <remarks>
+        /// As a subpass cannot have subpass, if this pass is already a subpass, this field is null.
+        /// </remarks>
+        public readonly EffectPassCollection SubPasses;
+
+        /// <summary>
+        /// Gets a boolean indicating if this pass is a subpass.
+        /// </summary>
+        public readonly bool IsSubPass;
 
         /// <summary>
         ///   Gets or sets the state of the blend.
@@ -179,7 +196,6 @@ namespace SharpDX.Toolkit.Graphics
                 hasRasterizerState = true;
             }
         }
-
         /// <summary>
         ///   Applies this pass to the device pipeline.
         /// </summary>
@@ -191,11 +207,25 @@ namespace SharpDX.Toolkit.Graphics
         ///     <li>Set all input constant buffers, shader resource view, unordered access views and sampler states to the stage.</li>
         ///   </ul>
         /// </remarks>
-        public unsafe void Apply()
+        public void Apply()
         {
-            // Give a chance to the effect callback to prepare this pass before it is actually applied.
-            Effect.OnApply(this);
+            // Give a chance to the effect callback to prepare this pass before it is actually applied (the OnApply can completely
+            // change the pass and use for example a subpass).
+            var realPass = Effect.OnApply(this);
+            realPass.ApplyInternal();
 
+            // Applies global state if we have applied a subpass (that will eventually override states setup by realPass)
+            if (realPass != this)
+            {
+                ApplyStates();
+            }
+        }
+
+        /// <summary>
+        /// Internal apply.
+        /// </summary>
+        private unsafe void ApplyInternal()
+        {
             var pLinks = pipeline.SlotLinks.Links;
             var pPointers = pipeline.PointersBuffer;
             var constantBuffers = Effect.ResourceLinker.ConstantBuffers;
@@ -298,6 +328,11 @@ namespace SharpDX.Toolkit.Graphics
                 shaderStage.SetShader(stageBlock.Shader, null, 0);
             }
 
+            ApplyStates();
+        }
+
+        private void ApplyStates()
+        {
             // ----------------------------------------------
             // Set the blend state
             // ----------------------------------------------

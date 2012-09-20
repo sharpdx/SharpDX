@@ -28,6 +28,8 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public class Effect : Component
     {
+        public delegate EffectPass OnApplyDelegate(EffectPass pass);
+
         /// <summary>
         ///   Gets a collection of constant buffers that are defined for this effect.
         /// </summary>
@@ -77,7 +79,7 @@ namespace SharpDX.Toolkit.Graphics
         ///   This external hook provides a way to pre-configure a pipeline when a pass is applied.
         ///   Subclass of this class can override the method <see cref="OnApply" />.
         /// </remarks>
-        public event Action<EffectPass> OnApplyCallback;
+        public event OnApplyDelegate OnApplyCallback;
 
         protected virtual void PrepareGroup()
         {
@@ -101,6 +103,7 @@ namespace SharpDX.Toolkit.Graphics
 
             var logger = new Logger();
             int techniqueIndex = 0;
+            EffectPass parentPass = null;
             foreach (var techniqueRaw in effectBytecode.Techniques)
             {
                 var name = techniqueRaw.Name;
@@ -121,7 +124,23 @@ namespace SharpDX.Toolkit.Graphics
 
                     pass.Initialize(logger);
 
-                    technique.Passes.Add(pass);
+                    // If this is a subpass, add it to the parent pass
+                    if (passRaw.IsSubPass)
+                    {
+                        if (parentPass == null)
+                        {
+                            logger.Error("Pass [{0}] is declared as a subpass but has no parent");
+                        }
+                        else
+                        {
+                            parentPass.SubPasses.Add(pass);
+                        }
+                    }
+                    else
+                    {
+                        technique.Passes.Add(pass);
+                        parentPass = pass;
+                    }
                 }
             }
 
@@ -161,10 +180,11 @@ namespace SharpDX.Toolkit.Graphics
             get { return base.DisposeCollector; }
         }
 
-        protected internal virtual void OnApply(EffectPass pass)
+        protected internal virtual EffectPass OnApply(EffectPass pass)
         {
             var handler = OnApplyCallback;
-            if (handler != null) handler(pass);
+            if (handler != null) return handler(pass);
+            return pass;
         }
 
         protected override void Dispose(bool disposeManagedResources)
