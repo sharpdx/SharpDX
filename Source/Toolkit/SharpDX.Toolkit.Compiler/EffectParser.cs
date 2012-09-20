@@ -416,6 +416,11 @@ namespace SharpDX.Toolkit.Graphics
                         continueParsingTecnhique = false;
                         break;
 
+                    // fxc doesn't support empty statements, so we don't support them.
+                    //case TokenType.SemiColon:
+                    //    // Skip empty statements
+                    //    break;
+
                     default:
                         Logger.Error("Unexpected token [{0}]. Expecting tokens ['identifier','}}']", currentToken.Span, currentToken);
                         continueParsingTecnhique = false;

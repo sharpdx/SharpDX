@@ -544,13 +544,13 @@ namespace SharpDX.Toolkit.Graphics
                     var rawLevel = (int) (Convert.ToSingle(literalValue, CultureInfo.InvariantCulture) * 10);
                     switch (rawLevel)
                     {
-                        case 910:
+                        case 91:
                             level = FeatureLevel.Level_9_1;
                             break;
-                        case 920:
+                        case 92:
                             level = FeatureLevel.Level_9_2;
                             break;
-                        case 930:
+                        case 93:
                             level = FeatureLevel.Level_9_3;
                             break;
                         case 100:

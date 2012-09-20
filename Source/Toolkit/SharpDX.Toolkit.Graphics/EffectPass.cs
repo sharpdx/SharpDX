@@ -438,7 +438,7 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     resourceIndex = ((EffectBytecode.ResourceParameter) previousParameter.ParameterDescription).Slot;
 
-                    if (!CompareResourceParameter(parameterRaw, (EffectBytecode.ResourceParameter) previousParameter.ParameterDescription))
+                    if (CompareResourceParameter(parameterRaw, (EffectBytecode.ResourceParameter) previousParameter.ParameterDescription))
                     {
                         // If registered parameters is different
                         logger.Error("Resource Parameter [{0}] is already defined with a different definition [{1}]", parameterRaw, previousParameter.ParameterDescription);

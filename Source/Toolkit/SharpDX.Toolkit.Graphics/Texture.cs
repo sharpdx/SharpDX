@@ -88,7 +88,8 @@ namespace SharpDX.Toolkit.Graphics
 
         protected override void Initialize(GraphicsDevice deviceArg, DeviceChild resource)
         {
-            base.Initialize(deviceArg, resource);
+            // Be sure that we are storing only the main device (which contains the immediate context).
+            base.Initialize(deviceArg.MainDevice, resource);
             InitializeViews();
         }
 

@@ -284,7 +284,7 @@ namespace SharpDX
             return GetAttribute<OptionAttribute>(field) ?? new OptionAttribute(field.Name);
         }
 
-        private void ShowError(string message, params object[] args)
+        public void ShowError(string message, params object[] args)
         {
             string name = Path.GetFileNameWithoutExtension(Process.GetCurrentProcess().ProcessName);
 
@@ -486,6 +486,33 @@ namespace SharpDX
         /// <summary>
         /// Intensity background color modifier.
         /// </summary>
-        IntensityBackground = 0x00000080
+        IntensityBackground = 0x00000080,
+
+
+        Black = 0,
+
+        Cyan = Green | Blue,
+
+        Magenta = Red | Blue,
+
+        Yellow = Red | Green,
+
+        DarkGrey = Red | Green | Blue,
+
+        LightGrey = Intensity,
+
+        LightRed = Intensity | Red,
+
+        LightGreen = Intensity | Green,
+
+        LightBlue = Intensity | Blue,
+
+        LightCyan = Intensity | Green | Blue,
+
+        LightMagenta = Intensity | Red | Blue,
+
+        LightYellow = Intensity | Red | Green,
+
+        White = Intensity | Red | Green | Blue,
     }
 }
