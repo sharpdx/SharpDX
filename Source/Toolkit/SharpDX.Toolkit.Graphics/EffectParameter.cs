@@ -28,14 +28,14 @@ namespace SharpDX.Toolkit.Graphics
     /// </remarks>
     public sealed class EffectParameter : ComponentBase
     {
-        internal readonly EffectBytecode.Parameter ParameterDescription;
+        internal readonly EffectData.Parameter ParameterDescription;
         internal readonly EffectConstantBuffer buffer;
         private readonly EffectResourceLinker resourceLinker;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EffectParameter"/> class.
         /// </summary>
-        internal EffectParameter(EffectBytecode.ValueTypeParameter parameterDescription, EffectConstantBuffer buffer)
+        internal EffectParameter(EffectData.ValueTypeParameter parameterDescription, EffectConstantBuffer buffer)
             : base(parameterDescription.Name)
         {
             this.ParameterDescription = parameterDescription;
@@ -54,7 +54,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Initializes a new instance of the <see cref="EffectParameter"/> class.
         /// </summary>
-        internal EffectParameter(EffectBytecode.ResourceParameter parameterDescription, EffectResourceType resourceType, int offset, EffectResourceLinker resourceLinker)
+        internal EffectParameter(EffectData.ResourceParameter parameterDescription, EffectResourceType resourceType, int offset, EffectResourceLinker resourceLinker)
             : base(parameterDescription.Name)
         {
             this.ParameterDescription = parameterDescription;
@@ -195,7 +195,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             if (IsValueType)
             {
-                var defaultValue = ((EffectBytecode.ValueTypeParameter) ParameterDescription).DefaultValue;
+                var defaultValue = ((EffectData.ValueTypeParameter) ParameterDescription).DefaultValue;
                 if (defaultValue != null)
                 {
                     SetValue(defaultValue);

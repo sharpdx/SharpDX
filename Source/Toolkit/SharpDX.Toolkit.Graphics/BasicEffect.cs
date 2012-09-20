@@ -29,7 +29,7 @@ namespace SharpDX.Toolkit.Graphics
     {
         private const string BasicEffectName = "Toolkit::BasicEffect";
 
-        private static readonly EffectBytecode Bytecode = EffectBytecode.Load(new byte[0]);
+        private static readonly EffectData EffectData = EffectData.Load(new byte[0]);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BasicEffect" /> class.
@@ -43,7 +43,7 @@ namespace SharpDX.Toolkit.Graphics
 
         protected override void PrepareGroup()
         {
-            Group.RegisterBytecode(Bytecode);
+            Group.RegisterBytecode(EffectData);
         }
     }
 }

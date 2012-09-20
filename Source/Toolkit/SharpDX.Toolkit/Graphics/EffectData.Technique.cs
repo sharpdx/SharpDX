@@ -18,60 +18,44 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Collections;
 using System.Collections.Generic;
 using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public partial class EffectBytecode 
+    public partial class EffectData 
     {
         /// <summary>
-        /// Describes link to shaders for each pipeline <see cref="EffectShaderType"/>
+        /// Describes a technique.
         /// </summary>
-        public sealed class Pipeline : IDataSerializable, IEnumerable<ShaderLink>
+        public sealed class Technique : IDataSerializable
         {
-            public ShaderLink[] Links;
-
             /// <summary>
-            /// Initializes a new instance of the <see cref="Pipeline" /> class.
+            /// Name of this technique.
             /// </summary>
-            public Pipeline()
-            {
-                Links = new ShaderLink[6];
-            }
-
-            /// <summary>
-            /// Gets or sets the <see cref="ShaderLink" /> with the specified stage type.
-            /// </summary>
-            /// <param name="effectShaderType">Type of the stage.</param>
-            /// <returns>A <see cref="ShaderLink"/></returns>
             /// <remarks>
-            /// The return value can be null if there is no shaders associated for this particular stage.
+            /// This value can be null.
             /// </remarks>
-            public ShaderLink this[EffectShaderType effectShaderType]
+            public string Name;
+
+            /// <summary>
+            /// List of <see cref="Pass"/>.
+            /// </summary>
+            public List<Pass> Passes;
+
+            public override string ToString()
             {
-                get { return Links[(int)effectShaderType]; }
-                set { Links[(int)effectShaderType] = value; }
+                return string.Format("Technique: [{0}], Passes({1})", Name, Passes.Count);
             }
 
             /// <inheritdoc/>
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
                 serializer.AllowNull = true;
-                serializer.Serialize(ref Links);
+                serializer.Serialize(ref Name);
                 serializer.AllowNull = false;
-            }
 
-            public IEnumerator<ShaderLink> GetEnumerator()
-            {
-                foreach (var shaderLink in Links)
-                    yield return shaderLink;
-            }
-
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return GetEnumerator();
+                serializer.Serialize(ref Passes);
             }
         }
     }

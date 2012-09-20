@@ -35,11 +35,11 @@ namespace SharpDX.Toolkit.Graphics
     /// It is working like an archive and is able to store multiple effect in a single object.
     /// It is serializable using <see cref="Load(Stream)"/> and <see cref="Save(Stream)"/> method.
     /// </remarks>
-    public sealed partial class EffectBytecode : IDataSerializable
+    public sealed partial class EffectData : IDataSerializable
     {
         private const string MagicCode = "TKFX";
 
-        public EffectBytecode()
+        public EffectData()
         {
             Shaders = new List<Shader>();
             Effects = new List<Effect>();
@@ -56,7 +56,7 @@ namespace SharpDX.Toolkit.Graphics
         public List<Effect> Effects;
 
         /// <summary>
-        /// Saves this <see cref="EffectBytecode"/> instance to the specified stream.
+        /// Saves this <see cref="EffectData"/> instance to the specified stream.
         /// </summary>
         /// <param name="stream">The stream.</param>
         public void Save(Stream stream)
@@ -66,7 +66,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Saves this <see cref="EffectBytecode"/> instance to the specified file.
+        /// Saves this <see cref="EffectData"/> instance to the specified file.
         /// </summary>
         /// <param name="fileName">The output filename.</param>
         public void Save(string  fileName)
@@ -98,14 +98,14 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Merges an existing <see cref="EffectBytecode"/> into this instance.
+        /// Merges an existing <see cref="EffectData"/> into this instance.
         /// </summary>
-        /// <param name="source">The EffectBytecode to merge.</param>
+        /// <param name="source">The EffectData to merge.</param>
         /// <exception cref="InvalidOperationException">If the merge failed.</exception>
         /// <remarks>
         /// This method is useful to build an archive of several effects.
         /// </remarks>
-        public void MergeFrom(EffectBytecode source)
+        public void MergeFrom(EffectData source)
         {
             var logger = new Logger();
             if (!MergeFrom(source, logger))
@@ -113,14 +113,14 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Merges an existing <see cref="EffectBytecode"/> into this instance.
+        /// Merges an existing <see cref="EffectData"/> into this instance.
         /// </summary>
-        /// <param name="source">The EffectBytecode to merge.</param>
+        /// <param name="source">The EffectData to merge.</param>
         /// <param name="logger">Logger used to report merging errors.</param>
         /// <remarks>
         /// This method is useful to build an archive of several effects.
         /// </remarks>
-        public bool MergeFrom(EffectBytecode source, Logger logger)
+        public bool MergeFrom(EffectData source, Logger logger)
         {
             bool isMergeOk = true;
 
@@ -203,18 +203,18 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Loads an <see cref="EffectBytecode"/> from the specified stream.
+        /// Loads an <see cref="EffectData"/> from the specified stream.
         /// </summary>
         /// <param name="stream">The stream.</param>
-        /// <returns>An <see cref="EffectBytecode"/>. Null if the stream is not a serialized <see cref="EffectBytecode"/>.</returns>
+        /// <returns>An <see cref="EffectData"/>. Null if the stream is not a serialized <see cref="EffectData"/>.</returns>
         /// <remarks>
         /// </remarks>
-        public static EffectBytecode Load(Stream stream)
+        public static EffectData Load(Stream stream)
         {
             var serializer = GetSerializer(stream, SerializerMode.Read);
             try
             {
-                return serializer.Load<EffectBytecode>();
+                return serializer.Load<EffectData>();
             } catch (InvalidChunkException chunkException)
             {
                 // If we have an exception of the magiccode, just return null
@@ -227,21 +227,21 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Loads an <see cref="EffectBytecode"/> from the specified buffer.
+        /// Loads an <see cref="EffectData"/> from the specified buffer.
         /// </summary>
         /// <param name="buffer">The buffer.</param>
-        /// <returns>An <see cref="EffectBytecode"/> </returns>
-        public static EffectBytecode Load(byte[] buffer)
+        /// <returns>An <see cref="EffectData"/> </returns>
+        public static EffectData Load(byte[] buffer)
         {
             return Load(new MemoryStream(buffer));
         }
 
         /// <summary>
-        /// Loads an <see cref="EffectBytecode"/> from the specified file.
+        /// Loads an <see cref="EffectData"/> from the specified file.
         /// </summary>
         /// <param name="fileName">The filename.</param>
-        /// <returns>An <see cref="EffectBytecode"/> </returns>
-        public static EffectBytecode Load(string fileName)
+        /// <returns>An <see cref="EffectData"/> </returns>
+        public static EffectData Load(string fileName)
         {
             using (var stream = new NativeFileStream(fileName, NativeFileMode.Open, NativeFileAccess.Read))
                 return Load(stream);
@@ -259,7 +259,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <inheritdoc/>
         void IDataSerializable.Serialize(BinarySerializer serializer)
         {
-            // Starts the whole EffectBytecode by the magiccode "TKFX"
+            // Starts the whole EffectData by the magiccode "TKFX"
             // If the serializer don't find the TKFX, It will throw an
             // exception that will be catched by Load method.
             serializer.BeginChunk(MagicCode);

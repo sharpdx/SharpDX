@@ -30,7 +30,7 @@ namespace SharpDX.Toolkit.Graphics
     {
         private readonly Dictionary<string, object> mapNameToValue;
 
-        internal EffectAttributeCollection(IEnumerable<EffectBytecode.Attribute> attributes)
+        internal EffectAttributeCollection(IEnumerable<EffectData.Attribute> attributes)
         {
             mapNameToValue = new Dictionary<string, object>();
             foreach (var attribute in attributes)

@@ -42,7 +42,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
         [TestFixtureSetUp]
         public void Initialize()
         {
-            GraphicsDevice = GraphicsDevice.New();
+            GraphicsDevice = GraphicsDevice.New(DeviceCreationFlags.Debug);
 
             dxsdkDir = Environment.GetEnvironmentVariable("DXSDK_DIR");
 

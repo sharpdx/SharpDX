@@ -130,6 +130,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="GraphicsClassDiagram.cd" />
+    <None Include="HlslStockEffects\Common.fxh" />
+    <None Include="HlslStockEffects\Lighting.fxh" />
+    <None Include="HlslStockEffects\Macros.fxh" />
+    <None Include="HlslStockEffects\Structures.fxh" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="HlslStockEffects\AlphaTestEffect.fx" />
+    <Content Include="HlslStockEffects\BasicEffect.fx" />
+    <Content Include="HlslStockEffects\DualTextureEffect.fx" />
+    <Content Include="HlslStockEffects\EnvironmentMapEffect.fx" />
+    <Content Include="HlslStockEffects\SkinnedEffect.fx" />
+    <Content Include="HlslStockEffects\SpriteEffect.fx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />

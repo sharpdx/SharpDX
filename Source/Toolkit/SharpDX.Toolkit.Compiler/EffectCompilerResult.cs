@@ -30,19 +30,19 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Initializes a new instance of the <see cref="EffectCompilerResult" /> class.
         /// </summary>
-        /// <param name="bytecode">The bytecode.</param>
+        /// <param name="effectData">The EffectData.</param>
         /// <param name="logger">The logger.</param>
-        internal EffectCompilerResult(EffectBytecode bytecode, Logger logger)
+        internal EffectCompilerResult(EffectData effectData, Logger logger)
         {
-            Bytecode = bytecode;
+            EffectData = effectData;
             Logger = logger;
         }
 
         /// <summary>
-        /// Gets the bytecode.
+        /// Gets the EffectData.
         /// </summary>
-        /// <value>The bytecode.</value>
-        public EffectBytecode Bytecode { get; private set; }
+        /// <value>The EffectData.</value>
+        public EffectData EffectData { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether this instance has errors.

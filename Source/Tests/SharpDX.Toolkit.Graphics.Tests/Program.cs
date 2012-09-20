@@ -19,9 +19,11 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using SharpDX.Direct3D;
 using SharpDX.IO;
 using SharpDX.WIC;
 
@@ -47,8 +49,33 @@ namespace SharpDX.Toolkit.Graphics.Tests
             //testImage.Initialize();
             //testImage.TestLoadSave();
 
-            var testCompiler = new TestEffectCompiler();
-            testCompiler.TestCompiler();
+            //var testTexture = new TestTexture();
+            //testTexture.Initialize();
+            //testTexture.Test1DArrayAndMipmaps();
+
+            //var testCompiler = new TestEffectCompiler();
+            //testCompiler.TestCompiler();
+
+            // Compile a toolkit effect from a file
+            var device = GraphicsDevice.New();
+
+
+            var result = EffectCompiler.CompileFromFile(@"C:\Code\SharpDX\Source\Toolkit\SharpDX.Toolkit.Graphics\HlslStockEffects\BasicEffect.fx", EffectCompilerFlags.None, new List<ShaderMacro>() { new ShaderMacro("SM4", "")});
+
+            var bytecode = result.EffectData;
+
+            // Create a EffectData group from a single EffectData
+            var effectGroup = EffectGroup.New(device, bytecode);
+
+            //var effect = effectGroup.New<BasicEffect>();
+            var effect = new Effect(device, effectGroup, "BasicEffect");
+
+            effect.Techniques[0].Passes[4].Apply();
+
+            Console.WriteLine(effect.ConstantBuffers.Count);
+
+
+
         }
     }
 }

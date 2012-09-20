@@ -32,10 +32,10 @@ namespace SharpDX.Toolkit.Graphics
     public sealed class EffectConstantBuffer : DataBuffer, IEquatable<EffectConstantBuffer>
     {
         private readonly Buffer nativeBuffer;
-        internal EffectBytecode.ConstantBuffer Description;
+        internal EffectData.ConstantBuffer Description;
         private readonly int hashCode;
 
-        internal EffectConstantBuffer(GraphicsDevice device, EffectGroup group, EffectBytecode.ConstantBuffer description) : base(description.Size)
+        internal EffectConstantBuffer(GraphicsDevice device, EffectGroup group, EffectData.ConstantBuffer description) : base(description.Size)
         {
             Name = description.Name;
             EffectGroup = group;

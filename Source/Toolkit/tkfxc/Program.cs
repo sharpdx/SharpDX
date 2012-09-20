@@ -120,7 +120,7 @@ namespace SharpDX.Toolkit.Graphics
             if (options.PackColumnMajor)
                 flags |= EffectCompilerFlags.PackMatrixColumnMajor;
 
-            var archiveBytecode = new EffectBytecode();
+            var archiveBytecode = new EffectData();
             bool hasErrors = false;
 
             // ----------------------------------------------------------------
@@ -139,11 +139,11 @@ namespace SharpDX.Toolkit.Graphics
                     continue;
                 }
 
-                EffectBytecode bytecode = null;
+                EffectData effectData = null;
 
                 // Try to load this file as a precompiled file
-                bytecode = EffectBytecode.Load(fxFile);
-                if (bytecode != null)
+                effectData = EffectData.Load(fxFile);
+                if (effectData != null)
                 {
                     Console.WriteLine("Load Compiled File [{0}]", fxFile);                    
                 }
@@ -178,13 +178,13 @@ namespace SharpDX.Toolkit.Graphics
                         ResetColor();
                     }
 
-                    bytecode = effectBytecode.Bytecode;
+                    effectData = effectBytecode.EffectData;
                 }
 
                 // If there is no errors, merge the result to the final archive
                 if (!hasErrors)
                 {
-                    if (ProcessBytecode(bytecode, archiveBytecode))
+                    if (ProcessBytecode(effectData, archiveBytecode))
                         hasErrors = true;
                 }
             }
@@ -205,7 +205,7 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        private bool ProcessBytecode(EffectBytecode input, EffectBytecode merged)
+        private bool ProcessBytecode(EffectData input, EffectData merged)
         {
             var hasErrors = false;
             DumpBytecode(input);
@@ -226,13 +226,13 @@ namespace SharpDX.Toolkit.Graphics
             return hasErrors;
         }
 
-        private void DumpBytecode(EffectBytecode bytecode)
+        private void DumpBytecode(EffectData effectData)
         {
             Console.WriteLine();
 
-            for (int i = 0; i < bytecode.Shaders.Count; i++)
+            for (int i = 0; i < effectData.Shaders.Count; i++)
             {
-                var shader = bytecode.Shaders[i];
+                var shader = effectData.Shaders[i];
 
                 Color(ConsoleColor.White);
                 Console.WriteLine("--------------------------------------------------------------------------------");
@@ -254,7 +254,7 @@ namespace SharpDX.Toolkit.Graphics
 
             const string tab = "    ";
 
-            foreach (var effect in bytecode.Effects)
+            foreach (var effect in effectData.Effects)
             {
                 Console.Write("effect");
                 Color(ConsoleColor.LightGreen);
@@ -291,7 +291,7 @@ namespace SharpDX.Toolkit.Graphics
                             ResetColor();
                             Console.Write(" = ");
                             Color(ConsoleColor.White);
-                            Console.WriteLine("{0}", link.IsImport ? link.ImportName : string.Format("Shader[{0}] => {1}", link.Index, bytecode.Shaders[link.Index].Name == null ? "private"  : "public " + bytecode.Shaders[link.Index].Name));
+                            Console.WriteLine("{0}", link.IsImport ? link.ImportName : string.Format("Shader[{0}] => {1}", link.Index, effectData.Shaders[link.Index].Name == null ? "private"  : "public " + effectData.Shaders[link.Index].Name));
                             ResetColor();
                         }
 

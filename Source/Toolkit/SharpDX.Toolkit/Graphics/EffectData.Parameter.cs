@@ -23,34 +23,33 @@ using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public partial class EffectBytecode
+    public partial class EffectData
     {
-        /// <summary>	
-        /// <p>Describes a shader signature.</p>	
-        /// </summary>	
-        /// <remarks>	
-        /// Describes an input or output signature, composed of <see cref="Semantic"/> descriptions.
-        /// </remarks>	
-        public sealed class Signature : IDataSerializable, IEquatable<Signature>
+        /// <summary>
+        /// An abstract parameter, which can be a <see cref="ResourceParameter"/> or a <see cref="ValueTypeParameter"/>.
+        /// </summary>
+        public abstract class Parameter : IDataSerializable, IEquatable<Parameter>
         {
             /// <summary>
-            /// Gets or sets the semantics
+            /// Name of this parameter.
             /// </summary>
-            public Semantic[] Semantics;
+            public string Name;
 
-            public bool Equals(Signature other)
+            /// <summary>
+            /// The <see cref="EffectParameterClass"/> of this parameter.
+            /// </summary>
+            public EffectParameterClass Class;
+
+            /// <summary>
+            /// The <see cref="EffectParameterType"/> of this parameter.
+            /// </summary>
+            public EffectParameterType Type;
+
+            public bool Equals(Parameter other)
             {
                 if (ReferenceEquals(null, other)) return false;
                 if (ReferenceEquals(this, other)) return true;
-
-                if (Semantics.Length != other.Semantics.Length)
-                    return false;
-
-                for (int i = 0; i < Semantics.Length; i++)
-                    if (Semantics[i] != other.Semantics[i])
-                        return false;
-
-                return true;
+                return string.Equals(Name, other.Name) && Class.Equals(other.Class) && Type.Equals(other.Type);
             }
 
             public override bool Equals(object obj)
@@ -58,20 +57,26 @@ namespace SharpDX.Toolkit.Graphics
                 if (ReferenceEquals(null, obj)) return false;
                 if (ReferenceEquals(this, obj)) return true;
                 if (obj.GetType() != this.GetType()) return false;
-                return Equals((Signature) obj);
+                return Equals((Parameter) obj);
             }
 
             public override int GetHashCode()
             {
-                return Semantics.Length;
+                unchecked
+                {
+                    int hashCode = Name.GetHashCode();
+                    hashCode = (hashCode * 397) ^ Class.GetHashCode();
+                    hashCode = (hashCode * 397) ^ Type.GetHashCode();
+                    return hashCode;
+                }
             }
 
-            public static bool operator ==(Signature left, Signature right)
+            public static bool operator ==(Parameter left, Parameter right)
             {
                 return Equals(left, right);
             }
 
-            public static bool operator !=(Signature left, Signature right)
+            public static bool operator !=(Parameter left, Parameter right)
             {
                 return !Equals(left, right);
             }
@@ -79,7 +84,23 @@ namespace SharpDX.Toolkit.Graphics
             /// <inheritdoc/>
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
-                serializer.Serialize(ref Semantics);
+                InternalSerialize(serializer);
+            }
+
+            /// <summary>
+            /// Serialize this instance but hides implementation from outside..
+            /// </summary>
+            /// <param name="serializer">The serializer.</param>
+            internal virtual void InternalSerialize(BinarySerializer serializer)
+            {
+                serializer.Serialize(ref Name);
+                serializer.SerializeEnum(ref Class);
+                serializer.SerializeEnum(ref Type);
+            }
+
+            public override string ToString()
+            {
+                return string.Format("Name: {0}, Class: {1}, Type: {2}", Name, Class, Type);
             }
         }
     }

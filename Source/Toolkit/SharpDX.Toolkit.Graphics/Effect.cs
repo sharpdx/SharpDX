@@ -48,7 +48,7 @@ namespace SharpDX.Toolkit.Graphics
         public readonly EffectTechniqueCollection Techniques;
 
         private readonly EffectGroup group;
-        private EffectBytecode.Effect effectBytecode;
+        private EffectData.Effect effectBytecode;
 
         public Effect(GraphicsDevice device, EffectGroup group, string effectName) : base(effectName)
         {
@@ -95,7 +95,7 @@ namespace SharpDX.Toolkit.Graphics
             group.AddEffect(this);
         }
 
-        private void Initialize(EffectBytecode.Effect effectBytecode)
+        private void Initialize(EffectData.Effect effectBytecode)
         {
             this.effectBytecode = effectBytecode;
 

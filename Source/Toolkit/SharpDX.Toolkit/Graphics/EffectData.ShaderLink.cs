@@ -21,7 +21,7 @@ using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public partial class EffectBytecode 
+    public partial class EffectData 
     {
         /// <summary>
         /// A link to a compiled shader.
@@ -73,7 +73,7 @@ namespace SharpDX.Toolkit.Graphics
             /// </summary>
             /// <value>The index.</value>
             /// <remarks>
-            /// This index is a direct reference to the shader in <see cref="EffectBytecode.Shaders"/>.
+            /// This index is a direct reference to the shader in <see cref="EffectData.Shaders"/>.
             /// </remarks>
             public int Index
             {

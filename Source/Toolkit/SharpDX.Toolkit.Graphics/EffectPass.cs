@@ -61,7 +61,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public readonly Effect Effect;
 
-        private readonly EffectBytecode.Pass pass;
+        private readonly EffectData.Pass pass;
         private readonly GraphicsDevice graphicsDevice;
 
         private PipelineBlock pipeline;
@@ -86,7 +86,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="effect"> The effect. </param>
         /// <param name="pass"> The pass. </param>
         /// <param name="name"> The name. </param>
-        internal EffectPass(Logger logger, Effect effect, EffectBytecode.Pass pass, string name)
+        internal EffectPass(Logger logger, Effect effect, EffectData.Pass pass, string name)
             : base(name)
         {
             this.pass = pass;
@@ -377,7 +377,7 @@ namespace SharpDX.Toolkit.Graphics
         private void InitStageBlock(StageBlock stageBlock, Logger logger)
         {
             stageBlock.Shader = Effect.Group.GetOrCompileShader(stageBlock.Type, stageBlock.Index);
-            var shaderRaw = Effect.Group.Bytecode.Shaders[stageBlock.Index];
+            var shaderRaw = Effect.Group.EffectData.Shaders[stageBlock.Index];
 
             for (int i = 0; i < shaderRaw.ConstantBuffers.Count; i++)
             {
@@ -406,7 +406,7 @@ namespace SharpDX.Toolkit.Graphics
                         if (previousParameter == null)
                         {
                             // Add an effect parameter linked to the approriate constant buffer at the effect level.
-                            Effect.Parameters.Add(new EffectParameter((EffectBytecode.ValueTypeParameter) parameter.ParameterDescription, constantBuffer));
+                            Effect.Parameters.Add(new EffectParameter((EffectData.ValueTypeParameter) parameter.ParameterDescription, constantBuffer));
                         }
                         else if (parameter.ParameterDescription != previousParameter.ParameterDescription || parameter.buffer != previousParameter.buffer)
                         {
@@ -436,9 +436,9 @@ namespace SharpDX.Toolkit.Graphics
                 }
                 else
                 {
-                    resourceIndex = ((EffectBytecode.ResourceParameter) previousParameter.ParameterDescription).Slot;
+                    resourceIndex = ((EffectData.ResourceParameter) previousParameter.ParameterDescription).Slot;
 
-                    if (CompareResourceParameter(parameterRaw, (EffectBytecode.ResourceParameter) previousParameter.ParameterDescription))
+                    if (CompareResourceParameter(parameterRaw, (EffectData.ResourceParameter) previousParameter.ParameterDescription))
                     {
                         // If registered parameters is different
                         logger.Error("Resource Parameter [{0}] is already defined with a different definition [{1}]", parameterRaw, previousParameter.ParameterDescription);
@@ -676,15 +676,15 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        private bool CompareResourceParameter(EffectBytecode.ResourceParameter left, EffectBytecode.ResourceParameter right)
+        private bool CompareResourceParameter(EffectData.ResourceParameter left, EffectData.ResourceParameter right)
         {
             return (left.Class != right.Class || left.Type != right.Type || left.Count != right.Count);
         }
 
 
-        private EffectAttributeCollection PrepareAttributes(Logger logger, List<EffectBytecode.Attribute> attributes)
+        private EffectAttributeCollection PrepareAttributes(Logger logger, List<EffectData.Attribute> attributes)
         {
-            attributes = new List<EffectBytecode.Attribute>(attributes);
+            attributes = new List<EffectData.Attribute>(attributes);
 
             for (int i = 0; i < attributes.Count; i++)
             {
@@ -692,28 +692,28 @@ namespace SharpDX.Toolkit.Graphics
                 bool attributeHandled = true;
                 switch (attribute.Name)
                 {
-                    case EffectBytecode.Attribute.Blending:
+                    case EffectData.Attribute.Blending:
                         BlendState = graphicsDevice.BlendStates[(string) attribute.Value];
                         if (BlendState == null)
                             logger.Error("Unable to find registered BlendState [{0}]", (string)attribute.Value);
                         break;
-                    case EffectBytecode.Attribute.BlendingColor:
+                    case EffectData.Attribute.BlendingColor:
                         BlendStateColor = (Color4) (Vector4) attribute.Value;
                         break;
-                    case EffectBytecode.Attribute.BlendingSampleMask:
+                    case EffectData.Attribute.BlendingSampleMask:
                         BlendStateSampleMask = (uint) attribute.Value;
                         break;
 
-                    case EffectBytecode.Attribute.DepthStencil:
+                    case EffectData.Attribute.DepthStencil:
                         DepthStencilState = graphicsDevice.DepthStencilStates[(string) attribute.Value];
                         if (DepthStencilState == null)
                             logger.Error("Unable to find registered DepthStencilState [{0}]", (string)attribute.Value);
                         break;
-                    case EffectBytecode.Attribute.DepthStencilReference:
+                    case EffectData.Attribute.DepthStencilReference:
                         DepthStencilReference = (int) attribute.Value;
                         break;
 
-                    case EffectBytecode.Attribute.Rasterizer:
+                    case EffectData.Attribute.Rasterizer:
                         RasterizerState = graphicsDevice.RasterizerStates[(string) attribute.Value];
                         if (RasterizerState == null)
                             logger.Error("Unable to find registered RasterizerState [{0}]", (string)attribute.Value);

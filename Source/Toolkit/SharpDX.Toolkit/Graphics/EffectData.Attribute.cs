@@ -18,47 +18,46 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Collections.Generic;
 using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public partial class EffectBytecode 
+    public partial class EffectData 
     {
         /// <summary>
-        /// Describes a pass from a technique.
+        /// An attribute defined for a <see cref="Pass"/>.
         /// </summary>
-        public sealed class Pass : IDataSerializable
+        public sealed class Attribute : IDataSerializable
         {
+            public const string Blending = "Blending";
+            public const string BlendingColor = "BlendingColor";
+            public const string BlendingSampleMask = "BlendingSampleMask";
+            public const string DepthStencil = "DepthStencil";
+            public const string DepthStencilReference = "DepthStencilReference";
+            public const string Rasterizer = "Rasterizer";
+
             /// <summary>
-            /// Name of this pass.
+            /// Name of this attribute.
             /// </summary>
             public string Name;
 
             /// <summary>
-            /// List of <see cref="Attribute"/>.
+            /// Value of this attribute.
             /// </summary>
-            public List<Attribute> Attributes;
-
-            /// <summary>
-            /// Description of the shader stage <see cref="Pipeline"/>.
-            /// </summary>
-            public Pipeline Pipeline;
+            public object Value;
 
             public override string ToString()
             {
-                return string.Format("Pass: [{0}], Attributes({1})", Name, Attributes.Count);
+                return string.Format("{0} = {1}", Name, Value);
             }
 
             /// <inheritdoc/>
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
-                serializer.AllowNull = true;
                 serializer.Serialize(ref Name);
+                serializer.AllowNull = true;
+                serializer.SerializeDynamic(ref Value);
                 serializer.AllowNull = false;
-
-                serializer.Serialize(ref Attributes);
-                serializer.Serialize(ref Pipeline);
             }
         }
     }

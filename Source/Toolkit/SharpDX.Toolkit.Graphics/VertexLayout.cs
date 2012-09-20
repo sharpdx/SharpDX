@@ -33,7 +33,7 @@ namespace SharpDX.Toolkit.Graphics
     public class VertexLayout : GraphicsResource
     {
         /// <summary>
-        /// Gets the bytecode for this declaration.
+        /// Gets the EffectData for this declaration.
         /// </summary>
         public readonly byte[] ShaderBytecode;
 

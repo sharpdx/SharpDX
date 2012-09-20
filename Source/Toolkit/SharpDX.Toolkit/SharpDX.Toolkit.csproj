@@ -16,19 +16,19 @@
     <Compile Include="Diagnostics\LogMessage.cs" />
     <Compile Include="Diagnostics\LogMessageType.cs" />
     <Compile Include="Diagnostics\Logger.cs" />
-    <Compile Include="Graphics\EffectBytecode.ShaderLink.cs" />
-    <Compile Include="Graphics\EffectBytecode.Signature.cs" />
-    <Compile Include="Graphics\EffectBytecode.Semantic.cs" />
-    <Compile Include="Graphics\EffectBytecode.Attribute.cs" />
-    <Compile Include="Graphics\EffectBytecode.Pipeline.cs" />
-    <Compile Include="Graphics\EffectBytecode.ConstantBuffer.cs" />
-    <Compile Include="Graphics\EffectBytecode.Pass.cs" />
-    <Compile Include="Graphics\EffectBytecode.Technique.cs" />
-    <Compile Include="Graphics\EffectBytecode.ResourceParameter.cs" />
-    <Compile Include="Graphics\EffectBytecode.ValueTypeParameter.cs" />
-    <Compile Include="Graphics\EffectBytecode.Parameter.cs" />
-    <Compile Include="Graphics\EffectBytecode.Effect.cs" />
-    <Compile Include="Graphics\EffectBytecode.Shader.cs" />
+    <Compile Include="Graphics\EffectData.ShaderLink.cs" />
+    <Compile Include="Graphics\EffectData.Signature.cs" />
+    <Compile Include="Graphics\EffectData.Semantic.cs" />
+    <Compile Include="Graphics\EffectData.Attribute.cs" />
+    <Compile Include="Graphics\EffectData.Pipeline.cs" />
+    <Compile Include="Graphics\EffectData.ConstantBuffer.cs" />
+    <Compile Include="Graphics\EffectData.Pass.cs" />
+    <Compile Include="Graphics\EffectData.Technique.cs" />
+    <Compile Include="Graphics\EffectData.ResourceParameter.cs" />
+    <Compile Include="Graphics\EffectData.ValueTypeParameter.cs" />
+    <Compile Include="Graphics\EffectData.Parameter.cs" />
+    <Compile Include="Graphics\EffectData.Effect.cs" />
+    <Compile Include="Graphics\EffectData.Shader.cs" />
     <Compile Include="Graphics\EffectCompilerFlags.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\..\SharedAssemblyInfo.cs">
@@ -37,7 +37,7 @@
     <Compile Include="Graphics\EffectShaderType.cs" />
     <Compile Include="Graphics\EffectParameterClass.cs" />
     <Compile Include="Graphics\EffectParameterType.cs" />
-    <Compile Include="Graphics\EffectBytecode.cs" />
+    <Compile Include="Graphics\EffectData.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SharpDX\SharpDX.csproj">

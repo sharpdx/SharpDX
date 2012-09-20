@@ -23,7 +23,7 @@ using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public sealed partial class EffectBytecode
+    public sealed partial class EffectData
     {
         /// <summary>	
         /// <p>Describes a semantic signature.</p>	

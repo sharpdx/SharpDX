@@ -24,7 +24,7 @@ using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public partial class EffectBytecode
+    public partial class EffectData
     {
         /// <summary>
         /// Describes a shader and associated bytecode.

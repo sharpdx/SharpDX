@@ -44,7 +44,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             // Check that we don't have any errors
             Assert.False(result.HasErrors);
 
-            var bytecode = result.Bytecode;
+            var bytecode = result.EffectData;
 
             // Check that we have a single effect compiled in this archive.
             Assert.AreEqual(bytecode.Effects.Count, 1);
@@ -58,7 +58,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             // Check that this is the profile 10.0
             Assert.AreEqual(bytecode.Shaders[0].Level, FeatureLevel.Level_10_0);
 
-            // Create a bytecode group from a single bytecode
+            // Create a EffectData group from a single EffectData
             var effectGroup = EffectGroup.New(device, bytecode);
 
             //var effect = effectGroup.New<BasicEffect>();

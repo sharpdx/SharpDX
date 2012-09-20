@@ -18,46 +18,60 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System.Collections;
+using System.Collections.Generic;
 using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public partial class EffectBytecode 
+    public partial class EffectData 
     {
         /// <summary>
-        /// An attribute defined for a <see cref="Pass"/>.
+        /// Describes link to shaders for each pipeline <see cref="EffectShaderType"/>
         /// </summary>
-        public sealed class Attribute : IDataSerializable
+        public sealed class Pipeline : IDataSerializable, IEnumerable<ShaderLink>
         {
-            public const string Blending = "Blending";
-            public const string BlendingColor = "BlendingColor";
-            public const string BlendingSampleMask = "BlendingSampleMask";
-            public const string DepthStencil = "DepthStencil";
-            public const string DepthStencilReference = "DepthStencilReference";
-            public const string Rasterizer = "Rasterizer";
+            public ShaderLink[] Links;
 
             /// <summary>
-            /// Name of this attribute.
+            /// Initializes a new instance of the <see cref="Pipeline" /> class.
             /// </summary>
-            public string Name;
-
-            /// <summary>
-            /// Value of this attribute.
-            /// </summary>
-            public object Value;
-
-            public override string ToString()
+            public Pipeline()
             {
-                return string.Format("{0} = {1}", Name, Value);
+                Links = new ShaderLink[6];
+            }
+
+            /// <summary>
+            /// Gets or sets the <see cref="ShaderLink" /> with the specified stage type.
+            /// </summary>
+            /// <param name="effectShaderType">Type of the stage.</param>
+            /// <returns>A <see cref="ShaderLink"/></returns>
+            /// <remarks>
+            /// The return value can be null if there is no shaders associated for this particular stage.
+            /// </remarks>
+            public ShaderLink this[EffectShaderType effectShaderType]
+            {
+                get { return Links[(int)effectShaderType]; }
+                set { Links[(int)effectShaderType] = value; }
             }
 
             /// <inheritdoc/>
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
-                serializer.Serialize(ref Name);
                 serializer.AllowNull = true;
-                serializer.SerializeDynamic(ref Value);
+                serializer.Serialize(ref Links);
                 serializer.AllowNull = false;
+            }
+
+            public IEnumerator<ShaderLink> GetEnumerator()
+            {
+                foreach (var shaderLink in Links)
+                    yield return shaderLink;
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
             }
         }
     }

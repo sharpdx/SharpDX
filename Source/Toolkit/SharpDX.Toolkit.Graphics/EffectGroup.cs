@@ -28,7 +28,7 @@ namespace SharpDX.Toolkit.Graphics
     /// This class manages multiple effects.
     /// </summary>
     /// <remarks>
-    /// This class is responsible to store all bytecode, create shareable constant buffers betwen effects and reuse shader bytecode instances.
+    /// This class is responsible to store all EffectData, create shareable constant buffers betwen effects and reuse shader EffectData instances.
     /// </remarks>
     public sealed class EffectGroup : Component
     {
@@ -38,26 +38,26 @@ namespace SharpDX.Toolkit.Graphics
 
         #endregion
 
-        private readonly EffectBytecode bytecodeGroup;
+        private readonly EffectData dataGroup;
         private readonly List<SharpDX.Direct3D11.DeviceChild> compiledShaders;
         private readonly GraphicsDevice device;
         private readonly List<Effect> effects;
 
         // GraphicsDevice => (ConstantBufferName => (ConstantBufferKey => EffectConstantBuffer))
         private readonly Dictionary<GraphicsDevice, Dictionary<string, Dictionary<ConstantBufferKey, EffectConstantBuffer>>> mapNameToConstantBuffer;
-        private readonly Dictionary<string, EffectBytecode.Effect> mapNameToEffect;
-        private readonly Dictionary<EffectBytecode, bool> registered;
+        private readonly Dictionary<string, EffectData.Effect> mapNameToEffect;
+        private readonly Dictionary<EffectData, bool> registered;
         private readonly object sync = new object();
         private ConstantBufferAllocatorDelegate constantBufferAllocator;
 
 
         private EffectGroup(GraphicsDevice device)
         {
-            bytecodeGroup = new EffectBytecode();
-            mapNameToEffect = new Dictionary<string, EffectBytecode.Effect>();
+            dataGroup = new EffectData();
+            mapNameToEffect = new Dictionary<string, EffectData.Effect>();
             mapNameToConstantBuffer = new Dictionary<GraphicsDevice, Dictionary<string, Dictionary<ConstantBufferKey, EffectConstantBuffer>>>();
             compiledShaders = new List<DeviceChild>();
-            registered = new Dictionary<EffectBytecode, bool>(new IdentityEqualityComparer<EffectBytecode>());
+            registered = new Dictionary<EffectData, bool>(new IdentityEqualityComparer<EffectData>());
             effects = new List<Effect>();
             this.device = device.MainDevice;
             constantBufferAllocator = DefaultConstantBufferAllocator;
@@ -92,32 +92,32 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Gets the current merged bytecode for this group. See remarks.
+        /// Gets the current merged EffectData for this group. See remarks.
         /// </summary>
-        /// <value>The bytecode.</value>
+        /// <value>The EffectData.</value>
         /// <remarks>
-        /// This bytecode must not be modified at runtime.
+        /// This EffectData must not be modified at runtime.
         /// </remarks>
-        public EffectBytecode Bytecode
+        public EffectData EffectData
         {
-            get { return bytecodeGroup; }
+            get { return dataGroup; }
         }
 
         /// <summary>
-        /// Registers a bytecode to this group.
+        /// Registers a EffectData to this group.
         /// </summary>
-        /// <param name="bytecodes">The bytecodes to register.</param>
-        public void RegisterBytecode(params EffectBytecode[] bytecodes)
+        /// <param name="datas">The datas to register.</param>
+        public void RegisterBytecode(params EffectData[] datas)
         {
-            // Lock the whole EffectGroup in case multiple threads would add bytecode at the same time.
+            // Lock the whole EffectGroup in case multiple threads would add EffectData at the same time.
             lock (sync)
             {
                 bool hasNewBytecode = false;
-                foreach (var bytecode in bytecodes)
+                foreach (var bytecode in datas)
                 {
                     if (!registered.ContainsKey(bytecode))
                     {
-                        bytecodeGroup.MergeFrom(bytecode);
+                        dataGroup.MergeFrom(bytecode);
                         registered.Add(bytecode, true);
                         hasNewBytecode = true;
                     }
@@ -127,11 +127,11 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     // Create all mapping
                     mapNameToEffect.Clear();
-                    foreach (var effect in bytecodeGroup.Effects)
+                    foreach (var effect in dataGroup.Effects)
                         mapNameToEffect.Add(effect.Name, effect);
 
-                    // Just alocate the compiled shaders array according to the currennt size of shader bytecodes
-                    for (int i = compiledShaders.Count; i < bytecodeGroup.Shaders.Count; i++)
+                    // Just alocate the compiled shaders array according to the currennt size of shader datas
+                    for (int i = compiledShaders.Count; i < dataGroup.Shaders.Count; i++)
                     {
                         compiledShaders.Add(null);
                     }
@@ -155,9 +155,9 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        internal EffectBytecode.Effect Find(string name)
+        internal EffectData.Effect Find(string name)
         {
-            EffectBytecode.Effect rawEffect;
+            EffectData.Effect rawEffect;
             lock (sync)
             {
                 mapNameToEffect.TryGetValue(name, out rawEffect);
@@ -174,7 +174,7 @@ namespace SharpDX.Toolkit.Graphics
                 shader = compiledShaders[index];
                 if (shader == null)
                 {
-                    var bytecodeRaw = bytecodeGroup.Shaders[index].Bytecode;
+                    var bytecodeRaw = dataGroup.Shaders[index].Bytecode;
                     switch (shaderType)
                     {
                         case EffectShaderType.Vertex:
@@ -202,7 +202,7 @@ namespace SharpDX.Toolkit.Graphics
             return shader;
         }
 
-        internal EffectConstantBuffer GetOrCreateConstantBuffer(GraphicsDevice context, EffectBytecode.ConstantBuffer bufferRaw)
+        internal EffectConstantBuffer GetOrCreateConstantBuffer(GraphicsDevice context, EffectData.ConstantBuffer bufferRaw)
         {
             // Only lock the constant buffer object
             lock (mapNameToConstantBuffer)
@@ -247,15 +247,15 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Creates a new effect group from a specified list of <see cref="EffectBytecode"/>.
+        /// Creates a new effect group from a specified list of <see cref="EffectData"/>.
         /// </summary>
         /// <param name="device">The device.</param>
-        /// <param name="bytecodes">The bytecodes.</param>
+        /// <param name="datas">The datas.</param>
         /// <returns>An instance of <see cref="EffectGroup"/>.</returns>
-        public static EffectGroup New(GraphicsDevice device, params EffectBytecode[] bytecodes)
+        public static EffectGroup New(GraphicsDevice device, params EffectData[] datas)
         {
             var group = new EffectGroup(device);
-            group.RegisterBytecode(bytecodes);
+            group.RegisterBytecode(datas);
             return group;
         }
 
@@ -268,10 +268,10 @@ namespace SharpDX.Toolkit.Graphics
 
         private class ConstantBufferKey : IEquatable<ConstantBufferKey>
         {
-            public readonly EffectBytecode.ConstantBuffer Description;
+            public readonly EffectData.ConstantBuffer Description;
             public readonly int HashCode;
 
-            public ConstantBufferKey(EffectBytecode.ConstantBuffer description)
+            public ConstantBufferKey(EffectData.ConstantBuffer description)
             {
                 Description = description;
                 HashCode = description.GetHashCode();

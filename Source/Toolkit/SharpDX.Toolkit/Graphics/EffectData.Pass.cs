@@ -23,29 +23,36 @@ using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public partial class EffectBytecode 
+    public partial class EffectData 
     {
         /// <summary>
-        /// Describes a technique.
+        /// Describes a pass from a technique.
         /// </summary>
-        public sealed class Technique : IDataSerializable
+        public sealed class Pass : IDataSerializable
         {
             /// <summary>
-            /// Name of this technique.
+            /// Name of this pass.
             /// </summary>
-            /// <remarks>
-            /// This value can be null.
-            /// </remarks>
             public string Name;
 
             /// <summary>
-            /// List of <see cref="Pass"/>.
+            /// Parent pass is an index to the parent pass. 0 if there is no parent, > 0 is the index+1 of the parent pass
             /// </summary>
-            public List<Pass> Passes;
+            public int ParentIndex;
+
+            /// <summary>
+            /// List of <see cref="Attribute"/>.
+            /// </summary>
+            public List<Attribute> Attributes;
+
+            /// <summary>
+            /// Description of the shader stage <see cref="Pipeline"/>.
+            /// </summary>
+            public Pipeline Pipeline;
 
             public override string ToString()
             {
-                return string.Format("Technique: [{0}], Passes({1})", Name, Passes.Count);
+                return string.Format("Pass: [{0}], Parent: {1}, Attributes({2})", Name, ParentIndex, Attributes.Count);
             }
 
             /// <inheritdoc/>
@@ -55,7 +62,9 @@ namespace SharpDX.Toolkit.Graphics
                 serializer.Serialize(ref Name);
                 serializer.AllowNull = false;
 
-                serializer.Serialize(ref Passes);
+                serializer.Serialize(ref ParentIndex);
+                serializer.Serialize(ref Attributes);
+                serializer.Serialize(ref Pipeline);
             }
         }
     }

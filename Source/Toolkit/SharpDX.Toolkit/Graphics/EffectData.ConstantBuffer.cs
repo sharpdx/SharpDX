@@ -19,68 +19,75 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public partial class EffectBytecode 
+    public partial class EffectData 
     {
         /// <summary>
-        /// Describes a resource parameter.
+        /// Describes a constant buffer.
         /// </summary>
-        public sealed class ResourceParameter : Parameter, IEquatable<ResourceParameter>
+        public sealed class ConstantBuffer : IDataSerializable, IEquatable<ConstantBuffer>
         {
             /// <summary>
-            /// The slot index register to bind to.
+            /// Name of this constant buffer.
             /// </summary>
-            public byte Slot;
+            public string Name;
 
             /// <summary>
-            /// The number of slots to bind.
+            /// Size in bytes of this constant buffer.
             /// </summary>
-            public byte Count;
+            public int Size;
 
-            public bool Equals(ResourceParameter other)
+            /// <summary>
+            /// List of parameters in this constant buffer.
+            /// </summary>
+            public List<ValueTypeParameter> Parameters;
+
+            public bool Equals(ConstantBuffer other)
             {
                 if (ReferenceEquals(null, other)) return false;
                 if (ReferenceEquals(this, other)) return true;
-                return base.Equals(other) && Slot == other.Slot && Count == other.Count;
+                return string.Equals(Name, other.Name) && Size == other.Size && Utilities.Compare(Parameters, other.Parameters);
             }
 
             public override bool Equals(object obj)
             {
                 if (ReferenceEquals(null, obj)) return false;
                 if (ReferenceEquals(this, obj)) return true;
-                return obj is ResourceParameter && Equals((ResourceParameter) obj);
+                return obj is ConstantBuffer && Equals((ConstantBuffer) obj);
             }
 
             public override int GetHashCode()
             {
                 unchecked
                 {
-                    int hashCode = base.GetHashCode();
-                    hashCode = (hashCode * 397) ^ Slot.GetHashCode();
-                    hashCode = (hashCode * 397) ^ Count.GetHashCode();
+                    int hashCode = Name.GetHashCode();
+                    hashCode = (hashCode * 397) ^ Size;
+                    hashCode = (hashCode * 397) ^ Parameters.Count;
                     return hashCode;
                 }
             }
 
-            public static bool operator ==(ResourceParameter left, ResourceParameter right)
+            public static bool operator ==(ConstantBuffer left, ConstantBuffer right)
             {
                 return Equals(left, right);
             }
 
-            public static bool operator !=(ResourceParameter left, ResourceParameter right)
+            public static bool operator !=(ConstantBuffer left, ConstantBuffer right)
             {
                 return !Equals(left, right);
             }
 
+
             /// <inheritdoc/>
-            internal override void InternalSerialize(BinarySerializer serializer)
+            void IDataSerializable.Serialize(BinarySerializer serializer)
             {
-                base.InternalSerialize(serializer);
-                serializer.Serialize(ref Slot);
-                serializer.Serialize(ref Count);
+                serializer.Serialize(ref Name);
+                serializer.SerializePackedInt(ref Size);
+                serializer.Serialize(ref Parameters);
             }
         }
     }

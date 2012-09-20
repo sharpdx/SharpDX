@@ -23,33 +23,34 @@ using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public partial class EffectBytecode
+    public partial class EffectData
     {
-        /// <summary>
-        /// An abstract parameter, which can be a <see cref="ResourceParameter"/> or a <see cref="ValueTypeParameter"/>.
-        /// </summary>
-        public abstract class Parameter : IDataSerializable, IEquatable<Parameter>
+        /// <summary>	
+        /// <p>Describes a shader signature.</p>	
+        /// </summary>	
+        /// <remarks>	
+        /// Describes an input or output signature, composed of <see cref="Semantic"/> descriptions.
+        /// </remarks>	
+        public sealed class Signature : IDataSerializable, IEquatable<Signature>
         {
             /// <summary>
-            /// Name of this parameter.
+            /// Gets or sets the semantics
             /// </summary>
-            public string Name;
+            public Semantic[] Semantics;
 
-            /// <summary>
-            /// The <see cref="EffectParameterClass"/> of this parameter.
-            /// </summary>
-            public EffectParameterClass Class;
-
-            /// <summary>
-            /// The <see cref="EffectParameterType"/> of this parameter.
-            /// </summary>
-            public EffectParameterType Type;
-
-            public bool Equals(Parameter other)
+            public bool Equals(Signature other)
             {
                 if (ReferenceEquals(null, other)) return false;
                 if (ReferenceEquals(this, other)) return true;
-                return string.Equals(Name, other.Name) && Class.Equals(other.Class) && Type.Equals(other.Type);
+
+                if (Semantics.Length != other.Semantics.Length)
+                    return false;
+
+                for (int i = 0; i < Semantics.Length; i++)
+                    if (Semantics[i] != other.Semantics[i])
+                        return false;
+
+                return true;
             }
 
             public override bool Equals(object obj)
@@ -57,26 +58,20 @@ namespace SharpDX.Toolkit.Graphics
                 if (ReferenceEquals(null, obj)) return false;
                 if (ReferenceEquals(this, obj)) return true;
                 if (obj.GetType() != this.GetType()) return false;
-                return Equals((Parameter) obj);
+                return Equals((Signature) obj);
             }
 
             public override int GetHashCode()
             {
-                unchecked
-                {
-                    int hashCode = Name.GetHashCode();
-                    hashCode = (hashCode * 397) ^ Class.GetHashCode();
-                    hashCode = (hashCode * 397) ^ Type.GetHashCode();
-                    return hashCode;
-                }
+                return Semantics.Length;
             }
 
-            public static bool operator ==(Parameter left, Parameter right)
+            public static bool operator ==(Signature left, Signature right)
             {
                 return Equals(left, right);
             }
 
-            public static bool operator !=(Parameter left, Parameter right)
+            public static bool operator !=(Signature left, Signature right)
             {
                 return !Equals(left, right);
             }
@@ -84,23 +79,7 @@ namespace SharpDX.Toolkit.Graphics
             /// <inheritdoc/>
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
-                InternalSerialize(serializer);
-            }
-
-            /// <summary>
-            /// Serialize this instance but hides implementation from outside..
-            /// </summary>
-            /// <param name="serializer">The serializer.</param>
-            internal virtual void InternalSerialize(BinarySerializer serializer)
-            {
-                serializer.Serialize(ref Name);
-                serializer.SerializeEnum(ref Class);
-                serializer.SerializeEnum(ref Type);
-            }
-
-            public override string ToString()
-            {
-                return string.Format("Name: {0}, Class: {1}, Type: {2}", Name, Class, Type);
+                serializer.Serialize(ref Semantics);
             }
         }
     }
