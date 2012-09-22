@@ -71,6 +71,11 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        public T GetResource<T>(int resourceIndex) where T : class
+        {
+            return (T)resources[resourceIndex];
+        }
+
         public void SetResource<T>(int resourceIndex, EffectResourceType type, T value) where T : class
         {
             resources[resourceIndex] = value;

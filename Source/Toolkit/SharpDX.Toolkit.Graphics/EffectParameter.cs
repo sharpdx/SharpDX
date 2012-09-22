@@ -126,6 +126,24 @@ namespace SharpDX.Toolkit.Graphics
         internal int Offset;
 
         /// <summary>
+        /// Gets a single value to the associated parameter in the constant buffer.
+        /// </summary>
+        /// <typeparam name = "T">The type of the value to read from the buffer.</typeparam>
+        public T GetValue<T>() where T : struct
+        {
+            return buffer.Get<T>(Offset);
+        }
+
+        /// <summary>
+        /// Gets a single value to the associated parameter in the constant buffer.
+        /// </summary>
+        /// <typeparam name = "T">The type of the value to read from the buffer.</typeparam>
+        public T[] GetValueArray<T>(int count) where T : struct
+        {
+            return buffer.GetRange<T>(Offset, count);
+        }
+
+        /// <summary>
         /// Sets a single value to the associated parameter in the constant buffer.
         /// </summary>
         /// <typeparam name = "T">The type of the value to be written to the buffer.</typeparam>
@@ -169,6 +187,11 @@ namespace SharpDX.Toolkit.Graphics
         {
             buffer.Set(Offset + Utilities.SizeOf<T>() * index, values);
             buffer.IsDirty = true;
+        }
+
+        public T GetResource<T>() where T : class
+        {
+            return resourceLinker.GetResource<T>(Offset);
         }
 
         public void SetResource<T>(T value) where T : class
