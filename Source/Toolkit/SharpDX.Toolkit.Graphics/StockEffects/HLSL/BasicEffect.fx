@@ -1,3 +1,74 @@
+// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+// -----------------------------------------------------------------------------
+// The following code is a port of XNA StockEffects http://xbox.create.msdn.com/en-US/education/catalog/sample/stock_effects
+// -----------------------------------------------------------------------------
+// Microsoft Public License (Ms-PL)
+//
+// This license governs use of the accompanying software. If you use the 
+// software, you accept this license. If you do not accept the license, do not
+// use the software.
+//
+// 1. Definitions
+// The terms "reproduce," "reproduction," "derivative works," and 
+// "distribution" have the same meaning here as under U.S. copyright law.
+// A "contribution" is the original software, or any additions or changes to 
+// the software.
+// A "contributor" is any person that distributes its contribution under this 
+// license.
+// "Licensed patents" are a contributor's patent claims that read directly on 
+// its contribution.
+//
+// 2. Grant of Rights
+// (A) Copyright Grant- Subject to the terms of this license, including the 
+// license conditions and limitations in section 3, each contributor grants 
+// you a non-exclusive, worldwide, royalty-free copyright license to reproduce
+// its contribution, prepare derivative works of its contribution, and 
+// distribute its contribution or any derivative works that you create.
+// (B) Patent Grant- Subject to the terms of this license, including the license
+// conditions and limitations in section 3, each contributor grants you a 
+// non-exclusive, worldwide, royalty-free license under its licensed patents to
+// make, have made, use, sell, offer for sale, import, and/or otherwise dispose
+// of its contribution in the software or derivative works of the contribution 
+// in the software.
+//
+// 3. Conditions and Limitations
+// (A) No Trademark License- This license does not grant you rights to use any 
+// contributors' name, logo, or trademarks.
+// (B) If you bring a patent claim against any contributor over patents that 
+// you claim are infringed by the software, your patent license from such 
+// contributor to the software ends automatically.
+// (C) If you distribute any portion of the software, you must retain all 
+// copyright, patent, trademark, and attribution notices that are present in the
+// software.
+// (D) If you distribute any portion of the software in source code form, you 
+// may do so only under this license by including a complete copy of this 
+// license with your distribution. If you distribute any portion of the software
+// in compiled or object code form, you may only do so under a license that 
+// complies with this license.
+// (E) The software is licensed "as-is." You bear the risk of using it. The
+// contributors give no express warranties, guarantees or conditions. You may
+// have additional consumer rights under your local laws which this license 
+// cannot change. To the extent permitted under your local laws, the 
+// contributors exclude the implied warranties of merchantability, fitness for a
+// particular purpose and non-infringement.
 //-----------------------------------------------------------------------------
 // BasicEffect.fx
 //
@@ -449,9 +520,22 @@ float4 PSBasicPixelLightingTx(PSInputPixelLightingTx pin) : SV_Target0
     return color;
 }
 
+// ------------------------------------------------------------------------------
+// Technique declaration is different with SharpDX Toolkit FX compiler:
+// 1) It doesn't support shader compiled outside a Pass
+// 2) It doesn't support indexing pre-compiled shader outside a Pass
+//
+// This is resolved:
+// For issue 1) by inlining the shader declarations inside the pass
+// For issue 2) using a SubPass concept to encapsulate a set of pass
+// into a single pass.
+// ------------------------------------------------------------------------------
+
 Technique BasicEffect
 {
 	Pass {  
+        EffectName = "Toolkit::BasicEffect";
+
         // empty to setup the profile for next passes
         Profile = 9.1; 							
         
@@ -461,36 +545,36 @@ Technique BasicEffect
         SubPassCount = 32;
     }  
 
-	Pass {  VertexShader = VSBasic                   ; PixelShader = PSBasic                      ;}  // basic
-	Pass {  VertexShader = VSBasic                   ; PixelShader = PSBasic                      ;}  // no fog
-	Pass {  VertexShader = VSBasicNoFog              ; PixelShader = PSBasicTx                    ;}  // vertex color
-	Pass {  VertexShader = VSBasicVc                 ; PixelShader = PSBasic                      ;}  // vertex color, no fog
-	Pass {  VertexShader = VSBasicVcNoFog            ; PixelShader = PSBasicNoFog                 ;}  // texture
-	Pass {  VertexShader = VSBasicTx                 ; PixelShader = PSBasicTx                    ;}  // texture, no fog
-	Pass {  VertexShader = VSBasicTxNoFog            ; PixelShader = PSBasicNoFog                 ;}  // texture + vertex color
-	Pass {  VertexShader = VSBasicTxVc               ; PixelShader = PSBasicTx                    ;}  // texture + vertex color, no fog
-	Pass {  VertexShader = VSBasicTxVcNoFog          ; PixelShader = PSBasicTxNoFog               ;}  // vertex lighting
-	Pass {  VertexShader = VSBasicTxVcNoFog          ; PixelShader = PSBasicVertexLighting        ;}  // vertex lighting, no fog
-	Pass {  VertexShader = VSBasicVertexLighting     ; PixelShader = PSBasicTxNoFog               ;}  // vertex lighting + vertex color
-	Pass {  VertexShader = VSBasicVertexLighting     ; PixelShader = PSBasicVertexLighting        ;}  // vertex lighting + vertex color, no fog
-	Pass {  VertexShader = VSBasicVertexLightingVc   ; PixelShader = PSBasicVertexLightingNoFog   ;}  // vertex lighting + texture
-	Pass {  VertexShader = VSBasicVertexLightingVc   ; PixelShader = PSBasicVertexLightingTx      ;}  // vertex lighting + texture, no fog
-	Pass {  VertexShader = VSBasicVertexLightingTx   ; PixelShader = PSBasicVertexLightingNoFog   ;}  // vertex lighting + texture + vertex color
-	Pass {  VertexShader = VSBasicVertexLightingTx   ; PixelShader = PSBasicVertexLightingTx      ;}  // vertex lighting + texture + vertex color, no fog
-	Pass {  VertexShader = VSBasicVertexLightingTxVc ; PixelShader = PSBasicTxNoFog               ;}  // one light
-	Pass {  VertexShader = VSBasicVertexLightingTxVc ; PixelShader = PSBasicVertexLighting        ;}  // one light, no fog
-	Pass {  VertexShader = VSBasicOneLight           ; PixelShader = PSBasicTxNoFog               ;}  // one light + vertex color
-	Pass {  VertexShader = VSBasicOneLight           ; PixelShader = PSBasicVertexLighting        ;}  // one light + vertex color, no fog
-	Pass {  VertexShader = VSBasicOneLightVc         ; PixelShader = PSBasicVertexLightingNoFog   ;}  // one light + texture
-	Pass {  VertexShader = VSBasicOneLightVc         ; PixelShader = PSBasicVertexLightingTx      ;}  // one light + texture, no fog
-	Pass {  VertexShader = VSBasicOneLightTx         ; PixelShader = PSBasicVertexLightingNoFog   ;}  // one light + texture + vertex color
-	Pass {  VertexShader = VSBasicOneLightTx         ; PixelShader = PSBasicVertexLightingTx      ;}  // one light + texture + vertex color, no fog
-	Pass {  VertexShader = VSBasicOneLightTxVc       ; PixelShader = PSBasicVertexLightingTxNoFog ;}  // pixel lighting
-	Pass {  VertexShader = VSBasicOneLightTxVc       ; PixelShader = PSBasicVertexLightingTxNoFog ;}  // pixel lighting, no fog
-	Pass {  VertexShader = VSBasicPixelLighting      ; PixelShader = PSBasicVertexLightingTxNoFog ;}  // pixel lighting + vertex color
-	Pass {  VertexShader = VSBasicPixelLighting      ; PixelShader = PSBasicVertexLightingTxNoFog ;}  // pixel lighting + vertex color, no fog
-	Pass {  VertexShader = VSBasicPixelLightingVc    ; PixelShader = PSBasicPixelLighting         ;}  // pixel lighting + texture
-	Pass {  VertexShader = VSBasicPixelLightingVc    ; PixelShader = PSBasicPixelLighting         ;}  // pixel lighting + texture, no fog
-	Pass {  VertexShader = VSBasicPixelLightingTx    ; PixelShader = PSBasicPixelLighting         ;}  // pixel lighting + texture + vertex color
-	Pass {  VertexShader = VSBasicPixelLightingTx    ; PixelShader = PSBasicPixelLighting         ;}  // pixel lighting + texture + vertex color, no fog
+    Pass {  VertexShader = VSBasic                   ; PixelShader = PSBasic                      ;}  // basic
+    Pass {  VertexShader = VSBasicNoFog              ; PixelShader = PSBasicNoFog                 ;}  // no fog
+    Pass {  VertexShader = VSBasicVc                 ; PixelShader = PSBasic                      ;}  // vertex color
+    Pass {  VertexShader = VSBasicVcNoFog            ; PixelShader = PSBasicNoFog                 ;}  // vertex color, no fog
+    Pass {  VertexShader = VSBasicTx                 ; PixelShader = PSBasicTx                    ;}  // texture
+    Pass {  VertexShader = VSBasicTxNoFog            ; PixelShader = PSBasicTxNoFog               ;}  // texture, no fog
+    Pass {  VertexShader = VSBasicTxVc               ; PixelShader = PSBasicTx                    ;}  // texture + vertex color
+    Pass {  VertexShader = VSBasicTxVcNoFog          ; PixelShader = PSBasicTxNoFog               ;}  // texture + vertex color, no fog
+    Pass {  VertexShader = VSBasicVertexLighting     ; PixelShader = PSBasicVertexLighting        ;}  // vertex lighting
+    Pass {  VertexShader = VSBasicVertexLighting     ; PixelShader = PSBasicVertexLightingNoFog   ;}  // vertex lighting, no fog
+    Pass {  VertexShader = VSBasicVertexLightingVc   ; PixelShader = PSBasicVertexLighting        ;}  // vertex lighting + vertex color
+    Pass {  VertexShader = VSBasicVertexLightingVc   ; PixelShader = PSBasicVertexLightingNoFog   ;}  // vertex lighting + vertex color, no fog
+    Pass {  VertexShader = VSBasicVertexLightingTx   ; PixelShader = PSBasicVertexLightingTx      ;}  // vertex lighting + texture
+    Pass {  VertexShader = VSBasicVertexLightingTx   ; PixelShader = PSBasicVertexLightingTxNoFog ;}  // vertex lighting + texture, no fog
+    Pass {  VertexShader = VSBasicVertexLightingTxVc ; PixelShader = PSBasicVertexLightingTx      ;}  // vertex lighting + texture + vertex color
+    Pass {  VertexShader = VSBasicVertexLightingTxVc ; PixelShader = PSBasicVertexLightingTxNoFog ;}  // vertex lighting + texture + vertex color, no fog
+    Pass {  VertexShader = VSBasicOneLight           ; PixelShader = PSBasicVertexLighting        ;}  // one light
+    Pass {  VertexShader = VSBasicOneLight           ; PixelShader = PSBasicVertexLightingNoFog   ;}  // one light, no fog
+    Pass {  VertexShader = VSBasicOneLightVc         ; PixelShader = PSBasicVertexLighting        ;}  // one light + vertex color
+    Pass {  VertexShader = VSBasicOneLightVc         ; PixelShader = PSBasicVertexLightingNoFog   ;}  // one light + vertex color, no fog
+    Pass {  VertexShader = VSBasicOneLightTx         ; PixelShader = PSBasicVertexLightingTx      ;}  // one light + texture
+    Pass {  VertexShader = VSBasicOneLightTx         ; PixelShader = PSBasicVertexLightingTxNoFog ;}  // one light + texture, no fog
+    Pass {  VertexShader = VSBasicOneLightTxVc       ; PixelShader = PSBasicVertexLightingTx      ;}  // one light + texture + vertex color
+    Pass {  VertexShader = VSBasicOneLightTxVc       ; PixelShader = PSBasicVertexLightingTxNoFog ;}  // one light + texture + vertex color, no fog
+    Pass {  VertexShader = VSBasicPixelLighting      ; PixelShader = PSBasicPixelLighting         ;}  // pixel lighting
+    Pass {  VertexShader = VSBasicPixelLighting      ; PixelShader = PSBasicPixelLighting         ;}  // pixel lighting, no fog
+    Pass {  VertexShader = VSBasicPixelLightingVc    ; PixelShader = PSBasicPixelLighting         ;}  // pixel lighting + vertex color
+    Pass {  VertexShader = VSBasicPixelLightingVc    ; PixelShader = PSBasicPixelLighting         ;}  // pixel lighting + vertex color, no fog
+    Pass {  VertexShader = VSBasicPixelLightingTx    ; PixelShader = PSBasicPixelLightingTx       ;}  // pixel lighting + texture
+    Pass {  VertexShader = VSBasicPixelLightingTx    ; PixelShader = PSBasicPixelLightingTx       ;}  // pixel lighting + texture, no fog
+    Pass {  VertexShader = VSBasicPixelLightingTxVc  ; PixelShader = PSBasicPixelLightingTx       ;}  // pixel lighting + texture + vertex color
+    Pass {  VertexShader = VSBasicPixelLightingTxVc  ; PixelShader = PSBasicPixelLightingTx       ;}  // pixel lighting + texture + vertex color, no fog
 }
