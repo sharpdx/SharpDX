@@ -270,14 +270,17 @@ namespace SharpDX.Toolkit.Graphics
                     ResetColor();
 
                     Console.WriteLine(tab + "{");
-                    foreach (var pass in technique.Passes)
+                    for (int passIndex = 0; passIndex < technique.Passes.Count; passIndex++)
                     {
-                        Console.Write(tab + tab + "pass");
+                        var pass = technique.Passes[passIndex];
+                        var passtab = pass.IsSubPass ? tab + tab + tab : tab + tab;
+
+                        Console.Write("{0}{1} #{2}", passtab, ((pass.IsSubPass) ? "subpass" : "pass"), passIndex);
                         Color(ConsoleColor.LightGreen);
                         Console.WriteLine(" {0}", pass.Name);
                         ResetColor();
 
-                        Console.WriteLine(tab + tab + "{");
+                        Console.WriteLine(passtab + "{");
 
                         for (int i = 0; i < pass.Pipeline.Links.Length; i++)
                         {
@@ -287,11 +290,12 @@ namespace SharpDX.Toolkit.Graphics
                                 continue;
 
                             Color(ConsoleColor.LightYellow);
-                            Console.Write(tab + tab + tab + "{0}", shaderType);
+                            Console.Write(passtab + tab + "{0}", shaderType);
                             ResetColor();
                             Console.Write(" = ");
                             Color(ConsoleColor.White);
-                            Console.WriteLine("{0}", link.IsImport ? link.ImportName : string.Format("Shader[{0}] => {1}", link.Index, effectData.Shaders[link.Index].Name == null ? "private"  : "public " + effectData.Shaders[link.Index].Name));
+                            Console.WriteLine("{0}",
+                                              link.IsImport ? link.ImportName : string.Format("Shader[{0}] => {1}", link.Index, effectData.Shaders[link.Index].Name == null ? "private" : "public " + effectData.Shaders[link.Index].Name));
                             ResetColor();
                         }
 
@@ -302,10 +306,10 @@ namespace SharpDX.Toolkit.Graphics
                             foreach (var attribute in pass.Attributes)
                             {
                                 var typeName = attribute.Value != null ? attribute.Value.GetType().FullName.StartsWith("SharpDX") ? attribute.Value.GetType().FullName : null : null;
-                                Console.WriteLine(tab + tab + tab + "{0} = {1}", attribute.Name, typeName == null ? attribute.Value : string.Format("{0}({1})", typeName, attribute.Value));
+                                Console.WriteLine(passtab + tab + "{0} = {1}", attribute.Name, typeName == null ? attribute.Value : string.Format("{0}({1})", typeName, attribute.Value));
                             }
                         }
-                        Console.WriteLine(tab + tab + "}");
+                        Console.WriteLine(passtab + "}");
                     }
                     Console.WriteLine(tab + "}");
                 }
