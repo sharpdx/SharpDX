@@ -34,6 +34,7 @@ namespace SharpDX.Toolkit.Graphics
         internal Device Device;
         internal DeviceContext Context;
         internal CommonShaderStage[] ShaderStages;
+        private readonly Viewport[] viewports = new Viewport[16];
 
         /// <summary>
         /// Gets the features supported by this <see cref="GraphicsDevice"/>.
@@ -749,6 +750,25 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
+        /// Gets the main viewport.
+        /// </summary>
+        /// <value>The main viewport.</value>
+        public Viewport Viewport
+        {
+            get { return viewports[0]; }
+        }
+
+        /// <summary>
+        /// Gets the viewport.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <returns>Returns a viewport bind on a specified mulrendertarget</returns>
+        public Viewport GetViewport(int index)
+        {
+            return viewports[index];
+        }
+
+        /// <summary>
         /// Binds a single viewport to the rasterizer stage.
         /// </summary>
         /// <param name="x">The x coord of the viewport.</param>
@@ -765,6 +785,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::RSSetViewports</unmanaged-short>	
         public void SetViewports(float x, float y, float width, float height, float minZ = 0.0f, float maxZ = 1.0f)
         {
+            viewports[0] = new Viewport(x, y, width, height, minZ, maxZ);
             Context.Rasterizer.SetViewport(x, y, width, height, minZ, maxZ);
         }
 
@@ -780,6 +801,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::RSSetViewports</unmanaged-short>	
         public void SetViewports(Viewport viewport)
         {
+            viewports[0] = viewport;
             Context.Rasterizer.SetViewports(viewport);
         }
 
@@ -795,6 +817,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::RSSetViewports</unmanaged-short>	
         public void SetViewports(params Viewport[] viewports)
         {
+            for (int i = 0; i < viewports.Length; i++)
+                this.viewports[i] = viewports[i];
+
             Context.Rasterizer.SetViewports(viewports);
         }
 
