@@ -524,6 +524,12 @@ namespace SharpDX.Toolkit.Graphics
 
                 switch (shortProfile)
                 {
+                    case "2_0":
+                        level = FeatureLevel.Level_9_1;
+                        break;
+                    case "3_0":
+                        level = FeatureLevel.Level_9_3;
+                        break;
                     case "4_0_level_9_1":
                         level = FeatureLevel.Level_9_1;
                         break;
@@ -622,8 +628,29 @@ namespace SharpDX.Toolkit.Graphics
             }
             else if (expression is Ast.CompileExpression)
             {
-                logger.Error("Unexpected compile expression. fx_2_0 are not supported", expression.Span);
-                return null;
+                var compileExpression = (Ast.CompileExpression) expression;
+
+                var profileName = compileExpression.Profile.Text;
+
+                ProfileToFeatureLevel(StageTypeToString(effectShaderType) + "_", profileName, out level);
+
+                if (compileExpression.Method is Ast.MethodExpression)
+                {
+                    var shaderMethod = (Ast.MethodExpression)compileExpression.Method;
+
+                    if (shaderMethod.Arguments.Count > 0)
+                    {
+                        logger.Error("Default arguments for shader methods are not supported", shaderMethod.Span);
+                        return null;
+                    }
+
+                    shaderName = shaderMethod.Name.Text;
+                }
+                else
+                {
+                    logger.Error("Unsupported expression for compile. Excepting method", expression.Span);
+                    return null;
+                }
             }
             else if (expression is Ast.MethodExpression)
             {
