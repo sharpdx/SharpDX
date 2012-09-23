@@ -26,7 +26,8 @@ namespace SharpDX.Toolkit.Graphics
     /// <summary>	
     /// An attribute to use on a field in a structure, to describe a single vertex element for the input-assembler stage.
     /// </summary>	
-    /// <seealso cref="VertexDeclaration"/>
+    /// <seealso cref="VertexBufferLayout"/>
+    /// <seealso cref="VertexBufferSlot"/>
     /// <seealso cref="VertexElement"/>
     /// <msdn-id>ff476180</msdn-id>	
     /// <unmanaged>D3D11_INPUT_ELEMENT_DESC</unmanaged>	
