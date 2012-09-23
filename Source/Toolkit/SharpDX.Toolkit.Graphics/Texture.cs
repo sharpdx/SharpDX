@@ -89,7 +89,7 @@ namespace SharpDX.Toolkit.Graphics
         protected override void Initialize(GraphicsDevice deviceArg, DeviceChild resource)
         {
             // Be sure that we are storing only the main device (which contains the immediate context).
-            base.Initialize(deviceArg.MainDevice, resource);
+            base.Initialize(deviceArg, resource);
             InitializeViews();
         }
 
@@ -270,19 +270,20 @@ namespace SharpDX.Toolkit.Graphics
         /// Gets the content of this texture to an array of data.
         /// </summary>
         /// <typeparam name="TData">The type of the T data.</typeparam>
-        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="arrayOrDepthSlice">The array slice index. This value must be set to 0 for Texture 3D.</param>
         /// <param name="mipSlice">The mip slice index.</param>
         /// <returns>The texture data.</returns>
         /// <msdn-id>ff476457</msdn-id>
         ///   <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
         ///   <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
-        /// <remarks>This method creates internally a stagging resource, copies to it and map it to memory. Use method with explicit staging resource
+        /// <remarks>
+        /// This method is only working when called from the main thread that is accessing the main <see cref="GraphicsDevice"/>.
+        /// This method creates internally a stagging resource, copies to it and map it to memory. Use method with explicit staging resource
         /// for optimal performances.</remarks>
-        public TData[] GetData<TData>(GraphicsDevice device, int arrayOrDepthSlice = 0, int mipSlice = 0) where TData : struct
+        public TData[] GetData<TData>(int arrayOrDepthSlice = 0, int mipSlice = 0) where TData : struct
         {
             var toData = new TData[this.CalculatePixelDataCount<TData>(mipSlice)];
-            GetData(device, toData, arrayOrDepthSlice, mipSlice);
+            GetData(toData, arrayOrDepthSlice, mipSlice);
             return toData;
         }
 
@@ -290,28 +291,29 @@ namespace SharpDX.Toolkit.Graphics
         /// Copies the content of this texture to an array of data.
         /// </summary>
         /// <typeparam name="TData">The type of the T data.</typeparam>
-        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="toData">The destination buffer to receive a copy of the texture datas.</param>
         /// <param name="arraySlice">The array slice index. This value must be set to 0 for Texture 3D.</param>
         /// <param name="mipSlice">The mip slice index.</param>
         /// <msdn-id>ff476457</msdn-id>
         ///   <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
         ///   <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
-        /// <remarks>This method creates internally a stagging resource if this texture is not already a stagging resouce, copies to it and map it to memory. Use method with explicit staging resource
+        /// <remarks>
+        /// This method is only working when called from the main thread that is accessing the main <see cref="GraphicsDevice"/>.
+        /// This method creates internally a stagging resource if this texture is not already a stagging resouce, copies to it and map it to memory. Use method with explicit staging resource
         /// for optimal performances.</remarks>
-        public void GetData<TData>(GraphicsDevice device, TData[] toData, int arraySlice = 0, int mipSlice = 0) where TData : struct
+        public void GetData<TData>(TData[] toData, int arraySlice = 0, int mipSlice = 0) where TData : struct
         {
             // Get data from this resource
             if (Description.Usage == ResourceUsage.Staging)
             {
                 // Directly if this is a staging resource
-                GetData(device, this, toData, arraySlice, mipSlice);
+                GetData(this, toData, arraySlice, mipSlice);
             }
             else
             {
                 // Unefficient way to use the Copy method using dynamic staging texture
                 using (var throughStaging = this.ToStaging())
-                    GetData(device, throughStaging, toData, arraySlice, mipSlice);
+                    GetData(throughStaging, toData, arraySlice, mipSlice);
             }
         }
 
@@ -319,7 +321,6 @@ namespace SharpDX.Toolkit.Graphics
         /// Copies the content of this texture from GPU memory to an array of data on CPU memory using a specific staging resource.
         /// </summary>
         /// <typeparam name="TData">The type of the T data.</typeparam>
-        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="stagingTexture">The staging texture used to transfer the texture to.</param>
         /// <param name="toData">To data.</param>
         /// <param name="arraySlice">The array slice index. This value must be set to 0 for Texture 3D.</param>
@@ -329,17 +330,16 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
         /// <remarks>
-        /// See unmanaged documentation for usage and restrictions.
+        /// This method is only working when called from the main thread that is accessing the main <see cref="GraphicsDevice"/>.
         /// </remarks>
-        public unsafe void GetData<TData>(GraphicsDevice device, Texture stagingTexture, TData[] toData, int arraySlice = 0, int mipSlice = 0) where TData : struct
+        public unsafe void GetData<TData>(Texture stagingTexture, TData[] toData, int arraySlice = 0, int mipSlice = 0) where TData : struct
         {
-            GetData(device, stagingTexture, new DataPointer((IntPtr)Interop.Fixed(toData), toData.Length * Utilities.SizeOf<TData>()), arraySlice, mipSlice);
+            GetData(stagingTexture, new DataPointer((IntPtr)Interop.Fixed(toData), toData.Length * Utilities.SizeOf<TData>()), arraySlice, mipSlice);
         }
 
         /// <summary>
         /// Copies the content of this texture from GPU memory to a pointer on CPU memory using a specific staging resource.
         /// </summary>
-        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="stagingTexture">The staging texture used to transfer the texture to.</param>
         /// <param name="toData">The pointer to data in CPU memory.</param>
         /// <param name="arraySlice">The array slice index. This value must be set to 0 for Texture 3D.</param>
@@ -349,11 +349,12 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
         /// <remarks>
-        /// See unmanaged documentation for usage and restrictions.
+        /// This method is only working when called from the main thread that is accessing the main <see cref="GraphicsDevice"/>.
         /// </remarks>
-        public unsafe void GetData(GraphicsDevice device, Texture stagingTexture, DataPointer toData, int arraySlice = 0, int mipSlice = 0)
+        public unsafe void GetData(Texture stagingTexture, DataPointer toData, int arraySlice = 0, int mipSlice = 0)
         {
-            var deviceContext = (Direct3D11.DeviceContext) device;
+            var device = GraphicsDevice;
+            var deviceContext = (Direct3D11.DeviceContext)device;
 
             // Get mipmap description for the specified mipSlice
             var mipmap = this.GetMipMapDescription(mipSlice);
@@ -425,6 +426,47 @@ namespace SharpDX.Toolkit.Graphics
 
         /// <summary>
         /// Copies the content an array of data on CPU memory to this texture into GPU memory.
+        /// </summary>
+        /// <typeparam name="TData">The type of the T data.</typeparam>
+        /// <param name="fromData">The data to copy from.</param>
+        /// <param name="arraySlice">The array slice index. This value must be set to 0 for Texture 3D.</param>
+        /// <param name="mipSlice">The mip slice index.</param>
+        /// <param name="region">Destination region</param>
+        /// <exception cref="System.ArgumentException">When strides is different from optimal strides, and TData is not the same size as the pixel format, or Width * Height != toData.Length</exception>
+        /// <msdn-id>ff476457</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
+        /// <remarks>
+        /// This method is only working on the main graphics device. Use method with explicit graphics device to set data on a deferred context.
+        /// See also unmanaged documentation about Map/UnMap for usage and restrictions.
+        /// </remarks>
+        public void SetData<TData>(TData[] fromData, int arraySlice = 0, int mipSlice = 0, ResourceRegion? region = null) where TData : struct
+        {
+            SetData(GraphicsDevice, fromData, arraySlice, mipSlice, region);
+        }
+
+        /// <summary>
+        /// Copies the content an data on CPU memory to this texture into GPU memory using the specified <see cref="GraphicsDevice"/> (The graphics device could be deffered).
+        /// </summary>
+        /// <param name="fromData">The data to copy from.</param>
+        /// <param name="arraySlice">The array slice index. This value must be set to 0 for Texture 3D.</param>
+        /// <param name="mipSlice">The mip slice index.</param>
+        /// <param name="region">Destination region</param>
+        /// <exception cref="System.ArgumentException">When strides is different from optimal strides, and TData is not the same size as the pixel format, or Width * Height != toData.Length</exception>
+        /// <msdn-id>ff476457</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
+        /// <remarks>
+        /// This method is only working on the main graphics device. Use method with explicit graphics device to set data on a deferred context.
+        /// See also unmanaged documentation about Map/UnMap for usage and restrictions.
+        /// </remarks>
+        public void SetData(DataPointer fromData, int arraySlice = 0, int mipSlice = 0, ResourceRegion? region = null)
+        {
+            SetData(GraphicsDevice, fromData, arraySlice, mipSlice, region);
+        }
+
+        /// <summary>
+        /// Copies the content an array of data on CPU memory to this texture into GPU memory using the specified <see cref="GraphicsDevice"/> (The graphics device could be deffered).
         /// </summary>
         /// <typeparam name="TData">The type of the T data.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
@@ -585,7 +627,6 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-
         /// <summary>
         /// Return an equivalent staging texture CPU read-writable from this instance.
         /// </summary>
@@ -649,7 +690,6 @@ namespace SharpDX.Toolkit.Graphics
             var image = Image.Load(stream);
             try
             {
-
                 switch (image.Description.Dimension)
                 {
                     case TextureDimension.Texture1D:
@@ -672,6 +712,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Loads a texture from a file.
         /// </summary>
+        /// <param name="device">Specify the <see cref="GraphicsDevice"/> used to load and create a texture from a file.</param>
         /// <param name="filePath">The file to load the texture from.</param>
         /// <param name="isUnorderedReadWrite">True to load the texture with unordered access enabled. Default is false.</param>
         /// <param name="usage">Usage of the resource. Default is <see cref="ResourceUsage.Immutable"/> </param>
@@ -696,6 +737,45 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
+        /// Gets the GPU content of this texture as an <see cref="Image"/> on the CPU.
+        /// </summary>
+        public Image GetDataAsImsage()
+        {
+            using (var stagingTexture = ToStaging())
+                return GetDataAsImsage(stagingTexture);
+        }
+
+        /// <summary>
+        /// Gets the GPU content of this texture to an <see cref="Image"/> on the CPU.
+        /// </summary>
+        /// <param name="stagingTexture">The staging texture used to temporary transfer the image from the GPU to CPU.</param>
+        /// <exception cref="ArgumentException">If stagingTexture is not a staging texture.</exception>
+        public Image GetDataAsImsage(Texture stagingTexture)
+        {
+            if (stagingTexture.Description.Usage != ResourceUsage.Staging)
+                throw new ArgumentException("Invalid texture used as staging. Must have Usage = ResourceUsage.Staging", "stagingTexture");
+
+            var image = Image.New(stagingTexture.Description);
+            try {
+                for (int arrayIndex = 0; arrayIndex < image.Description.ArraySize; arrayIndex++)
+                {
+                    for (int mipLevel = 0; mipLevel < image.Description.MipLevels; mipLevel++)
+                    {
+                        var pixelBuffer = image.PixelBuffer[arrayIndex, mipLevel];
+                        GetData(stagingTexture, new DataPointer(pixelBuffer.DataPointer, pixelBuffer.BufferStride), arrayIndex, mipLevel);
+                    }
+                }
+
+            } catch (Exception)
+            {
+                // If there was an exception, free the allocated image to avoid any memory leak.
+                image.Dispose();
+                throw;
+            }
+            return image;
+        }
+
+        /// <summary>
         /// Saves this texture to a stream with a specified format.
         /// </summary>
         /// <param name="stream">The stream.</param>
@@ -704,27 +784,8 @@ namespace SharpDX.Toolkit.Graphics
         /// <exception cref="ArgumentException">If stagingTexture is not a staging texture.</exception>
         public void Save(Stream stream, Texture stagingTexture, ImageFileType fileType)
         {
-            if (stagingTexture.Description.Usage != ResourceUsage.Staging)
-                throw new ArgumentException("Invalid texture used as staging. Must have Usage = ResourceUsage.Staging", "stagingTexture");
-
-            var image = Image.New(stagingTexture.Description);
-
-            try
-            {
-                for (int arrayIndex = 0; arrayIndex < image.Description.ArraySize; arrayIndex++)
-                {
-                    for (int mipLevel = 0; mipLevel < image.Description.MipLevels; mipLevel++)
-                    {
-                        var pixelBuffer = image.PixelBuffer[arrayIndex, mipLevel];
-                        GetData(GraphicsDevice, stagingTexture, new DataPointer(pixelBuffer.DataPointer, pixelBuffer.BufferStride), arrayIndex, mipLevel);
-                    }
-                }
-
+            using (var image = GetDataAsImsage(stagingTexture))
                 image.Save(stream, fileType);
-            } finally
-            {
-                image.Dispose();
-            }
         }
 
         /// <summary>

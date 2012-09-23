@@ -106,7 +106,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             texture.SetData(GraphicsDevice, textureData);
 
             // Readback data from the GPU
-            var readBackData = texture.GetData<byte>(GraphicsDevice);
+            var readBackData = texture.GetData<byte>();
 
             // Check that both content are equal
             Assert.True(Utilities.Compare(textureData, readBackData));
@@ -118,7 +118,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             {
                 GraphicsDevice.Copy(texture, texture2);
 
-                readBackData = texture2.GetData<byte>(GraphicsDevice);
+                readBackData = texture2.GetData<byte>();
 
                 // Check that both content are equal
                 Assert.True(Utilities.Compare(textureData, readBackData));
@@ -133,7 +133,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             var region = new ResourceRegion(textureData.Length - 4, 0, 0, textureData.Length, 1, 1);
             texture.SetData(GraphicsDevice, smallTextureDataRegion, 0, 0, region);
 
-            readBackData = texture.GetData<byte>(GraphicsDevice);
+            readBackData = texture.GetData<byte>();
 
             Array.Copy(smallTextureDataRegion, 0, textureData, textureData.Length - 4, 4);
 
@@ -242,7 +242,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
 
             texture.SetData(GraphicsDevice, textureData, 1, 8);
 
-            var readbackData = texture.GetData<byte>(GraphicsDevice, 1, 8);
+            var readbackData = texture.GetData<byte>(1, 8);
 
             Assert.AreEqual(textureData.Length, readbackData.Length);
             Assert.AreEqual(textureData[0], readbackData[0]);
@@ -261,7 +261,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
 
             // Set the value == 1
             GraphicsDevice.Clear(uav, 1);
-            readbackData = texture.GetData<byte>(GraphicsDevice, 1, 8);
+            readbackData = texture.GetData<byte>(1, 8);
             Assert.AreEqual(readbackData.Length, 1);
             Assert.AreEqual(readbackData[0], 1);
 

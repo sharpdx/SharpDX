@@ -42,13 +42,11 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="resource">The resource.</param>
         protected virtual void Initialize(GraphicsDevice deviceLocal, DeviceChild resource)
         {
-            GraphicsDevice = deviceLocal;
+            // Keep track only to the Main device, as deferred context are not useful when manipulating resources.
+            GraphicsDevice = deviceLocal.MainDevice;
 
-            if (deviceLocal != null )
-            {
-                Resource = resource == null ? CreateResource() : ToDispose(resource);
-                isResourceInitialized = true;
-            }
+            Resource = resource == null ? CreateResource() : ToDispose(resource);
+            isResourceInitialized = true;
         }
 
         /// <summary>
