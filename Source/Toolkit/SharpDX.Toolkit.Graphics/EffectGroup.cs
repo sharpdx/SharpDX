@@ -238,7 +238,7 @@ namespace SharpDX.Toolkit.Graphics
                 if (!bufferSet.TryGetValue(bufferKey, out buffer))
                 {
                     // 4) If this buffer doesn't exist, create a new one and register it.
-                    buffer = new EffectConstantBuffer(device, this, bufferRaw);
+                    buffer = new EffectConstantBuffer(device, bufferRaw);
                     bufferSet[bufferKey] = buffer;
                 }
 

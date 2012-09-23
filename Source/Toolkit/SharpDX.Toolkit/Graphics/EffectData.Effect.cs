@@ -37,6 +37,11 @@ namespace SharpDX.Toolkit.Graphics
             public string Name;
 
             /// <summary>
+            /// Share constant buffers.
+            /// </summary>
+            public bool ShareConstantBuffers;
+
+            /// <summary>
             /// List of <see cref="Technique"/>.
             /// </summary>
             public List<Technique> Techniques;
@@ -50,6 +55,7 @@ namespace SharpDX.Toolkit.Graphics
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
                 serializer.Serialize(ref Name);
+                serializer.Serialize(ref ShareConstantBuffers);
                 serializer.Serialize(ref Techniques);
             }
         }

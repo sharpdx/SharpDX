@@ -35,10 +35,9 @@ namespace SharpDX.Toolkit.Graphics
         internal EffectData.ConstantBuffer Description;
         private readonly int hashCode;
 
-        internal EffectConstantBuffer(GraphicsDevice device, EffectGroup group, EffectData.ConstantBuffer description) : base(description.Size)
+        internal EffectConstantBuffer(GraphicsDevice device, EffectData.ConstantBuffer description) : base(description.Size)
         {
             Name = description.Name;
-            EffectGroup = group;
             Parameters = new EffectParameterCollection(description.Parameters.Count);
             hashCode = description.GetHashCode();
 
@@ -67,11 +66,6 @@ namespace SharpDX.Toolkit.Graphics
         /// be uploaded.
         /// </remarks>
         public bool IsDirty;
-
-        /// <summary>
-        /// Gets the <see cref="EffectGroup"/> this constant buffer is attached to.
-        /// </summary>
-        public readonly EffectGroup EffectGroup;
 
         /// <summary>
         /// Gets the parameters registered for this constant buffer.

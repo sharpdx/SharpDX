@@ -278,6 +278,9 @@ namespace SharpDX.Toolkit.Graphics
                 case EffectData.Attribute.DepthStencilReference:
                     HandleAttribute<int>(expression);
                     break;
+                case "ShareConstantBuffers":
+                    HandleShareConstantBuffers(expression.Value);
+                    break;
                 case "EffectName":
                     HandleEffectName(expression.Value);
                     break;
@@ -340,6 +343,22 @@ namespace SharpDX.Toolkit.Graphics
             else
             {
                 logger.Error("Unexpected value. Expecting a identifier/string or an array of identifier/string.", expression.Span);
+            }
+        }
+
+        private void HandleShareConstantBuffers(Ast.Expression expression)
+        {
+            object value;
+            if (!ExtractValue(expression, out value))
+                return;
+
+            if (!(value is bool))
+            {
+                logger.Error("ShareConstantBuffers must be a bool", expression.Span);
+            }
+            else
+            {
+                effect.ShareConstantBuffers = (bool)value;
             }
         }
 

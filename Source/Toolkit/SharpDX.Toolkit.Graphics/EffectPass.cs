@@ -418,8 +418,20 @@ namespace SharpDX.Toolkit.Graphics
             {
                 var constantBufferRaw = shaderRaw.ConstantBuffers[i];
 
-                // Use the group to share constant buffers
-                var constantBuffer = Effect.Group.GetOrCreateConstantBuffer(Effect.GraphicsDevice, constantBufferRaw);
+                EffectConstantBuffer constantBuffer;
+
+                // Is the effect is using shared constant buffers via the EffectGroup?
+                if (Effect.ShareConstantBuffers)
+                {
+                    // Use the group to share constant buffers
+                    constantBuffer = Effect.Group.GetOrCreateConstantBuffer(Effect.GraphicsDevice, constantBufferRaw);
+                }
+                else
+                {
+                    // This is a local constant buffer that will be collected by the effect itself.
+                    constantBuffer = new EffectConstantBuffer(Effect.GraphicsDevice, constantBufferRaw);
+                    Effect.DisposeCollector.Collect(constantBuffer);
+                }
 
                 // IF constant buffer is null, it means that there is a conflict
                 if (constantBuffer == null)

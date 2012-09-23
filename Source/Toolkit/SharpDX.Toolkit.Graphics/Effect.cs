@@ -52,6 +52,8 @@ namespace SharpDX.Toolkit.Graphics
         private readonly EffectGroup group;
         private EffectData.Effect effectBytecode;
 
+        internal bool ShareConstantBuffers;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Effect" /> class with the specified effect. See remarks.
         /// </summary>
@@ -118,16 +120,18 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Initializes the specified effect bytecode.
         /// </summary>
-        /// <param name="effectBytecode">The effect bytecode.</param>
+        /// <param name="effectBytecodeArg">The effect bytecode.</param>
         /// <exception cref="System.InvalidOperationException"></exception>
-        private void Initialize(EffectData.Effect effectBytecode)
+        private void Initialize(EffectData.Effect effectBytecodeArg)
         {
-            this.effectBytecode = effectBytecode;
+            effectBytecode = effectBytecodeArg;
+
+            ShareConstantBuffers = effectBytecodeArg.ShareConstantBuffers;
 
             var logger = new Logger();
             int techniqueIndex = 0;
             EffectPass parentPass = null;
-            foreach (var techniqueRaw in effectBytecode.Techniques)
+            foreach (var techniqueRaw in effectBytecodeArg.Techniques)
             {
                 var name = techniqueRaw.Name;
                 if (string.IsNullOrEmpty(name))
