@@ -81,7 +81,7 @@ namespace SharpDX.Toolkit.Graphics
     /// <summary>
     /// Built-in effect that supports alpha testing.
     /// </summary>
-    public class AlphaTestEffect : Effect, IEffectMatrices, IEffectFog
+    public partial class AlphaTestEffect : Effect, IEffectMatrices, IEffectFog
     {
         #region Effect Parameters
 
@@ -320,8 +320,6 @@ namespace SharpDX.Toolkit.Graphics
 
         private const string AlphaTestEffectName = "Toolkit::AlphaTestEffect";
 
-        private static readonly EffectData EffectData = EffectData.Load(new byte[0]);
-
         /// <summary>
         /// Creates a new AlphaTestEffect with default parameter settings.
         /// </summary>
@@ -338,9 +336,10 @@ namespace SharpDX.Toolkit.Graphics
             CacheEffectParameters();
         }
 
-        protected override void PrepareGroup()
+        protected override void Initialize()
         {
-            Group.RegisterBytecode(EffectData);
+            Group.RegisterBytecode(effectBytecode);
+            base.Initialize();
         }
 
         ///// <summary>

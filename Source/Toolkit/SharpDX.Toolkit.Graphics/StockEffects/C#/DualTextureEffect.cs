@@ -81,7 +81,7 @@ namespace SharpDX.Toolkit.Graphics
     /// <summary>
     /// Built-in effect that supports two-layer multitexturing.
     /// </summary>
-    public class DualTextureEffect : Effect, IEffectMatrices, IEffectFog
+    public partial class DualTextureEffect : Effect, IEffectMatrices, IEffectFog
     {
         #region Effect Parameters
 
@@ -298,8 +298,6 @@ namespace SharpDX.Toolkit.Graphics
 
         private const string DualTextureEffectName = "Toolkit::DualTextureEffect";
 
-        private static readonly EffectData EffectData = EffectData.Load(new byte[0]);
-
         /// <summary>
         /// Creates a new DualTextureEffect with default parameter settings.
         /// </summary>
@@ -316,9 +314,10 @@ namespace SharpDX.Toolkit.Graphics
             CacheEffectParameters();
         }
 
-        protected override void PrepareGroup()
+        protected override void Initialize()
         {
-            Group.RegisterBytecode(EffectData);
+            Group.RegisterBytecode(effectBytecode);
+            base.Initialize();
         }
 
         ///// <summary>

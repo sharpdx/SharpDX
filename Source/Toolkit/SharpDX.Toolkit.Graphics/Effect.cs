@@ -50,9 +50,15 @@ namespace SharpDX.Toolkit.Graphics
         public readonly EffectTechniqueCollection Techniques;
 
         private readonly EffectGroup group;
-        private EffectData.Effect effectBytecode;
+        private EffectData.Effect effectData;
 
-        internal bool ShareConstantBuffers;
+        /// <summary>
+        /// Set to true to force all constant shaders to be shared between other effects within a common <see cref="EffectGroup"/>. Default is false.
+        /// </summary>
+        /// <remarks>
+        /// This value can also be set in the TKFX file directly by setting ShareConstantBuffers = true; in a pass.
+        /// </remarks>
+        protected internal bool ShareConstantBuffers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Effect" /> class with the specified effect. See remarks.
@@ -80,7 +86,7 @@ namespace SharpDX.Toolkit.Graphics
             Techniques = new EffectTechniqueCollection();
             ResourceLinker = ToDispose(new EffectResourceLinker());
             this.group = group;
-            Initialize(effectName);
+            Initialize();
         }
 
         /// <summary>
@@ -101,17 +107,9 @@ namespace SharpDX.Toolkit.Graphics
         /// </remarks>
         public event OnApplyDelegate OnApplyCallback;
 
-        protected virtual void PrepareGroup()
+        protected virtual void Initialize()
         {
-        }
-
-        private void Initialize(string effectName)
-        {
-            PrepareGroup();
-            var effectRaw = group.Find(effectName);
-            if (effectRaw == null)
-                throw new ArgumentException(string.Format("Unable to find effect [{0}] from the EFfectGroup", effectName), "effectName");
-            Initialize(effectRaw);
+            Initialize(group.Find(Name));
 
             // If everything was fine, then we can register it into the group
             group.AddEffect(this);
@@ -120,18 +118,21 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Initializes the specified effect bytecode.
         /// </summary>
-        /// <param name="effectBytecodeArg">The effect bytecode.</param>
+        /// <param name="effectDataArg">The effect bytecode.</param>
         /// <exception cref="System.InvalidOperationException"></exception>
-        private void Initialize(EffectData.Effect effectBytecodeArg)
+        private void Initialize(EffectData.Effect effectDataArg)
         {
-            effectBytecode = effectBytecodeArg;
+            if (effectDataArg == null)
+                throw new ArgumentException(string.Format("Unable to find effect [{0}] from the EffectGroup", Name), "effectName");
 
-            ShareConstantBuffers = effectBytecodeArg.ShareConstantBuffers;
+            effectData = effectDataArg;
+
+            ShareConstantBuffers = effectDataArg.ShareConstantBuffers;
 
             var logger = new Logger();
             int techniqueIndex = 0;
             EffectPass parentPass = null;
-            foreach (var techniqueRaw in effectBytecodeArg.Techniques)
+            foreach (var techniqueRaw in effectDataArg.Techniques)
             {
                 var name = techniqueRaw.Name;
                 if (string.IsNullOrEmpty(name))

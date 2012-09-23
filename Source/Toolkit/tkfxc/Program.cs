@@ -23,6 +23,8 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml;
 using SharpDX.Direct3D;
+using SharpDX.IO;
+using SharpDX.Text;
 using SharpDX.Toolkit.Diagnostics;
 
 namespace SharpDX.Toolkit.Graphics
@@ -44,6 +46,18 @@ namespace SharpDX.Toolkit.Graphics
         [Option("Fo", Description = "Output object file. default is [output.tkfxo]\n", Value = "<file>")]
         public string OutputFile = "output.tkfxo";
 
+        [Option("Fc", Description = "Output class file.", Value = "<file>")]
+        public string OutputClassFile;
+
+        [Option("ON", Description = "Name of the namespace to output in the .cs when using Fc option. Default: SharpDX.Toolkit.Graphics.", Value = "<namepsace>")]
+        public string OutputNamespace = "SharpDX.Toolkit.Graphics";
+
+        [Option("OC", Description = "Name of the classname to output in the .cs when using Fc option. Default: name of Fc file without the extension.", Value = "<classname>")]
+        public string OutputClassname;
+
+        [Option("OF", Description = "Name of the fieldname to output in the .cs when using Fc option. Default: effectBytecode.\n", Value = "<fieldname>")]
+        public string OutputFieldName = "effectBytecode";
+
         [Option("Fv", Description = "Output disassemble of fx files and tkfxo files only. No output file generated")]
         public bool ViewOnly;
 
@@ -58,6 +72,9 @@ namespace SharpDX.Toolkit.Graphics
 
         [Option("Zpc", Description = "Pack matrices in column-major order")]
         public bool PackColumnMajor;
+
+        [Option("nodis", Description = "Suppress output of disassembly on the standard output.")]
+        public bool NoDisassembly;
 
         static void Main(string[] args)
         {
@@ -199,16 +216,34 @@ namespace SharpDX.Toolkit.Graphics
             else if (!ViewOnly)
             {
                 Console.WriteLine();
-                Console.WriteLine("Save output to [{0}]", options.OutputFile);
-                // Save the result
-                archiveBytecode.Save(options.OutputFile);
+
+                if (OutputClassFile != null)
+                {
+                    var codeWriter = new EffectDataCodeWriter
+                                         {
+                                             Namespace = OutputNamespace, 
+                                             ClassName = OutputClassname ?? Path.GetFileNameWithoutExtension(OutputClassFile),
+                                             FieldName = OutputFieldName,
+                                         };
+
+                    Console.WriteLine("Save C# code output to [{0}]", OutputClassFile);
+                    using (var stream = new NativeFileStream(OutputClassFile, NativeFileMode.Create, NativeFileAccess.Write, NativeFileShare.Write))
+                        codeWriter.Write(archiveBytecode, new StreamWriter(stream, Encoding.UTF8));
+                }
+                else
+                {
+                    Console.WriteLine("Save output to [{0}]", options.OutputFile);
+                    // Save the result
+                    archiveBytecode.Save(options.OutputFile);
+                }
             }
         }
 
         private bool ProcessBytecode(EffectData input, EffectData merged)
         {
             var hasErrors = false;
-            DumpBytecode(input);
+            if (!NoDisassembly)
+                DumpBytecode(input);
 
             var logger = new Logger();
             merged.MergeFrom(input, logger);

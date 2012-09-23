@@ -83,7 +83,7 @@ namespace SharpDX.Toolkit.Graphics
     /// <summary>
     /// Built-in effect for rendering skinned character models.
     /// </summary>
-    public class SkinnedEffect : Effect, IEffectMatrices, IEffectLights, IEffectFog
+    public partial class SkinnedEffect : Effect, IEffectMatrices, IEffectLights, IEffectFog
     {
         public const int MaxBones = 72;
         
@@ -442,8 +442,6 @@ namespace SharpDX.Toolkit.Graphics
 
         private const string SkinnedEffectName = "Toolkit::SkinnedEffect";
 
-        private static readonly EffectData EffectData = EffectData.Load(new byte[0]);
-
         /// <summary>
         /// Creates a new SkinnedEffect with default parameter settings.
         /// </summary>
@@ -474,9 +472,10 @@ namespace SharpDX.Toolkit.Graphics
             SetBoneTransforms(identityBones);
         }
 
-        protected override void PrepareGroup()
+        protected override void Initialize()
         {
-            Group.RegisterBytecode(EffectData);
+            Group.RegisterBytecode(effectBytecode);
+            base.Initialize();
         }
 
         ///// <summary>

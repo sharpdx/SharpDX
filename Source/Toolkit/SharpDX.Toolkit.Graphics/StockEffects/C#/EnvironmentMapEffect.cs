@@ -83,7 +83,7 @@ namespace SharpDX.Toolkit.Graphics
     /// <summary>
     /// Built-in effect that supports environment mapping.
     /// </summary>
-    public class EnvironmentMapEffect : Effect, IEffectMatrices, IEffectLights, IEffectFog
+    public partial class EnvironmentMapEffect : Effect, IEffectMatrices, IEffectLights, IEffectFog
     {
         #region Effect Parameters
 
@@ -403,8 +403,6 @@ namespace SharpDX.Toolkit.Graphics
 
         private const string EnvironmentMapEffectName = "Toolkit::EnvironmentMapEffect";
 
-        private static readonly EffectData EffectData = EffectData.Load(new byte[0]);
-
         /// <summary>
         /// Creates a new EnvironmentMapEffect with default parameter settings.
         /// </summary>
@@ -427,9 +425,10 @@ namespace SharpDX.Toolkit.Graphics
             FresnelFactor = 1;
         }
 
-        protected override void PrepareGroup()
+        protected override void Initialize()
         {
-            Group.RegisterBytecode(EffectData);
+            Group.RegisterBytecode(effectBytecode);
+            base.Initialize();
         }
 
         ///// <summary>

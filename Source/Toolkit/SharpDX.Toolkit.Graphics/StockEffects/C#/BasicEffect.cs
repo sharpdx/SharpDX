@@ -81,7 +81,7 @@ namespace SharpDX.Toolkit.Graphics
     /// <summary>
     /// Built-in effect that supports optional texturing, vertex coloring, fog, and lighting.
     /// </summary>
-    public class BasicEffect : Effect, IEffectMatrices, IEffectLights, IEffectFog
+    public partial class BasicEffect : Effect, IEffectMatrices, IEffectLights, IEffectFog
     {
         #region Effect Parameters
 
@@ -423,8 +423,6 @@ namespace SharpDX.Toolkit.Graphics
 
         private const string BasicEffectName = "Toolkit::BasicEffect";
 
-        private static readonly EffectData EffectData = EffectData.Load(new byte[0]);
-
         /// <summary>
         /// Initializes a new instance of the <see cref="BasicEffect" /> class.
         /// </summary>
@@ -449,9 +447,10 @@ namespace SharpDX.Toolkit.Graphics
             SpecularPower = 16;
         }
 
-        protected override void PrepareGroup()
+        protected override void Initialize()
         {
-            Group.RegisterBytecode(EffectData);
+            Group.RegisterBytecode(effectBytecode);
+            base.Initialize();
         }
 
         ///// <summary>

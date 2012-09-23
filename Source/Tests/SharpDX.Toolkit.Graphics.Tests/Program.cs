@@ -60,15 +60,8 @@ namespace SharpDX.Toolkit.Graphics.Tests
             var device = GraphicsDevice.New();
 
 
-            var result = EffectCompiler.CompileFromFile(@"C:\Code\SharpDX\Source\Toolkit\SharpDX.Toolkit.Graphics\HlslStockEffects\BasicEffect.fx", EffectCompilerFlags.None, new List<ShaderMacro>() { new ShaderMacro("SM4", "")});
 
-            var bytecode = result.EffectData;
-
-            // Create a EffectData group from a single EffectData
-            var effectGroup = EffectGroup.New(device, bytecode);
-
-            //var effect = effectGroup.New<BasicEffect>();
-            var effect = new Effect(device, effectGroup, "BasicEffect");
+            var effect = new BasicEffect(device);
 
             effect.Techniques[0].Passes[0].Apply();
 

@@ -81,7 +81,7 @@ namespace SharpDX.Toolkit.Graphics
     /// <summary>
     /// The default effect used by SpriteBatch.
     /// </summary>
-    public class SpriteEffect : Effect
+    public partial class SpriteEffect : Effect
     {
         #region Effect Parameters
 
@@ -92,8 +92,6 @@ namespace SharpDX.Toolkit.Graphics
         #region Methods
 
         private const string SpriteEffectName = "Toolkit::SpriteEffect";
-
-        private static readonly EffectData EffectData = EffectData.Load(new byte[0]);
 
         /// <summary>
         /// Creates a new SpriteEffect.
@@ -109,6 +107,12 @@ namespace SharpDX.Toolkit.Graphics
             : base(device, group, SpriteEffectName)
         {
             CacheEffectParameters();
+        }
+
+        protected override void Initialize()
+        {
+            Group.RegisterBytecode(effectBytecode);
+            base.Initialize();
         }
 
         ///// <summary>

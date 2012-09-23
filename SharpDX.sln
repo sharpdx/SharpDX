@@ -203,6 +203,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Toolkit", "Toolkit", "{529B140D-B91D-49EA-B173-9ADD6AB2A2A3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpDX.Toolkit.Graphics", "Source\Toolkit\SharpDX.Toolkit.Graphics\SharpDX.Toolkit.Graphics.csproj", "{53EF08A7-4224-434C-A62C-F29807C1C750}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BCE106B4-0C81-4705-8A9C-C4C4F5EAB702} = {BCE106B4-0C81-4705-8A9C-C4C4F5EAB702}
+		{8BFFF9D1-84EC-4FBA-9BEB-710ECF1857A8} = {8BFFF9D1-84EC-4FBA-9BEB-710ECF1857A8}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpDX.Toolkit.Graphics.Tests", "Source\Tests\SharpDX.Toolkit.Graphics.Tests\SharpDX.Toolkit.Graphics.Tests.csproj", "{4E0E6A4D-930D-4660-8DE0-E30FF1F9F4A9}"
 EndProject

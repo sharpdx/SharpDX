@@ -37,6 +37,7 @@ namespace SharpDX.Toolkit.Graphics
 
         internal EffectConstantBuffer(GraphicsDevice device, EffectData.ConstantBuffer description) : base(description.Size)
         {
+            Description = description;
             Name = description.Name;
             Parameters = new EffectParameterCollection(description.Parameters.Count);
             hashCode = description.GetHashCode();

@@ -60,16 +60,40 @@
     <Compile Include="PixelBuffer.cs" />
     <Compile Include="PresentationParameters.cs" />
     <Compile Include="PresentInterval.cs" />
+    <Compile Include="StockEffects\HLSL\AlphaTestEffect.ByteCode.cs">
+      <AutoGen>true</AutoGen>
+      <DependentUpon>StockEffects\HLSL\AlphaTestEffect.fx</DependentUpon>
+    </Compile>    
     <Compile Include="StockEffects\C#\AlphaTestEffect.cs" />
+    <Compile Include="StockEffects\HLSL\BasicEffect.ByteCode.cs" >
+      <AutoGen>true</AutoGen>
+      <DependentUpon>StockEffects\HLSL\BasicEffect.fx</DependentUpon>
+    </Compile>
     <Compile Include="StockEffects\C#\BasicEffect.cs" />
     <Compile Include="StockEffects\C#\DirectionalLight.cs" />
+    <Compile Include="StockEffects\HLSL\DualTextureEffect.ByteCode.cs" >
+      <AutoGen>true</AutoGen>
+      <DependentUpon>StockEffects\HLSL\DualTextureEffect.fx</DependentUpon>
+    </Compile>
+    <Compile Include="StockEffects\HLSL\EnvironmentMapEffect.ByteCode.cs" >
+      <AutoGen>true</AutoGen>
+      <DependentUpon>StockEffects\HLSL\EnvironmentMapEffect.fx</DependentUpon>
+    </Compile>
     <Compile Include="StockEffects\C#\IEffectLights.cs" />
     <Compile Include="StockEffects\C#\IEffectFog.cs" />
     <Compile Include="StockEffects\C#\DualTextureEffect.cs" />
     <Compile Include="StockEffects\C#\EffectHelpers.cs" />
     <Compile Include="StockEffects\C#\EnvironmentMapEffect.cs" />
     <Compile Include="StockEffects\C#\IEffectMatrices.cs" />
+    <Compile Include="StockEffects\HLSL\SkinnedEffect.ByteCode.cs" >
+      <AutoGen>true</AutoGen>
+      <DependentUpon>StockEffects\HLSL\SkinnedEffect.fx</DependentUpon>
+    </Compile>
     <Compile Include="StockEffects\C#\SkinnedEffect.cs" />
+    <Compile Include="StockEffects\HLSL\SpriteEffect.ByteCode.cs" >
+      <AutoGen>true</AutoGen>
+      <DependentUpon>StockEffects\HLSL\SpriteEffect.fx</DependentUpon>
+    </Compile>
     <Compile Include="StockEffects\C#\SpriteEffect.cs" />
     <Compile Include="TextureDimension.cs" />
     <Compile Include="TGAHelper.cs" />
@@ -143,6 +167,7 @@
   <ItemGroup>
     <None Include="GraphicsClassDiagram.cd" />
     <None Include="StockEffects\HLSL\Common.fxh" />
+    <None Include="StockEffects\HLSL\CompileEffects.bat" />
     <None Include="StockEffects\HLSL\Lighting.fxh" />
     <None Include="StockEffects\HLSL\Macros.fxh" />
     <None Include="StockEffects\HLSL\Structures.fxh" />
