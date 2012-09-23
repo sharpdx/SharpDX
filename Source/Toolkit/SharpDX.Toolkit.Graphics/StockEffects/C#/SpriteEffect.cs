@@ -98,6 +98,13 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Creates a new SpriteEffect.
         /// </summary>
+        public SpriteEffect(GraphicsDevice device) : this(device, device.DefaultEffectGroup)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new SpriteEffect from a specified <see cref="EffectGroup"/>.
+        /// </summary>
         public SpriteEffect(GraphicsDevice device, EffectGroup group)
             : base(device, group, SpriteEffectName)
         {

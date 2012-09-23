@@ -113,13 +113,22 @@ namespace SharpDX
         /// <param name="objectToDispose">Object to dispose.</param>
         public void RemoveAndDispose<T>(ref T objectToDispose)
         {
-
-            var disposableObject = objectToDispose as IDisposable;
-            if (disposableObject != null && disposables != null)
+            if (disposables != null)
             {
-                Remove(disposableObject);
-                // Dispose the comonent
-                disposableObject.Dispose();
+                Remove(objectToDispose);
+
+                var disposableObject = objectToDispose as IDisposable;
+                if (disposableObject != null)
+                {
+                    // Dispose the comonent
+                    disposableObject.Dispose();
+                }
+                else
+                {
+                    var localData = (object)objectToDispose;
+                    var dataPointer = (IntPtr) localData;
+                    Utilities.FreeMemory(dataPointer);
+                }
                 objectToDispose = default(T);
             }
         }

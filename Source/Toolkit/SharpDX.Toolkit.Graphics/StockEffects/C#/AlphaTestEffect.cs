@@ -325,6 +325,13 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Creates a new AlphaTestEffect with default parameter settings.
         /// </summary>
+        public AlphaTestEffect(GraphicsDevice device) : this(device, device.DefaultEffectGroup)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new AlphaTestEffect with default parameter settings from a specified <see cref="EffectGroup"/>.
+        /// </summary>
         public AlphaTestEffect(GraphicsDevice device, EffectGroup group)
             : base(device, group, AlphaTestEffectName)
         {
@@ -403,7 +410,7 @@ namespace SharpDX.Toolkit.Graphics
             // Recompute the alpha test settings?
             if ((dirtyFlags & EffectDirtyFlags.AlphaTest) != 0)
             {
-                Vector4 alphaTest = new Vector4();
+                var alphaTest = new Vector4();
                 bool eqNe = false;
                 
                 // Convert reference alpha from 8 bit integer to 0-1 float format.

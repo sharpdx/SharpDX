@@ -429,6 +429,14 @@ namespace SharpDX.Toolkit.Graphics
         /// Initializes a new instance of the <see cref="BasicEffect" /> class.
         /// </summary>
         /// <param name="device">The device.</param>
+        public BasicEffect(GraphicsDevice device) : this(device, device.DefaultEffectGroup)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BasicEffect" /> class from a specified <see cref="EffectGroup"/>.
+        /// </summary>
+        /// <param name="device">The device.</param>
         /// <param name="group">The group.</param>
         public BasicEffect(GraphicsDevice device, EffectGroup group)
             : base(device, group, BasicEffectName)

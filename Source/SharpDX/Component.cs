@@ -95,24 +95,24 @@ namespace SharpDX
         /// Adds a disposable object to the list of the objects to dispose.
         /// </summary>
         /// <param name="toDisposeArg">To dispose.</param>
-        protected internal T ToDispose<T>(T toDisposeArg) where T : class, IDisposable
+        protected internal T ToDispose<T>(T toDisposeArg)
         {
-            if (toDisposeArg  != null)
+            if (!ReferenceEquals(toDisposeArg, null))
             {
                 if (DisposeCollector == null)
                     DisposeCollector = new DisposeCollector();
                 return DisposeCollector.Collect(toDisposeArg);
             }
-            return null;
+            return default(T);
         }
 
         /// <summary>
         /// Dispose a disposable object and set the reference to null. Removes this object from the ToDispose list.
         /// </summary>
         /// <param name="objectToDispose">Object to dispose.</param>
-        protected internal void RemoveAndDispose<T>(ref T objectToDispose) where T : class, IDisposable
+        protected internal void RemoveAndDispose<T>(ref T objectToDispose)
         {
-            if (objectToDispose != null && DisposeCollector != null)
+            if (!ReferenceEquals(objectToDispose, null) && DisposeCollector != null)
                 DisposeCollector.RemoveAndDispose(ref objectToDispose);
         }
 
@@ -121,9 +121,9 @@ namespace SharpDX
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="toDisposeArg">To dispose.</param>
-        protected internal void RemoveToDispose<T>(T toDisposeArg) where T : class, IDisposable
+        protected internal void RemoveToDispose<T>(T toDisposeArg)
         {
-            if (toDisposeArg != null && DisposeCollector != null)
+            if (!ReferenceEquals(toDisposeArg, null) && DisposeCollector != null)
                 DisposeCollector.Remove(toDisposeArg);
         }
     }

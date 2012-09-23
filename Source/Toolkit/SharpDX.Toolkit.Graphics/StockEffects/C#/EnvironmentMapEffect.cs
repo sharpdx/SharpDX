@@ -408,6 +408,13 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Creates a new EnvironmentMapEffect with default parameter settings.
         /// </summary>
+        public EnvironmentMapEffect(GraphicsDevice device) : this(device, device.DefaultEffectGroup)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new EnvironmentMapEffect with default parameter settings from a specified <see cref="EffectGroup"/>.
+        /// </summary>
         public EnvironmentMapEffect(GraphicsDevice device, EffectGroup group)
             : base(device, group, EnvironmentMapEffectName)
         {

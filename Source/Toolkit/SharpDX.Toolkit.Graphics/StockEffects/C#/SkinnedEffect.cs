@@ -447,6 +447,13 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Creates a new SkinnedEffect with default parameter settings.
         /// </summary>
+        public SkinnedEffect(GraphicsDevice device) : this(device, device.DefaultEffectGroup)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new SkinnedEffect with default parameter settings from a specified <see cref="EffectGroup"/>.
+        /// </summary>
         public SkinnedEffect(GraphicsDevice device, EffectGroup group)
             : base(device, group, SkinnedEffectName)
         {

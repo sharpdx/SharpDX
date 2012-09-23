@@ -18,11 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using SharpDX.DXGI;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using Device = SharpDX.Direct3D11.Device;
-using MapFlags = SharpDX.Direct3D11.MapFlags;
 
 namespace SharpDX.Toolkit.Graphics
 {
@@ -35,11 +33,18 @@ namespace SharpDX.Toolkit.Graphics
         internal DeviceContext Context;
         internal CommonShaderStage[] ShaderStages;
         private readonly Viewport[] viewports = new Viewport[16];
+        private IntPtr resetVertexBuffersPointer;
+        private int maxSlotCountForVertexBuffer;
 
         /// <summary>
         /// Gets the features supported by this <see cref="GraphicsDevice"/>.
         /// </summary>
         public readonly GraphicsDeviceFeatures Features;
+
+        /// <summary>
+        /// Default effect group shared between all deferred GraphicsDevice instances.
+        /// </summary>
+        public readonly EffectGroup DefaultEffectGroup;
 
         /// <summary>
         /// Gets the <see cref="GraphicsDevice"/> for immediate rendering.
@@ -84,6 +89,11 @@ namespace SharpDX.Toolkit.Graphics
         private int currentDepthStencilReference = 0;
         private RasterizerState currentRasterizerState;
         private PrimitiveTopology currentPrimitiveTopology;
+        private VertexBufferLayout currentInputLayout;
+
+        private InputAssemblerStage inputAssemblerStage;
+        private RasterizerStage rasterizeStage;
+        private OutputMergerStage outputMergerStage;
 
         internal readonly bool needWorkAroundForUpdateSubResource;
 
@@ -95,6 +105,9 @@ namespace SharpDX.Toolkit.Graphics
             Context = Device.ImmediateContext;
             IsDeferred = false;
             Features = new GraphicsDeviceFeatures(Device);
+
+            // Create default Effect group
+            DefaultEffectGroup = EffectGroup.New(this, "Default");
 
             // Create all default states
             BlendStates = new BlendStateCollection(this);
@@ -115,6 +128,9 @@ namespace SharpDX.Toolkit.Graphics
             IsDeferred = false;
             Features = new GraphicsDeviceFeatures(Device);
 
+            // Create default Effect group
+            DefaultEffectGroup = EffectGroup.New(this, "Default");
+
             // Create all default states
             BlendStates = new BlendStateCollection(this);
             DepthStencilStates = new DepthStencilStateCollection(this);
@@ -133,6 +149,12 @@ namespace SharpDX.Toolkit.Graphics
             IsDeferred = true;
             Features = mainDevice.Features;
 
+            // Create default Effect group
+            DefaultEffectGroup = mainDevice.DefaultEffectGroup;
+
+            // Copy the reset vertex buffer
+            resetVertexBuffersPointer = mainDevice.resetVertexBuffersPointer;
+
             // Create all default states
             BlendStates = mainDevice.BlendStates;
             DepthStencilStates = mainDevice.DepthStencilStates;
@@ -146,6 +168,13 @@ namespace SharpDX.Toolkit.Graphics
 
         private void Initialize()
         {
+            // Default null VertexBuffers used to reset
+            resetVertexBuffersPointer = ToDispose(Utilities.AllocateClearedMemory(Utilities.SizeOf<IntPtr>() * InputAssemblerStage.VertexInputResourceSlotCount));
+
+            inputAssemblerStage = Context.InputAssembler;
+            outputMergerStage = Context.OutputMerger;
+            rasterizeStage = Context.Rasterizer;
+
             // Precompute shader stages
             ShaderStages = new CommonShaderStage[]
                                {
@@ -359,7 +388,7 @@ namespace SharpDX.Toolkit.Graphics
             {
                 if (currentPrimitiveTopology != value)
                 {
-                    Context.InputAssembler.PrimitiveTopology = value;
+                    inputAssemblerStage.PrimitiveTopology = value;
                     currentPrimitiveTopology = value;
                 }
             }
@@ -609,14 +638,14 @@ namespace SharpDX.Toolkit.Graphics
 
             if (blendState == null)
             {
-                Context.OutputMerger.SetBlendState(null, Color.White, -1);
+                outputMergerStage.SetBlendState(null, Color.White, -1);
                 currentBlendState = null;
                 currentBlendFactor = Color.White;
                 currentMultiSampleMask = -1;
             }
             else
             {
-                Context.OutputMerger.SetBlendState(blendState, blendState.BlendFactor, blendState.MultiSampleMask);
+                outputMergerStage.SetBlendState(blendState, blendState.BlendFactor, blendState.MultiSampleMask);
                 currentBlendState = blendState;
                 currentBlendFactor = blendState.BlendFactor;
                 currentMultiSampleMask = blendState.MultiSampleMask;
@@ -643,12 +672,12 @@ namespace SharpDX.Toolkit.Graphics
 
             if (blendState == null)
             {
-                Context.OutputMerger.SetBlendState(null, blendFactor, multiSampleMask);
+                outputMergerStage.SetBlendState(null, blendFactor, multiSampleMask);
                 currentBlendState = null;
             }
             else
             {
-                Context.OutputMerger.SetBlendState(blendState, blendFactor, multiSampleMask);
+                outputMergerStage.SetBlendState(blendState, blendFactor, multiSampleMask);
                 currentBlendState = blendState;
             }
 
@@ -690,7 +719,7 @@ namespace SharpDX.Toolkit.Graphics
             if (ReferenceEquals(currentDepthStencilState, depthStencilState) && currentDepthStencilReference == stencilReference)
                 return;
 
-            Context.OutputMerger.SetDepthStencilState(depthStencilState, stencilReference);
+            outputMergerStage.SetDepthStencilState(depthStencilState, stencilReference);
 
             // Set new current state
             currentDepthStencilState = depthStencilState;
@@ -710,7 +739,7 @@ namespace SharpDX.Toolkit.Graphics
             if (ReferenceEquals(currentRasterizerState, rasterizerState))
                 return;
 
-            Context.Rasterizer.State = rasterizerState;
+            rasterizeStage.State = rasterizerState;
 
             // Set new current state
             currentRasterizerState = rasterizerState;
@@ -731,7 +760,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::RSSetScissorRects</unmanaged-short>	
         public void SetScissorRectangles(int left, int top, int right, int bottom)
         {
-            Context.Rasterizer.SetScissorRectangle(left, top, right, bottom);
+            rasterizeStage.SetScissorRectangle(left, top, right, bottom);
         }
 
         /// <summary>
@@ -746,7 +775,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::RSSetScissorRects</unmanaged-short>	
         public void SetScissorRectangles(params Rectangle[] scissorRectangles)
         {
-            Context.Rasterizer.SetScissorRectangles(scissorRectangles);
+            rasterizeStage.SetScissorRectangles(scissorRectangles);
         }
 
         /// <summary>
@@ -786,7 +815,7 @@ namespace SharpDX.Toolkit.Graphics
         public void SetViewports(float x, float y, float width, float height, float minZ = 0.0f, float maxZ = 1.0f)
         {
             viewports[0] = new Viewport(x, y, width, height, minZ, maxZ);
-            Context.Rasterizer.SetViewport(x, y, width, height, minZ, maxZ);
+            rasterizeStage.SetViewport(x, y, width, height, minZ, maxZ);
         }
 
         /// <summary>
@@ -802,7 +831,7 @@ namespace SharpDX.Toolkit.Graphics
         public void SetViewports(Viewport viewport)
         {
             viewports[0] = viewport;
-            Context.Rasterizer.SetViewports(viewport);
+            rasterizeStage.SetViewports(viewport);
         }
 
         /// <summary>
@@ -820,7 +849,7 @@ namespace SharpDX.Toolkit.Graphics
             for (int i = 0; i < viewports.Length; i++)
                 this.viewports[i] = viewports[i];
 
-            Context.Rasterizer.SetViewports(viewports);
+            rasterizeStage.SetViewports(viewports);
         }
 
         /// <summary>
@@ -831,7 +860,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargets</unmanaged-short>	
         public void ResetTargets()
         {
-            Context.OutputMerger.ResetTargets();
+            outputMergerStage.ResetTargets();
         }
 
         /// <summary>	
@@ -846,7 +875,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargets</unmanaged-short>	
         public void SetRenderTargets(params RenderTargetView[] renderTargetViews)
         {
-            Context.OutputMerger.SetTargets(renderTargetViews);
+            outputMergerStage.SetTargets(renderTargetViews);
         }
 
         /// <summary>	
@@ -861,7 +890,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargets</unmanaged-short>	
         public void SetRenderTargets(RenderTargetView renderTargetView)
         {
-            Context.OutputMerger.SetTargets(renderTargetView);
+            outputMergerStage.SetTargets(renderTargetView);
         }
 
         /// <summary>
@@ -877,7 +906,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargets</unmanaged-short>	
         public void SetRenderTargets(DepthStencilView depthStencilView, params RenderTargetView[] renderTargetViews)
         {
-            Context.OutputMerger.SetTargets(depthStencilView, renderTargetViews);
+            outputMergerStage.SetTargets(depthStencilView, renderTargetViews);
         }
 
         /// <summary>
@@ -893,7 +922,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargets</unmanaged-short>	
         public void SetRenderTargets(DepthStencilView depthStencilView, RenderTargetView renderTargetView)
         {
-            Context.OutputMerger.SetTargets(depthStencilView, renderTargetView);
+            outputMergerStage.SetTargets(depthStencilView, renderTargetView);
         }
 
       /// <summary>	
@@ -910,60 +939,67 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::IASetIndexBuffer</unmanaged-short>	
         public void SetIndexBuffer(Buffer indexBuffer, bool is32Bit, int offset = 0)
         {
-            Context.InputAssembler.SetIndexBuffer(indexBuffer, is32Bit ? DXGI.Format.R32_UInt : DXGI.Format.R16_UInt, offset);
-        }
-
-        public void SetInputLayout(InputLayout inputLayout)
-        {
-            Context.InputAssembler.InputLayout = inputLayout;
+            inputAssemblerStage.SetIndexBuffer(indexBuffer, is32Bit ? DXGI.Format.R32_UInt : DXGI.Format.R16_UInt, offset);
         }
 
         /// <summary>
-        /// <p>Bind a single vertex buffer to the input-assembler stage.</p>	
-        /// </summary>	
-        /// <param name="slot"><dd>  <p>The first input slot for binding. The first vertex buffer is explicitly bound to the start slot; this causes each additional vertex buffer in the array to be implicitly bound to each subsequent input slot. The maximum of 16 or 32 input slots (ranges from 0 to <see cref="SharpDX.Direct3D11.InputAssemblerStage.VertexInputResourceSlotCount"/> - 1) are available; the maximum number of input slots depends on the feature level.</p> </dd></param>	
-        /// <param name="vertexBufferBinding"><dd>  <p>A <see cref="SharpDX.Direct3D11.VertexBufferBinding"/>. The vertex buffer must have been created with the <strong><see cref="SharpDX.Direct3D11.BindFlags.VertexBuffer"/></strong> flag.</p> </dd></param>        /// <remarks>	
-        /// <p>For information about creating vertex buffers, see Create a Vertex Buffer.</p><p>Calling this method using a buffer that is currently bound for writing (i.e. bound to the stream output pipeline stage) will effectively bind <strong><c>null</c></strong> instead because a buffer cannot be bound as both an input and an output at the same time.</p><p>The debug layer will generate a warning whenever a resource is prevented from being bound simultaneously as an input and an output, but this will not prevent invalid data from being used by the runtime.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10. </p>	
-        /// </remarks>	
-        /// <msdn-id>ff476456</msdn-id>	
-        /// <unmanaged>void ID3D11DeviceContext::IASetVertexBuffers([In] unsigned int StartSlot,[In] unsigned int NumBuffers,[In, Buffer] const void* ppVertexBuffers,[In, Buffer] const void* pStrides,[In, Buffer] const void* pOffsets)</unmanaged>	
-        /// <unmanaged-short>ID3D11DeviceContext::IASetVertexBuffers</unmanaged-short>	
-        public void SetVertexBuffers(int slot, VertexBufferBinding vertexBufferBinding)
+        /// Sets the vertex buffer layout.
+        /// </summary>
+        /// <param name="inputLayout">The input layout.</param>
+        /// <msdn-id>ff476454</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::IASetInputLayout([In, Optional] ID3D11InputLayout* pInputLayout)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::IASetInputLayout</unmanaged-short>	
+        public void SetVertexBufferLayout(VertexBufferLayout inputLayout)
         {
-            Context.InputAssembler.SetVertexBuffers(slot, vertexBufferBinding);
+            // The setup of the real input layout is delayed until we know which pass is applied.
+            currentInputLayout = inputLayout;
         }
 
         /// <summary>
-        /// <p>Bind an array of vertex buffers to the input-assembler stage.</p>	
+        /// <p>Bind a verte buffer to the input-assembler stage.</p>	
         /// </summary>	
-        /// <param name="firstSlot"><dd>  <p>The first input slot for binding. The first vertex buffer is explicitly bound to the start slot; this causes each additional vertex buffer in the array to be implicitly bound to each subsequent input slot. The maximum of 16 or 32 input slots (ranges from 0 to <see cref="SharpDX.Direct3D11.InputAssemblerStage.VertexInputResourceSlotCount"/> - 1) are available; the maximum number of input slots depends on the feature level.</p> </dd></param>	
-        /// <param name="vertexBufferBindings"><dd>  <p>A reference to an array of <see cref="SharpDX.Direct3D11.VertexBufferBinding"/>. The vertex buffers must have been created with the <strong><see cref="SharpDX.Direct3D11.BindFlags.VertexBuffer"/></strong> flag.</p> </dd></param>        /// <remarks>	
-        /// <p>For information about creating vertex buffers, see Create a Vertex Buffer.</p><p>Calling this method using a buffer that is currently bound for writing (i.e. bound to the stream output pipeline stage) will effectively bind <strong><c>null</c></strong> instead because a buffer cannot be bound as both an input and an output at the same time.</p><p>The debug layer will generate a warning whenever a resource is prevented from being bound simultaneously as an input and an output, but this will not prevent invalid data from being used by the runtime.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10. </p>	
-        /// </remarks>	
-        /// <msdn-id>ff476456</msdn-id>	
-        /// <unmanaged>void ID3D11DeviceContext::IASetVertexBuffers([In] unsigned int StartSlot,[In] unsigned int NumBuffers,[In, Buffer] const void* ppVertexBuffers,[In, Buffer] const void* pStrides,[In, Buffer] const void* pOffsets)</unmanaged>	
-        /// <unmanaged-short>ID3D11DeviceContext::IASetVertexBuffers</unmanaged-short>	
-        public void SetVertexBuffers(int firstSlot, params VertexBufferBinding[] vertexBufferBindings)
-        {
-            Context.InputAssembler.SetVertexBuffers(firstSlot, vertexBufferBindings);
-        }
-
-        /// <summary>
-        /// <p>Bind an array of vertex buffers to the input-assembler stage.</p>	
-        /// </summary>	
-        /// <param name="slot"><dd>  <p>The first input slot for binding. The first vertex buffer is explicitly bound to the start slot; this causes each additional vertex buffer in the array to be implicitly bound to each subsequent input slot. The maximum of 16 or 32 input slots (ranges from 0 to <see cref="SharpDX.Direct3D11.InputAssemblerStage.VertexInputResourceSlotCount"/> - 1) are available; the maximum number of input slots depends on the feature level.</p> </dd></param>	
-        /// <param name="vertexBuffers"><dd>  <p>A reference to an array of vertex buffers (see <strong><see cref="SharpDX.Direct3D11.Buffer"/></strong>). The vertex buffers must have been created with the <strong><see cref="SharpDX.Direct3D11.BindFlags.VertexBuffer"/></strong> flag.</p> </dd></param>	
-        /// <param name="stridesRef"><dd>  <p>Pointer to an array of stride values; one stride value for each buffer in the vertex-buffer array. Each stride is the size (in bytes) of the elements that are to be used from that vertex buffer.</p> </dd></param>	
-        /// <param name="offsetsRef"><dd>  <p>Pointer to an array of offset values; one offset value for each buffer in the vertex-buffer array. Each offset is the number of bytes between the first element of a vertex buffer and the first element that will be used.</p> </dd></param>	
+        /// <param name="slot">The first input slot for binding.</param>	
+        /// <param name="vertexBuffer">The vertex buffer to bind to this slot. This vertex buffer must have been created with the <strong><see cref="SharpDX.Direct3D11.BindFlags.VertexBuffer"/></strong> flag.</param>	
+        /// <param name="stride">The stride is the size (in bytes) of the elements that are to be used from that vertex buffer.</param>	
+        /// <param name="offset">The offset is the number of bytes between the first element of a vertex buffer and the first element that will be used.</param>	
         /// <remarks>	
         /// <p>For information about creating vertex buffers, see Create a Vertex Buffer.</p><p>Calling this method using a buffer that is currently bound for writing (i.e. bound to the stream output pipeline stage) will effectively bind <strong><c>null</c></strong> instead because a buffer cannot be bound as both an input and an output at the same time.</p><p>The debug layer will generate a warning whenever a resource is prevented from being bound simultaneously as an input and an output, but this will not prevent invalid data from being used by the runtime.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10. </p>	
         /// </remarks>	
         /// <msdn-id>ff476456</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::IASetVertexBuffers([In] unsigned int StartSlot,[In] unsigned int NumBuffers,[In, Buffer] const void* ppVertexBuffers,[In, Buffer] const void* pStrides,[In, Buffer] const void* pOffsets)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::IASetVertexBuffers</unmanaged-short>	
-        public void SetVertexBuffers(int slot, SharpDX.Direct3D11.Buffer[] vertexBuffers, int[] stridesRef, int[] offsetsRef)
+        public unsafe void SetVertexBuffer(int slot, SharpDX.Direct3D11.Buffer vertexBuffer, int stride, int offset = 0)
         {
-            Context.InputAssembler.SetVertexBuffers(slot, vertexBuffers, stridesRef, offsetsRef);
+            IntPtr vertexBufferPtr = IntPtr.Zero;
+            if (vertexBuffer != null)
+            {
+                vertexBufferPtr = vertexBuffer.NativePointer;
+
+                // Update the index of the last slot buffer bounded, used by ResetVertexBuffers
+                if ((slot+1) > maxSlotCountForVertexBuffer)
+                    maxSlotCountForVertexBuffer = slot + 1;
+            }
+            inputAssemblerStage.SetVertexBuffers(slot, 1, vertexBufferPtr, new IntPtr(&stride), new IntPtr(&offset));
+        }
+
+        /// <summary>
+        /// Resets all vertex buffers bounded to a slot range. By default, It clears all the bounded buffers. See remarks.
+        /// </summary>	
+        /// <remarks>
+        /// This is sometimes required to unding explicitly vertex buffers bounding to the input shader assembly, when a
+        /// vertex buffer is used as the output of the pipeline.
+        /// </remarks>
+        /// <msdn-id>ff476456</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::IASetVertexBuffers([In] unsigned int StartSlot,[In] unsigned int NumBuffers,[In, Buffer] const void* ppVertexBuffers,[In, Buffer] const void* pStrides,[In, Buffer] const void* pOffsets)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::IASetVertexBuffers</unmanaged-short>	
+        public void ResetVertexBuffers()
+        {
+            if (maxSlotCountForVertexBuffer == 0)
+                return;
+
+            inputAssemblerStage.SetVertexBuffers(0, maxSlotCountForVertexBuffer, resetVertexBuffersPointer, resetVertexBuffersPointer, resetVertexBuffersPointer);
+
+            maxSlotCountForVertexBuffer = 0;
         }
 
         /// <summary>
@@ -977,6 +1013,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>IDXGISwapChain::Present</unmanaged-short>	
         public void Present()
         {
+            if (IsDeferred)
+                throw new InvalidOperationException("Cannot use Present on a deferred context");
+
             if (CurrentPresenter == null)
                 throw new InvalidOperationException("No presenter currently setup for this instance. CurrentPresenter is null");
 

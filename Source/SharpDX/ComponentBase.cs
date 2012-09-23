@@ -51,8 +51,11 @@ namespace SharpDX
         /// <param name="name">The name.</param>
         protected ComponentBase(string name)
         {
-            this.name = name;
-            this.isNameImmutable = true;
+            if (name != null)
+            {
+                this.name = name;
+                this.isNameImmutable = true;
+            }
         }
 
         /// <summary>

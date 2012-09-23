@@ -414,6 +414,23 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Allocate an aligned memory buffer and clear it with a specified value (0 by defaault).
+        /// </summary>
+        /// <param name="sizeInBytes">Size of the buffer to allocate.</param>
+        /// <param name="clearValue">Default value used to clear the buffer.</param>
+        /// <param name="align">Alignment, 16 bytes by default.</param>
+        /// <returns>A pointer to a buffer aligned.</returns>
+        /// <remarks>
+        /// To free this buffer, call <see cref="FreeMemory"/>
+        /// </remarks>
+        public static IntPtr AllocateClearedMemory(int sizeInBytes, byte clearValue = 0, int align = 16)
+        {
+            var ptr = AllocateMemory(sizeInBytes, align);
+            ClearMemory(ptr, clearValue, sizeInBytes);
+            return ptr;
+        }
+
+        /// <summary>
         /// Determines whether the specified memory pointer is aligned in memory.
         /// </summary>
         /// <param name="memoryPtr">The memory pointer.</param>

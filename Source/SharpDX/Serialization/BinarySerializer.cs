@@ -498,6 +498,27 @@ namespace SharpDX.Serialization
         }
 
         /// <summary>
+        /// Serializes a static value implementing the <see cref="IDataSerializable"/> interface. Unlike <see cref="Serialize{T}(ref T)"/>, 
+        /// this method doesn't allocate a new instance when reading but use the reference value.
+        /// </summary>
+        /// <typeparam name="T">Type of the data to serialize.</typeparam>
+        /// <param name="value">The value to serialize</param>
+        /// <remarks>
+        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.
+        /// </remarks>
+        public void SerializeWithNoInstance<T>(ref T value) where T : IDataSerializable
+        {
+            int storeObjectRef;
+            if (SerializeIsNull(ref value, out storeObjectRef))
+                return;
+
+            value.Serialize(this);
+
+            // Store ObjectRef
+            if (storeObjectRef >= 0) StoreObjectRef(value, storeObjectRef);
+        }
+
+        /// <summary>
         /// Serializes an enum value.
         /// </summary>
         /// <typeparam name="T">Type of the enum to serialize.</typeparam>
@@ -631,6 +652,38 @@ namespace SharpDX.Serialization
                 valueArray = new T[count];
                 for (int index = 0; index < count; index++)
                     Serialize(ref valueArray[index]);
+            }
+
+            // Store ObjectRef
+            if (storeObjectRef >= 0) StoreObjectRef(valueArray, storeObjectRef);
+        }
+
+        /// <summary>
+        /// Serializes an array of static values that are implementing the <see cref="IDataSerializable"/> interface.
+        /// </summary>
+        /// <typeparam name="T">Type of the data to serialize.</typeparam>
+        /// <param name="valueArray">An array of value to serialize</param>
+        /// <remarks>
+        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.
+        /// </remarks>
+        public void SerializeWithNoInstance<T>(ref T[] valueArray) where T : IDataSerializable
+        {
+            int storeObjectRef;
+            if (SerializeIsNull(ref valueArray, out storeObjectRef))
+                return;
+
+            if (Mode == SerializerMode.Write)
+            {
+                Write7BitEncodedInt(valueArray.Length);
+                for (int i = 0; i < valueArray.Length; i++)
+                    SerializeWithNoInstance(ref valueArray[i]);
+            }
+            else
+            {
+                var count = Read7BitEncodedInt();
+               valueArray = new T[count];
+                for (int index = 0; index < count; index++)
+                    SerializeWithNoInstance(ref valueArray[index]);
             }
 
             // Store ObjectRef

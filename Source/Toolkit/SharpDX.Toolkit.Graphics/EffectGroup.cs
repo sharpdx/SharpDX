@@ -51,7 +51,7 @@ namespace SharpDX.Toolkit.Graphics
         private ConstantBufferAllocatorDelegate constantBufferAllocator;
 
 
-        private EffectGroup(GraphicsDevice device)
+        private EffectGroup(GraphicsDevice device, string name = null) : base(name)
         {
             dataGroup = new EffectData();
             mapNameToEffect = new Dictionary<string, EffectData.Effect>();
@@ -257,6 +257,25 @@ namespace SharpDX.Toolkit.Graphics
             var group = new EffectGroup(device);
             group.RegisterBytecode(datas);
             return group;
+        }
+
+        /// <summary>
+        /// Creates a new named effect group from a specified list of <see cref="EffectData" />.
+        /// </summary>
+        /// <param name="device">The device.</param>
+        /// <param name="name">The name of this effect group.</param>
+        /// <param name="datas">The datas.</param>
+        /// <returns>An instance of <see cref="EffectGroup" />.</returns>
+        public static EffectGroup New(GraphicsDevice device, string name, params EffectData[] datas)
+        {
+            var group = new EffectGroup(device);
+            group.RegisterBytecode(datas);
+            return group;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("EffectGroup [{0}]", Name);
         }
 
         private static Buffer DefaultConstantBufferAllocator(GraphicsDevice device, EffectGroup group, EffectConstantBuffer constantBuffer)

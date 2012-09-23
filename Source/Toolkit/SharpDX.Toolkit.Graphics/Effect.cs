@@ -52,6 +52,24 @@ namespace SharpDX.Toolkit.Graphics
         private readonly EffectGroup group;
         private EffectData.Effect effectBytecode;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Effect" /> class with the specified effect. See remarks.
+        /// </summary>
+        /// <param name="device">The device.</param>
+        /// <param name="effectName">Name of the effect.</param>
+        /// <remarks>
+        /// The effect must have been loaded and registered into the <see cref="Graphics.GraphicsDevice.DefaultEffectGroup"/>.
+        /// </remarks>
+        public Effect(GraphicsDevice device, string effectName) : this(device, device.DefaultEffectGroup, effectName)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Effect" /> class with the specified effect loaded from an effect group.
+        /// </summary>
+        /// <param name="device">The device.</param>
+        /// <param name="group">The effect group.</param>
+        /// <param name="effectName">Name of the effect.</param>
         public Effect(GraphicsDevice device, EffectGroup group, string effectName) : base(effectName)
         {
             GraphicsDevice = device;
@@ -97,6 +115,11 @@ namespace SharpDX.Toolkit.Graphics
             group.AddEffect(this);
         }
 
+        /// <summary>
+        /// Initializes the specified effect bytecode.
+        /// </summary>
+        /// <param name="effectBytecode">The effect bytecode.</param>
+        /// <exception cref="System.InvalidOperationException"></exception>
         private void Initialize(EffectData.Effect effectBytecode)
         {
             this.effectBytecode = effectBytecode;
