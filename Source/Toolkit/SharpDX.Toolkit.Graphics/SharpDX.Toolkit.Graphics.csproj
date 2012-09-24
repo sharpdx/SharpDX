@@ -19,6 +19,7 @@
     </Compile>
     <Compile Include="BlendState.cs" />
     <Compile Include="BlendStateCollection.cs" />
+    <Compile Include="EffectConstantBufferKey.cs" />
     <Compile Include="InputSignatureKey.cs" />
     <Compile Include="InputSignatureManager.cs" />
     <Compile Include="ReadOnlyArray.cs" />

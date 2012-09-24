@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
 using System.Collections.Generic;
 using SharpDX.Direct3D11;
 
@@ -44,8 +43,8 @@ namespace SharpDX.Toolkit.Graphics
         private readonly GraphicsDevice graphicsDevice;
         private readonly List<Effect> effects;
 
-        // GraphicsDevice => (ConstantBufferName => (ConstantBufferKey => EffectConstantBuffer))
-        private readonly Dictionary<GraphicsDevice, Dictionary<string, Dictionary<ConstantBufferKey, EffectConstantBuffer>>> mapNameToConstantBuffer;
+        // GraphicsDevice => (ConstantBufferName => (EffectConstantBufferKey => EffectConstantBuffer))
+        private readonly Dictionary<GraphicsDevice, Dictionary<string, Dictionary<EffectConstantBufferKey, EffectConstantBuffer>>> mapNameToConstantBuffer;
         private readonly Dictionary<string, EffectData.Effect> mapNameToEffect;
         private readonly Dictionary<EffectData, bool> registered;
         private readonly object sync = new object();
@@ -56,7 +55,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             dataGroup = new EffectData();
             mapNameToEffect = new Dictionary<string, EffectData.Effect>();
-            mapNameToConstantBuffer = new Dictionary<GraphicsDevice, Dictionary<string, Dictionary<ConstantBufferKey, EffectConstantBuffer>>>();
+            mapNameToConstantBuffer = new Dictionary<GraphicsDevice, Dictionary<string, Dictionary<EffectConstantBufferKey, EffectConstantBuffer>>>();
             compiledShaders = new List<DeviceChild>();
             registered = new Dictionary<EffectData, bool>(new IdentityEqualityComparer<EffectData>());
             effects = new List<Effect>();
@@ -225,7 +224,7 @@ namespace SharpDX.Toolkit.Graphics
             // Only lock the constant buffer object
             lock (mapNameToConstantBuffer)
             {
-                Dictionary<string, Dictionary<ConstantBufferKey, EffectConstantBuffer>> nameToConstantBufferList;
+                Dictionary<string, Dictionary<EffectConstantBufferKey, EffectConstantBuffer>> nameToConstantBufferList;
 
                 // ----------------------------------------------------------------------------
                 // 1) Get the cache of constant buffers for a particular GraphicsDevice
@@ -234,24 +233,24 @@ namespace SharpDX.Toolkit.Graphics
                 // To simplify, we assume that a GraphicsDevice is alive during the whole life of the application.
                 if (!mapNameToConstantBuffer.TryGetValue(context, out nameToConstantBufferList))
                 {
-                    nameToConstantBufferList = new Dictionary<string, Dictionary<ConstantBufferKey, EffectConstantBuffer>>();
+                    nameToConstantBufferList = new Dictionary<string, Dictionary<EffectConstantBufferKey, EffectConstantBuffer>>();
                     mapNameToConstantBuffer[context] = nameToConstantBufferList;
                 }
 
                 // ----------------------------------------------------------------------------
                 // 2) Get a set of constant buffers for a particular constant buffer name
                 // ----------------------------------------------------------------------------
-                Dictionary<ConstantBufferKey, EffectConstantBuffer> bufferSet;
+                Dictionary<EffectConstantBufferKey, EffectConstantBuffer> bufferSet;
                 if (!nameToConstantBufferList.TryGetValue(bufferRaw.Name, out bufferSet))
                 {
-                    bufferSet = new Dictionary<ConstantBufferKey, EffectConstantBuffer>();
+                    bufferSet = new Dictionary<EffectConstantBufferKey, EffectConstantBuffer>();
                     nameToConstantBufferList[bufferRaw.Name] = bufferSet;
                 }
 
                 // ----------------------------------------------------------------------------
                 // 3) Get an existing constant buffer having the same name/sizel/ayout/parameters
                 // ----------------------------------------------------------------------------
-                var bufferKey = new ConstantBufferKey(bufferRaw);
+                var bufferKey = new EffectConstantBufferKey(bufferRaw);
                 EffectConstantBuffer buffer;
                 if (!bufferSet.TryGetValue(bufferKey, out buffer))
                 {
@@ -301,53 +300,7 @@ namespace SharpDX.Toolkit.Graphics
             return Buffer.Cosntant.New(device, constantBuffer.Size);
         }
 
-        #region Nested type: ConstantBufferKey
-
-        private class ConstantBufferKey : IEquatable<ConstantBufferKey>
-        {
-            public readonly EffectData.ConstantBuffer Description;
-            public readonly int HashCode;
-
-            public ConstantBufferKey(EffectData.ConstantBuffer description)
-            {
-                Description = description;
-                HashCode = description.GetHashCode();
-            }
-
-            #region IEquatable<ConstantBufferKey> Members
-
-            public bool Equals(ConstantBufferKey other)
-            {
-                if (ReferenceEquals(null, other)) return false;
-                if (ReferenceEquals(this, other)) return true;
-                return HashCode == other.HashCode && Description.Equals(other.Description);
-            }
-
-            #endregion
-
-            public override bool Equals(object obj)
-            {
-                if (ReferenceEquals(null, obj)) return false;
-                if (ReferenceEquals(this, obj)) return true;
-                if (obj.GetType() != this.GetType()) return false;
-                return Equals((ConstantBufferKey) obj);
-            }
-
-            public override int GetHashCode()
-            {
-                return HashCode;
-            }
-
-            public static bool operator ==(ConstantBufferKey left, ConstantBufferKey right)
-            {
-                return Equals(left, right);
-            }
-
-            public static bool operator !=(ConstantBufferKey left, ConstantBufferKey right)
-            {
-                return !Equals(left, right);
-            }
-        }
+        #region Nested type: EffectConstantBufferKey
 
         #endregion
     }

@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using SharpDX.Toolkit.Diagnostics;
 
 namespace SharpDX.Toolkit.Graphics
@@ -29,6 +30,8 @@ namespace SharpDX.Toolkit.Graphics
     public class Effect : Component
     {
         public delegate EffectPass OnApplyDelegate(EffectPass pass);
+
+        private Dictionary<EffectConstantBufferKey, EffectConstantBuffer> effectConstantBuffersCache;
 
         /// <summary>
         ///   Gets a collection of constant buffers that are defined for this effect.
@@ -129,6 +132,10 @@ namespace SharpDX.Toolkit.Graphics
 
             ShareConstantBuffers = effectDataArg.ShareConstantBuffers;
 
+            // Create the local effect constant buffers cache
+            if (!ShareConstantBuffers)
+                effectConstantBuffersCache = new Dictionary<EffectConstantBufferKey, EffectConstantBuffer>();
+
             var logger = new Logger();
             int techniqueIndex = 0;
             EffectPass parentPass = null;
@@ -225,6 +232,33 @@ namespace SharpDX.Toolkit.Graphics
             Group.RemoveEffect(this);
 
             base.Dispose(disposeManagedResources);
+        }
+
+        internal EffectConstantBuffer GetOrCreateConstantBuffer(GraphicsDevice context, EffectData.ConstantBuffer bufferRaw)
+        {
+            EffectConstantBuffer constantBuffer;
+            // Is the effect is using shared constant buffers via the EffectGroup?
+            if (ShareConstantBuffers)
+            {
+                // Use the group to share constant buffers
+                constantBuffer = Group.GetOrCreateConstantBuffer(context, bufferRaw);
+            }
+            else
+            {
+                // ----------------------------------------------------------------------------
+                // Get an existing constant buffer having the same name/sizel/ayout/parameters
+                // ----------------------------------------------------------------------------
+                var bufferKey = new EffectConstantBufferKey(bufferRaw);
+                if (!effectConstantBuffersCache.TryGetValue(bufferKey, out constantBuffer))
+                {
+                    // 4) If this buffer doesn't exist, create a new one and register it.
+                    constantBuffer = new EffectConstantBuffer(context, bufferRaw);
+                    effectConstantBuffersCache.Add(bufferKey, constantBuffer);
+                    DisposeCollector.Collect(constantBuffer);
+                }
+            }
+
+            return constantBuffer;
         }
     }
 }

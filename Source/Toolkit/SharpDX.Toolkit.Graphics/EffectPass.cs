@@ -431,26 +431,12 @@ namespace SharpDX.Toolkit.Graphics
             {
                 var constantBufferRaw = shaderRaw.ConstantBuffers[i];
 
-                EffectConstantBuffer constantBuffer;
-
-                // Is the effect is using shared constant buffers via the EffectGroup?
-                if (Effect.ShareConstantBuffers)
+                var constantBuffer = Effect.GetOrCreateConstantBuffer(Effect.GraphicsDevice, constantBufferRaw);
+                // IF constant buffer is null, it means that there is a conflict
+                if (constantBuffer == null)
                 {
-                    // Use the group to share constant buffers
-                    constantBuffer = Effect.Group.GetOrCreateConstantBuffer(Effect.GraphicsDevice, constantBufferRaw);
-
-                    // IF constant buffer is null, it means that there is a conflict
-                    if (constantBuffer == null)
-                    {
-                        logger.Error("Constant buffer [{0}] cannot have multiple size or different content declaration inside the same effect group", constantBufferRaw.Name);
-                        continue;
-                    }
-                }
-                else
-                {
-                    // This is a local constant buffer that will be collected by the effect itself.
-                    constantBuffer = new EffectConstantBuffer(Effect.GraphicsDevice, constantBufferRaw);
-                    Effect.DisposeCollector.Collect(constantBuffer);
+                    logger.Error("Constant buffer [{0}] cannot have multiple size or different content declaration inside the same effect group", constantBufferRaw.Name);
+                    continue;
                 }
                 
                 // Test if this constant buffer is not already part of the effect
