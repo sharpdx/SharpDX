@@ -58,9 +58,14 @@ namespace SharpDX.Toolkit.Graphics
             /// <param name="count">The number of element in this buffer.</param>
             /// <param name="isUnorderedAccess">if set to <c>true</c> this buffer supports unordered access (RW in HLSL).</param>
             /// <returns>A Structured buffer</returns>
-            public static Buffer New<T>(GraphicsDevice device, int count, bool isUnorderedAccess = false) where T : struct
+            public static Buffer<T> New<T>(GraphicsDevice device, int count, bool isUnorderedAccess = false) where T : struct
             {
-                return New(device, count, Utilities.SizeOf<T>(), isUnorderedAccess);
+                var bufferFlags = BufferFlags.StructuredBuffer | BufferFlags.ShaderResource;
+
+                if (isUnorderedAccess)
+                    bufferFlags |= BufferFlags.UnorderedAccess;
+
+                return Buffer.New<T>(device, count, bufferFlags);
             }
 
             /// <summary>
@@ -71,7 +76,7 @@ namespace SharpDX.Toolkit.Graphics
             /// <param name="value">The value to initialize the Structured buffer.</param>
             /// <param name="isUnorderedAccess">if set to <c>true</c> this buffer supports unordered access (RW in HLSL).</param>
             /// <returns>A Structured buffer</returns>
-            public static Buffer New<T>(GraphicsDevice device, T[] value, bool isUnorderedAccess = false) where T : struct
+            public static Buffer<T> New<T>(GraphicsDevice device, T[] value, bool isUnorderedAccess = false) where T : struct
             {
                 var bufferFlags = BufferFlags.StructuredBuffer | BufferFlags.ShaderResource;
 
@@ -117,8 +122,8 @@ namespace SharpDX.Toolkit.Graphics
             /// <returns>A StructuredAppend buffer</returns>
             public static Buffer New(GraphicsDevice device,int count, int elementSize)
             {
-                const BufferFlags bufferFlags = BufferFlags.StructuredAppendBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess;
-                return Buffer.New(device, count * elementSize, elementSize, bufferFlags);
+                const BufferFlags BufferFlags = BufferFlags.StructuredAppendBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess;
+                return Buffer.New(device, count * elementSize, elementSize, BufferFlags);
             }
 
             /// <summary>
@@ -128,9 +133,10 @@ namespace SharpDX.Toolkit.Graphics
             /// <typeparam name="T">Type of the element in the structured buffer</typeparam>
             /// <param name="count">The number of element in this buffer.</param>
             /// <returns>A Structured buffer</returns>
-            public static Buffer New<T>(GraphicsDevice device, int count) where T : struct
+            public static Buffer<T> New<T>(GraphicsDevice device, int count) where T : struct
             {
-                return New(device, count, Utilities.SizeOf<T>());
+                const BufferFlags BufferFlags = BufferFlags.StructuredAppendBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess;
+                return Buffer.New<T>(device, count, BufferFlags);
             }
 
             /// <summary>
@@ -140,10 +146,10 @@ namespace SharpDX.Toolkit.Graphics
             /// <typeparam name="T">Type of the StructuredAppend buffer to get the sizeof from</typeparam>
             /// <param name="value">The value to initialize the StructuredAppend buffer.</param>
             /// <returns>A StructuredAppend buffer</returns>
-            public static Buffer New<T>(GraphicsDevice device, T[] value) where T : struct
+            public static Buffer<T> New<T>(GraphicsDevice device, T[] value) where T : struct
             {
-                const BufferFlags bufferFlags = BufferFlags.StructuredAppendBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess;
-                return Buffer.New(device, value, bufferFlags);
+                const BufferFlags BufferFlags = BufferFlags.StructuredAppendBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess;
+                return Buffer.New(device, value, BufferFlags);
             }
 
             /// <summary>
@@ -155,8 +161,8 @@ namespace SharpDX.Toolkit.Graphics
             /// <returns>A StructuredAppend buffer</returns>
             public static Buffer New(GraphicsDevice device,DataPointer value, int elementSize)
             {
-                const BufferFlags bufferFlags = BufferFlags.StructuredAppendBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess;
-                return Buffer.New(device, value, elementSize, bufferFlags);
+                const BufferFlags BufferFlags = BufferFlags.StructuredAppendBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess;
+                return Buffer.New(device, value, elementSize, BufferFlags);
             }
         }
 
@@ -177,8 +183,8 @@ namespace SharpDX.Toolkit.Graphics
             /// <returns>A StructuredCounter buffer</returns>
             public static Buffer New(GraphicsDevice device,int count, int elementSize)
             {
-                const BufferFlags bufferFlags = BufferFlags.StructuredCounterBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess;
-                return Buffer.New(device, count * elementSize, elementSize, bufferFlags);
+                const BufferFlags BufferFlags = BufferFlags.StructuredCounterBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess;
+                return Buffer.New(device, count * elementSize, elementSize, BufferFlags);
             }
 
             /// <summary>
@@ -188,9 +194,10 @@ namespace SharpDX.Toolkit.Graphics
             /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="count">The number of element in this buffer.</param>
             /// <returns>A Structured buffer</returns>
-            public static Buffer New<T>(GraphicsDevice device, int count) where T : struct
+            public static Buffer<T> New<T>(GraphicsDevice device, int count) where T : struct
             {
-                return New(device, count, Utilities.SizeOf<T>());
+                const BufferFlags BufferFlags = BufferFlags.StructuredCounterBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess;
+                return Buffer.New<T>(device, count, BufferFlags);
             }
 
             /// <summary>
@@ -202,8 +209,8 @@ namespace SharpDX.Toolkit.Graphics
             /// <returns>A StructuredCounter buffer</returns>
             public static Buffer New<T>(GraphicsDevice device, T[] value) where T : struct
             {
-                const BufferFlags bufferFlags = BufferFlags.StructuredCounterBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess;
-                return Buffer.New(device, value, bufferFlags);
+                const BufferFlags BufferFlags = BufferFlags.StructuredCounterBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess;
+                return Buffer.New(device, value, BufferFlags);
             }
 
             /// <summary>
@@ -215,8 +222,8 @@ namespace SharpDX.Toolkit.Graphics
             /// <returns>A StructuredCounter buffer</returns>
             public static Buffer New(GraphicsDevice device, DataPointer value, int elementSize)
             {
-                const BufferFlags bufferFlags = BufferFlags.StructuredCounterBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess;
-                return Buffer.New(device, value, elementSize, bufferFlags);
+                const BufferFlags BufferFlags = BufferFlags.StructuredCounterBuffer | BufferFlags.ShaderResource | BufferFlags.UnorderedAccess;
+                return Buffer.New(device, value, elementSize, BufferFlags);
             }
         }
     }

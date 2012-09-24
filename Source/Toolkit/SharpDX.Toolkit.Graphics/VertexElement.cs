@@ -32,11 +32,11 @@ namespace SharpDX.Toolkit.Graphics
     /// A description of a single element for the input-assembler stage. This structure is related to <see cref="Direct3D11.InputElement"/>.
     /// </summary>	
     /// <remarks>	
-    /// Because <see cref="Direct3D11.InputElement"/> requires to have the same <see cref="VertexBufferSlot.SlotIndex"/>, <see cref="VertexBufferSlot.VertexClassification"/> and <see cref="VertexBufferSlot.instanceDataStepRate"/>,
-    /// the <see cref="VertexBufferSlot"/> structure encapsulates a set of <see cref="VertexElement"/> for a particular slot, classification and instance data step rate.
+    /// Because <see cref="Direct3D11.InputElement"/> requires to have the same <see cref="VertexBufferLayout.SlotIndex"/>, <see cref="VertexBufferLayout.VertexClassification"/> and <see cref="VertexBufferLayout.instanceDataStepRate"/>,
+    /// the <see cref="VertexBufferLayout"/> structure encapsulates a set of <see cref="VertexElement"/> for a particular slot, classification and instance data step rate.
     /// Unlike the default <see cref="Direct3D11.InputElement"/>, this structure accepts a semantic name with a postfix number that will be automatically extracted to the semantic index.
     /// </remarks>	
-    /// <seealso cref="VertexBufferSlot"/>
+    /// <seealso cref="VertexBufferLayout"/>
     /// <msdn-id>ff476180</msdn-id>	
     /// <unmanaged>D3D11_INPUT_ELEMENT_DESC</unmanaged>	
     /// <unmanaged-short>D3D11_INPUT_ELEMENT_DESC</unmanaged-short>	

@@ -46,9 +46,9 @@ namespace SharpDX.Toolkit.Graphics
             /// <typeparam name="T">Type of the constant buffer to get the sizeof from</typeparam>
             /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <returns>A constant buffer</returns>
-            public static Buffer New<T>(GraphicsDevice device) where T : struct
+            public static Buffer<T> New<T>(GraphicsDevice device) where T : struct
             {
-                return Buffer.New(device, Utilities.SizeOf<T>(), BufferFlags.ConstantBuffer, ResourceUsage.Dynamic);
+                return Buffer.New<T>(device, 1, BufferFlags.ConstantBuffer, ResourceUsage.Dynamic);
             }
 
             /// <summary>
@@ -59,7 +59,7 @@ namespace SharpDX.Toolkit.Graphics
             /// <param name="value">The value to initialize the constant buffer.</param>
             /// <param name="usage">The usage of this resource.</param>
             /// <returns>A constant buffer</returns>
-            public static Buffer New<T>(GraphicsDevice device, ref T value, ResourceUsage usage = ResourceUsage.Dynamic) where T : struct
+            public static Buffer<T> New<T>(GraphicsDevice device, ref T value, ResourceUsage usage = ResourceUsage.Dynamic) where T : struct
             {
                 return Buffer.New(device, ref value, BufferFlags.ConstantBuffer, usage);
             }
@@ -72,7 +72,7 @@ namespace SharpDX.Toolkit.Graphics
             /// <param name="value">The value to initialize the constant buffer.</param>
             /// <param name="usage">The usage of this resource.</param>
             /// <returns>A constant buffer</returns>
-            public static Buffer New<T>(GraphicsDevice device, T[] value, ResourceUsage usage = ResourceUsage.Dynamic) where T : struct
+            public static Buffer<T> New<T>(GraphicsDevice device, T[] value, ResourceUsage usage = ResourceUsage.Dynamic) where T : struct
             {
                 return Buffer.New(device, value, BufferFlags.ConstantBuffer, usage);
             }

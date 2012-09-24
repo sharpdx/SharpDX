@@ -40,7 +40,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Gets the description of vertex declaration.
         /// </summary>
-        public readonly VertexBufferSlot[] VertexBufferSlots;
+        public readonly VertexBufferLayout[] Layouts;
 
         private static readonly Dictionary<VertexDeclarationSet, VertexLayout> VertexLayoutCache = new Dictionary<VertexDeclarationSet, VertexLayout>();
 
@@ -52,8 +52,8 @@ namespace SharpDX.Toolkit.Graphics
         private VertexLayout(GraphicsDevice device, VertexDeclarationSet descriptions)
         {
             ShaderBytecode = descriptions.ShaderBytecode;
-            VertexBufferSlots = descriptions.VertexBufferSlots;
-            Initialize(device.MainDevice, new InputLayout(device.MainDevice, ShaderBytecode, ToInputElements(descriptions.VertexBufferSlots)));
+            this.Layouts = descriptions.Layouts;
+            Initialize(device.MainDevice, new InputLayout(device.MainDevice, ShaderBytecode, ToInputElements(descriptions.Layouts)));
         }
 
         /// <summary>	
@@ -69,7 +69,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476518</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateVertexLayout([In] const D3D11_SAMPLER_DESC* pSamplerDesc,[Out, Fast] ID3D11VertexLayout** ppVertexLayout)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateVertexLayout</unmanaged-short>	
-        public static VertexLayout New(GraphicsDevice device, byte[] inputShaderSignature, params VertexBufferSlot[] description)
+        public static VertexLayout New(GraphicsDevice device, byte[] inputShaderSignature, params VertexBufferLayout[] description)
         {
             if (description == null)
                 throw new ArgumentNullException("description");
@@ -102,7 +102,7 @@ namespace SharpDX.Toolkit.Graphics
             return (Direct3D11.InputLayout)(from == null ? null : from.GetOrCreateResource());
         }
 
-        public static InputElement[] ToInputElements(params VertexBufferSlot[] descriptions)
+        public static InputElement[] ToInputElements(params VertexBufferLayout[] descriptions)
         {
             if (descriptions == null)
                 throw new ArgumentNullException("description");
@@ -130,30 +130,30 @@ namespace SharpDX.Toolkit.Graphics
 
         class VertexDeclarationSet : IEquatable<VertexDeclarationSet>
         {
-            public VertexDeclarationSet(byte[] shaderBytecode, VertexBufferSlot[] descriptions)
+            public VertexDeclarationSet(byte[] shaderBytecode, VertexBufferLayout[] descriptions)
             {
                 ShaderBytecode = shaderBytecode;
-                VertexBufferSlots = descriptions;
+                this.Layouts = descriptions;
             }
 
             public readonly byte[] ShaderBytecode;
 
-            public readonly VertexBufferSlot[] VertexBufferSlots;
+            public readonly VertexBufferLayout[] Layouts;
 
             public bool Equals(VertexDeclarationSet other)
             {
                 if (ShaderBytecode.Length != other.ShaderBytecode.Length)
                     return false;
 
-                if (VertexBufferSlots.Length != other.VertexBufferSlots.Length)
+                if (this.Layouts.Length != other.Layouts.Length)
                     return false;
 
                 for (int i = 0; i < ShaderBytecode.Length; i++)
                     if (ShaderBytecode[i] != other.ShaderBytecode[i])
                         return false;
 
-                for (int i = 0; i < VertexBufferSlots.Length; i++)
-                    if (VertexBufferSlots[i] != other.VertexBufferSlots[i])
+                for (int i = 0; i < this.Layouts.Length; i++)
+                    if (this.Layouts[i] != other.Layouts[i])
                         return false;
 
                 return true;
@@ -167,8 +167,8 @@ namespace SharpDX.Toolkit.Graphics
 
             public override int GetHashCode()
             {
-                int hashCode = VertexBufferSlots.Length.GetHashCode();
-                foreach(var vertexDeclaration in VertexBufferSlots)
+                int hashCode = this.Layouts.Length.GetHashCode();
+                foreach(var vertexDeclaration in this.Layouts)
                     hashCode = (hashCode * 397) ^ vertexDeclaration.GetHashCode();
                 return hashCode;
             }

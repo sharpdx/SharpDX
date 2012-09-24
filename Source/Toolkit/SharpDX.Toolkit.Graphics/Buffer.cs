@@ -45,6 +45,8 @@ namespace SharpDX.Toolkit.Graphics
 
         private UnorderedAccessView unorderedAccessView;
 
+        private int elementCount;
+
         /// <summary>
         /// Gets the description of this buffer.
         /// </summary>
@@ -56,7 +58,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>
         /// This value is valid for structured buffers, raw buffers and index buffers that are used as a SharedResourceView.
         /// </remarks>
-        public readonly int Count;
+        public int ElementCount { get { return this.elementCount; } protected set { this.elementCount = value; } }
 
         /// <summary>
         /// Gets the type of this buffer.
@@ -76,12 +78,12 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="bufferFlags">Type of the buffer.</param>
         /// <param name="viewFormat">The view format.</param>
         /// <param name="dataPointer">The data pointer.</param>
-        private Buffer(GraphicsDevice device, BufferDescription description, BufferFlags bufferFlags, PixelFormat viewFormat, IntPtr dataPointer)
+        protected Buffer(GraphicsDevice device, BufferDescription description, BufferFlags bufferFlags, PixelFormat viewFormat, IntPtr dataPointer)
         {
             Description = description;
             BufferFlags = bufferFlags;
             ViewFormat = viewFormat;
-            InitCountAndViewFormat(out Count, ref ViewFormat);
+            InitCountAndViewFormat(out this.elementCount, ref ViewFormat);
             Initialize(device.MainDevice, new Direct3D11.Buffer(device.MainDevice, dataPointer, Description));
         }
 
@@ -92,12 +94,12 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="nativeBuffer">The native buffer.</param>
         /// <param name="bufferFlags">Type of the buffer.</param>
         /// <param name="viewFormat">The view format.</param>
-        private Buffer(GraphicsDevice device, Direct3D11.Buffer nativeBuffer, BufferFlags bufferFlags, PixelFormat viewFormat)
+        protected Buffer(GraphicsDevice device, Direct3D11.Buffer nativeBuffer, BufferFlags bufferFlags, PixelFormat viewFormat)
         {
             Description = nativeBuffer.Description;
             BufferFlags = bufferFlags;
             ViewFormat = viewFormat;
-            InitCountAndViewFormat(out Count, ref ViewFormat);
+            InitCountAndViewFormat(out this.elementCount, ref ViewFormat);
             Initialize(device, nativeBuffer);
         }
 
@@ -148,13 +150,11 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     if (!shaderResourceViews.TryGetValue(viewFormat, out srv))
                     {
-                        var description = new ShaderResourceViewDescription
-                        {
+                        var description = new ShaderResourceViewDescription {
                             Format = viewFormat,
                             Dimension = ShaderResourceViewDimension.ExtendedBuffer,
-                            BufferEx =
-                            {
-                                ElementCount = Count,
+                            BufferEx = {
+                                ElementCount = this.ElementCount,
                                 FirstElement = 0,
                                 Flags = ShaderResourceViewExtendedBufferFlags.None
                             }
@@ -189,12 +189,10 @@ namespace SharpDX.Toolkit.Graphics
 
                     if (!renderTargetViews.TryGetValue(renderTargetKey, out srv))
                     {
-                        var description = new RenderTargetViewDescription()
-                        {
+                        var description = new RenderTargetViewDescription() {
                             Format = pixelFormat,
                             Dimension = RenderTargetViewDimension.Buffer,
-                            Buffer =
-                            {
+                            Buffer = {
                                 ElementWidth = pixelFormat.SizeInBytes * width,
                                 ElementOffset = 0
                             }
@@ -208,7 +206,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Gets the content of this texture to an array of data.
+        /// Gets the content of this buffer to an array of data.
         /// </summary>
         /// <typeparam name="TData">The type of the T data.</typeparam>
         /// <remarks>
@@ -226,7 +224,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Copies the content of this texture to an array of data.
+        /// Copies the content of this buffer to an array of data.
         /// </summary>
         /// <typeparam name="TData">The type of the T data.</typeparam>
         /// <param name="toData">The destination buffer to receive a copy of the texture datas.</param>
@@ -254,7 +252,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Copies the content of this texture to an array of data.
+        /// Copies the content of this buffer to an array of data.
         /// </summary>
         /// <typeparam name="TData">The type of the T data.</typeparam>
         /// <param name="toData">The destination buffer to receive a copy of the texture datas.</param>
@@ -282,7 +280,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Copies the content of this texture from GPU memory to an array of data on CPU memory using a specific staging resource.
+        /// Copies the content of this buffer from GPU memory to an array of data on CPU memory using a specific staging resource.
         /// </summary>
         /// <typeparam name="TData">The type of the T data.</typeparam>
         /// <param name="stagingTexture">The staging buffer used to transfer the buffer.</param>
@@ -300,7 +298,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Copies the content of this texture from GPU memory to an array of data on CPU memory using a specific staging resource.
+        /// Copies the content of this buffer from GPU memory to an array of data on CPU memory using a specific staging resource.
         /// </summary>
         /// <typeparam name="TData">The type of the T data.</typeparam>
         /// <param name="stagingTexture">The staging buffer used to transfer the buffer.</param>
@@ -318,7 +316,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Copies the content of this texture from GPU memory to a CPU memory using a specific staging resource.
+        /// Copies the content of this buffer from GPU memory to a CPU memory using a specific staging resource.
         /// </summary>
         /// <param name="stagingTexture">The staging buffer used to transfer the buffer.</param>
         /// <param name="toData">To data pointer.</param>
@@ -349,7 +347,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Copies the content an array of data on CPU memory to this texture into GPU memory.
+        /// Copies the content of a single structure data from CPU memory to this buffer into GPU memory.
         /// </summary>
         /// <typeparam name="TData">The type of the T data.</typeparam>
         /// <param name="fromData">The data to copy from.</param>
@@ -367,7 +365,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Copies the content an array of data on CPU memory to this texture into GPU memory.
+        /// Copies the content an array of data from CPU memory to this buffer into GPU memory.
         /// </summary>
         /// <typeparam name="TData">The type of the T data.</typeparam>
         /// <param name="fromData">The data to copy from.</param>
@@ -385,7 +383,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Copies the content an array of data on CPU memory to this texture into GPU memory.
+        /// Copies the content an array of data on CPU memory to this buffer into GPU memory.
         /// </summary>
         /// <param name="fromData">A data pointer.</param>
         /// <param name="offsetInBytes">The offset in bytes to write to.</param>
@@ -402,7 +400,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Copies the content an array of data on CPU memory to this texture into GPU memory.
+        /// Copies the content an array of data on CPU memory to this buffer into GPU memory.
         /// </summary>
         /// <typeparam name="TData">The type of the T data.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
@@ -421,7 +419,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Copies the content an array of data on CPU memory to this texture into GPU memory.
+        /// Copies the content an array of data on CPU memory to this buffer into GPU memory.
         /// </summary>
         /// <typeparam name="TData">The type of the T data.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
@@ -440,7 +438,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Copies the content an array of data on CPU memory to this texture into GPU memory.
+        /// Copies the content an array of data on CPU memory to this buffer into GPU memory.
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="fromData">A data pointer.</param>
@@ -543,6 +541,26 @@ namespace SharpDX.Toolkit.Graphics
         /// Creates a new <see cref="Buffer" /> instance.
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
+        /// <param name="elementCount">Number of T elment in this buffer.</param>
+        /// <param name="bufferFlags">The buffer flags to specify the type of buffer.</param>
+        /// <param name="usage">The usage.</param>
+        /// <returns>An instance of a new <see cref="Buffer" /></returns>
+        /// <msdn-id>ff476501</msdn-id>
+        /// <unmanaged>HRESULT ID3D11Device::CreateBuffer([In] const D3D11_BUFFER_DESC* pDesc,[In, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Buffer** ppBuffer)</unmanaged>
+        /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>
+        public static Buffer<T> New<T>(GraphicsDevice device, int elementCount, BufferFlags bufferFlags, ResourceUsage usage = ResourceUsage.Default) where T : struct
+        {
+            int bufferSize = Utilities.SizeOf<T>() * elementCount;
+            int elementSize = Utilities.SizeOf<T>();
+
+            var description = NewDescription(bufferSize, elementSize, bufferFlags, usage);
+            return new Buffer<T>(device, description, bufferFlags, PixelFormat.Unknown, IntPtr.Zero);
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="Buffer" /> instance.
+        /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="bufferSize">Size of the buffer in bytes.</param>
         /// <param name="bufferFlags">The buffer flags to specify the type of buffer.</param>
         /// <param name="viewFormat">The view format must be specified if the buffer is declared as a shared resource view.</param>
@@ -605,7 +623,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476501</msdn-id>
         /// <unmanaged>HRESULT ID3D11Device::CreateBuffer([In] const D3D11_BUFFER_DESC* pDesc,[In, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Buffer** ppBuffer)</unmanaged>
         /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>
-        public static Buffer New<T>(GraphicsDevice device, ref T value, BufferFlags bufferFlags, ResourceUsage usage = ResourceUsage.Default) where T : struct
+        public static Buffer<T> New<T>(GraphicsDevice device, ref T value, BufferFlags bufferFlags, ResourceUsage usage = ResourceUsage.Default) where T : struct
         {
             return New(device, ref value, bufferFlags, PixelFormat.Unknown, usage);
         }
@@ -623,7 +641,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476501</msdn-id>
         /// <unmanaged>HRESULT ID3D11Device::CreateBuffer([In] const D3D11_BUFFER_DESC* pDesc,[In, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Buffer** ppBuffer)</unmanaged>
         /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>
-        public unsafe static Buffer New<T>(GraphicsDevice device, ref T value, BufferFlags bufferFlags, DXGI.Format viewFormat, ResourceUsage usage = ResourceUsage.Default) where T : struct
+        public static unsafe Buffer<T> New<T>(GraphicsDevice device, ref T value, BufferFlags bufferFlags, DXGI.Format viewFormat, ResourceUsage usage = ResourceUsage.Default) where T : struct
         {
             int bufferSize = Utilities.SizeOf<T>();
             int elementSize = ((bufferFlags & BufferFlags.StructuredBuffer) != 0) ? Utilities.SizeOf<T>() : 0;
@@ -631,7 +649,7 @@ namespace SharpDX.Toolkit.Graphics
             viewFormat = CheckPixelFormat(bufferFlags, elementSize, viewFormat);
 
             var description = NewDescription(bufferSize, elementSize, bufferFlags, usage);
-            return new Buffer(device, description, bufferFlags, viewFormat, (IntPtr)Interop.Fixed(ref value));
+            return new Buffer<T>(device, description, bufferFlags, viewFormat, (IntPtr)Interop.Fixed(ref value));
         }
 
         /// <summary>
@@ -646,7 +664,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476501</msdn-id>
         /// <unmanaged>HRESULT ID3D11Device::CreateBuffer([In] const D3D11_BUFFER_DESC* pDesc,[In, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Buffer** ppBuffer)</unmanaged>
         /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>
-        public static Buffer New<T>(GraphicsDevice device, T[] initialValue, BufferFlags bufferFlags, ResourceUsage usage = ResourceUsage.Default) where T : struct
+        public static Buffer<T> New<T>(GraphicsDevice device, T[] initialValue, BufferFlags bufferFlags, ResourceUsage usage = ResourceUsage.Default) where T : struct
         {
             return New(device, initialValue, bufferFlags, PixelFormat.Unknown, usage);
         }
@@ -664,14 +682,14 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476501</msdn-id>
         /// <unmanaged>HRESULT ID3D11Device::CreateBuffer([In] const D3D11_BUFFER_DESC* pDesc,[In, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Buffer** ppBuffer)</unmanaged>
         /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>
-        public unsafe static Buffer New<T>(GraphicsDevice device, T[] initialValue, BufferFlags bufferFlags, DXGI.Format viewFormat, ResourceUsage usage = ResourceUsage.Default) where T : struct
+        public static unsafe Buffer<T> New<T>(GraphicsDevice device, T[] initialValue, BufferFlags bufferFlags, DXGI.Format viewFormat, ResourceUsage usage = ResourceUsage.Default) where T : struct
         {
             int bufferSize = Utilities.SizeOf<T>() * initialValue.Length;
             int elementSize = Utilities.SizeOf<T>();
             viewFormat = CheckPixelFormat(bufferFlags, elementSize, viewFormat);
 
             var description = NewDescription(bufferSize, elementSize, bufferFlags, usage);
-            return new Buffer(device, description, bufferFlags, viewFormat, (IntPtr)Interop.Fixed(initialValue));
+            return new Buffer<T>(device, description, bufferFlags, viewFormat, (IntPtr)Interop.Fixed(initialValue));
         }
 
         /// <summary>
@@ -803,7 +821,7 @@ namespace SharpDX.Toolkit.Graphics
 
             return bufferType;
         }
-        
+
         private static PixelFormat CheckPixelFormat(BufferFlags bufferFlags, int elementSize, PixelFormat viewFormat)
         {
             if ((bufferFlags & BufferFlags.IndexBuffer) != 0 && (bufferFlags & BufferFlags.ShaderResource) != 0)
@@ -811,15 +829,14 @@ namespace SharpDX.Toolkit.Graphics
                 if (elementSize != 2 && elementSize != 4)
                     throw new ArgumentException("Element size must be set to sizeof(short) = 2 or sizeof(int) = 4 for index buffer if index buffer is bound to a ShaderResource", "elementSize");
 
-                viewFormat = elementSize == 2 ? PixelFormat.R16.UInt: PixelFormat.R32.UInt;
+                viewFormat = elementSize == 2 ? PixelFormat.R16.UInt : PixelFormat.R32.UInt;
             }
             return viewFormat;
         }
 
         private static BufferDescription NewDescription(int bufferSize, int elementSize, BufferFlags bufferFlags, ResourceUsage usage)
         {
-            var desc = new BufferDescription()
-            {
+            var desc = new BufferDescription() {
                 SizeInBytes = bufferSize,
                 StructureByteStride = (bufferFlags & BufferFlags.StructuredBuffer) != 0 ? elementSize : 0,
                 CpuAccessFlags = GetCputAccessFlagsFromUsage(usage),
@@ -871,7 +888,7 @@ namespace SharpDX.Toolkit.Graphics
 
             var srvFormat = ViewFormat;
             var uavFormat = ViewFormat;
-            
+
             if (((BufferFlags & BufferFlags.RawBuffer) != 0))
             {
                 srvFormat = PixelFormat.R32.Typeless;
@@ -885,13 +902,11 @@ namespace SharpDX.Toolkit.Graphics
 
             if ((bindFlags & BindFlags.UnorderedAccess) != 0)
             {
-                var description = new UnorderedAccessViewDescription()
-                {
+                var description = new UnorderedAccessViewDescription() {
                     Format = uavFormat,
                     Dimension = UnorderedAccessViewDimension.Buffer,
-                    Buffer =
-                    {
-                        ElementCount = Count,
+                    Buffer = {
+                        ElementCount = this.ElementCount,
                         FirstElement = 0,
                         Flags = UnorderedAccessViewBufferFlags.None
                     },
@@ -909,7 +924,7 @@ namespace SharpDX.Toolkit.Graphics
                 this.unorderedAccessView = ToDispose(new UnorderedAccessView(this.GraphicsDevice, (Direct3D11.Resource)this.Resource, description));
             }
         }
-        
+
         /// <summary>
         /// Implicit casting operator to <see cref="Direct3D11.Resource"/>
         /// </summary>
@@ -947,7 +962,7 @@ namespace SharpDX.Toolkit.Graphics
         public static implicit operator UnorderedAccessView(Buffer from)
         {
             return from == null ? null : from.unorderedAccessView;
-        }        
+        }
 
         private struct RenderTargetKey : IEquatable<RenderTargetKey>
         {
@@ -968,8 +983,9 @@ namespace SharpDX.Toolkit.Graphics
 
             public override bool Equals(object obj)
             {
-                if (ReferenceEquals(null, obj)) return false;
-                return obj is RenderTargetKey && Equals((RenderTargetKey) obj);
+                if (ReferenceEquals(null, obj))
+                    return false;
+                return obj is RenderTargetKey && Equals((RenderTargetKey)obj);
             }
 
             public override int GetHashCode()
@@ -989,6 +1005,114 @@ namespace SharpDX.Toolkit.Graphics
             {
                 return !left.Equals(right);
             }
+        }
+    }
+
+    /// <summary>
+    /// A buffer with typed information.
+    /// </summary>
+    /// <typeparam name="T">Type of an element of this buffer.</typeparam>
+    public class Buffer<T> : Buffer where T : struct
+    {
+        protected internal Buffer(GraphicsDevice device, BufferDescription description, BufferFlags bufferFlags, PixelFormat viewFormat, IntPtr dataPointer) : base(device, description, bufferFlags, viewFormat, dataPointer)
+        {
+            this.ElementSize = Utilities.SizeOf<T>();
+            this.ElementCount = Description.SizeInBytes / ElementSize;
+        }
+
+        protected internal Buffer(GraphicsDevice device, Direct3D11.Buffer nativeBuffer, BufferFlags bufferFlags, PixelFormat viewFormat)
+            : base(device, nativeBuffer, bufferFlags, viewFormat)
+        {
+            this.ElementSize = Utilities.SizeOf<T>();
+            this.ElementCount = Description.SizeInBytes / ElementSize;
+        }
+
+        /// <summary>
+        /// Gets the size of element T.
+        /// </summary>
+        public readonly int ElementSize;
+
+        /// <summary>
+        /// Gets the content of this texture to an array of data.
+        /// </summary>
+        /// <returns>An array of data.</returns>
+        /// <msdn-id>ff476457</msdn-id>
+        ///   <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
+        ///   <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
+        /// <remarks>This method is only working when called from the main thread that is accessing the main <see cref="GraphicsDevice" />.
+        /// This method creates internally a stagging resource if this texture is not already a stagging resouce, copies to it and map it to memory. Use method with explicit staging resource
+        /// for optimal performances.</remarks>
+        public T[] GetData()
+        {
+            return GetData<T>();
+        }
+
+        /// <summary>
+        /// Copies the content of a single structure data from CPU memory to this buffer into GPU memory.
+        /// </summary>
+        /// <param name="fromData">The data to copy from.</param>
+        /// <param name="offsetInBytes">The offset in bytes to write to.</param>
+        /// <exception cref="System.ArgumentException"></exception>
+        /// <remarks>
+        /// This method is only working when called from the main thread that is accessing the main <see cref="GraphicsDevice"/>. See the unmanaged documentation about Map/UnMap for usage and restrictions.
+        /// </remarks>
+        /// <msdn-id>ff476457</msdn-id>
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
+        public void SetData(ref T fromData, int offsetInBytes = 0)
+        {
+            base.SetData(ref fromData, offsetInBytes);
+        }
+
+        /// <summary>
+        /// Copies the content an array of data from CPU memory to this buffer into GPU memory.
+        /// </summary>
+        /// <param name="fromData">The data to copy from.</param>
+        /// <param name="offsetInBytes">The offset in bytes to write to.</param>
+        /// <remarks>
+        /// This method is only working when called from the main thread that is accessing the main <see cref="GraphicsDevice"/>. See the unmanaged documentation about Map/UnMap for usage and restrictions.
+        /// </remarks>
+        /// <msdn-id>ff476457</msdn-id>
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
+        public void SetData(T[] fromData, int offsetInBytes = 0)
+        {
+            base.SetData(fromData, offsetInBytes);
+        }
+
+        /// <summary>
+        /// Copies the content of a single structure data from CPU memory to this buffer into GPU memory.
+        /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
+        /// <param name="fromData">The data to copy from.</param>
+        /// <param name="offsetInBytes">The offset in bytes to write to.</param>
+        /// <exception cref="System.ArgumentException"></exception>
+        /// <remarks>
+        /// This method is only working when called from the main thread that is accessing the main <see cref="GraphicsDevice"/>. See the unmanaged documentation about Map/UnMap for usage and restrictions.
+        /// </remarks>
+        /// <msdn-id>ff476457</msdn-id>
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
+        public void SetData(GraphicsDevice device, ref T fromData, int offsetInBytes = 0)
+        {
+            base.SetData(device, ref fromData, offsetInBytes);
+        }
+
+        /// <summary>
+        /// Copies the content an array of data from CPU memory to this buffer into GPU memory.
+        /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
+        /// <param name="fromData">The data to copy from.</param>
+        /// <param name="offsetInBytes">The offset in bytes to write to.</param>
+        /// <remarks>
+        /// This method is only working when called from the main thread that is accessing the main <see cref="GraphicsDevice"/>. See the unmanaged documentation about Map/UnMap for usage and restrictions.
+        /// </remarks>
+        /// <msdn-id>ff476457</msdn-id>
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
+        public void SetData(GraphicsDevice device, T[] fromData, int offsetInBytes = 0)
+        {
+            base.SetData(fromData, offsetInBytes);
         }
     }
 }

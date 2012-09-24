@@ -48,9 +48,9 @@ namespace SharpDX.Toolkit.Graphics
             /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="usage">The usage.</param>
             /// <returns>A index buffer</returns>
-            public static Buffer New<T>(GraphicsDevice device, ResourceUsage usage = ResourceUsage.Default) where T : struct
+            public static Buffer<T> New<T>(GraphicsDevice device, ResourceUsage usage = ResourceUsage.Default) where T : struct
             {
-                return Buffer.New(device, Utilities.SizeOf<T>(), BufferFlags.IndexBuffer, usage);
+                return Buffer.New<T>(device, 1, BufferFlags.IndexBuffer, usage);
             }
 
             /// <summary>
@@ -61,7 +61,7 @@ namespace SharpDX.Toolkit.Graphics
             /// <param name="value">The value to initialize the index buffer.</param>
             /// <param name="usage">The usage of this resource.</param>
             /// <returns>A index buffer</returns>
-            public static Buffer New<T>(GraphicsDevice device, ref T value, ResourceUsage usage = ResourceUsage.Default) where T : struct
+            public static Buffer<T> New<T>(GraphicsDevice device, ref T value, ResourceUsage usage = ResourceUsage.Default) where T : struct
             {
                 return Buffer.New(device, ref value, BufferFlags.IndexBuffer, usage);
             }
@@ -74,7 +74,7 @@ namespace SharpDX.Toolkit.Graphics
             /// <param name="value">The value to initialize the index buffer.</param>
             /// <param name="usage">The usage of this resource.</param>
             /// <returns>A index buffer</returns>
-            public static Buffer New<T>(GraphicsDevice device, T[] value, ResourceUsage usage = ResourceUsage.Default) where T : struct
+            public static Buffer<T> New<T>(GraphicsDevice device, T[] value, ResourceUsage usage = ResourceUsage.Default) where T : struct
             {
                 return Buffer.New(device, value, BufferFlags.IndexBuffer, usage);
             }

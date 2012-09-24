@@ -63,19 +63,19 @@
     <Compile Include="StockEffects\HLSL\AlphaTestEffect.ByteCode.cs">
       <AutoGen>true</AutoGen>
       <DependentUpon>StockEffects\HLSL\AlphaTestEffect.fx</DependentUpon>
-    </Compile>    
+    </Compile>
     <Compile Include="StockEffects\C#\AlphaTestEffect.cs" />
-    <Compile Include="StockEffects\HLSL\BasicEffect.ByteCode.cs" >
+    <Compile Include="StockEffects\HLSL\BasicEffect.ByteCode.cs">
       <AutoGen>true</AutoGen>
       <DependentUpon>StockEffects\HLSL\BasicEffect.fx</DependentUpon>
     </Compile>
     <Compile Include="StockEffects\C#\BasicEffect.cs" />
     <Compile Include="StockEffects\C#\DirectionalLight.cs" />
-    <Compile Include="StockEffects\HLSL\DualTextureEffect.ByteCode.cs" >
+    <Compile Include="StockEffects\HLSL\DualTextureEffect.ByteCode.cs">
       <AutoGen>true</AutoGen>
       <DependentUpon>StockEffects\HLSL\DualTextureEffect.fx</DependentUpon>
     </Compile>
-    <Compile Include="StockEffects\HLSL\EnvironmentMapEffect.ByteCode.cs" >
+    <Compile Include="StockEffects\HLSL\EnvironmentMapEffect.ByteCode.cs">
       <AutoGen>true</AutoGen>
       <DependentUpon>StockEffects\HLSL\EnvironmentMapEffect.fx</DependentUpon>
     </Compile>
@@ -85,12 +85,12 @@
     <Compile Include="StockEffects\C#\EffectHelpers.cs" />
     <Compile Include="StockEffects\C#\EnvironmentMapEffect.cs" />
     <Compile Include="StockEffects\C#\IEffectMatrices.cs" />
-    <Compile Include="StockEffects\HLSL\SkinnedEffect.ByteCode.cs" >
+    <Compile Include="StockEffects\HLSL\SkinnedEffect.ByteCode.cs">
       <AutoGen>true</AutoGen>
       <DependentUpon>StockEffects\HLSL\SkinnedEffect.fx</DependentUpon>
     </Compile>
     <Compile Include="StockEffects\C#\SkinnedEffect.cs" />
-    <Compile Include="StockEffects\HLSL\SpriteEffect.ByteCode.cs" >
+    <Compile Include="StockEffects\HLSL\SpriteEffect.ByteCode.cs">
       <AutoGen>true</AutoGen>
       <DependentUpon>StockEffects\HLSL\SpriteEffect.fx</DependentUpon>
     </Compile>
@@ -100,10 +100,10 @@
     <Compile Include="UnorderedAccessViewSelector.cs" />
     <Compile Include="ShaderResourceViewSelector.cs" />
     <Compile Include="RenderTargetViewSelector.cs" />
-    <Compile Include="VertexBufferLayout.cs" />
+    <Compile Include="VertexInputLayout.cs" />
     <Compile Include="VertexLayout.cs" />
     <Compile Include="VertexElementAttribute.cs" />
-    <Compile Include="VertexBufferSlot.cs" />
+    <Compile Include="VertexBufferLayout.cs" />
     <Compile Include="VertexElement.cs" />
     <Compile Include="VertexPositionTexture.cs" />
     <Compile Include="VertexPositionNormalTexture.cs" />

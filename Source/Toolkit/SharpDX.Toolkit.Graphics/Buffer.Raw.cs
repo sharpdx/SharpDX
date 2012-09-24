@@ -53,9 +53,9 @@ namespace SharpDX.Toolkit.Graphics
             /// <param name="additionalBindings">The additional bindings (for example, to create a combined raw/index buffer, pass <see cref="BufferFlags.IndexBuffer" />)</param>
             /// <param name="usage">The usage.</param>
             /// <returns>A Raw buffer</returns>
-            public static Buffer New<T>(GraphicsDevice device, BufferFlags additionalBindings = BufferFlags.None, ResourceUsage usage = ResourceUsage.Default) where T : struct
+            public static Buffer<T> New<T>(GraphicsDevice device, BufferFlags additionalBindings = BufferFlags.None, ResourceUsage usage = ResourceUsage.Default) where T : struct
             {
-                return Buffer.New(device, Utilities.SizeOf<T>(), BufferFlags.RawBuffer | additionalBindings, usage);
+                return Buffer.New<T>(device, 1, BufferFlags.RawBuffer | additionalBindings, usage);
             }
 
             /// <summary>
@@ -67,7 +67,7 @@ namespace SharpDX.Toolkit.Graphics
             /// <param name="additionalBindings">The additional bindings (for example, to create a combined raw/index buffer, pass <see cref="BufferFlags.IndexBuffer" />)</param>
             /// <param name="usage">The usage of this resource.</param>
             /// <returns>A Raw buffer</returns>
-            public static Buffer New<T>(GraphicsDevice device, ref T value, BufferFlags additionalBindings = BufferFlags.None, ResourceUsage usage = ResourceUsage.Default) where T : struct
+            public static Buffer<T> New<T>(GraphicsDevice device, ref T value, BufferFlags additionalBindings = BufferFlags.None, ResourceUsage usage = ResourceUsage.Default) where T : struct
             {
                 return Buffer.New(device, ref value, BufferFlags.RawBuffer | additionalBindings, usage);
             }
@@ -81,7 +81,7 @@ namespace SharpDX.Toolkit.Graphics
             /// <param name="additionalBindings">The additional bindings (for example, to create a combined raw/index buffer, pass <see cref="BufferFlags.IndexBuffer" />)</param>
             /// <param name="usage">The usage of this resource.</param>
             /// <returns>A Raw buffer</returns>
-            public static Buffer New<T>(GraphicsDevice device, T[] value, BufferFlags additionalBindings = BufferFlags.None, ResourceUsage usage = ResourceUsage.Default) where T : struct
+            public static Buffer<T> New<T>(GraphicsDevice device, T[] value, BufferFlags additionalBindings = BufferFlags.None, ResourceUsage usage = ResourceUsage.Default) where T : struct
             {
                 return Buffer.New(device, value, BufferFlags.RawBuffer | additionalBindings, usage);
             }

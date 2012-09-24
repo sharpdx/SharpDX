@@ -89,7 +89,7 @@ namespace SharpDX.Toolkit.Graphics
         private int currentDepthStencilReference = 0;
         private RasterizerState currentRasterizerState;
         private PrimitiveTopology currentPrimitiveTopology;
-        private VertexBufferLayout currentInputLayout;
+        private VertexInputLayout currentInputLayout;
 
         private InputAssemblerStage inputAssemblerStage;
         private RasterizerStage rasterizeStage;
@@ -943,16 +943,60 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Sets the vertex buffer layout.
+        /// Sets the vertex input layout.
         /// </summary>
         /// <param name="inputLayout">The input layout.</param>
         /// <msdn-id>ff476454</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::IASetInputLayout([In, Optional] ID3D11InputLayout* pInputLayout)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::IASetInputLayout</unmanaged-short>	
-        public void SetVertexBufferLayout(VertexBufferLayout inputLayout)
+        public void SetVertexInputLayout(VertexInputLayout inputLayout)
         {
             // The setup of the real input layout is delayed until we know which pass is applied.
             currentInputLayout = inputLayout;
+        }
+
+        /// <summary>
+        /// Bind a vertex buffer on the slot #0 of the input-assembler stage.
+        /// </summary>	
+        /// <param name="vertexBuffer">The vertex buffer to bind to this slot. This vertex buffer must have been created with the <strong><see cref="SharpDX.Direct3D11.BindFlags.VertexBuffer"/></strong> flag.</param>	
+        /// <param name="vertexIndex">The index is the number of vertex element between the first element of a vertex buffer and the first element that will be used.</param>	
+        /// <remarks>	
+        /// <p>For information about creating vertex buffers, see Create a Vertex Buffer.</p><p>Calling this method using a buffer that is currently bound for writing (i.e. bound to the stream output pipeline stage) will effectively bind <strong><c>null</c></strong> instead because a buffer cannot be bound as both an input and an output at the same time.</p><p>The debug layer will generate a warning whenever a resource is prevented from being bound simultaneously as an input and an output, but this will not prevent invalid data from being used by the runtime.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10. </p>	
+        /// </remarks>	
+        /// <msdn-id>ff476456</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::IASetVertexBuffers([In] unsigned int StartSlot,[In] unsigned int NumBuffers,[In, Buffer] const void* ppVertexBuffers,[In, Buffer] const void* pStrides,[In, Buffer] const void* pOffsets)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::IASetVertexBuffers</unmanaged-short>	
+        public void SetVertexBuffer<T>(Buffer<T> vertexBuffer, int vertexIndex = 0) where T : struct
+        {
+            SetVertexBuffer(0, vertexBuffer, vertexIndex);
+        }
+
+        /// <summary>
+        /// Bind a verte buffer to the input-assembler stage.
+        /// </summary>	
+        /// <param name="slot">The first input slot for binding.</param>	
+        /// <param name="vertexBuffer">The vertex buffer to bind to this slot. This vertex buffer must have been created with the <strong><see cref="SharpDX.Direct3D11.BindFlags.VertexBuffer"/></strong> flag.</param>	
+        /// <param name="vertexIndex">The index is the number of vertex element between the first element of a vertex buffer and the first element that will be used.</param>	
+        /// <remarks>	
+        /// <p>For information about creating vertex buffers, see Create a Vertex Buffer.</p><p>Calling this method using a buffer that is currently bound for writing (i.e. bound to the stream output pipeline stage) will effectively bind <strong><c>null</c></strong> instead because a buffer cannot be bound as both an input and an output at the same time.</p><p>The debug layer will generate a warning whenever a resource is prevented from being bound simultaneously as an input and an output, but this will not prevent invalid data from being used by the runtime.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10. </p>	
+        /// </remarks>	
+        /// <msdn-id>ff476456</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::IASetVertexBuffers([In] unsigned int StartSlot,[In] unsigned int NumBuffers,[In, Buffer] const void* ppVertexBuffers,[In, Buffer] const void* pStrides,[In, Buffer] const void* pOffsets)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::IASetVertexBuffers</unmanaged-short>	
+        public unsafe void SetVertexBuffer<T>(int slot, Buffer<T> vertexBuffer, int vertexIndex = 0) where T : struct
+        {
+            IntPtr vertexBufferPtr = IntPtr.Zero;
+            int stride = Utilities.SizeOf<T>();
+            int offset = vertexIndex * stride;
+            if (vertexBuffer != null)
+            {
+                vertexBufferPtr = ((Direct3D11.Buffer)vertexBuffer).NativePointer;
+
+                // Update the index of the last slot buffer bounded, used by ResetVertexBuffers
+                if ((slot + 1) > maxSlotCountForVertexBuffer)
+                    maxSlotCountForVertexBuffer = slot + 1;
+            }
+            inputAssemblerStage.SetVertexBuffers(slot, 1, vertexBufferPtr, new IntPtr(&stride), new IntPtr(&offset));
         }
 
         /// <summary>
@@ -960,15 +1004,15 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>	
         /// <param name="slot">The first input slot for binding.</param>	
         /// <param name="vertexBuffer">The vertex buffer to bind to this slot. This vertex buffer must have been created with the <strong><see cref="SharpDX.Direct3D11.BindFlags.VertexBuffer"/></strong> flag.</param>	
-        /// <param name="stride">The stride is the size (in bytes) of the elements that are to be used from that vertex buffer.</param>	
-        /// <param name="offset">The offset is the number of bytes between the first element of a vertex buffer and the first element that will be used.</param>	
+        /// <param name="vertexStride">The vertexStride is the size (in bytes) of the elements that are to be used from that vertex buffer.</param>	
+        /// <param name="offsetInBytes">The offset is the number of bytes between the first element of a vertex buffer and the first element that will be used.</param>	
         /// <remarks>	
         /// <p>For information about creating vertex buffers, see Create a Vertex Buffer.</p><p>Calling this method using a buffer that is currently bound for writing (i.e. bound to the stream output pipeline stage) will effectively bind <strong><c>null</c></strong> instead because a buffer cannot be bound as both an input and an output at the same time.</p><p>The debug layer will generate a warning whenever a resource is prevented from being bound simultaneously as an input and an output, but this will not prevent invalid data from being used by the runtime.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10. </p>	
         /// </remarks>	
         /// <msdn-id>ff476456</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::IASetVertexBuffers([In] unsigned int StartSlot,[In] unsigned int NumBuffers,[In, Buffer] const void* ppVertexBuffers,[In, Buffer] const void* pStrides,[In, Buffer] const void* pOffsets)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::IASetVertexBuffers</unmanaged-short>	
-        public unsafe void SetVertexBuffer(int slot, SharpDX.Direct3D11.Buffer vertexBuffer, int stride, int offset = 0)
+        public unsafe void SetVertexBuffer(int slot, SharpDX.Direct3D11.Buffer vertexBuffer, int vertexStride, int offsetInBytes = 0)
         {
             IntPtr vertexBufferPtr = IntPtr.Zero;
             if (vertexBuffer != null)
@@ -979,7 +1023,7 @@ namespace SharpDX.Toolkit.Graphics
                 if ((slot+1) > maxSlotCountForVertexBuffer)
                     maxSlotCountForVertexBuffer = slot + 1;
             }
-            inputAssemblerStage.SetVertexBuffers(slot, 1, vertexBufferPtr, new IntPtr(&stride), new IntPtr(&offset));
+            inputAssemblerStage.SetVertexBuffers(slot, 1, vertexBufferPtr, new IntPtr(&vertexStride), new IntPtr(&offsetInBytes));
         }
 
         /// <summary>

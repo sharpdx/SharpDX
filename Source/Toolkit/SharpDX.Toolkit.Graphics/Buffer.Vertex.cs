@@ -48,9 +48,9 @@ namespace SharpDX.Toolkit.Graphics
             /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="usage">The usage.</param>
             /// <returns>A Vertex buffer</returns>
-            public static Buffer New<T>(GraphicsDevice device, ResourceUsage usage = ResourceUsage.Default) where T : struct
+            public static Buffer<T> New<T>(GraphicsDevice device, ResourceUsage usage = ResourceUsage.Default) where T : struct
             {
-                return Buffer.New(device,Utilities.SizeOf<T>(), BufferFlags.VertexBuffer, usage);
+                return Buffer.New<T>(device, 1, BufferFlags.VertexBuffer, usage);
             }
 
             /// <summary>
@@ -61,7 +61,7 @@ namespace SharpDX.Toolkit.Graphics
             /// <param name="value">The value to initialize the Vertex buffer.</param>
             /// <param name="usage">The usage of this resource.</param>
             /// <returns>A Vertex buffer</returns>
-            public static Buffer New<T>(GraphicsDevice device, ref T value, ResourceUsage usage = ResourceUsage.Default) where T : struct
+            public static Buffer<T> New<T>(GraphicsDevice device, ref T value, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
             {
                 return Buffer.New(device,ref value, BufferFlags.VertexBuffer, usage);
             }
@@ -74,7 +74,7 @@ namespace SharpDX.Toolkit.Graphics
             /// <param name="value">The value to initialize the Vertex buffer.</param>
             /// <param name="usage">The usage of this resource.</param>
             /// <returns>A Vertex buffer</returns>
-            public static Buffer New<T>(GraphicsDevice device, T[] value, ResourceUsage usage = ResourceUsage.Default) where T : struct
+            public static Buffer<T> New<T>(GraphicsDevice device, T[] value, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
             {
                 return Buffer.New(device,value, BufferFlags.VertexBuffer, usage);
             }
@@ -86,7 +86,7 @@ namespace SharpDX.Toolkit.Graphics
             /// <param name="value">The value to initialize the Vertex buffer.</param>
             /// <param name="usage">The usage of this resource.</param>
             /// <returns>A Vertex buffer</returns>
-            public static Buffer New(GraphicsDevice device, DataPointer value, ResourceUsage usage = ResourceUsage.Default)
+            public static Buffer New(GraphicsDevice device, DataPointer value, ResourceUsage usage = ResourceUsage.Immutable)
             {
                 return Buffer.New(device,value, 0, BufferFlags.VertexBuffer, usage);
             }

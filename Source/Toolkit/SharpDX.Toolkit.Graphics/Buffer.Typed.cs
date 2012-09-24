@@ -56,7 +56,7 @@ namespace SharpDX.Toolkit.Graphics
             /// <param name="isUnorderedAccess">if set to <c>true</c> this buffer supports unordered access (RW in HLSL).</param>
             /// <param name="usage">The usage of this resource.</param>
             /// <returns>A Typed buffer</returns>
-            public static Buffer New<T>(GraphicsDevice device, T[] value, PixelFormat viewFormat, bool isUnorderedAccess = false, ResourceUsage usage = ResourceUsage.Default) where T : struct
+            public static Buffer<T> New<T>(GraphicsDevice device, T[] value, PixelFormat viewFormat, bool isUnorderedAccess = false, ResourceUsage usage = ResourceUsage.Default) where T : struct
             {
                 return Buffer.New(device,value, BufferFlags.ShaderResource | (isUnorderedAccess ? BufferFlags.UnorderedAccess : BufferFlags.None), viewFormat, usage);
             }

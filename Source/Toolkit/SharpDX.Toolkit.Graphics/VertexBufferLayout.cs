@@ -19,148 +19,171 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections.Generic;
-using SharpDX.Direct3D11;
+using SharpDX.DXGI;
 
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>	
-    /// Defines the layout of all vertex buffers that will be bound to the input-assembler stage. 
+    /// A description of a vertex elements for particular slot for the input-assembler stage. 
     /// This structure is related to <see cref="Direct3D11.InputElement"/>.
     /// </summary>	
     /// <remarks>	
-    /// <p>Because <see cref="Direct3D11.InputElement"/> requires to have the same <see cref="InputElement.Slot"/>, <see cref="InputElement.InstanceDataStepRate"/>,
-    /// this <see cref="VertexBufferLayout"/> structure encapsulates a set of <see cref="VertexBufferSlot"/>.</p>
-    /// <p>
-    /// This class is caching <see cref="VertexBufferLayout"/> to improve performance.
-    /// The same description set of <see cref="VertexBufferSlot"/> will return the same <see cref="VertexBufferLayout"/> instance.
-    /// </p>
+    /// Because <see cref="Direct3D11.InputElement"/> requires to have the same <see cref="SlotIndex"/>, <see cref="InstanceCount"/>,
+    /// this <see cref="VertexBufferLayout"/> structure encapsulates a set of <see cref="VertexElement"/> for a particular slot, instance count.
     /// </remarks>	
     /// <seealso cref="VertexElement"/>
     /// <msdn-id>ff476180</msdn-id>	
     /// <unmanaged>D3D11_INPUT_ELEMENT_DESC</unmanaged>	
     /// <unmanaged-short>D3D11_INPUT_ELEMENT_DESC</unmanaged-short>	
-    public sealed class VertexBufferLayout : IEquatable<VertexBufferLayout>
+    public class VertexBufferLayout : IEquatable<VertexBufferLayout>
     {
-        private static readonly Dictionary<ReadOnlyArray<VertexBufferSlot>, VertexBufferLayout> VertexBufferBindingCache = new Dictionary<ReadOnlyArray<VertexBufferSlot>, VertexBufferLayout>();
+        /// <summary>
+        /// Vertex buffer slot index.
+        /// </summary>
+        public readonly int SlotIndex;
+
+        /// <summary>	
+        /// The number of instances to draw using the same per-instance data before advancing in the buffer by one element. This value must be 0 for an  element that contains per-vertex data (the slot class is set to <see cref="SharpDX.Direct3D11.InputClassification.PerVertexData"/>).
+        /// </summary>	
+        /// <msdn-id>ff476180</msdn-id>	
+        /// <unmanaged>unsigned int InstanceDataStepRate</unmanaged>	
+        /// <unmanaged-short>unsigned int InstanceDataStepRate</unmanaged-short>	
+        public readonly int InstanceCount;
 
         /// <summary>
-        /// Gets a unique identifier of this VertexBufferLayout configuration.
+        /// Vertex elements describing this declaration.
         /// </summary>
-        public readonly int Id;
-
-        public readonly ReadOnlyArray<VertexBufferSlot> VertexBufferLayouts;
+        public readonly ReadOnlyArray<VertexElement> VertexElements;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="VertexBufferLayout" /> class.
+        /// Precalculate hashcode for faster comparison.
         /// </summary>
-        /// <param name="id">The id.</param>
-        /// <param name="vertexBufferLayouts">The vertex buffer layouts.</param>
-        private VertexBufferLayout(int id, ReadOnlyArray<VertexBufferSlot> vertexBufferLayouts)
+        private int hashCode;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VertexBufferLayout" /> struct.
+        /// </summary>
+        /// <param name="slot">The slot to bind this vertex buffer to. </param>
+        /// <param name="elements">The elements.</param>
+        /// <param name="instanceCount">The instance data step rate.</param>
+        private VertexBufferLayout(int slot, VertexElement[] elements, int instanceCount)
         {
-            this.Id = id;
-            VertexBufferLayouts = vertexBufferLayouts;
+            if (elements == null)
+                throw new ArgumentNullException("elements");
+
+            if (elements.Length == 0)
+                throw new ArgumentException("Vertex elements cannot have zero elements.", "elements");
+
+            // Make a copy of the elements.
+            var copyElements = new VertexElement[elements.Length];
+            Array.Copy(elements, copyElements, elements.Length);
+
+            SlotIndex = slot;
+            VertexElements = new ReadOnlyArray<VertexElement>(CalculateStaticOffsets(copyElements));
+            InstanceCount = instanceCount;
+
+            ComputeHashcode();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VertexBufferLayout" /> struct.
+        /// </summary>
+        /// <param name="slot">The slot to bind this vertex buffer to.</param>
+        /// <param name="structType">Type of a structure that is using <see cref="VertexElementAttribute" />.</param>
+        /// <param name="instanceCount">Specify the instancing count. Set to 0 for no instancing.</param>
+        /// <returns>A new instance of <see cref="VertexBufferLayout"/>.</returns>
+        public static VertexBufferLayout New(int slot, Type structType, int instanceCount = 0)
+        {
+            return New(slot, VertexElement.FromType(structType));
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VertexBufferLayout" /> struct.
+        /// </summary>
+        /// <typeparam name="T">Type of a structure that is using <see cref="VertexElementAttribute" />.</typeparam>
+        /// <param name="slot">The slot to bind this vertex buffer to.</param>
+        /// <param name="instanceCount">Specify the instancing count. Set to 0 for no instancing.</param>
+        /// <returns>A new instance of <see cref="VertexBufferLayout"/>.</returns>
+        public static VertexBufferLayout New<T>(int slot, int instanceCount = 0) where T : struct
+        {
+            return New(slot, typeof (T), instanceCount);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VertexBufferLayout" /> struct.
+        /// </summary>
+        /// <param name="slot">The slot to bind this vertex buffer to.</param>
+        /// <param name="elements">The elements.</param>
+        /// <returns>A new instance of <see cref="VertexBufferLayout"/>.</returns>
+        public static VertexBufferLayout New(int slot, params VertexElement[] elements)
+        {
+            return New(slot, elements, 0);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VertexBufferLayout" /> struct with instantiated data.
+        /// </summary>
+        /// <param name="slot">The slot to bind this vertex buffer to.</param>
+        /// <param name="elements">The elements.</param>
+        /// <param name="instanceCount">Specify the instancing count. Set to 0 for no instancing.</param>
+        /// <returns>A new instance of <see cref="VertexBufferLayout"/>.</returns>
+        public static VertexBufferLayout New(int slot, VertexElement[] elements, int instanceCount)
+        {
+            return new VertexBufferLayout(slot, elements, instanceCount);
+        }
+
+        private static VertexElement[] CalculateStaticOffsets(VertexElement[] vertexElements)
+        {
+            int offset = 0;
+            for(int i = 0; i < vertexElements.Length; i++)
+            {
+                // If offset is not specified, use the current offset
+                if (vertexElements[i].AlignedByteOffset == -1)
+                    vertexElements[i].alignedByteOffset = offset;
+                else
+                    offset = vertexElements[i].AlignedByteOffset;
+
+                // Move to the next field.
+                offset += FormatHelper.SizeOfInBits(vertexElements[i].Format);
+            }
+            return vertexElements;
         }
 
         public bool Equals(VertexBufferLayout other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Id == other.Id;
+            return hashCode == other.hashCode && VertexElements.Equals(other.VertexElements) && InstanceCount == other.InstanceCount;
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj is VertexBufferLayout && Equals((VertexBufferLayout) obj);
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((VertexBufferLayout) obj);
         }
 
         public override int GetHashCode()
         {
-            return Id;
+            return hashCode;
         }
 
-        /// <summary>
-        /// Implements the operator ==.
-        /// </summary>
-        /// <param name="left">The left.</param>
-        /// <param name="right">The right.</param>
-        /// <returns>The result of the operator.</returns>
+        private void ComputeHashcode()
+        {
+            // precalculate the hashcode for this instance
+            hashCode = InstanceCount;
+            hashCode = (hashCode * 397) ^ VertexElements.GetHashCode();
+        }
+
         public static bool operator ==(VertexBufferLayout left, VertexBufferLayout right)
         {
             return Equals(left, right);
         }
 
-        /// <summary>
-        /// Implements the operator !=.
-        /// </summary>
-        /// <param name="left">The left.</param>
-        /// <param name="right">The right.</param>
-        /// <returns>The result of the operator.</returns>
         public static bool operator !=(VertexBufferLayout left, VertexBufferLayout right)
         {
             return !Equals(left, right);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VertexBufferLayout" /> with a single slot from a structure that is using <see cref="VertexElementAttribute"/>.
-        /// </summary>
-        /// <param name="slot">The slot index in the input-assembler stage.</param>
-        /// <param name="structType">Type of a structure that is using <see cref="VertexElementAttribute" />.</param>
-        /// <returns>A new instance of <see cref="VertexBufferLayout"/>.</returns>
-        public static VertexBufferLayout New(int slot, Type structType)
-        {
-            return New(VertexBufferSlot.New(slot, structType));
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VertexBufferLayout" /> with a single slot from a structure that is using <see cref="VertexElementAttribute"/>.
-        /// </summary>
-        /// <typeparam name="T">Type of a structure that is using <see cref="VertexElementAttribute" />.</typeparam>
-        /// <param name="slot">The slot index in the input-assembler stage.</param>
-        /// <returns>A new instance of <see cref="VertexBufferLayout"/>.</returns>
-        public static VertexBufferLayout New<T>(int slot) where T : struct
-        {
-            return New(VertexBufferSlot.New(slot, typeof(T)));
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VertexBufferLayout" /> with a single slot.
-        /// </summary>
-        /// <param name="slot">The slot index in the input-assembler stage.</param>
-        /// <param name="vertexElements">Description of vertex elements.</param>
-        /// <returns>A new instance of <see cref="VertexBufferLayout"/>.</returns>
-        public static VertexBufferLayout New(int slot, params VertexElement[] vertexElements)
-        {
-            return New(VertexBufferSlot.New(slot, vertexElements));
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VertexBufferLayout" />.
-        /// </summary>
-        /// <param name="slots">A set of description of input layout for each slots in input-assembler stage.</param>
-        /// <returns>A new instance of <see cref="VertexBufferLayout"/>.</returns>
-        public static VertexBufferLayout New(params VertexBufferSlot[] slots)
-        {
-            // Make sure that the original buffer won't be modified, so we make a copy.
-            var layoutCopy = new VertexBufferSlot[slots.Length];
-            Array.Copy(slots, layoutCopy, slots.Length);
-
-            // Create a readonly array.
-            var vertexBufferLayouts = new ReadOnlyArray<VertexBufferSlot>(layoutCopy);
-
-            // Register a unique VertexBufferLayout.
-            lock (VertexBufferBindingCache)
-            {
-                VertexBufferLayout vertexBufferLayout;
-                if (!VertexBufferBindingCache.TryGetValue(vertexBufferLayouts, out vertexBufferLayout))
-                {
-                    vertexBufferLayout = new VertexBufferLayout(VertexBufferBindingCache.Count, vertexBufferLayouts);
-                    VertexBufferBindingCache.Add(vertexBufferLayouts, vertexBufferLayout);
-                }
-                return vertexBufferLayout;
-            }
         }
     }
 }
