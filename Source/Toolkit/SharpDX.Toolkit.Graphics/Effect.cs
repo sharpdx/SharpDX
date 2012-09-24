@@ -198,6 +198,10 @@ namespace SharpDX.Toolkit.Graphics
             {
                 foreach (var pass in technique.Passes)
                 {
+                    foreach (var subPass in pass.SubPasses)
+                    {
+                        subPass.ComputeSlotLinks();
+                    }
                     pass.ComputeSlotLinks();
                 }
             }

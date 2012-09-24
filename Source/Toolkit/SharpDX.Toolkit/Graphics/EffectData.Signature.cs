@@ -38,6 +38,16 @@ namespace SharpDX.Toolkit.Graphics
             /// </summary>
             public Semantic[] Semantics;
 
+            /// <summary>
+            /// Gets the bytecode of this signature. This field is only valid for Input Vertex Shader.
+            /// </summary>
+            public byte[] Bytecode;
+
+            /// <summary>
+            /// Gets the hashcode associated with the signature bytecode.
+            /// </summary>
+            public int Hashcode;
+
             public bool Equals(Signature other)
             {
                 if (ReferenceEquals(null, other)) return false;
@@ -80,6 +90,10 @@ namespace SharpDX.Toolkit.Graphics
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
                 serializer.Serialize(ref Semantics);
+                serializer.AllowNull = true;
+                serializer.Serialize(ref Semantics);
+                serializer.AllowNull = false;
+                serializer.Serialize(ref Hashcode);
             }
         }
     }

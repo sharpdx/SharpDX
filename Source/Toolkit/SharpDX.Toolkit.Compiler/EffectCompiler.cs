@@ -843,8 +843,7 @@ namespace SharpDX.Toolkit.Graphics
 
                     // Compute Hashcode
                     newBytecode = newBytecode.Strip(StripFlags.CompilerStripTestBlobs | StripFlags.CompilerStripReflectionData | StripFlags.CompilerStripDebugInformation);
-                    shader.Hashcode = HashUtility.ComputeFNVModified(newBytecode);
-
+                    shader.Hashcode = Utilities.ComputeHashFNVModified(newBytecode);
 
                     // Check that this shader was not already generated
                     int shaderIndex;
@@ -861,6 +860,15 @@ namespace SharpDX.Toolkit.Graphics
                     if (shaderIndex >= effectData.Shaders.Count)
                     {
                         shaderIndex = effectData.Shaders.Count;
+
+                        // If this is a Vertex shader, compute the binary signature for the input layout
+                        if (shader.Type == EffectShaderType.Vertex)
+                        {
+                            // Gets the signature from the stripped bytecode and compute the hashcode.
+                            shader.InputSignature.Bytecode = ShaderSignature.GetInputSignature(newBytecode);
+                            shader.InputSignature.Hashcode = Utilities.ComputeHashFNVModified(shader.InputSignature.Bytecode);
+                        }
+
                         effectData.Shaders.Add(shader);
                     }
 

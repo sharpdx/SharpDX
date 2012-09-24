@@ -38,9 +38,10 @@ namespace SharpDX.Toolkit.Graphics
 
         #endregion
 
+
         private readonly EffectData dataGroup;
         private readonly List<SharpDX.Direct3D11.DeviceChild> compiledShaders;
-        private readonly GraphicsDevice device;
+        private readonly GraphicsDevice graphicsDevice;
         private readonly List<Effect> effects;
 
         // GraphicsDevice => (ConstantBufferName => (ConstantBufferKey => EffectConstantBuffer))
@@ -59,7 +60,7 @@ namespace SharpDX.Toolkit.Graphics
             compiledShaders = new List<DeviceChild>();
             registered = new Dictionary<EffectData, bool>(new IdentityEqualityComparer<EffectData>());
             effects = new List<Effect>();
-            this.device = device.MainDevice;
+            this.graphicsDevice = device.MainDevice;
             constantBufferAllocator = DefaultConstantBufferAllocator;
         }
 
@@ -117,6 +118,9 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     if (!registered.ContainsKey(bytecode))
                     {
+                        // Pre-cache all input signatures
+                        CacheInputSignature(bytecode);
+
                         dataGroup.MergeFrom(bytecode);
                         registered.Add(bytecode, true);
                         hasNewBytecode = true;
@@ -135,6 +139,20 @@ namespace SharpDX.Toolkit.Graphics
                     {
                         compiledShaders.Add(null);
                     }
+                }
+            }
+        }
+
+        private void CacheInputSignature(EffectData effectData)
+        {
+            // Iterate on all vertex shaders and make unique the bytecode
+            // for faster comparison when creating input layout.
+            foreach (var shader in effectData.Shaders)
+            {
+                if (shader.Type == EffectShaderType.Vertex && shader.InputSignature.Bytecode != null)
+                {
+                    var signature = graphicsDevice.GetOrCreateInputSignatureManager(shader.InputSignature.Bytecode, shader.InputSignature.Hashcode);
+                    shader.Bytecode = signature.Bytecode;
                 }
             }
         }
@@ -178,22 +196,22 @@ namespace SharpDX.Toolkit.Graphics
                     switch (shaderType)
                     {
                         case EffectShaderType.Vertex:
-                            shader = new VertexShader(device, bytecodeRaw);
+                            shader = new VertexShader(graphicsDevice, bytecodeRaw);
                             break;
                         case EffectShaderType.Domain:
-                            shader = new DomainShader(device, bytecodeRaw);
+                            shader = new DomainShader(graphicsDevice, bytecodeRaw);
                             break;
                         case EffectShaderType.Hull:
-                            shader = new HullShader(device, bytecodeRaw);
+                            shader = new HullShader(graphicsDevice, bytecodeRaw);
                             break;
                         case EffectShaderType.Geometry:
-                            shader = new GeometryShader(device, bytecodeRaw);
+                            shader = new GeometryShader(graphicsDevice, bytecodeRaw);
                             break;
                         case EffectShaderType.Pixel:
-                            shader = new PixelShader(device, bytecodeRaw);
+                            shader = new PixelShader(graphicsDevice, bytecodeRaw);
                             break;
                         case EffectShaderType.Compute:
-                            shader = new ComputeShader(device, bytecodeRaw);
+                            shader = new ComputeShader(graphicsDevice, bytecodeRaw);
                             break;
                     }
                     compiledShaders[index] = shader;
@@ -238,7 +256,7 @@ namespace SharpDX.Toolkit.Graphics
                 if (!bufferSet.TryGetValue(bufferKey, out buffer))
                 {
                     // 4) If this buffer doesn't exist, create a new one and register it.
-                    buffer = new EffectConstantBuffer(device, bufferRaw);
+                    buffer = new EffectConstantBuffer(graphicsDevice, bufferRaw);
                     bufferSet[bufferKey] = buffer;
                 }
 

@@ -24,8 +24,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using SharpDX.Direct3D;
+using SharpDX.Direct3D11;
 using SharpDX.IO;
 using SharpDX.WIC;
+using SharpDX.Windows;
 
 namespace SharpDX.Toolkit.Graphics.Tests
 {
@@ -57,18 +59,50 @@ namespace SharpDX.Toolkit.Graphics.Tests
             //testCompiler.TestCompiler();
 
             // Compile a toolkit effect from a file
-            var device = GraphicsDevice.New();
+
+            var form = new RenderForm("SharpDX - MiniTri Direct3D 11 Sample");
+
+            int width = form.ClientSize.Width;
+            int height = form.ClientSize.Height;
+
+            var device = GraphicsDevice.New(DeviceCreationFlags.Debug);
+            device.CurrentPresenter = GraphicsPresenter.New(device, width, height, PixelFormat.R8G8B8A8.UNorm, form.Handle);
+
+            var effect = new BasicEffect(device)
+                             {
+                                 VertexColorEnabled = true, 
+                                 View = Matrix.Identity, 
+                                 Projection = Matrix.Identity, 
+                                 World = Matrix.Identity
+                             };
+
+            var bufferData = new []
+                           {
+                               new VertexPositionColor(new Vector3(-0.5f, -0.5f, 0.5f), Color.Red),
+                               new VertexPositionColor(new Vector3( 0.0f,  0.5f, 0.5f), Color.Green),
+                               new VertexPositionColor(new Vector3( 0.5f, -0.5f, 0.5f), Color.Blue),
+                           };
 
 
+            var vertexBuffer = Buffer.Vertex.New(device, bufferData);
+            var inputLayout = VertexInputLayout.FromBuffer(0, vertexBuffer);
 
-            var effect = new BasicEffect(device);
+            device.SetRenderTargets(device.CurrentPresenter.BackBuffer);
+            device.SetViewports(0, 0, width, height);
+            device.SetVertexInputLayout(inputLayout);
+            device.SetVertexBuffer(0, vertexBuffer);
 
-            effect.Techniques[0].Passes[0].Apply();
+            RenderLoop.Run(form, () =>
+                                     {
+                                         device.Clear(device.CurrentPresenter.BackBuffer, Color.CornflowerBlue);
 
-            Console.WriteLine(effect.ConstantBuffers.Count);
+                                         effect.Techniques[0].Passes[0].Apply();
 
+                                         device.Draw(PrimitiveType.TriangleList, 3);
 
+                                         device.Present();
 
+                                     });
         }
     }
 }

@@ -44,6 +44,8 @@ namespace SharpDX.Toolkit.Graphics
     {
         private static readonly Dictionary<ReadOnlyArray<VertexBufferLayout>, VertexInputLayout> VertexBufferBindingCache = new Dictionary<ReadOnlyArray<VertexBufferLayout>, VertexInputLayout>();
 
+        internal readonly InputElement[] InputElements;
+
         /// <summary>
         /// Gets a unique identifier of this VertexInputLayout configuration.
         /// </summary>
@@ -63,6 +65,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             this.Id = id;
             this.BufferLayouts = bufferLayouts;
+            InputElements = ComputeInputElements();
         }
 
         public bool Equals(VertexInputLayout other)
@@ -82,6 +85,31 @@ namespace SharpDX.Toolkit.Graphics
         public override int GetHashCode()
         {
             return Id;
+        }
+
+        private InputElement[] ComputeInputElements()
+        {
+            var inputElements = new List<InputElement>();
+            foreach (var vertexDesc in BufferLayouts)
+            {
+                foreach (var vertexElement in vertexDesc.VertexElements)
+                {
+                    // TODO: Perform consistency check on the input elements
+
+                    inputElements.Add(new InputElement()
+                    {
+                        SemanticName = vertexElement.SemanticName,
+                        SemanticIndex = vertexElement.SemanticIndex,
+                        Format = vertexElement.Format,
+                        AlignedByteOffset = vertexElement.AlignedByteOffset,
+                        Slot = vertexDesc.SlotIndex,
+                        Classification = vertexDesc.InstanceCount > 0 ? InputClassification.PerInstanceData : InputClassification.PerVertexData,
+                        InstanceDataStepRate = vertexDesc.InstanceCount,
+                    }
+                        );
+                }
+            }
+            return inputElements.ToArray();
         }
 
         /// <summary>

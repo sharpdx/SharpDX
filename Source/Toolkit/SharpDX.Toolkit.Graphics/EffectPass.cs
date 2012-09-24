@@ -80,9 +80,13 @@ namespace SharpDX.Toolkit.Graphics
         private bool hasRasterizerState = false;
         private RasterizerState rasterizerState;
 
+        private InputSignatureManager inputSignatureManager;
+        private InputLayoutPair currentInputLayoutPair;
+
         /// <summary>
         ///   Initializes a new instance of the <see cref="EffectPass" /> class.
         /// </summary>
+        /// <param name="logger">The logger used to log errors.</param>
         /// <param name="effect"> The effect. </param>
         /// <param name="pass"> The pass. </param>
         /// <param name="name"> The name. </param>
@@ -226,6 +230,9 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         private unsafe void ApplyInternal()
         {
+            // Sets the current pass on the graphics device
+            graphicsDevice.CurrentPass = this;
+
             var pLinks = pipeline.SlotLinks.Links;
             var pPointers = pipeline.PointersBuffer;
             var constantBuffers = Effect.ResourceLinker.ConstantBuffers;
@@ -414,6 +421,12 @@ namespace SharpDX.Toolkit.Graphics
             stageBlock.Shader = Effect.Group.GetOrCompileShader(stageBlock.Type, stageBlock.Index);
             var shaderRaw = Effect.Group.EffectData.Shaders[stageBlock.Index];
 
+            // Cache the input signature
+            if (shaderRaw.Type == EffectShaderType.Vertex)
+            {
+                inputSignatureManager = graphicsDevice.GetOrCreateInputSignatureManager(shaderRaw.Bytecode, shaderRaw.Hashcode);
+            }
+
             for (int i = 0; i < shaderRaw.ConstantBuffers.Count; i++)
             {
                 var constantBufferRaw = shaderRaw.ConstantBuffers[i];
@@ -425,6 +438,13 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     // Use the group to share constant buffers
                     constantBuffer = Effect.Group.GetOrCreateConstantBuffer(Effect.GraphicsDevice, constantBufferRaw);
+
+                    // IF constant buffer is null, it means that there is a conflict
+                    if (constantBuffer == null)
+                    {
+                        logger.Error("Constant buffer [{0}] cannot have multiple size or different content declaration inside the same effect group", constantBufferRaw.Name);
+                        continue;
+                    }
                 }
                 else
                 {
@@ -432,14 +452,7 @@ namespace SharpDX.Toolkit.Graphics
                     constantBuffer = new EffectConstantBuffer(Effect.GraphicsDevice, constantBufferRaw);
                     Effect.DisposeCollector.Collect(constantBuffer);
                 }
-
-                // IF constant buffer is null, it means that there is a conflict
-                if (constantBuffer == null)
-                {
-                    logger.Error("Constant buffer [{0}] cannot have multiple size or different content declaration inside the same effect group", constantBufferRaw.Name);
-                    continue;
-                }
-
+                
                 // Test if this constant buffer is not already part of the effect
                 if (Effect.ConstantBuffers[constantBufferRaw.Name] == null)
                 {
@@ -778,6 +791,17 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             return new EffectAttributeCollection(attributes);
+        }
+
+
+        internal InputLayout GetInputLayout(VertexInputLayout layout)
+        {
+            if (layout == null)
+                return null;
+
+            if (!ReferenceEquals(currentInputLayoutPair.VertexInputLayout, layout))
+                inputSignatureManager.GetOrCreate(layout, out currentInputLayoutPair);
+            return currentInputLayoutPair.InputLayout;
         }
 
         #region Nested type: PipelineBlock

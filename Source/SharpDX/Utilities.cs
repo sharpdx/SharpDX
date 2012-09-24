@@ -21,6 +21,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection.Emit;
@@ -104,7 +105,7 @@ namespace SharpDX
         /// <returns>True if the buffers are equivalent, false otherwise.</returns>
         public unsafe static bool CompareMemory(IntPtr from, IntPtr against, int sizeToCompare)
         {
-            var pSrc = (byte*)from;
+            var pSrc = (byte*)@from;
             var pDst = (byte*)against;
 
             // Compare 8 bytes.
@@ -153,7 +154,7 @@ namespace SharpDX
         /// <returns>sizeof this struct</returns>
         public static int SizeOf<T>() where T : struct
         {
-            return SharpDX.Interop.SizeOf<T>();            
+            return Interop.SizeOf<T>();            
         }
 
         /// <summary>
@@ -164,7 +165,7 @@ namespace SharpDX
         /// <returns>sizeof in bytes of this array of struct</returns>
         public static int SizeOf<T>(T[] array) where T : struct
         {
-            return array == null ? 0 : array.Length * SharpDX.Interop.SizeOf<T>();
+            return array == null ? 0 : array.Length * Interop.SizeOf<T>();
         }
 
         /// <summary>
@@ -213,7 +214,7 @@ namespace SharpDX
             unsafe
             {
                 fixed (void* pBuffer = buffer)
-                    SharpDX.Interop.Write<T>(pBuffer, source, 0, source.Length);
+                    Interop.Write(pBuffer, source, 0, source.Length);
             }
             return buffer;
         }
@@ -228,7 +229,7 @@ namespace SharpDX
         {
             unsafe
             {
-                return SharpDX.Interop.ReadInline<T>((void*)source);
+                return Interop.ReadInline<T>((void*)source);
             }
         }
 
@@ -243,7 +244,7 @@ namespace SharpDX
         {
             unsafe
             {
-                SharpDX.Interop.CopyInline<T>(ref data, (void*)source);
+                Interop.CopyInline(ref data, (void*)source);
             }
         }
 
@@ -258,7 +259,7 @@ namespace SharpDX
         {
             unsafe
             {
-                SharpDX.Interop.CopyInlineOut<T>(out data, (void*)source);
+                Interop.CopyInlineOut(out data, (void*)source);
             }
         }
 
@@ -273,7 +274,7 @@ namespace SharpDX
         {
             unsafe
             {
-                return (IntPtr)SharpDX.Interop.Read<T>((void*)source, ref data);
+                return (IntPtr)Interop.Read((void*)source, ref data);
             }
         }
 
@@ -290,7 +291,7 @@ namespace SharpDX
         {
             unsafe
             {
-                return (IntPtr)SharpDX.Interop.Read<T>((void*)source, data, offset, count);
+                return (IntPtr)Interop.Read((void*)source, data, offset, count);
             }
         }
 
@@ -320,7 +321,7 @@ namespace SharpDX
         {
             unsafe
             {
-                return (IntPtr)SharpDX.Interop.Write<T>((void*)destination, ref data);
+                return (IntPtr)Interop.Write((void*)destination, ref data);
             }
         }
 
@@ -337,7 +338,7 @@ namespace SharpDX
         {
             unsafe
             {
-                return (IntPtr)SharpDX.Interop.Write<T>((void*)destination, data, offset, count);
+                return (IntPtr)Interop.Write((void*)destination, data, offset, count);
             }
         }
 
@@ -637,15 +638,15 @@ namespace SharpDX
         /// <returns>a byte[] buffer</returns>
         public static byte[] ReadStream(Stream stream, ref int readLength)
         {
-            System.Diagnostics.Debug.Assert(stream != null);
-            System.Diagnostics.Debug.Assert(stream.CanRead);
+            Debug.Assert(stream != null);
+            Debug.Assert(stream.CanRead);
             int num = readLength;
-            System.Diagnostics.Debug.Assert(num <= (stream.Length - stream.Position));
+            Debug.Assert(num <= (stream.Length - stream.Position));
             if (num == 0)
                 readLength = (int) (stream.Length - stream.Position);
             num = readLength;
 
-            System.Diagnostics.Debug.Assert(num >= 0);
+            Debug.Assert(num >= 0);
             if (num == 0)
                 return new byte[0];
 
@@ -909,7 +910,7 @@ namespace SharpDX
                 // If property type is bool, convert it to int first
                 if (propertyType == typeof(bool))
                 {
-                    ilGenerator.EmitCall(OpCodes.Call,  Utilities.GetMethod(typeof(Convert), "ToInt32", new[] { typeof(bool) }), null);
+                    ilGenerator.EmitCall(OpCodes.Call,  GetMethod(typeof(Convert), "ToInt32", new[] { typeof(bool) }), null);
                 }
                 ilGenerator.Emit(OpCodes.Stind_I4);
             }
@@ -999,7 +1000,7 @@ namespace SharpDX
                 // If property type is bool, convert it to int first
                 if (propertyType == typeof(bool))
                 {
-                    ilGenerator.EmitCall(OpCodes.Call, Utilities.GetMethod(typeof(Convert),"ToBoolean", new[] { typeT }), null);
+                    ilGenerator.EmitCall(OpCodes.Call, GetMethod(typeof(Convert),"ToBoolean", new[] { typeT }), null);
                 }
             }
             else if (typeT == typeof(long) || typeT == typeof(ulong))
@@ -1217,5 +1218,24 @@ namespace SharpDX
         }
         [DllImport("kernel32", EntryPoint = "GetProcAddress", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
         static extern IntPtr GetProcAddress_(IntPtr hModule, string procName);
+
+        /// <summary>
+        /// Compute a FNV1-modified Hash from <a href="http://bretm.home.comcast.net/~bretm/hash/6.html">Fowler/Noll/Vo Hash</a> improved version.
+        /// </summary>
+        /// <param name="data">Data to compute the hash from.</param>
+        /// <returns>A hash value</returns>
+        public static int ComputeHashFNVModified(byte[] data)
+        {
+            const uint p = 16777619;
+            uint hash = 2166136261;
+            foreach (byte b in data)
+                hash = (hash ^ b) * p;
+            hash += hash << 13;
+            hash ^= hash >> 7;
+            hash += hash << 3;
+            hash ^= hash >> 17;
+            hash += hash << 5;
+            return unchecked((int)hash);
+        }
     }
 }

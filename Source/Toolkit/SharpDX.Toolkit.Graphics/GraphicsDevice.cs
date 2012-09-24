@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Collections.Generic;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using Device = SharpDX.Direct3D11.Device;
@@ -35,6 +36,12 @@ namespace SharpDX.Toolkit.Graphics
         private readonly Viewport[] viewports = new Viewport[16];
         private IntPtr resetVertexBuffersPointer;
         private int maxSlotCountForVertexBuffer;
+        private Dictionary<VertexInputLayout, InputLayoutPair> inputLayoutDeviceCache;
+        private Dictionary<VertexInputLayout, InputLayoutPair> inputLayoutContextCache;
+
+        internal EffectPass CurrentPass;
+
+        private readonly Dictionary<InputSignatureKey, InputSignatureManager> inputSignatureCache;
 
         /// <summary>
         /// Gets the features supported by this <see cref="GraphicsDevice"/>.
@@ -89,7 +96,8 @@ namespace SharpDX.Toolkit.Graphics
         private int currentDepthStencilReference = 0;
         private RasterizerState currentRasterizerState;
         private PrimitiveTopology currentPrimitiveTopology;
-        private VertexInputLayout currentInputLayout;
+        private VertexInputLayout currentVertexInputLayout;
+        private bool hasNewVertexBufferLayout;
 
         private InputAssemblerStage inputAssemblerStage;
         private RasterizerStage rasterizeStage;
@@ -105,6 +113,11 @@ namespace SharpDX.Toolkit.Graphics
             Context = Device.ImmediateContext;
             IsDeferred = false;
             Features = new GraphicsDeviceFeatures(Device);
+
+            // Global cache for all input signatures inside a GraphicsDevice.
+            inputSignatureCache =  new Dictionary<InputSignatureKey, InputSignatureManager>();
+            inputLayoutDeviceCache =  new Dictionary<VertexInputLayout, InputLayoutPair>(new IdentityEqualityComparer<VertexInputLayout>());
+            inputLayoutContextCache = new Dictionary<VertexInputLayout, InputLayoutPair>(new IdentityEqualityComparer<VertexInputLayout>());
 
             // Create default Effect group
             DefaultEffectGroup = EffectGroup.New(this, "Default");
@@ -127,6 +140,11 @@ namespace SharpDX.Toolkit.Graphics
             Context = Device.ImmediateContext;
             IsDeferred = false;
             Features = new GraphicsDeviceFeatures(Device);
+
+            // Global cache for all input signatures inside a GraphicsDevice.
+            inputSignatureCache = new Dictionary<InputSignatureKey, InputSignatureManager>();
+            inputLayoutDeviceCache = new Dictionary<VertexInputLayout, InputLayoutPair>(new IdentityEqualityComparer<VertexInputLayout>());
+            inputLayoutContextCache = new Dictionary<VertexInputLayout, InputLayoutPair>(new IdentityEqualityComparer<VertexInputLayout>());
 
             // Create default Effect group
             DefaultEffectGroup = EffectGroup.New(this, "Default");
@@ -151,6 +169,12 @@ namespace SharpDX.Toolkit.Graphics
 
             // Create default Effect group
             DefaultEffectGroup = mainDevice.DefaultEffectGroup;
+
+            // Copy the Global cache for all input signatures inside a GraphicsDevice.
+            inputSignatureCache = mainDevice.inputSignatureCache;
+            inputLayoutDeviceCache = mainDevice.inputLayoutDeviceCache;
+            // For a new deferred context, we need to create a new inputLayout cache
+            inputLayoutContextCache = new Dictionary<VertexInputLayout, InputLayoutPair>(new IdentityEqualityComparer<VertexInputLayout>());
 
             // Copy the reset vertex buffer
             resetVertexBuffersPointer = mainDevice.resetVertexBuffersPointer;
@@ -409,9 +433,14 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::DrawIndexed</unmanaged-short>	
         public void DrawIndexed(PrimitiveType primitiveType, int indexCount, int startIndexLocation = 0, int baseVertexLocation = 0)
         {
+            SetupInputLayout();
+
             PrimitiveType = primitiveType;
             Context.DrawIndexed(indexCount, startIndexLocation, baseVertexLocation);
         }
+
+
+        private InputLayout currentInputLayout;
 
         /// <summary>	
         /// <p>Draw non-indexed, non-instanced primitives.</p>	
@@ -427,6 +456,8 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::Draw</unmanaged-short>	
         public void Draw(PrimitiveType primitiveType, int vertexCount, int startVertexLocation = 0)
         {
+            SetupInputLayout();
+
             PrimitiveType = primitiveType;
             Context.Draw(vertexCount, startVertexLocation);
         }
@@ -448,6 +479,8 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::DrawIndexedInstanced</unmanaged-short>	
         public void DrawIndexedInstanced(PrimitiveType primitiveType, int indexCountPerInstance, int instanceCount, int startIndexLocation = 0, int baseVertexLocation = 0, int startInstanceLocation = 0)
         {
+            SetupInputLayout();
+
             PrimitiveType = primitiveType;
             Context.DrawIndexedInstanced(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
         }
@@ -468,6 +501,8 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::DrawInstanced</unmanaged-short>	
         public void DrawInstanced(PrimitiveType primitiveType, int vertexCountPerInstance, int instanceCount, int startVertexLocation = 0, int startInstanceLocation = 0)
         {
+            SetupInputLayout();
+
             PrimitiveType = primitiveType;
             Context.DrawInstanced(vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation);
         }
@@ -484,6 +519,8 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::DrawAuto</unmanaged-short>	
         public void DrawAuto(PrimitiveType primitiveType)
         {
+            SetupInputLayout();
+
             PrimitiveType = primitiveType;
             Context.DrawAuto();
         }
@@ -502,6 +539,8 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::DrawIndexedInstancedIndirect</unmanaged-short>	
         public void DrawIndexedInstanced(PrimitiveType primitiveType, SharpDX.Direct3D11.Buffer argumentsBuffer, int alignedByteOffsetForArgs = 0)
         {
+            SetupInputLayout();
+
             PrimitiveType = primitiveType;
             Context.DrawIndexedInstancedIndirect(argumentsBuffer, alignedByteOffsetForArgs);
         }
@@ -520,6 +559,8 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::DrawInstancedIndirect</unmanaged-short>	
         public void DrawInstanced(PrimitiveType primitiveType, SharpDX.Direct3D11.Buffer argumentsBuffer, int alignedByteOffsetForArgs = 0)
         {
+            SetupInputLayout();
+
             PrimitiveType = primitiveType;
             Context.DrawIndexedInstancedIndirect(argumentsBuffer, alignedByteOffsetForArgs);
         }
@@ -952,7 +993,11 @@ namespace SharpDX.Toolkit.Graphics
         public void SetVertexInputLayout(VertexInputLayout inputLayout)
         {
             // The setup of the real input layout is delayed until we know which pass is applied.
-            currentInputLayout = inputLayout;
+            if (!ReferenceEquals(currentVertexInputLayout, inputLayout))
+            {
+                currentVertexInputLayout = inputLayout;
+                hasNewVertexBufferLayout = true;
+            }
         }
 
         /// <summary>
@@ -996,7 +1041,7 @@ namespace SharpDX.Toolkit.Graphics
                 if ((slot + 1) > maxSlotCountForVertexBuffer)
                     maxSlotCountForVertexBuffer = slot + 1;
             }
-            inputAssemblerStage.SetVertexBuffers(slot, 1, vertexBufferPtr, new IntPtr(&stride), new IntPtr(&offset));
+            inputAssemblerStage.SetVertexBuffers(slot, 1, new IntPtr(&vertexBufferPtr), new IntPtr(&stride), new IntPtr(&offset));
         }
 
         /// <summary>
@@ -1074,6 +1119,44 @@ namespace SharpDX.Toolkit.Graphics
         public static implicit operator DeviceContext(GraphicsDevice from)
         {
             return from == null ? null : from.Context;
+        }
+
+        private void SetupInputLayout()
+        {
+            if (CurrentPass == null)
+                throw new InvalidOperationException("Cannot perform a Draw/Dispatch operation without an EffectPass applied.");
+
+            var inputLayout = CurrentPass.GetInputLayout(currentVertexInputLayout);
+            if (!ReferenceEquals(inputLayout, currentInputLayout))
+            {
+                inputAssemblerStage.SetInputLayout(inputLayout);
+                currentInputLayout = inputLayout;
+            }
+        }
+
+        /// <summary>
+        /// Gets or create an input signature manager for a particular signature.
+        /// </summary>
+        /// <param name="signatureBytecode">The signature bytecode.</param>
+        /// <param name="signatureHashcode">The signature hashcode.</param>
+        /// <returns></returns>
+        internal InputSignatureManager GetOrCreateInputSignatureManager(byte[] signatureBytecode, int signatureHashcode)
+        {
+            var key = new InputSignatureKey(signatureBytecode, signatureHashcode);
+
+            InputSignatureManager signatureManager;
+
+            // Lock all input signatures, as they are shared between all shaders/graphics device instances.
+            lock (inputSignatureCache)
+            {
+                if (!inputSignatureCache.TryGetValue(key, out signatureManager))
+                {
+                    signatureManager = new InputSignatureManager(this, signatureBytecode, inputLayoutContextCache, inputLayoutDeviceCache);
+                    inputSignatureCache.Add(key, signatureManager);
+                }
+            }
+
+            return signatureManager;
         }
     }
 }
