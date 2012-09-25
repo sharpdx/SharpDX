@@ -27,7 +27,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Constant buffer helper methods.
         /// </summary>
-        public static class Cosntant
+        public static class Constant
         {
             /// <summary>
             /// Creates a new constant buffer with <see cref="ResourceUsage.Dynamic"/> usage.

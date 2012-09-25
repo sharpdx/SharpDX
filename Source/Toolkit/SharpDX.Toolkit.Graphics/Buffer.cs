@@ -693,6 +693,28 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
+        /// Creates a new <see cref="Buffer" /> instance from a byte array.
+        /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
+        /// <param name="initialValue">The initial value of this buffer.</param>
+        /// <param name="elementSize">Size of an element. Must be equal to 2 or 4 for an index buffer, or to the size of a struct for a structured/typed buffer. Can be set to 0 for other buffers.</param>
+        /// <param name="bufferFlags">The buffer flags to specify the type of buffer.</param>
+        /// <param name="viewFormat">The view format must be specified if the buffer is declared as a shared resource view.</param>
+        /// <param name="usage">The usage.</param>
+        /// <returns>An instance of a new <see cref="Buffer" /></returns>
+        /// <msdn-id>ff476501</msdn-id>
+        /// <unmanaged>HRESULT ID3D11Device::CreateBuffer([In] const D3D11_BUFFER_DESC* pDesc,[In, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Buffer** ppBuffer)</unmanaged>
+        /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>
+        public static unsafe Buffer New(GraphicsDevice device, byte[] initialValue, int elementSize, BufferFlags bufferFlags, DXGI.Format viewFormat = DXGI.Format.Unknown, ResourceUsage usage = ResourceUsage.Default)
+        {
+            int bufferSize = initialValue.Length;
+            viewFormat = CheckPixelFormat(bufferFlags, elementSize, viewFormat);
+
+            var description = NewDescription(bufferSize, elementSize, bufferFlags, usage);
+            return new Buffer(device, description, bufferFlags, viewFormat, (IntPtr)Interop.Fixed(initialValue));
+        }
+
+        /// <summary>
         /// Creates a new <see cref="Buffer" /> instance.
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>

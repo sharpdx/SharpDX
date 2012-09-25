@@ -297,7 +297,7 @@ namespace SharpDX.Toolkit.Graphics
 
         private static Buffer DefaultConstantBufferAllocator(GraphicsDevice device, EffectGroup group, EffectConstantBuffer constantBuffer)
         {
-            return Buffer.Cosntant.New(device, constantBuffer.Size);
+            return Buffer.Constant.New(device, constantBuffer.Size);
         }
 
         #region Nested type: EffectConstantBufferKey

@@ -53,7 +53,7 @@ namespace SharpDX.Toolkit.Graphics
             // By default, all constant buffers are cleared with 0
             Clear();
 
-            nativeBuffer = ToDispose(Buffer.Cosntant.New(device, Size));
+            nativeBuffer = ToDispose(Buffer.Constant.New(device, Size));
 
             // The buffer is considered dirty for the first usage.
             IsDirty = true;

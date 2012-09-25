@@ -30,7 +30,7 @@ namespace SharpDX.Toolkit.Graphics
         public static class Vertex
         {
             /// <summary>
-            /// Creates a new Vertex buffer <see cref="ResourceUsage.Default"/> uasge.
+            /// Creates a new Vertex buffer with <see cref="ResourceUsage.Default"/> uasge by default.
             /// </summary>
             /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="size">The size in bytes.</param>
@@ -42,7 +42,7 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             /// <summary>
-            /// Creates a new Vertex buffer <see cref="ResourceUsage.Default"/> uasge.
+            /// Creates a new Vertex buffer with <see cref="ResourceUsage.Default"/> uasge by default.
             /// </summary>
             /// <typeparam name="T">Type of the Vertex buffer to get the sizeof from</typeparam>
             /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
@@ -54,7 +54,7 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             /// <summary>
-            /// Creates a new Vertex buffer <see cref="ResourceUsage.Default"/> uasge.
+            /// Creates a new Vertex buffer with <see cref="ResourceUsage.Immutable"/> uasge by default.
             /// </summary>
             /// <typeparam name="T">Type of the Vertex buffer to get the sizeof from</typeparam>
             /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
@@ -67,7 +67,7 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             /// <summary>
-            /// Creates a new Vertex buffer <see cref="ResourceUsage.Default"/> uasge.
+            /// Creates a new Vertex buffer with <see cref="ResourceUsage.Immutable"/> uasge by default.
             /// </summary>
             /// <typeparam name="T">Type of the Vertex buffer to get the sizeof from</typeparam>
             /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
@@ -80,7 +80,7 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             /// <summary>
-            /// Creates a new Vertex buffer <see cref="ResourceUsage.Default"/> uasge.
+            /// Creates a new Vertex buffer with <see cref="ResourceUsage.Immutable"/> uasge by default.
             /// </summary>
             /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="value">The value to initialize the Vertex buffer.</param>
