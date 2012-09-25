@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using SharpDX.DXGI;
 
 namespace SharpDX.Toolkit.Graphics
@@ -38,7 +39,6 @@ namespace SharpDX.Toolkit.Graphics
     {
         private readonly GraphicsDevice graphicsDevice;
         private readonly SwapChain swapChain;
-        private readonly SwapChainDescription swapChainDescription;
 
         /// <summary>
         /// Gets the description of this presenter.
@@ -50,17 +50,31 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="device">The device.</param>
         /// <param name="swapChain">The swap chain.</param>
-        private GraphicsPresenter(GraphicsDevice device, SwapChain swapChain)
+        /// <param name="presentationParameters"> </param>
+        private GraphicsPresenter(GraphicsDevice device, SwapChain swapChain, PresentationParameters presentationParameters)
         {
             device = device.MainDevice;
             this.graphicsDevice = device;
             this.swapChain = ToDispose(swapChain);
-            this.swapChainDescription = swapChain.Description;
-            this.Description = swapChainDescription;
+            this.Description = presentationParameters.Clone();
             this.PresentInterval = PresentInterval.Default;
 
             // TODO handle multiple backbuffers
             BackBuffer = RenderTarget2D.New(device, swapChain.GetBackBuffer<SharpDX.Direct3D11.Texture2D>(0));
+
+            ApplySwapChainDescription();
+        }
+
+        private void ApplySwapChainDescription()
+        {
+            var swapChainDesc = swapChain.Description;
+            Description.BackBufferWidth = swapChainDesc.ModeDescription.Width;
+            Description.BackBufferHeight = swapChainDesc.ModeDescription.Height;
+            Description.BackBufferFormat = swapChainDesc.ModeDescription.Format;
+            Description.RefreshRate = swapChainDesc.ModeDescription.RefreshRate;
+
+            if (Description.IsFullScreen)
+                IsFullScreen = Description.IsFullScreen;
         }
 
         /// <summary>
@@ -72,31 +86,58 @@ namespace SharpDX.Toolkit.Graphics
         /// Initializes a new instance of the <see cref="GraphicsPresenter" /> class.
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
-        /// <param name="width">The width in pixel of the output.</param>
-        /// <param name="height">The height in pixel of the output</param>
-        /// <param name="pixelFormat">The pixel format</param>
-        /// <param name="windowHandle">A handle to the window (HWND/form.Handle for Desktop, CoreWindow IUnknown pointer for Metro)</param>
-        /// <param name="usage">Usage of this presenter</param>
-        /// <param name="refreshRate"> </param>
+        /// <param name="presentationParameters">The presentation parameters </param>
         /// <returns>A new instance of the <see cref="GraphicsPresenter" /> class.</returns>
-        public static GraphicsPresenter New(GraphicsDevice device, int width, int height, PixelFormat pixelFormat, System.IntPtr windowHandle, Rational? refreshRate = null, SharpDX.DXGI.Usage usage = SharpDX.DXGI.Usage.BackBuffer | SharpDX.DXGI.Usage.RenderTargetOutput)
+        public static GraphicsPresenter New(GraphicsDevice device, PresentationParameters presentationParameters)
         {
 #if WIN8METRO
             throw new NotImplementedException(); 
 #else
-            return NewForDesktop(device, width, height, pixelFormat, windowHandle, refreshRate, usage);
+            return NewForDesktop(device, presentationParameters);
 #endif
         }
 
 #if !WIN8METRO
-        private static GraphicsPresenter NewForDesktop(GraphicsDevice graphicsDevice, int width, int height, PixelFormat pixelFormat, System.IntPtr windowHandle, Rational? refreshRate = null, SharpDX.DXGI.Usage usage = SharpDX.DXGI.Usage.BackBuffer | SharpDX.DXGI.Usage.RenderTargetOutput)
+        private static GraphicsPresenter NewForDesktop(GraphicsDevice graphicsDevice, PresentationParameters presentationParameters)
         {
+            int width = presentationParameters.BackBufferWidth;
+            int height = presentationParameters.BackBufferHeight;
+            PixelFormat pixelFormat = presentationParameters.BackBufferFormat;
+            Rational refreshRate = presentationParameters.RefreshRate;
+            SharpDX.DXGI.Usage usage = presentationParameters.RenderTargetUsage;
+            System.IntPtr windowHandle;
+
+            // Check for Window Handle parameter
+            if (presentationParameters.DeviceWindowHandle == null)
+                throw new ArgumentException("DeviceWindowHandle cannot be null");
+
+            var deviceWindowHandle = presentationParameters.DeviceWindowHandle;
+
+            if (deviceWindowHandle is GraphicsWindow)
+            {
+                deviceWindowHandle = ((GraphicsWindow) deviceWindowHandle).BackControl;
+            }
+
+            if (deviceWindowHandle is IntPtr)
+            {
+                windowHandle = (IntPtr)deviceWindowHandle;
+            }
+            else if (deviceWindowHandle is System.Windows.Forms.Control)
+            {
+                var control = (System.Windows.Forms.Control)deviceWindowHandle;
+                control.ClientSize = new Size(width, height);
+                windowHandle = control.Handle;
+            }
+            else
+            {
+                throw new NotSupportedException(string.Format("DeviceWindowHandle of type [{0}] is not supported. Only Window Handle IntPtr or WinForm Control", deviceWindowHandle.GetType().Name));
+            }
+
             // By default, use 60Hz for displaying in full screen
-            if (!refreshRate.HasValue)
+            if (refreshRate == Rational.Empty)
                 refreshRate = new Rational(60, 1);
 
             var graphicsAdapter = graphicsDevice.Adapter ?? GraphicsAdapter.Default;
-            var refreshRateValue = refreshRate.Value;
 
             // Get display mode for the particular width, height, pixelformat
             var selectedModes = new List<DisplayMode>();
@@ -107,22 +148,25 @@ namespace SharpDX.Toolkit.Graphics
                     selectedModes.Add(displayMode);
             }
 
+            if (selectedModes.Count == 0 && presentationParameters.IsFullScreen)
+                throw new NotSupportedException("Resolution is not supported by the graphics adapter.");
+
             // Calculate the closest / best refresh rate
-            var refreshRateExpected = (float)refreshRateValue.Numerator / refreshRateValue.Denominator;
+            var refreshRateExpected = (float)refreshRate.Numerator / refreshRate.Denominator;
             var bestRefreshRateDiff = float.MaxValue;
             foreach (var selectedMode in selectedModes)
             {
                 float refreshRateDiff = Math.Abs((float) selectedMode.RefreshRate.Numerator / selectedMode.RefreshRate.Denominator - refreshRateExpected);
                 if (refreshRateDiff < bestRefreshRateDiff)
                 {
-                    refreshRateValue = selectedMode.RefreshRate;
+                    refreshRate = selectedMode.RefreshRate;
                     bestRefreshRateDiff = refreshRateDiff;
                 }
             }
 
             var description = new SwapChainDescription()
             {
-                ModeDescription = new ModeDescription(width, height, refreshRateValue, pixelFormat),
+                ModeDescription = new ModeDescription(width, height, refreshRate, pixelFormat),
                 BufferCount = 1,
                 OutputHandle = windowHandle,
                 SampleDescription = new SampleDescription(1, 0),
@@ -132,7 +176,7 @@ namespace SharpDX.Toolkit.Graphics
                 Flags = SwapChainFlags.None,
             };
 
-            var graphicsPresenter = new GraphicsPresenter(graphicsDevice, new SwapChain(GraphicsAdapter.Factory, (Direct3D11.Device)graphicsDevice, description));
+            var graphicsPresenter = new GraphicsPresenter(graphicsDevice, new SwapChain(GraphicsAdapter.Factory, (Direct3D11.Device)graphicsDevice, description), presentationParameters);
             return graphicsPresenter;
         }
 #endif
@@ -169,7 +213,11 @@ namespace SharpDX.Toolkit.Graphics
         /// Gets or sets the <see cref="PresentInterval"/>. Default is to wait for one vertical blanking.
         /// </summary>
         /// <value>The present interval.</value>
-        public PresentInterval PresentInterval { get; set; }
+        public PresentInterval PresentInterval
+        {
+            get { return Description.PresentationInterval; }
+            set { Description.PresentationInterval = value; }
+        }
 
         /// <summary>
         /// Presents the Backbuffer to the screen.

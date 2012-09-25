@@ -57,52 +57,6 @@ namespace SharpDX.Toolkit.Graphics.Tests
 
             //var testCompiler = new TestEffectCompiler();
             //testCompiler.TestCompiler();
-
-            // Compile a toolkit effect from a file
-
-            var form = new RenderForm("SharpDX - MiniTri Direct3D 11 Sample");
-
-            int width = form.ClientSize.Width;
-            int height = form.ClientSize.Height;
-
-            var device = GraphicsDevice.New(DeviceCreationFlags.Debug);
-            device.CurrentPresenter = GraphicsPresenter.New(device, width, height, PixelFormat.R8G8B8A8.UNorm, form.Handle);
-
-            var effect = new BasicEffect(device)
-                             {
-                                 VertexColorEnabled = true, 
-                                 View = Matrix.Identity, 
-                                 Projection = Matrix.Identity, 
-                                 World = Matrix.Identity
-                             };
-
-            var bufferData = new []
-                           {
-                               new VertexPositionColor(new Vector3(-0.5f, -0.5f, 0.5f), Color.Red),
-                               new VertexPositionColor(new Vector3( 0.0f,  0.5f, 0.5f), Color.Green),
-                               new VertexPositionColor(new Vector3( 0.5f, -0.5f, 0.5f), Color.Blue),
-                           };
-
-
-            var vertexBuffer = Buffer.Vertex.New(device, bufferData);
-            var inputLayout = VertexInputLayout.FromBuffer(0, vertexBuffer);
-
-            device.SetRenderTargets(device.CurrentPresenter.BackBuffer);
-            device.SetViewports(0, 0, width, height);
-            device.SetVertexInputLayout(inputLayout);
-            device.SetVertexBuffer(0, vertexBuffer);
-
-            RenderLoop.Run(form, () =>
-                                     {
-                                         device.Clear(device.CurrentPresenter.BackBuffer, Color.CornflowerBlue);
-
-                                         effect.Techniques[0].Passes[0].Apply();
-
-                                         device.Draw(PrimitiveType.TriangleList, 3);
-
-                                         device.Present();
-
-                                     });
         }
     }
 }

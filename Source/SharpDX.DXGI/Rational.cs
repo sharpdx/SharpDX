@@ -18,10 +18,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+
 namespace SharpDX.DXGI
 {
-    public partial struct Rational
+    public partial struct Rational : IEquatable<Rational>
     {
+        /// <summary>
+        /// An empty rational that can be used for comparisons. 
+        /// </summary>
+        public static readonly Rational Empty = new Rational();
+
         /// <summary>
         ///   Initializes a new instance of the <see cref = "T:SharpDX.DXGI.Rational" /> structure.
         /// </summary>
@@ -31,6 +38,36 @@ namespace SharpDX.DXGI
         {
             this.Numerator = numerator;
             this.Denominator = denominator;
+        }
+
+
+        public bool Equals(Rational other)
+        {
+            return Numerator == other.Numerator && Denominator == other.Denominator;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is Rational && Equals((Rational) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (Numerator * 397) ^ Denominator;
+            }
+        }
+
+        public static bool operator ==(Rational left, Rational right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Rational left, Rational right)
+        {
+            return !left.Equals(right);
         }
     }
 }

@@ -280,7 +280,6 @@ namespace SharpDX.Toolkit.Graphics
                 var localLink = stageBlock.ConstantBufferSlotLinks;
                 for (int i = 0; i < localLink.Count; i++)
                 {
-                    // TODO Upload constant buffers
                     shaderStage.SetConstantBuffers(pLinks->SlotIndex, pLinks->SlotCount, pLinks->Pointer);
                     pLinks++;
                 }

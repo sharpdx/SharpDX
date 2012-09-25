@@ -52,8 +52,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public readonly EffectTechniqueCollection Techniques;
 
-        private readonly EffectGroup group;
-        private EffectData.Effect effectData;
+        private EffectData.Effect rawEffect;
 
         /// <summary>
         /// Set to true to force all constant shaders to be shared between other effects within a common <see cref="EffectGroup"/>. Default is false.
@@ -62,6 +61,37 @@ namespace SharpDX.Toolkit.Graphics
         /// This value can also be set in the TKFX file directly by setting ShareConstantBuffers = true; in a pass.
         /// </remarks>
         protected internal bool ShareConstantBuffers;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Effect" /> class with the specified bytecode effect. See remarks.
+        /// </summary>
+        /// <param name="device">The device.</param>
+        /// <param name="bytecode">The bytecode to add to <see cref="Graphics.GraphicsDevice.DefaultEffectGroup"/>. This bytecode must contain only one effect.</param>
+        /// <exception cref="ArgumentException">If the bytecode doesn't contain a single effect.</exception>
+        /// <remarks>
+        /// The effect bytecode must contain only a single effect and will be registered into the <see cref="Graphics.GraphicsDevice.DefaultEffectGroup"/>.
+        /// </remarks>
+        public Effect(GraphicsDevice device, byte[] bytecode)
+        {
+            GraphicsDevice = device;
+            ConstantBuffers = new EffectConstantBufferCollection();
+            Parameters = new EffectParameterCollection();
+            Techniques = new EffectTechniqueCollection();
+            ResourceLinker = ToDispose(new EffectResourceLinker());
+            Group = device.DefaultEffectGroup;
+
+            var effectData = EffectData.Load(bytecode);
+            if (effectData.Effects.Count != 1) 
+                throw new ArgumentException("Expecting only one effect in the effect bytecode. Use GraphicsDevice.DefaultEffectGroup.RegisterBytecode instead", "bytecode");
+
+            // Sets the effect name
+            Name = effectData.Effects[0].Name;
+
+            // Register the bytecode to the group
+            Group.RegisterBytecode(effectData);
+
+            Initialize();
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Effect" /> class with the specified effect. See remarks.
@@ -88,7 +118,7 @@ namespace SharpDX.Toolkit.Graphics
             Parameters = new EffectParameterCollection();
             Techniques = new EffectTechniqueCollection();
             ResourceLinker = ToDispose(new EffectResourceLinker());
-            this.group = group;
+            Group = group;
             Initialize();
         }
 
@@ -96,10 +126,7 @@ namespace SharpDX.Toolkit.Graphics
         ///   Gets the group this effect attached to.
         /// </summary>
         /// <value> The group. </value>
-        public EffectGroup Group
-        {
-            get { return group; }
-        }
+        public readonly EffectGroup Group;
 
         /// <summary>
         ///   Occurs when the on apply is applied on a pass.
@@ -112,10 +139,10 @@ namespace SharpDX.Toolkit.Graphics
 
         protected virtual void Initialize()
         {
-            Initialize(group.Find(Name));
+            Initialize(Group.Find(Name));
 
             // If everything was fine, then we can register it into the group
-            group.AddEffect(this);
+            Group.AddEffect(this);
         }
 
         /// <summary>
@@ -128,7 +155,7 @@ namespace SharpDX.Toolkit.Graphics
             if (effectDataArg == null)
                 throw new ArgumentException(string.Format("Unable to find effect [{0}] from the EffectGroup", Name), "effectName");
 
-            effectData = effectDataArg;
+            rawEffect = effectDataArg;
 
             ShareConstantBuffers = effectDataArg.ShareConstantBuffers;
 

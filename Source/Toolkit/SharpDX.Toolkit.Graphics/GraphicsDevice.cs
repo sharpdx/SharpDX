@@ -217,10 +217,19 @@ namespace SharpDX.Toolkit.Graphics
         public readonly GraphicsAdapter Adapter;
 
         /// <summary>
+        /// Gets the back buffer sets by the current <see cref="Presenter" /> setup on this device.
+        /// </summary>
+        /// <value>The back buffer. The returned value may be null if no <see cref="GraphicsPresenter"/> are setup on this device.</value>
+        public RenderTarget2D BackBuffer
+        {
+            get { return Presenter != null ? Presenter.BackBuffer : null; }
+        }
+
+        /// <summary>
         /// Gets or sets the current presenter use by the <see cref="Present"/> method.
         /// </summary>
         /// <value>The current presenter.</value>
-        public GraphicsPresenter CurrentPresenter { get; set; }
+        public GraphicsPresenter Presenter { get; set; }
 
         /// <summary>
         /// Clears a render target view by setting all the elements in a render target to one value.
@@ -1095,7 +1104,7 @@ namespace SharpDX.Toolkit.Graphics
         /// Presents the Backbuffer to the screen.
         /// </summary>
         /// <remarks>
-        /// This method is only working if a <see cref="GraphicsPresenter"/> is set on this device using <see cref="CurrentPresenter"/> property.
+        /// This method is only working if a <see cref="GraphicsPresenter"/> is set on this device using <see cref="Presenter"/> property.
         /// </remarks>
         /// <msdn-id>bb174576</msdn-id>	
         /// <unmanaged>HRESULT IDXGISwapChain::Present([In] unsigned int SyncInterval,[In] DXGI_PRESENT_FLAGS Flags)</unmanaged>	
@@ -1105,10 +1114,10 @@ namespace SharpDX.Toolkit.Graphics
             if (IsDeferred)
                 throw new InvalidOperationException("Cannot use Present on a deferred context");
 
-            if (CurrentPresenter == null)
-                throw new InvalidOperationException("No presenter currently setup for this instance. CurrentPresenter is null");
+            if (Presenter == null)
+                throw new InvalidOperationException("No presenter currently setup for this instance. Presenter is null");
 
-            CurrentPresenter.Present();
+            Presenter.Present();
         }
 
         public static implicit operator Device(GraphicsDevice from)

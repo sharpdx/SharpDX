@@ -56,7 +56,7 @@ namespace SharpDX.Toolkit.Graphics
             CullFront = Add(RasterizerState.New(device, "CullFront", CullMode.Front));
             CullBack =  Add(RasterizerState.New(device, "CullBack", CullMode.Back));
             CullNone =  Add(RasterizerState.New(device, "CullNone", CullMode.None));
-            Default = Add(RasterizerState.New(device, "Default", CullMode.Back));
+            Default = CullBack;
         }
     }
 }

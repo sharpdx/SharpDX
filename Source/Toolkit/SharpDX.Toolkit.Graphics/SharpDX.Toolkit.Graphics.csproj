@@ -12,6 +12,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" Condition=" '$(SharpDXWin8)' == 'false'" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedAssemblyInfo.cs">
@@ -20,6 +21,7 @@
     <Compile Include="BlendState.cs" />
     <Compile Include="BlendStateCollection.cs" />
     <Compile Include="EffectConstantBufferKey.cs" />
+    <Compile Include="GraphicsWindow.cs" />
     <Compile Include="InputSignatureKey.cs" />
     <Compile Include="InputSignatureManager.cs" />
     <Compile Include="ReadOnlyArray.cs" />
@@ -176,22 +178,22 @@
     <None Include="StockEffects\HLSL\Structures.fxh" />
     <None Include="StockEffects\Microsoft Permissive License.rtf" />
     <None Include="StockEffects\HLSL\AlphaTestEffect.fx">
-        <LastGenOutput>AlphaTestEffect.ByteCode.cs</LastGenOutput>
+      <LastGenOutput>AlphaTestEffect.ByteCode.cs</LastGenOutput>
     </None>
     <None Include="StockEffects\HLSL\BasicEffect.fx">
-        <LastGenOutput>BasicEffect.ByteCode.cs</LastGenOutput>
+      <LastGenOutput>BasicEffect.ByteCode.cs</LastGenOutput>
     </None>
     <None Include="StockEffects\HLSL\DualTextureEffect.fx">
-        <LastGenOutput>DualTextureEffect.ByteCode.cs</LastGenOutput>
+      <LastGenOutput>DualTextureEffect.ByteCode.cs</LastGenOutput>
     </None>
     <None Include="StockEffects\HLSL\EnvironmentMapEffect.fx">
-        <LastGenOutput>EnvironmentMapEffect.ByteCode.cs</LastGenOutput>
+      <LastGenOutput>EnvironmentMapEffect.ByteCode.cs</LastGenOutput>
     </None>
     <None Include="StockEffects\HLSL\SkinnedEffect.fx">
-        <LastGenOutput>SkinnedEffect.ByteCode.cs</LastGenOutput>
+      <LastGenOutput>SkinnedEffect.ByteCode.cs</LastGenOutput>
     </None>
     <None Include="StockEffects\HLSL\SpriteEffect.fx">
-        <LastGenOutput>SpriteEffect.ByteCode.cs</LastGenOutput>
+      <LastGenOutput>SpriteEffect.ByteCode.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

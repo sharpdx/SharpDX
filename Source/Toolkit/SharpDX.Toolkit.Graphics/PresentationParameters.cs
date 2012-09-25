@@ -18,83 +18,141 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Runtime.InteropServices;
+using SharpDX.DXGI;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    /// <summary>	
-    /// Describes a swap chain. This class is the intersection of the fields found in <see cref="DXGI.SwapChain"/> and <see cref="DXGI.SwapChain1"/>.
-    /// </summary>	
-    /// <msdn-id>bb173075</msdn-id>	
-    /// <unmanaged>DXGI_SWAP_CHAIN_DESC</unmanaged>	
-    /// <unmanaged-short>DXGI_SWAP_CHAIN_DESC</unmanaged-short>	
-    [StructLayout(LayoutKind.Sequential, Pack = 0)]
-    public partial struct PresentationParameters
+    /// <summary>
+    ///   Describes a swap chain. This class is the intersection of the fields found in <see cref="SwapChain" /> and <see
+    ///    cref="SharpDX.DXGI.SwapChain1" />.
+    /// </summary>
+    /// <msdn-id>bb173075</msdn-id>
+    /// <unmanaged>DXGI_SWAP_CHAIN_DESC</unmanaged>
+    /// <unmanaged-short>DXGI_SWAP_CHAIN_DESC</unmanaged-short>
+    public class PresentationParameters
     {
-        /// <summary>	
-        /// A value that describes the resolution width. 
-        /// </summary>	
-        /// <msdn-id>bb173075</msdn-id>	
-        /// <unmanaged>DXGI_MODE_DESC BufferDesc</unmanaged>	
-        /// <unmanaged-short>DXGI_MODE_DESC BufferDesc</unmanaged-short>	
-        public int Width;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PresentationParameters" /> class with default values.
+        /// </summary>
+        public PresentationParameters()
+        {
+            BackBufferWidth = 800;
+            BackBufferHeight = 600;
+            BackBufferFormat = PixelFormat.R8G8B8A8.UNorm;
+            PresentationInterval = PresentInterval.Immediate;
+            MultiSampleCount = MSAALevel.None;
+            IsFullScreen = false;
+            RefreshRate = new Rational(60, 1); // by default
+            RenderTargetUsage = Usage.BackBuffer | Usage.RenderTargetOutput;
+            Flags = SwapChainFlags.None;
+        }
 
-        /// <summary>	
-        /// A value that describes the resolution height. 
-        /// </summary>	
-        /// <msdn-id>bb173075</msdn-id>	
-        /// <unmanaged>DXGI_MODE_DESC BufferDesc</unmanaged>	
-        /// <unmanaged-short>DXGI_MODE_DESC BufferDesc</unmanaged-short>	
-        public int Height;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PresentationParameters" /> class with <see cref="PixelFormat.R8G8B8A8.UNorm"/>.
+        /// </summary>
+        /// <param name="backBufferWidth">Width of the back buffer.</param>
+        /// <param name="backBufferHeight">Height of the back buffer.</param>
+        /// <param name="deviceWindowHandle">The device window handle.</param>
+        public PresentationParameters(int backBufferWidth, int backBufferHeight, object deviceWindowHandle) : this(backBufferWidth, backBufferHeight, deviceWindowHandle, PixelFormat.R8G8B8A8.UNorm)
+        {
+        }
 
-        /// <summary>	
-        /// A <strong><see cref="SharpDX.DXGI.Format"/></strong> structure describing the display format.
-        /// </summary>	
-        /// <msdn-id>bb173075</msdn-id>	
-        /// <unmanaged>DXGI_MODE_DESC BufferDesc</unmanaged>	
-        /// <unmanaged-short>DXGI_MODE_DESC BufferDesc</unmanaged-short>	
-        public PixelFormat Format;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PresentationParameters" /> class.
+        /// </summary>
+        /// <param name="backBufferWidth">Width of the back buffer.</param>
+        /// <param name="backBufferHeight">Height of the back buffer.</param>
+        /// <param name="deviceWindowHandle">The device window handle.</param>
+        /// <param name="backBufferFormat">The back buffer format.</param>
+        public PresentationParameters(int backBufferWidth, int backBufferHeight, object deviceWindowHandle, PixelFormat backBufferFormat) : this()
+        {
+            BackBufferWidth = backBufferWidth;
+            BackBufferHeight = backBufferHeight;
+            DeviceWindowHandle = deviceWindowHandle;
+            BackBufferFormat = backBufferFormat;
+        }
 
-        /// <summary>	
-        /// <dd> <p>A <strong><see cref="SharpDX.DXGI.Rational"/></strong> structure describing the refresh rate in hertz</p> </dd>	
-        /// </summary>	
-        /// <msdn-id>bb173064</msdn-id>	
-        /// <unmanaged>DXGI_RATIONAL RefreshRate</unmanaged>	
-        /// <unmanaged-short>DXGI_RATIONAL RefreshRate</unmanaged-short>	
-        public SharpDX.DXGI.Rational RefreshRate;
+        /// <summary>
+        ///   A value that describes the resolution width.
+        /// </summary>
+        /// <msdn-id>bb173075</msdn-id>
+        /// <unmanaged>DXGI_MODE_DESC BufferDesc</unmanaged>
+        /// <unmanaged-short>DXGI_MODE_DESC BufferDesc</unmanaged-short>
+        public int BackBufferWidth;
 
-        /// <summary>	
-        /// <dd> <p>A member of the DXGI_USAGE enumerated type that describes the surface usage and CPU access options for the back buffer. The back buffer can  be used for shader input or render-target output.</p> </dd>	
-        /// </summary>	
-        /// <msdn-id>bb173075</msdn-id>	
-        /// <unmanaged>DXGI_USAGE_ENUM BufferUsage</unmanaged>	
-        /// <unmanaged-short>DXGI_USAGE_ENUM BufferUsage</unmanaged-short>	
-        public SharpDX.DXGI.Usage Usage;
+        /// <summary>
+        ///   A value that describes the resolution height.
+        /// </summary>
+        /// <msdn-id>bb173075</msdn-id>
+        /// <unmanaged>DXGI_MODE_DESC BufferDesc</unmanaged>
+        /// <unmanaged-short>DXGI_MODE_DESC BufferDesc</unmanaged-short>
+        public int BackBufferHeight;
 
-        /// <summary>	
-        /// <dd> <p>A member of the <strong><see cref="SharpDX.DXGI.SwapChainFlags"/></strong> enumerated type that describes options for swap-chain behavior.</p> </dd>	
-        /// </summary>	
-        /// <msdn-id>bb173075</msdn-id>	
-        /// <unmanaged>DXGI_SWAP_CHAIN_FLAG Flags</unmanaged>	
-        /// <unmanaged-short>DXGI_SWAP_CHAIN_FLAG Flags</unmanaged-short>	
+        /// <summary>
+        ///   A <strong>
+        ///       <see cref="SharpDX.DXGI.Format" />
+        ///     </strong> structure describing the display format.
+        /// </summary>
+        /// <msdn-id>bb173075</msdn-id>
+        /// <unmanaged>DXGI_MODE_DESC BufferDesc</unmanaged>
+        /// <unmanaged-short>DXGI_MODE_DESC BufferDesc</unmanaged-short>
+        public PixelFormat BackBufferFormat;
+
+        /// <summary>
+        ///   A Window object. See remarks.
+        /// </summary>
+        /// <remarks>
+        ///   A window object is platform dependent:
+        ///   <ul>
+        ///     <li>On Windows Desktop: This could a low level window/control handle (IntPtr), or directly a Winform Control object.</li>
+        ///     <li>On Windows Metro: This could be SwapChainBackgroundPanel object.</li>
+        ///   </ul>
+        /// </remarks>
+        public object DeviceWindowHandle;
+
+        /// <summary>
+        ///   A member of the <see cref="SharpDX.DXGI.SwapChainFlags" />
+        ///   enumerated type that describes options for swap-chain behavior.
+        /// </summary>
+        /// <msdn-id>bb173075</msdn-id>
+        /// <unmanaged>DXGI_SWAP_CHAIN_FLAG Flags</unmanaged>
+        /// <unmanaged-short>DXGI_SWAP_CHAIN_FLAG Flags</unmanaged-short>
         public SharpDX.DXGI.SwapChainFlags Flags;
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="DXGI.SwapChainDescription"/> to <see cref="PresentationParameters"/>.
+        ///   Gets or sets a value indicating whether the application is in full screen mode.
         /// </summary>
-        /// <param name="description">The swapchain description.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator PresentationParameters(DXGI.SwapChainDescription description)
+        public bool IsFullScreen;
+
+        /// <summary>
+        ///   Gets or sets a value indicating the number of sample locations during multisampling.
+        /// </summary>
+        public MSAALevel MultiSampleCount;
+
+        /// <summary>
+        ///   Gets or sets the maximum rate at which the swap chain's back buffers can be presented to the front buffer.
+        /// </summary>
+        public PresentInterval PresentationInterval;
+
+        /// <summary>
+        ///   A <see cref="SharpDX.DXGI.Rational" />   structure describing the refresh rate in hertz
+        /// </summary>
+        /// <msdn-id>bb173064</msdn-id>
+        /// <unmanaged>DXGI_RATIONAL RefreshRate</unmanaged>
+        /// <unmanaged-short>DXGI_RATIONAL RefreshRate</unmanaged-short>
+        public SharpDX.DXGI.Rational RefreshRate;
+
+        /// <summary>
+        ///   <p>A member of the DXGI_USAGE enumerated type that describes the surface usage and CPU access options for the back buffer. The back buffer can  be used for shader input or render-target output.</p>
+        /// </summary>
+        /// <msdn-id>bb173075</msdn-id>
+        /// <unmanaged>DXGI_USAGE_ENUM BufferUsage</unmanaged>
+        /// <unmanaged-short>DXGI_USAGE_ENUM BufferUsage</unmanaged-short>
+        public SharpDX.DXGI.Usage RenderTargetUsage;
+
+        internal PresentationParameters Clone()
         {
-            return new PresentationParameters()
-            {
-                Width = description.ModeDescription.Width,
-                Height = description.ModeDescription.Height,
-                Format = description.ModeDescription.Format,
-                RefreshRate = description.ModeDescription.RefreshRate,
-                Usage = description.Usage,
-                Flags = description.Flags
-            };
+            return (PresentationParameters)MemberwiseClone();
         }
     }
 }
