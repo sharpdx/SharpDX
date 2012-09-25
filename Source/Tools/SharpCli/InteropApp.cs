@@ -144,7 +144,7 @@ namespace SharpCli
 
         private void ReplaceFixedStatement(MethodDefinition method, ILProcessor ilProcessor, Instruction fixedtoPatch)
         {
-            var paramT = method.GenericParameters[0];
+            var paramT = ((GenericInstanceMethod)fixedtoPatch.Operand).GenericArguments[0];
             // Preparing locals
             // local(0) T*
             method.Body.Variables.Add(new VariableDefinition("pin", new PinnedType(new ByReferenceType(paramT))));
@@ -182,21 +182,21 @@ namespace SharpCli
 
         private void ReplaceReadInline(MethodDefinition method, ILProcessor ilProcessor, Instruction fixedtoPatch)
         {
-            var paramT = method.GenericParameters[0];
+            var paramT = ((GenericInstanceMethod)fixedtoPatch.Operand).GenericArguments[0];
             var copyInstruction = ilProcessor.Create(OpCodes.Ldobj, paramT);
             ilProcessor.Replace(fixedtoPatch, copyInstruction);
         }
 
         private void ReplaceCopyInline(MethodDefinition method, ILProcessor ilProcessor, Instruction fixedtoPatch)
         {
-            var paramT = method.GenericParameters[0];
+            var paramT = ((GenericInstanceMethod)fixedtoPatch.Operand).GenericArguments[0];
             var copyInstruction = ilProcessor.Create(OpCodes.Cpobj, paramT);
             ilProcessor.Replace(fixedtoPatch, copyInstruction);
         }
 
         private void ReplaceSizeOfStructGeneric(MethodDefinition method, ILProcessor ilProcessor, Instruction fixedtoPatch)
         {
-            var paramT = method.GenericParameters[0];
+            var paramT = ((GenericInstanceMethod)fixedtoPatch.Operand).GenericArguments[0];
             var copyInstruction = ilProcessor.Create(OpCodes.Sizeof, paramT);
             ilProcessor.Replace(fixedtoPatch, copyInstruction);
         }
@@ -243,7 +243,7 @@ namespace SharpCli
 
         private void ReplaceFixedArrayStatement(MethodDefinition method, ILProcessor ilProcessor, Instruction fixedtoPatch)
         {
-            var paramT = method.GenericParameters[0];
+            var paramT = ((GenericInstanceMethod)fixedtoPatch.Operand).GenericArguments[0];
             // Preparing locals
             // local(0) T*
             method.Body.Variables.Add(new VariableDefinition("pin", new PinnedType(new ByReferenceType(paramT))));
