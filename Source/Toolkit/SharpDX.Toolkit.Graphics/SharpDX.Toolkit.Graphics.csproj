@@ -65,22 +65,22 @@
     <Compile Include="PresentInterval.cs" />
     <Compile Include="StockEffects\HLSL\AlphaTestEffect.ByteCode.cs">
       <AutoGen>true</AutoGen>
-      <DependentUpon>StockEffects\HLSL\AlphaTestEffect.fx</DependentUpon>
+      <DependentUpon>AlphaTestEffect.fx</DependentUpon>
     </Compile>
     <Compile Include="StockEffects\C#\AlphaTestEffect.cs" />
     <Compile Include="StockEffects\HLSL\BasicEffect.ByteCode.cs">
       <AutoGen>true</AutoGen>
-      <DependentUpon>StockEffects\HLSL\BasicEffect.fx</DependentUpon>
+      <DependentUpon>BasicEffect.fx</DependentUpon>
     </Compile>
     <Compile Include="StockEffects\C#\BasicEffect.cs" />
     <Compile Include="StockEffects\C#\DirectionalLight.cs" />
     <Compile Include="StockEffects\HLSL\DualTextureEffect.ByteCode.cs">
       <AutoGen>true</AutoGen>
-      <DependentUpon>StockEffects\HLSL\DualTextureEffect.fx</DependentUpon>
+      <DependentUpon>DualTextureEffect.fx</DependentUpon>
     </Compile>
     <Compile Include="StockEffects\HLSL\EnvironmentMapEffect.ByteCode.cs">
       <AutoGen>true</AutoGen>
-      <DependentUpon>StockEffects\HLSL\EnvironmentMapEffect.fx</DependentUpon>
+      <DependentUpon>EnvironmentMapEffect.fx</DependentUpon>
     </Compile>
     <Compile Include="StockEffects\C#\IEffectLights.cs" />
     <Compile Include="StockEffects\C#\IEffectFog.cs" />
@@ -90,12 +90,12 @@
     <Compile Include="StockEffects\C#\IEffectMatrices.cs" />
     <Compile Include="StockEffects\HLSL\SkinnedEffect.ByteCode.cs">
       <AutoGen>true</AutoGen>
-      <DependentUpon>StockEffects\HLSL\SkinnedEffect.fx</DependentUpon>
+      <DependentUpon>SkinnedEffect.fx</DependentUpon>
     </Compile>
     <Compile Include="StockEffects\C#\SkinnedEffect.cs" />
     <Compile Include="StockEffects\HLSL\SpriteEffect.ByteCode.cs">
       <AutoGen>true</AutoGen>
-      <DependentUpon>StockEffects\HLSL\SpriteEffect.fx</DependentUpon>
+      <DependentUpon>SpriteEffect.fx</DependentUpon>
     </Compile>
     <Compile Include="StockEffects\C#\SpriteEffect.cs" />
     <Compile Include="TextureDimension.cs" />
@@ -175,14 +175,24 @@
     <None Include="StockEffects\HLSL\Macros.fxh" />
     <None Include="StockEffects\HLSL\Structures.fxh" />
     <None Include="StockEffects\Microsoft Permissive License.rtf" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="StockEffects\HLSL\AlphaTestEffect.fx" />
-    <Content Include="StockEffects\HLSL\BasicEffect.fx" />
-    <Content Include="StockEffects\HLSL\DualTextureEffect.fx" />
-    <Content Include="StockEffects\HLSL\EnvironmentMapEffect.fx" />
-    <Content Include="StockEffects\HLSL\SkinnedEffect.fx" />
-    <Content Include="StockEffects\HLSL\SpriteEffect.fx" />
+    <None Include="StockEffects\HLSL\AlphaTestEffect.fx">
+        <LastGenOutput>AlphaTestEffect.ByteCode.cs</LastGenOutput>
+    </None>
+    <None Include="StockEffects\HLSL\BasicEffect.fx">
+        <LastGenOutput>BasicEffect.ByteCode.cs</LastGenOutput>
+    </None>
+    <None Include="StockEffects\HLSL\DualTextureEffect.fx">
+        <LastGenOutput>DualTextureEffect.ByteCode.cs</LastGenOutput>
+    </None>
+    <None Include="StockEffects\HLSL\EnvironmentMapEffect.fx">
+        <LastGenOutput>EnvironmentMapEffect.ByteCode.cs</LastGenOutput>
+    </None>
+    <None Include="StockEffects\HLSL\SkinnedEffect.fx">
+        <LastGenOutput>SkinnedEffect.ByteCode.cs</LastGenOutput>
+    </None>
+    <None Include="StockEffects\HLSL\SpriteEffect.fx">
+        <LastGenOutput>SpriteEffect.ByteCode.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
