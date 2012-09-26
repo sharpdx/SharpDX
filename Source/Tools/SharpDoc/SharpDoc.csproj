@@ -401,8 +401,8 @@ copy  "$(TargetDir)*.dll" "$(SolutionDir)Build\Tools\Bin\"
 rmdir /S /Q  "$(SolutionDir)Build\Tools\Styles"
 mkdir "$(SolutionDir)Build\Tools\Styles"
 xcopy /Y /E "$(ProjectDir)Styles" "$(SolutionDir)Build\Tools\Styles\"
-xcopy /Y /E "$(ProjectDir)Styles\SharpDXWeb\css\sharpdoc.css" "$(SolutionDir)..\SharpDX-Web\www\templates\rt_kinetic\css\"
-xcopy /Y /E "$(ProjectDir)Styles\Standard\js\sharpdoc.js" "$(SolutionDir)..\SharpDX-Web\www\templates\rt_kinetic\js\"</PostBuildEvent>
+REM xcopy /Y /E "$(ProjectDir)Styles\SharpDXWeb\css\sharpdoc.css" "$(SolutionDir)..\SharpDX-Web\www\templates\rt_kinetic\css\"
+REM xcopy /Y /E "$(ProjectDir)Styles\Standard\js\sharpdoc.js" "$(SolutionDir)..\SharpDX-Web\www\templates\rt_kinetic\js\"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
