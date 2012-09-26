@@ -42,7 +42,11 @@ namespace SharpDX
         /// <param name="text">The text.</param>
         public SingletonString(string text) : this()
         {
+#if WIN8METRO
+            this.text = text;
+#else
             this.text = string.Intern(text);
+#endif
             hashCode = text != null ? text.GetHashCode() : 0;
         }
 

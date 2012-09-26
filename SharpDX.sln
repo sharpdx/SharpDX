@@ -1472,9 +1472,7 @@ Global
 		{05D111D6-C8FD-4DA4-B6C0-8C47E7081C3F}.ToolsDebug|Any CPU.ActiveCfg = Debug|Any CPU
 		{05D111D6-C8FD-4DA4-B6C0-8C47E7081C3F}.ToolsDebug|Any CPU.Build.0 = Debug|Any CPU
 		{05D111D6-C8FD-4DA4-B6C0-8C47E7081C3F}.Win8Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{05D111D6-C8FD-4DA4-B6C0-8C47E7081C3F}.Win8Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05D111D6-C8FD-4DA4-B6C0-8C47E7081C3F}.Win8Release|Any CPU.ActiveCfg = Release|Any CPU
-		{05D111D6-C8FD-4DA4-B6C0-8C47E7081C3F}.Win8Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
