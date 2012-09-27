@@ -51,7 +51,8 @@
     <property name="version-dir" value="Standard-net40" if="${build_type == 'net40'}"/>
     <property name="version-dir" value="Signed-net20" if="${build_type == 'net20' and build_signed}"/>
     <property name="version-dir" value="Signed-net40" if="${build_type == 'net40' and build_signed}"/>
-    <property name="version-dir" value="Win8Metro" if="${build_type == 'win8'}"/>
+    <property name="version-dir" value="Standard-winrt" if="${build_type == 'win8'}"/>
+    <property name="version-dir" value="Signed-winrt" if="${build_type == 'win8' and build_signed}"/>
     <property name="version-dir" value="Win8Desktop-net40" if="${build_type == 'dx11_1'}"/>
 
     <regex pattern="AssemblyVersion\(.(?'assembly_version'\d+\.\d+.\d+)" input="${assembly_version_file}" />
@@ -93,7 +94,7 @@
         <include name="**/*.suo" />
         <include name="**/*.bak" />
         <include name="**/*.user" />
-        <include name="**/_ReSharper.*/**" />
+        <exclude name="**/_ReSharper.*/**" />
         <exclude name="**/Build/**" />
         <exclude name="**/External/**" />
         <exclude name="**/.git/**" />
@@ -180,6 +181,7 @@
     <echo message="signed-net20 = Prepare for signed build (Framework .NET 2.0+)"/>
     <echo message="signed-net40 = Prepare for signed build (Framework .NET 4.0+)"/>
     <echo message="        win8 = Prepare for DirectX11.1 Win8 Metro build (Framework .NET 4.5Core)"/>
+    <echo message=" signed-win8 = Prepare for Signed DirectX11.1 Win8 Metro build (Framework .NET 4.5Core)"/>
     <echo message="      dx11_1 = Prepare for DirectX11.1 desktop build (Framework .NET 2.0+)"/>
     <echo message=""/>
     <echo message="       clean = Full cleanup"/>
@@ -205,6 +207,9 @@
     <call target="build"/>
 
     <call target="signed-net40"/>
+    <call target="build"/>
+
+    <call target="signed-win8"/>
     <call target="build"/>
 
     <!-- Build All Unsigned target first -->
@@ -244,6 +249,11 @@
   </target>
   <target name="signed-net40" description="Build signed-net40 targets">
     <property name="build_type" value="net40"/>
+    <property name="build_signed" value="true"/>
+  </target>
+  
+  <target name="signed-win8" description="Build signed-win8 targets">
+    <property name="build_type" value="win8"/>
     <property name="build_signed" value="true"/>
   </target>
 
@@ -337,6 +347,14 @@
   <target name="build" description="Build all targets.">
     <!-- Setup based on config -->
     <call target="setup"/>
+
+    <echo message="****************************************************************************"/>
+    <echo message="----------------------------------------------------------------------------"/>
+    <echo message=""/>
+    <echo message="Building target [${version-dir}]"/>
+    <echo message=""/>
+    <echo message="----------------------------------------------------------------------------"/>
+    <echo message="****************************************************************************"/>
 
     <!-- Clean all directories -->
     <property name="keeppdb" value="false"/>

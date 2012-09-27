@@ -1,39 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-
-  <Identity Name="082f04f1-c380-4219-857d-1bcf82423a37"
-            Publisher="CN=Alexandre"
-            Version="1.0.0.0" />
-
+  <Identity Name="082f04f1-c380-4219-857d-1bcf82423a37" Publisher="CN=SharpDXTest" Version="1.0.0.0" />
   <Properties>
     <DisplayName>MediaPlayerApp</DisplayName>
-    <PublisherDisplayName>Alexandre</PublisherDisplayName>
+    <PublisherDisplayName>SharpDXTest</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
-
   <Prerequisites>
     <OSMinVersion>6.2.0</OSMinVersion>
     <OSMaxVersionTested>6.2.0</OSMaxVersionTested>
   </Prerequisites>
-
   <Resources>
-    <Resource Language="x-generate"/>
+    <Resource Language="x-generate" />
   </Resources>
-
   <Applications>
-    <Application Id="App"
-        Executable="$targetnametoken$.exe"
-        EntryPoint="MediaPlayerApp.App">
-        <VisualElements
-            DisplayName="MediaPlayerApp"
-            Logo="Assets\Logo.png"
-            SmallLogo="Assets\SmallLogo.png"
-            Description="MediaPlayerApp"
-            ForegroundText="light"
-            BackgroundColor="#464646">
-            <DefaultTile ShowName="allLogos" />
-            <SplashScreen Image="Assets\SplashScreen.png" />
-        </VisualElements>
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="MediaPlayerApp.App">
+      <VisualElements DisplayName="MediaPlayerApp" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="MediaPlayerApp" ForegroundText="light" BackgroundColor="#464646">
+        <DefaultTile ShowName="allLogos" />
+        <SplashScreen Image="Assets\SplashScreen.png" />
+      </VisualElements>
     </Application>
   </Applications>
   <Capabilities>

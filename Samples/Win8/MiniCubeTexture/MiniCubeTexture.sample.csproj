@@ -12,8 +12,8 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>MiniCubeTexture_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>8C6B41DB8841408F6BD85BFF9FC77157BFE7EA17</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>MiniCubeTexture.sample_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>69FC3410F5F3F4E5B0CC309A8C04288FD2366F50</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -125,6 +125,7 @@
     <Content Include="MiniCubeTexture_PS.fxo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="MiniCubeTexture.sample_TemporaryKey.pfx" />
     <None Include="MiniCubeTexture_TemporaryKey.pfx" />
     <Content Include="MiniCubeTexture_VS.fxo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

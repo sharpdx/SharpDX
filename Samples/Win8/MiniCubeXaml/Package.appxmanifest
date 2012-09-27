@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="79f009a5-9ab8-4fe4-9fdb-be2c629b927c" Publisher="CN=Alexandre" Version="1.0.0.0" />
+  <Identity Name="79f009a5-9ab8-4fe4-9fdb-be2c629b927c" Publisher="CN=SharpDXTest" Version="1.0.0.0" />
   <Properties>
     <DisplayName>MiniCubeXaml</DisplayName>
-    <PublisherDisplayName>Alexandre</PublisherDisplayName>
+    <PublisherDisplayName>SharpDXTest</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
     <Description>MiniCubeXaml</Description>
   </Properties>

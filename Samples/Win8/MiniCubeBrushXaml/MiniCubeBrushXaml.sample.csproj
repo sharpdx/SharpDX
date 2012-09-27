@@ -12,8 +12,8 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>MiniCubeBrushXaml_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>93DF78CFF0AD6696BF2B413E5700714071D1F51C</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>MiniCubeBrushXaml.sample_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>75F8C381D9D8721F0B0442D559CDCCBB9A2D364A</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -153,6 +153,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Common\ReadMe.txt" />
+    <None Include="MiniCubeBrushXaml.sample_TemporaryKey.pfx" />
     <None Include="MiniCubeBrushXaml_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

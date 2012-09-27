@@ -12,8 +12,8 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>D2DLightingEffects_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>52575949779ECC889AE81A7696018CBA18678B0B</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>D2DLightingEffects.sample_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>C117A823272EFC81EAC5EA2A35FFB409CF8F9DF1</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -150,6 +150,7 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="Common\ReadMe.txt" />
+    <None Include="D2DLightingEffects.sample_TemporaryKey.pfx" />
     <None Include="D2DLightingEffects_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

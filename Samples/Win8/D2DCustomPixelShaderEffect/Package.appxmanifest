@@ -1,40 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-
-  <Identity Name="ee99edfd-1a96-4495-8f8e-2c4f5b2cb741"
-            Publisher="CN=Jose"
-            Version="1.0.0.0" />
-
+  <Identity Name="ee99edfd-1a96-4495-8f8e-2c4f5b2cb741" Publisher="CN=SharpDXTest" Version="1.0.0.0" />
   <Properties>
     <DisplayName>D2DCustomPixelShaderEffect</DisplayName>
-    <PublisherDisplayName>Jose</PublisherDisplayName>
+    <PublisherDisplayName>SharpDXTest</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
     <Description>D2DCustomPixelShaderEffect</Description>
   </Properties>
-
   <Prerequisites>
     <OSMinVersion>6.2</OSMinVersion>
     <OSMaxVersionTested>6.2</OSMaxVersionTested>
   </Prerequisites>
-
   <Resources>
-    <Resource Language="x-generate"/>
+    <Resource Language="x-generate" />
   </Resources>
-
   <Applications>
-    <Application Id="App"
-        Executable="$targetnametoken$.exe"
-        EntryPoint="D2DCustomPixelShaderEffect.App">
-        <VisualElements
-            DisplayName="D2DCustomPixelShaderEffect"
-            Logo="Assets\Logo.png"
-            SmallLogo="Assets\SmallLogo.png"
-            Description="D2DCustomPixelShaderEffect"
-            ForegroundText="light"
-            BackgroundColor="#222222">
-            <DefaultTile ShowName="allLogos" />
-            <SplashScreen Image="Assets\SplashScreen.png" />
-        </VisualElements>
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="D2DCustomPixelShaderEffect.App">
+      <VisualElements DisplayName="D2DCustomPixelShaderEffect" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="D2DCustomPixelShaderEffect" ForegroundText="light" BackgroundColor="#222222">
+        <DefaultTile ShowName="allLogos" />
+        <SplashScreen Image="Assets\SplashScreen.png" />
+      </VisualElements>
     </Application>
   </Applications>
   <Capabilities>

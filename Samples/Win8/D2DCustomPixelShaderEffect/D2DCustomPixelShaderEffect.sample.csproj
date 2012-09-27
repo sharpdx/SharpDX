@@ -12,8 +12,8 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>D2DCustomPixelShaderEffect_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>582F1E96A79095CF9365078454B07DE24210F7F1</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>D2DCustomPixelShaderEffect.sample_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>AA4B7F58392E56482285243BA6F95072811163E1</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -153,6 +153,7 @@
     </Content>
     <Content Include="Ripple.hlsl" />
     <None Include="Common\ReadMe.txt" />
+    <None Include="D2DCustomPixelShaderEffect.sample_TemporaryKey.pfx" />
     <None Include="D2DCustomPixelShaderEffect_TemporaryKey.pfx" />
     <Content Include="Ripple.cso">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

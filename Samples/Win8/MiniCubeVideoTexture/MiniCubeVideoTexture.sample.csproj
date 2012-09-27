@@ -12,7 +12,8 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>MiniCubeVideoTexture_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>MiniCubeVideoTexture.sample_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>5E281C382BCF7E2C4F5E374867DDB136BE0402CC</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -121,6 +122,7 @@
     <Content Include="MiniCubeTexture_VS.fxo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="MiniCubeVideoTexture.sample_TemporaryKey.pfx" />
     <None Include="MiniCubeVideoTexture_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

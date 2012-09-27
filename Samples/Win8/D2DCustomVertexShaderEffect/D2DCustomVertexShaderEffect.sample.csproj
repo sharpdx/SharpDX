@@ -12,8 +12,8 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>D2DCustomVertexShaderEffect_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>CD6765CA205B4427E4CCB048FA2E207FBDCE76F7</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>D2DCustomVertexShaderEffect.sample_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>9BDC04FA1314CBF3FB126DA9B90FD3689C6C6FD1</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -154,6 +154,7 @@
     </Content>
     <Content Include="WaveEffect.hlsl" />
     <None Include="Common\ReadMe.txt" />
+    <None Include="D2DCustomVertexShaderEffect.sample_TemporaryKey.pfx" />
     <None Include="D2DCustomVertexShaderEffect_TemporaryKey.pfx" />
     <Content Include="WaveEffect.cso">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
