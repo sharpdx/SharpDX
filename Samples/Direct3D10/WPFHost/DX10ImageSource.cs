@@ -68,7 +68,7 @@ namespace WPFHost
         public void Dispose()
         {
             this.SetRenderTargetDX10(null);
-            Disposer.SafeDispose(ref this.RenderTarget);
+            Disposer.RemoveAndDispose(ref this.RenderTarget);
 
             DX10ImageSource.ActiveClients--;
             this.EndD3D();
@@ -139,9 +139,9 @@ namespace WPFHost
             if (DX10ImageSource.ActiveClients != 0)
                 return;
 
-            Disposer.SafeDispose(ref this.RenderTarget);
-            Disposer.SafeDispose(ref DX10ImageSource.D3DDevice);
-            Disposer.SafeDispose(ref DX10ImageSource.D3DContext);
+            Disposer.RemoveAndDispose(ref this.RenderTarget);
+            Disposer.RemoveAndDispose(ref DX10ImageSource.D3DDevice);
+            Disposer.RemoveAndDispose(ref DX10ImageSource.D3DContext);
         }
 
         private IntPtr GetSharedHandle(SharpDX.Direct3D10.Texture2D Texture)

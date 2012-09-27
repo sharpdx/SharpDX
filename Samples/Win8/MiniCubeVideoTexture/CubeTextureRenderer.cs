@@ -71,7 +71,7 @@ namespace MiniCubeTexture
         public virtual void Initialize(DeviceManager devices)
         {
             // Remove previous buffer
-            SafeDispose(ref constantBuffer);
+            RemoveAndDispose(ref constantBuffer);
 
             mediaPlayer.BackgroundColor = Color.Gray;
 

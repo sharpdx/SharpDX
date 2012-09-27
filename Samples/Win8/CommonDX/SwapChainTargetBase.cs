@@ -110,10 +110,10 @@ namespace CommonDX
             var d2dContext = DeviceManager.ContextDirect2D;
 
             d2dContext.Target = null;
-            SafeDispose(ref renderTargetView);
-            SafeDispose(ref depthStencilView);
-            SafeDispose(ref bitmapTarget);
-            SafeDispose(ref backBuffer);
+            RemoveAndDispose(ref renderTargetView);
+            RemoveAndDispose(ref depthStencilView);
+            RemoveAndDispose(ref bitmapTarget);
+            RemoveAndDispose(ref backBuffer);
 
             // If the swap chain already exists, resize it.
             if (swapChain != null)

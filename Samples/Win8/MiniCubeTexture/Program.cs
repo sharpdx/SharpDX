@@ -62,9 +62,9 @@ namespace MiniCubeTexture
                 this.window = window;
 
                 // Safely dispose any previous instance
-                SafeDispose(ref deviceManager);
-                SafeDispose(ref target);
-                SafeDispose(ref cubeRenderer);
+                RemoveAndDispose(ref deviceManager);
+                RemoveAndDispose(ref target);
+                RemoveAndDispose(ref cubeRenderer);
 
                 // Creates a new DeviceManager (Direct3D, Direct2D, DirectWrite, WIC)
                 deviceManager = ToDispose(new DeviceManager());

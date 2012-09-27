@@ -132,9 +132,9 @@ namespace CommonDX
             var debugLevel = SharpDX.Direct2D1.DebugLevel.None;
 #endif
             // Dispose previous references and set to null
-            SafeDispose(ref d2dFactory);
-            SafeDispose(ref dwriteFactory);
-            SafeDispose(ref wicFactory);
+            RemoveAndDispose(ref d2dFactory);
+            RemoveAndDispose(ref dwriteFactory);
+            RemoveAndDispose(ref wicFactory);
 
             // Allocate new references
             d2dFactory = ToDispose(new SharpDX.Direct2D1.Factory1(SharpDX.Direct2D1.FactoryType.SingleThreaded, debugLevel));
@@ -151,10 +151,10 @@ namespace CommonDX
         protected virtual void CreateDeviceResources()
         {
             // Dispose previous references and set to null
-            SafeDispose(ref d3dDevice);
-            SafeDispose(ref d3dContext);
-            SafeDispose(ref d2dDevice);
-            SafeDispose(ref d2dContext);
+            RemoveAndDispose(ref d3dDevice);
+            RemoveAndDispose(ref d3dContext);
+            RemoveAndDispose(ref d2dDevice);
+            RemoveAndDispose(ref d2dContext);
 
             // Allocate new references
             // Enable compatibility with Direct2D
@@ -162,8 +162,18 @@ namespace CommonDX
             var creationFlags = SharpDX.Direct3D11.DeviceCreationFlags.VideoSupport | SharpDX.Direct3D11.DeviceCreationFlags.BgraSupport;
 
             // Decomment this line to have Debug. Unfortunately, debug is sometimes crashing applications, so it is disable by default
-            using (var defaultDevice = new SharpDX.Direct3D11.Device(DriverType.Hardware, creationFlags))
-                d3dDevice = defaultDevice.QueryInterface<SharpDX.Direct3D11.Device1>();
+            try
+            {
+                // Try to create it with Video Support
+                // If it is not working, we just use BGRA
+                using (var defaultDevice = new SharpDX.Direct3D11.Device(DriverType.Hardware, creationFlags))
+                    d3dDevice = defaultDevice.QueryInterface<SharpDX.Direct3D11.Device1>();
+            } catch (Exception)
+            {
+                creationFlags = SharpDX.Direct3D11.DeviceCreationFlags.BgraSupport;
+                using (var defaultDevice = new SharpDX.Direct3D11.Device(DriverType.Hardware, creationFlags))
+                    d3dDevice = defaultDevice.QueryInterface<SharpDX.Direct3D11.Device1>();
+            }
             featureLevel = d3dDevice.FeatureLevel;
 
             // Get Direct3D 11.1 context

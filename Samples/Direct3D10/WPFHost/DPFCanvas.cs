@@ -92,22 +92,22 @@ namespace WPFHost
             this.D3DSurface.IsFrontBufferAvailableChanged -= OnIsFrontBufferAvailableChanged;
             this.Source = null;
 
-            Disposer.SafeDispose(ref this.D3DSurface);
-            Disposer.SafeDispose(ref this.RenderTargetView);
-            Disposer.SafeDispose(ref this.DepthStencilView);
-            Disposer.SafeDispose(ref this.RenderTarget);
-            Disposer.SafeDispose(ref this.DepthStencil);
-            Disposer.SafeDispose(ref this.Device);
+            Disposer.RemoveAndDispose(ref this.D3DSurface);
+            Disposer.RemoveAndDispose(ref this.RenderTargetView);
+            Disposer.RemoveAndDispose(ref this.DepthStencilView);
+            Disposer.RemoveAndDispose(ref this.RenderTarget);
+            Disposer.RemoveAndDispose(ref this.DepthStencil);
+            Disposer.RemoveAndDispose(ref this.Device);
         }
 
         private void CreateAndBindTargets()
         {
             this.D3DSurface.SetRenderTargetDX10(null);
 
-            Disposer.SafeDispose(ref this.RenderTargetView);
-            Disposer.SafeDispose(ref this.DepthStencilView);
-            Disposer.SafeDispose(ref this.RenderTarget);
-            Disposer.SafeDispose(ref this.DepthStencil);
+            Disposer.RemoveAndDispose(ref this.RenderTargetView);
+            Disposer.RemoveAndDispose(ref this.DepthStencilView);
+            Disposer.RemoveAndDispose(ref this.RenderTarget);
+            Disposer.RemoveAndDispose(ref this.DepthStencil);
 
             int width = Math.Max((int)base.ActualWidth, 100);
             int height = Math.Max((int)base.ActualHeight, 100);

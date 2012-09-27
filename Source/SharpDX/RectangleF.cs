@@ -220,7 +220,7 @@ namespace SharpDX
         /// <returns></returns>
         public static implicit operator SharpDX.DrawingRectangleF(RectangleF input)
         {
-            return new System.Drawing.RectangleF(input.Left, input.Top, input.Right - input.Left, input.Bottom - input.Top);
+            return new SharpDX.DrawingRectangleF(input.Left, input.Top, input.Right - input.Left, input.Bottom - input.Top);
         }
 
         /// <summary>

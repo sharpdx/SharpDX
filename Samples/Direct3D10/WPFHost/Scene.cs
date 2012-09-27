@@ -103,10 +103,10 @@ namespace WPFHost
 
         void IScene.Detach()
         {
-            Disposer.SafeDispose(ref this.Vertices);
-            Disposer.SafeDispose(ref this.VertexLayout);
-            Disposer.SafeDispose(ref this.SimpleEffect);
-            Disposer.SafeDispose(ref this.VertexStream);
+            Disposer.RemoveAndDispose(ref this.Vertices);
+            Disposer.RemoveAndDispose(ref this.VertexLayout);
+            Disposer.RemoveAndDispose(ref this.SimpleEffect);
+            Disposer.RemoveAndDispose(ref this.VertexStream);
         }
 
         void IScene.Update(TimeSpan sceneTime)

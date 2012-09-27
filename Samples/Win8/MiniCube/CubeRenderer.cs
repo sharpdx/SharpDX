@@ -64,7 +64,7 @@ namespace MiniCube
         public virtual void Initialize(DeviceManager devices)
         {
             // Remove previous buffer
-            SafeDispose(ref constantBuffer);
+            RemoveAndDispose(ref constantBuffer);
 
             // Setup local variables
             var d3dDevice = devices.DeviceDirect3D;
