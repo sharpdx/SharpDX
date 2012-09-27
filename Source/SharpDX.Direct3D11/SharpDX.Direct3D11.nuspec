@@ -52,9 +52,9 @@
     <file src="..\..\Bin\Signed-net40\SharpDX.Direct3D11.pdb" target="lib\net40" />
     <file src="..\..\Bin\Signed-net40\SharpDX.Direct3D11.xml" target="lib\net40" />
 
-    <file src="..\..\Bin\Win8Metro\SharpDX.Direct3D11.dll" target="lib\winrt" />
-    <file src="..\..\Bin\Win8Metro\SharpDX.Direct3D11.pdb" target="lib\winrt" />
-    <file src="..\..\Bin\Win8Metro\SharpDX.Direct3D11.xml" target="lib\winrt" />
+    <file src="..\..\Bin\Signed-winrt\SharpDX.Direct3D11.dll" target="lib\winrt" />
+    <file src="..\..\Bin\Signed-winrt\SharpDX.Direct3D11.pdb" target="lib\winrt" />
+    <file src="..\..\Bin\Signed-winrt\SharpDX.Direct3D11.xml" target="lib\winrt" />
 
     <file src="**\*.cs" target="src" />
   </files>

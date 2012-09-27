@@ -50,9 +50,9 @@
     <file src="..\..\Bin\Signed-net40\SharpDX.MediaFoundation.pdb" target="lib\net40" />
     <file src="..\..\Bin\Signed-net40\SharpDX.MediaFoundation.xml" target="lib\net40" />
 
-    <file src="..\..\Bin\Win8Metro\SharpDX.MediaFoundation.dll" target="lib\winrt" />
-    <file src="..\..\Bin\Win8Metro\SharpDX.MediaFoundation.pdb" target="lib\winrt" />
-    <file src="..\..\Bin\Win8Metro\SharpDX.MediaFoundation.xml" target="lib\winrt" />
+    <file src="..\..\Bin\Signed-winrt\SharpDX.MediaFoundation.dll" target="lib\winrt" />
+    <file src="..\..\Bin\Signed-winrt\SharpDX.MediaFoundation.pdb" target="lib\winrt" />
+    <file src="..\..\Bin\Signed-winrt\SharpDX.MediaFoundation.xml" target="lib\winrt" />
 
     <file src="**\*.cs" target="src" />
   </files>

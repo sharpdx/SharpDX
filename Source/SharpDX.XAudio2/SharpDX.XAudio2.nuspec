@@ -50,9 +50,9 @@
     <file src="..\..\Bin\Signed-net40\SharpDX.XAudio2.pdb" target="lib\net40" />
     <file src="..\..\Bin\Signed-net40\SharpDX.XAudio2.xml" target="lib\net40" />
 
-    <file src="..\..\Bin\Win8Metro\SharpDX.XAudio2.dll" target="lib\winrt" />
-    <file src="..\..\Bin\Win8Metro\SharpDX.XAudio2.pdb" target="lib\winrt" />
-    <file src="..\..\Bin\Win8Metro\SharpDX.XAudio2.xml" target="lib\winrt" />
+    <file src="..\..\Bin\Signed-winrt\SharpDX.XAudio2.dll" target="lib\winrt" />
+    <file src="..\..\Bin\Signed-winrt\SharpDX.XAudio2.pdb" target="lib\winrt" />
+    <file src="..\..\Bin\Signed-winrt\SharpDX.XAudio2.xml" target="lib\winrt" />
 
     <file src="**\*.cs" target="src" />
   </files>
