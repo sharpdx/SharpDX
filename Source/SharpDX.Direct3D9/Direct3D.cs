@@ -221,7 +221,7 @@ namespace SharpDX.Direct3D9
         /// <unmanaged>HRESULT IDirect3D9::CheckDeviceType([In] unsigned int Adapter,[In] D3DDEVTYPE DevType,[In] D3DFORMAT AdapterFormat,[In] D3DFORMAT BackBufferFormat,[In] BOOL bWindowed)</unmanaged>
         public bool CheckDeviceType(int adapter, DeviceType deviceType, Format adapterFormat, Format backBufferFormat, bool windowed)
         {
-            return CheckDeviceType_(adapter, deviceType, adapterFormat, backBufferFormat, windowed) != 0;
+            return CheckDeviceType_(adapter, deviceType, adapterFormat, backBufferFormat, windowed) == 0;
         }
 
         /// <summary>
