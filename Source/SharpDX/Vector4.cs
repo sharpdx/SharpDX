@@ -1097,6 +1097,17 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Modulates a vector with another by performing component-wise multiplication equivalent to <see cref="Modulate(ref SharpDX.Vector4,ref SharpDX.Vector4,out SharpDX.Vector4)"/>.
+        /// </summary>
+        /// <param name="left">The first vector to multiply.</param>
+        /// <param name="right">The second vector to multiply.</param>
+        /// <returns>The multiplication of the two vectors.</returns>
+        public static Vector4 operator *(Vector4 left, Vector4 right)
+        {
+            return new Vector4(left.X * right.X, left.Y * right.Y, left.Z * right.Z, left.W * right.W);
+        }
+
+        /// <summary>
         /// Assert a vector (return it unchanged).
         /// </summary>
         /// <param name="value">The vector to assert (unchange).</param>
