@@ -202,6 +202,27 @@ namespace SharpDX
             return new System.Drawing.RectangleF(input.Left, input.Top, input.Right - input.Left, input.Bottom - input.Top);
         }
 #endif
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="System.Drawing.RectangleF"/> to <see cref="SharpDX.RectangleF"/>.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static implicit operator RectangleF(SharpDX.DrawingRectangleF input)
+        {
+            return new RectangleF(input.X, input.Y, input.X + input.Width, input.Y + input.Height);
+        }
+
+        /// <summary>
+        /// Rectangles the F.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <returns></returns>
+        public static implicit operator SharpDX.DrawingRectangleF(RectangleF input)
+        {
+            return new System.Drawing.RectangleF(input.Left, input.Top, input.Right - input.Left, input.Bottom - input.Top);
+        }
+
         /// <summary>
         /// Implements the operator ==.
         /// </summary>
