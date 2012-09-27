@@ -35,6 +35,7 @@
     <Compile Include="AssemblyDoc.cs" />
     <Compile Include="Color.cs" />
     <Compile Include="ColorBGRA.cs" />
+    <Compile Include="Serialization\NamespaceDoc.cs" />
     <Compile Include="SingletonString.cs" />
     <Compile Include="ComponentBase.cs" />
     <Compile Include="DataPointer.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="TagAttribute.cs" />
     <Compile Include="Text\ASCIIEncoding.cs" />
+    <Compile Include="Text\NamespaceDoc.cs" />
     <Compile Include="Win32Native.cs" />
     <Compile Include="Plane.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -174,8 +176,12 @@
     <Compile Include="Win32\VariantType.cs" />
     <Compile Include="Windows\NamespaceDoc.cs" />
     <Compile Include="Windows\RenderLoop.cs" />
-    <Compile Include="Windows\RenderControl.cs" />
-    <Compile Include="Windows\RenderForm.cs" />
+    <Compile Include="Windows\RenderControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Windows\RenderForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Color.Palette.cs" />
