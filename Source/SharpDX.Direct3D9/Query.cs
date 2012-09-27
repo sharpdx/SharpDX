@@ -72,7 +72,6 @@ namespace SharpDX.Direct3D9
         /// <unmanaged-short>IDirect3DQuery9::GetData</unmanaged-short>	
         public unsafe bool GetData<T>(out T data, bool flush) where T : struct
         {
-            bool result;
             QueryType type = Type;
             bool isInvalid = true;
             switch (type)
@@ -133,18 +132,27 @@ namespace SharpDX.Direct3D9
             if (isInvalid)
                 throw new ArgumentException(string.Format("Unsupported data size [{0}] for type [{1}]. See documentation for expecting type.", typeof(T), type));
 
+            Result result;
             if (typeof(T) == typeof(bool))
             {
                 int value = 0;
-                result = GetData(new IntPtr(&value), 4, flush ? 1 : 0) == 0;
+                result = GetData(new IntPtr(&value), 4, flush ? 1 : 0);
                 data = (T)Convert.ChangeType(value, typeof(T));
             }
             else
             {
                 data = default(T);
-                result = GetData((IntPtr)Interop.Fixed(ref data), Utilities.SizeOf<T>(), flush ? 1 : 0) == 0;
+                result = GetData((IntPtr)Interop.Fixed(ref data), Utilities.SizeOf<T>(), flush ? 1 : 0);
             }
-            return result;
+
+            if (result == Result.Ok)
+                return true;
+            if (result == Result.False)
+                return false;
+
+            // Should throw an exception
+            result.CheckError();
+            return false;
         }
     }
 }
