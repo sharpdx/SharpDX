@@ -2451,7 +2451,7 @@
     <map method="IDirect3DQuery9::GetType" property="false" visibility="internal"/>
     <map param="IDirect3DQuery9::Issue::dwIssueFlags" type="D3DISSUE" />
     <map method="IDirect3DQuery9::GetType" property="false" />
-    <map method="IDirect3DQuery9::GetData" visibility="internal" />
+    <map method="IDirect3DQuery9::GetData" visibility="internal" check="false"/>
     
     <map param="IDirect3DDevice9Ex::GetGPUThreadPriority::pPriority" attribute="out" />
     <map param="IDirect3DDevice9Ex::GetMaximumFrameLatency::pMaxLatency" attribute="out" />

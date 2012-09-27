@@ -43,16 +43,38 @@ namespace SharpDX.Direct3D9
             get { return GetTypeInfo(); }
         }
 
-        /// <summary>
-        /// Polls a queried resource to get the query state or a query result.
-        /// </summary>
-        /// <typeparam name="T">Type of the object to query</typeparam>
+        /// <summary>	
+        /// <p>Polls a queried resource to get the query state or a query result. For more information about queries, see Queries (Direct3D 9).</p>	
+        /// </summary>	
+        /// <typeparam name="T">Type of the object to query. See remarks.</typeparam>
+        /// <param name="data">The value of the query </param>
         /// <param name="flush">if set to <c>true</c> [flush].</param>
-        /// <returns>The value of the query</returns>
-        public unsafe T GetData<T>(bool flush) where T : struct
+        /// <returns>The return type identifies the query state (see Queries (Direct3D 9)). The method returns <strong>true</strong> if the query data is available and <strong>false</strong>if it is not.  These are considered successful return values. If the method fails when <strong>D3DGETDATA_FLUSH</strong> is used, the return value can be <see cref="SharpDX.Direct3D9.ResultCode.DeviceLost"/>. </p></returns>	
+        /// <remarks>
+        /// Each <see cref="QueryType"/> is expecting a particular type.
+        /// <ul>
+        /// <li>QueryType.VCache  => <see cref="VCache"/></li>
+        /// <li>QueryType.ResourceManager  => <see cref="ResourceManager"/></li>
+        /// <li>QueryType.VertexStats  => <see cref="VertexStats"/></li>
+        /// <li>QueryType.Event  => <see cref="bool"/></li>
+        /// <li>QueryType.Occlusion  => <see cref="int"/> or <see cref="uint"/></li>
+        /// <li>QueryType.Timestamp  => <see cref="long"/> or <see cref="ulong"/></li>
+        /// <li>QueryType.TimestampDisjoint  => <see cref="bool"/></li>
+        /// <li>QueryType.PipelineTimings  => <see cref="PipelineTimings"/></li>
+        /// <li>QueryType.InterfaceTimings  => <see cref="InterfaceTimings"/></li>
+        /// <li>QueryType.VertexTimings  => <see cref="StageTimings"/></li>
+        /// <li>QueryType.BandwidthTimings  => <see cref="BandwidthTimings"/></li>
+        /// <li>QueryType.CacheUtilization  => <see cref="CacheUtilization"/></li>
+        /// </ul>
+        /// </remarks>
+        /// <msdn-id>bb205873</msdn-id>	
+        /// <unmanaged>HRESULT IDirect3DQuery9::GetData([In] void* pData,[In] unsigned int dwSize,[In] unsigned int dwGetDataFlags)</unmanaged>	
+        /// <unmanaged-short>IDirect3DQuery9::GetData</unmanaged-short>	
+        public unsafe bool GetData<T>(out T data, bool flush) where T : struct
         {
+            bool result;
             QueryType type = Type;
-            bool isInvalid = false;
+            bool isInvalid = true;
             switch (type)
             {
                 case QueryType.VCache:
@@ -105,23 +127,24 @@ namespace SharpDX.Direct3D9
 
                 case QueryType.CacheUtilization:
                     isInvalid = typeof(T) != typeof(CacheUtilization);
-                    break;
+                    break;                
             }
 
             if (isInvalid)
-                throw new ArgumentException(string.Format("Invalid data size [{0}] for type [{1}]", typeof(T), type));
+                throw new ArgumentException(string.Format("Unsupported data size [{0}] for type [{1}]. See documentation for expecting type.", typeof(T), type));
 
-            if ((type != QueryType.Event) && (type != QueryType.TimestampDisjoint))
+            if (typeof(T) == typeof(bool))
             {
-                T data = default(T);
-                GetData((IntPtr)Interop.Fixed(ref data), Utilities.SizeOf<T>(), flush ? 1 : 0);
-                return data;
+                int value = 0;
+                result = GetData(new IntPtr(&value), 4, flush ? 1 : 0) == 0;
+                data = (T)Convert.ChangeType(value, typeof(T));
             }
-
-            int value = 0;
-            GetData(new IntPtr(&value), 4, flush ? 1 : 0);
-
-            return (T)Convert.ChangeType(value, typeof(T));
+            else
+            {
+                data = default(T);
+                result = GetData((IntPtr)Interop.Fixed(ref data), Utilities.SizeOf<T>(), flush ? 1 : 0) == 0;
+            }
+            return result;
         }
     }
 }
