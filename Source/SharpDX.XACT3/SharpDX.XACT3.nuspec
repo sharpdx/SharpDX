@@ -43,13 +43,13 @@
   </metadata>
 
   <files>
-    <file src="..\..\Bin\Standard-net20\SharpDX.XACT3.dll" target="lib\net20" />
-    <file src="..\..\Bin\Standard-net20\SharpDX.XACT3.pdb" target="lib\net20" />
-    <file src="..\..\Bin\Standard-net20\SharpDX.XACT3.xml" target="lib\net20" />
+    <file src="..\..\Bin\Signed-net20\SharpDX.XACT3.dll" target="lib\net20" />
+    <file src="..\..\Bin\Signed-net20\SharpDX.XACT3.pdb" target="lib\net20" />
+    <file src="..\..\Bin\Signed-net20\SharpDX.XACT3.xml" target="lib\net20" />
 
-    <file src="..\..\Bin\Standard-net40\SharpDX.XACT3.dll" target="lib\net40" />
-    <file src="..\..\Bin\Standard-net40\SharpDX.XACT3.pdb" target="lib\net40" />
-    <file src="..\..\Bin\Standard-net40\SharpDX.XACT3.xml" target="lib\net40" />
+    <file src="..\..\Bin\Signed-net40\SharpDX.XACT3.dll" target="lib\net40" />
+    <file src="..\..\Bin\Signed-net40\SharpDX.XACT3.pdb" target="lib\net40" />
+    <file src="..\..\Bin\Signed-net40\SharpDX.XACT3.xml" target="lib\net40" />
 
     <file src="**\*.cs" target="src" />
   </files>
