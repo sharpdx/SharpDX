@@ -216,7 +216,7 @@ namespace SharpDX
         /// <returns></returns>
         public static implicit operator SharpDX.DrawingRectangle(Rectangle input)
         {
-            return new System.Drawing.Rectangle(input.Left, input.Top, input.Right - input.Left, input.Bottom - input.Top);
+            return new SharpDX.DrawingRectangle(input.Left, input.Top, input.Right - input.Left, input.Bottom - input.Top);
         }
 
         /// <summary>
