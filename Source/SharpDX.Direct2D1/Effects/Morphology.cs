@@ -58,30 +58,30 @@ namespace SharpDX.Direct2D1.Effects
         /// <summary>
         /// Size of the kernel in the X direction. The units are in DIPs.
         /// </summary>
-        public float Width
+        public int Width
         {
             get
             {
-                return GetFloatValue((int)MorphologyProperties.Width);
+                return (int)GetUIntValue((int)MorphologyProperties.Width);
             }
             set
             {
-                SetValue((int)MorphologyProperties.Width, value);
+                SetValue((int)MorphologyProperties.Width, (uint)value);
             }
         }
 
         /// <summary>
         /// Size of the kernel in the Y direction. The units are in DIPs.
         /// </summary>
-        public float Height
+        public int Height
         {
             get
             {
-                return GetFloatValue((int)MorphologyProperties.Height);
+                return (int)GetUIntValue((int)MorphologyProperties.Height);
             }
             set
             {
-                SetValue((int)MorphologyProperties.Height, value);
+                SetValue((int)MorphologyProperties.Height, (uint)value);
             }
         }
     }

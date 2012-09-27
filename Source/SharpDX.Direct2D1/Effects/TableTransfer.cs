@@ -40,15 +40,23 @@ namespace SharpDX.Direct2D1.Effects
         /// <summary>
         /// The list of values used to define the transfer function for the Red channel.
         /// </summary>
-        public float[] RedTable
+        public unsafe float[] RedTable
         {
             get
             {
-                throw new NotImplementedException();
+                var localValue = new float[256];
+                GetValue((int) TableTransferProperties.RedTable, PropertyType.Blob,
+                         new IntPtr(Interop.Fixed(localValue)), sizeof (float)*256);
+                return localValue;
             }
             set
             {
-                throw new NotImplementedException();
+                var localValue = value;
+                if (value.Length != 256)
+                    throw new ArgumentException("Invalid table size. Excepting Legnth 256.");
+
+                SetValue((int) TableTransferProperties.RedTable, PropertyType.Blob,
+                         new IntPtr(Interop.Fixed(localValue)), sizeof (float)*256);
             }
         }
 
@@ -70,15 +78,23 @@ namespace SharpDX.Direct2D1.Effects
         /// <summary>
         /// The list of values that define the transfer function for the Green channel.
         /// </summary>
-        public float[] GreenTable
+        public unsafe float[] GreenTable
         {
             get
             {
-                throw new NotImplementedException();
+                var localValue = new float[256];
+                GetValue((int)TableTransferProperties.GreenTable, PropertyType.Blob,
+                         new IntPtr(Interop.Fixed(localValue)), sizeof(float) * 256);
+                return localValue;
             }
             set
             {
-                throw new NotImplementedException();
+                var localValue = value;
+                if (value.Length != 256)
+                    throw new ArgumentException("Invalid table size. Excepting Legnth 256.");
+
+                SetValue((int)TableTransferProperties.GreenTable, PropertyType.Blob,
+                         new IntPtr(Interop.Fixed(localValue)), sizeof(float) * 256);
             }
         }
 
@@ -100,15 +116,23 @@ namespace SharpDX.Direct2D1.Effects
         /// <summary>
         /// The list of values that define the transfer function for the Blue channel. 
         /// </summary>
-        public float[] BlueTable
+        public unsafe float[] BlueTable
         {
             get
             {
-                throw new NotImplementedException();
+                var localValue = new float[256];
+                GetValue((int)TableTransferProperties.BlueTable, PropertyType.Blob,
+                         new IntPtr(Interop.Fixed(localValue)), sizeof(float) * 256);
+                return localValue;
             }
             set
             {
-                throw new NotImplementedException();
+                var localValue = value;
+                if (value.Length != 256)
+                    throw new ArgumentException("Invalid table size. Excepting Legnth 256.");
+
+                SetValue((int)TableTransferProperties.BlueTable, PropertyType.Blob,
+                         new IntPtr(Interop.Fixed(localValue)), sizeof(float) * 256);
             }
         }
 
@@ -130,15 +154,23 @@ namespace SharpDX.Direct2D1.Effects
         /// <summary>
         /// The list of values that define the transfer function for the Alpha channel. 
         /// </summary>
-        public float[] AlphaTable
+        public unsafe float[] AlphaTable
         {
             get
             {
-                throw new NotImplementedException();
+                var localValue = new float[256];
+                GetValue((int)TableTransferProperties.AlphaTable, PropertyType.Blob,
+                         new IntPtr(Interop.Fixed(localValue)), sizeof(float) * 256);
+                return localValue;
             }
             set
             {
-                throw new NotImplementedException();
+                var localValue = value;
+                if (value.Length != 256)
+                    throw new ArgumentException("Invalid table size. Excepting Legnth 256.");
+
+                SetValue((int)TableTransferProperties.AlphaTable, PropertyType.Blob,
+                         new IntPtr(Interop.Fixed(localValue)), sizeof(float) * 256);
             }
         }
 
