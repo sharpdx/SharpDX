@@ -108,7 +108,7 @@ namespace SharpDX.Direct3D11
             CreateDevice(adapter, DriverType.Unknown, flags, featureLevels);
         }
 
-#if !WIN8METRO
+#if !W8CORE
 
         /// <summary>
         ///   Initializes a new instance of the <see cref = "T:SharpDX.Direct3D11.Device" /> class along with a new <see cref = "T:SharpDX.DXGI.SwapChain" /> used for rendering.

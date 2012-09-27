@@ -26,7 +26,7 @@ namespace SharpDX.DXGI
 {
     public partial class Factory
     {
-#if !WIN8METRO
+#if !W8CORE
         /// <summary>
         ///   Default Constructor for Factory
         /// </summary>

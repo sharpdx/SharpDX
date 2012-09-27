@@ -31,7 +31,7 @@ using System.Text;
 
 using SharpDX.Direct3D;
 using System.Reflection;
-#if WIN8METRO
+#if W8CORE
 using System.Threading.Tasks;
 using System.Linq;
 using System.Linq.Expressions;
@@ -392,7 +392,7 @@ namespace SharpDX
         /// <returns>The guid associated with this type</returns>
         public static Guid GetGuidFromType(Type type)
         {
-#if WIN8METRO
+#if W8CORE
             return type.GetTypeInfo().GUID;
 #else
             return type.GUID;
@@ -465,7 +465,7 @@ namespace SharpDX
         /// <returns></returns>
         public static string PtrToStringAnsi(IntPtr pointer, int maxLength)
         {
-#if WIN8METRO
+#if W8CORE
             return Marshal.PtrToStringAnsi(pointer, maxLength);
 #else
             unsafe
@@ -487,7 +487,7 @@ namespace SharpDX
         /// <returns></returns>
         public static string PtrToStringUni(IntPtr pointer, int maxLength)
         {
-#if WIN8METRO
+#if W8CORE
             return Marshal.PtrToStringUni(pointer, maxLength);
 #else
             unsafe
@@ -599,7 +599,7 @@ namespace SharpDX
         {
             if (blob == null) return null;
             string output;
-#if WIN8METRO
+#if W8CORE
             output = Marshal.PtrToStringAnsi(blob.BufferPointer);
 #else
             unsafe
@@ -757,7 +757,7 @@ namespace SharpDX
         /// <returns>The custom attribute or null if not found</returns>
         public static T GetCustomAttribute<T>(MemberInfo memberInfo, bool inherited = false) where T : Attribute
         {
-#if WIN8METRO
+#if W8CORE
             return memberInfo.GetCustomAttribute<T>(inherited);
 #else
             var result = memberInfo.GetCustomAttributes(typeof(T), inherited);
@@ -776,7 +776,7 @@ namespace SharpDX
         /// <returns>The custom attribute or null if not found</returns>
         public static IEnumerable<T> GetCustomAttributes<T>(MemberInfo memberInfo, bool inherited = false) where T : Attribute
         {
-#if WIN8METRO
+#if W8CORE
             return memberInfo.GetCustomAttributes<T>(inherited);
 #else
             var result = memberInfo.GetCustomAttributes(typeof(T), inherited);
@@ -798,7 +798,7 @@ namespace SharpDX
         /// </returns>
         public static bool IsAssignableFrom(Type toType, Type fromType)
         {
-#if WIN8METRO
+#if W8CORE
             return toType.GetTypeInfo().IsAssignableFrom(fromType.GetTypeInfo());
 #else
             return toType.IsAssignableFrom(fromType);
@@ -814,7 +814,7 @@ namespace SharpDX
         /// </returns>
         public static bool IsEnum(Type typeToTest)
         {
-#if WIN8METRO
+#if W8CORE
             return typeToTest.GetTypeInfo().IsEnum;
 #else
             return typeToTest.IsEnum;
@@ -830,7 +830,7 @@ namespace SharpDX
         /// </returns>
         public static bool IsValueType(Type typeToTest)
         {
-#if WIN8METRO
+#if W8CORE
             return typeToTest.GetTypeInfo().IsValueType;
 #else
             return typeToTest.IsValueType;
@@ -838,7 +838,7 @@ namespace SharpDX
         }
 
         private static MethodInfo GetMethod(Type type, string name, Type[] typeArgs) {
-#if WIN8METRO
+#if W8CORE
 
             foreach( var method in type.GetTypeInfo().GetDeclaredMethods(name)) {
                 if ( method.GetParameters().Length == typeArgs.Length) {
@@ -871,7 +871,7 @@ namespace SharpDX
         /// <returns>A compiled delegate </returns>
         public static GetValueFastDelegate<T> BuildPropertyGetter<T>(Type customEffectType, PropertyInfo propertyInfo)
         {
-#if WIN8METRO
+#if W8CORE
 
             var valueParam = Expression.Parameter(typeof(T).MakeByRefType());
             var objectParam = Expression.Parameter(typeof(object));
@@ -952,7 +952,7 @@ namespace SharpDX
         /// <returns>A compiled delegate</returns>
         public static SetValueFastDelegate<T> BuildPropertySetter<T>(Type customEffectType, PropertyInfo propertyInfo)
         {
-#if WIN8METRO
+#if W8CORE
             var valueParam = Expression.Parameter(typeof(T).MakeByRefType());
             var objectParam = Expression.Parameter(typeof(object));
             var castParam = Expression.Convert(objectParam, customEffectType);
@@ -1066,7 +1066,7 @@ namespace SharpDX
             var tempType = sourceType;
             while (tempType != null)
             {
-#if WIN8METRO
+#if W8CORE
                 methods.AddRange(tempType.GetTypeInfo().DeclaredMethods); //target methods will be favored in the search
                 tempType = tempType.GetTypeInfo().BaseType;
 #else
@@ -1078,7 +1078,7 @@ namespace SharpDX
             tempType = targetType;
             while (tempType != null)
             {
-#if WIN8METRO
+#if W8CORE
                 methods.AddRange(tempType.GetTypeInfo().DeclaredMethods); //target methods will be favored in the search
                 tempType = tempType.GetTypeInfo().BaseType;
 #else
@@ -1124,7 +1124,7 @@ namespace SharpDX
             ClsctxAll = ClsctxServer | ClsctxInprocHandler
         }
 
-#if WIN8METRO
+#if W8CORE
         [StructLayout(LayoutKind.Sequential)]
         public struct MultiQueryInterface
         {
@@ -1133,7 +1133,7 @@ namespace SharpDX
             public Result ResultCode;
         };
 
-        // TODO THIS IS NOT TESTED under WIN8METRO
+        // TODO THIS IS NOT TESTED under W8CORE
         [DllImport("ole32.dll", ExactSpelling = true, EntryPoint = "CoCreateInstanceFromApp", PreserveSig = true)]
         private static extern Result CoCreateInstanceFromApp([In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid, 
             IntPtr pUnkOuter, 
@@ -1210,7 +1210,7 @@ namespace SharpDX
             return result;
         }
 
-#if WIN8METRO
+#if W8CORE
         [DllImport("kernel32", EntryPoint = "LoadPackagedLibrary", SetLastError = true)]
         static extern IntPtr LoadLibrary_(string lpFileName, int reserved = 0);
 #else

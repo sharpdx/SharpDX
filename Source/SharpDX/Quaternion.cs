@@ -56,7 +56,7 @@ namespace SharpDX
     /// Represents a four dimensional mathematical quaternion.
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-#if !WIN8METRO
+#if !W8CORE
     [Serializable]
     [TypeConverter(typeof(SharpDX.Design.QuaternionConverter))]
 #endif

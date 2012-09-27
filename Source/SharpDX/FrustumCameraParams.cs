@@ -26,7 +26,7 @@ namespace SharpDX
     /// <summary>
     /// Frustum camera parameters.
     /// </summary>
-#if !WIN8METRO
+#if !W8CORE
     [Serializable]
 #endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]

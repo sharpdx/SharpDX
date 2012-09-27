@@ -30,7 +30,7 @@
 
   <!-- D3D10 includes -->
   <!-- d3d10_1.h must be included before d3d10.h -->
-  <ifndef name="WIN8METRO">
+  <ifndef name="W8CORE">
     <include file="d3d10_1.h" />
     <include file="d3d10.h" />
     <include file="d3d10_1shader.h" />
@@ -39,7 +39,7 @@
     <include file="d3d10sdklayers.h" />
     <include file="d3d10shader.h" />
   </ifndef>
-  
+
   <ifndef name="DIRECTX11_1">
     <include file="d3dx10.h" />
     <include file="d3dx10core.h" />
@@ -50,12 +50,14 @@
   
   <!-- D3D11 includes -->
   <include file="d3d11.h" />
+  
   <ifdef name="DIRECTX11_1">
     <include file="d3d11_1.h" />
   </ifdef>
-  <include file="d3d11sdklayers.h" />
   
-  <ifndef name="WIN8METRO">
+  <include file="d3d11sdklayers.h" />
+
+  <ifndef name="W8CORE">
     <include file="d3dx11.h" />
     <include file="d3dx11core.h" />
     <include file="d3dx11tex.h" />
@@ -63,7 +65,6 @@
     <include file="d3dcsx.h" />
     <include file="d3dx11effect.h"/>
   </ifndef>
-
 
   <naming />
   <binding/>
@@ -89,7 +90,7 @@
     <ifdef name="DIRECTX11_1">
       <context>d3d11_1</context>
     </ifdef>
-    <ifndef name="WIN8METRO">
+    <ifndef name="W8CORE">
       <context>d3dx11</context>
       <context>d3d11sdklayers</context>
       <context>d3dx11core</context>

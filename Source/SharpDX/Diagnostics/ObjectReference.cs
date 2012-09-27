@@ -35,7 +35,7 @@ namespace SharpDX.Diagnostics
         /// <param name="creationTime">The creation time.</param>
         /// <param name="comObject">The com object to track.</param>
         /// <param name="stackTrace">The stack trace.</param>
-#if WIN8METRO
+#if W8CORE
         public ObjectReference(DateTime creationTime, ComObject comObject)
         {
             CreationTime = creationTime;
@@ -64,7 +64,7 @@ namespace SharpDX.Diagnostics
         /// <value>The weak reference to the tracked object.</value>
         public WeakReference Object { get; private set; }
 
-#if !WIN8METRO
+#if !W8CORE
         /// <summary>
         /// Gets the stack trace when the track object was created.
         /// </summary>
@@ -91,7 +91,7 @@ namespace SharpDX.Diagnostics
 
             var builder = new StringBuilder();
             builder.AppendFormat(System.Globalization.CultureInfo.InvariantCulture, "Active COM Object: [0x{0:X}] Class: [{1}] Time [{2}] Stack:", comObject.NativePointer.ToInt64(), comObject.GetType().FullName, CreationTime).AppendLine();
-#if !WIN8METRO
+#if !W8CORE
             foreach (var stackFrame in StackTrace.GetFrames())
             {
                 // Skip system/generated frame

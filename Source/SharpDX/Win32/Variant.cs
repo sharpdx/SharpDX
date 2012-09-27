@@ -259,7 +259,7 @@ namespace SharpDX.Win32
                 var type = value.GetType();
 
                 Type = VariantType.Default;
-#if WIN8METRO
+#if W8CORE
                 if (type.GetTypeInfo().IsPrimitive)
 #else
                 if (type.IsPrimitive)

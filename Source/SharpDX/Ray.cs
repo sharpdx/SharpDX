@@ -53,7 +53,7 @@ namespace SharpDX
     /// <summary>
     /// Represents a three dimensional line based on a point in space and a direction.
     /// </summary>
-#if !WIN8METRO
+#if !W8CORE
     [Serializable]
 #endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]

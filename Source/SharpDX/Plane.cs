@@ -53,7 +53,7 @@ namespace SharpDX
     /// <summary>
     /// Represents a plane in three dimensional space.
     /// </summary>
-#if !WIN8METRO
+#if !W8CORE
     [Serializable]
 #endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]

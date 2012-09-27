@@ -44,7 +44,7 @@ namespace SharpDX.IO
         /// <param name="share">The share mode.</param>
         public unsafe NativeFileStream(string fileName, NativeFileMode fileMode, NativeFileAccess access, NativeFileShare share = NativeFileShare.Read)
         {
-#if WIN8METRO
+#if W8CORE
             //uint newAccess = 0;
             //const int FILE_ATTRIBUTE_NORMAL = 0x00000080;
             //const int FILE_FLAG_RANDOM_ACCESS = 0x10000000;
@@ -94,7 +94,7 @@ namespace SharpDX.IO
             canWrite = 0 != (access & NativeFileAccess.Write);
 
             // TODO how setup correctly canSeek flags? 
-            // Kernel32.GetFileType(SafeFileHandle handle); is not available on Win8Metro
+            // Kernel32.GetFileType(SafeFileHandle handle); is not available on W8CORE
             canSeek = true;
 
         }

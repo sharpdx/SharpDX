@@ -60,7 +60,7 @@ foreach (var sharpFunctionGroup in Namespace.Classes)
 			var interopFunction = sharpFunction.Interop;
 #>
         [DllImport(<#= sharpFunction.DllName #>, EntryPoint = "<#= sharpFunction.CppElementName #>", CallingConvention = CallingConvention.<#= sharpFunction.CallingConvention #>)]
-#if !WIN8METRO
+#if !W8CORE
 		[System.Security.SuppressUnmanagedCodeSecurityAttribute]
 #endif
         private unsafe static extern <#= interopFunction.ReturnType.TypeName #> <#= sharpFunction.CppElementName #>_(<#

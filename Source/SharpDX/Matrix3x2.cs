@@ -28,7 +28,7 @@ namespace SharpDX
     /// <summary>
     /// Direct2D Matrix3x2 3x2. Use <see cref="SharpDX.Matrix3x2"/> and implicit cast to <see cref="Matrix3x2"/>.
     /// </summary>
-#if !WIN8METRO
+#if !W8CORE
     [Serializable]
 #endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]

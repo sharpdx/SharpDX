@@ -45,7 +45,7 @@ namespace SharpDX
             {
                 if (!typeToShadowTypes.TryGetValue(type, out slimInterfaces))
                 {
-#if WIN8METRO
+#if W8CORE
                     var interfaces = type.GetTypeInfo().ImplementedInterfaces;
 #else
                     var interfaces = type.GetInterfaces();
@@ -66,7 +66,7 @@ namespace SharpDX
                         }
 
                         // Keep only final interfaces and not intermediate.
-#if WIN8METRO
+#if W8CORE
                         var inheritList = item.GetTypeInfo().ImplementedInterfaces;
 #else
                         var inheritList = item.GetInterfaces();
@@ -102,7 +102,7 @@ namespace SharpDX
                 guidToShadow.Add(Utilities.GetGuidFromType(item), shadow);
 
                 // Associate also inherited interface to this shadow
-#if WIN8METRO
+#if W8CORE
                 var inheritList = item.GetTypeInfo().ImplementedInterfaces;
 #else
                 var inheritList = item.GetInterfaces();

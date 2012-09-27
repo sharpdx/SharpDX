@@ -29,7 +29,7 @@ namespace SharpDX
     /// <summary>
     ///   Represents a four dimensional mathematical vector.
     /// </summary>
-#if !WIN8METRO
+#if !W8CORE
     [Serializable]
 #endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]

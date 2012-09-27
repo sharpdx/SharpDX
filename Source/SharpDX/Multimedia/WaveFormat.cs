@@ -370,7 +370,7 @@ namespace SharpDX.Multimedia
                 this.extraSize = br.ReadInt16();
                 if (this.extraSize > formatChunkLength - 18)
                 {
-#if !WIN8METRO
+#if !W8CORE
                     Console.WriteLine("Format chunk mismatch");
 #endif
                     //RRL GSM exhibits this bug. Don't throw an exception

@@ -30,7 +30,7 @@ namespace SharpDX
     ///   A half precision (16 bit) floating point value.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-#if !WIN8METRO
+#if !W8CORE
     [Serializable]
     [TypeConverter(typeof(SharpDX.Design.HalfConverter))]
 #endif

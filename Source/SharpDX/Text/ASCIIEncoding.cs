@@ -24,7 +24,7 @@ namespace SharpDX.Text
     /// </summary>
     public abstract class Encoding : System.Text.Encoding
     {
-#if WIN8METRO
+#if W8CORE
         /// <summary>
         /// Returns an encoding for the ASCII character set. The returned encoding
         //  will be an instance of the ASCIIEncoding class.

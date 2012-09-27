@@ -265,7 +265,7 @@ namespace SharpDX.Serialization
         /// <typeparam name="T">Type of the element to serialize.</typeparam>
         public void RegisterDynamic<T>() where T : IDataSerializable, new()
         {
-#if WIN8METRO
+#if W8CORE
             var attribute = Utilities.GetCustomAttribute<DynamicSerializerAttribute>(typeof (T).GetTypeInfo());
 #else
             var attribute = Utilities.GetCustomAttribute<DynamicSerializerAttribute>(typeof (T));
@@ -2557,7 +2557,7 @@ namespace SharpDX.Serialization
                     // Figure out how many chars to process this round.
                     int charCount = (numLeft > maxChars) ? maxChars : numLeft;
                     int byteLen;
-#if WIN8METRO
+#if W8CORE
                     // This is inefficient, but .NET 4.5 Core profile doesn't give us the choice.
                     var charArray = value.ToCharArray();
                     byteLen = encoder.GetBytes(charArray, charStart, charCount, largeByteBuffer, 0, charCount == numLeft);

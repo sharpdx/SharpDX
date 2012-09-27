@@ -42,7 +42,7 @@ namespace SharpDX
         /// <param name="text">The text.</param>
         public SingletonString(string text) : this()
         {
-#if WIN8METRO
+#if W8CORE
             this.text = text;
 #else
             this.text = string.Intern(text);

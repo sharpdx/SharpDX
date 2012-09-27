@@ -57,7 +57,7 @@ namespace SharpDX
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     [DynamicSerializer("TKMX")]
-#if !WIN8METRO
+#if !W8CORE
     [Serializable]
     [TypeConverter(typeof(SharpDX.Design.MatrixConverter))]
 #endif

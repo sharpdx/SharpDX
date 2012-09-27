@@ -23,7 +23,9 @@
 <config id="sharpdx-direct3d11" xmlns="urn:SharpGen.Config">
   <depends>sharpdx</depends>
   <depends>sharpdx-dxgi</depends>
-  <depends>sharpdx-d3dcompiler</depends>
+  <ifndef name="WP8">
+    <depends>sharpdx-d3dcompiler</depends>
+  </ifndef>
   <depends>sharpdx-direct3d1x</depends>
 
   <namespace>SharpDX.Direct3D11</namespace>  
@@ -41,7 +43,8 @@
   <ifdef name="DIRECTX11_1">
     <include file="d3d11_1.h" attach="true" />
   </ifdef>
-  <ifndef name="WIN8METRO">
+  
+  <ifndef name="W8CORE">
     <include file="d3dx11.h" attach="true">
       <post>
 
@@ -62,7 +65,6 @@
     <include file="d3dx11async.h" attach="true" />
     <include file="d3dcsx.h" attach="true" />
   </ifndef>
-
   <naming />
 
   <context-set id="d3d11-all">
@@ -72,7 +74,7 @@
     <ifdef name="DIRECTX11_1">
       <context>d3d11_1</context>
     </ifdef>
-    <ifndef name="WIN8METRO">
+    <ifndef name="W8CORE">
       <context>d3dx11</context>
       <context>d3d11sdklayers</context>
       <context>d3dx11core</context>
@@ -266,17 +268,17 @@
     // D3D11 Functions
     // *****************************************************************
     -->
-    <ifdef name="WIN8METRO">
+    <ifdef name="W8CORE">
       <remove function="D3D11CreateDeviceAndSwapChain"/>
     </ifdef>
-    
+
     <map function="D3D11(.+)" name-tmp="$1" />
     <map function="D3D11.*" dll='"d3d11.dll"' group="SharpDX.Direct3D11.D3D11" />
     <map param="D3D11CreateDevice::ppDevice" attribute="out fast" />
 
     <remove function="ID3D11DeviceContext1_.*"/>
 
-    <ifndef name="WIN8METRO">
+    <ifndef name="W8CORE">
       <map function="D3DX11(.+)" name-tmp="$1" />
       <map function="D3DX11(.+)W" name-tmp="$1" />
       <map function="D3DX11.*" dll='"#(D3DX11_DLL_A)"' group="SharpDX.Direct3D11.D3DX11" />
@@ -288,7 +290,7 @@
     // D3D11 Constants
     // *****************************************************************
     -->
-    <ifndef name="WIN8METRO">
+    <ifndef name="W8CORE">
       <context-clear />
       <context>d3dcsx</context>
       <map function="D3DX11.*" dll='"#(D3DCSX_DLL_A)"' group="SharpDX.Direct3D11.D3DCSX" />

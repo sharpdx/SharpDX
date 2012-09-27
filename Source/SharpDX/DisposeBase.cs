@@ -17,7 +17,7 @@ namespace SharpDX
         /// </summary>
         public event EventHandler<EventArgs> Disposed;
 
-#if !WIN8METRO
+#if !W8CORE
         /// <summary>
         /// Releases unmanaged resources and performs other cleanup operations before the
         /// <see cref="DisposeBase"/> is reclaimed by garbage collection.
@@ -56,7 +56,7 @@ namespace SharpDX
                 if (Disposing != null) Disposing(this, EventArgs.Empty);
 
                 Dispose(disposing);
-#if !WIN8METRO
+#if !W8CORE
                 if (disposing)
                     GC.SuppressFinalize(this);
 #endif

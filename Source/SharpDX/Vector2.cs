@@ -55,7 +55,7 @@ namespace SharpDX
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     [DynamicSerializer("TKV2")]
-#if !WIN8METRO
+#if !W8CORE
     [Serializable]
     [TypeConverter(typeof(SharpDX.Design.Vector2Converter))]
 #endif

@@ -32,7 +32,7 @@ namespace SharpDX.Diagnostics
     {
         private static readonly Dictionary<IntPtr, List<ObjectReference>> ObjectReferences = new Dictionary<IntPtr, List<ObjectReference>>();
 
-#if !WIN8METRO
+#if !W8CORE
         /// <summary>
         /// Initializes the <see cref="ObjectTracker"/> class.
         /// </summary>
@@ -75,7 +75,7 @@ namespace SharpDX.Diagnostics
                     referenceList = new List<ObjectReference>();
                     ObjectReferences.Add(comObject.NativePointer, referenceList);
                 }
-#if WIN8METRO
+#if W8CORE
                 referenceList.Add(new ObjectReference(DateTime.Now, comObject));
 #else
                 referenceList.Add(new ObjectReference(DateTime.Now, comObject, new StackTrace(3, true)));

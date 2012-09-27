@@ -64,7 +64,9 @@
   </include>
   <ifdef name="DIRECTX11_1">
     <include id="dxgi1_2" file="dxgi1_2.h" attach="true" />
-    <include id="windows.ui.xaml.media.dxinterop" file="windows.ui.xaml.media.dxinterop.h" attach="true" />
+    <ifndef name="WP8">
+      <include id="windows.ui.xaml.media.dxinterop" file="windows.ui.xaml.media.dxinterop.h" attach="true" />
+    </ifndef>
   </ifdef>
   
   <context-set id="dxgi-all">
@@ -234,12 +236,12 @@
     <map param="IDXGIResource1::CreateSharedHandle::dwAccess" type="DXGI_SHARED_RESOURCE_FLAGS"/>
     <map param="IDXGIResource1::CreateSharedHandle::pHandle" return="true"/>
 
-    <ifdef name="WIN8METRO">
+    <ifdef name="W8CORE">
       <map method="IDXGIOutput1::DuplicateOutput" visibility="internal"/>
       <map param="IDXGIOutput1::DuplicateOutput::ppOutputDuplication" type="void"/>
     </ifdef>
 
-    <ifndef name="WIN8METRO">
+    <ifndef name="W8CORE">
       <map param="IDXGIOutput1::DuplicateOutput::ppOutputDuplication" return="true"/>
     </ifndef>
 
@@ -264,7 +266,7 @@
     // *****************************************************************
     -->
 
-    <ifdef name="WIN8METRO">
+    <ifdef name="W8CORE">
       <remove function="CreateDXGIFactory"/>
     </ifdef>
     <map function="CreateDXGIFactory.*" dll='"dxgi.dll"' group="SharpDX.DXGI.DXGI" />

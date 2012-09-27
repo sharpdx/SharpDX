@@ -29,7 +29,7 @@ namespace SharpDX
     /// Defines a four component vector, using half precision floating point coordinates.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-#if !WIN8METRO
+#if !W8CORE
     [Serializable]
     [TypeConverter(typeof(SharpDX.Design.Half4Converter))]
 #endif

@@ -53,7 +53,7 @@ namespace SharpDX.Direct3D11
             device.CreateShaderResourceView(resource, description, this);
         }
 
-#if !WIN8METRO
+#if !W8CORE
         /// <summary>	
         /// Create a shader-resource view from a file. Read the characteristics of a texture when the texture is loaded.
         /// </summary>	

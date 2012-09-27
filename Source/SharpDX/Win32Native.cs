@@ -97,7 +97,7 @@ namespace SharpDX
             public byte tmPitchAndFamily;
             public byte tmCharSet;
         }
-#if !WIN8METRO
+#if !W8CORE
 
         [StructLayout(LayoutKind.Sequential)]
         public struct NativeMessage

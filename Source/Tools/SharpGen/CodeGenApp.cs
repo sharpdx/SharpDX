@@ -156,6 +156,12 @@ namespace SharpGen
 #if WIN8METRO
             // Load configuration
             Macros.Add("WIN8METRO");
+            Macros.Add("W8CORE");
+#endif
+#if WP8
+            // Load configuration
+            Macros.Add("WP8");
+            Macros.Add("W8CORE");
 #endif
 #if DIRECTX11_1
             // Load configuration

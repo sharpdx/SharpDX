@@ -27,7 +27,7 @@ namespace SharpDX
     /// <summary>
     /// Structure using the same layout than <see cref="System.Drawing.Size"/>.
     /// </summary>
-#if !WIN8METRO
+#if !W8CORE
     [Serializable]
 #endif
     [StructLayout(LayoutKind.Sequential)]

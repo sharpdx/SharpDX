@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 #if DIRECTX11_1
-#if !WIN8METRO
+#if !W8CORE
 namespace SharpDX.DXGI
 {
     public partial class OutputDuplication

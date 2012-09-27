@@ -89,7 +89,7 @@ namespace SharpDX.IO
             }
         }
 
-#if WIN8METRO
+#if W8CORE
         internal struct CREATEFILE2_EXTENDED_PARAMETERS
         {
             public uint dwSize;
@@ -192,7 +192,7 @@ namespace SharpDX.IO
         [DllImport("kernel32.dll", EntryPoint = "SetEndOfFile", SetLastError = true, CharSet = CharSet.Ansi)]
         internal static extern bool SetEndOfFile(IntPtr handle);
 
-#if WIN8METRO
+#if W8CORE
 
         private enum FILE_INFO_BY_HANDLE_CLASS : int
         {

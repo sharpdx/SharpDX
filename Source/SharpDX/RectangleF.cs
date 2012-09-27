@@ -29,7 +29,7 @@ namespace SharpDX
     /// internally storing Left,Top,Right,Bottom instead of Left,Top,Width,Height.
     /// Although automatic casting from a to System.Drawing.Rectangle is provided by this class.
     /// </summary>
-#if !WIN8METRO
+#if !W8CORE
     [Serializable]
 #endif
     [StructLayout(LayoutKind.Sequential)]
