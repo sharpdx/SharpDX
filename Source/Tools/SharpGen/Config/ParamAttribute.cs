@@ -45,5 +45,7 @@ namespace SharpGen.Config
         Fast = 0x20,
         [EnumMember, XmlEnum("params")]     // params setup buffer and params
         Params = 0x48,
+        [EnumMember, XmlEnum("value")]     // force pointer to valuetype > 16 bytes to be passed by value
+        Value = 0x80,
     }
 }

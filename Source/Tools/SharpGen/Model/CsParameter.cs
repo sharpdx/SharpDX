@@ -21,6 +21,7 @@
 using System;
 using System.Text;
 using SharpGen.Config;
+using SharpGen.CppModel;
 
 namespace SharpGen.Model
 {
@@ -61,6 +62,8 @@ namespace SharpGen.Model
                 _isFast = true;
             DefaultValue = tag.DefaultValue;
         }
+
+        public CppParameter CppParameter { get { return (CppParameter) CppElement; } }
 
         public bool IsFixed
         {
@@ -166,7 +169,7 @@ namespace SharpGen.Model
 
         public bool IsRefInValueTypeSmall
         {
-            get { return IsRefIn && IsValueType && !IsArray && PublicType.SizeOf <= SizeOfLimit && !HasNativeValueType; }
+            get { return IsRefIn && IsValueType && !IsArray && (PublicType.SizeOf <= SizeOfLimit || (CppParameter.Attribute & ParamAttribute.Value) != 0) && !HasNativeValueType; }
         }
 
         public bool IsRefInValueTypeByPointer
