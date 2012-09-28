@@ -108,7 +108,7 @@ namespace SharpDX.Toolkit.Graphics
         protected GraphicsDevice(DriverType type, DeviceCreationFlags flags = DeviceCreationFlags.None, params FeatureLevel[] featureLevels)
         {
             Device = ToDispose(featureLevels.Length > 0 ? new Device(type, flags, featureLevels) : new Device(type, flags));
-            IsDebugMode = (Device.CreationFlags & (int)DeviceCreationFlags.Debug) != 0;
+            IsDebugMode = (Device.CreationFlags & DeviceCreationFlags.Debug) != 0;
             MainDevice = this;
             Context = Device.ImmediateContext;
             IsDeferred = false;
@@ -134,7 +134,7 @@ namespace SharpDX.Toolkit.Graphics
         protected GraphicsDevice(GraphicsAdapter adapter, DeviceCreationFlags flags = DeviceCreationFlags.None, params FeatureLevel[] featureLevels)
         {
             Device = ToDispose(featureLevels.Length > 0 ? new Device(adapter, flags, featureLevels) : new Device(adapter, flags));
-            IsDebugMode = (Device.CreationFlags & (int)DeviceCreationFlags.Debug) != 0;
+            IsDebugMode = (Device.CreationFlags & DeviceCreationFlags.Debug) != 0;
             Adapter = adapter;
             MainDevice = this;
             Context = Device.ImmediateContext;
@@ -161,7 +161,7 @@ namespace SharpDX.Toolkit.Graphics
         protected GraphicsDevice(GraphicsDevice mainDevice, DeviceContext deferredContext)
         {
             Device = mainDevice.Device;
-            IsDebugMode = (Device.CreationFlags & (int)DeviceCreationFlags.Debug) != 0;
+            IsDebugMode = (Device.CreationFlags & DeviceCreationFlags.Debug) != 0;
             MainDevice = mainDevice;
             Context = deferredContext;
             IsDeferred = true;
