@@ -227,6 +227,8 @@
     <Compile Include="WIC\ColorContext.cs" />
     <Compile Include="WIC\ColorTransform.cs" />
     <Compile Include="WIC\ComponentInfo.cs" />
+    <Compile Include="WIC\ImageEncoder.cs" />
+    <Compile Include="WIC\ImageParameters.cs" />
     <Compile Include="WIC\ImagingFactory2.cs" />
     <Compile Include="WIC\FastMetadataEncoder.cs" />
     <Compile Include="WIC\FormatConverter.cs" />

@@ -293,6 +293,11 @@
     <!--Don't generate properties for SetPixelFormat, as it is expecting to use by ref argument-->
     <map method="IWICBitmapFrameEncode::SetPixelFormat" property="false"/>
 
+    <map method="IWICImagingFactory2::CreateImageEncoder" visibility="internal"/>
+    <map param="IWICImagingFactory2::CreateImageEncoder::ppWICImageEncoder" attribute="fast out"/>
+
+    <map param="IWICImageEncoder::Write.*::pImageParameters" attribute="in value"/>
+
     <!--
     // *****************************************************************
     // WIC Functions
