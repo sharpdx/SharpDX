@@ -56,8 +56,8 @@
     <property name="version-dir" value="Win8Desktop-net40" if="${build_type == 'dx11_1'}"/>
 
     <regex pattern="AssemblyVersion\(.(?'assembly_version'\d+\.\d+.\d+)" input="${assembly_version_file}" />
-    <property name="output_bin_zip" value="${project.name}-Bin-${assembly_version}${build-date}.7z"/>
-    <property name="output_bin_and_samples_zip" value="${project.name}-Full-${assembly_version}${build-date}.7z"/>
+    <property name="output_bin_zip" value="${project.name}-Bin-${assembly_version}${build-date}.exe"/>
+    <property name="output_bin_and_samples_zip" value="${project.name}-Full-${assembly_version}${build-date}.exe"/>
 
     <!-- Setup configuration -->
     <property name="configuration" value="Net20Release" if="${build_type == 'net20'}"/>
@@ -424,11 +424,13 @@
         <include name="Bin/**/*.dll"/>
         <include name="Bin/**/*.xml"/>
         <include name="Samples/**"/>
+        <include name="*.html"/>
         <include name="*.txt"/>
         <exclude name="Samples/Win8/Win8Demos.sln"/>
         <exclude name="**/*.sample.csproj"/>
         <exclude name="googlecode_password.txt"/>
         <exclude name="Bin/**/*Toolkit*.dll"/>
+        <exclude name="Samples/Win8/**/AppPackages/**"/>
       </fileset>
     </copy>
 
@@ -436,6 +438,7 @@
     <exec program="External/7-Zip/7z.exe" workingdir="Build">
       <arg value="a"/>
       <arg value="-r"/>
+      <arg value="-sfx7z.sfx"/>
       <arg value="..\${output_bin_zip}"/>
       <arg value="Bin\*.*"/>
       <arg value="ChangeLog.txt"/>
@@ -447,6 +450,7 @@
     <exec program="External/7-Zip/7z.exe" workingdir="Build">
       <arg value="a"/>
       <arg value="-r"/>
+      <arg value="-sfx7z.sfx"/>
       <arg value="..\${output_bin_and_samples_zip}"/>
       <arg value="*.*"/>
     </exec>
