@@ -191,6 +191,14 @@ namespace SharpGen.Generator
 
             method.Name = NamingRules.Rename(cppMethod);
             method.Offset = cppMethod.Offset;
+
+            // For methods, the tag "type" is only used for return type
+            // So we are overiding the return type here
+            var tag = cppMethod.GetTagOrDefault<MappingRule>();
+            if (tag.MappingType != null)
+                cppMethod.ReturnType.Tag = new MappingRule() { MappingType = tag.MappingType };
+
+            // Get the inferred return type
             method.ReturnType = Manager.GetCsType<CsMarshalBase>(cppMethod.ReturnType);
 
             if (method.CheckReturnType && method.ReturnType.PublicType != null && method.ReturnType.PublicType.QualifiedName == "SharpDX.Result")
