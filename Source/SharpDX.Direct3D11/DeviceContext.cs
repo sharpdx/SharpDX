@@ -40,22 +40,6 @@ namespace SharpDX.Direct3D11
             Device__ = device;
         }
 
-        /// <summary>	
-        /// <p>Clears an unordered access resource with bit-precise values.</p>	
-        /// </summary>	
-        /// <param name="unorderedAccessViewRef">No documentation.</param>	
-        /// <param name="values">No documentation.</param>	
-        /// <remarks>	
-        /// <p>This API copies the lower ni bits from each array element i to the corresponding channel, where ni is the number of bits in  the ith channel of the resource format (for example, R8G8B8_FLOAT has 8 bits for the first 3 channels). This works on any UAV with no format conversion.  For a raw or structured buffer view, only the first array element value is used.</p>	
-        /// </remarks>	
-        /// <msdn-id>ff476391</msdn-id>	
-        /// <unmanaged>void ID3D11DeviceContext::ClearUnorderedAccessViewUint([In] ID3D11UnorderedAccessView* pUnorderedAccessView,[In] const unsigned int* Values)</unmanaged>	
-        /// <unmanaged-short>ID3D11DeviceContext::ClearUnorderedAccessViewUint</unmanaged-short>	
-        public void ClearUnorderedAccessView(SharpDX.Direct3D11.UnorderedAccessView unorderedAccessViewRef, uint values)
-        {
-            ClearUnorderedAccessView(unorderedAccessViewRef, unchecked((int)values));
-        }
-
         /// <summary>
         ///   Create a command list and record graphics commands into it.
         /// </summary>

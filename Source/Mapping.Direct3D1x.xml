@@ -424,6 +424,10 @@
     <map method="ID3D(\d+)DeviceContext::SetResourceMinLOD" name="SetMinimumLod" />
     <map method="ID3D(\d+)DeviceContext::ClearUnorderedAccessViewFloat" name="ClearUnorderedAccessView" />
     <map method="ID3D(\d+)DeviceContext::ClearUnorderedAccessViewUint" name="ClearUnorderedAccessView" />
+
+    <map param="ID3D(\d+)DeviceContext::ClearUnorderedAccessViewFloat::Values" type="SHARPDX_VECTOR4" />
+    <map param="ID3D(\d+)DeviceContext::ClearUnorderedAccessViewUint::Values" type="SHARPDX_INT4" />
+
     <map param="ID3D(\d+)DeviceContext::ClearDepthStencilView::ClearFlags" type="D3D11_CLEAR_FLAG" />
     <remove interface="ID3DX(\d+)ThreadPump" />
     <remove interface="ID3DX(\d+)DataLoader" />

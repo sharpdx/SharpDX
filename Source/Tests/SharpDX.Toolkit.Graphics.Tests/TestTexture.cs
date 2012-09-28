@@ -260,7 +260,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             });
 
             // Set the value == 1
-            GraphicsDevice.Clear(uav, 1);
+            GraphicsDevice.Clear(uav, new Int4(1,0,0,0));
             readbackData = texture.GetData<byte>(1, 8);
             Assert.AreEqual(readbackData.Length, 1);
             Assert.AreEqual(readbackData[0], 1);

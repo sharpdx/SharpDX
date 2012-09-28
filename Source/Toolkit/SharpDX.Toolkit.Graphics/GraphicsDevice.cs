@@ -274,7 +274,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476391</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::ClearUnorderedAccessViewUint([In] ID3D11UnorderedAccessView* pUnorderedAccessView,[In] const unsigned int* Values)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::ClearUnorderedAccessViewUint</unmanaged-short>	
-        public void Clear(UnorderedAccessView view, int value)
+        public void Clear(UnorderedAccessView view, Int4 value)
         {
             Context.ClearUnorderedAccessView(view, value);
         }
@@ -290,7 +290,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476390</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::ClearUnorderedAccessViewFloat([In] ID3D11UnorderedAccessView* pUnorderedAccessView,[In] const float* Values)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::ClearUnorderedAccessViewFloat</unmanaged-short>	
-        public void Clear(UnorderedAccessView view, float value)
+        public void Clear(UnorderedAccessView view, Vector4 value)
         {
             Context.ClearUnorderedAccessView(view, value);
         }
