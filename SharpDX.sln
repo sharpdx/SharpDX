@@ -122,7 +122,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 	ProjectSection(SolutionItems) = preProject
 		ChangeLog.txt = ChangeLog.txt
 		README.markdown = README.markdown
-		ReleaseNotes.txt = ReleaseNotes.txt
+		ReleaseNotes.html = ReleaseNotes.html
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniTri.sample", "Samples\Direct3D9\MiniTri\MiniTri.sample.csproj", "{9C904B7C-65F6-4AF2-8502-1183D00E5E0C}"

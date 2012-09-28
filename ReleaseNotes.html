@@ -1,0 +1,345 @@
+<html>
+<head>
+  <title>SharpDX 2.3.0 Release Notes (Sep 2012)</title>
+</head>
+<body>
+<p>Release Notes (2012-09-28)</p>
+<h2 class="title">General</h2>
+    <ul>
+        <li>New release of <strong>SharpDX 2.3.0</strong>.</li>
+        <li>This version is <strong>compatible with Windows 8 RTM</strong> and <strong>Visual Studio 2012 RTM</strong>.</li>
+        <li><strong>New target assemblies released</strong> : Signed-net40, Signed-winrt. <strong>Nuget packages</strong> are now providing <strong>signed assemblies</strong>.</li>
+        <li><strong>*Lots* </strong>of small <strong>enhancements, changes, bug fixes</strong>. See complete listing below.</li>
+        <li><strong>SharpDX.Toolkit, a high level XNA like API for Direct3D11 is under heavy development</strong>. The toolkit is not yet part of the distribution but a Beta version should be released by the end of October. Currently implemented:
+            <ul>
+                <li>Friendly constructors for all resources (states, textures, rendertargets, buffers).</li>
+                <li>Image and Texture loading &amp; saving for various formats (DDS, JPG, PNG, BMP, TIFF, GIF). </li>
+                <li>A full HLSL Effect / FX system, very similar to legacy FX system, using efficiently Direct3D11, compatible with Windows Desktop and Windows 8 Modern, with a custom compilers. All XNA stock effects (BasicEffect, DualTextureEffect...etc.) were successfully ported to it. The toolkit is coming with its own effect compiler (tkfxc) similar to standard fxc.exe.</li>
+            </ul>
+        </li>
+        <li>Concerning support for <strong>Windows Phone 8 (WP8)</strong> nothing to announce yet until the official release of the WP8 SDK.</li>
+    </ul>
+<h2 class="title">Changes and Fixes</h2>
+    <p>The following listing is automatically generated from commit logs.</p>
+<h4 class="title">ALL</h4>
+<ul>
+  <li>API Breaking changes: Old Color struct was BGRA (1st byte Blue, 2nd byte Green...etc.). It is now RGBA (for consistency with Color3/4). There is a new ColorBGRA struct (used mainly by Direct3D9). Move stock Colors to Color struct. Change mapping D3DCOLOR to SharpDX.ColorBGRA. (<a href='http://code.google.com/p/sharpdx/source/detail?r=eb348e38e25cf6b896061694bec7ac00f93dee9c'>changes</a>)</li>
+  <li>Remove return SharpDX.Result for all methods that are already checking the result. (<a href='http://code.google.com/p/sharpdx/source/detail?r=1017dbd8a115003dd4cf27fc036500221f951def'>changes</a>)</li>
+</ul>
+<h4 class="title">Build</h4>
+<ul>
+  <li>Add new configuration for net40. Update all csproj (except Samples/*.csproj). Update build to support new binaries (Standard-net40, Signed-net40), update nuget specs with n40 target. Change all public key for signed assemblies, as the private key was lost. (<a href='http://code.google.com/p/sharpdx/source/detail?r=5a6e9029199b3b20aa2d2129b713a0b176679359'>changes</a>)</li>
+  <li>Fix app manifest/certificates for Win8 and build (<a href='http://code.google.com/p/sharpdx/source/detail?r=97dee1bb9316f56db5a05acdaac0fd972dfdba91'>changes</a>)</li>
+  <li>Fix build for Win8 with latest changes in handling SharpDX.Result (<a href='http://code.google.com/p/sharpdx/source/detail?r=33e78b433e3623c7e11db242b3b2eab0d93b6f0d'>changes</a>)</li>
+  <li>Fix compilation errors (<a href='http://code.google.com/p/sharpdx/source/detail?r=f4d7e29f31910ac14fd7dd2bfc2cdf1b8f82ccbf'>changes</a>)</li>
+  <li>Fix compilation under Win8 (<a href='http://code.google.com/p/sharpdx/source/detail?r=cf255c8941358f125323e911f03e259d055727b2'>changes</a>)</li>
+  <li>Fix invalid references in SharpDX.sln (<a href='http://code.google.com/p/sharpdx/source/detail?r=704f144671f114b6af50be2eb59f1ef02a46f5c0'>changes</a>)</li>
+  <li>Fix issue with SharpDoc file copy (<a href='http://code.google.com/p/sharpdx/source/detail?r=9f2d08e3b728071857116b30a25cba787de9e6ef'>changes</a>)</li>
+  <li>Fix nuget and documentation build steps (<a href='http://code.google.com/p/sharpdx/source/detail?r=2596721b0677c66a7c406b23f90e085a03212671'>changes</a>)</li>
+  <li>Fix nuget package to use only signed assemblies (<a href='http://code.google.com/p/sharpdx/source/detail?r=6cef60b756b0460e3020c5ed7ab24d0f5e67ace0'>changes</a>)</li>
+  <li>Regenerate public keys as I lost the original private key for signed assemblies (idiot) (<a href='http://code.google.com/p/sharpdx/source/detail?r=5bf51421400f139097061a4eac8e15a14353de76'>changes</a>)</li>
+</ul>
+<h4 class="title">Build/Win8</h4>
+<ul>
+  <li>Add all samples to the solution. It is no longer possible to compile Win8Metro targets under VS2011, unless you remove all Win8 samples. (<a href='http://code.google.com/p/sharpdx/source/detail?r=788d6ecb2096d1e7c9cab4e1a476551fe6cda881'>changes</a>)</li>
+</ul>
+<h4 class="title">D3D10/D3D11</h4>
+<ul>
+  <li>Fix issue while marshaling Message in InfoQueue.GetMessage() method (<a href='http://code.google.com/p/sharpdx/source/detail?r=1f8235bd21661a288215405b59f7450baf8b0a78'>changes</a>)</li>
+</ul>
+<h4 class="title">D3DCompiler</h4>
+<ul>
+  <li>Add sourceFileName to ShaderBytecode.Preprocess methods (<a href='http://code.google.com/p/sharpdx/source/detail?r=a2399d82e2e0f6eef7df82fcae24477a6189e254'>changes</a>)</li>
+</ul>
+<h4 class="title">Direct2D1</h4>
+<ul>
+  <li>Add ImageEncoder constructor, remove previous ImagingFactor2.CreateImageEncoder method. Tranform WriteFrame methods using value-type for ImageParameters. (<a href='http://code.google.com/p/sharpdx/source/detail?r=453bb00a589e20a3c141b5718838febbfc842e5e'>changes</a>)</li>
+  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=218'>issue #218</a>. Flags is setup on all enums D2D1_.*_OPTIONS1? (<a href='http://code.google.com/p/sharpdx/source/detail?r=42249bd90074fd1b963a9ff0a69dd235f12b5f2c'>changes</a>)</li>
+  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=247'>issue #247</a> (TableTransfer.Red/Green/Blue/Alpha Table) and <a href='http://code.google.com/p/sharpdx/issues/detail?id=248'>issue #248</a> (Morphology Width, Height) (<a href='http://code.google.com/p/sharpdx/source/detail?r=83e8e003769f4e644d569067723a6e68f910fd7a'>changes</a>)</li>
+  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=250'>issue #250</a>. ResourceTexture constructor is now filling correctly native struct. (<a href='http://code.google.com/p/sharpdx/source/detail?r=356be126e6ae62fe4dedaef1c4692dcbc895a803'>changes</a>)</li>
+</ul>
+<h4 class="title">Direct2D1/WIC</h4>
+<ul>
+  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=224'>issue #224</a>. Add Stream to all WIC Encoders. Add Bitmap.New constructors from generics. Fix disposable objects in samples SurfaceImageSourceTarget. (<a href='http://code.google.com/p/sharpdx/source/detail?r=32940dfc7fe772a5155f62a9586888e7cbef4853'>changes</a>)</li>
+</ul>
+<h4 class="title">Direct3D10</h4>
+<ul>
+  <li>Fix issue on ID3DX10Mesh Intersect.* methods that were not marked as PURE in original header file. (<a href='http://code.google.com/p/sharpdx/source/detail?r=dc1ab770d481fbc97017a56b0766596bf6101ea0'>changes</a>)</li>
+</ul>
+<h4 class="title">Direct3D11</h4>
+<ul>
+  <li>Add ClearUnorderedAccessView method to accept uint value (<a href='http://code.google.com/p/sharpdx/source/detail?r=dc50f247a7a7df70ea76b81ef04e36b94f7f6c8f'>changes</a>)</li>
+  <li>Add comment for ResourceRegion (<a href='http://code.google.com/p/sharpdx/source/detail?r=d34d237714c3bfb596f25fc29da2c621131d6c19'>changes</a>)</li>
+  <li>Add Default() method to SamplerStateDescription. Fix documentation in SamplerState constructors (<a href='http://code.google.com/p/sharpdx/source/detail?r=b47528c4ec36de10f5152d4d44b1cc99a5aa83c6'>changes</a>)</li>
+  <li>Add Device.CheckFeatureXXX specialized methods for new D3D11.1 features (<a href='http://code.google.com/p/sharpdx/source/detail?r=ed092b4353ab2b93410c790f9b70dcf39c9cb121'>changes</a>)</li>
+  <li>Add fast internal methods and make CommonShaderStage consistent between all stages. (<a href='http://code.google.com/p/sharpdx/source/detail?r=3965ca432f8eea420ae024495cbf6ebc9a930c16'>changes</a>)</li>
+  <li>Add SetUnorderedAccessViews simplified method for OutputMergerStage (<a href='http://code.google.com/p/sharpdx/source/detail?r=3cb54355ebe99f3b92e33825c6e6cb4051ff8cab'>changes</a>)</li>
+  <li>All Texture constructors now accept DataBox as native methods. (<a href='http://code.google.com/p/sharpdx/source/detail?r=768806da578a2b6185f258f8ce322d27a30e0971'>changes</a>)</li>
+  <li>DeviceContext.UpdateSubresource accept region with typed data (<a href='http://code.google.com/p/sharpdx/source/detail?r=2f4d2fbd7a162ab0bcc7e3d33bfb6e2bd7a597c6'>changes</a>)</li>
+  <li>Fix DeviceContext documentation (<a href='http://code.google.com/p/sharpdx/source/detail?r=7e8f78348e52c1a60525250d09b19d76cfcd29cf'>changes</a>)</li>
+  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=257'>issue #257</a> ClearUnorderedAccessView values are Vector4 or Int4 (and not int or float!!!) (<a href='http://code.google.com/p/sharpdx/source/detail?r=f739c8b5733f00e9eb15f444c33c1ba2622821c9'>changes</a>)</li>
+  <li>Fix issue with ID3D11Debug constructor. Rename Debug to DeviceDebug. (<a href='http://code.google.com/p/sharpdx/source/detail?r=add2b2706a7e04280691ec81830176d9cdafb197'>changes</a>)</li>
+  <li>GetCreationFlags should return DeviceCreationFlags (<a href='http://code.google.com/p/sharpdx/source/detail?r=7d98e75de3ff5382ea1c7d1ec6da63b5eb262e72'>changes</a>)</li>
+  <li>Remove dependencies to D3DCompiler and Effects framework. A new assembly Direct3D11.Effects is created. (<a href='http://code.google.com/p/sharpdx/source/detail?r=21504417f90d83c7cb607915101ad123c848a2eb'>changes</a>)</li>
+  <li>Remove usage of generics for Resource.ToFile (<a href='http://code.google.com/p/sharpdx/source/detail?r=6fde50f94d30e929d42877f0da50a3f2f724f1c3'>changes</a>)</li>
+</ul>
+<h4 class="title">Direct3D11.Effects</h4>
+<ul>
+  <li>Fix isue #240. Add EffectGroup.Description property. (<a href='http://code.google.com/p/sharpdx/source/detail?r=d013c168a420e999fa400a12007ccc3fb4edcb4f'>changes</a>)</li>
+</ul>
+<h4 class="title">Direct3D9</h4>
+<ul>
+  <li>Add constructor for RenderToSurface (<a href='http://code.google.com/p/sharpdx/source/detail?r=d69cb7355e0d72fadf30d5dc2fe9ba6cc26476e9'>changes</a>)</li>
+  <li>Fix Device.SetTransform method to accept Matrix passing by value. (<a href='http://code.google.com/p/sharpdx/source/detail?r=4ae5ecee7528175b6c735ea5dab3791a2221c28b'>changes</a>)</li>
+  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=220'>issue #220</a>. Add nullable parameters for Sprite.Draw method (<a href='http://code.google.com/p/sharpdx/source/detail?r=9f8d63afab514ddc3e92396956342cc8c286a5d3'>changes</a>)</li>
+  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=221'>issue #221</a>. Add MeasureText method with rectangle parameter (<a href='http://code.google.com/p/sharpdx/source/detail?r=876f34330fda728b2502142d0b988b1c702ad8a2'>changes</a>)</li>
+  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=252'>issue #252</a>. Direct3D.CheckDeviceType return test should be == 0 (<a href='http://code.google.com/p/sharpdx/source/detail?r=6591d40664d36d5282e5372bbb2f04fc435e1be3'>changes</a>)</li>
+  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=253'>issue #253</a>, check for other return values in Query.GetData and throw error if different than Ok/False (<a href='http://code.google.com/p/sharpdx/source/detail?r=afd9993316b40160955fc192a54a932bbc06a1e1'>changes</a>)</li>
+  <li>Fix issue from forum http://sharpdx.org/forum/4-general/390-d3dfvf-texcoordsizen  Add VertexFormatHelper.TexCoordSize() function. (<a href='http://code.google.com/p/sharpdx/source/detail?r=49c79e8e765b4de50fe38266bbe82c83c84cef23'>changes</a>)</li>
+  <li>Fix issue with GetFrontBufferData (<a href='http://code.google.com/p/sharpdx/source/detail?r=92e6de4aedaa2db7f046487844ee110704565127'>changes</a>)</li>
+  <li>Fix issue with Query.GetData to return result of operation (<a href='http://code.google.com/p/sharpdx/source/detail?r=d11e9e194628c9b693ca65a291632afb0484e337'>changes</a>)</li>
+  <li>Fix switch/case problem in VertexFormatHelper (<a href='http://code.google.com/p/sharpdx/source/detail?r=1792660134f9de43dfda3e2302968eaac98ef896'>changes</a>)</li>
+</ul>
+<h4 class="title">DirectWrite</h4>
+<ul>
+  <li>Fix bug in FontFile.ReferenceKey property (<a href='http://code.google.com/p/sharpdx/source/detail?r=ec637855aa7ff0fde7770e23550239da21800f6c'>changes</a>)</li>
+  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=227'>issue #227</a>. Add TextFormat.SetTrimming method. (<a href='http://code.google.com/p/sharpdx/source/detail?r=cf5579a3262edfba74f3b27ca86964b26bc39ae3'>changes</a>)</li>
+  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=241'>issue #241</a>. Remove throwing exceptions and try/catch from TextLayout methods. (<a href='http://code.google.com/p/sharpdx/source/detail?r=c335ba85c6cfd27b899f9ccbb3cdbc21d66ffda5'>changes</a>)</li>
+</ul>
+<h4 class="title">Documentation</h4>
+<ul>
+  <li>Add NamespaceDoc for SharpDX.Serialization and SharpDX.Text (<a href='http://code.google.com/p/sharpdx/source/detail?r=d48030e1b702cdf8aeb79e7078e83fa332daa1d2'>changes</a>)</li>
+</ul>
+<h4 class="title">DXGI</h4>
+<ul>
+  <li>Add ToString method for SampleDescription (<a href='http://code.google.com/p/sharpdx/source/detail?r=f419ed4d69e98e0727797887ceff975a04916045'>changes</a>)</li>
+  <li>Better &quot;performance&quot; for FormatHelper.SizeOfInBits method. Fix size for all BC.* formats. (<a href='http://code.google.com/p/sharpdx/source/detail?r=3a3591b7fc6f12a73b95f066e71e086bb4205780'>changes</a>)</li>
+  <li>Improve FormatHelper &quot;performance&quot;. (<a href='http://code.google.com/p/sharpdx/source/detail?r=362f6eb3d8f6e7836885be8929c1f19433e3eaf8'>changes</a>)</li>
+</ul>
+<h4 class="title">MediaFoundation</h4>
+<ul>
+  <li>Add MediaEngine support. MediaPlayer still need some refactoring (<a href='http://code.google.com/p/sharpdx/source/detail?r=7dca00e90f6e33eedd693659a35941bd9d51c480'>changes</a>)</li>
+  <li>Add MiniCubeVideoTexture sample for Windows 8 Metro (<a href='http://code.google.com/p/sharpdx/source/detail?r=5bea19d0e84b619d27d2e53d621dce14c39b1404'>changes</a>)</li>
+  <li>Work on MediaEngine, MediaPlayer is almost done (<a href='http://code.google.com/p/sharpdx/source/detail?r=700a8ab1509b8e8bb7024e1dbc275ac9df4d520e'>changes</a>)</li>
+</ul>
+<h4 class="title">Samples</h4>
+<ul>
+  <li>CommonDX.SurfaceImageSourceTarget, Add ToDispose (<a href='http://code.google.com/p/sharpdx/source/detail?r=9513b5741979fb7f193a32d1489a40de041679d3'>changes</a>)</li>
+  <li>Fix compilation errors (<a href='http://code.google.com/p/sharpdx/source/detail?r=cdb69fca2c196cc91438ced789e981f728db2f62'>changes</a>)</li>
+  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=235'>issue #235</a>. Release Backbuffer before resize. (<a href='http://code.google.com/p/sharpdx/source/detail?r=55f16183a1913f36232416de25d8604f3f64ce36'>changes</a>)</li>
+  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=237'>issue #237</a>. Add opacity flag to CommonDX.SurfaceImageSourceTarget (<a href='http://code.google.com/p/sharpdx/source/detail?r=9158da2db1fc6d92accdff5394e4cff235a95729'>changes</a>)</li>
+  <li>Fix MediaPlayer to be compatible with DeviceManager init process (<a href='http://code.google.com/p/sharpdx/source/detail?r=617b8a6e96853c39800005df0751a160630dfd7b'>changes</a>)</li>
+  <li>Fix uv mapping for CubeTexture samples (<a href='http://code.google.com/p/sharpdx/source/detail?r=836921ecb8fc4222b22676fe9bc7a54a8c5d0bb0'>changes</a>)</li>
+  <li>Remove invalid assembly references (<a href='http://code.google.com/p/sharpdx/source/detail?r=362e6e4ed71ac8e9096fddd1f8b6ed8454511d86'>changes</a>)</li>
+</ul>
+<h4 class="title">Samples.Win8</h4>
+<ul>
+  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=219'>issue #219</a>. Add &quot;&quot; around path for fxc build event in order to support spaces in directory (<a href='http://code.google.com/p/sharpdx/source/detail?r=c4d810d5496ed26bbc6d7f69852f6be4bdfd9af6'>changes</a>)</li>
+  <li>Force all Win8 Modern samples to run under Direct3D11 feature level 9.1 (<a href='http://code.google.com/p/sharpdx/source/detail?r=45e4551b1b6695b4f02345c4b8c0a18545986394'>changes</a>)</li>
+</ul>
+<h4 class="title">SharpCli</h4>
+<ul>
+  <li>Fix inlined IL code replacement using the generic parameter from the current operand. (<a href='http://code.google.com/p/sharpdx/source/detail?r=6c4af7253bfcffc3b19e01eb12124c9bd9dbe3ce'>changes</a>)</li>
+  <li>Remove hardcoded &quot;C:\Program Files(x86)....etc.&quot; and replace it by using Environement (<a href='http://code.google.com/p/sharpdx/source/detail?r=ca5dabbd351d8cbaabcf59867a8c4c7c59a872fe'>changes</a>)</li>
+  <li>Use NET 4.0 client profile in order to run it fine on Windows 8 without 3.5 installed (<a href='http://code.google.com/p/sharpdx/source/detail?r=b57278d05ffaef5e49126616685ef40de8ee9dee'>changes</a>)</li>
+</ul>
+<h4 class="title">SharpCLI</h4>
+<ul>
+  <li>Fix bug when running from a subdirectory (<a href='http://code.google.com/p/sharpdx/source/detail?r=8934075172cfb151937b5e4091b0424f62055c8b'>changes</a>)</li>
+</ul>
+<h4 class="title">SharpDoc</h4>
+<ul>
+  <li>Fix ArgumentNullException when passing assemblies directly on the command line. (<a href='http://code.google.com/p/sharpdx/source/detail?r=231cfd414b92d9f47f1e0b86f7d705b341db17cf'>changes</a>)</li>
+</ul>
+<h4 class="title">SharpDX</h4>
+<ul>
+  <li>Add builtin support for IDataSerializable for all SharpDX types. (<a href='http://code.google.com/p/sharpdx/source/detail?r=2b0afdc9f0840857e0ddefd4c966361c2c1b083f'>changes</a>)</li>
+  <li>Add cast operator between SharpDX.Rectangle(F) and SharpDX.DrawingRectangle(F) (<a href='http://code.google.com/p/sharpdx/source/detail?r=ee5f23961a8251a2e8482d5d74ed9fb1d19377ea'>changes</a>)</li>
+  <li>Add DisposableCollection and ComponentBase. (<a href='http://code.google.com/p/sharpdx/source/detail?r=a4adc8f2172212f44e1c28efba3b5478ffa9f80c'>changes</a>)</li>
+  <li>Add DynamicSerializerAttribute to basic types. (<a href='http://code.google.com/p/sharpdx/source/detail?r=2f5819dccd4db159413746b09d5c86c9b08c0c7c'>changes</a>)</li>
+  <li>Add float constructors to Half vectors and implicit/explicit convertors with VectorX (<a href='http://code.google.com/p/sharpdx/source/detail?r=dbe89792f7c336f39dd91b2ee9bb0ec40b3b5e08'>changes</a>)</li>
+  <li>Add implicit conversion for  DrawingPointF &lt;-&gt; Vector2 (<a href='http://code.google.com/p/sharpdx/source/detail?r=68452c021181a78c6b8b0981d0fd96dd38769c4d'>changes</a>)</li>
+  <li>Add SharpDX.Bool for windows BOOL type (using 4 bytes) - instead of performing in-place conversion with bool (<a href='http://code.google.com/p/sharpdx/source/detail?r=050d5ed525d140581da4ea478821f93eec9ed88e'>changes</a>)</li>
+  <li>Add SharpDX.Color 32-bit structure. (<a href='http://code.google.com/p/sharpdx/source/detail?r=5de4dd66532b0012e6c3c05d7753bcf5ad7758f6'>changes</a>)</li>
+  <li>Add support for Enum serialization in SharpDX.Serialization (<a href='http://code.google.com/p/sharpdx/source/detail?r=a9e5ece6102333318f3a157ddf3a8010159a5f27'>changes</a>)</li>
+  <li>Add support for NativeFileStream.Flush (<a href='http://code.google.com/p/sharpdx/source/detail?r=975ed6b177951e5b3e6af67d1b50aea53360ae3b'>changes</a>)</li>
+  <li>Add support for serializing identity objects to SharpDX.Serialization (optional). Add tests for dynamics and identity. (<a href='http://code.google.com/p/sharpdx/source/detail?r=669355efad751f4b130f444174bb0d824bc21c1e'>changes</a>)</li>
+  <li>Add Utilities.AllocateMemory supporting 16 byte aligned (<a href='http://code.google.com/p/sharpdx/source/detail?r=92d3d2767fd9adfef51816749a01af1a0e0c6d58'>changes</a>)</li>
+  <li>Add Utilities.CompareMemory method (<a href='http://code.google.com/p/sharpdx/source/detail?r=5bf48dd1844b11ba9a7ce21d6206e904553fa7c6'>changes</a>)</li>
+  <li>Add Utility.Compare methods (<a href='http://code.google.com/p/sharpdx/source/detail?r=75099518b827c13c9403a9209bb5ef5479b49dfc'>changes</a>)</li>
+  <li>Add void* constructor to DataPointer (<a href='http://code.google.com/p/sharpdx/source/detail?r=21e70c5543c2d7ed4c0b83954ed8b9c6e05a36f9'>changes</a>)</li>
+  <li>ComStreamProxy return 0 from read when delegate stream is returning zero, in order to avoid infinite loop (<a href='http://code.google.com/p/sharpdx/source/detail?r=a4885b24a151a2e5d3f60274a772d160ff2c897e'>changes</a>)</li>
+  <li>Finalize SharpDX.Serialization, add unit tests. (<a href='http://code.google.com/p/sharpdx/source/detail?r=29e44b5160f895831376e83148c672464172d9cf'>changes</a>)</li>
+  <li>Fix bug in DataStream/DataBuffer.Create&lt;T&gt; and add support for pin/unpin + index offset. (<a href='http://code.google.com/p/sharpdx/source/detail?r=a6568e0ba33cc8f199804f3278ee38acb93667ea'>changes</a>)</li>
+  <li>Fix bug in method Utilities.CompareMemory (<a href='http://code.google.com/p/sharpdx/source/detail?r=31c7b459ba682a90613b493a6c160ace51154ed4'>changes</a>)</li>
+  <li>Fix bug in NativeFile.FlushFileBuffers (<a href='http://code.google.com/p/sharpdx/source/detail?r=94b170254ddb09d930754987cb4ac2b0502e0d6b'>changes</a>)</li>
+  <li>Fix bug in Utilities.AllocateMemory (<a href='http://code.google.com/p/sharpdx/source/detail?r=8d97aea44441c0388f4cd78d9b0f69e0ec0a7412'>changes</a>)</li>
+  <li>Fix compilation error on Win8 (<a href='http://code.google.com/p/sharpdx/source/detail?r=81c3996aa173ac43155bb184d2813fd9449bc75a'>changes</a>)</li>
+  <li>Fix compilation error with Rectangle bouuu (<a href='http://code.google.com/p/sharpdx/source/detail?r=0fb2ce70e02ac0b9fbe70a7068144bdb063b0b5a'>changes</a>)</li>
+  <li>Fix compilation on Win8 for Serialization (<a href='http://code.google.com/p/sharpdx/source/detail?r=910dbb09b6964507d7423c41fbe0835b8d34ef68'>changes</a>)</li>
+  <li>Fix compiling issue on Win8 with Serialization. (<a href='http://code.google.com/p/sharpdx/source/detail?r=895c2ed3139f9e1bb3b0b823ad03b5077a73963e'>changes</a>)</li>
+  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=222'>issue #222</a>. Add ToString methods to Drawing.* structures (<a href='http://code.google.com/p/sharpdx/source/detail?r=aae0ff1065118835ff752eb3a4a375f7052fd663'>changes</a>)</li>
+  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=239'>issue #239</a>. Replace checked by unchecked keyword. (<a href='http://code.google.com/p/sharpdx/source/detail?r=33a401cf0818a5d0fcf072171a30ec8ba57fdcbd'>changes</a>)</li>
+  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=243'>issue #243</a>. Rename ShaderResourceViewDimension.TextureCubeArray (<a href='http://code.google.com/p/sharpdx/source/detail?r=af69bb048a55499461ca3743ac56d7363522d417'>changes</a>)</li>
+  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=244'>issue #244</a>. Breaking change for SharpDX.Color. Create SharpDX.ColorBGRA. Update SharpGen mapping to D3DCOLOR to ColorBGRA. Update Color and ColorBGRA for consistency. Remove implicit convertor from Color4 to Color. (<a href='http://code.google.com/p/sharpdx/source/detail?r=d9774846e71ec37913e05a7c4a28d8f81cf8ab8e'>changes</a>)</li>
+  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=254'>issue #254</a>. Add * multiply opreator for Vector2/3/4. (<a href='http://code.google.com/p/sharpdx/source/detail?r=eb3c867717e24a71545265e728cf5e86402ef474'>changes</a>)</li>
+  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=255'>issue #255</a> &amp; 237. Add Matrix3x2 operators, scaling, rotation...etc. (<a href='http://code.google.com/p/sharpdx/source/detail?r=bb22faf4072ff22aad7ee68335f8068e05687126'>changes</a>)</li>
+  <li>Fix memory alloc bug in ComArray (<a href='http://code.google.com/p/sharpdx/source/detail?r=0d1497961892a21faaab8711a3e9b9421c294f45'>changes</a>)</li>
+  <li>Improve performance Interop.SizeOf/Read/Write for a single T struct value. This may not be compatible with current version of Mono (<a href='http://code.google.com/p/sharpdx/source/detail?r=d97eaa43f2b8da1acce3ebad3c10a579c4ce1d27'>changes</a>)</li>
+  <li>Make DataBuffer inherit from Component (<a href='http://code.google.com/p/sharpdx/source/detail?r=e6ef486c71750d2b1be349c46abd68a7a5f8d453'>changes</a>)</li>
+  <li>Remove Vector4 unused code (<a href='http://code.google.com/p/sharpdx/source/detail?r=d00c0498bc6e41cfffd8c4d4e27ea07422530dd3'>changes</a>)</li>
+  <li>Start to add Serialization framework (<a href='http://code.google.com/p/sharpdx/source/detail?r=c97ba7cf70aeca958f598eae5f1fe4d157a94808'>changes</a>)</li>
+  <li>Use aligned memory for ComArray (<a href='http://code.google.com/p/sharpdx/source/detail?r=a8b4547d6a446188a905c1e51a0c1a7cf2bb78a2'>changes</a>)</li>
+</ul>
+<h4 class="title">SharpDX.Serialization</h4>
+<ul>
+  <li>Add support for packed int (used for count). Delayed Reader/Writer initialization based on Mode. Add object[], List&lt;object&gt; serializers. Switchback to AllowNull, AllowIdentity properties instead of methods. Update Tests. (<a href='http://code.google.com/p/sharpdx/source/detail?r=22518e028d9b506ee6f7c9403b724e79294023c1'>changes</a>)</li>
+</ul>
+<h4 class="title">SharpDX.Tests</h4>
+<ul>
+  <li>Fix TestResultDescriptor (<a href='http://code.google.com/p/sharpdx/source/detail?r=fc6b520bc7776f5b666888d8520812ce7ef7c55c'>changes</a>)</li>
+</ul>
+<h4 class="title">SharpGen</h4>
+<ul>
+  <li>Add support to change the return type of a method (<a href='http://code.google.com/p/sharpdx/source/detail?r=c7d732197d118ec6061285fb1ff8271888479eea'>changes</a>)</li>
+  <li>Add support to force by-value for pointers to value-type parameters with sizeof &gt; 16 bytes. (<a href='http://code.google.com/p/sharpdx/source/detail?r=d098ae957ee8a483707e9e048cad41f22fcd5cc6'>changes</a>)</li>
+  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=211'>issue #211</a>. X3DAudio is using cdecl instead of stdcall. Add support for cdecl in SharpGen. (<a href='http://code.google.com/p/sharpdx/source/detail?r=f4656181525629395f574871cb4fe7ab32ea7cfa'>changes</a>)</li>
+  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=246'>issue #246</a>. Test for optional parameter before MarshalFree (<a href='http://code.google.com/p/sharpdx/source/detail?r=a3ea8ec1ed1774788c89b36ad0e5bfbad4ae684e'>changes</a>)</li>
+  <li>Fix problem with partially Windows SDK installed by checking the existence of the include directory. (<a href='http://code.google.com/p/sharpdx/source/detail?r=8b57a3ae0579d89ba36de4054cbc3bc5287ade7f'>changes</a>)</li>
+  <li>Update MSDN doc from VS2010 RTM (<a href='http://code.google.com/p/sharpdx/source/detail?r=89418e0b666d4dab571041e05988ddea0054e9ce'>changes</a>)</li>
+</ul>
+<h4 class="title">tkfxc</h4>
+<ul>
+  <li>Remove unused files from project (<a href='http://code.google.com/p/sharpdx/source/detail?r=b28b31e0b16b08de250d8b89b37c5d825fd08a1a'>changes</a>)</li>
+  <li>Simplify using ConsoleProgram (<a href='http://code.google.com/p/sharpdx/source/detail?r=90047da20dbfcf6196e0a602ec0389d68d5c3c07'>changes</a>)</li>
+</ul>
+<h4 class="title">Toolkit</h4>
+<ul>
+  <li>New project SharpDX.Toolkit to store common classes shared by all SharpDX.Toolkit.* assemblies. (<a href='http://code.google.com/p/sharpdx/source/detail?r=8f91851bf287826706db5f6ab2b92f32f50d6731'>changes</a>)</li>
+</ul>
+<h4 class="title">Toolkit.Compiler</h4>
+<ul>
+  <li>Add support for identifier with namespace (Toolkit::VS for example) in fx file. (<a href='http://code.google.com/p/sharpdx/source/detail?r=1c3207b3b1d15ec3ce82c0592def49325bf4cdd1'>changes</a>)</li>
+</ul>
+<h4 class="title">Toolkit.Graphics</h4>
+<ul>
+  <li>1st version of Effect framework. (<a href='http://code.google.com/p/sharpdx/source/detail?r=059ed17165a64e4c9313a0da4b611332e271b6eb'>changes</a>)</li>
+  <li>Add a first sample MiniTri using Toolkit.Graphics. (<a href='http://code.google.com/p/sharpdx/source/detail?r=fa00112398322bf69d23e8801ef4322c7daa1f81'>changes</a>)</li>
+  <li>Add all XNA stock effects (AlphaTestEffect, BasicEffect, DualTextureEffect, EnvironmentMapEffect, SkinnedEffect, SpriteEffect). (<a href='http://code.google.com/p/sharpdx/source/detail?r=5bfdea9274c67b7da6afb08fccf05853d7b7c05b'>changes</a>)</li>
+  <li>Add BlendState (<a href='http://code.google.com/p/sharpdx/source/detail?r=c2c1fa5f4f613d39327da9ff273e1afa611f1b2c'>changes</a>)</li>
+  <li>Add BlendState, DepthStencilState, RasterizerState. (<a href='http://code.google.com/p/sharpdx/source/detail?r=f2b0aaff489dc079050874d0cd324deb09b539f7'>changes</a>)</li>
+  <li>Add Buffer.Typed constructors. (<a href='http://code.google.com/p/sharpdx/source/detail?r=1a0bbaab1972991ec02f0d38a0ce64dc3f939811'>changes</a>)</li>
+  <li>Add Buffer&lt;T&gt; type. Rename VertexBufferLayout into VertexInputLayout and VertexBufferSlot into VertexBufferLayout (<a href='http://code.google.com/p/sharpdx/source/detail?r=6abd7cc09d915636a852a5be91c5d5cbd25e8c42'>changes</a>)</li>
+  <li>Add coments for Buffer.Raw/Structured (<a href='http://code.google.com/p/sharpdx/source/detail?r=a0b11532ecfa8d1d998c4687f4e0ed41a62d5e2e'>changes</a>)</li>
+  <li>Add comments, refactor removing generic in inheritance (<a href='http://code.google.com/p/sharpdx/source/detail?r=a55f21af4d80958ba8230b5304a47b14eccad84b'>changes</a>)</li>
+  <li>Add default effect group to GraphicsDevice. Add simplified constructors for all Stock Effects to use the default effect group. (<a href='http://code.google.com/p/sharpdx/source/detail?r=01d2304c5c01f8ee4e636b332aafe89f719b2008'>changes</a>)</li>
+  <li>Add DepthStencilBuffer (<a href='http://code.google.com/p/sharpdx/source/detail?r=3061d780ae2cd79abb8f1b9c332b60320911503b'>changes</a>)</li>
+  <li>Add direct access to FeaturesPerFormat using an indexer on the GraphicsDeviceFeatures structure. (<a href='http://code.google.com/p/sharpdx/source/detail?r=e9d284aaffe76887ebeb475a10d8e38c891e4648'>changes</a>)</li>
+  <li>Add EffectParameter.GetValue and GetResource methods. (<a href='http://code.google.com/p/sharpdx/source/detail?r=b66c79cbe5f8d3bf2c2d087041e098fcea6f83ea'>changes</a>)</li>
+  <li>Add GraphicsAdapter class. (<a href='http://code.google.com/p/sharpdx/source/detail?r=be290b28c2d834154e9672c142fe827838978548'>changes</a>)</li>
+  <li>Add GraphicsDevice to all constructors. (<a href='http://code.google.com/p/sharpdx/source/detail?r=00c9698f7049687aab07fe9e9e8980ab1c232386'>changes</a>)</li>
+  <li>Add GraphicsDevice.Viewport and GetViewport(index) method. (<a href='http://code.google.com/p/sharpdx/source/detail?r=f54b981f2aa9846f3b5b76966301e329dfb6238e'>changes</a>)</li>
+  <li>Add GraphicsDeviceFeatures to GraphicsDevice. (<a href='http://code.google.com/p/sharpdx/source/detail?r=9be324c8050f2ca7a65240d307a42fa2201d2788'>changes</a>)</li>
+  <li>Add GraphicsInterval to GraphicsPresenter. Add Present method to both GraphicsPresenter and GraphicsDevice. (<a href='http://code.google.com/p/sharpdx/source/detail?r=fa9b841a0f8b0f711d03b93e460d9019a6db6c8d'>changes</a>)</li>
+  <li>Add GraphicsPresenter frontend to DXGI.SwapChain (<a href='http://code.google.com/p/sharpdx/source/detail?r=7afba76efda75c2c1950188e6a01d643342e1cbd'>changes</a>)</li>
+  <li>Add load DDS method (<a href='http://code.google.com/p/sharpdx/source/detail?r=0296cb7d9ddd3ab51aec6b586d8bf892cb08b267'>changes</a>)</li>
+  <li>Add pluggable Image Load/Save through register method (<a href='http://code.google.com/p/sharpdx/source/detail?r=587cab8e121512d591ded06e20e5b1aa738a1bf7'>changes</a>)</li>
+  <li>Add PrimitiveType to all Draw methods. Add SetIndexBuffer / SetVertexBuffers methods. (<a href='http://code.google.com/p/sharpdx/source/detail?r=8218e1453921ee1292a532d0813a78a6daa391af'>changes</a>)</li>
+  <li>Add RenderTarget, ShaderResource and UnorderedAccess view selectors on Texture. Fix GraphicsDevice.SetContent for textures. Change name in GraphicsDeviceFeatures (<a href='http://code.google.com/p/sharpdx/source/detail?r=4ea65eea95e03e0ed683ba9d3f077e3d38f6f618'>changes</a>)</li>
+  <li>Add RenderTarget3D. Add support for correct initial textures for all versions Texture1D,2D,3D (<a href='http://code.google.com/p/sharpdx/source/detail?r=ea89acf6ce6d6608b5197a83bc5e59077dfbe146'>changes</a>)</li>
+  <li>Add SamplerState object with default states. (<a href='http://code.google.com/p/sharpdx/source/detail?r=6be356a90a46559b40cd252a760d21e87bcb8006'>changes</a>)</li>
+  <li>Add several methods from DeviceContext (ClearState, Flush, Draw, Dispatch... etc.) (<a href='http://code.google.com/p/sharpdx/source/detail?r=d2032f57bdb36f4627491e8156edaf8f8f81e017'>changes</a>)</li>
+  <li>Add some comments (<a href='http://code.google.com/p/sharpdx/source/detail?r=bb86526e18f1909ff7d0dfc65040528a37389d08'>changes</a>)</li>
+  <li>Add support for additional bindings in Buffer.Raw constructors (<a href='http://code.google.com/p/sharpdx/source/detail?r=e440710d8152aa9178a4029d64b905adac6c1e7a'>changes</a>)</li>
+  <li>Add support for all Buffers (Constant, Index, Vertex, Structured, StructuredAppend, StructuredCounter, Raw, RenderTarget) (<a href='http://code.google.com/p/sharpdx/source/detail?r=fef752b5bd435568fcfeaeadf05661df2bebb4fe'>changes</a>)</li>
+  <li>Add support for Buffer.GetData/SetData with offsetInBytes handling (<a href='http://code.google.com/p/sharpdx/source/detail?r=e9974d90d081be7bb433d0d534510ad863c2b0d6'>changes</a>)</li>
+  <li>Add support for case insensitive semantic declaration. (<a href='http://code.google.com/p/sharpdx/source/detail?r=3b39763ec799de3ba468f034e1791f507121d37f'>changes</a>)</li>
+  <li>Add support for dynamic attributes Vector2/3/4 to EffectBytecode (<a href='http://code.google.com/p/sharpdx/source/detail?r=6cbcd3eea2e423b4ac97bd54ca8954fb42178622'>changes</a>)</li>
+  <li>Add support for sub-pass in at runtime (in order to fully support BasicEffect) (<a href='http://code.google.com/p/sharpdx/source/detail?r=a31b518cf5713dee1aa3e0269d69486e46b317c9'>changes</a>)</li>
+  <li>Add support TextureCube, RenderTargetCube. Refactor Texture1/2/3D and RenderTarget1/2/3D. Improves GraphicsDevice.GetData/SetData for textures. (<a href='http://code.google.com/p/sharpdx/source/detail?r=6cc9a0881735a5508ebe7391d3e8b89c7b5357bc'>changes</a>)</li>
+  <li>Add support to save DDS image. Tests completed for DDS. (<a href='http://code.google.com/p/sharpdx/source/detail?r=fafcf92504d5b5cca973c938cf86c208670aa17f'>changes</a>)</li>
+  <li>Add tests for DDS loading. (<a href='http://code.google.com/p/sharpdx/source/detail?r=9cdc445dfc493240d4c83ee956557b8f91b55da6'>changes</a>)</li>
+  <li>Add Texture.New(Image) and Texture.Load/Save. Saving is not yet working for compressed BC formats. (<a href='http://code.google.com/p/sharpdx/source/detail?r=4abcd8027984ee703f14eb9179ba5481200e5d57'>changes</a>)</li>
+  <li>Add TextureDimension to TextureDescription. (<a href='http://code.google.com/p/sharpdx/source/detail?r=98c1f796883dd56b1bd015c0bbf4e61140640cfd'>changes</a>)</li>
+  <li>Add TGAHelper, not fully ported. (<a href='http://code.google.com/p/sharpdx/source/detail?r=872c52ff7fcd5250e197e12281a49c8d9abac1fd'>changes</a>)</li>
+  <li>Add Toolkit Effect compiler and command line compiler (tkfxc) (<a href='http://code.google.com/p/sharpdx/source/detail?r=8c3a5d78891d88f7d50e2b9efd528fd697b66508'>changes</a>)</li>
+  <li>Add XNA like VertexPosition.* predefined structures (<a href='http://code.google.com/p/sharpdx/source/detail?r=0d7db3d36803623a2b927e73cc1c35cc7124da84'>changes</a>)</li>
+  <li>By default, constant buffers are shared within an Effect. (<a href='http://code.google.com/p/sharpdx/source/detail?r=27b6c500e74950717c2ecee947b9c08d0b3119ba'>changes</a>)</li>
+  <li>Chance tests for DepthStencilBuffer feature level (<a href='http://code.google.com/p/sharpdx/source/detail?r=d13856d52722f033e7a0738346dd65597bedf7a6'>changes</a>)</li>
+  <li>Change GetData/SetData to GetContent/SetContent (<a href='http://code.google.com/p/sharpdx/source/detail?r=a36450f94326c5547cd62ea8c7f9e0348fdeeea8'>changes</a>)</li>
+  <li>Change TextureDescription to use PixelFormat (<a href='http://code.google.com/p/sharpdx/source/detail?r=55fe898e105e3145f4e7b9e0f413c855a84ca3b9'>changes</a>)</li>
+  <li>DDS Texture loading working. Tests are still incomplete. (<a href='http://code.google.com/p/sharpdx/source/detail?r=a9bc265814fec21718d702a21e5763ae490d46ad'>changes</a>)</li>
+  <li>Finalize PixelBuffer methods and usage from Image. Add Image.ToDataBox method. Fix memory leak for WIC images. Fix performance for DDS. Add TKTX proprietary file format. Add unit tests. (<a href='http://code.google.com/p/sharpdx/source/detail?r=448ac503eb34d29f76f34d11b980a35215440c86'>changes</a>)</li>
+  <li>First fully working version with MiniTri using BasicEffect! \o/ (<a href='http://code.google.com/p/sharpdx/source/detail?r=fd4c3359c722ceba1455f2312392db7f47febfed'>changes</a>)</li>
+  <li>Fix bug in DDS. Add WIC Load and Save. (<a href='http://code.google.com/p/sharpdx/source/detail?r=d03ad5df6b298febe99ab513f9007d263f8ea954'>changes</a>)</li>
+  <li>Fix bug in GraphicsDevice.GetContent for buffers (<a href='http://code.google.com/p/sharpdx/source/detail?r=61e1bfd11320f52e5faa83ceb6affdee1f15f868'>changes</a>)</li>
+  <li>Fix comment on BlendState class (<a href='http://code.google.com/p/sharpdx/source/detail?r=0f65526a4f1b68af11c997e547de5fc680f901ab'>changes</a>)</li>
+  <li>Fix comments and add sealed to various Effect classes. (<a href='http://code.google.com/p/sharpdx/source/detail?r=d788f4498e2569cfac11ebc368394e27587b27a8'>changes</a>)</li>
+  <li>Fix compilation under Win8 (<a href='http://code.google.com/p/sharpdx/source/detail?r=0bbfecefb07a2976c7a20aa5fa9da66fd78595dc'>changes</a>)</li>
+  <li>Fix compilation under Win8 Metro (<a href='http://code.google.com/p/sharpdx/source/detail?r=1a597a8022ddcc1a50833e72f77af45ba3b44747'>changes</a>)</li>
+  <li>Fix constructors for all RenderTarget1D 2D and 3D (<a href='http://code.google.com/p/sharpdx/source/detail?r=4dcc2fcabfaf2c504bdb5875abff3168523b6e54'>changes</a>)</li>
+  <li>Fix constructors using generics for all Texture. Fix slice selector. Add tests for Texture1D. Fix all resources to use MainDevice instead of current device. (<a href='http://code.google.com/p/sharpdx/source/detail?r=fecb78de46314d3d28b75843540233e3695c04c9'>changes</a>)</li>
+  <li>Fix databox checking for all textures (<a href='http://code.google.com/p/sharpdx/source/detail?r=e857190854b9b9fc3f0235ee890b1d7876bb33cb'>changes</a>)</li>
+  <li>Fix doc (<a href='http://code.google.com/p/sharpdx/source/detail?r=9d854fcf822b8fadcceaa65dc3c4270213537db2'>changes</a>)</li>
+  <li>Fix documentation for BlendState, DepthStencilState, RasterizerState (<a href='http://code.google.com/p/sharpdx/source/detail?r=105908d52431038cfaa9d5b1fc350d20d51ed399'>changes</a>)</li>
+  <li>Fix GraphicsDevice.GetContent and SetContent. Add MipMapDescription class. Fix Texture.Load and Texture.Save, now fully working and pass tests. \o/ (<a href='http://code.google.com/p/sharpdx/source/detail?r=7c44de5ba50ff80f83e944d3a8c5db12e20c3d45'>changes</a>)</li>
+  <li>Fix handling of Blend/DepthStencil/Rasterizer states at the effect level. Rename GraphicsDevice.Get/SetContent to GetData/SetData and move them to Buffer/Texture. (<a href='http://code.google.com/p/sharpdx/source/detail?r=f85e3c197221348ae9bc5275781e3798690d39b1'>changes</a>)</li>
+  <li>Fix image.Dispose for DDS loading (<a href='http://code.google.com/p/sharpdx/source/detail?r=3cf00785f82b82bfb0780bfda2f35da29b0ffab0'>changes</a>)</li>
+  <li>Fix issue in EffectPass when comparing parameters. Fix compiler issue with 9.1/9.2/9.3 profile (<a href='http://code.google.com/p/sharpdx/source/detail?r=c25122cf5f49cbc0ef9e6a03c7ad7925be7b0a52'>changes</a>)</li>
+  <li>Fix memory leak in Texture.Load and Save. Improves tests for texture loading/saving, check memory and GC. (<a href='http://code.google.com/p/sharpdx/source/detail?r=95ff93204926d81bb3eb887629bd331e3df90bcd'>changes</a>)</li>
+  <li>Fix memory leak in WIC. Fix handling of compressed BC textures (<a href='http://code.google.com/p/sharpdx/source/detail?r=e2296d1f6fcb1b60a6121cab9ffd35fe12dcefda'>changes</a>)</li>
+  <li>Fix project configuration (<a href='http://code.google.com/p/sharpdx/source/detail?r=fb526b37bef760482baf6ec328fc411ca5d6de12'>changes</a>)</li>
+  <li>Fix Texture1DBase.InitializeViews. Add implicit cast to DXGI.Surface for Texture1D and Texture2D (<a href='http://code.google.com/p/sharpdx/source/detail?r=db92c6bea6266b752ced0019e2b9f53af9b738ca'>changes</a>)</li>
+  <li>Fix Texture2D GetData/SetData for arbitrary struct (<a href='http://code.google.com/p/sharpdx/source/detail?r=8e9eb695cd89311a420a78cfbf2cbbef0f8869f4'>changes</a>)</li>
+  <li>Fix type in Buffer.Constant (<a href='http://code.google.com/p/sharpdx/source/detail?r=3fba635aa54488ff5d2552cf458777d2df34dda4'>changes</a>)</li>
+  <li>GraphicsDevice add check method to retrieve maxium MSAA count (<a href='http://code.google.com/p/sharpdx/source/detail?r=ba9db74c22f1a32053492c1bc2f864cda2f6ee6d'>changes</a>)</li>
+  <li>Improve Constant buffer handling in Effect. (<a href='http://code.google.com/p/sharpdx/source/detail?r=27a86440635f24382b12a835ab3290e929d789fd'>changes</a>)</li>
+  <li>Improves methods coherence between Texture1D/2D and RenderTarget1D/2D (<a href='http://code.google.com/p/sharpdx/source/detail?r=15ee2eda3b05f7dac21e5a5c27067d5844134393'>changes</a>)</li>
+  <li>Make all effect constant buffers not shared by default (in order to keep compatibility with XNA effects). (<a href='http://code.google.com/p/sharpdx/source/detail?r=d2fb02f42eb4c1e5faa92ad7b76df3380e7fcba2'>changes</a>)</li>
+  <li>Make constant buffers not shareable by default. Include generated bytecode for StockEffects into the project. Update tkfxc to support generating C# code with embedded effect bytecode. (<a href='http://code.google.com/p/sharpdx/source/detail?r=1235155d53eca70b95733c4173f0008d0a38d1f9'>changes</a>)</li>
+  <li>Move all DeviceContext dependent operations (Copy/GetData/SetData) to GraphicsDevice (<a href='http://code.google.com/p/sharpdx/source/detail?r=a19bc8879bfc71e085d927243130d7a9546a49c2'>changes</a>)</li>
+  <li>Moves ToStaging in TextureDescription (<a href='http://code.google.com/p/sharpdx/source/detail?r=a34bb59949b88fa533d0f1598baed5e30bd18aa9'>changes</a>)</li>
+  <li>Provide GetData/SetData method with DataPointer parameter (<a href='http://code.google.com/p/sharpdx/source/detail?r=629e7103622e66bdd66a2f4fcf8223ffa4b9ea41'>changes</a>)</li>
+  <li>Remove Effect from group when it is disposed. (<a href='http://code.google.com/p/sharpdx/source/detail?r=6a1d9d70c112ab5721618ee41bbe95db262892cb'>changes</a>)</li>
+  <li>Remove GraphicsDeviceContext to keep GraphicsDevice simple (<a href='http://code.google.com/p/sharpdx/source/detail?r=8597fa5ba57a97a05557d613c9ca2fb794ea9a75'>changes</a>)</li>
+  <li>Remove GraphicsState and use GraphicsResource for all resources. Update class diagram (<a href='http://code.google.com/p/sharpdx/source/detail?r=14613b43f8a5ca3835c8209066ea394037e8a7fe'>changes</a>)</li>
+  <li>Remove IVertexType. Add VertexLayout, VertexDeclaration, VertexElement and attributes. (<a href='http://code.google.com/p/sharpdx/source/detail?r=4f6b907281fbacabd2508544ed9fc05b4f6b97bd'>changes</a>)</li>
+  <li>Rename EffectBytecode to EffectData for future consitency with ModelData. (<a href='http://code.google.com/p/sharpdx/source/detail?r=499a0f6469452ea963a06371d1a88fff3195b157'>changes</a>)</li>
+  <li>Rename SelectView to ViewType (<a href='http://code.google.com/p/sharpdx/source/detail?r=379d9ea6e2d0b272f9c99b40e56bafbe85d48fa5'>changes</a>)</li>
+  <li>Rename ShaderType to EffectShaderType (<a href='http://code.google.com/p/sharpdx/source/detail?r=74eb6c11d33c1ef76fd01d520d95f9109fd069d8'>changes</a>)</li>
+  <li>Rename ViewSlice to SelectView (<a href='http://code.google.com/p/sharpdx/source/detail?r=f6852745c07878e8ffeb3713c007d82f7d42dd6f'>changes</a>)</li>
+  <li>RenderTarget2D update (<a href='http://code.google.com/p/sharpdx/source/detail?r=4c7bf8def0182b7efb344ce7a50faa427faed9ef'>changes</a>)</li>
+  <li>Simplify Buffer/Texture GetData/SetData without explicity using a GraphicsDevice instance. (<a href='http://code.google.com/p/sharpdx/source/detail?r=ea24963fbeff62f1b218b29b8ba41b8b5b9b1ba6'>changes</a>)</li>
+  <li>Start to add support for DDS texture loading/saving (<a href='http://code.google.com/p/sharpdx/source/detail?r=f5a7a25a9439c2e57eecbac5cce366f0d928251b'>changes</a>)</li>
+  <li>Start to port WIC texture loading from DirectXTex (<a href='http://code.google.com/p/sharpdx/source/detail?r=ad81a74f254f88f81f3cc02a442c885c9be695cf'>changes</a>)</li>
+  <li>Update class diagram (<a href='http://code.google.com/p/sharpdx/source/detail?r=aed9c99c54353ea360f2f3357fce5e6bebf60f74'>changes</a>)</li>
+  <li>Update class diagram (<a href='http://code.google.com/p/sharpdx/source/detail?r=1695716b27a55be5d54fc0f4e8236eaeb0f2dbd5'>changes</a>)</li>
+  <li>UpdateSubresource only valid for ResourceUsage.Default and not immutable (<a href='http://code.google.com/p/sharpdx/source/detail?r=0ad372eb90c65ac0664ff1531b5b81d7e50165e9'>changes</a>)</li>
+  <li>Use count instead of size for Structured and Typed buffers (<a href='http://code.google.com/p/sharpdx/source/detail?r=a5b479c34440138b7c112e924f413cb77d408371'>changes</a>)</li>
+  <li>Use DDSFlags.None instead of ForceDX10Ext (<a href='http://code.google.com/p/sharpdx/source/detail?r=f66a942fc2f239c6e0ed79ea53aee701b888a7b4'>changes</a>)</li>
+  <li>Use of Graphics.CurrentSafe for internal usage for all resource creations. (<a href='http://code.google.com/p/sharpdx/source/detail?r=016df726db397397404e45ce77fbd0fd4174af70'>changes</a>)</li>
+  <li>Work on Texture2D/RenderTarget2D to support Texture arrays, mip levels and multi-samples. (<a href='http://code.google.com/p/sharpdx/source/detail?r=288d2a25dd3e1326cfbb7ece14bb682fbe079ea2'>changes</a>)</li>
+  <li>Work on VertexBuffer/VertexBufferLayout declarations, unfinished. (<a href='http://code.google.com/p/sharpdx/source/detail?r=dfc48981b933da75e5a79d6370428d750f94265c'>changes</a>)</li>
+</ul>
+<h4 class="title">Toolkit.Graphics.Compiler</h4>
+<ul>
+  <li>Add support for legacy D3D9 compile expression (VertexShader = compile vs_2_0 VS();). Get translated to vs/ps_4_0_level_9_1 (for 2_0) or level_9_3 (for 3_0) (<a href='http://code.google.com/p/sharpdx/source/detail?r=105a6d0d406410e4ba31479362397d7db0b18d16'>changes</a>)</li>
+</ul>
+<h4 class="title">Toolkit.tkfxc</h4>
+<ul>
+  <li>Add better printer of subpasses. (<a href='http://code.google.com/p/sharpdx/source/detail?r=c76225f96da370a5b1be2186b58a16f3e0b9fc41'>changes</a>)</li>
+  <li>Improves output listing of tkfxc.exe Effect Compiler, now very similar to legacy fxc.exe (<a href='http://code.google.com/p/sharpdx/source/detail?r=6782450815bf494ad3f729c8e8dda4275131f599'>changes</a>)</li>
+</ul>
+<h4 class="title">Tools</h4>
+<ul>
+  <li>Add SharpGitLog small tools to help building release notes for SharpDX (<a href='http://code.google.com/p/sharpdx/source/detail?r=dd98cf70c53a385321b0ec7f24bd025bf52dccfe'>changes</a>)</li>
+</ul>
+<h4 class="title">WIC</h4>
+<ul>
+  <li>Add BitmapFrameEncode.WritePixels method to take an array of T[] (<a href='http://code.google.com/p/sharpdx/source/detail?r=d6efc209fd8a97b201b287c3428cd13c8f23d113'>changes</a>)</li>
+  <li>Add BitmapSource.CopyPixels method with direct pointer/size (<a href='http://code.google.com/p/sharpdx/source/detail?r=2481d1877fb03c47d5cea81cd850badcca0e51da'>changes</a>)</li>
+  <li>Add missing [Flags] attributes to some enumerations (<a href='http://code.google.com/p/sharpdx/source/detail?r=5e47d28615805a6ad937460241e9bdc60df0de54'>changes</a>)</li>
+  <li>Add stride to Bitmap.New method (<a href='http://code.google.com/p/sharpdx/source/detail?r=69ceff53e270a08639174ed2ce8b51fdac4949e9'>changes</a>)</li>
+</ul>
+</body>
+</html>

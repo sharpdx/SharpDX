@@ -428,6 +428,7 @@
         <exclude name="Samples/Win8/Win8Demos.sln"/>
         <exclude name="**/*.sample.csproj"/>
         <exclude name="googlecode_password.txt"/>
+        <exclude name="Bin/**/*Toolkit*.dll"/>
       </fileset>
     </copy>
 
@@ -439,7 +440,7 @@
       <arg value="Bin\*.*"/>
       <arg value="ChangeLog.txt"/>
       <arg value="License.txt"/>
-      <arg value="ReleaseNotes.txt"/>
+      <arg value="ReleaseNotes.html"/>
     </exec>
 
     <delete file="${output_bin_and_samples_zip}"/>
