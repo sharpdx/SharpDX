@@ -64,6 +64,9 @@
     <Reference Include="SharpDX.Direct3D11">
       <HintPath>..\..\..\Bin\Standard-net20\SharpDX.Direct3D11.dll</HintPath>
     </Reference>
+    <Reference Include="SharpDX.Direct3D11.Effects">
+      <HintPath>..\..\..\Bin\Standard-net20\SharpDX.Direct3D11.Effects.dll</HintPath>
+    </Reference>
     <Reference Include="SharpDX.DXGI">
       <HintPath>..\..\..\Bin\Standard-net20\SharpDX.DXGI.dll</HintPath>
     </Reference>

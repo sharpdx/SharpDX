@@ -109,16 +109,16 @@
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <Reference Include="SharpDX">
-      <HintPath>..\..\..\Bin\Win8Metro\SharpDX.dll</HintPath>
+      <HintPath>..\..\..\Bin\Standard-winrt\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct2D1">
-      <HintPath>..\..\..\Bin\Win8Metro\SharpDX.Direct2D1.dll</HintPath>
+      <HintPath>..\..\..\Bin\Standard-winrt\SharpDX.Direct2D1.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D11">
-      <HintPath>..\..\..\Bin\Win8Metro\SharpDX.Direct3D11.dll</HintPath>
+      <HintPath>..\..\..\Bin\Standard-winrt\SharpDX.Direct3D11.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.DXGI">
-      <HintPath>..\..\..\Bin\Win8Metro\SharpDX.DXGI.dll</HintPath>
+      <HintPath>..\..\..\Bin\Standard-winrt\SharpDX.DXGI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

@@ -167,12 +167,12 @@ namespace CommonDX
                 // Try to create it with Video Support
                 // If it is not working, we just use BGRA
                 // Force to FeatureLevel.Level_9_1
-                using (var defaultDevice = new SharpDX.Direct3D11.Device(DriverType.Hardware, creationFlags, FeatureLevel.Level_9_1))
+                using (var defaultDevice = new SharpDX.Direct3D11.Device(DriverType.Hardware, creationFlags))
                     d3dDevice = defaultDevice.QueryInterface<SharpDX.Direct3D11.Device1>();
             } catch (Exception)
             {
                 creationFlags = SharpDX.Direct3D11.DeviceCreationFlags.BgraSupport;
-                using (var defaultDevice = new SharpDX.Direct3D11.Device(DriverType.Hardware, creationFlags, FeatureLevel.Level_9_1))
+                using (var defaultDevice = new SharpDX.Direct3D11.Device(DriverType.Hardware, creationFlags))
                     d3dDevice = defaultDevice.QueryInterface<SharpDX.Direct3D11.Device1>();
             }
             featureLevel = d3dDevice.FeatureLevel;
