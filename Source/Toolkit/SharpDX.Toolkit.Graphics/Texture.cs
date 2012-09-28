@@ -830,7 +830,7 @@ namespace SharpDX.Toolkit.Graphics
             return requestedLevel  == 0 ? maxMipMap : Math.Min(requestedLevel, maxMipMap);
         }
 
-        protected static DataBox GetDataBox<T>(Format format, int width, int height, T[] textureData, IntPtr fixedPointer) where T : struct
+        protected static DataBox GetDataBox<T>(Format format, int width, int height, int depth, T[] textureData, IntPtr fixedPointer) where T : struct
         {
             // Check that the textureData size is correct
             if (textureData == null) throw new ArgumentNullException("textureData");
@@ -839,7 +839,7 @@ namespace SharpDX.Toolkit.Graphics
             int widthCount;
             int heightCount;
             Image.ComputePitch(format, width, height, out rowPitch, out slicePitch, out widthCount, out heightCount);
-            if (Utilities.SizeOf(textureData) != slicePitch) throw new ArgumentException("Invalid size for TextureData");
+            if (Utilities.SizeOf(textureData) != (slicePitch * depth)) throw new ArgumentException("Invalid size for TextureData");
 
             return new DataBox(fixedPointer, rowPitch, slicePitch);
         }

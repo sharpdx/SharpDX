@@ -151,7 +151,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </remarks>
         public unsafe static Texture1D New<T>(GraphicsDevice device, int width, PixelFormat format, T[] textureData, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
         {
-            return new Texture1D(device, NewDescription(width, format, isUnorderedReadWrite, 1, 1, usage), GetDataBox(format, width, 1, textureData, (IntPtr)Interop.Fixed(textureData)));
+            return new Texture1D(device, NewDescription(width, format, isUnorderedReadWrite, 1, 1, usage), GetDataBox(format, width, 1, 1, textureData, (IntPtr)Interop.Fixed(textureData)));
         }
 
         /// <summary>

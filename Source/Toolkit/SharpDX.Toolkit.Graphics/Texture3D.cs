@@ -154,7 +154,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11Device::CreateTexture3D</unmanaged-short>	
         public unsafe static Texture3D New<T>(GraphicsDevice device, int width, int height, int depth, PixelFormat format, T[] textureData, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
         {
-            return New(device, width, height, depth, 1, format, new [] { GetDataBox(format, width, 1, textureData, (IntPtr)Interop.Fixed(textureData)) }, isUnorderedReadWrite, usage);
+            return New(device, width, height, depth, 1, format, new [] { GetDataBox(format, width, height, depth, textureData, (IntPtr)Interop.Fixed(textureData)) }, isUnorderedReadWrite, usage);
         }
 
         /// <summary>

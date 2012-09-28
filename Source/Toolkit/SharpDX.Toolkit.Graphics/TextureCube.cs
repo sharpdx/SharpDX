@@ -150,12 +150,12 @@ namespace SharpDX.Toolkit.Graphics
             if (textureData.Length != 6)
                 throw new ArgumentException("Invalid texture datas. First dimension must be equal to 6", "textureData");
 
-            var dataBox1 = GetDataBox(format, size, size, textureData[0], (IntPtr)Interop.Fixed(textureData[0]));
-            var dataBox2 = GetDataBox(format, size, size, textureData[0], (IntPtr)Interop.Fixed(textureData[1]));
-            var dataBox3 = GetDataBox(format, size, size, textureData[0], (IntPtr)Interop.Fixed(textureData[2]));
-            var dataBox4 = GetDataBox(format, size, size, textureData[0], (IntPtr)Interop.Fixed(textureData[3]));
-            var dataBox5 = GetDataBox(format, size, size, textureData[0], (IntPtr)Interop.Fixed(textureData[4]));
-            var dataBox6 = GetDataBox(format, size, size, textureData[0], (IntPtr)Interop.Fixed(textureData[5]));
+            var dataBox1 = GetDataBox(format, size, size, 1, textureData[0], (IntPtr)Interop.Fixed(textureData[0]));
+            var dataBox2 = GetDataBox(format, size, size, 1, textureData[0], (IntPtr)Interop.Fixed(textureData[1]));
+            var dataBox3 = GetDataBox(format, size, size, 1, textureData[0], (IntPtr)Interop.Fixed(textureData[2]));
+            var dataBox4 = GetDataBox(format, size, size, 1, textureData[0], (IntPtr)Interop.Fixed(textureData[3]));
+            var dataBox5 = GetDataBox(format, size, size, 1, textureData[0], (IntPtr)Interop.Fixed(textureData[4]));
+            var dataBox6 = GetDataBox(format, size, size, 1, textureData[0], (IntPtr)Interop.Fixed(textureData[5]));
 
             return new TextureCube(device, NewTextureCubeDescription(size, format, isUnorderedReadWrite, 1, usage), dataBox1, dataBox2, dataBox3, dataBox4, dataBox5, dataBox6);
         }
