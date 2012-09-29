@@ -501,6 +501,50 @@ namespace SharpDX
 #endif
         }
 
+        public static unsafe IntPtr StringToHGlobalAnsi(string s)
+        {
+#if WP8
+            throw new NotImplementedException();
+         
+#else
+            return Marshal.StringToHGlobalAnsi(s);
+#endif
+        }
+
+
+        public static unsafe IntPtr StringToHGlobalUni(string s)
+        {
+#if WP8
+            if (s == null)
+            {
+                return IntPtr.Zero;
+            }
+            int num = (s.Length + 1) * 2;
+            if (num < s.Length)
+            {
+                throw new ArgumentOutOfRangeException("s");
+            }
+            IntPtr ptr2 = Marshal.AllocHGlobal(num);
+            if (ptr2 == IntPtr.Zero)
+            {
+                throw new OutOfMemoryException();
+            }
+            // Completely unefficient, but this is the only to the a string in WP8
+            var localArray = s.ToCharArray();
+            fixed (char* str = localArray)
+            {
+                char* pSrc = str;
+                Utilities.CopyMemory(ptr2, new IntPtr(pSrc), s.Length + 1);
+            }
+            return ptr2;
+#else
+            return Marshal.StringToHGlobalUni(s);
+#endif
+        }
+ 
+
+
+
         /// <summary>
         /// Gets the IUnknown from object. Similar to <see cref="Marshal.GetIUnknownForObject"/> but accept null object
         /// by returning an IntPtr.Zero IUnknown pointer.

@@ -136,6 +136,18 @@ namespace SharpGen.Model
                 return false;
             }
         }
+        
+        public bool IsPointer
+        {
+            get
+            {
+                if (Type != null)
+                {
+                    return Type.IsPointer;
+                }
+                return false;
+            }
+        }
 
         /// <summary>
         /// Gets a value indicating whether this instance is value type.

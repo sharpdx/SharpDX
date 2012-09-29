@@ -140,6 +140,7 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
+  
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Release|AnyCPU'">
     <OutputPath>bin\WP8Release\</OutputPath>
     <DefineConstants>TRACE;WP8;DIRECTX11_1</DefineConstants>

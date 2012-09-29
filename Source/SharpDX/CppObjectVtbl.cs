@@ -32,11 +32,11 @@ namespace SharpDX
         /// Add a method supported by this interface. This method is typically called from inherited constructor.
         /// </summary>
         /// <param name="method">the managed delegate method</param>
-        public void AddMethod(Delegate method)
+        public unsafe void AddMethod(Delegate method)
         {
             int index = methods.Count;
             methods.Add(method);
-            Marshal.WriteIntPtr(vtbl, index * IntPtr.Size, Marshal.GetFunctionPointerForDelegate(method));
+            *((IntPtr*) vtbl + index) = Marshal.GetFunctionPointerForDelegate(method);
         }
     }
 }

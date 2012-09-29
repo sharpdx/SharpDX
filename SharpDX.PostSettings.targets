@@ -8,6 +8,21 @@
   <Import Condition="'$(Configuration)' == 'Win8Debug' or '$(Configuration)' == 'Win8Release'" Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   
   <Import Condition="'$(SharpDXWin8)' == 'false'" Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!--Include automatically SharpDXWP8 interop assembly-->
+  <ItemGroup>
+    <ProjectReference Condition="'$(SharpDXWP8)' == 'true'" Include="$(SolutionDir)Source\SharpDXWP8\SharpDXWP8.vcxproj">
+      <Project>{c6ae9847-3089-4fe4-91df-b1a3ee115cf4}</Project>
+      <Name>SharpDXWP8</Name>
+    </ProjectReference>
+  </ItemGroup>
+
+  <!--Import standard targets for all non-Windows Phone 8 platforms-->
+  <Import Condition="'$(SharpDXWP8)' == 'false'" Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
+  <!--Import Windows Phone 8 targets only for WP8 -->
+  <Import Condition="'$(SharpDXWP8)' == 'true'" Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
+  <Import Condition="'$(SharpDXWP8)' == 'true'" Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
+
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DocumentationFile>bin\Release\$(AssemblyName).xml</DocumentationFile>
@@ -27,6 +42,10 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Release|AnyCPU'">
     <DocumentationFile>bin\Win8Release\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Release|AnyCPU'">
+    <DocumentationFile>bin\WP8Release\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
   <!-- Don't use anymore task, as msbuild is keeping a lock on the file on the 1st build and we are not able to reapply SharpCLI once it is created

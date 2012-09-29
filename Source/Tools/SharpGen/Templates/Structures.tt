@@ -320,7 +320,7 @@ foreach (var sharpStruct in Namespace.Structs)
 <#+
 					} else if (sharpStructItem.PublicType.QualifiedName == "string") {
 #>
-            IntPtr <#= sharpStructItem.Name #>_ = Marshal.StringToHGlobalAnsi(this.<#= sharpStructItem.Name #>);
+            IntPtr <#= sharpStructItem.Name #>_ = Utilities.StringToHGlobalAnsi(this.<#= sharpStructItem.Name #>);
             fixed (void* __ptr = &@ref.<#= sharpStructItem.Name #>) Utilities.CopyMemory((IntPtr)__ptr, <#= sharpStructItem.Name #>_, this.<#= sharpStructItem.Name #>.Length);
             Marshal.FreeHGlobal( <#= sharpStructItem.Name #>_);
 <#+
@@ -335,11 +335,11 @@ foreach (var sharpStruct in Namespace.Structs)
 						if (!sharpStructItem.IsWideChar) {
 				// Copy string
 #>
-            @ref.<#= sharpStructItem.Name #> = ( this.<#= sharpStructItem.Name #> == null )?IntPtr.Zero : Marshal.StringToHGlobalAnsi(this.<#= sharpStructItem.Name #>);
+            @ref.<#= sharpStructItem.Name #> = ( this.<#= sharpStructItem.Name #> == null )?IntPtr.Zero : Utilities.StringToHGlobalAnsi(this.<#= sharpStructItem.Name #>);
 <#+
 						} else {
 #>
-            @ref.<#= sharpStructItem.Name #> = ( this.<#= sharpStructItem.Name #> == null )?IntPtr.Zero : Marshal.StringToHGlobalUni(this.<#= sharpStructItem.Name #>);
+            @ref.<#= sharpStructItem.Name #> = ( this.<#= sharpStructItem.Name #> == null )?IntPtr.Zero : Utilities.StringToHGlobalUni(this.<#= sharpStructItem.Name #>);
 <#+
 						}							
 					} else if ( sharpStructItemAsStruct != null && sharpStructItemAsStruct.HasMarshalType) {

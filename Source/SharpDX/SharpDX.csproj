@@ -11,7 +11,7 @@
     Related to this issue http://connect.microsoft.com/VisualStudio/feedback/details/735718/visual-studio-2011-beta-is-incorrectly-building-solution -->
     <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(SharpDXWin8)' == 'false'">
+  <ItemGroup Condition=" '$(SharpDXWin8Core)' == 'false'">
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -79,7 +79,7 @@
     <Compile Include="IO\NativeFileMode.cs" />
     <Compile Include="IO\NativeFileShare.cs" />
     <Compile Include="Matrix3x2.cs" />
-    <Compile Include="Properties\Resources.Designer.cs" Condition=" '$(SharpDXWin8)' == 'false'">
+    <Compile Include="Properties\Resources.Designer.cs" Condition=" '$(SharpDXWin8Core)' == 'false'">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>

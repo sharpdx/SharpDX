@@ -214,9 +214,9 @@
 					// Handle Input String 
 					} else if (param.IsString) {
 						if (param.IsWideChar) {#>
-                IntPtr <#= param.TempName #> = Marshal.StringToHGlobalUni(<#= param.Name #>);
+                IntPtr <#= param.TempName #> = Utilities.StringToHGlobalUni(<#= param.Name #>);
 <#+						} else {#>
-                IntPtr <#= param.TempName #> = Marshal.StringToHGlobalAnsi(<#= param.Name #>);
+                IntPtr <#= param.TempName #> = Utilities.StringToHGlobalAnsi(<#= param.Name #>);
 <#+						}						
 					} else if ( param.IsRefIn && param.IsValueType && param.IsOptionnal) {#>
                 <#= param.PublicType.QualifiedName #> <#= param.TempName #>;

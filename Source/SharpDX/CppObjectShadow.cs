@@ -41,7 +41,7 @@ namespace SharpDX
         /// Initializes the specified shadow instance from a vtbl and a callback.
         /// </summary>
         /// <param name="callbackInstance">The callback.</param>
-        public virtual void Initialize(ICallbackable callbackInstance)
+        public unsafe virtual void Initialize(ICallbackable callbackInstance)
         {
             this.Callback = callbackInstance;
 
@@ -50,7 +50,8 @@ namespace SharpDX
 
             var handle = GCHandle.Alloc(this);
             Marshal.WriteIntPtr(NativePointer, GetVtbl.Pointer);
-            Marshal.WriteIntPtr(NativePointer, IntPtr.Size, GCHandle.ToIntPtr(handle));
+
+            *((IntPtr*) NativePointer + 1) = GCHandle.ToIntPtr(handle);
         }
 
         /// <summary>
