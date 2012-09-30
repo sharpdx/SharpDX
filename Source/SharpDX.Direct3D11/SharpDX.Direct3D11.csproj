@@ -29,6 +29,7 @@
     <Compile Include="RasterizerStateDescription1.cs" />
     <Compile Include="DepthStencilStateDescription.cs" />
     <Compile Include="Device1.cs" />
+    <Compile Include="IDrawingSurfaceBackgroundContentProvider.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="RasterizerStateDescription.cs" />
     <Compile Include="RaterizerState1.cs" />

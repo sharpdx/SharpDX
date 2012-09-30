@@ -20,6 +20,7 @@
 using System;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace SharpDX
 {
@@ -32,6 +33,9 @@ namespace SharpDX
         private readonly Dictionary<Guid, CppObjectShadow> guidToShadow = new Dictionary<Guid, CppObjectShadow>();
 
         private static readonly Dictionary<Type, List<Type>> typeToShadowTypes = new Dictionary<Type, List<Type>>();
+
+        private IntPtr guidPtr;
+        public IntPtr[] Guids { get; private set; }
 
         public void Initialize(ICallbackable callbackable)
         {
@@ -117,6 +121,35 @@ namespace SharpDX
                     guidToShadow.Add(Utilities.GetGuidFromType(inheritInterface), shadow);
                 }
             }
+
+#if W8CORE
+            // Precalculate the list of GUID without IUnknown and IInspectable
+            // Used for WinRT 
+            int countGuids = 0;
+            foreach (var guidKey in guidToShadow.Keys)
+            {
+                if (guidKey != Utilities.GetGuidFromType(typeof(IInspectable)) && guidKey != Utilities.GetGuidFromType(typeof(IUnknown)))
+                    countGuids++;
+            }
+
+            guidPtr = Marshal.AllocHGlobal(Utilities.SizeOf<Guid>() * countGuids);
+            Guids = new IntPtr[countGuids];
+            int i = 0;
+            unsafe
+            {
+                var pGuid = (Guid*) guidPtr;
+                foreach (var guidKey in guidToShadow.Keys)
+                {
+                    if (guidKey == Utilities.GetGuidFromType(typeof(IInspectable)) || guidKey == Utilities.GetGuidFromType(typeof(IUnknown)))
+                        continue;
+
+                    pGuid[i] = guidKey;
+                    // Store the pointer
+                    Guids[i] = new IntPtr(pGuid + i);
+                    i++;
+                }
+            }
+#endif
         }
 
         internal IntPtr Find(Type type)
@@ -145,6 +178,12 @@ namespace SharpDX
                 foreach (var comObjectCallbackNative in guidToShadow.Values)
                     comObjectCallbackNative.Dispose();
                 guidToShadow.Clear();
+
+                if (guidPtr != IntPtr.Zero)
+                {
+                    Marshal.FreeHGlobal(guidPtr);
+                    guidPtr = IntPtr.Zero;
+                }
             }
         }
     }

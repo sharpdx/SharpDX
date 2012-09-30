@@ -40,7 +40,8 @@
     <Compile Include="IO\PathUtility.cs" />
     <Compile Include="IO\RandomStream.cs" />
     <Compile Include="Multimedia\WavWriter.cs" />
-    <Compile Include="Serialization\ArrayLengthType.cs" />
+    <Compile Include="IInspectable.cs" />
+    <Compile Include="InspectableShadow.cs" />
     <Compile Include="Serialization\NamespaceDoc.cs" />
     <Compile Include="Serialization\SerializeFlags.cs" />
     <Compile Include="ServiceEventArgs.cs" />

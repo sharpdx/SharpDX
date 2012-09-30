@@ -43,7 +43,11 @@
   <ifdef name="DIRECTX11_1">
     <include file="d3d11_1.h" attach="true" />
   </ifdef>
-  
+
+  <ifdef name="WP8">
+    <include file="DrawingSurfaceNative.h" attach="true" />
+  </ifdef>
+
   <ifndef name="W8CORE">
     <include file="d3dx11.h" attach="true">
       <post>
@@ -128,12 +132,21 @@
     <bind from="ID3DX11ThreadPump" to="System.IntPtr" />
     <bind from="D3D11_MAPPED_SUBRESOURCE" to="SharpDX.DataBox" />
     <bind from="D3D11_SUBRESOURCE_DATA" to="SharpDX.DataBox" />
+    <bind from="DrawingSurfaceSizeF" to="SharpDX.DrawingSizeF"/>
+    <bind from="DrawingSurfaceRectF" to="SharpDX.RectangleF"/>
   </bindings>
 
   <!-- D3D11 mapping -->
   <mapping>
+    <!-- WP8 DrawingSurface -->
+    <context>drawingsurfacenative</context>
+    <map interface="IDrawingSurfaceBackgroundContentProviderNative" callback="true"/>
+    <map interface="IDrawingSurfaceContentProviderNative" callback="true"/>
+    <map interface="IDrawingSurfaceRuntimeHostNative" name="DrawingSurfaceRuntimeHost" />
+    <map interface="IDrawingSurfaceSynchronizedTextureNative" name="DrawingSurfaceSynchronizedTexture" />
+    <context-clear/>
+    
     <context id="d3d11-all"/>
-
     <!--
     // *****************************************************************
     // D3D11 Enumerations
