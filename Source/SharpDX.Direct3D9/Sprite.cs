@@ -57,25 +57,6 @@ namespace SharpDX.Direct3D9
         /// <p>Adds a sprite to the list of batched sprites.</p>	
         /// </summary>	
         /// <param name="textureRef"><dd>  <p>Pointer to an <strong><see cref="SharpDX.Direct3D9.Texture"/></strong> interface that represents the sprite texture.</p> </dd></param>	
-        /// <param name="color"><dd>  <p> <strong><see cref="SharpDX.Color4"/></strong> type. The color and alpha channels are modulated by this value. A value of 0xFFFFFFFF maintains the original source color and alpha data. Use the <strong>D3DCOLOR_RGBA</strong> macro to help generate this color.</p> </dd></param>	
-        /// <param name="positionRef"><dd>  <p>Pointer to a <strong><see cref="SharpDX.Vector3"/></strong> vector that identifies the position of the sprite. If this argument is <strong><c>null</c></strong>, the point (0,0,0) is used, which is the upper-left corner.</p> </dd></param>	
-        /// <param name="centerRef"><dd>  <p>Pointer to a <strong><see cref="SharpDX.Vector3"/></strong> vector that identifies the center of the sprite. If this argument is <strong><c>null</c></strong>, the point (0,0,0) is used, which is the upper-left corner.</p> </dd></param>	
-        /// <returns><p>If the method succeeds, the return value is <see cref="SharpDX.Result.Ok"/>. If the method fails, the return value can be one of the following: <see cref="SharpDX.Direct3D9.ResultCode.InvalidCall"/>, D3DXERR_INVALIDDATA.</p></returns>	
-        /// <remarks>	
-        /// <p>To scale, rotate, or translate a sprite, call <strong><see cref="SharpDX.Direct3D9.Sprite.SetTransform"/></strong> with a matrix that contains the scale, rotate, and translate (SRT) values, before calling <see cref="SharpDX.Direct3D9.Sprite.Draw"/>. For information about setting SRT values in a matrix, see Matrix Transforms.</p>	
-        /// </remarks>	
-        /// <msdn-id>bb174251</msdn-id>	
-        /// <unmanaged>HRESULT ID3DXSprite::Draw([In] IDirect3DTexture9* pTexture,[In] const RECT* pSrcRect,[In] const D3DXVECTOR3* pCenter,[In] const D3DXVECTOR3* pPosition,[In] D3DCOLOR Color)</unmanaged>	
-        /// <unmanaged-short>ID3DXSprite::Draw</unmanaged-short>	
-        public void Draw(SharpDX.Direct3D9.Texture textureRef, SharpDX.ColorBGRA color, SharpDX.Vector3 positionRef, SharpDX.Vector3? centerRef = null)
-        {
-            Draw(textureRef, color, null, positionRef, centerRef);
-        }
-
-        /// <summary>	
-        /// <p>Adds a sprite to the list of batched sprites.</p>	
-        /// </summary>	
-        /// <param name="textureRef"><dd>  <p>Pointer to an <strong><see cref="SharpDX.Direct3D9.Texture"/></strong> interface that represents the sprite texture.</p> </dd></param>	
         /// <param name="srcRectRef"><dd>  <p>Pointer to a <strong><see cref="SharpDX.Rectangle"/></strong> structure that indicates the portion of the source texture to use for the sprite. If this parameter is <strong><c>null</c></strong>, then the entire source image is used for the sprite.</p> </dd></param>	
         /// <param name="centerRef"><dd>  <p>Pointer to a <strong><see cref="SharpDX.Vector3"/></strong> vector that identifies the center of the sprite. If this argument is <strong><c>null</c></strong>, the point (0,0,0) is used, which is the upper-left corner.</p> </dd></param>	
         /// <param name="positionRef"><dd>  <p>Pointer to a <strong><see cref="SharpDX.Vector3"/></strong> vector that identifies the position of the sprite. If this argument is <strong><c>null</c></strong>, the point (0,0,0) is used, which is the upper-left corner.</p> </dd></param>	
