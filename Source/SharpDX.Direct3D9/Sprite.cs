@@ -68,7 +68,7 @@ namespace SharpDX.Direct3D9
         /// <msdn-id>bb174251</msdn-id>	
         /// <unmanaged>HRESULT ID3DXSprite::Draw([In] IDirect3DTexture9* pTexture,[In] const RECT* pSrcRect,[In] const D3DXVECTOR3* pCenter,[In] const D3DXVECTOR3* pPosition,[In] D3DCOLOR Color)</unmanaged>	
         /// <unmanaged-short>ID3DXSprite::Draw</unmanaged-short>	
-        public unsafe void Draw(SharpDX.Direct3D9.Texture textureRef, SharpDX.ColorBGRA color, SharpDX.DrawingRectangle? srcRectRef = null, SharpDX.Vector3? centerRef = null, SharpDX.Vector3? positionRef = null)
+        public unsafe void Draw(SharpDX.Direct3D9.Texture textureRef, SharpDX.ColorBGRA color, SharpDX.Rectangle? srcRectRef = null, SharpDX.Vector3? centerRef = null, SharpDX.Vector3? positionRef = null)
         {
             SharpDX.Rectangle localRect = default(Rectangle);
             SharpDX.Vector3 localCenter;
