@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 #if W8CORE
+using System.Runtime.InteropServices;
 
 namespace SharpDX.MediaFoundation
 {
@@ -27,7 +28,12 @@ namespace SharpDX.MediaFoundation
         {
             Utilities.CreateComInstance(ClsidMFMediaEngineClassFactory, Utilities.CLSCTX.ClsctxInproc, Utilities.GetGuidFromType(typeof(MediaEngineClassFactory)), this);
         }
-         
+
+        // Declare FilgraphManager as a COM coclass:
+        [ComImport, Guid("4D645ACE-26AA-4688-9BE1-DF3516990B93")]
+        private class MediaEngineClassFactoryImpl
+        {
+        }
     }
 }
 #endif

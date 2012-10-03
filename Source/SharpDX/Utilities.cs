@@ -1177,6 +1177,42 @@ namespace SharpDX
             public Result ResultCode;
         };
 
+
+#if WP8
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        private delegate Result CoCreateInstanceFromAppDelegate([In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid, 
+            IntPtr pUnkOuter, 
+            CLSCTX dwClsContext, 
+            IntPtr reserved,
+            int countMultiQuery,
+            ref MultiQueryInterface query);
+
+        private static CoCreateInstanceFromAppDelegate CoCreateInstanceFromApp;
+
+        internal unsafe static void CreateComInstance(Guid clsid, CLSCTX clsctx, Guid riid, ComObject comObject)
+        {
+            if (CoCreateInstanceFromApp == null)
+            {
+                CoCreateInstanceFromApp =
+                    (CoCreateInstanceFromAppDelegate)
+                    Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.CoCreateInstanceFromApp()),
+                                                          typeof (CoCreateInstanceFromAppDelegate));
+            }
+
+            MultiQueryInterface localQuery = new MultiQueryInterface()
+            {
+                InterfaceIID = new IntPtr(&riid),
+                IUnknownPointer = IntPtr.Zero,
+                ResultCode = 0,
+            };
+
+            var result = CoCreateInstanceFromApp(clsid, IntPtr.Zero, clsctx, IntPtr.Zero, 1, ref localQuery);
+            result.CheckError();
+            localQuery.ResultCode.CheckError();
+            comObject.NativePointer = localQuery.IUnknownPointer;
+        }
+#else
         // TODO THIS IS NOT TESTED under W8CORE
         [DllImport("ole32.dll", ExactSpelling = true, EntryPoint = "CoCreateInstanceFromApp", PreserveSig = true)]
         private static extern Result CoCreateInstanceFromApp([In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid, 
@@ -1200,6 +1236,10 @@ namespace SharpDX
             localQuery.ResultCode.CheckError();
             comObject.NativePointer = localQuery.IUnknownPointer;
         }
+#endif
+
+
+
 #else
         [DllImport("ole32.dll", ExactSpelling = true, EntryPoint = "CoCreateInstance", PreserveSig = true)]
         private static extern Result CoCreateInstance([In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid, IntPtr pUnkOuter, CLSCTX dwClsContext, [In, MarshalAs(UnmanagedType.LPStruct)] Guid riid, out IntPtr comObject);
@@ -1237,8 +1277,18 @@ namespace SharpDX
             SpeedOverMemory = 0x8
         }
 
+#if WP8
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        internal delegate bool CloseHandleDelegate(IntPtr handle);
+        private static CloseHandleDelegate closeHandle;
+        internal static CloseHandleDelegate CloseHandle
+        {
+            get { return closeHandle ?? (closeHandle = (CloseHandleDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.CloseHandle()), typeof(CloseHandleDelegate))); }
+        }
+#else
         [DllImport("kernel32.dll", EntryPoint = "CloseHandle", SetLastError = true)]
         internal static extern bool CloseHandle(IntPtr handle);
+#endif
 
         /// <summary>
         /// Loads a native library.
@@ -1254,7 +1304,15 @@ namespace SharpDX
             return result;
         }
 
-#if W8CORE
+#if WP8
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        private delegate IntPtr LoadLibraryDelegate([MarshalAs(UnmanagedType.LPWStr)] string lpFileName, int reserved = 0);
+        private static LoadLibraryDelegate loadLibrary_;
+        private static LoadLibraryDelegate LoadLibrary_
+        {
+            get { return loadLibrary_ ?? (loadLibrary_ = (LoadLibraryDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.LoadPackagedLibrary()), typeof(LoadLibraryDelegate))); }
+        }
+#elif WIN8METRO
         [DllImport("kernel32", EntryPoint = "LoadPackagedLibrary", SetLastError = true)]
         static extern IntPtr LoadLibrary_(string lpFileName, int reserved = 0);
 #else
@@ -1276,8 +1334,19 @@ namespace SharpDX
                 throw new SharpDXException(dllFunctionToImport);
             return result;
         }
+
+#if WP8
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        private delegate IntPtr GetProcAddressDelegate(IntPtr hModule, [MarshalAs(UnmanagedType.LPWStr)] string procName);
+        private static GetProcAddressDelegate getProcAddress_;
+        private static GetProcAddressDelegate GetProcAddress_
+        {
+            get { return getProcAddress_ ?? (getProcAddress_ = (GetProcAddressDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.GetProcAddress()), typeof(GetProcAddressDelegate))); }
+        }
+#else
         [DllImport("kernel32", EntryPoint = "GetProcAddress", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
         static extern IntPtr GetProcAddress_(IntPtr hModule, string procName);
+#endif
 
         /// <summary>
         /// Compute a FNV1-modified Hash from <a href="http://bretm.home.comcast.net/~bretm/hash/6.html">Fowler/Noll/Vo Hash</a> improved version.

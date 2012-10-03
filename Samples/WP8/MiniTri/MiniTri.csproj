@@ -121,7 +121,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SplashScreenImage.jpg" />
+    <Content Include="SplashScreenImage.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\AlignmentGrid.png" />
     <Content Include="Assets\ApplicationIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -160,6 +162,14 @@
     <ProjectReference Include="..\..\..\Source\SharpDX.DXGI\SharpDX.DXGI.csproj">
       <Project>{3FC6DE77-B412-4101-9E64-6B9AA831179B}</Project>
       <Name>SharpDX.DXGI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Source\SharpDX.XAudio2\SharpDX.XAudio2.csproj">
+      <Project>{4995127E-0B8E-45B8-80C4-6BAC1BBE3783}</Project>
+      <Name>SharpDX.XAudio2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Source\SharpDX.MediaFoundation\SharpDX.MediaFoundation.csproj">
+      <Project>{CA21A201-078B-4EBE-A2AB-C3B1FFEC99F9}</Project>
+      <Name>SharpDX.MediaFoundation</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />

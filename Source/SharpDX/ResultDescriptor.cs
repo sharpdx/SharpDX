@@ -259,7 +259,18 @@ namespace SharpDX
             return description;
         }
 
+#if WP8
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        private delegate uint FormatMessageWDelegate(int dwFlags, IntPtr lpSource, int dwMessageId, int dwLanguageId, ref IntPtr lpBuffer, int nSize, IntPtr Arguments);
+        private static FormatMessageWDelegate formatMessageW;
+        private static FormatMessageWDelegate FormatMessageW
+        {
+            get { return formatMessageW ?? (formatMessageW = (FormatMessageWDelegate) Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.FormatMessageW()), typeof (FormatMessageWDelegate))); }
+        }
+#else
         [DllImport("kernel32.dll", EntryPoint = "FormatMessageW")]
         private static extern uint FormatMessageW(int dwFlags, IntPtr lpSource, int dwMessageId, int dwLanguageId, ref IntPtr lpBuffer, int nSize, IntPtr Arguments);
+#endif
+
     }
 }

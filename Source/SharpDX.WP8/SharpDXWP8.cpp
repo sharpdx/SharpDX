@@ -9,6 +9,20 @@ Interop::Interop()
 {
 }
 
+// Win32
+IntPtr32 Interop::CoCreateInstanceFromApp() { return (IntPtr32)::CoCreateInstanceFromApp;}
+IntPtr32 Interop::LoadPackagedLibrary() { return (IntPtr32)::LoadPackagedLibrary;}
+IntPtr32 Interop::GetProcAddress() { return (IntPtr32)::GetProcAddress;}
+IntPtr32 Interop::CreateFile2() { return (IntPtr32)::CreateFile2;}
+IntPtr32 Interop::ReadFile() { return (IntPtr32)::ReadFile;}
+IntPtr32 Interop::FlushFileBuffers() { return (IntPtr32)::FlushFileBuffers;}
+IntPtr32 Interop::WriteFile() { return (IntPtr32)::WriteFile;}
+IntPtr32 Interop::SetFilePointerEx() { return (IntPtr32)::SetFilePointerEx;}
+IntPtr32 Interop::GetFileInformationByHandleEx() { return (IntPtr32)::GetFileInformationByHandleEx;}
+IntPtr32 Interop::FormatMessageW() { return (IntPtr32)::FormatMessageW;}
+IntPtr32 Interop::CloseHandle() { return (IntPtr32)::CloseHandle;}
+IntPtr32 Interop::SetEndOfFile() { return (IntPtr32)::SetEndOfFile;}
+
 // D3D11
 IntPtr32 Interop::D3D11CreateDevice() { return (IntPtr32)::D3D11CreateDevice;}
 // DXGI

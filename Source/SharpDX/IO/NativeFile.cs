@@ -88,7 +88,6 @@ namespace SharpDX.IO
                 }
             }
         }
-
 #if W8CORE
         internal struct CREATEFILE2_EXTENDED_PARAMETERS
         {
@@ -100,99 +99,6 @@ namespace SharpDX.IO
             public IntPtr hTemplateFile;
         };
 
-        /// <summary>
-        /// Creates the specified lp file name.
-        /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        /// <param name="desiredAccess">The desired access.</param>
-        /// <param name="shareMode">The share mode.</param>
-        /// <param name="mode">The creation disposition.</param>
-        /// <param name="extendedParameters">The extended parameters.</param>
-        /// <returns>A handle to the created file. IntPtr.Zero if failed.</returns>
-        /// <unmanaged>CreateFile2</unmanaged>
-        [DllImport("kernel32.dll", EntryPoint = "CreateFile2", SetLastError = true, CharSet = CharSet.Unicode)]
-        internal static extern IntPtr Create(
-            string fileName,
-            NativeFileAccess desiredAccess,
-            NativeFileShare shareMode,
-            NativeFileMode mode,
-            IntPtr extendedParameters);
-#else
-        /// <summary>
-        /// Creates the file.
-        /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        /// <param name="desiredAccess">The desired access.</param>
-        /// <param name="shareMode">The share mode.</param>
-        /// <param name="securityAttributes">The security attributes.</param>
-        /// <param name="mode">The creation disposition.</param>
-        /// <param name="flagsAndOptions">The flags and attributes.</param>
-        /// <param name="templateFile">The template file.</param>
-        /// <returns>A handle to the created file. IntPtr.Zero if failed.</returns>
-        /// <unmanaged>CreateFile</unmanaged>
-        [DllImport("kernel32.dll", EntryPoint = "CreateFile", SetLastError = true, CharSet = CharSet.Ansi)]
-        internal static extern IntPtr Create(
-            string fileName,
-            NativeFileAccess desiredAccess,
-            NativeFileShare shareMode,
-            IntPtr securityAttributes,
-            NativeFileMode mode,
-            NativeFileOptions flagsAndOptions,
-            IntPtr templateFile);
-#endif
-
-        /// <summary>
-        /// Reads to a file.
-        /// </summary>
-        /// <param name="fileHandle">The file handle.</param>
-        /// <param name="buffer">The buffer.</param>
-        /// <param name="numberOfBytesToRead">The number of bytes to read.</param>
-        /// <param name="numberOfBytesRead">The number of bytes read.</param>
-        /// <param name="overlapped">The overlapped.</param>
-        /// <returns>A Result</returns>
-        /// <unmanaged>ReadFile</unmanaged>
-        [DllImport("kernel32.dll", EntryPoint = "ReadFile", SetLastError = true, CharSet = CharSet.Ansi)]
-        internal static extern bool ReadFile(IntPtr fileHandle, IntPtr buffer, int numberOfBytesToRead, out int numberOfBytesRead, IntPtr overlapped);
-
-
-        [DllImport("kernel32.dll", EntryPoint = "FlushFileBuffers", SetLastError = true)]
-        internal static extern bool FlushFileBuffers(IntPtr hFile);
-
-        /// <summary>
-        /// Writes to a file.
-        /// </summary>
-        /// <param name="fileHandle">The file handle.</param>
-        /// <param name="buffer">The buffer.</param>
-        /// <param name="numberOfBytesToRead">The number of bytes to read.</param>
-        /// <param name="numberOfBytesRead">The number of bytes read.</param>
-        /// <param name="overlapped">The overlapped.</param>
-        /// <returns>A Result</returns>
-        /// <unmanaged>WriteFile</unmanaged>
-        [DllImport("kernel32.dll", EntryPoint = "WriteFile", SetLastError = true, CharSet = CharSet.Ansi)]
-        internal static extern bool WriteFile(IntPtr fileHandle, IntPtr buffer, int numberOfBytesToRead, out int numberOfBytesRead, IntPtr overlapped);
-
-        /// <summary>
-        /// Sets the file pointer.
-        /// </summary>
-        /// <param name="handle">The handle.</param>
-        /// <param name="distanceToMove">The distance to move.</param>
-        /// <param name="distanceToMoveHigh">The distance to move high.</param>
-        /// <param name="seekOrigin">The seek origin.</param>
-        /// <returns></returns>
-        /// <unmanaged>SetFilePointerEx</unmanaged>
-        [DllImport("kernel32.dll", EntryPoint = "SetFilePointerEx", SetLastError = true, CharSet = CharSet.Ansi)]
-        internal static extern bool SetFilePointerEx(IntPtr handle, long distanceToMove, out long distanceToMoveHigh, SeekOrigin seekOrigin);
-
-        /// <summary>
-        /// Sets the end of file.
-        /// </summary>
-        /// <param name="handle">The handle.</param>
-        /// <returns></returns>
-        /// <unmanaged>SetEndOfFile</unmanaged>
-        [DllImport("kernel32.dll", EntryPoint = "SetEndOfFile", SetLastError = true, CharSet = CharSet.Ansi)]
-        internal static extern bool SetEndOfFile(IntPtr handle);
-
-#if W8CORE
 
         private enum FILE_INFO_BY_HANDLE_CLASS : int
         {
@@ -241,9 +147,6 @@ namespace SharpDX.IO
             public int Directory;
         };
 
-        [DllImport("kernel32.dll", EntryPoint = "GetFileInformationByHandleEx", SetLastError = true, CharSet = CharSet.Ansi)]
-        private static extern bool GetFileInformationByHandleEx(IntPtr handle, FILE_INFO_BY_HANDLE_CLASS FileInformationClass, IntPtr lpFileInformation, int dwBufferSize);
-
         /// <summary>
         /// Gets the size of the file.
         /// </summary>
@@ -261,8 +164,145 @@ namespace SharpDX.IO
                 return result;
             }
         }
+#endif
 
+#if WP8
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        internal delegate bool ReadFileDelegate(IntPtr fileHandle, IntPtr buffer, int numberOfBytesToRead, out int numberOfBytesRead, IntPtr overlapped);
+        internal static readonly ReadFileDelegate ReadFile;
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        internal delegate bool FlushFileBuffersDelegate(IntPtr hFile);
+        internal static readonly FlushFileBuffersDelegate FlushFileBuffers;
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        internal delegate bool WriteFileDelegate(IntPtr fileHandle, IntPtr buffer, int numberOfBytesToRead, out int numberOfBytesRead, IntPtr overlapped);
+        internal static readonly WriteFileDelegate WriteFile;
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        internal delegate bool SetFilePointerExDelegate(IntPtr handle, long distanceToMove, out long distanceToMoveHigh, SeekOrigin seekOrigin);
+        internal static readonly SetFilePointerExDelegate SetFilePointerEx;
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        internal delegate bool SetEndOfFileDelegate(IntPtr handle);
+        internal static readonly SetEndOfFileDelegate SetEndOfFile;
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        internal delegate IntPtr CreateDelegate([MarshalAs(UnmanagedType.LPWStr)] string fileName, NativeFileAccess desiredAccess, NativeFileShare shareMode, NativeFileMode mode, IntPtr extendedParameters);
+        internal static readonly CreateDelegate Create;
+
+        private delegate bool GetFileInformationByHandleExDelegate(IntPtr handle, FILE_INFO_BY_HANDLE_CLASS FileInformationClass, IntPtr lpFileInformation, int dwBufferSize);
+        private static readonly GetFileInformationByHandleExDelegate GetFileInformationByHandleEx;
+
+        static NativeFile()
+        {
+            // Initialize all the DllImports at once, since we are going to use all of them anyway.
+            ReadFile = (ReadFileDelegate) Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.ReadFile()), typeof (ReadFileDelegate));
+            FlushFileBuffers = (FlushFileBuffersDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.FlushFileBuffers()), typeof(FlushFileBuffersDelegate));
+            WriteFile = (WriteFileDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.WriteFile()), typeof(WriteFileDelegate));
+            SetFilePointerEx = (SetFilePointerExDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.SetFilePointerEx()), typeof(SetFilePointerExDelegate));
+            SetEndOfFile = (SetEndOfFileDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.SetEndOfFile()), typeof(SetEndOfFileDelegate));
+            Create = (CreateDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.CreateFile2()), typeof(CreateDelegate));
+            GetFileInformationByHandleEx = (GetFileInformationByHandleExDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.GetFileInformationByHandleEx()), typeof(GetFileInformationByHandleExDelegate));
+        }
 #else
+    /// <summary>
+    /// Reads to a file.
+    /// </summary>
+    /// <param name="fileHandle">The file handle.</param>
+    /// <param name="buffer">The buffer.</param>
+    /// <param name="numberOfBytesToRead">The number of bytes to read.</param>
+    /// <param name="numberOfBytesRead">The number of bytes read.</param>
+    /// <param name="overlapped">The overlapped.</param>
+    /// <returns>A Result</returns>
+    /// <unmanaged>ReadFile</unmanaged>
+        [DllImport("kernel32.dll", EntryPoint = "ReadFile", SetLastError = true, CharSet = CharSet.Ansi)]
+        internal static extern bool ReadFile(IntPtr fileHandle, IntPtr buffer, int numberOfBytesToRead, out int numberOfBytesRead, IntPtr overlapped);
+
+
+        [DllImport("kernel32.dll", EntryPoint = "FlushFileBuffers", SetLastError = true)]
+        internal static extern bool FlushFileBuffers(IntPtr hFile);
+
+        /// <summary>
+        /// Writes to a file.
+        /// </summary>
+        /// <param name="fileHandle">The file handle.</param>
+        /// <param name="buffer">The buffer.</param>
+        /// <param name="numberOfBytesToRead">The number of bytes to read.</param>
+        /// <param name="numberOfBytesRead">The number of bytes read.</param>
+        /// <param name="overlapped">The overlapped.</param>
+        /// <returns>A Result</returns>
+        /// <unmanaged>WriteFile</unmanaged>
+        [DllImport("kernel32.dll", EntryPoint = "WriteFile", SetLastError = true, CharSet = CharSet.Ansi)]
+        internal static extern bool WriteFile(IntPtr fileHandle, IntPtr buffer, int numberOfBytesToRead, out int numberOfBytesRead, IntPtr overlapped);
+
+        /// <summary>
+        /// Sets the file pointer.
+        /// </summary>
+        /// <param name="handle">The handle.</param>
+        /// <param name="distanceToMove">The distance to move.</param>
+        /// <param name="distanceToMoveHigh">The distance to move high.</param>
+        /// <param name="seekOrigin">The seek origin.</param>
+        /// <returns></returns>
+        /// <unmanaged>SetFilePointerEx</unmanaged>
+        [DllImport("kernel32.dll", EntryPoint = "SetFilePointerEx", SetLastError = true, CharSet = CharSet.Ansi)]
+        internal static extern bool SetFilePointerEx(IntPtr handle, long distanceToMove, out long distanceToMoveHigh, SeekOrigin seekOrigin);
+
+        /// <summary>
+        /// Sets the end of file.
+        /// </summary>
+        /// <param name="handle">The handle.</param>
+        /// <returns></returns>
+        /// <unmanaged>SetEndOfFile</unmanaged>
+        [DllImport("kernel32.dll", EntryPoint = "SetEndOfFile", SetLastError = true, CharSet = CharSet.Ansi)]
+        internal static extern bool SetEndOfFile(IntPtr handle);
+
+#if W8CORE
+
+        /// <summary>
+        /// Creates the specified lp file name.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="desiredAccess">The desired access.</param>
+        /// <param name="shareMode">The share mode.</param>
+        /// <param name="mode">The creation disposition.</param>
+        /// <param name="extendedParameters">The extended parameters.</param>
+        /// <returns>A handle to the created file. IntPtr.Zero if failed.</returns>
+        /// <unmanaged>CreateFile2</unmanaged>
+        [DllImport("kernel32.dll", EntryPoint = "CreateFile2", SetLastError = true, CharSet = CharSet.Unicode)]
+        internal static extern IntPtr Create(
+            string fileName,
+            NativeFileAccess desiredAccess,
+            NativeFileShare shareMode,
+            NativeFileMode mode,
+            IntPtr extendedParameters);
+
+
+        [DllImport("kernel32.dll", EntryPoint = "GetFileInformationByHandleEx", SetLastError = true, CharSet = CharSet.Ansi)]
+        private static extern bool GetFileInformationByHandleEx(IntPtr handle, FILE_INFO_BY_HANDLE_CLASS FileInformationClass, IntPtr lpFileInformation, int dwBufferSize);
+#else
+        /// <summary>
+        /// Creates the file.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="desiredAccess">The desired access.</param>
+        /// <param name="shareMode">The share mode.</param>
+        /// <param name="securityAttributes">The security attributes.</param>
+        /// <param name="mode">The creation disposition.</param>
+        /// <param name="flagsAndOptions">The flags and attributes.</param>
+        /// <param name="templateFile">The template file.</param>
+        /// <returns>A handle to the created file. IntPtr.Zero if failed.</returns>
+        /// <unmanaged>CreateFile</unmanaged>
+        [DllImport("kernel32.dll", EntryPoint = "CreateFile", SetLastError = true, CharSet = CharSet.Ansi)]
+        internal static extern IntPtr Create(
+            string fileName,
+            NativeFileAccess desiredAccess,
+            NativeFileShare shareMode,
+            IntPtr securityAttributes,
+            NativeFileMode mode,
+            NativeFileOptions flagsAndOptions,
+            IntPtr templateFile);
+
         /// <summary>
         /// Gets the size of the file.
         /// </summary>
@@ -272,7 +312,10 @@ namespace SharpDX.IO
         /// <unmanaged>GetFileSizeEx</unmanaged>
         [DllImport("kernel32.dll", EntryPoint = "GetFileSizeEx", SetLastError = true, CharSet = CharSet.Ansi)]
         internal static extern bool GetFileSizeEx(IntPtr handle, out long fileSize);
+
 #endif
+#endif
+        // END WP8
 
     }
 }

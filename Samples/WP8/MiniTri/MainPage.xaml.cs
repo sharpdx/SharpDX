@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
@@ -16,6 +17,9 @@ using Microsoft.Phone.Controls;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX;
+using SharpDX.IO;
+using SharpDX.MediaFoundation;
+using Color = SharpDX.Color;
 
 namespace MiniTriApp
 {
@@ -23,12 +27,13 @@ namespace MiniTriApp
     {
         protected DrawingSurfaceRuntimeHost Host;
         protected Device CurrentDevice;
+        private Stopwatch clock;
 
         public override void Connect(DrawingSurfaceRuntimeHost host, Device device)
         {
             this.Host = host;
             this.CurrentDevice = device;
-
+            clock = Stopwatch.StartNew();
         }
 
         public override void Disconnect()
@@ -45,7 +50,10 @@ namespace MiniTriApp
             if (CurrentDevice != device)
                 CurrentDevice = device;
 
-            context.ClearRenderTargetView(renderTargetView, new Color4(DateTime.Now.Second / 60.0f));
+            var color = Color.CornflowerBlue;
+            color = Color.AdjustContrast(color, .5f + .5f*(float) Math.Sin(clock.ElapsedMilliseconds/500.0f));
+
+            context.ClearRenderTargetView(renderTargetView, color);
 
             Host.RequestAdditionalFrame();
         }
@@ -63,6 +71,20 @@ namespace MiniTriApp
             InitializeComponent();
 
             var device = new Device(DriverType.Hardware);
+            device.Dispose();
+
+            var audio2 = new SharpDX.XAudio2.XAudio2();
+            var data = audio2.PerformanceData;
+
+            var mfactory = new MediaEngineClassFactory();
+            var mengine = new MediaEngine(mfactory);
+
+            var path = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
+
+            var test = NativeFile.ReadAllBytes(path + @"\SplashScreenImage.jpg");
+
+            
+
 
             DrawingSurfaceBackground.SetBackgroundContentProvider(background);
             //DrawingSurfaceBackground.SetBackgroundManipulationHandler(m_d3dBackground);

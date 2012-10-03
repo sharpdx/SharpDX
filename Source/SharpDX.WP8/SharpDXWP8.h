@@ -12,7 +12,19 @@ namespace SharpDX
 		private:
 			Interop();
 		public:
-
+			// COM
+			static IntPtr32 CoCreateInstanceFromApp();
+			static IntPtr32 LoadPackagedLibrary();
+			static IntPtr32 GetProcAddress();
+			static IntPtr32 CreateFile2();
+			static IntPtr32 ReadFile();
+			static IntPtr32 FlushFileBuffers();
+			static IntPtr32 WriteFile();
+			static IntPtr32 SetFilePointerEx();
+			static IntPtr32 GetFileInformationByHandleEx();
+			static IntPtr32 FormatMessageW();
+			static IntPtr32 CloseHandle();
+			static IntPtr32 SetEndOfFile();
 			// D3D11
 			static IntPtr32 D3D11CreateDevice();
 			// DXGI

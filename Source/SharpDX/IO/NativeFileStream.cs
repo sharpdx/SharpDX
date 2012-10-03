@@ -80,7 +80,7 @@ namespace SharpDX.IO
 #endif
             if (handle == new IntPtr(-1))
             {
-                var lastWin32Error = Marshal.GetLastWin32Error();
+                var lastWin32Error = MarshalGetLastWin32Error();
                 if (lastWin32Error == 2)
                 {
                     throw new FileNotFoundException("Unable to find file", fileName);
@@ -89,7 +89,6 @@ namespace SharpDX.IO
                 var lastError = Result.GetResultFromWin32Error(lastWin32Error);
                 throw new IOException(string.Format(CultureInfo.InvariantCulture, "Unable to open file {0}", fileName), lastError.Code);
             }
-
             canRead = 0 != (access & NativeFileAccess.Read);
             canWrite = 0 != (access & NativeFileAccess.Write);
 
@@ -98,12 +97,20 @@ namespace SharpDX.IO
             canSeek = true;
 
         }
+        private static int MarshalGetLastWin32Error()
+        {
+#if WP8
+            return 0;
+#else
+            return Marshal.GetLastWin32Error();
+#endif
+        }
 
         /// <inheritdoc/>
         public override void Flush()
         {
             if (!NativeFile.FlushFileBuffers(handle))
-                throw new IOException("Unable to flush stream", Marshal.GetLastWin32Error());
+                throw new IOException("Unable to flush stream", MarshalGetLastWin32Error());
         }
 
         /// <inheritdoc/>
@@ -111,7 +118,7 @@ namespace SharpDX.IO
         {
             long newPosition;
             if (!NativeFile.SetFilePointerEx(handle, offset, out newPosition, origin))
-                throw new IOException("Unable to seek to this position", Marshal.GetLastWin32Error());
+                throw new IOException("Unable to seek to this position", MarshalGetLastWin32Error());
             position = newPosition;
             return position;
         }
@@ -121,9 +128,9 @@ namespace SharpDX.IO
         {
             long newPosition;
             if (!NativeFile.SetFilePointerEx(handle, value, out newPosition, SeekOrigin.Begin))
-                throw new IOException("Unable to seek to this position", Marshal.GetLastWin32Error());
+                throw new IOException("Unable to seek to this position", MarshalGetLastWin32Error());
             if (!NativeFile.SetEndOfFile(handle))
-                throw new IOException("Unable to set the new length", Marshal.GetLastWin32Error());
+                throw new IOException("Unable to set the new length", MarshalGetLastWin32Error());
 
             if (position < value)
             {
@@ -167,7 +174,7 @@ namespace SharpDX.IO
                 void* pbuffer = (byte*) buffer + offset;
                 {
                     if (!NativeFile.ReadFile(handle, (IntPtr)pbuffer, count, out numberOfBytesRead, IntPtr.Zero))
-                        throw new IOException("Unable to read from file", Marshal.GetLastWin32Error());
+                        throw new IOException("Unable to read from file", MarshalGetLastWin32Error());
                 }
                 position += numberOfBytesRead;
             }
@@ -204,7 +211,7 @@ namespace SharpDX.IO
                 void* pbuffer = (byte*) buffer + offset;
                 {
                     if (!NativeFile.WriteFile(handle, (IntPtr)pbuffer, count, out numberOfBytesWritten, IntPtr.Zero))
-                        throw new IOException("Unable to write to file", Marshal.GetLastWin32Error());
+                        throw new IOException("Unable to write to file", MarshalGetLastWin32Error());
                 }
                 position += numberOfBytesWritten;
             }
@@ -244,7 +251,7 @@ namespace SharpDX.IO
             {
                 long length;
                 if (!NativeFile.GetFileSizeEx(handle, out length))
-                    throw new IOException("Unable to get file length", Marshal.GetLastWin32Error());
+                    throw new IOException("Unable to get file length", MarshalGetLastWin32Error());
                 return length;
             }
         }
