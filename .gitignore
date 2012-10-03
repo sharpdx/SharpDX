@@ -24,9 +24,11 @@ Thumbs.db
 [Dd]ebug*/
 *.lib
 *.sbr
+*.nogit
 *.nupkg
 *.zip
 *.sdf
+*.opensdf
 *.suo
 *.dotCover
 sdk-include/
