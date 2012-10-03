@@ -36,14 +36,14 @@ namespace SharpDX.MediaFoundation
         /// <unmanaged-short>IMFMediaEngineEx::SetSourceFromByteStream</unmanaged-short>	
         public void SetSourceFromByteStream(ByteStream byteStream, string url)
         {
-            var bstrUrl = Marshal.StringToBSTR(url);
+            var bstrUrl = Utilities.StringToHGlobalUni(url);
             try
             {
                 //var urlBstr = Marshal.StringToBSTR(url);
                 SetSourceFromByteStream_(byteStream.NativePointer, bstrUrl);
             } finally
             {
-                Marshal.FreeBSTR(bstrUrl);
+                Marshal.FreeHGlobal(bstrUrl);
             }
         }
     }

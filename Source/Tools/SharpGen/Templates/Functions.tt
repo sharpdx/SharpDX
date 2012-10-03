@@ -75,7 +75,7 @@ foreach (var sharpFunctionGroup in Namespace.Classes)
             get
             {
                 if (<#= sharpFunction.CppElementName #>__ == null)
-                    <#= sharpFunction.CppElementName #>__ = (<#= sharpFunction.CppElementName #>Delegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDXWP8.Interop.<#= sharpFunction.CppElementName #>()), typeof (<#= sharpFunction.CppElementName #>Delegate));
+                    <#= sharpFunction.CppElementName #>__ = (<#= sharpFunction.CppElementName #>Delegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.<#= sharpFunction.CppElementName #>()), typeof (<#= sharpFunction.CppElementName #>Delegate));
                 return <#= sharpFunction.CppElementName #>__;
             }
         }

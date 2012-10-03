@@ -1,6 +1,6 @@
-﻿using PhoneDirect3DXamlAppInterop.Resources;
+﻿using MiniTriApp.Resources;
 
-namespace PhoneDirect3DXamlAppInterop
+namespace MiniTriApp
 {
     /// <summary>
     /// Provides access to string resources.

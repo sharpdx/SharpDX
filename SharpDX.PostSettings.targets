@@ -10,9 +10,9 @@
   <Import Condition="'$(SharpDXWin8)' == 'false'" Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!--Include automatically SharpDXWP8 interop assembly-->
   <ItemGroup>
-    <ProjectReference Condition="'$(SharpDXWP8)' == 'true'" Include="$(SolutionDir)Source\SharpDXWP8\SharpDXWP8.vcxproj">
-      <Project>{c6ae9847-3089-4fe4-91df-b1a3ee115cf4}</Project>
-      <Name>SharpDXWP8</Name>
+    <ProjectReference Condition="'$(SharpDXWP8)' == 'true'" Include="$(SolutionDir)Source\SharpDX.WP8\SharpDX.WP8.vcxproj">
+      <!--<Project>{c6ae9847-3089-4fe4-91df-b1a3ee115cf4}</Project>-->
+      <Name>SharpDX.WP8</Name>
     </ProjectReference>
   </ItemGroup>
 
@@ -22,7 +22,6 @@
   <!--Import Windows Phone 8 targets only for WP8 -->
   <Import Condition="'$(SharpDXWP8)' == 'true'" Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Condition="'$(SharpDXWP8)' == 'true'" Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
-
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DocumentationFile>bin\Release\$(AssemblyName).xml</DocumentationFile>

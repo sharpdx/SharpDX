@@ -112,8 +112,13 @@
       <file>SharpDX.Direct3D10\Mapping.xml</file>
     </ifndef>
   </ifndef>
-
+  
   <file>SharpDX.Direct3D11\Mapping.xml</file>
+
+  <ifdef name="WP8">
+    <file>SharpDX.XAudio2\Mapping.xml</file>
+    <file>SharpDX.MediaFoundation\Mapping.xml</file>
+  </ifdef>
 
   <ifndef name="WP8">
     <ifndef name="WIN8METRO">

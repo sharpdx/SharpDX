@@ -9,8 +9,8 @@
     <ProjectTypeGuids>{C089C8C0-30E0-4E22-80C0-CE093F111A43};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PhoneDirect3DXamlAppInterop</RootNamespace>
-    <AssemblyName>PhoneDirect3DXamlAppInterop</AssemblyName>
+    <RootNamespace>MiniTriApp</RootNamespace>
+    <AssemblyName>MiniTri</AssemblyName>
     <TargetFrameworkIdentifier>WindowsPhone</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v8.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
@@ -21,7 +21,7 @@
     <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
     <XapFilename>PhoneDirect3DXamlAppInterop_$(Configuration)_$(Platform).xap</XapFilename>
     <SilverlightManifestTemplate>Properties\AppManifest.xml</SilverlightManifestTemplate>
-    <SilverlightAppEntry>PhoneDirect3DXamlAppInterop.App</SilverlightAppEntry>
+    <SilverlightAppEntry>MiniTriApp.App</SilverlightAppEntry>
     <ValidateXaml>true</ValidateXaml>
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
@@ -149,15 +149,18 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="SharpDX">
-      <HintPath>..\..\..\Source\SharpDX.Direct3D11\bin\WP8Debug\SharpDX.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Direct3D11">
-      <HintPath>..\..\..\Source\SharpDX.Direct3D11\bin\WP8Debug\SharpDX.Direct3D11.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.DXGI">
-      <HintPath>..\..\..\Source\SharpDX.Direct3D11\bin\WP8Debug\SharpDX.DXGI.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\..\..\Source\SharpDX\SharpDX.csproj">
+      <Project>{D0BCD56A-41C4-4A4E-8590-26864CED07FF}</Project>
+      <Name>SharpDX</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Source\SharpDX.Direct3D11\SharpDX.Direct3D11.csproj">
+      <Project>{736DFB52-1AFE-4EFF-9710-89046AB5B1F9}</Project>
+      <Name>SharpDX.Direct3D11</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Source\SharpDX.DXGI\SharpDX.DXGI.csproj">
+      <Project>{3FC6DE77-B412-4101-9E64-6B9AA831179B}</Project>
+      <Name>SharpDX.DXGI</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />

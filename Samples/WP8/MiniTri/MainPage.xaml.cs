@@ -13,10 +13,11 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
+using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX;
 
-namespace PhoneDirect3DXamlAppInterop
+namespace MiniTriApp
 {
     public class MyObject : DrawingSurfaceBackgroundContentProviderNativeBase
     {
@@ -60,6 +61,8 @@ namespace PhoneDirect3DXamlAppInterop
         public MainPage()
         {
             InitializeComponent();
+
+            var device = new Device(DriverType.Hardware);
 
             DrawingSurfaceBackground.SetBackgroundContentProvider(background);
             //DrawingSurfaceBackground.SetBackgroundManipulationHandler(m_d3dBackground);

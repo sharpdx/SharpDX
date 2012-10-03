@@ -17,7 +17,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if WIN8METRO
+#if W8CORE
 using System;
 
 namespace SharpDX.MediaFoundation
@@ -103,7 +103,7 @@ namespace SharpDX.MediaFoundation
                 Set(MediaEngineAttributeKeys.DxgiManager, value);
             }
         }
-
+#if !WP8
         public MediaEngineExtension Extension
         {
             get
@@ -115,7 +115,7 @@ namespace SharpDX.MediaFoundation
                 Set(MediaEngineAttributeKeys.Extension, value);
             }
         }
-
+#endif
         public int VideoOutputFormat
         {
             get

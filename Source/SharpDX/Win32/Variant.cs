@@ -17,7 +17,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if !WP8
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
@@ -120,7 +119,8 @@ namespace SharpDX.Win32
                             case VariantElementType.Double:
                                 return variantValue.doubleValue;
                             case VariantElementType.BinaryString:
-                                return Marshal.PtrToStringBSTR(variantValue.pointerValue);
+                                throw new NotSupportedException();
+                                //return Marshal.PtrToStringBSTR(variantValue.pointerValue);
                             case VariantElementType.StringPointer:
                                 return Marshal.PtrToStringAnsi(variantValue.pointerValue);
                             case VariantElementType.WStringPointer:
@@ -208,10 +208,11 @@ namespace SharpDX.Win32
                                 }
                             case VariantElementType.BinaryString:
                                 {
-                                    var array = new string[size];
-                                    for (int i = 0; i < size; i++)
-                                        array[i] = Marshal.PtrToStringBSTR(((IntPtr*)variantValue.recordValue.RecordPointer)[i]);
-                                    return array;
+                                    throw new NotSupportedException();
+                                    //var array = new string[size];
+                                    //for (int i = 0; i < size; i++)
+                                    //    array[i] = Marshal.PtrToStringBSTR(((IntPtr*)variantValue.recordValue.RecordPointer)[i]);
+                                    //return array;
                                 }
                             case VariantElementType.StringPointer:
                                 {
@@ -387,5 +388,4 @@ namespace SharpDX.Win32
         };
     }
 }
-#endif
 

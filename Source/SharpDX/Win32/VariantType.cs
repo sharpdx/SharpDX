@@ -17,7 +17,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if !WP8
 using System;
 
 namespace SharpDX.Win32
@@ -54,4 +53,3 @@ namespace SharpDX.Win32
         Reserved = 0x8000,
     }
 }
-#endif
