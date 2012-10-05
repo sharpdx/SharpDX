@@ -32,6 +32,9 @@ namespace SharpDX.Direct3D11
         /// <param name="driverType">
         /// Type of the driver.
         /// </param>
+        /// <msdn-id>ff476082</msdn-id>	
+        /// <unmanaged>HRESULT D3D11CreateDevice([In, Optional] IDXGIAdapter* pAdapter,[In] D3D_DRIVER_TYPE DriverType,[In] HINSTANCE Software,[In] D3D11_CREATE_DEVICE_FLAG Flags,[In, Buffer, Optional] const D3D_FEATURE_LEVEL* pFeatureLevels,[In] unsigned int FeatureLevels,[In] unsigned int SDKVersion,[Out, Fast] ID3D11Device** ppDevice,[Out, Optional] D3D_FEATURE_LEVEL* pFeatureLevel,[Out, Optional] ID3D11DeviceContext** ppImmediateContext)</unmanaged>	
+        /// <unmanaged-short>D3D11CreateDevice</unmanaged-short>	
         public Device(DriverType driverType)
             : this(driverType, DeviceCreationFlags.None)
         {
@@ -43,6 +46,9 @@ namespace SharpDX.Direct3D11
         /// <param name="adapter">
         /// The adapter.
         /// </param>
+        /// <msdn-id>ff476082</msdn-id>	
+        /// <unmanaged>HRESULT D3D11CreateDevice([In, Optional] IDXGIAdapter* pAdapter,[In] D3D_DRIVER_TYPE DriverType,[In] HINSTANCE Software,[In] D3D11_CREATE_DEVICE_FLAG Flags,[In, Buffer, Optional] const D3D_FEATURE_LEVEL* pFeatureLevels,[In] unsigned int FeatureLevels,[In] unsigned int SDKVersion,[Out, Fast] ID3D11Device** ppDevice,[Out, Optional] D3D_FEATURE_LEVEL* pFeatureLevel,[Out, Optional] ID3D11DeviceContext** ppImmediateContext)</unmanaged>	
+        /// <unmanaged-short>D3D11CreateDevice</unmanaged-short>	
         public Device(Adapter adapter)
             : this(adapter, DeviceCreationFlags.None)
         {
@@ -53,6 +59,9 @@ namespace SharpDX.Direct3D11
         /// </summary>
         /// <param name="driverType">Type of the driver.</param>
         /// <param name="flags">The flags.</param>
+        /// <msdn-id>ff476082</msdn-id>	
+        /// <unmanaged>HRESULT D3D11CreateDevice([In, Optional] IDXGIAdapter* pAdapter,[In] D3D_DRIVER_TYPE DriverType,[In] HINSTANCE Software,[In] D3D11_CREATE_DEVICE_FLAG Flags,[In, Buffer, Optional] const D3D_FEATURE_LEVEL* pFeatureLevels,[In] unsigned int FeatureLevels,[In] unsigned int SDKVersion,[Out, Fast] ID3D11Device** ppDevice,[Out, Optional] D3D_FEATURE_LEVEL* pFeatureLevel,[Out, Optional] ID3D11DeviceContext** ppImmediateContext)</unmanaged>	
+        /// <unmanaged-short>D3D11CreateDevice</unmanaged-short>	
         public Device(DriverType driverType, DeviceCreationFlags flags)
         {
             CreateDevice(null, driverType, flags, null);
@@ -63,6 +72,9 @@ namespace SharpDX.Direct3D11
         /// </summary>
         /// <param name = "adapter"></param>
         /// <param name = "flags"></param>
+        /// <msdn-id>ff476082</msdn-id>	
+        /// <unmanaged>HRESULT D3D11CreateDevice([In, Optional] IDXGIAdapter* pAdapter,[In] D3D_DRIVER_TYPE DriverType,[In] HINSTANCE Software,[In] D3D11_CREATE_DEVICE_FLAG Flags,[In, Buffer, Optional] const D3D_FEATURE_LEVEL* pFeatureLevels,[In] unsigned int FeatureLevels,[In] unsigned int SDKVersion,[Out, Fast] ID3D11Device** ppDevice,[Out, Optional] D3D_FEATURE_LEVEL* pFeatureLevel,[Out, Optional] ID3D11DeviceContext** ppImmediateContext)</unmanaged>	
+        /// <unmanaged-short>D3D11CreateDevice</unmanaged-short>	
         public Device(Adapter adapter, DeviceCreationFlags flags)
         {
             CreateDevice(adapter, DriverType.Unknown, flags, null);
@@ -74,6 +86,9 @@ namespace SharpDX.Direct3D11
         /// <param name = "driverType"></param>
         /// <param name = "flags"></param>
         /// <param name = "featureLevels"></param>
+        /// <msdn-id>ff476082</msdn-id>	
+        /// <unmanaged>HRESULT D3D11CreateDevice([In, Optional] IDXGIAdapter* pAdapter,[In] D3D_DRIVER_TYPE DriverType,[In] HINSTANCE Software,[In] D3D11_CREATE_DEVICE_FLAG Flags,[In, Buffer, Optional] const D3D_FEATURE_LEVEL* pFeatureLevels,[In] unsigned int FeatureLevels,[In] unsigned int SDKVersion,[Out, Fast] ID3D11Device** ppDevice,[Out, Optional] D3D_FEATURE_LEVEL* pFeatureLevel,[Out, Optional] ID3D11DeviceContext** ppImmediateContext)</unmanaged>	
+        /// <unmanaged-short>D3D11CreateDevice</unmanaged-short>	
         public Device(DriverType driverType, DeviceCreationFlags flags, params FeatureLevel[] featureLevels)
         {
             CreateDevice(null, driverType, flags, featureLevels);
@@ -85,6 +100,9 @@ namespace SharpDX.Direct3D11
         /// <param name = "adapter"></param>
         /// <param name = "flags"></param>
         /// <param name = "featureLevels"></param>
+        /// <msdn-id>ff476082</msdn-id>	
+        /// <unmanaged>HRESULT D3D11CreateDevice([In, Optional] IDXGIAdapter* pAdapter,[In] D3D_DRIVER_TYPE DriverType,[In] HINSTANCE Software,[In] D3D11_CREATE_DEVICE_FLAG Flags,[In, Buffer, Optional] const D3D_FEATURE_LEVEL* pFeatureLevels,[In] unsigned int FeatureLevels,[In] unsigned int SDKVersion,[Out, Fast] ID3D11Device** ppDevice,[Out, Optional] D3D_FEATURE_LEVEL* pFeatureLevel,[Out, Optional] ID3D11DeviceContext** ppImmediateContext)</unmanaged>	
+        /// <unmanaged-short>D3D11CreateDevice</unmanaged-short>	
         public Device(Adapter adapter, DeviceCreationFlags flags, params FeatureLevel[] featureLevels)
         {
             CreateDevice(adapter, DriverType.Unknown, flags, featureLevels);
