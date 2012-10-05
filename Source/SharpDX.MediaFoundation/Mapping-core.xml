@@ -712,7 +712,9 @@
     <map method="IMFAsyncResult::GetStatus" return="true" check="false"/>
 
     <map method="IMFMediaError::GetExtendedErrorCode" check="false"/>
-    
+
+    <map param="IMFSourceReader::.*::pp.*" return="true"/>
+
     <!--
     // *****************************************************************
     // MediaFoundation Functions
@@ -722,6 +724,8 @@
     <remove function="BSTR_.*"/>
     <remove function="HWND_.*"/>
     <remove function="LPSAFEARRAY_.*"/>
+
+    <map param="MFCreateSourceReader.*::pp.*" attribute="out fast"/>
     
     <!-- Remove some functions with unsupported structs -->
     <remove function="MFInitMediaTypeFromVideoInfoHeader" />
@@ -754,6 +758,8 @@
     <map function="MF(.*)" name-tmp="$1"/>
     <map function="MF.*" dll='"Mfplat.dll"' group="SharpDX.MediaFoundation.MediaFactory"/>
     <map function="Create.*" dll='"Temp.dll"' group="SharpDX.MediaFoundation.MediaFactory"/>
+
+    <map function="MFCreateSourceReader.*" dll='"Mfreadwrite.dll"'/>
 
     <context-clear />
   </mapping>

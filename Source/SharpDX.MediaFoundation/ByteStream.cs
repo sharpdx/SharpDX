@@ -19,12 +19,17 @@
 // THE SOFTWARE.
 
 using System;
+using System.IO;
 using System.Runtime.InteropServices;
+using SharpDX.Win32;
 
 namespace SharpDX.MediaFoundation
 {
     public partial class ByteStream
     {
+        private readonly Stream sourceStream;
+        private readonly ComStreamProxy streamProxy;
+
 #if DIRECTX11_1
         /// <summary>
         /// Instantiates a new instance <see cref="ByteStream"/> from a IRandomAccessStream COM object.
@@ -38,6 +43,21 @@ namespace SharpDX.MediaFoundation
             MediaFactory.CreateMFByteStreamOnStreamEx(iRandomAccessStream, this);
         }
 #endif
+        /// <summary>
+        /// Instantiates a new instance <see cref="ByteStream"/> from a <see cref="Stream"/>.
+        /// </summary>
+        /// <msdn-id>hh162754</msdn-id>	
+        /// <unmanaged>HRESULT MFCreateMFByteStreamOnStreamEx([In] IUnknown* punkStream,[Out] IMFByteStream** ppByteStream)</unmanaged>	
+        /// <unmanaged-short>MFCreateMFByteStreamOnStreamEx</unmanaged-short>	
+        public ByteStream(Stream sourceStream)
+        {
+            this.sourceStream = sourceStream;
+            streamProxy = new ComStreamProxy(sourceStream);
+
+            IByteStream localStream;
+            MediaFactory.CreateMFByteStreamOnStream(ComStream.ToIntPtr(streamProxy), out localStream);
+            NativePointer = ((ByteStream) localStream).NativePointer;
+        }
 
         /// <summary>	
         /// <p><strong>Applies to: </strong>desktop apps | Metro style apps</p><p> Retrieves the characteristics of the byte stream. </p>	
@@ -304,6 +324,17 @@ namespace SharpDX.MediaFoundation
         public void Close()
         {
             Close_();
+        }
+
+        protected override unsafe void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (streamProxy != null)
+                    streamProxy.Dispose();
+            }
+            
+            base.Dispose(disposing);
         }
     }
 }
