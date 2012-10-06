@@ -79,6 +79,11 @@ namespace SharpDX
             protected static int QueryInterfaceImpl(IntPtr thisObject, IntPtr guid, out IntPtr output)
             {
                 var shadow = ToShadow<ComObjectShadow>(thisObject);
+                if (shadow == null)
+                {
+                    output = IntPtr.Zero;
+                    return Result.NoInterface.Code;
+                }
                 unsafe
                 {
                     return shadow.QueryInterfaceImpl(thisObject, ref *((Guid*)guid), out output);
@@ -88,12 +93,20 @@ namespace SharpDX
             protected static int AddRefImpl(IntPtr thisObject)
             {
                 var shadow = ToShadow<ComObjectShadow>(thisObject);
+                // The shadow could be null if it is released explicitly
+                // But we are callbacked by a C++ that want to release it.
+                if (shadow == null)
+                    return 0;
                 return shadow.AddRefImpl(thisObject);
             }
 
             protected static int ReleaseImpl(IntPtr thisObject)
             {
                 var shadow = ToShadow<ComObjectShadow>(thisObject);
+                // The shadow could be null if it is released explicitly
+                // But we are callbacked by a C++ that want to release it.
+                if (shadow == null)
+                    return 0;
                 return shadow.ReleaseImpl(thisObject);
             }
         }

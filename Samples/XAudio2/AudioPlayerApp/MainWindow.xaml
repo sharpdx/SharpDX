@@ -1,0 +1,29 @@
+﻿<Window x:Class="AudioPlayerApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Audio Player with SharpDX XAudio2 and MediaFoundation" Height="114" Width="701" Icon="Icons\Logo.ico">
+    <Grid Height="73" VerticalAlignment="Top">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="50*"/>
+            <ColumnDefinition Width="13*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="39*"/>
+            <RowDefinition Height="34*"/>
+        </Grid.RowDefinitions>
+        <Button x:Name="EjectButton" HorizontalAlignment="Left" Margin="10,10,0,5" Width="24" Click="EjectButton_Click" ToolTip="Load a new song">
+            <Image x:Name="EjectButton1" Source="Icons/control_eject.png" />
+        </Button>
+        <ProgressBar x:Name="SoundProgressBar" Margin="68,4,10,0" MouseDown="SoundProgressBar_MouseDown" MouseEnter="SoundProgressBar_MouseEnter" MouseLeave="SoundProgressBar_MouseLeave" MouseMove="SoundProgressBar_MouseMove" MouseUp="SoundProgressBar_MouseUp" Grid.Row="1" Height="24" VerticalAlignment="Top"/>
+        <Button x:Name="PlayPauseButton" HorizontalAlignment="Left" Margin="10,4,0,0" VerticalAlignment="Top" Width="24" Height="24" Click="PlayPauseButton_Click" Grid.Row="1" ToolTip="Play">
+            <Image Source="Icons/control_play.png" />
+        </Button>
+        <Button x:Name="StopButton" HorizontalAlignment="Left" Margin="39,4,0,0" VerticalAlignment="Top" Width="24" Height="24" Click="StopButton_Click" Grid.Row="1" ToolTip="Stop">
+            <Image Source="Icons/control_stop.png" />
+        </Button>
+        <TextBox x:Name="FilePathTextBox" Margin="39,11,10,0" TextWrapping="Wrap" Text="Select an audio or video file with the eject button..." VerticalAlignment="Top" IsEnabled="False" Height="24"/>
+        <TextBox x:Name="TimeSpanTextBox" Margin="10,10,6,0" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Column="1" IsEnabled="False" TextAlignment="Center" Height="24"/>
+        <Slider x:Name="VolumeSlider" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Height="24" Width="123" Maximum="1" LargeChange="0.3" TickPlacement="BottomRight" TickFrequency="0.1" ValueChanged="VolumeSlider_ValueChanged" Value="1" PreviewMouseUp="VolumeSlider_PreviewMouseUp"/>
+
+    </Grid>
+</Window>

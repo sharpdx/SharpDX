@@ -41,7 +41,7 @@ namespace SharpDX.XAudio2
             device.CreateMasteringVoice(this, inputChannels, inputSampleRate, 0, deviceId, null, AudioStreamCategory.GameEffects);
         }
 #else
-        public MasteringVoice(XAudio2 device, int inputChannels = 2, int inputSampleRate = 44100, int deviceIndex = 0)
+        public MasteringVoice(XAudio2 device, int inputChannels = 0, int inputSampleRate = 0, int deviceIndex = 0)
             : base(IntPtr.Zero)
         {
             device.CreateMasteringVoice(this, inputChannels, inputSampleRate, 0, deviceIndex, null);

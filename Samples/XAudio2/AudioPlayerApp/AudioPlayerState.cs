@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,36 +18,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#if DIRECTX11_1
-namespace SharpDX.MediaFoundation
+namespace AudioPlayerApp
 {
-    public partial struct ColorBgra
+    /// <summary>
+    /// State of the audio player.
+    /// </summary>
+    public enum AudioPlayerState
     {
         /// <summary>
-        /// Creates a new instance of <see cref="ColorBgra"/>.
+        /// The player is stopped (default).
         /// </summary>
-        /// <param name="color"></param>
-        public ColorBgra(Color4 color)
-        {
-            // Don't know why, but the colors are mapped differently????
-            // Green => Red
-            // Blue => Green
-            // Red => Blue
-            // Alpha => Alpha
-            color.ToBgra(out Green, out Blue, out Red, out Alpha);
-        }
+        Stopped,
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.Color4"/> to <see cref="ColorBgra"/>.
+        /// The player is playing a sound.
         /// </summary>
-        /// <param name="from">The value.</param>
-        /// <returns>
-        /// The result of the conversion.
-        /// </returns>
-        public static implicit operator ColorBgra(Color4 from)
-        {
-            return new ColorBgra(from);
-        }
+        Playing,
+
+        /// <summary>
+        /// The player is paused.
+        /// </summary>
+        Paused,
     }
 }
-#endif

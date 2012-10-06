@@ -20,15 +20,17 @@
 using System;
 using System.Runtime.InteropServices;
 
+using SharpDX.Serialization;
+
 namespace SharpDX.Multimedia
 {
     /// <summary>
     /// A FourCC descriptor.
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Size = 4)]
-    public struct FourCC : IEquatable<FourCC>
+    public struct FourCC : IEquatable<FourCC>, IDataSerializable
     {
-        private readonly uint value;
+        private uint value;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FourCC" /> struct.
@@ -168,6 +170,11 @@ namespace SharpDX.Multimedia
         public override int GetHashCode()
         {
             return (int) value;
+        }
+
+        public void Serialize(BinarySerializer serializer)
+        {
+            serializer.Serialize(ref value);
         }
 
         public static bool operator ==(FourCC left, FourCC right)

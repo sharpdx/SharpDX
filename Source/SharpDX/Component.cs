@@ -63,6 +63,8 @@ namespace SharpDX
         /// </value>
         protected internal bool IsDisposed { get; private set; }
 
+        protected internal bool IsDisposing { get; private set; }
+
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources
         /// </summary>
@@ -70,6 +72,7 @@ namespace SharpDX
         {
             if (!IsDisposed)
             {
+                IsDisposing = true;
                 Dispose(true);
                 IsDisposed = true;
             }

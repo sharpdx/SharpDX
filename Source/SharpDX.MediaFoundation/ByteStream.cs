@@ -25,12 +25,16 @@ using SharpDX.Win32;
 
 namespace SharpDX.MediaFoundation
 {
+    /// <summary>
+    /// ByteStream class used 
+    /// </summary>
     public partial class ByteStream
     {
         private readonly Stream sourceStream;
+        private readonly ComStream comStream;
         private readonly ComStreamProxy streamProxy;
 
-#if DIRECTX11_1
+#if WIN8METRO
         /// <summary>
         /// Instantiates a new instance <see cref="ByteStream"/> from a IRandomAccessStream COM object.
         /// </summary>
@@ -42,7 +46,7 @@ namespace SharpDX.MediaFoundation
         {
             MediaFactory.CreateMFByteStreamOnStreamEx(iRandomAccessStream, this);
         }
-#endif
+#else
         /// <summary>
         /// Instantiates a new instance <see cref="ByteStream"/> from a <see cref="Stream"/>.
         /// </summary>
@@ -59,6 +63,30 @@ namespace SharpDX.MediaFoundation
             NativePointer = ((ByteStream) localStream).NativePointer;
         }
 
+        /// <summary>
+        /// Instantiates a new instance <see cref="ByteStream"/> from a <see cref="Stream"/>.
+        /// </summary>
+        /// <msdn-id>hh162754</msdn-id>	
+        /// <unmanaged>HRESULT MFCreateMFByteStreamOnStreamEx([In] IUnknown* punkStream,[Out] IMFByteStream** ppByteStream)</unmanaged>	
+        /// <unmanaged-short>MFCreateMFByteStreamOnStreamEx</unmanaged-short>	
+        public ByteStream(byte[] sourceStream) : this(new MemoryStream(sourceStream))
+        {
+        }
+
+        /// <summary>
+        /// Instantiates a new instance <see cref="ByteStream"/> from a <see cref="Stream"/>.
+        /// </summary>
+        /// <msdn-id>hh162754</msdn-id>	
+        /// <unmanaged>HRESULT MFCreateMFByteStreamOnStreamEx([In] IUnknown* punkStream,[Out] IMFByteStream** ppByteStream)</unmanaged>	
+        /// <unmanaged-short>MFCreateMFByteStreamOnStreamEx</unmanaged-short>	
+        public ByteStream(ComStream sourceStream)
+        {
+            this.comStream = sourceStream;
+            IByteStream localStream;
+            MediaFactory.CreateMFByteStreamOnStream(sourceStream.NativePointer, out localStream);
+            NativePointer = ((ByteStream)localStream).NativePointer;
+        }
+#endif
         /// <summary>	
         /// <p><strong>Applies to: </strong>desktop apps | Metro style apps</p><p> Retrieves the characteristics of the byte stream. </p>	
         /// </summary>	
@@ -328,13 +356,13 @@ namespace SharpDX.MediaFoundation
 
         protected override unsafe void Dispose(bool disposing)
         {
+            base.Dispose(disposing);
+
             if (disposing)
             {
                 if (streamProxy != null)
                     streamProxy.Dispose();
-            }
-            
-            base.Dispose(disposing);
+            }            
         }
     }
 }

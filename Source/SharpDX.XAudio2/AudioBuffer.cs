@@ -26,6 +26,35 @@ namespace SharpDX.XAudio2
         private DataStream _dataStream;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="AudioBuffer" /> class.
+        /// </summary>
+        public AudioBuffer()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AudioBuffer" /> class.
+        /// </summary>
+        /// <param name="stream">The stream to get the audio buffer from.</param>
+        public AudioBuffer(DataStream stream)
+        {
+            Stream = stream;
+            Flags = BufferFlags.EndOfStream;
+            AudioBytes = (int)stream.Length;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AudioBuffer" /> class.
+        /// </summary>
+        /// <param name="dataBuffer">The buffer to get the audio buffer from.</param>
+        public AudioBuffer(DataPointer dataBuffer)
+        {
+            AudioDataPointer = dataBuffer.Pointer;
+            Flags = BufferFlags.EndOfStream;
+            AudioBytes = dataBuffer.Size;
+        }
+
+        /// <summary>
         /// Gets or sets the datastream associated to this audio buffer
         /// </summary>
         /// <value>The stream.</value>

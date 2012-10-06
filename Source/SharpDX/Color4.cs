@@ -791,6 +791,26 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Performs an explicit conversion from <see cref="SharpDX.Vector3"/> to <see cref="SharpDX.Color4"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static explicit operator Color4(ColorBGRA value)
+        {
+            return new Color4(value.R, value.G, value.B, value.A);
+        }
+
+        /// <summary>
+        /// Performs an explicit conversion from <see cref="SharpDX.Vector4"/> to <see cref="SharpDX.Color4"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static explicit operator ColorBGRA(Color4 value)
+        {
+            return new ColorBGRA(value.Red, value.Green, value.Blue, value.Alpha);
+        }
+
+        /// <summary>
         /// Performs an explicit conversion from <see cref="SharpDX.Color4"/> to <see cref="System.Int32"/>.
         /// </summary>
         /// <param name="value">The value.</param>

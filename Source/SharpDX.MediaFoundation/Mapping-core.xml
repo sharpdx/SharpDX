@@ -27,6 +27,10 @@
     <depends>sharpdx-dxgi</depends>
   </ifdef>
 
+  <ifndef name="DIRECTX11_1">
+    <depends>sharpdx-direct3d9</depends>
+  </ifndef>
+
   <namespace>SharpDX.MediaFoundation</namespace>
   <assembly>SharpDX.MediaFoundation</assembly>
 
@@ -178,6 +182,12 @@
     <create visibility="public static" class="TopologyNodeAttributeKeys" />
     <create visibility="public static" class="TranscodeAttributeKeys" />
     <create visibility="public static" class="TransformAttributeKeys" />
+
+    <create visibility="public static" class="AudioFormatGuids" />
+    <const from-guid="MFAudioFormat_(.*)" class="SharpDX.MediaFoundation.AudioFormatGuids" type="System.Guid" name="$1">new Guid("$1")</const>
+
+    <create visibility="public static" class="MediaTypeGuids" />
+    <const from-guid="MFMediaType_(.*)" class="SharpDX.MediaFoundation.MediaTypeGuids" type="System.Guid" name="$1">new Guid("$1")</const>
 
     <const from-guid="EVRConfig_AllowBatching" class="SharpDX.MediaFoundation.EVRConfigAttributeKeys" type="MediaAttributeKey&lt;int&gt;" name="AllowBatching">new MediaAttributeKey&lt;int&gt;("$1")</const>
     <const from-guid="EVRConfig_AllowDropToBob" class="SharpDX.MediaFoundation.EVRConfigAttributeKeys" type="MediaAttributeKey&lt;int&gt;" name="AllowDropToBob">new MediaAttributeKey&lt;int&gt;("$1")</const>
@@ -541,7 +551,7 @@
     <const from-guid="MFT_TRANSFORM_CLSID_Attribute" class="SharpDX.MediaFoundation.TransformAttributeKeys" type="MediaAttributeKey&lt;System.Guid&gt;" name="MftTransformClsidAttribute">new MediaAttributeKey&lt;System.Guid&gt;("$1")</const>
     <const from-guid="VIDEO_ZOOM_RECT" class="SharpDX.MediaFoundation.EVRAttributeKeys" type="MediaAttributeKey&lt;byte[]&gt;" name="VideoZoomRect">new MediaAttributeKey&lt;byte[]&gt;("$1")</const>
 
-    <create class="MediaFactory"/>
+    <create class="MediaFactory" visibility="public static"/>
     <const from-macro="MF_VERSION" class="SharpDX.MediaFoundation.MediaFactory" type="int" name="Version" />
 
     <const from-guid="CLSID_MFMediaEngineClassFactory" visibility="internal" class="SharpDX.MediaFoundation.MediaEngineClassFactory" type="System.Guid" name="CLSID_MFMediaEngineClassFactory">new System.Guid("$1")</const>
@@ -554,6 +564,7 @@
     <bind from="MPEG2VIDEOINFO" to="SharpDX.MediaFoundation.Mpeg2VideoInformation"/>
     <bind from="VIDEOINFOHEADER2" to="SharpDX.MediaFoundation.VideoInformationHeader2"/>
     <bind from="RESOURCE_CHARACTERISTICS" to="SharpDX.MediaFoundation.ResourceCharacteristics"/>
+    <bind from="MFARGB" to="SharpDX.ColorBGRA"/>
   </bindings>
 
   <mapping>
@@ -584,6 +595,8 @@
     <map enum="#MF_SOURCE_READER_INVALID_STREAM_INDEX" name="SourceReaderIndex"/>
     <map enum-item="MF_SOURCE_READER_(.*)" name-tmp="$1"/>
 
+    <map enum-item="MF_SOURCE_READERF_(.*)" name-tmp="$1"/>
+
     <map enum="#MF_SINK_WRITER_INVALID_STREAM_INDEX" name="SinkWriterIndex"/>
     <map enum-item="MF_SINK_WRITER_(.*)" name-tmp="$1"/>
 
@@ -607,12 +620,6 @@
     <map struct="MFVideoSurfaceInfo" marshalto="true"/>
 
     <map enum-item="MFVideoRotationFormat_(.*)" name="Angle$1"/>
-
-    <map struct="MFARGB" name="ColorBgra"/>
-    <map field="MFARGB::rgbRed" name="Red"/>
-    <map field="MFARGB::rgbBlue" name="Blue"/>
-    <map field="MFARGB::rgbGreen" name="Green"/>
-    <map field="MFARGB::rgbAlpha" name="Alpha"/>
 
     <!--
     // *****************************************************************
@@ -715,6 +722,22 @@
 
     <map param="IMFSourceReader::.*::pp.*" return="true"/>
 
+    <map method="IMFSourceReader::SetCurrentMediaType" visibility="internal"/>
+    <map param="IMFSourceReader::SetCurrentMediaType::pdwReserved" type="void"/>
+
+    <map param="IMFSourceReader::ReadSample::dwControlFlags" type="MF_SOURCE_READER_CONTROL_FLAG"/>
+    <map param="IMFSourceReader::ReadSample::pdwStreamFlags" type="MF_SOURCE_READER_FLAG"/>
+
+    <map param="IMFSourceReader::GetPresentationAttribute::pvarAttribute" return="true"/>
+
+    <map method="IMFSourceReader::SetCurrentPosition" visibility="internal"/>
+
+    <map param="IMFSample::.*::pp.*" return="true"/>
+
+    <map param="IMFMediaBuffer::Lock::ppbBuffer" type="void" attribute="out" return="true"/>
+
+
+
     <!--
     // *****************************************************************
     // MediaFoundation Functions
@@ -742,9 +765,6 @@
       <remove function="MFCreateProtectedEnvironmentAccess"/>
       <remove function="MFCreateSinkWriterFromMediaSink"/>
       <remove function="MFCreateSinkWriterFromURL"/>
-      <remove function="MFCreateSourceReaderFromByteStream"/>
-      <remove function="MFCreateSourceReaderFromMediaSource"/>
-      <remove function="MFCreateSourceReaderFromURL"/>
       <remove function="MFGetLocalId"/>
       <remove function="MFGetService"/>
       <remove function="MFGetSystemId"/>
@@ -755,11 +775,18 @@
     <map param="MFCreateDXGIDeviceManager::ppDeviceManager" attribute="out fast"/>
     <map param="MFCreateMFByteStreamOnStreamEx::ppByteStream" attribute="out fast"/>
 
+    <map function="MFAddPeriodicCallback" visibility="internal"/>
+
     <map function="MF(.*)" name-tmp="$1"/>
     <map function="MF.*" dll='"Mfplat.dll"' group="SharpDX.MediaFoundation.MediaFactory"/>
     <map function="Create.*" dll='"Temp.dll"' group="SharpDX.MediaFoundation.MediaFactory"/>
 
     <map function="MFCreateSourceReader.*" dll='"Mfreadwrite.dll"'/>
+
+    <map function="MFCreateWaveFormatExFromMFMediaType" visibility="internal"/>
+    <map param="MFCreateWaveFormatExFromMFMediaType::ppWF" type="void"/>
+    
+    <map param="MFCreateMediaType::ppMFType" attribute="out fast"/>
 
     <context-clear />
   </mapping>

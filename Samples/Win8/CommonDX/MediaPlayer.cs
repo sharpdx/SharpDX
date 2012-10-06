@@ -54,7 +54,7 @@ namespace CommonDX
         /// <summary>
         /// Gets or sets the background color used to display the video.
         /// </summary>
-        public Color4 BackgroundColor { get; set; }
+        public Color BackgroundColor { get; set; }
 
         /// <summary>
         /// Gets or sets the url used to play the stream.
@@ -112,7 +112,7 @@ namespace CommonDX
                             var desc = backBuffer.Description;
                             var region = new Rectangle(0, 0, desc.Width, desc.Height);
 
-                            mediaEngineEx.TransferVideoFrame(backBuffer, null, region, BackgroundColor);
+                            mediaEngineEx.TransferVideoFrame(backBuffer, null, region, (ColorBGRA)BackgroundColor);
                         }
                     }
                 }

@@ -35,6 +35,7 @@
     <Compile Include="AssemblyDoc.cs" />
     <Compile Include="Color.cs" />
     <Compile Include="ColorBGRA.cs" />
+    <Compile Include="Multimedia\WavWriter.cs" />
     <Compile Include="Serialization\NamespaceDoc.cs" />
     <Compile Include="SingletonString.cs" />
     <Compile Include="ComponentBase.cs" />

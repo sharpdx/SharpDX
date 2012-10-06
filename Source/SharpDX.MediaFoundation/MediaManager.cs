@@ -22,6 +22,8 @@ namespace SharpDX.MediaFoundation
 {
     public static partial class MediaManager
     {
+        private static bool isStartup;
+
         /// <summary>
         ///   <p><strong>Applies to: </strong>desktop apps | Metro style apps</p><p>Initializes Microsoft Media Foundation.</p>
         /// </summary>
@@ -37,7 +39,10 @@ namespace SharpDX.MediaFoundation
         /// </remarks>
         public static void Startup(bool useLightVersion = false)
         {
+            if (isStartup)
+                return;
             MediaFactory.Startup(MediaFactory.Version, useLightVersion ? 1 : 0);
+            isStartup = true;
         }
 
         /// <summary>	

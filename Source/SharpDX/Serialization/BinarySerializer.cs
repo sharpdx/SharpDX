@@ -1320,6 +1320,19 @@ namespace SharpDX.Serialization
         /// <summary>
         /// Serializes a memory region.
         /// </summary>
+        /// <param name="dataRegion">The pointer to an unmanaged memory region. For read operation, this pointer must be allocated by the caller.</param>
+        /// <exception cref="System.IO.EndOfStreamException">If the end of stream was reached before reading all the bytes.</exception>
+        /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.
+        /// This method doesn't serialize the sizeInBytes of the region, so the size must be serialized serparetely.
+        /// </remarks>
+        public void SerializeMemoryRegion(DataPointer dataRegion)
+        {
+            SerializeMemoryRegion(dataRegion.Pointer, dataRegion.Size);
+        }
+
+        /// <summary>
+        /// Serializes a memory region.
+        /// </summary>
         /// <param name="dataPointer">The data pointer. For read operation, this pointer must be allocated by the caller.</param>
         /// <param name="sizeInBytes">The size in bytes. See remarks.</param>
         /// <exception cref="System.IO.EndOfStreamException">If the end of stream was reached before reading all the bytes.</exception>

@@ -129,7 +129,6 @@
     <map field="XAUDIO2_BUFFER::pContext" name="Context" />
     <map struct="XAUDIO2_BUFFER" native="true" struct-to-class="true" marshal="false" new="false" />
     <map field="XAUDIO2_BUFFER::pAudioData" name="AudioDataPointer" />
-    <map field="XAUDIO2_BUFFER::pAudioData" visibility="internal" />
     <map struct="XAUDIO2_SEND_DESCRIPTOR" name="VoiceSendDescriptor" />
     <map field="XAUDIO2_SEND_DESCRIPTOR::Flags" type="XAUDIO2_VOICE_SEND_FLAGS" />
     <map field="XAUDIO2_SEND_DESCRIPTOR::pOutputVoice" name="OutputVoicePointer" />
@@ -190,6 +189,8 @@
       <map method="IXAudio2SourceVoice::GetState" visibility="internal" />
       <map param="IXAudio2SourceVoice::GetState::pVoiceState" return="true" />
     </ifdef>
+
+    <map param="IXAudio2.*::.*::OperationSet" default="0"/>
     
     <!--
     // *****************************************************************
