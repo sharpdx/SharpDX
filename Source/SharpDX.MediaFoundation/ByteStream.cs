@@ -22,6 +22,11 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using SharpDX.Win32;
+using SharpDX.IO;
+
+#if WIN8METRO
+using Windows.Storage.Streams;
+#endif
 
 namespace SharpDX.MediaFoundation
 {
@@ -30,23 +35,11 @@ namespace SharpDX.MediaFoundation
     /// </summary>
     public partial class ByteStream
     {
-        private readonly Stream sourceStream;
-        private readonly ComStream comStream;
-        private readonly ComStreamProxy streamProxy;
+        private Stream sourceStream;
+        private ComStream comStream;
+        private ComStreamProxy streamProxy;
+        private ComObject randomAccessStreamCom;
 
-#if WIN8METRO
-        /// <summary>
-        /// Instantiates a new instance <see cref="ByteStream"/> from a IRandomAccessStream COM object.
-        /// </summary>
-        /// <param name="iRandomAccessStream">A IRandomAccessStream COM object</param>
-        /// <msdn-id>hh162754</msdn-id>	
-        /// <unmanaged>HRESULT MFCreateMFByteStreamOnStreamEx([In] IUnknown* punkStream,[Out] IMFByteStream** ppByteStream)</unmanaged>	
-        /// <unmanaged-short>MFCreateMFByteStreamOnStreamEx</unmanaged-short>	
-        public ByteStream(ComObject iRandomAccessStream)
-        {
-            MediaFactory.CreateMFByteStreamOnStreamEx(iRandomAccessStream, this);
-        }
-#else
         /// <summary>
         /// Instantiates a new instance <see cref="ByteStream"/> from a <see cref="Stream"/>.
         /// </summary>
@@ -56,12 +49,32 @@ namespace SharpDX.MediaFoundation
         public ByteStream(Stream sourceStream)
         {
             this.sourceStream = sourceStream;
+#if WIN8METRO
+            var randomAccessStream = sourceStream.AsRandomAccessStream();
+            randomAccessStreamCom = new ComObject(Marshal.GetIUnknownForObject(randomAccessStream));
+            MediaFactory.CreateMFByteStreamOnStreamEx(randomAccessStreamCom, this);
+#else
             streamProxy = new ComStreamProxy(sourceStream);
-
             IByteStream localStream;
             MediaFactory.CreateMFByteStreamOnStream(ComStream.ToIntPtr(streamProxy), out localStream);
             NativePointer = ((ByteStream) localStream).NativePointer;
+#endif
         }
+
+#if WIN8METRO
+        /// <summary>
+        /// Instantiates a new instance <see cref="ByteStream"/> from a <see cref="Stream"/>.
+        /// </summary>
+        /// <msdn-id>hh162754</msdn-id>	
+        /// <unmanaged>HRESULT MFCreateMFByteStreamOnStreamEx([In] IUnknown* punkStream,[Out] IMFByteStream** ppByteStream)</unmanaged>	
+        /// <unmanaged-short>MFCreateMFByteStreamOnStreamEx</unmanaged-short>	
+        public ByteStream(IRandomAccessStream sourceStream)
+        {
+            var randomAccessStream = sourceStream;
+            randomAccessStreamCom = new ComObject(Marshal.GetIUnknownForObject(randomAccessStream));
+            MediaFactory.CreateMFByteStreamOnStreamEx(randomAccessStreamCom, this);
+        }
+#endif
 
         /// <summary>
         /// Instantiates a new instance <see cref="ByteStream"/> from a <see cref="Stream"/>.
@@ -73,6 +86,7 @@ namespace SharpDX.MediaFoundation
         {
         }
 
+#if !WIN8METRO
         /// <summary>
         /// Instantiates a new instance <see cref="ByteStream"/> from a <see cref="Stream"/>.
         /// </summary>
@@ -358,11 +372,17 @@ namespace SharpDX.MediaFoundation
         {
             base.Dispose(disposing);
 
-            if (disposing)
+            if (streamProxy != null)
             {
-                if (streamProxy != null)
-                    streamProxy.Dispose();
-            }            
+                streamProxy.Dispose();
+                streamProxy = null;
+            }
+
+            if (randomAccessStreamCom != null)
+            {
+                randomAccessStreamCom.Dispose();
+                randomAccessStreamCom = null;
+            }
         }
     }
 }

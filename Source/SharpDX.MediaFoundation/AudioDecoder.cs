@@ -24,6 +24,10 @@ using System.IO;
 
 using SharpDX.Multimedia;
 
+#if WIN8METRO
+using Windows.Storage.Streams;
+#endif
+
 namespace SharpDX.MediaFoundation
 {
     /// <summary>
@@ -49,49 +53,6 @@ namespace SharpDX.MediaFoundation
             MediaManager.Startup();
         }
 
-#if WIN8METRO
-        private ComObject stream;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AudioDecoder" /> class.
-        /// </summary>
-        /// <param name="stream">The IRandomAccessStream to read the compressed audio.</param>
-        public AudioDecoder(ComObject stream)
-        {
-            // Make sure that the MediaEngine is initialized.
-            MediaManager.Startup();
-            Source = stream;
-        }
-
-        /// <summary>
-        /// Gets or sets the source stream. See remarks.
-        /// </summary>
-        /// <value>The source.</value>
-        /// <remarks>
-        /// The source must be set before calling <see cref="GetSamples()"/>
-        /// </remarks>
-        public ComObject Source
-        {
-            get { return stream; }
-            set
-            {
-                if (stream != value)
-                {
-                    stream = value;
-                    lock (sourceReaderLock)
-                    {
-                        // If the nextSourceReader is not null
-                        if (nextSourceReader != null)
-                            nextSourceReader.Dispose();
-                        nextSourceReader = new SourceReader(value);
-                        Initialize(nextSourceReader);
-                    }
-                }
-            }
-        }
-#else
-        private Stream stream;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="AudioDecoder" /> class.
         /// </summary>
@@ -100,7 +61,7 @@ namespace SharpDX.MediaFoundation
         {
             // Make sure that the MediaEngine is initialized.
             MediaManager.Startup();
-            Source = stream;
+            SetSourceStream(stream);
         }
 
         /// <summary>
@@ -110,27 +71,50 @@ namespace SharpDX.MediaFoundation
         /// <remarks>
         /// The source must be set before calling <see cref="GetSamples()"/>
         /// </remarks>
-        public Stream Source
+        public void SetSourceStream(Stream value)
         {
-            get { return stream; }
-            set
+            lock (sourceReaderLock)
             {
-                if (stream != value)
-                {
-                    stream = value;
-                    lock (sourceReaderLock)
-                    {
-                        // If the nextSourceReader is not null
-                        if (nextSourceReader != null)
-                            nextSourceReader.Dispose();
-                        nextSourceReader = new SourceReader(value);
-                        Initialize(nextSourceReader);
-                    }
-                }
+                // If the nextSourceReader is not null
+                if (nextSourceReader != null)
+                    nextSourceReader.Dispose();
+                nextSourceReader = new SourceReader(value);
+                Initialize(nextSourceReader);
+            }
+        }
+
+#if WIN8METRO
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AudioDecoder" /> class.
+        /// </summary>
+        /// <param name="stream">The stream to read the compressed audio.</param>
+        public AudioDecoder(IRandomAccessStream stream)
+        {
+            // Make sure that the MediaEngine is initialized.
+            MediaManager.Startup();
+            SetSourceStream(stream);
+        }
+
+        /// <summary>
+        /// Gets or sets the source stream. See remarks.
+        /// </summary>
+        /// <value>The source.</value>
+        /// <remarks>
+        /// The source must be set before calling <see cref="GetSamples()"/>
+        /// </remarks>
+        public void SetSourceStream(IRandomAccessStream value)
+        {
+            lock (sourceReaderLock)
+            {
+                // If the nextSourceReader is not null
+                if (nextSourceReader != null)
+                    nextSourceReader.Dispose();
+                nextSourceReader = new SourceReader(value);
+                Initialize(nextSourceReader);
             }
         }
 #endif
-
+        
         /// <summary>
         /// Gets the total duration in seconds.
         /// </summary>
@@ -165,7 +149,7 @@ namespace SharpDX.MediaFoundation
         /// <returns>An enumerator of pointer to PCM decoded data with the same format as returned by <see cref="WaveFormat"/>.</returns>
         /// <remarks>
         /// This method is only working as a single enumerator at a time.
-        /// The <see cref="Source"/> must be set before calling <see cref="GetSamples()"/>
+        /// The <see cref="SetSourceStream(System.IO.Stream)"/> must be set before calling <see cref="GetSamples()"/>
         /// </remarks>
         public IEnumerable<DataPointer> GetSamples(TimeSpan startingPositionInSeconds)
         {

@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 using SharpDX;
 using SharpDX.MediaFoundation;
 using Windows.Storage.Streams;
+using System.IO;
 
 namespace CommonDX
 {
@@ -132,8 +133,7 @@ namespace CommonDX
 
         public void SetBytestream(IRandomAccessStream streamHandle)
         {
-            streamCom = new ComObject(streamHandle);
-            byteStream = new ByteStream(streamCom);
+            byteStream = new ByteStream(streamHandle);
             mediaEngineEx.SetSourceFromByteStream(byteStream, Url);
         }
 
