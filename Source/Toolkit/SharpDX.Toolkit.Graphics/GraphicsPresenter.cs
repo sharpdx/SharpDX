@@ -20,8 +20,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using SharpDX.DXGI;
+#if !WIN8METRO
+using System.Drawing;
+#endif
 
 namespace SharpDX.Toolkit.Graphics
 {

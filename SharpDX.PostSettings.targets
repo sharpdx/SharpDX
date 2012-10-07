@@ -1,5 +1,14 @@
 <!-- Common Targets used by SharpDX projects -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
+    <VisualStudioVersion>11.0</VisualStudioVersion>
+  </PropertyGroup>
+  
+  <Import Condition="'$(Configuration)' == 'Win8Debug' or '$(Configuration)' == 'Win8Release'" Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  
+  <Import Condition="'$(SharpDXWin8)' == 'false'" Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DocumentationFile>bin\Release\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
@@ -19,43 +28,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Release|AnyCPU'">
     <DocumentationFile>bin\Win8Release\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
-
-    <PropertyGroup>
-      <ResolveReferencesDependsOn>
-        $(ResolveReferencesDependsOn);
-        ImplicitlyExpandTargetFramework;
-      </ResolveReferencesDependsOn>
-
-      <ImplicitlyExpandTargetFrameworkDependsOn>
-        $(ImplicitlyExpandTargetFrameworkDependsOn);
-        GetReferenceAssemblyPaths
-      </ImplicitlyExpandTargetFrameworkDependsOn>
-    </PropertyGroup>
-
-    <Target Name="ImplicitlyExpandTargetFramework"
-        Condition="'$(ImplicitlyExpandTargetFramework)' == 'true'"
-        DependsOnTargets="$(ImplicitlyExpandTargetFrameworkDependsOn)"
-    >
-    <ItemGroup>
-      <ReferenceAssemblyPaths Include="$(_TargetFrameworkDirectories)"/>
-      <ReferencePath Include="%(ReferenceAssemblyPaths.Identity)*.dll">
-        <WinMDFile>false</WinMDFile>
-        <CopyLocal>false</CopyLocal>
-        <ReferenceGroupingDisplayName>$(TargetFrameworkMonikerDisplayName)</ReferenceGroupingDisplayName>
-        <ReferenceGrouping>$(TargetFrameworkMoniker)</ReferenceGrouping>
-        <ResolvedFrom>ImplicitlyExpandTargetFramework</ResolvedFrom>
-        <IsSystemReference>True</IsSystemReference>
-      </ReferencePath>
-    </ItemGroup>
-
-    <Message Importance="Low" Text="Including @(ReferencePath)"
-      Condition="'%(ReferencePath.ResolvedFrom)' == 'ImplicitlyExpandTargetFramework'"/>
-
-    <ItemGroup>
-      <_ResolveAssemblyReferenceResolvedFiles Include="@(ReferencePath)"
-        Condition="'%(ReferencePath.ResolvedFrom)' == 'ImplicitlyExpandTargetFramework'"/>
-    </ItemGroup>
-  </Target>
 
   <!-- Don't use anymore task, as msbuild is keeping a lock on the file on the 1st build and we are not able to reapply SharpCLI once it is created
    <UsingTask AssemblyFile="$(SolutionDir)Source\Bin\SharpCli.exe" TaskName="SharpCli.InteropBuilderTask" /> -->

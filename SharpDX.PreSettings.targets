@@ -1,5 +1,6 @@
 <!-- Common Settings used by SharpDX projects -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <SharpDXSign Condition=" '$(SharpDXSign)' == '' ">false</SharpDXSign>
@@ -29,10 +30,10 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Win8Debug' Or '$(Configuration)' == 'Win8Release'  ">
     <SharpDXWin8>true</SharpDXWin8>
     <DirectX11_1>true</DirectX11_1>
-    <ImplicitlyExpandTargetFramework>true</ImplicitlyExpandTargetFramework>
+<!--<ImplicitlyExpandTargetFramework>false</ImplicitlyExpandTargetFramework>
     <TargetFrameworkIdentifier>.NETCore</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <TargetPlatformVersion>8.0</TargetPlatformVersion>
+    <TargetPlatformVersion>8.0</TargetPlatformVersion>-->
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Net20Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -127,7 +128,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Win8Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;WIN8METRO;NET35Plus;DIRECTX11_1</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;WIN8METRO;NETFX_CORE;DIRECTX11_1</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>
     </DocumentationFile>
@@ -140,7 +141,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Release|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Win8Release</OutputPath>
-    <DefineConstants>TRACE;WIN8METRO;NET35Plus;DIRECTX11_1</DefineConstants>
+    <DefineConstants>TRACE;WIN8METRO;NETFX_CORE;DIRECTX11_1</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>

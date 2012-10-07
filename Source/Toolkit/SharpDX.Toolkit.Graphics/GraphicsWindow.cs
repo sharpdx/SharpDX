@@ -19,8 +19,10 @@
 // THE SOFTWARE.
 
 using System;
+#if !WIN8METRO
 using System.Windows.Forms;
 using SharpDX.Windows;
+#endif
 
 namespace SharpDX.Toolkit.Graphics
 {
