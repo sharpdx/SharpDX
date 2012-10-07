@@ -52,7 +52,7 @@ namespace SharpDX
             }
             set
             {
-                pMatrix = Matrix;
+                pMatrix = value;
                 GetPlanesFromMatrix(ref pMatrix, out pNear, out pFar, out pLeft, out pRight, out pTop, out pBottom);
             }
         }
