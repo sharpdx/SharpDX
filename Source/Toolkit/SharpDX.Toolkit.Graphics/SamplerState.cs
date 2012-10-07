@@ -40,10 +40,10 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="description">The description.</param>
-        private SamplerState(GraphicsDevice device, SamplerStateDescription description)
+        private SamplerState(GraphicsDevice device, SamplerStateDescription description) : base(device.MainDevice)
         {
             Description = description;
-            Initialize(device.MainDevice, null);
+            Initialize(new SharpDX.Direct3D11.SamplerState(device, description));
         }
 
         /// <summary>
@@ -51,11 +51,10 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="nativeState">State of the native.</param>
-        private SamplerState(GraphicsDevice device, Direct3D11.SamplerState nativeState)
+        private SamplerState(GraphicsDevice device, Direct3D11.SamplerState nativeState) : base(device.MainDevice)
         {
             Description = nativeState.Description;
-            Resource = ToDispose(nativeState);
-            Initialize(device.MainDevice, null);
+            Initialize(nativeState);
         }
 
         /// <summary>	
@@ -110,18 +109,13 @@ namespace SharpDX.Toolkit.Graphics
             return new SamplerState(device, description) {Name = name};
         }
         
-        protected override DeviceChild CreateResource()
-        {
-            return new Direct3D11.SamplerState(GraphicsDevice, Description);
-        }
-
         /// <summary>
         /// Implicit casting operator to <see cref="Direct3D11.Resource"/>
         /// </summary>
         /// <param name="from">The GraphicsState to convert from.</param>
         public static implicit operator Direct3D11.SamplerState(SamplerState from)
         {
-            return (Direct3D11.SamplerState) (from == null ? null : from.GetOrCreateResource());
+            return (Direct3D11.SamplerState) (from == null ? null : from.Resource);
         }
 
         internal static SamplerState New(GraphicsDevice device, string name, Filter filterMode, TextureAddressMode uvwMode)

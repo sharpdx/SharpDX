@@ -38,24 +38,23 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Initializes a new instance of the <see cref="DepthStencilState" /> class.
         /// </summary>
-        /// <param name="deviceLocal">The device local.</param>
+        /// <param name="device">The device local.</param>
         /// <param name="description">The description.</param>
-        private DepthStencilState(GraphicsDevice deviceLocal, DepthStencilStateDescription description)
+        private DepthStencilState(GraphicsDevice device, DepthStencilStateDescription description) : base(device.MainDevice)
         {
             Description = description;
-            Initialize(deviceLocal, null);
+            Initialize(new Direct3D11.DepthStencilState(GraphicsDevice, Description));
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DepthStencilState" /> class.
         /// </summary>
-        /// <param name="deviceLocal">The device local.</param>
+        /// <param name="device">The device local.</param>
         /// <param name="nativeState">State of the native.</param>
-        private DepthStencilState(GraphicsDevice deviceLocal, Direct3D11.DepthStencilState nativeState)
+        private DepthStencilState(GraphicsDevice device, Direct3D11.DepthStencilState nativeState) : base(device.MainDevice)
         {
             Description = nativeState.Description;
-            Resource = ToDispose(nativeState);
-            Initialize(deviceLocal, null);
+            Initialize(nativeState);
         }
 
         /// <summary>	
@@ -110,18 +109,13 @@ namespace SharpDX.Toolkit.Graphics
             return new DepthStencilState(device, description) {Name = name};
         }
 
-        protected override DeviceChild CreateResource()
-        {
-            return new Direct3D11.DepthStencilState(GraphicsDevice, Description);
-        }
-
         /// <summary>
         /// Implicit casting operator to <see cref="Direct3D11.Resource"/>
         /// </summary>
         /// <param name="from">The GraphicsState to convert from.</param>
         public static implicit operator Direct3D11.DepthStencilState(DepthStencilState from)
         {
-            return (Direct3D11.DepthStencilState) (from == null ? null : from.GetOrCreateResource());
+            return (Direct3D11.DepthStencilState) (from == null ? null : from.Resource);
         }
 
         internal static DepthStencilState New(GraphicsDevice device, string name, bool depthEnable, bool depthWriteEnable)

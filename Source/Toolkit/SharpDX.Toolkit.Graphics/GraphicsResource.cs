@@ -30,23 +30,28 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public abstract class GraphicsResource : Component
     {
-        private readonly object lockCreate = new object();
-        private bool isResourceInitialized;
-        internal GraphicsDevice GraphicsDevice;
+        /// <summary>
+        /// GraphicsDevice used to create this instance.
+        /// </summary>
+        public readonly GraphicsDevice GraphicsDevice;
+
+        /// <summary>
+        /// The attached Direct3D11 resource to this instance.
+        /// </summary>
         internal DeviceChild Resource;
+
+        protected GraphicsResource(GraphicsDevice graphicsDevice)
+        {
+            GraphicsDevice = graphicsDevice;
+        }
 
         /// <summary>
         /// Initializes the specified device local.
         /// </summary>
-        /// <param name="deviceLocal">The device local.</param>
         /// <param name="resource">The resource.</param>
-        protected virtual void Initialize(GraphicsDevice deviceLocal, DeviceChild resource)
+        protected virtual void Initialize(DeviceChild resource)
         {
-            // Keep track only to the Main device, as deferred context are not useful when manipulating resources.
-            GraphicsDevice = deviceLocal.MainDevice;
-
-            Resource = resource == null ? CreateResource() : ToDispose(resource);
-            isResourceInitialized = true;
+            Resource = ToDispose(resource);
         }
 
         /// <summary>
@@ -56,26 +61,6 @@ namespace SharpDX.Toolkit.Graphics
         public static implicit operator Resource(GraphicsResource from)
         {
             return from == null ? null : (Resource)from.Resource;
-        }
-
-        protected virtual DeviceChild CreateResource()
-        {
-            return null;
-        }
-
-        protected DeviceChild GetOrCreateResource()
-        {
-            if (isResourceInitialized)
-                return Resource;
-
-            lock (lockCreate)
-            {
-                if (Resource == null)
-                {
-                    Resource = ToDispose(CreateResource());
-                }
-            }
-            return Resource;
         }
 
         /// <summary>

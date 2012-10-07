@@ -74,7 +74,7 @@ namespace SharpDX.Toolkit.Graphics
         internal UnorderedAccessView[] unorderedAccessViews;
         private MipMapDescription[] mipmapDescriptions;
 
-        protected Texture(TextureDescription description)
+        protected Texture(GraphicsDevice device, TextureDescription description) : base(device.MainDevice)
         {
             Description = description;
             IsBlockCompressed = FormatHelper.IsCompressed(description.Format);
@@ -86,10 +86,10 @@ namespace SharpDX.Toolkit.Graphics
             mipmapDescriptions = Image.CalculateMipMapDescription(description);
         }
 
-        protected override void Initialize(GraphicsDevice deviceArg, DeviceChild resource)
+        protected override void Initialize(DeviceChild resource)
         {
             // Be sure that we are storing only the main device (which contains the immediate context).
-            base.Initialize(deviceArg, resource);
+            base.Initialize(resource);
             InitializeViews();
         }
 

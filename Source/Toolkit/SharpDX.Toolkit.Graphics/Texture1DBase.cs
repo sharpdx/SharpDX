@@ -40,10 +40,10 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
         protected internal Texture1DBase(GraphicsDevice device, Texture1DDescription description1D)
-            : base(description1D)
+            : base(device, description1D)
         {
             Resource = new Direct3D11.Texture1D(device, description1D);
-            Initialize(device.MainDevice, Resource);
+            Initialize(Resource);
         }
 
         /// <summary>
@@ -56,10 +56,10 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
         protected internal Texture1DBase(GraphicsDevice device, Texture1DDescription description1D, DataBox[] dataBox)
-            : base(description1D)
+            : base(device, description1D)
         {
             Resource = new Direct3D11.Texture1D(device, description1D, dataBox);
-            Initialize(device.MainDevice, Resource);
+            Initialize(Resource);
         }
 
         /// <summary>
@@ -71,10 +71,10 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
         protected internal Texture1DBase(GraphicsDevice device, Direct3D11.Texture1D texture)
-            : base(texture.Description)
+            : base(device, texture.Description)
         {
             Resource = texture;
-            Initialize(device.MainDevice, Resource);
+            Initialize(Resource);
         }
 
         /// <summary>

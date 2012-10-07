@@ -48,32 +48,31 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Initializes a new instance of the <see cref="BlendState" /> class.
         /// </summary>
-        /// <param name="deviceLocal">The device local.</param>
+        /// <param name="device">The device local.</param>
         /// <param name="description">The description.</param>
         /// <param name="blendFactor">The blend factor.</param>
         /// <param name="mask">The mask.</param>
-        private BlendState(GraphicsDevice deviceLocal, BlendStateDescription description, Color4 blendFactor, int mask)
+        private BlendState(GraphicsDevice device, BlendStateDescription description, Color4 blendFactor, int mask) : base(device)
         {
             Description = description;
             BlendFactor = blendFactor;
             MultiSampleMask = mask;
-            Initialize(deviceLocal, null);
+            Initialize(new Direct3D11.BlendState(GraphicsDevice, Description));
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BlendState" /> class.
         /// </summary>
-        /// <param name="deviceLocal">The device local.</param>
+        /// <param name="device">The device local.</param>
         /// <param name="nativeState">State of the native.</param>
         /// <param name="blendFactor">The blend factor.</param>
         /// <param name="mask">The mask.</param>
-        private BlendState(GraphicsDevice deviceLocal, Direct3D11.BlendState nativeState, Color4 blendFactor, int mask)
+        private BlendState(GraphicsDevice device, Direct3D11.BlendState nativeState, Color4 blendFactor, int mask) : base(device)
         {
             Description = nativeState.Description;
             BlendFactor = blendFactor;
             MultiSampleMask = mask;
-            Resource = ToDispose(nativeState);
-            Initialize(deviceLocal, null);
+            Initialize(nativeState);
         }
 
         /// <summary>
@@ -207,18 +206,13 @@ namespace SharpDX.Toolkit.Graphics
             return new BlendState(device, description, blendFactor, mask);
         }
 
-        protected override DeviceChild CreateResource()
-        {
-            return new Direct3D11.BlendState(GraphicsDevice, Description);
-        }
-
         /// <summary>
         /// Implicit casting operator to <see cref="Direct3D11.Resource"/>
         /// </summary>
         /// <param name="from">The GraphicsState to convert from.</param>
         public static implicit operator Direct3D11.BlendState(BlendState from)
         {
-            return (Direct3D11.BlendState) (from == null ? null : from.GetOrCreateResource());
+            return (Direct3D11.BlendState) (from == null ? null : from.Resource);
         }
 
         internal static BlendState New(GraphicsDevice device, string name, BlendOption sourceBlend, BlendOption destinationBlend)

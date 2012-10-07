@@ -49,11 +49,11 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="descriptions">The description.</param>
-        private VertexLayout(GraphicsDevice device, VertexDeclarationSet descriptions)
+        private VertexLayout(GraphicsDevice device, VertexDeclarationSet descriptions) : base(device.MainDevice)
         {
             ShaderBytecode = descriptions.ShaderBytecode;
             this.Layouts = descriptions.Layouts;
-            Initialize(device.MainDevice, new InputLayout(device.MainDevice, ShaderBytecode, ToInputElements(descriptions.Layouts)));
+            Initialize(new InputLayout(device.MainDevice, ShaderBytecode, ToInputElements(descriptions.Layouts)));
         }
 
         /// <summary>	
@@ -87,11 +87,7 @@ namespace SharpDX.Toolkit.Graphics
             }
             return vertexLayout;
         }
-        
-        protected override DeviceChild CreateResource()
-        {
-            throw new InvalidOperationException();
-        }
+
 
         /// <summary>
         /// Implicit casting operator to <see cref="Direct3D11.Resource"/>
@@ -99,7 +95,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="from">The GraphicsState to convert from.</param>
         public static implicit operator Direct3D11.InputLayout(VertexLayout from)
         {
-            return (Direct3D11.InputLayout)(from == null ? null : from.GetOrCreateResource());
+            return (Direct3D11.InputLayout)(from == null ? null : from.Resource);
         }
 
         public static InputElement[] ToInputElements(params VertexBufferLayout[] descriptions)

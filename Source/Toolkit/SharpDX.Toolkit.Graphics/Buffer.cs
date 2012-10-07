@@ -78,13 +78,13 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="bufferFlags">Type of the buffer.</param>
         /// <param name="viewFormat">The view format.</param>
         /// <param name="dataPointer">The data pointer.</param>
-        protected Buffer(GraphicsDevice device, BufferDescription description, BufferFlags bufferFlags, PixelFormat viewFormat, IntPtr dataPointer)
+        protected Buffer(GraphicsDevice device, BufferDescription description, BufferFlags bufferFlags, PixelFormat viewFormat, IntPtr dataPointer) : base(device.MainDevice)
         {
             Description = description;
             BufferFlags = bufferFlags;
             ViewFormat = viewFormat;
             InitCountAndViewFormat(out this.elementCount, ref ViewFormat);
-            Initialize(device.MainDevice, new Direct3D11.Buffer(device.MainDevice, dataPointer, Description));
+            Initialize(new Direct3D11.Buffer(device.MainDevice, dataPointer, Description));
         }
 
         /// <summary>
@@ -94,13 +94,13 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="nativeBuffer">The native buffer.</param>
         /// <param name="bufferFlags">Type of the buffer.</param>
         /// <param name="viewFormat">The view format.</param>
-        protected Buffer(GraphicsDevice device, Direct3D11.Buffer nativeBuffer, BufferFlags bufferFlags, PixelFormat viewFormat)
+        protected Buffer(GraphicsDevice device, Direct3D11.Buffer nativeBuffer, BufferFlags bufferFlags, PixelFormat viewFormat) : base(device.MainDevice)
         {
             Description = nativeBuffer.Description;
             BufferFlags = bufferFlags;
             ViewFormat = viewFormat;
             InitCountAndViewFormat(out this.elementCount, ref ViewFormat);
-            Initialize(device, nativeBuffer);
+            Initialize(nativeBuffer);
         }
 
         /// <summary>
@@ -781,11 +781,10 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Initializes the specified device arg.
         /// </summary>
-        /// <param name="deviceArg">The device arg.</param>
         /// <param name="resource">The resource.</param>
-        private void Initialize(GraphicsDevice deviceArg, Direct3D11.Buffer resource)
+        protected override void Initialize(Direct3D11.DeviceChild resource)
         {
-            base.Initialize(deviceArg, resource);
+            base.Initialize(resource);
 
             // Staging resource don't have any views
             if (Description.Usage != ResourceUsage.Staging)

@@ -40,10 +40,10 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="description">The description.</param>
-        private RasterizerState(GraphicsDevice device, RasterizerStateDescription description)
+        private RasterizerState(GraphicsDevice device, RasterizerStateDescription description) : base(device.MainDevice)
         {
             Description = description;
-            Initialize(device, null);
+            Initialize(new Direct3D11.RasterizerState(GraphicsDevice, Description));
         }
 
         /// <summary>
@@ -51,11 +51,10 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="nativeState">State of the native.</param>
-        private RasterizerState(GraphicsDevice device, Direct3D11.RasterizerState nativeState)
+        private RasterizerState(GraphicsDevice device, Direct3D11.RasterizerState nativeState) : base(device.MainDevice)
         {
             Description = nativeState.Description;
-            Resource = ToDispose(nativeState);
-            Initialize(device, null);
+            Initialize(nativeState);
         }
 
         /// <summary>	
@@ -107,18 +106,13 @@ namespace SharpDX.Toolkit.Graphics
             return new RasterizerState(device, description) {Name = name};
         }
         
-        protected override DeviceChild CreateResource()
-        {
-            return new Direct3D11.RasterizerState(GraphicsDevice, Description);
-        }
-
         /// <summary>
         /// Implicit casting operator to <see cref="Direct3D11.Resource"/>
         /// </summary>
         /// <param name="from">The GraphicsState to convert from.</param>
         public static implicit operator Direct3D11.RasterizerState(RasterizerState from)
         {
-            return (Direct3D11.RasterizerState) (from == null ? null : from.GetOrCreateResource());
+            return (Direct3D11.RasterizerState) (from == null ? null : from.Resource);
         }
 
         internal static RasterizerState New(GraphicsDevice device, string name, CullMode mode)

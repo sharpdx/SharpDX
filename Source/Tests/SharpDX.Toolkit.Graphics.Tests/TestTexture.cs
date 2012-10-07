@@ -290,7 +290,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
                                       "RifleStock1Bump.dds"  // This file is in BC1 format but size is not a multiple of 4, so It can't be loaded as a texture, so we skip it.
                                   };
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 1; i++)
             {
                 foreach (var file in files)
                 {
