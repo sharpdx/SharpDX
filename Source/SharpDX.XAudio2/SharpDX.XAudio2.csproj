@@ -8,7 +8,7 @@
     <RootNamespace>SharpDX.XAudio2</RootNamespace>
     <AssemblyName>SharpDX.XAudio2</AssemblyName>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(SharpDXWin8)' == 'false'">
+  <ItemGroup Condition=" '$(SharpDXWin8Core)' == 'false'">
     <Reference Include="System" />
     <Reference Include="System.Data" />
   </ItemGroup>

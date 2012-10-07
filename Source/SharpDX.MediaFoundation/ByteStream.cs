@@ -24,7 +24,7 @@ using System.Runtime.InteropServices;
 using SharpDX.Win32;
 using SharpDX.IO;
 
-#if WIN8METRO
+#if W8CORE
 using Windows.Storage.Streams;
 #endif
 
@@ -40,6 +40,7 @@ namespace SharpDX.MediaFoundation
         private ComStreamProxy streamProxy;
         private ComObject randomAccessStreamCom;
 
+#if !WP8
         /// <summary>
         /// Instantiates a new instance <see cref="ByteStream"/> from a <see cref="Stream"/>.
         /// </summary>
@@ -61,7 +62,18 @@ namespace SharpDX.MediaFoundation
 #endif
         }
 
-#if WIN8METRO
+        /// <summary>
+        /// Instantiates a new instance <see cref="ByteStream"/> from a <see cref="Stream"/>.
+        /// </summary>
+        /// <msdn-id>hh162754</msdn-id>	
+        /// <unmanaged>HRESULT MFCreateMFByteStreamOnStreamEx([In] IUnknown* punkStream,[Out] IMFByteStream** ppByteStream)</unmanaged>	
+        /// <unmanaged-short>MFCreateMFByteStreamOnStreamEx</unmanaged-short>	
+        public ByteStream(byte[] sourceStream) : this(new MemoryStream(sourceStream))
+        {
+        }
+#endif
+
+#if W8CORE
         /// <summary>
         /// Instantiates a new instance <see cref="ByteStream"/> from a <see cref="Stream"/>.
         /// </summary>
@@ -76,17 +88,7 @@ namespace SharpDX.MediaFoundation
         }
 #endif
 
-        /// <summary>
-        /// Instantiates a new instance <see cref="ByteStream"/> from a <see cref="Stream"/>.
-        /// </summary>
-        /// <msdn-id>hh162754</msdn-id>	
-        /// <unmanaged>HRESULT MFCreateMFByteStreamOnStreamEx([In] IUnknown* punkStream,[Out] IMFByteStream** ppByteStream)</unmanaged>	
-        /// <unmanaged-short>MFCreateMFByteStreamOnStreamEx</unmanaged-short>	
-        public ByteStream(byte[] sourceStream) : this(new MemoryStream(sourceStream))
-        {
-        }
-
-#if !WIN8METRO
+#if !W8CORE
         /// <summary>
         /// Instantiates a new instance <see cref="ByteStream"/> from a <see cref="Stream"/>.
         /// </summary>

@@ -1,6 +1,5 @@
 <!-- Common Settings used by SharpDX projects -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <!--
   *************************************************************************************************************
   Global Configuration
@@ -64,10 +63,13 @@
     <SharpDXWin8Core>true</SharpDXWin8Core>
     <SharpDXWP8>true</SharpDXWP8>
     <DirectX11_1>true</DirectX11_1>
-    <ImplicitlyExpandTargetFramework>false</ImplicitlyExpandTargetFramework>
     <TargetFrameworkIdentifier>WindowsPhone</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v8.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>false</SilverlightApplication>    
   </PropertyGroup>
+
+  <!--<Import Condition="'$(SharpDXWP8)' != 'false'"  Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />-->
 
   <!--
   *************************************************************************************************************
@@ -210,7 +212,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\WP8Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;WP8;W8CORE;DIRECTX11_1</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;WP8;W8CORE;DIRECTX11_1;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>
     </DocumentationFile>
@@ -224,7 +228,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Release|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\WP8Release</OutputPath>
-    <DefineConstants>TRACE;WP8;W8CORE;DIRECTX11_1</DefineConstants>
+    <DefineConstants>TRACE;WP8;W8CORE;DIRECTX11_1;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -237,7 +243,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\WP8Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;WP8;W8CORE;DIRECTX11_1</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;WP8;W8CORE;DIRECTX11_1;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>
     </DocumentationFile>
@@ -250,7 +258,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Release|x86'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\WP8Release</OutputPath>
-    <DefineConstants>TRACE;WP8;W8CORE;DIRECTX11_1</DefineConstants>
+    <DefineConstants>TRACE;WP8;W8CORE;DIRECTX11_1;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>

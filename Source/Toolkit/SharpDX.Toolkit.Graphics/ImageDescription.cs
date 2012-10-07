@@ -28,7 +28,7 @@ namespace SharpDX.Toolkit.Graphics
     /// <summary>
     /// A description for <see cref="Image"/>.
     /// </summary>
-#if !WIN8METRO
+#if !W8CORE
     [Serializable]
 #endif
     [StructLayout(LayoutKind.Sequential)]

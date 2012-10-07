@@ -630,12 +630,14 @@ namespace SharpDX.Toolkit.Graphics
         static Image()
         {
             Register(ImageFileType.Dds,  DDSHelper.LoadFromDDSMemory, DDSHelper.SaveToDDSStream);
+#if !WP8
             Register(ImageFileType.Gif,  WICHelper.LoadFromWICMemory, WICHelper.SaveGifToWICMemory);
             Register(ImageFileType.Tiff, WICHelper.LoadFromWICMemory, WICHelper.SaveTiffToWICMemory);
             Register(ImageFileType.Bmp,  WICHelper.LoadFromWICMemory, WICHelper.SaveBmpToWICMemory);
             Register(ImageFileType.Jpg,  WICHelper.LoadFromWICMemory, WICHelper.SaveJpgToWICMemory);
             Register(ImageFileType.Png,  WICHelper.LoadFromWICMemory, WICHelper.SavePngToWICMemory);
             Register(ImageFileType.Wmp,  WICHelper.LoadFromWICMemory, WICHelper.SaveWmpToWICMemory);
+#endif
             Register(ImageFileType.Tktx, LoadTKTX, SaveTKTX);
         }
 

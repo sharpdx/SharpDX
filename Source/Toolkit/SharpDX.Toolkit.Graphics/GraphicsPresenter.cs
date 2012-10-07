@@ -65,6 +65,8 @@ namespace SharpDX.Toolkit.Graphics
         /// Gets the underlying native presenter (can be a <see cref="SharpDX.DXGI.SwapChain"/> or <see cref="SharpDX.DXGI.SwapChain1"/> or null, depending on the platform).
         /// </summary>
         /// <value>The native presenter.</value>
+
+
         public abstract object NativePresenter { get; }
 
         /// <summary>

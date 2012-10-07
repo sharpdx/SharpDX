@@ -4,10 +4,7 @@
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
   </PropertyGroup>
-  
-  <Import Condition="'$(Configuration)' == 'Win8Debug' or '$(Configuration)' == 'Win8Release'" Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
-  
-  <Import Condition="'$(SharpDXWin8)' == 'false'" Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+   
   <!--Include automatically SharpDXWP8 interop assembly-->
   <ItemGroup>
     <ProjectReference Condition="'$(SharpDXWP8)' == 'true'" Include="$(SolutionDir)Source\SharpDX.WP8\SharpDX.WP8.vcxproj">
@@ -15,6 +12,9 @@
       <Name>SharpDX.WP8</Name>
     </ProjectReference>
   </ItemGroup>
+
+  <!--Import Windows 8 WINRT targets only for WIN8 platforms-->
+  <Import Condition="'$(Configuration)' == 'Win8Debug' or '$(Configuration)' == 'Win8Release'" Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
 
   <!--Import standard targets for all non-Windows Phone 8 platforms-->
   <Import Condition="'$(SharpDXWP8)' == 'false'" Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -47,6 +47,8 @@
     <DocumentationFile>bin\WP8Release\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
+  <ProjectExtensions/>
+  
   <!-- Don't use anymore task, as msbuild is keeping a lock on the file on the 1st build and we are not able to reapply SharpCLI once it is created
    <UsingTask AssemblyFile="$(SolutionDir)Source\Bin\SharpCli.exe" TaskName="SharpCli.InteropBuilderTask" /> -->
 

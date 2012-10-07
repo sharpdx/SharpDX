@@ -69,7 +69,7 @@
 // cannot change. To the extent permitted under your local laws, the 
 // contributors exclude the implied warranties of merchantability, fitness for a
 // particular purpose and non-infringement.
-
+#if !WP8
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -727,3 +727,4 @@ namespace SharpDX.Toolkit.Graphics
         }
     }
 }
+#endif

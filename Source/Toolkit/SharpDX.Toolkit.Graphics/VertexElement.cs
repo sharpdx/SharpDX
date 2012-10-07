@@ -513,8 +513,10 @@ namespace SharpDX.Toolkit.Graphics
                         fieldFormat = ConvertTypeToFormat(field.FieldType);
 
                     var offset = vertexElementAttribute.AlignedByteOffset;
+#if !WP8
                     if (offset < 0)
                         offset = Marshal.OffsetOf(type, field.Name).ToInt32();
+#endif
                         
                     vertexElements.Add(new VertexElement(vertexElementAttribute.SemanticName, vertexElementAttribute.SemanticIndex, fieldFormat, offset));
                     break;
