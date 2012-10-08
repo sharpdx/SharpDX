@@ -1339,7 +1339,7 @@ namespace SharpDX.Serialization
         /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.
         /// This method doesn't serialize the sizeInBytes of the region, so the size must be serialized serparetely.
         /// </remarks>
-        public void SerializeMemoryRegion(IntPtr dataPointer, int sizeInBytes)
+        public unsafe void SerializeMemoryRegion(IntPtr dataPointer, int sizeInBytes)
         {
             const int internalBufferSize = 32768;
 
@@ -1383,6 +1383,8 @@ namespace SharpDX.Serialization
                         var maxSize = remainingSize < largeByteBuffer.Length ? remainingSize : largeByteBuffer.Length;
                         Utilities.Read(dataPointer, largeByteBuffer, 0, maxSize);
                         Stream.Write(largeByteBuffer, 0, maxSize);
+
+                        dataPointer = (IntPtr) ((byte*) dataPointer + maxSize);
                         remainingSize -= maxSize;
                     }
                 }
@@ -1397,6 +1399,7 @@ namespace SharpDX.Serialization
                             throw new EndOfStreamException();
                         Utilities.Write(dataPointer, largeByteBuffer, 0, maxSize);
 
+                        dataPointer = (IntPtr)((byte*)dataPointer + maxSize);
                         remainingSize -= maxSize;
                     }
                 }
