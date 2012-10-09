@@ -34,7 +34,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="position">The position of this vertex.</param>
         /// <param name="color">The color of this vertex.</param>
-        public VertexPositionColor(Vector3 position, Color color) : this()
+        public VertexPositionColor(Vector3 position, Color4 color) : this()
         {
             Position = position;
             Color = color;
@@ -50,7 +50,7 @@ namespace SharpDX.Toolkit.Graphics
         /// The vertex color.
         /// </summary>
         [VertexElement("COLOR")]
-        public Color Color;
+        public Color4 Color;
 
         public bool Equals(VertexPositionColor other)
         {

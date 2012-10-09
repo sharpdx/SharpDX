@@ -359,9 +359,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476457</msdn-id>
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
-        public void SetData<TData>(ref TData fromData, int offsetInBytes = 0) where TData : struct
+        public void SetData<TData>(ref TData fromData, int offsetInBytes = 0, SetDataOptions options = SetDataOptions.Discard) where TData : struct
         {
-            SetData(GraphicsDevice, ref fromData, offsetInBytes);
+            SetData(GraphicsDevice, ref fromData, offsetInBytes, options);
         }
 
         /// <summary>
@@ -377,9 +377,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476457</msdn-id>
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
-        public unsafe void SetData<TData>(TData[] fromData, int offsetInBytes = 0) where TData : struct
+        public unsafe void SetData<TData>(TData[] fromData, int startIndex = 0, int elementCount = 0, int offsetInBytes = 0, SetDataOptions options = SetDataOptions.Discard) where TData : struct
         {
-            SetData(GraphicsDevice, fromData, offsetInBytes);
+            SetData(GraphicsDevice, fromData, startIndex, elementCount, offsetInBytes, options);
         }
 
         /// <summary>
@@ -394,9 +394,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>
         /// This method is only working when called from the main thread that is accessing the main <see cref="GraphicsDevice"/>. See the unmanaged documentation about Map/UnMap for usage and restrictions.
         /// </remarks>
-        public void SetData(DataPointer fromData, int offsetInBytes = 0)
+        public void SetData(DataPointer fromData, int offsetInBytes = 0, SetDataOptions options = SetDataOptions.Discard)
         {
-            SetData(GraphicsDevice, fromData, offsetInBytes);
+            SetData(GraphicsDevice, fromData, offsetInBytes, options);
         }
 
         /// <summary>
@@ -413,9 +413,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476457</msdn-id>
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
-        public unsafe void SetData<TData>(GraphicsDevice device, ref TData fromData, int offsetInBytes = 0) where TData : struct
+        public unsafe void SetData<TData>(GraphicsDevice device, ref TData fromData, int offsetInBytes = 0, SetDataOptions options = SetDataOptions.Discard) where TData : struct
         {
-            SetData(device, new DataPointer(Interop.Fixed(ref fromData), Utilities.SizeOf<TData>()), offsetInBytes);
+            SetData(device, new DataPointer(Interop.Fixed(ref fromData), Utilities.SizeOf<TData>()), offsetInBytes, options);
         }
 
         /// <summary>
@@ -432,9 +432,12 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476457</msdn-id>
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
-        public unsafe void SetData<TData>(GraphicsDevice device, TData[] fromData, int offsetInBytes = 0) where TData : struct
+        public unsafe void SetData<TData>(GraphicsDevice device, TData[] fromData, int startIndex = 0, int elementCount = 0, int offsetInBytes = 0, SetDataOptions options = SetDataOptions.Discard) where TData : struct
         {
-            SetData(device, new DataPointer(Interop.Fixed(fromData), (fromData.Length * Utilities.SizeOf<TData>())), offsetInBytes);
+            var sizeOfT = Interop.SizeOf<TData>();
+            var sourcePtr = (IntPtr)((byte*) Interop.Fixed(fromData) + startIndex*sizeOfT);
+            var sizeOfData = (elementCount == 0 ? fromData.Length : elementCount)*sizeOfT;
+            SetData(device, new DataPointer(sourcePtr, sizeOfData), offsetInBytes, options);
         }
 
         /// <summary>
@@ -450,15 +453,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>
         /// See the unmanaged documentation about Map/UnMap for usage and restrictions.
         /// </remarks>
-        public void SetData(GraphicsDevice device, DataPointer fromData, int offsetInBytes = 0)
+        public unsafe void SetData(GraphicsDevice device, DataPointer fromData, int offsetInBytes = 0, SetDataOptions options = SetDataOptions.Discard)
         {
+            // Check size validity of data to copy to
+            if ((fromData.Size + offsetInBytes) > this.Description.SizeInBytes)
+                throw new ArgumentException("Size of data to upload + offset is larger than size of buffer");
+
             var deviceContext = (Direct3D11.DeviceContext)device;
 
-            // Check size validity of data to copy to
-            if (fromData.Size > this.Description.SizeInBytes)
-                throw new ArgumentException("Size of data to upload larger than size of buffer");
-
-            // If this texture is declared as default usage, we can only use UpdateSubresource, which is not optimal but better than nothing
+            // If this bufefer is declared as default usage, we can only use UpdateSubresource, which is not optimal but better than nothing
             if (this.Description.Usage == ResourceUsage.Default)
             {
                 // Setup the dest region inside the buffer
@@ -474,18 +477,42 @@ namespace SharpDX.Toolkit.Graphics
             }
             else
             {
-                if (offsetInBytes > 0)
-                    throw new ArgumentException("offset is only supported for textured declared with ResourceUsage.Default", "offsetInBytes");
-
                 try
                 {
-                    var box = deviceContext.MapSubresource(this, 0, MapMode.WriteDiscard, Direct3D11.MapFlags.None);
-                    Utilities.CopyMemory(box.DataPointer, fromData.Pointer, fromData.Size);
+                    var box = deviceContext.MapSubresource(this, 0, SetDataOptionsHelper.ConvertToMapMode(options), Direct3D11.MapFlags.None);
+                    Utilities.CopyMemory((IntPtr)((byte*)box.DataPointer + offsetInBytes), fromData.Pointer, fromData.Size);
                 }
                 finally
                 {
                     deviceContext.UnmapSubresource(this, 0);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Directly sets a CPU memory region.
+        /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
+        /// <param name="fromData">A data pointer.</param>
+        /// <param name="offsetInBytes">The offset in bytes to write to.</param>
+        /// <exception cref="System.ArgumentException"></exception>
+        /// <msdn-id>ff476457</msdn-id>
+        ///   <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
+        ///   <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
+        /// <remarks>
+        /// See the unmanaged documentation about Map/UnMap for usage and restrictions.
+        /// </remarks>
+        public unsafe void SetDynamicData(GraphicsDevice device, Action<IntPtr> fromData, int offsetInBytes = 0, SetDataOptions options = SetDataOptions.Discard)
+        {
+            var deviceContext = (Direct3D11.DeviceContext)device;
+            try
+            {
+                var box = deviceContext.MapSubresource(this, 0, SetDataOptionsHelper.ConvertToMapMode(options), Direct3D11.MapFlags.None);
+                fromData((IntPtr)((byte*)box.DataPointer + offsetInBytes));
+            }
+            finally
+            {
+                deviceContext.UnmapSubresource(this, 0);
             }
         }
 
@@ -1080,9 +1107,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476457</msdn-id>
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
-        public void SetData(ref T fromData, int offsetInBytes = 0)
+        public void SetData(ref T fromData, int offsetInBytes = 0, SetDataOptions options = SetDataOptions.Discard)
         {
-            base.SetData(ref fromData, offsetInBytes);
+            base.SetData(ref fromData, offsetInBytes, options);
         }
 
         /// <summary>
@@ -1096,9 +1123,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476457</msdn-id>
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
-        public void SetData(T[] fromData, int offsetInBytes = 0)
+        public void SetData(T[] fromData, int startIndex = 0, int elementCount = 0, int offsetInBytes = 0, SetDataOptions options = SetDataOptions.Discard)
         {
-            base.SetData(fromData, offsetInBytes);
+            base.SetData(fromData, startIndex, elementCount, offsetInBytes, options);
         }
 
         /// <summary>
@@ -1114,9 +1141,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476457</msdn-id>
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
-        public void SetData(GraphicsDevice device, ref T fromData, int offsetInBytes = 0)
+        public void SetData(GraphicsDevice device, ref T fromData, int offsetInBytes = 0, SetDataOptions options = SetDataOptions.Discard)
         {
-            base.SetData(device, ref fromData, offsetInBytes);
+            base.SetData(device, ref fromData, offsetInBytes, options);
         }
 
         /// <summary>
@@ -1131,9 +1158,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476457</msdn-id>
         /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
-        public void SetData(GraphicsDevice device, T[] fromData, int offsetInBytes = 0)
+        public void SetData(GraphicsDevice device, T[] fromData, int startIndex = 0, int elementCount = 0, int offsetInBytes = 0, SetDataOptions options = SetDataOptions.Discard)
         {
-            base.SetData(fromData, offsetInBytes);
+            base.SetData(device, fromData, startIndex, elementCount, offsetInBytes, options);
         }
     }
 }

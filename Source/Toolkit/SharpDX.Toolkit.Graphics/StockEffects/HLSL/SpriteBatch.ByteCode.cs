@@ -10,7 +10,7 @@
 
 namespace SharpDX.Toolkit.Graphics 
 {
-    public partial class SpriteEffect
+    public partial class SpriteBatch
     {
         private static readonly SharpDX.Toolkit.Graphics.EffectData effectBytecode = SharpDX.Toolkit.Graphics.EffectData.Load(new byte[] {
 84, 75, 70, 88, 40, 7, 0, 0, 83, 72, 68, 82, 226, 6, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 145, 0, 0, 144, 6, 68, 88, 66, 67, 20, 231, 227, 21, 91, 190, 15, 240, 73, 120, 17, 49, 127, 109, 56, 211, 1, 0, 0, 0, 16, 3, 0, 0, 4, 0, 0, 0, 48, 0, 0, 0, 

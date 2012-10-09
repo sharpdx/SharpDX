@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
@@ -155,6 +157,15 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
+        /// Sets a single matrix transposed value.
+        /// </summary>
+        /// <param name="matrix"></param>
+        public unsafe void SetValueTranspose(Matrix matrix)
+        {
+            Matrix.TransposeByRef(ref matrix, ref *(Matrix*)((byte*)buffer.DataPointer + Offset));
+        }
+
+        /// <summary>
         /// Sets an array of values to the associated parameter in the constant buffer.
         /// </summary>
         /// <typeparam name = "T">The type of the value to be written to the buffer.</typeparam>
@@ -197,6 +208,15 @@ namespace SharpDX.Toolkit.Graphics
         public void SetResource<T>(T value) where T : class
         {
             resourceLinker.SetResource(Offset, ResourceType, value);
+        }
+
+        /// <summary>
+        /// Direct access to the resource pointer in order to 
+        /// </summary>
+        /// <param name="resourcePointer"></param>
+        internal void SetResourcePointer(IntPtr resourcePointer) 
+        {
+            resourceLinker.SetResourcePointer(Offset, ResourceType, resourcePointer);
         }
 
         public void SetResource<T>(params T[] valueArray) where T : class

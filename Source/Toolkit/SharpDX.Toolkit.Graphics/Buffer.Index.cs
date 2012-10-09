@@ -47,11 +47,12 @@ namespace SharpDX.Toolkit.Graphics
             /// </summary>
             /// <typeparam name="T">Type of the index buffer to get the sizeof from</typeparam>
             /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
+            /// <param name="indexCount">Number of indices.</param>
             /// <param name="usage">The usage.</param>
             /// <returns>A index buffer</returns>
-            public static Buffer<T> New<T>(GraphicsDevice device, ResourceUsage usage = ResourceUsage.Default) where T : struct
+            public static Buffer<T> New<T>(GraphicsDevice device, int indexCount, ResourceUsage usage = ResourceUsage.Default) where T : struct
             {
-                return Buffer.New<T>(device, 1, BufferFlags.IndexBuffer, usage);
+                return Buffer.New<T>(device, indexCount, BufferFlags.IndexBuffer, usage);
             }
 
             /// <summary>

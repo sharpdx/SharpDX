@@ -34,6 +34,11 @@ namespace SharpDX
     public struct DrawingRectangle : IEquatable<DrawingRectangle>, IDataSerializable
     {
         /// <summary>
+        /// An empty drawing rectangle.
+        /// </summary>
+        public readonly static DrawingRectangle Empty = new DrawingRectangle();
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DrawingRectangle"/> struct.
         /// </summary>
         /// <param name="x">The x.</param>
@@ -126,32 +131,6 @@ namespace SharpDX
         {
             return !left.Equals(right);
         }
-
-#if WinFormsInterop
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="System.Drawing.Rectangle"/> to <see cref="SharpDX.DrawingRectangle"/>.
-        /// </summary>
-        /// <param name="input">The input.</param>
-        /// <returns>
-        /// The result of the conversion.
-        /// </returns>
-        public static implicit operator DrawingRectangle(System.Drawing.Rectangle input)
-        {
-            return new DrawingRectangle(input.X, input.Y, input.Width, input.Height);
-        }
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.DrawingRectangle"/> to <see cref="System.Drawing.Rectangle"/>.
-        /// </summary>
-        /// <param name="input">The input.</param>
-        /// <returns>
-        /// The result of the conversion.
-        /// </returns>
-        public static implicit operator System.Drawing.Rectangle(DrawingRectangle input)
-        {
-            return new System.Drawing.Rectangle(input.X, input.Y, input.Width, input.Height);
-        }
-#endif
 
         public override string ToString()
         {

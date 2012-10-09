@@ -36,37 +36,72 @@ namespace SharpDX
         /// <summary>
         /// Initializes a new instance of the <see cref="DrawingRectangleF"/> struct.
         /// </summary>
+        /// <param name="position">The x-y position of this rectangle.</param>
+        /// <param name="size">The x-y size of this rectangle.</param>
+        public DrawingRectangleF(Vector2 position, Vector2 size)
+        {
+            Position = position;
+            Size = size;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DrawingRectangleF"/> struct.
+        /// </summary>
         /// <param name="x">The x.</param>
         /// <param name="y">The y.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         public DrawingRectangleF(float x, float y, float width, float height)
         {
-            X = x;
-            Y = y;
-            Width = width;
-            Height = height;
+            Position = new Vector2(x,y);
+            Size = new Vector2(width, height);
         }
+
+        /// <summary>
+        /// The Position.
+        /// </summary>
+        public Vector2 Position;
+
+        /// <summary>
+        /// The Size.
+        /// </summary>
+        public Vector2 Size;
 
         /// <summary>
         /// Left coordinate.
         /// </summary>
-        public float X;
+        public float X
+        {
+            get { return Position.X; }
+            set { Position.X = value; }
+        }
 
         /// <summary>
         /// Top coordinate.
         /// </summary>
-        public float Y;
+        public float Y
+        {
+            get { return Position.Y; }
+            set { Position.Y = value; }
+        }
 
         /// <summary>
         /// Width of this rectangle.
         /// </summary>
-        public float Width;
+        public float Width
+        {
+            get { return Size.X; }
+            set { Size.X = value; }
+        }
 
         /// <summary>
         /// Height of this rectangle.
         /// </summary>
-        public float Height;
+        public float Height
+        {
+            get { return Size.Y; }
+            set { Size.Y = value; }
+        }
 
         /// <summary>
         /// Determines whether the specified <see cref="System.Object"/> is equal to this instance.
@@ -164,10 +199,10 @@ namespace SharpDX
             // Write optimized version without using Serialize methods
             if (serializer.Mode == SerializerMode.Write)
             {
-                serializer.Writer.Write(X);
-                serializer.Writer.Write(Y);
-                serializer.Writer.Write(Width);
-                serializer.Writer.Write(Height);
+                serializer.Writer.Write(Position.X);
+                serializer.Writer.Write(Position.Y);
+                serializer.Writer.Write(Size.X);
+                serializer.Writer.Write(Size.Y);
             }
             else
             {

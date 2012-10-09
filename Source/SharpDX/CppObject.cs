@@ -29,7 +29,7 @@ namespace SharpDX
         /// <summary>
         /// The native pointer
         /// </summary>
-        protected unsafe void* _nativePointer;
+        protected internal unsafe void* _nativePointer;
 
         /// <summary>
         ///   Default constructor.

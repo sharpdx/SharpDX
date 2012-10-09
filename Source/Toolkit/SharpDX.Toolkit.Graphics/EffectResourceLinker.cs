@@ -76,7 +76,7 @@ namespace SharpDX.Toolkit.Graphics
             return (T)resources[resourceIndex];
         }
 
-        public void SetResource<T>(int resourceIndex, EffectResourceType type, T value) where T : class
+        public void SetResource<T>(int resourceIndex, EffectResourceType type, object value)
         {
             resources[resourceIndex] = value;
             unsafe
@@ -84,7 +84,17 @@ namespace SharpDX.Toolkit.Graphics
                 Pointers[resourceIndex] = GetNativePointer(resourceIndex, type, value);
             }
         }
-    
+
+        public void SetResourcePointer(int resourceIndex, EffectResourceType type, IntPtr value)
+        {
+            // Don't setup the resources at the global level, only setup the native pointer
+            //resources[resourceIndex] = value;
+            unsafe
+            {
+                Pointers[resourceIndex] = value;
+            }
+        }
+
         public void SetResource<T>(int resourceIndex, EffectResourceType type, params T[] valueArray) where T : class
         {
             foreach (var value in valueArray)
@@ -98,10 +108,13 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        private IntPtr GetNativePointer<T>(int resourceIndex, EffectResourceType type, T value) where T : class
+        private IntPtr GetNativePointer(int resourceIndex, EffectResourceType type, object value)
         {
             if (value == null)
                 return IntPtr.Zero;
+
+            if (value.GetType() == typeof(IntPtr))
+                return (IntPtr) value;
 
             switch (type)
             {

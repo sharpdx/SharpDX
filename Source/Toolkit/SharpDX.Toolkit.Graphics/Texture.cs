@@ -32,8 +32,10 @@ namespace SharpDX.Toolkit.Graphics
     /// Base class for texture resources.
     /// </summary>
     /// <typeparam name="T">Type of the <see cref="N:SharpDX.Direct3D11"/> texture resource.</typeparam>
-    public abstract class Texture : GraphicsResource
+    public abstract class Texture : GraphicsResource, IComparable<Texture>
     {
+        private long textureId;
+
         /// <summary>
         /// Common description for this texture.
         /// </summary>
@@ -86,11 +88,47 @@ namespace SharpDX.Toolkit.Graphics
             mipmapDescriptions = Image.CalculateMipMapDescription(description);
         }
 
+        /// <summary>	
+        /// <dd> <p>Texture width (in texels). The  range is from 1 to <see cref="SharpDX.Direct3D11.Resource.MaximumTexture1DSize"/> (16384). However, the range is actually constrained by the feature level at which you create the rendering device. For more information about restrictions, see Remarks.</p> </dd>	
+        /// </summary>	
+        /// <remarks>
+        /// This field is valid for all textures: <see cref="Texture1D"/>, <see cref="Texture2D"/>, <see cref="Texture3D"/> and <see cref="TextureCube"/>.
+        /// </remarks>
+        public int Width
+        {
+            get { return Description.Width; }
+        }
+
+        /// <summary>	
+        /// <dd> <p>Texture height (in texels). The  range is from 1 to <see cref="SharpDX.Direct3D11.Resource.MaximumTexture3DSize"/> (2048). However, the range is actually constrained by the feature level at which you create the rendering device. For more information about restrictions, see Remarks.</p> </dd>	
+        /// </summary>	
+        /// <remarks>
+        /// This field is only valid for <see cref="Texture2D"/>, <see cref="Texture3D"/> and <see cref="TextureCube"/>.
+        /// </remarks>
+        public int Height
+        {
+            get { return Description.Height; }
+        }
+
+        /// <summary>	
+        /// <dd> <p>Texture depth (in texels). The  range is from 1 to <see cref="SharpDX.Direct3D11.Resource.MaximumTexture3DSize"/> (2048). However, the range is actually constrained by the feature level at which you create the rendering device. For more information about restrictions, see Remarks.</p> </dd>	
+        /// </summary>	
+        /// <remarks>
+        /// This field is only valid for <see cref="Texture3D"/>.
+        /// </remarks>
+        public int Depth
+        {
+            get { return Description.Depth; }
+        }
+
+
         protected override void Initialize(DeviceChild resource)
         {
             // Be sure that we are storing only the main device (which contains the immediate context).
             base.Initialize(resource);
             InitializeViews();
+            // Gets a Texture ID
+            textureId = resource.NativePointer.ToInt64();
         }
 
         /// <summary>
@@ -995,6 +1033,11 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             return mipLevels;
+        }
+
+        public int CompareTo(Texture obj)
+        {
+            return textureId.CompareTo(obj.textureId);
         }
     }
 }

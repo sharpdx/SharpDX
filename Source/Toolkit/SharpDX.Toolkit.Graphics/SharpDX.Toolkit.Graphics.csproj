@@ -11,7 +11,7 @@
   <ItemGroup Condition=" '$(SharpDXWin8)' == 'false'">
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Drawing"/>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
@@ -28,6 +28,10 @@
     <Compile Include="RasterizerStateCollection.cs" />
     <Compile Include="SamplerStateCollection.cs" />
     <Compile Include="DepthStencilStateCollection.cs" />
+    <Compile Include="SetDataOptions.cs" />
+    <Compile Include="SpriteBatch.cs" />
+    <Compile Include="SpriteEffects.cs" />
+    <Compile Include="SpriteSortMode.cs" />
     <Compile Include="StateCollectionBase.cs" />
     <Compile Include="Buffer.cs" />
     <Compile Include="Buffer.Constant.cs" />
@@ -95,18 +99,16 @@
       <DependentUpon>SkinnedEffect.fx</DependentUpon>
     </Compile>
     <Compile Include="StockEffects\C#\SkinnedEffect.cs" />
-    <Compile Include="StockEffects\HLSL\SpriteEffect.ByteCode.cs">
+    <Compile Include="StockEffects\HLSL\SpriteBatch.ByteCode.cs">
       <AutoGen>true</AutoGen>
       <DependentUpon>SpriteEffect.fx</DependentUpon>
     </Compile>
-    <Compile Include="StockEffects\C#\SpriteEffect.cs" />
     <Compile Include="TextureDimension.cs" />
     <Compile Include="TGAHelper.cs" />
     <Compile Include="UnorderedAccessViewSelector.cs" />
     <Compile Include="ShaderResourceViewSelector.cs" />
     <Compile Include="RenderTargetViewSelector.cs" />
     <Compile Include="VertexInputLayout.cs" />
-    <Compile Include="VertexLayout.cs" />
     <Compile Include="VertexElementAttribute.cs" />
     <Compile Include="VertexBufferLayout.cs" />
     <Compile Include="VertexElement.cs" />

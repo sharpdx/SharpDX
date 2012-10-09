@@ -276,8 +276,8 @@ namespace SharpDX.Toolkit.Graphics
                     }
                 }
 
-                pLinks = stageBlock.ConstantBufferSlotLinks.Links;
                 var localLink = stageBlock.ConstantBufferSlotLinks;
+                pLinks = localLink.Links;
                 for (int i = 0; i < localLink.Count; i++)
                 {
                     shaderStage.SetConstantBuffers(pLinks->SlotIndex, pLinks->SlotCount, pLinks->Pointer);
@@ -288,6 +288,7 @@ namespace SharpDX.Toolkit.Graphics
                 // Setup ShaderResourceView
                 // ----------------------------------------------
                 localLink = stageBlock.ShaderResourceViewSlotLinks;
+                pLinks = localLink.Links;
                 for (int i = 0; i < localLink.Count; i++)
                 {
                     shaderStage.SetShaderResources(pLinks->SlotIndex, pLinks->SlotCount, pLinks->Pointer);
@@ -298,6 +299,7 @@ namespace SharpDX.Toolkit.Graphics
                 // Setup UnorderedAccessView
                 // ----------------------------------------------
                 localLink = stageBlock.UnorderedAccessViewSlotLinks;
+                pLinks = localLink.Links;
                 // TODO: Add support for customizable UAV Counters
                 if (stageBlock.Type == EffectShaderType.Compute)
                 {
@@ -322,6 +324,7 @@ namespace SharpDX.Toolkit.Graphics
                 // Setup SamplerStates
                 // ----------------------------------------------
                 localLink = stageBlock.SamplerStateSlotLinks;
+                pLinks = localLink.Links;
                 for (int i = 0; i < localLink.Count; i++)
                 {
                     shaderStage.SetSamplers(pLinks->SlotIndex, pLinks->SlotCount, pLinks->Pointer);
@@ -430,6 +433,10 @@ namespace SharpDX.Toolkit.Graphics
             {
                 var constantBufferRaw = shaderRaw.ConstantBuffers[i];
 
+                // Constant buffers with a null size are skipped
+                if (constantBufferRaw.Size == 0)
+                    continue;
+
                 var constantBuffer = Effect.GetOrCreateConstantBuffer(Effect.GraphicsDevice, constantBufferRaw);
                 // IF constant buffer is null, it means that there is a conflict
                 if (constantBuffer == null)
@@ -469,6 +476,12 @@ namespace SharpDX.Toolkit.Graphics
             {
                 EffectParameter parameter;
                 var previousParameter = Effect.Parameters[parameterRaw.Name];
+
+                // Skip enmpty constant buffers.
+                if (parameterRaw.Type == EffectParameterType.ConstantBuffer && Effect.ConstantBuffers[parameterRaw.Name] == null)
+                {
+                    continue;
+                }
 
                 int resourceIndex = Effect.ResourceLinker.Count;
 

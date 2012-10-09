@@ -256,6 +256,9 @@
 
     <map method="ID3D11Device::GetDeviceRemovedReason" return="true"/>
 
+    <map method="ID3D11View::GetResource" property="false" visibility="internal"/>
+    <map param="ID3D11View::GetResource::ppResource" type="void"/>
+
     <!--
     // *****************************************************************
     // D3D11 Functions

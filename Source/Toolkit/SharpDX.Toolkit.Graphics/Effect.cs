@@ -137,6 +137,12 @@ namespace SharpDX.Toolkit.Graphics
         /// </remarks>
         public event OnApplyDelegate OnApplyCallback;
 
+        /// <summary>
+        /// Gets or sets the current technique.
+        /// </summary>
+        /// <value>The current technique.</value>
+        public EffectTechnique CurrentTechnique { get; set; }
+
         protected virtual void Initialize()
         {
             Initialize(Group.Find(Name));

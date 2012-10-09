@@ -38,6 +38,8 @@ namespace SharpDX.Toolkit.Graphics
         private int maxSlotCountForVertexBuffer;
         private Dictionary<VertexInputLayout, InputLayoutPair> inputLayoutDeviceCache;
         private Dictionary<VertexInputLayout, InputLayoutPair> inputLayoutContextCache;
+        internal int spriteBeginCount;
+        internal int spriteImmediateBeginCount;
 
         internal EffectPass CurrentPass;
 
@@ -100,7 +102,8 @@ namespace SharpDX.Toolkit.Graphics
         private bool hasNewVertexBufferLayout;
 
         private InputAssemblerStage inputAssemblerStage;
-        private RasterizerStage rasterizeStage;
+        private RasterizerStage rasterizerStage;
+        internal PixelShaderStage PixelShaderStage;
         private OutputMergerStage outputMergerStage;
 
         internal readonly bool needWorkAroundForUpdateSubResource;
@@ -197,7 +200,8 @@ namespace SharpDX.Toolkit.Graphics
 
             inputAssemblerStage = Context.InputAssembler;
             outputMergerStage = Context.OutputMerger;
-            rasterizeStage = Context.Rasterizer;
+            rasterizerStage = Context.Rasterizer;
+            PixelShaderStage = Context.PixelShader;
 
             // Precompute shader stages
             ShaderStages = new CommonShaderStage[]
@@ -789,7 +793,7 @@ namespace SharpDX.Toolkit.Graphics
             if (ReferenceEquals(currentRasterizerState, rasterizerState))
                 return;
 
-            rasterizeStage.State = rasterizerState;
+            rasterizerStage.State = rasterizerState;
 
             // Set new current state
             currentRasterizerState = rasterizerState;
@@ -810,7 +814,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::RSSetScissorRects</unmanaged-short>	
         public void SetScissorRectangles(int left, int top, int right, int bottom)
         {
-            rasterizeStage.SetScissorRectangle(left, top, right, bottom);
+            rasterizerStage.SetScissorRectangle(left, top, right, bottom);
         }
 
         /// <summary>
@@ -825,7 +829,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::RSSetScissorRects</unmanaged-short>	
         public void SetScissorRectangles(params Rectangle[] scissorRectangles)
         {
-            rasterizeStage.SetScissorRectangles(scissorRectangles);
+            rasterizerStage.SetScissorRectangles(scissorRectangles);
         }
 
         /// <summary>
@@ -865,7 +869,7 @@ namespace SharpDX.Toolkit.Graphics
         public void SetViewports(float x, float y, float width, float height, float minZ = 0.0f, float maxZ = 1.0f)
         {
             viewports[0] = new Viewport(x, y, width, height, minZ, maxZ);
-            rasterizeStage.SetViewport(x, y, width, height, minZ, maxZ);
+            rasterizerStage.SetViewport(x, y, width, height, minZ, maxZ);
         }
 
         /// <summary>
@@ -881,7 +885,7 @@ namespace SharpDX.Toolkit.Graphics
         public void SetViewports(Viewport viewport)
         {
             viewports[0] = viewport;
-            rasterizeStage.SetViewports(viewport);
+            rasterizerStage.SetViewports(viewport);
         }
 
         /// <summary>
@@ -899,7 +903,7 @@ namespace SharpDX.Toolkit.Graphics
             for (int i = 0; i < viewports.Length; i++)
                 this.viewports[i] = viewports[i];
 
-            rasterizeStage.SetViewports(viewports);
+            rasterizerStage.SetViewports(viewports);
         }
 
         /// <summary>

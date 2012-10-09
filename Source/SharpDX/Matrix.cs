@@ -1145,6 +1145,31 @@ namespace SharpDX
         /// Calculates the transpose of the specified matrix.
         /// </summary>
         /// <param name="value">The matrix whose transpose is to be calculated.</param>
+        /// <param name="result">When the method completes, contains the transpose of the specified matrix.</param>
+        public static void TransposeByRef(ref Matrix value, ref Matrix result)
+        {
+            result.M11 = value.M11;
+            result.M12 = value.M21;
+            result.M13 = value.M31;
+            result.M14 = value.M41;
+            result.M21 = value.M12;
+            result.M22 = value.M22;
+            result.M23 = value.M32;
+            result.M24 = value.M42;
+            result.M31 = value.M13;
+            result.M32 = value.M23;
+            result.M33 = value.M33;
+            result.M34 = value.M43;
+            result.M41 = value.M14;
+            result.M42 = value.M24;
+            result.M43 = value.M34;
+            result.M44 = value.M44;
+        }
+
+        /// <summary>
+        /// Calculates the transpose of the specified matrix.
+        /// </summary>
+        /// <param name="value">The matrix whose transpose is to be calculated.</param>
         /// <returns>The transpose of the specified matrix.</returns>
         public static Matrix Transpose(Matrix value)
         {
