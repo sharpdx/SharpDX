@@ -45,6 +45,16 @@ namespace SharpGen.Model
 
         public bool IsPersistent { get; set; }
 
+        public override string DocUnmanagedName
+        {
+            get
+            {
+                if (Setter != null && Getter != null)
+                    return string.Format("{0} / {1}", Getter.CppElement.Name, Setter.CppElement.Name);
+                return base.DocUnmanagedName;
+            }
+        }
+
         public string PrefixSetterParam
         {
             get

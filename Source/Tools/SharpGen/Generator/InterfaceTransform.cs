@@ -321,6 +321,8 @@ namespace SharpGen.Generator
             }
         }
 
+        private static readonly Regex MatchGet = new Regex(@"^\s*(\<[Pp]\>)?\s*(Gets?|Retrieves?|Returns)");
+
         /// <summary>
         /// Creates C# properties for method that respect the following convention:
         /// TODO describe the convention to create properties from methods here.
@@ -448,6 +450,13 @@ namespace SharpGen.Generator
 
                 // Associate the property with the Getter element
                 property.CppElement = getterOrSetter.CppElement;
+
+                // If We have a getter, then we need to modify the documentation in order to print that we have Gets and Sets.
+                if (property.Getter != null && property.Setter != null && !string.IsNullOrEmpty(property.Description))
+                {
+                    property.Description = MatchGet.Replace(property.Description, "$1$2 or sets");
+                }
+
                 var parent = getterOrSetter.Parent;
 
                 // If Getter has no property, 
