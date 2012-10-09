@@ -14,7 +14,7 @@ DECLARE_TEXTURE(Texture, 0);
 BEGIN_CONSTANTS
 MATRIX_CONSTANTS
 
-    float4x4 MatrixTransform    _vs(c0) _cb(c0);
+    row_major float4x4 MatrixTransform    _vs(c0) _cb(c0);
 
 END_CONSTANTS
 

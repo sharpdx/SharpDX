@@ -91,7 +91,7 @@ BEGIN_CONSTANTS
 
 MATRIX_CONSTANTS
 
-    float4x4 WorldViewProj  _vs(c1) _cb(c0);
+    row_major float4x4 WorldViewProj  _vs(c1) _cb(c0);
 
 END_CONSTANTS
 

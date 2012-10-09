@@ -106,12 +106,12 @@ BEGIN_CONSTANTS
     float3 FogColor                 _ps(c1)  _cb(c10);
     float4 FogVector                _vs(c11) _cb(c11);
 
-    float4x4 World                  _vs(c16) _cb(c12);
-    float3x3 WorldInverseTranspose  _vs(c19) _cb(c16);
+    row_major float4x4 World                  _vs(c16) _cb(c12);
+    row_major float3x3 WorldInverseTranspose  _vs(c19) _cb(c16);
 
 MATRIX_CONSTANTS
 
-    float4x4 WorldViewProj          _vs(c12) _cb(c0);
+    row_major float4x4 WorldViewProj          _vs(c12) _cb(c0);
 
 END_CONSTANTS
 

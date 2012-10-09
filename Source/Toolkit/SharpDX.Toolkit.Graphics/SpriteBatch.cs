@@ -732,7 +732,7 @@ namespace SharpDX.Toolkit.Graphics
             else
             {
                 effectSampler.SetResource(samplerState);
-                effectMatrixTransform.SetValueTranspose(finalMatrix);
+                effectMatrixTransform.SetValue(finalMatrix);
 
                 // Apply the sprite effect globally
                 spriteEffectPass.Apply();

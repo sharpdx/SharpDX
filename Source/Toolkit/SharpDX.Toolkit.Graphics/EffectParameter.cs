@@ -156,14 +156,14 @@ namespace SharpDX.Toolkit.Graphics
             buffer.IsDirty = true;
         }
 
-        /// <summary>
-        /// Sets a single matrix transposed value.
-        /// </summary>
-        /// <param name="matrix"></param>
-        public unsafe void SetValueTranspose(Matrix matrix)
-        {
-            Matrix.TransposeByRef(ref matrix, ref *(Matrix*)((byte*)buffer.DataPointer + Offset));
-        }
+        ///// <summary>
+        ///// Sets a single matrix transposed value.
+        ///// </summary>
+        ///// <param name="matrix"></param>
+        //public unsafe void SetValueTranspose(Matrix matrix)
+        //{
+        //    Matrix.TransposeByRef(ref matrix, ref *(Matrix*)((byte*)buffer.DataPointer + Offset));
+        //}
 
         /// <summary>
         /// Sets an array of values to the associated parameter in the constant buffer.
