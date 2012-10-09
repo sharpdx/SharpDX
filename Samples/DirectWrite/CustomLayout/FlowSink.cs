@@ -20,7 +20,7 @@
 
 using System;
 using System.Collections.Generic;
-
+using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 
@@ -72,7 +72,7 @@ namespace CustomLayout
 
                 GlyphRun glyphRun = customGlyphRun.Convert(glyphIndices_, glyphAdvances_, glyphOffsets_);
                 if (glyphRun != null)
-                    renderTarget.DrawGlyphRun(new System.Drawing.PointF(customGlyphRun.x, customGlyphRun.y), glyphRun, brush, MeasuringMode.Natural);
+                    renderTarget.DrawGlyphRun(new DrawingPointF(customGlyphRun.x, customGlyphRun.y), glyphRun, brush, MeasuringMode.Natural);
             }
         }
     }

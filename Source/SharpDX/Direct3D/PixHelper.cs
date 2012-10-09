@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 #if !WIN8METRO
-using System.Drawing;
 using System.Runtime.InteropServices;
 namespace SharpDX.Direct3D
 {

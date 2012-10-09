@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 using System;
 using System.Diagnostics;
-using System.Drawing;
 
 using SharpDX;
 using SharpDX.Direct3D9;

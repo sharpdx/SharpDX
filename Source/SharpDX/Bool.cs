@@ -90,7 +90,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="SharpDX.Color4"/> to <see cref="System.Drawing.Color"/>.
+        /// Performs an explicit conversion from <see cref="SharpDX.Bool"/> to <see cref="bool"/>.
         /// </summary>
         /// <param name="booleanValue">The value.</param>
         /// <returns>The result of the conversion.</returns>
@@ -100,7 +100,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="SharpDX.Color4"/> to <see cref="System.Drawing.Color"/>.
+        /// Performs an explicit conversion from <see cref="bool"/> to <see cref="SharpDX.Bool"/>.
         /// </summary>
         /// <param name="boolValue">The value.</param>
         /// <returns>The result of the conversion.</returns>

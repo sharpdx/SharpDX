@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.Drawing;
+using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 using SharpDX.Samples;
@@ -49,7 +49,7 @@ namespace TextRenderingApp
             base.Draw(time);
 
             // Draw the TextLayout
-            RenderTarget2D.DrawTextLayout(new PointF(0,0), TextLayout, SceneColorBrush, DrawTextOptions.None );
+            RenderTarget2D.DrawTextLayout(new DrawingPointF(0,0), TextLayout, SceneColorBrush, DrawTextOptions.None );
         }
 
 

@@ -44,7 +44,7 @@ namespace SharpDX.Samples
 
             HwndRenderTargetProperties properties = new HwndRenderTargetProperties();
             properties.Hwnd = DisplayHandle;
-            properties.PixelSize = new System.Drawing.Size(demoConfiguration.Width, demoConfiguration.Height);
+            properties.PixelSize = new SharpDX.DrawingSize(demoConfiguration.Width, demoConfiguration.Height);
             properties.PresentOptions = PresentOptions.None;
 
             RenderTarget2D = new WindowRenderTarget(Factory2D, new RenderTargetProperties(new PixelFormat(Format.Unknown, AlphaMode.Premultiplied)), properties);

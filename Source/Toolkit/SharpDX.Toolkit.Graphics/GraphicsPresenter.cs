@@ -21,9 +21,6 @@
 using System;
 using System.Collections.Generic;
 using SharpDX.DXGI;
-#if !WIN8METRO
-using System.Drawing;
-#endif
 
 namespace SharpDX.Toolkit.Graphics
 {
@@ -127,7 +124,7 @@ namespace SharpDX.Toolkit.Graphics
             else if (deviceWindowHandle is System.Windows.Forms.Control)
             {
                 var control = (System.Windows.Forms.Control)deviceWindowHandle;
-                control.ClientSize = new Size(width, height);
+                control.ClientSize = new System.Drawing.Size(width, height);
                 windowHandle = control.Handle;
             }
             else

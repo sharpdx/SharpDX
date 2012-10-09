@@ -162,32 +162,6 @@ namespace SharpDX
             return !left.Equals(right);
         }
 
-#if WinFormsInterop
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="System.Drawing.RectangleF"/> to <see cref="SharpDX.DrawingRectangleF"/>.
-        /// </summary>
-        /// <param name="input">The input.</param>
-        /// <returns>
-        /// The result of the conversion.
-        /// </returns>
-        public static implicit operator DrawingRectangleF(System.Drawing.RectangleF input)
-        {
-            return new DrawingRectangleF(input.X, input.Y, input.Width, input.Height);
-        }
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.DrawingRectangleF"/> to <see cref="System.Drawing.RectangleF"/>.
-        /// </summary>
-        /// <param name="input">The input.</param>
-        /// <returns>
-        /// The result of the conversion.
-        /// </returns>
-        public static implicit operator System.Drawing.RectangleF(DrawingRectangleF input)
-        {
-            return new System.Drawing.RectangleF(input.X, input.Y, input.Width, input.Height);
-        }
-#endif
-
         public override string ToString()
         {
             return string.Format("(X: {0} Y: {1} W: {2} H: {3})", X, Y, Width, Height);

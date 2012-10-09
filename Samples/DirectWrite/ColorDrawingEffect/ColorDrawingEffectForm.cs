@@ -125,7 +125,7 @@ namespace ColorDrawingEffect
             Factory2D = new SharpDX.Direct2D1.Factory();
             FactoryDWrite = new SharpDX.DirectWrite.Factory();
 
-            var properties = new HwndRenderTargetProperties {Hwnd = Handle, PixelSize = ClientSize, PresentOptions = PresentOptions.None};
+            var properties = new HwndRenderTargetProperties {Hwnd = Handle, PixelSize = new DrawingSize(ClientSize.Width, ClientSize.Height), PresentOptions = PresentOptions.None};
 
             RenderTarget2D = new WindowRenderTarget(Factory2D, new RenderTargetProperties(), properties)
                                  {
@@ -186,7 +186,7 @@ namespace ColorDrawingEffect
         {
             try
             {
-                RenderTarget2D.Resize(ClientRectangle.Size);
+                RenderTarget2D.Resize(new DrawingSize(ClientRectangle.Size.Width, ClientRectangle.Size.Height));
                 CurrentTextLayout.MaxWidth = ClientRectangle.Size.Width;
                 CurrentTextLayout.MaxHeight = ClientRectangle.Size.Height;
             }

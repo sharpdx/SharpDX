@@ -109,32 +109,6 @@ namespace SharpDX
             return !left.Equals(right);
         }
 
-#if WinFormsInterop
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="System.Drawing.Point"/> to <see cref="SharpDX.DrawingPoint"/>.
-        /// </summary>
-        /// <param name="input">The input.</param>
-        /// <returns>
-        /// The result of the conversion.
-        /// </returns>
-        public static implicit operator DrawingPoint(System.Drawing.Point input)
-        {
-            return new DrawingPoint(input.X, input.Y);
-        }
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.DrawingPoint"/> to <see cref="System.Drawing.Point"/>.
-        /// </summary>
-        /// <param name="input">The input.</param>
-        /// <returns>
-        /// The result of the conversion.
-        /// </returns>
-        public static implicit operator System.Drawing.Point(DrawingPoint input)
-        {
-            return new System.Drawing.Point(input.X, input.Y);
-        }
-#endif
-
         public override string ToString()
         {
             return string.Format("({0},{1})", X, Y);

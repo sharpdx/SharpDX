@@ -181,27 +181,6 @@ namespace SharpDX
                 return result;
             }
         }
-#if WinFormsInterop
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="System.Drawing.RectangleF"/> to <see cref="SharpDX.RectangleF"/>.
-        /// </summary>
-        /// <param name="input">The input.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator RectangleF(System.Drawing.RectangleF input)
-        {
-            return new RectangleF(input.Left, input.Top, input.Right, input.Bottom);
-        }
-
-        /// <summary>
-        /// Rectangles the F.
-        /// </summary>
-        /// <param name="input">The input.</param>
-        /// <returns></returns>
-        public static implicit operator System.Drawing.RectangleF(RectangleF input)
-        {
-            return new System.Drawing.RectangleF(input.Left, input.Top, input.Right - input.Left, input.Bottom - input.Top);
-        }
-#endif
 
         /// <summary>
         /// Performs an implicit conversion from <see cref="System.Drawing.RectangleF"/> to <see cref="SharpDX.RectangleF"/>.

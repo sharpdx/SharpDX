@@ -109,32 +109,6 @@ namespace SharpDX
             return !left.Equals(right);
         }
 
-#if WinFormsInterop
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="System.Drawing.Size"/> to <see cref="SharpDX.DrawingSize"/>.
-        /// </summary>
-        /// <param name="input">The input.</param>
-        /// <returns>
-        /// The result of the conversion.
-        /// </returns>
-        public static implicit operator DrawingSize(System.Drawing.Size input)
-        {
-            return new DrawingSize(input.Width, input.Height);
-        }
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="SharpDX.DrawingSize"/> to <see cref="System.Drawing.Size"/>.
-        /// </summary>
-        /// <param name="input">The input.</param>
-        /// <returns>
-        /// The result of the conversion.
-        /// </returns>
-        public static implicit operator System.Drawing.Size(DrawingSize input)
-        {
-            return new System.Drawing.Size(input.Width, input.Height);
-        }
-#endif
-
         public override string ToString()
         {
             return string.Format("({0},{1})", Width, Height);
