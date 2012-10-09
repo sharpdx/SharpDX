@@ -76,7 +76,7 @@ namespace SharpDX.Direct2D1.Effects
             {
                 var array = new float[NumBins];
                 fixed (void* pArray = array)
-                    GetValue((int)HistogramProperties.HistogramOutput, PropertyType.Array, (IntPtr)pArray, sizeof(float) * array.Length);
+                    GetValue((int)HistogramProperties.HistogramOutput, PropertyType.Blob, (IntPtr)pArray, sizeof(float) * array.Length);
                 return array;
             }
         }
