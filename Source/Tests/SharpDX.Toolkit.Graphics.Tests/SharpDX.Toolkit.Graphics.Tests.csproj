@@ -51,7 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TestEffectCompiler.cs" />
+    <Compile Include="TestEffect.cs" />
     <Compile Include="TestImage.cs" />
     <Compile Include="TestBuffer.cs" />
     <Compile Include="Program.cs" />

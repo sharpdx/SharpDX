@@ -45,6 +45,11 @@ namespace SharpDX.Toolkit.Graphics
             GraphicsDevice = graphicsDevice;
         }
 
+        protected GraphicsResource(GraphicsDevice graphicsDevice, string name) : base(name)
+        {
+            GraphicsDevice = graphicsDevice;
+        }
+
         /// <summary>
         /// Initializes the specified device local.
         /// </summary>
@@ -93,7 +98,7 @@ namespace SharpDX.Toolkit.Graphics
         protected override void OnNameChanged()
         {
             base.OnNameChanged();
-            if (GraphicsDevice.IsDebugMode)
+            if (GraphicsDevice.IsDebugMode && this.Resource != null)
                 this.Resource.DebugName = Name;
         }
 

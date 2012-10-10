@@ -31,6 +31,10 @@ struct PS_IN
 
 // constant buffer variables
 float4x4 worldViewProj;
+row_major float4x4 worlViewProjRowMajor;
+float3x3 worldViewProj3x3;
+float4x3 matrix4x3;
+row_major float3x4 matrix3x4RowMajor;
 
 // binded resources
 Texture2D tex : register(t0);
@@ -56,6 +60,10 @@ PS_IN VS( VS_IN input)
 	if (ACTIVATE_DUMMY_CODE) 
 	{
 		output.pos = mul(input.pos, worldViewProj) + 
+			mul(input.pos, worlViewProjRowMajor) +
+			float4(mul(input.pos.xyz, worldViewProj3x3).xy, 0, 0) + 
+			mul(input.pos, matrix4x3).xyzz +
+			mul(matrix3x4RowMajor, input.pos).xyzz +
 			tex.SampleLevel(samp, float2(0.5, 0.5), 0) +
 			tex1.SampleLevel(samp, float2(0.5, 0.5), 0) +
 			tex2.SampleLevel(samp, float2(0.5, 0.5), 0) +

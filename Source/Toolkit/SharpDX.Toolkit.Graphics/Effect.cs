@@ -27,7 +27,7 @@ namespace SharpDX.Toolkit.Graphics
     /// <summary>
     /// Main class to apply shader effects.
     /// </summary>
-    public class Effect : Component
+    public class Effect : GraphicsResource
     {
         public delegate EffectPass OnApplyDelegate(EffectPass pass);
 
@@ -37,8 +37,6 @@ namespace SharpDX.Toolkit.Graphics
         ///   Gets a collection of constant buffers that are defined for this effect.
         /// </summary>
         public readonly EffectConstantBufferCollection ConstantBuffers;
-
-        internal readonly GraphicsDevice GraphicsDevice;
 
         /// <summary>
         ///   Gets a collection of parameters that are defined for this effect.
@@ -72,17 +70,29 @@ namespace SharpDX.Toolkit.Graphics
         /// The effect bytecode must contain only a single effect and will be registered into the <see cref="Graphics.GraphicsDevice.DefaultEffectGroup"/>.
         /// </remarks>
         public Effect(GraphicsDevice device, byte[] bytecode)
+            : this(device, EffectData.Load(bytecode))
         {
-            GraphicsDevice = device;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Effect" /> class with the specified bytecode effect. See remarks.
+        /// </summary>
+        /// <param name="device">The device.</param>
+        /// <param name="effectData">The bytecode to add to <see cref="Graphics.GraphicsDevice.DefaultEffectGroup"/>. This bytecode must contain only one effect.</param>
+        /// <exception cref="ArgumentException">If the bytecode doesn't contain a single effect.</exception>
+        /// <remarks>
+        /// The effect bytecode must contain only a single effect and will be registered into the <see cref="Graphics.GraphicsDevice.DefaultEffectGroup"/>.
+        /// </remarks>
+        public Effect(GraphicsDevice device, EffectData effectData) : base(device)
+        {
+            if (effectData.Effects.Count != 1)
+                throw new ArgumentException("Expecting only one effect in the effect bytecode. Use GraphicsDevice.DefaultEffectGroup.RegisterBytecode instead", "bytecode");
+
             ConstantBuffers = new EffectConstantBufferCollection();
             Parameters = new EffectParameterCollection();
             Techniques = new EffectTechniqueCollection();
             ResourceLinker = ToDispose(new EffectResourceLinker());
             Group = device.DefaultEffectGroup;
-
-            var effectData = EffectData.Load(bytecode);
-            if (effectData.Effects.Count != 1) 
-                throw new ArgumentException("Expecting only one effect in the effect bytecode. Use GraphicsDevice.DefaultEffectGroup.RegisterBytecode instead", "bytecode");
 
             // Sets the effect name
             Name = effectData.Effects[0].Name;
@@ -111,9 +121,8 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="device">The device.</param>
         /// <param name="group">The effect group.</param>
         /// <param name="effectName">Name of the effect.</param>
-        public Effect(GraphicsDevice device, EffectGroup group, string effectName) : base(effectName)
+        public Effect(GraphicsDevice device, EffectGroup group, string effectName) : base(device, effectName)
         {
-            GraphicsDevice = device;
             ConstantBuffers = new EffectConstantBufferCollection();
             Parameters = new EffectParameterCollection();
             Techniques = new EffectTechniqueCollection();

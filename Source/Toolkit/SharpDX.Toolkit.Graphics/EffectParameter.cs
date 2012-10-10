@@ -33,6 +33,8 @@ namespace SharpDX.Toolkit.Graphics
         internal readonly EffectData.Parameter ParameterDescription;
         internal readonly EffectConstantBuffer buffer;
         private readonly EffectResourceLinker resourceLinker;
+        private readonly GetMatrixDelegate GetMatrixImpl;
+        private readonly CopyMatrixDelegate CopyMatrix;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EffectParameter"/> class.
@@ -51,6 +53,16 @@ namespace SharpDX.Toolkit.Graphics
             ColumnCount = parameterDescription.ColumnCount;
             ElementCount = parameterDescription.Count;
             Offset = parameterDescription.Offset;
+            Size = parameterDescription.Size;
+
+            // If the expecting Matrix is column_major or the expected size is != from Matrix, than we need to remap SharpDX.Matrix to it.
+            if (ParameterClass == EffectParameterClass.MatrixRows || ParameterClass == EffectParameterClass.MatrixColumns)
+            {
+                var isMatrixToMap = parameterDescription.Size != Interop.SizeOf<Matrix>() || ParameterClass == EffectParameterClass.MatrixColumns;
+                // Use the correct function for this parameter
+                CopyMatrix = isMatrixToMap ? (ParameterClass == EffectParameterClass.MatrixRows) ? new CopyMatrixDelegate(CopyMatrixRowMajor) : CopyMatrixColumnMajor : CopyMatrixDirect;
+                GetMatrixImpl = isMatrixToMap ? (ParameterClass == EffectParameterClass.MatrixRows) ? new GetMatrixDelegate(GetMatrixRowMajorFrom) : GetMatrixColumnMajorFrom : GetMatrixDirectFrom;
+            }
         }
 
         /// <summary>
@@ -119,30 +131,96 @@ namespace SharpDX.Toolkit.Graphics
         public readonly int ElementCount;
 
         /// <summary>
+        /// Size in bytes of the element, only valid for value types.
+        /// </summary>
+        public readonly int Size;
+
+        /// <summary>
         /// Offset of this parameter.
         /// </summary>
         /// <remarks>
         /// For a value type, this offset is the offset in bytes inside the constant buffer.
         /// For a resource type, this offset is an index to the resource linker.
         /// </remarks>
-        internal int Offset;
+        public readonly int Offset;
 
         /// <summary>
         /// Gets a single value to the associated parameter in the constant buffer.
         /// </summary>
-        /// <typeparam name = "T">The type of the value to read from the buffer.</typeparam>
+        /// <typeparam name="T">The type of the value to read from the buffer.</typeparam>
+        /// <returns>The value of this parameter.</returns>
         public T GetValue<T>() where T : struct
         {
             return buffer.Get<T>(Offset);
         }
 
         /// <summary>
-        /// Gets a single value to the associated parameter in the constant buffer.
+        /// Gets an array of values to the associated parameter in the constant buffer.
         /// </summary>
         /// <typeparam name = "T">The type of the value to read from the buffer.</typeparam>
+        /// <returns>The value of this parameter.</returns>
         public T[] GetValueArray<T>(int count) where T : struct
         {
             return buffer.GetRange<T>(Offset, count);
+        }
+
+        /// <summary>
+        /// Gets a single value to the associated parameter in the constant buffer.
+        /// </summary>
+        /// <returns>The value of this parameter.</returns>
+        public Matrix GetMatrix()
+        {
+            return GetMatrixImpl(Offset);
+        }
+
+        /// <summary>
+        /// Gets a single value to the associated parameter in the constant buffer.
+        /// </summary>
+        /// <returns>The value of this parameter.</returns>
+        public Matrix GetMatrix(int startIndex)
+        {
+            return GetMatrixImpl(Offset + (startIndex << 6));
+        }
+
+        /// <summary>
+        /// Gets an array of matrices to the associated parameter in the constant buffer.
+        /// </summary>
+        /// <param name="count">The count.</param>
+        /// <returns>Matrix[][].</returns>
+        /// <returns>The value of this parameter.</returns>
+        public Matrix[] GetMatrixArray(int count)
+        {
+            return GetMatrixArray(0, count);
+        }
+
+        /// <summary>
+        /// Gets a single value to the associated parameter in the constant buffer.
+        /// </summary>
+        /// <typeparam name = "T">The type of the value to read from the buffer.</typeparam>
+        /// <returns>The value of this parameter.</returns>
+        public unsafe Matrix[] GetMatrixArray(int startIndex, int count)
+        {
+            var result = new Matrix[count];
+            var offset = Offset + (startIndex << 6);
+            // Fix the whole buffer
+            fixed (Matrix* pMatrix = result)
+            {
+                for (int i = 0; i < result.Length; i++, offset += Size)
+                    pMatrix[i] = GetMatrixImpl(offset);
+            }
+            buffer.IsDirty = true;
+            return result;
+        }
+
+        /// <summary>
+        /// Sets a single value to the associated parameter in the constant buffer.
+        /// </summary>
+        /// <typeparam name = "T">The type of the value to be written to the buffer.</typeparam>
+        /// <param name = "value">The value to write to the buffer.</param>
+        public void SetValue<T>(ref T value) where T : struct
+        {
+            buffer.Set(Offset, ref value);
+            buffer.IsDirty = true;
         }
 
         /// <summary>
@@ -156,14 +234,72 @@ namespace SharpDX.Toolkit.Graphics
             buffer.IsDirty = true;
         }
 
-        ///// <summary>
-        ///// Sets a single matrix transposed value.
-        ///// </summary>
-        ///// <param name="matrix"></param>
-        //public unsafe void SetValueTranspose(Matrix matrix)
-        //{
-        //    Matrix.TransposeByRef(ref matrix, ref *(Matrix*)((byte*)buffer.DataPointer + Offset));
-        //}
+        /// <summary>
+        /// Sets a single matrix value to the associated parameter in the constant buffer.
+        /// </summary>
+        /// <param name = "value">The matrix to write to the buffer.</param>
+        public void SetValue(ref Matrix value)
+        {
+            CopyMatrix(ref value, Offset);
+            buffer.IsDirty = true;
+        }
+
+        /// <summary>
+        /// Sets a single matrix value to the associated parameter in the constant buffer.
+        /// </summary>
+        /// <param name = "value">The matrix to write to the buffer.</param>
+        public void SetValue(Matrix value)
+        {
+            CopyMatrix(ref value, Offset);
+            buffer.IsDirty = true;
+        }
+
+        /// <summary>
+        /// Sets an array of matrices to the associated parameter in the constant buffer.
+        /// </summary>
+        /// <param name = "values">An array of matrices to be written to the current buffer.</param>
+        public unsafe void SetValue(Matrix[] values)
+        {
+            var offset = Offset;
+            // Fix the whole buffer
+            fixed (Matrix* pMatrix = values)
+            {
+                for (int i = 0; i < values.Length; i++)
+                {
+                    CopyMatrix(ref pMatrix[i], offset);
+                    offset += Size;
+                }
+            }
+            buffer.IsDirty = true;
+        }
+
+        /// <summary>
+        /// Sets a single matrix at the specified index for the associated parameter in the constant buffer.
+        /// </summary>
+        /// <param name="index">Index of the matrix to write in element count.</param>
+        /// <param name = "value">The matrix to write to the buffer.</param>
+        public void SetValue(int index, Matrix value) 
+        {
+            CopyMatrix(ref value, Offset + (index << 6));
+            buffer.IsDirty = true;
+        }
+
+        /// <summary>
+        /// Sets an array of matrices to at the specified index for the associated parameter in the constant buffer.
+        /// </summary>
+        /// <param name="index">Index of the matrix to write in element count.</param>
+        /// <param name = "values">An array of matrices to be written to the current buffer.</param>
+        public unsafe void SetValue(int index, Matrix[] values) 
+        {
+            var offset = Offset + (index << 6);
+            // Fix the whole buffer
+            fixed (Matrix* pMatrix = values)
+            {
+                for (int i = 0; i < values.Length; i++, offset += Size)
+                    CopyMatrix(ref pMatrix[i], offset);
+            }
+            buffer.IsDirty = true;
+        }
 
         /// <summary>
         /// Sets an array of values to the associated parameter in the constant buffer.
@@ -182,9 +318,21 @@ namespace SharpDX.Toolkit.Graphics
         /// <typeparam name = "T">The type of the value to be written to the buffer.</typeparam>
         /// <param name="index">Index of the value to write in typeof(T) element count.</param>
         /// <param name = "value">The value to write to the buffer.</param>
+        public void SetValue<T>(int index, ref T value) where T : struct
+        {
+            buffer.Set(Offset + Interop.SizeOf<T>() * index, ref value);
+            buffer.IsDirty = true;
+        }
+
+        /// <summary>
+        /// Sets a single value at the specified index for the associated parameter in the constant buffer.
+        /// </summary>
+        /// <typeparam name = "T">The type of the value to be written to the buffer.</typeparam>
+        /// <param name="index">Index of the value to write in typeof(T) element count.</param>
+        /// <param name = "value">The value to write to the buffer.</param>
         public void SetValue<T>(int index, T value) where T : struct
         {
-            buffer.Set(Offset + Utilities.SizeOf<T>() * index, value);
+            buffer.Set(Offset + Interop.SizeOf<T>() * index, value);
             buffer.IsDirty = true;
         }
 
@@ -196,7 +344,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name = "values">An array of values to be written to the current buffer.</param>
         public void SetValue<T>(int index, T[] values) where T : struct
         {
-            buffer.Set(Offset + Utilities.SizeOf<T>() * index, values);
+            buffer.Set(Offset + Interop.SizeOf<T>() * index, values);
             buffer.IsDirty = true;
         }
 
@@ -249,6 +397,120 @@ namespace SharpDX.Toolkit.Graphics
         public override string ToString()
         {
             return string.Format("[{0}] {1} Class: {2}, Resource: {3}, Type: {4}, IsValue: {5}, RowCount: {6}, ColumnCount: {7}, ElementCount: {8}", Index, Name, ParameterClass, ResourceType, ParameterType, IsValueType, RowCount, ColumnCount, ElementCount);
+        }
+
+        /// <summary>
+        /// CopyMatrix delegate used to reorder matrix when copying from <see cref="Matrix"/>.
+        /// </summary>
+        /// <param name="matrix">The source matrix.</param>
+        /// <param name="offset">The offset in bytes to write to</param>
+        private delegate void CopyMatrixDelegate(ref Matrix matrix, int offset);
+
+        /// <summary>
+        /// Copy matrix in row major order.
+        /// </summary>
+        /// <param name="matrix">The source matrix.</param>
+        /// <param name="offset">The offset in bytes to write to</param>
+        private unsafe void CopyMatrixRowMajor(ref Matrix matrix, int offset)
+        {
+            var pDest = (float*)((byte*)buffer.DataPointer + offset);
+            fixed (void* pMatrix = &matrix)
+            {
+                var pSrc = (float*)pMatrix;
+                // If Matrx is row_major but expecting less columns/rows
+                // then copy only necessasry columns/rows.
+                for (int i = 0; i < RowCount; i++)
+                {
+                    for (int j = 0; j < ColumnCount; j++, pDest++)
+                        *pDest = pSrc[j];
+                    pSrc += 4;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Copy matrix in column major order.
+        /// </summary>
+        /// <param name="matrix">The source matrix.</param>
+        /// <param name="offset">The offset in bytes to write to</param>
+        private unsafe void CopyMatrixColumnMajor(ref Matrix matrix, int offset)
+        {
+            var pDest = (float*)((byte*)buffer.DataPointer + offset);
+            fixed (void* pMatrix = &matrix)
+            {
+                var pSrc = (float*)pMatrix;
+                // If Matrix is column_major, then we need to transpose it
+                for (int i = 0; i < ColumnCount; i++, pSrc++)
+                {
+                    for (int j = 0; j < RowCount; j++, pDest++)
+                        *pDest = pSrc[j * 4];
+                }
+            }
+        }
+
+        /// <summary>
+        /// Straight Matrix copy, no conversion.
+        /// </summary>
+        /// <param name="matrix">The source matrix.</param>
+        /// <param name="offset">The offset in bytes to write to</param>
+        private void CopyMatrixDirect(ref Matrix matrix, int offset)
+        {
+            buffer.Set(offset, matrix);
+        }
+
+        /// <summary>
+        /// CopyMatrix delegate used to reorder matrix when copying from <see cref="Matrix"/>.
+        /// </summary>
+        /// <param name="offset">The offset in bytes to write to</param>
+        private delegate Matrix GetMatrixDelegate(int offset);
+
+        /// <summary>
+        /// Copy matrix in row major order.
+        /// </summary>
+        /// <param name="offset">The offset in bytes to write to</param>
+        private unsafe Matrix GetMatrixRowMajorFrom(int offset)
+        {
+            var result = default(Matrix);
+            var pSrc = (float*)((byte*)buffer.DataPointer + offset);
+            var pDest = (float*)&result;
+
+            // If Matrix is row_major but expecting less columns/rows
+            // then copy only necessasry columns/rows.
+            for (int i = 0; i < RowCount; i++)
+            {
+                for (int j = 0; j < ColumnCount; j++, pSrc++)
+                    pDest[j] = *pSrc;
+                pDest += 4;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Copy matrix in column major order.
+        /// </summary>
+        /// <param name="offset">The offset in bytes to write to</param>
+        private unsafe Matrix GetMatrixColumnMajorFrom(int offset)
+        {
+            var result = default(Matrix);
+            var pSrc = (float*)((byte*)buffer.DataPointer + offset);
+            var pDest = (float*)&result;
+
+            // If Matrix is column_major, then we need to transpose it
+            for (int i = 0; i < ColumnCount; i++, pDest++)
+            {
+                for (int j = 0; j < RowCount; j++)
+                    pDest[j * 4] = *pSrc++;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Straight Matrix copy, no conversion.
+        /// </summary>
+        /// <param name="offset">The offset in bytes to write to</param>
+        private Matrix GetMatrixDirectFrom(int offset)
+        {
+            return buffer.GetMatrix(offset);
         }
     }
 }

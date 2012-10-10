@@ -426,7 +426,7 @@ namespace SharpDX.Toolkit.Graphics
             // Cache the input signature
             if (shaderRaw.Type == EffectShaderType.Vertex)
             {
-                inputSignatureManager = graphicsDevice.GetOrCreateInputSignatureManager(shaderRaw.Bytecode, shaderRaw.Hashcode);
+                inputSignatureManager = graphicsDevice.GetOrCreateInputSignatureManager(shaderRaw.InputSignature.Bytecode, shaderRaw.InputSignature.Hashcode);
             }
 
             for (int i = 0; i < shaderRaw.ConstantBuffers.Count; i++)

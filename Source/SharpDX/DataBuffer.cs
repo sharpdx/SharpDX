@@ -421,6 +421,19 @@ namespace SharpDX
             }
         }
 
+        /// <summary>
+        ///   Sets a single value to the buffer at a specified position.
+        /// </summary>
+        /// <typeparam name = "T">The type of the value to be written to the buffer.</typeparam>
+        /// <param name="positionInBytes">Relative position in bytes from the beginning of the buffer to set the data to.</param>
+        /// <param name = "value">The value to write to the buffer.</param>
+        public void Set<T>(int positionInBytes, ref T value) where T : struct
+        {
+            unsafe
+            {
+                Interop.CopyInline(_buffer + positionInBytes, ref value);
+            }
+        }
 
         /// <summary>
         ///   Sets a single value to the buffer at a specified position.
