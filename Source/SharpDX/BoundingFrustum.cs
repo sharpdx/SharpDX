@@ -487,7 +487,7 @@ namespace SharpDX
             var result = ContainmentType.Contains;
             for (int i = 0; i < 6; i++)
             {
-                plane = GetPlane(0);
+                plane = GetPlane(i);
                 GetBoxToPlanePVertexNVertex(ref box, ref plane.Normal, out p, out n);
                 if (Collision.PlaneIntersectsPoint(ref pNear, ref p) == PlaneIntersectionType.Back)
                     return ContainmentType.Disjoint;
