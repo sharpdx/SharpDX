@@ -91,7 +91,7 @@ namespace SharpDX.Toolkit.Graphics
             {
                 serializer.Serialize(ref Semantics);
                 serializer.AllowNull = true;
-                serializer.Serialize(ref Semantics);
+                serializer.Serialize(ref Bytecode);
                 serializer.AllowNull = false;
                 serializer.Serialize(ref Hashcode);
             }

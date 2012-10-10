@@ -150,7 +150,8 @@ namespace SharpDX.Toolkit.Graphics
             {
                 if (shader.Type == EffectShaderType.Vertex && shader.InputSignature.Bytecode != null)
                 {
-                    graphicsDevice.GetOrCreateInputSignatureManager(shader.InputSignature.Bytecode, shader.InputSignature.Hashcode);
+                    var inputSignature = graphicsDevice.GetOrCreateInputSignatureManager(shader.InputSignature.Bytecode, shader.InputSignature.Hashcode);
+                    shader.InputSignature.Bytecode = inputSignature.Bytecode;
                 }
             }
         }
