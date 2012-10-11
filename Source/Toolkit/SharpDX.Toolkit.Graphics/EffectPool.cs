@@ -24,16 +24,16 @@ using SharpDX.Direct3D11;
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    /// This class manages multiple effects.
+    /// This class manages a pool of <see cref="Effect"/>.
     /// </summary>
     /// <remarks>
     /// This class is responsible to store all EffectData, create shareable constant buffers betwen effects and reuse shader EffectData instances.
     /// </remarks>
-    public sealed class EffectGroup : Component
+    public sealed class EffectPool : Component
     {
         #region Delegates
 
-        public delegate Buffer ConstantBufferAllocatorDelegate(GraphicsDevice device, EffectGroup group, EffectConstantBuffer constantBuffer);
+        public delegate Buffer ConstantBufferAllocatorDelegate(GraphicsDevice device, EffectPool pool, EffectConstantBuffer constantBuffer);
 
         #endregion
 
@@ -51,7 +51,7 @@ namespace SharpDX.Toolkit.Graphics
         private ConstantBufferAllocatorDelegate constantBufferAllocator;
 
 
-        private EffectGroup(GraphicsDevice device, string name = null) : base(name)
+        private EffectPool(GraphicsDevice device, string name = null) : base(name)
         {
             dataGroup = new EffectData();
             mapNameToEffect = new Dictionary<string, EffectData.Effect>();
@@ -92,7 +92,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Gets the current merged EffectData for this group. See remarks.
+        /// Gets the current merged EffectData for this pool. See remarks.
         /// </summary>
         /// <value>The EffectData.</value>
         /// <remarks>
@@ -104,12 +104,12 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Registers a EffectData to this group.
+        /// Registers a EffectData to this pool.
         /// </summary>
         /// <param name="datas">The datas to register.</param>
         public void RegisterBytecode(params EffectData[] datas)
         {
-            // Lock the whole EffectGroup in case multiple threads would add EffectData at the same time.
+            // Lock the whole EffectPool in case multiple threads would add EffectData at the same time.
             lock (sync)
             {
                 bool hasNewBytecode = false;
@@ -264,38 +264,38 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Creates a new effect group from a specified list of <see cref="EffectData"/>.
+        /// Creates a new effect pool from a specified list of <see cref="EffectData"/>.
         /// </summary>
         /// <param name="device">The device.</param>
         /// <param name="datas">The datas.</param>
-        /// <returns>An instance of <see cref="EffectGroup"/>.</returns>
-        public static EffectGroup New(GraphicsDevice device, params EffectData[] datas)
+        /// <returns>An instance of <see cref="EffectPool"/>.</returns>
+        public static EffectPool New(GraphicsDevice device, params EffectData[] datas)
         {
-            var group = new EffectGroup(device);
+            var group = new EffectPool(device);
             group.RegisterBytecode(datas);
             return group;
         }
 
         /// <summary>
-        /// Creates a new named effect group from a specified list of <see cref="EffectData" />.
+        /// Creates a new named effect pool from a specified list of <see cref="EffectData" />.
         /// </summary>
         /// <param name="device">The device.</param>
-        /// <param name="name">The name of this effect group.</param>
+        /// <param name="name">The name of this effect pool.</param>
         /// <param name="datas">The datas.</param>
-        /// <returns>An instance of <see cref="EffectGroup" />.</returns>
-        public static EffectGroup New(GraphicsDevice device, string name, params EffectData[] datas)
+        /// <returns>An instance of <see cref="EffectPool" />.</returns>
+        public static EffectPool New(GraphicsDevice device, string name, params EffectData[] datas)
         {
-            var group = new EffectGroup(device);
+            var group = new EffectPool(device);
             group.RegisterBytecode(datas);
             return group;
         }
 
         public override string ToString()
         {
-            return string.Format("EffectGroup [{0}]", Name);
+            return string.Format("EffectPool [{0}]", Name);
         }
 
-        private static Buffer DefaultConstantBufferAllocator(GraphicsDevice device, EffectGroup group, EffectConstantBuffer constantBuffer)
+        private static Buffer DefaultConstantBufferAllocator(GraphicsDevice device, EffectPool pool, EffectConstantBuffer constantBuffer)
         {
             return Buffer.Constant.New(device, constantBuffer.Size);
         }

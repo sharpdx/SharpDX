@@ -406,15 +406,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Creates a new EnvironmentMapEffect with default parameter settings.
         /// </summary>
-        public EnvironmentMapEffect(GraphicsDevice device) : this(device, device.DefaultEffectGroup)
+        public EnvironmentMapEffect(GraphicsDevice device) : this(device, device.DefaultEffectPool)
         {
         }
 
         /// <summary>
-        /// Creates a new EnvironmentMapEffect with default parameter settings from a specified <see cref="EffectGroup"/>.
+        /// Creates a new EnvironmentMapEffect with default parameter settings from a specified <see cref="EffectPool"/>.
         /// </summary>
-        public EnvironmentMapEffect(GraphicsDevice device, EffectGroup group)
-            : base(device, group, EnvironmentMapEffectName)
+        public EnvironmentMapEffect(GraphicsDevice device, EffectPool pool)
+            : base(device, pool, EnvironmentMapEffectName)
         {
             CacheEffectParameters(null);
 
@@ -427,7 +427,7 @@ namespace SharpDX.Toolkit.Graphics
 
         protected override void Initialize()
         {
-            Group.RegisterBytecode(effectBytecode);
+            Pool.RegisterBytecode(effectBytecode);
             base.Initialize();
         }
 

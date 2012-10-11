@@ -427,17 +427,17 @@ namespace SharpDX.Toolkit.Graphics
         /// Initializes a new instance of the <see cref="BasicEffect" /> class.
         /// </summary>
         /// <param name="device">The device.</param>
-        public BasicEffect(GraphicsDevice device) : this(device, device.DefaultEffectGroup)
+        public BasicEffect(GraphicsDevice device) : this(device, device.DefaultEffectPool)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BasicEffect" /> class from a specified <see cref="EffectGroup"/>.
+        /// Initializes a new instance of the <see cref="BasicEffect" /> class from a specified <see cref="EffectPool"/>.
         /// </summary>
         /// <param name="device">The device.</param>
-        /// <param name="group">The group.</param>
-        public BasicEffect(GraphicsDevice device, EffectGroup group)
-            : base(device, group, BasicEffectName)
+        /// <param name="pool">The pool.</param>
+        public BasicEffect(GraphicsDevice device, EffectPool pool)
+            : base(device, pool, BasicEffectName)
         {
             CacheEffectParameters(null);
 
@@ -449,7 +449,7 @@ namespace SharpDX.Toolkit.Graphics
 
         protected override void Initialize()
         {
-            Group.RegisterBytecode(effectBytecode);
+            Pool.RegisterBytecode(effectBytecode);
             base.Initialize();
         }
 

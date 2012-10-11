@@ -46,7 +46,7 @@
     <Compile Include="EffectAttributeCollection.cs" />
     <Compile Include="EffectConstantBuffer.cs" />
     <Compile Include="ComponentCollection.cs" />
-    <Compile Include="EffectGroup.cs" />
+    <Compile Include="EffectPool.cs" />
     <Compile Include="EffectParameter.cs" />
     <Compile Include="EffectParameterCollection.cs" />
     <Compile Include="EffectPass.cs" />

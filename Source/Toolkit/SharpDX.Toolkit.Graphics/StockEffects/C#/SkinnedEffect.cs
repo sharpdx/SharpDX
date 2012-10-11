@@ -445,15 +445,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Creates a new SkinnedEffect with default parameter settings.
         /// </summary>
-        public SkinnedEffect(GraphicsDevice device) : this(device, device.DefaultEffectGroup)
+        public SkinnedEffect(GraphicsDevice device) : this(device, device.DefaultEffectPool)
         {
         }
 
         /// <summary>
-        /// Creates a new SkinnedEffect with default parameter settings from a specified <see cref="EffectGroup"/>.
+        /// Creates a new SkinnedEffect with default parameter settings from a specified <see cref="EffectPool"/>.
         /// </summary>
-        public SkinnedEffect(GraphicsDevice device, EffectGroup group)
-            : base(device, group, SkinnedEffectName)
+        public SkinnedEffect(GraphicsDevice device, EffectPool pool)
+            : base(device, pool, SkinnedEffectName)
         {
             CacheEffectParameters(null);
 
@@ -474,7 +474,7 @@ namespace SharpDX.Toolkit.Graphics
 
         protected override void Initialize()
         {
-            Group.RegisterBytecode(effectBytecode);
+            Pool.RegisterBytecode(effectBytecode);
             base.Initialize();
         }
 

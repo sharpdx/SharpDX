@@ -59,8 +59,8 @@ namespace SharpDX.Toolkit.Graphics.Tests
             // Check that this is the profile 10.0
             Assert.AreEqual(bytecode.Shaders[0].Level, FeatureLevel.Level_10_0);
 
-            // Create a EffectData group from a single EffectData
-            var effectGroup = EffectGroup.New(device, bytecode);
+            // Create a EffectData pool from a single EffectData
+            var effectGroup = EffectPool.New(device, bytecode);
 
             //var effect = effectGroup.New<BasicEffect>();
             var effect = new Effect(device, effectGroup, "TestEffect");

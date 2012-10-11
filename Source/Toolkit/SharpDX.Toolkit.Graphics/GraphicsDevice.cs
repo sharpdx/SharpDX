@@ -51,9 +51,9 @@ namespace SharpDX.Toolkit.Graphics
         public readonly GraphicsDeviceFeatures Features;
 
         /// <summary>
-        /// Default effect group shared between all deferred GraphicsDevice instances.
+        /// Default effect pool shared between all deferred GraphicsDevice instances.
         /// </summary>
-        public readonly EffectGroup DefaultEffectGroup;
+        public readonly EffectPool DefaultEffectPool;
 
         /// <summary>
         /// Gets the <see cref="GraphicsDevice"/> for immediate rendering.
@@ -122,8 +122,8 @@ namespace SharpDX.Toolkit.Graphics
             inputLayoutDeviceCache =  new Dictionary<VertexInputLayout, InputLayoutPair>(new IdentityEqualityComparer<VertexInputLayout>());
             inputLayoutContextCache = new Dictionary<VertexInputLayout, InputLayoutPair>(new IdentityEqualityComparer<VertexInputLayout>());
 
-            // Create default Effect group
-            DefaultEffectGroup = EffectGroup.New(this, "Default");
+            // Create default Effect pool
+            DefaultEffectPool = EffectPool.New(this, "Default");
 
             // Create all default states
             BlendStates = new BlendStateCollection(this);
@@ -149,8 +149,8 @@ namespace SharpDX.Toolkit.Graphics
             inputLayoutDeviceCache = new Dictionary<VertexInputLayout, InputLayoutPair>(new IdentityEqualityComparer<VertexInputLayout>());
             inputLayoutContextCache = new Dictionary<VertexInputLayout, InputLayoutPair>(new IdentityEqualityComparer<VertexInputLayout>());
 
-            // Create default Effect group
-            DefaultEffectGroup = EffectGroup.New(this, "Default");
+            // Create default Effect pool
+            DefaultEffectPool = EffectPool.New(this, "Default");
 
             // Create all default states
             BlendStates = new BlendStateCollection(this);
@@ -170,8 +170,8 @@ namespace SharpDX.Toolkit.Graphics
             IsDeferred = true;
             Features = mainDevice.Features;
 
-            // Create default Effect group
-            DefaultEffectGroup = mainDevice.DefaultEffectGroup;
+            // Create default Effect pool
+            DefaultEffectPool = mainDevice.DefaultEffectPool;
 
             // Copy the Global cache for all input signatures inside a GraphicsDevice.
             inputSignatureCache = mainDevice.inputSignatureCache;

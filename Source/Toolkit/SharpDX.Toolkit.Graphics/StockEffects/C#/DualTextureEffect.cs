@@ -301,22 +301,22 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Creates a new DualTextureEffect with default parameter settings.
         /// </summary>
-        public DualTextureEffect(GraphicsDevice device) : this(device, device.DefaultEffectGroup)
+        public DualTextureEffect(GraphicsDevice device) : this(device, device.DefaultEffectPool)
         {
         }
 
         /// <summary>
-        /// Creates a new DualTextureEffect with default parameter settings from a specified <see cref="EffectGroup"/>.
+        /// Creates a new DualTextureEffect with default parameter settings from a specified <see cref="EffectPool"/>.
         /// </summary>
-        public DualTextureEffect(GraphicsDevice device, EffectGroup group)
-            : base(device, group, DualTextureEffectName)
+        public DualTextureEffect(GraphicsDevice device, EffectPool pool)
+            : base(device, pool, DualTextureEffectName)
         {
             CacheEffectParameters();
         }
 
         protected override void Initialize()
         {
-            Group.RegisterBytecode(effectBytecode);
+            Pool.RegisterBytecode(effectBytecode);
             base.Initialize();
         }
 

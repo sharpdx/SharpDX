@@ -26,8 +26,8 @@ namespace SharpDX.Toolkit.Graphics
     /// A constant buffer exposed by an effect.
     /// </summary>
     /// <remarks>
-    /// Constant buffers are created and shared inside a same <see cref="EffectGroup"/>. The creation of the underlying GPU buffer
-    /// can be overriden using <see cref="EffectGroup.ConstantBufferAllocator"/>.
+    /// Constant buffers are created and shared inside a same <see cref="EffectPool"/>. The creation of the underlying GPU buffer
+    /// can be overriden using <see cref="EffectPool.ConstantBufferAllocator"/>.
     /// </remarks>
     public sealed class EffectConstantBuffer : DataBuffer, IEquatable<EffectConstantBuffer>
     {

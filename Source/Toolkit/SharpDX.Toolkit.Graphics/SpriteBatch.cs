@@ -153,11 +153,11 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="graphicsDevice">The graphics device.</param>
         public SpriteBatch(GraphicsDevice graphicsDevice) : base(graphicsDevice)
         {
-            graphicsDevice.DefaultEffectGroup.RegisterBytecode(effectBytecode);
+            graphicsDevice.DefaultEffectPool.RegisterBytecode(effectBytecode);
 
             spriteQueue = new SpriteInfo[MaxBatchSize];
 
-            spriteEffect = new Effect(graphicsDevice, graphicsDevice.DefaultEffectGroup, "Toolkit::SpriteEffect");
+            spriteEffect = new Effect(graphicsDevice, graphicsDevice.DefaultEffectPool, "Toolkit::SpriteEffect");
             spriteEffect.CurrentTechnique = spriteEffect.Techniques[0];
             spriteEffectPass = spriteEffect.CurrentTechnique.Passes[0];
 

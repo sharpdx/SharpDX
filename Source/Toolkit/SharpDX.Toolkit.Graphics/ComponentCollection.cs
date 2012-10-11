@@ -56,7 +56,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Adds the specified item with a prefix name (used for techniques inside group).
+        /// Adds the specified item with a prefix name (used for techniques inside pool).
         /// Name will be added to collection with "PrefixName|ItemName" unless prefixname is empty ("ItemName").
         /// </summary>
         /// <param name="prefixName">The name.</param>

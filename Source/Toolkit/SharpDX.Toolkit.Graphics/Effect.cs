@@ -53,7 +53,7 @@ namespace SharpDX.Toolkit.Graphics
         private EffectData.Effect rawEffect;
 
         /// <summary>
-        /// Set to true to force all constant shaders to be shared between other effects within a common <see cref="EffectGroup"/>. Default is false.
+        /// Set to true to force all constant shaders to be shared between other effects within a common <see cref="EffectPool"/>. Default is false.
         /// </summary>
         /// <remarks>
         /// This value can also be set in the TKFX file directly by setting ShareConstantBuffers = true; in a pass.
@@ -64,10 +64,10 @@ namespace SharpDX.Toolkit.Graphics
         /// Initializes a new instance of the <see cref="Effect" /> class with the specified bytecode effect. See remarks.
         /// </summary>
         /// <param name="device">The device.</param>
-        /// <param name="bytecode">The bytecode to add to <see cref="Graphics.GraphicsDevice.DefaultEffectGroup"/>. This bytecode must contain only one effect.</param>
+        /// <param name="bytecode">The bytecode to add to <see cref="GraphicsDevice.DefaultEffectPool"/>. This bytecode must contain only one effect.</param>
         /// <exception cref="ArgumentException">If the bytecode doesn't contain a single effect.</exception>
         /// <remarks>
-        /// The effect bytecode must contain only a single effect and will be registered into the <see cref="Graphics.GraphicsDevice.DefaultEffectGroup"/>.
+        /// The effect bytecode must contain only a single effect and will be registered into the <see cref="GraphicsDevice.DefaultEffectPool"/>.
         /// </remarks>
         public Effect(GraphicsDevice device, byte[] bytecode)
             : this(device, EffectData.Load(bytecode))
@@ -78,27 +78,27 @@ namespace SharpDX.Toolkit.Graphics
         /// Initializes a new instance of the <see cref="Effect" /> class with the specified bytecode effect. See remarks.
         /// </summary>
         /// <param name="device">The device.</param>
-        /// <param name="effectData">The bytecode to add to <see cref="Graphics.GraphicsDevice.DefaultEffectGroup"/>. This bytecode must contain only one effect.</param>
+        /// <param name="effectData">The bytecode to add to <see cref="GraphicsDevice.DefaultEffectPool"/>. This bytecode must contain only one effect.</param>
         /// <exception cref="ArgumentException">If the bytecode doesn't contain a single effect.</exception>
         /// <remarks>
-        /// The effect bytecode must contain only a single effect and will be registered into the <see cref="Graphics.GraphicsDevice.DefaultEffectGroup"/>.
+        /// The effect bytecode must contain only a single effect and will be registered into the <see cref="GraphicsDevice.DefaultEffectPool"/>.
         /// </remarks>
         public Effect(GraphicsDevice device, EffectData effectData) : base(device)
         {
             if (effectData.Effects.Count != 1)
-                throw new ArgumentException("Expecting only one effect in the effect bytecode. Use GraphicsDevice.DefaultEffectGroup.RegisterBytecode instead", "bytecode");
+                throw new ArgumentException("Expecting only one effect in the effect bytecode. Use GraphicsDevice.DefaultEffectPool.RegisterBytecode instead", "bytecode");
 
             ConstantBuffers = new EffectConstantBufferCollection();
             Parameters = new EffectParameterCollection();
             Techniques = new EffectTechniqueCollection();
             ResourceLinker = ToDispose(new EffectResourceLinker());
-            Group = device.DefaultEffectGroup;
+            Pool = device.DefaultEffectPool;
 
             // Sets the effect name
             Name = effectData.Effects[0].Name;
 
-            // Register the bytecode to the group
-            Group.RegisterBytecode(effectData);
+            // Register the bytecode to the pool
+            Pool.RegisterBytecode(effectData);
 
             Initialize();
         }
@@ -109,33 +109,33 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="device">The device.</param>
         /// <param name="effectName">Name of the effect.</param>
         /// <remarks>
-        /// The effect must have been loaded and registered into the <see cref="Graphics.GraphicsDevice.DefaultEffectGroup"/>.
+        /// The effect must have been loaded and registered into the <see cref="GraphicsDevice.DefaultEffectPool"/>.
         /// </remarks>
-        public Effect(GraphicsDevice device, string effectName) : this(device, device.DefaultEffectGroup, effectName)
+        public Effect(GraphicsDevice device, string effectName) : this(device, device.DefaultEffectPool, effectName)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Effect" /> class with the specified effect loaded from an effect group.
+        /// Initializes a new instance of the <see cref="Effect" /> class with the specified effect loaded from an effect pool.
         /// </summary>
         /// <param name="device">The device.</param>
-        /// <param name="group">The effect group.</param>
+        /// <param name="pool">The effect pool.</param>
         /// <param name="effectName">Name of the effect.</param>
-        public Effect(GraphicsDevice device, EffectGroup group, string effectName) : base(device, effectName)
+        public Effect(GraphicsDevice device, EffectPool pool, string effectName) : base(device, effectName)
         {
             ConstantBuffers = new EffectConstantBufferCollection();
             Parameters = new EffectParameterCollection();
             Techniques = new EffectTechniqueCollection();
             ResourceLinker = ToDispose(new EffectResourceLinker());
-            Group = group;
+            Pool = pool;
             Initialize();
         }
 
         /// <summary>
-        ///   Gets the group this effect attached to.
+        ///   Gets the pool this effect attached to.
         /// </summary>
-        /// <value> The group. </value>
-        public readonly EffectGroup Group;
+        /// <value> The pool. </value>
+        public readonly EffectPool Pool;
 
         /// <summary>
         ///   Occurs when the on apply is applied on a pass.
@@ -154,10 +154,10 @@ namespace SharpDX.Toolkit.Graphics
 
         protected virtual void Initialize()
         {
-            Initialize(Group.Find(Name));
+            Initialize(Pool.Find(Name));
 
-            // If everything was fine, then we can register it into the group
-            Group.AddEffect(this);
+            // If everything was fine, then we can register it into the pool
+            Pool.AddEffect(this);
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace SharpDX.Toolkit.Graphics
         private void Initialize(EffectData.Effect effectDataArg)
         {
             if (effectDataArg == null)
-                throw new ArgumentException(string.Format("Unable to find effect [{0}] from the EffectGroup", Name), "effectName");
+                throw new ArgumentException(string.Format("Unable to find effect [{0}] from the EffectPool", Name), "effectName");
 
             rawEffect = effectDataArg;
 
@@ -270,8 +270,8 @@ namespace SharpDX.Toolkit.Graphics
 
         protected override void Dispose(bool disposeManagedResources)
         {
-            // Remove this instance from the group
-            Group.RemoveEffect(this);
+            // Remove this instance from the pool
+            Pool.RemoveEffect(this);
 
             base.Dispose(disposeManagedResources);
         }
@@ -279,11 +279,11 @@ namespace SharpDX.Toolkit.Graphics
         internal EffectConstantBuffer GetOrCreateConstantBuffer(GraphicsDevice context, EffectData.ConstantBuffer bufferRaw)
         {
             EffectConstantBuffer constantBuffer;
-            // Is the effect is using shared constant buffers via the EffectGroup?
+            // Is the effect is using shared constant buffers via the EffectPool?
             if (ShareConstantBuffers)
             {
-                // Use the group to share constant buffers
-                constantBuffer = Group.GetOrCreateConstantBuffer(context, bufferRaw);
+                // Use the pool to share constant buffers
+                constantBuffer = Pool.GetOrCreateConstantBuffer(context, bufferRaw);
             }
             else
             {

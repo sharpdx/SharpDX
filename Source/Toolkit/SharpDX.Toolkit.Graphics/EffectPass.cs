@@ -420,8 +420,8 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="logger">The logger.</param>
         private void InitStageBlock(StageBlock stageBlock, Logger logger)
         {
-            stageBlock.Shader = Effect.Group.GetOrCompileShader(stageBlock.Type, stageBlock.Index);
-            var shaderRaw = Effect.Group.EffectData.Shaders[stageBlock.Index];
+            stageBlock.Shader = Effect.Pool.GetOrCompileShader(stageBlock.Type, stageBlock.Index);
+            var shaderRaw = Effect.Pool.EffectData.Shaders[stageBlock.Index];
 
             // Cache the input signature
             if (shaderRaw.Type == EffectShaderType.Vertex)
@@ -441,7 +441,7 @@ namespace SharpDX.Toolkit.Graphics
                 // IF constant buffer is null, it means that there is a conflict
                 if (constantBuffer == null)
                 {
-                    logger.Error("Constant buffer [{0}] cannot have multiple size or different content declaration inside the same effect group", constantBufferRaw.Name);
+                    logger.Error("Constant buffer [{0}] cannot have multiple size or different content declaration inside the same effect pool", constantBufferRaw.Name);
                     continue;
                 }
                 

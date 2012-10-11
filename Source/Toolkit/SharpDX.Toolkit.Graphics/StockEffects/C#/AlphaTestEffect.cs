@@ -323,22 +323,22 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Creates a new AlphaTestEffect with default parameter settings.
         /// </summary>
-        public AlphaTestEffect(GraphicsDevice device) : this(device, device.DefaultEffectGroup)
+        public AlphaTestEffect(GraphicsDevice device) : this(device, device.DefaultEffectPool)
         {
         }
 
         /// <summary>
-        /// Creates a new AlphaTestEffect with default parameter settings from a specified <see cref="EffectGroup"/>.
+        /// Creates a new AlphaTestEffect with default parameter settings from a specified <see cref="EffectPool"/>.
         /// </summary>
-        public AlphaTestEffect(GraphicsDevice device, EffectGroup group)
-            : base(device, group, AlphaTestEffectName)
+        public AlphaTestEffect(GraphicsDevice device, EffectPool pool)
+            : base(device, pool, AlphaTestEffectName)
         {
             CacheEffectParameters();
         }
 
         protected override void Initialize()
         {
-            Group.RegisterBytecode(effectBytecode);
+            Pool.RegisterBytecode(effectBytecode);
             base.Initialize();
         }
 
