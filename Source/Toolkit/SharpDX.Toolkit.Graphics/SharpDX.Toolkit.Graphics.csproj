@@ -29,6 +29,7 @@
     <Compile Include="SamplerStateCollection.cs" />
     <Compile Include="DepthStencilStateCollection.cs" />
     <Compile Include="SetDataOptions.cs" />
+    <Compile Include="SharedDataType.cs" />
     <Compile Include="SpriteBatch.cs" />
     <Compile Include="SpriteEffects.cs" />
     <Compile Include="SpriteSortMode.cs" />

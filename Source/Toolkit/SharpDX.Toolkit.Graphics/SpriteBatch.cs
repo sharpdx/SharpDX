@@ -100,7 +100,6 @@ namespace SharpDX.Toolkit.Graphics
 
         private readonly EffectParameter effectMatrixTransform;
         private readonly EffectParameter effectSampler;
-        private readonly EffectParameter effectTexture;
         private readonly FrontToBackComparer frontToBackComparer = new FrontToBackComparer();
         private readonly Buffer<short> indexBuffer;
         private readonly Effect spriteEffect;
@@ -156,26 +155,24 @@ namespace SharpDX.Toolkit.Graphics
             graphicsDevice.DefaultEffectPool.RegisterBytecode(effectBytecode);
 
             spriteQueue = new SpriteInfo[MaxBatchSize];
+            spriteTextures = new Texture2D[MaxBatchSize];
 
             spriteEffect = new Effect(graphicsDevice, graphicsDevice.DefaultEffectPool, "Toolkit::SpriteEffect");
             spriteEffect.CurrentTechnique = spriteEffect.Techniques[0];
             spriteEffectPass = spriteEffect.CurrentTechnique.Passes[0];
 
             effectMatrixTransform = spriteEffect.Parameters["MatrixTransform"];
-            effectTexture = spriteEffect.Parameters["Texture"];
             effectSampler = spriteEffect.Parameters["TextureSampler"];
 
-            // TODO, pool these buffers per device context
-
-            // Creates the vertex buffer
-            vertexBuffer = ToDispose(Buffer.Vertex.New<VertexPositionColorTexture>(GraphicsDevice, MaxVertexCount, ResourceUsage.Dynamic));
+            // Creates the vertex buffer (shared by within a device context).
+            vertexBuffer = GraphicsDevice.GetOrCreateSharedData(SharedDataType.PerContext, "SpriteBatch.VertexBuffer", () => Buffer.Vertex.New<VertexPositionColorTexture>(GraphicsDevice, MaxVertexCount, ResourceUsage.Dynamic));
             vertexBufferPosition = 0;
 
-            // Creates the vertex input layout
+            // Creates the vertex input layout (we don't need to cache them as they are already cached).
             vertexInputLayout = VertexInputLayout.New(VertexBufferLayout.New<VertexPositionColorTexture>(0));
 
-            // Creates the index buffer
-            indexBuffer = ToDispose(Buffer.Index.New(GraphicsDevice, indices));
+            // Creates the index buffer (shared within a Direct3D11 Device)
+            indexBuffer =  GraphicsDevice.GetOrCreateSharedData(SharedDataType.PerDevice, "SpriteBatch.IndexBuffer", () => Buffer.Index.New(GraphicsDevice, indices));
         }
 
         /// <summary>
@@ -582,7 +579,7 @@ namespace SharpDX.Toolkit.Graphics
             }
             else
             {
-                if ((spriteTextures == null) || (spriteTextures.Length < spriteQueue.Length))
+                if (spriteTextures.Length < spriteQueue.Length)
                 {
                     Array.Resize(ref spriteTextures, spriteQueue.Length);
                 }

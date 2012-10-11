@@ -30,6 +30,8 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public class GraphicsDevice : Component
     {
+        private readonly Dictionary<string, object> sharedDataPerDevice;
+        private readonly Dictionary<string, object> sharedDataPerDeviceContext = new Dictionary<string, object>();
         internal Device Device;
         internal DeviceContext Context;
         internal CommonShaderStage[] ShaderStages;
@@ -121,6 +123,7 @@ namespace SharpDX.Toolkit.Graphics
             inputSignatureCache =  new Dictionary<InputSignatureKey, InputSignatureManager>();
             inputLayoutDeviceCache =  new Dictionary<VertexInputLayout, InputLayoutPair>(new IdentityEqualityComparer<VertexInputLayout>());
             inputLayoutContextCache = new Dictionary<VertexInputLayout, InputLayoutPair>(new IdentityEqualityComparer<VertexInputLayout>());
+            sharedDataPerDevice = new Dictionary<string, object>();
 
             // Create default Effect pool
             DefaultEffectPool = EffectPool.New(this, "Default");
@@ -148,6 +151,7 @@ namespace SharpDX.Toolkit.Graphics
             inputSignatureCache = new Dictionary<InputSignatureKey, InputSignatureManager>();
             inputLayoutDeviceCache = new Dictionary<VertexInputLayout, InputLayoutPair>(new IdentityEqualityComparer<VertexInputLayout>());
             inputLayoutContextCache = new Dictionary<VertexInputLayout, InputLayoutPair>(new IdentityEqualityComparer<VertexInputLayout>());
+            sharedDataPerDevice = new Dictionary<string, object>();
 
             // Create default Effect pool
             DefaultEffectPool = EffectPool.New(this, "Default");
@@ -178,6 +182,7 @@ namespace SharpDX.Toolkit.Graphics
             inputLayoutDeviceCache = mainDevice.inputLayoutDeviceCache;
             // For a new deferred context, we need to create a new inputLayout cache
             inputLayoutContextCache = new Dictionary<VertexInputLayout, InputLayoutPair>(new IdentityEqualityComparer<VertexInputLayout>());
+            sharedDataPerDevice = mainDevice.sharedDataPerDevice;
 
             // Copy the reset vertex buffer
             resetVertexBuffersPointer = mainDevice.resetVertexBuffersPointer;
@@ -1144,6 +1149,40 @@ namespace SharpDX.Toolkit.Graphics
             {
                 inputAssemblerStage.SetInputLayout(inputLayout);
                 currentInputLayout = inputLayout;
+            }
+        }
+
+        /// <summary>
+        /// A delegate called to create shareable data. See remarks.
+        /// </summary>
+        /// <typeparam name="T">Type of the data to create.</typeparam>
+        /// <returns>A new instance of the data to share.</returns>
+        /// <remarks>
+        /// Because this method is being called from a lock region, this method should not be time consuming.
+        /// </remarks>
+        public delegate T CreateSharedData<out T>();
+
+        /// <summary>
+        /// Gets a shared data for this device context with a delegate to create the shared data if it is not present.
+        /// </summary>
+        /// <typeparam name="T">Type of the shared data to get/create.</typeparam>
+        /// <param name="type">Type of the data to share.</param>
+        /// <param name="key">The key of the shared data.</param>
+        /// <param name="sharedDataCreator">The shared data creator.</param>
+        /// <returns>An instance of the shared data. The shared data will be disposed by this <see cref="GraphicsDevice"/> instance.</returns>
+        public T GetOrCreateSharedData<T>(SharedDataType type, string key, CreateSharedData<T> sharedDataCreator) where T : IDisposable
+        {
+            var dictionary = (type == SharedDataType.PerDevice) ? sharedDataPerDevice : sharedDataPerDeviceContext;
+
+            lock (dictionary)
+            {
+                object localValue;
+                if (!dictionary.TryGetValue(key, out localValue))
+                {
+                    localValue = ToDispose(sharedDataCreator());
+                    dictionary.Add(key, localValue);
+                }
+                return (T)localValue;
             }
         }
 
