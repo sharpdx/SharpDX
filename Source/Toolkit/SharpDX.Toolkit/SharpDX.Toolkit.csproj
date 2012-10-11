@@ -30,6 +30,7 @@
     <Compile Include="Graphics\EffectData.Effect.cs" />
     <Compile Include="Graphics\EffectData.Shader.cs" />
     <Compile Include="Graphics\EffectCompilerFlags.cs" />
+    <Compile Include="Graphics\SpriteFontData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
@@ -40,6 +41,10 @@
     <Compile Include="Graphics\EffectData.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\SharpDX.DXGI\SharpDX.DXGI.csproj">
+      <Project>{3fc6de77-b412-4101-9e64-6b9aa831179b}</Project>
+      <Name>SharpDX.DXGI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\SharpDX\SharpDX.csproj">
       <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
       <Name>SharpDX</Name>

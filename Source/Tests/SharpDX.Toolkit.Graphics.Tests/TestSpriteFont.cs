@@ -18,49 +18,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Runtime.InteropServices;
-using SharpDX.Direct3D;
-using SharpDX.Direct3D11;
-using SharpDX.IO;
-using SharpDX.WIC;
-using SharpDX.Windows;
+using NUnit.Framework;
 
 namespace SharpDX.Toolkit.Graphics.Tests
 {
-    public class Program
+    public class TestSpriteFont
     {
-        public static void Main(string[] args)
+        public void TestSpriteFondDataLoad()
         {
-            //var test = new TestBuffer();
-            //test.AllTest();
+            // Load a spritefont file generated with DirectTk.MakeSpriteFont command line tool.
+            var test = SpriteFontData.Load("Arial16.spritefont");
 
-            //var testTexture2D = new TestTexture2D();
-            //testTexture2D.TestConstructors();
-
-            //// Test Image
-            //var testImage = new TestImage();
-            //testImage.Initialize();
-            //testImage.TestLoadAndSave();
-
-            // Test Image
-            //var testImage = new TestTexture();
-            //testImage.Initialize();
-            //testImage.TestLoadSave();
-
-            //var testTexture = new TestTexture();
-            //testTexture.Initialize();
-            //testTexture.Test1DArrayAndMipmaps();
-
-            //var testCompiler = new TestEffect();
-            //testCompiler.TestMatrix();
-
-            var testSpriteFont = new TestSpriteFont();
-            testSpriteFont.TestSpriteFondDataLoad();
-
+            Assert.NotNull(test.Glyphs);
+            Assert.True(test.Glyphs.Length > 0);
         }
     }
 }
