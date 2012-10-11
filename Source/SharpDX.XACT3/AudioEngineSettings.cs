@@ -34,7 +34,7 @@ namespace SharpDX.XACT3
         public const int DefaultLookAhead = 250;
 
         private XAudio2.XAudio2 xAudio2;
-        private XAudio2.MasteringVoice materingVoice;
+        private XAudio2.MasteringVoice masteringVoice;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AudioEngineSettings"/> class.
@@ -98,17 +98,17 @@ namespace SharpDX.XACT3
         {
             get
             {
-                if (materingVoice == null)
+                if (masteringVoice == null)
                 {
                     if (MasteringVoicePointer != IntPtr.Zero)
-                        materingVoice = new XAudio2.MasteringVoice(MasteringVoicePointer);
+                        masteringVoice = new XAudio2.MasteringVoice(MasteringVoicePointer);
                 }
-                return materingVoice;
+                return masteringVoice;
             }
             set
             {
-                materingVoice = value;
-                XAudio2Pointer = materingVoice != null ? materingVoice.NativePointer : IntPtr.Zero;
+                masteringVoice = value;
+                MasteringVoicePointer = masteringVoice != null ? masteringVoice.NativePointer : IntPtr.Zero;
             }
         }
     }
