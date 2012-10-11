@@ -489,9 +489,10 @@ namespace SharpDX
             {
                 plane = GetPlane(i);
                 GetBoxToPlanePVertexNVertex(ref box, ref plane.Normal, out p, out n);
-                if (Collision.PlaneIntersectsPoint(ref pNear, ref p) == PlaneIntersectionType.Back)
+                if (Collision.PlaneIntersectsPoint(ref plane, ref p) == PlaneIntersectionType.Back)
                     return ContainmentType.Disjoint;
-                else if (Collision.PlaneIntersectsPoint(ref pNear, ref n) == PlaneIntersectionType.Back)
+
+                if (Collision.PlaneIntersectsPoint(ref plane, ref n) == PlaneIntersectionType.Back)
                     result = ContainmentType.Intersects;
             }
             return result;
