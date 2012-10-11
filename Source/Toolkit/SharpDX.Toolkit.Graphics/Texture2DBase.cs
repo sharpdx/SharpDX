@@ -231,9 +231,9 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        protected static Texture2DDescription NewDescription(int width, int height, PixelFormat format, bool isReadWrite, int mipCount, int arraySize, ResourceUsage usage)
+        protected static Texture2DDescription NewDescription(int width, int height, PixelFormat format, TextureFlags textureFlags, int mipCount, int arraySize, ResourceUsage usage)
         {
-            if (isReadWrite)
+            if ((textureFlags & TextureFlags.UnorderedAccess) != 0)
                 usage = ResourceUsage.Default;
 
             var desc = new Texture2DDescription()
@@ -242,17 +242,13 @@ namespace SharpDX.Toolkit.Graphics
                                Height = height,
                                ArraySize = arraySize,
                                SampleDescription = new DXGI.SampleDescription(1, 0),
-                               BindFlags = BindFlags.ShaderResource,
+                               BindFlags = GetBindFlagsFromTextureFlags(textureFlags),
                                Format = format,
                                MipLevels = CalculateMipMapCount(mipCount, width, height),
                                Usage = usage,
-                               CpuAccessFlags = GetCputAccessFlagsFromUsage(usage)
+                               CpuAccessFlags = GetCputAccessFlagsFromUsage(usage),
+                               OptionFlags = ResourceOptionFlags.None
                            };
-
-            if (isReadWrite)
-            {
-                desc.BindFlags |= BindFlags.UnorderedAccess;
-            }
             return desc;
         }
     }

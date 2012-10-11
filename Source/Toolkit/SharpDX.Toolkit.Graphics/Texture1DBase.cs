@@ -203,26 +203,22 @@ namespace SharpDX.Toolkit.Graphics
                 GetUnorderedAccessView(0, 0);
             }
         }
-               
-        protected static Texture1DDescription NewDescription(int width, PixelFormat format, bool isReadWrite, int mipCount, int arraySize, ResourceUsage usage)
+
+        protected static Texture1DDescription NewDescription(int width, PixelFormat format, TextureFlags textureFlags, int mipCount, int arraySize, ResourceUsage usage)
         {
-            usage = isReadWrite ? ResourceUsage.Default : usage;
+            if ((textureFlags & TextureFlags.UnorderedAccess) != 0)
+                usage = ResourceUsage.Default;
 
             var desc = new Texture1DDescription()
                            {
                                Width = width,
                                ArraySize = arraySize,
-                               BindFlags = BindFlags.ShaderResource,
+                               BindFlags = GetBindFlagsFromTextureFlags(textureFlags),
                                Format = format,
                                MipLevels = CalculateMipMapCount(mipCount, width),
                                Usage = usage,
                                CpuAccessFlags = GetCputAccessFlagsFromUsage(usage)
                            };
-
-            if (isReadWrite)
-            {
-                desc.BindFlags |= BindFlags.UnorderedAccess;
-            }
             return desc;
         }
     }

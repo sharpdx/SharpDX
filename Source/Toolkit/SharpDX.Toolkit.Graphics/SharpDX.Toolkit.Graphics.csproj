@@ -105,6 +105,7 @@
       <DependentUpon>SpriteEffect.fx</DependentUpon>
     </Compile>
     <Compile Include="TextureDimension.cs" />
+    <Compile Include="TextureFlags.cs" />
     <Compile Include="TGAHelper.cs" />
     <Compile Include="UnorderedAccessViewSelector.cs" />
     <Compile Include="ShaderResourceViewSelector.cs" />

@@ -152,15 +152,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="width">The width.</param>
         /// <param name="format">Describes the format to use.</param>
-        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
+        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
         /// <param name="arraySize">Size of the texture 1D array, default to 1.</param>
         /// <returns>A new instance of <see cref="RenderTarget1D" /> class.</returns>
         /// <msdn-id>ff476520</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        public static RenderTarget1D New(GraphicsDevice device, int width, PixelFormat format, bool isUnorderedReadWrite = false, int arraySize = 1)
+        public static RenderTarget1D New(GraphicsDevice device, int width, PixelFormat format, TextureFlags flags = TextureFlags.RenderTarget | TextureFlags.ShaderResource, int arraySize = 1)
         {
-            return New(device, width, false, format, isUnorderedReadWrite, arraySize);
+            return New(device, width, false, format, flags | TextureFlags.RenderTarget, arraySize);
         }
 
         /// <summary>
@@ -170,21 +170,20 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="width">The width.</param>
         /// <param name="mipCount">Number of mipmaps, set to true to have all mipmaps, set to an int >=1 for a particular mipmap count.</param>
         /// <param name="format">Describes the format to use.</param>
-        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
+        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
         /// <param name="arraySize">Size of the texture 1D array, default to 1.</param>
         /// <returns>A new instance of <see cref="RenderTarget1D" /> class.</returns>
         /// <msdn-id>ff476520</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        public static RenderTarget1D New(GraphicsDevice device, int width, MipMapCount mipCount, PixelFormat format, bool isUnorderedReadWrite = false, int arraySize = 1)
+        public static RenderTarget1D New(GraphicsDevice device, int width, MipMapCount mipCount, PixelFormat format, TextureFlags flags = TextureFlags.RenderTarget | TextureFlags.ShaderResource, int arraySize = 1)
         {
-            return new RenderTarget1D(device, NewRenderTargetDescription(width, format, isUnorderedReadWrite, mipCount, arraySize));
+            return new RenderTarget1D(device, NewRenderTargetDescription(width, format, flags | TextureFlags.RenderTarget, mipCount, arraySize));
         }
 
-        protected static Texture1DDescription NewRenderTargetDescription(int width, PixelFormat format, bool isReadWrite, int mipCount, int arraySize)
+        protected static Texture1DDescription NewRenderTargetDescription(int width, PixelFormat format, TextureFlags textureFlags,int mipCount, int arraySize)
         {
-            var desc = Texture1DBase.NewDescription(width, format, isReadWrite, mipCount, arraySize, ResourceUsage.Default);
-            desc.BindFlags |= BindFlags.RenderTarget;
+            var desc = Texture1DBase.NewDescription(width, format, textureFlags, mipCount, arraySize, ResourceUsage.Default);
             return desc;
         }
     }

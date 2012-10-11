@@ -162,15 +162,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         /// <param name="format">Describes the format to use.</param>
-        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
+        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
         /// <param name="arraySize">Size of the texture 2D array, default to 1.</param>
         /// <returns>A new instance of <see cref="RenderTarget2D" /> class.</returns>
         /// <msdn-id>ff476521</msdn-id>
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
-        public static RenderTarget2D New(GraphicsDevice device, int width, int height, PixelFormat format, bool isUnorderedReadWrite = false, int arraySize = 1)
+        public static RenderTarget2D New(GraphicsDevice device, int width, int height, PixelFormat format, TextureFlags flags = TextureFlags.RenderTarget | TextureFlags.ShaderResource, int arraySize = 1)
         {
-            return New(device, width, height, false, format, isUnorderedReadWrite, arraySize);
+            return New(device, width, height, false, format, flags | TextureFlags.RenderTarget, arraySize);
         }
 
         /// <summary>
@@ -181,15 +181,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="height">The height.</param>
         /// <param name="mipCount">Number of mipmaps, set to true to have all mipmaps, set to an int >=1 for a particular mipmap count.</param>
         /// <param name="format">Describes the format to use.</param>
-        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
+        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
         /// <param name="arraySize">Size of the texture 2D array, default to 1.</param>
         /// <returns>A new instance of <see cref="RenderTarget2D" /> class.</returns>
         /// <msdn-id>ff476521</msdn-id>
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
-        public static RenderTarget2D New(GraphicsDevice device, int width, int height, MipMapCount mipCount, PixelFormat format, bool isUnorderedReadWrite = false, int arraySize = 1)
+        public static RenderTarget2D New(GraphicsDevice device, int width, int height, MipMapCount mipCount, PixelFormat format, TextureFlags flags = TextureFlags.RenderTarget | TextureFlags.ShaderResource, int arraySize = 1)
         {
-            return new RenderTarget2D(device, NewRenderTargetDescription(device.MainDevice, width, height, format, isUnorderedReadWrite, mipCount, arraySize, MSAALevel.None));
+            return new RenderTarget2D(device, NewRenderTargetDescription(device.MainDevice, width, height, format, flags | TextureFlags.RenderTarget, mipCount, arraySize, MSAALevel.None));
         }
 
         /// <summary>
@@ -207,13 +207,12 @@ namespace SharpDX.Toolkit.Graphics
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
         public static RenderTarget2D New(GraphicsDevice device, int width, int height, MSAALevel multiSampleCount, PixelFormat format, int arraySize = 1)
         {
-            return new RenderTarget2D(device, NewRenderTargetDescription(device.MainDevice, width, height, format, false, 1, arraySize, multiSampleCount));
+            return new RenderTarget2D(device, NewRenderTargetDescription(device.MainDevice, width, height, format, TextureFlags.RenderTarget, 1, arraySize, multiSampleCount));
         }
 
-        protected static Texture2DDescription NewRenderTargetDescription(GraphicsDevice device, int width, int height, PixelFormat format, bool isReadWrite, int mipCount, int arraySize, MSAALevel multiSampleCount)
+        protected static Texture2DDescription NewRenderTargetDescription(GraphicsDevice device, int width, int height, PixelFormat format, TextureFlags textureFlags, int mipCount, int arraySize, MSAALevel multiSampleCount)
         {
-            var desc = Texture2DBase.NewDescription(width, height, format, isReadWrite, mipCount, arraySize, ResourceUsage.Default);
-            desc.BindFlags |= BindFlags.RenderTarget;
+            var desc = Texture2DBase.NewDescription(width, height, format, textureFlags, mipCount, arraySize, ResourceUsage.Default);
 
             // Sets the MSAALevel
             int maximumMSAA = (int)device.Features[format].MSAALevelMax;

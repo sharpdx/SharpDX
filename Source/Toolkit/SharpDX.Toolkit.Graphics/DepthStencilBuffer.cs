@@ -216,7 +216,7 @@ namespace SharpDX.Toolkit.Graphics
 
         protected static Texture2DDescription NewDepthStencilBufferDescription(GraphicsDevice device, int width, int height, DepthFormat format, MSAALevel multiSampleCount, int arraySize)
         {
-            var desc = Texture2DBase.NewDescription(width, height, DXGI.Format.Unknown, false, 1, arraySize, ResourceUsage.Default);
+            var desc = Texture2DBase.NewDescription(width, height, DXGI.Format.Unknown, TextureFlags.None, 1, arraySize, ResourceUsage.Default);
             desc.BindFlags |= BindFlags.DepthStencil;
             // Sets the MSAALevel
             int maximumMSAA = (int)device.Features[(DXGI.Format)format].MSAALevelMax;

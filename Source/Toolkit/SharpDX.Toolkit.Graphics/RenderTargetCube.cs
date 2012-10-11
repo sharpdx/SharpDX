@@ -147,14 +147,14 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="size">The size (in pixels) of the top-level faces of the cube texture.</param>
         /// <param name="format">Describes the format to use.</param>
-        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
+        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
         /// <returns>A new instance of <see cref="RenderTargetCube" /> class.</returns>
         /// <msdn-id>ff476521</msdn-id>
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
-        public static RenderTargetCube New(GraphicsDevice device, int size, PixelFormat format, bool isUnorderedReadWrite = false)
+        public static RenderTargetCube New(GraphicsDevice device, int size, PixelFormat format, TextureFlags flags = TextureFlags.RenderTarget | TextureFlags.ShaderResource)
         {
-            return New(device, size, false, format, isUnorderedReadWrite);
+            return New(device, size, false, format, flags | TextureFlags.RenderTarget);
         }
 
         /// <summary>
@@ -164,21 +164,20 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="size">The size (in pixels) of the top-level faces of the cube texture.</param>
         /// <param name="mipCount">Number of mipmaps, set to true to have all mipmaps, set to an int >=1 for a particular mipmap count.</param>
         /// <param name="format">Describes the format to use.</param>
-        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
+        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
         /// <returns>A new instance of <see cref="RenderTargetCube" /> class.</returns>
         /// <msdn-id>ff476521</msdn-id>
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
-        public static RenderTargetCube New(GraphicsDevice device, int size, MipMapCount mipCount, PixelFormat format, bool isUnorderedReadWrite = false)
+        public static RenderTargetCube New(GraphicsDevice device, int size, MipMapCount mipCount, PixelFormat format, TextureFlags flags = TextureFlags.RenderTarget | TextureFlags.ShaderResource)
         {
-            return new RenderTargetCube(device, NewRenderTargetDescription(size, format, isUnorderedReadWrite, mipCount));
+            return new RenderTargetCube(device, NewRenderTargetDescription(size, format, flags | TextureFlags.RenderTarget, mipCount));
         }
 
-        protected static Texture2DDescription NewRenderTargetDescription(int size, PixelFormat format, bool isReadWrite, int mipCount)
+        protected static Texture2DDescription NewRenderTargetDescription(int size, PixelFormat format, TextureFlags flags, int mipCount)
         {
-            var desc = Texture2DBase.NewDescription(size, size, format, isReadWrite, mipCount, 6, ResourceUsage.Default);
+            var desc = Texture2DBase.NewDescription(size, size, format, flags, mipCount, 6, ResourceUsage.Default);
             desc.OptionFlags = ResourceOptionFlags.TextureCube;
-            desc.BindFlags |= BindFlags.RenderTarget;
             return desc;
         }
     }

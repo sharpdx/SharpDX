@@ -151,15 +151,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="height">The height.</param>
         /// <param name="depth">The depth.</param>
         /// <param name="format">Describes the format to use.</param>
-        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
+        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
         /// <param name="arraySize">Size of the texture 3D array, default to 1.</param>
         /// <returns>A new instance of <see cref="RenderTarget3D" /> class.</returns>
         /// <msdn-id>ff476521</msdn-id>
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture3D([In] const D3D11_TEXTURE3D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture3D** ppTexture3D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture3D</unmanaged-short>
-        public static RenderTarget3D New(GraphicsDevice device, int width, int height, int depth,  PixelFormat format, bool isUnorderedReadWrite = false, int arraySize = 1)
+        public static RenderTarget3D New(GraphicsDevice device, int width, int height, int depth,  PixelFormat format, TextureFlags flags = TextureFlags.RenderTarget | TextureFlags.ShaderResource, int arraySize = 1)
         {
-            return New(device, width, height, depth, false, format, isUnorderedReadWrite, arraySize);
+            return New(device, width, height, depth, false, format, flags | TextureFlags.RenderTarget, arraySize);
         }
 
         /// <summary>
@@ -171,21 +171,20 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="depth">The depth.</param>
         /// <param name="mipCount">Number of mipmaps, set to true to have all mipmaps, set to an int >=1 for a particular mipmap count.</param>
         /// <param name="format">Describes the format to use.</param>
-        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
+        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
         /// <param name="arraySize">Size of the texture 3D array, default to 1.</param>
         /// <returns>A new instance of <see cref="RenderTarget3D" /> class.</returns>
         /// <msdn-id>ff476521</msdn-id>
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture3D([In] const D3D11_TEXTURE3D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture3D** ppTexture3D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture3D</unmanaged-short>
-        public static RenderTarget3D New(GraphicsDevice device, int width, int height, int depth, MipMapCount mipCount, PixelFormat format, bool isUnorderedReadWrite = false, int arraySize = 1)
+        public static RenderTarget3D New(GraphicsDevice device, int width, int height, int depth, MipMapCount mipCount, PixelFormat format, TextureFlags flags = TextureFlags.RenderTarget | TextureFlags.ShaderResource, int arraySize = 1)
         {
-            return new RenderTarget3D(device, NewRenderTargetDescription(width, height, depth, format, isUnorderedReadWrite, mipCount));
+            return new RenderTarget3D(device, NewRenderTargetDescription(width, height, depth, format, flags | TextureFlags.RenderTarget, mipCount));
         }
 
-        protected static Texture3DDescription NewRenderTargetDescription(int width, int height, int depth, PixelFormat format, bool isReadWrite, int mipCount)
+        protected static Texture3DDescription NewRenderTargetDescription(int width, int height, int depth, PixelFormat format, TextureFlags textureFlags,int mipCount)
         {
-            var desc = Texture3DBase.NewDescription(width, height, depth, format, isReadWrite, mipCount, ResourceUsage.Default);
-            desc.BindFlags |= BindFlags.RenderTarget;
+            var desc = Texture3DBase.NewDescription(width, height, depth, format, textureFlags, mipCount, ResourceUsage.Default);
             return desc;
         }
     }

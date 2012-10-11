@@ -177,9 +177,9 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        protected static Texture3DDescription NewDescription(int width, int height, int depth, PixelFormat format, bool isReadWrite, int mipCount, ResourceUsage usage)
+        protected static Texture3DDescription NewDescription(int width, int height, int depth, PixelFormat format, TextureFlags textureFlags, int mipCount, ResourceUsage usage)
         {
-            if (isReadWrite)
+            if ((textureFlags & TextureFlags.UnorderedAccess) != 0)
                 usage = ResourceUsage.Default;
             
             var desc = new Texture3DDescription()
@@ -187,18 +187,13 @@ namespace SharpDX.Toolkit.Graphics
                                Width = width,
                                Height = height,
                                Depth = depth,
-                               BindFlags = BindFlags.ShaderResource,
+                               BindFlags = GetBindFlagsFromTextureFlags(textureFlags),
                                Format = format,
                                MipLevels = CalculateMipMapCount(mipCount, width, height, depth),
                                Usage = usage,
                                CpuAccessFlags = GetCputAccessFlagsFromUsage(usage),
                                OptionFlags = ResourceOptionFlags.None
                            };
-
-            if (isReadWrite)
-            {
-                desc.BindFlags |= BindFlags.UnorderedAccess;
-            }
             return desc;
         }
     }

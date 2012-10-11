@@ -720,10 +720,10 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="stream">The stream to load the texture from.</param>
-        /// <param name="isUnorderedReadWrite">True to load the texture with unordered access enabled. Default is false.</param>
+        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
         /// <param name="usage">Usage of the resource. Default is <see cref="ResourceUsage.Immutable"/> </param>
         /// <returns>A texture</returns>
-        public static Texture Load(GraphicsDevice device, Stream stream, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
+        public static Texture Load(GraphicsDevice device, Stream stream, TextureFlags flags = TextureFlags.ShaderResource, ResourceUsage usage = ResourceUsage.Immutable)
         {
             var image = Image.Load(stream);
             try
@@ -731,13 +731,13 @@ namespace SharpDX.Toolkit.Graphics
                 switch (image.Description.Dimension)
                 {
                     case TextureDimension.Texture1D:
-                        return Texture1D.New(device, image, isUnorderedReadWrite, usage);
+                        return Texture1D.New(device, image, flags, usage);
                     case TextureDimension.Texture2D:
-                        return Texture2D.New(device, image, isUnorderedReadWrite, usage);
+                        return Texture2D.New(device, image, flags, usage);
                     case TextureDimension.Texture3D:
-                        return Texture3D.New(device, image, isUnorderedReadWrite, usage);
+                        return Texture3D.New(device, image, flags, usage);
                     case TextureDimension.TextureCube:
-                        return TextureCube.New(device, image, isUnorderedReadWrite, usage);
+                        return TextureCube.New(device, image, flags, usage);
                 }
             } finally
             {
@@ -752,13 +752,13 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="device">Specify the <see cref="GraphicsDevice"/> used to load and create a texture from a file.</param>
         /// <param name="filePath">The file to load the texture from.</param>
-        /// <param name="isUnorderedReadWrite">True to load the texture with unordered access enabled. Default is false.</param>
+        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
         /// <param name="usage">Usage of the resource. Default is <see cref="ResourceUsage.Immutable"/> </param>
         /// <returns>A texture</returns>
-        public static Texture Load(GraphicsDevice device, string filePath, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
+        public static Texture Load(GraphicsDevice device, string filePath, TextureFlags flags = TextureFlags.ShaderResource, ResourceUsage usage = ResourceUsage.Immutable)
         {
             using (var stream = new NativeFileStream(filePath, NativeFileMode.Open, NativeFileAccess.Read))
-                return Load(device, stream, isUnorderedReadWrite, usage);
+                return Load(device, stream, flags, usage);
         }
 
         /// <summary>
@@ -882,16 +882,16 @@ namespace SharpDX.Toolkit.Graphics
             return new DataBox(fixedPointer, rowPitch, slicePitch);
         }
 
-        internal static TextureDescription CreateTextureDescriptionFromImage(Image image, bool isUnorderedReadWrite, ResourceUsage usage)
+        internal static TextureDescription CreateTextureDescriptionFromImage(Image image, TextureFlags flags, ResourceUsage usage)
         {
             var desc = (TextureDescription)image.Description;
             desc.BindFlags = BindFlags.ShaderResource;
             desc.Usage = usage;
-            if (isUnorderedReadWrite)
-            {
+            if ((flags & TextureFlags.UnorderedAccess) != 0)
                 desc.Usage = ResourceUsage.Default;
-                desc.BindFlags |= BindFlags.UnorderedAccess;
-            }
+
+            desc.BindFlags = GetBindFlagsFromTextureFlags(flags);
+
             desc.CpuAccessFlags = GetCputAccessFlagsFromUsage(usage);
             return desc;
         }
@@ -1038,6 +1038,21 @@ namespace SharpDX.Toolkit.Graphics
         public int CompareTo(Texture obj)
         {
             return textureId.CompareTo(obj.textureId);
+        }
+
+        internal static BindFlags GetBindFlagsFromTextureFlags(TextureFlags flags)
+        {
+            var bindFlags = BindFlags.None;
+            if ((flags & TextureFlags.ShaderResource) != 0)
+                bindFlags |= BindFlags.ShaderResource;
+
+            if ((flags & TextureFlags.UnorderedAccess) != 0)
+                bindFlags |= BindFlags.UnorderedAccess;
+
+            if ((flags & TextureFlags.RenderTarget) != 0)
+                bindFlags |= BindFlags.RenderTarget;
+
+            return bindFlags;
         }
     }
 }

@@ -96,16 +96,16 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="size">The size (in pixels) of the top-level faces of the cube texture.</param>
         /// <param name="format">Describes the format to use.</param>
         /// <param name="usage">The usage.</param>
-        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
+        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
         /// <returns>
         /// A new instance of <see cref="Texture2D"/> class.
         /// </returns>
         /// <msdn-id>ff476521</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
-        public static TextureCube New(GraphicsDevice device, int size, PixelFormat format, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Default)
+        public static TextureCube New(GraphicsDevice device, int size, PixelFormat format, TextureFlags flags = TextureFlags.ShaderResource, ResourceUsage usage = ResourceUsage.Default)
         {
-            return New(device, size, false, format, isUnorderedReadWrite, usage);
+            return New(device, size, false, format, flags, usage);
         }
 
         /// <summary>
@@ -116,16 +116,16 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="mipCount">Number of mipmaps, set to true to have all mipmaps, set to an int >=1 for a particular mipmap count.</param>
         /// <param name="format">Describes the format to use.</param>
         /// <param name="usage">The usage.</param>
-        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
+        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
         /// <returns>
         /// A new instance of <see cref="Texture2D"/> class.
         /// </returns>
         /// <msdn-id>ff476521</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
-        public static TextureCube New(GraphicsDevice device, int size, MipMapCount mipCount, PixelFormat format, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Default)
+        public static TextureCube New(GraphicsDevice device, int size, MipMapCount mipCount, PixelFormat format, TextureFlags flags = TextureFlags.ShaderResource, ResourceUsage usage = ResourceUsage.Default)
         {
-            return new TextureCube(device, NewTextureCubeDescription(size, format, isUnorderedReadWrite, mipCount, usage));
+            return new TextureCube(device, NewTextureCubeDescription(size, format, flags | TextureFlags.ShaderResource, mipCount, usage));
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="size">The size (in pixels) of the top-level faces of the cube texture.</param>
         /// <param name="format">Describes the format to use.</param>
         /// <param name="usage">The usage.</param>
-        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
+        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
         /// <param name="textureData">an array of 6 textures. See remarks</param>
         /// <returns>A new instance of <see cref="TextureCube" /> class.</returns>
         /// <msdn-id>ff476521</msdn-id>
@@ -145,7 +145,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>
         /// The first dimension of mipMapTextures describes the number of array (TextureCube Array), the second is the texture data for a particular cube face.
         /// </remarks>
-        public unsafe static TextureCube New<T>(GraphicsDevice device, int size, PixelFormat format, T[][] textureData, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
+        public unsafe static TextureCube New<T>(GraphicsDevice device, int size, PixelFormat format, T[][] textureData, TextureFlags flags = TextureFlags.ShaderResource, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
         {
             if (textureData.Length != 6)
                 throw new ArgumentException("Invalid texture datas. First dimension must be equal to 6", "textureData");
@@ -157,7 +157,7 @@ namespace SharpDX.Toolkit.Graphics
             var dataBox5 = GetDataBox(format, size, size, 1, textureData[0], (IntPtr)Interop.Fixed(textureData[4]));
             var dataBox6 = GetDataBox(format, size, size, 1, textureData[0], (IntPtr)Interop.Fixed(textureData[5]));
 
-            return new TextureCube(device, NewTextureCubeDescription(size, format, isUnorderedReadWrite, 1, usage), dataBox1, dataBox2, dataBox3, dataBox4, dataBox5, dataBox6);
+            return new TextureCube(device, NewTextureCubeDescription(size, format, flags | TextureFlags.ShaderResource, 1, usage), dataBox1, dataBox2, dataBox3, dataBox4, dataBox5, dataBox6);
         }
 
         /// <summary>
@@ -167,7 +167,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="size">The size (in pixels) of the top-level faces of the cube texture.</param>
         /// <param name="format">Describes the format to use.</param>
         /// <param name="usage">The usage.</param>
-        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
+        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
         /// <param name="textureData">an array of 6 textures. See remarks</param>
         /// <returns>A new instance of <see cref="TextureCube" /> class.</returns>
         /// <msdn-id>ff476521</msdn-id>
@@ -176,12 +176,12 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>
         /// The first dimension of mipMapTextures describes the number of array (TextureCube Array), the second is the texture data for a particular cube face.
         /// </remarks>
-        public static TextureCube New(GraphicsDevice device, int size, PixelFormat format, DataBox[] textureData, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
+        public static TextureCube New(GraphicsDevice device, int size, PixelFormat format, DataBox[] textureData, TextureFlags flags = TextureFlags.ShaderResource, ResourceUsage usage = ResourceUsage.Immutable)
         {
             if (textureData.Length != 6)
                 throw new ArgumentException("Invalid texture datas. First dimension must be equal to 6", "textureData");
 
-            return new TextureCube(device, NewTextureCubeDescription(size, format, isUnorderedReadWrite, 1, usage), textureData);
+            return new TextureCube(device, NewTextureCubeDescription(size, format, flags | TextureFlags.ShaderResource, 1, usage), textureData);
         }
 
         /// <summary>
@@ -189,19 +189,19 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="image">An image in CPU memory.</param>
-        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
+        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
         /// <param name="usage">The usage.</param>
         /// <returns>A new instance of <see cref="TextureCube" /> class.</returns>
         /// <msdn-id>ff476521</msdn-id>
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
-        public static TextureCube New(GraphicsDevice device, Image image, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
+        public static TextureCube New(GraphicsDevice device, Image image, TextureFlags flags = TextureFlags.ShaderResource, ResourceUsage usage = ResourceUsage.Immutable)
         {
             if (image == null) throw new ArgumentNullException("image");
             if (image.Description.Dimension != TextureDimension.TextureCube)
                 throw new ArgumentException("Invalid image. Must be Cube", "image");
 
-            return new TextureCube(device, CreateTextureDescriptionFromImage(image, isUnorderedReadWrite, usage), image.ToDataBox());
+            return new TextureCube(device, CreateTextureDescriptionFromImage(image, flags | TextureFlags.ShaderResource, usage), image.ToDataBox());
         }
 
         /// <summary>
@@ -209,13 +209,13 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="stream">The stream to load the texture from.</param>
-        /// <param name="isUnorderedReadWrite">True to load the texture with unordered access enabled. Default is false.</param>
+        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
         /// <param name="usage">Usage of the resource. Default is <see cref="ResourceUsage.Immutable"/> </param>
         /// <exception cref="ArgumentException">If the texture is not of type Cube</exception>
         /// <returns>A texture</returns>
-        public static new TextureCube Load(GraphicsDevice device, Stream stream, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
+        public static new TextureCube Load(GraphicsDevice device, Stream stream, TextureFlags flags = TextureFlags.ShaderResource, ResourceUsage usage = ResourceUsage.Immutable)
         {
-            var texture = Texture.Load(device, stream, isUnorderedReadWrite, usage);
+            var texture = Texture.Load(device, stream, flags | TextureFlags.ShaderResource, usage);
             if (!(texture is TextureCube))
                 throw new ArgumentException(string.Format("Texture is not type of [TextureCube] but [{0}]", texture.GetType().Name));
             return (TextureCube)texture;
@@ -226,19 +226,19 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="filePath">The file to load the texture from.</param>
-        /// <param name="isUnorderedReadWrite">True to load the texture with unordered access enabled. Default is false.</param>
+        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
         /// <param name="usage">Usage of the resource. Default is <see cref="ResourceUsage.Immutable"/> </param>
         /// <exception cref="ArgumentException">If the texture is not of type Cube</exception>
         /// <returns>A texture</returns>
-        public static new TextureCube Load(GraphicsDevice device, string filePath, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
+        public static new TextureCube Load(GraphicsDevice device, string filePath, TextureFlags flags = TextureFlags.ShaderResource, ResourceUsage usage = ResourceUsage.Immutable)
         {
             using (var stream = new NativeFileStream(filePath, NativeFileMode.Open, NativeFileAccess.Read))
-                return Load(device, stream, isUnorderedReadWrite, usage);
+                return Load(device, stream, flags | TextureFlags.ShaderResource, usage);
         }
 
-        protected static Texture2DDescription NewTextureCubeDescription(int size, PixelFormat format, bool isReadWrite, int mipCount, ResourceUsage usage)
+        protected static Texture2DDescription NewTextureCubeDescription(int size, PixelFormat format, TextureFlags flags, int mipCount, ResourceUsage usage)
         {
-            var desc = NewDescription(size, size, format, isReadWrite, mipCount, 6, usage);
+            var desc = NewDescription(size, size, format, flags, mipCount, 6, usage);
             desc.OptionFlags = ResourceOptionFlags.TextureCube;
             return desc;
         }

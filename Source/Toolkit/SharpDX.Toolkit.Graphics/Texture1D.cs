@@ -98,7 +98,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="width">The width.</param>
         /// <param name="format">Describes the format to use.</param>
         /// <param name="usage">The usage.</param>
-        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
+        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
         /// <param name="arraySize">Size of the texture 2D array, default to 1.</param>
         /// <returns>
         /// A new instance of <see cref="Texture1D"/> class.
@@ -106,9 +106,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476520</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        public static Texture1D New(GraphicsDevice device, int width, PixelFormat format, bool isUnorderedReadWrite = false, int arraySize = 1, ResourceUsage usage = ResourceUsage.Default)
+        public static Texture1D New(GraphicsDevice device, int width, PixelFormat format, TextureFlags flags = TextureFlags.ShaderResource, int arraySize = 1, ResourceUsage usage = ResourceUsage.Default)
         {
-            return New(device, width, false, format, isUnorderedReadWrite, arraySize, usage);
+            return New(device, width, false, format, flags, arraySize, usage);
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="mipCount">Number of mipmaps, set to true to have all mipmaps, set to an int >=1 for a particular mipmap count.</param>
         /// <param name="format">Describes the format to use.</param>
         /// <param name="usage">The usage.</param>
-        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
+        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
         /// <param name="arraySize">Size of the texture 2D array, default to 1.</param>
         /// <returns>
         /// A new instance of <see cref="Texture1D"/> class.
@@ -127,9 +127,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476520</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>	
-        public static Texture1D New(GraphicsDevice device, int width, MipMapCount mipCount, PixelFormat format, bool isUnorderedReadWrite = false, int arraySize = 1, ResourceUsage usage = ResourceUsage.Default)
+        public static Texture1D New(GraphicsDevice device, int width, MipMapCount mipCount, PixelFormat format, TextureFlags flags = TextureFlags.ShaderResource, int arraySize = 1, ResourceUsage usage = ResourceUsage.Default)
         {
-            return new Texture1D(device, NewDescription(width, format, isUnorderedReadWrite, mipCount, arraySize, usage));
+            return new Texture1D(device, NewDescription(width, format, flags | TextureFlags.ShaderResource, mipCount, arraySize, usage));
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="format">Describes the format to use.</param>
         /// <param name="usage">The usage.</param>
         /// <param name="textureData">Texture data. Size of must be equal to sizeof(Format) * width </param>
-        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
+        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
         /// <returns>A new instance of <see cref="Texture1D" /> class.</returns>
         /// <msdn-id>ff476521</msdn-id>
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_Texture1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>
@@ -149,9 +149,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>
         /// The first dimension of mipMapTextures describes the number of array (Texture1D Array), second dimension is the mipmap, the third is the texture data for a particular mipmap.
         /// </remarks>
-        public unsafe static Texture1D New<T>(GraphicsDevice device, int width, PixelFormat format, T[] textureData, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
+        public unsafe static Texture1D New<T>(GraphicsDevice device, int width, PixelFormat format, T[] textureData, TextureFlags flags = TextureFlags.ShaderResource, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
         {
-            return new Texture1D(device, NewDescription(width, format, isUnorderedReadWrite, 1, 1, usage), GetDataBox(format, width, 1, 1, textureData, (IntPtr)Interop.Fixed(textureData)));
+            return new Texture1D(device, NewDescription(width, format, flags | TextureFlags.ShaderResource, 1, 1, usage), GetDataBox(format, width, 1, 1, textureData, (IntPtr)Interop.Fixed(textureData)));
         }
 
         /// <summary>
@@ -159,19 +159,19 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="image">An image in CPU memory.</param>
-        /// <param name="isUnorderedReadWrite">true if the texture needs to support unordered read write.</param>
+        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
         /// <param name="usage">The usage.</param>
         /// <returns>A new instance of <see cref="Texture1D" /> class.</returns>
         /// <msdn-id>ff476521</msdn-id>
         /// <unmanaged>HRESULT ID3D11Device::CreateTexture1D([In] const D3D11_TEXTURE1D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture1D** ppTexture1D)</unmanaged>
         /// <unmanaged-short>ID3D11Device::CreateTexture1D</unmanaged-short>
-        public static Texture1D New(GraphicsDevice device, Image image, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
+        public static Texture1D New(GraphicsDevice device, Image image, TextureFlags flags = TextureFlags.ShaderResource, ResourceUsage usage = ResourceUsage.Immutable)
         {
             if (image == null) throw new ArgumentNullException("image");
             if (image.Description.Dimension != TextureDimension.Texture1D)
                 throw new ArgumentException("Invalid image. Must be 1D", "image");
 
-            return new Texture1D(device, CreateTextureDescriptionFromImage(image, isUnorderedReadWrite, usage), image.ToDataBox());
+            return new Texture1D(device, CreateTextureDescriptionFromImage(image, flags | TextureFlags.ShaderResource, usage), image.ToDataBox());
         }
 
         /// <summary>
@@ -179,13 +179,13 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="stream">The stream to load the texture from.</param>
-        /// <param name="isUnorderedReadWrite">True to load the texture with unordered access enabled. Default is false.</param>
+        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
         /// <param name="usage">Usage of the resource. Default is <see cref="ResourceUsage.Immutable"/> </param>
         /// <exception cref="ArgumentException">If the texture is not of type 1D</exception>
         /// <returns>A texture</returns>
-        public static new Texture1D Load(GraphicsDevice device, Stream stream, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
+        public static new Texture1D Load(GraphicsDevice device, Stream stream, TextureFlags flags = TextureFlags.ShaderResource, ResourceUsage usage = ResourceUsage.Immutable)
         {
-            var texture = Texture.Load(device, stream, isUnorderedReadWrite, usage);
+            var texture = Texture.Load(device, stream, flags | TextureFlags.ShaderResource, usage);
             if (!(texture is Texture1D))
                 throw new ArgumentException(string.Format("Texture is not type of [Texture1D] but [{0}]", texture.GetType().Name));
             return (Texture1D)texture;
@@ -196,14 +196,14 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
         /// <param name="filePath">The file to load the texture from.</param>
-        /// <param name="isUnorderedReadWrite">True to load the texture with unordered access enabled. Default is false.</param>
+        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
         /// <param name="usage">Usage of the resource. Default is <see cref="ResourceUsage.Immutable"/> </param>
         /// <exception cref="ArgumentException">If the texture is not of type 1D</exception>
         /// <returns>A texture</returns>
-        public static new Texture1D Load(GraphicsDevice device, string filePath, bool isUnorderedReadWrite = false, ResourceUsage usage = ResourceUsage.Immutable)
+        public static new Texture1D Load(GraphicsDevice device, string filePath, TextureFlags flags = TextureFlags.ShaderResource, ResourceUsage usage = ResourceUsage.Immutable)
         {
             using (var stream = new NativeFileStream(filePath, NativeFileMode.Open, NativeFileAccess.Read))
-                return Load(device, stream, isUnorderedReadWrite, usage);
+                return Load(device, stream, flags, usage);
         }
     }
 }

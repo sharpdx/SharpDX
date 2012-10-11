@@ -153,7 +153,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             // -----------------------------------------------------------------------------------------
             // Check for a Texture1D as an array of 6 texture with (8+1) mipmaps each, with UAV support
             // -----------------------------------------------------------------------------------------
-            var texture = Texture1D.New(GraphicsDevice, 256, true, PixelFormat.R8.UNorm, true, 6);
+            var texture = Texture1D.New(GraphicsDevice, 256, true, PixelFormat.R8.UNorm, TextureFlags.UnorderedAccess, 6);
             var mipcount = (int)Math.Log(256, 2) + 1;
 
             // Check description against native description
