@@ -81,7 +81,7 @@ namespace SharpDX
             {
                 var memoryPtr = (IntPtr)(object)toDispose;
                 if (!Utilities.IsMemoryAligned(memoryPtr))
-                    throw new ArgumentException("Memory pointer is invalid. Memory must have been allocated with ");
+                    throw new ArgumentException("Memory pointer is invalid. Memory must have been allocated with Utilties.AllocateMemory");
             }
 
             var toDisposeComponent = toDispose as Component;
