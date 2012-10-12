@@ -100,9 +100,7 @@ namespace SharpDX.Toolkit.Graphics
                 serializer.SerializePackedInt(ref index);
 
                 // Enable null reference just for the import name
-                serializer.AllowNull = true;
-                serializer.Serialize(ref importName);
-                serializer.AllowNull = false;
+                serializer.Serialize(ref importName, SerializeFlags.Nullable);
             }
         }
     }

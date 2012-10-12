@@ -58,9 +58,7 @@ namespace SharpDX.Toolkit.Graphics
             /// <inheritdoc/>
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
-                serializer.AllowNull = true;
-                serializer.Serialize(ref Links);
-                serializer.AllowNull = false;
+                serializer.Serialize(ref Links, SerializeFlags.Nullable);
             }
 
             public IEnumerator<ShaderLink> GetEnumerator()

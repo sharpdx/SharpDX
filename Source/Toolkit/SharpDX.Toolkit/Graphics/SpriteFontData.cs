@@ -47,6 +47,7 @@ namespace SharpDX.Toolkit.Graphics
         public static SpriteFontData Load(Stream stream)
         {
             var serializer = new BinarySerializer(stream, SerializerMode.Read, Text.Encoding.ASCII);
+            serializer.ArrayLengthType = ArrayLengthType.Int;           
             var data = serializer.Load<SpriteFontData>();
             if (data.Glyphs == null)
                 throw new InvalidOperationException(string.Format("Invalid sprite font data. Expecting magic code [{0}]", spriteFontMagic));
@@ -84,16 +85,7 @@ namespace SharpDX.Toolkit.Graphics
                 return;
             }
 
-            int count = 0;
-            if (serializer.Mode == SerializerMode.Read)
-            {
-                serializer.Serialize(ref count);
-            }
-            else
-            {
-                count = Glyphs.Length;
-            }
-            serializer.Serialize(ref Glyphs, count);
+            serializer.Serialize(ref Glyphs);
             serializer.Serialize(ref LineSpacing);
             serializer.Serialize(ref DefaultCharacter);
 

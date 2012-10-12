@@ -120,10 +120,7 @@ namespace SharpDX.Toolkit.Graphics
 
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
-                serializer.AllowNull = true;
-                serializer.Serialize(ref Name);
-                serializer.AllowNull = false;
-
+                serializer.Serialize(ref Name, SerializeFlags.Nullable);
                 serializer.SerializeEnum(ref Type);
                 serializer.SerializeEnum(ref CompilerFlags);
                 serializer.SerializeEnum(ref Level);

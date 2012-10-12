@@ -18,43 +18,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Collections.Generic;
-using SharpDX.Serialization;
-
-namespace SharpDX.Toolkit.Graphics
+namespace SharpDX.Serialization
 {
-    public partial class EffectData 
+    /// <summary>
+    /// Specify the size used for encoding length for array while using a <see cref="BinarySerializer"/>, just before an array is encoded.
+    /// </summary>
+    public enum ArrayLengthType
     {
         /// <summary>
-        /// Describes a technique.
+        /// Use variable length 7Bit Encoding that will output from 1 byte to 5 byte depending on the range of length value.
         /// </summary>
-        public sealed class Technique : IDataSerializable
-        {
-            /// <summary>
-            /// Name of this technique.
-            /// </summary>
-            /// <remarks>
-            /// This value can be null.
-            /// </remarks>
-            public string Name;
+        Dynamic = 0,
 
-            /// <summary>
-            /// List of <see cref="Pass"/>.
-            /// </summary>
-            public List<Pass> Passes;
+        /// <summary>
+        /// Output a length as a byte. The length must not be greater than 255.
+        /// </summary>
+        Byte = 255,
 
-            public override string ToString()
-            {
-                return string.Format("Technique: [{0}], Passes({1})", Name, Passes.Count);
-            }
+        /// <summary>
+        /// Output a length as an ushort. The length must not be greater than 65535.
+        /// </summary>
+        UShort = 65535,
 
-            /// <inheritdoc/>
-            void IDataSerializable.Serialize(BinarySerializer serializer)
-            {
-                serializer.Serialize(ref Name, SerializeFlags.Nullable);
-
-                serializer.Serialize(ref Passes);
-            }
-        }
+        /// <summary>
+        /// Output a length as an int. The length must not be greater than 2^31 - 1.
+        /// </summary>
+        Int = 0x7FFFFFF
     }
 }

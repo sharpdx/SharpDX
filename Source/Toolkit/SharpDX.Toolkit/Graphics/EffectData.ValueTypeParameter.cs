@@ -107,9 +107,7 @@ namespace SharpDX.Toolkit.Graphics
                 serializer.SerializePackedInt(ref Size);
                 serializer.Serialize(ref RowCount);
                 serializer.Serialize(ref ColumnCount);
-                serializer.AllowNull = true;
-                serializer.Serialize(ref DefaultValue);
-                serializer.AllowNull = false;
+                serializer.Serialize(ref DefaultValue, SerializeFlags.Nullable);
             }
         }
     }

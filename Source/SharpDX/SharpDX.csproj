@@ -35,7 +35,9 @@
     <Compile Include="ColorBGRA.cs" />
     <Compile Include="IO\RandomStream.cs" />
     <Compile Include="Multimedia\WavWriter.cs" />
+    <Compile Include="Serialization\ArrayLengthType.cs" />
     <Compile Include="Serialization\NamespaceDoc.cs" />
+    <Compile Include="Serialization\SerializeFlags.cs" />
     <Compile Include="SingletonString.cs" />
     <Compile Include="ComponentBase.cs" />
     <Compile Include="DataPointer.cs" />

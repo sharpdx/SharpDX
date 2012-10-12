@@ -404,11 +404,9 @@ namespace SharpDX.Tests
                 serializer.Serialize(ref OList);
 
                 // Allow null values here.
-                serializer.AllowNull = true;
-                serializer.Serialize(ref ONull);
-                serializer.Serialize(ref OArrayNull);
-                serializer.Serialize(ref OListNull);
-                serializer.AllowNull = false;
+                serializer.Serialize(ref ONull, SerializeFlags.Nullable);
+                serializer.Serialize(ref OArrayNull, SerializeFlags.Nullable);
+                serializer.Serialize(ref OListNull, SerializeFlags.Nullable);
 
                 serializer.Serialize(ref Q);
                 serializer.Serialize(ref QArray);
@@ -524,7 +522,6 @@ namespace SharpDX.Tests
             
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
-                serializer.AllowNull = true;
                 serializer.SerializeDynamic(ref A);
                 serializer.SerializeDynamic(ref AArray);
                 serializer.SerializeDynamic(ref AList);
@@ -609,8 +606,6 @@ namespace SharpDX.Tests
                 serializer.SerializeDynamic(ref SIdentity44);
                 serializer.SerializeDynamic(ref SIdentity55);
                 serializer.AllowIdentity = false;
-
-                serializer.AllowNull = false;
             }
 
             public void CopyTo(ref TestData dest)

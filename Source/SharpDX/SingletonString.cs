@@ -69,9 +69,7 @@ namespace SharpDX
 
         public void Serialize(BinarySerializer serializer)
         {
-            serializer.AllowNull = true;
-            serializer.Serialize(ref text);
-            serializer.AllowNull = false;
+            serializer.Serialize(ref text, SerializeFlags.Nullable);
 
             if (serializer.Mode == SerializerMode.Read)
                 hashCode = text != null ? text.GetHashCode() : 0;

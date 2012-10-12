@@ -90,9 +90,7 @@ namespace SharpDX.Toolkit.Graphics
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
                 serializer.Serialize(ref Semantics);
-                serializer.AllowNull = true;
-                serializer.Serialize(ref Bytecode);
-                serializer.AllowNull = false;
+                serializer.Serialize(ref Bytecode, SerializeFlags.Nullable);
                 serializer.Serialize(ref Hashcode);
             }
         }

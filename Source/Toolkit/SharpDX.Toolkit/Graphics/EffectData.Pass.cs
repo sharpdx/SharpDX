@@ -58,9 +58,7 @@ namespace SharpDX.Toolkit.Graphics
             /// <inheritdoc/>
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
-                serializer.AllowNull = true;
-                serializer.Serialize(ref Name);
-                serializer.AllowNull = false;
+                serializer.Serialize(ref Name, SerializeFlags.Nullable);
 
                 serializer.Serialize(ref IsSubPass);
                 serializer.Serialize(ref Attributes);

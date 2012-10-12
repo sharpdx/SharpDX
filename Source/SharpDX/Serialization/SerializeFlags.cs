@@ -18,43 +18,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Collections.Generic;
-using SharpDX.Serialization;
 
-namespace SharpDX.Toolkit.Graphics
+using System;
+
+namespace SharpDX.Serialization
 {
-    public partial class EffectData 
+    /// <summary>
+    /// Flags used when serializing a value with a <see cref="BinarySerializer"/>.
+    /// </summary>
+    [Flags]
+    public enum SerializeFlags
     {
         /// <summary>
-        /// Describes a technique.
+        /// Normal serialize (not dynamic, not nullable).
         /// </summary>
-        public sealed class Technique : IDataSerializable
-        {
-            /// <summary>
-            /// Name of this technique.
-            /// </summary>
-            /// <remarks>
-            /// This value can be null.
-            /// </remarks>
-            public string Name;
+        Normal = 0,
 
-            /// <summary>
-            /// List of <see cref="Pass"/>.
-            /// </summary>
-            public List<Pass> Passes;
+        /// <summary>
+        /// Serialize a value as a dynamic value (the output stream will contain a magic-code for each encoded object). 
+        /// </summary>
+        Dynamic = 1,
 
-            public override string ToString()
-            {
-                return string.Format("Technique: [{0}], Passes({1})", Name, Passes.Count);
-            }
-
-            /// <inheritdoc/>
-            void IDataSerializable.Serialize(BinarySerializer serializer)
-            {
-                serializer.Serialize(ref Name, SerializeFlags.Nullable);
-
-                serializer.Serialize(ref Passes);
-            }
-        }
+        /// <summary>
+        /// Serialize a value that can be null.
+        /// </summary>
+        Nullable = 2,
     }
 }
