@@ -23,6 +23,7 @@ using System.IO;
 using System.Text;
 using SharpDX.IO;
 using SharpDX.Multimedia;
+using System.Reflection;
 
 namespace SharpDX.Serialization
 {
