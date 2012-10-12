@@ -242,7 +242,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\WP8Debug\</OutputPath>
+    <OutputPath>bin\WP8Debug-x86\</OutputPath>
     <DefineConstants>TRACE;DEBUG;WP8;W8CORE;DIRECTX11_1;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
@@ -257,7 +257,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Release|x86'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\WP8Release</OutputPath>
+    <OutputPath>bin\WP8Release-x86</OutputPath>
     <DefineConstants>TRACE;WP8;W8CORE;DIRECTX11_1;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
@@ -268,4 +268,35 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
+
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Debug|ARM'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\WP8Debug-ARM\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;WP8;W8CORE;DIRECTX11_1;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Release|ARM'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\WP8Release-ARM</OutputPath>
+    <DefineConstants>TRACE;WP8;W8CORE;DIRECTX11_1;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
+
 </Project>
