@@ -7,6 +7,10 @@
     <ProjectGuid>{BCE106B4-0C81-4705-8A9C-C4C4F5EAB702}</ProjectGuid>
     <RootNamespace>SharpDX.Toolkit.Compiler</RootNamespace>
     <AssemblyName>tkfxc</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>    
   </PropertyGroup>
   <PropertyGroup>
     <OutputType>Exe</OutputType>
