@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using SharpDX.IO;
 using SharpDX.Serialization;
@@ -92,7 +93,7 @@ namespace SharpDX.Toolkit.Graphics
             serializer.Serialize(ref Image);
         }
 
-        public class Glyph : IDataSerializable
+        public struct Glyph : IDataSerializable
         {
             // Unicode codepoint.
             public int Character;

@@ -75,6 +75,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 using SharpDX.Direct3D11;
 
@@ -369,6 +370,144 @@ namespace SharpDX.Toolkit.Graphics
             DrawSprite(texture, ref destination, true, ref sourceRectangle, color, rotation, ref origin, effects, layerDepth);
         }
 
+        /// <summary>Adds a string to a batch of sprites for rendering using the specified font, text, position, and color.</summary>
+        /// <param name="spriteFont">A font for diplaying text.</param>
+        /// <param name="text">A text string.</param>
+        /// <param name="position">The location (in screen coordinates) to draw the sprite.</param>
+        /// <param name="color">The color to tint a sprite. Use Color.White for full color with no tinting.</param>
+        public void DrawString(SpriteFont spriteFont, string text, Vector2 position, Color color)
+        {
+            if (spriteFont == null)
+            {
+                throw new ArgumentNullException("spriteFont");
+            }
+            if (text == null)
+            {
+                throw new ArgumentNullException("text");
+            }
+            var proxy = new SpriteFont.StringProxy(text);
+            var one = Vector2.One;
+            spriteFont.InternalDraw(ref proxy, this, position, color, 0f, Vector2.Zero, ref one, SpriteEffects.None, 0f);
+        }
+
+        /// <summary>Adds a string to a batch of sprites for rendering using the specified font, text, position, and color.</summary>
+        /// <param name="spriteFont">A font for diplaying text.</param>
+        /// <param name="text">Text string.</param>
+        /// <param name="position">The location (in screen coordinates) to draw the sprite.</param>
+        /// <param name="color">The color to tint a sprite. Use Color.White for full color with no tinting.</param>
+        public void DrawString(SpriteFont spriteFont, StringBuilder text, Vector2 position, Color color)
+        {
+            if (spriteFont == null)
+            {
+                throw new ArgumentNullException("spriteFont");
+            }
+            if (text == null)
+            {
+                throw new ArgumentNullException("text");
+            }
+            var proxy = new SpriteFont.StringProxy(text);
+            var one = Vector2.One;
+            spriteFont.InternalDraw(ref proxy, this, position, color, 0f, Vector2.Zero, ref one, SpriteEffects.None, 0f);
+        }
+
+        /// <summary>Adds a string to a batch of sprites for rendering using the specified font, text, position, color, rotation, origin, scale, effects and layer.</summary>
+        /// <param name="spriteFont">A font for diplaying text.</param>
+        /// <param name="text">A text string.</param>
+        /// <param name="position">The location (in screen coordinates) to draw the sprite.</param>
+        /// <param name="color">The color to tint a sprite. Use Color.White for full color with no tinting.</param>
+        /// <param name="rotation">Specifies the angle (in radians) to rotate the sprite about its center.</param>
+        /// <param name="origin">The sprite origin; the default is (0,0) which represents the upper-left corner.</param>
+        /// <param name="scale">Scale factor.</param>
+        /// <param name="effects">Effects to apply.</param>
+        /// <param name="layerDepth">The depth of a layer. By default, 0 represents the front layer and 1 represents a back layer. Use SpriteSortMode if you want sprites to be sorted during drawing.</param>
+        public void DrawString(SpriteFont spriteFont, string text, Vector2 position, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
+        {
+            if (spriteFont == null)
+            {
+                throw new ArgumentNullException("spriteFont");
+            }
+            if (text == null)
+            {
+                throw new ArgumentNullException("text");
+            }
+            var proxy = new SpriteFont.StringProxy(text);
+            spriteFont.InternalDraw(ref proxy, this, position, color, rotation, origin, ref scale, effects, layerDepth);
+        }
+
+        /// <summary>Adds a string to a batch of sprites for rendering using the specified font, text, position, color, rotation, origin, scale, effects and layer.</summary>
+        /// <param name="spriteFont">A font for diplaying text.</param>
+        /// <param name="text">A text string.</param>
+        /// <param name="position">The location (in screen coordinates) to draw the sprite.</param>
+        /// <param name="color">The color to tint a sprite. Use Color.White for full color with no tinting.</param>
+        /// <param name="rotation">Specifies the angle (in radians) to rotate the sprite about its center.</param>
+        /// <param name="origin">The sprite origin; the default is (0,0) which represents the upper-left corner.</param>
+        /// <param name="scale">Scale factor.</param>
+        /// <param name="effects">Effects to apply.</param>
+        /// <param name="layerDepth">The depth of a layer. By default, 0 represents the front layer and 1 represents a back layer. Use SpriteSortMode if you want sprites to be sorted during drawing.</param>
+        public void DrawString(SpriteFont spriteFont, string text, Vector2 position, Color color, float rotation, Vector2 origin, float scale, SpriteEffects effects, float layerDepth)
+        {
+            if (spriteFont == null)
+            {
+                throw new ArgumentNullException("spriteFont");
+            }
+            if (text == null)
+            {
+                throw new ArgumentNullException("text");
+            }
+            var proxy = new SpriteFont.StringProxy(text);
+            var vector = new Vector2(scale, scale);
+            spriteFont.InternalDraw(ref proxy, this, position, color, rotation, origin, ref vector, effects, layerDepth);
+        }
+
+        /// <summary>Adds a string to a batch of sprites for rendering using the specified font, text, position, color, rotation, origin, scale, effects and layer.</summary>
+        /// <param name="spriteFont">A font for diplaying text.</param>
+        /// <param name="text">Text string.</param>
+        /// <param name="position">The location (in screen coordinates) to draw the sprite.</param>
+        /// <param name="color">The color to tint a sprite. Use Color.White for full color with no tinting.</param>
+        /// <param name="rotation">Specifies the angle (in radians) to rotate the sprite about its center.</param>
+        /// <param name="origin">The sprite origin; the default is (0,0) which represents the upper-left corner.</param>
+        /// <param name="scale">Scale factor.</param>
+        /// <param name="effects">Effects to apply.</param>
+        /// <param name="layerDepth">The depth of a layer. By default, 0 represents the front layer and 1 represents a back layer. Use SpriteSortMode if you want sprites to be sorted during drawing.</param>
+        public void DrawString(SpriteFont spriteFont, StringBuilder text, Vector2 position, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
+        {
+            if (spriteFont == null)
+            {
+                throw new ArgumentNullException("spriteFont");
+            }
+            if (text == null)
+            {
+                throw new ArgumentNullException("text");
+            }
+            var proxy = new SpriteFont.StringProxy(text);
+            spriteFont.InternalDraw(ref proxy, this, position, color, rotation, origin, ref scale, effects, layerDepth);
+        }
+
+        /// <summary>Adds a string to a batch of sprites for rendering using the specified font, text, position, color, rotation, origin, scale, effects and layer.</summary>
+        /// <param name="spriteFont">A font for diplaying text.</param>
+        /// <param name="text">Text string.</param>
+        /// <param name="position">The location (in screen coordinates) to draw the sprite.</param>
+        /// <param name="color">The color to tint a sprite. Use Color.White for full color with no tinting.</param>
+        /// <param name="rotation">Specifies the angle (in radians) to rotate the sprite about its center.</param>
+        /// <param name="origin">The sprite origin; the default is (0,0) which represents the upper-left corner.</param>
+        /// <param name="scale">Scale factor.</param>
+        /// <param name="effects">Effects to apply.</param>
+        /// <param name="layerDepth">The depth of a layer. By default, 0 represents the front layer and 1 represents a back layer. Use SpriteSortMode if you want sprites to be sorted during drawing.</param>
+        public void DrawString(SpriteFont spriteFont, StringBuilder text, Vector2 position, Color color, float rotation, Vector2 origin, float scale, SpriteEffects effects, float layerDepth)
+        {
+            if (spriteFont == null)
+            {
+                throw new ArgumentNullException("spriteFont");
+            }
+            if (text == null)
+            {
+                throw new ArgumentNullException("text");
+            }
+            var proxy = new SpriteFont.StringProxy(text);
+            var vector = new Vector2(scale, scale);
+            spriteFont.InternalDraw(ref proxy, this, position, color, rotation, origin, ref vector, effects, layerDepth);
+        }
+
         /// <summary>
         /// Flushes the sprite batch and restores the device state to how it was before Begin was called. 
         /// </summary>
@@ -505,7 +644,7 @@ namespace SharpDX.Toolkit.Graphics
             Array.Sort(sortIndices, 0, spriteQueueCount, comparer);
         }
 
-        private unsafe void DrawSprite(Texture2D texture, ref DrawingRectangleF destination, bool scaleDestination, ref DrawingRectangle? sourceRectangle, Color4 color, float rotation, ref Vector2 origin, SpriteEffects effects, float depth)
+        internal unsafe void DrawSprite(Texture2D texture, ref DrawingRectangleF destination, bool scaleDestination, ref DrawingRectangle? sourceRectangle, Color4 color, float rotation, ref Vector2 origin, SpriteEffects effects, float depth)
         {
             // Check that texture is not null
             if (texture == null)

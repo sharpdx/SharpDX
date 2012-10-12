@@ -32,6 +32,7 @@
     <Compile Include="SharedDataType.cs" />
     <Compile Include="SpriteBatch.cs" />
     <Compile Include="SpriteEffects.cs" />
+    <Compile Include="SpriteFont.cs" />
     <Compile Include="SpriteSortMode.cs" />
     <Compile Include="StateCollectionBase.cs" />
     <Compile Include="Buffer.cs" />
