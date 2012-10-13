@@ -33,6 +33,7 @@
     <Compile Include="AssemblyDoc.cs" />
     <Compile Include="Color.cs" />
     <Compile Include="ColorBGRA.cs" />
+    <Compile Include="IO\PathUtility.cs" />
     <Compile Include="IO\RandomStream.cs" />
     <Compile Include="Multimedia\WavWriter.cs" />
     <Compile Include="Serialization\ArrayLengthType.cs" />

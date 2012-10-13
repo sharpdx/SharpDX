@@ -18,14 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
 using System.IO;
 using SharpDX.IO;
 using SharpDX.Serialization;
+using SharpDX.Toolkit.Content;
 
 namespace SharpDX.Toolkit.Graphics
 {
+    [ContentReader(typeof(SpriteFontDataContentReader))]
     public class SpriteFontData : IDataSerializable
     {
         const string spriteFontMagic = "DXTKfont";
@@ -47,11 +47,12 @@ namespace SharpDX.Toolkit.Graphics
         /// </remarks>
         public static SpriteFontData Load(Stream stream)
         {
-            var serializer = new BinarySerializer(stream, SerializerMode.Read, Text.Encoding.ASCII);
-            serializer.ArrayLengthType = ArrayLengthType.Int;           
+            var serializer = new BinarySerializer(stream, SerializerMode.Read, Text.Encoding.ASCII) {ArrayLengthType = ArrayLengthType.Int};
             var data = serializer.Load<SpriteFontData>();
+
+            // Glyps are null, then this is not a SpriteFondData
             if (data.Glyphs == null)
-                throw new InvalidOperationException(string.Format("Invalid sprite font data. Expecting magic code [{0}]", spriteFontMagic));
+                return null;
             return data;
         }
 
@@ -83,6 +84,8 @@ namespace SharpDX.Toolkit.Graphics
 
             if (magic != spriteFontMagic)
             {
+                // Make sure that Glyphs is null
+                Glyphs = null;
                 return;
             }
 

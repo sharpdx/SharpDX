@@ -21,7 +21,11 @@
     <Compile Include="BlendState.cs" />
     <Compile Include="BlendStateCollection.cs" />
     <Compile Include="EffectConstantBufferKey.cs" />
+    <Compile Include="EffectContentReader.cs" />
+    <Compile Include="GraphicsResourceContentReaderBase.cs" />
     <Compile Include="GraphicsWindow.cs" />
+    <Compile Include="IGraphicsDeviceService.cs" />
+    <Compile Include="ImageContentReader.cs" />
     <Compile Include="InputSignatureKey.cs" />
     <Compile Include="InputSignatureManager.cs" />
     <Compile Include="ReadOnlyArray.cs" />
@@ -33,6 +37,7 @@
     <Compile Include="SpriteBatch.cs" />
     <Compile Include="SpriteEffects.cs" />
     <Compile Include="SpriteFont.cs" />
+    <Compile Include="SpriteFontContentReader.cs" />
     <Compile Include="SpriteSortMode.cs" />
     <Compile Include="StateCollectionBase.cs" />
     <Compile Include="Buffer.cs" />
@@ -105,6 +110,7 @@
       <AutoGen>true</AutoGen>
       <DependentUpon>SpriteEffect.fx</DependentUpon>
     </Compile>
+    <Compile Include="TextureContentReader.cs" />
     <Compile Include="TextureDimension.cs" />
     <Compile Include="TextureFlags.cs" />
     <Compile Include="TGAHelper.cs" />

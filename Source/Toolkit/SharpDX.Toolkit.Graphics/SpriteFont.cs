@@ -79,10 +79,12 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using SharpDX.IO;
+using SharpDX.Toolkit.Content;
 
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>Represents a font texture.</summary>
+    [ContentReader(typeof(SpriteFontContentReader))]
     public sealed class SpriteFont : GraphicsResource
     {
         private readonly Dictionary<char, int> characterMap;
@@ -121,7 +123,10 @@ namespace SharpDX.Toolkit.Graphics
         /// </remarks>
         public static SpriteFont Load(GraphicsDevice device, Stream stream)
         {
-            return New(device, SpriteFontData.Load(stream));
+            var spriteFontData = SpriteFontData.Load(stream);
+            if (spriteFontData == null)
+                return null;
+            return New(device, spriteFontData);
         }
 
         /// <summary>

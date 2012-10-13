@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using SharpDX.Toolkit.Content;
 using SharpDX.Toolkit.Diagnostics;
 
 namespace SharpDX.Toolkit.Graphics
@@ -27,6 +28,7 @@ namespace SharpDX.Toolkit.Graphics
     /// <summary>
     /// Main class to apply shader effects.
     /// </summary>
+    [ContentReader(typeof(EffectContentReader))]
     public class Effect : GraphicsResource
     {
         public delegate EffectPass OnApplyDelegate(EffectPass pass);
@@ -86,7 +88,7 @@ namespace SharpDX.Toolkit.Graphics
         public Effect(GraphicsDevice device, EffectData effectData) : base(device)
         {
             if (effectData.Effects.Count != 1)
-                throw new ArgumentException("Expecting only one effect in the effect bytecode. Use GraphicsDevice.DefaultEffectPool.RegisterBytecode instead", "bytecode");
+                throw new ArgumentException(string.Format("Expecting only one effect in the effect bytecode instead of [{0}]. Use GraphicsDevice.DefaultEffectPool.RegisterBytecode instead", Utilities.Join(",", effectData.Effects)), "bytecode");
 
             ConstantBuffers = new EffectConstantBufferCollection();
             Parameters = new EffectParameterCollection();

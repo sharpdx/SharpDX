@@ -42,11 +42,17 @@ namespace SharpDX.Toolkit.Graphics
 
         protected GraphicsResource(GraphicsDevice graphicsDevice)
         {
+            if (graphicsDevice == null)
+                throw new ArgumentNullException("graphicsDevice");
+
             GraphicsDevice = graphicsDevice;
         }
 
         protected GraphicsResource(GraphicsDevice graphicsDevice, string name) : base(name)
         {
+            if (graphicsDevice == null)
+                throw new ArgumentNullException("graphicsDevice");
+
             GraphicsDevice = graphicsDevice;
         }
 

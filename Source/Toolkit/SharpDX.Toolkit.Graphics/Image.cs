@@ -76,12 +76,14 @@ using System.Runtime.InteropServices;
 using SharpDX.DXGI;
 using SharpDX.IO;
 using SharpDX.Serialization;
+using SharpDX.Toolkit.Content;
 
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
     /// Provides method to instantiate an image 1D/2D/3D supporting TextureArray and mipmaps on the CPU or to load/save an image from the disk.
     /// </summary>
+    [ContentReader(typeof(ImageContentReader))]
     public sealed class Image : Component
     {
         public delegate Image ImageLoadDelegate(IntPtr dataPointer, int dataSize, bool makeACopy, GCHandle? handle);

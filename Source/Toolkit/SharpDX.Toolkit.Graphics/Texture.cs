@@ -23,6 +23,7 @@ using System.IO;
 using SharpDX.DXGI;
 using SharpDX.Direct3D11;
 using SharpDX.IO;
+using SharpDX.Toolkit.Content;
 using DeviceChild = SharpDX.Direct3D11.DeviceChild;
 using MapFlags = SharpDX.Direct3D11.MapFlags;
 
@@ -32,6 +33,7 @@ namespace SharpDX.Toolkit.Graphics
     /// Base class for texture resources.
     /// </summary>
     /// <typeparam name="T">Type of the <see cref="N:SharpDX.Direct3D11"/> texture resource.</typeparam>
+    [ContentReader(typeof(TextureContentReader))]
     public abstract class Texture : GraphicsResource, IComparable<Texture>
     {
         private long textureId;
