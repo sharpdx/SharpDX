@@ -180,7 +180,9 @@
     <map struct="D3D(\d+)_BOX" name="ResourceRegion" />
     <map struct="D3D(\d+)_COUNTER_INFO" name="CounterCapabilities" />
     <map struct="D3D(\d+)_BLEND_DESC" name="BlendStateDescription" />
+    <map struct="D3D(\d+)_BLEND_DESC1" name="BlendStateDescription1" />
     <map struct="D3D(\d+)_RASTERIZER_DESC" name="RasterizerStateDescription" />
+    <map struct="D3D(\d+)_RASTERIZER_DESC1" name="RasterizerStateDescription1" />
     <map struct="D3D(\d+)_SAMPLER_DESC" name="SamplerStateDescription" />
     <map field="D3D(\d+)_SAMPLER_DESC::BorderColor" type="SHARPDX_COLOR4" array="0" />
     <map field="D3D(\d+)_SAMPLER_DESC::MaxAnisotropy" name="MaximumAnisotropy" />
@@ -294,8 +296,8 @@
     <map field="D3DX?(\d+)_EFFECT_SHADER_DESC::NumOutputSignatureEntries" name="OutputParameterCount" />
     <map field="D3D(X?\d+)_EFFECT_VARIABLE_DESC::Flags" type="D3D$1_EFFECT_VARIABLE_FLAGS" />
     <map field="D3DX?(\d+)_EFFECT_VARIABLE_DESC::Annotations" name="AnnotationCount" />
-    <map field="D3D(\d+)_RASTERIZER_DESC::(.*)Enable" name="Is$2Enabled" />
-    <map field="D3D(\d+)_RASTERIZER_DESC::FrontCounterClockwise" name="IsFrontCounterClockwise" />
+    <map field="D3D(\d+)_RASTERIZER_DESC1?::(.*)Enable" name="Is$2Enabled" />
+    <map field="D3D(\d+)_RASTERIZER_DESC1?::FrontCounterClockwise" name="IsFrontCounterClockwise" />
     <map field="D3D(\d+)_RENDER_TARGET_BLEND_DESC1?::BlendEnable" name="IsBlendEnabled" />
     <map field="D3D(\d+)_RENDER_TARGET_BLEND_DESC1?::SrcBlend" name="SourceBlend" />
     <map field="D3D(\d+)_RENDER_TARGET_BLEND_DESC1?::DestBlend" name="DestinationBlend" />

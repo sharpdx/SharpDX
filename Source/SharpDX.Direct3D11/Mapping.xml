@@ -168,6 +168,10 @@
     // D3D11 Struct
     // *****************************************************************
     -->
+
+    <map field="D3D11_RENDER_TARGET_BLEND_DESC1::LogicOpEnable" name="IsLogicOperationEnabled"/>
+    <map field="D3D11_RENDER_TARGET_BLEND_DESC1::LogicOp" name="LogicOperation"/>
+
     <map struct="D3D11_SHADER_BUFFER_DESC" name="ConstantBufferDescription" />
     <map field="D3D11_SHADER_DESC::Version" type="D3D11_SHADER_VERSION_TYPE" />
     <map field="D3D11_CLASS_INSTANCE_DESC::Created" name="IsCreated" />

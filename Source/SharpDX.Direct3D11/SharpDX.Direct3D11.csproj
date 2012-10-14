@@ -25,6 +25,8 @@
     <Compile Include="ClassLinkage.cs" />
     <Compile Include="ComputeShader.cs" />
     <Compile Include="BlendState1.cs" />
+    <Compile Include="BlendStateDescription1.cs" />
+    <Compile Include="RasterizerStateDescription1.cs" />
     <Compile Include="DepthStencilStateDescription.cs" />
     <Compile Include="Device1.cs" />
     <Compile Include="NamespaceDoc.cs" />
