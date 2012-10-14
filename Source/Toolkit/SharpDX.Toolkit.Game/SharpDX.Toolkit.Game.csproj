@@ -5,7 +5,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{B2516A23-1A99-4263-964A-B820FD07FA80}</ProjectGuid>
-    <RootNamespace>SharpDX.Toolkit.Game</RootNamespace>
+    <RootNamespace>SharpDX.Toolkit</RootNamespace>
     <AssemblyName>SharpDX.Toolkit.Game</AssemblyName>
   </PropertyGroup>
   <ItemGroup Condition=" '$(SharpDXWin8)' == 'false'">
@@ -18,6 +18,16 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Game.cs" />
+    <Compile Include="GamePlatform.cs" />
+    <Compile Include="GameSystem.cs" />
+    <Compile Include="GameSystemCollection.cs" />
+    <Compile Include="GameServiceRegistry.cs" />
+    <Compile Include="GameTime.cs" />
+    <Compile Include="GameWindow.cs" />
+    <Compile Include="IDrawable.cs" />
+    <Compile Include="IGameSystem.cs" />
+    <Compile Include="IUpdateable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
