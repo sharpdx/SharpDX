@@ -28,7 +28,7 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     internal class EffectContentReader : GraphicsResourceContentReaderBase<Effect>
     {
-        protected override Effect ReadContent(ContentManager readerManager, GraphicsDevice device, string assetName, Stream stream)
+        protected override Effect ReadContent(IContentManager readerManager, GraphicsDevice device, string assetName, Stream stream)
         {
             var effectData = EffectData.Load(stream);
             if (effectData == null)

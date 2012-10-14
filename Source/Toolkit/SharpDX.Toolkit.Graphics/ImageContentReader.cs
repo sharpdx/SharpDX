@@ -28,7 +28,7 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     class ImageContentReader : IContentReader
     {
-        public object ReadContent(ContentManager readerManager, string assetName, Stream stream, out bool keepStreamOpen)
+        public object ReadContent(IContentManager readerManager, string assetName, Stream stream, out bool keepStreamOpen)
         {
             keepStreamOpen = false;
             var image = Image.Load(stream);

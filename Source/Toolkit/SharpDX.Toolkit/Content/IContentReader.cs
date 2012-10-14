@@ -22,8 +22,19 @@ using System.IO;
 
 namespace SharpDX.Toolkit.Content
 {
+    /// <summary>
+    /// A content reader is in charge of reading object data from a stream.
+    /// </summary>
     public interface IContentReader
     {
-        object ReadContent(ContentManager readerManager, string assetName, Stream stream, out bool keepStreamOpen);
+        /// <summary>
+        /// Reads the content of a particular data from a stream.
+        /// </summary>
+        /// <param name="contentManager">The content manager.</param>
+        /// <param name="assetName">The name of the asset associated with the stream.</param>
+        /// <param name="stream">The steam of the asset to load data from.</param>
+        /// <param name="keepStreamOpen"><c>true</c> to keep the stream opened after the content was read, otherwise the stream will be closed after if this content reader succeeded to read the data.</param>
+        /// <returns>The data decoded from the stream, or null if the kind of asset is not supported by this content reader.</returns>
+        object ReadContent(IContentManager contentManager, string assetName, Stream stream, out bool keepStreamOpen);
     }
 }

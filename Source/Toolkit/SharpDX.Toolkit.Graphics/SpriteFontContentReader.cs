@@ -28,7 +28,7 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     internal class SpriteFontContentReader : GraphicsResourceContentReaderBase<SpriteFont>
     {
-        protected override SpriteFont ReadContent(ContentManager readerManager, GraphicsDevice device, string assetName, Stream stream)
+        protected override SpriteFont ReadContent(IContentManager readerManager, GraphicsDevice device, string assetName, Stream stream)
         {
             var spriteFont = SpriteFont.Load(device, stream);
             if (spriteFont != null)

@@ -26,7 +26,12 @@ using System.Reflection;
 
 namespace SharpDX.Toolkit.Content
 {
-    public class ContentManager : Component
+    /// <summary>
+    /// The content manager implementation is responsible to load and store content data (texture, songs, effects...etc.) using 
+    /// several <see cref="IContentResolver"/> to resolve a stream from an asset name and several registered <see cref="IContentReader"/>
+    /// to convert data from stream.
+    /// </summary>
+    public class ContentManager : Component, IContentManager
     {
         private readonly Dictionary<string, object> assetLockers;
         private readonly Dictionary<string, object> loadedAssets;
@@ -55,7 +60,7 @@ namespace SharpDX.Toolkit.Content
         /// Gets the service provider associated with the ContentManager.
         /// </summary>
         /// <value>The service provider.</value>
-        public IServiceProvider ServiceProvider { get; private set; }
+        public IServiceProvider ServiceProvider { get; protected set; }
 
         /// <summary>
         /// Loads an asset that has been processed by the Content Pipeline.  Reference page contains code sample.
@@ -63,7 +68,7 @@ namespace SharpDX.Toolkit.Content
         /// <typeparam name="T"></typeparam>
         /// <param name="assetNameWithExtension">Full asset name (with its extension)</param>
         /// <returns>``0.</returns>
-        /// <exception cref="SharpDX.Toolkit.Content.AssetNotFoundException">If the asset was not found from all <see cref="ContentResolver"/>.</exception>
+        /// <exception cref="SharpDX.Toolkit.Content.AssetNotFoundException">If the asset was not found from all <see cref="IContentResolver"/>.</exception>
         /// <exception cref="NotSupportedException">If no content reader was suitable to decode the asset.</exception>
         public virtual T Load<T>(string assetNameWithExtension)
         {
@@ -96,10 +101,6 @@ namespace SharpDX.Toolkit.Content
                 lock (loadedAssets)
                 {
                     loadedAssets.Add(assetNameWithExtension, result);
-
-                    // If this asset is disposable, then add it to the list of object to dispose.
-                    if (result is IDisposable)
-                        ToDispose(result);
                 }
             }
 
@@ -107,6 +108,24 @@ namespace SharpDX.Toolkit.Content
             return (T) result;
         }
 
+        /// <summary>
+        /// Unloads all data that was loaded by this ContentManager. All data will be disposed.
+        /// </summary>
+        /// <remarks>
+        /// Unlike <see cref="Load{T}"/> method, this method is not threadsafe and must be called by a single caller at a single time.
+        /// </remarks>
+        public virtual void Unload()
+        {
+            foreach (var loadedAsset in loadedAssets.Values)
+            {
+                var disposable = loadedAsset as IDisposable;
+                if (disposable != null)
+                    disposable.Dispose();
+            }
+
+            assetLockers.Clear();
+            loadedAssets.Clear();
+        }
 
         /// <summary>
         /// Registers a content reader.
@@ -188,49 +207,65 @@ namespace SharpDX.Toolkit.Content
             long startPosition = stream.Position;
             bool keepStreamOpen = false;
 
-            // Try to load from registered content readers
-            List<IContentReader> readers = registeredContentReaders;
-            foreach (IContentReader registeredContentReader in readers)
+            try
             {
-                // Rewind position everytime we try to load an asset
-                result = registeredContentReader.ReadContent(this, assetNameWithExtension, stream, out keepStreamOpen);
-                stream.Position = startPosition;
-                if (result != null)
-                    break;
-            }
+                // Try to load from registered content readers
+                List<IContentReader> readers = registeredContentReaders;
+                foreach (IContentReader registeredContentReader in readers)
+                {
+                    // Rewind position everytime we try to load an asset
+                    result = registeredContentReader.ReadContent(this, assetNameWithExtension, stream, out keepStreamOpen);
+                    stream.Position = startPosition;
+                    if (result != null)
+                        break;
+                }
 
-            if (result == null)
-            {
-                // Else try to load using a dynamic content reader attribute
-#if WIN8METRO
-                var contentReaderAttribute = Utilities.GetCustomAttribute<ContentReaderAttribute>(typeof (T).GetTypeInfo(), true);
-#else
-                var contentReaderAttribute = Utilities.GetCustomAttribute<ContentReaderAttribute>(typeof (T), true);
-#endif
-                if (contentReaderAttribute == null)
-                    throw new NotSupportedException("No content reader registered or found for this asset");
-
-                object contentReaderAbstract = Activator.CreateInstance(contentReaderAttribute.ContentReaderType);
-                var contentReader = contentReaderAbstract as IContentReader;
-                if (contentReader == null)
-                    throw new NotSupportedException(string.Format("Invalid content reader type [{0}]. Expecting an instance of IContentReader", contentReaderAbstract.GetType().FullName));
-
-                // Rewind position everytime we try to load an asset
-                stream.Position = startPosition;
-                result = contentReader.ReadContent(this, assetNameWithExtension, stream, out keepStreamOpen);
-                stream.Position = startPosition;
                 if (result == null)
-                    throw new NotSupportedException("Unable to load content");
+                {
+                    // Else try to load using a dynamic content reader attribute
+#if WIN8METRO
+                    var contentReaderAttribute = Utilities.GetCustomAttribute<ContentReaderAttribute>(typeof (T).GetTypeInfo(), true);
+#else
+                    var contentReaderAttribute = Utilities.GetCustomAttribute<ContentReaderAttribute>(typeof(T), true);
+#endif
+                    if (contentReaderAttribute == null)
+                        throw new NotSupportedException("No content reader registered or found for this asset");
 
-                // If this content reader has been used successfully, then we can register it.
-                RegisterContentReader(contentReader);
+                    object contentReaderAbstract = Activator.CreateInstance(contentReaderAttribute.ContentReaderType);
+                    var contentReader = contentReaderAbstract as IContentReader;
+                    if (contentReader == null)
+                        throw new NotSupportedException(string.Format("Invalid content reader type [{0}]. Expecting an instance of IContentReader", contentReaderAbstract.GetType().FullName));
+
+                    // Rewind position everytime we try to load an asset
+                    stream.Position = startPosition;
+                    result = contentReader.ReadContent(this, assetNameWithExtension, stream, out keepStreamOpen);
+                    stream.Position = startPosition;
+                    if (result == null)
+                        throw new NotSupportedException("Unable to load content");
+
+                    // If this content reader has been used successfully, then we can register it.
+                    RegisterContentReader(contentReader);
+                }
             }
-
-            // If we don't need to keep the stream open, then we can close it
-            if (!keepStreamOpen)
-                stream.Dispose();
+            finally
+            {
+                // If we don't need to keep the stream open, then we can close it
+                // and make sure that we will close the stream even if there is an exception.
+                if (!keepStreamOpen)
+                    stream.Dispose();
+            }
 
             return result;
+        }
+
+        protected override void Dispose(bool disposeManagedResources)
+        {
+            if (disposeManagedResources)
+            {
+                Unload();
+            }
+
+            base.Dispose(disposeManagedResources);
         }
     }
 }

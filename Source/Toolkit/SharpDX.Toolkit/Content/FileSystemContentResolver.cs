@@ -23,14 +23,24 @@ using SharpDX.IO;
 
 namespace SharpDX.Toolkit.Content
 {
+    /// <summary>
+    /// This <see cref="IContentResolver" /> is loading an asset name from a root directory from a physical disk.
+    /// </summary>
     public class FileSystemContentResolver : IContentResolver
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileSystemContentResolver" /> class.
+        /// </summary>
+        /// <param name="rootDirectory">The root directory.</param>
         public FileSystemContentResolver(string rootDirectory)
         {
             RootDirectory = rootDirectory;
         }
 
-
+        /// <summary>
+        /// Gets the root directory from where assets will be loaded from the disk.
+        /// </summary>
+        /// <value>The root directory.</value>
         public string RootDirectory { get; private set; }
 
         public Stream Resolve(string assetName)
