@@ -24,7 +24,7 @@ namespace SharpDX
     /// <summary>
     /// A lighweight Component base class.
     /// </summary>
-    public abstract class ComponentBase
+    public abstract class ComponentBase : IComponent
     {
         /// <summary>
         /// Occurs while this component is disposing and before it is disposed.
