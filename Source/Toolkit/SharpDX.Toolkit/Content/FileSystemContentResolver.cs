@@ -27,7 +27,7 @@ namespace SharpDX.Toolkit.Content
     {
         public FileSystemContentResolver(string rootDirectory)
         {
-            RootDirectory = Path.GetFullPath(rootDirectory);
+            RootDirectory = rootDirectory;
         }
 
 

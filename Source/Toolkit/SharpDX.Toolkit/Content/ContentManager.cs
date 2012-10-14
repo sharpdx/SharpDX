@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using SharpDX.IO;
+using System.Reflection;
 
 namespace SharpDX.Toolkit.Content
 {
@@ -201,7 +202,11 @@ namespace SharpDX.Toolkit.Content
             if (result == null)
             {
                 // Else try to load using a dynamic content reader attribute
+#if WIN8METRO
+                var contentReaderAttribute = Utilities.GetCustomAttribute<ContentReaderAttribute>(typeof (T).GetTypeInfo(), true);
+#else
                 var contentReaderAttribute = Utilities.GetCustomAttribute<ContentReaderAttribute>(typeof (T), true);
+#endif
                 if (contentReaderAttribute == null)
                     throw new NotSupportedException("No content reader registered or found for this asset");
 
@@ -223,7 +228,7 @@ namespace SharpDX.Toolkit.Content
 
             // If we don't need to keep the stream open, then we can close it
             if (!keepStreamOpen)
-                stream.Close();
+                stream.Dispose();
 
             return result;
         }
