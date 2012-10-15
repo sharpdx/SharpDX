@@ -30,7 +30,7 @@ namespace SharpDX.Direct3D11
         /// <param name = "device">The device with which to associate the state object.</param>
         /// <param name = "description">The state description.</param>
         /// <returns>The newly created object.</returns>
-        public BlendState1(Device1 device, SharpDX.Direct3D11.BlendDescription1 description)
+        public BlendState1(Device1 device, SharpDX.Direct3D11.BlendStateDescription1 description)
             : base(IntPtr.Zero)
         {
             device.CreateBlendState1(ref description, this);
@@ -42,7 +42,7 @@ namespace SharpDX.Direct3D11
         /// <param name = "device">The device with which to associate the state object.</param>
         /// <param name = "description">The state description.</param>
         /// <returns>The newly created object.</returns>
-        public BlendState1(Device1 device, ref BlendDescription1 description)
+        public BlendState1(Device1 device, ref BlendStateDescription1 description)
             : base(IntPtr.Zero)
         {
             device.CreateBlendState1(ref description, this);
