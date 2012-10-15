@@ -35,6 +35,8 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Linq.Expressions;
+using SharpDX.Text;
+
 #endif
 
 namespace SharpDX
@@ -504,8 +506,23 @@ namespace SharpDX
         public static unsafe IntPtr StringToHGlobalAnsi(string s)
         {
 #if WP8
-            throw new NotImplementedException();
-         
+            if (s == null)
+            {
+                return IntPtr.Zero;
+            }
+            int cbNativeBuffer = (s.Length + 1) * 4;
+            var ptr2 = Marshal.AllocHGlobal(cbNativeBuffer);
+            if (ptr2 == IntPtr.Zero)
+            {
+                throw new OutOfMemoryException();
+            }
+            fixed (char* chRef = s)
+            {
+                int count = ASCIIEncoding.ASCII.GetBytes(chRef, s.Length, (byte*) ptr2, cbNativeBuffer);
+                ((byte*) ptr2)[count] = 0;
+            }
+
+            return ptr2;
 #else
             return Marshal.StringToHGlobalAnsi(s);
 #endif
