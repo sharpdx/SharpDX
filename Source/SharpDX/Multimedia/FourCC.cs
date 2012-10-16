@@ -30,6 +30,11 @@ namespace SharpDX.Multimedia
     [StructLayout(LayoutKind.Sequential, Size = 4)]
     public struct FourCC : IEquatable<FourCC>, IDataSerializable
     {
+        /// <summary>
+        /// Empty FourCC.
+        /// </summary>
+        public static readonly FourCC Empty = new FourCC(0);
+
         private uint value;
 
         /// <summary>

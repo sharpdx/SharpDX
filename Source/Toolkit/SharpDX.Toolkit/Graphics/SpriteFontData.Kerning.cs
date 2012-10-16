@@ -18,29 +18,38 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.IO;
-using SharpDX.Toolkit.Content;
+using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    /// <summary>
-    /// Internal class to load a SpriteFont.
-    /// </summary>
-    internal class SpriteFontContentReader : GraphicsResourceContentReaderBase<SpriteFont>
+    public partial class SpriteFontData
     {
-        protected override SpriteFont ReadContent(IContentManager readerManager, GraphicsDevice device, string assetName, Stream stream)
+        /// <summary>
+        /// Describes kerning information.
+        /// </summary>
+        public struct Kerning : IDataSerializable
         {
-            SpriteFont spriteFont = null;
-            var assetPath = Path.GetDirectoryName(assetName);
+            /// <summary>
+            /// Unicode for the 1st character.
+            /// </summary>
+            public int First;
 
-            // Load the sprite font data
-            var spriteFontData = SpriteFontData.Load(stream, name => readerManager.Load<Texture2D>(Path.Combine(assetPath ?? string.Empty, name)));
+            /// <summary>
+            /// Unicode for the 2nd character.
+            /// </summary>
+            public int Second;
 
-            // If sprite font was fine, then instantiate SpriteFont graphics object.
-            if (spriteFontData != null)
-                spriteFont = SpriteFont.New(device, spriteFontData);
+            /// <summary>
+            /// X Offsets in pixels to apply between the 1st and 2nd character.
+            /// </summary>
+            public float Offset;
 
-            return spriteFont;
+            public void Serialize(BinarySerializer serializer)
+            {
+                serializer.Serialize(ref First);
+                serializer.Serialize(ref Second);
+                serializer.Serialize(ref Offset);
+            }
         }
     }
 }

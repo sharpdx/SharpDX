@@ -23,6 +23,10 @@
     <Compile Include="Diagnostics\LogMessage.cs" />
     <Compile Include="Diagnostics\LogMessageType.cs" />
     <Compile Include="Diagnostics\Logger.cs" />
+    <Compile Include="Graphics\SpriteFontData.AngelCodeBMFontLoader.cs" />
+    <Compile Include="Graphics\SpriteFontData.MakeSpriteFontLoader.cs" />
+    <Compile Include="Graphics\SpriteFontData.Kerning.cs" />
+    <Compile Include="Graphics\SpriteFontData.Bitmap.cs" />
     <Compile Include="Graphics\EffectData.ShaderLink.cs" />
     <Compile Include="Graphics\EffectData.Signature.cs" />
     <Compile Include="Graphics\EffectData.Semantic.cs" />
@@ -57,6 +61,9 @@
       <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
       <Name>SharpDX</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\SpriteFontData.Glyph.cs" />
   </ItemGroup>
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

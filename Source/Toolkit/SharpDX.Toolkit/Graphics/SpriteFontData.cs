@@ -18,130 +18,151 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.IO;
 using SharpDX.IO;
+using SharpDX.Multimedia;
 using SharpDX.Serialization;
 using SharpDX.Toolkit.Content;
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>
+    /// A delegate to load binary bitmap data from a bitmap name (currently used to load external bitmap referenced in AngelCode Bitmap data).
+    /// </summary>
+    /// <param name="bitmapName">The name of the bitmap data to load.</param>
+    /// <returns>A bitmap data object.</returns>
+    public delegate object SpriteFontBitmapDataLoaderDelegate(string bitmapName);
+
+    /// <summary>
+    /// Data for a SpriteFont object that supports kerning.
+    /// </summary>
+    /// <remarks>
+    /// Loading of SpriteFontData supports DirectXTk "MakeSpriteFont" fornat and AngelCode Bitmap Font Maker (binary format).
+    /// </remarks>
     [ContentReader(typeof(SpriteFontDataContentReader))]
-    public class SpriteFontData : IDataSerializable
+    public partial class SpriteFontData : IDataSerializable
     {
-        const string spriteFontMagic = "DXTKfont";
-
-        public Glyph[] Glyphs;
-
-        public float LineSpacing;
-
-        public int DefaultCharacter;
-
-        public Bitmap Image;
+        const string FontMagicCode = "TKFT";
 
         /// <summary>
-        /// Loads an <see cref="EffectData"/> from the specified stream.
+        /// The number of pixels from the absolute top of the line to the base of the characters.
+        /// </summary>
+        public float BaseOffset;
+
+        /// <summary>
+        /// This is the distance in pixels between each line of text.
+        /// </summary>
+        public float LineSpacing;
+
+        /// <summary>
+        /// The default character fallback.
+        /// </summary>
+        public int DefaultCharacter;
+
+        /// <summary>
+        /// An array of <see cref="Glyph"/> data.
+        /// </summary>
+        public Glyph[] Glyphs;
+
+        /// <summary>
+        /// An array of <see cref="Bitmap"/> data.
+        /// </summary>
+        public Bitmap[] Bitmaps;
+
+        /// <summary>
+        /// An array of <see cref="Kerning"/> data.
+        /// </summary>
+        public Kerning[] Kernings;
+
+        /// <summary>
+        /// Loads a <see cref="SpriteFontData"/> from the specified stream.
         /// </summary>
         /// <param name="stream">The stream.</param>
-        /// <returns>An <see cref="EffectData"/>. Null if the stream is not a serialized <see cref="EffectData"/>.</returns>
-        /// <remarks>
-        /// </remarks>
-        public static SpriteFontData Load(Stream stream)
+        /// <param name="bitmapDataLoader">A delegate to load bitmap data that are not stored in the buffer.</param>
+        /// <returns>An <see cref="SpriteFontData"/>. Null if the stream is not a serialized <see cref="SpriteFontData"/>.</returns>
+        public static SpriteFontData Load(Stream stream, SpriteFontBitmapDataLoaderDelegate bitmapDataLoader = null)
         {
             var serializer = new BinarySerializer(stream, SerializerMode.Read, Text.Encoding.ASCII) {ArrayLengthType = ArrayLengthType.Int};
-            var data = serializer.Load<SpriteFontData>();
+
+            var data = new SpriteFontData();
+
+            var magicCode = FourCC.Empty;
+            serializer.Serialize(ref magicCode);
+            if (magicCode == "DXTK")
+            {
+                data.SerializeMakeSpriteFont(serializer);
+            }
+            else if (magicCode == new FourCC(0x03464D42)) // BMF\3
+            {
+                data.SerializeBMFFont(serializer);
+            }
+            else
+            {
+                return null;
+            }
 
             // Glyps are null, then this is not a SpriteFondData
             if (data.Glyphs == null)
                 return null;
+
+            if (bitmapDataLoader != null)
+            {
+                foreach (var bitmap in data.Bitmaps)
+                {
+                    // If the bitmap data is a string, then this is a texture to load
+                    if (bitmap.Data is string)
+                    {
+                        bitmap.Data = bitmapDataLoader((string) bitmap.Data);
+                    }
+                }
+            }
+
             return data;
         }
 
         /// <summary>
-        /// Loads an <see cref="EffectData"/> from the specified buffer.
+        /// Loads a <see cref="SpriteFontData"/> from the specified stream.
         /// </summary>
         /// <param name="buffer">The buffer.</param>
-        /// <returns>An <see cref="EffectData"/> </returns>
-        public static SpriteFontData Load(byte[] buffer)
+        /// <param name="bitmapDataLoader">A delegate to load bitmap data that are not stored in the buffer.</param>
+        /// <returns>An <see cref="SpriteFontData"/>. Null if the stream is not a serialized <see cref="SpriteFontData"/>.</returns>
+        public static SpriteFontData Load(byte[] buffer, SpriteFontBitmapDataLoaderDelegate bitmapDataLoader = null)
         {
-            return Load(new MemoryStream(buffer));
+            return Load(new MemoryStream(buffer), bitmapDataLoader);
         }
 
         /// <summary>
-        /// Loads an <see cref="EffectData"/> from the specified file.
+        /// Loads a <see cref="SpriteFontData"/> from the specified stream.
         /// </summary>
         /// <param name="fileName">The filename.</param>
-        /// <returns>An <see cref="EffectData"/> </returns>
-        public static SpriteFontData Load(string fileName)
+        /// <param name="bitmapDataLoader">A delegate to load bitmap data that are not stored in the buffer.</param>
+        /// <returns>An <see cref="SpriteFontData"/>. Null if the stream is not a serialized <see cref="SpriteFontData"/>.</returns>
+        public static SpriteFontData Load(string fileName, SpriteFontBitmapDataLoaderDelegate bitmapDataLoader = null)
         {
             using (var stream = new NativeFileStream(fileName, NativeFileMode.Open, NativeFileAccess.Read))
-                return Load(stream);
+                return Load(stream, bitmapDataLoader);
         }
 
         void IDataSerializable.Serialize(BinarySerializer serializer)
         {
-            string magic = spriteFontMagic;
-            serializer.Serialize(ref magic, spriteFontMagic.Length);
+            // TODO implement a custom serial here
+            throw new NotImplementedException();
+        //    string magic = FontMagicCode;
+        //    serializer.Serialize(ref magic, FontMagicCode.Length);
 
-            if (magic != spriteFontMagic)
-            {
-                // Make sure that Glyphs is null
-                Glyphs = null;
-                return;
-            }
+        //    if (magic != FontMagicCode)
+        //    {
+        //        // Make sure that Glyphs is null
+        //        //Glyphs = null;
+        //        return;
+        //    }
 
-            serializer.Serialize(ref Glyphs);
-            serializer.Serialize(ref LineSpacing);
-            serializer.Serialize(ref DefaultCharacter);
+        //    //serializer.Serialize(ref Glyphs);
+        //    serializer.Serialize(ref LineSpacing);
+        //    serializer.Serialize(ref DefaultCharacter);
 
-            serializer.Serialize(ref Image);
-        }
-
-        public struct Glyph : IDataSerializable
-        {
-            // Unicode codepoint.
-            public int Character;
-
-            // Glyph image data (may only use a portion of a larger bitmap).
-            public Rectangle Subrect;
-
-            // Layout information.
-            public Vector2 Offset;
-
-            // Advance X
-            public float XAdvance;
-
-            void IDataSerializable.Serialize(BinarySerializer serializer)
-            {
-                serializer.Serialize(ref Character);
-                serializer.Serialize(ref Subrect);
-                serializer.Serialize(ref Offset);
-                serializer.Serialize(ref XAdvance);
-            }
-        }
-
-        public class Bitmap : IDataSerializable
-        {
-            public int Width;
-
-            public int Height;
-
-            public DXGI.Format PixelFormat;
-
-            public int RowStride;
-
-            public int CompressedHeight;
-
-            public byte[] Data;
-
-            void IDataSerializable.Serialize(BinarySerializer serializer)
-            {
-                serializer.Serialize(ref Width);
-                serializer.Serialize(ref Height);
-                serializer.SerializeEnum(ref PixelFormat);
-                serializer.Serialize(ref RowStride);
-                serializer.Serialize(ref CompressedHeight);
-                serializer.Serialize(ref Data, RowStride * CompressedHeight);
-            }
+        //    //serializer.Serialize(ref Image);
         }
     }
 }

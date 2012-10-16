@@ -83,13 +83,17 @@ using SharpDX.Toolkit.Content;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    /// <summary>Represents a font texture.</summary>
+    /// <summary>
+    /// Represents a font texture.
+    /// </summary>
     [ContentReader(typeof(SpriteFontContentReader))]
     public sealed class SpriteFont : GraphicsResource
     {
+        private readonly float globalBaseOffsetY;
         private readonly Dictionary<char, int> characterMap;
+        private readonly Dictionary<int, float> kerningMap;
         private readonly SpriteFontData.Glyph[] glyphs;
-        private Texture2D texture;
+        private Texture2D[] textures;
 
         // Lookup table indicates which way to move along each axis per SpriteEffects enum value.
         private static readonly Vector2[] axisDirectionTable = new[]
@@ -114,16 +118,19 @@ namespace SharpDX.Toolkit.Graphics
             return new SpriteFont(device, spriteFontData);
         }
 
+
         /// <summary>
         /// Loads an <see cref="EffectData"/> from the specified stream.
         /// </summary>
+        /// <param name="device">The graphics device</param>
         /// <param name="stream">The stream.</param>
+        /// <param name="bitmapDataLoader">A delegate to load bitmap data that are not stored in the buffer.</param>
         /// <returns>An <see cref="EffectData"/>. Null if the stream is not a serialized <see cref="EffectData"/>.</returns>
         /// <remarks>
         /// </remarks>
-        public static SpriteFont Load(GraphicsDevice device, Stream stream)
+        public static SpriteFont Load(GraphicsDevice device, Stream stream, SpriteFontBitmapDataLoaderDelegate bitmapDataLoader = null)
         {
-            var spriteFontData = SpriteFontData.Load(stream);
+            var spriteFontData = SpriteFontData.Load(stream, bitmapDataLoader);
             if (spriteFontData == null)
                 return null;
             return New(device, spriteFontData);
@@ -132,28 +139,33 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Loads an <see cref="EffectData"/> from the specified buffer.
         /// </summary>
+        /// <param name="device">The graphics device</param>
         /// <param name="buffer">The buffer.</param>
+        /// <param name="bitmapDataLoader">A delegate to load bitmap data that are not stored in the buffer.</param>
         /// <returns>An <see cref="EffectData"/> </returns>
-        public static SpriteFont Load(GraphicsDevice device, byte[] buffer)
+        public static SpriteFont Load(GraphicsDevice device, byte[] buffer, SpriteFontBitmapDataLoaderDelegate bitmapDataLoader = null)
         {
-            return Load(device, new MemoryStream(buffer));
+            return Load(device, new MemoryStream(buffer), bitmapDataLoader);
         }
 
         /// <summary>
         /// Loads an <see cref="EffectData"/> from the specified file.
         /// </summary>
+        /// <param name="device">The graphics device</param>
         /// <param name="fileName">The filename.</param>
         /// <returns>An <see cref="EffectData"/> </returns>
         public static SpriteFont Load(GraphicsDevice device, string fileName)
         {
+            var fileDirectory = Path.GetDirectoryName(fileName);
             using (var stream = new NativeFileStream(fileName, NativeFileMode.Open, NativeFileAccess.Read))
-                return Load(device, stream);
+                return Load(device, stream, bitmapName => Texture2D.Load(device, Path.Combine(fileDirectory, bitmapName)));
         }
-        
+       
         internal SpriteFont(GraphicsDevice device, SpriteFontData spriteFontData)
             : base(device)
         {
             // Read the glyph data.
+            globalBaseOffsetY = spriteFontData.BaseOffset;
             glyphs = spriteFontData.Glyphs;
             characterMap = new Dictionary<char, int>(glyphs.Length * 2);
 
@@ -166,6 +178,18 @@ namespace SharpDX.Toolkit.Graphics
                 characterList.Add(charItem);
             }
 
+            // Prepare kernings if they are available.
+            var kernings = spriteFontData.Kernings;
+            if (kernings != null)
+            {
+                kerningMap = new Dictionary<int, float>(spriteFontData.Kernings.Length);
+                for (int i = 0; i < kernings.Length; i++)
+                {
+                    int key = (kernings[i].First << 16) | kernings[i].Second;
+                    kerningMap.Add(key, kernings[i].Offset);
+                }
+            }
+
             Characters = new ReadOnlyCollection<char>(characterList);
 
             // Read font properties.
@@ -174,15 +198,30 @@ namespace SharpDX.Toolkit.Graphics
             DefaultCharacter = (char)spriteFontData.DefaultCharacter;
 
             // Read the texture data.
-            var image = spriteFontData.Image;
-
-            // Create the texture
-            texture =  ToDispose(Texture2D.New(device, image.Width, image.Height, image.PixelFormat, image.Data));
+            textures = new Texture2D[spriteFontData.Bitmaps.Length];
+            for(int i = 0; i < textures.Length; i++)
+            {
+                var bitmap = spriteFontData.Bitmaps[i];
+                if (bitmap.Data is SpriteFontData.BitmapData)
+                {
+                    var image = (SpriteFontData.BitmapData) bitmap.Data;
+                    textures[i] =  ToDispose(Texture2D.New(device, image.Width, image.Height, image.PixelFormat, image.Data));
+                }
+                else if (bitmap.Data is Texture2D)
+                {
+                    textures[i] = (Texture2D) bitmap.Data;
+                }
+                else
+                {
+                    throw new NotSupportedException(string.Format("SpriteFontData.Bitmap of type [{0}] is not supported. Only SpriteFontData.BitmapData or Texture2D", bitmap == null ? "null" : bitmap.GetType().Name));
+                }
+            }
         }
 
         internal void InternalDraw(ref StringProxy text, SpriteBatch spriteBatch, Vector2 position, Color color, float rotation, Vector2 origin, ref Vector2 scale, SpriteEffects spriteEffects, float depth)
         {
             var baseOffset = origin;
+            //baseOffset.Y += globalBaseOffsetY;
 
             // If the text is mirrored, offset the start position accordingly.
             if (spriteEffects != SpriteEffects.None)
@@ -209,7 +248,7 @@ namespace SharpDX.Toolkit.Graphics
                                            }
                                            var destination = new DrawingRectangleF(position.X, position.Y, localScale.X, localScale.Y);
                                            DrawingRectangle? sourceRectangle = glyph.Subrect;
-                                           spriteBatch.DrawSprite(texture, ref destination, true, ref sourceRectangle, color, rotation, ref offset, spriteEffects, depth);
+                                           spriteBatch.DrawSprite(textures[glyph.BitmapIndex], ref destination, true, ref sourceRectangle, color, rotation, ref offset, spriteEffects, depth);
                                        });
         }
 
@@ -261,12 +300,15 @@ namespace SharpDX.Toolkit.Graphics
         {
             float x = 0;
             float y = 0;
+            // TODO: Not sure how to handle globalBaseOffsetY from AngelCode BMFont
 
             fixed (void* pGlyph = glyphs)
             {
+                var key = 0;
                 for (int i =  0; i < text.Length; i++)
                 {
                     char character = text[i];
+                    key |= character;
 
                     switch (character)
                     {
@@ -294,14 +336,22 @@ namespace SharpDX.Toolkit.Graphics
                             if (x < 0)
                                 x = 0;
 
+                            // Offset the kerning
+                            //float kerningOffset;
+                            //if (kerningMap != null && kerningMap.TryGetValue(key, out kerningOffset))
+                            //    x += kerningOffset;
+
                             if (!char.IsWhiteSpace(character))
                             {
                                 action(ref *glyph, x, y);
                             }
 
-                            x += glyph->Subrect.Right - glyph->Subrect.Left + glyph->XAdvance;
+                            x += glyph->XAdvance;
                             break;
                     }
+
+                    // Shift the kerning key
+                    key  =  (key << 16);
                 }
             }
         }
