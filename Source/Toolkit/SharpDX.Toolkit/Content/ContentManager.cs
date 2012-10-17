@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using SharpDX.Collections;
 using SharpDX.IO;
 using System.Reflection;
 
@@ -35,10 +36,8 @@ namespace SharpDX.Toolkit.Content
     {
         private readonly Dictionary<string, object> assetLockers;
         private readonly Dictionary<string, object> loadedAssets;
-        private readonly object registeredContentResolversLock = new object();
-        private readonly object registeredContentReadersLock = new object();
-        private List<IContentResolver> registeredContentResolvers;
-        private List<IContentReader> registeredContentReaders;
+        private readonly List<IContentResolver> registeredContentResolvers;
+        private readonly List<IContentReader> registeredContentReaders;
 
         /// <summary>
         /// Initializes a new instance of ContentManager.  Reference page contains code sample.
@@ -50,11 +49,32 @@ namespace SharpDX.Toolkit.Content
                 throw new ArgumentNullException("serviceProvider");
 
             ServiceProvider = serviceProvider;
-            registeredContentReaders = new List<IContentReader>();
+
+            // Content resolvers
+            Resolvers = new ObservableCollection<IContentResolver>();
+            Resolvers.ItemAdded += ContentResolvers_ItemAdded;
+            Resolvers.ItemRemoved += ContentResolvers_ItemRemoved;
             registeredContentResolvers = new List<IContentResolver>();
+
+            // Content readers.
+            Readers = new ObservableCollection<IContentReader>();
+            Readers.ItemAdded += ContentReaders_ItemAdded;
+            Readers.ItemRemoved += ContentReaders_ItemRemoved;
+            registeredContentReaders = new List<IContentReader>();
+
             loadedAssets = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
             assetLockers = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
         }
+
+        /// <summary>
+        /// Add or remove registered <see cref="IContentResolver"/> to this instance.
+        /// </summary>
+        public ObservableCollection<IContentResolver> Resolvers { get; private set; }
+
+        /// <summary>
+        /// Add or remove registered <see cref="IContentReader"/> to this instance.
+        /// </summary>
+        public ObservableCollection<IContentReader> Readers { get; private set; }
 
         /// <summary>
         /// Gets the service provider associated with the ContentManager.
@@ -127,51 +147,6 @@ namespace SharpDX.Toolkit.Content
             loadedAssets.Clear();
         }
 
-        /// <summary>
-        /// Registers a content reader.
-        /// </summary>
-        /// <param name="contentReader">The content reader.</param>
-        public void RegisterContentReader(IContentReader contentReader)
-        {
-            lock (registeredContentReadersLock)
-            {
-                registeredContentReaders = new List<IContentReader>(registeredContentReaders) { contentReader };
-            }
-        }
-
-        /// <summary>
-        /// Unregister a content reader.
-        /// </summary>
-        /// <param name="contentReader">The content reader.</param>
-        public void UnRegisterContentReader(IContentReader contentReader)
-        {
-            lock (registeredContentReadersLock)
-            {
-                var tempList = new List<IContentReader>(registeredContentReaders);
-                tempList.Remove(contentReader);
-                registeredContentReaders = tempList;
-            }
-        }
-
-        public void RegisterContentResolver(IContentResolver contentResolver)
-        {
-            lock (registeredContentResolversLock)
-            {
-                registeredContentResolvers = new List<IContentResolver>(registeredContentResolvers) { contentResolver };
-            }
-
-        }
-
-        public void UnRegisterContentResolver(IContentResolver contentResolver)
-        {
-            lock (registeredContentResolversLock)
-            {
-                var tempList = new List<IContentResolver>(registeredContentResolvers);
-                tempList.Remove(contentResolver);
-                registeredContentResolvers = tempList;
-            }
-        }
-
         private object GetAssetLocker(string assetNameWithExtension)
         {
             object assetLockerRead;
@@ -190,7 +165,11 @@ namespace SharpDX.Toolkit.Content
         {
             Stream stream = null;
             // First, resolve the stream for this asset.
-            var resolvers = registeredContentResolvers;
+            List<IContentResolver> resolvers;
+            lock (registeredContentResolvers)
+            {
+                resolvers = new List<IContentResolver>(registeredContentResolvers);
+            }
             foreach (var contentResolver in resolvers)
             {
                 stream = contentResolver.Resolve(assetNameWithExtension);
@@ -210,7 +189,11 @@ namespace SharpDX.Toolkit.Content
             try
             {
                 // Try to load from registered content readers
-                List<IContentReader> readers = registeredContentReaders;
+                List<IContentReader> readers;
+                lock (registeredContentReaders)
+                {
+                    readers = new List<IContentReader>(registeredContentReaders);
+                }
                 foreach (IContentReader registeredContentReader in readers)
                 {
                     // Rewind position everytime we try to load an asset
@@ -244,7 +227,10 @@ namespace SharpDX.Toolkit.Content
                         throw new NotSupportedException("Unable to load content");
 
                     // If this content reader has been used successfully, then we can register it.
-                    RegisterContentReader(contentReader);
+                    lock (registeredContentReaders)
+                    {
+                        registeredContentReaders.Add(contentReader);
+                    }
                 }
             }
             finally
@@ -266,6 +252,38 @@ namespace SharpDX.Toolkit.Content
             }
 
             base.Dispose(disposeManagedResources);
+        }
+
+        private void ContentResolvers_ItemAdded(object sender, ObservableCollectionEventArgs<IContentResolver> e)
+        {
+            lock (registeredContentResolvers)
+            {
+                registeredContentResolvers.Add(e.Item);
+            }
+        }
+
+        private void ContentResolvers_ItemRemoved(object sender, ObservableCollectionEventArgs<IContentResolver> e)
+        {
+            lock (registeredContentResolvers)
+            {
+                registeredContentResolvers.Add(e.Item);
+            }
+        }
+
+        private void ContentReaders_ItemAdded(object sender, ObservableCollectionEventArgs<IContentReader> e)
+        {
+            lock (registeredContentReaders)
+            {
+                registeredContentReaders.Add(e.Item);
+            }
+        }
+
+        private void ContentReaders_ItemRemoved(object sender, ObservableCollectionEventArgs<IContentReader> e)
+        {
+            lock (registeredContentReaders)
+            {
+                registeredContentReaders.Add(e.Item);
+            }
         }
     }
 }
