@@ -337,9 +337,9 @@ namespace SharpDX.Toolkit.Graphics
                                 x = 0;
 
                             // Offset the kerning
-                            //float kerningOffset;
-                            //if (kerningMap != null && kerningMap.TryGetValue(key, out kerningOffset))
-                            //    x += kerningOffset;
+                            float kerningOffset;
+                            if (kerningMap != null && kerningMap.TryGetValue(key, out kerningOffset))
+                                x += kerningOffset;
 
                             if (!char.IsWhiteSpace(character))
                             {
