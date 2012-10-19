@@ -179,9 +179,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Begins a sprite batch operation using deferred sort and default state objects (BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise).
         /// </summary>
-        public void Begin()
+        public void Begin(SpriteSortMode spritemode = SpriteSortMode.Deferred, Effect effect = null)
         {
-            Begin(SpriteSortMode.Deferred, null, null, null, null, null, Matrix.Identity);
+            Begin(spritemode, null, null, null, null, effect, Matrix.Identity);
         }
 
         /// <summary>
@@ -734,6 +734,9 @@ namespace SharpDX.Toolkit.Graphics
             if (customEffect != null)
             {
                 var currentTechnique = customEffect.CurrentTechnique;
+                if (currentTechnique == null)
+                    throw new InvalidOperationException("CurrentTechnique is not set on custom effect");
+
                 int passCount = currentTechnique.Passes.Count;
                 for (int i = 0; i < passCount; i++)
                 {
@@ -753,9 +756,9 @@ namespace SharpDX.Toolkit.Graphics
                 unsafe
                 {
                     // Sets the texture for this sprite effect.
-                    // Use an optimize version in order to avoid to reapply the sprite effect here just to change texture
+                    // Use an optimized version in order to avoid to reapply the sprite effect here just to change texture
                     // We are calling directly the PixelShaderStage. We assume that the texture is on slot 0 as it is
-                    // setup in the original shader.
+                    // setup in the original BasicEffect.fx shader.
                     GraphicsDevice.PixelShaderStage.SetShaderResources(0, 1, new IntPtr(&nativeShaderResourceViewPointer));
                 }
 
