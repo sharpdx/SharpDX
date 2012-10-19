@@ -152,7 +152,7 @@ namespace SharpDX.XAudio2
                 if (effectDescriptors != null)
                 {
                     var tempSendDescriptor = new EffectChain();
-                    EffectDescriptor.__Native[] effectDescriptorNatives = new EffectDescriptor.__Native[effectDescriptors.Length];
+                    var effectDescriptorNatives = new EffectDescriptor.__Native[effectDescriptors.Length];
                     for (int i = 0; i < effectDescriptorNatives.Length; i++)
                         effectDescriptors[i].__MarshalTo(ref effectDescriptorNatives[i]);
                     tempSendDescriptor.EffectCount = effectDescriptorNatives.Length;
@@ -162,7 +162,10 @@ namespace SharpDX.XAudio2
                         SetEffectChain(tempSendDescriptor);
                     }
                 }
-                SetEffectChain((EffectChain?)null);
+                else
+                {
+                    SetEffectChain((EffectChain?) null);
+                }
             }
 
         }
@@ -179,15 +182,17 @@ namespace SharpDX.XAudio2
             {
                 if (outputVoices != null)
                 {
-                    var tempSendDescriptor = new VoiceSendDescriptors();
-                    tempSendDescriptor.SendCount = outputVoices.Length;
+                    var tempSendDescriptor = new VoiceSendDescriptors {SendCount = outputVoices.Length};
                     fixed (void* pVoiceSendDescriptors = &outputVoices[0])
                     {
                         tempSendDescriptor.SendPointer = (IntPtr)pVoiceSendDescriptors;
                         SetOutputVoices(tempSendDescriptor);
                     }
                 }
-                SetOutputVoices((VoiceSendDescriptors?)null);
+                else
+                {
+                    SetOutputVoices((VoiceSendDescriptors?) null);
+                }
             }
         }
 
