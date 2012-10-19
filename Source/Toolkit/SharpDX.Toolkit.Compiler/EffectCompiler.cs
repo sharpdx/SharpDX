@@ -988,6 +988,11 @@ namespace SharpDX.Toolkit.Graphics
                 var reflectConstantBuffer = reflect.GetConstantBuffer(i);
                 var reflectConstantBufferDescription = reflectConstantBuffer.Description;
 
+                // Skip non pure constant-buffers and texture buffers
+                if (reflectConstantBufferDescription.Type != ConstantBufferType.ConstantBuffer
+                    && reflectConstantBufferDescription.Type != ConstantBufferType.TextureBuffer)
+                    continue;
+
                 // Create the buffer
                 var parameterBuffer = new EffectData.ConstantBuffer()
                                           {

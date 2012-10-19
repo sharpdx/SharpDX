@@ -37,15 +37,13 @@ namespace SharpDX.Toolkit.Graphics
     /// <unmanaged-short>ID3D11Buffer</unmanaged-short>	
     public partial class Buffer : GraphicsResource
     {
-        private readonly Dictionary<DXGI.Format, ShaderResourceView> shaderResourceViews = new Dictionary<Format, ShaderResourceView>();
+        private readonly Dictionary<ShaderResourceKey, ShaderResourceView> shaderResourceViews = new Dictionary<ShaderResourceKey, ShaderResourceView>();
 
         private readonly Dictionary<RenderTargetKey, RenderTargetView> renderTargetViews = new Dictionary<RenderTargetKey, RenderTargetView>();
 
         private ShaderResourceView shaderResourceView;
 
         private UnorderedAccessView unorderedAccessView;
-
-        private int elementCount;
 
         /// <summary>
         /// Gets the description of this buffer.
@@ -58,7 +56,12 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>
         /// This value is valid for structured buffers, raw buffers and index buffers that are used as a SharedResourceView.
         /// </remarks>
-        public int ElementCount { get { return this.elementCount; } protected set { this.elementCount = value; } }
+        public readonly int ElementCount;
+
+        /// <summary>
+        /// Gets the size of element T.
+        /// </summary>
+        public readonly int ElementSize;
 
         /// <summary>
         /// Gets the type of this buffer.
@@ -83,7 +86,8 @@ namespace SharpDX.Toolkit.Graphics
             Description = description;
             BufferFlags = bufferFlags;
             ViewFormat = viewFormat;
-            InitCountAndViewFormat(out this.elementCount, ref ViewFormat);
+            InitCountAndViewFormat(out this.ElementCount, ref ViewFormat);
+            ElementSize = Description.SizeInBytes / this.ElementCount;
             Initialize(new Direct3D11.Buffer(device.MainDevice, dataPointer, Description));
         }
 
@@ -99,7 +103,8 @@ namespace SharpDX.Toolkit.Graphics
             Description = nativeBuffer.Description;
             BufferFlags = bufferFlags;
             ViewFormat = viewFormat;
-            InitCountAndViewFormat(out this.elementCount, ref ViewFormat);
+            InitCountAndViewFormat(out this.ElementCount, ref ViewFormat);
+            ElementSize = Description.SizeInBytes / this.ElementCount;
             Initialize(nativeBuffer);
         }
 
@@ -133,6 +138,8 @@ namespace SharpDX.Toolkit.Graphics
         /// Gets a <see cref="ShaderResourceView"/> for a particular <see cref="PixelFormat"/>.
         /// </summary>
         /// <param name="viewFormat">The view format.</param>
+        /// <param name="firstElement">The first element of the view.</param>
+        /// <param name="elementCount">The number of elements accessible from the view.</param>
         /// <returns>A <see cref="ShaderResourceView"/> for the particular view format.</returns>
         /// <remarks>
         /// The buffer must have been declared with <see cref="Graphics.BufferFlags.ShaderResource"/>. 
@@ -141,21 +148,23 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476519</msdn-id>	
         /// <unmanaged>HRESULT ID3D11Device::CreateShaderResourceView([In] ID3D11Resource* pResource,[In, Optional] const D3D11_SHADER_RESOURCE_VIEW_DESC* pDesc,[Out, Fast] ID3D11ShaderResourceView** ppSRView)</unmanaged>	
         /// <unmanaged-short>ID3D11Device::CreateShaderResourceView</unmanaged-short>	
-        public ShaderResourceView GetShaderResourceView(PixelFormat viewFormat)
+        public ShaderResourceView GetShaderResourceView(PixelFormat viewFormat, int firstElement, int elementCount)
         {
             ShaderResourceView srv = null;
             if ((Description.BindFlags & BindFlags.ShaderResource) != 0)
             {
                 lock (shaderResourceViews)
                 {
-                    if (!shaderResourceViews.TryGetValue(viewFormat, out srv))
+                    var key = new ShaderResourceKey(viewFormat, firstElement, elementCount);
+
+                    if (!shaderResourceViews.TryGetValue(key, out srv))
                     {
                         var description = new ShaderResourceViewDescription {
                             Format = viewFormat,
                             Dimension = ShaderResourceViewDimension.ExtendedBuffer,
                             BufferEx = {
-                                ElementCount = this.ElementCount,
-                                FirstElement = 0,
+                                ElementCount = elementCount,
+                                FirstElement = firstElement,
                                 Flags = ShaderResourceViewExtendedBufferFlags.None
                             }
                         };
@@ -164,6 +173,8 @@ namespace SharpDX.Toolkit.Graphics
                             description.BufferEx.Flags |= ShaderResourceViewExtendedBufferFlags.Raw;
 
                         srv = ToDispose(new ShaderResourceView(this.GraphicsDevice, (Direct3D11.Resource)this.Resource, description));
+
+                        shaderResourceViews.Add(key, srv);
                     }
                 }
             }
@@ -180,14 +191,14 @@ namespace SharpDX.Toolkit.Graphics
         /// The RenderTargetView instance is kept by this buffer and will be disposed when this buffer is disposed.</remarks>
         public RenderTargetView GetRenderTargetView(PixelFormat pixelFormat, int width)
         {
-            RenderTargetView srv = null;
+            RenderTargetView rtv = null;
             if ((Description.BindFlags & BindFlags.RenderTarget) != 0)
             {
                 lock (renderTargetViews)
                 {
                     var renderTargetKey = new RenderTargetKey(pixelFormat, width);
 
-                    if (!renderTargetViews.TryGetValue(renderTargetKey, out srv))
+                    if (!renderTargetViews.TryGetValue(renderTargetKey, out rtv))
                     {
                         var description = new RenderTargetViewDescription() {
                             Format = pixelFormat,
@@ -198,11 +209,13 @@ namespace SharpDX.Toolkit.Graphics
                             }
                         };
 
-                        srv = ToDispose(new RenderTargetView(this.GraphicsDevice, (Direct3D11.Resource)this.Resource, description));
+                        rtv = ToDispose(new RenderTargetView(this.GraphicsDevice, (Direct3D11.Resource)this.Resource, description));
+
+                        renderTargetViews.Add(renderTargetKey, rtv);
                     }
                 }
             }
-            return srv;
+            return rtv;
         }
 
         /// <summary>
@@ -828,14 +841,19 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     count = (BufferFlags & BufferFlags.ShaderResource) != 0 ? Description.SizeInBytes / ViewFormat.SizeInBytes : 0;
                 }
+                else if (viewFormat != DXGI.Format.Unknown)
+                {
+                    count = Description.SizeInBytes / viewFormat.SizeInBytes;
+                }
                 else
+                {
                     count = 1;
+                }
             }
             else
             {
-                // For structured buffer
+                // Element count
                 count = Description.SizeInBytes / Description.StructureByteStride;
-                viewFormat = PixelFormat.Unknown;
             }
         }
 
@@ -886,7 +904,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             var desc = new BufferDescription() {
                 SizeInBytes = bufferSize,
-                StructureByteStride = (bufferFlags & BufferFlags.StructuredBuffer) != 0 ? elementSize : 0,
+                StructureByteStride = elementSize, // We keep the element size in the structure byte stride, even if it is not a structured buffer
                 CpuAccessFlags = GetCputAccessFlagsFromUsage(usage),
                 BindFlags = BindFlags.None,
                 OptionFlags = ResourceOptionFlags.None,
@@ -945,7 +963,7 @@ namespace SharpDX.Toolkit.Graphics
 
             if ((bindFlags & BindFlags.ShaderResource) != 0)
             {
-                this.shaderResourceView = GetShaderResourceView(srvFormat);
+                this.shaderResourceView = GetShaderResourceView(srvFormat, 0, ElementCount);
             }
 
             if ((bindFlags & BindFlags.UnorderedAccess) != 0)
@@ -1054,6 +1072,55 @@ namespace SharpDX.Toolkit.Graphics
                 return !left.Equals(right);
             }
         }
+
+        private struct ShaderResourceKey : IEquatable<ShaderResourceKey>
+        {
+            public ShaderResourceKey(Format viewFormat, int offset, int count)
+            {
+                this.ViewFormat = viewFormat;
+                this.Offset = offset;
+                this.Count = count;
+            }
+
+            public DXGI.Format ViewFormat;
+
+            public int Offset;
+
+            public int Count;
+
+            public bool Equals(ShaderResourceKey other)
+            {
+                return this.ViewFormat.Equals(other.ViewFormat) && this.Offset == other.Offset && this.Count == other.Count;
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj))
+                    return false;
+                return obj is ShaderResourceKey && Equals((ShaderResourceKey)obj);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    int hashCode = this.ViewFormat.GetHashCode();
+                    hashCode = (hashCode * 397) ^ this.Offset;
+                    hashCode = (hashCode * 397) ^ this.Count;
+                    return hashCode;
+                }
+            }
+
+            public static bool operator ==(ShaderResourceKey left, ShaderResourceKey right)
+            {
+                return left.Equals(right);
+            }
+
+            public static bool operator !=(ShaderResourceKey left, ShaderResourceKey right)
+            {
+                return !left.Equals(right);
+            }
+        }
     }
 
     /// <summary>
@@ -1064,21 +1131,13 @@ namespace SharpDX.Toolkit.Graphics
     {
         protected internal Buffer(GraphicsDevice device, BufferDescription description, BufferFlags bufferFlags, PixelFormat viewFormat, IntPtr dataPointer) : base(device, description, bufferFlags, viewFormat, dataPointer)
         {
-            this.ElementSize = Utilities.SizeOf<T>();
-            this.ElementCount = Description.SizeInBytes / ElementSize;
         }
 
         protected internal Buffer(GraphicsDevice device, Direct3D11.Buffer nativeBuffer, BufferFlags bufferFlags, PixelFormat viewFormat)
             : base(device, nativeBuffer, bufferFlags, viewFormat)
         {
-            this.ElementSize = Utilities.SizeOf<T>();
-            this.ElementCount = Description.SizeInBytes / ElementSize;
         }
 
-        /// <summary>
-        /// Gets the size of element T.
-        /// </summary>
-        public readonly int ElementSize;
 
         /// <summary>
         /// Gets the content of this texture to an array of data.

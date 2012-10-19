@@ -104,9 +104,9 @@ namespace SharpDX.Toolkit.Graphics
                                                                                            EffectResourceType.UnorderedAccessView, // D3D_SVT_RWTEXTURE2DARRAY = 43
                                                                                            EffectResourceType.UnorderedAccessView, // D3D_SVT_RWTEXTURE3D = 44
                                                                                            EffectResourceType.UnorderedAccessView, // D3D_SVT_RWBUFFER = 45
-                                                                                           EffectResourceType.UnorderedAccessView, // D3D_SVT_BYTEADDRESS_BUFFER = 46
+                                                                                           EffectResourceType.ShaderResourceView,  // D3D_SVT_BYTEADDRESS_BUFFER = 46
                                                                                            EffectResourceType.UnorderedAccessView, // D3D_SVT_RWBYTEADDRESS_BUFFER = 47
-                                                                                           EffectResourceType.UnorderedAccessView, // D3D_SVT_STRUCTURED_BUFFER = 48
+                                                                                           EffectResourceType.ShaderResourceView,  // D3D_SVT_STRUCTURED_BUFFER = 48
                                                                                            EffectResourceType.UnorderedAccessView, // D3D_SVT_RWSTRUCTURED_BUFFER = 49
                                                                                            EffectResourceType.UnorderedAccessView, // D3D_SVT_APPEND_STRUCTURED_BUFFER = 50
                                                                                            EffectResourceType.UnorderedAccessView, // D3D_SVT_CONSUME_STRUCTURED_BUFFER = 51
