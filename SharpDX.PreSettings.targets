@@ -116,6 +116,12 @@
     <AssemblyOriginatorKeyFile>$(SolutionDir)sharpdx.snk</AssemblyOriginatorKeyFile>
     <DelaySign>true</DelaySign>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Win8Release|AnyCPU' And '$(SharpDXSign)' == 'true'">
+    <DefineConstants>TRACE;WIN8METRO;NETFX_CORE;DIRECTX11_1;SHARPDX_SIGNED</DefineConstants>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(SolutionDir)sharpdx.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DIRECTX11_1Release|AnyCPU' And '$(SharpDXSign)' == 'true'">
     <DefineConstants>TRACE;DIRECTX11_1;WinFormsInterop;SHARPDX_SIGNED</DefineConstants>
     <SignAssembly>true</SignAssembly>
