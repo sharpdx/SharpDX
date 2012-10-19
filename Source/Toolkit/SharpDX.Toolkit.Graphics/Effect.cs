@@ -149,7 +149,7 @@ namespace SharpDX.Toolkit.Graphics
         public event OnApplyDelegate OnApplyCallback;
 
         /// <summary>
-        /// Gets or sets the current technique.
+        /// Gets or sets the current technique. By default, it is set to the first available technique in this effect.
         /// </summary>
         /// <value>The current technique.</value>
         public EffectTechnique CurrentTechnique { get; set; }
@@ -180,8 +180,12 @@ namespace SharpDX.Toolkit.Graphics
             if (!ShareConstantBuffers)
                 effectConstantBuffersCache = new Dictionary<EffectConstantBufferKey, EffectConstantBuffer>();
 
+            if (effectDataArg.Techniques.Count == 0)
+                throw new InvalidOperationException("No techniques found in this effect");
+
             var logger = new Logger();
             int techniqueIndex = 0;
+            int totalPassCount = 0;
             EffectPass parentPass = null;
             foreach (var techniqueRaw in effectDataArg.Techniques)
             {
@@ -199,7 +203,7 @@ namespace SharpDX.Toolkit.Graphics
                     if (string.IsNullOrEmpty(name))
                         name = string.Format("${0}", passIndex++);
 
-                    var pass = new EffectPass(logger, this, passRaw, name);
+                    var pass = new EffectPass(logger, this, technique, passRaw, name);
 
                     pass.Initialize(logger);
 
@@ -221,7 +225,13 @@ namespace SharpDX.Toolkit.Graphics
                         parentPass = pass;
                     }
                 }
+
+                // Count the number of passes
+                totalPassCount += technique.Passes.Count;
             }
+
+            if (totalPassCount == 0)
+                throw new InvalidOperationException("No passes found in this effect");
 
             // Log all the exception in a single throw
             if (logger.HasErrors)
@@ -256,6 +266,9 @@ namespace SharpDX.Toolkit.Graphics
                     pass.ComputeSlotLinks();
                 }
             }
+
+            // Setup the first Current Technique.
+            CurrentTechnique = this.Techniques[0];
         }
 
         internal new DisposeCollector DisposeCollector
@@ -266,7 +279,8 @@ namespace SharpDX.Toolkit.Graphics
         protected internal virtual EffectPass OnApply(EffectPass pass)
         {
             var handler = OnApplyCallback;
-            if (handler != null) return handler(pass);
+            if (handler != null) pass = handler(pass);
+
             return pass;
         }
 

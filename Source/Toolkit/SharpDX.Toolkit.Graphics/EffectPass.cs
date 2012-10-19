@@ -83,6 +83,8 @@ namespace SharpDX.Toolkit.Graphics
         private InputSignatureManager inputSignatureManager;
         private InputLayoutPair currentInputLayoutPair;
 
+        internal EffectTechnique Technique;
+
         /// <summary>
         ///   Initializes a new instance of the <see cref="EffectPass" /> class.
         /// </summary>
@@ -90,9 +92,10 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="effect"> The effect. </param>
         /// <param name="pass"> The pass. </param>
         /// <param name="name"> The name. </param>
-        internal EffectPass(Logger logger, Effect effect, EffectData.Pass pass, string name)
+        internal EffectPass(Logger logger, Effect effect, EffectTechnique technique, EffectData.Pass pass, string name)
             : base(name)
         {
+            this.Technique = technique;
             this.pass = pass;
             this.Effect = effect;
             this.graphicsDevice = effect.GraphicsDevice;
@@ -230,6 +233,9 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         private unsafe void ApplyInternal()
         {
+            // By default, we set the Current technique 
+            Effect.CurrentTechnique = Technique;
+
             // Sets the current pass on the graphics device
             graphicsDevice.CurrentPass = this;
 
