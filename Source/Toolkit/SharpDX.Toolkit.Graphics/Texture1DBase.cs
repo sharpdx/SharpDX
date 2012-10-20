@@ -217,8 +217,16 @@ namespace SharpDX.Toolkit.Graphics
                                Format = format,
                                MipLevels = CalculateMipMapCount(mipCount, width),
                                Usage = usage,
-                               CpuAccessFlags = GetCputAccessFlagsFromUsage(usage)
+                               CpuAccessFlags = GetCputAccessFlagsFromUsage(usage),
+                               OptionFlags = ResourceOptionFlags.None
                            };
+
+            // If the texture is a RenderTarget + ShaderResource + MipLevels > 1, then allow for GenerateMipMaps method
+            if ((desc.BindFlags & BindFlags.RenderTarget) != 0 && (desc.BindFlags & BindFlags.ShaderResource) != 0 && desc.MipLevels > 1)
+            {
+                desc.OptionFlags |= ResourceOptionFlags.GenerateMipMaps;
+            }
+
             return desc;
         }
     }

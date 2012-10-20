@@ -32,7 +32,6 @@ namespace SharpDX.Toolkit.Graphics
     /// <summary>
     /// Base class for texture resources.
     /// </summary>
-    /// <typeparam name="T">Type of the <see cref="N:SharpDX.Direct3D11"/> texture resource.</typeparam>
     [ContentReader(typeof(TextureContentReader))]
     public abstract class Texture : GraphicsResource, IComparable<Texture>
     {
@@ -146,6 +145,33 @@ namespace SharpDX.Toolkit.Graphics
         public MipMapDescription GetMipMapDescription(int mipmap)
         {
             return mipmapDescriptions[mipmap];
+        }
+
+        /// <summary>
+        /// Generates the mip maps for this texture. See remarks.
+        /// </summary>
+        /// <exception cref="System.NotSupportedException">Cannot generate mipmaps for this texture (Must be RenderTarget and ShaderResource and MipLevels > 1</exception>
+        /// <remarks>This method is only working for texture that are RenderTarget and ShaderResource and with MipLevels &gt; 1</remarks>
+        public void GenerateMipMaps()
+        {
+            GenerateMipMaps(GraphicsDevice);
+        }
+
+        /// <summary>
+        /// Generates the mip maps for this texture. See remarks.
+        /// </summary>
+        /// <param name="device">The device.</param>
+        /// <exception cref="System.NotSupportedException">Cannot generate mipmaps for this texture (Must be RenderTarget and ShaderResource and MipLevels > 1</exception>
+        /// <remarks>This method is only working for texture that are RenderTarget and ShaderResource and with MipLevels &gt; 1</remarks>
+        public void GenerateMipMaps(GraphicsDevice device)
+        {
+            // If the texture is a RenderTarget + ShaderResource + MipLevels > 1, then allow for GenerateMipMaps method
+            if ((Description.BindFlags & BindFlags.RenderTarget) == 0 || (Description.BindFlags & BindFlags.ShaderResource) == 0 || Description.MipLevels == 1)
+            {
+                throw new NotSupportedException("Cannot generate mipmaps for this texture (Must be RenderTarget and ShaderResource and MipLevels > 1");
+            }
+
+            ((DeviceContext)device).GenerateMips(this);
         }
 
         /// <summary>
