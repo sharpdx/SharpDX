@@ -375,6 +375,7 @@
       <arg value="/p:Configuration=${configuration}"/>
       <arg value='/p:Platform="Any CPU"'/>
       <arg value='/p:SharpDXSign=${build_signed}'/>
+      <arg value="/v:normal"/>
       <arg value="${project.name}.sln" />
     </exec>
 
@@ -389,6 +390,23 @@
         <include name="SharpDX.*/Bin/${configuration}/*.xml" />
       </fileset>
     </copy>
+
+    <foreach item="File" property="filename" if="${build_signed}">
+      <in>
+        <items>
+          <include name="Bin/${version-dir}/*.dll" />
+          <exclude name="Bin/${version-dir}/sharpdx_*.dll" />
+        </items>
+      </in>
+      <do>
+        <!-- Setup MSBuild -->
+        <exec program="C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\x64\sn.exe" workingdir="${path::get-directory-name(filename)}">
+          <arg value="-Ra"/>
+          <arg value="${filename}"/>
+          <arg value="..\..\SharpDX.snk" />
+        </exec>
+      </do>
+    </foreach>
 
   </target>
 

@@ -38,11 +38,12 @@
 
     <Message Text="Signing Assembly $(TargetPath)"/>
 
+    <Exec Command='"C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\x64\sn.exe" -Ra $(TargetPath) $(SolutionDir)sharpdx.snk' Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' And '$(SharpDXSign)' == 'true'"/>
+
     <!-- Copy back *.dll from bin/Debug|Release to obj/Debug/Release directory -->
     <Copy SourceFiles="@(MainAssembly)" DestinationFolder="$(IntermediateOutputPath)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)"/>
     <!-- Copy back *.pdb from bin/Debug|Release to obj/Debug/Release directory -->
     <Copy SourceFiles="@(_DebugSymbolsOutputPath)" DestinationFiles="@(_DebugSymbolsIntermediatePath)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)" Condition="'$(_DebugSymbolsProduced)'=='true' and '$(SkipCopyingSymbolsToOutputDirectory)' != 'true'"/>
 
-    <Exec Command='"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin\sn.exe" -Ra $(TargetPath) $(SolutionDir)sharpdx.snk' Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' And '$(SharpDXSign)' == 'true'"/>
   </Target>
 </Project>
