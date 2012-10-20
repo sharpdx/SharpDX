@@ -18,16 +18,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using SharpDX.Toolkit.Graphics;
 
 namespace SharpDX.Toolkit
 {
-    /// <summary>
-    /// An abstract window.
-    /// </summary>
-    public abstract class GameWindow
-    {
-        public abstract object NativeWindow { get; }
 
-        public abstract bool IsMinimized { get; }
+    public class GraphicsDeviceManager : IGraphicsDeviceManager, IGraphicsDeviceService
+    {
+        public bool BeginDraw()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CreateDevice()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void EndDraw()
+        {
+            throw new NotImplementedException();
+        }
+
+        public event EventHandler<EventArgs> DeviceCreated;
+
+        public event EventHandler<EventArgs> DeviceDisposing;
+
+        public event EventHandler<EventArgs> DeviceReset;
+
+        public event EventHandler<EventArgs> DeviceResetting;
+
+        public GraphicsDevice GraphicsDevice { get; private set; }
     }
 }

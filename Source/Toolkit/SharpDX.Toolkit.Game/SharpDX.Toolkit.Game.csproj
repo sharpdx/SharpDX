@@ -18,6 +18,8 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="GameWindowDesktop.cs" />
+    <Compile Include="GamePlatformDesktop.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GamePlatform.cs" />
     <Compile Include="GameSystem.cs" />
@@ -25,12 +27,19 @@
     <Compile Include="GameServiceRegistry.cs" />
     <Compile Include="GameTime.cs" />
     <Compile Include="GameWindow.cs" />
+    <Compile Include="GraphicsDeviceManager.cs" />
     <Compile Include="IDrawable.cs" />
     <Compile Include="IGameSystem.cs" />
+    <Compile Include="IGraphicsDeviceManager.cs" />
     <Compile Include="IUpdateable.cs" />
+    <Compile Include="LaunchParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\SharpDX.Direct3D11\SharpDX.Direct3D11.csproj">
+      <Project>{736dfb52-1afe-4eff-9710-89046ab5b1f9}</Project>
+      <Name>SharpDX.Direct3D11</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\SharpDX\SharpDX.csproj">
       <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
       <Name>SharpDX</Name>

@@ -24,25 +24,61 @@ namespace SharpDX.Toolkit
 {
     internal abstract class GamePlatform
     {
-        public static GamePlatform Create()
+        public delegate void VoidAction();
+
+        protected IServiceRegistry Services;
+
+        protected GamePlatform(IServiceRegistry services)
         {
-            throw new NotImplementedException();
+            Services = services;
         }
 
-        internal abstract GameWindow Window { get; }
+        public static GamePlatform Create(IServiceRegistry serices)
+        {
+#if !WIN8METRO
+            return new GamePlatformDesktop(serices);
+#else
+            return null;
+#endif
+        }
 
-        internal event EventHandler<EventArgs> Activated;
+        public abstract void Initialize();
 
-        internal event EventHandler<EventArgs> Deactivated;
+        public object WindowContext { get; set; }
 
-        internal event EventHandler<EventArgs> Exiting;
+        public event EventHandler<EventArgs> Activated;
 
-        internal event EventHandler<EventArgs> Idle;
+        public event EventHandler<EventArgs> Deactivated;
 
-        internal event EventHandler<EventArgs> Resume;
+        public event EventHandler<EventArgs> Exiting;
 
-        internal event EventHandler<EventArgs> Suspend;
+        public event EventHandler<EventArgs> Idle;
 
+        public event EventHandler<EventArgs> Resume;
+
+        public event EventHandler<EventArgs> Suspend;
+
+        public event VoidAction Tick;
+
+        public GameWindow Window { get; protected set; }
+
+        public bool IsBlockingRun { get; protected set; }
+
+        public abstract bool IsMouseVisible { get; set; }
+
+        public abstract void Run();
+
+        public virtual void Exit()
+        {
+            Activated = null;
+            Deactivated = null;
+            Exiting = null;
+            Idle = null;
+            Resume = null;
+            Suspend = null;
+            Tick = null;
+        }
+        
         protected void OnActivated(EventArgs e)
         {
             EventHandler<EventArgs> handler = Activated;
@@ -77,6 +113,12 @@ namespace SharpDX.Toolkit
         {
             EventHandler<EventArgs> handler = Suspend;
             if (handler != null) handler(this, e);
+        }
+    
+        protected void OnTick()
+        {
+            var handler = Tick;
+            if (handler != null) handler();
         }
     }
 }

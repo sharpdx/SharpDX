@@ -20,17 +20,55 @@
 
 using System;
 using System.Collections.Generic;
+
+using SharpDX.Collections;
 using SharpDX.Toolkit.Content;
 using SharpDX.Toolkit.Graphics;
 
 namespace SharpDX.Toolkit
 {
+
+    /// <summary>
+    /// The game.
+    /// </summary>
     public class Game : Component
     {
+        #region Fields
+
+        private readonly List<IDrawable> currentlyDrawingGameSystems;
+        private readonly List<IUpdateable> currentlyUpdatingGameSystems;
         private readonly List<IDrawable> drawableGameSystems;
+        private readonly GameTime gameTime;
         private readonly List<IGameSystem> pendingGameSystems;
         private readonly List<IUpdateable> updateableGameSystems;
+        private readonly int[] lastUpdateCount;
+        private readonly float updateCountAverageSlowLimit;
         private readonly GamePlatform gamePlatform;
+        private IGraphicsDeviceService graphicsDeviceService;
+        private IGraphicsDeviceManager graphicsDeviceManager;
+        private bool isEndRunRequired;
+        private bool isExiting;
+        private bool isFirstUpdateDone;
+        private bool suppressDraw;
+
+        private TimeSpan totalGameTime;
+        private TimeSpan inactiveSleepTime;
+        private TimeSpan maximumElapsedTime;
+        private TimeSpan accumulatedElapsedGameTime;
+        private TimeSpan lastFrameElapsedGameTime;
+        private int nextLastUpdateCountIndex;
+        private bool drawRunningSlowly;
+        private bool forceElapsedTimeToZero;
+
+        private readonly TimerTick timer;
+
+        private GraphicsDevice graphicsDevice;
+
+        private bool isMouseVisible;
+
+        #endregion
+
+        #region Constructors and Destructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Game" /> class.
@@ -39,32 +77,64 @@ namespace SharpDX.Toolkit
         {
             // Internals
             drawableGameSystems = new List<IDrawable>();
+            currentlyDrawingGameSystems = new List<IDrawable>();
             pendingGameSystems = new List<IGameSystem>();
             updateableGameSystems = new List<IUpdateable>();
+            currentlyUpdatingGameSystems = new List<IUpdateable>();
+            gameTime = new GameTime();
+            totalGameTime = new TimeSpan();
+            timer = new TimerTick();
+            TargetElapsedTime = TimeSpan.FromTicks(10000000 / 60); // target elapsed time is by default 60Hz
+            lastUpdateCount = new int[4];
+            nextLastUpdateCountIndex = 0;
+
+            // Calculate the updateCountAverageSlowLimit (assuming moving average is >=3 )
+            // Example for a moving average of 4:
+            // updateCountAverageSlowLimit = (2 * 2 + (4 - 2)) / 4 = 1.5f
+            const int BadUpdateCountTime = 2; // number of bad frame (a bad frame is a frame that has at least 2 updates)
+            var maxLastCount = 2 * Math.Min(BadUpdateCountTime, lastUpdateCount.Length);
+            updateCountAverageSlowLimit = (float)(maxLastCount + (lastUpdateCount.Length - maxLastCount)) / lastUpdateCount.Length;
 
             // Externals
             Services = new GameServiceRegistry();
-            GameSystems = new GameSystemCollection();
             Content = new ContentManager(Services);
+            LaunchParameters = new LaunchParameters();
+            GameSystems = new GameSystemCollection();
+            gamePlatform = GamePlatform.Create(Services);
 
-            // Add ContentManager as a service.
-            Services.AddService(typeof (IContentManager), Content);
+            // Setup registry
+            Services.AddService(typeof(IServiceRegistry), Services);
+            Services.AddService(typeof(IContentManager), Content);
 
             // Register events on GameSystems.
             GameSystems.ItemAdded += GameSystems_ItemAdded;
             GameSystems.ItemRemoved += GameSystems_ItemRemoved;
 
-            // Create the game platform for the current platform
-            gamePlatform = GamePlatform.Create();
-
             IsActive = true;
         }
 
+        #endregion
+
+        #region Public Events
+
         /// <summary>
-        /// Gets the game components registered by this game.
+        /// Occurs when [activated].
         /// </summary>
-        /// <value>The game components.</value>
-        public GameSystemCollection GameSystems { get; private set; }
+        public event EventHandler<EventArgs> Activated;
+
+        /// <summary>
+        /// Occurs when [deactivated].
+        /// </summary>
+        public event EventHandler<EventArgs> Deactivated;
+
+        /// <summary>
+        /// Occurs when [exiting].
+        /// </summary>
+        public event EventHandler<EventArgs> Exiting;
+
+        #endregion
+
+        #region Public Properties
 
         /// <summary>
         /// Gets or sets the <see cref="ContentManager"/>.
@@ -73,10 +143,27 @@ namespace SharpDX.Toolkit
         public ContentManager Content { get; set; }
 
         /// <summary>
+        /// Gets the game components registered by this game.
+        /// </summary>
+        /// <value>The game components.</value>
+        public GameSystemCollection GameSystems { get; private set; }
+
+        /// <summary>
         /// Gets the graphics device.
         /// </summary>
         /// <value>The graphics device.</value>
-        public GraphicsDevice GraphicsDevice { get; private set; }
+        public GraphicsDevice GraphicsDevice
+        {
+            get
+            {
+                if (graphicsDeviceService == null)
+                {
+                    throw new InvalidOperationException("GraphicsDeviceService is not yet initialized");
+                }
+
+                return graphicsDeviceService.GraphicsDevice;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the inactive sleep time.
@@ -100,7 +187,33 @@ namespace SharpDX.Toolkit
         /// Gets or sets a value indicating whether the mouse should be visible.
         /// </summary>
         /// <value><c>true</c> if the mouse should be visible; otherwise, <c>false</c>.</value>
-        public bool IsMouseVisible { get; set; }
+        public bool IsMouseVisible
+        {
+            get
+            {
+                return isMouseVisible;
+            }
+
+            set
+            {
+                isMouseVisible = value;
+                if (gamePlatform != null)
+                {
+                    gamePlatform.IsMouseVisible = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the launch parameters.
+        /// </summary>
+        /// <value>The launch parameters.</value>
+        public LaunchParameters LaunchParameters { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether is running.
+        /// </summary>
+        public bool IsRunning { get; private set; }
 
         /// <summary>
         /// Gets the service container.
@@ -118,48 +231,351 @@ namespace SharpDX.Toolkit
         /// Gets the abstract window.
         /// </summary>
         /// <value>The window.</value>
-        public GameWindow Window { get; private set; }
+        public GameWindow Window
+        {
+            get
+            {
+                if (gamePlatform != null)
+                {
+                    return gamePlatform.Window;
+                }
+                return null;
+            }
+        }
 
-        public bool IsRunning { get; private set; }
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
-        /// Occurs when [activated].
+        /// Exits the game.
         /// </summary>
-        public event EventHandler<EventArgs> Activated;
+        public void Exit()
+        {
+            isExiting = true;
+            gamePlatform.Exit();
+            if (IsRunning && isEndRunRequired)
+            {
+                EndRun();
+                IsRunning = false;
+            }
+        }
 
         /// <summary>
-        /// Occurs when [deactivated].
+        /// Resets the elapsed time counter.
         /// </summary>
-        public event EventHandler<EventArgs> Deactivated;
+        public void ResetElapsedTime()
+        {
+            forceElapsedTimeToZero = true;
+            drawRunningSlowly = false;
+            Array.Clear(lastUpdateCount, 0, lastUpdateCount.Length);
+            nextLastUpdateCountIndex = 0;
+        }
 
         /// <summary>
-        /// Occurs when [exiting].
+        /// Call this method to initialize the game, begin running the game loop, and start processing events for the game.
         /// </summary>
-        public event EventHandler<EventArgs> Exiting;
+        /// <param name="windowContext">The window Context.</param>
+        /// <exception cref="System.InvalidOperationException">Cannot run this instance while it is already running</exception>
+        public void Run(object windowContext)
+        {
+            if (IsRunning)
+            {
+                throw new InvalidOperationException("Cannot run this instance while it is already running");
+            }
+
+            // Create the game platform for the current platform
+            gamePlatform.Tick += Tick;
+
+            // Setup the window context and initialize the platform
+            gamePlatform.WindowContext = windowContext;
+            gamePlatform.Initialize();
+
+            // Gets the graphics device manager
+            graphicsDeviceManager = Services.GetService(typeof(IGraphicsDeviceManager)) as IGraphicsDeviceManager;
+            if (graphicsDeviceManager == null)
+            {
+                throw new InvalidOperationException("No GraphicsDeviceManager found");
+            }
+
+            // Make sure that the device is already created
+            graphicsDeviceManager.CreateDevice();
+
+            // Gets the graphics device service
+            graphicsDeviceService = Services.GetService(typeof(IGraphicsDeviceService)) as IGraphicsDeviceService;
+            if (graphicsDeviceService == null)
+            {
+                throw new InvalidOperationException("No GraphicsDeviceService found");
+            }
+
+            // Checks the graphics device
+            if (graphicsDeviceService.GraphicsDevice == null)
+            {
+                throw new InvalidOperationException("No GraphicsDevice found");
+            }
+
+            try
+            {
+                // Initialize this instance and all game systems
+                Initialize();
+
+                IsRunning = true;
+
+                BeginRun();
+
+                gameTime.Update(totalGameTime, TimeSpan.Zero, false);
+                gameTime.FrameCount = 0;
+
+                // Run the first time an update
+                Update(gameTime);
+
+                isFirstUpdateDone = true;
+
+                // Run the game, loop depending on the platform/window.
+                gamePlatform.Run();
+
+                if (gamePlatform.IsBlockingRun)
+                {
+                    // If the previous call was blocking, then we can call Endrun
+                    EndRun();
+                }
+                else
+                {
+                    // EndRun will be executed on Game.Exit
+                    isEndRunRequired = true;
+                }
+            }
+            finally
+            {
+                if (!isEndRunRequired)
+                {
+                    IsRunning = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Prevents calls to Draw until the next Update.
+        /// </summary>
+        public void SuppressDraw()
+        {
+            suppressDraw = true;
+        }
+
+        /// <summary>
+        /// Updates the game's clock and calls Update and Draw.
+        /// </summary>
+        public void Tick()
+        {
+            // If this instance is existing, then don't make any further update/draw
+            if (isExiting)
+            {
+                return;
+            }
+
+            // If this instance is not active, sleep for an inactive sleep time
+            if (!IsActive)
+            {
+                Utilities.Sleep(inactiveSleepTime);
+            }
+
+            // Update the timer
+            timer.Tick();
+
+            var elapsedAdjustedTime = timer.ElapsedAdjustedTime;
+
+            if (forceElapsedTimeToZero)
+            {
+                elapsedAdjustedTime = TimeSpan.Zero;
+                forceElapsedTimeToZero = false;
+            }
+
+            if (elapsedAdjustedTime > maximumElapsedTime)
+            {
+                elapsedAdjustedTime = maximumElapsedTime;
+            }
+
+            bool suppressNextDraw = true;
+            if (IsFixedTimeStep)
+            {
+                // If the rounded TargetElapsedTime is equivalent to current ElapsedAdjustedTime
+                // then make ElapsedAdjustedTime = TargetElapsedTime. We take the same internal rules as XNA 
+                if (Math.Abs(elapsedAdjustedTime.Ticks - TargetElapsedTime.Ticks) < (TargetElapsedTime.Ticks >> 6))
+                {
+                    elapsedAdjustedTime = TargetElapsedTime;
+                }
+
+                // Update the accumulated time
+                accumulatedElapsedGameTime += elapsedAdjustedTime;
+
+                // Calculate the number of update to issue
+                var updateCount = (int)(accumulatedElapsedGameTime.Ticks / TargetElapsedTime.Ticks);
+
+                // If there is no need for update, then 
+                if (updateCount == 0)
+                {
+                    return;
+                }
+
+                // Calculate a moving average on updateCount
+                lastUpdateCount[nextLastUpdateCountIndex] = updateCount;
+                float updateCountMean = 0;
+                for (int i = 0; i < lastUpdateCount.Length; i++)
+                {
+                    updateCountMean += lastUpdateCount[i];
+                }
+
+                updateCountMean /= lastUpdateCount.Length;
+                nextLastUpdateCountIndex = (nextLastUpdateCountIndex + 1) % lastUpdateCount.Length;
+
+                // Test when we are running slowly
+                drawRunningSlowly = updateCountMean > updateCountAverageSlowLimit;
+
+                // We have called updateCount times, so we can substract this from accumulated elapsed game time
+                accumulatedElapsedGameTime = new TimeSpan(accumulatedElapsedGameTime.Ticks - (updateCount * TargetElapsedTime.Ticks));
+
+                // Reset the time of the next frame
+                for (lastFrameElapsedGameTime = TimeSpan.Zero; updateCount > 0 && !isExiting; updateCount--)
+                {
+                    gameTime.Update(totalGameTime, TargetElapsedTime, drawRunningSlowly);
+                    try
+                    {
+                        Update(gameTime);
+
+                        // If there is no exception, then we can draw the frame
+                        suppressNextDraw &= suppressDraw;
+                        suppressDraw = false;
+                    }
+                    finally
+                    {
+                        lastFrameElapsedGameTime += TargetElapsedTime;
+                        totalGameTime += TargetElapsedTime;
+                    }
+                }
+            }
+            else
+            {
+                drawRunningSlowly = false;
+                Array.Clear(lastUpdateCount, 0, lastUpdateCount.Length);
+                nextLastUpdateCountIndex = 0;
+
+                if (!isExiting)
+                {
+                    lastFrameElapsedGameTime = elapsedAdjustedTime;
+                    gameTime.Update(totalGameTime, elapsedAdjustedTime, false);
+
+                    try
+                    {
+                        Update(gameTime);
+
+                        // If there is no exception, then we can draw the frame
+                        suppressNextDraw &= suppressDraw;
+                        suppressDraw = false;
+                    }
+                    finally
+                    {
+                        totalGameTime += elapsedAdjustedTime;
+                    }
+                }
+            }
+
+            if (!suppressNextDraw)
+            {
+                DrawFrame();
+            }
+        }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Starts the drawing of a frame. This method is followed by calls to Draw and EndDraw.
         /// </summary>
-        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise</returns>
+        /// <returns><c>true</c> to continue drawing, false to not call <see cref="Draw"/> and <see cref="EndDraw"/></returns>
         protected virtual bool BeginDraw()
         {
+            if ((graphicsDeviceManager != null) && !graphicsDeviceManager.BeginDraw())
+            {
+                return false;
+            }
+
             return true;
         }
 
-        /// <summary>Called after all components are initialized but before the first update in the game loop.</summary>
+        /// <summary>
+        /// Called after all components are initialized but before the first update in the game loop.
+        /// </summary>
         protected virtual void BeginRun()
         {
         }
 
-        /// <summary>  Reference page contains code sample.</summary>
-        /// <param name="gameTime">Time passed since the last call to Draw.</param>
+        protected override void Dispose(bool disposeManagedResources)
+        {
+            if (disposeManagedResources)
+            {
+                lock (this)
+                {
+                    var array = new IGameSystem[GameSystems.Count];
+                    this.GameSystems.CopyTo(array, 0);
+                    for (int i = 0; i < array.Length; i++)
+                    {
+                        var disposable = array[i] as IDisposable;
+                        if (disposable != null)
+                        {
+                            disposable.Dispose();
+                        }
+                    }
+
+                    var disposableGraphicsManager = graphicsDeviceManager as IDisposable;
+                    if (disposableGraphicsManager != null)
+                    {
+                        disposableGraphicsManager.Dispose();
+                    }
+
+                    DisposeGraphicsDeviceEvents();
+                }
+            }
+
+            base.Dispose(disposeManagedResources);
+        }
+
+        /// <summary>
+        /// Reference page contains code sample.
+        /// </summary>
+        /// <param name="gameTime">
+        /// Time passed since the last call to Draw.
+        /// </param>
         protected virtual void Draw(GameTime gameTime)
         {
+            // Just lock current drawable game systems to grab them in a temporary list.
+            lock (drawableGameSystems)
+            {
+                for (int i = 0; i < drawableGameSystems.Count; i++)
+                {
+                    currentlyDrawingGameSystems.Add(drawableGameSystems[i]);
+                }
+            }
+
+            for (int i = 0; i < currentlyDrawingGameSystems.Count; i++)
+            {
+                var drawable = currentlyDrawingGameSystems[i];
+                if (drawable.Visible)
+                {
+                    drawable.Draw(gameTime);
+                }
+            }
+
+            currentlyDrawingGameSystems.Clear();
         }
 
         /// <summary>Ends the drawing of a frame. This method is preceeded by calls to Draw and BeginDraw.</summary>
         protected virtual void EndDraw()
         {
+            if (graphicsDeviceManager != null)
+            {
+                graphicsDeviceManager.EndDraw();
+            }
         }
 
         /// <summary>Called after the game loop has stopped running before exiting.</summary>
@@ -167,108 +583,159 @@ namespace SharpDX.Toolkit
         {
         }
 
-        /// <summary>Exits the game.</summary>
-        public void Exit()
-        {
-        }
-
         /// <summary>Called after the Game and GraphicsDevice are created, but before LoadContent.  Reference page contains code sample.</summary>
         protected virtual void Initialize()
         {
+            // Setup the graphics device if it was not already setup.
+            SetupGraphicsDeviceEvents();
+
+            // Add all game systems that were added to this game instance before the game started.
+            while (pendingGameSystems.Count != 0)
+            {
+                pendingGameSystems[0].Initialize();
+                pendingGameSystems.RemoveAt(0);
+            }
+
+            // Load the content of the game
+            LoadContent();
         }
 
-        /// <summary />
+        /// <summary>
+        /// Loads the content.
+        /// </summary>
         protected virtual void LoadContent()
         {
         }
 
-        /// <summary>Raises the Activated event. Override this method to add code to handle when the game gains focus.</summary>
+        /// <summary>
+        /// Raises the Activated event. Override this method to add code to handle when the game gains focus.
+        /// </summary>
         /// <param name="sender">The Game.</param>
         /// <param name="args">Arguments for the Activated event.</param>
         protected virtual void OnActivated(object sender, EventArgs args)
         {
         }
 
-        /// <summary>Raises the Deactivated event. Override this method to add code to handle when the game loses focus.</summary>
+        /// <summary>
+        /// Raises the Deactivated event. Override this method to add code to handle when the game loses focus.
+        /// </summary>
         /// <param name="sender">The Game.</param>
         /// <param name="args">Arguments for the Deactivated event.</param>
         protected virtual void OnDeactivated(object sender, EventArgs args)
         {
         }
 
-        /// <summary>Raises an Exiting event. Override this method to add code to handle when the game is exiting.</summary>
+        /// <summary>
+        /// Raises an Exiting event. Override this method to add code to handle when the game is exiting.
+        /// </summary>
         /// <param name="sender">The Game.</param>
         /// <param name="args">Arguments for the Exiting event.</param>
         protected virtual void OnExiting(object sender, EventArgs args)
         {
         }
 
-        private void Paint(object sender, EventArgs e)
-        {
-        }
-
-        /// <summary>Resets the elapsed time counter.</summary>
-        public void ResetElapsedTime()
-        {
-        }
-
-        /// <summary>Call this method to initialize the game, begin running the game loop, and start processing events for the game.</summary>
-        public void Run()
-        {
-        }
-
-        /// <summary>Run the game through what would happen in a single tick of the game clock; this method is designed for debugging only.</summary>
-        public void RunOneFrame()
-        {
-        }
-
-        /// <summary>This is used to display an error message if there is no suitable graphics device or sound card.</summary>
+        /// <summary>
+        /// This is used to display an error message if there is no suitable graphics device or sound card.
+        /// </summary>
         /// <param name="exception">The exception to display.</param>
+        /// <returns>The <see cref="bool" />.</returns>
         protected virtual bool ShowMissingRequirementMessage(Exception exception)
         {
             return true;
         }
 
-        /// <summary>Prevents calls to Draw until the next Update.</summary>
-        public void SuppressDraw()
-        {
-        }
-
-        /// <summary>Updates the game's clock and calls Update and Draw.</summary>
-        public void Tick()
-        {
-        }
-
-        /// <summary>Called when graphics resources need to be unloaded. Override this method to unload any game-specific graphics resources.</summary>
+        /// <summary>
+        /// Called when graphics resources need to be unloaded. Override this method to unload any game-specific graphics resources.
+        /// </summary>
         protected virtual void UnloadContent()
         {
         }
 
-        /// <summary> Reference page contains links to related conceptual articles.</summary>
-        /// <param name="gameTime">Time passed since the last call to Update.</param>
+        /// <summary>
+        /// Reference page contains links to related conceptual articles.
+        /// </summary>
+        /// <param name="gameTime">
+        /// Time passed since the last call to Update.
+        /// </param>
         protected virtual void Update(GameTime gameTime)
         {
+            lock (updateableGameSystems)
+            {
+                for (int i = 0; i < updateableGameSystems.Count; i++)
+                {
+                    currentlyUpdatingGameSystems.Add(updateableGameSystems[i]);
+                }
+            }
+
+            for (int i = 0; i < currentlyUpdatingGameSystems.Count; i++)
+            {
+                IUpdateable updateable = currentlyUpdatingGameSystems[i];
+                if (updateable.Enabled)
+                {
+                    updateable.Update(gameTime);
+                }
+            }
+
+            currentlyUpdatingGameSystems.Clear();
+            isFirstUpdateDone = true;
         }
 
-        private void OnActivated(EventArgs e)
+        private static bool AddGameSystem<T>(T gameSystem, List<T> gameSystems, IComparer<T> comparer, bool removePreviousSystem = false)
         {
-            EventHandler<EventArgs> handler = Activated;
-            if (handler != null) handler(this, e);
+            lock (gameSystems)
+            {
+                // If we are updating the order
+                if (removePreviousSystem)
+                {
+                    gameSystems.Remove(gameSystem);
+                }
+
+                // Find this gameSystem
+                int index = gameSystems.BinarySearch(gameSystem, comparer);
+                if (index < 0)
+                {
+                    // If index is negative, that is the bitwise complement of the index of the next element that is larger than item 
+                    // or, if there is no larger element, the bitwise complement of Count.
+                    index = ~index;
+
+                    // Iterate until the order is different or we are at the end of the list
+                    while ((index < gameSystems.Count) && (comparer.Compare(gameSystems[index], gameSystem) == 0))
+                    {
+                        index++;
+                    }
+
+                    gameSystems.Insert(index, gameSystem);
+
+                    // True, the system was inserted
+                    return true;
+                }
+            }
+
+            // False, it is already in the list
+            return false;
         }
 
-        private void OnDeactivated(EventArgs e)
+        private void DrawFrame()
         {
-            EventHandler<EventArgs> handler = Deactivated;
-            if (handler != null) handler(this, e);
+            try
+            {
+                if (!isExiting && isFirstUpdateDone && !Window.IsMinimized && BeginDraw())
+                {
+                    gameTime.Update(totalGameTime, lastFrameElapsedGameTime, drawRunningSlowly);
+                    gameTime.FrameCount++;
+
+                    Draw(gameTime);
+
+                    EndDraw();
+                }
+            }
+            finally
+            {
+                lastFrameElapsedGameTime = TimeSpan.Zero;
+            }
         }
 
-        private void OnExiting(EventArgs e)
-        {
-            EventHandler<EventArgs> handler = Exiting;
-            if (handler != null) handler(this, e);
-        }
-
-        private void GameSystems_ItemAdded(object sender, Collections.ObservableCollectionEventArgs<IGameSystem> e)
+        private void GameSystems_ItemAdded(object sender, ObservableCollectionEventArgs<IGameSystem> e)
         {
             var gameSystem = e.Item;
 
@@ -298,7 +765,7 @@ namespace SharpDX.Toolkit
             }
         }
 
-        private void GameSystems_ItemRemoved(object sender, Collections.ObservableCollectionEventArgs<IGameSystem> e)
+        private void GameSystems_ItemRemoved(object sender, ObservableCollectionEventArgs<IGameSystem> e)
         {
             var gameSystem = e.Item;
 
@@ -310,53 +777,94 @@ namespace SharpDX.Toolkit
             var gameComponent = gameSystem as IUpdateable;
             if (gameComponent != null)
             {
-                updateableGameSystems.Remove(gameComponent);
+                lock (updateableGameSystems)
+                {
+                    updateableGameSystems.Remove(gameComponent);
+                }
+
                 gameComponent.UpdateOrderChanged -= updateableGameSystem_UpdateOrderChanged;
             }
 
             var item = gameSystem as IDrawable;
             if (item != null)
             {
-                drawableGameSystems.Remove(item);
+                lock (drawableGameSystems)
+                {
+                    drawableGameSystems.Remove(item);
+                }
+
                 item.DrawOrderChanged -= drawableGameSystem_DrawOrderChanged;
             }
         }
 
-        private static bool AddGameSystem<T>(T gameSystem, List<T> gameSystems, IComparer<T> comparer, bool removePreviousSystem = false)
+        private void SetupGraphicsDeviceEvents()
         {
-            // If we are updating the order
-            if (removePreviousSystem)
+            // Find the IGraphicsDeviceSerive.
+            graphicsDeviceService = Services.GetService(typeof(IGraphicsDeviceService)) as IGraphicsDeviceService;
+
+            // If there is no graphics device service, don't go further as the whole Game would not work
+            if (graphicsDeviceService == null)
             {
-                gameSystems.Remove(gameSystem);
+                throw new InvalidOperationException("Unable to create find a IGraphicsDeviceService");
             }
 
-            // Find this gameSystem
-            int index = gameSystems.BinarySearch(gameSystem, comparer);
-            if (index < 0)
+            if (graphicsDeviceService.GraphicsDevice == null)
             {
-                // If index is negative, that is the bitwise complement of the index of the next element that is larger than item 
-                // or, if there is no larger element, the bitwise complement of Count.
-                index = ~index;
-
-                // Iterate until the order is different or we are at the end of the list
-                while ((index < gameSystems.Count) && (comparer.Compare(gameSystems[index], gameSystem) == 0))
-                {
-                    index++;
-                }
-
-                gameSystems.Insert(index, gameSystem);
-
-                // True, the system was inserted
-                return true;
+                throw new InvalidOperationException("Unable to find a GraphicsDevice instance");
             }
 
-            // False, it is already in the list
-            return false;
+            graphicsDeviceService.DeviceCreated += graphicsDeviceService_DeviceCreated;
+            graphicsDeviceService.DeviceResetting += graphicsDeviceService_DeviceResetting;
+            graphicsDeviceService.DeviceReset += graphicsDeviceService_DeviceReset;
+            graphicsDeviceService.DeviceDisposing += graphicsDeviceService_DeviceDisposing;
         }
 
-        private void updateableGameSystem_UpdateOrderChanged(object sender, EventArgs e)
+        private void DisposeGraphicsDeviceEvents()
         {
-            AddGameSystem((IUpdateable)sender, updateableGameSystems, UpdateableComparer.Default, true);
+            if (graphicsDeviceService != null)
+            {
+                graphicsDeviceService.DeviceCreated -= graphicsDeviceService_DeviceCreated;
+                graphicsDeviceService.DeviceResetting -= graphicsDeviceService_DeviceResetting;
+                graphicsDeviceService.DeviceReset -= graphicsDeviceService_DeviceReset;
+                graphicsDeviceService.DeviceDisposing -= graphicsDeviceService_DeviceDisposing;
+            }
+        }
+
+        private void OnActivated(EventArgs e)
+        {
+            EventHandler<EventArgs> handler = Activated;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
+        private void OnDeactivated(EventArgs e)
+        {
+            EventHandler<EventArgs> handler = Deactivated;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
+        private void OnExiting(EventArgs e)
+        {
+            EventHandler<EventArgs> handler = Exiting;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
+        private void WindowOnDraw(object sender, EventArgs eventArgs)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void WindowOnUpdate(object sender, EventArgs eventArgs)
+        {
+            throw new NotImplementedException();
         }
 
         private void drawableGameSystem_DrawOrderChanged(object sender, EventArgs e)
@@ -364,52 +872,88 @@ namespace SharpDX.Toolkit
             AddGameSystem((IDrawable)sender, drawableGameSystems, DrawableComparer.Default, true);
         }
 
-        #region Nested type: DrawableComparer
+        private void graphicsDeviceService_DeviceCreated(object sender, EventArgs e)
+        {
+            LoadContent();
+        }
 
-        internal class DrawableComparer : IComparer<IDrawable>
+        private void graphicsDeviceService_DeviceDisposing(object sender, EventArgs e)
+        {
+            Content.Unload();
+            UnloadContent();
+        }
+
+        private void graphicsDeviceService_DeviceReset(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void graphicsDeviceService_DeviceResetting(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void updateableGameSystem_UpdateOrderChanged(object sender, EventArgs e)
+        {
+            AddGameSystem((IUpdateable)sender, updateableGameSystems, UpdateableComparer.Default, true);
+        }
+
+        #endregion
+
+        /// <summary>
+        /// The comparer used to order <see cref="IDrawable"/> objects.
+        /// </summary>
+        internal struct DrawableComparer : IComparer<IDrawable>
         {
             public static readonly DrawableComparer Default = new DrawableComparer();
-
-            #region IComparer<IDrawable> Members
 
             public int Compare(IDrawable left, IDrawable right)
             {
                 if (Equals(left, right))
+                {
                     return 0;
+                }
+
                 if (left == null)
+                {
                     return 1;
+                }
+
                 if (right == null)
+                {
                     return -1;
+                }
+
                 return (left.DrawOrder < right.DrawOrder) ? -1 : 1;
             }
-
-            #endregion
         }
 
-        #endregion
-
-        #region Nested type: UpdateableComparer
-
-        internal class UpdateableComparer : IComparer<IUpdateable>
+        /// <summary>
+        /// The comparer used to order <see cref="IUpdateable"/> objects.
+        /// </summary>
+        internal struct UpdateableComparer : IComparer<IUpdateable>
         {
             public static readonly UpdateableComparer Default = new UpdateableComparer();
-
-            #region IComparer<IUpdateable> Members
 
             public int Compare(IUpdateable left, IUpdateable right)
             {
                 if (Equals(left, right))
+                {
                     return 0;
+                }
+
                 if (left == null)
+                {
                     return 1;
+                }
+
                 if (right == null)
+                {
                     return -1;
+                }
+
                 return (left.UpdateOrder < right.UpdateOrder) ? -1 : 1;
             }
-
-            #endregion
         }
-
-        #endregion
     }
 }

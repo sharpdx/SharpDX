@@ -17,17 +17,52 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+#if !WIN8METRO
 using System;
+using System.Windows.Forms;
+using SharpDX.Windows;
 
 namespace SharpDX.Toolkit
 {
     /// <summary>
     /// An abstract window.
     /// </summary>
-    public abstract class GameWindow
+    internal class GameWindowDesktop : GameWindow
     {
-        public abstract object NativeWindow { get; }
+        internal GameWindowDesktop(object windowContext)
+        {
+            windowContext = windowContext ?? new RenderForm("SharpDX.Toolkit.Game");
+            Control = windowContext as Control;
+            if (Control == null)
+            {
+                throw new NotSupportedException("Unsupported window context. Unable to create game window. Only System.Windows.Control subclass are supported");
+            }
+        }
 
-        public abstract bool IsMinimized { get; }
+        public readonly Control Control;
+
+        public override object NativeWindow
+        {
+            get
+            {
+                return Control;
+            }
+        }
+
+        public override bool IsMinimized
+        {
+            get
+            {
+                var form  = Control as Form;
+                if (form != null)
+                {
+                    return form.WindowState == FormWindowState.Minimized;
+                }
+
+                // Check for non-form control
+                return false;
+            }
+        }
     }
 }
+#endif

@@ -17,17 +17,28 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System;
 
 namespace SharpDX.Toolkit
 {
     /// <summary>
-    /// An abstract window.
+    /// Defines the interface for an object that manages a GraphicsDevice.
     /// </summary>
-    public abstract class GameWindow
+    public interface IGraphicsDeviceManager
     {
-        public abstract object NativeWindow { get; }
+        /// <summary>
+        /// Starts the drawing of a frame.
+        /// </summary>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise</returns>
+        bool BeginDraw();
 
-        public abstract bool IsMinimized { get; }
+        /// <summary>
+        /// Called to ensure that the device manager has created a valid device.
+        /// </summary>
+        void CreateDevice();
+
+        /// <summary>
+        /// Called by the game at the end of drawing; presents the final rendering.
+        /// </summary>
+        void EndDraw();
     }
 }

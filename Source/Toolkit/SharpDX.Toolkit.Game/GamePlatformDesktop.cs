@@ -17,17 +17,52 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System;
+#if !WIN8METRO
+using System.Windows.Forms;
+using SharpDX.Windows;
 
 namespace SharpDX.Toolkit
 {
-    /// <summary>
-    /// An abstract window.
-    /// </summary>
-    public abstract class GameWindow
+    internal class GamePlatformDesktop : GamePlatform
     {
-        public abstract object NativeWindow { get; }
+        private GameWindowDesktop gameWindowDesktop;
 
-        public abstract bool IsMinimized { get; }
+        private bool isMouseVisible;
+
+        public GamePlatformDesktop(IServiceRegistry services) : base(services)
+        {
+            IsBlockingRun = true;
+        }
+
+        public override void Initialize()
+        {
+            gameWindowDesktop = new GameWindowDesktop(WindowContext);
+            Window = gameWindowDesktop;
+        }
+
+        public override bool IsMouseVisible
+        {
+            get
+            {
+                return isMouseVisible;
+            }
+            set
+            {
+                isMouseVisible = value;
+            }
+        }
+
+        public override void Run()
+        {
+            RenderLoop.Run((Control)Window.NativeWindow, OnTick);
+        }
+
+        public override void Exit()
+        {
+            gameWindowDesktop.Control.Dispose();
+
+            base.Exit();
+        }
     }
 }
+#endif
