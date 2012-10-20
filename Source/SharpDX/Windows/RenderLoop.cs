@@ -52,7 +52,7 @@ namespace SharpDX.Windows
         /// </summary>
         /// <param name="form">The form.</param>
         /// <param name="renderCallback">The rendering callback.</param>
-        public static void Run(Form form, RenderCallback renderCallback)
+        public static void Run(Control form, RenderCallback renderCallback)
         {
             var proxyWindow = new ProxyNativeWindow(form);
             proxyWindow.Run(renderCallback);
@@ -91,7 +91,7 @@ namespace SharpDX.Windows
         /// </summary>
         private class ProxyNativeWindow
         {
-            private readonly Form _form;
+            private readonly Control _form;
             private readonly IntPtr _windowHandle;
             private readonly IntPtr _ptrToDefaultWndProc;
             private Win32Native.WndProc _wndProc;
@@ -100,16 +100,16 @@ namespace SharpDX.Windows
             /// <summary>
             /// Initializes a new instance of the <see cref="ProxyNativeWindow"/> class.
             /// </summary>
-            public ProxyNativeWindow(Form form)
+            public ProxyNativeWindow(Control form)
             {
                 _form = form;
                 _windowHandle = form.Handle;
-                _form.FormClosed += form_FormClosed;
+                _form.Disposed += _form_Disposed;
                 _ptrToDefaultWndProc = Win32Native.GetWindowLong(new HandleRef(this, _windowHandle), Win32Native.WindowLongType.WndProc);
                 _isAlive = true;
             }
 
-            private void form_FormClosed(object sender, FormClosedEventArgs e)
+            void _form_Disposed(object sender, EventArgs e)
             {
                 _isAlive = false;
             }
@@ -169,7 +169,8 @@ namespace SharpDX.Windows
                     if (_isAlive)
                         renderCallback();
                 }
-                _form.FormClosed -= form_FormClosed;
+
+                _form.Disposed -= _form_Disposed;
             }
         }
     }

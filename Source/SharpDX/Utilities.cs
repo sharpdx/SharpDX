@@ -32,6 +32,7 @@ using System.Text;
 using SharpDX.Direct3D;
 using System.Reflection;
 #if WIN8METRO
+using System.Threading.Tasks;
 using System.Linq;
 using System.Linq.Expressions;
 #endif
@@ -1031,6 +1032,19 @@ namespace SharpDX
             ilGenerator.Emit(OpCodes.Ret);
             return (SetValueFastDelegate<T>)method.CreateDelegate(typeof(SetValueFastDelegate<T>));
 #endif
+        }
+
+        /// <summary>
+        /// Suspends the current thread of a <see cref="sleepTimeInMillis" />.
+        /// </summary>
+        /// <param name="sleepTimeInMillis">The duration to sleep in milliseconds.</param>
+        public static void Sleep(TimeSpan sleepTimeInMillis)
+        {
+#if WIN8METRO
+            Task.Delay(sleepTimeInMillis).Wait();
+#else
+            System.Threading.Thread.Sleep(sleepTimeInMillis);
+#endif            
         }
 
         /// <summary>
