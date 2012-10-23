@@ -74,6 +74,7 @@ namespace SharpDX.Windows
         //private DisplayMonitor monitor;
         private bool sizeMove;
 
+        private bool isBackgroundFirstDraw;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RenderForm"/> class.
@@ -194,6 +195,11 @@ namespace SharpDX.Windows
         /// <param name="e">A <see cref="T:System.Windows.Forms.PaintEventArgs"/> that contains the event data.</param>
         protected override void OnPaintBackground(PaintEventArgs e)
         {
+            if (!isBackgroundFirstDraw)
+            {
+                base.OnPaintBackground(e);
+                isBackgroundFirstDraw = true;
+            }
         }
 
         /// <summary>
@@ -375,9 +381,20 @@ namespace SharpDX.Windows
                         }
                     }
                     break;
+                case 0x00A5://WM_NCRBUTTONUP
+                case 0x0084://WM_NCHITTEST
+                    return;
             }
 
             base.WndProc(ref m);
+        }
+
+        protected override bool ProcessDialogKey(Keys keyData)
+        {
+            if (keyData == (Keys.Menu | Keys.Alt))
+                return true;
+            else
+                return base.ProcessDialogKey(keyData);
         }
 
         /// <summary>
