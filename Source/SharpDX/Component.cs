@@ -66,6 +66,11 @@ namespace SharpDX
         protected internal bool IsDisposing { get; private set; }
 
         /// <summary>
+        /// Occurs when when Dispose is called.
+        /// </summary>
+        public event EventHandler<EventArgs> Disposing;
+
+        /// <summary>
         /// Releases unmanaged and - optionally - managed resources
         /// </summary>
         public void Dispose()
@@ -73,6 +78,14 @@ namespace SharpDX
             if (!IsDisposed)
             {
                 IsDisposing = true;
+
+                // Call the disposing event.
+                var handler = Disposing;
+                if (handler != null)
+                {
+                    handler(this, EventArgs.Empty);
+                }
+
                 Dispose(true);
                 IsDisposed = true;
             }
