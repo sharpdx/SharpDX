@@ -342,8 +342,6 @@
     <map param="pDestWeights" attribute="out buffer" />
     <map param="ID3DX10SkinInfo::RemapBones::pBoneRemap" attribute="in buffer" />
     <map param="ID3DX10SkinInfo::RemapVertices::pVertexRemap" attribute="in buffer" />
-
-    <map method="ID3D10Device::GetDeviceRemovedReason" return="true"/>
     
     <!--
     // *****************************************************************
