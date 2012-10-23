@@ -163,12 +163,14 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
 
+            int msaaCount = Math.Min((int)presentationParameters.MultiSampleCount, (int)graphicsDevice.Features[pixelFormat].MSAALevelMax);
+
             var description = new SwapChainDescription()
             {
                 ModeDescription = new ModeDescription(width, height, refreshRate, pixelFormat),
-                BufferCount = 1,
+                BufferCount = 2,
                 OutputHandle = windowHandle,
-                SampleDescription = new SampleDescription(1, 0),
+                SampleDescription = new SampleDescription(msaaCount, 0),
                 SwapEffect = SwapEffect.Discard,
                 Usage = usage,
                 IsWindowed = true,

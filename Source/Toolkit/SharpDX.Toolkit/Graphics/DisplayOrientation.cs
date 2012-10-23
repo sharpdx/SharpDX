@@ -17,40 +17,34 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
 using System;
 
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    /// Service providing method to access GraphicsDevice life-cycle.
+    /// Describes the orientation of the display.
     /// </summary>
-    public interface IGraphicsDeviceService
+    [Flags]
+    public enum DisplayOrientation
     {
         /// <summary>
-        /// Occurs when a device is created.
+        /// The default value for the orientation.
         /// </summary>
-        event EventHandler<EventArgs> DeviceCreated;
+        Default = 0,
 
         /// <summary>
-        /// Occurs when a device is disposing.
+        /// Displays in landscape mode to the left.
         /// </summary>
-        event EventHandler<EventArgs> DeviceDisposing;
+        LandscapeLeft = 1,
 
         /// <summary>
-        /// Occurs when a device is reseted.
+        /// Displays in landscape mode to the right.
         /// </summary>
-        event EventHandler<EventArgs> DeviceReset;
+        LandscapeRight = 2,
 
         /// <summary>
-        /// Occurs when a device is resetting.
+        /// Displays in portrait mode.
         /// </summary>
-        event EventHandler<EventArgs> DeviceResetting;
-
-        /// <summary>
-        /// Gets the current graphcs device.
-        /// </summary>
-        /// <value>The graphics device.</value>
-        GraphicsDevice GraphicsDevice { get; }
+        Portrait = 4
     }
 }

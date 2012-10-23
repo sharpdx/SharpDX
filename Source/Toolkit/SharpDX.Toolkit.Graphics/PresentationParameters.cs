@@ -23,62 +23,22 @@ using SharpDX.DXGI;
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    ///   Describes a swap chain. This class is the intersection of the fields found in <see cref="SwapChain" /> and <see
-    ///    cref="SharpDX.DXGI.SwapChain1" />.
+    ///   Describess how data will be displayed to the screen.
     /// </summary>
     /// <msdn-id>bb173075</msdn-id>
     /// <unmanaged>DXGI_SWAP_CHAIN_DESC</unmanaged>
     /// <unmanaged-short>DXGI_SWAP_CHAIN_DESC</unmanaged-short>
     public class PresentationParameters
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PresentationParameters" /> class with default values.
-        /// </summary>
-        public PresentationParameters()
-        {
-            BackBufferWidth = 800;
-            BackBufferHeight = 600;
-            BackBufferFormat = PixelFormat.R8G8B8A8.UNorm;
-            PresentationInterval = PresentInterval.Immediate;
-            MultiSampleCount = MSAALevel.None;
-            IsFullScreen = false;
-            RefreshRate = new Rational(60, 1); // by default
-            RenderTargetUsage = Usage.BackBuffer | Usage.RenderTargetOutput;
-            Flags = SwapChainFlags.None;
-        }
+        #region Fields
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PresentationParameters" /> class with <see cref="PixelFormat.R8G8B8A8.UNorm"/>.
-        /// </summary>
-        /// <param name="backBufferWidth">Width of the back buffer.</param>
-        /// <param name="backBufferHeight">Height of the back buffer.</param>
-        /// <param name="deviceWindowHandle">The device window handle.</param>
-        public PresentationParameters(int backBufferWidth, int backBufferHeight, object deviceWindowHandle) : this(backBufferWidth, backBufferHeight, deviceWindowHandle, PixelFormat.R8G8B8A8.UNorm)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PresentationParameters" /> class.
-        /// </summary>
-        /// <param name="backBufferWidth">Width of the back buffer.</param>
-        /// <param name="backBufferHeight">Height of the back buffer.</param>
-        /// <param name="deviceWindowHandle">The device window handle.</param>
-        /// <param name="backBufferFormat">The back buffer format.</param>
-        public PresentationParameters(int backBufferWidth, int backBufferHeight, object deviceWindowHandle, PixelFormat backBufferFormat) : this()
-        {
-            BackBufferWidth = backBufferWidth;
-            BackBufferHeight = backBufferHeight;
-            DeviceWindowHandle = deviceWindowHandle;
-            BackBufferFormat = backBufferFormat;
-        }
-
-        /// <summary>
-        ///   A value that describes the resolution width.
+        ///   A <strong><see cref="SharpDX.DXGI.Format" /></strong> structure describing the display format.
         /// </summary>
         /// <msdn-id>bb173075</msdn-id>
         /// <unmanaged>DXGI_MODE_DESC BufferDesc</unmanaged>
         /// <unmanaged-short>DXGI_MODE_DESC BufferDesc</unmanaged-short>
-        public int BackBufferWidth;
+        public PixelFormat BackBufferFormat;
 
         /// <summary>
         ///   A value that describes the resolution height.
@@ -89,14 +49,17 @@ namespace SharpDX.Toolkit.Graphics
         public int BackBufferHeight;
 
         /// <summary>
-        ///   A <strong>
-        ///       <see cref="SharpDX.DXGI.Format" />
-        ///     </strong> structure describing the display format.
+        ///   A value that describes the resolution width.
         /// </summary>
         /// <msdn-id>bb173075</msdn-id>
         /// <unmanaged>DXGI_MODE_DESC BufferDesc</unmanaged>
         /// <unmanaged-short>DXGI_MODE_DESC BufferDesc</unmanaged-short>
-        public PixelFormat BackBufferFormat;
+        public int BackBufferWidth;
+
+        /// <summary>
+        /// Gets or sets the depth stencil format
+        /// </summary>
+        public DepthFormat DepthStencilFormat;
 
         /// <summary>
         ///   A Window object. See remarks.
@@ -117,7 +80,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>bb173075</msdn-id>
         /// <unmanaged>DXGI_SWAP_CHAIN_FLAG Flags</unmanaged>
         /// <unmanaged-short>DXGI_SWAP_CHAIN_FLAG Flags</unmanaged-short>
-        public SharpDX.DXGI.SwapChainFlags Flags;
+        public SwapChainFlags Flags;
 
         /// <summary>
         ///   Gets or sets a value indicating whether the application is in full screen mode.
@@ -140,7 +103,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>bb173064</msdn-id>
         /// <unmanaged>DXGI_RATIONAL RefreshRate</unmanaged>
         /// <unmanaged-short>DXGI_RATIONAL RefreshRate</unmanaged-short>
-        public SharpDX.DXGI.Rational RefreshRate;
+        public Rational RefreshRate;
 
         /// <summary>
         ///   <p>A member of the DXGI_USAGE enumerated type that describes the surface usage and CPU access options for the back buffer. The back buffer can  be used for shader input or render-target output.</p>
@@ -148,11 +111,65 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>bb173075</msdn-id>
         /// <unmanaged>DXGI_USAGE_ENUM BufferUsage</unmanaged>
         /// <unmanaged-short>DXGI_USAGE_ENUM BufferUsage</unmanaged-short>
-        public SharpDX.DXGI.Usage RenderTargetUsage;
+        public Usage RenderTargetUsage;
 
-        internal PresentationParameters Clone()
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PresentationParameters" /> class with default values.
+        /// </summary>
+        public PresentationParameters()
+        {
+            BackBufferWidth = 800;
+            BackBufferHeight = 480;
+            BackBufferFormat = PixelFormat.R8G8B8A8.UNorm;
+            PresentationInterval = PresentInterval.Immediate;
+            DepthStencilFormat = DepthFormat.Depth24Stencil8;
+            MultiSampleCount = MSAALevel.None;
+            IsFullScreen = false;
+            RefreshRate = new Rational(60, 1); // by default
+            RenderTargetUsage = Usage.BackBuffer | Usage.RenderTargetOutput;
+            Flags = SwapChainFlags.None;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PresentationParameters" /> class with <see cref="PixelFormat.R8G8B8A8.UNorm"/>.
+        /// </summary>
+        /// <param name="backBufferWidth">Width of the back buffer.</param>
+        /// <param name="backBufferHeight">Height of the back buffer.</param>
+        /// <param name="deviceWindowHandle">The device window handle.</param>
+        public PresentationParameters(int backBufferWidth, int backBufferHeight, object deviceWindowHandle)
+            : this(backBufferWidth, backBufferHeight, deviceWindowHandle, PixelFormat.R8G8B8A8.UNorm)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PresentationParameters" /> class.
+        /// </summary>
+        /// <param name="backBufferWidth">Width of the back buffer.</param>
+        /// <param name="backBufferHeight">Height of the back buffer.</param>
+        /// <param name="deviceWindowHandle">The device window handle.</param>
+        /// <param name="backBufferFormat">The back buffer format.</param>
+        public PresentationParameters(int backBufferWidth, int backBufferHeight, object deviceWindowHandle, PixelFormat backBufferFormat)
+            : this()
+        {
+            BackBufferWidth = backBufferWidth;
+            BackBufferHeight = backBufferHeight;
+            DeviceWindowHandle = deviceWindowHandle;
+            BackBufferFormat = backBufferFormat;
+        }
+
+        #endregion
+
+        #region Methods
+
+        public PresentationParameters Clone()
         {
             return (PresentationParameters)MemberwiseClone();
         }
+
+        #endregion
     }
 }

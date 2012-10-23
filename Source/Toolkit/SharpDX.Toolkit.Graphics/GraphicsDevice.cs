@@ -111,37 +111,48 @@ namespace SharpDX.Toolkit.Graphics
         internal readonly bool needWorkAroundForUpdateSubResource;
 
         protected GraphicsDevice(DriverType type, DeviceCreationFlags flags = DeviceCreationFlags.None, params FeatureLevel[] featureLevels)
+            : this((featureLevels != null && featureLevels.Length > 0) ? new Device(type, flags, featureLevels) : new Device(type, flags))
         {
-            Device = ToDispose(featureLevels.Length > 0 ? new Device(type, flags, featureLevels) : new Device(type, flags));
-            IsDebugMode = (Device.CreationFlags & DeviceCreationFlags.Debug) != 0;
-            MainDevice = this;
-            Context = Device.ImmediateContext;
-            IsDeferred = false;
-            Features = new GraphicsDeviceFeatures(Device);
-
-            // Global cache for all input signatures inside a GraphicsDevice.
-            inputSignatureCache =  new Dictionary<InputSignatureKey, InputSignatureManager>();
-            inputLayoutDeviceCache =  new Dictionary<VertexInputLayout, InputLayoutPair>(new IdentityEqualityComparer<VertexInputLayout>());
-            inputLayoutContextCache = new Dictionary<VertexInputLayout, InputLayoutPair>(new IdentityEqualityComparer<VertexInputLayout>());
-            sharedDataPerDevice = new Dictionary<string, object>();
-
-            // Create default Effect pool
-            DefaultEffectPool = EffectPool.New(this, "Default");
-
-            // Create all default states
-            BlendStates = new BlendStateCollection(this);
-            DepthStencilStates = new DepthStencilStateCollection(this);
-            SamplerStates = new SamplerStateCollection(this);
-            RasterizerStates = new RasterizerStateCollection(this);
-
-            Initialize();
         }
 
         protected GraphicsDevice(GraphicsAdapter adapter, DeviceCreationFlags flags = DeviceCreationFlags.None, params FeatureLevel[] featureLevels)
+            : this((featureLevels != null && featureLevels.Length > 0) ? new Device(adapter, flags, featureLevels) : new Device(adapter, flags))
         {
-            Device = ToDispose(featureLevels.Length > 0 ? new Device(adapter, flags, featureLevels) : new Device(adapter, flags));
-            IsDebugMode = (Device.CreationFlags & DeviceCreationFlags.Debug) != 0;
+        }
+
+        protected GraphicsDevice(SharpDX.Direct3D11.Device existingDevice, GraphicsAdapter adapter = null)
+        {
+            Device = ToDispose(existingDevice);
             Adapter = adapter;
+
+            // If the adapter is null, then try to locate back the adapter
+            if (adapter == null)
+            {
+                try
+                {
+                    using (var dxgiDevice = Device.QueryInterface<DXGI.Device>())
+                    {
+                        using (var dxgiAdapter = dxgiDevice.Adapter)
+                        {
+                            var deviceId = dxgiAdapter.Description.DeviceId;
+
+                            foreach (var graphicsAdapter in GraphicsAdapter.Adapters)
+                            {
+                                if (deviceId == graphicsAdapter.Description.DeviceId)
+                                {
+                                    Adapter = graphicsAdapter;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                } 
+                catch (Exception ex)
+                {
+                }
+            }
+
+            IsDebugMode = (Device.CreationFlags & DeviceCreationFlags.Debug) != 0;
             MainDevice = this;
             Context = Device.ImmediateContext;
             IsDeferred = false;
@@ -161,13 +172,14 @@ namespace SharpDX.Toolkit.Graphics
             DepthStencilStates = new DepthStencilStateCollection(this);
             SamplerStates = new SamplerStateCollection(this);
             RasterizerStates = new RasterizerStateCollection(this);
-            
+
             Initialize();
         }
 
         protected GraphicsDevice(GraphicsDevice mainDevice, DeviceContext deferredContext)
         {
             Device = mainDevice.Device;
+            Adapter = mainDevice.Adapter;
             IsDebugMode = (Device.CreationFlags & DeviceCreationFlags.Debug) != 0;
             MainDevice = mainDevice;
             Context = deferredContext;
@@ -201,7 +213,10 @@ namespace SharpDX.Toolkit.Graphics
         private void Initialize()
         {
             // Default null VertexBuffers used to reset
-            resetVertexBuffersPointer = ToDispose(Utilities.AllocateClearedMemory(Utilities.SizeOf<IntPtr>() * InputAssemblerStage.VertexInputResourceSlotCount));
+            if (resetVertexBuffersPointer == IntPtr.Zero)
+            {
+                resetVertexBuffersPointer = ToDispose(Utilities.AllocateClearedMemory(Utilities.SizeOf<IntPtr>() * InputAssemblerStage.VertexInputResourceSlotCount));
+            }
 
             inputAssemblerStage = Context.InputAssembler;
             outputMergerStage = Context.OutputMerger;
@@ -239,6 +254,64 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <value>The current presenter.</value>
         public GraphicsPresenter Presenter { get; set; }
+
+        /// <summary>
+        /// Occurs when the device is going to be lost (for example before a reset).
+        /// </summary>
+        public event EventHandler<EventArgs> DeviceLost;
+
+        /// <summary>
+        /// Occurs when a device is reset and an application needs to recreate all dependent resources.
+        /// </summary>
+        public event EventHandler<EventArgs> DeviceReset;
+
+        /// <summary>
+        /// Occurs when a device is resetting.
+        /// </summary>
+        public event EventHandler<EventArgs> DeviceResetting;
+
+
+        /// <summary>
+        /// Gets the status of this device.
+        /// </summary>
+        public GraphicsDeviceStatus GraphicsDeviceStatus
+        {
+            get
+            {
+                var result = ((Device)MainDevice).GetDeviceRemovedReason();
+                if (result == DXGI.ResultCode.DeviceRemoved)
+                {
+                    return GraphicsDeviceStatus.Removed;
+                }
+
+                if (result == DXGI.ResultCode.DeviceReset)
+                {
+                    return GraphicsDeviceStatus.Reset;
+                }
+
+                if (result == DXGI.ResultCode.DeviceHung)
+                {
+                    return GraphicsDeviceStatus.Hung;
+                }
+
+                if (result == DXGI.ResultCode.DriverInternalError)
+                {
+                    return GraphicsDeviceStatus.InternalError;
+                }
+
+                if (result == DXGI.ResultCode.InvalidCall)
+                {
+                    return GraphicsDeviceStatus.InvalidCall;
+                }
+
+                if (result.Code < 0)
+                {
+                    return GraphicsDeviceStatus.Reset;
+                }
+
+                return GraphicsDeviceStatus.Normal;
+            }
+        }
 
         /// <summary>
         /// Clears a render target view by setting all the elements in a render target to one value.
@@ -630,6 +703,18 @@ namespace SharpDX.Toolkit.Graphics
         public void Flush()
         {
             Context.Flush();
+        }
+
+
+
+        /// <summary>
+        /// Creates a new <see cref="GraphicsDevice" /> from an existing <see cref="SharpDX.Direct3D11.Device" />.
+        /// </summary>
+        /// <param name="existingDevice">An existing device.</param>
+        /// <returns>A new instance of <see cref="GraphicsDevice" /></returns>
+        public static GraphicsDevice New(SharpDX.Direct3D11.Device existingDevice)
+        {
+            return new GraphicsDevice(existingDevice);
         }
 
         /// <summary>
@@ -1123,10 +1208,22 @@ namespace SharpDX.Toolkit.Graphics
             if (IsDeferred)
                 throw new InvalidOperationException("Cannot use Present on a deferred context");
 
-            if (Presenter == null)
-                throw new InvalidOperationException("No presenter currently setup for this instance. Presenter is null");
+            if (Presenter != null)
+            {
+                try
+                {
+                    Presenter.Present();
+                } 
+                catch (SharpDXException ex)
+                {
+                    if (ex.ResultCode == DXGI.ResultCode.DeviceReset || ex.ResultCode == DXGI.ResultCode.DeviceRemoved)
+                    {
+                        // TODO: Implement device reset / removed
+                    }
+                    throw;
+                }
 
-            Presenter.Present();
+            }
         }
 
         public static implicit operator Device(GraphicsDevice from)

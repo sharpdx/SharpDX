@@ -22,6 +22,7 @@
     <Compile Include="BlendStateCollection.cs" />
     <Compile Include="EffectConstantBufferKey.cs" />
     <Compile Include="EffectContentReader.cs" />
+    <Compile Include="GraphicsDeviceStatus.cs" />
     <Compile Include="GraphicsResourceContentReaderBase.cs" />
     <Compile Include="GraphicsWindow.cs" />
     <Compile Include="IGraphicsDeviceService.cs" />
