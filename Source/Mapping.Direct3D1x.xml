@@ -346,7 +346,9 @@
 
     <map method="ID3D10Device::GetCreationFlags" type="D3D10_CREATE_DEVICE_FLAG"/>
     <map method="ID3D11Device::GetCreationFlags" type="D3D11_CREATE_DEVICE_FLAG"/>
-
+    
+    <map method="ID3D(\d+)Device::GetDeviceRemovedReason" check="false"/>
+    
     <map method="ID3D(\d+)Device::CheckCounter" visibility="internal"/>
     <map method="ID3D(\d+)Device1?::Create.*" visibility="internal" />
     <map param="ID3D(\d+)Device1?::Create.*::pp.*" attribute="out fast" />
