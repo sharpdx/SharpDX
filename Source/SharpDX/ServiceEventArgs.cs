@@ -23,11 +23,14 @@ namespace SharpDX
 {
     public class ServiceEventArgs : EventArgs
     {
-        public ServiceEventArgs(object serviceObject)
+        public ServiceEventArgs(Type serviceType, object serviceInstance)
         {
-            Service = serviceObject;
+            ServiceType = serviceType;
+            Instance = serviceInstance;
         }
 
-        public object Service { get; private set; }
+        public Type ServiceType { get; private set; }
+
+        public object Instance { get; private set; }
     }
 }
