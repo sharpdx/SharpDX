@@ -38,11 +38,9 @@ namespace SharpDX.Toolkit
 #if !WIN8METRO
             return new GamePlatformDesktop(serices);
 #else
-            return null;
+            throw new NotImplementedException();
 #endif
         }
-
-        public abstract void Initialize();
 
         public object WindowContext { get; set; }
 
@@ -60,7 +58,7 @@ namespace SharpDX.Toolkit
 
         public event VoidAction Tick;
 
-        public GameWindow Window { get; protected set; }
+        public abstract GameWindow Window { get; }
 
         public bool IsBlockingRun { get; protected set; }
 

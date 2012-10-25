@@ -20,6 +20,8 @@
 #if !WIN8METRO
 using System;
 using System.Windows.Forms;
+
+using SharpDX.Toolkit.Graphics;
 using SharpDX.Windows;
 
 namespace SharpDX.Toolkit
@@ -29,9 +31,38 @@ namespace SharpDX.Toolkit
     /// </summary>
     internal class GameWindowDesktop : GameWindow
     {
-        internal GameWindowDesktop(object windowContext)
+        public Control Control;
+
+        internal GameWindowDesktop()
         {
-            windowContext = windowContext ?? new RenderForm("SharpDX.Toolkit.Game");
+        }
+
+        public override object NativeWindow
+        {
+            get
+            {
+                return Control;
+            }
+        }
+
+        public override void BeginScreenDeviceChange(bool willBeFullScreen)
+        {
+            
+        }
+
+        public override void EndScreenDeviceChange(int clientWidth, int clientHeight)
+        {
+            
+        }
+
+        protected internal override void SetSupportedOrientations(DisplayOrientation orientations)
+        {
+            // Desktop doesn't have orientation (unless on Windows 8?)
+        }
+
+        internal override void Initialize(object windowContext)
+        {
+            windowContext = windowContext ?? new GameWindowForm("SharpDX.Toolkit.Game");
             Control = windowContext as Control;
             if (Control == null)
             {
@@ -39,13 +70,34 @@ namespace SharpDX.Toolkit
             }
         }
 
-        public readonly Control Control;
-
-        public override object NativeWindow
+        public override bool AllowUserResizing
         {
             get
             {
-                return Control;
+                return (Control is GameWindowForm && ((GameWindowForm)Control).AllowUserResizing);
+            }
+            set
+            {
+                if (Control is GameWindowForm)
+                {
+                    ((GameWindowForm)Control).AllowUserResizing = value;
+                }
+            }
+        }
+
+        public override DrawingRectangle ClientBounds
+        {
+            get
+            {
+                return new DrawingRectangle(0, 0, Control.ClientSize.Width, Control.ClientSize.Height);
+            }
+        }
+
+        public override DisplayOrientation CurrentOrientation
+        {
+            get
+            {
+                return DisplayOrientation.Default;
             }
         }
 

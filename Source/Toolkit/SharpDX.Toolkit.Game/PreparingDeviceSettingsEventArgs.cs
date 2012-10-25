@@ -19,52 +19,27 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 
 namespace SharpDX.Toolkit
 {
     /// <summary>
-    /// Parameters used when launching an application.
+    /// Describes settings to apply before preparing a device for creation, used by <see cref="GraphicsDeviceManager.OnPreparingDeviceSettings"/>.
     /// </summary>
-    public class LaunchParameters : Dictionary<string, string>
+    public class PreparingDeviceSettingsEventArgs : EventArgs
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="LaunchParameters" /> class.
+        /// Initializes a new instance of the <see cref="PreparingDeviceSettingsEventArgs" /> class.
         /// </summary>
-        public LaunchParameters()
+        /// <param name="graphicsDeviceInformation">The graphics device information.</param>
+        public PreparingDeviceSettingsEventArgs(GraphicsDeviceInformation graphicsDeviceInformation)
         {
-#if !WIN8METRO
-            var args = Environment.GetCommandLineArgs();
-
-            if (args.Length > 1)
-            {
-                var trimChars = new[] { '/', '-' };
-
-                for (int i = 1; i < args.Length; i++)
-                {
-                    var argument = args[i].TrimStart(trimChars);
-                    string key;
-                    var value = string.Empty;
-
-                    int index = argument.IndexOf(':');
-                    if (index != -1)
-                    {
-                        key = argument.Substring(0, index);
-                        value = argument.Substring(index + 1);
-                    }
-                    else
-                    {
-                        key = argument;
-                    }
-
-                    if (!ContainsKey(key) && (key != string.Empty))
-                    {
-                        Add(key, value);
-                    }
-                }
-            }
-#endif
+            GraphicsDeviceInformation = graphicsDeviceInformation;
         }
-    }
 
+        /// <summary>
+        /// Gets the graphics device information.
+        /// </summary>
+        /// <value>The graphics device information.</value>
+        public GraphicsDeviceInformation GraphicsDeviceInformation { get; private set; }
+    }
 }

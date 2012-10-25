@@ -108,7 +108,9 @@ foreach (var sharpInterface in Namespace.Interfaces)
 <#+
 		// Include Inner structure
 		foreach (var innerInterface in sharpInterface.InnerInterfaces) {
-#>            <#= innerInterface.PropertyAccesName #> = new <#= innerInterface.QualifiedName #>(this.NativePointer);		
+#>            if (<#= innerInterface.PropertyAccesName #> == null) 
+                <#= innerInterface.PropertyAccesName #> = new <#= innerInterface.QualifiedName #>(IntPtr.Zero);
+            <#= innerInterface.PropertyAccesName #>.NativePointer = NativePointer;
 <#+		
 		}
 #>        }

@@ -116,7 +116,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         protected GraphicsDevice(GraphicsAdapter adapter, DeviceCreationFlags flags = DeviceCreationFlags.None, params FeatureLevel[] featureLevels)
-            : this((featureLevels != null && featureLevels.Length > 0) ? new Device(adapter, flags, featureLevels) : new Device(adapter, flags))
+            : this((featureLevels != null && featureLevels.Length > 0) ? new Device(adapter, flags, featureLevels) : new Device(adapter, flags), adapter)
         {
         }
 

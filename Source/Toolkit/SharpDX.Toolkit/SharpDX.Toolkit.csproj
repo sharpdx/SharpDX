@@ -23,6 +23,7 @@
     <Compile Include="Diagnostics\LogMessage.cs" />
     <Compile Include="Diagnostics\LogMessageType.cs" />
     <Compile Include="Diagnostics\Logger.cs" />
+    <Compile Include="Graphics\DisplayOrientation.cs" />
     <Compile Include="Graphics\SpriteFontData.AngelCodeBMFontLoader.cs" />
     <Compile Include="Graphics\SpriteFontData.MakeSpriteFontLoader.cs" />
     <Compile Include="Graphics\SpriteFontData.Kerning.cs" />

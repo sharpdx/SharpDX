@@ -19,6 +19,8 @@
 // THE SOFTWARE.
 using System;
 
+using SharpDX.Toolkit.Graphics;
+
 namespace SharpDX.Toolkit
 {
     /// <summary>
@@ -26,8 +28,77 @@ namespace SharpDX.Toolkit
     /// </summary>
     public abstract class GameWindow
     {
+        #region Public Events
+
+        public event EventHandler<EventArgs> ClientSizeChanged;
+
+        public event EventHandler<EventArgs> OrientationChanged;
+
+        #endregion
+
+        #region Public Properties
+
+        public abstract bool AllowUserResizing { get; set; }
+
+        /// <summary>
+        /// Gets the client bounds.
+        /// </summary>
+        /// <value>The client bounds.</value>
+        public abstract DrawingRectangle ClientBounds { get; }
+
+        /// <summary>
+        /// Gets the current orientation.
+        /// </summary>
+        /// <value>The current orientation.</value>
+        public abstract DisplayOrientation CurrentOrientation { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is minimized.
+        /// </summary>
+        /// <value><c>true</c> if this instance is minimized; otherwise, <c>false</c>.</value>
+        public abstract bool IsMinimized { get; }
+
+        /// <summary>
+        /// Gets the native window.
+        /// </summary>
+        /// <value>The native window.</value>
         public abstract object NativeWindow { get; }
 
-        public abstract bool IsMinimized { get; }
+        #endregion
+
+        #region Public Methods and Operators
+
+        public abstract void BeginScreenDeviceChange(bool willBeFullScreen);
+
+        public void EndScreenDeviceChange()
+        {
+            EndScreenDeviceChange(ClientBounds.Width, ClientBounds.Height);
+        }
+
+        public abstract void EndScreenDeviceChange(int clientWidth, int clientHeight);
+
+        #endregion
+
+        protected void OnClientSizeChanged(EventArgs e)
+        {
+            EventHandler<EventArgs> handler = ClientSizeChanged;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
+        protected void OnOrientationChanged(EventArgs e)
+        {
+            EventHandler<EventArgs> handler = OrientationChanged;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
+        protected internal abstract void SetSupportedOrientations(DisplayOrientation orientations);
+
+        internal abstract void Initialize(object windowContext);
     }
 }

@@ -84,6 +84,8 @@ namespace SharpDX.Toolkit
             gameTime = new GameTime();
             totalGameTime = new TimeSpan();
             timer = new TimerTick();
+            IsFixedTimeStep = true;
+            maximumElapsedTime = TimeSpan.FromMilliseconds(500.0);
             TargetElapsedTime = TimeSpan.FromTicks(10000000 / 60); // target elapsed time is by default 60Hz
             lastUpdateCount = new int[4];
             nextLastUpdateCountIndex = 0;
@@ -277,7 +279,7 @@ namespace SharpDX.Toolkit
         /// </summary>
         /// <param name="windowContext">The window Context.</param>
         /// <exception cref="System.InvalidOperationException">Cannot run this instance while it is already running</exception>
-        public void Run(object windowContext)
+        public void Run(object windowContext = null)
         {
             if (IsRunning)
             {
@@ -287,9 +289,8 @@ namespace SharpDX.Toolkit
             // Create the game platform for the current platform
             gamePlatform.Tick += Tick;
 
-            // Setup the window context and initialize the platform
-            gamePlatform.WindowContext = windowContext;
-            gamePlatform.Initialize();
+            // Setup the window context
+            Window.Initialize(windowContext);
 
             // Gets the graphics device manager
             graphicsDeviceManager = Services.GetService(typeof(IGraphicsDeviceManager)) as IGraphicsDeviceManager;
@@ -323,6 +324,7 @@ namespace SharpDX.Toolkit
 
                 BeginRun();
 
+                timer.Reset();
                 gameTime.Update(totalGameTime, TimeSpan.Zero, false);
                 gameTime.FrameCount = 0;
 
@@ -396,6 +398,9 @@ namespace SharpDX.Toolkit
             }
 
             bool suppressNextDraw = true;
+            int updateCount = 1;
+            var singleFrameElapsedTime = elapsedAdjustedTime;
+
             if (IsFixedTimeStep)
             {
                 // If the rounded TargetElapsedTime is equivalent to current ElapsedAdjustedTime
@@ -409,9 +414,9 @@ namespace SharpDX.Toolkit
                 accumulatedElapsedGameTime += elapsedAdjustedTime;
 
                 // Calculate the number of update to issue
-                var updateCount = (int)(accumulatedElapsedGameTime.Ticks / TargetElapsedTime.Ticks);
+                updateCount = (int)(accumulatedElapsedGameTime.Ticks / TargetElapsedTime.Ticks);
 
-                // If there is no need for update, then 
+                // If there is no need for update, then exit
                 if (updateCount == 0)
                 {
                     return;
@@ -431,51 +436,33 @@ namespace SharpDX.Toolkit
                 // Test when we are running slowly
                 drawRunningSlowly = updateCountMean > updateCountAverageSlowLimit;
 
-                // We have called updateCount times, so we can substract this from accumulated elapsed game time
+                // We are going to call Update updateCount times, so we can substract this from accumulated elapsed game time
                 accumulatedElapsedGameTime = new TimeSpan(accumulatedElapsedGameTime.Ticks - (updateCount * TargetElapsedTime.Ticks));
-
-                // Reset the time of the next frame
-                for (lastFrameElapsedGameTime = TimeSpan.Zero; updateCount > 0 && !isExiting; updateCount--)
-                {
-                    gameTime.Update(totalGameTime, TargetElapsedTime, drawRunningSlowly);
-                    try
-                    {
-                        Update(gameTime);
-
-                        // If there is no exception, then we can draw the frame
-                        suppressNextDraw &= suppressDraw;
-                        suppressDraw = false;
-                    }
-                    finally
-                    {
-                        lastFrameElapsedGameTime += TargetElapsedTime;
-                        totalGameTime += TargetElapsedTime;
-                    }
-                }
+                singleFrameElapsedTime = TargetElapsedTime;
             }
             else
             {
-                drawRunningSlowly = false;
                 Array.Clear(lastUpdateCount, 0, lastUpdateCount.Length);
                 nextLastUpdateCountIndex = 0;
+                drawRunningSlowly = false;
+            }
 
-                if (!isExiting)
+            // Reset the time of the next frame
+            for (lastFrameElapsedGameTime = TimeSpan.Zero; updateCount > 0 && !isExiting; updateCount--)
+            {
+                gameTime.Update(totalGameTime, singleFrameElapsedTime, drawRunningSlowly);
+                try
                 {
-                    lastFrameElapsedGameTime = elapsedAdjustedTime;
-                    gameTime.Update(totalGameTime, elapsedAdjustedTime, false);
+                    Update(gameTime);
 
-                    try
-                    {
-                        Update(gameTime);
-
-                        // If there is no exception, then we can draw the frame
-                        suppressNextDraw &= suppressDraw;
-                        suppressDraw = false;
-                    }
-                    finally
-                    {
-                        totalGameTime += elapsedAdjustedTime;
-                    }
+                    // If there is no exception, then we can draw the frame
+                    suppressNextDraw &= suppressDraw;
+                    suppressDraw = false;
+                }
+                finally
+                {
+                    lastFrameElapsedGameTime += singleFrameElapsedTime;
+                    totalGameTime += singleFrameElapsedTime;
                 }
             }
 
@@ -855,16 +842,6 @@ namespace SharpDX.Toolkit
             {
                 handler(this, e);
             }
-        }
-
-        private void WindowOnDraw(object sender, EventArgs eventArgs)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void WindowOnUpdate(object sender, EventArgs eventArgs)
-        {
-            throw new NotImplementedException();
         }
 
         private void drawableGameSystem_DrawOrderChanged(object sender, EventArgs e)

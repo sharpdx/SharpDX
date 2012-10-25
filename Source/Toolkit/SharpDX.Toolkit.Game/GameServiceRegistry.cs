@@ -86,7 +86,7 @@ namespace SharpDX.Toolkit
                     throw new ArgumentException("Service is already registered", "type");
                 registeredService.Add(type, provider);
             }
-            OnServiceAdded(new ServiceEventArgs(provider));
+            OnServiceAdded(new ServiceEventArgs(type, provider));
         }
 
         /// <summary>Removes the object providing a specified service.</summary>
@@ -103,7 +103,7 @@ namespace SharpDX.Toolkit
                     registeredService.Remove(type);
             }
             if (oldService != null)
-                OnServiceRemoved(new ServiceEventArgs(oldService));
+                OnServiceRemoved(new ServiceEventArgs(type, oldService));
         }
 
         #endregion

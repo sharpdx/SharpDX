@@ -17,52 +17,45 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+#if !WIN8METRO
+using System.Windows.Forms;
 
-using System;
-using System.Diagnostics;
-using System.IO;
-using SharpDX;
-using SharpDX.Direct3D;
-using SharpDX.Toolkit;
-using SharpDX.Toolkit.Content;
+using SharpDX.Windows;
 
-namespace MiniTri
+namespace SharpDX.Toolkit
 {
-    // Use Toolkit namespace inside your namepsace in order to make a priority over Direct3D11/DXGI namespaces.
-    using SharpDX.Toolkit.Graphics;
-
-    /// <summary>
-    /// Simple HelloWorld application using SharpDX.Toolkit.
-    /// </summary>
-    class Program : Game
+    internal class GameWindowForm : RenderForm
     {
-        private GraphicsDeviceManager graphicsDeviceManager;
+        private bool allowUserResizing;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Program" /> class.
-        /// </summary>
-        public Program()
+        private bool isFullScreenMaximized;
+
+        public GameWindowForm()
         {
-            // Creates a graphics manager
-            graphicsDeviceManager = new GraphicsDeviceManager(this);
         }
 
-        protected override void Draw(GameTime gameTime)
+        public GameWindowForm(string text)
+            : base(text)
         {
-            base.Draw(gameTime);
-
-            // Clears the screen
-            GraphicsDevice.Clear(GraphicsDevice.BackBuffer, Color.CornflowerBlue);
         }
 
-        /// <summary>
-        /// Defines the entry point of the application.
-        /// </summary>
-        [STAThread]
-        static void Main()
+        internal bool AllowUserResizing
         {
-            var program = new Program();
-            program.Run();
+            get
+            {
+                return allowUserResizing;
+            }
+            set
+            {
+                if (allowUserResizing != value)
+                {
+                    allowUserResizing = value;
+                    MaximizeBox = !allowUserResizing;
+                    FormBorderStyle = allowUserResizing ? FormBorderStyle.FixedSingle : FormBorderStyle.Sizable;
+                }
+            }
         }
     }
 }
+
+#endif

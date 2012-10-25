@@ -24,7 +24,7 @@
     <Compile Include="EffectContentReader.cs" />
     <Compile Include="GraphicsDeviceStatus.cs" />
     <Compile Include="GraphicsResourceContentReaderBase.cs" />
-    <Compile Include="GraphicsWindow.cs" />
+    <Compile Include="GraphicsPresenterForSwapChain.cs" />
     <Compile Include="IGraphicsDeviceService.cs" />
     <Compile Include="ImageContentReader.cs" />
     <Compile Include="InputSignatureKey.cs" />

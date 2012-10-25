@@ -20,9 +20,10 @@
 
 using System;
 using System.Collections.Generic;
-using SharpDX.DXGI;
+
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
+using SharpDX.DXGI;
 
 namespace SharpDX.Toolkit.Graphics
 {
@@ -34,12 +35,11 @@ namespace SharpDX.Toolkit.Graphics
     /// <unmanaged-short>IDXGIAdapter1</unmanaged-short>	
     public class GraphicsAdapter : Component
     {
-        private static readonly DisposeCollector StaticCollector;
+        private static DisposeCollector staticCollector;
         private readonly Adapter1 adapter;
         private readonly int adapterOrdinal;
-        //private AdapterDescription1 adapterDescription;
-        private Output[] outputs;
-        private OutputDescription outputDescription;
+        private readonly Output[] outputs;
+        private readonly OutputDescription outputDescription;
 
         /// <summary>
         /// Default PixelFormat used.
@@ -47,33 +47,45 @@ namespace SharpDX.Toolkit.Graphics
         public PixelFormat DefaultFormat = PixelFormat.R8G8B8A8.UNorm;
 
         /// <summary>
-        /// Static initializing of GraphicsAdapter.
+        /// Initializes static members of the <see cref="GraphicsAdapter" /> class.
         /// </summary>
         static GraphicsAdapter()
         {
-            StaticCollector = new DisposeCollector();
+            Initialize(new Factory1());
+        }
 
-            // DXGI Factory
-            Factory = new Factory1();
-            StaticCollector.Collect(Factory);
+        /// <summary>
+        /// Initializes all adapters with the specified factory.
+        /// </summary>
+        /// <param name="factory1">The factory1.</param>
+        internal static void Initialize(Factory1 factory1)
+        {
+            if (staticCollector != null)
+            {
+                staticCollector.Dispose();
+            }
+
+            staticCollector = new DisposeCollector();
+            Factory = factory1;
+            staticCollector.Collect(Factory);
 
             int countAdapters = Factory.GetAdapterCount1();
             var adapters = new List<GraphicsAdapter>();
             for (int i = 0; i < countAdapters; i++)
             {
                 var adapter = new GraphicsAdapter(i);
-                StaticCollector.Collect(adapter);
+                staticCollector.Collect(adapter);
                 adapters.Add(adapter);
             }
 
             Default = adapters[0];
-            Adapters = adapters.ToArray();            
+            Adapters = adapters.ToArray();
         }
 
         /// <summary>
-        /// Constructor from adapter ordinal
+        /// Initializes a new instance of the <see cref="GraphicsAdapter" /> class.
         /// </summary>
-        /// <param name="adapterOrdinal"></param>
+        /// <param name="adapterOrdinal">The adapter ordinal.</param>
         private GraphicsAdapter(int adapterOrdinal)
         {
             this.adapterOrdinal = adapterOrdinal;
@@ -81,24 +93,26 @@ namespace SharpDX.Toolkit.Graphics
             Description = adapter.Description1;
             outputs = adapter.Outputs;
             SupportedDisplayModes = new DisplayMode[0];
-            Initialize();
-        }
 
-        private void Initialize()
-        {
+            // Enumerate outputs if any.
             if (outputs != null && outputs.Length > 0)
             {
                 outputDescription = outputs[0].Description;
                 SupportedDisplayModes = GetSupportedDisplayModes();
                 foreach (var output in outputs)
+                {
                     ToDispose(output);
+                }
+
+                // Stupid DXGI, there is no way to get the DXGI.Format, nor the refresh rate.
+                CurrentDisplayMode = new DisplayMode(new ModeDescription(outputDescription.DesktopBounds.Width, outputDescription.DesktopBounds.Height, new Rational(60, 1), Format.R8G8B8A8_UNorm));
             }
         }
 
         /// <summary>
         /// Gets the <see cref="Factory1"/> used by all GraphicsAdapter.
         /// </summary>
-        public static readonly SharpDX.DXGI.Factory1 Factory;
+        public static SharpDX.DXGI.Factory1 Factory { get; private set; }
 
         /// <summary>
         /// Return the description of this adapter
@@ -136,14 +150,20 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
+        /// Gets the current display mode.
+        /// </summary>
+        /// <value>The current display mode.</value>
+        public DisplayMode CurrentDisplayMode { get; private set; }
+
+        /// <summary>
         /// Collection of available adapters on the system.
         /// </summary>
-        public static readonly GraphicsAdapter[] Adapters;
+        public static GraphicsAdapter[] Adapters { get; private set;}
 
         /// <summary>
         /// Gets the default adapter.
         /// </summary>
-        public static readonly GraphicsAdapter Default;
+        public static GraphicsAdapter Default { get; private set; }
 
         /// <summary>
         /// Returns a collection of supported display modes for the current adapter.
@@ -199,7 +219,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         internal static void DisposeStatic()
         {
-            ((IDisposable)StaticCollector).Dispose();
+            ((IDisposable)staticCollector).Dispose();
         }
 
         /// <summary>

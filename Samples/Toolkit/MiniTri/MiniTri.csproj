@@ -60,6 +60,10 @@
       <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
       <Name>SharpDX</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Source\Toolkit\SharpDX.Toolkit.Game\SharpDX.Toolkit.Game.csproj">
+      <Project>{B2516A23-1A99-4263-964A-B820FD07FA80}</Project>
+      <Name>SharpDX.Toolkit.Game</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Source\Toolkit\SharpDX.Toolkit.Graphics\SharpDX.Toolkit.Graphics.csproj">
       <Project>{53ef08a7-4224-434c-a62c-f29807c1c750}</Project>
       <Name>SharpDX.Toolkit.Graphics</Name>

@@ -18,26 +18,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 #if !WIN8METRO
+using System.Collections.Generic;
 using System.Windows.Forms;
+
+using SharpDX.DXGI;
+using SharpDX.Direct3D;
+using SharpDX.Direct3D11;
+using SharpDX.Toolkit.Graphics;
 using SharpDX.Windows;
 
 namespace SharpDX.Toolkit
 {
-    internal class GamePlatformDesktop : GamePlatform
+    internal class GamePlatformDesktop : GamePlatform, IGraphicsDeviceFactory
     {
-        private GameWindowDesktop gameWindowDesktop;
+        private readonly GameWindowDesktop gameWindowDesktop;
 
         private bool isMouseVisible;
 
         public GamePlatformDesktop(IServiceRegistry services) : base(services)
         {
             IsBlockingRun = true;
+            gameWindowDesktop = new GameWindowDesktop();
+            services.AddService(typeof(IGraphicsDeviceFactory), this);
         }
 
-        public override void Initialize()
+        public override GameWindow Window
         {
-            gameWindowDesktop = new GameWindowDesktop(WindowContext);
-            Window = gameWindowDesktop;
+            get
+            {
+                return gameWindowDesktop;
+            }
         }
 
         public override bool IsMouseVisible
@@ -46,6 +56,7 @@ namespace SharpDX.Toolkit
             {
                 return isMouseVisible;
             }
+
             set
             {
                 isMouseVisible = value;
@@ -62,6 +73,44 @@ namespace SharpDX.Toolkit
             gameWindowDesktop.Control.Dispose();
 
             base.Exit();
+        }
+
+        public List<GraphicsDeviceInformation> FindBestDevices()
+        {
+            var graphicsDeviceInfos = new List<GraphicsDeviceInformation>();
+            foreach (var graphicsAdapter in GraphicsAdapter.Adapters)
+            {
+                // Get display mode for the particular width, height, pixelformat
+                foreach (var displayMode in graphicsAdapter.SupportedDisplayModes)
+                {
+                    var deviceInfo = new GraphicsDeviceInformation
+                        {
+                            Adapter = graphicsAdapter,
+                            GraphicsProfile = FeatureLevel.Level_11_0,
+                            PresentationParameters =
+                                {
+                                    BackBufferWidth = displayMode.Width,
+                                    BackBufferHeight = displayMode.Height,
+                                    BackBufferFormat = displayMode.Format,
+                                    RefreshRate = displayMode.RefreshRate,
+                                    PresentationInterval = PresentInterval.Default,
+                                    RenderTargetUsage = Usage.BackBuffer | Usage.RenderTargetOutput,
+                                    DeviceWindowHandle = gameWindowDesktop.Control
+                                }
+                        };
+
+                    graphicsDeviceInfos.Add(deviceInfo);
+                }
+            }
+            return graphicsDeviceInfos;
+        }
+
+        public GraphicsDevice CreateDevice(GraphicsDeviceInformation deviceInformation)
+        {
+            var device = GraphicsDevice.New(deviceInformation.Adapter);
+            device.Presenter = GraphicsPresenter.New(device, deviceInformation.PresentationParameters);
+            gameWindowDesktop.Control.ClientSize = new System.Drawing.Size(deviceInformation.PresentationParameters.BackBufferWidth, deviceInformation.PresentationParameters.BackBufferHeight);
+            return device;
         }
     }
 }
