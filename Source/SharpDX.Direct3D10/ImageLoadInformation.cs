@@ -26,6 +26,21 @@ namespace SharpDX.Direct3D10
         /// <summary>
         /// The default value for load options.
         /// </summary>
-        public const int FileDefaultValue = -1;        
+        public const int FileDefaultValue = -1;
+
+        /// <summary>
+        /// Gets an ImageLoadInformation that is setup with all default values (<see cref="FileDefaultValue"/>).
+        /// </summary>
+        public static readonly ImageLoadInformation Default = GetDefault();
+
+        private static ImageLoadInformation GetDefault()
+        {
+            var value = default(ImageLoadInformation);
+            unsafe
+            {
+                Utilities.ClearMemory(new IntPtr(&value), 0xFF, Utilities.SizeOf<ImageLoadInformation>());
+            }
+            return value;
+        }
     }
 }
