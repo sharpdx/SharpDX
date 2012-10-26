@@ -51,7 +51,12 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         static GraphicsAdapter()
         {
+#if DIRECTX11_1
+            using (var factory = new Factory1())
+                Initialize(factory.QueryInterface<Factory2>());
+#else
             Initialize(new Factory1());
+#endif
         }
 
         /// <summary>

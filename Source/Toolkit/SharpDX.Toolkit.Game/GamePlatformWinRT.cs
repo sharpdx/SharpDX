@@ -17,45 +17,42 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if !WIN8METRO
+#if WIN8METRO
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Windows.Forms;
 
 using SharpDX.DXGI;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.Toolkit.Graphics;
-using SharpDX.Windows;
+using Windows.ApplicationModel;
 
 namespace SharpDX.Toolkit
 {
-    internal class GamePlatformDesktop : GamePlatform, IGraphicsDeviceFactory
+    internal class GamePlatformWinRT : GamePlatform, IGraphicsDeviceFactory
     {
-        private readonly GameWindowDesktop gameWindowDesktop;
+        private readonly GameWindowWinRT gameWindowWinRT;
 
         private bool isMouseVisible;
 
-        public GamePlatformDesktop(IServiceRegistry services) : base(services)
+        public GamePlatformWinRT(IServiceRegistry services) : base(services)
         {
-            IsBlockingRun = true;
-            gameWindowDesktop = new GameWindowDesktop();
+            gameWindowWinRT = new GameWindowWinRT();
             services.AddService(typeof(IGraphicsDeviceFactory), this);
         }
 
         public override string GetDefaultAppDirectory()
         {
-            var assemblyUri = new Uri(Assembly.GetEntryAssembly().CodeBase);
-            return Path.GetDirectoryName(assemblyUri.LocalPath);
+            return Path.GetDirectoryName(Package.Current.InstalledLocation.Path);
         }
 
         public override GameWindow Window
         {
             get
             {
-                return gameWindowDesktop;
+                return gameWindowWinRT;
             }
         }
 
@@ -74,19 +71,24 @@ namespace SharpDX.Toolkit
 
         public override void Run(object windowContext, VoidAction initCallback, VoidAction tickCallback)
         {
+            // If window context is null under WinRT, then this is a non-XAML application
+            IsBlockingRun = windowContext == null;
+
             // Initialize the window
             Window.Initialize(windowContext);
 
-            // Initialize the init callback
-            initCallback();
-
-            // Run the rendering loop
-            RenderLoop.Run((Control)Window.NativeWindow, new RenderLoop.RenderCallback(tickCallback));
+            if (windowContext == null)
+            {
+                gameWindowWinRT.RunCoreWindow(initCallback, tickCallback);
+            }
         }
 
         public override void Exit()
         {
-            gameWindowDesktop.Control.Dispose();
+            if (gameWindowWinRT.CoreWindow != null)
+            {
+                gameWindowWinRT.CoreWindow.Close();
+            }
 
             base.Exit();
         }
@@ -111,7 +113,8 @@ namespace SharpDX.Toolkit
                                     RefreshRate = displayMode.RefreshRate,
                                     PresentationInterval = PresentInterval.Default,
                                     RenderTargetUsage = Usage.BackBuffer | Usage.RenderTargetOutput,
-                                    DeviceWindowHandle = gameWindowDesktop.Control
+                                    DeviceWindowHandle = gameWindowWinRT.CoreWindow,
+                                    IsFullScreen = true,
                                 }
                         };
 
@@ -125,7 +128,6 @@ namespace SharpDX.Toolkit
         {
             var device = GraphicsDevice.New(deviceInformation.Adapter);
             device.Presenter = new SwapChainGraphicsPresenter(device, deviceInformation.PresentationParameters);
-            gameWindowDesktop.Control.ClientSize = new System.Drawing.Size(deviceInformation.PresentationParameters.BackBufferWidth, deviceInformation.PresentationParameters.BackBufferHeight);
             return device;
         }
     }

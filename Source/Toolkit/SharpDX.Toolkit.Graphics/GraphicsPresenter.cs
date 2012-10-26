@@ -68,21 +68,6 @@ namespace SharpDX.Toolkit.Graphics
         public abstract object NativePresenter { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GraphicsPresenter" /> class.
-        /// </summary>
-        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
-        /// <param name="presentationParameters">The presentation parameters </param>
-        /// <returns>A new instance of the <see cref="GraphicsPresenter" /> class.</returns>
-        public static GraphicsPresenter New(GraphicsDevice device, PresentationParameters presentationParameters)
-        {
-#if WIN8METRO
-            throw new NotImplementedException(); 
-#else
-            return new GraphicsPresenterForSwapChain(device, presentationParameters);
-#endif
-        }
-
-        /// <summary>
         /// Gets or sets fullscreen mode for this presenter.
         /// </summary>
         /// <remarks>

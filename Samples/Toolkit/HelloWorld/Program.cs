@@ -19,49 +19,25 @@
 // THE SOFTWARE.
 
 using System;
-using System.Diagnostics;
-using System.IO;
-using SharpDX;
-using SharpDX.Direct3D;
-using SharpDX.Toolkit;
-using SharpDX.Toolkit.Content;
 
-namespace MiniTri
+namespace HelloWorld
 {
-    // Use Toolkit namespace inside your namepsace in order to make a priority over Direct3D11/DXGI namespaces.
-    using SharpDX.Toolkit.Graphics;
-
     /// <summary>
     /// Simple HelloWorld application using SharpDX.Toolkit.
     /// </summary>
-    class Program : Game
+    class Program
     {
-        private GraphicsDeviceManager graphicsDeviceManager;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Program" /> class.
-        /// </summary>
-        public Program()
-        {
-            // Creates a graphics manager
-            graphicsDeviceManager = new GraphicsDeviceManager(this);
-        }
-
-        protected override void Draw(GameTime gameTime)
-        {
-            base.Draw(gameTime);
-
-            // Clears the screen
-            GraphicsDevice.Clear(GraphicsDevice.BackBuffer, Color.CornflowerBlue);
-        }
-
         /// <summary>
         /// Defines the entry point of the application.
         /// </summary>
+#if NETFX_CORE
+        [MTAThread]
+#else
         [STAThread]
+#endif
         static void Main()
         {
-            var program = new Program();
+            var program = new HelloWorldGame();
             program.Run();
         }
     }

@@ -97,6 +97,8 @@ namespace SharpDX.Toolkit
             }
         }
 
+        public abstract bool IsFullScreenMandatory { get; }
+
         protected internal abstract void SetSupportedOrientations(DisplayOrientation orientations);
 
         internal abstract void Initialize(object windowContext);

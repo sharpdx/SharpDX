@@ -17,23 +17,29 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if !WIN8METRO
-using System;
-using System.Windows.Forms;
+#if WIN8METRO
 
 using SharpDX.Toolkit.Graphics;
-using SharpDX.Windows;
+
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
+using Windows.Graphics.Display;
 
 namespace SharpDX.Toolkit
 {
     /// <summary>
     /// An abstract window.
     /// </summary>
-    internal class GameWindowDesktop : GameWindow
+    internal class GameWindowWinRT : GameWindow, IFrameworkViewSource, IFrameworkView
     {
-        public Control Control;
+        private object nativeWindow;
 
-        internal GameWindowDesktop()
+        internal CoreWindow CoreWindow;
+
+        private VoidAction initCallback;
+        private VoidAction tickCallback;
+
+        internal GameWindowWinRT()
         {
         }
 
@@ -41,7 +47,7 @@ namespace SharpDX.Toolkit
         {
             get
             {
-                return Control;
+                return nativeWindow;
             }
         }
 
@@ -59,7 +65,7 @@ namespace SharpDX.Toolkit
         {
             get
             {
-                return false;
+                return true;
             }
         }
 
@@ -70,26 +76,22 @@ namespace SharpDX.Toolkit
 
         internal override void Initialize(object windowContext)
         {
-            windowContext = windowContext ?? new GameWindowForm("SharpDX.Toolkit.Game");
-            Control = windowContext as Control;
-            if (Control == null)
-            {
-                throw new NotSupportedException("Unsupported window context. Unable to create game window. Only System.Windows.Control subclass are supported");
-            }
+            nativeWindow = windowContext;
+        }
+
+        IFrameworkView IFrameworkViewSource.CreateView()
+        {
+            return this;
         }
 
         public override bool AllowUserResizing
         {
             get
             {
-                return (Control is GameWindowForm && ((GameWindowForm)Control).AllowUserResizing);
+                return false;
             }
             set
             {
-                if (Control is GameWindowForm)
-                {
-                    ((GameWindowForm)Control).AllowUserResizing = value;
-                }
             }
         }
 
@@ -97,7 +99,12 @@ namespace SharpDX.Toolkit
         {
             get
             {
-                return new DrawingRectangle(0, 0, Control.ClientSize.Width, Control.ClientSize.Height);
+                if (CoreWindow != null)
+                {
+                    return new DrawingRectangle(0, 0, (int)(CoreWindow.Bounds.Width * DisplayProperties.LogicalDpi / 96.0), (int)(CoreWindow.Bounds.Height * DisplayProperties.LogicalDpi / 96.0));
+                }
+
+                return DrawingRectangle.Empty;
             }
         }
 
@@ -113,15 +120,60 @@ namespace SharpDX.Toolkit
         {
             get
             {
-                var form  = Control as Form;
-                if (form != null)
-                {
-                    return form.WindowState == FormWindowState.Minimized;
-                }
-
-                // Check for non-form control
                 return false;
             }
+        }
+
+        public void RunCoreWindow(VoidAction initCallback, VoidAction tickCallback)
+        {
+            this.initCallback = initCallback;
+            this.tickCallback = tickCallback;
+
+            CoreApplication.Run(this);
+        }
+
+        void IFrameworkView.Initialize(CoreApplicationView applicationView)
+        {
+            
+        }
+
+        void IFrameworkView.SetWindow(CoreWindow window)
+        {
+            nativeWindow = window;
+            CoreWindow = window;
+
+            // Call the init callback once the window is activated
+            initCallback();
+        }
+
+        void IFrameworkView.Load(string entryPoint)
+        {
+        }
+
+        void IFrameworkView.Run()
+        {
+            // Specify the cursor type as the standard arrow cursor.
+            // CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
+
+            // Activate the application window, making it visible and enabling it to receive events.
+            CoreWindow.Activate();
+
+            bool windowIsClosed = false;
+
+            CoreWindow.Closed += (sender, args) => windowIsClosed = true;
+
+            // Enter the render loop.  Note that Metro style apps should never exit.
+            while (!windowIsClosed)
+            {
+                // Process events incoming to the window.
+                CoreWindow.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessAllIfPresent);
+
+                tickCallback();
+            }
+        }
+
+        void IFrameworkView.Uninitialize()
+        {
         }
     }
 }

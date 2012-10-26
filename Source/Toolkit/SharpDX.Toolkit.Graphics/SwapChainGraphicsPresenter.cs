@@ -19,7 +19,10 @@
 // THE SOFTWARE.
 
 using System;
-#if !WIN8METRO
+#if WIN8METRO
+using Windows.UI.Core;
+using Windows.Graphics.Display;
+#else
 using System.Windows.Forms;
 #endif
 
@@ -30,13 +33,13 @@ namespace SharpDX.Toolkit.Graphics
     /// <summary>
     /// Graphics presenter for SwapChain.
     /// </summary>
-    internal class GraphicsPresenterForSwapChain : GraphicsPresenter
+    public class SwapChainGraphicsPresenter : GraphicsPresenter
     {
         private readonly RenderTarget2D backBuffer;
 
         private readonly SwapChain swapChain;
 
-        public GraphicsPresenterForSwapChain(GraphicsDevice device, PresentationParameters presentationParameters)
+        public SwapChainGraphicsPresenter(GraphicsDevice device, PresentationParameters presentationParameters)
             : base(device, presentationParameters)
         {
             PresentInterval = PresentInterval.Default;
@@ -110,14 +113,44 @@ namespace SharpDX.Toolkit.Graphics
             }
 
 #if WIN8METRO
-            throw new NotImplementedException(); 
+            return CreateSwapChainForWinRT();
 #else
-            return InitializeForDesktop();
+            return CreateSwapChainForDesktop();
 #endif
         }
 
-#if !WIN8METRO
-        private SwapChain InitializeForDesktop()
+#if WIN8METRO
+        private SwapChain CreateSwapChainForWinRT()
+        {
+            var window = Description.DeviceWindowHandle as CoreWindow;
+
+            if (window!= null)
+            {
+                var description = new SwapChainDescription1
+                    {
+                        // Automatic sizing
+                        Width = Description.BackBufferWidth,
+                        Height = Description.BackBufferHeight,
+                        Format = SharpDX.DXGI.Format.B8G8R8A8_UNorm,
+                        Stereo = false,
+                        SampleDescription = new SharpDX.DXGI.SampleDescription((int)Description.MultiSampleCount, 0),
+                        Usage = Description.RenderTargetUsage,
+                        // Use two buffers to enable flip effect.
+                        BufferCount = 2,
+                        Scaling = SharpDX.DXGI.Scaling.Stretch,
+                        SwapEffect = SharpDX.DXGI.SwapEffect.FlipSequential,
+                    };
+
+                // Creates a SwapChain from a CoreWindow pointer
+                using (var comWindow = new ComObject(window)) return ((DXGI.Factory2)GraphicsAdapter.Factory).CreateSwapChainForCoreWindow((Direct3D11.Device)GraphicsDevice, comWindow, ref description, null);
+            }
+            else
+            {
+                throw new NotSupportedException();
+            }
+        }
+#else
+        private SwapChain CreateSwapChainForDesktop()
         {
             var control = Description.DeviceWindowHandle as Control;
             if (control == null)

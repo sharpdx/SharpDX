@@ -104,6 +104,9 @@ namespace SharpDX.Toolkit
             GameSystems = new GameSystemCollection();
             gamePlatform = GamePlatform.Create(Services);
 
+            // By default, add a FileResolver for the ContentManager
+            Content.Resolvers.Add(new FileSystemContentResolver(gamePlatform.GetDefaultAppDirectory()));
+
             // Setup registry
             Services.AddService(typeof(IServiceRegistry), Services);
             Services.AddService(typeof(IContentManager), Content);
@@ -274,31 +277,8 @@ namespace SharpDX.Toolkit
             nextLastUpdateCountIndex = 0;
         }
 
-        /// <summary>
-        /// Call this method to initialize the game, begin running the game loop, and start processing events for the game.
-        /// </summary>
-        /// <param name="windowContext">The window Context.</param>
-        /// <exception cref="System.InvalidOperationException">Cannot run this instance while it is already running</exception>
-        public void Run(object windowContext = null)
+        private void InitializeBeforeRun()
         {
-            if (IsRunning)
-            {
-                throw new InvalidOperationException("Cannot run this instance while it is already running");
-            }
-
-            // Create the game platform for the current platform
-            gamePlatform.Tick += Tick;
-
-            // Setup the window context
-            Window.Initialize(windowContext);
-
-            // Gets the graphics device manager
-            graphicsDeviceManager = Services.GetService(typeof(IGraphicsDeviceManager)) as IGraphicsDeviceManager;
-            if (graphicsDeviceManager == null)
-            {
-                throw new InvalidOperationException("No GraphicsDeviceManager found");
-            }
-
             // Make sure that the device is already created
             graphicsDeviceManager.CreateDevice();
 
@@ -315,26 +295,46 @@ namespace SharpDX.Toolkit
                 throw new InvalidOperationException("No GraphicsDevice found");
             }
 
+            // Initialize this instance and all game systems
+            Initialize();
+
+            IsRunning = true;
+
+            BeginRun();
+
+            timer.Reset();
+            gameTime.Update(totalGameTime, TimeSpan.Zero, false);
+            gameTime.FrameCount = 0;
+
+            // Run the first time an update
+            Update(gameTime);
+
+            isFirstUpdateDone = true;
+        }
+
+        /// <summary>
+        /// Call this method to initialize the game, begin running the game loop, and start processing events for the game.
+        /// </summary>
+        /// <param name="windowContext">The window Context.</param>
+        /// <exception cref="System.InvalidOperationException">Cannot run this instance while it is already running</exception>
+        public void Run(object windowContext = null)
+        {
+            if (IsRunning)
+            {
+                throw new InvalidOperationException("Cannot run this instance while it is already running");
+            }
+
+            // Gets the graphics device manager
+            graphicsDeviceManager = Services.GetService(typeof(IGraphicsDeviceManager)) as IGraphicsDeviceManager;
+            if (graphicsDeviceManager == null)
+            {
+                throw new InvalidOperationException("No GraphicsDeviceManager found");
+            }
+
             try
             {
-                // Initialize this instance and all game systems
-                Initialize();
-
-                IsRunning = true;
-
-                BeginRun();
-
-                timer.Reset();
-                gameTime.Update(totalGameTime, TimeSpan.Zero, false);
-                gameTime.FrameCount = 0;
-
-                // Run the first time an update
-                Update(gameTime);
-
-                isFirstUpdateDone = true;
-
                 // Run the game, loop depending on the platform/window.
-                gamePlatform.Run();
+                gamePlatform.Run(windowContext, InitializeBeforeRun, Tick);
 
                 if (gamePlatform.IsBlockingRun)
                 {

@@ -49,6 +49,8 @@ namespace SharpDX
     public delegate TResult Func<out TResult>();
 #endif
 
+    public delegate void VoidAction();
+
     /// <summary>
     /// A Delegate to get a property value from an object.
     /// </summary>

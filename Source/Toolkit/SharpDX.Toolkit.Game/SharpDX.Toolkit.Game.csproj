@@ -18,6 +18,8 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="GameWindowWinRT.cs" />
+    <Compile Include="GamePlatformWinRT.cs" />
     <Compile Include="GameWindowDesktop.cs" />
     <Compile Include="GamePlatformDesktop.cs" />
     <Compile Include="Game.cs" />
@@ -27,7 +29,9 @@
     <Compile Include="GameServiceRegistry.cs" />
     <Compile Include="GameTime.cs" />
     <Compile Include="GameWindow.cs" />
-    <Compile Include="GameWindowForm.cs" />
+    <Compile Include="GameWindowForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="GraphicsDeviceInformation.cs" />
     <Compile Include="GraphicsDeviceManager.cs" />
     <Compile Include="IDrawable.cs" />

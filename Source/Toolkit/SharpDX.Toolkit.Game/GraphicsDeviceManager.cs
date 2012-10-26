@@ -108,6 +108,7 @@ namespace SharpDX.Toolkit
             preferredBackBufferHeight = DefaultBackBufferHeight;
             PreferMultiSampling = false;
             GraphicsProfile = FeatureLevel.Level_11_0;
+            isFullScreen = game.Window.IsFullScreenMandatory;
 
             // Register the services to the registry
             game.Services.AddService(typeof(IGraphicsDeviceManager), this);
@@ -175,7 +176,7 @@ namespace SharpDX.Toolkit
 
             set
             {
-                if (isFullScreen != value)
+                if (isFullScreen != value && !game.Window.IsFullScreenMandatory)
                 {
                     isFullScreen = value;
                     deviceSettingsChanged = true;

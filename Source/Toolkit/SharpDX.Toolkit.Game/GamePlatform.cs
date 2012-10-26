@@ -24,8 +24,6 @@ namespace SharpDX.Toolkit
 {
     internal abstract class GamePlatform
     {
-        public delegate void VoidAction();
-
         protected IServiceRegistry Services;
 
         protected GamePlatform(IServiceRegistry services)
@@ -33,14 +31,16 @@ namespace SharpDX.Toolkit
             Services = services;
         }
 
-        public static GamePlatform Create(IServiceRegistry serices)
+        public static GamePlatform Create(IServiceRegistry services)
         {
-#if !WIN8METRO
-            return new GamePlatformDesktop(serices);
+#if WIN8METRO
+            return new GamePlatformWinRT(services);
 #else
-            throw new NotImplementedException();
+            return new GamePlatformDesktop(services);
 #endif
         }
+
+        public abstract string GetDefaultAppDirectory();
 
         public object WindowContext { get; set; }
 
@@ -56,15 +56,13 @@ namespace SharpDX.Toolkit
 
         public event EventHandler<EventArgs> Suspend;
 
-        public event VoidAction Tick;
-
         public abstract GameWindow Window { get; }
 
         public bool IsBlockingRun { get; protected set; }
 
         public abstract bool IsMouseVisible { get; set; }
 
-        public abstract void Run();
+        public abstract void Run(object windowContext, VoidAction initCallback, VoidAction tickCallback);
 
         public virtual void Exit()
         {
@@ -74,7 +72,6 @@ namespace SharpDX.Toolkit
             Idle = null;
             Resume = null;
             Suspend = null;
-            Tick = null;
         }
         
         protected void OnActivated(EventArgs e)
@@ -111,12 +108,6 @@ namespace SharpDX.Toolkit
         {
             EventHandler<EventArgs> handler = Suspend;
             if (handler != null) handler(this, e);
-        }
-    
-        protected void OnTick()
-        {
-            var handler = Tick;
-            if (handler != null) handler();
         }
     }
 }

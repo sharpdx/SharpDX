@@ -39,6 +39,8 @@ namespace SharpDX.Toolkit.Content
         private readonly List<IContentResolver> registeredContentResolvers;
         private readonly List<IContentReader> registeredContentReaders;
 
+        private string rootDirectory;
+
         /// <summary>
         /// Initializes a new instance of ContentManager.  Reference page contains code sample.
         /// </summary>
@@ -83,6 +85,27 @@ namespace SharpDX.Toolkit.Content
         public IServiceProvider ServiceProvider { get; protected set; }
 
         /// <summary>
+        /// Gets or sets the root directory.
+        /// </summary>
+        public string RootDirectory
+        {
+            get
+            {
+                return rootDirectory;
+            }
+
+            set
+            {
+                if (loadedAssets.Count > 0)
+                {
+                    throw new InvalidOperationException("RootDirectory cannot be changed when a ContentManager has already assets loaded");
+                }
+                    
+                rootDirectory = value;
+            }
+        }
+
+        /// <summary>
         /// Loads an asset that has been processed by the Content Pipeline.  Reference page contains code sample.
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -92,7 +115,7 @@ namespace SharpDX.Toolkit.Content
         /// <exception cref="NotSupportedException">If no content reader was suitable to decode the asset.</exception>
         public virtual T Load<T>(string assetNameWithExtension)
         {
-            assetNameWithExtension = PathUtility.GetNormalizedPath(assetNameWithExtension);
+            assetNameWithExtension = PathUtility.GetNormalizedPath(Path.Combine(rootDirectory ?? string.Empty, assetNameWithExtension));
 
             object result = null;
 
