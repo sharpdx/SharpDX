@@ -91,42 +91,10 @@ namespace SharpDX.Toolkit
             base.Exit();
         }
 
-        public List<GraphicsDeviceInformation> FindBestDevices()
-        {
-            var graphicsDeviceInfos = new List<GraphicsDeviceInformation>();
-            foreach (var graphicsAdapter in GraphicsAdapter.Adapters)
-            {
-                // Get display mode for the particular width, height, pixelformat
-                foreach (var displayMode in graphicsAdapter.SupportedDisplayModes)
-                {
-                    var deviceInfo = new GraphicsDeviceInformation
-                        {
-                            Adapter = graphicsAdapter,
-                            GraphicsProfile = FeatureLevel.Level_11_0,
-                            PresentationParameters =
-                                {
-                                    BackBufferWidth = displayMode.Width,
-                                    BackBufferHeight = displayMode.Height,
-                                    BackBufferFormat = displayMode.Format,
-                                    RefreshRate = displayMode.RefreshRate,
-                                    PresentationInterval = PresentInterval.Default,
-                                    RenderTargetUsage = Usage.BackBuffer | Usage.RenderTargetOutput,
-                                    DeviceWindowHandle = gameWindowDesktop.Control
-                                }
-                        };
-
-                    graphicsDeviceInfos.Add(deviceInfo);
-                }
-            }
-            return graphicsDeviceInfos;
-        }
-
         public GraphicsDevice CreateDevice(GraphicsDeviceInformation deviceInformation)
         {
-            var device = GraphicsDevice.New(deviceInformation.Adapter);
-            device.Presenter = new SwapChainGraphicsPresenter(device, deviceInformation.PresentationParameters);
             gameWindowDesktop.Control.ClientSize = new System.Drawing.Size(deviceInformation.PresentationParameters.BackBufferWidth, deviceInformation.PresentationParameters.BackBufferHeight);
-            return device;
+            return base.CreateDevice(deviceInformation);
         }
     }
 }

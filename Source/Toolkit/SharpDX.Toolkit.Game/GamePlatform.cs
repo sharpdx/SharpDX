@@ -19,10 +19,15 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+
+using SharpDX.DXGI;
+using SharpDX.Direct3D;
+using SharpDX.Toolkit.Graphics;
 
 namespace SharpDX.Toolkit
 {
-    internal abstract class GamePlatform
+    internal abstract class GamePlatform : IGraphicsDeviceFactory
     {
         protected IServiceRegistry Services;
 
@@ -108,6 +113,43 @@ namespace SharpDX.Toolkit
         {
             EventHandler<EventArgs> handler = Suspend;
             if (handler != null) handler(this, e);
+        }
+
+        public virtual List<GraphicsDeviceInformation> FindBestDevices()
+        {
+            var graphicsDeviceInfos = new List<GraphicsDeviceInformation>();
+            foreach (var graphicsAdapter in GraphicsAdapter.Adapters)
+            {
+                // Get display mode for the particular width, height, pixelformat
+                foreach (var displayMode in graphicsAdapter.SupportedDisplayModes)
+                {
+                    var deviceInfo = new GraphicsDeviceInformation
+                    {
+                        Adapter = graphicsAdapter,
+                        GraphicsProfile = FeatureLevel.Level_11_0,
+                        PresentationParameters =
+                        {
+                            BackBufferWidth = displayMode.Width,
+                            BackBufferHeight = displayMode.Height,
+                            BackBufferFormat = displayMode.Format,
+                            RefreshRate = displayMode.RefreshRate,
+                            PresentationInterval = PresentInterval.Default,
+                            RenderTargetUsage = Usage.BackBuffer | Usage.RenderTargetOutput,
+                            DeviceWindowHandle = Window.NativeWindow
+                        }
+                    };
+
+                    graphicsDeviceInfos.Add(deviceInfo);
+                }
+            }
+            return graphicsDeviceInfos;
+        }
+
+        public virtual GraphicsDevice CreateDevice(GraphicsDeviceInformation deviceInformation)
+        {
+            var device = GraphicsDevice.New(deviceInformation.Adapter);
+            device.Presenter = new SwapChainGraphicsPresenter(device, deviceInformation.PresentationParameters);
+            return device;
         }
     }
 }

@@ -22,6 +22,7 @@ using System;
 #if WIN8METRO
 using Windows.UI.Core;
 using Windows.Graphics.Display;
+using Windows.UI.Xaml.Controls;
 #else
 using System.Windows.Forms;
 #endif
@@ -122,27 +123,38 @@ namespace SharpDX.Toolkit.Graphics
 #if WIN8METRO
         private SwapChain CreateSwapChainForWinRT()
         {
-            var window = Description.DeviceWindowHandle as CoreWindow;
+            var coreWindow = Description.DeviceWindowHandle as CoreWindow;
+            var swapChainBackgroundPanel = Description.DeviceWindowHandle as SwapChainBackgroundPanel;
 
-            if (window!= null)
+            var description = new SwapChainDescription1
             {
-                var description = new SwapChainDescription1
-                    {
-                        // Automatic sizing
-                        Width = Description.BackBufferWidth,
-                        Height = Description.BackBufferHeight,
-                        Format = SharpDX.DXGI.Format.B8G8R8A8_UNorm,
-                        Stereo = false,
-                        SampleDescription = new SharpDX.DXGI.SampleDescription((int)Description.MultiSampleCount, 0),
-                        Usage = Description.RenderTargetUsage,
-                        // Use two buffers to enable flip effect.
-                        BufferCount = 2,
-                        Scaling = SharpDX.DXGI.Scaling.Stretch,
-                        SwapEffect = SharpDX.DXGI.SwapEffect.FlipSequential,
-                    };
-
+                // Automatic sizing
+                Width = Description.BackBufferWidth,
+                Height = Description.BackBufferHeight,
+                Format = SharpDX.DXGI.Format.B8G8R8A8_UNorm,
+                Stereo = false,
+                SampleDescription = new SharpDX.DXGI.SampleDescription((int)Description.MultiSampleCount, 0),
+                Usage = Description.RenderTargetUsage,
+                // Use two buffers to enable flip effect.
+                BufferCount = 2,
+                Scaling = SharpDX.DXGI.Scaling.Stretch,
+                SwapEffect = SharpDX.DXGI.SwapEffect.FlipSequential,
+            }; 
+            
+            if (coreWindow != null)
+            {
                 // Creates a SwapChain from a CoreWindow pointer
-                using (var comWindow = new ComObject(window)) return ((DXGI.Factory2)GraphicsAdapter.Factory).CreateSwapChainForCoreWindow((Direct3D11.Device)GraphicsDevice, comWindow, ref description, null);
+                using (var comWindow = new ComObject(coreWindow)) return ((DXGI.Factory2)GraphicsAdapter.Factory).CreateSwapChainForCoreWindow((Direct3D11.Device)GraphicsDevice, comWindow, ref description, null);
+            }
+            else if (swapChainBackgroundPanel != null)
+            {
+                var nativePanel = ComObject.As<ISwapChainBackgroundPanelNative>(swapChainBackgroundPanel);
+                // Creates the swap chain for XAML composition
+                var swapChain = ((DXGI.Factory2)GraphicsAdapter.Factory).CreateSwapChainForComposition((Direct3D11.Device)GraphicsDevice, ref description, null);
+
+                // Associate the SwapChainBackgroundPanel with the swap chain
+                nativePanel.SwapChain = swapChain;
+                return swapChain;
             }
             else
             {

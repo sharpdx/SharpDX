@@ -474,7 +474,6 @@ namespace SharpDX.Toolkit
             {
                 throw new InvalidOperationException("No screen modes found");
             }
-
             RankDevices(devices);
             return (devices.Count > 0) ? devices[0] : null;
         }

@@ -19,6 +19,9 @@
 // THE SOFTWARE.
 #if WIN8METRO
 
+using System;
+
+using SharpDX.DXGI;
 using SharpDX.Toolkit.Graphics;
 
 using Windows.ApplicationModel.Core;
@@ -34,7 +37,9 @@ namespace SharpDX.Toolkit
     {
         private object nativeWindow;
 
-        internal CoreWindow CoreWindow;
+        public CoreWindow CoreWindow;
+
+        public bool IsSwapChainBackgroundPanel;
 
         private VoidAction initCallback;
         private VoidAction tickCallback;
@@ -77,6 +82,20 @@ namespace SharpDX.Toolkit
         internal override void Initialize(object windowContext)
         {
             nativeWindow = windowContext;
+
+            if (windowContext != null)
+            {
+                try
+                {
+                    // Just check that the window context is implementing ISwapChainBackgroundPanelNative
+                    var nativePanel = ComObject.As<ISwapChainBackgroundPanelNative>(windowContext);
+                    IsSwapChainBackgroundPanel = true;
+                    nativePanel.Dispose();
+                } catch (SharpDXException ex)
+                {
+                    throw new NotSupportedException(string.Format("Unsupported window context [{0}]. Only null or SwapChainBackgroundPanel", nativeWindow.GetType().FullName));
+                }
+            }
         }
 
         IFrameworkView IFrameworkViewSource.CreateView()

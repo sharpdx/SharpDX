@@ -28,6 +28,7 @@ using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.Toolkit.Graphics;
 using Windows.ApplicationModel;
+using Windows.UI.Xaml.Media;
 
 namespace SharpDX.Toolkit
 {
@@ -36,6 +37,8 @@ namespace SharpDX.Toolkit
         private readonly GameWindowWinRT gameWindowWinRT;
 
         private bool isMouseVisible;
+
+        private VoidAction tickCallback;
 
         public GamePlatformWinRT(IServiceRegistry services) : base(services)
         {
@@ -77,10 +80,24 @@ namespace SharpDX.Toolkit
             // Initialize the window
             Window.Initialize(windowContext);
 
+            this.tickCallback = tickCallback;
+
             if (windowContext == null)
             {
+                // Rendering to CoreWindow
                 gameWindowWinRT.RunCoreWindow(initCallback, tickCallback);
             }
+            else
+            {
+                // Rendering to SwapChainBackgroundPanel
+                initCallback();
+                CompositionTarget.Rendering += CompositionTarget_Rendering;
+            }
+        }
+
+        void CompositionTarget_Rendering(object sender, object e)
+        {
+            tickCallback();
         }
 
         public override void Exit()
@@ -89,46 +106,12 @@ namespace SharpDX.Toolkit
             {
                 gameWindowWinRT.CoreWindow.Close();
             }
+            else if (gameWindowWinRT.IsSwapChainBackgroundPanel)
+            {
+                CompositionTarget.Rendering -= CompositionTarget_Rendering;
+            }
 
             base.Exit();
-        }
-
-        public List<GraphicsDeviceInformation> FindBestDevices()
-        {
-            var graphicsDeviceInfos = new List<GraphicsDeviceInformation>();
-            foreach (var graphicsAdapter in GraphicsAdapter.Adapters)
-            {
-                // Get display mode for the particular width, height, pixelformat
-                foreach (var displayMode in graphicsAdapter.SupportedDisplayModes)
-                {
-                    var deviceInfo = new GraphicsDeviceInformation
-                        {
-                            Adapter = graphicsAdapter,
-                            GraphicsProfile = FeatureLevel.Level_11_0,
-                            PresentationParameters =
-                                {
-                                    BackBufferWidth = displayMode.Width,
-                                    BackBufferHeight = displayMode.Height,
-                                    BackBufferFormat = displayMode.Format,
-                                    RefreshRate = displayMode.RefreshRate,
-                                    PresentationInterval = PresentInterval.Default,
-                                    RenderTargetUsage = Usage.BackBuffer | Usage.RenderTargetOutput,
-                                    DeviceWindowHandle = gameWindowWinRT.CoreWindow,
-                                    IsFullScreen = true,
-                                }
-                        };
-
-                    graphicsDeviceInfos.Add(deviceInfo);
-                }
-            }
-            return graphicsDeviceInfos;
-        }
-
-        public GraphicsDevice CreateDevice(GraphicsDeviceInformation deviceInformation)
-        {
-            var device = GraphicsDevice.New(deviceInformation.Adapter);
-            device.Presenter = new SwapChainGraphicsPresenter(device, deviceInformation.PresentationParameters);
-            return device;
         }
     }
 }

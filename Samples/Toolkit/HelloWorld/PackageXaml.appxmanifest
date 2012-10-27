@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="a7b33af5-ec81-40fd-8961-f6fceb8fc393" Publisher="CN=Home" Version="1.0.0.0" />
+  <Identity Name="e4e0c09f-b2db-40a2-ad3e-03be25cd55a0" Publisher="CN=Home" Version="1.0.0.0" />
   <Properties>
-    <DisplayName>HelloWorld.WinRT</DisplayName>
+    <DisplayName>HelloWorld.WinRTXaml</DisplayName>
     <PublisherDisplayName>Home</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -14,8 +14,8 @@
     <Resource Language="x-generate" />
   </Resources>
   <Applications>
-    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="HelloWorld.Program">
-      <VisualElements DisplayName="HelloWorld.WinRT" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="HelloWorld.WinRT" ForegroundText="light" BackgroundColor="#464646">
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="HelloWorld.App">
+      <VisualElements DisplayName="HelloWorld.WinRTXaml" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="HelloWorld.WinRTXaml" ForegroundText="light" BackgroundColor="#464646">
         <DefaultTile ShowName="allLogos" />
         <SplashScreen Image="Assets\SplashScreen.png" />
       </VisualElements>
