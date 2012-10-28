@@ -78,6 +78,15 @@ namespace SharpDX.Toolkit
             }
         }
 
+        protected override void SetTitle(string title)
+        {
+            var form = Control as Form;
+            if (form != null)
+            {
+                form.Text = title;
+            }
+        }
+
         public override bool AllowUserResizing
         {
             get

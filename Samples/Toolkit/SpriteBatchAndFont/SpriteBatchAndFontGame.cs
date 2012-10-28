@@ -85,6 +85,12 @@ namespace SpriteBatchAndFont
             fpsClock.Start();
         }
 
+        protected override void Initialize()
+        {
+            Window.Title = "SpriteBatch and Font demo";
+            base.Initialize();
+        }
+
         protected override void Draw(GameTime gameTime)
         {
             // Clears the screen with the Color.CornflowerBlue

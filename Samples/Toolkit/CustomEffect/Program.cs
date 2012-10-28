@@ -18,45 +18,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using SharpDX;
-using SharpDX.Toolkit;
-using SharpDX.Toolkit.Graphics;
+using System;
 
-namespace HelloWorld
+namespace CustomEffect
 {
     /// <summary>
-    /// Simple HelloWorld application using SharpDX.Toolkit.
-    /// The purpose of this application is to show the minimal setup of a game.
+    /// Simple CustomEffect application using SharpDX.Toolkit.
     /// </summary>
-    public class HelloWorldGame : Game
+    class Program
     {
-        private GraphicsDeviceManager graphicsDeviceManager;
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="HelloWorldGame" /> class.
+        /// Defines the entry point of the application.
         /// </summary>
-        public HelloWorldGame()
+#if NETFX_CORE
+        [MTAThread]
+#else
+        [STAThread]
+#endif
+        static void Main()
         {
-            // Creates a graphics manager. This is mandatory.
-            graphicsDeviceManager = new GraphicsDeviceManager(this);
-
-            // Setup the relative directory to the executable directory
-            // for loading contents with the ContentManager
-            Content.RootDirectory = "Content";
-        }
-
-        protected override void Initialize()
-        {
-            Window.Title = "HelloWorld!";
-            base.Initialize();
-        }
-
-        protected override void Draw(GameTime gameTime)
-        {
-            // Clears the screen with the Color.CornflowerBlue
-            GraphicsDevice.Clear(GraphicsDevice.BackBuffer, Color.CornflowerBlue);
-
-            base.Draw(gameTime);
+            var program = new CustomEffectGame();
+            program.Run();
         }
     }
 }

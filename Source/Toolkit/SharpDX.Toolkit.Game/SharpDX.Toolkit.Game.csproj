@@ -29,9 +29,7 @@
     <Compile Include="GameServiceRegistry.cs" />
     <Compile Include="GameTime.cs" />
     <Compile Include="GameWindow.cs" />
-    <Compile Include="GameWindowForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="GameWindowForm.cs" />
     <Compile Include="GraphicsDeviceInformation.cs" />
     <Compile Include="GraphicsDeviceManager.cs" />
     <Compile Include="IDrawable.cs" />

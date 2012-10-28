@@ -111,6 +111,12 @@ namespace MiniCube
             inputLayout = VertexInputLayout.FromBuffer(0, vertices);
         }
 
+        protected override void Initialize()
+        {
+            Window.Title = "MiniCube demo";
+            base.Initialize();
+        }
+
         protected override void Update(GameTime gameTime)
         {
             // Rotate the cube.

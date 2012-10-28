@@ -28,6 +28,8 @@ namespace SharpDX.Toolkit
     /// </summary>
     public abstract class GameWindow
     {
+        private string title;
+
         #region Public Events
 
         public event EventHandler<EventArgs> ClientSizeChanged;
@@ -63,6 +65,31 @@ namespace SharpDX.Toolkit
         /// </summary>
         /// <value>The native window.</value>
         public abstract object NativeWindow { get; }
+
+        /// <summary>
+        /// Gets or sets the title of the window.
+        /// </summary>
+        public string Title
+        {
+            get
+            {
+                return title;
+            }
+
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException("value");
+                }
+
+                if (title != value)
+                {
+                    title = value;
+                    SetTitle(title);
+                }
+            }
+        }
 
         #endregion
 
@@ -102,5 +129,7 @@ namespace SharpDX.Toolkit
         protected internal abstract void SetSupportedOrientations(DisplayOrientation orientations);
 
         internal abstract void Initialize(object windowContext);
+
+        protected abstract void SetTitle(string title);
     }
 }

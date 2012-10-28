@@ -151,6 +151,10 @@ namespace SharpDX.Toolkit
             CoreApplication.Run(this);
         }
 
+        protected override void SetTitle(string title)
+        {
+        }
+
         void IFrameworkView.Initialize(CoreApplicationView applicationView)
         {
             
