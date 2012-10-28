@@ -181,7 +181,7 @@ namespace SharpDX.Toolkit.Graphics
                                     Subrect = new Rectangle(bmfGlyph.X, bmfGlyph.Y, bmfGlyph.X + bmfGlyph.Width, bmfGlyph.Y + bmfGlyph.Height), 
                                     Offset = {X = bmfGlyph.OffsetX, Y = bmfGlyph.OffsetY}, 
                                     XAdvance = bmfGlyph.AdvanceX,
-                                    BitmapIndex =  bmfGlyph.PageIndex
+                                    BitmapIndex = bmfGlyph.PageIndex
                                 };
             }
 

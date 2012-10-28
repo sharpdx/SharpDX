@@ -601,7 +601,7 @@ namespace SharpDX.Toolkit.Graphics
                     }
                 }
             }
-            throw new NotSupportedException("Image format not supported");
+            return null;
         }
 
         /// <summary>

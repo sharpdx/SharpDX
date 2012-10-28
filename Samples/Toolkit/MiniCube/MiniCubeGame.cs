@@ -130,10 +130,6 @@ namespace MiniCube
             GraphicsDevice.SetVertexBuffer(vertices);
             GraphicsDevice.SetVertexInputLayout(inputLayout);
 
-            // Setup the render target and the viewport
-            GraphicsDevice.SetRenderTargets(GraphicsDevice.BackBuffer);
-            GraphicsDevice.SetViewports(0, 0, GraphicsDevice.BackBuffer.Width, GraphicsDevice.BackBuffer.Height);
-
             // Apply the basic effect technique and draw the rotating cube
             basicEffect.CurrentTechnique.Passes[0].Apply();
             GraphicsDevice.Draw(PrimitiveType.TriangleList, vertices.ElementCount);

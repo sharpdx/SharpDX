@@ -205,7 +205,7 @@ namespace SharpDX.Toolkit.Graphics
                 if (bitmap.Data is SpriteFontData.BitmapData)
                 {
                     var image = (SpriteFontData.BitmapData) bitmap.Data;
-                    textures[i] =  ToDispose(Texture2D.New(device, image.Width, image.Height, image.PixelFormat, image.Data));
+                    textures[i] = ToDispose(Texture2D.New(device, image.Width, image.Height, image.PixelFormat, image.Data));
                 }
                 else if (bitmap.Data is Texture2D)
                 {

@@ -217,6 +217,17 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Gets the result from win32 error.
+        /// </summary>
+        /// <param name="win32Error">The win32Error.</param>
+        /// <returns>A HRESULT.</returns>
+        public static Result GetResultFromWin32Error(int win32Error)
+        {
+            const int FACILITY_WIN32 = 7;
+            return win32Error <= 0 ? win32Error : (int)((win32Error & 0x0000FFFF) | (FACILITY_WIN32 << 16) | 0x80000000);
+        } 
+
+        /// <summary>
         /// Result code Ok
         /// </summary>
         public static Result Ok = new Result(unchecked((int)0x00000000));

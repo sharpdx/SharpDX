@@ -115,7 +115,7 @@ namespace SharpDX.Toolkit.Content
         /// <exception cref="NotSupportedException">If no content reader was suitable to decode the asset.</exception>
         public virtual T Load<T>(string assetNameWithExtension)
         {
-            assetNameWithExtension = PathUtility.GetNormalizedPath(Path.Combine(rootDirectory ?? string.Empty, assetNameWithExtension));
+            var assetPath = PathUtility.GetNormalizedPath(Path.Combine(rootDirectory ?? string.Empty, assetNameWithExtension));
 
             object result = null;
 
@@ -134,7 +134,7 @@ namespace SharpDX.Toolkit.Content
                 // Else we need to load it from a content resolver disk/zip...etc.
 
                 // First, resolve the stream for this asset.
-                Stream stream = FindStream(assetNameWithExtension);
+                Stream stream = FindStream(assetPath);
                 if (stream == null)
                     throw new AssetNotFoundException(assetNameWithExtension);
 

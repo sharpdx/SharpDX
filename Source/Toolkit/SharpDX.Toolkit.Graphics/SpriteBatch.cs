@@ -829,15 +829,15 @@ namespace SharpDX.Toolkit.Graphics
                 var corner = CornerOffsets[j ^ (int)spriteInfo.SpriteEffects];
 
                 // Calculate position on destination
-                var position = new Vector2((corner.X - origin.X)*spriteInfo.Destination.Width, (corner.Y - origin.Y)*spriteInfo.Destination.Height);
+                var position = new Vector2((corner.X - origin.X) * spriteInfo.Destination.Width, (corner.Y - origin.Y) * spriteInfo.Destination.Height);
 
                 // Apply rotation and destination offset
-                vertex->Position.X = (spriteInfo.Destination.X + (position.X*rotation.X)) - (position.Y*rotation.Y);
-                vertex->Position.Y = (spriteInfo.Destination.Y + (position.X*rotation.Y)) + (position.Y*rotation.X);
+                vertex->Position.X = (spriteInfo.Destination.X + (position.X * rotation.X)) - (position.Y * rotation.Y);
+                vertex->Position.Y = (spriteInfo.Destination.Y + (position.X * rotation.Y)) + (position.Y * rotation.X);
                 vertex->Position.Z = spriteInfo.Depth;
                 vertex->Color = spriteInfo.Color;
-                vertex->TextureCoordinate.X = (spriteInfo.Source.X + (corner.X*spriteInfo.Source.Width))*deltaX;
-                vertex->TextureCoordinate.Y = (spriteInfo.Source.Y + (corner.Y*spriteInfo.Source.Height))*deltaY;
+                vertex->TextureCoordinate.X = (spriteInfo.Source.X + corner.X * spriteInfo.Source.Width) * deltaX;
+                vertex->TextureCoordinate.Y = (spriteInfo.Source.Y + corner.Y * spriteInfo.Source.Height) * deltaY;
                 vertex++;
             }
         }
@@ -853,24 +853,27 @@ namespace SharpDX.Toolkit.Graphics
             Viewport viewport = GraphicsDevice.Viewport;
             float xRatio = (viewport.Width > 0) ? (1f/(viewport.Width)) : 0f;
             float yRatio = (viewport.Height > 0) ? (-1f/(viewport.Height)) : 0f;
-            var matrix = new Matrix {M11 = xRatio*2f, M22 = yRatio*2f, M33 = 1f, M44 = 1f, M41 = -1f - xRatio, M42 = 1f - yRatio};
+            var matrix = new Matrix { M11 = xRatio * 2f, M22 = yRatio * 2f, M33 = 1f, M44 = 1f, M41 = -1f, M42 = 1f };
 
             Matrix finalMatrix;
             Matrix.Multiply(ref transformMatrix, ref matrix, out finalMatrix);
+
+            // Use LinearClamp for sampler state
+            var localSamplerState = samplerState ?? GraphicsDevice.SamplerStates.LinearClamp;
 
             // Setup effect states and parameters: SamplerState and MatrixTransform
             // Sets the sampler state
             if (customEffect != null)
             {
                 if (customEffectSampler != null)
-                    customEffectSampler.SetResource(samplerState);
+                    customEffectSampler.SetResource(localSamplerState);
 
                 if (customEffectMatrixTransform != null)
                     customEffectMatrixTransform.SetValue(finalMatrix);
             }
             else
             {
-                effectSampler.SetResource(samplerState);
+                effectSampler.SetResource(localSamplerState);
                 effectMatrixTransform.SetValue(finalMatrix);
 
                 // Apply the sprite effect globally

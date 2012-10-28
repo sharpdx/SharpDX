@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,25 +18,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.IO;
-using SharpDX.Toolkit.Content;
+using Windows.UI.Xaml.Controls;
 
-namespace SharpDX.Toolkit.Graphics
+namespace SpriteBatchAndFont
 {
     /// <summary>
-    /// Internal class to load Texture.
+    /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    class TextureContentReader : GraphicsResourceContentReaderBase<Texture>
+    public sealed partial class MainPage
     {
-        protected override Texture ReadContent(IContentManager readerManager, GraphicsDevice device, string assetName, Stream stream)
-        {
-            var texture = Texture.Load(device, stream);
-            if (texture != null)
-            {
-                texture.Name = assetName;
-            }
+        private readonly SpriteBatchAndFontGame game;
 
-            return texture;
+        public MainPage()
+        {
+            InitializeComponent();
+            game = new SpriteBatchAndFontGame();
+            game.Run(this);
         }
     }
 }

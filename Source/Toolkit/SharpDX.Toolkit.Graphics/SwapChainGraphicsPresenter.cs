@@ -43,7 +43,7 @@ namespace SharpDX.Toolkit.Graphics
         public SwapChainGraphicsPresenter(GraphicsDevice device, PresentationParameters presentationParameters)
             : base(device, presentationParameters)
         {
-            PresentInterval = PresentInterval.Default;
+            PresentInterval = presentationParameters.PresentationInterval;
 
             // Initialize the swap chain
             swapChain = CreateSwapChain();

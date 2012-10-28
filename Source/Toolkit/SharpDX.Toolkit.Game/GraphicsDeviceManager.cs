@@ -373,6 +373,15 @@ namespace SharpDX.Toolkit
                     }
 
                     break;
+                case GraphicsDeviceStatus.Normal:
+                    // By default, we setup the render target to the back buffer, and the viewport as well.
+                    if (GraphicsDevice.BackBuffer != null)
+                    {
+                        GraphicsDevice.SetRenderTargets(GraphicsDevice.BackBuffer);
+                        GraphicsDevice.SetViewports(0, 0, GraphicsDevice.BackBuffer.Width, GraphicsDevice.BackBuffer.Height);
+                    }
+
+                    break;
             }
 
             beginDrawOk = true;

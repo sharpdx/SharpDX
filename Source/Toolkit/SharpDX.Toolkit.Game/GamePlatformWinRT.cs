@@ -48,7 +48,7 @@ namespace SharpDX.Toolkit
 
         public override string GetDefaultAppDirectory()
         {
-            return Path.GetDirectoryName(Package.Current.InstalledLocation.Path);
+            return Package.Current.InstalledLocation.Path;
         }
 
         public override GameWindow Window

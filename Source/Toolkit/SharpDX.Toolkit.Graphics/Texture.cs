@@ -754,6 +754,11 @@ namespace SharpDX.Toolkit.Graphics
         public static Texture Load(GraphicsDevice device, Stream stream, TextureFlags flags = TextureFlags.ShaderResource, ResourceUsage usage = ResourceUsage.Immutable)
         {
             var image = Image.Load(stream);
+            if (image == null)
+            {
+                return null;
+            }
+
             try
             {
                 switch (image.Description.Dimension)

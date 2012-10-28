@@ -42,15 +42,53 @@ namespace SharpDX.IO
         /// <param name="fileMode">The file mode.</param>
         /// <param name="access">The access mode.</param>
         /// <param name="share">The share mode.</param>
-        public NativeFileStream(string fileName, NativeFileMode fileMode, NativeFileAccess access, NativeFileShare share = NativeFileShare.Read)
+        public unsafe NativeFileStream(string fileName, NativeFileMode fileMode, NativeFileAccess access, NativeFileShare share = NativeFileShare.Read)
         {
 #if WIN8METRO
+            //uint newAccess = 0;
+            //const int FILE_ATTRIBUTE_NORMAL = 0x00000080;
+            //const int FILE_FLAG_RANDOM_ACCESS = 0x10000000;
+            //const int FILE_FLAG_SEQUENTIAL_SCAN = 0x08000000;
+
+            //var extendedParams = default(NativeFile.CREATEFILE2_EXTENDED_PARAMETERS);
+            //extendedParams.dwSize = (uint)Utilities.SizeOf<NativeFile.CREATEFILE2_EXTENDED_PARAMETERS>();
+            //extendedParams.dwFileAttributes = FILE_ATTRIBUTE_NORMAL;
+            //extendedParams.dwFileFlags = FILE_FLAG_RANDOM_ACCESS;
+            //extendedParams.dwSecurityQosFlags = 0;
+            //extendedParams.lpSecurityAttributes = IntPtr.Zero;
+            //extendedParams.hTemplateFile = IntPtr.Zero;
+
+            //if ((access & NativeFileAccess.Read) != 0)
+            //{
+            //    // Sets GENERIC_READ
+            //    newAccess |= 0x00120089;
+            //}
+
+            //if ((access & NativeFileAccess.Write) != 0)
+            //{
+            //    newAccess |= 0x00120116;
+            //}
+
+            //if ((access & NativeFileAccess.Execute) != 0)
+            //{
+            //    newAccess |= 0x001200a0;
+            //}
+            //handle = NativeFile.Create(fileName, (NativeFileAccess)newAccess, share, fileMode, new IntPtr(&extendedParams));
             handle = NativeFile.Create(fileName, access, share, fileMode, IntPtr.Zero);
 #else
             handle = NativeFile.Create(fileName, access, share, IntPtr.Zero, fileMode, NativeFileOptions.None, IntPtr.Zero);
 #endif
             if (handle == new IntPtr(-1))
-                throw new IOException(string.Format(CultureInfo.InvariantCulture, "Unable to open file {0}", fileName), Marshal.GetLastWin32Error());
+            {
+                var lastWin32Error = Marshal.GetLastWin32Error();
+                if (lastWin32Error == 2)
+                {
+                    throw new FileNotFoundException("Unable to find file", fileName);
+                }
+
+                var lastError = Result.GetResultFromWin32Error(lastWin32Error);
+                throw new IOException(string.Format(CultureInfo.InvariantCulture, "Unable to open file {0}", fileName), lastError.Code);
+            }
 
             canRead = 0 != (access & NativeFileAccess.Read);
             canWrite = 0 != (access & NativeFileAccess.Write);

@@ -90,6 +90,16 @@ namespace SharpDX.IO
         }
 
 #if WIN8METRO
+        internal struct CREATEFILE2_EXTENDED_PARAMETERS
+        {
+            public uint dwSize;
+            public uint dwFileAttributes;
+            public uint dwFileFlags;
+            public uint dwSecurityQosFlags;
+            public IntPtr lpSecurityAttributes;
+            public IntPtr hTemplateFile;
+        };
+
         /// <summary>
         /// Creates the specified lp file name.
         /// </summary>
