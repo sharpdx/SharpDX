@@ -41,7 +41,9 @@ namespace CommonDX
         private int pixelHeight;
         private SurfaceImageSource surfaceImageSource;
         private ISurfaceImageSourceNative surfaceImageSourceNative;
+        private readonly SurfaceViewData[] viewDatas = new SurfaceViewData[2];
         private DrawingPoint position;
+        private int nextViewDataIndex;
 
         /// <summary>
         /// Initialzes a new <see cref="SurfaceImageSourceTarget"/> instance.
@@ -54,6 +56,8 @@ namespace CommonDX
             this.pixelHeight = pixelHeight;
             this.surfaceImageSource = new SurfaceImageSource(pixelWidth, pixelHeight, supportOpacity);
             surfaceImageSourceNative = ToDispose(ComObject.As<SharpDX.DXGI.ISurfaceImageSourceNative>(surfaceImageSource));
+            viewDatas[0] = new SurfaceViewData();
+            viewDatas[1] = new SurfaceViewData();
         }
 
         /// <summary>
@@ -90,7 +94,7 @@ namespace CommonDX
         /// <inveritdoc/>
         public override void RenderAll()
         {
-            SurfaceViewData viewData;
+            SurfaceViewData viewData = null;
 
             var regionToDraw = new SharpDX.Rectangle(0, 0, pixelWidth, pixelHeight);
 
@@ -100,19 +104,33 @@ namespace CommonDX
             {
                 // Cache DXGI surface in order to avoid recreate all render target view, depth stencil...etc.
                 // Is it the right way to do it?
-                // It seems that ISurfaceImageSourceNative.BeginDraw is returning 2 different DXGI surfaces
-                if (!mapSurfaces.TryGetValue(surface.NativePointer, out viewData))
+                // It seems that ISurfaceImageSourceNative.BeginDraw is returning 2 different DXGI surfaces (when the application is in foreground)
+                // or different DXGI surfaces (when the application is in background).
+                foreach (var surfaceViewData in viewDatas)
                 {
-                    viewData = new SurfaceViewData();
-                    mapSurfaces.Add(surface.NativePointer, viewData);
+                    if (surfaceViewData.SurfacePointer == surface.NativePointer)
+                    {
+                        viewData = surfaceViewData;
+                        break;
+                    }
+                }
+
+                if (viewData == null)
+                {
+                    viewData = viewDatas[nextViewDataIndex];
+                    nextViewDataIndex = (nextViewDataIndex + 1) % viewDatas.Length;
+
+                    // Make sure that previous was disposed.
+                    viewData.Dispose();
+                    viewData.SurfacePointer = surface.NativePointer;
 
                     // Allocate a new renderTargetView if size is different
                     // Cache the rendertarget dimensions in our helper class for convenient use.
-                    viewData.BackBuffer = ToDispose(surface.QueryInterface<SharpDX.Direct3D11.Texture2D>());
+                    viewData.BackBuffer = surface.QueryInterface<SharpDX.Direct3D11.Texture2D>();
                     {
                         var desc = viewData.BackBuffer.Description;
                         viewData.RenderTargetSize = new Size(desc.Width, desc.Height);
-                        viewData.RenderTargetView = ToDispose(new SharpDX.Direct3D11.RenderTargetView(DeviceManager.DeviceDirect3D, viewData.BackBuffer));
+                        viewData.RenderTargetView = new SharpDX.Direct3D11.RenderTargetView(DeviceManager.DeviceDirect3D, viewData.BackBuffer);
                     }
 
                     // Create a descriptor for the depth/stencil buffer.
@@ -129,7 +147,7 @@ namespace CommonDX
                         SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0),
                         BindFlags = SharpDX.Direct3D11.BindFlags.DepthStencil,
                     }))
-                        viewData.DepthStencilView = ToDispose(new SharpDX.Direct3D11.DepthStencilView(DeviceManager.DeviceDirect3D, depthBuffer, new SharpDX.Direct3D11.DepthStencilViewDescription() { Dimension = SharpDX.Direct3D11.DepthStencilViewDimension.Texture2D }));
+                        viewData.DepthStencilView = new SharpDX.Direct3D11.DepthStencilView(DeviceManager.DeviceDirect3D, depthBuffer, new SharpDX.Direct3D11.DepthStencilViewDescription() { Dimension = SharpDX.Direct3D11.DepthStencilViewDimension.Texture2D });
 
                     // Now we set up the Direct2D render target bitmap linked to the swapchain. 
                     // Whenever we render to this bitmap, it will be directly rendered to the 
@@ -142,7 +160,7 @@ namespace CommonDX
 
                     // Direct2D needs the dxgi version of the backbuffer surface pointer.
                     // Get a D2D surface from the DXGI back buffer to use as the D2D render target.
-                    viewData.BitmapTarget = ToDispose(new SharpDX.Direct2D1.Bitmap1(DeviceManager.ContextDirect2D, surface, bitmapProperties));
+                    viewData.BitmapTarget = new SharpDX.Direct2D1.Bitmap1(DeviceManager.ContextDirect2D, surface, bitmapProperties);
 
                     // Create a viewport descriptor of the full window size.
                     viewData.Viewport = new SharpDX.Direct3D11.Viewport(position.X, position.Y, (float)viewData.RenderTargetSize.Width - position.X, (float)viewData.RenderTargetSize.Height - position.Y, 0.0f, 1.0f);
@@ -169,14 +187,24 @@ namespace CommonDX
         /// <summary>
         /// This class is used to store attached render target view to DXGI surfaces.
         /// </summary>
-        class SurfaceViewData
+        class SurfaceViewData : IDisposable
         {
+            public IntPtr SurfacePointer;
             public SharpDX.Direct3D11.Texture2D BackBuffer;
             public SharpDX.Direct3D11.RenderTargetView RenderTargetView;
             public SharpDX.Direct3D11.DepthStencilView DepthStencilView;
             public SharpDX.Direct2D1.Bitmap1 BitmapTarget;
             public SharpDX.Direct3D11.Viewport Viewport;
             public Size RenderTargetSize;
+
+            public void Dispose()
+            {
+                ComObject.Dispose(ref BitmapTarget);
+                ComObject.Dispose(ref RenderTargetView);
+                ComObject.Dispose(ref DepthStencilView);
+                ComObject.Dispose(ref BackBuffer);
+                SurfacePointer = IntPtr.Zero;
+            }
         }
     }
 }
