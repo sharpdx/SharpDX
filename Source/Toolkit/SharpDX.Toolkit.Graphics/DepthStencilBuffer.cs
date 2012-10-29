@@ -65,6 +65,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             DepthFormat = depthFormat;
             DefaultViewFormat = ComputeViewFormat(DepthFormat, out HasStencil);
+            Initialize(Resource);
             HasReadOnlyView = InitializeViewsDelayed(out ReadOnlyView);
         }
 
@@ -73,6 +74,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             DepthFormat = depthFormat;
             DefaultViewFormat = ComputeViewFormat(DepthFormat, out HasStencil);
+            Initialize(Resource);
             HasReadOnlyView = InitializeViewsDelayed(out ReadOnlyView);
         }
 

@@ -34,14 +34,21 @@ namespace SharpDX.Toolkit.Graphics
     /// </remarks>
     public class RenderTarget2D : Texture2DBase
     {
+        private bool pureRenderTarget;
+        private RenderTargetView customRenderTargetView;
+
         internal RenderTarget2D(GraphicsDevice device, Texture2DDescription description2D)
             : base(device.MainDevice, description2D)
         {
+            Initialize(Resource);
         }
 
-        internal RenderTarget2D(GraphicsDevice device, Direct3D11.Texture2D texture)
+        internal RenderTarget2D(GraphicsDevice device, Direct3D11.Texture2D texture, RenderTargetView renderTargetView = null, bool pureRenderTarget = false)
             : base(device.MainDevice, texture)
         {
+            this.pureRenderTarget = pureRenderTarget;
+            this.customRenderTargetView = renderTargetView;
+            Initialize(Resource);
         }
 
         /// <summary>
@@ -55,13 +62,24 @@ namespace SharpDX.Toolkit.Graphics
 
         protected override void InitializeViews()
         {
-            // Perform default initialization
-            base.InitializeViews();
-
             if ((this.Description.BindFlags & BindFlags.RenderTarget) != 0)
             {
                 this.renderTargetViews = new RenderTargetView[GetViewCount()];
-                GetRenderTargetView(ViewType.Full, 0, 0);
+            }
+
+            if (pureRenderTarget)
+            {
+                renderTargetViews[0] = customRenderTargetView;
+            }
+            else
+            {
+                // Perform default initialization
+                base.InitializeViews();
+
+                if ((this.Description.BindFlags & BindFlags.RenderTarget) != 0)
+                {
+                    GetRenderTargetView(ViewType.Full, 0, 0);
+                }
             }
         }
 
@@ -153,6 +171,26 @@ namespace SharpDX.Toolkit.Graphics
         public static RenderTarget2D New(GraphicsDevice device, Direct3D11.Texture2D texture)
         {
             return new RenderTarget2D(device, texture);
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="RenderTarget2D"/> from a <see cref="RenderTargetView"/>.
+        /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
+        /// <param name="renderTargetView">The native texture <see cref="RenderTargetView"/>.</param>
+        /// <returns>
+        /// A new instance of <see cref="RenderTarget2D"/> class.
+        /// </returns>
+        /// <msdn-id>ff476521</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
+        /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
+        public static RenderTarget2D New(GraphicsDevice device, RenderTargetView renderTargetView, bool pureRenderTarget = false)
+        {
+            using (var resource = renderTargetView.Resource)
+            using (var texture2D = resource.QueryInterface<Direct3D11.Texture2D>())
+            {
+                return new RenderTarget2D(device, texture2D, renderTargetView, pureRenderTarget);
+            }
         }
 
         /// <summary>

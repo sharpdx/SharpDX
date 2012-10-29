@@ -26,7 +26,7 @@ namespace SharpDX.Toolkit
     /// <summary>
     /// An abstract window.
     /// </summary>
-    public abstract class GameWindow
+    public abstract class GameWindow : Component
     {
         private string title;
 

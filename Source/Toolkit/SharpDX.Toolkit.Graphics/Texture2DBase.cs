@@ -43,7 +43,6 @@ namespace SharpDX.Toolkit.Graphics
             : base(device, description2D)
         {
             Resource = new Direct3D11.Texture2D(device, description2D);
-            Initialize(Resource);
         }
 
         /// <summary>
@@ -59,7 +58,6 @@ namespace SharpDX.Toolkit.Graphics
             : base(device ,description2D)
         {
             Resource = new Direct3D11.Texture2D(device, description2D, dataBoxes);
-            Initialize(Resource);
         }
 
         /// <summary>
@@ -74,7 +72,6 @@ namespace SharpDX.Toolkit.Graphics
             : base(device, texture.Description)
         {
             Resource = texture;
-            Initialize(Resource);
         }
 
         /// <summary>

@@ -164,7 +164,7 @@ namespace SharpDX
         /// <remarks>
         /// The reference will be set to null after dispose.
         /// </remarks>
-        public static void Dispose<T>(ref T comObject) where T : ComObject
+        public static void Dispose<T>(ref T comObject) where T : class, IDisposable
         {
             if (comObject != null)
             {

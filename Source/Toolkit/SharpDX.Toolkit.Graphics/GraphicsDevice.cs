@@ -43,6 +43,7 @@ namespace SharpDX.Toolkit.Graphics
         internal int spriteBeginCount;
         internal int spriteImmediateBeginCount;
 
+        private VertexInputLayout currentVertexInputLayout;
         internal EffectPass CurrentPass;
 
         private readonly Dictionary<InputSignatureKey, InputSignatureManager> inputSignatureCache;
@@ -91,17 +92,6 @@ namespace SharpDX.Toolkit.Graphics
         /// Gets the registered <see cref="RasterizerState"/> for this graphics device.
         /// </summary>
         public readonly RasterizerStateCollection RasterizerStates;
-
-        // Current states
-        private BlendState currentBlendState;
-        private Color4 currentBlendFactor = Color.White;
-        private int currentMultiSampleMask = -1;
-        private DepthStencilState currentDepthStencilState;
-        private int currentDepthStencilReference = 0;
-        private RasterizerState currentRasterizerState;
-        private PrimitiveTopology currentPrimitiveTopology;
-        private VertexInputLayout currentVertexInputLayout;
-        private bool hasNewVertexBufferLayout;
 
         private InputAssemblerStage inputAssemblerStage;
         private RasterizerStage rasterizerStage;
@@ -501,11 +491,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             set
             {
-                if (currentPrimitiveTopology != value)
-                {
-                    inputAssemblerStage.PrimitiveTopology = value;
-                    currentPrimitiveTopology = value;
-                }
+                inputAssemblerStage.PrimitiveTopology = value;
             }
         }
 
@@ -529,9 +515,6 @@ namespace SharpDX.Toolkit.Graphics
             PrimitiveType = primitiveType;
             Context.DrawIndexed(indexCount, startIndexLocation, baseVertexLocation);
         }
-
-
-        private InputLayout currentInputLayout;
 
         /// <summary>	
         /// <p>Draw non-indexed, non-instanced primitives.</p>	
@@ -705,8 +688,6 @@ namespace SharpDX.Toolkit.Graphics
             Context.Flush();
         }
 
-
-
         /// <summary>
         /// Creates a new <see cref="GraphicsDevice" /> from an existing <see cref="SharpDX.Direct3D11.Device" />.
         /// </summary>
@@ -776,23 +757,13 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::OMSetBlendState</unmanaged-short>	
         public void SetBlendState(BlendState blendState)
         {
-            // If same instance, avoid a unmanaged to managed transition.
-            if (ReferenceEquals(currentBlendState, blendState) && currentBlendFactor == blendState.BlendFactor && currentMultiSampleMask == blendState.MultiSampleMask)
-                return;
-
             if (blendState == null)
             {
                 outputMergerStage.SetBlendState(null, Color.White, -1);
-                currentBlendState = null;
-                currentBlendFactor = Color.White;
-                currentMultiSampleMask = -1;
             }
             else
             {
                 outputMergerStage.SetBlendState(blendState, blendState.BlendFactor, blendState.MultiSampleMask);
-                currentBlendState = blendState;
-                currentBlendFactor = blendState.BlendFactor;
-                currentMultiSampleMask = blendState.MultiSampleMask;
             }
         }
 
@@ -810,23 +781,14 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::OMSetBlendState</unmanaged-short>	
         public void SetBlendState(BlendState blendState, Color4 blendFactor, int multiSampleMask = -1)
         {
-            // If same instance, avoid a unmanaged to managed transition.
-            if (ReferenceEquals(currentBlendState, blendState) && currentBlendFactor == blendFactor && currentMultiSampleMask == multiSampleMask)
-                return;
-
             if (blendState == null)
             {
                 outputMergerStage.SetBlendState(null, blendFactor, multiSampleMask);
-                currentBlendState = null;
             }
             else
             {
                 outputMergerStage.SetBlendState(blendState, blendFactor, multiSampleMask);
-                currentBlendState = blendState;
             }
-
-            currentBlendFactor = blendFactor;
-            currentMultiSampleMask = multiSampleMask;
         }
 
         /// <summary>	
@@ -859,15 +821,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::OMSetDepthStencilState</unmanaged-short>	
         public void SetDepthStencilState(DepthStencilState depthStencilState, int stencilReference = 0)
         {
-            // If same instance, avoid a unmanaged to managed transition.
-            if (ReferenceEquals(currentDepthStencilState, depthStencilState) && currentDepthStencilReference == stencilReference)
-                return;
-
             outputMergerStage.SetDepthStencilState(depthStencilState, stencilReference);
-
-            // Set new current state
-            currentDepthStencilState = depthStencilState;
-            currentDepthStencilReference = stencilReference;
         }
 
         /// <summary>	
@@ -879,14 +833,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::RSSetState</unmanaged-short>	
         public void SetRasterizerState(RasterizerState rasterizerState)
         {
-            // If same instance, avoid a unmanaged to managed transition.
-            if (ReferenceEquals(currentRasterizerState, rasterizerState))
-                return;
-
             rasterizerStage.State = rasterizerState;
-
-            // Set new current state
-            currentRasterizerState = rasterizerState;
         }
 
         /// <summary>
@@ -1095,12 +1042,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::IASetInputLayout</unmanaged-short>	
         public void SetVertexInputLayout(VertexInputLayout inputLayout)
         {
-            // The setup of the real input layout is delayed until we know which pass is applied.
-            if (!ReferenceEquals(currentVertexInputLayout, inputLayout))
-            {
-                currentVertexInputLayout = inputLayout;
-                hasNewVertexBufferLayout = true;
-            }
+            currentVertexInputLayout = inputLayout;
         }
 
         /// <summary>
@@ -1242,11 +1184,7 @@ namespace SharpDX.Toolkit.Graphics
                 throw new InvalidOperationException("Cannot perform a Draw/Dispatch operation without an EffectPass applied.");
 
             var inputLayout = CurrentPass.GetInputLayout(currentVertexInputLayout);
-            if (!ReferenceEquals(inputLayout, currentInputLayout))
-            {
-                inputAssemblerStage.SetInputLayout(inputLayout);
-                currentInputLayout = inputLayout;
-            }
+            inputAssemblerStage.SetInputLayout(inputLayout);
         }
 
         /// <summary>

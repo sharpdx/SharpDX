@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{05D111D6-C8FD-4DA4-B6C0-8C47E7081C3F}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HelloWorld</RootNamespace>
+    <AssemblyName>HelloWorld.Desktop</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Common\HelloWorld\HelloWorldGame.cs">
+      <Link>HelloWorldGame.cs</Link>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Source\SharpDX.Direct3D11\SharpDX.Direct3D11.csproj">
+      <Project>{736dfb52-1afe-4eff-9710-89046ab5b1f9}</Project>
+      <Name>SharpDX.Direct3D11</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Source\SharpDX.DXGI\SharpDX.DXGI.csproj">
+      <Project>{3fc6de77-b412-4101-9e64-6b9aa831179b}</Project>
+      <Name>SharpDX.DXGI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Source\SharpDX\SharpDX.csproj">
+      <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
+      <Name>SharpDX</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Source\Toolkit\SharpDX.Toolkit.Game\SharpDX.Toolkit.Game.csproj">
+      <Project>{B2516A23-1A99-4263-964A-B820FD07FA80}</Project>
+      <Name>SharpDX.Toolkit.Game</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Source\Toolkit\SharpDX.Toolkit.Graphics\SharpDX.Toolkit.Graphics.csproj">
+      <Project>{53ef08a7-4224-434c-a62c-f29807c1c750}</Project>
+      <Name>SharpDX.Toolkit.Graphics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Source\Toolkit\SharpDX.Toolkit\SharpDX.Toolkit.csproj">
+      <Project>{9ff0707c-75bb-4984-a01f-b9eaad293f6c}</Project>
+      <Name>SharpDX.Toolkit</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

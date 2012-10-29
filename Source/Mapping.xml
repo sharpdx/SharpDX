@@ -87,7 +87,6 @@
     #define UNICODE
     // for SAL annotations
     #define _PREFAST_
-    // enum __SAL_YesNo {};
     // To force GUID to be declared
     #define INITGUID
     // Wrap all declspec with gccxml
@@ -96,6 +95,12 @@
     #define __unaligned __attribute((__unaligned))
   </include-prolog>
 
+  <ifndef name="WP8">
+    <include-prolog>
+      enum __SAL_YesNo {};
+    </include-prolog>
+  </ifndef>
+  
   <!-- Reference Mapping Files -->
 
   <file>SharpDX\Mapping.xml</file>

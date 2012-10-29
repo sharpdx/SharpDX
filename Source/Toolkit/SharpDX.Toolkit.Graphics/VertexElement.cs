@@ -499,6 +499,7 @@ namespace SharpDX.Toolkit.Graphics
 #endif
 
             var vertexElements = new List<VertexElement>();
+            var currentOffset = 0;
 #if WIN8METRO
             foreach (var field in type.GetTypeInfo().DeclaredFields)
 #else
@@ -513,7 +514,17 @@ namespace SharpDX.Toolkit.Graphics
                         fieldFormat = ConvertTypeToFormat(field.FieldType);
 
                     var offset = vertexElementAttribute.AlignedByteOffset;
-#if !WP8
+#if WP8
+                    if (offset < 0)
+                    {
+                        offset = currentOffset;
+                        currentOffset += (int)FormatHelper.SizeOfInBytes(fieldFormat);
+                    } 
+                    else
+                    {
+                        currentOffset = offset;
+                    }
+#else
                     if (offset < 0)
                         offset = Marshal.OffsetOf(type, field.Name).ToInt32();
 #endif

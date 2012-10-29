@@ -18,6 +18,8 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="GameWindowWP8.cs" />
+    <Compile Include="GamePlatformWP8.cs" />
     <Compile Include="GameWindowWinRT.cs" />
     <Compile Include="GamePlatformWinRT.cs" />
     <Compile Include="GameWindowDesktop.cs" />

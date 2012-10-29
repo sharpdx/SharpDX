@@ -832,8 +832,8 @@ namespace SharpDX.Toolkit.Graphics
                 var position = new Vector2((corner.X - origin.X) * spriteInfo.Destination.Width, (corner.Y - origin.Y) * spriteInfo.Destination.Height);
 
                 // Apply rotation and destination offset
-                vertex->Position.X = (spriteInfo.Destination.X + (position.X * rotation.X)) - (position.Y * rotation.Y);
-                vertex->Position.Y = (spriteInfo.Destination.Y + (position.X * rotation.Y)) + (position.Y * rotation.X);
+                vertex->Position.X = spriteInfo.Destination.X + (position.X * rotation.X) - (position.Y * rotation.Y);
+                vertex->Position.Y = spriteInfo.Destination.Y + (position.X * rotation.Y) + (position.Y * rotation.X);
                 vertex->Position.Z = spriteInfo.Depth;
                 vertex->Color = spriteInfo.Color;
                 vertex->TextureCoordinate.X = (spriteInfo.Source.X + corner.X * spriteInfo.Source.Width) * deltaX;
