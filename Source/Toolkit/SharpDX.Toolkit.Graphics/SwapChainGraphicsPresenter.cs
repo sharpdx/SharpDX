@@ -23,6 +23,8 @@ using System;
 using Windows.UI.Core;
 using Windows.Graphics.Display;
 using Windows.UI.Xaml.Controls;
+#elif WP8
+
 #else
 using System.Windows.Forms;
 #endif
@@ -160,6 +162,11 @@ namespace SharpDX.Toolkit.Graphics
             {
                 throw new NotSupportedException();
             }
+        }
+#elif WP8
+        private SwapChain CreateSwapChainForDesktop()
+        {
+            throw new NotImplementedException();
         }
 #else
         private SwapChain CreateSwapChainForDesktop()

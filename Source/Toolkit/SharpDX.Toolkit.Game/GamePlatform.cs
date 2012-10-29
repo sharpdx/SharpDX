@@ -40,6 +40,8 @@ namespace SharpDX.Toolkit
         {
 #if WIN8METRO
             return new GamePlatformWinRT(services);
+#elif WP8
+            throw new NotImplementedException();
 #else
             return new GamePlatformDesktop(services);
 #endif
