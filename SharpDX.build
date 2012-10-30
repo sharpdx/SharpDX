@@ -494,6 +494,7 @@
     <copy todir="Build/">
       <fileset>
         <include name="Bin/**/*.dll"/>
+        <include name="Bin/**/*.winmd"/>
         <include name="Bin/**/*.xml"/>
         <include name="Samples/**"/>
         <include name="*.html"/>
