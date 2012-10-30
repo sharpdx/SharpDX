@@ -44,41 +44,40 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomEffectGame.cs" />
+    <Compile Include="..\..\Common\CustomEffect\CustomEffectGame.cs">
+      <Link>CustomEffectGame.cs</Link>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Source\SharpDX.Direct3D11\SharpDX.Direct3D11.csproj">
-      <Project>{736dfb52-1afe-4eff-9710-89046ab5b1f9}</Project>
-      <Name>SharpDX.Direct3D11</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Source\SharpDX.DXGI\SharpDX.DXGI.csproj">
-      <Project>{3fc6de77-b412-4101-9e64-6b9aa831179b}</Project>
-      <Name>SharpDX.DXGI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Source\SharpDX\SharpDX.csproj">
-      <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
-      <Name>SharpDX</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Source\Toolkit\SharpDX.Toolkit.Game\SharpDX.Toolkit.Game.csproj">
-      <Project>{B2516A23-1A99-4263-964A-B820FD07FA80}</Project>
-      <Name>SharpDX.Toolkit.Game</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Source\Toolkit\SharpDX.Toolkit.Graphics\SharpDX.Toolkit.Graphics.csproj">
-      <Project>{53ef08a7-4224-434c-a62c-f29807c1c750}</Project>
-      <Name>SharpDX.Toolkit.Graphics</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Source\Toolkit\SharpDX.Toolkit\SharpDX.Toolkit.csproj">
-      <Project>{9ff0707c-75bb-4984-a01f-b9eaad293f6c}</Project>
-      <Name>SharpDX.Toolkit</Name>
-    </ProjectReference>
+    <Reference Include="SharpDX.Direct3D11">
+      <HintPath>..\..\..\..\Bin\Standard-net40\SharpDX.Direct3D11.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.DXGI">
+      <HintPath>..\..\..\..\Bin\Standard-net40\SharpDX.DXGI.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX">
+      <HintPath>..\..\..\..\Bin\Standard-net40\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Toolkit.Game">
+      <HintPath>..\..\..\..\Bin\Standard-net40\SharpDX.Toolkit.Game.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Toolkit.Graphics">
+      <HintPath>..\..\..\..\Bin\Standard-net40\SharpDX.Toolkit.Graphics.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Toolkit">
+      <HintPath>..\..\..\..\Bin\Standard-net40\SharpDX.Toolkit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Content\MetaTunnel.fx" />
+    <None Include="..\..\Common\CustomEffect\Content\MetaTunnel.fx">
+      <Link>Content\MetaTunnel.fx</Link>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\MetaTunnel.fxo">
+    <Content Include="..\..\Common\CustomEffect\Content\MetaTunnel.fxo">
+      <Link>Content\MetaTunnel.fxo</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
