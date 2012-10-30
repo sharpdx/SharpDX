@@ -500,6 +500,7 @@
         <include name="*.txt"/>
         <exclude name="Samples/Win8/Win8Demos.sln"/>
         <exclude name="**/*.sample.csproj"/>
+        <exclude name="**/_ReSharper.*/"/>
         <exclude name="googlecode_password.txt"/>
         <exclude name="Samples/Win8/**/AppPackages/**"/>
       </fileset>

@@ -1,9 +1,9 @@
 <html>
 <head>
-  <title>SharpDX 2.3.1 Release Notes (1 Oct 2012)</title>
+  <title>SharpDX 2.4 Release Notes (31 Oct 2012)</title>
 </head>
     <body>
-<p>Release Notes (2012-10-30)</p>
+<p>Release Notes (2012-10-31)</p>
 <h2 class="title">General Information</h2>
 <p><strong>A new version 2.4 of SharpDX is available today for download with two major new features:</strong></p>
 <ul style="margin-bottom: 14pt;">
@@ -21,7 +21,7 @@ This release includes also some breaking changes, enhancements, bug fixes...etc.
 </ul>
 <p>This version has some minor restrictions and is not as perfect as we would expect due to some limitations in the Windows Phone 8 CLR Runtime that restricts ..NET usage. Mainly, WP8 doesn't allow to DllImport a function, so SharpDX on WP8 has the contraint to be platform dependent (x86, ARM) instead of being fully AnyCpu as previously. This is a known issue from WP8 CLR Team and will hopefully be fixed in next updates of WP8. Also, WP8 .NET is still suffering from some legacy WP7 Silverlight limitations that should also be fixed in next releases (for example, SharpDX cannot be used outside a Silverlight / XAML container, unlike on Windows RT where we can run an application without using XAML).<br /><br />Apart from some restrictions of using a Direct3D11 API on a lower spec GPU, you can safely use the same Direct3D11 across Windows Desktop, Windows RT and WP8. This should open lots of exciting opportunities!</p>
 <h2 class="title">Toolkit for Games and Prototyping</h2>
-<p>SharpDX has been working hard to bring a <strong>higher level API on top of DirectX API</strong> and this now possible with SharpDX.Toolkit that is providing a Direct3D11 XNA like API. This beta version is now part of the distribution. If you are developing a Direct3D11 application, we highly suggest you to move to the Toolkit, as It provides a significant layer to ease the use of the Direct3D11 API and most importantly, to easily develop from Windows Desktop, Windows RT and WP8 using exactly the same code base!<br /><br />The purpose of the toolkit is to target the <strong>DirectX and Windows platforms only</strong> and is not intended as a general cross platform game framework. Please check <a target="_blank" href="http://monogame.codeplex.com/">MonoGame</a>, or the upcoming and more <a target="_blank" href="http://paradox3d.net/">advanced Paradox Engine</a> for cross platform solutions. The toolkit could still be the perfect companion for:</p>
+<p>SharpDX has been working hard to bring a <strong>higher level API on top of DirectX API</strong> and this now possible with SharpDX.Toolkit that is providing a Direct3D11 XNA like API. This beta version is now part of the distribution. If you are developing a Direct3D11 application, we highly suggest you to move to the Toolkit, as It provides a significant layer to ease the use of the Direct3D11 API and most importantly, to easily develop from Windows Desktop, Windows RT and WP8 using exactly the same code base!<br /><br />The purpose of the toolkit is to target the <strong>DirectX and Windows platforms only</strong> and is not intended as a general cross platform game framework. The toolkit could be the perfect companion for:</p>
 <ul>
 <li>Developing multimedia or game applications using Direct3D11.</li>
 <li>Prototyping advanced Direct3D11 effects in C#.</li>
