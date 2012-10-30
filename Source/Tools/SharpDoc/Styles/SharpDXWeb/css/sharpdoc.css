@@ -120,8 +120,8 @@
 	float:left;
 	height:16px;
 	margin:0;
-	padding-left:4px;
-	padding-right:4px;
+	padding-left:2px;
+	padding-right:2px;
 	width:16px;
 }
 
@@ -292,6 +292,11 @@
 .sharpdoc div.icon.win8metro
 {
 	background-image:url("../images/win8metro.png");
+}
+
+.sharpdoc div.icon.wp8
+{
+	background-image:url("../images/wp8.png");
 }
 
 .sharpdoc div.icon.win8desktop

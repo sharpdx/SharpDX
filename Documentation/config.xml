@@ -145,6 +145,11 @@
   <source api="default|All Windows Desktop - .NET 2.0+ - .NET 4.0+" xml="..\Bin\Standard-net20\SharpDX.Direct3D10.xml">..\Bin\Standard-net20\SharpDX.Direct3D10.dll</source>
   <source api="default|All Windows Desktop - .NET 2.0+ - .NET 4.0+" xml="..\Bin\Standard-net20\SharpDX.Direct3D11.xml">..\Bin\Standard-net20\SharpDX.Direct3D11.dll</source>
   <source api="default|All Windows Desktop - .NET 2.0+ - .NET 4.0+" xml="..\Bin\Standard-net20\SharpDX.Direct2D1.xml">..\Bin\Standard-net20\SharpDX.Direct2D1.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+ - .NET 4.0+" xml="..\Bin\Standard-net20\SharpDX.MediaFoundation.xml">..\Bin\Standard-net20\SharpDX.MediaFoundation.dll</source>
+
+  <source api="default|All Windows Desktop - .NET 2.0+ - .NET 4.0+" xml="..\Bin\Standard-net20\SharpDX.Toolkit.xml">..\Bin\Standard-net20\SharpDX.Toolkit.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+ - .NET 4.0+" xml="..\Bin\Standard-net20\SharpDX.Toolkit.Graphics.xml">..\Bin\Standard-net20\SharpDX.Toolkit.Graphics.dll</source>
+  <source api="default|All Windows Desktop - .NET 2.0+ - .NET 4.0+" xml="..\Bin\Standard-net20\SharpDX.Toolkit.Game.xml">..\Bin\Standard-net20\SharpDX.Toolkit.Game.dll</source>
 
   <!-- Win8Metro Binaries -->
   <source api="win8metro|Windows 8 Metro - DirectX11.1 - .NET 4.5 Core" xml="..\Bin\Standard-winrt\SharpDX.xml">..\Bin\Standard-winrt\SharpDX.dll</source>
@@ -154,6 +159,22 @@
   <source api="win8metro|Windows 8 Metro - DirectX11.1 - .NET 4.5 Core" xml="..\Bin\Standard-winrt\SharpDX.XInput.xml">..\Bin\Standard-winrt\SharpDX.XInput.dll</source>
   <source api="win8metro|Windows 8 Metro - DirectX11.1 - .NET 4.5 Core" xml="..\Bin\Standard-winrt\SharpDX.Direct3D11.xml">..\Bin\Standard-winrt\SharpDX.Direct3D11.dll</source>
   <source api="win8metro|Windows 8 Metro - DirectX11.1 - .NET 4.5 Core" xml="..\Bin\Standard-winrt\SharpDX.Direct2D1.xml">..\Bin\Standard-winrt\SharpDX.Direct2D1.dll</source>
+  <source api="win8metro|Windows 8 Metro - DirectX11.1 - .NET 4.5 Core" xml="..\Bin\Standard-winrt\SharpDX.MediaFoundation.xml">..\Bin\Standard-winrt\SharpDX.MediaFoundation.dll</source>
+
+  <source api="win8metro|Windows 8 Metro - DirectX11.1 - .NET 4.5 Core" xml="..\Bin\Standard-winrt\SharpDX.Toolkit.xml">..\Bin\Standard-winrt\SharpDX.Toolkit.dll</source>
+  <source api="win8metro|Windows 8 Metro - DirectX11.1 - .NET 4.5 Core" xml="..\Bin\Standard-winrt\SharpDX.Toolkit.Graphics.xml">..\Bin\Standard-winrt\SharpDX.Toolkit.Graphics.dll</source>
+  <source api="win8metro|Windows 8 Metro - DirectX11.1 - .NET 4.5 Core" xml="..\Bin\Standard-winrt\SharpDX.Toolkit.Game.xml">..\Bin\Standard-winrt\SharpDX.Toolkit.Game.dll</source>
+
+  <!-- WP8 Binaries -->
+  <source api="wp8|Windows Phone 8 - DirectX11.1 - .NET 4.5 Core" xml="..\Bin\Standard-wp8-x86\SharpDX.xml">..\Bin\Standard-wp8-x86\SharpDX.dll</source>
+  <source api="wp8|Windows Phone 8 - DirectX11.1 - .NET 4.5 Core" xml="..\Bin\Standard-wp8-x86\SharpDX.DXGI.xml">..\Bin\Standard-wp8-x86\SharpDX.DXGI.dll</source>
+  <source api="wp8|Windows Phone 8 - DirectX11.1 - .NET 4.5 Core" xml="..\Bin\Standard-wp8-x86\SharpDX.XAudio2.xml">..\Bin\Standard-wp8-x86\SharpDX.XAudio2.dll</source>
+  <source api="wp8|Windows Phone 8 - DirectX11.1 - .NET 4.5 Core" xml="..\Bin\Standard-wp8-x86\SharpDX.Direct3D11.xml">..\Bin\Standard-wp8-x86\SharpDX.Direct3D11.dll</source>
+  <source api="wp8|Windows Phone 8 - DirectX11.1 - .NET 4.5 Core" xml="..\Bin\Standard-wp8-x86\SharpDX.MediaFoundation.xml">..\Bin\Standard-wp8-x86\SharpDX.MediaFoundation.dll</source>
+
+  <source api="wp8|Windows Phone 8 - DirectX11.1 - .NET 4.5 Core" xml="..\Bin\Standard-wp8-x86\SharpDX.Toolkit.xml">..\Bin\Standard-wp8-x86\SharpDX.Toolkit.dll</source>
+  <source api="wp8|Windows Phone 8 - DirectX11.1 - .NET 4.5 Core" xml="..\Bin\Standard-wp8-x86\SharpDX.Toolkit.Graphics.xml">..\Bin\Standard-wp8-x86\SharpDX.Toolkit.Graphics.dll</source>
+  <source api="wp8|Windows Phone 8 - DirectX11.1 - .NET 4.5 Core" xml="..\Bin\Standard-wp8-x86\SharpDX.Toolkit.Game.xml">..\Bin\Standard-wp8-x86\SharpDX.Toolkit.Game.dll</source>
 
   <!-- Win8Desktop DirectX11.1 Binaries -->
   <source api="win8desktop|Windows 8 Desktop - DirectX11.1 - .NET 4.0+" xml="..\Bin\Win8Desktop-net40\SharpDX.xml">..\Bin\Win8Desktop-net40\SharpDX.dll</source>
@@ -163,4 +184,9 @@
   <source api="win8desktop|Windows 8 Desktop - DirectX11.1 - .NET 4.0+" xml="..\Bin\Win8Desktop-net40\SharpDX.XInput.xml">..\Bin\Win8Desktop-net40\SharpDX.XInput.dll</source>
   <source api="win8desktop|Windows 8 Desktop - DirectX11.1 - .NET 4.0+" xml="..\Bin\Win8Desktop-net40\SharpDX.Direct3D11.xml">..\Bin\Win8Desktop-net40\SharpDX.Direct3D11.dll</source>
   <source api="win8desktop|Windows 8 Desktop - DirectX11.1 - .NET 4.0+" xml="..\Bin\Win8Desktop-net40\SharpDX.Direct2D1.xml">..\Bin\Win8Desktop-net40\SharpDX.Direct2D1.dll</source>
+  <source api="win8desktop|Windows 8 Desktop - DirectX11.1 - .NET 4.0+" xml="..\Bin\Win8Desktop-net40\SharpDX.MediaFoundation.xml">..\Bin\Win8Desktop-net40\SharpDX.MediaFoundation.dll</source>
+
+  <source api="win8desktop|Windows 8 Desktop - DirectX11.1 - .NET 4.0+" xml="..\Bin\Win8Desktop-net40\SharpDX.Toolkit.xml">..\Bin\Win8Desktop-net40\SharpDX.Toolkit.dll</source>
+  <source api="win8desktop|Windows 8 Desktop - DirectX11.1 - .NET 4.0+" xml="..\Bin\Win8Desktop-net40\SharpDX.Toolkit.Graphics.xml">..\Bin\Win8Desktop-net40\SharpDX.Toolkit.Graphics.dll</source>
+  <source api="win8desktop|Windows 8 Desktop - DirectX11.1 - .NET 4.0+" xml="..\Bin\Win8Desktop-net40\SharpDX.Toolkit.Game.xml">..\Bin\Win8Desktop-net40\SharpDX.Toolkit.Game.dll</source>
 </config>

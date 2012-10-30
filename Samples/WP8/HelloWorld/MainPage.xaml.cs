@@ -17,17 +17,27 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using SpriteBatchAndFont.Resources;
 
-namespace SpriteBatchAndFont
+using System.Security;
+
+namespace MiniTriApp
 {
     /// <summary>
-    /// Provides access to string resources.
+    /// This application demonstrates a very simple WP8 application using Direct3D11 and DrawingSurface Interop 
+    /// via <see cref="SharpDX.Direct3D11.DrawingSurfaceBackgroundContentProviderNativeBase"/>.
     /// </summary>
-    public class LocalizedStrings
+    public partial class MainPage
     {
-        private static AppResources _localizedResources = new AppResources();
+        private readonly SimpleRenderer d3dRenderer = new SimpleRenderer();
 
-        public AppResources LocalizedResources { get { return _localizedResources; } }
+        // Constructor
+        [SecuritySafeCritical]
+        public MainPage()
+        {
+            InitializeComponent();
+
+            // Use the Direct3D SimpleRenderer class to display a content into the DrawingSurface
+            DrawingSurfaceBackground.SetBackgroundContentProvider(d3dRenderer);
+        }
     }
 }

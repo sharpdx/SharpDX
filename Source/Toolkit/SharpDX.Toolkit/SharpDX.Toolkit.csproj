@@ -13,6 +13,7 @@
     <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyDoc.cs" />
     <Compile Include="Content\AssetNotFoundException.cs" />
     <Compile Include="Content\ContentManager.cs" />
     <Compile Include="Content\ContentReaderAttribute.cs" />
@@ -20,10 +21,13 @@
     <Compile Include="Content\IContentManager.cs" />
     <Compile Include="Content\IContentReader.cs" />
     <Compile Include="Content\IContentResolver.cs" />
+    <Compile Include="Content\NamespaceDoc.cs" />
     <Compile Include="Diagnostics\LogMessage.cs" />
     <Compile Include="Diagnostics\LogMessageType.cs" />
     <Compile Include="Diagnostics\Logger.cs" />
+    <Compile Include="Diagnostics\NamespaceDoc.cs" />
     <Compile Include="Graphics\DisplayOrientation.cs" />
+    <Compile Include="Graphics\NamespaceDoc.cs" />
     <Compile Include="Graphics\SpriteFontData.AngelCodeBMFontLoader.cs" />
     <Compile Include="Graphics\SpriteFontData.MakeSpriteFontLoader.cs" />
     <Compile Include="Graphics\SpriteFontData.Kerning.cs" />
@@ -44,6 +48,7 @@
     <Compile Include="Graphics\EffectCompilerFlags.cs" />
     <Compile Include="Graphics\SpriteFontData.cs" />
     <Compile Include="Graphics\SpriteFontDataContentReader.cs" />
+    <Compile Include="NamespaceDoc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
@@ -65,6 +70,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Graphics\SpriteFontData.Glyph.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SharpDX.Toolkit.nuspec" />
   </ItemGroup>
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

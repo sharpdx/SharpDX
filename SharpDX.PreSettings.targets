@@ -152,35 +152,6 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
-  <!--.NET 2.0/4.0/DirectX11.1 - Signed assemblies for Desktop-->
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Net20Release|AnyCPU' And '$(SharpDXSign)' == 'true'">
-    <DefineConstants>TRACE;WinFormsInterop;SHARPDX_SIGNED</DefineConstants>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>$(SolutionDir)sharpdx.snk</AssemblyOriginatorKeyFile>
-    <DelaySign>true</DelaySign>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Net40Release|AnyCPU' And '$(SharpDXSign)' == 'true'">
-    <DefineConstants>TRACE;WinFormsInterop;SHARPDX_SIGNED</DefineConstants>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>$(SolutionDir)sharpdx.snk</AssemblyOriginatorKeyFile>
-    <DelaySign>true</DelaySign>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Win8Release|AnyCPU' And '$(SharpDXSign)' == 'true'">
-    <DefineConstants>TRACE;WIN8METRO;NETFX_CORE;DIRECTX11_1;SHARPDX_SIGNED</DefineConstants>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>$(SolutionDir)sharpdx.snk</AssemblyOriginatorKeyFile>
-    <DelaySign>true</DelaySign>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DIRECTX11_1Release|AnyCPU' And '$(SharpDXSign)' == 'true'">
-    <DefineConstants>TRACE;DIRECTX11_1;WinFormsInterop;SHARPDX_SIGNED</DefineConstants>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>$(SolutionDir)sharpdx.snk</AssemblyOriginatorKeyFile>
-    <DelaySign>true</DelaySign>
-  </PropertyGroup>
-  <PropertyGroup>
-    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-  </PropertyGroup>
-
   <!--.NET 4.5 - DirectX11.1 - Windows 8 Metro-->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -211,7 +182,7 @@
   <!--.NET Windows Phone - DirectX11.1 - Windows Phone 8-->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\WP8Debug\</OutputPath>
+    <OutputPath>bin\WP8Debug</OutputPath>
     <DefineConstants>TRACE;DEBUG;WP8;W8CORE;DIRECTX11_1;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
@@ -257,7 +228,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Release|x86'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\WP8Release-x86</OutputPath>
+    <OutputPath>bin\WP8Release-x86\</OutputPath>
     <DefineConstants>TRACE;WP8;W8CORE;DIRECTX11_1;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
@@ -268,7 +239,6 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
-
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -287,7 +257,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Release|ARM'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\WP8Release-ARM</OutputPath>
+    <OutputPath>bin\WP8Release-ARM\</OutputPath>
     <DefineConstants>TRACE;WP8;W8CORE;DIRECTX11_1;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
@@ -297,6 +267,48 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
+
+  <!--.NET 2.0/4.0/DirectX11.1 - Signed assemblies for all platforms-->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Net20Release|AnyCPU' And '$(SharpDXSign)' == 'true'">
+    <DefineConstants>TRACE;WinFormsInterop;SHARPDX_SIGNED</DefineConstants>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(SolutionDir)sharpdx.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Net40Release|AnyCPU' And '$(SharpDXSign)' == 'true'">
+    <DefineConstants>TRACE;WinFormsInterop;SHARPDX_SIGNED</DefineConstants>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(SolutionDir)sharpdx.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Win8Release|AnyCPU' And '$(SharpDXSign)' == 'true'">
+    <DefineConstants>TRACE;WIN8METRO;W8CORE;NET35Plus;DIRECTX11_1;SHARPDX_SIGNED</DefineConstants>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(SolutionDir)sharpdx.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DIRECTX11_1Release|AnyCPU' And '$(SharpDXSign)' == 'true'">
+    <DefineConstants>TRACE;DIRECTX11_1;WinFormsInterop;SHARPDX_SIGNED</DefineConstants>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(SolutionDir)sharpdx.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'WP8Release|x86' And '$(SharpDXSign)' == 'true'">
+    <DefineConstants>TRACE;WP8;W8CORE;DIRECTX11_1;SILVERLIGHT;WINDOWS_PHONE;SHARPDX_SIGNED</DefineConstants>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(SolutionDir)sharpdx.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'WP8Release|ARM' And '$(SharpDXSign)' == 'true'">
+    <DefineConstants>TRACE;WP8;W8CORE;DIRECTX11_1;SILVERLIGHT;WINDOWS_PHONE;SHARPDX_SIGNED</DefineConstants>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(SolutionDir)sharpdx.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
 
 </Project>

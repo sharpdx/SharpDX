@@ -56,9 +56,9 @@
     <!--<file src="..\..\Bin\Signed-net40\SharpDX.dll" target="lib\net40" />-->
     <!--<file src="..\..\Bin\Signed-net40\SharpDX.xml" target="lib\net40" />-->
 
-    <file src="..\..\Bin\Signed-winrt\SharpDX.dll" target="lib\winrt" />
-    <file src="..\..\Bin\Signed-winrt\SharpDX.pdb" target="lib\winrt" />
-    <file src="..\..\Bin\Signed-winrt\SharpDX.xml" target="lib\winrt" />
+    <file src="..\..\Bin\Signed-winrt\SharpDX.dll" target="lib\netcore45" />
+    <file src="..\..\Bin\Signed-winrt\SharpDX.pdb" target="lib\netcore45" />
+    <file src="..\..\Bin\Signed-winrt\SharpDX.xml" target="lib\netcore45" />
 
     <file src="**\*.cs" target="src" />
   </files>

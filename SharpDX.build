@@ -26,6 +26,8 @@
   <property name="project.name" value="SharpDX"/>
   <property name="project.sname" value="sharpdx"/>
 
+  <property name="solution.platform" value="Any CPU"/>
+
   <property name="build_type" value="net20"/>
   <property name="build_signed" value="false"/>
 
@@ -53,7 +55,13 @@
     <property name="version-dir" value="Signed-net40" if="${build_type == 'net40' and build_signed}"/>
     <property name="version-dir" value="Standard-winrt" if="${build_type == 'win8'}"/>
     <property name="version-dir" value="Signed-winrt" if="${build_type == 'win8' and build_signed}"/>
+    <property name="version-dir" value="Standard-wp8-${solution.platform}" if="${build_type == 'wp8'}"/>
+    <property name="version-dir" value="Signed-wp8-${solution.platform}" if="${build_type == 'wp8' and build_signed}"/>
     <property name="version-dir" value="Win8Desktop-net40" if="${build_type == 'dx11_1'}"/>
+
+    <!-- override default solution.name for WP8 -->
+    <property name="solution.name" value="SharpDX"/>
+    <property name="solution.name" value="SharpDXWP8" if="${build_type == 'wp8'}"/>
 
     <regex pattern="AssemblyVersion\(.(?'assembly_version'\d+\.\d+.\d+)" input="${assembly_version_file}" />
     <property name="output_bin_zip" value="${project.name}-Bin-${assembly_version}${build-date}.exe"/>
@@ -63,7 +71,11 @@
     <property name="configuration" value="Net20Release" if="${build_type == 'net20'}"/>
     <property name="configuration" value="Net40Release" if="${build_type == 'net40'}"/>
     <property name="configuration" value="Win8Release"  if="${build_type == 'win8'}"/>
+    <property name="configuration" value="WP8Release"   if="${build_type == 'wp8'}"/>
     <property name="configuration" value="DIRECTX11_1Release" if="${build_type == 'dx11_1'}"/>
+
+    <property name="bin-dir" value="${configuration}"/>
+    <property name="bin-dir" value="${configuration}-${solution.platform}" if="${build_type == 'wp8'}"/>
 
     <echo message="${project.name} version from file is ${assembly_version}"/>
   </target>
@@ -182,6 +194,8 @@
     <echo message="signed-net40 = Prepare for signed build (Framework .NET 4.0+)"/>
     <echo message="        win8 = Prepare for DirectX11.1 Win8 Metro build (Framework .NET 4.5Core)"/>
     <echo message=" signed-win8 = Prepare for Signed DirectX11.1 Win8 Metro build (Framework .NET 4.5Core)"/>
+    <echo message="         wp8 = Prepare for DirectX11.1 WP8 build (Framework .NET 4.5Core)"/>
+    <echo message="  signed-wp8 = Prepare for Signed DirectX11.1 WP8 build (Framework .NET 4.5Core)"/>
     <echo message="      dx11_1 = Prepare for DirectX11.1 desktop build (Framework .NET 2.0+)"/>
     <echo message=""/>
     <echo message="       clean = Full cleanup"/>
@@ -212,7 +226,18 @@
     <call target="signed-win8"/>
     <call target="build"/>
 
-    <!-- Build All Unsigned target first -->
+    <!-- Build WP8 targets x86/ARM -->
+    <call target="wp8"/>
+    <call target="x86"/>
+    <call target="build"/>
+
+    <call target="wp8"/>
+    <call target="arm"/>
+    <call target="build"/>
+
+    <!-- Build all Any CPU targets -->
+    <call target="anycpu"/>
+
     <call target="win8"/>
     <call target="build"/>
 
@@ -232,6 +257,18 @@
     <call target="zip"/>
 
     <call target="publish-code" if="${publish}"/>
+  </target>
+
+  <target name="x86" description="Build x86 targets">
+    <property name="solution.platform" value="x86"/>
+  </target>
+
+  <target name="arm" description="Build arm targets">
+    <property name="solution.platform" value="ARM"/>
+  </target>
+
+  <target name="anycpu" description="Build Any CPU targets">
+    <property name="solution.platform" value="Any CPU"/>
   </target>
 
   <target name="net20" description="Build net20 targets">
@@ -259,6 +296,16 @@
 
   <target name="win8" description="Build win8 targets">
     <property name="build_type" value="win8"/>
+    <property name="build_signed" value="false"/>
+  </target>
+
+  <target name="signed-wp8" description="Build signed-wp8 targets">
+    <property name="build_type" value="wp8"/>
+    <property name="build_signed" value="true"/>
+  </target>
+
+  <target name="wp8" description="Build wp8 targets">
+    <property name="build_type" value="wp8"/>
     <property name="build_signed" value="false"/>
   </target>
 
@@ -373,10 +420,10 @@
     <exec program="msbuild.exe" >
       <arg value="/t:Build"/>
       <arg value="/p:Configuration=${configuration}"/>
-      <arg value='/p:Platform="Any CPU"'/>
+      <arg value='/p:Platform="${solution.platform}"'/>
       <arg value='/p:SharpDXSign=${build_signed}'/>
       <arg value="/v:normal"/>
-      <arg value="${project.name}.sln" />
+      <arg value="${solution.name}.sln" />
     </exec>
 
     <!-- Create Bin Output Directory -->
@@ -385,9 +432,15 @@
 
     <copy flatten="true" todir="Bin/${version-dir}">
       <fileset basedir="Source/">
-        <include name="SharpDX.*/Bin/${configuration}/*.dll" />
-        <include name="SharpDX.*/Bin/${configuration}/*.pdb" />
-        <include name="SharpDX.*/Bin/${configuration}/*.xml" />
+        <include name="SharpDX.*/Bin/${bin-dir}/*.dll" />
+        <include name="SharpDX.*/Bin/${bin-dir}/*.winmd" />
+        <include name="SharpDX.*/Bin/${bin-dir}/*.pdb" />
+        <include name="SharpDX.*/Bin/${bin-dir}/*.xml" />
+
+        <include name="Toolkit/SharpDX.*/Bin/${bin-dir}/*.dll" />
+        <include name="Toolkit/SharpDX.*/Bin/${bin-dir}/*.winmd" />
+        <include name="Toolkit/SharpDX.*/Bin/${bin-dir}/*.pdb" />
+        <include name="Toolkit/SharpDX.*/Bin/${bin-dir}/*.xml" />
       </fileset>
     </copy>
 
@@ -447,7 +500,6 @@
         <exclude name="Samples/Win8/Win8Demos.sln"/>
         <exclude name="**/*.sample.csproj"/>
         <exclude name="googlecode_password.txt"/>
-        <exclude name="Bin/**/*Toolkit*.dll"/>
         <exclude name="Samples/Win8/**/AppPackages/**"/>
       </fileset>
     </copy>

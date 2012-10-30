@@ -86,7 +86,6 @@
     </Compile>
     <Compile Include="SharpDXBase.cs" />
     <Compile Include="SharpDXContentProvider.cs" />
-    <Compile Include="SharpDXHelper.cs" />
     <Compile Include="SharpDXInterop.cs" />
   </ItemGroup>
   <ItemGroup>

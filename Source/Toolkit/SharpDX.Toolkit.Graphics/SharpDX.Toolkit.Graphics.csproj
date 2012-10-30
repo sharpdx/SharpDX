@@ -18,8 +18,10 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AssemblyDoc.cs" />
     <Compile Include="BlendState.cs" />
     <Compile Include="BlendStateCollection.cs" />
+    <Compile Include="NamespaceDoc.cs" />
     <Compile Include="RenderTargetGraphicsPresenter.cs" />
     <Compile Include="EffectConstantBufferKey.cs" />
     <Compile Include="EffectContentReader.cs" />
@@ -161,7 +163,7 @@
     <Compile Include="WICHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SharpDX.Direct2D1\SharpDX.Direct2D1.csproj">
+    <ProjectReference Include="..\..\SharpDX.Direct2D1\SharpDX.Direct2D1.csproj" Condition=" '$(SharpDXWP8)' == 'false'">
       <Project>{c97878f4-1510-4bba-8153-bd71da7d50d8}</Project>
       <Name>SharpDX.Direct2D1</Name>
     </ProjectReference>
@@ -184,6 +186,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="GraphicsClassDiagram.cd" />
+    <None Include="SharpDX.Toolkit.Graphics.nuspec" />
     <None Include="StockEffects\HLSL\Common.fxh" />
     <None Include="StockEffects\HLSL\CompileEffects.bat" />
     <None Include="StockEffects\HLSL\Lighting.fxh" />

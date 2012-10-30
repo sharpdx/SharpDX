@@ -22,38 +22,47 @@
 -->
 <package >
   <metadata>
-    <id>SharpDX.XAudio2</id>
+    <id>SharpDX.Toolkit.Graphics</id>
     <version>$version$</version>
-    <title>SharpDX.XAudio2</title>
+    <title>SharpDX.Toolkit.Graphics</title>
     <authors>Alexandre Mutel</authors>
     <owners>Alexandre Mutel</owners>
     <licenseUrl>http://sharpdx.org/License.txt</licenseUrl>
     <projectUrl>http://sharpdx.org</projectUrl>
     <iconUrl>http://sharpdx.org/logo_100x100.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Assembly providing DirectX - XAudio2, X3DAudio and XAPO managed API.</description>
+    <description>Graphics assembly for SharpDX.Toolkit assemblies.</description>
     <copyright>Copyright (c) 2010-2011 Alexandre Mutel</copyright>
-    <tags>SharpDX DirectX Direct3D MDX XAudio2 XAPO</tags>
+    <tags>SharpDX DirectX Direct3D Multimedia MDX 3D</tags>
+
     <!-- Release notes for this version-->
     <releaseNotes></releaseNotes>
+
     <dependencies>
       <dependency id="SharpDX" version="$version$"/>
+      <dependency id="SharpDX.Direct3D11" version="$version$"/>
+      <dependency id="SharpDX.DXGI" version="$version$"/>
+      <dependency id="SharpDX.Toolkit" version="$version$"/>
     </dependencies>
   </metadata>
 
   <files>
-    <file src="..\..\Bin\Signed-net20\SharpDX.XAudio2.dll" target="lib\net20" />
-    <file src="..\..\Bin\Signed-net20\SharpDX.XAudio2.pdb" target="lib\net20" />
-    <file src="..\..\Bin\Signed-net20\SharpDX.XAudio2.xml" target="lib\net20" />
+    <file src="..\..\..\Bin\Signed-net20\SharpDX.Toolkit.Graphics.dll" target="lib\net20" />
+    <file src="..\..\..\Bin\Signed-net20\SharpDX.Toolkit.Graphics.pdb" target="lib\net20" />
+    <file src="..\..\..\Bin\Signed-net20\SharpDX.Toolkit.Graphics.xml" target="lib\net20" />
 
-    <file src="..\..\Bin\Signed-net40\SharpDX.XAudio2.dll" target="lib\net40" />
-    <file src="..\..\Bin\Signed-net40\SharpDX.XAudio2.pdb" target="lib\net40" />
-    <file src="..\..\Bin\Signed-net40\SharpDX.XAudio2.xml" target="lib\net40" />
+    <file src="..\..\..\Bin\Signed-net40\SharpDX.Toolkit.Graphics.dll" target="lib\net40" />
+    <file src="..\..\..\Bin\Signed-net40\SharpDX.Toolkit.Graphics.pdb" target="lib\net40" />
+    <file src="..\..\..\Bin\Signed-net40\SharpDX.Toolkit.Graphics.xml" target="lib\net40" />
 
-    <file src="..\..\Bin\Signed-winrt\SharpDX.XAudio2.dll" target="lib\netcore45" />
-    <file src="..\..\Bin\Signed-winrt\SharpDX.XAudio2.pdb" target="lib\netcore45" />
-    <file src="..\..\Bin\Signed-winrt\SharpDX.XAudio2.xml" target="lib\netcore45" />
+    <!--<file src="..\..\Bin\Signed-net40\SharpDX.dll" target="lib\net40" />-->
+    <!--<file src="..\..\Bin\Signed-net40\SharpDX.xml" target="lib\net40" />-->
+
+    <file src="..\..\..\Bin\Signed-winrt\SharpDX.Toolkit.Graphics.dll" target="lib\netcore45" />
+    <file src="..\..\..\Bin\Signed-winrt\SharpDX.Toolkit.Graphics.pdb" target="lib\netcore45" />
+    <file src="..\..\..\Bin\Signed-winrt\SharpDX.Toolkit.Graphics.xml" target="lib\netcore45" />
 
     <file src="**\*.cs" target="src" />
   </files>
+
 </package>

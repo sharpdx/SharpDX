@@ -18,6 +18,7 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AssemblyDoc.cs" />
     <Compile Include="GameWindowWP8.cs" />
     <Compile Include="GamePlatformWP8.cs" />
     <Compile Include="GameWindowWinRT.cs" />
@@ -31,7 +32,9 @@
     <Compile Include="GameServiceRegistry.cs" />
     <Compile Include="GameTime.cs" />
     <Compile Include="GameWindow.cs" />
-    <Compile Include="GameWindowForm.cs" />
+    <Compile Include="GameWindowForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="GraphicsDeviceInformation.cs" />
     <Compile Include="GraphicsDeviceManager.cs" />
     <Compile Include="IDrawable.cs" />
@@ -40,6 +43,7 @@
     <Compile Include="IGraphicsDeviceFactory.cs" />
     <Compile Include="IUpdateable.cs" />
     <Compile Include="LaunchParameters.cs" />
+    <Compile Include="NamespaceDoc.cs" />
     <Compile Include="PreparingDeviceSettingsEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -64,6 +68,9 @@
       <Project>{9ff0707c-75bb-4984-a01f-b9eaad293f6c}</Project>
       <Name>SharpDX.Toolkit</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SharpDX.Toolkit.Game.nuspec" />
   </ItemGroup>
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

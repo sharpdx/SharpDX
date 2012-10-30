@@ -50,9 +50,9 @@
     <file src="..\..\Bin\Signed-net40\SharpDX.D3DCompiler.pdb" target="lib\net40" />
     <file src="..\..\Bin\Signed-net40\SharpDX.D3DCompiler.xml" target="lib\net40" />
 
-    <file src="..\..\Bin\Signed-winrt\SharpDX.D3DCompiler.dll" target="lib\winrt" />
-    <file src="..\..\Bin\Signed-winrt\SharpDX.D3DCompiler.pdb" target="lib\winrt" />
-    <file src="..\..\Bin\Signed-winrt\SharpDX.D3DCompiler.xml" target="lib\winrt" />
+    <file src="..\..\Bin\Signed-winrt\SharpDX.D3DCompiler.dll" target="lib\netcore45" />
+    <file src="..\..\Bin\Signed-winrt\SharpDX.D3DCompiler.pdb" target="lib\netcore45" />
+    <file src="..\..\Bin\Signed-winrt\SharpDX.D3DCompiler.xml" target="lib\netcore45" />
 
     <file src="**\*.cs" target="src" />
   </files>

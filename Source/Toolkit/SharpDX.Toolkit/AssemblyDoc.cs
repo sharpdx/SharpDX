@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,17 +17,13 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using SpriteBatchAndFont.Resources;
-
-namespace SpriteBatchAndFont
+namespace SharpDX.Toolkit
 {
     /// <summary>
-    /// Provides access to string resources.
+    /// The <see cref="A:SharpDX.Toolkit"/> assembly provides a high level DirectX API.
     /// </summary>
-    public class LocalizedStrings
+    [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    class AssemblyDoc
     {
-        private static AppResources _localizedResources = new AppResources();
-
-        public AppResources LocalizedResources { get { return _localizedResources; } }
     }
 }

@@ -43,8 +43,12 @@
     <DocumentationFile>bin\Win8Release\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Release|AnyCPU'">
-    <DocumentationFile>bin\WP8Release\$(AssemblyName).xml</DocumentationFile>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Release|x86'">
+    <DocumentationFile>bin\WP8Release-x86\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Release|ARM'">
+    <DocumentationFile>bin\WP8Release-ARM\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
   <ProjectExtensions/>

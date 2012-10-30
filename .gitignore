@@ -33,8 +33,10 @@ Thumbs.db
 *.dotCover
 sdk-include/
 vc-include/
+SharpDX.Assimp/
 obj/
 ipch*/
+AppPackages/
 [Rr]elease*/
 _ReSharper*/
 [Tt]est[Rr]esult*

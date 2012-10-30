@@ -23,6 +23,7 @@
     <Compile Include="AssemblyDoc.cs" />
     <Compile Include="AudioDecoder.cs" />
     <Compile Include="ByteStream.cs" />
+    <Compile Include="DirectX\NamespaceDoc.cs" />
     <Compile Include="DXGIDeviceManager.cs" />
     <Compile Include="IByteStream.cs" />
     <Compile Include="MediaEngineClassFactory.cs" />
@@ -49,6 +50,7 @@
     <Compile Include="MediaManager.cs" />
     <Compile Include="MediaType.cs" />
     <Compile Include="NamespaceDoc.cs" />
+    <Compile Include="OPM\NamespaceDoc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceCharacteristics.cs" />
     <Compile Include="SourceReader.cs" />

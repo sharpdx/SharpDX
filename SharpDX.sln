@@ -1,4 +1,5 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sources", "Sources", "{CC8DB471-0644-430D-9D4B-808A2475BEC0}"
 	ProjectSection(SolutionItems) = preProject
@@ -264,29 +265,29 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Desktop", "Desktop", "{86BC
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WinRT", "WinRT", "{775BD577-42DF-4F40-9BF7-DBD8604EA322}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld.Desktop", "Samples\Toolkit\Desktop\HelloWorld\HelloWorld.Desktop.csproj", "{05D111D6-C8FD-4DA4-B6C0-8C47E7081C3F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld.Desktop.sample", "Samples\Toolkit\Desktop\HelloWorld\HelloWorld.Desktop.sample.csproj", "{05D111D6-C8FD-4DA4-B6C0-8C47E7081C3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomEffect.Desktop", "Samples\Toolkit\Desktop\CustomEffect\CustomEffect.Desktop.csproj", "{0C9A4884-6357-4392-9341-27B43E195456}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomEffect.Desktop.sample", "Samples\Toolkit\Desktop\CustomEffect\CustomEffect.Desktop.sample.csproj", "{0C9A4884-6357-4392-9341-27B43E195456}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniCube.Desktop", "Samples\Toolkit\Desktop\MiniCube\MiniCube.Desktop.csproj", "{0B991266-369E-460C-86D5-7F91407E5407}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniCube.Desktop.sample", "Samples\Toolkit\Desktop\MiniCube\MiniCube.Desktop.sample.csproj", "{0B991266-369E-460C-86D5-7F91407E5407}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpriteBatchAndFont.Desktop", "Samples\Toolkit\Desktop\SpriteBatchAndFont\SpriteBatchAndFont.Desktop.csproj", "{618171D7-F09F-4C05-AE09-CFA4C4E9C53B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpriteBatchAndFont.Desktop.sample", "Samples\Toolkit\Desktop\SpriteBatchAndFont\SpriteBatchAndFont.Desktop.sample.csproj", "{618171D7-F09F-4C05-AE09-CFA4C4E9C53B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomEffect.WinRT", "Samples\Toolkit\WinRT\CustomEffect\CustomEffect.WinRT.csproj", "{253B1281-7088-474A-80EA-D7CC5D2015F9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomEffect.WinRT.sample", "Samples\Toolkit\WinRT\CustomEffect\CustomEffect.WinRT.sample.csproj", "{253B1281-7088-474A-80EA-D7CC5D2015F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomEffect.WinRTXaml", "Samples\Toolkit\WinRT\CustomEffect\CustomEffect.WinRTXaml.csproj", "{229164CC-9EBD-4C7A-AC53-EB3699866010}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomEffect.WinRTXaml.sample", "Samples\Toolkit\WinRT\CustomEffect\CustomEffect.WinRTXaml.sample.csproj", "{229164CC-9EBD-4C7A-AC53-EB3699866010}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld.WinRT", "Samples\Toolkit\WinRT\HelloWorld\HelloWorld.WinRT.csproj", "{909E7305-BEFC-4E0B-8F4A-FCB96EDBAC59}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld.WinRT.sample", "Samples\Toolkit\WinRT\HelloWorld\HelloWorld.WinRT.sample.csproj", "{909E7305-BEFC-4E0B-8F4A-FCB96EDBAC59}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld.WinRTXaml", "Samples\Toolkit\WinRT\HelloWorld\HelloWorld.WinRTXaml.csproj", "{CED8D394-44C5-4934-BC76-4CA851D7CAA9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld.WinRTXaml.sample", "Samples\Toolkit\WinRT\HelloWorld\HelloWorld.WinRTXaml.sample.csproj", "{CED8D394-44C5-4934-BC76-4CA851D7CAA9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniCube.WinRT", "Samples\Toolkit\WinRT\MiniCube\MiniCube.WinRT.csproj", "{60C924B6-B570-42CA-B42A-B7F81D4B9CD3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniCube.WinRT.sample", "Samples\Toolkit\WinRT\MiniCube\MiniCube.WinRT.sample.csproj", "{60C924B6-B570-42CA-B42A-B7F81D4B9CD3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniCube.WinRTXaml", "Samples\Toolkit\WinRT\MiniCube\MiniCube.WinRTXaml.csproj", "{5114D1A3-5423-4B73-8729-57CD90DC4BEC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniCube.WinRTXaml.sample", "Samples\Toolkit\WinRT\MiniCube\MiniCube.WinRTXaml.sample.csproj", "{5114D1A3-5423-4B73-8729-57CD90DC4BEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpriteBatchAndFont.WinRT", "Samples\Toolkit\WinRT\SpriteBatchAndFont\SpriteBatchAndFont.WinRT.csproj", "{A17BD4F4-8B5B-4214-B55B-FCDB31F655C2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpriteBatchAndFont.WinRT.sample", "Samples\Toolkit\WinRT\SpriteBatchAndFont\SpriteBatchAndFont.WinRT.sample.csproj", "{A17BD4F4-8B5B-4214-B55B-FCDB31F655C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpriteBatchAndFont.WinRTXaml", "Samples\Toolkit\WinRT\SpriteBatchAndFont\SpriteBatchAndFont.WinRTXaml.csproj", "{6143AB62-23ED-48B0-91A1-B0F09B8B9105}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpriteBatchAndFont.WinRTXaml.sample", "Samples\Toolkit\WinRT\SpriteBatchAndFont\SpriteBatchAndFont.WinRTXaml.sample.csproj", "{6143AB62-23ED-48B0-91A1-B0F09B8B9105}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
