@@ -448,6 +448,7 @@
     <foreach item="File" property="filename" if="${build_signed}">
       <in>
         <items>
+          <include name="Bin/${version-dir}/*.exe" />
           <include name="Bin/${version-dir}/*.dll" />
           <exclude name="Bin/${version-dir}/sharpdx_*.dll" />
         </items>
@@ -493,6 +494,7 @@
 
     <copy todir="Build/">
       <fileset>
+        <include name="Bin/**/*.exe"/>
         <include name="Bin/**/*.dll"/>
         <include name="Bin/**/*.winmd"/>
         <include name="Bin/**/*.xml"/>
