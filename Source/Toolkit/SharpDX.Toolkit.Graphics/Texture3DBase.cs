@@ -125,11 +125,10 @@ namespace SharpDX.Toolkit.Graphics
             if ((this.Description.BindFlags & BindFlags.UnorderedAccess) == 0)
                 return null;
 
-            int sliceCount;
-            int mipCount;
-            GetViewSliceBounds(ViewType.Single, ref zSlice, ref mipIndex, out sliceCount, out mipCount);
+            int sliceCount = 1;
 
-            var uavIndex = GetViewIndex(ViewType.Single, zSlice, mipIndex);
+            // Use Full although we are binding to a single array/mimap slice, just to get the correct index
+            var uavIndex = GetViewIndex(ViewType.Full, zSlice, mipIndex);
 
             lock (this.unorderedAccessViews)
             {

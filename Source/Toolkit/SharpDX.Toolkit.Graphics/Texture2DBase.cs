@@ -162,38 +162,39 @@ namespace SharpDX.Toolkit.Graphics
             if ((this.Description.BindFlags & BindFlags.UnorderedAccess) == 0)
                 return null;
 
-            int arrayCount;
-            int mipCount;
-            GetViewSliceBounds(ViewType.Single, ref arrayOrDepthSlice, ref mipIndex, out arrayCount, out mipCount);
+            int arrayCount = 1;
 
-            var uavIndex = GetViewIndex(ViewType.Single, arrayOrDepthSlice, mipIndex);
-            var uav = this.unorderedAccessViews[uavIndex];
+            // Use Full although we are binding to a single array/mimap slice, just to get the correct index
+            var uavIndex = GetViewIndex(ViewType.Full, arrayOrDepthSlice, mipIndex);
 
-            // Creates the unordered access view
-            if (uav == null)
+            lock (this.unorderedAccessViews)
             {
-                var uavDescription = new UnorderedAccessViewDescription()
-                {
-                    Format = this.Description.Format,
-                    Dimension = this.Description.ArraySize > 1 ? UnorderedAccessViewDimension.Texture2DArray : UnorderedAccessViewDimension.Texture2D
-                };
+                var uav = this.unorderedAccessViews[uavIndex];
 
-                if (this.Description.ArraySize > 1)
+                // Creates the unordered access view
+                if (uav == null)
                 {
-                    uavDescription.Texture2DArray.ArraySize = arrayCount;
-                    uavDescription.Texture2DArray.FirstArraySlice = arrayOrDepthSlice;
-                    uavDescription.Texture2DArray.MipSlice = mipIndex;
-                }
-                else
-                {
-                    uavDescription.Texture2D.MipSlice = mipIndex;
-                }
+                    var uavDescription = new UnorderedAccessViewDescription() {
+                        Format = this.Description.Format,
+                        Dimension = this.Description.ArraySize > 1 ? UnorderedAccessViewDimension.Texture2DArray : UnorderedAccessViewDimension.Texture2D
+                    };
 
-                uav = new UnorderedAccessView(GraphicsDevice, Resource, uavDescription);
-                this.unorderedAccessViews[uavIndex] = ToDispose(uav);
+                    if (this.Description.ArraySize > 1)
+                    {
+                        uavDescription.Texture2DArray.ArraySize = arrayCount;
+                        uavDescription.Texture2DArray.FirstArraySlice = arrayOrDepthSlice;
+                        uavDescription.Texture2DArray.MipSlice = mipIndex;
+                    }
+                    else
+                    {
+                        uavDescription.Texture2D.MipSlice = mipIndex;
+                    }
+
+                    uav = new UnorderedAccessView(GraphicsDevice, Resource, uavDescription);
+                    this.unorderedAccessViews[uavIndex] = ToDispose(uav);
+                }
+                return uav;
             }
-
-            return uav;
         }
 
         /// <summary>
