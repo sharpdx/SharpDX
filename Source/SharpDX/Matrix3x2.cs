@@ -660,7 +660,7 @@ namespace SharpDX
         {
             Vector2 result;
             result.X = (point.X * matrix.M11) + (point.Y * matrix.M21) + matrix.M31;
-            result.Y = (point.Y * matrix.M12) + (point.Y * matrix.M22) + matrix.M32;
+            result.Y = (point.X * matrix.M12) + (point.Y * matrix.M22) + matrix.M32;
             return result;
         }
 
@@ -675,7 +675,7 @@ namespace SharpDX
         {
             Vector2 localResult;
             localResult.X = (point.X * matrix.M11) + (point.Y * matrix.M21) + matrix.M31;
-            localResult.Y = (point.Y * matrix.M12) + (point.Y * matrix.M22) + matrix.M32;
+            localResult.Y = (point.X * matrix.M12) + (point.Y * matrix.M22) + matrix.M32;
             result = localResult;
         }
 
