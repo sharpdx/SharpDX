@@ -318,7 +318,7 @@ namespace SharpDX.Toolkit.Graphics
         public void Draw(Texture2D texture, DrawingRectangle destinationRectangle, DrawingRectangle? sourceRectangle, Color4 color, float rotation, Vector2 origin, SpriteEffects effects, float layerDepth)
         {
             var destination = new DrawingRectangleF(destinationRectangle.X, destinationRectangle.Y, destinationRectangle.Width, destinationRectangle.Height);
-            DrawSprite(texture, ref destination, false, ref sourceRectangle, color, 0f, ref vector2Zero, SpriteEffects.None, 0f);
+            DrawSprite(texture, ref destination, false, ref sourceRectangle, color, 0f, ref vector2Zero, SpriteEffects.None, layerDepth);
         }
 
         /// <summary>
