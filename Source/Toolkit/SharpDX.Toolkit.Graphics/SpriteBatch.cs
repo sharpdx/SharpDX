@@ -94,18 +94,18 @@ namespace SharpDX.Toolkit.Graphics
         private const int MaxVertexCount = MaxBatchSize * VerticesPerSprite;
         private const int MaxIndexCount = MaxBatchSize * IndicesPerSprite;
 
+        private static readonly Vector2[] CornerOffsets = { Vector2.Zero, Vector2.UnitX, Vector2.UnitY, Vector2.One };
+        private static readonly short[] indices;
         private static Vector2 vector2Zero = Vector2.Zero;
         private static DrawingRectangle? nullRectangle;
-        private static readonly Vector2[] CornerOffsets = {Vector2.Zero, Vector2.UnitX, Vector2.UnitY, Vector2.One};
+        
         private readonly BackToFrontComparer backToFrontComparer = new BackToFrontComparer();
-
         private readonly EffectParameter effectMatrixTransform;
         private readonly EffectParameter effectSampler;
         private readonly FrontToBackComparer frontToBackComparer = new FrontToBackComparer();
         private readonly Buffer<short> indexBuffer;
         private readonly Effect spriteEffect;
         private readonly EffectPass spriteEffectPass;
-        private readonly Direct3D11.Texture2D tempTexture2D = new Direct3D11.Texture2D(IntPtr.Zero);
         private readonly TextureComparer textureComparer = new TextureComparer();
         private readonly ResourceContext resourceContext;
         private readonly VertexInputLayout vertexInputLayout;
@@ -128,8 +128,6 @@ namespace SharpDX.Toolkit.Graphics
         private Texture2D[] spriteTextures;
 
         private Matrix transformMatrix;
-
-        private static readonly short[] indices;
 
         static SpriteBatch()
         {
