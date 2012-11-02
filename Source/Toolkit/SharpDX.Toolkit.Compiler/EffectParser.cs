@@ -127,11 +127,30 @@ namespace SharpDX.Toolkit.Graphics
                 switch (token.Type)
                 {
                     case TokenType.Identifier:
-                        if ((token.EqualString("technique") || token.EqualString("technique10") || token.EqualString("technique11")) && CheckAllBracketsClosed())
+                        if ((token.EqualString("technique") || token.EqualString("technique10") || token.EqualString("technique11")) && curlyBraceCount == 0)
                             ParseTechnique();
                         break;
                 }
             } while (true);
+
+            if (!CheckAllBracketsClosed())
+            {
+                if (parentCount != 0)
+                {
+                    Logger.Error("Error matching closing parenthese for '('", lastParentToken.Span);
+                }
+
+                if (bracketCount != 0)
+                {
+                    Logger.Error("Error matching closing bracket for '['", lastBracketToken.Span);
+                }
+
+                if (curlyBraceCount != 0)
+                {
+                    Logger.Error("Error matching closing curly brace for '{'", lastCurlyBraceToken.Span);
+                }
+            }
+
 
             return result;
         }
@@ -141,16 +160,24 @@ namespace SharpDX.Toolkit.Graphics
             return parentCount == 0 && bracketCount == 0 && curlyBraceCount == 0;
         }
 
+        private Token lastParentToken;
+
+        private Token lastBracketToken;
+
+        private Token lastCurlyBraceToken;
+
         private bool HandleBrackets(Token token)
         {
             bool isBracketOk = true;
             switch (token.Type)
             {
                 case TokenType.LeftParent:
+                    lastParentToken = token;
                     parentCount++;
                     break;
 
                 case TokenType.RightParent:
+                    lastParentToken = token;
                     parentCount--;
                     if (parentCount < 0)
                     {
@@ -161,10 +188,12 @@ namespace SharpDX.Toolkit.Graphics
                     break;
 
                 case TokenType.LeftBracket:
+                    lastBracketToken = token;
                     bracketCount++;
                     break;
 
                 case TokenType.RightBracket:
+                    lastBracketToken = token;
                     bracketCount--;
                     if (bracketCount < 0)
                     {
@@ -175,10 +204,12 @@ namespace SharpDX.Toolkit.Graphics
                     break;
 
                 case TokenType.LeftCurlyBrace:
+                    lastCurlyBraceToken = token;
                     curlyBraceCount++;
                     break;
 
                 case TokenType.RightCurlyBrace:
+                    lastCurlyBraceToken = token;
                     curlyBraceCount--;
                     if (curlyBraceCount < 0)
                     {
