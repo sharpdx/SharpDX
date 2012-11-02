@@ -107,7 +107,7 @@ namespace SharpDX.Toolkit.Graphics
         private readonly EffectPass spriteEffectPass;
         private readonly Direct3D11.Texture2D tempTexture2D = new Direct3D11.Texture2D(IntPtr.Zero);
         private readonly TextureComparer textureComparer = new TextureComparer();
-        private readonly Buffer<VertexPositionColorTexture> vertexBuffer;
+        private readonly ResourceContext resourceContext;
         private readonly VertexInputLayout vertexInputLayout;
         private BlendState blendState;
 
@@ -128,7 +128,6 @@ namespace SharpDX.Toolkit.Graphics
         private Texture2D[] spriteTextures;
 
         private Matrix transformMatrix;
-        private int vertexBufferPosition;
 
         private static readonly short[] indices;
 
@@ -166,8 +165,7 @@ namespace SharpDX.Toolkit.Graphics
             effectSampler = spriteEffect.Parameters["TextureSampler"];
 
             // Creates the vertex buffer (shared by within a device context).
-            vertexBuffer = GraphicsDevice.GetOrCreateSharedData(SharedDataType.PerContext, "SpriteBatch.VertexBuffer", () => Buffer.Vertex.New<VertexPositionColorTexture>(GraphicsDevice, MaxVertexCount, ResourceUsage.Dynamic));
-            vertexBufferPosition = 0;
+            resourceContext = GraphicsDevice.GetOrCreateSharedData(SharedDataType.PerContext, "SpriteBatch.VertexBuffer", () => new ResourceContext(GraphicsDevice));
 
             // Creates the vertex input layout (we don't need to cache them as they are already cached).
             vertexInputLayout = VertexInputLayout.New(VertexBufferLayout.New<VertexPositionColorTexture>(0));
@@ -729,7 +727,7 @@ namespace SharpDX.Toolkit.Graphics
 
         private void DrawBatchPerTexture(Texture2D texture, SpriteInfo[] sprites, int offset, int count)
         {
-            var nativeShaderResourceViewPointer = ((ShaderResourceView) texture).NativePointer;
+            var nativeShaderResourceViewPointer = ((ShaderResourceView)texture).NativePointer;
 
             if (customEffect != null)
             {
@@ -772,19 +770,16 @@ namespace SharpDX.Toolkit.Graphics
             float deltaY = 1f/(texture.Height);
             while (count > 0)
             {
-                var noOverwrite = SetDataOptions.NoOverwrite;
-
                 // How many sprites do we want to draw?
                 int batchSize = count;
 
                 // How many sprites does the D3D vertex buffer have room for?
-                int remainingSpace = MaxBatchSize - vertexBufferPosition;
+                int remainingSpace = MaxBatchSize - resourceContext.VertexBufferPosition;
                 if (batchSize > remainingSpace)
                 {
                     if (remainingSpace < MinBatchSize)
                     {
-                        vertexBufferPosition = 0;
-                        noOverwrite = SetDataOptions.Discard;
+                        resourceContext.VertexBufferPosition = 0;
                         batchSize = (count < MaxBatchSize) ? count : MaxBatchSize;
                     }
                     else
@@ -794,8 +789,11 @@ namespace SharpDX.Toolkit.Graphics
                 }
 
                 // Sets the data directly to the buffer in memory
-                int offsetInBytes = vertexBufferPosition* VerticesPerSprite * Utilities.SizeOf<VertexPositionColorTexture>();
-                vertexBuffer.SetDynamicData(GraphicsDevice, ptr =>
+                int offsetInBytes = resourceContext.VertexBufferPosition * VerticesPerSprite * Utilities.SizeOf<VertexPositionColorTexture>();
+
+                var noOverwrite = resourceContext.VertexBufferPosition == 0 ? SetDataOptions.Discard : SetDataOptions.NoOverwrite;
+
+                resourceContext.VertexBuffer.SetDynamicData(GraphicsDevice, ptr =>
                                                                 {
                                                                     var texturePtr = (VertexPositionColorTexture*) ptr;
                                                                     for (int i = 0; i < batchSize; i++)
@@ -803,12 +801,12 @@ namespace SharpDX.Toolkit.Graphics
                                                                 }, offsetInBytes, noOverwrite);
 
                 // Draw from the specified index
-                int startIndex = vertexBufferPosition * IndicesPerSprite;
+                int startIndex = resourceContext.VertexBufferPosition * IndicesPerSprite;
                 int indexCount = batchSize * IndicesPerSprite;
                 GraphicsDevice.DrawIndexed(PrimitiveType.TriangleList, indexCount, startIndex);
 
                 // Update position, offset and remaining count
-                vertexBufferPosition += batchSize;
+                resourceContext.VertexBufferPosition += batchSize;
                 offset += batchSize;
                 count -= batchSize;
             }
@@ -884,10 +882,16 @@ namespace SharpDX.Toolkit.Graphics
             GraphicsDevice.SetVertexInputLayout(vertexInputLayout);
 
             // VertexBuffer
-            GraphicsDevice.SetVertexBuffer(vertexBuffer);
+            GraphicsDevice.SetVertexBuffer(resourceContext.VertexBuffer);
 
             // Index buffer
             GraphicsDevice.SetIndexBuffer(indexBuffer, false);
+
+            // If this is a deferred D3D context, reset position so the first Map call will use D3D11_MAP_WRITE_DISCARD.
+            if (GraphicsDevice.IsDeferred)
+            {
+                resourceContext.VertexBufferPosition = 0;
+            }
         }
 
         #region Nested type: BackToFrontComparer
@@ -959,5 +963,21 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         #endregion
+
+
+        /// <summary>
+        /// Use a ResourceContext per GraphicsDevice (DeviceContext)
+        /// </summary>
+        private class ResourceContext : Component
+        {
+            public readonly Buffer<VertexPositionColorTexture> VertexBuffer;
+
+            public int VertexBufferPosition;
+
+            public ResourceContext(GraphicsDevice device)
+            {
+                VertexBuffer = ToDispose(Buffer.Vertex.New<VertexPositionColorTexture>(device, MaxVertexCount, ResourceUsage.Dynamic));
+            }
+        }
     }
 }
