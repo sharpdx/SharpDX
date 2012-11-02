@@ -40,8 +40,6 @@ namespace SharpDX.Toolkit.Graphics
         private int maxSlotCountForVertexBuffer;
         private Dictionary<VertexInputLayout, InputLayoutPair> inputLayoutDeviceCache;
         private Dictionary<VertexInputLayout, InputLayoutPair> inputLayoutContextCache;
-        internal int spriteBeginCount;
-        internal int spriteImmediateBeginCount;
 
         private VertexInputLayout currentVertexInputLayout;
         internal EffectPass CurrentPass;

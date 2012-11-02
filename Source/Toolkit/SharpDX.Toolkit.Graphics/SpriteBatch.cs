@@ -255,21 +255,15 @@ namespace SharpDX.Toolkit.Graphics
             // Immediate mode, then prepare for rendering here instead of End()
             if (sortMode == SpriteSortMode.Immediate)
             {
-                if (GraphicsDevice.spriteBeginCount > 0)
+                if (resourceContext.IsInImmediateMode)
                 {
                     throw new InvalidOperationException("Only one SpriteBatch at a time can use SpriteSortMode.Immediate");
                 }
 
                 PrepareForRendering();
 
-                GraphicsDevice.spriteImmediateBeginCount = (ushort) (GraphicsDevice.spriteImmediateBeginCount + 1);
+                resourceContext.IsInImmediateMode = true;
             }
-            else if (GraphicsDevice.spriteImmediateBeginCount > 0)
-            {
-                throw new InvalidOperationException("Nesting more than one SpriteBatch. Begin when using a SpriteBatch with SpriteSortMode.Immediate is not allowed.");
-            }
-
-            GraphicsDevice.spriteBeginCount = (ushort) (GraphicsDevice.spriteBeginCount + 1);
 
             // Sets to true isBeginCalled
             isBeginCalled = true;
@@ -518,10 +512,16 @@ namespace SharpDX.Toolkit.Graphics
 
             if (spriteSortMode == SpriteSortMode.Immediate)
             {
-                Interlocked.Decrement(ref GraphicsDevice.spriteImmediateBeginCount);
+                resourceContext.IsInImmediateMode = false;
             }
             else if (spriteQueueCount > 0)
             {
+                  // Draw the queued sprites now.
+                if (resourceContext.IsInImmediateMode)
+                {
+                    throw new InvalidOperationException("Cannot end one SpriteBatch while another is using SpriteSortMode.Immediate");
+                }
+
                 // If not immediate, then setup and render all sprites
                 PrepareForRendering();
                 FlushBatch();
@@ -538,7 +538,6 @@ namespace SharpDX.Toolkit.Graphics
 
             // We are with begin pair
             isBeginCalled = false;
-            Interlocked.Decrement(ref GraphicsDevice.spriteBeginCount);
         }
 
         private void FlushBatch()
@@ -973,6 +972,8 @@ namespace SharpDX.Toolkit.Graphics
             public readonly Buffer<VertexPositionColorTexture> VertexBuffer;
 
             public int VertexBufferPosition;
+
+            public bool IsInImmediateMode;
 
             public ResourceContext(GraphicsDevice device)
             {
