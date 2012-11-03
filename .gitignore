@@ -36,6 +36,7 @@ vc-include/
 SharpDX.Assimp/
 obj/
 ipch*/
+Demo/
 AppPackages/
 [Rr]elease*/
 _ReSharper*/

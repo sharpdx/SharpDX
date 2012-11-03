@@ -14,14 +14,14 @@
   </ItemGroup>
 
   <!--Import Windows 8 WINRT targets only for WIN8 platforms-->
-  <Import Condition="'$(Configuration)' == 'Win8Debug' or '$(Configuration)' == 'Win8Release'" Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
-
-  <!--Import standard targets for all non-Windows Phone 8 platforms-->
-  <Import Condition="'$(SharpDXWP8)' == 'false'" Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Condition="'$(SharpDXWin8)' == 'true'" Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
 
   <!--Import Windows Phone 8 targets only for WP8 -->
   <Import Condition="'$(SharpDXWP8)' == 'true'" Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Condition="'$(SharpDXWP8)' == 'true'" Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
+
+  <!--Import standard targets for all non-Windows(Phone) 8 platforms-->
+  <Import Condition="'$(SharpDXWin8Core)' == 'false'" Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DocumentationFile>bin\Release\$(AssemblyName).xml</DocumentationFile>

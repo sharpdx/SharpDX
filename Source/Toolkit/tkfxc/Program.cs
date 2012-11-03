@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
 using SharpDX.Direct3D;
@@ -83,6 +84,12 @@ namespace SharpDX.Toolkit.Graphics
 
         void Run(string[] args)
         {
+            var assemblyUri = new Uri(Assembly.GetEntryAssembly().CodeBase);
+            var assemblyPath = Path.GetDirectoryName(assemblyUri.LocalPath);
+
+            var newPath = Path.GetFullPath(Path.Combine(assemblyPath, @"..\Redist\D3D\" + (IntPtr.Size == 4 ? "x86" : "x64"))) + ";" + Environment.GetEnvironmentVariable("PATH");
+            Environment.SetEnvironmentVariable("PATH", newPath);
+
             // Print the exe header
             PrintHeader();
 
