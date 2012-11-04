@@ -109,6 +109,11 @@ namespace SharpDX.Toolkit.Graphics
         private readonly TextureComparer textureComparer = new TextureComparer();
         private readonly ResourceContext resourceContext;
         private readonly VertexInputLayout vertexInputLayout;
+        private readonly Dictionary<IntPtr, TextureInfo> textureInfos = new Dictionary<IntPtr, TextureInfo>(128);
+        private readonly Resource tempResource = new Resource(IntPtr.Zero);
+        private readonly SharpDX.Direct3D11.Texture1D tempTexture1D = new SharpDX.Direct3D11.Texture1D(IntPtr.Zero);
+        private readonly SharpDX.Direct3D11.Texture2D tempTexture2D = new SharpDX.Direct3D11.Texture2D(IntPtr.Zero);
+        private readonly SharpDX.Direct3D11.Texture3D tempTexture3D = new SharpDX.Direct3D11.Texture3D(IntPtr.Zero);
         private BlendState blendState;
 
         private Effect customEffect;
@@ -125,7 +130,8 @@ namespace SharpDX.Toolkit.Graphics
         private SpriteInfo[] spriteQueue;
         private int spriteQueueCount;
         private SpriteSortMode spriteSortMode;
-        private Texture2D[] spriteTextures;
+        private TextureInfo[] spriteTextures;
+
 
         private Matrix transformMatrix;
 
@@ -153,7 +159,7 @@ namespace SharpDX.Toolkit.Graphics
             graphicsDevice.DefaultEffectPool.RegisterBytecode(effectBytecode);
 
             spriteQueue = new SpriteInfo[MaxBatchSize];
-            spriteTextures = new Texture2D[MaxBatchSize];
+            spriteTextures = new TextureInfo[MaxBatchSize];
 
             spriteEffect = new Effect(graphicsDevice, graphicsDevice.DefaultEffectPool, "Toolkit::SpriteEffect");
             spriteEffect.CurrentTechnique = spriteEffect.Techniques[0];
@@ -276,7 +282,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>
         /// Before making any calls to Draw, you must call Begin. Once all calls to Draw are complete, call End. 
         /// </remarks>
-        public void Draw(Texture2D texture, DrawingRectangle destinationRectangle, Color4 color)
+        public void Draw(ShaderResourceView texture, DrawingRectangle destinationRectangle, Color4 color)
         {
             var destination = new DrawingRectangleF(destinationRectangle.X, destinationRectangle.Y, destinationRectangle.Width, destinationRectangle.Height);
             DrawSprite(texture, ref destination, false, ref nullRectangle, color, 0f, ref vector2Zero, SpriteEffects.None, 0f);
@@ -288,7 +294,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="texture">A texture.</param>
         /// <param name="position">The location (in screen coordinates) to draw the sprite.</param>
         /// <param name="color">The color to tint a sprite. Use Color.White for full color with no tinting.</param>
-        public void Draw(Texture2D texture, Vector2 position, Color4 color)
+        public void Draw(ShaderResourceView texture, Vector2 position, Color4 color)
         {
             var destination = new DrawingRectangleF(position.X, position.Y, 1f, 1f);
             DrawSprite(texture, ref destination, true, ref nullRectangle, color, 0f, ref vector2Zero, SpriteEffects.None, 0f);
@@ -305,7 +311,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="origin">The sprite origin; the default is (0,0) which represents the upper-left corner.</param>
         /// <param name="effects">Effects to apply.</param>
         /// <param name="layerDepth">The depth of a layer. By default, 0 represents the front layer and 1 represents a back layer. Use SpriteSortMode if you want sprites to be sorted during drawing.</param>
-        public void Draw(Texture2D texture, DrawingRectangle destinationRectangle, DrawingRectangle? sourceRectangle, Color4 color, float rotation, Vector2 origin, SpriteEffects effects, float layerDepth)
+        public void Draw(ShaderResourceView texture, DrawingRectangle destinationRectangle, DrawingRectangle? sourceRectangle, Color4 color, float rotation, Vector2 origin, SpriteEffects effects, float layerDepth)
         {
             var destination = new DrawingRectangleF(destinationRectangle.X, destinationRectangle.Y, destinationRectangle.Width, destinationRectangle.Height);
             DrawSprite(texture, ref destination, false, ref sourceRectangle, color, 0f, ref vector2Zero, SpriteEffects.None, layerDepth);
@@ -318,7 +324,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="position">The location (in screen coordinates) to draw the sprite.</param>
         /// <param name="sourceRectangle">A rectangle that specifies (in texels) the source texels from a texture. Use null to draw the entire texture. </param>
         /// <param name="color">The color to tint a sprite. Use Color.White for full color with no tinting.</param>
-        public void Draw(Texture2D texture, Vector2 position, DrawingRectangle? sourceRectangle, Color4 color)
+        public void Draw(ShaderResourceView texture, Vector2 position, DrawingRectangle? sourceRectangle, Color4 color)
         {
             var destination = new DrawingRectangleF(position.X, position.Y, 1f, 1f);
             DrawSprite(texture, ref destination, true, ref sourceRectangle, color, 0f, ref vector2Zero, SpriteEffects.None, 0f);
@@ -336,7 +342,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="scale">Scale factor.</param>
         /// <param name="effects">Effects to apply.</param>
         /// <param name="layerDepth">The depth of a layer. By default, 0 represents the front layer and 1 represents a back layer. Use SpriteSortMode if you want sprites to be sorted during drawing.</param>
-        public void Draw(Texture2D texture, Vector2 position, DrawingRectangle? sourceRectangle, Color4 color, float rotation, Vector2 origin, float scale, SpriteEffects effects, float layerDepth)
+        public void Draw(ShaderResourceView texture, Vector2 position, DrawingRectangle? sourceRectangle, Color4 color, float rotation, Vector2 origin, float scale, SpriteEffects effects, float layerDepth)
         {
             var destination = new DrawingRectangleF(position.X, position.Y, scale, scale);
             DrawSprite(texture, ref destination, true, ref sourceRectangle, color, rotation, ref origin, effects, layerDepth);
@@ -354,7 +360,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="scale">Scale factor.</param>
         /// <param name="effects">Effects to apply.</param>
         /// <param name="layerDepth">The depth of a layer. By default, 0 represents the front layer and 1 represents a back layer. Use SpriteSortMode if you want sprites to be sorted during drawing.</param>
-        public void Draw(Texture2D texture, Vector2 position, DrawingRectangle? sourceRectangle, Color4 color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
+        public void Draw(ShaderResourceView texture, Vector2 position, DrawingRectangle? sourceRectangle, Color4 color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
         {
             var destination = new DrawingRectangleF(position.X, position.Y, scale.X, scale.Y);
             DrawSprite(texture, ref destination, true, ref sourceRectangle, color, rotation, ref origin, effects, layerDepth);
@@ -534,6 +540,9 @@ namespace SharpDX.Toolkit.Graphics
                 customEffect = null;
             }
 
+            // Clear stored texture infos
+            textureInfos.Clear();
+
             // We are with begin pair
             isBeginCalled = false;
         }
@@ -556,10 +565,10 @@ namespace SharpDX.Toolkit.Graphics
 
             // Iterate on all sprites and group batch per texture.
             int offset = 0;
-            Texture2D previousTexture = null;
+            var previousTexture = default(TextureInfo);
             for (int i = 0; i < spriteQueueCount; i++)
             {
-                Texture2D texture;
+                TextureInfo texture;
 
                 if (spriteSortMode == SpriteSortMode.Deferred)
                 {
@@ -575,19 +584,20 @@ namespace SharpDX.Toolkit.Graphics
                     texture = spriteTextures[index];
                 }
 
-                if (texture != previousTexture)
+                if (texture.ShaderResourceView != previousTexture.ShaderResourceView)
                 {
                     if (i > offset)
                     {
-                        DrawBatchPerTexture(previousTexture, spriteQueueForBatch, offset, i - offset);
+                        DrawBatchPerTexture(ref previousTexture, spriteQueueForBatch, offset, i - offset);
                     }
+
                     offset = i;
                     previousTexture = texture;
                 }
             }
 
             // Draw the last batch
-            DrawBatchPerTexture(previousTexture, spriteQueueForBatch, offset, spriteQueueCount - offset);
+            DrawBatchPerTexture(ref previousTexture, spriteQueueForBatch, offset, spriteQueueCount - offset);
 
             // Reset the queue.
             Array.Clear(spriteTextures, 0, spriteQueueCount);
@@ -634,12 +644,14 @@ namespace SharpDX.Toolkit.Graphics
 
             // Reset all indices to the original order
             for (int i = 0; i < spriteQueueCount; i++)
+            {
                 sortIndices[i] = i;
+            }
 
             Array.Sort(sortIndices, 0, spriteQueueCount, comparer);
         }
 
-        internal unsafe void DrawSprite(Texture2D texture, ref DrawingRectangleF destination, bool scaleDestination, ref DrawingRectangle? sourceRectangle, Color4 color, float rotation, ref Vector2 origin, SpriteEffects effects, float depth)
+        internal unsafe void DrawSprite(ShaderResourceView texture, ref DrawingRectangleF destination, bool scaleDestination, ref DrawingRectangle? sourceRectangle, Color4 color, float rotation, ref Vector2 origin, SpriteEffects effects, float depth)
         {
             // Check that texture is not null
             if (texture == null)
@@ -657,6 +669,42 @@ namespace SharpDX.Toolkit.Graphics
             if (spriteQueueCount >= spriteQueue.Length)
             {
                 Array.Resize(ref spriteQueue, spriteQueue.Length*2);
+            }
+
+            // Gets the resource information from the view (width, height).
+            // Cache the result in order to avoid this request if the texture is reused 
+            // inside a same Begin/End block.
+            TextureInfo textureInfo;
+            if (!textureInfos.TryGetValue(texture.NativePointer, out textureInfo))
+            {
+                textureInfo.ShaderResourceView = texture.NativePointer;
+                IntPtr resourcePtr;
+                texture.GetResource(out resourcePtr);
+                tempResource._nativePointer = (void*)resourcePtr;
+                switch (tempResource.Dimension)
+                {
+                    case ResourceDimension.Texture1D:
+                        tempTexture1D._nativePointer = (void*)resourcePtr;
+                        textureInfo.Width = tempTexture1D.Description.Width;
+                        textureInfo.Height = 1;
+                        break;
+                    case ResourceDimension.Texture2D:
+                        tempTexture2D._nativePointer = (void*)resourcePtr;
+                        var description2D = tempTexture2D.Description;
+                        textureInfo.Width = description2D.Width;
+                        textureInfo.Height = description2D.Height;
+                        break;
+                    case ResourceDimension.Texture3D:
+                        tempTexture3D._nativePointer = (void*)resourcePtr;
+                        var description3D = tempTexture3D.Description;
+                        textureInfo.Width = description3D.Width;
+                        textureInfo.Height = description3D.Height;
+                        break;
+                    default:
+                        throw new ArgumentException("Invalid resource for texture. Must be Texture1D/2D/3D", "texture");
+                }
+
+                textureInfos.Add(texture.NativePointer, textureInfo);
             }
 
             // Put values in next SpriteInfo
@@ -679,8 +727,8 @@ namespace SharpDX.Toolkit.Graphics
                     // Else, use directly the size of the texture
                     spriteInfo->Source.X = 0.0f;
                     spriteInfo->Source.Y = 0.0f;
-                    width = texture.Width;
-                    height = texture.Height;
+                    width = textureInfo.Width;
+                    height = textureInfo.Height;
                 }
 
                 // Sets the width and height
@@ -709,7 +757,7 @@ namespace SharpDX.Toolkit.Graphics
             // If we are in immediate mode, render the sprite directly
             if (spriteSortMode == SpriteSortMode.Immediate)
             {
-                DrawBatchPerTexture(texture, spriteQueue, 0, 1);
+                DrawBatchPerTexture(ref textureInfo, spriteQueue, 0, 1);
             }
             else
             {
@@ -717,14 +765,14 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     Array.Resize(ref spriteTextures, spriteQueue.Length);
                 }
-                spriteTextures[spriteQueueCount] = texture;
+                spriteTextures[spriteQueueCount] = textureInfo;
                 spriteQueueCount++;
             }
         }
 
-        private void DrawBatchPerTexture(Texture2D texture, SpriteInfo[] sprites, int offset, int count)
+        private void DrawBatchPerTexture(ref TextureInfo texture, SpriteInfo[] sprites, int offset, int count)
         {
-            var nativeShaderResourceViewPointer = ((ShaderResourceView)texture).NativePointer;
+            var nativeShaderResourceViewPointer = texture.ShaderResourceView;
 
             if (customEffect != null)
             {
@@ -737,13 +785,15 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     // Sets the texture on the custom effect if the parameter exist
                     if (customEffectTexture != null)
+                    {
                         customEffectTexture.SetResourcePointer(nativeShaderResourceViewPointer);
+                    }
 
                     // Apply the current pass
                     currentTechnique.Passes[i].Apply();
 
                     // Draw the batch of sprites
-                    DrawBatchPerTextureAndPass(texture, sprites, offset, count);
+                    DrawBatchPerTextureAndPass(ref texture, sprites, offset, count);
                 }
             }
             else
@@ -757,11 +807,11 @@ namespace SharpDX.Toolkit.Graphics
                     GraphicsDevice.PixelShaderStage.SetShaderResources(0, 1, new IntPtr(&nativeShaderResourceViewPointer));
                 }
 
-                DrawBatchPerTextureAndPass(texture, sprites, offset, count);
+                DrawBatchPerTextureAndPass(ref texture, sprites, offset, count);
             }
         }
 
-        private unsafe void DrawBatchPerTextureAndPass(Texture2D texture, SpriteInfo[] sprites, int offset, int count)
+        private unsafe void DrawBatchPerTextureAndPass(ref TextureInfo texture, SpriteInfo[] sprites, int offset, int count)
         {
             float deltaX = 1f/(texture.Width);
             float deltaY = 1f/(texture.Height);
@@ -931,13 +981,13 @@ namespace SharpDX.Toolkit.Graphics
 
         private class TextureComparer : IComparer<int>
         {
-            public Texture2D[] SpriteTextures;
+            public TextureInfo[] SpriteTextures;
 
             #region IComparer<int> Members
 
             public int Compare(int left, int right)
             {
-                return SpriteTextures[left].CompareTo(SpriteTextures[right]);
+                return SpriteTextures[left].ShaderResourceView.ToInt64().CompareTo(SpriteTextures[right].ShaderResourceView.ToInt64());
             }
 
             #endregion
@@ -977,6 +1027,15 @@ namespace SharpDX.Toolkit.Graphics
             {
                 VertexBuffer = ToDispose(Buffer.Vertex.New<VertexPositionColorTexture>(device, MaxVertexCount, ResourceUsage.Dynamic));
             }
+        }
+
+        private struct TextureInfo
+        {
+            public IntPtr ShaderResourceView;
+
+            public int Width;
+
+            public int Height;
         }
     }
 }
