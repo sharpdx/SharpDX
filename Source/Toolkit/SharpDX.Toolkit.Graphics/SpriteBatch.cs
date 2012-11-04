@@ -654,7 +654,7 @@ namespace SharpDX.Toolkit.Graphics
         internal unsafe void DrawSprite(ShaderResourceView texture, ref DrawingRectangleF destination, bool scaleDestination, ref DrawingRectangle? sourceRectangle, Color4 color, float rotation, ref Vector2 origin, SpriteEffects effects, float depth)
         {
             // Check that texture is not null
-            if (texture == null)
+            if (texture == null || texture.NativePointer == IntPtr.Zero)
             {
                 throw new ArgumentNullException("texture");
             }
@@ -1029,6 +1029,9 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>
+        /// Internal structure used to store texture information.
+        /// </summary>
         private struct TextureInfo
         {
             public IntPtr ShaderResourceView;
