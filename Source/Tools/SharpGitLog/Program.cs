@@ -120,8 +120,6 @@ namespace SharpGitLog
 
             var regexIssue = new Regex(@"issue\s+#(\d+)");
 
-
-
             var keys = commits.Keys.ToList();
             keys.Sort();
             foreach (var key in keys)
@@ -134,9 +132,9 @@ namespace SharpGitLog
                 foreach (var value in values)
                 {
                     var commitDescription = EscapeHtml(value.Item2);
-                    commitDescription = regexIssue.Replace(commitDescription, "<a href='http://code.google.com/p/sharpdx/issues/detail?id=$1'>$0</a>");
+                    commitDescription = regexIssue.Replace(commitDescription, "<a href='http://code.google.com/p/sharpdx/issues/detail?id=$1' target='_blank'>$0</a>");
 
-                    writer.WriteLine("  <li>{0} (<a href='http://code.google.com/p/sharpdx/source/detail?r={1}'>changes</a>)</li>", commitDescription, value.Item1);
+                    writer.WriteLine("  <li>{0} (<a href='http://code.google.com/p/sharpdx/source/detail?r={1}' target='_blank'>changes</a>)</li>", commitDescription, value.Item1);
                 }
                 writer.WriteLine("</ul>");
             }
