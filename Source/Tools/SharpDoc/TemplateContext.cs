@@ -67,12 +67,8 @@ namespace SharpDoc
         /// </returns>
         private IModelReference FindLocalReference(string id)
         {
-            if (CurrentContext == null)
-                return Registry.FindById(id);
-
-            return Registry.FindById(id, CurrentContext) ?? Registry.FindById(id);
+            return Registry.FindById(id);
         }
-
 
         /// <summary>
         /// Gets the param dynamic properties.
@@ -122,7 +118,7 @@ namespace SharpDoc
         /// Gets or sets the assemblies.
         /// </summary>
         /// <value>The assemblies.</value>
-        public List<NAssembly> Assemblies { get; set; }
+        public List<NNamespace> Namespaces { get; set; }
 
         /// <summary>
         /// Gets or sets the current topic.
@@ -256,7 +252,7 @@ namespace SharpDoc
                 if (Logger.HasErrors)
                     Logger.Fatal("Too many errors in config file. Check previous message.");
 
-                Assemblies = new List<NAssembly>(modelProcessor.Assemblies);
+                Namespaces = new List<NNamespace>(modelProcessor.Namespaces);
                 Registry = modelProcessor.Registry;
 
                 assembliesProcessed = true;
@@ -272,7 +268,7 @@ namespace SharpDoc
             if (!topicsProcessed)
             {
                 // Build the topics
-                topicBuilder = new TopicBuilder() { Assemblies = modelProcessor.Assemblies, Registry = modelProcessor.Registry };
+                topicBuilder = new TopicBuilder() { Namespaces = modelProcessor.Namespaces, Registry = modelProcessor.Registry };
                 topicBuilder.Run(Config, PageIdFunction);
 
                 if (Logger.HasErrors)

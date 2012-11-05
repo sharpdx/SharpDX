@@ -134,6 +134,9 @@ namespace SharpDoc.Model
         [XmlAttribute("category")]
         public string Category { get; set; }
 
+        [XmlIgnore]
+        public IModelReference Assembly { get; set; }
+
         /// <summary>
         /// Gets or sets the name of the file that contains the documentation.
         /// </summary>

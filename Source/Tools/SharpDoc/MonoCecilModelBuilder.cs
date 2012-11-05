@@ -59,7 +59,7 @@ namespace SharpDoc
         /// <returns>
         /// An assembly documentator that contains all documented types, methods.
         /// </returns>
-        public NAssembly LoadFrom(NAssemblySource assemblySource, MemberRegistry memberRegistry)
+        public void LoadFrom(NAssemblySource assemblySource, MemberRegistry memberRegistry)
         {
             CurrentMergeGroup = assemblySource.MergeGroup;
 
@@ -86,7 +86,7 @@ namespace SharpDoc
                 // Apply documentation from AssemblyDoc special class
                 assembly.DocNode = _source.Document.FindMemberDoc("T:" + assembly.Name + "." + AssemblyDocClass);
 
-                _registry.Register(assembly, assembly);
+                _registry.Register(assembly);
             }
             assembly.SetApiGroup(CurrentMergeGroup, true);
             CurrentAssembly = assembly;
@@ -128,8 +128,6 @@ namespace SharpDoc
 
             //foreach (var namespaceName in @assembly.Namespaces)
             //    namespaces[namespaceName].Types.Sort((left, right) => left.PageId.CompareTo(right.PageId));
-
-            return assembly;
         }
 
         /// <summary>
@@ -142,7 +140,7 @@ namespace SharpDoc
         {
             var namespaceId = "N:" + name;
 
-            var @namespace = (NNamespace)_registry.FindById(namespaceId, CurrentAssembly);
+            var @namespace = (NNamespace)_registry.FindById(namespaceId);
 
             if (@namespace == null)
             {
@@ -151,13 +149,10 @@ namespace SharpDoc
                 @namespace.PageId = PageIdFunction(@namespace);
                 @namespace.PageTitle = @namespace.Name + " " + @namespace.Category + " (" + assembly.Name + ")";
 
-                _registry.Register(assembly, @namespace);
+                _registry.Register(@namespace);
 
                 // Apply documentation on namespace from NamespaceDoc special class
                 @namespace.DocNode = _source.Document.FindMemberDoc("T:" + name + "." + NamespaceDocClass);
-
-                // Add See Alsos
-                @namespace.SeeAlsos.Add(new NSeeAlso(@namespace.Assembly));
 
                 assembly.Namespaces.Add(@namespace);
             }
@@ -177,7 +172,7 @@ namespace SharpDoc
                 return;
 
             var typeId = DocIdHelper.GetXmlId(typeDef);
-            var type = (NType)_registry.FindById(typeId, CurrentAssembly);
+            var type = (NType)_registry.FindById(typeId);
 
             // If this is a new type create and register it
             if (type == null)
@@ -212,7 +207,7 @@ namespace SharpDoc
                     throw new InvalidOperationException(string.Format("Unsupported type [{0}]", typeDef.FullName));
                 }
 
-                _registry.Register(@namespace.Assembly, type);
+                _registry.Register(type);
                 @namespace.AddType(type);
 
                 // Add reference to all base types
@@ -292,7 +287,6 @@ namespace SharpDoc
                     type.Attributes.Add("SerializableAttribute");
 
                 type.SeeAlsos.Add(new NSeeAlso(@namespace));
-                type.SeeAlsos.Add(new NSeeAlso(@namespace.Assembly));
             }
 
             // Add current group
@@ -394,6 +388,7 @@ namespace SharpDoc
             method.IsStatic = methodDef.IsStatic;
             method.IsFinal = methodDef.IsFinal;
             method.IsAbstract = methodDef.IsAbstract;
+            method.Assembly = CurrentAssembly;
 
             if (methodDef.IsPublic)
                 method.Visibility = NVisibility.Public;
@@ -457,12 +452,12 @@ namespace SharpDoc
             // If not a get/set then handle it
             if (!isSpecialMethod)
             {
-                var oldMethod = (NMethod)_registry.FindById(method.Id, CurrentAssembly);
+                var oldMethod = (NMethod)_registry.FindById(method.Id);
                 method = oldMethod ?? method;
 
                 if (oldMethod == null)
                 {
-                    _registry.Register(parent.Namespace.Assembly, method);
+                    _registry.Register(method);
                     parent.AddMember(method);
 
                     var parentType = parent as NType;
@@ -486,7 +481,6 @@ namespace SharpDoc
                     // Add SeeAlso
                     method.SeeAlsos.Add(new NSeeAlso(parent));
                     method.SeeAlsos.Add(new NSeeAlso(parent.Namespace));
-                    method.SeeAlsos.Add(new NSeeAlso(parent.Namespace.Assembly));
 
                     UpdatePageTitle(method);
                 }
@@ -715,12 +709,12 @@ namespace SharpDoc
         private void AddEvent(NType parent, EventDefinition eventDef)
         {
             var eventId = DocIdHelper.GetXmlId(eventDef);
-            var @event = (NEvent)_registry.FindById(eventId, CurrentAssembly);
+            var @event = (NEvent)_registry.FindById(eventId);
 
             if (@event == null)
             {
                 @event = NewInstance<NEvent>(parent.Namespace, eventDef);
-                _registry.Register(parent.Namespace.Assembly, @event);
+                _registry.Register(@event);
 
                 @event.MemberType = NMemberType.Event;
                 @event.EventType = this.GetTypeReference(eventDef.EventType);
@@ -741,7 +735,6 @@ namespace SharpDoc
                 // Add SeeAlso
                 @event.SeeAlsos.Add(new NSeeAlso(parent));
                 @event.SeeAlsos.Add(new NSeeAlso(parent.Namespace));
-                @event.SeeAlsos.Add(new NSeeAlso(parent.Namespace.Assembly));
 
                 UpdatePageTitle(@event);
             }
@@ -760,12 +753,12 @@ namespace SharpDoc
                 return;
 
             var fieldId = DocIdHelper.GetXmlId(fieldDef);
-            var field = (NField)_registry.FindById(fieldId, CurrentAssembly);
+            var field = (NField)_registry.FindById(fieldId);
 
             if (field == null)
             {
                 field = NewInstance<NField>(parent.Namespace, fieldDef);
-                _registry.Register(parent.Namespace.Assembly, field);
+                _registry.Register(field);
                 field.MemberType = NMemberType.Field;
                 field.FieldType = GetTypeReference(fieldDef.FieldType);
 
@@ -791,7 +784,6 @@ namespace SharpDoc
 
                 field.SeeAlsos.Add(new NSeeAlso(parent));
                 field.SeeAlsos.Add(new NSeeAlso(parent.Namespace));
-                field.SeeAlsos.Add(new NSeeAlso(parent.Namespace.Assembly));
 
                 UpdatePageTitle(field);
             }
@@ -807,12 +799,12 @@ namespace SharpDoc
         private void AddProperty(NType parent, PropertyDefinition propertyDef)
         {
             var propertyId = DocIdHelper.GetXmlId(propertyDef);
-            var property = (NProperty)_registry.FindById(propertyId, CurrentAssembly);
+            var property = (NProperty)_registry.FindById(propertyId);
 
             if (property == null)
             {
                 property = NewInstance<NProperty>(parent.Namespace, propertyDef);
-                _registry.Register(parent.Namespace.Assembly, property);
+                _registry.Register(property);
                 property.Namespace = parent.Namespace;
 
                 property.MemberType = NMemberType.Property;
@@ -832,7 +824,6 @@ namespace SharpDoc
 
                 property.SeeAlsos.Add(new NSeeAlso(parent));
                 property.SeeAlsos.Add(new NSeeAlso(parent.Namespace));
-                property.SeeAlsos.Add(new NSeeAlso(parent.Namespace.Assembly));
 
                 UpdatePageTitle(property);
             }
@@ -854,6 +845,7 @@ namespace SharpDoc
             member.DocNode = _source.Document.FindMemberDoc(member.Id);
             member.DeclaringType = GetTypeReference(memberRef.DeclaringType);
             member.Namespace = @nameSpace;
+            member.Assembly = CurrentAssembly;
             this.FillMemberReference(member, memberRef);
             // Add generic parameter contraints
             return member;

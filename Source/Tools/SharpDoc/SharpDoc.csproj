@@ -203,8 +203,6 @@
     <None Include="Styles\Standard\html\SyntaxCodeCSharp.cshtml" />
     <None Include="Styles\Standard\html\TabCode.cshtml" />
     <None Include="Styles\Standard\Param.cshtml" />
-    <None Include="Styles\Standard\html\Assembly.cshtml" />
-    <None Include="Styles\Standard\html\AssemblyBody.cshtml" />
     <None Include="Styles\Standard\html\Member.cshtml" />
     <None Include="Styles\Standard\html\SyntaxMethod.cshtml" />
     <None Include="Styles\Standard\html\Syntax.cshtml" />

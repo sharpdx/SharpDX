@@ -28,43 +28,34 @@
 @model SharpDoc.TemplateContext
 @{    
     // Write Class Library        
-    foreach (var assembly in Model.Assemblies)
+    foreach (var @namespace in Model.Namespaces)
     {
-        Model.Topic = assembly.TopicLink;
-        Model.Assembly = assembly;
-        Model.Namespace = null;
+        Model.Topic = @namespace.TopicLink;
+        Model.Namespace = @namespace;
         Model.Type = null;
-       
-        Logger.Message("Generating documentation for assembly [{0}]", assembly.Name);
 
-        Model.WriteTo(assembly, Parse("Assembly"));
-        
-        foreach (var @namespace in assembly.Namespaces)
+        Logger.Message("Generating documentation for namespace [{0}]", @namespace.Name);
+
+        Model.WriteTo(@namespace, Parse("Namespace"));
+
+        foreach (var type in @namespace.Types)
         {
-            Model.Topic = @namespace.TopicLink;
-            Model.Namespace = @namespace;
-            Model.Type = null;
+            Model.Topic = type.TopicLink;
+            Model.Type = type;
+            Model.Assembly = (SharpDoc.Model.NAssembly)type.Assembly;
+            Model.WriteTo(@type, Parse("Type"));
 
-            Model.WriteTo(@namespace, Parse("Namespace"));
-
-            foreach (var type in @namespace.Types)
+            // Enum-item are not going to be generated
+            if (!(type is NEnum))
             {
-                Model.Topic = type.TopicLink;
-                Model.Type = type;
-                Model.WriteTo(@type, Parse("Type"));
-
-                // Enum-item are not going to be generated
-                if (!(type is NEnum))
+                foreach (var member in type.Members)
                 {
-                    foreach (var member in type.Members)
-                    {
-                        Model.Member = member;
-                        Model.WriteTo(@member, Parse("Member"));
-                    }
+                    Model.Member = member;
+                    Model.WriteTo(@member, Parse("Member"));
                 }
-                Model.Member = null;
-                Model.Type = null;
             }
+            Model.Member = null;
+            Model.Type = null;
         }
     }
     // Reset current topic to null

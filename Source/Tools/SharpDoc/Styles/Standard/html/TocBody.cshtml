@@ -36,19 +36,6 @@
             return;
         
         var topicLink = topic;
-
-		// Special cases for an assembly with a single namespace
-		// Instead, link assembly to namespace directly, in order to save a click
-		if (topic.AttachedClassNode is NAssembly)
-        {
-            var namespaces = ((NAssembly)topic.AttachedClassNode).Namespaces;
-			if (namespaces.Count == 1)
-            {
-                var subNS = namespaces[0];
-		        topicLink = subNS.TopicLink;
-            }
-        }
-
         var url = Model.ToUrl(topicLink, topic.Name, false, isHighlight ? " class='highlight'" : "");
 
         toc.AppendFormat("<div class='{0}'><div class='icon'></div>{1}<div style='clear: both'></div></div>", classLevel, url).AppendLine();

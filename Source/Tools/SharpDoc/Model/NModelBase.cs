@@ -80,6 +80,8 @@ namespace SharpDoc.Model
         /// </value>
         public string Category { get; protected set; }
 
+        public IModelReference Assembly { get; set; }
+
         /// <summary>
         /// Gets or sets the <see cref="XmlNode"/> extracted from the code comments 
         /// for a particular member.

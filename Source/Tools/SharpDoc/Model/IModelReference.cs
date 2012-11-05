@@ -73,5 +73,10 @@ namespace SharpDoc.Model
         /// The category.
         /// </value>
         string Category { get; }
+
+        /// <summary>
+        /// Gets the assembly this model reference is attached to.
+        /// </summary>
+        IModelReference Assembly { get; set; }
     }
 }

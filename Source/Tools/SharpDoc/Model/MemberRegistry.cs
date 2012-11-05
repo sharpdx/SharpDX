@@ -27,26 +27,25 @@ namespace SharpDoc.Model
     /// </summary>
     public class MemberRegistry
     {
-        private readonly Dictionary<string, Dictionary<string, IModelReference>> _mapIdToModelElement;
+        private readonly Dictionary<string, IModelReference> _mapIdToModelElement;
         private const string TopicContainer = "__topics__";
+
+        private readonly List<NNamespace> namespaces = new List<NNamespace>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MemberRegistry"/> class.
         /// </summary>
         public MemberRegistry()
         {
-            _mapIdToModelElement = new Dictionary<string, Dictionary<string, IModelReference>>();
+            _mapIdToModelElement = new Dictionary<string, IModelReference>();
         }
 
-
-        /// <summary>
-        /// Finds the by id.
-        /// </summary>
-        /// <param name="id">The id.</param>
-        /// <returns></returns>
-        public IModelReference FindById(string id)
+        public List<NNamespace> Namespaces
         {
-            return FindById(id, null);
+            get
+            {
+                return namespaces;
+            }
         }
 
         /// <summary>
@@ -55,56 +54,11 @@ namespace SharpDoc.Model
         /// <param name="id">The id.</param>
         /// <param name="context">The context. If context is null, look inside all registered assemblies</param>
         /// <returns></returns>
-        public IModelReference FindById(string id, IModelReference context)
+        public IModelReference FindById(string id)
         {
             IModelReference refFound = null;
-
-            List<string> assemblyIds;
-
-            if (context == null)
-            {
-                assemblyIds = new List<string>(_mapIdToModelElement.Keys);
-            }
-            else
-            {
-                assemblyIds = new List<string>();
-
-                if (context is NMember)
-                {
-                    assemblyIds.Add(((NMember) (context)).Namespace.Assembly.Id);
-                }
-                else if (context is NNamespace)
-                {
-                    assemblyIds.Add(((NNamespace) (context)).Assembly.Id);
-                }
-                else if (context is NAssembly)
-                {
-                    assemblyIds.Add(((NAssembly)context).Id);
-                }
-            }
-            assemblyIds.Add(TopicContainer);
-
-            foreach (var assemblyId in assemblyIds)
-            {
-                Dictionary<string, IModelReference> idToRef;
-                if (_mapIdToModelElement.TryGetValue(assemblyId, out idToRef))
-                {
-                    if (idToRef.TryGetValue(id, out refFound))
-                        return refFound;
-                }
-                
-            }
+            _mapIdToModelElement.TryGetValue(id, out refFound);
             return refFound;
-        }
-
-        /// <summary>
-        /// Registers the specified model element with the specified id.
-        /// </summary>
-        /// <param name="assembly">The assembly.</param>
-        /// <param name="modelReference">The model element.</param>
-        public bool Register(NAssembly assembly, IModelReference modelReference)
-        {
-            return Register(assembly.Id, modelReference);
         }
 
         /// <summary>
@@ -128,7 +82,7 @@ namespace SharpDoc.Model
                 return;
 
             // If this is a real topic, we can register it and all its children
-            Register(TopicContainer, topic);
+            Register((IModelReference)topic);
             foreach (var subTopic in topic.SubTopics)
                 Register(subTopic);
         }
@@ -138,20 +92,19 @@ namespace SharpDoc.Model
         /// </summary>
         /// <param name="containerId">The container id.</param>
         /// <param name="modelReference">The model element.</param>
-        private bool Register(string containerId, IModelReference modelReference)
+        public bool Register(IModelReference modelReference)
         {
-            Dictionary<string, IModelReference> idToRef;
-            if (!_mapIdToModelElement.TryGetValue(containerId, out idToRef))
-            {
-                idToRef = new Dictionary<string, IModelReference>();
-                _mapIdToModelElement.Add(containerId, idToRef);
-            }
-
-            if (idToRef.ContainsKey(modelReference.Id))
+            if (_mapIdToModelElement.ContainsKey(modelReference.Id))
             {
                 return false;
             }
-            idToRef.Add(modelReference.Id, modelReference);
+            _mapIdToModelElement.Add(modelReference.Id, modelReference);
+
+            if (modelReference is NNamespace)
+            {
+                namespaces.Add((NNamespace)modelReference);
+            }
+
             return true;
         }
     }

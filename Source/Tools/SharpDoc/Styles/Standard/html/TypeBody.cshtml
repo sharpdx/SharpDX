@@ -89,7 +89,7 @@
     @Helpers.Section.Dump("section_partial_inheritance", "Inheritance Hierarchy", DumpInheritance(!HasComplexInheritance).ToString())   
 <br/>
 <div class="origin">
-<strong>Assembly: </strong>@ToUrl(Model.Assembly) (@Model.Assembly.FileName @Model.Assembly.Version)<br />
+<strong>Assembly: </strong>@Model.Assembly.FullName (@Model.Assembly.FileName @Model.Assembly.Version)<br />
 <strong>Namespace: </strong>@ToUrl(Model.Namespace)<br />
 @Helpers.TypeBodyMembersHeader.Dump(self)
 </div>

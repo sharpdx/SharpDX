@@ -43,12 +43,6 @@ namespace SharpDoc.Model
         }
 
         /// <summary>
-        /// Gets or sets the assembly.
-        /// </summary>
-        /// <value>The assembly.</value>
-        public NAssembly Assembly { get; set; }
-
-        /// <summary>
         /// Gets or sets the types.
         /// </summary>
         /// <value>The types.</value>

@@ -36,7 +36,7 @@ namespace SharpDoc
         /// </summary>
         public ModelProcessor()
         {
-            Assemblies = new List<NAssembly>();
+            Namespaces = new List<NNamespace>();
             Registry = new MemberRegistry();
         }
 
@@ -50,7 +50,7 @@ namespace SharpDoc
         /// Gets the assemblies.
         /// </summary>
         /// <value>The assemblies.</value>
-        public List<NAssembly> Assemblies { get; private set; }
+        public List<NNamespace> Namespaces{ get; private set; }
 
         /// <summary>
         /// Gets or sets the assembly manager.
@@ -91,47 +91,33 @@ namespace SharpDoc
             // Process all assemblies
             foreach (var assemblySource in assemblySources)
             {
-                var assembly = ModelBuilder.LoadFrom(assemblySource, Registry);
-                if (Assemblies.FirstOrDefault(checkAssembly => assembly.Id == checkAssembly.Id) == null)
-                {
-                    Assemblies.Add(assembly);
-                }
+                ModelBuilder.LoadFrom(assemblySource, Registry);
             }
 
-            // Sort assemblies
-            Assemblies.Sort((from, to) => string.CompareOrdinal(@from.Name, to.Name));
+            Namespaces.AddRange(Registry.Namespaces);
 
-            // Perform additionnal step by adding direct descendants for each class);
-            foreach (var assembly in Assemblies)
+            Namespaces.Sort((from, to) => string.CompareOrdinal(@from.Name, to.Name));
+
+            foreach (var @namespace in Namespaces)
             {
-                // Sort namespaces
-                assembly.Namespaces.Sort((from, to) => string.CompareOrdinal(@from.Name, to.Name));
-
-                foreach (var @namespace in assembly.Namespaces)
-                {
-                    ProcessDescendants(assembly, @namespace.Types);
-                }
+                ProcessDescendants(@namespace.Types);
             }
 
-            // Compute a flatten hierarchy and sort it
-            foreach (var assembly in Assemblies)
+            foreach (var @namespace in Namespaces)
             {
-                foreach (var @namespace in assembly.Namespaces)
-                {
-                    @namespace.Types.Sort((from, to) => string.CompareOrdinal(@from.Name, to.Name));
+                @namespace.Types.Sort((from, to) => string.CompareOrdinal(@from.Name, to.Name));
 
-                    FlattenHierarchy(@namespace.Types);
-                }
+                FlattenHierarchy(@namespace.Types);
             }
         }
 
-        private NClass ProcessInheritance(NType type, NAssembly assemblyContext = null)
+        private NClass ProcessInheritance(NType type)
         {
             NClass baseModel = null;
             if (type.Bases.Count > 0)
             {
                 var directParent = type.Bases[0];
-                baseModel = (NClass)this.FindType(directParent.Id, assemblyContext);
+                baseModel = (NClass)this.FindType(directParent.Id);
             }
             
             if (type.AllMembers.Count > 0)
@@ -230,9 +216,9 @@ namespace SharpDoc
             return baseModel;
         }
 
-        private NType FindType(string id, NAssembly assemblyContext)
+        private NType FindType(string id)
         {
-            var baseModel = Registry.FindById(id, assemblyContext) as NType;
+            var baseModel = Registry.FindById(id) as NType;
 
             // If not found from current assembly, find from other assemblies
             // TODO this is not correct. Correct behavior requires to iterate
@@ -243,7 +229,7 @@ namespace SharpDoc
             return baseModel;
         }
 
-        private void ProcessDescendants(NAssembly assembly, IEnumerable<NType> types)
+        private void ProcessDescendants(IEnumerable<NType> types)
         {
             foreach (var type in types)
             {
@@ -256,7 +242,7 @@ namespace SharpDoc
                     if (baseModel != null)
                         baseModel.Descendants.Add(type);
 
-                    this.ProcessDescendants(assembly, type.Members.OfType<NType>());
+                    this.ProcessDescendants(type.Members.OfType<NType>());
                 }
             }
         }

@@ -41,7 +41,7 @@
 
 <div class="origin">
 <strong>Namespace: </strong>@ToUrl(Model.Namespace)<br />
-<strong>Assembly: </strong>@ToUrl(Model.Assembly) (@Model.Assembly.FileName @Model.Assembly.Version)<br />
+<strong>Assembly: </strong>@model.Assembly.FullName (@Model.Assembly.FileName @Model.Assembly.Version)<br />
       
 @Helpers.TypeBodyMembersHeader.Dump(self)
 </div>

@@ -37,10 +37,6 @@
         
 <div class="summary"><p>@TagExpand(self.Description)</p></div>
 
-<div class="origin">
-<strong>Assembly: </strong>@ToUrl(Model.Assembly, Model.Assembly.FullName) (@Model.Assembly.FileName @Model.Assembly.Version)<br />
-</div>
-
 <div class="members">
     @if (self.HasClasses)
         @Helpers.Section.Dump("Classes", self.Classes, true)

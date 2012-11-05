@@ -37,7 +37,7 @@ namespace SharpDoc
         /// Gets the assemblies.
         /// </summary>
         /// <value>The assemblies.</value>
-        public List<NAssembly> Assemblies { get; set; }
+        public List<NNamespace> Namespaces { get; set; }
 
         /// <summary>
         /// Gets or sets the registry.
@@ -86,7 +86,7 @@ namespace SharpDoc
             NTopic topicLibrary = null;
 
             // If there are any assemblies, we have to generate class library topics
-            if (Assemblies.Count >= 0)
+            if (Namespaces.Count >= 0)
             {
                 // Find if a ClassLibrary topic is referenced in the config topic
                 topicLibrary = (RootTopic != null) ? RootTopic.FindTopicById(NTopic.ClassLibraryTopicId) : null;
@@ -133,43 +133,32 @@ namespace SharpDoc
                 topicToIndex.Index = index++;
             }
 
-            // Process aseemblies
-            foreach (var assembly in Assemblies)
+            foreach (var @namespace in Namespaces)
             {
                 // Affect new Index based on previous topics
-                assembly.Index = index++;
-                var assemblyTopic = new NTopic(assembly) { Name = assembly.Name + " Assembly", AttachedClassNode = assembly };
-                assembly.TopicLink = assemblyTopic;
-                topicLibrary.SubTopics.Add(assemblyTopic);
-                assembly.SeeAlsos.Add(new NSeeAlso(topicLibrary));
+                @namespace.Index = index++;
+                var namespaceTopic = new NTopic(@namespace) { Name = @namespace.Name + " Namespace", AttachedClassNode = @namespace };
+                @namespace.TopicLink = namespaceTopic;
+                topicLibrary.SubTopics.Add(namespaceTopic);
+                @namespace.SeeAlsos.Add(new NSeeAlso(topicLibrary));
 
-                foreach (var @namespace in assembly.Namespaces)
+                foreach (var type in @namespace.Types)
                 {
                     // Affect new Index based on previous topics
-                    @namespace.Index = index++;
-                    var namespaceTopic = new NTopic(@namespace) { Name = @namespace.Name + " Namespace", AttachedClassNode = @namespace };
-                    @namespace.TopicLink = namespaceTopic;
-                    assemblyTopic.SubTopics.Add(namespaceTopic);
-                    @namespace.SeeAlsos.Add(new NSeeAlso(topicLibrary));
+                    type.Index = index++;
+                    var typeTopic = new NTopic(type) { Name = type.Name + " " + type.Category, AttachedClassNode = type };
+                    type.TopicLink = typeTopic;
+                    namespaceTopic.SubTopics.Add(typeTopic);
+                    type.SeeAlsos.Add(new NSeeAlso(topicLibrary));
 
-                    foreach (var type in @namespace.Types)
+                    // We don't process fields for enums
+                    if (!(type is NEnum))
                     {
-                        // Affect new Index based on previous topics
-                        type.Index = index++;
-                        var typeTopic = new NTopic(type) { Name = type.Name + " " + type.Category, AttachedClassNode = type };
-                        type.TopicLink = typeTopic;
-                        namespaceTopic.SubTopics.Add(typeTopic);
-                        type.SeeAlsos.Add(new NSeeAlso(topicLibrary));
-
-                        // We don't process fields for enums
-                        if (!(type is NEnum))
+                        foreach (var member in type.Members)
                         {
-                            foreach (var member in type.Members)
-                            {
-                                // Affect new Index based on previous topics
-                                member.Index = index++;
-                                member.SeeAlsos.Add(new NSeeAlso(topicLibrary));
-                            }
+                            // Affect new Index based on previous topics
+                            member.Index = index++;
+                            member.SeeAlsos.Add(new NSeeAlso(topicLibrary));
                         }
                     }
                 }
