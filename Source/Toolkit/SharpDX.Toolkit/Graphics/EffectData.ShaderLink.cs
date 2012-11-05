@@ -17,6 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System;
+
 using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
@@ -26,8 +29,11 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// A link to a compiled shader.
         /// </summary>
-        public sealed class ShaderLink : IDataSerializable
+        public sealed class ShaderLink : IDataSerializable, IEquatable<ShaderLink>
         {
+            public static readonly ShaderLink NullShader = new ShaderLink(-1);
+
+
             private int index;
             private string importName;
 
@@ -92,6 +98,51 @@ namespace SharpDX.Toolkit.Graphics
             {
                 get { return importName; }
                 set { importName = value; }
+            }
+
+            /// <summary>
+            /// Gets a value indicating whether this instance is a null shader.
+            /// </summary>
+            /// <value><c>true</c> if this instance is null shader; otherwise, <c>false</c>.</value>
+            public bool IsNullShader
+            {
+                get { return index < 0; }
+            }
+
+            public bool Equals(ShaderLink other)
+            {
+                if (ReferenceEquals(null, other))
+                    return false;
+                if (ReferenceEquals(this, other))
+                    return true;
+                return this.index == other.index && string.Equals(this.importName, other.importName);
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj))
+                    return false;
+                if (ReferenceEquals(this, obj))
+                    return true;
+                return obj is ShaderLink && Equals((ShaderLink)obj);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return (this.index * 397) ^ (this.importName != null ? this.importName.GetHashCode() : 0);
+                }
+            }
+
+            public static bool operator ==(ShaderLink left, ShaderLink right)
+            {
+                return Equals(left, right);
+            }
+
+            public static bool operator !=(ShaderLink left, ShaderLink right)
+            {
+                return !Equals(left, right);
             }
 
             /// <inheritdoc/>

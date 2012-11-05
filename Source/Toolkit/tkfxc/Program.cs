@@ -337,7 +337,7 @@ namespace SharpDX.Toolkit.Graphics
                             Console.Write(" = ");
                             Color(ConsoleColor.White);
                             Console.WriteLine("{0}",
-                                              link.IsImport ? link.ImportName : string.Format("Shader[{0}] => {1}", link.Index, effectData.Shaders[link.Index].Name == null ? "private" : "public " + effectData.Shaders[link.Index].Name));
+                                link.IsImport ? link.ImportName : link.IsNullShader ? "null" : string.Format("Shader[{0}] => {1}", link.Index, effectData.Shaders[link.Index].Name == null ? "private" : "public " + effectData.Shaders[link.Index].Name));
                             ResetColor();
                         }
 

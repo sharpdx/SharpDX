@@ -731,9 +731,11 @@ namespace SharpDX.Toolkit.Graphics
         private void CompileShader(EffectShaderType type, string shaderName, SourceSpan span)
         {
             var level = this.level;
-
             if (shaderName == null)
+            {
+                pass.Pipeline[type] = EffectData.ShaderLink.NullShader;
                 return;
+            }
 
             //// If the shader has been already compiled, skip it
             //foreach (var shader in EffectData.Shaders)

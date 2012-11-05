@@ -264,6 +264,18 @@ namespace SharpDX.Toolkit.Graphics
                     continue;
 
                 var shaderStage = stageBlock.ShaderStage;
+
+                // ----------------------------------------------
+                // Setup the shader for this stage.
+                // ----------------------------------------------
+                shaderStage.SetShader(stageBlock.Shader, null, 0);
+
+                // If Shader is a null shader, then skip further processing
+                if (stageBlock.Index < 0)
+                {
+                    continue;
+                }
+
                 var mergerStage = pipeline.OutputMergerStage;
 
                 // ----------------------------------------------
@@ -336,11 +348,6 @@ namespace SharpDX.Toolkit.Graphics
                     shaderStage.SetSamplers(pLinks->SlotIndex, pLinks->SlotCount, pLinks->Pointer);
                     pLinks++;
                 }
-
-                // ----------------------------------------------
-                // Setup finally the shader for this stage.
-                // ----------------------------------------------
-                shaderStage.SetShader(stageBlock.Shader, null, 0);
             }
 
             ApplyStates();
@@ -406,7 +413,7 @@ namespace SharpDX.Toolkit.Graphics
 
                 if (link.IsImport)
                 {
-                    throw new InvalidOperationException(string.Format("Unable to resolved imported shader [{0}] for stage [{1}]", link.ImportName, shaderType));
+                    throw new InvalidOperationException(string.Format("Unable to resolve imported shader [{0}] for stage [{1}]", link.ImportName, shaderType));
                 }
 
                 var stageBlock = new StageBlock(shaderType);
@@ -426,6 +433,12 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="logger">The logger.</param>
         private void InitStageBlock(StageBlock stageBlock, Logger logger)
         {
+            // If null shader, then skip init
+            if (stageBlock.Index < 0)
+            {
+                return;
+            }
+
             stageBlock.Shader = Effect.Pool.GetOrCompileShader(stageBlock.Type, stageBlock.Index);
             var shaderRaw = Effect.Pool.EffectData.Shaders[stageBlock.Index];
 

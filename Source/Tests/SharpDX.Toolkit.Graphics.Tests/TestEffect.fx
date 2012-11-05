@@ -128,6 +128,7 @@ technique
 
 		// Specify the pipeline (there is also all Direct3D11 other stages: DomainShader, HullShader, GeometryShader, ComputeShader).
 		VertexShader = VS; 
+        GeometryShader = null;
 		PixelShader = PS; 
 	}
 

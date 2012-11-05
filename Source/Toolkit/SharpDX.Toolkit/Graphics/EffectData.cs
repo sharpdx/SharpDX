@@ -163,7 +163,7 @@ namespace SharpDX.Toolkit.Graphics
                                     shaderLink.Index = index;
                                 }
                             }
-                            else
+                            else if (!shaderLink.IsNullShader)
                             {
                                 var shader = source.Shaders[shaderLink.Index];
                                 var index = FindShader(shader);
