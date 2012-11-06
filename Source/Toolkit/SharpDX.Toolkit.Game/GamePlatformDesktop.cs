@@ -69,6 +69,15 @@ namespace SharpDX.Toolkit
             set
             {
                 isMouseVisible = value;
+
+                if (isMouseVisible)
+                {
+                    Cursor.Show();
+                }
+                else
+                {
+                    Cursor.Hide();
+                }
             }
         }
 

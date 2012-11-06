@@ -295,6 +295,8 @@ namespace SharpDX.Toolkit
                 throw new InvalidOperationException("No GraphicsDevice found");
             }
 
+            gamePlatform.IsMouseVisible = IsMouseVisible;
+
             // Initialize this instance and all game systems
             Initialize();
 
