@@ -381,9 +381,6 @@ namespace SharpDX.Windows
                         }
                     }
                     break;
-                case 0x00A5://WM_NCRBUTTONUP
-                case 0x0084://WM_NCHITTEST
-                    return;
             }
 
             base.WndProc(ref m);
