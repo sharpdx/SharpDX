@@ -90,7 +90,7 @@ namespace SharpDX.Toolkit
             base.Exit();
         }
 
-        public override List<GraphicsDeviceInformation> FindBestDevices()
+        public override List<GraphicsDeviceInformation> FindBestDevices(GameGraphicsParameters prefferedParameters)
         {
             // Unlike Desktop and WinRT, the list of best devices are completely fixed in WP8 XAML
             // So we return a single element

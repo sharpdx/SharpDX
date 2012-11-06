@@ -21,6 +21,7 @@
 using System;
 
 using SharpDX.Direct3D;
+using SharpDX.Direct3D11;
 using SharpDX.Toolkit.Graphics;
 
 namespace SharpDX.Toolkit
@@ -121,9 +122,65 @@ namespace SharpDX.Toolkit
             }
         }
 
+        /// <summary>
+        /// Gets or sets the creation flags.
+        /// </summary>
+        /// <value>The creation flags.</value>
+        public DeviceCreationFlags DeviceCreationFlags { get; set; }
+
         #endregion
 
         #region Public Methods and Operators
+
+        /// <summary>Returns a value that indicates whether the current instance is equal to a specified object.</summary>
+        /// <param name="obj">The Object to compare with the current GraphicsDeviceInformation.</param>
+        public override bool Equals(object obj)
+        {
+            var information = obj as GraphicsDeviceInformation;
+            if (information == null)
+            {
+                return false;
+            }
+
+            if (!information.adapter.Equals(this.adapter))
+            {
+                return false;
+            }
+
+            if (!information.graphicsProfile.Equals(this.graphicsProfile))
+            {
+                return false;
+            }
+
+            return information.PresentationParameters.BackBufferWidth == this.PresentationParameters.BackBufferWidth 
+                && information.PresentationParameters.BackBufferHeight == this.PresentationParameters.BackBufferHeight
+                && information.PresentationParameters.BackBufferFormat == this.PresentationParameters.BackBufferFormat 
+                && information.PresentationParameters.DepthStencilFormat == this.PresentationParameters.DepthStencilFormat
+                && information.PresentationParameters.MultiSampleCount == this.PresentationParameters.MultiSampleCount 
+                && information.PresentationParameters.RefreshRate == this.PresentationParameters.RefreshRate
+                && information.PresentationParameters.PresentationInterval == this.PresentationParameters.PresentationInterval
+                && information.PresentationParameters.RenderTargetUsage == this.PresentationParameters.RenderTargetUsage
+                && information.PresentationParameters.DeviceWindowHandle == this.PresentationParameters.DeviceWindowHandle
+                && information.PresentationParameters.IsFullScreen == this.PresentationParameters.IsFullScreen;
+        }
+
+        /// <summary>Gets the hash code for this object.</summary>
+        public override int GetHashCode()
+        {
+            return graphicsProfile.GetHashCode()
+                   ^ adapter.GetHashCode()
+                   ^ presentationParameters.BackBufferWidth.GetHashCode()
+                   ^ presentationParameters.BackBufferHeight.GetHashCode()
+                   ^ presentationParameters.BackBufferFormat.GetHashCode()
+                   ^ presentationParameters.DepthStencilFormat.GetHashCode()
+                   ^ presentationParameters.MultiSampleCount.GetHashCode()
+                   ^ presentationParameters.PresentationInterval.GetHashCode()
+                   ^ presentationParameters.RenderTargetUsage.GetHashCode()
+                   ^ presentationParameters.RefreshRate.GetHashCode()
+                   ^ presentationParameters.DeviceWindowHandle.GetHashCode()
+                   ^ presentationParameters.IsFullScreen.GetHashCode();
+        }
+
 
         /// <summary>
         /// Clones this instance.

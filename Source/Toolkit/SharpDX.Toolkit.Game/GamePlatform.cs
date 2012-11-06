@@ -117,39 +117,77 @@ namespace SharpDX.Toolkit
             if (handler != null) handler(this, e);
         }
 
-        public virtual List<GraphicsDeviceInformation> FindBestDevices()
+        protected void AddDevice(GraphicsAdapter graphicsAdapter, DisplayMode mode,  GraphicsDeviceInformation deviceBaseInfo, GameGraphicsParameters prefferedParameters, List<GraphicsDeviceInformation> graphicsDeviceInfos)
+        {
+            var deviceInfo = deviceBaseInfo.Clone();
+
+            deviceInfo.PresentationParameters.RefreshRate = mode.RefreshRate;
+
+            if (prefferedParameters.IsFullScreen)
+            {
+                deviceInfo.PresentationParameters.BackBufferWidth = mode.Width;
+                deviceInfo.PresentationParameters.BackBufferHeight = mode.Height;
+            }
+            else
+            {
+                deviceInfo.PresentationParameters.BackBufferWidth = prefferedParameters.PreferredBackBufferWidth;
+                deviceInfo.PresentationParameters.BackBufferHeight = prefferedParameters.PreferredBackBufferHeight;
+            }
+
+            // TODO: Handle BackBufferFormat / multisampling / depthstencil format
+            deviceInfo.PresentationParameters.BackBufferFormat = prefferedParameters.PreferredBackBufferFormat;
+            deviceInfo.PresentationParameters.DepthStencilFormat = prefferedParameters.PreferredDepthStencilFormat;
+            deviceInfo.PresentationParameters.MultiSampleCount = MSAALevel.None;
+
+            if (!graphicsDeviceInfos.Contains(deviceInfo))
+            {
+                graphicsDeviceInfos.Add(deviceInfo);
+            }
+        }
+
+        public virtual List<GraphicsDeviceInformation> FindBestDevices(GameGraphicsParameters prefferedParameters)
         {
             var graphicsDeviceInfos = new List<GraphicsDeviceInformation>();
             foreach (var graphicsAdapter in GraphicsAdapter.Adapters)
             {
-                // Get display mode for the particular width, height, pixelformat
-                foreach (var displayMode in graphicsAdapter.SupportedDisplayModes)
+                if (graphicsAdapter.IsProfileSupported(prefferedParameters.GraphicsProfile))
                 {
                     var deviceInfo = new GraphicsDeviceInformation
-                    {
-                        Adapter = graphicsAdapter,
-                        GraphicsProfile = FeatureLevel.Level_11_0,
-                        PresentationParameters =
                         {
-                            BackBufferWidth = displayMode.Width,
-                            BackBufferHeight = displayMode.Height,
-                            BackBufferFormat = displayMode.Format,
-                            RefreshRate = displayMode.RefreshRate,
-                            PresentationInterval = PresentInterval.Default,
-                            RenderTargetUsage = Usage.BackBuffer | Usage.RenderTargetOutput,
-                            DeviceWindowHandle = Window.NativeWindow
-                        }
-                    };
+                            Adapter = graphicsAdapter,
+                            GraphicsProfile = prefferedParameters.GraphicsProfile,
+                            PresentationParameters =
+                                {
+                                    MultiSampleCount = MSAALevel.None,
+                                    IsFullScreen = prefferedParameters.IsFullScreen,
+                                    PresentationInterval = prefferedParameters.SynchronizeWithVerticalRetrace ? PresentInterval.One : PresentInterval.Immediate,
+                                    DeviceWindowHandle = Window.NativeWindow,
+                                    RenderTargetUsage = Usage.BackBuffer | Usage.RenderTargetOutput
+                                }
+                        };
 
-                    graphicsDeviceInfos.Add(deviceInfo);
+                    if (graphicsAdapter.CurrentDisplayMode != null)
+                    {
+                        AddDevice(graphicsAdapter, graphicsAdapter.CurrentDisplayMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
+                    }
+
+                    if (prefferedParameters.IsFullScreen)
+                    {
+                        // Get display mode for the particular width, height, pixelformat
+                        foreach (var displayMode in graphicsAdapter.SupportedDisplayModes)
+                        {
+                            AddDevice(graphicsAdapter, displayMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
+                        }
+                    }
                 }
             }
+
             return graphicsDeviceInfos;
         }
 
         public virtual GraphicsDevice CreateDevice(GraphicsDeviceInformation deviceInformation)
         {
-            var device = GraphicsDevice.New(deviceInformation.Adapter);
+            var device = GraphicsDevice.New(deviceInformation.Adapter, deviceInformation.DeviceCreationFlags);
             device.Presenter = new SwapChainGraphicsPresenter(device, deviceInformation.PresentationParameters);
             return device;
         }

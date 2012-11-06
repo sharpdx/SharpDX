@@ -133,7 +133,7 @@ namespace SharpDX.Toolkit.Graphics
                 // Automatic sizing
                 Width = Description.BackBufferWidth,
                 Height = Description.BackBufferHeight,
-                Format = SharpDX.DXGI.Format.B8G8R8A8_UNorm,
+                Format = SharpDX.DXGI.Format.B8G8R8A8_UNorm, // TODO: Check if we can use the Description.BackBufferFormat
                 Stereo = false,
                 SampleDescription = new SharpDX.DXGI.SampleDescription((int)Description.MultiSampleCount, 0),
                 Usage = Description.RenderTargetUsage,
@@ -180,16 +180,22 @@ namespace SharpDX.Toolkit.Graphics
             var description = new SwapChainDescription
                 {
                     ModeDescription = new ModeDescription(Description.BackBufferWidth, Description.BackBufferHeight, Description.RefreshRate, Description.BackBufferFormat), 
-                    BufferCount = 1, 
+                    BufferCount = 1, // TODO: Do we really need this to be configurable by the user?
                     OutputHandle = control.Handle, 
                     SampleDescription = new SampleDescription((int)Description.MultiSampleCount, 0), 
                     SwapEffect = SwapEffect.Discard, 
                     Usage = Description.RenderTargetUsage, 
-                    IsWindowed = !Description.IsFullScreen, 
-                    Flags = SwapChainFlags.None, 
+                    IsWindowed = true,
+                    Flags = Description.Flags, 
                 };
 
-            return new SwapChain(GraphicsAdapter.Factory, (Direct3D11.Device)GraphicsDevice, description);
+            var newSwapChain = new SwapChain(GraphicsAdapter.Factory, (Direct3D11.Device)GraphicsDevice, description);
+            if (Description.IsFullScreen)
+            {
+                newSwapChain.IsFullScreen = Description.IsFullScreen;
+            }
+
+            return newSwapChain;
         }
 #endif
     }

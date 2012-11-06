@@ -26,7 +26,7 @@ namespace SharpDX.Toolkit
 {
     public interface IGraphicsDeviceFactory
     {
-        List<GraphicsDeviceInformation> FindBestDevices();
+        List<GraphicsDeviceInformation> FindBestDevices(GameGraphicsParameters graphicsParameters);
 
         GraphicsDevice CreateDevice(GraphicsDeviceInformation deviceInformation);
     }

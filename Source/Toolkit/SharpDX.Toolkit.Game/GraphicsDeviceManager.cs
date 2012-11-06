@@ -206,6 +206,12 @@ namespace SharpDX.Toolkit
         }
 
         /// <summary>
+        /// Gets or sets the device creation flags that will be used to create the <see cref="GraphicsDevice"/>
+        /// </summary>
+        /// <value>The device creation flags.</value>
+        public DeviceCreationFlags DeviceCreationFlags { get; set; }
+
+        /// <summary>
         /// Gets or sets the preferred back buffer format.
         /// </summary>
         /// <value>The preferred back buffer format.</value>
@@ -242,6 +248,7 @@ namespace SharpDX.Toolkit
                 if (preferredBackBufferHeight != value)
                 {
                     preferredBackBufferHeight = value;
+                    isBackBufferToResize = false;
                     deviceSettingsChanged = true;
                 }
             }
@@ -263,6 +270,7 @@ namespace SharpDX.Toolkit
                 if (preferredBackBufferWidth != value)
                 {
                     preferredBackBufferWidth = value;
+                    isBackBufferToResize = false;
                     deviceSettingsChanged = true;
                 }
             }
@@ -478,13 +486,39 @@ namespace SharpDX.Toolkit
         /// <returns>The graphics device information.</returns>
         protected virtual GraphicsDeviceInformation FindBestDevice(bool anySuitableDevice)
         {
-            var devices = graphicsDeviceFactory.FindBestDevices();
+            // Setup preferred parameters before passing them to the factory
+            var preferredParameters = new GameGraphicsParameters
+                {
+                    PreferredBackBufferWidth = PreferredBackBufferWidth,
+                    PreferredBackBufferHeight = PreferredBackBufferHeight,
+                    PreferredBackBufferFormat = PreferredBackBufferFormat,
+                    PreferredDepthStencilFormat = PreferredDepthStencilFormat,
+                    IsFullScreen = IsFullScreen,
+                    PreferMultiSampling = PreferMultiSampling,
+                    SynchronizeWithVerticalRetrace = SynchronizeWithVerticalRetrace,
+                    GraphicsProfile = GraphicsProfile
+                };
+
+            // Setup resized value if there is a resize pending
+            if (!IsFullScreen && isBackBufferToResize)
+            {
+                preferredParameters.PreferredBackBufferWidth = resizedBackBufferWidth;
+                preferredParameters.PreferredBackBufferHeight = resizedBackBufferHeight;
+            }
+
+            var devices = graphicsDeviceFactory.FindBestDevices(preferredParameters);
             if (devices.Count == 0)
             {
                 throw new InvalidOperationException("No screen modes found");
             }
+
             RankDevices(devices);
-            return (devices.Count > 0) ? devices[0] : null;
+
+            if (devices.Count == 0)
+            {
+                throw new InvalidOperationException("No screen modes found after ranking");
+            }
+            return devices[0];
         }
 
         /// <summary>
@@ -701,6 +735,7 @@ namespace SharpDX.Toolkit
 
             newInfo.PresentationParameters.IsFullScreen = isFullScreen;
             newInfo.PresentationParameters.PresentationInterval = SynchronizeWithVerticalRetrace ? PresentInterval.One : PresentInterval.Immediate;
+            newInfo.DeviceCreationFlags = DeviceCreationFlags;
 
             OnPreparingDeviceSettings(this, new PreparingDeviceSettingsEventArgs(newInfo));
 
@@ -746,7 +781,6 @@ namespace SharpDX.Toolkit
             {
                 // Notifies the game window for the new orientation
                 game.Window.SetSupportedOrientations(SelectOrientation(supportedOrientations, PreferredBackBufferWidth, PreferredBackBufferHeight, true));
-
 
                 var graphicsDeviceInformation = FindBestDevice(forceCreate);
                 game.Window.BeginScreenDeviceChange(graphicsDeviceInformation.PresentationParameters.IsFullScreen);

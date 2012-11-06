@@ -19,6 +19,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AssemblyDoc.cs" />
+    <Compile Include="GameGraphicsParameters.cs" />
     <Compile Include="GameWindowWP8.cs" />
     <Compile Include="GamePlatformWP8.cs" />
     <Compile Include="GameWindowWinRT.cs" />
