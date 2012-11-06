@@ -40,6 +40,10 @@ namespace SharpDX.Toolkit
 
         public GamePlatformDesktop(IServiceRegistry services) : base(services)
         {
+            // By default, the mouse is hidden
+            isMouseVisible = false;
+            Cursor.Hide();
+
             IsBlockingRun = true;
             gameWindowDesktop = new GameWindowDesktop();
             services.AddService(typeof(IGraphicsDeviceFactory), this);
@@ -68,15 +72,18 @@ namespace SharpDX.Toolkit
 
             set
             {
-                isMouseVisible = value;
+                if (isMouseVisible != value)
+                {
+                    isMouseVisible = value;
 
-                if (isMouseVisible)
-                {
-                    Cursor.Show();
-                }
-                else
-                {
-                    Cursor.Hide();
+                    if (isMouseVisible)
+                    {
+                        Cursor.Show();
+                    }
+                    else
+                    {
+                        Cursor.Hide();
+                    }
                 }
             }
         }
