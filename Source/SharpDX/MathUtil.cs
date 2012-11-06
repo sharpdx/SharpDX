@@ -42,6 +42,7 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
+using System;
 
 namespace SharpDX
 {
@@ -199,15 +200,95 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Clamp a value.
+        /// Clamps the specified value.
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="min"></param>
-        /// <param name="max"></param>
-        /// <returns></returns>
+        /// <param name="value">The value.</param>
+        /// <param name="min">The min.</param>
+        /// <param name="max">The max.</param>
+        /// <returns>The result of clamiping a value between min and max</returns>
         public static float Clamp(float value, float min, float max)
         {
             return value < min ? min : value > max ? max : value;
+        }
+
+        /// <summary>
+        /// Calculates the modulo of the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="modulo">The modulo.</param>
+        /// <returns>The result of the modulo applied to value</returns>
+        public static float Mod(float value, float modulo)
+        {
+            if (modulo == 0.0f)
+            {
+                return value;
+            }
+
+            return (float)(value - modulo * Math.Floor(value / modulo));
+        }
+
+        /// <summary>
+        /// Calculates the modulo 2*PI of the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the modulo applied to value</returns>
+        public static float Mod2PI(float value)
+        {
+            return Mod(value, TwoPi);
+        }
+
+        /// <summary>
+        /// Wraps the specified value into a range.
+        /// </summary>
+        /// <param name="value">The value to wrap.</param>
+        /// <param name="min">The min.</param>
+        /// <param name="max">The max.</param>
+        /// <returns>Result of the wrapping.</returns>
+        public static int Wrap(int value, int min, int max)
+        {
+            int range_size = max - min + 1;
+
+            if (value < min)
+            {
+                return value + range_size * ((min - value) / range_size + 1);
+            }
+
+            if (value > max)
+            {
+                return value - range_size * ((value - max) / range_size + 1);
+            }
+
+            return value;
+        }
+
+        /// <summary>
+        /// Wraps the specified value into a range.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="min">The min.</param>
+        /// <param name="max">The max.</param>
+        /// <returns>Result of the wrapping.</returns>
+        public static float Wrap(float value, float min, float max)
+        {
+            if (min > max)
+            {
+                var tmp = min;
+                min = max;
+                max = tmp;
+            }
+
+            // adjust to 0
+            value -= min; 
+
+            float rangeSize = max - min;
+
+            if (rangeSize == 0.0f)
+            {
+                // avoid dividing by 0
+                return max;
+            } 
+
+            return (float)(value - (rangeSize * Math.Floor(value / rangeSize)) + min);
         }
     }
 }
