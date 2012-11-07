@@ -131,7 +131,7 @@ namespace SharpDX.Toolkit.Graphics
         private int spriteQueueCount;
         private SpriteSortMode spriteSortMode;
         private TextureInfo[] spriteTextures;
-
+        private DataBuffer x64TempBuffer;
 
         private Matrix transformMatrix;
 
@@ -840,12 +840,42 @@ namespace SharpDX.Toolkit.Graphics
 
                 var noOverwrite = resourceContext.VertexBufferPosition == 0 ? SetDataOptions.Discard : SetDataOptions.NoOverwrite;
 
-                resourceContext.VertexBuffer.SetDynamicData(GraphicsDevice, ptr =>
-                                                                {
-                                                                    var texturePtr = (VertexPositionColorTexture*) ptr;
-                                                                    for (int i = 0; i < batchSize; i++)
-                                                                        UpdateVertexFromSpriteInfo(ref sprites[offset + i], ref texturePtr, deltaX, deltaY);
-                                                                }, offsetInBytes, noOverwrite);
+                // ------------------------------------------------------------------------------------------------------------
+                // CAUTION: Performance problem under x64 resolved by this special codepath:
+                // For some unknown reasons, It seems that writing directly to the pointer returned by the MapSubresource is 
+                // extremely inefficient using x64 but using a temporary buffer and performing a mempcy to the locked region
+                // seems to be running at the same speed than x86
+                // ------------------------------------------------------------------------------------------------------------
+                if (IntPtr.Size == 8)
+                {
+                    if (x64TempBuffer == null)
+                    {
+                        x64TempBuffer = ToDispose(new DataBuffer(Utilities.SizeOf<VertexPositionColorTexture>() * MaxBatchSize * VerticesPerSprite)));
+                    }
+
+                    // Perform the update of all vertices on a temporary buffer
+                    var texturePtr = (VertexPositionColorTexture*)x64TempBuffer.DataPointer;
+                    for (int i = 0; i < batchSize; i++)
+                    {
+                        UpdateVertexFromSpriteInfo(ref sprites[offset + i], ref texturePtr, deltaX, deltaY);
+                    }
+
+                    // Then copy this buffer in one shot
+                    resourceContext.VertexBuffer.SetData(GraphicsDevice, new DataPointer(x64TempBuffer.DataPointer, batchSize * VerticesPerSprite * Utilities.SizeOf<VertexPositionColorTexture>()), offsetInBytes, noOverwrite);
+                }
+                else
+                {
+                    // For x86 version, It seems that we can write directly to the buffer
+                    // TODO: Need to check that this behavior is also running fine under WP8
+                    resourceContext.VertexBuffer.SetDynamicData(GraphicsDevice, ptr =>
+                                                                    {
+                                                                        var texturePtr = (VertexPositionColorTexture*) ptr;
+                                                                        for (int i = 0; i < batchSize; i++)
+                                                                        {
+                                                                            UpdateVertexFromSpriteInfo(ref sprites[offset + i], ref texturePtr, deltaX, deltaY);
+                                                                        }
+                                                                    }, offsetInBytes, noOverwrite);
+                }
 
                 // Draw from the specified index
                 int startIndex = resourceContext.VertexBufferPosition * IndicesPerSprite;
