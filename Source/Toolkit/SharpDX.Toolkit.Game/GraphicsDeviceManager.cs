@@ -49,7 +49,7 @@ namespace SharpDX.Toolkit
 
         private bool deviceSettingsChanged;
 
-        private FeatureLevel graphicsProfile;
+        private FeatureLevel preferredGraphicsProfile;
 
         private bool isFullScreen;
 
@@ -107,7 +107,19 @@ namespace SharpDX.Toolkit
             preferredBackBufferWidth = DefaultBackBufferWidth;
             preferredBackBufferHeight = DefaultBackBufferHeight;
             PreferMultiSampling = false;
-            GraphicsProfile = FeatureLevel.Level_11_0;
+            PreferredGraphicsProfile = new []
+                {
+#if DIRECTX11_1
+                    FeatureLevel.Level_11_1, 
+#endif
+                    FeatureLevel.Level_11_0, 
+                    FeatureLevel.Level_10_1, 
+                    FeatureLevel.Level_10_0, 
+                    FeatureLevel.Level_9_3, 
+                    FeatureLevel.Level_9_2, 
+                    FeatureLevel.Level_9_1, 
+                };
+
             isFullScreen = game.Window.IsFullScreenMandatory;
 
             // Register the services to the registry
@@ -143,25 +155,19 @@ namespace SharpDX.Toolkit
         public GraphicsDevice GraphicsDevice { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the graphics profile.
+        /// Gets or sets the list of graphics profile to select from the best feature to the lower feature. See remarks.
         /// </summary>
         /// <value>The graphics profile.</value>
-        public FeatureLevel GraphicsProfile
-        {
-            get
-            {
-                return graphicsProfile;
-            }
-
-            set
-            {
-                if (graphicsProfile != value)
-                {
-                    graphicsProfile = value;
-                    deviceSettingsChanged = true;
-                }
-            }
-        }
+        /// <remarks>
+        /// By default, the PreferredGraphicsProfile is set to { <see cref="FeatureLevel.Level_11_1"/>, 
+        /// <see cref="FeatureLevel.Level_11_0"/>,
+        /// <see cref="FeatureLevel.Level_10_1"/>,
+        /// <see cref="FeatureLevel.Level_10_0"/>,
+        /// <see cref="FeatureLevel.Level_9_3"/>,
+        /// <see cref="FeatureLevel.Level_9_2"/>,
+        /// <see cref="FeatureLevel.Level_9_1"/>}
+        /// </remarks>
+        public FeatureLevel[] PreferredGraphicsProfile { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is full screen.
@@ -496,7 +502,7 @@ namespace SharpDX.Toolkit
                     IsFullScreen = IsFullScreen,
                     PreferMultiSampling = PreferMultiSampling,
                     SynchronizeWithVerticalRetrace = SynchronizeWithVerticalRetrace,
-                    GraphicsProfile = GraphicsProfile
+                    PreferredGraphicsProfile = (FeatureLevel[])PreferredGraphicsProfile.Clone(),
                 };
 
             // Setup resized value if there is a resize pending

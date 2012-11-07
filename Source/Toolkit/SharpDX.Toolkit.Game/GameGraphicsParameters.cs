@@ -69,7 +69,7 @@ namespace SharpDX.Toolkit
         /// <summary>
         /// Gets or sets the minimum graphics profile.
         /// </summary>
-        public FeatureLevel GraphicsProfile;
+        public FeatureLevel[] PreferredGraphicsProfile;
 
         /// <summary>
         ///   Gets or sets a value indicating the number of sample locations during multisampling.

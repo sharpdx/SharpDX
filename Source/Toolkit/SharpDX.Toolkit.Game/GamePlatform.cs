@@ -148,36 +148,46 @@ namespace SharpDX.Toolkit
         public virtual List<GraphicsDeviceInformation> FindBestDevices(GameGraphicsParameters prefferedParameters)
         {
             var graphicsDeviceInfos = new List<GraphicsDeviceInformation>();
+
+            // Iterate on each adapter
             foreach (var graphicsAdapter in GraphicsAdapter.Adapters)
             {
-                if (graphicsAdapter.IsProfileSupported(prefferedParameters.GraphicsProfile))
+                // Iterate on each preferred graphics profile
+                foreach (var featureLevel in prefferedParameters.PreferredGraphicsProfile)
                 {
-                    var deviceInfo = new GraphicsDeviceInformation
-                        {
-                            Adapter = graphicsAdapter,
-                            GraphicsProfile = prefferedParameters.GraphicsProfile,
-                            PresentationParameters =
-                                {
-                                    MultiSampleCount = MSAALevel.None,
-                                    IsFullScreen = prefferedParameters.IsFullScreen,
-                                    PresentationInterval = prefferedParameters.SynchronizeWithVerticalRetrace ? PresentInterval.One : PresentInterval.Immediate,
-                                    DeviceWindowHandle = Window.NativeWindow,
-                                    RenderTargetUsage = Usage.BackBuffer | Usage.RenderTargetOutput
-                                }
-                        };
-
-                    if (graphicsAdapter.CurrentDisplayMode != null)
+                    // Check if this profile is supported.
+                    if (graphicsAdapter.IsProfileSupported(featureLevel))
                     {
-                        AddDevice(graphicsAdapter, graphicsAdapter.CurrentDisplayMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
-                    }
+                        var deviceInfo = new GraphicsDeviceInformation
+                            {
+                                Adapter = graphicsAdapter,
+                                GraphicsProfile = featureLevel,
+                                PresentationParameters =
+                                    {
+                                        MultiSampleCount = MSAALevel.None,
+                                        IsFullScreen = prefferedParameters.IsFullScreen,
+                                        PresentationInterval = prefferedParameters.SynchronizeWithVerticalRetrace ? PresentInterval.One : PresentInterval.Immediate,
+                                        DeviceWindowHandle = Window.NativeWindow,
+                                        RenderTargetUsage = Usage.BackBuffer | Usage.RenderTargetOutput
+                                    }
+                            };
 
-                    if (prefferedParameters.IsFullScreen)
-                    {
-                        // Get display mode for the particular width, height, pixelformat
-                        foreach (var displayMode in graphicsAdapter.SupportedDisplayModes)
+                        if (graphicsAdapter.CurrentDisplayMode != null)
                         {
-                            AddDevice(graphicsAdapter, displayMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
+                            AddDevice(graphicsAdapter, graphicsAdapter.CurrentDisplayMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
                         }
+
+                        if (prefferedParameters.IsFullScreen)
+                        {
+                            // Get display mode for the particular width, height, pixelformat
+                            foreach (var displayMode in graphicsAdapter.SupportedDisplayModes)
+                            {
+                                AddDevice(graphicsAdapter, displayMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
+                            }
+                        }
+
+                        // If the profile is supported, we are just using the first best one
+                        break;
                     }
                 }
             }

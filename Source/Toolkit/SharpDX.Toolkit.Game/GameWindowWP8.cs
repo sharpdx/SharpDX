@@ -258,7 +258,7 @@ namespace SharpDX.Toolkit
                 }
             } catch (Exception ex)
             {
-                System.Diagnostics.Debugger.Break();
+                // System.Diagnostics.Debugger.Break();
             }
         }
 
