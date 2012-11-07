@@ -193,6 +193,12 @@ namespace SharpDX.Toolkit.Content
             {
                 resolvers = new List<IContentResolver>(registeredContentResolvers);
             }
+
+            if (resolvers.Count == 0)
+            {
+                throw new InvalidOperationException("No resolver registered to this content manager");
+            }
+
             foreach (var contentResolver in resolvers)
             {
                 stream = contentResolver.Resolve(assetNameWithExtension);
