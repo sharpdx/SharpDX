@@ -850,7 +850,7 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     if (x64TempBuffer == null)
                     {
-                        x64TempBuffer = ToDispose(new DataBuffer(Utilities.SizeOf<VertexPositionColorTexture>() * MaxBatchSize * VerticesPerSprite)));
+                        x64TempBuffer = ToDispose(new DataBuffer(Utilities.SizeOf<VertexPositionColorTexture>() * MaxBatchSize * VerticesPerSprite));
                     }
 
                     // Perform the update of all vertices on a temporary buffer
