@@ -199,12 +199,15 @@
     -->
     <ifdef name="DIRECTX11_1">
       <map function="XAudio2Create" dll='"#(XAUDIO2_DLL_A)"' group="SharpDX.XAudio2.XAudio2Functions" />
+      <map function="CreateAudio.*" dll='"#(XAUDIO2_DLL_A)"' group="SharpDX.XAudio2.XAudio2Functions" />
       <map param="XAudio2Create::ppXAudio2" attribute="out fast"/>
+      <map param="CreateAudio.*::ppApo" attribute="out fast"/>
     </ifdef>
     
     <!--<remove function="XAudio2Create.*"/>-->
-    <remove function="CreateAudio.*"/>
-    
+    <ifndef name="DIRECTX11_1">
+      <remove function="CreateAudio.*"/>
+    </ifndef>
     <context-clear />
   </mapping>
 </config>

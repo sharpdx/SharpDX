@@ -88,9 +88,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Mapping-xaudio2.xml" />
-    <Content Include="X3DAudio\Mapping.xml" />
-    <Content Include="XAPO\Mapping.xml" />
+    <None Include="Mapping-xaudio2.xml" />
+    <None Include="X3DAudio\Mapping.xml" />
+    <None Include="XAPO\Mapping.xml" />
   </ItemGroup>
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

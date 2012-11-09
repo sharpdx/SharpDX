@@ -41,8 +41,12 @@ namespace SharpDX.XAudio2.Fx
         public Reverb(bool isUsingDebug)
             : base(IntPtr.Zero)
         {
+#if DIRECTX11_1
+            XAudio2Functions.CreateAudioReverb(this);
+#else
             Guid clsid = (isUsingDebug) ? XAudio2FxContants.CLSID_AudioReverb_Debug : XAudio2FxContants.CLSID_AudioReverb;
             Utilities.CreateComInstance(clsid, Utilities.CLSCTX.ClsctxInprocServer, Utilities.GetGuidFromType(typeof(AudioProcessor)), this);
+#endif
         }
     }
 }
