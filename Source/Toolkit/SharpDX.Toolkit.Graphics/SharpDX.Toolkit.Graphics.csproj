@@ -22,6 +22,8 @@
     <Compile Include="BlendState.cs" />
     <Compile Include="BlendStateCollection.cs" />
     <Compile Include="NamespaceDoc.cs" />
+    <Compile Include="PrimitiveBatch.cs" />
+    <Compile Include="PrimitiveBatchBase.cs" />
     <Compile Include="RenderTargetGraphicsPresenter.cs" />
     <Compile Include="EffectConstantBufferKey.cs" />
     <Compile Include="EffectContentReader.cs" />
