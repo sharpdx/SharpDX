@@ -675,7 +675,7 @@ namespace SharpDX.Direct3D9
             unsafe
             {
                 fixed (void* pData = data)
-                    SetPixelShaderConstantF(startRegister, (IntPtr)pData, data.Length << 4);
+                    SetPixelShaderConstantF(startRegister, (IntPtr)pData, data.Length << 2); // *4 is enough
             }                              
         }
 
@@ -693,7 +693,7 @@ namespace SharpDX.Direct3D9
             unsafe
             {
                 fixed (void* pData = data)
-                    SetPixelShaderConstantF(startRegister, (IntPtr)pData, data.Length << 2);
+                    SetPixelShaderConstantF(startRegister, (IntPtr)pData, data.Length); // a vector4 is only one register
             }                  
         }
 
@@ -739,7 +739,7 @@ namespace SharpDX.Direct3D9
             unsafe
             {
                 fixed (void* pData = data)
-                    SetPixelShaderConstantI(startRegister, (IntPtr)pData, data.Length);
+                    SetPixelShaderConstantI(startRegister, (IntPtr)pData, data.Length >> 2); // /4 as it's the count of Vector4i
             }                      
         }
 
@@ -757,7 +757,7 @@ namespace SharpDX.Direct3D9
             unsafe
             {
                 fixed (void* pData = data)
-                    SetPixelShaderConstantF(startRegister, (IntPtr)pData, data.Length);
+                    SetPixelShaderConstantF(startRegister, (IntPtr)pData, data.Length >> 2); // /4 as it's the count of Vector4f
             }            
         }
 
@@ -772,7 +772,7 @@ namespace SharpDX.Direct3D9
         /// <unmanaged>HRESULT IDirect3DDevice9::SetPixelShaderConstantF([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int Vector4fCount)</unmanaged>
         public unsafe void SetPixelShaderConstant(int startRegister, Matrix* data)
         {
-            SetPixelShaderConstantF(startRegister, (IntPtr)data, 16);
+            SetPixelShaderConstantF(startRegister, (IntPtr)data, 4); // a matrix is only 4 registers
         }
 
         /// <summary>
@@ -788,7 +788,7 @@ namespace SharpDX.Direct3D9
         {
             unsafe
             {
-                SetPixelShaderConstantF(startRegister, new IntPtr(&data), 16);
+                SetPixelShaderConstantF(startRegister, new IntPtr(&data), 4); // a matrix is only 4 registers
             }
         }
 
@@ -804,7 +804,7 @@ namespace SharpDX.Direct3D9
         /// <unmanaged>HRESULT IDirect3DDevice9::SetPixelShaderConstantF([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int Vector4fCount)</unmanaged>
         public unsafe void SetPixelShaderConstant(int startRegister, Matrix* data, int count)
         {
-            SetPixelShaderConstantF(startRegister, (IntPtr)data, count << 4);
+            SetPixelShaderConstantF(startRegister, (IntPtr)data, count << 2); // *4 is enough as a matrix is still 4 registers
         }
 
         /// <summary>
@@ -823,7 +823,7 @@ namespace SharpDX.Direct3D9
             unsafe
             {
                 fixed (void* pData = &data[offset])
-                    SetPixelShaderConstantF(startRegister, (IntPtr)pData, count << 4);
+					SetPixelShaderConstantF(startRegister, (IntPtr)pData, count << 2); // *4 is enough as a matrix is still 4 registers
             }
         }
 
@@ -841,7 +841,7 @@ namespace SharpDX.Direct3D9
             unsafe
             {
                 fixed (void* pData = &data[offset])
-                    SetPixelShaderConstantF(startRegister, (IntPtr)pData, count << 2);
+                    SetPixelShaderConstantF(startRegister, (IntPtr)pData, count); // count is enough, as a Vector4f is only one register
             }            
         }
 
@@ -886,8 +886,8 @@ namespace SharpDX.Direct3D9
         {
             unsafe
             {
-                fixed (void* pData = &data[offset])
-                    SetPixelShaderConstantI(startRegister, (IntPtr)pData, count);
+				fixed (void* pData = &data[offset])
+					SetPixelShaderConstantI(startRegister, (IntPtr) pData, count);
             }            
         }
 
@@ -1140,7 +1140,7 @@ namespace SharpDX.Direct3D9
             unsafe
             {
                 fixed (void* pData = data)
-                    SetVertexShaderConstantF(startRegister, (IntPtr)pData, data.Length << 4);
+                    SetVertexShaderConstantF(startRegister, (IntPtr)pData, data.Length << 2);
             }
         }
 
@@ -1158,7 +1158,7 @@ namespace SharpDX.Direct3D9
             unsafe
             {
                 fixed (void* pData = data)
-                    SetVertexShaderConstantF(startRegister, (IntPtr)pData, data.Length << 2);
+                    SetVertexShaderConstantF(startRegister, (IntPtr)pData, data.Length >> 2);
             }
         }
 
@@ -1204,7 +1204,7 @@ namespace SharpDX.Direct3D9
             unsafe
             {
                 fixed (void* pData = data)
-                    SetVertexShaderConstantI(startRegister, (IntPtr)pData, data.Length);
+                    SetVertexShaderConstantI(startRegister, (IntPtr)pData, data.Length >> 2);
             }
         }
 
@@ -1222,7 +1222,7 @@ namespace SharpDX.Direct3D9
             unsafe
             {
                 fixed (void* pData = data)
-                    SetVertexShaderConstantF(startRegister, (IntPtr)pData, data.Length);
+                    SetVertexShaderConstantF(startRegister, (IntPtr)pData, data.Length >> 2);
             }
         }
 
@@ -1237,7 +1237,7 @@ namespace SharpDX.Direct3D9
         /// <unmanaged>HRESULT IDirect3DDevice9::SetVertexShaderConstantF([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int Vector4fCount)</unmanaged>
         public unsafe void SetVertexShaderConstant(int startRegister, Matrix* data)
         {
-            SetVertexShaderConstantF(startRegister, (IntPtr)data, 16);
+            SetVertexShaderConstantF(startRegister, (IntPtr)data, 4);
         }
 
         /// <summary>
@@ -1253,7 +1253,7 @@ namespace SharpDX.Direct3D9
         {
             unsafe
             {
-                SetVertexShaderConstantF(startRegister, new IntPtr(&data), 16);
+                SetVertexShaderConstantF(startRegister, new IntPtr(&data), 4);
             }
         }
 
@@ -1269,7 +1269,7 @@ namespace SharpDX.Direct3D9
         /// <unmanaged>HRESULT IDirect3DDevice9::SetVertexShaderConstantF([In] unsigned int StartRegister,[In] const void* pConstantData,[In] unsigned int Vector4fCount)</unmanaged>
         public unsafe void SetVertexShaderConstant(int startRegister, Matrix* data, int count)
         {
-            SetVertexShaderConstantF(startRegister, (IntPtr)data, count << 4);
+            SetVertexShaderConstantF(startRegister, (IntPtr)data, count << 2);
         }
 
         /// <summary>
@@ -1288,7 +1288,7 @@ namespace SharpDX.Direct3D9
             unsafe
             {
                 fixed (void* pData = &data[offset])
-                    SetVertexShaderConstantF(startRegister, (IntPtr)pData, count << 4);
+                    SetVertexShaderConstantF(startRegister, (IntPtr)pData, count << 2);
             }
         }
 
@@ -1306,7 +1306,7 @@ namespace SharpDX.Direct3D9
             unsafe
             {
                 fixed (void* pData = &data[offset])
-                    SetVertexShaderConstantF(startRegister, (IntPtr)pData, count << 2);
+                    SetVertexShaderConstantF(startRegister, (IntPtr)pData, count >> 2);
             }
         }
 
