@@ -544,7 +544,7 @@ namespace SharpDX.Toolkit.Graphics
 
                 var range = new SlotLinkSet() {SlotCount = parameterRaw.Count, SlotIndex = parameterRaw.Slot};
                 slots.Add(range);
-                range.Links.Add(new SlotLink(resourceIndex, 0, parameterRaw.Count));
+                range.Links.Add(new SlotLink(parameter.Offset, 0, parameterRaw.Count));
             }
 
             stageBlock.ConstantBufferLinks = constantBufferLinks.ToArray();
