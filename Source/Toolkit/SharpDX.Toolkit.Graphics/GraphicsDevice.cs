@@ -238,6 +238,15 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
+        /// Gets the depth stencil buffer sets by the current <see cref="Presenter" /> setup on this device.
+        /// </summary>
+        /// <value>The depth stencil buffer. The returned value may be null if no <see cref="GraphicsPresenter"/> are setup on this device or no depth buffer was allocated.</value>
+        public DepthStencilBuffer DepthStencilBuffer
+        {
+            get { return Presenter != null ? Presenter.DepthStencilBuffer : null; }
+        }
+
+        /// <summary>
         /// Gets or sets the current presenter use by the <see cref="Present"/> method.
         /// </summary>
         /// <value>The current presenter.</value>
@@ -299,6 +308,81 @@ namespace SharpDX.Toolkit.Graphics
 
                 return GraphicsDeviceStatus.Normal;
             }
+        }
+
+        /// <summary>
+        /// Clears the default render target and depth stencil buffer attached to the current <see cref="Presenter"/>.
+        /// </summary>
+        /// <param name="color">Set this color value in all buffers.</param>
+        /// <exception cref="System.InvalidOperationException">Cannot clear without a Presenter set on this instance</exception>
+        public void Clear(Color4 color)
+        {
+            if (Presenter == null)
+            {
+                throw new InvalidOperationException("Cannot clear without a Presenter set on this instance");
+            }
+
+            var options = Presenter.BackBuffer != null ? ClearOptions.Target : (ClearOptions)0;
+
+            if (DepthStencilBuffer != null)
+            {
+                options |= DepthStencilBuffer.HasStencil ? ClearOptions.DepthBuffer | ClearOptions.Stencil : ClearOptions.DepthBuffer;
+            }
+
+            Clear(options, color, 1f, 0);
+        }
+
+        /// <summary>
+        /// Clears the default render target and depth stencil buffer attached to the current <see cref="Presenter"/>.
+        /// </summary>
+        /// <param name="options">Options for clearing a buffer.</param>
+        /// <param name="color">Set this four-component color value in the buffer.</param>
+        /// <param name="depth">Set this depth value in the buffer.</param>
+        /// <param name="stencil">Set this stencil value in the buffer.</param>
+        public void Clear(ClearOptions options, Color4 color, float depth, int stencil)
+        {
+            if (Presenter == null)
+            {
+                throw new InvalidOperationException("Cannot clear without a Presenter set on this instance");
+            }
+
+            if ((options & ClearOptions.Target) != 0)
+            {
+                if (BackBuffer == null)
+                {
+                    throw new InvalidOperationException("Cannot clear a null BackBuffer for the current Presenter");
+                }
+
+                Clear(BackBuffer, color);
+            }
+
+            if ((options & (ClearOptions.Stencil | ClearOptions.DepthBuffer)) != 0)
+            {
+                if (DepthStencilBuffer == null)
+                {
+                    throw new InvalidOperationException("No default depth stencil buffer available the current Presenter");
+                }
+
+                var flags = (options & ClearOptions.DepthBuffer) != 0 ? DepthStencilClearFlags.Depth : 0;
+                if ((options & ClearOptions.Stencil) != 0)
+                {
+                    flags |= DepthStencilClearFlags.Stencil;
+                }
+
+                Clear(DepthStencilBuffer, flags, depth, (byte)stencil);
+            }
+        }
+
+        /// <summary>
+        /// Clears the default render target and depth stencil buffer attached to the current <see cref="Presenter"/>.
+        /// </summary>
+        /// <param name="options">Options for clearing a buffer.</param>
+        /// <param name="color">Set this four-component color value in the buffer.</param>
+        /// <param name="depth">Set this depth value in the buffer.</param>
+        /// <param name="stencil">Set this stencil value in the buffer.</param>
+        public void Clear(ClearOptions options, Vector4 color, float depth, int stencil)
+        {
+            Clear(options, (Color4)color, depth, stencil);
         }
 
         /// <summary>

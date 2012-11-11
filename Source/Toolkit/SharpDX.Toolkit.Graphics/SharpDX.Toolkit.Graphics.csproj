@@ -21,6 +21,7 @@
     <Compile Include="AssemblyDoc.cs" />
     <Compile Include="BlendState.cs" />
     <Compile Include="BlendStateCollection.cs" />
+    <Compile Include="ClearOptions.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="PrimitiveBatch.cs" />
     <Compile Include="PrimitiveBatchBase.cs" />
