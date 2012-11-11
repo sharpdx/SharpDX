@@ -901,8 +901,7 @@ namespace SharpDX.Toolkit.Graphics
             for (int j = 0; j < 4; j++)
             {
                 // Gets the corner and take into account the Flip mode.
-                var corner = CornerOffsets[j ^ (int)spriteInfo.SpriteEffects];
-
+                var corner = CornerOffsets[j];
                 // Calculate position on destination
                 var position = new Vector2((corner.X - origin.X) * spriteInfo.Destination.Width, (corner.Y - origin.Y) * spriteInfo.Destination.Height);
 
@@ -911,6 +910,8 @@ namespace SharpDX.Toolkit.Graphics
                 vertex->Position.Y = spriteInfo.Destination.Y + (position.X * rotation.Y) + (position.Y * rotation.X);
                 vertex->Position.Z = spriteInfo.Depth;
                 vertex->Color = spriteInfo.Color;
+
+                corner = CornerOffsets[j ^ (int)spriteInfo.SpriteEffects];
                 vertex->TextureCoordinate.X = (spriteInfo.Source.X + corner.X * spriteInfo.Source.Width) * deltaX;
                 vertex->TextureCoordinate.Y = (spriteInfo.Source.Y + corner.Y * spriteInfo.Source.Height) * deltaY;
                 vertex++;
