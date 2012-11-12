@@ -48,7 +48,6 @@ namespace CustomEffect
             // Creates a graphics manager. This is mandatory.
             graphicsDeviceManager = new GraphicsDeviceManager(this);
             graphicsDeviceManager.PreferredDepthStencilFormat = DepthFormat.None;
-            graphicsDeviceManager.DeviceCreationFlags = DeviceCreationFlags.Debug;
 
             // Setup the relative directory to the executable directory
             // for loading contents with the ContentManager
