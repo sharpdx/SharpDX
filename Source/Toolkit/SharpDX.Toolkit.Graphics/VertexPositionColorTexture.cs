@@ -35,7 +35,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="position">The position of this vertex.</param>
         /// <param name="color">The color of this vertex.</param>
         /// <param name="textureCoordinate">UV texture coordinates.</param>
-        public VertexPositionColorTexture(Vector3 position, Color4 color, Vector2 textureCoordinate) : this()
+        public VertexPositionColorTexture(Vector3 position, Color color, Vector2 textureCoordinate) : this()
         {
             Position = position;
             Color = color;
@@ -52,7 +52,7 @@ namespace SharpDX.Toolkit.Graphics
         /// The vertex color.
         /// </summary>
         [VertexElement("COLOR")]
-        public Color4 Color;
+        public Color Color;
 
         /// <summary>
         /// UV texture coordinates.

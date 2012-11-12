@@ -41,6 +41,8 @@ namespace SharpDX.Toolkit.Graphics
         private Dictionary<VertexInputLayout, InputLayoutPair> inputLayoutDeviceCache;
         private Dictionary<VertexInputLayout, InputLayoutPair> inputLayoutContextCache;
 
+        private readonly PrimitiveQuad primitiveQuad;
+
         private VertexInputLayout currentVertexInputLayout;
         internal EffectPass CurrentPass;
 
@@ -162,6 +164,9 @@ namespace SharpDX.Toolkit.Graphics
             RasterizerStates = new RasterizerStateCollection(this);
 
             Initialize();
+
+            // Create Internal Effect
+            primitiveQuad = new PrimitiveQuad(this);
         }
 
         protected GraphicsDevice(GraphicsDevice mainDevice, DeviceContext deferredContext)
@@ -196,6 +201,9 @@ namespace SharpDX.Toolkit.Graphics
             // Setup the workaround flag
             needWorkAroundForUpdateSubResource = IsDeferred && !Features.HasDriverCommandLists;
             Initialize();
+
+            // Create Internal Effect
+            primitiveQuad = new PrimitiveQuad(this);
         }
 
         private void Initialize()
@@ -719,6 +727,40 @@ namespace SharpDX.Toolkit.Graphics
 
             PrimitiveType = primitiveType;
             Context.DrawIndexedInstancedIndirect(argumentsBuffer, alignedByteOffsetForArgs);
+        }
+
+        public void DrawQuad(Effect effect)
+        {
+            primitiveQuad.Draw(effect);
+        }
+
+        public void DrawQuad(Effect effect, Matrix transform)
+        {
+            primitiveQuad.Transform = transform;
+            primitiveQuad.Draw(effect);
+        }
+
+        public void DrawQuad(Effect effect, ref Matrix transform)
+        {
+            primitiveQuad.Transform = transform;
+            primitiveQuad.Draw(effect);
+        }
+
+        public void DrawQuad(EffectPass effectPass)
+        {
+            primitiveQuad.Draw(effectPass);
+        }
+
+        public void DrawQuad(EffectPass effectPass, Matrix transform)
+        {
+            primitiveQuad.Transform = transform;
+            primitiveQuad.Draw(effectPass);
+        }
+
+        public void DrawQuad(EffectPass effectPass, ref Matrix transform)
+        {
+            primitiveQuad.Transform = transform;
+            primitiveQuad.Draw(effectPass);
         }
 
         /// <summary>	

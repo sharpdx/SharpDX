@@ -30,6 +30,11 @@
     <Compile Include="EffectContentReader.cs" />
     <Compile Include="GraphicsDeviceStatus.cs" />
     <Compile Include="GraphicsResourceContentReaderBase.cs" />
+    <Compile Include="PrimitiveQuad.cs" />
+    <Compile Include="StockEffects\HLSL\PrimitiveQuad.cs">
+      <DependentUpon>PrimitiveQuad.fx</DependentUpon>
+      <AutoGen>True</AutoGen>
+    </Compile>
     <Compile Include="SwapChainGraphicsPresenter.cs" />
     <Compile Include="IGraphicsDeviceService.cs" />
     <Compile Include="ImageContentReader.cs" />
@@ -213,6 +218,9 @@
     </None>
     <None Include="StockEffects\HLSL\SpriteEffect.fx">
       <LastGenOutput>SpriteEffect.ByteCode.cs</LastGenOutput>
+    </None>
+    <None Include="StockEffects\HLSL\PrimitiveQuad.fx">
+      <LastGenOutput>PrimitiveQuad.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
