@@ -1237,7 +1237,7 @@ namespace SharpDX.Toolkit.Graphics
                 if ((slot+1) > maxSlotCountForVertexBuffer)
                     maxSlotCountForVertexBuffer = slot + 1;
             }
-            inputAssemblerStage.SetVertexBuffers(slot, 1, vertexBufferPtr, new IntPtr(&vertexStride), new IntPtr(&offsetInBytes));
+            inputAssemblerStage.SetVertexBuffers(slot, 1, new IntPtr(&vertexBufferPtr), new IntPtr(&vertexStride), new IntPtr(&offsetInBytes));
         }
 
         /// <summary>

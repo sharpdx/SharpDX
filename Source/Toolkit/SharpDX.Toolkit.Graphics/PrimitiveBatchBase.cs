@@ -89,7 +89,7 @@ namespace SharpDX.Toolkit.Graphics
 
         private readonly GraphicsDevice device;
 
-        private readonly Buffer<short> indexBuffer;
+        private readonly Buffer indexBuffer;
 
         private readonly int maxIndices;
 
@@ -129,10 +129,10 @@ namespace SharpDX.Toolkit.Graphics
             // If you only intend to draw non-indexed geometry, specify maxIndices = 0 to skip creating the index buffer.
             if (maxIndices > 0)
             {
-                indexBuffer = ToDispose(Buffer.Index.New<short>(device, maxIndices * sizeof(short), ResourceUsage.Dynamic));
+                indexBuffer = ToDispose(Buffer.New(device, maxIndices * sizeof(short), sizeof(short), BufferFlags.IndexBuffer, ResourceUsage.Dynamic));
             }
 
-            vertexBuffer = ToDispose(Buffer.Vertex.New(device, maxVertices * vertexSize, ResourceUsage.Dynamic));
+            vertexBuffer = ToDispose(Buffer.New(device, maxVertices * vertexSize, vertexSize, BufferFlags.VertexBuffer, ResourceUsage.Dynamic));
         }
 
         #endregion
