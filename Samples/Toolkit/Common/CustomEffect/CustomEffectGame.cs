@@ -71,6 +71,7 @@ namespace CustomEffect
             // As the shader is writing to the screen, we don't need to clear it.
             metaTunnelEffect.Parameters["w"].SetValue((float)gameTime.TotalGameTime.TotalSeconds);
 
+            // Draw a full screen quad using the specified effect.
             GraphicsDevice.DrawQuad(metaTunnelEffect);
 
             // Handle base.Draw

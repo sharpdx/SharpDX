@@ -69,6 +69,19 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
+        /// Draws a quad. The effect must have been applied before calling this method with pixel shader having the signature float2:TEXCOORD.
+        /// </summary>
+        public void Draw()
+        {
+            GraphicsDevice.SetVertexBuffer(sharedData.VertexBuffer);
+            GraphicsDevice.SetVertexInputLayout(sharedData.VertexInputLayout);
+
+            // Make sure that we are using our vertex shader
+            quadPass.Apply();
+            GraphicsDevice.Draw(PrimitiveType.TriangleStrip, 4);
+        }
+
+        /// <summary>
         /// Draws the specified effect onto the quad. The effect must have a pixel shader with the signature float2:TEXCOORD.
         /// </summary>
         /// <param name="effect">The effect.</param>
@@ -94,16 +107,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="effectPass">The effect pass.</param>
         public void Draw(EffectPass effectPass)
         {
-            GraphicsDevice.SetVertexBuffer(sharedData.VertexBuffer);
-            GraphicsDevice.SetVertexInputLayout(sharedData.VertexInputLayout);
-
             // Apply the Effect pass
             effectPass.Apply();
-
-            // Make sure that we are using our vertex shader
-            quadPass.Apply();
-
-            GraphicsDevice.Draw(PrimitiveType.TriangleStrip, 4);
+            Draw();
         }
 
         /// <summary>
@@ -134,7 +140,6 @@ namespace SharpDX.Toolkit.Graphics
                 VertexBuffer = ToDispose(Buffer.Vertex.New(device, QuadsVertices));
                 VertexInputLayout = VertexInputLayout.FromBuffer(0, VertexBuffer);
             }
-
         }
     }
 }

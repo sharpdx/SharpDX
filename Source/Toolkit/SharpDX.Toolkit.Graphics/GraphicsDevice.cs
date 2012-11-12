@@ -729,34 +729,82 @@ namespace SharpDX.Toolkit.Graphics
             Context.DrawIndexedInstancedIndirect(argumentsBuffer, alignedByteOffsetForArgs);
         }
 
+        /// <summary>
+        /// Draws a fullscreen quad. An effect with at least a pixel shader (with the expected signature - float2:TEXCOORD) must have been applied before using this method.
+        /// </summary>
+        /// <seealso cref="PrimitiveQuad" />
+        public void DrawQuad()
+        {
+            primitiveQuad.Draw();
+        }
+
+        /// <summary>
+        /// Draws a fullscreen quad. An effect with at least a pixel shader (with the expected signature - float2:TEXCOORD) must have been applied before using this method.
+        /// </summary>
+        /// <param name="tranform">The tranform.</param>
+        /// <seealso cref="PrimitiveQuad"/>
+        public void DrawQuad(Matrix tranform)
+        {
+            primitiveQuad.Transform = tranform;
+            primitiveQuad.Draw();
+        }
+
+        /// <summary>
+        /// Draws a fullscreen quad with the specified effect (with the expected signature - float2:TEXCOORD)
+        /// </summary>
+        /// <param name="effect">The effect.</param>
         public void DrawQuad(Effect effect)
         {
             primitiveQuad.Draw(effect);
         }
 
+        /// <summary>
+        /// Draws a fullscreen quad with the specified effect (with the expected signature - float2:TEXCOORD)
+        /// </summary>
+        /// <param name="effect">The effect.</param>
+        /// <param name="transform">The transform.</param>
         public void DrawQuad(Effect effect, Matrix transform)
         {
             primitiveQuad.Transform = transform;
             primitiveQuad.Draw(effect);
         }
 
+        /// <summary>
+        /// Draws a fullscreen quad with the specified effect (with the expected signature - float2:TEXCOORD)
+        /// </summary>
+        /// <param name="effect">The effect.</param>
+        /// <param name="transform">The transform.</param>
         public void DrawQuad(Effect effect, ref Matrix transform)
         {
             primitiveQuad.Transform = transform;
             primitiveQuad.Draw(effect);
         }
 
+        /// <summary>
+        /// Draws a fullscreen quad with the specified effect pass (with the expected signature - float2:TEXCOORD)
+        /// </summary>
+        /// <param name="effectPass">The effect pass.</param>
         public void DrawQuad(EffectPass effectPass)
         {
             primitiveQuad.Draw(effectPass);
         }
 
+        /// <summary>
+        /// Draws a fullscreen quad with the specified effect pass (with the expected signature - float2:TEXCOORD)
+        /// </summary>
+        /// <param name="effectPass">The effect pass.</param>
+        /// <param name="transform">The transform.</param>
         public void DrawQuad(EffectPass effectPass, Matrix transform)
         {
             primitiveQuad.Transform = transform;
             primitiveQuad.Draw(effectPass);
         }
 
+        /// <summary>
+        /// Draws a fullscreen quad with the specified effect pass (with the expected signature - float2:TEXCOORD)
+        /// </summary>
+        /// <param name="effectPass">The effect pass.</param>
+        /// <param name="transform">The transform.</param>
         public void DrawQuad(EffectPass effectPass, ref Matrix transform)
         {
             primitiveQuad.Transform = transform;
