@@ -77,30 +77,78 @@ using SharpDX.Direct3D;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    // Template makes the API typesafe, eg. PrimitiveBatch<VertexPositionColor>.
+    /// <summary>
+    /// Primitive batch implementation using generic.
+    /// </summary>
+    /// <typeparam name="T">Type of a Vertex element</typeparam>
     public class PrimitiveBatch<T> : PrimitiveBatchBase where T : struct
     {
         const int DefaultBatchSize = 2048;
 
-        public PrimitiveBatch(GraphicsDevice device, int maxIndices = DefaultBatchSize * 3, int maxVertices = DefaultBatchSize)
-            : base(device, maxIndices, maxVertices, Utilities.SizeOf<T>())
+        /// <summary>
+        /// The quad indices
+        /// </summary>
+        private static readonly short[] QuadIndices = new short[] { 0, 1, 2, 0, 2, 3 };
+
+        private readonly VertexInputLayout vertexInputLayout;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PrimitiveBatch{T}" /> class.
+        /// </summary>
+        /// <param name="graphicsDevice">The device.</param>
+        /// <param name="maxIndices">The max indices.</param>
+        /// <param name="maxVertices">The max vertices.</param>
+        public PrimitiveBatch(GraphicsDevice graphicsDevice, int maxIndices = DefaultBatchSize * 3, int maxVertices = DefaultBatchSize)
+            : base(graphicsDevice, maxIndices, maxVertices, Utilities.SizeOf<T>())
         {
+            var vertexElements = VertexElement.FromType<T>();
+
+            // If the type has some VertexElement description, we can use them directly to setup the vertex input layout.
+            if (vertexElements != null)
+            {
+                vertexInputLayout = VertexInputLayout.New(0, vertexElements);
+            }
         }
 
-        // Similar to the D3D9 API DrawPrimitiveUP.
+        public override void Begin()
+        {
+            base.Begin();
+
+            // Setup the Vertex Input layout if we have one.
+            if (vertexInputLayout != null)
+            {
+                GraphicsDevice.SetVertexInputLayout(vertexInputLayout);
+            }
+        }
+
+        /// <summary>
+        /// Draws vertices for the specified topology.
+        /// </summary>
+        /// <param name="topology">The topology.</param>
+        /// <param name="vertices">The vertices.</param>
         public unsafe void Draw(PrimitiveType topology, T[] vertices)
         {
             var mappedVertices = Draw(topology, false, IntPtr.Zero, 0, vertices.Length);
             Utilities.CopyMemory(mappedVertices, (IntPtr)Interop.Fixed(vertices), vertices.Length * VertexSize) ;
         }
 
-        // Similar to the D3D9 API DrawIndexedPrimitiveUP.
+        /// <summary>
+        /// Draws the indexed vertices with the specified toplogy.
+        /// </summary>
+        /// <param name="topology">The topology.</param>
+        /// <param name="indices">The indices.</param>
+        /// <param name="vertices">The vertices.</param>
         public unsafe void DrawIndexed(PrimitiveType topology, short[] indices, T[] vertices)
         {
             var mappedVertices = Draw(topology, true, (IntPtr)Interop.Fixed(indices), indices.Length, vertices.Length);
             Utilities.CopyMemory(mappedVertices, (IntPtr)Interop.Fixed(vertices), vertices.Length * VertexSize) ;
         }
 
+        /// <summary>
+        /// Draws a line.
+        /// </summary>
+        /// <param name="v1">The v1 starting point.</param>
+        /// <param name="v2">The v2 end point.</param>
         public unsafe void DrawLine(T v1, T v2)
         {
             var mappedVertices = Draw(PrimitiveTopology.LineList, false, IntPtr.Zero, 0, 2);
@@ -108,6 +156,12 @@ namespace SharpDX.Toolkit.Graphics
             Utilities.Write(new IntPtr((byte*)mappedVertices + VertexSize), ref v2);
         }
 
+        /// <summary>
+        /// Draws a triangle (points must be ordered in CW or CCW depending on rasterizer settings).
+        /// </summary>
+        /// <param name="v1">The v1.</param>
+        /// <param name="v2">The v2.</param>
+        /// <param name="v3">The v3.</param>
         public unsafe void DrawTriangle(T v1, T v2, T v3)
         {
             var mappedVertices = Draw(PrimitiveTopology.TriangleList, false, IntPtr.Zero, 0, 3);
@@ -116,12 +170,16 @@ namespace SharpDX.Toolkit.Graphics
             Utilities.Write(new IntPtr((byte*)mappedVertices + VertexSize + VertexSize), ref v3);
         }
 
-        private readonly static short[] quadIndices = new short[] { 0, 1, 2, 0, 2, 3 };
-
+        /// <summary>
+        /// Draws a quad (points must be ordered in CW or CCW depending on rasterizer settings).
+        /// </summary>
+        /// <param name="v1">The v1.</param>
+        /// <param name="v2">The v2.</param>
+        /// <param name="v3">The v3.</param>
+        /// <param name="v4">The v4.</param>
         public unsafe void DrawQuad(T v1, T v2, T v3, T v4)
         {
-
-            var mappedVertices = (byte*)Draw(PrimitiveTopology.TriangleList, true, (IntPtr)Interop.Fixed(quadIndices), 6, 4);
+            var mappedVertices = (byte*)Draw(PrimitiveTopology.TriangleList, true, (IntPtr)Interop.Fixed(QuadIndices), 6, 4);
             Utilities.Write((IntPtr)mappedVertices, ref v1);
             mappedVertices += VertexSize;
             Utilities.Write((IntPtr)mappedVertices, ref v2);

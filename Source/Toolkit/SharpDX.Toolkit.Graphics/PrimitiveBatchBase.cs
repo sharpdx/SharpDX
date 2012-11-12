@@ -78,6 +78,9 @@ using SharpDX.Direct3D11;
 
 namespace SharpDX.Toolkit.Graphics
 {
+    /// <summary>
+    /// Primitive batch base class.
+    /// </summary>
     public class PrimitiveBatchBase : Component
     {
         #region Fields
@@ -87,7 +90,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         protected readonly int VertexSize;
 
-        private readonly GraphicsDevice device;
+        private readonly GraphicsDevice graphicsDevice;
 
         private readonly Buffer indexBuffer;
 
@@ -119,9 +122,16 @@ namespace SharpDX.Toolkit.Graphics
 
         #region Constructors and Destructors
 
-        protected PrimitiveBatchBase(GraphicsDevice device, int maxIndices, int maxVertices, int vertexSize)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PrimitiveBatchBase" /> class.
+        /// </summary>
+        /// <param name="graphicsDevice">The device.</param>
+        /// <param name="maxIndices">The max indices.</param>
+        /// <param name="maxVertices">The max vertices.</param>
+        /// <param name="vertexSize">Size of the vertex.</param>
+        protected PrimitiveBatchBase(GraphicsDevice graphicsDevice, int maxIndices, int maxVertices, int vertexSize)
         {
-            this.device = device;
+            this.graphicsDevice = graphicsDevice;
             this.maxIndices = maxIndices;
             this.maxVertices = maxVertices;
             this.VertexSize = vertexSize;
@@ -129,10 +139,10 @@ namespace SharpDX.Toolkit.Graphics
             // If you only intend to draw non-indexed geometry, specify maxIndices = 0 to skip creating the index buffer.
             if (maxIndices > 0)
             {
-                indexBuffer = ToDispose(Buffer.New(device, maxIndices * sizeof(short), sizeof(short), BufferFlags.IndexBuffer, ResourceUsage.Dynamic));
+                indexBuffer = ToDispose(Buffer.New(graphicsDevice, maxIndices * sizeof(short), sizeof(short), BufferFlags.IndexBuffer, ResourceUsage.Dynamic));
             }
 
-            vertexBuffer = ToDispose(Buffer.New(device, maxVertices * vertexSize, vertexSize, BufferFlags.VertexBuffer, ResourceUsage.Dynamic));
+            vertexBuffer = ToDispose(Buffer.New(graphicsDevice, maxVertices * vertexSize, vertexSize, BufferFlags.VertexBuffer, ResourceUsage.Dynamic));
         }
 
         #endregion
@@ -140,10 +150,22 @@ namespace SharpDX.Toolkit.Graphics
         #region Public Methods and Operators
 
         /// <summary>
-        /// Begin/End a batch of primitive drawing operations.
+        /// Gets the graphics device.
+        /// </summary>
+        /// <value>The graphics device.</value>
+        public GraphicsDevice GraphicsDevice
+        {
+            get
+            {
+                return graphicsDevice;
+            }
+        }
+
+        /// <summary>
+        /// Begin a batch of primitive drawing operations.
         /// </summary>
         /// <exception cref="System.InvalidOperationException">Cannot nest Begin calls</exception>
-        public void Begin()
+        public virtual void Begin()
         {
             if (inBeginEndPair)
             {
@@ -153,13 +175,14 @@ namespace SharpDX.Toolkit.Graphics
             // Bind the index buffer.
             if (maxIndices > 0)
             {
-                device.SetIndexBuffer(indexBuffer, false);
+                graphicsDevice.SetIndexBuffer(indexBuffer, false);
             }
 
-            device.SetVertexBuffer(0, vertexBuffer, VertexSize, 0);
+            // Binds the vertex buffer
+            graphicsDevice.SetVertexBuffer(0, vertexBuffer, VertexSize);
 
             // If this is a deferred D3D context, reset position so the first Map calls will use D3D11_MAP_WRITE_DISCARD.
-            if (device.IsDeferred)
+            if (graphicsDevice.IsDeferred)
             {
                 currentIndex = 0;
                 currentVertex = 0;
@@ -168,7 +191,11 @@ namespace SharpDX.Toolkit.Graphics
             inBeginEndPair = true;
         }
 
-        public void End()
+        /// <summary>
+        /// Ends batch of primitive drawing operations.
+        /// </summary>
+        /// <exception cref="System.InvalidOperationException">Begin must be called before End</exception>
+        public virtual void End()
         {
             if (!inBeginEndPair)
             {
@@ -182,9 +209,20 @@ namespace SharpDX.Toolkit.Graphics
 
         #endregion
 
-        // Can we combine adjacent primitives using this topology into a single draw call?
         #region Methods
 
+        /// <summary>
+        /// Draws the specified topology.
+        /// </summary>
+        /// <param name="topology">The topology.</param>
+        /// <param name="isIndexed">if set to <c>true</c> [is indexed].</param>
+        /// <param name="indices">The indices.</param>
+        /// <param name="indexCount">The index count.</param>
+        /// <param name="vertexCount">The vertex count.</param>
+        /// <returns>IntPtr.</returns>
+        /// <exception cref="System.ArgumentNullException">Indices cannot be null</exception>
+        /// <exception cref="System.ArgumentException">Too many indices;indexCount</exception>
+        /// <exception cref="System.InvalidOperationException">Begin must be called before Draw</exception>
         protected unsafe IntPtr Draw(PrimitiveTopology topology, bool isIndexed, IntPtr indices, int indexCount, int vertexCount)
         {
             if (isIndexed && indices == IntPtr.Zero)
@@ -264,6 +302,9 @@ namespace SharpDX.Toolkit.Graphics
             return result;
         }
 
+        /// <summary>
+        /// Flushes the batch.
+        /// </summary>
         protected void FlushBatch()
         {
             // Early out if there is nothing to flush.
@@ -272,19 +313,19 @@ namespace SharpDX.Toolkit.Graphics
                 return;
             }
 
-            ((DeviceContext)device).UnmapSubresource(vertexBuffer, 0);
+            ((DeviceContext)graphicsDevice).UnmapSubresource(vertexBuffer, 0);
 
             if (currentlyIndexed)
             {
                 // Draw indexed geometry.
-                ((DeviceContext)device).UnmapSubresource(indexBuffer, 0);
+                ((DeviceContext)graphicsDevice).UnmapSubresource(indexBuffer, 0);
 
-                device.DrawIndexed(currentTopology, currentIndex - baseIndex, baseIndex, baseVertex);
+                graphicsDevice.DrawIndexed(currentTopology, currentIndex - baseIndex, baseIndex, baseVertex);
             }
             else
             {
                 // Draw non-indexed geometry.
-                device.Draw(currentTopology, currentVertex - baseVertex, baseVertex);
+                graphicsDevice.Draw(currentTopology, currentVertex - baseVertex, baseVertex);
             }
 
             currentTopology = PrimitiveTopology.Undefined;
@@ -308,11 +349,16 @@ namespace SharpDX.Toolkit.Graphics
             // but that's not always a perf win, so let's keep things simple.
         }
 
-        // Helper for locking a vertex or index buffer.
+        /// <summary>
+        /// Locks a vertex or index buffer.
+        /// </summary>
+        /// <param name="buffer">The buffer.</param>
+        /// <param name="currentPosition">The current position.</param>
+        /// <returns>A DataBox.</returns>
         private DataBox LockBuffer(Buffer buffer, int currentPosition)
         {
             var mapType = (currentPosition == 0) ? MapMode.WriteDiscard : MapMode.WriteNoOverwrite;
-            return ((DeviceContext)device).MapSubresource(buffer, 0, mapType, MapFlags.None);
+            return ((DeviceContext)graphicsDevice).MapSubresource(buffer, 0, mapType, MapFlags.None);
         }
 
         #endregion
