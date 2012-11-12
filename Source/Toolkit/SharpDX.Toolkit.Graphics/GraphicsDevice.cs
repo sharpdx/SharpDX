@@ -30,8 +30,8 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public class GraphicsDevice : Component
     {
-        private readonly Dictionary<string, object> sharedDataPerDevice;
-        private readonly Dictionary<string, object> sharedDataPerDeviceContext = new Dictionary<string, object>();
+        private readonly Dictionary<object, object> sharedDataPerDevice;
+        private readonly Dictionary<object, object> sharedDataPerDeviceContext = new Dictionary<object, object>();
         internal Device Device;
         internal DeviceContext Context;
         internal CommonShaderStage[] ShaderStages;
@@ -152,7 +152,7 @@ namespace SharpDX.Toolkit.Graphics
             inputSignatureCache = new Dictionary<InputSignatureKey, InputSignatureManager>();
             inputLayoutDeviceCache = new Dictionary<VertexInputLayout, InputLayoutPair>(new IdentityEqualityComparer<VertexInputLayout>());
             inputLayoutContextCache = new Dictionary<VertexInputLayout, InputLayoutPair>(new IdentityEqualityComparer<VertexInputLayout>());
-            sharedDataPerDevice = new Dictionary<string, object>();
+            sharedDataPerDevice = new Dictionary<object, object>();
 
             // Create default Effect pool
             DefaultEffectPool = EffectPool.New(this, "Default");
@@ -1377,7 +1377,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="key">The key of the shared data.</param>
         /// <param name="sharedDataCreator">The shared data creator.</param>
         /// <returns>An instance of the shared data. The shared data will be disposed by this <see cref="GraphicsDevice"/> instance.</returns>
-        public T GetOrCreateSharedData<T>(SharedDataType type, string key, CreateSharedData<T> sharedDataCreator) where T : IDisposable
+        public T GetOrCreateSharedData<T>(SharedDataType type, object key, CreateSharedData<T> sharedDataCreator) where T : IDisposable
         {
             var dictionary = (type == SharedDataType.PerDevice) ? sharedDataPerDevice : sharedDataPerDeviceContext;
 
