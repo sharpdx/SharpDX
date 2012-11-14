@@ -777,8 +777,6 @@ namespace SharpDX.Toolkit.Graphics
             if (customEffect != null)
             {
                 var currentTechnique = customEffect.CurrentTechnique;
-                if (currentTechnique == null)
-                    throw new InvalidOperationException("CurrentTechnique is not set on custom effect");
 
                 int passCount = currentTechnique.Passes.Count;
                 for (int i = 0; i < passCount; i++)
@@ -941,6 +939,9 @@ namespace SharpDX.Toolkit.Graphics
             // Sets the sampler state
             if (customEffect != null)
             {
+                if (customEffect.CurrentTechnique == null)
+                    throw new InvalidOperationException("CurrentTechnique is not set on custom effect");
+
                 if (customEffectSampler != null)
                     customEffectSampler.SetResource(localSamplerState);
 
