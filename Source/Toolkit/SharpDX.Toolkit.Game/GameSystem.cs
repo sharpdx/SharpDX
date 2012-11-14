@@ -47,6 +47,16 @@ namespace SharpDX.Toolkit
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="GameSystem" /> class.
+        /// </summary>
+        /// <param name="game">The game.</param>
+        public GameSystem(Game game)
+        {
+            this.game = game;
+            this.registry = game.Services;
+        }
+
+        /// <summary>
         /// Gets the <see cref="Game"/> associated with this <see cref="GameSystem"/>. This value can be null in a mock environment.
         /// </summary>
         /// <value>The game.</value>
@@ -86,7 +96,7 @@ namespace SharpDX.Toolkit
                 if (drawOrder != value)
                 {
                     drawOrder = value;
-                    OnDrawOrderChanged(EventArgs.Empty);
+                    OnDrawOrderChanged(this, EventArgs.Empty);
                 }
             }
         }
@@ -95,9 +105,12 @@ namespace SharpDX.Toolkit
 
         #region IGameSystem Members
 
-        public void Initialize()
+        public virtual void Initialize()
         {
-            game = (Game) registry.GetService(typeof (Game));
+            if (game == null)
+            {
+                game = (Game)registry.GetService(typeof(Game));
+            }
         }
 
         #endregion
@@ -133,17 +146,17 @@ namespace SharpDX.Toolkit
                 if (updateOrder != value)
                 {
                     updateOrder = value;
-                    OnUpdateOrderChanged(EventArgs.Empty);
+                    OnUpdateOrderChanged(this, EventArgs.Empty);
                 }
             }
         }
 
         #endregion
 
-        private void OnDrawOrderChanged(EventArgs e)
+        protected virtual void OnDrawOrderChanged(object source, EventArgs e)
         {
             EventHandler<EventArgs> handler = DrawOrderChanged;
-            if (handler != null) handler(this, e);
+            if (handler != null) handler(source, e);
         }
 
         private void OnVisibleChanged(EventArgs e)
@@ -158,10 +171,10 @@ namespace SharpDX.Toolkit
             if (handler != null) handler(this, e);
         }
 
-        private void OnUpdateOrderChanged(EventArgs e)
+        protected virtual void OnUpdateOrderChanged(object source, EventArgs e)
         {
             EventHandler<EventArgs> handler = UpdateOrderChanged;
-            if (handler != null) handler(this, e);
+            if (handler != null) handler(source, e);
         }
     }
 }
