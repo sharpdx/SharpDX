@@ -141,7 +141,7 @@ namespace SharpDX.Design
 			if (propertyValues == null)
 				throw new ArgumentNullException("propertyValues");
 
-			return new Color((float)propertyValues["R"], (float)propertyValues["G"], (float)propertyValues["B"], (float)propertyValues["A"]);
+			return new Color((byte)propertyValues["R"], (byte)propertyValues["G"], (byte)propertyValues["B"], (byte)propertyValues["A"]);
 		}
 	}
 }
