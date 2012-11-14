@@ -34,6 +34,8 @@ namespace SharpDX.Toolkit.Graphics
     /// <unmanaged-short>IDXGISwapChain</unmanaged-short>	
     public abstract class GraphicsPresenter : Component
     {
+        private DepthStencilBuffer depthStencilBuffer;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GraphicsPresenter" /> class.
         /// </summary>
@@ -43,6 +45,9 @@ namespace SharpDX.Toolkit.Graphics
         {
             GraphicsDevice = device.MainDevice;
             Description = presentationParameters.Clone();
+
+            // Creates a default DepthStencilBuffer.
+            CreateDepthStencilBuffer();
         }
 
         /// <summary>
@@ -62,22 +67,35 @@ namespace SharpDX.Toolkit.Graphics
         public abstract RenderTarget2D BackBuffer { get; }
 
         /// <summary>
+        /// Gets the default depth stencil buffer for this presenter.
+        /// </summary>
+        public DepthStencilBuffer DepthStencilBuffer
+        {
+            get
+            {
+                return depthStencilBuffer;
+            }
+
+            protected set
+            {
+                depthStencilBuffer = value;
+            }
+        }
+
+        /// <summary>
         /// Gets the underlying native presenter (can be a <see cref="SharpDX.DXGI.SwapChain"/> or <see cref="SharpDX.DXGI.SwapChain1"/> or null, depending on the platform).
         /// </summary>
         /// <value>The native presenter.</value>
-
-
         public abstract object NativePresenter { get; }
 
         /// <summary>
         /// Gets or sets fullscreen mode for this presenter.
         /// </summary>
-        /// <remarks>
-        /// This method is only valid on Windows Desktop and has no effect on Windows Metro.
-        /// </remarks>
-        /// <msdn-id>bb174579</msdn-id>	
-        /// <unmanaged>HRESULT IDXGISwapChain::SetFullscreenState([In] BOOL Fullscreen,[In, Optional] IDXGIOutput* pTarget)</unmanaged>	
-        /// <unmanaged-short>IDXGISwapChain::SetFullscreenState</unmanaged-short>	
+        /// <value><c>true</c> if this instance is full screen; otherwise, <c>false</c>.</value>
+        /// <msdn-id>bb174579</msdn-id>
+        ///   <unmanaged>HRESULT IDXGISwapChain::SetFullscreenState([In] BOOL Fullscreen,[In, Optional] IDXGIOutput* pTarget)</unmanaged>
+        ///   <unmanaged-short>IDXGISwapChain::SetFullscreenState</unmanaged-short>
+        /// <remarks>This method is only valid on Windows Desktop and has no effect on Windows Metro.</remarks>
         public abstract bool IsFullScreen { get; set; }
 
         /// <summary>
@@ -97,5 +115,38 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged>HRESULT IDXGISwapChain::Present([In] unsigned int SyncInterval,[In] DXGI_PRESENT_FLAGS Flags)</unmanaged>	
         /// <unmanaged-short>IDXGISwapChain::Present</unmanaged-short>	
         public abstract void Present();
+
+        /// <summary>
+        /// Resizes the current presenter, by resizing the back buffer and the depth stencil buffer.
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        public virtual void Resize(int width, int height)
+        {
+            if (DepthStencilBuffer != null)
+            {
+                RemoveAndDispose(ref depthStencilBuffer);
+            }
+
+            Description.BackBufferWidth = width;
+            Description.BackBufferHeight = height;
+
+            CreateDepthStencilBuffer();
+        }
+
+        /// <summary>
+        /// Creates the depth stencil buffer.
+        /// </summary>
+        protected virtual void CreateDepthStencilBuffer()
+        {
+            // If no depth stencil buffer, just return
+            if (Description.DepthStencilFormat == DepthFormat.None)
+            {
+                return;
+            }
+
+            // Creates the depth stencil buffer.
+            DepthStencilBuffer = ToDispose(DepthStencilBuffer.New(GraphicsDevice, Description.BackBufferWidth, Description.BackBufferHeight, Description.MultiSampleCount, Description.DepthStencilFormat));
+        }
     }
 }

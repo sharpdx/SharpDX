@@ -94,7 +94,13 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>A new instance of <see cref="VertexBufferLayout"/>.</returns>
         public static VertexBufferLayout New(int slot, Type structType, int instanceCount = 0)
         {
-            return New(slot, VertexElement.FromType(structType));
+            var vertexElements = VertexElement.FromType(structType);
+            if (vertexElements == null)
+            {
+                throw new ArgumentException(string.Format("Unable to calculate VertexElements from Type [{0}]. This type is not using VertexElementAttribute.", structType.Name), "type");
+            }
+
+            return New(slot, vertexElements);
         }
 
         /// <summary>

@@ -30,8 +30,8 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public class GraphicsDevice : Component
     {
-        private readonly Dictionary<string, object> sharedDataPerDevice;
-        private readonly Dictionary<string, object> sharedDataPerDeviceContext = new Dictionary<string, object>();
+        private readonly Dictionary<object, object> sharedDataPerDevice;
+        private readonly Dictionary<object, object> sharedDataPerDeviceContext = new Dictionary<object, object>();
         internal Device Device;
         internal DeviceContext Context;
         internal CommonShaderStage[] ShaderStages;
@@ -40,6 +40,8 @@ namespace SharpDX.Toolkit.Graphics
         private int maxSlotCountForVertexBuffer;
         private Dictionary<VertexInputLayout, InputLayoutPair> inputLayoutDeviceCache;
         private Dictionary<VertexInputLayout, InputLayoutPair> inputLayoutContextCache;
+
+        private readonly PrimitiveQuad primitiveQuad;
 
         private VertexInputLayout currentVertexInputLayout;
         internal EffectPass CurrentPass;
@@ -150,7 +152,7 @@ namespace SharpDX.Toolkit.Graphics
             inputSignatureCache = new Dictionary<InputSignatureKey, InputSignatureManager>();
             inputLayoutDeviceCache = new Dictionary<VertexInputLayout, InputLayoutPair>(new IdentityEqualityComparer<VertexInputLayout>());
             inputLayoutContextCache = new Dictionary<VertexInputLayout, InputLayoutPair>(new IdentityEqualityComparer<VertexInputLayout>());
-            sharedDataPerDevice = new Dictionary<string, object>();
+            sharedDataPerDevice = new Dictionary<object, object>();
 
             // Create default Effect pool
             DefaultEffectPool = EffectPool.New(this, "Default");
@@ -162,6 +164,9 @@ namespace SharpDX.Toolkit.Graphics
             RasterizerStates = new RasterizerStateCollection(this);
 
             Initialize();
+
+            // Create Internal Effect
+            primitiveQuad = new PrimitiveQuad(this);
         }
 
         protected GraphicsDevice(GraphicsDevice mainDevice, DeviceContext deferredContext)
@@ -196,6 +201,9 @@ namespace SharpDX.Toolkit.Graphics
             // Setup the workaround flag
             needWorkAroundForUpdateSubResource = IsDeferred && !Features.HasDriverCommandLists;
             Initialize();
+
+            // Create Internal Effect
+            primitiveQuad = new PrimitiveQuad(this);
         }
 
         private void Initialize()
@@ -235,6 +243,15 @@ namespace SharpDX.Toolkit.Graphics
         public RenderTarget2D BackBuffer
         {
             get { return Presenter != null ? Presenter.BackBuffer : null; }
+        }
+
+        /// <summary>
+        /// Gets the depth stencil buffer sets by the current <see cref="Presenter" /> setup on this device.
+        /// </summary>
+        /// <value>The depth stencil buffer. The returned value may be null if no <see cref="GraphicsPresenter"/> are setup on this device or no depth buffer was allocated.</value>
+        public DepthStencilBuffer DepthStencilBuffer
+        {
+            get { return Presenter != null ? Presenter.DepthStencilBuffer : null; }
         }
 
         /// <summary>
@@ -299,6 +316,81 @@ namespace SharpDX.Toolkit.Graphics
 
                 return GraphicsDeviceStatus.Normal;
             }
+        }
+
+        /// <summary>
+        /// Clears the default render target and depth stencil buffer attached to the current <see cref="Presenter"/>.
+        /// </summary>
+        /// <param name="color">Set this color value in all buffers.</param>
+        /// <exception cref="System.InvalidOperationException">Cannot clear without a Presenter set on this instance</exception>
+        public void Clear(Color4 color)
+        {
+            if (Presenter == null)
+            {
+                throw new InvalidOperationException("Cannot clear without a Presenter set on this instance");
+            }
+
+            var options = Presenter.BackBuffer != null ? ClearOptions.Target : (ClearOptions)0;
+
+            if (DepthStencilBuffer != null)
+            {
+                options |= DepthStencilBuffer.HasStencil ? ClearOptions.DepthBuffer | ClearOptions.Stencil : ClearOptions.DepthBuffer;
+            }
+
+            Clear(options, color, 1f, 0);
+        }
+
+        /// <summary>
+        /// Clears the default render target and depth stencil buffer attached to the current <see cref="Presenter"/>.
+        /// </summary>
+        /// <param name="options">Options for clearing a buffer.</param>
+        /// <param name="color">Set this four-component color value in the buffer.</param>
+        /// <param name="depth">Set this depth value in the buffer.</param>
+        /// <param name="stencil">Set this stencil value in the buffer.</param>
+        public void Clear(ClearOptions options, Color4 color, float depth, int stencil)
+        {
+            if (Presenter == null)
+            {
+                throw new InvalidOperationException("Cannot clear without a Presenter set on this instance");
+            }
+
+            if ((options & ClearOptions.Target) != 0)
+            {
+                if (BackBuffer == null)
+                {
+                    throw new InvalidOperationException("Cannot clear a null BackBuffer for the current Presenter");
+                }
+
+                Clear(BackBuffer, color);
+            }
+
+            if ((options & (ClearOptions.Stencil | ClearOptions.DepthBuffer)) != 0)
+            {
+                if (DepthStencilBuffer == null)
+                {
+                    throw new InvalidOperationException("No default depth stencil buffer available the current Presenter");
+                }
+
+                var flags = (options & ClearOptions.DepthBuffer) != 0 ? DepthStencilClearFlags.Depth : 0;
+                if ((options & ClearOptions.Stencil) != 0)
+                {
+                    flags |= DepthStencilClearFlags.Stencil;
+                }
+
+                Clear(DepthStencilBuffer, flags, depth, (byte)stencil);
+            }
+        }
+
+        /// <summary>
+        /// Clears the default render target and depth stencil buffer attached to the current <see cref="Presenter"/>.
+        /// </summary>
+        /// <param name="options">Options for clearing a buffer.</param>
+        /// <param name="color">Set this four-component color value in the buffer.</param>
+        /// <param name="depth">Set this depth value in the buffer.</param>
+        /// <param name="stencil">Set this stencil value in the buffer.</param>
+        public void Clear(ClearOptions options, Vector4 color, float depth, int stencil)
+        {
+            Clear(options, (Color4)color, depth, stencil);
         }
 
         /// <summary>
@@ -635,6 +727,88 @@ namespace SharpDX.Toolkit.Graphics
 
             PrimitiveType = primitiveType;
             Context.DrawIndexedInstancedIndirect(argumentsBuffer, alignedByteOffsetForArgs);
+        }
+
+        /// <summary>
+        /// Draws a fullscreen quad. An effect with at least a pixel shader (with the expected signature - float2:TEXCOORD) must have been applied before using this method.
+        /// </summary>
+        /// <seealso cref="PrimitiveQuad" />
+        public void DrawQuad()
+        {
+            primitiveQuad.Draw();
+        }
+
+        /// <summary>
+        /// Draws a fullscreen quad. An effect with at least a pixel shader (with the expected signature - float2:TEXCOORD) must have been applied before using this method.
+        /// </summary>
+        /// <param name="tranform">The tranform.</param>
+        /// <seealso cref="PrimitiveQuad"/>
+        public void DrawQuad(Matrix tranform)
+        {
+            primitiveQuad.Transform = tranform;
+            primitiveQuad.Draw();
+        }
+
+        /// <summary>
+        /// Draws a fullscreen quad with the specified effect (with the expected signature - float2:TEXCOORD)
+        /// </summary>
+        /// <param name="effect">The effect.</param>
+        public void DrawQuad(Effect effect)
+        {
+            primitiveQuad.Draw(effect);
+        }
+
+        /// <summary>
+        /// Draws a fullscreen quad with the specified effect (with the expected signature - float2:TEXCOORD)
+        /// </summary>
+        /// <param name="effect">The effect.</param>
+        /// <param name="transform">The transform.</param>
+        public void DrawQuad(Effect effect, Matrix transform)
+        {
+            primitiveQuad.Transform = transform;
+            primitiveQuad.Draw(effect);
+        }
+
+        /// <summary>
+        /// Draws a fullscreen quad with the specified effect (with the expected signature - float2:TEXCOORD)
+        /// </summary>
+        /// <param name="effect">The effect.</param>
+        /// <param name="transform">The transform.</param>
+        public void DrawQuad(Effect effect, ref Matrix transform)
+        {
+            primitiveQuad.Transform = transform;
+            primitiveQuad.Draw(effect);
+        }
+
+        /// <summary>
+        /// Draws a fullscreen quad with the specified effect pass (with the expected signature - float2:TEXCOORD)
+        /// </summary>
+        /// <param name="effectPass">The effect pass.</param>
+        public void DrawQuad(EffectPass effectPass)
+        {
+            primitiveQuad.Draw(effectPass);
+        }
+
+        /// <summary>
+        /// Draws a fullscreen quad with the specified effect pass (with the expected signature - float2:TEXCOORD)
+        /// </summary>
+        /// <param name="effectPass">The effect pass.</param>
+        /// <param name="transform">The transform.</param>
+        public void DrawQuad(EffectPass effectPass, Matrix transform)
+        {
+            primitiveQuad.Transform = transform;
+            primitiveQuad.Draw(effectPass);
+        }
+
+        /// <summary>
+        /// Draws a fullscreen quad with the specified effect pass (with the expected signature - float2:TEXCOORD)
+        /// </summary>
+        /// <param name="effectPass">The effect pass.</param>
+        /// <param name="transform">The transform.</param>
+        public void DrawQuad(EffectPass effectPass, ref Matrix transform)
+        {
+            primitiveQuad.Transform = transform;
+            primitiveQuad.Draw(effectPass);
         }
 
         /// <summary>	
@@ -1111,7 +1285,7 @@ namespace SharpDX.Toolkit.Graphics
                 if ((slot+1) > maxSlotCountForVertexBuffer)
                     maxSlotCountForVertexBuffer = slot + 1;
             }
-            inputAssemblerStage.SetVertexBuffers(slot, 1, vertexBufferPtr, new IntPtr(&vertexStride), new IntPtr(&offsetInBytes));
+            inputAssemblerStage.SetVertexBuffers(slot, 1, new IntPtr(&vertexBufferPtr), new IntPtr(&vertexStride), new IntPtr(&offsetInBytes));
         }
 
         /// <summary>
@@ -1203,7 +1377,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="key">The key of the shared data.</param>
         /// <param name="sharedDataCreator">The shared data creator.</param>
         /// <returns>An instance of the shared data. The shared data will be disposed by this <see cref="GraphicsDevice"/> instance.</returns>
-        public T GetOrCreateSharedData<T>(SharedDataType type, string key, CreateSharedData<T> sharedDataCreator) where T : IDisposable
+        public T GetOrCreateSharedData<T>(SharedDataType type, object key, CreateSharedData<T> sharedDataCreator) where T : IDisposable
         {
             var dictionary = (type == SharedDataType.PerDevice) ? sharedDataPerDevice : sharedDataPerDeviceContext;
 

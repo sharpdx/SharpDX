@@ -95,7 +95,7 @@ namespace SpriteBatchAndFont
         protected override void Draw(GameTime gameTime)
         {
             // Clears the screen with the Color.CornflowerBlue
-            GraphicsDevice.Clear(GraphicsDevice.BackBuffer, Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // Precalculate some constants
             int textureHalfSize = ballsTexture.Width / 2;

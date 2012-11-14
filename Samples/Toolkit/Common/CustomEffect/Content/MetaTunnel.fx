@@ -7,11 +7,6 @@
 
 float w;
 
-float4 VSMain(float3 pos : SV_Position, inout float2 tex : TEXCOORD0) : SV_POSITION
-{
-	return float4(pos, 1.0);
-}
-
 float obj(float3 pos)
 {
 	float final=1.0;
@@ -22,7 +17,7 @@ float obj(float3 pos)
 	return final;
 }
 
-float4 PSMain(float4 pos: SV_POSITION, float2 tex : TEXCOORD) : SV_TARGET
+float4 PSMain(float2 tex : TEXCOORD) : SV_TARGET
 {
 	static const float s=0.4;
 	float2 v= tex.xy * 2.0 - 1.0;
@@ -57,13 +52,11 @@ float4 PSMain(float4 pos: SV_POSITION, float2 tex : TEXCOORD) : SV_TARGET
 	return float4(color + float3(0.1,0.2,0.5) * (t*0.025), 1.0);
 }
 
-
 technique 
 {
 	pass 
 	{
 		Profile = 10.0;
-		VertexShader = VSMain;
 		PixelShader = PSMain;
 	}
 }

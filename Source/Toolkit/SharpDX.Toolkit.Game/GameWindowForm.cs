@@ -30,13 +30,16 @@ namespace SharpDX.Toolkit
 
         private bool isFullScreenMaximized;
 
-        public GameWindowForm()
+        public GameWindowForm() : this("SharpDX")
         {
         }
 
         public GameWindowForm(string text)
             : base(text)
         {
+            // By default, non resizable
+            MaximizeBox = false;
+            FormBorderStyle = FormBorderStyle.FixedSingle;
         }
 
         internal bool AllowUserResizing
@@ -50,8 +53,8 @@ namespace SharpDX.Toolkit
                 if (allowUserResizing != value)
                 {
                     allowUserResizing = value;
-                    MaximizeBox = !allowUserResizing;
-                    FormBorderStyle = allowUserResizing ? FormBorderStyle.FixedSingle : FormBorderStyle.Sizable;
+                    MaximizeBox = allowUserResizing;
+                    FormBorderStyle = allowUserResizing ? FormBorderStyle.Sizable : FormBorderStyle.FixedSingle;
                 }
             }
         }

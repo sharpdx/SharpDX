@@ -22,6 +22,7 @@ using System;
 using System.Diagnostics;
 
 using SharpDX;
+using SharpDX.Direct3D11;
 using SharpDX.Toolkit;
 
 namespace CustomEffect
@@ -37,8 +38,6 @@ namespace CustomEffect
     public class CustomEffectGame : Game
     {
         private GraphicsDeviceManager graphicsDeviceManager;
-        private Buffer<VertexPositionTexture> quadVertices;
-        private VertexInputLayout inputLayout;
         private Effect metaTunnelEffect;
 
         /// <summary>
@@ -47,7 +46,8 @@ namespace CustomEffect
         public CustomEffectGame()
         {
             // Creates a graphics manager. This is mandatory.
-            graphicsDeviceManager = new GraphicsDeviceManager(this); 
+            graphicsDeviceManager = new GraphicsDeviceManager(this);
+            graphicsDeviceManager.PreferredDepthStencilFormat = DepthFormat.None;
 
             // Setup the relative directory to the executable directory
             // for loading contents with the ContentManager
@@ -64,34 +64,15 @@ namespace CustomEffect
         {
             // Loads the effect
             metaTunnelEffect = Content.Load<Effect>("metatunnel.fxo");
-
-            // Prepare a quad buffer
-            quadVertices = Buffer.Vertex.New(
-                GraphicsDevice,
-                new[]
-                    {
-                        new VertexPositionTexture(new Vector3(-1, 1, 0), new Vector2(0, 0)),
-                        new VertexPositionTexture(new Vector3(1, 1, 0), new Vector2(1, 0)),
-                        new VertexPositionTexture(new Vector3(-1, -1, 0), new Vector2(0, 1)),
-                        new VertexPositionTexture(new Vector3(1, -1, 0), new Vector2(1, 1)),
-                    });
-
-            // Create an input layout from the vertices
-            inputLayout = VertexInputLayout.FromBuffer(0, quadVertices);
         }
 
         protected override void Draw(GameTime gameTime)
         {
             // As the shader is writing to the screen, we don't need to clear it.
             metaTunnelEffect.Parameters["w"].SetValue((float)gameTime.TotalGameTime.TotalSeconds);
-            metaTunnelEffect.CurrentTechnique.Passes[0].Apply();
 
-            // Setup the VertexBuffer/Layout.
-            GraphicsDevice.SetVertexBuffer(quadVertices);
-            GraphicsDevice.SetVertexInputLayout(inputLayout);
-
-            // Draw the fullscreen quad
-            GraphicsDevice.Draw(PrimitiveType.TriangleStrip, quadVertices.ElementCount);
+            // Draw a full screen quad using the specified effect.
+            GraphicsDevice.DrawQuad(metaTunnelEffect);
 
             // Handle base.Draw
             base.Draw(gameTime);

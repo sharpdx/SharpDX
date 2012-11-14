@@ -20,7 +20,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
@@ -107,7 +106,7 @@ namespace SharpDX.Toolkit
             preferredBackBufferWidth = DefaultBackBufferWidth;
             preferredBackBufferHeight = DefaultBackBufferHeight;
             PreferMultiSampling = false;
-            PreferredGraphicsProfile = new []
+            PreferredGraphicsProfile = new[]
                 {
 #if DIRECTX11_1
                     FeatureLevel.Level_11_1, 
@@ -168,6 +167,16 @@ namespace SharpDX.Toolkit
         /// <see cref="FeatureLevel.Level_9_1"/>}
         /// </remarks>
         public FeatureLevel[] PreferredGraphicsProfile { get; set; }
+
+        /// <summary>
+        /// Sets the preferred graphics profile.
+        /// </summary>
+        /// <param name="levels">The levels.</param>
+        /// <seealso cref="PreferredGraphicsProfile"/>
+        public void SetPreferredGraphicsProfile(params FeatureLevel[] levels)
+        {
+            PreferredGraphicsProfile = levels;
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is full screen.
@@ -391,7 +400,7 @@ namespace SharpDX.Toolkit
                     // By default, we setup the render target to the back buffer, and the viewport as well.
                     if (GraphicsDevice.BackBuffer != null)
                     {
-                        GraphicsDevice.SetRenderTargets(GraphicsDevice.BackBuffer);
+                        GraphicsDevice.SetRenderTargets(GraphicsDevice.DepthStencilBuffer, GraphicsDevice.BackBuffer);
                         GraphicsDevice.SetViewports(0, 0, GraphicsDevice.BackBuffer.Width, GraphicsDevice.BackBuffer.Height);
                     }
 

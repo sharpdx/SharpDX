@@ -79,9 +79,8 @@ namespace SharpDX.Windows
         /// <summary>
         /// Initializes a new instance of the <see cref="RenderForm"/> class.
         /// </summary>
-        public RenderForm()
+        public RenderForm() : this("SharpDX")
         {
-            Construct("SharpDX");
         }
 
         /// <summary>
@@ -90,7 +89,14 @@ namespace SharpDX.Windows
         /// <param name="text">The text.</param>
         public RenderForm(String text)
         {
-            Construct(text);
+            Text = text;
+            ClientSize = new System.Drawing.Size(800, 600);
+            MinimumSize = new System.Drawing.Size(200, 200);
+
+            ResizeRedraw = true;
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
+
+            Icon = SharpDX.Properties.Resources.logo;
         }
 
         /// <summary>
@@ -137,18 +143,6 @@ namespace SharpDX.Windows
         /// Occurs when [user resized].
         /// </summary>
         public event EventHandler<EventArgs> UserResized;
-
-        private void Construct(String text)
-        {
-            Text = text;
-            ClientSize = new System.Drawing.Size(800, 600);
-            MinimumSize = new System.Drawing.Size(200, 200);
-
-            ResizeRedraw = true;
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
-
-            Icon = SharpDX.Properties.Resources.logo;
-        }
 
         /// <summary>
         /// Raises the <see cref="E:System.Windows.Forms.Form.ResizeBegin"/> event.

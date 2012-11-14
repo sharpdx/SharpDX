@@ -21,12 +21,20 @@
     <Compile Include="AssemblyDoc.cs" />
     <Compile Include="BlendState.cs" />
     <Compile Include="BlendStateCollection.cs" />
+    <Compile Include="ClearOptions.cs" />
     <Compile Include="NamespaceDoc.cs" />
+    <Compile Include="PrimitiveBatch.cs" />
+    <Compile Include="PrimitiveBatchBase.cs" />
     <Compile Include="RenderTargetGraphicsPresenter.cs" />
     <Compile Include="EffectConstantBufferKey.cs" />
     <Compile Include="EffectContentReader.cs" />
     <Compile Include="GraphicsDeviceStatus.cs" />
     <Compile Include="GraphicsResourceContentReaderBase.cs" />
+    <Compile Include="PrimitiveQuad.cs" />
+    <Compile Include="StockEffects\HLSL\PrimitiveQuad.cs">
+      <DependentUpon>PrimitiveQuad.fx</DependentUpon>
+      <AutoGen>True</AutoGen>
+    </Compile>
     <Compile Include="SwapChainGraphicsPresenter.cs" />
     <Compile Include="IGraphicsDeviceService.cs" />
     <Compile Include="ImageContentReader.cs" />
@@ -210,6 +218,9 @@
     </None>
     <None Include="StockEffects\HLSL\SpriteEffect.fx">
       <LastGenOutput>SpriteEffect.ByteCode.cs</LastGenOutput>
+    </None>
+    <None Include="StockEffects\HLSL\PrimitiveQuad.fx">
+      <LastGenOutput>PrimitiveQuad.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />

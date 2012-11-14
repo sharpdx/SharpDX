@@ -389,16 +389,23 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-
         /// <summary>
-        /// Gets or sets the current texture.
+        /// Gets or sets the current texture. Either use this property or <see cref="TextureView"/> but not both at the same time.
         /// </summary>
-        public Texture2D Texture
+        public Texture2DBase Texture
         {
-            get { return textureParam.GetResource<Texture2D>(); }
+            get { return textureParam.GetResource<Texture2DBase>(); }
             set { textureParam.SetResource(value); }
         }
 
+        /// <summary>
+        /// Gets or sets the current texture view. Either use this property or <see cref="Texture"/> but not both at the same time.
+        /// </summary>
+        public Direct3D11.ShaderResourceView TextureView
+        {
+            get { return textureParam.GetResource<Direct3D11.ShaderResourceView>(); }
+            set { textureParam.SetResource(value); }
+        }
 
         /// <summary>
         /// Gets or sets whether vertex color is enabled.

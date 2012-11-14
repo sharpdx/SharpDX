@@ -17,46 +17,29 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+using System;
 
-using SharpDX;
-using SharpDX.Toolkit;
-using SharpDX.Toolkit.Graphics;
-
-namespace HelloWorld
+namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    /// Simple HelloWorld application using SharpDX.Toolkit.
-    /// The purpose of this application is to show the minimal setup of a game.
+    /// Specifies the buffer to use when using <see cref="GraphicsDevice.Clear(SharpDX.Color4)"/>
     /// </summary>
-    public class HelloWorldGame : Game
+    [Flags]
+    public enum ClearOptions
     {
-        private GraphicsDeviceManager graphicsDeviceManager;
+        /// <summary>
+        /// Clears the depth buffer.
+        /// </summary>
+        DepthBuffer = 2,
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HelloWorldGame" /> class.
+        /// Clears the stencil buffer.
         /// </summary>
-        public HelloWorldGame()
-        {
-            // Creates a graphics manager. This is mandatory.
-            graphicsDeviceManager = new GraphicsDeviceManager(this);
+        Stencil = 4,
 
-            // Setup the relative directory to the executable directory
-            // for loading contents with the ContentManager
-            Content.RootDirectory = "Content";
-        }
-
-        protected override void Initialize()
-        {
-            Window.Title = "HelloWorld!";
-            base.Initialize();
-        }
-
-        protected override void Draw(GameTime gameTime)
-        {
-            // Clears the screen with the Color.CornflowerBlue
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            base.Draw(gameTime);
-        }
+        /// <summary>
+        /// Clears the render target buffer.
+        /// </summary>
+        Target = 1
     }
 }

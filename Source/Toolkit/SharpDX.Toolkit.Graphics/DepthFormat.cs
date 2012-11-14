@@ -26,6 +26,11 @@ namespace SharpDX.Toolkit.Graphics
     public enum DepthFormat
     {
         /// <summary>
+        /// No depth stencil buffer.
+        /// </summary>
+        None = 0,
+
+        /// <summary>
         /// A buffer that contains 16-bits of depth data.
         /// </summary>
         /// <msdn-id>bb173059</msdn-id>	

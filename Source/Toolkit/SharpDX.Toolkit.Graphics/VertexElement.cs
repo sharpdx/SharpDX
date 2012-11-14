@@ -487,6 +487,8 @@ namespace SharpDX.Toolkit.Graphics
         /// <exception cref="System.ArgumentException">If type doesn't contain any <see cref="VertexElementAttribute"/></exception>
         public static VertexElement[] FromType(Type type)
         {
+            // TODO: Should we cache VertexElement[] per type in a global cache?
+
             if (type == null)
                 throw new ArgumentNullException("type");
 
@@ -534,8 +536,7 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
 
-            if (vertexElements.Count == 0)
-                throw new ArgumentException(string.Format("Unable to calculate VertexElements from Type [{0}]. This type is not using VertexElementAttribute.", type.Name), "type");
+            if (vertexElements.Count == 0) return null;
 
             return vertexElements.ToArray();
         }

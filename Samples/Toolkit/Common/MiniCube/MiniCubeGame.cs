@@ -130,7 +130,7 @@ namespace MiniCube
         protected override void Draw(GameTime gameTime)
         {
             // Clears the screen with the Color.CornflowerBlue
-            GraphicsDevice.Clear(GraphicsDevice.BackBuffer, Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // Setup the vertices
             GraphicsDevice.SetVertexBuffer(vertices);
