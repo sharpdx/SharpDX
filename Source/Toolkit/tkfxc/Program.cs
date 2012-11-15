@@ -146,6 +146,66 @@ namespace SharpDX.Toolkit.Graphics
 
             var archiveBytecode = new EffectData();
             bool hasErrors = false;
+            bool isFileUpToDate = true;
+
+            // ----------------------------------------------------------------
+            // Pre check files
+            // ----------------------------------------------------------------
+            var outputTime = new DateTime();
+            var outputFileName = OutputClassFile ?? OutputFile;
+            if (!ViewOnly)
+            {
+                if (OutputClassFile != null)
+                {
+                    if (File.Exists(OutputClassFile))
+                        outputTime = File.GetLastWriteTime(OutputClassFile);
+                }
+                else if (OutputFile != null)
+                {
+                    if (File.Exists(OutputFile))
+                        outputTime = File.GetLastWriteTime(OutputFile);
+                }
+                else
+                {
+                    ErrorColor();
+                    Console.WriteLine("Missing /Fo OutputFile or /Fc OutputClassFile");
+                    ResetColor();
+                    Environment.Exit(-1);
+                }
+            }
+
+            // If the assembly is more recent than the ouput file, then regenerate it
+            var assemblyTime = File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location);
+            if (assemblyTime > outputTime)
+            {
+                isFileUpToDate = false;
+            }
+            else
+            {
+                // Else check that all files are not more recent.
+                foreach (var fxFile in options.FxFiles)
+                {
+                    var filePath = Path.Combine(Environment.CurrentDirectory, fxFile);
+
+                    if (!File.Exists(filePath))
+                    {
+                        isFileUpToDate = false;
+                        break;
+                    }
+
+                    if (File.GetLastWriteTime(filePath) > outputTime)
+                    {
+                        isFileUpToDate = false;
+                        break;
+                    }
+                }
+            }
+
+            if (!ViewOnly && isFileUpToDate)
+            {
+                Console.WriteLine("Nothing to compile, output file is up to date [{0}]", outputFileName);
+                Environment.Exit(0);
+            }
 
             // ----------------------------------------------------------------
             // Process each fx files / tkfxo files
