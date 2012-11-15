@@ -29,12 +29,14 @@
     <Compile Include="CallbackBase.cs" />
     <Compile Include="Collections\ObservableCollection.cs" />
     <Compile Include="Collections\ObservableCollectionEventArgs.cs" />
+    <Compile Include="Design\Color4Converter.cs" />
     <Compile Include="ComArray.cs" />
     <Compile Include="CompilationResultBase.cs" />
     <Compile Include="Bool4.cs" />
     <Compile Include="AssemblyDoc.cs" />
     <Compile Include="Color.cs" />
     <Compile Include="ColorBGRA.cs" />
+    <Compile Include="Design\ColorConverter.cs" />
     <Compile Include="IComponent.cs" />
     <Compile Include="IServiceRegistry.cs" />
     <Compile Include="IO\PathUtility.cs" />

@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using SharpDX.Serialization;
@@ -32,6 +33,7 @@ namespace SharpDX
 #endif
     [StructLayout(LayoutKind.Sequential, Size = 4)]
     [DynamicSerializer("TKC1")]
+	[TypeConverter(typeof(SharpDX.Design.ColorConverter))]
     public partial struct Color : IEquatable<Color>, IFormattable, IDataSerializable
     {
         /// <summary>
