@@ -233,7 +233,8 @@
     
     
     
-    
+    <const from-guid="MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_VIDCAP_GUID" class="SharpDX.MediaFoundation.CaptureDeviceAttributeKeys" type="MediaAttributeKey&lt;System.Guid&gt;" name="SourceTypeVideoCapture">new MediaAttributeKey&lt;System.Guid&gt;("$1")</const>
+    <const from-guid="MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_AUDCAP_GUID" class="SharpDX.MediaFoundation.CaptureDeviceAttributeKeys" type="MediaAttributeKey&lt;System.Guid&gt;" name="SourceTypeAudioCapture">new MediaAttributeKey&lt;System.Guid&gt;("$1")</const>
     <const from-guid="MF_DEVSOURCE_ATTRIBUTE_FRIENDLY_NAME" class="SharpDX.MediaFoundation.CaptureDeviceAttributeKeys" type="MediaAttributeKey&lt;string&gt;" name="FriendlyName">new MediaAttributeKey&lt;string&gt;("$1")</const>
     <const from-guid="MF_DEVSOURCE_ATTRIBUTE_MEDIA_TYPE" class="SharpDX.MediaFoundation.CaptureDeviceAttributeKeys" type="MediaAttributeKey&lt;byte[]&gt;" name="MediaType">new MediaAttributeKey&lt;byte[]&gt;("$1")</const>
     <const from-guid="MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE" class="SharpDX.MediaFoundation.CaptureDeviceAttributeKeys" type="MediaAttributeKey&lt;System.Guid&gt;" name="SourceType">new MediaAttributeKey&lt;System.Guid&gt;("$1")</const>
