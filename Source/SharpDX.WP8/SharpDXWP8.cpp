@@ -30,6 +30,8 @@ IntPtr32 Interop::CreateDXGIFactory1() { return (IntPtr32)::CreateDXGIFactory1;}
 // XAudio2
 IntPtr32 Interop::XAudio2Create() { return (IntPtr32)::XAudio2Create;}
 IntPtr32 Interop::CreateFX() { return (IntPtr32)::CreateFX;}
+IntPtr32 Interop::CreateAudioReverb() { return (IntPtr32)::CreateAudioReverb;}
+IntPtr32 Interop::CreateAudioVolumeMeter() { return (IntPtr32)::CreateAudioVolumeMeter;}
 IntPtr32 Interop::X3DAudioCalculate() { return (IntPtr32)::X3DAudioCalculate;}
 IntPtr32 Interop::X3DAudioInitialize() { return (IntPtr32)::X3DAudioInitialize;}
 // Media Engine

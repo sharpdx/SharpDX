@@ -32,6 +32,8 @@ namespace SharpDX
 			// XAudio2
 			static IntPtr32 XAudio2Create();
 			static IntPtr32 CreateFX();
+			static IntPtr32 CreateAudioReverb();
+			static IntPtr32 CreateAudioVolumeMeter();
 			static IntPtr32 X3DAudioCalculate();
 			static IntPtr32 X3DAudioInitialize();
 			// Media Engine
