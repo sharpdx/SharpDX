@@ -20,6 +20,9 @@
 
 using System;
 
+using SharpDX.Toolkit.Content;
+using SharpDX.Toolkit.Graphics;
+
 namespace SharpDX.Toolkit
 {
     /// <summary>
@@ -28,7 +31,7 @@ namespace SharpDX.Toolkit
     /// <remarks>
     /// A <see cref="GameSystem"/> component can be used to 
     /// </remarks>
-    public class GameSystem : Component, IGameSystem, IUpdateable, IDrawable
+    public class GameSystem : Component, IGameSystem, IUpdateable, IDrawable, IContentable
     {
         private readonly IServiceRegistry registry;
         private int drawOrder;
@@ -36,6 +39,8 @@ namespace SharpDX.Toolkit
         private Game game;
         private int updateOrder;
         private bool visible;
+        private IContentManager contentManager;
+        private IGraphicsDeviceService graphicsDeviceService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameSystem" /> class.
@@ -50,10 +55,9 @@ namespace SharpDX.Toolkit
         /// Initializes a new instance of the <see cref="GameSystem" /> class.
         /// </summary>
         /// <param name="game">The game.</param>
-        public GameSystem(Game game)
+        public GameSystem(Game game) : this(game.Services)
         {
             this.game = game;
-            this.registry = game.Services;
         }
 
         /// <summary>
@@ -63,6 +67,30 @@ namespace SharpDX.Toolkit
         public Game Game
         {
             get { return game; }
+        }
+
+        /// <summary>
+        /// Gets the content manager.
+        /// </summary>
+        /// <value>The content.</value>
+        protected IContentManager Content
+        {
+            get
+            {
+                return contentManager;
+            }
+        }
+
+        /// <summary>
+        /// Gets the graphics device.
+        /// </summary>
+        /// <value>The graphics device.</value>
+        protected GraphicsDevice GraphicsDevice
+        {
+            get
+            {
+                return graphicsDeviceService != null ? graphicsDeviceService.GraphicsDevice : null;
+            }
         }
 
         #region IDrawable Members
@@ -111,6 +139,14 @@ namespace SharpDX.Toolkit
             {
                 game = (Game)registry.GetService(typeof(Game));
             }
+
+            // Gets the Content Manager
+            contentManager = (IContentManager)registry.GetService(typeof(IContentManager));
+
+            // Gets the graphics device service
+            graphicsDeviceService = (IGraphicsDeviceService)registry.GetService(typeof(IGraphicsDeviceService));
+
+            ((IContentable)this).LoadContent();
         }
 
         #endregion
@@ -176,5 +212,28 @@ namespace SharpDX.Toolkit
             EventHandler<EventArgs> handler = UpdateOrderChanged;
             if (handler != null) handler(source, e);
         }
+
+        #region Implementation of IContentable
+
+        void IContentable.LoadContent()
+        {
+            LoadContent();
+        }
+
+        void IContentable.UnloadContent()
+        {
+            UnloadContent();
+        }
+
+        protected virtual void LoadContent()
+        {
+        }
+
+        protected virtual void UnloadContent()
+        {
+        }
+
+        #endregion
     }
 }
+
