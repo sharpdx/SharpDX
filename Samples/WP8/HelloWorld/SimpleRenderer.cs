@@ -42,7 +42,7 @@ namespace MiniTriApp
         {
         }
 
-        public override void PrepareResources(DateTime presentTargetTime, DrawingSizeF desiredRenderTargetSize)
+        public override void PrepareResources(DateTime presentTargetTime, ref DrawingSizeF desiredRenderTargetSize)
         {
         }
 
