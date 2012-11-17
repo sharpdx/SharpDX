@@ -58,6 +58,7 @@ namespace SharpDX
 #endif
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     [DynamicSerializer("TKC4")]
+	[TypeConverter(typeof(SharpDX.Design.Color4Converter))]
     public struct Color4 : IEquatable<Color4>, IFormattable, IDataSerializable
     {
         /// <summary>

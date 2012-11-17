@@ -109,11 +109,14 @@ namespace MiniCube
 
             // Create an input layout from the vertices
             inputLayout = VertexInputLayout.FromBuffer(0, vertices);
+
+            base.LoadContent();
         }
 
         protected override void Initialize()
         {
             Window.Title = "MiniCube demo";
+
             base.Initialize();
         }
 

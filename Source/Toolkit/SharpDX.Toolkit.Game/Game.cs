@@ -37,10 +37,12 @@ namespace SharpDX.Toolkit
 
         private readonly List<IDrawable> currentlyDrawingGameSystems;
         private readonly List<IUpdateable> currentlyUpdatingGameSystems;
+        private readonly List<IContentable> currentlyContentGameSystems;
         private readonly List<IDrawable> drawableGameSystems;
         private readonly GameTime gameTime;
         private readonly List<IGameSystem> pendingGameSystems;
         private readonly List<IUpdateable> updateableGameSystems;
+        private readonly List<IContentable> contentableGameSystems;
         private readonly int[] lastUpdateCount;
         private readonly float updateCountAverageSlowLimit;
         private readonly GamePlatform gamePlatform;
@@ -59,6 +61,7 @@ namespace SharpDX.Toolkit
         private int nextLastUpdateCountIndex;
         private bool drawRunningSlowly;
         private bool forceElapsedTimeToZero;
+        private bool isInitialzing;
 
         private readonly TimerTick timer;
 
@@ -81,6 +84,7 @@ namespace SharpDX.Toolkit
             pendingGameSystems = new List<IGameSystem>();
             updateableGameSystems = new List<IUpdateable>();
             currentlyUpdatingGameSystems = new List<IUpdateable>();
+            contentableGameSystems = new List<IContentable>();
             gameTime = new GameTime();
             totalGameTime = new TimeSpan();
             timer = new TimerTick();
@@ -586,7 +590,9 @@ namespace SharpDX.Toolkit
             }
 
             // Load the content of the game
+            isInitialzing = true;
             LoadContent();
+            isInitialzing = false;
         }
 
         /// <summary>
@@ -594,6 +600,28 @@ namespace SharpDX.Toolkit
         /// </summary>
         protected virtual void LoadContent()
         {
+            // When initializing, we don't need to call explicitly the LoadContent for each GameSystem
+            // as they were already called by the GameSystem.Initialize method
+            // Otherwise, in case of a GraphicsDevice reset, we need to call GameSystem.LoadContent
+            if (isInitialzing)
+            {
+                return;
+            }
+
+            lock (contentableGameSystems)
+            {
+                foreach (var contentable in contentableGameSystems)
+                {
+                    currentlyContentGameSystems.Add(contentable);
+                }
+            }
+
+            foreach (var contentable in currentlyContentGameSystems)
+            {
+                contentable.LoadContent();
+            }
+
+            currentlyContentGameSystems.Clear();
         }
 
         /// <summary>
@@ -638,6 +666,20 @@ namespace SharpDX.Toolkit
         /// </summary>
         protected virtual void UnloadContent()
         {
+            lock (contentableGameSystems)
+            {
+                foreach (var contentable in contentableGameSystems)
+                {
+                    currentlyContentGameSystems.Add(contentable);
+                }
+            }
+
+            foreach (var contentable in currentlyContentGameSystems)
+            {
+                contentable.UnloadContent();
+            }
+
+            currentlyContentGameSystems.Clear();
         }
 
         /// <summary>
@@ -650,15 +692,14 @@ namespace SharpDX.Toolkit
         {
             lock (updateableGameSystems)
             {
-                for (int i = 0; i < updateableGameSystems.Count; i++)
+                foreach (var updateable in updateableGameSystems)
                 {
-                    currentlyUpdatingGameSystems.Add(updateableGameSystems[i]);
+                    currentlyUpdatingGameSystems.Add(updateable);
                 }
             }
 
-            for (int i = 0; i < currentlyUpdatingGameSystems.Count; i++)
+            foreach (var updateable in currentlyUpdatingGameSystems)
             {
-                IUpdateable updateable = currentlyUpdatingGameSystems[i];
                 if (updateable.Enabled)
                 {
                     updateable.Update(gameTime);
@@ -739,6 +780,19 @@ namespace SharpDX.Toolkit
                 pendingGameSystems.Add(gameSystem);
             }
 
+            // Add a contentable system to a separate list
+            var contentableSystem = gameSystem as IContentable;
+            if (contentableSystem != null)
+            {
+                lock (contentableGameSystems)
+                {
+                    if (!contentableGameSystems.Contains(contentableSystem))
+                    {
+                        contentableGameSystems.Add(contentableSystem);
+                    }
+                }
+            }
+
             // Add an updateable system to the separate list
             var updateableGameSystem = gameSystem as IUpdateable;
             if (updateableGameSystem != null && AddGameSystem(updateableGameSystem, updateableGameSystems, UpdateableComparer.Default))
@@ -752,6 +806,7 @@ namespace SharpDX.Toolkit
             {
                 drawableGameSystem.DrawOrderChanged += drawableGameSystem_DrawOrderChanged;
             }
+
         }
 
         private void GameSystems_ItemRemoved(object sender, ObservableCollectionEventArgs<IGameSystem> e)
@@ -761,6 +816,15 @@ namespace SharpDX.Toolkit
             if (!IsRunning)
             {
                 pendingGameSystems.Remove(gameSystem);
+            }
+
+            var contentableSystem = gameSystem as IContentable;
+            if (contentableSystem != null)
+            {
+                lock (contentableGameSystems)
+                {
+                    contentableGameSystems.Remove(contentableSystem);
+                }
             }
 
             var gameComponent = gameSystem as IUpdateable;

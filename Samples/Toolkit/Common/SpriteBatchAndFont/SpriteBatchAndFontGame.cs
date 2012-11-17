@@ -77,12 +77,16 @@ namespace SpriteBatchAndFont
 
             // Instantiate a SpriteBatch
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            base.LoadContent();
         }
 
         protected override void BeginRun()
         {
             // Starts the FPS clock
             fpsClock.Start();
+
+            base.BeginRun();
         }
 
         protected override void Initialize()
@@ -90,7 +94,6 @@ namespace SpriteBatchAndFont
             Window.Title = "SpriteBatch and Font demo";
             base.Initialize();
         }
-
 
         protected override void Draw(GameTime gameTime)
         {

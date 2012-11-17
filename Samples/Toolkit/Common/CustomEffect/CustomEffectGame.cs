@@ -57,6 +57,7 @@ namespace CustomEffect
         protected override void Initialize()
         {
             Window.Title = "MetaTunnel Effect by XT95/Frequency";
+
             base.Initialize();
         }
 
@@ -64,6 +65,8 @@ namespace CustomEffect
         {
             // Loads the effect
             metaTunnelEffect = Content.Load<Effect>("metatunnel.fxo");
+
+            base.LoadContent();
         }
 
         protected override void Draw(GameTime gameTime)

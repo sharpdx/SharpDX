@@ -233,7 +233,8 @@
     
     
     
-    
+    <const from-guid="MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_VIDCAP_GUID" class="SharpDX.MediaFoundation.CaptureDeviceAttributeKeys" type="MediaAttributeKey&lt;System.Guid&gt;" name="SourceTypeVideoCapture">new MediaAttributeKey&lt;System.Guid&gt;("$1")</const>
+    <const from-guid="MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_AUDCAP_GUID" class="SharpDX.MediaFoundation.CaptureDeviceAttributeKeys" type="MediaAttributeKey&lt;System.Guid&gt;" name="SourceTypeAudioCapture">new MediaAttributeKey&lt;System.Guid&gt;("$1")</const>
     <const from-guid="MF_DEVSOURCE_ATTRIBUTE_FRIENDLY_NAME" class="SharpDX.MediaFoundation.CaptureDeviceAttributeKeys" type="MediaAttributeKey&lt;string&gt;" name="FriendlyName">new MediaAttributeKey&lt;string&gt;("$1")</const>
     <const from-guid="MF_DEVSOURCE_ATTRIBUTE_MEDIA_TYPE" class="SharpDX.MediaFoundation.CaptureDeviceAttributeKeys" type="MediaAttributeKey&lt;byte[]&gt;" name="MediaType">new MediaAttributeKey&lt;byte[]&gt;("$1")</const>
     <const from-guid="MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE" class="SharpDX.MediaFoundation.CaptureDeviceAttributeKeys" type="MediaAttributeKey&lt;System.Guid&gt;" name="SourceType">new MediaAttributeKey&lt;System.Guid&gt;("$1")</const>
@@ -798,6 +799,100 @@
     <map param="MFCreateWaveFormatExFromMFMediaType::ppWF" type="void"/>
     
     <map param="MFCreateMediaType::ppMFType" attribute="out fast"/>
+
+    <map function="MFTranscodeGetAudioOutputAvailableTypes" dll='"mf.dll"'/>
+    <map function="MFShutdownObject" dll='"mf.dll"'/>
+    <map function="MFRR_CreateActivate" dll='"mf.dll"'/>
+    <map function="MFRequireProtectedEnvironment" dll='"mf.dll"'/>
+    <map function="MFReadSequencerSegmentOffset" dll='"mf.dll"'/>
+    <map function="MFLoadSignedLibrary" dll='"mf.dll"'/>
+    <map function="MFGetTopoNodeCurrentType" dll='"mf.dll"'/>
+    <map function="MFGetSystemId" dll='"mf.dll"'/>
+    <map function="MFGetSupportedSchemes" dll='"mf.dll"'/>
+    <map function="MFGetSupportedMimeTypes" dll='"mf.dll"'/>
+    <map function="MFGetService" dll='"mf.dll"'/>
+    <map function="MFGetMultipleServiceProviders" dll='"mf.dll"'/>
+    <map function="MFGetLocalId" dll='"mf.dll"'/>
+    <map function="MFEnumDeviceSources" dll='"mf.dll"'/>
+    <map function="MFCreateWMVEncoderActivate" dll='"mf.dll"'/>
+    <map function="MFCreateWMAEncoderActivate" dll='"mf.dll"'/>
+    <map function="MFCreateVideoRendererActivate" dll='"mf.dll"'/>
+    <map function="MFCreateVideoRenderer" dll='"mf.dll"'/>
+    <map function="MFCreateUrlmonSchemePlugin" dll='"mf.dll"'/>
+    <map function="MFCreateTranscodeTopologyFromByteStream" dll='"mf.dll"'/>
+    <map function="MFCreateTranscodeTopology" dll='"mf.dll"'/>
+    <map function="MFCreateTranscodeSinkActivate" dll='"mf.dll"'/>
+    <map function="MFCreateTranscodeProfile" dll='"mf.dll"'/>
+    <map function="MFCreateTopologyNode" dll='"mf.dll"'/>
+    <map function="MFCreateTopology" dll='"mf.dll"'/>
+    <map function="MFCreateTopoLoader" dll='"mf.dll"'/>
+    <map function="MFCreateStandardQualityManager" dll='"mf.dll"'/>
+    <map function="MFCreateSourceResolver" dll='"mf.dll"'/>
+    <map function="MFCreateSoundEventSchemePlugin" dll='"mf.dll"'/>
+    <map function="MFCreateSimpleTypeHandler" dll='"mf.dll"'/>
+    <map function="MFCreateSequencerSourceRemoteStream" dll='"mf.dll"'/>
+    <map function="MFCreateSequencerSource" dll='"mf.dll"'/>
+    <map function="MFCreateSequencerSegmentOffset" dll='"mf.dll"'/>
+    <map function="MFCreateSecureHttpSchemePlugin" dll='"mf.dll"'/>
+    <map function="MFCreateSampleGrabberSinkActivate" dll='"mf.dll"'/>
+    <map function="MFCreateSampleCopierMFT" dll='"mf.dll"'/>
+    <map function="MFCreateSAMIByteStreamPlugin" dll='"mf.dll"'/>
+    <map function="MFCreateRemoteDesktopPlugin" dll='"mf.dll"'/>
+    <map function="MFCreateProxyLocator" dll='"mf.dll"'/>
+    <map function="MFCreateProtectedEnvironmentAccess" dll='"mf.dll"'/>
+    <map function="MFCreatePresentationDescriptorFromASFProfile" dll='"mf.dll"'/>
+    <map function="MFCreatePresentationClock" dll='"mf.dll"'/>
+    <map function="MFCreatePMPServer" dll='"mf.dll"'/>
+    <map function="MFCreatePMPMediaSession" dll='"mf.dll"'/>
+    <map function="MFCreatePMPHost" dll='"mf.dll"'/>
+    <map function="MFCreateNSCByteStreamPlugin" dll='"mf.dll"'/>
+    <map function="MFCreateNetSchemePlugin" dll='"mf.dll"'/>
+    <map function="MFCreateMuxSink" dll='"mf.dll"'/>
+    <map function="MFCreateMPEG4MediaSink" dll='"mf.dll"'/>
+    <map function="MFCreateMP3MediaSink" dll='"mf.dll"'/>
+    <map function="MFCreateMP3ByteStreamPlugin" dll='"mf.dll"'/>
+    <map function="MFCreateMediaSession" dll='"mf.dll"'/>
+    <map function="MFCreateMediaProcessor" dll='"mf.dll"'/>
+    <map function="MFCreateLPCMByteStreamPlugin" dll='"mf.dll"'/>
+    <map function="MFCreateHttpSchemePlugin" dll='"mf.dll"'/>
+    <map function="MFCreateFMPEG4MediaSink" dll='"mf.dll"'/>
+    <map function="MFCreateFileSchemePlugin" dll='"mf.dll"'/>
+    <map function="MFCreateFileBlockMap" dll='"mf.dll"'/>
+    <map function="MFCreateDrmNetNDSchemePlugin" dll='"mf.dll"'/>
+    <map function="MFCreateDeviceSourceActivate" dll='"mf.dll"'/>
+    <map function="MFCreateDeviceSource" dll='"mf.dll"'/>
+    <map function="MFCreateCredentialCache" dll='"mf.dll"'/>
+    <map function="MFCreateCacheManager" dll='"mf.dll"'/>
+    <map function="MFCreateByteCacheFile" dll='"mf.dll"'/>
+    <map function="MFCreateAudioRendererActivate" dll='"mf.dll"'/>
+    <map function="MFCreateAudioRenderer" dll='"mf.dll"'/>
+    <map function="MFCreateASFStreamSelector" dll='"mf.dll"'/>
+    <map function="MFCreateASFStreamingMediaSinkActivate" dll='"mf.dll"'/>
+    <map function="MFCreateASFStreamingMediaSink" dll='"mf.dll"'/>
+    <map function="MFCreateASFSplitter" dll='"mf.dll"'/>
+    <map function="MFCreateASFProfileFromPresentationDescriptor" dll='"mf.dll"'/>
+    <map function="MFCreateASFProfile" dll='"mf.dll"'/>
+    <map function="MFCreateASFMultiplexer" dll='"mf.dll"'/>
+    <map function="MFCreateASFMediaSinkActivate" dll='"mf.dll"'/>
+    <map function="MFCreateASFMediaSink" dll='"mf.dll"'/>
+    <map function="MFCreateASFIndexerByteStream" dll='"mf.dll"'/>
+    <map function="MFCreateASFIndexer" dll='"mf.dll"'/>
+    <map function="MFCreateASFContentInfo" dll='"mf.dll"'/>
+    <map function="MFCreateASFByteStreamPlugin" dll='"mf.dll"'/>
+    <map function="MFCreateAppSourceProxy" dll='"mf.dll"'/>
+    <map function="MFCreateAggregateSource" dll='"mf.dll"'/>
+    <map function="MFCreateADTSMediaSink" dll='"mf.dll"'/>
+    <map function="MFCreateAC3MediaSink" dll='"mf.dll"'/>
+    <map function="MFCreate3GPMediaSink" dll='"mf.dll"'/>
+    <map function="MergePropertyStore" dll='"mf.dll"'/>
+    <map function="ExtractPropVariant" dll='"mf.dll"'/>
+    <map function="DllGetClassObject" dll='"mf.dll"'/>
+    <map function="DllGetActivationFactory" dll='"mf.dll"'/>
+    <map function="DllCanUnloadNow" dll='"mf.dll"'/>
+    <map function="CreateNamedPropertyStore" dll='"mf.dll"'/>
+    <map function="CopyPropertyStore" dll='"mf.dll"'/>
+    <map function="ConvertPropVariant" dll='"mf.dll"'/>
+    <map function="AppendPropVariant" dll='"mf.dll"'/>    
 
     <context-clear />
   </mapping>
