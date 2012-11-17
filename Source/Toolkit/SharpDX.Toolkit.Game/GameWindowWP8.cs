@@ -170,7 +170,7 @@ namespace SharpDX.Toolkit
             ComObject.Dispose(ref BackBuffer);
         }
 
-        void IDrawingSurfaceBackgroundContentProviderNative.PrepareResources(DateTime presentTargetTime, DrawingSizeF desiredRenderTargetSize)
+        void IDrawingSurfaceBackgroundContentProviderNative.PrepareResources(DateTime presentTargetTime, ref DrawingSizeF desiredRenderTargetSize)
         {
             
         }

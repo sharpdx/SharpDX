@@ -56,7 +56,7 @@ namespace MiniTriApp
             _host.RequestAdditionalFrame();
         }
 
-        public override void PrepareResources(DateTime presentTargetTime, SharpDX.DrawingSizeF desiredRenderTargetSize)
+        public override void PrepareResources(DateTime presentTargetTime, ref SharpDX.DrawingSizeF desiredRenderTargetSize)
         {
         }
 
