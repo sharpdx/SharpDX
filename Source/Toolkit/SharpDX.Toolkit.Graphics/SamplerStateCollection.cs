@@ -28,32 +28,37 @@ namespace SharpDX.Toolkit.Graphics
     public sealed class SamplerStateCollection : StateCollectionBase<SamplerState>
     {
         /// <summary>
-        /// Default state for point filtering with texture coordinate wrapping.
+        /// Default state is using linear filtering with texture coordinate clamping.
+        /// </summary>
+        public readonly SamplerState Default;
+
+        /// <summary>
+        /// Point filtering with texture coordinate wrapping.
         /// </summary>
         public readonly SamplerState PointWrap;
 
         /// <summary>
-        /// Default state for point filtering with texture coordinate clamping.
+        /// Point filtering with texture coordinate clamping.
         /// </summary>
         public readonly SamplerState PointClamp;
 
         /// <summary>
-        /// Default state for linear filtering with texture coordinate wrapping.
+        /// Linear filtering with texture coordinate wrapping.
         /// </summary>
         public readonly SamplerState LinearWrap;
 
         /// <summary>
-        /// Default state for linear filtering with texture coordinate clamping.
+        /// Linear filtering with texture coordinate clamping.
         /// </summary>
         public readonly SamplerState LinearClamp;
 
         /// <summary>
-        /// Default state for anisotropic filtering with texture coordinate wrapping.
+        /// Anisotropic filtering with texture coordinate wrapping.
         /// </summary>
         public readonly SamplerState AnisotropicWrap;
 
         /// <summary>
-        /// Default state for anisotropic filtering with texture coordinate clamping.
+        /// Anisotropic filtering with texture coordinate clamping.
         /// </summary>
         public readonly SamplerState AnisotropicClamp;
 
@@ -69,6 +74,7 @@ namespace SharpDX.Toolkit.Graphics
             LinearClamp = Add(SamplerState.New(device, "LinearClamp", Filter.MinMagMipLinear, TextureAddressMode.Clamp));
             AnisotropicWrap = Add(SamplerState.New(device, "AnisotropicWrap", Filter.Anisotropic, TextureAddressMode.Wrap));
             AnisotropicClamp = Add(SamplerState.New(device, "AnisotropicClamp", Filter.Anisotropic, TextureAddressMode.Clamp));
+            Default = LinearClamp;
         }
     }
 }

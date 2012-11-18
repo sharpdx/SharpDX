@@ -86,6 +86,7 @@ namespace SharpDX.Toolkit.Graphics
         #region Effect Parameters
 
         EffectParameter textureParam;
+        EffectParameter samplerParam;
         EffectParameter diffuseColorParam;
         EffectParameter emissiveColorParam;
         EffectParameter specularColorParam;
@@ -514,7 +515,8 @@ namespace SharpDX.Toolkit.Graphics
         void CacheEffectParameters(BasicEffect cloneSource)
         {
             textureParam                = Parameters["Texture"];
-            diffuseColorParam           = Parameters["DiffuseColor"];
+            samplerParam                = Parameters["TextureSampler"];
+            diffuseColorParam = Parameters["DiffuseColor"];
             emissiveColorParam          = Parameters["EmissiveColor"];
             specularColorParam          = Parameters["SpecularColor"];
             specularPowerParam          = Parameters["SpecularPower"];
@@ -539,6 +541,8 @@ namespace SharpDX.Toolkit.Graphics
                                           Parameters["DirLight2DiffuseColor"],
                                           Parameters["DirLight2SpecularColor"],
                                           (cloneSource != null) ? cloneSource.light2 : null);
+
+            samplerParam.SetResource(GraphicsDevice.SamplerStates.Default);
         }
 
 
