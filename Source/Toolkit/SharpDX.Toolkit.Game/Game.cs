@@ -80,6 +80,7 @@ namespace SharpDX.Toolkit
         {
             // Internals
             drawableGameSystems = new List<IDrawable>();
+            currentlyContentGameSystems  = new List<IContentable>();
             currentlyDrawingGameSystems = new List<IDrawable>();
             pendingGameSystems = new List<IGameSystem>();
             updateableGameSystems = new List<IUpdateable>();
