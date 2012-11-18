@@ -542,6 +542,12 @@ namespace SharpDX.Toolkit
         /// <param name="foundDevices">The list of devices that can be reorder.</param>
         protected virtual void RankDevices(List<GraphicsDeviceInformation> foundDevices)
         {
+            // Don't sort if there is a single device (mostly for XAML/WP8)
+            if (foundDevices.Count == 1)
+            {
+                return;
+            }
+
             foundDevices.Sort(
                 (left, right) =>
                     {
