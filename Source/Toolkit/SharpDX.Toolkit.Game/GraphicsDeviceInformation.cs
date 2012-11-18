@@ -67,11 +67,6 @@ namespace SharpDX.Toolkit
 
             set
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException("value");
-                }
-
                 adapter = value;
             }
         }
@@ -90,11 +85,6 @@ namespace SharpDX.Toolkit
 
             set
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException("value");
-                }
-
                 graphicsProfile = value;
             }
         }
@@ -113,11 +103,6 @@ namespace SharpDX.Toolkit
 
             set
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException("value");
-                }
-
                 presentationParameters = value;
             }
         }
@@ -142,12 +127,12 @@ namespace SharpDX.Toolkit
                 return false;
             }
 
-            if (!information.adapter.Equals(this.adapter))
+            if (!Equals(information.adapter, adapter))
             {
                 return false;
             }
 
-            if (!information.graphicsProfile.Equals(this.graphicsProfile))
+            if (information.graphicsProfile != this.graphicsProfile)
             {
                 return false;
             }
@@ -168,7 +153,7 @@ namespace SharpDX.Toolkit
         public override int GetHashCode()
         {
             return graphicsProfile.GetHashCode()
-                   ^ adapter.GetHashCode()
+                   ^ (adapter == null ? 0 : adapter.GetHashCode())
                    ^ presentationParameters.BackBufferWidth.GetHashCode()
                    ^ presentationParameters.BackBufferHeight.GetHashCode()
                    ^ presentationParameters.BackBufferFormat.GetHashCode()
