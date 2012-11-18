@@ -481,6 +481,9 @@
     <map param="ID3DX?(\d+)EffectPass::GetVertexShaderDesc::pDesc" attribute="out" />
     <map param="ID3DX?(\d+)EffectPass::GetGeometryShaderDesc::pDesc" attribute="out" />
     <map param="ID3DX?(\d+)EffectPass::GetPixelShaderDesc::pDesc" attribute="out" />
+    <map param="ID3DX?(\d+)EffectPass::GetHullShaderDesc::pDesc" attribute="out" />
+    <map param="ID3DX?(\d+)EffectPass::GetDomainShaderDesc::pDesc" attribute="out" />
+    <map param="ID3DX?(\d+)EffectPass::GetComputeShaderDesc::pDesc" attribute="out" />
     <map param="ID3DX?(\d+)EffectRasterizerVariable::GetBackingStore::pRasterizerDesc" attribute="out" />
     <map param="ID3DX?(\d+)EffectRasterizerVariable::GetRasterizerState::ppRasterizerState" attribute="out" return="true" />
     <map method="ID3DX?(\d+)EffectRenderTargetViewVariable::.*" visibility="internal" property="false" />
