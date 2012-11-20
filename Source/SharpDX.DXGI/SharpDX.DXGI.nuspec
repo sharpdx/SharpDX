@@ -50,9 +50,9 @@
     <file src="..\..\Bin\Signed-net40\SharpDX.DXGI.pdb" target="lib\net40" />
     <file src="..\..\Bin\Signed-net40\SharpDX.DXGI.xml" target="lib\net40" />
 
-    <file src="..\..\Bin\Signed-winrt\SharpDX.DXGI.dll" target="lib\netcore45" />
-    <file src="..\..\Bin\Signed-winrt\SharpDX.DXGI.pdb" target="lib\netcore45" />
-    <file src="..\..\Bin\Signed-winrt\SharpDX.DXGI.xml" target="lib\netcore45" />
+    <file src="..\..\Bin\Signed-winrt\SharpDX.DXGI.dll" target="lib\win8" />
+    <file src="..\..\Bin\Signed-winrt\SharpDX.DXGI.pdb" target="lib\win8" />
+    <file src="..\..\Bin\Signed-winrt\SharpDX.DXGI.xml" target="lib\win8" />
 
     <file src="**\*.cs" target="src" />
   </files>

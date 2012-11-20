@@ -58,9 +58,9 @@
     <!--<file src="..\..\Bin\Signed-net40\SharpDX.dll" target="lib\net40" />-->
     <!--<file src="..\..\Bin\Signed-net40\SharpDX.xml" target="lib\net40" />-->
 
-    <file src="..\..\..\Bin\Signed-winrt\SharpDX.Toolkit.Graphics.dll" target="lib\netcore45" />
-    <file src="..\..\..\Bin\Signed-winrt\SharpDX.Toolkit.Graphics.pdb" target="lib\netcore45" />
-    <file src="..\..\..\Bin\Signed-winrt\SharpDX.Toolkit.Graphics.xml" target="lib\netcore45" />
+    <file src="..\..\..\Bin\Signed-winrt\SharpDX.Toolkit.Graphics.dll" target="lib\win8" />
+    <file src="..\..\..\Bin\Signed-winrt\SharpDX.Toolkit.Graphics.pdb" target="lib\win8" />
+    <file src="..\..\..\Bin\Signed-winrt\SharpDX.Toolkit.Graphics.xml" target="lib\win8" />
 
     <file src="**\*.cs" target="src" />
   </files>

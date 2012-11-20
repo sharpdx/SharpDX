@@ -51,9 +51,9 @@
     <file src="..\..\Bin\Signed-net40\SharpDX.Direct2D1.pdb" target="lib\net40" />
     <file src="..\..\Bin\Signed-net40\SharpDX.Direct2D1.xml" target="lib\net40" />
 
-    <file src="..\..\Bin\Signed-winrt\SharpDX.Direct2D1.dll" target="lib\netcore45" />
-    <file src="..\..\Bin\Signed-winrt\SharpDX.Direct2D1.pdb" target="lib\netcore45" />
-    <file src="..\..\Bin\Signed-winrt\SharpDX.Direct2D1.xml" target="lib\netcore45" />
+    <file src="..\..\Bin\Signed-winrt\SharpDX.Direct2D1.dll" target="lib\win8" />
+    <file src="..\..\Bin\Signed-winrt\SharpDX.Direct2D1.pdb" target="lib\win8" />
+    <file src="..\..\Bin\Signed-winrt\SharpDX.Direct2D1.xml" target="lib\win8" />
 
     <file src="**\*.cs" target="src" />
   </files>
