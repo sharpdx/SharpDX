@@ -384,6 +384,55 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
+        /// Creates a new texture with the specified generic texture description.
+        /// </summary>
+        /// <param name="graphicsDevice">The graphics device.</param>
+        /// <param name="description">The description.</param>
+        /// <returns>A Texture instance, either a RenderTarget or DepthStencilBuffer or Texture, depending on Binding flags.</returns>
+        public static Texture New(GraphicsDevice graphicsDevice, TextureDescription description)
+        {
+            if (graphicsDevice == null)
+            {
+                throw new ArgumentNullException("graphicsDevice");
+            }
+
+            if ((description.BindFlags & BindFlags.RenderTarget) != 0)
+            {
+                switch (description.Dimension)
+                {
+                    case TextureDimension.Texture1D:
+                        return RenderTarget1D.New(graphicsDevice, description);
+                    case TextureDimension.Texture2D:
+                        return RenderTarget2D.New(graphicsDevice, description);
+                    case TextureDimension.Texture3D:
+                        return RenderTarget3D.New(graphicsDevice, description);
+                    case TextureDimension.TextureCube:
+                        return RenderTargetCube.New(graphicsDevice, description);
+                }
+            } 
+            else if ((description.BindFlags & BindFlags.DepthStencil) != 0)
+            {
+                return DepthStencilBuffer.New(graphicsDevice, description);
+            }
+            else
+            {
+                switch (description.Dimension)
+                {
+                    case TextureDimension.Texture1D:
+                        return Texture1D.New(graphicsDevice, description);
+                    case TextureDimension.Texture2D:
+                        return Texture2D.New(graphicsDevice, description);
+                    case TextureDimension.Texture3D:
+                        return Texture3D.New(graphicsDevice, description);
+                    case TextureDimension.TextureCube:
+                        return TextureCube.New(graphicsDevice, description);
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Copies the content of this texture from GPU memory to an array of data on CPU memory using a specific staging resource.
         /// </summary>
         /// <typeparam name="TData">The type of the T data.</typeparam>

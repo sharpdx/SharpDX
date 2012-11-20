@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.Runtime.InteropServices;
 
 using SharpDX.DXGI;
@@ -34,7 +35,7 @@ namespace SharpDX.Toolkit.Graphics
     /// It provides also 2-way implicit conversions for 1D, 2D, 3D textures descriptions.
     /// </remarks>
     [StructLayout(LayoutKind.Sequential)]
-    public struct TextureDescription
+    public struct TextureDescription : IEquatable<TextureDescription>
     {
         /// <summary>
         /// The dimension of a texture.
@@ -159,6 +160,50 @@ namespace SharpDX.Toolkit.Graphics
             copy.Usage = ResourceUsage.Staging;
             copy.OptionFlags = copy.Dimension == TextureDimension.TextureCube ? ResourceOptionFlags.TextureCube : ResourceOptionFlags.None;
             return copy;
+        }
+
+        public bool Equals(TextureDescription other)
+        {
+            return Dimension.Equals(other.Dimension) && Width == other.Width && Height == other.Height && Depth == other.Depth && ArraySize == other.ArraySize && MipLevels == other.MipLevels && Format.Equals(other.Format) && SampleDescription.Equals(other.SampleDescription) && Usage.Equals(other.Usage) && BindFlags.Equals(other.BindFlags) && CpuAccessFlags.Equals(other.CpuAccessFlags) && OptionFlags.Equals(other.OptionFlags);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+            return obj is TextureDescription && Equals((TextureDescription)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = Dimension.GetHashCode();
+                hashCode = (hashCode * 397) ^ Width;
+                hashCode = (hashCode * 397) ^ Height;
+                hashCode = (hashCode * 397) ^ Depth;
+                hashCode = (hashCode * 397) ^ ArraySize;
+                hashCode = (hashCode * 397) ^ MipLevels;
+                hashCode = (hashCode * 397) ^ Format.GetHashCode();
+                hashCode = (hashCode * 397) ^ SampleDescription.GetHashCode();
+                hashCode = (hashCode * 397) ^ Usage.GetHashCode();
+                hashCode = (hashCode * 397) ^ BindFlags.GetHashCode();
+                hashCode = (hashCode * 397) ^ CpuAccessFlags.GetHashCode();
+                hashCode = (hashCode * 397) ^ OptionFlags.GetHashCode();
+                return hashCode;
+            }
+        }
+
+        public static bool operator ==(TextureDescription left, TextureDescription right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(TextureDescription left, TextureDescription right)
+        {
+            return !left.Equals(right);
         }
 
         /// <summary>
