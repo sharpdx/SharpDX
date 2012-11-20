@@ -30,10 +30,10 @@ namespace SharpDX
     /// </summary>
 #if !W8CORE
     [Serializable]
+    [TypeConverter(typeof(SharpDX.Design.ColorConverter))]
 #endif
     [StructLayout(LayoutKind.Sequential, Size = 4)]
     [DynamicSerializer("TKC1")]
-	[TypeConverter(typeof(SharpDX.Design.ColorConverter))]
     public partial struct Color : IEquatable<Color>, IFormattable, IDataSerializable
     {
         /// <summary>
