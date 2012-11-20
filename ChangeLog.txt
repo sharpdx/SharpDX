@@ -1,6 +1,203 @@
 SharpDX Change Log
 ==================
 
+Previous Release notes:
+
+--------------------------
+Release Notes (2012-10-31)
+--------------------------
+General Information
+
+A new version 2.4 of SharpDX is available today for download with two major new features:
+
+    Adds support for Windows Phone 8: This new version provides full access to WP8 DirectX from .NET (Direct3D11, XAudio2, MediaEngine). It allows you to add 3D content seamlessly integrated into your XAML DrawingSurface very easily. Like SharpDX for Windows RT, you can develop a game using Direct3D from .NET without using C++.
+    New SharpDX.Toolkit (beta), a high level API that greatly simplifies access to Direct3D11 by providing a XNA like API with the full power Direct3D11. The toolkit allows you to develop a 3D application to target Windows Desktop, Windows RT or Windows Phone 8 using exactly the same code base.
+
+This release includes also some breaking changes, enhancements, bug fixes...etc. Check the details below.
+
+Windows Phone 8
+
+Last year, SharpDX was released on Windows 8 Metro only one week after It was revealed. This year, we had the chance to get our hands on an early version of the Windows Phone 8 SDK, in order to port SharpDX safely and easily. SharpDX is proud to provide the full DirectX experience for .NET developers from Windows XP to Windows Phone 8 platform. This release includes:
+
+    Supports for Direct3D11.1/DXGI API. The SharpDX Toolkit (see below) is also able to target this platform.
+    Supports for XAudio2 API
+    Supports for MediaEngine API
+    Integration of Direct3D11 into XAML DrawingSurface (version using synchronized texture will be supported in next release)
+
+This version has some minor restrictions and is not as perfect as we would expect due to some limitations in the Windows Phone 8 CLR Runtime that restricts ..NET usage. Mainly, WP8 doesn't allow to DllImport a function, so SharpDX on WP8 has the contraint to be platform dependent (x86, ARM) instead of being fully AnyCpu as previously. This is a known issue from WP8 CLR Team and will hopefully be fixed in next updates of WP8. Also, WP8 .NET is still suffering from some legacy WP7 Silverlight limitations that should also be fixed in next releases (for example, SharpDX cannot be used outside a Silverlight / XAML container, unlike on Windows RT where we can run an application without using XAML).
+
+Apart from some restrictions of using a Direct3D11 API on a lower spec GPU, you can safely use the same Direct3D11 across Windows Desktop, Windows RT and WP8. This should open lots of exciting opportunities!
+Toolkit for Games and Prototyping
+
+SharpDX has been working hard to bring a higher level API on top of DirectX API and this now possible with SharpDX.Toolkit that is providing a Direct3D11 XNA like API. This beta version is now part of the distribution. If you are developing a Direct3D11 application, we highly suggest you to move to the Toolkit, as It provides a significant layer to ease the use of the Direct3D11 API and most importantly, to easily develop from Windows Desktop, Windows RT and WP8 using exactly the same code base!
+
+The purpose of the toolkit is to target the DirectX and Windows platforms only and is not intended as a general cross platform game framework. The toolkit could be the perfect companion for:
+
+    Developing multimedia or game applications using Direct3D11.
+    Prototyping advanced Direct3D11 effects in C#.
+
+This release includes the following features:
+
+    Full coverage of the Graphics API:
+        The toolkit provides a high level wrapper for each low level Direct3D11 classes: GraphicsDevice, Buffers (Vertex, Index, Structured, UnorderedAccess...etc.), Texture1D/2D/3D, TextureCube, RenderTargets, DepthStencilBuffer...etc. All these classes are handling creation of the resources and taking care of all ShaderResourceViews, RenderTargetViews, DepthStencilViews...etc. All Toolkit objects are castable to Direct3D11 raw objects.
+        Provides all GetData/SetData for textures, buffers...etc.
+        Provides an easy access to most of Direct3D11 Level 10-11+ features : Unordered Access (RWTextures, RWBuffers..etc.), Geometry Shaders, Tesselation...etc.
+        All stock states are available through the GraphicsDevice.BlendStates / RasterizerStates / DepthStencilStates
+        Texture and Image loading and saving (ported from DirectXTex and DirectXTk projects) supporting several image formats (DDS, JPG, PNG, BMP, GIF).
+        A complete Effect System, handling the most complex part of efficiently binding shaders into the pipeline, update and upload constant buffers, bind all resources. This Effect system is also providing some advanced features, like constant buffer pooling, shader pooling (share a particular shader bytecode across different effects)...etc. The Effect system is introducing a new syntax for handling techniques and passes, but is still very similar to legacy Effect system. It is also supporting basic syntaxes for legacy FX 2.0 and FX 5.0 Effect systems.
+        Port of all XNA StockEffects like the famous BasicEffect class.The API is compatible with XNA API, making it easy to port XNA samples to the toolkit.
+        Port of SpriteBatch and SpriteFont from DirectXTk. SpriteFont is supporting font file format generated from DirectXTk MakeSpriteFont, or BMFont AngelCode (binary format). SharpDX provides tkfont.exe as well (which is currently only a port of MakeSpriteFont). SpriteFont in SharpDX is also suporting kernings! (currently only available with AngelCode BMFont).
+    Supports of a modular ContentManager, XNA API compliant, but It provides plugin API for resolving streams (like loading resources not from the disk but from a zip or whatever) and pluggable readers (converter from binary streams to toolkit objects)
+    Supports the XNA like Game class infrastructure that allows you to use the same code base across different platforms. This is abstracting creation of graphics devices, graphics presenters (swapchain), native windows (on Windows Form, on Windows RT)....etc. You don't have to write specific code to run your game in Windows Desktop and Windows RT, this is the same code!
+    Four samples released that are running on Windows Desktop, Windows RT and Windows Phone 8
+        HelloWorld, a simple application that shows a basic usage of Game class
+        MiniCube, the popular SharpDX sample ported to the Toolkit, demonstrating how code is much simpler and less verbose than the raw API.
+        SpriteBatchAndFont, displaying 5000 sprites and using SpriteFont to draw some texts.
+        CustomEffect, shows how to use the effect system with a custom fx file.
+
+As most of the effort in SharpDX development is now going into the toolkit in order to provides advanced features, you can expect the following features to be available in next releases of the Toolkit:
+
+    Port of PrimitiveBatch from DirectXTk.
+    Supports for Models/Mesh loading, animation, mesh rendering (usng assimp to support several popular formats).
+    Supports for Audio (dynamic audio, wav sound player and media like library for MP3/WMA...etc).
+    Supports for Input controllers (keyboard, mouses, touchscreen, gamepad... etc.)
+    Visual Studio project templates.
+    Possibly a simplified content pipeline manager integrated in VS
+
+Unfortunately, there was a plan to provide a documentation of the Toolkit API for this beta, but there was not enough time left to finish and polish everything and to write this documentation, but unlike the DirectX API that has lots of books, resources on internet in C++, the toolkit needs defintely some documentation.
+Changes and bugfixes
+
+Please find below an auto-generated list of all changes and fixes from previous 2.3 version.
+Build
+
+    Fix compilation error under Win8 with BinarySerializer (changes)
+    Fix issue #273. Signed assemblies for WinRT were not... signed in 2.3.x (changes)
+    Fix issue of signed assembly not fully valid. (changes)
+    Fix SharpDX.sln (changes)
+    Remove any non-AnyCpu configurations in csproj/sln files. (changes)
+    Remove Debug/Release targets (changes)
+    Update gitignore (changes)
+    Update release notes for 2.3.1 (changes)
+    Use standard msbuild for Win8 Metro instead of custom assembly resolving in order to be able to use WINRT API from SharpDX assembly. Prepare things for using IRandomAccessStream by adding a RandomStream extension. (changes)
+
+Direct2D1
+
+    Fix issue #263. Use PropertyType.Blob instead of Array. (changes)
+
+Direct3D10/11
+
+    Add ImageLoadInformation.Default field to get the default ImageLoadInformation correctly initialized. (changes)
+
+Direct3D11
+
+    Add msdn doc link to Device. (changes)
+    Add ResourceView.ResourceAs<T> method. (changes)
+    Fix BlendState1 and RasterizerState1 constructors. (changes)
+    Fix Device.DeviceRemoveReason (changes)
+    Make Device.DeviceRemoveReason not throwing exceptions (changes)
+    Remove default values for OutputMergerStage.SetBlendState taking uint sample mask in order to avoid conflict with regular method (changes)
+    Update nuspec package for Effects assembly. (changes)
+
+Direct3D11.1
+
+    Change BlendDescription1 and RasterizerDescription1 to BlendStateDescription1 and RasterizerStateDescription1. Add Default() method to both. (changes)
+
+Direct3D9
+
+    Fix issue #223. Remove Sprite.Draw method using SharpDX.Rectangle. (changes)
+    Fix Sprite.Draw signature and revert it to using SharpDX.Rectangle (changes)
+    Remove overloaded method Draw (changes)
+
+MediaFoundation
+
+    Add support for decoding compressed audio. Add two samples 1) DecodeAudioToWav and 2) a WPF Media Player. (changes)
+    Fix header comment in MediaType. (changes)
+    Start to add SourceReader support for audio decoding. (changes)
+    Update AudioDecoder to support IRandomAccessStream directly. (changes)
+
+Samples
+
+    Add CustomEffect Toolkit sample. (changes)
+    Add Toolkit MiniCube samples for Desktop, WinRT, WinRTXaml (changes)
+    Add Win8 sample SimpleMiniCube. (changes)
+    Fix compilation path for HelloWorld.WinRT samples in Toolkit (changes)
+    Fix memory leak with SurfaceImageSourceTarget when a Xaml App was running in the background. (changes)
+    Try to fix Win8 samples sln (changes)
+
+SharpDX
+
+    Add Component.Disposing method. (changes)
+    Add IComponent interface, IServiceRegistry and ObersableCollection. (changes)
+    Add TimerTick class. Add Utilities.Sleep portable method. RenderLoop is now accepting Control instead of only Forms. (changes)
+    Fix Alt key for RenderForm. (changes)
+    Fix bug in BinarySerializer.SerializeMemoryRegion (changes)
+    Fix bug in BoudingFrustum.Matrix not updating correctly frustum planes. (changes)
+    Fix exception message in DisposeCollector (changes)
+    Fix issue #258, FourCC struct was not returning the correct string. (changes)
+    Fix issue #264 errata. (changes)
+    Fix issue #264. BoundingFrustum.Contains was invalid. (changes)
+    IServiceRegistry/ServiceEventArgs should provide type of the interface and not only the implementation. (changes)
+    Remove all implicit conversion with System.Drawing in order to unify the API for all platforms (changes)
+    Simplify serialization for Nullable values. Add support for different type of Array Length encoding (dynamic, byte, short, uint). (changes)
+
+SharpGen
+
+    Fix documentation summary and unmanaged link for properties with a getter and setter. The summary is now including "Gets or sets" instead of only "Gets". (changes)
+
+Toolkit
+
+    Add ContentManager with IContentResolver for getting the Stream and IContentReader to read from the Stream and provide an instance of the resource. (changes)
+    Fix compilation error under Windows 8 (as usual, caused by the Type reflection mess introduced by WinRT, this is really annoying) (changes)
+    Update ContentManager to use IContentManager (that will be later accessible from a ServiceProvider through the Game class). (changes)
+
+Toolkit.Game
+
+    Add new project SharpDX.Toolkit.Game (changes)
+    Add primarily working version of SharpDX.Toolkit.Game for Desktop. (changes)
+    Add SpriteBatchAndFont samples. Fix transform issues in SpriteBatch. Fix issue in ContentManager when loading sub-resources. (changes)
+    Add support for Game class running on a SwapChainBackgroundPanel. Add sample HelloWorld.WinRTXaml. (changes)
+    Add support for WinRT (non-xaml). Next is to add support for WinRT xaml. Add first sample HelloWorld using the SharpDX.Toolkit. (changes)
+    Remove font debugging in sample SpriteBatchAndFontGame (changes)
+    Start to work on Game classes. (changes)
+    Working on Game classes, starting desktop implem, not yet finished. (changes)
+
+Toolkit.Graphics
+
+    Add 1st draft implem of SpriteBatch. (changes)
+    Add a method to take sprite mode with a direct effect. (changes)
+    Add GraphicsDevice.New() from an existing SharpDX.Direct3D11.Device (changes)
+    Add pooling of vertex buffer/index buffer in GraphicsDevice. Add GetOrCreateSharedData to GraphicsDevice.. (changes)
+    Add some checks to validate an effect (at least one technique, at least one pass). Set CurrentTechnique default to Techniques[0]. Also unlike XNA, you can apply a pass without setting the CurrentTechnique. It will replace it without complaining. (changes)
+    Add support for AngelCode BMFont. Add kerning support. Split SpriteFontData class. (changes)
+    Add support for loading directly spritefont file generated by DirectXTk.MakeSpriteFont tools. (changes)
+    Add support for SpriteFont, working directly with spritefont file generated from DirectXTk MakeSpriteFont.exe (changes)
+    Add support for Texture.GenerateMipMaps. (changes)
+    Fix bug in EffectData.Signature serializer. Fix bug in handling vertex input signature. (changes)
+    Fix bug when creating a ShaderResourceView for a Buffer. Fix issue where created views (srv/rtv) were not cached for buffers. (changes)
+    Handle correctly column/row major matrix (with auto-transpose) for effects. Add optimized paths for EffectParameter.SetValue(Matrix). Fix bug in Effect with shader signature. (changes)
+    Rename EffectGroup to EffectPool in make it a bit closer to the legacy EffectPool (though it is a bit different) (changes)
+    Replace boolean for isUnorderedAccess by using a TextureFlags enum (changes)
+    SpriteFont fix back kerning (changes)
+    Use constructor with GraphicsDevice in all subclass of GraphicsResource. (changes)
+    Use ObservableCollection<T> for ContentManager.Resolvers and Readers (changes)
+    Use row_major declaration for all matrices in order to avoid a transpose on the client side and keep shaders compatible with XNA. (changes)
+
+Toolkit.tkfont
+
+    Add new tkfont utility directly ported from DirectXTk.MakeSpriteFont, in order to support future kerning features that will be added later. (changes)
+
+Toolkit.tkfxc
+
+    Set target framework to 4.0 Client (changes)
+
+XACT3
+
+    Fix issue #268. AudioEngineSettings.MasteringVoice should initialize MasteringVoicePointer. (changes)
+
+XAudio2
+
+    Fix issue #272 in Voice.SetEffectChain/SetOutputVoices (changes)
+
 --------------------------
 Release Notes (2012-06-10)
 --------------------------
