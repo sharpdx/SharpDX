@@ -81,37 +81,37 @@ namespace SharpDX.Toolkit
             Suspend = null;
         }
         
-        protected void OnActivated(EventArgs e)
+        protected void OnActivated(object source, EventArgs e)
         {
             EventHandler<EventArgs> handler = Activated;
             if (handler != null) handler(this, e);
         }
 
-        protected void OnDeactivated(EventArgs e)
+        protected void OnDeactivated(object source, EventArgs e)
         {
             EventHandler<EventArgs> handler = Deactivated;
             if (handler != null) handler(this, e);
         }
 
-        protected void OnExiting(EventArgs e)
+        protected void OnExiting(object source, EventArgs e)
         {
             EventHandler<EventArgs> handler = Exiting;
             if (handler != null) handler(this, e);
         }
 
-        protected void OnIdle(EventArgs e)
+        protected void OnIdle(object source, EventArgs e)
         {
             EventHandler<EventArgs> handler = Idle;
             if (handler != null) handler(this, e);
         }
 
-        protected void OnResume(EventArgs e)
+        protected void OnResume(object source, EventArgs e)
         {
             EventHandler<EventArgs> handler = Resume;
             if (handler != null) handler(this, e);
         }
 
-        protected void OnSuspend(EventArgs e)
+        protected void OnSuspend(object source, EventArgs e)
         {
             EventHandler<EventArgs> handler = Suspend;
             if (handler != null) handler(this, e);

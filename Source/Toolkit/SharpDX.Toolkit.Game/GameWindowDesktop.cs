@@ -33,6 +33,7 @@ namespace SharpDX.Toolkit
     {
         public Control Control;
 
+
         internal GameWindowDesktop()
         {
         }
@@ -75,6 +76,13 @@ namespace SharpDX.Toolkit
             if (Control == null)
             {
                 throw new NotSupportedException("Unsupported window context. Unable to create game window. Only System.Windows.Control subclass are supported");
+            }
+
+            var renderForm = windowContext as GameWindowForm;
+            if (renderForm != null)
+            {
+                renderForm.AppActivated += OnActivated;
+                renderForm.AppDeactivated += OnDeactivated;
             }
         }
 

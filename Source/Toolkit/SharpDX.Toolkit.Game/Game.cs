@@ -300,6 +300,11 @@ namespace SharpDX.Toolkit
                 throw new InvalidOperationException("No GraphicsDevice found");
             }
 
+            // Register to platform events.
+            gamePlatform.Activated += OnActivated;
+            gamePlatform.Deactivated += OnDeactivated;
+            gamePlatform.Exiting += OnExiting;
+
             gamePlatform.IsMouseVisible = IsMouseVisible;
 
             // Initialize this instance and all game systems
@@ -632,6 +637,11 @@ namespace SharpDX.Toolkit
         /// <param name="args">Arguments for the Activated event.</param>
         protected virtual void OnActivated(object sender, EventArgs args)
         {
+            var handler = Activated;
+            if (handler != null)
+            {
+                handler(this, args);
+            }
         }
 
         /// <summary>
@@ -641,6 +651,11 @@ namespace SharpDX.Toolkit
         /// <param name="args">Arguments for the Deactivated event.</param>
         protected virtual void OnDeactivated(object sender, EventArgs args)
         {
+            var handler = Deactivated;
+            if (handler != null)
+            {
+                handler(this, args);
+            }
         }
 
         /// <summary>
@@ -650,6 +665,11 @@ namespace SharpDX.Toolkit
         /// <param name="args">Arguments for the Exiting event.</param>
         protected virtual void OnExiting(object sender, EventArgs args)
         {
+            var handler = Exiting;
+            if (handler != null)
+            {
+                handler(this, args);
+            }
         }
 
         /// <summary>
@@ -881,33 +901,6 @@ namespace SharpDX.Toolkit
                 graphicsDeviceService.DeviceResetting -= graphicsDeviceService_DeviceResetting;
                 graphicsDeviceService.DeviceReset -= graphicsDeviceService_DeviceReset;
                 graphicsDeviceService.DeviceDisposing -= graphicsDeviceService_DeviceDisposing;
-            }
-        }
-
-        private void OnActivated(EventArgs e)
-        {
-            EventHandler<EventArgs> handler = Activated;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
-        }
-
-        private void OnDeactivated(EventArgs e)
-        {
-            EventHandler<EventArgs> handler = Deactivated;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
-        }
-
-        private void OnExiting(EventArgs e)
-        {
-            EventHandler<EventArgs> handler = Exiting;
-            if (handler != null)
-            {
-                handler(this, e);
             }
         }
 

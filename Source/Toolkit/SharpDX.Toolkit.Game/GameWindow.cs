@@ -36,6 +36,10 @@ namespace SharpDX.Toolkit
 
         public event EventHandler<EventArgs> OrientationChanged;
 
+        internal event EventHandler<EventArgs> Activated;
+
+        internal event EventHandler<EventArgs> Deactivated;
+
         #endregion
 
         #region Public Properties
@@ -131,5 +135,23 @@ namespace SharpDX.Toolkit
         internal abstract void Initialize(object windowContext);
 
         protected abstract void SetTitle(string title);
+
+        protected void OnActivated(object source, EventArgs e)
+        {
+            EventHandler<EventArgs> handler = Activated;
+            if (handler != null)
+            {
+                handler(source, e);
+            }
+        }
+
+        protected void OnDeactivated(object source, EventArgs e)
+        {
+            EventHandler<EventArgs> handler = Deactivated;
+            if (handler != null)
+            {
+                handler(source, e);
+            }
+        }
     }
 }

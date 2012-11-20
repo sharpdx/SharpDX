@@ -93,11 +93,22 @@ namespace SharpDX.Toolkit
             // Initialize the window
             Window.Initialize(windowContext);
 
+            // Register on Activated 
+            Window.Activated += OnActivated;
+            Window.Deactivated += OnDeactivated;
+
             // Initialize the init callback
             initCallback();
 
             // Run the rendering loop
-            RenderLoop.Run((Control)Window.NativeWindow, new RenderLoop.RenderCallback(tickCallback));
+            try
+            {
+                RenderLoop.Run((Control)Window.NativeWindow, new RenderLoop.RenderCallback(tickCallback));
+            } 
+            finally
+            {
+                OnExiting(this, EventArgs.Empty);
+            }
         }
 
         public override void Exit()
