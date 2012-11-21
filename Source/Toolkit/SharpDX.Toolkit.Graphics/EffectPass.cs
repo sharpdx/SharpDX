@@ -509,7 +509,7 @@ namespace SharpDX.Toolkit.Graphics
                     parameter = new EffectParameter(parameterRaw, EffectResourceTypeHelper.ConvertFromParameterType(parameterRaw.Type), Effect.ResourceLinker.Count, Effect.ResourceLinker);
                     Effect.Parameters.Add(parameter);
 
-                    Effect.ResourceLinker.Count++;
+                    Effect.ResourceLinker.Count += parameterRaw.Count;
                 }
                 else
                 {

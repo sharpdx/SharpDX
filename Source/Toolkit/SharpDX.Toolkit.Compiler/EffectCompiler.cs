@@ -23,6 +23,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
+
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D;
 using SharpDX.IO;
@@ -37,6 +39,8 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public class EffectCompiler
     {
+        private static Regex MatchVariableArray = new Regex(@"(.*)\[(\d+)\]");
+
         private static readonly Dictionary<string, ValueConverter> ValueConverters = new Dictionary<string, ValueConverter>()
                                                                            {
                                                                                {
@@ -839,6 +843,11 @@ namespace SharpDX.Toolkit.Graphics
                         BuildParameters(shader, reflect);
                     }
 
+                    if (logger.HasErrors)
+                    {
+                        return;
+                    }
+
                     // Strip reflection datas, as we are storing them in the toolkit format.
                     var newBytecode = result.Bytecode.Strip(StripFlags.CompilerStripReflectionData);
                     shader.Bytecode = newBytecode;
@@ -1017,6 +1026,9 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
 
+            var resourceParameters = new Dictionary<string, EffectData.ResourceParameter>();
+            var indicesUsedByName = new Dictionary<string, List<IndexedInputBindingDescription>>();
+
             // Iterate on all resources bound in order to resolve resouce dependencies for this shader.
             // If the shader is dependent from an object variable, then create this variable as well.
             for (int i = 0; i < description.BoundResources; i++)
@@ -1024,10 +1036,121 @@ namespace SharpDX.Toolkit.Graphics
                 var bindingDescription = reflect.GetResourceBindingDescription(i);
                 string name = bindingDescription.Name;
 
-                // Build resource parameter
-                var parameter = BuildResourceParameter(name, bindingDescription);
-                shader.ResourceParameters.Add(parameter);
+                // Handle special case for indexable variable in SM5.0 that is different from SM4.0
+                // In SM4.0, reflection on a texture array declared as "Texture2D textureArray[4];" will
+                // result into a single "textureArray" InputBindingDescription
+                // While in SM5.0, we will have several textureArray[1], textureArray[2]...etc, and 
+                // indices depending on the usage. Fortunately, it seems that in SM5.0, there is no hole
+                // so we can rebuilt a SM4.0 like description for SM5.0.
+                // This is the purpose of this code.
+                var matchResult = MatchVariableArray.Match(name);
+                if (matchResult.Success)
+                {
+                    name = matchResult.Groups[1].Value;
+                    int arrayIndex = int.Parse(matchResult.Groups[2].Value);
+
+                    if (bindingDescription.BindCount != 1)
+                    {
+                        logger.Error("Unexpected BindCount ({0}) instead of 1 for indexable variable '{1}'", new SourceSpan(), bindingDescription.BindCount, name);
+                        return;
+                    }
+
+                    List<IndexedInputBindingDescription> indices;
+                    if (!indicesUsedByName.TryGetValue(name, out indices))
+                    {
+                        indices = new List<IndexedInputBindingDescription>();
+                        indicesUsedByName.Add(name, indices);
+                    }
+
+                    indices.Add(new IndexedInputBindingDescription(arrayIndex, bindingDescription));
+                }
+
+                // In the case of SM5.0 and texture array, there can be several intputbindingdescription, so we ignore them
+                // here, as we are going to recover them outside this loop.
+                if (!resourceParameters.ContainsKey(name))
+                {
+                    // Build resource parameter
+                    var parameter = BuildResourceParameter(name, bindingDescription);
+                    shader.ResourceParameters.Add(parameter);
+                    resourceParameters.Add(name, parameter);
+                }
             }
+
+            // Do we have any SM5.0 Indexable array to fix?
+            if (indicesUsedByName.Count > 0)
+            {
+                foreach (var resourceParameter in resourceParameters)
+                {
+                    var name = resourceParameter.Key;
+                    List<IndexedInputBindingDescription> indexedBindings;
+                    if (indicesUsedByName.TryGetValue(name, out indexedBindings))
+                    {
+                        // Just make sure to sort the list in index ascending order
+                        indexedBindings.Sort((left, right) => left.Index.CompareTo(right.Index));
+                        int minIndex = -1;
+                        int maxIndex = -1;
+                        int previousIndex = -1;
+
+                        int minBindingIndex = -1;
+                        int previousBindingIndex = -1;
+
+
+                        // Check that indices have only a delta of 1
+                        foreach (var indexedBinding in indexedBindings)
+                        {
+                            if (minIndex < 0)
+                            {
+                                minIndex = indexedBinding.Index;
+                            }
+
+                            if (minBindingIndex < 0)
+                            {
+                                minBindingIndex = indexedBinding.Description.BindPoint;
+                            }
+
+                            if (indexedBinding.Index > maxIndex)
+                            {
+                                maxIndex = indexedBinding.Index;
+                            }
+
+                            if (previousIndex >= 0)
+                            {
+                                if ((indexedBinding.Index - previousIndex) != 1)
+                                {
+                                    logger.Error("Unexpected sparse index for indexable variable '{0}'", new SourceSpan(), name);
+                                    return;
+                                }
+
+                                if ((indexedBinding.Description.BindPoint - previousBindingIndex) != 1)
+                                {
+                                    logger.Error("Unexpected sparse index for indexable variable '{0}'", new SourceSpan(), name);
+                                    return;
+                                }
+                            }
+
+                            previousIndex = indexedBinding.Index;
+                            previousBindingIndex = indexedBinding.Description.BindPoint;
+                        }
+
+                        // Fix the slot and count
+                        resourceParameter.Value.Slot = (byte)(minBindingIndex - minIndex);
+                        resourceParameter.Value.Count = (byte)(maxIndex + 1);
+                    }
+                }
+            }
+        }
+
+        private class IndexedInputBindingDescription
+        {
+            public IndexedInputBindingDescription(int index, InputBindingDescription description)
+            {
+                Index = index;
+                Description = description;
+            }
+
+            public int Index;
+
+            public InputBindingDescription Description;
         }
 
         /// <summary>
