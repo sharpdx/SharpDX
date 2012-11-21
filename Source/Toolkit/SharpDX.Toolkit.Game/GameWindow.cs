@@ -110,7 +110,7 @@ namespace SharpDX.Toolkit
 
         #endregion
 
-        protected void OnClientSizeChanged(EventArgs e)
+        protected void OnClientSizeChanged(object source, EventArgs e)
         {
             EventHandler<EventArgs> handler = ClientSizeChanged;
             if (handler != null)
@@ -119,7 +119,7 @@ namespace SharpDX.Toolkit
             }
         }
 
-        protected void OnOrientationChanged(EventArgs e)
+        protected void OnOrientationChanged(object source, EventArgs e)
         {
             EventHandler<EventArgs> handler = OrientationChanged;
             if (handler != null)

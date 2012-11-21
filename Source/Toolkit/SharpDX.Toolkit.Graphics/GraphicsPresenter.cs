@@ -121,7 +121,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public virtual void Resize(int width, int height)
+        public virtual void Resize(int width, int height, DXGI.Format format)
         {
             if (DepthStencilBuffer != null)
             {
@@ -130,6 +130,7 @@ namespace SharpDX.Toolkit.Graphics
 
             Description.BackBufferWidth = width;
             Description.BackBufferHeight = height;
+            Description.BackBufferFormat = format;
 
             CreateDepthStencilBuffer();
         }

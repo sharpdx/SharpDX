@@ -83,6 +83,7 @@ namespace SharpDX.Toolkit
             {
                 renderForm.AppActivated += OnActivated;
                 renderForm.AppDeactivated += OnDeactivated;
+                renderForm.UserResized += OnClientSizeChanged;
             }
         }
 

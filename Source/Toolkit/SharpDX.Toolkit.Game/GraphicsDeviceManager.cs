@@ -797,7 +797,7 @@ namespace SharpDX.Toolkit
             int width = game.Window.ClientBounds.Width;
             int height = game.Window.ClientBounds.Height;
 
-            bool flag = false;
+            bool isBeginScreenDeviceChange = false;
             try
             {
                 // Notifies the game window for the new orientation
@@ -805,7 +805,7 @@ namespace SharpDX.Toolkit
 
                 var graphicsDeviceInformation = FindBestDevice(forceCreate);
                 game.Window.BeginScreenDeviceChange(graphicsDeviceInformation.PresentationParameters.IsFullScreen);
-                flag = true;
+                isBeginScreenDeviceChange = true;
                 bool needToCreateNewDevice = true;
 
                 // If we are not forced to create a new device and this is already an existing GraphicsDevice
@@ -817,8 +817,13 @@ namespace SharpDX.Toolkit
                     {
                         try
                         {
-                            // TODO Reset GraphicsDevice and Resize Presenter here
-                            //needToCreateNewDevice = false;
+                            var newWidth = graphicsDeviceInformation.PresentationParameters.BackBufferWidth;
+                            var newHeight = graphicsDeviceInformation.PresentationParameters.BackBufferHeight;
+                            var newFormat = graphicsDeviceInformation.PresentationParameters.BackBufferFormat;
+
+                            GraphicsDevice.Presenter.Resize(newWidth, newHeight, newFormat);
+
+                            needToCreateNewDevice = false;
                         }
                         catch
                         {
@@ -848,7 +853,7 @@ namespace SharpDX.Toolkit
             }
             finally
             {
-                if (flag)
+                if (isBeginScreenDeviceChange)
                 {
                     game.Window.EndScreenDeviceChange(width, height);
                 }

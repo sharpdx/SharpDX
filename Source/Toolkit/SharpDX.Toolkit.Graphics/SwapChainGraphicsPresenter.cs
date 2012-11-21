@@ -38,9 +38,11 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public class SwapChainGraphicsPresenter : GraphicsPresenter
     {
-        private readonly RenderTarget2D backBuffer;
+        private RenderTarget2D backBuffer;
 
-        private readonly SwapChain swapChain;
+        private SwapChain swapChain;
+
+        private int bufferCount;
 
         public SwapChainGraphicsPresenter(GraphicsDevice device, PresentationParameters presentationParameters)
             : base(device, presentationParameters)
@@ -107,6 +109,18 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        public override void Resize(int width, int height, Format format)
+        {
+            base.Resize(width, height, format);
+
+            RemoveAndDispose(ref backBuffer);
+
+            swapChain.ResizeBuffers(bufferCount, width, height, format, Description.Flags);
+
+            // Recreate the back buffer
+            backBuffer = RenderTarget2D.New(GraphicsDevice, swapChain.GetBackBuffer<Direct3D11.Texture2D>(0));
+        }
+
         private SwapChain CreateSwapChain()
         {
             // Check for Window Handle parameter
@@ -128,6 +142,7 @@ namespace SharpDX.Toolkit.Graphics
             var coreWindow = Description.DeviceWindowHandle as CoreWindow;
             var swapChainBackgroundPanel = Description.DeviceWindowHandle as SwapChainBackgroundPanel;
 
+            bufferCount = 2;
             var description = new SwapChainDescription1
             {
                 // Automatic sizing
@@ -138,7 +153,7 @@ namespace SharpDX.Toolkit.Graphics
                 SampleDescription = new SharpDX.DXGI.SampleDescription((int)Description.MultiSampleCount, 0),
                 Usage = Description.RenderTargetUsage,
                 // Use two buffers to enable flip effect.
-                BufferCount = 2,
+                BufferCount = bufferCount,
                 Scaling = SharpDX.DXGI.Scaling.Stretch,
                 SwapEffect = SharpDX.DXGI.SwapEffect.FlipSequential,
             }; 
@@ -177,10 +192,11 @@ namespace SharpDX.Toolkit.Graphics
                 throw new NotSupportedException(string.Format("Form of type [{0}] is not supported. Only System.Windows.Control are supported", Description.DeviceWindowHandle != null ? Description.DeviceWindowHandle.GetType().Name : "null"));
             }
 
+            bufferCount = 1;
             var description = new SwapChainDescription
                 {
                     ModeDescription = new ModeDescription(Description.BackBufferWidth, Description.BackBufferHeight, Description.RefreshRate, Description.BackBufferFormat), 
-                    BufferCount = 1, // TODO: Do we really need this to be configurable by the user?
+                    BufferCount = bufferCount, // TODO: Do we really need this to be configurable by the user?
                     OutputHandle = control.Handle, 
                     SampleDescription = new SampleDescription((int)Description.MultiSampleCount, 0), 
                     SwapEffect = SwapEffect.Discard, 

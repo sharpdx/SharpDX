@@ -165,8 +165,11 @@ namespace SharpDX.Windows
         {
             base.OnResizeEnd(e);
 
-            OnUserResized(e);
-            UpdateScreen();
+            if (sizeMove && cachedSize != Size)
+            {
+                OnUserResized(e);
+                UpdateScreen();
+            }
 
             sizeMove = false;
             OnResumeRendering(e);
