@@ -134,6 +134,8 @@ namespace SharpDX.Toolkit
 
         internal abstract void Initialize(object windowContext);
 
+        internal abstract bool IsMouseVisible { get; set; }
+
         protected abstract void SetTitle(string title);
 
         protected void OnActivated(object source, EventArgs e)

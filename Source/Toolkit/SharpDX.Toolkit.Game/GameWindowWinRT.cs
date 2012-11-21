@@ -143,6 +143,8 @@ namespace SharpDX.Toolkit
             }
         }
 
+        internal override bool IsMouseVisible {get; set;}
+
         public void RunCoreWindow(VoidAction initCallback, VoidAction tickCallback)
         {
             this.initCallback = initCallback;

@@ -73,6 +73,8 @@ namespace SharpDX.Toolkit
             }
         }
 
+        internal override bool IsMouseVisible {get; set;}
+
         protected internal override void SetSupportedOrientations(DisplayOrientation orientations)
         {
             // Desktop doesn't have orientation (unless on Windows 8?)
@@ -144,7 +146,7 @@ namespace SharpDX.Toolkit
         {
         }
 
-        #region Implementation of ICallbackable
+#region Implementation of ICallbackable
 
         IDisposable ICallbackable.Shadow { get; set; }
 
@@ -155,7 +157,7 @@ namespace SharpDX.Toolkit
 
         #endregion
 
-        #region Implementation of IDrawingSurfaceBackgroundContentProviderNative
+#region Implementation of IDrawingSurfaceBackgroundContentProviderNative
 
         public bool Exiting;
 
@@ -264,7 +266,7 @@ namespace SharpDX.Toolkit
 
         #endregion
 
-        #region Implementation of ICustomQueryInterface
+#region Implementation of ICustomQueryInterface
 
         CustomQueryInterfaceResult ICustomQueryInterface.GetInterface(ref Guid iid, out IntPtr ppv)
         {

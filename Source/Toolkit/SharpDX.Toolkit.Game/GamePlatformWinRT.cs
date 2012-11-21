@@ -36,8 +36,6 @@ namespace SharpDX.Toolkit
     {
         private readonly GameWindowWinRT gameWindowWinRT;
 
-        private bool isMouseVisible;
-
         private VoidAction tickCallback;
 
         public GamePlatformWinRT(IServiceRegistry services) : base(services)
@@ -56,19 +54,6 @@ namespace SharpDX.Toolkit
             get
             {
                 return gameWindowWinRT;
-            }
-        }
-
-        public override bool IsMouseVisible
-        {
-            get
-            {
-                return isMouseVisible;
-            }
-
-            set
-            {
-                isMouseVisible = value;
             }
         }
 

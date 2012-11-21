@@ -67,8 +67,6 @@ namespace SharpDX.Toolkit
 
         public bool IsBlockingRun { get; protected set; }
 
-        public abstract bool IsMouseVisible { get; set; }
-
         public abstract void Run(object windowContext, VoidAction initCallback, VoidAction tickCallback);
 
         public virtual void Exit()

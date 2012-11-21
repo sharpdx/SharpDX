@@ -33,6 +33,8 @@ namespace SharpDX.Toolkit
     {
         public Control Control;
 
+        private GameWindowForm gameWindowForm;
+
 
         internal GameWindowDesktop()
         {
@@ -78,12 +80,33 @@ namespace SharpDX.Toolkit
                 throw new NotSupportedException("Unsupported window context. Unable to create game window. Only System.Windows.Control subclass are supported");
             }
 
-            var renderForm = windowContext as GameWindowForm;
-            if (renderForm != null)
+            gameWindowForm = windowContext as GameWindowForm;
+            if (gameWindowForm != null)
             {
-                renderForm.AppActivated += OnActivated;
-                renderForm.AppDeactivated += OnDeactivated;
-                renderForm.UserResized += OnClientSizeChanged;
+                gameWindowForm.AppActivated += OnActivated;
+                gameWindowForm.AppDeactivated += OnDeactivated;
+                gameWindowForm.UserResized += OnClientSizeChanged;
+            }
+        }
+
+        internal override bool IsMouseVisible
+        {
+            get
+            {
+                if (gameWindowForm != null)
+                {
+                    return gameWindowForm.IsMouseVisible;
+                }
+
+                return true;
+            }
+
+            set
+            {
+                if (gameWindowForm != null)
+                {
+                    gameWindowForm.IsMouseVisible = value;
+                }
             }
         }
 

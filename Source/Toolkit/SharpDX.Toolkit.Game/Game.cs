@@ -207,9 +207,9 @@ namespace SharpDX.Toolkit
             set
             {
                 isMouseVisible = value;
-                if (gamePlatform != null)
+                if (Window != null)
                 {
-                    gamePlatform.IsMouseVisible = value;
+                    Window.IsMouseVisible = value;
                 }
             }
         }
@@ -304,8 +304,6 @@ namespace SharpDX.Toolkit
             gamePlatform.Activated += OnActivated;
             gamePlatform.Deactivated += OnDeactivated;
             gamePlatform.Exiting += OnExiting;
-
-            gamePlatform.IsMouseVisible = IsMouseVisible;
 
             // Initialize this instance and all game systems
             Initialize();
