@@ -400,6 +400,15 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
+        /// Gets or sets the current texture sampler. Default is <see cref="SamplerStateCollection.Default"/>.
+        /// </summary>
+        public SamplerState Sampler
+        {
+            get { return samplerParam.GetResource<SamplerState>(); }
+            set { samplerParam.SetResource(value); }
+        }
+
+        /// <summary>
         /// Gets or sets the current texture view. Either use this property or <see cref="Texture"/> but not both at the same time.
         /// </summary>
         public Direct3D11.ShaderResourceView TextureView
