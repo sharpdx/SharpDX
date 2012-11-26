@@ -59,6 +59,9 @@ namespace SharpDX.Toolkit.Graphics
         [Option("OF", Description = "Name of the fieldname to output in the .cs when using Fc option. Default: effectBytecode.\n", Value = "<fieldname>")]
         public string OutputFieldName = "effectBytecode";
 
+        [Option("Ti", Description = "Compile the file only if the source file is newer (not working for indirect include).\n")]
+        public bool CompileOnlyIfNewer;
+
         [Option("Fv", Description = "Output disassemble of fx files and tkfxo files only. No output file generated")]
         public bool ViewOnly;
 
@@ -146,14 +149,14 @@ namespace SharpDX.Toolkit.Graphics
 
             var archiveBytecode = new EffectData();
             bool hasErrors = false;
-            bool isFileUpToDate = true;
+            bool isFileUpToDate = CompileOnlyIfNewer;
 
             // ----------------------------------------------------------------
             // Pre check files
             // ----------------------------------------------------------------
             var outputTime = new DateTime();
             var outputFileName = OutputClassFile ?? OutputFile;
-            if (!ViewOnly)
+            if (!ViewOnly && CompileOnlyIfNewer)
             {
                 if (OutputClassFile != null)
                 {
@@ -172,33 +175,34 @@ namespace SharpDX.Toolkit.Graphics
                     ResetColor();
                     Environment.Exit(-1);
                 }
-            }
 
-            // If the assembly is more recent than the ouput file, then regenerate it
-            var assemblyTime = File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location);
-            if (assemblyTime > outputTime)
-            {
-                isFileUpToDate = false;
-            }
-            else
-            {
-                // Else check that all files are not more recent.
-                foreach (var fxFile in options.FxFiles)
+
+                // If the assembly is more recent than the ouput file, then regenerate it
+                var assemblyTime = File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location);
+                if (assemblyTime > outputTime)
                 {
-                    var filePath = Path.Combine(Environment.CurrentDirectory, fxFile);
-
-                    if (!File.Exists(filePath))
-                    {
-                        isFileUpToDate = false;
-                        break;
-                    }
-
-                    if (File.GetLastWriteTime(filePath) > outputTime)
-                    {
-                        isFileUpToDate = false;
-                        break;
-                    }
+                    isFileUpToDate = false;
                 }
+                else
+                {
+                    // Else check that all files are not more recent.
+                    foreach (var fxFile in options.FxFiles)
+                    {
+                        var filePath = Path.Combine(Environment.CurrentDirectory, fxFile);
+
+                        if (!File.Exists(filePath))
+                        {
+                            isFileUpToDate = false;
+                            break;
+                        }
+
+                        if (File.GetLastWriteTime(filePath) > outputTime)
+                        {
+                            isFileUpToDate = false;
+                            break;
+                        }
+                    }
+                }            
             }
 
             if (!ViewOnly && isFileUpToDate)
@@ -338,7 +342,7 @@ namespace SharpDX.Toolkit.Graphics
 
                 Color(ConsoleColor.White);
                 Console.WriteLine("--------------------------------------------------------------------------------");
-                Console.WriteLine("Shader[{0}] {1}Type: {2} Level: {3} Visibility: {4}", i, shader.Name == null ? string.Empty : string.Format("{0} ", shader.Name), shader.Type, shader.Level, shader.Name != null ? "public" : "private");
+                Console.WriteLine("Shader[{0}] {1}Type: {2} Level: {3} Visibility: {4} ByteCode Size: {5}", i, shader.Name == null ? string.Empty : string.Format("{0} ", shader.Name), shader.Type, shader.Level, shader.Name != null ? "public" : "private", shader.Bytecode.Length);
                 Console.WriteLine("--------------------------------------------------------------------------------");
                 Console.WriteLine();
                 ResetColor();
