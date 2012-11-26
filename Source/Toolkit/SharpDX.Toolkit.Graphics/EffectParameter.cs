@@ -419,11 +419,10 @@ namespace SharpDX.Toolkit.Graphics
                 var pSrc = (float*)pMatrix;
                 // If Matrx is row_major but expecting less columns/rows
                 // then copy only necessasry columns/rows.
-                for (int i = 0; i < RowCount; i++)
+                for (int i = 0; i < RowCount; i++, pSrc +=4, pDest += 4)
                 {
-                    for (int j = 0; j < ColumnCount; j++, pDest++)
-                        *pDest = pSrc[j];
-                    pSrc += 4;
+                    for (int j = 0; j < ColumnCount; j++)
+                        pDest[j] = pSrc[j];
                 }
             }
         }
@@ -440,10 +439,10 @@ namespace SharpDX.Toolkit.Graphics
             {
                 var pSrc = (float*)pMatrix;
                 // If Matrix is column_major, then we need to transpose it
-                for (int i = 0; i < ColumnCount; i++, pSrc++)
+                for (int i = 0; i < ColumnCount; i++, pSrc++, pDest += 4)
                 {
-                    for (int j = 0; j < RowCount; j++, pDest++)
-                        *pDest = pSrc[j * 4];
+                    for (int j = 0; j < RowCount; j++)
+                        pDest[j] = pSrc[j * 4];
                 }
             }
         }
@@ -474,13 +473,12 @@ namespace SharpDX.Toolkit.Graphics
             var pSrc = (float*)((byte*)buffer.DataPointer + offset);
             var pDest = (float*)&result;
 
-            // If Matrix is row_major but expecting less columns/rows
+            // If Matrx is row_major but expecting less columns/rows
             // then copy only necessasry columns/rows.
-            for (int i = 0; i < RowCount; i++)
+            for (int i = 0; i < RowCount; i++, pSrc += 4, pDest += 4)
             {
-                for (int j = 0; j < ColumnCount; j++, pSrc++)
-                    pDest[j] = *pSrc;
-                pDest += 4;
+                for (int j = 0; j < ColumnCount; j++)
+                    pDest[j] = pSrc[j];
             }
             return result;
         }
@@ -496,10 +494,10 @@ namespace SharpDX.Toolkit.Graphics
             var pDest = (float*)&result;
 
             // If Matrix is column_major, then we need to transpose it
-            for (int i = 0; i < ColumnCount; i++, pDest++)
+            for (int i = 0; i < ColumnCount; i++, pSrc +=4, pDest++)
             {
                 for (int j = 0; j < RowCount; j++)
-                    pDest[j * 4] = *pSrc++;
+                    pDest[j * 4] = pSrc[j];
             }
             return result;
         }

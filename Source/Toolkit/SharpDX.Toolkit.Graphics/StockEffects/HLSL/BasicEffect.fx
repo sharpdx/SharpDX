@@ -493,7 +493,7 @@ float4 PSBasicPixelLighting(PSInputPixelLighting pin) : SV_Target0
     
     ColorPair lightResult = ComputeLights(eyeVector, worldNormal, 3);
 
-    color.rgb *= lightResult.Diffuse;
+    color.rgb *=  lightResult.Diffuse;
     
     AddSpecular(color, lightResult.Specular);
     ApplyFog(color, pin.PositionWS.w);
@@ -545,36 +545,36 @@ Technique BasicEffect
         SubPassCount = 32;
     }  
 
-    Pass {  VertexShader = VSBasic                   ; PixelShader = PSBasic                      ;}  // basic
-    Pass {  VertexShader = VSBasicNoFog              ; PixelShader = PSBasicNoFog                 ;}  // no fog
-    Pass {  VertexShader = VSBasicVc                 ; PixelShader = PSBasic                      ;}  // vertex color
-    Pass {  VertexShader = VSBasicVcNoFog            ; PixelShader = PSBasicNoFog                 ;}  // vertex color, no fog
-    Pass {  VertexShader = VSBasicTx                 ; PixelShader = PSBasicTx                    ;}  // texture
-    Pass {  VertexShader = VSBasicTxNoFog            ; PixelShader = PSBasicTxNoFog               ;}  // texture, no fog
-    Pass {  VertexShader = VSBasicTxVc               ; PixelShader = PSBasicTx                    ;}  // texture + vertex color
-    Pass {  VertexShader = VSBasicTxVcNoFog          ; PixelShader = PSBasicTxNoFog               ;}  // texture + vertex color, no fog
-    Pass {  VertexShader = VSBasicVertexLighting     ; PixelShader = PSBasicVertexLighting        ;}  // vertex lighting
-    Pass {  VertexShader = VSBasicVertexLighting     ; PixelShader = PSBasicVertexLightingNoFog   ;}  // vertex lighting, no fog
-    Pass {  VertexShader = VSBasicVertexLightingVc   ; PixelShader = PSBasicVertexLighting        ;}  // vertex lighting + vertex color
-    Pass {  VertexShader = VSBasicVertexLightingVc   ; PixelShader = PSBasicVertexLightingNoFog   ;}  // vertex lighting + vertex color, no fog
-    Pass {  VertexShader = VSBasicVertexLightingTx   ; PixelShader = PSBasicVertexLightingTx      ;}  // vertex lighting + texture
-    Pass {  VertexShader = VSBasicVertexLightingTx   ; PixelShader = PSBasicVertexLightingTxNoFog ;}  // vertex lighting + texture, no fog
-    Pass {  VertexShader = VSBasicVertexLightingTxVc ; PixelShader = PSBasicVertexLightingTx      ;}  // vertex lighting + texture + vertex color
-    Pass {  VertexShader = VSBasicVertexLightingTxVc ; PixelShader = PSBasicVertexLightingTxNoFog ;}  // vertex lighting + texture + vertex color, no fog
-    Pass {  VertexShader = VSBasicOneLight           ; PixelShader = PSBasicVertexLighting        ;}  // one light
-    Pass {  VertexShader = VSBasicOneLight           ; PixelShader = PSBasicVertexLightingNoFog   ;}  // one light, no fog
-    Pass {  VertexShader = VSBasicOneLightVc         ; PixelShader = PSBasicVertexLighting        ;}  // one light + vertex color
-    Pass {  VertexShader = VSBasicOneLightVc         ; PixelShader = PSBasicVertexLightingNoFog   ;}  // one light + vertex color, no fog
-    Pass {  VertexShader = VSBasicOneLightTx         ; PixelShader = PSBasicVertexLightingTx      ;}  // one light + texture
-    Pass {  VertexShader = VSBasicOneLightTx         ; PixelShader = PSBasicVertexLightingTxNoFog ;}  // one light + texture, no fog
-    Pass {  VertexShader = VSBasicOneLightTxVc       ; PixelShader = PSBasicVertexLightingTx      ;}  // one light + texture + vertex color
-    Pass {  VertexShader = VSBasicOneLightTxVc       ; PixelShader = PSBasicVertexLightingTxNoFog ;}  // one light + texture + vertex color, no fog
-    Pass {  VertexShader = VSBasicPixelLighting      ; PixelShader = PSBasicPixelLighting         ;}  // pixel lighting
-    Pass {  VertexShader = VSBasicPixelLighting      ; PixelShader = PSBasicPixelLighting         ;}  // pixel lighting, no fog
-    Pass {  VertexShader = VSBasicPixelLightingVc    ; PixelShader = PSBasicPixelLighting         ;}  // pixel lighting + vertex color
-    Pass {  VertexShader = VSBasicPixelLightingVc    ; PixelShader = PSBasicPixelLighting         ;}  // pixel lighting + vertex color, no fog
-    Pass {  VertexShader = VSBasicPixelLightingTx    ; PixelShader = PSBasicPixelLightingTx       ;}  // pixel lighting + texture
-    Pass {  VertexShader = VSBasicPixelLightingTx    ; PixelShader = PSBasicPixelLightingTx       ;}  // pixel lighting + texture, no fog
-    Pass {  VertexShader = VSBasicPixelLightingTxVc  ; PixelShader = PSBasicPixelLightingTx       ;}  // pixel lighting + texture + vertex color
-    Pass {  VertexShader = VSBasicPixelLightingTxVc  ; PixelShader = PSBasicPixelLightingTx       ;}  // pixel lighting + texture + vertex color, no fog
+    Pass {  VertexShader = VSBasic                   ; PixelShader = PSBasic                      ;}  // 00 basic
+    Pass {  VertexShader = VSBasicNoFog              ; PixelShader = PSBasicNoFog                 ;}  // 01 no fog
+    Pass {  VertexShader = VSBasicVc                 ; PixelShader = PSBasic                      ;}  // 02 vertex color
+    Pass {  VertexShader = VSBasicVcNoFog            ; PixelShader = PSBasicNoFog                 ;}  // 03 vertex color, no fog
+    Pass {  VertexShader = VSBasicTx                 ; PixelShader = PSBasicTx                    ;}  // 04 texture
+    Pass {  VertexShader = VSBasicTxNoFog            ; PixelShader = PSBasicTxNoFog               ;}  // 05 texture, no fog
+    Pass {  VertexShader = VSBasicTxVc               ; PixelShader = PSBasicTx                    ;}  // 06 texture + vertex color
+    Pass {  VertexShader = VSBasicTxVcNoFog          ; PixelShader = PSBasicTxNoFog               ;}  // 07 texture + vertex color, no fog
+    Pass {  VertexShader = VSBasicVertexLighting     ; PixelShader = PSBasicVertexLighting        ;}  // 08 vertex lighting
+    Pass {  VertexShader = VSBasicVertexLighting     ; PixelShader = PSBasicVertexLightingNoFog   ;}  // 09 vertex lighting, no fog
+    Pass {  VertexShader = VSBasicVertexLightingVc   ; PixelShader = PSBasicVertexLighting        ;}  // 10 vertex lighting + vertex color
+    Pass {  VertexShader = VSBasicVertexLightingVc   ; PixelShader = PSBasicVertexLightingNoFog   ;}  // 11 vertex lighting + vertex color, no fog
+    Pass {  VertexShader = VSBasicVertexLightingTx   ; PixelShader = PSBasicVertexLightingTx      ;}  // 12 vertex lighting + texture
+    Pass {  VertexShader = VSBasicVertexLightingTx   ; PixelShader = PSBasicVertexLightingTxNoFog ;}  // 13 vertex lighting + texture, no fog
+    Pass {  VertexShader = VSBasicVertexLightingTxVc ; PixelShader = PSBasicVertexLightingTx      ;}  // 14 vertex lighting + texture + vertex color
+    Pass {  VertexShader = VSBasicVertexLightingTxVc ; PixelShader = PSBasicVertexLightingTxNoFog ;}  // 15 vertex lighting + texture + vertex color, no fog
+    Pass {  VertexShader = VSBasicOneLight           ; PixelShader = PSBasicVertexLighting        ;}  // 16 one light
+    Pass {  VertexShader = VSBasicOneLight           ; PixelShader = PSBasicVertexLightingNoFog   ;}  // 17 one light, no fog
+    Pass {  VertexShader = VSBasicOneLightVc         ; PixelShader = PSBasicVertexLighting        ;}  // 18 one light + vertex color
+    Pass {  VertexShader = VSBasicOneLightVc         ; PixelShader = PSBasicVertexLightingNoFog   ;}  // 19 one light + vertex color, no fog
+    Pass {  VertexShader = VSBasicOneLightTx         ; PixelShader = PSBasicVertexLightingTx      ;}  // 20 one light + texture
+    Pass {  VertexShader = VSBasicOneLightTx         ; PixelShader = PSBasicVertexLightingTxNoFog ;}  // 21 one light + texture, no fog
+    Pass {  VertexShader = VSBasicOneLightTxVc       ; PixelShader = PSBasicVertexLightingTx      ;}  // 22 one light + texture + vertex color
+    Pass {  VertexShader = VSBasicOneLightTxVc       ; PixelShader = PSBasicVertexLightingTxNoFog ;}  // 23 one light + texture + vertex color, no fog
+    Pass {  VertexShader = VSBasicPixelLighting      ; PixelShader = PSBasicPixelLighting         ;}  // 24 pixel lighting
+    Pass {  VertexShader = VSBasicPixelLighting      ; PixelShader = PSBasicPixelLighting         ;}  // 25 pixel lighting, no fog
+    Pass {  VertexShader = VSBasicPixelLightingVc    ; PixelShader = PSBasicPixelLighting         ;}  // 26 pixel lighting + vertex color
+    Pass {  VertexShader = VSBasicPixelLightingVc    ; PixelShader = PSBasicPixelLighting         ;}  // 27 pixel lighting + vertex color, no fog
+    Pass {  VertexShader = VSBasicPixelLightingTx    ; PixelShader = PSBasicPixelLightingTx       ;}  // 28 pixel lighting + texture
+    Pass {  VertexShader = VSBasicPixelLightingTx    ; PixelShader = PSBasicPixelLightingTx       ;}  // 29 pixel lighting + texture, no fog
+    Pass {  VertexShader = VSBasicPixelLightingTxVc  ; PixelShader = PSBasicPixelLightingTx       ;}  // 30 pixel lighting + texture + vertex color
+    Pass {  VertexShader = VSBasicPixelLightingTxVc  ; PixelShader = PSBasicPixelLightingTx       ;}  // 31 pixel lighting + texture + vertex color, no fog
 }
