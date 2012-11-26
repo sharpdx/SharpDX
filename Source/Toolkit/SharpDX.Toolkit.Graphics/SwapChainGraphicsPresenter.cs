@@ -50,9 +50,9 @@ namespace SharpDX.Toolkit.Graphics
             PresentInterval = presentationParameters.PresentationInterval;
 
             // Initialize the swap chain
-            swapChain = CreateSwapChain();
+            swapChain = ToDispose(CreateSwapChain());
 
-            backBuffer = RenderTarget2D.New(device, swapChain.GetBackBuffer<Direct3D11.Texture2D>(0));
+            backBuffer = ToDispose(RenderTarget2D.New(device, swapChain.GetBackBuffer<Direct3D11.Texture2D>(0)));
         }
 
         public override RenderTarget2D BackBuffer
@@ -118,7 +118,7 @@ namespace SharpDX.Toolkit.Graphics
             swapChain.ResizeBuffers(bufferCount, width, height, format, Description.Flags);
 
             // Recreate the back buffer
-            backBuffer = RenderTarget2D.New(GraphicsDevice, swapChain.GetBackBuffer<Direct3D11.Texture2D>(0));
+            backBuffer = ToDispose(RenderTarget2D.New(GraphicsDevice, swapChain.GetBackBuffer<Direct3D11.Texture2D>(0)));
         }
 
         private SwapChain CreateSwapChain()

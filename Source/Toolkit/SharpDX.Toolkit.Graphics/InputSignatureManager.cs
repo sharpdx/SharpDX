@@ -30,7 +30,7 @@ namespace SharpDX.Toolkit.Graphics
         public InputLayout InputLayout;
     }
 
-    internal class InputSignatureManager
+    internal class InputSignatureManager : Component
     {
         private readonly Direct3D11.Device device;
 
@@ -57,7 +57,7 @@ namespace SharpDX.Toolkit.Graphics
                     if (!DeviceCache.TryGetValue(layout, out currentPassPreviousPair))
                     {
 
-                        currentPassPreviousPair.InputLayout = new InputLayout(device, Bytecode, layout.InputElements);
+                        currentPassPreviousPair.InputLayout =  ToDispose(new InputLayout(device, Bytecode, layout.InputElements));
                         currentPassPreviousPair.VertexInputLayout = layout;
                         DeviceCache.Add(layout, currentPassPreviousPair);
                     }

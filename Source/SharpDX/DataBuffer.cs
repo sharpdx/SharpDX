@@ -167,6 +167,8 @@ namespace SharpDX
                     _buffer = (sbyte*)0;
                 }
             }
+
+            base.Dispose(disposing);
         }
 
         /// <summary>

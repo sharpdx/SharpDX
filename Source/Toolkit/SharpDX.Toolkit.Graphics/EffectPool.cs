@@ -213,7 +213,7 @@ namespace SharpDX.Toolkit.Graphics
                             shader = new ComputeShader(graphicsDevice, bytecodeRaw);
                             break;
                     }
-                    compiledShaders[index] = shader;
+                    compiledShaders[index] = ToDispose(shader);
                 }
             }
             return shader;
@@ -256,7 +256,7 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     // 4) If this buffer doesn't exist, create a new one and register it.
                     buffer = new EffectConstantBuffer(graphicsDevice, bufferRaw);
-                    bufferSet[bufferKey] = buffer;
+                    bufferSet[bufferKey] = ToDispose(buffer);
                 }
 
                 return buffer;

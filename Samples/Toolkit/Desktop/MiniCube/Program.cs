@@ -37,8 +37,8 @@ namespace MiniCube
 #endif
         static void Main()
         {
-            var program = new MiniCubeGame();
-            program.Run();
+            using (var program = new SphereGame())
+                program.Run();
         }
     }
 }

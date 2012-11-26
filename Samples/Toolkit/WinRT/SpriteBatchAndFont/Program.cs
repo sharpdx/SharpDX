@@ -37,8 +37,8 @@ namespace SpriteBatchAndFont
 #endif
         static void Main()
         {
-            var program = new SpriteBatchAndFontGame();
-            program.Run();
+            using (var program = new SpriteBatchAndFontGame())
+                program.Run();
         }
     }
 }

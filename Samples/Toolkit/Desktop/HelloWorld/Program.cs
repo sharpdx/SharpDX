@@ -37,8 +37,8 @@ namespace HelloWorld
 #endif
         static void Main()
         {
-            var program = new HelloWorldGame();
-            program.Run();
+            using (var program = new HelloWorldGame())
+                program.Run();
         }
     }
 }

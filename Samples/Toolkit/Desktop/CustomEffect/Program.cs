@@ -37,8 +37,8 @@ namespace CustomEffect
 #endif
         static void Main()
         {
-            var program = new CustomEffectGame();
-            program.Run();
+            using (var program = new CustomEffectGame())
+                program.Run();
         }
     }
 }

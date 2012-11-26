@@ -155,18 +155,18 @@ namespace SharpDX.Toolkit.Graphics
             sharedDataPerDevice = new Dictionary<object, object>();
 
             // Create default Effect pool
-            DefaultEffectPool = EffectPool.New(this, "Default");
+            DefaultEffectPool = ToDispose(EffectPool.New(this, "Default"));
 
             // Create all default states
-            BlendStates = new BlendStateCollection(this);
-            DepthStencilStates = new DepthStencilStateCollection(this);
-            SamplerStates = new SamplerStateCollection(this);
-            RasterizerStates = new RasterizerStateCollection(this);
+            BlendStates = ToDispose(new BlendStateCollection(this));
+            DepthStencilStates = ToDispose(new DepthStencilStateCollection(this));
+            SamplerStates = ToDispose(new SamplerStateCollection(this));
+            RasterizerStates = ToDispose(new RasterizerStateCollection(this));
 
             Initialize();
 
             // Create Internal Effect
-            primitiveQuad = new PrimitiveQuad(this);
+            primitiveQuad = ToDispose(new PrimitiveQuad(this));
         }
 
         protected GraphicsDevice(GraphicsDevice mainDevice, DeviceContext deferredContext)
@@ -203,7 +203,7 @@ namespace SharpDX.Toolkit.Graphics
             Initialize();
 
             // Create Internal Effect
-            primitiveQuad = new PrimitiveQuad(this);
+            primitiveQuad = ToDispose(new PrimitiveQuad(this));
         }
 
         private void Initialize()
@@ -1410,7 +1410,7 @@ namespace SharpDX.Toolkit.Graphics
             {
                 if (!inputSignatureCache.TryGetValue(key, out signatureManager))
                 {
-                    signatureManager = new InputSignatureManager(this, signatureBytecode, inputLayoutContextCache, inputLayoutDeviceCache);
+                    signatureManager = ToDispose(new InputSignatureManager(this, signatureBytecode, inputLayoutContextCache, inputLayoutDeviceCache));
                     inputSignatureCache.Add(key, signatureManager);
                 }
             }

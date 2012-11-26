@@ -475,6 +475,12 @@ namespace SharpDX.Toolkit
 
                 if (GraphicsDevice != null)
                 {
+                    if (GraphicsDevice.Presenter != null)
+                    {
+                        GraphicsDevice.Presenter.Dispose();
+                        GraphicsDevice.Presenter = null;
+                    }
+
                     GraphicsDevice.Dispose();
                     GraphicsDevice = null;
                 }
