@@ -107,7 +107,12 @@ namespace SharpDX.Toolkit
             Content = new ContentManager(Services);
             LaunchParameters = new LaunchParameters();
             GameSystems = new GameSystemCollection();
+
+            // Create Platform
             gamePlatform = GamePlatform.Create(Services);
+            gamePlatform.Activated += gamePlatform_Activated;
+            gamePlatform.Deactivated += gamePlatform_Deactivated;
+            gamePlatform.Exiting += gamePlatform_Exiting;
 
             // By default, add a FileResolver for the ContentManager
             Content.Resolvers.Add(new FileSystemContentResolver(gamePlatform.GetDefaultAppDirectory()));
@@ -299,11 +304,6 @@ namespace SharpDX.Toolkit
             {
                 throw new InvalidOperationException("No GraphicsDevice found");
             }
-
-            // Register to platform events.
-            gamePlatform.Activated += OnActivated;
-            gamePlatform.Deactivated += OnDeactivated;
-            gamePlatform.Exiting += OnExiting;
 
             // Initialize this instance and all game systems
             Initialize();
@@ -727,6 +727,29 @@ namespace SharpDX.Toolkit
 
             currentlyUpdatingGameSystems.Clear();
             isFirstUpdateDone = true;
+        }
+
+        private void gamePlatform_Activated(object sender, EventArgs e)
+        {
+            if (!IsActive)
+            {
+                IsActive = true;
+                OnActivated(this, EventArgs.Empty);
+            }
+        }
+
+        private void gamePlatform_Deactivated(object sender, EventArgs e)
+        {
+            if (IsActive)
+            {
+                IsActive = false;
+                OnDeactivated(this, EventArgs.Empty);
+            }
+        }
+
+        private void gamePlatform_Exiting(object sender, EventArgs e)
+        {
+            OnExiting(this, EventArgs.Empty);
         }
 
         private static bool AddGameSystem<T>(T gameSystem, List<T> gameSystems, IComparer<T> comparer, bool removePreviousSystem = false)
