@@ -36,34 +36,26 @@ namespace SharpDX.Toolkit.Graphics
 
         public readonly byte[] Bytecode;
 
-        public Dictionary<VertexInputLayout, InputLayoutPair> ContextCache;
+        private readonly Dictionary<VertexInputLayout, InputLayoutPair> Cache;
 
-        public Dictionary<VertexInputLayout, InputLayoutPair> DeviceCache;
-
-        public InputSignatureManager(GraphicsDevice device, byte[] byteCode, Dictionary<VertexInputLayout, InputLayoutPair> contextCache, Dictionary<VertexInputLayout, InputLayoutPair> deviceCache)
+        public InputSignatureManager(GraphicsDevice device, byte[] byteCode)
         {
             this.device = device;
             Bytecode = byteCode;
-            ContextCache = contextCache;
-            DeviceCache = deviceCache;
+            Cache = new Dictionary<VertexInputLayout, InputLayoutPair>();
         }
 
         public void GetOrCreate(VertexInputLayout layout, out InputLayoutPair currentPassPreviousPair)
         {
-            if (!ContextCache.TryGetValue(layout, out currentPassPreviousPair))
+            lock (Cache)
             {
-                lock (DeviceCache)
+                if (!Cache.TryGetValue(layout, out currentPassPreviousPair))
                 {
-                    if (!DeviceCache.TryGetValue(layout, out currentPassPreviousPair))
-                    {
 
-                        currentPassPreviousPair.InputLayout =  ToDispose(new InputLayout(device, Bytecode, layout.InputElements));
-                        currentPassPreviousPair.VertexInputLayout = layout;
-                        DeviceCache.Add(layout, currentPassPreviousPair);
-                    }
+                    currentPassPreviousPair.InputLayout =  ToDispose(new InputLayout(device, Bytecode, layout.InputElements));
+                    currentPassPreviousPair.VertexInputLayout = layout;
+                    Cache.Add(layout, currentPassPreviousPair);
                 }
-
-                ContextCache.Add(layout, currentPassPreviousPair);
             }
         }
     }

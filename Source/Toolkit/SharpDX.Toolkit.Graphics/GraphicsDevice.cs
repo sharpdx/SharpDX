@@ -38,8 +38,6 @@ namespace SharpDX.Toolkit.Graphics
         private readonly Viewport[] viewports = new Viewport[16];
         private IntPtr resetVertexBuffersPointer;
         private int maxSlotCountForVertexBuffer;
-        private Dictionary<VertexInputLayout, InputLayoutPair> inputLayoutDeviceCache;
-        private Dictionary<VertexInputLayout, InputLayoutPair> inputLayoutContextCache;
 
         private readonly PrimitiveQuad primitiveQuad;
 
@@ -150,8 +148,6 @@ namespace SharpDX.Toolkit.Graphics
 
             // Global cache for all input signatures inside a GraphicsDevice.
             inputSignatureCache = new Dictionary<InputSignatureKey, InputSignatureManager>();
-            inputLayoutDeviceCache = new Dictionary<VertexInputLayout, InputLayoutPair>(new IdentityEqualityComparer<VertexInputLayout>());
-            inputLayoutContextCache = new Dictionary<VertexInputLayout, InputLayoutPair>(new IdentityEqualityComparer<VertexInputLayout>());
             sharedDataPerDevice = new Dictionary<object, object>();
 
             // Create default Effect pool
@@ -184,9 +180,6 @@ namespace SharpDX.Toolkit.Graphics
 
             // Copy the Global cache for all input signatures inside a GraphicsDevice.
             inputSignatureCache = mainDevice.inputSignatureCache;
-            inputLayoutDeviceCache = mainDevice.inputLayoutDeviceCache;
-            // For a new deferred context, we need to create a new inputLayout cache
-            inputLayoutContextCache = new Dictionary<VertexInputLayout, InputLayoutPair>(new IdentityEqualityComparer<VertexInputLayout>());
             sharedDataPerDevice = mainDevice.sharedDataPerDevice;
 
             // Copy the reset vertex buffer
@@ -1410,7 +1403,7 @@ namespace SharpDX.Toolkit.Graphics
             {
                 if (!inputSignatureCache.TryGetValue(key, out signatureManager))
                 {
-                    signatureManager = ToDispose(new InputSignatureManager(this, signatureBytecode, inputLayoutContextCache, inputLayoutDeviceCache));
+                    signatureManager = ToDispose(new InputSignatureManager(this, signatureBytecode));
                     inputSignatureCache.Add(key, signatureManager);
                 }
             }

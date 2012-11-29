@@ -811,13 +811,22 @@ namespace SharpDX.Toolkit.Graphics
         }
 
 
+        private readonly Dictionary<VertexInputLayout, InputLayoutPair> LocalInputLayoutCache = new Dictionary<VertexInputLayout, InputLayoutPair>();
+
         internal InputLayout GetInputLayout(VertexInputLayout layout)
         {
             if (layout == null)
                 return null;
 
             if (!ReferenceEquals(currentInputLayoutPair.VertexInputLayout, layout))
-                inputSignatureManager.GetOrCreate(layout, out currentInputLayoutPair);
+            {
+                // Use a local cache to speed up retrieval
+                if (!LocalInputLayoutCache.TryGetValue(layout, out currentInputLayoutPair))
+                {
+                    inputSignatureManager.GetOrCreate(layout, out currentInputLayoutPair);
+                    LocalInputLayoutCache.Add(layout, currentInputLayoutPair);
+                }
+            }
             return currentInputLayoutPair.InputLayout;
         }
 
