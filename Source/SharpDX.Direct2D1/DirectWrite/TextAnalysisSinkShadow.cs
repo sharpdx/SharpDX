@@ -39,9 +39,9 @@ namespace SharpDX.DirectWrite
             return ToIntPtr<TextAnalysisSink>(callback);
         }
 
-        private class TextAnalysisSinkVtbl : ComObjectVtbl
+        protected class TextAnalysisSinkVtbl : ComObjectVtbl
         {
-            public TextAnalysisSinkVtbl() : base(4)
+            public TextAnalysisSinkVtbl(int methodCount = 0) : base(4 + methodCount)
             {
                 unsafe
                 {

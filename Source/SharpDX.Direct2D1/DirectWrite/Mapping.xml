@@ -28,6 +28,9 @@
   <assembly>SharpDX.Direct2D1</assembly>
   
   <include file="dwrite.h" attach="true" output="DirectWrite"/>
+  <ifdef name="DIRECTX11_1">
+    <include file="dwrite_1.h" attach="true" output="DirectWrite"/>
+  </ifdef>
 
   <naming />
   
@@ -37,6 +40,7 @@
   
   <mapping>
     <context>dwrite</context>
+    <context>dwrite_1</context>
 
     <!--
     // *****************************************************************
@@ -44,6 +48,7 @@
     // *****************************************************************
     -->
     <map enum="DWRITE(.+)" name-tmp="$1" />
+    <map enum-item="DWRITE_GLYPH_ORIENTATION_ANGLE_(\d+)_DEGREES" name="Degrees$1"/>
 
     <!--
     // *****************************************************************
@@ -69,6 +74,11 @@
     <map field="DWRITE_LINE_BREAKPOINT::breakConditionBefore" visibility="internal" name="BreakConditionBefore_" />
     <map field="DWRITE_LINE_BREAKPOINT::breakConditionAfter" visibility="internal" name="BreakConditionAfter_" />
     <map struct="DWRITE_TYPOGRAPHIC_FEATURES" visibility="internal"/>
+
+    <map struct="DWRITE_PANOSE_INNER_0" name="PanoseText"/>
+    <map struct="DWRITE_PANOSE_INNER_1" name="PanoseScript"/>
+    <map struct="DWRITE_PANOSE_INNER_2" name="PanoseDecorative"/>
+    <map struct="DWRITE_PANOSE_INNER_3" name="PanoseSymbol"/>
 
     <!--
     // *****************************************************************
@@ -145,7 +155,9 @@
     <map method="IDWriteLocalizedStrings::GetString" visibility="internal" />
     <map method="IDWriteLocalizedStrings::GetStringLength" visibility="internal" />
     <map interface="IDWriteTextAnalysisSink" callback="true" callback-dual="false" />
+    <map interface="IDWriteTextAnalysisSink1" callback="true" callback-dual="false" />
     <map interface="IDWriteTextAnalysisSource" callback="true" callback-dual="false" />
+    <map interface="IDWriteTextAnalysisSource1" callback="true" callback-dual="false" />
     <map param="IDWriteTextLayout::DetermineMinWidth::minWidth" return="true" />
     <map method="IDWriteTextLayout::GetClusterMetrics" visibility="internal" />
     <map param="IDWriteTextLayout::GetDrawingEffect::drawingEffect" return="true" />

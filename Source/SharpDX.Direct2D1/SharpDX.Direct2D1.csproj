@@ -11,7 +11,7 @@
   <ItemGroup Condition=" '$(SharpDXWin8)' == 'false'">
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Drawing"/>
+    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
@@ -34,6 +34,11 @@
     <Compile Include="ComputeTransform.cs" />
     <Compile Include="ComputeTransformNative.cs" />
     <Compile Include="ComputeTransformShadow.cs" />
+    <Compile Include="DirectWrite\TextAnalyzer1.cs" />
+    <Compile Include="DirectWrite\TextAnalysisSource1Shadow.cs" />
+    <Compile Include="DirectWrite\TextAnalysisSource1.cs" />
+    <Compile Include="DirectWrite\TextAnalysisSink1Shadow.cs" />
+    <Compile Include="DirectWrite\TextAnalysisSink1.cs" />
     <Compile Include="DirectWrite\NamespaceDoc.cs" />
     <Compile Include="Effects\NamespaceDoc.cs" />
     <Compile Include="NamespaceDoc.cs" />

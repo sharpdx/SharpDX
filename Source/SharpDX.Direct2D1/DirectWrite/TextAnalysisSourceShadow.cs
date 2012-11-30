@@ -58,10 +58,10 @@ namespace SharpDX.DirectWrite
             return ToIntPtr<TextAnalysisSource>(callback);
         }
 
-        private class TextAnalysisSourceVtbl : ComObjectVtbl
+        protected class TextAnalysisSourceVtbl : ComObjectVtbl
         {
-            public TextAnalysisSourceVtbl()
-                : base(5)
+            public TextAnalysisSourceVtbl(int methodCount = 0)
+                : base(5 + methodCount)
             {
                 AddMethod(new GetTextAtPositionDelegate(GetTextAtPositionImpl));
                 AddMethod(new GetTextBeforePositionDelegate(GetTextBeforePositionImpl));

@@ -764,7 +764,7 @@ namespace SharpGen.Parser
                 }
                 else if (newItem.StartsWith("uuid("))
                 {
-                    guid = newItem.Trim(')').Substring("uuid(".Length).Trim('"');
+                    guid = newItem.Trim(')').Substring("uuid(".Length).Trim('"', '{', '}');
                 }
             }
 
