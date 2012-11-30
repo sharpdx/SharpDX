@@ -511,7 +511,7 @@ namespace SharpDX
         /// <returns>The modulated color.</returns>
         public static ColorBGRA Modulate(ColorBGRA left, ColorBGRA right)
         {
-            return new ColorBGRA(left.R * right.R, left.G * right.G, left.B * right.B, left.A * right.A);
+            return new ColorBGRA((left.R * right.R) >> 8, (left.G * right.G) >> 8, (left.B * right.B) >> 8, (left.A * right.A) >> 8);
         }
 
         /// <summary>
@@ -942,7 +942,7 @@ namespace SharpDX
         /// <returns>The result of the conversion.</returns>
         public static explicit operator ColorBGRA(Vector3 value)
         {
-            return new ColorBGRA(value.X, value.Y, value.Z, 1.0f);
+            return new ColorBGRA(value.X/255.0f, value.Y/255.0f, value.Z/255.0f, 1.0f);
         }
 
         /// <summary>
