@@ -195,6 +195,8 @@ namespace SharpDX.Toolkit
         private int nextRenderTarget = 0;
         private RenderTargetGraphicsPresenter graphicsPresenter;
 
+        private Exception drawException = null;
+
         void IDrawingSurfaceBackgroundContentProviderNative.Draw(Device device, DeviceContext context, RenderTargetView renderTargetView)
         {
             try
@@ -260,7 +262,9 @@ namespace SharpDX.Toolkit
                 }
             } catch (Exception ex)
             {
-                // System.Diagnostics.Debugger.Break();
+                // TODO: As we are in a callback from a native code, we cannot pass back this exception,
+                // so how to pass back this exception to the user at an appropriate time?
+                drawException = ex;
             }
         }
 

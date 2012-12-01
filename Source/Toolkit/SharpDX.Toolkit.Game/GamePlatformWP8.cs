@@ -59,7 +59,7 @@ namespace SharpDX.Toolkit
         public override void Run(object windowContext, VoidAction initCallback, VoidAction tickCallback)
         {
             // If window context is null under WinRT, then this is a non-XAML application
-            IsBlockingRun = true;
+            IsBlockingRun = false;
 
             // Initialize the window
             Window.Initialize(windowContext);
