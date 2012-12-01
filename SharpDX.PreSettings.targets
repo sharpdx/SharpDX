@@ -5,6 +5,10 @@
   Global Configuration
   *************************************************************************************************************
   -->
+  <PropertyGroup Condition=" '$(Configuration)' == 'WP8Debug' Or '$(Configuration)' == 'WP8Release'  ">
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+  </PropertyGroup>
+  
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Net20Debug</Configuration>
     <SharpDXSign Condition=" '$(SharpDXSign)' == '' ">false</SharpDXSign>
