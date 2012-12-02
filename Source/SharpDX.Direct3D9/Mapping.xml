@@ -2091,7 +2091,8 @@
     <map struct="D3DCLIPSTATUS9" name="ClipStatus" />
     <map struct="D3DDEVICE_CREATION_PARAMETERS" name="CreationParameters" />
     <map struct="D3DDISPLAYMODE" name="DisplayMode" />
-    <map struct="D3DDISPLAYMODEEX" name="DisplayModeEx" />
+    <map struct="D3DDISPLAYMODEEX" name="DisplayModeEx" native="true" struct-to-class="true" new="true" />
+    <map field="D3DDISPLAYMODEEX::Size" visibility="internal"/>
     <map struct="D3DDISPLAYMODEFILTER" name="DisplayModeFilter" />
     <map struct="D3DGAMMARAMP" name="GammaRamp" />
     <map struct="D3DINDEXBUFFER_DESC" name="IndexBufferDescription" />

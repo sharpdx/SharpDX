@@ -248,7 +248,9 @@ namespace SharpDX.Direct3D9
         {
             unsafe
             {
-                ResetEx(ref presentationParametersRef, new IntPtr(&fullScreenDisplayMode));
+                var native = DisplayModeEx.__NewNative();
+                fullScreenDisplayMode.__MarshalTo(ref native);
+                ResetEx(ref presentationParametersRef, new IntPtr(&native));
             }
         }
     }

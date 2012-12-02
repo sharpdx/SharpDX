@@ -20,8 +20,16 @@
 
 namespace SharpDX.Direct3D9
 {
-    public partial struct DisplayModeEx
+    public partial class DisplayModeEx
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DisplayModeEx" /> class.
+        /// </summary>
+        public DisplayModeEx()
+        {
+            Size = Utilities.SizeOf<__Native>();
+        }
+
         /// <summary>
         /// Gets the aspect ratio.
         /// </summary>
@@ -36,6 +44,11 @@ namespace SharpDX.Direct3D9
         public override string ToString()
         {
             return string.Format("Width: {0}, Height: {1}, RefreshRate: {2}, Format: {3}", Width, Height, RefreshRate, Format);
+        }
+
+        internal static __Native __NewNative()
+        {
+            return new __Native { Size = Utilities.SizeOf<__Native>() };
         }
     }
 }
