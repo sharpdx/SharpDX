@@ -743,6 +743,58 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
+        /// Copies the content of an image to this texture.
+        /// </summary>
+        /// <param name="image">The source image to copy from.</param>
+        /// <msdn-id>ff476457</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
+        /// <remarks>
+        /// See unmanaged documentation for usage and restrictions.
+        /// </remarks>
+        public void SetData(Image image)
+        {
+            SetData(GraphicsDevice, image);
+        }
+
+        /// <summary>
+        /// Copies the content of an image to this texture.
+        /// </summary>
+        /// <param name="graphicsDevice">The <see cref="GraphicsDevice"/>.</param>
+        /// <param name="image">The source image to copy from.</param>
+        /// <exception cref="System.ArgumentException">Image is not same dimension and/or format than this texture</exception>
+        /// <msdn-id>ff476457</msdn-id>	
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
+        /// <remarks>
+        /// See unmanaged documentation for usage and restrictions.
+        /// </remarks>
+        public void SetData(GraphicsDevice graphicsDevice, Image image)
+        {
+            var textureDescription = image.Description;
+
+            if (textureDescription.Width != Description.Width
+                || textureDescription.Height != Description.Height
+                || textureDescription.ArraySize != Description.ArraySize
+                || textureDescription.Depth != Description.Depth
+                || textureDescription.Dimension != Description.Dimension
+                || textureDescription.Format != Description.Format
+                || textureDescription.MipLevels != Description.MipLevels)
+            {
+                throw new ArgumentException("Image is not same dimension and/or format than this texture");
+            }
+
+            for (int arrayIndex = 0; arrayIndex < image.Description.ArraySize; arrayIndex++)
+            {
+                for (int mipLevel = 0; mipLevel < image.Description.MipLevels; mipLevel++)
+                {
+                    var pixelBuffer = image.PixelBuffer[arrayIndex, mipLevel];
+                    SetData(graphicsDevice, new DataPointer(pixelBuffer.DataPointer, pixelBuffer.BufferStride), arrayIndex, mipLevel);
+                }
+            }
+        }
+
+        /// <summary>
         /// Return an equivalent staging texture CPU read-writable from this instance.
         /// </summary>
         /// <returns></returns>
@@ -859,10 +911,10 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Gets the GPU content of this texture as an <see cref="Image"/> on the CPU.
         /// </summary>
-        public Image GetDataAsImsage()
+        public Image GetDataAsImage()
         {
             using (var stagingTexture = ToStaging())
-                return GetDataAsImsage(stagingTexture);
+                return GetDataAsImage(stagingTexture);
         }
 
         /// <summary>
@@ -870,7 +922,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="stagingTexture">The staging texture used to temporary transfer the image from the GPU to CPU.</param>
         /// <exception cref="ArgumentException">If stagingTexture is not a staging texture.</exception>
-        public Image GetDataAsImsage(Texture stagingTexture)
+        public Image GetDataAsImage(Texture stagingTexture)
         {
             if (stagingTexture.Description.Usage != ResourceUsage.Staging)
                 throw new ArgumentException("Invalid texture used as staging. Must have Usage = ResourceUsage.Staging", "stagingTexture");
@@ -904,7 +956,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <exception cref="ArgumentException">If stagingTexture is not a staging texture.</exception>
         public void Save(Stream stream, Texture stagingTexture, ImageFileType fileType)
         {
-            using (var image = GetDataAsImsage(stagingTexture))
+            using (var image = GetDataAsImage(stagingTexture))
                 image.Save(stream, fileType);
         }
 
