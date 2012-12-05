@@ -1317,7 +1317,7 @@ namespace SharpDX
         {
             IntPtr result = LoadLibrary_(dllName);
             if (result == IntPtr.Zero)
-                throw new SharpDXException(dllName);
+                throw new DllNotFoundException(string.Format("Unable to find [{0}] in the PATH", dllName));
             return result;
         }
 
