@@ -28,6 +28,7 @@ using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 using Matrix = SharpDX.Matrix;
+using TextAntialiasMode = SharpDX.Direct2D1.TextAntialiasMode;
 
 namespace CommonDX
 {
