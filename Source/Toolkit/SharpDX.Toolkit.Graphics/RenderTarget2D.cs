@@ -208,7 +208,7 @@ namespace SharpDX.Toolkit.Graphics
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
         public static RenderTarget2D New(GraphicsDevice device, int width, int height, PixelFormat format, TextureFlags flags = TextureFlags.RenderTarget | TextureFlags.ShaderResource, int arraySize = 1)
         {
-            return New(device, width, height, false, format, flags | TextureFlags.RenderTarget, arraySize);
+            return New(device, width, height, false, format, flags, arraySize);
         }
 
         /// <summary>
@@ -227,7 +227,7 @@ namespace SharpDX.Toolkit.Graphics
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
         public static RenderTarget2D New(GraphicsDevice device, int width, int height, MipMapCount mipCount, PixelFormat format, TextureFlags flags = TextureFlags.RenderTarget | TextureFlags.ShaderResource, int arraySize = 1)
         {
-            return new RenderTarget2D(device, NewRenderTargetDescription(device.MainDevice, width, height, format, flags | TextureFlags.RenderTarget, mipCount, arraySize, MSAALevel.None));
+            return new RenderTarget2D(device, CreateDescription(device.MainDevice, width, height, format, flags, mipCount, arraySize, MSAALevel.None));
         }
 
         /// <summary>
@@ -245,11 +245,68 @@ namespace SharpDX.Toolkit.Graphics
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
         public static RenderTarget2D New(GraphicsDevice device, int width, int height, MSAALevel multiSampleCount, PixelFormat format, int arraySize = 1)
         {
-            return new RenderTarget2D(device, NewRenderTargetDescription(device.MainDevice, width, height, format, TextureFlags.RenderTarget, 1, arraySize, multiSampleCount));
+            return new RenderTarget2D(device, CreateDescription(device.MainDevice, width, height, format, TextureFlags.RenderTarget, 1, arraySize, multiSampleCount));
         }
 
-        protected static Texture2DDescription NewRenderTargetDescription(GraphicsDevice device, int width, int height, PixelFormat format, TextureFlags textureFlags, int mipCount, int arraySize, MSAALevel multiSampleCount)
+        /// <summary>
+        /// Creates a new texture description for a <see cref="RenderTarget2D" /> with a single mipmap.
+        /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="format">Describes the format to use.</param>
+        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
+        /// <param name="arraySize">Size of the texture 2D array, default to 1.</param>
+        /// <returns>A new instance of <see cref="RenderTarget2D" /> class.</returns>
+        /// <msdn-id>ff476521</msdn-id>
+        ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
+        ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
+        public static Texture2DDescription CreateDescription(GraphicsDevice device, int width, int height, PixelFormat format, TextureFlags flags = TextureFlags.RenderTarget | TextureFlags.ShaderResource, int arraySize = 1)
         {
+            return CreateDescription(device, width, height, false, format, flags, arraySize);
+        }
+
+        /// <summary>
+        /// Creates a new texture description <see cref="RenderTarget2D" />.
+        /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="mipCount">Number of mipmaps, set to true to have all mipmaps, set to an int >=1 for a particular mipmap count.</param>
+        /// <param name="format">Describes the format to use.</param>
+        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
+        /// <param name="arraySize">Size of the texture 2D array, default to 1.</param>
+        /// <returns>A new instance of <see cref="RenderTarget2D" /> class.</returns>
+        /// <msdn-id>ff476521</msdn-id>
+        ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
+        ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
+        public static Texture2DDescription CreateDescription(GraphicsDevice device, int width, int height, MipMapCount mipCount, PixelFormat format, TextureFlags flags = TextureFlags.RenderTarget | TextureFlags.ShaderResource, int arraySize = 1)
+        {
+            return CreateDescription(device.MainDevice, width, height, format, flags, mipCount, arraySize, MSAALevel.None);
+        }
+
+        /// <summary>
+        /// Creates a new texture description <see cref="RenderTarget2D" /> using multisampling.
+        /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="format">Describes the format to use.</param>
+        /// <param name="arraySize">Size of the texture 2D array, default to 1.</param>
+        /// <param name="multiSampleCount">The multisample count.</param>
+        /// <returns>A new instance of <see cref="RenderTarget2D" /> class.</returns>
+        /// <msdn-id>ff476521</msdn-id>
+        ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
+        ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
+        public static Texture2DDescription CreateDescription(GraphicsDevice device, int width, int height, MSAALevel multiSampleCount, PixelFormat format, int arraySize = 1)
+        {
+            return CreateDescription(device.MainDevice, width, height, format, TextureFlags.RenderTarget, 1, arraySize, multiSampleCount);
+        }
+
+        internal static Texture2DDescription CreateDescription(GraphicsDevice device, int width, int height, PixelFormat format, TextureFlags textureFlags, int mipCount, int arraySize, MSAALevel multiSampleCount)
+        {
+            // Make sure that the texture to create is a render target
+            textureFlags |= TextureFlags.RenderTarget;
             var desc = Texture2DBase.NewDescription(width, height, format, textureFlags, mipCount, arraySize, ResourceUsage.Default);
 
             // Sets the MSAALevel
