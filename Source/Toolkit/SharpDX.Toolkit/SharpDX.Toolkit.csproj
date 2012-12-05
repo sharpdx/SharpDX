@@ -26,8 +26,16 @@
     <Compile Include="Diagnostics\LogMessageType.cs" />
     <Compile Include="Diagnostics\Logger.cs" />
     <Compile Include="Diagnostics\NamespaceDoc.cs" />
+    <Compile Include="Graphics\AttributeData.cs" />
+    <Compile Include="Graphics\ModelData.IndexBuffer.cs" />
+    <Compile Include="Graphics\ModelData.VertexBuffer.cs" />
+    <Compile Include="Graphics\ModelData.Bone.cs" />
+    <Compile Include="Graphics\ModelData.Mesh.cs" />
+    <Compile Include="Graphics\ModelData.MeshPart.cs" />
     <Compile Include="Graphics\DisplayOrientation.cs" />
+    <Compile Include="Graphics\ModelData.cs" />
     <Compile Include="Graphics\NamespaceDoc.cs" />
+    <Compile Include="Graphics\ReadOnlyArray.cs" />
     <Compile Include="Graphics\SpriteFontData.AngelCodeBMFontLoader.cs" />
     <Compile Include="Graphics\SpriteFontData.MakeSpriteFontLoader.cs" />
     <Compile Include="Graphics\SpriteFontData.Kerning.cs" />
@@ -35,7 +43,7 @@
     <Compile Include="Graphics\EffectData.ShaderLink.cs" />
     <Compile Include="Graphics\EffectData.Signature.cs" />
     <Compile Include="Graphics\EffectData.Semantic.cs" />
-    <Compile Include="Graphics\EffectData.Attribute.cs" />
+    <Compile Include="Graphics\EffectData.AttributeKeys.cs" />
     <Compile Include="Graphics\EffectData.Pipeline.cs" />
     <Compile Include="Graphics\EffectData.ConstantBuffer.cs" />
     <Compile Include="Graphics\EffectData.Pass.cs" />
@@ -48,6 +56,9 @@
     <Compile Include="Graphics\EffectCompilerFlags.cs" />
     <Compile Include="Graphics\SpriteFontData.cs" />
     <Compile Include="Graphics\SpriteFontDataContentReader.cs" />
+    <Compile Include="Graphics\VertexBufferLayout.cs" />
+    <Compile Include="Graphics\VertexElement.cs" />
+    <Compile Include="Graphics\VertexElementAttribute.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\..\SharedAssemblyInfo.cs">

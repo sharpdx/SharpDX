@@ -40,7 +40,6 @@
     <Compile Include="ImageContentReader.cs" />
     <Compile Include="InputSignatureKey.cs" />
     <Compile Include="InputSignatureManager.cs" />
-    <Compile Include="ReadOnlyArray.cs" />
     <Compile Include="RasterizerStateCollection.cs" />
     <Compile Include="SamplerStateCollection.cs" />
     <Compile Include="DepthStencilStateCollection.cs" />
@@ -62,7 +61,7 @@
     <Compile Include="Buffer.Argument.cs" />
     <Compile Include="Buffer.Typed.cs" />
     <Compile Include="EffectConstantBufferCollection.cs" />
-    <Compile Include="EffectAttributeCollection.cs" />
+    <Compile Include="AttributeCollection.cs" />
     <Compile Include="EffectConstantBuffer.cs" />
     <Compile Include="ComponentCollection.cs" />
     <Compile Include="EffectPool.cs" />
@@ -130,9 +129,6 @@
     <Compile Include="ShaderResourceViewSelector.cs" />
     <Compile Include="RenderTargetViewSelector.cs" />
     <Compile Include="VertexInputLayout.cs" />
-    <Compile Include="VertexElementAttribute.cs" />
-    <Compile Include="VertexBufferLayout.cs" />
-    <Compile Include="VertexElement.cs" />
     <Compile Include="VertexPositionTexture.cs" />
     <Compile Include="VertexPositionNormalTexture.cs" />
     <Compile Include="VertexPositionColorTexture.cs" />

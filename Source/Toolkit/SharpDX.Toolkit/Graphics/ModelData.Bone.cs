@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,51 +18,49 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Collections.Generic;
 using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public partial class EffectData 
+    public sealed partial class ModelData
     {
         /// <summary>
-        /// Describes a pass from a technique.
+        /// Class Bone
         /// </summary>
-        public sealed class Pass : IDataSerializable
+        public struct Bone : IDataSerializable
         {
             /// <summary>
-            /// Name of this pass.
+            /// The index of this bone into the bone collection of the model.
+            /// </summary>
+            public int Index;
+
+            /// <summary>
+            /// Gets parent bone index.
+            /// </summary>
+            public int ParentIndex;
+
+            /// <summary>
+            /// The transform this bone relative to its parent bone.
+            /// </summary>
+            public Matrix Transform;
+
+            /// <summary>
+            /// The name of this bone.
             /// </summary>
             public string Name;
 
             /// <summary>
-            /// True if this pass is the sub-pass of a root pass.
+            /// The children bone indices.
             /// </summary>
-            public bool IsSubPass;
+            public int[] Children;
 
-            /// <summary>
-            /// List of <see cref="AttributeData"/>.
-            /// </summary>
-            public List<AttributeData> Attributes;
-
-            /// <summary>
-            /// Description of the shader stage <see cref="Pipeline"/>.
-            /// </summary>
-            public Pipeline Pipeline;
-
-            public override string ToString()
-            {
-                return string.Format("Pass: [{0}], SubPass: {1}, Attributes({2})", Name, IsSubPass, Attributes.Count);
-            }
-
-            /// <inheritdoc/>
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
-                serializer.Serialize(ref Name, SerializeFlags.Nullable);
-
-                serializer.Serialize(ref IsSubPass);
-                serializer.Serialize(ref Attributes);
-                serializer.Serialize(ref Pipeline);
+                serializer.Serialize(ref Index);
+                serializer.Serialize(ref ParentIndex);
+                serializer.Serialize(ref Transform);
+                serializer.Serialize(ref Name, false, SerializeFlags.Nullable);
+                serializer.Serialize(ref Children, serializer.Serialize, SerializeFlags.Nullable);
             }
         }
     }

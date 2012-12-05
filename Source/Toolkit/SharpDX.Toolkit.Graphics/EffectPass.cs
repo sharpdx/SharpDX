@@ -54,7 +54,7 @@ namespace SharpDX.Toolkit.Graphics
         ///   Gets the attributes associated with this pass.
         /// </summary>
         /// <value> The attributes. </value>
-        public readonly EffectAttributeCollection Attributes;
+        public readonly AttributeCollection Attributes;
 
         /// <summary>
         /// The parent effect of this pass.
@@ -759,9 +759,9 @@ namespace SharpDX.Toolkit.Graphics
         }
 
 
-        private EffectAttributeCollection PrepareAttributes(Logger logger, List<EffectData.Attribute> attributes)
+        private AttributeCollection PrepareAttributes(Logger logger, List<AttributeData> attributes)
         {
-            attributes = new List<EffectData.Attribute>(attributes);
+            attributes = new List<AttributeData>(attributes);
 
             for (int i = 0; i < attributes.Count; i++)
             {
@@ -769,28 +769,28 @@ namespace SharpDX.Toolkit.Graphics
                 bool attributeHandled = true;
                 switch (attribute.Name)
                 {
-                    case EffectData.Attribute.Blending:
+                    case EffectData.AttributeKeys.Blending:
                         BlendState = graphicsDevice.BlendStates[(string) attribute.Value];
                         if (BlendState == null)
                             logger.Error("Unable to find registered BlendState [{0}]", (string)attribute.Value);
                         break;
-                    case EffectData.Attribute.BlendingColor:
+                    case EffectData.AttributeKeys.BlendingColor:
                         BlendStateColor = (Color4) (Vector4) attribute.Value;
                         break;
-                    case EffectData.Attribute.BlendingSampleMask:
+                    case EffectData.AttributeKeys.BlendingSampleMask:
                         BlendStateSampleMask = (uint) attribute.Value;
                         break;
 
-                    case EffectData.Attribute.DepthStencil:
+                    case EffectData.AttributeKeys.DepthStencil:
                         DepthStencilState = graphicsDevice.DepthStencilStates[(string) attribute.Value];
                         if (DepthStencilState == null)
                             logger.Error("Unable to find registered DepthStencilState [{0}]", (string)attribute.Value);
                         break;
-                    case EffectData.Attribute.DepthStencilReference:
+                    case EffectData.AttributeKeys.DepthStencilReference:
                         DepthStencilReference = (int) attribute.Value;
                         break;
 
-                    case EffectData.Attribute.Rasterizer:
+                    case EffectData.AttributeKeys.Rasterizer:
                         RasterizerState = graphicsDevice.RasterizerStates[(string) attribute.Value];
                         if (RasterizerState == null)
                             logger.Error("Unable to find registered RasterizerState [{0}]", (string)attribute.Value);
@@ -807,7 +807,7 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
 
-            return new EffectAttributeCollection(attributes);
+            return new AttributeCollection(attributes);
         }
 
 

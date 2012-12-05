@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,50 +19,29 @@
 // THE SOFTWARE.
 
 using System.Collections.Generic;
+
 using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public partial class EffectData 
+    public sealed partial class ModelData
     {
-        /// <summary>
-        /// Describes a pass from a technique.
-        /// </summary>
-        public sealed class Pass : IDataSerializable
+        public sealed class IndexBuffer : IDataSerializable
         {
             /// <summary>
-            /// Name of this pass.
+            /// The number of indices stored in this index buffer.
             /// </summary>
-            public string Name;
+            public int Count;
 
             /// <summary>
-            /// True if this pass is the sub-pass of a root pass.
+            /// Gets the index buffer for this mesh part.
             /// </summary>
-            public bool IsSubPass;
+            public byte[] Buffer;
 
-            /// <summary>
-            /// List of <see cref="AttributeData"/>.
-            /// </summary>
-            public List<AttributeData> Attributes;
-
-            /// <summary>
-            /// Description of the shader stage <see cref="Pipeline"/>.
-            /// </summary>
-            public Pipeline Pipeline;
-
-            public override string ToString()
-            {
-                return string.Format("Pass: [{0}], SubPass: {1}, Attributes({2})", Name, IsSubPass, Attributes.Count);
-            }
-
-            /// <inheritdoc/>
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
-                serializer.Serialize(ref Name, SerializeFlags.Nullable);
-
-                serializer.Serialize(ref IsSubPass);
-                serializer.Serialize(ref Attributes);
-                serializer.Serialize(ref Pipeline);
+                serializer.Serialize(ref Count);
+                serializer.Serialize(ref Buffer);
             }
         }
     }

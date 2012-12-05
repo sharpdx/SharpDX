@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,50 +19,50 @@
 // THE SOFTWARE.
 
 using System.Collections.Generic;
+
 using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public partial class EffectData 
+    public sealed partial class ModelData
     {
         /// <summary>
-        /// Describes a pass from a technique.
+        /// Class Mesh
         /// </summary>
-        public sealed class Pass : IDataSerializable
+        public sealed class Mesh : IDataSerializable
         {
             /// <summary>
-            /// Name of this pass.
+            /// Index of this mesh into the mesh collection.
+            /// </summary>
+            public int Index;
+
+            /// <summary>
+            /// Index of the parent bone for this mesh. The parent bone of a mesh contains a transformation matrix that describes how the mesh is located relative to any parent meshes in a model.
+            /// </summary>
+            public int ParentBoneIndex;
+
+            /// <summary>
+            /// Gets the name of this mesh.
             /// </summary>
             public string Name;
 
             /// <summary>
-            /// True if this pass is the sub-pass of a root pass.
+            /// Gets the <see cref="MeshPart"/> instances that make up this mesh. Each part of a mesh is composed of a set of primitives that share the same material. 
             /// </summary>
-            public bool IsSubPass;
+            public List<MeshPart> MeshParts;
 
             /// <summary>
-            /// List of <see cref="AttributeData"/>.
+            /// Gets attributes attached to this mesh.
             /// </summary>
             public List<AttributeData> Attributes;
 
-            /// <summary>
-            /// Description of the shader stage <see cref="Pipeline"/>.
-            /// </summary>
-            public Pipeline Pipeline;
-
-            public override string ToString()
+            public void Serialize(BinarySerializer serializer)
             {
-                return string.Format("Pass: [{0}], SubPass: {1}, Attributes({2})", Name, IsSubPass, Attributes.Count);
-            }
-
-            /// <inheritdoc/>
-            void IDataSerializable.Serialize(BinarySerializer serializer)
-            {
-                serializer.Serialize(ref Name, SerializeFlags.Nullable);
-
-                serializer.Serialize(ref IsSubPass);
+                serializer.Serialize(ref Index);
+                serializer.Serialize(ref ParentBoneIndex);
+                serializer.Serialize(ref Name, false, SerializeFlags.Nullable);
+                serializer.Serialize(ref MeshParts);
                 serializer.Serialize(ref Attributes);
-                serializer.Serialize(ref Pipeline);
             }
         }
     }

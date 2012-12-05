@@ -203,7 +203,7 @@ namespace SharpDX.Toolkit.Graphics
                        {
                            Name = passAst.Name,
                            Pipeline = new EffectData.Pipeline(),
-                           Attributes = new List<EffectData.Attribute>()
+                           Attributes = new List<AttributeData>()
                        };
 
             // Clear current exports
@@ -265,21 +265,21 @@ namespace SharpDX.Toolkit.Graphics
                     HandleExport(expression.Value);
                     break;
 
-                case EffectData.Attribute.Blending:
-                case EffectData.Attribute.DepthStencil:
-                case EffectData.Attribute.Rasterizer:
+                case EffectData.AttributeKeys.Blending:
+                case EffectData.AttributeKeys.DepthStencil:
+                case EffectData.AttributeKeys.Rasterizer:
                     HandleAttribute<string>(expression);
                     break;
 
-                case EffectData.Attribute.BlendingColor:
+                case EffectData.AttributeKeys.BlendingColor:
                     HandleAttribute<Vector4>(expression);
                     break;
 
-                case EffectData.Attribute.BlendingSampleMask:
+                case EffectData.AttributeKeys.BlendingSampleMask:
                     HandleAttribute<uint>(expression);
                     break;
 
-                case EffectData.Attribute.DepthStencilReference:
+                case EffectData.AttributeKeys.DepthStencilReference:
                     HandleAttribute<int>(expression);
                     break;
                 case "ShareConstantBuffers":
@@ -435,7 +435,7 @@ namespace SharpDX.Toolkit.Graphics
             object value;
             if (ExtractValue(expression.Value, out value))
             {
-                var attribute = new EffectData.Attribute() {Name = expression.Name.Text, Value = value};
+                var attribute = new AttributeData() {Name = expression.Name.Text, Value = value};
                 pass.Attributes.Add(attribute);
             }
         }
@@ -462,7 +462,7 @@ namespace SharpDX.Toolkit.Graphics
                     }
                 }
 
-                var attribute = new EffectData.Attribute() { Name = expression.Name.Text, Value = value };
+                var attribute = new AttributeData() { Name = expression.Name.Text, Value = value };
                 pass.Attributes.Add(attribute);
             }
         }

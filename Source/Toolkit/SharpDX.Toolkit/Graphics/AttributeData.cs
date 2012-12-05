@@ -22,41 +22,31 @@ using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public partial class EffectData 
+    /// <summary>
+    /// An attribute defined for a <see cref="EffectData.Pass"/> or <see cref="Model"/>.
+    /// </summary>
+    public sealed class AttributeData : IDataSerializable
     {
         /// <summary>
-        /// An attribute defined for a <see cref="Pass"/>.
+        /// Name of this attribute.
         /// </summary>
-        public sealed class Attribute : IDataSerializable
+        public string Name;
+
+        /// <summary>
+        /// Value of this attribute.
+        /// </summary>
+        public object Value;
+
+        public override string ToString()
         {
-            public const string Blending = "Blending";
-            public const string BlendingColor = "BlendingColor";
-            public const string BlendingSampleMask = "BlendingSampleMask";
-            public const string DepthStencil = "DepthStencil";
-            public const string DepthStencilReference = "DepthStencilReference";
-            public const string Rasterizer = "Rasterizer";
+            return string.Format("{0} = {1}", Name, Value);
+        }
 
-            /// <summary>
-            /// Name of this attribute.
-            /// </summary>
-            public string Name;
-
-            /// <summary>
-            /// Value of this attribute.
-            /// </summary>
-            public object Value;
-
-            public override string ToString()
-            {
-                return string.Format("{0} = {1}", Name, Value);
-            }
-
-            /// <inheritdoc/>
-            void IDataSerializable.Serialize(BinarySerializer serializer)
-            {
-                serializer.Serialize(ref Name);
-                serializer.SerializeDynamic(ref Value, SerializeFlags.Nullable);
-            }
+        /// <inheritdoc/>
+        void IDataSerializable.Serialize(BinarySerializer serializer)
+        {
+            serializer.Serialize(ref Name);
+            serializer.SerializeDynamic(ref Value, SerializeFlags.Nullable);
         }
     }
 }
