@@ -49,6 +49,9 @@
     <create class="BitmapDecoderGuids" visibility="public sealed"/>
     <const from-guid="CLSID_WIC(.*)Decoder" class="SharpDX.WIC.BitmapDecoderGuids" type="System.Guid" name="$1">new System.Guid("$1")</const>
 
+    <create class="ResultCode" visibility="public"/>
+    <const from-macro="WINCODEC_ERR_(.*)" type="SharpDX.ResultDescriptor" cpp-type="int" name="$1" class="SharpDX.WIC.ResultCode" visibility="public static readonly">new SharpDX.ResultDescriptor($1, "$3", "$0", "$2")</const>
+
     <context-clear />
   </extension>
 
