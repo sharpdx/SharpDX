@@ -209,20 +209,22 @@ namespace SharpDX.XAudio2
         {
             unsafe
             {
-                SharpDX.XAudio2.BufferWma bufferWmaRef;
                 if (decodedXMWAPacketInfo != null)
                 {
                     fixed (void* pBuffer = decodedXMWAPacketInfo)
                     {
+                        SharpDX.XAudio2.BufferWma bufferWmaRef;
                         bufferWmaRef.PacketCount = decodedXMWAPacketInfo.Length;
                         bufferWmaRef.DecodedPacketCumulativeBytesPointer = (IntPtr)pBuffer;
                         SubmitSourceBuffer(bufferRef, new IntPtr(&bufferWmaRef));
                     }
                 }
-                SubmitSourceBuffer(bufferRef, IntPtr.Zero);
+                else
+                {
+                    SubmitSourceBuffer(bufferRef, IntPtr.Zero);
+                }
             }
         }
-
 
         protected override void Dispose(bool disposing)
         {
