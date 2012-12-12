@@ -39,6 +39,12 @@ namespace SharpDX.XInput
         }
 
         /// <summary>
+        /// Gets the <see cref="UserIndex"/> associated with this controller.
+        /// </summary>
+        /// <value>The index of the user.</value>
+        public UserIndex UserIndex { get { return this.userIndex; } }
+
+        /// <summary>
         /// Gets the battery information.
         /// </summary>
         /// <param name="batteryDeviceType">Type of the battery device.</param>
@@ -83,13 +89,23 @@ namespace SharpDX.XInput
         /// <summary>
         /// Gets the state.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The state of this controller.</returns>
         public State GetState()
         {
             State temp;
             var result = ErrorCodeHelper.ToResult(XInput.XInputGetState((int)userIndex, out temp));
             result.CheckError();
             return temp;
+        }
+
+        /// <summary>
+        /// Gets the state.
+        /// </summary>
+        /// <param name="state">The state of this controller.</param>
+        /// <returns><c>true</c> if the controller is connected, <c>false</c> otherwise.</returns>
+        public bool GetState(out State state)
+        {
+            return XInput.XInputGetState((int)userIndex, out state) == (int)ErrorCode.Success;
         }
 
         /// <summary>
