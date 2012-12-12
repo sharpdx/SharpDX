@@ -20,12 +20,14 @@
 #if WIN8METRO
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
 using SharpDX.DXGI;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
+using SharpDX.IO;
 using SharpDX.Toolkit.Graphics;
 using Windows.ApplicationModel;
 using Windows.UI.Xaml.Media;
@@ -79,6 +81,53 @@ namespace SharpDX.Toolkit
                 CompositionTarget.Rendering += CompositionTarget_Rendering;
             }
         }
+
+        public override List<GraphicsDeviceInformation> FindBestDevices(GameGraphicsParameters prefferedParameters)
+        {
+            var graphicsDeviceInfos = base.FindBestDevices(prefferedParameters);
+
+            // Special case where the default FindBestDevices is not working
+            if (graphicsDeviceInfos.Count == 0)
+            {
+                var graphicsAdapter = GraphicsAdapter.Adapters[0];
+
+                // Iterate on each preferred graphics profile
+                foreach (var featureLevel in prefferedParameters.PreferredGraphicsProfile)
+                {
+                    // Check if this profile is supported.
+                    if (graphicsAdapter.IsProfileSupported(featureLevel))
+                    {
+                        var deviceInfo = new GraphicsDeviceInformation
+                                             {
+                                                 Adapter = graphicsAdapter,
+                                                 GraphicsProfile = featureLevel,
+                                                 PresentationParameters =
+                                                     {
+                                                         MultiSampleCount = MSAALevel.None,
+                                                         IsFullScreen = prefferedParameters.IsFullScreen,
+                                                         PresentationInterval = prefferedParameters.SynchronizeWithVerticalRetrace ? PresentInterval.One : PresentInterval.Immediate,
+                                                         DeviceWindowHandle = Window.NativeWindow,
+                                                         RenderTargetUsage = Usage.BackBuffer | Usage.RenderTargetOutput
+                                                     }
+                                             };
+
+                        // Hardcoded format and refresh rate...
+                        // This is a workaround to allow this code to work inside the emulator
+                        // but this is not really robust
+                        // TODO: Check how to handle this case properly
+                        var displayMode = new DisplayMode(DXGI.Format.B8G8R8A8_UNorm, gameWindowWinRT.ClientBounds.Width, gameWindowWinRT.ClientBounds.Height, new Rational(60, 1));
+                        AddDevice(graphicsAdapter, displayMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
+
+                        // If the profile is supported, we are just using the first best one
+                        break;
+                    }
+                }
+            }
+
+            return graphicsDeviceInfos;
+        }
+
+
 
         void CompositionTarget_Rendering(object sender, object e)
         {

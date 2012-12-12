@@ -27,6 +27,7 @@ using SharpDX.Toolkit.Graphics;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.Graphics.Display;
+using Windows.UI.Xaml.Controls;
 
 namespace SharpDX.Toolkit
 {
@@ -43,6 +44,8 @@ namespace SharpDX.Toolkit
 
         private VoidAction initCallback;
         private VoidAction tickCallback;
+
+        private DrawingRectangle clientBounds;
 
         internal GameWindowWinRT()
         {
@@ -85,16 +88,14 @@ namespace SharpDX.Toolkit
 
             if (windowContext != null)
             {
-                try
-                {
-                    // Just check that the window context is implementing ISwapChainBackgroundPanelNative
-                    var nativePanel = ComObject.As<ISwapChainBackgroundPanelNative>(windowContext);
-                    IsSwapChainBackgroundPanel = true;
-                    nativePanel.Dispose();
-                } catch (SharpDXException ex)
+                var swapChainBackgroundPanel = windowContext as SwapChainBackgroundPanel;
+                if (swapChainBackgroundPanel == null)
                 {
                     throw new NotSupportedException(string.Format("Unsupported window context [{0}]. Only null or SwapChainBackgroundPanel", nativeWindow.GetType().FullName));
                 }
+
+                clientBounds = new DrawingRectangle(0, 0, (int)swapChainBackgroundPanel.ActualWidth, (int)swapChainBackgroundPanel.ActualHeight);
+                IsSwapChainBackgroundPanel = true;
             }
         }
 
@@ -123,7 +124,7 @@ namespace SharpDX.Toolkit
                     return new DrawingRectangle(0, 0, (int)(CoreWindow.Bounds.Width * DisplayProperties.LogicalDpi / 96.0), (int)(CoreWindow.Bounds.Height * DisplayProperties.LogicalDpi / 96.0));
                 }
 
-                return DrawingRectangle.Empty;
+                return clientBounds;
             }
         }
 
