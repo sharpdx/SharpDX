@@ -117,7 +117,7 @@ namespace SharpDX.Toolkit.Graphics
                         && supportedDisplayMode.Format == Format.R8G8B8A8_UNorm)
                     {
                         // Stupid DXGI, there is no way to get the DXGI.Format, nor the refresh rate.
-                        CurrentDisplayMode = new DisplayMode(new ModeDescription(outputDescription.DesktopBounds.Width, outputDescription.DesktopBounds.Height, supportedDisplayMode.RefreshRate, Format.R8G8B8A8_UNorm));
+                        CurrentDisplayMode = new DisplayMode(Format.R8G8B8A8_UNorm, outputDescription.DesktopBounds.Width, outputDescription.DesktopBounds.Height, supportedDisplayMode.RefreshRate);
                         break;
                     }
                 }
@@ -247,27 +247,49 @@ namespace SharpDX.Toolkit.Graphics
             var modeAvailable = new List<DisplayMode>();
             var modeMap = new Dictionary<string, DisplayMode>();
 
-            foreach (var format in Enum.GetValues(typeof(DXGI.Format)))
+#if DIRECTX11_1
+            var output1 = output.QueryInterface<Output1>();
+#endif
+
+            try
             {
+                foreach (var format in Enum.GetValues(typeof(DXGI.Format)))
+                {
+#if DIRECTX11_1
+                    var modes = output1.GetDisplayModeList1(
+                        (Format)format,
+                        DisplayModeEnumerationFlags.Interlaced |
+                        DisplayModeEnumerationFlags.Scaling);
+#else
                 var modes = output.GetDisplayModeList((Format)format,
                                                       DisplayModeEnumerationFlags.Interlaced |
                                                       DisplayModeEnumerationFlags.Scaling);
+#endif
 
-                foreach (var mode in modes)
-                {
-                    if (mode.Scaling == DisplayModeScaling.Unspecified)
+
+                    foreach (var mode in modes)
                     {
-                        string key = format + ";" + mode.Width + ";" + mode.Height + ";" + mode.RefreshRate.Numerator + ";" + mode.RefreshRate.Denominator;
-
-                        DisplayMode oldMode;
-                        if (!modeMap.TryGetValue(key, out oldMode))
+                        if (mode.Scaling == DisplayModeScaling.Unspecified)
                         {
-                            var displayMode = new DisplayMode(mode);
+                            string key = format + ";" + mode.Width + ";" + mode.Height + ";" + mode.RefreshRate.Numerator + ";" + mode.RefreshRate.Denominator;
 
-                            modeMap.Add(key, displayMode);
-                            modeAvailable.Add(displayMode);
+                            DisplayMode oldMode;
+                            if (!modeMap.TryGetValue(key, out oldMode))
+                            {
+                                var displayMode = new DisplayMode(mode.Format, mode.Width, mode.Height, mode.RefreshRate);
+
+                                modeMap.Add(key, displayMode);
+                                modeAvailable.Add(displayMode);
+                            }
                         }
                     }
+                }
+            }
+            catch (SharpDXException dxgiException)
+            {
+                if (dxgiException.ResultCode != DXGI.ResultCode.NotCurrentlyAvailable)
+                {
+                    throw;
                 }
             }
             return modeAvailable.ToArray();

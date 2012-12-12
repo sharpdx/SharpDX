@@ -31,11 +31,20 @@ namespace SharpDX.Toolkit.Graphics
     /// <unmanaged-short>DXGI_MODE_DESC</unmanaged-short>	
     public class DisplayMode
     {
-        private ModeDescription modeDescription;
+        private DXGI.Format pixelFormat;
 
-        internal DisplayMode(ModeDescription modeDescription)
+        private int width;
+
+        private int height;
+
+        private Rational refreshRate;
+
+        public DisplayMode(Format pixelFormat, int width, int height, Rational refreshRate)
         {
-            this.modeDescription = modeDescription;
+            this.pixelFormat = pixelFormat;
+            this.width = width;
+            this.height = height;
+            this.refreshRate = refreshRate;
         }
 
         /// <summary>
@@ -63,7 +72,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             get
             {
-                return (PixelFormat)modeDescription.Format;   
+                return (PixelFormat)pixelFormat;   
             }            
         }
 
@@ -77,7 +86,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             get
             {
-                return modeDescription.Width;
+                return width;
             }
         }
 
@@ -91,7 +100,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             get
             {
-                return modeDescription.Height;
+                return height;
             }
         }
 
@@ -105,7 +114,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             get
             {
-                return modeDescription.RefreshRate;
+                return refreshRate;
             }
         }
 
