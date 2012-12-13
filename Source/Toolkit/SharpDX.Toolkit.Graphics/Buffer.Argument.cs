@@ -30,7 +30,7 @@ namespace SharpDX.Toolkit.Graphics
         public static class Argument
         {
             /// <summary>
-            /// Creates a new Argument buffer <see cref="ResourceUsage.Default"/> uasge.
+            /// Creates a new Argument buffer <see cref="ResourceUsage.Default"/> usage.
             /// </summary>
             /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="size">The size in bytes.</param>
@@ -42,7 +42,7 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             /// <summary>
-            /// Creates a new Argument buffer <see cref="ResourceUsage.Default"/> uasge.
+            /// Creates a new Argument buffer <see cref="ResourceUsage.Default"/> usage.
             /// </summary>
             /// <typeparam name="T">Type of the Argument buffer to get the sizeof from</typeparam>
             /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
@@ -54,7 +54,7 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             /// <summary>
-            /// Creates a new Argument buffer <see cref="ResourceUsage.Default"/> uasge.
+            /// Creates a new Argument buffer <see cref="ResourceUsage.Default"/> usage.
             /// </summary>
             /// <typeparam name="T">Type of the Argument buffer to get the sizeof from</typeparam>
             /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
