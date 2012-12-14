@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+
 using SharpDX.Toolkit.Content;
 using SharpDX.Toolkit.Diagnostics;
 
@@ -242,11 +243,36 @@ namespace SharpDX.Toolkit.Graphics
 
             //// Sort all parameters by their resource types
             //// in order to achieve better local cache coherency in resource linker
-            //Parameters.Items.Sort((left, right) => (int)left.ResourceType - (int)right.ResourceType);
+            Parameters.Items.Sort((left, right) =>
+                {
+                    // First, order first all value types, then resource type
+                    var comparison = left.IsValueType != right.IsValueType ? left.IsValueType ? -1 : 1 : 0;
+
+                    // If same type
+                    if (comparison == 0)
+                    {
+                        // Order by resource type
+                        comparison = ((int)left.ResourceType).CompareTo((int)right.ResourceType);
+
+                        // If same, order by resource index
+                        if (comparison == 0)
+                        {
+                            comparison = left.Offset.CompareTo(right.Offset);
+                        }
+                    }
+                    return comparison;
+                });
 
             // Prelink constant buffers
+            int resourceIndex = 0;
             foreach (var parameter in Parameters)
             {
+                // Recalculate parameter resource index
+                if (!parameter.IsValueType)
+                {
+                    parameter.Offset = resourceIndex++;
+                }
+
                 // Set the default values 
                 parameter.SetDefaultValue();
 

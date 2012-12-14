@@ -41,14 +41,14 @@ namespace SharpDX.Toolkit.Graphics
         ShaderResourceView = 2,
 
         /// <summary>
-        /// An <see cref="Direct3D11.UnorderedAccessView"/>.
-        /// </summary>
-        UnorderedAccessView = 3,
-
-        /// <summary>
         /// A <see cref="Direct3D11.SamplerState"/>.
         /// </summary>
-        SamplerState = 4,
+        SamplerState = 3,
+
+        /// <summary>
+        /// An <see cref="Direct3D11.UnorderedAccessView"/>.
+        /// </summary>
+        UnorderedAccessView = 4,
     }
 
     /// <summary>
