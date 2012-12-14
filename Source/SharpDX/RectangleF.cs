@@ -181,6 +181,21 @@ namespace SharpDX
                 return result;
             }
         }
+        
+        /// <summary>
+        /// Checks, if specified screen coordinates is inside <see cref="SharpDX.RectangleF"/> 
+        /// </summary>
+        /// <param name="x">X screen coordinate.</param>
+        /// <param name="y">Y screen coordinate.</param>
+        /// <returns></returns>
+        public bool PointInside(float x, float y)
+        {
+            if (x >= _left && x <= _right && y >= _top && y <= _bottom)
+            {
+                return true;
+            }
+            return false;
+        }
 
         /// <summary>
         /// Performs an implicit conversion from <see cref="System.Drawing.RectangleF"/> to <see cref="SharpDX.RectangleF"/>.
