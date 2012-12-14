@@ -69,7 +69,7 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             /// <summary>
-            /// Creates a new Structured buffer <see cref="ResourceUsage.Default" /> uasge.
+            /// Creates a new Structured buffer <see cref="ResourceUsage.Default" /> usage.
             /// </summary>
             /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <typeparam name="T">Type of the Structured buffer to get the sizeof from</typeparam>
@@ -87,7 +87,7 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             /// <summary>
-            /// Creates a new Structured buffer <see cref="ResourceUsage.Default" /> uasge.
+            /// Creates a new Structured buffer <see cref="ResourceUsage.Default" /> usage.
             /// </summary>
             /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="value">The value to initialize the Structured buffer.</param>
@@ -140,7 +140,7 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             /// <summary>
-            /// Creates a new StructuredAppend buffer <see cref="ResourceUsage.Default" /> uasge.
+            /// Creates a new StructuredAppend buffer <see cref="ResourceUsage.Default" /> usage.
             /// </summary>
             /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <typeparam name="T">Type of the StructuredAppend buffer to get the sizeof from</typeparam>
@@ -153,7 +153,7 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             /// <summary>
-            /// Creates a new StructuredAppend buffer <see cref="ResourceUsage.Default" /> uasge.
+            /// Creates a new StructuredAppend buffer <see cref="ResourceUsage.Default" /> usage.
             /// </summary>
             /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="value">The value to initialize the StructuredAppend buffer.</param>
@@ -201,7 +201,7 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             /// <summary>
-            /// Creates a new StructuredCounter buffer <see cref="ResourceUsage.Default" /> uasge.
+            /// Creates a new StructuredCounter buffer <see cref="ResourceUsage.Default" /> usage.
             /// </summary>
             /// <typeparam name="T">Type of the StructuredCounter buffer to get the sizeof from</typeparam>
             /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
@@ -214,7 +214,7 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             /// <summary>
-            /// Creates a new StructuredCounter buffer <see cref="ResourceUsage.Default" /> uasge.
+            /// Creates a new StructuredCounter buffer <see cref="ResourceUsage.Default" /> usage.
             /// </summary>
             /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
             /// <param name="value">The value to initialize the StructuredCounter buffer.</param>
