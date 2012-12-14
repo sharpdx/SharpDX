@@ -57,7 +57,7 @@ namespace SharpDX
             Size = new Vector2(width, height);
         }
         
-                /// <summary>
+          /// <summary>
         /// Checks, if specified point is inside <see cref="SharpDX.DrawingRectangleF"/>.
         /// </summary>
         /// <param name="x">X point coordinate.</param>
@@ -65,7 +65,7 @@ namespace SharpDX
         /// <returns><c>true</c> if point is inside <see cref="SharpDX.DrawingRectangleF"/>, otherwise <c>false</c>.</returns>
         public bool Contains(int x, int y)
         {
-            if (x >= _left && x <= _right && y >= _top && y <= _bottom)
+            if (x >= X && x <= X+Width && y >= Y && y <= Y+Width)
             {
                 return true;
             }
@@ -80,7 +80,7 @@ namespace SharpDX
         /// <returns><c>true</c> if point is inside <see cref="SharpDX.DrawingRectangleF"/>, otherwise <c>false</c>.</returns>
         public bool Contains(float x, float y)
         {
-            if (x >= _left && x <= _right && y >= _top && y <= _bottom)
+            if (x >= X && x <= X+Width && y >= Y && y <= Y+Width)
             {
                 return true;
             }
@@ -94,7 +94,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <see cref="SharpDX.Vector2"/> is inside <see cref="SharpDX.DrawingRectangleF"/>, otherwise <c>false</c>.</returns>
         public bool Contains(Vector2 vector2D)
         {
-            if (vector2D.X >= _left && vector2D.X <= _right && vector2D.Y >= _top && vector2D.Y <= _bottom)
+            if (vector2D.X >= X && vector2D.X <= X+Width && vector2D.Y >= Y && vector2D.Y <= Y+Width)
             {
                 return true;
             }
@@ -108,7 +108,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <see cref="SharpDX.DrawingPoint"/> is inside <see cref="SharpDX.DrawingRectangleF"/>, otherwise <c>false</c>.</returns>
         public bool Contains(SharpDX.DrawingPoint point)
         {
-            if (point.X >= _left && point.X <= _right && point.Y >= _top && point.Y <= _bottom)
+            if (point.X >= X && point.X <= X+Width && point.Y >= Y && point.Y <= Y+Width)
             {
                 return true;
             }
@@ -122,12 +122,12 @@ namespace SharpDX
         /// <returns><c>true</c> if <see cref="SharpDX.DrawingPointF"/> is inside <see cref="SharpDX.DrawingRectangleF"/>, otherwise <c>false</c>.</returns>
         public bool Contains(SharpDX.DrawingPointF point)
         {
-            if (point.X >= _left && point.X <= _right && point.Y >= _top && point.Y <= _bottom)
+            if (point.X >= X && point.X <= X+Width && point.Y >= Y && point.Y <= Y+Width)
             {
                 return true;
             }
             return false;
-        } 
+        }  
 
         /// <summary>
         /// The Position.
