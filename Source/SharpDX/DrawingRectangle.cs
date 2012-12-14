@@ -112,7 +112,7 @@ namespace SharpDX
         /// <param name="x">X point coordinate.</param>
         /// <param name="y">Y point coordinate.</param>
         /// <returns><c>true</c> if point inside <see cref="SharpDX.DrawingRectangle"/>, <c>false</c> otherwise.</returns>
-        public bool PointInside(int x, int y)
+        public bool IsPointInside(int x, int y)
         { 
             if (x >= _left && x <= _right && y >= _top && y <= _bottom)
             {
