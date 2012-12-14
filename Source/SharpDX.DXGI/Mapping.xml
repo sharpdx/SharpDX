@@ -213,7 +213,7 @@
     <map method="IDXGIKeyedMutex::(.*)Sync" name="$1" />
     
     <map method="IDXGIOutput::FindClosestMatchingMode" visibility="internal" />
-    <map method="IDXGIOutput::GetDisplayModeList" visibility="internal" />
+    <map method="IDXGIOutput1?::GetDisplayModeList1?" visibility="internal" />
     <map method="IDXGIOutput::SetDisplaySurface" visibility="public" property="false" />
     <map method="IDXGIOutput::GetDisplaySurfaceData" name="CopyDisplaySurfaceTo" />
     <map method="IDXGIOutput::WaitForVBlank" name="WaitForVerticalBlank" />
