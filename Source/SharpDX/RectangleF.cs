@@ -65,6 +65,78 @@ namespace SharpDX
             _bottom = bottom;
         }
 
+                /// <summary>
+        /// Checks, if specified point is inside <see cref="SharpDX.RectangleF"/>.
+        /// </summary>
+        /// <param name="x">X point coordinate.</param>
+        /// <param name="y">Y point coordinate.</param>
+        /// <returns><c>true</c> if point is inside <see cref="SharpDX.RectangleF"/>, otherwise <c>false</c>.</returns>
+        public bool Contains(int x, int y)
+        {
+            if (x >= _left && x <= _right && y >= _top && y <= _bottom)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Checks, if specified point is inside <see cref="SharpDX.RectangleF"/>.
+        /// </summary>
+        /// <param name="x">X point coordinate.</param>
+        /// <param name="y">Y point coordinate.</param>
+        /// <returns><c>true</c> if point is inside <see cref="SharpDX.RectangleF"/>, otherwise <c>false</c>.</returns>
+        public bool Contains(float x, float y)
+        {
+            if (x >= _left && x <= _right && y >= _top && y <= _bottom)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Checks, if specified <see cref="SharpDX.Vector2"/> is inside <see cref="SharpDX.RectangleF"/>. 
+        /// </summary> 
+        /// <param name="vector2D">Coordinate <see cref="SharpDX.Vector2"/>.</param>
+        /// <returns><c>true</c> if <see cref="SharpDX.Vector2"/> is inside <see cref="SharpDX.RectangleF"/>, otherwise <c>false</c>.</returns>
+        public bool Contains(Vector2 vector2D)
+        {
+            if (vector2D.X >= _left && vector2D.X <= _right && vector2D.Y >= _top && vector2D.Y <= _bottom)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Checks, if specified <see cref="SharpDX.DrawingPoint"/> is inside <see cref="SharpDX.RectangleF"/>. 
+        /// </summary>
+        /// <param name="point">Coordinate <see cref="SharpDX.DrawingPoint"/>.</param> 
+        /// <returns><c>true</c> if <see cref="SharpDX.DrawingPoint"/> is inside <see cref="SharpDX.RectangleF"/>, otherwise <c>false</c>.</returns>
+        public bool Contains(SharpDX.DrawingPoint point)
+        {
+            if (point.X >= _left && point.X <= _right && point.Y >= _top && point.Y <= _bottom)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Checks, if specified <see cref="SharpDX.DrawingPointF"/> is inside <see cref="SharpDX.RectangleF"/>. 
+        /// </summary>
+        /// <param name="point">Coordinate <see cref="SharpDX.DrawingPointF"/>.</param> 
+        /// <returns><c>true</c> if <see cref="SharpDX.DrawingPointF"/> is inside <see cref="SharpDX.RectangleF"/>, otherwise <c>false</c>.</returns>
+        public bool Contains(SharpDX.DrawingPointF point)
+        {
+            if (point.X >= _left && point.X <= _right && point.Y >= _top && point.Y <= _bottom)
+            {
+                return true;
+            }
+            return false;
+        } 
+
         /// <summary>
         /// Gets or sets the left.
         /// </summary>
