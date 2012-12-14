@@ -179,7 +179,8 @@
     <map param="IXAudio2::CreateSubmixVoice::Flags" type="XAUDIO2_VOICE_SEND_FLAGS" />
     <map param="IXAudio2::CreateSourceVoice::pSourceFormat" type="void" />
     <map method="IXAudio2Voice::SetEffectChain" visibility="internal" property="false" />
-
+    <map param="IXAudio2::SetDebugConfiguration::pDebugConfiguration" attribute="in value"/>
+    
     <map method="IXAudio2SourceVoice::Start" visibility="internal" />
     <map param="IXAudio2SourceVoice::Stop::Flags" type="XAUDIO2_PLAY_FLAGS" />
     <map method="IXAudio2SourceVoice::SubmitSourceBuffer" visibility="internal" />
