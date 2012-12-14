@@ -863,24 +863,31 @@ namespace SharpDX.Toolkit.Graphics
 
         #region Nested type: SlotLink
 
-        [StructLayout(LayoutKind.Explicit, Size = 16)]
+        // The CLR seems to have a bug when using an explicit layout and adding this object
+        // to a list. The object is not correctly copied!
+        [StructLayout(LayoutKind.Sequential)]
         private struct SlotLink
         {
             public SlotLink(int globalIndex, int slotIndex, int slotCount)
             {
-                Pointer = IntPtr.Zero;
-                GlobalIndex = globalIndex;
+                Pointer = new IntPtr(globalIndex);
                 SlotIndex = slotIndex;
                 SlotCount = slotCount;
             }
 
-            [FieldOffset(0)] public IntPtr Pointer;
+            public IntPtr Pointer;
 
-            [FieldOffset(0)] public int GlobalIndex;
+            public int SlotIndex;
 
-            [FieldOffset(8)] public int SlotIndex;
+            public int SlotCount;
 
-            [FieldOffset(12)] public int SlotCount;
+            public int GlobalIndex
+            {
+                get
+                {
+                    return Pointer.ToInt32();
+                }
+            }
         }
 
         #endregion
