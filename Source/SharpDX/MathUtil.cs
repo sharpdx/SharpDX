@@ -212,6 +212,18 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Clamps the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="min">The min.</param>
+        /// <param name="max">The max.</param>
+        /// <returns>The result of clamiping a value between min and max</returns>
+        public static int Clamp(int value, int min, int max)
+        {
+            return value < min ? min : value > max ? max : value;
+        }
+
+        /// <summary>
         /// Calculates the modulo of the specified value.
         /// </summary>
         /// <param name="value">The value.</param>
