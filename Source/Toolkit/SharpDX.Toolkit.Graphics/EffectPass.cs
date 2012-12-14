@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 using SharpDX.Direct3D11;
 using SharpDX.Toolkit.Diagnostics;
@@ -84,6 +85,9 @@ namespace SharpDX.Toolkit.Graphics
         private InputLayoutPair currentInputLayoutPair;
 
         internal EffectTechnique Technique;
+
+        private const bool EnableDebug = false;
+        internal static TextWriter DebugLog = new StringWriter();
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="EffectPass" /> class.
@@ -239,7 +243,7 @@ namespace SharpDX.Toolkit.Graphics
             // Sets the current pass on the graphics device
             graphicsDevice.CurrentPass = this;
 
-            var pLinks = pipeline.SlotLinks.Links;
+            var pLinks = pipeline.CopySlotLinks.Links;
             var pPointers = pipeline.PointersBuffer;
             var constantBuffers = Effect.ResourceLinker.ConstantBuffers;
 
@@ -247,7 +251,7 @@ namespace SharpDX.Toolkit.Graphics
             // Handle sparse input resources and update their continous counterpart.
             // ---------------------------------------------------------------------
             var resourceLinkerPointers = Effect.ResourceLinker.Pointers;
-            for (int i = 0; i < pipeline.SlotLinks.Count; i++)
+            for (int i = 0; i < pipeline.CopySlotLinks.Count; i++)
             {
                 var pWritePtr = (IntPtr*) ((byte*) pPointers + pLinks->SlotIndex);
                 for (int j = 0; j < pLinks->SlotCount; j++)
@@ -529,38 +533,49 @@ namespace SharpDX.Toolkit.Graphics
                     constantBufferLinks.Add(new ConstantBufferLink(Effect.ConstantBuffers[parameter.Name], parameter.Offset));
                 }
 
-                // Allocate slots only when needed
-                if (stageBlock.Slots == null)
+                if (stageBlock.Parameters == null)
                 {
-                    stageBlock.Slots = new List<SlotLinkSet>[1 + (int) EffectResourceType.SamplerState];
+                     stageBlock.Parameters = new List<EffectParameter>();
                 }
 
-                var slots = stageBlock.Slots[(int) parameter.ResourceType];
-                if (slots == null)
-                {
-                    slots = new List<SlotLinkSet>();
-                    stageBlock.Slots[(int) parameter.ResourceType] = slots;
-                }
-
-                var range = new SlotLinkSet() {SlotCount = parameterRaw.Count, SlotIndex = parameterRaw.Slot};
-                slots.Add(range);
-                range.Links.Add(new SlotLink(parameter.Offset, 0, parameterRaw.Count));
+                stageBlock.Parameters.Add(parameter);
             }
 
             stageBlock.ConstantBufferLinks = constantBufferLinks.ToArray();
-
-            // Optimize the current stage block
-            OptimizeSlotLinks(ref stageBlock);
         }
 
         /// <summary>
         /// Optimizes the slot links.
         /// </summary>
         /// <param name="stageBlock">The stage block.</param>
-        private void OptimizeSlotLinks(ref StageBlock stageBlock)
+        private void PrepareSlotLinks(ref StageBlock stageBlock)
         {
-            if (stageBlock.Slots == null)
-                return;
+            // Allocate slots only when needed
+            stageBlock.Slots = new List<SlotLinkSet>[1 + (int)EffectResourceType.UnorderedAccessView];
+
+            // Compute default slot links link
+            foreach (var parameter in stageBlock.Parameters)
+            {
+
+                var slots = stageBlock.Slots[(int)parameter.ResourceType];
+                if (slots == null)
+                {
+                    slots = new List<SlotLinkSet>();
+                    stageBlock.Slots[(int)parameter.ResourceType] = slots;
+                }
+
+                var parameterRaw = (EffectData.ResourceParameter)parameter.ParameterDescription;
+
+                var range = new SlotLinkSet() { SlotCount = parameterRaw.Count, SlotIndex = parameterRaw.Slot };
+                slots.Add(range);
+                range.Links.Add(new SlotLink(parameter.Offset, 0, parameterRaw.Count));
+            }
+
+            if (EnableDebug)
+            {
+                DebugLog.WriteLine("*** Before OptimizeSlotLinks ****");
+                PrintLinks(ref stageBlock);
+            }
 
             // Optimize all slots
             foreach (var slotRangePerResourceType in stageBlock.Slots)
@@ -607,6 +622,12 @@ namespace SharpDX.Toolkit.Graphics
                     }
                 }
             }
+
+            if (EnableDebug)
+            {
+                DebugLog.WriteLine("*** After OptimizeSlotLinks ****");
+                PrintLinks(ref stageBlock);
+            }
         }
 
         /// <summary>
@@ -624,14 +645,26 @@ namespace SharpDX.Toolkit.Graphics
             int pointerBuffersOffset = 0;
 
             // ----------------------------------------------------------------------------------
-            // 1st pass: calculate memory for all SlotLinks and buffer of pointers for each stage
+            // 0 pass: Prepare all slot links
             // ----------------------------------------------------------------------------------
-            foreach (var stageBlock in pipeline.Stages)
+            foreach (var stageBlockVar in pipeline.Stages)
             {
-                if (stageBlock == null)
+                var stageBlock = stageBlockVar;
+
+                if (stageBlock == null || stageBlock.Parameters == null)
                     continue;
 
-                if (stageBlock.Slots == null)
+                PrepareSlotLinks(ref stageBlock);
+            }
+
+            // ----------------------------------------------------------------------------------
+            // 1st pass: calculate memory for all SlotLinks and buffer of pointers for each stage
+            // ----------------------------------------------------------------------------------
+            foreach (var stageBlockVar in pipeline.Stages)
+            {
+                var stageBlock = stageBlockVar;
+
+                if (stageBlock == null || stageBlock.Slots == null)
                     continue;
 
                 foreach (var slotLinkSetList in stageBlock.Slots)
@@ -668,17 +701,31 @@ namespace SharpDX.Toolkit.Graphics
             Utilities.ClearMemory(pipeline.GlobalSlotPointer, 0, slotTotalMemory);
 
             // Calculate address of slotlinks
-            pipeline.SlotLinks.Links = (SlotLink*) ((byte*) pipeline.GlobalSlotPointer + singleSlotLinksOffset);
+            pipeline.CopySlotLinks.Links = (SlotLink*) ((byte*) pipeline.GlobalSlotPointer + singleSlotLinksOffset);
 
             // Calculate address of buffer pointers
             pipeline.PointersBuffer = (IntPtr*) ((byte*) pipeline.GlobalSlotPointer + pointerBuffersOffset);
+
+            if (EnableDebug)
+            {
+                DebugLog.WriteLine("Memory Layout for Effect [{0}] Pass [{1}]", Effect.Name, Name);
+                DebugLog.WriteLine("Global SlotLinks Native Buffer [0x{0:X} - 0x{1:X}] ({2} bytes)", pipeline.GlobalSlotPointer.ToInt64(), new IntPtr((byte*)pipeline.GlobalSlotPointer + slotTotalMemory).ToInt64(), slotTotalMemory);
+
+                DebugLog.WriteLine("SlotLinks Per Type [0x{0:X} - 0x{1:X}] ({2} bytes)", pipeline.GlobalSlotPointer.ToInt64(), new IntPtr(pipeline.CopySlotLinks.Links).ToInt64(), singleSlotLinksOffset);
+
+                DebugLog.WriteLine("SlotLinks Copy [0x{0:X} - 0x{1:X}] ({2} bytes)", new IntPtr(pipeline.CopySlotLinks.Links).ToInt64(), new IntPtr(pipeline.PointersBuffer).ToInt64(), pointerBuffersOffset - singleSlotLinksOffset);
+
+                DebugLog.WriteLine("Slot Copy Pointers [0x{0:X} - 0x{1:X}] ({2} bytes)", new IntPtr(pipeline.PointersBuffer).ToInt64(), new IntPtr((byte*)pipeline.GlobalSlotPointer + slotTotalMemory).ToInt64(), slotTotalMemory - pointerBuffersOffset);
+                DebugLog.WriteLine("");
+                DebugLog.Flush();
+            }
 
             // ----------------------------------------------------------------------------------
             // 2nd pass: calculate memory for all SlotLinks and buffer of pointers for each stage
             // ----------------------------------------------------------------------------------
             var globalSoftLink = (SlotLink*) pipeline.GlobalSlotPointer;
 
-            var slotLinks = pipeline.SlotLinks.Links;
+            var slotLinks = pipeline.CopySlotLinks.Links;
 
             int currentPointerOffset = 0;
 
@@ -741,7 +788,7 @@ namespace SharpDX.Toolkit.Graphics
                                 // Make slotIndex absolute
                                 slotLink.SlotIndex = slotLink.SlotIndex * Utilities.SizeOf<IntPtr>() + currentPointerOffset;
                                 *slotLinks++ = slotLink;
-                                pipeline.SlotLinks.Count++;
+                                pipeline.CopySlotLinks.Count++;
                             }
 
                             currentPointerOffset += slotLinkSet.SlotCount * Utilities.SizeOf<IntPtr>();
@@ -753,11 +800,34 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        private void PrintLinks(ref StageBlock stageBlock)
+        {
+            DebugLog.WriteLine("  |- Stage [{0}]", stageBlock.Shader.GetType().Name);
+            for (int resourceTypeIndex = 0; resourceTypeIndex < stageBlock.Slots.Length; resourceTypeIndex++)
+            {
+                var resourceType = (EffectResourceType)resourceTypeIndex;
+                var slotRangePerResourceType = stageBlock.Slots[resourceTypeIndex];
+                if (slotRangePerResourceType == null)
+                {
+                    continue;
+                }
+
+                DebugLog.WriteLine("     |- ResourceType [{0}]", resourceType);
+                foreach (var slotLinkSet in slotRangePerResourceType)
+                {
+                    DebugLog.WriteLine("        |- SlotRange Slot [{0}] Count [{1}] (IsDirect: {2})", slotLinkSet.SlotIndex, slotLinkSet.SlotCount, slotLinkSet.IsDirectSlot);
+                    foreach (var slotLink in slotLinkSet.Links)
+                    {
+                        DebugLog.WriteLine("           |- Resource [{0}] Index [{1}] Count[{2}]", slotLink.GlobalIndex, slotLink.SlotIndex, slotLink.SlotCount);
+                    }
+                }
+            }
+        }
+
         private bool CompareResourceParameter(EffectData.ResourceParameter left, EffectData.ResourceParameter right)
         {
             return (left.Class != right.Class || left.Type != right.Type || left.Count != right.Count);
         }
-
 
         private AttributeCollection PrepareAttributes(Logger logger, List<AttributeData> attributes)
         {
@@ -838,7 +908,7 @@ namespace SharpDX.Toolkit.Graphics
 
             public OutputMergerStage OutputMergerStage;
             public unsafe IntPtr* PointersBuffer;
-            public RawSlotLinkSet SlotLinks;
+            public RawSlotLinkSet CopySlotLinks;
             public StageBlock[] Stages;
         }
 
@@ -917,6 +987,8 @@ namespace SharpDX.Toolkit.Graphics
 
         private class StageBlock
         {
+            public List<EffectParameter> Parameters;
+
             public RawSlotLinkSet ConstantBufferSlotLinks;
             public ConstantBufferLink[] ConstantBufferLinks;
             public int Index;

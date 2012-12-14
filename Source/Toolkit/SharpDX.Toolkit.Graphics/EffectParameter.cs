@@ -35,6 +35,7 @@ namespace SharpDX.Toolkit.Graphics
         private readonly EffectResourceLinker resourceLinker;
         private readonly GetMatrixDelegate GetMatrixImpl;
         private readonly CopyMatrixDelegate CopyMatrix;
+        private int offset;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EffectParameter"/> class.
@@ -142,7 +143,18 @@ namespace SharpDX.Toolkit.Graphics
         /// For a value type, this offset is the offset in bytes inside the constant buffer.
         /// For a resource type, this offset is an index to the resource linker.
         /// </remarks>
-        public readonly int Offset;
+        public int Offset
+        {
+            get
+            {
+                return offset;
+            }
+
+            internal set
+            {
+                offset = value;
+            }
+        }
 
         /// <summary>
         /// Gets a single value to the associated parameter in the constant buffer.
@@ -151,7 +163,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>The value of this parameter.</returns>
         public T GetValue<T>() where T : struct
         {
-            return buffer.Get<T>(Offset);
+            return buffer.Get<T>(offset);
         }
 
         /// <summary>
@@ -161,7 +173,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>The value of this parameter.</returns>
         public T[] GetValueArray<T>(int count) where T : struct
         {
-            return buffer.GetRange<T>(Offset, count);
+            return buffer.GetRange<T>(offset, count);
         }
 
         /// <summary>
@@ -170,7 +182,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>The value of this parameter.</returns>
         public Matrix GetMatrix()
         {
-            return GetMatrixImpl(Offset);
+            return GetMatrixImpl(offset);
         }
 
         /// <summary>
@@ -179,7 +191,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>The value of this parameter.</returns>
         public Matrix GetMatrix(int startIndex)
         {
-            return GetMatrixImpl(Offset + (startIndex << 6));
+            return GetMatrixImpl(offset + (startIndex << 6));
         }
 
         /// <summary>
@@ -201,12 +213,12 @@ namespace SharpDX.Toolkit.Graphics
         public unsafe Matrix[] GetMatrixArray(int startIndex, int count)
         {
             var result = new Matrix[count];
-            var offset = Offset + (startIndex << 6);
+            var localOffset = offset + (startIndex << 6);
             // Fix the whole buffer
             fixed (Matrix* pMatrix = result)
             {
-                for (int i = 0; i < result.Length; i++, offset += Size)
-                    pMatrix[i] = GetMatrixImpl(offset);
+                for (int i = 0; i < result.Length; i++, localOffset += Size)
+                    pMatrix[i] = GetMatrixImpl(localOffset);
             }
             buffer.IsDirty = true;
             return result;
@@ -219,7 +231,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name = "value">The value to write to the buffer.</param>
         public void SetValue<T>(ref T value) where T : struct
         {
-            buffer.Set(Offset, ref value);
+            buffer.Set(offset, ref value);
             buffer.IsDirty = true;
         }
 
@@ -230,7 +242,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name = "value">The value to write to the buffer.</param>
         public void SetValue<T>(T value) where T : struct
         {
-            buffer.Set(Offset, value);
+            buffer.Set(offset, value);
             buffer.IsDirty = true;
         }
 
@@ -240,7 +252,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name = "value">The matrix to write to the buffer.</param>
         public void SetValue(ref Matrix value)
         {
-            CopyMatrix(ref value, Offset);
+            CopyMatrix(ref value, offset);
             buffer.IsDirty = true;
         }
 
@@ -250,7 +262,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name = "value">The matrix to write to the buffer.</param>
         public void SetValue(Matrix value)
         {
-            CopyMatrix(ref value, Offset);
+            CopyMatrix(ref value, offset);
             buffer.IsDirty = true;
         }
 
@@ -260,14 +272,14 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name = "values">An array of matrices to be written to the current buffer.</param>
         public unsafe void SetValue(Matrix[] values)
         {
-            var offset = Offset;
+            var localOffset = offset;
             // Fix the whole buffer
             fixed (Matrix* pMatrix = values)
             {
                 for (int i = 0; i < values.Length; i++)
                 {
-                    CopyMatrix(ref pMatrix[i], offset);
-                    offset += Size;
+                    CopyMatrix(ref pMatrix[i], localOffset);
+                    localOffset += Size;
                 }
             }
             buffer.IsDirty = true;
@@ -280,7 +292,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name = "value">The matrix to write to the buffer.</param>
         public void SetValue(int index, Matrix value) 
         {
-            CopyMatrix(ref value, Offset + (index << 6));
+            CopyMatrix(ref value, offset + (index << 6));
             buffer.IsDirty = true;
         }
 
@@ -291,12 +303,12 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name = "values">An array of matrices to be written to the current buffer.</param>
         public unsafe void SetValue(int index, Matrix[] values) 
         {
-            var offset = Offset + (index << 6);
+            var localOffset = this.offset + (index << 6);
             // Fix the whole buffer
             fixed (Matrix* pMatrix = values)
             {
-                for (int i = 0; i < values.Length; i++, offset += Size)
-                    CopyMatrix(ref pMatrix[i], offset);
+                for (int i = 0; i < values.Length; i++, localOffset += Size)
+                    CopyMatrix(ref pMatrix[i], localOffset);
             }
             buffer.IsDirty = true;
         }
@@ -308,7 +320,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name = "values">An array of values to be written to the current buffer.</param>
         public void SetValue<T>(T[] values) where T : struct
         {
-            buffer.Set(Offset, values);
+            buffer.Set(offset, values);
             buffer.IsDirty = true;
         }
 
@@ -320,7 +332,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name = "value">The value to write to the buffer.</param>
         public void SetValue<T>(int index, ref T value) where T : struct
         {
-            buffer.Set(Offset + Interop.SizeOf<T>() * index, ref value);
+            buffer.Set(offset + Interop.SizeOf<T>() * index, ref value);
             buffer.IsDirty = true;
         }
 
@@ -332,7 +344,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name = "value">The value to write to the buffer.</param>
         public void SetValue<T>(int index, T value) where T : struct
         {
-            buffer.Set(Offset + Interop.SizeOf<T>() * index, value);
+            buffer.Set(offset + Interop.SizeOf<T>() * index, value);
             buffer.IsDirty = true;
         }
 
@@ -344,18 +356,18 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name = "values">An array of values to be written to the current buffer.</param>
         public void SetValue<T>(int index, T[] values) where T : struct
         {
-            buffer.Set(Offset + Interop.SizeOf<T>() * index, values);
+            buffer.Set(offset + Interop.SizeOf<T>() * index, values);
             buffer.IsDirty = true;
         }
 
         public T GetResource<T>() where T : class
         {
-            return resourceLinker.GetResource<T>(Offset);
+            return resourceLinker.GetResource<T>(offset);
         }
 
         public void SetResource<T>(T value) where T : class
         {
-            resourceLinker.SetResource(Offset, ResourceType, value);
+            resourceLinker.SetResource(offset, ResourceType, value);
         }
 
         /// <summary>
@@ -364,22 +376,22 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="resourcePointer"></param>
         internal void SetResourcePointer(IntPtr resourcePointer) 
         {
-            resourceLinker.SetResourcePointer(Offset, ResourceType, resourcePointer);
+            resourceLinker.SetResourcePointer(offset, ResourceType, resourcePointer);
         }
 
         public void SetResource<T>(params T[] valueArray) where T : class
         {
-            resourceLinker.SetResource(Offset, ResourceType, valueArray);
+            resourceLinker.SetResource(offset, ResourceType, valueArray);
         }
 
         public void SetResource<T>(int index, T value) where T : class
         {
-            resourceLinker.SetResource(Offset + index, ResourceType, value);
+            resourceLinker.SetResource(offset + index, ResourceType, value);
         }
 
         public void SetResource<T>(int index, params T[] valueArray) where T : class
         {
-            resourceLinker.SetResource(Offset + index, ResourceType, valueArray);
+            resourceLinker.SetResource(offset + index, ResourceType, valueArray);
         }
 
         internal void SetDefaultValue()
@@ -396,7 +408,7 @@ namespace SharpDX.Toolkit.Graphics
 
         public override string ToString()
         {
-            return string.Format("[{0}] {1} Class: {2}, Resource: {3}, Type: {4}, IsValue: {5}, RowCount: {6}, ColumnCount: {7}, ElementCount: {8}", Index, Name, ParameterClass, ResourceType, ParameterType, IsValueType, RowCount, ColumnCount, ElementCount);
+            return string.Format("[{0}] {1} Class: {2}, Resource: {3}, Type: {4}, IsValue: {5}, RowCount: {6}, ColumnCount: {7}, ElementCount: {8} Offset: {9}", Index, Name, ParameterClass, ResourceType, ParameterType, IsValueType, RowCount, ColumnCount, ElementCount, Offset);
         }
 
         /// <summary>
