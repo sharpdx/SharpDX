@@ -107,6 +107,21 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Checks, if specified screen coordinates is inside <see cref="SharpDX.DrawingRectangle"/> 
+        /// </summary>
+        /// <param name="x">X screen coordinate.</param>
+        /// <param name="y">Y screen coordinate.</param>
+        /// <returns></returns>
+        public bool PointInside(int x, int y)
+        {
+            if (x >= _left && x <= _right && y >= _top && y <= _bottom)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Implements the operator ==.
         /// </summary>
         /// <param name="left">The left.</param>
