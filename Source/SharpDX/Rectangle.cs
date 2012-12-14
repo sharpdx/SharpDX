@@ -179,7 +179,7 @@ namespace SharpDX
         }
  
         /// <summary>
-        /// Check if specified screen coordinates inside <see cref="SharpDX.Rectangle"/> 
+        /// Checks, if specified screen coordinates is inside <see cref="SharpDX.Rectangle"/> 
         /// </summary>
         /// <param name="x">X screen coordinate.</param>
         /// <param name="y">Y screen coordinate.</param>
