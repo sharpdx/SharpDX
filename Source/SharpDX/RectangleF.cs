@@ -183,13 +183,13 @@ namespace SharpDX
         }
         
         /// <summary>
-        /// Checks, if specified screen coordinates is inside <see cref="SharpDX.RectangleF"/> 
+        /// Checks, if specified point coordinates is inside <see cref="SharpDX.RectangleF"/>.
         /// </summary>
-        /// <param name="x">X screen coordinate.</param>
-        /// <param name="y">Y screen coordinate.</param>
-        /// <returns></returns>
+        /// <param name="x">X point coordinate.</param>
+        /// <param name="y">Y point coordinate.</param>
+        /// <returns><c>true</c> if point inside <see cref="SharpDX.RectangleF"/>, <c>false</c> otherwise.</returns>
         public bool PointInside(float x, float y)
-        {
+        { 
             if (x >= _left && x <= _right && y >= _top && y <= _bottom)
             {
                 return true;
