@@ -177,6 +177,21 @@ namespace SharpDX
                 return result;
             }
         }
+ 
+        /// <summary>
+        /// Checks, if specified point coordinates is inside <see cref="SharpDX.Rectangle"/>.
+        /// </summary>
+        /// <param name="x">X point coordinate.</param>
+        /// <param name="y">Y point coordinate.</param>
+        /// <returns><c>true</c> if point inside <see cref="SharpDX.Rectangle"/>, <c>false</c> otherwise.</returns>
+        public bool PointInside(int x, int y)
+        { 
+            if (x >= _left && x <= _right && y >= _top && y <= _bottom)
+            {
+                return true;
+            }
+            return false;
+        }
 
         /// <summary>
         /// Performs an implicit conversion from <see cref="SharpDX.DrawingRectangle"/> to <see cref="SharpDX.Rectangle"/>.
