@@ -46,7 +46,7 @@ using System;
 
 namespace SharpDX
 {
-    public class MathUtil
+    public static class MathUtil
     {
         /// <summary>
         /// The value for which all absolute numbers smaller than are considered equal to zero.
@@ -308,5 +308,29 @@ namespace SharpDX
 
             return (float)(value - (rangeSize * Math.Floor(value / rangeSize)) + min);
         }
+                    
+        /// <summary>
+        /// Extension - Get random <c>float</c> number within range.
+        /// </summary>
+        /// <param name="random">Current <see cref="System.Random"/>.</param>
+        /// <param name="min">Minimum.</param>
+        /// <param name="max">Maximum.</param>
+        /// <returns>Random <c>float</c> number.</returns>
+        public static float GetRandomFloat(this Random random, float min, float max)
+        {
+            return (float)(min + random.NextDouble() * (max - min));
+        }
+
+        /// <summary>
+        /// Extension - Get random <c>double</c> number within range.
+        /// </summary>
+        /// <param name="random">Current <see cref="System.Random"/>.</param>
+        /// <param name="min">Minimum.</param>
+        /// <param name="max">Maximum.</param>
+        /// <returns>Random <c>double</c> number.</returns>
+        public static double GetRandomDouble(this Random random, double min, double max)
+        {
+            return (min + random.NextDouble() * (max - min));
+        } 
     }
 }
