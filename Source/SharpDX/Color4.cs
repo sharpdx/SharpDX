@@ -174,6 +174,31 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="SharpDX.Color4"/> struct.
+        /// </summary>
+        /// <param name="value"><see cref="SharpDX.Color3"/> used to initialize the color.</param>
+        public Color4(Color3 color)
+        {
+          Red = color.Red;
+          Green = color.Green;
+          Blue = color.Blue;
+          Alpha = 1.0f;
+        }
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SharpDX.Color4"/> struct.
+        /// </summary>
+        /// <param name="value"><see cref="SharpDX.Color3"/> used to initialize the color.</param>
+        /// <param name="alpha">The alpha component of the color.</param>
+        public Color4(Color3 color, float alpha)
+        {
+          Red = color.Red;
+          Green = color.Green;
+          Blue = color.Blue;
+          Alpha = alpha;
+        }
+
+        /// <summary>
         /// Gets or sets the component at the specified index.
         /// </summary>
         /// <value>The value of the red, green, blue, and alpha components, depending on the index.</value>

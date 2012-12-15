@@ -46,7 +46,7 @@ using System;
 
 namespace SharpDX
 {
-    public class MathUtil
+    public static class MathUtil
     {
         /// <summary>
         /// The value for which all absolute numbers smaller than are considered equal to zero.
@@ -258,19 +258,25 @@ namespace SharpDX
         /// <returns>Result of the wrapping.</returns>
         public static int Wrap(int value, int min, int max)
         {
-            int range_size = max - min + 1;
-
-            if (value < min)
+            if (min > max)
             {
-                return value + range_size * ((min - value) / range_size + 1);
+                var tmp = min;
+                min = max;
+                max = tmp;
             }
 
-            if (value > max)
+            // adjust to 0
+            value -= min;
+
+            int rangeSize = max - min;
+
+            if (rangeSize == 0)
             {
-                return value - range_size * ((value - max) / range_size + 1);
+                // avoid dividing by 0
+                return max;
             }
 
-            return value;
+            return (value - (rangeSize * (value / rangeSize)) + min);
         }
 
         /// <summary>
@@ -302,5 +308,29 @@ namespace SharpDX
 
             return (float)(value - (rangeSize * Math.Floor(value / rangeSize)) + min);
         }
+                    
+        /// <summary>
+        /// Extension - Get random <c>float</c> number within range.
+        /// </summary>
+        /// <param name="random">Current <see cref="System.Random"/>.</param>
+        /// <param name="min">Minimum.</param>
+        /// <param name="max">Maximum.</param>
+        /// <returns>Random <c>float</c> number.</returns>
+        public static float GetRandomFloat(this Random random, float min, float max)
+        {
+            return (float)(min + random.NextDouble() * (max - min));
+        }
+
+        /// <summary>
+        /// Extension - Get random <c>double</c> number within range.
+        /// </summary>
+        /// <param name="random">Current <see cref="System.Random"/>.</param>
+        /// <param name="min">Minimum.</param>
+        /// <param name="max">Maximum.</param>
+        /// <returns>Random <c>double</c> number.</returns>
+        public static double GetRandomDouble(this Random random, double min, double max)
+        {
+            return (min + random.NextDouble() * (max - min));
+        } 
     }
 }
