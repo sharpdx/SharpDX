@@ -308,7 +308,7 @@ namespace SharpDX
 
             return (float)(value - (rangeSize * Math.Floor(value / rangeSize)) + min);
         }
-                    
+#if NET35Plus                    
         /// <summary>
         /// Extension - Get random <c>float</c> number within range.
         /// </summary>
@@ -332,5 +332,6 @@ namespace SharpDX
         {
             return (min + random.NextDouble() * (max - min));
         } 
+#endif
     }
 }
