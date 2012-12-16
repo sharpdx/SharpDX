@@ -170,7 +170,7 @@ namespace CommonDX
                 depthStencilView = ToDispose(new SharpDX.Direct3D11.DepthStencilView(d3dDevice, depthBuffer, new SharpDX.Direct3D11.DepthStencilViewDescription() { Dimension = SharpDX.Direct3D11.DepthStencilViewDimension.Texture2D }));
 
             // Create a viewport descriptor of the full window size.
-            var viewport = new SharpDX.Direct3D11.Viewport((float)RenderTargetBounds.X, (float)RenderTargetBounds.Y, (float)RenderTargetBounds.Width, (float)RenderTargetBounds.Height, 0.0f, 1.0f);
+            var viewport = new SharpDX.ViewportF((float)RenderTargetBounds.X, (float)RenderTargetBounds.Y, (float)RenderTargetBounds.Width, (float)RenderTargetBounds.Height, 0.0f, 1.0f);
 
             // Set the current viewport using the descriptor.
             d3dContext.Rasterizer.SetViewports(viewport);
