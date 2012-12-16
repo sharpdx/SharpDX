@@ -163,13 +163,13 @@ namespace CommonDX
                     viewData.BitmapTarget = new SharpDX.Direct2D1.Bitmap1(DeviceManager.ContextDirect2D, surface, bitmapProperties);
 
                     // Create a viewport descriptor of the full window size.
-                    viewData.Viewport = new SharpDX.Direct3D11.Viewport(position.X, position.Y, (float)viewData.RenderTargetSize.Width - position.X, (float)viewData.RenderTargetSize.Height - position.Y, 0.0f, 1.0f);
+                    viewData.Viewport = new SharpDX.ViewportF(position.X, position.Y, (float)viewData.RenderTargetSize.Width - position.X, (float)viewData.RenderTargetSize.Height - position.Y, 0.0f, 1.0f);
                 }
 
                 backBuffer = viewData.BackBuffer;
                 renderTargetView = viewData.RenderTargetView;
                 depthStencilView = viewData.DepthStencilView;
-                RenderTargetBounds = new Rect(viewData.Viewport.TopLeftX, viewData.Viewport.TopLeftY, viewData.Viewport.Width, viewData.Viewport.Height);
+                RenderTargetBounds = new Rect(viewData.Viewport.X, viewData.Viewport.Y, viewData.Viewport.Width, viewData.Viewport.Height);
                 bitmapTarget = viewData.BitmapTarget;
 
                 DeviceManager.ContextDirect2D.Target = viewData.BitmapTarget;
@@ -194,7 +194,7 @@ namespace CommonDX
             public SharpDX.Direct3D11.RenderTargetView RenderTargetView;
             public SharpDX.Direct3D11.DepthStencilView DepthStencilView;
             public SharpDX.Direct2D1.Bitmap1 BitmapTarget;
-            public SharpDX.Direct3D11.Viewport Viewport;
+            public SharpDX.ViewportF Viewport;
             public Size RenderTargetSize;
 
             public void Dispose()
