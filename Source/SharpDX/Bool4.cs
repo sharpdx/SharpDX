@@ -25,7 +25,7 @@ using SharpDX.Serialization;
 namespace SharpDX
 {
     /// <summary>
-    ///   Represents a four dimensional mathematical vector of bool (32 bits per bool value).
+    /// Represents a four dimensional mathematical vector of bool (32 bits per bool value).
     /// </summary>
 #if !W8CORE
     [Serializable]
@@ -35,59 +35,62 @@ namespace SharpDX
     public struct Bool4 : IEquatable<Bool4>, IFormattable, IDataSerializable
     {
         /// <summary>
-        ///   The size of the <see cref = "Bool4" /> type, in bytes.
+        /// The size of the <see cref = "Bool4" /> type, in bytes.
         /// </summary>
         public static readonly int SizeInBytes = Marshal.SizeOf(typeof (Bool4));
 
         /// <summary>
-        ///   A <see cref = "Bool4" /> with all of its components set to false.
+        /// A <see cref = "Bool4" /> with all of its components set to false.
         /// </summary>
         public static readonly Bool4 False = new Bool4();
 
         /// <summary>
-        ///   The X unit <see cref = "Bool4" /> (true, 0, 0, 0).
+        /// The X unit <see cref = "Bool4" /> (true, 0, 0, 0).
         /// </summary>
         public static readonly Bool4 UnitX = new Bool4(true, false, false, false);
 
         /// <summary>
-        ///   The Y unit <see cref = "Bool4" /> (0, true, 0, 0).
+        /// The Y unit <see cref = "Bool4" /> (0, true, 0, 0).
         /// </summary>
         public static readonly Bool4 UnitY = new Bool4(false, true, false, false);
 
         /// <summary>
-        ///   The Z unit <see cref = "Bool4" /> (0, 0, true, 0).
+        /// The Z unit <see cref = "Bool4" /> (0, 0, true, 0).
         /// </summary>
         public static readonly Bool4 UnitZ = new Bool4(false, false, true, false);
 
         /// <summary>
-        ///   The W unit <see cref = "Bool4" /> (0, 0, 0, true).
+        /// The W unit <see cref = "Bool4" /> (0, 0, 0, true).
         /// </summary>
         public static readonly Bool4 UnitW = new Bool4(false, false, false, true);
 
         /// <summary>
-        ///   A <see cref = "Bool4" /> with all of its components set to true.
+        /// A <see cref = "Bool4" /> with all of its components set to true.
         /// </summary>
         public static readonly Bool4 One = new Bool4(true, true, true, true);
 
+        /// <summary>
+        /// The X component of the vector.
+        /// </summary>
         private int iX;
 
         /// <summary>
-        ///   The Y component of the vector.
+        /// The Y component of the vector.
         /// </summary>
         private int iY;
 
         /// <summary>
-        ///   The Z component of the vector.
+        /// The Z component of the vector.
         /// </summary>
         private int iZ;
 
         /// <summary>
-        ///   The W component of the vector.
+        /// The W component of the vector.
         /// </summary>
         private int iW;
 
         /// <summary>
-        ///   The X component of the vector.
+        /// The X component of the vector.
         /// </summary>
         public bool X
         {
@@ -102,7 +105,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   The Y component of the vector.
+        /// The Y component of the vector.
         /// </summary>
         public bool Y
         {
@@ -117,7 +120,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   The Z component of the vector.
+        /// The Z component of the vector.
         /// </summary>
         public bool Z
         {
@@ -132,7 +135,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   The W component of the vector.
+        /// The W component of the vector.
         /// </summary>
         public bool W
         {
@@ -147,7 +150,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref = "Bool4" /> struct.
+        /// Initializes a new instance of the <see cref = "Bool4" /> struct.
         /// </summary>
         /// <param name = "value">The value that will be assigned to all components.</param>
         public Bool4(bool value)
@@ -159,7 +162,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref = "Bool4" /> struct.
+        /// Initializes a new instance of the <see cref = "Bool4" /> struct.
         /// </summary>
         /// <param name = "x">Initial value for the X component of the vector.</param>
         /// <param name = "y">Initial value for the Y component of the vector.</param>
@@ -175,7 +178,7 @@ namespace SharpDX
 
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref = "Bool4" /> struct.
+        /// Initializes a new instance of the <see cref = "Bool4" /> struct.
         /// </summary>
         /// <param name = "values">The values to assign to the X, Y, Z, and W components of the vector. This must be an array with four elements.</param>
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "values" /> is <c>null</c>.</exception>
@@ -196,7 +199,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Gets or sets the component at the specified index.
+        /// Gets or sets the component at the specified index.
         /// </summary>
         /// <value>The value of the X, Y, Z, or W component, depending on the index.</value>
         /// <param name = "index">The index of the component to access. Use 0 for the X component, 1 for the Y component, 2 for the Z component, and 3 for the W component.</param>
@@ -244,7 +247,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Creates an array containing the elements of the vector.
+        /// Creates an array containing the elements of the vector.
         /// </summary>
         /// <returns>A four-element array containing the components of the vector.</returns>
         public bool[] ToArray()
@@ -253,7 +256,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Tests for equality between two objects.
+        /// Tests for equality between two objects.
         /// </summary>
         /// <param name = "left">The first value to compare.</param>
         /// <param name = "right">The second value to compare.</param>
@@ -264,7 +267,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Tests for inequality between two objects.
+        /// Tests for inequality between two objects.
         /// </summary>
         /// <param name = "left">The first value to compare.</param>
         /// <param name = "right">The second value to compare.</param>
@@ -275,10 +278,10 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Returns a <see cref = "System.String" /> that represents this instance.
+        /// Returns a <see cref = "System.String" /> that represents this instance.
         /// </summary>
         /// <returns>
-        ///   A <see cref = "System.String" /> that represents this instance.
+        /// A <see cref = "System.String" /> that represents this instance.
         /// </returns>
         public override string ToString()
         {
@@ -299,10 +302,10 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Returns a hash code for this instance.
+        /// Returns a hash code for this instance.
         /// </summary>
         /// <returns>
-        ///   A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
         /// </returns>
         public override int GetHashCode()
         {
@@ -312,11 +315,11 @@ namespace SharpDX
 
 
         /// <summary>
-        ///   Determines whether the specified <see cref = "Bool4" /> is equal to this instance.
+        /// Determines whether the specified <see cref = "Bool4" /> is equal to this instance.
         /// </summary>
         /// <param name = "other">The <see cref = "Bool4" /> to compare with this instance.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref = "Bool4" /> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref = "Bool4" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public bool Equals(Bool4 other)
         {
@@ -324,11 +327,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Determines whether the specified <see cref = "System.Object" /> is equal to this instance.
+        /// Determines whether the specified <see cref = "System.Object" /> is equal to this instance.
         /// </summary>
         /// <param name = "value">The <see cref = "System.Object" /> to compare with this instance.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref = "System.Object" /> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref = "System.Object" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public override bool Equals(object value)
         {
