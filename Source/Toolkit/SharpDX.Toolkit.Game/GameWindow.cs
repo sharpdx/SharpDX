@@ -31,9 +31,15 @@ namespace SharpDX.Toolkit
         private string title;
 
         #region Public Events
-
+        
+        /// <summary>
+        /// Occurs, when device client size is changed.
+        /// </summary>
         public event EventHandler<EventArgs> ClientSizeChanged;
 
+        /// <summary>
+        /// Occurs, when device orientation is changed.
+        /// </summary>
         public event EventHandler<EventArgs> OrientationChanged;
 
         internal event EventHandler<EventArgs> Activated;
@@ -43,7 +49,10 @@ namespace SharpDX.Toolkit
         #endregion
 
         #region Public Properties
-
+        
+        /// <summary>
+        /// Gets or sets, user possibility to resize this window.
+        /// </summary>
         public abstract bool AllowUserResizing { get; set; }
 
         /// <summary>
