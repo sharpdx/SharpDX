@@ -505,6 +505,54 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
+        /// Draw 2d-line, using Bresenham's line algorithm.
+        /// </summary> 
+        /// <param name="texture">Line fill texture.</param>
+        /// <param name="x0">X position of first line point.</param>
+        /// <param name="y0">Y position of first line point.</param>
+        /// <param name="x1">X position of second line point.</param>
+        /// <param name="y1">Y position of second line point.</param> 
+        /// <param name="lineWidth">The width of the line.</param>
+        /// <param name="linePointFrequency">Frequence of the point inside line. Also - using (0 or 1) will result continuous line(without texture)-other(for example 2) will result line with texture.</param>
+        /// <param name="color">Line <see cref="SharpDX.Color"/>.</param>
+        /// <param name="layerDepth">The depth of a layer. By default, 0 represents the front layer and 1 represents a back layer. Use SpriteSortMode if you want sprites to be sorted during drawing.</param>
+        public void DrawLine(ShaderResourceView texture, int x0, int y0, int x1, int y1, float lineWidth, int linePointFrequency, Color color, float layerDepth)
+        {
+            if (linePointFrequency == 0) linePointFrequency = 1;
+
+            int sx, sy, err, e2;
+
+            int dx = Math.Abs(x1 - x0);
+            int dy = Math.Abs(y1 - y0);
+
+            if (x0 < x1) sx = 1; else sx = -1;
+            if (y0 < y1) sy = 1; else sy = -1;
+            err = dx - dy;
+
+            int iCount = 0;
+            while (true)
+            {
+                var dest = new DrawingRectangleF(x0,y0,lineWidth,lineWidth);
+
+                if (iCount % linePointFrequency == 0)
+                DrawSprite(texture,ref dest, true, ref nullRectangle, color, 0, ref vector2Zero, SpriteEffects.None, layerDepth);
+                if (x0 == x1 && y0 == y1) break;
+                e2 = 2 * err;
+                if (e2 > -dy)
+                {
+                    err = err - dy;
+                    x0 = x0 + sx;
+                }
+                if (e2 < dx)
+                {
+                    err = err + dx;
+                    y0 = y0 + sy;
+                }
+                iCount++;
+            }
+        }
+
+        /// <summary>
         /// Flushes the sprite batch and restores the device state to how it was before Begin was called. 
         /// </summary>
         public void End()
