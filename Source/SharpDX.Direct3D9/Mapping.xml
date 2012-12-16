@@ -703,6 +703,7 @@
     <bind from="PALETTEENTRY" to="SharpDX.Direct3D9.PaletteEntry"/>
     <bind from="ID3DXBuffer" to="SharpDX.Direct3D.Blob"/>
     <bind from="D3DXHANDLE" to="SharpDX.Direct3D9.EffectHandle" marshal="System.IntPtr"/>
+    <bind from="D3DVIEWPORT9" to="SharpDX.Viewport"/>
     <bind from="D3DX9_FONT_WEIGHT" to="SharpDX.Direct3D9.FontWeight" />
     <bind from="D3DX9_FONT_QUALITY" to="SharpDX.Direct3D9.FontQuality" />
     <bind from="D3DX9_FONT_PRECISION" to="SharpDX.Direct3D9.FontPrecision" />

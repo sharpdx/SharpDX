@@ -27,18 +27,18 @@ namespace SharpDX.Direct3D11
         /// <summary>	
         /// Get the array of {{viewports}} bound  to the {{rasterizer stage}} 	
         /// </summary>	
-        /// <returns>An array of viewports (see <see cref="SharpDX.Direct3D11.Viewport"/>).</returns>
+        /// <returns>An array of viewports (see <see cref="SharpDX.ViewportF"/>).</returns>
         /// <unmanaged>void RSGetViewports([InOut] int* NumViewports,[Out, Buffer, Optional] D3D10_VIEWPORT* pViewports)</unmanaged>
         /// <msdn-id>ff476477</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::RSGetViewports([InOut] unsigned int* pNumViewports,[Out, Buffer, Optional] D3D11_VIEWPORT* pViewports)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::RSGetViewports</unmanaged-short>	
-        public SharpDX.Direct3D11.Viewport[] GetViewports()
+        public SharpDX.ViewportF[] GetViewports()
         {
             int numViewports = 0;
 
             GetViewports(ref numViewports, null);
 
-            SharpDX.Direct3D11.Viewport[] viewports = new SharpDX.Direct3D11.Viewport[numViewports];
+            var viewports = new SharpDX.ViewportF[numViewports];
             GetViewports(ref numViewports, viewports);
 
             return viewports;
@@ -47,12 +47,12 @@ namespace SharpDX.Direct3D11
         /// <summary>	
         /// Get the array of {{viewports}} bound  to the {{rasterizer stage}} 	
         /// </summary>	
-        /// <returns>An array of viewports (see <see cref="SharpDX.Direct3D11.Viewport"/>).</returns>
+        /// <returns>An array of viewports (see <see cref="SharpDX.ViewportF"/>).</returns>
         /// <unmanaged>void RSGetViewports([InOut] int* NumViewports,[Out, Buffer, Optional] D3D10_VIEWPORT* pViewports)</unmanaged>
         /// <msdn-id>ff476477</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::RSGetViewports([InOut] unsigned int* pNumViewports,[Out, Buffer, Optional] D3D11_VIEWPORT* pViewports)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::RSGetViewports</unmanaged-short>	
-        public void GetViewports(SharpDX.Direct3D11.Viewport[] viewports)
+        public void GetViewports(SharpDX.ViewportF[] viewports)
         {
             int numViewports = viewports.Length;
             GetViewports(ref numViewports, viewports);
@@ -149,7 +149,7 @@ namespace SharpDX.Direct3D11
         /// <unmanaged-short>ID3D11DeviceContext::RSSetViewports</unmanaged-short>	
         public void SetViewport(float x, float y, float width, float height, float minZ = 0.0f, float maxZ = 1.0f)
         {
-            var viewport = new Viewport(x, y, width, height, minZ, maxZ);
+            var viewport = new ViewportF(x, y, width, height, minZ, maxZ);
             unsafe
             {
                 SetViewports(1, new IntPtr(&viewport));
@@ -166,7 +166,7 @@ namespace SharpDX.Direct3D11
         /// <msdn-id>ff476480</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::RSSetViewports([In] unsigned int NumViewports,[In, Buffer, Optional] const void* pViewports)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::RSSetViewports</unmanaged-short>	
-        public void SetViewports(Viewport viewport)
+        public void SetViewports(ViewportF viewport)
         {
             unsafe
             {
@@ -184,7 +184,7 @@ namespace SharpDX.Direct3D11
         /// <msdn-id>ff476480</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::RSSetViewports([In] unsigned int NumViewports,[In, Buffer, Optional] const void* pViewports)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::RSSetViewports</unmanaged-short>	
-        public void SetViewports(params Viewport[] viewports)
+        public void SetViewports(params ViewportF[] viewports)
         {
             unsafe
             {

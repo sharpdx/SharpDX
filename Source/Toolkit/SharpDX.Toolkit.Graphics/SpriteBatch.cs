@@ -924,7 +924,7 @@ namespace SharpDX.Toolkit.Graphics
             GraphicsDevice.SetRasterizerState(rasterizerState ?? GraphicsDevice.RasterizerStates.CullBack);
 
             // Build ortho-projection matrix
-            Viewport viewport = GraphicsDevice.Viewport;
+            ViewportF viewport = GraphicsDevice.Viewport;
             float xRatio = (viewport.Width > 0) ? (1f/(viewport.Width)) : 0f;
             float yRatio = (viewport.Height > 0) ? (-1f/(viewport.Height)) : 0f;
             var matrix = new Matrix { M11 = xRatio * 2f, M22 = yRatio * 2f, M33 = 1f, M44 = 1f, M41 = -1f, M42 = 1f };

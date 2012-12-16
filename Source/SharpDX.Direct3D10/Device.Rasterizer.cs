@@ -26,15 +26,15 @@ namespace SharpDX.Direct3D10
         /// <summary>	
         /// Get the array of {{viewports}} bound  to the {{rasterizer stage}} 	
         /// </summary>	
-        /// <returns>An array of viewports (see <see cref="SharpDX.Direct3D10.Viewport"/>).</returns>
+        /// <returns>An array of viewports (see <see cref="SharpDX.Viewport"/>).</returns>
         /// <unmanaged>void RSGetViewports([InOut] int* NumViewports,[Out, Buffer, Optional] D3D10_VIEWPORT* pViewports)</unmanaged>
-        public SharpDX.Direct3D10.Viewport[] GetViewports()
+        public SharpDX.Viewport[] GetViewports()
         {
             int numViewports = 0;
 
             GetViewports(ref numViewports, null);
 
-            SharpDX.Direct3D10.Viewport[] viewports = new SharpDX.Direct3D10.Viewport[numViewports];
+            SharpDX.Viewport[] viewports = new SharpDX.Viewport[numViewports];
             GetViewports(ref numViewports, viewports);
 
             return viewports;
@@ -43,9 +43,9 @@ namespace SharpDX.Direct3D10
         /// <summary>	
         /// Get the array of {{viewports}} bound  to the {{rasterizer stage}} 	
         /// </summary>	
-        /// <returns>An array of viewports (see <see cref="SharpDX.Direct3D10.Viewport"/>).</returns>
+        /// <returns>An array of viewports (see <see cref="SharpDX.Viewport"/>).</returns>
         /// <unmanaged>void RSGetViewports([InOut] int* NumViewports,[Out, Buffer, Optional] D3D10_VIEWPORT* pViewports)</unmanaged>
-        public void GetViewports(SharpDX.Direct3D10.Viewport[] viewports)
+        public void GetViewports(SharpDX.Viewport[] viewports)
         {
             int numViewports = viewports.Length;
             GetViewports(ref numViewports, viewports);

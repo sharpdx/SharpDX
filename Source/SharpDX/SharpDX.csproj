@@ -29,6 +29,7 @@
     <Compile Include="CallbackBase.cs" />
     <Compile Include="Collections\ObservableCollection.cs" />
     <Compile Include="Collections\ObservableCollectionEventArgs.cs" />
+    <Compile Include="ViewportF.cs" />
     <Compile Include="Design\Color4Converter.cs" />
     <Compile Include="ComArray.cs" />
     <Compile Include="CompilationResultBase.cs" />
@@ -156,6 +157,7 @@
     <Compile Include="Text\ASCIIEncoding.cs" />
     <Compile Include="Text\NamespaceDoc.cs" />
     <Compile Include="TimerTick.cs" />
+    <Compile Include="Viewport.cs" />
     <Compile Include="Win32Native.cs" />
     <Compile Include="Plane.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

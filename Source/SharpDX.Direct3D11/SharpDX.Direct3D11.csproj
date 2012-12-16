@@ -88,7 +88,6 @@
     <Compile Include="UnorderedAccessView.cs" />
     <Compile Include="VertexBufferBinding.cs" />
     <Compile Include="VertexShader.cs" />
-    <Compile Include="Viewport.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Documentation\CodeComments.xml" />

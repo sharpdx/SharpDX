@@ -117,6 +117,7 @@
     <bind from="D3D10_MAPPED_TEXTURE2D" to="SharpDX.DataRectangle"/>
     <bind from="D3D10_MAPPED_TEXTURE3D" to="SharpDX.DataBox"/>
     <bind from="ID3DX10ThreadPump" to="System.IntPtr" />
+    <bind from="D3D10_VIEWPORT" to="SharpDX.Viewport"/>
   </bindings>
 
   <!-- D3D10 mapping -->
