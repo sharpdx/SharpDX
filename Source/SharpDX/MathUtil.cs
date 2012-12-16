@@ -304,7 +304,7 @@ namespace SharpDX
             {
                 // avoid dividing by 0
                 return max;
-            } 
+            }
 
             return (float)(value - (rangeSize * Math.Floor(value / rangeSize)) + min);
         }
@@ -316,7 +316,7 @@ namespace SharpDX
         /// <param name="min">Minimum.</param>
         /// <param name="max">Maximum.</param>
         /// <returns>Random <c>float</c> number.</returns>
-        public static float GetRandomFloat(this Random random, float min, float max)
+        public static float NextFloat(this Random random, float min, float max)
         {
             return (float)(min + random.NextDouble() * (max - min));
         }
@@ -328,7 +328,7 @@ namespace SharpDX
         /// <param name="min">Minimum.</param>
         /// <param name="max">Maximum.</param>
         /// <returns>Random <c>double</c> number.</returns>
-        public static double GetRandomDouble(this Random random, double min, double max)
+        public static double NextDouble(this Random random, double min, double max)
         {
             return (min + random.NextDouble() * (max - min));
         } 
