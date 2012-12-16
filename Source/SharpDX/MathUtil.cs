@@ -320,6 +320,60 @@ namespace SharpDX
 
             return (float)(value - (rangeSize * Math.Floor(value / rangeSize)) + min);
         }
+        
+        /// <summary>
+        /// Gauss function.
+        /// </summary>
+        /// <param name="amplitude">Curve amplitude.</param>
+        /// <param name="x">Position X.</param>
+        /// <param name="y">Position Y</param>
+        /// <param name="radX">Radius X.</param>
+        /// <param name="radY">Radius Y.</param>
+        /// <param name="sigmaX">Curve sigma X.</param>
+        /// <param name="sigmaY">Curve sigma Y.</param>
+        /// <returns>The result of gaussian function.</returns>
+        public static float Gauss(float amplitude,float x,float y,float radX,float radY,float sigmaX,float sigmaY)
+        {
+            float AExp = (amplitude*2.718281828f);
+
+            return (float) 
+            (
+                AExp -
+                (
+                    Math.Pow(x - radX / 2, 2) / (2 * (float)Math.Pow(sigmaX, 2))
+                    +
+                    Math.Pow(y - radY / 2, 2) / (2 * (float)Math.Pow(sigmaY, 2))
+                )
+            );
+        }
+
+        /// <summary>
+        /// Gauss function.
+        /// </summary>
+        /// <param name="amplitude">Curve amplitude.</param>
+        /// <param name="x">Position X.</param>
+        /// <param name="y">Position Y</param>
+        /// <param name="radX">Radius X.</param>
+        /// <param name="radY">Radius Y.</param>
+        /// <param name="sigmaX">Curve sigma X.</param>
+        /// <param name="sigmaY">Curve sigma Y.</param>
+        /// <returns>The result of gaussian function.</returns>
+        public static double Gauss(double amplitude, double x, double y, double radX, double radY, double sigmaX, double sigmaY)
+        {
+            double AExp = (amplitude * 2.718281828);
+
+            return 
+            (
+                AExp -
+                (
+                    Math.Pow(x - radX / 2, 2) / (2 * Math.Pow(sigmaX, 2))
+                    +
+                    Math.Pow(y - radY / 2, 2) / (2 * Math.Pow(sigmaY, 2))
+                )
+            );
+        }
+        
+        
 #if NET35Plus                    
         /// <summary>
         /// Extension - Get random <c>float</c> number within range.
