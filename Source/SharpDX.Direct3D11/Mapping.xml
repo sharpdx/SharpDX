@@ -134,6 +134,7 @@
     <bind from="D3D11_SUBRESOURCE_DATA" to="SharpDX.DataBox" />
     <bind from="DrawingSurfaceSizeF" to="SharpDX.DrawingSizeF"/>
     <bind from="DrawingSurfaceRectF" to="SharpDX.RectangleF"/>
+    <bind from="D3D11_VIEWPORT" to="SharpDX.ViewportF"/>
   </bindings>
 
   <!-- D3D11 mapping -->

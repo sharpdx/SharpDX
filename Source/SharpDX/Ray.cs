@@ -259,29 +259,29 @@ namespace SharpDX
             return Collision.RayIntersectsSphere(ref this, ref sphere, out point);
         }
 
-        ///// <summary>
-        ///// Calculates a world space <see cref="SharpDX.Ray"/> from 2d screen coordinates.
-        ///// </summary>
-        ///// <param name="x">X coordinate on 2d screen.</param>
-        ///// <param name="y">Y coordinate on 2d screen.</param>
-        ///// <param name="viewport"><see cref="SharpDX.Direct3D11.Viewport"/>.</param>
-        ///// <param name="worldViewProjection">Transformation <see cref="SharpDX.Matrix"/>.</param>
-        ///// <returns>Resulting <see cref="SharpDX.Ray"/>.</returns>
-        //public static Ray GetPickRay(int x, int y, Viewport viewport, Matrix worldViewProjection)
-        //{
-        //    var nearPoint = new Vector3(x, y, 0);
-        //    var farPoint = new Vector3(x, y, 1); 
-          
-        //    nearPoint = Vector3.Unproject(nearPoint, viewport.TopLeftX, viewport.TopLeftY, viewport.Width, viewport.Height, viewport.MinDepth,
-        //                                viewport.MaxDepth, worldViewProjection);
-        //    farPoint = Vector3.Unproject(farPoint, viewport.TopLeftX, viewport.TopLeftY, viewport.Width, viewport.Height, viewport.MinDepth,
-        //                                viewport.MaxDepth, worldViewProjection); 
+        /// <summary>
+        /// Calculates a world space <see cref="SharpDX.Ray"/> from 2d screen coordinates.
+        /// </summary>
+        /// <param name="x">X coordinate on 2d screen.</param>
+        /// <param name="y">Y coordinate on 2d screen.</param>
+        /// <param name="viewport"><see cref="SharpDX.ViewportF"/>.</param>
+        /// <param name="worldViewProjection">Transformation <see cref="SharpDX.Matrix"/>.</param>
+        /// <returns>Resulting <see cref="SharpDX.Ray"/>.</returns>
+        public static Ray GetPickRay(int x, int y, ViewportF viewport, Matrix worldViewProjection)
+        {
+            var nearPoint = new Vector3(x, y, 0);
+            var farPoint = new Vector3(x, y, 1);
 
-        //    Vector3 direction = farPoint - nearPoint; 
-        //    direction.Normalize();
+            nearPoint = Vector3.Unproject(nearPoint, viewport.X, viewport.Y, viewport.Width, viewport.Height, viewport.MinDepth,
+                                        viewport.MaxDepth, worldViewProjection);
+            farPoint = Vector3.Unproject(farPoint, viewport.X, viewport.Y, viewport.Width, viewport.Height, viewport.MinDepth,
+                                        viewport.MaxDepth, worldViewProjection);
 
-        //    return new Ray(nearPoint, direction);   
-        //}
+            Vector3 direction = farPoint - nearPoint;
+            direction.Normalize();
+
+            return new Ray(nearPoint, direction);
+        }
 
         /// <summary>
         /// Tests for equality between two objects.
