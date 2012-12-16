@@ -62,6 +62,16 @@ namespace SharpDX
     public struct Color4 : IEquatable<Color4>, IFormattable, IDataSerializable
     {
         /// <summary>
+        /// The Black color (0, 0, 0, 1).
+        /// </summary>
+        public static readonly Color4 Black = new Color4(0.0f, 0.0f, 0.0f, 1.0f);
+
+        /// <summary>
+        /// The White color (1, 1, 1, 1).
+        /// </summary>
+        public static readonly Color4 White = new Color4(1.0f, 1.0f, 1.0f, 1.0f);
+
+        /// <summary>
         /// The red component of the color.
         /// </summary>
         public float Red;
