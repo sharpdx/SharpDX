@@ -173,7 +173,7 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             // Throws an exception if the resource is not supported.
-            throw new NotSupportedException("Unsupported resource type");
+            throw new NotSupportedException(string.Format("Unsupported resource type [{0}/{1}]", type, value.GetType().Name));
         }
     }
 }

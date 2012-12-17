@@ -31,12 +31,14 @@ namespace SharpDX.Toolkit.Graphics
     /// </remarks>
     public sealed class EffectConstantBuffer : DataBuffer, IEquatable<EffectConstantBuffer>
     {
+        private GraphicsDevice device;
         private readonly Buffer nativeBuffer;
         internal EffectData.ConstantBuffer Description;
         private readonly int hashCode;
 
         internal EffectConstantBuffer(GraphicsDevice device, EffectData.ConstantBuffer description) : base(description.Size)
         {
+            this.device = device;
             Description = description;
             Name = description.Name;
             Parameters = new EffectParameterCollection(description.Parameters.Count);
@@ -72,6 +74,27 @@ namespace SharpDX.Toolkit.Graphics
         /// Gets the parameters registered for this constant buffer.
         /// </summary>
         public readonly EffectParameterCollection Parameters;
+
+        /// <summary>
+        /// Updates the specified constant buffer from all parameters value.
+        /// </summary>
+        public void Update()
+        {
+            Update(device);
+        }
+
+        /// <summary>
+        /// Updates the specified constant buffer from all parameters value.
+        /// </summary>
+        /// <param name="device">The device.</param>
+        public void Update(GraphicsDevice device)
+        {
+            if (IsDirty)
+            {
+                nativeBuffer.SetData(device, new DataPointer(DataPointer, Size));
+                IsDirty = false;
+            }
+        }
 
         public bool Equals(EffectConstantBuffer other)
         {
