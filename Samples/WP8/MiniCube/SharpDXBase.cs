@@ -98,7 +98,7 @@ namespace MiniTriApp
             _windowBounds.Height = _renderTargetSize.Height;
 
             // Create a viewport descriptor of the full window size.
-             var viewport = new SharpDX.Direct3D11.Viewport(0, 0, (float)_renderTargetSize.Width, (float)_renderTargetSize.Height );
+             var viewport = new SharpDX.ViewportF(0, 0, (float)_renderTargetSize.Width, (float)_renderTargetSize.Height );
 
             _deviceContext.Rasterizer.SetViewports(viewport);
         }
