@@ -34,7 +34,7 @@
     <Compile Include="Graphics\IEffectCompiler.cs" />
     <Compile Include="Graphics\ModelData.IndexBuffer.cs" />
     <Compile Include="Graphics\ModelData.VertexBuffer.cs" />
-    <Compile Include="Graphics\ModelData.Bone.cs" />
+    <Compile Include="Graphics\ModelData.Node.cs" />
     <Compile Include="Graphics\ModelData.Mesh.cs" />
     <Compile Include="Graphics\ModelData.MeshPart.cs" />
     <Compile Include="Graphics\DisplayOrientation.cs" />

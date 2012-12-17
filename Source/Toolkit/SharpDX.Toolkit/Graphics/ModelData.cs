@@ -38,7 +38,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public ModelData()
         {
-            Bones = new List<Bone>();
+            Bones = new List<Node>();
             Meshes = new List<Mesh>();
             Attributes = new List<AttributeData>();
         }
@@ -46,7 +46,12 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Gets the bones of this model.
         /// </summary>
-        public List<Bone> Bones;
+        public List<Node> Bones;
+
+        /// <summary>
+        /// Gets the bones used to perform skinning animation with this model.
+        /// </summary>
+        public List<Node> SkinnedBones;
 
         /// <summary>
         /// Gets the mesh of this model.

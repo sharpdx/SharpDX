@@ -59,6 +59,11 @@ namespace SharpDX.Toolkit.Graphics
             public int VertexOffset;
 
             /// <summary>
+            /// Gets the offset matrix attached to each bone weights
+            /// </summary>
+            public Matrix[] BoneOffsetMatrices;
+
+            /// <summary>
             /// The attributes attached to this mesh part.
             /// </summary>
             public List<AttributeData> Attributes;

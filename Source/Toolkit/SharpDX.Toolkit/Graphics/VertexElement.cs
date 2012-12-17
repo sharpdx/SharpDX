@@ -294,6 +294,76 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
+        /// Declares a VertexElement with the semantic "BLENDINDICES".
+        /// </summary>
+        /// <typeparam name="T">Type of the BlendIndices semantic.</typeparam>
+        /// <param name="semanticIndex">The semantic index.</param>
+        /// <param name="offsetInBytes">The offset in bytes of this element. Use <see cref="AppendAligned"/> to compute automatically the offset from previous elements.</param>
+        /// <returns>A new instance of <see cref="VertexElement" /> that represents this semantic.</returns>
+        public static VertexElement BlendIndices<T>(int semanticIndex = 0, int offsetInBytes = AppendAligned) where T : struct
+        {
+            return BlendIndices(semanticIndex, ConvertTypeToFormat<T>(), offsetInBytes);
+        }
+
+        /// <summary>
+        /// Declares a VertexElement with the semantic "BLENDINDICES".
+        /// </summary>
+        /// <param name="format">Format of this element.</param>
+        /// <param name="offsetInBytes">The offset in bytes of this element. Use <see cref="AppendAligned"/> to compute automatically the offset from previous elements.</param>
+        /// <returns>A new instance of <see cref="VertexElement" /> that represents this semantic.</returns>
+        public static VertexElement BlendIndices(Format format, int offsetInBytes = AppendAligned)
+        {
+            return BlendIndices(0, format, offsetInBytes);
+        }
+
+        /// <summary>
+        /// Declares a VertexElement with the semantic "BLENDINDICES".
+        /// </summary>
+        /// <param name="semanticIndex">The semantic index.</param>
+        /// <param name="format">Format of this element.</param>
+        /// <param name="offsetInBytes">The offset in bytes of this element. Use <see cref="AppendAligned"/> to compute automatically the offset from previous elements.</param>
+        /// <returns>A new instance of <see cref="VertexElement" /> that represents this semantic.</returns>
+        public static VertexElement BlendIndices(int semanticIndex, Format format, int offsetInBytes = AppendAligned)
+        {
+            return new VertexElement("BLENDINDICES", semanticIndex, format, offsetInBytes);
+        }
+
+        /// <summary>
+        /// Declares a VertexElement with the semantic "BLENDWEIGHTS".
+        /// </summary>
+        /// <typeparam name="T">Type of the BlendWeights semantic.</typeparam>
+        /// <param name="semanticIndex">The semantic index.</param>
+        /// <param name="offsetInBytes">The offset in bytes of this element. Use <see cref="AppendAligned"/> to compute automatically the offset from previous elements.</param>
+        /// <returns>A new instance of <see cref="VertexElement" /> that represents this semantic.</returns>
+        public static VertexElement BlendWeights<T>(int semanticIndex = 0, int offsetInBytes = AppendAligned) where T : struct
+        {
+            return BlendWeights(semanticIndex, ConvertTypeToFormat<T>(), offsetInBytes);
+        }
+
+        /// <summary>
+        /// Declares a VertexElement with the semantic "BLENDWEIGHTS".
+        /// </summary>
+        /// <param name="format">Format of this element.</param>
+        /// <param name="offsetInBytes">The offset in bytes of this element. Use <see cref="AppendAligned"/> to compute automatically the offset from previous elements.</param>
+        /// <returns>A new instance of <see cref="VertexElement" /> that represents this semantic.</returns>
+        public static VertexElement BlendWeights(Format format, int offsetInBytes = AppendAligned)
+        {
+            return BlendWeights(0, format, offsetInBytes);
+        }
+
+        /// <summary>
+        /// Declares a VertexElement with the semantic "BLENDWEIGHTS".
+        /// </summary>
+        /// <param name="semanticIndex">The semantic index.</param>
+        /// <param name="format">Format of this element.</param>
+        /// <param name="offsetInBytes">The offset in bytes of this element. Use <see cref="AppendAligned"/> to compute automatically the offset from previous elements.</param>
+        /// <returns>A new instance of <see cref="VertexElement" /> that represents this semantic.</returns>
+        public static VertexElement BlendWeights(int semanticIndex, Format format, int offsetInBytes = AppendAligned)
+        {
+            return new VertexElement("BLENDWEIGHTS", semanticIndex, format, offsetInBytes);
+        }
+
+        /// <summary>
         /// Declares a VertexElement with the semantic "POSITION".
         /// </summary>
         /// <typeparam name="T">Type of the Position semantic.</typeparam>
