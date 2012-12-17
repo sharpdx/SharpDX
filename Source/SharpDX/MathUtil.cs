@@ -376,7 +376,7 @@ namespace SharpDX
         
 #if NET35Plus                    
         /// <summary>
-        /// Extension - Get random <c>float</c> number within range.
+        /// Get random <c>float</c> number within range.
         /// </summary>
         /// <param name="random">Current <see cref="System.Random"/>.</param>
         /// <param name="min">Minimum.</param>
@@ -388,7 +388,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Extension - Get random <c>double</c> number within range.
+        /// Get random <c>double</c> number within range.
         /// </summary>
         /// <param name="random">Current <see cref="System.Random"/>.</param>
         /// <param name="min">Minimum.</param>
@@ -398,6 +398,155 @@ namespace SharpDX
         {
             return (min + random.NextDouble() * (max - min));
         } 
+        
+        /// <summary>
+        /// Get random <c>long</c> number.
+        /// </summary>
+        /// <param name="random">Current <see cref="System.Random"/>.</param>
+        /// <returns>Random <c>long</c> number.</returns>
+        public static long NextLong(this Random random)
+        { 
+            var buffer = new byte[sizeof(long)];
+            random.NextBytes(buffer);
+            return BitConverter.ToInt64(buffer, 0);
+        }
+
+        /// <summary>
+        /// Get random <c>long</c> number.
+        /// </summary>
+        /// <param name="random">Current <see cref="System.Random"/>.</param>
+        /// <param name="min">Minimum.</param>
+        /// <param name="max">Maximum.</param>
+        /// <returns>Random <c>long</c> number.</returns>
+        public static long NextLong(this Random random,long min,long max)
+        {
+            byte[] buf = new byte[sizeof(long)];
+            random.NextBytes(buf);
+            long longRand = BitConverter.ToInt64(buf, 0);
+
+            return (Math.Abs(longRand % (max - min)) + min);
+        } 
+
+        /// <summary>
+        /// Get random <see cref="SharpDX.Vector2"/> within range.
+        /// </summary>
+        /// <param name="random">Current <see cref="System.Random"/>.</param>
+        /// <param name="min">Minimum.</param>
+        /// <param name="max">Maximum.</param>
+        /// <returns>Random <see cref="SharpDX.Vector2"/>.</returns>
+        public static Vector2 NextVector2(this Random random, Vector2 min, Vector2 max)
+        {
+            return new Vector2(random.NextFloat(min.X, max.X), random.NextFloat(min.Y, max.Y));
+        }
+
+        /// <summary>
+        /// Get random <see cref="SharpDX.Vector3"/> within range.
+        /// </summary>
+        /// <param name="random">Current <see cref="System.Random"/>.</param>
+        /// <param name="min">Minimum.</param>
+        /// <param name="max">Maximum.</param>
+        /// <returns>Random <see cref="SharpDX.Vector3"/>.</returns>
+        public static Vector3 NextVector3(this Random random, Vector3 min, Vector3 max)
+        {
+            return new Vector3(random.NextFloat(min.X, max.X), random.NextFloat(min.Y, max.Y), random.NextFloat(min.Z, max.Z));
+        }
+
+        /// <summary>
+        /// Get random <see cref="SharpDX.Vector4"/> within range.
+        /// </summary>
+        /// <param name="random">Current <see cref="System.Random"/>.</param>
+        /// <param name="min">Minimum.</param>
+        /// <param name="max">Maximum.</param>
+        /// <returns>Random <see cref="SharpDX.Vector4"/>.</returns>
+        public static Vector4 NextVector4(this Random random, Vector4 min, Vector4 max)
+        {
+            return new Vector4(random.NextFloat(min.X, max.X), random.NextFloat(min.Y, max.Y), random.NextFloat(min.Z, max.Z), random.NextFloat(min.W, max.W));
+        }
+
+        /// <summary>
+        /// Get random opaque <see cref="SharpDX.Color"/>
+        /// </summary>
+        /// <param name="random">Current <see cref="System.Random"/>.</param>
+        /// <returns>Random <see cref="SharpDX.Color"/>.</returns>
+        public static Color NextColor(this Random random)
+        {
+            return new Color(random.NextFloat(0.0f, 1.0f), random.NextFloat(0.0f, 1.0f), random.NextFloat(0.0f, 1.0f), 1.0f);
+        }
+
+        /// <summary>
+        /// Get random opaque <see cref="SharpDX.Color"/>
+        /// </summary>
+        /// <param name="random">Current <see cref="System.Random"/>.</param>
+        /// <param name="minBrightness">Minimum brightness.</param>
+        /// <param name="maxBrightness">Maximum brightness</param>
+        /// <returns>Random <see cref="SharpDX.Color"/>.</returns>
+        public static Color NextColor(this Random random, float minBrightness, float maxBrightness)
+        {
+            return new Color(random.NextFloat(minBrightness, maxBrightness), random.NextFloat(minBrightness, maxBrightness), random.NextFloat(minBrightness, maxBrightness), 1.0f);
+        }
+
+        /// <summary>
+        /// Get random <see cref="SharpDX.Color"/>.
+        /// </summary>
+        /// <param name="random">Current <see cref="System.Random"/>.</param>   
+        /// <param name="minBrightness">Minimum brightness.</param>
+        /// <param name="maxBrightness">Maximum brightness</param>
+        /// <param name="alpha">Alpha value.</param>
+        /// <returns>Random <see cref="SharpDX.Color"/>.</returns>
+        public static Color NextColor(this Random random, float minBrightness, float maxBrightness, float alpha)
+        {
+            return new Color(random.NextFloat(minBrightness, maxBrightness), random.NextFloat(minBrightness, maxBrightness), random.NextFloat(minBrightness, maxBrightness), alpha);
+        } 
+
+        /// <summary>
+        /// Get random <see cref="SharpDX.Color"/>.
+        /// </summary>
+        /// <param name="random">Current <see cref="System.Random"/>.</param>
+        /// <param name="minBrightness">Minimum brightness.</param>
+        /// <param name="maxBrightness">Maximum brightness</param>
+        /// <param name="minAlpha">Minimum alpha.</param>
+        /// <param name="maxAlpha">Maximum alpha.</param>
+        /// <returns>Random <see cref="SharpDX.Color"/>.</returns>
+        public static Color NextColor(this Random random, float minBrightness, float maxBrightness, float minAlpha, float maxAlpha)
+        {
+            return new Color(random.NextFloat(minBrightness, maxBrightness), random.NextFloat(minBrightness, maxBrightness), random.NextFloat(minBrightness, maxBrightness), random.NextFloat(minAlpha, maxAlpha));
+        }
+
+        /// <summary>
+        /// Get random <see cref="SharpDX.DrawingPoint"/>.
+        /// </summary>
+        /// <param name="random">Current <see cref="System.Random"/>.</param>
+        /// <param name="min">Minimum.</param>
+        /// <param name="max">Maximum.</param>
+        /// <returns>Random <see cref="SharpDX.DrawingPoint"/>.</returns>
+        public static DrawingPoint NextDPoint(this Random random,DrawingPoint min,DrawingPoint max)
+        {
+            return new DrawingPoint(random.Next(min.X,max.X),random.Next(min.Y,max.Y));
+        }
+
+        /// <summary>
+        /// Get random <see cref="SharpDX.DrawingPointF"/>.
+        /// </summary>
+        /// <param name="random">Current <see cref="System.Random"/>.</param>
+        /// <param name="min">Minimum.</param>
+        /// <param name="max">Maximum.</param>
+        /// <returns>Random <see cref="SharpDX.DrawingPointF"/>.</returns>
+        public static DrawingPointF NextDPointF(this Random random, DrawingPointF min, DrawingPointF max)
+        {
+            return new DrawingPointF(random.NextFloat(min.X, max.X), random.NextFloat(min.Y, max.Y));
+        }
+        
+        /// <summary>
+        /// Get random <see cref="System.TimeSpan"/>.
+        /// </summary>
+        /// <param name="random">Current <see cref="System.Random"/>.</param>
+        /// <param name="min">Minimum.</param>
+        /// <param name="max">Maximum.</param>
+        /// <returns>Random <see cref="System.TimeSpan"/>.</returns>
+        public static TimeSpan NextTimespan(this Random random, TimeSpan min, TimeSpan max)
+        { 
+            return TimeSpan.FromTicks(random.NextLong(min.Ticks,max.Ticks));
+        }
 #endif
     }
 }
