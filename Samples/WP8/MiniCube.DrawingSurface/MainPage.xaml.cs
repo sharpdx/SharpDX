@@ -36,8 +36,8 @@ namespace MiniTriApp
         {
             InitializeComponent();
 
-            DrawingSurface.SetBackgroundContentProvider( _sdInterop.CreateContentProvider() );
-            DrawingSurface.SetBackgroundManipulationHandler(_sdInterop);
+            DrawingSurface.SetContentProvider( _sdInterop.CreateContentProvider() );
+            DrawingSurface.SetManipulationHandler(_sdInterop);
         }
     }
 }

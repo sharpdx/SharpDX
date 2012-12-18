@@ -19,6 +19,6 @@
         <DrawingSurface x:Name="DrawingSurface" />
     </Grid>
     -->
-    <DrawingSurfaceBackgroundGrid x:Name="DrawingSurface" />
+    <DrawingSurface x:Name="DrawingSurface" Width="400" Height="400" />
     
 </phone:PhoneApplicationPage>

@@ -30,14 +30,14 @@ namespace MiniTriApp
     /// This is a port of Direct3D C++ WP8 sample. This port is not clean and complete. 
     /// The preferred way to access Direct3D on WP8 is by using SharpDX.Toolkit.
     /// </summary>
-    internal class SharpDXContentProvider : DrawingSurfaceBackgroundContentProviderNativeBase
+    internal class SharpDXContentProvider : DrawingSurfaceContentProviderNativeBase
     {
         public SharpDXContentProvider(SharpDXInterop controller)
         {
             _controller = controller;
         }
 
-        public override void Connect(DrawingSurfaceRuntimeHost host, Device device)
+        public override void Connect(DrawingSurfaceRuntimeHost host)
         {
             _host = host;
             _controller.Connect();
@@ -50,14 +50,15 @@ namespace MiniTriApp
             _synchronizedTexture = null;
         }
 
-        public override void Draw(Device device, DeviceContext context, RenderTargetView renderTargetView)
+        public override void GetTexture(SharpDX.DrawingSizeF surfaceSize, ref DrawingSurfaceSynchronizedTexture synchronizedTexture, ref SharpDX.RectangleF textureSubRectangle)
         {
-            _controller.Render(device, context, renderTargetView);
-            _host.RequestAdditionalFrame();
+            //_controller.Render(device, context, renderTargetView);
+            //_host.RequestAdditionalFrame();
         }
 
-        public override void PrepareResources(DateTime presentTargetTime, ref SharpDX.DrawingSizeF desiredRenderTargetSize)
+        public override void PrepareResources(DateTime presentTargetTime, ref SharpDX.Bool isContentDirty)
         {
+            isContentDirty = true;
         }
 
 	    private readonly SharpDXInterop _controller;
