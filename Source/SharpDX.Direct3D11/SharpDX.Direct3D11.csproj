@@ -26,6 +26,7 @@
     <Compile Include="ComputeShader.cs" />
     <Compile Include="BlendState1.cs" />
     <Compile Include="BlendStateDescription1.cs" />
+    <Compile Include="IDrawingSurfaceContentProvider.cs" />
     <Compile Include="RasterizerStateDescription1.cs" />
     <Compile Include="DepthStencilStateDescription.cs" />
     <Compile Include="Device1.cs" />
