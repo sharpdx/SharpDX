@@ -137,14 +137,14 @@ namespace SharpDX.Direct3D11
             }
 
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            private delegate int PrepareResourcesDelegate(IntPtr thisPtr, IntPtr presentTargetTime, IntPtr isContentDirty);
-            private unsafe static int PrepareResources(IntPtr thisPtr, IntPtr presentTargetTime, IntPtr isContentDirty)
+            private delegate int PrepareResourcesDelegate(IntPtr thisPtr, IntPtr presentTargetTime, ref Bool isContentDirty);
+            private unsafe static int PrepareResources(IntPtr thisPtr, IntPtr presentTargetTime, ref Bool isContentDirty)
             {
                 try
                 {
                     var shadow = ToShadow<DrawingSurfaceContentProviderShadow>(thisPtr);
                     var callback = (IDrawingSurfaceContentProviderNative)shadow.Callback;
-                    callback.PrepareResources(new DateTime(*(long*)presentTargetTime), ref *(Bool*)isContentDirty);
+                    callback.PrepareResources(new DateTime(*(long*)presentTargetTime), ref isContentDirty);
                 }
                 catch (Exception exception)
                 {
@@ -156,8 +156,8 @@ namespace SharpDX.Direct3D11
 
             
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            private delegate int GetTextureDelegate(IntPtr thisPtr, IntPtr surfaceSize, DrawingSurfaceSynchronizedTexture synchronizedTexture, IntPtr textureSubRectangle);
-            private unsafe static int GetTexture(IntPtr thisPtr, IntPtr surfaceSize, DrawingSurfaceSynchronizedTexture synchronizedTexture, IntPtr textureSubRectangle)
+            private delegate int GetTextureDelegate(IntPtr thisPtr, IntPtr surfaceSize, ref DrawingSurfaceSynchronizedTexture synchronizedTexture, IntPtr textureSubRectangle);
+            private unsafe static int GetTexture(IntPtr thisPtr, IntPtr surfaceSize, ref DrawingSurfaceSynchronizedTexture synchronizedTexture, IntPtr textureSubRectangle)
             {
                 try
                 {
