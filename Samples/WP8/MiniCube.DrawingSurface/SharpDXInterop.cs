@@ -27,16 +27,44 @@ using SharpDX.Direct3D11;
 
 namespace MiniTriApp
 {
+    public delegate void RequestAdditionalFrameHandler();
+    public delegate void RecreateSynchronizedTextureHandler();
+
     /// <summary>
     /// This is a port of Direct3D C++ WP8 sample. This port is not clean and complete. 
     /// The preferred way to access Direct3D on WP8 is by using SharpDX.Toolkit.
     /// </summary>
     internal class SharpDXInterop : Windows.Phone.Input.Interop.IDrawingSurfaceManipulationHandler
     {
+        public event RequestAdditionalFrameHandler RequestAdditionalFrame;
+	    public event RecreateSynchronizedTextureHandler RecreateSynchronizedTexture;
+
+        public Windows.Foundation.Size NativeResolution { get; set; }
+        public Windows.Foundation.Size _renderResolution;
+        public Windows.Foundation.Size WindowBounds { get; set; }
+
         public SharpDXInterop()
         {
             _timer = new BasicTimer();
         }
+
+        public Windows.Foundation.Size RenderResolution {
+            get { return _renderResolution; }
+            set {
+                if (value.Width != _renderResolution.Width ||
+                    value.Height != _renderResolution.Height)
+                {
+                    _renderResolution = value;
+
+                    if (_renderer!=null)
+                    {
+                        _renderer.UpdateForWindowSizeChange((float)_renderResolution.Width, (float)_renderResolution.Height);
+                        if (RecreateSynchronizedTexture != null) RecreateSynchronizedTexture();
+                    }
+                }
+            } 
+        }
+
 
         internal object CreateContentProvider()
         {

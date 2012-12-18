@@ -19,6 +19,8 @@
 // THE SOFTWARE.
 using System.Security;
 using Microsoft.Phone.Controls;
+using System;
+using System.Windows;
 
 namespace MiniTriApp
 {
@@ -28,7 +30,7 @@ namespace MiniTriApp
     /// </summary>
     public partial class MainPage : PhoneApplicationPage
     {
-        private SharpDXInterop _sdInterop = new SharpDXInterop();
+        private SharpDXInterop _sdInterop = null;
 
         // Constructor
         [SecuritySafeCritical]
@@ -36,8 +38,35 @@ namespace MiniTriApp
         {
             InitializeComponent();
 
-            DrawingSurface.SetContentProvider( _sdInterop.CreateContentProvider() );
-            DrawingSurface.SetManipulationHandler(_sdInterop);
+
+        }
+
+        private void DrawingSurface_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (_sdInterop == null)
+            {
+                _sdInterop = new SharpDXInterop();
+
+                // Set window bounds in dips
+                _sdInterop.WindowBounds = new Windows.Foundation.Size(
+                    (float)DrawingSurface.ActualWidth,
+                    (float)DrawingSurface.ActualHeight
+                    );
+
+                // Set native resolution in pixels
+                _sdInterop.NativeResolution = new Windows.Foundation.Size(
+                    (float)Math.Floor(DrawingSurface.ActualWidth * Application.Current.Host.Content.ScaleFactor / 100.0f + 0.5f),
+                    (float)Math.Floor(DrawingSurface.ActualHeight * Application.Current.Host.Content.ScaleFactor / 100.0f + 0.5f)
+                    );
+
+                // Set render resolution to the full native resolution
+                _sdInterop.RenderResolution = _sdInterop.NativeResolution;
+
+                // Hook-up native component to DrawingSurface
+                DrawingSurface.SetContentProvider(_sdInterop.CreateContentProvider());
+                DrawingSurface.SetManipulationHandler(_sdInterop);
+            }
+
         }
     }
 }
