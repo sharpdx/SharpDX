@@ -179,6 +179,7 @@
     <Compile Include="Win32\ComStreamShadow.cs" />
     <Compile Include="Win32\ComStreamBaseShadow.cs" />
     <Compile Include="Win32\ErrorCode.cs" />
+    <Compile Include="Win32\MessageFilterHook.cs" />
     <Compile Include="Win32\NamespaceDoc.cs" />
     <Compile Include="Win32\PropertyBag.cs" />
     <Compile Include="Win32\IStream.cs" />

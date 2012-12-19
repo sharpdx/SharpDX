@@ -23,6 +23,8 @@ using System.Globalization;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 
+using SharpDX.Win32;
+
 namespace SharpDX.Windows
 {
     /// <summary>
@@ -89,12 +91,10 @@ namespace SharpDX.Windows
         /// <summary>
         /// ProxyNativeWindow, used only to detect if the original window is destroyed
         /// </summary>
-        private class ProxyNativeWindow
+        private class ProxyNativeWindow : IMessageFilter
         {
             private readonly Control _form;
             private readonly IntPtr _windowHandle;
-            private readonly IntPtr _ptrToDefaultWndProc;
-            private Win32Native.WndProc _wndProc;
             private bool _isAlive;
 
             /// <summary>
@@ -105,7 +105,7 @@ namespace SharpDX.Windows
                 _form = form;
                 _windowHandle = form.Handle;
                 _form.Disposed += _form_Disposed;
-                _ptrToDefaultWndProc = Win32Native.GetWindowLong(new HandleRef(this, _windowHandle), Win32Native.WindowLongType.WndProc);
+                MessageFilterHook.AddMessageFilter(_windowHandle, this);
                 _isAlive = true;
             }
 
@@ -113,29 +113,12 @@ namespace SharpDX.Windows
             {
                 _isAlive = false;
             }
-
-            /// <summary>
-            /// Private WindowProc in order to handle NCDestroy message
-            /// </summary>
-            private IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam)
-            {
-                var result = Win32Native.CallWindowProc(_ptrToDefaultWndProc, hWnd, msg, wParam, lParam);
-                // WM_NCDESTROY = &H82
-                if (msg == 130)
-                    _isAlive = false;
-                return result;
-            }
             
             /// <summary>
             /// Private rendering loop
             /// </summary>
             public void Run(RenderCallback renderCallback)
             {
-                _wndProc = new Win32Native.WndProc(WndProc);
-
-                // Set our own private wndproc in order to catch NCDestroy message
-                Win32Native.SetWindowLong(new HandleRef(this, _windowHandle), Win32Native.WindowLongType.WndProc, _wndProc);
-
                 // Show the form
                 _form.Show();
 
@@ -171,6 +154,18 @@ namespace SharpDX.Windows
                 }
 
                 _form.Disposed -= _form_Disposed;
+
+                MessageFilterHook.RemoveMessageFilter(_windowHandle, this);
+            }
+
+            public bool PreFilterMessage(ref Message m)
+            {
+                // NCDESTROY event?
+                if (m.Msg == 130)
+                {
+                    _isAlive = false;
+                }
+                return false;
             }
         }
     }
