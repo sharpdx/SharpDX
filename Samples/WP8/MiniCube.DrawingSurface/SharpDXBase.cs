@@ -40,59 +40,86 @@ namespace MiniTriApp
         {
         }
 
-        public void Update(Device device, DeviceContext context, RenderTargetView renderTargetView)
+        public void Initialize()
         {
-            if (device != _device)
-            {
-                _device = device;
-                CreateDeviceResources();
-            }
-
-            _deviceContext = context;
-            _renderTargetview = renderTargetView;
-
-            CreateWindowSizeDependentResources();
+	        //CreateDeviceResources();
         }
+
+        public virtual void Update(float timeTotal, float timeDelta)
+        {
+
+        }
+
 
         public virtual void CreateDeviceResources()
         {
+            // This flag adds support for surfaces with a different color channel ordering
+	        // than the API default. It is required for compatibility with Direct2D.
+	        DeviceCreationFlags creationFlags = DeviceCreationFlags.BgraSupport  | DeviceCreationFlags.Debug;
+            
+	        // This array defines the set of DirectX hardware feature levels this app will support.
+	        // Note the ordering should be preserved.
+	        // Don't forget to declare your application's minimum required feature level in its
+	        // description.  All applications are assumed to support 9.1 unless otherwise stated.
+            
+	        SharpDX.Direct3D.FeatureLevel[] featureLevels = 
+	        {
+                SharpDX.Direct3D.FeatureLevel.Level_11_1,
+		        SharpDX.Direct3D.FeatureLevel.Level_11_0,
+		        SharpDX.Direct3D.FeatureLevel.Level_10_1,
+		        SharpDX.Direct3D.FeatureLevel.Level_10_0,
+		        SharpDX.Direct3D.FeatureLevel.Level_9_3
+	        };
+
+	        // Create the Direct3D 11 API device object and a corresponding context.
+            _device = new Device( DriverType.Hardware, creationFlags, featureLevels);
+            _deviceContext = new DeviceContext(_device);
+
+            _featureLevel = _device.FeatureLevel;
+
         }
 
         public virtual void CreateWindowSizeDependentResources()
         {
-            var resource = _renderTargetview.Resource;
-            using (var texture2D = new Texture2D(resource.NativePointer))
+            Texture2DDescription renderTargetDesc = new Texture2DDescription()
             {
+                Width = (int) _renderTargetSize.Width,
+                Height = (int) _renderTargetSize.Height,
+                ArraySize = 1,
+                BindFlags = BindFlags.RenderTarget | BindFlags.ShaderResource,
+                CpuAccessFlags =  CpuAccessFlags.None,
+                Format = SharpDX.DXGI.Format.B8G8R8A8_UNorm,
+                MipLevels = 1,
+                OptionFlags = ResourceOptionFlags.SharedKeyedmutex | ResourceOptionFlags.SharedNthandle,
+                SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0),
+                Usage = ResourceUsage.Default
+            };
+            
 
-                var currentWidth = (int) _renderTargetSize.Width;
-                var currentHeight = (int) _renderTargetSize.Height;
 
-                if (currentWidth != texture2D.Description.Width &&
-                    currentHeight != texture2D.Description.Height)
-                {
-                    _renderTargetSize.Width = texture2D.Description.Width;
-                    _renderTargetSize.Height = texture2D.Description.Height;
+            
+            // Allocate a 2-D surface as the render target buffer.
+            _renderTarget = new Texture2D(_device, renderTargetDesc);
+            
+            _renderTargetview = new RenderTargetView(_device, _renderTarget);
 
-                    ComObject.Dispose(ref _depthStencilView);
+            Texture2DDescription depthStencilDesc = new Texture2DDescription()
+            {
+                Format = SharpDX.DXGI.Format.D24_UNorm_S8_UInt,
+                Width = (int)_renderTargetSize.Width,
+                Height = (int)_renderTargetSize.Height,
+                ArraySize = 1,
+                MipLevels = 1,
+                BindFlags = BindFlags.DepthStencil
+            };
 
-                    using (var depthTexture = new Texture2D(
-                        _device,
-                        new Texture2DDescription()
-                            {
-                                Width = (int) _renderTargetSize.Width,
-                                Height = (int) _renderTargetSize.Height,
-                                ArraySize = 1,
-                                BindFlags = BindFlags.DepthStencil,
-                                CpuAccessFlags = CpuAccessFlags.None,
-                                Format = SharpDX.DXGI.Format.D24_UNorm_S8_UInt,
-                                MipLevels = 1,
-                                OptionFlags = ResourceOptionFlags.None,
-                                SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0),
-                                Usage = ResourceUsage.Default
-                            }))
-                        _depthStencilView = new DepthStencilView(_device, depthTexture);
-                }
-            }
+
+            Texture2D depthStencil = new Texture2D(_device, depthStencilDesc);
+            DepthStencilViewDescription depthStencilViewDesc = new DepthStencilViewDescription();
+            depthStencilViewDesc.Dimension = DepthStencilViewDimension.Texture2D;
+             ComObject.Dispose(ref _depthStencilView);
+            _depthStencilView = new DepthStencilView(_device, depthStencil, depthStencilViewDesc);
+            
 
             _windowBounds.Width = _renderTargetSize.Width;
             _windowBounds.Height = _renderTargetSize.Height;
@@ -108,6 +135,15 @@ namespace MiniTriApp
 	        _renderTargetSize.Width = width;
 	        _renderTargetSize.Height = height;
 
+
+        }
+
+        public virtual void UpdateForRenderResolutionChange(float width, float height)
+        {
+	        _renderTargetSize.Width = width;
+	        _renderTargetSize.Height = height;
+
+
 	        RenderTargetView[] nullViews = {null};
 	        //_deviceContext.SetRenderTargets(ARRAYSIZE(nullViews), nullViews, null);
 	        _renderTarget = null;
@@ -116,6 +152,7 @@ namespace MiniTriApp
 	        _deviceContext.Flush();
 
 	        CreateWindowSizeDependentResources();
+
         }
 
         public abstract void Render();

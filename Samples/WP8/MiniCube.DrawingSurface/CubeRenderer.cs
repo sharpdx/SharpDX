@@ -43,9 +43,10 @@ namespace MiniTriApp
         private VertexBufferBinding _vertexBufferBinding;
         private SharpDX.Direct3D11.Buffer _constantBuffer;
         private Stopwatch _clock;
-
+        
         public CubeRenderer()
         {
+
             _loadingComplete = false;
             _indexCount = 0;
         }
@@ -129,18 +130,46 @@ namespace MiniTriApp
 
         }
 
+        public override void CreateWindowSizeDependentResources()
+        {
+            base.CreateWindowSizeDependentResources();
+
+            float aspectRatio = (float)_windowBounds.Width / (float)_windowBounds.Height;
+            float fovAngleY = 70.0f * (float)Math.PI / 180.0f;
+            if (aspectRatio < 1.0f)
+            {
+                fovAngleY /= aspectRatio;
+            }
+        }
+
+        Matrix _view;
+        Matrix _proj;
+        Matrix _viewProj;
+        Matrix _worldViewProj;
+        
+        public override void Update(float timeTotal, float timeDelta)
+        {
+           //timeDelta; // Unused parameter.
+            int width = (int)_renderTargetSize.Width;
+            int height = (int)_renderTargetSize.Height;
+
+
+	        Vector3 eye = new Vector3(0.0f, 0.7f, 1.5f);
+	        Vector3 at = new Vector3(0.0f, -0.1f, 0.0f);
+	        Vector3 up = new Vector3(0.0f, 1.0f, 0.0f);
+
+            _view = Matrix.LookAtLH(eye, at, up);
+            _proj = Matrix.PerspectiveFovLH((float)Math.PI / 4.0f, width / (float)height, 0.1f, 100.0f);
+            _viewProj = Matrix.Multiply(_view, _proj);
+	
+            
+            _worldViewProj = Matrix.RotationY(timeTotal * (float)Math.PI / 4.0f) * _viewProj;
+            _worldViewProj.Transpose();
+
+        }
+
         public override void Render()
         {
-            int width = (int) _renderTargetSize.Width;
-            int height = (int) _renderTargetSize.Height;
-
-            // Prepare matrices
-            var view = Matrix.LookAtLH(new Vector3(0, 0, -5), new Vector3(0, 0, 0), Vector3.UnitY);
-            var proj = Matrix.PerspectiveFovLH((float)Math.PI / 4.0f, width / (float)height, 0.1f, 100.0f);
-            var viewProj = Matrix.Multiply(view, proj);
-
-            var time = (float)(_clock.ElapsedMilliseconds / 1000.0);
-
 
             // Set targets (This is mandatory in the loop)
             _deviceContext.OutputMerger.SetTargets(_depthStencilView, _renderTargetview);
@@ -152,9 +181,6 @@ namespace MiniTriApp
 
             //if (ShowCube)
             //{
-                // Calculate WorldViewProj
-                var worldViewProj = Matrix.Scaling(1.0f) * Matrix.RotationX(time) * Matrix.RotationY(time * 2.0f) * Matrix.RotationZ(time * .7f) * viewProj;
-                worldViewProj.Transpose();
 
                 // Setup the pipeline
                 _deviceContext.InputAssembler.SetVertexBuffers(0, _vertexBufferBinding);
@@ -165,8 +191,8 @@ namespace MiniTriApp
                 _deviceContext.PixelShader.Set(_pixelShader);
 
                 // Update Constant Buffer
-                _deviceContext.UpdateSubresource(ref worldViewProj, _constantBuffer, 0);
-
+                _deviceContext.UpdateSubresource(ref _worldViewProj, _constantBuffer, 0);
+            
                 // Draw the cube
                 _deviceContext.Draw(36, 0);
             //}

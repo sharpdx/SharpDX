@@ -98,9 +98,12 @@ namespace MiniTriApp
             // Insert your code here.
         }
 
-        internal void Connect()
+        internal void Connect(DrawingSurfaceRuntimeHost host)
         {
 	        _renderer = new CubeRenderer();
+            _renderer.Initialize();
+            _renderer.UpdateForWindowSizeChange((float)WindowBounds.Width, (float)WindowBounds.Height);
+            _renderer.UpdateForRenderResolutionChange((float)WindowBounds.Width, (float)WindowBounds.Height);
 
 	        // Restart timer after renderer has finished initializing.
 	        _timer.Reset();
@@ -111,21 +114,29 @@ namespace MiniTriApp
             _renderer = null;
         }
 
+        internal void PrepareResources(DateTime presentTargetTime, ref Bool isContentDirty)
+        {
+            isContentDirty = true;	
+        }
+
         internal void UpdateForWindowSizeChange(float width, float height)
         {
             _renderer.UpdateForWindowSizeChange(width, height);
         }
 
-        internal void Render(Device device, DeviceContext context, RenderTargetView renderTargetView)
+        internal void GetTexture(DrawingSizeF surfaceSize, ref DrawingSurfaceSynchronizedTexture synchronizedTexture, ref RectangleF textureSubRectangle)
         {
             _timer.Update();
-            _renderer.Update(device, context, renderTargetView);
+            _renderer.Update(_timer.Total, _timer.Delta);
             _renderer.Render();
+
+            if (RequestAdditionalFrame!=null) RequestAdditionalFrame();
+
         }
 
         internal Texture2D GetTexture()
         {
-            return _renderer.GetTexture();
+	        return _renderer.GetTexture();
         }
 
         private CubeRenderer _renderer;
