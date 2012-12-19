@@ -42,7 +42,7 @@ namespace MiniTriApp
 
         public void Initialize()
         {
-	        //CreateDeviceResources();
+	        CreateDeviceResources();
         }
 
         public virtual void Update(float timeTotal, float timeDelta)
@@ -110,7 +110,12 @@ namespace MiniTriApp
                 Height = (int)_renderTargetSize.Height,
                 ArraySize = 1,
                 MipLevels = 1,
-                BindFlags = BindFlags.DepthStencil
+                BindFlags = BindFlags.DepthStencil,
+                Usage = ResourceUsage.Default,
+                CpuAccessFlags = CpuAccessFlags.None,
+                SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0), 
+                OptionFlags = ResourceOptionFlags.None
+
             };
 
 

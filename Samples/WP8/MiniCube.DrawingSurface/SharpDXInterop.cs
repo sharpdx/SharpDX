@@ -66,7 +66,7 @@ namespace MiniTriApp
         }
 
 
-        internal object CreateContentProvider()
+        public object CreateContentProvider()
         {
 	        var provider =  new SharpDXContentProvider(this);
             return provider;

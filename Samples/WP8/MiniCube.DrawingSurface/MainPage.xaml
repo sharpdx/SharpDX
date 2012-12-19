@@ -14,11 +14,11 @@
     shell:SystemTray.IsVisible="True">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
-    <!--
+    
     <Grid x:Name="LayoutRoot" Background="Transparent">
-        <DrawingSurface x:Name="DrawingSurface" />
+        <DrawingSurface x:Name="DrawingSurface" Loaded="DrawingSurface_Loaded"/>
     </Grid>
-    -->
-    <DrawingSurface x:Name="DrawingSurface" Width="400" Height="400" Loaded="DrawingSurface_Loaded" />
+    
+    
     
 </phone:PhoneApplicationPage>
