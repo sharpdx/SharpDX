@@ -120,10 +120,13 @@ namespace MiniTriApp
 
 
             Texture2D depthStencil = new Texture2D(_device, depthStencilDesc);
-            DepthStencilViewDescription depthStencilViewDesc = new DepthStencilViewDescription();
-            depthStencilViewDesc.Dimension = DepthStencilViewDimension.Texture2D;
+            //DepthStencilViewDescription depthStencilViewDesc = new DepthStencilViewDescription()
+            //{
+            //     Dimension = DepthStencilViewDimension.Texture2D,
+            //};
+            
              ComObject.Dispose(ref _depthStencilView);
-            _depthStencilView = new DepthStencilView(_device, depthStencil, depthStencilViewDesc);
+            _depthStencilView = new DepthStencilView(_device, depthStencil); //, depthStencilViewDesc);
             
 
             _windowBounds.Width = _renderTargetSize.Width;

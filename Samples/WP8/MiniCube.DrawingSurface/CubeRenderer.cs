@@ -140,6 +140,19 @@ namespace MiniTriApp
             {
                 fovAngleY /= aspectRatio;
             }
+
+            //XMStoreFloat4x4(
+            //    &m_constantBufferData.projection,
+            //    XMMatrixTranspose(
+            //        XMMatrixPerspectiveFovRH(
+            //            fovAngleY,
+            //            aspectRatio,
+            //            0.01f,
+            //            100.0f
+            //            )
+            //        )
+            //    );
+
         }
 
         Matrix _view;
