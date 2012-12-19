@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Forms;
 using SharpDX.Multimedia;
+using SharpDX.Win32;
 
 namespace SharpDX.RawInput
 {
@@ -110,6 +111,11 @@ namespace SharpDX.RawInput
         /// <param name="addMessageFilter">if set to <c>true</c> register message filter to Application.AddMessageFilter.</param>
         public static void RegisterDevice(UsagePage usagePage, UsageId usageId, DeviceFlags flags, IntPtr target, bool addMessageFilter = true)
         {
+            if (target == IntPtr.Zero)
+            {
+                target = Win32Native.GetFocus();
+            }
+
             var rawInputDevices = new RawInputDevice[1];
             rawInputDevices[0].UsagePage = (short) usagePage;
             rawInputDevices[0].Usage = (short) usageId;
@@ -122,7 +128,7 @@ namespace SharpDX.RawInput
             if (rawInputMessageFilter == null && addMessageFilter)
             {
                 rawInputMessageFilter = new RawInputMessageFilter();
-                Application.AddMessageFilter(rawInputMessageFilter);
+                MessageFilterHook.AddMessageFilter(target, rawInputMessageFilter);
             }
         }
 
