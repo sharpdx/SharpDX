@@ -146,26 +146,29 @@ namespace SharpDX
             return GetWindowLong64(hWnd, index);
         }
 
+        [DllImport("user32.dll", EntryPoint = "GetFocus", CharSet = CharSet.Ansi)]
+        public static extern IntPtr GetFocus();
+
         [DllImport("user32.dll", EntryPoint = "GetWindowLong", CharSet = CharSet.Ansi)]
         private static extern IntPtr GetWindowLong32(HandleRef hwnd, WindowLongType index);
 
         [DllImport("user32.dll", EntryPoint = "GetWindowLongPtr", CharSet = CharSet.Ansi)]
         private static extern IntPtr GetWindowLong64(HandleRef hwnd, WindowLongType index);
 
-        public static IntPtr SetWindowLong(HandleRef hwnd, WindowLongType index, WndProc wndProc)
+        public static IntPtr SetWindowLong(HandleRef hwnd, WindowLongType index, IntPtr wndProcPtr)
         {
             if (IntPtr.Size == 4)
             {
-                return SetWindowLong32(hwnd, index, wndProc);
+                return SetWindowLong32(hwnd, index, wndProcPtr);
             }
-            return SetWindowLongPtr64(hwnd, index, wndProc);
+            return SetWindowLongPtr64(hwnd, index, wndProcPtr);
         }
 
         [DllImport("user32.dll", EntryPoint = "SetWindowLong", CharSet = CharSet.Ansi)]
-        private static extern IntPtr SetWindowLong32(HandleRef hwnd, WindowLongType index, WndProc wndProc);
+        private static extern IntPtr SetWindowLong32(HandleRef hwnd, WindowLongType index, IntPtr wndProc);
 
         [DllImport("user32.dll", EntryPoint = "SetWindowLongPtr", CharSet = CharSet.Ansi)]
-        private static extern IntPtr SetWindowLongPtr64(HandleRef hwnd, WindowLongType index, WndProc wndProc);
+        private static extern IntPtr SetWindowLongPtr64(HandleRef hwnd, WindowLongType index, IntPtr wndProc);
 
         [DllImport("user32.dll", EntryPoint = "CallWindowProc", CharSet = CharSet.Ansi)]
         public static extern IntPtr CallWindowProc(IntPtr wndProc, IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam);
