@@ -156,8 +156,8 @@ namespace SharpDX.Direct3D11
 
             
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            private delegate int GetTextureDelegate(IntPtr thisPtr, IntPtr surfaceSize, ref DrawingSurfaceSynchronizedTexture synchronizedTexture, IntPtr textureSubRectangle);
-            private unsafe static int GetTexture(IntPtr thisPtr, IntPtr surfaceSize, ref DrawingSurfaceSynchronizedTexture synchronizedTexture, IntPtr textureSubRectangle)
+            private delegate int GetTextureDelegate(IntPtr thisPtr, IntPtr surfaceSize, IntPtr synchronizedTexture, IntPtr textureSubRectangle);
+            private unsafe static int GetTexture(IntPtr thisPtr, IntPtr surfaceSize, IntPtr synchronizedTexture, IntPtr textureSubRectangle)
             {
                 try
                 {
@@ -167,7 +167,7 @@ namespace SharpDX.Direct3D11
                     if (surfaceSize == IntPtr.Zero || textureSubRectangle == IntPtr.Zero)
                         throw new ArgumentException();
 
-                    callback.GetTexture(*(DrawingSizeF*)surfaceSize, ref synchronizedTexture, ref *(RectangleF*) textureSubRectangle);
+                    callback.GetTexture(*(DrawingSizeF*)surfaceSize, ref shadow.synchronizedTexture , ref *(RectangleF*) textureSubRectangle);
                 }
                 catch (Exception exception)
                 {
