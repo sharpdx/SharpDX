@@ -55,7 +55,7 @@ namespace MiniTriApp
         {
             // This flag adds support for surfaces with a different color channel ordering
 	        // than the API default. It is required for compatibility with Direct2D.
-	        DeviceCreationFlags creationFlags = DeviceCreationFlags.BgraSupport  | DeviceCreationFlags.Debug;
+	        DeviceCreationFlags creationFlags = DeviceCreationFlags.BgraSupport  ; //| DeviceCreationFlags.Debug;
             
 	        // This array defines the set of DirectX hardware feature levels this app will support.
 	        // Note the ordering should be preserved.
@@ -140,8 +140,8 @@ namespace MiniTriApp
 
         public virtual void UpdateForWindowSizeChange(float width, float height)
         {
-	        _renderTargetSize.Width = width;
-	        _renderTargetSize.Height = height;
+	        _windowBounds.Width = width;
+            _windowBounds.Height = height;
 
 
         }

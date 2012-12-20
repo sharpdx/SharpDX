@@ -58,7 +58,7 @@ namespace MiniTriApp
 
                     if (_renderer!=null)
                     {
-                        _renderer.UpdateForWindowSizeChange((float)_renderResolution.Width, (float)_renderResolution.Height);
+                        _renderer.UpdateForRenderResolutionChange((float)_renderResolution.Width, (float)_renderResolution.Height);
                         if (RecreateSynchronizedTexture != null) RecreateSynchronizedTexture();
                     }
                 }
@@ -103,7 +103,7 @@ namespace MiniTriApp
 	        _renderer = new CubeRenderer();
             _renderer.Initialize();
             _renderer.UpdateForWindowSizeChange((float)WindowBounds.Width, (float)WindowBounds.Height);
-            _renderer.UpdateForRenderResolutionChange((float)WindowBounds.Width, (float)WindowBounds.Height);
+            _renderer.UpdateForRenderResolutionChange((float)_renderResolution.Width, (float)_renderResolution.Height);
 
 	        // Restart timer after renderer has finished initializing.
 	        _timer.Reset();
