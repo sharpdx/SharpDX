@@ -32,7 +32,7 @@ namespace SharpDX.Toolkit
         event EventHandler<EventArgs> DrawOrderChanged;
 
         /// <summary>
-        /// Occurs when the <see cref="DrawOrder"/> property changes.
+        /// Occurs when the <see cref="Visible"/> property changes.
         /// </summary>
         event EventHandler<EventArgs> VisibleChanged;
 
