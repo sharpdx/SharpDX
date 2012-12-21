@@ -437,7 +437,7 @@
         <include name="SharpDX.*/Bin/${bin-dir}/*.pdb" />
         <include name="SharpDX.*/Bin/${bin-dir}/*.xml" />
 
-        <include name="Toolkit/SharpDX.*/Bin/${bin-dir}/*.exe" />
+        <include name="Toolkit/tk.*/Bin/${bin-dir}/*.exe" />
         <include name="Toolkit/SharpDX.*/Bin/${bin-dir}/*.dll" />
         <include name="Toolkit/SharpDX.*/Bin/${bin-dir}/*.winmd" />
         <include name="Toolkit/SharpDX.*/Bin/${bin-dir}/*.pdb" />
