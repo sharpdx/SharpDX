@@ -59,10 +59,10 @@
       <exclude>SharpDXWeb</exclude>
     </topic>
 
-    <!-- Documentation for Programming Guide -->
+    <!-- Documentation for Programming Guide --><!--
     <topic id="X:ProgrammingGuide" filename="02-guide.html" page-id="guide" name="Programming Guide" on-url="true" >
 
-      <!-- Use to specify Joomla SubMenu -->
+      --><!-- Use to specify Joomla SubMenu --><!--
       <param name="ItemId">150</param>
       
       <topic id="X:ProgrammingGuide.Overview" filename="03-guide-overview.html" page-id="overview" name="Overview">
@@ -84,16 +84,16 @@
       </topic>
     </topic>
 
-    <!-- Documentation for Tutorials -->
+    --><!-- Documentation for Tutorials --><!--
     <topic id="X:Tutorials" filename="10-tutorials.html" page-id="tutorials" name="Tutorials" on-url="true">
 
-      <!-- Use to specify Joomla SubMenu -->
+      --><!-- Use to specify Joomla SubMenu --><!--
       <param name="ItemId">151</param>
 
       <topic id="X:Tutorials.Tutorial1" filename="11-tutorial1.html" page-id="tutorial1" name="Tutorial 1 : Window setup"/>
       <topic id="X:Tutorials.Tutorial2" filename="11-tutorial2.html" page-id="tutorial2" name="Tutorial 2 : Direct3D11 setup"/>
       <topic id="X:Tutorials.Tutorial3" filename="11-tutorial3.html" page-id="tutorial3" name="Tutorial 3 : Direct3D11 MiniCube Sample"/>
-    </topic>
+    </topic>-->
 
     <!-- Special topic X:ClassLibrary to include generated class library references. No filename to setup as it is generated -->
     <topic id="X:ClassLibraryReference" page-id="api" name="Class Library Reference" index="100" on-url="true">

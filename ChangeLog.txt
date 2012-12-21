@@ -4,6 +4,129 @@ SharpDX Change Log
 Previous Release notes:
 
 --------------------------
+Release Notes (2012-11-20)
+--------------------------
+General Information
+
+A new version 2.4.1 of SharpDX is available today for download.
+
+This version is a maintenance version, mainly fixing several issues and improving the SharpDX Toolkit.
+
+PrimitiveBatch from DirectXTk has been ported to the Toolkit. Also, there is a new convenient method to draw a full screen quad using GraphicsDevice.DrawQuad. See details about changes in the Toolkit below.
+
+Note about using the Toolkit effect compiler (tkfxc.exe): You can use either the version from:
+
+    The directory Bin\Net40Release if you have DirectX End-User Runtime June 2010 installed.
+    Or you can use directly Bin\Win8Desktop-net40 which is shipped with D3DCompiler_46.dll
+    Both versions can compiled shaders for all Windows (from Desktop, Windows RT and Windows Phone 8, except if you are using latest D3D11.1 features which are only available using d3dcompiler_46.dll)
+
+As It was explained in a previous post, SharpDX is now accepting code contribution from the community. This release is integrating contributions from early contributors to SharpDX on github!
+
+Concerning the support, I'm focusing my primary support for the core functions of the following API:
+
+    Direct3D11 (not Effect11 framework), DXGI, D3DCompiler, XAudio2 and Audio part of MediaFoundation.
+    The toolkit, the Toolkit.Graphics and compiler. The Toolkit.Game assembly has a lower priority (for non desktop platforms).
+
+For other API, I strongly encourage the community to participate to fix bugs and/or add improvements, as they have a lower priority support now in SharpDX.
+
+Concerning the forum, my personnal investement to respond to API usage has now a much lower priority, as explained in the "Changes in Support and Community" post.
+
+Also, as indicated on the contact form, I will not respond to any private inquiry about SharpDX bug notice or API usage.
+Changes and bugfixes
+
+Please find below an auto-generated list of all changes and fixes from previous 2.3 version.
+Code contributed by SharpDX Community
+
+    Added missing XAudio interop methods for WP8. (changes, changes)
+    Fix for Incorrect SetPixel and SetVertexShaderConstant (F and I arrays) where count were incorrectly *4 (changes)
+    Fix issue #305.[DX11] Missing functions in Direct3D11.EffectPass (changes, changes)
+    Fixed IDrawingSurfaceBackgroundContentProviderNative.PrepareResources to properly support desiredRenderTargetSize as an in/out var. (changes)
+    Merge branch 'master' into wp8 (changes)
+    Merge pull request #1 from jbriguet/master (changes)
+    Merge remote-tracking branch 'origin/master' (changes)
+    Updated fix for SetVertexShaderConstant (changes)
+    Added ColorConverter & Color4Converter (changes)
+    Added SourceType VideoCaptureGuid and AudioCaptureGuid in SharpDX.MediaFoundation.CaptureDeviceAttributeKeys (changes)
+    Fix mapping in MediaFoundation for various functions by using mf.dll (changes)
+
+Build
+
+    Remove ProjectTypeGuids on SharpDX project, as it is conflicting when WP8 SDK is not installed. (changes)
+    Update README.markdown for github (changes)
+
+SharpDoc
+
+    Remove assembly documentation in order to support same namespace declared in different assemblies. Now, namespaces are the top level topic item in the class library reference. (changes)
+
+SharpDX
+
+    Fix issue #282. Matrix3x2.TransformationPoint was not valid. (changes)
+    Fix issue #283. Add new wrap methods to MathUtil (changes)
+    Fix issue #292. A regression bug was introduced in RenderForm that was preventing anykind of interaction with it. This patch fix a code that went to git by mistake. (changes)
+
+SharpGitLog
+
+    Fix links (changes)
+
+Toolkit
+
+    Add an exception to ContentManager.Load when there is no registered resolvers (changes)
+
+Toolkit.Compiler
+
+    Add a check when missing a parenthesis, bracket, curly brace in FX file and generate a parsing error. (changes)
+
+Toolkit.Game
+
+    Add better support for PreferredGraphicsProfile in GraphicsDeviceManager (changes)
+    Add IContentable to allow a GameSystem to Load and Unload content as in the game class. Add Content and GraphicsDevice property directly to accessible to a GameSystem. (changes)
+    Add support Activated, Deactivated and Exiting events for Desktop platform (they are not yet implemented for Windows RT and WP8) (changes)
+    Fix issue #281. Game.IsMouseVisible is now working on Desktop (bis) (changes)
+    Fix issue #281. Game.IsMouseVisible is now working on Desktop. (changes)
+    Fix issue #291. Allows PreferredBackBufferWidth / PreferredBackBufferHeight to be effectively used in non-fullscreen scenario. (changes)
+    Fix issue #309 crash on phone HW devices where the adapter is null because the attached adapter to the device is invalid (changes)
+    Fix issue #309. Allow null value for GraphicsDeviceInformation.Adapter. (changes)
+    Fix issue #310. Private variable in game was not initialized. (changes)
+
+Toolkit.Graphics
+
+    Add BasicEffect.TextureView to allow ShaderResourceView instead of texture2D. Change BasicEffect.Texture to accept Texture2DBase (changes)
+    Add comments to PrimitiveBatch. Add automatic VertexInputLayout for vertices with known VertexElements. (changes)
+    Add comments to PrimitiveQuad / GraphicsDevice.DrawQuad (changes)
+    Add generic Texture.New method. Add equals/hashcode to TextureDescription (changes)
+    Add GraphicsDevice.Clear method similar to XNA (changes)
+    Add PrimitiveQuad and GraphicsDevice.DrawQuad for fullscreen quad primitive. Modify CustomEFfectContent sample to use the new DrawQuad method. (changes)
+    Add test and TextureInfo comment to SpriteBatch. (changes)
+    Fix access to unordered access view on texture. (changes)
+    Fix bug in GraphicsDevice.SetVertexBuffers. Test that PrimitiveBatch is running fine. (changes)
+    Fix compiling error typo in SpriteBatch (changes)
+    Fix GameWindow.AllowUserResizing (changes)
+    Fix issue #284. Sorting mode was not working on a particular SpriteBatch.Draw method. (changes)
+    Fix issue #286. SpriteBatch was not working with multiple instance. (changes)
+    Fix issue #289. Allows a pass to set a shader stage to null (changes)
+    Fix issue #296. Severe bug in effect that was preventing Effect to work properly with resource to bind. (changes)
+    Fix issue #301. SpriteEffects.FlipXXX modes are now working correctly (changes)
+    Fix issue #304. Add virtual to GameSystem.Initialize and fire events methods (changes)
+    Fix ordering of static/readonly members in SpriteBatch. Remove unused members. (changes)
+    Fix performance weird issue under x64 for SpriteBatch. Should now be on par with x86 (changes)
+    Initialzie the TextureSampler to use the default SamplerSate in BasicEffect in order to avoid invalid error messages when debugging the device (changes)
+    Modify SpriteBatch to allow ShaderResourceView instead of Texture2D, as it is much more versatile. (changes)
+    Move test for CustomEffect.CurrentTechnique to a upper level in SpriteBatch (changes)
+    Port PrimitiveBatch from DirectXTk. Not yet tested. (changes)
+    Remove DeviceCreationFlags.Debug from CustomEffectGame sample (changes)
+    Simplifies SpriteBatch immediate mode using same behavior as in DirectXTk (changes)
+    Update GraphicsDevice.GetOrCreateSharedData<T> to accept "object key" instead of "string key". (changes)
+
+Toolkit.tkfxc
+
+    Fix issue #287. Add Redist D3DCompiler_46.dll to the build. Update tkfxc to use a dynamic path to load d3dcompiler dll for Win8Desktop-net40 version. (changes)
+    The command line compiler is now not compiling/writing the output if the input is not more recent (changes)
+
+XAudio2
+
+    Fix issue #299. Add XAudio2 FX Reverb and VolumeMeter that were missing under DirectX11.1 (changes)
+
+--------------------------
 Release Notes (2012-10-31)
 --------------------------
 General Information
