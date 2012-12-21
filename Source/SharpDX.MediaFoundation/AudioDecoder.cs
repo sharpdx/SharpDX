@@ -286,7 +286,7 @@ namespace SharpDX.MediaFoundation
                 WaveFormat = realMediaType.ExtracttWaveFormat(out sizeRef);
             }
 
-            Duration = new TimeSpan(reader.GetPresentationAttribute(SourceReaderIndex.Mediasource, PresentationDescriptionAttributeKeys.Duration));
+            Duration = new TimeSpan(reader.GetPresentationAttribute(SourceReaderIndex.MediaSource, PresentationDescriptionAttributeKeys.Duration));
         }
     }
 }

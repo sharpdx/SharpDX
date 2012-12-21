@@ -89,7 +89,7 @@ namespace CommonDX
                                      };
 
                 using (var factory = new MediaEngineClassFactory())
-                    mediaEngine = new MediaEngine(factory, attributes, MediaEngineCreateflags.WaitforstableState, OnMediaEngineEvent);                
+                    mediaEngine = new MediaEngine(factory, attributes, MediaEngineCreateFlags.WaitForStableState, OnMediaEngineEvent);                
                 mediaEngineEx = mediaEngine.QueryInterface<MediaEngineEx>();
             }
         }
@@ -321,13 +321,13 @@ namespace CommonDX
         {
             switch (mediaEvent)
             {
-                case MediaEngineEvent.Notifystablestate:
+                case MediaEngineEvent.NotifyStableState:
                     SetEvent(new IntPtr(param1));
                     break;
-                case MediaEngineEvent.Loadedmetadata:
+                case MediaEngineEvent.LoadedMetadata:
                     isEndOfStream = false;
                     break;
-                case MediaEngineEvent.Canplay:
+                case MediaEngineEvent.CanPlay:
                     // Start the Playback
                     Play();
                     break;
@@ -344,7 +344,7 @@ namespace CommonDX
                     }
                     isEndOfStream = true;
                     break;
-                case MediaEngineEvent.Timeupdate:
+                case MediaEngineEvent.TimeUpdate:
                     break;
                 case MediaEngineEvent.Error:
                     break;

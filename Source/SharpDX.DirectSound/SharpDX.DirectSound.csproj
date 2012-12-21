@@ -59,7 +59,9 @@
     <Compile Include="WavesReverb.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Mapping.xml" />
+    <None Include="Mapping.xml">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="SharpDX.DirectSound.nuspec" />

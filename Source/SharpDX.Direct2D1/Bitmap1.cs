@@ -143,7 +143,7 @@ namespace SharpDX.Direct2D1
         /// <unmanaged>HRESULT ID2D1Bitmap1::Map([In] D2D1_MAP_OPTIONS options,[Out] D2D1_MAPPED_RECT* mappedRect)</unmanaged>	
         public DataRectangle Map(SharpDX.Direct2D1.MapOptions options)
         {
-            MappedRect mappedRect;
+            MappedRectangle mappedRect;
             Map(options, out mappedRect);
             return new DataRectangle(mappedRect.Bits, mappedRect.Pitch);
         }

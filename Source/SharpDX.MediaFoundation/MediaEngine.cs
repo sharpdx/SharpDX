@@ -35,7 +35,7 @@ namespace SharpDX.MediaFoundation
         /// <param name="factory"></param>
         /// <param name="attributes"></param>
         /// <param name="createFlags"> </param>
-        public MediaEngine(MediaEngineClassFactory factory, MediaEngineAttributes attributes = null, MediaEngineCreateflags createFlags = MediaEngineCreateflags.None, MediaEngineNotifyDelegate playbackCallback = null)
+        public MediaEngine(MediaEngineClassFactory factory, MediaEngineAttributes attributes = null, MediaEngineCreateFlags createFlags = MediaEngineCreateFlags.None, MediaEngineNotifyDelegate playbackCallback = null)
         {
             // Create engine attributes if null
             attributes = attributes ?? new MediaEngineAttributes();

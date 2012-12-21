@@ -26,7 +26,7 @@ namespace SharpDX.DXGI
         /// <unmanaged>HRESULT IDXGIOutputDuplication::MapDesktopSurface([Out] DXGI_MAPPED_RECT* pLockedRect)</unmanaged>	
         public DataRectangle MapDesktopSurface()
         {
-            MappedRect mappedRect;
+            MappedRectangle mappedRect;
             MapDesktopSurface(out mappedRect);
             return new DataRectangle(mappedRect.PBits, mappedRect.Pitch);
         }

@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -33,7 +34,12 @@ namespace SharpGen.Generator
     /// </summary>
     public class NamingRulesManager
     {
-        private readonly Dictionary<Regex, string> _expandShortName = new Dictionary<Regex, string>();
+        private readonly List<ShortNameMapper> _expandShortName = new List<ShortNameMapper>();
+
+        /// <summary>
+        /// The recorded names, a list of previous name and new name.
+        /// </summary>
+        public readonly List<Tuple<CppElement, string>> RecordNames = new List<Tuple<CppElement, string>>();
 
         /// <summary>
         /// Adds the short name rule.
@@ -42,7 +48,9 @@ namespace SharpGen.Generator
         /// <param name="expandedName">Name of the expanded.</param>
         public void AddShortNameRule(string regexShortName, string expandedName)
         {
-            _expandShortName.Add(new Regex("^"+regexShortName+"$"), expandedName);
+            _expandShortName.Add(new ShortNameMapper(regexShortName, expandedName));
+            // Not efficient, but we order from longest to shortest regex
+            _expandShortName.Sort((left, right) => -left.Regex.ToString().Length.CompareTo(right.Regex.ToString().Length));
         }
 
         /// <summary>
@@ -56,8 +64,8 @@ namespace SharpGen.Generator
             string originalName = cppElement.Name;
             string name = cppElement.Name;
 
+            var namingFlags = NamingFlags.Default;
             bool nameModifiedByTag = false;
-            bool keepUnderscore = false;
 
             // Handle Tag
             var tag = cppElement.GetTagOrDefault<MappingRule>();
@@ -72,8 +80,8 @@ namespace SharpGen.Generator
                         return name;
                 }
 
-                if (tag.NameKeepUnderscore.HasValue)
-                    keepUnderscore = tag.NameKeepUnderscore.Value;
+                if (tag.NamingFlags.HasValue)
+                    namingFlags = tag.NamingFlags.Value;
             }
 
             // Rename is tagged as final, then return the string
@@ -89,7 +97,7 @@ namespace SharpGen.Generator
             name = name.TrimStart('_');
 
             // Convert rest of the string in CamelCase
-            name = ConvertToPascalCase(name, keepUnderscore);
+            name = ConvertToPascalCase(name, namingFlags);
             return name;
         }
 
@@ -100,7 +108,7 @@ namespace SharpGen.Generator
         /// <returns>The C# name</returns>
         public string Rename(CppElement cppElement)
         {
-            return UnKeyword(RenameCore(cppElement));
+            return RecordRename(cppElement, UnKeyword(RenameCore(cppElement)));
         }
 
         /// <summary>
@@ -111,7 +119,7 @@ namespace SharpGen.Generator
         /// <returns>The C# name of this enum item</returns>
         public string Rename(CppEnumItem cppEnumItem, string rootEnumName)
         {
-            return UnKeyword(RenameCore(cppEnumItem, rootEnumName));
+            return RecordRename(cppEnumItem, UnKeyword(RenameCore(cppEnumItem, rootEnumName)));
         }
 
         /// <summary>
@@ -139,7 +147,31 @@ namespace SharpGen.Generator
 
             name = new string(name[0], 1).ToLower() + name.Substring(1);
 
-            return UnKeyword(name);
+            return RecordRename(cppParameter, UnKeyword(name));
+        }
+
+        /// <summary>
+        /// Dump the names changes as a comma separated list of [FromName,ToName]
+        /// </summary>
+        /// <param name="writer">Text output of the dump</param>
+        public void DumpRenames(TextWriter writer)
+        {
+            foreach (var recordName in RecordNames)
+            {
+                writer.WriteLine("{0},{1}", recordName.Item1.FullName, recordName.Item2);
+            }
+        }
+
+        /// <summary>
+        /// Record the name source and the modified name.
+        /// </summary>
+        /// <param name="fromElement">The element to rename</param>
+        /// <param name="toName">The new name</param>
+        /// <returns>The new name</returns>
+        private string RecordRename(CppElement fromElement, string toName)
+        {
+            RecordNames.Add(new Tuple<CppElement, string>(fromElement, toName));
+            return toName;
         }
 
         /// <summary>
@@ -201,7 +233,7 @@ namespace SharpGen.Generator
         /// <param name="text">The text to convert.</param>
         /// <param name="keepUnderscore">if set to <c>true</c> keep underscore in this name.</param>
         /// <returns></returns>
-        public string ConvertToPascalCase(string text, bool keepUnderscore)
+        public string ConvertToPascalCase(string text, NamingFlags namingFlags)
         {
             string[] splittedPhrase = text.Split('_');
             var sb = new StringBuilder();
@@ -209,22 +241,45 @@ namespace SharpGen.Generator
             for (int i = 0; i < splittedPhrase.Length; i++)
             {
                 string subPart = splittedPhrase[i];
-                bool isRenameRegexpFound = false;
 
-                // Try to match a subpart and replace it if necessary
-                foreach (var regExp in _expandShortName)
+                // Don't perform expansion when asked
+                if ((namingFlags & NamingFlags.NoShortNameExpand) == 0)
                 {
-                    if (regExp.Key.Match(subPart).Success)
+                    while (subPart.Length > 0)
                     {
-                        subPart = regExp.Key.Replace(subPart, regExp.Value);
-                        isRenameRegexpFound = true;
-                        sb.Append(subPart);
-                        break;
+                        bool continueReplace = false;
+                        foreach (var regExp in _expandShortName)
+                        {
+                            var regex = regExp.Regex;
+                            var newText = regExp.Replace;
+
+                            if (regex.Match(subPart).Success)
+                            {
+                                if (regExp.HasRegexReplace)
+                                {
+                                    subPart = regex.Replace(subPart, regExp.Replace);
+                                    sb.Append(subPart);
+                                    subPart = string.Empty;
+                                }
+                                else
+                                {
+                                    subPart = regex.Replace(subPart, string.Empty);
+                                    sb.Append(newText);
+                                    continueReplace = true;
+                                }
+                                break;
+                            }
+                        }
+
+                        if (!continueReplace)
+                        {
+                            break;
+                        }
                     }
                 }
 
                 // Else, perform a standard convertion
-                if (!isRenameRegexpFound)
+                if (subPart.Length > 0)
                 {
                     int numberOfCharLowercase;
                     // If string is not Pascal Case, then Pascal Case it
@@ -244,7 +299,7 @@ namespace SharpGen.Generator
                     }
                 }
 
-                if (keepUnderscore && (i + 1) < splittedPhrase.Length)
+                if ( (namingFlags & NamingFlags.KeepUnderscore) != 0 && (i + 1) < splittedPhrase.Length)
                     sb.Append("_");
             }
             return sb.ToString();
@@ -258,6 +313,22 @@ namespace SharpGen.Generator
         private static bool IsKeyword(string name)
         {
             return CSharpKeywords.Contains(name);
+        }
+
+        private class ShortNameMapper
+        {
+            public ShortNameMapper(string regex, string replace)
+            {
+                Regex = new Regex("^" + regex);
+                Replace = replace;
+                HasRegexReplace = replace.Contains("$");
+            }
+
+            public Regex Regex;
+
+            public string Replace;
+
+            public bool HasRegexReplace;
         }
 
         /// <summary>

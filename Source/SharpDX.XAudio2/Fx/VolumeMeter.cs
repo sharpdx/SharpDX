@@ -25,7 +25,7 @@ namespace SharpDX.XAudio2.Fx
     /// <summary>
     /// A VolumeMeter XAudio2 AudioProcessor.
     /// </summary>
-    public partial class VolumeMeter : AudioProcessorParamNative<VolumemeterLevels>
+    public partial class VolumeMeter : AudioProcessorParamNative<VolumeMeterLevels>
     {
 
         /// <summary>

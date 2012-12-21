@@ -882,7 +882,7 @@ namespace SharpDX.Toolkit.Graphics
             if ((description.OptionFlags & ResourceOptionFlags.BufferAllowRawViews) != 0)
                 bufferType |= BufferFlags.RawBuffer;
 
-            if ((description.OptionFlags & ResourceOptionFlags.DrawindirectArgs) != 0)
+            if ((description.OptionFlags & ResourceOptionFlags.DrawIndirectArguments) != 0)
                 bufferType |= BufferFlags.ArgumentBuffer;
 
             return bufferType;
@@ -940,7 +940,7 @@ namespace SharpDX.Toolkit.Graphics
                 desc.OptionFlags |= ResourceOptionFlags.BufferAllowRawViews;
 
             if ((bufferFlags & BufferFlags.ArgumentBuffer) == BufferFlags.ArgumentBuffer)
-                desc.OptionFlags |= ResourceOptionFlags.DrawindirectArgs;
+                desc.OptionFlags |= ResourceOptionFlags.DrawIndirectArguments;
 
             return desc;
         }

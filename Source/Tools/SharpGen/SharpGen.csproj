@@ -127,7 +127,6 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\WP8Debug\</OutputPath>
@@ -140,7 +139,6 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
-  
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Release|AnyCPU'">
     <OutputPath>bin\WP8Release\</OutputPath>
     <DefineConstants>TRACE;WP8;DIRECTX11_1</DefineConstants>
@@ -154,7 +152,6 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
-
   <ItemGroup>
     <Reference Include="HtmlAgilityPack, Version=1.4.0.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -188,6 +185,7 @@
     <Compile Include="Config\BindRule.cs" />
     <Compile Include="Config\ContextSetRule.cs" />
     <Compile Include="Config\ContextRule.cs" />
+    <Compile Include="Config\NamingFlags.cs" />
     <Compile Include="Config\IncludeDirRule.cs" />
     <Compile Include="Config\MoveRule.cs" />
     <Compile Include="Config\ParamAttribute.cs" />

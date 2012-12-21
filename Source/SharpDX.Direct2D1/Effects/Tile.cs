@@ -44,11 +44,11 @@ namespace SharpDX.Direct2D1.Effects
         {
             get
             {
-                return GetVector4Value((int)TileProperties.Rect);
+                return GetVector4Value((int)TileProperties.Rectangle);
             }
             set
             {
-                SetValue((int)TileProperties.Rect, value);
+                SetValue((int)TileProperties.Rectangle, value);
             }
         }
     }

@@ -92,9 +92,9 @@ namespace SharpDX.DirectInput
         /// <value>The size of the buffer.</value>
         public int BufferSize
         {
-            get { return GetInt(PropertyGuids.Buffersize); }
+            get { return GetInt(PropertyGuids.BufferSize); }
 
-            set { Set(PropertyGuids.Buffersize, value); }
+            set { Set(PropertyGuids.BufferSize, value); }
         }
 
         /// <summary>
@@ -148,8 +148,8 @@ namespace SharpDX.DirectInput
         /// <value>The name of the instance.</value>
         public string InstanceName
         {
-            get { return GetString(PropertyGuids.Instancename); }
-            set { Set(PropertyGuids.Instancename, value); }
+            get { return GetString(PropertyGuids.InstanceName); }
+            set { Set(PropertyGuids.InstanceName, value); }
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace SharpDX.DirectInput
         /// <value>The  human-readable display name of the port to which this device is connected.</value>
         public string PortDisplayName
         {
-            get { return GetPath(PropertyGuids.Getportdisplayname); }
+            get { return GetPath(PropertyGuids.GetPortdisplayname); }
         }
 
         /// <summary>

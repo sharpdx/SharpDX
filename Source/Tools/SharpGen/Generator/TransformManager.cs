@@ -1274,7 +1274,7 @@ namespace SharpGen.Generator
 
             foreach (var macroDef in constantDefinitions)
             {
-                string finalFieldName = fieldName == null ? macroDef.Name : NamingRules.ConvertToPascalCase(regex.Replace(macroDef.Name, fieldName), false);
+                string finalFieldName = fieldName == null ? macroDef.Name : NamingRules.ConvertToPascalCase(regex.Replace(macroDef.Name, fieldName), NamingFlags.Default);
                 string finalValue = valueMap == null ? macroDef.Value : string.Format(valueMap, macroDef.Name, macroDef.Value, finalFieldName, CurrentNamespaceName);
                 AddConstantToCSharpType(macroDef, fullNameCSharpType, type, finalFieldName, finalValue).Visibility = visibility.HasValue
                                                                                                                          ? visibility.Value
@@ -1284,7 +1284,7 @@ namespace SharpGen.Generator
             var guidDefinitions = CppModule.Find<CppGuid>(macroRegexp);
             foreach (var guidDef in guidDefinitions)
             {
-                string finalFieldName = fieldName == null ? guidDef.Name : NamingRules.ConvertToPascalCase(regex.Replace(guidDef.Name, fieldName), false);
+                string finalFieldName = fieldName == null ? guidDef.Name : NamingRules.ConvertToPascalCase(regex.Replace(guidDef.Name, fieldName), NamingFlags.Default);
                 string finalValue = valueMap == null ? guidDef.Guid.ToString() : string.Format(valueMap, guidDef.Name, guidDef.Guid.ToString(), finalFieldName, CurrentNamespaceName);
                 AddConstantToCSharpType(guidDef, fullNameCSharpType, type, finalFieldName, finalValue).Visibility = visibility.HasValue
                                                                                                                         ? visibility.Value

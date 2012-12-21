@@ -169,7 +169,7 @@ namespace SharpDX.MediaFoundation
         /// <msdn-id>ms697053</msdn-id>	
         /// <unmanaged>HRESULT IMFByteStream::Seek([In] MFBYTESTREAM_SEEK_ORIGIN SeekOrigin,[In] longlong llSeekOffset,[In] unsigned int dwSeekFlags,[Out] unsigned longlong* pqwCurrentPosition)</unmanaged>	
         /// <unmanaged-short>IMFByteStream::Seek</unmanaged-short>	
-        long Seek(SharpDX.MediaFoundation.BytestreamSeekOrigin seekOrigin, long llSeekOffset, int dwSeekFlags);
+        long Seek(SharpDX.MediaFoundation.ByteStreamSeekOrigin seekOrigin, long llSeekOffset, int dwSeekFlags);
 
         /// <summary>	
         /// <p><strong>Applies to: </strong>desktop apps | Metro style apps</p><p> Clears any internal buffers used by the stream. If you are writing to the stream, the buffered data is written to the underlying file or device. </p>	

@@ -105,7 +105,7 @@ namespace SharpDX.XInput
         /// <returns><c>true</c> if the controller is connected, <c>false</c> otherwise.</returns>
         public bool GetState(out State state)
         {
-            return XInput.XInputGetState((int)userIndex, out state) == (int)ErrorCode.Success;
+            return XInput.XInputGetState((int)userIndex, out state) == 0;
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace SharpDX.XInput
             get
             {
                 State temp;
-                return XInput.XInputGetState((int)userIndex, out temp) == (int)ErrorCode.Success;
+                return XInput.XInputGetState((int)userIndex, out temp) == 0;
             }
         }
 

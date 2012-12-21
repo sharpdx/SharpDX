@@ -17,43 +17,21 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if DIRECTX11_1
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Xml.Serialization;
 
-namespace SharpDX.Direct2D1.Effects
+namespace SharpGen.Config
 {
-    /// <summary>
-    /// Builtin Crop effect.
-    /// </summary>
-    public class Crop : Effect
-    {
-        /// <summary>
-        /// Initializes a new instance of <see cref="Crop"/> effect.
-        /// </summary>
-        /// <param name="context"></param>
-        public Crop(DeviceContext context) : base(context, Effect.Crop)
-        {
-        }
+    [Flags]
+    public enum NamingFlags
+    {        
+        [XmlEnum("default")] 
+        Default = 0x0,
 
-        /// <summary>
-        /// The region to be cropped specified as a vector in the form (left, top, width, height). The units are in DIPs.
-        /// </summary>
-        /// <remarks>
-        /// The rectangle will be truncated if it overlaps the edge boundaries of the input image.
-        /// </remarks>
-        public Vector4 Rectangle
-        {
-            get
-            {
-                return GetVector4Value((int)CropProperties.Rectangle);
-            }
-            set
-            {
-                SetValue((int)CropProperties.Rectangle, value);
-            }
-        }
+        [XmlEnum("noexpand")]
+        NoShortNameExpand = 0x01,
+
+        [XmlEnum("underscore")] 
+        KeepUnderscore = 0x02,
     }
 }
-#endif

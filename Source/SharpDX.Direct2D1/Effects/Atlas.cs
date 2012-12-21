@@ -44,11 +44,11 @@ namespace SharpDX.Direct2D1.Effects
         {
             get
             {
-                return GetVector4Value((int)AtlasProperties.InputRect);
+                return GetVector4Value((int)AtlasProperties.InputRectangle);
             }
             set
             {
-                SetValue((int)AtlasProperties.InputRect, value);
+                SetValue((int)AtlasProperties.InputRectangle, value);
             }
         }
 
@@ -59,11 +59,11 @@ namespace SharpDX.Direct2D1.Effects
         {
             get
             {
-                return GetVector4Value((int)AtlasProperties.InputPaddingRect);
+                return GetVector4Value((int)AtlasProperties.InputPaddingRectangle);
             }
             set
             {
-                SetValue((int)AtlasProperties.InputPaddingRect, value);
+                SetValue((int)AtlasProperties.InputPaddingRectangle, value);
             }
         }
     }
