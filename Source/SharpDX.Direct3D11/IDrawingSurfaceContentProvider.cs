@@ -35,14 +35,14 @@ namespace SharpDX.Direct3D11
         // DrawingSurfaceSizeF *desiredRenderTargetSize
         /* public void PrepareResources(long resentTargetTimeRef, out SharpDX.Bool isContentDirty) */
         /* public void PrepareResources(long resentTargetTimeRef, ref SharpDX.DrawingSizeF desiredRenderTargetSize) */
-        void PrepareResources(DateTime presentTargetTime, ref Bool isContentDirty);
+        void PrepareResources(DateTime presentTargetTime, out Bool isContentDirty);
 
         //_In_  ID3D11Device1 *hostDevice,
         //_In_  ID3D11DeviceContext1 *hostDeviceContext,
         //_In_  ID3D11RenderTargetView *hostRenderTargetView) = 0;
         /* public void GetTexture(SharpDX.DrawingSizeF surfaceSize, out SharpDX.Direct3D11.DrawingSurfaceSynchronizedTexture synchronizedTexture, out SharpDX.RectangleF textureSubRectangle) */
         /* public void Draw(SharpDX.Direct3D11.Device1 hostDevice, SharpDX.Direct3D11.DeviceContext1 hostDeviceContext, SharpDX.Direct3D11.RenderTargetView hostRenderTargetView) */
-        void GetTexture(DrawingSizeF surfaceSize, ref DrawingSurfaceSynchronizedTexture synchronizedTexture, ref RectangleF textureSubRectangle);
+        void GetTexture(DrawingSizeF surfaceSize, out DrawingSurfaceSynchronizedTexture synchronizedTexture, out RectangleF textureSubRectangle);
     }
 
     public abstract class DrawingSurfaceContentProviderNativeBase : CallbackBase, IDrawingSurfaceContentProviderNative, IInspectable, ICustomQueryInterface
@@ -58,9 +58,9 @@ namespace SharpDX.Direct3D11
 
         public abstract void Disconnect();
 
-        public abstract void PrepareResources(DateTime presentTargetTime, ref Bool isContentDirty);
+        public abstract void PrepareResources(DateTime presentTargetTime, out Bool isContentDirty);
 
-        public abstract void GetTexture(DrawingSizeF surfaceSize, ref DrawingSurfaceSynchronizedTexture synchronizedTexture, ref RectangleF textureSubRectangle);
+        public abstract void GetTexture(DrawingSizeF surfaceSize, out DrawingSurfaceSynchronizedTexture synchronizedTexture, out RectangleF textureSubRectangle);
 
         CustomQueryInterfaceResult ICustomQueryInterface.GetInterface(ref Guid iid, out IntPtr ppv)
         {
@@ -137,14 +137,14 @@ namespace SharpDX.Direct3D11
             }
 
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            private delegate int PrepareResourcesDelegate(IntPtr thisPtr, IntPtr presentTargetTime, ref Bool isContentDirty);
-            private unsafe static int PrepareResources(IntPtr thisPtr, IntPtr presentTargetTime, ref Bool isContentDirty)
+            private delegate int PrepareResourcesDelegate(IntPtr thisPtr, IntPtr presentTargetTime, IntPtr isContentDirty);
+            private unsafe static int PrepareResources(IntPtr thisPtr, IntPtr presentTargetTime, IntPtr isContentDirty)
             {
                 try
                 {
                     var shadow = ToShadow<DrawingSurfaceContentProviderShadow>(thisPtr);
                     var callback = (IDrawingSurfaceContentProviderNative)shadow.Callback;
-                    callback.PrepareResources(new DateTime(*(long*)presentTargetTime), ref isContentDirty);
+                    callback.PrepareResources(new DateTime(*(long*)presentTargetTime), out *(Bool*)isContentDirty);
                 }
                 catch (Exception exception)
                 {
@@ -167,7 +167,7 @@ namespace SharpDX.Direct3D11
                     if (surfaceSize == IntPtr.Zero || textureSubRectangle == IntPtr.Zero)
                         throw new ArgumentException();
 
-                    callback.GetTexture(*(DrawingSizeF*)surfaceSize, ref shadow.synchronizedTexture , ref *(RectangleF*) textureSubRectangle);
+                    callback.GetTexture(*(DrawingSizeF*)surfaceSize, out shadow.synchronizedTexture , out *(RectangleF*) textureSubRectangle);
                 }
                 catch (Exception exception)
                 {

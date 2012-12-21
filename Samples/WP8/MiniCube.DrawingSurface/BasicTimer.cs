@@ -47,14 +47,14 @@ namespace MiniTriApp
         internal void Update()
         {
              _currentTime = _watch.ElapsedMilliseconds;           
-            Total = _currentTime - _startTime / 1000.0f;
+            Total = (_currentTime - _startTime) / 1000.0f;
             if (_lastTime == _startTime)
             {
                 Delta = 1.0f/60.0f;
             }
             else
             {
-                Delta = _currentTime - _lastTime/1000.0f;
+                Delta = (_currentTime - _lastTime)/1000.0f;
             }
             _lastTime = _currentTime;
         }

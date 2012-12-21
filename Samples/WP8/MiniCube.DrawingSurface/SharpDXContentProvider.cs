@@ -67,29 +67,32 @@ namespace MiniTriApp
             _synchronizedTexture = null;
         }
 
-        public override void PrepareResources(DateTime presentTargetTime, ref SharpDX.Bool isContentDirty)
+        public override void PrepareResources(DateTime presentTargetTime, out SharpDX.Bool isContentDirty)
         {
-            _controller.PrepareResources(presentTargetTime, ref isContentDirty);
+            _controller.PrepareResources(presentTargetTime, out isContentDirty);
+
         }
 
-        public override void GetTexture(SharpDX.DrawingSizeF surfaceSize, ref DrawingSurfaceSynchronizedTexture synchronizedTexture, ref SharpDX.RectangleF textureSubRectangle)
+        public override void GetTexture(SharpDX.DrawingSizeF surfaceSize, out DrawingSurfaceSynchronizedTexture synchronizedTexture, out SharpDX.RectangleF textureSubRectangle)
         {
             if (_synchronizedTexture == null)
             {
                 _host.CreateSynchronizedTexture(_controller.GetTexture(), out _synchronizedTexture);
+
             }
 
             // Set output parameters.
-            textureSubRectangle.Left = 0.0f;
-            textureSubRectangle.Top = 0.0f;
-            textureSubRectangle.Right = surfaceSize.Width;
-            textureSubRectangle.Bottom = surfaceSize.Height;
+            _textureSubRectangle.Left = 0.0f;
+            _textureSubRectangle.Top = 0.0f;
+            _textureSubRectangle.Right = surfaceSize.Width;
+            _textureSubRectangle.Bottom = surfaceSize.Height;
 
             synchronizedTexture = _synchronizedTexture;
+            textureSubRectangle = _textureSubRectangle;
 
             _synchronizedTexture.BeginDraw();
 
-            _controller.GetTexture(surfaceSize, ref synchronizedTexture, ref textureSubRectangle);
+            _controller.GetTexture(surfaceSize, synchronizedTexture, textureSubRectangle);
 
             _synchronizedTexture.EndDraw();
             
@@ -100,5 +103,6 @@ namespace MiniTriApp
 	    private readonly SharpDXInterop _controller;
 	    DrawingSurfaceRuntimeHost _host;
 	    DrawingSurfaceSynchronizedTexture _synchronizedTexture;
+        SharpDX.RectangleF _textureSubRectangle;
     }
 }

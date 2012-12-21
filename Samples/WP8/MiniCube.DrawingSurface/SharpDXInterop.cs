@@ -114,7 +114,7 @@ namespace MiniTriApp
             _renderer = null;
         }
 
-        internal void PrepareResources(DateTime presentTargetTime, ref Bool isContentDirty)
+        internal void PrepareResources(DateTime presentTargetTime, out SharpDX.Bool isContentDirty)
         {
             isContentDirty = true;	
         }
@@ -124,7 +124,7 @@ namespace MiniTriApp
             _renderer.UpdateForWindowSizeChange(width, height);
         }
 
-        internal void GetTexture(DrawingSizeF surfaceSize, ref DrawingSurfaceSynchronizedTexture synchronizedTexture, ref RectangleF textureSubRectangle)
+        internal void GetTexture(DrawingSizeF surfaceSize, DrawingSurfaceSynchronizedTexture synchronizedTexture, RectangleF textureSubRectangle)
         {
             _timer.Update();
             _renderer.Update(_timer.Total, _timer.Delta);
