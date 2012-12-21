@@ -55,7 +55,7 @@ namespace MiniTriApp
         {
             // This flag adds support for surfaces with a different color channel ordering
 	        // than the API default. It is required for compatibility with Direct2D.
-	        DeviceCreationFlags creationFlags = DeviceCreationFlags.BgraSupport  ; //| DeviceCreationFlags.Debug;
+	        DeviceCreationFlags creationFlags = DeviceCreationFlags.BgraSupport | DeviceCreationFlags.Debug;
             
 	        // This array defines the set of DirectX hardware feature levels this app will support.
 	        // Note the ordering should be preserved.
@@ -72,9 +72,11 @@ namespace MiniTriApp
 	        };
 
 	        // Create the Direct3D 11 API device object and a corresponding context.
-            _device = new Device( DriverType.Hardware, creationFlags, featureLevels);
-            _deviceContext = new DeviceContext(_device);
+            _device = new Device(DriverType.Hardware, creationFlags, featureLevels);
 
+            //_deviceContext = new DeviceContext(_device);  // <== this was creating a deffered context
+            _deviceContext = _device.ImmediateContext;
+            
             _featureLevel = _device.FeatureLevel;
 
         }
@@ -83,16 +85,16 @@ namespace MiniTriApp
         {
             Texture2DDescription renderTargetDesc = new Texture2DDescription()
             {
+                Format = SharpDX.DXGI.Format.B8G8R8A8_UNorm,
                 Width = (int) _renderTargetSize.Width,
                 Height = (int) _renderTargetSize.Height,
                 ArraySize = 1,
-                BindFlags = BindFlags.RenderTarget | BindFlags.ShaderResource,
-                CpuAccessFlags =  CpuAccessFlags.None,
-                Format = SharpDX.DXGI.Format.B8G8R8A8_UNorm,
                 MipLevels = 1,
+                BindFlags = BindFlags.RenderTarget | BindFlags.ShaderResource,
+                Usage = ResourceUsage.Default,
+                CpuAccessFlags =  CpuAccessFlags.None,
                 OptionFlags = ResourceOptionFlags.SharedKeyedmutex | ResourceOptionFlags.SharedNthandle,
-                SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0),
-                Usage = ResourceUsage.Default
+                SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0)
             };
             
 
@@ -174,7 +176,7 @@ namespace MiniTriApp
         protected Device _device;
         protected DeviceContext _deviceContext;
         protected Texture2D _renderTarget;
-        protected RenderTargetView _renderTargetview;
+        protected RenderTargetView _renderTargetview; 
         protected DepthStencilView _depthStencilView;
 
         // Cached renderer properties.
