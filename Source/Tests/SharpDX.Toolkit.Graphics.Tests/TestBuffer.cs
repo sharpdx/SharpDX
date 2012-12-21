@@ -381,7 +381,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             {
                 BindFlags = BindFlags.None,
                 CpuAccessFlags = CpuAccessFlags.None,
-                OptionFlags = ResourceOptionFlags.DrawindirectArgs,
+                OptionFlags = ResourceOptionFlags.DrawIndirectArguments,
                 SizeInBytes = 256,
                 StructureByteStride = 0,
                 Usage = ResourceUsage.Default
@@ -401,7 +401,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             {
                 BindFlags = BindFlags.UnorderedAccess,
                 CpuAccessFlags = CpuAccessFlags.None,
-                OptionFlags = ResourceOptionFlags.DrawindirectArgs | ResourceOptionFlags.BufferAllowRawViews,
+                OptionFlags = ResourceOptionFlags.DrawIndirectArguments | ResourceOptionFlags.BufferAllowRawViews,
                 SizeInBytes = 256,
                 StructureByteStride = 0,
                 Usage = ResourceUsage.Default

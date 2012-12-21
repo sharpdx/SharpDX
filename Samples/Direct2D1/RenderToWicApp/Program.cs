@@ -45,7 +45,7 @@ namespace RenderToWicApp
             const int width = 512;
             const int height = 512;
 
-            var rectangleGeometry = new RoundedRectangleGeometry(d2dFactory, new RoundedRect() { RadiusX = 32, RadiusY = 32, Rect = new RectangleF(128, 128, width - 128, height-128) });
+            var rectangleGeometry = new RoundedRectangleGeometry(d2dFactory, new RoundedRectangle() { RadiusX = 32, RadiusY = 32, Rect = new RectangleF(128, 128, width - 128, height-128) });
 
             var wicBitmap = new Bitmap(wicFactory, width, height, SharpDX.WIC.PixelFormat.Format32bppBGR, BitmapCreateCacheOption.CacheOnLoad);
 

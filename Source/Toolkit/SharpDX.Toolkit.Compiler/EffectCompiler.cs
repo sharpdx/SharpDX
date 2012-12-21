@@ -1244,10 +1244,10 @@ namespace SharpDX.Toolkit.Graphics
                 case ShaderInputType.Structured:
                     parameter.Type = EffectParameterType.StructuredBuffer;
                     break;
-                case ShaderInputType.Byteaddress:
+                case ShaderInputType.ByteAddress:
                     parameter.Type = EffectParameterType.ByteAddressBuffer;
                     break;
-                case ShaderInputType.UnorderedAccessViewRwtyped:
+                case ShaderInputType.UnorderedAccessViewRWTyped:
                     switch (variableBinding.Dimension)
                     {
                         case ShaderResourceViewDimension.Buffer:
@@ -1270,7 +1270,7 @@ namespace SharpDX.Toolkit.Graphics
                             break;
                     }
                     break;
-                case ShaderInputType.UnorderedAccessViewRwstructured:
+                case ShaderInputType.UnorderedAccessViewRWStructured:
                     parameter.Type = EffectParameterType.RWStructuredBuffer;
                     break;
                 case ShaderInputType.UnorderedAccessViewRWByteAddress:
@@ -1282,7 +1282,7 @@ namespace SharpDX.Toolkit.Graphics
                 case ShaderInputType.UnorderedAccessViewConsumeStructured:
                     parameter.Type = EffectParameterType.ConsumeStructuredBuffer;
                     break;
-                case ShaderInputType.UnorderedAccessViewRwstructuredWithCounter:
+                case ShaderInputType.UnorderedAccessViewRWStructuredWithCounter:
                     parameter.Type = EffectParameterType.StructuredBuffer;
                     break;
                 case ShaderInputType.Sampler:

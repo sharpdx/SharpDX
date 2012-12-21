@@ -95,7 +95,7 @@ namespace SharpGen.Model
                            if (fromTag.Replace != null) tag.Replace = fromTag.Replace;
                            if (fromTag.MappingName != null) 
                                tag.MappingName = RegexRename(pathREgex, element.FullName, fromTag.MappingName);
-                           if (fromTag.NameKeepUnderscore.HasValue) tag.NameKeepUnderscore = fromTag.NameKeepUnderscore.Value;
+                           if (fromTag.NamingFlags.HasValue) tag.NamingFlags = fromTag.NamingFlags.Value;
                            if (fromTag.IsFinalMappingName != null) tag.IsFinalMappingName = fromTag.IsFinalMappingName;
                            if (fromTag.StructPack != null) tag.StructPack = fromTag.StructPack;
                            if (fromTag.StructHasNativeValueType != null) tag.StructHasNativeValueType = fromTag.StructHasNativeValueType;

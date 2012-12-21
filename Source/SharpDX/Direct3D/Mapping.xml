@@ -87,6 +87,7 @@
     <map enum-item="D3D_SVC_(.*)" name-tmp="$1" />
     <map enum-item="D3D_SVF_(.*)" name-tmp="$1" />
     <map enum-item="D3D_SVT_(.*)" name-tmp="$1" />
+    <map enum-item="D3D_SVT_MIN(\d+)(.*)" name-tmp="MIN$2$1"/>
     <map enum-item="D3D_SIF_(.*)" name-tmp="$1" />
     <map enum-item="D3D_SIT_(.*)" name-tmp="$1" />
     <map enum-item="D3D_CT_(.*)" name-tmp="$1" />

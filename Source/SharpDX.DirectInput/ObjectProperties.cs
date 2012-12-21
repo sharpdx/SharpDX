@@ -69,7 +69,7 @@ namespace SharpDX.DirectInput
         /// <value>The logical range.</value>
         public InputRange LogicalRange
         {
-            get { return GetRange(PropertyGuids.Logicalrange); }
+            get { return GetRange(PropertyGuids.LogicalRange); }
         }
 
         /// <summary>

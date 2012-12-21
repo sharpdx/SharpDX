@@ -28,7 +28,7 @@ namespace SharpDX.Direct2D1
         /// </summary>	
         /// <param name="factory">an instance of <see cref = "SharpDX.Direct2D1.Factory" /></param>
         /// <param name="roundedRectangle">The coordinates and corner radii of the rounded rectangle geometry.</param>
-        public RoundedRectangleGeometry(Factory factory, RoundedRect roundedRectangle)
+        public RoundedRectangleGeometry(Factory factory, RoundedRectangle roundedRectangle)
             : base(IntPtr.Zero)
         {
             factory.CreateRoundedRectangleGeometry(ref roundedRectangle, this);

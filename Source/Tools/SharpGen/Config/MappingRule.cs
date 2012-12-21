@@ -51,9 +51,9 @@ namespace SharpGen.Config
         public Visibility _NativeCallbackVisibility_ { get { return NativeCallbackVisibility.Value; } set { NativeCallbackVisibility = value; } } public bool ShouldSerialize_NativeCallbackVisibility_() { return NativeCallbackVisibility != null; }
 
         [XmlIgnore]
-        public bool? NameKeepUnderscore { get; set; }
-        [XmlAttribute("keep-underscore")]
-        public bool  _NameKeepUnderscore_ { get { return NameKeepUnderscore.Value; } set { NameKeepUnderscore = value; } } public bool ShouldSerialize_NameKeepUnderscore_() { return NameKeepUnderscore != null; }
+        public NamingFlags? NamingFlags { get; set; }
+        [XmlAttribute("naming")]
+        public NamingFlags _NamingFlags_ { get { return NamingFlags.Value; } set { NamingFlags = value; } } public bool ShouldSerialize_NamingFlags_() { return NamingFlags != null; }
 
         /// <summary>
         /// Name of a native callback

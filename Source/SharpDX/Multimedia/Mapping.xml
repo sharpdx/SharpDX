@@ -100,15 +100,15 @@
 
     <!-- class SharpDX.Multimedia.UsagePage -->
     <map enum="HID_USAGE_PAGE" name="UsagePage" type="short"/>
-    <map enum-item="HID_USAGE_PAGE_(.*)" name-tmp="$1" />
+    <map enum-item="HID_USAGE_PAGE_(.*)" name-tmp="$1" naming="noexpand"/>
 
     <!-- class SharpDX.Multimedia.UsageId -->
     <map enum="HID_USAGE_ID" name="UsageId" type="short"/>
-    <map enum-item="HID_USAGE_([^P].*)" name-tmp="$1" />
+    <map enum-item="HID_USAGE_([^P].*)" name-tmp="$1" naming="noexpand"/>
 
     <!-- class SharpDX.Multimedia.WaveFormatEncoding-->
     <map enum="WAVE_FORMAT_ENCODING" name="WaveFormatEncoding" type="short"/>
-    <map enum-item="WAVE_FORMAT_(.*)" name-tmp="$1" />
+    <map enum-item="WAVE_FORMAT_(.*)" name-tmp="$1" naming="noexpand" />
     <map enum-item="WAVE_FORMAT_([0-9].*)" name-tmp="Tag$1" />
     <map enum-item="WAVE_FORMAT_GSM610" name-tmp="DefaultGsm610" />
 

@@ -1045,7 +1045,7 @@ namespace SharpDX.Direct3D9
         /// <unmanaged>HRESULT IDirect3DSurface9::LockRect([Out] D3DLOCKED_RECT* pLockedRect,[In] const void* pRect,[In] D3DLOCK Flags)</unmanaged>
         public DataRectangle LockRectangle(LockFlags flags)
         {
-            LockedRect lockedRect;
+            LockedRectangle lockedRect;
             LockRectangle(out lockedRect, IntPtr.Zero, flags);
             return new DataRectangle(lockedRect.PBits, lockedRect.Pitch);
         }
@@ -1061,7 +1061,7 @@ namespace SharpDX.Direct3D9
         {
             unsafe
             {
-                LockedRect lockedRect;
+                LockedRectangle lockedRect;
                 LockRectangle(out lockedRect, new IntPtr(&rect), flags);
                 return new DataRectangle(lockedRect.PBits, lockedRect.Pitch);
             }
@@ -1076,7 +1076,7 @@ namespace SharpDX.Direct3D9
         /// <unmanaged>HRESULT IDirect3DSurface9::LockRect([Out] D3DLOCKED_RECT* pLockedRect,[In] const void* pRect,[In] D3DLOCK Flags)</unmanaged>
         public DataRectangle LockRectangle(LockFlags flags, out DataStream stream)
         {
-            LockedRect lockedRect;
+            LockedRectangle lockedRect;
             LockRectangle(out lockedRect, IntPtr.Zero, flags);
             stream = new DataStream(lockedRect.PBits, lockedRect.Pitch * Description.Height, true, (flags & LockFlags.ReadOnly) == 0);
             return new DataRectangle(lockedRect.PBits, lockedRect.Pitch);
@@ -1094,7 +1094,7 @@ namespace SharpDX.Direct3D9
         {
             unsafe
             {
-                LockedRect lockedRect;
+                LockedRectangle lockedRect;
                 LockRectangle(out lockedRect, new IntPtr(&rect), flags);
                 stream = new DataStream(lockedRect.PBits, lockedRect.Pitch * Description.Height, true, (flags & LockFlags.ReadOnly) == 0);
                 return new DataRectangle(lockedRect.PBits, lockedRect.Pitch);

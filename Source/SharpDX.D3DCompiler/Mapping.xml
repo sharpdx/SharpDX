@@ -113,7 +113,7 @@
     <map enum-item="D3D_BLOB_(.*)" name-tmp="$1" />
     <map enum="D3DCOMPILE_SECDATA_FLAGS" name="SecondaryDataFlags"/>
     <map enum-item="D3DCOMPILE_SECDATA_(.*)" name-tmp="$1"/>
-
+    
     <!--
     // *****************************************************************
     // D3DCompiler Structures

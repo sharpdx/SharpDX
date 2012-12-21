@@ -617,6 +617,9 @@
     <remove enum-item="MF2DBuffer_LockFlags_ForceDWORD"/>
 
     <map enum="MF3DVideoOutputType" name="Video3DOutputType"/>
+    
+    <map enum="ASF_SELECTION_STATUS" name="AsfSelectionStatus"/>
+    <map enum-item="ASF_STATUS_(.*)" name-tmp="$1"/>
 
     <!--
     // *****************************************************************

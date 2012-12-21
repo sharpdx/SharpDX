@@ -30,7 +30,7 @@ namespace SharpDX.DXGI
         /// <returns>A <see cref="T:SharpDX.DataRectangle" /> for accessing the mapped data, or <c>null</c> on failure.</returns>.
         public DataRectangle Map(MapFlags flags)
         {
-            MappedRect mappedRect;
+            MappedRectangle mappedRect;
             Map(out mappedRect, (int) flags);
             return new DataRectangle(mappedRect.PBits, mappedRect.Pitch);
         }

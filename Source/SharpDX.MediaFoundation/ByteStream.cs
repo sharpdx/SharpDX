@@ -333,7 +333,7 @@ namespace SharpDX.MediaFoundation
         /// <msdn-id>ms697053</msdn-id>	
         /// <unmanaged>HRESULT IMFByteStream::Seek([In] MFBYTESTREAM_SEEK_ORIGIN SeekOrigin,[In] longlong llSeekOffset,[In] unsigned int dwSeekFlags,[Out] unsigned longlong* pqwCurrentPosition)</unmanaged>	
         /// <unmanaged-short>IMFByteStream::Seek</unmanaged-short>	
-        public long Seek(SharpDX.MediaFoundation.BytestreamSeekOrigin seekOrigin, long llSeekOffset, int dwSeekFlags)
+        public long Seek(SharpDX.MediaFoundation.ByteStreamSeekOrigin seekOrigin, long llSeekOffset, int dwSeekFlags)
         {
             long result;
             Seek_(seekOrigin, llSeekOffset, dwSeekFlags, out result);

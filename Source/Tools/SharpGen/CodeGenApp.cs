@@ -231,6 +231,11 @@ namespace SharpGen
                 // Print statistics
                 transformer.PrintStatistics();
 
+                // Output all elements
+                var fileWriter = new StreamWriter("SharpGen_rename.log");
+                transformer.NamingRules.DumpRenames(fileWriter);
+                fileWriter.Close();
+
                 // Update Checkfile for assembly
                 File.WriteAllText(_assemblyCheckFile, "");
                 File.SetLastWriteTime(_assemblyCheckFile, _assemblyDatetime);

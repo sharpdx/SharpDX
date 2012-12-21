@@ -124,6 +124,7 @@
     <map enum-item="DSFXR_UNALLOCATED" name="Unallocated" />
     <map enum-item="DSFXR_FAILED" name="Failed" />
     <map enum-item="DSFXR_UNKNOWN" name="Unknown" />
+    <map enum-item="DSFXR_SENDLOOP" name="SendLoop" />
     <map enum-item="DSCFX_LOCHARDWARE" name="LocatedInHardware" />
     <map enum-item="DSCFX_LOCSOFTWARE" name="LocatedInSoftware" />
     <map enum-item="DSFX_I3DL2_ENVIRONMENT_PRESET_DEFAULT" name="Default" />

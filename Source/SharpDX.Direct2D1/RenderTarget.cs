@@ -231,7 +231,7 @@ namespace SharpDX.Direct2D1
         /// <param name="roundedRect">The dimensions of the rounded rectangle to draw, in device-independent pixels. </param>
         /// <param name="brush">The brush used to paint the rounded rectangle's outline.  </param>
         /// <unmanaged>void ID2D1RenderTarget::DrawRoundedRectangle([In] const D2D1_ROUNDED_RECT* roundedRect,[In] ID2D1Brush* brush,[None] float strokeWidth,[In, Optional] ID2D1StrokeStyle* strokeStyle)</unmanaged>
-        public void DrawRoundedRectangle(RoundedRect roundedRect, Brush brush)
+        public void DrawRoundedRectangle(RoundedRectangle roundedRect, Brush brush)
         {
             DrawRoundedRectangle(ref roundedRect, brush, StrokeWidth, null);
         }
@@ -246,7 +246,7 @@ namespace SharpDX.Direct2D1
         /// <param name="brush">The brush used to paint the rounded rectangle's outline.  </param>
         /// <param name="strokeWidth">The width of the rounded rectangle's stroke. The stroke is centered on the rounded rectangle's outline. The default value is 1.0f.  </param>
         /// <unmanaged>void ID2D1RenderTarget::DrawRoundedRectangle([In] const D2D1_ROUNDED_RECT* roundedRect,[In] ID2D1Brush* brush,[None] float strokeWidth,[In, Optional] ID2D1StrokeStyle* strokeStyle)</unmanaged>
-        public void DrawRoundedRectangle(RoundedRect roundedRect, Brush brush, float strokeWidth)
+        public void DrawRoundedRectangle(RoundedRectangle roundedRect, Brush brush, float strokeWidth)
         {
             DrawRoundedRectangle(ref roundedRect, brush, strokeWidth, null);
         }
@@ -262,7 +262,7 @@ namespace SharpDX.Direct2D1
         /// <param name="strokeWidth">The width of the rounded rectangle's stroke. The stroke is centered on the rounded rectangle's outline. The default value is 1.0f.  </param>
         /// <param name="strokeStyle">The style of the rounded rectangle's stroke, or NULL to paint a solid stroke. The default value is NULL. </param>
         /// <unmanaged>void ID2D1RenderTarget::DrawRoundedRectangle([In] const D2D1_ROUNDED_RECT* roundedRect,[In] ID2D1Brush* brush,[None] float strokeWidth,[In, Optional] ID2D1StrokeStyle* strokeStyle)</unmanaged>
-        public void DrawRoundedRectangle(RoundedRect roundedRect, Brush brush, float strokeWidth, StrokeStyle strokeStyle)
+        public void DrawRoundedRectangle(RoundedRectangle roundedRect, Brush brush, float strokeWidth, StrokeStyle strokeStyle)
         {
             DrawRoundedRectangle(ref roundedRect, brush, strokeWidth, strokeStyle);
         }
@@ -386,7 +386,7 @@ namespace SharpDX.Direct2D1
         /// <param name="roundedRect">The dimensions of the rounded rectangle to paint, in device-independent pixels. </param>
         /// <param name="brush">The brush used to paint the interior of the rounded rectangle. </param>
         /// <unmanaged>void ID2D1RenderTarget::FillRoundedRectangle([In] const D2D1_ROUNDED_RECT* roundedRect,[In] ID2D1Brush* brush)</unmanaged>
-        public void FillRoundedRectangle(RoundedRect roundedRect, Brush brush)
+        public void FillRoundedRectangle(RoundedRectangle roundedRect, Brush brush)
         {
             FillRoundedRectangle(ref roundedRect, brush);
         }
