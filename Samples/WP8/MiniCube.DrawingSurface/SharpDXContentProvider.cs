@@ -87,14 +87,23 @@ namespace MiniTriApp
             _textureSubRectangle.Right = surfaceSize.Width;
             _textureSubRectangle.Bottom = surfaceSize.Height;
 
+           
             synchronizedTexture = _synchronizedTexture;
             textureSubRectangle = _textureSubRectangle;
+           
 
+            //something is going wrong here as the second time thru the BeginDraw consumes 
+            //the call and controlnever returns back to this method, thus GetTexture 
+            //(the call after begindraw) never fires again... ??????
             _synchronizedTexture.BeginDraw();
+
 
             _controller.GetTexture(surfaceSize, synchronizedTexture, textureSubRectangle);
 
             _synchronizedTexture.EndDraw();
+
+                
+            
             
         }
 
