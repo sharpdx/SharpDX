@@ -55,7 +55,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Gets the structure byte size.
         /// </summary>
-        public static int Size {get{return 16;}}
+        public static readonly int Size = 16;
 
         public bool Equals(VertexPositionColor other)
         {
