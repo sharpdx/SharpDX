@@ -53,9 +53,9 @@ namespace SharpDX.Toolkit.Graphics
         public Vector2 TextureCoordinate;
 
         /// <summary>
-        /// Gets the structure byte size.
+        /// Defines structure byte size.
         /// </summary>
-        public static int Size {get{return 20;}}
+        public static readonly int Size = 20;
 
         public bool Equals(VertexPositionTexture other)
         {
