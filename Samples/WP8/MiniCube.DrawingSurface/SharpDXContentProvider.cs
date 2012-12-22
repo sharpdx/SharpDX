@@ -83,24 +83,29 @@ namespace MiniTriApp
                 _host.CreateSynchronizedTexture(_controller.GetTexture(), out _synchronizedTexture);
 
             }
-
+            
             // Set output parameters.
             _textureSubRectangle.Left = 0.0f;
             _textureSubRectangle.Top = 0.0f;
             _textureSubRectangle.Right = surfaceSize.Width;
             _textureSubRectangle.Bottom = surfaceSize.Height;
 
+
+            //HOW DO YOU DO A Microsoft::WRL::ComPtr<T>   CopyTo ?????
+            //m_synchronizedTexture.CopyTo(synchronizedTexture);
             synchronizedTexture = _synchronizedTexture;
+
+
             textureSubRectangle = _textureSubRectangle;     
 
             //something is going wrong here as the second time thru the BeginDraw consumes 
             //the call and controlnever returns back to this method, thus GetTexture 
             //(the call after begindraw) never fires again... ??????
-            _synchronizedTexture.BeginDraw();
+            synchronizedTexture.BeginDraw();
 
-            _controller.GetTexture(surfaceSize, _synchronizedTexture, textureSubRectangle);
+            _controller.GetTexture(surfaceSize, synchronizedTexture, textureSubRectangle);
 
-            _synchronizedTexture.EndDraw();
+            synchronizedTexture.EndDraw();
 
 
         }

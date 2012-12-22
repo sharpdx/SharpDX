@@ -71,13 +71,22 @@ namespace MiniTriApp
 		        SharpDX.Direct3D.FeatureLevel.Level_9_3
 	        };
 
+            // Dispose previous references and set to null
+            RemoveAndDispose(ref _device);
+            RemoveAndDispose(ref _deviceContext);
+
 	        // Create the Direct3D 11 API device object and a corresponding context.
-            _device = new Device(DriverType.Hardware, creationFlags, featureLevels);
+            using (var defaultDevice = new SharpDX.Direct3D11.Device(DriverType.Hardware, creationFlags,featureLevels))
+                _device = defaultDevice.QueryInterface<SharpDX.Direct3D11.Device1>();
+
+            _featureLevel = _device.FeatureLevel;
 
             //_deviceContext = new DeviceContext(_device);  // <== this was creating a deffered context
-            _deviceContext = _device.ImmediateContext;
+            // Get Direct3D 11.1 context
+            _deviceContext = ToDispose(_device.ImmediateContext.QueryInterface<SharpDX.Direct3D11.DeviceContext1>());
+
             
-            _featureLevel = _device.FeatureLevel;
+            
 
         }
 
@@ -96,14 +105,12 @@ namespace MiniTriApp
                 OptionFlags = ResourceOptionFlags.SharedKeyedmutex | ResourceOptionFlags.SharedNthandle,
                 SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0)
             };
-            
-
 
             
             // Allocate a 2-D surface as the render target buffer.
-            _renderTarget = new Texture2D(_device, renderTargetDesc);
-            
-            _renderTargetview = new RenderTargetView(_device, _renderTarget);
+            _renderTarget = ToDispose(new Texture2D(_device, renderTargetDesc));
+
+            _renderTargetview = ToDispose(new RenderTargetView(_device, _renderTarget));
 
             Texture2DDescription depthStencilDesc = new Texture2DDescription()
             {
@@ -121,14 +128,14 @@ namespace MiniTriApp
             };
 
 
-            Texture2D depthStencil = new Texture2D(_device, depthStencilDesc);
+            Texture2D depthStencil = ToDispose(new Texture2D(_device, depthStencilDesc));
             //DepthStencilViewDescription depthStencilViewDesc = new DepthStencilViewDescription()
             //{
             //     Dimension = DepthStencilViewDimension.Texture2D,
             //};
             
              ComObject.Dispose(ref _depthStencilView);
-            _depthStencilView = new DepthStencilView(_device, depthStencil); //, depthStencilViewDesc);
+            _depthStencilView = ToDispose(new DepthStencilView(_device, depthStencil)); //, depthStencilViewDesc));
             
 
             _windowBounds.Width = _renderTargetSize.Width;
