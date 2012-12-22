@@ -32,7 +32,7 @@ namespace SharpDX.Toolkit
         event EventHandler<EventArgs> DrawOrderChanged;
 
         /// <summary>
-        /// Occurs when the <see cref="DrawOrder"/> property changes.
+        /// Occurs when the <see cref="Visible"/> property changes.
         /// </summary>
         event EventHandler<EventArgs> VisibleChanged;
 
@@ -47,12 +47,7 @@ namespace SharpDX.Toolkit
         /// </summary>
         /// <value><c>true</c> if this drawable component is visible; otherwise, <c>false</c>.</value>
         bool Visible { get; }
-
-        /// <summary>
-        /// The order in which to draw this object relative to other objects. Objects with a lower value are drawn first.
-        /// </summary>
-        /// <value>The draw order.</value>
-
+  
         /// <summary>
         /// Gets the draw order relative to other objects. <see cref="IDrawable"/> objects with a lower value are drawn first.
         /// </summary>

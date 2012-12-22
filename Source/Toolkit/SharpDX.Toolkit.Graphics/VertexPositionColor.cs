@@ -51,6 +51,11 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         [VertexElement("COLOR")]
         public Color Color;
+        
+        /// <summary>
+        /// Defines structure byte size.
+        /// </summary>
+        public static readonly int Size = 16;
 
         public bool Equals(VertexPositionColor other)
         {
