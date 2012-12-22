@@ -53,7 +53,7 @@ namespace SharpDX.Toolkit.Graphics
         public Color Color;
         
         /// <summary>
-        /// Gets the structure byte size.
+        /// Defines structure byte size.
         /// </summary>
         public static readonly int Size = 16;
 
