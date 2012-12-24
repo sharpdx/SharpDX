@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 
 namespace SharpDX.Toolkit.Graphics
@@ -121,6 +122,13 @@ namespace SharpDX.Toolkit.Graphics
         internal static SamplerState New(GraphicsDevice device, string name, Filter filterMode, TextureAddressMode uvwMode)
         {
             var description = SamplerStateDescription.Default();
+
+            // For 9.1, anisotropy cannot be larger then 2
+            if (device.Features.Level == FeatureLevel.Level_9_1)
+            {
+                description.MaximumAnisotropy = 2;
+            }
+
             description.Filter = filterMode;
             description.AddressU = uvwMode;
             description.AddressV = uvwMode;
