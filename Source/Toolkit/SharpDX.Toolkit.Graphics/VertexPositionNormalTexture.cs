@@ -59,6 +59,11 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         [VertexElement("TEXCOORD0")]
         public Vector2 TextureCoordinate;
+        
+        /// <summary>
+        /// Defines structure byte size.
+        /// </summary>
+        public static readonly int Size = 32;
 
         public bool Equals(VertexPositionNormalTexture other)
         {
