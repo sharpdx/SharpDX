@@ -199,10 +199,10 @@ namespace CommonDX
 
             public void Dispose()
             {
-                ComObject.Dispose(ref BitmapTarget);
-                ComObject.Dispose(ref RenderTargetView);
-                ComObject.Dispose(ref DepthStencilView);
-                ComObject.Dispose(ref BackBuffer);
+                Utilities.Dispose(ref BitmapTarget);
+                Utilities.Dispose(ref RenderTargetView);
+                Utilities.Dispose(ref DepthStencilView);
+                Utilities.Dispose(ref BackBuffer);
                 SurfacePointer = IntPtr.Zero;
             }
         }

@@ -31,6 +31,10 @@ namespace SharpDX.Toolkit
     /// </summary>
     internal class GameWindowDesktop : GameWindow
     {
+        private bool isInitialized;
+        private bool isMouseVisible;
+        private bool isMouseCurrentlyHidden;
+
         public Control Control;
 
         private GameWindowForm gameWindowForm;
@@ -38,6 +42,14 @@ namespace SharpDX.Toolkit
 
         internal GameWindowDesktop()
         {
+        }
+
+        public bool IsForm
+        {
+            get
+            {
+                return Control is Form;
+            }
         }
 
         public override object NativeWindow
@@ -73,12 +85,20 @@ namespace SharpDX.Toolkit
 
         internal override void Initialize(object windowContext)
         {
+            if (isInitialized)
+            {
+                throw new InvalidOperationException("GameWindow is already initialized");
+            }
+
             windowContext = windowContext ?? new GameWindowForm("SharpDX.Toolkit.Game");
             Control = windowContext as Control;
             if (Control == null)
             {
                 throw new NotSupportedException("Unsupported window context. Unable to create game window. Only System.Windows.Control subclass are supported");
             }
+
+            Control.MouseEnter += GameWindowForm_MouseEnter;
+            Control.MouseLeave += GameWindowForm_MouseLeave;
 
             gameWindowForm = windowContext as GameWindowForm;
             if (gameWindowForm != null)
@@ -87,26 +107,73 @@ namespace SharpDX.Toolkit
                 gameWindowForm.AppDeactivated += OnDeactivated;
                 gameWindowForm.UserResized += OnClientSizeChanged;
             }
+            else
+            {
+                Control.Resize += OnClientSizeChanged;
+            }
+
+            isInitialized = true;
         }
 
-        internal override bool IsMouseVisible
+        void GameWindowForm_MouseEnter(object sender, System.EventArgs e)
+        {
+            if (!isMouseVisible && !isMouseCurrentlyHidden)
+            {
+                Cursor.Hide();
+                isMouseCurrentlyHidden = true;
+            }
+        }
+
+        void GameWindowForm_MouseLeave(object sender, System.EventArgs e)
+        {
+            if (isMouseCurrentlyHidden)
+            {
+                Cursor.Show();
+                isMouseCurrentlyHidden = false;
+            }
+        }
+
+        public override bool IsMouseVisible
         {
             get
             {
-                if (gameWindowForm != null)
-                {
-                    return gameWindowForm.IsMouseVisible;
-                }
-
-                return true;
+                return isMouseVisible;
             }
-
             set
             {
-                if (gameWindowForm != null)
+                if (isMouseVisible != value)
                 {
-                    gameWindowForm.IsMouseVisible = value;
+                    isMouseVisible = value;
+                    if (isMouseVisible)
+                    {
+                        if (isMouseCurrentlyHidden)
+                        {
+                            Cursor.Show();
+                            isMouseCurrentlyHidden = false;
+                        }
+                    }
+                    else if (!isMouseCurrentlyHidden)
+                    {
+                        Cursor.Hide();
+                        isMouseCurrentlyHidden = true;
+                    }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="GameWindow" /> is visible.
+        /// </summary>
+        /// <value><c>true</c> if visible; otherwise, <c>false</c>.</value>
+        public override bool Visible
+        {
+            get
+            {
+                return Control.Visible;
+            }
+            set
+            {
+                Control.Visible = value;
             }
         }
 

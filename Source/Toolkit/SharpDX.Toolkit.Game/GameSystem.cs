@@ -70,6 +70,18 @@ namespace SharpDX.Toolkit
         }
 
         /// <summary>
+        /// Gets the services registry.
+        /// </summary>
+        /// <value>The services registry.</value>
+        public IServiceRegistry Services
+        {
+            get
+            {
+                return registry;
+            }
+        }
+
+        /// <summary>
         /// Gets the content manager.
         /// </summary>
         /// <value>The content.</value>
@@ -99,7 +111,16 @@ namespace SharpDX.Toolkit
 
         public event EventHandler<EventArgs> VisibleChanged;
 
+        public virtual bool BeginDraw()
+        {
+            return true;
+        }
+
         public virtual void Draw(GameTime gameTime)
+        {
+        }
+
+        public virtual void EndDraw()
         {
         }
 

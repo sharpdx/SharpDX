@@ -43,17 +43,25 @@ namespace SharpDX.Toolkit
             services.AddService(typeof(IGraphicsDeviceFactory), this);
         }
 
-        public override string GetDefaultAppDirectory()
+        public override string DefaultAppDirectory
         {
-            return Package.Current.InstalledLocation.Path;
+            get
+            {
+                return Package.Current.InstalledLocation.Path;
+            }
         }
 
-        public override GameWindow Window
+        public override GameWindow MainWindow
         {
             get
             {
                 return gameWindowWP8;
             }
+        }
+
+        public override GameWindow CreateWindow(object windowContext = null, int width = 0, int height = 0)
+        {
+            throw new NotSupportedException();
         }
 
         public override void Run(object windowContext, VoidAction initCallback, VoidAction tickCallback)
@@ -62,7 +70,7 @@ namespace SharpDX.Toolkit
             IsBlockingRun = false;
 
             // Initialize the window
-            Window.Initialize(windowContext);
+            MainWindow.Initialize(windowContext);
 
             // Rendering to CoreWindow
             gameWindowWP8.RunDrawingSurfaceBackground(initCallback, tickCallback);

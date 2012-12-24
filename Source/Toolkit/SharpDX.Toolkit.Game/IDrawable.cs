@@ -37,10 +37,21 @@ namespace SharpDX.Toolkit
         event EventHandler<EventArgs> VisibleChanged;
 
         /// <summary>
+        /// Starts the drawing of a frame. This method is followed by calls to Draw and EndDraw.
+        /// </summary>
+        /// <returns><c>true</c> if Draw should occur, <c>false</c> otherwise</returns>
+        bool BeginDraw();
+
+        /// <summary>
         /// Draws this instance.
         /// </summary>
         /// <param name="gameTime">The current timing.</param>
         void Draw(GameTime gameTime);
+
+        /// <summary>
+        /// Ends the drawing of a frame. This method is preceeded by calls to Draw and BeginDraw.
+        /// </summary>
+        void EndDraw();
 
         /// <summary>
         /// Gets a value indicating whether the <see cref="Draw"/> method should be called by <see cref="Game.Draw"/>.

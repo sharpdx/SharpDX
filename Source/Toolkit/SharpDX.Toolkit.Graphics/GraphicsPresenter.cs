@@ -46,6 +46,8 @@ namespace SharpDX.Toolkit.Graphics
             GraphicsDevice = device.MainDevice;
             Description = presentationParameters.Clone();
 
+            DefaultViewport = new ViewportF(0, 0, Description.BackBufferWidth, Description.BackBufferHeight);
+
             // Creates a default DepthStencilBuffer.
             CreateDepthStencilBuffer();
         }
@@ -60,6 +62,11 @@ namespace SharpDX.Toolkit.Graphics
         /// Gets the description of this presenter.
         /// </summary>
         public PresentationParameters Description { get; private set; }
+
+        /// <summary>
+        /// Default viewport that covers the whole presenter surface.
+        /// </summary>
+        public ViewportF DefaultViewport { get; protected set; }
 
         /// <summary>
         /// Gets the default back buffer for this presenter.
@@ -131,6 +138,8 @@ namespace SharpDX.Toolkit.Graphics
             Description.BackBufferWidth = width;
             Description.BackBufferHeight = height;
             Description.BackBufferFormat = format;
+
+            DefaultViewport = new ViewportF(0, 0, Description.BackBufferWidth, Description.BackBufferHeight);
 
             CreateDepthStencilBuffer();
         }

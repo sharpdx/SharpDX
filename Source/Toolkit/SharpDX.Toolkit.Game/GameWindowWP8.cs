@@ -73,7 +73,7 @@ namespace SharpDX.Toolkit
             }
         }
 
-        internal override bool IsMouseVisible {get; set;}
+        public override bool IsMouseVisible {get; set;}
 
         protected internal override void SetSupportedOrientations(DisplayOrientation orientations)
         {
@@ -146,6 +146,21 @@ namespace SharpDX.Toolkit
         {
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="GameWindow" /> is visible.
+        /// </summary>
+        /// <value><c>true</c> if visible; otherwise, <c>false</c>.</value>
+        public override bool Visible
+        {
+            get
+            {
+                return true;
+            }
+            set
+            {
+            }
+        }
+
 #region Implementation of ICallbackable
 
         IDisposable ICallbackable.Shadow { get; set; }
@@ -155,7 +170,7 @@ namespace SharpDX.Toolkit
 
         public RenderTarget2D BackBuffer;
 
-        #endregion
+#endregion
 
 #region Implementation of IDrawingSurfaceBackgroundContentProviderNative
 
@@ -268,7 +283,7 @@ namespace SharpDX.Toolkit
             }
         }
 
-        #endregion
+#endregion
 
 #region Implementation of ICustomQueryInterface
 
@@ -278,7 +293,7 @@ namespace SharpDX.Toolkit
             return CustomQueryInterfaceResult.Handled;
         }
 
-        #endregion
+#endregion
     }
 }
 #endif
