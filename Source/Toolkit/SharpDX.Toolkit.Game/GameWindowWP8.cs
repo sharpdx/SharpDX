@@ -183,8 +183,8 @@ namespace SharpDX.Toolkit
 
         void IDrawingSurfaceBackgroundContentProviderNative.Disconnect()
         {
-            ComObject.Dispose(ref GraphicsDevice);
-            ComObject.Dispose(ref BackBuffer);
+            Utilities.Dispose(ref GraphicsDevice);
+            Utilities.Dispose(ref BackBuffer);
         }
 
         void IDrawingSurfaceBackgroundContentProviderNative.PrepareResources(DateTime presentTargetTime, ref DrawingSizeF desiredRenderTargetSize)
@@ -200,7 +200,7 @@ namespace SharpDX.Toolkit
 
             public void Dispose()
             {
-                ComObject.Dispose(ref RenderTarget);
+                Utilities.Dispose(ref RenderTarget);
                 NativePointer = IntPtr.Zero;
             }
         }

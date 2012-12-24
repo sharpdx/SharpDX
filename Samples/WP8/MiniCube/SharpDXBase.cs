@@ -73,7 +73,7 @@ namespace MiniTriApp
                     _renderTargetSize.Width = texture2D.Description.Width;
                     _renderTargetSize.Height = texture2D.Description.Height;
 
-                    ComObject.Dispose(ref _depthStencilView);
+                    Utilities.Dispose(ref _depthStencilView);
 
                     using (var depthTexture = new Texture2D(
                         _device,
