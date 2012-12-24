@@ -144,7 +144,22 @@ namespace SharpDX.Toolkit
             }
         }
 
-        internal override bool IsMouseVisible {get; set;}
+        public override bool IsMouseVisible {get; set;}
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="GameWindow" /> is visible.
+        /// </summary>
+        /// <value><c>true</c> if visible; otherwise, <c>false</c>.</value>
+        public override bool Visible
+        {
+            get
+            {
+                return true;
+            }
+            set
+            {
+            }
+        }
 
         public void RunCoreWindow(VoidAction initCallback, VoidAction tickCallback)
         {

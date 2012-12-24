@@ -46,17 +46,25 @@ namespace SharpDX.Toolkit
             services.AddService(typeof(IGraphicsDeviceFactory), this);
         }
 
-        public override string GetDefaultAppDirectory()
+        public override string DefaultAppDirectory
         {
-            return Package.Current.InstalledLocation.Path;
+            get
+            {
+                return Package.Current.InstalledLocation.Path;
+            }
         }
 
-        public override GameWindow Window
+        public override GameWindow MainWindow
         {
             get
             {
                 return gameWindowWinRT;
             }
+        }
+
+        public override GameWindow CreateWindow(object windowContext = null, int width = 0, int height = 0)
+        {
+            throw new NotSupportedException();
         }
 
         public override void Run(object windowContext, VoidAction initCallback, VoidAction tickCallback)
@@ -65,7 +73,7 @@ namespace SharpDX.Toolkit
             IsBlockingRun = windowContext == null;
 
             // Initialize the window
-            Window.Initialize(windowContext);
+            MainWindow.Initialize(windowContext);
 
             this.tickCallback = tickCallback;
 
@@ -106,7 +114,7 @@ namespace SharpDX.Toolkit
                                                          MultiSampleCount = MSAALevel.None,
                                                          IsFullScreen = prefferedParameters.IsFullScreen,
                                                          PresentationInterval = prefferedParameters.SynchronizeWithVerticalRetrace ? PresentInterval.One : PresentInterval.Immediate,
-                                                         DeviceWindowHandle = Window.NativeWindow,
+                                                         DeviceWindowHandle = MainWindow.NativeWindow,
                                                          RenderTargetUsage = Usage.BackBuffer | Usage.RenderTargetOutput
                                                      }
                                              };

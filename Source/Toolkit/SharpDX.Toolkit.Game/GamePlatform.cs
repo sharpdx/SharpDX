@@ -27,7 +27,7 @@ using SharpDX.Toolkit.Graphics;
 
 namespace SharpDX.Toolkit
 {
-    internal abstract class GamePlatform : IGraphicsDeviceFactory
+    internal abstract class GamePlatform : IGraphicsDeviceFactory, IGamePlatform
     {
         protected IServiceRegistry Services;
 
@@ -47,7 +47,7 @@ namespace SharpDX.Toolkit
 #endif
         }
 
-        public abstract string GetDefaultAppDirectory();
+        public abstract string DefaultAppDirectory { get; }
 
         public object WindowContext { get; set; }
 
@@ -63,7 +63,9 @@ namespace SharpDX.Toolkit
 
         public event EventHandler<EventArgs> Suspend;
 
-        public abstract GameWindow Window { get; }
+        public abstract GameWindow MainWindow { get; }
+
+        public abstract GameWindow CreateWindow(object windowContext = null, int width = 0, int height = 0);
 
         public bool IsBlockingRun { get; protected set; }
 
@@ -165,7 +167,7 @@ namespace SharpDX.Toolkit
                                         MultiSampleCount = MSAALevel.None,
                                         IsFullScreen = prefferedParameters.IsFullScreen,
                                         PresentationInterval = prefferedParameters.SynchronizeWithVerticalRetrace ? PresentInterval.One : PresentInterval.Immediate,
-                                        DeviceWindowHandle = Window.NativeWindow,
+                                        DeviceWindowHandle = MainWindow.NativeWindow,
                                         RenderTargetUsage = Usage.BackBuffer | Usage.RenderTargetOutput
                                     }
                             };

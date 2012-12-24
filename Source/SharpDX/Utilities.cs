@@ -28,6 +28,7 @@ using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
+using System.Threading;
 
 using SharpDX.Direct3D;
 using System.Reflection;
@@ -1106,7 +1107,7 @@ namespace SharpDX
 #if WIN8METRO
             Task.Delay(sleepTimeInMillis).Wait();
 #else
-            System.Threading.Thread.Sleep(sleepTimeInMillis);
+            Thread.Sleep(sleepTimeInMillis);
 #endif            
         }
 
@@ -1317,7 +1318,7 @@ namespace SharpDX
         {
             IntPtr result = LoadLibrary_(dllName);
             if (result == IntPtr.Zero)
-                throw new DllNotFoundException(string.Format("Unable to find [{0}] in the PATH", dllName));
+                throw new DllNotFoundException(String.Format("Unable to find [{0}] in the PATH", dllName));
             return result;
         }
 
@@ -1382,6 +1383,23 @@ namespace SharpDX
             hash ^= hash >> 17;
             hash += hash << 5;
             return unchecked((int)hash);
+        }
+
+        /// <summary>
+        /// Safely dispose a referencem if not null, and set it to null after dispose.
+        /// </summary>
+        ///<typeparam name="T">The type of COM interface to dispose</typeparam>
+        /// <param name="comObject">Object to dispose</param>
+        /// <remarks>
+        /// The reference will be set to null after dispose.
+        /// </remarks>
+        public static void Dispose<T>(ref T comObject) where T : class, IDisposable
+        {
+            if (comObject != null)
+            {
+                comObject.Dispose();
+                comObject = null;
+            }
         }
     }
 }

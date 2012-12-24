@@ -41,54 +41,6 @@ namespace SharpDX.Toolkit
             // By default, non resizable
             MaximizeBox = false;
             FormBorderStyle = FormBorderStyle.FixedSingle;
-            MouseEnter += GameWindowForm_MouseEnter;
-            MouseLeave += GameWindowForm_MouseLeave;
-        }
-
-        void GameWindowForm_MouseEnter(object sender, System.EventArgs e)
-        {
-            if (!isMouseVisible && !isMouseCurrentlyHidden)
-            {
-                Cursor.Hide();
-                isMouseCurrentlyHidden = true;
-            }
-        }
-
-        void GameWindowForm_MouseLeave(object sender, System.EventArgs e)
-        {
-            if (isMouseCurrentlyHidden)
-            {
-                Cursor.Show();
-                isMouseCurrentlyHidden = false;
-            }
-        }
-
-        internal bool IsMouseVisible
-        {
-            get
-            {
-                return isMouseVisible;
-            }
-            set
-            {
-                if (isMouseVisible != value)
-                {
-                    isMouseVisible = value;
-                    if (isMouseVisible)
-                    {
-                        if (isMouseCurrentlyHidden)
-                        {
-                            Cursor.Show();
-                            isMouseCurrentlyHidden = false;
-                        }
-                    }
-                    else if (!isMouseCurrentlyHidden)
-                    {
-                        Cursor.Hide();
-                        isMouseCurrentlyHidden = true;
-                    }
-                }
-            }
         }
 
         internal bool AllowUserResizing

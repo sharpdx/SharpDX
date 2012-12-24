@@ -1040,7 +1040,11 @@ namespace SharpDX.Toolkit.Graphics
         /// <value>The main viewport.</value>
         public ViewportF Viewport
         {
-            get { return viewports[0]; }
+            get
+            {
+                rasterizerStage.GetViewports(viewports);
+                return viewports[0];
+            }
         }
 
         /// <summary>
@@ -1050,6 +1054,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>Returns a viewport bind on a specified mulrendertarget</returns>
         public ViewportF GetViewport(int index)
         {
+            rasterizerStage.GetViewports(viewports);
             return viewports[index];
         }
 

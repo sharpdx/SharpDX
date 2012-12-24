@@ -115,11 +115,12 @@ namespace SharpDX.Toolkit
             gamePlatform.Exiting += gamePlatform_Exiting;
 
             // By default, add a FileResolver for the ContentManager
-            Content.Resolvers.Add(new FileSystemContentResolver(gamePlatform.GetDefaultAppDirectory()));
+            Content.Resolvers.Add(new FileSystemContentResolver(gamePlatform.DefaultAppDirectory));
 
             // Setup registry
             Services.AddService(typeof(IServiceRegistry), Services);
             Services.AddService(typeof(IContentManager), Content);
+            Services.AddService(typeof(IGamePlatform), gamePlatform);
 
             // Register events on GameSystems.
             GameSystems.ItemAdded += GameSystems_ItemAdded;
@@ -252,7 +253,7 @@ namespace SharpDX.Toolkit
             {
                 if (gamePlatform != null)
                 {
-                    return gamePlatform.Window;
+                    return gamePlatform.MainWindow;
                 }
                 return null;
             }
@@ -559,7 +560,11 @@ namespace SharpDX.Toolkit
                 var drawable = currentlyDrawingGameSystems[i];
                 if (drawable.Visible)
                 {
-                    drawable.Draw(gameTime);
+                    if (drawable.BeginDraw())
+                    {
+                        drawable.Draw(gameTime);
+                        drawable.EndDraw();
+                    }
                 }
             }
 

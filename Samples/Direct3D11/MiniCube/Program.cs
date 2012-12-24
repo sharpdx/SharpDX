@@ -183,10 +183,10 @@ namespace MiniCube
                 if (userResized)
                 {
                     // Dispose all previous allocated resources
-                    ComObject.Dispose(ref backBuffer);
-                    ComObject.Dispose(ref renderView);
-                    ComObject.Dispose(ref depthBuffer);
-                    ComObject.Dispose(ref depthView);
+                    Utilities.Dispose(ref backBuffer);
+                    Utilities.Dispose(ref renderView);
+                    Utilities.Dispose(ref depthBuffer);
+                    Utilities.Dispose(ref depthView);
 
                     // Resize the backbuffer
                     swapChain.ResizeBuffers(desc.BufferCount, form.ClientSize.Width, form.ClientSize.Height, Format.Unknown, SwapChainFlags.None);
