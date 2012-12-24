@@ -27,7 +27,7 @@ using SharpDX.Serialization;
 namespace SharpDX
 {
     /// <summary>
-    ///   Represents a three dimensional mathematical int vector.
+    /// Represents a three dimensional mathematical int vector.
     /// </summary>
 #if !W8CORE
     [Serializable]
@@ -37,52 +37,52 @@ namespace SharpDX
     public struct Int3 : IEquatable<Int3>, IFormattable, IDataSerializable
     {
         /// <summary>
-        ///   The size of the <see cref = "Int3" /> type, in bytes.
+        /// The size of the <see cref = "Int3" /> type, in bytes.
         /// </summary>
         public static readonly int SizeInBytes = Marshal.SizeOf(typeof (Int3));
 
         /// <summary>
-        ///   A <see cref = "Int3" /> with all of its components set to zero.
+        /// A <see cref = "Int3" /> with all of its components set to zero.
         /// </summary>
         public static readonly Int3 Zero = new Int3();
 
         /// <summary>
-        ///   The X unit <see cref = "Int3" /> (1, 0, 0).
+        /// The X unit <see cref = "Int3" /> (1, 0, 0).
         /// </summary>
         public static readonly Int3 UnitX = new Int3(1, 0, 0);
 
         /// <summary>
-        ///   The Y unit <see cref = "Int3" /> (0, 1, 0).
+        /// The Y unit <see cref = "Int3" /> (0, 1, 0).
         /// </summary>
         public static readonly Int3 UnitY = new Int3(0, 1, 0);
 
         /// <summary>
-        ///   The Z unit <see cref = "Int3" /> (0, 0, 1).
+        /// The Z unit <see cref = "Int3" /> (0, 0, 1).
         /// </summary>
         public static readonly Int3 UnitZ = new Int3(0, 0, 1);
 
         /// <summary>
-        ///   A <see cref = "Int3" /> with all of its components set to one.
+        /// A <see cref = "Int3" /> with all of its components set to one.
         /// </summary>
         public static readonly Int3 One = new Int3(1, 1, 1);
 
         /// <summary>
-        ///   The X component of the vector.
+        /// The X component of the vector.
         /// </summary>
         public int X;
 
         /// <summary>
-        ///   The Y component of the vector.
+        /// The Y component of the vector.
         /// </summary>
         public int Y;
 
         /// <summary>
-        ///   The Z component of the vector.
+        /// The Z component of the vector.
         /// </summary>
         public int Z;
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref = "Int3" /> struct.
+        /// Initializes a new instance of the <see cref = "Int3" /> struct.
         /// </summary>
         /// <param name = "value">The value that will be assigned to all components.</param>
         public Int3(int value)
@@ -93,7 +93,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref = "Int3" /> struct.
+        /// Initializes a new instance of the <see cref = "Int3" /> struct.
         /// </summary>
         /// <param name = "x">Initial value for the X component of the vector.</param>
         /// <param name = "y">Initial value for the Y component of the vector.</param>
@@ -107,7 +107,7 @@ namespace SharpDX
 
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref = "Int3" /> struct.
+        /// Initializes a new instance of the <see cref = "Int3" /> struct.
         /// </summary>
         /// <param name = "values">The values to assign to the X, Y, Z, and W components of the vector. This must be an array with four elements.</param>
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "values" /> is <c>null</c>.</exception>
@@ -126,7 +126,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Gets or sets the component at the specified index.
+        /// Gets or sets the component at the specified index.
         /// </summary>
         /// <value>The value of the X, Y, Z, or W component, depending on the index.</value>
         /// <param name = "index">The index of the component to access. Use 0 for the X component, 1 for the Y component, 2 for the Z component, and 3 for the W component.</param>
@@ -169,7 +169,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Creates an array containing the elements of the vector.
+        /// Creates an array containing the elements of the vector.
         /// </summary>
         /// <returns>A four-element array containing the components of the vector.</returns>
         public int[] ToArray()
@@ -178,7 +178,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Adds two vectors.
+        /// Adds two vectors.
         /// </summary>
         /// <param name = "left">The first vector to add.</param>
         /// <param name = "right">The second vector to add.</param>
@@ -189,7 +189,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Adds two vectors.
+        /// Adds two vectors.
         /// </summary>
         /// <param name = "left">The first vector to add.</param>
         /// <param name = "right">The second vector to add.</param>
@@ -200,7 +200,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Subtracts two vectors.
+        /// Subtracts two vectors.
         /// </summary>
         /// <param name = "left">The first vector to subtract.</param>
         /// <param name = "right">The second vector to subtract.</param>
@@ -211,7 +211,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Subtracts two vectors.
+        /// Subtracts two vectors.
         /// </summary>
         /// <param name = "left">The first vector to subtract.</param>
         /// <param name = "right">The second vector to subtract.</param>
@@ -222,7 +222,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Scales a vector by the given value.
+        /// Scales a vector by the given value.
         /// </summary>
         /// <param name = "value">The vector to scale.</param>
         /// <param name = "scale">The amount by which to scale the vector.</param>
@@ -233,7 +233,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Scales a vector by the given value.
+        /// Scales a vector by the given value.
         /// </summary>
         /// <param name = "value">The vector to scale.</param>
         /// <param name = "scale">The amount by which to scale the vector.</param>
@@ -244,7 +244,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Modulates a vector with another by performing component-wise multiplication.
+        /// Modulates a vector with another by performing component-wise multiplication.
         /// </summary>
         /// <param name = "left">The first vector to modulate.</param>
         /// <param name = "right">The second vector to modulate.</param>
@@ -255,7 +255,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Modulates a vector with another by performing component-wise multiplication.
+        /// Modulates a vector with another by performing component-wise multiplication.
         /// </summary>
         /// <param name = "left">The first vector to modulate.</param>
         /// <param name = "right">The second vector to modulate.</param>
@@ -266,7 +266,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Scales a vector by the given value.
+        /// Scales a vector by the given value.
         /// </summary>
         /// <param name = "value">The vector to scale.</param>
         /// <param name = "scale">The amount by which to scale the vector.</param>
@@ -277,7 +277,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Scales a vector by the given value.
+        /// Scales a vector by the given value.
         /// </summary>
         /// <param name = "value">The vector to scale.</param>
         /// <param name = "scale">The amount by which to scale the vector.</param>
@@ -288,7 +288,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Reverses the direction of a given vector.
+        /// Reverses the direction of a given vector.
         /// </summary>
         /// <param name = "value">The vector to negate.</param>
         /// <param name = "result">When the method completes, contains a vector facing in the opposite direction.</param>
@@ -298,7 +298,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Reverses the direction of a given vector.
+        /// Reverses the direction of a given vector.
         /// </summary>
         /// <param name = "value">The vector to negate.</param>
         /// <returns>A vector facing in the opposite direction.</returns>
@@ -308,7 +308,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Restricts a value to be within a specified range.
+        /// Restricts a value to be within a specified range.
         /// </summary>
         /// <param name = "value">The value to clamp.</param>
         /// <param name = "min">The minimum value.</param>
@@ -332,7 +332,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Restricts a value to be within a specified range.
+        /// Restricts a value to be within a specified range.
         /// </summary>
         /// <param name = "value">The value to clamp.</param>
         /// <param name = "min">The minimum value.</param>
@@ -346,7 +346,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Returns a vector containing the smallest components of the specified vectors.
+        /// Returns a vector containing the smallest components of the specified vectors.
         /// </summary>
         /// <param name = "left">The first source vector.</param>
         /// <param name = "right">The second source vector.</param>
@@ -359,7 +359,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Returns a vector containing the largest components of the specified vectors.
+        /// Returns a vector containing the largest components of the specified vectors.
         /// </summary>
         /// <param name = "left">The first source vector.</param>
         /// <param name = "right">The second source vector.</param>
@@ -372,7 +372,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Returns a vector containing the smallest components of the specified vectors.
+        /// Returns a vector containing the smallest components of the specified vectors.
         /// </summary>
         /// <param name = "left">The first source vector.</param>
         /// <param name = "right">The second source vector.</param>
@@ -385,7 +385,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Returns a vector containing the smallest components of the specified vectors.
+        /// Returns a vector containing the smallest components of the specified vectors.
         /// </summary>
         /// <param name = "left">The first source vector.</param>
         /// <param name = "right">The second source vector.</param>
@@ -398,7 +398,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Adds two vectors.
+        /// Adds two vectors.
         /// </summary>
         /// <param name = "left">The first vector to add.</param>
         /// <param name = "right">The second vector to add.</param>
@@ -409,7 +409,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Assert a vector (return it unchanged).
+        /// Assert a vector (return it unchanged).
         /// </summary>
         /// <param name = "value">The vector to assert (unchange).</param>
         /// <returns>The asserted (unchanged) vector.</returns>
@@ -419,7 +419,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Subtracts two vectors.
+        /// Subtracts two vectors.
         /// </summary>
         /// <param name = "left">The first vector to subtract.</param>
         /// <param name = "right">The second vector to subtract.</param>
@@ -430,7 +430,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Reverses the direction of a given vector.
+        /// Reverses the direction of a given vector.
         /// </summary>
         /// <param name = "value">The vector to negate.</param>
         /// <returns>A vector facing in the opposite direction.</returns>
@@ -440,7 +440,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Scales a vector by the given value.
+        /// Scales a vector by the given value.
         /// </summary>
         /// <param name = "value">The vector to scale.</param>
         /// <param name = "scale">The amount by which to scale the vector.</param>
@@ -451,7 +451,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Scales a vector by the given value.
+        /// Scales a vector by the given value.
         /// </summary>
         /// <param name = "value">The vector to scale.</param>
         /// <param name = "scale">The amount by which to scale the vector.</param>
@@ -462,7 +462,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Scales a vector by the given value.
+        /// Scales a vector by the given value.
         /// </summary>
         /// <param name = "value">The vector to scale.</param>
         /// <param name = "scale">The amount by which to scale the vector.</param>
@@ -473,7 +473,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Tests for equality between two objects.
+        /// Tests for equality between two objects.
         /// </summary>
         /// <param name = "left">The first value to compare.</param>
         /// <param name = "right">The second value to compare.</param>
@@ -484,7 +484,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Tests for inequality between two objects.
+        /// Tests for inequality between two objects.
         /// </summary>
         /// <param name = "left">The first value to compare.</param>
         /// <param name = "right">The second value to compare.</param>
@@ -495,7 +495,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Performs an explicit conversion from <see cref = "Int3" /> to <see cref = "Vector2" />.
+        /// Performs an explicit conversion from <see cref = "Int3" /> to <see cref = "Vector2" />.
         /// </summary>
         /// <param name = "value">The value.</param>
         /// <returns>The result of the conversion.</returns>
@@ -505,7 +505,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Performs an explicit conversion from <see cref = "Int3" /> to <see cref = "Vector3" />.
+        /// Performs an explicit conversion from <see cref = "Int3" /> to <see cref = "Vector3" />.
         /// </summary>
         /// <param name = "value">The value.</param>
         /// <returns>The result of the conversion.</returns>
@@ -515,10 +515,10 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Returns a <see cref = "System.String" /> that represents this instance.
+        /// Returns a <see cref = "System.String" /> that represents this instance.
         /// </summary>
         /// <returns>
-        ///   A <see cref = "System.String" /> that represents this instance.
+        /// A <see cref = "System.String" /> that represents this instance.
         /// </returns>
         public override string ToString()
         {
@@ -526,11 +526,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Returns a <see cref = "System.String" /> that represents this instance.
+        /// Returns a <see cref = "System.String" /> that represents this instance.
         /// </summary>
         /// <param name = "format">The format.</param>
         /// <returns>
-        ///   A <see cref = "System.String" /> that represents this instance.
+        /// A <see cref = "System.String" /> that represents this instance.
         /// </returns>
         public string ToString(string format)
         {
@@ -544,11 +544,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Returns a <see cref = "System.String" /> that represents this instance.
+        /// Returns a <see cref = "System.String" /> that represents this instance.
         /// </summary>
         /// <param name = "formatProvider">The format provider.</param>
         /// <returns>
-        ///   A <see cref = "System.String" /> that represents this instance.
+        /// A <see cref = "System.String" /> that represents this instance.
         /// </returns>
         public string ToString(IFormatProvider formatProvider)
         {
@@ -556,12 +556,12 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Returns a <see cref = "System.String" /> that represents this instance.
+        /// Returns a <see cref = "System.String" /> that represents this instance.
         /// </summary>
         /// <param name = "format">The format.</param>
         /// <param name = "formatProvider">The format provider.</param>
         /// <returns>
-        ///   A <see cref = "System.String" /> that represents this instance.
+        /// A <see cref = "System.String" /> that represents this instance.
         /// </returns>
         public string ToString(string format, IFormatProvider formatProvider)
         {
@@ -573,10 +573,10 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Returns a hash code for this instance.
+        /// Returns a hash code for this instance.
         /// </summary>
         /// <returns>
-        ///   A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
         /// </returns>
         public override int GetHashCode()
         {
@@ -602,11 +602,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Determines whether the specified <see cref = "Int3" /> is equal to this instance.
+        /// Determines whether the specified <see cref = "Int3" /> is equal to this instance.
         /// </summary>
         /// <param name = "other">The <see cref = "Int3" /> to compare with this instance.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref = "Int3" /> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref = "Int3" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public bool Equals(Int3 other)
         {
@@ -614,11 +614,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Determines whether the specified <see cref = "System.Object" /> is equal to this instance.
+        /// Determines whether the specified <see cref = "System.Object" /> is equal to this instance.
         /// </summary>
         /// <param name = "value">The <see cref = "System.Object" /> to compare with this instance.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref = "System.Object" /> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref = "System.Object" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public override bool Equals(object value)
         {
