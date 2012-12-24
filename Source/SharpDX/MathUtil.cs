@@ -543,7 +543,7 @@ namespace SharpDX
         /// <param name="min">Minimum.</param>
         /// <param name="max">Maximum.</param>
         /// <returns>Random <see cref="System.TimeSpan"/>.</returns>
-        public static TimeSpan NextTimespan(this Random random, TimeSpan min, TimeSpan max)
+        public static TimeSpan NextTime(this Random random, TimeSpan min, TimeSpan max)
         { 
             return TimeSpan.FromTicks(random.NextLong(min.Ticks,max.Ticks));
         }
