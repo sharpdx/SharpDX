@@ -44,13 +44,13 @@ namespace SharpDX.Toolkit.Graphics
         private Ast.Technique currentTechnique;
         private Token currentToken;
 
-        internal IncludeHandler includeHandler;
         private bool isPreviewToken = false;
         private int parentCount = 0;
         private List<Token> previewTokens = new List<Token>();
         private EffectParserResult result;
         private Token savedPreviewToken;
         private IEnumerator<Token> tokenEnumerator;
+        private List<string> includeDirectoryList;
 
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public EffectParser()
         {
-            includeHandler = new IncludeHandler();
+            includeDirectoryList = new List<string>();
             Macros = new List<ShaderMacro>();
         }
 
@@ -66,11 +66,7 @@ namespace SharpDX.Toolkit.Graphics
         /// Gets or sets the include file callback.
         /// </summary>
         /// <value>The include file callback.</value>
-        public IncludeFileDelegate IncludeFileCallback
-        {
-            get { return includeHandler.IncludeFileCallback; }
-            set { includeHandler.IncludeFileCallback = value; }
-        }
+        public IncludeFileDelegate IncludeFileCallback { get; set; }
 
         /// <summary>
         /// Gets the macros.
@@ -84,7 +80,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <value>The include directory list.</value>
         public List<string> IncludeDirectoryList
         {
-            get { return includeHandler.IncludeDirectories; }
+            get { return includeDirectoryList; }
         }
 
         /// <summary>
@@ -99,24 +95,45 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="input">The input.</param>
         /// <param name="fileName">Name of the file.</param>
         /// <returns>Result of parsing</returns>
-        public EffectParserResult Parse(string input, string fileName)
+        public EffectParserResult PrepareParsing(string input, string fileName)
+        {
+            var filePath = Path.GetFullPath(fileName);
+            fileName = Path.GetFileName(fileName);
+
+            var localResult = new EffectParserResult
+                                  {
+                                      SourceFileName = Path.Combine(Environment.CurrentDirectory, filePath), 
+                                      IncludeHandler = new FileIncludeHandler { Logger = Logger }
+                                  };
+            localResult.IncludeHandler.CurrentDirectory.Push(Path.GetDirectoryName(localResult.SourceFileName));
+            localResult.IncludeHandler.IncludeDirectories.AddRange(IncludeDirectoryList);
+            localResult.IncludeHandler.IncludeFileCallback = IncludeFileCallback;
+            localResult.IncludeHandler.FileResolved.Add(fileName, new FileIncludeHandler.FileItem(fileName, filePath, File.GetLastWriteTime(filePath)));
+
+            string compilationErrors = null;
+            var preprocessedInput = ShaderBytecode.Preprocess(input, Macros.ToArray(), localResult.IncludeHandler, out compilationErrors, fileName);
+            localResult.PreprocessedSource = preprocessedInput;
+
+            localResult.Hashcode = CalculateHashcode(localResult);
+
+            return localResult;
+        }
+
+        /// <summary>
+        /// Continues the parsing.
+        /// </summary>
+        /// <param name="previousParsing">The previous parsing.</param>
+        /// <returns>EffectParserResult.</returns>
+        public EffectParserResult ContinueParsing(EffectParserResult previousParsing)
         {
             // Reset count
             parentCount = 0;
             curlyBraceCount = 0;
             bracketCount = 0;
-            result = new EffectParserResult {SourceFileName = Path.Combine(Environment.CurrentDirectory, Path.GetFullPath(fileName))};
 
-            includeHandler.Logger = Logger;
-            includeHandler.FileResolved.Clear();
-            includeHandler.CurrentDirectory.Clear();
-            includeHandler.CurrentDirectory.Push(Path.GetDirectoryName(result.SourceFileName));
+            result = previousParsing;
 
-            string compilationErrors = null;
-            var preprocessedInput = ShaderBytecode.Preprocess(input, Macros.ToArray(), includeHandler, out compilationErrors, fileName);
-            result.PreprocessedSource = preprocessedInput;
-
-            tokenEnumerator = Tokenizer.Run(preprocessedInput).GetEnumerator();
+            tokenEnumerator = Tokenizer.Run(previousParsing.PreprocessedSource).GetEnumerator();
 
             do
             {
@@ -151,8 +168,18 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
 
-
             return result;
+        }
+
+        /// <summary>
+        /// Parses the specified input.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns>Result of parsing</returns>
+        public EffectParserResult Parse(string input, string fileName)
+        {
+            return ContinueParsing(PrepareParsing(input, fileName));
         }
 
         private bool CheckAllBracketsClosed()
@@ -267,15 +294,10 @@ namespace SharpDX.Toolkit.Graphics
                     currentFile = token.Value.Substring(1, token.Value.Length - 2);
 
                     // Replace "file" from #line preprocessor with the actual fullpath.
-                    for (int i = 0; i < includeHandler.FileResolved.Count; i++)
+                    var includeHandler = result.IncludeHandler;
+                    if (includeHandler.FileResolved.ContainsKey(currentFile))
                     {
-                        var fileResolved = includeHandler.FileResolved[i];
-                        if (fileResolved.Item1 == currentFile)
-                        {
-                            currentFile = fileResolved.Item2;
-                            includeHandler.FileResolved.RemoveAt(i);
-                            break;
-                        }
+                        currentFile = includeHandler.FileResolved[currentFile].FilePath;
                     }
                     currentFile = currentFile.Replace(@"\\", @"\");
 
@@ -810,100 +832,33 @@ namespace SharpDX.Toolkit.Graphics
             return expression;
         }
 
-        #region Nested type: IncludeHandler
-
-        internal class IncludeHandler : CallbackBase, Include
+        private int CalculateHashcode(EffectParserResult parserResult)
         {
-            public readonly Stack<string> CurrentDirectory;
+            var keys = new List<string>(parserResult.IncludeHandler.FileResolved.Keys);
+            keys.Sort(StringComparer.InvariantCultureIgnoreCase);
 
-            public readonly List<Tuple<string, string>> FileResolved;
-            public readonly List<string> IncludeDirectories;
-            public SourceSpan CurrentSpan;
-            public IncludeFileDelegate IncludeFileCallback;
-            public EffectCompilerLogger Logger;
-
-            public IncludeHandler()
+            // Compute a HashCode using FNVModified
+            // based on filename and file write time
+            const uint p = 16777619;
+            uint hash = 2166136261;
+            
+            foreach (var fileKey in keys)
             {
-                IncludeDirectories = new List<string>();
-                CurrentDirectory = new Stack<string>();
-                FileResolved = new List<Tuple<string, string>>();
+                var fileItem = parserResult.IncludeHandler.FileResolved[fileKey];
+                var modifiedTime = fileItem.ModifiedTime;
+                var fileName = fileKey.ToLower();
+
+                hash = (hash ^ (uint)fileName.GetHashCode()) * p;
+                hash = (hash ^ (uint)modifiedTime.GetHashCode()) * p;
             }
 
-            #region Include Members
-
-            public Stream Open(IncludeType type, string fileName, Stream parentStream)
-            {
-                var currentDirectory = CurrentDirectory.Peek();
-                if (currentDirectory == null)
-                    currentDirectory = Environment.CurrentDirectory;
-
-                var filePath = fileName;
-
-                if (!Path.IsPathRooted(filePath))
-                {
-                    var directoryToSearch = new List<string> {currentDirectory};
-                    directoryToSearch.AddRange(IncludeDirectories);
-                    foreach (var dirPath in directoryToSearch)
-                    {
-                        var selectedFile = Path.Combine(dirPath, fileName);
-                        if (File.Exists(selectedFile))
-                        {
-                            filePath = selectedFile;
-                            break;
-                        }
-                    }
-                }
-
-                Stream stream = null;
-
-                if (filePath == null || !File.Exists(filePath))
-                {
-                    // Else try to use the include file callback
-                    if (IncludeFileCallback != null)
-                    {
-                        stream = IncludeFileCallback(type == IncludeType.System, fileName);
-                        if (stream != null)
-                        {
-                            FileResolved.Add(new Tuple<string, string>(fileName, fileName));
-                            return stream;
-                        }
-                    }
-
-                    Logger.Error("Unable to find file [{0}]", CurrentSpan, filePath ?? fileName);
-                    return null;
-                }
-
-                stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-                CurrentDirectory.Push(Path.GetDirectoryName(Path.GetFullPath(filePath)));
-                FileResolved.Add(new Tuple<string, string>(fileName, Path.GetFullPath(filePath)));
-                return stream;
-            }
-
-            public void Close(Stream stream)
-            {
-                stream.Close();
-                CurrentDirectory.Pop();
-            }
-
-            #endregion
+            hash += hash << 13;
+            hash ^= hash >> 7;
+            hash += hash << 3;
+            hash ^= hash >> 17;
+            hash += hash << 5;
+            return unchecked((int)hash);
         }
 
-        #endregion
-
-        #region Nested type: Tuple
-
-        internal class Tuple<T1, T2>
-        {
-            public T1 Item1;
-            public T2 Item2;
-
-            public Tuple(T1 item1, T2 item2)
-            {
-                Item1 = item1;
-                Item2 = item2;
-            }
-        }
-
-        #endregion
     }
 }

@@ -45,7 +45,7 @@ namespace SharpDX.Toolkit.Graphics
         public readonly List<string> IncludeDirs = new List<string>();
 
         [Option("Fo", Description = "Output object file. default is [output.tkfxo]\n", Value = "<file>")]
-        public string OutputFile = "output.tkfxo";
+        public string OutputFile = null;
 
         [Option("Fc", Description = "Output class file.", Value = "<file>")]
         public string OutputClassFile;
@@ -59,7 +59,7 @@ namespace SharpDX.Toolkit.Graphics
         [Option("OF", Description = "Name of the fieldname to output in the .cs when using Fc option. Default: effectBytecode.\n", Value = "<fieldname>")]
         public string OutputFieldName = "effectBytecode";
 
-        [Option("Ti", Description = "Compile the file only if the source file is newer (not working for indirect include).\n")]
+        [Option("Ti", Description = "Compile the file only if the source file is newer (working with indirect include).\n")]
         public bool CompileOnlyIfNewer;
 
         [Option("Fv", Description = "Output disassemble of fx files and tkfxo files only. No output file generated")]
@@ -149,67 +149,39 @@ namespace SharpDX.Toolkit.Graphics
 
             var archiveBytecode = new EffectData();
             bool hasErrors = false;
-            bool isFileUpToDate = CompileOnlyIfNewer;
 
             // ----------------------------------------------------------------
             // Pre check files
             // ----------------------------------------------------------------
-            var outputTime = new DateTime();
-            var outputFileName = OutputClassFile ?? OutputFile;
-            if (!ViewOnly && CompileOnlyIfNewer)
+            bool isOutputUpToDate = false;
+
+            if (options.OutputClassFile == null && options.OutputFile == null)
             {
-                if (OutputClassFile != null)
-                {
-                    if (File.Exists(OutputClassFile))
-                        outputTime = File.GetLastWriteTime(OutputClassFile);
-                }
-                else if (OutputFile != null)
-                {
-                    if (File.Exists(OutputFile))
-                        outputTime = File.GetLastWriteTime(OutputFile);
-                }
-                else
-                {
-                    ErrorColor();
-                    Console.WriteLine("Missing /Fo OutputFile or /Fc OutputClassFile");
-                    ResetColor();
-                    Environment.Exit(-1);
-                }
+                options.OutputFile = "output.tkfxo";
+            }
 
-
-                // If the assembly is more recent than the ouput file, then regenerate it
-                var assemblyTime = File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location);
-                if (assemblyTime > outputTime)
+            bool isSingleInputAndOutput = !ViewOnly && options.FxFiles.Count == 1 && CompileOnlyIfNewer && options.OutputFile != null;
+            int hashCode = 0;
+            if (isSingleInputAndOutput)
+            {
+                if (File.Exists(options.OutputFile))
                 {
-                    isFileUpToDate = false;
-                }
-                else
-                {
-                    // Else check that all files are not more recent.
-                    foreach (var fxFile in options.FxFiles)
+                    try
                     {
-                        var filePath = Path.Combine(Environment.CurrentDirectory, fxFile);
-
-                        if (!File.Exists(filePath))
-                        {
-                            isFileUpToDate = false;
-                            break;
-                        }
-
-                        if (File.GetLastWriteTime(filePath) > outputTime)
-                        {
-                            isFileUpToDate = false;
-                            break;
-                        }
+                        using (var outputFileStream = new FileStream(options.OutputFile, FileMode.Open, FileAccess.Read)) hashCode = EffectData.GetHashCode(outputFileStream);
+                        flags |= EffectCompilerFlags.AllowFastCompileWithFileDependenciesChecking;
                     }
-                }            
+                    catch
+                    {
+                    }
+                }
             }
 
-            if (!ViewOnly && isFileUpToDate)
-            {
-                Console.WriteLine("Nothing to compile, output file is up to date [{0}]", outputFileName);
-                Environment.Exit(0);
-            }
+            //if (!ViewOnly && isFileUpToDate)
+            //{
+            //    Console.WriteLine("Nothing to compile, output file is up to date [{0}]", outputFileName);
+            //    Environment.Exit(0);
+            //}
 
             // ----------------------------------------------------------------
             // Process each fx files / tkfxo files
@@ -239,7 +211,7 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     // Compile the fx file
                     Console.WriteLine("Compile Effect File [{0}]", filePath);
-                    var effectBytecode = EffectCompiler.Compile(File.ReadAllText(filePath), filePath, flags, macros, options.IncludeDirs);
+                    var effectBytecode = EffectCompiler.Compile(File.ReadAllText(filePath), filePath, flags, macros, options.IncludeDirs, null, hashCode);
 
                     // If there is any warning, errors, turn Error color on
                     if (effectBytecode.Logger.Messages.Count > 0)
@@ -252,6 +224,11 @@ namespace SharpDX.Toolkit.Graphics
                     {
                         Console.Error.WriteLine("Error when compiling file [{0}]:", fxFile);
                         hasErrors = true;
+                    }
+                    else if ((flags & EffectCompilerFlags.AllowFastCompileWithFileDependenciesChecking) != 0 && effectBytecode.IsUpToDate && effectBytecode.EffectData == null)
+                    {
+                        isOutputUpToDate = true;
+                        break;
                     }
 
                     // Print all messages (warning and errors)
@@ -272,8 +249,14 @@ namespace SharpDX.Toolkit.Graphics
                 // If there is no errors, merge the result to the final archive
                 if (!hasErrors)
                 {
-                    if (ProcessBytecode(effectData, archiveBytecode))
-                        hasErrors = true;
+                    if (isSingleInputAndOutput)
+                    {
+                        archiveBytecode = effectData;
+                    }
+                    else
+                    {
+                        if (ProcessBytecode(effectData, archiveBytecode)) hasErrors = true;
+                    }
                 }
             }
 
@@ -288,24 +271,31 @@ namespace SharpDX.Toolkit.Graphics
             {
                 Console.WriteLine();
 
-                if (OutputClassFile != null)
+                if (isOutputUpToDate)
                 {
-                    var codeWriter = new EffectDataCodeWriter
-                                         {
-                                             Namespace = OutputNamespace, 
-                                             ClassName = OutputClassname ?? Path.GetFileNameWithoutExtension(OutputClassFile),
-                                             FieldName = OutputFieldName,
-                                         };
-
-                    Console.WriteLine("Save C# code output to [{0}]", OutputClassFile);
-                    using (var stream = new NativeFileStream(OutputClassFile, NativeFileMode.Create, NativeFileAccess.Write, NativeFileShare.Write))
-                        codeWriter.Write(archiveBytecode, new StreamWriter(stream, Encoding.UTF8));
+                    Console.Error.WriteLine("Nothing to compile. Output file [{0}] is up-to-date", options.OutputFile);
                 }
                 else
                 {
-                    Console.WriteLine("Save output to [{0}]", options.OutputFile);
-                    // Save the result
-                    archiveBytecode.Save(options.OutputFile);
+                    if (OutputClassFile != null)
+                    {
+                        var codeWriter = new EffectDataCodeWriter
+                                             {
+                                                 Namespace = OutputNamespace,
+                                                 ClassName = OutputClassname ?? Path.GetFileNameWithoutExtension(OutputClassFile),
+                                                 FieldName = OutputFieldName,
+                                             };
+
+                        Console.WriteLine("Save C# code output to [{0}]", OutputClassFile);
+                        using (var stream = new NativeFileStream(OutputClassFile, NativeFileMode.Create, NativeFileAccess.Write, NativeFileShare.Write)) codeWriter.Write(archiveBytecode, new StreamWriter(stream, Encoding.UTF8));
+                    }
+
+                    if (options.OutputFile != null)
+                    {
+                        Console.WriteLine("Save binary output to [{0}]", options.OutputFile);
+                        // Save the result
+                        archiveBytecode.Save(options.OutputFile);
+                    }
                 }
             }
         }
