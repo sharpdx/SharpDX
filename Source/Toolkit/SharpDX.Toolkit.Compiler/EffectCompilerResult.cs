@@ -32,11 +32,17 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="effectData">The EffectData.</param>
         /// <param name="logger">The logger.</param>
-        internal EffectCompilerResult(EffectData effectData, Logger logger)
+        internal EffectCompilerResult(bool isUpToDate, EffectData effectData, Logger logger)
         {
+            IsUpToDate = isUpToDate;
             EffectData = effectData;
             Logger = logger;
         }
+
+        /// <summary>
+        /// A boolean indicating wether the compilation result is up to date (effectData == null and no need to perform a full compile)
+        /// </summary>
+        public readonly bool IsUpToDate;
 
         /// <summary>
         /// Gets the EffectData.

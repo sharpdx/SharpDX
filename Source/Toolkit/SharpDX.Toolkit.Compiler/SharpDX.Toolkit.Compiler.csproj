@@ -33,6 +33,7 @@
     <Compile Include="EffectParser.cs" />
     <Compile Include="EffectCompilerMessage.cs" />
     <Compile Include="EffectParserResult.cs" />
+    <Compile Include="FileIncludeHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SourceSpan.cs" />
     <Compile Include="Token.cs" />

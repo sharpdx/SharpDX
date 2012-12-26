@@ -142,7 +142,12 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>	
         /// <unmanaged>D3DCOMPILE_WARNINGS_ARE_ERRORS</unmanaged>	
         /// <unmanaged-short>D3DCOMPILE_WARNINGS_ARE_ERRORS</unmanaged-short>	
-        WarningsAreErrors = unchecked((int)262144),			
+        WarningsAreErrors = unchecked((int)262144),
+
+        /// <summary>	
+        /// Instruct the compiler to compile only if all source include files are not newer than the compiled file. The Hashcode must be passed to the compile function.
+        /// </summary>	
+        AllowFastCompileWithFileDependenciesChecking = 0x80000,
         
         /// <summary>	
         /// None.	

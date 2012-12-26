@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using SharpDX.IO;
+using SharpDX.Multimedia;
 using SharpDX.Serialization;
 using SharpDX.Toolkit.Diagnostics;
 
@@ -44,6 +45,11 @@ namespace SharpDX.Toolkit.Graphics
             Shaders = new List<Shader>();
             Effects = new List<Effect>();
         }
+
+        /// <summary>
+        /// Gets the Source HashCode, a hashcode generated from input source file names (including all includes) and modified time for each file.
+        /// </summary>
+        public int HashCode;
 
         /// <summary>
         /// List of compiled shaders.
@@ -123,6 +129,9 @@ namespace SharpDX.Toolkit.Graphics
         public bool MergeFrom(EffectData source, Logger logger)
         {
             bool isMergeOk = true;
+
+            // Clear the HashCode as it doesn't mean anything
+            HashCode = 0;
 
             foreach (var effect in source.Effects)
             {
@@ -227,6 +236,29 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
+        /// Get the HashCode from the binary effect, without loading the full effect in memory.
+        /// </summary>
+        /// <param name="stream">The effect binary stream</param>
+        /// <returns>The hashcode stored in the binary effect.</returns>
+        public static int GetHashCode(Stream stream)
+        {
+            int hash = 0;
+            var dataReader = new BinaryReader(stream);
+            var savePosition = stream.Position;
+            if ((stream.Length - stream.Position) > 12)
+            {
+                var magicCode = (FourCC)dataReader.ReadInt32();
+                if (magicCode == MagicCode)
+                {
+                    dataReader.ReadInt32();
+                    hash = dataReader.ReadInt32();
+                }
+            }
+            stream.Position = savePosition;
+            return hash;
+        }
+
+        /// <summary>
         /// Loads an <see cref="EffectData"/> from the specified buffer.
         /// </summary>
         /// <param name="buffer">The buffer.</param>
@@ -263,6 +295,9 @@ namespace SharpDX.Toolkit.Graphics
             // If the serializer don't find the TKFX, It will throw an
             // exception that will be catched by Load method.
             serializer.BeginChunk(MagicCode);
+
+            // Serialize the HashCode
+            serializer.Serialize(ref HashCode);
 
             // Shaders section
             serializer.BeginChunk("SHDR");
