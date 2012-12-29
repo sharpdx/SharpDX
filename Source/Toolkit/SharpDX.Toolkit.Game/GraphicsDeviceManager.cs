@@ -147,6 +147,8 @@ namespace SharpDX.Toolkit
 
         public event EventHandler<EventArgs> DeviceResetting;
 
+        public event EventHandler<PreparingDeviceSettingsEventArgs> PreparingDeviceSettings;
+
         #endregion
 
         #region Public Properties
@@ -719,7 +721,7 @@ namespace SharpDX.Toolkit
         
         protected virtual void OnPreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs args)
         {
-            var handler = DeviceCreated;
+            var handler = PreparingDeviceSettings;
             if (handler != null)
             {
                 handler(sender, args);
