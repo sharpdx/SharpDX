@@ -79,7 +79,7 @@ namespace SharpDX.Direct3D9
         public DeviceEx(Direct3DEx direct3D, int adapter, DeviceType deviceType, IntPtr controlHandle, CreateFlags createFlags, PresentParameters presentParameters, DisplayModeEx fullScreenDisplayMode)
             : base(IntPtr.Zero)
         {
-            direct3D.CreateDeviceEx(adapter, deviceType, controlHandle, (int)createFlags, new[] {presentParameters}, new[] {fullScreenDisplayMode}, this);
+            direct3D.CreateDeviceEx(adapter, deviceType, controlHandle, (int)createFlags, new[] {presentParameters}, fullScreenDisplayMode == null ? null : new[] {fullScreenDisplayMode}, this);
         }
 
         /// <summary>

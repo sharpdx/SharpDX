@@ -2201,7 +2201,7 @@
     <map method="IDirect3D9Ex::CreateDeviceEx" visibility="internal"/>
     <map param="IDirect3D9Ex::CreateDeviceEx::ppReturnedDeviceInterface" attribute="out fast"/>
     <map param="IDirect3D9Ex::CreateDeviceEx::pPresentationParameters" attribute="in buffer"/>
-    <map param="IDirect3D9Ex::CreateDeviceEx::pFullscreenDisplayMode" attribute="in buffer"/>
+    <map param="IDirect3D9Ex::CreateDeviceEx::pFullscreenDisplayMode" attribute="in buffer optional"/>
     <map method="IDirect3D9Ex::EnumAdapterModesEx" name="EnumerateAdapterModesEx"/>
     <map param="IDirect3D9Ex::EnumAdapterModesEx::pMode" return="true" attribute="out"/>
     <map param="IDirect3D9Ex::GetAdapterDisplayModeEx::pMode" return="true" attribute="out"/>
