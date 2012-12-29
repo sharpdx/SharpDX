@@ -70,7 +70,7 @@ namespace SharpDX.Windows
         private const int SC_SCREENSAVE = 0xF140;
         private const int MNC_CLOSE = 1;
         private System.Drawing.Size cachedSize;
-        private bool minimized;
+        private FormWindowState previousWindowState;
         //private DisplayMonitor monitor;
         private bool sizeMove;
 
@@ -97,6 +97,8 @@ namespace SharpDX.Windows
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
 
             Icon = SharpDX.Properties.Resources.logo;
+
+            previousWindowState = FormWindowState.Normal;
         }
 
         /// <summary>
@@ -298,8 +300,7 @@ namespace SharpDX.Windows
                 case WM_SIZE:
                     if (wparam == SIZE_MINIMIZED)
                     {
-                        minimized = true;
-                        //maximized = false;
+                        previousWindowState = FormWindowState.Minimized;
                         OnPauseRendering(EventArgs.Empty);
                     }
                     else
@@ -316,29 +317,31 @@ namespace SharpDX.Windows
                         }
                         else if (wparam == SIZE_MAXIMIZED)
                         {
-                            if (minimized)
+                            if (previousWindowState == FormWindowState.Minimized)
                                 OnResumeRendering(EventArgs.Empty);
 
-                            minimized = false;
-                            // maximized = true;
+                            previousWindowState = FormWindowState.Maximized;
 
                             OnUserResized(EventArgs.Empty);
                             UpdateScreen();
+                            cachedSize = Size;
                         }
                         else if (wparam == SIZE_RESTORED)
                         {
-                            if (minimized)
+                            if (previousWindowState == FormWindowState.Minimized)
                                 OnResumeRendering(EventArgs.Empty);
 
-                            minimized = false;
-                            // maximized = false;
-
-                            if (!sizeMove && Size != cachedSize)
+                            if (!sizeMove && (Size != cachedSize || previousWindowState == FormWindowState.Maximized))
                             {
+
+                                previousWindowState = FormWindowState.Normal;
+                                
                                 OnUserResized(EventArgs.Empty);
                                 UpdateScreen();
                                 cachedSize = Size;
                             }
+
+                            previousWindowState = FormWindowState.Normal;
                         }
                     }
                     break;
