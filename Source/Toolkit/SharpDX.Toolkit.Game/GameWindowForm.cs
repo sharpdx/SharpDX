@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 #if !W8CORE
+using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 using SharpDX.Windows;
@@ -27,9 +29,6 @@ namespace SharpDX.Toolkit
     internal class GameWindowForm : RenderForm
     {
         private bool allowUserResizing;
-        private bool isFullScreenMaximized;
-        private bool isMouseVisible;
-        private bool isMouseCurrentlyHidden;
 
         public GameWindowForm() : this("SharpDX")
         {
