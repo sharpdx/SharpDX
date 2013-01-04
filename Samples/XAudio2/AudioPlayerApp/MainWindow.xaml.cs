@@ -25,6 +25,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using Microsoft.Win32;
+
+using SharpDX;
 using SharpDX.IO;
 using SharpDX.MediaFoundation;
 using SharpDX.XAudio2;
@@ -56,6 +58,14 @@ namespace AudioPlayerApp
             timer.Interval = TimeSpan.FromSeconds(0.1);
             timer.Tick += timer_Tick;
             timer.Start();
+        }
+
+
+        protected override void OnClosed(EventArgs e)
+        {
+            Utilities.Dispose(ref masteringVoice);
+            Utilities.Dispose(ref xaudio2);
+            base.OnClosed(e);
         }
 
         private void EjectButton_Click(object sender, RoutedEventArgs e)
