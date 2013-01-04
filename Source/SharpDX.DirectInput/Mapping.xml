@@ -680,10 +680,6 @@
     <remove enum-item="DIK_CIRCUMFLEX"/>
     <map enum-item="DIK_([A-Z].*)" name-tmp="$1"/>
     <map enum-item="DIK_([0-9])" name-tmp="D$1"/>
-    <map enum-item="DIK_UP" name="UpArrow"/>
-    <map enum-item="DIK_Left" name="LeftArrow"/>
-    <map enum-item="DIK_Right" name="RightArrow"/>
-    <map enum-item="DIK_Down" name="DownArrow"/>
     <map enum-item="DIK_APPS" name="Applications"/>
     <map enum-item="DIK_AT" name="AT"/>
     <map enum-item="DIK_AX" name="AX"/>
