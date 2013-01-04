@@ -87,6 +87,21 @@ namespace SharpDX.Toolkit
                 // Rendering to SwapChainBackgroundPanel
                 initCallback();
                 CompositionTarget.Rendering += CompositionTarget_Rendering;
+                gameWindowWinRT.ClientSizeChanged += gameWindowWinRT_ClientSizeChanged;
+            }
+        }
+
+        void gameWindowWinRT_ClientSizeChanged(object sender, EventArgs e)
+        {
+            IGraphicsDeviceService deviceManager = (IGraphicsDeviceService)this.Services.GetService(typeof(IGraphicsDeviceService));
+
+            if (deviceManager != null)
+            {
+                int newWidth = gameWindowWinRT.ClientBounds.Width;
+                int newHeight = gameWindowWinRT.ClientBounds.Height;
+                SharpDX.DXGI.Format newFormat = deviceManager.GraphicsDevice.Presenter.Description.BackBufferFormat;
+
+                deviceManager.GraphicsDevice.Presenter.Resize(newWidth, newHeight, newFormat);
             }
         }
 
