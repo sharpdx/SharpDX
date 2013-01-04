@@ -184,7 +184,6 @@ namespace SharpDX.Windows
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            cachedSize = Size;
             UpdateScreen();
         }
 
@@ -335,7 +334,6 @@ namespace SharpDX.Windows
                             {
 
                                 previousWindowState = FormWindowState.Normal;
-                                
                                 OnUserResized(EventArgs.Empty);
                                 UpdateScreen();
                                 cachedSize = Size;
