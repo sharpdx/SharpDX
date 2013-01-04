@@ -680,6 +680,54 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Calculates the inverse of this matrix instance.
+        /// </summary>
+        public void Invert()
+        {
+            Invert(ref this, out this);
+        }
+
+        /// <summary>
+        /// Calculates the inverse of the specified matrix.
+        /// </summary>
+        /// <param name="value">The matrix whose inverse is to be calculated.</param>
+        /// <returns>the inverse of the specified matrix.</returns>
+        public static Matrix3x2 Invert(Matrix3x2 value)
+        {
+            Matrix3x2 result;
+            Invert(ref value, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Calculates the inverse of the specified matrix.
+        /// </summary>
+        /// <param name="value">The matrix whose inverse is to be calculated.</param>
+        /// <param name="result">When the method completes, contains the inverse of the specified matrix.</param>
+        public static void Invert(ref Matrix3x2 value, out Matrix3x2 result)
+        {
+            float determinant = value.Determinant();
+
+            if (MathUtil.WithinEpsilon(determinant, 0.0f))
+            {
+                result = Identity;
+                return;
+            }
+
+            float invdet = 1.0f / determinant;
+            float _offsetX = value.M31;
+            float _offsetY = value.M32;
+
+            result = new Matrix3x2(
+                value.M22 * invdet,
+                -value.M12 * invdet,
+                -value.M21 * invdet,
+                value.M11 * invdet,
+                (value.M21 * _offsetY - _offsetX * value.M22) * invdet,
+                (_offsetX * value.M12 - value.M11 * _offsetY) * invdet);
+        }
+
+        /// <summary>
         /// Adds two matricies.
         /// </summary>
         /// <param name="left">The first matrix to add.</param>
