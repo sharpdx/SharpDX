@@ -40,11 +40,18 @@ namespace SharpDX.Toolkit
         private object nativeWindow;
 
         public CoreWindow CoreWindow;
-
-        public bool IsSwapChainBackgroundPanel;
+        private SwapChainBackgroundPanel swapChainBackgroundPanel;
 
         private VoidAction initCallback;
         private VoidAction tickCallback;
+
+        public bool IsSwapChainBackgroundPanel
+        {
+            get
+            {
+                return this.swapChainBackgroundPanel != null;
+            }
+        }
 
         internal GameWindowWinRT()
         {
@@ -94,8 +101,14 @@ namespace SharpDX.Toolkit
                 }
 
                 //clientBounds = new DrawingRectangle(0, 0, (int)swapChainBackgroundPanel.ActualWidth, (int)swapChainBackgroundPanel.ActualHeight);
-                IsSwapChainBackgroundPanel = true;
+                this.swapChainBackgroundPanel = swapChainBackgroundPanel;
+                this.swapChainBackgroundPanel.SizeChanged += swapChainBackgroundPanel_SizeChanged;
             }
+        }
+
+        private void swapChainBackgroundPanel_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            this.OnClientSizeChanged(sender, EventArgs.Empty);
         }
 
         IFrameworkView IFrameworkViewSource.CreateView()
@@ -107,7 +120,7 @@ namespace SharpDX.Toolkit
         {
             get
             {
-                return false;
+                return true;
             }
             set
             {
@@ -118,6 +131,10 @@ namespace SharpDX.Toolkit
         {
             get
             {
+                if (this.IsSwapChainBackgroundPanel)
+                {
+                    return new DrawingRectangle(0, 0, (int)(this.swapChainBackgroundPanel.ActualWidth * DisplayProperties.LogicalDpi / 96.0), (int)(this.swapChainBackgroundPanel.ActualHeight * DisplayProperties.LogicalDpi / 96.0)); 
+                }
                 if (CoreWindow != null)
                 {
                     return new DrawingRectangle(0, 0, (int)(CoreWindow.Bounds.Width * DisplayProperties.LogicalDpi / 96.0), (int)(CoreWindow.Bounds.Height * DisplayProperties.LogicalDpi / 96.0));
