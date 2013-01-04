@@ -113,6 +113,14 @@ namespace MiniCube
             base.LoadContent();
         }
 
+        protected override void UnloadContent()
+        {
+            basicEffect.Dispose();
+            vertices.Dispose();
+
+            base.UnloadContent();
+        }
+
         protected override void Initialize()
         {
             Window.Title = "MiniCube demo";

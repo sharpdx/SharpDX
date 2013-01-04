@@ -62,6 +62,7 @@ namespace SharpDX.Toolkit
         private bool drawRunningSlowly;
         private bool forceElapsedTimeToZero;
         private bool isInitialzing;
+        private bool contentLoaded = false;
 
         private readonly TimerTick timer;
 
@@ -631,6 +632,8 @@ namespace SharpDX.Toolkit
             }
 
             currentlyContentGameSystems.Clear();
+
+            contentLoaded = true;
         }
 
         /// <summary>
@@ -943,7 +946,12 @@ namespace SharpDX.Toolkit
         private void graphicsDeviceService_DeviceDisposing(object sender, EventArgs e)
         {
             Content.Unload();
-            UnloadContent();
+
+            if (contentLoaded)
+            {
+                UnloadContent();
+                contentLoaded = false;
+            }
         }
 
         private void graphicsDeviceService_DeviceReset(object sender, EventArgs e)
