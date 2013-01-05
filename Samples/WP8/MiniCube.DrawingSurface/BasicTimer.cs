@@ -66,6 +66,7 @@ namespace MiniTriApp
             _startTime = _currentTime;
             Total = 0.0f;
             Delta = 1.0f / 60.0f;
+            _watch.Start();
         }
     }
 }

@@ -152,8 +152,6 @@ namespace SharpDX.Direct3D11
                 }
                 return Result.Ok.Code;
             }
-
-
             
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
             private delegate int GetTextureDelegate(IntPtr thisPtr, IntPtr surfaceSize, IntPtr synchronizedTexture, IntPtr textureSubRectangle);
@@ -167,7 +165,18 @@ namespace SharpDX.Direct3D11
                     if (surfaceSize == IntPtr.Zero || textureSubRectangle == IntPtr.Zero)
                         throw new ArgumentException();
 
-                    callback.GetTexture(*(DrawingSizeF*)surfaceSize, out shadow.synchronizedTexture , out *(RectangleF*) textureSubRectangle);
+                    // Call the callback GetTexture method    
+                    callback.GetTexture(*(DrawingSizeF*)surfaceSize, out shadow.synchronizedTexture, out *(RectangleF*)textureSubRectangle);
+
+                    // Copy back synhronized texture pointer to native code
+                    if (shadow.synchronizedTexture != null)
+                    {
+                        // Increment COM reference before giving back the sychronized texture
+                        ((IUnknown)shadow.synchronizedTexture).AddReference();
+
+                        // Copy the pointer to the output parameter
+                        *(IntPtr*)synchronizedTexture = shadow.synchronizedTexture.NativePointer;
+                    }
                 }
                 catch (Exception exception)
                 {

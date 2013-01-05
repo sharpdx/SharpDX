@@ -145,6 +145,7 @@
     <map interface="IDrawingSurfaceContentProviderNative" callback="true"/>
     <map interface="IDrawingSurfaceRuntimeHostNative" name="DrawingSurfaceRuntimeHost" />
     <map interface="IDrawingSurfaceSynchronizedTextureNative" name="DrawingSurfaceSynchronizedTexture" />
+    <map param="IDrawingSurfaceRuntimeHostNative::CreateSynchronizedTexture::synchronizedTexture" return="true"/>
     <context-clear/>
     
     <context id="d3d11-all"/>

@@ -166,50 +166,32 @@ namespace MiniTriApp
             int width = (int)_renderTargetSize.Width;
             int height = (int)_renderTargetSize.Height;
 
-
-	        Vector3 eye = new Vector3(0.0f, 0.7f, 1.5f);
-	        Vector3 at = new Vector3(0.0f, -0.1f, 0.0f);
-	        Vector3 up = new Vector3(0.0f, 1.0f, 0.0f);
-
-            _view = Matrix.LookAtLH(eye, at, up);
+            _view = Matrix.LookAtLH(new Vector3(0, 0, -5), new Vector3(0, 0, 0), Vector3.UnitY);
             _proj = Matrix.PerspectiveFovLH((float)Math.PI / 4.0f, width / (float)height, 0.1f, 100.0f);
             _viewProj = Matrix.Multiply(_view, _proj);
-	
-            
-            _worldViewProj = Matrix.RotationY(timeTotal * (float)Math.PI / 4.0f) * _viewProj;
-            _worldViewProj.Transpose();
 
+            _worldViewProj = Matrix.Scaling(1.0f) * Matrix.RotationX(timeTotal) * Matrix.RotationY(timeTotal * 2.0f) * Matrix.RotationZ(timeTotal * .7f) * _viewProj;
+            _worldViewProj.Transpose();
         }
 
         public override void Render()
         {
-
-            // Set targets (This is mandatory in the loop)
-            _deviceContext.OutputMerger.SetTargets(_depthStencilView, _renderTargetview);
-
+            _deviceContext.ClearRenderTargetView(_renderTargetview, Color.CornflowerBlue);
             _deviceContext.ClearDepthStencilView(_depthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
 
-            // Clear the views
-            _deviceContext.ClearRenderTargetView(_renderTargetview, Color.CornflowerBlue);
+            _deviceContext.OutputMerger.SetTargets(_depthStencilView, _renderTargetview);
 
-            //if (ShowCube)
-            //{
+            _deviceContext.InputAssembler.SetVertexBuffers(0, _vertexBufferBinding);
+            _deviceContext.InputAssembler.InputLayout = _vertexLayout;
+            _deviceContext.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
 
-                // Setup the pipeline
-                _deviceContext.InputAssembler.SetVertexBuffers(0, _vertexBufferBinding);
-                _deviceContext.InputAssembler.InputLayout = _vertexLayout;
-                _deviceContext.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
-                _deviceContext.VertexShader.SetConstantBuffer(0, _constantBuffer);
-                _deviceContext.VertexShader.Set(_vertexShader);
-                _deviceContext.PixelShader.Set(_pixelShader);
+            _deviceContext.UpdateSubresource(ref _worldViewProj, _constantBuffer);
+            _deviceContext.VertexShader.SetConstantBuffer(0, _constantBuffer);
+            _deviceContext.VertexShader.Set(_vertexShader);
 
-                // Update Constant Buffer
-                _deviceContext.UpdateSubresource(ref _worldViewProj, _constantBuffer, 0);
-            
-                // Draw the cube
-                _deviceContext.Draw(36, 0);
-            //}
+            _deviceContext.PixelShader.Set(_pixelShader);
 
+            _deviceContext.Draw(36, 0);
         }
 
 

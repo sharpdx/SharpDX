@@ -46,11 +46,9 @@ namespace MiniTriApp
             _controller.RecreateSynchronizedTexture +=()=>{
                 if (_host!=null)
 	            {
-		            _host.CreateSynchronizedTexture(_controller.GetTexture(), out _synchronizedTexture);
+		            _synchronizedTexture = _host.CreateSynchronizedTexture(_controller.GetTexture());
 	            }
             };
-
-
 
         }
 
@@ -76,12 +74,9 @@ namespace MiniTriApp
         
         public override void GetTexture(SharpDX.DrawingSizeF surfaceSize, out DrawingSurfaceSynchronizedTexture synchronizedTexture, out SharpDX.RectangleF textureSubRectangle)
         {
-            
-
             if (_synchronizedTexture == null)
             {
-                _host.CreateSynchronizedTexture(_controller.GetTexture(), out _synchronizedTexture);
-
+                _synchronizedTexture = _host.CreateSynchronizedTexture(_controller.GetTexture());
             }
             
             // Set output parameters.
@@ -95,7 +90,6 @@ namespace MiniTriApp
             //m_synchronizedTexture.CopyTo(synchronizedTexture);
             synchronizedTexture = _synchronizedTexture;
 
-
             textureSubRectangle = _textureSubRectangle;     
 
             //something is going wrong here as the second time thru the BeginDraw consumes 
@@ -106,8 +100,6 @@ namespace MiniTriApp
             _controller.GetTexture(surfaceSize, synchronizedTexture, textureSubRectangle);
 
             synchronizedTexture.EndDraw();
-
-
         }
 
 
