@@ -386,7 +386,7 @@ namespace SharpDX.Windows
 
         protected override bool ProcessDialogKey(Keys keyData)
         {
-            if (keyData == (Keys.Menu | Keys.Alt))
+            if (keyData == (Keys.Menu | Keys.Alt) || keyData == Keys.F10)
                 return true;
             else
                 return base.ProcessDialogKey(keyData);
