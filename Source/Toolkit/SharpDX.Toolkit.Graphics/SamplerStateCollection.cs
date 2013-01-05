@@ -43,6 +43,11 @@ namespace SharpDX.Toolkit.Graphics
         public readonly SamplerState PointClamp;
 
         /// <summary>
+        /// Point filtering with texture coordinate mirroring.
+        /// </summary>
+        public readonly SamplerState PointMirror;
+
+        /// <summary>
         /// Linear filtering with texture coordinate wrapping.
         /// </summary>
         public readonly SamplerState LinearWrap;
@@ -51,6 +56,11 @@ namespace SharpDX.Toolkit.Graphics
         /// Linear filtering with texture coordinate clamping.
         /// </summary>
         public readonly SamplerState LinearClamp;
+
+        /// <summary>
+        /// Linear filtering with texture coordinate mirroring.
+        /// </summary>
+        public readonly SamplerState LinearMirror;
 
         /// <summary>
         /// Anisotropic filtering with texture coordinate wrapping.
@@ -63,6 +73,11 @@ namespace SharpDX.Toolkit.Graphics
         public readonly SamplerState AnisotropicClamp;
 
         /// <summary>
+        /// Anisotropic filtering with texture coordinate mirroring.
+        /// </summary>
+        public readonly SamplerState AnisotropicMirror;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SamplerStateCollection" /> class.
         /// </summary>
         /// <param name="device">The device.</param>
@@ -70,10 +85,13 @@ namespace SharpDX.Toolkit.Graphics
         {
             PointWrap = Add(SamplerState.New(device, "PointWrap", Filter.MinMagMipPoint, TextureAddressMode.Wrap));
             PointClamp = Add(SamplerState.New(device, "PointClamp", Filter.MinMagMipPoint, TextureAddressMode.Clamp));
+            PointMirror = Add(SamplerState.New(device, "PointMirror", Filter.MinMagMipPoint, TextureAddressMode.Mirror));
             LinearWrap = Add(SamplerState.New(device, "LinearWrap", Filter.MinMagMipLinear, TextureAddressMode.Wrap));
             LinearClamp = Add(SamplerState.New(device, "LinearClamp", Filter.MinMagMipLinear, TextureAddressMode.Clamp));
+            LinearMirror = Add(SamplerState.New(device, "LinearMirror", Filter.MinMagMipLinear, TextureAddressMode.Mirror));
             AnisotropicWrap = Add(SamplerState.New(device, "AnisotropicWrap", Filter.Anisotropic, TextureAddressMode.Wrap));
             AnisotropicClamp = Add(SamplerState.New(device, "AnisotropicClamp", Filter.Anisotropic, TextureAddressMode.Clamp));
+            AnisotropicMirror = Add(SamplerState.New(device, "AnisotropicMirror", Filter.Anisotropic, TextureAddressMode.Mirror));
             Default = LinearClamp;
         }
     }
