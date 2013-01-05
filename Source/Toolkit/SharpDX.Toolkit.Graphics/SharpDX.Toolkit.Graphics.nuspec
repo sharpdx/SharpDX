@@ -40,6 +40,7 @@
 
     <dependencies>
       <dependency id="SharpDX" version="$version$"/>
+      <dependency id="SharpDX.Direct2D1" version="$version$"/>
       <dependency id="SharpDX.Direct3D11" version="$version$"/>
       <dependency id="SharpDX.DXGI" version="$version$"/>
       <dependency id="SharpDX.Toolkit" version="$version$"/>
