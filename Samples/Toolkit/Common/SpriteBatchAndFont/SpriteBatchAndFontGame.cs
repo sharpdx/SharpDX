@@ -81,6 +81,13 @@ namespace SpriteBatchAndFont
             base.LoadContent();
         }
 
+        protected override void UnloadContent()
+        {
+            spriteBatch.Dispose();
+
+            base.UnloadContent();
+        }
+
         protected override void BeginRun()
         {
             // Starts the FPS clock

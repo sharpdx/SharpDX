@@ -178,7 +178,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Gets or sets the left position.
+        /// Gets the left position.
         /// </summary>
         /// <value>The left position.</value>
         public int X
@@ -187,7 +187,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Gets or sets the top position.
+        /// Gets the top position.
         /// </summary>
         /// <value>The top position.</value>
         public int Y
@@ -196,7 +196,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Gets or sets the width.
+        /// Gets the width.
         /// </summary>
         /// <value>The width.</value>
         public int Width
@@ -205,7 +205,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Gets or sets the height.
+        /// Gets the height.
         /// </summary>
         /// <value>The height.</value>
         public int Height
