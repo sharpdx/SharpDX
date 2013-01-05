@@ -32,10 +32,12 @@ namespace SharpDX.Toolkit.Graphics
     {
         internal TextureCube(GraphicsDevice device, Texture2DDescription description2D, params DataBox[] dataBoxes) : base(device, description2D, dataBoxes)
         {
+            Initialize(Resource);
         }
 
         internal TextureCube(GraphicsDevice device, Direct3D11.Texture2D texture) : base(device, texture)
         {
+            Initialize(Resource);
         }
 
         internal override RenderTargetView GetRenderTargetView(ViewType viewType, int arrayOrDepthSlice, int mipMapSlice)
