@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\SharpDX.PreSettings.targets" />
+  <PropertyGroup>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{46452614-6B06-400F-A74C-1632C79B762C}</ProjectGuid>
+    <RootNamespace>SharpDX.Toolkit.Input</RootNamespace>
+    <AssemblyName>SharpDX.Toolkit.Input</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(SharpDXWin8)' == 'false'">
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="AssemblyDoc.cs" />
+    <Compile Include="NamespaceDoc.cs" />
+    <Compile Include="WindowBinderDesktop.cs" />
+    <Compile Include="IMouseService.cs" />
+    <Compile Include="KeyState.cs" />
+    <Compile Include="MouseButton.cs" />
+    <Compile Include="MouseManager.cs" />
+    <Compile Include="MouseState.cs" />
+    <Compile Include="Point.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WindowBinder.cs" />
+    <Compile Include="WindowBinderWinRT.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\SharpDX.Direct3D11\SharpDX.Direct3D11.csproj">
+      <Project>{736dfb52-1afe-4eff-9710-89046ab5b1f9}</Project>
+      <Name>SharpDX.Direct3D11</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SharpDX.DXGI\SharpDX.DXGI.csproj">
+      <Project>{3fc6de77-b412-4101-9e64-6b9aa831179b}</Project>
+      <Name>SharpDX.DXGI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SharpDX\SharpDX.csproj">
+      <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
+      <Name>SharpDX</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpDX.Toolkit.Graphics\SharpDX.Toolkit.Graphics.csproj">
+      <Project>{53ef08a7-4224-434c-a62c-f29807c1c750}</Project>
+      <Name>SharpDX.Toolkit.Graphics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpDX.Toolkit\SharpDX.Toolkit.csproj">
+      <Project>{9ff0707c-75bb-4984-a01f-b9eaad293f6c}</Project>
+      <Name>SharpDX.Toolkit</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpDX.Toolkit.Game\SharpDX.Toolkit.Game.csproj">
+      <Project>{B2516A23-1A99-4263-964A-B820FD07FA80}</Project>
+      <Name>SharpDX.Toolkit.Game</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SharpDX.Toolkit.Input.nuspec" />
+  </ItemGroup>
+  <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
