@@ -21,6 +21,7 @@
 
             this.game = game;
             game.Services.AddService(typeof(IMouseService), this);
+            game.GameSystems.Add(this);
         }
 
         public void Initialize()
