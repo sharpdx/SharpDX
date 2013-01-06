@@ -17,6 +17,7 @@
 #if !W8CORE
             return new WindowBinderDesktop(nativeWindow);
 #elif WIN8METRO
+            return new WindowBinderWinRT(nativeWindow);
 #else
             throw new NotSupportedException();
 #endif
