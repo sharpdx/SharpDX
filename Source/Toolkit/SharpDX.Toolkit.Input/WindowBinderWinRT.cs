@@ -47,6 +47,7 @@ namespace SharpDX.Toolkit.Input
             if (p.PointerDevice.PointerDeviceType != PointerDeviceType.Mouse) return;
 
             OnMouseDown(GetMouseButton(p));
+            OnMouseWheel(p.Properties.MouseWheelDelta);
 
             args.Handled = true;
         }
@@ -57,6 +58,7 @@ namespace SharpDX.Toolkit.Input
             if (p.PointerDevice.PointerDeviceType != PointerDeviceType.Mouse) return;
 
             OnMouseUp(GetMouseButton(p));
+            OnMouseWheel(p.Properties.MouseWheelDelta);
 
             args.Handled = true;
         }
@@ -69,6 +71,8 @@ namespace SharpDX.Toolkit.Input
             var dipFactor = DisplayProperties.LogicalDpi / 96.0f;
             pointerX = (int)(p.Position.X * dipFactor);
             pointerY = (int)(p.Position.Y * dipFactor);
+
+            OnMouseWheel(p.Properties.MouseWheelDelta);
         }
 
         private static MouseButton GetMouseButton(PointerPoint p)
