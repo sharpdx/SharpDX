@@ -18,9 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using System.Diagnostics;
-
 using SharpDX;
 using SharpDX.Toolkit;
 
@@ -51,6 +48,7 @@ namespace MouseInput
         {
             // Creates a graphics manager. This is mandatory.
             graphicsDeviceManager = new GraphicsDeviceManager(this);
+
             // Create the mouse manager
             mouseManager = new MouseManager(this);
 
@@ -95,6 +93,7 @@ namespace MouseInput
             // Clears the screen with the Color.CornflowerBlue
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            // print the current mouse state
             var sb = new StringBuilder();
             sb.AppendFormat("Left button  : {0}\n", mouseState.Left);
             sb.AppendFormat("Middle button: {0}\n", mouseState.Middle);
@@ -116,6 +115,7 @@ namespace MouseInput
 
         protected override void Update(GameTime gameTime)
         {
+            // read the current mouse state
             mouseState = mouseManager.GetState();
 
             base.Update(gameTime);

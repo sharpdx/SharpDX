@@ -18,27 +18,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-
-namespace MouseInput.WinRT
+namespace SharpDX.Toolkit.Input
 {
     /// <summary>
-    /// Simple MouseInput application using SharpDX.Toolkit.
+    /// The <see cref="SharpDX.Toolkit.Input"/> namespace provides a high level Input API.
     /// </summary>
-    class Program
+    [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    class NamespaceDoc
     {
-        /// <summary>
-        /// Defines the entry point of the application.
-        /// </summary>
-#if NETFX_CORE
-        [MTAThread]
-#else
-        [STAThread]
-#endif
-        static void Main()
-        {
-            using (var program = new MouseInputGame())
-                program.Run();
-        }
     }
 }
