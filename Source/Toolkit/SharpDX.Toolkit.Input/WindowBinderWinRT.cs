@@ -33,10 +33,9 @@ namespace SharpDX.Toolkit.Input
         private void HandlePointerWheelChanged(CoreWindow sender, PointerEventArgs args)
         {
             var p = args.CurrentPoint;
-            if (p.PointerDevice.PointerDeviceType != PointerDeviceType.Mouse
-                || p.Properties.IsHorizontalMouseWheel) return;
+            if (p.PointerDevice.PointerDeviceType != PointerDeviceType.Mouse) return;
 
-            OnMouseWheel(p.Properties.MouseWheelDelta);
+            UpdateMouse(p);
 
             args.Handled = true;
         }
@@ -46,8 +45,7 @@ namespace SharpDX.Toolkit.Input
             var p = args.CurrentPoint;
             if (p.PointerDevice.PointerDeviceType != PointerDeviceType.Mouse) return;
 
-            OnMouseDown(GetMouseButton(p));
-            OnMouseWheel(p.Properties.MouseWheelDelta);
+            UpdateMouse(p);
 
             args.Handled = true;
         }
@@ -57,8 +55,7 @@ namespace SharpDX.Toolkit.Input
             var p = args.CurrentPoint;
             if (p.PointerDevice.PointerDeviceType != PointerDeviceType.Mouse) return;
 
-            OnMouseUp(GetMouseButton(p));
-            OnMouseWheel(p.Properties.MouseWheelDelta);
+            UpdateMouse(p);
 
             args.Handled = true;
         }
@@ -68,31 +65,31 @@ namespace SharpDX.Toolkit.Input
             var p = args.CurrentPoint;
             if (p.PointerDevice.PointerDeviceType != PointerDeviceType.Mouse) return;
 
+            UpdateMouse(p);
+
+            args.Handled = true;
+        }
+
+        private void UpdateMouse(PointerPoint p)
+        {
             var dipFactor = DisplayProperties.LogicalDpi / 96.0f;
             pointerX = (int)(p.Position.X * dipFactor);
             pointerY = (int)(p.Position.Y * dipFactor);
 
             OnMouseWheel(p.Properties.MouseWheelDelta);
+            RaiseButtonChange(p, MouseButton.Left, x => x.IsLeftButtonPressed);
+            RaiseButtonChange(p, MouseButton.Middle, x => x.IsMiddleButtonPressed);
+            RaiseButtonChange(p, MouseButton.Right, x => x.IsRightButtonPressed);
+            RaiseButtonChange(p, MouseButton.XButton1, x => x.IsXButton1Pressed);
+            RaiseButtonChange(p, MouseButton.XButton2, x => x.IsXButton2Pressed);
         }
 
-        private static MouseButton GetMouseButton(PointerPoint p)
+        private void RaiseButtonChange(PointerPoint p, MouseButton button, System.Func<PointerPointProperties, bool> isDown)
         {
-            var properties = p.Properties;
-
-            MouseButton button;
-            if (properties.IsLeftButtonPressed)
-                button = MouseButton.Left;
-            else if (properties.IsRightButtonPressed)
-                button = MouseButton.Right;
-            else if (properties.IsMiddleButtonPressed)
-                button = MouseButton.Middle;
-            else if (properties.IsXButton1Pressed)
-                button = MouseButton.XButton1;
-            else if (properties.IsXButton2Pressed)
-                button = MouseButton.XButton2;
+            if (isDown(p.Properties))
+                OnMouseDown(button);
             else
-                throw new System.ArgumentOutOfRangeException("p", "Cannot determine which mouse button was pressed");
-            return button;
+                OnMouseUp(button);
         }
     }
 }
