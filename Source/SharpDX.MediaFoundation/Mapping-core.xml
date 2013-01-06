@@ -57,6 +57,7 @@
   <include file="mfobjects.h" attach="true"/>
   <include file="mftransform.h" attach="true"/>
   <include file="mediaobj.h" attach="true"/>
+
   <ifdef name="DIRECTX11_1">
     <include file="mfmediaengine.h" attach="true"/>
   </ifdef>
@@ -192,6 +193,9 @@
 
     <create visibility="public static" class="AudioFormatGuids" />
     <const from-guid="MFAudioFormat_(.*)" class="SharpDX.MediaFoundation.AudioFormatGuids" type="System.Guid" name="$1">new Guid("$1")</const>
+
+    <create visibility="public static" class="TransformCategoryGuids" />
+    <const from-guid="MFT_CATEGORY_(.*)" class="SharpDX.MediaFoundation.TransformCategoryGuids" type="System.Guid" name="$1">new Guid("$1")</const>
 
     <create visibility="public static" class="MediaTypeGuids" />
     <const from-guid="MFMediaType_(.*)" class="SharpDX.MediaFoundation.MediaTypeGuids" type="System.Guid" name="$1">new Guid("$1")</const>
@@ -538,6 +542,11 @@
     <const from-guid="MFSampleExtension_VideoDSPMode" class="SharpDX.MediaFoundation.SampleAttributeKeys" type="MediaAttributeKey&lt;int&gt;" name="VideoDSPMode">new MediaAttributeKey&lt;int&gt;("$1")</const>
     <const from-guid="MFSampleExtension_VideoEncodePictureType" class="SharpDX.MediaFoundation.SampleAttributeKeys" type="MediaAttributeKey&lt;int&gt;" name="VideoEncodePictureType">new MediaAttributeKey&lt;int&gt;("$1")</const>
     <const from-guid="MFSampleExtension_VideoEncodeQP" class="SharpDX.MediaFoundation.SampleAttributeKeys" type="MediaAttributeKey&lt;long&gt;" name="VideoEncodeQP">new MediaAttributeKey&lt;long&gt;("$1")</const>
+    <const from-guid="MFSampleExtension_DescrambleData" class="SharpDX.MediaFoundation.SampleAttributeKeys" type="MediaAttributeKey&lt;long&gt;" name="DescrambleData">new MediaAttributeKey&lt;long&gt;("$1")</const>
+    <const from-guid="MFSampleExtension_SampleKeyID" class="SharpDX.MediaFoundation.SampleAttributeKeys" type="MediaAttributeKey&lt;int&gt;" name="SampleKeyID">new MediaAttributeKey&lt;int&gt;("$1")</const>
+    <const from-guid="MFSampleExtension_GenKeyFunc" class="SharpDX.MediaFoundation.SampleAttributeKeys" type="MediaAttributeKey&lt;long&gt;" name="GenKeyFunc">new MediaAttributeKey&lt;long&gt;("$1")</const>
+    <const from-guid="MFSampleExtension_GenKeyCtx" class="SharpDX.MediaFoundation.SampleAttributeKeys" type="MediaAttributeKey&lt;long&gt;" name="GenKeyCtx">new MediaAttributeKey&lt;long&gt;("$1")</const>
+    <const from-guid="MFSampleExtension_PacketCrossOffsets" class="SharpDX.MediaFoundation.SampleAttributeKeys" type="MediaAttributeKey&lt;byte[]&gt;" name="PacketCrossOffsets">new MediaAttributeKey&lt;byte[]&gt;("$1")</const>
     <const from-guid="MFT_CODEC_MERIT_Attribute" class="SharpDX.MediaFoundation.TransformAttributeKeys" type="MediaAttributeKey&lt;int&gt;" name="MftCodecMeritAttribute">new MediaAttributeKey&lt;int&gt;("$1")</const>
     <const from-guid="MFT_CONNECTED_STREAM_ATTRIBUTE" class="SharpDX.MediaFoundation.TransformAttributeKeys" type="MediaAttributeKey&lt;SharpDX.ComObject&gt;" name="MftConnectedStreamAttribute">new MediaAttributeKey&lt;SharpDX.ComObject&gt;("$1")</const>
     <const from-guid="MFT_CONNECTED_TO_HW_STREAM" class="SharpDX.MediaFoundation.TransformAttributeKeys" type="MediaAttributeKey&lt;int&gt;" name="MftConnectedToHwStream">new MediaAttributeKey&lt;int&gt;("$1")</const>
@@ -620,6 +629,13 @@
     
     <map enum="ASF_SELECTION_STATUS" name="AsfSelectionStatus"/>
     <map enum-item="ASF_STATUS_(.*)" name-tmp="$1"/>
+
+    <map enum="_MFT_ENUM_FLAG" name="TransformEnumFlag"/>
+    <map enum-item="MFT_ENUM_FLAG_(.*)" name-tmp="$1"/>
+
+    <map enum="_MFT_PROCESS_OUTPUT_FLAGS" name="TransformProcessOutputFlags"/>
+    <map enum="_MFT_PROCESS_OUTPUT_STATUS" name="TransformProcessOutputStatus"/>
+    
 
     <!--
     // *****************************************************************
@@ -795,7 +811,7 @@
     <map function="MF(.*)" name-tmp="$1"/>
     <map function="MF.*" dll='"Mfplat.dll"' group="SharpDX.MediaFoundation.MediaFactory"/>
     <map function="Create.*" dll='"Temp.dll"' group="SharpDX.MediaFoundation.MediaFactory"/>
-
+    
     <map function="MFCreateSourceReader.*" dll='"Mfreadwrite.dll"'/>
 
     <map function="MFCreateWaveFormatExFromMFMediaType" visibility="internal"/>
@@ -895,8 +911,13 @@
     <map function="CreateNamedPropertyStore" dll='"mf.dll"'/>
     <map function="CopyPropertyStore" dll='"mf.dll"'/>
     <map function="ConvertPropVariant" dll='"mf.dll"'/>
-    <map function="AppendPropVariant" dll='"mf.dll"'/>    
+    <map function="AppendPropVariant" dll='"mf.dll"'/>
 
+    <map function="MFTEnumEx" visibility="internal"/>
+    <map param="MFTEnumEx::pppMFTActivate" type="void" attribute="in"/>
+    <map param="IMFASFMultiplexer::GetNextPacket::pdwStatusFlags" attribute="out"/>
+    <map param="IMFASFMultiplexer::GetNextPacket::pdwStatusFlags" type="ASF_STATUSFLAGS"/>
+    
     <context-clear />
   </mapping>
 </config>
