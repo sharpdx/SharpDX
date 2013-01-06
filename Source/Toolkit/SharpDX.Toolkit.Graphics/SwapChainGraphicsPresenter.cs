@@ -90,7 +90,7 @@ namespace SharpDX.Toolkit.Graphics
                     throw new ArgumentException("Cannot switch to non-full screen in Windows RT");
                 }
 #else
-                swapChain.IsFullScreen = true;
+                swapChain.IsFullScreen = value;
 #endif
             }
         }
