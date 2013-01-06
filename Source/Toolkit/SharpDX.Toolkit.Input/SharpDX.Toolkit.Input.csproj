@@ -18,6 +18,8 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AssemblyDoc.cs" />
+    <Compile Include="NamespaceDoc.cs" />
     <Compile Include="WindowBinderDesktop.cs" />
     <Compile Include="IMouseService.cs" />
     <Compile Include="KeyState.cs" />
