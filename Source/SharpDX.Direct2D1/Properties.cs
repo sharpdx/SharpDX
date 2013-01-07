@@ -933,7 +933,7 @@ namespace SharpDX.Direct2D1
         /// <unmanaged>HRESULT ID2D1Properties::SetValue([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
         public unsafe void SetValue(int index, Matrix5x4 value)
         {
-            SetValue(index, PropertyType.Matrix4x4, new IntPtr(&value), sizeof(Matrix5x4));
+            SetValue(index, PropertyType.Matrix5x4, new IntPtr(&value), sizeof(Matrix5x4));
         }
 
         /// <summary>
