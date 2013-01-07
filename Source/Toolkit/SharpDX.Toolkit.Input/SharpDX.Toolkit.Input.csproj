@@ -19,6 +19,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AssemblyDoc.cs" />
+    <Compile Include="ButtonState.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="WindowBinderDesktop.cs" />
     <Compile Include="IMouseService.cs" />

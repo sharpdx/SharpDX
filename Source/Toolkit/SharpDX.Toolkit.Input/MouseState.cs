@@ -26,11 +26,11 @@ namespace SharpDX.Toolkit.Input
     /// <remarks>Is inmutable.</remarks>
     public struct MouseState
     {
-        private readonly KeyState left;
-        private readonly KeyState middle;
-        private readonly KeyState right;
-        private readonly KeyState xButton1;
-        private readonly KeyState xButton2;
+        private readonly ButtonState left;
+        private readonly ButtonState middle;
+        private readonly ButtonState right;
+        private readonly ButtonState xButton1;
+        private readonly ButtonState xButton2;
         private readonly int x;
         private readonly int y;
         private readonly int wheelDelta;
@@ -46,7 +46,7 @@ namespace SharpDX.Toolkit.Input
         /// <param name="x">X-position of the mouse cursor</param>
         /// <param name="y">Y-position of the mouse cursor</param>
         /// <param name="wheelDelta">Delta of mouse wheel relative to previous input event</param>
-        public MouseState(KeyState left, KeyState middle, KeyState right, KeyState xButton1, KeyState xButton2, int x, int y, int wheelDelta)
+        public MouseState(ButtonState left, ButtonState middle, ButtonState right, ButtonState xButton1, ButtonState xButton2, int x, int y, int wheelDelta)
         {
             this.left = left;
             this.middle = middle;
@@ -61,27 +61,27 @@ namespace SharpDX.Toolkit.Input
         /// <summary>
         /// State of the left button
         /// </summary>
-        public KeyState Left { get { return left; } }
+        public ButtonState Left { get { return left; } }
 
         /// <summary>
         /// State of the middle button
         /// </summary>
-        public KeyState Middle { get { return middle; } }
+        public ButtonState Middle { get { return middle; } }
 
         /// <summary>
         /// State of the right button
         /// </summary>
-        public KeyState Right { get { return right; } }
+        public ButtonState Right { get { return right; } }
 
         /// <summary>
         /// State of the X-Button 1
         /// </summary>
-        public KeyState XButton1 { get { return xButton1; } }
+        public ButtonState XButton1 { get { return xButton1; } }
 
         /// <summary>
         /// State of the X-Button 2
         /// </summary>
-        public KeyState XButton2 { get { return xButton2; } }
+        public ButtonState XButton2 { get { return xButton2; } }
 
         /// <summary>
         /// X-position of the mouse cursor

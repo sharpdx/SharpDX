@@ -30,11 +30,11 @@ namespace SharpDX.Toolkit.Input
         private readonly Game game; // keep a reference to game to get access to native window during initialization
 
         // as the MouseState structure is inmutable - keep a state from which the structure can be rebuild
-        private KeyState left;
-        private KeyState middle;
-        private KeyState right;
-        private KeyState xButton1;
-        private KeyState xButton2;
+        private ButtonState left;
+        private ButtonState middle;
+        private ButtonState right;
+        private ButtonState xButton1;
+        private ButtonState xButton2;
         private int wheelDelta;
 
         // provides platform-specific binding to mouse functionality
@@ -92,7 +92,7 @@ namespace SharpDX.Toolkit.Input
         /// <param name="button">The pressed button</param>
         private void HandleMouseDown(MouseButton button)
         {
-            SetButtonStateTo(button, KeyState.Down);
+            SetButtonStateTo(button, ButtonState.Pressed);
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace SharpDX.Toolkit.Input
         /// <param name="button">The pressed button</param>
         private void HandleMouseUp(MouseButton button)
         {
-            SetButtonStateTo(button, KeyState.Up);
+            SetButtonStateTo(button, ButtonState.Released);
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace SharpDX.Toolkit.Input
         /// <param name="button">The button whose state needs to be set.</param>
         /// <param name="state">The new state of the button.</param>
         /// <exception cref="ArgumentOutOfRangeException">Is thrown if the <paramref name="button"/> has an unknown value.</exception>
-        private void SetButtonStateTo(MouseButton button, KeyState state)
+        private void SetButtonStateTo(MouseButton button, ButtonState state)
         {
             switch (button)
             {
