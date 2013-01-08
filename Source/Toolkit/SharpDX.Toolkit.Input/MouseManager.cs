@@ -29,7 +29,7 @@ namespace SharpDX.Toolkit.Input
     {
         private readonly Game game; // keep a reference to game to get access to native window during initialization
 
-        // as the MouseState structure is inmutable - keep a state from which the structure can be rebuild
+        // as the MouseState structure is inmutable - keep a state from which the structure can be rebuilt
         private ButtonState left;
         private ButtonState middle;
         private ButtonState right;
@@ -41,7 +41,7 @@ namespace SharpDX.Toolkit.Input
         private WindowBinder binder;
 
         /// <summary>
-        /// Initializez a new instance of <see cref="MouseManager"/> class
+        /// Initializes a new instance of <see cref="MouseManager"/> class
         /// </summary>
         /// <param name="game">The <see cref="Game"/> instance whose window is used as source of mouse input events</param>
         /// <exception cref="ArgumentNullException">Is thrown if <paramref name="game"/> is null</exception>
