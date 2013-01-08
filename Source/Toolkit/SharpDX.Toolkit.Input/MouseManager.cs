@@ -38,7 +38,7 @@ namespace SharpDX.Toolkit.Input
         private int wheelDelta;
 
         // provides platform-specific binding to mouse functionality
-        private WindowBinder binder;
+        private MousePlatform binder;
 
         /// <summary>
         /// Initializes a new instance of <see cref="MouseManager"/> class
@@ -65,7 +65,7 @@ namespace SharpDX.Toolkit.Input
         {
             var w = game.Window.NativeWindow;
             // create platform-specific binder instance
-            binder = WindowBinder.Create(w);
+            binder = MousePlatform.Create(w);
 
             // binder will report state changes trough these events:
             binder.MouseDown += HandleMouseDown;
@@ -87,7 +87,7 @@ namespace SharpDX.Toolkit.Input
         }
 
         /// <summary>
-        /// Handler for <see cref="WindowBinder.MouseDown"/> event
+        /// Handler for <see cref="MousePlatform.MouseDown"/> event
         /// </summary>
         /// <param name="button">The pressed button</param>
         private void HandleMouseDown(MouseButton button)
@@ -96,7 +96,7 @@ namespace SharpDX.Toolkit.Input
         }
 
         /// <summary>
-        /// Handler for <see cref="WindowBinder.MouseUp"/> event
+        /// Handler for <see cref="MousePlatform.MouseUp"/> event
         /// </summary>
         /// <param name="button">The pressed button</param>
         private void HandleMouseUp(MouseButton button)
@@ -105,7 +105,7 @@ namespace SharpDX.Toolkit.Input
         }
 
         /// <summary>
-        /// Handler for <see cref="WindowBinder.MouseWheelDelta"/> event
+        /// Handler for <see cref="MousePlatform.MouseWheelDelta"/> event
         /// </summary>
         /// <param name="wheelDelta">The pressed button</param>
         private void HandleWheelDelta(int wheelDelta)

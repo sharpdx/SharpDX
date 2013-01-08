@@ -29,8 +29,8 @@
     <Compile Include="MouseState.cs" />
     <Compile Include="Point.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WindowBinder.cs" />
-    <Compile Include="WindowBinderWinRT.cs" />
+    <Compile Include="MousePlatform.cs" />
+    <Compile Include="MousePlatformWinRt.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SharpDX.Direct3D11\SharpDX.Direct3D11.csproj">
