@@ -28,7 +28,7 @@ namespace SharpDX.Toolkit.Audio
     /// <summary>
     /// Provides a single playing, paused, or stopped instance of a <see cref="SoundEffect"/> sound.
     /// </summary>
-    class SoundEffectInstance
+    public class SoundEffectInstance
     {
         private int position;
 
