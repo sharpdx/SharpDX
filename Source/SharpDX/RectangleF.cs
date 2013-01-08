@@ -41,7 +41,7 @@ namespace SharpDX
         private float _bottom;
 
         /// <summary>
-        /// An empty rectangle
+        /// An empty rectangle.
         /// </summary>
         public static readonly RectangleF Empty;
 
@@ -65,7 +65,7 @@ namespace SharpDX
             _bottom = bottom;
         }
 
-                /// <summary>
+        /// <summary>
         /// Checks, if specified point is inside <see cref="SharpDX.RectangleF"/>.
         /// </summary>
         /// <param name="x">X point coordinate.</param>
@@ -218,7 +218,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="obj">The <see cref="System.Object"/> to compare with this instance.</param>
         /// <returns>
-        /// 	<c>true</c> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public override bool Equals(object obj)
         {
