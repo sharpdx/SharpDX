@@ -30,7 +30,7 @@ namespace SharpDX.Toolkit.Audio
     /// <summary>
     /// Provides a loaded sound resource.
     /// </summary>
-    class SoundEffect : IDisposable
+    public class SoundEffect : Component
     {
         private TimeSpan duration;
 
