@@ -47,7 +47,6 @@
     <Compile Include="MediaAttributes.cs" />
     <Compile Include="MediaEngine.cs" />
     <Compile Include="MediaEngineAttributes.cs" />
-    <Compile Include="MediaFactory.cs" />
     <Compile Include="MediaManager.cs" />
     <Compile Include="MediaType.cs" />
     <Compile Include="NamespaceDoc.cs" />
@@ -55,7 +54,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceCharacteristics.cs" />
     <Compile Include="SourceReader.cs" />
-    <Compile Include="Transform.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Documentation\CodeComments.xml" />
