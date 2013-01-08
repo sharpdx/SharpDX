@@ -21,7 +21,7 @@
     <Compile Include="AssemblyDoc.cs" />
     <Compile Include="ButtonState.cs" />
     <Compile Include="NamespaceDoc.cs" />
-    <Compile Include="WindowBinderDesktop.cs" />
+    <Compile Include="MousePlatformDesktop.cs" />
     <Compile Include="IMouseService.cs" />
     <Compile Include="KeyState.cs" />
     <Compile Include="MouseButton.cs" />
