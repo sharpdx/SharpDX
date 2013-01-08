@@ -50,6 +50,7 @@ namespace SharpDX.Toolkit.Input
 #if !W8CORE
             return new KeyboardPlatformDesktop(nativeWindow); // Desktop platform
 #elif WIN8METRO
+            return new KeyboardPlatformWinRT(nativeWindow);
 #else
             throw new NotSupportedException("This functionality is not supported on current platform."); // no other platforms are supported at this time
 #endif

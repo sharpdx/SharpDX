@@ -24,6 +24,7 @@
     <Compile Include="KeyboardManager.cs" />
     <Compile Include="KeyboardPlatform.cs" />
     <Compile Include="KeyboardPlatformDesktop.cs" />
+    <Compile Include="KeyboardPlatformWinRT.cs" />
     <Compile Include="KeyboardState.cs" />
     <Compile Include="Keys.cs" />
     <Compile Include="NamespaceDoc.cs" />
