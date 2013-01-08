@@ -18,10 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+
 namespace SharpDX.Toolkit.Input
 {
-    using System;
-
     /// <summary>
     /// The <see cref="MouseManager"/> component provides access to mouse state
     /// </summary>
@@ -63,9 +63,8 @@ namespace SharpDX.Toolkit.Input
         /// <exception cref="NotSupportedException">Is thrown if mouse manager is used on an usupported platform.</exception>
         public void Initialize()
         {
-            var w = game.Window.NativeWindow;
             // create platform-specific instance
-            platform = MousePlatform.Create(w);
+            platform = MousePlatform.Create(game.Window.NativeWindow);
 
             // platform will report state changes trough these events:
             platform.MouseDown += HandleMouseDown;
