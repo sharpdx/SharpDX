@@ -88,7 +88,11 @@ namespace SharpDX.Toolkit.Input
         /// <param name="key">The pressed key</param>
         private void HandleKeyPressed(Keys key)
         {
+            // need to remove pressed key only on .NET 2.0 platform, as others are using HashSet
+            // for storage which disallows duplicates
+#if WinFormsInterop && !NET35Plus // .NET 2.0
             pressedKeys.Remove(key);
+#endif
             pressedKeys.Add(key);
         }
 
