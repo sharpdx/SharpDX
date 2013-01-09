@@ -248,6 +248,12 @@ namespace SharpDX.MediaFoundation
 
             CleanupAndDispose();
 
+            if (nextSourceReader != null)
+            {
+                nextSourceReader.Dispose();
+                nextSourceReader = null;
+            }
+
             if (sourceReader != null)
             {
                 sourceReader.Dispose();
