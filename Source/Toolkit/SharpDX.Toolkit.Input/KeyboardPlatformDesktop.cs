@@ -194,7 +194,10 @@ namespace SharpDX.Toolkit.Input
             _keysDictionary[FormsKeys.Play] = Keys.Play;
             _keysDictionary[FormsKeys.Zoom] = Keys.Zoom;
             _keysDictionary[FormsKeys.Pa1] = Keys.Pa1;
-            _keysDictionary[FormsKeys.OemClear] = Keys.OemClear; 
+            _keysDictionary[FormsKeys.OemClear] = Keys.OemClear;
+            _keysDictionary[FormsKeys.ShiftKey] = Keys.Shift;
+            _keysDictionary[FormsKeys.ControlKey] = Keys.Control;
+            _keysDictionary[FormsKeys.Menu] = Keys.Alt;
         }
 
         /// <summary>
@@ -211,10 +214,21 @@ namespace SharpDX.Toolkit.Input
         /// <exception cref="ArgumentNullException">Is thrown when <paramref name="nativeWindow"/> is null</exception>
         protected override void BindWindow(object nativeWindow)
         {
-            if(nativeWindow == null) throw new ArgumentNullException("nativeWindow");
+            if (nativeWindow == null) throw new ArgumentNullException("nativeWindow");
             var w = (Control)nativeWindow;
+            w.PreviewKeyDown += HandlePreviewKeyDown;
             w.KeyDown += HandleKeyDown;
             w.KeyUp += HandleKeyUp;
+        }
+
+        /// <summary>
+        /// Handles the <see cref="Control.KeyDown"/> event
+        /// </summary>
+        /// <param name="sender">Ignored</param>
+        /// <param name="e">Pressed key is read from <see cref="PreviewKeyDownEventArgs.KeyCode"/> property</param>
+        private void HandlePreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            ProcessKeyEvent(e.KeyCode, RaiseKeyPressed);
         }
 
         /// <summary>
@@ -224,7 +238,8 @@ namespace SharpDX.Toolkit.Input
         /// <param name="e">Pressed key is read from <see cref="KeyEventArgs.KeyCode"/> property</param>
         private void HandleKeyDown(object sender, KeyEventArgs e)
         {
-            RaiseKeyPressed(TranslateKey(e.KeyCode));
+            e.Handled = true;
+            ProcessKeyEvent(e.KeyCode, RaiseKeyPressed);
         }
 
         /// <summary>
@@ -234,19 +249,38 @@ namespace SharpDX.Toolkit.Input
         /// <param name="e">Released key is read from <see cref="KeyEventArgs.KeyCode"/> property</param>
         private void HandleKeyUp(object sender, KeyEventArgs e)
         {
-            RaiseKeyReleased(TranslateKey(e.KeyCode));
+            e.Handled = true;
+            ProcessKeyEvent(e.KeyCode, RaiseKeyReleased);
         }
 
         /// <summary>
-        /// Translates the <see cref="System.Windows.Forms.Keys"/> value to <see cref="Keys"/>
+        /// Translates the WinForms key to Toolkit key and invokes status change
         /// </summary>
-        /// <param name="key">The WinForms key value</param>
-        /// <returns>toolkit key value or <see cref="Keys.None"/> for unknown values</returns>
-        private static Keys TranslateKey(FormsKeys key)
+        /// <remarks>For modifier keys (Shift, Control, Alt) will invoke its Left... analog additionally</remarks>
+        /// <param name="keyCode">WinForms key code to be translated</param>
+        /// <param name="keyAction">delegate to invoke with translated key</param>
+        private static void ProcessKeyEvent(FormsKeys keyCode, Action<Keys> keyAction)
         {
             Keys translatedKey;
-            // ignore unknown keys
-            return _keysDictionary.TryGetValue(key, out translatedKey) ? translatedKey : Keys.None;
+            if (!_keysDictionary.TryGetValue(keyCode, out translatedKey))
+                translatedKey = Keys.None;
+
+            keyAction(translatedKey);
+
+            // XNA doesn't have handless modifier keys, so we will map general keys to left ones:
+            // TODO: consider P/Invoke to get pressed keys and/or determine which key was pressed
+            switch (translatedKey)
+            {
+                case Keys.Shift:
+                    keyAction(Keys.LeftShift);
+                    break;
+                case Keys.Control:
+                    keyAction(Keys.LeftControl);
+                    break;
+                case Keys.Alt:
+                    keyAction(Keys.LeftAlt);
+                    break;
+            }
         }
     }
 }

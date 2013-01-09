@@ -35,6 +35,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MouseInput.Desktop", "Toolk
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MouseInput.WinRT", "Toolkit\WinRT\MouseInput\MouseInput.WinRT.csproj", "{76D9FEBB-0609-4836-9FBF-608536A585C2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyboardInput.Desktop", "Toolkit\Desktop\KeyboardInput\KeyboardInput.Desktop.csproj", "{A9660D02-5107-41D6-A1D7-32458E8A6C94}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyboardInput.WinRT", "Toolkit\WinRT\KeyboardInput\KeyboardInput.WinRT.csproj", "{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -357,6 +361,40 @@ Global
 		{76D9FEBB-0609-4836-9FBF-608536A585C2}.Release|x86.ActiveCfg = Release|x86
 		{76D9FEBB-0609-4836-9FBF-608536A585C2}.Release|x86.Build.0 = Release|x86
 		{76D9FEBB-0609-4836-9FBF-608536A585C2}.Release|x86.Deploy.0 = Release|x86
+		{A9660D02-5107-41D6-A1D7-32458E8A6C94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9660D02-5107-41D6-A1D7-32458E8A6C94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9660D02-5107-41D6-A1D7-32458E8A6C94}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{A9660D02-5107-41D6-A1D7-32458E8A6C94}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A9660D02-5107-41D6-A1D7-32458E8A6C94}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A9660D02-5107-41D6-A1D7-32458E8A6C94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9660D02-5107-41D6-A1D7-32458E8A6C94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9660D02-5107-41D6-A1D7-32458E8A6C94}.Release|ARM.ActiveCfg = Release|Any CPU
+		{A9660D02-5107-41D6-A1D7-32458E8A6C94}.Release|x64.ActiveCfg = Release|Any CPU
+		{A9660D02-5107-41D6-A1D7-32458E8A6C94}.Release|x86.ActiveCfg = Release|Any CPU
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}.Debug|ARM.ActiveCfg = Debug|ARM
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}.Debug|ARM.Build.0 = Debug|ARM
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}.Debug|ARM.Deploy.0 = Debug|ARM
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}.Debug|x64.ActiveCfg = Debug|x64
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}.Debug|x64.Build.0 = Debug|x64
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}.Debug|x64.Deploy.0 = Debug|x64
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}.Debug|x86.ActiveCfg = Debug|x86
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}.Debug|x86.Build.0 = Debug|x86
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}.Debug|x86.Deploy.0 = Debug|x86
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}.Release|ARM.ActiveCfg = Release|ARM
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}.Release|ARM.Build.0 = Release|ARM
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}.Release|ARM.Deploy.0 = Release|ARM
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}.Release|x64.ActiveCfg = Release|x64
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}.Release|x64.Build.0 = Release|x64
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}.Release|x64.Deploy.0 = Release|x64
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}.Release|x86.ActiveCfg = Release|x86
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}.Release|x86.Build.0 = Release|x86
+		{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

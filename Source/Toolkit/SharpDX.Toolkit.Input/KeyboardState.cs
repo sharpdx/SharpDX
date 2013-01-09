@@ -133,7 +133,7 @@ namespace SharpDX.Toolkit.Input
         /// <remarks>Cache the returned value if it needs to be reused</remarks>
         /// <param name="key">A <see cref="Keys"/> to check whether it is pressed or not</param>
         /// <returns>True if the key is pressed; False - otherwise</returns>
-        private bool IsKeyDown(Keys key)
+        public bool IsKeyDown(Keys key)
         {
             var info = new KeyInfo(key);
             uint chunk;

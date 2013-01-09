@@ -152,13 +152,15 @@ namespace SharpDX.Toolkit.Input
             _keysDictionary[VirtualKey.F24] = Keys.F24;
             _keysDictionary[VirtualKey.NumberKeyLock] = Keys.NumLock;
             _keysDictionary[VirtualKey.Scroll] = Keys.Scroll;
+            _keysDictionary[VirtualKey.Shift] = Keys.Shift;
             _keysDictionary[VirtualKey.LeftShift] = Keys.LeftShift;
             _keysDictionary[VirtualKey.RightShift] = Keys.RightShift;
+            _keysDictionary[VirtualKey.Control] = Keys.Control;
             _keysDictionary[VirtualKey.LeftControl] = Keys.LeftControl;
             _keysDictionary[VirtualKey.RightControl] = Keys.RightControl;
+            _keysDictionary[VirtualKey.Menu] = Keys.Alt;
             _keysDictionary[VirtualKey.LeftMenu] = Keys.LeftAlt;
             _keysDictionary[VirtualKey.RightMenu] = Keys.RightAlt;
-            _keysDictionary[VirtualKey.Back] = Keys.BrowserBack;
         }
 
         /// <summary>
@@ -203,7 +205,8 @@ namespace SharpDX.Toolkit.Input
         /// <param name="args">Provides the key value from <see cref="KeyEventArgs.VirtualKey"/> property</param>
         private void HandleWindowKeyDown(CoreWindow sender, KeyEventArgs args)
         {
-            RaiseKeyPressed(TranslateKey(args.VirtualKey));
+            ProcessKeyEvent(args.VirtualKey, RaiseKeyPressed);
+            args.Handled = true;
         }
 
         /// <summary>
@@ -213,7 +216,8 @@ namespace SharpDX.Toolkit.Input
         /// <param name="args">Provides the key value from <see cref="KeyEventArgs.VirtualKey"/> property</param>
         private void HandleWindowKeyUp(CoreWindow sender, KeyEventArgs args)
         {
-            RaiseKeyReleased(TranslateKey(args.VirtualKey));
+            ProcessKeyEvent(args.VirtualKey, RaiseKeyReleased);
+            args.Handled = true;
         }
 
         /// <summary>
@@ -223,7 +227,8 @@ namespace SharpDX.Toolkit.Input
         /// <param name="args">Provides the key value from <see cref="KeyRoutedEventArgs.Key"/> property</param>
         private void HandleUIElementKeyDown(object sender, KeyRoutedEventArgs args)
         {
-            RaiseKeyPressed(TranslateKey(args.Key));
+            ProcessKeyEvent(args.Key, RaiseKeyPressed);
+            args.Handled = true;
         }
 
         /// <summary>
@@ -233,19 +238,37 @@ namespace SharpDX.Toolkit.Input
         /// <param name="args">Provides the key value from <see cref="KeyRoutedEventArgs.Key"/> property</param>
         private void HandleUIElementKeyUp(object sender, KeyRoutedEventArgs args)
         {
-            RaiseKeyReleased(TranslateKey(args.Key));
+            ProcessKeyEvent(args.Key, RaiseKeyReleased);
+            args.Handled = true;
         }
 
         /// <summary>
-        /// Translates the <see cref="System.Windows.Forms.Keys"/> value to <see cref="Keys"/>
+        /// Translates the WinRT key to Toolkit key and invokes status change
         /// </summary>
-        /// <param name="key">The WinForms key value</param>
-        /// <returns>toolkit key value or <see cref="Keys.None"/> for unknown values</returns>
-        private static Keys TranslateKey(VirtualKey key)
+        /// <remarks>For modifier keys (Shift, Control, Alt) will invoke its Left... analog additionally</remarks>
+        /// <param name="keyCode">WinRT key code to be translated</param>
+        /// <param name="keyAction">delegate to invoke with translated key</param>
+        private static void ProcessKeyEvent(VirtualKey keyCode, Action<Keys> keyAction)
         {
             Keys translatedKey;
-            // ignore unknown keys
-            return _keysDictionary.TryGetValue(key, out translatedKey) ? translatedKey : Keys.None;
+            if (!_keysDictionary.TryGetValue(keyCode, out translatedKey))
+                translatedKey = Keys.None;
+
+            keyAction(translatedKey);
+
+            // XNA doesn't have handless modifier keys, so we will map general keys to left ones:
+            switch (translatedKey)
+            {
+                case Keys.Shift:
+                    keyAction(Keys.LeftShift);
+                    break;
+                case Keys.Control:
+                    keyAction(Keys.LeftControl);
+                    break;
+                case Keys.Alt:
+                    keyAction(Keys.LeftAlt);
+                    break;
+            }
         }
     }
 }
