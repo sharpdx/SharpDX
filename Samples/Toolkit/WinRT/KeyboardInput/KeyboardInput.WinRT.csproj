@@ -4,15 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{76D9FEBB-0609-4836-9FBF-608536A585C2}</ProjectGuid>
+    <ProjectGuid>{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MouseInput.WinRT</RootNamespace>
-    <AssemblyName>MouseInput.WinRT</AssemblyName>
+    <RootNamespace>KeyboardInput.WinRT</RootNamespace>
+    <AssemblyName>KeyboardInput.WinRT</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>MouseInput.WinRT_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>KeyboardInput.WinRT_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -103,17 +103,17 @@
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="..\..\Common\MouseInput\MouseInputGame.cs">
-      <Link>MouseInputGame.cs</Link>
+    <Compile Include="Program.cs" />
+    <Compile Include="..\..\Common\KeyboardInput\KeyboardInputGame.cs">
+      <Link>KeyboardInputGame.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="MouseInput.WinRT_TemporaryKey.pfx" />
+    <None Include="KeyboardInput.WinRT_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Logo.png" />
@@ -145,7 +145,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\Common\MouseInput\Content\Arial16.tkfnt">
+    <Content Include="..\..\Common\KeyboardInput\Content\Arial16.tkfnt">
       <Link>Content\Arial16.tkfnt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

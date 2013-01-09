@@ -26,15 +26,15 @@ namespace SharpDX.Toolkit.Input
     using System.Windows.Forms;
 
     /// <summary>
-    /// Represents a specific <see cref="WindowBinder"/> implementation for WinForms platform (desktop)
+    /// Represents a specific <see cref="MousePlatform"/> implementation for WinForms platform (desktop)
     /// </summary>
-    internal sealed class WindowBinderDesktop : WindowBinder
+    internal sealed class MousePlatformDesktop : MousePlatform
     {
         /// <summary>
         /// Initializes a new instance of <see cref="WindowBinderDesktop"/> class.
         /// </summary>
         /// <param name="nativeWindow">A reference to <see cref="Control"/> class.</param>
-        public WindowBinderDesktop(object nativeWindow) : base(nativeWindow) { }
+        public MousePlatformDesktop(object nativeWindow) : base(nativeWindow) { }
 
         /// <summary>
         /// Binds to specific events of the provided CoreWindow

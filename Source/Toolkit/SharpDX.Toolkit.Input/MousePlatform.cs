@@ -25,38 +25,38 @@ namespace SharpDX.Toolkit.Input
     /// <summary>
     /// Base class for platform-specific event bindings
     /// </summary>
-    internal abstract class WindowBinder
+    internal abstract class MousePlatform
     {
         private readonly object nativeWindow; // used to retrieve mouse location
 
         /// <summary>
-        /// Initializes a new instance of <see cref="WindowBinder"/> class
+        /// Initializes a new instance of <see cref="MousePlatform"/> class
         /// </summary>
         /// <param name="nativeWindow">The native window object reference</param>
         /// <exception cref="ArgumentNullException">Is thrown when <paramref name="nativeWindow"/> is null</exception>
-        protected WindowBinder(object nativeWindow)
+        protected MousePlatform(object nativeWindow)
         {
-            if(nativeWindow == null) throw new ArgumentNullException("nativeWindow");
+            if (nativeWindow == null) throw new ArgumentNullException("nativeWindow");
 
             this.nativeWindow = nativeWindow;
             BindWindow(nativeWindow);
         }
 
         /// <summary>
-        /// Creates a platform-specific instance of <see cref="WindowBinder"/> class.
+        /// Creates a platform-specific instance of <see cref="MousePlatform"/> class.
         /// </summary>
         /// <param name="nativeWindow">The native window object reference</param>
         /// <exception cref="ArgumentNullException">Is thrown when <paramref name="nativeWindow"/> is null</exception>
-        /// <returns>The instance of <see cref="WindowBinder"/></returns>
-        internal static WindowBinder Create(object nativeWindow)
+        /// <returns>The instance of <see cref="MousePlatform"/></returns>
+        internal static MousePlatform Create(object nativeWindow)
         {
-            if(nativeWindow == null) throw new ArgumentNullException("nativeWindow");
+            if (nativeWindow == null) throw new ArgumentNullException("nativeWindow");
 #if !W8CORE
-            return new WindowBinderDesktop(nativeWindow); // WinForms platform
+            return new MousePlatformDesktop(nativeWindow); // WinForms platform
 #elif WIN8METRO
-            return new WindowBinderWinRT(nativeWindow); // WinRT platform
+            return new MousePlatformWinRT(nativeWindow); // WinRT platform
 #else
-            throw new NotSupportedException(); // no other platforms are supported at this time
+            throw new NotSupportedException("This functionality is not supported on current platform."); // no other platforms are supported at this time
 #endif
         }
 
@@ -102,7 +102,7 @@ namespace SharpDX.Toolkit.Input
         /// <param name="button">Mouse button which has been pressed</param>
         protected void OnMouseDown(MouseButton button)
         {
-            RaiseEvent(MouseDown, button);
+            Raise(MouseDown, button);
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace SharpDX.Toolkit.Input
         /// <param name="button">Mouse button which has been released</param>
         protected void OnMouseUp(MouseButton button)
         {
-            RaiseEvent(MouseUp, button);
+            Raise(MouseUp, button);
         }
 
         /// <summary>
@@ -120,17 +120,17 @@ namespace SharpDX.Toolkit.Input
         /// <param name="wheelDelta">Current value of mouse wheel delta</param>
         protected void OnMouseWheel(int wheelDelta)
         {
-            RaiseEvent(MouseWheelDelta, wheelDelta);
+            Raise(MouseWheelDelta, wheelDelta);
         }
 
         /// <summary>
-        /// Generic helper class to call a single-parameter event handler
+        /// Generic helper method to call a single-parameter event handler
         /// </summary>
         /// <remarks>This ensures that during the call - the handler reference will not be lost (due to stack-copy of delegate reference)</remarks>
         /// <typeparam name="TArg">The type of event argument</typeparam>
         /// <param name="handler">The reference to event delegate</param>
         /// <param name="argument">The event argument</param>
-        private void RaiseEvent<TArg>(Action<TArg> handler, TArg argument)
+        private static void Raise<TArg>(Action<TArg> handler, TArg argument)
         {
             if (handler != null)
                 handler(argument);

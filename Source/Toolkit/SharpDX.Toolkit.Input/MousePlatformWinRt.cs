@@ -33,26 +33,26 @@ namespace SharpDX.Toolkit.Input
     using global::Windows.UI.Xaml.Input;
 
     /// <summary>
-    /// Represents a specific <see cref="WindowBinder"/> implementation for the WinRT platform
+    /// Represents a specific <see cref="MousePlatform"/> implementation for the WinRT platform
     /// </summary>
-    internal class WindowBinderWinRT : WindowBinder
+    internal class MousePlatformWinRT : MousePlatform
     {
         // keep the mouse cursor location from last event
         private int pointerX;
         private int pointerY;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="WindowBinderWinRT"/> class.
+        /// Initializes a new instance of <see cref="MousePlatformWinRT"/> class.
         /// </summary>
         /// <param name="nativeWindow">A reference to <see cref="CoreWindow"/> or <see cref="UIElement"/> class.</param>
-        internal WindowBinderWinRT(object nativeWindow) : base(nativeWindow) { }
+        internal MousePlatformWinRT(object nativeWindow) : base(nativeWindow) { }
 
         /// <summary>
         /// Binds to specific events of the provided CoreWindow
         /// </summary>
         /// <param name="nativeWindow">A reference to <see cref="CoreWindow"/> or <see cref="UIElement"/> class.</param>
         /// <exception cref="ArgumentNullException">Is thrown when <paramref name="nativeWindow"/> is null.</exception>
-        /// <exception cref="InvalidCastException">Is thrown when <paramref name="nativeWindow"/> is not an instance of the <see cref="CoreWindow"/> class.</exception>
+        /// <exception cref="ArgumentException">Is thrown when <paramref name="nativeWindow"/> is not a <see cref="CoreWindow"/> and not an <see cref="UIElement"/></exception>
         protected override void BindWindow(object nativeWindow)
         {
             if (nativeWindow == null) throw new ArgumentNullException("nativeWindow");
@@ -63,18 +63,20 @@ namespace SharpDX.Toolkit.Input
                 window.PointerReleased += HandleWindowPointerEvent;
                 window.PointerWheelChanged += HandleWindowPointerEvent;
                 window.PointerMoved += HandleWindowPointerEvent;
+                return;
             }
-            else
+            
+            var uiElement = nativeWindow as UIElement;
+            if (uiElement != null)
             {
-                var uiElement = nativeWindow as UIElement;
-                if (uiElement != null)
-                {
-                    uiElement.PointerPressed += HandleUIElementPointerEvent;
-                    uiElement.PointerReleased += HandleUIElementPointerEvent;
-                    uiElement.PointerWheelChanged += HandleUIElementPointerEvent;
-                    uiElement.PointerMoved += HandleUIElementPointerEvent;
-                }
+                uiElement.PointerPressed += HandleUIElementPointerEvent;
+                uiElement.PointerReleased += HandleUIElementPointerEvent;
+                uiElement.PointerWheelChanged += HandleUIElementPointerEvent;
+                uiElement.PointerMoved += HandleUIElementPointerEvent;
+                return;
             }
+
+            throw new ArgumentException("Should be an instance of either CoreWindow or UIElement", "nativeWindow");
         }
 
         /// <summary>

@@ -18,10 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+
 namespace SharpDX.Toolkit.Input
 {
-    using System;
-
     /// <summary>
     /// The <see cref="MouseManager"/> component provides access to mouse state
     /// </summary>
@@ -29,7 +29,7 @@ namespace SharpDX.Toolkit.Input
     {
         private readonly Game game; // keep a reference to game to get access to native window during initialization
 
-        // as the MouseState structure is inmutable - keep a state from which the structure can be rebuild
+        // as the MouseState structure is inmutable - keep a state from which the structure can be rebuilt
         private ButtonState left;
         private ButtonState middle;
         private ButtonState right;
@@ -38,10 +38,10 @@ namespace SharpDX.Toolkit.Input
         private int wheelDelta;
 
         // provides platform-specific binding to mouse functionality
-        private WindowBinder binder;
+        private MousePlatform platform;
 
         /// <summary>
-        /// Initializez a new instance of <see cref="MouseManager"/> class
+        /// Initializes a new instance of <see cref="MouseManager"/> class
         /// </summary>
         /// <param name="game">The <see cref="Game"/> instance whose window is used as source of mouse input events</param>
         /// <exception cref="ArgumentNullException">Is thrown if <paramref name="game"/> is null</exception>
@@ -63,14 +63,13 @@ namespace SharpDX.Toolkit.Input
         /// <exception cref="NotSupportedException">Is thrown if mouse manager is used on an usupported platform.</exception>
         public void Initialize()
         {
-            var w = game.Window.NativeWindow;
-            // create platform-specific binder instance
-            binder = WindowBinder.Create(w);
+            // create platform-specific instance
+            platform = MousePlatform.Create(game.Window.NativeWindow);
 
-            // binder will report state changes trough these events:
-            binder.MouseDown += HandleMouseDown;
-            binder.MouseUp += HandleMouseUp;
-            binder.MouseWheelDelta += HandleWheelDelta;
+            // platform will report state changes trough these events:
+            platform.MouseDown += HandleMouseDown;
+            platform.MouseUp += HandleMouseUp;
+            platform.MouseWheelDelta += HandleWheelDelta;
         }
 
         /// <summary>
@@ -81,13 +80,13 @@ namespace SharpDX.Toolkit.Input
         public MouseState GetState()
         {
             // read the mouse position information
-            var position = binder.GetLocation();
+            var position = platform.GetLocation();
 
             return new MouseState(left, middle, right, xButton1, xButton2, position.X, position.Y, wheelDelta);
         }
 
         /// <summary>
-        /// Handler for <see cref="WindowBinder.MouseDown"/> event
+        /// Handler for <see cref="MousePlatform.MouseDown"/> event
         /// </summary>
         /// <param name="button">The pressed button</param>
         private void HandleMouseDown(MouseButton button)
@@ -96,7 +95,7 @@ namespace SharpDX.Toolkit.Input
         }
 
         /// <summary>
-        /// Handler for <see cref="WindowBinder.MouseUp"/> event
+        /// Handler for <see cref="MousePlatform.MouseUp"/> event
         /// </summary>
         /// <param name="button">The pressed button</param>
         private void HandleMouseUp(MouseButton button)
@@ -105,7 +104,7 @@ namespace SharpDX.Toolkit.Input
         }
 
         /// <summary>
-        /// Handler for <see cref="WindowBinder.MouseWheelDelta"/> event
+        /// Handler for <see cref="MousePlatform.MouseWheelDelta"/> event
         /// </summary>
         /// <param name="wheelDelta">The pressed button</param>
         private void HandleWheelDelta(int wheelDelta)

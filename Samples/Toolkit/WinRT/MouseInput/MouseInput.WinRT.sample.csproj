@@ -104,7 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\Common\MouseInput\MouseInputGame.cs">
-      <Link>SpriteBatchAndFontGame.cs</Link>
+      <Link>MouseInputGame.cs</Link>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
