@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5BD9D753-1827-46E5-9388-CC4709FA87A7}</ProjectGuid>
+    <ProjectGuid>{7D0686C8-E617-4B68-B235-EB34B4E53508}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MouseInput.Desktop</RootNamespace>

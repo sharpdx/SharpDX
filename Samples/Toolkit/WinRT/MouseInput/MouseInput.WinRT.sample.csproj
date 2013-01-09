@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6D41D736-AD6F-46C9-9505-171ECED89184}</ProjectGuid>
+    <ProjectGuid>{76D9FEBB-0609-4836-9FBF-608536A585C2}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MouseInput.WinRT</RootNamespace>
