@@ -45,7 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\Common\MouseInput\MouseInputGame.cs">
-      <Link>SpriteBatchAndFontGame.cs</Link>
+      <Link>MouseInputGame.cs</Link>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -81,7 +81,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\Common\SpriteBatchAndFont\Content\Arial16.tkfnt">
+    <Content Include="..\..\Common\MouseInput\Content\Arial16.tkfnt">
       <Link>Content\Arial16.tkfnt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
