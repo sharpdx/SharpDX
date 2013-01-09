@@ -530,7 +530,7 @@ namespace SharpDX.Toolkit.Graphics
                 // For constant buffers, we need to store explicit link
                 if (parameter.ResourceType == EffectResourceType.ConstantBuffer)
                 {
-                    constantBufferLinks.Add(new ConstantBufferLink(Effect.ConstantBuffers[parameter.Name], parameter.Offset));
+                    constantBufferLinks.Add(new ConstantBufferLink(Effect.ConstantBuffers[parameter.Name], parameter));
                 }
 
                 if (stageBlock.Parameters == null)
@@ -552,6 +552,12 @@ namespace SharpDX.Toolkit.Graphics
         {
             // Allocate slots only when needed
             stageBlock.Slots = new List<SlotLinkSet>[1 + (int)EffectResourceType.UnorderedAccessView];
+
+            // Retrieve Constant buffer resource index as It has been updated by the reordering of resources
+            for (int i = 0; i < stageBlock.ConstantBufferLinks.Length; i++)
+            {
+                stageBlock.ConstantBufferLinks[i].ResourceIndex = stageBlock.ConstantBufferLinks[i].Parameter.Offset;
+            }
 
             // Compute default slot links link
             foreach (var parameter in stageBlock.Parameters)
@@ -1011,15 +1017,18 @@ namespace SharpDX.Toolkit.Graphics
 
         private struct ConstantBufferLink
         {
-            public ConstantBufferLink(EffectConstantBuffer constantBuffer, int resourceIndex)
+            public ConstantBufferLink(EffectConstantBuffer constantBuffer, EffectParameter parameter)
             {
                 ConstantBuffer = constantBuffer;
-                ResourceIndex = resourceIndex;
+                Parameter = parameter;
+                ResourceIndex = 0;
             }
 
             public readonly EffectConstantBuffer ConstantBuffer;
 
-            public readonly int ResourceIndex;
+            public readonly EffectParameter Parameter;
+
+            public int ResourceIndex;
         }
 
         #endregion
