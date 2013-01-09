@@ -88,6 +88,7 @@ namespace SharpDX.Toolkit.Input
         /// <param name="key">The pressed key</param>
         private void HandleKeyPressed(Keys key)
         {
+            pressedKeys.Remove(key);
             pressedKeys.Add(key);
         }
 
