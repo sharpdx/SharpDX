@@ -105,6 +105,9 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\..\Common\MouseInput\MouseInputGame.cs">
+      <Link>MouseInputGame.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -117,6 +120,35 @@
     <Content Include="Assets\SmallLogo.png" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="SharpDX.Direct3D11">
+      <HintPath>..\..\..\..\Bin\Standard-winrt\SharpDX.Direct3D11.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.DXGI">
+      <HintPath>..\..\..\..\Bin\Standard-winrt\SharpDX.DXGI.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX">
+      <HintPath>..\..\..\..\Bin\Standard-winrt\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Toolkit.Game">
+      <HintPath>..\..\..\..\Bin\Standard-winrt\SharpDX.Toolkit.Game.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Toolkit.Graphics">
+      <HintPath>..\..\..\..\Bin\Standard-winrt\SharpDX.Toolkit.Graphics.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Toolkit.Input">
+      <HintPath>..\..\..\..\Bin\Standard-winrt\SharpDX.Toolkit.Input.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Toolkit">
+      <HintPath>..\..\..\..\Bin\Standard-winrt\SharpDX.Toolkit.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\Common\MouseInput\Content\Arial16.tkfnt">
+      <Link>Content\Arial16.tkfnt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
