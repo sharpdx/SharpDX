@@ -518,6 +518,7 @@
     <bind from="bool" to="System.Boolean" />
 
     <!-- SharpDX bindings -->
+    <bind from="SHARPDX_USHORT" to="System.UInt16" />
     <bind from="SHARPDX_BOOL4" to="SharpDX.Bool4" />
     <bind from="SHARPDX_INT3" to="SharpDX.Int3" />
     <bind from="SHARPDX_INT4" to="SharpDX.Int4" />

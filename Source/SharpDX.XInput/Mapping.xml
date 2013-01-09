@@ -145,6 +145,9 @@
     <map field="XINPUT_KEYSTROKE::VirtualKey" type="XINPUT_GAMEPAD_KEY_CODE"/>
     <map field="XINPUT_KEYSTROKE::Flags" type="XINPUT_KEYSTROKE_FLAGS"/>
     <map field="XINPUT_KEYSTROKE::UserIndex" type="XUSER_INDEX"/>
+    
+    <map field="XINPUT_VIBRATION::wLeftMotorSpeed" type="SHARPDX_USHORT"/>
+    <map field="XINPUT_VIBRATION::wRightMotorSpeed" type="SHARPDX_USHORT"/>
 
     <!--
     // *****************************************************************
