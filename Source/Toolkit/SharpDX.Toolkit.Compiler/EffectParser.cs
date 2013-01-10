@@ -22,6 +22,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text;
+
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D;
 
@@ -95,7 +97,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="input">The input.</param>
         /// <param name="fileName">Name of the file.</param>
         /// <returns>Result of parsing</returns>
-        public EffectParserResult PrepareParsing(string input, string fileName)
+        private EffectParserResult PrepareParsing(string input, string fileName)
         {
             var filePath = Path.GetFullPath(fileName);
             fileName = Path.GetFileName(fileName);
@@ -114,7 +116,7 @@ namespace SharpDX.Toolkit.Graphics
             var preprocessedInput = ShaderBytecode.Preprocess(input, Macros.ToArray(), localResult.IncludeHandler, out compilationErrors, fileName);
             localResult.PreprocessedSource = preprocessedInput;
 
-            localResult.Hashcode = CalculateHashcode(localResult);
+            localResult.DependencyList = CalculateDependencies(localResult);
 
             return localResult;
         }
@@ -124,7 +126,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="previousParsing">The previous parsing.</param>
         /// <returns>EffectParserResult.</returns>
-        public EffectParserResult ContinueParsing(EffectParserResult previousParsing)
+        private EffectParserResult ContinueParsing(EffectParserResult previousParsing)
         {
             // Reset count
             parentCount = 0;
@@ -832,32 +834,21 @@ namespace SharpDX.Toolkit.Graphics
             return expression;
         }
 
-        private int CalculateHashcode(EffectParserResult parserResult)
+        private EffectDependencyList CalculateDependencies(EffectParserResult parserResult)
         {
             var keys = new List<string>(parserResult.IncludeHandler.FileResolved.Keys);
             keys.Sort(StringComparer.InvariantCultureIgnoreCase);
 
-            // Compute a HashCode using FNVModified
-            // based on filename and file write time
-            const uint p = 16777619;
-            uint hash = 2166136261;
-            
+            var dependency = new EffectDependencyList();
+
             foreach (var fileKey in keys)
             {
                 var fileItem = parserResult.IncludeHandler.FileResolved[fileKey];
                 var modifiedTime = fileItem.ModifiedTime;
-                var fileName = fileKey.ToLower();
-
-                hash = (hash ^ (uint)fileName.GetHashCode()) * p;
-                hash = (hash ^ (uint)modifiedTime.GetHashCode()) * p;
+                dependency.Add(fileItem.FilePath, modifiedTime);
             }
 
-            hash += hash << 13;
-            hash ^= hash >> 7;
-            hash += hash << 3;
-            hash ^= hash >> 17;
-            hash += hash << 5;
-            return unchecked((int)hash);
+            return dependency;
         }
 
     }

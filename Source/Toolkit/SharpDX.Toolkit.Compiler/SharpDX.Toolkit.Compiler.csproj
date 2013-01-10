@@ -30,6 +30,7 @@
     <Compile Include="EffectCompilerResult.cs" />
     <Compile Include="EffectCompiler.cs" />
     <Compile Include="EffectDataCodeWriter.cs" />
+    <Compile Include="EffectDependencyList.cs" />
     <Compile Include="EffectParser.cs" />
     <Compile Include="EffectCompilerMessage.cs" />
     <Compile Include="EffectParserResult.cs" />

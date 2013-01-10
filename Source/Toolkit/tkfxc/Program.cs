@@ -35,8 +35,8 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     class Program : ConsoleProgram
     {
-        [Option("Effect *.fx Files | PreCompiled Effect *.tkfxo files", Required = true)]
-        public List<string> FxFiles = new List<string>();
+        [Option("Effect File | PreCompiled Effect *.tkfxo file", Required = true)]
+        public string FxFile = null;
 
         [Option("D", Description = "Define macro", Value = "<id>=<text>")]
         public readonly List<string> Defines = new List<string>();
@@ -62,8 +62,8 @@ namespace SharpDX.Toolkit.Graphics
         [Option("Ti", Description = "Compile the file only if the source file is newer (working with indirect include).\n")]
         public bool CompileOnlyIfNewer;
 
-        [Option("Fv", Description = "Output disassemble of fx files and tkfxo files only. No output file generated")]
-        public bool ViewOnly;
+        [Option("To", Description = "Output directory for the dependency file (default '.' in the same directory than file to compile\n")]
+        public string OutputDependencyDirectory = ".";
 
         [Option("Od", Description = "Output shader with debug information and no optimization")]
         public bool Debug;
@@ -84,6 +84,8 @@ namespace SharpDX.Toolkit.Graphics
         {
             new Program().Run(args);
         }
+
+        private bool hasErrors;
 
         void Run(string[] args)
         {
@@ -147,179 +149,145 @@ namespace SharpDX.Toolkit.Graphics
             if (options.PackColumnMajor)
                 flags |= EffectCompilerFlags.PackMatrixColumnMajor;
 
-            var archiveBytecode = new EffectData();
-            bool hasErrors = false;
+            hasErrors = false;
 
             // ----------------------------------------------------------------
             // Pre check files
             // ----------------------------------------------------------------
-            bool isOutputUpToDate = false;
-
             if (options.OutputClassFile == null && options.OutputFile == null)
             {
                 options.OutputFile = "output.tkfxo";
             }
 
-            bool isSingleInputAndOutput = !ViewOnly && options.FxFiles.Count == 1 && CompileOnlyIfNewer && options.OutputFile != null;
-            int hashCode = 0;
-            if (isSingleInputAndOutput)
-            {
-                if (File.Exists(options.OutputFile))
-                {
-                    try
-                    {
-                        using (var outputFileStream = new FileStream(options.OutputFile, FileMode.Open, FileAccess.Read)) hashCode = EffectData.GetHashCode(outputFileStream);
-                        flags |= EffectCompilerFlags.AllowFastCompileWithFileDependenciesChecking;
-                    }
-                    catch
-                    {
-                    }
-                }
-            }
-
-            //if (!ViewOnly && isFileUpToDate)
-            //{
-            //    Console.WriteLine("Nothing to compile, output file is up to date [{0}]", outputFileName);
-            //    Environment.Exit(0);
-            //}
-
             // ----------------------------------------------------------------
             // Process each fx files / tkfxo files
             // ----------------------------------------------------------------
-            foreach (var fxFile in options.FxFiles)
-            {
-                var filePath = Path.Combine(Environment.CurrentDirectory, fxFile);
+            var fxFile = options.FxFile;
+            var filePath = Path.Combine(Environment.CurrentDirectory, fxFile);
 
-                if (!File.Exists(filePath))
+            // Check that input file exists
+            if (!File.Exists(filePath))
+            {
+                ErrorColor();
+                Console.Error.WriteLine("File [{0}] does not exist", fxFile);
+                ResetColor();
+                Abort();
+            }
+            
+            string outputDependencyDirPath = Path.Combine(Environment.CurrentDirectory, OutputDependencyDirectory);
+            string outputDependencyFilePath = Path.Combine(outputDependencyDirPath, Path.GetFileName(options.FxFile) + ".deps");
+
+            if (CompileOnlyIfNewer && File.Exists(outputDependencyFilePath))
+            {
+                var dependencyList = EffectDependencyList.FromFile(outputDependencyFilePath);
+
+                // If no changes
+                if (dependencyList.Count > 0 && !dependencyList.CheckForChanges())
+                {
+                    Console.Error.WriteLine("Nothing to compile. Output file [{0}] is up-to-date", options.OutputFile);
+                    Environment.Exit(0);
+                }
+            }
+
+            var viewOnly = false;
+            // Try to load this file as a precompiled file
+            var effectData = EffectData.Load(fxFile);
+            EffectCompilerResult compilerResult = null;
+
+            if (effectData != null)
+            {
+                Console.WriteLine("Load Compiled File [{0}]", fxFile);
+                viewOnly = true;
+            }
+            else
+            {
+                // Compile the fx file
+                Console.WriteLine("Compile Effect File [{0}]", filePath);
+                compilerResult = EffectCompiler.Compile(File.ReadAllText(filePath), filePath, flags, macros, options.IncludeDirs);
+
+                // If there is any warning, errors, turn Error color on
+                if (compilerResult.Logger.Messages.Count > 0)
                 {
                     ErrorColor();
-                    Console.Error.WriteLine("File [{0}] does not exist", fxFile);
-                    ResetColor();
+                }
+
+                // Show a message error for the current file
+                if (compilerResult.HasErrors)
+                {
+                    Console.Error.WriteLine("Error when compiling file [{0}]:", fxFile);
                     hasErrors = true;
-                    continue;
                 }
 
-                EffectData effectData = null;
-
-                // Try to load this file as a precompiled file
-                effectData = EffectData.Load(fxFile);
-                if (effectData != null)
+                // Print all messages (warning and errors)
+                foreach (var logMessage in compilerResult.Logger.Messages)
                 {
-                    Console.WriteLine("Load Compiled File [{0}]", fxFile);                    
+                    Console.WriteLine(logMessage);
                 }
-                else
+
+                // If we have some messages, reset the color back
+                if (compilerResult.Logger.Messages.Count > 0)
                 {
-                    // Compile the fx file
-                    Console.WriteLine("Compile Effect File [{0}]", filePath);
-                    var effectBytecode = EffectCompiler.Compile(File.ReadAllText(filePath), filePath, flags, macros, options.IncludeDirs, null, hashCode);
-
-                    // If there is any warning, errors, turn Error color on
-                    if (effectBytecode.Logger.Messages.Count > 0)
-                    {
-                        ErrorColor();
-                    }
-
-                    // Show a message error for the current file
-                    if (effectBytecode.HasErrors)
-                    {
-                        Console.Error.WriteLine("Error when compiling file [{0}]:", fxFile);
-                        hasErrors = true;
-                    }
-                    else if ((flags & EffectCompilerFlags.AllowFastCompileWithFileDependenciesChecking) != 0 && effectBytecode.IsUpToDate && effectBytecode.EffectData == null)
-                    {
-                        isOutputUpToDate = true;
-                        break;
-                    }
-
-                    // Print all messages (warning and errors)
-                    foreach (var logMessage in effectBytecode.Logger.Messages)
-                    {
-                        Console.WriteLine(logMessage);
-                    }
-
-                    // If we have some messages, reset the color back
-                    if (effectBytecode.Logger.Messages.Count > 0)
-                    {
-                        ResetColor();
-                    }
-
-                    effectData = effectBytecode.EffectData;
+                    ResetColor();
                 }
 
-                // If there is no errors, merge the result to the final archive
-                if (!hasErrors)
-                {
-                    if (isSingleInputAndOutput)
-                    {
-                        archiveBytecode = effectData;
-                    }
-                    else
-                    {
-                        if (ProcessBytecode(effectData, archiveBytecode)) hasErrors = true;
-                    }
-                }
+                effectData = compilerResult.EffectData;
+            }
+
+            if (!NoDisassembly && effectData != null)
+            {
+                DumpBytecode(effectData);
             }
 
             if (hasErrors)
             {
-                ErrorColor();
-                Console.Error.WriteLine("Compilation has errors. Process aborted.");
-                ResetColor();
-                Environment.Exit(-1);
+                Abort();
             }
-            else if (!ViewOnly)
+
+            if (!viewOnly)
             {
                 Console.WriteLine();
 
-                if (isOutputUpToDate)
+                if (CompileOnlyIfNewer && compilerResult.DependencyList != null && compilerResult.DependencyList.Count > 0)
                 {
-                    Console.Error.WriteLine("Nothing to compile. Output file [{0}] is up-to-date", options.OutputFile);
+                    // If output directory doesn't exist, we can create it
+                    if (!Directory.Exists(outputDependencyDirPath))
+                    {
+                        Directory.CreateDirectory(outputDependencyDirPath);
+                    }
+
+                    // Save the dependency file
+                    Console.WriteLine("Save dependency list to [{0}]", outputDependencyFilePath);
+                    compilerResult.DependencyList.Save(outputDependencyFilePath);
                 }
-                else
+
+                if (OutputClassFile != null)
                 {
-                    if (OutputClassFile != null)
-                    {
-                        var codeWriter = new EffectDataCodeWriter
-                                             {
-                                                 Namespace = OutputNamespace,
-                                                 ClassName = OutputClassname ?? Path.GetFileNameWithoutExtension(OutputClassFile),
-                                                 FieldName = OutputFieldName,
-                                             };
+                    var codeWriter = new EffectDataCodeWriter
+                                         {
+                                             Namespace = OutputNamespace,
+                                             ClassName = OutputClassname ?? Path.GetFileNameWithoutExtension(OutputClassFile),
+                                             FieldName = OutputFieldName,
+                                         };
 
-                        Console.WriteLine("Save C# code output to [{0}]", OutputClassFile);
-                        using (var stream = new NativeFileStream(OutputClassFile, NativeFileMode.Create, NativeFileAccess.Write, NativeFileShare.Write)) codeWriter.Write(archiveBytecode, new StreamWriter(stream, Encoding.UTF8));
-                    }
+                    Console.WriteLine("Save C# code output to [{0}]", OutputClassFile);
+                    using (var stream = new NativeFileStream(OutputClassFile, NativeFileMode.Create, NativeFileAccess.Write, NativeFileShare.Write)) codeWriter.Write(effectData, new StreamWriter(stream, Encoding.UTF8));
+                }
 
-                    if (options.OutputFile != null)
-                    {
-                        Console.WriteLine("Save binary output to [{0}]", options.OutputFile);
-                        // Save the result
-                        archiveBytecode.Save(options.OutputFile);
-                    }
+                if (options.OutputFile != null)
+                {
+                    Console.WriteLine("Save binary output to [{0}]", options.OutputFile);
+                    // Save the result
+                    effectData.Save(options.OutputFile);
                 }
             }
         }
 
-        private bool ProcessBytecode(EffectData input, EffectData merged)
+        private void Abort()
         {
-            var hasErrors = false;
-            if (!NoDisassembly)
-                DumpBytecode(input);
-
-            var logger = new Logger();
-            merged.MergeFrom(input, logger);
-
-            // If there is any errors from 
-            if (logger.HasErrors)
-            {
-                hasErrors = true;
-                ErrorColor();
-                foreach (var message in logger.Messages)
-                    Console.Error.WriteLine(message);
-                ResetColor();
-            }
-
-            return hasErrors;
+            ErrorColor();
+            Console.Error.WriteLine("Compilation has errors. Process aborted.");
+            ResetColor();
+            Environment.Exit(-1);
         }
 
         private void DumpBytecode(EffectData effectData)

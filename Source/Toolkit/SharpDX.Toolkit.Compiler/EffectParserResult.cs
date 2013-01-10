@@ -26,11 +26,10 @@ namespace SharpDX.Toolkit.Graphics
 
         public string PreprocessedSource;
 
-        public int Hashcode;
+        public EffectDependencyList DependencyList;
 
         public Ast.Shader Shader;
 
         public FileIncludeHandler IncludeHandler;
-
     }
 }

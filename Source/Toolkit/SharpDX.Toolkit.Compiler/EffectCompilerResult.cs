@@ -30,19 +30,20 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Initializes a new instance of the <see cref="EffectCompilerResult" /> class.
         /// </summary>
+        /// <param name="dependencyList">The dependency list.</param>
         /// <param name="effectData">The EffectData.</param>
         /// <param name="logger">The logger.</param>
-        internal EffectCompilerResult(bool isUpToDate, EffectData effectData, Logger logger)
+        internal EffectCompilerResult(EffectDependencyList dependencyList, EffectData effectData, Logger logger)
         {
-            IsUpToDate = isUpToDate;
+            DependencyList = dependencyList;
             EffectData = effectData;
             Logger = logger;
         }
 
         /// <summary>
-        /// A boolean indicating wether the compilation result is up to date (effectData == null and no need to perform a full compile)
+        /// The effect dependency list (a list of files and includes that this effect is timestamp dependent).
         /// </summary>
-        public readonly bool IsUpToDate;
+        public EffectDependencyList DependencyList;
 
         /// <summary>
         /// Gets the EffectData.

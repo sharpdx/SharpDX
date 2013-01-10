@@ -73,6 +73,8 @@ namespace SharpDX.Toolkit.Graphics
         private EffectData.Technique technique;
         private int nextSubPassCount;
 
+        private EffectDependencyList dependencyList;
+
         private EffectCompiler()
         {
         }
@@ -87,9 +89,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="includeFileDelegate">The include file delegate.</param>
         /// <returns>The result of compilation.</returns>
         public static EffectCompilerResult CompileFromFile(string filePath, EffectCompilerFlags flags = EffectCompilerFlags.None, List<ShaderMacro> macros = null, List<string> includeDirectoryList = null,
-                                                   IncludeFileDelegate includeFileDelegate = null, int destinationHashCode = 0)
+                                                   IncludeFileDelegate includeFileDelegate = null)
         {
-            return Compile(NativeFile.ReadAllText(filePath), filePath, flags, macros, includeDirectoryList, includeFileDelegate, destinationHashCode);
+            return Compile(NativeFile.ReadAllText(filePath), filePath, flags, macros, includeDirectoryList, includeFileDelegate);
         }
 
         /// <summary>
@@ -103,7 +105,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="includeFileDelegate">The include file delegate.</param>
         /// <returns>The result of compilation.</returns>
         public static EffectCompilerResult Compile(string sourceCode, string filePath, EffectCompilerFlags flags = EffectCompilerFlags.None, List<ShaderMacro> macros = null, List<string> includeDirectoryList = null,
-                                                   IncludeFileDelegate includeFileDelegate = null, int destinationHashCode = 0)
+                                                   IncludeFileDelegate includeFileDelegate = null)
         {
             var compiler = new EffectCompiler
                                {
@@ -112,7 +114,8 @@ namespace SharpDX.Toolkit.Graphics
                                    includeDirectoryList = includeDirectoryList ?? new List<string>(),
                                    includeFileDelegate = includeFileDelegate
                                };
-            return new EffectCompilerResult(compiler.InternalCompile(sourceCode, filePath, destinationHashCode), compiler.effectData, compiler.logger);
+            compiler.InternalCompile(sourceCode, filePath);
+            return new EffectCompilerResult(compiler.dependencyList, compiler.effectData, compiler.logger);
         }
 
         /// <summary>
@@ -125,7 +128,7 @@ namespace SharpDX.Toolkit.Graphics
             return new ShaderBytecode(shader.Bytecode).Disassemble(DisassemblyFlags.EnableColorCode | DisassemblyFlags.EnableInstructionNumbering);
         }
 
-        private bool InternalCompile(string sourceCode, string fileName, int destinationHashCode)
+        private void InternalCompile(string sourceCode, string fileName)
         {
             effectData = null;
 
@@ -136,34 +139,16 @@ namespace SharpDX.Toolkit.Graphics
             parser.Macros.AddRange(macros);
             parser.IncludeDirectoryList.AddRange(includeDirectoryList);
 
-            if ((compilerFlags & EffectCompilerFlags.AllowFastCompileWithFileDependenciesChecking) != 0 && destinationHashCode != 0)
-            {
-                parserResult = parser.PrepareParsing(sourceCode, fileName);
+            parserResult = parser.Parse(sourceCode, fileName);
+            dependencyList = parserResult.DependencyList;
 
-                if (parserResult.Hashcode == destinationHashCode)
-                {
-                    return true;
-                }
-
-                parserResult = parser.ContinueParsing(parserResult);
-            }
-            else
-            {
-                parserResult = parser.Parse(sourceCode, fileName);
-            }
-
-            // Remove AllowFastCompileWithFileDependenciesChecking flags
-            compilerFlags &= ~EffectCompilerFlags.AllowFastCompileWithFileDependenciesChecking;
+            if (logger.HasErrors) return;
 
             // Get back include handler.
             includeHandler = parserResult.IncludeHandler;
 
-            if (logger.HasErrors)
-                return false;
-
             effectData = new EffectData
                                  {
-                                     HashCode = parserResult.Hashcode,
                                      Effects = new List<EffectData.Effect>(),
                                      Shaders = new List<EffectData.Shader>()
                                  };
@@ -183,8 +168,6 @@ namespace SharpDX.Toolkit.Graphics
                     HandleTechnique(techniqueAst);
                 }
             }
-
-            return false;
         }
 
         private void HandleTechnique(Ast.Technique techniqueAst)
