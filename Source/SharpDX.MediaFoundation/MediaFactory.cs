@@ -1,8 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+#if !W8CORE
+using System;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace SharpDX.MediaFoundation
 {
@@ -16,7 +33,10 @@ namespace SharpDX.MediaFoundation
         /// <param name="inputTypeRef">A pointer to an <strong><see cref="SharpDX.MediaFoundation.TRegisterTypeInformation"/></strong> structure that specifies an input media type to match.<para>This parameter can be NULL. If NULL, all input types are matched.</para></param>
         /// <param name="outputTypeRef">A pointer to an <strong><see cref="SharpDX.MediaFoundation.TRegisterTypeInformation"/></strong> structure that specifies an output media type to match.<para>This parameter can be NULL. If NULL, all output types are matched.</para></param>
         /// <returns>Returnss an array of <strong><see cref="SharpDX.MediaFoundation.Activate"/></strong> objects. Each object represents an activation object for an MFT that matches the search criteria. The function allocates the memory for the array. The caller must release the pointers and call the Dispose for each element in the array.</returns>
-        public static Activate[] TEnumEx(Guid guidCategory, TransformEnumFlag enumFlags, TRegisterTypeInformation? inputTypeRef, TRegisterTypeInformation? outputTypeRef)
+        /// <msdn-id>dd388652</msdn-id>	
+        /// <unmanaged>HRESULT MFTEnumEx([In] GUID guidCategory,[In] unsigned int Flags,[In, Optional] const MFT_REGISTER_TYPE_INFO* pInputType,[In, Optional] const MFT_REGISTER_TYPE_INFO* pOutputType,[Out, Buffer] IMFActivate*** pppMFTActivate,[Out] unsigned int* pnumMFTActivate)</unmanaged>	
+        /// <unmanaged-short>MFTEnumEx</unmanaged-short>	
+        public static Activate[] FindTransform(Guid guidCategory, TransformEnumFlag enumFlags, TRegisterTypeInformation? inputTypeRef = null, TRegisterTypeInformation? outputTypeRef = null)
         {
             IntPtr pActivatesArr;
             int pNumActivates;
@@ -25,11 +45,10 @@ namespace SharpDX.MediaFoundation
             var activates = new Activate[pNumActivates];
             unsafe
             {
-                IntPtr* ptr = (IntPtr*)(pActivatesArr);
+                var ptr = (IntPtr*)(pActivatesArr);
                 for (int i = 0; i < pNumActivates; i++)
                 {
-                    activates[i] = new Activate(*ptr);
-                    ptr++;
+                    activates[i] = new Activate(ptr[i]);
                 }
             }
             Marshal.FreeCoTaskMem(pActivatesArr);
@@ -38,3 +57,4 @@ namespace SharpDX.MediaFoundation
         }
     }
 }
+#endif
