@@ -40,7 +40,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
             var device = GraphicsDevice.New();
 
             // Compile a toolkit effect from a file
-            var result = EffectCompiler.CompileFromFile("TestEffect.fx");
+            var result = new EffectCompiler().CompileFromFile("TestEffect.fx");
 
             // Check that we don't have any errors
             Assert.False(result.HasErrors);
@@ -100,7 +100,7 @@ namespace SharpDX.Toolkit.Graphics.Tests
         {
             // Compile a toolkit effect from a file
             var device = GraphicsDevice.New(DeviceCreationFlags.Debug);
-            var result = EffectCompiler.CompileFromFile("TestEffect.fx");
+            var result = new EffectCompiler().CompileFromFile("TestEffect.fx");
 
             var effect = new Effect(device, result.EffectData);
 

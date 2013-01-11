@@ -30,12 +30,12 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Initializes a new instance of the <see cref="EffectCompilerResult" /> class.
         /// </summary>
-        /// <param name="dependencyList">The dependency list.</param>
+        /// <param name="dependencyFilePath">The path to dependency file (may be null).</param>
         /// <param name="effectData">The EffectData.</param>
         /// <param name="logger">The logger.</param>
-        internal EffectCompilerResult(EffectDependencyList dependencyList, EffectData effectData, Logger logger)
+        public EffectCompilerResult(string dependencyFilePath, EffectData effectData, Logger logger)
         {
-            DependencyList = dependencyList;
+            DependencyFilePath = dependencyFilePath;
             EffectData = effectData;
             Logger = logger;
         }
@@ -43,7 +43,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// The effect dependency list (a list of files and includes that this effect is timestamp dependent).
         /// </summary>
-        public EffectDependencyList DependencyList;
+        public string DependencyFilePath;
 
         /// <summary>
         /// Gets the EffectData.

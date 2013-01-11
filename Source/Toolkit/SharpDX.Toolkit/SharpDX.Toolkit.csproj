@@ -27,6 +27,10 @@
     <Compile Include="Diagnostics\Logger.cs" />
     <Compile Include="Diagnostics\NamespaceDoc.cs" />
     <Compile Include="Graphics\AttributeData.cs" />
+    <Compile Include="Graphics\EffectCompilerResult.cs" />
+    <Compile Include="Graphics\EffectData.CompilerArguments.cs" />
+    <Compile Include="Graphics\EffectData.ShaderMacro.cs" />
+    <Compile Include="Graphics\IEffectCompiler.cs" />
     <Compile Include="Graphics\ModelData.IndexBuffer.cs" />
     <Compile Include="Graphics\ModelData.VertexBuffer.cs" />
     <Compile Include="Graphics\ModelData.Bone.cs" />

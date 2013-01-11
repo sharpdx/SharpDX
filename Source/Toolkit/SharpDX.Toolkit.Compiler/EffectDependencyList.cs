@@ -81,6 +81,13 @@ namespace SharpDX.Toolkit.Graphics
 
         public void Save(string file)
         {
+            var dirPath = Path.GetDirectoryName(file);
+            // If output directory doesn't exist, we can create it
+            if (dirPath != null && !Directory.Exists(dirPath))
+            {
+                Directory.CreateDirectory(dirPath);
+            }
+
             var filePath = typeof(EffectDependencyList).Assembly.Location;
             Remove(filePath);
             Add(filePath, File.GetLastWriteTime(filePath));
@@ -88,8 +95,18 @@ namespace SharpDX.Toolkit.Graphics
             using (var stream = new NativeFileStream(file, NativeFileMode.Create, NativeFileAccess.Write)) Save(stream);
         }
 
+        /// <summary>
+        /// Checks for changes in the dependency file.
+        /// </summary>
+        /// <returns><c>true</c> if a file has been updated, <c>false</c> otherwise</returns>
         public bool CheckForChanges()
         {
+            // No files? Then it is considered as changed.
+            if (Count == 0)
+            {
+                return true;
+            }
+
             foreach (var fileItem in this)
             {
                 if (!File.Exists(fileItem.Key))

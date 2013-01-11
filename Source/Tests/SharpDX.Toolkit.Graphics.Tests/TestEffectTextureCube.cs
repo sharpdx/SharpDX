@@ -32,15 +32,15 @@ namespace SharpDX.Toolkit.Graphics.Tests
     /// </summary>
     [TestFixture]
     [Description("Tests SharpDX.Toolkit.Graphics")]
-    public class TestEffectTextureArray
+    public class TestEffectTextureCube
     {
         [Test]
-        public void TestCompiler()
+        public void Test()
         {
             var device = GraphicsDevice.New();
 
             // Compile a toolkit effect from a file
-            var result = new EffectCompiler().CompileFromFile("TestEffectTextureArray.fx");
+            var result = EffectCompiler.CompileFromFile("toto.fx");
 
             // Check that we don't have any errors
             Assert.False(result.HasErrors);
@@ -49,21 +49,13 @@ namespace SharpDX.Toolkit.Graphics.Tests
 
             var effect = new Effect(device, bytecode);
 
-            var tex1 = Texture2D.New(device, 256, 256, PixelFormat.R8.UNorm);
-            var tex2 = Texture2D.New(device, 256, 256, PixelFormat.R8.UNorm);
-            var tex3 = Texture2D.New(device, 256, 256, PixelFormat.R8.UNorm);
+            var tex1 = TextureCube.New(device, 64, PixelFormat.R8.UNorm);
             var samplerState = device.SamplerStates.PointWrap;
 
-            effect.Parameters["testTextureArray"].SetResource(0, tex1);
-            effect.Parameters["testTextureArray"].SetResource(1, tex2);
-            effect.Parameters["testTextureArray"].SetResource(2, tex3);
-
-            //effect.Parameters["World"].SetValue(Vector3.Zero);
-            //effect.Parameters["Tata"].SetResource(texture);
+            effect.Parameters["SkyBoxTexture"].SetResource(tex1);
+            effect.Parameters["SkyBoxSampler"].SetResource(samplerState);
 
             effect.Techniques[0].Passes[0].Apply();
-
-            effect.Techniques[0].Passes[1].Apply();
 
             Console.WriteLine(effect.Parameters.Count);
 

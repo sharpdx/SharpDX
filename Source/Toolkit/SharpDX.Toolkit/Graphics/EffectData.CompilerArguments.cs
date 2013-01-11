@@ -17,52 +17,53 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
-using System;
 using System.Collections.Generic;
+
 using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
     public partial class EffectData
     {
-        /// <summary>
-        /// Describes an effect.
-        /// </summary>
-        public sealed class Effect : IDataSerializable
+        public class CompilerArguments : IDataSerializable
         {
             /// <summary>
-            /// Name of the effect.
+            /// The absolute path to the FX source file used to compile this effect.
             /// </summary>
-            public string Name;
+            public string FilePath;
 
             /// <summary>
-            /// Share constant buffers.
+            /// The absolute path to dependency filepath generated when compiling this effect.
             /// </summary>
-            public bool ShareConstantBuffers;
+            public string DependencyFilePath;
 
             /// <summary>
-            /// List of <see cref="Technique"/>.
+            /// The flags used to compile an effect.
             /// </summary>
-            public List<Technique> Techniques;
+            public EffectCompilerFlags CompilerFlags;
 
             /// <summary>
-            /// The compiler arguments used to compile this effect. This field is null if the effect is not compiled with the option "AllowDynamicRecompiling".
+            /// The macros used to compile this effect (may be null).
             /// </summary>
-            public CompilerArguments Arguments;
+            public List<ShaderMacro> Macros;
+
+            /// <summary>
+            /// The list of include directory used to compile this file (may be null)
+            /// </summary>
+            public List<string> IncludeDirectoryList;
+
+            void IDataSerializable.Serialize(BinarySerializer serializer)
+            {
+                serializer.Serialize(ref FilePath);
+                serializer.Serialize(ref DependencyFilePath);
+                serializer.SerializeEnum(ref CompilerFlags);
+                serializer.Serialize(ref Macros, SerializeFlags.Nullable);
+                serializer.Serialize(ref IncludeDirectoryList, serializer.Serialize, SerializeFlags.Nullable);
+            }
 
             public override string ToString()
             {
-                return string.Format("Effect: {0}, Techniques({1})", Name, Techniques.Count);
-            }
-
-            /// <inheritdoc/>
-            void IDataSerializable.Serialize(BinarySerializer serializer)
-            {
-                serializer.Serialize(ref Name);
-                serializer.Serialize(ref ShareConstantBuffers);
-                serializer.Serialize(ref Techniques);
-                serializer.Serialize(ref Arguments, SerializeFlags.Nullable);
+                return string.Format("FilePath: {0}, CompilerFlags: {1}", FilePath, CompilerFlags);
             }
         }
     }

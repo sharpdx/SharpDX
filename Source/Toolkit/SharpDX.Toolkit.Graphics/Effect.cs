@@ -277,7 +277,7 @@ namespace SharpDX.Toolkit.Graphics
                 parameter.SetDefaultValue();
 
                 if (parameter.ResourceType == EffectResourceType.ConstantBuffer)
-                    parameter.SetResource(0, ConstantBuffers[parameter.Name]);
+                    parameter.SetResource(ConstantBuffers[parameter.Name]);
             }
 
             // Compute slot links

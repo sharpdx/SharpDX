@@ -17,36 +17,21 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
 using System.Collections.Generic;
-using System.IO;
-
-using SharpDX.IO;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public delegate Stream IncludeFileDelegate(bool isSystemInclude, string file);
-
     /// <summary>
-    /// Main class used to compile a Toolkit FX file.
+    /// Interface to compile an effect.
     /// </summary>
-    public class EffectCompiler : IEffectCompiler
+    public interface IEffectCompiler
     {
         /// <summary>
         /// Checks for changes from a dependency file.
         /// </summary>
         /// <param name="dependencyFilePath">The dependency file path.</param>
         /// <returns><c>true</c> if a file has been updated, <c>false</c> otherwise</returns>
-        public bool CheckForChanges(string dependencyFilePath)
-        {
-            // If the file does not exist, than return true as it is a new dependency to generate
-            if (!File.Exists(dependencyFilePath))
-            {
-                return true;
-            }
-
-            return EffectDependencyList.FromFile(dependencyFilePath).CheckForChanges();
-        }
+        bool CheckForChanges(string dependencyFilePath);
 
         /// <summary>
         /// Compiles an effect from file.
@@ -56,10 +41,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="macros">The macrosArgs.</param>
         /// <param name="includeDirectoryList">The include directory list.</param>
         /// <returns>The result of compilation.</returns>
-        public EffectCompilerResult CompileFromFile(string filePath, EffectCompilerFlags flags = EffectCompilerFlags.None, List<EffectData.ShaderMacro> macros = null, List<string> includeDirectoryList = null, bool alloDynamicCompiling = false, string dependencyFilePath = null)
-        {
-            return Compile(NativeFile.ReadAllText(filePath), filePath, flags, macros, includeDirectoryList, alloDynamicCompiling, dependencyFilePath);
-        }
+        EffectCompilerResult CompileFromFile(string filePath, EffectCompilerFlags flags = EffectCompilerFlags.None, List<EffectData.ShaderMacro> macros = null, List<string> includeDirectoryList = null, bool alloDynamicCompiling = false, string dependencyFilePath = null);
 
         /// <summary>
         /// Compiles an effect from the specified source code and filepath.
@@ -70,21 +52,13 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="macrosArgs">The macrosArgs.</param>
         /// <param name="includeDirectoryList">The include directory list.</param>
         /// <returns>The result of compilation.</returns>
-        public EffectCompilerResult Compile(string sourceCode, string filePath, EffectCompilerFlags flags = EffectCompilerFlags.None, List<EffectData.ShaderMacro> macrosArgs = null, List<string> includeDirectoryList = null, bool allowDynamicCompiling = false, string dependencyFilePath = null)
-        {
-            var compiler = new EffectCompilerInternal();
-            return compiler.Compile(sourceCode, filePath, flags, macrosArgs, includeDirectoryList, allowDynamicCompiling, dependencyFilePath);
-        }
+        EffectCompilerResult Compile(string sourceCode, string filePath, EffectCompilerFlags flags = EffectCompilerFlags.None, List<EffectData.ShaderMacro> macrosArgs = null, List<string> includeDirectoryList = null, bool allowDynamicCompiling = false, string dependencyFilePath = null);
 
         /// <summary>
         /// Disassembles a shader HLSL bytecode to asm code.
         /// </summary>
         /// <param name="shader">The shader.</param>
         /// <returns>A string containing asm code decoded from HLSL bytecode.</returns>
-        public string DisassembleShader(EffectData.Shader shader)
-        {
-            var compiler = new EffectCompilerInternal();
-            return compiler.DisassembleShader(shader);
-        }
-   }
+        string DisassembleShader(EffectData.Shader shader);
+    }
 }

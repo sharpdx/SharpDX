@@ -19,50 +19,69 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
     public partial class EffectData
     {
-        /// <summary>
-        /// Describes an effect.
-        /// </summary>
-        public sealed class Effect : IDataSerializable
+        public struct ShaderMacro : IEquatable<Direct3D.ShaderMacro>, IDataSerializable
         {
             /// <summary>
-            /// Name of the effect.
+            /// The name of the macro.
             /// </summary>
             public string Name;
 
             /// <summary>
-            /// Share constant buffers.
+            /// The value of the macro.
             /// </summary>
-            public bool ShareConstantBuffers;
+            public string Value;
 
             /// <summary>
-            /// List of <see cref="Technique"/>.
+            /// Initializes a new instance of the <see cref="ShaderMacro" /> struct.
             /// </summary>
-            public List<Technique> Techniques;
-
-            /// <summary>
-            /// The compiler arguments used to compile this effect. This field is null if the effect is not compiled with the option "AllowDynamicRecompiling".
-            /// </summary>
-            public CompilerArguments Arguments;
-
-            public override string ToString()
+            /// <param name="name">The name.</param>
+            /// <param name="value">The value.</param>
+            public ShaderMacro(string name, object value)
             {
-                return string.Format("Effect: {0}, Techniques({1})", Name, Techniques.Count);
+                Name = name;
+                Value = value == null ? null : value.ToString();
             }
 
-            /// <inheritdoc/>
+            public bool Equals(Direct3D.ShaderMacro other)
+            {
+                return string.Equals(this.Name, other.Name) && string.Equals(this.Value, other.Definition);
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj))
+                    return false;
+                return obj is Direct3D.ShaderMacro && Equals((Direct3D.ShaderMacro)obj);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return ((this.Name != null ? this.Name.GetHashCode() : 0) * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                }
+            }
+
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
                 serializer.Serialize(ref Name);
-                serializer.Serialize(ref ShareConstantBuffers);
-                serializer.Serialize(ref Techniques);
-                serializer.Serialize(ref Arguments, SerializeFlags.Nullable);
+                serializer.Serialize(ref Value, SerializeFlags.Nullable);
+            }
+
+            public static bool operator ==(ShaderMacro left, ShaderMacro right)
+            {
+                return left.Equals(right);
+            }
+
+            public static bool operator !=(ShaderMacro left, ShaderMacro right)
+            {
+                return !left.Equals(right);
             }
         }
     }

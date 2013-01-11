@@ -62,6 +62,9 @@ namespace SharpDX.Toolkit.Graphics
         [Option("Ti", Description = "Compile the file only if the source file is newer (working with indirect include).\n")]
         public bool CompileOnlyIfNewer;
 
+        [Option("Re", Description = "Allow auto dynamic compiling at runtime.\n")]
+        public bool AllowDynamicCompiling;
+
         [Option("To", Description = "Output directory for the dependency file (default '.' in the same directory than file to compile\n")]
         public string OutputDependencyDirectory = ".";
 
@@ -107,7 +110,7 @@ namespace SharpDX.Toolkit.Graphics
             // ----------------------------------------------------------------
             // Process macros
             // ----------------------------------------------------------------
-            var macros = new List<ShaderMacro>();
+            var macros = new List<EffectData.ShaderMacro>();
             foreach (var define in options.Defines)
             {
                 var nameValue = define.Split('=');
@@ -117,7 +120,7 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     value = nameValue[1];
                 }
-                macros.Add(new ShaderMacro(name, value));
+                macros.Add(new EffectData.ShaderMacro(name, value));
             }
 
             // ----------------------------------------------------------------
@@ -177,12 +180,17 @@ namespace SharpDX.Toolkit.Graphics
             string outputDependencyDirPath = Path.Combine(Environment.CurrentDirectory, OutputDependencyDirectory);
             string outputDependencyFilePath = Path.Combine(outputDependencyDirPath, Path.GetFileName(options.FxFile) + ".deps");
 
-            if (CompileOnlyIfNewer && File.Exists(outputDependencyFilePath))
-            {
-                var dependencyList = EffectDependencyList.FromFile(outputDependencyFilePath);
+            // New Compiler
+            var compiler = new EffectCompiler();
 
-                // If no changes
-                if (dependencyList.Count > 0 && !dependencyList.CheckForChanges())
+            if (AllowDynamicCompiling)
+            {
+                CompileOnlyIfNewer = true;
+            }
+
+            if (CompileOnlyIfNewer)
+            {
+                if (!compiler.CheckForChanges(outputDependencyFilePath))
                 {
                     Console.Error.WriteLine("Nothing to compile. Output file [{0}] is up-to-date", options.OutputFile);
                     Environment.Exit(0);
@@ -203,7 +211,7 @@ namespace SharpDX.Toolkit.Graphics
             {
                 // Compile the fx file
                 Console.WriteLine("Compile Effect File [{0}]", filePath);
-                compilerResult = EffectCompiler.Compile(File.ReadAllText(filePath), filePath, flags, macros, options.IncludeDirs);
+                compilerResult = compiler.Compile(File.ReadAllText(filePath), filePath, flags, macros, options.IncludeDirs, AllowDynamicCompiling, CompileOnlyIfNewer ? outputDependencyFilePath : null);
 
                 // If there is any warning, errors, turn Error color on
                 if (compilerResult.Logger.Messages.Count > 0)
@@ -235,7 +243,7 @@ namespace SharpDX.Toolkit.Graphics
 
             if (!NoDisassembly && effectData != null)
             {
-                DumpBytecode(effectData);
+                DumpBytecode(compiler, effectData);
             }
 
             if (hasErrors)
@@ -247,17 +255,10 @@ namespace SharpDX.Toolkit.Graphics
             {
                 Console.WriteLine();
 
-                if (CompileOnlyIfNewer && compilerResult.DependencyList != null && compilerResult.DependencyList.Count > 0)
+                if (CompileOnlyIfNewer && compilerResult.DependencyFilePath != null)
                 {
-                    // If output directory doesn't exist, we can create it
-                    if (!Directory.Exists(outputDependencyDirPath))
-                    {
-                        Directory.CreateDirectory(outputDependencyDirPath);
-                    }
-
-                    // Save the dependency file
+                    // Dependency file save to 
                     Console.WriteLine("Save dependency list to [{0}]", outputDependencyFilePath);
-                    compilerResult.DependencyList.Save(outputDependencyFilePath);
                 }
 
                 if (OutputClassFile != null)
@@ -290,7 +291,7 @@ namespace SharpDX.Toolkit.Graphics
             Environment.Exit(-1);
         }
 
-        private void DumpBytecode(EffectData effectData)
+        private void DumpBytecode(EffectCompiler compiler, EffectData effectData)
         {
             Console.WriteLine();
 
@@ -305,7 +306,7 @@ namespace SharpDX.Toolkit.Graphics
                 Console.WriteLine();
                 ResetColor();
 
-                DumpHtmlToConsole(EffectCompiler.DisassembleShader(shader));
+                DumpHtmlToConsole(compiler.DisassembleShader(shader));
                 Console.WriteLine();
             }
 
