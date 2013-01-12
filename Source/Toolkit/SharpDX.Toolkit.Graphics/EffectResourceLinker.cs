@@ -66,8 +66,11 @@ namespace SharpDX.Toolkit.Graphics
         {
             unsafe
             {
-                Utilities.FreeMemory((IntPtr) Pointers);
-                Pointers = (IntPtr*)IntPtr.Zero;
+                if ((IntPtr)Pointers != IntPtr.Zero)
+                {
+                    Utilities.FreeMemory((IntPtr)Pointers);
+                    Pointers = (IntPtr*)IntPtr.Zero;
+                }
             }
         }
 

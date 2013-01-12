@@ -68,7 +68,7 @@ namespace SharpDX.Toolkit.Graphics
             mapItems.Add(string.IsNullOrEmpty(prefixName) ? name : prefixName + "|" + name, item);
         }
 
-        protected void Clear()
+        internal void Clear()
         {
             Items.Clear();
             mapItems.Clear();

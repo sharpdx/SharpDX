@@ -257,6 +257,47 @@ namespace SharpDX.IO
         [DllImport("kernel32.dll", EntryPoint = "SetEndOfFile", SetLastError = true, CharSet = CharSet.Ansi)]
         internal static extern bool SetEndOfFile(IntPtr handle);
 
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct FILETIME
+        {
+            public uint DateTimeLow;
+            public uint DateTimeHigh;
+
+            public DateTime ToDateTime()
+            {
+                return DateTime.FromFileTimeUtc((((long)DateTimeHigh) << 32) | ((uint)DateTimeLow));
+            }
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct WIN32_FILE_ATTRIBUTE_DATA
+        {
+            public uint FileAttributes;
+            public FILETIME CreationTime;
+            public FILETIME LastAccessTime;
+            public FILETIME LastWriteTime;
+            public uint FileSizeHigh;
+            public uint FileSizeLow;
+        }
+
+        [DllImport("kernel32.dll", EntryPoint="GetFileAttributesExW", CharSet = CharSet.Unicode, SetLastError = true)]
+        internal static extern bool GetFileAttributesEx(string name, int fileInfoLevel, out WIN32_FILE_ATTRIBUTE_DATA lpFileInformation);
+
+        /// <summary>
+        /// Gets the last write time access for the specified path.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <returns>The last write time access</returns>
+        public static DateTime GetLastWriteTime(string path)
+        {
+            WIN32_FILE_ATTRIBUTE_DATA data;
+            if (GetFileAttributesEx(path, 0, out data))
+            {
+                return data.LastWriteTime.ToDateTime().ToLocalTime();
+            }
+            return new DateTime(0);
+        }
+
 #if W8CORE
 
         /// <summary>

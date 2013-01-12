@@ -46,14 +46,18 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public readonly EffectParameterCollection Parameters;
 
-        internal readonly EffectResourceLinker ResourceLinker;
+        internal EffectResourceLinker ResourceLinker { get; private set; }
 
         /// <summary>
         ///   Gets a collection of techniques that are defined for this effect.
         /// </summary>
         public readonly EffectTechniqueCollection Techniques;
 
-        private EffectData.Effect rawEffect;
+        /// <summary>
+        /// Gets the data associated to this effect.
+        /// </summary>
+        /// <value>The data.</value>
+        public EffectData.Effect RawEffectData { get; private set; }
 
         /// <summary>
         /// Set to true to force all constant shaders to be shared between other effects within a common <see cref="EffectPool"/>. Default is false.
@@ -94,7 +98,7 @@ namespace SharpDX.Toolkit.Graphics
             ConstantBuffers = new EffectConstantBufferCollection();
             Parameters = new EffectParameterCollection();
             Techniques = new EffectTechniqueCollection();
-            ResourceLinker = ToDispose(new EffectResourceLinker());
+
             Pool = device.DefaultEffectPool;
 
             // Sets the effect name
@@ -103,7 +107,10 @@ namespace SharpDX.Toolkit.Graphics
             // Register the bytecode to the pool
             Pool.RegisterBytecode(effectData);
 
-            Initialize();
+            // Initialize from effect
+            InitializeFrom(Pool.Find(Name));
+            // If everything was fine, then we can register it into the pool
+            Pool.AddEffect(this);
         }
 
         /// <summary>
@@ -129,9 +136,12 @@ namespace SharpDX.Toolkit.Graphics
             ConstantBuffers = new EffectConstantBufferCollection();
             Parameters = new EffectParameterCollection();
             Techniques = new EffectTechniqueCollection();
-            ResourceLinker = ToDispose(new EffectResourceLinker());
             Pool = pool;
-            Initialize();
+
+            // Initialize from effect
+            InitializeFrom(Pool.Find(effectName));
+            // If everything was fine, then we can register it into the pool
+            Pool.AddEffect(this);
         }
 
         /// <summary>
@@ -155,40 +165,54 @@ namespace SharpDX.Toolkit.Graphics
         /// <value>The current technique.</value>
         public EffectTechnique CurrentTechnique { get; set; }
 
-        protected virtual void Initialize()
-        {
-            Initialize(Pool.Find(Name));
-
-            // If everything was fine, then we can register it into the pool
-            Pool.AddEffect(this);
-        }
+        /// <summary>
+        /// The effect is supporting dynamic compilation.
+        /// </summary>
+        public bool IsSupportingDynamicCompilation { get; private set; }
 
         /// <summary>
-        /// Initializes the specified effect bytecode.
+        /// Binds the specified effect data to this instance.
         /// </summary>
-        /// <param name="effectDataArg">The effect bytecode.</param>
-        /// <exception cref="System.InvalidOperationException"></exception>
-        private void Initialize(EffectData.Effect effectDataArg)
+        /// <param name="effectDataArg">The effect data arg.</param>
+        /// <exception cref="System.ArgumentException">effectName</exception>
+        /// <exception cref="System.InvalidOperationException">No techniques found in this effect</exception>
+        public void InitializeFrom(EffectData.Effect effectDataArg)
         {
             if (effectDataArg == null)
                 throw new ArgumentException(string.Format("Unable to find effect [{0}] from the EffectPool", Name), "effectName");
 
-            rawEffect = effectDataArg;
+            if (effectDataArg.Techniques.Count == 0)
+                throw new InvalidOperationException("No techniques found in this effect");
 
-            ShareConstantBuffers = effectDataArg.ShareConstantBuffers;
+            RawEffectData = effectDataArg;
+
+            // Clean any previously allocated resources
+            if (DisposeCollector != null)
+            {
+                DisposeCollector.DisposeAndClear();
+            }
+            ConstantBuffers.Clear();
+            Parameters.Clear();
+            Techniques.Clear();
+            ResourceLinker = ToDispose(new EffectResourceLinker());
+            if (effectConstantBuffersCache != null)
+            {
+                effectConstantBuffersCache.Clear();
+            }
+
+            // Copy data
+            IsSupportingDynamicCompilation = RawEffectData.Arguments != null;
+            ShareConstantBuffers = RawEffectData.ShareConstantBuffers;
 
             // Create the local effect constant buffers cache
             if (!ShareConstantBuffers)
                 effectConstantBuffersCache = new Dictionary<EffectConstantBufferKey, EffectConstantBuffer>();
 
-            if (effectDataArg.Techniques.Count == 0)
-                throw new InvalidOperationException("No techniques found in this effect");
-
             var logger = new Logger();
             int techniqueIndex = 0;
             int totalPassCount = 0;
             EffectPass parentPass = null;
-            foreach (var techniqueRaw in effectDataArg.Techniques)
+            foreach (var techniqueRaw in RawEffectData.Techniques)
             {
                 var name = techniqueRaw.Name;
                 if (string.IsNullOrEmpty(name))
@@ -295,6 +319,13 @@ namespace SharpDX.Toolkit.Graphics
 
             // Setup the first Current Technique.
             CurrentTechnique = this.Techniques[0];
+
+            // Allow subclasses to complete initialization.
+            Initialize();
+        }
+
+        protected virtual void Initialize()
+        {
         }
 
         internal new DisposeCollector DisposeCollector

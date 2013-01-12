@@ -140,6 +140,8 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
 
+            EffectPools = new SharpDX.Collections.ObservableCollection<EffectPool>();
+
             IsDebugMode = (Device.CreationFlags & DeviceCreationFlags.Debug) != 0;
             MainDevice = this;
             Context = Device.ImmediateContext;
@@ -151,7 +153,7 @@ namespace SharpDX.Toolkit.Graphics
             sharedDataPerDevice = new Dictionary<object, object>();
 
             // Create default Effect pool
-            DefaultEffectPool = ToDispose(EffectPool.New(this, "Default"));
+            DefaultEffectPool = EffectPool.New(this, "Default");
 
             // Create all default states
             BlendStates = ToDispose(new BlendStateCollection(this));
@@ -176,6 +178,7 @@ namespace SharpDX.Toolkit.Graphics
             Features = mainDevice.Features;
 
             // Create default Effect pool
+            EffectPools = mainDevice.EffectPools;
             DefaultEffectPool = mainDevice.DefaultEffectPool;
 
             // Copy the Global cache for all input signatures inside a GraphicsDevice.
@@ -228,6 +231,12 @@ namespace SharpDX.Toolkit.Graphics
         /// Gets the adapter associated with this device.
         /// </summary>
         public readonly GraphicsAdapter Adapter;
+
+        /// <summary>
+        /// Gets the effect pools.
+        /// </summary>
+        /// <value>The effect pools.</value>
+        public SharpDX.Collections.ObservableCollection<EffectPool> EffectPools { get; private set; }
 
         /// <summary>
         /// Gets the back buffer sets by the current <see cref="Presenter" /> setup on this device.
@@ -1390,6 +1399,23 @@ namespace SharpDX.Toolkit.Graphics
                 return (T)localValue;
             }
         }
+
+        protected override void Dispose(bool disposeManagedResources)
+        {
+
+            if (disposeManagedResources)
+            {
+                foreach (var effectPool in EffectPools)
+                {
+                    effectPool.Dispose();
+                }
+
+                EffectPools = null;
+            }
+
+            base.Dispose(disposeManagedResources);
+        }
+
 
         /// <summary>
         /// Gets or create an input signature manager for a particular signature.

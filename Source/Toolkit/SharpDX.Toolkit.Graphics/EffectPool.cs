@@ -18,7 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
+using SharpDX.Collections;
 using SharpDX.Direct3D11;
 
 namespace SharpDX.Toolkit.Graphics
@@ -59,8 +63,10 @@ namespace SharpDX.Toolkit.Graphics
             compiledShaders = new List<DeviceChild>();
             registered = new Dictionary<EffectData, bool>(new IdentityEqualityComparer<EffectData>());
             effects = new List<Effect>();
+            RegisteredEffects = new ReadOnlyCollection<Effect>(effects);
             this.graphicsDevice = device.MainDevice;
             constantBufferAllocator = DefaultConstantBufferAllocator;
+            graphicsDevice.EffectPools.Add(this);
         }
 
         /// <summary>
@@ -106,24 +112,22 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Registers a EffectData to this pool.
         /// </summary>
-        /// <param name="datas">The datas to register.</param>
-        public void RegisterBytecode(params EffectData[] datas)
+        /// <param name="data">The effect data to register.</param>
+        /// <param name="allowOverride">if set to <c>true</c> [allow override].</param>
+        public void RegisterBytecode(EffectData data, bool allowOverride = false)
         {
             // Lock the whole EffectPool in case multiple threads would add EffectData at the same time.
             lock (sync)
             {
                 bool hasNewBytecode = false;
-                foreach (var bytecode in datas)
+                if (!registered.ContainsKey(data))
                 {
-                    if (!registered.ContainsKey(bytecode))
-                    {
-                        // Pre-cache all input signatures
-                        CacheInputSignature(bytecode);
+                    // Pre-cache all input signatures
+                    CacheInputSignature(data);
 
-                        dataGroup.MergeFrom(bytecode);
-                        registered.Add(bytecode, true);
-                        hasNewBytecode = true;
-                    }
+                    dataGroup.MergeFrom(data, allowOverride);
+                    registered.Add(data, true);
+                    hasNewBytecode = true;
                 }
 
                 if (hasNewBytecode)
@@ -156,12 +160,19 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        public readonly System.Collections.ObjectModel.ReadOnlyCollection<Effect> RegisteredEffects;
+
+        public event EventHandler<ObservableCollectionEventArgs<Effect>> EffectAdded;
+
+        public event EventHandler<ObservableCollectionEventArgs<Effect>> EffectRemoved;
+
         internal void AddEffect(Effect effect)
         {
             lock (effects)
             {
                 this.effects.Add(effect);
             }
+            OnEffectAdded(new ObservableCollectionEventArgs<Effect>(effect));
         }
 
         internal void RemoveEffect(Effect effect)
@@ -170,6 +181,7 @@ namespace SharpDX.Toolkit.Graphics
             {
                 this.effects.Remove(effect);
             }
+            OnEffectRemoved(new ObservableCollectionEventArgs<Effect>(effect));
         }
 
         internal EffectData.Effect Find(string name)
@@ -264,15 +276,18 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Creates a new effect pool from a specified list of <see cref="EffectData"/>.
+        /// Creates a new effect pool from a specified list of <see cref="EffectData" />.
         /// </summary>
         /// <param name="device">The device.</param>
-        /// <param name="datas">The datas.</param>
-        /// <returns>An instance of <see cref="EffectPool"/>.</returns>
-        public static EffectPool New(GraphicsDevice device, params EffectData[] datas)
+        /// <param name="effectData">The effect data.</param>
+        /// <returns>An instance of <see cref="EffectPool" />.</returns>
+        public static EffectPool New(GraphicsDevice device, EffectData effectData = null)
         {
             var group = new EffectPool(device);
-            group.RegisterBytecode(datas);
+            if (effectData != null)
+            {
+                group.RegisterBytecode(effectData);
+            }
             return group;
         }
 
@@ -281,12 +296,15 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="device">The device.</param>
         /// <param name="name">The name of this effect pool.</param>
-        /// <param name="datas">The datas.</param>
+        /// <param name="effectData">The effect data.</param>
         /// <returns>An instance of <see cref="EffectPool" />.</returns>
-        public static EffectPool New(GraphicsDevice device, string name, params EffectData[] datas)
+        public static EffectPool New(GraphicsDevice device, string name, EffectData effectData = null)
         {
             var group = new EffectPool(device);
-            group.RegisterBytecode(datas);
+            if (effectData != null)
+            {
+                group.RegisterBytecode(effectData);
+            }
             return group;
         }
 
@@ -300,8 +318,23 @@ namespace SharpDX.Toolkit.Graphics
             return Buffer.Constant.New(device, constantBuffer.Size);
         }
 
-        #region Nested type: EffectConstantBufferKey
 
-        #endregion
+        private void OnEffectAdded(ObservableCollectionEventArgs<Effect> e)
+        {
+            EventHandler<ObservableCollectionEventArgs<Effect>> handler = EffectAdded;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
+        private void OnEffectRemoved(ObservableCollectionEventArgs<Effect> e)
+        {
+            EventHandler<ObservableCollectionEventArgs<Effect>> handler = EffectRemoved;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
     }
 }

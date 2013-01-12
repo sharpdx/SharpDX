@@ -19,6 +19,10 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AssemblyDoc.cs" />
+    <Compile Include="EffectCompilerSystem.Default.cs" />
+    <Compile Include="EffectCompilerEventArgs.cs" />
+    <Compile Include="EffectCompilerSystem.Desktop.cs" />
+    <Compile Include="EffectCompilerSystem.cs" />
     <Compile Include="GameWindowRenderer.cs" />
     <Compile Include="IGamePlatform.cs" />
     <Compile Include="IContentable.cs" />
@@ -65,6 +69,10 @@
     <ProjectReference Include="..\SharpDX.Toolkit.Graphics\SharpDX.Toolkit.Graphics.csproj">
       <Project>{53ef08a7-4224-434c-a62c-f29807c1c750}</Project>
       <Name>SharpDX.Toolkit.Graphics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpDX.Toolkit.Compiler\SharpDX.Toolkit.Compiler.csproj" Condition=" '$(SharpDXWin8Core)' == 'false'">
+      <Project>{8BFFF9D1-84EC-4FBA-9BEB-710ECF1857A8}</Project>
+      <Name>SharpDX.Toolkit.Compiler</Name>
     </ProjectReference>
     <ProjectReference Include="..\SharpDX.Toolkit\SharpDX.Toolkit.csproj">
       <Project>{9ff0707c-75bb-4984-a01f-b9eaad293f6c}</Project>

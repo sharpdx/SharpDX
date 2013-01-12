@@ -40,29 +40,43 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Disposes all object collected by this class and clear the list. The collector can still be used for collecting.
+        /// </summary>
+        /// <remarks>
+        /// To completely dispose this instance and avoid further dispose, use <see cref="Dispose"/> method instead.
+        /// </remarks>
+        public void DisposeAndClear()
+        {
+            if (disposables == null)
+            {
+                return;
+            }
+
+            for (int i = disposables.Count - 1; i >= 0; i--)
+            {
+                var valueToDispose = disposables[i];
+                if (valueToDispose is IDisposable)
+                {
+                    ((IDisposable)valueToDispose).Dispose();
+                }
+                else
+                {
+                    Utilities.FreeMemory((IntPtr)valueToDispose);
+                }
+
+                disposables.RemoveAt(i);
+            }
+            disposables.Clear();
+        }
+
+        /// <summary>
         /// Disposes of object resources.
         /// </summary>
         /// <param name="disposeManagedResources">If true, managed resources should be
         /// disposed of in addition to unmanaged resources.</param>
         protected override void Dispose(bool disposeManagedResources)
         {
-            // Dispose all ComObjects
-            if (disposables != null)
-            {
-                for (int i = disposables.Count - 1; i >= 0; i--)
-                {
-                    var valueToDispose = disposables[i];
-                    if (valueToDispose is IDisposable)
-                    {
-                        ((IDisposable) valueToDispose).Dispose();
-                    }
-                    else
-                    {
-                        Utilities.FreeMemory((IntPtr) valueToDispose);
-                    }
-                    Remove(valueToDispose);
-                }
-            }
+            DisposeAndClear();
             disposables = null;
         }
 

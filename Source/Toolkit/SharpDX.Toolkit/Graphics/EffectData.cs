@@ -99,50 +99,64 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Merges an existing <see cref="EffectData"/> into this instance.
+        /// Merges an existing <see cref="EffectData" /> into this instance.
         /// </summary>
         /// <param name="source">The EffectData to merge.</param>
+        /// <param name="allowOverride">if set to <c>true</c> [allow override].</param>
+        /// <exception cref="System.InvalidOperationException"></exception>
         /// <exception cref="InvalidOperationException">If the merge failed.</exception>
-        /// <remarks>
-        /// This method is useful to build an archive of several effects.
-        /// </remarks>
-        public void MergeFrom(EffectData source)
+        /// <remarks>This method is useful to build an archive of several effects.</remarks>
+        public void MergeFrom(EffectData source, bool allowOverride = false)
         {
             var logger = new Logger();
-            if (!MergeFrom(source, logger))
+            if (!MergeFrom(source, logger, allowOverride))
                 throw new InvalidOperationException(Utilities.Join("\r\n",logger.Messages));
         }
 
         /// <summary>
-        /// Merges an existing <see cref="EffectData"/> into this instance.
+        /// Merges an existing <see cref="EffectData" /> into this instance.
         /// </summary>
         /// <param name="source">The EffectData to merge.</param>
         /// <param name="logger">Logger used to report merging errors.</param>
-        /// <remarks>
-        /// This method is useful to build an archive of several effects.
-        /// </remarks>
-        public bool MergeFrom(EffectData source, Logger logger)
+        /// <param name="allowOverride">if set to <c>true</c> [allow override].</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise</returns>
+        /// <remarks>This method is useful to build an archive of several effects.</remarks>
+        public bool MergeFrom(EffectData source, Logger logger, bool allowOverride = false)
         {
             bool isMergeOk = true;
 
             foreach (var effect in source.Effects)
             {
-                bool skipEffect = false;
+                bool effectAlreadyRegistered = false;
 
                 // Add effect that is not already in the archive with this same name.
-                foreach (var effect2 in Effects)
+                int previousEffectIndex = 0;
+                for (; previousEffectIndex < Effects.Count; previousEffectIndex++)
                 {
+                    var effect2 = Effects[previousEffectIndex];
                     if (effect2.Name == effect.Name)
                     {
-                        skipEffect = true;
+                        effectAlreadyRegistered = true;
                         break;
                     }
                 }
 
-                if (skipEffect)
-                    continue;
-                
-                Effects.Add(effect);
+                if (effectAlreadyRegistered)
+                {
+                    if (allowOverride)
+                    {
+                        Effects[previousEffectIndex] = effect;
+                    }
+                    else
+                    {
+                        // Skip the effect it it is already registered
+                        continue;
+                    }
+                }
+                else
+                {
+                    Effects.Add(effect);
+                }
 
                 foreach (var technique in effect.Techniques)
                 {

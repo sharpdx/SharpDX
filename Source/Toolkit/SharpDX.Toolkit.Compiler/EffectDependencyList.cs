@@ -21,7 +21,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Text.RegularExpressions;
 
 using SharpDX.IO;
@@ -90,7 +89,7 @@ namespace SharpDX.Toolkit.Graphics
 
             var filePath = typeof(EffectDependencyList).Assembly.Location;
             Remove(filePath);
-            Add(filePath, File.GetLastWriteTime(filePath));
+            Add(filePath, NativeFile.GetLastWriteTime(filePath));
 
             using (var stream = new NativeFileStream(file, NativeFileMode.Create, NativeFileAccess.Write)) Save(stream);
         }
@@ -114,7 +113,7 @@ namespace SharpDX.Toolkit.Graphics
                     return true;
                 }
 
-                var fileTime = File.GetLastWriteTime(fileItem.Key);
+                var fileTime = NativeFile.GetLastWriteTime(fileItem.Key);
 
                 if (fileItem.Value != fileTime)
                 {

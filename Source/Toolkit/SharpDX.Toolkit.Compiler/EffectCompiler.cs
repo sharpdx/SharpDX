@@ -32,6 +32,16 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public class EffectCompiler : IEffectCompiler
     {
+        public List<string> LoadDependency(string dependencyFilePath)
+        {
+            // If the file does not exist, than return true as it is a new dependency to generate
+            if (!File.Exists(dependencyFilePath))
+            {
+                return new List<string>();
+            }
+            return new List<string>(EffectDependencyList.FromFile(dependencyFilePath).Keys);
+        }
+
         /// <summary>
         /// Checks for changes from a dependency file.
         /// </summary>
