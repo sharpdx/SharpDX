@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+
 using SharpDX.Multimedia;
 
 namespace SharpDX.X3DAudio
@@ -35,7 +37,11 @@ namespace SharpDX.X3DAudio
         /// Initializes a new instance of the <see cref="X3DAudio"/> class.
         /// </summary>
         /// <param name="speakers">The speakers config.</param>
-        public X3DAudio(Speakers speakers) : this(speakers, SpeedOfSound)
+        /// <msdn-id>microsoft.directx_sdk.x3daudio.x3daudioinitialize</msdn-id>	
+        /// <unmanaged>void X3DAudioInitialize([In] SPEAKER_FLAGS SpeakerChannelMask,[In] float SpeedOfSound,[Out] X3DAUDIOHANDLE* Instance)</unmanaged>	
+        /// <unmanaged-short>X3DAudioInitialize</unmanaged-short>	
+        public X3DAudio(Speakers speakers)
+            : this(speakers, SpeedOfSound)
         {
         }
 
@@ -44,6 +50,9 @@ namespace SharpDX.X3DAudio
         /// </summary>
         /// <param name="speakers">The speakers config.</param>
         /// <param name="speedOfSound">The speed of sound.</param>
+        /// <msdn-id>microsoft.directx_sdk.x3daudio.x3daudioinitialize</msdn-id>	
+        /// <unmanaged>void X3DAudioInitialize([In] SPEAKER_FLAGS SpeakerChannelMask,[In] float SpeedOfSound,[Out] X3DAUDIOHANDLE* Instance)</unmanaged>	
+        /// <unmanaged-short>X3DAudioInitialize</unmanaged-short>	
         public X3DAudio(Speakers speakers, float speedOfSound)
         {
             X3DAudioInitialize(speakers, speedOfSound, out handle);
@@ -58,17 +67,45 @@ namespace SharpDX.X3DAudio
         /// <param name="sourceChannelCount">The source channel count.</param>
         /// <param name="destinationChannelCount">The destination channel count.</param>
         /// <returns>Dsp settings</returns>
+        /// <msdn-id>ee419052</msdn-id>	
+        /// <unmanaged>void X3DAudioCalculate([In] const X3DAUDIOHANDLE* Instance,[In] const X3DAUDIO_LISTENER* pListener,[In] const X3DAUDIO_EMITTER* pEmitter,[In] X3DAudioCalculateFlags Flags,[In] void* pDSPSettings)</unmanaged>	
+        /// <unmanaged-short>X3DAudioCalculate</unmanaged-short>	
         public DspSettings Calculate(Listener listener, Emitter emitter, CalculateFlags flags, int sourceChannelCount, int destinationChannelCount)
         {
-            var settings = new DspSettings
-            {
-                SourceChannelCount = sourceChannelCount,
-                DestinationChannelCount = destinationChannelCount
-            };
-
-            X3DAudioCalculate(ref handle, listener, emitter, flags, settings);
-
+            var settings = new DspSettings(sourceChannelCount, destinationChannelCount);
+            Calculate(listener, emitter, flags, settings);
             return settings;
+        }
+
+        /// <summary>
+        /// Calculates dsp settings for the specified listener and emitter. See remarks.
+        /// </summary>
+        /// <param name="listener">The listener.</param>
+        /// <param name="emitter">The emitter.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="settings">The settings.</param>
+        /// <remarks>The source and destination channel count must be set on <see cref="DspSettings" /> before calling this method.</remarks>
+        /// <msdn-id>ee419052</msdn-id>	
+        /// <unmanaged>void X3DAudioCalculate([In] const X3DAUDIOHANDLE* Instance,[In] const X3DAUDIO_LISTENER* pListener,[In] const X3DAUDIO_EMITTER* pEmitter,[In] X3DAudioCalculateFlags Flags,[In] void* pDSPSettings)</unmanaged>	
+        /// <unmanaged-short>X3DAudioCalculate</unmanaged-short>	
+        public unsafe void Calculate(Listener listener, Emitter emitter, CalculateFlags flags, DspSettings settings)
+        {
+            if (settings == null) throw new ArgumentNullException("settings");
+
+            DspSettings.__Native settingsNative;
+            settingsNative.SrcChannelCount = settings.SourceChannelCount;
+            settingsNative.DstChannelCount = settings.DestinationChannelCount;
+
+            fixed (void* pMatrix = settings.MatrixCoefficients)
+            fixed (void* pDelays = settings.DelayTimes)
+            {
+                settingsNative.MatrixCoefficientsPointer = (IntPtr)pMatrix;
+                settingsNative.DelayTimesPointer = (IntPtr)pDelays;
+                
+                X3DAudioCalculate(ref handle, listener, emitter, flags, new IntPtr(&settingsNative));
+            }
+
+            settings.__MarshalFrom(ref settingsNative);
         }
     }
 }

@@ -8,11 +8,31 @@ namespace SharpDX.X3DAudio
     /// </summary>	
     /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='X3DAUDIO_DSP_SETTINGS']/*"/>	
     /// <unmanaged>X3DAUDIO_DSP_SETTINGS</unmanaged>	
-    public  partial class DspSettings
+    public partial class DspSettings
     {
-        public float[] MatrixCoefficients;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DspSettings" /> class.
+        /// </summary>
+        /// <param name="sourceChannelCount">The source channel count.</param>
+        /// <param name="destinationChannelCount">The destination channel count.</param>
+        public DspSettings(int sourceChannelCount, int destinationChannelCount)
+        {
+            SourceChannelCount = sourceChannelCount;
+            DestinationChannelCount = destinationChannelCount;
 
-        public float[] DelayTimes;
+            MatrixCoefficients = new float[sourceChannelCount * destinationChannelCount];
+            DelayTimes = new float[destinationChannelCount];
+        }
+
+        /// <summary>
+        /// The matrix coefficients
+        /// </summary>
+        public readonly float[] MatrixCoefficients;
+
+        /// <summary>
+        /// The delay times
+        /// </summary>
+        public readonly float[] DelayTimes;
 
         // Internal native struct used for marshalling
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -30,38 +50,11 @@ namespace SharpDX.X3DAudio
             public float EmitterToListenerDistance;
             public float EmitterVelocityComponent;
             public float ListenerVelocityComponent;
-            // Method to free unmanaged allocation
-            internal unsafe void __MarshalFree()
-            {
-                if (MatrixCoefficientsPointer != IntPtr.Zero)
-                    Marshal.FreeHGlobal(MatrixCoefficientsPointer);
-                if (DelayTimesPointer != IntPtr.Zero)
-                    Marshal.FreeHGlobal(DelayTimesPointer);
-            }
-        }
-
-        // Method to free unmanaged allocation
-        internal unsafe void __MarshalFree(ref __Native @ref)
-        {
-            @ref.__MarshalFree();
         }
 
         // Method to marshal from native to managed struct
         internal unsafe void __MarshalFrom(ref __Native @ref)
         {
-            //this.MatrixCoefficientsPointer = @ref.MatrixCoefficientsPointer;
-            //this.DelayTimesPointer = @ref.DelayTimesPointer;
-
-            MatrixCoefficients = new float[@ref.SrcChannelCount * @ref.DstChannelCount];
-            if (MatrixCoefficients.Length > 0)
-                Utilities.Read(@ref.MatrixCoefficientsPointer, MatrixCoefficients, 0, MatrixCoefficients.Length);
-
-            DelayTimes = new float[@ref.DstChannelCount];
-            if (DelayTimes.Length > 0)
-                Utilities.Read(@ref.DelayTimesPointer, DelayTimes, 0, DelayTimes.Length);
-
-            this.SourceChannelCount = @ref.SrcChannelCount;
-            this.DestinationChannelCount = @ref.DstChannelCount;
             this.LpfDirectCoefficient = @ref.LPFDirectCoefficient;
             this.LpfReverbCoefficient = @ref.LPFReverbCoefficient;
             this.ReverbLevel = @ref.ReverbLevel;
@@ -70,30 +63,6 @@ namespace SharpDX.X3DAudio
             this.EmitterToListenerDistance = @ref.EmitterToListenerDistance;
             this.EmitterVelocityComponent = @ref.EmitterVelocityComponent;
             this.ListenerVelocityComponent = @ref.ListenerVelocityComponent;
-        }
-
-        // Method to marshal from managed struct tot native
-        internal unsafe void __MarshalTo(ref __Native @ref)
-        {
-            int size = SourceChannelCount * DestinationChannelCount * sizeof(float);
-            @ref.MatrixCoefficientsPointer = Marshal.AllocHGlobal(size);
-            Utilities.ClearMemory(@ref.MatrixCoefficientsPointer, 0, size);
-
-            size = DestinationChannelCount * sizeof(float);
-            @ref.DelayTimesPointer = Marshal.AllocHGlobal(size);
-            Utilities.ClearMemory(@ref.DelayTimesPointer, 0, size);
-
-            @ref.SrcChannelCount = this.SourceChannelCount;
-            @ref.DstChannelCount = this.DestinationChannelCount;
-            @ref.LPFDirectCoefficient = this.LpfDirectCoefficient;
-            @ref.LPFReverbCoefficient = this.LpfReverbCoefficient;
-            @ref.ReverbLevel = this.ReverbLevel;
-            @ref.DopplerFactor = this.DopplerFactor;
-            @ref.EmitterToListenerAngle = this.EmitterToListenerAngle;
-            @ref.EmitterToListenerDistance = this.EmitterToListenerDistance;
-            @ref.EmitterVelocityComponent = this.EmitterVelocityComponent;
-            @ref.ListenerVelocityComponent = this.ListenerVelocityComponent;
-
         }
     }
 }

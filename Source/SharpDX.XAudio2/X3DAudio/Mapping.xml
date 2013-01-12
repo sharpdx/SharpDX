@@ -86,8 +86,8 @@
     <map struct="X3DAUDIO_LISTENER" native="true" struct-to-class="true" marshal="true"/>
 
     <map struct="X3DAUDIO_DSP_SETTINGS" native="true" struct-to-class="true" marshal="true"/>
-    <map field="SrcChannelCount" name="SourceChannelCount"/>
-    <map field="DstChannelCount" name="DestinationChannelCount"/>
+    <map field="SrcChannelCount" name="SourceChannelCount" visibility="public readonly"/>
+    <map field="DstChannelCount" name="DestinationChannelCount" visibility="public readonly"/>
 
     <map field=".*::LFE(.*)" name="Lfe$1"/>
     <map field=".*::LPF(.*)" name="Lpf$1"/>
@@ -101,7 +101,8 @@
     <map param="X3DAudioInitialize::SpeakerChannelMask" type="SPEAKER_FLAGS"/>    
     <map param="X3DAudioCalculate::Instance" attribute="in" type="X3DAUDIOHANDLE"/>
     <map param="X3DAudioCalculate::Flags" type="X3DAudioCalculateFlags"/>
-    
+    <map param="X3DAudioCalculate::pDSPSettings" type="void" attribute="in"/>
+
     <context-clear />
   </mapping>
 </config>
