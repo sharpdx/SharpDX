@@ -82,9 +82,9 @@ namespace SharpDX.Toolkit.Input
         /// </summary>
         /// <param name="nativeWindow">A reference to <see cref="CoreWindow"/> or <see cref="UIElement"/> class.</param>
         /// <returns>The location of mouse cursor</returns>
-        protected override Point GetLocationInternal(object nativeWindow)
+        protected override DrawingPoint GetLocationInternal(object nativeWindow)
         {
-            return new Point(pointerX, pointerY);
+            return new DrawingPoint(pointerX, pointerY);
         }
 
         /// <summary>

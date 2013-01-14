@@ -36,7 +36,6 @@
     <Compile Include="MouseButton.cs" />
     <Compile Include="MouseManager.cs" />
     <Compile Include="MouseState.cs" />
-    <Compile Include="Point.cs" />
     <Compile Include="PointerDeviceType.cs" />
     <Compile Include="PointerManager.cs" />
     <Compile Include="PointerPlatform.cs" />
