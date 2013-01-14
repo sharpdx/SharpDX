@@ -206,6 +206,8 @@
     <map param="D3DGetTraceInstructionOffsets::pTotalInsts" attribute="out"/>
     <map param="D3DCompile2::SecondaryDataFlags" type="D3DCOMPILE_SECDATA_FLAGS"/>
 
+    <map function="D3DCompile.*" check="false"/>
+    
     <context-clear />
   </mapping>
 </config>

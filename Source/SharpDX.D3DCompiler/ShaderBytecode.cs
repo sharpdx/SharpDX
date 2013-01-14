@@ -589,8 +589,46 @@ namespace SharpDX.D3DCompiler
             {
                 throw new FileNotFoundException("Could not open the shader or effect file.", fileName);
             }
-            return Compile(File.ReadAllText(fileName), entryPoint, profile, shaderFlags, effectFlags,
-                           PrepareMacros(defines), include, fileName);
+
+            unsafe
+            {
+                var resultCode = Result.Ok;
+
+                Blob blobForCode = null;
+                Blob blobForErrors = null;
+
+#if DIRECTX11_1
+                resultCode = D3D.CompileFromFile(
+                    fileName,
+                    PrepareMacros(defines),
+                    IncludeShadow.ToIntPtr(include),
+                    entryPoint,
+                    profile,
+                    shaderFlags,
+                    effectFlags,
+                    out blobForCode,
+                    out blobForErrors);
+
+                if (resultCode.Failure)
+                {
+                    if (blobForErrors != null)
+                    {
+                        if (Configuration.ThrowOnShaderCompileError) throw new CompilationException(resultCode, Utilities.BlobToString(blobForErrors));
+                    }
+                    else
+                    {
+                        throw new SharpDXException(resultCode);
+                    }
+                }
+
+                return new CompilationResult(blobForCode != null ? new ShaderBytecode(blobForCode) : null, resultCode, Utilities.BlobToString(blobForErrors));
+#else
+                return Compile(File.ReadAllText(fileName), entryPoint, profile, shaderFlags, effectFlags,
+                                PrepareMacros(defines), include, fileName);
+#endif
+            }
+
+
         }
 
 
@@ -619,54 +657,50 @@ namespace SharpDX.D3DCompiler
                 Blob blobForCode = null;
                 Blob blobForErrors = null;
 
-                try
-                {
 #if !DIRECTX11_1
-                    if ((shaderFlags & Effect10) != 0)
-                    {
-                        shaderFlags ^= Effect10;
+                if ((shaderFlags & Effect10) != 0)
+                {
+                    shaderFlags ^= Effect10;
 
-                        fixed (void* pData = &shaderSource[0])
-                            D3D.CompileEffect10FromMemory(
-                                (IntPtr)pData,
-                                shaderSource.Length,
-                                sourceFileName,
-                                PrepareMacros(defines),
-                                IncludeShadow.ToIntPtr(include),
-                                shaderFlags,
-                                effectFlags,
-                                out blobForCode,
-                                out blobForErrors);
-                    }
-                    else
-#endif
-                    {
-                        fixed (void* pData = &shaderSource[0])
-                            D3D.Compile(
-                                (IntPtr)pData,
-                                shaderSource.Length,
-                                sourceFileName,
-                                PrepareMacros(defines),
-                                IncludeShadow.ToIntPtr(include),
-                                entryPoint,
-                                profile,
-                                shaderFlags,
-                                effectFlags,
-                                out blobForCode,
-                                out blobForErrors);
-                    }
+                    fixed (void* pData = &shaderSource[0])
+                        resultCode = D3D.CompileEffect10FromMemory(
+                            (IntPtr)pData,
+                            shaderSource.Length,
+                            sourceFileName,
+                            PrepareMacros(defines),
+                            IncludeShadow.ToIntPtr(include),
+                            shaderFlags,
+                            effectFlags,
+                            out blobForCode,
+                            out blobForErrors);
                 }
-                catch (SharpDXException ex)
+                else
+#endif
+                {
+                    fixed (void* pData = &shaderSource[0])
+                        resultCode = D3D.Compile(
+                            (IntPtr)pData,
+                            shaderSource.Length,
+                            sourceFileName,
+                            PrepareMacros(defines),
+                            IncludeShadow.ToIntPtr(include),
+                            entryPoint,
+                            profile,
+                            shaderFlags,
+                            effectFlags,
+                            out blobForCode,
+                            out blobForErrors);
+                }
+
+                if (resultCode.Failure)
                 {
                     if (blobForErrors != null)
                     {
-                        resultCode = ex.ResultCode;
-                        if (Configuration.ThrowOnShaderCompileError)
-                            throw new CompilationException(ex.ResultCode, Utilities.BlobToString(blobForErrors));
+                        if (Configuration.ThrowOnShaderCompileError) throw new CompilationException(resultCode, Utilities.BlobToString(blobForErrors));
                     }
                     else
                     {
-                        throw;
+                        throw new SharpDXException(resultCode);
                     }
                 }
 
