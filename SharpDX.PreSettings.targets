@@ -23,7 +23,6 @@
     <SharpDXWin8>false</SharpDXWin8>
     <SharpDXWP8>false</SharpDXWP8>
     <DirectX11_1>false</DirectX11_1>
-    
   </PropertyGroup>
   
   <!--
@@ -34,18 +33,23 @@
   
   <!--.NET 2.0 - Desktop-->
   <PropertyGroup Condition=" '$(Configuration)' == 'Net20Debug' Or '$(Configuration)' == 'Net20Release'">
+    <OutputPath>$(SolutionDir)\Bin\Standard-net20\</OutputPath>
+    <OutputPath Condition=" '$(SharpDXSign)' == 'true'">$(SolutionDir)\Bin\Signed-net20\</OutputPath>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <TargetFrameworkProfile></TargetFrameworkProfile>
   </PropertyGroup>
   
   <!--.NET 4.0 - Desktop-->
   <PropertyGroup Condition=" '$(Configuration)' == 'Net40Debug' Or '$(Configuration)' == 'Net40Release'">
+    <OutputPath>$(SolutionDir)\Bin\Standard-net40\</OutputPath>
+    <OutputPath Condition=" '$(SharpDXSign)' == 'true'">$(SolutionDir)\Bin\Signed-net40\</OutputPath>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   
   <!--.NET 4.0 - DirectX11.1 - Windows 8 Desktop-->
   <PropertyGroup Condition=" '$(Configuration)' == 'DIRECTX11_1Debug' Or '$(Configuration)' == 'DIRECTX11_1Release'">
+    <OutputPath>$(SolutionDir)\Bin\Win8Desktop-net40\</OutputPath>
     <DirectX11_1>true</DirectX11_1>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
@@ -53,6 +57,8 @@
   
   <!--.NET 4.5 - DirectX11.1 - Windows 8 Metro-->
   <PropertyGroup Condition=" '$(Configuration)' == 'Win8Debug' Or '$(Configuration)' == 'Win8Release'  ">
+    <OutputPath>$(SolutionDir)\Bin\Standard-winrt\</OutputPath>
+    <OutputPath Condition=" '$(SharpDXSign)' == 'true'">$(SolutionDir)\Bin\Signed-winrt\</OutputPath>
     <SharpDXWin8>true</SharpDXWin8>
     <SharpDXWin8Core>true</SharpDXWin8Core>
     <DirectX11_1>true</DirectX11_1>
@@ -64,6 +70,7 @@
   
   <!--.NET Windows Phone - DirectX11.1 - Windows Phone 8-->
   <PropertyGroup Condition=" '$(Configuration)' == 'WP8Debug' Or '$(Configuration)' == 'WP8Release'  ">
+    <OutputPath>$(SolutionDir)\Bin\Standard-wp8-$(Platform)\</OutputPath>
     <SharpDXWin8Core>true</SharpDXWin8Core>
     <SharpDXWP8>true</SharpDXWP8>
     <DirectX11_1>true</DirectX11_1>
@@ -86,7 +93,6 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>pdbonly</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Net20Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;WinFormsInterop</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -96,7 +102,6 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Net20Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Net20Release</OutputPath>
     <DefineConstants>TRACE;WinFormsInterop</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -111,7 +116,6 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>pdbonly</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Net40Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;WinFormsInterop;NET35Plus</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -121,7 +125,6 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Net40Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Net40Release</OutputPath>
     <DefineConstants>TRACE;WinFormsInterop;NET35Plus</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -136,7 +139,6 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>pdbonly</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\DIRECTX11_1Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;DIRECTX11_1;WinFormsInterop;NET35Plus</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -146,7 +148,6 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DIRECTX11_1Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\DIRECTX11_1Release</OutputPath>
     <DefineConstants>TRACE;DIRECTX11_1;WinFormsInterop;NET35Plus</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -159,7 +160,6 @@
   <!--.NET 4.5 - DirectX11.1 - Windows 8 Metro-->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Win8Debug\</OutputPath>
    <DefineConstants>TRACE;DEBUG;WIN8METRO;W8CORE;NETFX_CORE;DIRECTX11_1;NET35Plus</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>
@@ -172,7 +172,6 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Release|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Win8Release</OutputPath>
     <DefineConstants>TRACE;WIN8METRO;W8CORE;NET35Plus;DIRECTX11_1;NET35Plus</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Optimize>true</Optimize>
@@ -186,7 +185,6 @@
   <!--.NET Windows Phone - DirectX11.1 - Windows Phone 8-->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\WP8Debug</OutputPath>
     <DefineConstants>TRACE;DEBUG;WP8;W8CORE;DIRECTX11_1;SILVERLIGHT;WINDOWS_PHONE;NET35Plus</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
@@ -202,7 +200,6 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Release|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\WP8Release</OutputPath>
     <DefineConstants>TRACE;WP8;W8CORE;DIRECTX11_1;SILVERLIGHT;WINDOWS_PHONE;NET35Plus</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
@@ -217,7 +214,6 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\WP8Debug-x86\</OutputPath>
     <DefineConstants>TRACE;DEBUG;WP8;W8CORE;DIRECTX11_1;SILVERLIGHT;WINDOWS_PHONE;NET35Plus</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
@@ -232,7 +228,6 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Release|x86'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\WP8Release-x86\</OutputPath>
     <DefineConstants>TRACE;WP8;W8CORE;DIRECTX11_1;SILVERLIGHT;WINDOWS_PHONE;NET35Plus</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
@@ -246,7 +241,6 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\WP8Debug-ARM\</OutputPath>
     <DefineConstants>TRACE;DEBUG;WP8;W8CORE;DIRECTX11_1;SILVERLIGHT;WINDOWS_PHONE;NET35Plus</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
@@ -261,7 +255,6 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Release|ARM'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\WP8Release-ARM\</OutputPath>
     <DefineConstants>TRACE;WP8;W8CORE;DIRECTX11_1;SILVERLIGHT;WINDOWS_PHONE;NET35Plus</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
