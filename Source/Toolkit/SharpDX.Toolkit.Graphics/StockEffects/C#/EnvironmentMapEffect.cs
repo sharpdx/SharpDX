@@ -401,8 +401,6 @@ namespace SharpDX.Toolkit.Graphics
 
         #region Methods
 
-        private const string EnvironmentMapEffectName = "Toolkit::EnvironmentMapEffect";
-
         /// <summary>
         /// Creates a new EnvironmentMapEffect with default parameter settings.
         /// </summary>
@@ -414,7 +412,7 @@ namespace SharpDX.Toolkit.Graphics
         /// Creates a new EnvironmentMapEffect with default parameter settings from a specified <see cref="EffectPool"/>.
         /// </summary>
         public EnvironmentMapEffect(GraphicsDevice device, EffectPool pool)
-            : base(device, pool, EnvironmentMapEffectName)
+            : base(device, effectBytecode, pool)
         {
             CacheEffectParameters(null);
 

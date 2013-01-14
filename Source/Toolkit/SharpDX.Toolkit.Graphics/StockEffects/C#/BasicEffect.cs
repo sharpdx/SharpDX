@@ -438,8 +438,6 @@ namespace SharpDX.Toolkit.Graphics
 
         #region Methods
 
-        private const string BasicEffectName = "Toolkit::BasicEffect";
-
         /// <summary>
         /// Initializes a new instance of the <see cref="BasicEffect" /> class.
         /// </summary>
@@ -454,10 +452,8 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="device">The device.</param>
         /// <param name="pool">The pool.</param>
         public BasicEffect(GraphicsDevice device, EffectPool pool)
-            : base(device, pool, BasicEffectName)
+            : base(device, effectBytecode, pool)
         {
-            CacheEffectParameters(null);
-
             DirectionalLight0.Enabled = true;
 
             SpecularColor = Vector3.One;
@@ -466,8 +462,32 @@ namespace SharpDX.Toolkit.Graphics
 
         protected override void Initialize()
         {
-            Pool.RegisterBytecode(effectBytecode);
-            base.Initialize();
+            textureParam = Parameters["Texture"];
+            samplerParam = Parameters["TextureSampler"];
+            diffuseColorParam = Parameters["DiffuseColor"];
+            emissiveColorParam = Parameters["EmissiveColor"];
+            specularColorParam = Parameters["SpecularColor"];
+            specularPowerParam = Parameters["SpecularPower"];
+            eyePositionParam = Parameters["EyePosition"];
+            fogColorParam = Parameters["FogColor"];
+            fogVectorParam = Parameters["FogVector"];
+            worldParam = Parameters["World"];
+            worldInverseTransposeParam = Parameters["WorldInverseTranspose"];
+            worldViewProjParam = Parameters["WorldViewProj"];
+
+            light0 = new DirectionalLight(Parameters["DirLight0Direction"],
+                                          Parameters["DirLight0DiffuseColor"],
+                                          Parameters["DirLight0SpecularColor"], null);
+
+            light1 = new DirectionalLight(Parameters["DirLight1Direction"],
+                                          Parameters["DirLight1DiffuseColor"],
+                                          Parameters["DirLight1SpecularColor"], null);
+
+            light2 = new DirectionalLight(Parameters["DirLight2Direction"],
+                                          Parameters["DirLight2DiffuseColor"],
+                                          Parameters["DirLight2SpecularColor"], null);
+
+            samplerParam.SetResource(GraphicsDevice.SamplerStates.Default);
         }
 
         ///// <summary>
@@ -516,44 +536,6 @@ namespace SharpDX.Toolkit.Graphics
 
             AmbientLightColor = EffectHelpers.EnableDefaultLighting(light0, light1, light2);
         }
-
-
-        /// <summary>
-        /// Looks up shortcut references to our effect parameters.
-        /// </summary>
-        void CacheEffectParameters(BasicEffect cloneSource)
-        {
-            textureParam                = Parameters["Texture"];
-            samplerParam                = Parameters["TextureSampler"];
-            diffuseColorParam = Parameters["DiffuseColor"];
-            emissiveColorParam          = Parameters["EmissiveColor"];
-            specularColorParam          = Parameters["SpecularColor"];
-            specularPowerParam          = Parameters["SpecularPower"];
-            eyePositionParam            = Parameters["EyePosition"];
-            fogColorParam               = Parameters["FogColor"];
-            fogVectorParam              = Parameters["FogVector"];
-            worldParam                  = Parameters["World"];
-            worldInverseTransposeParam  = Parameters["WorldInverseTranspose"];
-            worldViewProjParam          = Parameters["WorldViewProj"];
-
-            light0 = new DirectionalLight(Parameters["DirLight0Direction"],
-                                          Parameters["DirLight0DiffuseColor"],
-                                          Parameters["DirLight0SpecularColor"],
-                                          (cloneSource != null) ? cloneSource.light0 : null);
-
-            light1 = new DirectionalLight(Parameters["DirLight1Direction"],
-                                          Parameters["DirLight1DiffuseColor"],
-                                          Parameters["DirLight1SpecularColor"],
-                                          (cloneSource != null) ? cloneSource.light1 : null);
-
-            light2 = new DirectionalLight(Parameters["DirLight2Direction"],
-                                          Parameters["DirLight2DiffuseColor"],
-                                          Parameters["DirLight2SpecularColor"],
-                                          (cloneSource != null) ? cloneSource.light2 : null);
-
-            samplerParam.SetResource(GraphicsDevice.SamplerStates.Default);
-        }
-
 
         /// <summary>
         /// Lazily computes derived parameter values immediately before applying the effect.

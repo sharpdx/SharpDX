@@ -295,9 +295,6 @@ namespace SharpDX.Toolkit.Graphics
 
         #region Methods
 
-
-        private const string DualTextureEffectName = "Toolkit::DualTextureEffect";
-
         /// <summary>
         /// Creates a new DualTextureEffect with default parameter settings.
         /// </summary>
@@ -309,15 +306,18 @@ namespace SharpDX.Toolkit.Graphics
         /// Creates a new DualTextureEffect with default parameter settings from a specified <see cref="EffectPool"/>.
         /// </summary>
         public DualTextureEffect(GraphicsDevice device, EffectPool pool)
-            : base(device, pool, DualTextureEffectName)
+            : base(device, effectBytecode, pool)
         {
-            CacheEffectParameters();
         }
 
         protected override void Initialize()
         {
-            Pool.RegisterBytecode(effectBytecode);
-            base.Initialize();
+            textureParam = Parameters["Texture"];
+            texture2Param = Parameters["Texture2"];
+            diffuseColorParam = Parameters["DiffuseColor"];
+            fogColorParam = Parameters["FogColor"];
+            fogVectorParam = Parameters["FogVector"];
+            worldViewProjParam = Parameters["WorldViewProj"];
         }
 
         ///// <summary>
@@ -351,20 +351,6 @@ namespace SharpDX.Toolkit.Graphics
         //{
         //    return new DualTextureEffect(this);
         //}
-
-
-        /// <summary>
-        /// Looks up shortcut references to our effect parameters.
-        /// </summary>
-        void CacheEffectParameters()
-        {
-            textureParam = Parameters["Texture"];
-            texture2Param = Parameters["Texture2"];
-            diffuseColorParam = Parameters["DiffuseColor"];
-            fogColorParam = Parameters["FogColor"];
-            fogVectorParam = Parameters["FogVector"];
-            worldViewProjParam = Parameters["WorldViewProj"];
-        }
 
         /// <summary>
         /// Lazily computes derived parameter values immediately before applying the effect.

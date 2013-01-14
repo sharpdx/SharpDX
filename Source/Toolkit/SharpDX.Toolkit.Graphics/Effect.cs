@@ -85,21 +85,21 @@ namespace SharpDX.Toolkit.Graphics
         /// Initializes a new instance of the <see cref="Effect" /> class with the specified bytecode effect. See remarks.
         /// </summary>
         /// <param name="device">The device.</param>
-        /// <param name="effectData">The bytecode to add to <see cref="GraphicsDevice.DefaultEffectPool"/>. This bytecode must contain only one effect.</param>
+        /// <param name="effectData">The bytecode to add to the Effect Pool. This bytecode must contain only one effect.</param>
+        /// <param name="effectPool">The effect pool used to register the bytecode. Default is <see cref="GraphicsDevice.DefaultEffectPool" /></param>
+        /// <exception cref="System.ArgumentException">bytecode</exception>
         /// <exception cref="ArgumentException">If the bytecode doesn't contain a single effect.</exception>
-        /// <remarks>
-        /// The effect bytecode must contain only a single effect and will be registered into the <see cref="GraphicsDevice.DefaultEffectPool"/>.
-        /// </remarks>
-        public Effect(GraphicsDevice device, EffectData effectData) : base(device)
+        /// <remarks>The effect bytecode must contain only a single effect and will be registered into the <see cref="GraphicsDevice.DefaultEffectPool" />.</remarks>
+        public Effect(GraphicsDevice device, EffectData effectData, EffectPool effectPool = null) : base(device)
         {
             if (effectData.Effects.Count != 1)
-                throw new ArgumentException(string.Format("Expecting only one effect in the effect bytecode instead of [{0}]. Use GraphicsDevice.DefaultEffectPool.RegisterBytecode instead", Utilities.Join(",", effectData.Effects)), "bytecode");
+                throw new ArgumentException(string.Format("Expecting only one effect in the effect bytecode instead of [{0}] ", Utilities.Join(",", effectData.Effects)), "effectData");
 
             ConstantBuffers = new EffectConstantBufferCollection();
             Parameters = new EffectParameterCollection();
             Techniques = new EffectTechniqueCollection();
 
-            Pool = device.DefaultEffectPool;
+            Pool = effectPool ?? device.DefaultEffectPool;
 
             // Sets the effect name
             Name = effectData.Effects[0].Name;
@@ -109,37 +109,6 @@ namespace SharpDX.Toolkit.Graphics
 
             // Initialize from effect
             InitializeFrom(Pool.Find(Name));
-            // If everything was fine, then we can register it into the pool
-            Pool.AddEffect(this);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Effect" /> class with the specified effect. See remarks.
-        /// </summary>
-        /// <param name="device">The device.</param>
-        /// <param name="effectName">Name of the effect.</param>
-        /// <remarks>
-        /// The effect must have been loaded and registered into the <see cref="GraphicsDevice.DefaultEffectPool"/>.
-        /// </remarks>
-        public Effect(GraphicsDevice device, string effectName) : this(device, device.DefaultEffectPool, effectName)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Effect" /> class with the specified effect loaded from an effect pool.
-        /// </summary>
-        /// <param name="device">The device.</param>
-        /// <param name="pool">The effect pool.</param>
-        /// <param name="effectName">Name of the effect.</param>
-        public Effect(GraphicsDevice device, EffectPool pool, string effectName) : base(device, effectName)
-        {
-            ConstantBuffers = new EffectConstantBufferCollection();
-            Parameters = new EffectParameterCollection();
-            Techniques = new EffectTechniqueCollection();
-            Pool = pool;
-
-            // Initialize from effect
-            InitializeFrom(Pool.Find(effectName));
             // If everything was fine, then we can register it into the pool
             Pool.AddEffect(this);
         }

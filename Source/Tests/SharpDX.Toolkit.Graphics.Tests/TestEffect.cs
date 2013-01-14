@@ -60,10 +60,10 @@ namespace SharpDX.Toolkit.Graphics.Tests
             Assert.AreEqual(bytecode.Shaders[0].Level, FeatureLevel.Level_10_0);
 
             // Create a EffectData pool from a single EffectData
-            var effectGroup = EffectPool.New(device, bytecode);
+            var effectGroup = EffectPool.New(device);
 
             //var effect = effectGroup.New<BasicEffect>();
-            var effect = new Effect(device, effectGroup, "TestEffect");
+            var effect = new Effect(device, bytecode, effectGroup);
 
             //Texture2D tex : register(t0);
             //Texture2D tex1 : register(t2);

@@ -318,8 +318,6 @@ namespace SharpDX.Toolkit.Graphics
 
         #region Methods
 
-        private const string AlphaTestEffectName = "Toolkit::AlphaTestEffect";
-
         /// <summary>
         /// Creates a new AlphaTestEffect with default parameter settings.
         /// </summary>
@@ -331,15 +329,18 @@ namespace SharpDX.Toolkit.Graphics
         /// Creates a new AlphaTestEffect with default parameter settings from a specified <see cref="EffectPool"/>.
         /// </summary>
         public AlphaTestEffect(GraphicsDevice device, EffectPool pool)
-            : base(device, pool, AlphaTestEffectName)
+            : base(device, effectBytecode, pool)
         {
-            CacheEffectParameters();
         }
 
         protected override void Initialize()
         {
-            Pool.RegisterBytecode(effectBytecode);
-            base.Initialize();
+            textureParam = Parameters["Texture"];
+            diffuseColorParam = Parameters["DiffuseColor"];
+            alphaTestParam = Parameters["AlphaTest"];
+            fogColorParam = Parameters["FogColor"];
+            fogVectorParam = Parameters["FogVector"];
+            worldViewProjParam = Parameters["WorldViewProj"];
         }
 
         ///// <summary>
@@ -348,8 +349,6 @@ namespace SharpDX.Toolkit.Graphics
         //protected AlphaTestEffect(AlphaTestEffect cloneSource)
         //    : base(cloneSource)
         //{
-        //    CacheEffectParameters();
-
         //    fogEnabled = cloneSource.fogEnabled;
         //    vertexColorEnabled = cloneSource.vertexColorEnabled;
 
@@ -376,19 +375,6 @@ namespace SharpDX.Toolkit.Graphics
         //{
         //    return new AlphaTestEffect(this);
         //}
-
-        /// <summary>
-        /// Looks up shortcut references to our effect parameters.
-        /// </summary>
-        void CacheEffectParameters()
-        {
-            textureParam        = Parameters["Texture"];
-            diffuseColorParam   = Parameters["DiffuseColor"];
-            alphaTestParam      = Parameters["AlphaTest"];
-            fogColorParam       = Parameters["FogColor"];
-            fogVectorParam      = Parameters["FogVector"];
-            worldViewProjParam  = Parameters["WorldViewProj"];
-        }
 
         /// <summary>
         /// Lazily computes derived parameter values immediately before applying the effect.

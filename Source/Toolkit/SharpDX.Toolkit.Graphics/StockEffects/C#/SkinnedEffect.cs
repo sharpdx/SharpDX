@@ -453,16 +453,14 @@ namespace SharpDX.Toolkit.Graphics
         /// Creates a new SkinnedEffect with default parameter settings from a specified <see cref="EffectPool"/>.
         /// </summary>
         public SkinnedEffect(GraphicsDevice device, EffectPool pool)
-            : base(device, pool, SkinnedEffectName)
+            : base(device, effectBytecode, pool)
         {
-            CacheEffectParameters(null);
-
             DirectionalLight0.Enabled = true;
 
             SpecularColor = Vector3.One;
             SpecularPower = 16;
             
-            Matrix[] identityBones = new Matrix[MaxBones];
+            var identityBones = new Matrix[MaxBones];
             
             for (int i = 0; i < MaxBones; i++)
             {
@@ -474,8 +472,33 @@ namespace SharpDX.Toolkit.Graphics
 
         protected override void Initialize()
         {
-            Pool.RegisterBytecode(effectBytecode);
-            base.Initialize();
+            textureParam = Parameters["Texture"];
+            diffuseColorParam = Parameters["DiffuseColor"];
+            emissiveColorParam = Parameters["EmissiveColor"];
+            specularColorParam = Parameters["SpecularColor"];
+            specularPowerParam = Parameters["SpecularPower"];
+            eyePositionParam = Parameters["EyePosition"];
+            fogColorParam = Parameters["FogColor"];
+            fogVectorParam = Parameters["FogVector"];
+            worldParam = Parameters["World"];
+            worldInverseTransposeParam = Parameters["WorldInverseTranspose"];
+            worldViewProjParam = Parameters["WorldViewProj"];
+            bonesParam = Parameters["Bones"];
+
+            light0 = new DirectionalLight(Parameters["DirLight0Direction"],
+                                          Parameters["DirLight0DiffuseColor"],
+                                          Parameters["DirLight0SpecularColor"],
+                                          null);
+
+            light1 = new DirectionalLight(Parameters["DirLight1Direction"],
+                                          Parameters["DirLight1DiffuseColor"],
+                                          Parameters["DirLight1SpecularColor"],
+                                          null);
+
+            light2 = new DirectionalLight(Parameters["DirLight2Direction"],
+                                          Parameters["DirLight2DiffuseColor"],
+                                          Parameters["DirLight2SpecularColor"],
+                                          null);
         }
 
         ///// <summary>
@@ -520,40 +543,6 @@ namespace SharpDX.Toolkit.Graphics
         public void EnableDefaultLighting()
         {
             AmbientLightColor = EffectHelpers.EnableDefaultLighting(light0, light1, light2);
-        }
-
-        /// <summary>
-        /// Looks up shortcut references to our effect parameters.
-        /// </summary>
-        void CacheEffectParameters(SkinnedEffect cloneSource)
-        {
-            textureParam                = Parameters["Texture"];
-            diffuseColorParam           = Parameters["DiffuseColor"];
-            emissiveColorParam          = Parameters["EmissiveColor"];
-            specularColorParam          = Parameters["SpecularColor"];
-            specularPowerParam          = Parameters["SpecularPower"];
-            eyePositionParam            = Parameters["EyePosition"];
-            fogColorParam               = Parameters["FogColor"];
-            fogVectorParam              = Parameters["FogVector"];
-            worldParam                  = Parameters["World"];
-            worldInverseTransposeParam  = Parameters["WorldInverseTranspose"];
-            worldViewProjParam          = Parameters["WorldViewProj"];
-            bonesParam                  = Parameters["Bones"];
-
-            light0 = new DirectionalLight(Parameters["DirLight0Direction"],
-                                          Parameters["DirLight0DiffuseColor"],
-                                          Parameters["DirLight0SpecularColor"],
-                                          (cloneSource != null) ? cloneSource.light0 : null);
-
-            light1 = new DirectionalLight(Parameters["DirLight1Direction"],
-                                          Parameters["DirLight1DiffuseColor"],
-                                          Parameters["DirLight1SpecularColor"],
-                                          (cloneSource != null) ? cloneSource.light1 : null);
-
-            light2 = new DirectionalLight(Parameters["DirLight2Direction"],
-                                          Parameters["DirLight2DiffuseColor"],
-                                          Parameters["DirLight2SpecularColor"],
-                                          (cloneSource != null) ? cloneSource.light2 : null);
         }
 
         /// <summary>

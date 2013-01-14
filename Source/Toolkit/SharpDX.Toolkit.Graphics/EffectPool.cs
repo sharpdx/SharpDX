@@ -281,14 +281,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="device">The device.</param>
         /// <param name="effectData">The effect data.</param>
         /// <returns>An instance of <see cref="EffectPool" />.</returns>
-        public static EffectPool New(GraphicsDevice device, EffectData effectData = null)
+        public static EffectPool New(GraphicsDevice device)
         {
-            var group = new EffectPool(device);
-            if (effectData != null)
-            {
-                group.RegisterBytecode(effectData);
-            }
-            return group;
+            return new EffectPool(device);
         }
 
         /// <summary>
@@ -298,14 +293,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="name">The name of this effect pool.</param>
         /// <param name="effectData">The effect data.</param>
         /// <returns>An instance of <see cref="EffectPool" />.</returns>
-        public static EffectPool New(GraphicsDevice device, string name, EffectData effectData = null)
+        public static EffectPool New(GraphicsDevice device, string name)
         {
-            var group = new EffectPool(device);
-            if (effectData != null)
-            {
-                group.RegisterBytecode(effectData);
-            }
-            return group;
+            return new EffectPool(device);
         }
 
         public override string ToString()
