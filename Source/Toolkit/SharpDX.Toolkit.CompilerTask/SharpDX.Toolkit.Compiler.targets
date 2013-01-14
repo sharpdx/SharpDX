@@ -32,7 +32,10 @@
 
   <Target Name="BuildTkfx">
     <Message Text="Before BuildTkfx..."/>
-    <EffectCompilerTask ProjectDirectory="$(ProjectDir)" OutputDirectory="$(TargetDir)" Debug="$(ToolkitFxcDebugOption)" Files="@(ToolkitFx)" IntermediateDirectory="$(IntermediateOutputPath)"/>
+    <EffectCompilerTask ProjectDirectory="$(ProjectDir)" OutputDirectory="$(TargetDir)" Debug="$(ToolkitFxcDebugOption)" Files="@(ToolkitFx)" IntermediateDirectory="$(IntermediateOutputPath)">
+      <Output TaskParameter="OutputFiles" ItemName="FileWrites"/>
+    </EffectCompilerTask>
+    
     <Message Text="After BuildTkfx..."/>
   </Target>
 </Project>

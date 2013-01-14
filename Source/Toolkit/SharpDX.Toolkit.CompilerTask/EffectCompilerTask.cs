@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -38,6 +39,9 @@ namespace SharpDX.Toolkit.Graphics
         [Required]
         public ITaskItem[] Files { get; set; }
 
+        [Output]
+        public ITaskItem[] OutputFiles { get; set; }
+
         public bool Debug { get; set; }
 
         [Required]
@@ -49,12 +53,14 @@ namespace SharpDX.Toolkit.Graphics
         public override bool Execute()
         {
             var projectDirectory = ProjectDirectory.ItemSpec;
-            var outputDirectory = ProjectDirectory.ItemSpec;
+            var outputDirectory = OutputDirectory.ItemSpec;
             var intermediateDirectory = IntermediateDirectory.ItemSpec;
 
             var compiler = new EffectCompiler();
 
             bool hasErrors = false;
+
+            var outputFiles = new List<ITaskItem>();
 
             foreach (ITaskItem file in Files)
             {
@@ -63,11 +69,11 @@ namespace SharpDX.Toolkit.Graphics
 
                 var effectFilePath = Path.Combine(projectDirectory, effectFileName);
                 var dependencyFilePath = Path.Combine(Path.Combine(projectDirectory, intermediateDirectory), effectFileName + ".deps");
-                var compiledFilePath = Path.Combine(outputDirectory, outputFileName);
+                var outputFilePath = Path.Combine(outputDirectory, outputFileName);
 
                 Log.LogMessage(MessageImportance.High, "Check Toolkit FX file to compile {0} with dependency file {1}", effectFilePath, dependencyFilePath);
 
-                if (compiler.CheckForChanges(dependencyFilePath))
+                if (compiler.CheckForChanges(dependencyFilePath) || !File.Exists(outputFilePath))
                 {
                     Log.LogMessage(MessageImportance.High, "Start to compile {0}", effectFilePath);
 
@@ -136,7 +142,13 @@ namespace SharpDX.Toolkit.Graphics
                     {
                         try
                         {
-                            compilerResult.EffectData.Save(compiledFilePath);
+                            var directoryName = Path.GetDirectoryName(outputFilePath);
+                            if (!string.IsNullOrEmpty(directoryName) && !Directory.Exists(directoryName))
+                            {
+                                Directory.CreateDirectory(directoryName);
+                            }
+
+                            compilerResult.EffectData.Save(outputFilePath);
                         }
                         catch (Exception ex)
                         {
@@ -145,7 +157,17 @@ namespace SharpDX.Toolkit.Graphics
                         }
                     }
                 }
+
+                // Only add existing file
+                if (File.Exists(outputFilePath))
+                {
+                    // Add the file
+                    outputFiles.Add(new TaskItem(outputFilePath));
+                }
             }
+
+            OutputFiles = outputFiles.ToArray();
+
             return !hasErrors;
         }
     }
