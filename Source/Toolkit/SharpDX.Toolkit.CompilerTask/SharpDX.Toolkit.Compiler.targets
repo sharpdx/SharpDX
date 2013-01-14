@@ -1,0 +1,38 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <ItemGroup>
+    <AvailableItemName Include="ToolkitFx"></AvailableItemName>
+  </ItemGroup>
+
+  <!--
+    From C:\Program Files (x86)\MSBuild\Microsoft\XNA Game Studio\v4.0\Microsoft.Xna.GameStudio.Common.targets
+    In VS 2008, a new feature was introduced to speed up the "F5" scenario when
+    no changes have occurred. It does this by skipping the build entirely if the
+    IDE believes there are no changes. This is fast, but unreliable because it
+    does not check all the same files as msbuild does. In XNA game projects, for
+    example, the IDE does not check if any content needs to be rebuilt. As a
+    result, F5 is way faster, but you may start debugging a project that is out
+    of date. To disable the new feature, we set DisableFastUpToDateCheck to true.
+  -->
+  <!--<PropertyGroup>
+    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+  </PropertyGroup>-->
+  
+  <PropertyGroup>
+    <BuildDependsOn>
+      BuildTkfx;
+      $(BuildDependsOn);
+    </BuildDependsOn>
+
+    <ToolkitFxcDebugOption>true</ToolkitFxcDebugOption>
+    <ToolkitFxcDebugOption Condition="$(Optimize) == 'true'">false</ToolkitFxcDebugOption>
+  </PropertyGroup>
+  
+  <UsingTask TaskName="SharpDX.Toolkit.Graphics.EffectCompilerTask" AssemblyFile="C:\Code\SharpDX\Bin\Standard-net40\SharpDX.Toolkit.CompilerTask.dll"/>
+
+  <Target Name="BuildTkfx">
+    <Message Text="Before BuildTkfx..."/>
+    <EffectCompilerTask ProjectDirectory="$(ProjectDir)" OutputDirectory="$(TargetDir)" Debug="$(ToolkitFxcDebugOption)" Files="@(ToolkitFx)" IntermediateDirectory="$(IntermediateOutputPath)"/>
+    <Message Text="After BuildTkfx..."/>
+  </Target>
+</Project>
