@@ -17,6 +17,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -107,7 +108,7 @@ namespace SharpDX
         /// <param name="from">The pointer to compare from.</param>
         /// <param name="against">The pointer to compare against.</param>
         /// <param name="sizeToCompare">The size in bytes to compare.</param>
-        /// <returns>True if the buffers are equivalent, false otherwise.</returns>
+        /// <returns><c>true</c> if the buffers are equivalent; otherwise, <c>false</c>.</returns>
         public unsafe static bool CompareMemory(IntPtr from, IntPtr against, int sizeToCompare)
         {
             var pSrc = (byte*)@from;
@@ -123,7 +124,7 @@ namespace SharpDX
                 pDst += 8;
                 numberOf--;
             }
-
+ 
             // Compare remaining bytes.
             numberOf = sizeToCompare & 7;
             while (numberOf > 0)
@@ -156,7 +157,7 @@ namespace SharpDX
         /// Return the sizeof a struct from a CLR. Equivalent to sizeof operator but works on generics too.
         /// </summary>
         /// <typeparam name="T">A struct to evaluate.</typeparam>
-        /// <returns>sizeof this struct.</returns>
+        /// <returns>Size of this struct.</returns>
         public static int SizeOf<T>() where T : struct
         {
             return Interop.SizeOf<T>();            
@@ -167,7 +168,7 @@ namespace SharpDX
         /// </summary>
         /// <typeparam name="T">A struct.</typeparam>
         /// <param name="array">The array of struct to evaluate.</param>
-        /// <returns>sizeof in bytes of this array of struct.</returns>
+        /// <returns>Size in bytes of this array of struct.</returns>
         public static int SizeOf<T>(T[] array) where T : struct
         {
             return array == null ? 0 : array.Length * Interop.SizeOf<T>();
@@ -749,7 +750,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="left">A "from" enumerator.</param>
         /// <param name="right">A "to" enumerator.</param>
-        /// <returns><c>true</c> if lists are identical, <c>false</c> otherwise.</returns>
+        /// <returns><c>true</c> if lists are identical, <c>false</c> otherwis.</returns>
         public static bool Compare(IEnumerable left, IEnumerable right)
         {
             if (ReferenceEquals(left, right))
@@ -765,7 +766,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="leftIt">A "from" enumerator.</param>
         /// <param name="rightIt">A "to" enumerator.</param>
-        /// <returns><c>true</c> if lists are identical. <c>false</c> otherwise.</returns>
+        /// <returns><c>true</c> if lists are identical; otherwise, <c>false</c>.</returns>
         public static bool Compare(IEnumerator leftIt, IEnumerator rightIt)
         {
             if (ReferenceEquals(leftIt, rightIt))
@@ -798,7 +799,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="left">The collection to compare from.</param>
         /// <param name="right">The colllection to compare to.</param>
-        /// <returns><c>true</c> if lists are identical (but no necessarely of the same time), <c>false</c> otherwise.</returns>
+        /// <returns><c>true</c> if lists are identical (but no necessarely of the same time); otherwise , <c>false</c>.</returns>
         public static bool Compare(ICollection left, ICollection right)
         {
             if (ReferenceEquals(left, right))
@@ -1387,7 +1388,7 @@ namespace SharpDX
         /// Compute a FNV1-modified Hash from <a href="http://bretm.home.comcast.net/~bretm/hash/6.html">Fowler/Noll/Vo Hash</a> improved version.
         /// </summary>
         /// <param name="data">Data to compute the hash from.</param>
-        /// <returns>A hash value</returns>
+        /// <returns>A hash value.</returns>
         public static int ComputeHashFNVModified(byte[] data)
         {
             const uint p = 16777619;
