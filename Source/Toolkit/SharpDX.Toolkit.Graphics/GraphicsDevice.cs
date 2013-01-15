@@ -17,6 +17,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 using System;
 using System.Collections.Generic;
 using SharpDX.Direct3D;
@@ -26,7 +27,7 @@ using Device = SharpDX.Direct3D11.Device;
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    /// This class is a frontend to <see cref="SharpDX.Direct3D11.Device" /> and <see cref="SharpDX.Direct3D11.DeviceContext" />
+    /// This class is a frontend to <see cref="SharpDX.Direct3D11.Device"/> and <see cref="SharpDX.Direct3D11.DeviceContext"/>.
     /// </summary>
     public class GraphicsDevice : Component
     {
@@ -276,7 +277,6 @@ namespace SharpDX.Toolkit.Graphics
         /// Occurs when a device is resetting.
         /// </summary>
         public event EventHandler<EventArgs> DeviceResetting;
-
 
         /// <summary>
         /// Gets the status of this device.
@@ -741,7 +741,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Draws a fullscreen quad. An effect with at least a pixel shader (with the expected signature - float2:TEXCOORD) must have been applied before using this method.
+        /// Draw a fullscreen quad. An effect with at least a pixel shader (with the expected signature - float2:TEXCOORD) must have been applied before using this method.
         /// </summary>
         /// <param name="tranform">The tranform.</param>
         /// <seealso cref="PrimitiveQuad"/>
@@ -752,7 +752,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Draws a fullscreen quad with the specified effect (with the expected signature - float2:TEXCOORD)
+        /// Draw a fullscreen quad with the specified effect (with the expected signature - float2:TEXCOORD).
         /// </summary>
         /// <param name="effect">The effect.</param>
         public void DrawQuad(Effect effect)
@@ -761,7 +761,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Draws a fullscreen quad with the specified effect (with the expected signature - float2:TEXCOORD)
+        /// Draw a fullscreen quad with the specified effect (with the expected signature - float2:TEXCOORD).
         /// </summary>
         /// <param name="effect">The effect.</param>
         /// <param name="transform">The transform.</param>
@@ -772,7 +772,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Draws a fullscreen quad with the specified effect (with the expected signature - float2:TEXCOORD)
+        /// Draw a fullscreen quad with the specified effect (with the expected signature - float2:TEXCOORD).
         /// </summary>
         /// <param name="effect">The effect.</param>
         /// <param name="transform">The transform.</param>
@@ -783,7 +783,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Draws a fullscreen quad with the specified effect pass (with the expected signature - float2:TEXCOORD)
+        /// Draw a fullscreen quad with the specified effect pass (with the expected signature - float2:TEXCOORD).
         /// </summary>
         /// <param name="effectPass">The effect pass.</param>
         public void DrawQuad(EffectPass effectPass)
@@ -792,7 +792,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Draws a fullscreen quad with the specified effect pass (with the expected signature - float2:TEXCOORD)
+        /// Draw a fullscreen quad with the specified effect pass (with the expected signature - float2:TEXCOORD).
         /// </summary>
         /// <param name="effectPass">The effect pass.</param>
         /// <param name="transform">The transform.</param>
@@ -803,7 +803,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Draws a fullscreen quad with the specified effect pass (with the expected signature - float2:TEXCOORD)
+        /// Draw a fullscreen quad with the specified effect pass (with the expected signature - float2:TEXCOORD).
         /// </summary>
         /// <param name="effectPass">The effect pass.</param>
         /// <param name="transform">The transform.</param>
@@ -851,7 +851,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <p>Sends queued-up commands in the command buffer to the graphics processing unit (GPU).</p>	
         /// </summary>	
         /// <remarks>	
-        /// <p>Most applications don't need to call this method. If an application calls this method when not necessary, it incurs a performance penalty.  Each call to <strong>Flush</strong> incurs a significant amount of overhead.</p><p>When Microsoft Direct3D state-setting, present, or draw commands are called by an application, those commands are queued into an internal command buffer.  <strong>Flush</strong> sends those commands to the GPU for processing. Typically, the Direct3D runtime sends these commands to the GPU automatically whenever the runtime determines that  they need to be sent, such as when the command buffer is full or when an application maps a resource. <strong>Flush</strong> sends the commands manually.</p><p>We recommend that you use <strong>Flush</strong> when the CPU waits for an arbitrary amount of time (such as when  you call the <strong>Sleep</strong> function).</p><p>Because <strong>Flush</strong> operates asynchronously,  it can return either before or after the GPU finishes executing the queued graphics commands. However, the graphics commands eventually always complete. You can call the <strong><see cref="SharpDX.Direct3D11.Device.CreateQuery"/></strong> method with the <strong><see cref="SharpDX.Direct3D11.QueryType.Event"/></strong> value to create an event query; you can then use that event query in a call to the <strong><see cref="SharpDX.Direct3D11.DeviceContext.GetDataInternal"/></strong> method to determine when the GPU is finished processing the graphics commands.	
+        /// <p>Most applications don't need to call this method. If an application calls this method when not necessary, it incurs a performance penalty. Each call to <strong>Flush</strong> incurs a significant amount of overhead.</p><p>When Microsoft Direct3D state-setting, present, or draw commands are called by an application, those commands are queued into an internal command buffer.  <strong>Flush</strong> sends those commands to the GPU for processing. Typically, the Direct3D runtime sends these commands to the GPU automatically whenever the runtime determines that  they need to be sent, such as when the command buffer is full or when an application maps a resource. <strong>Flush</strong> sends the commands manually.</p><p>We recommend that you use <strong>Flush</strong> when the CPU waits for an arbitrary amount of time (such as when  you call the <strong>Sleep</strong> function).</p><p>Because <strong>Flush</strong> operates asynchronously,  it can return either before or after the GPU finishes executing the queued graphics commands. However, the graphics commands eventually always complete. You can call the <strong><see cref="SharpDX.Direct3D11.Device.CreateQuery"/></strong> method with the <strong><see cref="SharpDX.Direct3D11.QueryType.Event"/></strong> value to create an event query; you can then use that event query in a call to the <strong><see cref="SharpDX.Direct3D11.DeviceContext.GetDataInternal"/></strong> method to determine when the GPU is finished processing the graphics commands.	
         /// </p><p>Microsoft Direct3D?11 defers the destruction of objects. Therefore, an application can't rely upon objects immediately being destroyed. By calling <strong>Flush</strong>, you destroy any  objects whose destruction was deferred.  If an application requires synchronous destruction of an object, we recommend that the application release all its references, call <strong><see cref="SharpDX.Direct3D11.DeviceContext.ClearState"/></strong>, and then call <strong>Flush</strong>.</p>Deferred Destruction Issues with Flip Presentation Swap Chains<p>Direct3D?11 defers the destruction of objects like views and resources until it can efficiently destroy them. This deferred destruction can cause problems with flip presentation model swap chains. Flip presentation model swap chains have the <strong>DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL</strong> flag set. When you create a flip presentation model swap chain, you can associate only one swap chain at a time with an <strong><see cref="System.IntPtr"/></strong>, <strong>IWindow</strong>, or composition surface. If an application attempts to destroy a flip presentation model swap chain and replace it with another swap chain, the original swap chain is not destroyed when the application immediately frees all of the original swap chain's references.</p><p>Most applications typically use the <strong><see cref="SharpDX.DXGI.SwapChain.ResizeBuffers"/></strong> method for the majority of scenarios where they replace new swap chain buffers for old swap chain buffers. However, if an application must actually destroy an old swap chain and create a new swap chain, the application must force the destruction of all objects that the application freed. To force the destruction, call <strong><see cref="SharpDX.Direct3D11.DeviceContext.ClearState"/></strong> (or otherwise ensure no views are bound to pipeline state), and then call <strong>Flush</strong> on the immediate context. You must force destruction before you call <strong>IDXGIFactory2::CreateSwapChainForHwnd</strong>, <strong>IDXGIFactory2::CreateSwapChainForImmersiveWindow</strong>, or <strong>IDXGIFactory2::CreateSwapChainForCompositionSurface</strong> again to create a new swap chain.</p>	
         /// </remarks>	
         /// <msdn-id>ff476425</msdn-id>	
@@ -863,10 +863,10 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Creates a new <see cref="GraphicsDevice" /> from an existing <see cref="SharpDX.Direct3D11.Device" />.
+        /// Creates a new <see cref="GraphicsDevice"/> from an existing <see cref="SharpDX.Direct3D11.Device"/>.
         /// </summary>
         /// <param name="existingDevice">An existing device.</param>
-        /// <returns>A new instance of <see cref="GraphicsDevice" /></returns>
+        /// <returns>A new instance of <see cref="GraphicsDevice"/>.</returns>
         public static GraphicsDevice New(SharpDX.Direct3D11.Device existingDevice)
         {
             return new GraphicsDevice(existingDevice);
@@ -889,7 +889,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="type">The type.</param>
         /// <param name="flags">The flags.</param>
         /// <param name="featureLevels">The feature levels.</param>
-        /// <returns>A new instance of <see cref="GraphicsDevice"/></returns>
+        /// <returns>A new instance of <see cref="GraphicsDevice"/>.</returns>
         public static GraphicsDevice New(DriverType type, DeviceCreationFlags flags = DeviceCreationFlags.None, params FeatureLevel[] featureLevels)
         {
             if (type == DriverType.Hardware)
@@ -904,7 +904,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="adapter">The graphics adapter to use.</param>
         /// <param name="flags">The flags.</param>
         /// <param name="featureLevels">The feature levels.</param>
-        /// <returns>A new instance of <see cref="GraphicsDevice"/></returns>
+        /// <returns>A new instance of <see cref="GraphicsDevice"/>.</returns>
         public static GraphicsDevice New(GraphicsAdapter adapter, DeviceCreationFlags flags = DeviceCreationFlags.None, params FeatureLevel[] featureLevels)
         {
             return new GraphicsDevice(adapter, flags, featureLevels);
@@ -913,14 +913,14 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Creates a new deferred <see cref="GraphicsDevice"/>.
         /// </summary>
-        /// <returns>A deferred <see cref="GraphicsDevice"/></returns>
+        /// <returns>A deferred <see cref="GraphicsDevice"/>.</returns>
         public GraphicsDevice NewDeferred()
         {
             return new GraphicsDevice(this, new DeviceContext(Device));
         }
         
         /// <summary>	
-        /// <p>Set the blend state of the output-merger stage.</p>	
+        /// <p>Sets the blend state of the output-merger stage.</p>	
         /// </summary>	
         /// <param name="blendState"><dd>  <p>Pointer to a blend-state interface (see <strong><see cref="SharpDX.Direct3D11.BlendState"/></strong>). Passing in <strong><c>null</c></strong> implies a default blend state. See remarks for further details.</p> </dd></param>	
         /// <remarks>	
@@ -942,7 +942,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>	
-        /// <p>Set the blend state of the output-merger stage.</p>	
+        /// <p>Sets the blend state of the output-merger stage.</p>	
         /// </summary>	
         /// <param name="blendState"><dd>  <p>Pointer to a blend-state interface (see <strong><see cref="SharpDX.Direct3D11.BlendState"/></strong>). Passing in <strong><c>null</c></strong> implies a default blend state. See remarks for further details.</p> </dd></param>
         /// <param name="blendFactor"><dd>  <p>Array of blend factors, one for each RGBA component. This requires a blend state object that specifies the <strong><see cref="SharpDX.Direct3D11.BlendOption.BlendFactor"/></strong> option.</p> </dd></param>	
@@ -966,7 +966,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>	
-        /// <p>Set the blend state of the output-merger stage.</p>	
+        /// <p>Sets the blend state of the output-merger stage.</p>	
         /// </summary>	
         /// <param name="blendState"><dd>  <p>Pointer to a blend-state interface (see <strong><see cref="SharpDX.Direct3D11.BlendState"/></strong>). Passing in <strong><c>null</c></strong> implies a default blend state. See remarks for further details.</p> </dd></param>
         /// <param name="blendFactor"><dd>  <p>Array of blend factors, one for each RGBA component. This requires a blend state object that specifies the <strong><see cref="SharpDX.Direct3D11.BlendOption.BlendFactor"/></strong> option.</p> </dd></param>	
@@ -999,7 +999,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>	
-        /// <p>Set the <strong>rasterizer state</strong> for the rasterizer stage of the pipeline.</p>	
+        /// <p>Sets the <strong>rasterizer state</strong> for the rasterizer stage of the pipeline.</p>	
         /// </summary>	
         /// <param name="rasterizerState">The rasterizser state to set on this device.</param>	
         /// <msdn-id>ff476479</msdn-id>	
@@ -1029,7 +1029,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        ///   Binds a set of scissor rectangles to the rasterizer stage.
+        /// Binds a set of scissor rectangles to the rasterizer stage.
         /// </summary>
         /// <param name = "scissorRectangles">The set of scissor rectangles to bind.</param>
         /// <remarks>	
@@ -1105,7 +1105,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        ///   Binds a set of viewports to the rasterizer stage.
+        /// Binds a set of viewports to the rasterizer stage.
         /// </summary>
         /// <param name = "viewports">The set of viewports to bind.</param>
         /// <remarks>	
@@ -1123,7 +1123,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        ///   Unbinds all depth-stencil buffer and render targets from the output-merger stage.
+        /// Unbinds all depth-stencil buffer and render targets from the output-merger stage.
         /// </summary>
         /// <msdn-id>ff476464</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargets([In] unsigned int NumViews,[In] const void** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView)</unmanaged>	
@@ -1149,7 +1149,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>	
-        ///   Binds a single render target to the output-merger stage.
+        /// Binds a single render target to the output-merger stage.
         /// </summary>	
         /// <param name = "renderTargetView">A view of the render target to bind.</param>
         /// <remarks>	
@@ -1164,7 +1164,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        ///   Binds a depth-stencil buffer and a set of render targets to the output-merger stage.
+        /// Binds a depth-stencil buffer and a set of render targets to the output-merger stage.
         /// </summary>
         /// <param name = "depthStencilView">A view of the depth-stencil buffer to bind.</param>
         /// <param name = "renderTargetViews">A set of render target views to bind.</param>
@@ -1180,7 +1180,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        ///   Binds a depth-stencil buffer and a single render target to the output-merger stage.
+        /// Binds a depth-stencil buffer and a single render target to the output-merger stage.
         /// </summary>
         /// <param name = "depthStencilView">A view of the depth-stencil buffer to bind.</param>
         /// <param name = "renderTargetView">A view of the render target to bind.</param>
@@ -1195,14 +1195,14 @@ namespace SharpDX.Toolkit.Graphics
             outputMergerStage.SetTargets(depthStencilView, renderTargetView);
         }
 
-      /// <summary>	
+        /// <summary>	
         /// <p>Bind an index buffer to the input-assembler stage.</p>	
         /// </summary>	
         /// <param name="indexBuffer"><dd>  <p>A reference to an <strong><see cref="SharpDX.Direct3D11.Buffer"/></strong> object, that contains indices. The index buffer must have been created with  the <strong><see cref="SharpDX.Direct3D11.BindFlags.IndexBuffer"/></strong> flag.</p> </dd></param>	
         /// <param name="is32Bit">Set to true if indices are 32-bit values (integer size) or false if they are 16-bit values (short size)</param>	
         /// <param name="offset">Offset (in bytes) from the start of the index buffer to the first index to use. Default to 0</param>	
         /// <remarks>	
-        /// <p>For information about creating index buffers, see How to: Create an Index Buffer.</p><p>Calling this method using a buffer that is currently bound for writing (i.e. bound to the stream output pipeline stage) will effectively bind  <strong><c>null</c></strong> instead because a buffer cannot be bound as both an input and an output at the same time.</p><p>The debug layer will generate a warning whenever a resource is prevented from being bound simultaneously as an input and an output, but this will  not prevent invalid data from being used by the runtime.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10. </p>	
+        /// <p>For information about creating index buffers, see How to: Create an Index Buffer.</p><p>Calling this method using a buffer that is currently bound for writing (i.e. bound to the stream output pipeline stage) will effectively bind  <strong><c>null</c></strong> instead because a buffer cannot be bound as both an input and an output at the same time.</p><p>The debug layer will generate a warning whenever a resource is prevented from being bound simultaneously as an input and an output, but this will  not prevent invalid data from being used by the runtime.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10.</p>	
         /// </remarks>	
         /// <msdn-id>ff476453</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::IASetIndexBuffer([In, Optional] ID3D11Buffer* pIndexBuffer,[In] DXGI_FORMAT Format,[In] unsigned int Offset)</unmanaged>	
@@ -1241,13 +1241,13 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Bind a verte buffer to the input-assembler stage.
+        /// Bind a vertex buffer to the input-assembler stage.
         /// </summary>	
         /// <param name="slot">The first input slot for binding.</param>	
         /// <param name="vertexBuffer">The vertex buffer to bind to this slot. This vertex buffer must have been created with the <strong><see cref="SharpDX.Direct3D11.BindFlags.VertexBuffer"/></strong> flag.</param>	
         /// <param name="vertexIndex">The index is the number of vertex element between the first element of a vertex buffer and the first element that will be used.</param>	
         /// <remarks>	
-        /// <p>For information about creating vertex buffers, see Create a Vertex Buffer.</p><p>Calling this method using a buffer that is currently bound for writing (i.e. bound to the stream output pipeline stage) will effectively bind <strong><c>null</c></strong> instead because a buffer cannot be bound as both an input and an output at the same time.</p><p>The debug layer will generate a warning whenever a resource is prevented from being bound simultaneously as an input and an output, but this will not prevent invalid data from being used by the runtime.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10. </p>	
+        /// <p>For information about creating vertex buffers, see Create a Vertex Buffer.</p><p>Calling this method using a buffer that is currently bound for writing (i.e. bound to the stream output pipeline stage) will effectively bind <strong><c>null</c></strong> instead because a buffer cannot be bound as both an input and an output at the same time.</p><p>The debug layer will generate a warning whenever a resource is prevented from being bound simultaneously as an input and an output, but this will not prevent invalid data from being used by the runtime.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10.</p>	
         /// </remarks>	
         /// <msdn-id>ff476456</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::IASetVertexBuffers([In] unsigned int StartSlot,[In] unsigned int NumBuffers,[In, Buffer] const void* ppVertexBuffers,[In, Buffer] const void* pStrides,[In, Buffer] const void* pOffsets)</unmanaged>	
@@ -1269,14 +1269,14 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// <p>Bind a verte buffer to the input-assembler stage.</p>	
+        /// <p>Bind a vertex buffer to the input-assembler stage.</p>	
         /// </summary>	
         /// <param name="slot">The first input slot for binding.</param>	
         /// <param name="vertexBuffer">The vertex buffer to bind to this slot. This vertex buffer must have been created with the <strong><see cref="SharpDX.Direct3D11.BindFlags.VertexBuffer"/></strong> flag.</param>	
         /// <param name="vertexStride">The vertexStride is the size (in bytes) of the elements that are to be used from that vertex buffer.</param>	
         /// <param name="offsetInBytes">The offset is the number of bytes between the first element of a vertex buffer and the first element that will be used.</param>	
         /// <remarks>	
-        /// <p>For information about creating vertex buffers, see Create a Vertex Buffer.</p><p>Calling this method using a buffer that is currently bound for writing (i.e. bound to the stream output pipeline stage) will effectively bind <strong><c>null</c></strong> instead because a buffer cannot be bound as both an input and an output at the same time.</p><p>The debug layer will generate a warning whenever a resource is prevented from being bound simultaneously as an input and an output, but this will not prevent invalid data from being used by the runtime.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10. </p>	
+        /// <p>For information about creating vertex buffers, see Create a Vertex Buffer.</p><p>Calling this method using a buffer that is currently bound for writing (i.e. bound to the stream output pipeline stage) will effectively bind <strong><c>null</c></strong> instead because a buffer cannot be bound as both an input and an output at the same time.</p><p>The debug layer will generate a warning whenever a resource is prevented from being bound simultaneously as an input and an output, but this will not prevent invalid data from being used by the runtime.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10.</p>	
         /// </remarks>	
         /// <msdn-id>ff476456</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::IASetVertexBuffers([In] unsigned int StartSlot,[In] unsigned int NumBuffers,[In, Buffer] const void* ppVertexBuffers,[In, Buffer] const void* pStrides,[In, Buffer] const void* pOffsets)</unmanaged>	
@@ -1401,8 +1401,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         protected override void Dispose(bool disposeManagedResources)
-        {
-
+        { 
             if (disposeManagedResources)
             {
                 foreach (var effectPool in EffectPools)
