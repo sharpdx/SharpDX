@@ -59,10 +59,10 @@ namespace SharpDX.Toolkit.Graphics
         public EffectData.Effect RawEffectData { get; private set; }
 
         /// <summary>
-        /// Sets to true to force all constant shaders to be shared between other effects within a common <see cref="EffectPool"/>. Default is false.
+        /// Set to <c>true</c> to force all constant shaders to be shared between other effects within a common <see cref="EffectPool"/>. Default is <c>false</c>.
         /// </summary>
         /// <remarks>
-        /// This value can also be set in the TKFX file directly by setting ShareConstantBuffers = true; in a pass.
+        /// This value can also be set in the TKFX file directly by setting ShareConstantBuffers = <c>true</c>; in a pass.
         /// </remarks>
         protected internal bool ShareConstantBuffers;
 
