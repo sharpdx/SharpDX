@@ -139,123 +139,123 @@ namespace SharpDX
         /// <returns><c>true</c> if this <see cref="ViewportF"/> is valid; otherwise, <c>false</c>.</returns>
         bool Validate(ref string errorString)
         {
-            errorString = null;
-
-            if(Width < 0)
-    		{
-			    errorString = "Width is lower than 0";
-			    return false;
-			}
-			if(Height < 0)
-			{
-			    errorString = "Height is lower than 0.";
-                return false;
-			}
-
-			if(X < -32767)
-			{
-			    errorString = "X is lower than -32768.";
-                return false;
-			}
-
-			if(Y < -32767)
-			{
-			    errorString = "Y is lower than -32768.";
-                return false;
-			}
-
-			if(X + Width > 32767)
-			{
-				errorString = "X + Width is higher than 32767.";
-                return false;
-			}
-
-			if(Y + Height > 32767)
-			{
-			    errorString = "Y + Height is higher than 32767.";
-                return false;
-			}
-
-			if(MinDepth < 0.0f)
-			{
-			    errorString = "MinDepth is lower than 0.";
-                return false;
-			}
-
-			if(MinDepth > 1.0f)
-			{
-			    errorString = "MinDepth is higher than 1.";
-                return false;
-			}
-
-			if(MaxDepth < 0.0f)
-			{
-			    errorString = "MaxDepth is lower than 0.";
-                return false;
-			}
-
-			if(MaxDepth > 1.0f)
-			{
-			    errorString = "MaxDepth is higher than 1.";
-                return false;
-			}
-            return true;
+	    	errorString = null;
+	
+	    	if(Width < 0)
+	    	{
+		    errorString = "Width is lower than 0";
+		    return false;
+		}
+		if(Height < 0)
+		{
+		    errorString = "Height is lower than 0.";
+	            return false;
+		}
+	
+		if(X < -32767)
+		{
+		    errorString = "X is lower than -32768.";
+	            return false;
+		}
+	
+		if(Y < -32767)
+		{
+		    errorString = "Y is lower than -32768.";
+	            return false;
+		}
+	
+		if(X + Width > 32767)
+		{
+		    errorString = "X + Width is higher than 32767.";
+	            return false;
+		}
+	
+		if(Y + Height > 32767)
+		{
+	            errorString = "Y + Height is higher than 32767.";
+	            return false;
+		}
+	
+		if(MinDepth < 0.0f)
+		{
+		    errorString = "MinDepth is lower than 0.";
+	       	    return false;
+		}
+	
+		if(MinDepth > 1.0f)
+		{
+		    errorString = "MinDepth is higher than 1.";
+	            return false;
+		}
+	
+		if(MaxDepth < 0.0f)
+		{
+		    errorString = "MaxDepth is lower than 0.";
+	       	    return false;
+		}
+	
+		if(MaxDepth > 1.0f)
+		{
+		    errorString = "MaxDepth is higher than 1.";
+		    return false;
+		}
+	    	return true;
         }
 
         /// <summary>
         /// Checks if this <see cref="ViewportF"/> is valid d3d viewport. Throw <see cref="System.Exception"/> if its not.
         /// </summary>
         void Validate()
-		{  
-			if(Width < 0)
-			{
-			    throw new Exception("Width is lower than 0"); 
-			}
-			if(Height < 0)
-			{
-			    throw new Exception("Height is lower than 0.");
-			}
-
-			if(X < -32767)
-			{
-			    throw new Exception("X is lower than -32768.");
-			}
-
-			if(Y < -32767)
-			{
-			    throw new Exception("Y is lower than -32768.");
-			}
-
-			if(X + Width > 32767)
-			{
-				throw new Exception("X + Width is higher than 32767.");
-			}
-
-			if(Y + Height > 32767)
-			{
-			    throw new Exception("Y + Height is higher than 32767.");
-			}
-
-			if(MinDepth < 0.0f)
-			{
-			    throw new Exception("MinDepth is lower than 0.");
-			}
-
-			if(MinDepth > 1.0f)
-			{
-			    throw new Exception("MinDepth is higher than 1.");
-			}
-
-			if(MaxDepth < 0.0f)
-			{
-			    throw new Exception("MaxDepth is lower than 0.");
-			}
-
-			if(MaxDepth > 1.0f)
-			{
-			    throw new Exception("MaxDepth is higher than 1.");
-			}
+	{  
+		if(Width < 0)
+		{
+		    throw new Exception("Width is lower than 0"); 
 		}
+		if(Height < 0)
+		{
+		    throw new Exception("Height is lower than 0.");
+		}
+	
+		if(X < -32767)
+		{
+		    throw new Exception("X is lower than -32768.");
+		}
+	
+		if(Y < -32767)
+		{
+		    throw new Exception("Y is lower than -32768.");
+		}
+	
+		if(X + Width > 32767)
+		{
+		    throw new Exception("X + Width is higher than 32767.");
+		}
+	
+		if(Y + Height > 32767)
+		{
+		    throw new Exception("Y + Height is higher than 32767.");
+		}
+	
+		if(MinDepth < 0.0f)
+		{
+		    throw new Exception("MinDepth is lower than 0.");
+		}
+	
+		if(MinDepth > 1.0f)
+		{
+		    throw new Exception("MinDepth is higher than 1.");
+		}
+	
+		if(MaxDepth < 0.0f)
+		{
+		    throw new Exception("MaxDepth is lower than 0.");
+		}
+	
+		if(MaxDepth > 1.0f)
+		{
+		    throw new Exception("MaxDepth is higher than 1.");
+		}
+	}
 
         public bool Equals(ViewportF other)
         {
