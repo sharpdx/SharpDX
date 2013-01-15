@@ -41,7 +41,7 @@ namespace SharpDX
         private int _bottom;
 
         /// <summary>
-        /// An empty rectangle
+        /// An empty rectangle.
         /// </summary>
         public static readonly Rectangle Empty;
 
@@ -218,7 +218,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="obj">The <see cref="System.Object"/> to compare with this instance.</param>
         /// <returns>
-        /// 	<c>true</c> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public override bool Equals(object obj)
         {
@@ -227,6 +227,13 @@ namespace SharpDX
             return Equals((Rectangle)obj);
         }
 
+        /// <summary>
+        /// Determines whether the specified <see cref="SharpDX.Rectangle"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="SharpDX.Rectangle"/> to compare with this instance.</param>
+        /// <returns>
+        /// <c>true</c> if the specified <see cref="SharpDX.Rectangle"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
         public bool Equals(Rectangle other)
         {
             return other._left == _left && other._top == _top && other._right == _right && other._bottom == _bottom;
