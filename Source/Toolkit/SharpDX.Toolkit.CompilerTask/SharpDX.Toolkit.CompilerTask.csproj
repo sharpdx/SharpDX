@@ -44,9 +44,6 @@
       <Name>SharpDX.Toolkit</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="SharpDX.Toolkit.Compiler.targets" />
-  </ItemGroup>
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

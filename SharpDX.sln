@@ -166,6 +166,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{E462D87D
 		SharpDX.build = SharpDX.build
 		SharpDX.PostSettings.targets = SharpDX.PostSettings.targets
 		SharpDX.PreSettings.targets = SharpDX.PreSettings.targets
+		SharpDX.targets = SharpDX.targets
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniCube.sample", "Samples\Direct3D10\MiniCube\MiniCube.sample.csproj", "{3177A431-E344-4395-A5E7-F54DE5A1D397}"

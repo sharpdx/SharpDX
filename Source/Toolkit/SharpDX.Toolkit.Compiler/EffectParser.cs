@@ -113,7 +113,7 @@ namespace SharpDX.Toolkit.Graphics
             localResult.IncludeHandler.FileResolved.Add(fileName, new FileIncludeHandler.FileItem(fileName, filePath, File.GetLastWriteTime(filePath)));
 
             string compilationErrors = null;
-            var preprocessedInput = ShaderBytecode.Preprocess(input, Macros.ToArray(), localResult.IncludeHandler, out compilationErrors, fileName);
+            var preprocessedInput = ShaderBytecode.Preprocess(input, Macros.ToArray(), localResult.IncludeHandler, out compilationErrors, filePath);
             localResult.PreprocessedSource = preprocessedInput;
 
             localResult.DependencyList = CalculateDependencies(localResult);

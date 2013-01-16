@@ -839,7 +839,7 @@ namespace SharpDX.Toolkit.Graphics
                 var filePath = replaceBackSlash.Replace(parserResult.SourceFileName, @"\");
                 var result = ShaderBytecode.Compile(sourcecode, shaderName, profile, (ShaderFlags)compilerFlags, D3DCompiler.EffectFlags.None, null, includeHandler, filePath);
 
-                var compilerMessages = FixFilePathInCompilerMessages(result.Message, filePath);
+                var compilerMessages = result.Message;
                 if (result.HasErrors)
                 {
                     logger.LogMessage(new LogMessageRaw(LogMessageType.Error, compilerMessages));
@@ -1330,46 +1330,6 @@ namespace SharpDX.Toolkit.Graphics
             return parameter;
         }
         private static readonly Regex replaceBackSlash = new Regex(@"\\+");
-
-        /// <summary>
-        /// Fixes the file path in compiler messages (D3DCompile is generating an invalid path rooted to the path of the compiler + filename).
-        /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="filePath">The file path.</param>
-        /// <returns>System.String.</returns>
-        private static string FixFilePathInCompilerMessages(string message, string filePath)
-        {
-            if (string.IsNullOrEmpty(message))
-            {
-                return message;
-            }
-
-            var filePathShort = Path.GetFileName(filePath);
-            var invalidFilePath = Path.Combine(Environment.CurrentDirectory, filePathShort);
-
-            // If the filepath will be valid, than return the message as-is
-            if (string.Compare(invalidFilePath, filePath, StringComparison.InvariantCultureIgnoreCase) == 0)
-            {
-                return message;
-            }
-
-            var outputString = new StringBuilder(message.Length * 2);
-            var stringReader = new StringReader(message);
-            string line;
-
-            while ((line = stringReader.ReadLine()) != null)
-            {
-                line = replaceBackSlash.Replace(line, @"\");
-                if (line.StartsWith(invalidFilePath, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    // Replace it with the correct filepath
-                    line =  filePath + line.Substring(invalidFilePath.Length);
-                }
-                outputString.AppendLine(line);
-            }
-
-            return outputString.ToString();
-        }
 
         private static object ToFloat(EffectCompilerInternal compiler, object value)
         {

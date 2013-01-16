@@ -42,6 +42,8 @@ namespace SharpDX.Toolkit.Graphics
         [Output]
         public ITaskItem[] OutputFiles { get; set; }
 
+        public bool DynamicCompiling { get; set; }
+
         public bool Debug { get; set; }
 
         [Required]
@@ -71,13 +73,19 @@ namespace SharpDX.Toolkit.Graphics
                 var dependencyFilePath = Path.Combine(Path.Combine(projectDirectory, intermediateDirectory), effectFileName + ".deps");
                 var outputFilePath = Path.Combine(outputDirectory, outputFileName);
 
+                bool dynamicCompiling;
+                if (!bool.TryParse(file.GetMetadata("DynamicCompiling"), out dynamicCompiling))
+                {
+                    dynamicCompiling = DynamicCompiling;
+                }
+
                 Log.LogMessage(MessageImportance.High, "Check Toolkit FX file to compile {0} with dependency file {1}", effectFilePath, dependencyFilePath);
 
                 if (compiler.CheckForChanges(dependencyFilePath) || !File.Exists(outputFilePath))
                 {
                     Log.LogMessage(MessageImportance.High, "Start to compile {0}", effectFilePath);
 
-                    var compilerResult = compiler.CompileFromFile(effectFilePath, Debug ? EffectCompilerFlags.Debug : EffectCompilerFlags.None, null, null, false, dependencyFilePath);
+                    var compilerResult = compiler.CompileFromFile(effectFilePath, Debug ? EffectCompilerFlags.Debug : EffectCompilerFlags.None, null, null, dynamicCompiling, dependencyFilePath);
 
                     if (compilerResult.HasErrors)
                     {

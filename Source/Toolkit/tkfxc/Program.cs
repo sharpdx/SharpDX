@@ -62,7 +62,7 @@ namespace SharpDX.Toolkit.Graphics
         [Option("Ti", Description = "Compile the file only if the source file is newer (working with indirect include).\n")]
         public bool CompileOnlyIfNewer;
 
-        [Option("Re", Description = "Allow auto dynamic compiling at runtime.\n")]
+        [Option("Re", Description = "Allow effect dynamic compiling at runtime.\n")]
         public bool AllowDynamicCompiling;
 
         [Option("To", Description = "Output directory for the dependency file (default '.' in the same directory than file to compile\n")]
@@ -162,6 +162,13 @@ namespace SharpDX.Toolkit.Graphics
                 options.OutputFile = "output.tkfxo";
             }
 
+            // Check for output files
+            bool outputFileExist = options.OutputClassFile != null && File.Exists(options.OutputClassFile);
+            if (options.OutputFile != null && !File.Exists(options.OutputFile))
+            {
+                outputFileExist = false;
+            }
+
             // ----------------------------------------------------------------
             // Process each fx files / tkfxo files
             // ----------------------------------------------------------------
@@ -190,7 +197,7 @@ namespace SharpDX.Toolkit.Graphics
 
             if (CompileOnlyIfNewer)
             {
-                if (!compiler.CheckForChanges(outputDependencyFilePath))
+                if (!compiler.CheckForChanges(outputDependencyFilePath) && outputFileExist)
                 {
                     Console.Error.WriteLine("Nothing to compile. Output file [{0}] is up-to-date", options.OutputFile);
                     Environment.Exit(0);
