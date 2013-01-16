@@ -100,49 +100,53 @@ namespace SharpDX.Toolkit.Graphics
                     {
                         var text = message.ToString();
 
-
-                        var match = parseMessage.Match(text);
-                        if (match.Success)
+                        string line = null;
+                        var textReader = new StringReader(text);
+                        while ((line = textReader.ReadLine()) != null)
                         {
-                            var filePath = match.Groups[1].Value;
-                            var lineNumber = int.Parse(match.Groups[2].Value);
-                            var colNumberText = match.Groups[3].Value;
-                            int colStartNumber;
-                            int colEndNumber;
-                            var colMatch = matchNumberRange.Match(colNumberText);
-                            if (colMatch.Success)
+                            var match = parseMessage.Match(line);
+                            if (match.Success)
                             {
-                                int.TryParse(colMatch.Groups[1].Value, out colStartNumber);
-                                int.TryParse(colMatch.Groups[2].Value, out colEndNumber);
+                                var filePath = match.Groups[1].Value;
+                                var lineNumber = int.Parse(match.Groups[2].Value);
+                                var colNumberText = match.Groups[3].Value;
+                                int colStartNumber;
+                                int colEndNumber;
+                                var colMatch = matchNumberRange.Match(colNumberText);
+                                if (colMatch.Success)
+                                {
+                                    int.TryParse(colMatch.Groups[1].Value, out colStartNumber);
+                                    int.TryParse(colMatch.Groups[2].Value, out colEndNumber);
+                                }
+                                else
+                                {
+                                    int.TryParse(colNumberText, out colStartNumber);
+                                    colEndNumber = colStartNumber;
+                                }
+                                var msgType = match.Groups[4].Value;
+                                var msgCode = match.Groups[5].Value;
+                                var msgText = match.Groups[6].Value;
+                                if (string.Compare(msgType, "error", StringComparison.InvariantCultureIgnoreCase) == 0)
+                                {
+                                    Log.LogError(string.Empty, msgCode, string.Empty, filePath, lineNumber, colStartNumber, lineNumber, colEndNumber, msgText);
+                                }
+                                else if (string.Compare(msgType, "warning", StringComparison.InvariantCultureIgnoreCase) == 0)
+                                {
+                                    Log.LogWarning(string.Empty, msgCode, string.Empty, filePath, lineNumber, colStartNumber, lineNumber, colEndNumber, msgText);
+                                }
+                                else if (string.Compare(msgType, "info", StringComparison.InvariantCultureIgnoreCase) == 0)
+                                {
+                                    Log.LogWarning(string.Empty, msgCode, string.Empty, filePath, lineNumber, colStartNumber, lineNumber, colEndNumber, msgText);
+                                }
+                                else
+                                {
+                                    Log.LogWarning(line);
+                                }
                             }
                             else
                             {
-                                int.TryParse(colNumberText, out colStartNumber);
-                                colEndNumber = colStartNumber;
+                                Log.LogWarning(line);
                             }
-                            var msgType = match.Groups[4].Value;
-                            var msgCode = match.Groups[5].Value;
-                            var msgText = match.Groups[6].Value;
-                            if (string.Compare(msgType, "error", StringComparison.InvariantCultureIgnoreCase) == 0)
-                            {
-                                Log.LogError(string.Empty, msgCode, string.Empty, filePath, lineNumber, colStartNumber, lineNumber, colEndNumber, msgText);
-                            }
-                            else if (string.Compare(msgType, "warning", StringComparison.InvariantCultureIgnoreCase) == 0)
-                            {
-                                Log.LogWarning(string.Empty, msgCode, string.Empty, filePath, lineNumber, colStartNumber, lineNumber, colEndNumber, msgText);
-                            }
-                            else if (string.Compare(msgType, "info", StringComparison.InvariantCultureIgnoreCase) == 0)
-                            {
-                                Log.LogWarning(string.Empty, msgCode, string.Empty, filePath, lineNumber, colStartNumber, lineNumber, colEndNumber, msgText);
-                            }
-                            else
-                            {
-                                Log.LogWarning("Unable to parse: " + text);
-                            }
-                        }
-                        else
-                        {
-                            Log.LogWarning("Unable to parse: " + text);
                         }
                     }
 

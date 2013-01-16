@@ -51,7 +51,7 @@ namespace SharpDX.Toolkit.Graphics
 
         public override string ToString()
         {
-            return string.Format("{0} ({1}:{2})", FilePath, Line, Column);
+            return string.Format("{0} ({1},{2})", FilePath, Line, Column);
         }
     }
 }

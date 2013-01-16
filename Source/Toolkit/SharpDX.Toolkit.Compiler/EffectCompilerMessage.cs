@@ -33,7 +33,7 @@ namespace SharpDX.Toolkit.Graphics
 
         public override string ToString()
         {
-            return string.Format("{0}: {1}: {2}", Span, Type.ToString().ToLowerInvariant(), Text);
+            return string.Format("{0}: {1} X000: {2}", Span, Type.ToString().ToLowerInvariant(), Text);
         }
     }
 }
