@@ -24,6 +24,7 @@ using System.IO;
 using SharpDX.IO;
 using SharpDX.Multimedia;
 using SharpDX.Serialization;
+using SharpDX.Toolkit.Content;
 using SharpDX.Toolkit.Diagnostics;
 
 namespace SharpDX.Toolkit.Graphics
@@ -36,6 +37,7 @@ namespace SharpDX.Toolkit.Graphics
     /// It is working like an archive and is able to store multiple effect in a single object.
     /// It is serializable using <see cref="Load(Stream)"/> and <see cref="Save(Stream)"/> method.
     /// </remarks>
+    [ContentReader(typeof(EffectDataContentReader))]
     public sealed partial class EffectData : IDataSerializable
     {
         private const string MagicCode = "TKFX";

@@ -217,50 +217,64 @@ namespace SharpDX.Toolkit.Content
 
             try
             {
-                // Try to load from registered content readers
-                List<IContentReader> readers;
-                lock (registeredContentReaders)
-                {
-                    readers = new List<IContentReader>(registeredContentReaders);
-                }
-                foreach (IContentReader registeredContentReader in readers)
-                {
-                    // Rewind position everytime we try to load an asset
-                    result = registeredContentReader.ReadContent(this, assetNameWithExtension, stream, out keepStreamOpen);
-                    stream.Position = startPosition;
-                    if (result != null)
-                        break;
-                }
-
-                if (result == null)
-                {
-                    // Else try to load using a dynamic content reader attribute
+                // Else try to load using a dynamic content reader attribute
 #if WIN8METRO
-                    var contentReaderAttribute = Utilities.GetCustomAttribute<ContentReaderAttribute>(typeof (T).GetTypeInfo(), true);
+                var contentReaderAttribute = Utilities.GetCustomAttribute<ContentReaderAttribute>(typeof (T).GetTypeInfo(), true);
 #else
-                    var contentReaderAttribute = Utilities.GetCustomAttribute<ContentReaderAttribute>(typeof(T), true);
+                var contentReaderAttribute = Utilities.GetCustomAttribute<ContentReaderAttribute>(typeof(T), true);
 #endif
-                    if (contentReaderAttribute == null)
-                        throw new NotSupportedException("No content reader registered or found for this asset");
+                if (contentReaderAttribute != null)
+                {
+                    IContentReader contentReader = null;
 
-                    object contentReaderAbstract = Activator.CreateInstance(contentReaderAttribute.ContentReaderType);
-                    var contentReader = contentReaderAbstract as IContentReader;
-                    if (contentReader == null)
-                        throw new NotSupportedException(string.Format("Invalid content reader type [{0}]. Expecting an instance of IContentReader", contentReaderAbstract.GetType().FullName));
+                    lock (registeredContentReaders)
+                    {
+                        foreach (var reader in registeredContentReaders)
+                        {
+                            if (contentReaderAttribute.ContentReaderType.IsInstanceOfType(reader))
+                            {
+                                contentReader = reader;
+                                break;
+                            }
+                        }
+
+                        if (contentReader == null)
+                        {
+                            object contentReaderAbstract = Activator.CreateInstance(contentReaderAttribute.ContentReaderType);
+                            contentReader = contentReaderAbstract as IContentReader;
+                            if (contentReader == null) throw new NotSupportedException(string.Format("Invalid content reader type [{0}]. Expecting an instance of IContentReader", contentReaderAbstract.GetType().FullName));
+
+                            // If this content reader has been used successfully, then we can register it.
+                            lock (registeredContentReaders)
+                            {
+                                registeredContentReaders.Add(contentReader);
+                            }
+                        }
+                    }
 
                     // Rewind position everytime we try to load an asset
                     stream.Position = startPosition;
                     result = contentReader.ReadContent(this, assetNameWithExtension, stream, out keepStreamOpen);
                     stream.Position = startPosition;
-                    if (result == null)
-                        throw new NotSupportedException("Unable to load content");
-
-                    // If this content reader has been used successfully, then we can register it.
+                }
+                else
+                {
+                    // Try to load from registered content readers
+                    List<IContentReader> readers;
                     lock (registeredContentReaders)
                     {
-                        registeredContentReaders.Add(contentReader);
+                        readers = new List<IContentReader>(registeredContentReaders);
+                    }
+                    foreach (IContentReader registeredContentReader in readers)
+                    {
+                        // Rewind position everytime we try to load an asset
+                        result = registeredContentReader.ReadContent(this, assetNameWithExtension, stream, out keepStreamOpen);
+                        stream.Position = startPosition;
+                        if (result != null) break;
                     }
                 }
+
+                if (result == null) throw new NotSupportedException("Unable to load content");            
             }
             finally
             {
