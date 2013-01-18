@@ -54,6 +54,8 @@ namespace SharpDX.Toolkit.Graphics
         private IEnumerator<Token> tokenEnumerator;
         private List<string> includeDirectoryList;
 
+        private string newPreprocessedSource;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EffectParser" /> class.
@@ -134,6 +136,7 @@ namespace SharpDX.Toolkit.Graphics
             bracketCount = 0;
 
             result = previousParsing;
+            newPreprocessedSource = result.PreprocessedSource;
 
             tokenEnumerator = Tokenizer.Run(previousParsing.PreprocessedSource).GetEnumerator();
 
@@ -169,6 +172,8 @@ namespace SharpDX.Toolkit.Graphics
                     Logger.Error("Error matching closing curly brace for '{'", lastCurlyBraceToken.Span);
                 }
             }
+
+            result.PreprocessedSource = newPreprocessedSource;
 
             return result;
         }
@@ -299,7 +304,10 @@ namespace SharpDX.Toolkit.Graphics
                     var includeHandler = result.IncludeHandler;
                     if (includeHandler.FileResolved.ContainsKey(currentFile))
                     {
-                        currentFile = includeHandler.FileResolved[currentFile].FilePath;
+                        var fullPathFile = includeHandler.FileResolved[currentFile].FilePath;
+                        // This is not 100% accurate, but it is better than having invalid filepath
+                        newPreprocessedSource = newPreprocessedSource.Replace(token.Value, "\"" + fullPathFile + "\"");
+                        currentFile = fullPathFile;
                     }
                     currentFile = currentFile.Replace(@"\\", @"\");
 
