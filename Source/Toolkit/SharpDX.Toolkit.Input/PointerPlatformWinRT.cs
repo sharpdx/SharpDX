@@ -1,16 +1,54 @@
-﻿namespace SharpDX.Toolkit.Input
-{
-    using System;
-    using global::Windows.System;
-    using global::Windows.UI.Core;
-    using global::Windows.UI.Xaml;
+﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
 
+using System;
+using Windows.System;
+using Windows.UI.Core;
+using Windows.UI.Xaml;
+
+namespace SharpDX.Toolkit.Input
+{
+    /// <summary>
+    /// The <see cref="PointerPlatform"/> implementation for WinRT platform.
+    /// </summary>
     internal sealed class PointerPlatformWinRT : PointerPlatform
     {
-        public PointerPlatformWinRT(object nativeWindow, PointerManager manager) : base(nativeWindow, manager) { }
+        /// <summary>
+        /// Initializes a new intance of the <see cref="PointerPlatformWinRT"/> class.
+        /// </summary>
+        /// <param name="nativeWindow">The platform-specific reference to window object</param>
+        /// <param name="manager">The <see cref="PointerManager"/> whose events will be raised in response to platform-specific events</param>
+        /// <exception cref="ArgumentNullException">Is thrown when either <paramref name="nativeWindow"/> or <paramref name="manager"/> is null.</exception>
+        internal PointerPlatformWinRT(object nativeWindow, PointerManager manager) : base(nativeWindow, manager) { }
 
+        /// <summary>
+        /// Binds to pointer events of specified <paramref name="nativeWindow"/> object and raises the corresponding events on <paramref name="manager"/>.
+        /// </summary>
+        /// <param name="nativeWindow">An instance of either <see cref="CoreWindow"/> or <see cref="UIElement"/> object.</param>
+        /// <param name="manager">The related <see cref="PointerManager"/> instance.</param>
+        /// <exception cref="ArgumentNullException">Is thrown when either <paramref name="nativeWindow"/> or <paramref name="manager"/> is null.</exception>
         protected override void BindWindow(object nativeWindow, PointerManager manager)
         {
+            if(nativeWindow == null) throw new ArgumentNullException("nativeWindow");
+            if(manager == null) throw new ArgumentNullException("manager");
+
             var window = nativeWindow as CoreWindow;
             if (window != null)
             {
@@ -40,6 +78,12 @@
             throw new ArgumentException("Should be an instance of either CoreWindow or UIElement", "nativeWindow");
         }
 
+        /// <summary>
+        /// Creates a platform-independent instance of <see cref="PointerPoint"/> class from WinRT-specific objects.
+        /// </summary>
+        /// <param name="modifiers">The pressed modifier keys.</param>
+        /// <param name="point">The WinRT-specific instance of pointer point.</param>
+        /// <returns>An instance of <see cref="PointerPoint"/> class.</returns>
         private static PointerPoint BuildPoint(VirtualKeyModifiers modifiers, global::Windows.UI.Input.PointerPoint point)
         {
             var position = point.Position;
@@ -55,6 +99,12 @@
                    };
         }
 
+        /// <summary>
+        /// Maps from WinRT-specific device type to platform-independent device type enum.
+        /// </summary>
+        /// <param name="pointerDeviceType">WinRT specific device type enumeration.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Is thrown when <paramref name="pointerDeviceType"/> is not recognized.</exception>
+        /// <returns>Platform-independent device type enumeration</returns>
         private static PointerDeviceType GetDeviceType(global::Windows.Devices.Input.PointerDeviceType pointerDeviceType)
         {
             switch (pointerDeviceType)
@@ -70,6 +120,11 @@
             }
         }
 
+        /// <summary>
+        /// Maps from WinRT-specific key modifiers enumeration to platform-independent flags.
+        /// </summary>
+        /// <param name="modifiers">WinRT-specific key modifiers.</param>
+        /// <returns>Platform-independent flags.</returns>
         private static KeyModifiers GetKeyModifiers(VirtualKeyModifiers modifiers)
         {
             var result = KeyModifiers.None;
@@ -82,6 +137,11 @@
             return result;
         }
 
+        /// <summary>
+        /// Maps from WinRT-specific pointer properties to platform-independent class.
+        /// </summary>
+        /// <param name="properties">WinRT-specific pointer properties instance.</param>
+        /// <returns>Platform-independent pointer properties.</returns>
         private static PointerPointProperties GetProperties(global::Windows.UI.Input.PointerPointProperties properties)
         {
             var contactRect = properties.ContactRect;
@@ -111,6 +171,12 @@
                    };
         }
 
+        /// <summary>
+        /// Maps from WinRT-specific pointer update kind to platform-independent enum.
+        /// </summary>
+        /// <param name="pointerUpdateKind">WinRT specific pointer update kind enumeration.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Is thrown when <paramref name="pointerUpdateKind"/> is not recognized.</exception>
+        /// <returns>Platform-independent pointer update kind enumeration.</returns>
         private static PointerUpdateKind GetPointerUpdateKind(global::Windows.UI.Input.PointerUpdateKind pointerUpdateKind)
         {
             switch (pointerUpdateKind)
