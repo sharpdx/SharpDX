@@ -45,7 +45,8 @@ namespace SharpDX.Toolkit.Content
         /// Initializes a new instance of ContentManager.  Reference page contains code sample.
         /// </summary>
         /// <param name="serviceProvider">The service provider that the ContentManager should use to locate services.</param>
-        public ContentManager(IServiceProvider serviceProvider) : base("ContentManager")
+        public ContentManager(IServiceProvider serviceProvider)
+            : base("ContentManager")
         {
             if (serviceProvider == null)
                 throw new ArgumentNullException("serviceProvider");
@@ -100,7 +101,7 @@ namespace SharpDX.Toolkit.Content
                 {
                     throw new InvalidOperationException("RootDirectory cannot be changed when a ContentManager has already assets loaded");
                 }
-                    
+
                 rootDirectory = value;
             }
         }
@@ -127,7 +128,7 @@ namespace SharpDX.Toolkit.Content
                 {
                     if (loadedAssets.TryGetValue(assetNameWithExtension, out result))
                     {
-                        return (T) result;
+                        return (T)result;
                     }
                 }
 
@@ -148,7 +149,7 @@ namespace SharpDX.Toolkit.Content
             }
 
             // We could have an exception, but that's fine, as the user will be able to find why.
-            return (T) result;
+            return (T)result;
         }
 
         /// <summary>
@@ -219,7 +220,7 @@ namespace SharpDX.Toolkit.Content
             {
                 // Else try to load using a dynamic content reader attribute
 #if WIN8METRO
-                var contentReaderAttribute = Utilities.GetCustomAttribute<ContentReaderAttribute>(typeof (T).GetTypeInfo(), true);
+                var contentReaderAttribute = Utilities.GetCustomAttribute<ContentReaderAttribute>(typeof(T).GetTypeInfo(), true);
 #else
                 var contentReaderAttribute = Utilities.GetCustomAttribute<ContentReaderAttribute>(typeof(T), true);
 #endif
@@ -231,7 +232,15 @@ namespace SharpDX.Toolkit.Content
                     {
                         foreach (var reader in registeredContentReaders)
                         {
-                            if (contentReaderAttribute.ContentReaderType.IsInstanceOfType(reader))
+#if WIN8METRO
+                            var readerTypeMatchesAttribute = contentReaderAttribute.ContentReaderType
+                                .GetTypeInfo()
+                                .IsAssignableFrom(reader.GetType().GetTypeInfo());
+#else
+                            var readerTypeMatchesAttribute = contentReaderAttribute.ContentReaderType.IsInstanceOfType(reader);
+#endif
+
+                            if (readerTypeMatchesAttribute)
                             {
                                 contentReader = reader;
                                 break;
@@ -274,7 +283,7 @@ namespace SharpDX.Toolkit.Content
                     }
                 }
 
-                if (result == null) throw new NotSupportedException("Unable to load content");            
+                if (result == null) throw new NotSupportedException("Unable to load content");
             }
             finally
             {
