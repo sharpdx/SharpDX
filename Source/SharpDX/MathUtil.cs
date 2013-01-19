@@ -376,7 +376,7 @@ namespace SharpDX
         
 #if NET35Plus                    
         /// <summary>
-        /// Get random <c>float</c> number within range.
+        /// Gets random <c>float</c> number within range.
         /// </summary>
         /// <param name="random">Current <see cref="System.Random"/>.</param>
         /// <param name="min">Minimum.</param>
@@ -388,7 +388,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Get random <c>double</c> number within range.
+        /// Gets random <c>double</c> number within range.
         /// </summary>
         /// <param name="random">Current <see cref="System.Random"/>.</param>
         /// <param name="min">Minimum.</param>
@@ -400,7 +400,7 @@ namespace SharpDX
         } 
         
         /// <summary>
-        /// Get random <c>long</c> number.
+        /// Gets random <c>long</c> number.
         /// </summary>
         /// <param name="random">Current <see cref="System.Random"/>.</param>
         /// <returns>Random <c>long</c> number.</returns>
@@ -412,7 +412,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Get random <c>long</c> number.
+        /// Gets random <c>long</c> number within range.
         /// </summary>
         /// <param name="random">Current <see cref="System.Random"/>.</param>
         /// <param name="min">Minimum.</param>
@@ -428,7 +428,7 @@ namespace SharpDX
         } 
 
         /// <summary>
-        /// Get random <see cref="SharpDX.Vector2"/> within range.
+        /// Gets random <see cref="SharpDX.Vector2"/> within range.
         /// </summary>
         /// <param name="random">Current <see cref="System.Random"/>.</param>
         /// <param name="min">Minimum.</param>
@@ -440,7 +440,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Get random <see cref="SharpDX.Vector3"/> within range.
+        /// Gets random <see cref="SharpDX.Vector3"/> within range.
         /// </summary>
         /// <param name="random">Current <see cref="System.Random"/>.</param>
         /// <param name="min">Minimum.</param>
@@ -452,7 +452,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Get random <see cref="SharpDX.Vector4"/> within range.
+        /// Gets random <see cref="SharpDX.Vector4"/> within range.
         /// </summary>
         /// <param name="random">Current <see cref="System.Random"/>.</param>
         /// <param name="min">Minimum.</param>
@@ -464,7 +464,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Get random opaque <see cref="SharpDX.Color"/>
+        /// Gets random opaque <see cref="SharpDX.Color"/>.
         /// </summary>
         /// <param name="random">Current <see cref="System.Random"/>.</param>
         /// <returns>Random <see cref="SharpDX.Color"/>.</returns>
@@ -474,7 +474,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Get random opaque <see cref="SharpDX.Color"/>
+        /// Gets random opaque <see cref="SharpDX.Color"/>.
         /// </summary>
         /// <param name="random">Current <see cref="System.Random"/>.</param>
         /// <param name="minBrightness">Minimum brightness.</param>
@@ -486,7 +486,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Get random <see cref="SharpDX.Color"/>.
+        /// Gets random <see cref="SharpDX.Color"/>.
         /// </summary>
         /// <param name="random">Current <see cref="System.Random"/>.</param>   
         /// <param name="minBrightness">Minimum brightness.</param>
@@ -499,7 +499,7 @@ namespace SharpDX
         } 
 
         /// <summary>
-        /// Get random <see cref="SharpDX.Color"/>.
+        /// Gets random <see cref="SharpDX.Color"/>.
         /// </summary>
         /// <param name="random">Current <see cref="System.Random"/>.</param>
         /// <param name="minBrightness">Minimum brightness.</param>
@@ -513,7 +513,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Get random <see cref="SharpDX.DrawingPoint"/>.
+        /// Gets random <see cref="SharpDX.DrawingPoint"/>.
         /// </summary>
         /// <param name="random">Current <see cref="System.Random"/>.</param>
         /// <param name="min">Minimum.</param>
@@ -525,7 +525,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Get random <see cref="SharpDX.DrawingPointF"/>.
+        /// Gets random <see cref="SharpDX.DrawingPointF"/>.
         /// </summary>
         /// <param name="random">Current <see cref="System.Random"/>.</param>
         /// <param name="min">Minimum.</param>
@@ -537,7 +537,7 @@ namespace SharpDX
         }
         
         /// <summary>
-        /// Get random <see cref="System.TimeSpan"/>.
+        /// Gets random <see cref="System.TimeSpan"/>.
         /// </summary>
         /// <param name="random">Current <see cref="System.Random"/>.</param>
         /// <param name="min">Minimum.</param>
@@ -546,6 +546,179 @@ namespace SharpDX
         public static TimeSpan NextTime(this Random random, TimeSpan min, TimeSpan max)
         { 
             return TimeSpan.FromTicks(random.NextLong(min.Ticks,max.Ticks));
+        }
+#else
+        /// <summary>
+        /// Gets random <c>float</c> number within range.
+        /// </summary>
+        /// <param name="random">A <see cref="System.Random"/> instance.</param>
+        /// <param name="min">Minimum.</param>
+        /// <param name="max">Maximum.</param>
+        /// <returns>Random <c>float</c> number.</returns>
+        public static float NextFloat(Random random, float min, float max)
+        {
+            return (float)(min + random.NextDouble() * (max - min));
+        }
+
+        /// <summary>
+        /// Gets random <c>double</c> number within range.
+        /// </summary>
+        /// <param name="random">A <see cref="System.Random"/> instance.</param>
+        /// <param name="min">Minimum.</param>
+        /// <param name="max">Maximum.</param>
+        /// <returns>Random <c>double</c> number.</returns>
+        public static double NextDouble(Random random, double min, double max)
+        {
+            return (min + random.NextDouble() * (max - min));
+        }
+
+        /// <summary>
+        /// Gets random <c>long</c> number.
+        /// </summary>
+        /// <param name="random">A <see cref="System.Random"/> instance.</param>
+        /// <returns>Random <c>long</c> number.</returns>
+        public static long NextLong(Random random)
+        {
+            var buffer = new byte[sizeof(long)];
+            random.NextBytes(buffer);
+            return BitConverter.ToInt64(buffer, 0);
+        }
+
+        /// <summary>
+        /// Gets random <c>long</c> number within range.
+        /// </summary>
+        /// <param name="random">A <see cref="System.Random"/> instance.</param>
+        /// <param name="min">Minimum.</param>
+        /// <param name="max">Maximum.</param>
+        /// <returns>Random <c>long</c> number.</returns>
+        public static long NextLong(Random random, long min, long max)
+        {
+            byte[] buf = new byte[sizeof(long)];
+            random.NextBytes(buf);
+            long longRand = BitConverter.ToInt64(buf, 0);
+
+            return (Math.Abs(longRand % (max - min)) + min);
+        }
+
+        /// <summary>
+        /// Gets random <see cref="SharpDX.Vector2"/> within range.
+        /// </summary>
+        /// <param name="random">A <see cref="System.Random"/> instance.</param>
+        /// <param name="min">Minimum.</param>
+        /// <param name="max">Maximum.</param>
+        /// <returns>Random <see cref="SharpDX.Vector2"/>.</returns>
+        public static Vector2 NextVector2(Random random, Vector2 min, Vector2 max)
+        {
+            return new Vector2(random.NextFloat(min.X, max.X), random.NextFloat(min.Y, max.Y));
+        }
+
+        /// <summary>
+        /// Gets random <see cref="SharpDX.Vector3"/> within range.
+        /// </summary>
+        /// <param name="random">A <see cref="System.Random"/> instance.</param>
+        /// <param name="min">Minimum.</param>
+        /// <param name="max">Maximum.</param>
+        /// <returns>Random <see cref="SharpDX.Vector3"/>.</returns>
+        public static Vector3 NextVector3(Random random, Vector3 min, Vector3 max)
+        {
+            return new Vector3(random.NextFloat(min.X, max.X), random.NextFloat(min.Y, max.Y), random.NextFloat(min.Z, max.Z));
+        }
+
+        /// <summary>
+        /// Gets random <see cref="SharpDX.Vector4"/> within range.
+        /// </summary>
+        /// <param name="random">A <see cref="System.Random"/> instance.</param>
+        /// <param name="min">Minimum.</param>
+        /// <param name="max">Maximum.</param>
+        /// <returns>Random <see cref="SharpDX.Vector4"/>.</returns>
+        public static Vector4 NextVector4(Random random, Vector4 min, Vector4 max)
+        {
+            return new Vector4(random.NextFloat(min.X, max.X), random.NextFloat(min.Y, max.Y), random.NextFloat(min.Z, max.Z), random.NextFloat(min.W, max.W));
+        }
+
+        /// <summary>
+        /// Gets random opaque <see cref="SharpDX.Color"/>.
+        /// </summary>
+        /// <param name="random">A <see cref="System.Random"/> instance.</param>
+        /// <returns>Random <see cref="SharpDX.Color"/>.</returns>
+        public static Color NextColor(Random random)
+        {
+            return new Color(random.NextFloat(0.0f, 1.0f), random.NextFloat(0.0f, 1.0f), random.NextFloat(0.0f, 1.0f), 1.0f);
+        }
+
+        /// <summary>
+        /// Gets random opaque <see cref="SharpDX.Color"/>.
+        /// </summary>
+        /// <param name="random">A <see cref="System.Random"/> instance.</param>
+        /// <param name="minBrightness">Minimum brightness.</param>
+        /// <param name="maxBrightness">Maximum brightness</param>
+        /// <returns>Random <see cref="SharpDX.Color"/>.</returns>
+        public static Color NextColor(Random random, float minBrightness, float maxBrightness)
+        {
+            return new Color(random.NextFloat(minBrightness, maxBrightness), random.NextFloat(minBrightness, maxBrightness), random.NextFloat(minBrightness, maxBrightness), 1.0f);
+        }
+
+        /// <summary>
+        /// Gets random <see cref="SharpDX.Color"/>.
+        /// </summary>
+        /// <param name="random">A <see cref="System.Random"/> instance.</param>
+        /// <param name="minBrightness">Minimum brightness.</param>
+        /// <param name="maxBrightness">Maximum brightness</param>
+        /// <param name="alpha">Alpha value.</param>
+        /// <returns>Random <see cref="SharpDX.Color"/>.</returns>
+        public static Color NextColor(Random random, float minBrightness, float maxBrightness, float alpha)
+        {
+            return new Color(random.NextFloat(minBrightness, maxBrightness), random.NextFloat(minBrightness, maxBrightness), random.NextFloat(minBrightness, maxBrightness), alpha);
+        }
+
+        /// <summary>
+        /// Gets random <see cref="SharpDX.Color"/>.
+        /// </summary>
+        /// <param name="random">A <see cref="System.Random"/> instance.</param>
+        /// <param name="minBrightness">Minimum brightness.</param>
+        /// <param name="maxBrightness">Maximum brightness</param>
+        /// <param name="minAlpha">Minimum alpha.</param>
+        /// <param name="maxAlpha">Maximum alpha.</param>
+        /// <returns>Random <see cref="SharpDX.Color"/>.</returns>
+        public static Color NextColor(Random random, float minBrightness, float maxBrightness, float minAlpha, float maxAlpha)
+        {
+            return new Color(random.NextFloat(minBrightness, maxBrightness), random.NextFloat(minBrightness, maxBrightness), random.NextFloat(minBrightness, maxBrightness), random.NextFloat(minAlpha, maxAlpha));
+        }
+
+        /// <summary>
+        /// Gets random <see cref="SharpDX.DrawingPoint"/>.
+        /// </summary>
+        /// <param name="random">A <see cref="System.Random"/> instance.</param>
+        /// <param name="min">Minimum.</param>
+        /// <param name="max">Maximum.</param>
+        /// <returns>Random <see cref="SharpDX.DrawingPoint"/>.</returns>
+        public static DrawingPoint NextDPoint(Random random, DrawingPoint min, DrawingPoint max)
+        {
+            return new DrawingPoint(random.Next(min.X, max.X), random.Next(min.Y, max.Y));
+        }
+
+        /// <summary>
+        /// Gets random <see cref="SharpDX.DrawingPointF"/>.
+        /// </summary>
+        /// <param name="random">A <see cref="System.Random"/> instance.</param>
+        /// <param name="min">Minimum.</param>
+        /// <param name="max">Maximum.</param>
+        /// <returns>Random <see cref="SharpDX.DrawingPointF"/>.</returns>
+        public static DrawingPointF NextDPointF(Random random, DrawingPointF min, DrawingPointF max)
+        {
+            return new DrawingPointF(random.NextFloat(min.X, max.X), random.NextFloat(min.Y, max.Y));
+        }
+
+        /// <summary>
+        /// Gets random <see cref="System.TimeSpan"/>.
+        /// </summary>
+        /// <param name="random">A <see cref="System.Random"/> instance.</param>
+        /// <param name="min">Minimum.</param>
+        /// <param name="max">Maximum.</param>
+        /// <returns>Random <see cref="System.TimeSpan"/>.</returns>
+        public static TimeSpan NextTime(Random random, TimeSpan min, TimeSpan max)
+        {
+            return TimeSpan.FromTicks(random.NextLong(min.Ticks, max.Ticks));
         }
 #endif
     }

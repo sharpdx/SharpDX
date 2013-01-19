@@ -35,40 +35,39 @@ namespace SharpDX.Toolkit.Graphics
         public delegate EffectPass OnApplyDelegate(EffectPass pass);
 
         private Dictionary<EffectConstantBufferKey, EffectConstantBuffer> effectConstantBuffersCache;
+    
+        internal EffectResourceLinker ResourceLinker { get; private set; }
 
         /// <summary>
-        ///   Gets a collection of constant buffers that are defined for this effect.
+        /// Gets a collection of constant buffers that are defined for this effect.
         /// </summary>
         public readonly EffectConstantBufferCollection ConstantBuffers;
 
         /// <summary>
-        ///   Gets a collection of parameters that are defined for this effect.
+        /// Gets a collection of parameters that are defined for this effect.
         /// </summary>
         public readonly EffectParameterCollection Parameters;
 
-        internal EffectResourceLinker ResourceLinker { get; private set; }
-
         /// <summary>
-        ///   Gets a collection of techniques that are defined for this effect.
+        /// Gets a collection of techniques that are defined for this effect.
         /// </summary>
         public readonly EffectTechniqueCollection Techniques;
 
         /// <summary>
         /// Gets the data associated to this effect.
-        /// </summary>
-        /// <value>The data.</value>
+        /// </summary> 
         public EffectData.Effect RawEffectData { get; private set; }
 
         /// <summary>
-        /// Set to true to force all constant shaders to be shared between other effects within a common <see cref="EffectPool"/>. Default is false.
+        /// Set to <c>true</c> to force all constant shaders to be shared between other effects within a common <see cref="EffectPool"/>. Default is <c>false</c>.
         /// </summary>
         /// <remarks>
-        /// This value can also be set in the TKFX file directly by setting ShareConstantBuffers = true; in a pass.
+        /// This value can also be set in the TKFX file directly by setting ShareConstantBuffers = <c>true</c>; in a pass.
         /// </remarks>
         protected internal bool ShareConstantBuffers;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Effect" /> class with the specified bytecode effect. See remarks.
+        /// Initializes a new instance of the <see cref="Effect"/> class with the specified bytecode effect. See remarks.
         /// </summary>
         /// <param name="device">The device.</param>
         /// <param name="bytecode">The bytecode to add to <see cref="GraphicsDevice.DefaultEffectPool"/>. This bytecode must contain only one effect.</param>
@@ -86,14 +85,13 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="device">The device.</param>
         /// <param name="effectData">The bytecode to add to the Effect Pool. This bytecode must contain only one effect.</param>
-        /// <param name="effectPool">The effect pool used to register the bytecode. Default is <see cref="GraphicsDevice.DefaultEffectPool" /></param>
-        /// <exception cref="System.ArgumentException">bytecode</exception>
+        /// <param name="effectPool">The effect pool used to register the bytecode. Default is <see cref="GraphicsDevice.DefaultEffectPool"/>.</param>
         /// <exception cref="ArgumentException">If the bytecode doesn't contain a single effect.</exception>
-        /// <remarks>The effect bytecode must contain only a single effect and will be registered into the <see cref="GraphicsDevice.DefaultEffectPool" />.</remarks>
+        /// <remarks>The effect bytecode must contain only a single effect and will be registered into the <see cref="GraphicsDevice.DefaultEffectPool"/>.</remarks>
         public Effect(GraphicsDevice device, EffectData effectData, EffectPool effectPool = null) : base(device)
         {
             if (effectData.Effects.Count != 1)
-                throw new ArgumentException(string.Format("Expecting only one effect in the effect bytecode instead of [{0}] ", Utilities.Join(",", effectData.Effects)), "effectData");
+                throw new ArgumentException(string.Format("Expecting only one effect in the effect bytecode instead of [{0}].", Utilities.Join(",", effectData.Effects)), "effectData");
 
             ConstantBuffers = new EffectConstantBufferCollection();
             Parameters = new EffectParameterCollection();
@@ -114,17 +112,17 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        ///   Gets the pool this effect attached to.
+        /// Gets the pool this effect attached to.
         /// </summary>
         /// <value> The pool. </value>
         public readonly EffectPool Pool;
 
         /// <summary>
-        ///   Occurs when the on apply is applied on a pass.
+        /// Occurs when the on apply is applied on a pass.
         /// </summary>
         /// <remarks>
-        ///   This external hook provides a way to pre-configure a pipeline when a pass is applied.
-        ///   Subclass of this class can override the method <see cref="OnApply" />.
+        /// This external hook provides a way to pre-configure a pipeline when a pass is applied.
+        /// Subclass of this class can override the method <see cref="OnApply"/>.
         /// </remarks>
         public event OnApplyDelegate OnApplyCallback;
 
@@ -143,15 +141,15 @@ namespace SharpDX.Toolkit.Graphics
         /// Binds the specified effect data to this instance.
         /// </summary>
         /// <param name="effectDataArg">The effect data arg.</param>
-        /// <exception cref="System.ArgumentException">effectName</exception>
-        /// <exception cref="System.InvalidOperationException">No techniques found in this effect</exception>
+        /// <exception cref="System.ArgumentException">If unable to find effect [effectName] from the EffectPool.</exception>
+        /// <exception cref="System.InvalidOperationException">If no techniques found in this effect.</exception>
         public void InitializeFrom(EffectData.Effect effectDataArg)
         {
             if (effectDataArg == null)
-                throw new ArgumentException(string.Format("Unable to find effect [{0}] from the EffectPool", Name), "effectName");
+                throw new ArgumentException(string.Format("Unable to find effect [{0}] from the EffectPool.", Name), "effectName");
 
             if (effectDataArg.Techniques.Count == 0)
-                throw new InvalidOperationException("No techniques found in this effect");
+                throw new InvalidOperationException("No techniques found in this effect.");
 
             RawEffectData = effectDataArg;
 
@@ -206,7 +204,7 @@ namespace SharpDX.Toolkit.Graphics
                     {
                         if (parentPass == null)
                         {
-                            logger.Error("Pass [{0}] is declared as a subpass but has no parent");
+                            logger.Error("Pass [{0}] is declared as a subpass but has no parent.");
                         }
                         else
                         {
@@ -225,7 +223,7 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             if (totalPassCount == 0)
-                throw new InvalidOperationException("No passes found in this effect");
+                throw new InvalidOperationException("No passes found in this effect.");
 
             // Log all the exception in a single throw
             if (logger.HasErrors)

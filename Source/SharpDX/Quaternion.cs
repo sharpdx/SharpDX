@@ -449,11 +449,14 @@ namespace SharpDX
             float ry = right.Y;
             float rz = right.Z;
             float rw = right.W;
-
-            result.X = (rx * lw + lx * rw + ry * lz) - (rz * ly);
-            result.Y = (ry * lw + ly * rw + rz * lx) - (rx * lz);
-            result.Z = (rz * lw + lz * rw + rx * ly) - (ry * lx);
-            result.W = (rw * lw) - (rx * lx + ry * ly + rz * lz);
+            float a = (ly * rz - lz * ry);
+            float b = (lz * rx - lx * rz);
+            float c = (lx * ry - ly * rx);
+            float d = (lx * rx + ly * ry + lz * rz);
+            result.X = (lx * rw + rx * lw) + a;
+            result.Y = (ly * rw + ry * lw) + b;
+            result.Z = (lz * rw + rz * lw) + c;
+            result.W = lw * rw - d;
         }
 
         /// <summary>

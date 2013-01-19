@@ -17,6 +17,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -47,7 +48,7 @@ namespace SharpDX
     /// <summary>
     /// Encapsulates a method that has no parameters and returns a value of the type specified by the TResult parameter.
     /// </summary>
-    /// <typeparam name="TResult">The type of the return value of the method that this delegate encapsulates. This type parameter is covariant. That is, you can use either the type you specified or any type that is more derived. </typeparam>
+    /// <typeparam name="TResult">The type of the return value of the method that this delegate encapsulates. This type parameter is covariant. That is, you can use either the type you specified or any type that is more derived.</typeparam>
     /// <returns>The return value of the method that this delegate encapsulates.</returns>
     public delegate TResult Func<out TResult>();
 #endif
@@ -57,17 +58,17 @@ namespace SharpDX
     /// <summary>
     /// A Delegate to get a property value from an object.
     /// </summary>
-    /// <typeparam name="T">Type of the getter</typeparam>
-    /// <param name="obj">The obj to get the property from</param>
-    /// <param name="value">The value to get</param>
+    /// <typeparam name="T">Type of the getter.</typeparam>
+    /// <param name="obj">The obj to get the property from.</param>
+    /// <param name="value">The value to get.</param>
     public delegate void GetValueFastDelegate<T>(object obj, out T value);
 
     /// <summary>
     /// A Delegate to set a property value to an object.
     /// </summary>
-    /// <typeparam name="T">Type of the setter</typeparam>
-    /// <param name="obj">The obj to set the property from</param>
-    /// <param name="value">The value to set</param>
+    /// <typeparam name="T">Type of the setter.</typeparam>
+    /// <param name="obj">The obj to set the property from.</param>
+    /// <param name="value">The value to set.</param>
     public delegate void SetValueFastDelegate<T>(object obj, ref T value);
 
     /// <summary>
@@ -78,7 +79,7 @@ namespace SharpDX
         ///// <summary>
         ///// Native memcpy.
         ///// </summary>
-        ///// <param name="dest">The destination memory location</param>
+        ///// <param name="dest">The destination memory location.</param>
         ///// <param name="src">The source memory location.</param>
         ///// <param name="sizeInBytesToCopy">The count.</param>
         ///// <returns></returns>
@@ -89,10 +90,9 @@ namespace SharpDX
         /// <summary>
         /// Native memcpy.
         /// </summary>
-        /// <param name="dest">The destination memory location</param>
+        /// <param name="dest">The destination memory location.</param>
         /// <param name="src">The source memory location.</param>
-        /// <param name="sizeInBytesToCopy">The count.</param>
-        /// <returns></returns>
+        /// <param name="sizeInBytesToCopy">The byte count.</param>
         public static void CopyMemory(IntPtr dest, IntPtr src, int sizeInBytesToCopy)
         {
             unsafe
@@ -108,7 +108,7 @@ namespace SharpDX
         /// <param name="from">The pointer to compare from.</param>
         /// <param name="against">The pointer to compare against.</param>
         /// <param name="sizeToCompare">The size in bytes to compare.</param>
-        /// <returns>True if the buffers are equivalent, false otherwise.</returns>
+        /// <returns><c>true</c> if the buffers are equivalent; otherwise, <c>false</c>.</returns>
         public unsafe static bool CompareMemory(IntPtr from, IntPtr against, int sizeToCompare)
         {
             var pSrc = (byte*)@from;
@@ -124,7 +124,7 @@ namespace SharpDX
                 pDst += 8;
                 numberOf--;
             }
-
+ 
             // Compare remaining bytes.
             numberOf = sizeToCompare & 7;
             while (numberOf > 0)
@@ -156,8 +156,8 @@ namespace SharpDX
         /// <summary>
         /// Return the sizeof a struct from a CLR. Equivalent to sizeof operator but works on generics too.
         /// </summary>
-        /// <typeparam name="T">a struct to evaluate</typeparam>
-        /// <returns>sizeof this struct</returns>
+        /// <typeparam name="T">A struct to evaluate.</typeparam>
+        /// <returns>Size of this struct.</returns>
         public static int SizeOf<T>() where T : struct
         {
             return Interop.SizeOf<T>();            
@@ -166,9 +166,9 @@ namespace SharpDX
         /// <summary>
         /// Return the sizeof an array of struct. Equivalent to sizeof operator but works on generics too.
         /// </summary>
-        /// <typeparam name="T">a struct</typeparam>
+        /// <typeparam name="T">A struct.</typeparam>
         /// <param name="array">The array of struct to evaluate.</param>
-        /// <returns>sizeof in bytes of this array of struct</returns>
+        /// <returns>Size in bytes of this array of struct.</returns>
         public static int SizeOf<T>(T[] array) where T : struct
         {
             return array == null ? 0 : array.Length * Interop.SizeOf<T>();
@@ -177,7 +177,7 @@ namespace SharpDX
         /// <summary>
         /// Pins the specified source and call an action with the pinned pointer.
         /// </summary>
-        /// <typeparam name="T">The type of the structure to pin</typeparam>
+        /// <typeparam name="T">The type of the structure to pin.</typeparam>
         /// <param name="source">The source.</param>
         /// <param name="pinAction">The pin action to perform on the pinned pointer.</param>
         public static void Pin<T>(ref T source, Action<IntPtr> pinAction) where T : struct
@@ -191,7 +191,7 @@ namespace SharpDX
         /// <summary>
         /// Pins the specified source and call an action with the pinned pointer.
         /// </summary>
-        /// <typeparam name="T">The type of the structure to pin</typeparam>
+        /// <typeparam name="T">The type of the structure to pin.</typeparam>
         /// <param name="source">The source array.</param>
         /// <param name="pinAction">The pin action to perform on the pinned pointer.</param>
         public static void Pin<T>(T[] source, Action<IntPtr> pinAction) where T : struct
@@ -203,11 +203,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Covnerts a structured array to an equivalent byte array.
+        /// Converts a structured array to an equivalent byte array.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="source">The source.</param>
-        /// <returns></returns>
+        /// <typeparam name="T">The type of source array.</typeparam>
+        /// <param name="source">The source array.</param>
+        /// <returns>Converted byte array.</returns>
         public static byte[] ToByteArray<T>(T[] source) where T : struct
         {
             if (source == null) return null;
@@ -228,9 +228,9 @@ namespace SharpDX
         /// <summary>
         /// Reads the specified T data from a memory location.
         /// </summary>
-        /// <typeparam name="T">Type of a data to read</typeparam>
+        /// <typeparam name="T">Type of a data to read.</typeparam>
         /// <param name="source">Memory location to read from.</param>
-        /// <returns>The data read from the memory location</returns>
+        /// <returns>The data read from the memory location.</returns>
         public static T Read<T>(IntPtr source) where T : struct
         {
             unsafe
@@ -242,10 +242,10 @@ namespace SharpDX
         /// <summary>
         /// Reads the specified T data from a memory location.
         /// </summary>
-        /// <typeparam name="T">Type of a data to read</typeparam>
+        /// <typeparam name="T">Type of a data to read.</typeparam>
         /// <param name="source">Memory location to read from.</param>
         /// <param name="data">The data write to.</param>
-        /// <returns>source pointer + sizeof(T)</returns>
+        /// <returns>source pointer + sizeof(T).</returns>
         public static void Read<T>(IntPtr source, ref T data) where T : struct
         {
             unsafe
@@ -257,10 +257,10 @@ namespace SharpDX
         /// <summary>
         /// Reads the specified T data from a memory location.
         /// </summary>
-        /// <typeparam name="T">Type of a data to read</typeparam>
+        /// <typeparam name="T">Type of a data to read.</typeparam>
         /// <param name="source">Memory location to read from.</param>
         /// <param name="data">The data write to.</param>
-        /// <returns>source pointer + sizeof(T)</returns>
+        /// <returns>source pointer + sizeof(T).</returns>
         public static void ReadOut<T>(IntPtr source, out T data) where T : struct
         {
             unsafe
@@ -272,10 +272,10 @@ namespace SharpDX
         /// <summary>
         /// Reads the specified T data from a memory location.
         /// </summary>
-        /// <typeparam name="T">Type of a data to read</typeparam>
+        /// <typeparam name="T">Type of a data to read.</typeparam>
         /// <param name="source">Memory location to read from.</param>
         /// <param name="data">The data write to.</param>
-        /// <returns>source pointer + sizeof(T)</returns>
+        /// <returns>source pointer + sizeof(T).</returns>
         public static IntPtr ReadAndPosition<T>(IntPtr source, ref T data) where T : struct
         {
             unsafe
@@ -287,12 +287,12 @@ namespace SharpDX
         /// <summary>
         /// Reads the specified array T[] data from a memory location.
         /// </summary>
-        /// <typeparam name="T">Type of a data to read</typeparam>
+        /// <typeparam name="T">Type of a data to read.</typeparam>
         /// <param name="source">Memory location to read from.</param>
         /// <param name="data">The data write to.</param>
         /// <param name="offset">The offset in the array to write to.</param>
-        /// <param name="count">The number of T element to read from the memory location</param>
-        /// <returns>source pointer + sizeof(T) * count</returns>
+        /// <param name="count">The number of T element to read from the memory location.</param>
+        /// <returns>source pointer + sizeof(T) * count.</returns>
         public static IntPtr Read<T>(IntPtr source, T[] data, int offset, int count) where T : struct
         {
             unsafe
@@ -304,10 +304,10 @@ namespace SharpDX
         /// <summary>
         /// Writes the specified T data to a memory location.
         /// </summary>
-        /// <typeparam name="T">Type of a data to write</typeparam>
+        /// <typeparam name="T">Type of a data to write.</typeparam>
         /// <param name="destination">Memory location to write to.</param>
         /// <param name="data">The data to write.</param>
-        /// <returns>destination pointer + sizeof(T)</returns>
+        /// <returns>destination pointer + sizeof(T).</returns>
         public static void Write<T>(IntPtr destination, ref T data) where T : struct
         {
             unsafe
@@ -319,10 +319,10 @@ namespace SharpDX
         /// <summary>
         /// Writes the specified T data to a memory location.
         /// </summary>
-        /// <typeparam name="T">Type of a data to write</typeparam>
+        /// <typeparam name="T">Type of a data to write.</typeparam>
         /// <param name="destination">Memory location to write to.</param>
         /// <param name="data">The data to write.</param>
-        /// <returns>destination pointer + sizeof(T)</returns>
+        /// <returns>destination pointer + sizeof(T).</returns>
         public static IntPtr WriteAndPosition<T>(IntPtr destination, ref T data) where T : struct
         {
             unsafe
@@ -334,12 +334,12 @@ namespace SharpDX
         /// <summary>
         /// Writes the specified array T[] data to a memory location.
         /// </summary>
-        /// <typeparam name="T">Type of a data to write</typeparam>
+        /// <typeparam name="T">Type of a data to write.</typeparam>
         /// <param name="destination">Memory location to write to.</param>
         /// <param name="data">The array of T data to write.</param>
         /// <param name="offset">The offset in the array to read from.</param>
-        /// <param name="count">The number of T element to write to the memory location</param>
-        /// <returns>destination pointer + sizeof(T) * count</returns>
+        /// <param name="count">The number of T element to write to the memory location.</param>
+        /// <returns>destination pointer + sizeof(T) * count.</returns>
         public static IntPtr Write<T>(IntPtr destination, T[] data, int offset, int count) where T : struct
         {
             unsafe
@@ -348,25 +348,22 @@ namespace SharpDX
             }
         }
 
+	/// <summary>
+        /// Converts bool array to integer pointers array.
+        /// </summary>
+        /// <param name="array">The bool array.</param>
+        /// <param name="dest">The destination array of int pointers.</param>
         public unsafe static void ConvertToIntArray(bool[] array, int* dest)
         {
             for (int i = 0; i < array.Length; i++)
                 dest[i] = array[i] ? 1 : 0;
         }
-
-        public unsafe static bool[] ConvertToBoolArray(int* array, int length)
-        {
-            var temp = new bool[length];
-            for (int i = 0; i < temp.Length; i++)
-                temp[i] = array[i] != 0;
-            return temp;
-        }
-
+ 
         /// <summary>
-        /// Converts to int array.
+        /// Converts bool array to <see cref="Bool"/> array.
         /// </summary>
-        /// <param name="array">The array.</param>
-        /// <returns></returns>
+        /// <param name="array">The bool array.</param>
+        /// <returns>Converted array of <see cref="Bool"/>.</returns>
         public static Bool[] ConvertToIntArray(bool[] array)
         {
             var temp = new Bool[array.Length];
@@ -375,11 +372,25 @@ namespace SharpDX
             return temp;
         }
 
+ 	/// <summary>
+        /// Converts integer pointer array to bool array.
+        /// </summary>
+        /// <param name="array">The array of integer pointers.</param>
+        /// <param name="length">Array size.</param>
+        /// <returns>Converted array of bool.</returns>
+	public unsafe static bool[] ConvertToBoolArray(int* array, int length)
+        {
+            var temp = new bool[length];
+            for (int i = 0; i < temp.Length; i++)
+                temp[i] = array[i] != 0;
+            return temp;
+        }
+
         /// <summary>
-        /// Converts to bool array.
+        /// Converts <see cref="Bool"/> array to bool array.
         /// </summary>
         /// <param name="array">The array.</param>
-        /// <returns></returns>
+        /// <returns>Converted array of bool.</returns>
         public static bool[] ConvertToBoolArray(Bool[] array)
         {
             var temp = new bool[array.Length];
@@ -392,7 +403,7 @@ namespace SharpDX
         /// Gets the <see cref="System.Guid"/> from a type.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <returns>The guid associated with this type</returns>
+        /// <returns>The guid associated with this type.</returns>
         public static Guid GetGuidFromType(Type type)
         {
 #if W8CORE
@@ -409,7 +420,7 @@ namespace SharpDX
         /// <param name="align">Alignment, 16 bytes by default.</param>
         /// <returns>A pointer to a buffer aligned.</returns>
         /// <remarks>
-        /// To free this buffer, call <see cref="FreeMemory"/>
+        /// To free this buffer, call <see cref="FreeMemory"/>.
         /// </remarks>
         public unsafe static IntPtr AllocateMemory(int sizeInBytes, int align = 16)
         {
@@ -428,7 +439,7 @@ namespace SharpDX
         /// <param name="align">Alignment, 16 bytes by default.</param>
         /// <returns>A pointer to a buffer aligned.</returns>
         /// <remarks>
-        /// To free this buffer, call <see cref="FreeMemory"/>
+        /// To free this buffer, call <see cref="FreeMemory"/>.
         /// </remarks>
         public static IntPtr AllocateClearedMemory(int sizeInBytes, byte clearValue = 0, int align = 16)
         {
@@ -453,7 +464,7 @@ namespace SharpDX
         /// </summary>
         /// <returns>A pointer to a buffer aligned.</returns>
         /// <remarks>
-        /// The buffer must have been allocated with <see cref="AllocateMemory"/>
+        /// The buffer must have been allocated with <see cref="AllocateMemory"/>.
         /// </remarks>
         public unsafe static void FreeMemory(IntPtr alignedBuffer)
         {
@@ -464,8 +475,8 @@ namespace SharpDX
         /// Converts a pointer to a null-terminating string up to maxLength characters to a .Net string.
         /// </summary>
         /// <param name="pointer">The pointer to an ansi null string.</param>
-        /// <param name="maxLength">Maximum length of the string</param>
-        /// <returns></returns>
+        /// <param name="maxLength">Maximum length of the string.</param>
+        /// <returns>The converted string.</returns>
         public static string PtrToStringAnsi(IntPtr pointer, int maxLength)
         {
 #if W8CORE
@@ -486,8 +497,8 @@ namespace SharpDX
         /// Converts a pointer to a null-terminating string up to maxLength characters to a .Net string.
         /// </summary>
         /// <param name="pointer">The pointer to an unicode null string.</param>
-        /// <param name="maxLength">Maximum length of the string</param>
-        /// <returns></returns>
+        /// <param name="maxLength">Maximum length of the string.</param>
+        /// <returns>The converted string.</returns>
         public static string PtrToStringUni(IntPtr pointer, int maxLength)
         {
 #if W8CORE
@@ -504,6 +515,11 @@ namespace SharpDX
 #endif
         }
 
+	/// <summary>
+        /// Copies the contents of a managed String into unmanaged memory, converting into ANSI format as it copies.
+        /// </summary>
+        /// <param name="s">A managed string to be copied.</param> 
+        /// <returns>The address, in unmanaged memory, to where s was copied, or IntPtr.Zero if s is null.</returns>
         public static unsafe IntPtr StringToHGlobalAnsi(string s)
         {
 #if WP8
@@ -529,7 +545,11 @@ namespace SharpDX
 #endif
         }
 
-
+	/// <summary>
+        /// Copies the contents of a managed String into unmanaged memory.
+        /// </summary>
+        /// <param name="s">A managed string to be copied.</param> 
+        /// <returns>The address, in unmanaged memory, to where s was copied, or IntPtr.Zero if s is null.</returns>
         public static unsafe IntPtr StringToHGlobalUni(string s)
         {
 #if WP8
@@ -559,16 +579,13 @@ namespace SharpDX
             return Marshal.StringToHGlobalUni(s);
 #endif
         }
- 
-
-
-
+  
         /// <summary>
         /// Gets the IUnknown from object. Similar to <see cref="Marshal.GetIUnknownForObject"/> but accept null object
         /// by returning an IntPtr.Zero IUnknown pointer.
         /// </summary>
         /// <param name="obj">The managed object.</param>
-        /// <returns>an IUnknown pointer to a  managed object</returns>
+        /// <returns>An IUnknown pointer to a  managed object.</returns>
         public static IntPtr GetIUnknownForObject(object obj)
         {
             IntPtr objPtr =  obj == null ? IntPtr.Zero : Marshal.GetIUnknownForObject(obj);
@@ -581,7 +598,7 @@ namespace SharpDX
         /// Gets an object from an IUnknown pointer. Similar to <see cref="Marshal.GetObjectForIUnknown"/> but accept IntPtr.Zero
         /// by returning a null object.
         /// </summary>
-        /// <param name="iunknownPtr">an IUnknown pointer to a  managed object</param>
+        /// <param name="iunknownPtr">an IUnknown pointer to a  managed object.</param>
         /// <returns>The managed object.</returns>
         public static object GetObjectForIUnknown(IntPtr iunknownPtr)
         {
@@ -593,7 +610,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="separator">The separator.</param>
         /// <param name="array">The array.</param>
-        /// <returns>a string with array elements serparated by the seperator</returns>
+        /// <returns>A string with array elements serparated by the seperator.</returns>
         public static string Join<T>(string separator, T[] array)
         {
             var text = new StringBuilder();
@@ -613,7 +630,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="separator">The separator.</param>
         /// <param name="elements">The enumerable.</param>
-        /// <returns>a string with array elements serparated by the seperator</returns>
+        /// <returns>A string with array elements serparated by the seperator.</returns>
         public static string Join(string separator, IEnumerable elements)
         {
             var elementList = new List<string>();
@@ -635,7 +652,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="separator">The separator.</param>
         /// <param name="elements">The enumerable.</param>
-        /// <returns>a string with array elements serparated by the seperator</returns>
+        /// <returns>A string with array elements serparated by the seperator.</returns>
         public static string Join(string separator, IEnumerator elements)
         {
             var elementList = new List<string>();
@@ -675,20 +692,21 @@ namespace SharpDX
 
         /// <summary>
         /// Equivalent to IntPtr.Add method from 3.5+ .NET Framework.
+        /// Adds an offset to the value of a pointer.
         /// </summary>
-        /// <param name="ptr">A native pointer</param>
-        /// <param name="offset">The offset to add (number of bytes)</param>
-        /// <returns></returns>
+        /// <param name="ptr">A native pointer.</param>
+        /// <param name="offset">The offset to add (number of bytes).</param>
+        /// <returns>A new pointer that reflects the addition of offset to pointer.</returns>
         public unsafe static IntPtr IntPtrAdd(IntPtr ptr, int offset)
         {
             return new IntPtr(((byte*) ptr) + offset);
         }
 
         /// <summary>
-        ///   Read stream to a byte[] buffer
+        /// Read stream to a byte[] buffer.
         /// </summary>
-        /// <param name = "stream">input stream</param>
-        /// <returns>a byte[] buffer</returns>
+        /// <param name="stream">Input stream.</param>
+        /// <returns>A byte[] buffer.</returns>
         public static byte[] ReadStream(Stream stream)
         {
             int readLength = 0;
@@ -696,11 +714,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        ///   Read stream to a byte[] buffer
+        /// Read stream to a byte[] buffer.
         /// </summary>
-        /// <param name = "stream">input stream</param>
-        /// <param name = "readLength">length to read</param>
-        /// <returns>a byte[] buffer</returns>
+        /// <param name="stream">Input stream.</param>
+        /// <param name="readLength">Length to read.</param>
+        /// <returns>A byte[] buffer.</returns>
         public static byte[] ReadStream(Stream stream, ref int readLength)
         {
             Debug.Assert(stream != null);
@@ -732,7 +750,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="left">A "from" enumerator.</param>
         /// <param name="right">A "to" enumerator.</param>
-        /// <returns>True if lists are identical. False otherwise.</returns>
+        /// <returns><c>true</c> if lists are identical, <c>false</c> otherwis.</returns>
         public static bool Compare(IEnumerable left, IEnumerable right)
         {
             if (ReferenceEquals(left, right))
@@ -748,7 +766,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="leftIt">A "from" enumerator.</param>
         /// <param name="rightIt">A "to" enumerator.</param>
-        /// <returns>True if lists are identical. False otherwise.</returns>
+        /// <returns><c>true</c> if lists are identical; otherwise, <c>false</c>.</returns>
         public static bool Compare(IEnumerator leftIt, IEnumerator rightIt)
         {
             if (ReferenceEquals(leftIt, rightIt))
@@ -781,7 +799,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="left">The collection to compare from.</param>
         /// <param name="right">The colllection to compare to.</param>
-        /// <returns>True if lists are identical (but no necessarely of the same time). False otherwise.</returns>
+        /// <returns><c>true</c> if lists are identical (but no necessarely of the same time); otherwise , <c>false</c>.</returns>
         public static bool Compare(ICollection left, ICollection right)
         {
             if (ReferenceEquals(left, right))
@@ -813,10 +831,10 @@ namespace SharpDX
         /// <summary>
         /// Gets the custom attribute.
         /// </summary>
-        /// <typeparam name="T">Type of the custom attribute</typeparam>
+        /// <typeparam name="T">Type of the custom attribute.</typeparam>
         /// <param name="memberInfo">The member info.</param>
         /// <param name="inherited">if set to <c>true</c> [inherited].</param>
-        /// <returns>The custom attribute or null if not found</returns>
+        /// <returns>The custom attribute or null if not found.</returns>
         public static T GetCustomAttribute<T>(MemberInfo memberInfo, bool inherited = false) where T : Attribute
         {
 #if W8CORE
@@ -832,10 +850,10 @@ namespace SharpDX
         /// <summary>
         /// Gets the custom attributes.
         /// </summary>
-        /// <typeparam name="T">Type of the custom attribute</typeparam>
+        /// <typeparam name="T">Type of the custom attribute.</typeparam>
         /// <param name="memberInfo">The member info.</param>
         /// <param name="inherited">if set to <c>true</c> [inherited].</param>
-        /// <returns>The custom attribute or null if not found</returns>
+        /// <returns>The custom attribute or null if not found.</returns>
         public static IEnumerable<T> GetCustomAttributes<T>(MemberInfo memberInfo, bool inherited = false) where T : Attribute
         {
 #if W8CORE
@@ -856,7 +874,7 @@ namespace SharpDX
         /// <param name="toType">To type.</param>
         /// <param name="fromType">From type.</param>
         /// <returns>
-        ///   <c>true</c> if [is assignable from] [the specified to type]; otherwise, <c>false</c>.
+        /// <c>true</c> if [is assignable from] [the specified to type]; otherwise, <c>false</c>.
         /// </returns>
         public static bool IsAssignableFrom(Type toType, Type fromType)
         {
@@ -872,7 +890,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="typeToTest">The type to test.</param>
         /// <returns>
-        ///   <c>true</c> if the specified type to test is an enum; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified type to test is an enum; otherwise, <c>false</c>.
         /// </returns>
         public static bool IsEnum(Type typeToTest)
         {
@@ -888,7 +906,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="typeToTest">The type to test.</param>
         /// <returns>
-        ///   <c>true</c> if the specified type to test is a valuetype; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified type to test is a valuetype; otherwise, <c>false</c>.
         /// </returns>
         public static bool IsValueType(Type typeToTest)
         {
@@ -927,10 +945,10 @@ namespace SharpDX
         /// <summary>
         /// Builds a fast property getter from a type and a property info.
         /// </summary>
-        /// <typeparam name="T">Type of the getter</typeparam>
+        /// <typeparam name="T">Type of the getter.</typeparam>
         /// <param name="customEffectType">Type of the custom effect.</param>
         /// <param name="propertyInfo">The property info to get the value from.</param>
-        /// <returns>A compiled delegate </returns>
+        /// <returns>A compiled delegate.</returns>
         public static GetValueFastDelegate<T> BuildPropertyGetter<T>(Type customEffectType, PropertyInfo propertyInfo)
         {
 #if W8CORE
@@ -1008,10 +1026,10 @@ namespace SharpDX
         /// <summary>
         /// Builds a fast property setter from a type and a property info.
         /// </summary>
-        /// <typeparam name="T">Type of the setter</typeparam>
+        /// <typeparam name="T">Type of the setter.</typeparam>
         /// <param name="customEffectType">Type of the custom effect.</param>
         /// <param name="propertyInfo">The property info to set the value to.</param>
-        /// <returns>A compiled delegate</returns>
+        /// <returns>A compiled delegate.</returns>
         public static SetValueFastDelegate<T> BuildPropertySetter<T>(Type customEffectType, PropertyInfo propertyInfo)
         {
 #if W8CORE
@@ -1099,7 +1117,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Suspends the current thread of a <see cref="sleepTimeInMillis" />.
+        /// Suspends the current thread of a <see cref="sleepTimeInMillis"/>.
         /// </summary>
         /// <param name="sleepTimeInMillis">The duration to sleep in milliseconds.</param>
         public static void Sleep(TimeSpan sleepTimeInMillis)
@@ -1112,11 +1130,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Finds an explicit converstion between a source type and a target type
+        /// Finds an explicit converstion between a source type and a target type.
         /// </summary>
         /// <param name="sourceType">Type of the source.</param>
         /// <param name="targetType">Type of the target.</param>
-        /// <returns>The method to perform the conversion. null if not found</returns>
+        /// <returns>The method to perform the conversion. null if not found.</returns>
         private static MethodInfo FindExplicitConverstion(Type sourceType, Type targetType)
         {
             // No need for cast for similar source and target type
@@ -1312,8 +1330,8 @@ namespace SharpDX
         /// Loads a native library.
         /// </summary>
         /// <param name="dllName">Name of the DLL.</param>
-        /// <exception cref="SharpDXException">If dll was not found</exception>
-        /// <returns></returns>
+        /// <exception cref="DllNotFoundException">If dll was not found.</exception>
+        /// <returns>Handle to the module.</returns>
         public static IntPtr LoadLibrary(string dllName)
         {
             IntPtr result = LoadLibrary_(dllName);
@@ -1343,8 +1361,8 @@ namespace SharpDX
         /// </summary>
         /// <param name="handle">The handle.</param>
         /// <param name="dllFunctionToImport">The DLL function to import.</param>
-        /// <exception cref="SharpDXException">If the function was not found</exception>
-        /// <returns></returns>
+        /// <exception cref="SharpDXException">If the function was not found.</exception>
+        /// <returns>Pointer to address of the exported function or variable.</returns>
         public static IntPtr GetProcAddress(IntPtr handle, string dllFunctionToImport)
         {
             IntPtr result = GetProcAddress_(handle, dllFunctionToImport);
@@ -1370,7 +1388,7 @@ namespace SharpDX
         /// Compute a FNV1-modified Hash from <a href="http://bretm.home.comcast.net/~bretm/hash/6.html">Fowler/Noll/Vo Hash</a> improved version.
         /// </summary>
         /// <param name="data">Data to compute the hash from.</param>
-        /// <returns>A hash value</returns>
+        /// <returns>A hash value.</returns>
         public static int ComputeHashFNVModified(byte[] data)
         {
             const uint p = 16777619;
@@ -1388,8 +1406,8 @@ namespace SharpDX
         /// <summary>
         /// Safely dispose a referencem if not null, and set it to null after dispose.
         /// </summary>
-        ///<typeparam name="T">The type of COM interface to dispose</typeparam>
-        /// <param name="comObject">Object to dispose</param>
+        /// <typeparam name="T">The type of COM interface to dispose.</typeparam>
+        /// <param name="comObject">Object to dispose.</param>
         /// <remarks>
         /// The reference will be set to null after dispose.
         /// </remarks>
