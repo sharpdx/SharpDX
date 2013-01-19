@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#if WIN8METRO
+
 using System;
 using Windows.System;
 using Windows.UI.Core;
@@ -209,3 +211,5 @@ namespace SharpDX.Toolkit.Input
         }
     }
 }
+
+#endif

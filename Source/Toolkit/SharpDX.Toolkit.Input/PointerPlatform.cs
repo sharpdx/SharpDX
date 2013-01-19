@@ -52,6 +52,7 @@ namespace SharpDX.Toolkit.Input
         internal static PointerPlatform Create(object nativeWindow, PointerManager manager)
         {
 #if !W8CORE
+            return new PointerPlatformDesktop(nativeWindow, manager);
 #elif WIN8METRO
             return new PointerPlatformWinRT(nativeWindow, manager);
 #else

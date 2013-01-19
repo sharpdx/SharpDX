@@ -39,6 +39,7 @@
     <Compile Include="PointerDeviceType.cs" />
     <Compile Include="PointerManager.cs" />
     <Compile Include="PointerPlatform.cs" />
+    <Compile Include="PointerPlatformDesktop.cs" />
     <Compile Include="PointerPlatformWinRT.cs" />
     <Compile Include="PointerPoint.cs" />
     <Compile Include="PointerPointProperties.cs" />
