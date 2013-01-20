@@ -26,14 +26,32 @@ using FKeys = System.Windows.Forms.Keys;
 
 namespace SharpDX.Toolkit.Input
 {
+    /// <summary>
+    /// Specific implementation of <see cref="PointerPlatform"/> for Desktop
+    /// </summary>
     internal sealed class PointerPlatformDesktop : PointerPlatform
     {
         private Control control;
         private PointerManager manager;
 
+        // used to store the count of currently pressed mouse buttons, as subsequent buttons should raise 'Moved' events.
+        private int pressedButtonsCount;
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="PointerPlatformDesktop"/> class.
+        /// </summary>
+        /// <param name="nativeWindow">The platform-specific reference to window object</param>
+        /// <param name="manager">The <see cref="PointerManager"/> whose events will be raised in response to platform-specific events</param>
+        /// <exception cref="ArgumentNullException">Is thrown when either <paramref name="nativeWindow"/> or <paramref name="manager"/> is null.</exception>
         public PointerPlatformDesktop(object nativeWindow, PointerManager manager)
             : base(nativeWindow, manager) { }
 
+        /// <summary>
+        /// Binds to pointer events of specified <paramref name="nativeWindow"/> object and raises the corresponding events on <paramref name="manager"/>.
+        /// </summary>
+        /// <param name="nativeWindow">An instance of <see cref="Control"/>.</param>
+        /// <param name="manager">The related <see cref="PointerManager"/> instance.</param>
+        /// <exception cref="ArgumentNullException">Is thrown when either <paramref name="nativeWindow"/> or <paramref name="manager"/> is null.</exception>
         protected override void BindWindow(object nativeWindow, PointerManager manager)
         {
             if (nativeWindow == null) throw new ArgumentNullException("nativeWindow");
@@ -48,45 +66,88 @@ namespace SharpDX.Toolkit.Input
             control.MouseDown += HandleMouseDown;
             control.MouseUp += HandleMouseUp;
             control.MouseWheel += HandleMouseWheel;
-            control.MouseCaptureChanged += HandleCaptureChanged;
         }
 
+        /// <summary>
+        /// Handles the <see cref="Control.MouseLeave"/> event.
+        /// </summary>
+        /// <param name="sender">Ignored.</param>
+        /// <param name="e">Ignored.</param>
         private void HandleMouseLeave(object sender, EventArgs e)
         {
             manager.RaiseExited(CreatePoint(PointerUpdateKind.Other, 0));
         }
 
+        /// <summary>
+        /// Handles the <see cref="Control.MouseEnter"/> event.
+        /// </summary>
+        /// <param name="sender">Ignored.</param>
+        /// <param name="e">Ignored.</param>
         private void HandleMouseEnter(object sender, EventArgs e)
         {
             manager.RaiseEntered(CreatePoint(PointerUpdateKind.Other, 0));
         }
 
+        /// <summary>
+        /// Handles the <see cref="Control.MouseMove"/> event.
+        /// </summary>
+        /// <param name="sender">Ignored.</param>
+        /// <param name="e">Is used to retrieve information about mouse wheel delta (<see cref="MouseEventArgs.Delta"/>).</param>
         private void HandleMouseMove(object sender, MouseEventArgs e)
         {
             manager.RaiseMoved(CreatePoint(PointerUpdateKind.Other, e.Delta));
         }
 
+        /// <summary>
+        /// Handles the <see cref="Control.MouseDown"/> event.
+        /// </summary>
+        /// <param name="sender">Ignored.</param>
+        /// <param name="e">Is used to retrieve information about changed button (<see cref="MouseEventArgs.Button"/>) and wheel delta (<see cref="MouseEventArgs.Delta"/>).</param>
         private void HandleMouseDown(object sender, MouseEventArgs e)
         {
-            manager.RaisePressed(CreatePoint(TranslateMouseButtonDown(e.Button), e.Delta));
+            pressedButtonsCount++;
+
+            var point = CreatePoint(TranslateMouseButtonDown(e.Button), e.Delta);
+
+            if (pressedButtonsCount > 1)
+                manager.RaiseMoved(point);
+            else
+                manager.RaisePressed(point);
         }
 
+        /// <summary>
+        /// Handles the <see cref="Control.MouseUp"/> event.
+        /// </summary>
+        /// <param name="sender">Ignored.</param>
+        /// <param name="e">Is used to retrieve information about changed button (<see cref="MouseEventArgs.Button"/>) and wheel delta (<see cref="MouseEventArgs.Delta"/>).</param>
         private void HandleMouseUp(object sender, MouseEventArgs e)
         {
-            manager.RaiseReleased(CreatePoint(TranslateMouseButtonUp(e.Button), e.Delta));
+            pressedButtonsCount--;
+
+            var point = CreatePoint(TranslateMouseButtonUp(e.Button), e.Delta);
+
+            if (pressedButtonsCount > 0)
+                manager.RaiseMoved(point);
+            else
+                manager.RaiseReleased(point);
         }
 
+        /// <summary>
+        /// Handles the <see cref="Control.MouseWheel"/> event.
+        /// </summary>
+        /// <param name="sender">Ignored.</param>
+        /// <param name="e">Ignored.</param>
         private void HandleMouseWheel(object sender, MouseEventArgs e)
         {
             manager.RaiseWheelChanged(CreatePoint(PointerUpdateKind.Other, e.Delta));
         }
 
-        private void HandleCaptureChanged(object sender, EventArgs e)
-        {
-            if (!control.Capture)
-                manager.RaiseCaptureLost(CreatePoint(PointerUpdateKind.Other, 0));
-        }
-
+        /// <summary>
+        /// Creates a <see cref="PointerPoint"/> instance from current mouse state.
+        /// </summary>
+        /// <param name="pointerUpdateKind">The kind of pointer event.</param>
+        /// <param name="wheelDelta">The current mouse wheel delta.</param>
+        /// <returns>An instance of <see cref="PointerPoint"/> that represents the current state of mouse device.</returns>
         private PointerPoint CreatePoint(PointerUpdateKind pointerUpdateKind, int wheelDelta)
         {
             var modifierKeysDesktop = Control.ModifierKeys;
@@ -135,6 +196,11 @@ namespace SharpDX.Toolkit.Input
                    };
         }
 
+        /// <summary>
+        /// Translates the <see cref="MouseButtons"/> to corresponding <see cref="PointerUpdateKind"/> according to <see cref="Control.MouseDown"/> event.
+        /// </summary>
+        /// <param name="button">The pressed mouse button.</param>
+        /// <returns>The corresponding pointer update kind.</returns>
         private static PointerUpdateKind TranslateMouseButtonDown(MouseButtons button)
         {
             switch (button)
@@ -156,6 +222,11 @@ namespace SharpDX.Toolkit.Input
             }
         }
 
+        /// <summary>
+        /// Translates the <see cref="MouseButtons"/> to corresponding <see cref="PointerUpdateKind"/> according to <see cref="Control.MouseUp"/> event.
+        /// </summary>
+        /// <param name="button">The released mouse button.</param>
+        /// <returns>The corresponding pointer update kind.</returns>
         private static PointerUpdateKind TranslateMouseButtonUp(MouseButtons button)
         {
             switch (button)
