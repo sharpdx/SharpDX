@@ -135,7 +135,7 @@ namespace SharpDX.Toolkit.Input
                    };
         }
 
-        private PointerUpdateKind TranslateMouseButtonDown(MouseButtons button)
+        private static PointerUpdateKind TranslateMouseButtonDown(MouseButtons button)
         {
             switch (button)
             {
@@ -156,7 +156,7 @@ namespace SharpDX.Toolkit.Input
             }
         }
 
-        private PointerUpdateKind TranslateMouseButtonUp(MouseButtons button)
+        private static PointerUpdateKind TranslateMouseButtonUp(MouseButtons button)
         {
             switch (button)
             {
