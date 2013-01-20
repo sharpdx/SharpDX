@@ -176,6 +176,8 @@ namespace PointerInput
 
         protected override void LoadContent()
         {
+            Window.AllowUserResizing = true;
+
             // set the resolution to current window size:
             graphicsDeviceManager.PreferredBackBufferHeight = Window.ClientBounds.Height;
             graphicsDeviceManager.PreferredBackBufferWidth = Window.ClientBounds.Width;
