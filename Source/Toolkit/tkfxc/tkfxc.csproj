@@ -10,7 +10,7 @@
     <OutputType>Exe</OutputType>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
-    <FileAlignment>512</FileAlignment>    
+    <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -34,18 +34,22 @@
     <ProjectReference Include="..\..\SharpDX.D3DCompiler\SharpDX.D3DCompiler.csproj">
       <Project>{361d3f81-a48a-47f2-80df-ca4f9536cb4e}</Project>
       <Name>SharpDX.D3DCompiler</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\SharpDX\SharpDX.csproj">
       <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
       <Name>SharpDX</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\SharpDX.Toolkit.Compiler\SharpDX.Toolkit.Compiler.csproj">
       <Project>{8bfff9d1-84ec-4fba-9beb-710ecf1857a8}</Project>
       <Name>SharpDX.Toolkit.Compiler</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\SharpDX.Toolkit\SharpDX.Toolkit.csproj">
       <Project>{9ff0707c-75bb-4984-a01f-b9eaad293f6c}</Project>
       <Name>SharpDX.Toolkit</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

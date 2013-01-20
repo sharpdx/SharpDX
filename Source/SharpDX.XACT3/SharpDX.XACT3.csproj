@@ -54,10 +54,12 @@
     <ProjectReference Include="..\SharpDX.XAudio2\SharpDX.XAudio2.csproj">
       <Project>{4995127e-0b8e-45b8-80c4-6bac1bbe3783}</Project>
       <Name>SharpDX.XAudio2</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\SharpDX\SharpDX.csproj">
       <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
       <Name>SharpDX</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />

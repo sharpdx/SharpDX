@@ -103,10 +103,12 @@
     <ProjectReference Include="..\SharpDX.DXGI\SharpDX.DXGI.csproj">
       <Project>{3fc6de77-b412-4101-9e64-6b9aa831179b}</Project>
       <Name>SharpDX.DXGI</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\SharpDX\SharpDX.csproj">
       <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
       <Name>SharpDX</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />

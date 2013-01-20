@@ -75,18 +75,22 @@
     <ProjectReference Include="..\SharpDX.D3DCompiler\SharpDX.D3DCompiler.csproj" Condition=" '$(SharpDXWin8)' == 'false'">
       <Project>{361d3f81-a48a-47f2-80df-ca4f9536cb4e}</Project>
       <Name>SharpDX.D3DCompiler</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\SharpDX.Direct3D11\SharpDX.Direct3D11.csproj">
       <Project>{736dfb52-1afe-4eff-9710-89046ab5b1f9}</Project>
       <Name>SharpDX.Direct3D11</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\SharpDX.DXGI\SharpDX.DXGI.csproj">
       <Project>{3fc6de77-b412-4101-9e64-6b9aa831179b}</Project>
       <Name>SharpDX.DXGI</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\SharpDX\SharpDX.csproj">
       <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
       <Name>SharpDX</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />

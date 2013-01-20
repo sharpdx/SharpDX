@@ -57,26 +57,32 @@
     <ProjectReference Include="..\..\SharpDX.Direct3D11\SharpDX.Direct3D11.csproj">
       <Project>{736dfb52-1afe-4eff-9710-89046ab5b1f9}</Project>
       <Name>SharpDX.Direct3D11</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\SharpDX.DXGI\SharpDX.DXGI.csproj">
       <Project>{3fc6de77-b412-4101-9e64-6b9aa831179b}</Project>
       <Name>SharpDX.DXGI</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\SharpDX\SharpDX.csproj">
       <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
       <Name>SharpDX</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\SharpDX.Toolkit.Graphics\SharpDX.Toolkit.Graphics.csproj">
       <Project>{53ef08a7-4224-434c-a62c-f29807c1c750}</Project>
       <Name>SharpDX.Toolkit.Graphics</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\SharpDX.Toolkit.Compiler\SharpDX.Toolkit.Compiler.csproj" Condition=" '$(SharpDXWin8Core)' == 'false'">
       <Project>{8BFFF9D1-84EC-4FBA-9BEB-710ECF1857A8}</Project>
       <Name>SharpDX.Toolkit.Compiler</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\SharpDX.Toolkit\SharpDX.Toolkit.csproj">
       <Project>{9ff0707c-75bb-4984-a01f-b9eaad293f6c}</Project>
       <Name>SharpDX.Toolkit</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

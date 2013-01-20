@@ -70,14 +70,17 @@
     <ProjectReference Include="..\SharpDX.Direct3D9\SharpDX.Direct3D9.csproj" Condition=" '$(DirectX11_1)' == 'false'">
       <Project>{B4D984DF-85B8-4BBF-8C3B-5CEF905F40D9}</Project>
       <Name>SharpDX.Direct3D9</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\SharpDX.DXGI\SharpDX.DXGI.csproj">
       <Project>{3FC6DE77-B412-4101-9E64-6B9AA831179B}</Project>
       <Name>SharpDX.DXGI</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\SharpDX\SharpDX.csproj">
       <Project>{d0bcd56a-41c4-4a4e-8590-26864ced07ff}</Project>
       <Name>SharpDX</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
