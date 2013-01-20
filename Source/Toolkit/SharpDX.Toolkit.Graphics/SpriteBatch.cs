@@ -185,29 +185,6 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Begins a sprite batch rendering using the specified sorting mode and blend state. Other states are sets to default (DepthStencilState.None, SamplerState.LinearClamp, RasterizerState.CullCounterClockwise). If you pass a null blend state, the default is BlendState.AlphaBlend.
-        /// </summary>
-        /// <param name="sortMode">Sprite drawing order.</param>
-        /// <param name="blendState">Blending options.</param>
-        public void Begin(SpriteSortMode sortMode, BlendState blendState)
-        {
-            Begin(sortMode, blendState, null, null, null, null, Matrix.Identity);
-        }
-
-        /// <summary>
-        /// Begins a sprite batch rendering using the specified sorting mode and blend state, sampler, depth stencil and rasterizer state objects. Passing null for any of the state objects selects the default default state objects (BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise).
-        /// </summary>
-        /// <param name="sortMode">Sprite drawing order.</param>
-        /// <param name="blendState">Blending options.</param>
-        /// <param name="samplerState">Texture sampling options.</param>
-        /// <param name="depthStencilState">Depth and stencil options.</param>
-        /// <param name="rasterizerState">Rasterization options.</param>
-        public void Begin(SpriteSortMode sortMode, BlendState blendState, SamplerState samplerState, DepthStencilState depthStencilState, RasterizerState rasterizerState)
-        {
-            Begin(sortMode, blendState, samplerState, depthStencilState, rasterizerState, null, Matrix.Identity);
-        }
-
-        /// <summary>
         /// Begins a sprite batch rendering using the specified sorting mode and blend state, sampler, depth stencil and rasterizer state objects, plus a custom effect. Passing null for any of the state objects selects the default default state objects (BlendState.AlphaBlend, DepthStencilState.None, RasterizerState.CullCounterClockwise, SamplerState.LinearClamp). Passing a null effect selects the default SpriteBatch Class shader.
         /// </summary>
         /// <param name="sortMode">Sprite drawing order.</param>
@@ -216,7 +193,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="depthStencilState">Depth and stencil options.</param>
         /// <param name="rasterizerState">Rasterization options.</param>
         /// <param name="effect">Effect state options.</param>
-        public void Begin(SpriteSortMode sortMode, BlendState blendState, SamplerState samplerState, DepthStencilState depthStencilState, RasterizerState rasterizerState, Effect effect)
+        public void Begin(SpriteSortMode sortMode, BlendState blendState = null, SamplerState samplerState = null, DepthStencilState depthStencilState = null, RasterizerState rasterizerState = null, Effect effect = null)
         {
             Begin(sortMode, blendState, samplerState, depthStencilState, rasterizerState, effect, Matrix.Identity);
         }

@@ -148,6 +148,7 @@ namespace SharpDX.Toolkit.Graphics
             Context = Device.ImmediateContext;
             IsDeferred = false;
             Features = new GraphicsDeviceFeatures(Device);
+            AutoViewportFromRenderTargets = true; // By default
 
             // Global cache for all input signatures inside a GraphicsDevice.
             inputSignatureCache = new Dictionary<InputSignatureKey, InputSignatureManager>();
@@ -262,6 +263,12 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <value>The current presenter.</value>
         public GraphicsPresenter Presenter { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the viewport is automatically calculated and set when a rendertarget is set. Default is true.
+        /// </summary>
+        /// <value><c>true</c> if the viewport is automatically calculated and set when a rendertarget is set; otherwise, <c>false</c>.</value>
+        public bool AutoViewportFromRenderTargets { get; set; }
 
         /// <summary>
         /// Occurs when the device is going to be lost (for example before a reset).
@@ -741,6 +748,28 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
+        /// Draws a fullscreen quad with a pixel shader to output a texture with a particular sampler (default linear clamp).
+        /// </summary>
+        /// <param name="texture">The texture.</param>
+        /// <param name="samplerState">State of the sampler. If null, default sampler is <see cref="SamplerStateCollection.LinearClamp" />.</param>
+        public void DrawQuad(SharpDX.Direct3D11.ShaderResourceView texture, SharpDX.Direct3D11.SamplerState samplerState = null)
+        {
+            primitiveQuad.Draw(texture, samplerState);
+        }
+
+        /// <summary>
+        /// Draws a fullscreen quad with a pixel shader to output a texture with a particular sampler (default linear clamp).
+        /// </summary>
+        /// <param name="texture">The texture.</param>
+        /// <param name="tranform">The matrix tranform.</param>
+        /// <param name="samplerState">State of the sampler. If null, default sampler is <see cref="SamplerStateCollection.LinearClamp" />.</param>
+        public void DrawQuad(SharpDX.Direct3D11.ShaderResourceView texture, Matrix tranform, SharpDX.Direct3D11.SamplerState samplerState = null)
+        {
+            primitiveQuad.Transform = tranform;
+            primitiveQuad.Draw(texture, samplerState);
+        }
+
+        /// <summary>
         /// Draw a fullscreen quad. An effect with at least a pixel shader (with the expected signature - float2:TEXCOORD) must have been applied before using this method.
         /// </summary>
         /// <param name="tranform">The tranform.</param>
@@ -1145,6 +1174,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargets</unmanaged-short>	
         public void SetRenderTargets(params RenderTargetView[] renderTargetViews)
         {
+            CommonSetRenderTargets(renderTargetViews);
             outputMergerStage.SetTargets(renderTargetViews);
         }
 
@@ -1160,6 +1190,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargets</unmanaged-short>	
         public void SetRenderTargets(RenderTargetView renderTargetView)
         {
+            CommonSetRenderTargets(renderTargetView);
             outputMergerStage.SetTargets(renderTargetView);
         }
 
@@ -1176,6 +1207,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargets</unmanaged-short>	
         public void SetRenderTargets(DepthStencilView depthStencilView, params RenderTargetView[] renderTargetViews)
         {
+            CommonSetRenderTargets(renderTargetViews);
             outputMergerStage.SetTargets(depthStencilView, renderTargetViews);
         }
 
@@ -1192,6 +1224,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargets</unmanaged-short>	
         public void SetRenderTargets(DepthStencilView depthStencilView, RenderTargetView renderTargetView)
         {
+            CommonSetRenderTargets(renderTargetView);
             outputMergerStage.SetTargets(depthStencilView, renderTargetView);
         }
 
@@ -1440,5 +1473,24 @@ namespace SharpDX.Toolkit.Graphics
 
             return signatureManager;
         }
+
+        private void CommonSetRenderTargets(RenderTargetView rtv)
+        {
+            Texture texture;
+            if (AutoViewportFromRenderTargets &&  rtv != null && (texture = rtv.Tag as Texture) != null)
+            {
+                SetViewports(new ViewportF(0, 0, texture.Description.Width, texture.Description.Height));
+            }
+        }
+
+        private void CommonSetRenderTargets(RenderTargetView[] rtvs)
+        {
+            Texture texture;
+            if (AutoViewportFromRenderTargets && rtvs != null && rtvs.Length > 0 && (texture = rtvs[0].Tag as Texture) != null)
+            {
+                SetViewports(new ViewportF(0, 0, texture.Description.Width, texture.Description.Height));
+            }
+        }
+
     }
 }

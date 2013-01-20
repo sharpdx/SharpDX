@@ -27,7 +27,10 @@ namespace SharpDX.Toolkit.Graphics
     {
         private readonly Effect quadEffect;
         private readonly EffectPass quadPass;
+        private readonly EffectPass textureCopyPass;
         private readonly EffectParameter matrixParameter;
+        private readonly EffectParameter textureParameter;
+        private readonly EffectParameter textureSamplerParameter;
         private readonly SharedData sharedData;
 
         /// <summary>
@@ -40,6 +43,14 @@ namespace SharpDX.Toolkit.Graphics
             quadEffect = ToDispose(new Effect(GraphicsDevice, effectBytecode));
             quadPass = quadEffect.CurrentTechnique.Passes[0];
             matrixParameter = quadEffect.Parameters["MatrixTransform"];
+
+            textureCopyPass = quadEffect.CurrentTechnique.Passes[1];
+            textureParameter = quadEffect.Parameters["Texture"];
+            textureSamplerParameter = quadEffect.Parameters["TextureSampler"];
+
+            // Default LinearClamp
+            textureSamplerParameter.SetResource(GraphicsDevice.SamplerStates.LinearClamp);
+
             Transform = Matrix.Identity;
 
             sharedData = GraphicsDevice.GetOrCreateSharedData(SharedDataType.PerDevice, "Toolkit::PrimitiveQuad::VertexBuffer", () => new SharedData(GraphicsDevice));
@@ -78,6 +89,23 @@ namespace SharpDX.Toolkit.Graphics
 
             // Make sure that we are using our vertex shader
             quadPass.Apply();
+            GraphicsDevice.Draw(PrimitiveType.TriangleStrip, 4);
+        }
+
+        /// <summary>
+        /// Draws a quad with a texture. This Draw method is using a simple pixel shader that is sampling the texture. 
+        /// </summary>
+        /// <param name="texture">The texture to draw.</param>
+        /// <param name="samplerState">State of the sampler. If null, default sampler is <see cref="SamplerStateCollection.LinearClamp" />.</param>
+        public void Draw(SharpDX.Direct3D11.ShaderResourceView texture, SharpDX.Direct3D11.SamplerState samplerState = null)
+        {
+            GraphicsDevice.SetVertexBuffer(sharedData.VertexBuffer);
+            GraphicsDevice.SetVertexInputLayout(sharedData.VertexInputLayout);
+
+            // Make sure that we are using our vertex shader
+            textureParameter.SetResource(texture);
+            textureSamplerParameter.SetResource(samplerState ?? GraphicsDevice.SamplerStates.LinearClamp);
+            textureCopyPass.Apply();
             GraphicsDevice.Draw(PrimitiveType.TriangleStrip, 4);
         }
 
