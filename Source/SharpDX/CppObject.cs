@@ -32,6 +32,12 @@ namespace SharpDX
         protected internal unsafe void* _nativePointer;
 
         /// <summary>
+        /// Gets or sets a custom user tag object to associate with this instance..
+        /// </summary>
+        /// <value>The tag object.</value>
+        public object Tag { get; set; }
+
+        /// <summary>
         ///   Default constructor.
         /// </summary>
         /// <param name = "pointer">Pointer to Cpp Object</param>

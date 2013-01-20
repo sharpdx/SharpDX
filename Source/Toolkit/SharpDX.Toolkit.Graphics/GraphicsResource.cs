@@ -63,6 +63,10 @@ namespace SharpDX.Toolkit.Graphics
         protected virtual void Initialize(DeviceChild resource)
         {
             Resource = ToDispose(resource);
+            if (resource != null)
+            {
+                resource.Tag = this;
+            }
         }
 
         /// <summary>

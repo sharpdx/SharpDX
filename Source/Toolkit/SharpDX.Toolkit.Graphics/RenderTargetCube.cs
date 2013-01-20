@@ -102,6 +102,10 @@ namespace SharpDX.Toolkit.Graphics
                     rtv = new RenderTargetView(GraphicsDevice, Resource, rtvDescription);
                     this.renderTargetViews[rtvIndex] = ToDispose(rtv);
                 }
+
+                // Associate this instance
+                rtv.Tag = this;
+
                 return rtv;
             }
         }

@@ -153,6 +153,9 @@ namespace SharpDX.Toolkit.Graphics
                     this.shaderResourceViews[srvIndex] = ToDispose(srv);
                 }
 
+                // Associate this instance
+                srv.Tag = this;
+
                 return srv;
             }
         }
@@ -193,6 +196,10 @@ namespace SharpDX.Toolkit.Graphics
                     uav = new UnorderedAccessView(GraphicsDevice, Resource, uavDescription);
                     this.unorderedAccessViews[uavIndex] = ToDispose(uav);
                 }
+
+                // Associate this instance
+                uav.Tag = this;
+
                 return uav;
             }
         }

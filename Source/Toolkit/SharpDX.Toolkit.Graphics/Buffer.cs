@@ -174,6 +174,8 @@ namespace SharpDX.Toolkit.Graphics
 
                         srv = ToDispose(new ShaderResourceView(this.GraphicsDevice, (Direct3D11.Resource)this.Resource, description));
 
+                        srv.Tag = this;
+
                         shaderResourceViews.Add(key, srv);
                     }
                 }
@@ -210,6 +212,8 @@ namespace SharpDX.Toolkit.Graphics
                         };
 
                         rtv = ToDispose(new RenderTargetView(this.GraphicsDevice, (Direct3D11.Resource)this.Resource, description));
+
+                        rtv.Tag = this;
 
                         renderTargetViews.Add(renderTargetKey, rtv);
                     }
