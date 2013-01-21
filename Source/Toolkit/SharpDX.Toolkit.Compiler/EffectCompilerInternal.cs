@@ -887,12 +887,16 @@ namespace SharpDX.Toolkit.Graphics
                     }
 
                     // Strip reflection datas, as we are storing them in the toolkit format.
-                    var newBytecode = result.Bytecode.Strip(StripFlags.CompilerStripReflectionData);
-                    shader.Bytecode = newBytecode;
+                    var byteCodeNoDebugReflection = result.Bytecode.Strip(StripFlags.CompilerStripReflectionData | StripFlags.CompilerStripDebugInformation);
 
                     // Compute Hashcode
-                    newBytecode = newBytecode.Strip(StripFlags.CompilerStripTestBlobs | StripFlags.CompilerStripReflectionData | StripFlags.CompilerStripDebugInformation);
-                    shader.Hashcode = Utilities.ComputeHashFNVModified(newBytecode);
+                    shader.Hashcode = Utilities.ComputeHashFNVModified(byteCodeNoDebugReflection);
+
+                    // if No debug is required, take the bytecode without any debug/reflection info.
+                    if ((compilerFlags & EffectCompilerFlags.Debug) == 0)
+                    {
+                        shader.Bytecode = byteCodeNoDebugReflection;
+                    }
 
                     // Check that this shader was not already generated
                     int shaderIndex;
@@ -914,7 +918,7 @@ namespace SharpDX.Toolkit.Graphics
                         if (shader.Type == EffectShaderType.Vertex)
                         {
                             // Gets the signature from the stripped bytecode and compute the hashcode.
-                            shader.InputSignature.Bytecode = ShaderSignature.GetInputSignature(newBytecode);
+                            shader.InputSignature.Bytecode = ShaderSignature.GetInputSignature(byteCodeNoDebugReflection);
                             shader.InputSignature.Hashcode = Utilities.ComputeHashFNVModified(shader.InputSignature.Bytecode);
                         }
 
