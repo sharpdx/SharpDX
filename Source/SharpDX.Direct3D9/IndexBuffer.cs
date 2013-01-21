@@ -33,7 +33,9 @@ namespace SharpDX.Direct3D9
         /// <param name="usage">The usage.</param>
         /// <param name="pool">The pool.</param>
         /// <param name="sixteenBit">if set to <c>true</c> use 16bit index buffer, otherwise, use 32bit index buffer.</param>
-        /// <unmanaged>HRESULT IDirect3DDevice9::CreateIndexBuffer([In] unsigned int Length,[In] unsigned int Usage,[In] D3DFORMAT Format,[In] D3DPOOL Pool,[Out, Fast] IDirect3DIndexBuffer9** ppIndexBuffer,[In] void** pSharedHandle)</unmanaged>
+        /// <msdn-id>bb174357</msdn-id>	
+        /// <unmanaged>HRESULT IDirect3DDevice9::CreateIndexBuffer([In] unsigned int Length,[In] unsigned int Usage,[In] D3DFORMAT Format,[In] D3DPOOL Pool,[Out, Fast] IDirect3DIndexBuffer9** ppIndexBuffer,[In] void** pSharedHandle)</unmanaged>	
+        /// <unmanaged-short>IDirect3DDevice9::CreateIndexBuffer</unmanaged-short>	
         public IndexBuffer(Device device, int sizeInBytes, Usage usage, Pool pool, bool sixteenBit)
             : base(IntPtr.Zero)
         {
@@ -49,7 +51,9 @@ namespace SharpDX.Direct3D9
         /// <param name="pool">The pool.</param>
         /// <param name="sixteenBit">if set to <c>true</c> use 16bit index buffer, otherwise, use 32bit index buffer.</param>
         /// <param name="sharedHandle">The shared handle.</param>
-        /// <unmanaged>HRESULT IDirect3DDevice9::CreateIndexBuffer([In] unsigned int Length,[In] unsigned int Usage,[In] D3DFORMAT Format,[In] D3DPOOL Pool,[Out, Fast] IDirect3DIndexBuffer9** ppIndexBuffer,[In] void** pSharedHandle)</unmanaged>
+        /// <msdn-id>bb174357</msdn-id>	
+        /// <unmanaged>HRESULT IDirect3DDevice9::CreateIndexBuffer([In] unsigned int Length,[In] unsigned int Usage,[In] D3DFORMAT Format,[In] D3DPOOL Pool,[Out, Fast] IDirect3DIndexBuffer9** ppIndexBuffer,[In] void** pSharedHandle)</unmanaged>	
+        /// <unmanaged-short>IDirect3DDevice9::CreateIndexBuffer</unmanaged-short>	
         public IndexBuffer(Device device, int sizeInBytes, Usage usage, Pool pool, bool sixteenBit, ref IntPtr sharedHandle)
             : base(IntPtr.Zero)
         {
@@ -67,7 +71,9 @@ namespace SharpDX.Direct3D9
         /// <param name="sizeToLock">The size of the buffer to lock.</param>
         /// <param name="lockFlags">The lock flags.</param>
         /// <returns>A <see cref="SharpDX.DataStream" /> containing the locked index buffer.</returns>
-        /// <unmanaged>HRESULT IDirect3DIndexBuffer9::Lock([In] unsigned int OffsetToLock,[In] unsigned int SizeToLock,[In] void** ppbData,[In] unsigned int Flags)</unmanaged>
+        /// <msdn-id>bb205867</msdn-id>	
+        /// <unmanaged>HRESULT IDirect3DIndexBuffer9::Lock([In] unsigned int OffsetToLock,[In] unsigned int SizeToLock,[Out] void** ppbData,[In] D3DLOCK Flags)</unmanaged>	
+        /// <unmanaged-short>IDirect3DIndexBuffer9::Lock</unmanaged-short>	
         public SharpDX.DataStream Lock(int offsetToLock, int sizeToLock, LockFlags lockFlags)
         {
             IntPtr pOut;
@@ -77,6 +83,27 @@ namespace SharpDX.Direct3D9
             Lock(offsetToLock, sizeToLock, out pOut, lockFlags);
 
             return new DataStream(pOut, sizeToLock, true, (lockFlags & LockFlags.ReadOnly) == 0);
+        }
+
+        /// <summary>
+        /// Locks the specified index buffer.
+        /// </summary>
+        /// <param name="offsetToLock">The offset in the buffer.</param>
+        /// <param name="sizeToLock">The size of the buffer to lock.</param>
+        /// <param name="lockFlags">The lock flags.</param>
+        /// <returns>A <see cref="SharpDX.DataStream" /> containing the locked index buffer.</returns>
+        /// <msdn-id>bb205867</msdn-id>	
+        /// <unmanaged>HRESULT IDirect3DIndexBuffer9::Lock([In] unsigned int OffsetToLock,[In] unsigned int SizeToLock,[Out] void** ppbData,[In] D3DLOCK Flags)</unmanaged>	
+        /// <unmanaged-short>IDirect3DIndexBuffer9::Lock</unmanaged-short>	
+        public IntPtr LockToPointer(int offsetToLock, int sizeToLock, LockFlags lockFlags)
+        {
+            IntPtr pOut;
+            if (sizeToLock == 0)
+                sizeToLock = Description.Size;
+
+            Lock(offsetToLock, sizeToLock, out pOut, lockFlags);
+
+            return pOut;
         }
     }
 }
