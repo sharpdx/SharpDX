@@ -104,8 +104,14 @@ It compiles all files of type TookitFxc
   <UsingTask TaskName="SharpDX.Toolkit.Graphics.EffectCompilerTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
 
   <Target Name="BuildTkfx">
-    <EffectCompilerTask ProjectDirectory="$(ProjectDir)" OutputDirectory="$(OutDir)" Debug="$(ToolkitFxcDebugOption)" Files="@(ToolkitFxc)" IntermediateDirectory="$(IntermediateOutputPath)">
-      <Output TaskParameter="OutputFiles" ItemName="FileWrites"/>
+    <EffectCompilerTask 
+        ProjectDirectory="$(ProjectDir)" 
+        OutputDirectory="$(OutDir)" 
+        Debug="$(ToolkitFxcDebugOption)" 
+        Files="@(ToolkitFxc)" 
+        RootNamespace="$(RootNamespace)"
+        IntermediateDirectory="$(IntermediateOutputPath)">
+          <Output TaskParameter="OutputFiles" ItemName="FileWrites"/>
     </EffectCompilerTask>
   </Target>
 </Project>

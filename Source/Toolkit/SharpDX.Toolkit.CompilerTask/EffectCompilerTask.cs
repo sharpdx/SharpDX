@@ -21,10 +21,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+
+using SharpDX.IO;
 
 namespace SharpDX.Toolkit.Graphics
 {
@@ -45,6 +48,8 @@ namespace SharpDX.Toolkit.Graphics
         public bool DynamicCompiling { get; set; }
 
         public bool Debug { get; set; }
+
+        public string RootNamespace { get; set; }
 
         [Required]
         public ITaskItem IntermediateDirectory { get; set; }
@@ -71,12 +76,21 @@ namespace SharpDX.Toolkit.Graphics
 
                 var effectFilePath = Path.Combine(projectDirectory, effectFileName);
                 var dependencyFilePath = Path.Combine(Path.Combine(projectDirectory, intermediateDirectory), effectFileName + ".deps");
+
+                bool isBinaryOutput = true;
                 var outputFilePath = Path.Combine(outputDirectory, outputFileName);
 
                 bool dynamicCompiling;
                 if (!bool.TryParse(file.GetMetadata("DynamicCompiling"), out dynamicCompiling))
                 {
                     dynamicCompiling = DynamicCompiling;
+                }
+
+                string compileCsFile = file.GetMetadata("LastGenOutput");
+                if (!string.IsNullOrEmpty(compileCsFile) && compileCsFile.EndsWith(".cs", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    isBinaryOutput = false;
+                    outputFilePath = Path.Combine(Path.Combine(projectDirectory, Path.GetDirectoryName(effectFileName)), compileCsFile);
                 }
 
                 Log.LogMessage(MessageImportance.High, "Check Toolkit FX file to compile {0} with dependency file {1}", effectFilePath, dependencyFilePath);
@@ -160,7 +174,27 @@ namespace SharpDX.Toolkit.Graphics
                                 Directory.CreateDirectory(directoryName);
                             }
 
-                            compilerResult.EffectData.Save(outputFilePath);
+                            if (isBinaryOutput)
+                            {
+                                compilerResult.EffectData.Save(outputFilePath);
+                            }
+                            else
+                            {
+                                var outputNameSpace = file.GetMetadata("OutputNamespace");
+
+
+                                var codeWriter = new EffectDataCodeWriter
+                                {
+                                    Namespace = GetMetaData(file, "OutputNamespace", RootNamespace),
+                                    ClassName = GetMetaData(file, "OutputClassName", Path.GetFileNameWithoutExtension(effectFileName)),
+                                    FieldName = GetMetaData(file, "OutputFieldName", "bytecode"),
+                                };
+
+                                using (var stream = new NativeFileStream(outputFilePath, NativeFileMode.Create, NativeFileAccess.Write, NativeFileShare.Write))
+                                {
+                                    codeWriter.Write(compilerResult.EffectData, new StreamWriter(stream, Encoding.UTF8));
+                                }
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -181,6 +215,12 @@ namespace SharpDX.Toolkit.Graphics
             OutputFiles = outputFiles.ToArray();
 
             return !hasErrors;
+        }
+
+        private static string GetMetaData(ITaskItem taskItem, string name, string defaultValue)
+        {
+            var outputNameSpace = taskItem.GetMetadata(name);
+            return (string.IsNullOrEmpty(outputNameSpace)) ? defaultValue : outputNameSpace;
         }
     }
 }
