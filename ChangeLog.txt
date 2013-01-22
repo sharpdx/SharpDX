@@ -4,6 +4,142 @@ SharpDX Change Log
 Previous Release notes:
 
 --------------------------
+Release Notes (2012-12-21)
+--------------------------
+General Information
+
+A new version 2.4.2 of SharpDX is available today for download.
+
+This version is a maintenance version, mainly fixing several issues and improving the SharpDX Toolkit.
+
+This release is also introducing some breaking changes, so this is actually not what could be called a 'minor' release:
+
+    Replace all Viewport with a new global SharpDX.Viewport. The SharpDX.Direct3D11.Viewport with SharpDX.ViewportF.
+    Some enumerations names/class names has been renamed with more accurate CamelCase convention (In MediaFoundation, SharpDX.Direct2D1.RoundedRect renamed to RoundedRectangle, lots of D3D10/D3D11 MessageId enums now correctly named with camel case...etc.)
+
+This release is integrating several patches made by the community on github. Thanks to all of them!
+Changes and bugfixes
+
+Please find below an auto-generated list of all changes and fixes from previous 2.4.1 version.
+Build
+
+    Add Net35Plus defines to build project to allow usage of 3.5+ language features (extension methods...etc.) (changes)
+    Fix compilation error for DIRECTX11_1 target on desktop (changes)
+    Fix compilation error in sample (changes)
+    Fix compilation errors for Win8 platforms with latest DirectWrite update (changes)
+    Fix SharpDXWP8.sln (changes)
+    Update SharpDXWP8.sln to fix compilation errors (changes)
+
+Direct3D
+
+    Replace all Viewport with new global SharpDX.Viewport. SharpDX.Direct3D11.Viewport with SharpDX.ViewportF. Add cast method from SharpDX.Viewport to ViewportF (changes)
+
+Direct3D11
+
+    Fix issue #336. Remove some BlendState, DepthStencilState, RasterizerState constructors to avoid redundancy and conflicts in VB6 (changes)
+
+Direct3D9
+
+    Fix issue #326. Fix incorrect marshaling of DisplayModeEx. (changes)
+
+DirectWrite
+
+    Fix issue #324 Add missing implementation for DirectWrite1(changes)
+
+DXGI
+
+    Add Output1.GetDisplayModeList1 method (changes)
+    Fix compilation error for DirectX11.0 (changes)
+
+Samples
+
+    Fix issue #342. WP8 MiniCube SharpDXBase should use new SharpDX.ViewportF (changes)
+    Fix Win8 samples using new SharpDX.ViewportF (changes)
+
+SharpDX
+
+    Add Color3.Black and Color3.White (changes)
+    Add Color4.Black and Color4.White (changes)
+    Add SharpDX.Win32.MessageFilterHook that provides IMessageFilter hook for a particular window HWND handle (changes)
+    Added missing commentary to Bool4. (changes)
+    Added new methods for random to MathUtil. (changes)
+    Change GetRandomXXX to NextXXX to match Random class naming. (changes)
+    Deactivate code Ray.GetPickRay as it is using a non accessible struct (changes)
+    Enclose MathUtil extension methods by #if NET35Plus (changes)
+    Fix issue #325. Explicit convert operator to Color3 was invalid (changes)
+    Utilities.LoadLibrary is now throwing DllNotFoundException if a native dll was not found from the path (changes)
+    Add clamp method for integers. (changes)
+    Add constructors for Color4 - fix issue 328 (changes)
+    Add Contains methods to DrawingRectangle. (changes)
+    Add Contains methods to DrawingRectangleF. (changes)
+    Add Contains methods to Rectangle. (changes)
+    Add Contains methods to RectangleF. (changes)
+    Add Matrix vectors. (changes)
+    Added GetPickRay method. (changes)
+    Fix bug inside Wrap - change to overload. (changes)
+    fix Issue 328 - Color3 ToString method bug fixed (changes)
+    fixes (changes)
+    fixing few grammatic errors (changes)
+    fixing few grammatic errors (changes)
+    fixing few grammatic errors (changes)
+    fixing some grammatic errors (changes)
+    fixing some grammatic errors (changes)
+    fixing some grammatic errors (changes)
+    Fixing some grammatic errors. (changes)
+    Make MathUtil static - add random extensions. (changes)
+    Merge branch 'pr/n15_Shqrdx' (changes)
+    Merge commit '889f0c926b9ae10ae378d65e1de800a76faef0c1' into newBranch3 (changes)
+    Merge pull request #12 from Shqrdx/patch-1 (changes)
+    Merge pull request #14 from Shqrdx/newBranch3 (changes)
+    Update Source/SharpDX/DrawingRectangleF.cs (changes)
+    Two simple gauss methods. (changes)
+
+SharpGen
+
+    Change NamingRulesManager behavior for abbreviation. Breaking changes for somes enums/struct/class names that were previously not correctly CamelCase (changes)
+
+Toolkit.Compiler
+
+    Add CompileOnlyIfNewer option to tkfxc command line. Make default to always compile. (changes)
+
+Toolkit.Game
+
+    Added few comments to GameWindow (changes)
+    Fix issue #314. Add support for Window.ClientSizeChanged. Resize also the GraphicsPresenter swapchain, currently only supported under desktop (changes)
+    Fix issue #315. In window mode, mouse visible state is now only working on MouseEnter/MouseMove in the client area and not on the border/title bar. (changes)
+    Fix issue #320. Game.IsActive property is now set correctly according to Activated/Deactivated events. (changes)
+    Fix issue on Game.Run under WP8 that was setup as blocking instead of non blocking (changes)
+
+Toolkit.Graphics
+
+    Add EffectConstantBuffer.Update method (changes)
+    Add RenderTarget2D.CreateDescription (changes)
+    Fix issue #317. Non 4x4 matrix were not uploaded correctly to constant buffers. (changes)
+    Fix issue #318. Add BasicEffect.Sampler property to allow changing the default sampler of a BasicEffect. (changes)
+    Fix issue #319. Plug all cleanup/Dispose methods for Toolkit Graphics and Game. (changes)
+    Fix issue #321. VertexInputLayout caching system was invalid, causing the same input layout used by different vertex shaders to failed. (changes)
+    Fix issue #327. Rename method to Texture.GetDataAsImage and add method Texture.SetData(Image) (changes)
+    Fix issue #330. A SpriteBatch.Draw method was not taking rotation into account (changes)
+    Fix issue #335. Using StructLayout.Explicit with fixed size and field offset was generating a wrong code (seems a bug in JIT), leading to a crash in EffectPass.Apply(). Change Explicit layout to sequential and remove field offset fixed this. (changes)
+    Fix issue with indexable resource array when compiling with SM5.0. Fix Effect bug for indexable variable bound to multiple slots. (changes)
+    Make GraphicsAdapter working even if we cannot retrieve the output display modes. (changes)
+    Optimize resource slot bindings by compacting consecutive slots in Effect/EffectPass. (changes)
+    Start to add ModelData. (changes)
+
+WIC
+
+    Add SharpDX.WIC.ResultCode from WINCODEC_ERR_.* macros (changes)
+
+XAudio2
+
+    Fix issue #333. SourceVoice.SubmitSourceBuffer was invalid with xWMA (changes)
+    Fix issue #338. Make first param of XAudio2.SetDebugConfiguration non optional (changes)
+
+XInput
+
+    Add new Controller.GetState method to perform GetState and IsConnected in a same call. Add Controller.UserIndex value (changes)
+
+--------------------------
 Release Notes (2012-11-20)
 --------------------------
 General Information

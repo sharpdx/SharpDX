@@ -1,5 +1,5 @@
 <!--
-// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -416,6 +416,10 @@
       </fileset>
     </copy>
 
+    <!-- Create Bin Output Directory -->
+    <delete dir="Bin/${version-dir}"/>
+    <mkdir dir="Bin/${version-dir}"/>
+
     <!-- Setup MSBuild -->
     <exec program="msbuild.exe" >
       <arg value="/t:Build"/>
@@ -425,25 +429,6 @@
       <arg value="/v:normal"/>
       <arg value="${solution.name}.sln" />
     </exec>
-
-    <!-- Create Bin Output Directory -->
-    <delete dir="Bin/${version-dir}"/>
-    <mkdir dir="Bin/${version-dir}"/>
-
-    <copy flatten="true" todir="Bin/${version-dir}">
-      <fileset basedir="Source/">
-        <include name="SharpDX.*/Bin/${bin-dir}/*.dll" />
-        <include name="SharpDX.*/Bin/${bin-dir}/*.winmd" />
-        <include name="SharpDX.*/Bin/${bin-dir}/*.pdb" />
-        <include name="SharpDX.*/Bin/${bin-dir}/*.xml" />
-
-        <include name="Toolkit/tk.*/Bin/${bin-dir}/*.exe" />
-        <include name="Toolkit/SharpDX.*/Bin/${bin-dir}/*.dll" />
-        <include name="Toolkit/SharpDX.*/Bin/${bin-dir}/*.winmd" />
-        <include name="Toolkit/SharpDX.*/Bin/${bin-dir}/*.pdb" />
-        <include name="Toolkit/SharpDX.*/Bin/${bin-dir}/*.xml" />
-      </fileset>
-    </copy>
 
     <mkdir dir="Bin/Redist"/>
     <copy todir="Bin/Redist">

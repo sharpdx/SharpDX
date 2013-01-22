@@ -1,137 +1,267 @@
 <html>
-<head>
-  <title>SharpDX 2.4.2 Release Notes (21 Dec 2012)</title>
-</head>
+    <head>
+        <title>SharpDX 2.5.0 Release Notes (22 Jan 2013)</title>
+    </head>
     <body>
-<p>Release Notes (2012-12-21)</p>
-<h2 class="title">General Information</h2>
-<p><strong>A new version 2.4.2 of SharpDX is available today for download.</strong></p>
-        <p>This version is a maintenance version, mainly fixing several issues and improving the SharpDX Toolkit.</p>
-        <p>This release is also introducing some breaking changes, so this is actually not what could be called a 'minor' release:</p>
+        <p>Release Notes (2012-01-22)</p>
+        <h2 class="title">General Information</h2>
+        <p><strong>A new version 2.5.0 of SharpDX is available today for download.</strong></p>
+        <p>This version is a maintenance version of legacy APIs (Direct3D1, Direct2D...etc.) and improves of the SharpDX Toolkit by adding new features (Input! made by Artium Ciumac) and fixing several issues.</p>
+        <p>Among the list of new features and fixes in this release for the Toolkit, It contains most notably:</p>
         <ul>
-            <li>Replace all Viewport with a new global SharpDX.Viewport. The SharpDX.Direct3D11.Viewport with SharpDX.ViewportF.</li>
-            <li>Some enumerations names/class names has been renamed with more accurate CamelCase convention (In MediaFoundation, SharpDX.Direct2D1.RoundedRect renamed to RoundedRectangle, lots of D3D10/D3D11 MessageId enums now correctly named with camel case...etc.)</li>
+            <li>A new SharpDX.Toolkit.Input supporting Mouse and Keyboard - for Desktop and WinRT - with two samples.</li>
+            <li>Several issues fixed in the Toolkit preventing correct usage of custom effects.</li>
+            <li>An improved SharpDX.Toolkit.Compiler/tkfxc supporting input file dependency to track changes and compile an effect only if all dependent files - including indirect "includes" - changed-. This improves drastically the performance when compiling.</li>
+            <li>Add support for automatically re-compilation of effects at runtime when sourcecode changed without having to recompile an application - though, no samples released yet -</li>
+            <li>A new Toolkit.CompilerTask and a msbuild extension "SharpDX.targets" (used in Toolkit samples), that provides FX file compiling and automatic references of SharpDX assemblies depending on the project settings.</li>
+            <li>Add support in WP8 for DrawingSurface (Thanks to Jose Fajardo).</li>
         </ul>
         <p>This release is integrating several patches made by the community on github. Thanks to all of them!</p>
-<h2 class="title">Changes and bugfixes</h2>
-<p>Please find below an auto-generated list of all changes and fixes from previous 2.4.1 version.</p>
-<h4>Build</h4>
-<ul>
-  <li>Add Net35Plus defines to build project to allow usage of 3.5+ language features (extension methods...etc.) (<a href='http://code.google.com/p/sharpdx/source/detail?r=c16a53c858901d4e85f73ecd8155ddf0fab5de23' target='_blank'>changes</a>)</li>
-  <li>Fix compilation error for DIRECTX11_1 target on desktop (<a href='http://code.google.com/p/sharpdx/source/detail?r=e554197aa0ad251406bc3c5e43f56b8e9e9157e6' target='_blank'>changes</a>)</li>
-  <li>Fix compilation error in sample (<a href='http://code.google.com/p/sharpdx/source/detail?r=2d829dc3539b86d5ee1c7e2116bf45bdea3318ca' target='_blank'>changes</a>)</li>
-  <li>Fix compilation errors for Win8 platforms with latest DirectWrite update (<a href='http://code.google.com/p/sharpdx/source/detail?r=a3448cafbfab8b7070d536e4a75400f751adac67' target='_blank'>changes</a>)</li>
-  <li>Fix SharpDXWP8.sln (<a href='http://code.google.com/p/sharpdx/source/detail?r=62bf8d09d9502403e6173b9413873b883b36dbeb' target='_blank'>changes</a>)</li>
-  <li>Update SharpDXWP8.sln to fix compilation errors (<a href='http://code.google.com/p/sharpdx/source/detail?r=eb46227ca5ae00ff5f0bfd78808022d099732633' target='_blank'>changes</a>)</li>
-</ul>
-<h4>Direct3D</h4>
-<ul>
-  <li>Replace all Viewport with new global SharpDX.Viewport. SharpDX.Direct3D11.Viewport with SharpDX.ViewportF. Add cast method from SharpDX.Viewport to ViewportF (<a href='http://code.google.com/p/sharpdx/source/detail?r=a91d1d0d83939d36cbda04f48fca95f62ba7f50f' target='_blank'>changes</a>)</li>
-</ul>
-<h4>Direct3D11</h4>
-<ul>
-  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=336' target='_blank'>issue #336</a>. Remove some BlendState, DepthStencilState, RasterizerState constructors to avoid redundancy and conflicts in VB6 (<a href='http://code.google.com/p/sharpdx/source/detail?r=2b5f1c1e7e39f6b0a8cc2c808bfddbfb9a15a595' target='_blank'>changes</a>)</li>
-</ul>
-<h4>Direct3D9</h4>
-<ul>
-  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=326' target='_blank'>issue #326</a>. Fix incorrect marshaling of DisplayModeEx. (<a href='http://code.google.com/p/sharpdx/source/detail?r=a8f740a6af6a2c33ca1676e86dccd72da3eb113e' target='_blank'>changes</a>)</li>
-</ul>
-<h4>DirectWrite</h4>
-<ul>
-  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=324' target='_blank'>issue #324</a> Add missing implementation for DirectWrite1(<a href='http://code.google.com/p/sharpdx/source/detail?r=54c82a7c87d80e906dfc9f7ae19d8d3349b7110b' target='_blank'>changes</a>)</li>
-</ul>
-<h4>DXGI</h4>
-<ul>
-  <li>Add Output1.GetDisplayModeList1 method (<a href='http://code.google.com/p/sharpdx/source/detail?r=8f6e2380e680bd1d005cf8e8cf86f1c472e93133' target='_blank'>changes</a>)</li>
-  <li>Fix compilation error for DirectX11.0 (<a href='http://code.google.com/p/sharpdx/source/detail?r=1d240d01774d99a779cdf324526288b5e3d2da82' target='_blank'>changes</a>)</li>
-</ul>
-<h4>Samples</h4>
-<ul>
-  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=342' target='_blank'>issue #342</a>. WP8 MiniCube SharpDXBase should use new SharpDX.ViewportF (<a href='http://code.google.com/p/sharpdx/source/detail?r=f303b641f7cc33882d1f74d8bc3cb0a446e3cb6b' target='_blank'>changes</a>)</li>
-  <li>Fix Win8 samples using new SharpDX.ViewportF (<a href='http://code.google.com/p/sharpdx/source/detail?r=cd48f89289394c0cde5a85cb3874aeee805fab73' target='_blank'>changes</a>)</li>
-</ul>
-<h4>SharpDX</h4>
-<ul>
-  <li>Add Color3.Black and Color3.White (<a href='http://code.google.com/p/sharpdx/source/detail?r=702ea6de314e95bcb765d823b6dd96043505e712' target='_blank'>changes</a>)</li>
-  <li>Add Color4.Black and Color4.White (<a href='http://code.google.com/p/sharpdx/source/detail?r=4d974623f24d36e0f4e47f87098c2dc9019f5b90' target='_blank'>changes</a>)</li>
-  <li>Add SharpDX.Win32.MessageFilterHook that provides IMessageFilter hook for a particular window HWND handle (<a href='http://code.google.com/p/sharpdx/source/detail?r=9be87d8c48e55ec1a74f5e5b49dbb9aeadb98a8b' target='_blank'>changes</a>)</li>
-  <li>Added missing commentary to Bool4. (<a href='http://code.google.com/p/sharpdx/source/detail?r=ddc3dd4eba2b31f17b75df4ec353b73989e8591b' target='_blank'>changes</a>)</li>
-  <li>Added new methods for random to MathUtil. (<a href='http://code.google.com/p/sharpdx/source/detail?r=ba45b2f81db9846cf7cbb19171a69adcec55c8a1' target='_blank'>changes</a>)</li>
-  <li>Change GetRandomXXX to NextXXX to match Random class naming. (<a href='http://code.google.com/p/sharpdx/source/detail?r=91fd97e52fe8f683ca1184e8e910b697e28838ce' target='_blank'>changes</a>)</li>
-  <li>Deactivate code Ray.GetPickRay as it is using a non accessible struct (<a href='http://code.google.com/p/sharpdx/source/detail?r=66fd086a3888d52b0e77c005c4aaa532e78fdbef' target='_blank'>changes</a>)</li>
-  <li>Enclose MathUtil extension methods by #if NET35Plus (<a href='http://code.google.com/p/sharpdx/source/detail?r=63686eca111b5171240494b57b2f3408a5fd21cd' target='_blank'>changes</a>)</li>
-  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=325' target='_blank'>issue #325</a>. Explicit convert operator to Color3 was invalid (<a href='http://code.google.com/p/sharpdx/source/detail?r=cbe70224086419f2b7985caf55262519daf8b33d' target='_blank'>changes</a>)</li>
-  <li>Utilities.LoadLibrary is now throwing DllNotFoundException if a native dll was not found from the path (<a href='http://code.google.com/p/sharpdx/source/detail?r=14d4bd61f61278f23d8adc08a6e4f0a4e02194e2' target='_blank'>changes</a>)</li>
-  <li>Add clamp method for integers. (<a href='http://code.google.com/p/sharpdx/source/detail?r=3a878bc369ccd0dbc629598b84a12fdabed3962c' target='_blank'>changes</a>)</li>
-  <li>Add constructors for Color4 - fix issue 328 (<a href='http://code.google.com/p/sharpdx/source/detail?r=a6291b01a3c2f287802f502229b8aa47ac140091' target='_blank'>changes</a>)</li>
-  <li>Add Contains methods to DrawingRectangle. (<a href='http://code.google.com/p/sharpdx/source/detail?r=11f3bdd8042880fdc167cf3a52801b2e90ce6b04' target='_blank'>changes</a>)</li>
-  <li>Add Contains methods to DrawingRectangleF. (<a href='http://code.google.com/p/sharpdx/source/detail?r=b7b6c17635ad59a05dd73ab30fe45b60fd1d2e96' target='_blank'>changes</a>)</li>
-  <li>Add Contains methods to Rectangle. (<a href='http://code.google.com/p/sharpdx/source/detail?r=472a6014ff4686a5e8f928af74b8260810cae62e' target='_blank'>changes</a>)</li>
-  <li>Add Contains methods to RectangleF. (<a href='http://code.google.com/p/sharpdx/source/detail?r=80ceb933c62e58ca05110c06cb41c4fd5a305156' target='_blank'>changes</a>)</li>
-  <li>Add Matrix vectors. (<a href='http://code.google.com/p/sharpdx/source/detail?r=4459e2cd61f8b51bbba3942548bd32702af3abd5' target='_blank'>changes</a>)</li>
-  <li>Added GetPickRay method. (<a href='http://code.google.com/p/sharpdx/source/detail?r=889f0c926b9ae10ae378d65e1de800a76faef0c1' target='_blank'>changes</a>)</li>
-  <li>Fix bug inside Wrap - change to overload. (<a href='http://code.google.com/p/sharpdx/source/detail?r=d078da527ae00a150b39245cdb913e1b11d46a88' target='_blank'>changes</a>)</li>
-  <li>fix Issue 328 - Color3 ToString method bug fixed (<a href='http://code.google.com/p/sharpdx/source/detail?r=dbba77b757cc1c78ee80db3d31f9d76a27f6cdda' target='_blank'>changes</a>)</li>
-  <li>fixes (<a href='http://code.google.com/p/sharpdx/source/detail?r=a5b1d50ac06a5db99377dd78b6eab7aff8ce1fa9' target='_blank'>changes</a>)</li>
-  <li>fixing few grammatic errors (<a href='http://code.google.com/p/sharpdx/source/detail?r=e8801ac4e8af0bf9d9efcfcf2758021a014fffae' target='_blank'>changes</a>)</li>
-  <li>fixing few grammatic errors (<a href='http://code.google.com/p/sharpdx/source/detail?r=783d96f0aeba354c14897e411131322b530fb18a' target='_blank'>changes</a>)</li>
-  <li>fixing few grammatic errors (<a href='http://code.google.com/p/sharpdx/source/detail?r=3741e73b3177df4b62b766c3d8d5d605bbe92b4d' target='_blank'>changes</a>)</li>
-  <li>fixing some grammatic errors (<a href='http://code.google.com/p/sharpdx/source/detail?r=50250c3f1d4adf7f0052a8998483ffb2eecba083' target='_blank'>changes</a>)</li>
-  <li>fixing some grammatic errors (<a href='http://code.google.com/p/sharpdx/source/detail?r=22fa2b944f6d43f458feb6a7349c79bf4224369e' target='_blank'>changes</a>)</li>
-  <li>fixing some grammatic errors (<a href='http://code.google.com/p/sharpdx/source/detail?r=820c083b0c53b69dd014f8dccea9295ca4ff48c1' target='_blank'>changes</a>)</li>
-  <li>Fixing some grammatic errors. (<a href='http://code.google.com/p/sharpdx/source/detail?r=42797e5e8266c2cf780b9c62539358f332e4248e' target='_blank'>changes</a>)</li>
-  <li>Make MathUtil static - add random extensions. (<a href='http://code.google.com/p/sharpdx/source/detail?r=d8f41bc65a380517c5405193efdff19121b234e5' target='_blank'>changes</a>)</li>
-  <li>Merge branch &apos;pr/n15_Shqrdx&apos; (<a href='http://code.google.com/p/sharpdx/source/detail?r=0b5156c1c3b936b6c10229686a96f4586678d8be' target='_blank'>changes</a>)</li>
-  <li>Merge commit &apos;889f0c926b9ae10ae378d65e1de800a76faef0c1&apos; into newBranch3 (<a href='http://code.google.com/p/sharpdx/source/detail?r=35caa06977f201e32da5c362fd2b3b251236b71b' target='_blank'>changes</a>)</li>
-  <li>Merge pull request #12 from Shqrdx/patch-1 (<a href='http://code.google.com/p/sharpdx/source/detail?r=3bdeb2f32d75fdc85bf6e9e09d61d9ffad432c4c' target='_blank'>changes</a>)</li>
-  <li>Merge pull request #14 from Shqrdx/newBranch3 (<a href='http://code.google.com/p/sharpdx/source/detail?r=a4020f421a8e983a098baea411bd82ce4b23276f' target='_blank'>changes</a>)</li>
-  <li>Update Source/SharpDX/DrawingRectangleF.cs (<a href='http://code.google.com/p/sharpdx/source/detail?r=63b4fd0f52c5f6f138457679c8c697c2909be278' target='_blank'>changes</a>)</li>
-  <li>Two simple gauss methods. (<a href='http://code.google.com/p/sharpdx/source/detail?r=c2176387cbf8148dc5a68341b3521bbae9a21ed5' target='_blank'>changes</a>)</li>
-</ul>
-<h4>SharpGen</h4>
-<ul>
-  <li>Change NamingRulesManager behavior for abbreviation. Breaking changes for somes enums/struct/class names that were previously not correctly CamelCase (<a href='http://code.google.com/p/sharpdx/source/detail?r=395730300422cb59029d64453aa7a63dabcd1381' target='_blank'>changes</a>)</li>
-</ul>
-<h4>Toolkit.Compiler</h4>
-<ul>
-  <li>Add CompileOnlyIfNewer option to tkfxc command line. Make default to always compile. (<a href='http://code.google.com/p/sharpdx/source/detail?r=f097cd2d2bf5cfdc0f4b6d1841a2dc718901c25b' target='_blank'>changes</a>)</li>
-</ul>
-<h4>Toolkit.Game</h4>
-<ul>
-  <li>Added few comments to GameWindow (<a href='http://code.google.com/p/sharpdx/source/detail?r=12c46efee5425d92aff51c12a0b752eba443c39e' target='_blank'>changes</a>)</li>
-  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=314' target='_blank'>issue #314</a>. Add support for Window.ClientSizeChanged. Resize also the GraphicsPresenter swapchain, currently only supported under desktop (<a href='http://code.google.com/p/sharpdx/source/detail?r=44bb664a31555d968ebed0b6482e2e0c9a5abb66' target='_blank'>changes</a>)</li>
-  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=315' target='_blank'>issue #315</a>. In window mode, mouse visible state is now only working on MouseEnter/MouseMove in the client area and not on the border/title bar. (<a href='http://code.google.com/p/sharpdx/source/detail?r=f333f22b64b8cad01c0f072e4371e8500bf2efbc' target='_blank'>changes</a>)</li>
-  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=320' target='_blank'>issue #320</a>. Game.IsActive property is now set correctly according to Activated/Deactivated events. (<a href='http://code.google.com/p/sharpdx/source/detail?r=43ee928a098d69b558b78c9e8d5da7a02f165c0a' target='_blank'>changes</a>)</li>
-  <li>Fix issue on Game.Run under WP8 that was setup as blocking instead of non blocking (<a href='http://code.google.com/p/sharpdx/source/detail?r=1fe627dd57b33828d45b2a935c355816fba50cc5' target='_blank'>changes</a>)</li>
-</ul>
-<h4>Toolkit.Graphics</h4>
-<ul>
-  <li>Add EffectConstantBuffer.Update method (<a href='http://code.google.com/p/sharpdx/source/detail?r=a76c5eb24e85800b90a3b6ca442d04b433458960' target='_blank'>changes</a>)</li>
-  <li>Add RenderTarget2D.CreateDescription (<a href='http://code.google.com/p/sharpdx/source/detail?r=9f376b0e7de657afbf6fd2f9b7e44432b1dbacb5' target='_blank'>changes</a>)</li>
-  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=317' target='_blank'>issue #317</a>. Non 4x4 matrix were not uploaded correctly to constant buffers. (<a href='http://code.google.com/p/sharpdx/source/detail?r=7547efb8121ba15383a1b38c8dfa758f54944d42' target='_blank'>changes</a>)</li>
-  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=318' target='_blank'>issue #318</a>. Add BasicEffect.Sampler property to allow changing the default sampler of a BasicEffect. (<a href='http://code.google.com/p/sharpdx/source/detail?r=3a90bdca86faf07deb6bfd4e5977357a1b9dc0a3' target='_blank'>changes</a>)</li>
-  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=319' target='_blank'>issue #319</a>. Plug all cleanup/Dispose methods for Toolkit Graphics and Game. (<a href='http://code.google.com/p/sharpdx/source/detail?r=dd95930524f8847c89c685990299ef08b945aa23' target='_blank'>changes</a>)</li>
-  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=321' target='_blank'>issue #321</a>. VertexInputLayout caching system was invalid, causing the same input layout used by different vertex shaders to failed. (<a href='http://code.google.com/p/sharpdx/source/detail?r=f50e527d7b0710c44936bf110e0176283a2660b0' target='_blank'>changes</a>)</li>
-  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=327' target='_blank'>issue #327</a>. Rename method to Texture.GetDataAsImage and add method Texture.SetData(Image) (<a href='http://code.google.com/p/sharpdx/source/detail?r=8e0f24f7c5bb9fd2b647188eae724206beb5c793' target='_blank'>changes</a>)</li>
-  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=330' target='_blank'>issue #330</a>. A SpriteBatch.Draw method was not taking rotation into account (<a href='http://code.google.com/p/sharpdx/source/detail?r=5558a9c5bfb34204190d0f533871fec1d1c0fe7a' target='_blank'>changes</a>)</li>
-  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=335' target='_blank'>issue #335</a>. Using StructLayout.Explicit with fixed size and field offset was generating a wrong code (seems a bug in JIT), leading to a crash in EffectPass.Apply(). Change Explicit layout to sequential and remove field offset fixed this. (<a href='http://code.google.com/p/sharpdx/source/detail?r=56970065efff2bdc16e508ab2954c015d6d87770' target='_blank'>changes</a>)</li>
-  <li>Fix issue with indexable resource array when compiling with SM5.0. Fix Effect bug for indexable variable bound to multiple slots. (<a href='http://code.google.com/p/sharpdx/source/detail?r=62bcb205ece6db8dc9630e3b2642cef849c3241a' target='_blank'>changes</a>)</li>
-  <li>Make GraphicsAdapter working even if we cannot retrieve the output display modes. (<a href='http://code.google.com/p/sharpdx/source/detail?r=e2df42bd0362dfffebadf827471aba34a4d87a11' target='_blank'>changes</a>)</li>
-  <li>Optimize resource slot bindings by compacting consecutive slots in Effect/EffectPass. (<a href='http://code.google.com/p/sharpdx/source/detail?r=646ec018f17df99e6dbd282eb67cbe887dea9adc' target='_blank'>changes</a>)</li>
-  <li>Start to add ModelData. (<a href='http://code.google.com/p/sharpdx/source/detail?r=956de036545e5d59cba256194b0f4ed2dd08e624' target='_blank'>changes</a>)</li>
-</ul>
-<h4>WIC</h4>
-<ul>
-  <li>Add SharpDX.WIC.ResultCode from WINCODEC_ERR_.* macros (<a href='http://code.google.com/p/sharpdx/source/detail?r=d8a8bfccbe2fb78c8cf9ca643d5d102d7093af22' target='_blank'>changes</a>)</li>
-</ul>
-<h4>XAudio2</h4>
-<ul>
-  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=333' target='_blank'>issue #333</a>. SourceVoice.SubmitSourceBuffer was invalid with xWMA (<a href='http://code.google.com/p/sharpdx/source/detail?r=2c344aa5925ed29a8bb12eea6a26cd1d966c4813' target='_blank'>changes</a>)</li>
-  <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=338' target='_blank'>issue #338</a>. Make first param of XAudio2.SetDebugConfiguration  non optional (<a href='http://code.google.com/p/sharpdx/source/detail?r=6091d11f403d6457dbaa98bf04c39a5458a72617' target='_blank'>changes</a>)</li>
-</ul>
-<h4>XInput</h4>
-<ul>
-  <li>Add new Controller.GetState method to perform GetState and IsConnected  in a same call. Add Controller.UserIndex value (<a href='http://code.google.com/p/sharpdx/source/detail?r=c33d64bef1a897b649ab2e8866e43a12862b4e40' target='_blank'>changes</a>)</li>
-</ul>
+        <h2 class="title">Changes and bugfixes</h2>
+        <p>Please find below an auto-generated list of all changes and fixes from previous 2.4.2 version.</p>
+        <h4>Build</h4>
+        <ul>
+            <li>Add Net35Plus defines to build project to allow usage of 3.5+ language features (extension methods...etc.) (<a href='http://code.google.com/p/sharpdx/source/detail?r=979ab041d04d3e445eece79388ab812af59000a2' target='_blank'>changes</a>)</li>
+            <li>Change build output from local directory to $(SolutionDir)\Bin\XXX. Nant file is not yet updated so MakeSharpDX.com is temporarily not working. (<a href='http://code.google.com/p/sharpdx/source/detail?r=0b23f0fbd73e530181822d428f5755151ae70e09' target='_blank'>changes</a>)</li>
+            <li>Remove copy local as all projects are now outputing to the same folder (<a href='http://code.google.com/p/sharpdx/source/detail?r=b6a957b87e3e8490e4f3e4d72bac602a44e3e109' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>D3DCompiler</h4>
+        <ul>
+            <li>Remove ShaderBytecode.Compile internal SharpDXException when disabling Configuration.ThrowOnShaderCompileError (<a href='http://code.google.com/p/sharpdx/source/detail?r=59dca5a27d90f6ef711aee3c522c842eff895b71' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>Direct2D1</h4>
+        <ul>
+            <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=339' target='_blank'>issue #339</a>. Matrix5x4 was not correctly handled for Effect properties (<a href='http://code.google.com/p/sharpdx/source/detail?r=a16265f83047d8702bc2153190fcb96c5c2b365a' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>Direct3D</h4>
+        <ul>
+            <li>Replace all Viewport with new global SharpDX.Viewport. SharpDX.Direct3D11.Viewport with SharpDX.ViewportF. Add cast method from SharpDX.Viewport to ViewportF (<a href='http://code.google.com/p/sharpdx/source/detail?r=c6e64db97fd496b3faef13bc5512b1e6f9fcf93c' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>Direct3D11</h4>
+        <ul>
+            <li>Add better handling of caching DeviceChild.Device (<a href='http://code.google.com/p/sharpdx/source/detail?r=0181da9bf785995e7f862f03957a50e89c491fb6' target='_blank'>changes</a>)</li>
+            <li>DrawingSurfaceContentProvider SynchronizedTexture as IntPtr (<a href='http://code.google.com/p/sharpdx/source/detail?r=e8905e268532c08b7e26d3bac5f9f119089bc43f' target='_blank'>changes</a>)</li>
+            <li>Fix DrawingSurface support for WP8. MiniCube.DrawingSurface sample is working (<a href='http://code.google.com/p/sharpdx/source/detail?r=4ae5081827e05a5e0889a6b0d4595e8c58285688' target='_blank'>changes</a>)</li>
+            <li>Fix interface errors for WP8 IDrawingSurfaceContentProvider (<a href='http://code.google.com/p/sharpdx/source/detail?r=74a34d9c0a3a1a4a7549a193627a01c33fb02fc7' target='_blank'>changes</a>)</li>
+            <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=336' target='_blank'>issue #336</a>. Remove some BlendState, DepthStencilState, RasterizerState constructors to avoid redundancy and conflicts in VB6 (<a href='http://code.google.com/p/sharpdx/source/detail?r=9fa66a4d8a5dfc3eced1a703c468dc7ef7c67393' target='_blank'>changes</a>)</li>
+            <li>WP8 IDrawingSurfaceContentProvider (<a href='http://code.google.com/p/sharpdx/source/detail?r=edeaf7c7b7166ade6c97c47cf23f67a44299a8f9' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>Direct3D11/WP8Sample</h4>
+        <ul>
+            <li>change ref&apos;s to out (<a href='http://code.google.com/p/sharpdx/source/detail?r=070dd4218d226693d9ced79a77306b1830f4c436' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>Direct3D9</h4>
+        <ul>
+            <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=349' target='_blank'>issue #349</a>. DeviceEx constructor should accept null DisplayModeEx parameter. (<a href='http://code.google.com/p/sharpdx/source/detail?r=367e1a31ece1d717791e137223e88a686930f71e' target='_blank'>changes</a>)</li>
+            <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=372' target='_blank'>issue #372</a>. Resource.Device no longer generates allocation (<a href='http://code.google.com/p/sharpdx/source/detail?r=18d712e09b12ac051ad9d7acb159b485e9d8383f' target='_blank'>changes</a>)</li>
+            <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=373' target='_blank'>issue #373</a>. Add IndexBuffer.LockToPointer and VertexBuffer.LockToPointer methods (<a href='http://code.google.com/p/sharpdx/source/detail?r=ef43b32fb3897d591866cdcfeb2d0f427de25f93' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>DirectInput</h4>
+        <ul>
+            <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=352' target='_blank'>issue #352</a>. Rename UpArrow to Up and remove invalid mappings. (<a href='http://code.google.com/p/sharpdx/source/detail?r=f91482a268d567b39fa48c52bd93a5c757d05f89' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>DXGI</h4>
+        <ul>
+            <li>Add Output1.GetDisplayModeList1 method (<a href='http://code.google.com/p/sharpdx/source/detail?r=820dd37598e928f33c1cb097c293d0d48e967087' target='_blank'>changes</a>)</li>
+            <li>Fix compilation error for DirectX11.0 (<a href='http://code.google.com/p/sharpdx/source/detail?r=c26b5a00f6c7c44a1c051849f2bdda26b0eccd32' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>General</h4>
+        <ul>
+            <li>Fix comments (<a href='http://code.google.com/p/sharpdx/source/detail?r=63ca7bceee677dae924229bb114895ee5177dcb5' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>MediaFoundation</h4>
+        <ul>
+            <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=367' target='_blank'>issue #367</a>. Dispose correctly all SourceReader (<a href='http://code.google.com/p/sharpdx/source/detail?r=33e06c53cd678e52cb05223c911352f6d3399a09' target='_blank'>changes</a>)</li>
+            <li>Map missing enums and guids, remap some interface to allow audio encoding and decoding using IMFTransform. (<a href='http://code.google.com/p/sharpdx/source/detail?r=902cdad6d2a9dcf5aaa7bb222846cc2f8d8945cf' target='_blank'>changes</a>)</li>
+            <li>Rename MediaFactory.TEnumEx to FindTransform. Add ResultCode with all MF_E_ result code error. Fix Transform methods by returning boolean (<a href='http://code.google.com/p/sharpdx/source/detail?r=4846597b931835b0c12668cd909fb1fa500405f5' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>RawInput</h4>
+        <ul>
+            <li>Use of SharpDX.Win32.MessageFilterHook instead of Application.AddMessageFilter (<a href='http://code.google.com/p/sharpdx/source/detail?r=fac006c4441485348e17c2555b7e79f28f43c431' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>Release</h4>
+        <ul>
+            <li>Last fixes for 2.4.2. Remove unused documentation links. (<a href='http://code.google.com/p/sharpdx/source/detail?r=e8749b01569e48ac7cb828e5c2948eb49a300519' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>Samples</h4>
+        <ul>
+            <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=342' target='_blank'>issue #342</a>. WP8 MiniCube SharpDXBase should use new SharpDX.ViewportF (<a href='http://code.google.com/p/sharpdx/source/detail?r=ceaed591d4dac52b375d021ea85aa715614dae23' target='_blank'>changes</a>)</li>
+            <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=360' target='_blank'>issue #360</a> (<a href='http://code.google.com/p/sharpdx/source/detail?r=d42c70a462b77329cf72cafd378ec748e86abf5a' target='_blank'>changes</a>)</li>
+            <li>Fix Win8 samples using new SharpDX.ViewportF (<a href='http://code.google.com/p/sharpdx/source/detail?r=7d5ae423853df225f6b9b88b42974e4a530dc0ba' target='_blank'>changes</a>)</li>
+            <li>Update CustomEffect with latest changes from tkfxc/Effect compiler. (<a href='http://code.google.com/p/sharpdx/source/detail?r=eed288e325a84e3e702893aac0c57bbd3c84eb12' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>Samples WP8</h4>
+        <ul>
+            <li>Wired up DrawingSurface control (<a href='http://code.google.com/p/sharpdx/source/detail?r=8944746e15e9ea6315dd519029327d53fadfdbf8' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>SharpDX</h4>
+        <ul>
+            <li>Add Color3.Black and Color3.White (<a href='http://code.google.com/p/sharpdx/source/detail?r=bcfb350e868139ea1da8d811702535cc13be06f9' target='_blank'>changes</a>)</li>
+            <li>Add Color4.Black and Color4.White (<a href='http://code.google.com/p/sharpdx/source/detail?r=965b19cf089d1dbb8f65e5b70e8064436c8dc632' target='_blank'>changes</a>)</li>
+            <li>Add SharpDX.Win32.MessageFilterHook that provides IMessageFilter hook for a particular window HWND handle (<a href='http://code.google.com/p/sharpdx/source/detail?r=70242b427201a000eb67fee71ad21eb54741c289' target='_blank'>changes</a>)</li>
+            <li>Added missing commentary to Bool4. (<a href='http://code.google.com/p/sharpdx/source/detail?r=1a31b6f7f01ef6f6db3117e4a0d7ff845d83ea80' target='_blank'>changes</a>)</li>
+            <li>Added new methods for random to MathUtil. (<a href='http://code.google.com/p/sharpdx/source/detail?r=1595a7157d576eb1d83601c35479250091357aab' target='_blank'>changes</a>)</li>
+            <li>Change GetRandomXXX to NextXXX to match Random class naming. (<a href='http://code.google.com/p/sharpdx/source/detail?r=8c5b5a57587547b1632c44e58887397a6fafdf7c' target='_blank'>changes</a>)</li>
+            <li>Deactivate code Ray.GetPickRay as it is using a non accessible struct (<a href='http://code.google.com/p/sharpdx/source/detail?r=b7f8dcb231c3d562ab95466d53525aa69078d793' target='_blank'>changes</a>)</li>
+            <li>Enclose MathUtil extension methods by #if NET35Plus (<a href='http://code.google.com/p/sharpdx/source/detail?r=ff71c3e176bedfdc5ad86ef84d6cd40cf855c6dc' target='_blank'>changes</a>)</li>
+            <li>Fix comments (<a href='http://code.google.com/p/sharpdx/source/detail?r=099ae8877fd4747f1cce30826f82279976f1e3e1' target='_blank'>changes</a>)</li>
+            <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=334' target='_blank'>issue #334</a>. Add Matrix3x2.Invert method. (<a href='http://code.google.com/p/sharpdx/source/detail?r=9aa9cce06dc59d86aa1c01eaf41f9d3303fdaed4' target='_blank'>changes</a>)</li>
+            <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=357' target='_blank'>issue #357</a>. Fix comments for X/Y/Width/Height (<a href='http://code.google.com/p/sharpdx/source/detail?r=350b3aac6b61cda9caa5b277ccb41dd8a5d55bde' target='_blank'>changes</a>)</li>
+            <li>Fix RenderForm UserResized event from maximized to restored (<a href='http://code.google.com/p/sharpdx/source/detail?r=2c3a4d773d3bfc294e64644a4fdfc170574e06ba' target='_blank'>changes</a>)</li>
+            <li>Rename Random.NextTimespan to NextTime (<a href='http://code.google.com/p/sharpdx/source/detail?r=88a894837c59b344bc41fd5d728472decb1f04cf' target='_blank'>changes</a>)</li>
+            <li>Skip processing F10 key when pressed from a RenderForm as it is blocking the rendering (<a href='http://code.google.com/p/sharpdx/source/detail?r=ff505bb17411a5479b23fb13da6baf0b73a514aa' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>SharpDX.MathUtil</h4>
+        <ul>
+            <li>Two simple gauss methods. (<a href='http://code.google.com/p/sharpdx/source/detail?r=d67f417e48e979a573bcd50cbb47d783702fc164' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>SharpGen</h4>
+        <ul>
+            <li>Change NamingRulesManager behavior for abbreviation. Breaking changes for somes enums/struct/class names that were previously not correctly CamelCase (<a href='http://code.google.com/p/sharpdx/source/detail?r=4a6f53cef065a63342224a3d5ded638bd92f39ec' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>tkfxc</h4>
+        <ul>
+            <li>Add support for fast compilation when source file and include files are not changed compare to the output file, using the /Ti command line switch to use this feature. (<a href='http://code.google.com/p/sharpdx/source/detail?r=ddbd2a6ecb1ea540cb5e6f7beec1589716dd3461' target='_blank'>changes</a>)</li>
+            <li>Imrpoves performance for compiler with /Ti option (CompileOnlyIfNewer). Output dependency file checked when option is set. (<a href='http://code.google.com/p/sharpdx/source/detail?r=5400b869fa7c21c704f5e63f9d09ae192b4288a2' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>Toolkit</h4>
+        <ul>
+            <li>Fix ContentManager to use Reader from type instead of registered readers (<a href='http://code.google.com/p/sharpdx/source/detail?r=331544574b17c9d0ba3190cd14f5ba4fae7a230a' target='_blank'>changes</a>)</li>
+            <li>Fixed compilation error (<a href='http://code.google.com/p/sharpdx/source/detail?r=8bd156de81666a081d3288354bec9859e2652b82' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>Toolkit.Compiler</h4>
+        <ul>
+            <li>Fix Effect compiler error messages and parsing from task (<a href='http://code.google.com/p/sharpdx/source/detail?r=1cdb8c63295017867114e9a8d963337eb2dc9ab6' target='_blank'>changes</a>)</li>
+            <li>Fix error reporting to correct line for included files by patching preprocessor output (<a href='http://code.google.com/p/sharpdx/source/detail?r=90106d8929ea38d772bf596f246150d9f86e3ffb' target='_blank'>changes</a>)</li>
+            <li>Improve ToolkitFxc msbuild task. Add SharpDX.targets to automatically configure a msbuild project using SharpDX assemblies and compiling HLSL files with ToolkitFxc (<a href='http://code.google.com/p/sharpdx/source/detail?r=325681f79580a884dce6e33b194d964f8c9de9d6' target='_blank'>changes</a>)</li>
+            <li>Prepare support for dynamic recompilation at runtime for shaders (only available on Desktop) (<a href='http://code.google.com/p/sharpdx/source/detail?r=28b49b1d9ba1357c2bfabed82dfe346effc6a157' target='_blank'>changes</a>)</li>
+            <li>Store Debug/Reflection data when shader compiled in Debug mode to improve experience with Graphics Debugger like NSight (<a href='http://code.google.com/p/sharpdx/source/detail?r=db5fec48a84e08781d6dc354740caa2753db7d04' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>Toolkit.CompilerTask</h4>
+        <ul>
+            <li>Add new project to support msbuild task to compile Toolkit FX files (<a href='http://code.google.com/p/sharpdx/source/detail?r=b3b38fb738db686464b3fb37c7a016bfbd32946f' target='_blank'>changes</a>)</li>
+            <li>Add support for compiling to a C# file (<a href='http://code.google.com/p/sharpdx/source/detail?r=b4706ac5704295a4f8958f2d89e703169fb64adc' target='_blank'>changes</a>)</li>
+            <li>Support output files to be copied with project dependency.&nbsp; (<a href='http://code.google.com/p/sharpdx/source/detail?r=e658fe1dc164cbcccafb8d69aa3d38d968522c2c' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>Toolkit.Game</h4>
+        <ul>
+            <li>Added few comments to GameWindow (<a href='http://code.google.com/p/sharpdx/source/detail?r=d959b34fdce528ddd75f77c62d9c9deb5cf2a9bc' target='_blank'>changes</a>)</li>
+            <li>Finish dynamic effect recompilation with EffectCompilerSsystem. Supported on Desktop. (<a href='http://code.google.com/p/sharpdx/source/detail?r=4f69daa2173c0060ca8d8829645f7cf0d2d8cfc8' target='_blank'>changes</a>)</li>
+            <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=329' target='_blank'>issue #329</a> with SwapChainBackgroundPanel when used with emulator. Fix MetaTunnel.fxo shader (<a href='http://code.google.com/p/sharpdx/source/detail?r=86ec522e0110369c7e46d7ee2e881ecaed05d4b4' target='_blank'>changes</a>)</li>
+            <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=345' target='_blank'>issue #345</a> and #346. Add support for multiple window/control. Add new GameSystem in GameWindowRenderer. Add new sample MultiWindow only for desktop. (<a href='http://code.google.com/p/sharpdx/source/detail?r=9a7342b61cd3d9a11084f503637ecf1668bbf65e' target='_blank'>changes</a>)</li>
+            <li>Fix issue of GraphicsDeviceManager.DeviceCreated called instead of GraphicsDeviceManager.PreparingDeviceSettings  when resizing (<a href='http://code.google.com/p/sharpdx/source/detail?r=46f13792c7de662ea97cbd1cc58345f5d28f9d6a' target='_blank'>changes</a>)</li>
+            <li>Fix samples to unload dynamic content. Make sure UnloadContent is callable only if LoadContent was called. (<a href='http://code.google.com/p/sharpdx/source/detail?r=0807f3536a5fdb7c70d120b40bbd4f52a47275e0' target='_blank'>changes</a>)</li>
+            <li>Fixed <a href='http://code.google.com/p/sharpdx/issues/detail?id=358' target='_blank'>issue #358</a> - SharpDX.Toolkit doesn&apos;t detect window-size changes in WinRT (snap, fill, fullscreen). (<a href='http://code.google.com/p/sharpdx/source/detail?r=c093cc83066ad770de6864e1fb6c3894a608977c' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>Toolkit.Graphics</h4>
+        <ul>
+            <li>Add CppObject.Tag in order to provide fast association between Toolkit instance and Direct3D11 instance. (<a href='http://code.google.com/p/sharpdx/source/detail?r=1b0cd39a0047b3723b45d5fdd11d37b9bc9011c0' target='_blank'>changes</a>)</li>
+            <li>Add EffectConstantBuffer.Update method (<a href='http://code.google.com/p/sharpdx/source/detail?r=d026799aabb441d919cca51d8a79e164194a15b1' target='_blank'>changes</a>)</li>
+            <li>Add GraphicsDevice.DrawQuad(ShaderResourceView) to draw a quad texture. Add GraphicsDevice.AutoViewportFromRenderTargets, true by default to set automatically viewport when a new rendertarget is set through GraphicsDevice.SetRenderTargets (<a href='http://code.google.com/p/sharpdx/source/detail?r=4093471620d9f5f24b8ce9217ca10e56d36b1ae0' target='_blank'>changes</a>)</li>
+            <li>Add static property Size to VertexPositionColor, PositionColorTexture, PositionNormalTexture, PositionTexture. (<a href='http://code.google.com/p/sharpdx/source/detail?r=0be1cd7ae00354e341401ea281498472bf816d42' target='_blank'>changes</a>)</li>
+            <li>Add stock SamplerStates with Mirror mode for UVW (<a href='http://code.google.com/p/sharpdx/source/detail?r=f1242dd23160383d6840d260b89b1dfef9304ed2' target='_blank'>changes</a>)</li>
+            <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=330' target='_blank'>issue #330</a>. A SpriteBatch.Draw method was not taking rotation into account (<a href='http://code.google.com/p/sharpdx/source/detail?r=6231f297048555937ec3d2b06d2fa3f615a6d162' target='_blank'>changes</a>)</li>
+            <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=335' target='_blank'>issue #335</a>. Using StructLayout.Explicit with fixed size and field offset was generating a wrong code (seems a bug in JIT), leading to a crash in EffectPass.Apply(). Change Explicit layout to sequential and remove field offset fixed this. (<a href='http://code.google.com/p/sharpdx/source/detail?r=71c654ac2c5c3ae2c2052efe86f9f14ab160fb55' target='_blank'>changes</a>)</li>
+            <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=351' target='_blank'>issue #351</a>.  Resize Window event  was not triggered when GameWindow.AllowUserResizing=true (<a href='http://code.google.com/p/sharpdx/source/detail?r=c9898a978ca6cd97710a6efdacc261efe23f7705' target='_blank'>changes</a>)</li>
+            <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=354' target='_blank'>issue #354</a>. Add nuget dependency to Direct2D1 (<a href='http://code.google.com/p/sharpdx/source/detail?r=f006760a8691d8316af140adf92205e430f59dbe' target='_blank'>changes</a>)</li>
+            <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=362' target='_blank'>issue #362</a>. One method of SpriteBatch.Draw was not using SpriteEffects parameter (flip horizontal/vertical) (<a href='http://code.google.com/p/sharpdx/source/detail?r=6325357d907e94dd2b12315fa1c98d5efb64fdbe' target='_blank'>changes</a>)</li>
+            <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=366' target='_blank'>issue #366</a>. NullPointerException was occurring with constant buffer not correctly remapped to internal resource index after parameter reordering. (<a href='http://code.google.com/p/sharpdx/source/detail?r=13cd78dec8d1cd510e9853a1013226ecbd42b083' target='_blank'>changes</a>)</li>
+            <li>Fix issue when using GraphicsDeviceManager.IsFullScreen = true and closing application was causing a crash. SwapChain must be revert to non fullscreen before disposing a device. (<a href='http://code.google.com/p/sharpdx/source/detail?r=1f44d14fdae35656e134d2bf6ad34af436c30bdd' target='_blank'>changes</a>)</li>
+            <li>Fix issue with TextureCube not correctly initialized (<a href='http://code.google.com/p/sharpdx/source/detail?r=d1af518620612542dd2aac60e32e9dbc38c49a8d' target='_blank'>changes</a>)</li>
+            <li>Fix stock HLSL effects after latest recompilation mode added (<a href='http://code.google.com/p/sharpdx/source/detail?r=c239313a323d4b981956cdde7105ae436ab40d81' target='_blank'>changes</a>)</li>
+            <li>Make GraphicsAdapter working even if we cannot retrieve the output display modes. (<a href='http://code.google.com/p/sharpdx/source/detail?r=b1ff60d21c9a73d5d74d2ef39e4fa83df3f9eb9b' target='_blank'>changes</a>)</li>
+            <li>Optimize resource slot bindings by compacting consecutive slots in Effect/EffectPass. (<a href='http://code.google.com/p/sharpdx/source/detail?r=8bfbcbcf5a721bef4ef8c51fb83b69dfe72e1fe9' target='_blank'>changes</a>)</li>
+            <li>Try to fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=348' target='_blank'>issue #348</a>. Force MaximumAnisotropy to 2 for 9.1 feature level. (<a href='http://code.google.com/p/sharpdx/source/detail?r=9768cb6b8c58aadd371eae25f5d91515cc699f7a' target='_blank'>changes</a>)</li>
+            <li>Update StockEffects compiled file with latest tkfxc (<a href='http://code.google.com/p/sharpdx/source/detail?r=aff5c9e5224ffe99598d0ea137f5d7b6a3ee09bf' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>Toolkit.Input</h4>
+        <ul>
+            <li>Implemented mouse input for WinRT (<a href='http://code.google.com/p/sharpdx/source/detail?r=8b99acc728b9cd83dd39e34f4930143517b797d8' target='_blank'>changes</a>)</li>
+            <li>Implemented mouse support for Desktop platform (<a href='http://code.google.com/p/sharpdx/source/detail?r=bf198f1e0d7ed300b7bd690b9775a9c81c1c064a' target='_blank'>changes</a>)</li>
+            <li>Implemented mouse support for WinRT (<a href='http://code.google.com/p/sharpdx/source/detail?r=f66de0625f7498d17774ecb08e9e53a438ad0a66' target='_blank'>changes</a>)</li>
+            <li>Added KeyboardInput samples + fixed modifier keys handling (<a href='http://code.google.com/p/sharpdx/source/detail?r=f39baefa4f70f86cd0c0846047f0a739d182254d' target='_blank'>changes</a>)</li>
+            <li>Changed GUIDs for SharpDX.sln MouseInput projects to be different from those in Samples solution (<a href='http://code.google.com/p/sharpdx/source/detail?r=d501542146752cbc588969b5d938754df3493449' target='_blank'>changes</a>)</li>
+            <li>Fix issue with duplicate entries in pressed keys (<a href='http://code.google.com/p/sharpdx/source/detail?r=b936644bd1a2a6e325113716606c31eed302adb4' target='_blank'>changes</a>)</li>
+            <li>Fixed comments and variables after class rename (WindowBinder -&gt; MousePlatform) (<a href='http://code.google.com/p/sharpdx/source/detail?r=714a6b6022fc66d8383fd56007452a0e09f67375' target='_blank'>changes</a>)</li>
+            <li>Fixed duplicate keys on .NET 2.0 platform. (<a href='http://code.google.com/p/sharpdx/source/detail?r=b50f00abd9579960905459f61cb8550df9a7f1c7' target='_blank'>changes</a>)</li>
+            <li>Fixed grammar errors in comments (<a href='http://code.google.com/p/sharpdx/source/detail?r=07629562211c8d2af50877a34d6679f231fae294' target='_blank'>changes</a>)</li>
+            <li>Fixed MouseInput samples for SharpDX.sln (<a href='http://code.google.com/p/sharpdx/source/detail?r=234293dacdbba14d7ab600993e82db98f0329880' target='_blank'>changes</a>)</li>
+            <li>Fixed MouseInput samples for ToolkitSamples.sln (<a href='http://code.google.com/p/sharpdx/source/detail?r=ac0a4a3e401e3e04a99371e65022013bb6b4ab3c' target='_blank'>changes</a>)</li>
+            <li>Implemented keyboard input support for desktop platforms (<a href='http://code.google.com/p/sharpdx/source/detail?r=72e12a4eaf6ee618e02b8af4be2651711bff7798' target='_blank'>changes</a>)</li>
+            <li>Implemented WinRT keyboard support (<a href='http://code.google.com/p/sharpdx/source/detail?r=7bdafb43f3f685256d6ac30f8cad896263ebe434' target='_blank'>changes</a>)</li>
+            <li>Improved initialization logic of MousePlatformWinRT - will throw exception an appropiate control was not provided (<a href='http://code.google.com/p/sharpdx/source/detail?r=d19fbe7f0575d8c9188f3f902536d9275811d6e0' target='_blank'>changes</a>)</li>
+            <li>Renamed WindowBinder* classes to MousePlatform - which describe better their purpose (<a href='http://code.google.com/p/sharpdx/source/detail?r=013b4467b8e70a48bb048dd741f501ee9eccf564' target='_blank'>changes</a>)</li>
+            <li>Replace KeyState with ButtonState in MouseState. (<a href='http://code.google.com/p/sharpdx/source/detail?r=aafe3edf10aaa3f8d35941611386cccbc6d0493b' target='_blank'>changes</a>)</li>
+            <li>Small code improvements (<a href='http://code.google.com/p/sharpdx/source/detail?r=2479e3456040117eaf06277bb7e31ad9c8613660' target='_blank'>changes</a>)</li>
+            <li>Updated MouseInput sample project GUIDs (<a href='http://code.google.com/p/sharpdx/source/detail?r=c5195de5f769c61204b4023176ae27b1a35508bb' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>WIC</h4>
+        <ul>
+            <li>Add SharpDX.WIC.ResultCode from WINCODEC_ERR_.* macros (<a href='http://code.google.com/p/sharpdx/source/detail?r=a432fa275d0d834a1a3e45fb36c12573866b76a0' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>WP8</h4>
+        <ul>
+            <li>Fix compilation with latest changes (<a href='http://code.google.com/p/sharpdx/source/detail?r=a13cda7128f6bfc4711c05e24ee133186dd14682' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>WP8 Sample</h4>
+        <ul>
+            <li>clean up CreateDeviceResources (<a href='http://code.google.com/p/sharpdx/source/detail?r=9db31b67a9d268238d8edb08fa5e485ad2075634' target='_blank'>changes</a>)</li>
+            <li>comment on whats going wrong (<a href='http://code.google.com/p/sharpdx/source/detail?r=69949e2d6c2fb064811b36cec2097c6cdad61b12' target='_blank'>changes</a>)</li>
+            <li>fix issue where i was creating a Defferred Context (<a href='http://code.google.com/p/sharpdx/source/detail?r=bf50cbde7c2c5a19cbbefd1e0c2b8eb9e495285a' target='_blank'>changes</a>)</li>
+            <li>fixing DepthStencil (<a href='http://code.google.com/p/sharpdx/source/detail?r=04507f4ba5094b912ef57536d9c92b7017411c34' target='_blank'>changes</a>)</li>
+            <li>fixing incorrect code (<a href='http://code.google.com/p/sharpdx/source/detail?r=6f64e756b8d8fc8bb87dc136ad4e9d8836144fb7' target='_blank'>changes</a>)</li>
+            <li>fixing up misinterpretations (<a href='http://code.google.com/p/sharpdx/source/detail?r=f2db76bd795615f833f353632e563d6fbedef555' target='_blank'>changes</a>)</li>
+            <li>Sample for IDrawingSurfaceContentProvider (<a href='http://code.google.com/p/sharpdx/source/detail?r=59f44831500a4b7fbf797bfb2a3556427e434e6d' target='_blank'>changes</a>)</li>
+            <li>Wired up the IDrawingSurfaceContentProvider (<a href='http://code.google.com/p/sharpdx/source/detail?r=522544dd2fd77f9c6c060ceec1ce34b49745595f' target='_blank'>changes</a>)</li>
+            <li>wiring up base/provider/interop/renderer (<a href='http://code.google.com/p/sharpdx/source/detail?r=cefdc40dc54f743b3762ce2b8bff1a3987a7ecf3' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>X3DAudio</h4>
+        <ul>
+            <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=370' target='_blank'>issue #370</a>. Add X3DAudio.Calculate with DspSettings. Force DspSettings constructor and rewrite marshaling in order to avoid GC. (<a href='http://code.google.com/p/sharpdx/source/detail?r=a747eeccebddad81a2a77d40d4f5a0009756da61' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>XAudio2</h4>
+        <ul>
+            <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=333' target='_blank'>issue #333</a>. SourceVoice.SubmitSourceBuffer was invalid with xWMA (<a href='http://code.google.com/p/sharpdx/source/detail?r=f779673f10650e1ac9b2f792fc086bf74cb0b3d5' target='_blank'>changes</a>)</li>
+            <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=338' target='_blank'>issue #338</a>. Make first param of XAudio2.SetDebugConfiguration  non optional (<a href='http://code.google.com/p/sharpdx/source/detail?r=3749b6836fa78b411b214c2e0952c34db99f3eed' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>XInput</h4>
+        <ul>
+            <li>Add new Controller.GetState method to perform GetState and IsConnected  in a same call. Add Controller.UserIndex value (<a href='http://code.google.com/p/sharpdx/source/detail?r=23b41e945711bf9c9fd064c4c4a4acd33d3cea5d' target='_blank'>changes</a>)</li>
+            <li>Fix <a href='http://code.google.com/p/sharpdx/issues/detail?id=368' target='_blank'>issue #368</a>. Vibration.Left/RightMotorSpeed should be declared as ushort (<a href='http://code.google.com/p/sharpdx/source/detail?r=6a5afc7ea28fb7a7445e19b06ef2fe663688592a' target='_blank'>changes</a>)</li>
+        </ul>
+        <h4>Misc User Contributions</h4>
+        <ul>
+            <li>Add clamp method for integers. (<a href='http://code.google.com/p/sharpdx/source/detail?r=4e21a6a89f0eb1563a21fc3bb80db309bd825a3e' target='_blank'>changes</a>)</li>
+            <li>Add constructors for Color4 - fix issue 328 (<a href='http://code.google.com/p/sharpdx/source/detail?r=14b00f0edd445c35e379cd4cc840787b1678e24f' target='_blank'>changes</a>)</li>
+            <li>Add Contains methods to DrawingRectangle. (<a href='http://code.google.com/p/sharpdx/source/detail?r=a7aa982b473b8939f44eef3957db6f754c9a08dd' target='_blank'>changes</a>)</li>
+            <li>Add Contains methods to DrawingRectangleF. (<a href='http://code.google.com/p/sharpdx/source/detail?r=12bfcc4c818045e87aee27ad8f7563c09de0c741' target='_blank'>changes</a>)</li>
+            <li>Add Contains methods to Rectangle. (<a href='http://code.google.com/p/sharpdx/source/detail?r=117c159109661d9003ad1e2d865755d8f802f4d6' target='_blank'>changes</a>)</li>
+            <li>Add Contains methods to RectangleF. (<a href='http://code.google.com/p/sharpdx/source/detail?r=9047e9ee7f18c2faa658a3ef17bb51ee5d8dd39f' target='_blank'>changes</a>)</li>
+            <li>Add Matrix vectors. (<a href='http://code.google.com/p/sharpdx/source/detail?r=33c9e25001169b94abebcae9b82d5a994ea71298' target='_blank'>changes</a>)</li>
+            <li>added blank Toolkit.Input project to solution (<a href='http://code.google.com/p/sharpdx/source/detail?r=2f54ca695f0e5ae2b3dccded50cab1c0dccc5f09' target='_blank'>changes</a>)</li>
+            <li>Added GetPickRay method. (<a href='http://code.google.com/p/sharpdx/source/detail?r=5fc7582a3f2e5dfbc58a7637789451c682b6340b' target='_blank'>changes</a>)</li>
+            <li>Added nuspec file (<a href='http://code.google.com/p/sharpdx/source/detail?r=24889e6d3807cf96f37f18272225dac6a7c303c5' target='_blank'>changes</a>)</li>
+            <li>added sample for Desktop mouse input (<a href='http://code.google.com/p/sharpdx/source/detail?r=8974e7f3bee9779dc2208fcb934160772c8b8602' target='_blank'>changes</a>)</li>
+            <li>added xml documentation for SharpDX.Toolkit.Input assembly (<a href='http://code.google.com/p/sharpdx/source/detail?r=95770c51df1555540de5e4561afa186e87013c79' target='_blank'>changes</a>)</li>
+            <li>Fix bug inside Wrap - change to overload. (<a href='http://code.google.com/p/sharpdx/source/detail?r=bd177814374d048b01fe468cad4afab9f5527420' target='_blank'>changes</a>)</li>
+            <li>fix Issue 328 - Color3 ToString method bug fixed (<a href='http://code.google.com/p/sharpdx/source/detail?r=92b517be71380906a4f52fbefd4028516c21b394' target='_blank'>changes</a>)</li>
+            <li>fixed csproj and fixed WinRT xaml integration (<a href='http://code.google.com/p/sharpdx/source/detail?r=df6d4e9ac8236eff19bbff6a532b3892e3059951' target='_blank'>changes</a>)</li>
+            <li>fixes (<a href='http://code.google.com/p/sharpdx/source/detail?r=6d69e823dc02c1296de383a61edd64ca5145bcd4' target='_blank'>changes</a>)</li>
+            <li>fixing few grammatic errors (<a href='http://code.google.com/p/sharpdx/source/detail?r=5cabe6933d70fa85340cb6317ddbba9bb236f28f' target='_blank'>changes</a>)</li>
+            <li>fixing few grammatic errors (<a href='http://code.google.com/p/sharpdx/source/detail?r=acdad151011376b9566a3a4fdc62b421518ac14f' target='_blank'>changes</a>)</li>
+            <li>fixing few grammatic errors (<a href='http://code.google.com/p/sharpdx/source/detail?r=6f40f8e97edda35825001ca1a91c3df46d959435' target='_blank'>changes</a>)</li>
+            <li>fixing some grammatic errors (<a href='http://code.google.com/p/sharpdx/source/detail?r=01b4da7116f1dc99973030efe153f9eaec4d5e69' target='_blank'>changes</a>)</li>
+            <li>fixing some grammatic errors (<a href='http://code.google.com/p/sharpdx/source/detail?r=ea35b53150f933e1e0c8d28f0b0e5e323330fc53' target='_blank'>changes</a>)</li>
+            <li>fixing some grammatic errors (<a href='http://code.google.com/p/sharpdx/source/detail?r=8aa0ab452e23e52401d81a4f92cb5facba12c80b' target='_blank'>changes</a>)</li>
+            <li>Make MathUtil static - add random extensions. (<a href='http://code.google.com/p/sharpdx/source/detail?r=7bff1128a8e44ab466019c3c6890fbfed386a211' target='_blank'>changes</a>)</li>
+            <li>Merge branch &apos;master&apos; into input-kb (<a href='http://code.google.com/p/sharpdx/source/detail?r=b201edfc443983349f577d3a73f79b2d022988e2' target='_blank'>changes</a>)</li>
+            <li>Merge branch &apos;pr/n22_r2d2rigo&apos; (<a href='http://code.google.com/p/sharpdx/source/detail?r=d78623dbee574a8348142bd6c9697a92847996c9' target='_blank'>changes</a>)</li>
+            <li>Merge branch &apos;pr/n27_ArtiomCiumac&apos; (<a href='http://code.google.com/p/sharpdx/source/detail?r=e689a274843eb4d4230bf2b77e6cf95a028c313c' target='_blank'>changes</a>)</li>
+            <li>Merge branch &apos;pr/n28_ArtiomCiumac&apos; (<a href='http://code.google.com/p/sharpdx/source/detail?r=5d83b0ef783957d8116ffd6a09796a66727f977c' target='_blank'>changes</a>)</li>
+            <li>Merge branch &apos;pr/n29_Fadi-git&apos; (<a href='http://code.google.com/p/sharpdx/source/detail?r=1d6de5744aa058e9ec9baa0d37a37fc3d86886c5' target='_blank'>changes</a>)</li>
+            <li>Merge branch &apos;wp8&apos; (<a href='http://code.google.com/p/sharpdx/source/detail?r=941158d8b165f78e4dfcfeccb808e35596227abb' target='_blank'>changes</a>)</li>
+            <li>Merge pull request #1 from sharpdx/master (<a href='http://code.google.com/p/sharpdx/source/detail?r=d5c72b9abaa9475891e9a056c34b635ac24d3d28' target='_blank'>changes</a>)</li>
+            <li>Update Source/SharpDX/DrawingRectangleF.cs (<a href='http://code.google.com/p/sharpdx/source/detail?r=ee54737e247aabf3a268594b4027fe7c7cd7831d' target='_blank'>changes</a>)</li>
+        </ul>
     </body>
 </html>

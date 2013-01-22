@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -86,7 +86,7 @@ namespace SharpDoc
 
             var options = new OptionSet()
                               {
-                                  "Copyright (c) 2010-2012 SharpDX - Alexandre Mutel",
+                                  "Copyright (c) 2010-2013 SharpDX - Alexandre Mutel",
                                   "Usage: SharpDoc [options]* [--config file.xml | Assembly1.dll Assembly1.xml...]*",
                                   "Documentation generator for .Net languages",
                                   "",
