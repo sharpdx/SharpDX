@@ -29,7 +29,7 @@ namespace SharpDX.Toolkit.Input
     /// <summary>
     /// Specific implementation of <see cref="PointerPlatform"/> for Desktop
     /// </summary>
-    internal sealed class PointerPlatformDesktop : PointerPlatform
+    internal sealed partial class PointerPlatformDesktop : PointerPlatform
     {
         private Control control;
         private PointerManager manager;
@@ -66,6 +66,9 @@ namespace SharpDX.Toolkit.Input
             control.MouseDown += HandleMouseDown;
             control.MouseUp += HandleMouseUp;
             control.MouseWheel += HandleMouseWheel;
+
+            // try register touch events
+            TryRegisterTouch();
         }
 
         /// <summary>
