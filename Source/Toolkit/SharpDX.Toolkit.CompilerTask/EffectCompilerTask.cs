@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -57,8 +58,25 @@ namespace SharpDX.Toolkit.Graphics
         private static Regex parseMessage = new Regex(@"(.*)\s*\(\s*(\d+)\s*,\s*([^ \)]+)\)\s*:\s*(\w+)\s+(\w+)\s*:\s*(.*)");
         private static Regex matchNumberRange = new Regex(@"(\d+)-(\d+)");
 
+        private static void SetupPath()
+        {
+            var assemblyPath = Path.GetDirectoryName(typeof(EffectCompilerTask).Assembly.Location);
+
+            var redistD3DPath = Path.GetFullPath(Path.Combine(assemblyPath, @"..\Redist\D3D\" + (IntPtr.Size == 4 ? "x86" : "x64")));
+
+            var existingPaths = new List<string>(Environment.GetEnvironmentVariable("PATH").Split(';'));
+
+            if (!existingPaths.Contains(redistD3DPath))
+            {
+                var newPath = redistD3DPath + ";" + Environment.GetEnvironmentVariable("PATH");
+                Environment.SetEnvironmentVariable("PATH", newPath);
+            }
+        }
+
         public override bool Execute()
         {
+            SetupPath();
+
             var projectDirectory = ProjectDirectory.ItemSpec;
             var outputDirectory = OutputDirectory.ItemSpec;
             var intermediateDirectory = IntermediateDirectory.ItemSpec;
