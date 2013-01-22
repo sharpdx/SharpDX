@@ -40,10 +40,6 @@ It compiles all files of type TookitFxc
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(SharpDXSdkBinDir)\SharpDX.Toolkit.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.Toolkit.Compiler">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(SharpDXSdkBinDir)\SharpDX.Toolkit.Compiler.dll</HintPath>
-    </Reference>
     <Reference Include="SharpDX.Toolkit.Game">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(SharpDXSdkBinDir)\SharpDX.Toolkit.Game.dll</HintPath>
@@ -54,10 +50,6 @@ It compiles all files of type TookitFxc
     </Reference>
     <Reference Include="SharpDX.Toolkit.Input">
       <HintPath>$(SharpDXSdkBinDir)\SharpDX.Toolkit.Input.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.D3DCompiler">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(SharpDXSdkBinDir)\SharpDX.D3DCompiler.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D11">
       <SpecificVersion>False</SpecificVersion>
@@ -70,7 +62,21 @@ It compiles all files of type TookitFxc
   </ItemGroup>
 
   <!-- If we are on desktop, we can safely add a reference to Direct2D1 -->
-  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
+  <ItemGroup Condition="Exists('$(SharpDXSdkBinDir)\SharpDX.Toolkit.Compiler.dll')">
+    <Reference Include="SharpDX.Toolkit.Compiler">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(SharpDXSdkBinDir)\SharpDX.Toolkit.Compiler.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists('$(SharpDXSdkBinDir)\SharpDX.D3DCompiler.dll')">
+    <Reference Include="SharpDX.D3DCompiler">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(SharpDXSdkBinDir)\SharpDX.D3DCompiler.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists('$(SharpDXSdkBinDir)\SharpDX.Direct2D1.dll')">
     <Reference Include="SharpDX.Direct2D1">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(SharpDXSdkBinDir)\SharpDX.Direct2D1.dll</HintPath>

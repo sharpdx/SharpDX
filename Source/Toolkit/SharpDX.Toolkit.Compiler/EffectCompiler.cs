@@ -32,6 +32,13 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public class EffectCompiler : IEffectCompiler
     {
+        public string GetDependencyFileNameFromEffectPath(string pathToFxFile)
+        {
+            pathToFxFile = pathToFxFile.Replace("\\", "___");
+            pathToFxFile += ".deps";
+            return pathToFxFile;
+        }
+
         public List<string> LoadDependency(string dependencyFilePath)
         {
             // If the file does not exist, than return true as it is a new dependency to generate

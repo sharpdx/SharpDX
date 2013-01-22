@@ -27,6 +27,13 @@ namespace SharpDX.Toolkit.Graphics
     public interface IEffectCompiler
     {
         /// <summary>
+        /// Gets the dependency filename from the (fx) effect path.
+        /// </summary>
+        /// <param name="pathToFxFile">The (fx) effect path.</param>
+        /// <returns>A dependency filename.</returns>
+        string GetDependencyFileNameFromEffectPath(string pathToFxFile);
+
+        /// <summary>
         /// Loads a dependency file.
         /// </summary>
         /// <param name="dependencyFilePath">The dependency file path.</param>

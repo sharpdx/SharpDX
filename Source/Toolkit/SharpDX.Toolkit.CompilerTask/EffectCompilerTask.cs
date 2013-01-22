@@ -90,10 +90,23 @@ namespace SharpDX.Toolkit.Graphics
             foreach (ITaskItem file in Files)
             {
                 var effectFileName = file.ItemSpec;
-                var outputFileName = Path.ChangeExtension(effectFileName, "fxo");
 
+                var linkEffectFileName = effectFileName;
+                if (!string.IsNullOrEmpty(file.GetMetadata("Link")))
+                {
+                    linkEffectFileName = file.GetMetadata("Link");
+                }
+
+                var outputFileName = Path.ChangeExtension(linkEffectFileName, "fxo");
                 var effectFilePath = Path.Combine(projectDirectory, effectFileName);
-                var dependencyFilePath = Path.Combine(Path.Combine(projectDirectory, intermediateDirectory), effectFileName + ".deps");
+                var dependencyFilePath = Path.Combine(Path.Combine(projectDirectory, intermediateDirectory), compiler.GetDependencyFileNameFromEffectPath(linkEffectFileName));
+
+                // Creates the dependency directory if it does no exist yet.
+                var dependencyDirectoryPath = Path.GetDirectoryName(dependencyFilePath);
+                if (!Directory.Exists(dependencyDirectoryPath))
+                {
+                    Directory.CreateDirectory(dependencyDirectoryPath);
+                }
 
                 bool isBinaryOutput = true;
                 var outputFilePath = Path.Combine(outputDirectory, outputFileName);

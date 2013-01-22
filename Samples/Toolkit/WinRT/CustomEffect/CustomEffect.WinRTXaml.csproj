@@ -52,14 +52,11 @@
     <AppxManifest Include="PackageXaml.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <Content Include="..\..\Common\CustomEffect\Content\MetaTunnel.fxo">
-      <Link>Content\MetaTunnel.fxo</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Include="CustomEffect.WinRTXaml_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <ToolkitFxc Include="..\..\Common\CustomEffect\Content\MetaTunnel.fx">
+      <Link>Content\MetaTunnel.fx</Link>
     </ToolkitFxc>
     <Content Include="Assets\Logo.png" />
     <Content Include="Assets\SmallLogo.png" />

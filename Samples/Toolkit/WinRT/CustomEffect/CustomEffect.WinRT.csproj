@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <ToolkitFxc Include="..\..\Common\CustomEffect\Content\MetaTunnel.fx">
+      <Link>Content\MetaTunnel.fx</Link>
     </ToolkitFxc>
     <Content Include="Assets\Logo.png" />
     <Content Include="Assets\SmallLogo.png" />

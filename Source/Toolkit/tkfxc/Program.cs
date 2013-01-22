@@ -184,11 +184,11 @@ namespace SharpDX.Toolkit.Graphics
                 Abort();
             }
             
-            string outputDependencyDirPath = Path.Combine(Environment.CurrentDirectory, OutputDependencyDirectory);
-            string outputDependencyFilePath = Path.Combine(outputDependencyDirPath, Path.GetFileName(options.FxFile) + ".deps");
-
             // New Compiler
             var compiler = new EffectCompiler();
+
+            string outputDependencyDirPath = Path.Combine(Environment.CurrentDirectory, OutputDependencyDirectory);
+            string outputDependencyFilePath = Path.Combine(outputDependencyDirPath,  compiler.GetDependencyFileNameFromEffectPath(options.FxFile));
 
             if (AllowDynamicCompiling)
             {
