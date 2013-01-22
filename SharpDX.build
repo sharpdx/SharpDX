@@ -493,6 +493,7 @@
         <include name="Bin/**/*.xml"/>
         <include name="Samples/**"/>
         <include name="*.html"/>
+        <include name="SharpDX.targets"/>
         <include name="*.txt"/>
         <exclude name="Samples/Win8/Win8Demos.sln"/>
         <exclude name="**/*.sample.csproj"/>
