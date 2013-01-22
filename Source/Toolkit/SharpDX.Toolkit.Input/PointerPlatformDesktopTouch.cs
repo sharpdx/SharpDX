@@ -76,7 +76,7 @@ namespace SharpDX.Toolkit.Input
             if (control.IsHandleCreated)
                 InitializeTouchProcedures();
             else
-                control.HandleCreated += (s,e)=>InitializeTouchProcedures();
+                control.HandleCreated += (s, e) => InitializeTouchProcedures();
         }
 
         /// <summary>
@@ -188,13 +188,6 @@ namespace SharpDX.Toolkit.Input
             var mask = input.dwMask;
             var flags = input.dwFlags;
 
-            var modifierKeysDesktop = Control.ModifierKeys;
-
-            var modifierKeys = KeyModifiers.None;
-            if (modifierKeysDesktop.HasFlag(System.Windows.Forms.Keys.Shift)) modifierKeys |= KeyModifiers.Shift;
-            if (modifierKeysDesktop.HasFlag(System.Windows.Forms.Keys.Alt)) modifierKeys |= KeyModifiers.Menu;
-            if (modifierKeysDesktop.HasFlag(System.Windows.Forms.Keys.Control)) modifierKeys |= KeyModifiers.Control;
-
             var isPrimary = (flags & User32.TOUCHEVENTF_PRIMARY) != 0;
 
             PointerUpdateKind pointerUpdateKind;
@@ -230,7 +223,7 @@ namespace SharpDX.Toolkit.Input
                             PointerId = (uint)input.dwID,
                             Timestamp = (ulong)input.dwTime,
                             Position = new DrawingPointF(position.X, position.Y),
-                            KeyModifiers = modifierKeys,
+                            KeyModifiers = GetCurrentKeyModifiers(),
                             Properties = new PointerPointProperties()
                         };
 

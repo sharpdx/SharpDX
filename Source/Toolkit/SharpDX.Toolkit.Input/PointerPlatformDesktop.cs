@@ -153,13 +153,6 @@ namespace SharpDX.Toolkit.Input
         /// <returns>An instance of <see cref="PointerPoint"/> that represents the current state of mouse device.</returns>
         private PointerPoint CreatePoint(PointerUpdateKind pointerUpdateKind, int wheelDelta)
         {
-            var modifierKeysDesktop = Control.ModifierKeys;
-
-            var modifierKeys = KeyModifiers.None;
-            if (modifierKeysDesktop.HasFlag(FKeys.Shift)) modifierKeys |= KeyModifiers.Shift;
-            if (modifierKeysDesktop.HasFlag(FKeys.Alt)) modifierKeys |= KeyModifiers.Menu;
-            if (modifierKeysDesktop.HasFlag(FKeys.Control)) modifierKeys |= KeyModifiers.Control;
-
             var position = control.PointToClient(Control.MousePosition);
 
             var mouseButtons = Control.MouseButtons;
@@ -173,12 +166,12 @@ namespace SharpDX.Toolkit.Input
                             IsHorizontalMouseWheel = false,
                             IsInRange = false,
                             IsInverted = false,
-                            IsLeftButtonPressed = mouseButtons.HasFlag(MouseButtons.Left),
-                            IsMiddleButtonPressed = mouseButtons.HasFlag(MouseButtons.Middle),
+                            IsLeftButtonPressed = (mouseButtons & MouseButtons.Left) != 0,
+                            IsMiddleButtonPressed = (mouseButtons & MouseButtons.Middle) != 0,
                             IsPrimary = true,
-                            IsRightButtonPressed = mouseButtons.HasFlag(MouseButtons.Right),
-                            IsXButton1Pressed = mouseButtons.HasFlag(MouseButtons.XButton1),
-                            IsXButton2Pressed = mouseButtons.HasFlag(MouseButtons.XButton2),
+                            IsRightButtonPressed = (mouseButtons & MouseButtons.Right) != 0,
+                            IsXButton1Pressed = (mouseButtons & MouseButtons.XButton1) != 0,
+                            IsXButton2Pressed = (mouseButtons & MouseButtons.XButton2) != 0,
                             MouseWheelDelta = wheelDelta,
                             Orientation = 0f,
                             TouchConfidence = false, // ?
@@ -191,12 +184,28 @@ namespace SharpDX.Toolkit.Input
             return new PointerPoint
                    {
                        DeviceType = PointerDeviceType.Mouse,
-                       KeyModifiers = modifierKeys,
+                       KeyModifiers = GetCurrentKeyModifiers(),
                        PointerId = 0,
                        Position = new DrawingPointF(position.X, position.Y),
                        Timestamp = (ulong)DateTime.Now.Ticks,
                        Properties = props
                    };
+        }
+
+        /// <summary>
+        /// Gets the currently pressed key modifiers
+        /// </summary>
+        /// <returns>Currently pressed key modifiers</returns>
+        private KeyModifiers GetCurrentKeyModifiers()
+        {
+            var modifierKeysDesktop = Control.ModifierKeys;
+            var modifierKeys = KeyModifiers.None;
+
+            if ((modifierKeysDesktop & FKeys.Shift) != 0) modifierKeys |= KeyModifiers.Shift;
+            if ((modifierKeysDesktop & FKeys.Alt) != 0) modifierKeys |= KeyModifiers.Menu;
+            if ((modifierKeysDesktop & FKeys.Control) != 0) modifierKeys |= KeyModifiers.Control;
+
+            return modifierKeys;
         }
 
         /// <summary>
