@@ -609,7 +609,7 @@ namespace SharpDX
         /// <returns>Random <see cref="SharpDX.Vector2"/>.</returns>
         public static Vector2 NextVector2(Random random, Vector2 min, Vector2 max)
         {
-            return new Vector2(random.NextFloat(min.X, max.X), random.NextFloat(min.Y, max.Y));
+            return new Vector2(NextFloat(random, min.X, max.X), NextFloat(random, min.Y, max.Y));
         }
 
         /// <summary>
@@ -621,7 +621,7 @@ namespace SharpDX
         /// <returns>Random <see cref="SharpDX.Vector3"/>.</returns>
         public static Vector3 NextVector3(Random random, Vector3 min, Vector3 max)
         {
-            return new Vector3(random.NextFloat(min.X, max.X), random.NextFloat(min.Y, max.Y), random.NextFloat(min.Z, max.Z));
+            return new Vector3(NextFloat(random, min.X, max.X), NextFloat(random, min.Y, max.Y), NextFloat(random, min.Z, max.Z));
         }
 
         /// <summary>
@@ -633,7 +633,7 @@ namespace SharpDX
         /// <returns>Random <see cref="SharpDX.Vector4"/>.</returns>
         public static Vector4 NextVector4(Random random, Vector4 min, Vector4 max)
         {
-            return new Vector4(random.NextFloat(min.X, max.X), random.NextFloat(min.Y, max.Y), random.NextFloat(min.Z, max.Z), random.NextFloat(min.W, max.W));
+            return new Vector4(NextFloat(random, min.X, max.X), NextFloat(random, min.Y, max.Y), NextFloat(random, min.Z, max.Z), NextFloat(random, min.W, max.W));
         }
 
         /// <summary>
@@ -643,7 +643,7 @@ namespace SharpDX
         /// <returns>Random <see cref="SharpDX.Color"/>.</returns>
         public static Color NextColor(Random random)
         {
-            return new Color(random.NextFloat(0.0f, 1.0f), random.NextFloat(0.0f, 1.0f), random.NextFloat(0.0f, 1.0f), 1.0f);
+            return new Color(NextFloat(random, 0.0f, 1.0f), NextFloat(random, 0.0f, 1.0f), NextFloat(random, 0.0f, 1.0f), 1.0f);
         }
 
         /// <summary>
@@ -655,7 +655,7 @@ namespace SharpDX
         /// <returns>Random <see cref="SharpDX.Color"/>.</returns>
         public static Color NextColor(Random random, float minBrightness, float maxBrightness)
         {
-            return new Color(random.NextFloat(minBrightness, maxBrightness), random.NextFloat(minBrightness, maxBrightness), random.NextFloat(minBrightness, maxBrightness), 1.0f);
+            return new Color(NextFloat(random, minBrightness, maxBrightness), NextFloat(random, minBrightness, maxBrightness), NextFloat(random, minBrightness, maxBrightness), 1.0f);
         }
 
         /// <summary>
@@ -668,7 +668,7 @@ namespace SharpDX
         /// <returns>Random <see cref="SharpDX.Color"/>.</returns>
         public static Color NextColor(Random random, float minBrightness, float maxBrightness, float alpha)
         {
-            return new Color(random.NextFloat(minBrightness, maxBrightness), random.NextFloat(minBrightness, maxBrightness), random.NextFloat(minBrightness, maxBrightness), alpha);
+            return new Color(NextFloat(random, minBrightness, maxBrightness), NextFloat(random, minBrightness, maxBrightness), NextFloat(random, minBrightness, maxBrightness), alpha);
         }
 
         /// <summary>
@@ -682,7 +682,7 @@ namespace SharpDX
         /// <returns>Random <see cref="SharpDX.Color"/>.</returns>
         public static Color NextColor(Random random, float minBrightness, float maxBrightness, float minAlpha, float maxAlpha)
         {
-            return new Color(random.NextFloat(minBrightness, maxBrightness), random.NextFloat(minBrightness, maxBrightness), random.NextFloat(minBrightness, maxBrightness), random.NextFloat(minAlpha, maxAlpha));
+            return new Color(NextFloat(random, minBrightness, maxBrightness), NextFloat(random, minBrightness, maxBrightness), NextFloat(random, minBrightness, maxBrightness), NextFloat(random, minAlpha, maxAlpha));
         }
 
         /// <summary>
@@ -706,7 +706,7 @@ namespace SharpDX
         /// <returns>Random <see cref="SharpDX.DrawingPointF"/>.</returns>
         public static DrawingPointF NextDPointF(Random random, DrawingPointF min, DrawingPointF max)
         {
-            return new DrawingPointF(random.NextFloat(min.X, max.X), random.NextFloat(min.Y, max.Y));
+            return new DrawingPointF(NextFloat(random, min.X, max.X), NextFloat(random, min.Y, max.Y));
         }
 
         /// <summary>
@@ -718,7 +718,7 @@ namespace SharpDX
         /// <returns>Random <see cref="System.TimeSpan"/>.</returns>
         public static TimeSpan NextTime(Random random, TimeSpan min, TimeSpan max)
         {
-            return TimeSpan.FromTicks(random.NextLong(min.Ticks, max.Ticks));
+            return TimeSpan.FromTicks(NextLong(random, min.Ticks, max.Ticks));
         }
 #endif
     }
