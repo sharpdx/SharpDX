@@ -58,19 +58,19 @@
     <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(ProjectDir)Bin\WP8$(Configuration)-x86\</OutDir>
+    <OutDir>$(SolutionDir)Bin\WP8$(Configuration)-x86\</OutDir>
     <IntDir>$(ProjectDir)\obj\$(Configuration)-x86\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(ProjectDir)Bin\WP8$(Configuration)-x86\</OutDir>
+    <OutDir>$(SolutionDir)Bin\WP8$(Configuration)-x86\</OutDir>
     <IntDir>$(ProjectDir)\obj\$(Configuration)-x86\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
-    <OutDir>$(ProjectDir)Bin\WP8$(Configuration)-ARM\</OutDir>
+    <OutDir>$(SolutionDir)Bin\WP8$(Configuration)-ARM\</OutDir>
     <IntDir>$(ProjectDir)\obj\$(Configuration)-ARM\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
-    <OutDir>$(ProjectDir)Bin\WP8$(Configuration)-ARM\</OutDir>
+    <OutDir>$(SolutionDir)Bin\WP8$(Configuration)-ARM\</OutDir>
     <IntDir>$(ProjectDir)\obj\$(Configuration)-ARM\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

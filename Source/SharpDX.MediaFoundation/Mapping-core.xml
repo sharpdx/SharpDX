@@ -45,6 +45,7 @@
       <include file="evr9.h" attach="true"/>
     </ifndef>
 
+    <include file="mferror.h" attach="true"/>
     <include file="mfmp2dlna.h" attach="true"/>
     <include file="mfplay.h" attach="true"/>
     <include file="mfreadwrite.h" attach="true"/>
@@ -57,7 +58,6 @@
   <include file="mfobjects.h" attach="true"/>
   <include file="mftransform.h" attach="true"/>
   <include file="mediaobj.h" attach="true"/>
-  <include file="mferror.h" attach="true"/>
   <ifdef name="DIRECTX11_1">
     <include file="mfmediaengine.h" attach="true"/>
   </ifdef>
