@@ -79,16 +79,16 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="SharpDX">
-      <HintPath>..\..\..\Source\SharpDX\Bin\Win8$(Configuration)\SharpDX.dll</HintPath>
+      <HintPath>$(SolutionDir)\Bin\Standard-winrt\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct2D1">
-      <HintPath>..\..\..\Source\SharpDX.Direct2D1\Bin\Win8$(Configuration)\SharpDX.Direct2D1.dll</HintPath>
+      <HintPath>$(SolutionDir)\Bin\Standard-winrt\SharpDX.Direct2D1.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D11">
-      <HintPath>..\..\..\Source\SharpDX.Direct3D11\Bin\Win8$(Configuration)\SharpDX.Direct3D11.dll</HintPath>
+      <HintPath>$(SolutionDir)\Bin\Standard-winrt\SharpDX.Direct3D11.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.DXGI">
-      <HintPath>..\..\..\Source\SharpDX.DXGI\Bin\Win8$(Configuration)\SharpDX.DXGI.dll</HintPath>
+      <HintPath>$(SolutionDir)\Bin\Standard-winrt\SharpDX.DXGI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' ">
