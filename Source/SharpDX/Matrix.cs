@@ -42,6 +42,7 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -157,9 +158,7 @@ namespace SharpDX
         /// Value at row 4 column 4 of the matrix.
         /// </summary>
         public float M44;
-
-
-                
+     
         /// <summary>
         /// Gets or sets the up <see cref="SharpDX.Vector3"/> of the matrix; that is M21, M22, and M23.
         /// </summary>
@@ -769,10 +768,10 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// 
+        /// Exchanges two columns in the matrix.
         /// </summary>
-        /// <param name="firstColumn"></param>
-        /// <param name="secondColumn"></param>
+        /// <param name="firstColumn">The first column to exchange. This is an index of the column starting at zero.</param>
+        /// <param name="secondColumn">The second column to exchange. This is an index of the column starting at zero.</param>
         public void ExchangeColumns(int firstColumn, int secondColumn)
         {
             if (firstColumn < 0)
@@ -3340,7 +3339,7 @@ namespace SharpDX
             };
         }
 
-                /// <summary>
+        /// <summary>
         /// Performs an implicit conversion from <see cref="Microsoft.Xna.Framework.Matrix"/> to <see cref="SharpDX.Matrix"/>.
         /// </summary>
         /// <param name="value">The value.</param>
