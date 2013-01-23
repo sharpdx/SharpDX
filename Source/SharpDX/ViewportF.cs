@@ -63,7 +63,7 @@ namespace SharpDX
         public float MaxDepth;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ViewportF" /> struct.
+        /// Initializes a new instance of the <see cref="ViewportF"/> struct.
         /// </summary>
         /// <param name="x">The x coordinate of the upper-left corner of the viewport in pixels.</param>
         /// <param name="y">The y coordinate of the upper-left corner of the viewport in pixels.</param>
@@ -80,7 +80,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ViewportF" /> struct.
+        /// Initializes a new instance of the <see cref="ViewportF"/> struct.
         /// </summary>
         /// <param name="x">The x coordinate of the upper-left corner of the viewport in pixels.</param>
         /// <param name="y">The y coordinate of the upper-left corner of the viewport in pixels.</param>
@@ -99,7 +99,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ViewportF" /> struct.
+        /// Initializes a new instance of the <see cref="ViewportF"/> struct.
         /// </summary>
         /// <param name="bounds">A bounding box that defines the location and size of the viewport in a render target.</param>
         public ViewportF(DrawingRectangleF bounds)
@@ -273,7 +273,7 @@ namespace SharpDX
 	/// <summary>
         /// Determines whether the specified object is equal to this instance.
         /// </summary>
-        /// <param name="other">The object to compare with this instance.</param>
+        /// <param name="obj">The object to compare with this instance.</param>
         /// <returns>
         /// <c>true</c> if the specified object is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
@@ -331,7 +331,7 @@ namespace SharpDX
         /// <summary>
         /// Retrieves a string representation of this object.
         /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
+        /// <returns>A <see cref="System.String"/> that represents this instance.</returns>
         public override string ToString()
         {
             return string.Format(CultureInfo.CurrentCulture, "{{X:{0} Y:{1} Width:{2} Height:{3} MinDepth:{4} MaxDepth:{5}}}", X, Y, Width, Height, MinDepth, MaxDepth);
@@ -389,7 +389,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Gets the aspect ratio used by the viewport
+        /// Gets the aspect ratio used by the viewport.
         /// </summary>
         /// <value>The aspect ratio.</value>
         public float AspectRatio
