@@ -80,7 +80,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ViewportF" /> struct.
+        /// Initializes a new instance of the <see cref="Viewport"/> struct.
         /// </summary>
         /// <param name="x">The x coordinate of the upper-left corner of the viewport in pixels.</param>
         /// <param name="y">The y coordinate of the upper-left corner of the viewport in pixels.</param>
@@ -99,7 +99,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Viewport" /> struct.
+        /// Initializes a new instance of the <see cref="Viewport"/> struct.
         /// </summary>
         /// <param name="bounds">A bounding box that defines the location and size of the viewport in a render target.</param>
         public Viewport(DrawingRectangle bounds)
@@ -272,7 +272,7 @@ namespace SharpDX
         /// <summary>
         /// Determines whether the specified object is equal to this instance.
         /// </summary>
-        /// <param name="other">The object to compare with this instance.</param>
+        /// <param name="obj">The object to compare with this instance.</param>
         /// <returns>
         /// <c>true</c> if the specified object is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
