@@ -63,7 +63,7 @@ namespace SharpDX
         public float MaxDepth;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Viewport" /> struct.
+        /// Initializes a new instance of the <see cref="Viewport"/> struct.
         /// </summary>
         /// <param name="x">The x coordinate of the upper-left corner of the viewport in pixels.</param>
         /// <param name="y">The y coordinate of the upper-left corner of the viewport in pixels.</param>
@@ -388,7 +388,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Gets the aspect ratio used by the viewport
+        /// Gets the aspect ratio used by the viewport.
         /// </summary>
         /// <value>The aspect ratio.</value>
         public float AspectRatio
