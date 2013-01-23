@@ -31,6 +31,9 @@ using SharpDX.Toolkit.Graphics;
 
 namespace SharpDX.Toolkit
 {
+    /// <summary>
+    /// TODO: COMMENT THIS CODE
+    /// </summary>
     public class EffectCompilerTask : EffectCompilerDependencyTask
     {
         private static Regex parseMessage = new Regex(@"(.*)\s*\(\s*(\d+)\s*,\s*([^ \)]+)\)\s*:\s*(\w+)\s+(\w+)\s*:\s*(.*)");
