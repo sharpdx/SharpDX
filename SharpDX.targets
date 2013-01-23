@@ -27,7 +27,8 @@ It compiles all files of type TookitFxc
     <SharpDXSdkBinDir Condition="'$(SharpDXSdkBinDir)' == ''">$(SharpDXSdkDir)\Bin\$(SharpDXPlatform)</SharpDXSdkBinDir>
     
     <!--SharpDX Directory used for compiling - Default to Standard-net40-->
-    <SharpDXSdkToolsDir Condition="'$(SharpDXSdkToolsDir)' == ''">$(SharpDXSdkDir)\Bin\Win8Desktop-net40</SharpDXSdkToolsDir>
+    <!--<SharpDXSdkToolsDir Condition="'$(SharpDXSdkToolsDir)' == ''">$(SharpDXSdkDir)\Bin\Win8Desktop-net40</SharpDXSdkToolsDir>-->
+    <SharpDXSdkToolsDir Condition="'$(SharpDXSdkToolsDir)' == ''">$(SharpDXSdkDir)\Bin\Standard-net40</SharpDXSdkToolsDir>
   </PropertyGroup>
 
   <!-- Automatically adds references to SharpDX assemblies for toolkit -->
@@ -97,9 +98,12 @@ It compiles all files of type TookitFxc
     <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
   </PropertyGroup>-->
 
+  <UsingTask TaskName="SharpDX.Toolkit.EffectCompilerTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
+  <UsingTask TaskName="SharpDX.Toolkit.EffectCompilerDependencyTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
+
   <PropertyGroup>
     <BuildDependsOn>
-      BuildTkfx;
+      TkFxcCompileTarget;
       $(BuildDependsOn);
     </BuildDependsOn>
 
@@ -107,17 +111,48 @@ It compiles all files of type TookitFxc
     <ToolkitFxcDebugOption Condition="$(Optimize) == 'true'">false</ToolkitFxcDebugOption>
   </PropertyGroup>
 
-  <UsingTask TaskName="SharpDX.Toolkit.Graphics.EffectCompilerTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
 
-  <Target Name="BuildTkfx">
-    <EffectCompilerTask 
-        ProjectDirectory="$(ProjectDir)" 
-        OutputDirectory="$(OutDir)" 
-        Debug="$(ToolkitFxcDebugOption)" 
-        Files="@(ToolkitFxc)" 
+  <PropertyGroup>
+    <AssignTargetPathsDependsOn>
+      $(AssignTargetPathsDependsOn);
+      TkFxcListContentAndCompileTarget;
+    </AssignTargetPathsDependsOn>
+
+    <ToolkitFxcDebugOption>true</ToolkitFxcDebugOption>
+    <ToolkitFxcDebugOption Condition="$(Optimize) == 'true'">false</ToolkitFxcDebugOption>
+  </PropertyGroup>
+
+  <Target Name="TkFxcListContentAndCompileTarget">
+    <Message Importance="high" Text="AssignTargetPathsDependsOn @(ToolkitFxc)"/>
+    
+    <EffectCompilerDependencyTask
+        ProjectDirectory="$(ProjectDir)"
+        IntermediateDirectory="$(IntermediateOutputPath)"
+        Debug="$(ToolkitFxcDebugOption)"
+        Files="@(ToolkitFxc)"
         RootNamespace="$(RootNamespace)"
-        IntermediateDirectory="$(IntermediateOutputPath)">
-          <Output TaskParameter="OutputFiles" ItemName="FileWrites"/>
+        >
+        <Output TaskParameter="ContentFiles" ItemName="TkFxcContent"/>
+        <Output TaskParameter="CompileFiles" ItemName="TkFxcCompile"/>
+    </EffectCompilerDependencyTask>
+
+    <ItemGroup>
+      <!--List Of fxo compiled file-->
+      <Content Include="@(TkFxcContent)" KeepMetadata="Link;CopyToOutputDirectory"/>
+
+      <!--List of cs compiled file-->
+      <Compile Include="@(TkFxcCompile)"/>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="TkFxcCompileTarget">
+    <EffectCompilerTask
+        ProjectDirectory="$(ProjectDir)"
+        IntermediateDirectory="$(IntermediateOutputPath)"
+        Debug="$(ToolkitFxcDebugOption)"
+        Files="@(ToolkitFxc)"
+        RootNamespace="$(RootNamespace)"
+        >
     </EffectCompilerTask>
   </Target>
 </Project>
