@@ -93,6 +93,7 @@
         <include name="**/Bin/*.lib" />
         <include name="**/Bin/*.exp" />
         <include name="**/Bin/*.check" />
+        <include name="**/AppPackages/**" />
         <include name="**/Debug/**" />
         <include name="**/Release/**" />
         <include name="**/Net20Debug/**" />
