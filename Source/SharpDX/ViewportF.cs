@@ -257,12 +257,26 @@ namespace SharpDX
 		}
 	}
 
+	/// <summary>
+        /// Determines whether the specified <see cref="SharpDX.ViewportF"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="SharpDX.ViewportF"/> to compare with this instance.</param>
+        /// <returns>
+        /// <c>true</c> if the specified <see cref="SharpDX.ViewportF"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
         public bool Equals(ViewportF other)
         {
             return MathUtil.WithinEpsilon(X, other.X) && MathUtil.WithinEpsilon(Y, other.Y) && MathUtil.WithinEpsilon(Width, other.Width) && MathUtil.WithinEpsilon(Height, other.Height) && MathUtil.WithinEpsilon(MinDepth, other.MinDepth)
                    && MathUtil.WithinEpsilon(MaxDepth, other.MaxDepth);
         }
-
+	
+	/// <summary>
+        /// Determines whether the specified object is equal to this instance.
+        /// </summary>
+        /// <param name="other">The object to compare with this instance.</param>
+        /// <returns>
+        /// <c>true</c> if the specified object is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -271,7 +285,13 @@ namespace SharpDX
             }
             return obj is ViewportF && Equals((ViewportF)obj);
         }
-
+	
+	/// <summary>
+        /// Returns a hash code for this instance.
+        /// </summary>
+        /// <returns>
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+        /// </returns>
         public override int GetHashCode()
         {
             unchecked
@@ -286,11 +306,23 @@ namespace SharpDX
             }
         }
 
+	/// <summary>
+        /// Implements the operator ==.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>The result of the operator.</returns>
         public static bool operator ==(ViewportF left, ViewportF right)
         {
             return left.Equals(right);
         }
 
+	/// <summary>
+        /// Implements the operator !=.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>The result of the operator.</returns>
         public static bool operator !=(ViewportF left, ViewportF right)
         {
             return !left.Equals(right);
