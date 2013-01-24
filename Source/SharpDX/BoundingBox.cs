@@ -87,15 +87,24 @@ namespace SharpDX
         public Vector3[] GetCorners()
         {
             Vector3[] results = new Vector3[8];
-            results[0] = new Vector3(Minimum.X, Maximum.Y, Maximum.Z);
-            results[1] = new Vector3(Maximum.X, Maximum.Y, Maximum.Z);
-            results[2] = new Vector3(Maximum.X, Minimum.Y, Maximum.Z);
-            results[3] = new Vector3(Minimum.X, Minimum.Y, Maximum.Z);
-            results[4] = new Vector3(Minimum.X, Maximum.Y, Minimum.Z);
-            results[5] = new Vector3(Maximum.X, Maximum.Y, Minimum.Z);
-            results[6] = new Vector3(Maximum.X, Minimum.Y, Minimum.Z);
-            results[7] = new Vector3(Minimum.X, Minimum.Y, Minimum.Z);
+            GetCorners(results);
             return results;
+        }
+
+        /// <summary>
+        /// Retrieves the eight corners of the bounding box.
+        /// </summary>
+        /// <returns>An array of points representing the eight corners of the bounding box.</returns>
+        public void GetCorners(Vector3[] corners)
+        {
+            corners[0] = new Vector3(Minimum.X, Maximum.Y, Maximum.Z);
+            corners[1] = new Vector3(Maximum.X, Maximum.Y, Maximum.Z);
+            corners[2] = new Vector3(Maximum.X, Minimum.Y, Maximum.Z);
+            corners[3] = new Vector3(Minimum.X, Minimum.Y, Maximum.Z);
+            corners[4] = new Vector3(Minimum.X, Maximum.Y, Minimum.Z);
+            corners[5] = new Vector3(Maximum.X, Maximum.Y, Minimum.Z);
+            corners[6] = new Vector3(Maximum.X, Minimum.Y, Minimum.Z);
+            corners[7] = new Vector3(Minimum.X, Minimum.Y, Minimum.Z);
         }
 
         /// <summary>

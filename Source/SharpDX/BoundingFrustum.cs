@@ -340,6 +340,23 @@ namespace SharpDX
         public Vector3[] GetCorners()
         {
             var corners = new Vector3[8];
+            GetCorners(corners);
+            return corners;
+        }
+
+        /// <summary>
+        /// Returns the 8 corners of the frustum, element0 is Near1 (near right down corner)
+        /// , element1 is Near2 (near right top corner)
+        /// , element2 is Near3 (near Left top corner)
+        /// , element3 is Near4 (near Left down corner)
+        /// , element4 is Far1 (far right down corner)
+        /// , element5 is Far2 (far right top corner)
+        /// , element6 is Far3 (far left top corner)
+        /// , element7 is Far4 (far left down corner)
+        /// </summary>
+        /// <returns>The 8 corners of the frustum</returns>
+        public void GetCorners(Vector3[] corners)
+        {
             corners[0] = Get3PlanesInterPoint(ref pNear, ref  pBottom, ref  pRight);    //Near1
             corners[1] = Get3PlanesInterPoint(ref pNear, ref  pTop, ref  pRight);       //Near2
             corners[2] = Get3PlanesInterPoint(ref pNear, ref  pTop, ref  pLeft);        //Near3
@@ -348,8 +365,8 @@ namespace SharpDX
             corners[5] = Get3PlanesInterPoint(ref pFar, ref  pTop, ref  pRight);       //Far2
             corners[6] = Get3PlanesInterPoint(ref pFar, ref  pTop, ref  pLeft);        //Far3
             corners[7] = Get3PlanesInterPoint(ref pFar, ref  pBottom, ref  pLeft);     //Far3
-            return corners;
         }
+
         /// <summary>
         /// Extracts perspective camera parameters from the frustum, dosn't work with orthographic frustums.
         /// </summary>
