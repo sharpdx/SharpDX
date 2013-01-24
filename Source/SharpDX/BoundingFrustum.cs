@@ -514,6 +514,17 @@ namespace SharpDX
             }
             return result;
         }
+
+        /// <summary>
+        /// Determines the intersection relationship between the frustum and a bounding box.
+        /// </summary>
+        /// <param name="box">The box.</param>
+        /// <returns>Type of the containment</returns>
+        public ContainmentType Contains(BoundingBox box)
+        {
+            return Contains(ref box);
+        }
+
         /// <summary>
         /// Determines the intersection relationship between the frustum and a bounding box.
         /// </summary>
@@ -558,6 +569,17 @@ namespace SharpDX
                 default: return ContainmentType.Contains;
             }
         }
+
+        /// <summary>
+        /// Determines the intersection relationship between the frustum and a bounding sphere.
+        /// </summary>
+        /// <param name="sphere">The sphere.</param>
+        /// <returns>Type of the containment</returns>
+        public ContainmentType Contains(BoundingSphere sphere)
+        {
+            return Contains(sphere);
+        }
+
         /// <summary>
         /// Determines the intersection relationship between the frustum and a bounding sphere.
         /// </summary>
@@ -576,6 +598,17 @@ namespace SharpDX
         {
             return Contains(frustum.GetCorners()) != ContainmentType.Disjoint;
         }
+
+        /// <summary>
+        /// Determines the intersection relationship between the frustum and another bounding frustum.
+        /// </summary>
+        /// <param name="frustum">The frustum.</param>
+        /// <returns>Type of the containment</returns>
+        public bool Contains(BoundingFrustum frustum)
+        {
+            return Contains(ref frustum);
+        }
+
         /// <summary>
         /// Determines the intersection relationship between the frustum and another bounding frustum.
         /// </summary>

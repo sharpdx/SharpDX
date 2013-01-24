@@ -196,6 +196,16 @@ namespace SharpDX
             return Collision.BoxContainsPoint(ref this, ref point);
         }
 
+        /// <summary>
+        /// Determines whether the current objects contains a point.
+        /// </summary>
+        /// <param name="point">The point to test.</param>
+        /// <returns>The type of containment the two objects have.</returns>
+        public ContainmentType Contains(Vector3 point)
+        {
+            return Contains(ref point);
+        }
+
         /* This implentation is wrong
         /// <summary>
         /// Determines whether the current objects contains a triangle.
@@ -221,6 +231,16 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Determines whether the current objects contains a <see cref="SharpDX.BoundingBox"/>.
+        /// </summary>
+        /// <param name="box">The box to test.</param>
+        /// <returns>The type of containment the two objects have.</returns>
+        public ContainmentType Contains(BoundingBox box)
+        {
+            return Contains(ref box);
+        }
+
+        /// <summary>
         /// Determines whether the current objects contains a <see cref="SharpDX.BoundingSphere"/>.
         /// </summary>
         /// <param name="sphere">The sphere to test.</param>
@@ -228,6 +248,16 @@ namespace SharpDX
         public ContainmentType Contains(ref BoundingSphere sphere)
         {
             return Collision.BoxContainsSphere(ref this, ref sphere);
+        }
+
+        /// <summary>
+        /// Determines whether the current objects contains a <see cref="SharpDX.BoundingSphere"/>.
+        /// </summary>
+        /// <param name="sphere">The sphere to test.</param>
+        /// <returns>The type of containment the two objects have.</returns>
+        public ContainmentType Contains(BoundingSphere sphere)
+        {
+            return Contains(ref sphere);
         }
 
         /// <summary>
