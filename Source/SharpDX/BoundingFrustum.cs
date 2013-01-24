@@ -438,6 +438,8 @@ namespace SharpDX
         /// <returns>Type of the containment</returns>
         public ContainmentType Contains(Vector3[] points)
         {
+            throw new NotImplementedException();
+            /* TODO: (PMin) This method is wrong, does not calculate case where only plane from points is intersected
             var containsAny = false;
             var containsAll = true;
             for (int i = 0; i < points.Length; i++)
@@ -461,7 +463,7 @@ namespace SharpDX
                     return ContainmentType.Intersects;
             }
             else
-                return ContainmentType.Disjoint;
+                return ContainmentType.Disjoint;  */
         }
         /// <summary>
         /// Checks whether a group of points lay totally inside the frsutrum (Contains), or lay partially inside the frustum (Intersects), or lay outside the frustum (Disjoint).
@@ -532,7 +534,7 @@ namespace SharpDX
         /// <param name="result">Type of the containment.</param>
         public void Contains(ref BoundingBox box, out ContainmentType result)
         {
-            result = Contains(box.GetCorners());
+            result = Contains(ref box);
         }
         /// <summary>
         /// Determines the intersection relationship between the frustum and a bounding sphere.
