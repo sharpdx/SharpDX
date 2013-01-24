@@ -177,8 +177,7 @@
   <source api="wp8|Windows Phone 8 - DirectX11.1 - .NET 4.5 Core" xml="..\Bin\Standard-wp8-x86\SharpDX.Toolkit.xml">..\Bin\Standard-wp8-x86\SharpDX.Toolkit.dll</source>
   <source api="wp8|Windows Phone 8 - DirectX11.1 - .NET 4.5 Core" xml="..\Bin\Standard-wp8-x86\SharpDX.Toolkit.Graphics.xml">..\Bin\Standard-wp8-x86\SharpDX.Toolkit.Graphics.dll</source>
   <source api="wp8|Windows Phone 8 - DirectX11.1 - .NET 4.5 Core" xml="..\Bin\Standard-wp8-x86\SharpDX.Toolkit.Game.xml">..\Bin\Standard-wp8-x86\SharpDX.Toolkit.Game.dll</source>
-  <source api="wp8|Windows Phone 8 - DirectX11.1 - .NET 4.5 Core" xml="..\Bin\Standard-wp8-x86\SharpDX.Toolkit.Input.xml">..\Bin\Standard-wp8-x86\SharpDX.Toolkit.Input.dll</source>
-
+  
   <!-- Win8Desktop DirectX11.1 Binaries -->
   <source api="win8desktop|Windows 8 Desktop - DirectX11.1 - .NET 4.0+" xml="..\Bin\Win8Desktop-net40\SharpDX.xml">..\Bin\Win8Desktop-net40\SharpDX.dll</source>
   <source api="win8desktop|Windows 8 Desktop - DirectX11.1 - .NET 4.0+" xml="..\Bin\Win8Desktop-net40\SharpDX.DXGI.xml">..\Bin\Win8Desktop-net40\SharpDX.DXGI.dll</source>
