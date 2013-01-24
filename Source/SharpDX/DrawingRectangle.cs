@@ -61,7 +61,7 @@ namespace SharpDX
         /// <returns><c>true</c> if point is inside <see cref="SharpDX.DrawingRectangle"/>, otherwise <c>false</c>.</returns>
         public bool Contains(int x, int y)
         {
-            if (x >= X && x <= X+Width && y >= Y && y <= Y+Width)
+            if (x >= X && x <= X+Width && y >= Y && y <= Y+Height)
             {
                 return true;
             }
@@ -76,7 +76,7 @@ namespace SharpDX
         /// <returns><c>true</c> if point is inside <see cref="SharpDX.DrawingRectangle"/>, otherwise <c>false</c>.</returns>
         public bool Contains(float x, float y)
         {
-            if (x >= X && x <= X+Width && y >= Y && y <= Y+Width)
+            if (x >= X && x <= X + Width && y >= Y && y <= Y + Height)
             {
                 return true;
             }
@@ -90,7 +90,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <see cref="SharpDX.Vector2"/> is inside <see cref="SharpDX.DrawingRectangle"/>, otherwise <c>false</c>.</returns>
         public bool Contains(Vector2 vector2D)
         {
-            if (vector2D.X >= X && vector2D.X <= X+Width && vector2D.Y >= Y && vector2D.Y <= Y+Width)
+            if (vector2D.X >= X && vector2D.X <= X + Width && vector2D.Y >= Y && vector2D.Y <= Y + Height)
             {
                 return true;
             }
@@ -104,7 +104,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <see cref="SharpDX.DrawingPoint"/> is inside <see cref="SharpDX.DrawingRectangle"/>, otherwise <c>false</c>.</returns>
         public bool Contains(SharpDX.DrawingPoint point)
         {
-            if (point.X >= X && point.X <= X+Width && point.Y >= Y && point.Y <= Y+Width)
+            if (point.X >= X && point.X <= X+Width && point.Y >= Y && point.Y <= Y+Height)
             {
                 return true;
             }
@@ -118,7 +118,7 @@ namespace SharpDX
         /// <returns><c>true</c> if <see cref="SharpDX.DrawingPointF"/> is inside <see cref="SharpDX.DrawingRectangle"/>, otherwise <c>false</c>.</returns>
         public bool Contains(SharpDX.DrawingPointF point)
         {
-            if (point.X >= X && point.X <= X+Width && point.Y >= Y && point.Y <= Y+Width)
+            if (point.X >= X && point.X <= X+Width && point.Y >= Y && point.Y <= Y+Height)
             {
                 return true;
             }
