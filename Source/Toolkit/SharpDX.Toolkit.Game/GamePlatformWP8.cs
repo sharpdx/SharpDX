@@ -64,13 +64,15 @@ namespace SharpDX.Toolkit
             throw new NotSupportedException();
         }
 
-        public override void Run(object windowContext, VoidAction initCallback, VoidAction tickCallback)
+        public override void Run(GameContext context)
         {
             // If window context is null under WinRT, then this is a non-XAML application
             IsBlockingRun = false;
 
             // Initialize the window
-            MainWindow.Initialize(windowContext);
+            MainWindow.Initialize(context);
+
+            MainWindow.Run();
 
             // Rendering to CoreWindow
             gameWindowWP8.RunDrawingSurfaceBackground(initCallback, tickCallback);

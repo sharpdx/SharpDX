@@ -346,7 +346,7 @@ namespace SharpDX.Toolkit
             try
             {
                 // Run the game, loop depending on the platform/window.
-                gamePlatform.Run(windowContext, InitializeBeforeRun, Tick);
+                gamePlatform.Run(new GameContext(windowContext, InitializeBeforeRun, Tick));
 
                 if (gamePlatform.IsBlockingRun)
                 {
