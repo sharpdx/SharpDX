@@ -90,9 +90,11 @@
     <ifdef name="DIRECTX11_1">
       <context>d3d11_1</context>
     </ifdef>
+
+    <context>d3d11sdklayers</context>
+
     <ifndef name="W8CORE">
       <context>d3dx11</context>
-      <context>d3d11sdklayers</context>
       <context>d3dx11core</context>
       <context>d3dx11tex</context>
       <context>d3dx11async</context>
@@ -329,7 +331,7 @@
     <!--<remove interface="ID3D10InfoQueue" />
     <remove struct="D3D10_INFO_QUEUE_FILTER" />
     <remove struct="D3D10_INFO_QUEUE_FILTER_DESC" />-->
-    <map method="ID3D(\d+)InfoQueue::GetMessageW" visibility="internal"/>
+    <map method="ID3D(\d+)InfoQueue::GetMessageW?" visibility="internal"/>
     <map param="pMessage" type="void" attribute="in"/>
     <map method="ID3D(\d+)InfoQueue::GetStorageFilter" visibility="internal"/>
     <map param="pFilter" type="void" attribute="in"/>

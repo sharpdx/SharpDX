@@ -17,7 +17,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if !DIRECTX11_1
 using System;
 using System.Runtime.InteropServices;
 
@@ -45,6 +44,10 @@ namespace SharpDX.Direct3D11
             this.Description = (@ref.PDescription == IntPtr.Zero) ? null : Marshal.PtrToStringAnsi(@ref.PDescription, @ref.DescriptionByteLength);
             this.DescriptionByteLength = @ref.DescriptionByteLength;
         }
+
+        public override string ToString()
+        {
+            return string.Format("[{0}] [{1}] [{2}] : {3}", Id, Severity, Category, Description);
+        }
     }
 }
-#endif
