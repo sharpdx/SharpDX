@@ -59,6 +59,9 @@ namespace SharpDX
         /// <param name="bottom">The bottom.</param>
         public Rectangle(int left, int top, int right, int bottom)
         {
+            System.Diagnostics.Debug.Assert(left <= right, "Width cannot be lower than zero");
+            System.Diagnostics.Debug.Assert(top <= bottom, "Height cannot be lower than zero");
+
             _left = left;
             _top = top;
             _right = right;

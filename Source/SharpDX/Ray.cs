@@ -204,6 +204,16 @@ namespace SharpDX
         /// Determines if there is an intersection between the current object and a <see cref="SharpDX.BoundingBox"/>.
         /// </summary>
         /// <param name="box">The box to test.</param>
+        /// <returns>Whether the two objects intersected.</returns>
+        public bool Intersects(BoundingBox box)
+        {
+            return Intersects(ref box);
+        }
+
+        /// <summary>
+        /// Determines if there is an intersection between the current object and a <see cref="SharpDX.BoundingBox"/>.
+        /// </summary>
+        /// <param name="box">The box to test.</param>
         /// <param name="distance">When the method completes, contains the distance of the intersection,
         /// or 0 if there was no intersection.</param>
         /// <returns>Whether the two objects intersected.</returns>
@@ -233,6 +243,16 @@ namespace SharpDX
         {
             float distance;
             return Collision.RayIntersectsSphere(ref this, ref sphere, out distance);
+        }
+
+        /// <summary>
+        /// Determines if there is an intersection between the current object and a <see cref="SharpDX.BoundingSphere"/>.
+        /// </summary>
+        /// <param name="sphere">The sphere to test.</param>
+        /// <returns>Whether the two objects intersected.</returns>
+        public bool Intersects(BoundingSphere sphere)
+        {
+            return Intersects(ref sphere);
         }
 
         /// <summary>
