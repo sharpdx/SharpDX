@@ -69,7 +69,7 @@ namespace SharpDX.Toolkit
 
         public bool IsBlockingRun { get; protected set; }
 
-        public abstract void Run(object windowContext, VoidAction initCallback, VoidAction tickCallback);
+        public abstract void Run(GameContext context);
 
         public virtual void Exit()
         {

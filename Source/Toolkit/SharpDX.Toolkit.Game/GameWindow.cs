@@ -154,7 +154,9 @@ namespace SharpDX.Toolkit
         /// Initializes the GameWindow with the specified window context.
         /// </summary>
         /// <param name="windowContext">The window context.</param>
-        internal abstract void Initialize(object windowContext);
+        internal abstract void Initialize(GameContext windowContext);
+
+        internal abstract void Run();
 
         protected internal abstract void SetSupportedOrientations(DisplayOrientation orientations);
 

@@ -20,6 +20,7 @@
 #if WP8
 
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 using SharpDX.Direct3D11;
@@ -280,6 +281,7 @@ namespace SharpDX.Toolkit
                 // TODO: As we are in a callback from a native code, we cannot pass back this exception,
                 // so how to pass back this exception to the user at an appropriate time?
                 drawException = ex;
+                Debug.WriteLine(drawException);
             }
         }
 
