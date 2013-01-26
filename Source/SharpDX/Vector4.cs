@@ -1179,7 +1179,7 @@ namespace SharpDX
         /// <returns>The scaled vector.</returns>
         public static Vector4 operator /(Vector4 value, Vector4 scale)
         {
-            return new Vector4(value.X / scale.X, value.Y / scale.Y, value.Z / scale.Z, value.W / scale.Z);
+            return new Vector4(value.X / scale.X, value.Y / scale.Y, value.Z / scale.Z, value.W / scale.W);
         }
 
         /// <summary>
