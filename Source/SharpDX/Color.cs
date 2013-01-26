@@ -90,6 +90,20 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="SharpDX.Color"/> struct.  Alpha is set to 255.
+        /// </summary>
+        /// <param name="red">The red component of the color.</param>
+        /// <param name="green">The green component of the color.</param>
+        /// <param name="blue">The blue component of the color.</param>
+        public Color(byte red, byte green, byte blue)
+        {
+            R = red;
+            G = green;
+            B = blue;
+            A = 255;
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SharpDX.Color"/> struct.
         /// </summary>
         /// <param name="red">The red component of the color.</param>
@@ -102,6 +116,20 @@ namespace SharpDX
             G = ToByte(green);
             B = ToByte(blue);
             A = ToByte(alpha);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SharpDX.Color"/> struct.  Alpha is set to 255.
+        /// </summary>
+        /// <param name="red">The red component of the color.</param>
+        /// <param name="green">The green component of the color.</param>
+        /// <param name="blue">The blue component of the color.</param>
+        public Color(float red, float green, float blue)
+        {
+            R = ToByte(red);
+            G = ToByte(green);
+            B = ToByte(blue);
+            A = 255;
         }
 
         /// <summary>
@@ -127,6 +155,18 @@ namespace SharpDX
             G = ToByte(value.Y);
             B = ToByte(value.Z);
             A = ToByte(alpha);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SharpDX.Color"/> struct. Alpha is set to 255.
+        /// </summary>
+        /// <param name="value">The red, green, and blue compoennts of the color.</param>
+        public Color(Vector3 value)
+        {
+            R = ToByte(value.X);
+            G = ToByte(value.Y);
+            B = ToByte(value.Z);
+            A = 255;
         }
 
         /// <summary>

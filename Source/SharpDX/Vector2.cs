@@ -1214,6 +1214,17 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Scales a vector by the given value.
+        /// </summary>
+        /// <param name="value">The vector to scale.</param>
+        /// <param name="scale">The amount by which to scale the vector.</param>
+        /// <returns>The scaled vector.</returns>
+        public static Vector2 operator /(Vector2 value, Vector2 scale)
+        {
+            return new Vector2(value.X / scale.X, value.Y / scale.Y);
+        }
+
+        /// <summary>
         /// Tests for equality between two objects.
         /// </summary>
         /// <param name="left">The first value to compare.</param>
