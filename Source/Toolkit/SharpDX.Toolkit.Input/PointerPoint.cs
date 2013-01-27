@@ -23,8 +23,13 @@ namespace SharpDX.Toolkit.Input
     /// <summary>
     /// Represents a platform-independent information about a pointer event.
     /// </summary>
-    public sealed class PointerPoint
+    public struct PointerPoint
     {
+        /// <summary>
+        /// The type of event that represents current pointer point
+        /// </summary>
+        public PointerEventType EventType { get; internal set; }
+
         /// <summary>
         /// The device type that raised the event.
         /// </summary>

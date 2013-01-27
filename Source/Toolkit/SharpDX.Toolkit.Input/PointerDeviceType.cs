@@ -23,7 +23,7 @@ namespace SharpDX.Toolkit.Input
     /// <summary>
     /// Represent the specific pointer device type
     /// </summary>
-    public enum PointerDeviceType
+    public enum PointerDeviceType : byte
     {
         /// <summary>
         /// Touch pointer device. A touchscreen, for example.

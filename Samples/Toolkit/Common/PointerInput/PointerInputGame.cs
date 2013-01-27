@@ -51,11 +51,11 @@ namespace PointerInput
 
             private string cache;
 
-            public PointerEventDescrption(int index, PointerPoint point, string description)
+            public PointerEventDescrption(int index, PointerPoint point)
             {
                 this.index = index;
                 this.point = point;
-                this.description = description;
+                this.description = point.EventType.ToString();
             }
 
             public PointerPoint Point { get { return point; } }
@@ -117,6 +117,7 @@ namespace PointerInput
         private readonly IPointerService pointerService;
         private SpriteBatch spriteBatch;
         private SpriteFont arial16BMFont;
+        private readonly PointerState pointerState = new PointerState();
 
         private const int maxEvents = 30;
 
@@ -142,17 +143,9 @@ namespace PointerInput
             // for loading contents with the ContentManager
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-
-            pointerService.PointerCaptureLost += p => AddEvent("Capture", p);
-            pointerService.PointerEntered += p => AddEvent("Entered", p);
-            pointerService.PointerExited += p => AddEvent("Exited", p);
-            pointerService.PointerMoved += p => AddEvent("Moved", p);
-            pointerService.PointerPressed += p => AddEvent("Pressed", p);
-            pointerService.PointerReleased += p => AddEvent("Released", p);
-            pointerService.PointerWheelChanged += p => AddEvent("Wheel", p);
         }
 
-        private void AddEvent(string eventDescription, PointerPoint point)
+        private void AddEvent(PointerPoint point)
         {
             // uncomment and edit these lines to filter-out the unneeded events
             //if (recentEvents.Count > 0)
@@ -169,7 +162,7 @@ namespace PointerInput
             if (recentEvents.Count == maxEvents)
                 recentEvents.Dequeue();
 
-            recentEvents.Enqueue(new PointerEventDescrption(eventIndex++, point, eventDescription));
+            recentEvents.Enqueue(new PointerEventDescrption(eventIndex++, point));
         }
 
         protected override void LoadContent()
@@ -222,6 +215,16 @@ namespace PointerInput
 
             // Handle base.Draw
             base.Draw(gameTime);
+        }
+
+        protected override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            pointerService.GetState(pointerState);
+
+            foreach(var point in pointerState.Points)
+                AddEvent(point);
         }
     }
 }

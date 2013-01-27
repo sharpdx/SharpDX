@@ -18,27 +18,46 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-
 namespace SharpDX.Toolkit.Input
 {
     /// <summary>
-    /// Provides access to platform-independent pointer events
+    /// Represents the type of pointer event
     /// </summary>
-    public interface IPointerService
+    public enum PointerEventType : byte
     {
         /// <summary>
-        /// Gets the current state of the pointer
+        /// The pointer capture was lost
         /// </summary>
-        /// <returns>An instance of <see cref="PointerState"/> class</returns>
-        PointerState GetState();
+        CaptureLost,
 
         /// <summary>
-        /// Fills the provided object with the current pointer state information
+        /// The pointer entered the current control bounds
         /// </summary>
-        /// <remarks>All properties of provided object will be cleared.</remarks>
-        /// <param name="state">The object that needs to be filled with pointer information</param>
-        /// <exception cref="ArgumentNullException">Is thrown when <paramref name="state"/> is null</exception>
-        void GetState(PointerState state);
+        Entered,
+
+        /// <summary>
+        /// The pointer exited the current control bounds
+        /// </summary>
+        Exited,
+
+        /// <summary>
+        /// The pointer moved over the current control bounds
+        /// </summary>
+        Moved,
+
+        /// <summary>
+        /// The pointer was pressed
+        /// </summary>
+        Pressed,
+
+        /// <summary>
+        /// The pointer was released
+        /// </summary>
+        Released,
+
+        /// <summary>
+        /// The pointer wheel changed its state
+        /// </summary>
+        WheelChanged,
     }
 }

@@ -8,7 +8,7 @@
     <RootNamespace>SharpDX.Toolkit.Input</RootNamespace>
     <AssemblyName>SharpDX.Toolkit.Input</AssemblyName>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(SharpDXWin8)' == 'false'">
+  <ItemGroup Condition=" '$(SharpDXWin8Core)' == 'false'">
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -37,12 +37,14 @@
     <Compile Include="MouseManager.cs" />
     <Compile Include="MouseState.cs" />
     <Compile Include="PointerDeviceType.cs" />
+    <Compile Include="PointerEventType.cs" />
     <Compile Include="PointerManager.cs" />
     <Compile Include="PointerPlatform.cs" />
     <Compile Include="PointerPlatformDesktop.cs" />
     <Compile Include="PointerPlatformDesktopTouch.cs" />
     <Compile Include="PointerPlatformWinRT.cs" />
     <Compile Include="PointerPoint.cs" />
+    <Compile Include="PointerState.cs" />
     <Compile Include="PointerUpdateKind.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MousePlatform.cs" />

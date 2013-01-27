@@ -60,45 +60,17 @@ namespace SharpDX.Toolkit.Input
             control = (Control)nativeWindow;
             this.manager = manager;
 
-            control.MouseLeave += HandleMouseLeave;
-            control.MouseEnter += HandleMouseEnter;
-            control.MouseMove += HandleMouseMove;
+            control.MouseLeave += (o, e) => CreateAndAddPoint(PointerEventType.Exited, PointerUpdateKind.Other, 0);
+            control.MouseEnter += (o, e) => CreateAndAddPoint(PointerEventType.Entered, PointerUpdateKind.Other, 0);
+            control.MouseMove += (o, e) => CreateAndAddPoint(PointerEventType.Moved, PointerUpdateKind.Other, e.Delta);
+            control.MouseWheel += (o, e) => CreateAndAddPoint(PointerEventType.WheelChanged, PointerUpdateKind.Other, e.Delta);
+
+            // these events have more complex handling, so they are moved to separate methods
             control.MouseDown += HandleMouseDown;
             control.MouseUp += HandleMouseUp;
-            control.MouseWheel += HandleMouseWheel;
 
             // try register touch events
             TryRegisterTouch();
-        }
-
-        /// <summary>
-        /// Handles the <see cref="Control.MouseLeave"/> event.
-        /// </summary>
-        /// <param name="sender">Ignored.</param>
-        /// <param name="e">Ignored.</param>
-        private void HandleMouseLeave(object sender, EventArgs e)
-        {
-            manager.RaiseExited(CreatePoint(PointerUpdateKind.Other, 0));
-        }
-
-        /// <summary>
-        /// Handles the <see cref="Control.MouseEnter"/> event.
-        /// </summary>
-        /// <param name="sender">Ignored.</param>
-        /// <param name="e">Ignored.</param>
-        private void HandleMouseEnter(object sender, EventArgs e)
-        {
-            manager.RaiseEntered(CreatePoint(PointerUpdateKind.Other, 0));
-        }
-
-        /// <summary>
-        /// Handles the <see cref="Control.MouseMove"/> event.
-        /// </summary>
-        /// <param name="sender">Ignored.</param>
-        /// <param name="e">Is used to retrieve information about mouse wheel delta (<see cref="MouseEventArgs.Delta"/>).</param>
-        private void HandleMouseMove(object sender, MouseEventArgs e)
-        {
-            manager.RaiseMoved(CreatePoint(PointerUpdateKind.Other, e.Delta));
         }
 
         /// <summary>
@@ -110,12 +82,8 @@ namespace SharpDX.Toolkit.Input
         {
             pressedButtonsCount++;
 
-            var point = CreatePoint(TranslateMouseButtonDown(e.Button), e.Delta);
-
-            if (pressedButtonsCount > 1)
-                manager.RaiseMoved(point);
-            else
-                manager.RaisePressed(point);
+            var eventType = pressedButtonsCount > 1 ? PointerEventType.Moved : PointerEventType.Pressed;
+            CreateAndAddPoint(eventType, TranslateMouseButtonDown(e.Button), e.Delta);
         }
 
         /// <summary>
@@ -127,38 +95,25 @@ namespace SharpDX.Toolkit.Input
         {
             pressedButtonsCount--;
 
-            var point = CreatePoint(TranslateMouseButtonUp(e.Button), e.Delta);
-
-            if (pressedButtonsCount > 0)
-                manager.RaiseMoved(point);
-            else
-                manager.RaiseReleased(point);
-        }
-
-        /// <summary>
-        /// Handles the <see cref="Control.MouseWheel"/> event.
-        /// </summary>
-        /// <param name="sender">Ignored.</param>
-        /// <param name="e">Ignored.</param>
-        private void HandleMouseWheel(object sender, MouseEventArgs e)
-        {
-            manager.RaiseWheelChanged(CreatePoint(PointerUpdateKind.Other, e.Delta));
+            var eventType = pressedButtonsCount > 0 ? PointerEventType.Moved : PointerEventType.Released;
+            CreateAndAddPoint(eventType, TranslateMouseButtonDown(e.Button), e.Delta);
         }
 
         /// <summary>
         /// Creates a <see cref="PointerPoint"/> instance from current mouse state.
         /// </summary>
+        /// <param name="eventType">The type of pointer event.</param>
         /// <param name="pointerUpdateKind">The kind of pointer event.</param>
         /// <param name="wheelDelta">The current mouse wheel delta.</param>
-        /// <returns>An instance of <see cref="PointerPoint"/> that represents the current state of mouse device.</returns>
-        private PointerPoint CreatePoint(PointerUpdateKind pointerUpdateKind, int wheelDelta)
+        private void CreateAndAddPoint(PointerEventType eventType, PointerUpdateKind pointerUpdateKind, int wheelDelta)
         {
             var position = control.PointToClient(Control.MousePosition);
 
             var mouseButtons = Control.MouseButtons;
 
-            return new PointerPoint
+            var point = new PointerPoint
                    {
+                       EventType = eventType,
                        DeviceType = PointerDeviceType.Mouse,
                        KeyModifiers = GetCurrentKeyModifiers(),
                        PointerId = 0,
@@ -185,6 +140,8 @@ namespace SharpDX.Toolkit.Input
                        YTilt = 0f,
                        PointerUpdateKind = pointerUpdateKind
                    };
+
+            manager.AddPointerEvent(ref point);
         }
 
         /// <summary>

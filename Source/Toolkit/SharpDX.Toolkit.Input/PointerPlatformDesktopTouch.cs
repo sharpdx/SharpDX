@@ -191,25 +191,26 @@ namespace SharpDX.Toolkit.Input
             var isPrimary = (flags & User32.TOUCHEVENTF_PRIMARY) != 0;
 
             PointerUpdateKind pointerUpdateKind;
-            Action<PointerPoint> dispatchDelegate;
+            PointerEventType eventType;
             if ((flags & User32.TOUCHEVENTF_DOWN) != 0)
             {
                 pointerUpdateKind = PointerUpdateKind.LeftButtonPressed;
-                dispatchDelegate = manager.RaisePressed;
+                eventType = PointerEventType.Pressed;
             }
             else if ((flags & User32.TOUCHEVENTF_DOWN) != 0)
             {
                 pointerUpdateKind = PointerUpdateKind.LeftButtonReleased;
-                dispatchDelegate = manager.RaiseReleased;
+                eventType = PointerEventType.Released;
             }
             else
             {
                 pointerUpdateKind = PointerUpdateKind.Other;
-                dispatchDelegate = manager.RaiseMoved;
+                eventType = PointerEventType.Moved;
             }
 
             var point = new PointerPoint
                         {
+                            EventType = eventType,
                             DeviceType = ((flags & User32.TOUCHEVENTF_PEN) != 0) ? PointerDeviceType.Pen : PointerDeviceType.Touch,
                             PointerId = (uint)input.dwID,
                             Timestamp = (ulong)input.dwTime,
@@ -224,7 +225,7 @@ namespace SharpDX.Toolkit.Input
             if ((mask & User32.TOUCHINPUTMASKF_CONTACTAREA) != 0)
                 point.ContactRect = new DrawingRectangleF(position.X, position.Y, AdjustX(input.cxContact), AdjustY(input.cyContact));
 
-            dispatchDelegate(point);
+            manager.AddPointerEvent(ref point);
         }
 
         /// <summary>

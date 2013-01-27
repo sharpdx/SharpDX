@@ -22,13 +22,23 @@ using System;
 
 namespace SharpDX.Toolkit.Input
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Provides cross-platform access to pointer events
     /// </summary>
-    public class PointerManager : Component, IGameSystem, IPointerService
+    public class PointerManager : Component, IGameSystem, IUpdateable, IPointerService
     {
         private readonly Game game; // keep a reference to game object to be able to initialize correctly
         private PointerPlatform platform; // keep a reference to pointer platform to be able to manipulate pointer
+
+        private List<PointerPoint> pointerPoints = new List<PointerPoint>(); // the list of currently collected pointer points
+        private List<PointerPoint> statePointerPoints = new List<PointerPoint>(); // the list of pointer points that will be copied to state
+
+        private readonly object pointerPointLock = new object(); // keep a separate object for lock operations as "lock(this)" is a bad practice
+
+        private bool enabled = true;
+        private int updateOrder;
 
         /// <summary>
         /// Initializes a new instance of <see cref="PointerManager"/> class
@@ -45,40 +55,35 @@ namespace SharpDX.Toolkit.Input
             this.game.GameSystems.Add(this);
         }
 
-        /// <summary>
-        /// Raised when <see cref="GameWindow.NativeWindow"/> object loses pointer capture
-        /// </summary>
-        public event Action<PointerPoint> PointerCaptureLost;
+        /// <inheritdoc/>
+        public bool Enabled
+        {
+            get { return enabled; }
+            private set
+            {
+                if (value == enabled) return;
+                enabled = value;
+                RaiseEvent(EnabledChanged);
+            }
+        }
 
-        /// <summary>
-        /// Raised when pointer enters <see cref="GameWindow.NativeWindow"/> object
-        /// </summary>
-        public event Action<PointerPoint> PointerEntered;
+        /// <inheritdoc/>
+        public int UpdateOrder
+        {
+            get { return updateOrder; }
+            private set
+            {
+                if (value == updateOrder) return;
+                updateOrder = value;
+                RaiseEvent(UpdateOrderChanged);
+            }
+        }
 
-        /// <summary>
-        /// Raised when pointer exits <see cref="GameWindow.NativeWindow"/> object
-        /// </summary>
-        public event Action<PointerPoint> PointerExited;
+        /// <inheritdoc/>
+        public event EventHandler<EventArgs> EnabledChanged;
 
-        /// <summary>
-        /// Raised when pointer moves on <see cref="GameWindow.NativeWindow"/> object
-        /// </summary>
-        public event Action<PointerPoint> PointerMoved;
-
-        /// <summary>
-        /// Raised when pointer is pressed on <see cref="GameWindow.NativeWindow"/> object
-        /// </summary>
-        public event Action<PointerPoint> PointerPressed;
-
-        /// <summary>
-        /// Raised when pointer is released on <see cref="GameWindow.NativeWindow"/> object
-        /// </summary>
-        public event Action<PointerPoint> PointerReleased;
-
-        /// <summary>
-        /// Raised when pointer wheel is changed on <see cref="GameWindow.NativeWindow"/> object
-        /// </summary>
-        public event Action<PointerPoint> PointerWheelChanged;
+        /// <inheritdoc/>
+        public event EventHandler<EventArgs> UpdateOrderChanged;
 
         /// <summary>
         /// Initializes this instance of <see cref="PointerManager"/> class.
@@ -90,81 +95,61 @@ namespace SharpDX.Toolkit.Input
             platform = PointerPlatform.Create(game.Window.NativeWindow, this);
         }
 
-        /// <summary>
-        /// Raises the <see cref="PointerManager.PointerCaptureLost"/> event.
-        /// </summary>
-        /// <param name="point">Contains the information about pointer event</param>
-        internal void RaiseCaptureLost(PointerPoint point)
+        /// <inheritdoc/>
+        public PointerState GetState()
         {
-            RaisePointerEvent(PointerCaptureLost, point);
+            var state = new PointerState();
+
+            GetState(state);
+
+            return state;
+        }
+
+        /// <inheritdoc/>
+        public void GetState(PointerState state)
+        {
+            if(state == null) throw new ArgumentNullException("state");
+
+            state.Points.Clear();
+
+            foreach(var point in statePointerPoints)
+                state.Points.Add(point);
+        }
+
+        /// <inheritdoc/>
+        public void Update(GameTime gameTime)
+        {
+            lock(pointerPointLock)
+            {
+                // swap the lists and clear the list that will be used to collect next pointer points
+
+                var tmp = pointerPoints;
+                pointerPoints = statePointerPoints;
+                statePointerPoints = tmp;
+
+                pointerPoints.Clear();
+            }
         }
 
         /// <summary>
-        /// Raises the <see cref="PointerManager.PointerEntered"/> event.
+        /// Adds a pointer point to the raised events collection. It will be copied to pointer state at next update.
         /// </summary>
-        /// <param name="point">Contains the information about pointer event</param>
-        internal void RaiseEntered(PointerPoint point)
+        /// <param name="point">The raised pointer event</param>
+        internal void AddPointerEvent(ref PointerPoint point)
         {
-            RaisePointerEvent(PointerEntered, point);
+            // use a simple lock at this time, to avoid excesive code complexity
+            lock(pointerPointLock)
+                pointerPoints.Add(point);
         }
 
         /// <summary>
-        /// Raises the <see cref="PointerManager.PointerExited"/> event.
+        /// Raises a simple event in a thread-safe way due to stack-copy of delegate reference
         /// </summary>
-        /// <param name="point">Contains the information about pointer event</param>
-        internal void RaiseExited(PointerPoint point)
+        /// <param name="handler">The event handler that needs to be raised</param>
+        private void RaiseEvent(EventHandler<EventArgs> handler)
         {
-            RaisePointerEvent(PointerExited, point);
-        }
-
-        /// <summary>
-        /// Raises the <see cref="PointerManager.PointerMoved"/> event.
-        /// </summary>
-        /// <param name="point">Contains the information about pointer event</param>
-        internal void RaiseMoved(PointerPoint point)
-        {
-            RaisePointerEvent(PointerMoved, point);
-        }
-
-        /// <summary>
-        /// Raises the <see cref="PointerManager.PointerPressed"/> event.
-        /// </summary>
-        /// <param name="point">Contains the information about pointer event</param>
-        internal void RaisePressed(PointerPoint point)
-        {
-            RaisePointerEvent(PointerPressed, point);
-        }
-
-        /// <summary>
-        /// Raises the <see cref="PointerManager.PointerReleased"/> event.
-        /// </summary>
-        /// <param name="point">Contains the information about pointer event</param>
-        internal void RaiseReleased(PointerPoint point)
-        {
-            RaisePointerEvent(PointerReleased, point);
-        }
-        
-        /// <summary>
-        /// Raises the <see cref="PointerManager.PointerWheelChanged"/> event.
-        /// </summary>
-        /// <param name="point">Contains the information about pointer event</param>
-        internal void RaiseWheelChanged(PointerPoint point)
-        {
-            RaisePointerEvent(PointerWheelChanged, point);
-        }
-
-        /// <summary>
-        /// Raises the specified pointer event
-        /// </summary>
-        /// <param name="handler">The event handler</param>
-        /// <param name="point">Information about pointer event</param>
-        /// <exception cref="ArgumentNullException">Is thrown when <paramref name="point"/> is null</exception>
-        private static void RaisePointerEvent(Action<PointerPoint> handler, PointerPoint point)
-        {
-            if (point == null) throw new ArgumentNullException("point");
-
             if (handler != null)
-                handler(point);
+                handler(this, EventArgs.Empty);
         }
     }
 }
