@@ -109,7 +109,7 @@ namespace SharpDX.Toolkit.Graphics
         private readonly TextureComparer textureComparer = new TextureComparer();
         private readonly ResourceContext resourceContext;
         private readonly VertexInputLayout vertexInputLayout;
-        private readonly Dictionary<IntPtr, TextureInfo> textureInfos = new Dictionary<IntPtr, TextureInfo>(128);
+        private readonly Dictionary<ShaderResourceView, TextureInfo> textureInfos = new Dictionary<ShaderResourceView, TextureInfo>(128);
         private readonly Resource tempResource = new Resource(IntPtr.Zero);
         private readonly SharpDX.Direct3D11.Texture1D tempTexture1D = new SharpDX.Direct3D11.Texture1D(IntPtr.Zero);
         private readonly SharpDX.Direct3D11.Texture2D tempTexture2D = new SharpDX.Direct3D11.Texture2D(IntPtr.Zero);
@@ -650,7 +650,7 @@ namespace SharpDX.Toolkit.Graphics
             // Cache the result in order to avoid this request if the texture is reused 
             // inside a same Begin/End block.
             TextureInfo textureInfo;
-            if (!textureInfos.TryGetValue(texture.NativePointer, out textureInfo))
+            if (!textureInfos.TryGetValue(texture, out textureInfo))
             {
                 textureInfo.ShaderResourceView = texture.NativePointer;
                 IntPtr resourcePtr;
@@ -679,7 +679,7 @@ namespace SharpDX.Toolkit.Graphics
                         throw new ArgumentException("Invalid resource for texture. Must be Texture1D/2D/3D", "texture");
                 }
 
-                textureInfos.Add(texture.NativePointer, textureInfo);
+                textureInfos.Add(texture, textureInfo);
             }
 
             // Put values in next SpriteInfo
