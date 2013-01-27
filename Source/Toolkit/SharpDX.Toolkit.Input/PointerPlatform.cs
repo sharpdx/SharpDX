@@ -27,6 +27,8 @@ namespace SharpDX.Toolkit.Input
     /// </summary>
     internal abstract class PointerPlatform
     {
+        protected readonly PointerManager manager;
+
         /// <summary>
         /// Initializes a new instance of <see cref="PointerPlatform"/> class
         /// </summary>
@@ -38,7 +40,9 @@ namespace SharpDX.Toolkit.Input
             if (nativeWindow == null) throw new ArgumentNullException("nativeWindow");
             if (manager == null) throw new ArgumentNullException("manager");
 
-            BindWindow(nativeWindow, manager);
+            this.manager = manager;
+
+            BindWindow(nativeWindow);
         }
 
         /// <summary>
@@ -64,7 +68,6 @@ namespace SharpDX.Toolkit.Input
         /// Derived classes should perform the binding to platform-specific events on <paramref name="nativeWindow"/> and raise the corresponding events on <paramref name="manager"/>.
         /// </summary>
         /// <param name="nativeWindow">The platform-specific reference to window object</param>
-        /// <param name="manager">The <see cref="PointerManager"/> whose events will be raised in response to platform-specific events</param>
-        protected abstract void BindWindow(object nativeWindow, PointerManager manager);
+        protected abstract void BindWindow(object nativeWindow);
     }
 }

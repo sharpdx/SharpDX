@@ -32,7 +32,6 @@ namespace SharpDX.Toolkit.Input
     internal sealed partial class PointerPlatformDesktop : PointerPlatform
     {
         private Control control;
-        private PointerManager manager;
 
         // used to store the count of currently pressed mouse buttons, as subsequent buttons should raise 'Moved' events.
         private int pressedButtonsCount;
@@ -52,13 +51,11 @@ namespace SharpDX.Toolkit.Input
         /// <param name="nativeWindow">An instance of <see cref="Control"/>.</param>
         /// <param name="manager">The related <see cref="PointerManager"/> instance.</param>
         /// <exception cref="ArgumentNullException">Is thrown when either <paramref name="nativeWindow"/> or <paramref name="manager"/> is null.</exception>
-        protected override void BindWindow(object nativeWindow, PointerManager manager)
+        protected override void BindWindow(object nativeWindow)
         {
             if (nativeWindow == null) throw new ArgumentNullException("nativeWindow");
-            if (manager == null) throw new ArgumentNullException("manager");
 
             control = (Control)nativeWindow;
-            this.manager = manager;
 
             control.MouseLeave += (o, e) => CreateAndAddPoint(PointerEventType.Exited, PointerUpdateKind.Other, 0);
             control.MouseEnter += (o, e) => CreateAndAddPoint(PointerEventType.Entered, PointerUpdateKind.Other, 0);
