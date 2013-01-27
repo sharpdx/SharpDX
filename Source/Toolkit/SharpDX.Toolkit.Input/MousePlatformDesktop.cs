@@ -60,14 +60,14 @@ namespace SharpDX.Toolkit.Input
         /// <param name="nativeWindow">A reference to <see cref="Control"/> class.</param>
         /// <exception cref="ArgumentNullException">Is thrown when <paramref name="nativeWindow"/> is null.</exception>
         /// <exception cref="InvalidCastException">Is thrown when <paramref name="nativeWindow"/> is not an instance of the <see cref="Control"/> class.</exception>
-        protected override Point GetLocationInternal(object nativeWindow)
+        protected override DrawingPoint GetLocationInternal(object nativeWindow)
         {
             if(nativeWindow == null) throw new ArgumentNullException("nativeWindow");
 
             var w = (Control)nativeWindow;
             var p = w.PointToClient(Cursor.Position);
 
-            return new Point(p.X, p.Y);
+            return new DrawingPoint(p.X, p.Y);
         }
 
         /// <summary>

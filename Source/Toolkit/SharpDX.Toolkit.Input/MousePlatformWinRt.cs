@@ -21,17 +21,15 @@
 #if WIN8METRO
 
 using System;
-using Windows.Devices.Input;
-using Windows.Foundation;
 using Windows.Graphics.Display;
 using Windows.UI.Core;
-using Windows.UI.Input;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Input;
+using WinRTPointerDeviceType = Windows.Devices.Input.PointerDeviceType;
+using WinRTPointerPoint = Windows.UI.Input.PointerPoint;
 
 namespace SharpDX.Toolkit.Input
 {
-    using global::Windows.UI.Xaml.Input;
-
     /// <summary>
     /// Represents a specific <see cref="MousePlatform"/> implementation for the WinRT platform
     /// </summary>
@@ -65,7 +63,7 @@ namespace SharpDX.Toolkit.Input
                 window.PointerMoved += HandleWindowPointerEvent;
                 return;
             }
-            
+
             var uiElement = nativeWindow as UIElement;
             if (uiElement != null)
             {
@@ -84,9 +82,9 @@ namespace SharpDX.Toolkit.Input
         /// </summary>
         /// <param name="nativeWindow">A reference to <see cref="CoreWindow"/> or <see cref="UIElement"/> class.</param>
         /// <returns>The location of mouse cursor</returns>
-        protected override Point GetLocationInternal(object nativeWindow)
+        protected override DrawingPoint GetLocationInternal(object nativeWindow)
         {
-            return new Point(pointerX, pointerY);
+            return new DrawingPoint(pointerX, pointerY);
         }
 
         /// <summary>
@@ -98,7 +96,7 @@ namespace SharpDX.Toolkit.Input
         {
             var p = args.CurrentPoint;
             // if the current device is not a mouse - ignore it
-            if (p.PointerDevice.PointerDeviceType != PointerDeviceType.Mouse) return;
+            if (p.PointerDevice.PointerDeviceType != WinRTPointerDeviceType.Mouse) return;
 
             UpdateMouse(p);
 
@@ -114,12 +112,12 @@ namespace SharpDX.Toolkit.Input
         /// <exception cref="InvalidCastException">Is thrown if <paramref name="sender"/> is not an <see cref="UIElement"/></exception>
         private void HandleUIElementPointerEvent(object sender, PointerRoutedEventArgs args)
         {
-            if(sender == null) throw new ArgumentNullException("sender");
-            if(args == null) throw new ArgumentNullException("args");
+            if (sender == null) throw new ArgumentNullException("sender");
+            if (args == null) throw new ArgumentNullException("args");
 
             var p = args.GetCurrentPoint((UIElement)sender);
             // if the current device is not a mouse - ignore it
-            if (p.PointerDevice.PointerDeviceType != PointerDeviceType.Mouse) return;
+            if (p.PointerDevice.PointerDeviceType != WinRTPointerDeviceType.Mouse) return;
 
             UpdateMouse(p);
 
@@ -130,7 +128,7 @@ namespace SharpDX.Toolkit.Input
         /// Raises corresponding events to update mouse state
         /// </summary>
         /// <param name="p"><see cref="PointerPoint"/> instance that contains all needed information</param>
-        private void UpdateMouse(PointerPoint p)
+        private void UpdateMouse(WinRTPointerPoint p)
         {
             // adjust mouse position from Device-Independent-Pixels to physical pixels
             var dipFactor = DisplayProperties.LogicalDpi / 96.0f;
