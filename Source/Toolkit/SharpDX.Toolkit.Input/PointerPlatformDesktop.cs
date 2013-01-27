@@ -157,30 +157,6 @@ namespace SharpDX.Toolkit.Input
 
             var mouseButtons = Control.MouseButtons;
 
-            var props = new PointerPointProperties
-                        {
-                            ContactRect = new DrawingRectangleF(position.X, position.Y, 0f, 0f),
-                            IsBarrelButtonPresset = false,
-                            IsCanceled = false,
-                            IsEraser = false,
-                            IsHorizontalMouseWheel = false,
-                            IsInRange = false,
-                            IsInverted = false,
-                            IsLeftButtonPressed = (mouseButtons & MouseButtons.Left) != 0,
-                            IsMiddleButtonPressed = (mouseButtons & MouseButtons.Middle) != 0,
-                            IsPrimary = true,
-                            IsRightButtonPressed = (mouseButtons & MouseButtons.Right) != 0,
-                            IsXButton1Pressed = (mouseButtons & MouseButtons.XButton1) != 0,
-                            IsXButton2Pressed = (mouseButtons & MouseButtons.XButton2) != 0,
-                            MouseWheelDelta = wheelDelta,
-                            Orientation = 0f,
-                            TouchConfidence = false, // ?
-                            Twist = 0f,
-                            XTilt = 0f,
-                            YTilt = 0f,
-                            PointerUpdateKind = pointerUpdateKind
-                        };
-
             return new PointerPoint
                    {
                        DeviceType = PointerDeviceType.Mouse,
@@ -188,7 +164,26 @@ namespace SharpDX.Toolkit.Input
                        PointerId = 0,
                        Position = new DrawingPointF(position.X, position.Y),
                        Timestamp = (ulong)DateTime.Now.Ticks,
-                       Properties = props
+                       ContactRect = new DrawingRectangleF(position.X, position.Y, 0f, 0f),
+                       IsBarrelButtonPresset = false,
+                       IsCanceled = false,
+                       IsEraser = false,
+                       IsHorizontalMouseWheel = false,
+                       IsInRange = false,
+                       IsInverted = false,
+                       IsLeftButtonPressed = (mouseButtons & MouseButtons.Left) != 0,
+                       IsMiddleButtonPressed = (mouseButtons & MouseButtons.Middle) != 0,
+                       IsPrimary = true,
+                       IsRightButtonPressed = (mouseButtons & MouseButtons.Right) != 0,
+                       IsXButton1Pressed = (mouseButtons & MouseButtons.XButton1) != 0,
+                       IsXButton2Pressed = (mouseButtons & MouseButtons.XButton2) != 0,
+                       MouseWheelDelta = wheelDelta,
+                       Orientation = 0f,
+                       TouchConfidence = false, // ?
+                       Twist = 0f,
+                       XTilt = 0f,
+                       YTilt = 0f,
+                       PointerUpdateKind = pointerUpdateKind
                    };
         }
 

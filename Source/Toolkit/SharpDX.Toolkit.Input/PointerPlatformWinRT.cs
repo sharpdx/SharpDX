@@ -88,7 +88,11 @@ namespace SharpDX.Toolkit.Input
         /// <returns>An instance of <see cref="PointerPoint"/> class.</returns>
         private static PointerPoint BuildPoint(VirtualKeyModifiers modifiers, global::Windows.UI.Input.PointerPoint point)
         {
+            if(point == null) throw new ArgumentNullException("point");
+
             var position = point.Position;
+            var properties = point.Properties;
+            var contactRect = properties.ContactRect;
 
             return new PointerPoint
                    {
@@ -97,7 +101,26 @@ namespace SharpDX.Toolkit.Input
                        PointerId = point.PointerId,
                        Position = new DrawingPointF((float)position.X, (float)position.Y),
                        Timestamp = point.Timestamp,
-                       Properties = GetProperties(point.Properties)
+                       ContactRect = new DrawingRectangleF((float)contactRect.X, (float)contactRect.Y, (float)contactRect.Width, (float)contactRect.Height),
+                       IsBarrelButtonPresset = properties.IsBarrelButtonPressed,
+                       IsCanceled = properties.IsCanceled,
+                       IsEraser = properties.IsEraser,
+                       IsHorizontalMouseWheel = properties.IsHorizontalMouseWheel,
+                       IsInRange = properties.IsInRange,
+                       IsInverted = properties.IsInverted,
+                       IsLeftButtonPressed = properties.IsLeftButtonPressed,
+                       IsMiddleButtonPressed = properties.IsMiddleButtonPressed,
+                       IsPrimary = properties.IsPrimary,
+                       IsRightButtonPressed = properties.IsRightButtonPressed,
+                       IsXButton1Pressed = properties.IsXButton1Pressed,
+                       IsXButton2Pressed = properties.IsXButton2Pressed,
+                       MouseWheelDelta = properties.MouseWheelDelta,
+                       Orientation = properties.Orientation,
+                       TouchConfidence = properties.TouchConfidence,
+                       Twist = properties.Twist,
+                       XTilt = properties.XTilt,
+                       YTilt = properties.YTilt,
+                       PointerUpdateKind = GetPointerUpdateKind(properties.PointerUpdateKind)
                    };
         }
 
@@ -137,40 +160,6 @@ namespace SharpDX.Toolkit.Input
             if (modifiers.HasFlag(VirtualKeyModifiers.Windows)) result |= KeyModifiers.Windows;
 
             return result;
-        }
-
-        /// <summary>
-        /// Maps from WinRT-specific pointer properties to platform-independent class.
-        /// </summary>
-        /// <param name="properties">WinRT-specific pointer properties instance.</param>
-        /// <returns>Platform-independent pointer properties.</returns>
-        private static PointerPointProperties GetProperties(global::Windows.UI.Input.PointerPointProperties properties)
-        {
-            var contactRect = properties.ContactRect;
-
-            return new PointerPointProperties
-                   {
-                       ContactRect = new DrawingRectangleF((float)contactRect.X, (float)contactRect.Y, (float)contactRect.Width, (float)contactRect.Height),
-                       IsBarrelButtonPresset = properties.IsBarrelButtonPressed,
-                       IsCanceled = properties.IsCanceled,
-                       IsEraser = properties.IsEraser,
-                       IsHorizontalMouseWheel = properties.IsHorizontalMouseWheel,
-                       IsInRange = properties.IsInRange,
-                       IsInverted = properties.IsInverted,
-                       IsLeftButtonPressed = properties.IsLeftButtonPressed,
-                       IsMiddleButtonPressed = properties.IsMiddleButtonPressed,
-                       IsPrimary = properties.IsPrimary,
-                       IsRightButtonPressed = properties.IsRightButtonPressed,
-                       IsXButton1Pressed = properties.IsXButton1Pressed,
-                       IsXButton2Pressed = properties.IsXButton2Pressed,
-                       MouseWheelDelta = properties.MouseWheelDelta,
-                       Orientation = properties.Orientation,
-                       TouchConfidence = properties.TouchConfidence,
-                       Twist = properties.Twist,
-                       XTilt = properties.XTilt,
-                       YTilt = properties.YTilt,
-                       PointerUpdateKind = GetPointerUpdateKind(properties.PointerUpdateKind)
-                   };
         }
 
         /// <summary>

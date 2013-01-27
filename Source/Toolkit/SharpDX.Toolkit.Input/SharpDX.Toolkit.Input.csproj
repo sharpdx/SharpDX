@@ -43,7 +43,6 @@
     <Compile Include="PointerPlatformDesktopTouch.cs" />
     <Compile Include="PointerPlatformWinRT.cs" />
     <Compile Include="PointerPoint.cs" />
-    <Compile Include="PointerPointProperties.cs" />
     <Compile Include="PointerUpdateKind.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MousePlatform.cs" />

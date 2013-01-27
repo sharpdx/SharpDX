@@ -72,25 +72,23 @@ namespace PointerInput
             /// </summary>
             private void BuildStringRepresentation()
             {
-                var p = point.Properties;
-
                 var sb = new StringBuilder();
 
                 // append general point information
                 sb.AppendFormat("{0} - {1}: ", index, description);
-                sb.AppendFormat("Dev:{0}; ID:{1}; Pos:{2}; Kind:{3}; ", point.DeviceType, point.PointerId, point.Position, p.PointerUpdateKind);
+                sb.AppendFormat("Dev:{0}; ID:{1}; Pos:{2}; Kind:{3}; ", point.DeviceType, point.PointerId, point.Position, point.PointerUpdateKind);
 
                 // append device-specific information
                 switch (point.DeviceType)
                 {
                     case PointerDeviceType.Touch:
-                        AppendTouchProperties(sb, p);
+                        AppendTouchProperties(sb, point);
                         break;
                     case PointerDeviceType.Pen:
-                        AppendPenProperties(sb, p);
+                        AppendPenProperties(sb, point);
                         break;
                     case PointerDeviceType.Mouse:
-                        AppendMouseProperties(sb, p);
+                        AppendMouseProperties(sb, point);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -99,17 +97,17 @@ namespace PointerInput
                 cache = sb.ToString();
             }
 
-            private void AppendMouseProperties(StringBuilder sb, PointerPointProperties p)
+            private void AppendMouseProperties(StringBuilder sb, PointerPoint p)
             {
                 sb.AppendFormat("L:{0}; R:{1}; M:{2}; d:{3}", p.IsLeftButtonPressed, p.IsRightButtonPressed, p.IsMiddleButtonPressed, p.MouseWheelDelta);
             }
 
-            private void AppendPenProperties(StringBuilder sb, PointerPointProperties p)
+            private void AppendPenProperties(StringBuilder sb, PointerPoint p)
             {
                 sb.AppendFormat("Er:{0}; Rng:{1}; Inv:{2}; Or:{3}; Tw:{4}; Tx:{5}; Ty:{6}", p.IsEraser, p.IsInRange, p.IsInverted, p.Orientation, p.Twist, p.XTilt, p.YTilt);
             }
 
-            private void AppendTouchProperties(StringBuilder sb, PointerPointProperties p)
+            private void AppendTouchProperties(StringBuilder sb, PointerPoint p)
             {
                 sb.AppendFormat("L:{0}; C:{1}; T:{2}; R:{3}", p.IsLeftButtonPressed, p.IsCanceled, p.TouchConfidence, p.IsInRange);
             }

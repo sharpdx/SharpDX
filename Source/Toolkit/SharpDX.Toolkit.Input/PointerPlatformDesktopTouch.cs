@@ -208,15 +208,6 @@ namespace SharpDX.Toolkit.Input
                 dispatchDelegate = manager.RaiseMoved;
             }
 
-            var properties = new PointerPointProperties();
-            if ((mask & User32.TOUCHINPUTMASKF_CONTACTAREA) != 0)
-                properties.ContactRect = new DrawingRectangleF(position.X, position.Y, AdjustX(input.cxContact), AdjustY(input.cyContact));
-
-            properties.IsPrimary = isPrimary;
-            properties.IsInRange = (flags & User32.TOUCHEVENTF_INRANGE) != 0;
-            properties.TouchConfidence = (flags & User32.TOUCHEVENTF_PALM) != 0;
-            properties.PointerUpdateKind = pointerUpdateKind;
-
             var point = new PointerPoint
                         {
                             DeviceType = ((flags & User32.TOUCHEVENTF_PEN) != 0) ? PointerDeviceType.Pen : PointerDeviceType.Touch,
@@ -224,8 +215,14 @@ namespace SharpDX.Toolkit.Input
                             Timestamp = (ulong)input.dwTime,
                             Position = new DrawingPointF(position.X, position.Y),
                             KeyModifiers = GetCurrentKeyModifiers(),
-                            Properties = new PointerPointProperties()
+                            IsPrimary = isPrimary,
+                            IsInRange = (flags & User32.TOUCHEVENTF_INRANGE) != 0,
+                            TouchConfidence = (flags & User32.TOUCHEVENTF_PALM) != 0,
+                            PointerUpdateKind = pointerUpdateKind,
                         };
+
+            if ((mask & User32.TOUCHINPUTMASKF_CONTACTAREA) != 0)
+                point.ContactRect = new DrawingRectangleF(position.X, position.Y, AdjustX(input.cxContact), AdjustY(input.cyContact));
 
             dispatchDelegate(point);
         }
