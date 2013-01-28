@@ -162,7 +162,7 @@ namespace SharpDX.Toolkit
         public override void Initialize()
         {
             var gamePlatform = (IGamePlatform)this.Services.GetService(typeof(IGamePlatform));
-            Window = gamePlatform.CreateWindow(NativeWindow, PreferredBackBufferWidth, PreferredBackBufferHeight);
+            Window = gamePlatform.CreateWindow(new GameWindowContext(NativeWindow, PreferredBackBufferWidth, PreferredBackBufferHeight));
             Window.Visible = true;
 
             Window.ClientSizeChanged += WindowOnClientSizeChanged;

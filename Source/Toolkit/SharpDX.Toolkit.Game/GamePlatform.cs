@@ -31,6 +31,8 @@ namespace SharpDX.Toolkit
     {
         protected IServiceRegistry Services;
 
+        protected GameWindow gameWindow;
+
         protected GamePlatform(IServiceRegistry services)
         {
             Services = services;
@@ -63,13 +65,54 @@ namespace SharpDX.Toolkit
 
         public event EventHandler<EventArgs> Suspend;
 
-        public abstract GameWindow MainWindow { get; }
+        public event EventHandler<EventArgs> WindowCreated;
 
-        public abstract GameWindow CreateWindow(object windowContext = null, int width = 0, int height = 0);
+        public GameWindow MainWindow
+        {
+            get
+            {
+                return gameWindow;
+            }
+        }
+
+        internal abstract GameWindow[] GetSupportedGameWindows();
+
+        public virtual GameWindow CreateWindow(GameWindowContext windowContext = null)
+        {
+            var windows = GetSupportedGameWindows();
+
+            foreach (var gameWindowToTest in windows)
+            {
+                if (gameWindowToTest.CanHandle(windowContext))
+                {
+                    var window = gameWindowToTest;
+                    window.Initialize(windowContext);
+
+                    return window;
+                }
+            }
+
+            throw new ArgumentException("Window context not supported");
+        }
 
         public bool IsBlockingRun { get; protected set; }
 
-        public abstract void Run(GameContext context);
+        public virtual void Run(GameWindowContext windowContext)
+        {
+            gameWindow = CreateWindow(windowContext);
+
+            // Register on Activated 
+            gameWindow.Activated += OnActivated;
+            gameWindow.Deactivated += OnDeactivated;
+
+            var windowCreated = WindowCreated;
+            if (windowCreated != null)
+            {
+                windowCreated(this, EventArgs.Empty);
+            }
+
+            gameWindow.Run(() => OnExiting(this, EventArgs.Empty));
+        }
 
         public virtual void Exit()
         {
@@ -79,6 +122,9 @@ namespace SharpDX.Toolkit
             Idle = null;
             Resume = null;
             Suspend = null;
+
+            gameWindow.Dispose();
+            gameWindow = null;
         }
         
         protected void OnActivated(object source, EventArgs e)
@@ -199,6 +245,10 @@ namespace SharpDX.Toolkit
         {
             var device = GraphicsDevice.New(deviceInformation.Adapter, deviceInformation.DeviceCreationFlags);
             device.Presenter = new SwapChainGraphicsPresenter(device, deviceInformation.PresentationParameters);
+
+            // Force to resize the gameWindow
+            gameWindow.Resize(deviceInformation.PresentationParameters.BackBufferWidth, deviceInformation.PresentationParameters.BackBufferHeight);
+
             return device;
         }
     }

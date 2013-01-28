@@ -114,6 +114,7 @@ namespace SharpDX.Toolkit
             gamePlatform.Activated += gamePlatform_Activated;
             gamePlatform.Deactivated += gamePlatform_Deactivated;
             gamePlatform.Exiting += gamePlatform_Exiting;
+            gamePlatform.WindowCreated += GamePlatformOnWindowCreated;
 
             // By default, add a FileResolver for the ContentManager
             Content.Resolvers.Add(new FileSystemContentResolver(gamePlatform.DefaultAppDirectory));
@@ -148,6 +149,11 @@ namespace SharpDX.Toolkit
         /// Occurs when [exiting].
         /// </summary>
         public event EventHandler<EventArgs> Exiting;
+
+        /// <summary>
+        /// Occurs when [window created].
+        /// </summary>
+        public event EventHandler<EventArgs> WindowCreated;
 
         #endregion
 
@@ -343,10 +349,12 @@ namespace SharpDX.Toolkit
                 throw new InvalidOperationException("No GraphicsDeviceManager found");
             }
 
+            // Run the game, loop depending on the platform/window.
+            var gameContext = new GameWindowContext(windowContext) { InitCalback = InitializeBeforeRun, RunCallback = Tick };
+
             try
             {
-                // Run the game, loop depending on the platform/window.
-                gamePlatform.Run(new GameContext(windowContext, InitializeBeforeRun, Tick));
+                gamePlatform.Run(gameContext);
 
                 if (gamePlatform.IsBlockingRun)
                 {
@@ -677,6 +685,21 @@ namespace SharpDX.Toolkit
                 handler(this, args);
             }
         }
+
+        protected virtual void OnWindowCreated()
+        {
+            EventHandler<EventArgs> handler = WindowCreated;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
+        }
+
+        private void GamePlatformOnWindowCreated(object sender, EventArgs eventArgs)
+        {
+            OnWindowCreated();
+        }
+
 
         /// <summary>
         /// This is used to display an error message if there is no suitable graphics device or sound card.

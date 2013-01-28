@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 #if !W8CORE
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 using SharpDX.Toolkit.Graphics;
@@ -29,18 +30,20 @@ namespace SharpDX.Toolkit
     /// <summary>
     /// An abstract window.
     /// </summary>
-    internal class GameWindowDesktop : GameWindow
+    internal class GameWindowDesktopWinForm : GameWindowDesktop
     {
         private bool isInitialized;
+
         private bool isMouseVisible;
+
         private bool isMouseCurrentlyHidden;
 
         public Control Control;
 
-        private GameWindowForm gameWindowForm;
+        private GameForm gameForm;
 
 
-        internal GameWindowDesktop()
+        internal GameWindowDesktopWinForm()
         {
         }
 
@@ -62,20 +65,12 @@ namespace SharpDX.Toolkit
 
         public override void BeginScreenDeviceChange(bool willBeFullScreen)
         {
-            
+
         }
 
         public override void EndScreenDeviceChange(int clientWidth, int clientHeight)
         {
-            
-        }
 
-        public override bool IsFullScreenMandatory
-        {
-            get
-            {
-                return false;
-            }
         }
 
         protected internal override void SetSupportedOrientations(DisplayOrientation orientations)
@@ -83,29 +78,49 @@ namespace SharpDX.Toolkit
             // Desktop doesn't have orientation (unless on Windows 8?)
         }
 
-        internal override void Initialize(object windowContext)
+        internal override bool CanHandle(GameWindowContext windowContext)
         {
+            // If no Windows context suplied or a WinForms control, than this instance is supporting it.
+            return windowContext.WindowContext == null || Utilities.IsInstanceOf(windowContext.WindowContext, "System.Windows.Forms.Control");
+        }
+
+        internal override void Initialize(GameWindowContext windowContext)
+        {
+            this.windowContext = windowContext;
+
             if (isInitialized)
             {
                 throw new InvalidOperationException("GameWindow is already initialized");
             }
 
-            windowContext = windowContext ?? new GameWindowForm("SharpDX.Toolkit.Game");
-            Control = windowContext as Control;
-            if (Control == null)
+            windowContext.WindowContext = windowContext.WindowContext ?? new GameForm("SharpDX.Toolkit.Game");
+            Control = (Control)windowContext.WindowContext;
+
+            // Setup the initial size of the window
+            var width = windowContext.RequestedWidth;
+            if (width == 0)
             {
-                throw new NotSupportedException("Unsupported window context. Unable to create game window. Only System.Windows.Control subclass are supported");
+                width = Control is Form ? GraphicsDeviceManager.DefaultBackBufferWidth : Control.ClientSize.Width;
             }
+
+            var height = windowContext.RequestedHeight;
+            if (height == 0)
+            {
+                height = Control is Form ? GraphicsDeviceManager.DefaultBackBufferHeight : Control.ClientSize.Height;
+            }
+
+            Control.ClientSize = new System.Drawing.Size(width, height);
+
 
             Control.MouseEnter += GameWindowForm_MouseEnter;
             Control.MouseLeave += GameWindowForm_MouseLeave;
 
-            gameWindowForm = windowContext as GameWindowForm;
-            if (gameWindowForm != null)
+            gameForm = Control as GameForm;
+            if (gameForm != null)
             {
-                gameWindowForm.AppActivated += OnActivated;
-                gameWindowForm.AppDeactivated += OnDeactivated;
-                gameWindowForm.UserResized += OnClientSizeChanged;
+                gameForm.AppActivated += OnActivated;
+                gameForm.AppDeactivated += OnDeactivated;
+                gameForm.UserResized += OnClientSizeChanged;
             }
             else
             {
@@ -115,7 +130,25 @@ namespace SharpDX.Toolkit
             isInitialized = true;
         }
 
-        void GameWindowForm_MouseEnter(object sender, System.EventArgs e)
+        internal override void Run(VoidAction onExit)
+        {
+            // Initialize the init callback
+            windowContext.InitCalback();
+
+            var runCallback = new RenderLoop.RenderCallback(windowContext.RunCallback);
+
+            // Run the rendering loop
+            try
+            {
+                RenderLoop.Run(Control, runCallback);
+            }
+            finally
+            {
+                onExit();
+            }
+        }
+
+        private void GameWindowForm_MouseEnter(object sender, System.EventArgs e)
         {
             if (!isMouseVisible && !isMouseCurrentlyHidden)
             {
@@ -124,7 +157,7 @@ namespace SharpDX.Toolkit
             }
         }
 
-        void GameWindowForm_MouseLeave(object sender, System.EventArgs e)
+        private void GameWindowForm_MouseLeave(object sender, System.EventArgs e)
         {
             if (isMouseCurrentlyHidden)
             {
@@ -186,17 +219,22 @@ namespace SharpDX.Toolkit
             }
         }
 
+        internal override void Resize(int width, int height)
+        {
+            Control.ClientSize = new Size(width, height);
+        }
+
         public override bool AllowUserResizing
         {
             get
             {
-                return (Control is GameWindowForm && ((GameWindowForm)Control).AllowUserResizing);
+                return (Control is GameForm && ((GameForm)Control).AllowUserResizing);
             }
             set
             {
-                if (Control is GameWindowForm)
+                if (Control is GameForm)
                 {
-                    ((GameWindowForm)Control).AllowUserResizing = value;
+                    ((GameForm)Control).AllowUserResizing = value;
                 }
             }
         }
@@ -221,7 +259,7 @@ namespace SharpDX.Toolkit
         {
             get
             {
-                var form  = Control as Form;
+                var form = Control as Form;
                 if (form != null)
                 {
                     return form.WindowState == FormWindowState.Minimized;
@@ -230,6 +268,19 @@ namespace SharpDX.Toolkit
                 // Check for non-form control
                 return false;
             }
+        }
+
+        protected override void Dispose(bool disposeManagedResources)
+        {
+            if (disposeManagedResources)
+            {
+                Control.Dispose();
+                Control = null;
+
+                gameForm = null;
+            }
+            
+            base.Dispose(disposeManagedResources);
         }
     }
 }

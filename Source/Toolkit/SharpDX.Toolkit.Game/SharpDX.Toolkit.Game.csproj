@@ -19,20 +19,22 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AssemblyDoc.cs" />
+    <Compile Include="Desktop\GameWindowDesktop.cs" />
     <Compile Include="EffectCompilerSystem.Default.cs" />
     <Compile Include="EffectCompilerEventArgs.cs" />
     <Compile Include="EffectCompilerSystem.Desktop.cs" />
     <Compile Include="EffectCompilerSystem.cs" />
+    <Compile Include="GameWindowContext.cs" />
     <Compile Include="GameWindowRenderer.cs" />
     <Compile Include="IGamePlatform.cs" />
     <Compile Include="IContentable.cs" />
     <Compile Include="GameGraphicsParameters.cs" />
-    <Compile Include="GameWindowWP8.cs" />
-    <Compile Include="GamePlatformWP8.cs" />
-    <Compile Include="GameWindowWinRT.cs" />
-    <Compile Include="GamePlatformWinRT.cs" />
-    <Compile Include="GameWindowDesktop.cs" />
-    <Compile Include="GamePlatformDesktop.cs" />
+    <Compile Include="WP8\GameWindowWP8.cs" />
+    <Compile Include="WP8\GamePlatformWP8.cs" />
+    <Compile Include="WinRT\GameWindowWinRT.cs" />
+    <Compile Include="WinRT\GamePlatformWinRT.cs" />
+    <Compile Include="Desktop\GameWindowWinForm.cs" />
+    <Compile Include="Desktop\GamePlatformDesktop.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GamePlatform.cs" />
     <Compile Include="GameSystem.cs" />
@@ -40,7 +42,9 @@
     <Compile Include="GameServiceRegistry.cs" />
     <Compile Include="GameTime.cs" />
     <Compile Include="GameWindow.cs" />
-    <Compile Include="GameWindowForm.cs" />
+    <Compile Include="Desktop\GameForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="GraphicsDeviceInformation.cs" />
     <Compile Include="GraphicsDeviceManager.cs" />
     <Compile Include="IDrawable.cs" />

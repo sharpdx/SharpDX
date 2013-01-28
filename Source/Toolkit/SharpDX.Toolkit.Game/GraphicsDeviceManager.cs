@@ -119,8 +119,6 @@ namespace SharpDX.Toolkit
                     FeatureLevel.Level_9_1, 
                 };
 
-            isFullScreen = game.Window.IsFullScreenMandatory;
-
             // Register the services to the registry
             game.Services.AddService(typeof(IGraphicsDeviceManager), this);
             game.Services.AddService(typeof(IGraphicsDeviceService), this);
@@ -131,6 +129,11 @@ namespace SharpDX.Toolkit
                 throw new InvalidOperationException("IGraphicsDeviceFactory is not registered as a service");
             }
 
+            game.WindowCreated += GameOnWindowCreated;
+        }
+
+        private void GameOnWindowCreated(object sender, EventArgs eventArgs)
+        {
             game.Window.ClientSizeChanged += Window_ClientSizeChanged;
             game.Window.OrientationChanged += Window_OrientationChanged;
         }
@@ -193,7 +196,7 @@ namespace SharpDX.Toolkit
 
             set
             {
-                if (isFullScreen != value && !game.Window.IsFullScreenMandatory)
+                if (isFullScreen != value)
                 {
                     isFullScreen = value;
                     deviceSettingsChanged = true;

@@ -886,6 +886,39 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Determines whether an object is an instance of a particular class using string instead of type (in order to avoid to load a type).
+        /// </summary>
+        /// <param name="obj">The object to scan its inheritance.</param>
+        /// <param name="parentClassNameToLookFor">The parent class name to look for.</param>
+        /// <returns><c>true</c> if the specified object is an instance of <see cref="parentClassNameToLookFor"/>; otherwise, <c>false</c>.</returns>
+        public static bool IsInstanceOf(object obj, string parentClassNameToLookFor)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+
+            var type = obj.GetType();
+            do
+            {
+                // Check for inheritance using string comparison
+                if (string.Compare(type.FullName, parentClassNameToLookFor, StringComparison.InvariantCulture) == 0)
+                {
+                    return true;
+                }
+#if W8CORE
+                type = type.GetTypeInfo().BaseType;
+#else
+                type = type.BaseType;
+#endif
+            }
+            while (type != null);
+
+            return false;
+        }
+
+
+        /// <summary>
         /// Determines whether the specified type to test is an enum.
         /// </summary>
         /// <param name="typeToTest">The type to test.</param>

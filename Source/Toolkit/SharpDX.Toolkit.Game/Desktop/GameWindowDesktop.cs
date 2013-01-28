@@ -18,20 +18,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using SharpDX.Toolkit.Graphics;
+
+#if !W8CORE
+
 namespace SharpDX.Toolkit
 {
-    internal abstract class GameSubWindow
+    /// <summary>
+    /// An abstract window.
+    /// </summary>
+    internal abstract class GameWindowDesktop : GameWindow
     {
-        public object WindowContext;
-
-        public VoidAction InitCalback;
-
-        public VoidAction RunCallback;
-
-        public abstract bool IsSupported(object windowContext);
-
-        public abstract bool Initialize();
-
-        public abstract void Run();
     }
 }
+#endif

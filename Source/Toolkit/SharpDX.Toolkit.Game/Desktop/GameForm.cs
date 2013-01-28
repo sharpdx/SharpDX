@@ -26,15 +26,15 @@ using SharpDX.Windows;
 
 namespace SharpDX.Toolkit
 {
-    internal class GameWindowForm : RenderForm
+    internal class GameForm : RenderForm
     {
         private bool allowUserResizing;
 
-        public GameWindowForm() : this("SharpDX")
+        public GameForm() : this("SharpDX")
         {
         }
 
-        public GameWindowForm(string text)
+        public GameForm(string text)
             : base(text)
         {
             // By default, non resizable
