@@ -25,6 +25,6 @@
         /// <remarks>
         /// This is currently only supported on Windows Desktop. The window context supported on windows is a subclass of System.Windows.Forms.Control (or null and a default RenderForm will be created).
         /// </remarks>
-        GameWindow CreateWindow(object windowContext = null, int width = 0, int height = 0);
+        GameWindow CreateWindow(GameWindowContext windowContext = null);
     }
 }

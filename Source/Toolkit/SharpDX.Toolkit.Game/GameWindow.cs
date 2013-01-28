@@ -33,6 +33,8 @@ namespace SharpDX.Toolkit
 
         private string title;
 
+        internal GameWindowContext windowContext;
+
         #endregion
 
         #region Public Events
@@ -77,12 +79,6 @@ namespace SharpDX.Toolkit
         /// </summary>
         /// <value>The current orientation.</value>
         public abstract DisplayOrientation CurrentOrientation { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether this window is only suitable to run in full-screen mode.
-        /// </summary>
-        /// <value><c>true</c> if this window is only suitable to run in full-screen mode is full screen mandatory; otherwise, <c>false</c>.</value>
-        public abstract bool IsFullScreenMandatory { get; }
 
         /// <summary>
         /// Gets a value indicating whether this instance is minimized.
@@ -154,11 +150,42 @@ namespace SharpDX.Toolkit
         /// Initializes the GameWindow with the specified window context.
         /// </summary>
         /// <param name="windowContext">The window context.</param>
-        internal abstract void Initialize(GameContext windowContext);
+        internal abstract bool CanHandle(GameWindowContext windowContext);
 
-        internal abstract void Run();
+        internal abstract void Initialize(GameWindowContext windowContext);
+
+        internal abstract void Run(VoidAction onExit);
+
+        internal abstract void Resize(int width, int height);
 
         protected internal abstract void SetSupportedOrientations(DisplayOrientation orientations);
+
+        protected bool CheckForInheritance(object context, string parentClassNameToLookFor)
+        {
+            if (context == null)
+            {
+                return false;
+            }
+
+            var type = context.GetType();
+
+
+            while (type != null )
+            {
+
+                if (string.Compare(type.FullName, parentClassNameToLookFor, StringComparison.InvariantCulture) == 0)
+                {
+                    return true;
+                }
+
+#if W8CORE
+                type = type.GetTypeInfo().BaseType;
+#else
+                type = type.BaseType;
+#endif
+            }
+            return false;
+        }
 
         protected void OnActivated(object source, EventArgs e)
         {

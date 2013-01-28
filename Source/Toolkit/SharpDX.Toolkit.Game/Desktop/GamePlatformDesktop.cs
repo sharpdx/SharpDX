@@ -17,26 +17,45 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+#if !W8CORE
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace SharpDX.Toolkit
 {
-    internal class GameContext
+    internal class GamePlatformDesktop : GamePlatform
     {
-        public GameContext()
+        public GamePlatformDesktop(IServiceRegistry services) : base(services)
         {
+            IsBlockingRun = true;
+            services.AddService(typeof(IGraphicsDeviceFactory), this);
         }
 
-        public GameContext(object windowContext, VoidAction initCalback, VoidAction runCallback)
+        public override string DefaultAppDirectory
         {
-            WindowContext = windowContext;
-            InitCalback = initCalback;
-            RunCallback = runCallback;
+            get
+            {
+                var assemblyUri = new Uri(Assembly.GetEntryAssembly().CodeBase);
+                return Path.GetDirectoryName(assemblyUri.LocalPath);
+            }
         }
 
-        public object WindowContext;
+        internal override GameWindow[] GetSupportedGameWindows()
+        {
+            return new GameWindow[] { new GameWindowDesktopWinForm() };
+        }
 
-        public VoidAction InitCalback;
+        public override void Run(GameWindowContext windowContext)
+        {
+            gameWindow = CreateWindow(windowContext);
 
-        public VoidAction RunCallback; 
+            // Register on Activated 
+            gameWindow.Activated += OnActivated;
+            gameWindow.Deactivated += OnDeactivated;
+
+            gameWindow.Run(() => OnExiting(this, EventArgs.Empty));
+        }
     }
 }
+#endif
