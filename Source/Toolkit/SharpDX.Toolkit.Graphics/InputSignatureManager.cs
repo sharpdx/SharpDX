@@ -25,9 +25,15 @@ namespace SharpDX.Toolkit.Graphics
 {
     internal struct InputLayoutPair
     {
-        public VertexInputLayout VertexInputLayout;
+        public InputLayoutPair(VertexInputLayout vertexInputLayout, InputLayout inputLayout)
+        {
+            VertexInputLayout = vertexInputLayout;
+            InputLayout = inputLayout;
+        }
 
-        public InputLayout InputLayout;
+        public readonly VertexInputLayout VertexInputLayout;
+
+        public readonly InputLayout InputLayout;
     }
 
     internal class InputSignatureManager : Component
@@ -52,8 +58,7 @@ namespace SharpDX.Toolkit.Graphics
                 if (!Cache.TryGetValue(layout, out currentPassPreviousPair))
                 {
 
-                    currentPassPreviousPair.InputLayout =  ToDispose(new InputLayout(device, Bytecode, layout.InputElements));
-                    currentPassPreviousPair.VertexInputLayout = layout;
+                    currentPassPreviousPair = new InputLayoutPair(layout, ToDispose(new InputLayout(device, Bytecode, layout.InputElements)));
                     Cache.Add(layout, currentPassPreviousPair);
                 }
             }
