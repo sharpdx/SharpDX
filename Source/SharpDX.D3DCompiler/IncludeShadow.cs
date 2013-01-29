@@ -22,6 +22,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 
+using SharpDX.Collections;
+
 namespace SharpDX.D3DCompiler
 {
     /// <summary>
@@ -30,7 +32,7 @@ namespace SharpDX.D3DCompiler
     internal class IncludeShadow : CppObjectShadow
     {
         private static readonly IncludeVtbl Vtbl = new IncludeVtbl();
-        private readonly Dictionary<IntPtr, Frame> frames = new Dictionary<IntPtr, Frame>();
+        private readonly Dictionary<IntPtr, Frame> frames = new Dictionary<IntPtr, Frame>(EqualityComparer.DefaultIntPtr);
 
         private struct Frame
         {

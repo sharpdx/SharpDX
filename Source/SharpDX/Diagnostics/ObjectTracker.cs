@@ -23,6 +23,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
+using SharpDX.Collections;
+
 namespace SharpDX.Diagnostics
 {
     /// <summary>
@@ -30,7 +32,7 @@ namespace SharpDX.Diagnostics
     /// </summary>
     public static class ObjectTracker
     {
-        private static readonly Dictionary<IntPtr, List<ObjectReference>> ObjectReferences = new Dictionary<IntPtr, List<ObjectReference>>();
+        private static readonly Dictionary<IntPtr, List<ObjectReference>> ObjectReferences = new Dictionary<IntPtr, List<ObjectReference>>(EqualityComparer.DefaultIntPtr);
 
 #if !W8CORE
         /// <summary>

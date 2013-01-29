@@ -24,6 +24,8 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
+using SharpDX.Collections;
+
 namespace SharpDX.Win32
 {
     /// <summary>
@@ -33,7 +35,7 @@ namespace SharpDX.Win32
     {
         #region Constants and Fields
 
-        private static readonly Dictionary<IntPtr, MessageFilterHook> RegisteredHooks = new Dictionary<IntPtr, MessageFilterHook>();
+        private static readonly Dictionary<IntPtr, MessageFilterHook> RegisteredHooks = new Dictionary<IntPtr, MessageFilterHook>(EqualityComparer.DefaultIntPtr);
 
         private readonly IntPtr defaultWndProc;
 
