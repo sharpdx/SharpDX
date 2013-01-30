@@ -2768,6 +2768,50 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Creats a skew/shear matrix by means of a translation vector, a rotation vector, and a rotation angle.
+        /// shearing is performed in the direction of translation vector, where translation vector and rotation vector define the shearing plane.
+        /// The effect is such that the skewed rotation vector has the specified angle with rotation itself.
+        /// </summary>
+        /// <param name="angle">The rotation angle.</param>
+        /// <param name="rotationVec">The rotation vector</param>
+        /// <param name="transVec">The translation vector</param>
+        /// <param name="matrix">Contains the created skew/shear matrix. </param>
+        public static void Skew(float angle, ref Vector3 rotationVec, ref Vector3 transVec, out Matrix matrix)
+        {
+            //http://elckerlyc.ewi.utwente.nl/browser/Elckerlyc/Hmi/HmiMath/src/hmi/math/Mat3f.java
+            float MINIMAL_SKEW_ANGLE = 0.000001f;
+
+            Vector3 e0 = rotationVec;
+            Vector3 e1 = Vector3.Normalize(transVec);
+
+            float rv1;
+            Vector3.Dot(ref rotationVec, ref  e1, out rv1);
+            e0 += rv1 * e1;
+            float rv0;
+            Vector3.Dot(ref rotationVec, ref e0, out rv0);
+            float cosa = (float)Math.Cos(angle);
+            float sina = (float)Math.Sin(angle);
+            float rr0 = rv0 * cosa - rv1 * sina;
+            float rr1 = rv0 * sina + rv1 * cosa;
+
+            if (rr0 < MINIMAL_SKEW_ANGLE)
+                throw new ArgumentException("illegal skew angle");
+
+            float d = (rr1 / rr0) - (rv1 / rv0);
+
+            matrix = Matrix.Identity;
+            matrix.M11 = d * e1[0] * e0[0] + 1.0f;
+            matrix.M12 = d * e1[0] * e0[1];
+            matrix.M13 = d * e1[0] * e0[2];
+            matrix.M21 = d * e1[1] * e0[0];
+            matrix.M22 = d * e1[1] * e0[1] + 1.0f;
+            matrix.M23 = d * e1[1] * e0[2];
+            matrix.M31 = d * e1[2] * e0[0];
+            matrix.M32 = d * e1[2] * e0[1];
+            matrix.M33 = d * e1[2] * e0[2] + 1.0f;
+        }
+
+        /// <summary>
         /// Creates a 3D affine transformation matrix.
         /// </summary>
         /// <param name="scaling">Scaling factor.</param>
