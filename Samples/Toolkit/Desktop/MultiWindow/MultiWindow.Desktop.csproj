@@ -37,6 +37,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,8 +49,20 @@
     <Compile Include="..\..\Common\MiniCube\MiniCubeGame.cs">
       <Link>MiniCubeGame.cs</Link>
     </Compile>
+    <Compile Include="MiniTriRenderer.cs" />
+    <Compile Include="MultiControlForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MultiControlForm.Designer.cs">
+      <DependentUpon>MultiControlForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MultiControlForm.resx">
+      <DependentUpon>MultiControlForm.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\..\..\SharpDX.targets" />

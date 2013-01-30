@@ -151,7 +151,7 @@ namespace SpriteBatchAndFont
             // Render the text
             spriteBatch.Begin();
             spriteBatch.DrawString(arial16BMFont, "  " + SpriteCount + "\nSprites", new Vector2(spriteSceneWidth - 32, spriteSceneHeight- 24), Color.White);
-            spriteBatch.DrawString(arial16BMFont, fpsText, new Vector2(0, 32), Color.White);
+            spriteBatch.DrawString(arial16BMFont, fpsText, new Vector2(0, 0), Color.White);
             spriteBatch.End();
 
             // Handle base.Draw

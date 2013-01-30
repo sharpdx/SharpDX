@@ -26,10 +26,10 @@ namespace SharpDX.Toolkit
 {
     internal class GamePlatformDesktop : GamePlatform
     {
-        public GamePlatformDesktop(IServiceRegistry services) : base(services)
+        public GamePlatformDesktop(Game game) : base(game)
         {
             IsBlockingRun = true;
-            services.AddService(typeof(IGraphicsDeviceFactory), this);
+            Services.AddService(typeof(IGraphicsDeviceFactory), this);
         }
 
         public override string DefaultAppDirectory
@@ -44,17 +44,6 @@ namespace SharpDX.Toolkit
         internal override GameWindow[] GetSupportedGameWindows()
         {
             return new GameWindow[] { new GameWindowDesktopWinForm() };
-        }
-
-        public override void Run(GameWindowContext windowContext)
-        {
-            gameWindow = CreateWindow(windowContext);
-
-            // Register on Activated 
-            gameWindow.Activated += OnActivated;
-            gameWindow.Deactivated += OnDeactivated;
-
-            gameWindow.Run(() => OnExiting(this, EventArgs.Empty));
         }
     }
 }

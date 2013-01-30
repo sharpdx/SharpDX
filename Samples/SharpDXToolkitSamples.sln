@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyboardInput.Desktop", "To
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyboardInput.WinRT", "Toolkit\WinRT\KeyboardInput\KeyboardInput.WinRT.csproj", "{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiWindow.Desktop", "Toolkit\Desktop\MultiWindow\MultiWindow.Desktop.csproj", "{ACF757CE-5FE6-425C-8648-2DB57CD49BD8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -395,6 +397,16 @@ Global
 		{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}.Release|x86.ActiveCfg = Release|x86
 		{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}.Release|x86.Build.0 = Release|x86
 		{E63A00EA-ECF2-48CA-9155-8E849AE7F02D}.Release|x86.Deploy.0 = Release|x86
+		{ACF757CE-5FE6-425C-8648-2DB57CD49BD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACF757CE-5FE6-425C-8648-2DB57CD49BD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACF757CE-5FE6-425C-8648-2DB57CD49BD8}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{ACF757CE-5FE6-425C-8648-2DB57CD49BD8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{ACF757CE-5FE6-425C-8648-2DB57CD49BD8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{ACF757CE-5FE6-425C-8648-2DB57CD49BD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACF757CE-5FE6-425C-8648-2DB57CD49BD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACF757CE-5FE6-425C-8648-2DB57CD49BD8}.Release|ARM.ActiveCfg = Release|Any CPU
+		{ACF757CE-5FE6-425C-8648-2DB57CD49BD8}.Release|x64.ActiveCfg = Release|Any CPU
+		{ACF757CE-5FE6-425C-8648-2DB57CD49BD8}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
