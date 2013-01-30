@@ -29,6 +29,7 @@
     <Compile Include="CallbackBase.cs" />
     <Compile Include="Collections\ObservableCollection.cs" />
     <Compile Include="Collections\ObservableCollectionEventArgs.cs" />
+    <Compile Include="OrientedBoundingBox.cs" />
     <Compile Include="Threading\TaskUtil.cs" />
     <Compile Include="ViewportF.cs" />
     <Compile Include="Design\Color4Converter.cs" />
