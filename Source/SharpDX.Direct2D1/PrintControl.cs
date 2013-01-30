@@ -17,7 +17,11 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System;
+
 #if DIRECTX11_1
+
 namespace SharpDX.Direct2D1
 {
     public partial class PrintControl
@@ -40,6 +44,38 @@ namespace SharpDX.Direct2D1
             device.CreatePrintControl(wicFactory, documentTarget, rintControlPropertiesRef, this);
         }
 
+        /// <summary>	
+        /// <p>[This documentation is preliminary and is subject to change.]</p><p><strong>Applies to: </strong>desktop apps | Metro style apps</p><p>TBD</p>	
+        /// </summary>	
+        /// <param name="commandList">No documentation.</param>	
+        /// <param name="pageSize">No documentation.</param>	
+        /// <returns>No documentation.</returns>	
+        /// <msdn-id>hh847997</msdn-id>	
+        /// <unmanaged>HRESULT ID2D1PrintControl::AddPage([In] ID2D1CommandList* commandList,[In] D2D_SIZE_F pageSize,[In, Optional] IStream* pagePrintTicketStream,[Out, Optional] unsigned longlong* tag1,[Out, Optional] unsigned longlong* tag2)</unmanaged>	
+        /// <unmanaged-short>ID2D1PrintControl::AddPage</unmanaged-short>	
+        public void AddPage(SharpDX.Direct2D1.CommandList commandList, SharpDX.DrawingSizeF pageSize)
+        {
+            long tag1;
+            long tag2;
+            AddPage(commandList, pageSize, out tag1, out tag2);
+        }
+
+        /// <summary>	
+        /// <p>[This documentation is preliminary and is subject to change.]</p><p><strong>Applies to: </strong>desktop apps | Metro style apps</p><p>TBD</p>	
+        /// </summary>	
+        /// <param name="commandList">No documentation.</param>	
+        /// <param name="pageSize">No documentation.</param>	
+        /// <param name="tag1">No documentation.</param>	
+        /// <param name="tag2">No documentation.</param>	
+        /// <returns>No documentation.</returns>	
+        /// <msdn-id>hh847997</msdn-id>	
+        /// <unmanaged>HRESULT ID2D1PrintControl::AddPage([In] ID2D1CommandList* commandList,[In] D2D_SIZE_F pageSize,[In, Optional] IStream* pagePrintTicketStream,[Out, Optional] unsigned longlong* tag1,[Out, Optional] unsigned longlong* tag2)</unmanaged>	
+        /// <unmanaged-short>ID2D1PrintControl::AddPage</unmanaged-short>	
+        public void AddPage(SharpDX.Direct2D1.CommandList commandList, SharpDX.DrawingSizeF pageSize, out long tag1, out long tag2)
+        {
+            AddPage_(commandList, pageSize, IntPtr.Zero, out tag1, out tag2);
+        }
     }
 }
+
 #endif
