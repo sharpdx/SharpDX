@@ -17,6 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System.Windows.Forms;
+
 using SharpDX;
 using SharpDX.Toolkit;
 using SharpDX.Toolkit.Graphics;
@@ -28,8 +31,8 @@ namespace MultiWindow
         private PrimitiveBatch<VertexPositionColor> primitiveBatch;
         private BasicEffect basicEffect;
 
-        public MiniTriRenderer(Game game, object windowContext = null)
-            : base(game, windowContext)
+        public MiniTriRenderer(Game game, Control control = null)
+            : base(game, new GameWindowContextWinForm(control))
         {
             BackgroundColor = Color.CornflowerBlue;
             ForegroundColor = Color.Red;

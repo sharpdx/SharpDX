@@ -44,10 +44,10 @@ namespace SharpDX.Toolkit
         /// </summary>
         /// <param name="registry">The registry.</param>
         /// <param name="windowContext">The window context.</param>
-        public GameWindowRenderer(IServiceRegistry registry, object windowContext = null)
+        public GameWindowRenderer(IServiceRegistry registry, GameWindowContext windowContext = null)
             : base(registry)
         {
-            NativeWindow = windowContext;
+            GameWindowContext = windowContext ?? GameWindowContext.Default();
         }
 
         /// <summary>
@@ -55,17 +55,17 @@ namespace SharpDX.Toolkit
         /// </summary>
         /// <param name="game">The game.</param>
         /// <param name="windowContext">The window context.</param>
-        public GameWindowRenderer(Game game, object windowContext = null)
+        public GameWindowRenderer(Game game, GameWindowContext windowContext = null)
             : base(game)
         {
-            NativeWindow = windowContext;
+            GameWindowContext = windowContext ?? GameWindowContext.Default();
         }
 
         /// <summary>
         /// Gets the underlying native window.
         /// </summary>
         /// <value>The underlying native window.</value>
-        public object NativeWindow { get; private set; }
+        public GameWindowContext GameWindowContext { get; private set; }
 
         /// <summary>
         /// Gets the window.
@@ -162,7 +162,9 @@ namespace SharpDX.Toolkit
         public override void Initialize()
         {
             var gamePlatform = (IGamePlatform)this.Services.GetService(typeof(IGamePlatform));
-            Window = gamePlatform.CreateWindow(new GameWindowContext(NativeWindow, PreferredBackBufferWidth, PreferredBackBufferHeight));
+            GameWindowContext.RequestedWidth = PreferredBackBufferWidth;
+            GameWindowContext.RequestedHeight = PreferredBackBufferHeight;
+            Window = gamePlatform.CreateWindow(GameWindowContext);
             Window.Visible = true;
 
             Window.ClientSizeChanged += WindowOnClientSizeChanged;

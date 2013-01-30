@@ -18,56 +18,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+using System.Windows.Forms;
+
+using SharpDX.Windows;
+
 namespace SharpDX.Toolkit
 {
     /// <summary>
-    /// Contains context used to render the game (Control for WinForm, a DrawingSurface for WP8...etc.).
+    /// A <see cref="GameWindowContext"/> to use for rendering to an existing WinForm <see cref="Control"/>.
     /// </summary>
-    /// <seealso cref="GameWindowContextWinForm"/>
-    public abstract class GameWindowContext
+    public class GameWindowContextWinForm : GameWindowContext
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GameWindowContext" /> class.
+        /// Initializes a new instance of the <see cref="GameWindowContextWinForm" /> class with a default <see cref="RenderForm"/>.
         /// </summary>
-        protected GameWindowContext()
+        public GameWindowContextWinForm() : this(null)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GameWindowContext" /> class.
+        /// Initializes a new instance of the <see cref="GameWindowContextWinForm" /> class.
         /// </summary>
-        /// <param name="requestedWidth">Requested width of the window.</param>
-        /// <param name="requestedHeight">Requested height of the window.</param>
-        protected GameWindowContext(int requestedWidth, int requestedHeight)
+        /// <param name="control">The control.</param>
+        /// <param name="requestedWidth">Width of the requested.</param>
+        /// <param name="requestedHeight">Height of the requested.</param>
+        public GameWindowContextWinForm(Control control, int requestedWidth = 0, int requestedHeight = 0)
+            : base(requestedWidth, requestedHeight)
         {
-            RequestedWidth = requestedWidth;
-            RequestedHeight = requestedHeight;
+            Control = control ?? new GameForm("SharpDX.Toolkit.Game");
         }
 
         /// <summary>
-        /// The requested width.
+        /// The control used as a GameWindow context.
         /// </summary>
-        public int RequestedWidth;
-
-        /// <summary>
-        /// The requested height.
-        /// </summary>
-        public int RequestedHeight;
-
-        /// <summary>
-        /// Gets a default instance.
-        /// </summary>
-        /// <returns>GameWindowContext.</returns>
-        public static GameWindowContext Default()
-        {
-#if WIN8METRO
-            return new GameWindowContextFrameView();
-#elif WP8
-            return new GameWindowContextDrawingSurface();
-#else
-            return new GameWindowContextWinForm();
-#endif
-        }
-
+        public readonly Control Control;
     }
 }

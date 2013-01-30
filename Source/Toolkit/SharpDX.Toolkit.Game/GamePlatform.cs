@@ -29,23 +29,26 @@ namespace SharpDX.Toolkit
 {
     internal abstract class GamePlatform : IGraphicsDeviceFactory, IGamePlatform
     {
-        protected IServiceRegistry Services;
+        protected readonly Game game;
+
+        protected readonly IServiceRegistry Services;
 
         protected GameWindow gameWindow;
 
-        protected GamePlatform(IServiceRegistry services)
+        protected GamePlatform(Game game)
         {
-            Services = services;
+            this.game = game;
+            Services = game.Services;
         }
 
-        public static GamePlatform Create(IServiceRegistry services)
+        public static GamePlatform Create(Game game)
         {
 #if WIN8METRO
-            return new GamePlatformWinRT(services);
+            return new GamePlatformWinRT(game);
 #elif WP8
-            return new GamePlatformWP8(services);
+            return new GamePlatformWP8(game);
 #else
-            return new GamePlatformDesktop(services);
+            return new GamePlatformDesktop(game);
 #endif
         }
 
@@ -77,33 +80,36 @@ namespace SharpDX.Toolkit
 
         internal abstract GameWindow[] GetSupportedGameWindows();
 
-        public virtual GameWindow CreateWindow(GameWindowContext windowContext = null)
+        public virtual GameWindow CreateWindow(GameWindowContext windowContext)
         {
+            windowContext = windowContext ?? GameWindowContext.Default();
+
             var windows = GetSupportedGameWindows();
 
             foreach (var gameWindowToTest in windows)
             {
                 if (gameWindowToTest.CanHandle(windowContext))
                 {
-                    var window = gameWindowToTest;
-                    window.Initialize(windowContext);
-
-                    return window;
+                    gameWindowToTest.Initialize(windowContext);
+                    return gameWindowToTest;
                 }
             }
 
-            throw new ArgumentException("Window context not supported");
+            throw new ArgumentException("Game Window context not supported on this platform");
         }
 
         public bool IsBlockingRun { get; protected set; }
 
-        public virtual void Run(GameWindowContext windowContext)
+        public void Run(GameWindowContext windowContext)
         {
             gameWindow = CreateWindow(windowContext);
 
             // Register on Activated 
             gameWindow.Activated += OnActivated;
             gameWindow.Deactivated += OnDeactivated;
+            gameWindow.InitCallback = game.InitializeBeforeRun;
+            gameWindow.RunCallback = game.Tick;
+            gameWindow.ExitCallback = () => OnExiting(this, EventArgs.Empty);
 
             var windowCreated = WindowCreated;
             if (windowCreated != null)
@@ -111,7 +117,7 @@ namespace SharpDX.Toolkit
                 windowCreated(this, EventArgs.Empty);
             }
 
-            gameWindow.Run(() => OnExiting(this, EventArgs.Empty));
+            gameWindow.Run();
         }
 
         public virtual void Exit()

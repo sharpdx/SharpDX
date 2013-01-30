@@ -110,7 +110,7 @@ namespace SharpDX.Toolkit
             GameSystems = new GameSystemCollection();
 
             // Create Platform
-            gamePlatform = GamePlatform.Create(Services);
+            gamePlatform = GamePlatform.Create(this);
             gamePlatform.Activated += gamePlatform_Activated;
             gamePlatform.Deactivated += gamePlatform_Deactivated;
             gamePlatform.Exiting += gamePlatform_Exiting;
@@ -295,7 +295,7 @@ namespace SharpDX.Toolkit
             nextLastUpdateCountIndex = 0;
         }
 
-        private void InitializeBeforeRun()
+        internal void InitializeBeforeRun()
         {
             // Make sure that the device is already created
             graphicsDeviceManager.CreateDevice();
@@ -333,9 +333,9 @@ namespace SharpDX.Toolkit
         /// <summary>
         /// Call this method to initialize the game, begin running the game loop, and start processing events for the game.
         /// </summary>
-        /// <param name="windowContext">The window Context.</param>
+        /// <param name="gameWindowContext">The window Context for this game.</param>
         /// <exception cref="System.InvalidOperationException">Cannot run this instance while it is already running</exception>
-        public void Run(object windowContext = null)
+        public void Run(GameWindowContext gameWindowContext = null)
         {
             if (IsRunning)
             {
@@ -349,12 +349,17 @@ namespace SharpDX.Toolkit
                 throw new InvalidOperationException("No GraphicsDeviceManager found");
             }
 
-            // Run the game, loop depending on the platform/window.
-            var gameContext = new GameWindowContext(windowContext) { InitCalback = InitializeBeforeRun, RunCallback = Tick };
+            if (graphicsDeviceManager == null)
+            {
+                throw new InvalidOperationException("No GraphicsDeviceManager found");
+            }
+
+            // Gets the GameWindow Context
+            gameWindowContext = gameWindowContext ?? GameWindowContext.Default();
 
             try
             {
-                gamePlatform.Run(gameContext);
+                gamePlatform.Run(gameWindowContext);
 
                 if (gamePlatform.IsBlockingRun)
                 {

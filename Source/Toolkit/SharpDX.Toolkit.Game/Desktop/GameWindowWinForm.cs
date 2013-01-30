@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 #if !W8CORE
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -32,8 +33,6 @@ namespace SharpDX.Toolkit
     /// </summary>
     internal class GameWindowDesktopWinForm : GameWindowDesktop
     {
-        private bool isInitialized;
-
         private bool isMouseVisible;
 
         private bool isMouseCurrentlyHidden;
@@ -42,17 +41,16 @@ namespace SharpDX.Toolkit
 
         private GameForm gameForm;
 
-
-        internal GameWindowDesktopWinForm()
-        {
-        }
-
-        public bool IsForm
+        private GameWindowContextWinForm WinFormContext
         {
             get
             {
-                return Control is Form;
+                return (GameWindowContextWinForm)this.GameWindowContext;
             }
+        }
+
+        internal GameWindowDesktopWinForm()
+        {
         }
 
         public override object NativeWindow
@@ -80,24 +78,17 @@ namespace SharpDX.Toolkit
 
         internal override bool CanHandle(GameWindowContext windowContext)
         {
-            // If no Windows context suplied or a WinForms control, than this instance is supporting it.
-            return windowContext.WindowContext == null || Utilities.IsInstanceOf(windowContext.WindowContext, "System.Windows.Forms.Control");
+            return windowContext is GameWindowContextWinForm;
         }
 
         internal override void Initialize(GameWindowContext windowContext)
         {
-            this.windowContext = windowContext;
+            this.GameWindowContext = windowContext;
 
-            if (isInitialized)
-            {
-                throw new InvalidOperationException("GameWindow is already initialized");
-            }
-
-            windowContext.WindowContext = windowContext.WindowContext ?? new GameForm("SharpDX.Toolkit.Game");
-            Control = (Control)windowContext.WindowContext;
+            Control = WinFormContext.Control;
 
             // Setup the initial size of the window
-            var width = windowContext.RequestedWidth;
+            var width = WinFormContext.RequestedWidth;
             if (width == 0)
             {
                 width = Control is Form ? GraphicsDeviceManager.DefaultBackBufferWidth : Control.ClientSize.Width;
@@ -110,7 +101,6 @@ namespace SharpDX.Toolkit
             }
 
             Control.ClientSize = new System.Drawing.Size(width, height);
-
 
             Control.MouseEnter += GameWindowForm_MouseEnter;
             Control.MouseLeave += GameWindowForm_MouseLeave;
@@ -126,16 +116,17 @@ namespace SharpDX.Toolkit
             {
                 Control.Resize += OnClientSizeChanged;
             }
-
-            isInitialized = true;
         }
 
-        internal override void Run(VoidAction onExit)
+        internal override void Run()
         {
-            // Initialize the init callback
-            windowContext.InitCalback();
+            Debug.Assert(InitCallback != null);
+            Debug.Assert(RunCallback != null);
 
-            var runCallback = new RenderLoop.RenderCallback(windowContext.RunCallback);
+            // Initialize the init callback
+            InitCallback();
+
+            var runCallback = new RenderLoop.RenderCallback(RunCallback);
 
             // Run the rendering loop
             try
@@ -144,7 +135,10 @@ namespace SharpDX.Toolkit
             }
             finally
             {
-                onExit();
+                if (ExitCallback != null)
+                {
+                    ExitCallback();
+                }
             }
         }
 

@@ -25,6 +25,7 @@
     <Compile Include="EffectCompilerSystem.Desktop.cs" />
     <Compile Include="EffectCompilerSystem.cs" />
     <Compile Include="GameWindowContext.cs" />
+    <Compile Include="GameWindowContextWinForm.cs" />
     <Compile Include="GameWindowRenderer.cs" />
     <Compile Include="IGamePlatform.cs" />
     <Compile Include="IContentable.cs" />

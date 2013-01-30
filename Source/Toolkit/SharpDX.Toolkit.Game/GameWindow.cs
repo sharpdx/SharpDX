@@ -33,7 +33,7 @@ namespace SharpDX.Toolkit
 
         private string title;
 
-        internal GameWindowContext windowContext;
+        internal GameWindowContext GameWindowContext;
 
         #endregion
 
@@ -154,7 +154,14 @@ namespace SharpDX.Toolkit
 
         internal abstract void Initialize(GameWindowContext windowContext);
 
-        internal abstract void Run(VoidAction onExit);
+
+        internal VoidAction InitCallback;
+
+        internal VoidAction RunCallback;
+
+        internal VoidAction ExitCallback;
+
+        internal abstract void Run();
 
         internal abstract void Resize(int width, int height);
 
