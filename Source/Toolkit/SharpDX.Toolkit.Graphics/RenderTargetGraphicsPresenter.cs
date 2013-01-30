@@ -29,8 +29,8 @@ namespace SharpDX.Toolkit.Graphics
     {
         private RenderTarget2D backBuffer;
 
-        public RenderTargetGraphicsPresenter(GraphicsDevice device, RenderTarget2D renderTarget)
-            : base(device, CreatePresentationParameters(renderTarget))
+        public RenderTargetGraphicsPresenter(GraphicsDevice device, RenderTarget2D renderTarget, DepthFormat depthFormat = DepthFormat.None)
+            : base(device, CreatePresentationParameters(renderTarget, depthFormat))
         {
             PresentInterval = Description.PresentationInterval;
 
@@ -38,13 +38,14 @@ namespace SharpDX.Toolkit.Graphics
             backBuffer = renderTarget;
         }
 
-        private static PresentationParameters CreatePresentationParameters(RenderTarget2D renderTarget2D)
+        private static PresentationParameters CreatePresentationParameters(RenderTarget2D renderTarget2D, DepthFormat depthFormat)
         {
             return new PresentationParameters()
                 {
                     BackBufferWidth = renderTarget2D.Width,
                     BackBufferHeight = renderTarget2D.Height,
                     BackBufferFormat = renderTarget2D.Description.Format,
+                    DepthStencilFormat = depthFormat,
                     DeviceWindowHandle = renderTarget2D,
                     Flags = SwapChainFlags.None,
                     IsFullScreen = true,

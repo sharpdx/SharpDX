@@ -27,6 +27,7 @@
     <Compile Include="BoundingFrustum.cs" />
     <Compile Include="BoundingSphere.cs" />
     <Compile Include="CallbackBase.cs" />
+    <Compile Include="Collections\EqualityComparer.cs" />
     <Compile Include="Collections\ObservableCollection.cs" />
     <Compile Include="Collections\ObservableCollectionEventArgs.cs" />
     <Compile Include="Threading\TaskUtil.cs" />

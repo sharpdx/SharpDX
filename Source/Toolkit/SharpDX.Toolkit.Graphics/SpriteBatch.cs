@@ -77,6 +77,8 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+
+using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 
 namespace SharpDX.Toolkit.Graphics
@@ -109,7 +111,7 @@ namespace SharpDX.Toolkit.Graphics
         private readonly TextureComparer textureComparer = new TextureComparer();
         private readonly ResourceContext resourceContext;
         private readonly VertexInputLayout vertexInputLayout;
-        private readonly Dictionary<IntPtr, TextureInfo> textureInfos = new Dictionary<IntPtr, TextureInfo>(128);
+        private readonly Dictionary<ShaderResourceView, TextureInfo> textureInfos = new Dictionary<ShaderResourceView, TextureInfo>(128);
         private readonly Resource tempResource = new Resource(IntPtr.Zero);
         private readonly SharpDX.Direct3D11.Texture1D tempTexture1D = new SharpDX.Direct3D11.Texture1D(IntPtr.Zero);
         private readonly SharpDX.Direct3D11.Texture2D tempTexture2D = new SharpDX.Direct3D11.Texture2D(IntPtr.Zero);
@@ -650,36 +652,55 @@ namespace SharpDX.Toolkit.Graphics
             // Cache the result in order to avoid this request if the texture is reused 
             // inside a same Begin/End block.
             TextureInfo textureInfo;
-            if (!textureInfos.TryGetValue(texture.NativePointer, out textureInfo))
+            if (!textureInfos.TryGetValue(texture, out textureInfo))
             {
+                // otherwise go to the slow path
                 textureInfo.ShaderResourceView = texture.NativePointer;
-                IntPtr resourcePtr;
-                texture.GetResource(out resourcePtr);
-                tempResource._nativePointer = (void*)resourcePtr;
-                switch (tempResource.Dimension)
+
+                // If this is a shader resource view from the toolkit
+                // go the fast path
+                var tkTexture = texture.Tag as Texture;
+                if (tkTexture != null)
                 {
-                    case ResourceDimension.Texture1D:
-                        tempTexture1D._nativePointer = (void*)resourcePtr;
-                        textureInfo.Width = tempTexture1D.Description.Width;
-                        textureInfo.Height = 1;
-                        break;
-                    case ResourceDimension.Texture2D:
-                        tempTexture2D._nativePointer = (void*)resourcePtr;
-                        var description2D = tempTexture2D.Description;
-                        textureInfo.Width = description2D.Width;
-                        textureInfo.Height = description2D.Height;
-                        break;
-                    case ResourceDimension.Texture3D:
-                        tempTexture3D._nativePointer = (void*)resourcePtr;
-                        var description3D = tempTexture3D.Description;
-                        textureInfo.Width = description3D.Width;
-                        textureInfo.Height = description3D.Height;
-                        break;
-                    default:
-                        throw new ArgumentException("Invalid resource for texture. Must be Texture1D/2D/3D", "texture");
+                    textureInfo.Width = tkTexture.Width;
+                    textureInfo.Height = tkTexture.Height;
+                }
+                else
+                {
+                    IntPtr resourcePtr;
+                    texture.GetResource(out resourcePtr);
+                    tempResource._nativePointer = (void*)resourcePtr;
+                    switch (tempResource.Dimension)
+                    {
+                        case ResourceDimension.Texture1D:
+                            tempTexture1D._nativePointer = (void*)resourcePtr;
+                            textureInfo.Width = tempTexture1D.Description.Width;
+                            textureInfo.Height = 1;
+                            break;
+                        case ResourceDimension.Texture2D:
+                            tempTexture2D._nativePointer = (void*)resourcePtr;
+                            var description2D = tempTexture2D.Description;
+                            textureInfo.Width = description2D.Width;
+                            textureInfo.Height = description2D.Height;
+                            break;
+                        case ResourceDimension.Texture3D:
+                            tempTexture3D._nativePointer = (void*)resourcePtr;
+                            var description3D = tempTexture3D.Description;
+                            textureInfo.Width = description3D.Width;
+                            textureInfo.Height = description3D.Height;
+                            break;
+                        default:
+                            throw new ArgumentException("Invalid resource for texture. Must be Texture1D/2D/3D", "texture");
+                    }
                 }
 
-                textureInfos.Add(texture.NativePointer, textureInfo);
+                // Then calculate the actual width of the view
+                // Use the first MostDetailedMip to calculate the actual size of this view
+                var mipIndex = texture.Description.Texture1D.MostDetailedMip;
+                textureInfo.Width = Math.Max(1, textureInfo.Width >> mipIndex);
+                textureInfo.Height = Math.Max(1, textureInfo.Height >> mipIndex);
+
+                textureInfos.Add(texture, textureInfo);
             }
 
             // Put values in next SpriteInfo
