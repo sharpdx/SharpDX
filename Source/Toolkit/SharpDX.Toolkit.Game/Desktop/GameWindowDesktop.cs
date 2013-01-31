@@ -31,7 +31,7 @@ namespace SharpDX.Toolkit
     /// <summary>
     /// An abstract window.
     /// </summary>
-    internal class GameWindowDesktopForm : GameWindow
+    internal class GameWindowDesktop : GameWindow
     {
         private bool isMouseVisible;
 
@@ -41,7 +41,7 @@ namespace SharpDX.Toolkit
 
         private RenderForm gameForm;
 
-        internal GameWindowDesktopForm()
+        internal GameWindowDesktop()
         {
         }
 
@@ -70,7 +70,7 @@ namespace SharpDX.Toolkit
 
         internal override bool CanHandle(GameContext gameContext)
         {
-            return gameContext.Type == GameContextType.DesktopForm;
+            return gameContext.Type == GameContextType.Desktop;
         }
 
         internal override void Initialize(GameContext gameContext)

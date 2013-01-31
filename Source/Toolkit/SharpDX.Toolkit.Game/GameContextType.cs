@@ -28,7 +28,7 @@ namespace SharpDX.Toolkit
         /// <summary>
         /// Game running on desktop in a form or <see cref="System.Windows.Forms.Control"/>.
         /// </summary>
-        DesktopForm,
+        Desktop,
 
         /// <summary>
         /// Game running on desktop in a WPF window through a D3DImage.
@@ -38,7 +38,7 @@ namespace SharpDX.Toolkit
         /// <summary>
         /// Game running on WinRT in a CoreWindow.
         /// </summary>
-        WinRTApplication,
+        WinRT,
 
         /// <summary>
         /// Game running on WinRT in a SwapChainBackgroundPanel.

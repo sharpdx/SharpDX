@@ -13,7 +13,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    
     <Reference Include="PresentationFramework" />
     <Reference Include="PresentationCore" />
     <Reference Include="WindowsBase" />
@@ -24,23 +23,24 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AssemblyDoc.cs" />
+    <Compile Include="GameContext.WinRT.cs" />
     <Compile Include="GameContext.DesktopWpf.cs" />
     <Compile Include="EffectCompilerSystem.Default.cs" />
     <Compile Include="EffectCompilerEventArgs.cs" />
     <Compile Include="EffectCompilerSystem.Desktop.cs" />
     <Compile Include="EffectCompilerSystem.cs" />
     <Compile Include="GameContext.cs" />
-    <Compile Include="GameContext.DesktopForm.cs" />
+    <Compile Include="GameContext.Desktop.cs" />
     <Compile Include="GameContextType.cs" />
     <Compile Include="GameWindowRenderer.cs" />
     <Compile Include="IGamePlatform.cs" />
     <Compile Include="IContentable.cs" />
     <Compile Include="GameGraphicsParameters.cs" />
+    <Compile Include="WinRT\GameWindowWinRT.cs" />
     <Compile Include="WP8\GameWindowWP8.cs" />
     <Compile Include="WP8\GamePlatformWP8.cs" />
-    <Compile Include="WinRT\GameWindowWinRT.cs" />
     <Compile Include="WinRT\GamePlatformWinRT.cs" />
-    <Compile Include="Desktop\GameWindowDesktopForm.cs" />
+    <Compile Include="Desktop\GameWindowDesktop.cs" />
     <Compile Include="Desktop\GamePlatformDesktop.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GamePlatform.cs" />

@@ -167,33 +167,6 @@ namespace SharpDX.Toolkit
 
         protected internal abstract void SetSupportedOrientations(DisplayOrientation orientations);
 
-        protected bool CheckForInheritance(object context, string parentClassNameToLookFor)
-        {
-            if (context == null)
-            {
-                return false;
-            }
-
-            var type = context.GetType();
-
-
-            while (type != null )
-            {
-
-                if (string.Compare(type.FullName, parentClassNameToLookFor, StringComparison.InvariantCulture) == 0)
-                {
-                    return true;
-                }
-
-#if W8CORE
-                type = type.GetTypeInfo().BaseType;
-#else
-                type = type.BaseType;
-#endif
-            }
-            return false;
-        }
-
         protected void OnActivated(object source, EventArgs e)
         {
             EventHandler<EventArgs> handler = Activated;

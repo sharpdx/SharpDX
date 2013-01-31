@@ -122,15 +122,18 @@ namespace SharpDX.Toolkit
 
         public virtual void Exit()
         {
+            if (gameWindow != null)
+            {
+                gameWindow.Dispose();
+                gameWindow = null;
+            }
+
             Activated = null;
             Deactivated = null;
             Exiting = null;
             Idle = null;
             Resume = null;
             Suspend = null;
-
-            gameWindow.Dispose();
-            gameWindow = null;
         }
         
         protected void OnActivated(object source, EventArgs e)

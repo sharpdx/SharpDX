@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,16 +19,11 @@
 // THE SOFTWARE.
 #if WIN8METRO
 
-using System;
-
-using SharpDX.DXGI;
 using SharpDX.Toolkit.Graphics;
 
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.Graphics.Display;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 
 namespace SharpDX.Toolkit
 {
@@ -37,84 +32,13 @@ namespace SharpDX.Toolkit
     /// </summary>
     internal class GameWindowWinRT : GameWindow, IFrameworkViewSource, IFrameworkView
     {
-        private object nativeWindow;
+        #region Fields
 
         public CoreWindow CoreWindow;
-        private SwapChainBackgroundPanel swapChainBackgroundPanel;
 
-        private VoidAction initCallback;
-        private VoidAction tickCallback;
+        #endregion
 
-        public bool IsSwapChainBackgroundPanel
-        {
-            get
-            {
-                return this.swapChainBackgroundPanel != null;
-            }
-        }
-        
-        internal GameWindowWinRT()
-        {
-        }
-
-        public override object NativeWindow
-        {
-            get
-            {
-                return nativeWindow;
-            }
-        }
-
-        public override void BeginScreenDeviceChange(bool willBeFullScreen)
-        {
-            
-        }
-
-        public override void EndScreenDeviceChange(int clientWidth, int clientHeight)
-        {
-            
-        }
-
-        public override bool IsFullScreenMandatory
-        {
-            get
-            {
-                return true;
-            }
-        }
-
-        protected internal override void SetSupportedOrientations(DisplayOrientation orientations)
-        {
-            // Desktop doesn't have orientation (unless on Windows 8?)
-        }
-
-        internal override void Initialize(object windowContext)
-        {
-            nativeWindow = windowContext;
-
-            if (windowContext != null)
-            {
-                var swapChainBackgroundPanel = windowContext as SwapChainBackgroundPanel;
-                if (swapChainBackgroundPanel == null)
-                {
-                    throw new NotSupportedException(string.Format("Unsupported window context [{0}]. Only null or SwapChainBackgroundPanel", nativeWindow.GetType().FullName));
-                }
-
-                //clientBounds = new DrawingRectangle(0, 0, (int)swapChainBackgroundPanel.ActualWidth, (int)swapChainBackgroundPanel.ActualHeight);
-                this.swapChainBackgroundPanel = swapChainBackgroundPanel;
-                this.swapChainBackgroundPanel.SizeChanged += swapChainBackgroundPanel_SizeChanged;
-            }
-        }
-
-        private void swapChainBackgroundPanel_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            this.OnClientSizeChanged(sender, EventArgs.Empty);
-        }
-
-        IFrameworkView IFrameworkViewSource.CreateView()
-        {
-            return this;
-        }
+        #region Public Properties
 
         public override bool AllowUserResizing
         {
@@ -131,16 +55,7 @@ namespace SharpDX.Toolkit
         {
             get
             {
-                if (this.IsSwapChainBackgroundPanel)
-                {
-                    return new DrawingRectangle(0, 0, (int)(this.swapChainBackgroundPanel.ActualWidth * DisplayProperties.LogicalDpi / 96.0), (int)(this.swapChainBackgroundPanel.ActualHeight * DisplayProperties.LogicalDpi / 96.0));
-                } 
-                if (CoreWindow != null)
-                {
-                    return new DrawingRectangle(0, 0, (int)(CoreWindow.Bounds.Width * DisplayProperties.LogicalDpi / 96.0), (int)(CoreWindow.Bounds.Height * DisplayProperties.LogicalDpi / 96.0));
-                }
-                var coreWindow = Window.Current.CoreWindow;
-                return new DrawingRectangle(0, 0, (int)(coreWindow.Bounds.Width * DisplayProperties.LogicalDpi / 96.0), (int)(coreWindow.Bounds.Height * DisplayProperties.LogicalDpi / 96.0));
+                return new DrawingRectangle(0, 0, (int)(CoreWindow.Bounds.Width * DisplayProperties.LogicalDpi / 96.0), (int)(CoreWindow.Bounds.Height * DisplayProperties.LogicalDpi / 96.0));
             }
         }
 
@@ -160,7 +75,15 @@ namespace SharpDX.Toolkit
             }
         }
 
-        public override bool IsMouseVisible {get; set;}
+        public override bool IsMouseVisible { get; set; }
+
+        public override object NativeWindow
+        {
+            get
+            {
+                return CoreWindow;
+            }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="GameWindow" /> is visible.
@@ -177,30 +100,24 @@ namespace SharpDX.Toolkit
             }
         }
 
-        public void RunCoreWindow(VoidAction initCallback, VoidAction tickCallback)
-        {
-            this.initCallback = initCallback;
-            this.tickCallback = tickCallback;
+        #endregion
 
-            CoreApplication.Run(this);
-        }
+        #region Public Methods and Operators
 
-        protected override void SetTitle(string title)
+        public override void BeginScreenDeviceChange(bool willBeFullScreen)
         {
         }
+
+        public override void EndScreenDeviceChange(int clientWidth, int clientHeight)
+        {
+        }
+
+        #endregion
+
+        #region Explicit Interface Methods
 
         void IFrameworkView.Initialize(CoreApplicationView applicationView)
         {
-            
-        }
-
-        void IFrameworkView.SetWindow(CoreWindow window)
-        {
-            nativeWindow = window;
-            CoreWindow = window;
-
-            // Call the init callback once the window is activated
-            initCallback();
         }
 
         void IFrameworkView.Load(string entryPoint)
@@ -225,13 +142,75 @@ namespace SharpDX.Toolkit
                 // Process events incoming to the window.
                 CoreWindow.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessAllIfPresent);
 
-                tickCallback();
+                RunCallback();
             }
+        }
+
+        void IFrameworkView.SetWindow(CoreWindow window)
+        {
+            CoreWindow = window;
+
+            // Call the init callback once the window is activated
+            InitCallback();
         }
 
         void IFrameworkView.Uninitialize()
         {
         }
+
+        IFrameworkView IFrameworkViewSource.CreateView()
+        {
+            return this;
+        }
+
+        #endregion
+
+        #region Methods
+
+        internal override bool CanHandle(GameContext windowContext)
+        {
+            return windowContext.Type == GameContextType.WinRT;
+        }
+
+        internal override void Initialize(GameContext windowContext)
+        {
+        }
+
+        internal override void Resize(int width, int height)
+        {
+
+        }
+
+        internal override void Run()
+        {
+            CoreApplication.Run(this);
+        }
+
+        protected internal override void SetSupportedOrientations(DisplayOrientation orientations)
+        {
+            // Desktop doesn't have orientation (unless on Windows 8?)
+        }
+
+        protected override void SetTitle(string title)
+        {
+        }
+
+        protected override void Dispose(bool disposeManagedResources)
+        {
+            if (disposeManagedResources)
+            {
+                if (CoreWindow != null)
+                {
+                    CoreWindow.Close();
+                    CoreWindow = null;
+                }
+            }
+            
+            base.Dispose(disposeManagedResources);
+        }
+
+        #endregion
     }
 }
+
 #endif

@@ -17,10 +17,11 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if !W8CORE
-using System.Windows.Forms;
+#if WIN8METRO
 
-using SharpDX.Windows;
+using System;
+
+using Windows.UI.Xaml.Controls;
 
 namespace SharpDX.Toolkit
 {
@@ -30,10 +31,12 @@ namespace SharpDX.Toolkit
     public partial class GameContext 
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GameContext" /> class with a default <see cref="RenderForm"/>.
+        /// Initializes a new instance of the <see cref="GameContext" /> class to run a Game on WinRT.
         /// </summary>
-        public GameContext() : this((Control)null)
+        public GameContext()
         {
+            Control = null;
+            Type = GameContextType.WinRT;
         }
 
         /// <summary>
@@ -42,12 +45,17 @@ namespace SharpDX.Toolkit
         /// <param name="control">The control.</param>
         /// <param name="requestedWidth">Width of the requested.</param>
         /// <param name="requestedHeight">Height of the requested.</param>
-        public GameContext(Control control, int requestedWidth = 0, int requestedHeight = 0)
+        public GameContext(SwapChainBackgroundPanel control, int requestedWidth = 0, int requestedHeight = 0)
         {
-            Control = control ?? new RenderForm("SharpDX Game");
+            if (control == null)
+            {
+                throw new ArgumentNullException("control");
+            }
+
+            Control = control;
             RequestedWidth = requestedWidth;
             RequestedHeight = requestedHeight;
-            Type = GameContextType.DesktopForm;
+            Type = GameContextType.WinRTBackgroundXaml;
         }
 
         /// <summary>
@@ -60,7 +68,7 @@ namespace SharpDX.Toolkit
         /// </summary>
         /// <param name="control">The control.</param>
         /// <returns>The result of the conversion.</returns>
-        public static implicit operator GameContext(Control control)
+        public static implicit operator GameContext(SwapChainBackgroundPanel control)
         {
             return new GameContext(control);
         }
