@@ -17,8 +17,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
-using System;
+#if !W8CORE
 using System.Windows.Forms;
 
 using SharpDX.Windows;
@@ -26,32 +25,45 @@ using SharpDX.Windows;
 namespace SharpDX.Toolkit
 {
     /// <summary>
-    /// A <see cref="GameWindowContext"/> to use for rendering to an existing WinForm <see cref="Control"/>.
+    /// A <see cref="GameContext"/> to use for rendering to an existing WinForm <see cref="Control"/>.
     /// </summary>
-    public class GameWindowContextWinForm : GameWindowContext
+    public partial class GameContext 
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GameWindowContextWinForm" /> class with a default <see cref="RenderForm"/>.
+        /// Initializes a new instance of the <see cref="GameContext" /> class with a default <see cref="RenderForm"/>.
         /// </summary>
-        public GameWindowContextWinForm() : this(null)
+        public GameContext() : this((Control)null)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GameWindowContextWinForm" /> class.
+        /// Initializes a new instance of the <see cref="GameContext" /> class.
         /// </summary>
         /// <param name="control">The control.</param>
         /// <param name="requestedWidth">Width of the requested.</param>
         /// <param name="requestedHeight">Height of the requested.</param>
-        public GameWindowContextWinForm(Control control, int requestedWidth = 0, int requestedHeight = 0)
-            : base(requestedWidth, requestedHeight)
+        public GameContext(Control control, int requestedWidth = 0, int requestedHeight = 0)
         {
-            Control = control ?? new GameForm("SharpDX.Toolkit.Game");
+            Control = control ?? new RenderForm("SharpDX Game");
+            RequestedWidth = requestedWidth;
+            RequestedHeight = requestedHeight;
+            Type = GameContextType.DesktopForm;
         }
 
         /// <summary>
-        /// The control used as a GameWindow context.
+        /// The control used as a GameWindow context (either an instance of <see cref="System.Windows.Forms.Control"/> or <see cref="System.Windows.Controls.Control"/>.
         /// </summary>
-        public readonly Control Control;
+        public readonly object Control;
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="Control"/> to <see cref="GameContext"/>.
+        /// </summary>
+        /// <param name="control">The control.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static implicit operator GameContext(Control control)
+        {
+            return new GameContext(control);
+        }
     }
 }
+#endif

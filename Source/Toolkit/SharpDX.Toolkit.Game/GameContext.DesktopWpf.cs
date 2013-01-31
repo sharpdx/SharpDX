@@ -19,45 +19,39 @@
 // THE SOFTWARE.
 #if !W8CORE
 using System;
-using System.Drawing;
-using System.Windows.Forms;
-
-using SharpDX.Windows;
+using System.Windows.Controls;
+using System.Windows.Interop;
 
 namespace SharpDX.Toolkit
 {
-    internal class GameForm : RenderForm
+    /// <summary>
+    /// A <see cref="GameContext"/> to use for rendering to an existing WinForm <see cref="Control"/>.
+    /// </summary>
+    public partial class GameContext 
     {
-        private bool allowUserResizing;
-
-        public GameForm() : this("SharpDX")
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GameContext" /> class from a WPF <see cref="Control"/>.
+        /// </summary>
+        /// <param name="control">The control.</param>
+        /// <param name="requestedWidth">Width of the requested.</param>
+        /// <param name="requestedHeight">Height of the requested.</param>
+        public GameContext(Control control, int requestedWidth = 0, int requestedHeight = 0)
         {
-        }
-
-        public GameForm(string text)
-            : base(text)
-        {
-            // By default, non resizable
-            MaximizeBox = false;
-            FormBorderStyle = FormBorderStyle.FixedSingle;
-        }
-
-        internal bool AllowUserResizing
-        {
-            get
+            if (control == null)
             {
-                return allowUserResizing;
+                throw new ArgumentNullException("control");
             }
-            set
-            {
-                if (allowUserResizing != value)
-                {
-                    allowUserResizing = value;
-                    MaximizeBox = allowUserResizing;
-                    FormBorderStyle = allowUserResizing ? FormBorderStyle.Sizable : FormBorderStyle.FixedSingle;
-                }
-            }
+
+            RequestedWidth = requestedWidth;
+            RequestedHeight = requestedHeight;
+            Type = GameContextType.DesktioWpf;
         }
+
+        /// <summary>
+        /// Gets the D3DImage associated with this window. This property is set once the <see cref="GameWindow"/> has been created.
+        /// </summary>
+        /// <value>The D3DImage interop.</value>
+        public D3DImage D3DImage { get; internal set; }
     }
 }
 #endif

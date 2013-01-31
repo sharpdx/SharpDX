@@ -73,7 +73,7 @@ namespace SharpDX.Windows
         private FormWindowState previousWindowState;
         //private DisplayMonitor monitor;
         private bool sizeMove;
-
+        private bool allowUserResizing;
         private bool isBackgroundFirstDraw;
 
         /// <summary>
@@ -99,6 +99,7 @@ namespace SharpDX.Windows
             Icon = SharpDX.Properties.Resources.logo;
 
             previousWindowState = FormWindowState.Normal;
+            AllowUserResizing = true;
         }
 
         /// <summary>
@@ -145,6 +146,27 @@ namespace SharpDX.Windows
         /// Occurs when [user resized].
         /// </summary>
         public event EventHandler<EventArgs> UserResized;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this form can be resized by the user. 
+        /// </summary>
+        /// <value><c>true</c> if this form can be resized by the user (by default); otherwise, <c>false</c>.</value>
+        public bool AllowUserResizing
+        {
+            get
+            {
+                return allowUserResizing;
+            }
+            set
+            {
+                if (allowUserResizing != value)
+                {
+                    allowUserResizing = value;
+                    MaximizeBox = allowUserResizing;
+                    FormBorderStyle = allowUserResizing ? FormBorderStyle.Sizable : FormBorderStyle.FixedSingle;
+                }
+            }
+        }
 
         /// <summary>
         /// Raises the <see cref="E:System.Windows.Forms.Form.ResizeBegin"/> event.

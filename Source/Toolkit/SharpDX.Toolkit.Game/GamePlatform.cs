@@ -80,17 +80,17 @@ namespace SharpDX.Toolkit
 
         internal abstract GameWindow[] GetSupportedGameWindows();
 
-        public virtual GameWindow CreateWindow(GameWindowContext windowContext)
+        public virtual GameWindow CreateWindow(GameContext gameContext)
         {
-            windowContext = windowContext ?? GameWindowContext.Default();
+            gameContext = gameContext ?? new GameContext();
 
             var windows = GetSupportedGameWindows();
 
             foreach (var gameWindowToTest in windows)
             {
-                if (gameWindowToTest.CanHandle(windowContext))
+                if (gameWindowToTest.CanHandle(gameContext))
                 {
-                    gameWindowToTest.Initialize(windowContext);
+                    gameWindowToTest.Initialize(gameContext);
                     return gameWindowToTest;
                 }
             }
@@ -100,9 +100,9 @@ namespace SharpDX.Toolkit
 
         public bool IsBlockingRun { get; protected set; }
 
-        public void Run(GameWindowContext windowContext)
+        public void Run(GameContext gameContext)
         {
-            gameWindow = CreateWindow(windowContext);
+            gameWindow = CreateWindow(gameContext);
 
             // Register on Activated 
             gameWindow.Activated += OnActivated;

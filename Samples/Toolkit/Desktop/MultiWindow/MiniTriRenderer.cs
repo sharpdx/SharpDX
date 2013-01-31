@@ -32,7 +32,7 @@ namespace MultiWindow
         private BasicEffect basicEffect;
 
         public MiniTriRenderer(Game game, Control control = null)
-            : base(game, new GameWindowContextWinForm(control))
+            : base(game, control)
         {
             BackgroundColor = Color.CornflowerBlue;
             ForegroundColor = Color.Red;

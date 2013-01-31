@@ -20,11 +20,11 @@
         /// <summary>
         /// Creates the a new <see cref="GameWindow"/>. See remarks.
         /// </summary>
-        /// <param name="windowContext">The window context. See remarks.</param>
+        /// <param name="gameContext">The window context. See remarks.</param>
         /// <returns>A new game window.</returns>
         /// <remarks>
         /// This is currently only supported on Windows Desktop. The window context supported on windows is a subclass of System.Windows.Forms.Control (or null and a default RenderForm will be created).
         /// </remarks>
-        GameWindow CreateWindow(GameWindowContext windowContext = null);
+        GameWindow CreateWindow(GameContext gameContext = null);
     }
 }

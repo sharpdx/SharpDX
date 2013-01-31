@@ -13,19 +13,25 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    
+    <Reference Include="PresentationFramework" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="System.Xaml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AssemblyDoc.cs" />
-    <Compile Include="Desktop\GameWindowDesktop.cs" />
+    <Compile Include="GameContext.DesktopWpf.cs" />
     <Compile Include="EffectCompilerSystem.Default.cs" />
     <Compile Include="EffectCompilerEventArgs.cs" />
     <Compile Include="EffectCompilerSystem.Desktop.cs" />
     <Compile Include="EffectCompilerSystem.cs" />
-    <Compile Include="GameWindowContext.cs" />
-    <Compile Include="GameWindowContextWinForm.cs" />
+    <Compile Include="GameContext.cs" />
+    <Compile Include="GameContext.DesktopForm.cs" />
+    <Compile Include="GameContextType.cs" />
     <Compile Include="GameWindowRenderer.cs" />
     <Compile Include="IGamePlatform.cs" />
     <Compile Include="IContentable.cs" />
@@ -34,7 +40,7 @@
     <Compile Include="WP8\GamePlatformWP8.cs" />
     <Compile Include="WinRT\GameWindowWinRT.cs" />
     <Compile Include="WinRT\GamePlatformWinRT.cs" />
-    <Compile Include="Desktop\GameWindowWinForm.cs" />
+    <Compile Include="Desktop\GameWindowDesktopForm.cs" />
     <Compile Include="Desktop\GamePlatformDesktop.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GamePlatform.cs" />
@@ -43,9 +49,6 @@
     <Compile Include="GameServiceRegistry.cs" />
     <Compile Include="GameTime.cs" />
     <Compile Include="GameWindow.cs" />
-    <Compile Include="Desktop\GameForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="GraphicsDeviceInformation.cs" />
     <Compile Include="GraphicsDeviceManager.cs" />
     <Compile Include="IDrawable.cs" />

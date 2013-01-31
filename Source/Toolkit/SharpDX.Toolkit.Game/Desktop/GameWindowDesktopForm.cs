@@ -31,7 +31,7 @@ namespace SharpDX.Toolkit
     /// <summary>
     /// An abstract window.
     /// </summary>
-    internal class GameWindowDesktopWinForm : GameWindowDesktop
+    internal class GameWindowDesktopForm : GameWindow
     {
         private bool isMouseVisible;
 
@@ -39,17 +39,9 @@ namespace SharpDX.Toolkit
 
         public Control Control;
 
-        private GameForm gameForm;
+        private RenderForm gameForm;
 
-        private GameWindowContextWinForm WinFormContext
-        {
-            get
-            {
-                return (GameWindowContextWinForm)this.GameWindowContext;
-            }
-        }
-
-        internal GameWindowDesktopWinForm()
+        internal GameWindowDesktopForm()
         {
         }
 
@@ -76,25 +68,25 @@ namespace SharpDX.Toolkit
             // Desktop doesn't have orientation (unless on Windows 8?)
         }
 
-        internal override bool CanHandle(GameWindowContext windowContext)
+        internal override bool CanHandle(GameContext gameContext)
         {
-            return windowContext is GameWindowContextWinForm;
+            return gameContext.Type == GameContextType.DesktopForm;
         }
 
-        internal override void Initialize(GameWindowContext windowContext)
+        internal override void Initialize(GameContext gameContext)
         {
-            this.GameWindowContext = windowContext;
+            this.GameContext = gameContext;
 
-            Control = WinFormContext.Control;
+            Control = (Control)gameContext.Control;
 
             // Setup the initial size of the window
-            var width = WinFormContext.RequestedWidth;
+            var width = gameContext.RequestedWidth;
             if (width == 0)
             {
                 width = Control is Form ? GraphicsDeviceManager.DefaultBackBufferWidth : Control.ClientSize.Width;
             }
 
-            var height = windowContext.RequestedHeight;
+            var height = gameContext.RequestedHeight;
             if (height == 0)
             {
                 height = Control is Form ? GraphicsDeviceManager.DefaultBackBufferHeight : Control.ClientSize.Height;
@@ -105,7 +97,7 @@ namespace SharpDX.Toolkit
             Control.MouseEnter += GameWindowForm_MouseEnter;
             Control.MouseLeave += GameWindowForm_MouseLeave;
 
-            gameForm = Control as GameForm;
+            gameForm = Control as RenderForm;
             if (gameForm != null)
             {
                 gameForm.AppActivated += OnActivated;
@@ -222,13 +214,14 @@ namespace SharpDX.Toolkit
         {
             get
             {
-                return (Control is GameForm && ((GameForm)Control).AllowUserResizing);
+                return (Control is RenderForm && ((RenderForm)Control).AllowUserResizing);
             }
             set
             {
-                if (Control is GameForm)
+                var form = Control as RenderForm;
+                if (form != null)
                 {
-                    ((GameForm)Control).AllowUserResizing = value;
+                    form.AllowUserResizing = value;
                 }
             }
         }

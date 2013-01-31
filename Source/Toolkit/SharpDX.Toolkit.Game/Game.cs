@@ -333,9 +333,9 @@ namespace SharpDX.Toolkit
         /// <summary>
         /// Call this method to initialize the game, begin running the game loop, and start processing events for the game.
         /// </summary>
-        /// <param name="gameWindowContext">The window Context for this game.</param>
+        /// <param name="gameContext">The window Context for this game.</param>
         /// <exception cref="System.InvalidOperationException">Cannot run this instance while it is already running</exception>
-        public void Run(GameWindowContext gameWindowContext = null)
+        public void Run(GameContext gameContext = null)
         {
             if (IsRunning)
             {
@@ -355,11 +355,11 @@ namespace SharpDX.Toolkit
             }
 
             // Gets the GameWindow Context
-            gameWindowContext = gameWindowContext ?? GameWindowContext.Default();
+            gameContext = gameContext ?? new GameContext();
 
             try
             {
-                gamePlatform.Run(gameWindowContext);
+                gamePlatform.Run(gameContext);
 
                 if (gamePlatform.IsBlockingRun)
                 {

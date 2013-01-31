@@ -18,17 +18,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using SharpDX.Toolkit.Graphics;
-
-#if !W8CORE
-
 namespace SharpDX.Toolkit
 {
     /// <summary>
-    /// An abstract window.
+    /// Contains context used to render the game (Control for WinForm, a DrawingSurface for WP8...etc.).
     /// </summary>
-    internal abstract class GameWindowDesktop : GameWindow
+    public partial class GameContext
     {
+        /// <summary>
+        /// The context type of this instance.
+        /// </summary>
+        public readonly GameContextType Type;
+
+        /// <summary>
+        /// The requested width.
+        /// </summary>
+        public int RequestedWidth;
+
+        /// <summary>
+        /// The requested height.
+        /// </summary>
+        public int RequestedHeight;
     }
 }
-#endif

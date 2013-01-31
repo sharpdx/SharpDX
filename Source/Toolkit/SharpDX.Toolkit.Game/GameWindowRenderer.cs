@@ -43,29 +43,29 @@ namespace SharpDX.Toolkit
         /// Initializes a new instance of the <see cref="GameWindowRenderer" /> class.
         /// </summary>
         /// <param name="registry">The registry.</param>
-        /// <param name="windowContext">The window context.</param>
-        public GameWindowRenderer(IServiceRegistry registry, GameWindowContext windowContext = null)
+        /// <param name="gameContext">The window context.</param>
+        public GameWindowRenderer(IServiceRegistry registry, GameContext gameContext = null)
             : base(registry)
         {
-            GameWindowContext = windowContext ?? GameWindowContext.Default();
+            GameContext = gameContext ?? new GameContext();
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameWindowRenderer" /> class.
         /// </summary>
         /// <param name="game">The game.</param>
-        /// <param name="windowContext">The window context.</param>
-        public GameWindowRenderer(Game game, GameWindowContext windowContext = null)
+        /// <param name="gameContext">The window context.</param>
+        public GameWindowRenderer(Game game, GameContext gameContext = null)
             : base(game)
         {
-            GameWindowContext = windowContext ?? GameWindowContext.Default();
+            GameContext = gameContext ?? new GameContext();
         }
 
         /// <summary>
         /// Gets the underlying native window.
         /// </summary>
         /// <value>The underlying native window.</value>
-        public GameWindowContext GameWindowContext { get; private set; }
+        public GameContext GameContext { get; private set; }
 
         /// <summary>
         /// Gets the window.
@@ -162,9 +162,9 @@ namespace SharpDX.Toolkit
         public override void Initialize()
         {
             var gamePlatform = (IGamePlatform)this.Services.GetService(typeof(IGamePlatform));
-            GameWindowContext.RequestedWidth = PreferredBackBufferWidth;
-            GameWindowContext.RequestedHeight = PreferredBackBufferHeight;
-            Window = gamePlatform.CreateWindow(GameWindowContext);
+            GameContext.RequestedWidth = PreferredBackBufferWidth;
+            GameContext.RequestedHeight = PreferredBackBufferHeight;
+            Window = gamePlatform.CreateWindow(GameContext);
             Window.Visible = true;
 
             Window.ClientSizeChanged += WindowOnClientSizeChanged;

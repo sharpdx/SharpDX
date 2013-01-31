@@ -33,7 +33,7 @@ namespace SharpDX.Toolkit
 
         private string title;
 
-        internal GameWindowContext GameWindowContext;
+        internal GameContext GameContext;
 
         #endregion
 
@@ -149,10 +149,10 @@ namespace SharpDX.Toolkit
         /// <summary>
         /// Initializes the GameWindow with the specified window context.
         /// </summary>
-        /// <param name="windowContext">The window context.</param>
-        internal abstract bool CanHandle(GameWindowContext windowContext);
+        /// <param name="gameContext">The window context.</param>
+        internal abstract bool CanHandle(GameContext gameContext);
 
-        internal abstract void Initialize(GameWindowContext windowContext);
+        internal abstract void Initialize(GameContext gameContext);
 
 
         internal VoidAction InitCallback;

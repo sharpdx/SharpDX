@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,53 +21,43 @@
 namespace SharpDX.Toolkit
 {
     /// <summary>
-    /// Contains context used to render the game (Control for WinForm, a DrawingSurface for WP8...etc.).
+    /// Type of a <see cref="GameContext"/>.
     /// </summary>
-    /// <seealso cref="GameWindowContextWinForm"/>
-    public abstract class GameWindowContext
+    public enum GameContextType
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GameWindowContext" /> class.
+        /// Game running on desktop in a form or <see cref="System.Windows.Forms.Control"/>.
         /// </summary>
-        protected GameWindowContext()
-        {
-        }
+        DesktopForm,
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GameWindowContext" /> class.
+        /// Game running on desktop in a WPF window through a D3DImage.
         /// </summary>
-        /// <param name="requestedWidth">Requested width of the window.</param>
-        /// <param name="requestedHeight">Requested height of the window.</param>
-        protected GameWindowContext(int requestedWidth, int requestedHeight)
-        {
-            RequestedWidth = requestedWidth;
-            RequestedHeight = requestedHeight;
-        }
+        DesktioWpf,
 
         /// <summary>
-        /// The requested width.
+        /// Game running on WinRT in a CoreWindow.
         /// </summary>
-        public int RequestedWidth;
+        WinRTApplication,
 
         /// <summary>
-        /// The requested height.
+        /// Game running on WinRT in a SwapChainBackgroundPanel.
         /// </summary>
-        public int RequestedHeight;
+        WinRTBackgroundXaml,
 
         /// <summary>
-        /// Gets a default instance.
+        /// Game running on WinRT in a SurfaceImageSource.
         /// </summary>
-        /// <returns>GameWindowContext.</returns>
-        public static GameWindowContext Default()
-        {
-#if WIN8METRO
-            return new GameWindowContextFrameView();
-#elif WP8
-            return new GameWindowContextDrawingSurface();
-#else
-            return new GameWindowContextWinForm();
-#endif
-        }
+        WinRTXaml,
 
+        /// <summary>
+        /// Game running on WinRT in a DrawingBackgroundSurface.
+        /// </summary>
+        WindowsPhoneBackgroundXaml,
+
+        /// <summary>
+        /// Game running on WinRT in a DrawingSurface.
+        /// </summary>
+        WindowsPhoneXaml,
     }
 }

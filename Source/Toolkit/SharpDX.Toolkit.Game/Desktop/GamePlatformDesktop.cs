@@ -43,7 +43,7 @@ namespace SharpDX.Toolkit
 
         internal override GameWindow[] GetSupportedGameWindows()
         {
-            return new GameWindow[] { new GameWindowDesktopWinForm() };
+            return new GameWindow[] { new GameWindowDesktopForm() };
         }
     }
 }
