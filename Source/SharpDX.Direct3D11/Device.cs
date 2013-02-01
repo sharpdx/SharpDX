@@ -441,6 +441,69 @@ namespace SharpDX.Direct3D11
         }
 
         /// <summary>
+        /// Check if a feature level is supported by a primary adapter.
+        /// </summary>
+        /// <param name="featureLevel">The feature level.</param>
+        /// <returns><c>true</c> if the primary adapter is supporting this feature level; otherwise, <c>false</c>.</returns>
+        public static bool IsSupportedFeatureLevel(FeatureLevel featureLevel)
+        {
+            var device = new Device(IntPtr.Zero);
+            DeviceContext context = null;
+            try
+            {
+                FeatureLevel outputLevel;
+                var result = D3D11.CreateDevice(null, DriverType.Hardware, IntPtr.Zero, DeviceCreationFlags.None,
+                                                new[] {featureLevel}, 1, D3D11.SdkVersion, device, out outputLevel,
+                                                out context);
+                return result.Success && outputLevel == featureLevel;
+            }
+            finally
+            {
+                if (context != null)
+                {
+                    context.Dispose();
+                }
+
+                if (device.NativePointer != IntPtr.Zero)
+                {
+                    device.Dispose();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Check if a feature level is supported by a particular adapter.
+        /// </summary>
+        /// <param name="adapter">The adapter.</param>
+        /// <param name="featureLevel">The feature level.</param>
+        /// <returns><c>true</c> if the specified adapter is supporting this feature level; otherwise, <c>false</c>.</returns>
+        public static bool IsSupportedFeatureLevel(Adapter adapter, FeatureLevel featureLevel)
+        {
+            var device = new Device(IntPtr.Zero);
+            DeviceContext context = null;
+            try
+            {
+                FeatureLevel outputLevel;
+                var result = D3D11.CreateDevice(adapter, DriverType.Unknown, IntPtr.Zero, DeviceCreationFlags.None,
+                                                new[] { featureLevel }, 1, D3D11.SdkVersion, device, out outputLevel,
+                                                out context);
+                return result.Success && outputLevel == featureLevel;
+            }
+            finally
+            {
+                if (context != null)
+                {
+                    context.Dispose();
+                }
+
+                if (device.NativePointer != IntPtr.Zero)
+                {
+                    device.Dispose();
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets the highest supported hardware feature level of the primary adapter.
         /// </summary>
         /// <returns>The highest supported hardware feature level.</returns>
@@ -450,7 +513,7 @@ namespace SharpDX.Direct3D11
             var device = new Device(IntPtr.Zero);
             DeviceContext context;
             D3D11.CreateDevice(null, DriverType.Hardware, IntPtr.Zero, DeviceCreationFlags.None, null, 0, D3D11.SdkVersion, device, out outputLevel,
-                               out context);
+                               out context).CheckError();
             context.Dispose();
             device.Dispose();
             return outputLevel;
@@ -469,7 +532,7 @@ namespace SharpDX.Direct3D11
             var device = new Device(IntPtr.Zero);
             DeviceContext context;
             D3D11.CreateDevice(adapter, DriverType.Unknown, IntPtr.Zero, DeviceCreationFlags.None, null, 0, D3D11.SdkVersion, device, out outputLevel,
-                               out context);
+                               out context).CheckError();
             context.Dispose();
             device.Dispose();
             return outputLevel;
@@ -556,8 +619,8 @@ namespace SharpDX.Direct3D11
         {
             FeatureLevel selectedLevel;
             D3D11.CreateDevice(adapter, driverType, IntPtr.Zero, flags, featureLevels,
-                               featureLevels == null ? 0 : featureLevels.Length, D3D11.SdkVersion, this,
-                               out selectedLevel, out ImmediateContext__);
+                                        featureLevels == null ? 0 : featureLevels.Length, D3D11.SdkVersion, this,
+                                        out selectedLevel, out ImmediateContext__).CheckError();
 
             if (ImmediateContext__ != null)
             {

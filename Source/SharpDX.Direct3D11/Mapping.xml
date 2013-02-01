@@ -291,7 +291,8 @@
     <map function="D3D11(.+)" name-tmp="$1" />
     <map function="D3D11.*" dll='"d3d11.dll"' group="SharpDX.Direct3D11.D3D11" />
     <map param="D3D11CreateDevice::ppDevice" attribute="out fast" />
-
+    <map function="D3D11CreateDevice" check="false"/>
+    
     <remove function="ID3D11DeviceContext1_.*"/>
 
     <ifndef name="W8CORE">

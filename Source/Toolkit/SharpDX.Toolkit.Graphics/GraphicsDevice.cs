@@ -230,6 +230,16 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
+        /// Check if a feature level is supported by a primary adapter.
+        /// </summary>
+        /// <param name="featureLevel">The feature level.</param>
+        /// <returns><c>true</c> if the primary adapter is supporting this feature level; otherwise, <c>false</c>.</returns>
+        public static bool IsProfileSupported(FeatureLevel featureLevel)
+        {
+            return SharpDX.Direct3D11.Device.IsSupportedFeatureLevel(featureLevel);
+        }
+
+        /// <summary>
         /// Gets the adapter associated with this device.
         /// </summary>
         public readonly GraphicsAdapter Adapter;

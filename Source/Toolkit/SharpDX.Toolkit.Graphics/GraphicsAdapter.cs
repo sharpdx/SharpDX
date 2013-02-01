@@ -145,23 +145,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>true if the profile is supported</returns>
         public bool IsProfileSupported(FeatureLevel featureLevel)
         {
-            // Only way is to instantiate a Direct3D11 device and check the selected
-            // feature level
-            bool isProfileSupported = false;
-
-            Direct3D11.Device device = null;
-            try
-            {
-                device = new SharpDX.Direct3D11.Device(adapter, DeviceCreationFlags.None, featureLevel);
-                isProfileSupported = featureLevel == device.FeatureLevel;
-            }
-            catch (SharpDXException) { }
-            finally
-            {
-                if (device != null)
-                    device.Dispose();
-            }
-            return isProfileSupported;
+            return SharpDX.Direct3D11.Device.IsSupportedFeatureLevel(this, featureLevel);
         }
 
         /// <summary>
