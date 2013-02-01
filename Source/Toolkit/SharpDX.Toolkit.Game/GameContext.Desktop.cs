@@ -47,7 +47,7 @@ namespace SharpDX.Toolkit
             Control = control ?? new RenderForm("SharpDX Game");
             RequestedWidth = requestedWidth;
             RequestedHeight = requestedHeight;
-            Type = GameContextType.Desktop;
+            ContextType = GameContextType.Desktop;
         }
 
         /// <summary>

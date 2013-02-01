@@ -70,7 +70,7 @@ namespace SharpDX.Toolkit
 
         internal override bool CanHandle(GameContext gameContext)
         {
-            return gameContext.Type == GameContextType.Desktop;
+            return gameContext.ContextType == GameContextType.Desktop;
         }
 
         internal override void Initialize(GameContext gameContext)
