@@ -39,6 +39,7 @@ namespace SharpDX.Toolkit
         {
             this.game = game;
             Services = game.Services;
+            Services.AddService(typeof(IGraphicsDeviceFactory), this);
         }
 
         public static GamePlatform Create(Game game)
@@ -46,7 +47,7 @@ namespace SharpDX.Toolkit
 #if WIN8METRO
             return new GamePlatformWinRT(game);
 #elif WP8
-            return new GamePlatformWP8(game);
+            return new GamePlatformWindowsPhone(game);
 #else
             return new GamePlatformDesktop(game);
 #endif
@@ -122,6 +123,8 @@ namespace SharpDX.Toolkit
 
         public virtual void Exit()
         {
+            gameWindow.Exiting = true;
+
             if (gameWindow != null)
             {
                 gameWindow.Dispose();

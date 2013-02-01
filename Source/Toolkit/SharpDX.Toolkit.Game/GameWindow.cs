@@ -154,6 +154,7 @@ namespace SharpDX.Toolkit
 
         internal abstract void Initialize(GameContext gameContext);
 
+        internal bool Exiting;
 
         internal VoidAction InitCallback;
 
@@ -164,6 +165,8 @@ namespace SharpDX.Toolkit
         internal abstract void Run();
 
         internal abstract void Resize(int width, int height);
+
+
 
         protected internal abstract void SetSupportedOrientations(DisplayOrientation orientations);
 

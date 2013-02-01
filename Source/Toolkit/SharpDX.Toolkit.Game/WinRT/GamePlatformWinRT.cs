@@ -30,7 +30,6 @@ namespace SharpDX.Toolkit
     {
         public GamePlatformWinRT(Game game) : base(game)
         {
-            Services.AddService(typeof(IGraphicsDeviceFactory), this);
         }
 
         public override string DefaultAppDirectory

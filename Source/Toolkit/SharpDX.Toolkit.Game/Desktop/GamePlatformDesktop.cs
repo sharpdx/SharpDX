@@ -29,7 +29,6 @@ namespace SharpDX.Toolkit
         public GamePlatformDesktop(Game game) : base(game)
         {
             IsBlockingRun = true;
-            Services.AddService(typeof(IGraphicsDeviceFactory), this);
         }
 
         public override string DefaultAppDirectory

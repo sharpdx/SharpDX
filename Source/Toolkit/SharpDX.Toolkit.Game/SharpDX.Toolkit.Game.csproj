@@ -23,6 +23,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AssemblyDoc.cs" />
+    <Compile Include="GameContext.WindowsPhoneBackgroundXaml.cs" />
     <Compile Include="GameContext.WinRTBackgroundXaml.cs" />
     <Compile Include="GameContext.WinRT.cs" />
     <Compile Include="GameContext.DesktopWpf.cs" />
@@ -39,8 +40,8 @@
     <Compile Include="GameGraphicsParameters.cs" />
     <Compile Include="WinRT\GameWindowWinRTBackgroundXaml.cs" />
     <Compile Include="WinRT\GameWindowWinRT.cs" />
-    <Compile Include="WP8\GameWindowWP8.cs" />
-    <Compile Include="WP8\GamePlatformWP8.cs" />
+    <Compile Include="WindowsPhone\GameWindowWindowsPhoneBackgroundXaml.cs" />
+    <Compile Include="WindowsPhone\GamePlatformWindowsPhone.cs" />
     <Compile Include="WinRT\GamePlatformWinRT.cs" />
     <Compile Include="Desktop\GameWindowDesktop.cs" />
     <Compile Include="Desktop\GamePlatformDesktop.cs" />

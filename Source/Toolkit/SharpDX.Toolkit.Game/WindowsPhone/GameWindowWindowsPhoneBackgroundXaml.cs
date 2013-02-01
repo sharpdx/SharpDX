@@ -22,88 +22,43 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-
+using System.Windows;
+using System.Windows.Controls;
+using Microsoft.Phone.Shell;
 using SharpDX.Direct3D11;
 using SharpDX.Toolkit.Graphics;
-using System.Windows.Controls;
 
 namespace SharpDX.Toolkit
 {
     /// <summary>
-    /// An abstract window.
+    ///     An abstract window.
     /// </summary>
-    internal class GameWindowWP8 : GameWindow, ICallbackable, IDrawingSurfaceBackgroundContentProviderNative, IInspectable, ICustomQueryInterface
+    internal class GameWindowWindowsPhoneBackgroundXaml : GameWindow, IDrawingSurfaceBackgroundContentProviderNative,
+                                                          IInspectable, ICustomQueryInterface
     {
-        private object nativeWindow;
-        private IntPtr thisComObjectPtr;
+        internal RenderTarget2D BackBuffer;
+        internal  GraphicsDevice GraphicsDevice;
+        private readonly IntPtr thisComObjectPtr;
 
         private DrawingSurfaceBackgroundGrid drawingSurfaceBackgroundGrid;
         private DrawingSurfaceRuntimeHost host;
 
-        private VoidAction initCallback;
-        private VoidAction tickCallback;
-
-        internal GameWindowWP8()
+        internal GameWindowWindowsPhoneBackgroundXaml()
         {
             thisComObjectPtr = CppObjectShadow.ToIntPtr<IDrawingSurfaceBackgroundContentProviderNative>(this);
         }
 
         public override object NativeWindow
         {
-            get
-            {
-                return nativeWindow;
-            }
+            get { return drawingSurfaceBackgroundGrid; }
         }
 
-        public override void BeginScreenDeviceChange(bool willBeFullScreen)
-        {
-            
-        }
-
-        public override void EndScreenDeviceChange(int clientWidth, int clientHeight)
-        {
-            
-        }
-
-        public override bool IsFullScreenMandatory
-        {
-            get
-            {
-                return true;
-            }
-        }
-
-        public override bool IsMouseVisible {get; set;}
-
-        protected internal override void SetSupportedOrientations(DisplayOrientation orientations)
-        {
-            // Desktop doesn't have orientation (unless on Windows 8?)
-        }
-
-        internal override void Initialize(object windowContext)
-        {
-            nativeWindow = windowContext;
-            drawingSurfaceBackgroundGrid = windowContext as DrawingSurfaceBackgroundGrid;
-            if (windowContext == null)
-            {
-                throw new ArgumentNullException("windowContext cannot be null under WP8", "windowContext");
-            }
-            if (drawingSurfaceBackgroundGrid == null)
-            {
-                throw new ArgumentException("Expecting a DrawingSurfaceBackgroundGrid as a window context under WP8", "windowContext");
-            }
-        }
+        public override bool IsMouseVisible { get; set; }
 
         public override bool AllowUserResizing
         {
-            get
-            {
-                return false;
-            }
-            set
-            {
-            }
+            get { return false; }
+            set { }
         }
 
         public override DrawingRectangle ClientBounds
@@ -120,62 +75,38 @@ namespace SharpDX.Toolkit
 
         public override DisplayOrientation CurrentOrientation
         {
-            get
-            {
-                return DisplayOrientation.Default;
-            }
+            get { return DisplayOrientation.Default; }
         }
 
         public override bool IsMinimized
         {
-            get
-            {
-                return false;
-            }
-        }
-
-        public void RunDrawingSurfaceBackground(VoidAction initCallback, VoidAction tickCallback)
-        {
-            this.initCallback = initCallback;
-            this.tickCallback = tickCallback;
-
-            // Set the background to this 
-            drawingSurfaceBackgroundGrid.SetBackgroundContentProvider(this);
-        }
-
-        protected override void SetTitle(string title)
-        {
+            get { return false; }
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="GameWindow" /> is visible.
+        ///     Gets or sets a value indicating whether this <see cref="GameWindow" /> is visible.
         /// </summary>
-        /// <value><c>true</c> if visible; otherwise, <c>false</c>.</value>
+        /// <value>
+        ///     <c>true</c> if visible; otherwise, <c>false</c>.
+        /// </value>
         public override bool Visible
         {
-            get
-            {
-                return true;
-            }
-            set
-            {
-            }
+            get { return true; }
+            set { }
         }
 
-#region Implementation of ICallbackable
+        #region Implementation of ICallbackable
 
         IDisposable ICallbackable.Shadow { get; set; }
 
+        #endregion
 
-        public GraphicsDevice GraphicsDevice;
+        #region Implementation of IDrawingSurfaceBackgroundContentProviderNative
 
-        public RenderTarget2D BackBuffer;
-
-#endregion
-
-#region Implementation of IDrawingSurfaceBackgroundContentProviderNative
-
-        public bool Exiting;
+        private readonly RenderTargetLocal[] renderTargets = new RenderTargetLocal[3];
+        private Exception drawException;
+        private RenderTargetGraphicsPresenter graphicsPresenter;
+        private int nextRenderTarget;
 
         void IDrawingSurfaceBackgroundContentProviderNative.Connect(DrawingSurfaceRuntimeHost host, Device device)
         {
@@ -188,32 +119,14 @@ namespace SharpDX.Toolkit
             Utilities.Dispose(ref BackBuffer);
         }
 
-        void IDrawingSurfaceBackgroundContentProviderNative.PrepareResources(DateTime presentTargetTime, ref DrawingSizeF desiredRenderTargetSize)
+        void IDrawingSurfaceBackgroundContentProviderNative.PrepareResources(DateTime presentTargetTime,
+                                                                             ref DrawingSizeF desiredRenderTargetSize)
         {
-            
         }
 
 
-        struct RenderTargetLocal
-        {
-            public IntPtr NativePointer;
-            public RenderTarget2D RenderTarget;
-
-            public void Dispose()
-            {
-                Utilities.Dispose(ref RenderTarget);
-                NativePointer = IntPtr.Zero;
-            }
-        }
-
-        // Only 3 buffers, seems ok on default WP8
-        private readonly RenderTargetLocal[] renderTargets = new RenderTargetLocal[3];
-        private int nextRenderTarget = 0;
-        private RenderTargetGraphicsPresenter graphicsPresenter;
-
-        private Exception drawException = null;
-
-        void IDrawingSurfaceBackgroundContentProviderNative.Draw(Device device, DeviceContext context, RenderTargetView renderTargetView)
+        void IDrawingSurfaceBackgroundContentProviderNative.Draw(Device device, DeviceContext context,
+                                                                 RenderTargetView renderTargetView)
         {
             try
             {
@@ -231,18 +144,19 @@ namespace SharpDX.Toolkit
 
                         graphicsPresenter = new RenderTargetGraphicsPresenter(GraphicsDevice, BackBuffer);
                         GraphicsDevice.Presenter = graphicsPresenter;
-                        initCallback();
+                        InitCallback();
                     }
                     else
                     {
-                        if (((Direct3D11.Device)GraphicsDevice).NativePointer != device.NativePointer || ((Direct3D11.DeviceContext)GraphicsDevice).NativePointer != context.NativePointer)
+                        if (((Device) GraphicsDevice).NativePointer != device.NativePointer ||
+                            ((DeviceContext) GraphicsDevice).NativePointer != context.NativePointer)
                         {
-                            System.Diagnostics.Debugger.Break();
+                            Debugger.Break();
                         }
 
                         // Find any previous render target that was already alocated.
                         bool foundRenderTarget = false;
-                        foreach (var renderTargetLocal in renderTargets)
+                        foreach (RenderTargetLocal renderTargetLocal in renderTargets)
                         {
                             if (renderTargetLocal.NativePointer == renderTargetView.NativePointer)
                             {
@@ -271,12 +185,13 @@ namespace SharpDX.Toolkit
                         // else we need to handle DeviceReset/Remove...etc.
                     }
 
-                    tickCallback();
+                    RunCallback();
 
                     // Aks the host for additional frame
                     host.RequestAdditionalFrame();
                 }
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 // TODO: As we are in a callback from a native code, we cannot pass back this exception,
                 // so how to pass back this exception to the user at an appropriate time?
@@ -285,9 +200,21 @@ namespace SharpDX.Toolkit
             }
         }
 
-#endregion
+        private struct RenderTargetLocal
+        {
+            public IntPtr NativePointer;
+            public RenderTarget2D RenderTarget;
 
-#region Implementation of ICustomQueryInterface
+            public void Dispose()
+            {
+                Utilities.Dispose(ref RenderTarget);
+                NativePointer = IntPtr.Zero;
+            }
+        }
+
+        #endregion
+
+        #region Implementation of ICustomQueryInterface
 
         CustomQueryInterfaceResult ICustomQueryInterface.GetInterface(ref Guid iid, out IntPtr ppv)
         {
@@ -295,7 +222,67 @@ namespace SharpDX.Toolkit
             return CustomQueryInterfaceResult.Handled;
         }
 
-#endregion
+        #endregion
+
+        public override void BeginScreenDeviceChange(bool willBeFullScreen)
+        {
+        }
+
+        public override void EndScreenDeviceChange(int clientWidth, int clientHeight)
+        {
+        }
+
+        internal override bool CanHandle(GameContext gameContext)
+        {
+            return gameContext.ContextType == GameContextType.WindowsPhoneBackgroundXaml;
+        }
+
+        internal override void Initialize(GameContext gameContext)
+        {
+            drawingSurfaceBackgroundGrid = (DrawingSurfaceBackgroundGrid) gameContext.Control;
+        }
+
+        internal override void Run()
+        {
+            drawingSurfaceBackgroundGrid.Loaded += DrawingSurfaceBackgroundGridOnLoaded;
+
+            // Never called??
+            drawingSurfaceBackgroundGrid.Unloaded += drawingSurfaceBackgroundGrid_Unloaded;
+        }
+
+        internal override void Resize(int width, int height)
+        {
+        }
+
+        protected internal override void SetSupportedOrientations(DisplayOrientation orientations)
+        {
+        }
+
+        protected override void SetTitle(string title)
+        {
+        }
+
+        protected override void Dispose(bool disposeManagedResources)
+        {
+            drawingSurfaceBackgroundGrid.SetBackgroundContentProvider(null);
+            
+            base.Dispose(disposeManagedResources);
+        }
+
+        private void DrawingSurfaceBackgroundGridOnLoaded(object sender, RoutedEventArgs routedEventArgs)
+        {
+            // Set the background to run this instance 
+            drawingSurfaceBackgroundGrid.SetBackgroundContentProvider(this);
+        }
+
+        private void drawingSurfaceBackgroundGrid_Unloaded(object sender, RoutedEventArgs e)
+        {
+            // Never called??
+            Exiting = true;
+            // Set the background to run this instance 
+            drawingSurfaceBackgroundGrid.SetBackgroundContentProvider(null);
+        }
     }
 }
+
 #endif
