@@ -79,7 +79,7 @@ namespace SharpDX.Toolkit.Input
         /// Returns the location of mouse cursor relative to program window
         /// </summary>
         /// <returns></returns>
-        internal Point GetLocation()
+        internal DrawingPoint GetLocation()
         {
             return GetLocationInternal(nativeWindow);
         }
@@ -94,7 +94,7 @@ namespace SharpDX.Toolkit.Input
         /// Derived classes should implement platform-specific code to retrieve the mouse cursor location
         /// </summary>
         /// <param name="nativeWindow">The native window object reference</param>
-        protected abstract Point GetLocationInternal(object nativeWindow);
+        protected abstract DrawingPoint GetLocationInternal(object nativeWindow);
 
         /// <summary>
         /// Raises the <see cref="MouseDown"/> event

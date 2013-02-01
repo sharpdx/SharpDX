@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,21 +18,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+
 namespace SharpDX.Toolkit.Input
 {
     /// <summary>
-    /// Represents a 2D point in discrete space
+    /// Provides access to platform-independent pointer events
     /// </summary>
-    /// <remarks>Used internally to retrieve the mouse cursor position</remarks>
-    internal struct Point
+    public interface IPointerService
     {
-        internal readonly int X;
-        internal readonly int Y;
+        /// <summary>
+        /// Gets the current state of the pointer
+        /// </summary>
+        /// <returns>An instance of <see cref="PointerState"/> class</returns>
+        PointerState GetState();
 
-        internal Point(int x, int y)
-        {
-            X = x;
-            Y = y;
-        }
+        /// <summary>
+        /// Fills the provided object with the current pointer state information
+        /// </summary>
+        /// <remarks>All properties of provided object will be cleared.</remarks>
+        /// <param name="state">The object that needs to be filled with pointer information</param>
+        /// <exception cref="ArgumentNullException">Is thrown when <paramref name="state"/> is null</exception>
+        void GetState(PointerState state);
     }
 }
