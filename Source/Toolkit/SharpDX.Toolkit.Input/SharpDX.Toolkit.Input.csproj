@@ -8,7 +8,7 @@
     <RootNamespace>SharpDX.Toolkit.Input</RootNamespace>
     <AssemblyName>SharpDX.Toolkit.Input</AssemblyName>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(SharpDXWin8)' == 'false'">
+  <ItemGroup Condition=" '$(SharpDXWin8Core)' == 'false'">
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -21,11 +21,13 @@
     <Compile Include="AssemblyDoc.cs" />
     <Compile Include="ButtonState.cs" />
     <Compile Include="IKeyboardService.cs" />
+    <Compile Include="IPointerService.cs" />
     <Compile Include="KeyboardManager.cs" />
     <Compile Include="KeyboardPlatform.cs" />
     <Compile Include="KeyboardPlatformDesktop.cs" />
     <Compile Include="KeyboardPlatformWinRT.cs" />
     <Compile Include="KeyboardState.cs" />
+    <Compile Include="KeyModifiers.cs" />
     <Compile Include="Keys.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="MousePlatformDesktop.cs" />
@@ -34,7 +36,16 @@
     <Compile Include="MouseButton.cs" />
     <Compile Include="MouseManager.cs" />
     <Compile Include="MouseState.cs" />
-    <Compile Include="Point.cs" />
+    <Compile Include="PointerDeviceType.cs" />
+    <Compile Include="PointerEventType.cs" />
+    <Compile Include="PointerManager.cs" />
+    <Compile Include="PointerPlatform.cs" />
+    <Compile Include="PointerPlatformDesktop.cs" />
+    <Compile Include="PointerPlatformDesktopTouch.cs" />
+    <Compile Include="PointerPlatformWinRT.cs" />
+    <Compile Include="PointerPoint.cs" />
+    <Compile Include="PointerState.cs" />
+    <Compile Include="PointerUpdateKind.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MousePlatform.cs" />
     <Compile Include="MousePlatformWinRT.cs" />

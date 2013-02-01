@@ -222,7 +222,7 @@ namespace SharpDX.Toolkit.Input
         }
 
         /// <summary>
-        /// Handles the <see cref="Control.KeyDown"/> event
+        /// Handles the <see cref="Control.PreviewKeyDown"/> event
         /// </summary>
         /// <param name="sender">Ignored</param>
         /// <param name="e">Pressed key is read from <see cref="PreviewKeyDownEventArgs.KeyCode"/> property</param>
