@@ -28,7 +28,7 @@ namespace SharpDX.Toolkit
         /// <summary>
         /// The context type of this instance.
         /// </summary>
-        public readonly GameContextType Type;
+        public readonly GameContextType ContextType;
 
         /// <summary>
         /// The requested width.

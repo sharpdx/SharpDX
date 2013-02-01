@@ -26,7 +26,7 @@ using Windows.ApplicationModel;
 
 namespace SharpDX.Toolkit
 {
-    internal class GamePlatformWinRT : GamePlatform, IGraphicsDeviceFactory
+    internal class GamePlatformWinRT : GamePlatform
     {
         public GamePlatformWinRT(Game game) : base(game)
         {
@@ -43,7 +43,7 @@ namespace SharpDX.Toolkit
 
         internal override GameWindow[] GetSupportedGameWindows()
         {
-            return new GameWindow[] { new GameWindowWinRT() };
+            return new GameWindow[] { new GameWindowWinRT(), new GameWindowWinRTBackgroundXaml(),  };
         }
 
         public override List<GraphicsDeviceInformation> FindBestDevices(GameGraphicsParameters prefferedParameters)

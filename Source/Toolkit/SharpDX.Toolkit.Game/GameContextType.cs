@@ -33,7 +33,7 @@ namespace SharpDX.Toolkit
         /// <summary>
         /// Game running on desktop in a WPF window through a D3DImage.
         /// </summary>
-        DesktioWpf,
+        DesktopWpf,
 
         /// <summary>
         /// Game running on WinRT in a CoreWindow.

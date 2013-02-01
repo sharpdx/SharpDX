@@ -44,7 +44,7 @@ namespace SharpDX.Toolkit
 
             RequestedWidth = requestedWidth;
             RequestedHeight = requestedHeight;
-            Type = GameContextType.DesktioWpf;
+            Type = GameContextType.DesktopWpf;
         }
 
         /// <summary>

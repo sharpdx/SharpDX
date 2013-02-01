@@ -19,22 +19,25 @@
 // THE SOFTWARE.
 #if WIN8METRO
 
+using System;
 using SharpDX.Toolkit.Graphics;
 
-using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.Graphics.Display;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 
 namespace SharpDX.Toolkit
 {
     /// <summary>
     /// An abstract window.
     /// </summary>
-    internal class GameWindowWinRT : GameWindow, IFrameworkViewSource, IFrameworkView
+    internal class GameWindowWinRTBackgroundXaml : GameWindow
     {
         #region Fields
 
-        public CoreWindow CoreWindow;
+        private SwapChainBackgroundPanel swapChainBackgroundPanel;
 
         #endregion
 
@@ -55,7 +58,7 @@ namespace SharpDX.Toolkit
         {
             get
             {
-                return new DrawingRectangle(0, 0, (int)(CoreWindow.Bounds.Width * DisplayProperties.LogicalDpi / 96.0), (int)(CoreWindow.Bounds.Height * DisplayProperties.LogicalDpi / 96.0));
+                return new DrawingRectangle(0, 0, (int)(this.swapChainBackgroundPanel.ActualWidth * DisplayProperties.LogicalDpi / 96.0), (int)(this.swapChainBackgroundPanel.ActualHeight * DisplayProperties.LogicalDpi / 96.0));
             }
         }
 
@@ -81,7 +84,7 @@ namespace SharpDX.Toolkit
         {
             get
             {
-                return CoreWindow;
+                return swapChainBackgroundPanel;
             }
         }
 
@@ -114,66 +117,32 @@ namespace SharpDX.Toolkit
 
         #endregion
 
-        #region Explicit Interface Methods
-
-        void IFrameworkView.Initialize(CoreApplicationView applicationView)
-        {
-        }
-
-        void IFrameworkView.Load(string entryPoint)
-        {
-        }
-
-        void IFrameworkView.Run()
-        {
-            // Specify the cursor type as the standard arrow cursor.
-            // CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
-
-            // Activate the application window, making it visible and enabling it to receive events.
-            CoreWindow.Activate();
-
-            bool windowIsClosed = false;
-
-            CoreWindow.Closed += (sender, args) => windowIsClosed = true;
-
-            // Enter the render loop.  Note that Metro style apps should never exit.
-            while (!windowIsClosed)
-            {
-                // Process events incoming to the window.
-                CoreWindow.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessAllIfPresent);
-
-                RunCallback();
-            }
-        }
-
-        void IFrameworkView.SetWindow(CoreWindow window)
-        {
-            CoreWindow = window;
-
-            // Call the init callback once the window is activated
-            InitCallback();
-        }
-
-        void IFrameworkView.Uninitialize()
-        {
-        }
-
-        IFrameworkView IFrameworkViewSource.CreateView()
-        {
-            return this;
-        }
-
-        #endregion
-
         #region Methods
 
         internal override bool CanHandle(GameContext windowContext)
         {
-            return windowContext.ContextType == GameContextType.WinRT;
+            return windowContext.ContextType == GameContextType.WinRTBackgroundXaml;
         }
 
         internal override void Initialize(GameContext windowContext)
         {
+            if (windowContext != null)
+            {
+                swapChainBackgroundPanel = windowContext.Control as SwapChainBackgroundPanel;
+                if (swapChainBackgroundPanel == null)
+                {
+                    throw new NotSupportedException(string.Format("Unsupported window context [{0}]. Only  SwapChainBackgroundPanel",  windowContext.Control.GetType().FullName));
+                }
+
+                //clientBounds = new DrawingRectangle(0, 0, (int)swapChainBackgroundPanel.ActualWidth, (int)swapChainBackgroundPanel.ActualHeight);
+                swapChainBackgroundPanel.SizeChanged += swapChainBackgroundPanel_SizeChanged;
+
+            }
+        }
+
+        private void swapChainBackgroundPanel_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            OnClientSizeChanged(sender, EventArgs.Empty);
         }
 
         internal override void Resize(int width, int height)
@@ -183,7 +152,16 @@ namespace SharpDX.Toolkit
 
         internal override void Run()
         {
-            CoreApplication.Run(this);
+            // Initialize Game
+            InitCallback();
+
+            // Perform the rendering loop
+            CompositionTarget.Rendering += CompositionTarget_Rendering;
+        }
+
+        void CompositionTarget_Rendering(object sender, object e)
+        {
+            RunCallback();
         }
 
         protected internal override void SetSupportedOrientations(DisplayOrientation orientations)
@@ -193,21 +171,17 @@ namespace SharpDX.Toolkit
 
         protected override void SetTitle(string title)
         {
+
         }
 
         protected override void Dispose(bool disposeManagedResources)
         {
-            if (disposeManagedResources)
-            {
-                if (CoreWindow != null)
-                {
-                    CoreWindow.Close();
-                    CoreWindow = null;
-                }
-            }
+            CompositionTarget.Rendering -= CompositionTarget_Rendering;
+            
             
             base.Dispose(disposeManagedResources);
         }
+
 
         #endregion
     }

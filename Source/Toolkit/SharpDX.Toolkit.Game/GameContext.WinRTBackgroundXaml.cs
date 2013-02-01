@@ -31,11 +31,37 @@ namespace SharpDX.Toolkit
     public partial class GameContext 
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GameContext" /> class to run a Game on WinRT.
+        /// Initializes a new instance of the <see cref="GameContext" /> class.
         /// </summary>
-        public GameContext()
+        /// <param name="control">The control.</param>
+        /// <param name="requestedWidth">Width of the requested.</param>
+        /// <param name="requestedHeight">Height of the requested.</param>
+        public GameContext(SwapChainBackgroundPanel control, int requestedWidth = 0, int requestedHeight = 0)
         {
-            ContextType = GameContextType.WinRT;
+            if (control == null)
+            {
+                throw new ArgumentNullException("control");
+            }
+
+            Control = control;
+            RequestedWidth = requestedWidth;
+            RequestedHeight = requestedHeight;
+            ContextType = GameContextType.WinRTBackgroundXaml;
+        }
+
+        /// <summary>
+        /// The control used as a GameWindow context (either an instance of <see cref="System.Windows.Forms.Control"/> or <see cref="System.Windows.Controls.Control"/>.
+        /// </summary>
+        public readonly object Control;
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="Control"/> to <see cref="GameContext"/>.
+        /// </summary>
+        /// <param name="control">The control.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static implicit operator GameContext(SwapChainBackgroundPanel control)
+        {
+            return new GameContext(control);
         }
     }
 }
