@@ -63,7 +63,7 @@ namespace SharpDX
         public float MaxDepth;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Viewport" /> struct.
+        /// Initializes a new instance of the <see cref="Viewport"/> struct.
         /// </summary>
         /// <param name="x">The x coordinate of the upper-left corner of the viewport in pixels.</param>
         /// <param name="y">The y coordinate of the upper-left corner of the viewport in pixels.</param>
@@ -80,7 +80,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ViewportF" /> struct.
+        /// Initializes a new instance of the <see cref="Viewport"/> struct.
         /// </summary>
         /// <param name="x">The x coordinate of the upper-left corner of the viewport in pixels.</param>
         /// <param name="y">The y coordinate of the upper-left corner of the viewport in pixels.</param>
@@ -99,7 +99,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Viewport" /> struct.
+        /// Initializes a new instance of the <see cref="Viewport"/> struct.
         /// </summary>
         /// <param name="bounds">A bounding box that defines the location and size of the viewport in a render target.</param>
         public Viewport(DrawingRectangle bounds)
@@ -132,11 +132,150 @@ namespace SharpDX
             }
         }
 
+        /// <summary>
+        /// Checks if this <see cref="Viewport"/> is valid d3d viewport.
+        /// </summary>
+        /// <param name="errorString">The returned error string, or null if no error occurs.</param>
+        /// <returns><c>true</c> if this <see cref="Viewport"/> is valid; otherwise, <c>false</c>.</returns>
+        bool Validate(ref string errorString)
+        {
+        	errorString = null;
+
+	    	if(Width < 0)
+	    	{
+    		    errorString = "Width is lower than 0";
+    		    return false;
+		    }
+    		if(Height < 0)
+    		{
+    		    errorString = "Height is lower than 0.";
+    	            return false;
+    		}
+    
+    		if(X < -32767)
+    		{
+    		    errorString = "X is lower than -32768.";
+    	            return false;
+    		}
+    
+    		if(Y < -32767)
+    		{
+    		    errorString = "Y is lower than -32768.";
+    	            return false;
+    		}
+    
+    		if(X + Width > 32767)
+    		{
+    		    errorString = "X + Width is higher than 32767.";
+    	            return false;
+    		}
+    
+    		if(Y + Height > 32767)
+    		{
+    	            errorString = "Y + Height is higher than 32767.";
+    	            return false;
+    		}
+    
+    		if(MinDepth < 0.0f)
+    		{
+    		    errorString = "MinDepth is lower than 0.";
+    	       	    return false;
+    		}
+    
+    		if(MinDepth > 1.0f)
+    		{
+    		    errorString = "MinDepth is higher than 1.";
+    	            return false;
+    		}
+    
+    		if(MaxDepth < 0.0f)
+    		{
+    		    errorString = "MaxDepth is lower than 0.";
+    	       	    return false;
+    		}
+    
+    		if(MaxDepth > 1.0f)
+    		{
+    		    errorString = "MaxDepth is higher than 1.";
+    		    return false;
+    		}
+	    	return true;
+        }
+
+        /// <summary>
+        /// Checks if this <see cref="Viewport"/> is valid d3d viewport. Throw <see cref="System.Exception"/> if its not.
+        /// </summary>
+        void Validate()
+    	{  
+    		if(Width < 0)
+    		{
+    		    throw new Exception("Width is lower than 0"); 
+    		}
+    		if(Height < 0)
+    		{
+    		    throw new Exception("Height is lower than 0.");
+    		}
+    
+    		if(X < -32767)
+    		{
+    		    throw new Exception("X is lower than -32768.");
+    		}
+    
+    		if(Y < -32767)
+    		{
+    		    throw new Exception("Y is lower than -32768.");
+    		}
+    
+    		if(X + Width > 32767)
+    		{
+    		    throw new Exception("X + Width is higher than 32767.");
+    		}
+    
+    		if(Y + Height > 32767)
+    		{
+    		    throw new Exception("Y + Height is higher than 32767.");
+    		}
+    
+    		if(MinDepth < 0.0f)
+    		{
+    		    throw new Exception("MinDepth is lower than 0.");
+    		}
+    
+    		if(MinDepth > 1.0f)
+    		{
+    		    throw new Exception("MinDepth is higher than 1.");
+    		}
+    
+    		if(MaxDepth < 0.0f)
+    		{
+    		    throw new Exception("MaxDepth is lower than 0.");
+    		}
+    
+    		if(MaxDepth > 1.0f)
+    		{
+    		    throw new Exception("MaxDepth is higher than 1.");
+    		}
+    	}
+
+        /// <summary>
+        /// Determines whether the specified <see cref="SharpDX.Viewport"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="SharpDX.Viewport"/> to compare with this instance.</param>
+        /// <returns>
+        /// <c>true</c> if the specified <see cref="SharpDX.Viewport"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
         public bool Equals(Viewport other)
         {
             return X == other.X && Y == other.Y && Width == other.Width && Height == other.Height && MathUtil.WithinEpsilon(MinDepth, other.MinDepth) && MathUtil.WithinEpsilon(MaxDepth, other.MaxDepth);
         }
 
+        /// <summary>
+        /// Determines whether the specified object is equal to this instance.
+        /// </summary>
+        /// <param name="obj">The object to compare with this instance.</param>
+        /// <returns>
+        /// <c>true</c> if the specified object is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -146,6 +285,12 @@ namespace SharpDX
             return obj is Viewport && Equals((Viewport)obj);
         }
 
+        /// <summary>
+        /// Returns a hash code for this instance.
+        /// </summary>
+        /// <returns>
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+        /// </returns>
         public override int GetHashCode()
         {
             unchecked
@@ -159,12 +304,24 @@ namespace SharpDX
                 return hashCode;
             }
         }
-
+        
+        /// <summary>
+        /// Implements the operator ==.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>The result of the operator.</returns>
         public static bool operator ==(Viewport left, Viewport right)
         {
             return left.Equals(right);
         }
 
+        /// <summary>
+        /// Implements the operator !=.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>The result of the operator.</returns>
         public static bool operator !=(Viewport left, Viewport right)
         {
             return !left.Equals(right);
@@ -231,7 +388,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Gets the aspect ratio used by the viewport
+        /// Gets the aspect ratio used by the viewport.
         /// </summary>
         /// <value>The aspect ratio.</value>
         public float AspectRatio
