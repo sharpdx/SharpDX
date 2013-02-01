@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2011 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,23 +17,40 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if DIRECTX11_1
-using System.Runtime.InteropServices;
 
-namespace SharpDX.MediaFoundation
+using System;
+
+namespace SharpDX.Toolkit.Input
 {
-    public partial class MediaEngineClassFactory
+    /// <summary>
+    /// These flags represent the corresponding modifier keys that were pressed at some specific event.
+    /// </summary>
+    [Flags]
+    public enum KeyModifiers
     {
-        public MediaEngineClassFactory()
-        {
-            Utilities.CreateComInstance(ClsidMFMediaEngineClassFactory, Utilities.CLSCTX.ClsctxInproc, Utilities.GetGuidFromType(typeof(MediaEngineClassFactory)), this);
-        }
+        /// <summary>
+        /// No modifier key are pressed.
+        /// </summary>
+        None = 0x00,
 
-        // Declare FilgraphManager as a COM coclass:
-        [ComImport, Guid("4D645ACE-26AA-4688-9BE1-DF3516990B93")]
-        private class MediaEngineClassFactoryImpl
-        {
-        }
+        /// <summary>
+        /// The CTRL modifier key.
+        /// </summary>
+        Control = 0x01,
+
+        /// <summary>
+        /// The SHIFT modifier key.
+        /// </summary>
+        Shift = 0x02,
+
+        /// <summary>
+        /// The ALT modifier key.
+        /// </summary>
+        Menu = 0x04,
+
+        /// <summary>
+        /// The WIN modifier key.
+        /// </summary>
+        Windows = 0x08
     }
 }
-#endif
