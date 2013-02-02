@@ -81,6 +81,7 @@ namespace SharpDX.Toolkit.Input
         /// <summary>
         /// Creates a platform-independent instance of <see cref="PointerPoint"/> class from WinRT-specific objects.
         /// </summary>
+        /// <param name="type">The pointer event type.</param>
         /// <param name="modifiers">The pressed modifier keys.</param>
         /// <param name="point">The WinRT-specific instance of pointer point.</param>
         /// <returns>An instance of <see cref="PointerPoint"/> class.</returns>
