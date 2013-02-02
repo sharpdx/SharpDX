@@ -63,7 +63,7 @@ namespace SharpDX
         public float MaxDepth;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Viewport" /> struct.
+        /// Initializes a new instance of the <see cref="Viewport"/> struct.
         /// </summary>
         /// <param name="x">The x coordinate of the upper-left corner of the viewport in pixels.</param>
         /// <param name="y">The y coordinate of the upper-left corner of the viewport in pixels.</param>
@@ -80,7 +80,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ViewportF" /> struct.
+        /// Initializes a new instance of the <see cref="Viewport"/> struct.
         /// </summary>
         /// <param name="x">The x coordinate of the upper-left corner of the viewport in pixels.</param>
         /// <param name="y">The y coordinate of the upper-left corner of the viewport in pixels.</param>
@@ -99,7 +99,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Viewport" /> struct.
+        /// Initializes a new instance of the <see cref="Viewport"/> struct.
         /// </summary>
         /// <param name="bounds">A bounding box that defines the location and size of the viewport in a render target.</param>
         public Viewport(DrawingRectangle bounds)
@@ -132,11 +132,25 @@ namespace SharpDX
             }
         }
 
+        /// <summary>
+        /// Determines whether the specified <see cref="SharpDX.Viewport"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="SharpDX.Viewport"/> to compare with this instance.</param>
+        /// <returns>
+        /// <c>true</c> if the specified <see cref="SharpDX.Viewport"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
         public bool Equals(Viewport other)
         {
             return X == other.X && Y == other.Y && Width == other.Width && Height == other.Height && MathUtil.WithinEpsilon(MinDepth, other.MinDepth) && MathUtil.WithinEpsilon(MaxDepth, other.MaxDepth);
         }
 
+        /// <summary>
+        /// Determines whether the specified object is equal to this instance.
+        /// </summary>
+        /// <param name="obj">The object to compare with this instance.</param>
+        /// <returns>
+        /// <c>true</c> if the specified object is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -146,6 +160,12 @@ namespace SharpDX
             return obj is Viewport && Equals((Viewport)obj);
         }
 
+        /// <summary>
+        /// Returns a hash code for this instance.
+        /// </summary>
+        /// <returns>
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+        /// </returns>
         public override int GetHashCode()
         {
             unchecked
@@ -159,12 +179,24 @@ namespace SharpDX
                 return hashCode;
             }
         }
-
+        
+        /// <summary>
+        /// Implements the operator ==.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>The result of the operator.</returns>
         public static bool operator ==(Viewport left, Viewport right)
         {
             return left.Equals(right);
         }
 
+        /// <summary>
+        /// Implements the operator !=.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>The result of the operator.</returns>
         public static bool operator !=(Viewport left, Viewport right)
         {
             return !left.Equals(right);
@@ -231,7 +263,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Gets the aspect ratio used by the viewport
+        /// Gets the aspect ratio used by the viewport.
         /// </summary>
         /// <value>The aspect ratio.</value>
         public float AspectRatio
