@@ -26,7 +26,6 @@
     <Compile Include="GameContext.WindowsPhoneBackgroundXaml.cs" />
     <Compile Include="GameContext.WinRTBackgroundXaml.cs" />
     <Compile Include="GameContext.WinRT.cs" />
-    <Compile Include="GameContext.DesktopWpf.cs" />
     <Compile Include="EffectCompilerSystem.Default.cs" />
     <Compile Include="EffectCompilerEventArgs.cs" />
     <Compile Include="EffectCompilerSystem.Desktop.cs" />
