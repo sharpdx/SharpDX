@@ -933,6 +933,9 @@ namespace SharpDX.Toolkit.Graphics
             if ((bufferFlags & BufferFlags.UnorderedAccess) != 0)
                 desc.BindFlags |= BindFlags.UnorderedAccess;
 
+            if ((bufferFlags & BufferFlags.StreamOutput) != 0)
+                desc.BindFlags |= BindFlags.StreamOutput;
+
             if ((bufferFlags & BufferFlags.StructuredBuffer) != 0)
             {
                 desc.OptionFlags |= ResourceOptionFlags.BufferStructured;

@@ -151,11 +151,19 @@ namespace SharpDX.Toolkit.Graphics
         /// Creates an indirect arguments buffer.
         /// </summary>
         /// <remarks>
-        /// This is equivalent to <see cref="ResourceOptionFlags.DrawindirectArgs"/>.
+        /// This is equivalent to <see cref="ResourceOptionFlags.DrawIndirectArguments"/>.
         /// </remarks>
         /// <msdn-id>ff476203</msdn-id>	
         /// <unmanaged>D3D11_RESOURCE_MISC_DRAWINDIRECT_ARGS</unmanaged>	
         /// <unmanaged-short>D3D11_RESOURCE_MISC_DRAWINDIRECT_ARGS</unmanaged-short>	
-        ArgumentBuffer = 1024
+        ArgumentBuffer = 1024,
+
+        /// <summary>	
+        /// Creates an output buffer for the stream-output stage.
+        /// </summary>	
+        /// <msdn-id>ff476085</msdn-id>	
+        /// <unmanaged>D3D11_BIND_STREAM_OUTPUT</unmanaged>	
+        /// <unmanaged-short>D3D11_BIND_STREAM_OUTPUT</unmanaged-short>	
+        StreamOutput = 2048,	
     }
 }
