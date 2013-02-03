@@ -27,7 +27,7 @@ using SharpDX.Toolkit.Graphics;
 
 namespace SharpDX.Toolkit
 {
-    internal abstract class GamePlatform : IGraphicsDeviceFactory, IGamePlatform
+    internal abstract class GamePlatform : DisposeBase, IGraphicsDeviceFactory, IGamePlatform
     {
         protected readonly Game game;
 
@@ -124,13 +124,6 @@ namespace SharpDX.Toolkit
         public virtual void Exit()
         {
             gameWindow.Exiting = true;
-
-            if (gameWindow != null)
-            {
-                gameWindow.Dispose();
-                gameWindow = null;
-            }
-
             Activated = null;
             Deactivated = null;
             Exiting = null;
@@ -262,6 +255,18 @@ namespace SharpDX.Toolkit
             gameWindow.Resize(deviceInformation.PresentationParameters.BackBufferWidth, deviceInformation.PresentationParameters.BackBufferHeight);
 
             return device;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (gameWindow != null)
+                {
+                    gameWindow.Dispose();
+                    gameWindow = null;
+                }
+            }
         }
     }
 }

@@ -546,6 +546,11 @@ namespace SharpDX.Toolkit
                     }
 
                     DisposeGraphicsDeviceEvents();
+
+                    if (gamePlatform != null)
+                    {
+                        gamePlatform.Dispose();
+                    }
                 }
             }
 
