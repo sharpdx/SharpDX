@@ -60,9 +60,11 @@
     <Exec Command='"$(SolutionDir)\Source\Bin\SharpCLI.exe" "$(TargetPath)"'/>
     <!-- <InteropBuilderTask FileName="$(TargetPath)"/> -->
 
-    <Message Text="Signing Assembly $(TargetPath)"/>
+    <GetFrameworkSdkPath>
+      <Output TaskParameter="Path" PropertyName="FrameworkSdkPath" />
+    </GetFrameworkSdkPath>
 
-    <Exec Command='"C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\x64\sn.exe" -Ra $(TargetPath) $(SolutionDir)sharpdx.snk' Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' And '$(SharpDXSign)' == 'true'"/>
+    <Exec Command='"$(FrameworkSdkPath)\bin\NETFX 4.0 Tools\x64\sn.exe" -Ra $(TargetPath) $(SolutionDir)sharpdx.snk' Condition="'$(SharpDXSign)' == 'true'"/>
 
     <!-- Copy back *.dll from bin/Debug|Release to obj/Debug/Release directory -->
     <Copy SourceFiles="@(MainAssembly)" DestinationFolder="$(IntermediateOutputPath)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)"/>
