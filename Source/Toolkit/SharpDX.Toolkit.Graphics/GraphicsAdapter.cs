@@ -232,7 +232,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Disposes of all objects
         /// </summary>
-        internal static void DisposeStatic()
+        public static void DisposeStatic()
         {
             ((IDisposable)staticCollector).Dispose();
         }
