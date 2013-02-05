@@ -59,10 +59,10 @@ namespace SharpDX.Toolkit.Graphics
         public List<AttributeData> Attributes;
 
         /// <summary>
-        /// Loads an <see cref="EffectData"/> from the specified stream.
+        /// Loads a <see cref="ModelData"/> from the specified stream.
         /// </summary>
         /// <param name="stream">The stream.</param>
-        /// <returns>An <see cref="EffectData"/>. Null if the stream is not a serialized <see cref="EffectData"/>.</returns>
+        /// <returns>A <see cref="ModelData"/>. Null if the stream is not a serialized <see cref="ModelData"/>.</returns>
         /// <remarks>
         /// </remarks>
         public static ModelData Load(Stream stream)
@@ -84,20 +84,20 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Loads an <see cref="EffectData"/> from the specified buffer.
+        /// Loads a <see cref="ModelData"/> from the specified buffer.
         /// </summary>
         /// <param name="buffer">The buffer.</param>
-        /// <returns>An <see cref="EffectData"/> </returns>
+        /// <returns>A <see cref="ModelData"/> </returns>
         public static ModelData Load(byte[] buffer)
         {
             return Load(new MemoryStream(buffer));
         }
 
         /// <summary>
-        /// Loads an <see cref="EffectData"/> from the specified file.
+        /// Loads an <see cref="ModelData"/> from the specified file.
         /// </summary>
         /// <param name="fileName">The filename.</param>
-        /// <returns>An <see cref="EffectData"/> </returns>
+        /// <returns>A <see cref="ModelData"/> </returns>
         public static ModelData Load(string fileName)
         {
             using (var stream = new NativeFileStream(fileName, NativeFileMode.Open, NativeFileAccess.Read))
@@ -105,7 +105,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Saves this <see cref="EffectData"/> instance to the specified stream.
+        /// Saves this <see cref="ModelData"/> instance to the specified stream.
         /// </summary>
         /// <param name="stream">The stream.</param>
         public void Save(Stream stream)
@@ -115,7 +115,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Saves this <see cref="EffectData"/> instance to the specified file.
+        /// Saves this <see cref="ModelData"/> instance to the specified file.
         /// </summary>
         /// <param name="fileName">The output filename.</param>
         public void Save(string fileName)
