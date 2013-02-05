@@ -61,7 +61,6 @@ namespace SharpDX.Toolkit
         private int nextLastUpdateCountIndex;
         private bool drawRunningSlowly;
         private bool forceElapsedTimeToZero;
-        private bool isInitialzing;
         private bool contentLoaded = false;
 
         private readonly TimerTick timer;
@@ -315,6 +314,9 @@ namespace SharpDX.Toolkit
 
             // Initialize this instance and all game systems
             Initialize();
+
+            // Load the content of the game
+            LoadContent();
 
             IsRunning = true;
 
@@ -616,11 +618,6 @@ namespace SharpDX.Toolkit
                 pendingGameSystems[0].Initialize();
                 pendingGameSystems.RemoveAt(0);
             }
-
-            // Load the content of the game
-            isInitialzing = true;
-            LoadContent();
-            isInitialzing = false;
         }
 
         /// <summary>
@@ -628,14 +625,6 @@ namespace SharpDX.Toolkit
         /// </summary>
         protected virtual void LoadContent()
         {
-            // When initializing, we don't need to call explicitly the LoadContent for each GameSystem
-            // as they were already called by the GameSystem.Initialize method
-            // Otherwise, in case of a GraphicsDevice reset, we need to call GameSystem.LoadContent
-            if (isInitialzing)
-            {
-                return;
-            }
-
             lock (contentableGameSystems)
             {
                 foreach (var contentable in contentableGameSystems)
@@ -873,6 +862,12 @@ namespace SharpDX.Toolkit
                     {
                         contentableGameSystems.Add(contentableSystem);
                     }
+                }
+
+                if (IsRunning)
+                {
+                    // Load the content of the system if the game is already running
+                    contentableSystem.LoadContent();
                 }
             }
 

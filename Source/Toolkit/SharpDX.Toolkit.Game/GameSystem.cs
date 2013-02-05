@@ -166,8 +166,6 @@ namespace SharpDX.Toolkit
 
             // Gets the graphics device service
             graphicsDeviceService = (IGraphicsDeviceService)registry.GetService(typeof(IGraphicsDeviceService));
-
-            ((IContentable)this).LoadContent();
         }
 
         #endregion
