@@ -42,6 +42,7 @@ namespace SharpDX.Toolkit
                 throw new ArgumentNullException("control");
             }
 
+            Control = control;
             RequestedWidth = requestedWidth;
             RequestedHeight = requestedHeight;
             ContextType = GameContextType.DesktopWpf;

@@ -44,7 +44,7 @@ namespace SharpDX.Toolkit
         /// <param name="requestedHeight">Height of the requested.</param>
         public GameContext(Control control, int requestedWidth = 0, int requestedHeight = 0)
         {
-            Control = control ?? new RenderForm("SharpDX Game");
+            Control = control ?? new RenderForm("SharpDX Game") { AllowUserResizing =  false };
             RequestedWidth = requestedWidth;
             RequestedHeight = requestedHeight;
             ContextType = GameContextType.Desktop;
