@@ -298,11 +298,15 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Gets the status of this device.
         /// </summary>
+        /// <msdn-id>ff476526</msdn-id>	
+        /// <unmanaged>GetDeviceRemovedReason</unmanaged>	
+        /// <unmanaged-short>GetDeviceRemovedReason</unmanaged-short>	
+        /// <unmanaged>HRESULT ID3D11Device::GetDeviceRemovedReason()</unmanaged>
         public GraphicsDeviceStatus GraphicsDeviceStatus
         {
             get
             {
-                var result = ((Device)MainDevice).GetDeviceRemovedReason();
+                var result = ((Device)MainDevice).DeviceRemovedReason;
                 if (result == DXGI.ResultCode.DeviceRemoved)
                 {
                     return GraphicsDeviceStatus.Removed;
