@@ -86,10 +86,24 @@ namespace SharpDX.Toolkit.Graphics
         public int Height { get { return height; } }
 
         /// <summary>
-        /// Gets the format.
+        /// Gets the format (this value can be changed)
         /// </summary>
         /// <value>The format.</value>
-        public Format Format { get { return format; } }
+        public Format Format
+        {
+            get
+            {
+                return format;
+            }
+            set
+            {
+                if (PixelSize != (int)FormatHelper.SizeOfInBytes(value))
+                {
+                    throw new ArgumentException(string.Format("Format [{0}] doesn't have same pixel size in bytes than current format [{1}]", value, format));
+                }
+                format = value;
+            }
+        }
 
         /// <summary>
         /// Gets the pixel size in bytes.
@@ -128,7 +142,7 @@ namespace SharpDX.Toolkit.Graphics
             // Check that buffers are identical
             if (this.Width != pixelBuffer.Width
                 || this.Height != pixelBuffer.Height
-                || this.Format != pixelBuffer.Format)
+                || PixelSize != (int)FormatHelper.SizeOfInBytes(pixelBuffer.Format))
             {
                 throw new ArgumentException("Invalid destination pixelBufferArray. Mush have same Width, Height and Format", "pixelBuffer");
             }
