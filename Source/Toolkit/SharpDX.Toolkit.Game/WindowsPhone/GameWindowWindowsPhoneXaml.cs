@@ -1,14 +1,35 @@
-﻿namespace SharpDX.Toolkit
-{
-    using System;
-    using System.Diagnostics;
-    using System.Runtime.InteropServices;
-    using System.Windows;
-    using System.Windows.Controls;
-    using Direct3D11;
-    using Graphics;
-    using Texture2D = Direct3D11.Texture2D;
+﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+#if WP8
 
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Windows;
+using System.Windows.Controls;
+using SharpDX.Direct3D11;
+using SharpDX.Toolkit.Graphics;
+using Texture2D = SharpDX.Direct3D11.Texture2D;
+
+namespace SharpDX.Toolkit
+{
     internal class GameWindowWindowsPhoneXaml : GameWindow, IDrawingSurfaceContentProviderNative,
                                                 IInspectable, ICustomQueryInterface
     {
@@ -81,10 +102,7 @@
 
         private Exception drawException;
         private RenderTargetGraphicsPresenter graphicsPresenter;
-        private int nextRenderTarget;
-
         private Graphics.Texture2D renderTarget;
-        private RenderTargetView renderTargetView;
         private DrawingSurfaceSynchronizedTexture synchronizedTexture;
 
         void IDrawingSurfaceContentProviderNative.Connect(DrawingSurfaceRuntimeHost host)
@@ -96,13 +114,15 @@
         {
             Utilities.Dispose(ref GraphicsDevice);
             Utilities.Dispose(ref BackBuffer);
+            Utilities.Dispose(ref graphicsPresenter);
+            Utilities.Dispose(ref renderTarget);
+            Utilities.Dispose(ref synchronizedTexture);
         }
 
         void IDrawingSurfaceContentProviderNative.PrepareResources(DateTime presentTargetTime, out Bool isContentDirty)
         {
             isContentDirty = true;
         }
-
 
         void IDrawingSurfaceContentProviderNative.GetTexture(DrawingSizeF surfaceSize, out DrawingSurfaceSynchronizedTexture synchronizedTexture, out RectangleF textureSubRectangle)
         {
@@ -114,7 +134,7 @@
                     {
                         GraphicsDevice = GraphicsDevice.New();
 
-                        var renderTargetDesc = new Texture2DDescription()
+                        var renderTargetDesc = new Texture2DDescription
                                                {
                                                    Format = DXGI.Format.B8G8R8A8_UNorm,
                                                    Width = (int)surfaceSize.Width,
@@ -135,20 +155,14 @@
                         GraphicsDevice.Presenter = graphicsPresenter;
                         InitCallback();
                     }
-                  
-                    if (this.synchronizedTexture == null)
-                    {
-                        this.synchronizedTexture = host.CreateSynchronizedTexture((Texture2D)renderTarget);
-                    }
 
-                    //something is going wrong here as the second time thru the BeginDraw consumes 
-                    //the call and controlnever returns back to this method, thus GetTexture 
-                    //(the call after begindraw) never fires again... ??????
+                    if(this.synchronizedTexture == null)
+                        this.synchronizedTexture = host.CreateSynchronizedTexture((Texture2D)renderTarget);
+
                     this.synchronizedTexture.BeginDraw();
 
                     RunCallback();
 
-                    // Aks the host for additional frame
                     host.RequestAdditionalFrame();
 
                     this.synchronizedTexture.EndDraw();
@@ -160,24 +174,11 @@
                 // so how to pass back this exception to the user at an appropriate time?
                 drawException = ex;
                 Debug.WriteLine(drawException);
-                
             }
 
             // Set output parameters.
             textureSubRectangle = new RectangleF(0f, 0f, surfaceSize.Width, surfaceSize.Height);
             synchronizedTexture = this.synchronizedTexture;
-        }
-
-        private struct RenderTargetLocal
-        {
-            public IntPtr NativePointer;
-            public RenderTarget2D RenderTarget;
-
-            public void Dispose()
-            {
-                Utilities.Dispose(ref RenderTarget);
-                NativePointer = IntPtr.Zero;
-            }
         }
 
         #endregion
@@ -252,3 +253,5 @@
         }
     }
 }
+
+#endif
