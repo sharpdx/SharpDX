@@ -37,6 +37,7 @@
     <Compile Include="IGamePlatform.cs" />
     <Compile Include="IContentable.cs" />
     <Compile Include="GameGraphicsParameters.cs" />
+    <Compile Include="WindowsPhone\GameWindowWindowsPhoneXaml.cs" />
     <Compile Include="WinRT\GameWindowWinRTBackgroundXaml.cs" />
     <Compile Include="WinRT\GameWindowWinRT.cs" />
     <Compile Include="WindowsPhone\GameWindowWindowsPhoneBackgroundXaml.cs" />

@@ -26,7 +26,7 @@ namespace SharpDX.Toolkit
     /// <summary>
     /// A <see cref="GameContext"/> to use for rendering to an existing WinForm <see cref="Control"/>.
     /// </summary>
-    public partial class GameContext 
+    public partial class GameContext
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="GameContext"/> class.
@@ -57,16 +57,45 @@ namespace SharpDX.Toolkit
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="GameContext" /> class.
+        /// </summary>
+        /// <param name="control">The control.</param>
+        /// <param name="requestedWidth">Width of the requested.</param>
+        /// <param name="requestedHeight">Height of the requested.</param>
+        public GameContext(DrawingSurface control, int requestedWidth = 0, int requestedHeight = 0)
+        {
+            if (control == null)
+            {
+                throw new ArgumentNullException("control");
+            }
+
+            Control = control;
+            RequestedWidth = requestedWidth;
+            RequestedHeight = requestedHeight;
+            ContextType = GameContextType.WindowsPhoneXaml;
+        }
+
+        /// <summary>
         /// The control used as a GameWindow context (either an instance of <see cref="DrawingSurfaceBackgroundGrid"/> or <see cref="DrawingSurface"/>.
         /// </summary>
         public readonly object Control;
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Control"/> to <see cref="GameContext"/>.
+        /// Performs an implicit conversion from <see cref="DrawingSurfaceBackgroundGrid"/> to <see cref="GameContext"/>.
         /// </summary>
         /// <param name="control">The control.</param>
         /// <returns>The result of the conversion.</returns>
         public static implicit operator GameContext(DrawingSurfaceBackgroundGrid control)
+        {
+            return new GameContext(control);
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="DrawingSurface"/> to <see cref="GameContext"/>.
+        /// </summary>
+        /// <param name="control">The control.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static implicit operator GameContext(DrawingSurface control)
         {
             return new GameContext(control);
         }
