@@ -24,15 +24,11 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
-using Microsoft.Phone.Shell;
 using SharpDX.Direct3D11;
 using SharpDX.Toolkit.Graphics;
 
 namespace SharpDX.Toolkit
 {
-    /// <summary>
-    ///     An abstract window.
-    /// </summary>
     internal class GameWindowWindowsPhoneBackgroundXaml : GameWindow, IDrawingSurfaceBackgroundContentProviderNative,
                                                           IInspectable, ICustomQueryInterface
     {
