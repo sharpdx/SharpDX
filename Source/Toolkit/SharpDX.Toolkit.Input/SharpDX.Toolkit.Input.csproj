@@ -43,6 +43,7 @@
     <Compile Include="PointerPlatformDesktop.cs" />
     <Compile Include="PointerPlatformDesktopTouch.cs" />
     <Compile Include="PointerPlatformWinRT.cs" />
+    <Compile Include="PointerPlatformWP8.cs" />
     <Compile Include="PointerPoint.cs" />
     <Compile Include="PointerState.cs" />
     <Compile Include="PointerUpdateKind.cs" />

@@ -25,7 +25,7 @@ namespace SharpDX.Toolkit.Input
     /// <summary>
     /// Base class for platform-specific event bindings
     /// </summary>
-    internal abstract class PointerPlatform
+    internal abstract class PointerPlatform : Component
     {
         protected readonly PointerManager manager;
 
@@ -59,6 +59,8 @@ namespace SharpDX.Toolkit.Input
             return new PointerPlatformDesktop(nativeWindow, manager);
 #elif WIN8METRO
             return new PointerPlatformWinRT(nativeWindow, manager);
+#elif WP8
+            return new PointerPlatformWP8(nativeWindow, manager);
 #else
             throw new NotSupportedException("This functionality is not supported on current platform."); // no other platforms are supported at this time
 #endif
