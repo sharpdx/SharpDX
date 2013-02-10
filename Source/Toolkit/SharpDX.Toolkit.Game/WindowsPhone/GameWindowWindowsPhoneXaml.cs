@@ -26,27 +26,28 @@ using System.Windows;
 using System.Windows.Controls;
 using SharpDX.Direct3D11;
 using SharpDX.Toolkit.Graphics;
+using Texture2D = SharpDX.Direct3D11.Texture2D;
 
 namespace SharpDX.Toolkit
 {
-    internal class GameWindowWindowsPhoneBackgroundXaml : GameWindow, IDrawingSurfaceBackgroundContentProviderNative,
-                                                          IInspectable, ICustomQueryInterface
+    internal class GameWindowWindowsPhoneXaml : GameWindow, IDrawingSurfaceContentProviderNative,
+                                                IInspectable, ICustomQueryInterface
     {
         internal RenderTarget2D BackBuffer;
-        internal  GraphicsDevice GraphicsDevice;
+        internal GraphicsDevice GraphicsDevice;
         private readonly IntPtr thisComObjectPtr;
 
-        private DrawingSurfaceBackgroundGrid drawingSurfaceBackgroundGrid;
+        private DrawingSurface drawingSurface;
         private DrawingSurfaceRuntimeHost host;
 
-        internal GameWindowWindowsPhoneBackgroundXaml()
+        internal GameWindowWindowsPhoneXaml()
         {
-            thisComObjectPtr = CppObjectShadow.ToIntPtr<IDrawingSurfaceBackgroundContentProviderNative>(this);
+            thisComObjectPtr = CppObjectShadow.ToIntPtr<IDrawingSurfaceContentProviderNative>(this);
         }
 
         public override object NativeWindow
         {
-            get { return drawingSurfaceBackgroundGrid; }
+            get { return drawingSurface; }
         }
 
         public override bool IsMouseVisible { get; set; }
@@ -97,94 +98,74 @@ namespace SharpDX.Toolkit
 
         #endregion
 
-        #region Implementation of IDrawingSurfaceBackgroundContentProviderNative
+        #region Implementation of IDrawingSurfaceContentProviderNative
 
-        private readonly RenderTargetLocal[] renderTargets = new RenderTargetLocal[3];
         private Exception drawException;
         private RenderTargetGraphicsPresenter graphicsPresenter;
-        private int nextRenderTarget;
+        private Graphics.Texture2D renderTarget;
+        private DrawingSurfaceSynchronizedTexture synchronizedTexture;
 
-        void IDrawingSurfaceBackgroundContentProviderNative.Connect(DrawingSurfaceRuntimeHost host, Device device)
+        void IDrawingSurfaceContentProviderNative.Connect(DrawingSurfaceRuntimeHost host)
         {
             this.host = host;
         }
 
-        void IDrawingSurfaceBackgroundContentProviderNative.Disconnect()
+        void IDrawingSurfaceContentProviderNative.Disconnect()
         {
             Utilities.Dispose(ref GraphicsDevice);
             Utilities.Dispose(ref BackBuffer);
+            Utilities.Dispose(ref graphicsPresenter);
+            Utilities.Dispose(ref renderTarget);
+            Utilities.Dispose(ref synchronizedTexture);
         }
 
-        void IDrawingSurfaceBackgroundContentProviderNative.PrepareResources(DateTime presentTargetTime,
-                                                                             ref DrawingSizeF desiredRenderTargetSize)
+        void IDrawingSurfaceContentProviderNative.PrepareResources(DateTime presentTargetTime, out Bool isContentDirty)
         {
+            isContentDirty = true;
         }
 
-
-        void IDrawingSurfaceBackgroundContentProviderNative.Draw(Device device, DeviceContext context,
-                                                                 RenderTargetView renderTargetView)
+        void IDrawingSurfaceContentProviderNative.GetTexture(DrawingSizeF surfaceSize, out DrawingSurfaceSynchronizedTexture synchronizedTexture, out RectangleF textureSubRectangle)
         {
             try
             {
-                RenderTarget2D localBackBuffer = null;
                 if (!Exiting)
                 {
                     if (GraphicsDevice == null)
                     {
-                        GraphicsDevice = GraphicsDevice.New(device);
+                        GraphicsDevice = GraphicsDevice.New();
 
-                        renderTargets[0].NativePointer = renderTargetView.NativePointer;
-                        renderTargets[0].RenderTarget = RenderTarget2D.New(GraphicsDevice, renderTargetView, true);
-                        BackBuffer = renderTargets[0].RenderTarget;
-                        nextRenderTarget++;
+                        var renderTargetDesc = new Texture2DDescription
+                                               {
+                                                   Format = DXGI.Format.B8G8R8A8_UNorm,
+                                                   Width = (int)surfaceSize.Width,
+                                                   Height = (int)surfaceSize.Height,
+                                                   ArraySize = 1,
+                                                   MipLevels = 1,
+                                                   BindFlags = BindFlags.RenderTarget | BindFlags.ShaderResource,
+                                                   Usage = ResourceUsage.Default,
+                                                   CpuAccessFlags = CpuAccessFlags.None,
+                                                   OptionFlags = ResourceOptionFlags.SharedKeyedmutex | ResourceOptionFlags.SharedNthandle,
+                                                   SampleDescription = new DXGI.SampleDescription(1, 0)
+                                               };
+
+                        renderTarget = ToDispose(Graphics.Texture2D.New(GraphicsDevice, renderTargetDesc));
+                        BackBuffer = ToDispose(RenderTarget2D.New(GraphicsDevice, new RenderTargetView(GraphicsDevice, renderTarget)));
 
                         graphicsPresenter = new RenderTargetGraphicsPresenter(GraphicsDevice, BackBuffer);
                         GraphicsDevice.Presenter = graphicsPresenter;
                         InitCallback();
                     }
-                    else
-                    {
-                        if (((Device) GraphicsDevice).NativePointer != device.NativePointer ||
-                            ((DeviceContext) GraphicsDevice).NativePointer != context.NativePointer)
-                        {
-                            Debugger.Break();
-                        }
 
-                        // Find any previous render target that was already alocated.
-                        bool foundRenderTarget = false;
-                        foreach (RenderTargetLocal renderTargetLocal in renderTargets)
-                        {
-                            if (renderTargetLocal.NativePointer == renderTargetView.NativePointer)
-                            {
-                                BackBuffer = renderTargetLocal.RenderTarget;
-                                graphicsPresenter.SetBackBuffer(BackBuffer);
-                                foundRenderTarget = true;
-                                break;
-                            }
-                        }
+                    if(this.synchronizedTexture == null)
+                        this.synchronizedTexture = host.CreateSynchronizedTexture((Texture2D)renderTarget);
 
-                        if (!foundRenderTarget)
-                        {
-                            // Dispose any previous render target.
-                            renderTargets[nextRenderTarget].Dispose();
-
-                            // Creates the new BackBuffer and associated it to the GraphicsPresenter
-                            BackBuffer = RenderTarget2D.New(GraphicsDevice, renderTargetView, true);
-                            graphicsPresenter.SetBackBuffer(BackBuffer);
-
-                            renderTargets[nextRenderTarget].NativePointer = renderTargetView.NativePointer;
-                            renderTargets[nextRenderTarget].RenderTarget = BackBuffer;
-                            nextRenderTarget++;
-                        }
-
-                        // TODO: Check that new device/devicecontext/renderTargetView are the same
-                        // else we need to handle DeviceReset/Remove...etc.
-                    }
+                    this.synchronizedTexture.BeginDraw();
 
                     RunCallback();
 
-                    // Aks the host for additional frame
                     host.RequestAdditionalFrame();
+
+                    this.synchronizedTexture.EndDraw();
                 }
             }
             catch (Exception ex)
@@ -194,18 +175,10 @@ namespace SharpDX.Toolkit
                 drawException = ex;
                 Debug.WriteLine(drawException);
             }
-        }
 
-        private struct RenderTargetLocal
-        {
-            public IntPtr NativePointer;
-            public RenderTarget2D RenderTarget;
-
-            public void Dispose()
-            {
-                Utilities.Dispose(ref RenderTarget);
-                NativePointer = IntPtr.Zero;
-            }
+            // Set output parameters.
+            textureSubRectangle = new RectangleF(0f, 0f, surfaceSize.Width, surfaceSize.Height);
+            synchronizedTexture = this.synchronizedTexture;
         }
 
         #endregion
@@ -230,20 +203,20 @@ namespace SharpDX.Toolkit
 
         internal override bool CanHandle(GameContext gameContext)
         {
-            return gameContext.ContextType == GameContextType.WindowsPhoneBackgroundXaml;
+            return gameContext.ContextType == GameContextType.WindowsPhoneXaml;
         }
 
         internal override void Initialize(GameContext gameContext)
         {
-            drawingSurfaceBackgroundGrid = (DrawingSurfaceBackgroundGrid) gameContext.Control;
+            drawingSurface = (DrawingSurface)gameContext.Control;
         }
 
         internal override void Run()
         {
-            drawingSurfaceBackgroundGrid.Loaded += DrawingSurfaceBackgroundGridOnLoaded;
+            drawingSurface.Loaded += DrawingSurfaceOnLoaded;
 
             // Never called??
-            drawingSurfaceBackgroundGrid.Unloaded += drawingSurfaceBackgroundGrid_Unloaded;
+            drawingSurface.Unloaded += DrawingSurfaceUnloaded;
         }
 
         internal override void Resize(int width, int height)
@@ -260,23 +233,23 @@ namespace SharpDX.Toolkit
 
         protected override void Dispose(bool disposeManagedResources)
         {
-            drawingSurfaceBackgroundGrid.SetBackgroundContentProvider(null);
-            
+            drawingSurface.SetContentProvider(null);
+
             base.Dispose(disposeManagedResources);
         }
 
-        private void DrawingSurfaceBackgroundGridOnLoaded(object sender, RoutedEventArgs routedEventArgs)
+        private void DrawingSurfaceOnLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
             // Set the background to run this instance 
-            drawingSurfaceBackgroundGrid.SetBackgroundContentProvider(this);
+            drawingSurface.SetContentProvider(this);
         }
 
-        private void drawingSurfaceBackgroundGrid_Unloaded(object sender, RoutedEventArgs e)
+        private void DrawingSurfaceUnloaded(object sender, RoutedEventArgs e)
         {
             // Never called??
             Exiting = true;
             // Set the background to run this instance 
-            drawingSurfaceBackgroundGrid.SetBackgroundContentProvider(null);
+            drawingSurface.SetContentProvider(null);
         }
     }
 }

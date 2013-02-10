@@ -47,7 +47,7 @@ namespace SharpDX.Toolkit
 
         internal override GameWindow[] GetSupportedGameWindows()
         {
-            return new GameWindow[] {new GameWindowWindowsPhoneBackgroundXaml(),};
+            return new GameWindow[] {new GameWindowWindowsPhoneBackgroundXaml(), new GameWindowWindowsPhoneXaml(), };
         }
 
         public override List<GraphicsDeviceInformation> FindBestDevices(GameGraphicsParameters prefferedParameters)
@@ -68,6 +68,22 @@ namespace SharpDX.Toolkit
                 return new List<GraphicsDeviceInformation>() {deviceInfo};
             }
 
+            var gameWindowXaml = gameWindow as GameWindowWindowsPhoneXaml;
+            if (gameWindowXaml != null)
+            {
+
+                // Unlike Desktop and WinRT, the list of best devices are completely fixed in WP8 XAML
+                // So we return a single element
+                var deviceInfo = new GraphicsDeviceInformation
+                                 {
+                                     Adapter = gameWindowXaml.GraphicsDevice.Adapter,
+                                     GraphicsProfile = gameWindowXaml.GraphicsDevice.Features.Level,
+                                     PresentationParameters = gameWindowXaml.GraphicsDevice.Presenter.Description
+                                 };
+
+                return new List<GraphicsDeviceInformation>() { deviceInfo };
+            }
+
             return base.FindBestDevices(prefferedParameters);
         }
 
@@ -78,6 +94,13 @@ namespace SharpDX.Toolkit
             {
                 // We don't have anything else than the GraphicsDevice created for the XAML so return it directly.
                 return gameWindowBackgroundXaml.GraphicsDevice;
+            }
+
+            var gameWindowXaml = gameWindow as GameWindowWindowsPhoneXaml;
+            if (gameWindowXaml != null)
+            {
+                // We don't have anything else than the GraphicsDevice created for the XAML so return it directly.
+                return gameWindowXaml.GraphicsDevice;
             }
 
             return base.CreateDevice(deviceInformation);
