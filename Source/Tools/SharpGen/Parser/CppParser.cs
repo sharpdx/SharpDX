@@ -23,6 +23,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
+using System.Linq;
 
 using SharpCore;
 using SharpCore.Logging;
@@ -432,20 +433,47 @@ namespace SharpGen.Parser
                 _group = CppModule.Read(GroupFileName);
             }
 
+            IncludeMacroCounts = new Dictionary<string, int>();
+
             // Load all defines and store them in the config file to allow dynamic variable substitution
             foreach (var cppInclude in _group.Includes)
             {
+                int count = 0;
+                IncludeMacroCounts.TryGetValue(cppInclude.Name, out count);
+
                 foreach (var cppDefine in cppInclude.Macros)
                 {
                     _configRoot.DynamicVariables.Remove(cppDefine.Name);
                     _configRoot.DynamicVariables.Add(cppDefine.Name, cppDefine.Value);
-                }                
+                    count ++;
+                }
+
+                IncludeMacroCounts[cppInclude.Name] = count;
             }
 
             // Expand all variables with all dynamic variables
             _configRoot.ExpandVariables(true);
 
             return _group;
+        }
+
+        private Dictionary<string, int> IncludeMacroCounts { get; set; }
+
+        /// <summary>
+        /// Prints the statistics.
+        /// </summary>
+        public void PrintStatistics()
+        {
+
+            var keys = IncludeMacroCounts.Keys.ToList();
+            keys.Sort(StringComparer.InvariantCultureIgnoreCase);
+
+            Logger.Message("Macro Statistics");
+            foreach (var key in keys)
+            {
+                Logger.Message("\t{0}\t{1}", key, IncludeMacroCounts[key]);
+            }
+            Logger.Message("\n");
         }
 
         /// <summary>

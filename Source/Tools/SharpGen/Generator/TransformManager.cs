@@ -1388,28 +1388,30 @@ namespace SharpGen.Generator
         /// </summary>
         public void PrintStatistics()
         {
-            var stats = new Dictionary<string, int>();
-            stats["interfaces"] = 0;
-            stats["methods"] = 0;
-            stats["parameters"] = 0;
-            stats["enums"] = 0;
-            stats["structs"] = 0;
-            stats["fields"] = 0;
-            stats["enumitems"] = 0;
-            stats["functions"] = 0;
+            var globalStats = new Dictionary<string, int>();
+            globalStats["interfaces"] = 0;
+            globalStats["methods"] = 0;
+            globalStats["parameters"] = 0;
+            globalStats["enums"] = 0;
+            globalStats["structs"] = 0;
+            globalStats["fields"] = 0;
+            globalStats["enumitems"] = 0;
+            globalStats["functions"] = 0;
+
+            Assemblies.Sort((left, right) => String.Compare(left.QualifiedName, right.QualifiedName, StringComparison.Ordinal));
 
             foreach (var assembly in Assemblies)
             {
+                var stats = globalStats.ToDictionary(globalStat => globalStat.Key, globalStat => 0);
+
                 foreach (var nameSpace in assembly.Items)
+                {
                     // Enums, Structs, Interface, FunctionGroup
                     foreach (var item in nameSpace.Items)
                     {
-                        if (item is CsInterface)
-                            stats["interfaces"]++;
-                        else if (item is CsStruct)
-                            stats["structs"]++;
-                        else if (item is CsEnum)
-                            stats["enums"]++;
+                        if (item is CsInterface) stats["interfaces"]++;
+                        else if (item is CsStruct) stats["structs"]++;
+                        else if (item is CsEnum) stats["enums"]++;
 
                         foreach (var subitem in item.Items)
                         {
@@ -1433,10 +1435,18 @@ namespace SharpGen.Generator
                             }
                         }
                     }
-            }
 
-            Logger.Message("CodeGen statistics:");
-            foreach (var stat in stats)
+                    foreach (var stat in stats) globalStats[stat.Key] += stat.Value;
+                }
+
+                Logger.Message("Assembly [{0}] Statistics", assembly.QualifiedName);
+                foreach (var stat in stats)
+                    Logger.Message("\tNumber of {0} : {1}", stat.Key, stat.Value);
+            }
+            Logger.Message("\n");
+
+            Logger.Message("Global Statistics:");
+            foreach (var stat in globalStats)
                 Logger.Message("\tNumber of {0} : {1}", stat.Key, stat.Value);
         }
     }

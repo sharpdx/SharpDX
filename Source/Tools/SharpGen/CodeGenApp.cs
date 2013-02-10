@@ -228,7 +228,9 @@ namespace SharpGen
                 if (Logger.HasErrors)
                     Logger.Fatal("Code generation failed");
 
+
                 // Print statistics
+                parser.PrintStatistics();
                 transformer.PrintStatistics();
 
                 // Output all elements
