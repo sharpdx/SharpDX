@@ -189,37 +189,43 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="height">The height.</param>
         /// <param name="format">Describes the format to use.</param>
         /// <param name="arraySize">Size of the texture 2D array, default to 1.</param>
+        /// <param name="shaderResource">if set to <c>true</c> this depth stencil buffer can be set as an input to a shader (default: false).</param>
         /// <returns>A new instance of <see cref="DepthStencilBuffer" /> class.</returns>
         /// <msdn-id>ff476521</msdn-id>
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
-        public static DepthStencilBuffer New(GraphicsDevice device, int width, int height, DepthFormat format, int arraySize = 1)
+        public static DepthStencilBuffer New(GraphicsDevice device, int width, int height, DepthFormat format, bool shaderResource = false, int arraySize = 1)
         {
-            return new DepthStencilBuffer(device, NewDepthStencilBufferDescription(device.MainDevice, width, height, format, MSAALevel.None, arraySize), format);
+            return new DepthStencilBuffer(device, NewDepthStencilBufferDescription(device.MainDevice, width, height, format, MSAALevel.None, arraySize, shaderResource), format);
         }
 
         /// <summary>
         /// Creates a new <see cref="DepthStencilBuffer" /> using multisampling.
         /// </summary>
-        /// <param name="device">The <see cref="GraphicsDevice"/>.</param>
+        /// <param name="device">The <see cref="GraphicsDevice" />.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
+        /// <param name="multiSampleCount">The multisample count.</param>
         /// <param name="format">Describes the format to use.</param>
         /// <param name="arraySize">Size of the texture 2D array, default to 1.</param>
-        /// <param name="multiSampleCount">The multisample count.</param>
+        /// <param name="shaderResource">if set to <c>true</c> this depth stencil buffer can be set as an input to a shader (default: false).</param>
         /// <returns>A new instance of <see cref="DepthStencilBuffer" /> class.</returns>
         /// <msdn-id>ff476521</msdn-id>
         ///   <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
-        public static DepthStencilBuffer New(GraphicsDevice device, int width, int height, MSAALevel multiSampleCount, DepthFormat format, int arraySize = 1)
+        public static DepthStencilBuffer New(GraphicsDevice device, int width, int height, MSAALevel multiSampleCount, DepthFormat format, bool shaderResource = false, int arraySize = 1)
         {
-            return new DepthStencilBuffer(device, NewDepthStencilBufferDescription(device.MainDevice, width, height, format, multiSampleCount, arraySize), format);
+            return new DepthStencilBuffer(device, NewDepthStencilBufferDescription(device.MainDevice, width, height, format, multiSampleCount, arraySize, shaderResource), format);
         }
 
-        protected static Texture2DDescription NewDepthStencilBufferDescription(GraphicsDevice device, int width, int height, DepthFormat format, MSAALevel multiSampleCount, int arraySize)
+        protected static Texture2DDescription NewDepthStencilBufferDescription(GraphicsDevice device, int width, int height, DepthFormat format, MSAALevel multiSampleCount, int arraySize, bool shaderResource)
         {
             var desc = Texture2DBase.NewDescription(width, height, DXGI.Format.Unknown, TextureFlags.None, 1, arraySize, ResourceUsage.Default);
             desc.BindFlags |= BindFlags.DepthStencil;
+            if (shaderResource)
+            {
+                desc.BindFlags |= BindFlags.ShaderResource;
+            }
             // Sets the MSAALevel
             int maximumMSAA = (int)device.Features[(DXGI.Format)format].MSAALevelMax;
             desc.SampleDescription.Count = Math.Max(1, Math.Min((int)multiSampleCount, maximumMSAA));
@@ -287,10 +293,12 @@ namespace SharpDX.Toolkit.Graphics
             {
                 case SharpDX.DXGI.Format.D16_UNorm:
                 case DXGI.Format.R16_Float:
+                case DXGI.Format.R16_Typeless:
                     return DepthFormat.Depth16;
 
                 case SharpDX.DXGI.Format.D32_Float:
                 case DXGI.Format.R32_Float:
+                case DXGI.Format.R32_Typeless:
                     return DepthFormat.Depth32;
 
                 case SharpDX.DXGI.Format.D24_UNorm_S8_UInt:
