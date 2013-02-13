@@ -315,8 +315,14 @@ namespace SharpDX.Toolkit
             // Initialize this instance and all game systems
             Initialize();
 
+            // Initialize all pending game systems added in Initialize after this base.Initialize
+            InitializePendingGameSystems();
+
             // Load the content of the game
             LoadContent();
+
+            // Initialize and load the content of pending game systems added in LoadContent.
+            InitializePendingGameSystems(true);
 
             IsRunning = true;
 
@@ -612,10 +618,21 @@ namespace SharpDX.Toolkit
             // Setup the graphics device if it was not already setup.
             SetupGraphicsDeviceEvents();
 
+            InitializePendingGameSystems();
+        }
+
+        private void InitializePendingGameSystems(bool loadContent = false)
+        {
             // Add all game systems that were added to this game instance before the game started.
             while (pendingGameSystems.Count != 0)
             {
                 pendingGameSystems[0].Initialize();
+
+                if (loadContent && pendingGameSystems[0] is IContentable)
+                {
+                    ((IContentable)pendingGameSystems[0]).LoadContent();
+                }
+
                 pendingGameSystems.RemoveAt(0);
             }
         }
@@ -624,6 +641,12 @@ namespace SharpDX.Toolkit
         /// Loads the content.
         /// </summary>
         protected virtual void LoadContent()
+        {
+            LoadContentSystems();
+            contentLoaded = true;
+        }
+
+        private void LoadContentSystems()
         {
             lock (contentableGameSystems)
             {
@@ -639,8 +662,6 @@ namespace SharpDX.Toolkit
             }
 
             currentlyContentGameSystems.Clear();
-
-            contentLoaded = true;
         }
 
         /// <summary>
@@ -902,6 +923,11 @@ namespace SharpDX.Toolkit
                 lock (contentableGameSystems)
                 {
                     contentableGameSystems.Remove(contentableSystem);
+                }
+
+                if (IsRunning)
+                {
+                    contentableSystem.UnloadContent();
                 }
             }
 

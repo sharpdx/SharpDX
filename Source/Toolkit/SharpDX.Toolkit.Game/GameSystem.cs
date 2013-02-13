@@ -156,11 +156,6 @@ namespace SharpDX.Toolkit
 
         public virtual void Initialize()
         {
-            if (game == null)
-            {
-                game = (Game)registry.GetService(typeof(Game));
-            }
-
             // Gets the Content Manager
             contentManager = (IContentManager)registry.GetService(typeof(IContentManager));
 

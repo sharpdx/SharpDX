@@ -92,7 +92,7 @@ namespace SharpDX.Toolkit.Input
         public void Initialize()
         {
             // TODO: assume Initialize is called only once. Implement cleanup in case if it is called several times.
-            platform = PointerPlatform.Create(game.Window.NativeWindow, this);
+            platform =  ToDispose(PointerPlatform.Create(game.Window.NativeWindow, this));
         }
 
         /// <inheritdoc/>
