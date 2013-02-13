@@ -45,6 +45,7 @@
 #if !W8CORE
 using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace SharpDX.Windows
@@ -354,10 +355,14 @@ namespace SharpDX.Windows
 
                             if (!sizeMove && (Size != cachedSize || previousWindowState == FormWindowState.Maximized))
                             {
-
                                 previousWindowState = FormWindowState.Normal;
-                                OnUserResized(EventArgs.Empty);
-                                UpdateScreen();
+
+                                // Only update when cachedSize is != 0
+                                if (cachedSize != Size.Empty)
+                                {
+                                    OnUserResized(EventArgs.Empty);
+                                    UpdateScreen();
+                                }
                                 cachedSize = Size;
                             }
 
