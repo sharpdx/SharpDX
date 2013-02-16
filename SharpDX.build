@@ -92,7 +92,7 @@
   <Target Name="GitUpdate">
 	<!-- Update master -->
 	<Exec Command='$(GitExe) checkout --merge "master"'/>
-	<Exec Command='$(GitExe) pull --rebase --progress origin'/>
+	<Exec Command='$(GitExe) pull --rebase origin'/>
 	
 	<!-- Rebase master_integration on master -->
 	<Exec Command='$(GitExe) checkout --merge "master_integration"'/>
@@ -103,10 +103,10 @@
 	<Exec Command='$(GitExe) merge "master_integration"'/>
 	
 	<!-- Push master to origin -->
-	<Exec Command='$(GitExe) push --recurse-submodules=check --progress "origin" master:master'/>
+	<Exec Command='$(GitExe) push --recurse-submodules=check "origin" master:master'/>
 
 	<!-- Push master_integration to origin -->
 	<Exec Command='$(GitExe) checkout --merge "master_integration"'/>
-	<Exec Command='$(GitExe) push --recurse-submodules=check --progress "origin" master:master'/>
+	<Exec Command='$(GitExe) push --recurse-submodules=check "origin" master:master'/>
   </Target>
 </Project>
