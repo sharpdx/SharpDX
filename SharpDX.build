@@ -26,8 +26,15 @@
     <SharpDXSolution>SharpDX.sln</SharpDXSolution>
     <SharpDXSolutionWP8>SharpDXWP8.sln</SharpDXSolutionWP8>
     <SamplesDirectory>Samples</SamplesDirectory>
+	<GitExe>"C:\Program Files (x86)\Git\bin\git.exe"</GitExe>
   </PropertyGroup>
 
+  <Target Name="FullBuild">
+	<CallTarget Targets="Build"/>
+	<CallTarget Targets="BuildSamples"/>
+	<CallTarget Targets="GitUpdate"/>
+  </Target>
+  
   <Target Name="Build">
     <RemoveDir Directories="Bin"/>
 
@@ -81,5 +88,25 @@
 
 	<CallTarget Targets="CleanSamples"/>
   </Target>
+  
+  <Target Name="GitUpdate">
+	<!-- Update master -->
+	<Exec Command='$(GitExe) checkout --merge "master"'/>
+	<Exec Command='$(GitExe) pull --rebase --progress origin'/>
+	
+	<!-- Rebase master_integration on master -->
+	<Exec Command='$(GitExe) checkout --merge "master_integration"'/>
+	<Exec Command='$(GitExe) rebase "master"'/>
+	
+	<!-- Merge master_integration into master -->
+	<Exec Command='$(GitExe) checkout --merge "master"'/>
+	<Exec Command='$(GitExe) merge "master_integration"'/>
+	
+	<!-- Push master to origin -->
+	<Exec Command='$(GitExe) push --recurse-submodules=check --progress "origin" master:master'/>
 
+	<!-- Push master_integration to origin -->
+	<Exec Command='$(GitExe) checkout --merge "master_integration"'/>
+	<Exec Command='$(GitExe) push --recurse-submodules=check --progress "origin" master:master'/>
+  </Target>
 </Project>
