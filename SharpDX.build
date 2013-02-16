@@ -74,9 +74,9 @@
     <!-- Build all samples -->
 	<CallTarget Targets="CleanSamples"/>
 
-    <!-- <MSBuild Targets="Clean;Build" Projects="$(MSBuildThisFileDirectory)\Samples\SharpDXSamples.sln"/> -->
-    <!-- <MSBuild Targets="Clean;Build" Projects="$(MSBuildThisFileDirectory)\Samples\SharpDXToolkitSamples.sln" Properties="Configuration=Debug;Platform=x86"/> -->
-    <MSBuild Targets="Clean;Build" Projects="$(MSBuildThisFileDirectory)\Samples\SharpDXWin8Samples.sln" Properties="Configuration=Debug;Platform=Any CPU"/>
+    <MSBuild Targets="Clean;Build" Projects="$(MSBuildThisFileDirectory)\Samples\SharpDXSamples.sln"/>
+    <MSBuild Targets="Clean;Build" Projects="$(MSBuildThisFileDirectory)\Samples\SharpDXToolkitSamples.sln" Properties="Configuration=Debug;Platform=x86"/>
+    <!-- <MSBuild Targets="Clean;Build" Projects="$(MSBuildThisFileDirectory)\Samples\SharpDXWin8Samples.sln" Properties="Configuration=Debug;Platform=Any CPU"/> -->
     <!-- <MSBuild Targets="Clean;Build" Projects="$(MSBuildThisFileDirectory)\Samples\SharpDXWP8Samples.sln" Properties="Configuration=Debug;Platform=Any CPU"/> -->
 
 	<CallTarget Targets="CleanSamples"/>
