@@ -25,6 +25,7 @@
   <PropertyGroup>
     <SharpDXSolution>SharpDX.sln</SharpDXSolution>
     <SharpDXSolutionWP8>SharpDXWP8.sln</SharpDXSolutionWP8>
+    <SamplesDirectory>Samples</SamplesDirectory>
   </PropertyGroup>
 
   <Target Name="Build">
@@ -43,15 +44,42 @@
 
     <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolutionWP8)" Properties="Configuration=WP8Release;Platform=x86"/>
     <MSBuild Targets="Clean;Build" Projects="$(SharpDXSolutionWP8)" Properties="Configuration=WP8Release;Platform=ARM"/>
-    
+
     <!--Copy redistribution D3D files to Bin-->
     <ItemGroup>
       <RedistFiles Include="External\D3D\**\*.*"/>
     </ItemGroup>
-    
+
     <MakeDir Directories="Bin\Redist\D3D"/>
     <Copy SourceFiles="@(RedistFiles)" DestinationFiles="@(RedistFiles->'Bin\Redist\D3D\%(RecursiveDir)%(Filename)%(Extension)')" />
 
+  </Target>
+
+  <Target Name="CleanSamples">
+    <ItemGroup>
+      <CleanFiles Include="$(SamplesDirectory)\**\Bin\**\*"/>
+      <CleanFiles Include="$(SamplesDirectory)\**\Obj\**\*"/>
+      <CleanFiles Include="$(SamplesDirectory)\**\_ReSharper*\**\*" />
+      <CleanFiles Include="$(SamplesDirectory)\**\AppPackages\**\*" />
+	  <CleanFiles Include="$(SamplesDirectory)\**\*.suo" />
+      <CleanFiles Include="$(SamplesDirectory)\**\*.bak" />
+      <CleanFiles Include="$(SamplesDirectory)\**\*.user" />
+    </ItemGroup> 
+
+    <Delete Files="@(CleanFiles)" />
+  </Target>
+
+  <Target Name="BuildSamples">
+
+    <!-- Build all samples -->
+	<CallTarget Targets="CleanSamples"/>
+
+    <!-- <MSBuild Targets="Clean;Build" Projects="$(MSBuildThisFileDirectory)\Samples\SharpDXSamples.sln"/> -->
+    <!-- <MSBuild Targets="Clean;Build" Projects="$(MSBuildThisFileDirectory)\Samples\SharpDXToolkitSamples.sln" Properties="Configuration=Debug;Platform=x86"/> -->
+    <MSBuild Targets="Clean;Build" Projects="$(MSBuildThisFileDirectory)\Samples\SharpDXWin8Samples.sln" Properties="Configuration=Debug;Platform=Any CPU"/>
+    <!-- <MSBuild Targets="Clean;Build" Projects="$(MSBuildThisFileDirectory)\Samples\SharpDXWP8Samples.sln" Properties="Configuration=Debug;Platform=Any CPU"/> -->
+
+	<CallTarget Targets="CleanSamples"/>
   </Target>
 
 </Project>

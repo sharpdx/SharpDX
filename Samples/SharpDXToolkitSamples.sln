@@ -488,7 +488,6 @@ Global
 		{03B394C1-213C-49DB-8541-9744884A4D8C}.Release|x64.ActiveCfg = Release|Any CPU
 		{03B394C1-213C-49DB-8541-9744884A4D8C}.Release|x86.ActiveCfg = Release|x86
 		{03B394C1-213C-49DB-8541-9744884A4D8C}.Release|x86.Build.0 = Release|x86
-		{03B394C1-213C-49DB-8541-9744884A4D8C}.Release|x86.Deploy.0 = Release|x86		
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

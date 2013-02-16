@@ -77,7 +77,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CommonDX\CommonDX.sample.csproj">
+    <ProjectReference Include="..\CommonDX\CommonDX.csproj">
       <Project>{45cd76a3-e21e-47a3-8bfd-9a1241aadb9d}</Project>
       <Name>CommonDX.sample</Name>
     </ProjectReference>
