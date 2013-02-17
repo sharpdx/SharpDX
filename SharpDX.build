@@ -26,7 +26,7 @@
     <SharpDXSolution>SharpDX.sln</SharpDXSolution>
     <SharpDXSolutionWP8>SharpDXWP8.sln</SharpDXSolutionWP8>
     <SamplesDirectory>Samples</SamplesDirectory>
-	<GitExe>"C:\Program Files (x86)\Git\bin\git.exe"</GitExe>
+	<GitExe>"C:\Program Files (x86)\Git\bin\git.exe" --work-tree="$(MSBuildThisFileDirectory)"</GitExe>
   </PropertyGroup>
 
   <Target Name="FullBuild">
