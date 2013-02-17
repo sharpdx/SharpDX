@@ -206,9 +206,8 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Gets a single value to the associated parameter in the constant buffer.
+        /// Gets an array of matrices to the associated parameter in the constant buffer.
         /// </summary>
-        /// <typeparam name = "T">The type of the value to read from the buffer.</typeparam>
         /// <returns>The value of this parameter.</returns>
         public unsafe Matrix[] GetMatrixArray(int startIndex, int count)
         {
@@ -217,7 +216,7 @@ namespace SharpDX.Toolkit.Graphics
             // Fix the whole buffer
             fixed (Matrix* pMatrix = result)
             {
-                for (int i = 0; i < result.Length; i++, localOffset += Size)
+                for (int i = 0; i < result.Length; i++, localOffset += Utilities.SizeOf<Matrix>())
                     pMatrix[i] = GetMatrixImpl(localOffset);
             }
             buffer.IsDirty = true;
@@ -276,11 +275,8 @@ namespace SharpDX.Toolkit.Graphics
             // Fix the whole buffer
             fixed (Matrix* pMatrix = values)
             {
-                for (int i = 0; i < values.Length; i++)
-                {
+                for (int i = 0; i < values.Length; i++, localOffset += Utilities.SizeOf<Matrix>())
                     CopyMatrix(ref pMatrix[i], localOffset);
-                    localOffset += Size;
-                }
             }
             buffer.IsDirty = true;
         }
@@ -307,7 +303,7 @@ namespace SharpDX.Toolkit.Graphics
             // Fix the whole buffer
             fixed (Matrix* pMatrix = values)
             {
-                for (int i = 0; i < values.Length; i++, localOffset += Size)
+                for (int i = 0; i < values.Length; i++, localOffset += Utilities.SizeOf<Matrix>())
                     CopyMatrix(ref pMatrix[i], localOffset);
             }
             buffer.IsDirty = true;
