@@ -27,12 +27,16 @@
     <SharpDXSolutionWP8>SharpDXWP8.sln</SharpDXSolutionWP8>
     <SamplesDirectory>Samples</SamplesDirectory>
 	<GitExe>"C:\Program Files (x86)\Git\bin\git.exe"</GitExe>
+	<ExtensionTasksPath>$(MSBuildThisFileDirectory)\External\MSBuildExtensionPack\</ExtensionTasksPath>
   </PropertyGroup>
+
+  <Import Project="$(ExtensionTasksPath)MSBuild.ExtensionPack.tasks"/>
 
   <Target Name="FullBuild">
 	<CallTarget Targets="Build"/>
 	<CallTarget Targets="BuildSamples"/>
 	<CallTarget Targets="GitUpdate"/>
+	<CallTarget Targets="ZipBuild"/>
   </Target>
   
   <Target Name="Build">
@@ -105,8 +109,21 @@
 	<!-- Push master to origin -->
 	<Exec Command='$(GitExe) push --recurse-submodules=check "origin" master:master'/>
 
+	<!-- Get logs from latest tags and push tags -->
+	<Exec Command='$(GitExe) log latest_build.. > CommitLog.txt'/>
+	<Exec Command='$(GitExe) tag -f latest_build'/>
+	<Exec Command='$(GitExe) push -f "origin" tag latest_build'/>
+	
 	<!-- Push master_integration to origin -->
 	<Exec Command='$(GitExe) checkout --merge "master_integration"'/>
 	<Exec Command='$(GitExe) push --recurse-submodules=check "origin" master:master'/>
+  </Target>
+  
+  <Target Name="ZipBuild">
+	<Exec Command='External\7-Zip\7z.exe a -r -sfx7z.sfx -xr!*.check -xr!*.pdb SharpDX-SDK-LatestDev.exe Bin\*.* Samples\*.* SharpDX.targets CommitLog.txt License.txt'/>
+  </Target>
+  
+  <Target Name="FtpUpload">
+	<MSBuild.ExtensionPack.Communication.Ftp TaskAction="UploadFiles" Host="sharpdx.org" RemoteDirectoryName="/sharpdx/upload" FileNames="SharpDX-SDK-LatestDev.exe" UserName="$(SharpDXFtpUser)" UserPassword="$(SharpDXFtpPassword)" />
   </Target>
 </Project>
