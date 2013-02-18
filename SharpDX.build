@@ -84,8 +84,6 @@
   <Target Name="BuildSamples">
 
     <!-- Build all samples -->
-	<CallTarget Targets="CleanSamples"/>
-
     <MSBuild Targets="Clean;Build" Projects="$(MSBuildThisFileDirectory)\Samples\SharpDXSamples.sln"/>
     <MSBuild Targets="Clean;Build" Projects="$(MSBuildThisFileDirectory)\Samples\SharpDXToolkitSamples.sln" Properties="Configuration=Debug;Platform=x86"/>
     <!-- <MSBuild Targets="Clean;Build" Projects="$(MSBuildThisFileDirectory)\Samples\SharpDXWin8Samples.sln" Properties="Configuration=Debug;Platform=Any CPU"/> -->
@@ -121,7 +119,7 @@
   </Target>
   
   <Target Name="ZipBuild">
-	<Exec Command='External\7-Zip\7z.exe a -r -sfx7z.sfx -xr!*.check -xr!*.pdb SharpDX-SDK-LatestDev.exe Bin\*.* Samples\*.* SharpDX.targets CommitLog.txt License.txt'/>
+	<Exec Command='External\7-Zip\7z.exe a -r -sfx7z.sfx -xr!External -xr!*.check -xr!*.pdb -xr!*.lib -xr!*.exp SharpDX-SDK-LatestDev.exe Bin\*.* Samples\*.* SharpDX.targets CommitLog.txt License.txt'/>
   </Target>
   
   <Target Name="FtpUpload">
