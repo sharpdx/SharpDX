@@ -37,6 +37,7 @@
 	<CallTarget Targets="BuildSamples"/>
 	<CallTarget Targets="GitUpdate"/>
 	<CallTarget Targets="ZipBuild"/>
+	<CallTarget Targets="FtpUpload"/>
   </Target>
   
   <Target Name="Build">
