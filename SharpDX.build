@@ -27,6 +27,7 @@
     <SharpDXSolutionWP8>SharpDXWP8.sln</SharpDXSolutionWP8>
     <SamplesDirectory>Samples</SamplesDirectory>
 	<GitExe>"C:\Program Files (x86)\Git\bin\git.exe"</GitExe>
+	<SharpDXDevZip>SharpDX-SDK-LatestDev.exe</SharpDXDevZip>
 	<ExtensionTasksPath>$(MSBuildThisFileDirectory)\External\MSBuildExtensionPack\</ExtensionTasksPath>
   </PropertyGroup>
 
@@ -119,10 +120,11 @@
   </Target>
   
   <Target Name="ZipBuild">
-	<Exec Command='External\7-Zip\7z.exe a -r -sfx7z.sfx -xr!External -xr!*.check -xr!*.pdb -xr!*.lib -xr!*.exp SharpDX-SDK-LatestDev.exe Bin\*.* Samples\*.* SharpDX.targets CommitLog.txt License.txt'/>
+	<Delete Files="$(SharpDXDevZip)"/>
+	<Exec Command='External\7-Zip\7z.exe a -r -sfx7z.sfx -xr!External -xr!*.check -xr!*.pdb -xr!*.lib -xr!*.exp $(SharpDXDevZip) Bin\*.* Samples\*.* SharpDX.targets CommitLog.txt License.txt'/>
   </Target>
   
   <Target Name="FtpUpload">
-	<MSBuild.ExtensionPack.Communication.Ftp TaskAction="UploadFiles" Host="sharpdx.org" RemoteDirectoryName="/sharpdx/upload" FileNames="SharpDX-SDK-LatestDev.exe" UserName="$(SharpDXFtpUser)" UserPassword="$(SharpDXFtpPassword)" />
+	<MSBuild.ExtensionPack.Communication.Ftp TaskAction="UploadFiles" Host="sharpdx.org" RemoteDirectoryName="/sharpdx/upload" FileNames="$(SharpDXDevZip)" UserName="$(SharpDXFtpUser)" UserPassword="$(SharpDXFtpPassword)" />
   </Target>
 </Project>
