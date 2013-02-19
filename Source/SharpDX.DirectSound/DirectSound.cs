@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace SharpDX.DirectSound
 {
@@ -84,9 +85,35 @@ namespace SharpDX.DirectSound
         /// <returns>A collection of the devices found.</returns>
         public static List<DeviceInformation> GetDevices()
         {
-            EnumDelegateCallback callback = new EnumDelegateCallback();
+            var callback = new EnumDelegateCallback();
             DSound.EnumerateW(callback.NativePointer, IntPtr.Zero);
             return callback.Informations;
+        }
+
+        /// <summary>
+        /// Duplicates the sound buffer.
+        /// </summary>
+        /// <param name="sourceBuffer">The source buffer.</param>
+        /// <returns>A duplicate of this soundBuffer.</returns>
+        /// <unmanaged>HRESULT IDirectSound::DuplicateSoundBuffer([In] IDirectSoundBuffer* pDSBufferOriginal,[Out] void** ppDSBufferDuplicate)</unmanaged>
+        ///   <unmanaged-short>IDirectSound::DuplicateSoundBuffer</unmanaged-short>
+        public SoundBuffer DuplicateSoundBuffer(SoundBuffer sourceBuffer)
+        {
+            IntPtr soundBufferPtr;
+            var result = DuplicateSoundBuffer(sourceBuffer, out soundBufferPtr);
+            SoundBuffer soundBuffer = null;
+
+            if (result.Success && soundBufferPtr != IntPtr.Zero)
+            {
+                soundBuffer = QueryInterfaceOrNull<PrimarySoundBuffer>(soundBufferPtr) ?? (SoundBuffer)QueryInterfaceOrNull<SecondarySoundBuffer>(soundBufferPtr);
+            }
+
+            if (soundBuffer != null)
+            {
+                Marshal.Release(soundBufferPtr);
+            }
+
+            return soundBuffer;
         }
     }
 }

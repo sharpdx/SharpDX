@@ -173,6 +173,28 @@ namespace SharpDX
             }
         }
 
+        /// <summary>
+        /// Queries a managed object for a particular COM interface support.
+        /// </summary>
+        ///<typeparam name="T">The type of the COM interface to query</typeparam>
+        /// <param name="comPointer">A pointer to a COM object.</param>
+        ///<returns>An instance of the queried interface</returns>
+        /// <msdn-id>ms682521</msdn-id>
+        /// <unmanaged>IUnknown::QueryInterface</unmanaged>	
+        /// <unmanaged-short>IUnknown::QueryInterface</unmanaged-short>
+        public static T QueryInterfaceOrNull<T>(IntPtr comPointer) where T : ComObject
+        {
+            if (comPointer == IntPtr.Zero)
+            {
+                return null;
+            }
+
+            var guid = Utilities.GetGuidFromType(typeof(T));
+            IntPtr pointerT;
+            var result = (Result)Marshal.QueryInterface(comPointer, ref guid, out pointerT);
+            return (result.Failure) ? null : FromPointerUnsafe<T>(pointerT);
+        }
+
         ///<summary>
         /// Query Interface for a particular interface support.
         ///</summary>
