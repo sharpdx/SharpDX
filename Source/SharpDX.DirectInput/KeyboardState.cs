@@ -73,8 +73,8 @@ namespace SharpDX.DirectInput
                 fixed (byte* pRawKeys = value.Keys)
                     for (int i = 0; i < 256; i++)
                     {
-                        update.RawOffset = i;
-                        update.Value = pRawKeys[i];
+                        update.rawOffset = i;
+                        update.value = pRawKeys[i];
                         //if (update.Key == Key.Unknown)
                         //    continue;
                         

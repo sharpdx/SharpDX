@@ -26,17 +26,65 @@ namespace SharpDX.DirectInput
     [StructLayout(LayoutKind.Sequential)]
     public struct KeyboardUpdate : IStateUpdate
     {
-        public int RawOffset { get; set; }
+        internal int rawOffset;
 
-        public int Value { get; set; }
+        internal int value;
 
-        public int Timestamp { get; set; }
+        private int timestamp;
 
-        public int Sequence { get; set; }
+        private int sequence;
 
-        public Key Key { get { return ConvertRawKey(((IStateUpdate)this).RawOffset); } }
+        public int RawOffset
+        {
+            get
+            {
+                return rawOffset;
+            }
+            set
+            {
+                rawOffset = value;
+            }
+        }
 
-        public bool IsPressed { get { return (((IStateUpdate)this).Value & 0x80) != 0; } }
+        public int Value
+        {
+            get
+            {
+                return value;
+            }
+            set
+            {
+                this.value = value;
+            }
+        }
+
+        public int Timestamp
+        {
+            get
+            {
+                return timestamp;
+            }
+            set
+            {
+                timestamp = value;
+            }
+        }
+
+        public int Sequence
+        {
+            get
+            {
+                return sequence;
+            }
+            set
+            {
+                sequence = value;
+            }
+        }
+
+        public Key Key { get { return ConvertRawKey(rawOffset); } }
+
+        public bool IsPressed { get { return (value & 0x80) != 0; } }
 
         public bool IsReleased { get { return !IsPressed; } }
 
@@ -49,7 +97,7 @@ namespace SharpDX.DirectInput
 
         public override string ToString()
         {
-            return String.Format("Key: {0}, IsPressed: {1} Timestamp: {2} Sequence: {3}", Key, IsPressed, Timestamp, Sequence);
+            return String.Format("Key: {0}, IsPressed: {1} Timestamp: {2} Sequence: {3}", Key, IsPressed, timestamp, sequence);
         }
     }
 }
