@@ -29,6 +29,7 @@
 	<GitExe>"C:\Program Files (x86)\Git\bin\git.exe"</GitExe>
 	<SharpDXDevZip>SharpDX-SDK-LatestDev.exe</SharpDXDevZip>
 	<ExtensionTasksPath>$(MSBuildThisFileDirectory)\External\MSBuildExtensionPack\</ExtensionTasksPath>
+	<SharpDXNightlyBuildsPath Condition="'$(SharpDXNightlyBuildsPath)' == ''">$(MSBuildThisFileDirectory)..\SharpDXNightlyBuilds\</SharpDXNightlyBuildsPath>
   </PropertyGroup>
 
   <Import Project="$(ExtensionTasksPath)MSBuild.ExtensionPack.tasks"/>
@@ -38,7 +39,7 @@
 	<CallTarget Targets="BuildSamples"/>
 	<CallTarget Targets="GitUpdate"/>
 	<CallTarget Targets="ZipBuild"/>
-	<CallTarget Targets="FtpUpload"/>
+	<CallTarget Targets="GitUpload"/>
   </Target>
   
   <Target Name="Build">
@@ -107,7 +108,7 @@
 	<Exec Command='$(GitExe) merge "master_integration"'/>
 	
 	<!-- Push master to origin -->
-	<Exec Command='$(GitExe) push --recurse-submodules=check "origin" master:master'/>
+	<Exec Command='$(GitExe) push "origin" master:master'/>
 
 	<!-- Get logs from latest tags and push tags -->
 	<Exec Command='$(GitExe) log latest_build.. > CommitLog.txt'/>
@@ -116,7 +117,7 @@
 	
 	<!-- Push master_integration to origin -->
 	<Exec Command='$(GitExe) checkout --merge "master_integration"'/>
-	<Exec Command='$(GitExe) push --recurse-submodules=check "origin" master:master'/>
+	<Exec Command='$(GitExe) push "origin" master_integration:master_integration'/>
   </Target>
   
   <Target Name="ZipBuild">
@@ -124,7 +125,29 @@
 	<Exec Command='External\7-Zip\7z.exe a -r -sfx7z.sfx -xr!External -xr!*.check -xr!*.pdb -xr!*.lib -xr!*.exp $(SharpDXDevZip) Bin\*.* Samples\*.* SharpDX.targets CommitLog.txt License.txt'/>
   </Target>
   
-  <Target Name="FtpUpload">
-	<MSBuild.ExtensionPack.Communication.Ftp TaskAction="UploadFiles" Host="sharpdx.org" RemoteDirectoryName="/sharpdx/upload" FileNames="$(SharpDXDevZip)" UserName="$(SharpDXFtpUser)" UserPassword="$(SharpDXFtpPassword)" />
+  <Target Name="GitUpload">
+	<!-- Get Last commit log from git  -->
+	<PropertyGroup>
+		<LastCommitPath>last_commit.txt</LastCommitPath>
+	</PropertyGroup>
+	<Exec Command='$(GitExe) log --format=%%H -1 > $(LastCommitPath)'/>
+	<PropertyGroup>
+		<LastCommit>$([System.IO.File]::ReadAllText($(LastCommitPath)))</LastCommit>
+	</PropertyGroup>
+	
+	<!-- Checkout latest version of nightly builds  -->
+	<Exec Command='$(GitExe) checkout --merge "master"' WorkingDirectory="$(SharpDXNightlyBuildsPath)" />
+	<Exec Command='$(GitExe) pull --rebase origin' WorkingDirectory="$(SharpDXNightlyBuildsPath)" />
+
+	<!-- Copy Zip file to nightly builds -->
+	<Copy SourceFiles="$(SharpDXDevZip)" DestinationFolder="$(SharpDXNightlyBuildsPath)"/>
+	
+	<!-- Push nightly builds master -->
+	<Exec Command='$(GitExe) add $(SharpDXDevZip)' WorkingDirectory="$(SharpDXNightlyBuildsPath)" />
+	<Exec Command='$(GitExe) commit -m "Link to latest commit http://code.google.com/p/sharpdx/source/detail?r=$(LastCommit.Trim())"'  WorkingDirectory="$(SharpDXNightlyBuildsPath)" />
+	<Exec Command='$(GitExe) push "origin" master:master' WorkingDirectory="$(SharpDXNightlyBuildsPath)"  WorkingDirectory="$(SharpDXNightlyBuildsPath)" />
+	
+	<!-- Upload Last Commit file -->
+	<MSBuild.ExtensionPack.Communication.Ftp TaskAction="UploadFiles" Host="sharpdx.org" RemoteDirectoryName="/sharpdx/upload" FileNames="$(LastCommitPath)" UserName="$(SharpDXFtpUser)" UserPassword="$(SharpDXFtpPassword)" />
   </Target>
 </Project>
