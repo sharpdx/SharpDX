@@ -248,7 +248,7 @@ namespace SharpDX.Toolkit
 
         public virtual GraphicsDevice CreateDevice(GraphicsDeviceInformation deviceInformation)
         {
-            var device = GraphicsDevice.New(deviceInformation.Adapter, deviceInformation.DeviceCreationFlags);
+            var device = GraphicsDevice.New(deviceInformation.Adapter, deviceInformation.DeviceCreationFlags, deviceInformation.GraphicsProfile);
             device.Presenter = new SwapChainGraphicsPresenter(device, deviceInformation.PresentationParameters);
 
             // Force to resize the gameWindow

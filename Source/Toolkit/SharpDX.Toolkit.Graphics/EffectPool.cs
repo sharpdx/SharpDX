@@ -23,7 +23,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using SharpDX.Collections;
+using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
+using SharpDX.Toolkit.Diagnostics;
 
 namespace SharpDX.Toolkit.Graphics
 {
@@ -195,14 +197,21 @@ namespace SharpDX.Toolkit.Graphics
             return rawEffect;
         }
 
-        internal DeviceChild GetOrCompileShader(EffectShaderType shaderType, int index)
+        internal DeviceChild GetOrCompileShader(EffectShaderType shaderType, int index, out string profileError)
         {
             DeviceChild shader = null;
+            profileError = null;
             lock (sync)
             {
                 shader = compiledShaders[index];
                 if (shader == null)
                 {
+                    if (dataGroup.Shaders[index].Level > graphicsDevice.Features.Level)
+                    {
+                        profileError = string.Format("{0}", dataGroup.Shaders[index].Level);
+                        return null;
+                    }
+
                     var bytecodeRaw = dataGroup.Shaders[index].Bytecode;
                     switch (shaderType)
                     {

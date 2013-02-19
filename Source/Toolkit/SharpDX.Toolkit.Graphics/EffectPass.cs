@@ -443,7 +443,22 @@ namespace SharpDX.Toolkit.Graphics
                 return;
             }
 
-            stageBlock.Shader = Effect.Pool.GetOrCompileShader(stageBlock.Type, stageBlock.Index);
+            string errorProfile;
+            stageBlock.Shader = Effect.Pool.GetOrCompileShader(stageBlock.Type, stageBlock.Index, out errorProfile);
+
+            if (stageBlock.Shader == null)
+            {
+                logger.Error(
+                    "Unsupported shader profile [{0} / {1}] on current GraphicsDevice [{2}] in (effect [{3}] Technique [{4}] Pass: [{5}])",
+                    stageBlock.Type,
+                    errorProfile,
+                    graphicsDevice.Features.Level,
+                    Effect.Name,
+                    Technique.Name,
+                    Name);
+                return;
+            }
+
             var shaderRaw = Effect.Pool.EffectData.Shaders[stageBlock.Index];
 
             // Cache the input signature
