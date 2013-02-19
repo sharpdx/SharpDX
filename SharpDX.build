@@ -145,7 +145,7 @@
 	<!-- Push nightly builds master -->
 	<Exec Command='$(GitExe) add $(SharpDXDevZip)' WorkingDirectory="$(SharpDXNightlyBuildsPath)" />
 	<Exec Command='$(GitExe) commit -m "Link to latest commit http://code.google.com/p/sharpdx/source/detail?r=$(LastCommit.Trim())"'  WorkingDirectory="$(SharpDXNightlyBuildsPath)" />
-	<Exec Command='$(GitExe) push "origin" master:master' WorkingDirectory="$(SharpDXNightlyBuildsPath)"  WorkingDirectory="$(SharpDXNightlyBuildsPath)" />
+	<Exec Command='$(GitExe) push "origin" master:master' WorkingDirectory="$(SharpDXNightlyBuildsPath)" />
 	
 	<!-- Upload Last Commit file -->
 	<MSBuild.ExtensionPack.Communication.Ftp TaskAction="UploadFiles" Host="sharpdx.org" RemoteDirectoryName="/sharpdx/upload" FileNames="$(LastCommitPath)" UserName="$(SharpDXFtpUser)" UserPassword="$(SharpDXFtpPassword)" />
