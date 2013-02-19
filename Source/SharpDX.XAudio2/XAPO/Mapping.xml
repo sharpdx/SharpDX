@@ -60,7 +60,15 @@
     <const from-guid="CLSID_FXReverb" class="SharpDX.XAPO.Fx.XAPOFx" type="System.Guid" >new System.Guid("$1")</const>
     <const from-guid="CLSID_FXEcho" class="SharpDX.XAPO.Fx.XAPOFx" type="System.Guid" >new System.Guid("$1")</const>
 
-    <const from-macro="FXMASTERINGLIMITER_(.*)" class="SharpDX.XAPO.Fx.MasteringLimiterParameters" type="int" name="$1" />
+    <create class="SharpDX.XAPO.Fx.MasteringLimiter" visibility="public partial" />
+    <create class="SharpDX.XAPO.Fx.Equalizer" visibility="public partial" />
+    <create class="SharpDX.XAPO.Fx.Reverb" visibility="public partial" />
+    <create class="SharpDX.XAPO.Fx.Echo" visibility="public partial" />
+
+    <const from-macro="FXMASTERINGLIMITER_(.*)" class="SharpDX.XAPO.Fx.MasteringLimiter" type="int" name="$1" />
+    <const from-macro="FXEQ_(.*)" class="SharpDX.XAPO.Fx.Equalizer" type="float" name="$1" />
+    <const from-macro="FXREVERB_(.*)" class="SharpDX.XAPO.Fx.Reverb" type="float" name="$1" />
+    <const from-macro="FXECHO_(.*)" class="SharpDX.XAPO.Fx.Echo" type="float" name="$1" />
 
     <create class="SharpDX.XAPO.Fx.XAPOFx" />
 
