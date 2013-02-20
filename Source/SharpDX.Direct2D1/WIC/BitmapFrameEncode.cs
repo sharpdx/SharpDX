@@ -123,5 +123,16 @@ namespace SharpDX.WIC
         {
             WriteSource(bitmapSource, null);
         }
+
+        protected override unsafe void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Options.Dispose();
+                Options = null;
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }
