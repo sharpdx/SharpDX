@@ -583,25 +583,28 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     using (var converter = new FormatConverter(Factory))
                     {
-                        converter.Initialize(source, targetGuid, GetWICDither(flags), null, 0, BitmapPaletteType.Custom);
-
-                        int bpp = GetBitsPerPixel(targetGuid);
-                        if (bpp == 0)
-                            throw new NotSupportedException("Unable to determine the Bpp for the target format");
-
-                        int rowPitch = (image.Width * bpp + 7) / 8;
-                        int slicePitch = rowPitch * image.Height;
-
-                        var temp = Utilities.AllocateMemory(slicePitch);
-                        try
+                        using (var palette = new Palette(Factory))
                         {
+                            palette.Initialize(source, 256, true);
+                            converter.Initialize(source, targetGuid, GetWICDither(flags), palette, 0, BitmapPaletteType.Custom);
 
-                            converter.CopyPixels(rowPitch, temp, slicePitch);
-                            frame.WritePixels(image.Height, temp, rowPitch, slicePitch);
-                        }
-                        finally
-                        {
-                            Utilities.FreeMemory(temp);
+                            int bpp = GetBitsPerPixel(targetGuid);
+                            if (bpp == 0) throw new NotSupportedException("Unable to determine the Bpp for the target format");
+
+                            int rowPitch = (image.Width * bpp + 7) / 8;
+                            int slicePitch = rowPitch * image.Height;
+
+                            var temp = Utilities.AllocateMemory(slicePitch);
+                            try
+                            {
+                                converter.CopyPixels(rowPitch, temp, slicePitch);
+                                frame.Palette = palette;
+                                frame.WritePixels(image.Height, temp, rowPitch, slicePitch);
+                            }
+                            finally
+                            {
+                                Utilities.FreeMemory(temp);
+                            }
                         }
                     }
                 }
@@ -614,7 +617,6 @@ namespace SharpDX.Toolkit.Graphics
 
             frame.Commit();
         }
-
 
         private static void EncodeSingleFrame( PixelBuffer pixelBuffer, WICFlags flags, Guid guidContainerFormat, Stream stream )
         {
