@@ -195,7 +195,8 @@ namespace SharpDX.Toolkit.Graphics
             // Read font properties.
             LineSpacing = spriteFontData.LineSpacing;
 
-            DefaultCharacter = (char)spriteFontData.DefaultCharacter;
+            if(spriteFontData.DefaultCharacter > 0)
+                DefaultCharacter = (char)spriteFontData.DefaultCharacter;
 
             // Read the texture data.
             textures = new Texture2D[spriteFontData.Bitmaps.Length];
@@ -307,26 +308,33 @@ namespace SharpDX.Toolkit.Graphics
                 var key = 0;
                 for (int i =  0; i < text.Length; i++)
                 {
-                    char character = text[i];
-                    key |= character;
+                    char character = text[i];					
 
                     switch (character)
                     {
                         case '\r':
                             // Skip carriage returns.
+                            key |= character;
                             continue;
 
                         case '\n':
                             // New line.
                             x = 0;
                             y += LineSpacing;
+                            key |= character;
                             break;
 
                         default:
                             // Output this character.
                             int glyphIndex;
                             if (!characterMap.TryGetValue(character, out glyphIndex))
-                                throw new ArgumentException(string.Format("Character '{0}' is not available in the SpriteFont character map", character), "text");
+                            {
+                                if(DefaultCharacter.HasValue && characterMap.TryGetValue(DefaultCharacter.Value, out glyphIndex))
+                                    character = DefaultCharacter.Value;
+                                else
+                                    throw new ArgumentException(string.Format("Character '{0}' is not available in the SpriteFont character map", character), "text");
+                            }
+                            key |= character;
 
                             var glyph = (SpriteFontData.Glyph*) pGlyph + glyphIndex;
 
