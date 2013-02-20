@@ -120,7 +120,12 @@ It compiles all files of type TookitFxc
 
     <IsBuildInDebug>true</IsBuildInDebug>
     <IsBuildInDebug Condition="$(Optimize) == 'true'">false</IsBuildInDebug>
+    
+    <!--By default turn-on debugging on tkfxc when compiling in debug (no optimize)-->
     <ToolkitFxcDebugOption Condition="'$(ToolkitFxcDebugOption)' == ''">$(IsBuildInDebug)</ToolkitFxcDebugOption>
+
+    <!--By default turn-on dynamic compiling on tkfxc when compiling in debug (no optimize)-->
+    <ToolkitFxcDynamicCompilingOption Condition="'$(ToolkitFxcDynamicCompilingOption)' == ''">$(IsBuildInDebug)</ToolkitFxcDynamicCompilingOption>
   </PropertyGroup>
 
   <Target Name="TkFxcListContentAndCompileTarget">
@@ -150,6 +155,7 @@ It compiles all files of type TookitFxc
     <EffectCompilerTask
         ProjectDirectory="$(ProjectDir)"
         IntermediateDirectory="$(IntermediateOutputPath)"
+        DynamicCompiling="$(ToolkitFxcDynamicCompilingOption)"
         Debug="$(ToolkitFxcDebugOption)"
         Files="@(ToolkitFxc)"
         RootNamespace="$(RootNamespace)"
