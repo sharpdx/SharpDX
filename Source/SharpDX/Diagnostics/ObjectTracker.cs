@@ -27,12 +27,33 @@ using SharpDX.Collections;
 
 namespace SharpDX.Diagnostics
 {
+    public class ComObjectEventArgs : EventArgs
+    {
+        public ComObject Object;
+
+        public ComObjectEventArgs(ComObject o)
+        {
+            Object = o;
+        }
+    }
+
+
     /// <summary>
     /// Track all allocated objects.
     /// </summary>
     public static class ObjectTracker
     {
         private static readonly Dictionary<IntPtr, List<ObjectReference>> ObjectReferences = new Dictionary<IntPtr, List<ObjectReference>>(EqualityComparer.DefaultIntPtr);
+
+        /// <summary>
+        /// Occurs when a ComObject is tracked.
+        /// </summary>
+        public static event EventHandler<ComObjectEventArgs> Tracked;
+
+        /// <summary>
+        /// Occurs when a ComObject is untracked.
+        /// </summary>
+        public static event EventHandler<ComObjectEventArgs> UnTracked;
 
 #if !W8CORE
         /// <summary>
@@ -82,6 +103,8 @@ namespace SharpDX.Diagnostics
 #else
                 referenceList.Add(new ObjectReference(DateTime.Now, comObject, new StackTrace(3, true)));
 #endif
+                // Fire Tracked event.
+                OnTracked(comObject);
             }
         }
 
@@ -151,6 +174,9 @@ namespace SharpDX.Diagnostics
                     // Remove empty list
                     if (referenceList.Count == 0)
                         ObjectReferences.Remove(comObject.NativePointer);
+
+                    // Fire UnTracked event
+                    OnUnTracked(comObject);
                 }
             }
         }
@@ -189,5 +215,23 @@ namespace SharpDX.Diagnostics
             }
             return text.ToString();
         }
-    }
+
+        private static void OnTracked(ComObject obj)
+        {
+            var handler = Tracked;
+            if (handler != null)
+            {
+                handler(null, new ComObjectEventArgs(obj));
+            }
+        }
+
+        private static void OnUnTracked(ComObject obj)
+        {
+            var handler = UnTracked;
+            if (handler != null)
+            {
+                handler(null, new ComObjectEventArgs(obj));
+            }
+        }
+   }
 }
