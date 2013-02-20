@@ -94,6 +94,7 @@ namespace SharpDX.Toolkit.Graphics
         private readonly Dictionary<int, float> kerningMap;
         private readonly SpriteFontData.Glyph[] glyphs;
         private Texture2D[] textures;
+        private readonly int defaultGlyphIndex;
 
         // Lookup table indicates which way to move along each axis per SpriteEffects enum value.
         private static readonly Vector2[] axisDirectionTable = new[]
@@ -195,7 +196,14 @@ namespace SharpDX.Toolkit.Graphics
             // Read font properties.
             LineSpacing = spriteFontData.LineSpacing;
 
-            DefaultCharacter = (char)spriteFontData.DefaultCharacter;
+            if (spriteFontData.DefaultCharacter > 0)
+            {
+                DefaultCharacter = (char)spriteFontData.DefaultCharacter;
+                if (!characterMap.TryGetValue(DefaultCharacter.Value, out defaultGlyphIndex))
+                {
+                    defaultGlyphIndex = -1;
+                }
+            }
 
             // Read the texture data.
             textures = new Texture2D[spriteFontData.Bitmaps.Length];
@@ -307,26 +315,38 @@ namespace SharpDX.Toolkit.Graphics
                 var key = 0;
                 for (int i =  0; i < text.Length; i++)
                 {
-                    char character = text[i];
-                    key |= character;
+                    char character = text[i];					
 
                     switch (character)
                     {
                         case '\r':
                             // Skip carriage returns.
+                            key |= character;
                             continue;
 
                         case '\n':
                             // New line.
                             x = 0;
                             y += LineSpacing;
+                            key |= character;
                             break;
 
                         default:
                             // Output this character.
                             int glyphIndex;
                             if (!characterMap.TryGetValue(character, out glyphIndex))
-                                throw new ArgumentException(string.Format("Character '{0}' is not available in the SpriteFont character map", character), "text");
+                            {
+                                if(DefaultCharacter.HasValue && defaultGlyphIndex >= 0)
+                                {
+                                    character = DefaultCharacter.Value;
+                                    glyphIndex = defaultGlyphIndex;
+                                }
+                                else
+                                {
+                                    throw new ArgumentException(string.Format("Character '{0}' is not available in the SpriteFont character map", character), "text");
+                                }
+                            }
+                            key |= character;
 
                             var glyph = (SpriteFontData.Glyph*) pGlyph + glyphIndex;
 
