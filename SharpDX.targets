@@ -118,12 +118,13 @@ It compiles all files of type TookitFxc
       TkFxcListContentAndCompileTarget;
     </AssignTargetPathsDependsOn>
 
-    <ToolkitFxcDebugOption>true</ToolkitFxcDebugOption>
-    <ToolkitFxcDebugOption Condition="$(Optimize) == 'true'">false</ToolkitFxcDebugOption>
+    <IsBuildInDebug>true</IsBuildInDebug>
+    <IsBuildInDebug Condition="$(Optimize) == 'true'">false</IsBuildInDebug>
+    <ToolkitFxcDebugOption Condition="'$(ToolkitFxcDebugOption)' == ''">$(IsBuildInDebug)</ToolkitFxcDebugOption>
   </PropertyGroup>
 
   <Target Name="TkFxcListContentAndCompileTarget">
-    <Message Importance="high" Text="AssignTargetPathsDependsOn @(ToolkitFxc)"/>
+    <!--<Message Importance="high" Text="AssignTargetPathsDependsOn @(ToolkitFxc)"/>-->
     
     <EffectCompilerDependencyTask
         ProjectDirectory="$(ProjectDir)"
