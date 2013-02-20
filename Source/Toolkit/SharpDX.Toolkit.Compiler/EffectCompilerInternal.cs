@@ -94,7 +94,8 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="flags">The flags.</param>
         /// <param name="macros">The macrosArgs.</param>
         /// <param name="includeDirectoryList">The include directory list.</param>
-        /// <param name="includeFileDelegate">The include file delegate.</param>
+        /// <param name="alloDynamicCompiling">if set to <c>true</c> [allo dynamic compiling].</param>
+        /// <param name="dependencyFilePath">The dependency file path.</param>
         /// <returns>The result of compilation.</returns>
         public EffectCompilerResult CompileFromFile(string filePath, EffectCompilerFlags flags = EffectCompilerFlags.None, List<EffectData.ShaderMacro> macros = null, List<string> includeDirectoryList = null, bool alloDynamicCompiling = false, string dependencyFilePath = null)
         {
@@ -109,7 +110,8 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="flags">The flags.</param>
         /// <param name="macrosArgs">The macrosArgs.</param>
         /// <param name="includeDirectoryList">The include directory list.</param>
-        /// <param name="includeFileDelegate">The include file delegate.</param>
+        /// <param name="allowDynamicCompiling">if set to <c>true</c> [allow dynamic compiling].</param>
+        /// <param name="dependencyFilePath">The dependency file path.</param>
         /// <returns>The result of compilation.</returns>
         public EffectCompilerResult Compile(string sourceCode, string filePath, EffectCompilerFlags flags = EffectCompilerFlags.None, List<EffectData.ShaderMacro> macrosArgs = null, List<string> includeDirectoryList = null, bool allowDynamicCompiling = false, string dependencyFilePath = null)
         {
