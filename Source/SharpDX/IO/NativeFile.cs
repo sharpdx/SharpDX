@@ -76,11 +76,13 @@ namespace SharpDX.IO
         /// <summary>
         /// Opens a text file, reads all lines of the file, and then closes the file.
         /// </summary>
-        /// <param name="path">The file to open for reading. </param>
+        /// <param name="path">The file to open for reading.</param>
+        /// <param name="encoding">The encoding.</param>
+        /// <param name="sharing">The sharing.</param>
         /// <returns>A string containing all lines of the file.</returns>
-        public static string ReadAllText(string path, Encoding encoding)
+        public static string ReadAllText(string path, Encoding encoding, NativeFileShare sharing = NativeFileShare.Read)
         {
-            using (var stream = new NativeFileStream(path, NativeFileMode.Open, NativeFileAccess.Read))
+            using (var stream = new NativeFileStream(path, NativeFileMode.Open, NativeFileAccess.Read, sharing))
             {
                 using (StreamReader reader = new StreamReader(stream, encoding, true, 0x400))
                 {

@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.IO;
 
 using SharpDX.IO;
+using SharpDX.Text;
 
 namespace SharpDX.Toolkit.Graphics
 {
@@ -75,7 +76,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>The result of compilation.</returns>
         public EffectCompilerResult CompileFromFile(string filePath, EffectCompilerFlags flags = EffectCompilerFlags.None, List<EffectData.ShaderMacro> macros = null, List<string> includeDirectoryList = null, bool alloDynamicCompiling = false, string dependencyFilePath = null)
         {
-            return Compile(NativeFile.ReadAllText(filePath), filePath, flags, macros, includeDirectoryList, alloDynamicCompiling, dependencyFilePath);
+            return Compile(NativeFile.ReadAllText(filePath, Encoding.UTF8, NativeFileShare.ReadWrite), filePath, flags, macros, includeDirectoryList, alloDynamicCompiling, dependencyFilePath);
         }
 
         /// <summary>

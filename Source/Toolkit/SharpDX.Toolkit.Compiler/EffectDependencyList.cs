@@ -60,7 +60,7 @@ namespace SharpDX.Toolkit.Graphics
 
         public static EffectDependencyList FromFile(string file)
         {
-            using (var stream = new NativeFileStream(file, NativeFileMode.Open, NativeFileAccess.Read)) return FromStream(stream);
+            using (var stream = new NativeFileStream(file, NativeFileMode.Open, NativeFileAccess.Read, NativeFileShare.ReadWrite)) return FromStream(stream);
         }
 
         public void Save(TextWriter writer)
@@ -91,7 +91,7 @@ namespace SharpDX.Toolkit.Graphics
             Remove(filePath);
             Add(filePath, NativeFile.GetLastWriteTime(filePath));
 
-            using (var stream = new NativeFileStream(file, NativeFileMode.Create, NativeFileAccess.Write)) Save(stream);
+            using (var stream = new NativeFileStream(file, NativeFileMode.Create, NativeFileAccess.Write, NativeFileShare.ReadWrite)) Save(stream);
         }
 
         /// <summary>

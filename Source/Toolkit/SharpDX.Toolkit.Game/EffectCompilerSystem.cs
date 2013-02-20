@@ -307,9 +307,9 @@ namespace SharpDX.Toolkit
                 // Loop until the end of this system
                 while (isThreadRunning)
                 {
-                    // On a system that supports FileSystemWatcher (Desktop), process request every 100ms
-                    // otherwise, process files every 500ms.
-                    if (!resetEvent.WaitOne(100 * effectsToAlwaysCheck.Count == 0 ? 1 : 5))
+                    // On a system that supports FileSystemWatcher (Desktop), process request every 250ms
+                    // otherwise, process files every 1000ms.
+                    if (!resetEvent.WaitOne(250 * effectsToAlwaysCheck.Count == 0 ? 1 : 5))
                     {
                         if (effectsToAlwaysCheck.Count == 0)
                         {

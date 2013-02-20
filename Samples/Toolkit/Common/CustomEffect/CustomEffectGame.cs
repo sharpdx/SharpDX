@@ -49,6 +49,12 @@ namespace CustomEffect
             graphicsDeviceManager = new GraphicsDeviceManager(this);
             graphicsDeviceManager.PreferredDepthStencilFormat = DepthFormat.None;
 
+            // Add dynamic EffectCompilerSystem, only active on desktop and compiled in debug mode.
+            // While the program is running, you can edit the shader and save a new version
+            // The EffectCompilerSystem will recompile dynamically the effect without having to
+            // reload/recompile the whole application.
+            GameSystems.Add(new EffectCompilerSystem(this));
+
             // Setup the relative directory to the executable directory
             // for loading contents with the ContentManager
             Content.RootDirectory = "Content";
