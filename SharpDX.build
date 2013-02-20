@@ -95,29 +95,30 @@
   </Target>
   
   <Target Name="GitUpdate">
-	<!-- Update master -->
-	<Exec Command='$(GitExe) checkout --merge "master"'/>
-	<Exec Command='$(GitExe) pull --rebase origin'/>
+	  <!-- Update master -->
+	  <Exec Command='$(GitExe) checkout --merge "master"'/>
+	  <Exec Command='$(GitExe) pull --rebase origin'/>
 	
-	<!-- Rebase master_integration on master -->
-	<Exec Command='$(GitExe) checkout --merge "master_integration"'/>
-	<Exec Command='$(GitExe) rebase "master"'/>
+	  <!-- Rebase master_integration on master -->
+	  <Exec Command='$(GitExe) checkout --merge "master_integration"'/>
+	  <Exec Command='$(GitExe) rebase "master"'/>
 	
-	<!-- Merge master_integration into master -->
-	<Exec Command='$(GitExe) checkout --merge "master"'/>
-	<Exec Command='$(GitExe) merge "master_integration"'/>
+	  <!-- Merge master_integration into master -->
+	  <Exec Command='$(GitExe) checkout --merge "master"'/>
+	  <Exec Command='$(GitExe) merge "master_integration"'/>
 	
-	<!-- Push master to origin -->
-	<Exec Command='$(GitExe) push "origin" master:master'/>
+	  <!-- Push master to origin -->
+	  <Exec Command='$(GitExe) push "origin" master:master'/>
 
-	<!-- Get logs from latest tags and push tags -->
-	<Exec Command='$(GitExe) log latest_build.. > CommitLog.txt'/>
-	<Exec Command='$(GitExe) tag -f latest_build'/>
-	<Exec Command='$(GitExe) push -f "origin" tag latest_build'/>
+	  <!-- Get logs from latest tags and push tags -->
+	  <Exec Command='$(GitExe) log latest_build.. > CommitLog.txt'/>
+	  <Exec Command='$(GitExe) tag -f latest_build'/>
+	  <Exec Command='$(GitExe) push -f "origin" tag latest_build'/>
 	
-	<!-- Push master_integration to origin -->
-	<Exec Command='$(GitExe) checkout --merge "master_integration"'/>
-	<Exec Command='$(GitExe) push "origin" master_integration:master_integration'/>
+	  <!-- Push master_integration to origin -->
+    <Exec Command='$(GitExe) checkout --merge "master_integration"'/>
+    <Exec Command='$(GitExe) pull --rebase origin'/>
+    <Exec Command='$(GitExe) push "origin" master_integration:master_integration'/>
   </Target>
   
   <Target Name="ZipBuild">
