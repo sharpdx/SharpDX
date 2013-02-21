@@ -22,12 +22,17 @@ using System;
 
 namespace SharpDX.MediaFoundation
 {
+    /// <summary>
+    /// Delegate MediaEngineNotifyDelegate {CC2D43FA-BBC4-448A-9D0B-7B57ADF2655C}
+    /// </summary>
+    /// <param name="mediaEvent">The media event.</param>
+    /// <param name="param1">The param1.</param>
+    /// <param name="param2">The param2.</param>
+    public delegate void MediaEngineNotifyDelegate(MediaEngineEvent mediaEvent, long param1, int param2);
+    
     public partial class MediaEngine
     {
         private MediaEngineNotifyImpl mediaEngineNotifyImpl;
-
-
-        public delegate void MediaEngineNotifyDelegate(MediaEngineEvent mediaEvent, long param1, int param2);
 
         /// <summary>
         /// Initializes an instance of the <see cref="MediaEngine"/> class.
@@ -35,12 +40,18 @@ namespace SharpDX.MediaFoundation
         /// <param name="factory"></param>
         /// <param name="attributes"></param>
         /// <param name="createFlags"> </param>
+        /// <msdn-id>hh447921</msdn-id>	
+        /// <unmanaged>HRESULT IMFMediaEngineClassFactory::CreateInstance([In] MF_MEDIA_ENGINE_CREATEFLAGS dwFlags,[In] IMFAttributes* pAttr,[Out, Fast] IMFMediaEngine** ppPlayer)</unmanaged>	
+        /// <unmanaged-short>IMFMediaEngineClassFactory::CreateInstance</unmanaged-short>	
         public MediaEngine(MediaEngineClassFactory factory, MediaEngineAttributes attributes = null, MediaEngineCreateFlags createFlags = MediaEngineCreateFlags.None, MediaEngineNotifyDelegate playbackCallback = null)
         {
             // Create engine attributes if null
             attributes = attributes ?? new MediaEngineAttributes();
 
-            PlaybackEvent = playbackCallback;
+            if (playbackCallback != null)
+            {
+                PlaybackEvent += playbackCallback;
+            }
 
             // Setup by default the MediaEngine notify as it is mandatory
             mediaEngineNotifyImpl = new MediaEngineNotifyImpl(this);
@@ -60,7 +71,6 @@ namespace SharpDX.MediaFoundation
         /// Media engine playback event.
         /// </summary>
         public event MediaEngineNotifyDelegate PlaybackEvent;
-
 
         /// <summary>	
         /// <p>[This documentation is preliminary and is subject to change.]</p><p><strong>Applies to: </strong>desktop apps | Metro style apps</p><p>Queries the Media Engine to find out whether a new video frame is ready.</p>	
@@ -100,7 +110,7 @@ namespace SharpDX.MediaFoundation
 
         private class MediaEngineNotifyImpl : CallbackBase, MediaEngineNotify
         {
-            private MediaEngine MediaEngine;
+            private readonly MediaEngine MediaEngine;
 
             public MediaEngineNotifyImpl(MediaEngine mediaEngine)
             {
