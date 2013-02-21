@@ -174,7 +174,7 @@ namespace SharpDX.Toolkit
 
                             renderTargets[nextRenderTarget].NativePointer = renderTargetView.NativePointer;
                             renderTargets[nextRenderTarget].RenderTarget = BackBuffer;
-                            nextRenderTarget++;
+                            nextRenderTarget = (nextRenderTarget + 1)%renderTargets.Length;
                         }
 
                         // TODO: Check that new device/devicecontext/renderTargetView are the same
