@@ -94,7 +94,7 @@ namespace SharpDX.Toolkit.Input
         public int Y { get { return y; } }
 
         /// <summary>
-        /// Delta of mouse wheel relative to previous input event
+        /// Gets the cumulative mouse scroll wheel value since the game was started.
         /// </summary>
         public int WheelDelta { get { return wheelDelta; } }
     }

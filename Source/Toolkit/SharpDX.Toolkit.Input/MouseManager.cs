@@ -109,7 +109,7 @@ namespace SharpDX.Toolkit.Input
         /// <param name="wheelDelta">The pressed button</param>
         private void HandleWheelDelta(int wheelDelta)
         {
-            this.wheelDelta = wheelDelta;
+            this.wheelDelta += wheelDelta;
         }
 
         /// <summary>
