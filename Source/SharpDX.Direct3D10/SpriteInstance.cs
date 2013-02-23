@@ -32,7 +32,7 @@ namespace SharpDX.Direct3D10
         {
             get
             {
-                return new ShaderResourceView(ShaderResourceViewPointer);
+                return CppObject.FromPointer<ShaderResourceView>(ShaderResourceViewPointer);
             }
             set
             {

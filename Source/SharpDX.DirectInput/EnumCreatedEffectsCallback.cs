@@ -64,7 +64,7 @@ namespace SharpDX.DirectInput
         private unsafe delegate int DirectInputEnumCreatedEffectsDelegate(void* deviceInstance, IntPtr data);
         private unsafe int DirectInputEnumCreatedEffectsImpl(void* deviceInstance, IntPtr data)
         {
-            var newEffect = new Effect((IntPtr)deviceInstance);
+            var newEffect = CppObject.FromPointer<Effect>((IntPtr)deviceInstance);
             Effects.Add(newEffect);
             // Return true to continue iterating
             return 1;

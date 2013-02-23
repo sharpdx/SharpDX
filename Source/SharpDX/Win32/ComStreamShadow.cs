@@ -118,7 +118,7 @@ namespace SharpDX.Win32
                 {
                     var shadow = ToShadow<ComStreamShadow>(thisPtr);
                     var callback = ((IStream)shadow.Callback);
-                    numberOfBytesRead = callback.CopyTo(new ComStream(streamPointer), numberOfBytes, out numberOfBytesWritten);
+                    numberOfBytesRead = callback.CopyTo(FromPointer<ComStream>(streamPointer), numberOfBytes, out numberOfBytesWritten);
                 }
                 catch (Exception exception)
                 {

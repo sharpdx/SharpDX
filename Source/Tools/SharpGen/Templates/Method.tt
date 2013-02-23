@@ -309,13 +309,13 @@
                 if (<#= param.Name #> != null)
 <#+								}
 #>                for (int i = 0; i < <#= param.Name #>.Length; i++)
-                    <#= param.Name #>[i] = (<#= param.TempName #>[i] == IntPtr.Zero)?null:new <#= paramInterface.NativeImplem.QualifiedName #>(<#= param.TempName #>[i]);	
+                    <#= param.Name #>[i] = CppObject.FromPointer<<#= paramInterface.NativeImplem.QualifiedName #>>(<#= param.TempName #>[i]);	
 <#+	
 							} else {
 								if (param.IsFastOut) {#>
-                ((<#= paramInterface.NativeImplem.QualifiedName #>)<#= param.Name #>).NativePointer = <#= param.TempName #>;
+                CppObject.SetDefaultInstance(<#= param.TempName #>, ((<#= paramInterface.NativeImplem.QualifiedName #>)<#= param.Name #>));
 <#+								} else {#>
-                <#= param.Name #>= (<#= param.TempName #> == IntPtr.Zero)?null:new <#= paramInterface.NativeImplem.QualifiedName #>(<#= param.TempName #>);	
+                <#= param.Name #>= CppObject.FromPointer<<#= paramInterface.NativeImplem.QualifiedName #>>(<#= param.TempName #>);	
 <#+								}
 							}
 						} else if (param.IsBoolToInt && !param.IsArray) {#>

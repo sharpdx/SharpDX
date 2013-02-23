@@ -58,7 +58,7 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<SourceTransformShadow>(thisPtr);
                     var callback = (SourceTransform)shadow.Callback;
-                    callback.SetRenderInformation(new RenderInformation(renderInfo));
+                    callback.SetRenderInformation(FromPointer<RenderInformation>(renderInfo));
                 }
                 catch (Exception exception)
                 {
@@ -76,7 +76,7 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<SourceTransformShadow>(thisPtr);
                     var callback = (SourceTransform)shadow.Callback;
-                    callback.Draw(new Bitmap1(target), *(SharpDX.Rectangle*)drawRect, targetOrigin);
+                    callback.Draw(FromPointer<Bitmap1>(target), *(SharpDX.Rectangle*)drawRect, targetOrigin);
                 }
                 catch (Exception exception)
                 {

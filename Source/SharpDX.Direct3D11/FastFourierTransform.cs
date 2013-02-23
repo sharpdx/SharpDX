@@ -262,7 +262,7 @@ namespace SharpDX.Direct3D11
         {
             IntPtr returnView = IntPtr.Zero;
             ForwardTransform(inputBufferRef, ref returnView);
-            return new UnorderedAccessView(returnView);
+            return FromPointer<UnorderedAccessView>(returnView);
         }
 
         /// <summary>	
@@ -277,7 +277,7 @@ namespace SharpDX.Direct3D11
         {
             IntPtr returnView = IntPtr.Zero;
             InverseTransform(inputBufferRef, ref returnView);
-            return new UnorderedAccessView(returnView);
+            return FromPointer<UnorderedAccessView>(returnView);
         }
 
         /// <summary>

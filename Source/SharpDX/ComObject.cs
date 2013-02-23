@@ -208,18 +208,6 @@ namespace SharpDX
             return FromPointer<T>(QueryInterfaceOrNull(Utilities.GetGuidFromType(typeof(T))));
         }
 
-        /// <summary>
-        /// Performs an explicit conversion from <see cref="System.IntPtr"/> to <see cref="SharpDX.ComObject"/>.
-        /// </summary>
-        /// <param name="nativePointer">The native pointer.</param>
-        /// <returns>
-        /// The result of the conversion.
-        /// </returns>
-        public static explicit operator ComObject(IntPtr nativePointer)
-        {
-            return nativePointer == IntPtr.Zero ? null : new ComObject(nativePointer);
-        }
-
         ///<summary>
         /// Query Interface for a particular interface support and attach to the given instance.
         ///</summary>
@@ -261,6 +249,9 @@ namespace SharpDX
             // Only dispose non-zero object
             if (NativePointer != IntPtr.Zero)
             {
+                // Dispose all cached members
+                DisposeCachedMembers();
+
 //                // If object is disposed by the finalizer, emits a warning
 //                if (Configuration.EnableObjectTracking && !disposing)
 //                {
@@ -278,6 +269,9 @@ namespace SharpDX
                 if (Configuration.EnableObjectTracking)
                     ObjectTracker.UnTrack(this);                
 
+                // Release native pointer
+                ObjectTracker.ReleaseDefaultInstance(NativePointer, this);
+
                 // Set pointer to null (using protected members in order to avoid NativePointerUpdat* callbacks.
                 _nativePointer = (void*)0;
             }
@@ -292,6 +286,8 @@ namespace SharpDX
 
         protected override void NativePointerUpdated(IntPtr oldNativePointer)
         {
+            DisposeCachedMembers();
+
             if (Configuration.EnableObjectTracking)
                 ObjectTracker.Track(this);
         }

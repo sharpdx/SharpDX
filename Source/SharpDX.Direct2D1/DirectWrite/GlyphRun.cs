@@ -77,7 +77,7 @@ namespace SharpDX.DirectWrite
         // Method to marshal from native to managed struct
         internal unsafe void __MarshalFrom(ref __Native @ref)
         {
-            this.FontFace = (@ref.FontFace == IntPtr.Zero) ? null : new FontFace(@ref.FontFace);
+            this.FontFace = (@ref.FontFace == IntPtr.Zero) ? null : CppObject.FromPointer<FontFace>(@ref.FontFace);
             // If FontFace != null, adds a reference to it
             if (FontFace != null)
                 ((IUnknown) this.FontFace).AddReference();

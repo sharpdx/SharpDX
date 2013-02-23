@@ -52,7 +52,7 @@ namespace SharpDX.XAudio2
         {
             get
             {
-                return OutputVoicePointer==IntPtr.Zero?null:new Voice(OutputVoicePointer);
+                return OutputVoicePointer==IntPtr.Zero?null:CppObject.FromPointer<Voice>(OutputVoicePointer);
             }
             set
             {

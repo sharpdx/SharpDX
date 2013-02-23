@@ -40,7 +40,7 @@ namespace SharpDX.Direct3D11
             {
                 IntPtr __output__; 
                 GetResource(out __output__); 
-                return new Resource(__output__);
+                return FromPointer<Resource>(__output__);
             }
         }
 

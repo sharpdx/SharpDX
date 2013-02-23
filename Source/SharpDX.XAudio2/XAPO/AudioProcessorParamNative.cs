@@ -50,7 +50,7 @@ namespace SharpDX.XAPO
             {
                 IntPtr parameterProviderPtr;
                 QueryInterface(Utilities.GetGuidFromType(typeof (ParameterProvider)), out parameterProviderPtr);
-                _parameterProviderNative = new ParameterProviderNative(parameterProviderPtr);
+                _parameterProviderNative = FromPointer<ParameterProviderNative>(parameterProviderPtr);
             }
         }
 

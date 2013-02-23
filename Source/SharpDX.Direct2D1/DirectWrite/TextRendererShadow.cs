@@ -123,7 +123,7 @@ namespace SharpDX.DirectWrite
             {
                 var shadow = ToShadow<TextRendererShadow>(thisObject);
                 var callback = (TextRenderer)shadow.Callback;
-                return callback.DrawInlineObject(GCHandle.FromIntPtr(clientDrawingContextPtr).Target, originX, originY, new InlineObjectNative(inlineObject), isSideways != 0, isRightToLeft != 0, (ComObject)Utilities.GetObjectForIUnknown(clientDrawingEffectPtr)).Code;
+                return callback.DrawInlineObject(GCHandle.FromIntPtr(clientDrawingContextPtr).Target, originX, originY, FromPointer<InlineObjectNative>(inlineObject), isSideways != 0, isRightToLeft != 0, (ComObject)Utilities.GetObjectForIUnknown(clientDrawingEffectPtr)).Code;
             }
         }
 

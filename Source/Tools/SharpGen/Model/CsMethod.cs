@@ -120,7 +120,8 @@ namespace SharpGen.Model
 
             AllowProperty = !tag.Property.HasValue || tag.Property.Value;
 
-            IsPersistent = tag.Persist.HasValue && tag.Persist.Value;
+            // Check if persistence is allowed for this property
+            AllowPersist = !(tag.Persist.HasValue && !tag.Persist.Value);
 
             if (tag.MethodCheckReturnType.HasValue)
                 CheckReturnType = tag.MethodCheckReturnType.Value;
@@ -141,6 +142,8 @@ namespace SharpGen.Model
         public bool AllowProperty { get; set; }
 
         public bool IsPersistent { get; set; }
+
+        public bool AllowPersist { get; private set; }
 
         public int Offset { get; set; }
 
@@ -217,7 +220,7 @@ namespace SharpGen.Model
                 if (ReturnType.PublicType.Type != null && ReturnType.PublicType.Type == typeof (bool))
                     return "(0!=";
                 if (ReturnType.PublicType is CsInterface)
-                    return "new " + ReturnType.PublicType.QualifiedName + "((IntPtr)";
+                    return "CppObject.FromPointer<" + ReturnType.PublicType.QualifiedName + ">((IntPtr)";
                 if (ReturnType.PublicType.Type == typeof(string))
                 {
                     if (ReturnType.IsWideChar)

@@ -118,7 +118,7 @@ namespace SharpDX.DirectWrite
                 {
                     var shadow = ToShadow<TextAnalysisSinkShadow>(thisPtr);
                     var callback = (TextAnalysisSink)shadow.Callback;
-                    callback.SetNumberSubstitution(textPosition, textLength, new NumberSubstitution(numberSubstitution));
+                    callback.SetNumberSubstitution(textPosition, textLength, FromPointer<NumberSubstitution>(numberSubstitution));
                 }
                 catch (Exception exception)
                 {

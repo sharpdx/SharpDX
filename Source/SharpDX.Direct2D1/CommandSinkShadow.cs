@@ -177,7 +177,7 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<CommandSinkShadow>(thisPtr);
                     var callback = (CommandSink)shadow.Callback;
-                    callback.TextRenderingParams = new DirectWrite.RenderingParams(textRenderingParams);
+                    callback.TextRenderingParams = FromPointer<DirectWrite.RenderingParams>(textRenderingParams);
                 }
                 catch (Exception exception)
                 {
@@ -279,7 +279,7 @@ namespace SharpDX.Direct2D1
 
                     var shadow = ToShadow<CommandSinkShadow>(thisPtr);
                     var callback = (CommandSink)shadow.Callback;
-                    callback.DrawGlyphRun(baselineOrigin, glyphRun, glyphRunDescription, new Brush(foregroundBrush), measuringMode);
+                    callback.DrawGlyphRun(baselineOrigin, glyphRun, glyphRunDescription, FromPointer<Brush>(foregroundBrush), measuringMode);
 
                 }
                 catch (Exception exception)
@@ -302,7 +302,7 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<CommandSinkShadow>(thisPtr);
                     var callback = (CommandSink)shadow.Callback;
-                    callback.DrawLine(point0, point1, new Brush(brush), strokeWidth, new StrokeStyle(strokeStyle));
+                    callback.DrawLine(point0, point1, FromPointer<Brush>(brush), strokeWidth, FromPointer<StrokeStyle>(strokeStyle));
                 }
                 catch (Exception exception)
                 {
@@ -320,7 +320,7 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<CommandSinkShadow>(thisPtr);
                     var callback = (CommandSink)shadow.Callback;
-                    callback.DrawGeometry(new Geometry(geometry),  new Brush(brush), strokeWidth, new StrokeStyle(strokeStyle));
+                    callback.DrawGeometry(FromPointer<Geometry>(geometry), FromPointer<Brush>(brush), strokeWidth, FromPointer<StrokeStyle>(strokeStyle));
                 }
                 catch (Exception exception)
                 {
@@ -338,7 +338,7 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<CommandSinkShadow>(thisPtr);
                     var callback = (CommandSink)shadow.Callback;
-                    callback.DrawRectangle(*(SharpDX.RectangleF*)rect, new Brush(brush), strokeWidth, new StrokeStyle(strokeStyle));
+                    callback.DrawRectangle(*(SharpDX.RectangleF*)rect, FromPointer<Brush>(brush), strokeWidth, FromPointer<StrokeStyle>(strokeStyle));
                 }
                 catch (Exception exception)
                 {
@@ -356,7 +356,7 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<CommandSinkShadow>(thisPtr);
                     var callback = (CommandSink)shadow.Callback;
-                    callback.DrawBitmap(new Bitmap(bitmap),
+                    callback.DrawBitmap(FromPointer<Bitmap>(bitmap),
                         destinationRectangle == IntPtr.Zero ? (SharpDX.RectangleF?)null : *(SharpDX.RectangleF*)destinationRectangle, 
                         opacity,
                         interpolationMode,
@@ -379,7 +379,7 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<CommandSinkShadow>(thisPtr);
                     var callback = (CommandSink)shadow.Callback;
-                    callback.DrawImage(new Image(image),
+                    callback.DrawImage(FromPointer<Image>(image),
                         targetOffset == IntPtr.Zero ? (SharpDX.DrawingPointF?)null : *(SharpDX.DrawingPointF*)targetOffset,
                         imageRectangle == IntPtr.Zero ? (SharpDX.RectangleF?)null : *(SharpDX.RectangleF*)imageRectangle, 
                         interpolationMode,
@@ -401,7 +401,7 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<CommandSinkShadow>(thisPtr);
                     var callback = (CommandSink)shadow.Callback;
-                    callback.DrawGdiMetafile(new GdiMetafile(gdiMetafile), 
+                    callback.DrawGdiMetafile(FromPointer<GdiMetafile>(gdiMetafile), 
                         targetOffset == IntPtr.Zero ? (SharpDX.DrawingPointF?) null: *(SharpDX.DrawingPointF*)targetOffset);
                 }
                 catch (Exception exception)
@@ -425,7 +425,7 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<CommandSinkShadow>(thisPtr);
                     var callback = (CommandSink)shadow.Callback;
-                    callback.FillMesh(new Mesh(mesh), new Brush(brush));
+                    callback.FillMesh(FromPointer<Mesh>(mesh), FromPointer<Brush>(brush));
                 }
                 catch (Exception exception)
                 {
@@ -443,7 +443,7 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<CommandSinkShadow>(thisPtr);
                     var callback = (CommandSink)shadow.Callback;
-                    callback.FillOpacityMask(new Bitmap(opacityMask), new Brush(brush),
+                    callback.FillOpacityMask(FromPointer<Bitmap>(opacityMask), FromPointer<Brush>(brush),
                         destinationRectangle == IntPtr.Zero ? (SharpDX.RectangleF?)null : *(SharpDX.RectangleF*)destinationRectangle,
                         sourceRectangle == IntPtr.Zero ? (SharpDX.RectangleF?)null : *(SharpDX.RectangleF*)sourceRectangle);
                 }
@@ -463,7 +463,7 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<CommandSinkShadow>(thisPtr);
                     var callback = (CommandSink)shadow.Callback;
-                    callback.FillGeometry(new Geometry(geometry), new Brush(brush), new Brush(opacityBrush));
+                    callback.FillGeometry(FromPointer<Geometry>(geometry), FromPointer<Brush>(brush), FromPointer<Brush>(opacityBrush));
                 }
                 catch (Exception exception)
                 {
@@ -481,7 +481,7 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<CommandSinkShadow>(thisPtr);
                     var callback = (CommandSink)shadow.Callback;
-                    callback.FillRectangle(*(SharpDX.RectangleF*)rect, new Brush(brush));
+                    callback.FillRectangle(*(SharpDX.RectangleF*)rect, FromPointer<Brush>(brush));
                 }
                 catch (Exception exception)
                 {
@@ -530,7 +530,7 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<CommandSinkShadow>(thisPtr);
                     var callback = (CommandSink)shadow.Callback;
-                    callback.PushLayer(ref *(LayerParameters1*)layerParameters1, layer == IntPtr.Zero ? null : new Layer(layer));
+                    callback.PushLayer(ref *(LayerParameters1*)layerParameters1, layer == IntPtr.Zero ? null : CppObject.FromPointer<Layer>(layer));
                 }
                 catch (Exception exception)
                 {

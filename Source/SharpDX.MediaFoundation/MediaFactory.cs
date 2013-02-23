@@ -48,7 +48,7 @@ namespace SharpDX.MediaFoundation
                 var ptr = (IntPtr*)(pActivatesArr);
                 for (int i = 0; i < pNumActivates; i++)
                 {
-                    activates[i] = new Activate(ptr[i]);
+                    activates[i] = CppObject.FromPointer<Activate>(ptr[i]);
                 }
             }
             Marshal.FreeCoTaskMem(pActivatesArr);

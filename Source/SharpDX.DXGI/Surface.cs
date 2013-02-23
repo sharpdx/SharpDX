@@ -57,7 +57,7 @@ namespace SharpDX.DXGI
         {
             IntPtr surfacePointer;
             swapChain.GetBuffer(index, Utilities.GetGuidFromType(typeof (Surface)), out surfacePointer);
-            return new Surface(surfacePointer);
+            return CppObject.FromPointer<Surface>(surfacePointer);
         }
     }
 }

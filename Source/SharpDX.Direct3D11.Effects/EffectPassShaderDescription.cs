@@ -32,7 +32,7 @@ namespace SharpDX.Direct3D11
         {
             get
             {
-                return new EffectShaderVariable(VariablePointer);
+                return CppObject.FromPointer<EffectShaderVariable>(VariablePointer);
             }
         }
     }

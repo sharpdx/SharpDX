@@ -66,18 +66,6 @@ foreach (var sharpInterface in Namespace.Interfaces)
         /// <param name="nativePtr">The native pointer.</param>	
         public <#= sharpInterface.Name #>(IntPtr nativePtr) : base(nativePtr) {
         }
-
-		/// <summary>
-		/// Performs an explicit conversion from <see cref="System.IntPtr"/> to <see cref="<#= sharpInterface.QualifiedName #>"/>. (This method is a shortcut to <see cref="SharpDX.CppObject.NativePointer"/>) 
-		/// </summary>
-		/// <param name="nativePointer">The native pointer.</param>
-		/// <returns>
-		/// The result of the conversion.
-		/// </returns>
-		public static explicit operator <#= sharpInterface.QualifiedName #>(IntPtr nativePointer)
-		{
-			return nativePointer == IntPtr.Zero ? null : new <#= sharpInterface.QualifiedName #>(nativePointer);
-		}
 <#+
 	}
 #>
@@ -165,7 +153,7 @@ foreach (var sharpInterface in Namespace.Interfaces)
 			if (sharpProperty.Getter != null) {			
 				if (sharpProperty.IsPersistent) {
 #>
-                get { return <#= sharpProperty.Name #>__ ?? <#= sharpProperty.Name #>__ = <#= sharpProperty.Getter.Name #>(); }
+                get { return <#= sharpProperty.Name #>__ ?? (<#= sharpProperty.Name #>__ = <#= sharpProperty.Getter.Name #>()); }
 <#+		
 				} else {
 #>
@@ -181,7 +169,7 @@ foreach (var sharpInterface in Namespace.Interfaces)
 		}
 #>        }
 <#+	
-		if (sharpProperty.IsPropertyParam && sharpProperty.IsPersistent) {
+		if (sharpProperty.IsPersistent) {
 #>
 			protected internal <#= sharpProperty.PublicType.QualifiedName #> <#= sharpProperty.Name #>__;
 <#+		
@@ -196,6 +184,27 @@ foreach (var sharpInterface in Namespace.Interfaces)
 			sharpInterfaceMethod.Hidden = true;
 		ProcessMethod(sharpInterfaceMethod);
 	}
+
+	if (sharpInterface.HasPersistent && !sharpInterface.IsCallback)
+	{
+#>
+        protected override void DisposeCachedMembers()
+        {
+<#+		
+			foreach (var sharpProperty in sharpInterface.Properties) {	
+			if (sharpProperty.IsPersistent)
+			{
+#>
+            SharpDX.Utilities.Dispose(ref <#= sharpProperty.Name #>__);
+<#+		
+			}
+		}
+#>
+            base.DisposeCachedMembers();
+        }
+<#+		
+	}
+
 #>
     }
 <#+

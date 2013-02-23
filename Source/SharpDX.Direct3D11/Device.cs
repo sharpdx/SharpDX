@@ -594,19 +594,6 @@ namespace SharpDX.Direct3D11
             }
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (ImmediateContext__ != null)
-                {
-                    ImmediateContext__.Dispose();
-                    ImmediateContext__ = null;
-                }
-            }
-            base.Dispose(disposing);
-        }
-
         /// <summary>
         ///   Internal CreateDevice
         /// </summary>
@@ -624,7 +611,9 @@ namespace SharpDX.Direct3D11
 
             if (ImmediateContext__ != null)
             {
-                // Add a reference when setting the device on the context
+                // As we are setting internally the context.Device property,
+                // we have to add a reference to this device because the immediate context 
+                // will release it on dispose.
                 ((IUnknown)this).AddReference();
                 ImmediateContext__.Device__ = this;
             }

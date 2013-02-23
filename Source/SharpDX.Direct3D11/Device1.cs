@@ -231,8 +231,8 @@ namespace SharpDX.Direct3D11
         /// <unmanaged>HRESULT ID3D11Device1::CreateDeviceContextState([In] D3D11_1_CREATE_DEVICE_CONTEXT_STATE_FLAG Flags,[In, Buffer] const D3D_FEATURE_LEVEL* pFeatureLevels,[In] unsigned int FeatureLevels,[In] unsigned int SDKVersion,[In] const GUID&amp; EmulatedInterface,[Out, Optional] D3D_FEATURE_LEVEL* pChosenFeatureLevel,[Out, Fast] ID3DDeviceContextState** ppContextState)</unmanaged>	
         public SharpDX.Direct3D11.DeviceContextState CreateDeviceContextState<T>(SharpDX.Direct3D11.CreateDeviceContextStateFlags flags, SharpDX.Direct3D.FeatureLevel[] featureLevelsRef, out SharpDX.Direct3D.FeatureLevel chosenFeatureLevelRef) where T : ComObject
         {
-            var deviceContextState = new SharpDX.Direct3D11.DeviceContextState(IntPtr.Zero);
-            CreateDeviceContextState(flags, featureLevelsRef, featureLevelsRef.Length, D3D11.SdkVersion, Utilities.GetGuidFromType(typeof(T)), out chosenFeatureLevelRef, deviceContextState);
+            DeviceContextState deviceContextState;
+            CreateDeviceContextState(flags, featureLevelsRef, featureLevelsRef.Length, D3D11.SdkVersion, Utilities.GetGuidFromType(typeof(T)), out chosenFeatureLevelRef, out deviceContextState);
             return deviceContextState;
         }
 
@@ -269,21 +269,6 @@ namespace SharpDX.Direct3D11
             IntPtr temp;
             OpenSharedResourceByName(name, desiredAccess, Utilities.GetGuidFromType(typeof(T)), out temp);
             return FromPointer<T>(temp);
-        }
-
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (ImmediateContext1__ != null)
-                {
-                    ImmediateContext1__.Dispose();
-                    ImmediateContext1__ = null;
-                }
-            }
-            
-            base.Dispose(disposing);
         }
     }
 }

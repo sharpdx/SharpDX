@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 #if DIRECTX11_1
 using System;
+using System.Runtime.InteropServices;
 
 namespace SharpDX.MediaFoundation
 {
@@ -71,6 +72,22 @@ namespace SharpDX.MediaFoundation
         /// Media engine playback event.
         /// </summary>
         public event MediaEngineNotifyDelegate PlaybackEvent;
+
+        public string Source
+        {
+            set
+            {
+                var strPtr = Utilities.StringToCoTaskMemUni(value);
+                try
+                {
+                    SetSource(strPtr);
+                }
+                finally
+                {
+                    Marshal.FreeCoTaskMem(strPtr);
+                }
+            }
+        }
 
         /// <summary>	
         /// <p>[This documentation is preliminary and is subject to change.]</p><p><strong>Applies to: </strong>desktop apps | Metro style apps</p><p>Queries the Media Engine to find out whether a new video frame is ready.</p>	

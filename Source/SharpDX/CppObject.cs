@@ -19,6 +19,8 @@
 // THE SOFTWARE.
 using System;
 
+using SharpDX.Diagnostics;
+
 namespace SharpDX
 {
     /// <summary>
@@ -129,7 +131,7 @@ namespace SharpDX
         }
 
         protected override void Dispose(bool disposing)
-        {            
+        {
         }
 
         /// <summary>
@@ -140,12 +142,21 @@ namespace SharpDX
         /// <returns>An instance of T binded to the native pointer</returns>
         public static T FromPointer<T>(IntPtr comObjectPtr) where T : CppObject
         {
-            return (comObjectPtr == IntPtr.Zero) ? null : (T) Activator.CreateInstance(typeof (T), comObjectPtr);
+            return ObjectTracker.FindOrCreateDefaultInstance<T>(comObjectPtr);
+        }
+
+        internal static void SetDefaultInstance<T>(IntPtr comObjectPtr, T valueInstance) where T : CppObject
+        {
+            ObjectTracker.MakeDefaultInstance(comObjectPtr, valueInstance);
         }
 
         internal static T FromPointerUnsafe<T>(IntPtr comObjectPtr)
         {
-            return (comObjectPtr == IntPtr.Zero) ? (T)(object)null : (T)Activator.CreateInstance(typeof(T), comObjectPtr);
+            return ObjectTracker.FindOrCreateDefaultInstance<T>(comObjectPtr);
+        }
+
+        protected virtual void DisposeCachedMembers()
+        {
         }
     }
 }

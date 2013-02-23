@@ -56,7 +56,7 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<DrawTransformShadow>(thisPtr);
                     var callback = (DrawTransform)shadow.Callback;
-                    callback.SetDrawInformation(new DrawInformation(drawInfo));
+                    callback.SetDrawInformation(FromPointer<DrawInformation>(drawInfo));
                 }
                 catch (Exception exception)
                 {

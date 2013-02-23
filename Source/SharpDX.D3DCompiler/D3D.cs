@@ -106,8 +106,8 @@ namespace SharpDX.D3DCompiler
                         definesRef[i].__MarshalFree(ref definesRef__[i]);
                     }
                 }
-                compiledEffectOut = (compiledEffectOut_ == IntPtr.Zero) ? null : new SharpDX.Direct3D.Blob(compiledEffectOut_);
-                errorsOut = (errorsOut_ == IntPtr.Zero) ? null : new SharpDX.Direct3D.Blob(errorsOut_);
+                compiledEffectOut = (compiledEffectOut_ == IntPtr.Zero) ? null : CppObject.FromPointer<Direct3D.Blob>(compiledEffectOut_);
+                errorsOut = (errorsOut_ == IntPtr.Zero) ? null : CppObject.FromPointer<Direct3D.Blob>(errorsOut_);
                 __result__.CheckError();
                 return __result__;
             }

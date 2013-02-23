@@ -58,7 +58,7 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<CustomEffectShadow>(thisPtr);
                     var callback = (CustomEffect)shadow.Callback;
-                    callback.Initialize(new EffectContext(effectContext), new TransformGraph(transformationGraph));
+                    callback.Initialize(FromPointer<EffectContext>(effectContext), FromPointer<TransformGraph>(transformationGraph));
                 }
                 catch (Exception exception)
                 {
@@ -100,7 +100,7 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<CustomEffectShadow>(thisPtr);
                     var callback = (CustomEffect)shadow.Callback;
-                    callback.SetGraph(new TransformGraph(transformGraph));
+                    callback.SetGraph(FromPointer<TransformGraph>(transformGraph));
                 }
                 catch (Exception exception)
                 {

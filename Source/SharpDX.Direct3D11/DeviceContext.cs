@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 using System;
 using System.Globalization;
-using System.Runtime.InteropServices;
 
 namespace SharpDX.Direct3D11
 {
@@ -34,10 +33,6 @@ namespace SharpDX.Direct3D11
             : base(IntPtr.Zero)
         {
             device.CreateDeferredContext(0, this);
-
-            // Add a reference to the device
-            ((IUnknown)device).AddReference();
-            Device__ = device;
         }
 
         /// <summary>

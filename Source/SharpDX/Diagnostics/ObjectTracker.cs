@@ -47,13 +47,49 @@ namespace SharpDX.Diagnostics
         }
     }
 
+    /// <summary>
+    /// List of <see cref="ObjectReference"/> tracked by <see cref="ObjectTracker"/>.
+    /// </summary>
+    public class ObjectReferenceCollection : List<ObjectReference>
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObjectReferenceCollection"/> class.
+        /// </summary>
+        public ObjectReferenceCollection()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Collections.Generic.List`1" /> class that is empty and has the specified initial capacity.
+        /// </summary>
+        /// <param name="capacity">The number of elements that the new list can initially store.</param>
+        public ObjectReferenceCollection(int capacity)
+            : base(capacity)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObjectReferenceCollection"/> class.
+        /// </summary>
+        /// <param name="collection">The collection.</param>
+        public ObjectReferenceCollection(IEnumerable<ObjectReference> collection)
+            : base(collection)
+        {
+        }
+
+        /// <summary>
+        /// Gets the default instance.
+        /// </summary>
+        /// <value>The default instance.</value>
+        public WeakReference DefaultInstance { get; internal set; }
+    }
 
     /// <summary>
     /// Track all allocated objects.
     /// </summary>
     public static class ObjectTracker
     {
-        private static readonly Dictionary<IntPtr, List<ObjectReference>> ObjectReferences = new Dictionary<IntPtr, List<ObjectReference>>(EqualityComparer.DefaultIntPtr);
+        private static readonly Dictionary<IntPtr, ObjectReferenceCollection> ObjectReferences = new Dictionary<IntPtr, ObjectReferenceCollection>(1024, EqualityComparer.DefaultIntPtr);
 
         /// <summary>
         /// Occurs when a ComObject is tracked.
@@ -101,11 +137,11 @@ namespace SharpDX.Diagnostics
                 return;
             lock (ObjectReferences)
             {
-                List<ObjectReference> referenceList;
+                ObjectReferenceCollection referenceList;
                 // Object is already tracked
                 if (!ObjectReferences.TryGetValue(comObject.NativePointer, out referenceList))
                 {
-                    referenceList = new List<ObjectReference>();
+                    referenceList = new ObjectReferenceCollection();
                     ObjectReferences.Add(comObject.NativePointer, referenceList);
                 }
 #if W8CORE
@@ -123,16 +159,113 @@ namespace SharpDX.Diagnostics
         /// </summary>
         /// <param name="comObjectPtr">The COM object pointer.</param>
         /// <returns>A list of object reference</returns>
-        public static List<ObjectReference> Find(IntPtr comObjectPtr)
+        public static ObjectReferenceCollection Find(IntPtr comObjectPtr)
         {
             lock (ObjectReferences)
             {
-                List<ObjectReference> referenceList;
+                ObjectReferenceCollection referenceList;
                 // Object is already tracked
                 if (ObjectReferences.TryGetValue(comObjectPtr, out referenceList))
-                    return new List<ObjectReference>(referenceList);
+                    return new ObjectReferenceCollection(referenceList);
             }
-            return new List<ObjectReference>();
+            return new ObjectReferenceCollection();
+        }
+
+        internal static T FindOrCreateDefaultInstance<T>(IntPtr cppObjectPtr)
+        {
+            if (cppObjectPtr == IntPtr.Zero)
+            {
+                return default(T);
+            }
+
+            T valueInstance;
+            lock (ObjectReferences)
+            {
+                ObjectReferenceCollection referenceList;
+
+                // Object is already tracked
+                if (!ObjectReferences.TryGetValue(cppObjectPtr, out referenceList))
+                {
+                    ObjectReferences.Add(cppObjectPtr, referenceList = new ObjectReferenceCollection());
+                }
+            
+                // Create a new instance only if :
+                // - There is no instance
+                // - The current instance is not assignable to T (T has a higher instance than the stored instance)
+
+                bool createNewInstance = false;
+                object localRef = null;
+                if (referenceList.DefaultInstance == null)
+                {
+                    createNewInstance = true;
+                }
+                else
+                {
+                    localRef = referenceList.DefaultInstance.Target;
+                    if (localRef != null)
+                    {
+                        createNewInstance = (typeof(T) != localRef.GetType() && !Utilities.IsAssignableFrom(typeof(T), localRef.GetType()));
+                    }
+                }
+
+                if (createNewInstance)
+                {
+                    valueInstance = (cppObjectPtr == IntPtr.Zero) ? default(T) : (T)Activator.CreateInstance(typeof(T), cppObjectPtr);
+                    referenceList.DefaultInstance = new WeakReference(valueInstance);
+                }
+                else
+                {
+                    valueInstance = (T)localRef;
+                }
+
+            }
+            return valueInstance;
+        }
+
+        internal static void MakeDefaultInstance<T>(IntPtr cppObjectPtr, T valueInstance) where T : CppObject
+        {
+            if (cppObjectPtr == IntPtr.Zero)
+            {
+                valueInstance.NativePointer = cppObjectPtr;
+                return;
+            }
+
+            lock (ObjectReferences)
+            {
+                ObjectReferenceCollection referenceList;
+
+                // Object is already tracked
+                if (!ObjectReferences.TryGetValue(cppObjectPtr, out referenceList))
+                {
+                    ObjectReferences.Add(cppObjectPtr, referenceList = new ObjectReferenceCollection());
+                }
+
+                if (referenceList.DefaultInstance == null || !ReferenceEquals(referenceList.DefaultInstance.Target, valueInstance))
+                {
+                    referenceList.DefaultInstance = new WeakReference(valueInstance);
+                }
+
+                valueInstance.NativePointer = cppObjectPtr;
+            }
+        }
+
+        internal static void ReleaseDefaultInstance(IntPtr cppObjectPtr, CppObject objectRef)
+        {
+            if (cppObjectPtr == IntPtr.Zero)
+            {
+                return;
+            }
+
+            lock (ObjectReferences)
+            {
+                ObjectReferenceCollection referenceList;
+
+                // Object is tracked, reset the default instance
+                if (ObjectReferences.TryGetValue(cppObjectPtr, out referenceList) && ReferenceEquals(referenceList.DefaultInstance.Target, objectRef))
+                {
+                    referenceList.DefaultInstance = null;
+                }
+            }
         }
 
         /// <summary>
@@ -144,7 +277,7 @@ namespace SharpDX.Diagnostics
         {
             lock (ObjectReferences)
             {
-                List<ObjectReference> referenceList;
+                ObjectReferenceCollection referenceList;
                 // Object is already tracked
                 if (ObjectReferences.TryGetValue(comObject.NativePointer, out referenceList))
                 {
@@ -169,7 +302,7 @@ namespace SharpDX.Diagnostics
 
             lock (ObjectReferences)
             {
-                List<ObjectReference> referenceList;
+                ObjectReferenceCollection referenceList;
                 // Object is already tracked
                 if (ObjectReferences.TryGetValue(comObject.NativePointer, out referenceList))
                 {
@@ -194,9 +327,9 @@ namespace SharpDX.Diagnostics
         /// <summary>
         /// Reports all COM object that are active and not yet disposed.
         /// </summary>
-        public static List<ObjectReference> FindActiveObjects()
+        public static ObjectReferenceCollection FindActiveObjects()
         {
-            var activeObjects = new List<ObjectReference>();
+            var activeObjects = new ObjectReferenceCollection();
             lock (ObjectReferences)
             {
                 foreach (var referenceList in ObjectReferences.Values)

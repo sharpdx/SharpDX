@@ -467,9 +467,14 @@ namespace SharpGen.Generator
                 if (property.Getter != null)
                 {
                     property.Getter.Visibility = Visibility.Internal;
-                    property.IsPersistent = property.Getter.IsPersistent;
-                    if (property.IsPersistent)
+
+                    // Handle persistence for ComObject, currently only for Getter of ComObject
+                    if (property.Setter == null && property.Getter.AllowPersist && property.PublicType is CsInterface)
+                    {
+                        property.Getter.IsPersistent = true;
+                        property.IsPersistent = true;
                         parent.HasPersistent = true;
+                    }
                 }
 
                 if (property.Setter != null)

@@ -258,8 +258,6 @@
     <move method="ID3D11DeviceContext::HS(.*)" to="HullShaderStage" property="HullShader" base="CommonShaderStage&lt;HullShader&gt;"/>
     <move method="ID3D11DeviceContext::CS(.*)" to="ComputeShaderStage" property="ComputeShader" base="CommonShaderStage&lt;ComputeShader&gt;"/>
 
-    <map method="ID3D11DeviceChild::GetDevice" persist="true"/>
-
     <map method="ID3D11DeviceContext::OMSetRenderTargets" visibility="internal"/>
     <map param="ppRenderTargetViews" type="void" attribute="in"/>
     <map method="ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews" visibility="internal"/>
@@ -271,6 +269,7 @@
     <map interface="ID3DUserDefinedAnnotation" name="UserDefinedAnnotation"/>
 
     <map param="ID3D11Device1::CreateDeviceContextState::Flags" type="D3D11_1_CREATE_DEVICE_CONTEXT_STATE_FLAG"/>
+    <map param="ID3D11Device1::CreateDeviceContextState::ppContextState" attribute="out"/>
 
     <map method="ID3D11Device1::OpenSharedResourceByName" visibility="internal" />
 

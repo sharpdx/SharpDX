@@ -57,7 +57,7 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<ComputeTransformShadow>(thisPtr);
                     var callback = (ComputeTransform)shadow.Callback;
-                    callback.SetComputeInformation(new ComputeInformation(computeInfo));
+                    callback.SetComputeInformation(FromPointer<ComputeInformation>(computeInfo));
                 }
                 catch (Exception exception)
                 {

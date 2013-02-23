@@ -745,6 +745,9 @@
 
     <map param="IMFMediaEngineEx::SetSourceFromByteStream::pURL" type="void"/>
 
+    <map method="IMFMediaEngine::SetSource" property="false" visibility="internal"/>
+    <map param="IMFMediaEngine::SetSource::pUrl" type="void"/>
+
     <map method="IMFAsyncResult::GetStatus" return="true" check="false"/>
 
     <map method="IMFMediaError::GetExtendedErrorCode" check="false"/>

@@ -712,7 +712,7 @@ namespace SharpDX.Direct3D9
         public static ShaderBytecode FromPointer(IntPtr pointer)
         {
             // TODO: check that pointer is a blob?
-            return new ShaderBytecode(new Blob(pointer));
+            return new ShaderBytecode(CppObject.FromPointer<Blob>(pointer));
         }
 
         /// <summary>

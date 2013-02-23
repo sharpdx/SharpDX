@@ -2654,8 +2654,6 @@
     <map param="ID3DXSprite::Draw::pCenter" type="void"/>
     <map param="ID3DXSprite::Draw::pPosition" type="void"/>
 
-    <map method="IDirect3DResource9::GetDevice" persist="true"/>
-
     <!--
     // *****************************************************************
     // D3D9 Functions
