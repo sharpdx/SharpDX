@@ -95,7 +95,7 @@ namespace SharpDX
         {
             IntPtr parentPtr;
             this.QueryInterface(Utilities.GetGuidFromType(typeof(T)), out parentPtr);
-            return FromPointer<T>(parentPtr);
+            return NewPointerUnsafe<T>(parentPtr);
         }
 
         ///<summary>
@@ -111,7 +111,7 @@ namespace SharpDX
         {
             IntPtr parentPtr;
             this.QueryInterface(Utilities.GetGuidFromType(typeof(T)), out parentPtr);
-            return FromPointerUnsafe<T>(parentPtr);
+            return NewPointerUnsafe<T>(parentPtr);
         }
 
         /// <summary>
@@ -192,7 +192,7 @@ namespace SharpDX
             var guid = Utilities.GetGuidFromType(typeof(T));
             IntPtr pointerT;
             var result = (Result)Marshal.QueryInterface(comPointer, ref guid, out pointerT);
-            return (result.Failure) ? null : FromPointerUnsafe<T>(pointerT);
+            return (result.Failure) ? null : NewPointerUnsafe<T>(pointerT);
         }
 
         ///<summary>
@@ -205,7 +205,7 @@ namespace SharpDX
         /// <unmanaged-short>IUnknown::QueryInterface</unmanaged-short>
         public virtual T QueryInterfaceOrNull<T>() where T : ComObject
         {
-            return FromPointer<T>(QueryInterfaceOrNull(Utilities.GetGuidFromType(typeof(T))));
+            return NewPointerUnsafe<T>(QueryInterfaceOrNull(Utilities.GetGuidFromType(typeof(T))));
         }
 
         ///<summary>

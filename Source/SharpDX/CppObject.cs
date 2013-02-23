@@ -150,9 +150,10 @@ namespace SharpDX
             ObjectTracker.MakeDefaultInstance(comObjectPtr, valueInstance);
         }
 
-        internal static T FromPointerUnsafe<T>(IntPtr comObjectPtr)
+        internal static T NewPointerUnsafe<T>(IntPtr comObjectPtr)
         {
-            return ObjectTracker.FindOrCreateDefaultInstance<T>(comObjectPtr);
+            if (comObjectPtr == IntPtr.Zero) return default(T);
+            return (T)Activator.CreateInstance(typeof(T), comObjectPtr);
         }
 
         protected virtual void DisposeCachedMembers()

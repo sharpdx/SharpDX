@@ -195,7 +195,7 @@ foreach (var sharpInterface in Namespace.Interfaces)
 			if (sharpProperty.IsPersistent)
 			{
 #>
-            SharpDX.Utilities.Dispose(ref <#= sharpProperty.Name #>__);
+            SharpDX.Utilities.Release(ref <#= sharpProperty.Name #>__);
 <#+		
 			}
 		}

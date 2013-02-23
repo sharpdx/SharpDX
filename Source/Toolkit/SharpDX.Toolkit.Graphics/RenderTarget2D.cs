@@ -190,8 +190,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
         public static RenderTarget2D New(GraphicsDevice device, RenderTargetView renderTargetView, bool pureRenderTarget = false)
         {
-            using (var resource = renderTargetView.Resource)
-            using (var texture2D = resource.QueryInterface<Direct3D11.Texture2D>())
+            using (var texture2D = renderTargetView.Resource.QueryInterface<Direct3D11.Texture2D>())
             {
                 return new RenderTarget2D(device, texture2D, renderTargetView, pureRenderTarget);
             }

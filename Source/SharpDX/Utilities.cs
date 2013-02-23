@@ -1457,5 +1457,21 @@ namespace SharpDX
                 comObject = null;
             }
         }
+
+        /// <summary>
+        /// Safely release the reference of a <see cref="IUnknown"/> object by decrementing usage ref counter.
+        /// </summary>
+        /// <typeparam name="T">The type of COM interface to release.</typeparam>
+        /// <param name="comObject">Object to dispose.</param>
+        public static int Release<T>(ref T comObject) where T : class, IUnknown
+        {
+            int result = 0;
+            if (comObject != null)
+            {
+                result = comObject.Release();
+                comObject = null;
+            }
+            return result;
+        }
     }
 }
