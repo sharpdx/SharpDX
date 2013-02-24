@@ -1463,14 +1463,18 @@ namespace SharpDX
         /// </summary>
         /// <typeparam name="T">The type of COM interface to release.</typeparam>
         /// <param name="comObject">Object to dispose.</param>
-        public static int Release<T>(ref T comObject) where T : class, IUnknown
+        /// <remarks>
+        /// The reference will be set to null after release.
+        /// </remarks>
+        public static int Release<T>(ref T comObject) where T : class
         {
             int result = 0;
-            if (comObject != null)
+            var iunknown = comObject as IUnknown;
+            if (iunknown != null)
             {
-                result = comObject.Release();
-                comObject = null;
+                result = iunknown.Release();
             }
+            comObject = null;
             return result;
         }
     }
