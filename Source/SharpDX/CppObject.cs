@@ -135,7 +135,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Instantiate a ComObject from a native pointer.
+        /// Instantiate a ComObject from a native pointer. Objects are cached when this interface has been already cached.
         /// </summary>
         /// <typeparam name="T">The ComObject class that will be returned</typeparam>
         /// <param name="comObjectPtr">The native pointer to a com object.</param>
@@ -148,6 +148,17 @@ namespace SharpDX
         internal static void SetDefaultInstance<T>(IntPtr comObjectPtr, T valueInstance) where T : CppObject
         {
             ObjectTracker.MakeDefaultInstance(comObjectPtr, valueInstance);
+        }
+
+        /// <summary>
+        /// Instantiate a ComObject from a native pointer (unlike <see cref="FromPointer{T}"/>, a new instance is always returned).
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="comObjectPtr">The COM object PTR.</param>
+        /// <returns>``0.</returns>
+        public static T NewPointer<T>(IntPtr comObjectPtr) where T : ComObject
+        {
+            return NewPointerUnsafe<T>(comObjectPtr);
         }
 
         internal static T NewPointerUnsafe<T>(IntPtr comObjectPtr)
