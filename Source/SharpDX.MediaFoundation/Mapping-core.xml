@@ -768,6 +768,8 @@
     
     <map interface="IMFAsyncCallback" name="IAsyncCallback" callback="true"/>
 
+    <map interface="IMFAsyncCallbackLogging" name="IAsyncCallbackLogging" callback="true"/>
+
     <map param="IMFByteStream::*.*::pb" type="void" attribute="in"/>
 
     <map param="IMFByteStream::Begin[RW].*::punkState" type="void"/>
@@ -801,6 +803,8 @@
     <map param="IMFGetService::GetService::ppvObject" return="true"/>
 
     <map param="IMFAsyncCallback::GetParameters::pdwFlags" type="MFASYNC_CALLBACK_FLAGS"/>
+    
+    
     
     <!--
     // *****************************************************************
