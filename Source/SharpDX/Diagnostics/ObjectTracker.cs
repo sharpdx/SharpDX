@@ -240,7 +240,7 @@ namespace SharpDX.Diagnostics
                 ObjectReferenceCollection referenceList;
 
                 // Object is tracked, reset the default instance
-                if (ObjectReferences.TryGetValue(cppObjectPtr, out referenceList) && ReferenceEquals(referenceList.DefaultInstance.Target, objectRef))
+                if (ObjectReferences.TryGetValue(cppObjectPtr, out referenceList) && referenceList.DefaultInstance != null && ReferenceEquals(referenceList.DefaultInstance.Target, objectRef))
                 {
                     referenceList.DefaultInstance = null;
                 }
