@@ -25,6 +25,7 @@
     <Compile Include="ByteStream.cs" />
     <Compile Include="DirectX\NamespaceDoc.cs" />
     <Compile Include="DXGIDeviceManager.cs" />
+    <Compile Include="IAsyncCallback.cs" />
     <Compile Include="IByteStream.cs" />
     <Compile Include="MediaEngineClassFactory.cs" />
     <Compile Include="MediaEngineEx.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="ServiceProvider.cs" />
     <Compile Include="SourceReader.cs" />
     <Compile Include="Transform.cs" />
+    <Compile Include="WorkQueueId.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Documentation\CodeComments.xml" />
