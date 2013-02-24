@@ -97,7 +97,7 @@ namespace SharpDX.MediaFoundation
         /// <msdn-id>ms704810</msdn-id>	
         /// <unmanaged>HRESULT IMFByteStream::BeginRead([Out, Buffer] unsigned char* pb,[In] unsigned int cb,[In] IMFAsyncCallback* pCallback,[In] IUnknown* punkState)</unmanaged>	
         /// <unmanaged-short>IMFByteStream::BeginRead</unmanaged-short>	
-        void BeginRead(byte[] bRef, int offset, int count, SharpDX.MediaFoundation.AsyncCallback callbackRef, object unkStateRef);
+        void BeginRead(byte[] bRef, int offset, int count, SharpDX.MediaFoundation.IAsyncCallback callbackRef, object unkStateRef);
 
         /// <summary>	
         /// <p><strong>Applies to: </strong>desktop apps | Metro style apps</p><p> Completes an asynchronous read operation. </p>	
@@ -141,7 +141,7 @@ namespace SharpDX.MediaFoundation
         /// <msdn-id>ms694005</msdn-id>	
         /// <unmanaged>HRESULT IMFByteStream::BeginWrite([In, Buffer] const unsigned char* pb,[In] unsigned int cb,[In] IMFAsyncCallback* pCallback,[In] IUnknown* punkState)</unmanaged>	
         /// <unmanaged-short>IMFByteStream::BeginWrite</unmanaged-short>	
-        void BeginWrite(byte[] bRef, int offset, int count, SharpDX.MediaFoundation.AsyncCallback callbackRef, object unkStateRef);
+        void BeginWrite(byte[] bRef, int offset, int count, SharpDX.MediaFoundation.IAsyncCallback callbackRef, object unkStateRef);
 
         /// <summary>	
         /// <p><strong>Applies to: </strong>desktop apps | Metro style apps</p><p> </p><p>Completes an asynchronous write operation.</p>	
