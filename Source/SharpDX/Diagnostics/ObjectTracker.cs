@@ -171,7 +171,7 @@ namespace SharpDX.Diagnostics
             return new ObjectReferenceCollection();
         }
 
-        internal static T FindOrCreateDefaultInstance<T>(IntPtr cppObjectPtr)
+        internal static T FindOrCreateDefaultInstance<T>(IntPtr cppObjectPtr) where T : class
         {
             if (cppObjectPtr == IntPtr.Zero)
             {
@@ -192,32 +192,11 @@ namespace SharpDX.Diagnostics
                 // Create a new instance only if :
                 // - There is no instance
                 // - The current instance is not assignable to T (T has a higher instance than the stored instance)
-
-                bool createNewInstance = false;
-                object localRef = null;
-                if (referenceList.DefaultInstance == null)
+                if (referenceList.DefaultInstance == null || (valueInstance = referenceList.DefaultInstance.Target as T) == null)
                 {
-                    createNewInstance = true;
-                }
-                else
-                {
-                    localRef = referenceList.DefaultInstance.Target;
-                    if (localRef != null)
-                    {
-                        createNewInstance = (typeof(T) != localRef.GetType() && !Utilities.IsAssignableFrom(typeof(T), localRef.GetType()));
-                    }
-                }
-
-                if (createNewInstance)
-                {
-                    valueInstance = (cppObjectPtr == IntPtr.Zero) ? default(T) : (T)Activator.CreateInstance(typeof(T), cppObjectPtr);
+                    valueInstance = (T)Activator.CreateInstance(typeof(T), cppObjectPtr);
                     referenceList.DefaultInstance = new WeakReference(valueInstance);
                 }
-                else
-                {
-                    valueInstance = (T)localRef;
-                }
-
             }
             return valueInstance;
         }

@@ -220,18 +220,18 @@ namespace SharpDX
             NativePointer = parentPtr;
         }
 
-        Result IUnknown.QueryInterface(ref Guid guid, out IntPtr comObject)
+        public Result QueryInterface(ref Guid guid, out IntPtr comObject)
         {
             return Marshal.QueryInterface(NativePointer, ref guid, out comObject);              
         }
 
-        int IUnknown.AddReference()
+        public int AddReference()
         {
             if (NativePointer == IntPtr.Zero) throw new InvalidOperationException("COM Object pointer is null");
             return Marshal.AddRef(NativePointer);            
         }
 
-        int IUnknown.Release()
+        public int Release()
         {
             if (NativePointer == IntPtr.Zero) throw new InvalidOperationException("COM Object pointer is null");
             return Marshal.Release(NativePointer);
