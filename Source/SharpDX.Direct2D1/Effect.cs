@@ -62,8 +62,7 @@ namespace SharpDX.Direct2D1
         /// <param name="invalidate">To invalidate</param>
         public void SetInputEffect(int index, Effect effect, bool invalidate = true)
         {
-            using (var output = effect.Output)
-                SetInput(index, output, invalidate);
+            SetInput(index, effect.Output, invalidate);
         }
     }
 
