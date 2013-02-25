@@ -74,11 +74,12 @@ namespace SharpDX.Toolkit.Graphics
             Factory = factory1;
             staticCollector.Collect(Factory);
 
-            int countAdapters = Factory.GetAdapterCount1();
+            var rawAdapters = Factory.Adapters1;
+            int countAdapters = rawAdapters.Length;
             var adapters = new List<GraphicsAdapter>();
             for (int i = 0; i < countAdapters; i++)
             {
-                var adapter = new GraphicsAdapter(i);
+                var adapter = new GraphicsAdapter(i, rawAdapters[i]);
                 staticCollector.Collect(adapter);
                 adapters.Add(adapter);
             }
@@ -91,10 +92,11 @@ namespace SharpDX.Toolkit.Graphics
         /// Initializes a new instance of the <see cref="GraphicsAdapter" /> class.
         /// </summary>
         /// <param name="adapterOrdinal">The adapter ordinal.</param>
-        private GraphicsAdapter(int adapterOrdinal)
+        /// <param name="adapter">The adapter.</param>
+        private GraphicsAdapter(int adapterOrdinal, Adapter1 adapter)
         {
             this.adapterOrdinal = adapterOrdinal;
-            adapter = ToDispose(Factory.GetAdapter1(adapterOrdinal));
+            this.adapter = adapter;
             Description = adapter.Description1;
             outputs = adapter.Outputs;
             SupportedDisplayModes = new DisplayMode[0];
@@ -104,11 +106,6 @@ namespace SharpDX.Toolkit.Graphics
             {
                 outputDescription = outputs[0].Description;
                 SupportedDisplayModes = GetSupportedDisplayModes();
-                foreach (var output in outputs)
-                {
-                    ToDispose(output);
-                }
-
 
                 foreach (var supportedDisplayMode in SupportedDisplayModes)
                 {
@@ -232,7 +229,8 @@ namespace SharpDX.Toolkit.Graphics
             var modeMap = new Dictionary<string, DisplayMode>();
 
 #if DIRECTX11_1
-            var output1 = output.QueryInterface<Output1>();
+            using (var output1 = output.QueryInterface<Output1>())
+            {
 #endif
 
             try
@@ -268,6 +266,9 @@ namespace SharpDX.Toolkit.Graphics
                         }
                     }
                 }
+#if DIRECTX11_1
+            } // End of using output1
+#endif
             }
             catch (SharpDXException dxgiException)
             {

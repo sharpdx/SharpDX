@@ -234,7 +234,16 @@ namespace SharpDX
         public int Release()
         {
             if (NativePointer == IntPtr.Zero) throw new InvalidOperationException("COM Object pointer is null");
-            return Marshal.Release(NativePointer);
+            var result = Marshal.Release(NativePointer);
+            if (result == 0)
+            {
+                // Release native pointer
+                ObjectTracker.ReleaseDefaultInstance(NativePointer, this);
+
+                // Set NativePointer to Zero. This will Untrack this object and dispose cached members
+                NativePointer = IntPtr.Zero;
+            }
+            return result;
         }
 
         /// <summary>
@@ -246,12 +255,12 @@ namespace SharpDX
         /// <unmanaged-short>IUnknown::Release</unmanaged-short>
         protected unsafe override void Dispose(bool disposing)
         {
+            // Dispose all cached members
+            DisposeCachedMembers();
+
             // Only dispose non-zero object
             if (NativePointer != IntPtr.Zero)
             {
-                // Dispose all cached members
-                DisposeCachedMembers();
-
 //                // If object is disposed by the finalizer, emits a warning
 //                if (Configuration.EnableObjectTracking && !disposing)
 //                {
@@ -269,8 +278,6 @@ namespace SharpDX
                 if (Configuration.EnableObjectTracking)
                     ObjectTracker.UnTrack(this);                
 
-                // Release native pointer
-                ObjectTracker.ReleaseDefaultInstance(NativePointer, this);
 
                 // Set pointer to null (using protected members in order to avoid NativePointerUpdat* callbacks.
                 _nativePointer = (void*)0;

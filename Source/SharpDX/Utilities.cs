@@ -1477,5 +1477,23 @@ namespace SharpDX
             comObject = null;
             return result;
         }
+
+        /// <summary>
+        /// Safely release an array of reference of <see cref="IUnknown" /> object by decrementing usage ref counter.
+        /// </summary>
+        /// <typeparam name="T">The type of COM interface to release.</typeparam>
+        /// <param name="comObjects">The COM objects.</param>
+        /// <remarks>The reference will be set to null after release.</remarks>
+        public static void Release<T>(ref T[] comObjects) where T : class
+        {
+            if (comObjects != null)
+            {
+                for (int i = 0; i < comObjects.Length; i++)
+                {
+                    Release(ref comObjects[i]);
+                }
+                comObjects = null;
+            }
+        }
     }
 }

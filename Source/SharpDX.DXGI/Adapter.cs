@@ -24,6 +24,8 @@ namespace SharpDX.DXGI
 {
     public partial class Adapter
     {
+        private readonly object lockOutputs = new object();
+        private Output[] outputs;
 
         /// <summary>
         /// Gets all outputs from this adapter.
@@ -35,17 +37,30 @@ namespace SharpDX.DXGI
         {
             get
             {
-                var outputs = new List<Output>();
-                do
+                lock (lockOutputs)
                 {
-                    Output output;
-                    var result = GetOutput(outputs.Count, out output);
-                    if (result == ResultCode.NotFound || output == null)
-                        break;
-                    outputs.Add(output);
-                } while (true);
-                return outputs.ToArray();
+                    if (outputs == null)
+                    {
+                        var outputList = new List<Output>();
+                        do
+                        {
+                            Output output;
+                            var result = GetOutput(outputList.Count, out output);
+                            if (result == ResultCode.NotFound || output == null) break;
+                            outputList.Add(output);
+                        }
+                        while (true);
+                        outputs =  outputList.ToArray();
+                    }
+                    return outputs;
+                }
             }
+        }
+
+        protected override void DisposeCachedMembers()
+        {
+            Utilities.Release(ref outputs);
+            base.DisposeCachedMembers();
         }
 
         /// <summary>
@@ -110,52 +125,6 @@ namespace SharpDX.DXGI
         public bool IsInterfaceSupported(Type type, out long userModeVersion)
         {
             return CheckInterfaceSupport(Utilities.GetGuidFromType(type), out userModeVersion).Success;
-        }
-
-        /// <summary>
-        /// Gets an adapter (video card) outputs.
-        /// </summary>
-        /// <param name="outputIndex">The index of the output.</param>
-        /// <returns>
-        /// An instance of <see cref="Output"/> 
-        /// </returns>
-        /// <unmanaged>HRESULT IDXGIAdapter::EnumOutputs([In] unsigned int Output,[Out] IDXGIOutput** ppOutput)</unmanaged>
-        /// <remarks>
-        /// When the EnumOutputs method succeeds and fills the ppOutput parameter with the address of the reference to the output interface, EnumOutputs increments the output interface's reference count. To avoid a memory leak, when you finish using the  output interface, call the Release method to decrement the reference count.EnumOutputs first returns the output on which the desktop primary is displayed. This adapter corresponds with an index of zero. EnumOutputs then returns other outputs.
-        /// </remarks>
-        /// <exception cref="SharpDXException">if the index is greater than the number of outputs, result code <see cref="SharpDX.DXGI.ResultCode.NotFound"/></exception>
-        /// <msdn-id>bb174525</msdn-id>	
-        /// <unmanaged>HRESULT IDXGIAdapter::EnumOutputs([In] unsigned int Output,[Out] IDXGIOutput** ppOutput)</unmanaged>	
-        /// <unmanaged-short>IDXGIAdapter::EnumOutputs</unmanaged-short>	
-        [Obsolete("Use Adapeter.Outputs property instead")]
-        public SharpDX.DXGI.Output GetOutput(int outputIndex)
-        {
-            Output output;
-            GetOutput(outputIndex, out output).CheckError();
-            return output;
-        }
-
-        /// <summary>
-        ///   Return the number of available outputs from this adapter.
-        /// </summary>
-        /// <returns>The number of outputs</returns>
-        /// <msdn-id>bb174525</msdn-id>	
-        /// <unmanaged>HRESULT IDXGIAdapter::EnumOutputs([In] unsigned int Output,[Out] IDXGIOutput** ppOutput)</unmanaged>	
-        /// <unmanaged-short>IDXGIAdapter::EnumOutputs</unmanaged-short>	
-        [Obsolete("Use Adapeter.Outputs property instead")]
-        public int GetOutputCount()
-        {
-            var nbOutputs = 0;
-            do
-            {
-                Output output;
-                var result = GetOutput(nbOutputs, out output);
-                if (result == ResultCode.NotFound || output == null)
-                    break;
-                output.Dispose();
-                nbOutputs++;
-            } while (true);
-            return nbOutputs;
         }
     }
 }
