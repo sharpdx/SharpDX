@@ -562,6 +562,28 @@
     <const from-guid="MFT_TRANSFORM_CLSID_Attribute" class="SharpDX.MediaFoundation.TransformAttributeKeys" type="MediaAttributeKey&lt;System.Guid&gt;" name="MftTransformClsidAttribute">new MediaAttributeKey&lt;System.Guid&gt;("$1")</const>
     <const from-guid="VIDEO_ZOOM_RECT" class="SharpDX.MediaFoundation.EVRAttributeKeys" type="MediaAttributeKey&lt;byte[]&gt;" name="VideoZoomRect">new MediaAttributeKey&lt;byte[]&gt;("$1")</const>
 
+    <create visibility="public static" class="MediaServiceKeys" />
+    <const from-guid="MF_METADATA_PROVIDER_SERVICE" class='SharpDX.MediaFoundation.MediaServiceKeys' type='Guid' name="MetadataProvider">new Guid("$1")</const>
+    <const from-guid="MF_PMP_SERVER_CONTEXT" class='SharpDX.MediaFoundation.MediaServiceKeys' type='Guid' name="PMPServer">new Guid("$1")</const>
+    <const from-guid="MF_QUALITY_SERVICES" class='SharpDX.MediaFoundation.MediaServiceKeys' type='Guid' name="Qualiy">new Guid("$1")</const>
+    <const from-guid="MF_RATE_CONTROL_SERVICE" class='SharpDX.MediaFoundation.MediaServiceKeys' type='Guid' name="RateControl">new Guid("$1")</const>
+    <const from-guid="MF_RATE_CONTROL_SERVICE" class='SharpDX.MediaFoundation.MediaServiceKeys' type='Guid' name="">new Guid("$1")</const>
+    <const from-guid="MF_REMOTE_PROXY" class='SharpDX.MediaFoundation.MediaServiceKeys' type='Guid' name="RemoteProxy">new Guid("$1")</const>
+    <const from-guid="MF_SAMI_SERVICE" class='SharpDX.MediaFoundation.MediaServiceKeys' type='Guid' name="SAMI">new Guid("$1")</const>
+    <const from-guid="MF_SOURCE_PRESENTATION_PROVIDER_SERVICE" class='SharpDX.MediaFoundation.MediaServiceKeys' type='Guid' name="SourcePresentationProvider">new Guid("$1")</const>
+    <const from-guid="MF_TIMECODE_SERVICE" class='SharpDX.MediaFoundation.MediaServiceKeys' type='Guid' name="TimeCode">new Guid("$1")</const>
+    <const from-guid="MF_TOPONODE_ATTRIBUTE_EDITOR_SERVICE" class='SharpDX.MediaFoundation.MediaServiceKeys' type='Guid' name="ToplogyNodeAttributeEditor">new Guid("$1")</const>
+    <const from-guid="MF_WRAPPED_OBJECT" class='SharpDX.MediaFoundation.MediaServiceKeys' type='Guid' name="WrappedObject">new Guid("$1")</const>
+    <const from-guid="MF_WORKQUEUE_SERVICES" class='SharpDX.MediaFoundation.MediaServiceKeys' type='Guid' name="WorkQueue">new Guid("$1")</const>
+    <const from-guid="MFNET_SAVEJOB_SERVICE" class='SharpDX.MediaFoundation.MediaServiceKeys' type='Guid' name="SaveJob">new Guid("$1")</const>
+    <const from-guid="MFNETSOURCE_STATISTICS_SERVICE" class='SharpDX.MediaFoundation.MediaServiceKeys' type='Guid' name="NetworkSourceStatistics">new Guid("$1")</const>
+    <const from-guid="MR_AUDIO_POLICY_SERVICE" class='SharpDX.MediaFoundation.MediaServiceKeys' type='Guid' name="AudioPolicy">new Guid("$1")</const>
+    <const from-guid="MR_BUFFER_SERVICE" class='SharpDX.MediaFoundation.MediaServiceKeys' type='Guid' name="Buffer">new Guid("$1")</const>
+    <const from-guid="MR_CAPTURE_POLICY_VOLUME_SERVICE" class='SharpDX.MediaFoundation.MediaServiceKeys' type='Guid' name="CapturePolicyVolume">new Guid("$1")</const>
+    <const from-guid="MR_POLICY_VOLUME_SERVICE" class='SharpDX.MediaFoundation.MediaServiceKeys' type='Guid' name="PolicyVolume">new Guid("$1")</const>
+    <const from-guid="MR_STREAM_VOLUME_SERVICE" class='SharpDX.MediaFoundation.MediaServiceKeys' type='Guid' name="StreamVolume">new Guid("$1")</const>
+    <const from-guid="MR_VIDEO_ACCELERATION_SERVICE" class='SharpDX.MediaFoundation.MediaServiceKeys' type='Guid' name="VideoAcceleration">new Guid("$1")</const>
+    
     <create class="MediaFactory" visibility="public static"/>
     <const from-macro="MF_VERSION" class="SharpDX.MediaFoundation.MediaFactory" type="int" name="Version" />
 
@@ -765,7 +787,7 @@
 
     <map param="IMFMediaBuffer::Lock::ppbBuffer" type="void" attribute="out" return="true"/>
 
-
+    <map param="IMFGetService::GetService::ppvObject" return="true"/>
 
     <!--
     // *****************************************************************

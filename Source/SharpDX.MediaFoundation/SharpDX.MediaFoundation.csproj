@@ -54,6 +54,7 @@
     <Compile Include="OPM\NamespaceDoc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceCharacteristics.cs" />
+    <Compile Include="ServiceProvider.cs" />
     <Compile Include="SourceReader.cs" />
     <Compile Include="Transform.cs" />
   </ItemGroup>
