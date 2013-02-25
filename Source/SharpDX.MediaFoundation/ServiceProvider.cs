@@ -35,7 +35,7 @@ namespace SharpDX.MediaFoundation
         ///   <unmanaged-short>IMFGetService::GetService</unmanaged-short>
         public T GetService<T>(System.Guid guidService) where T : ComObject
         {
-            return NewPointer<T>(GetService(guidService, Utilities.GetGuidFromType(typeof(T))));
+            return FromPointer<T>(GetService(guidService, Utilities.GetGuidFromType(typeof(T))));
         }
     }
 }
