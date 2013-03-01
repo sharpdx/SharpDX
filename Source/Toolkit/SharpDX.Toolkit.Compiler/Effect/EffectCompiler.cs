@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -33,21 +33,14 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public class EffectCompiler : IEffectCompiler
     {
-        public string GetDependencyFileNameFromEffectPath(string pathToFxFile)
+        public string GetDependencyFileNameFromSourcePath(string pathToFxFile)
         {
-            pathToFxFile = pathToFxFile.Replace("\\", "___");
-            pathToFxFile += ".deps";
-            return pathToFxFile;
+            return FileDependencyList.GetDependencyFileNameFromSourcePath(pathToFxFile);
         }
 
         public List<string> LoadDependency(string dependencyFilePath)
         {
-            // If the file does not exist, than return true as it is a new dependency to generate
-            if (!File.Exists(dependencyFilePath))
-            {
-                return new List<string>();
-            }
-            return new List<string>(EffectDependencyList.FromFile(dependencyFilePath).Keys);
+            return FileDependencyList.FromFileRaw(dependencyFilePath);
         }
 
         /// <summary>
@@ -57,13 +50,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns><c>true</c> if a file has been updated, <c>false</c> otherwise</returns>
         public bool CheckForChanges(string dependencyFilePath)
         {
-            // If the file does not exist, than return true as it is a new dependency to generate
-            if (!File.Exists(dependencyFilePath))
-            {
-                return true;
-            }
-
-            return EffectDependencyList.FromFile(dependencyFilePath).CheckForChanges();
+            return FileDependencyList.CheckForChanges(dependencyFilePath);
         }
 
         /// <summary>

@@ -73,13 +73,16 @@
 //--------------------------------------------------------------------
 using System;
 using System.IO;
-using System.Drawing;
-using System.Drawing.Imaging;
+
+using SharpDX.IO;
 
 namespace SharpDX.Toolkit.Graphics
 {
+    using System.Drawing;
+    using System.Drawing.Imaging;
+
     // Writes the output spritefont binary file.
-    public static class SpriteFontWriter
+    internal static class SpriteFontWriter
     {
         const string spriteFontMagic = "DXTKfont";
 
@@ -88,10 +91,17 @@ namespace SharpDX.Toolkit.Graphics
         const int DXGI_FORMAT_BC2_UNORM = 74;
 
 
-        public static void WriteSpriteFont(CommandLineOptions options, Glyph[] glyphs, float lineSpacing, Bitmap bitmap)
+        public static void WriteSpriteFont(FontDescription options, string outputFilename, Glyph[] glyphs, float lineSpacing, Bitmap bitmap)
         {
-            using (FileStream file = File.OpenWrite(options.OutputFile))
-            using (BinaryWriter writer = new BinaryWriter(file))
+            using (var stream = new NativeFileStream(outputFilename, NativeFileMode.Create, NativeFileAccess.Write))
+            {
+                WriteSpriteFont(options, stream, glyphs, lineSpacing, bitmap);
+            }
+        }
+
+        public static void WriteSpriteFont(FontDescription options, Stream outputStream, Glyph[] glyphs, float lineSpacing, Bitmap bitmap)
+        {
+            using (var writer = new BinaryWriter(outputStream))
             {
                 WriteMagic(writer);
                 WriteGlyphs(writer, glyphs);
@@ -102,7 +112,6 @@ namespace SharpDX.Toolkit.Graphics
                 WriteBitmap(writer, options, bitmap);
             }
         }
-
 
         static void WriteMagic(BinaryWriter writer)
         {
@@ -133,22 +142,22 @@ namespace SharpDX.Toolkit.Graphics
         }
 
 
-        static void WriteBitmap(BinaryWriter writer, CommandLineOptions options, Bitmap bitmap)
+        static void WriteBitmap(BinaryWriter writer, FontDescription options, Bitmap bitmap)
         {
             writer.Write(bitmap.Width);
             writer.Write(bitmap.Height);
 
-            switch (options.TextureFormat)
+            switch (options.Format)
             {
-                case TextureFormat.Rgba32:
+                case FontTextureFormat.Rgba32:
                     WriteRgba32(writer, bitmap);
                     break;
              
-                case TextureFormat.Bgra4444:
+                case FontTextureFormat.Bgra4444:
                     WriteBgra4444(writer, bitmap);
                     break;
                 
-                case TextureFormat.CompressedMono:
+                case FontTextureFormat.CompressedMono:
                     WriteCompressedMono(writer, bitmap, options);
                     break;
                 
@@ -215,7 +224,7 @@ namespace SharpDX.Toolkit.Graphics
 
 
         // Writes a block compressed monochromatic font texture.
-        static void WriteCompressedMono(BinaryWriter writer, Bitmap bitmap, CommandLineOptions options)
+        static void WriteCompressedMono(BinaryWriter writer, Bitmap bitmap, FontDescription options)
         {
             if ((bitmap.Width & 3) != 0 ||
                 (bitmap.Height & 3) != 0)
@@ -264,7 +273,7 @@ namespace SharpDX.Toolkit.Graphics
         // the possible 16 alpha values available in DXT3, so we can ensure the RGB and 
         // alpha channels always exactly match.
 
-        static void CompressBlock(BinaryWriter writer, BitmapUtils.PixelAccessor bitmapData, int blockX, int blockY, CommandLineOptions options)
+        static void CompressBlock(BinaryWriter writer, BitmapUtils.PixelAccessor bitmapData, int blockX, int blockY, FontDescription options)
         {
             long alphaBits = 0;
             int rgbBits = 0;

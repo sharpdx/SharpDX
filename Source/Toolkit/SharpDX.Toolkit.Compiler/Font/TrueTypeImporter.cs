@@ -75,16 +75,17 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.Drawing.Text;
 using System.Runtime.InteropServices;
 
 namespace SharpDX.Toolkit.Graphics
 {
+    using System.Drawing;
+    using System.Drawing.Drawing2D;
+    using System.Drawing.Imaging;
+    using System.Drawing.Text;
+    
     // Uses System.Drawing (aka GDI+) to rasterize TrueType fonts into a series of glyph bitmaps.
-    public class TrueTypeImporter : IFontImporter
+    internal class TrueTypeImporter : IFontImporter
     {
         // Properties hold the imported font data.
         public IEnumerable<Glyph> Glyphs { get; private set; }
@@ -96,7 +97,7 @@ namespace SharpDX.Toolkit.Graphics
         const int MaxGlyphSize = 1024;
 
 
-        public void Import(CommandLineOptions options)
+        public void Import(FontDescription options)
         {
             // Create a bunch of GDI+ objects.
             using (Font font = CreateFont(options))
@@ -131,9 +132,9 @@ namespace SharpDX.Toolkit.Graphics
 
 
         // Attempts to instantiate the requested GDI+ font object.
-        static Font CreateFont(CommandLineOptions options)
+        static Font CreateFont(FontDescription options)
         {
-            Font font = new Font(options.SourceFont, PointsToPixels(options.FontSize), options.FontStyle, GraphicsUnit.Pixel);
+            Font font = new Font(options.FontName, PointsToPixels(options.Size), (System.Drawing.FontStyle)options.Style, GraphicsUnit.Pixel);
 
             try
             {
@@ -142,8 +143,8 @@ namespace SharpDX.Toolkit.Graphics
                 // isn't sufficient because some fonts (eg. MS Mincho) change names depending on the locale.
 
                 // Early out: in most cases the name will match the current or invariant culture.
-                if (options.SourceFont.Equals(font.FontFamily.GetName(CultureInfo.CurrentCulture.LCID), StringComparison.OrdinalIgnoreCase) ||
-                    options.SourceFont.Equals(font.FontFamily.GetName(CultureInfo.InvariantCulture.LCID), StringComparison.OrdinalIgnoreCase))
+                if (options.FontName.Equals(font.FontFamily.GetName(CultureInfo.CurrentCulture.LCID), StringComparison.OrdinalIgnoreCase) ||
+                    options.FontName.Equals(font.FontFamily.GetName(CultureInfo.InvariantCulture.LCID), StringComparison.OrdinalIgnoreCase))
                 {
                     return font;
                 }
@@ -151,14 +152,14 @@ namespace SharpDX.Toolkit.Graphics
                 // Check the font name in every culture.
                 foreach (CultureInfo culture in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
                 {
-                    if (options.SourceFont.Equals(font.FontFamily.GetName(culture.LCID), StringComparison.OrdinalIgnoreCase))
+                    if (options.FontName.Equals(font.FontFamily.GetName(culture.LCID), StringComparison.OrdinalIgnoreCase))
                     {
                         return font;
                     }
                 }
 
                 // A font substitution must have occurred.
-                throw new Exception(string.Format("Can't find font '{0}'.", options.SourceFont));
+                throw new Exception(string.Format("Can't find font '{0}'.", options.FontName));
             }
             catch
             {

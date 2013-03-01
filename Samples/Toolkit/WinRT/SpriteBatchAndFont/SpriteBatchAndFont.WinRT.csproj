@@ -48,12 +48,11 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <ToolkitFont Include="..\..\Common\SpriteBatchAndFont\Content\Arial16.xml">
+      <Link>Content\Arial16.xml</Link>
+    </ToolkitFont>
     <Content Include="..\..\Common\SpriteBatchAndFont\Content\balls.dds">
       <Link>Content\balls.dds</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\Common\SpriteBatchAndFont\Content\Arial16.tkfnt">
-      <Link>Content\Arial16.tkfnt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="SpriteBatchAndFont.WinRT_TemporaryKey.pfx" />

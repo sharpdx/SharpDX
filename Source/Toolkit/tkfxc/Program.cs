@@ -188,7 +188,7 @@ namespace SharpDX.Toolkit.Graphics
             var compiler = new EffectCompiler();
 
             string outputDependencyDirPath = Path.Combine(Environment.CurrentDirectory, OutputDependencyDirectory);
-            string outputDependencyFilePath = Path.Combine(outputDependencyDirPath,  compiler.GetDependencyFileNameFromEffectPath(options.FxFile));
+            string outputDependencyFilePath = Path.Combine(outputDependencyDirPath,  compiler.GetDependencyFileNameFromSourcePath(options.FxFile));
 
             if (AllowDynamicCompiling)
             {

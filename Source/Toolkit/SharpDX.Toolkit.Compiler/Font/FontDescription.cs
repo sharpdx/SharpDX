@@ -72,16 +72,112 @@
 // particular purpose and non-infringement.
 //--------------------------------------------------------------------
 using System.Collections.Generic;
+using System.IO;
+using System.Xml;
+using System.Xml.Serialization;
+
+using SharpDX.IO;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    // Importer interface allows the conversion tool to support multiple source font formats.
-    public interface IFontImporter
+    //    <Asset Type="Graphics:FontDescription">
+  // <FontName>Kootenay</FontName>
+  // <Size>14</Size>
+  // <Spacing>0</Spacing>
+  // <UseKerning>true</UseKerning>
+  // <Style>Regular</Style>
+  // <CharacterRegions>
+  //    <CharacterRegion>
+  //      <Start>&#32;</Start>
+  //      <End>&#126;</End>
+  //    </CharacterRegion>
+  //  </CharacterRegions>
+  //</Asset>
+
+
+    // Options telling the tool what to do.
+    [XmlRoot("TkFont")]
+    public class FontDescription
     {
-        void Import(CommandLineOptions options);
+        /// <summary>
+        /// Input can be either a system (TrueType) font or a specially marked bitmap file.
+        /// </summary>
+        public string FontName;
 
-        IEnumerable<Glyph> Glyphs { get; }
+        /// <summary>
+        ///  Size and style for TrueType fonts (ignored when converting a bitmap font).
+        /// </summary>
+        public float Size = 23;
 
-        float LineSpacing { get; }
+        /// <summary>
+        /// Character spacing overrides. Zero is default spacing, negative closer together, positive further apart
+        /// </summary>
+        public float Spacing = 0;
+
+        /// <summary>
+        /// Line spacing overrides. Zero is default spacing, negative closer together, positive further apart
+        /// </summary>
+        public float LineSpacing = 0;
+
+        /// <summary>
+        /// Specifies whether to use kerning information when rendering the font. Default value is false (NOT SUPPORTED YET).
+        /// </summary>
+        public bool UseKerning = false;
+
+        /// <summary>
+        /// Format of the output texture. Values: 'auto', 'rgba32', 'bgra4444', 'compressedmono'. Default is 'auto'
+        /// </summary>
+        public FontTextureFormat Format = FontTextureFormat.Auto;
+
+        /// <summary>
+        /// Which characters to include in the font (eg. "/CharacterRegion:0x20-0x7F /CharacterRegion:0x123")
+        /// </summary>
+        public readonly List<CharacterRegion> CharacterRegions = new List<CharacterRegion>();
+
+        /// <summary>
+        /// Fallback character used when asked to render a codepoint that is not
+        /// included in the font. If zero, missing characters throw exceptions.
+        /// </summary>
+        public char DefaultCharacter = (char)0;
+
+        /// <summary>
+        /// Style for the font. 'regular', 'bold', 'italic', 'underline', 'strikeout'. Default is 'regular
+        /// </summary>
+        public FontStyle Style = FontStyle.Regular;
+
+        /// <summary>
+        /// By default, font textures use premultiplied alpha format. Set this if you want interpolative alpha instead.
+        /// </summary>
+        public bool NoPremultiply = false;
+
+
+        public static FontDescription Load(string fileName)
+        {
+            using (var stream = new NativeFileStream(fileName, NativeFileMode.Open, NativeFileAccess.Read)) return Load(stream);
+        }
+
+        private static XmlSerializer serializer = new XmlSerializer(typeof(FontDescription));
+
+        public static FontDescription Load(Stream stream)
+        {
+            return (FontDescription)serializer.Deserialize(stream);
+        }
+
+        public void Save(string fileName)
+        {
+            using (var stream = new NativeFileStream(fileName, NativeFileMode.Create, NativeFileAccess.Write)) Save(stream);
+        }
+
+        public void Save(Stream stream)
+        {
+            var settings = new XmlWriterSettings { Indent = true };
+            var ns = new XmlSerializerNamespaces();
+            ns.Add(string.Empty, string.Empty);
+
+            using (var writer = XmlWriter.Create(stream, settings))
+            {
+                serializer.Serialize(writer, this, ns);
+            }
+        }
     }
 }

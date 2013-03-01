@@ -27,8 +27,9 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="FontCompilerTask.cs" />
     <Compile Include="EffectCompilerTask.cs" />
-    <Compile Include="EffectCompilerDependencyTask.cs" />
+    <Compile Include="CompilerDependencyTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TaskItemExtensions.cs" />
   </ItemGroup>

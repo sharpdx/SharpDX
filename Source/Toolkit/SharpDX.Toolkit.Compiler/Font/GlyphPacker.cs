@@ -73,13 +73,14 @@
 //--------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 
 namespace SharpDX.Toolkit.Graphics
 {
+    using System.Drawing;
+    using System.Drawing.Imaging;
+
     // Helper for arranging many small bitmaps onto a single larger surface.
-    public static class GlyphPacker
+    internal static class GlyphPacker
     {
         public static Bitmap ArrangeGlyphs(Glyph[] sourceGlyphs)
         {

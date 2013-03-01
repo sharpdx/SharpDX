@@ -71,88 +71,35 @@
 // contributors exclude the implied warranties of merchantability, fitness for a
 // particular purpose and non-infringement.
 //--------------------------------------------------------------------
-using System;
-using System.IO;
-using SharpDX.IO;
-
 namespace SharpDX.Toolkit.Graphics
 {
-    internal class Program : ConsoleProgram
+    using System.Drawing;
+
+    // Represents a single character within a font.
+    internal class Glyph
     {
-        [Option("XML Font File Description", Required = true)]
-        public string XmlFontFile = null;
-
-        [Option("O", Description = "Output File, default is <XML Font File> without extension", Value = "<filename>")]
-        public string OutputFile = null;
-
-        [Option("Ti", Description = "Compile the file only if the source file is newer.\n")]
-        public bool CompileOnlyIfNewer;
-
-        [Option("To", Description = "Output directory for the dependency file (default '.' in the same directory than file to compile\n")]
-        public string OutputDependencyDirectory = ".";
-
-        [Option("S", Description = "Output Bitmap filename for debug in DDS format. Default is null.", Value = "<filename>")]
-        public string DebugOutputSpriteSheet = null;
-
-        public static void Main(string[] args)
+        // Constructor.
+        public Glyph(char character, Bitmap bitmap, Rectangle? subrect = null)
         {
-            new Program().Run(args);
+            this.Character = character;
+            this.Bitmap = bitmap;
+            this.Subrect = subrect.GetValueOrDefault(new Rectangle(0, 0, bitmap.Width, bitmap.Height));
         }
 
-        public void Run(string[] args)
-        {
-            // Print the exe header
-            PrintHeader();
 
-            // Parse the command line
-            if (!ParseCommandLine(args))
-            {
-                Environment.Exit(-1);
-            }
+        // Unicode codepoint.
+        public char Character;
 
-            // Loads the description
-            var fontDescription = FontDescription.Load(XmlFontFile);
 
-            var defaultOutputFile = Path.GetFileNameWithoutExtension(XmlFontFile);
+        // Glyph image data (may only use a portion of a larger bitmap).
+        public Bitmap Bitmap;
+        public Rectangle Subrect;
+        
 
-            // Compiles to SpriteData
-            OutputFile = OutputFile ?? defaultOutputFile;
+        // Layout information.
+        public float XOffset;
+        public float YOffset;
 
-            string dependencyFile = null;
-            if (CompileOnlyIfNewer)
-            {
-                dependencyFile = Path.Combine(OutputDependencyDirectory, FileDependencyList.GetDependencyFileNameFromSourcePath(XmlFontFile));
-            }
-
-            bool forceCompilation = (DebugOutputSpriteSheet != null && !File.Exists(DebugOutputSpriteSheet));
-
-            var result = FontCompiler.CompileAndSave(XmlFontFile, OutputFile, dependencyFile);
-            if (result.IsNewFontGenerated || forceCompilation)
-            {
-                Console.WriteLine("Writing [{0}] ({1} format)", OutputFile, fontDescription.Format);
-
-                // Save output files.
-                if (!string.IsNullOrEmpty(DebugOutputSpriteSheet))
-                {
-                    Console.WriteLine("Saving debug output spritesheet {0}", DebugOutputSpriteSheet);
-
-                    var spriteFontData = SpriteFontData.Load(OutputFile);
-
-                    if (spriteFontData.Bitmaps.Length > 0 && spriteFontData.Bitmaps[0].Data is SpriteFontData.BitmapData)
-                    {
-                        var bitmapData = (SpriteFontData.BitmapData)spriteFontData.Bitmaps[0].Data;
-                        using (var image = Image.New2D(bitmapData.Width, bitmapData.Height, 1, bitmapData.PixelFormat))
-                        {
-                            Utilities.Write(image.DataPointer, bitmapData.Data, 0, bitmapData.Data.Length);
-                            image.Save(DebugOutputSpriteSheet, ImageFileType.Dds);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                Console.WriteLine("No need to write [{0}]. File is up-to-date from XML description", OutputFile);
-            }
-        }
+        public float XAdvance;
     }
 }

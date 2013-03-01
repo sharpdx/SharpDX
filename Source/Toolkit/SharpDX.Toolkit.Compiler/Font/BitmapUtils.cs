@@ -72,14 +72,15 @@
 // particular purpose and non-infringement.
 //--------------------------------------------------------------------
 using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
 
 namespace SharpDX.Toolkit.Graphics
 {
+    using System.Drawing;
+    using System.Drawing.Imaging;
+    using System.Runtime.InteropServices;
+
     // Assorted helpers for doing useful things with bitmaps.
-    public static class BitmapUtils
+    internal static class BitmapUtils
     {
         // Copies a rectangular area from one bitmap to another.
         public static void CopyRect(Bitmap source, Rectangle sourceRegion, Bitmap output, Rectangle outputRegion)

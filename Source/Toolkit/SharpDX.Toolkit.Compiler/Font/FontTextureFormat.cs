@@ -71,88 +71,16 @@
 // contributors exclude the implied warranties of merchantability, fitness for a
 // particular purpose and non-infringement.
 //--------------------------------------------------------------------
-using System;
-using System.IO;
-using SharpDX.IO;
-
 namespace SharpDX.Toolkit.Graphics
 {
-    internal class Program : ConsoleProgram
+    /// <summary>
+    /// Available output texture formats.
+    /// </summary>
+    public enum FontTextureFormat
     {
-        [Option("XML Font File Description", Required = true)]
-        public string XmlFontFile = null;
-
-        [Option("O", Description = "Output File, default is <XML Font File> without extension", Value = "<filename>")]
-        public string OutputFile = null;
-
-        [Option("Ti", Description = "Compile the file only if the source file is newer.\n")]
-        public bool CompileOnlyIfNewer;
-
-        [Option("To", Description = "Output directory for the dependency file (default '.' in the same directory than file to compile\n")]
-        public string OutputDependencyDirectory = ".";
-
-        [Option("S", Description = "Output Bitmap filename for debug in DDS format. Default is null.", Value = "<filename>")]
-        public string DebugOutputSpriteSheet = null;
-
-        public static void Main(string[] args)
-        {
-            new Program().Run(args);
-        }
-
-        public void Run(string[] args)
-        {
-            // Print the exe header
-            PrintHeader();
-
-            // Parse the command line
-            if (!ParseCommandLine(args))
-            {
-                Environment.Exit(-1);
-            }
-
-            // Loads the description
-            var fontDescription = FontDescription.Load(XmlFontFile);
-
-            var defaultOutputFile = Path.GetFileNameWithoutExtension(XmlFontFile);
-
-            // Compiles to SpriteData
-            OutputFile = OutputFile ?? defaultOutputFile;
-
-            string dependencyFile = null;
-            if (CompileOnlyIfNewer)
-            {
-                dependencyFile = Path.Combine(OutputDependencyDirectory, FileDependencyList.GetDependencyFileNameFromSourcePath(XmlFontFile));
-            }
-
-            bool forceCompilation = (DebugOutputSpriteSheet != null && !File.Exists(DebugOutputSpriteSheet));
-
-            var result = FontCompiler.CompileAndSave(XmlFontFile, OutputFile, dependencyFile);
-            if (result.IsNewFontGenerated || forceCompilation)
-            {
-                Console.WriteLine("Writing [{0}] ({1} format)", OutputFile, fontDescription.Format);
-
-                // Save output files.
-                if (!string.IsNullOrEmpty(DebugOutputSpriteSheet))
-                {
-                    Console.WriteLine("Saving debug output spritesheet {0}", DebugOutputSpriteSheet);
-
-                    var spriteFontData = SpriteFontData.Load(OutputFile);
-
-                    if (spriteFontData.Bitmaps.Length > 0 && spriteFontData.Bitmaps[0].Data is SpriteFontData.BitmapData)
-                    {
-                        var bitmapData = (SpriteFontData.BitmapData)spriteFontData.Bitmaps[0].Data;
-                        using (var image = Image.New2D(bitmapData.Width, bitmapData.Height, 1, bitmapData.PixelFormat))
-                        {
-                            Utilities.Write(image.DataPointer, bitmapData.Data, 0, bitmapData.Data.Length);
-                            image.Save(DebugOutputSpriteSheet, ImageFileType.Dds);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                Console.WriteLine("No need to write [{0}]. File is up-to-date from XML description", OutputFile);
-            }
-        }
+        Auto,
+        Rgba32,
+        Bgra4444,
+        CompressedMono,
     }
 }

@@ -1,16 +1,41 @@
 ﻿<!--
+// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+-->
+
+<!--
 This Target file must be imported in a project using SharpDX
 It adds automatically references to SharpDX assemblies for 
 Toolkit based on the current .NET framework (select net20, net40 or winrt)
-It compiles all files of type TookitFxc
+It compiles all files of type ToolkitFxc/ToolkitFont
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <!--Add ToolkitFxc as a new Build Action accessible on each File Properties-->
   <ItemGroup>
     <AvailableItemName Include="ToolkitFxc"></AvailableItemName>
+    <AvailableItemName Include="ToolkitFont"></AvailableItemName>
   </ItemGroup>
 
+  <!-- Global property most of them are overridable in the project including this project file -->
+  <!-- The Most important variable is SharpDXSdkDir that should be a global system environement variable --> 
   <PropertyGroup>
     <!--Detect SharpDX Platform based on .NETFramework version-->
     <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetFrameworkIdentifier)' == '.NETFramework' and ('$(TargetFrameworkVersion)' == 'v2.0' or '$(TargetFrameworkVersion)' == 'v3.5') ">Standard-net20</SharpDXPlatform>
@@ -18,9 +43,13 @@ It compiles all files of type TookitFxc
     <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetFrameworkIdentifier)' == '.NETCore'">Standard-winrt</SharpDXPlatform>
     <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetFrameworkIdentifier)' == 'WindowsPhone' and '$(TargetFrameworkVersion)' == 'v8.0'">Standard-wp8-$(Platform)</SharpDXPlatform>
 
+    <!-- Variable used to select the platform used for the tool at compile time - default to Win8Desktop-net40 -->
+    <SharpDXPlatformTool Condition="'$(SharpDXPlatformTool)' == ''">Standard-net40</SharpDXPlatformTool>
+    
+    <!-- Flag indicating the platform is desktop -->
     <SharpDXIsPlatformDesktop Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">true</SharpDXIsPlatformDesktop>
     
-    <!--Root SharpDX SDK Directory where assemblies are stored-->
+    <!--Root SharpDX SDK Directory where assemblies are stored. This variable should be set as a Global System Environement Variable -->
     <SharpDXSdkDir Condition="'$(SharpDXSdkDir)' == ''">$(MSBuildThisFileDirectory)</SharpDXSdkDir>
 
     <!--SharpDX Directory to link against - based on platform-->
@@ -28,7 +57,7 @@ It compiles all files of type TookitFxc
     
     <!--SharpDX Directory used for compiling - Default to Standard-net40-->
     <!--<SharpDXSdkToolsDir Condition="'$(SharpDXSdkToolsDir)' == ''">$(SharpDXSdkDir)\Bin\Win8Desktop-net40</SharpDXSdkToolsDir>-->
-    <SharpDXSdkToolsDir Condition="'$(SharpDXSdkToolsDir)' == ''">$(SharpDXSdkDir)\Bin\Standard-net40</SharpDXSdkToolsDir>
+    <SharpDXSdkToolsDir Condition="'$(SharpDXSdkToolsDir)' == ''">$(SharpDXSdkDir)\Bin\$(SharpDXPlatformTool)</SharpDXSdkToolsDir>
   </PropertyGroup>
 
   <!-- Automatically adds references to SharpDX assemblies for toolkit -->
@@ -62,22 +91,23 @@ It compiles all files of type TookitFxc
     </Reference>
   </ItemGroup>
 
-  <!-- If we are on desktop, we can safely add a reference to Direct2D1 -->
-  <ItemGroup Condition="Exists('$(SharpDXSdkBinDir)\SharpDX.Toolkit.Compiler.dll')">
+  <!-- If we are on desktop, we can safely add a reference to Compiler -->
+  <ItemGroup Condition="Exists('$(SharpDXSdkBinDir)\SharpDX.Toolkit.Compiler.dll') and '$(TargetFrameworkIdentifier)' == '.NETFramework'">
     <Reference Include="SharpDX.Toolkit.Compiler">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(SharpDXSdkBinDir)\SharpDX.Toolkit.Compiler.dll</HintPath>
     </Reference>
   </ItemGroup>
 
-  <ItemGroup Condition="Exists('$(SharpDXSdkBinDir)\SharpDX.D3DCompiler.dll')">
+  <ItemGroup Condition="Exists('$(SharpDXSdkBinDir)\SharpDX.D3DCompiler.dll') and '$(TargetFrameworkIdentifier)' == '.NETFramework'">
     <Reference Include="SharpDX.D3DCompiler">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(SharpDXSdkBinDir)\SharpDX.D3DCompiler.dll</HintPath>
     </Reference>
   </ItemGroup>
 
-  <ItemGroup Condition="Exists('$(SharpDXSdkBinDir)\SharpDX.Direct2D1.dll')">
+  <!-- If we are on desktop or WinRT, we can safely add a reference to Direct2D1 -->
+  <ItemGroup Condition="Exists('$(SharpDXSdkBinDir)\SharpDX.Direct2D1.dll') and ('$(TargetFrameworkIdentifier)' == '.NETFramework' or '$(TargetFrameworkIdentifier)' == '.NETCore')">
     <Reference Include="SharpDX.Direct2D1">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(SharpDXSdkBinDir)\SharpDX.Direct2D1.dll</HintPath>
@@ -99,11 +129,13 @@ It compiles all files of type TookitFxc
   </PropertyGroup>-->
 
   <UsingTask TaskName="SharpDX.Toolkit.EffectCompilerTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
-  <UsingTask TaskName="SharpDX.Toolkit.EffectCompilerDependencyTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
+  <UsingTask TaskName="SharpDX.Toolkit.FontCompilerTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
+  <UsingTask TaskName="SharpDX.Toolkit.CompilerDependencyTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
 
+  <!-- Plugs all compilers in BuildDependsOn --> 
   <PropertyGroup>
     <BuildDependsOn>
-      TkFxcCompileTarget;
+      TkCompileTarget;
       $(BuildDependsOn);
     </BuildDependsOn>
 
@@ -111,11 +143,11 @@ It compiles all files of type TookitFxc
     <ToolkitFxcDebugOption Condition="$(Optimize) == 'true'">false</ToolkitFxcDebugOption>
   </PropertyGroup>
 
-
+  <!-- Plugs all dependency listing in AssignTargetPathsDependsOn - in order to support generated output to be copied as part of the build  --> 
   <PropertyGroup>
     <AssignTargetPathsDependsOn>
       $(AssignTargetPathsDependsOn);
-      TkFxcListContentAndCompileTarget;
+      TkListContentAndCompileTarget;
     </AssignTargetPathsDependsOn>
 
     <IsBuildInDebug>true</IsBuildInDebug>
@@ -128,30 +160,32 @@ It compiles all files of type TookitFxc
     <ToolkitFxcDynamicCompilingOption Condition="'$(ToolkitFxcDynamicCompilingOption)' == ''">$(IsBuildInDebug)</ToolkitFxcDynamicCompilingOption>
   </PropertyGroup>
 
-  <Target Name="TkFxcListContentAndCompileTarget">
+  <!-- Target used to calculate dependency output -->
+  <Target Name="TkListContentAndCompileTarget">
     <!--<Message Importance="high" Text="AssignTargetPathsDependsOn @(ToolkitFxc)"/>-->
-    
-    <EffectCompilerDependencyTask
+
+    <CompilerDependencyTask
         ProjectDirectory="$(ProjectDir)"
         IntermediateDirectory="$(IntermediateOutputPath)"
         Debug="$(ToolkitFxcDebugOption)"
-        Files="@(ToolkitFxc)"
+        Files="@(ToolkitFxc);@(ToolkitFont)"
         RootNamespace="$(RootNamespace)"
         >
-        <Output TaskParameter="ContentFiles" ItemName="TkFxcContent"/>
-        <Output TaskParameter="CompileFiles" ItemName="TkFxcCompile"/>
-    </EffectCompilerDependencyTask>
+        <Output TaskParameter="ContentFiles" ItemName="TkContent"/>
+        <Output TaskParameter="CompileFiles" ItemName="TkCompile"/>
+    </CompilerDependencyTask>
 
     <ItemGroup>
       <!--List Of fxo compiled file-->
-      <Content Include="@(TkFxcContent)" KeepMetadata="Link;CopyToOutputDirectory"/>
+      <Content Include="@(TkContent)" KeepMetadata="Link;CopyToOutputDirectory"/>
 
       <!--List of cs compiled file-->
-      <Compile Include="@(TkFxcCompile)"/>
+      <Compile Include="@(TkCompile)"/>
     </ItemGroup>
   </Target>
 
-  <Target Name="TkFxcCompileTarget">
+  <!-- Target used to compile content (Font/Fx files...) -->
+  <Target Name="TkCompileTarget">
     <EffectCompilerTask
         ProjectDirectory="$(ProjectDir)"
         IntermediateDirectory="$(IntermediateOutputPath)"
@@ -161,5 +195,17 @@ It compiles all files of type TookitFxc
         RootNamespace="$(RootNamespace)"
         >
     </EffectCompilerTask>
+    
+    <!--TODO Merge both task into a single one?-->
+    <FontCompilerTask
+        ProjectDirectory="$(ProjectDir)"
+        IntermediateDirectory="$(IntermediateOutputPath)"
+        DynamicCompiling="$(ToolkitFxcDynamicCompilingOption)"
+        Debug="$(ToolkitFxcDebugOption)"
+        Files="@(ToolkitFont)"
+        RootNamespace="$(RootNamespace)"
+        >
+    </FontCompilerTask>
+
   </Target>
 </Project>

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,23 +21,36 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 using SharpDX.IO;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public class EffectDependencyList : Dictionary<string, DateTime>
+    public class FileDependencyList : Dictionary<string, DateTime>
     {
         private static Regex MatchLine = new Regex(@"^(.*)\s(\d+)$");
 
-        public EffectDependencyList()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileDependencyList"/> class.
+        /// </summary>
+        public FileDependencyList()
         {
         }
 
-        public static EffectDependencyList FromReader(TextReader textReader)
+        public void AddDefaultDependencies()
         {
-            var effectDependency = new EffectDependencyList();
+            // Add reference to this assembly
+            AddDependencyPath(typeof(FileDependencyList).Assembly.Location);
+
+            // Add reference to SharpDX.Toolkit Assembly
+            AddDependencyPath(typeof(SpriteFontData).Assembly.Location);
+        }
+
+        public static FileDependencyList FromReader(TextReader textReader)
+        {
+            var effectDependency = new FileDependencyList();
             string line;
             while ((line = textReader.ReadLine()) != null)
             {
@@ -51,16 +64,49 @@ namespace SharpDX.Toolkit.Graphics
             return effectDependency;
         }
 
-        public static EffectDependencyList FromStream(Stream textStream)
+        public static FileDependencyList FromStream(Stream textStream)
         {
             var reader = new StreamReader(textStream);
             return FromReader(reader);
         }
 
+        public void AddDependencyPath(string filePath)
+        {
+            if (!ContainsKey(filePath))
+                Add(filePath, NativeFile.GetLastWriteTime(filePath));
+        }
 
-        public static EffectDependencyList FromFile(string file)
+        public static FileDependencyList FromFile(string file)
         {
             using (var stream = new NativeFileStream(file, NativeFileMode.Open, NativeFileAccess.Read, NativeFileShare.ReadWrite)) return FromStream(stream);
+        }
+
+        public static string GetDependencyFileNameFromSourcePath(string pathToFxFile)
+        {
+            pathToFxFile = pathToFxFile.Replace("\\", "___");
+            pathToFxFile += ".deps";
+            return pathToFxFile;
+        }
+
+        public static List<string> FromFileRaw(string dependencyFilePath)
+        {
+            // If the file does not exist, than return true as it is a new dependency to generate
+            if (!File.Exists(dependencyFilePath))
+            {
+                return new List<string>();
+            }
+            return new List<string>(FromFile(dependencyFilePath).Keys);
+        }
+
+        public static bool CheckForChanges(string dependencyFilePath)
+        {
+            // If the file does not exist, than return true as it is a new dependency to generate
+            if (!File.Exists(dependencyFilePath))
+            {
+                return true;
+            }
+
+            return FromFile(dependencyFilePath).CheckForChanges();
         }
 
         public void Save(TextWriter writer)
@@ -86,10 +132,6 @@ namespace SharpDX.Toolkit.Graphics
             {
                 Directory.CreateDirectory(dirPath);
             }
-
-            var filePath = typeof(EffectDependencyList).Assembly.Location;
-            Remove(filePath);
-            Add(filePath, NativeFile.GetLastWriteTime(filePath));
 
             using (var stream = new NativeFileStream(file, NativeFileMode.Create, NativeFileAccess.Write, NativeFileShare.ReadWrite)) Save(stream);
         }

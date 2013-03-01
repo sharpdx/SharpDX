@@ -29,7 +29,7 @@ namespace SharpDX.Toolkit
     /// <summary>
     /// TODO: COMMENT THIS CODE
     /// </summary>
-    public class EffectCompilerDependencyTask : Task
+    public class CompilerDependencyTask : Task
     {
         [Required]
         public ITaskItem ProjectDirectory { get; set; }
@@ -52,9 +52,9 @@ namespace SharpDX.Toolkit
 
         public string RootNamespace { get; set; }
 
-        protected class TkFxcItem
+        protected class TkItem
         {
-            public string FxName;
+            public string Name;
 
             public bool DynamicCompiling;
 
@@ -93,7 +93,7 @@ namespace SharpDX.Toolkit
 
             public override string ToString()
             {
-                return string.Format("FxName: {0}, DynamicCompiling: {1}, LinkName: {2}, InputFilePath: {3}, OutputFilePath: {4}, OutputCsFile: {5}, OutputNamespace: {6}, OutputClassName: {7}, OutputFieldName: {8}, OutputCs: {9}", FxName, DynamicCompiling, LinkName, InputFilePath, OutputFilePath, OutputCsFile, OutputNamespace, OutputClassName, OutputFieldName, OutputCs);
+                return string.Format("Name: {0}, DynamicCompiling: {1}, LinkName: {2}, InputFilePath: {3}, OutputFilePath: {4}, OutputCsFile: {5}, OutputNamespace: {6}, OutputClassName: {7}, OutputFieldName: {8}, OutputCs: {9}", Name, DynamicCompiling, LinkName, InputFilePath, OutputFilePath, OutputCsFile, OutputNamespace, OutputClassName, OutputFieldName, OutputCs);
             }
         }
 
@@ -106,9 +106,9 @@ namespace SharpDX.Toolkit
 
             foreach (ITaskItem file in Files)
             {
-                var item = GetTkFxcItem(file);
+                var item = GetTkItem(file);
 
-                Log.LogMessage(MessageImportance.High, "Process TkFxc item {0}", item);
+                Log.LogMessage(MessageImportance.High, "Process item {0}", item);
 
                 if (!ProcessItem(item))
                 {
@@ -134,17 +134,17 @@ namespace SharpDX.Toolkit
             return !hasErrors;
         }
 
-        protected virtual bool ProcessItem(TkFxcItem item)
+        protected virtual bool ProcessItem(TkItem item)
         {
             return true;
         }
 
-        protected TkFxcItem GetTkFxcItem(ITaskItem item)
+        protected TkItem GetTkItem(ITaskItem item)
         {
 
-            var data = new TkFxcItem
+            var data = new TkItem
                            {
-                               FxName = item.ItemSpec,
+                               Name = item.ItemSpec,
                                DynamicCompiling = item.GetMetadata("DynamicCompiling", DynamicCompiling),
                                LinkName = item.GetMetadata("Link", item.ItemSpec),
                                OutputNamespace = item.GetMetadata("OutputNamespace", RootNamespace),
@@ -165,11 +165,11 @@ namespace SharpDX.Toolkit
             // For cs: $(ProjectDir)/XXX/YYY.cs
             if (data.OutputCs)
             {
-                data.OutputFilePath = Path.Combine(IntermediateDirectory.ItemSpec, Path.Combine(Path.GetDirectoryName(data.FxName) ?? string.Empty, data.OutputCsFile));
+                data.OutputFilePath = Path.Combine(IntermediateDirectory.ItemSpec, Path.Combine(Path.GetDirectoryName(data.Name) ?? string.Empty, data.OutputCsFile));
             }
             else
             {
-                data.OutputLink = Path.ChangeExtension(data.LinkName, "fxo");
+                data.OutputLink = Path.ChangeExtension(data.LinkName, null);
                 data.OutputFilePath = Path.Combine(IntermediateDirectory.ItemSpec, data.OutputLink);
             }
 
@@ -177,7 +177,7 @@ namespace SharpDX.Toolkit
             data.OutputFilePath = Path.Combine(ProjectDirectory.ItemSpec, data.OutputFilePath);
 
             // Fullpath to the input file
-            data.InputFilePath = Path.Combine(ProjectDirectory.ItemSpec, data.FxName);
+            data.InputFilePath = Path.Combine(ProjectDirectory.ItemSpec, data.Name);
 
             return data;
         }

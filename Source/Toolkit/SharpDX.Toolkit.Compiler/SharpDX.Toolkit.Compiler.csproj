@@ -20,26 +20,42 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Ast.cs" />
-    <Compile Include="EffectCompilerInternal.cs" />
-    <Compile Include="EffectCompilerLogger.cs" />
-    <Compile Include="EffectCompiler.cs" />
-    <Compile Include="EffectDataCodeWriter.cs" />
-    <Compile Include="EffectDependencyList.cs" />
-    <Compile Include="EffectParser.cs" />
-    <Compile Include="EffectCompilerMessage.cs" />
-    <Compile Include="EffectParserResult.cs" />
-    <Compile Include="FileIncludeHandler.cs" />
+    <Compile Include="Effect\Ast.cs" />
+    <Compile Include="Effect\EffectCompilerInternal.cs" />
+    <Compile Include="Effect\EffectCompilerLogger.cs" />
+    <Compile Include="Effect\EffectCompiler.cs" />
+    <Compile Include="Effect\EffectDataCodeWriter.cs" />
+    <Compile Include="FileDependencyList.cs" />
+    <Compile Include="Effect\EffectParser.cs" />
+    <Compile Include="Effect\EffectCompilerMessage.cs" />
+    <Compile Include="Effect\EffectParserResult.cs" />
+    <Compile Include="Effect\FileIncludeHandler.cs" />
+    <Compile Include="Font\BitmapImporter.cs" />
+    <Compile Include="Font\BitmapUtils.cs" />
+    <Compile Include="Font\CharacterRegion.cs" />
+    <Compile Include="Font\CharacterRegionTypeConverter.cs" />
+    <Compile Include="Font\FontCompilerResult.cs" />
+    <Compile Include="Font\FontCompiler.cs" />
+    <Compile Include="Font\FontDescription.cs" />
+    <Compile Include="Font\FontStyle.cs" />
+    <Compile Include="Font\FontTextureFormat.cs" />
+    <Compile Include="Font\Glyph.cs" />
+    <Compile Include="Font\GlyphCropper.cs" />
+    <Compile Include="Font\GlyphPacker.cs" />
+    <Compile Include="Font\IFontImporter.cs" />
+    <Compile Include="Font\SpriteFontWriter.cs" />
+    <Compile Include="Font\TrueTypeImporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SourceSpan.cs" />
-    <Compile Include="Token.cs" />
-    <Compile Include="Tokenizer.cs" />
-    <Compile Include="TokenType.cs" />
+    <Compile Include="Effect\SourceSpan.cs" />
+    <Compile Include="Effect\Token.cs" />
+    <Compile Include="Effect\Tokenizer.cs" />
+    <Compile Include="Effect\TokenType.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SharpDX.D3DCompiler\SharpDX.D3DCompiler.csproj">
@@ -57,6 +73,12 @@
       <Name>SharpDX.Toolkit</Name>
       <Private>False</Private>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(SharpDXWin8Core)' == 'false'">
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

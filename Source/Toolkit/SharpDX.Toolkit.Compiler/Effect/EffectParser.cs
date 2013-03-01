@@ -842,18 +842,18 @@ namespace SharpDX.Toolkit.Graphics
             return expression;
         }
 
-        private EffectDependencyList CalculateDependencies(EffectParserResult parserResult)
+        private FileDependencyList CalculateDependencies(EffectParserResult parserResult)
         {
             var keys = new List<string>(parserResult.IncludeHandler.FileResolved.Keys);
             keys.Sort(StringComparer.InvariantCultureIgnoreCase);
 
-            var dependency = new EffectDependencyList();
+            var dependency = new FileDependencyList();
+            dependency.AddDefaultDependencies();
 
             foreach (var fileKey in keys)
             {
                 var fileItem = parserResult.IncludeHandler.FileResolved[fileKey];
-                var modifiedTime = fileItem.ModifiedTime;
-                dependency.Add(fileItem.FilePath, modifiedTime);
+                dependency.AddDependencyPath(fileItem.FilePath);
             }
 
             return dependency;

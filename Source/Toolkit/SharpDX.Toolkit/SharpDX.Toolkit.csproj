@@ -92,6 +92,9 @@
   <ItemGroup>
     <None Include="SharpDX.Toolkit.nuspec" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.XML" />
+  </ItemGroup>
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

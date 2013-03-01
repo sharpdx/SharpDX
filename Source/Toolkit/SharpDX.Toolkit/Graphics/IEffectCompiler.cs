@@ -31,7 +31,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <param name="pathToFxFile">The (fx) effect path.</param>
         /// <returns>A dependency filename.</returns>
-        string GetDependencyFileNameFromEffectPath(string pathToFxFile);
+        string GetDependencyFileNameFromSourcePath(string pathToFxFile);
 
         /// <summary>
         /// Loads a dependency file.

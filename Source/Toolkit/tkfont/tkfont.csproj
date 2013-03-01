@@ -19,22 +19,34 @@
     <Compile Include="..\..\Shared\ConsoleProgram.cs">
       <Link>ConsoleProgram.cs</Link>
     </Compile>
-    <Compile Include="BitmapUtils.cs" />
-    <Compile Include="CharacterRegion.cs" />
-    <Compile Include="GlyphCropper.cs" />
-    <Compile Include="IFontImporter.cs" />
-    <Compile Include="SpriteFontWriter.cs" />
-    <Compile Include="TrueTypeImporter.cs" />
-    <Compile Include="BitmapImporter.cs" />
-    <Compile Include="GlyphPacker.cs" />
-    <Compile Include="CommandLineOptions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Glyph.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\SharpDX.DXGI\SharpDX.DXGI.csproj">
+      <Project>{3FC6DE77-B412-4101-9E64-6B9AA831179B}</Project>
+      <Name>SharpDX.DXGI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SharpDX\SharpDX.csproj">
+      <Project>{D0BCD56A-41C4-4A4E-8590-26864CED07FF}</Project>
+      <Name>SharpDX</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpDX.Toolkit.Compiler\SharpDX.Toolkit.Compiler.csproj">
+      <Project>{8bfff9d1-84ec-4fba-9beb-710ecf1857a8}</Project>
+      <Name>SharpDX.Toolkit.Compiler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpDX.Toolkit.Graphics\SharpDX.Toolkit.Graphics.csproj">
+      <Project>{53ef08a7-4224-434c-a62c-f29807c1c750}</Project>
+      <Name>SharpDX.Toolkit.Graphics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpDX.Toolkit\SharpDX.Toolkit.csproj">
+      <Project>{9FF0707C-75BB-4984-A01F-B9EAAD293F6C}</Project>
+      <Name>SharpDX.Toolkit</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

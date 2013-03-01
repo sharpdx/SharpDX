@@ -71,35 +71,17 @@
 // contributors exclude the implied warranties of merchantability, fitness for a
 // particular purpose and non-infringement.
 //--------------------------------------------------------------------
-using System.Drawing;
+using System.Collections.Generic;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    // Represents a single character within a font.
-    public class Glyph
+    // Importer interface allows the conversion tool to support multiple source font formats.
+    internal interface IFontImporter
     {
-        // Constructor.
-        public Glyph(char character, Bitmap bitmap, Rectangle? subrect = null)
-        {
-            this.Character = character;
-            this.Bitmap = bitmap;
-            this.Subrect = subrect.GetValueOrDefault(new Rectangle(0, 0, bitmap.Width, bitmap.Height));
-        }
+        void Import(FontDescription options);
 
+        IEnumerable<Glyph> Glyphs { get; }
 
-        // Unicode codepoint.
-        public char Character;
-
-
-        // Glyph image data (may only use a portion of a larger bitmap).
-        public Bitmap Bitmap;
-        public Rectangle Subrect;
-        
-
-        // Layout information.
-        public float XOffset;
-        public float YOffset;
-
-        public float XAdvance;
+        float LineSpacing { get; }
     }
 }

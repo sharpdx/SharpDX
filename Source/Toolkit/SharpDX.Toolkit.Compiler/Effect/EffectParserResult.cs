@@ -26,7 +26,7 @@ namespace SharpDX.Toolkit.Graphics
 
         public string PreprocessedSource;
 
-        public EffectDependencyList DependencyList;
+        public FileDependencyList DependencyList;
 
         public Ast.Shader Shader;
 

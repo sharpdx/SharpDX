@@ -34,7 +34,7 @@ namespace SharpDX.Toolkit
     /// <summary>
     /// TODO: COMMENT THIS CODE
     /// </summary>
-    public class EffectCompilerTask : EffectCompilerDependencyTask
+    public class EffectCompilerTask : CompilerDependencyTask
     {
         private static Regex parseMessage = new Regex(@"(.*)\s*\(\s*(\d+)\s*,\s*([^ \)]+)\)\s*:\s*(\w+)\s+(\w+)\s*:\s*(.*)");
         private static Regex matchNumberRange = new Regex(@"(\d+)-(\d+)");
@@ -65,14 +65,14 @@ namespace SharpDX.Toolkit
             return base.Execute();
         }
 
-        protected override bool ProcessItem(TkFxcItem item)
+        protected override bool ProcessItem(TkItem item)
         {
             bool hasErrors = false;
 
             var inputFilePath = item.InputFilePath;
             var outputFilePath = item.OutputFilePath;
 
-            var dependencyFilePath = Path.Combine(Path.Combine(ProjectDirectory.ItemSpec, IntermediateDirectory.ItemSpec), compiler.GetDependencyFileNameFromEffectPath(item.LinkName));
+            var dependencyFilePath = Path.Combine(Path.Combine(ProjectDirectory.ItemSpec, IntermediateDirectory.ItemSpec), compiler.GetDependencyFileNameFromSourcePath(item.LinkName));
 
             // Creates the dependency directory if it does no exist yet.
             var dependencyDirectoryPath = Path.GetDirectoryName(dependencyFilePath);

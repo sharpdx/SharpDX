@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -71,7 +71,7 @@ namespace SharpDX.Toolkit.Graphics
         private EffectData.Technique technique;
         private int nextSubPassCount;
 
-        private EffectDependencyList dependencyList;
+        private FileDependencyList dependencyList;
 
         public EffectCompilerInternal()
         {
@@ -84,7 +84,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns><c>true</c> if a file has been updated, <c>false</c> otherwise</returns>
         public bool CheckForChanges(string dependencyFilePath)
         {
-            return EffectDependencyList.FromFile(dependencyFilePath).CheckForChanges();
+            return FileDependencyList.FromFile(dependencyFilePath).CheckForChanges();
         }
 
         /// <summary>

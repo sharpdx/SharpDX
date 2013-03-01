@@ -71,67 +71,74 @@
 // contributors exclude the implied warranties of merchantability, fitness for a
 // particular purpose and non-infringement.
 //--------------------------------------------------------------------
-using System.Collections.Generic;
-using System.Drawing;
+#if !W8CORE
+using System;
+using System.ComponentModel;
+using System.Globalization;
+using System.Linq;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    // Available output texture formats.
-    public enum TextureFormat
+    public class CharacterRegionTypeConverter : TypeConverter
     {
-        Auto,
-        Rgba32,
-        Bgra4444,
-        CompressedMono,
-    }
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        {
+            return sourceType == typeof(string);
+        }
 
 
-    // Options telling the tool what to do.
-    public class CommandLineOptions
-    {
-        // Input can be either a system (TrueType) font or a specially marked bitmap file.
-        [ConsoleProgram.OptionAttribute("SourceFont", Description = "Input can be either a system (TrueType) font or a specially marked bitmap file", Required = true, Value = "<fontname>")]
-        public string SourceFont;
+        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        {
+            // Input must be a string.
+            string source = value as string;
+
+            if (string.IsNullOrEmpty(source))
+            {
+                throw new ArgumentException();
+            }
+
+            // Supported input formats:
+            //  A
+            //  A-Z
+            //  32-127
+            //  0x20-0x7F
+
+            char[] split = source.Split('-')
+                                 .Select(ConvertCharacter)
+                                 .ToArray();
+
+            switch (split.Length)
+            {
+                case 1:
+                    // Only a single character (eg. "a").
+                    return new CharacterRegion(split[0], split[0]);
+
+                case 2:
+                    // Range of characters (eg. "a-z").
+                    return new CharacterRegion(split[0], split[1]);
+             
+                default:
+                    throw new ArgumentException();
+            }
+        }
 
 
-        // Output spritefont binary.
-        [ConsoleProgram.OptionAttribute("OutputFile", Description = "Output spritefont binary", Required = true, Value = "<file>")]
-        public string OutputFile;
+        static char ConvertCharacter(string value)
+        {
+            if (value.Length == 1)
+            {
+                // Single character directly specifies a codepoint.
+                return value[0];
+            }
+            else
+            {
+                // Otherwise it must be an integer (eg. "32" or "0x20").
+                return (char)(int)intConverter.ConvertFromInvariantString(value);
+            }
+        }
 
-        // Which characters to include in the font (eg. "/CharacterRegion:0x20-0x7F /CharacterRegion:0x123")
-        [ConsoleProgram.OptionAttribute("CharacterRegion", Description = @"Which characters to include in the font (eg. ""/CharacterRegion:0x20-0x7F /CharacterRegion:0x123"")", Value = "<value>")]
-        public readonly List<CharacterRegion> CharacterRegions = new List<CharacterRegion>();
 
-        // Fallback character used when asked to render a codepoint that is not
-        // included in the font. If zero, missing characters throw exceptions.
-        [ConsoleProgram.OptionAttribute("DefaultCharacter", Description = "Fallback character used when asked to render a codepoint that is not included in the font", Value = "<integer>")]
-        public int DefaultCharacter = 0;
-
-        // Size and style for TrueType fonts (ignored when converting a bitmap font).
-        [ConsoleProgram.OptionAttribute("FontSize", Description = "Size and style for TrueType fonts (ignored when converting a bitmap font)", Value = "<integer>")]
-        public float FontSize = 23;
-
-        // Font style
-        [ConsoleProgram.OptionAttribute("FontStyle", Description = "Style for the font. 'regular', 'bold', 'italic', 'underline', 'strikeout'. Default is 'regular'\n", Value = "<style>")]
-        public FontStyle FontStyle = FontStyle.Regular;
-
-        // Spacing overrides. Zero is default spacing, negative closer together, positive further apart.
-        [ConsoleProgram.OptionAttribute("LineSpacing", Description = "Line spacing overrides. Zero is default spacing, negative closer together, positive further apart", Value = "<float>")]
-        public float LineSpacing = 0;
-
-        [ConsoleProgram.OptionAttribute("CharacterSpacing", Description = "Character spacing overrides. Zero is default spacing, negative closer together, positive further apart\n", Value = "<float>")]
-        public float CharacterSpacing = 0;
-
-        // What format should the output texture be?
-        [ConsoleProgram.OptionAttribute("TextureFormat", Description = "Format of the output texture. Values: 'auto', 'rgba32', 'bgra4444', 'compressedmono'. Default is 'auto'", Value = "<format>")]
-        public TextureFormat TextureFormat = TextureFormat.Auto;
-
-        // By default, font textures use premultiplied alpha format. Set this if you want interpolative alpha instead.
-        [ConsoleProgram.OptionAttribute("NoPremultiply", Description = "By default, font textures use premultiplied alpha format. Set this if you want interpolative alpha instead\n")]
-        public bool NoPremultiply = false;
-
-        // Dumps the generated sprite texture to a bitmap file (useful for debugging).
-        [ConsoleProgram.OptionAttribute("DebugOutputSpriteSheet", Description = "Dumps the generated sprite texture to a bitmap file (useful for debugging)", Value = "<output>")]
-        public string DebugOutputSpriteSheet = null;
+        static TypeConverter intConverter = TypeDescriptor.GetConverter(typeof(int));
     }
 }
+#endif

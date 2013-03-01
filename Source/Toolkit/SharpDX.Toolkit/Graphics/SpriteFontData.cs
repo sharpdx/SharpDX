@@ -58,7 +58,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// The default character fallback.
         /// </summary>
-        public int DefaultCharacter;
+        public char DefaultCharacter;
 
         /// <summary>
         /// An array of <see cref="Glyph"/> data.

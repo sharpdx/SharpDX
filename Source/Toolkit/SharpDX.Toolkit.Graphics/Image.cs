@@ -556,6 +556,22 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Saves this instance to a file.
         /// </summary>
+        /// <param name="fileName">The destination file. Filename must end with a known extension (dds, bmp, jpg, png, gif, tiff, wmp, tga)</param>
+        public void Save(string fileName)
+        {
+            var extension = Path.GetExtension(fileName);
+            ImageFileType fileType;
+            if (extension == null || !Enum.TryParse(extension.TrimStart('.'), true, out fileType))
+            {
+                throw new ArgumentException("Filename must have a supported image extension: dds, bmp, jpg, png, gif, tiff, wmp, tga");
+            }
+
+            Save(fileName, fileType);
+        }
+
+        /// <summary>
+        /// Saves this instance to a file.
+        /// </summary>
         /// <param name="fileName">The destination file.</param>
         /// <param name="fileType">Specify the output format.</param>
         /// <remarks>This method support the following format: <c>dds, bmp, jpg, png, gif, tiff, wmp, tga</c>.</remarks>

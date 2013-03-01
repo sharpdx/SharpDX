@@ -70,7 +70,7 @@ namespace CustomEffect
         protected override void LoadContent()
         {
             // Loads the effect
-            metaTunnelEffect = Content.Load<Effect>("metatunnel.fxo");
+            metaTunnelEffect = Content.Load<Effect>("metatunnel");
 
             base.LoadContent();
         }
