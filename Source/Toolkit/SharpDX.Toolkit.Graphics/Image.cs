@@ -560,10 +560,41 @@ namespace SharpDX.Toolkit.Graphics
         public void Save(string fileName)
         {
             var extension = Path.GetExtension(fileName);
+            extension = extension ?? string.Empty;
+
             ImageFileType fileType;
-            if (extension == null || !Enum.TryParse(extension.TrimStart('.'), true, out fileType))
+            extension = extension.TrimStart('.').ToLower();
+            switch (extension)
             {
-                throw new ArgumentException("Filename must have a supported image extension: dds, bmp, jpg, png, gif, tiff, wmp, tga");
+                case "jpg":
+                    fileType = ImageFileType.Jpg;
+                    break;
+                case "dds":
+                    fileType = ImageFileType.Dds;
+                    break;
+                case "gif":
+                    fileType = ImageFileType.Gif;
+                    break;
+                case "bmp":
+                    fileType = ImageFileType.Bmp;
+                    break;
+                case "png":
+                    fileType = ImageFileType.Png;
+                    break;
+                case "tga":
+                    fileType = ImageFileType.Tga;
+                    break;
+                case "tiff":
+                    fileType = ImageFileType.Tiff;
+                    break;
+                case "tktx":
+                    fileType = ImageFileType.Tktx;
+                    break;
+                case "wmp":
+                    fileType = ImageFileType.Wmp;
+                    break;
+                default:
+                    throw new ArgumentException("Filename must have a supported image extension: dds, bmp, jpg, png, gif, tiff, wmp, tga");
             }
 
             Save(fileName, fileType);
