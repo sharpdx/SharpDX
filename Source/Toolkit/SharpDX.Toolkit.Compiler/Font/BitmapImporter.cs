@@ -73,9 +73,7 @@
 //--------------------------------------------------------------------
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
-
 
 namespace SharpDX.Toolkit.Graphics
 {
@@ -116,7 +114,7 @@ namespace SharpDX.Toolkit.Graphics
             bitmap = BitmapUtils.ChangePixelFormat(bitmap, PixelFormat.Format32bppArgb);
 
             // What characters are included in this font?
-            var characters = CharacterRegion.Flatten(options.CharacterRegions).ToArray();
+            var characters = Utilities.ToArray(CharacterRegion.Flatten(options.CharacterRegions));
             int characterIndex = 0;
             char currentCharacter = '\0';
 

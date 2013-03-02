@@ -72,7 +72,6 @@
 // particular purpose and non-infringement.
 //--------------------------------------------------------------------
 using System;
-using System.Linq;
 using System.ComponentModel;
 using System.Collections.Generic;
 
@@ -116,10 +115,10 @@ namespace SharpDX.Toolkit.Graphics
         // Flattens a list of character regions into a combined list of individual characters.
         public static IEnumerable<Char> Flatten(IEnumerable<CharacterRegion> regions)
         {
-            if (regions.Any())
+            if (Utilities.Any(regions))
             {
                 // If we have any regions, flatten them and remove duplicates.
-                return regions.SelectMany(region => region.Characters).Distinct();
+                return Utilities.Distinct(Utilities.SelectMany(regions, region => region.Characters));
             }
             else
             {

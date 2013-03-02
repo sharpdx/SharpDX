@@ -75,7 +75,6 @@
 using System;
 using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
 
 namespace SharpDX.Toolkit.Graphics
 {
@@ -103,9 +102,12 @@ namespace SharpDX.Toolkit.Graphics
             //  32-127
             //  0x20-0x7F
 
-            char[] split = source.Split('-')
-                                 .Select(ConvertCharacter)
-                                 .ToArray();
+            var splitStr = source.Split('-');
+            var split = new char[splitStr.Length];
+            for (int i = 0; i < splitStr.Length; i++)
+            {
+                split[i] = ConvertCharacter(splitStr[i]);
+            }
 
             switch (split.Length)
             {

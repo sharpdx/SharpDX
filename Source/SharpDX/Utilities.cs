@@ -1419,5 +1419,119 @@ namespace SharpDX
                 comObject = null;
             }
         }
+
+        /// <summary>
+        /// Transforms an <see cref="IEnumerable{T}"/> to an array of T.
+        /// </summary>
+        /// <typeparam name="T">Type of the element</typeparam>
+        /// <param name="source">The enumerable source.</param>
+        /// <returns>an array of T</returns>
+        public static T[] ToArray<T>(IEnumerable<T> source)
+        {
+            return new Buffer<T>(source).ToArray();
+        }
+
+        /// <summary>
+        /// Test if there is an element in this enumeration.
+        /// </summary>
+        /// <typeparam name="T">Type of the element</typeparam>
+        /// <param name="source">The enumerable source.</param>
+        /// <returns><c>true</c> if there is an element in this enumeration, <c>false</c> otherwise</returns>
+        public static bool Any<T>(IEnumerable<T> source)
+        {
+            return source.GetEnumerator().MoveNext();
+        }
+
+        /// <summary>
+        /// Select elements from an enumeration.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the T source.</typeparam>
+        /// <typeparam name="TResult">The type of the T result.</typeparam>
+        /// <param name="source">The source.</param>
+        /// <param name="selector">The selector.</param>
+        /// <returns>A enumeration of selected values</returns>
+        public static IEnumerable<TResult> SelectMany<TSource, TResult>(IEnumerable<TSource> source, Func<TSource, IEnumerable<TResult>> selector)
+        {
+            foreach (TSource sourceItem in source)
+            {
+                foreach (TResult result in selector(sourceItem))
+                    yield return result;
+            }
+        }
+
+        /// <summary>
+        /// Selects distinct elements from an enumeration.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the T source.</typeparam>
+        /// <param name="source">The source.</param>
+        /// <param name="comparer">The comparer.</param>
+        /// <returns>A enumeration of selected values</returns>
+        public static IEnumerable<TSource> Distinct<TSource>(IEnumerable<TSource> source, IEqualityComparer<TSource> comparer = null)
+        {
+            if (comparer == null)
+                comparer = EqualityComparer<TSource>.Default;
+            
+            // using Dictionary is not really efficient but easy to implement
+            var values = new Dictionary<TSource, object>(comparer);
+            foreach (TSource sourceItem in source)
+            {
+                if (!values.ContainsKey(sourceItem))
+                {
+                    values.Add(sourceItem, null);
+                    yield return sourceItem;
+                }
+            }
+        }
+
+        internal struct Buffer<TElement>
+        {
+            internal TElement[] items;
+            internal int count;
+
+            internal Buffer(IEnumerable<TElement> source)
+            {
+                var array = (TElement[])null;
+                int length = 0;
+                var collection = source as ICollection<TElement>;
+                if (collection != null)
+                {
+                    length = collection.Count;
+                    if (length > 0)
+                    {
+                        array = new TElement[length];
+                        collection.CopyTo(array, 0);
+                    }
+                }
+                else
+                {
+                    foreach (TElement element in source)
+                    {
+                        if (array == null)
+                            array = new TElement[4];
+                        else if (array.Length == length)
+                        {
+                            var elementArray = new TElement[checked(length * 2)];
+                            Array.Copy(array, 0, elementArray, 0, length);
+                            array = elementArray;
+                        }
+                        array[length] = element;
+                        ++length;
+                    }
+                }
+                items = array;
+                count = length;
+            }
+
+            internal TElement[] ToArray()
+            {
+                if (count == 0)
+                    return new TElement[0];
+                if (items.Length == count)
+                    return items;
+                var elementArray = new TElement[count];
+                Array.Copy(items, 0, elementArray, 0, count);
+                return elementArray;
+            }
+        }
     }
 }
