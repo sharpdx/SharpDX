@@ -293,11 +293,10 @@ namespace SharpDX.Toolkit.Graphics
 
 
             // Helper computes the address of the specified pixel.
-            IntPtr PixelAddress(int x, int y)
+            unsafe IntPtr PixelAddress(int x, int y)
             {
-                return data.Scan0 + (y * data.Stride) + (x * sizeof(int));
+                return new IntPtr((byte*)data.Scan0 + (y * data.Stride) + (x * sizeof(int)));
             }
-
 
             // Fields.
             Bitmap bitmap;
