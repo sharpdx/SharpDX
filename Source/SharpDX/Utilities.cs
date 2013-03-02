@@ -51,6 +51,8 @@ namespace SharpDX
     /// <typeparam name="TResult">The type of the return value of the method that this delegate encapsulates. This type parameter is covariant. That is, you can use either the type you specified or any type that is more derived.</typeparam>
     /// <returns>The return value of the method that this delegate encapsulates.</returns>
     public delegate TResult Func<out TResult>();
+    public delegate TResult Func<in T1, out TResult>(T1 paramT1);
+    public delegate TResult Func<in T1, in T2, out TResult>(T1 paramT1, T2 paramT2);
 #endif
 
     public delegate void VoidAction();
