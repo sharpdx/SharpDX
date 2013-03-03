@@ -166,7 +166,7 @@ namespace SharpDX.Toolkit
 
         internal abstract void Resize(int width, int height);
 
-
+        internal IServiceRegistry Services { get; set; }
 
         protected internal abstract void SetSupportedOrientations(DisplayOrientation orientations);
 

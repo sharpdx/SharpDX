@@ -34,6 +34,8 @@ namespace SharpDX.Toolkit
     {
         internal RenderTarget2D BackBuffer;
         internal  GraphicsDevice GraphicsDevice;
+
+        private IGraphicsDeviceManager graphicsDeviceManager;
         private readonly IntPtr thisComObjectPtr;
 
         private DrawingSurfaceBackgroundGrid drawingSurfaceBackgroundGrid;
@@ -120,6 +122,18 @@ namespace SharpDX.Toolkit
         {
         }
 
+        private void CreateDevice(Device device, DeviceContext context, RenderTargetView renderTargetView)
+        {
+            GraphicsDevice = GraphicsDevice.New(device);
+
+            renderTargets[0].NativePointer = renderTargetView.NativePointer;
+            renderTargets[0].RenderTarget = RenderTarget2D.New(GraphicsDevice, renderTargetView, true);
+            BackBuffer = renderTargets[0].RenderTarget;
+            nextRenderTarget++;
+
+            graphicsPresenter = new RenderTargetGraphicsPresenter(GraphicsDevice, BackBuffer);
+            GraphicsDevice.Presenter = graphicsPresenter;
+        }
 
         void IDrawingSurfaceBackgroundContentProviderNative.Draw(Device device, DeviceContext context,
                                                                  RenderTargetView renderTargetView)
@@ -131,15 +145,7 @@ namespace SharpDX.Toolkit
                 {
                     if (GraphicsDevice == null)
                     {
-                        GraphicsDevice = GraphicsDevice.New(device);
-
-                        renderTargets[0].NativePointer = renderTargetView.NativePointer;
-                        renderTargets[0].RenderTarget = RenderTarget2D.New(GraphicsDevice, renderTargetView, true);
-                        BackBuffer = renderTargets[0].RenderTarget;
-                        nextRenderTarget++;
-
-                        graphicsPresenter = new RenderTargetGraphicsPresenter(GraphicsDevice, BackBuffer);
-                        GraphicsDevice.Presenter = graphicsPresenter;
+                        CreateDevice(device, context, renderTargetView);
                         InitCallback();
                     }
                     else
@@ -147,7 +153,13 @@ namespace SharpDX.Toolkit
                         if (((Device) GraphicsDevice).NativePointer != device.NativePointer ||
                             ((DeviceContext) GraphicsDevice).NativePointer != context.NativePointer)
                         {
-                            Debugger.Break();
+                            Utilities.Dispose(ref GraphicsDevice);
+                            Utilities.Dispose(ref BackBuffer);
+
+                            CreateDevice(device, context, renderTargetView);
+
+                            // Force the graphics device to reload the content manager
+                            graphicsDeviceManager.CreateDevice();
                         }
 
                         // Find any previous render target that was already alocated.
@@ -236,6 +248,7 @@ namespace SharpDX.Toolkit
         internal override void Initialize(GameContext gameContext)
         {
             drawingSurfaceBackgroundGrid = (DrawingSurfaceBackgroundGrid) gameContext.Control;
+            graphicsDeviceManager = (IGraphicsDeviceManager)Services.GetService(typeof(IGraphicsDeviceManager));
         }
 
         internal override void Run()

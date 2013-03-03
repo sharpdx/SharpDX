@@ -91,6 +91,7 @@ namespace SharpDX.Toolkit
             {
                 if (gameWindowToTest.CanHandle(gameContext))
                 {
+                    gameWindowToTest.Services = Services;
                     gameWindowToTest.Initialize(gameContext);
                     return gameWindowToTest;
                 }
@@ -186,7 +187,7 @@ namespace SharpDX.Toolkit
             }
 
             // TODO: Handle BackBufferFormat / multisampling / depthstencil format
-            deviceInfo.PresentationParameters.BackBufferFormat = prefferedParameters.PreferredBackBufferFormat;
+            deviceInfo.PresentationParameters.BackBufferFormat = mode.Format;
             deviceInfo.PresentationParameters.DepthStencilFormat = prefferedParameters.PreferredDepthStencilFormat;
             deviceInfo.PresentationParameters.MultiSampleCount = MSAALevel.None;
 

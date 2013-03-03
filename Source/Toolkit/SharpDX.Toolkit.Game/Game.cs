@@ -65,8 +65,6 @@ namespace SharpDX.Toolkit
 
         private readonly TimerTick timer;
 
-        private GraphicsDevice graphicsDevice;
-
         private bool isMouseVisible;
 
         #endregion
@@ -315,14 +313,14 @@ namespace SharpDX.Toolkit
             // Initialize this instance and all game systems
             Initialize();
 
-            // Initialize all pending game systems added in Initialize after this base.Initialize
+            // If there were any new game systems added in initialize, we should remove them here
             InitializePendingGameSystems();
 
             // Load the content of the game
             LoadContent();
 
-            // Initialize and load the content of pending game systems added in LoadContent.
-            InitializePendingGameSystems(true);
+            // Same here, make sure that pending game systems setup in LoadContent are initialized
+            InitializePendingGameSystems();
 
             IsRunning = true;
 
@@ -617,9 +615,9 @@ namespace SharpDX.Toolkit
         {
             // Setup the graphics device if it was not already setup.
             SetupGraphicsDeviceEvents();
-
             InitializePendingGameSystems();
         }
+
 
         private void InitializePendingGameSystems(bool loadContent = false)
         {
@@ -971,8 +969,6 @@ namespace SharpDX.Toolkit
             }
 
             graphicsDeviceService.DeviceCreated += graphicsDeviceService_DeviceCreated;
-            graphicsDeviceService.DeviceResetting += graphicsDeviceService_DeviceResetting;
-            graphicsDeviceService.DeviceReset += graphicsDeviceService_DeviceReset;
             graphicsDeviceService.DeviceDisposing += graphicsDeviceService_DeviceDisposing;
         }
 
@@ -981,8 +977,6 @@ namespace SharpDX.Toolkit
             if (graphicsDeviceService != null)
             {
                 graphicsDeviceService.DeviceCreated -= graphicsDeviceService_DeviceCreated;
-                graphicsDeviceService.DeviceResetting -= graphicsDeviceService_DeviceResetting;
-                graphicsDeviceService.DeviceReset -= graphicsDeviceService_DeviceReset;
                 graphicsDeviceService.DeviceDisposing -= graphicsDeviceService_DeviceDisposing;
             }
         }
@@ -1006,16 +1000,6 @@ namespace SharpDX.Toolkit
                 UnloadContent();
                 contentLoaded = false;
             }
-        }
-
-        private void graphicsDeviceService_DeviceReset(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void graphicsDeviceService_DeviceResetting(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
         }
 
         private void updateableGameSystem_UpdateOrderChanged(object sender, EventArgs e)

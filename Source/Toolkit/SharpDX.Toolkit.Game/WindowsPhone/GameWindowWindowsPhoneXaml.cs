@@ -33,9 +33,10 @@ namespace SharpDX.Toolkit
     internal class GameWindowWindowsPhoneXaml : GameWindow, IDrawingSurfaceContentProviderNative,
                                                 IInspectable, ICustomQueryInterface
     {
-        internal RenderTarget2D BackBuffer;
-        internal GraphicsDevice GraphicsDevice;
+        private DrawingSizeF currentSize;
         private readonly IntPtr thisComObjectPtr;
+
+        private bool isInitialized;
 
         private DrawingSurface drawingSurface;
         private DrawingSurfaceRuntimeHost host;
@@ -62,11 +63,7 @@ namespace SharpDX.Toolkit
         {
             get
             {
-                if (BackBuffer != null)
-                {
-                    return new DrawingRectangle(0, 0, BackBuffer.Width, BackBuffer.Height);
-                }
-                return DrawingRectangle.Empty;
+                return new DrawingRectangle(0, 0, (int)currentSize.Width, (int)currentSize.Height);
             }
         }
 
@@ -102,8 +99,13 @@ namespace SharpDX.Toolkit
 
         private Exception drawException;
         private RenderTargetGraphicsPresenter graphicsPresenter;
-        private Graphics.Texture2D renderTarget;
         private DrawingSurfaceSynchronizedTexture synchronizedTexture;
+
+        public void CreateSynchronizedTexture(Graphics.Texture2D renderTarget2D)
+        {
+            Utilities.Dispose(ref synchronizedTexture);
+            synchronizedTexture = host.CreateSynchronizedTexture((Texture2D)renderTarget2D);
+        }
 
         void IDrawingSurfaceContentProviderNative.Connect(DrawingSurfaceRuntimeHost host)
         {
@@ -112,10 +114,7 @@ namespace SharpDX.Toolkit
 
         void IDrawingSurfaceContentProviderNative.Disconnect()
         {
-            Utilities.Dispose(ref GraphicsDevice);
-            Utilities.Dispose(ref BackBuffer);
             Utilities.Dispose(ref graphicsPresenter);
-            Utilities.Dispose(ref renderTarget);
             Utilities.Dispose(ref synchronizedTexture);
         }
 
@@ -130,34 +129,14 @@ namespace SharpDX.Toolkit
             {
                 if (!Exiting)
                 {
-                    if (GraphicsDevice == null)
+                    // TODO Check if surfaceSize changed to reinitialize the buffers?
+                    currentSize = surfaceSize;
+
+                    if (!isInitialized)
                     {
-                        GraphicsDevice = GraphicsDevice.New();
-
-                        var renderTargetDesc = new Texture2DDescription
-                                               {
-                                                   Format = DXGI.Format.B8G8R8A8_UNorm,
-                                                   Width = (int)surfaceSize.Width,
-                                                   Height = (int)surfaceSize.Height,
-                                                   ArraySize = 1,
-                                                   MipLevels = 1,
-                                                   BindFlags = BindFlags.RenderTarget | BindFlags.ShaderResource,
-                                                   Usage = ResourceUsage.Default,
-                                                   CpuAccessFlags = CpuAccessFlags.None,
-                                                   OptionFlags = ResourceOptionFlags.SharedKeyedmutex | ResourceOptionFlags.SharedNthandle,
-                                                   SampleDescription = new DXGI.SampleDescription(1, 0)
-                                               };
-
-                        renderTarget = ToDispose(Graphics.Texture2D.New(GraphicsDevice, renderTargetDesc));
-                        BackBuffer = ToDispose(RenderTarget2D.New(GraphicsDevice, new RenderTargetView(GraphicsDevice, renderTarget)));
-
-                        graphicsPresenter = new RenderTargetGraphicsPresenter(GraphicsDevice, BackBuffer);
-                        GraphicsDevice.Presenter = graphicsPresenter;
                         InitCallback();
+                        isInitialized = true;
                     }
-
-                    if(this.synchronizedTexture == null)
-                        this.synchronizedTexture = host.CreateSynchronizedTexture((Texture2D)renderTarget);
 
                     this.synchronizedTexture.BeginDraw();
 
@@ -234,6 +213,13 @@ namespace SharpDX.Toolkit
         protected override void Dispose(bool disposeManagedResources)
         {
             drawingSurface.SetContentProvider(null);
+
+            var callbackable = (ICallbackable)this;
+            if (callbackable.Shadow != null)
+            {
+                callbackable.Shadow.Dispose();
+                callbackable.Shadow = null;
+            }
 
             base.Dispose(disposeManagedResources);
         }

@@ -146,9 +146,7 @@ namespace SharpDX.Toolkit
 
         public event EventHandler<EventArgs> DeviceDisposing;
 
-        public event EventHandler<EventArgs> DeviceReset;
-
-        public event EventHandler<EventArgs> DeviceResetting;
+        public event EventHandler<EventArgs> DeviceLost;
 
         public event EventHandler<PreparingDeviceSettingsEventArgs> PreparingDeviceSettings;
 
@@ -375,6 +373,7 @@ namespace SharpDX.Toolkit
 
         bool IGraphicsDeviceManager.BeginDraw()
         {
+            beginDrawOk = false;
             if (GraphicsDevice == null)
             {
                 return false;
@@ -382,25 +381,6 @@ namespace SharpDX.Toolkit
 
             switch (GraphicsDevice.GraphicsDeviceStatus)
             {
-                case GraphicsDeviceStatus.Removed:
-                    Utilities.Sleep(TimeSpan.FromMilliseconds(20));
-                    return false;
-                case GraphicsDeviceStatus.Reset:
-                    Utilities.Sleep(TimeSpan.FromMilliseconds(20));
-                    try
-                    {
-                        ChangeOrCreateDevice(false);
-                    }
-                    catch (Exception)
-                    {
-                        return false;
-                    }
-                    catch
-                    {
-                        ChangeOrCreateDevice(true);
-                    }
-
-                    break;
                 case GraphicsDeviceStatus.Normal:
                     // Before drawing, we should clear the state to make sure that there is no unstable graphics device states (On some WP8 devices for example)
                     // An applicatio should not rely on previous state (last frame...etc.) after BeginDraw.
@@ -413,6 +393,18 @@ namespace SharpDX.Toolkit
                         GraphicsDevice.SetViewports(0, 0, GraphicsDevice.BackBuffer.Width, GraphicsDevice.BackBuffer.Height);
                     }
 
+                    break;
+                default:
+                    Utilities.Sleep(TimeSpan.FromMilliseconds(20));
+                    try
+                    {
+                        OnDeviceLost(this, EventArgs.Empty);
+                        ChangeOrCreateDevice(true);
+                    }
+                    catch (Exception)
+                    {
+                        return false;
+                    }
                     break;
             }
 
@@ -711,18 +703,9 @@ namespace SharpDX.Toolkit
             }
         }
         
-        protected virtual void OnDeviceReset(object sender, EventArgs args)
+        protected virtual void OnDeviceLost(object sender, EventArgs args)
         {
-            var handler = DeviceReset;
-            if (handler != null)
-            {
-                handler(sender, args);
-            }
-        }
-        
-        protected virtual void OnDeviceResetting(object sender, EventArgs args)
-        {
-            var handler = DeviceResetting;
+            var handler = DeviceLost;
             if (handler != null)
             {
                 handler(sender, args);
@@ -757,18 +740,20 @@ namespace SharpDX.Toolkit
             }
         }
 
-
         private void CreateDevice(GraphicsDeviceInformation newInfo)
         {
             if (GraphicsDevice != null)
             {
-                if (GraphicsDevice.Presenter != null)
+                if (!GraphicsDevice.IsDisposed)
                 {
-                    GraphicsDevice.Presenter.Dispose();
-                    GraphicsDevice.Presenter = null;
-                }
+                    if (GraphicsDevice.Presenter != null)
+                    {
+                        GraphicsDevice.Presenter.Dispose();
+                        GraphicsDevice.Presenter = null;
+                    }
 
-                GraphicsDevice.Dispose();
+                    GraphicsDevice.Dispose();
+                }
                 GraphicsDevice = null;
             }
 
@@ -781,27 +766,9 @@ namespace SharpDX.Toolkit
             // this.ValidateGraphicsDeviceInformation(newInfo);
             GraphicsDevice = graphicsDeviceFactory.CreateDevice(newInfo);
 
-            GraphicsDevice.DeviceResetting += GraphicsDevice_DeviceResetting;
-            GraphicsDevice.DeviceReset += GraphicsDevice_DeviceReset;
-            GraphicsDevice.DeviceLost += GraphicsDevice_DeviceLost;
             GraphicsDevice.Disposing += GraphicsDevice_Disposing;
 
             OnDeviceCreated(this, EventArgs.Empty);
-        }
-
-        void GraphicsDevice_DeviceResetting(object sender, EventArgs e)
-        {
-            // TODO what to do?
-        }
-
-        void GraphicsDevice_DeviceReset(object sender, EventArgs e)
-        {
-            // TODO what to do?
-        }
-
-        void GraphicsDevice_DeviceLost(object sender, EventArgs e)
-        {
-            // TODO what to do?
         }
 
         void GraphicsDevice_Disposing(object sender, EventArgs e)

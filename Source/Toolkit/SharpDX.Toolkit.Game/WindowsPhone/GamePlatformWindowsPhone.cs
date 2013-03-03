@@ -65,24 +65,13 @@ namespace SharpDX.Toolkit
                         PresentationParameters = gameWindowBackgroundXaml.GraphicsDevice.Presenter.Description
                     };
 
-                return new List<GraphicsDeviceInformation>() {deviceInfo};
-            }
-
-            var gameWindowXaml = gameWindow as GameWindowWindowsPhoneXaml;
-            if (gameWindowXaml != null)
-            {
-
-                // Unlike Desktop and WinRT, the list of best devices are completely fixed in WP8 XAML
-                // So we return a single element
-                var deviceInfo = new GraphicsDeviceInformation
-                                 {
-                                     Adapter = gameWindowXaml.GraphicsDevice.Adapter,
-                                     GraphicsProfile = gameWindowXaml.GraphicsDevice.Features.Level,
-                                     PresentationParameters = gameWindowXaml.GraphicsDevice.Presenter.Description
-                                 };
-
                 return new List<GraphicsDeviceInformation>() { deviceInfo };
             }
+
+            // Else for DrawingSurface we are forcing the width and height
+            var gameWindowXaml = (GameWindowWindowsPhoneXaml)gameWindow;
+            prefferedParameters.PreferredBackBufferWidth = gameWindowXaml.ClientBounds.Width;
+            prefferedParameters.PreferredBackBufferHeight = gameWindowXaml.ClientBounds.Height;
 
             return base.FindBestDevices(prefferedParameters);
         }
@@ -96,14 +85,34 @@ namespace SharpDX.Toolkit
                 return gameWindowBackgroundXaml.GraphicsDevice;
             }
 
-            var gameWindowXaml = gameWindow as GameWindowWindowsPhoneXaml;
-            if (gameWindowXaml != null)
-            {
-                // We don't have anything else than the GraphicsDevice created for the XAML so return it directly.
-                return gameWindowXaml.GraphicsDevice;
-            }
+            // Else this is a DrawingSruface 
 
-            return base.CreateDevice(deviceInformation);
+            var device = GraphicsDevice.New(deviceInformation.Adapter, deviceInformation.DeviceCreationFlags);
+
+            var renderTargetDesc = new Texture2DDescription
+            {
+                Format = deviceInformation.PresentationParameters.BackBufferFormat,
+                Width = (int)deviceInformation.PresentationParameters.BackBufferWidth,
+                Height = (int)deviceInformation.PresentationParameters.BackBufferHeight,
+                ArraySize = 1,
+                MipLevels = 1,
+                BindFlags = BindFlags.RenderTarget | BindFlags.ShaderResource,
+                Usage = ResourceUsage.Default,
+                CpuAccessFlags = CpuAccessFlags.None,
+                OptionFlags = ResourceOptionFlags.SharedKeyedmutex | ResourceOptionFlags.SharedNthandle,
+                SampleDescription = new DXGI.SampleDescription(1, 0)
+            };
+
+            var renderTarget = Graphics.Texture2D.New(device, renderTargetDesc);
+            var BackBuffer = RenderTarget2D.New(device, new RenderTargetView(device, renderTarget));
+
+            var graphicsPresenter = new RenderTargetGraphicsPresenter(device, BackBuffer);
+            device.Presenter = graphicsPresenter;
+
+            var gameWindowXaml = (GameWindowWindowsPhoneXaml)gameWindow;
+            gameWindowXaml.CreateSynchronizedTexture(renderTarget);
+
+            return device;
         }
     }
 }

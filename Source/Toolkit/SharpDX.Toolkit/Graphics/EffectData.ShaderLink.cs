@@ -87,6 +87,8 @@ namespace SharpDX.Toolkit.Graphics
                 set { index = value; }
             }
 
+            public int RuntimeIndex { get; set; }
+
             /// <summary>
             /// Gets or sets the name of the shader import. Can be null.
             /// </summary>

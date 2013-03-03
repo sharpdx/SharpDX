@@ -177,7 +177,7 @@ namespace SharpDX.Toolkit.Graphics
                                 if (index >= 0)
                                 {
                                     shaderLink.ImportName = null;
-                                    shaderLink.Index = index;
+                                    shaderLink.RuntimeIndex = index;
                                 }
                             }
                             else if (!shaderLink.IsNullShader)
@@ -203,11 +203,11 @@ namespace SharpDX.Toolkit.Graphics
                                         }
                                     }
 
-                                    shaderLink.Index = index;
+                                    shaderLink.RuntimeIndex = index;
                                 }
                                 else
                                 {
-                                    shaderLink.Index = Shaders.Count;
+                                    shaderLink.RuntimeIndex = Shaders.Count;
                                     Shaders.Add(shader);
                                 }
                             }

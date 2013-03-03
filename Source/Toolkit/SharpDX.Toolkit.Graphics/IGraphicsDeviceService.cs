@@ -38,14 +38,9 @@ namespace SharpDX.Toolkit.Graphics
         event EventHandler<EventArgs> DeviceDisposing;
 
         /// <summary>
-        /// Occurs when a device is reseted.
+        /// Occurs when a device is lost.
         /// </summary>
-        event EventHandler<EventArgs> DeviceReset;
-
-        /// <summary>
-        /// Occurs when a device is resetting.
-        /// </summary>
-        event EventHandler<EventArgs> DeviceResetting;
+        event EventHandler<EventArgs> DeviceLost;
 
         /// <summary>
         /// Gets the current graphcs device.

@@ -281,21 +281,6 @@ namespace SharpDX.Toolkit.Graphics
         public bool AutoViewportFromRenderTargets { get; set; }
 
         /// <summary>
-        /// Occurs when the device is going to be lost (for example before a reset).
-        /// </summary>
-        public event EventHandler<EventArgs> DeviceLost;
-
-        /// <summary>
-        /// Occurs when a device is reset and an application needs to recreate all dependent resources.
-        /// </summary>
-        public event EventHandler<EventArgs> DeviceReset;
-
-        /// <summary>
-        /// Occurs when a device is resetting.
-        /// </summary>
-        public event EventHandler<EventArgs> DeviceResetting;
-
-        /// <summary>
         /// Gets the status of this device.
         /// </summary>
         /// <msdn-id>ff476526</msdn-id>	

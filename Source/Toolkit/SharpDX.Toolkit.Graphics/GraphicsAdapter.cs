@@ -109,7 +109,6 @@ namespace SharpDX.Toolkit.Graphics
                     ToDispose(output);
                 }
 
-
                 foreach (var supportedDisplayMode in SupportedDisplayModes)
                 {
                     if (supportedDisplayMode.Width == outputDescription.DesktopBounds.Width
@@ -119,6 +118,21 @@ namespace SharpDX.Toolkit.Graphics
                         // Stupid DXGI, there is no way to get the DXGI.Format, nor the refresh rate.
                         CurrentDisplayMode = new DisplayMode(Format.R8G8B8A8_UNorm, outputDescription.DesktopBounds.Width, outputDescription.DesktopBounds.Height, supportedDisplayMode.RefreshRate);
                         break;
+                    }
+                }
+
+                if (CurrentDisplayMode == null)
+                {
+                    foreach (var supportedDisplayMode in SupportedDisplayModes)
+                    {
+                        if (supportedDisplayMode.Width == outputDescription.DesktopBounds.Width
+                            && supportedDisplayMode.Height == outputDescription.DesktopBounds.Height
+                            && supportedDisplayMode.Format == Format.B8G8R8A8_UNorm)
+                        {
+                            // Stupid DXGI, there is no way to get the DXGI.Format, nor the refresh rate.
+                            CurrentDisplayMode = new DisplayMode(Format.B8G8R8A8_UNorm, outputDescription.DesktopBounds.Width, outputDescription.DesktopBounds.Height, supportedDisplayMode.RefreshRate);
+                            break;
+                        }
                     }
                 }
             }

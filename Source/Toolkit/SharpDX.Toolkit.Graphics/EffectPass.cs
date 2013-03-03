@@ -423,7 +423,7 @@ namespace SharpDX.Toolkit.Graphics
                 var stageBlock = new StageBlock(shaderType);
                 pipeline.Stages[i] = stageBlock;
 
-                stageBlock.Index = link.Index;
+                stageBlock.Index = link.RuntimeIndex;
                 stageBlock.ShaderStage = Effect.GraphicsDevice.ShaderStages[i];
 
                 InitStageBlock(stageBlock, logger);
