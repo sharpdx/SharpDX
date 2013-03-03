@@ -20,7 +20,7 @@
 // THE SOFTWARE.
 -->
 <!-- Common Settings used by SharpDX projects -->
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTarget="Help" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
     <SharpDXSolution>SharpDX.sln</SharpDXSolution>
@@ -33,6 +33,10 @@
   </PropertyGroup>
 
   <Import Project="$(ExtensionTasksPath)MSBuild.ExtensionPack.tasks"/>
+  
+  <Target Name="Help">
+	<Message Importance="high" Text="Use parameter /t:Build to build all SharpDX assemblies"/>
+  </Target>
 
   <Target Name="FullBuild">
 	<CallTarget Targets="Build"/>
