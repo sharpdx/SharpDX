@@ -81,11 +81,11 @@ namespace SharpDX.Toolkit
                 Directory.CreateDirectory(dependencyDirectoryPath);
             }
 
-            Log.LogMessage(MessageImportance.High, "Check Toolkit FX file to compile {0} with dependency file {1}", inputFilePath, dependencyFilePath);
+            Log.LogMessage(MessageImportance.Normal, "Check Toolkit FX file to compile {0} with dependency file {1}", inputFilePath, dependencyFilePath);
 
             if (compiler.CheckForChanges(dependencyFilePath) || !File.Exists(outputFilePath))
             {
-                Log.LogMessage(MessageImportance.High, "Start to compile {0}", inputFilePath);
+                Log.LogMessage(MessageImportance.Normal, "Start to compile {0}", inputFilePath);
 
                 var compilerResult = compiler.CompileFromFile(inputFilePath, Debug ? EffectCompilerFlags.Debug : EffectCompilerFlags.None, null, null, item.DynamicCompiling, dependencyFilePath);
 
@@ -95,7 +95,7 @@ namespace SharpDX.Toolkit
                 }
                 else
                 {
-                    Log.LogMessage(MessageImportance.High, "Compiled successfull {0} to {1}", inputFilePath, outputFilePath);
+                    Log.LogMessage(MessageImportance.Normal, "Compiled successfull {0} to {1}", inputFilePath, outputFilePath);
                 }
 
                 foreach (var message in compilerResult.Logger.Messages)

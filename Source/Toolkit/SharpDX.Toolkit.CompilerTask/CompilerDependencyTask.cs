@@ -99,37 +99,44 @@ namespace SharpDX.Toolkit
 
         public override bool Execute()
         {
-            var contentFiles = new List<ITaskItem>();
-            var compileFiles = new List<ITaskItem>();
-
             var hasErrors = false;
-
-            foreach (ITaskItem file in Files)
+            try
             {
-                var item = GetTkItem(file);
+                var contentFiles = new List<ITaskItem>();
+                var compileFiles = new List<ITaskItem>();
 
-                Log.LogMessage(MessageImportance.High, "Process item {0}", item);
-
-                if (!ProcessItem(item))
+                foreach (ITaskItem file in Files)
                 {
-                    hasErrors = true;
+                    var item = GetTkItem(file);
+
+                    Log.LogMessage(MessageImportance.Low, "Process item {0}", item);
+
+                    if (!ProcessItem(item))
+                    {
+                        hasErrors = true;
+                    }
+
+                    var returnedItem = item.ToTaskItem();
+
+                    // Fxo are copied to output
+                    if (item.OutputCs)
+                    {
+                        compileFiles.Add(returnedItem);
+                    }
+                    else
+                    {
+                        contentFiles.Add(returnedItem);
+                    }
                 }
 
-                var returnedItem = item.ToTaskItem();
-
-                // Fxo are copied to output
-                if (item.OutputCs)
-                {
-                    compileFiles.Add(returnedItem);
-                }
-                else
-                {
-                    contentFiles.Add(returnedItem);
-                }
+                ContentFiles = contentFiles.ToArray();
+                CompileFiles = compileFiles.ToArray();
             }
-
-            ContentFiles = contentFiles.ToArray();
-            CompileFiles = compileFiles.ToArray();
+            catch (Exception ex)
+            {
+                Log.LogError("Unexpected exception: {0}", ex);
+                hasErrors = true;
+            }
 
             return !hasErrors;
         }
