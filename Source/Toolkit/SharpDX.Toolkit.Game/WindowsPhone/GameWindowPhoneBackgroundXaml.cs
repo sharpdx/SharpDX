@@ -35,6 +35,8 @@ namespace SharpDX.Toolkit
         internal RenderTarget2D BackBuffer;
         internal  GraphicsDevice GraphicsDevice;
 
+        private bool isInitialized;
+
         private IGraphicsDeviceManager graphicsDeviceManager;
         private readonly IntPtr thisComObjectPtr;
 
@@ -113,6 +115,11 @@ namespace SharpDX.Toolkit
 
         void IDrawingSurfaceBackgroundContentProviderNative.Disconnect()
         {
+            for (int i = 0; i < renderTargets.Length; i++)
+            {
+                renderTargets[i].Dispose();
+            }
+
             Utilities.Dispose(ref GraphicsDevice);
             Utilities.Dispose(ref BackBuffer);
         }
@@ -143,15 +150,16 @@ namespace SharpDX.Toolkit
                 RenderTarget2D localBackBuffer = null;
                 if (!Exiting)
                 {
-                    if (GraphicsDevice == null)
+                    if (!isInitialized)
                     {
                         CreateDevice(device, context, renderTargetView);
                         InitCallback();
+                        isInitialized = true;
                     }
                     else
                     {
-                        if (((Device) GraphicsDevice).NativePointer != device.NativePointer ||
-                            ((DeviceContext) GraphicsDevice).NativePointer != context.NativePointer)
+                        if (GraphicsDevice == null || (((Device) GraphicsDevice).NativePointer != device.NativePointer ||
+                            ((DeviceContext) GraphicsDevice).NativePointer != context.NativePointer))
                         {
                             Utilities.Dispose(ref GraphicsDevice);
                             Utilities.Dispose(ref BackBuffer);
