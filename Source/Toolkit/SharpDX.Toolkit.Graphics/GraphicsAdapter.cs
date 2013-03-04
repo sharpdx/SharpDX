@@ -51,12 +51,32 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         static GraphicsAdapter()
         {
+            Initialize();
+        }
+
+        /// <summary>
+        /// Initializes the GraphicsAdapter. On Desktop and WinRT, this is done statically.
+        /// </summary>
+        public static void Initialize()
+        {
+            if (Adapters == null)
+            {
 #if DIRECTX11_1
-            using (var factory = new Factory1())
-                Initialize(factory.QueryInterface<Factory2>());
+            using (var factory = new Factory1()) Initialize(factory.QueryInterface<Factory2>());
 #else
             Initialize(new Factory1());
 #endif
+            }
+        }
+
+        /// <summary>
+        /// Dispose all statically cached value by this instance.
+        /// </summary>
+        public new static void Dispose()
+        {
+            Utilities.Dispose(ref staticCollector);
+            Adapters = null;
+            Default = null;
         }
 
         /// <summary>
@@ -225,14 +245,6 @@ namespace SharpDX.Toolkit.Graphics
         public static implicit operator Factory1(GraphicsAdapter from)
         {
             return Factory;
-        }
-
-        /// <summary>
-        /// Disposes of all objects
-        /// </summary>
-        internal static void DisposeStatic()
-        {
-            ((IDisposable)staticCollector).Dispose();
         }
 
         /// <summary>

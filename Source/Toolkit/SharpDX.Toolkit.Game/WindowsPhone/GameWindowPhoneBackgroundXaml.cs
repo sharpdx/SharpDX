@@ -29,7 +29,7 @@ using SharpDX.Toolkit.Graphics;
 
 namespace SharpDX.Toolkit
 {
-    internal class GameWindowWindowsPhoneBackgroundXaml : GameWindow, IDrawingSurfaceBackgroundContentProviderNative,
+    internal class GameWindowPhoneBackgroundXaml : GameWindow, IDrawingSurfaceBackgroundContentProviderNative,
                                                           IInspectable, ICustomQueryInterface
     {
         internal RenderTarget2D BackBuffer;
@@ -41,7 +41,7 @@ namespace SharpDX.Toolkit
         private DrawingSurfaceBackgroundGrid drawingSurfaceBackgroundGrid;
         private DrawingSurfaceRuntimeHost host;
 
-        internal GameWindowWindowsPhoneBackgroundXaml()
+        internal GameWindowPhoneBackgroundXaml()
         {
             thisComObjectPtr = CppObjectShadow.ToIntPtr<IDrawingSurfaceBackgroundContentProviderNative>(this);
         }

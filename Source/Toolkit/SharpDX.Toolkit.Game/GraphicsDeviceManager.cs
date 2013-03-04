@@ -771,13 +771,25 @@ namespace SharpDX.Toolkit
             OnDeviceCreated(this, EventArgs.Empty);
         }
 
-        void GraphicsDevice_Disposing(object sender, EventArgs e)
+        private void GraphicsDevice_Disposing(object sender, EventArgs e)
         {
+            // Clears the GraphicsDevice
+            GraphicsDevice = null;
+
+            // Make sure that all GraphicsAdapter are cleared and removed when device is disposed.
+            GraphicsAdapter.Dispose();
+
             OnDeviceDisposing(sender, e);
         }
 
         private void ChangeOrCreateDevice(bool forceCreate)
         {
+            if (forceCreate)
+            {
+                // Make sure that GraphicsAdapter are initialized.
+                GraphicsAdapter.Initialize();
+            }
+
             isChangingDevice = true;
             int width = game.Window.ClientBounds.Width;
             int height = game.Window.ClientBounds.Height;

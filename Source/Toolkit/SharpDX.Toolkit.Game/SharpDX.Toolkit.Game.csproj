@@ -37,11 +37,11 @@
     <Compile Include="IGamePlatform.cs" />
     <Compile Include="IContentable.cs" />
     <Compile Include="GameGraphicsParameters.cs" />
-    <Compile Include="WindowsPhone\GameWindowWindowsPhoneXaml.cs" />
+    <Compile Include="WindowsPhone\GameWindowPhoneXaml.cs" />
     <Compile Include="WinRT\GameWindowWinRTBackgroundXaml.cs" />
     <Compile Include="WinRT\GameWindowWinRT.cs" />
-    <Compile Include="WindowsPhone\GameWindowWindowsPhoneBackgroundXaml.cs" />
-    <Compile Include="WindowsPhone\GamePlatformWindowsPhone.cs" />
+    <Compile Include="WindowsPhone\GameWindowPhoneBackgroundXaml.cs" />
+    <Compile Include="WindowsPhone\GamePlatformPhone.cs" />
     <Compile Include="WinRT\GamePlatformWinRT.cs" />
     <Compile Include="Desktop\GameWindowDesktop.cs" />
     <Compile Include="Desktop\GamePlatformDesktop.cs" />

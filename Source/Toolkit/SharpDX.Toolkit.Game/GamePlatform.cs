@@ -47,7 +47,7 @@ namespace SharpDX.Toolkit
 #if WIN8METRO
             return new GamePlatformWinRT(game);
 #elif WP8
-            return new GamePlatformWindowsPhone(game);
+            return new GamePlatformPhone(game);
 #else
             return new GamePlatformDesktop(game);
 #endif

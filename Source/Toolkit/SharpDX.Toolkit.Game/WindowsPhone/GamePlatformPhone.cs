@@ -31,9 +31,9 @@ using Windows.ApplicationModel;
 
 namespace SharpDX.Toolkit
 {
-    internal class GamePlatformWindowsPhone : GamePlatform, IGraphicsDeviceFactory
+    internal class GamePlatformPhone : GamePlatform, IGraphicsDeviceFactory
     {
-        public GamePlatformWindowsPhone(Game game) : base(game)
+        public GamePlatformPhone(Game game) : base(game)
         {
         }
 
@@ -47,12 +47,12 @@ namespace SharpDX.Toolkit
 
         internal override GameWindow[] GetSupportedGameWindows()
         {
-            return new GameWindow[] {new GameWindowWindowsPhoneBackgroundXaml(), new GameWindowWindowsPhoneXaml(), };
+            return new GameWindow[] {new GameWindowPhoneBackgroundXaml(), new GameWindowPhoneXaml(), };
         }
 
         public override List<GraphicsDeviceInformation> FindBestDevices(GameGraphicsParameters prefferedParameters)
         {
-            var gameWindowBackgroundXaml = gameWindow as GameWindowWindowsPhoneBackgroundXaml;
+            var gameWindowBackgroundXaml = gameWindow as GameWindowPhoneBackgroundXaml;
             if (gameWindowBackgroundXaml != null)
             {
 
@@ -69,7 +69,7 @@ namespace SharpDX.Toolkit
             }
 
             // Else for DrawingSurface we are forcing the width and height
-            var gameWindowXaml = (GameWindowWindowsPhoneXaml)gameWindow;
+            var gameWindowXaml = (GameWindowPhoneXaml)gameWindow;
             prefferedParameters.PreferredBackBufferWidth = gameWindowXaml.ClientBounds.Width;
             prefferedParameters.PreferredBackBufferHeight = gameWindowXaml.ClientBounds.Height;
 
@@ -78,7 +78,7 @@ namespace SharpDX.Toolkit
 
         public override GraphicsDevice CreateDevice(GraphicsDeviceInformation deviceInformation)
         {
-            var gameWindowBackgroundXaml = gameWindow as GameWindowWindowsPhoneBackgroundXaml;
+            var gameWindowBackgroundXaml = gameWindow as GameWindowPhoneBackgroundXaml;
             if (gameWindowBackgroundXaml != null)
             {
                 // We don't have anything else than the GraphicsDevice created for the XAML so return it directly.
@@ -91,7 +91,7 @@ namespace SharpDX.Toolkit
 
             var renderTargetDesc = new Texture2DDescription
             {
-                Format = deviceInformation.PresentationParameters.BackBufferFormat,
+                Format = Format.B8G8R8A8_UNorm,
                 Width = (int)deviceInformation.PresentationParameters.BackBufferWidth,
                 Height = (int)deviceInformation.PresentationParameters.BackBufferHeight,
                 ArraySize = 1,
@@ -109,7 +109,7 @@ namespace SharpDX.Toolkit
             var graphicsPresenter = new RenderTargetGraphicsPresenter(device, BackBuffer);
             device.Presenter = graphicsPresenter;
 
-            var gameWindowXaml = (GameWindowWindowsPhoneXaml)gameWindow;
+            var gameWindowXaml = (GameWindowPhoneXaml)gameWindow;
             gameWindowXaml.CreateSynchronizedTexture(renderTarget);
 
             return device;

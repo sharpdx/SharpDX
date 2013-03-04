@@ -30,7 +30,7 @@ using Texture2D = SharpDX.Direct3D11.Texture2D;
 
 namespace SharpDX.Toolkit
 {
-    internal class GameWindowWindowsPhoneXaml : GameWindow, IDrawingSurfaceContentProviderNative,
+    internal class GameWindowPhoneXaml : GameWindow, IDrawingSurfaceContentProviderNative,
                                                 IInspectable, ICustomQueryInterface
     {
         private DrawingSizeF currentSize;
@@ -41,7 +41,11 @@ namespace SharpDX.Toolkit
         private DrawingSurface drawingSurface;
         private DrawingSurfaceRuntimeHost host;
 
-        internal GameWindowWindowsPhoneXaml()
+        private IGraphicsDeviceService graphicsDeviceService;
+
+        private IGraphicsDeviceManager graphicsDeviceManager;
+
+        internal GameWindowPhoneXaml()
         {
             thisComObjectPtr = CppObjectShadow.ToIntPtr<IDrawingSurfaceContentProviderNative>(this);
         }
@@ -114,7 +118,12 @@ namespace SharpDX.Toolkit
 
         void IDrawingSurfaceContentProviderNative.Disconnect()
         {
-            Utilities.Dispose(ref graphicsPresenter);
+            // Dispose the graphics device
+            if (graphicsDeviceService.GraphicsDevice != null)
+            {
+                graphicsDeviceService.GraphicsDevice.Dispose();
+            }
+
             Utilities.Dispose(ref synchronizedTexture);
         }
 
@@ -136,6 +145,11 @@ namespace SharpDX.Toolkit
                     {
                         InitCallback();
                         isInitialized = true;
+                    }
+                    else if (this.synchronizedTexture == null)
+                    {
+                        // Make sure that the graphics device is created
+                        graphicsDeviceManager.CreateDevice();
                     }
 
                     this.synchronizedTexture.BeginDraw();
@@ -188,6 +202,8 @@ namespace SharpDX.Toolkit
         internal override void Initialize(GameContext gameContext)
         {
             drawingSurface = (DrawingSurface)gameContext.Control;
+            graphicsDeviceService = (IGraphicsDeviceService)Services.GetService(typeof(IGraphicsDeviceService));
+            graphicsDeviceManager = (IGraphicsDeviceManager)Services.GetService(typeof(IGraphicsDeviceManager));
         }
 
         internal override void Run()
