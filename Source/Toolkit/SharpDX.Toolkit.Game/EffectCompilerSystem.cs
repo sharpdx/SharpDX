@@ -215,12 +215,15 @@ namespace SharpDX.Toolkit
 
             isThreadRunning = false;
 
-            GraphicsDevice.EffectPools.ItemAdded -= EffectPools_ItemAdded;
-            GraphicsDevice.EffectPools.ItemRemoved -= EffectPools_ItemRemoved;
-
-            foreach (var effectPool in GraphicsDevice.EffectPools)
+            if (GraphicsDevice != null)
             {
-                RemoveEffectPool(effectPool);
+                GraphicsDevice.EffectPools.ItemAdded -= EffectPools_ItemAdded;
+                GraphicsDevice.EffectPools.ItemRemoved -= EffectPools_ItemRemoved;
+
+                foreach (var effectPool in GraphicsDevice.EffectPools)
+                {
+                    RemoveEffectPool(effectPool);
+                }
             }
 
             base.UnloadContent();
