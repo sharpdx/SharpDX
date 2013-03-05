@@ -48,6 +48,8 @@ namespace SharpDX.Toolkit
         private readonly GamePlatform gamePlatform;
         private IGraphicsDeviceService graphicsDeviceService;
         private IGraphicsDeviceManager graphicsDeviceManager;
+
+        private readonly DisposeCollector contentCollector;
         private bool isEndRunRequired;
         private bool isExiting;
         private bool isFirstUpdateDone;
@@ -84,6 +86,7 @@ namespace SharpDX.Toolkit
             updateableGameSystems = new List<IUpdateable>();
             currentlyUpdatingGameSystems = new List<IUpdateable>();
             contentableGameSystems = new List<IContentable>();
+            contentCollector = new DisposeCollector();
             gameTime = new GameTime();
             totalGameTime = new TimeSpan();
             timer = new TimerTick();
@@ -636,6 +639,20 @@ namespace SharpDX.Toolkit
         }
 
         /// <summary>
+        /// Adds an object to be disposed automatically when <see cref="UnloadContent"/> is called. See remarks.
+        /// </summary>
+        /// <typeparam name="T">Type of the object to dispose</typeparam>
+        /// <param name="disposable">The disposable object.</param>
+        /// <returns>The disposable object.</returns>
+        /// <remarks>
+        /// Use this method for any content that is not loaded through the <see cref="ContentManager"/>.
+        /// </remarks>
+        protected T ToDisposeContent<T>(T disposable) where T : IDisposable
+        {
+            return contentCollector.Collect(disposable);
+        }
+
+        /// <summary>
         /// Loads the content.
         /// </summary>
         protected virtual void LoadContent()
@@ -734,6 +751,9 @@ namespace SharpDX.Toolkit
         /// </summary>
         protected virtual void UnloadContent()
         {
+            // Dispose all objects allocated from content
+            contentCollector.DisposeAndClear();
+
             lock (contentableGameSystems)
             {
                 foreach (var contentable in contentableGameSystems)

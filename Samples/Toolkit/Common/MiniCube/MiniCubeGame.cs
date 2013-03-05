@@ -56,16 +56,16 @@ namespace MiniCube
         protected override void LoadContent()
         {
             // Creates a basic effect
-            basicEffect = new BasicEffect(GraphicsDevice)
+            basicEffect = ToDisposeContent(new BasicEffect(GraphicsDevice)
                 {
                     VertexColorEnabled = true,
                     View = Matrix.LookAtLH(new Vector3(0, 0, -5), new Vector3(0, 0, 0), Vector3.UnitY),
                     Projection = Matrix.PerspectiveFovLH((float)Math.PI / 4.0f, (float)GraphicsDevice.BackBuffer.Width / GraphicsDevice.BackBuffer.Height, 0.1f, 100.0f),
                     World = Matrix.Identity
-                };
+                });
 
             // Creates vertices for the cube
-            vertices = Buffer.Vertex.New(
+            vertices = ToDisposeContent(Buffer.Vertex.New(
                 GraphicsDevice,
                 new[]
                     {
@@ -105,20 +105,13 @@ namespace MiniCube
                         new VertexPositionColor(new Vector3(1.0f, -1.0f, -1.0f), Color.DarkOrange),
                         new VertexPositionColor(new Vector3(1.0f, 1.0f, -1.0f), Color.DarkOrange),
                         new VertexPositionColor(new Vector3(1.0f, 1.0f, 1.0f), Color.DarkOrange),
-                    });
+                    }));
+            ToDisposeContent(vertices);
 
             // Create an input layout from the vertices
             inputLayout = VertexInputLayout.FromBuffer(0, vertices);
 
             base.LoadContent();
-        }
-
-        protected override void UnloadContent()
-        {
-            basicEffect.Dispose();
-            vertices.Dispose();
-
-            base.UnloadContent();
         }
 
         protected override void Initialize()
