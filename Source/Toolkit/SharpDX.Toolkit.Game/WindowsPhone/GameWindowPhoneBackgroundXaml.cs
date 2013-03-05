@@ -32,8 +32,11 @@ namespace SharpDX.Toolkit
     internal class GameWindowPhoneBackgroundXaml : GameWindow, IDrawingSurfaceBackgroundContentProviderNative,
                                                           IInspectable, ICustomQueryInterface
     {
-        internal RenderTarget2D BackBuffer;
-        internal  GraphicsDevice GraphicsDevice;
+        private RenderTarget2D backBuffer;
+        private GraphicsDevice graphicsDevice;
+        private Device currentDevice;
+        private DeviceContext currentDeviceContext;
+        private RenderTargetView currentRenderTargetView;
 
         private bool isInitialized;
 
@@ -65,9 +68,9 @@ namespace SharpDX.Toolkit
         {
             get
             {
-                if (BackBuffer != null)
+                if (backBuffer != null)
                 {
-                    return new DrawingRectangle(0, 0, BackBuffer.Width, BackBuffer.Height);
+                    return new DrawingRectangle(0, 0, backBuffer.Width, backBuffer.Height);
                 }
                 return DrawingRectangle.Empty;
             }
@@ -115,13 +118,19 @@ namespace SharpDX.Toolkit
 
         void IDrawingSurfaceBackgroundContentProviderNative.Disconnect()
         {
+            // Don't perform any dispose here, as It seems that we are unable to get back to the application after (program access violation)
+        }
+
+        private void DisposeAll()
+        {
+            // Dispose the graphics device
+            Utilities.Dispose(ref graphicsDevice);
+
             for (int i = 0; i < renderTargets.Length; i++)
             {
                 renderTargets[i].Dispose();
             }
-
-            Utilities.Dispose(ref GraphicsDevice);
-            Utilities.Dispose(ref BackBuffer);
+            Utilities.Dispose(ref backBuffer);
         }
 
         void IDrawingSurfaceBackgroundContentProviderNative.PrepareResources(DateTime presentTargetTime,
@@ -129,17 +138,22 @@ namespace SharpDX.Toolkit
         {
         }
 
-        private void CreateDevice(Device device, DeviceContext context, RenderTargetView renderTargetView)
+        internal GraphicsDevice EnsureDevice()
         {
-            GraphicsDevice = GraphicsDevice.New(device);
+            if (graphicsDevice == null)
+            {
+                graphicsDevice = GraphicsDevice.New(currentDevice);
 
-            renderTargets[0].NativePointer = renderTargetView.NativePointer;
-            renderTargets[0].RenderTarget = RenderTarget2D.New(GraphicsDevice, renderTargetView, true);
-            BackBuffer = renderTargets[0].RenderTarget;
-            nextRenderTarget++;
+                renderTargets[0].NativePointer = currentRenderTargetView.NativePointer;
+                renderTargets[0].RenderTarget = RenderTarget2D.New(graphicsDevice, currentRenderTargetView, true);
+                backBuffer = renderTargets[0].RenderTarget;
+                nextRenderTarget = (nextRenderTarget + 1) % renderTargets.Length;
 
-            graphicsPresenter = new RenderTargetGraphicsPresenter(GraphicsDevice, BackBuffer);
-            GraphicsDevice.Presenter = graphicsPresenter;
+                graphicsPresenter = new RenderTargetGraphicsPresenter(graphicsDevice, backBuffer);
+                graphicsDevice.Presenter = graphicsPresenter;
+            }
+
+            return graphicsDevice;
         }
 
         void IDrawingSurfaceBackgroundContentProviderNative.Draw(Device device, DeviceContext context,
@@ -147,59 +161,64 @@ namespace SharpDX.Toolkit
         {
             try
             {
-                RenderTarget2D localBackBuffer = null;
                 if (!Exiting)
                 {
-                    if (!isInitialized)
+
+                    // Create the GraphicsDevice here
+                    if (!ComObject.EqualsComObject(device, currentDevice) ||
+                        !ComObject.EqualsComObject(context, currentDeviceContext))
                     {
-                        CreateDevice(device, context, renderTargetView);
-                        InitCallback();
-                        isInitialized = true;
-                    }
-                    else
-                    {
-                        if (GraphicsDevice == null || (((Device) GraphicsDevice).NativePointer != device.NativePointer ||
-                            ((DeviceContext) GraphicsDevice).NativePointer != context.NativePointer))
+                        currentDevice = device;
+                        currentDeviceContext = context;
+                        currentRenderTargetView = renderTargetView;
+
+                        DisposeAll();
+
+                        if (!isInitialized)
                         {
-                            Utilities.Dispose(ref GraphicsDevice);
-                            Utilities.Dispose(ref BackBuffer);
+                            InitCallback();
+                            isInitialized = true;
+                        }
+                        else
+                        {
+                            // Dispose the graphics device
+                            Utilities.Dispose(ref graphicsDevice);
 
-                            CreateDevice(device, context, renderTargetView);
-
-                            // Force the graphics device to reload the content manager
+                            // Call the graphics device to call us back on EnsureDevice method
                             graphicsDeviceManager.CreateDevice();
                         }
-
-                        // Find any previous render target that was already alocated.
-                        bool foundRenderTarget = false;
-                        foreach (RenderTargetLocal renderTargetLocal in renderTargets)
-                        {
-                            if (renderTargetLocal.NativePointer == renderTargetView.NativePointer)
-                            {
-                                BackBuffer = renderTargetLocal.RenderTarget;
-                                graphicsPresenter.SetBackBuffer(BackBuffer);
-                                foundRenderTarget = true;
-                                break;
-                            }
-                        }
-
-                        if (!foundRenderTarget)
-                        {
-                            // Dispose any previous render target.
-                            renderTargets[nextRenderTarget].Dispose();
-
-                            // Creates the new BackBuffer and associated it to the GraphicsPresenter
-                            BackBuffer = RenderTarget2D.New(GraphicsDevice, renderTargetView, true);
-                            graphicsPresenter.SetBackBuffer(BackBuffer);
-
-                            renderTargets[nextRenderTarget].NativePointer = renderTargetView.NativePointer;
-                            renderTargets[nextRenderTarget].RenderTarget = BackBuffer;
-                            nextRenderTarget = (nextRenderTarget + 1)%renderTargets.Length;
-                        }
-
-                        // TODO: Check that new device/devicecontext/renderTargetView are the same
-                        // else we need to handle DeviceReset/Remove...etc.
                     }
+
+                    // Find any previous render target that was already alocated.
+                    bool foundRenderTarget = false;
+                    foreach (RenderTargetLocal renderTargetLocal in renderTargets)
+                    {
+                        if (renderTargetLocal.NativePointer == renderTargetView.NativePointer)
+                        {
+                            backBuffer = renderTargetLocal.RenderTarget;
+                            graphicsPresenter.SetBackBuffer(backBuffer);
+                            foundRenderTarget = true;
+                            break;
+                        }
+                    }
+
+                    if (!foundRenderTarget)
+                    {
+                        // Dispose any previous render target.
+                        renderTargets[nextRenderTarget].Dispose();
+
+                        // Creates the new backBuffer and associated it to the GraphicsPresenter
+                        backBuffer = RenderTarget2D.New(graphicsDevice, renderTargetView, true);
+
+                        renderTargets[nextRenderTarget].NativePointer = renderTargetView.NativePointer;
+                        renderTargets[nextRenderTarget].RenderTarget = backBuffer;
+                        nextRenderTarget = (nextRenderTarget + 1)%renderTargets.Length;
+
+                        graphicsPresenter.SetBackBuffer(backBuffer);
+                    }
+
+                    // TODO: Check that new device/devicecontext/renderTargetView are the same
+                    // else we need to handle DeviceReset/Remove...etc.
 
                     RunCallback();
 

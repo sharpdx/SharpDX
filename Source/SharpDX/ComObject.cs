@@ -82,6 +82,27 @@ namespace SharpDX
             return pointer;
         }
 
+        /// <summary>
+        /// Compares 2 COM objects and return true if the native pointer is the same.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns><c>true</c> if the native pointer is the same, <c>false</c> otherwise</returns>
+        public static bool EqualsComObject<T>(T left, T right) where T : ComObject
+        {
+            if (Equals(left, right))
+            {
+                return true;
+            }
+
+            if (left == null || right == null)
+            {
+                return false;
+            }
+
+            return (left.NativePointer == right.NativePointer);
+        }
+
         ///<summary>
         /// Query this instance for a particular COM interface support.
         ///</summary>

@@ -55,14 +55,17 @@ namespace SharpDX.Toolkit
             var gameWindowBackgroundXaml = gameWindow as GameWindowPhoneBackgroundXaml;
             if (gameWindowBackgroundXaml != null)
             {
+                // Make sure that we have the single graphics device created by the BackgroundXaml
+                var graphicsDevice = gameWindowBackgroundXaml.EnsureDevice();
+
 
                 // Unlike Desktop and WinRT, the list of best devices are completely fixed in WP8 XAML
                 // So we return a single element
                 var deviceInfo = new GraphicsDeviceInformation
                     {
-                        Adapter = gameWindowBackgroundXaml.GraphicsDevice.Adapter,
-                        GraphicsProfile = gameWindowBackgroundXaml.GraphicsDevice.Features.Level,
-                        PresentationParameters = gameWindowBackgroundXaml.GraphicsDevice.Presenter.Description
+                        Adapter = graphicsDevice.Adapter,
+                        GraphicsProfile = graphicsDevice.Features.Level,
+                        PresentationParameters = graphicsDevice.Presenter.Description
                     };
 
                 return new List<GraphicsDeviceInformation>() { deviceInfo };
@@ -82,7 +85,7 @@ namespace SharpDX.Toolkit
             if (gameWindowBackgroundXaml != null)
             {
                 // We don't have anything else than the GraphicsDevice created for the XAML so return it directly.
-                return gameWindowBackgroundXaml.GraphicsDevice;
+                return gameWindowBackgroundXaml.EnsureDevice();
             }
 
             // Else this is a DrawingSruface 
