@@ -35,6 +35,7 @@ namespace SharpDX.XACT3
 
         private readonly NotificationCallbackDelegate unmanagedDelegate;
         private readonly IntPtr unmanagedDelegatePointer;
+        private ManagedNotificationCallback callback;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AudioEngine"/> class.
@@ -149,8 +150,7 @@ namespace SharpDX.XACT3
         /// <param name="notificationType">Type of the notification.</param>
         public void RegisterNotification(NotificationType notificationType)
         {
-            var notificationDescription = VerifyRegister(notificationType, typeof(AudioEngine),
-                                                                     OnNotificationDelegate);
+            var notificationDescription = VerifyRegister(notificationType, typeof(AudioEngine), callback ?? (callback = OnNotificationDelegate));
             notificationDescription.SoundBankPointer = NativePointer;
             RegisterNotification(ref notificationDescription);
         }
@@ -161,8 +161,7 @@ namespace SharpDX.XACT3
         /// <param name="notificationType">Type of the notification.</param>
         public void UnregisterNotification(NotificationType notificationType)
         {
-            var notificationDescription = VerifyRegister(notificationType, typeof(AudioEngine),
-                                                                     OnNotificationDelegate);
+            var notificationDescription = VerifyRegister(notificationType, typeof(AudioEngine), callback ?? (callback = OnNotificationDelegate));
             notificationDescription.SoundBankPointer = NativePointer;
             UnRegisterNotification(ref notificationDescription);
         }
@@ -255,6 +254,7 @@ namespace SharpDX.XACT3
         {
             if (!AllowedNotifications[notificationType].Contains(type))
                 throw new InvalidOperationException(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Register to notification [{0}] not supported for type [{1}]", notificationType, type));
+
             return new RawNotificationDescription()
             {
                 Type = notificationType,

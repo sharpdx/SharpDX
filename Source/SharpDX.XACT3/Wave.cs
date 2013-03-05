@@ -26,6 +26,7 @@ namespace SharpDX.XACT3
     {
         private AudioEngine audioEngine;
         internal bool IsAudioEngineReadonly;
+        private ManagedNotificationCallback callback;
 
         /// <summary>
         /// Gets or sets the audio engine.
@@ -73,8 +74,7 @@ namespace SharpDX.XACT3
             if (AudioEngine == null)
                 throw new InvalidOperationException("AudioEngine attached to this instance cannot be null");
 
-            var notificationDescription = AudioEngine.VerifyRegister(notificationType, typeof(Wave),
-                                                                     OnNotificationDelegate);
+            var notificationDescription = AudioEngine.VerifyRegister(notificationType, typeof(Wave), callback ?? (callback = OnNotificationDelegate));
             notificationDescription.WavePointer = NativePointer;
             AudioEngine.RegisterNotification(ref notificationDescription);
         }
@@ -88,8 +88,7 @@ namespace SharpDX.XACT3
             if (AudioEngine == null)
                 throw new InvalidOperationException("AudioEngine attached to this instance cannot be null");
 
-            var notificationDescription = AudioEngine.VerifyRegister(notificationType, typeof(Wave),
-                                                                     OnNotificationDelegate);
+            var notificationDescription = AudioEngine.VerifyRegister(notificationType, typeof(Wave), callback ?? (callback = OnNotificationDelegate));
             notificationDescription.WavePointer = NativePointer;
             AudioEngine.UnRegisterNotification(ref notificationDescription);
         }

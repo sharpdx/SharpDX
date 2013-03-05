@@ -28,6 +28,8 @@ namespace SharpDX.XACT3
         private DataStream soundBankSourceStream;
         private AudioEngine audioEngine;
         private readonly bool isAudioEngineReadonly;
+
+        private ManagedNotificationCallback callback;
         
         /// <summary>
         /// Initializes a new instance of the <see cref="SoundBank"/> class from a soundbank stream.
@@ -41,6 +43,7 @@ namespace SharpDX.XACT3
             isAudioEngineReadonly = true;
             soundBankSourceStream = stream as DataStream ?? DataStream.Create(Utilities.ReadStream(stream), true, true);
             audioEngine.CreateSoundBank(soundBankSourceStream.DataPointer, (int)soundBankSourceStream.Length, 0, 0, this);
+            callback = OnNotificationDelegate;
         }
 
         /// <summary>
@@ -116,8 +119,7 @@ namespace SharpDX.XACT3
             if (AudioEngine == null)
                 throw new InvalidOperationException("AudioEngine attached to this instance cannot be null");
 
-            var notificationDescription = AudioEngine.VerifyRegister(notificationType, typeof(SoundBank),
-                                                                     OnNotificationDelegate);
+            var notificationDescription = AudioEngine.VerifyRegister(notificationType, typeof(SoundBank), callback ?? (callback = OnNotificationDelegate));
             notificationDescription.SoundBankPointer = NativePointer;
             AudioEngine.RegisterNotification(ref notificationDescription);
         }
@@ -131,8 +133,7 @@ namespace SharpDX.XACT3
             if (AudioEngine == null)
                 throw new InvalidOperationException("AudioEngine attached to this instance cannot be null");
 
-            var notificationDescription = AudioEngine.VerifyRegister(notificationType, typeof(SoundBank),
-                                                                     OnNotificationDelegate);
+            var notificationDescription = AudioEngine.VerifyRegister(notificationType, typeof(SoundBank), callback ?? (callback = OnNotificationDelegate));
             notificationDescription.SoundBankPointer = NativePointer;
             AudioEngine.UnRegisterNotification(ref notificationDescription);
         }

@@ -20,6 +20,8 @@
 
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
+
 using Microsoft.Win32.SafeHandles;
 
 using SharpDX.IO;
@@ -30,7 +32,12 @@ namespace SharpDX.XACT3
     public partial class WaveBank
     {
         private AudioEngine audioEngine;
+
+        private byte[] rawBuffer;
+
+        private GCHandle rawBufferHandle;
         private readonly bool isAudioEngineReadonly;
+        private ManagedNotificationCallback callback;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WaveBank"/> class from a wave bank stream.
@@ -49,12 +56,9 @@ namespace SharpDX.XACT3
                 return;
             }
 
-            var data = Utilities.ReadStream(stream);
-            unsafe
-            {
-                fixed (void* pData = data)
-                    audioEngine.CreateInMemoryWaveBank((IntPtr)pData, data.Length, 0, 0, this);
-            }
+            rawBuffer = Utilities.ReadStream(stream);
+            rawBufferHandle = GCHandle.Alloc(rawBuffer, GCHandleType.Pinned);
+            audioEngine.CreateInMemoryWaveBank(rawBufferHandle.AddrOfPinnedObject(), rawBuffer.Length, 0, 0, this);
         }
 
         /// <summary>
@@ -131,8 +135,7 @@ namespace SharpDX.XACT3
             if (AudioEngine == null)
                 throw new InvalidOperationException("AudioEngine attached to this instance cannot be null");
 
-            var notificationDescription = AudioEngine.VerifyRegister(notificationType, typeof(WaveBank),
-                                                                     OnNotificationDelegate);
+            var notificationDescription = AudioEngine.VerifyRegister(notificationType, typeof(WaveBank), callback ?? (callback = OnNotificationDelegate));
             notificationDescription.WaveBankPointer = NativePointer;
             AudioEngine.RegisterNotification(ref notificationDescription);
         }
@@ -146,8 +149,7 @@ namespace SharpDX.XACT3
             if (AudioEngine == null)
                 throw new InvalidOperationException("AudioEngine attached to this instance cannot be null");
 
-            var notificationDescription = AudioEngine.VerifyRegister(notificationType, typeof(WaveBank),
-                                                                     OnNotificationDelegate);
+            var notificationDescription = AudioEngine.VerifyRegister(notificationType, typeof(WaveBank), callback ?? (callback = OnNotificationDelegate));
             notificationDescription.WaveBankPointer = NativePointer;
             AudioEngine.UnRegisterNotification(ref notificationDescription);
         }
@@ -195,6 +197,12 @@ namespace SharpDX.XACT3
                 FileStreamHandle.Dispose();
                 FileStreamHandle = null;
             }
+
+            if (rawBufferHandle.IsAllocated)
+            {
+                rawBufferHandle.Free();
+            }
+
             base.Dispose(disposing);
         }
 
