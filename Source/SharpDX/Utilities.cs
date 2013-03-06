@@ -470,6 +470,7 @@ namespace SharpDX
         /// </remarks>
         public unsafe static void FreeMemory(IntPtr alignedBuffer)
         {
+            if (alignedBuffer == IntPtr.Zero) return;
             Marshal.FreeHGlobal(((IntPtr*) alignedBuffer)[-1]);
         }
 
