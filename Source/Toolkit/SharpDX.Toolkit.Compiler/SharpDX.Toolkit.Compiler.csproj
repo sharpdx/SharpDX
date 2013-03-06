@@ -9,6 +9,9 @@
     <AssemblyName>SharpDX.Toolkit.Compiler</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AssimpNet">
+      <HintPath>..\..\..\External\AssimpNet-3.1\Bin\AssimpNet.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -42,50 +45,6 @@
     <Compile Include="Font\IFontImporter.cs" />
     <Compile Include="Font\SpriteFontWriter.cs" />
     <Compile Include="Font\TrueTypeImporter.cs" />
-    <Compile Include="AssimpNet\Animation.cs" />
-    <Compile Include="AssimpNet\AssimpException.cs" />
-    <Compile Include="AssimpNet\AssimpImporter.cs" />
-    <Compile Include="AssimpNet\Bone.cs" />
-    <Compile Include="AssimpNet\Camera.cs" />
-    <Compile Include="AssimpNet\Color3D.cs" />
-    <Compile Include="AssimpNet\Color4D.cs" />
-    <Compile Include="AssimpNet\Configs\PropertyConfig.cs" />
-    <Compile Include="AssimpNet\Enums.cs" />
-    <Compile Include="AssimpNet\ExportDataBlob.cs" />
-    <Compile Include="AssimpNet\ExportFormatDescription.cs" />
-    <Compile Include="AssimpNet\Face.cs" />
-    <Compile Include="AssimpNet\Light.cs" />
-    <Compile Include="AssimpNet\LogStream.cs" />
-    <Compile Include="AssimpNet\Material.cs" />
-    <Compile Include="AssimpNet\MaterialProperty.cs" />
-    <Compile Include="AssimpNet\Matrix3x3.cs" />
-    <Compile Include="AssimpNet\Matrix4x4.cs" />
-    <Compile Include="AssimpNet\MemoryHelper.cs" />
-    <Compile Include="AssimpNet\Mesh.cs" />
-    <Compile Include="AssimpNet\MeshAnimationAttachment.cs" />
-    <Compile Include="AssimpNet\MeshAnimationChannel.cs" />
-    <Compile Include="AssimpNet\MeshKey.cs" />
-    <Compile Include="AssimpNet\Node.cs" />
-    <Compile Include="AssimpNet\NodeAnimationChannel.cs" />
-    <Compile Include="AssimpNet\Plane.cs" />
-    <Compile Include="AssimpNet\PostProcessPreset.cs" />
-    <Compile Include="AssimpNet\Quaternion.cs" />
-    <Compile Include="AssimpNet\QuaternionKey.cs" />
-    <Compile Include="AssimpNet\Ray.cs" />
-    <Compile Include="AssimpNet\Scene.cs" />
-    <Compile Include="AssimpNet\Texel.cs" />
-    <Compile Include="AssimpNet\Texture.cs" />
-    <Compile Include="AssimpNet\TextureSlot.cs" />
-    <Compile Include="AssimpNet\Unmanaged\AiConfigs.cs" />
-    <Compile Include="AssimpNet\Unmanaged\AiDefines.cs" />
-    <Compile Include="AssimpNet\Unmanaged\AiMatKeys.cs" />
-    <Compile Include="AssimpNet\Unmanaged\AssimpMethods.cs" />
-    <Compile Include="AssimpNet\Unmanaged\UnmanagedStructures.cs" />
-    <Compile Include="AssimpNet\UVTransform.cs" />
-    <Compile Include="AssimpNet\Vector2D.cs" />
-    <Compile Include="AssimpNet\Vector3D.cs" />
-    <Compile Include="AssimpNet\VectorKey.cs" />
-    <Compile Include="AssimpNet\VertexWeight.cs" />
     <Compile Include="ModelCompiler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Effect\SourceSpan.cs" />
@@ -119,17 +78,16 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-  </ItemGroup>    
+  </ItemGroup>
   <ItemGroup>
-    <Content Include="assimp_x86.dll">
+    <Content Include="..\..\..\External\AssimpNet-3.1\Bin\Assimp32.dll">
+      <Link>Assimp32.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="assimp_x64.dll">
+    <Content Include="..\..\..\External\AssimpNet-3.1\Bin\Assimp64.dll">
+      <Link>Assimp64.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="AssimpNet\AssimpNet_License.txt" />
-    <Content Include="AssimpNet\Assimp_License.txt" />
-    <Content Include="AssimpNet\Readme.txt" />
   </ItemGroup>
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

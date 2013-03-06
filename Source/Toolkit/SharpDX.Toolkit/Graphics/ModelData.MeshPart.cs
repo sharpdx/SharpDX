@@ -29,6 +29,11 @@ namespace SharpDX.Toolkit.Graphics
         public sealed class MeshPart : IDataSerializable
         {
             /// <summary>
+            /// The material index.
+            /// </summary>
+            public int MaterialIndex;
+
+            /// <summary>
             /// Gets the number of indices. Can be 0.
             /// </summary>
             public int IndexCount;
@@ -70,6 +75,7 @@ namespace SharpDX.Toolkit.Graphics
 
             public void Serialize(BinarySerializer serializer)
             {
+                serializer.Serialize(ref MaterialIndex);
                 serializer.Serialize(ref IndexCount);
                 
                 // IndexBuffer is stored as a unique object inside a whole model

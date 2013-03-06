@@ -28,6 +28,24 @@ namespace SharpDX.Toolkit.Graphics
     public sealed class AttributeData : IDataSerializable
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="AttributeData"/> class.
+        /// </summary>
+        public AttributeData()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AttributeData"/> class.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="value">The value.</param>
+        public AttributeData(string name, object value)
+        {
+            Name = name;
+            Value = value;
+        }
+
+        /// <summary>
         /// Name of this attribute.
         /// </summary>
         public string Name;

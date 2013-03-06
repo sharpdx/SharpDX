@@ -53,7 +53,7 @@ namespace SharpDX.Toolkit.Graphics
         private ModelData CompileFromStream(Stream modelStream, string fileName)
         {
             var importer = new AssimpImporter();
-            importer.SetConfig(new NormalSmoothingAngleConfig(66.0f));
+            //importer.SetConfig(new NormalSmoothingAngleConfig(66.0f));
             scene = importer.ImportFileFromStream(modelStream, PostProcessPreset.TargetRealTimeMaximumQuality, Path.GetExtension(fileName));
             model = new ModelData();
             ProcessScene();
@@ -76,6 +76,41 @@ namespace SharpDX.Toolkit.Graphics
             
             // Collect nodes
             CollectNodes(scene.RootNode, new ModelData.Node());
+
+            if (scene.Materials != null)
+            {
+                for (int i = 0; i < scene.Materials.Length; i++)
+                {
+                    var material = scene.Materials[i];
+
+                    var materialData = new ModelData.Material();
+                    foreach (var property in material.GetAllProperties())
+                    {
+                        // TODO CONVERT MATERIAL here
+                        //materialData.Attributes.Add(new AttributeData(property.Name, property.AsBoolean()));
+                    }
+
+                    foreach (TextureType textureType in Enum.GetValues(typeof(TextureType)))
+                    {
+                        if (textureType != TextureType.None)
+                        {
+                            var textures = material.GetTextures(textureType);
+                            if (textures != null)
+                            {
+                                foreach (var textureSlot in textures)
+                                {
+                                    var newTextureSlot = new ModelData.TextureSlot()
+                                                             {
+                                                                 FilePath = textureSlot.FilePath,
+                                                                 BlendFactor = textureSlot.BlendFactor,
+                                                             };
+                                    materialData.TextureSlots.Add(newTextureSlot);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private Dictionary<Node, int> meshNodes = new Dictionary<Node, int>();
@@ -113,7 +148,9 @@ namespace SharpDX.Toolkit.Graphics
 
         private bool IsModelNode(Node node)
         {
-            return meshNodes.ContainsKey(node) || skinnedBones.ContainsKey(node);
+            // Disable Skinned bones for this version
+            //return meshNodes.ContainsKey(node) || skinnedBones.ContainsKey(node);
+            return meshNodes.ContainsKey(node);
         }
 
         private void RegisterNode(Node node, Dictionary<Node,int> nodeMap)
@@ -202,6 +239,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             var meshPart = new ModelData.MeshPart()
                                {
+                                   MaterialIndex = assimpMesh.MaterialIndex,
                                    VertexBuffer = new ModelData.VertexBuffer()
                                                       {
                                                           Layout = new List<VertexElement>()
@@ -394,20 +432,15 @@ namespace SharpDX.Toolkit.Graphics
             {
                 // Write only short indices if count is less than the size of a short
                 meshPart.IndexBuffer.Buffer = new byte[indices.Length * 2];
-                var indexStream = DataStream.Create(meshPart.IndexBuffer.Buffer, true, true);
-                foreach (int index in indices)
-                {
-                    indexStream.Write((ushort)index);
-                }
-                indexStream.Dispose();
+                using (var indexStream = DataStream.Create(meshPart.IndexBuffer.Buffer, true, true))
+                    foreach (int index in indices) indexStream.Write((ushort)index);
             }
             else
             {
                 // Otherwise, use full 32-bit precision to store indices
                 meshPart.IndexBuffer.Buffer = new byte[indices.Length * 4];
-                var indexStream = DataStream.Create(meshPart.IndexBuffer.Buffer, true, true);
-                indexStream.WriteRange(indices);
-                indexStream.Dispose();
+                using (var indexStream = DataStream.Create(meshPart.IndexBuffer.Buffer, true, true))
+                    indexStream.WriteRange(indices);
             }
 
             return meshPart;

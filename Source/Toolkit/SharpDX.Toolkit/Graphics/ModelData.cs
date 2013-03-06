@@ -40,6 +40,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             Bones = new List<Node>();
             Meshes = new List<Mesh>();
+            Materials = new List<Material>();
             Attributes = new List<AttributeData>();
         }
 
@@ -57,6 +58,11 @@ namespace SharpDX.Toolkit.Graphics
         /// Gets the mesh of this model.
         /// </summary>
         public List<Mesh> Meshes;
+
+        /// <summary>
+        /// Gets the material of this model.
+        /// </summary>
+        public List<Material> Materials;
 
         /// <summary>
         /// Gets the attributes attached to this instance.
@@ -157,6 +163,11 @@ namespace SharpDX.Toolkit.Graphics
             // Mesh section
             serializer.BeginChunk("MESH");
             serializer.Serialize(ref Meshes);
+            serializer.EndChunk();
+
+            // Material section
+            serializer.BeginChunk("MATL");
+            serializer.Serialize(ref Materials);
             serializer.EndChunk();
 
             // Serialize attributes

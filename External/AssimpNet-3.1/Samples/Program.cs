@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright (c) 2012 Nicholas Woodfield
+* Copyright (c) 2012-2013 Nicholas Woodfield
 * 
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -21,35 +21,16 @@
 */
 
 using System;
-using System.Runtime.InteropServices;
 
-namespace Assimp {
-
-    /// <summary>
-    /// Defines a 3D ray with a point of origin and a direction.
-    /// </summary>
-    [Serializable]
-    [StructLayout(LayoutKind.Sequential)]
-    internal struct Ray {
-
+namespace Assimp.Sample {
+    static class Program {
         /// <summary>
-        /// Origin of the ray in space.
+        /// The main entry point for the application.
         /// </summary>
-        public Vector3D Position;
-
-        /// <summary>
-        /// Direction of the ray.
-        /// </summary>
-        public Vector3D Direction;
-
-        /// <summary>
-        /// Constructs a new Ray.
-        /// </summary>
-        /// <param name="pos"></param>
-        /// <param name="dir"></param>
-        public Ray(Vector3D pos, Vector3D dir) {
-            Position = pos;
-            Direction = dir;
+        [STAThread]
+        static void Main() {
+            SimpleOpenGLSample sample = new SimpleOpenGLSample();
+            sample.Run(30.0, 0.0);
         }
     }
 }

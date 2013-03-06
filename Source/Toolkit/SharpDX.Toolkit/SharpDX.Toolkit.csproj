@@ -27,6 +27,8 @@
     <Compile Include="Diagnostics\Logger.cs" />
     <Compile Include="Diagnostics\NamespaceDoc.cs" />
     <Compile Include="Graphics\AttributeData.cs" />
+    <Compile Include="Graphics\ModelData.Texture.cs" />
+    <Compile Include="Graphics\ModelData.Material.cs" />
     <Compile Include="Graphics\EffectDataContentReader.cs" />
     <Compile Include="Graphics\EffectCompilerResult.cs" />
     <Compile Include="Graphics\EffectData.CompilerArguments.cs" />
