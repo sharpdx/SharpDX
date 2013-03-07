@@ -29,10 +29,7 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public class MaterialKey : IDataSerializable, IEquatable<MaterialKey>
     {
-        private string key;
-        private MaterialTextureType type;
-        private int index;
-        private int hashCode;
+        private string name;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MaterialKey"/> class.
@@ -41,78 +38,28 @@ namespace SharpDX.Toolkit.Graphics
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MaterialKey"/> class.
-        /// </summary>
-        /// <param name="fullName">The full name.</param>
-        /// <exception cref="System.ArgumentNullException">fullName</exception>
-        /// <exception cref="System.ArgumentException">Invalid format for fullName: must be \xxx,0,0\;fullName</exception>
-        public MaterialKey(string fullName)
-        {
-            if (string.IsNullOrEmpty(fullName))
-                throw new ArgumentNullException("fullName");
-
-            var values = fullName.Split(',');
-            if (values.Length != 3)
-                throw new ArgumentException("Invalid format for fullName: must be \"xxx,0,0\"", "fullName");
-
-            key = values[0];
-            type = (MaterialTextureType)int.Parse(values[1]);
-            index = int.Parse(values[2]);
-
-            CalculateHashcode();
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MaterialKey"/> class.
         /// </summary>
-        /// <param name="key">The Name.</param>
-        /// <param name="type">The type.</param>
-        /// <param name="index">The index.</param>
-        public MaterialKey(string key, MaterialTextureType type, int index)
+        /// <param name="name">The Name.</param>
+        public MaterialKey(string name)
         {
-            this.key = key;
-            this.type = type;
-            this.index = index;
-
-            CalculateHashcode();
+            this.name = name;
         }
 
         /// <summary>
         /// Gets the Name.
         /// </summary>
         /// <value>The Name.</value>
-        public string Key
+        public string Name
         {
             get
             {
-                return key;
+                return name;
             }
         }
 
-        /// <summary>
-        /// Gets the type.
-        /// </summary>
-        /// <value>The type.</value>
-        public MaterialTextureType Type
-        {
-            get
-            {
-                return type;
-            }
-        }
-
-        /// <summary>
-        /// Gets the index.
-        /// </summary>
-        /// <value>The index.</value>
-        public int Index
-        {
-            get
-            {
-                return index;
-            }
-        }
 
         public bool Equals(MaterialKey other)
         {
@@ -124,7 +71,7 @@ namespace SharpDX.Toolkit.Graphics
             {
                 return true;
             }
-            return string.Equals(key, other.key) && type == other.type && index == other.index;
+            return string.Equals(name, other.name);
         }
 
         public override bool Equals(object obj)
@@ -147,17 +94,7 @@ namespace SharpDX.Toolkit.Graphics
 
         public override int GetHashCode()
         {
-            return hashCode;
-        }
-
-        private void CalculateHashcode()
-        {
-            unchecked
-            {
-                hashCode = key.GetHashCode();
-                hashCode = (hashCode * 397) ^ (int)type;
-                hashCode = (hashCode * 397) ^ index;
-            }
+            return name.GetHashCode();
         }
 
         public static bool operator ==(MaterialKey left, MaterialKey right)
@@ -172,54 +109,41 @@ namespace SharpDX.Toolkit.Graphics
 
         void IDataSerializable.Serialize(BinarySerializer serializer)
         {
-            serializer.Serialize(ref key);
-
-            if (serializer.Mode == SerializerMode.Write)
-            {
-                serializer.Writer.Write((byte)type);
-                serializer.Writer.Write((byte)index);
-            }
-            else
-            {
-                type = (MaterialTextureType)serializer.Reader.ReadByte();
-                index = serializer.Reader.ReadByte();
-                CalculateHashcode();
-            }
+            serializer.Serialize(ref name);
         }
 
         public override string ToString()
         {
-            return string.Format("{0},{1},{2}", key, (byte)type, (byte)index);
+            return string.Format("{0}", name);
         }
     }
 
     public class MaterialKey<T> : MaterialKey
     {
-        public MaterialKey(string key, MaterialTextureType type, int index) : base(key, type, index)
+        public MaterialKey(string name) : base(name)
         {
         }
     }
 
     public class MaterialKeys
     {
-        public readonly static MaterialKey<string> Name = new MaterialKey<string>("?mat.name", 0, 0);
-        public readonly static MaterialKey<bool> TwoSided = new MaterialKey<bool>("$mat.twosided", 0, 0);
-        public readonly static MaterialKey<MaterialShadingMode> ShadingMode = new MaterialKey<MaterialShadingMode>("$mat.shadingm", 0, 0);
-        public readonly static MaterialKey<bool> Wireframe = new MaterialKey<bool>("$mat.wireframe", 0, 0);
-        public readonly static MaterialKey<MaterialBlendMode> BlendMode = new MaterialKey<MaterialBlendMode>("$mat.blend", 0, 0);
-        public readonly static MaterialKey<float> Opacity = new MaterialKey<float>("$mat.opacity", 0, 0);
-        public readonly static MaterialKey<float> BumpScaling = new MaterialKey<float>("$mat.bumpscaling", 0, 0);
-        public readonly static MaterialKey<float> Shininess = new MaterialKey<float>("$mat.shininess", 0, 0);
-        public readonly static MaterialKey<float> Reflectivity = new MaterialKey<float>("$mat.reflectivity", 0, 0);
-        public readonly static MaterialKey<float> ShininessStrength = new MaterialKey<float>("$mat.shinpercent", 0, 0);
-        public readonly static MaterialKey<float> Refractivity = new MaterialKey<float>("$mat.refracti", 0, 0);
-        public readonly static MaterialKey<Color4> ColorDiffuse = new MaterialKey<Color4>("$clr.diffuse", 0, 0);
-        public readonly static MaterialKey<Color4> ColorAmbient = new MaterialKey<Color4>("$clr.ambient", 0, 0);
-        public readonly static MaterialKey<Color4> ColorSpecular = new MaterialKey<Color4>("$clr.specular", 0, 0);
-        public readonly static MaterialKey<Color4> ColorEmissive = new MaterialKey<Color4>("$clr.emissive", 0, 0);
-        public readonly static MaterialKey<Color4> ColorTransparent = new MaterialKey<Color4>("$clr.transparent", 0, 0);
-        public readonly static MaterialKey<Color4> ColorReflective = new MaterialKey<Color4>("$clr.reflective", 0, 0);
-        public readonly static MaterialKey GlobalBacgroundImage = new MaterialKey("?bg.global", 0, 0);
+        public readonly static MaterialKey<string> Name = new MaterialKey<string>("Name");
+        public readonly static MaterialKey<bool> TwoSided = new MaterialKey<bool>("TwoSided");
+        public readonly static MaterialKey<MaterialShadingMode> ShadingMode = new MaterialKey<MaterialShadingMode>("ShadingMode");
+        public readonly static MaterialKey<bool> Wireframe = new MaterialKey<bool>("Wireframe");
+        public readonly static MaterialKey<MaterialBlendMode> BlendMode = new MaterialKey<MaterialBlendMode>("BlendMode");
+        public readonly static MaterialKey<float> Opacity = new MaterialKey<float>("Opacity");
+        public readonly static MaterialKey<float> BumpScaling = new MaterialKey<float>("BumpScaling");
+        public readonly static MaterialKey<float> Shininess = new MaterialKey<float>("Shininess");
+        public readonly static MaterialKey<float> Reflectivity = new MaterialKey<float>("Reflectivity");
+        public readonly static MaterialKey<float> ShininessStrength = new MaterialKey<float>("ShininessStrength");
+        public readonly static MaterialKey<float> Refractivity = new MaterialKey<float>("Refractivity");
+        public readonly static MaterialKey<Color4> ColorDiffuse = new MaterialKey<Color4>("ColorDiffuse");
+        public readonly static MaterialKey<Color4> ColorAmbient = new MaterialKey<Color4>("ColorAmbient");
+        public readonly static MaterialKey<Color4> ColorSpecular = new MaterialKey<Color4>("ColorSpecular");
+        public readonly static MaterialKey<Color4> ColorEmissive = new MaterialKey<Color4>("ColorEmissive");
+        public readonly static MaterialKey<Color4> ColorTransparent = new MaterialKey<Color4>("ColorTransparent");
+        public readonly static MaterialKey<Color4> ColorReflective = new MaterialKey<Color4>("ColorReflective");
     }
 
     public enum MaterialBlendMode

@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 using Assimp;
 
@@ -82,6 +83,26 @@ namespace SharpDX.Toolkit.Graphics
             ProcessMaterials();
         }
 
+        private static List<string> supportedNames = new List<string>()
+                                                         {
+                                                             "?mat.name,0,0",
+                                                             "$mat.twosided,0,0",
+                                                             "$mat.shadingm,0,0",
+                                                             "$mat.wireframe,0,0",
+                                                             "$mat.blend,0,0",
+                                                             "$mat.opacity,0,0",
+                                                             "$mat.bumpscaling,0,0",
+                                                             "$mat.shininess,0,0",
+                                                             "$mat.reflectivity,0,0",
+                                                             "$mat.shinpercent,0,0",
+                                                             "$clr.diffuse,0,0",
+                                                             "$clr.ambient,0,0",
+                                                             "$clr.specular,0,0",
+                                                             "$clr.emissive,0,0",
+                                                             "$clr.transparent,0,0",
+                                                             "$clr.reflective,0,0",
+                                                         };
+
         private void ProcessMaterials()
         {
             if (scene.Materials == null)
@@ -91,34 +112,57 @@ namespace SharpDX.Toolkit.Graphics
 
             foreach (var rawMaterial in scene.Materials)
             {
-                var material = new ModelData.Material();
-                model.Materials.Add(material);
-                var properties = material.Properties;
+                model.Materials.Add(Process(rawMaterial));
+            }
+        }
 
-                // Setup all default properties for this material
-                if (rawMaterial.HasBlendMode) properties.SetProperty(MaterialKeys.BlendMode, (MaterialBlendMode)rawMaterial.BlendMode);
-                if (rawMaterial.HasBumpScaling) properties.SetProperty(MaterialKeys.BumpScaling, rawMaterial.BumpScaling);
-                if (rawMaterial.HasColorAmbient) properties.SetProperty(MaterialKeys.ColorAmbient, ConvertColor(rawMaterial.ColorAmbient));
-                if (rawMaterial.HasColorDiffuse) properties.SetProperty(MaterialKeys.ColorDiffuse, ConvertColor(rawMaterial.ColorDiffuse));
-                if (rawMaterial.HasColorEmissive) properties.SetProperty(MaterialKeys.ColorEmissive, ConvertColor(rawMaterial.ColorEmissive));
-                if (rawMaterial.HasColorReflective) properties.SetProperty(MaterialKeys.ColorReflective, ConvertColor(rawMaterial.ColorReflective));
-                if (rawMaterial.HasColorSpecular) properties.SetProperty(MaterialKeys.ColorSpecular, ConvertColor(rawMaterial.ColorSpecular));
-                if (rawMaterial.HasColorTransparent) properties.SetProperty(MaterialKeys.ColorTransparent, ConvertColor(rawMaterial.ColorTransparent));
-                if (rawMaterial.HasName) properties.SetProperty(MaterialKeys.Name, rawMaterial.Name);
-                if (rawMaterial.HasOpacity) properties.SetProperty(MaterialKeys.Opacity, rawMaterial.Opacity);
-                if (rawMaterial.HasReflectivity) properties.SetProperty(MaterialKeys.Reflectivity, rawMaterial.Reflectivity);
-                if (rawMaterial.HasShininess) properties.SetProperty(MaterialKeys.Shininess, rawMaterial.Shininess);
-                if (rawMaterial.HasShininessStrength) properties.SetProperty(MaterialKeys.ShininessStrength, rawMaterial.ShininessStrength);
-                if (rawMaterial.HasShadingMode) properties.SetProperty(MaterialKeys.ShadingMode, (MaterialShadingMode)rawMaterial.ShadingMode);
-                if (rawMaterial.HasTwoSided) properties.SetProperty(MaterialKeys.TwoSided, rawMaterial.IsTwoSided);
-                if (rawMaterial.HasWireFrame) properties.SetProperty(MaterialKeys.Wireframe, rawMaterial.IsWireFrameEnabled);
+        private ModelData.Material Process(Material rawMaterial)
+        {
+            var material = new ModelData.Material();
+            model.Materials.Add(material);
+            var properties = material.Properties;
 
-                // Iterate on other properties
-                foreach (var rawProperty in rawMaterial.GetAllProperties())
+            // Setup all default properties for this material
+            if (rawMaterial.HasBlendMode) properties.SetProperty(MaterialKeys.BlendMode, (MaterialBlendMode)rawMaterial.BlendMode);
+            if (rawMaterial.HasBumpScaling) properties.SetProperty(MaterialKeys.BumpScaling, rawMaterial.BumpScaling);
+            if (rawMaterial.HasColorAmbient) properties.SetProperty(MaterialKeys.ColorAmbient, ConvertColor(rawMaterial.ColorAmbient));
+            if (rawMaterial.HasColorDiffuse) properties.SetProperty(MaterialKeys.ColorDiffuse, ConvertColor(rawMaterial.ColorDiffuse));
+            if (rawMaterial.HasColorEmissive) properties.SetProperty(MaterialKeys.ColorEmissive, ConvertColor(rawMaterial.ColorEmissive));
+            if (rawMaterial.HasColorReflective) properties.SetProperty(MaterialKeys.ColorReflective, ConvertColor(rawMaterial.ColorReflective));
+            if (rawMaterial.HasColorSpecular) properties.SetProperty(MaterialKeys.ColorSpecular, ConvertColor(rawMaterial.ColorSpecular));
+            if (rawMaterial.HasColorTransparent) properties.SetProperty(MaterialKeys.ColorTransparent, ConvertColor(rawMaterial.ColorTransparent));
+            if (rawMaterial.HasName) properties.SetProperty(MaterialKeys.Name, rawMaterial.Name);
+            if (rawMaterial.HasOpacity) properties.SetProperty(MaterialKeys.Opacity, rawMaterial.Opacity);
+            if (rawMaterial.HasReflectivity) properties.SetProperty(MaterialKeys.Reflectivity, rawMaterial.Reflectivity);
+            if (rawMaterial.HasShininess) properties.SetProperty(MaterialKeys.Shininess, rawMaterial.Shininess);
+            if (rawMaterial.HasShininessStrength) properties.SetProperty(MaterialKeys.ShininessStrength, rawMaterial.ShininessStrength);
+            if (rawMaterial.HasShadingMode) properties.SetProperty(MaterialKeys.ShadingMode, (MaterialShadingMode)rawMaterial.ShadingMode);
+            if (rawMaterial.HasTwoSided) properties.SetProperty(MaterialKeys.TwoSided, rawMaterial.IsTwoSided);
+            if (rawMaterial.HasWireFrame) properties.SetProperty(MaterialKeys.Wireframe, rawMaterial.IsWireFrameEnabled);
+
+            // Iterate on other properties
+            foreach (var rawProperty in rawMaterial.GetAllProperties())
+            {
+                var key = new MaterialKey(rawProperty.FullyQualifiedName);
+                if (!properties.ContainsKey(key) && !supportedNames.Contains(rawProperty.FullyQualifiedName))
                 {
-                    var key = new MaterialKey(rawProperty.FullyQualifiedName);
-                    if (!properties.ContainsKey(key) && !rawProperty.FullyQualifiedName.StartsWith("$tex"))
+                    if (!rawProperty.FullyQualifiedName.StartsWith("$tex"))
                     {
+                        // Just use our own key for this material
+                        if (key.Name == "$mat.refracti,0,0") key = MaterialKeys.Refractivity;
+
+                        const string matNamePrefix = "$mat.";
+                        if (key.Name.StartsWith(matNamePrefix) && key.Name.Length > matNamePrefix.Length)
+                        {
+                            var newName = key.Name.Substring(matNamePrefix.Length);
+                            key = new MaterialKey(new StringBuilder().Append(char.ToUpperInvariant(newName[0])).Append(newName.Substring(1)).ToString());
+                        }
+
+                        if (properties.ContainsKey(key))
+                        {
+                            continue;
+                        }
+
                         switch (rawProperty.PropertyType)
                         {
                             case PropertyType.String:
@@ -161,35 +205,37 @@ namespace SharpDX.Toolkit.Graphics
                         }
                     }
                 }
+            }
 
-                // Process textures
-                foreach (TextureType textureType in Enum.GetValues(typeof(TextureType)))
+            // Process textures
+            foreach (TextureType textureType in Enum.GetValues(typeof(TextureType)))
+            {
+                if (textureType != TextureType.None)
                 {
-                    if (textureType != TextureType.None)
+                    var textures = rawMaterial.GetTextures(textureType);
+                    if (textures != null)
                     {
-                        var textures = rawMaterial.GetTextures(textureType);
-                        if (textures != null)
+                        foreach (var textureSlot in textures)
                         {
-                            foreach (var textureSlot in textures)
-                            {
-                                var newTextureSlot = new ModelData.MaterialTexture()
-                                                         {
-                                                             FilePath = textureSlot.FilePath,
-                                                             BlendFactor = textureSlot.BlendFactor,
-                                                             Operation = (MaterialTextureOperator)textureSlot.Operation,
-                                                             Index = (int)textureSlot.TextureIndex,
-                                                             UVIndex = (int)textureSlot.UVIndex,
-                                                             Type = (MaterialTextureType)textureSlot.TextureType,
-                                                             WrapMode = ConvertWrapMode(textureSlot.WrapMode),
-                                                             Flags = (MaterialTextureFlags)textureSlot.Flags
-                                                         };
+                            var newTextureSlot = new ModelData.MaterialTexture()
+                                                     {
+                                                         FilePath = textureSlot.FilePath,
+                                                         BlendFactor = textureSlot.BlendFactor,
+                                                         Operation = (MaterialTextureOperator)textureSlot.Operation,
+                                                         Index = (int)textureSlot.TextureIndex,
+                                                         UVIndex = (int)textureSlot.UVIndex,
+                                                         Type = (MaterialTextureType)textureSlot.TextureType,
+                                                         WrapMode = ConvertWrapMode(textureSlot.WrapMode),
+                                                         Flags = (MaterialTextureFlags)textureSlot.Flags
+                                                     };
 
-                                material.Textures.Add(newTextureSlot);
-                            }
+                            material.Textures.Add(newTextureSlot);
                         }
                     }
                 }
             }
+
+            return material;
         }
 
         private void CollectSkinnedBones()
