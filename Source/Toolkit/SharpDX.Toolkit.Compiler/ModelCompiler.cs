@@ -23,15 +23,21 @@ using System.Collections.Generic;
 using System.IO;
 
 using Assimp;
-using Assimp.Configs;
 
 using SharpDX.DXGI;
+using SharpDX.Direct3D11;
 using SharpDX.IO;
 
 namespace SharpDX.Toolkit.Graphics
 {
     public sealed class ModelCompiler
     {
+        private Assimp.Scene scene;
+        private ModelData model;
+        private List<ModelData.MeshPart>[] registeredMeshParts;
+        private Dictionary<Node, int> meshNodes = new Dictionary<Node, int>();
+        private Dictionary<Node, int> skinnedBones = new Dictionary<Node, int>();
+
         private ModelCompiler()
         {
         }
@@ -60,10 +66,6 @@ namespace SharpDX.Toolkit.Graphics
             return model;
         }
 
-        private Assimp.Scene scene;
-        private ModelData model;
-        private List<ModelData.MeshPart>[] registeredMeshParts;
-
         private void ProcessScene()
         {
             // Collect bones from mesh
@@ -77,44 +79,118 @@ namespace SharpDX.Toolkit.Graphics
             // Collect nodes
             CollectNodes(scene.RootNode, new ModelData.Node());
 
-            if (scene.Materials != null)
+            ProcessMaterials();
+        }
+
+        private void ProcessMaterials()
+        {
+            if (scene.Materials == null)
             {
-                for (int i = 0; i < scene.Materials.Length; i++)
+                return;
+            }
+
+            foreach (var rawMaterial in scene.Materials)
+            {
+                var material = new ModelData.Material();
+                model.Materials.Add(material);
+                var properties = material.Properties;
+
+                // Setup all default properties for this material
+                if (rawMaterial.HasBlendMode) properties.SetProperty(MaterialKeys.BlendMode, (MaterialBlendMode)rawMaterial.BlendMode);
+                if (rawMaterial.HasBumpScaling) properties.SetProperty(MaterialKeys.BumpScaling, rawMaterial.BumpScaling);
+                if (rawMaterial.HasColorAmbient) properties.SetProperty(MaterialKeys.ColorAmbient, ConvertColor(rawMaterial.ColorAmbient));
+                if (rawMaterial.HasColorDiffuse) properties.SetProperty(MaterialKeys.ColorDiffuse, ConvertColor(rawMaterial.ColorDiffuse));
+                if (rawMaterial.HasColorEmissive) properties.SetProperty(MaterialKeys.ColorEmissive, ConvertColor(rawMaterial.ColorEmissive));
+                if (rawMaterial.HasColorReflective) properties.SetProperty(MaterialKeys.ColorReflective, ConvertColor(rawMaterial.ColorReflective));
+                if (rawMaterial.HasColorSpecular) properties.SetProperty(MaterialKeys.ColorSpecular, ConvertColor(rawMaterial.ColorSpecular));
+                if (rawMaterial.HasColorTransparent) properties.SetProperty(MaterialKeys.ColorTransparent, ConvertColor(rawMaterial.ColorTransparent));
+                if (rawMaterial.HasName) properties.SetProperty(MaterialKeys.Name, rawMaterial.Name);
+                if (rawMaterial.HasOpacity) properties.SetProperty(MaterialKeys.Opacity, rawMaterial.Opacity);
+                if (rawMaterial.HasReflectivity) properties.SetProperty(MaterialKeys.Reflectivity, rawMaterial.Reflectivity);
+                if (rawMaterial.HasShininess) properties.SetProperty(MaterialKeys.Shininess, rawMaterial.Shininess);
+                if (rawMaterial.HasShininessStrength) properties.SetProperty(MaterialKeys.ShininessStrength, rawMaterial.ShininessStrength);
+                if (rawMaterial.HasShadingMode) properties.SetProperty(MaterialKeys.ShadingMode, (MaterialShadingMode)rawMaterial.ShadingMode);
+                if (rawMaterial.HasTwoSided) properties.SetProperty(MaterialKeys.TwoSided, rawMaterial.IsTwoSided);
+                if (rawMaterial.HasWireFrame) properties.SetProperty(MaterialKeys.Wireframe, rawMaterial.IsWireFrameEnabled);
+
+                // Iterate on other properties
+                foreach (var rawProperty in rawMaterial.GetAllProperties())
                 {
-                    var material = scene.Materials[i];
-
-                    var materialData = new ModelData.Material();
-                    foreach (var property in material.GetAllProperties())
+                    var key = new MaterialKey(rawProperty.FullyQualifiedName);
+                    if (!properties.ContainsKey(key) && !rawProperty.FullyQualifiedName.StartsWith("$tex"))
                     {
-                        // TODO CONVERT MATERIAL here
-                        //materialData.Attributes.Add(new AttributeData(property.Name, property.AsBoolean()));
-                    }
-
-                    foreach (TextureType textureType in Enum.GetValues(typeof(TextureType)))
-                    {
-                        if (textureType != TextureType.None)
+                        switch (rawProperty.PropertyType)
                         {
-                            var textures = material.GetTextures(textureType);
-                            if (textures != null)
-                            {
-                                foreach (var textureSlot in textures)
+                            case PropertyType.String:
+                                properties.Add(key, rawProperty.AsString());
+                                break;
+                            case PropertyType.Float:
+                                switch (rawProperty.ByteCount / 4)
                                 {
-                                    var newTextureSlot = new ModelData.TextureSlot()
-                                                             {
-                                                                 FilePath = textureSlot.FilePath,
-                                                                 BlendFactor = textureSlot.BlendFactor,
-                                                             };
-                                    materialData.TextureSlots.Add(newTextureSlot);
+                                    case 1:
+                                        properties.Add(key, rawProperty.AsFloat());
+                                        break;
+                                    case 2:
+                                        properties.Add(key, new Vector2(rawProperty.AsFloatArray()));
+                                        break;
+                                    case 3:
+                                        properties.Add(key, new Vector3(rawProperty.AsFloatArray()));
+                                        break;
+                                    case 4:
+                                        properties.Add(key, new Vector4(rawProperty.AsFloatArray()));
+                                        break;
+                                    case 16:
+                                        properties.Add(key, new Matrix(rawProperty.AsFloatArray()));
+                                        break;
                                 }
+                                break;
+                            case PropertyType.Integer:
+                                switch (rawProperty.ByteCount / 4)
+                                {
+                                    case 1:
+                                        properties.Add(key, rawProperty.AsInteger());
+                                        break;
+                                    default:
+                                        properties.Add(key, rawProperty.AsIntegerArray());
+                                        break;
+                                }
+                                break;
+                            case PropertyType.Buffer:
+                                properties.Add(key, rawProperty.RawData);
+                                break;
+                        }
+                    }
+                }
+
+                // Process textures
+                foreach (TextureType textureType in Enum.GetValues(typeof(TextureType)))
+                {
+                    if (textureType != TextureType.None)
+                    {
+                        var textures = rawMaterial.GetTextures(textureType);
+                        if (textures != null)
+                        {
+                            foreach (var textureSlot in textures)
+                            {
+                                var newTextureSlot = new ModelData.MaterialTexture()
+                                                         {
+                                                             FilePath = textureSlot.FilePath,
+                                                             BlendFactor = textureSlot.BlendFactor,
+                                                             Operation = (MaterialTextureOperator)textureSlot.Operation,
+                                                             Index = (int)textureSlot.TextureIndex,
+                                                             UVIndex = (int)textureSlot.UVIndex,
+                                                             Type = (MaterialTextureType)textureSlot.TextureType,
+                                                             WrapMode = ConvertWrapMode(textureSlot.WrapMode),
+                                                             Flags = (MaterialTextureFlags)textureSlot.Flags
+                                                         };
+
+                                material.Textures.Add(newTextureSlot);
                             }
                         }
                     }
                 }
             }
         }
-
-        private Dictionary<Node, int> meshNodes = new Dictionary<Node, int>();
-        private Dictionary<Node, int> skinnedBones = new Dictionary<Node, int>();
 
         private void CollectSkinnedBones()
         {
@@ -456,9 +532,29 @@ namespace SharpDX.Toolkit.Graphics
             return *(SharpDX.Vector3*)&value;
         }
 
+        private unsafe static SharpDX.Color4 ConvertColor(Color4D value)
+        {
+            return *(SharpDX.Color4*)&value;
+        }
+
         private unsafe static Matrix ConvertMatrix(Matrix4x4 sourceMatrix)
         {
             return *(Matrix*)&sourceMatrix;
+        }
+
+        private TextureAddressMode ConvertWrapMode(TextureWrapMode wrapMode)
+        {
+            switch (wrapMode)
+            {
+                case TextureWrapMode.Clamp:
+                    return TextureAddressMode.Clamp;
+                case TextureWrapMode.Wrap:
+                    return TextureAddressMode.Wrap;
+                case TextureWrapMode.Mirror:
+                    return TextureAddressMode.Mirror;
+                default:
+                    return TextureAddressMode.Border;
+            }
         }
     }
 }

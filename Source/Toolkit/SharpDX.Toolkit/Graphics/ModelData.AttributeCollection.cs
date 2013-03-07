@@ -17,53 +17,41 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System.Collections.Generic;
+
 using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
-
-    public partial class ModelData
+    public sealed partial class ModelData
     {
         /// <summary>
         /// Class Mesh
         /// </summary>
-        public sealed class Material : IDataSerializable
+        public sealed class AttributeCollection : Dictionary<string, AttributeData>, IDataSerializable
         {
-            private MaterialTextureCollection textures;
-            private MaterialPropertyCollection properties;
-
-            public Material()
+            public void Serialize(BinarySerializer serializer)
             {
-                textures = new MaterialTextureCollection();
-                properties = new MaterialPropertyCollection();
-            }
-
-            /// <summary>
-            /// The textures
-            /// </summary>
-            public MaterialTextureCollection Textures
-            {
-                get
+                if (serializer.Mode == SerializerMode.Write)
                 {
-                    return textures;
+                    serializer.Writer.Write(Count);
+                    foreach (var value in Values)
+                    {
+                        var localValue = value;
+                        serializer.Serialize(ref localValue);
+                    }
                 }
-            }
-
-            /// <summary>
-            /// Gets attributes attached to this material.
-            /// </summary>
-            public MaterialPropertyCollection Properties
-            {
-                get
+                else
                 {
-                    return properties;
+                    var count = serializer.Reader.ReadInt32();
+                    for (int i = 0; i < count; i++)
+                    {
+                        AttributeData localValue = null;
+                        serializer.Serialize(ref localValue);
+                        Add(localValue.Name, localValue);
+                    }
                 }
-            }
-
-            void IDataSerializable.Serialize(BinarySerializer serializer)
-            {
-                serializer.Serialize(ref textures);
-                serializer.Serialize(ref properties);
             }
         }
     }

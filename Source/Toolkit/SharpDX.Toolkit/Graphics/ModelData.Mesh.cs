@@ -32,6 +32,14 @@ namespace SharpDX.Toolkit.Graphics
         public sealed class Mesh : IDataSerializable
         {
             /// <summary>
+            /// Initializes a new instance of the <see cref="Mesh"/> class.
+            /// </summary>
+            public Mesh()
+            {
+                Attributes = new AttributeCollection();
+            }
+
+            /// <summary>
             /// Index of this mesh into the mesh collection.
             /// </summary>
             public int Index;
@@ -54,7 +62,7 @@ namespace SharpDX.Toolkit.Graphics
             /// <summary>
             /// Gets attributes attached to this mesh.
             /// </summary>
-            public List<AttributeData> Attributes;
+            public AttributeCollection Attributes;
 
             public void Serialize(BinarySerializer serializer)
             {

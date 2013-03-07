@@ -18,18 +18,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Collections.Generic;
-
+using SharpDX.Direct3D11;
 using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public sealed partial class ModelData
+    public partial class ModelData
     {
         /// <summary>
-        /// Class Mesh
+        /// Slot of a texture
         /// </summary>
-        public sealed class TextureSlot : IDataSerializable
+        public sealed class MaterialTexture : IDataSerializable
         {
             /// <summary>
             /// The file path
@@ -39,7 +38,7 @@ namespace SharpDX.Toolkit.Graphics
             /// <summary>
             /// The type of this texture.
             /// </summary>
-            public TextureType Type;
+            public MaterialTextureType Type;
 
             /// <summary>
             /// The index of this texture.
@@ -59,12 +58,17 @@ namespace SharpDX.Toolkit.Graphics
             /// <summary>
             /// The texture operation.
             /// </summary>
-            public TextureOperation Operation;
+            public MaterialTextureOperator Operation;
 
             /// <summary>
             /// The wrap mode
             /// </summary>
-            public TextureWrapMode WrapMode;
+            public TextureAddressMode WrapMode;
+
+            /// <summary>
+            /// Texture flags.
+            /// </summary>
+            public MaterialTextureFlags Flags;
 
             public void Serialize(BinarySerializer serializer)
             {
@@ -75,42 +79,8 @@ namespace SharpDX.Toolkit.Graphics
                 serializer.Serialize(ref BlendFactor);
                 serializer.SerializeEnum(ref Operation);
                 serializer.SerializeEnum(ref WrapMode);
+                serializer.SerializeEnum(ref Flags);
             }
-        }
-
-        public enum TextureType : uint
-        {
-            None,
-            Diffuse,
-            Specular,
-            Ambient,
-            Emissive,
-            Height,
-            Normals,
-            Shininess,
-            Opacity,
-            Displacement,
-            Lightmap,
-            Reflection,
-            Unknown,
-        }
-
-        public enum TextureOperation
-        {
-            Multiply,
-            Add,
-            Subtract,
-            Divide,
-            SmoothAdd,
-            SignedAdd,
-        }
-
-        public enum TextureWrapMode
-        {
-            Wrap,
-            Clamp,
-            Mirror,
-            Decal,
         }
     }
 }

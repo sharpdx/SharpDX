@@ -27,7 +27,15 @@
     <Compile Include="Diagnostics\Logger.cs" />
     <Compile Include="Diagnostics\NamespaceDoc.cs" />
     <Compile Include="Graphics\AttributeData.cs" />
-    <Compile Include="Graphics\ModelData.Texture.cs" />
+    <Compile Include="Graphics\MaterialKey.cs" />
+    <Compile Include="Graphics\MaterialPropertyCollection.cs" />
+    <Compile Include="Graphics\ModelData.MaterialTextureCollection.cs" />
+    <Compile Include="Graphics\ModelData.AttributeCollection.cs" />
+    <Compile Include="Graphics\MaterialShadingMode.cs" />
+    <Compile Include="Graphics\MaterialTextureFlags.cs" />
+    <Compile Include="Graphics\MaterialTextureOperator.cs" />
+    <Compile Include="Graphics\MaterialTextureType.cs" />
+    <Compile Include="Graphics\ModelData.MaterialTexture.cs" />
     <Compile Include="Graphics\ModelData.Material.cs" />
     <Compile Include="Graphics\EffectDataContentReader.cs" />
     <Compile Include="Graphics\EffectCompilerResult.cs" />
@@ -77,6 +85,10 @@
     <Compile Include="Graphics\EffectData.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\SharpDX.Direct3D11\SharpDX.Direct3D11.csproj">
+      <Project>{736dfb52-1afe-4eff-9710-89046ab5b1f9}</Project>
+      <Name>SharpDX.Direct3D11</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\SharpDX.DXGI\SharpDX.DXGI.csproj">
       <Project>{3fc6de77-b412-4101-9e64-6b9aa831179b}</Project>
       <Name>SharpDX.DXGI</Name>
