@@ -26,14 +26,14 @@ namespace SharpDX.Toolkit.Graphics
 {
     public partial class ModelData
     {
-        public class MaterialTextureCollection : Dictionary<MaterialTextureType, List<MaterialTexture>>, IDataSerializable
+        public class MaterialTextureStackCollection : Dictionary<MaterialTextureType, MaterialTextureStack>, IDataSerializable
         {
             public void Add(MaterialTexture texture)
             {
-                List<MaterialTexture> textures;
+                MaterialTextureStack textures;
                 if (!TryGetValue(texture.Type, out textures))
                 {
-                    Add(texture.Type, textures = new List<MaterialTexture>());
+                    Add(texture.Type, textures = new MaterialTextureStack());
                 }
                 textures.Add(texture);
             }
@@ -57,7 +57,7 @@ namespace SharpDX.Toolkit.Graphics
                     for (int i = 0; i < count; i++)
                     {
                         var type = MaterialTextureType.None;
-                        List<MaterialTexture> localValue = null;
+                        MaterialTextureStack localValue = null;
                         serializer.SerializeEnum(ref type);
                         serializer.Serialize(ref localValue);
                         Add(type, localValue);

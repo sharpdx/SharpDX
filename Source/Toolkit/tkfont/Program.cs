@@ -111,9 +111,11 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             // Loads the description
+            var filePath = Path.Combine(Environment.CurrentDirectory, XmlFontFile);
+
             var fontDescription = FontDescription.Load(XmlFontFile);
 
-            var defaultOutputFile = Path.GetFileNameWithoutExtension(XmlFontFile);
+            var defaultOutputFile = Path.Combine(Path.GetDirectoryName(filePath), Path.GetFileNameWithoutExtension(filePath));
 
             // Compiles to SpriteData
             OutputFile = OutputFile ?? defaultOutputFile;
@@ -121,13 +123,13 @@ namespace SharpDX.Toolkit.Graphics
             string dependencyFile = null;
             if (CompileOnlyIfNewer)
             {
-                dependencyFile = Path.Combine(OutputDependencyDirectory, FileDependencyList.GetDependencyFileNameFromSourcePath(XmlFontFile));
+                dependencyFile = Path.Combine(OutputDependencyDirectory, FileDependencyList.GetDependencyFileNameFromSourcePath(Path.GetFileName(filePath)));
             }
 
             bool forceCompilation = (DebugOutputSpriteSheet != null && !File.Exists(DebugOutputSpriteSheet));
 
-            var result = FontCompiler.CompileAndSave(XmlFontFile, OutputFile, dependencyFile);
-            if (result.IsNewFontGenerated || forceCompilation)
+            var result = FontCompiler.CompileAndSave(filePath, OutputFile, dependencyFile);
+            if (result.IsContentGenerated || forceCompilation)
             {
                 Console.WriteLine("Writing [{0}] ({1} format)", OutputFile, fontDescription.Format);
 

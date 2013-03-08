@@ -28,6 +28,7 @@ using Assimp;
 using SharpDX.DXGI;
 using SharpDX.Direct3D11;
 using SharpDX.IO;
+using SharpDX.Toolkit.Diagnostics;
 
 namespace SharpDX.Toolkit.Graphics
 {
@@ -36,12 +37,74 @@ namespace SharpDX.Toolkit.Graphics
         private Assimp.Scene scene;
         private ModelData model;
         private List<ModelData.MeshPart>[] registeredMeshParts;
-        private Dictionary<Node, int> meshNodes = new Dictionary<Node, int>();
-        private Dictionary<Node, int> skinnedBones = new Dictionary<Node, int>();
-
+        private readonly Dictionary<Node, int> meshNodes = new Dictionary<Node, int>();
+        private readonly Dictionary<Node, int> skinnedBones = new Dictionary<Node, int>();
+        private readonly static List<string> AssimpMaterialDefaultNames = new List<string>()
+                                                         {
+                                                             "?mat.name,0,0",
+                                                             "$mat.twosided,0,0",
+                                                             "$mat.shadingm,0,0",
+                                                             "$mat.wireframe,0,0",
+                                                             "$mat.blend,0,0",
+                                                             "$mat.opacity,0,0",
+                                                             "$mat.bumpscaling,0,0",
+                                                             "$mat.shininess,0,0",
+                                                             "$mat.reflectivity,0,0",
+                                                             "$mat.shinpercent,0,0",
+                                                             "$clr.diffuse,0,0",
+                                                             "$clr.ambient,0,0",
+                                                             "$clr.specular,0,0",
+                                                             "$clr.emissive,0,0",
+                                                             "$clr.transparent,0,0",
+                                                             "$clr.reflective,0,0",
+                                                         };
         private ModelCompiler()
         {
         }
+
+        public static ContentCompilerResult CompileAndSave(string fileName, string outputFile, string dependencyFile = null)
+        {
+            var result = new ContentCompilerResult { Logger = new Logger() };
+
+            bool contentToUpdate = true;
+            if (dependencyFile != null)
+            {
+                if (!FileDependencyList.CheckForChanges(dependencyFile))
+                {
+                    contentToUpdate = false;
+                }
+            }
+
+            if (contentToUpdate)
+            {
+                try
+                {
+                    var modelData = CompileFromFile(fileName);
+
+                    // Save the model
+                    modelData.Save(outputFile);
+
+                    if (dependencyFile != null)
+                    {
+                        // Save the dependency
+                        var dependencyList = new FileDependencyList();
+                        dependencyList.AddDefaultDependencies();
+                        dependencyList.AddDependencyPath(fileName);
+                        dependencyList.Save(dependencyFile);
+                    }
+
+                    result.IsContentGenerated = true;
+                }
+                catch (Exception ex)
+                {
+                    result.Logger.Error("Unexpected exception while converting {0} : {1}", fileName, ex.ToString());
+                }
+
+            }
+
+            return result;
+        }
+
 
         public static ModelData CompileFromFile(string fileName)
         {
@@ -80,28 +143,9 @@ namespace SharpDX.Toolkit.Graphics
             // Collect nodes
             CollectNodes(scene.RootNode, new ModelData.Node());
 
+            // Process materials
             ProcessMaterials();
         }
-
-        private static List<string> supportedNames = new List<string>()
-                                                         {
-                                                             "?mat.name,0,0",
-                                                             "$mat.twosided,0,0",
-                                                             "$mat.shadingm,0,0",
-                                                             "$mat.wireframe,0,0",
-                                                             "$mat.blend,0,0",
-                                                             "$mat.opacity,0,0",
-                                                             "$mat.bumpscaling,0,0",
-                                                             "$mat.shininess,0,0",
-                                                             "$mat.reflectivity,0,0",
-                                                             "$mat.shinpercent,0,0",
-                                                             "$clr.diffuse,0,0",
-                                                             "$clr.ambient,0,0",
-                                                             "$clr.specular,0,0",
-                                                             "$clr.emissive,0,0",
-                                                             "$clr.transparent,0,0",
-                                                             "$clr.reflective,0,0",
-                                                         };
 
         private void ProcessMaterials()
         {
@@ -119,7 +163,6 @@ namespace SharpDX.Toolkit.Graphics
         private ModelData.Material Process(Material rawMaterial)
         {
             var material = new ModelData.Material();
-            model.Materials.Add(material);
             var properties = material.Properties;
 
             // Setup all default properties for this material
@@ -144,7 +187,7 @@ namespace SharpDX.Toolkit.Graphics
             foreach (var rawProperty in rawMaterial.GetAllProperties())
             {
                 var key = new MaterialKey(rawProperty.FullyQualifiedName);
-                if (!properties.ContainsKey(key) && !supportedNames.Contains(rawProperty.FullyQualifiedName))
+                if (!properties.ContainsKey(key) && !AssimpMaterialDefaultNames.Contains(rawProperty.FullyQualifiedName))
                 {
                     if (!rawProperty.FullyQualifiedName.StartsWith("$tex"))
                     {
@@ -366,7 +409,7 @@ namespace SharpDX.Toolkit.Graphics
                                                       {
                                                           Layout = new List<VertexElement>()
                                                       },
-                                    IndexBuffer = new ModelData.IndexBuffer()
+                                   IndexBuffer = new ModelData.IndexBuffer()
                                };
 
             var layout = meshPart.VertexBuffer.Layout;

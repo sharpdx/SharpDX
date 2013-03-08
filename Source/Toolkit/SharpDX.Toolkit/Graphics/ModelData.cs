@@ -39,6 +39,7 @@ namespace SharpDX.Toolkit.Graphics
         public ModelData()
         {
             Bones = new List<Node>();
+            SkinnedBones = new List<Node>();
             Meshes = new List<Mesh>();
             Materials = new List<Material>();
             Attributes = new List<AttributeData>();
@@ -160,13 +161,18 @@ namespace SharpDX.Toolkit.Graphics
             serializer.Serialize(ref Bones);
             serializer.EndChunk();
 
+            // Skinned Bones section
+            serializer.BeginChunk("SKIN");
+            serializer.Serialize(ref SkinnedBones);
+            serializer.EndChunk();
+
             // Mesh section
             serializer.BeginChunk("MESH");
             serializer.Serialize(ref Meshes);
             serializer.EndChunk();
 
             // Material section
-            serializer.BeginChunk("MATL");
+            serializer.BeginChunk("MATE");
             serializer.Serialize(ref Materials);
             serializer.EndChunk();
 

@@ -36,6 +36,7 @@ namespace SharpDX.Toolkit.Graphics
             /// </summary>
             public Mesh()
             {
+                MeshParts = new List<MeshPart>();
                 Attributes = new AttributeCollection();
             }
 

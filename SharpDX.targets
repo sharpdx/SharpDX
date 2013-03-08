@@ -32,6 +32,7 @@ It compiles all files of type ToolkitFxc/ToolkitFont
   <ItemGroup>
     <AvailableItemName Include="ToolkitFxc"></AvailableItemName>
     <AvailableItemName Include="ToolkitFont"></AvailableItemName>
+    <AvailableItemName Include="ToolkitModel"></AvailableItemName>
   </ItemGroup>
 
   <!-- Global property most of them are overridable in the project including this project file -->
@@ -168,7 +169,7 @@ It compiles all files of type ToolkitFxc/ToolkitFont
         ProjectDirectory="$(ProjectDir)"
         IntermediateDirectory="$(IntermediateOutputPath)"
         Debug="$(ToolkitFxcDebugOption)"
-        Files="@(ToolkitFxc);@(ToolkitFont)"
+        Files="@(ToolkitFxc);@(ToolkitFont);@(ToolkitModel)"
         RootNamespace="$(RootNamespace)"
         >
         <Output TaskParameter="ContentFiles" ItemName="TkContent"/>
@@ -206,6 +207,17 @@ It compiles all files of type ToolkitFxc/ToolkitFont
         RootNamespace="$(RootNamespace)"
         >
     </FontCompilerTask>
+
+    <!--TODO Merge both task into a single one?-->
+    <ModelCompilerTask
+        ProjectDirectory="$(ProjectDir)"
+        IntermediateDirectory="$(IntermediateOutputPath)"
+        DynamicCompiling="$(ToolkitFxcDynamicCompilingOption)"
+        Debug="$(ToolkitFxcDebugOption)"
+        Files="@(ToolkitModel)"
+        RootNamespace="$(RootNamespace)"
+        >
+    </ModelCompilerTask>
 
   </Target>
 </Project>

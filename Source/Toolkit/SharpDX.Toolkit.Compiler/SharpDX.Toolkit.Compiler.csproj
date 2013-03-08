@@ -34,7 +34,7 @@
     <Compile Include="Font\BitmapUtils.cs" />
     <Compile Include="Font\CharacterRegion.cs" />
     <Compile Include="Font\CharacterRegionTypeConverter.cs" />
-    <Compile Include="Font\FontCompilerResult.cs" />
+    <Compile Include="Font\ContentCompilerResult.cs" />
     <Compile Include="Font\FontCompiler.cs" />
     <Compile Include="Font\FontDescription.cs" />
     <Compile Include="Font\FontStyle.cs" />

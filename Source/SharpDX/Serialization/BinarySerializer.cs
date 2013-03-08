@@ -830,6 +830,38 @@ namespace SharpDX.Serialization
         }
 
         /// <summary>
+        /// Serializes a list of static values that are implementing the <see cref="IDataSerializable"/> interface.
+        /// </summary>
+        /// <typeparam name="T">Type of the data to serialize.</typeparam>
+        /// <param name="valueList">A list of value to serialize</param>
+        /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags"/>.</param>
+        /// <remarks>
+        /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.
+        /// </remarks>
+        public void SerializeThis<T>(List<T> valueList, SerializeFlags serializeFlags = SerializeFlags.Normal) where T : IDataSerializable, new()
+        {
+            if (Mode == SerializerMode.Write)
+            {
+                WriteArrayLength(valueList.Count);
+                foreach (var value in valueList)
+                {
+                    T localValue = value;
+                    Serialize(ref localValue);
+                }
+            }
+            else
+            {
+                var count = ReadArrayLength();
+                for (int index = 0; index < count; index++)
+                {
+                    var value = default(T);
+                    Serialize(ref value);
+                    valueList.Add(value);
+                }
+            }
+        }
+
+        /// <summary>
         /// Serializes a list of primitive values using a specific serializer method from this instance.
         /// </summary>
         /// <typeparam name="T">Type of the data to serialize.</typeparam>

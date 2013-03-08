@@ -18,30 +18,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using SharpDX.Toolkit.Diagnostics;
+using System.Collections.Generic;
+
+using SharpDX.Direct3D11;
+using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    /// <summary>
-    /// Result of a compilation.
-    /// </summary>
-    public sealed class FontCompilerResult
+    public partial class ModelData
     {
-        public bool IsNewFontGenerated { get; set; }
-
         /// <summary>
-        /// Gets a value indicating whether this instance has errors.
+        /// A Stack of texture
         /// </summary>
-        /// <value><c>true</c> if this instance has errors; otherwise, <c>false</c>.</value>
-        public bool HasErrors
+        public sealed class MaterialTextureStack : List<MaterialTexture>, IDataSerializable
         {
-            get { return Logger.HasErrors; }
+            public void Serialize(BinarySerializer serializer)
+            {
+                serializer.SerializeThis(this);
+            }
         }
-
-        /// <summary>
-        /// Gets the logger containing compilation messages..
-        /// </summary>
-        /// <value>The logger.</value>
-        public Logger Logger { get; set; }
     }
 }

@@ -94,10 +94,10 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="outputFile">The output file.</param>
         /// <param name="dependencyFile">The dependency file.</param>
         /// <returns><c>true</c> if XXXX, <c>false</c> otherwise</returns>
-        public static FontCompilerResult CompileAndSave(string sourceXmlFile, string outputFile, string dependencyFile = null)
+        public static ContentCompilerResult CompileAndSave(string sourceXmlFile, string outputFile, string dependencyFile = null)
         {
             var logger = new Logger();
-            var result = new FontCompilerResult { Logger = logger };
+            var result = new ContentCompilerResult { Logger = logger };
             try
             {
                 var fontDescription = FontDescription.Load(sourceXmlFile);
@@ -107,16 +107,16 @@ namespace SharpDX.Toolkit.Graphics
                 // Compiles to SpriteData
                 outputFile = outputFile ?? defaultOutputFile;
 
-                result.IsNewFontGenerated = true;
+                result.IsContentGenerated = true;
                 if (dependencyFile != null)
                 {
                     if (!FileDependencyList.CheckForChanges(dependencyFile))
                     {
-                        result.IsNewFontGenerated = false;
+                        result.IsContentGenerated = false;
                     }
                 }
 
-                if (result.IsNewFontGenerated)
+                if (result.IsContentGenerated)
                 {
                     // Make sure that directory name doesn't collide with filename
                     var directoryName = Path.GetDirectoryName(outputFile + ".tmp");

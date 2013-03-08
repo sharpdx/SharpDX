@@ -124,32 +124,4 @@ namespace SharpDX.Toolkit.Graphics
         {
         }
     }
-
-    public class MaterialKeys
-    {
-        public readonly static MaterialKey<string> Name = new MaterialKey<string>("Name");
-        public readonly static MaterialKey<bool> TwoSided = new MaterialKey<bool>("TwoSided");
-        public readonly static MaterialKey<MaterialShadingMode> ShadingMode = new MaterialKey<MaterialShadingMode>("ShadingMode");
-        public readonly static MaterialKey<bool> Wireframe = new MaterialKey<bool>("Wireframe");
-        public readonly static MaterialKey<MaterialBlendMode> BlendMode = new MaterialKey<MaterialBlendMode>("BlendMode");
-        public readonly static MaterialKey<float> Opacity = new MaterialKey<float>("Opacity");
-        public readonly static MaterialKey<float> BumpScaling = new MaterialKey<float>("BumpScaling");
-        public readonly static MaterialKey<float> Shininess = new MaterialKey<float>("Shininess");
-        public readonly static MaterialKey<float> Reflectivity = new MaterialKey<float>("Reflectivity");
-        public readonly static MaterialKey<float> ShininessStrength = new MaterialKey<float>("ShininessStrength");
-        public readonly static MaterialKey<float> Refractivity = new MaterialKey<float>("Refractivity");
-        public readonly static MaterialKey<Color4> ColorDiffuse = new MaterialKey<Color4>("ColorDiffuse");
-        public readonly static MaterialKey<Color4> ColorAmbient = new MaterialKey<Color4>("ColorAmbient");
-        public readonly static MaterialKey<Color4> ColorSpecular = new MaterialKey<Color4>("ColorSpecular");
-        public readonly static MaterialKey<Color4> ColorEmissive = new MaterialKey<Color4>("ColorEmissive");
-        public readonly static MaterialKey<Color4> ColorTransparent = new MaterialKey<Color4>("ColorTransparent");
-        public readonly static MaterialKey<Color4> ColorReflective = new MaterialKey<Color4>("ColorReflective");
-    }
-
-    public enum MaterialBlendMode
-    {
-        Default,
-
-        Additive,
-    }
 }

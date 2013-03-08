@@ -36,8 +36,17 @@ namespace SharpDX.Toolkit.Compiler
     /// </summary>
     class Program : ConsoleProgram
     {
-        [Option("Model Files", Required = true)]
-        public List<string> ModelFiles = new List<string>();
+        [Option("Model File", Required = true)]
+        public string ModelFile;
+
+        [Option("O", Description = "Output File, default is <Model File> without extension", Value = "<filename>")]
+        public string OutputFile = null;
+
+        [Option("Ti", Description = "Compile the file only if the source file is newer.\n")]
+        public bool CompileOnlyIfNewer;
+
+        [Option("To", Description = "Output directory for the dependency file (default '.' in the same directory than file to compile\n")]
+        public string OutputDependencyDirectory = ".";
 
         static void Main(string[] args)
         {
@@ -59,34 +68,48 @@ namespace SharpDX.Toolkit.Compiler
             bool hasErrors = false;
 
             // ----------------------------------------------------------------
-            // Process each fx files / tkfxo files
+            // Process model file
             // ----------------------------------------------------------------
-            foreach (var fxFile in options.ModelFiles)
+            var filePath = Path.Combine(Environment.CurrentDirectory, ModelFile);
+
+            if (!File.Exists(filePath))
             {
-                var filePath = Path.Combine(Environment.CurrentDirectory, fxFile);
-
-                if (!File.Exists(filePath))
-                {
-                    ErrorColor();
-                    Console.Error.WriteLine("File [{0}] does not exist", fxFile);
-                    ResetColor();
-                    hasErrors = true;
-                    continue;
-                }
-
-                // Compile the fx file
-                Console.WriteLine("Compile Model from File [{0}]", filePath);
-                var modelData = ModelCompiler.CompileFromFile(filePath);
-
-                // TODO IMPLEMENT SAVING
+                ErrorColor();
+                Console.Error.WriteLine("File [{0}] does not exist", filePath);
+                ResetColor();
+                Environment.Exit(-1);
             }
 
-            if (hasErrors)
+            var defaultOutputFile = Path.Combine(Path.GetDirectoryName(filePath), Path.GetFileNameWithoutExtension(filePath));
+
+            // Compiles to SpriteData
+            OutputFile = OutputFile ?? defaultOutputFile;
+
+            string dependencyFile = null;
+            if (CompileOnlyIfNewer)
+            {
+                dependencyFile = Path.Combine(OutputDependencyDirectory, FileDependencyList.GetDependencyFileNameFromSourcePath(Path.GetFileName(filePath)));
+            }
+
+            Console.WriteLine("Compile Model from File [{0}] => {1}", filePath, OutputFile);
+            var result = ModelCompiler.CompileAndSave(filePath, OutputFile, dependencyFile);
+
+            if (result.HasErrors)
             {
                 ErrorColor();
                 Console.Error.WriteLine("Compilation has errors. Process aborted.");
                 ResetColor();
                 Environment.Exit(-1);
+            }
+            
+            
+            if (result.IsContentGenerated)
+            {
+                Console.WriteLine("Successfull");
+            }
+            else
+            {
+                Console.WriteLine("Nothing to generate. Model and Compiled Model are in sync");
             }
         }
     }

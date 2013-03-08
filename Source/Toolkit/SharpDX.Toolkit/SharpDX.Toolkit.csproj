@@ -27,9 +27,12 @@
     <Compile Include="Diagnostics\Logger.cs" />
     <Compile Include="Diagnostics\NamespaceDoc.cs" />
     <Compile Include="Graphics\AttributeData.cs" />
+    <Compile Include="Graphics\ModelData.MaterialTextureStack.cs" />
+    <Compile Include="Graphics\MaterialBlendMode.cs" />
     <Compile Include="Graphics\MaterialKey.cs" />
+    <Compile Include="Graphics\MaterialKeys.cs" />
     <Compile Include="Graphics\MaterialPropertyCollection.cs" />
-    <Compile Include="Graphics\ModelData.MaterialTextureCollection.cs" />
+    <Compile Include="Graphics\ModelData.MaterialTextureStackCollection.cs" />
     <Compile Include="Graphics\ModelData.AttributeCollection.cs" />
     <Compile Include="Graphics\MaterialShadingMode.cs" />
     <Compile Include="Graphics\MaterialTextureFlags.cs" />

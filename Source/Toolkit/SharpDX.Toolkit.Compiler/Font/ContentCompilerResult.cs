@@ -17,54 +17,31 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using SharpDX.Serialization;
+
+using SharpDX.Toolkit.Diagnostics;
 
 namespace SharpDX.Toolkit.Graphics
 {
-
-    public partial class ModelData
+    /// <summary>
+    /// Result of a compilation.
+    /// </summary>
+    public sealed class ContentCompilerResult
     {
+        public bool IsContentGenerated { get; set; }
+
         /// <summary>
-        /// Class Mesh
+        /// Gets a value indicating whether this instance has errors.
         /// </summary>
-        public sealed class Material : IDataSerializable
+        /// <value><c>true</c> if this instance has errors; otherwise, <c>false</c>.</value>
+        public bool HasErrors
         {
-            private MaterialTextureStackCollection texturesStack;
-            private MaterialPropertyCollection properties;
-
-            public Material()
-            {
-                texturesStack = new MaterialTextureStackCollection();
-                properties = new MaterialPropertyCollection();
-            }
-
-            /// <summary>
-            /// The textures
-            /// </summary>
-            public MaterialTextureStackCollection Textures
-            {
-                get
-                {
-                    return texturesStack;
-                }
-            }
-
-            /// <summary>
-            /// Gets attributes attached to this material.
-            /// </summary>
-            public MaterialPropertyCollection Properties
-            {
-                get
-                {
-                    return properties;
-                }
-            }
-
-            void IDataSerializable.Serialize(BinarySerializer serializer)
-            {
-                serializer.Serialize(ref texturesStack);
-                serializer.Serialize(ref properties);
-            }
+            get { return Logger.HasErrors; }
         }
+
+        /// <summary>
+        /// Gets the logger containing compilation messages..
+        /// </summary>
+        /// <value>The logger.</value>
+        public Logger Logger { get; set; }
     }
 }
