@@ -132,6 +132,7 @@ It compiles all files of type ToolkitFxc/ToolkitFont
   <UsingTask TaskName="SharpDX.Toolkit.EffectCompilerTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
   <UsingTask TaskName="SharpDX.Toolkit.FontCompilerTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
   <UsingTask TaskName="SharpDX.Toolkit.CompilerDependencyTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
+  <UsingTask TaskName="SharpDX.Toolkit.ModelCompilerTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
 
   <!-- Plugs all compilers in BuildDependsOn --> 
   <PropertyGroup>
