@@ -86,6 +86,19 @@ namespace SharpDX.Toolkit.Input
         }
 
         /// <summary>
+        /// Sets the position of mouse pointer
+        /// </summary>
+        /// <param name="point">The desired position</param>
+        /// <exception cref="InvalidOperationException">Is thrown when <see cref="MouseManager"/> is not initialized</exception>
+        public void SetPosition(DrawingPoint point)
+        {
+            if (platform == null)
+                throw new InvalidOperationException("MouseManager is not initialized.");
+
+            platform.SetLocation(point);
+        }
+
+        /// <summary>
         /// Handler for <see cref="MousePlatform.MouseDown"/> event
         /// </summary>
         /// <param name="button">The pressed button</param>

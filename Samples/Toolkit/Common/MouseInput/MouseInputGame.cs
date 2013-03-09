@@ -67,7 +67,7 @@ namespace MouseInput
             // SpriteFont supports the following font file format:
             // - DirectX Toolkit MakeSpriteFont or SharpDX Toolkit tkfont
             // - BMFont from Angelcode http://www.angelcode.com/products/bmfont/
-            arial16BMFont = Content.Load<SpriteFont>("Arial16.tkfnt");
+            arial16BMFont = Content.Load<SpriteFont>("Arial16");
 
             // Instantiate a SpriteBatch
             spriteBatch = new SpriteBatch(GraphicsDevice);
