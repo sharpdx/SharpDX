@@ -30,6 +30,8 @@ using WinRTPointerPoint = Windows.UI.Input.PointerPoint;
 
 namespace SharpDX.Toolkit.Input
 {
+    using global::Windows.Devices.Input;
+
     /// <summary>
     /// Represents a specific <see cref="MousePlatform"/> implementation for the WinRT platform
     /// </summary>

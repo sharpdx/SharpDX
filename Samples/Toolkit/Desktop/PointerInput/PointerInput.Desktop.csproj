@@ -69,11 +69,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\Common\PointerInput\Content\Arial16.tkfnt">
-      <Link>Content\Arial16.tkfnt</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ToolkitFont Include="..\..\Common\PointerInput\Content\Arial16.xml">
+      <Link>Content\Arial16.xml</Link>
+    </ToolkitFont>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\..\..\SharpDX.targets" />

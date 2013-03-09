@@ -116,16 +116,13 @@
     <None Include="MouseInput.WinRT_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <ToolkitFont Include="..\..\Common\MouseInput\Content\Arial16.xml">
+      <Link>Content\Arial16.xml</Link>
+    </ToolkitFont>
     <Content Include="Assets\Logo.png" />
     <Content Include="Assets\SmallLogo.png" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\..\Common\MouseInput\Content\Arial16.tkfnt">
-      <Link>Content\Arial16.tkfnt</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>

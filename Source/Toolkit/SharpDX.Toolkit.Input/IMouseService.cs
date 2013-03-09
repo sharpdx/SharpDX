@@ -30,5 +30,11 @@ namespace SharpDX.Toolkit.Input
         /// </summary>
         /// <returns>A snapshot of current mouse state</returns>
         MouseState GetState();
+
+        /// <summary>
+        /// Sets the position of mouse pointer
+        /// </summary>
+        /// <param name="point">The desired position</param>
+        void SetPosition(DrawingPoint point);
     }
 }

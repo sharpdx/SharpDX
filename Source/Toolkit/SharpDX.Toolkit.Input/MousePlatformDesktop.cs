@@ -23,6 +23,7 @@
 namespace SharpDX.Toolkit.Input
 {
     using System;
+    using System.Runtime.InteropServices;
     using System.Windows.Forms;
 
     /// <summary>
@@ -30,11 +31,20 @@ namespace SharpDX.Toolkit.Input
     /// </summary>
     internal sealed class MousePlatformDesktop : MousePlatform
     {
+        [DllImport("user32.dll")]
+        static extern bool SetCursorPos(int X, int Y);
+
         /// <summary>
         /// Initializes a new instance of <see cref="WindowBinderDesktop"/> class.
         /// </summary>
         /// <param name="nativeWindow">A reference to <see cref="Control"/> class.</param>
         public MousePlatformDesktop(object nativeWindow) : base(nativeWindow) { }
+
+        /// <inheritdoc />
+        internal override void SetLocation(DrawingPoint point)
+        {
+            SetCursorPos(point.X, point.Y);
+        }
 
         /// <summary>
         /// Binds to specific events of the provided CoreWindow
