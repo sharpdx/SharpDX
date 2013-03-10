@@ -478,9 +478,13 @@ namespace SharpDX.Toolkit
                 {
                     if (GraphicsDevice.Presenter != null)
                     {
-                        // Make sure that the Presenter is reverted to window before shuting down
+						
+                        // Invalid for WinRT - throwing a "Value does not fall within the expected range" Exception
+#if !WIN8METRO
+                        // Make sure that the Presenter is reverted to window before shutting down
                         // otherwise the Direct3D11.Device will generate an exception on Dispose()
-                        GraphicsDevice.Presenter.IsFullScreen = false;
+                        GraphicsDevice.Presenter.IsFullScreen = false;			
+#endif
                         GraphicsDevice.Presenter.Dispose();
                         GraphicsDevice.Presenter = null;
                     }
