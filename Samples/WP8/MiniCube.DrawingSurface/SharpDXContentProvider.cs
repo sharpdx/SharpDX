@@ -62,7 +62,7 @@ namespace MiniTriApp
         {
             _controller.Disconnect();
             _host = null;
-            _synchronizedTexture = null;
+            SharpDX.Utilities.Dispose(ref _synchronizedTexture);
         }
 
         public override void PrepareResources(DateTime presentTargetTime, out SharpDX.Bool isContentDirty)
