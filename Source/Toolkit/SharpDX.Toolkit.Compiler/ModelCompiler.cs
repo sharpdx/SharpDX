@@ -141,7 +141,7 @@ namespace SharpDX.Toolkit.Graphics
             CollectMeshNodes(scene.RootNode);
             
             // Collect nodes
-            CollectNodes(scene.RootNode, new ModelData.Bone());
+            CollectNodes(scene.RootNode, null);
 
             // Process materials
             ProcessMaterials();
@@ -348,12 +348,12 @@ namespace SharpDX.Toolkit.Graphics
                             {
                                 Index = model.Bones.Count,
                                 Name = node.Name,
-                                ParentIndex = targetParent.Index,
+                                ParentIndex = targetParent == null ? -1 : targetParent.Index,
                                 Transform = ConvertMatrix(node.Transform),
                                 Children = new List<int>()
                             };
 
-            if (targetParent.Children != null)
+            if (targetParent!= null && targetParent.Children != null)
             {
                 targetParent.Children.Add(parent.Index);
             }
@@ -533,6 +533,12 @@ namespace SharpDX.Toolkit.Graphics
             vertexBuffer.Count = assimpMesh.VertexCount;
             vertexBuffer.Buffer = new byte[vertexBufferElementSize * assimpMesh.VertexCount];
 
+            // Update the MaximumBufferSizeInBytes needed to load this model
+            if (vertexBuffer.Buffer.Length > model.MaximumBufferSizeInBytes)
+            {
+                model.MaximumBufferSizeInBytes = vertexBuffer.Buffer.Length;
+            }
+
             var vertexStream = DataStream.Create(vertexBuffer.Buffer, true, true);
             for (int i = 0; i < assimpMesh.VertexCount; i++)
             {
@@ -612,6 +618,12 @@ namespace SharpDX.Toolkit.Graphics
                 indexBuffer.Buffer = new byte[indices.Length * 4];
                 using (var indexStream = DataStream.Create(indexBuffer.Buffer, true, true))
                     indexStream.WriteRange(indices);
+            }
+
+            // Update the MaximumBufferSizeInBytes needed to load this model
+            if (indexBuffer.Buffer.Length > model.MaximumBufferSizeInBytes)
+            {
+                model.MaximumBufferSizeInBytes = indexBuffer.Buffer.Length;
             }
 
             return meshPart;

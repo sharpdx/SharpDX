@@ -29,7 +29,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Class Bone
         /// </summary>
-        public struct Bone : IDataSerializable
+        public class Bone : IDataSerializable
         {
             public int Index;
 

@@ -165,6 +165,13 @@ namespace SharpDX.Serialization
             // Register all default dynamics.
             foreach (var defaultDynamic in DefaultDynamics)
                 RegisterDynamic(defaultDynamic);
+
+            RegisterDynamic<Color4>();
+            RegisterDynamic<Color3>();
+            RegisterDynamic<Color>();
+            RegisterDynamic<Vector4>();
+            RegisterDynamic<Vector3>();
+            RegisterDynamic<Vector2>();
         }
 
         /// <summary>

@@ -51,6 +51,7 @@ namespace SharpDX.Toolkit.Graphics
 
             GraphicsDevice = graphicsDevice;
             TextureLoaderDelegate = textureLoader;
+            ArrayLengthType = ArrayLengthType.Int;
             Model = CreateModel();
         }
 
@@ -170,22 +171,22 @@ namespace SharpDX.Toolkit.Graphics
 
             // Material section
             BeginChunk("MATL");
-            model.Materials = ReadMaterials();
+            ReadMaterials(ref model.Materials);
             EndChunk();
 
             // Bones section
             BeginChunk("BONE");
-            model.Bones = ReadBones();
+            ReadBones(ref model.Bones);
             EndChunk();
 
             // Skinned Bones section
             BeginChunk("SKIN");
-            model.SkinnedBones = ReadBones();
+            ReadBones(ref model.SkinnedBones);
             EndChunk();
 
             // Mesh section
             BeginChunk("MESH");
-            model.Meshes = ReadMeshes();
+            ReadMeshes(ref model.Meshes);
             EndChunk();
 
             // Serialize attributes
@@ -195,10 +196,10 @@ namespace SharpDX.Toolkit.Graphics
             EndChunk();
         }
 
-        protected virtual ModelBoneCollection ReadBones()
+        protected virtual void ReadBones(ref ModelBoneCollection  bones)
         {
             // Read all bones
-            var bones = ReadList(CreateModelBoneCollection, CreateModelBone, ReadBone);
+            ReadList(ref bones, CreateModelBoneCollection, CreateModelBone, ReadBone);
 
             // Fix all children bones
             int count = bones.Count;
@@ -227,39 +228,36 @@ namespace SharpDX.Toolkit.Graphics
                 }
                 children.ChildIndices = null;
             }
-
-            return bones;
         }
 
-        protected virtual MaterialCollection ReadMaterials()
+        protected virtual void ReadMaterials(ref MaterialCollection materials)
         {
-            return ReadList(CreateModelMaterialCollection, CreateModelMaterial, ReadMaterial);
+            ReadList(ref materials, CreateModelMaterialCollection, CreateModelMaterial, ReadMaterial);
         }
 
-        protected virtual ModelMeshCollection ReadMeshes()
+        protected virtual void ReadMeshes(ref ModelMeshCollection meshes)
         {
-            return ReadList(CreateModelMeshCollection, CreateModelMesh, ReadMesh);
+            ReadList(ref meshes, CreateModelMeshCollection, CreateModelMesh, ReadMesh);
         }
 
-        protected virtual VertexBufferBindingCollection ReadVertexBuffers()
+        protected virtual void ReadVertexBuffers(ref VertexBufferBindingCollection vertices)
         {
-            return ReadList(CreateVertexBufferBindingCollection, CreateVertexBufferBinding, ReadVertexBuffer);
+            ReadList(ref vertices, CreateVertexBufferBindingCollection, CreateVertexBufferBinding, ReadVertexBuffer);
         }
 
-        protected virtual ModelMeshPartCollection ReadMeshParts()
+        protected virtual void ReadMeshParts(ref ModelMeshPartCollection meshParts)
         {
-            return ReadList(CreateModelMeshPartCollection, CreateModelMeshPart, ReadMeshPart);
+            ReadList(ref meshParts, CreateModelMeshPartCollection, CreateModelMeshPart, ReadMeshPart);
         }
 
-        protected virtual BufferCollection ReadIndexBuffers()
+        protected virtual void ReadIndexBuffers(ref BufferCollection list)
         {
             int count = Reader.ReadInt32();
-            var list = CreateBufferCollection(count);
+            list = CreateBufferCollection(count);
             for (int i = 0; i < count; i++)
             {
                 list.Add(ReadIndexBuffer());
             }
-            return list;
         }
 
         protected virtual void ReadMaterial(ref Material material)
@@ -376,15 +374,17 @@ namespace SharpDX.Toolkit.Graphics
 
         protected virtual void ReadMesh(ref ModelMesh mesh)
         {
+            CurrentMesh = mesh;
             Serialize(ref mesh.name, false, SerializeFlags.Nullable);
             int parentBoneIndex = Reader.ReadInt32();
             if (parentBoneIndex >= 0) mesh.ParentBone = Model.Bones[parentBoneIndex];
 
-            mesh.VertexBuffers = ReadVertexBuffers();
-            mesh.IndexBuffers = ReadIndexBuffers();
-            mesh.MeshParts = ReadMeshParts();
+            ReadVertexBuffers(ref mesh.VertexBuffers);
+            ReadIndexBuffers(ref mesh.IndexBuffers);
+            ReadMeshParts(ref mesh.MeshParts);
 
             Serialize(ref mesh.Attributes);
+            CurrentMesh = null;
         }
 
         protected virtual void ReadMeshPart(ref ModelMeshPart meshPart)
@@ -441,10 +441,10 @@ namespace SharpDX.Toolkit.Graphics
 
         protected delegate void ReadItemDelegate<T>(ref T item);
 
-        protected virtual TLIST ReadList<TLIST, TITEM>(CreateListDelegate<TLIST, TITEM> listCreate, CreateItemDelegate<TITEM> itemCreate, ReadItemDelegate<TITEM> itemReader) where TLIST : List<TITEM>
+        protected virtual TLIST ReadList<TLIST, TITEM>(ref TLIST list, CreateListDelegate<TLIST, TITEM> listCreate, CreateItemDelegate<TITEM> itemCreate, ReadItemDelegate<TITEM> itemReader) where TLIST : List<TITEM>
         {
             int count = Reader.ReadInt32();
-            var list = listCreate(count);
+            list = listCreate(count);
             for (int i = 0; i < count; i++)
             {
                 var item = itemCreate();

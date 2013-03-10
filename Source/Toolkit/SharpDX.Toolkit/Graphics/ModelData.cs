@@ -144,12 +144,7 @@ namespace SharpDX.Toolkit.Graphics
         private static BinarySerializer GetSerializer(Stream stream, SerializerMode mode)
         {
             var serializer = new BinarySerializer(stream, mode, Text.Encoding.ASCII);
-            serializer.RegisterDynamic<Color4>();
-            serializer.RegisterDynamic<Color3>();
-            serializer.RegisterDynamic<Color>();
-            serializer.RegisterDynamic<Vector4>();
-            serializer.RegisterDynamic<Vector3>();
-            serializer.RegisterDynamic<Vector2>();
+            serializer.ArrayLengthType = ArrayLengthType.Int;
             return serializer;
         }
 
