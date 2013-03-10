@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,48 +18,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 
 using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public sealed partial class ModelData
+    public class ModelBoneCollection : List<ModelBone>
     {
         /// <summary>
-        /// Class Bone
+        /// Initializes a new instance of the <see cref="ModelBoneCollection"/> class.
         /// </summary>
-        public struct Bone : IDataSerializable
+        public ModelBoneCollection()
         {
-            public int Index;
-
-            /// <summary>
-            /// Gets parent node index.
-            /// </summary>
-            public int ParentIndex;
-
-            /// <summary>
-            /// The transform this node relative to its parent node.
-            /// </summary>
-            public Matrix Transform;
-
-            /// <summary>
-            /// The name of this node.
-            /// </summary>
-            public string Name;
-
-            /// <summary>
-            /// The children node indices.
-            /// </summary>
-            public List<int> Children;
-
-            void IDataSerializable.Serialize(BinarySerializer serializer)
-            {
-                serializer.Serialize(ref ParentIndex);
-                serializer.Serialize(ref Transform);
-                serializer.Serialize(ref Name, false, SerializeFlags.Nullable);
-                serializer.Serialize(ref Children, serializer.Serialize, SerializeFlags.Nullable);
-            }
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Collections.Generic.List`1" /> class that is empty and has the specified initial capacity.
+        /// </summary>
+        /// <param name="capacity">The number of elements that the new list can initially store.</param>
+        public ModelBoneCollection(int capacity)
+            : base(capacity)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ModelBoneCollection"/> class.
+        /// </summary>
+        /// <param name="collection">The collection.</param>
+        public ModelBoneCollection(IEnumerable<ModelBone> collection)
+            : base(collection)
+        {
+        }
+
+        internal List<int> ChildIndices;
     }
 }

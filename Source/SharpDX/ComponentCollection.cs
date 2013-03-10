@@ -21,7 +21,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace SharpDX.Toolkit.Graphics
+namespace SharpDX
 {
     /// <summary>
     /// A generic collection for effect framework.
@@ -29,16 +29,16 @@ namespace SharpDX.Toolkit.Graphics
     /// <typeparam name="T">Type of the collection</typeparam>
     public abstract class ComponentCollection<T> : IEnumerable<T> where T : ComponentBase
     {
-        internal readonly List<T> Items;
+        internal protected readonly List<T> Items;
         private readonly Dictionary<string, T> mapItems;
 
-        internal ComponentCollection()
+        protected ComponentCollection()
         {
             Items = new List<T>();
             mapItems = new Dictionary<string, T>();
         }
 
-        internal ComponentCollection(int capacity)
+        protected ComponentCollection(int capacity)
         {
             Items = new List<T>(capacity);
             mapItems = new Dictionary<string, T>(capacity);
@@ -48,30 +48,29 @@ namespace SharpDX.Toolkit.Graphics
         /// Adds the specified item.
         /// </summary>
         /// <param name="item">The item.</param>
-        internal T Add(T item)
+        internal protected T Add(T item)
         {
             Items.Add(item);
             mapItems.Add(item.Name, item);
             return item;
         }
 
-        /// <summary>
-        /// Adds the specified item with a prefix name (used for techniques inside pool).
-        /// Name will be added to collection with "PrefixName|ItemName" unless prefixname is empty ("ItemName").
-        /// </summary>
-        /// <param name="prefixName">The name.</param>
-        /// <param name="item">The item.</param>
-        internal void Add(string prefixName, T item)
-        {
-            Items.Add(item);
-            string name = item.Name;
-            mapItems.Add(string.IsNullOrEmpty(prefixName) ? name : prefixName + "|" + name, item);
-        }
-
-        internal void Clear()
+        internal protected void Clear()
         {
             Items.Clear();
             mapItems.Clear();
+        }
+
+        protected int Capacity
+        {
+            get
+            {
+                return Items.Capacity;
+            }
+            set
+            {
+                Items.Capacity = value;
+            }
         }
 
         /// <summary>

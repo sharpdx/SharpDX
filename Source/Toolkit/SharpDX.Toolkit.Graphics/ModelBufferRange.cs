@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,24 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Collections.Generic;
-
-using SharpDX.Direct3D11;
-using SharpDX.Serialization;
-
 namespace SharpDX.Toolkit.Graphics
 {
-    public partial class ModelData
+    public struct ModelBufferRange<T>
     {
-        /// <summary>
-        /// A Stack of texture
-        /// </summary>
-        public sealed class MaterialTextureStack : List<MaterialTexture>, IDataSerializable
-        {
-            public void Serialize(BinarySerializer serializer)
-            {
-                serializer.SerializeThis(this);
-            }
-        }
+        public T Resource;
+
+        public int Start;
+
+        public int Count;
     }
 }

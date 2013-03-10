@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,42 +24,20 @@ using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public sealed partial class ModelData
+    public class ModelMeshCollection : List<ModelMesh>
     {
-        /// <summary>
-        /// Class Bone
-        /// </summary>
-        public struct Bone : IDataSerializable
+        public ModelMeshCollection()
         {
-            public int Index;
+        }
 
-            /// <summary>
-            /// Gets parent node index.
-            /// </summary>
-            public int ParentIndex;
+        public ModelMeshCollection(int capacity)
+            : base(capacity)
+        {
+        }
 
-            /// <summary>
-            /// The transform this node relative to its parent node.
-            /// </summary>
-            public Matrix Transform;
-
-            /// <summary>
-            /// The name of this node.
-            /// </summary>
-            public string Name;
-
-            /// <summary>
-            /// The children node indices.
-            /// </summary>
-            public List<int> Children;
-
-            void IDataSerializable.Serialize(BinarySerializer serializer)
-            {
-                serializer.Serialize(ref ParentIndex);
-                serializer.Serialize(ref Transform);
-                serializer.Serialize(ref Name, false, SerializeFlags.Nullable);
-                serializer.Serialize(ref Children, serializer.Serialize, SerializeFlags.Nullable);
-            }
+        public ModelMeshCollection(IEnumerable<ModelMesh> collection)
+            : base(collection)
+        {
         }
     }
 }

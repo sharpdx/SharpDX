@@ -31,39 +31,44 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     public sealed partial class ModelData : IDataSerializable
     {
-        private const string MagicCode = "TKMD";
+        public const string MagicCode = "TKMD";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ModelData" /> class.
         /// </summary>
         public ModelData()
         {
-            Bones = new List<Node>();
-            SkinnedBones = new List<Node>();
-            Meshes = new List<Mesh>();
             Materials = new List<Material>();
+            Bones = new List<Bone>();
+            SkinnedBones = new List<Bone>();
+            Meshes = new List<Mesh>();
             Attributes = new List<AttributeData>();
         }
 
         /// <summary>
-        /// Gets the bones of this model.
+        /// Gest the maximum buffer size in bytes that will be needed when loading this model.
         /// </summary>
-        public List<Node> Bones;
-
-        /// <summary>
-        /// Gets the bones used to perform skinning animation with this model.
-        /// </summary>
-        public List<Node> SkinnedBones;
-
-        /// <summary>
-        /// Gets the mesh of this model.
-        /// </summary>
-        public List<Mesh> Meshes;
+        public int MaximumBufferSizeInBytes;
 
         /// <summary>
         /// Gets the material of this model.
         /// </summary>
         public List<Material> Materials;
+
+        /// <summary>
+        /// Gets the bones of this model.
+        /// </summary>
+        public List<Bone> Bones;
+
+        /// <summary>
+        /// Gets the bones used to perform skinning animation with this model.
+        /// </summary>
+        public List<Bone> SkinnedBones;
+
+        /// <summary>
+        /// Gets the mesh of this model.
+        /// </summary>
+        public List<Mesh> Meshes;
 
         /// <summary>
         /// Gets the attributes attached to this instance.
@@ -154,7 +159,18 @@ namespace SharpDX.Toolkit.Graphics
             // Starts the whole ModelData by the magiccode "TKMD"
             // If the serializer don't find the TKMD, It will throw an
             // exception that will be catched by Load method.
+
+            // This code should not be modified without modifying the serialize code in Model.
+
             serializer.BeginChunk(MagicCode);
+
+            // Serialize the maximum buffer size used when loading this model.
+            serializer.Serialize(ref MaximumBufferSizeInBytes);
+
+            // Material section
+            serializer.BeginChunk("MATL");
+            serializer.Serialize(ref Materials);
+            serializer.EndChunk();
 
             // Bones section
             serializer.BeginChunk("BONE");
@@ -171,15 +187,10 @@ namespace SharpDX.Toolkit.Graphics
             serializer.Serialize(ref Meshes);
             serializer.EndChunk();
 
-            // Material section
-            serializer.BeginChunk("MATE");
-            serializer.Serialize(ref Materials);
-            serializer.EndChunk();
-
             // Serialize attributes
             serializer.Serialize(ref Attributes);
 
-            // Close TKFX section
+            // Close TKMD section
             serializer.EndChunk();
         }
     }

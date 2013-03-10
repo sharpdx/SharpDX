@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,49 +18,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Runtime.InteropServices;
-
-using SharpDX.Serialization;
+using System.Collections.Generic;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    /// <summary>
-    /// An attribute defined for a <see cref="EffectData.Pass"/> or <see cref="Model"/>.
-    /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
-    public struct AttributeData : IDataSerializable
+    public class VertexBufferBindingCollection : List<VertexBufferBinding>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AttributeData"/> class.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="value">The value.</param>
-        public AttributeData(string name, object value)
+        public VertexBufferBindingCollection()
         {
-            Name = name;
-            Value = value;
         }
 
-        /// <summary>
-        /// The name.
-        /// </summary>
-        public string Name;
-
-        /// <summary>
-        /// Value of this attribute.
-        /// </summary>
-        public object Value;
-
-        public override string ToString()
+        public VertexBufferBindingCollection(int capacity)
+            : base(capacity)
         {
-            return string.Format("{0} = {1}", Name, Value);
         }
 
-        /// <inheritdoc/>
-        public void Serialize(BinarySerializer serializer)
+        public VertexBufferBindingCollection(IEnumerable<VertexBufferBinding> collection)
+            : base(collection)
         {
-            serializer.Serialize(ref Name);
-            serializer.SerializeDynamic(ref Value, SerializeFlags.Nullable);
         }
     }
 }

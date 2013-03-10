@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,40 +18,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Collections.Generic;
-
-using SharpDX.Serialization;
+using System;
+using System.IO;
 
 namespace SharpDX.Toolkit.Graphics
 {
+    public delegate Texture ModelMaterialTextureLoaderDelegate(string name);
 
-    public partial class ModelData
+    public class Model : Component
     {
-        /// <summary>
-        /// Class Mesh
-        /// </summary>
-        public sealed class Material : IDataSerializable
+        public MaterialCollection Materials;
+
+        public ModelBoneCollection Bones;
+
+        public ModelBoneCollection SkinnedBones;
+
+        public ModelMeshCollection Meshes;
+
+        public AttributeCollection Attributes;
+
+        public virtual Model Clone()
         {
-            public Material()
+            var model = (Model)MemberwiseClone();
+            throw new NotImplementedException();
+        }
+
+        public static Model Load(GraphicsDevice graphicsDevice, Stream stream, ModelMaterialTextureLoaderDelegate textureLoader)
+        {
+            using (var serializer = new ModelReader(graphicsDevice, stream, textureLoader))
             {
-                Textures = new List<MaterialTexture>();
-                Properties = new MaterialPropertyCollection();
-            }
-
-            /// <summary>
-            /// The textures
-            /// </summary>
-            public List<MaterialTexture> Textures;
-
-            /// <summary>
-            /// Gets attributes attached to this material.
-            /// </summary>
-            public MaterialPropertyCollection Properties;
-
-            void IDataSerializable.Serialize(BinarySerializer serializer)
-            {
-                serializer.Serialize(ref Textures);
-                serializer.Serialize(ref Properties);
+                return serializer.ReadModel();
             }
         }
     }

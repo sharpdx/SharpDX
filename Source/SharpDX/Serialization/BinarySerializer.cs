@@ -50,7 +50,7 @@ namespace SharpDX.Serialization
     /// 
     /// </ul>
     /// </remarks>
-    public class BinarySerializer
+    public class BinarySerializer : Component
     {
         private int chunkCount;
         private Chunk[] chunks;
@@ -91,6 +91,26 @@ namespace SharpDX.Serialization
         /// Reader used to directly read from the underlying stream.
         /// </summary>
         public BinaryReader Reader { get; private set; }
+
+        /// <summary>
+        /// Gets the reader and throws an exception if this serializer is in Write mode.
+        /// </summary>
+        /// <param name="context">The context object that requires a Reader.</param>
+        /// <returns>A BinaryReader.</returns>
+        /// <exception cref="System.ArgumentNullException">context</exception>
+        /// <exception cref="System.InvalidOperationException">If this reader is not in read mode</exception>
+        public BinaryReader ReaderOnly(object context)
+        {
+            if (context == null)
+            {
+                throw new ArgumentNullException("context");
+            }
+            if (Mode != SerializerMode.Read)
+            {
+                throw new InvalidOperationException(string.Format("[{0}] is only expecting Read-Only BinarySerializer", context.GetType().Name));
+            }
+            return Reader;
+        }
 
         /// <summary>
         /// Writer used to directly write to the underlying stream.
@@ -889,7 +909,7 @@ namespace SharpDX.Serialization
             else
             {
                 var count = ReadArrayLength();
-                valueList = new List<T>(count);
+                EnsureList(ref valueList, count);
                 for (int i = 0; i < count; i++)
                 {
                     var localValue = default(T);
@@ -930,7 +950,7 @@ namespace SharpDX.Serialization
             }
             else
             {
-                valueList = new List<T>(count);
+                EnsureList(ref valueList, count);
                 for (int index = 0; index < count; index++)
                 {
                     var value = default(T);
@@ -972,7 +992,7 @@ namespace SharpDX.Serialization
             }
             else
             {
-                valueList = new List<T>(count);
+                EnsureList(ref valueList, count);
                 for (int i = 0; i < count; i++)
                 {
                     var localValue = default(T);
@@ -983,6 +1003,23 @@ namespace SharpDX.Serialization
 
             // Store ObjectRef
             if (storeObjectRef >= 0) StoreObjectRef(valueList, storeObjectRef);
+        }
+
+        private void EnsureList<T>(ref List<T> valueList, int count)
+        {
+            // If there is a list provided, use it inplace instead of allocating a new one
+            if (valueList != null)
+            {
+                valueList.Clear();
+                if (valueList.Capacity < count)
+                {
+                    valueList.Capacity = count;
+                }
+            }
+            else
+            {
+                valueList = new List<T>(count);
+            }
         }
 
         /// <summary>
@@ -1402,14 +1439,6 @@ namespace SharpDX.Serialization
         /// </remarks>
         public unsafe void SerializeMemoryRegion(IntPtr dataPointer, int sizeInBytes)
         {
-            const int internalBufferSize = 32768;
-
-            if (largeByteBuffer == null)
-                largeByteBuffer = new byte[internalBufferSize];
-
-            if (largeByteBuffer.Length < internalBufferSize)
-                largeByteBuffer = new byte[internalBufferSize];
-
             // Provides optimized path for special streams
             var fileStream = Stream as NativeFileStream;
             if (fileStream != null)
@@ -1436,6 +1465,14 @@ namespace SharpDX.Serialization
             }
             else
             {
+                const int internalBufferSize = 32768;
+
+                if (largeByteBuffer == null)
+                    largeByteBuffer = new byte[internalBufferSize];
+
+                if (largeByteBuffer.Length < internalBufferSize)
+                    largeByteBuffer = new byte[internalBufferSize];
+
                 if (Mode == SerializerMode.Write)
                 {
                     var remainingSize = sizeInBytes;
@@ -2722,6 +2759,10 @@ namespace SharpDX.Serialization
             {
                 DynamicSerializer(ref value, serializer);
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
         }
     }
 }

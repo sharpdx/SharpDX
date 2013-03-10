@@ -51,6 +51,11 @@ namespace SharpDX.Toolkit.Graphics
             return TryGetValue(key, out value) ? Utilities.IsEnum(typeof(T)) ? (T)Enum.ToObject(typeof(T), (int)value) : (T)value : default(T);
         }
 
+        public virtual MaterialPropertyCollection Clone()
+        {
+            return (MaterialPropertyCollection)MemberwiseClone();
+        }
+
         void IDataSerializable.Serialize(BinarySerializer serializer)
         {
             if (serializer.Mode == SerializerMode.Write)

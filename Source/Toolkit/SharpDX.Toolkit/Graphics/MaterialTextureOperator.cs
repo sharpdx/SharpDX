@@ -66,7 +66,7 @@ namespace SharpDX.Toolkit.Graphics
     /// <summary>
     /// Defines how the Nth texture of a specific type is combined with the result of all previous layers.
     /// </summary>
-    public enum MaterialTextureOperator
+    public enum MaterialTextureOperator : byte
     {
         /// <summary>
         /// T = T1 * T2 

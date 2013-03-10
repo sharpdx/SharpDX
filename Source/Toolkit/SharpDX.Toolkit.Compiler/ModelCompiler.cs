@@ -141,7 +141,7 @@ namespace SharpDX.Toolkit.Graphics
             CollectMeshNodes(scene.RootNode);
             
             // Collect nodes
-            CollectNodes(scene.RootNode, new ModelData.Node());
+            CollectNodes(scene.RootNode, new ModelData.Bone());
 
             // Process materials
             ProcessMaterials();
@@ -335,7 +335,7 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
         
-        private void CollectNodes(Node node, ModelData.Node targetParent)
+        private void CollectNodes(Node node, ModelData.Bone targetParent)
         {
             bool isModelNode = IsModelNode(node);
 
@@ -344,7 +344,7 @@ namespace SharpDX.Toolkit.Graphics
                 return;
             }
 
-            var parent = new ModelData.Node
+            var parent = new ModelData.Bone
                             {
                                 Index = model.Bones.Count,
                                 Name = node.Name,
@@ -368,7 +368,6 @@ namespace SharpDX.Toolkit.Graphics
                 var mesh = new ModelData.Mesh
                                {
                                    Name = parent.Name, 
-                                   Index = model.Meshes.Count,
                                    ParentBoneIndex = parent.Index, 
                                    MeshParts = new List<ModelData.MeshPart>()
                                };
@@ -376,7 +375,7 @@ namespace SharpDX.Toolkit.Graphics
                 for (int i = 0; i < node.MeshCount; i++)
                 {
                     var meshIndex = node.MeshIndices[i];
-                    var meshPart = Process(scene.Meshes[meshIndex]);
+                    var meshPart = Process(mesh, scene.Meshes[meshIndex]);
 
                     var meshToPartList = registeredMeshParts[meshIndex];
                     if (meshToPartList == null)
@@ -400,19 +399,25 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        private ModelData.MeshPart Process(Assimp.Mesh assimpMesh)
+        private ModelData.MeshPart Process(ModelData.Mesh mesh, Assimp.Mesh assimpMesh)
         {
             var meshPart = new ModelData.MeshPart()
                                {
                                    MaterialIndex = assimpMesh.MaterialIndex,
-                                   VertexBuffer = new ModelData.VertexBuffer()
-                                                      {
-                                                          Layout = new List<VertexElement>()
-                                                      },
-                                   IndexBuffer = new ModelData.IndexBuffer()
+                                   VertexBufferRange = new ModelData.BufferRange() { Slot = mesh.VertexBuffers.Count },
+                                   IndexBufferRange = new ModelData.BufferRange() { Slot = mesh.IndexBuffers.Count }
                                };
 
-            var layout = meshPart.VertexBuffer.Layout;
+            var vertexBuffer = new ModelData.VertexBuffer()
+            {
+                Layout = new List<VertexElement>()
+            };
+            mesh.VertexBuffers.Add(vertexBuffer);
+
+            var indexBuffer = new ModelData.IndexBuffer();
+            mesh.IndexBuffers.Add(indexBuffer);
+
+            var layout = vertexBuffer.Layout;
 
             int vertexBufferElementSize = 0;
 
@@ -524,10 +529,11 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             // Write all vertices
-            meshPart.VertexCount = assimpMesh.VertexCount;
-            meshPart.VertexBuffer.Count = assimpMesh.VertexCount;
-            meshPart.VertexBuffer.Buffer = new byte[vertexBufferElementSize * assimpMesh.VertexCount];
-            var vertexStream = DataStream.Create(meshPart.VertexBuffer.Buffer, true, true);
+            meshPart.VertexBufferRange.Count = assimpMesh.VertexCount;
+            vertexBuffer.Count = assimpMesh.VertexCount;
+            vertexBuffer.Buffer = new byte[vertexBufferElementSize * assimpMesh.VertexCount];
+
+            var vertexStream = DataStream.Create(vertexBuffer.Buffer, true, true);
             for (int i = 0; i < assimpMesh.VertexCount; i++)
             {
                 vertexStream.Write(assimpMesh.Vertices[i]);
@@ -591,20 +597,20 @@ namespace SharpDX.Toolkit.Graphics
 
             // Write all indices
             var indices = assimpMesh.GetIntIndices();
-            meshPart.IndexCount = indices.Length;
-            meshPart.IndexBuffer.Count = indices.Length;
-            if (meshPart.VertexCount < 65536)
+            indexBuffer.Count = indices.Length;
+            meshPart.IndexBufferRange.Count = indices.Length;
+            if (meshPart.VertexBufferRange.Count < 65536)
             {
                 // Write only short indices if count is less than the size of a short
-                meshPart.IndexBuffer.Buffer = new byte[indices.Length * 2];
-                using (var indexStream = DataStream.Create(meshPart.IndexBuffer.Buffer, true, true))
+                indexBuffer.Buffer = new byte[indices.Length * 2];
+                using (var indexStream = DataStream.Create(indexBuffer.Buffer, true, true))
                     foreach (int index in indices) indexStream.Write((ushort)index);
             }
             else
             {
                 // Otherwise, use full 32-bit precision to store indices
-                meshPart.IndexBuffer.Buffer = new byte[indices.Length * 4];
-                using (var indexStream = DataStream.Create(meshPart.IndexBuffer.Buffer, true, true))
+                indexBuffer.Buffer = new byte[indices.Length * 4];
+                using (var indexStream = DataStream.Create(indexBuffer.Buffer, true, true))
                     indexStream.WriteRange(indices);
             }
 

@@ -78,7 +78,7 @@ namespace SharpDX.Toolkit.Graphics
     /// This corresponds to the #AI_MATKEY_TEXFLAGS property.
     /// </remarks>
     [Flags]
-    public enum MaterialTextureFlags
+    public enum MaterialTextureFlags : byte
     {
         /// <summary>
         /// No flags.

@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 using SharpDX.Serialization;
 
@@ -33,7 +34,7 @@ namespace SharpDX.Toolkit.Graphics
             /// </summary>
             public MeshPart()
             {
-                Attributes = new AttributeCollection();
+                Attributes = new List<AttributeData>();
             }
 
             /// <summary>
@@ -42,34 +43,14 @@ namespace SharpDX.Toolkit.Graphics
             public int MaterialIndex;
 
             /// <summary>
-            /// Gets the number of indices. Can be 0.
+            /// The index buffer range. The slot in the buffer range is the position of the index buffer in <see cref="ModelData.IndexBuffers"/>.
             /// </summary>
-            public int IndexCount;
+            public BufferRange IndexBufferRange;
 
             /// <summary>
-            /// The index buffer. This value can be null.
+            /// The vertex buffer range. The slot in the buffer range is the position of the vertex buffer in <see cref="ModelData.VertexBuffers"/>.
             /// </summary>
-            public IndexBuffer IndexBuffer;
-
-            /// <summary>
-            /// The location in the index array at which to start reading vertices.
-            /// </summary>
-            public int StartIndex;
-
-            /// <summary>
-            /// The number of vertices used during a draw call.
-            /// </summary>
-            public int VertexCount;
-
-            /// <summary>
-            /// The layout of the vertex buffer.
-            /// </summary>
-            public VertexBuffer VertexBuffer;
-
-            /// <summary>
-            /// Gets the offset (in vertices) from the top of vertex buffer.
-            /// </summary>
-            public int VertexOffset;
+            public BufferRange VertexBufferRange;
 
             /// <summary>
             /// Gets the offset matrix attached to each bone weights
@@ -79,30 +60,42 @@ namespace SharpDX.Toolkit.Graphics
             /// <summary>
             /// The attributes attached to this mesh part.
             /// </summary>
-            public AttributeCollection Attributes;
+            public List<AttributeData> Attributes;
+
+            void IDataSerializable.Serialize(BinarySerializer serializer)
+            {
+                serializer.Serialize(ref MaterialIndex);
+                serializer.Serialize(ref IndexBufferRange);
+                serializer.Serialize(ref VertexBufferRange);
+                serializer.Serialize(ref Attributes);
+            }
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct BufferRange : IDataSerializable
+        {
+            public int Slot;
+
+            public int Start;
+
+            public int Count;
 
             public void Serialize(BinarySerializer serializer)
             {
-                serializer.Serialize(ref MaterialIndex);
-                serializer.Serialize(ref IndexCount);
-                
-                // IndexBuffer is stored as a unique object inside a whole model
-                serializer.AllowIdentity = true;
-                serializer.Serialize(ref IndexBuffer, SerializeFlags.Nullable);
-                serializer.AllowIdentity = false;
-
-                serializer.Serialize(ref StartIndex);
-
-                serializer.Serialize(ref VertexCount);
-
-                // VertexBuffer is stored as a unique object inside a whole model
-                serializer.AllowIdentity = true;
-                serializer.Serialize(ref VertexBuffer);
-                serializer.AllowIdentity = false;
-                
-                serializer.Serialize(ref VertexOffset);
-                
-                serializer.Serialize(ref Attributes);
+                if (serializer.Mode == SerializerMode.Read)
+                {
+                    var reader = serializer.Reader;
+                    Slot = reader.ReadInt32();
+                    Start = reader.ReadInt32();
+                    Count = reader.ReadInt32();
+                }
+                else
+                {
+                    var writer = serializer.Writer;
+                    writer.Write(Slot);
+                    writer.Write(Start);
+                    writer.Write(Count);
+                }
             }
         }
     }

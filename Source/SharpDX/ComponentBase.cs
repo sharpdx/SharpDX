@@ -30,7 +30,7 @@ namespace SharpDX
         /// Occurs while this component is disposing and before it is disposed.
         /// </summary>
         //internal event EventHandler<EventArgs> Disposing;
-        private string name;
+        internal protected string name;
 
         /// <summary>
         /// Gets or sets a value indicating whether the name of this instance is immutable.

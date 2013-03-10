@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,49 +18,62 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Runtime.InteropServices;
-
-using SharpDX.Serialization;
+using SharpDX.Direct3D11;
 
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    /// An attribute defined for a <see cref="EffectData.Pass"/> or <see cref="Model"/>.
+    /// Describes a texture used by a material.
     /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
-    public struct AttributeData : IDataSerializable
+    public class MaterialTexture : ComponentBase
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AttributeData"/> class.
+        /// The Texture associated to this material.
         /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="value">The value.</param>
-        public AttributeData(string name, object value)
-        {
-            Name = name;
-            Value = value;
-        }
+        public Texture Texture;
 
         /// <summary>
-        /// The name.
+        /// The type of this texture.
         /// </summary>
-        public string Name;
+        public MaterialTextureType Type;
 
         /// <summary>
-        /// Value of this attribute.
+        /// The index of this texture.
         /// </summary>
-        public object Value;
+        public int Index;
 
-        public override string ToString()
-        {
-            return string.Format("{0} = {1}", Name, Value);
-        }
+        /// <summary>
+        /// The UV index.
+        /// </summary>
+        public int UVIndex;
 
-        /// <inheritdoc/>
-        public void Serialize(BinarySerializer serializer)
+        /// <summary>
+        /// The blend factor
+        /// </summary>
+        public float BlendFactor;
+
+        /// <summary>
+        /// The texture operation to perform on the stack.
+        /// </summary>
+        public MaterialTextureOperator Operation;
+
+        /// <summary>
+        /// The wrap mode
+        /// </summary>
+        public TextureAddressMode WrapMode;
+
+        /// <summary>
+        /// Texture flags.
+        /// </summary>
+        public MaterialTextureFlags Flags;
+
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns>A new MaterialTexture.</returns>
+        public virtual MaterialTexture Clone()
         {
-            serializer.Serialize(ref Name);
-            serializer.SerializeDynamic(ref Value, SerializeFlags.Nullable);
+            return (MaterialTexture)MemberwiseClone();
         }
     }
 }

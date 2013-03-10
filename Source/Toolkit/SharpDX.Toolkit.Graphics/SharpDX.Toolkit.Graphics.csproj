@@ -22,6 +22,21 @@
     <Compile Include="BlendState.cs" />
     <Compile Include="BlendStateCollection.cs" />
     <Compile Include="ClearOptions.cs" />
+    <Compile Include="MaterialTexture.cs" />
+    <Compile Include="MaterialTextureStack.cs" />
+    <Compile Include="Model.cs" />
+    <Compile Include="ModelBone.cs" />
+    <Compile Include="ModelBoneCollection.cs" />
+    <Compile Include="BufferCollection.cs" />
+    <Compile Include="ModelBufferRange.cs" />
+    <Compile Include="Material.cs" />
+    <Compile Include="MaterialCollection.cs" />
+    <Compile Include="ModelMesh.cs" />
+    <Compile Include="ModelMeshCollection.cs" />
+    <Compile Include="ModelMeshPart.cs" />
+    <Compile Include="ModelMeshPartCollection.cs" />
+    <Compile Include="ModelReader.cs" />
+    <Compile Include="VertexBufferBindingCollection.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="PrimitiveBatch.cs" />
     <Compile Include="PrimitiveBatchBase.cs" />
@@ -63,7 +78,6 @@
     <Compile Include="EffectConstantBufferCollection.cs" />
     <Compile Include="AttributeCollection.cs" />
     <Compile Include="EffectConstantBuffer.cs" />
-    <Compile Include="ComponentCollection.cs" />
     <Compile Include="EffectPool.cs" />
     <Compile Include="EffectParameter.cs" />
     <Compile Include="EffectParameterCollection.cs" />
@@ -128,6 +142,7 @@
     <Compile Include="UnorderedAccessViewSelector.cs" />
     <Compile Include="ShaderResourceViewSelector.cs" />
     <Compile Include="RenderTargetViewSelector.cs" />
+    <Compile Include="VertexBufferBinding.cs" />
     <Compile Include="VertexInputLayout.cs" />
     <Compile Include="VertexPositionTexture.cs" />
     <Compile Include="VertexPositionNormalTexture.cs" />

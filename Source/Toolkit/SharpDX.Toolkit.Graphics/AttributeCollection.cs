@@ -18,19 +18,42 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
+
+using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
     /// A collection of attributes.
     /// </summary>
-    public sealed class AttributeCollection : IEnumerable<KeyValuePair<string, object>>
+    public sealed class AttributeCollection : IEnumerable<AttributeData>, IDataSerializable
     {
-        private readonly Dictionary<string, object> mapNameToValue;
+        private Dictionary<string, object> mapNameToValue;
 
-        internal AttributeCollection(IEnumerable<AttributeData> attributes)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AttributeCollection"/> class.
+        /// </summary>
+        public AttributeCollection()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AttributeCollection"/> class.
+        /// </summary>
+        /// <param name="capacity">The capacity.</param>
+        public AttributeCollection(int capacity)
+        {
+            mapNameToValue = new Dictionary<string, object>(capacity);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AttributeCollection"/> class.
+        /// </summary>
+        /// <param name="attributes">The attributes.</param>
+        public AttributeCollection(IEnumerable<AttributeData> attributes)
         {
             mapNameToValue = new Dictionary<string, object>();
             foreach (var attribute in attributes)
@@ -86,15 +109,76 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <inheritdoc/>
-        public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
+        public IEnumerator<AttributeData> GetEnumerator()
         {
-            return mapNameToValue.GetEnumerator();
+            return new AttributeDataEnumerator(mapNameToValue.GetEnumerator());
         }
 
         /// <inheritdoc/>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        void IDataSerializable.Serialize(BinarySerializer serializer)
+        {
+            var reader = serializer.ReaderOnly(this);
+
+            int count = reader.ReadInt32();
+
+            if (mapNameToValue == null)
+            {
+                mapNameToValue = new Dictionary<string, object>(count);
+            }
+
+            var data = new AttributeData();
+            for (int i = 0; i < count; i++)
+            {
+                data.Serialize(serializer);
+                mapNameToValue.Add(data.Name, data.Value);
+            }
+        }
+
+        private class AttributeDataEnumerator : IEnumerator<AttributeData>
+        {
+            private readonly IEnumerator<KeyValuePair<string, object>> values;
+
+            public AttributeDataEnumerator(IEnumerator<KeyValuePair<string, object>> values)
+            {
+                this.values = values;
+            }
+
+            public void Dispose()
+            {
+                values.Dispose();
+            }
+
+            public bool MoveNext()
+            {
+                return values.MoveNext();
+            }
+
+            public void Reset()
+            {
+                values.Reset();
+            }
+
+            public AttributeData Current
+            {
+                get
+                {
+                    var data = values.Current;
+                    return new AttributeData(data.Key,  data.Value);
+                }
+            }
+
+            object IEnumerator.Current
+            {
+                get
+                {
+                    return Current;
+                }
+            }
         }
     }
 }

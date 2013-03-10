@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,39 +20,36 @@
 
 using System.Collections.Generic;
 
-using SharpDX.Serialization;
-
 namespace SharpDX.Toolkit.Graphics
 {
-    public sealed partial class ModelData
+    /// <summary>
+    /// A collection of <see cref="Material"/>.
+    /// </summary>
+    public class MaterialCollection : List<Material>
     {
         /// <summary>
-        /// Class Mesh
+        /// Initializes a new instance of the <see cref="MaterialCollection"/> class.
         /// </summary>
-        public sealed class AttributeCollection : Dictionary<string, AttributeData>, IDataSerializable
+        public MaterialCollection()
         {
-            public void Serialize(BinarySerializer serializer)
-            {
-                if (serializer.Mode == SerializerMode.Write)
-                {
-                    serializer.Writer.Write(Count);
-                    foreach (var value in Values)
-                    {
-                        var localValue = value;
-                        serializer.Serialize(ref localValue);
-                    }
-                }
-                else
-                {
-                    var count = serializer.Reader.ReadInt32();
-                    for (int i = 0; i < count; i++)
-                    {
-                        AttributeData localValue = null;
-                        serializer.Serialize(ref localValue);
-                        Add(localValue.Name, localValue);
-                    }
-                }
-            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Collections.Generic.List`1" /> class that is empty and has the specified initial capacity.
+        /// </summary>
+        /// <param name="capacity">The number of elements that the new list can initially store.</param>
+        public MaterialCollection(int capacity)
+            : base(capacity)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MaterialCollection"/> class.
+        /// </summary>
+        /// <param name="collection">The collection.</param>
+        public MaterialCollection(IEnumerable<Material> collection)
+            : base(collection)
+        {
         }
     }
 }

@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using System.Collections.Generic;
+using System.ComponentModel;
 
 using SharpDX.Serialization;
 
@@ -36,14 +37,16 @@ namespace SharpDX.Toolkit.Graphics
             /// </summary>
             public Mesh()
             {
+                VertexBuffers = new List<VertexBuffer>();
+                IndexBuffers = new List<IndexBuffer>();
                 MeshParts = new List<MeshPart>();
-                Attributes = new AttributeCollection();
+                Attributes = new List<AttributeData>();
             }
 
             /// <summary>
-            /// Index of this mesh into the mesh collection.
+            /// Gets the name of this mesh.
             /// </summary>
-            public int Index;
+            public string Name;
 
             /// <summary>
             /// Index of the parent bone for this mesh. The parent bone of a mesh contains a transformation matrix that describes how the mesh is located relative to any parent meshes in a model.
@@ -51,9 +54,14 @@ namespace SharpDX.Toolkit.Graphics
             public int ParentBoneIndex;
 
             /// <summary>
-            /// Gets the name of this mesh.
+            /// Gets the shared vertex buffers
             /// </summary>
-            public string Name;
+            public List<VertexBuffer> VertexBuffers;
+
+            /// <summary>
+            /// Gets the shared index buffers
+            /// </summary>
+            public List<IndexBuffer> IndexBuffers;
 
             /// <summary>
             /// Gets the <see cref="MeshPart"/> instances that make up this mesh. Each part of a mesh is composed of a set of primitives that share the same material. 
@@ -63,13 +71,14 @@ namespace SharpDX.Toolkit.Graphics
             /// <summary>
             /// Gets attributes attached to this mesh.
             /// </summary>
-            public AttributeCollection Attributes;
+            public List<AttributeData> Attributes;
 
             public void Serialize(BinarySerializer serializer)
             {
-                serializer.Serialize(ref Index);
-                serializer.Serialize(ref ParentBoneIndex);
                 serializer.Serialize(ref Name, false, SerializeFlags.Nullable);
+                serializer.Serialize(ref ParentBoneIndex);
+                serializer.Serialize(ref VertexBuffers);
+                serializer.Serialize(ref IndexBuffers);
                 serializer.Serialize(ref MeshParts);
                 serializer.Serialize(ref Attributes);
             }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,41 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Collections.Generic;
-
-using SharpDX.Serialization;
-
 namespace SharpDX.Toolkit.Graphics
 {
-
-    public partial class ModelData
+    public struct VertexBufferBinding
     {
-        /// <summary>
-        /// Class Mesh
-        /// </summary>
-        public sealed class Material : IDataSerializable
-        {
-            public Material()
-            {
-                Textures = new List<MaterialTexture>();
-                Properties = new MaterialPropertyCollection();
-            }
+        public Buffer Buffer;
 
-            /// <summary>
-            /// The textures
-            /// </summary>
-            public List<MaterialTexture> Textures;
-
-            /// <summary>
-            /// Gets attributes attached to this material.
-            /// </summary>
-            public MaterialPropertyCollection Properties;
-
-            void IDataSerializable.Serialize(BinarySerializer serializer)
-            {
-                serializer.Serialize(ref Textures);
-                serializer.Serialize(ref Properties);
-            }
-        }
+        public VertexInputLayout Layout;
     }
 }
