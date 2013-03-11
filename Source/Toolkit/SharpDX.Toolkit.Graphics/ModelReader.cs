@@ -127,9 +127,14 @@ namespace SharpDX.Toolkit.Graphics
             return new VertexBufferBindingCollection(capacity);
         }
 
-        protected virtual AttributeCollection CreateAttributeCollection(int capacity)
+        protected virtual PropertyCollection CreatePropertyCollection(int capacity)
         {
-            return new AttributeCollection(capacity);
+            return new PropertyCollection(capacity);
+        }
+
+        protected virtual PropertyCollection CreateMaterialPropertyCollection(int capacity)
+        {
+            return new PropertyCollection(capacity);
         }
 
         protected virtual BufferCollection CreateBufferCollection(int capacity)
@@ -147,9 +152,9 @@ namespace SharpDX.Toolkit.Graphics
             return new MaterialTexture();
         }
 
-        protected virtual MaterialTextureStack CreateMaterialTextureStack()
+        protected virtual MaterialTextureStack CreateMaterialTextureStack(int capacity)
         {
-            return new MaterialTextureStack();
+            return new MaterialTextureStack(capacity);
         }
 
         public Model ReadModel()
@@ -179,10 +184,11 @@ namespace SharpDX.Toolkit.Graphics
             ReadBones(ref model.Bones);
             EndChunk();
 
-            // Skinned Bones section
-            BeginChunk("SKIN");
-            ReadBones(ref model.SkinnedBones);
-            EndChunk();
+            //// DISABLE_SKINNED_BONES
+            //// Skinned Bones section
+            //BeginChunk("SKIN");
+            //ReadBones(ref model.SkinnedBones);
+            //EndChunk();
 
             // Mesh section
             BeginChunk("MESH");
@@ -190,7 +196,7 @@ namespace SharpDX.Toolkit.Graphics
             EndChunk();
 
             // Serialize attributes
-            Serialize(ref model.Attributes);
+            ReadProperties(ref model.Properties);
 
             // Close TKMD section
             EndChunk();
@@ -230,6 +236,44 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        public delegate PropertyKey NameToPropertyKeyDelegate(string name);
+
+        protected virtual void ReadProperties(ref PropertyCollection properties)
+        {
+            ReadProperties(ref properties, name => new PropertyKey(name));
+        }
+
+        protected virtual void ReadProperties(ref PropertyCollection properties, NameToPropertyKeyDelegate nameToKey)
+        {
+            if (nameToKey == null)
+            {
+                throw new ArgumentNullException("nameToKey");
+            }
+
+            int count = Reader.ReadInt32();
+
+            if (properties == null)
+            {
+                properties = CreatePropertyCollection(count);
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                string name = null;
+                object value = null;
+                Serialize(ref name);
+                SerializeDynamic(ref value, SerializeFlags.Nullable);;
+
+                var key = nameToKey(name);
+                if (key == null)
+                {
+                    throw new InvalidOperationException(string.Format("Cannot convert property name [{0}] to null key", name));
+                }
+
+                properties[key] = value;
+            }
+        }
+       
         protected virtual void ReadMaterials(ref MaterialCollection materials)
         {
             ReadList(ref materials, CreateModelMaterialCollection, CreateModelMaterial, ReadMaterial);
@@ -262,71 +306,23 @@ namespace SharpDX.Toolkit.Graphics
 
         protected virtual void ReadMaterial(ref Material material)
         {
-            var textureCount = Reader.ReadInt32();
-            for (int i = 0; i < textureCount; i++)
+            var textureStackCount = Reader.ReadInt32();
+            var properties = CreateMaterialPropertyCollection(textureStackCount + 32);
+            material.Properties = properties;
+            for (int i = 0; i < textureStackCount; i++)
             {
-                var materialTexture = CreateMaterialTexture();
-                ReadMaterialTexture(ref materialTexture);
+                string keyName = null;
+                Serialize(ref keyName);
 
-                switch (materialTexture.Type)
-                {
-                    case MaterialTextureType.Ambient:
-                        AddMaterialTexture(ref material.Ambient, materialTexture);
-                        break;
-                    case MaterialTextureType.Diffuse:
-                        AddMaterialTexture(ref material.Diffuse, materialTexture);
-                        break;
-                    case MaterialTextureType.Displacement:
-                        AddMaterialTexture(ref material.Displacement, materialTexture);
-                        break;
-                    case MaterialTextureType.Emissive:
-                        AddMaterialTexture(ref material.Emissive, materialTexture);
-                        break;
-                    case MaterialTextureType.Height:
-                        AddMaterialTexture(ref material.Height, materialTexture);
-                        break;
-                    case MaterialTextureType.Lightmap:
-                        AddMaterialTexture(ref material.Lightmap, materialTexture);
-                        break;
-                    case MaterialTextureType.Normals:
-                        AddMaterialTexture(ref material.Normals, materialTexture);
-                        break;
-                    case MaterialTextureType.Opacity:
-                        AddMaterialTexture(ref material.Opacity, materialTexture);
-                        break;
-                    case MaterialTextureType.Reflection:
-                        AddMaterialTexture(ref material.Reflection, materialTexture);
-                        break;
-                    case MaterialTextureType.Shininess:
-                        AddMaterialTexture(ref material.Shininess, materialTexture);
-                        break;
-                    case MaterialTextureType.Specular:
-                        AddMaterialTexture(ref material.Specular, materialTexture);
-                        break;
-                    case MaterialTextureType.Unknown:
-                        AddMaterialTexture(ref material.Unknown, materialTexture);
-                        break;
-                    case MaterialTextureType.None:
-                        // Throws an exception for None?
-                        //AddMaterialTexture(ref material.None, materialTexture);
-                        break;
-                    default:
-                        throw new InvalidOperationException(string.Format("Invalid material texture type [{0}]", materialTexture.Type));
-                        break;
-                }
+                MaterialTextureStack textureStack = null;
+                ReadList(ref textureStack, CreateMaterialTextureStack, CreateMaterialTexture, ReadMaterialTexture);
+
+                var key = MaterialKeys.FindKeyByName(keyName) ?? new PropertyKey(keyName);
+
+                properties[key] = textureStack;
             }
 
-            // TODO Improve serialization
-            Serialize(ref material.Properties);
-        }
-
-        protected virtual void AddMaterialTexture(ref MaterialTextureStack textureStack, MaterialTexture texture)
-        {
-            if (textureStack == null)
-            {
-                textureStack = CreateMaterialTextureStack();
-            }
-            textureStack.Add(texture);
+            ReadProperties(ref material.Properties, name => MaterialKeys.FindKeyByName(name) ?? new PropertyKey(name));
         }
 
         protected virtual void ReadMaterialTexture(ref MaterialTexture materialTexture)
@@ -337,7 +333,6 @@ namespace SharpDX.Toolkit.Graphics
             materialTexture.name = Path.GetFileNameWithoutExtension(filePath);
             materialTexture.Texture = TextureLoaderDelegate(filePath);
 
-            materialTexture.Type = (MaterialTextureType)Reader.ReadByte();
             materialTexture.Index = Reader.ReadInt32();
             materialTexture.UVIndex = Reader.ReadInt32();
             materialTexture.BlendFactor = Reader.ReadSingle();
@@ -383,7 +378,7 @@ namespace SharpDX.Toolkit.Graphics
             ReadIndexBuffers(ref mesh.IndexBuffers);
             ReadMeshParts(ref mesh.MeshParts);
 
-            Serialize(ref mesh.Attributes);
+            ReadProperties(ref mesh.Properties);
             CurrentMesh = null;
         }
 
@@ -403,8 +398,8 @@ namespace SharpDX.Toolkit.Graphics
             vertexBufferRange.Serialize(this);
             meshPart.VertexBuffer = GetFromList(vertexBufferRange, CurrentMesh.VertexBuffers);
 
-            // Attributes
-            Serialize(ref meshPart.Attributes);
+            // Properties
+            ReadProperties(ref meshPart.Properties);
         }
 
         protected virtual void ReadVertexBuffer(ref VertexBufferBinding vertexBufferBinding)

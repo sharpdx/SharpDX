@@ -36,11 +36,6 @@ namespace SharpDX.Toolkit.Graphics
             public string FilePath;
 
             /// <summary>
-            /// The type of this texture.
-            /// </summary>
-            public MaterialTextureType Type;
-
-            /// <summary>
             /// The index of this texture.
             /// </summary>
             public int Index;
@@ -73,7 +68,6 @@ namespace SharpDX.Toolkit.Graphics
             public void Serialize(BinarySerializer serializer)
             {
                 serializer.Serialize(ref FilePath);
-                serializer.SerializeEnum(ref Type);
                 serializer.Serialize(ref Index);
                 serializer.Serialize(ref UVIndex);
                 serializer.Serialize(ref BlendFactor);

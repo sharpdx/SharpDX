@@ -49,7 +49,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// The attributes for this mesh part.
         /// </summary>
-        public AttributeCollection Attributes;
+        public PropertyCollection Properties;
 
         /// <summary>
         /// Draws this <see cref="ModelMeshPart"/>. See remarks for difference with XNA.

@@ -20,32 +20,30 @@
 
 using System;
 
-using SharpDX.Serialization;
-
-namespace SharpDX.Toolkit.Graphics
+namespace SharpDX.Toolkit
 {
     /// <summary>
-    /// A Name describing a material attribute.
+    /// A Name describing a property attribute.
     /// </summary>
-    public class MaterialKey : IDataSerializable, IEquatable<MaterialKey>
+    public class PropertyKey : IEquatable<PropertyKey>
     {
-        private string name;
+        private readonly string name;
+
+        private readonly int hashcode;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MaterialKey"/> class.
-        /// </summary>
-        public MaterialKey()
-        {
-        }
-
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MaterialKey"/> class.
+        /// Initializes a new instance of the <see cref="PropertyKey"/> class.
         /// </summary>
         /// <param name="name">The Name.</param>
-        public MaterialKey(string name)
+        public PropertyKey(string name)
         {
+            if (name == null)
+            {
+                throw new ArgumentNullException("name");
+            }
+
             this.name = name;
+            this.hashcode = name.GetHashCode();
         }
 
         /// <summary>
@@ -60,8 +58,7 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-
-        public bool Equals(MaterialKey other)
+        public bool Equals(PropertyKey other)
         {
             if (ReferenceEquals(null, other))
             {
@@ -84,7 +81,7 @@ namespace SharpDX.Toolkit.Graphics
             {
                 return true;
             }
-            var materialKey = obj as MaterialKey;
+            var materialKey = obj as PropertyKey;
             if (materialKey == null)
             {
                 return false;
@@ -94,22 +91,17 @@ namespace SharpDX.Toolkit.Graphics
 
         public override int GetHashCode()
         {
-            return name.GetHashCode();
+            return hashcode;
         }
 
-        public static bool operator ==(MaterialKey left, MaterialKey right)
+        public static bool operator ==(PropertyKey left, PropertyKey right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(MaterialKey left, MaterialKey right)
+        public static bool operator !=(PropertyKey left, PropertyKey right)
         {
             return !Equals(left, right);
-        }
-
-        void IDataSerializable.Serialize(BinarySerializer serializer)
-        {
-            serializer.Serialize(ref name);
         }
 
         public override string ToString()
@@ -118,9 +110,9 @@ namespace SharpDX.Toolkit.Graphics
         }
     }
 
-    public class MaterialKey<T> : MaterialKey
+    public class PropertyKey<T> : PropertyKey
     {
-        public MaterialKey(string name) : base(name)
+        public PropertyKey(string name) : base(name)
         {
         }
     }

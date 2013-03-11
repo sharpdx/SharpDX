@@ -22,6 +22,7 @@
     <Compile Include="BlendState.cs" />
     <Compile Include="BlendStateCollection.cs" />
     <Compile Include="ClearOptions.cs" />
+    <Compile Include="MaterialKeys.cs" />
     <Compile Include="MaterialTexture.cs" />
     <Compile Include="MaterialTextureStack.cs" />
     <Compile Include="Model.cs" />
@@ -76,7 +77,6 @@
     <Compile Include="Buffer.Argument.cs" />
     <Compile Include="Buffer.Typed.cs" />
     <Compile Include="EffectConstantBufferCollection.cs" />
-    <Compile Include="AttributeCollection.cs" />
     <Compile Include="EffectConstantBuffer.cs" />
     <Compile Include="EffectPool.cs" />
     <Compile Include="EffectParameter.cs" />

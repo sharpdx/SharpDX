@@ -247,7 +247,7 @@ namespace SharpDX.Toolkit.Graphics
                        {
                            Name = passAst.Name,
                            Pipeline = new EffectData.Pipeline(),
-                           Attributes = new List<AttributeData>()
+                           Properties = new CommonData.PropertyCollection()
                        };
 
             // Clear current exports
@@ -309,21 +309,21 @@ namespace SharpDX.Toolkit.Graphics
                     HandleExport(expression.Value);
                     break;
 
-                case EffectData.AttributeKeys.Blending:
-                case EffectData.AttributeKeys.DepthStencil:
-                case EffectData.AttributeKeys.Rasterizer:
+                case EffectData.PropertyKeys.Blending:
+                case EffectData.PropertyKeys.DepthStencil:
+                case EffectData.PropertyKeys.Rasterizer:
                     HandleAttribute<string>(expression);
                     break;
 
-                case EffectData.AttributeKeys.BlendingColor:
+                case EffectData.PropertyKeys.BlendingColor:
                     HandleAttribute<Vector4>(expression);
                     break;
 
-                case EffectData.AttributeKeys.BlendingSampleMask:
+                case EffectData.PropertyKeys.BlendingSampleMask:
                     HandleAttribute<uint>(expression);
                     break;
 
-                case EffectData.AttributeKeys.DepthStencilReference:
+                case EffectData.PropertyKeys.DepthStencilReference:
                     HandleAttribute<int>(expression);
                     break;
                 case "ShareConstantBuffers":
@@ -479,8 +479,7 @@ namespace SharpDX.Toolkit.Graphics
             object value;
             if (ExtractValue(expression.Value, out value))
             {
-                var attribute = new AttributeData() {Name = expression.Name.Text, Value = value};
-                pass.Attributes.Add(attribute);
+                pass.Properties[expression.Name.Text] = value;
             }
         }
 
@@ -506,8 +505,7 @@ namespace SharpDX.Toolkit.Graphics
                     }
                 }
 
-                var attribute = new AttributeData() { Name = expression.Name.Text, Value = value };
-                pass.Attributes.Add(attribute);
+                pass.Properties[expression.Name.Text] = value;
             }
         }
 

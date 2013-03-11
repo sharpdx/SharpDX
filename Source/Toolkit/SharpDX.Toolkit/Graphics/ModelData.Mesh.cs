@@ -40,7 +40,7 @@ namespace SharpDX.Toolkit.Graphics
                 VertexBuffers = new List<VertexBuffer>();
                 IndexBuffers = new List<IndexBuffer>();
                 MeshParts = new List<MeshPart>();
-                Attributes = new List<AttributeData>();
+                Properties = new PropertyCollection();
             }
 
             /// <summary>
@@ -71,7 +71,7 @@ namespace SharpDX.Toolkit.Graphics
             /// <summary>
             /// Gets attributes attached to this mesh.
             /// </summary>
-            public List<AttributeData> Attributes;
+            public PropertyCollection Properties;
 
             public void Serialize(BinarySerializer serializer)
             {
@@ -80,7 +80,7 @@ namespace SharpDX.Toolkit.Graphics
                 serializer.Serialize(ref VertexBuffers);
                 serializer.Serialize(ref IndexBuffers);
                 serializer.Serialize(ref MeshParts);
-                serializer.Serialize(ref Attributes);
+                serializer.Serialize(ref Properties);
             }
         }
     }

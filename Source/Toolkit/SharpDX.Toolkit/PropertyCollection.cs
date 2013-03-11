@@ -21,13 +21,36 @@
 using System;
 using System.Collections.Generic;
 
-using SharpDX.Serialization;
-
-namespace SharpDX.Toolkit.Graphics
+namespace SharpDX.Toolkit
 {
-    public class MaterialPropertyCollection : Dictionary<MaterialKey, object>, IDataSerializable
+    public class PropertyCollection : Dictionary<PropertyKey, object>
     {
-        public void SetProperty<T>(MaterialKey<T> key, T value)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PropertyCollection"/> class.
+        /// </summary>
+        public PropertyCollection()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PropertyCollection" /> class that is empty, has the specified initial capacity, and uses the default equality comparer for the key type.
+        /// </summary>
+        /// <param name="capacity">The initial number of elements that the <see cref="PropertyCollection" /> can contain.</param>
+        public PropertyCollection(int capacity)
+            : base(capacity)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PropertyCollection"/> class.
+        /// </summary>
+        /// <param name="dictionary">The dictionary.</param>
+        public PropertyCollection(IDictionary<PropertyKey, object> dictionary)
+            : base(dictionary)
+        {
+        }
+
+        public void SetProperty<T>(PropertyKey<T> key, T value)
         {
             if (Utilities.IsEnum(typeof(T)))
             {
@@ -40,47 +63,21 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        public bool HasProperty<T>(MaterialKey<T> key)
+        public bool ContainsKey<T>(PropertyKey<T> key)
         {
-            return ContainsKey(key);
+            return base.ContainsKey(key);
         }
 
-        public T GetProperty<T>(MaterialKey<T> key)
+        public T GetProperty<T>(PropertyKey<T> key)
         {
             object value;
             return TryGetValue(key, out value) ? Utilities.IsEnum(typeof(T)) ? (T)Enum.ToObject(typeof(T), (int)value) : (T)value : default(T);
         }
 
-        public virtual MaterialPropertyCollection Clone()
+        public virtual PropertyCollection Clone()
         {
-            return (MaterialPropertyCollection)MemberwiseClone();
+            return (PropertyCollection)MemberwiseClone();
         }
 
-        void IDataSerializable.Serialize(BinarySerializer serializer)
-        {
-            if (serializer.Mode == SerializerMode.Write)
-            {
-                serializer.Writer.Write(Count);
-                foreach (var item in this)
-                {
-                    var key = item.Key;
-                    var value = item.Value;
-                    serializer.Serialize(ref key);
-                    serializer.SerializeDynamic(ref value, SerializeFlags.Nullable);
-                }
-            }
-            else
-            {
-                var count = serializer.Reader.ReadInt32();
-                for (int i = 0; i < count; i++)
-                {
-                    MaterialKey key = null;
-                    object value = null;
-                    serializer.Serialize(ref key);
-                    serializer.SerializeDynamic(ref value, SerializeFlags.Nullable);
-                    Add(key, value);
-                }
-            }
-        }
     }
 }

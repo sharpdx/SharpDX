@@ -31,11 +31,12 @@ namespace SharpDX.Toolkit.Graphics
 
         public ModelBoneCollection Bones;
 
-        public ModelBoneCollection SkinnedBones;
+        //// DISABLE_SKINNED_BONES
+        //public ModelBoneCollection SkinnedBones;
 
         public ModelMeshCollection Meshes;
 
-        public AttributeCollection Attributes;
+        public PropertyCollection Properties;
 
         public virtual Model Clone()
         {

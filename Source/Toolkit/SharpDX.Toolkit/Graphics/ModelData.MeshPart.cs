@@ -27,14 +27,14 @@ namespace SharpDX.Toolkit.Graphics
 {
     public sealed partial class ModelData
     {
-        public sealed class MeshPart : IDataSerializable
+        public sealed class MeshPart : CommonData, IDataSerializable
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="MeshPart"/> class.
             /// </summary>
             public MeshPart()
             {
-                Attributes = new List<AttributeData>();
+                Properties = new PropertyCollection();
             }
 
             /// <summary>
@@ -60,14 +60,14 @@ namespace SharpDX.Toolkit.Graphics
             /// <summary>
             /// The attributes attached to this mesh part.
             /// </summary>
-            public List<AttributeData> Attributes;
+            public PropertyCollection Properties;
 
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
                 serializer.Serialize(ref MaterialIndex);
                 serializer.Serialize(ref IndexBufferRange);
                 serializer.Serialize(ref VertexBufferRange);
-                serializer.Serialize(ref Attributes);
+                serializer.Serialize(ref Properties);
             }
         }
 

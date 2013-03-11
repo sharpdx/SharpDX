@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Collections.Generic;
 using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
@@ -28,7 +27,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Describes a pass from a technique.
         /// </summary>
-        public sealed class Pass : IDataSerializable
+        public sealed class Pass : CommonData, IDataSerializable
         {
             /// <summary>
             /// Name of this pass.
@@ -41,9 +40,9 @@ namespace SharpDX.Toolkit.Graphics
             public bool IsSubPass;
 
             /// <summary>
-            /// List of <see cref="AttributeData"/>.
+            /// List of <see cref="SharpDX.Properties"/>.
             /// </summary>
-            public List<AttributeData> Attributes;
+            public PropertyCollection Properties;
 
             /// <summary>
             /// Description of the shader stage <see cref="Pipeline"/>.
@@ -52,7 +51,7 @@ namespace SharpDX.Toolkit.Graphics
 
             public override string ToString()
             {
-                return string.Format("Pass: [{0}], SubPass: {1}, Attributes({2})", Name, IsSubPass, Attributes.Count);
+                return string.Format("Pass: [{0}], SubPass: {1}, Attributes({2})", Name, IsSubPass, Properties.Count);
             }
 
             /// <inheritdoc/>
@@ -61,7 +60,7 @@ namespace SharpDX.Toolkit.Graphics
                 serializer.Serialize(ref Name, SerializeFlags.Nullable);
 
                 serializer.Serialize(ref IsSubPass);
-                serializer.Serialize(ref Attributes);
+                serializer.Serialize(ref Properties);
                 serializer.Serialize(ref Pipeline);
             }
         }

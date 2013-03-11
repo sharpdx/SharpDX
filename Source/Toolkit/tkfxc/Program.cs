@@ -371,14 +371,14 @@ namespace SharpDX.Toolkit.Graphics
                             ResetColor();
                         }
 
-                        if (pass.Attributes.Count > 0)
+                        if (pass.Properties.Count > 0)
                         {
                             Console.WriteLine();
 
-                            foreach (var attribute in pass.Attributes)
+                            foreach (var attribute in pass.Properties)
                             {
                                 var typeName = attribute.Value != null ? attribute.Value.GetType().FullName.StartsWith("SharpDX") ? attribute.Value.GetType().FullName : null : null;
-                                Console.WriteLine(passtab + tab + "{0} = {1}", attribute.Name, typeName == null ? attribute.Value : string.Format("{0}({1})", typeName, attribute.Value));
+                                Console.WriteLine(passtab + tab + "{0} = {1}", attribute.Key, typeName == null ? attribute.Value : string.Format("{0}({1})", typeName, attribute.Value));
                             }
                         }
                         Console.WriteLine(passtab + "}");

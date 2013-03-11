@@ -33,11 +33,6 @@ namespace SharpDX.Toolkit.Graphics
         public Texture Texture;
 
         /// <summary>
-        /// The type of this texture.
-        /// </summary>
-        public MaterialTextureType Type;
-
-        /// <summary>
         /// The index of this texture.
         /// </summary>
         public int Index;

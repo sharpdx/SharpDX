@@ -29,7 +29,7 @@ namespace SharpDX.Toolkit.Graphics
     /// <summary>
     /// The model data used to store 3D mesh model.
     /// </summary>
-    public sealed partial class ModelData : IDataSerializable
+    public sealed partial class ModelData : CommonData, IDataSerializable
     {
         public const string MagicCode = "TKMD";
 
@@ -40,9 +40,10 @@ namespace SharpDX.Toolkit.Graphics
         {
             Materials = new List<Material>();
             Bones = new List<Bone>();
-            SkinnedBones = new List<Bone>();
+            // DISABLE_SKINNED_BONES
+            //SkinnedBones = new List<Bone>();
             Meshes = new List<Mesh>();
-            Attributes = new List<AttributeData>();
+            Attributes = new PropertyCollection();
         }
 
         /// <summary>
@@ -60,10 +61,11 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public List<Bone> Bones;
 
-        /// <summary>
-        /// Gets the bones used to perform skinning animation with this model.
-        /// </summary>
-        public List<Bone> SkinnedBones;
+        // DISABLE_SKINNED_BONES
+        ///// <summary>
+        ///// Gets the bones used to perform skinning animation with this model.
+        ///// </summary>
+        //public List<Bone> SkinnedBones;
 
         /// <summary>
         /// Gets the mesh of this model.
@@ -73,7 +75,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Gets the attributes attached to this instance.
         /// </summary>
-        public List<AttributeData> Attributes;
+        public PropertyCollection Attributes;
 
         /// <summary>
         /// Loads a <see cref="ModelData"/> from the specified stream.
@@ -145,6 +147,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             var serializer = new BinarySerializer(stream, mode, Text.Encoding.ASCII);
             serializer.ArrayLengthType = ArrayLengthType.Int;
+            serializer.RegisterDynamicList<MaterialTexture>("MATL");
             return serializer;
         }
 
@@ -172,10 +175,11 @@ namespace SharpDX.Toolkit.Graphics
             serializer.Serialize(ref Bones);
             serializer.EndChunk();
 
-            // Skinned Bones section
-            serializer.BeginChunk("SKIN");
-            serializer.Serialize(ref SkinnedBones);
-            serializer.EndChunk();
+            //// DISABLE_SKINNED_BONES
+            //// Skinned Bones section
+            //serializer.BeginChunk("SKIN");
+            //serializer.Serialize(ref SkinnedBones);
+            //serializer.EndChunk();
 
             // Mesh section
             serializer.BeginChunk("MESH");

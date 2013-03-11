@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,64 +18,58 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 
 using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
-
-    public partial class ModelData
+    /// <summary>
+    /// Common data used by <see cref="EffectData"/>, <see cref="ModelData"/>.
+    /// </summary>
+    public partial class CommonData
     {
-        /// <summary>
-        /// Class Mesh
-        /// </summary>
-        public sealed class Material : CommonData, IDataSerializable
+        public class PropertyCollection : Dictionary<string, object>, IDataSerializable
         {
-            public Material()
+            public void SetProperty<T>(string key, T value)
             {
-                Textures = new Dictionary<string, List<MaterialTexture>>();
-                Properties = new PropertyCollection();
+                if (Utilities.IsEnum(typeof(T)))
+                {
+                    var intValue = Convert.ToInt32(value);
+                    Add(key, intValue);
+                }
+                else
+                {
+                    Add(key, value);
+                }
             }
-
-            /// <summary>
-            /// The textures
-            /// </summary>
-            public Dictionary<string, List<MaterialTexture>> Textures;
-
-            /// <summary>
-            /// Gets attributes attached to this material.
-            /// </summary>
-            public PropertyCollection Properties;
 
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
                 if (serializer.Mode == SerializerMode.Write)
                 {
-                    serializer.Writer.Write(Textures.Count);
-                    foreach (var texture in Textures)
+                    serializer.Writer.Write(Count);
+                    foreach (var item in this)
                     {
-                        var name = texture.Key;
-                        var list = texture.Value;
-                        serializer.Serialize(ref name);
-                        serializer.Serialize(ref list);
+                        var key = item.Key;
+                        var value = item.Value;
+                        serializer.Serialize(ref key);
+                        serializer.SerializeDynamic(ref value, SerializeFlags.Nullable);
                     }
                 }
                 else
                 {
                     var count = serializer.Reader.ReadInt32();
-                    Textures = new Dictionary<string, List<MaterialTexture>>(count);
-                    for(int i = 0; i < count; i++)
+                    for (int i = 0; i < count; i++)
                     {
                         string name = null;
-                        List<MaterialTexture> list = null;
+                        object value = null;
                         serializer.Serialize(ref name);
-                        serializer.Serialize(ref list);
-                        Textures.Add(name, list);
+                        serializer.SerializeDynamic(ref value, SerializeFlags.Nullable);
+                        Add(name, value);
                     }
                 }
-
-                serializer.Serialize(ref Properties);
             }
         }
     }

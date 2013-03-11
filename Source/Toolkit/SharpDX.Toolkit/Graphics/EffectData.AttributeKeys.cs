@@ -22,7 +22,7 @@ namespace SharpDX.Toolkit.Graphics
 {
     public partial class EffectData 
     {
-        public sealed class AttributeKeys
+        public sealed class PropertyKeys
         {
             public const string Blending = "Blending";
 

@@ -55,7 +55,7 @@ namespace SharpDX.Toolkit.Graphics
         ///   Gets the attributes associated with this pass.
         /// </summary>
         /// <value> The attributes. </value>
-        public readonly AttributeCollection Attributes;
+        public readonly PropertyCollection Properties;
 
         /// <summary>
         /// The parent effect of this pass.
@@ -108,7 +108,7 @@ namespace SharpDX.Toolkit.Graphics
                                Stages = new StageBlock[EffectPass.StageCount],
                            };
 
-            Attributes = PrepareAttributes(logger, pass.Attributes);
+            Properties = PrepareProperties(logger, pass.Properties);
             IsSubPass = pass.IsSubPass;
             // Don't create SubPasses collection for subpass.
             if (!IsSubPass)
@@ -850,55 +850,47 @@ namespace SharpDX.Toolkit.Graphics
             return (left.Class != right.Class || left.Type != right.Type || left.Count != right.Count);
         }
 
-        private AttributeCollection PrepareAttributes(Logger logger, List<AttributeData> attributes)
+        private PropertyCollection PrepareProperties(Logger logger, CommonData.PropertyCollection properties)
         {
-            attributes = new List<AttributeData>(attributes);
+            var passProperties = new PropertyCollection();
 
-            for (int i = 0; i < attributes.Count; i++)
+            foreach (var property in properties)
             {
-                var attribute = attributes[i];
-                bool attributeHandled = true;
-                switch (attribute.Name)
+                switch (property.Key)
                 {
-                    case EffectData.AttributeKeys.Blending:
-                        BlendState = graphicsDevice.BlendStates[(string) attribute.Value];
+                    case EffectData.PropertyKeys.Blending:
+                        BlendState = graphicsDevice.BlendStates[(string)property.Value];
                         if (BlendState == null)
-                            logger.Error("Unable to find registered BlendState [{0}]", (string)attribute.Value);
+                            logger.Error("Unable to find registered BlendState [{0}]", (string)property.Value);
                         break;
-                    case EffectData.AttributeKeys.BlendingColor:
-                        BlendStateColor = (Color4) (Vector4) attribute.Value;
+                    case EffectData.PropertyKeys.BlendingColor:
+                        BlendStateColor = (Color4)(Vector4)property.Value;
                         break;
-                    case EffectData.AttributeKeys.BlendingSampleMask:
-                        BlendStateSampleMask = (uint) attribute.Value;
+                    case EffectData.PropertyKeys.BlendingSampleMask:
+                        BlendStateSampleMask = (uint)property.Value;
                         break;
 
-                    case EffectData.AttributeKeys.DepthStencil:
-                        DepthStencilState = graphicsDevice.DepthStencilStates[(string) attribute.Value];
+                    case EffectData.PropertyKeys.DepthStencil:
+                        DepthStencilState = graphicsDevice.DepthStencilStates[(string)property.Value];
                         if (DepthStencilState == null)
-                            logger.Error("Unable to find registered DepthStencilState [{0}]", (string)attribute.Value);
+                            logger.Error("Unable to find registered DepthStencilState [{0}]", (string)property.Value);
                         break;
-                    case EffectData.AttributeKeys.DepthStencilReference:
-                        DepthStencilReference = (int) attribute.Value;
+                    case EffectData.PropertyKeys.DepthStencilReference:
+                        DepthStencilReference = (int)property.Value;
                         break;
 
-                    case EffectData.AttributeKeys.Rasterizer:
-                        RasterizerState = graphicsDevice.RasterizerStates[(string) attribute.Value];
+                    case EffectData.PropertyKeys.Rasterizer:
+                        RasterizerState = graphicsDevice.RasterizerStates[(string)property.Value];
                         if (RasterizerState == null)
-                            logger.Error("Unable to find registered RasterizerState [{0}]", (string)attribute.Value);
+                            logger.Error("Unable to find registered RasterizerState [{0}]", (string)property.Value);
                         break;
                     default:
-                        attributeHandled = false;
+                        passProperties[new PropertyKey(property.Key)] = property.Value;
                         break;
-                }
-
-                if (attributeHandled)
-                {
-                    attributes.RemoveAt(i);
-                    i--;
                 }
             }
 
-            return new AttributeCollection(attributes);
+            return passProperties;
         }
 
 

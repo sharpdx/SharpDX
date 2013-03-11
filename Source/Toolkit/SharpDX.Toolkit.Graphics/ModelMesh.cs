@@ -30,6 +30,6 @@ namespace SharpDX.Toolkit.Graphics
 
         public ModelMeshPartCollection MeshParts;
 
-        public AttributeCollection Attributes;
+        public PropertyCollection Properties;
     }
 }
