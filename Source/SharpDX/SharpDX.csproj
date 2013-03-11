@@ -188,7 +188,7 @@
     <Compile Include="Win32\PropertyBag.cs" />
     <Compile Include="Win32\IStream.cs" />
     <Compile Include="Win32\IStreamBase.cs" />
-    <Compile Include="Win32\PropertyKey.cs" />
+    <Compile Include="Win32\PropertyBagKey.cs" />
     <Compile Include="Win32\ComStringEnumerator.cs" />
     <Compile Include="Win32\SecurityAttributes.cs" />
     <Compile Include="Win32\Variant.cs" />

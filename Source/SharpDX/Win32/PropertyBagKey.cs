@@ -25,13 +25,13 @@ namespace SharpDX.Win32
     /// </summary>
     /// <typeparam name="T1">The public type of this property.</typeparam>
     /// <typeparam name="T2">The marshaling type of this property.</typeparam>
-    public class PropertyKey<T1,T2> 
+    public class PropertyBagKey<T1,T2> 
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PropertyKey&lt;T1, T2&gt;"/> class.
+        /// Initializes a new instance of the <see cref="PropertyBagKey{T1,T2}"/> class.
         /// </summary>
         /// <param name="name">The name.</param>
-        public PropertyKey(string name)
+        public PropertyBagKey(string name)
         {
             Name = name;
         }

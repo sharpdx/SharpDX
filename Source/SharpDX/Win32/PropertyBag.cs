@@ -109,13 +109,13 @@ namespace SharpDX.Win32
         }
 
         /// <summary>
-        /// Gets the value of the property by using a <see cref="PropertyKey{T1,T2}"/>
+        /// Gets the value of the property by using a <see cref="PropertyBagKey{T1,T2}"/>
         /// </summary>
         /// <typeparam name="T1">The public type of this property.</typeparam>
         /// <typeparam name="T2">The marshaling type of this property.</typeparam>
         /// <param name="propertyKey">The property key.</param>
         /// <returns>Value of the property</returns>
-        public T1 Get<T1, T2>(PropertyKey<T1, T2> propertyKey)
+        public T1 Get<T1, T2>(PropertyBagKey<T1, T2> propertyKey)
         {
             var value = Get(propertyKey.Name);
             return (T1) Convert.ChangeType(value, typeof (T1));
@@ -142,13 +142,13 @@ namespace SharpDX.Win32
         }
 
         /// <summary>
-        /// Sets the value of the property by using a <see cref="PropertyKey{T1,T2}"/>
+        /// Sets the value of the property by using a <see cref="PropertyBagKey{T1,T2}"/>
         /// </summary>
         /// <typeparam name="T1">The public type of this property.</typeparam>
         /// <typeparam name="T2">The marshaling type of this property.</typeparam>
         /// <param name="propertyKey">The property key.</param>
         /// <param name="value">The value.</param>
-        public void Set<T1,T2>(PropertyKey<T1,T2> propertyKey, T1 value)
+        public void Set<T1,T2>(PropertyBagKey<T1,T2> propertyKey, T1 value)
         {
             Set(propertyKey.Name, value);
         }

@@ -51,7 +51,7 @@ namespace SharpDX.WIC
             get { return Get(ImageQualityKey); }
             set { Set(ImageQualityKey, value);}
         }
-        private static readonly PropertyKey<float, float> ImageQualityKey = new PropertyKey<float, float>("ImageQuality");
+        private static readonly PropertyBagKey<float, float> ImageQualityKey = new PropertyBagKey<float, float>("ImageQuality");
 
         /// <summary>
         /// Gets or sets the compression quality.
@@ -68,7 +68,7 @@ namespace SharpDX.WIC
             get { return Get(CompressionQualityKey); }
             set { Set(CompressionQualityKey, value); }
         }
-        private static readonly PropertyKey<float, float> CompressionQualityKey = new PropertyKey<float, float>("CompressionQuality");
+        private static readonly PropertyBagKey<float, float> CompressionQualityKey = new PropertyBagKey<float, float>("CompressionQuality");
 
         /// <summary>
         /// Gets or sets a value indicating whether loss less compression is enabled.
@@ -85,7 +85,7 @@ namespace SharpDX.WIC
             get { return Get(LosslessKey); }
             set { Set(LosslessKey, value); }
         }
-        private static readonly PropertyKey<bool, bool> LosslessKey = new PropertyKey<bool, bool>("Lossless");
+        private static readonly PropertyBagKey<bool, bool> LosslessKey = new PropertyBagKey<bool, bool>("Lossless");
 
         /// <summary>
         /// Gets or sets the bitmap transform.
@@ -102,7 +102,7 @@ namespace SharpDX.WIC
             get { return Get(BitmapTransformKey); }
             set { Set(BitmapTransformKey, value); }
         }
-        private static readonly PropertyKey<BitmapTransformOptions, byte> BitmapTransformKey = new PropertyKey<BitmapTransformOptions, byte>("BitmapTransform");
+        private static readonly PropertyBagKey<BitmapTransformOptions, byte> BitmapTransformKey = new PropertyBagKey<BitmapTransformOptions, byte>("BitmapTransform");
 
         /// <summary>
         /// Gets or sets a value indicating whether [interlace option].
@@ -119,7 +119,7 @@ namespace SharpDX.WIC
             get { return Get(InterlaceOptionKey); }
             set { Set(InterlaceOptionKey, value); }
         }
-        private static readonly PropertyKey<bool, bool> InterlaceOptionKey = new PropertyKey<bool, bool>("InterlaceOption");
+        private static readonly PropertyBagKey<bool, bool> InterlaceOptionKey = new PropertyBagKey<bool, bool>("InterlaceOption");
 
         /// <summary>
         /// Gets or sets the filter option.
@@ -136,7 +136,7 @@ namespace SharpDX.WIC
             get { return Get(FilterOptionKey); }
             set { Set(FilterOptionKey, value); }
         }
-        private static readonly PropertyKey<PngFilterOption, byte> FilterOptionKey = new PropertyKey<PngFilterOption, byte>("FilterOption");
+        private static readonly PropertyBagKey<PngFilterOption, byte> FilterOptionKey = new PropertyBagKey<PngFilterOption, byte>("FilterOption");
 
         /// <summary>
         /// Gets or sets the TIFF compression method.
@@ -153,7 +153,7 @@ namespace SharpDX.WIC
             get { return Get(TiffCompressionMethodKey); }
             set { Set(TiffCompressionMethodKey, value); }
         }
-        private static readonly PropertyKey<TiffCompressionOption, bool> TiffCompressionMethodKey = new PropertyKey<TiffCompressionOption, bool>("TiffCompressionMethod");
+        private static readonly PropertyBagKey<TiffCompressionOption, bool> TiffCompressionMethodKey = new PropertyBagKey<TiffCompressionOption, bool>("TiffCompressionMethod");
 
         /// <summary>
         /// Gets or sets the luminance.
@@ -170,7 +170,7 @@ namespace SharpDX.WIC
             get { return Get(LuminanceKey); }
             set { Set(LuminanceKey, value); }
         }
-        private static readonly PropertyKey<uint[], uint[]> LuminanceKey = new PropertyKey<uint[], uint[]>("Luminance");
+        private static readonly PropertyBagKey<uint[], uint[]> LuminanceKey = new PropertyBagKey<uint[], uint[]>("Luminance");
 
         /// <summary>
         /// Gets or sets the chrominance.
@@ -187,7 +187,7 @@ namespace SharpDX.WIC
             get { return Get(ChrominanceKey); }
             set { Set(ChrominanceKey, value); }
         }
-        private static readonly PropertyKey<uint[], uint[]> ChrominanceKey = new PropertyKey<uint[], uint[]>("Chrominance");
+        private static readonly PropertyBagKey<uint[], uint[]> ChrominanceKey = new PropertyBagKey<uint[], uint[]>("Chrominance");
 
         /// <summary>
         /// Gets or sets the JPEG Y cr cb subsampling.
@@ -204,7 +204,7 @@ namespace SharpDX.WIC
             get { return Get(JpegYCrCbSubsamplingKey); }
             set { Set(JpegYCrCbSubsamplingKey, value); }
         }
-        private static readonly PropertyKey<JpegYCrCbSubsamplingOption, byte> JpegYCrCbSubsamplingKey = new PropertyKey<JpegYCrCbSubsamplingOption, byte>("JpegYCrCbSubsampling");
+        private static readonly PropertyBagKey<JpegYCrCbSubsamplingOption, byte> JpegYCrCbSubsamplingKey = new PropertyBagKey<JpegYCrCbSubsamplingOption, byte>("JpegYCrCbSubsampling");
 
         /// <summary>
         /// Gets or sets a value indicating whether [suppress app0].
@@ -221,6 +221,6 @@ namespace SharpDX.WIC
             get { return Get(SuppressApp0Key); }
             set { Set(SuppressApp0Key, value); }
         }
-        private static readonly PropertyKey<bool, bool> SuppressApp0Key = new PropertyKey<bool, bool>("SuppressApp0");
+        private static readonly PropertyBagKey<bool, bool> SuppressApp0Key = new PropertyBagKey<bool, bool>("SuppressApp0");
     }
 }
