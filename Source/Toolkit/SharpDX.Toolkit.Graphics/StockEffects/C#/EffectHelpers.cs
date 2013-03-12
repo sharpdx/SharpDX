@@ -177,7 +177,7 @@ namespace SharpDX.Toolkit.Graphics
         /// Sets the diffuse/emissive/alpha material color parameters.
         /// </summary>
         internal static void SetMaterialColor(bool lightingEnabled, float alpha,
-                                              ref Vector3 diffuseColor, ref Vector3 emissiveColor, ref Vector3 ambientLightColor,
+                                              ref Vector4 diffuseColor, ref Vector3 emissiveColor, ref Vector3 ambientLightColor,
                                               EffectParameter diffuseColorParam, EffectParameter emissiveColorParam)
         {
             // Desired lighting model:

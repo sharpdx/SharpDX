@@ -38,11 +38,9 @@ namespace ModelRendering
         private SpriteBatch spriteBatch;
         private SpriteFont arial16BMFont;
 
-        private BasicEffect effect;
-
         private Model model;
-        private int frameCount;
-        private string fpsText;
+
+        private BasicEffectRenderer modelRenderer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ModelRenderingGame" /> class.
@@ -66,23 +64,9 @@ namespace ModelRendering
             // Load the model
             model = Content.Load<Model>("duck");
 
-            var texture = model.Materials[0].GetProperty(MaterialKeys.DiffuseTexture)[0].Texture;
-
-            effect = ToDisposeContent(new BasicEffect(GraphicsDevice)
-                         {
-                             Texture = (Texture2D)texture,
-                             World = Matrix.Identity,
-                             View = Matrix.Identity,
-                             Projection = Matrix.Identity,
-                         });
-
-            effect.View = Matrix.LookAtLH(new Vector3(0, 0, -25), new Vector3(0, 0, 0), Vector3.UnitY);
-            effect.Projection = Matrix.PerspectiveFovLH(0.9f, (float)GraphicsDevice.BackBuffer.Width / GraphicsDevice.BackBuffer.Height, 0.1f, 1000.0f);
-
-            effect.TextureEnabled = true;
-
-            effect.EnableDefaultLighting();
-            effect.PreferPerPixelLighting = true;
+            modelRenderer = new BasicEffectRenderer(GraphicsDevice);
+            modelRenderer.Initialize(model);
+            modelRenderer.EnableDefaultLighting();
 
             // Instantiate a SpriteBatch
             spriteBatch = ToDisposeContent(new SpriteBatch(GraphicsDevice));
@@ -106,11 +90,12 @@ namespace ModelRendering
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
 
+            var view = Matrix.LookAtLH(new Vector3(0, 0, -25), new Vector3(0, 0, 0), Vector3.UnitY);
+            var projection = Matrix.PerspectiveFovLH(0.9f, (float)GraphicsDevice.BackBuffer.Width / GraphicsDevice.BackBuffer.Height, 0.1f, 1000.0f);
+            var world = Matrix.Scaling(0.1f) * Matrix.RotationY((float)gameTime.TotalGameTime.TotalSeconds) * Matrix.Translation(0, -8, 0);
 
-            effect.World = Matrix.Scaling(0.1f) * Matrix.RotationY((float)gameTime.TotalGameTime.TotalSeconds) * Matrix.Translation(0, -8, 0);
-
-            effect.CurrentTechnique.Passes[0].Apply();
-            model.Meshes[0].MeshParts[0].Draw(GraphicsDevice);
+            // Draw the model
+            modelRenderer.Draw(GraphicsDevice, world, view, projection);
 
             // Render the text
             spriteBatch.Begin();

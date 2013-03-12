@@ -691,7 +691,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator Vector3(Color3 value)
+        public static implicit operator Vector3(Color3 value)
         {
             return new Vector3(value.Red, value.Green, value.Blue);
         }
@@ -701,7 +701,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator Color3(Vector3 value)
+        public static implicit operator Color3(Vector3 value)
         {
             return new Color3(value.X, value.Y, value.Z);
         }

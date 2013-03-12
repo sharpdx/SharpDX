@@ -32,16 +32,16 @@ namespace SharpDX.Toolkit.Graphics
     {
         public class PropertyCollection : Dictionary<string, object>, IDataSerializable
         {
-            public void SetProperty<T>(string key, T value)
+            public void SetProperty<T>(PropertyKey<T> key, T value)
             {
                 if (Utilities.IsEnum(typeof(T)))
                 {
                     var intValue = Convert.ToInt32(value);
-                    Add(key, intValue);
+                    Add(key.Name, intValue);
                 }
                 else
                 {
-                    Add(key, value);
+                    Add(key.Name, value);
                 }
             }
 

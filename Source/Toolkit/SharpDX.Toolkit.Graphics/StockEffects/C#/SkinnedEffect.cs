@@ -117,7 +117,7 @@ namespace SharpDX.Toolkit.Graphics
 
         Matrix worldView;
 
-        Vector3 diffuseColor = Vector3.One;
+        Vector4 diffuseColor = Vector4.One;
         Vector3 emissiveColor = Vector3.Zero;
         Vector3 ambientLightColor = Vector3.Zero;
 
@@ -187,7 +187,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Gets or sets the material diffuse color (range 0 to 1).
         /// </summary>
-        public Vector3 DiffuseColor
+        public Vector4 DiffuseColor
         {
             get { return diffuseColor; }
             

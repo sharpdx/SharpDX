@@ -801,7 +801,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator Vector4(Color4 value)
+        public static implicit operator Vector4(Color4 value)
         {
             return new Vector4(value.Red, value.Green, value.Blue, value.Alpha);
         }
