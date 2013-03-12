@@ -20,14 +20,42 @@
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public class ModelBone : ComponentBase
+    public abstract class ModelRenderer
     {
-        public int Index;
+        protected ModelRenderer(Model model)
+        {
+            Model = model;
+        }
 
-        public ModelBoneCollection Children;
+        public readonly Model Model;
 
-        public ModelBone Parent;
+        public void Initialize()
+        {
+            foreach (var mesh in Model.Meshes)
+            {
+                foreach (var meshPart in mesh.MeshParts)
+                {
+                    var effect = CreateEffect(mesh, meshPart);
+                }
+            }
+        }
 
-        public Matrix Transform;
+        protected abstract Effect CreateEffect(ModelMesh mesh, ModelMeshPart meshPart);
+
+
+        public void Draw(GraphicsDevice graphicsDevice)
+        {
+        }
+    }
+
+
+    public class ModelMeshRenderer
+    {
+        
+    }
+
+    public class ModelMeshPartRenderer
+    {
+        
     }
 }

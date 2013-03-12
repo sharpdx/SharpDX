@@ -60,10 +60,20 @@ namespace SharpDX.Toolkit
                 {
                     Log.LogMessage(MessageImportance.Low, "Start to compile {0}", inputFilePath);
 
-                    var compilerResult = ModelCompiler.CompileAndSave(inputFilePath, outputFilePath, dependencyFilePath);
+                    var compilerOptions = new ModelCompilerOptions()
+                                              {
+                                                  DependencyFile = dependencyFilePath,
+                                                  Quality = Debug ? ModelRealTimeQuality.Low : ModelRealTimeQuality.Maximum
+                                              };
+                    var compilerResult = ModelCompiler.CompileAndSave(inputFilePath, outputFilePath, compilerOptions);
 
                     if (compilerResult.HasErrors)
                     {
+                        foreach (var message in compilerResult.Logger.Messages)
+                        {
+                            Log.LogError(message.ToString());
+                        }
+
                         hasErrors = true;
                     }
                     else

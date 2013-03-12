@@ -20,14 +20,19 @@
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public class ModelBone : ComponentBase
+    public enum ModelRealTimeQuality
     {
-        public int Index;
+        Low,
 
-        public ModelBoneCollection Children;
+        Default,
 
-        public ModelBone Parent;
+        Maximum,
+    }
 
-        public Matrix Transform;
+    public class ModelCompilerOptions
+    {
+        public ModelRealTimeQuality Quality;
+
+        public string DependencyFile;
     }
 }

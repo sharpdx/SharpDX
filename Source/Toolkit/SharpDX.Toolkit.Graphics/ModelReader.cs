@@ -343,6 +343,9 @@ namespace SharpDX.Toolkit.Graphics
 
         protected virtual void ReadBone(ref ModelBone bone)
         {
+            // Read ModelBone index
+            bone.Index = Reader.ReadInt32();
+
             // Read Parent Index
             int parentIndex = Reader.ReadInt32();
             if (parentIndex > Model.Bones.Count)
@@ -373,6 +376,9 @@ namespace SharpDX.Toolkit.Graphics
             Serialize(ref mesh.name, false, SerializeFlags.Nullable);
             int parentBoneIndex = Reader.ReadInt32();
             if (parentBoneIndex >= 0) mesh.ParentBone = Model.Bones[parentBoneIndex];
+
+            // Read the bouding sphere
+            Serialize(ref mesh.BoundingSphere);
 
             ReadVertexBuffers(ref mesh.VertexBuffers);
             ReadIndexBuffers(ref mesh.IndexBuffers);

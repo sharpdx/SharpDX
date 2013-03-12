@@ -39,6 +39,9 @@ namespace SharpDX.Toolkit.Compiler
         [Option("Model File", Required = true)]
         public string ModelFile;
 
+        [Option("F", Description = "Fast quality (Default is Maximum)")]
+        public bool FastQuality;
+
         [Option("O", Description = "Output File, default is <Model File> without extension", Value = "<filename>")]
         public string OutputFile = null;
 
@@ -92,7 +95,14 @@ namespace SharpDX.Toolkit.Compiler
             }
 
             Console.WriteLine("Compile Model from File [{0}] => {1}", filePath, OutputFile);
-            var result = ModelCompiler.CompileAndSave(filePath, OutputFile, dependencyFile);
+
+            var compilerOptions = new ModelCompilerOptions()
+                                      {
+                                          DependencyFile = dependencyFile,
+                                          Quality = FastQuality ? ModelRealTimeQuality.Low : ModelRealTimeQuality.Maximum
+                                      };
+
+            var result = ModelCompiler.CompileAndSave(filePath, OutputFile, compilerOptions);
 
             if (result.HasErrors)
             {

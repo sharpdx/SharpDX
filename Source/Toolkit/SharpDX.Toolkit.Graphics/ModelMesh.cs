@@ -24,6 +24,8 @@ namespace SharpDX.Toolkit.Graphics
     {
         public ModelBone ParentBone;
 
+        public BoundingSphere BoundingSphere;
+
         public VertexBufferBindingCollection VertexBuffers;
 
         public BufferCollection IndexBuffers;

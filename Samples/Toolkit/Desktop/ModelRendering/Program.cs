@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2012 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,16 +18,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace SharpDX.Toolkit.Graphics
+using System;
+
+namespace ModelRendering
 {
-    public class ModelBone : ComponentBase
+    /// <summary>
+    /// Simple SpriteBatchAndFont application using SharpDX.Toolkit.
+    /// </summary>
+    class Program
     {
-        public int Index;
-
-        public ModelBoneCollection Children;
-
-        public ModelBone Parent;
-
-        public Matrix Transform;
+        /// <summary>
+        /// Defines the entry point of the application.
+        /// </summary>
+#if NETFX_CORE
+        [MTAThread]
+#else
+        [STAThread]
+#endif
+        static void Main()
+        {
+            using (var program = new ModelRenderingGame())
+                program.Run();
+        }
     }
 }

@@ -220,25 +220,52 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Constructs a <see cref="SharpDX.BoundingSphere"/> that fully contains the given points.
+        /// Constructs a <see cref="SharpDX.BoundingSphere" /> that fully contains the given points.
         /// </summary>
         /// <param name="points">The points that will be contained by the sphere.</param>
+        /// <param name="start">The start index from points array to start compute the bounding sphere.</param>
+        /// <param name="count">The count of points to process to compute the bounding sphere.</param>
         /// <param name="result">When the method completes, contains the newly constructed bounding sphere.</param>
-        public static void FromPoints(Vector3[] points, out BoundingSphere result)
+        /// <exception cref="System.ArgumentNullException">points</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">
+        /// start
+        /// or
+        /// count
+        /// </exception>
+        public static void FromPoints(Vector3[] points, int start, int count, out BoundingSphere result)
         {
+            if (points == null)
+            {
+                throw new ArgumentNullException("points");
+            }
+
+            // Check that start is in the correct range
+            if (start < 0 || start >= points.Length)
+            {
+                throw new ArgumentOutOfRangeException("start", start, string.Format("Must be in the range [0, {0}]", points.Length - 1));
+            }
+
+            // Check that count is in the correct range
+            if (count < 0 || (start + count) > points.Length)
+            {
+                throw new ArgumentOutOfRangeException("count", count, string.Format("Must be in the range <= {0}", points.Length));
+            }
+
+            var upperEnd = start + count;
+
             //Find the center of all points.
             Vector3 center = Vector3.Zero;
-            for (int i = 0; i < points.Length; ++i)
+            for (int i = start; i < upperEnd; ++i)
             {
                 Vector3.Add(ref points[i], ref center, out center);
             }
 
             //This is the center of our sphere.
-            center /= (float)points.Length;
+            center /= (float)count;
 
             //Find the radius of the sphere
             float radius = 0f;
-            for (int i = 0; i < points.Length; ++i)
+            for (int i = start; i < upperEnd; ++i)
             {
                 //We are doing a relative distance comparasin to find the maximum distance
                 //from the center of our sphere.
@@ -255,6 +282,21 @@ namespace SharpDX
             //Construct the sphere.
             result.Center = center;
             result.Radius = radius;
+        }
+
+        /// <summary>
+        /// Constructs a <see cref="SharpDX.BoundingSphere"/> that fully contains the given points.
+        /// </summary>
+        /// <param name="points">The points that will be contained by the sphere.</param>
+        /// <param name="result">When the method completes, contains the newly constructed bounding sphere.</param>
+        public static void FromPoints(Vector3[] points, out BoundingSphere result)
+        {
+            if (points == null)
+            {
+                throw new ArgumentNullException("points");
+            }
+
+            FromPoints(points, 0, points.Length, out result);
         }
 
         /// <summary>

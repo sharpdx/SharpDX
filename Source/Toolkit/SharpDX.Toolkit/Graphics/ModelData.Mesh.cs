@@ -54,6 +54,11 @@ namespace SharpDX.Toolkit.Graphics
             public int ParentBoneIndex;
 
             /// <summary>
+            /// The bounding sphere for this mesh (in local object space).
+            /// </summary>
+            public BoundingSphere BoundingSphere;
+
+            /// <summary>
             /// Gets the shared vertex buffers
             /// </summary>
             public List<VertexBuffer> VertexBuffers;
@@ -77,6 +82,7 @@ namespace SharpDX.Toolkit.Graphics
             {
                 serializer.Serialize(ref Name, false, SerializeFlags.Nullable);
                 serializer.Serialize(ref ParentBoneIndex);
+                serializer.Serialize(ref BoundingSphere);
                 serializer.Serialize(ref VertexBuffers);
                 serializer.Serialize(ref IndexBuffers);
                 serializer.Serialize(ref MeshParts);

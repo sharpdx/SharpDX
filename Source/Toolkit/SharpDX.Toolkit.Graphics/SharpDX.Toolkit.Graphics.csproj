@@ -22,6 +22,7 @@
     <Compile Include="BlendState.cs" />
     <Compile Include="BlendStateCollection.cs" />
     <Compile Include="ClearOptions.cs" />
+    <Compile Include="ModelContentReader.cs" />
     <Compile Include="MaterialKeys.cs" />
     <Compile Include="MaterialTexture.cs" />
     <Compile Include="MaterialTextureStack.cs" />
@@ -37,6 +38,7 @@
     <Compile Include="ModelMeshPart.cs" />
     <Compile Include="ModelMeshPartCollection.cs" />
     <Compile Include="ModelReader.cs" />
+    <Compile Include="ModelRenderer.cs" />
     <Compile Include="VertexBufferBindingCollection.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="PrimitiveBatch.cs" />

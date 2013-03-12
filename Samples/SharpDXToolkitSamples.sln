@@ -49,6 +49,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PointerInput.WP8", "Toolkit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniCube.WP8.DrawingSurface", "Toolkit\WP8\MiniCube.DrawingSurface\MiniCube.WP8.DrawingSurface.csproj", "{03B394C1-213C-49DB-8541-9744884A4D8C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelRendering.Desktop", "Toolkit\Desktop\ModelRendering\ModelRendering.Desktop.csproj", "{A01E9FF2-AB38-4C1A-9AED-4DA69A5F36F0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -488,6 +490,16 @@ Global
 		{03B394C1-213C-49DB-8541-9744884A4D8C}.Release|x64.ActiveCfg = Release|Any CPU
 		{03B394C1-213C-49DB-8541-9744884A4D8C}.Release|x86.ActiveCfg = Release|x86
 		{03B394C1-213C-49DB-8541-9744884A4D8C}.Release|x86.Build.0 = Release|x86
+		{A01E9FF2-AB38-4C1A-9AED-4DA69A5F36F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A01E9FF2-AB38-4C1A-9AED-4DA69A5F36F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A01E9FF2-AB38-4C1A-9AED-4DA69A5F36F0}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{A01E9FF2-AB38-4C1A-9AED-4DA69A5F36F0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A01E9FF2-AB38-4C1A-9AED-4DA69A5F36F0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A01E9FF2-AB38-4C1A-9AED-4DA69A5F36F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A01E9FF2-AB38-4C1A-9AED-4DA69A5F36F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A01E9FF2-AB38-4C1A-9AED-4DA69A5F36F0}.Release|ARM.ActiveCfg = Release|Any CPU
+		{A01E9FF2-AB38-4C1A-9AED-4DA69A5F36F0}.Release|x64.ActiveCfg = Release|Any CPU
+		{A01E9FF2-AB38-4C1A-9AED-4DA69A5F36F0}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

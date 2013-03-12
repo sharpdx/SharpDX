@@ -24,6 +24,7 @@ using System.IO;
 using System.Text;
 
 using Assimp;
+using Assimp.Unmanaged;
 
 using SharpDX.DXGI;
 using SharpDX.Direct3D11;
@@ -39,6 +40,8 @@ namespace SharpDX.Toolkit.Graphics
         private List<ModelData.MeshPart>[] registeredMeshParts;
         private readonly Dictionary<Node, int> meshNodes = new Dictionary<Node, int>();
         private readonly Dictionary<Node, int> skinnedBones = new Dictionary<Node, int>();
+
+
         private readonly static List<string> AssimpMaterialDefaultNames = new List<string>()
                                                          {
                                                              "?mat.name,0,0",
@@ -62,14 +65,29 @@ namespace SharpDX.Toolkit.Graphics
         {
         }
 
-        public static ContentCompilerResult CompileAndSave(string fileName, string outputFile, string dependencyFile = null)
+        public static ContentCompilerResult CompileAndSave(string fileName, string outputFile, ModelCompilerOptions compilerOptions)
         {
+            if (fileName == null)
+            {
+                throw new ArgumentNullException("fileName");
+            }
+
+            if (outputFile == null)
+            {
+                throw new ArgumentNullException("outputFile");
+            }
+
+            if (compilerOptions == null)
+            {
+                throw new ArgumentNullException("compilerOptions");
+            }
+
             var result = new ContentCompilerResult { Logger = new Logger() };
 
             bool contentToUpdate = true;
-            if (dependencyFile != null)
+            if (compilerOptions.DependencyFile != null)
             {
-                if (!FileDependencyList.CheckForChanges(dependencyFile))
+                if (!FileDependencyList.CheckForChanges(compilerOptions.DependencyFile))
                 {
                     contentToUpdate = false;
                 }
@@ -79,18 +97,18 @@ namespace SharpDX.Toolkit.Graphics
             {
                 try
                 {
-                    var modelData = CompileFromFile(fileName);
+                    var modelData = CompileFromFile(fileName, compilerOptions);
 
                     // Save the model
                     modelData.Save(outputFile);
 
-                    if (dependencyFile != null)
+                    if (compilerOptions.DependencyFile != null)
                     {
                         // Save the dependency
                         var dependencyList = new FileDependencyList();
                         dependencyList.AddDefaultDependencies();
                         dependencyList.AddDependencyPath(fileName);
-                        dependencyList.Save(dependencyFile);
+                        dependencyList.Save(compilerOptions.DependencyFile);
                     }
 
                     result.IsContentGenerated = true;
@@ -105,26 +123,46 @@ namespace SharpDX.Toolkit.Graphics
             return result;
         }
 
-
-        public static ModelData CompileFromFile(string fileName)
+        public static ModelData CompileFromFile(string fileName, ModelCompilerOptions compilerOptions)
         {
             using (var stream = new NativeFileStream(fileName, NativeFileMode.Open, NativeFileAccess.Read))
             {
-                return Compile(stream, fileName);
+                return Compile(stream, fileName, compilerOptions);
             }
         }
 
-        public static ModelData Compile(Stream modelStream, string fileName)
+        public static ModelData Compile(Stream modelStream, string fileName, ModelCompilerOptions compilerOptions)
         {
             var compiler = new ModelCompiler();
-            return compiler.CompileFromStream(modelStream, fileName);
+            return compiler.CompileFromStream(modelStream, fileName, compilerOptions);
         }
 
-        private ModelData CompileFromStream(Stream modelStream, string fileName)
+        private ModelData CompileFromStream(Stream modelStream, string fileName, ModelCompilerOptions compilerOptions)
         {
+            var rootPath = Path.GetDirectoryName(typeof(AssimpLibrary).Assembly.Location);
+            AssimpLibrary.Instance.LoadLibrary(Path.Combine(rootPath, AssimpLibrary.Instance.DefaultLibraryPath32Bit), Path.Combine(rootPath, AssimpLibrary.Instance.DefaultLibraryPath64Bit));
+
             var importer = new AssimpImporter();
             //importer.SetConfig(new NormalSmoothingAngleConfig(66.0f));
-            scene = importer.ImportFileFromStream(modelStream, PostProcessPreset.TargetRealTimeMaximumQuality, Path.GetExtension(fileName));
+
+            // Steps for Direct3D, should we make this configurable?
+            var steps = PostProcessSteps.FlipUVs | PostProcessSteps.FlipWindingOrder | PostProcessSteps.MakeLeftHanded;
+
+            // Setup quality
+            switch (compilerOptions.Quality)
+            {
+                case ModelRealTimeQuality.Low:
+                    steps |= PostProcessPreset.TargetRealTimeFast;
+                    break;
+                case ModelRealTimeQuality.Maximum:
+                    steps |= PostProcessPreset.TargetRealTimeMaximumQuality;
+                    break;
+                default:
+                    steps |= PostProcessPreset.TargetRealTimeQuality;
+                    break;
+            }
+
+            scene = importer.ImportFileFromStream(modelStream, steps, Path.GetExtension(fileName));
             model = new ModelData();
             ProcessScene();
             return model;
@@ -375,6 +413,23 @@ namespace SharpDX.Toolkit.Graphics
                                    MeshParts = new List<ModelData.MeshPart>()
                                };
                 model.Meshes.Add(mesh);
+
+                // Precalculate the number of vertices for bouding sphere calculation
+                boundingPointCount = 0;
+                for (int i = 0; i < node.MeshCount; i++)
+                {
+                    var meshIndex = node.MeshIndices[i];
+                    var meshPart = scene.Meshes[meshIndex];
+                    boundingPointCount += meshPart.VertexCount;
+                }
+
+                // Reallocate the buffer if needed
+                if (boundingPoints == null || boundingPoints.Length < boundingPointCount)
+                {
+                    boundingPoints = new Vector3[boundingPointCount];
+                }
+
+                currentBoundingPointIndex = 0;
                 for (int i = 0; i < node.MeshCount; i++)
                 {
                     var meshIndex = node.MeshIndices[i];
@@ -390,6 +445,9 @@ namespace SharpDX.Toolkit.Graphics
                     meshToPartList.Add(meshPart);
                     mesh.MeshParts.Add(meshPart);
                 }
+
+                // Calculate the bounding sphere.
+                BoundingSphere.FromPoints(boundingPoints, 0, boundingPointCount, out mesh.BoundingSphere);
             } 
 
             // continue for all child nodes
@@ -401,6 +459,12 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
         }
+
+        private Vector3[] boundingPoints;
+        private int currentBoundingPointIndex;
+        private int boundingPointCount;
+
+
 
         private ModelData.MeshPart Process(ModelData.Mesh mesh, Assimp.Mesh assimpMesh)
         {
@@ -425,7 +489,7 @@ namespace SharpDX.Toolkit.Graphics
             int vertexBufferElementSize = 0;
 
             // Add position
-            layout.Add(VertexElement.Position(Format.R32G32B32_Float, 0));
+            layout.Add(VertexElement.PositionTransformed(Format.R32G32B32_Float, 0));
             vertexBufferElementSize += Utilities.SizeOf<SharpDX.Vector3>();
 
             // Add normals
@@ -545,7 +609,11 @@ namespace SharpDX.Toolkit.Graphics
             var vertexStream = DataStream.Create(vertexBuffer.Buffer, true, true);
             for (int i = 0; i < assimpMesh.VertexCount; i++)
             {
-                vertexStream.Write(assimpMesh.Vertices[i]);
+                var position = assimpMesh.Vertices[i];
+                vertexStream.Write(position);
+
+                // Store bounding points for BoundingSphere pre-calculation
+                boundingPoints[currentBoundingPointIndex++] = new Vector3(position.X, position.Y, position.Z);
 
                 // Add normals
                 if (assimpMesh.HasNormals)

@@ -21,10 +21,13 @@
 using System;
 using System.IO;
 
+using SharpDX.Toolkit.Content;
+
 namespace SharpDX.Toolkit.Graphics
 {
     public delegate Texture ModelMaterialTextureLoaderDelegate(string name);
 
+    [ContentReader(typeof(ModelContentReader))]
     public class Model : Component
     {
         public MaterialCollection Materials;
@@ -37,6 +40,136 @@ namespace SharpDX.Toolkit.Graphics
         public ModelMeshCollection Meshes;
 
         public PropertyCollection Properties;
+
+        /// <summary>
+        /// Copies a transform of each bone in a model relative to all parent bones of the bone into a given array.
+        /// </summary>
+        /// <param name="destinationBoneTransforms">The array to receive bone transforms.</param>
+        /// <exception cref="System.ArgumentNullException">destinationBoneTransforms</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">destinationBoneTransforms</exception>
+        public void CopyAbsoluteBoneTransformsTo(Matrix[] destinationBoneTransforms)
+        {
+            if (destinationBoneTransforms == null)
+            {
+                throw new ArgumentNullException("destinationBoneTransforms");
+            }
+            if (destinationBoneTransforms.Length < Bones.Count)
+            {
+                throw new ArgumentOutOfRangeException("destinationBoneTransforms");
+            }
+            int count = Bones.Count;
+            for (int i = 0; i < count; i++)
+            {
+                ModelBone bone = Bones[i];
+                if (bone.Parent == null)
+                {
+                    destinationBoneTransforms[i] = bone.Transform;
+                }
+                else
+                {
+                    destinationBoneTransforms[i] = bone.Transform * destinationBoneTransforms[bone.Parent.Index];
+                }
+            }
+        }
+
+        /// <summary>
+        /// Copies an array of transforms into each bone in the model.
+        /// </summary>
+        /// <param name="sourceBoneTransforms">An array containing new bone transforms.</param>
+        /// <exception cref="System.ArgumentNullException">sourceBoneTransforms</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">sourceBoneTransforms</exception>
+        public void CopyBoneTransformsFrom(Matrix[] sourceBoneTransforms)
+        {
+            if (sourceBoneTransforms == null)
+            {
+                throw new ArgumentNullException("sourceBoneTransforms");
+            }
+            if (sourceBoneTransforms.Length < Bones.Count)
+            {
+                throw new ArgumentOutOfRangeException("sourceBoneTransforms");
+            }
+            int count = Bones.Count;
+            for (int i = 0; i < count; i++)
+            {
+                Bones[i].Transform = sourceBoneTransforms[i];
+            }
+        }
+
+        /// <summary>
+        /// Copies each bone transform relative only to the parent bone of the model to a given array.
+        /// </summary>
+        /// <param name="destinationBoneTransforms">The array to receive bone transforms.</param>
+        /// <exception cref="System.ArgumentNullException">destinationBoneTransforms</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">destinationBoneTransforms</exception>
+        public void CopyBoneTransformsTo(Matrix[] destinationBoneTransforms)
+        {
+            if (destinationBoneTransforms == null)
+            {
+                throw new ArgumentNullException("destinationBoneTransforms");
+            }
+            if (destinationBoneTransforms.Length < Bones.Count)
+            {
+                throw new ArgumentOutOfRangeException("destinationBoneTransforms");
+            }
+            int count = Bones.Count;
+            for (int i = 0; i < count; i++)
+            {
+                destinationBoneTransforms[i] = Bones[i].Transform;
+            }
+        }
+
+        ///// <summary>Render a model after applying the matrix transformations.</summary>
+        ///// <param name="world">A world transformation matrix.</param>
+        ///// <param name="view">A view transformation matrix.</param>
+        ///// <param name="projection">A projection transformation matrix.</param>
+        //public void Draw(Matrix world, Matrix view, Matrix projection)
+        //{
+        //    int count = Meshes.Count;
+        //    int num3 = Bones.Count;
+        //    Matrix[] sharedDrawBoneMatrices = Model.sharedDrawBoneMatrices;
+        //    if ((sharedDrawBoneMatrices == null) || (sharedDrawBoneMatrices.Length < num3))
+        //    {
+        //        sharedDrawBoneMatrices = new Matrix[num3];
+        //        Model.sharedDrawBoneMatrices = sharedDrawBoneMatrices;
+        //    }
+        //    this.CopyAbsoluteBoneTransformsTo(sharedDrawBoneMatrices);
+        //    for (int i = 0; i < count; i++)
+        //    {
+        //        var mesh = Meshes[i];
+        //        int index = mesh.ParentBone.Index;
+        //        int num4 = mesh.Effects.Count;
+        //        for (int j = 0; j < num4; j++)
+        //        {
+        //            Effect effect = mesh.Effects[j];
+        //            if (effect == null)
+        //            {
+        //                throw new InvalidOperationException(FrameworkResources.ModelHasNoEffect);
+        //            }
+
+        //            IEffectMatrices matrices = effect as IEffectMatrices;
+        //            if (matrices == null)
+        //            {
+        //                throw new InvalidOperationException(FrameworkResources.ModelHasNoIEffectMatrices);
+        //            }
+        //            matrices.World = sharedDrawBoneMatrices[index] * world;
+        //            matrices.View = view;
+        //            matrices.Projection = projection;
+        //        }
+        //        mesh.Draw();
+        //    }
+        //}
+
+        /// <summary>
+        /// Gets the root bone for this model.
+        /// </summary>
+        /// <value>The root.</value>
+        public ModelBone Root
+        {
+            get
+            {
+                return Bones.Count > 0 ? Bones[0] : null;
+            }
+        }
 
         public virtual Model Clone()
         {

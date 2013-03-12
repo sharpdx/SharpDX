@@ -18,48 +18,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Collections.Generic;
-
-using SharpDX.Serialization;
+using System.IO;
+using SharpDX.Toolkit.Content;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public sealed partial class ModelData
+    /// <summary>
+    /// Internal class to load a SpriteFont.
+    /// </summary>
+    internal class ModelContentReader : GraphicsResourceContentReaderBase<Model>
     {
-        /// <summary>
-        /// Class Bone
-        /// </summary>
-        public class Bone : IDataSerializable
+        protected override Model ReadContent(IContentManager readerManager, GraphicsDevice device, string assetName, Stream stream)
         {
-            public int Index;
+            var assetPath = Path.GetDirectoryName(assetName);
 
-            /// <summary>
-            /// Gets parent node index.
-            /// </summary>
-            public int ParentIndex;
-
-            /// <summary>
-            /// The transform this node relative to its parent node.
-            /// </summary>
-            public Matrix Transform;
-
-            /// <summary>
-            /// The name of this node.
-            /// </summary>
-            public string Name;
-
-            /// <summary>
-            /// The children node indices.
-            /// </summary>
-            public List<int> Children;
-
-            void IDataSerializable.Serialize(BinarySerializer serializer)
-            {
-                serializer.Serialize(ref ParentIndex);
-                serializer.Serialize(ref Transform);
-                serializer.Serialize(ref Name, false, SerializeFlags.Nullable);
-                serializer.Serialize(ref Children, serializer.Serialize, SerializeFlags.Nullable);
-            }
+            return Model.Load(device, stream, name => readerManager.Load<Texture>(Path.Combine(assetPath ?? string.Empty, name)));
         }
     }
 }
