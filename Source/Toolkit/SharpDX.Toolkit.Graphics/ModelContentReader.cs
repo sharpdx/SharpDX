@@ -43,14 +43,15 @@ namespace SharpDX.Toolkit.Graphics
             // Loads the model.
             var model = Model.Load(device, stream, name =>
                 {
-                    var texturePath = Path.Combine(assetPath ?? string.Empty, name);
                     try
                     {
+                        var texturePath = Path.Combine(assetPath ?? string.Empty, name);
                         return readerManager.Load<Texture>(texturePath);
                     }
-                    catch (Exception ex)
+                    catch (AssetNotFoundException ex)
                     {
-                        Debug.WriteLine("Exception while trying to load {0}. Reason: {1}", texturePath, ex);
+                        // TODO: Because some models could have some textures that are not found, the model should load, even if the
+                        // Texture was not found, but we define what to do in this case. Log error?
                     }
                     return null;
                 });

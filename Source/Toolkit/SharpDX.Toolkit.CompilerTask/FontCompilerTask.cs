@@ -62,6 +62,9 @@ namespace SharpDX.Toolkit
 
                     var compilerResult = FontCompiler.CompileAndSave(inputFilePath, outputFilePath, dependencyFilePath);
 
+                    // Log all messages
+                    LogLogger(compilerResult.Logger);
+
                     if (compilerResult.HasErrors)
                     {
                         hasErrors = true;

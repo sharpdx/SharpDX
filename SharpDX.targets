@@ -107,6 +107,21 @@ It compiles all files of type ToolkitFxc/ToolkitFont
     </Reference>
   </ItemGroup>
 
+  <!--Copy Assimp32 / Assimp64 dll on desktop-->
+  <ItemGroup Condition="Exists('$(SharpDXSdkBinDir)\Assimp32.dll') and '$(TargetFrameworkIdentifier)' == '.NETFramework'">
+    <Content Include="$(SharpDXSdkBinDir)\Assimp32.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>Assimp32.dll</Link>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists('$(SharpDXSdkBinDir)\Assimp64.dll') and '$(TargetFrameworkIdentifier)' == '.NETFramework'">
+    <Content Include="$(SharpDXSdkBinDir)\Assimp64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>Assimp32.dll</Link>
+    </Content>
+  </ItemGroup>
+
   <!-- If we are on desktop or WinRT, we can safely add a reference to Direct2D1 -->
   <ItemGroup Condition="Exists('$(SharpDXSdkBinDir)\SharpDX.Direct2D1.dll') and ('$(TargetFrameworkIdentifier)' == '.NETFramework' or '$(TargetFrameworkIdentifier)' == '.NETCore')">
     <Reference Include="SharpDX.Direct2D1">

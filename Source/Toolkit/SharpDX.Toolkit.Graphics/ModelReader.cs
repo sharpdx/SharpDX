@@ -363,7 +363,12 @@ namespace SharpDX.Toolkit.Graphics
                 }
                 else
                 {
-                    materialTexture.Texture = TextureLoaderDelegate(filePath);
+                    // If the texture name is empty, the texture was probably not located when compiling, so we skipt it
+                    // TODO Check if we want another behavior?
+                    if (!string.IsNullOrEmpty(filePath))
+                    {
+                        materialTexture.Texture = TextureLoaderDelegate(filePath);
+                    }
                 }
             }
 

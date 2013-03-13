@@ -38,6 +38,11 @@ namespace SharpDX.IO
         /// </remarks>
         public static string GetNormalizedPath(string path)
         {
+            if (path == null)
+            {
+                throw new ArgumentNullException("path");
+            }
+
             // Make sure that all / are translated to \
             path = path.Replace('/', '\\');
 
@@ -50,8 +55,7 @@ namespace SharpDX.IO
                     continue;
                 if (pathItem == "..")
                 {
-                    if (pathList.Count == 0)
-                        throw new ArgumentException("Invalid path can't start with '..'");
+                    if (pathList.Count == 0) return null;
                     pathList.Pop();
                 }
                 else

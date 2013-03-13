@@ -8,12 +8,9 @@
     <RootNamespace>SharpDX.Toolkit</RootNamespace>
     <AssemblyName>SharpDX.Toolkit.Compiler</AssemblyName>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Net40Debug|AnyCPU'">
-    <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AssimpNet">
-      <HintPath>..\..\..\External\AssimpNet-3.1\Bin\AssimpNet.dll</HintPath>
+      <HintPath>..\..\..\External\AssimpNet-3.1\Bin\$(SharpDXPlatform)\AssimpNet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

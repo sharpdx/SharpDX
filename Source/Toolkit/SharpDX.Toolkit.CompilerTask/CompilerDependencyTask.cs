@@ -24,6 +24,8 @@ using System.IO;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
+using SharpDX.Toolkit.Diagnostics;
+
 namespace SharpDX.Toolkit
 {
     /// <summary>
@@ -144,6 +146,30 @@ namespace SharpDX.Toolkit
         protected virtual bool ProcessItem(TkItem item)
         {
             return true;
+        }
+
+        protected void LogLogger(SharpDX.Toolkit.Diagnostics.Logger logs)
+        {
+            if (logs == null)
+            {
+                return;
+            }
+
+            foreach (var message in logs.Messages)
+            {
+                switch (message.Type)
+                {
+                    case LogMessageType.Warning:
+                        Log.LogWarning(message.Text);
+                        break;
+                    case LogMessageType.Error:
+                        Log.LogError(message.Text);
+                        break;
+                    case LogMessageType.Info:
+                        Log.LogMessage(MessageImportance.Low, message.Text);
+                        break;
+                }
+            }
         }
 
         protected TkItem GetTkItem(ITaskItem item)

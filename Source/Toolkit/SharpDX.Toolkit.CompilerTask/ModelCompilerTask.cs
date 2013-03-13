@@ -67,13 +67,11 @@ namespace SharpDX.Toolkit
                                               };
                     var compilerResult = ModelCompiler.CompileAndSave(inputFilePath, outputFilePath, compilerOptions);
 
+                    // Log all messages
+                    LogLogger(compilerResult.Logger);
+
                     if (compilerResult.HasErrors)
                     {
-                        foreach (var message in compilerResult.Logger.Messages)
-                        {
-                            Log.LogError(message.ToString());
-                        }
-
                         hasErrors = true;
                     }
                     else

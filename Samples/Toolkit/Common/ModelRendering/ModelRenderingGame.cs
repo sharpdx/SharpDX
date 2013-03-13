@@ -120,6 +120,9 @@ namespace ModelRendering
                 keySpacePressed = false;
             }
 
+            if (keyState.IsKeyDown(Keys.Escape))
+                Exit();
+
             // Calculate the bounds of this model
             modelBounds = model.CalculateBounds();
 
@@ -128,7 +131,7 @@ namespace ModelRendering
             var scaling = MaxModelSize / modelBounds.Radius;
             view = Matrix.LookAtLH(new Vector3(0, 0, - MaxModelSize * 2.5f), new Vector3(0, 0, 0), Vector3.UnitY);
             projection = Matrix.PerspectiveFovLH(0.9f, (float)GraphicsDevice.BackBuffer.Width / GraphicsDevice.BackBuffer.Height, 0.1f, MaxModelSize * 10.0f);
-            world = Matrix.Scaling(scaling) * Matrix.RotationY((float)gameTime.TotalGameTime.TotalSeconds) * Matrix.Translation(0, -modelBounds.Center.Y * scaling, 0);
+            world = Matrix.Translation(-modelBounds.Center.X, -modelBounds.Center.Y, -modelBounds.Center.Z) * Matrix.Scaling(scaling) * Matrix.RotationY((float)gameTime.TotalGameTime.TotalSeconds);
         }
 
         protected override void Draw(GameTime gameTime)

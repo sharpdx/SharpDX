@@ -146,10 +146,15 @@ namespace SharpDX.Toolkit.Graphics
 
         private Logger logger;
 
+        private string modelFilePath;
+        private string modelDirectory;
+
         private ContentCompilerResult CompileFromStream(Stream modelStream, string fileName, ModelCompilerOptions compilerOptions)
         {
             logger = new Logger();
             var result = new ContentCompilerResult() { Logger = logger };
+            modelFilePath = fileName;
+            modelDirectory = Path.GetDirectoryName(modelFilePath);
 
             // Preload AssimpLibrary if not already loaded
             if (!AssimpLibrary.Instance.LibraryLoaded)
@@ -370,6 +375,12 @@ namespace SharpDX.Toolkit.Graphics
                                                          WrapMode = ConvertWrapMode(textureSlot.WrapMode),
                                                          Flags = (MaterialTextureFlags)textureSlot.Flags
                                                      };
+
+                            var pathToFullTexture = Path.Combine(modelDirectory, textureSlot.FilePath);
+                            if (!File.Exists(pathToFullTexture))
+                            {
+                                logger.Warning(string.Format("Texture [{0}] not found from path [{1}] for model [{2}]. Skip it", textureSlot.FilePath, pathToFullTexture, modelFilePath));
+                            }
 
                             materialTextures.Add(newTextureSlot);
                         }

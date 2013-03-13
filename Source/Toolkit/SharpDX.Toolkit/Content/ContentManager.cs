@@ -118,7 +118,13 @@ namespace SharpDX.Toolkit.Content
         /// <exception cref="NotSupportedException">If no content reader was suitable to decode the asset.</exception>
         public virtual T Load<T>(string assetNameWithExtension, object options = null)
         {
+            var sourcePath = Path.Combine(rootDirectory ?? string.Empty, assetNameWithExtension);
             var assetPath = PathUtility.GetNormalizedPath(Path.Combine(rootDirectory ?? string.Empty, assetNameWithExtension));
+
+            if (assetPath == null)
+            {
+                throw new AssetNotFoundException(string.Format("Invalid source path [{0}]", sourcePath));
+            }
 
             object result = null;
 

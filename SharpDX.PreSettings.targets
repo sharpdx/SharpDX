@@ -13,6 +13,12 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Net20Debug</Configuration>
     <SharpDXSign Condition=" '$(SharpDXSign)' == '' ">false</SharpDXSign>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+
+
+    <SharpDXAssemblyType>Standard</SharpDXAssemblyType>
+    <SharpDXPlatform>net20</SharpDXPlatform>
+    <SharpDXAssemblyType Condition=" '$(SharpDXSign)' == 'true'">Signed</SharpDXAssemblyType>
+
     
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <OutputType>Library</OutputType>
@@ -33,23 +39,21 @@
   
   <!--.NET 2.0 - Desktop-->
   <PropertyGroup Condition=" '$(Configuration)' == 'Net20Debug' Or '$(Configuration)' == 'Net20Release'">
-    <OutputPath>$(SolutionDir)\Bin\Standard-net20\</OutputPath>
-    <OutputPath Condition=" '$(SharpDXSign)' == 'true'">$(SolutionDir)\Bin\Signed-net20\</OutputPath>
+    <SharpDXPlatform>net20</SharpDXPlatform>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <TargetFrameworkProfile></TargetFrameworkProfile>
   </PropertyGroup>
   
   <!--.NET 4.0 - Desktop-->
   <PropertyGroup Condition=" '$(Configuration)' == 'Net40Debug' Or '$(Configuration)' == 'Net40Release'">
-    <OutputPath>$(SolutionDir)\Bin\Standard-net40\</OutputPath>
-    <OutputPath Condition=" '$(SharpDXSign)' == 'true'">$(SolutionDir)\Bin\Signed-net40\</OutputPath>
+    <SharpDXPlatform>net40</SharpDXPlatform>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   
   <!--.NET 4.0 - DirectX11.1 - Windows 8 Desktop-->
   <PropertyGroup Condition=" '$(Configuration)' == 'DIRECTX11_1Debug' Or '$(Configuration)' == 'DIRECTX11_1Release'">
-    <OutputPath>$(SolutionDir)\Bin\Win8Desktop-net40\</OutputPath>
+    <SharpDXPlatform>net40</SharpDXPlatform>
     <DirectX11_1>true</DirectX11_1>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
@@ -57,8 +61,7 @@
   
   <!--.NET 4.5 - DirectX11.1 - Windows 8 Metro-->
   <PropertyGroup Condition=" '$(Configuration)' == 'Win8Debug' Or '$(Configuration)' == 'Win8Release'  ">
-    <OutputPath>$(SolutionDir)\Bin\Standard-winrt\</OutputPath>
-    <OutputPath Condition=" '$(SharpDXSign)' == 'true'">$(SolutionDir)\Bin\Signed-winrt\</OutputPath>
+    <SharpDXPlatform>winrt</SharpDXPlatform>
     <SharpDXWin8>true</SharpDXWin8>
     <SharpDXWin8Core>true</SharpDXWin8Core>
     <DirectX11_1>true</DirectX11_1>
@@ -70,7 +73,7 @@
   
   <!--.NET Windows Phone - DirectX11.1 - Windows Phone 8-->
   <PropertyGroup Condition=" '$(Configuration)' == 'WP8Debug' Or '$(Configuration)' == 'WP8Release'  ">
-    <OutputPath>$(SolutionDir)\Bin\Standard-wp8-$(Platform)\</OutputPath>
+    <SharpDXPlatform>wp8-$(Platform)</SharpDXPlatform>
     <SharpDXWin8Core>true</SharpDXWin8Core>
     <SharpDXWP8>true</SharpDXWP8>
     <DirectX11_1>true</DirectX11_1>
@@ -81,6 +84,9 @@
   </PropertyGroup>
 
   <!--<Import Condition="'$(SharpDXWP8)' != 'false'"  Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />-->
+  <PropertyGroup>
+    <OutputPath>$(SolutionDir)\Bin\$(SharpDXAssemblyType)-$(SharpDXPlatform)\</OutputPath>
+  </PropertyGroup>
 
   <!--
   *************************************************************************************************************

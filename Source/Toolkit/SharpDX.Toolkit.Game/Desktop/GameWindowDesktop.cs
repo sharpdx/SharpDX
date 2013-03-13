@@ -110,6 +110,8 @@ namespace SharpDX.Toolkit
             }
         }
 
+        private RenderLoop.RenderCallback runRenderCallback;
+
         internal override void Run()
         {
             Debug.Assert(InitCallback != null);
@@ -118,12 +120,12 @@ namespace SharpDX.Toolkit
             // Initialize the init callback
             InitCallback();
 
-            var runCallback = new RenderLoop.RenderCallback(RunCallback);
+            runRenderCallback = new RenderLoop.RenderCallback(RenderLoopCallback);
 
             // Run the rendering loop
             try
             {
-                RenderLoop.Run(Control, runCallback);
+                RenderLoop.Run(Control, runRenderCallback);
             }
             finally
             {
@@ -132,6 +134,21 @@ namespace SharpDX.Toolkit
                     ExitCallback();
                 }
             }
+        }
+
+        private void RenderLoopCallback()
+        {
+            if (Exiting)
+            {
+                if (Control != null)
+                {
+                    Control.Dispose();
+                    Control = null;
+                }
+                return;
+            }
+
+            RunCallback();
         }
 
         private void GameWindowForm_MouseEnter(object sender, System.EventArgs e)
@@ -261,8 +278,11 @@ namespace SharpDX.Toolkit
         {
             if (disposeManagedResources)
             {
-                Control.Dispose();
-                Control = null;
+                if (Control != null)
+                {
+                    Control.Dispose();
+                    Control = null;
+                }
 
                 gameForm = null;
             }
