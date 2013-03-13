@@ -22,6 +22,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+#if W8CORE
+using SharpDX.Text;
+#endif
 using System.Text.RegularExpressions;
 
 using SharpDX.Direct3D11;
