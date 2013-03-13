@@ -30,7 +30,7 @@ namespace SharpDX.Toolkit.Graphics
     /// <typeparam name="T"></typeparam>
     abstract class GraphicsResourceContentReaderBase<T> : IContentReader
     {
-        object IContentReader.ReadContent(IContentManager readerManager, string assetName, Stream stream, out bool keepStreamOpen)
+        object IContentReader.ReadContent(IContentManager readerManager, string assetName, Stream stream, out bool keepStreamOpen, object options)
         {
             keepStreamOpen = false;
             var service = readerManager.ServiceProvider.GetService(typeof (IGraphicsDeviceService)) as IGraphicsDeviceService;
@@ -43,6 +43,6 @@ namespace SharpDX.Toolkit.Graphics
             return ReadContent(readerManager, service.GraphicsDevice, assetName, stream);
         }
 
-        protected abstract T ReadContent(IContentManager readerManager, GraphicsDevice device, string assetName, Stream stream);
+        protected abstract T ReadContent(IContentManager readerManager, GraphicsDevice device, string assetName, Stream stream, object options = null);
     }
 }

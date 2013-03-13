@@ -44,6 +44,35 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Copies a transform of each bone in a model relative to all parent bones of the bone into a given array.
         /// </summary>
+        /// <param name="destinationBoneTransformsPtr">The array to receive bone transforms. Length of the allocated array must be at least == sizeof(Matrix) * Bones.Count</param>
+        /// <exception cref="System.ArgumentNullException">destinationBoneTransforms</exception>
+        public unsafe void CopyAbsoluteBoneTransformsTo(IntPtr destinationBoneTransformsPtr)
+        {
+            if (destinationBoneTransformsPtr == IntPtr.Zero)
+            {
+                throw new ArgumentNullException("destinationBoneTransforms");
+            }
+
+            var destinationBoneTransforms = (Matrix*)destinationBoneTransformsPtr;
+
+            int count = Bones.Count;
+            for (int i = 0; i < count; i++)
+            {
+                ModelBone bone = Bones[i];
+                if (bone.Parent == null)
+                {
+                    destinationBoneTransforms[i] = bone.Transform;
+                }
+                else
+                {
+                    destinationBoneTransforms[i] = bone.Transform * destinationBoneTransforms[bone.Parent.Index];
+                }
+            }
+        }
+
+        /// <summary>
+        /// Copies a transform of each bone in a model relative to all parent bones of the bone into a given array.
+        /// </summary>
         /// <param name="destinationBoneTransforms">The array to receive bone transforms.</param>
         /// <exception cref="System.ArgumentNullException">destinationBoneTransforms</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">destinationBoneTransforms</exception>
@@ -119,6 +148,105 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
+        /// Render a model after applying the matrix transformations.
+        /// </summary>
+        /// <param name="context">The <see cref="GraphicsDevice"/> context.</param>
+        /// <param name="world">A world transformation matrix.</param>
+        /// <param name="view">A view transformation matrix.</param>
+        /// <param name="projection">A projection transformation matrix.</param>
+        /// <exception cref="System.InvalidOperationException">
+        /// Mesh has no effect
+        /// or
+        /// Effect has no IEffectMatrices
+        /// </exception>
+        public unsafe void Draw(GraphicsDevice context, Matrix world, Matrix view, Matrix projection)
+        {
+            int count = Meshes.Count;
+            int boneCount = Bones.Count;
+            Matrix* localSharedDrawBoneMatrices = stackalloc Matrix[boneCount];
+
+            CopyAbsoluteBoneTransformsTo(new IntPtr(localSharedDrawBoneMatrices));
+            for (int i = 0; i < count; i++)
+            {
+                var mesh = Meshes[i];
+                int index = mesh.ParentBone.Index;
+                int effectCount = mesh.Effects.Count;
+                for (int j = 0; j < effectCount; j++)
+                {
+                    var effect = mesh.Effects[j];
+                    if (effect == null)
+                    {
+                        throw new InvalidOperationException("Mesh has no effect");
+                    }
+
+                    var matrices = effect as IEffectMatrices;
+                    if (matrices == null)
+                    {
+                        throw new InvalidOperationException("Effect has no IEffectMatrices");
+                    }
+                    Matrix result;
+                    Matrix.Multiply(ref localSharedDrawBoneMatrices[index], ref world, out result);
+                    matrices.World = result;
+                    matrices.View = view;
+                    matrices.Projection = projection;
+                }
+
+                mesh.Draw(context);
+            }
+        }
+
+
+        /// <summary>
+        /// Calculates the bounds of this model.
+        /// </summary>
+        /// <returns>BoundingSphere.</returns>
+        public unsafe BoundingSphere CalculateBounds()
+        {
+            return CalculateBounds(Matrix.Identity);
+        }
+
+        /// <summary>
+        /// Calculates the bounds of this model in world space.
+        /// </summary>
+        /// <param name="world">The world.</param>
+        /// <returns>BoundingSphere.</returns>
+        public unsafe BoundingSphere CalculateBounds(Matrix world)
+        {
+            int count = Meshes.Count;
+            int boneCount = Bones.Count;
+            Matrix* localSharedDrawBoneMatrices = stackalloc Matrix[boneCount];
+
+            CopyAbsoluteBoneTransformsTo(new IntPtr(localSharedDrawBoneMatrices));
+            var defaultSphere = new BoundingSphere(Vector3.Zero, 0.0f);
+            for (int i = 0; i < count; i++)
+            {
+                var mesh = Meshes[i];
+                int index = mesh.ParentBone.Index;
+                Matrix result;
+                Matrix.Multiply(ref localSharedDrawBoneMatrices[index], ref world, out result);
+
+                var meshSphere = mesh.BoundingSphere;
+                Vector3.TransformCoordinate(ref meshSphere.Center, ref result, out meshSphere.Center);
+
+                BoundingSphere.Merge(ref defaultSphere, ref meshSphere, out defaultSphere);
+            }
+            return defaultSphere;
+        }
+
+        /// <summary>
+        /// Iterator on each <see cref="ModelMeshPart"/>.
+        /// </summary>
+        /// <param name="meshPartFunction">The mesh part function.</param>
+        public void ForEach(Action<ModelMeshPart> meshPartFunction)
+        {
+            int meshCount = Meshes.Count;
+            for (int i = 0; i < meshCount; i++)
+            {
+                Meshes[i].ForEach(meshPartFunction);
+            }
+        }
+
+        /// <summary>
         /// Gets the root bone for this model.
         /// </summary>
         /// <value>The root.</value>
@@ -142,6 +270,11 @@ namespace SharpDX.Toolkit.Graphics
             {
                 return serializer.ReadModel();
             }
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0} {1}", this.GetType().Name, Name);
         }
     }
 }

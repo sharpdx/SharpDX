@@ -22,13 +22,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 
 using SharpDX.Direct3D11;
 using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    internal class ModelReader : BinarySerializer
+    public class ModelReader : BinarySerializer
     {
         private DataPointer sharedPtr;
 
@@ -52,7 +53,6 @@ namespace SharpDX.Toolkit.Graphics
             GraphicsDevice = graphicsDevice;
             TextureLoaderDelegate = textureLoader;
             ArrayLengthType = ArrayLengthType.Int;
-            Model = CreateModel();
         }
 
         internal void AllocateSharedMemory(int size)
@@ -69,11 +69,13 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        protected readonly Model Model;
+        protected Model Model;
 
         protected ModelMesh CurrentMesh;
 
         protected readonly GraphicsDevice GraphicsDevice;
+
+        private List<Texture> EmbeddedTextures = new List<Texture>();
 
         protected readonly ModelMaterialTextureLoaderDelegate TextureLoaderDelegate;
 
@@ -159,6 +161,7 @@ namespace SharpDX.Toolkit.Graphics
 
         public Model ReadModel()
         {
+            Model = CreateModel();
             var model = Model;
             ReadModel(ref model);
             return model;
@@ -173,6 +176,17 @@ namespace SharpDX.Toolkit.Graphics
 
             // Allocated the shared memory used to load this Model
             AllocateSharedMemory(Reader.ReadInt32());
+
+            // Textures / preload embedded textures
+            BeginChunk("TEXS");
+            int textureCount = Reader.ReadInt32();
+            for (int i = 0; i < textureCount; i++)
+            {
+                byte[] textureData = null;
+                Serialize(ref textureData);
+                EmbeddedTextures.Add(Texture.Load(GraphicsDevice, new MemoryStream(textureData)));
+            }
+            EndChunk();
 
             // Material section
             BeginChunk("MATL");
@@ -325,13 +339,33 @@ namespace SharpDX.Toolkit.Graphics
             ReadProperties(ref material.Properties, name => MaterialKeys.FindKeyByName(name) ?? new PropertyKey(name));
         }
 
+        private static Regex RegexMatchEmbeddedTexture = new Regex(@"^\*(\d+)$");
+
         protected virtual void ReadMaterialTexture(ref MaterialTexture materialTexture)
         {
             // Loads the texture
             string filePath = null;
             Serialize(ref filePath);
             materialTexture.name = Path.GetFileNameWithoutExtension(filePath);
-            materialTexture.Texture = TextureLoaderDelegate(filePath);
+
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                var match = RegexMatchEmbeddedTexture.Match(filePath);
+
+                if (match.Success)
+                {
+                    var textureIndex = int.Parse(match.Groups[1].Value);
+                    if (textureIndex > EmbeddedTextures.Count)
+                    {
+                        throw new InvalidOperationException(string.Format("Out of range embedded texture with index [{0}] vs max [{1}]", textureIndex, EmbeddedTextures.Count));
+                    }
+                    materialTexture.Texture = EmbeddedTextures[textureIndex];
+                }
+                else
+                {
+                    materialTexture.Texture = TextureLoaderDelegate(filePath);
+                }
+            }
 
             materialTexture.Index = Reader.ReadInt32();
             materialTexture.UVIndex = Reader.ReadInt32();
@@ -390,6 +424,9 @@ namespace SharpDX.Toolkit.Graphics
 
         protected virtual void ReadMeshPart(ref ModelMeshPart meshPart)
         {
+            // Set the Parent mesh for the current ModelMeshPart.
+            meshPart.ParentMesh = CurrentMesh;
+
             // Material
             int materialIndex = Reader.ReadInt32();
             meshPart.Material = Model.Materials[materialIndex];

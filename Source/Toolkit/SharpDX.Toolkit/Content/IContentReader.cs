@@ -34,7 +34,8 @@ namespace SharpDX.Toolkit.Content
         /// <param name="assetName">The name of the asset associated with the stream.</param>
         /// <param name="stream">The steam of the asset to load data from.</param>
         /// <param name="keepStreamOpen"><c>true</c> to keep the stream opened after the content was read, otherwise the stream will be closed after if this content reader succeeded to read the data.</param>
+        /// <param name="options">The options passed to the content manager.</param>
         /// <returns>The data decoded from the stream, or null if the kind of asset is not supported by this content reader.</returns>
-        object ReadContent(IContentManager contentManager, string assetName, Stream stream, out bool keepStreamOpen);
+        object ReadContent(IContentManager contentManager, string assetName, Stream stream, out bool keepStreamOpen, object options = null);
     }
 }

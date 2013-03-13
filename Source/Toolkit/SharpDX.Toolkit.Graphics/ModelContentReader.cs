@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+using System.Diagnostics;
 using System.IO;
 using SharpDX.Toolkit.Content;
 
@@ -28,11 +30,60 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     internal class ModelContentReader : GraphicsResourceContentReaderBase<Model>
     {
-        protected override Model ReadContent(IContentManager readerManager, GraphicsDevice device, string assetName, Stream stream)
+        protected override Model ReadContent(IContentManager readerManager, GraphicsDevice device, string assetName, Stream stream, object options)
         {
+            var readerOptions = options as ModelContentReaderOptions;
+            if (options != null && readerOptions == null)
+            {
+                throw new ArgumentException("Invalid options. Must be instance of ModelContentReaderOptions", "options");
+            }
+
             var assetPath = Path.GetDirectoryName(assetName);
 
-            return Model.Load(device, stream, name => readerManager.Load<Texture>(Path.Combine(assetPath ?? string.Empty, name)));
+            // Loads the model.
+            var model = Model.Load(device, stream, name =>
+                {
+                    var texturePath = Path.Combine(assetPath ?? string.Empty, name);
+                    try
+                    {
+                        return readerManager.Load<Texture>(texturePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("Exception while trying to load {0}. Reason: {1}", texturePath, ex);
+                    }
+                    return null;
+                });
+
+            if (model == null)
+            {
+                return null;
+            }
+
+            // If the model has no name, use filename
+            if (model.Name == null)
+            {
+                model.Name = Path.GetFileName(assetName);
+            }
+
+            // Applies the Effect installer on the model.
+            bool disableInstaller = readerOptions != null && readerOptions.DisableEffectInstaller;
+            if (!disableInstaller)
+            {
+                IEffectInstaller effectInstaller;
+                if (readerOptions != null && readerOptions.EffectInstaller != null)
+                {
+                    effectInstaller = readerOptions.EffectInstaller;
+                }
+                else
+                {
+                    effectInstaller = new BasicEffectInstaller(device);
+                }
+
+                effectInstaller.Apply(model);
+            }
+
+            return model;
         }
     }
 }

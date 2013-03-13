@@ -38,6 +38,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public ModelData()
         {
+            Textures = new List<byte[]>();
             Materials = new List<Material>();
             Bones = new List<Bone>();
             // DISABLE_SKINNED_BONES
@@ -50,6 +51,11 @@ namespace SharpDX.Toolkit.Graphics
         /// Gest the maximum buffer size in bytes that will be needed when loading this model.
         /// </summary>
         public int MaximumBufferSizeInBytes;
+
+        /// <summary>
+        /// Embedded textures.
+        /// </summary>
+        public List<byte[]> Textures;
 
         /// <summary>
         /// Gets the material of this model.
@@ -164,6 +170,30 @@ namespace SharpDX.Toolkit.Graphics
 
             // Serialize the maximum buffer size used when loading this model.
             serializer.Serialize(ref MaximumBufferSizeInBytes);
+
+            // Texture section
+            serializer.BeginChunk("TEXS");
+            if (serializer.Mode == SerializerMode.Read)
+            {
+                int textureCount = serializer.Reader.ReadInt32();
+                Textures = new List<byte[]>(textureCount);
+                for (int i = 0; i < textureCount; i++)
+                {
+                    byte[] textureData = null;
+                    serializer.Serialize(ref textureData);
+                    Textures.Add(textureData);
+                }
+            }
+            else
+            {
+                serializer.Writer.Write(Textures.Count);
+                for (int i = 0; i < Textures.Count; i++)
+                {
+                    byte[] textureData = Textures[i];
+                    serializer.Serialize(ref textureData);
+                }
+            }
+            serializer.EndChunk();
 
             // Material section
             serializer.BeginChunk("MATL");

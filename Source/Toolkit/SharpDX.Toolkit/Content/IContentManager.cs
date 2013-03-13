@@ -42,10 +42,11 @@ namespace SharpDX.Toolkit.Content
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="assetNameWithExtension">Full asset name (with its extension)</param>
+        /// <param name="options">The options to pass to the content reader (null by default).</param>
         /// <returns>``0.</returns>
-        /// <exception cref="SharpDX.Toolkit.Content.AssetNotFoundException">If the asset was not found from all <see cref="IContentResolver"/>.</exception>
+        /// <exception cref="SharpDX.Toolkit.Content.AssetNotFoundException">If the asset was not found from all <see cref="IContentResolver" />.</exception>
         /// <exception cref="System.NotSupportedException">If no content reader was suitable to decode the asset.</exception>
-        T Load<T>(string assetNameWithExtension);
+        T Load<T>(string assetNameWithExtension, object options = null);
 
         /// <summary>
         /// Unloads all data that was loaded by this ContentManager. All data will be disposed.

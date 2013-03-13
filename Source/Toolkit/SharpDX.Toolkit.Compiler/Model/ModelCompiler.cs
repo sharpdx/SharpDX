@@ -82,7 +82,6 @@ namespace SharpDX.Toolkit.Graphics
                 throw new ArgumentNullException("compilerOptions");
             }
 
-            var result = new ContentCompilerResult { Logger = new Logger() };
 
             bool contentToUpdate = true;
             if (compilerOptions.DependencyFile != null)
@@ -93,11 +92,19 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
 
+            var result = new ContentCompilerResult { Logger = new Logger() };
             if (contentToUpdate)
             {
                 try
                 {
-                    var modelData = CompileFromFile(fileName, compilerOptions);
+                    result = CompileFromFile(fileName, compilerOptions);
+
+                    if (result.HasErrors)
+                    {
+                        return result;
+                    }
+
+                    var modelData = result.ModelData;
 
                     // Save the model
                     modelData.Save(outputFile);
@@ -117,13 +124,13 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     result.Logger.Error("Unexpected exception while converting {0} : {1}", fileName, ex.ToString());
                 }
-
             }
+
 
             return result;
         }
 
-        public static ModelData CompileFromFile(string fileName, ModelCompilerOptions compilerOptions)
+        public static ContentCompilerResult CompileFromFile(string fileName, ModelCompilerOptions compilerOptions)
         {
             using (var stream = new NativeFileStream(fileName, NativeFileMode.Open, NativeFileAccess.Read))
             {
@@ -131,16 +138,25 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        public static ModelData Compile(Stream modelStream, string fileName, ModelCompilerOptions compilerOptions)
+        public static ContentCompilerResult Compile(Stream modelStream, string fileName, ModelCompilerOptions compilerOptions)
         {
             var compiler = new ModelCompiler();
             return compiler.CompileFromStream(modelStream, fileName, compilerOptions);
         }
 
-        private ModelData CompileFromStream(Stream modelStream, string fileName, ModelCompilerOptions compilerOptions)
+        private Logger logger;
+
+        private ContentCompilerResult CompileFromStream(Stream modelStream, string fileName, ModelCompilerOptions compilerOptions)
         {
-            var rootPath = Path.GetDirectoryName(typeof(AssimpLibrary).Assembly.Location);
-            AssimpLibrary.Instance.LoadLibrary(Path.Combine(rootPath, AssimpLibrary.Instance.DefaultLibraryPath32Bit), Path.Combine(rootPath, AssimpLibrary.Instance.DefaultLibraryPath64Bit));
+            logger = new Logger();
+            var result = new ContentCompilerResult() { Logger = logger };
+
+            // Preload AssimpLibrary if not already loaded
+            if (!AssimpLibrary.Instance.LibraryLoaded)
+            {
+                var rootPath = Path.GetDirectoryName(typeof(AssimpLibrary).Assembly.Location);
+                AssimpLibrary.Instance.LoadLibrary(Path.Combine(rootPath, AssimpLibrary.Instance.DefaultLibraryPath32Bit), Path.Combine(rootPath, AssimpLibrary.Instance.DefaultLibraryPath64Bit));
+            }
 
             var importer = new AssimpImporter();
             //importer.SetConfig(new NormalSmoothingAngleConfig(66.0f));
@@ -165,7 +181,11 @@ namespace SharpDX.Toolkit.Graphics
             scene = importer.ImportFileFromStream(modelStream, steps, Path.GetExtension(fileName));
             model = new ModelData();
             ProcessScene();
-            return model;
+
+            result.IsContentGenerated = true;
+            result.ModelData = model;
+
+            return result;
         }
 
         private void ProcessScene()
@@ -175,6 +195,8 @@ namespace SharpDX.Toolkit.Graphics
 
             registeredMeshParts = new List<ModelData.MeshPart>[scene.MeshCount];
 
+            CollectEmbeddedTextures(scene.Textures);
+
             // Collect meshes and attached nodes
             CollectMeshNodes(scene.RootNode);
             
@@ -183,6 +205,42 @@ namespace SharpDX.Toolkit.Graphics
 
             // Process materials
             ProcessMaterials();
+        }
+
+        private void CollectEmbeddedTextures(Texture[] textures)
+        {
+            if (textures == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < textures.Length; i++)
+            {
+                if (textures[i].IsCompressed)
+                {
+                    var compressedTexture = (CompressedTexture)textures[i];
+                    CheckTextureFormat(compressedTexture.FormatHint);
+                    model.Textures.Add(compressedTexture.Data);
+                }
+                else
+                {
+                    logger.Error("Embedded texture non-compressed are not supported");
+                }
+            }
+        }
+
+        private void CheckTextureFormat(string format)
+        {
+            switch (format)
+            {
+                case "jpg":
+                case "dds":
+                case "tif":
+                case "bmp":
+                case "gif":
+                    return;
+            }
+            logger.Warning(string.Format("Embedded texture with format [{0}] is not supported", format));
         }
 
         private void ProcessMaterials()
@@ -568,7 +626,7 @@ namespace SharpDX.Toolkit.Graphics
                     if (bone.HasVertexWeights)
                     {
                         var boneNode = scene.RootNode.FindNode(bone.Name);
-                        var boneIndex = meshNodes[boneNode];
+                        var boneIndex = skinnedBones[boneNode];
                         for (int j = 0; j < bone.VertexWeightCount; j++)
                         {
                             var weights = bone.VertexWeights[j];

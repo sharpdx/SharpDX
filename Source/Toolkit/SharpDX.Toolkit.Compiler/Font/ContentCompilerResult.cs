@@ -29,6 +29,8 @@ namespace SharpDX.Toolkit.Graphics
     {
         public bool IsContentGenerated { get; set; }
 
+        public ModelData ModelData;
+
         /// <summary>
         /// Gets a value indicating whether this instance has errors.
         /// </summary>

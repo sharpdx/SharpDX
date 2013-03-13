@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+
 namespace SharpDX.Toolkit.Graphics
 {
     public class ModelMesh : ComponentBase
@@ -26,12 +28,57 @@ namespace SharpDX.Toolkit.Graphics
 
         public BoundingSphere BoundingSphere;
 
-        public VertexBufferBindingCollection VertexBuffers;
+        internal VertexBufferBindingCollection VertexBuffers;
 
-        public BufferCollection IndexBuffers;
+        internal BufferCollection IndexBuffers;
 
         public ModelMeshPartCollection MeshParts;
 
         public PropertyCollection Properties;
+
+        public ModelMesh()
+        {
+            Effects = new ModelEffectCollection();
+        }
+
+        public ModelEffectCollection Effects { get; private set; }
+
+        /// <summary>
+        /// Iterator on each <see cref="ModelMeshPart"/>.
+        /// </summary>
+        /// <param name="meshPartFunction">The mesh part function.</param>
+        public void ForEach(Action<ModelMeshPart> meshPartFunction)
+        {
+            int meshPartCount = MeshParts.Count;
+            for (int i = 0; i < meshPartCount; i++)
+            {
+                meshPartFunction(MeshParts[i]);
+            }
+        }
+
+        /// <summary>
+        /// Draws all of the ModelMeshPart objects in this mesh, using their current Effect settings.
+        /// </summary>
+        /// <exception cref="System.InvalidOperationException">Model has no effect</exception>
+        public void Draw(GraphicsDevice context)
+        {
+            int count = this.MeshParts.Count;
+            for (int i = 0; i < count; i++)
+            {
+                ModelMeshPart part = MeshParts[i];
+                Effect effect = part.Effect;
+                if (effect == null)
+                {
+                    throw new InvalidOperationException("Model has no effect");
+                }
+                int passCount = effect.CurrentTechnique.Passes.Count;
+                for (int j = 0; j < passCount; j++)
+                {
+                    effect.CurrentTechnique.Passes[j].Apply();
+                    part.Draw(context);
+                }
+            }
+        }
+
     }
 }

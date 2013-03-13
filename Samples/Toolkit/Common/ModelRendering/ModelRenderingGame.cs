@@ -18,9 +18,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+using System.Collections.Generic;
+
 using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.Toolkit;
+using SharpDX.Toolkit.Input;
 
 namespace ModelRendering
 {
@@ -38,9 +42,16 @@ namespace ModelRendering
         private SpriteBatch spriteBatch;
         private SpriteFont arial16BMFont;
 
+        private KeyboardManager keyboard;
+
         private Model model;
 
-        private BasicEffectRenderer modelRenderer;
+        private List<Model> models;
+
+        private BoundingSphere modelBounds;
+        private Matrix world;
+        private Matrix view;
+        private Matrix projection;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ModelRenderingGame" /> class.
@@ -61,17 +72,26 @@ namespace ModelRendering
             // Load the fonts
             arial16BMFont = Content.Load<SpriteFont>("Arial16");
 
-            // Load the model
-            model = Content.Load<Model>("duck");
+            // Load the model (by default the model is loaded with a BasicEffect. Use ModelContentReaderOptions to change the behavior at loading time.
+            //model = Content.Load<Model>("duck");
+            //model = Content.Load<Model>("ShipMestaty");
+            keyboard = new KeyboardManager(this);
 
-            modelRenderer = new BasicEffectRenderer(GraphicsDevice);
-            modelRenderer.Initialize(model);
-            modelRenderer.EnableDefaultLighting();
+            models = new List<Model>();
+            foreach (var modelName in new[] { "Dude", "Duck", "Car", "Happy", "Knot", "Skull", "Sphere", "Teapot" })
+            {
+                model = Content.Load<Model>(modelName);
+                
+                // Enable default lighting  on model.
+                BasicEffect.EnableDefaultLighting(model, true);
+
+                models.Add(model);
+            }
+            model = models[0];
+
 
             // Instantiate a SpriteBatch
             spriteBatch = ToDisposeContent(new SpriteBatch(GraphicsDevice));
-
-            primitiveBatch = new PrimitiveBatch<VertexPositionNormalTexture>(GraphicsDevice);
 
             base.LoadContent();
         }
@@ -82,24 +102,46 @@ namespace ModelRendering
             base.Initialize();
         }
 
-        private PrimitiveBatch<VertexPositionNormalTexture> primitiveBatch;
+        private bool keySpacePressed = false;
+
+        protected override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            var keyState = keyboard.GetState();
+            if (keyState.GetPressedKeys().Length > 0)
+            {
+                keySpacePressed = true;
+            }
+            else if (keySpacePressed)
+            {
+                // Go to next model when pressing key space
+                model = models[(models.IndexOf(model) + 1) % models.Count];
+                keySpacePressed = false;
+            }
+
+            // Calculate the bounds of this model
+            modelBounds = model.CalculateBounds();
+
+            // Calculates the world and the view based on the model size
+            const float MaxModelSize = 10.0f;
+            var scaling = MaxModelSize / modelBounds.Radius;
+            view = Matrix.LookAtLH(new Vector3(0, 0, - MaxModelSize * 2.5f), new Vector3(0, 0, 0), Vector3.UnitY);
+            projection = Matrix.PerspectiveFovLH(0.9f, (float)GraphicsDevice.BackBuffer.Width / GraphicsDevice.BackBuffer.Height, 0.1f, MaxModelSize * 10.0f);
+            world = Matrix.Scaling(scaling) * Matrix.RotationY((float)gameTime.TotalGameTime.TotalSeconds) * Matrix.Translation(0, -modelBounds.Center.Y * scaling, 0);
+        }
 
         protected override void Draw(GameTime gameTime)
         {
             // Clears the screen with the Color.CornflowerBlue
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-
-            var view = Matrix.LookAtLH(new Vector3(0, 0, -25), new Vector3(0, 0, 0), Vector3.UnitY);
-            var projection = Matrix.PerspectiveFovLH(0.9f, (float)GraphicsDevice.BackBuffer.Width / GraphicsDevice.BackBuffer.Height, 0.1f, 1000.0f);
-            var world = Matrix.Scaling(0.1f) * Matrix.RotationY((float)gameTime.TotalGameTime.TotalSeconds) * Matrix.Translation(0, -8, 0);
-
             // Draw the model
-            modelRenderer.Draw(GraphicsDevice, world, view, projection);
+            model.Draw(GraphicsDevice, world, view, projection);
 
             // Render the text
             spriteBatch.Begin();
-            spriteBatch.DrawString(arial16BMFont, "Model rendering", new Vector2(0, 0), Color.White);
+            spriteBatch.DrawString(arial16BMFont, "Press any key to switch models...\r\nCurrent Model: " + model.Name, new Vector2(16, 16), Color.White);
             spriteBatch.End();
 
             // Handle base.Draw

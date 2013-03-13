@@ -28,7 +28,7 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     class TextureContentReader : GraphicsResourceContentReaderBase<Texture>
     {
-        protected override Texture ReadContent(IContentManager readerManager, GraphicsDevice device, string assetName, Stream stream)
+        protected override Texture ReadContent(IContentManager readerManager, GraphicsDevice device, string assetName, Stream stream, object options)
         {
             var texture = Texture.Load(device, stream);
             if (texture != null)

@@ -22,6 +22,9 @@
     <Compile Include="BlendState.cs" />
     <Compile Include="BlendStateCollection.cs" />
     <Compile Include="ClearOptions.cs" />
+    <Compile Include="BasicEffect.Extensions.cs" />
+    <Compile Include="EffectInstallerBase.cs" />
+    <Compile Include="IEffectInstaller.cs" />
     <Compile Include="ModelContentReader.cs" />
     <Compile Include="MaterialKeys.cs" />
     <Compile Include="MaterialTexture.cs" />
@@ -33,12 +36,14 @@
     <Compile Include="ModelBufferRange.cs" />
     <Compile Include="Material.cs" />
     <Compile Include="MaterialCollection.cs" />
+    <Compile Include="ModelContentReaderOptions.cs" />
+    <Compile Include="ModelEffectCollection.cs" />
     <Compile Include="ModelMesh.cs" />
     <Compile Include="ModelMeshCollection.cs" />
     <Compile Include="ModelMeshPart.cs" />
     <Compile Include="ModelMeshPartCollection.cs" />
     <Compile Include="ModelReader.cs" />
-    <Compile Include="ModelRenderer.cs" />
+    <Compile Include="BasicEffectInstaller.cs" />
     <Compile Include="VertexBufferBindingCollection.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="PrimitiveBatch.cs" />

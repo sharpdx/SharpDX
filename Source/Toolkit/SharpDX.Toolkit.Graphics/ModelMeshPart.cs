@@ -32,6 +32,11 @@ namespace SharpDX.Toolkit.Graphics
     public class ModelMeshPart : ComponentBase
     {
         /// <summary>
+        /// The parent mesh.
+        /// </summary>
+        public ModelMesh ParentMesh;
+
+        /// <summary>
         /// The material used by this mesh part.
         /// </summary>
         public Material Material;
@@ -50,6 +55,56 @@ namespace SharpDX.Toolkit.Graphics
         /// The attributes for this mesh part.
         /// </summary>
         public PropertyCollection Properties;
+
+        private Effect effect;
+
+        /// <summary>Gets or sets the material Effect for this mesh part.  Reference page contains code sample.</summary>
+        public Effect Effect
+        {
+            get
+            {
+                return effect;
+            }
+            set
+            {
+                if (value != effect)
+                {
+                    bool isPreviousEffectUsedByAnotherMeshPart = false;
+                    bool isEffectUsedByAnotherMeshPart = false;
+
+                    var effects = ParentMesh.Effects;
+                    var meshPartRenderers = ParentMesh.MeshParts;
+
+                    // Check that 
+                    for (int i = 0; i < meshPartRenderers.Count; i++)
+                    {
+                        ModelMeshPart objA = meshPartRenderers[i];
+                        if (!ReferenceEquals(objA, this))
+                        {
+                            var partEffect = meshPartRenderers[i].Effect;
+                            if (ReferenceEquals(partEffect, effect))
+                            {
+                                isPreviousEffectUsedByAnotherMeshPart = true;
+                            }
+                            else if (ReferenceEquals(partEffect, value))
+                            {
+                                isEffectUsedByAnotherMeshPart = true;
+                            }
+                        }
+                    }
+
+                    if (!isPreviousEffectUsedByAnotherMeshPart && (effect != null))
+                    {
+                        effects.Remove(effect);
+                    }
+                    if (!isEffectUsedByAnotherMeshPart && (value != null))
+                    {
+                        effects.Add(value);
+                    }
+                    effect = value;
+                }
+            }
+        }
 
         /// <summary>
         /// Draws this <see cref="ModelMeshPart"/>. See remarks for difference with XNA.

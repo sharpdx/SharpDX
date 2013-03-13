@@ -111,10 +111,12 @@ namespace SharpDX.Toolkit.Content
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="assetNameWithExtension">Full asset name (with its extension)</param>
+        /// <param name="options">The options to pass to the content reader (null by default).</param>
         /// <returns>``0.</returns>
-        /// <exception cref="SharpDX.Toolkit.Content.AssetNotFoundException">If the asset was not found from all <see cref="IContentResolver"/>.</exception>
+        /// <exception cref="AssetNotFoundException"></exception>
+        /// <exception cref="SharpDX.Toolkit.Content.AssetNotFoundException">If the asset was not found from all <see cref="IContentResolver" />.</exception>
         /// <exception cref="NotSupportedException">If no content reader was suitable to decode the asset.</exception>
-        public virtual T Load<T>(string assetNameWithExtension)
+        public virtual T Load<T>(string assetNameWithExtension, object options = null)
         {
             var assetPath = PathUtility.GetNormalizedPath(Path.Combine(rootDirectory ?? string.Empty, assetNameWithExtension));
 
@@ -139,7 +141,7 @@ namespace SharpDX.Toolkit.Content
                 if (stream == null)
                     throw new AssetNotFoundException(assetNameWithExtension);
 
-                result = LoadAssetWithDynamicContentReader<T>(assetNameWithExtension, stream);
+                result = LoadAssetWithDynamicContentReader<T>(assetNameWithExtension, stream, options);
 
                 // Cache the loaded assets
                 lock (loadedAssets)
@@ -209,7 +211,7 @@ namespace SharpDX.Toolkit.Content
             return stream;
         }
 
-        private object LoadAssetWithDynamicContentReader<T>(string assetNameWithExtension, Stream stream)
+        private object LoadAssetWithDynamicContentReader<T>(string assetNameWithExtension, Stream stream, object options)
         {
             object result = null;
 

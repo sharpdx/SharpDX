@@ -28,7 +28,7 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     class SpriteFontDataContentReader : IContentReader
     {
-        public object ReadContent(IContentManager readerManager, string assetName, Stream stream, out bool keepStreamOpen)
+        public object ReadContent(IContentManager readerManager, string assetName, Stream stream, out bool keepStreamOpen, object options)
         {
             keepStreamOpen = false;
             return SpriteFontData.Load(stream);

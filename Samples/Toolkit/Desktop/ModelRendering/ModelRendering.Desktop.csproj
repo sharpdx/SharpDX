@@ -13,7 +13,7 @@
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -59,6 +60,47 @@
     </ToolkitModel>
     <Content Include="..\..\Common\ModelRendering\Content\duckCM.dds">
       <Link>Content\duckCM.dds</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ToolkitModel Include="..\..\Common\ModelRendering\Content\Car.x">
+      <Link>Content\Car.x</Link>
+    </ToolkitModel>
+    <ToolkitModel Include="..\..\Common\ModelRendering\Content\Happy.x">
+      <Link>Content\Happy.x</Link>
+    </ToolkitModel>
+    <ToolkitModel Include="..\..\Common\ModelRendering\Content\Knot.x">
+      <Link>Content\Knot.x</Link>
+    </ToolkitModel>
+    <ToolkitModel Include="..\..\Common\ModelRendering\Content\Skull.x">
+      <Link>Content\Skull.x</Link>
+    </ToolkitModel>
+    <ToolkitModel Include="..\..\Common\ModelRendering\Content\Sphere.x">
+      <Link>Content\Sphere.x</Link>
+    </ToolkitModel>
+    <ToolkitModel Include="..\..\Common\ModelRendering\Content\Teapot.x">
+      <Link>Content\Teapot.x</Link>
+    </ToolkitModel>
+  </ItemGroup>
+  <ItemGroup>
+    <ToolkitModel Include="..\..\Common\ModelRendering\Content\dude.fbx">
+      <Link>Content\dude.fbx</Link>
+    </ToolkitModel>
+    <Content Include="..\..\Common\ModelRendering\Content\head.dds">
+      <Link>Content\head.dds</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Common\ModelRendering\Content\jacket.dds">
+      <Link>Content\jacket.dds</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Common\ModelRendering\Content\pants.dds">
+      <Link>Content\pants.dds</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Common\ModelRendering\Content\upBodyC.dds">
+      <Link>Content\upBodyC.dds</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
