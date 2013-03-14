@@ -62,6 +62,8 @@ namespace ModelRendering
             graphicsDeviceManager = new GraphicsDeviceManager(this); 
             graphicsDeviceManager.DeviceCreationFlags = DeviceCreationFlags.Debug;
 
+            keyboard = new KeyboardManager(this);
+
             // Setup the relative directory to the executable directory
             // for loading contents with the ContentManager
             Content.RootDirectory = "Content";
@@ -75,7 +77,6 @@ namespace ModelRendering
             // Load the model (by default the model is loaded with a BasicEffect. Use ModelContentReaderOptions to change the behavior at loading time.
             //model = Content.Load<Model>("duck");
             //model = Content.Load<Model>("ShipMestaty");
-            keyboard = new KeyboardManager(this);
 
             models = new List<Model>();
             foreach (var modelName in new[] { "Dude", "Duck", "Car", "Happy", "Knot", "Skull", "Sphere", "Teapot" })
@@ -88,7 +89,6 @@ namespace ModelRendering
                 models.Add(model);
             }
             model = models[0];
-
 
             // Instantiate a SpriteBatch
             spriteBatch = ToDisposeContent(new SpriteBatch(GraphicsDevice));
