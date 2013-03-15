@@ -166,7 +166,7 @@ namespace SharpDX.Direct3D11
         /// <msdn-id>ff476480</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::RSSetViewports([In] unsigned int NumViewports,[In, Buffer, Optional] const void* pViewports)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::RSSetViewports</unmanaged-short>	
-        public void SetViewports(ViewportF viewport)
+        public void SetViewport(ViewportF viewport)
         {
             unsafe
             {
@@ -175,21 +175,20 @@ namespace SharpDX.Direct3D11
         }
 
         /// <summary>
-        ///   Binds a set of viewports to the rasterizer stage.
+        /// Binds a set of viewports to the rasterizer stage.
         /// </summary>
-        /// <param name = "viewports">The set of viewports to bind.</param>
-        /// <remarks>	
-        /// <p></p><p>All viewports must be set atomically as one operation. Any viewports not defined by the call are disabled.</p><p>Which viewport to use is determined by the SV_ViewportArrayIndex semantic output by a geometry shader; if a geometry shader does not specify the semantic, Direct3D will use the first viewport in the array.</p>	
-        /// </remarks>	
-        /// <msdn-id>ff476480</msdn-id>	
-        /// <unmanaged>void ID3D11DeviceContext::RSSetViewports([In] unsigned int NumViewports,[In, Buffer, Optional] const void* pViewports)</unmanaged>	
-        /// <unmanaged-short>ID3D11DeviceContext::RSSetViewports</unmanaged-short>	
-        public void SetViewports(params ViewportF[] viewports)
+        /// <param name="viewports">The set of viewports to bind.</param>
+        /// <param name="count">The number of viewport to set.</param>
+        /// <msdn-id>ff476480</msdn-id>
+        ///   <unmanaged>void ID3D11DeviceContext::RSSetViewports([In] unsigned int NumViewports,[In, Buffer, Optional] const void* pViewports)</unmanaged>
+        ///   <unmanaged-short>ID3D11DeviceContext::RSSetViewports</unmanaged-short>
+        /// <remarks><p></p><p>All viewports must be set atomically as one operation. Any viewports not defined by the call are disabled.</p><p>Which viewport to use is determined by the SV_ViewportArrayIndex semantic output by a geometry shader; if a geometry shader does not specify the semantic, Direct3D will use the first viewport in the array.</p></remarks>
+        public void SetViewports(ViewportF[] viewports, int count = 0)
         {
             unsafe
             {
                 fixed (void* pBuffer = viewports)
-                    SetViewports(viewports == null ? 0 : viewports.Length, (IntPtr)pBuffer);
+                    SetViewports(viewports == null ? 0 : count <= 0 ? viewports.Length : count, (IntPtr)pBuffer);
             }
         }
     }

@@ -216,7 +216,7 @@ namespace MiniCube
                     depthView = new DepthStencilView(device, depthBuffer);
 
                     // Setup targets and viewport for rendering
-                    context.Rasterizer.SetViewports(new Viewport(0, 0, form.ClientSize.Width, form.ClientSize.Height, 0.0f, 1.0f));
+                    context.Rasterizer.SetViewport(new Viewport(0, 0, form.ClientSize.Width, form.ClientSize.Height, 0.0f, 1.0f));
                     context.OutputMerger.SetTargets(depthView, renderView);
 
                     // Setup new projection matrix with correct aspect ratio

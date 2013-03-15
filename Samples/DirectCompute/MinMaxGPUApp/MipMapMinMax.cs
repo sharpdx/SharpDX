@@ -271,7 +271,7 @@ namespace MinMaxGPUApp
                 context.PixelShader.Set(i == 0 ? pixelShaderMinMaxBegin[shaderIndex - 1] : pixelShaderMinMax[shaderIndex - 1]);
                 context.PixelShader.SetSampler(0, sampler);
                 context.PixelShader.SetShaderResource(0, from);
-                context.Rasterizer.SetViewports(viewport);
+                context.Rasterizer.SetViewport(viewport);
                 //context.ClearRenderTargetView(texture2DMinMaxRenderView[levelIndex], Colors.Black);
                 context.OutputMerger.SetTargets(texture2DMinMaxRenderView[levelIndex]);
                 context.Draw(4, 0);

@@ -390,7 +390,7 @@ namespace SharpDX.Toolkit
                     if (GraphicsDevice.BackBuffer != null)
                     {
                         GraphicsDevice.SetRenderTargets(GraphicsDevice.DepthStencilBuffer, GraphicsDevice.BackBuffer);
-                        GraphicsDevice.SetViewports(0, 0, GraphicsDevice.BackBuffer.Width, GraphicsDevice.BackBuffer.Height);
+                        GraphicsDevice.SetViewport(0, 0, GraphicsDevice.BackBuffer.Width, GraphicsDevice.BackBuffer.Height);
                     }
 
                     break;

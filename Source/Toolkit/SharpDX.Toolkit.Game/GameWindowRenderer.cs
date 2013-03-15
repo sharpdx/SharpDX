@@ -214,7 +214,7 @@ namespace SharpDX.Toolkit
                 }
 
                 GraphicsDevice.Presenter = Presenter;
-                GraphicsDevice.SetViewports(Presenter.DefaultViewport);
+                GraphicsDevice.SetViewport(Presenter.DefaultViewport);
                 GraphicsDevice.SetRenderTargets(Presenter.DepthStencilBuffer, Presenter.BackBuffer);
 
                 beginDrawOk = true;
@@ -246,7 +246,7 @@ namespace SharpDX.Toolkit
                 {
                     GraphicsDevice.Presenter = savedPresenter;
                     GraphicsDevice.SetRenderTargets(savedPresenter.DepthStencilBuffer, savedPresenter.BackBuffer);
-                    GraphicsDevice.SetViewports(savedViewport);
+                    GraphicsDevice.SetViewport(savedViewport);
                 }
             }
         }

@@ -289,7 +289,7 @@ namespace SimpleMiniCube
                 var viewport = new Viewport(0, 0, width, height, 0.0f, 1.0f);
 
                 // Set the current viewport using the descriptor.
-                graphicsDevice.ImmediateContext.Rasterizer.SetViewports(viewport);
+                graphicsDevice.ImmediateContext.Rasterizer.SetViewport(viewport);
             }
         }
  

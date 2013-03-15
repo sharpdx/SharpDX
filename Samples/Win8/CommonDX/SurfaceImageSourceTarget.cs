@@ -175,7 +175,7 @@ namespace CommonDX
                 DeviceManager.ContextDirect2D.Target = viewData.BitmapTarget;
 
                 // Set the current viewport using the descriptor.
-                DeviceManager.ContextDirect3D.Rasterizer.SetViewports(viewData.Viewport);
+                DeviceManager.ContextDirect3D.Rasterizer.SetViewport(viewData.Viewport);
 
                 // Perform the actual rendering of this target
                 base.RenderAll();

@@ -108,7 +108,7 @@ namespace SharpDX.Toolkit.Graphics
                 depthStencilViewDescription.Dimension = DepthStencilViewDimension.Texture2DMultisampled;
 
             // Create the Depth Stencil View
-            depthStencilView = ToDispose(new SharpDX.Direct3D11.DepthStencilView(GraphicsDevice, Resource, depthStencilViewDescription));
+            depthStencilView = ToDispose(new SharpDX.Direct3D11.DepthStencilView(GraphicsDevice, Resource, depthStencilViewDescription) { Tag = this });
 
             // ReadOnly for feature level Direct3D11
             if (GraphicsDevice.Features.Level >= FeatureLevel.Level_11_0)
@@ -118,7 +118,7 @@ namespace SharpDX.Toolkit.Graphics
                 if (HasStencil)
                     depthStencilViewDescription.Flags |= DepthStencilViewFlags.ReadOnlyStencil;
 
-                readOnlyView = ToDispose(new SharpDX.Direct3D11.DepthStencilView(GraphicsDevice, Resource, depthStencilViewDescription));
+                readOnlyView = ToDispose(new SharpDX.Direct3D11.DepthStencilView(GraphicsDevice, Resource, depthStencilViewDescription) { Tag = this });
                 hasReadOnlyView = true;
             }
 

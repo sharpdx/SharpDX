@@ -173,7 +173,7 @@ namespace CommonDX
             var viewport = new SharpDX.ViewportF((float)RenderTargetBounds.X, (float)RenderTargetBounds.Y, (float)RenderTargetBounds.Width, (float)RenderTargetBounds.Height, 0.0f, 1.0f);
 
             // Set the current viewport using the descriptor.
-            d3dContext.Rasterizer.SetViewports(viewport);
+            d3dContext.Rasterizer.SetViewport(viewport);
 
             // Now we set up the Direct2D render target bitmap linked to the swapchain. 
             // Whenever we render to this bitmap, it will be directly rendered to the 

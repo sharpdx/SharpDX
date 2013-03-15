@@ -122,7 +122,7 @@ namespace MiniTri
             context.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
             context.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(vertices, 32, 0));
             context.VertexShader.Set(vertexShader);
-            context.Rasterizer.SetViewports(new Viewport(0, 0, form.ClientSize.Width, form.ClientSize.Height, 0.0f, 1.0f));
+            context.Rasterizer.SetViewport(new Viewport(0, 0, form.ClientSize.Width, form.ClientSize.Height, 0.0f, 1.0f));
             context.PixelShader.Set(pixelShader);
             context.OutputMerger.SetTargets(renderView);
 

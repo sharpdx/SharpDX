@@ -40,6 +40,9 @@ namespace SharpDX.Toolkit.Graphics
         private IntPtr resetVertexBuffersPointer;
         private int maxSlotCountForVertexBuffer;
 
+        private RenderTargetView currentRenderTargetView;
+        private DepthStencilView currentDepthStencilView;
+
         private readonly PrimitiveQuad primitiveQuad;
 
         private VertexInputLayout currentVertexInputLayout;
@@ -333,16 +336,18 @@ namespace SharpDX.Toolkit.Graphics
         /// <exception cref="System.InvalidOperationException">Cannot clear without a Presenter set on this instance</exception>
         public void Clear(Color4 color)
         {
-            if (Presenter == null)
-            {
-                throw new InvalidOperationException("Cannot clear without a Presenter set on this instance");
-            }
+            var options = currentRenderTargetView != null ? ClearOptions.Target : (ClearOptions)0;
 
-            var options = Presenter.BackBuffer != null ? ClearOptions.Target : (ClearOptions)0;
-
-            if (DepthStencilBuffer != null)
+            if (currentDepthStencilView != null)
             {
-                options |= DepthStencilBuffer.HasStencil ? ClearOptions.DepthBuffer | ClearOptions.Stencil : ClearOptions.DepthBuffer;
+                var depthStencilBuffer = currentDepthStencilView.Tag as DepthStencilBuffer;
+                if (depthStencilBuffer == null)
+                {
+                    throw new InvalidOperationException("Clear on a custom DepthStencilView is not supported by this method. Use Clear(DepthStencilView) directly");
+                }
+
+                options |= depthStencilBuffer.HasStencil ? ClearOptions.DepthBuffer | ClearOptions.Stencil : ClearOptions.DepthBuffer;
+
             }
 
             Clear(options, color, 1f, 0);
@@ -357,26 +362,20 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="stencil">Set this stencil value in the buffer.</param>
         public void Clear(ClearOptions options, Color4 color, float depth, int stencil)
         {
-            if (Presenter == null)
-            {
-                throw new InvalidOperationException("Cannot clear without a Presenter set on this instance");
-            }
-
             if ((options & ClearOptions.Target) != 0)
             {
-                if (BackBuffer == null)
+                if (currentRenderTargetView == null)
                 {
-                    throw new InvalidOperationException("Cannot clear a null BackBuffer for the current Presenter");
+                    throw new InvalidOperationException("No default render target view setup. Call SetRenderTargets before calling this method.");
                 }
-
-                Clear(BackBuffer, color);
+                Clear(currentRenderTargetView, color);
             }
 
             if ((options & (ClearOptions.Stencil | ClearOptions.DepthBuffer)) != 0)
             {
-                if (DepthStencilBuffer == null)
+                if (currentDepthStencilView == null)
                 {
-                    throw new InvalidOperationException("No default depth stencil buffer available the current Presenter");
+                    throw new InvalidOperationException("No default depth stencil view setup. Call SetRenderTargets before calling this method.");
                 }
 
                 var flags = (options & ClearOptions.DepthBuffer) != 0 ? DepthStencilClearFlags.Depth : 0;
@@ -385,7 +384,7 @@ namespace SharpDX.Toolkit.Graphics
                     flags |= DepthStencilClearFlags.Stencil;
                 }
 
-                Clear(DepthStencilBuffer, flags, depth, (byte)stencil);
+                Clear(currentDepthStencilView, flags, depth, (byte)stencil);
             }
         }
 
@@ -1082,6 +1081,11 @@ namespace SharpDX.Toolkit.Graphics
                 rasterizerStage.GetViewports(viewports);
                 return viewports[0];
             }
+
+            set
+            {
+                SetViewport(value);
+            }
         }
 
         /// <summary>
@@ -1110,7 +1114,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476480</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::RSSetViewports([In] unsigned int NumViewports,[In, Buffer, Optional] const void* pViewports)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::RSSetViewports</unmanaged-short>	
-        public void SetViewports(float x, float y, float width, float height, float minZ = 0.0f, float maxZ = 1.0f)
+        public void SetViewport(float x, float y, float width, float height, float minZ = 0.0f, float maxZ = 1.0f)
         {
             viewports[0] = new ViewportF(x, y, width, height, minZ, maxZ);
             rasterizerStage.SetViewport(x, y, width, height, minZ, maxZ);
@@ -1126,10 +1130,10 @@ namespace SharpDX.Toolkit.Graphics
         /// <msdn-id>ff476480</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::RSSetViewports([In] unsigned int NumViewports,[In, Buffer, Optional] const void* pViewports)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::RSSetViewports</unmanaged-short>	
-        public void SetViewports(ViewportF viewport)
+        public void SetViewport(ViewportF viewport)
         {
             viewports[0] = viewport;
-            rasterizerStage.SetViewports(viewport);
+            rasterizerStage.SetViewport(viewport);
         }
 
         /// <summary>
@@ -1147,7 +1151,7 @@ namespace SharpDX.Toolkit.Graphics
             for (int i = 0; i < viewports.Length; i++)
                 this.viewports[i] = viewports[i];
 
-            rasterizerStage.SetViewports(viewports);
+            rasterizerStage.SetViewports(this.viewports, viewports.Length);
         }
 
         /// <summary>
@@ -1158,6 +1162,8 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargets</unmanaged-short>	
         public void ResetTargets()
         {
+            currentRenderTargetView = null;
+            currentDepthStencilView = null;
             outputMergerStage.ResetTargets();
         }
 
@@ -1173,7 +1179,13 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargets</unmanaged-short>	
         public void SetRenderTargets(params RenderTargetView[] renderTargetViews)
         {
+            if (renderTargetViews == null)
+            {
+                throw new ArgumentNullException("renderTargetViews");
+            }
+
             CommonSetRenderTargets(renderTargetViews);
+            currentDepthStencilView = null;
             outputMergerStage.SetTargets(renderTargetViews);
         }
 
@@ -1190,6 +1202,7 @@ namespace SharpDX.Toolkit.Graphics
         public void SetRenderTargets(RenderTargetView renderTargetView)
         {
             CommonSetRenderTargets(renderTargetView);
+            currentDepthStencilView = null;
             outputMergerStage.SetTargets(renderTargetView);
         }
 
@@ -1206,7 +1219,13 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargets</unmanaged-short>	
         public void SetRenderTargets(DepthStencilView depthStencilView, params RenderTargetView[] renderTargetViews)
         {
+            if (renderTargetViews == null)
+            {
+                throw new ArgumentNullException("renderTargetViews");
+            }
+
             CommonSetRenderTargets(renderTargetViews);
+            currentDepthStencilView = depthStencilView;
             outputMergerStage.SetTargets(depthStencilView, renderTargetViews);
         }
 
@@ -1224,6 +1243,7 @@ namespace SharpDX.Toolkit.Graphics
         public void SetRenderTargets(DepthStencilView depthStencilView, RenderTargetView renderTargetView)
         {
             CommonSetRenderTargets(renderTargetView);
+            currentDepthStencilView = depthStencilView;
             outputMergerStage.SetTargets(depthStencilView, renderTargetView);
         }
 
@@ -1476,18 +1496,21 @@ namespace SharpDX.Toolkit.Graphics
         private void CommonSetRenderTargets(RenderTargetView rtv)
         {
             Texture texture;
+            currentRenderTargetView = rtv;
             if (AutoViewportFromRenderTargets &&  rtv != null && (texture = rtv.Tag as Texture) != null)
             {
-                SetViewports(new ViewportF(0, 0, texture.Description.Width, texture.Description.Height));
+                SetViewport(new ViewportF(0, 0, texture.Description.Width, texture.Description.Height));
             }
         }
 
         private void CommonSetRenderTargets(RenderTargetView[] rtvs)
         {
             Texture texture;
-            if (AutoViewportFromRenderTargets && rtvs != null && rtvs.Length > 0 && (texture = rtvs[0].Tag as Texture) != null)
+            var rtv0 = rtvs.Length > 0 ? rtvs[0] : null;
+            currentRenderTargetView = rtv0;
+            if (AutoViewportFromRenderTargets && rtv0 != null && (texture = rtv0.Tag as Texture) != null)
             {
-                SetViewports(new ViewportF(0, 0, texture.Description.Width, texture.Description.Height));
+                SetViewport(new ViewportF(0, 0, texture.Description.Width, texture.Description.Height));
             }
         }
 
