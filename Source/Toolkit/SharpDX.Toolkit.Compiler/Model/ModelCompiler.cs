@@ -106,6 +106,13 @@ namespace SharpDX.Toolkit.Graphics
 
                     var modelData = result.ModelData;
 
+                    // Make sure that directory name doesn't collide with filename
+                    var directoryName = Path.GetDirectoryName(outputFile + ".tmp");
+                    if (!string.IsNullOrEmpty(directoryName) && !Directory.Exists(directoryName))
+                    {
+                        Directory.CreateDirectory(directoryName);
+                    }
+
                     // Save the model
                     modelData.Save(outputFile);
 
