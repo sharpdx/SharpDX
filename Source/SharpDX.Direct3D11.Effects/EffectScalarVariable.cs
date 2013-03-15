@@ -84,6 +84,32 @@ namespace SharpDX.Direct3D11
         }
 
         /// <summary>	
+        /// Set an unsigned integer variable.	
+        /// </summary>	
+        /// <param name="value">A reference to the variable. </param>
+        /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
+        /// <unmanaged>HRESULT ID3D10EffectScalarVariable::SetInt([None] int Value)</unmanaged>
+        public void Set(uint value)
+        {
+            int temp = 0;
+            unchecked { temp = (int)value; }
+            SetInt(temp);
+        }
+
+        /// <summary>	
+        /// Set an array of unsigned integer variables.	
+        /// </summary>	
+        /// <param name="dataRef">A reference to the start of the data to set. </param>
+        /// <returns>Returns one of the following {{Direct3D 10 Return Codes}}. </returns>
+        /// <unmanaged>HRESULT ID3D10EffectScalarVariable::SetIntArray([In, Buffer] int* pData,[None] int Offset,[None] int Count)</unmanaged>
+        public void Set(uint[] dataRef)
+        {
+            int[] temp = new int[dataRef.Length];
+            unchecked { for (int n = 0; n < dataRef.Length; n++) temp[n] = (int)dataRef[n]; }
+            Set(temp, 0);
+        }
+
+        /// <summary>	
         /// Set an integer variable.	
         /// </summary>	
         /// <param name="value">A reference to the variable. </param>
