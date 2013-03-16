@@ -230,25 +230,29 @@ namespace SharpDX.Toolkit.Graphics
             int maximumMSAA = (int)device.Features[(DXGI.Format)format].MSAALevelMax;
             desc.SampleDescription.Count = Math.Max(1, Math.Min((int)multiSampleCount, maximumMSAA));
 
-            var typelessDepthFormat = SharpDX.DXGI.Format.Unknown;
+            var typelessDepthFormat = (SharpDX.DXGI.Format)format;
 
-            // Determine TypeLess Format and ShaderResourceView Format
-            switch (format)
+            // If shader resource view are not required, don't use a TypeLess format
+            if (shaderResource)
             {
-                case DepthFormat.Depth16:
-                    typelessDepthFormat = SharpDX.DXGI.Format.R16_Typeless;
-                    break;
-                case DepthFormat.Depth32:
-                    typelessDepthFormat = SharpDX.DXGI.Format.R32_Typeless;
-                    break;
-                case DepthFormat.Depth24Stencil8:
-                    typelessDepthFormat = SharpDX.DXGI.Format.R24G8_Typeless;
-                    break;
-                case DepthFormat.Depth32Stencil8X24:
-                    typelessDepthFormat = SharpDX.DXGI.Format.R32G8X24_Typeless;
-                    break;
-                default:
-                    throw new InvalidOperationException(string.Format("Unsupported DepthFormat [{0}] for depth buffer", format));
+                // Determine TypeLess Format and ShaderResourceView Format
+                switch (format)
+                {
+                    case DepthFormat.Depth16:
+                        typelessDepthFormat = SharpDX.DXGI.Format.R16_Typeless;
+                        break;
+                    case DepthFormat.Depth32:
+                        typelessDepthFormat = SharpDX.DXGI.Format.R32_Typeless;
+                        break;
+                    case DepthFormat.Depth24Stencil8:
+                        typelessDepthFormat = SharpDX.DXGI.Format.R24G8_Typeless;
+                        break;
+                    case DepthFormat.Depth32Stencil8X24:
+                        typelessDepthFormat = SharpDX.DXGI.Format.R32G8X24_Typeless;
+                        break;
+                    default:
+                        throw new InvalidOperationException(string.Format("Unsupported DepthFormat [{0}] for depth buffer", format));
+                }
             }
 
             desc.Format = typelessDepthFormat;

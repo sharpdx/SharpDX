@@ -108,6 +108,12 @@ namespace SharpDX.Toolkit
             PreferMultiSampling = false;
             PreferredGraphicsProfile = new[]
                 {
+#if WP8
+                    // By default on WP8, only run in 9.3 to make sure
+                    // that we are not going to use 11.1 features when
+                    // running from the debugger.
+                    FeatureLevel.Level_9_3, 
+#else
 #if DIRECTX11_1
                     FeatureLevel.Level_11_1, 
 #endif
@@ -117,6 +123,7 @@ namespace SharpDX.Toolkit
                     FeatureLevel.Level_9_3, 
                     FeatureLevel.Level_9_2, 
                     FeatureLevel.Level_9_1, 
+#endif
                 };
 
             // Register the services to the registry

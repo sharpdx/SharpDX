@@ -134,9 +134,6 @@
     <ToolkitModel Include="..\..\Common\ModelRendering\Content\Knot.x">
       <Link>Content\Knot.x</Link>
     </ToolkitModel>
-    <ToolkitModel Include="..\..\Common\ModelRendering\Content\ShipMestaty.dae">
-      <Link>Content\ShipMestaty.dae</Link>
-    </ToolkitModel>
     <ToolkitModel Include="..\..\Common\ModelRendering\Content\Skull.x">
       <Link>Content\Skull.x</Link>
     </ToolkitModel>
@@ -174,10 +171,6 @@
     <ToolkitFont Include="..\..\Common\ModelRendering\Content\Arial16.xml">
       <Link>Content\Arial16.xml</Link>
     </ToolkitFont>
-    <Content Include="..\..\Common\ModelRendering\Content\finalship.jpg">
-      <Link>Content\finalship.jpg</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Assets\AlignmentGrid.png" />
     <Content Include="Assets\ApplicationIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

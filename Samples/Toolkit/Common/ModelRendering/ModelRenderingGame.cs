@@ -61,8 +61,6 @@ namespace ModelRendering
         {
             // Creates a graphics manager. This is mandatory.
             graphicsDeviceManager = new GraphicsDeviceManager(this);
-            graphicsDeviceManager.DeviceCreationFlags = DeviceCreationFlags.Debug;
-            graphicsDeviceManager.PreferredGraphicsProfile = new[] { FeatureLevel.Level_9_3 };
 
             pointer = new PointerManager(this);
 
@@ -86,7 +84,7 @@ namespace ModelRendering
                 model = Content.Load<Model>(modelName);
                 
                 // Enable default lighting  on model.
-                //BasicEffect.EnableDefaultLighting(model, true);
+                BasicEffect.EnableDefaultLighting(model, true);
 
                 models.Add(model);
             }
