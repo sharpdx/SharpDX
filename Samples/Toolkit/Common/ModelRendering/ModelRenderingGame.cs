@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 
 using SharpDX;
+using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.Toolkit;
 using SharpDX.Toolkit.Input;
@@ -42,7 +43,7 @@ namespace ModelRendering
         private SpriteBatch spriteBatch;
         private SpriteFont arial16BMFont;
 
-        private KeyboardManager keyboard;
+        private PointerManager pointer;
 
         private Model model;
 
@@ -59,10 +60,11 @@ namespace ModelRendering
         public ModelRenderingGame()
         {
             // Creates a graphics manager. This is mandatory.
-            graphicsDeviceManager = new GraphicsDeviceManager(this); 
+            graphicsDeviceManager = new GraphicsDeviceManager(this);
             graphicsDeviceManager.DeviceCreationFlags = DeviceCreationFlags.Debug;
+            graphicsDeviceManager.PreferredGraphicsProfile = new[] { FeatureLevel.Level_9_3 };
 
-            keyboard = new KeyboardManager(this);
+            pointer = new PointerManager(this);
 
             // Setup the relative directory to the executable directory
             // for loading contents with the ContentManager
@@ -84,7 +86,7 @@ namespace ModelRendering
                 model = Content.Load<Model>(modelName);
                 
                 // Enable default lighting  on model.
-                BasicEffect.EnableDefaultLighting(model, true);
+                //BasicEffect.EnableDefaultLighting(model, true);
 
                 models.Add(model);
             }
@@ -108,8 +110,8 @@ namespace ModelRendering
         {
             base.Update(gameTime);
 
-            var keyState = keyboard.GetState();
-            if (keyState.GetPressedKeys().Length > 0)
+            var pointerState = pointer.GetState();
+            if (pointerState.Points.Count > 0 && pointerState.Points[0].EventType == PointerEventType.Released)
             {
                 keySpacePressed = true;
             }
@@ -119,9 +121,6 @@ namespace ModelRendering
                 model = models[(models.IndexOf(model) + 1) % models.Count];
                 keySpacePressed = false;
             }
-
-            if (keyState.IsKeyDown(Keys.Escape))
-                Exit();
 
             // Calculate the bounds of this model
             modelBounds = model.CalculateBounds();
@@ -144,7 +143,7 @@ namespace ModelRendering
 
             // Render the text
             spriteBatch.Begin();
-            spriteBatch.DrawString(arial16BMFont, "Press any key to switch models...\r\nCurrent Model: " + model.Name, new Vector2(16, 16), Color.White);
+            spriteBatch.DrawString(arial16BMFont, "Press the pointer to switch models...\r\nCurrent Model: " + model.Name, new Vector2(16, 16), Color.White);
             spriteBatch.End();
 
             // Handle base.Draw

@@ -663,7 +663,7 @@ namespace SharpDX.Toolkit.Graphics
 
                 if (hasWeights)
                 {
-                    layout.Add(VertexElement.BlendIndices(Format.R32G32B32A32_UInt, vertexBufferElementSize));
+                    layout.Add(VertexElement.BlendIndices(Format.R16G16B16A16_SInt, vertexBufferElementSize));
                     vertexBufferElementSize += Utilities.SizeOf<SharpDX.Int4>();
 
                     layout.Add(VertexElement.BlendWeights(Format.R32G32B32A32_Float, vertexBufferElementSize));
