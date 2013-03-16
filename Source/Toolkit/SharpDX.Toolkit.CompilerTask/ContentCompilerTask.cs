@@ -106,15 +106,15 @@ namespace SharpDX.Toolkit
         {
             switch (message.Type)
             {
-            case LogMessageType.Warning:
-                Log.LogWarning(message.Text);
-                break;
-            case LogMessageType.Error:
-                Log.LogError(message.Text);
-                break;
-            case LogMessageType.Info:
-                Log.LogMessage(MessageImportance.Low, message.Text);
-                break;
+                case LogMessageType.Warning:
+                    Log.LogWarning(message.Text);
+                    break;
+                case LogMessageType.Error:
+                    Log.LogError(message.Text);
+                    break;
+                case LogMessageType.Info:
+                    Log.LogMessage(MessageImportance.Low, message.Text);
+                    break;
             }
         }
 
@@ -146,23 +146,25 @@ namespace SharpDX.Toolkit
                         colEndNumber = colStartNumber;
                     }
 
+                    var msgType = match.Groups[4].Value;
                     var msgCode = match.Groups[5].Value;
                     var msgText = match.Groups[6].Value;
 
-                    switch (message.Type)
+                    if (string.Compare(msgType, "error", StringComparison.InvariantCultureIgnoreCase) == 0)
                     {
-                    case LogMessageType.Warning:
                         Log.LogError(string.Empty, msgCode, string.Empty, filePath, lineNumber, colStartNumber, lineNumber, colEndNumber, msgText);
-                        break;
-                    case LogMessageType.Error:
+                    }
+                    else if (string.Compare(msgType, "warning", StringComparison.InvariantCultureIgnoreCase) == 0)
+                    {
                         Log.LogWarning(string.Empty, msgCode, string.Empty, filePath, lineNumber, colStartNumber, lineNumber, colEndNumber, msgText);
-                        break;
-                    case LogMessageType.Info:
+                    }
+                    else if (string.Compare(msgType, "info", StringComparison.InvariantCultureIgnoreCase) == 0)
+                    {
                         Log.LogWarning(string.Empty, msgCode, string.Empty, filePath, lineNumber, colStartNumber, lineNumber, colEndNumber, msgText);
-                        break;
-                    default:
+                    }
+                    else
+                    {
                         Log.LogWarning(line);
-                        break;
                     }
                 }
                 else
