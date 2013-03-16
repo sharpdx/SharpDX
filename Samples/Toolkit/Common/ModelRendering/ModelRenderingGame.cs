@@ -61,6 +61,7 @@ namespace ModelRendering
         {
             // Creates a graphics manager. This is mandatory.
             graphicsDeviceManager = new GraphicsDeviceManager(this);
+            graphicsDeviceManager.PreferredGraphicsProfile = new FeatureLevel[] { FeatureLevel.Level_9_1, };
 
             pointer = new PointerManager(this);
 
@@ -75,9 +76,6 @@ namespace ModelRendering
             arial16BMFont = Content.Load<SpriteFont>("Arial16");
 
             // Load the model (by default the model is loaded with a BasicEffect. Use ModelContentReaderOptions to change the behavior at loading time.
-            //model = Content.Load<Model>("duck");
-            //model = Content.Load<Model>("ShipMestaty");
-
             models = new List<Model>();
             foreach (var modelName in new[] { "Dude", "Duck", "Car", "Happy", "Knot", "Skull", "Sphere", "Teapot" })
             {
@@ -102,8 +100,6 @@ namespace ModelRendering
             base.Initialize();
         }
 
-        private bool keySpacePressed = false;
-
         protected override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -111,13 +107,8 @@ namespace ModelRendering
             var pointerState = pointer.GetState();
             if (pointerState.Points.Count > 0 && pointerState.Points[0].EventType == PointerEventType.Released)
             {
-                keySpacePressed = true;
-            }
-            else if (keySpacePressed)
-            {
                 // Go to next model when pressing key space
                 model = models[(models.IndexOf(model) + 1) % models.Count];
-                keySpacePressed = false;
             }
 
             // Calculate the bounds of this model
