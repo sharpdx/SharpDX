@@ -256,6 +256,8 @@ namespace SharpDX.Toolkit
             return gameContext.ContextType == GameContextType.WindowsPhoneBackgroundXaml;
         }
 
+        public DepthFormat RequestDepthFormat;
+
         /// <summary>
         /// Creates a <see cref="GraphicsDevice"/> if not already created based from latest internal device.
         /// </summary>
@@ -305,7 +307,7 @@ namespace SharpDX.Toolkit
 
             if (resetPresenter)
             {
-                graphicsPresenter = new RenderTargetGraphicsPresenter(graphicsDevice, backBuffer);
+                graphicsPresenter = new RenderTargetGraphicsPresenter(graphicsDevice, backBuffer, RequestDepthFormat);
                 graphicsDevice.Presenter = graphicsPresenter;
             }
 

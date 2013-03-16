@@ -56,8 +56,8 @@ namespace SharpDX.Toolkit
             if (gameWindowBackgroundXaml != null)
             {
                 // Make sure that we have the single graphics device created by the BackgroundXaml
+                gameWindowBackgroundXaml.RequestDepthFormat = prefferedParameters.PreferredDepthStencilFormat;
                 var graphicsDevice = gameWindowBackgroundXaml.EnsureDevice();
-
 
                 // Unlike Desktop and WinRT, the list of best devices are completely fixed in WP8 XAML
                 // So we return a single element
@@ -109,7 +109,7 @@ namespace SharpDX.Toolkit
             var renderTarget = Graphics.Texture2D.New(device, renderTargetDesc);
             var BackBuffer = RenderTarget2D.New(device, new RenderTargetView(device, renderTarget));
 
-            var graphicsPresenter = new RenderTargetGraphicsPresenter(device, BackBuffer);
+            var graphicsPresenter = new RenderTargetGraphicsPresenter(device, BackBuffer, deviceInformation.PresentationParameters.DepthStencilFormat);
             device.Presenter = graphicsPresenter;
 
             var gameWindowXaml = (GameWindowPhoneXaml)gameWindow;
