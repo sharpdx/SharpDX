@@ -27,6 +27,7 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="ContentCompilerTask.cs" />
     <Compile Include="ModelCompilerTask.cs" />
     <Compile Include="FontCompilerTask.cs" />
     <Compile Include="EffectCompilerTask.cs" />
