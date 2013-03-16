@@ -18,75 +18,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
-
-using Microsoft.Build.Framework;
-
-using SharpDX.IO;
 using SharpDX.Toolkit.Graphics;
 
 namespace SharpDX.Toolkit
 {
-    /// <summary>
-    /// TODO: COMMENT THIS CODE
-    /// </summary>
-    public class FontCompilerTask : CompilerDependencyTask
+    public class FontCompilerTask : ContentCompilerTask
     {
-        protected override bool ProcessItem(TkItem item)
+        protected override Diagnostics.Logger ProcessFileAndGetLogResults(string inputFilePath, string outputFilePath, string dependencyFilePath, TkItem item)
         {
-            bool hasErrors = false;
-
-            var inputFilePath = item.InputFilePath;
-            var outputFilePath = item.OutputFilePath;
-
-            try
-            {
-                var dependencyFilePath = Path.Combine(Path.Combine(ProjectDirectory.ItemSpec, IntermediateDirectory.ItemSpec), FileDependencyList.GetDependencyFileNameFromSourcePath(item.LinkName));
-
-                // Creates the dependency directory if it does no exist yet.
-                var dependencyDirectoryPath = Path.GetDirectoryName(dependencyFilePath);
-                if (!Directory.Exists(dependencyDirectoryPath))
-                {
-                    Directory.CreateDirectory(dependencyDirectoryPath);
-                }
-
-                Log.LogMessage(MessageImportance.High, "Check Toolkit Font file to compile {0} with dependency file {1}", inputFilePath, dependencyFilePath);
-
-                if (FileDependencyList.CheckForChanges(dependencyFilePath) || !File.Exists(outputFilePath))
-                {
-                    Log.LogMessage(MessageImportance.High, "Start to compile {0}", inputFilePath);
-
-                    var compilerResult = FontCompiler.CompileAndSave(inputFilePath, outputFilePath, dependencyFilePath);
-
-                    // Log all messages
-                    LogLogger(compilerResult.Logger);
-
-                    if (compilerResult.HasErrors)
-                    {
-                        hasErrors = true;
-                    }
-                    else
-                    {
-                        Log.LogMessage(MessageImportance.High, "Compiled successfull {0} to {1}", inputFilePath, outputFilePath);
-
-                        if (item.OutputCs)
-                        {
-                            Log.LogWarning("Compilation to CS not yet supported for Font file");
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.LogError("Cannot write compiled file to {0} : {1}", inputFilePath, ex.Message);
-                hasErrors = true;
-            }
-
-            return !hasErrors;
+            var compilerResult = FontCompiler.CompileAndSave(inputFilePath, outputFilePath, dependencyFilePath);
+            return compilerResult.Logger;
         }
     }
 }

@@ -17,14 +17,13 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
-
-using SharpDX.Toolkit.Diagnostics;
 
 namespace SharpDX.Toolkit
 {
@@ -33,27 +32,6 @@ namespace SharpDX.Toolkit
     /// </summary>
     public class CompilerDependencyTask : Task
     {
-        [Required]
-        public ITaskItem ProjectDirectory { get; set; }
-
-        [Required]
-        public ITaskItem IntermediateDirectory { get; set; }
-
-        [Required]
-        public ITaskItem[] Files { get; set; }
-
-        [Output]
-        public ITaskItem[] ContentFiles { get; set; }
-
-        [Output]
-        public ITaskItem[] CompileFiles { get; set; }
-
-        public bool DynamicCompiling { get; set; }
-
-        public bool Debug { get; set; }
-
-        public string RootNamespace { get; set; }
-
         protected class TkItem
         {
             public string Name;
@@ -68,7 +46,7 @@ namespace SharpDX.Toolkit
 
             public string OutputLink;
 
-            public bool   OutputCs;
+            public bool OutputCs;
 
             public string OutputCsFile;
 
@@ -99,11 +77,34 @@ namespace SharpDX.Toolkit
             }
         }
 
-        public override bool Execute()
+        [Required]
+        public ITaskItem ProjectDirectory { get; set; }
+
+        [Required]
+        public ITaskItem IntermediateDirectory { get; set; }
+
+        [Required]
+        public ITaskItem[] Files { get; set; }
+
+        [Output]
+        public ITaskItem[] ContentFiles { get; set; }
+
+        [Output]
+        public ITaskItem[] CompileFiles { get; set; }
+
+        public bool DynamicCompiling { get; set; }
+
+        public bool Debug { get; set; }
+
+        public string RootNamespace { get; set; }
+
+        public sealed override bool Execute()
         {
             var hasErrors = false;
             try
             {
+                Initialize();
+
                 var contentFiles = new List<ITaskItem>();
                 var compileFiles = new List<ITaskItem>();
 
@@ -143,47 +144,21 @@ namespace SharpDX.Toolkit
             return !hasErrors;
         }
 
-        protected virtual bool ProcessItem(TkItem item)
-        {
-            return true;
-        }
+        protected virtual void Initialize() { }
 
-        protected void LogLogger(SharpDX.Toolkit.Diagnostics.Logger logs)
-        {
-            if (logs == null)
-            {
-                return;
-            }
-
-            foreach (var message in logs.Messages)
-            {
-                switch (message.Type)
-                {
-                    case LogMessageType.Warning:
-                        Log.LogWarning(message.Text);
-                        break;
-                    case LogMessageType.Error:
-                        Log.LogError(message.Text);
-                        break;
-                    case LogMessageType.Info:
-                        Log.LogMessage(MessageImportance.Low, message.Text);
-                        break;
-                }
-            }
-        }
-
-        protected TkItem GetTkItem(ITaskItem item)
+        private TkItem GetTkItem(ITaskItem item)
         {
 
             var data = new TkItem
-                           {
-                               Name = item.ItemSpec,
-                               DynamicCompiling = item.GetMetadata("DynamicCompiling", DynamicCompiling),
-                               LinkName = item.GetMetadata("Link", item.ItemSpec),
-                               OutputNamespace = item.GetMetadata("OutputNamespace", RootNamespace),
-                               OutputFieldName = item.GetMetadata("OutputFieldName", "bytecode"),
-                               OutputCs =  item.GetMetadata("OutputCs", false)
-                           };
+                       {
+                           Name = item.ItemSpec,
+                           DynamicCompiling = item.GetMetadata("DynamicCompiling", DynamicCompiling),
+                           LinkName = item.GetMetadata("Link", item.ItemSpec),
+                           OutputNamespace = item.GetMetadata("OutputNamespace", RootNamespace),
+                           OutputFieldName = item.GetMetadata("OutputFieldName", "bytecode"),
+                           OutputCs = item.GetMetadata("OutputCs", false)
+                       };
+
             data.OutputClassName = item.GetMetadata("OutputClassName", Path.GetFileNameWithoutExtension(data.LinkName));
             data.OutputCsFile = item.GetMetadata("OutputCsFileName", Path.GetFileNameWithoutExtension(data.LinkName) + ".Generated.cs");
 
@@ -213,6 +188,11 @@ namespace SharpDX.Toolkit
             data.InputFilePath = Path.Combine(ProjectDirectory.ItemSpec, data.Name);
 
             return data;
+        }
+
+        protected virtual bool ProcessItem(TkItem item)
+        {
+            return true;
         }
     }
 }
