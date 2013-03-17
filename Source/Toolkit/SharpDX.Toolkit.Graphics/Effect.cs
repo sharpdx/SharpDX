@@ -90,9 +90,6 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>The effect bytecode must contain only a single effect and will be registered into the <see cref="GraphicsDevice.DefaultEffectPool"/>.</remarks>
         public Effect(GraphicsDevice device, EffectData effectData, EffectPool effectPool = null) : base(device)
         {
-            if (effectData.Effects.Count != 1)
-                throw new ArgumentException(string.Format("Expecting only one effect in the effect bytecode instead of [{0}].", Utilities.Join(",", effectData.Effects)), "effectData");
-
             ConstantBuffers = new EffectConstantBufferCollection();
             Parameters = new EffectParameterCollection();
             Techniques = new EffectTechniqueCollection();
@@ -100,13 +97,14 @@ namespace SharpDX.Toolkit.Graphics
             Pool = effectPool ?? device.DefaultEffectPool;
 
             // Sets the effect name
-            Name = effectData.Effects[0].Name;
+            Name = effectData.Description.Name;
 
             // Register the bytecode to the pool
-            Pool.RegisterBytecode(effectData);
+            var effect = Pool.RegisterBytecode(effectData);
 
             // Initialize from effect
-            InitializeFrom(Pool.Find(Name));
+            InitializeFrom(effect);
+
             // If everything was fine, then we can register it into the pool
             Pool.AddEffect(this);
         }
@@ -145,12 +143,6 @@ namespace SharpDX.Toolkit.Graphics
         /// <exception cref="System.InvalidOperationException">If no techniques found in this effect.</exception>
         public void InitializeFrom(EffectData.Effect effectDataArg)
         {
-            if (effectDataArg == null)
-                throw new ArgumentException(string.Format("Unable to find effect [{0}] from the EffectPool.", Name), "effectName");
-
-            if (effectDataArg.Techniques.Count == 0)
-                throw new InvalidOperationException("No techniques found in this effect.");
-
             RawEffectData = effectDataArg;
 
             // Clean any previously allocated resources

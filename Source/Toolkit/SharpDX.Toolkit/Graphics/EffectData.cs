@@ -33,8 +33,7 @@ namespace SharpDX.Toolkit.Graphics
     /// Container for shader bytecodes and effect metadata.
     /// </summary>
     /// <remarks>
-    /// This class is responsible to store shader bytecodes, effects, techniques, passes...etc.
-    /// It is working like an archive and is able to store multiple effect in a single object.
+    /// This class is responsible to store shader bytecodes, effect, techniques, passes...etc.
     /// It is serializable using <see cref="Load(Stream)"/> and <see cref="Save(Stream)"/> method.
     /// </remarks>
     [ContentReader(typeof(EffectDataContentReader))]
@@ -42,13 +41,10 @@ namespace SharpDX.Toolkit.Graphics
     {
         public const string MagicCode = "TKFX";
 
-        public const int Version = 0x100;
-
+        public const int Version = 0x101;
 
         public EffectData()
         {
-            Shaders = new List<Shader>();
-            Effects = new List<Effect>();
         }
 
         /// <summary>
@@ -56,10 +52,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public List<Shader> Shaders;
 
-        /// <summary>
-        /// List of effects.
-        /// </summary>
-        public List<Effect> Effects;
+        public Effect Description;
 
         /// <summary>
         /// Saves this <see cref="EffectData"/> instance to the specified stream.
@@ -79,147 +72,6 @@ namespace SharpDX.Toolkit.Graphics
         {
             using (var stream = new NativeFileStream(fileName, NativeFileMode.Create, NativeFileAccess.Write, NativeFileShare.Write))
                 Save(stream);
-        }
-
-
-        public int FindShader(Shader shader)
-        {
-            for (int i = 0; i < Shaders.Count; i++)
-            {
-                if (Shaders[i].IsSimilar(shader))
-                    return i;
-            }
-            return -1;
-        }
-
-        public int FindShaderByName(string name)
-        {
-            for (int i = 0; i < Shaders.Count; i++)
-            {
-                if (Shaders[i].Name == name)
-                    return i;
-            }
-            return -1;
-
-        }
-
-        /// <summary>
-        /// Merges an existing <see cref="EffectData" /> into this instance.
-        /// </summary>
-        /// <param name="source">The EffectData to merge.</param>
-        /// <param name="allowOverride">if set to <c>true</c> [allow override].</param>
-        /// <exception cref="System.InvalidOperationException"></exception>
-        /// <exception cref="InvalidOperationException">If the merge failed.</exception>
-        /// <remarks>This method is useful to build an archive of several effects.</remarks>
-        public void MergeFrom(EffectData source, bool allowOverride = false)
-        {
-            var logger = new Logger();
-            if (!MergeFrom(source, logger, allowOverride))
-                throw new InvalidOperationException(Utilities.Join("\r\n",logger.Messages));
-        }
-
-        /// <summary>
-        /// Merges an existing <see cref="EffectData" /> into this instance.
-        /// </summary>
-        /// <param name="source">The EffectData to merge.</param>
-        /// <param name="logger">Logger used to report merging errors.</param>
-        /// <param name="allowOverride">if set to <c>true</c> [allow override].</param>
-        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise</returns>
-        /// <remarks>This method is useful to build an archive of several effects.</remarks>
-        public bool MergeFrom(EffectData source, Logger logger, bool allowOverride = false)
-        {
-            bool isMergeOk = true;
-
-            foreach (var effect in source.Effects)
-            {
-                bool effectAlreadyRegistered = false;
-
-                // Add effect that is not already in the archive with this same name.
-                int previousEffectIndex = 0;
-                for (; previousEffectIndex < Effects.Count; previousEffectIndex++)
-                {
-                    var effect2 = Effects[previousEffectIndex];
-                    if (effect2.Name == effect.Name)
-                    {
-                        effectAlreadyRegistered = true;
-                        break;
-                    }
-                }
-
-                if (effectAlreadyRegistered)
-                {
-                    if (allowOverride)
-                    {
-                        Effects[previousEffectIndex] = effect;
-                    }
-                    else
-                    {
-                        // Skip the effect it it is already registered
-                        continue;
-                    }
-                }
-                else
-                {
-                    Effects.Add(effect);
-                }
-
-                foreach (var technique in effect.Techniques)
-                {
-                    foreach (var pass in technique.Passes)
-                    {
-                        foreach (var shaderLink in pass.Pipeline)
-                        {
-                            if (shaderLink == null)
-                                continue;
-
-                            if (shaderLink.IsImport)
-                            {
-                                // If this is an import, we try first to resolve it directly
-                                // Else we keep the name as-is
-                                var index = FindShaderByName(shaderLink.ImportName);
-                                if (index >= 0)
-                                {
-                                    shaderLink.ImportName = null;
-                                    shaderLink.RuntimeIndex = index;
-                                }
-                            }
-                            else if (!shaderLink.IsNullShader)
-                            {
-                                var shader = source.Shaders[shaderLink.Index];
-                                var index = FindShader(shader);
-                                if (index >= 0)
-                                {
-                                    var previousShader = Shaders[index];
-
-                                    if (shader.Name != null)
-                                    {
-                                        // if shader from this instance is local and shader from source is global => transform current shader to global
-                                        if (previousShader.Name == null)
-                                        {
-                                            previousShader.Name = shader.Name;
-                                        }
-                                        else if (shader.Name != previousShader.Name)
-                                        {
-                                            // If shader from this instance is global and shader from source is global => check names. If exported names are different, this is an error
-                                            logger.Error("Cannot merge shader [{0}] into this instance, as there is already a global shader with a different name [{1}]", shader.Name, previousShader.Name);
-                                            isMergeOk = false;
-                                        }
-                                    }
-
-                                    shaderLink.RuntimeIndex = index;
-                                }
-                                else
-                                {
-                                    shaderLink.RuntimeIndex = Shaders.Count;
-                                    Shaders.Add(shader);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return isMergeOk;
         }
 
         /// <summary>
@@ -295,7 +147,6 @@ namespace SharpDX.Toolkit.Graphics
                 serializer.Writer.Write(Version);
             }
 
-
             // Shaders section
             serializer.BeginChunk("SHDR");
             serializer.Serialize(ref Shaders);
@@ -303,7 +154,7 @@ namespace SharpDX.Toolkit.Graphics
 
             // Effects section
             serializer.BeginChunk("EFFX");
-            serializer.Serialize(ref Effects);
+            serializer.Serialize(ref Description);
             serializer.EndChunk();
 
             // Close TKFX section

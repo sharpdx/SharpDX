@@ -56,8 +56,9 @@ namespace SharpDX.Toolkit.Graphics
 
         private readonly List<string> currentExports = new List<string>();
         private EffectCompilerFlags compilerFlags;
-        private EffectData.Effect effect;
         private EffectData effectData;
+
+        private EffectData.Effect effect;
 
         private List<string> includeDirectoryList;
         public IncludeFileDelegate IncludeFileDelegate;
@@ -138,7 +139,7 @@ namespace SharpDX.Toolkit.Graphics
                 dependencyList.Save(dependencyFilePath);
 
                 // If dynamic compiling, store the parameters used to compile this effect directly in the bytecode
-                if (allowDynamicCompiling && result.EffectData != null && result.EffectData.Effects.Count == 1) 
+                if (allowDynamicCompiling && result.EffectData != null) 
                 {
                     var compilerArguments = new EffectData.CompilerArguments { FilePath = filePath, DependencyFilePath = dependencyFilePath, Macros = new List<EffectData.ShaderMacro>(), IncludeDirectoryList = new List<string>() };
                     if (macrosArgs != null)
@@ -151,7 +152,7 @@ namespace SharpDX.Toolkit.Graphics
                         compilerArguments.IncludeDirectoryList.AddRange(includeDirectoryList);
                     }
 
-                    result.EffectData.Effects[0].Arguments = compilerArguments;
+                    result.EffectData.Description.Arguments = compilerArguments;
                 }
             }
 
@@ -189,17 +190,14 @@ namespace SharpDX.Toolkit.Graphics
 
             effectData = new EffectData
                                  {
-                                     Effects = new List<EffectData.Effect>(),
-                                     Shaders = new List<EffectData.Shader>()
+                                     Shaders = new List<EffectData.Shader>(),
+                                     Description = new EffectData.Effect()
+                                                       {
+                                                           Name = Path.GetFileNameWithoutExtension(fileName),
+                                                           Techniques = new List<EffectData.Technique>(),
+                                                       }
                                  };
-
-            effect = new EffectData.Effect()
-                         {
-                             Name = Path.GetFileNameWithoutExtension(fileName),
-                             Techniques = new List<EffectData.Technique>()
-                         };
-
-            effectData.Effects.Add(effect);
+            effect = effectData.Description;
 
             if (parserResult.Shader != null)
             {
@@ -422,7 +420,7 @@ namespace SharpDX.Toolkit.Graphics
             }
             else
             {
-                effect.Name = (string) value;
+                effect.Name = (string)value;
             }
         }
 

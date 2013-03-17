@@ -44,26 +44,24 @@ namespace SharpDX.Toolkit.Graphics
         #endregion
 
 
-        private readonly EffectData dataGroup;
+        internal readonly List<EffectData.Shader> RegisteredShaders;
         private readonly List<SharpDX.Direct3D11.DeviceChild> compiledShaders;
         private readonly GraphicsDevice graphicsDevice;
         private readonly List<Effect> effects;
 
         // GraphicsDevice => (ConstantBufferName => (EffectConstantBufferKey => EffectConstantBuffer))
         private readonly Dictionary<GraphicsDevice, Dictionary<string, Dictionary<EffectConstantBufferKey, EffectConstantBuffer>>> mapNameToConstantBuffer;
-        private readonly Dictionary<string, EffectData.Effect> mapNameToEffect;
-        private readonly Dictionary<EffectData, bool> registered;
+        private readonly Dictionary<EffectData, EffectData.Effect> registered;
         private readonly object sync = new object();
         private ConstantBufferAllocatorDelegate constantBufferAllocator;
 
 
         private EffectPool(GraphicsDevice device, string name = null) : base(name)
         {
-            dataGroup = new EffectData();
-            mapNameToEffect = new Dictionary<string, EffectData.Effect>();
+            RegisteredShaders = new List<EffectData.Shader>();
             mapNameToConstantBuffer = new Dictionary<GraphicsDevice, Dictionary<string, Dictionary<EffectConstantBufferKey, EffectConstantBuffer>>>();
-            compiledShaders = new List<DeviceChild>();
-            registered = new Dictionary<EffectData, bool>(new IdentityEqualityComparer<EffectData>());
+            compiledShaders = new List<DeviceChild>(1024);
+            registered = new Dictionary<EffectData, EffectData.Effect>(new IdentityEqualityComparer<EffectData>());
             effects = new List<Effect>();
             RegisteredEffects = new ReadOnlyCollection<Effect>(effects);
             this.graphicsDevice = device.MainDevice;
@@ -100,51 +98,33 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Gets the current merged EffectData for this pool. See remarks.
-        /// </summary>
-        /// <value>The EffectData.</value>
-        /// <remarks>
-        /// This EffectData must not be modified at runtime.
-        /// </remarks>
-        public EffectData EffectData
-        {
-            get { return dataGroup; }
-        }
-
-        /// <summary>
         /// Registers a EffectData to this pool.
         /// </summary>
         /// <param name="data">The effect data to register.</param>
-        /// <param name="allowOverride">if set to <c>true</c> [allow override].</param>
-        public void RegisterBytecode(EffectData data, bool allowOverride = false)
+        /// <returns>The effect description.</returns>
+        public EffectData.Effect RegisterBytecode(EffectData data)
         {
             // Lock the whole EffectPool in case multiple threads would add EffectData at the same time.
             lock (sync)
             {
-                bool hasNewBytecode = false;
-                if (!registered.ContainsKey(data))
+                EffectData.Effect effect;
+
+                if (!registered.TryGetValue(data, out effect))
                 {
                     // Pre-cache all input signatures
                     CacheInputSignature(data);
 
-                    dataGroup.MergeFrom(data, allowOverride);
-                    registered.Add(data, true);
-                    hasNewBytecode = true;
-                }
-
-                if (hasNewBytecode)
-                {
-                    // Create all mapping
-                    mapNameToEffect.Clear();
-                    foreach (var effect in dataGroup.Effects)
-                        mapNameToEffect.Add(effect.Name, effect);
+                    effect = RegisterInternal(data);
+                    registered.Add(data, effect);
 
                     // Just alocate the compiled shaders array according to the currennt size of shader datas
-                    for (int i = compiledShaders.Count; i < dataGroup.Shaders.Count; i++)
+                    for (int i = compiledShaders.Count; i < RegisteredShaders.Count; i++)
                     {
                         compiledShaders.Add(null);
                     }
                 }
+
+                return effect;
             }
         }
 
@@ -186,17 +166,6 @@ namespace SharpDX.Toolkit.Graphics
             OnEffectRemoved(new ObservableCollectionEventArgs<Effect>(effect));
         }
 
-        internal EffectData.Effect Find(string name)
-        {
-            EffectData.Effect rawEffect;
-            lock (sync)
-            {
-                mapNameToEffect.TryGetValue(name, out rawEffect);
-            }
-
-            return rawEffect;
-        }
-
         internal DeviceChild GetOrCompileShader(EffectShaderType shaderType, int index, out string profileError)
         {
             DeviceChild shader = null;
@@ -206,13 +175,13 @@ namespace SharpDX.Toolkit.Graphics
                 shader = compiledShaders[index];
                 if (shader == null)
                 {
-                    if (dataGroup.Shaders[index].Level > graphicsDevice.Features.Level)
+                    if (RegisteredShaders[index].Level > graphicsDevice.Features.Level)
                     {
-                        profileError = string.Format("{0}", dataGroup.Shaders[index].Level);
+                        profileError = string.Format("{0}", RegisteredShaders[index].Level);
                         return null;
                     }
 
-                    var bytecodeRaw = dataGroup.Shaders[index].Bytecode;
+                    var bytecodeRaw = RegisteredShaders[index].Bytecode;
                     switch (shaderType)
                     {
                         case EffectShaderType.Vertex:
@@ -312,11 +281,133 @@ namespace SharpDX.Toolkit.Graphics
             return string.Format("EffectPool [{0}]", Name);
         }
 
+
+
+        /// <summary>
+        /// Merges an existing <see cref="EffectData" /> into this instance.
+        /// </summary>
+        /// <param name="source">The EffectData to merge.</param>
+        /// <param name="logger">Logger used to report merging errors.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise</returns>
+        /// <remarks>This method is useful to build an archive of several effects.</remarks>
+        private EffectData.Effect RegisterInternal(EffectData source)
+        {
+            var effect = source.Description;
+
+            var effectRuntime = new EffectData.Effect()
+                                    {
+                                        Name = effect.Name,
+                                        Arguments = effect.Arguments,
+                                        ShareConstantBuffers = effect.ShareConstantBuffers,
+                                        Techniques = new List<EffectData.Technique>(effect.Techniques.Count)
+                                    };
+
+            Logger logger = null;
+
+            foreach (var techniqueOriginal in effect.Techniques)
+            {
+                var technique = techniqueOriginal.Clone();
+                effectRuntime.Techniques.Add(technique);
+
+                foreach (var pass in technique.Passes)
+                {
+                    foreach (var shaderLink in pass.Pipeline)
+                    {
+                        // No shader set for this stage
+                        if (shaderLink == null) continue;
+
+                        // If the shader is an import, we try first to resolve it directly
+                        if (shaderLink.IsImport)
+                        {
+                            var index = FindShaderByName(shaderLink.ImportName);
+                            if (index >= 0)
+                            {
+                                shaderLink.ImportName = null;
+                                shaderLink.Index = index;
+                            }
+                            else
+                            {
+                                if (logger == null)
+                                {
+                                    logger = new Logger();
+                                }
+
+                                logger.Error("Cannot find shader import by name [{0}]", shaderLink.ImportName);
+                            }
+                        }
+                        else if (!shaderLink.IsNullShader)
+                        {
+                            var shader = source.Shaders[shaderLink.Index];
+
+                            // Find a similar shader
+                            var shaderIndex = FindSimilarShader(shader);
+
+                            if (shaderIndex >= 0)
+                            {
+                                var previousShader = RegisteredShaders[shaderIndex];
+
+                                // If the previous shader is 
+                                if (shader.Name != null)
+                                {
+                                    // if shader from this instance is local and shader from source is global => transform current shader to global
+                                    if (previousShader.Name == null)
+                                    {
+                                        previousShader.Name = shader.Name;
+                                    }
+                                    else if (shader.Name != previousShader.Name)
+                                    {
+                                        if (logger == null)
+                                        {
+                                            logger = new Logger();
+                                        }
+                                        // If shader from this instance is global and shader from source is global => check names. If exported names are different, this is an error
+                                        logger.Error("Cannot merge shader [{0}] into this instance, as there is already a global shader with a different name [{1}]", shader.Name, previousShader.Name);
+                                    }
+                                }
+
+                                shaderLink.Index = shaderIndex;
+                            }
+                            else
+                            {
+                                shaderLink.Index = RegisteredShaders.Count;
+                                RegisteredShaders.Add(shader);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (logger != null && logger.HasErrors)
+                throw new InvalidOperationException(Utilities.Join("\r\n", logger.Messages));
+
+            return effectRuntime;
+        }
+
+        private int FindSimilarShader(EffectData.Shader shader)
+        {
+            for (int i = 0; i < RegisteredShaders.Count; i++)
+            {
+                if (RegisteredShaders[i].IsSimilar(shader))
+                    return i;
+            }
+            return -1;
+        }
+
+        private int FindShaderByName(string name)
+        {
+            for (int i = 0; i < RegisteredShaders.Count; i++)
+            {
+                if (RegisteredShaders[i].Name == name)
+                    return i;
+            }
+            return -1;
+
+        }
+
         private static Buffer DefaultConstantBufferAllocator(GraphicsDevice device, EffectPool pool, EffectConstantBuffer constantBuffer)
         {
             return Buffer.Constant.New(device, constantBuffer.Size);
         }
-
 
         private void OnEffectAdded(ObservableCollectionEventArgs<Effect> e)
         {

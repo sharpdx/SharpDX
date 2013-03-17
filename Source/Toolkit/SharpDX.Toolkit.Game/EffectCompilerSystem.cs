@@ -135,10 +135,10 @@ namespace SharpDX.Toolkit
                 var effectData = effectToRebind.EffectData;
 
                 // First register the bytecode to the pool in order to reuse existing shaders
-                effect.Pool.RegisterBytecode(effectData, true);
+                var newEffect = effect.Pool.RegisterBytecode(effectData);
 
                 // Then re-instantiate this effect.
-                effect.InitializeFrom(effectData.Effects[0]);
+                effect.InitializeFrom(newEffect);
             }
 
             base.Update(gameTime);
@@ -347,7 +347,7 @@ namespace SharpDX.Toolkit
                             var compilerResult = compiler.CompileFromFile(args.FilePath, args.CompilerFlags, args.Macros, args.IncludeDirectoryList, true, args.DependencyFilePath);
 
                             // If there are errors notify them
-                            if (compilerResult.HasErrors || compilerResult.EffectData.Effects.Count == 0)
+                            if (compilerResult.HasErrors)
                             {
                                 OnCompilationError(new EffectCompilerEventArgs(effect, compilerResult.Logger.Messages));
                             }

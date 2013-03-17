@@ -48,6 +48,24 @@ namespace SharpDX.Toolkit.Graphics
                 return string.Format("Technique: [{0}], Passes({1})", Name, Passes.Count);
             }
 
+            /// <summary>
+            /// Clones this instance.
+            /// </summary>
+            /// <returns>Technique.</returns>
+            public Technique Clone()
+            {
+                var technique = (Technique)MemberwiseClone();
+                if (Passes != null)
+                {
+                    for (int i = 0; i < Passes.Count; i++)
+                    {
+                        var pass = Passes[i];
+                        Passes[i] = pass != null ? pass.Clone() : null;
+                    }
+                }
+                return technique;
+            }
+
             /// <inheritdoc/>
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {

@@ -49,6 +49,26 @@ namespace SharpDX.Toolkit.Graphics
             /// </summary>
             public Pipeline Pipeline;
 
+
+            /// <summary>
+            /// Clones this instance.
+            /// </summary>
+            /// <returns>Pass.</returns>
+            public Pass Clone()
+            {
+                var pass = (Pass)MemberwiseClone();
+                if (pass.Properties != null)
+                {
+                    pass.Properties = pass.Properties.Clone();
+                }
+                if (pass.Pipeline != null)
+                {
+                    pass.Pipeline = pass.Pipeline.Clone();
+                }
+
+                return pass;
+            }
+
             public override string ToString()
             {
                 return string.Format("Pass: [{0}], SubPass: {1}, Attributes({2})", Name, IsSubPass, Properties.Count);

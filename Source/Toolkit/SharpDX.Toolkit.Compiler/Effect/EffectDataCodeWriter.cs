@@ -76,10 +76,7 @@ namespace {1}
 ";
 
         var effectToGenerateText = new StringBuilder();
-            foreach(var effect in effectData.Effects)
-            {
-                effectToGenerateText.AppendFormat("//     Effect [{0}]\r\n", effect.Name);
-            }
+            effectToGenerateText.AppendFormat("//     Effect [{0}]\r\n", effectData.Description.Name);
 
             var buffer = new MemoryStream();
             effectData.Save(buffer);

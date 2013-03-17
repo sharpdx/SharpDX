@@ -33,7 +33,6 @@ namespace SharpDX.Toolkit.Graphics
         {
             public static readonly ShaderLink NullShader = new ShaderLink(-1);
 
-
             private int index;
             private string importName;
 
@@ -87,8 +86,6 @@ namespace SharpDX.Toolkit.Graphics
                 set { index = value; }
             }
 
-            public int RuntimeIndex { get; set; }
-
             /// <summary>
             /// Gets or sets the name of the shader import. Can be null.
             /// </summary>
@@ -109,6 +106,11 @@ namespace SharpDX.Toolkit.Graphics
             public bool IsNullShader
             {
                 get { return index < 0; }
+            }
+
+            public ShaderLink Clone()
+            {
+                return (ShaderLink)MemberwiseClone();
             }
 
             public bool Equals(ShaderLink other)

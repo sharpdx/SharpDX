@@ -47,11 +47,8 @@ namespace SharpDX.Toolkit.Graphics.Tests
 
             var bytecode = result.EffectData;
 
-            // Check that we have a single effect compiled in this archive.
-            Assert.AreEqual(bytecode.Effects.Count, 1);
-
             // Check that the name of this effect is the file name
-            Assert.AreEqual(bytecode.Effects[0].Name, "TestEffect");
+            Assert.AreEqual(bytecode.Description.Name, "TestEffect");
 
             // We have 3 shaders compiled: VS, VS2, PS
             Assert.AreEqual(bytecode.Shaders.Count, 3);

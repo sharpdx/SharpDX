@@ -45,6 +45,11 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
 
+            public PropertyCollection Clone()
+            {
+                return (PropertyCollection)MemberwiseClone();
+            }
+
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
                 if (serializer.Mode == SerializerMode.Write)

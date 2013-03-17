@@ -423,7 +423,7 @@ namespace SharpDX.Toolkit.Graphics
                 var stageBlock = new StageBlock(shaderType);
                 pipeline.Stages[i] = stageBlock;
 
-                stageBlock.Index = link.RuntimeIndex;
+                stageBlock.Index = link.Index;
                 stageBlock.ShaderStage = Effect.GraphicsDevice.ShaderStages[i];
 
                 InitStageBlock(stageBlock, logger);
@@ -438,13 +438,14 @@ namespace SharpDX.Toolkit.Graphics
         private void InitStageBlock(StageBlock stageBlock, Logger logger)
         {
             // If null shader, then skip init
-            if (stageBlock.Index < 0)
+            var shaderIndex = stageBlock.Index;
+            if (shaderIndex < 0)
             {
                 return;
             }
 
             string errorProfile;
-            stageBlock.Shader = Effect.Pool.GetOrCompileShader(stageBlock.Type, stageBlock.Index, out errorProfile);
+            stageBlock.Shader = Effect.Pool.GetOrCompileShader(stageBlock.Type, shaderIndex, out errorProfile);
 
             if (stageBlock.Shader == null)
             {
@@ -459,7 +460,7 @@ namespace SharpDX.Toolkit.Graphics
                 return;
             }
 
-            var shaderRaw = Effect.Pool.EffectData.Shaders[stageBlock.Index];
+            var shaderRaw = Effect.Pool.RegisteredShaders[shaderIndex];
 
             // Cache the input signature
             if (shaderRaw.Type == EffectShaderType.Vertex)

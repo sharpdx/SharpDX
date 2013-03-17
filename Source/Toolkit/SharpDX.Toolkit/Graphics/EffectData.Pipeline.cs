@@ -42,6 +42,26 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             /// <summary>
+            /// Clones this instance.
+            /// </summary>
+            /// <returns>Pipeline.</returns>
+            public Pipeline Clone()
+            {
+                var pipeline = (Pipeline)MemberwiseClone();
+                pipeline.Links = new ShaderLink[Links.Length];
+                for (int i = 0; i < Links.Length; i++)
+                {
+                    var link = Links[i];
+                    if (link != null)
+                    {
+                        pipeline.Links[i] = link.Clone();
+                    }
+                }
+                return pipeline;
+            }
+
+
+            /// <summary>
             /// Gets or sets the <see cref="ShaderLink" /> with the specified stage type.
             /// </summary>
             /// <param name="effectShaderType">Type of the stage.</param>

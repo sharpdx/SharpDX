@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,15 +20,24 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using SharpDX.IO;
+using SharpDX.Multimedia;
 using SharpDX.Serialization;
+using SharpDX.Toolkit.Content;
+using SharpDX.Toolkit.Diagnostics;
 
 namespace SharpDX.Toolkit.Graphics
 {
-    public partial class EffectData
+    /// <summary>
+    /// Container for shader bytecodes and effect metadata.
+    /// </summary>
+    /// <remarks>
+    /// This class is responsible to store shader bytecodes, effect, techniques, passes...etc.
+    /// It is serializable using <see cref="Load(Stream)"/> and <see cref="Save(Stream)"/> method.
+    /// </remarks>
+    public sealed partial class EffectData : IDataSerializable
     {
-        /// <summary>
-        /// Describes an effect.
-        /// </summary>
         public sealed class Effect : IDataSerializable
         {
             /// <summary>
@@ -51,11 +60,6 @@ namespace SharpDX.Toolkit.Graphics
             /// </summary>
             public CompilerArguments Arguments;
 
-            public override string ToString()
-            {
-                return string.Format("Effect: {0}, Techniques({1})", Name, Techniques.Count);
-            }
-
             /// <inheritdoc/>
             void IDataSerializable.Serialize(BinarySerializer serializer)
             {
@@ -65,5 +69,5 @@ namespace SharpDX.Toolkit.Graphics
                 serializer.Serialize(ref Arguments, SerializeFlags.Nullable);
             }
         }
-    }
+   }
 }

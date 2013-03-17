@@ -35,7 +35,7 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     class Program : ConsoleProgram
     {
-        [Option("Effect File | PreCompiled Effect *.tkfxo file", Required = true)]
+        [Option("Effect File", Required = true)]
         public string FxFile = null;
 
         [Option("D", Description = "Define macro", Value = "<id>=<text>")]
@@ -319,20 +319,15 @@ namespace SharpDX.Toolkit.Graphics
 
             Color(ConsoleColor.White);
             Console.WriteLine("--------------------------------------------------------------------------------");
-            Console.WriteLine("Effects");
+            Console.WriteLine("effect {0}", effectData.Description.Name);
             Console.WriteLine("--------------------------------------------------------------------------------");
             Console.WriteLine();
             ResetColor();
 
             const string tab = "    ";
 
-            foreach (var effect in effectData.Effects)
+            var effect = effectData.Description;
             {
-                Console.Write("effect");
-                Color(ConsoleColor.LightGreen);
-                Console.WriteLine(" {0}", effect.Name);
-                ResetColor();
-
                 Console.WriteLine("{");
                 foreach (var technique in effect.Techniques)
                 {
