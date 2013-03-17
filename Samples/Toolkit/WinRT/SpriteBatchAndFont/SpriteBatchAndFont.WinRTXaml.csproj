@@ -55,10 +55,9 @@
     <ToolkitFont Include="..\..\Common\SpriteBatchAndFont\Content\Arial16.xml">
       <Link>Content\Arial16.xml</Link>
     </ToolkitFont>
-    <Content Include="..\..\Common\SpriteBatchAndFont\Content\balls.dds">
+    <ToolkitTexture Include="..\..\Common\SpriteBatchAndFont\Content\balls.dds">
       <Link>Content\balls.dds</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </ToolkitTexture>
     <None Include="SpriteBatchAndFont.WinRTXaml_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

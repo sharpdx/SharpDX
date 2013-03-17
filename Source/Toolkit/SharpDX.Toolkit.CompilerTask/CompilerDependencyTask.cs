@@ -177,7 +177,7 @@ namespace SharpDX.Toolkit
             }
             else
             {
-                data.OutputLink = Path.ChangeExtension(data.LinkName, null);
+                data.OutputLink = Path.ChangeExtension(data.LinkName, "tkb");
                 data.OutputFilePath = Path.Combine(IntermediateDirectory.ItemSpec, data.OutputLink);
             }
 

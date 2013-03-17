@@ -372,9 +372,18 @@ namespace SharpDX.Toolkit.Graphics
 
                         foreach (var textureSlot in textures)
                         {
+                            var textureFilePath = textureSlot.FilePath.Replace(@"/", @"\");
+                            var textureWinFilePath = textureFilePath;
+
+                            // Remove any .\
+                            while (textureFilePath.StartsWith(@".\"))
+                            {
+                                textureFilePath = textureFilePath.Substring(2);
+                            }
+
                             var newTextureSlot = new ModelData.MaterialTexture()
                                                      {
-                                                         FilePath = textureSlot.FilePath,
+                                                         FilePath = textureFilePath,
                                                          BlendFactor = textureSlot.BlendFactor,
                                                          Operation = (MaterialTextureOperator)textureSlot.Operation,
                                                          Index = (int)textureSlot.TextureIndex,
@@ -383,7 +392,7 @@ namespace SharpDX.Toolkit.Graphics
                                                          Flags = (MaterialTextureFlags)textureSlot.Flags
                                                      };
 
-                            var pathToFullTexture = Path.Combine(modelDirectory, textureSlot.FilePath);
+                            var pathToFullTexture = Path.Combine(modelDirectory, textureWinFilePath);
                             if (!File.Exists(pathToFullTexture))
                             {
                                 logger.Warning(string.Format("Texture [{0}] not found from path [{1}] for model [{2}]. Skip it", textureSlot.FilePath, pathToFullTexture, modelFilePath));

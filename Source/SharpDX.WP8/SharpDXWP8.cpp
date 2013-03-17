@@ -22,6 +22,7 @@ IntPtr32 Interop::GetFileInformationByHandleEx() { return (IntPtr32)::GetFileInf
 IntPtr32 Interop::FormatMessageW() { return (IntPtr32)::FormatMessageW;}
 IntPtr32 Interop::CloseHandle() { return (IntPtr32)::CloseHandle;}
 IntPtr32 Interop::SetEndOfFile() { return (IntPtr32)::SetEndOfFile;}
+IntPtr32 Interop::GetFileAttributesExW() { return (IntPtr32)::GetFileAttributesExW;}
 
 // D3D11
 IntPtr32 Interop::D3D11CreateDevice() { return (IntPtr32)::D3D11CreateDevice;}

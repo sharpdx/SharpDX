@@ -104,6 +104,7 @@ namespace SharpDX.Toolkit.Graphics
             using (var writer = new BinaryWriter(outputStream))
             {
                 WriteMagic(writer);
+                writer.Write(SpriteFontData.Version);
                 WriteGlyphs(writer, glyphs);
 
                 writer.Write(lineSpacing);

@@ -68,7 +68,7 @@ namespace SpriteBatchAndFont
         protected override void LoadContent()
         {
             // Loads the balls texture (32 textures (32x32) stored vertically => 32 x 1024 ).
-            ballsTexture = Content.Load<Texture2D>("balls.dds");
+            ballsTexture = Content.Load<Texture2D>("balls");
 
             // SpriteFont supports the following font file format:
             // - DirectX Toolkit MakeSpriteFont or SharpDX Toolkit tkfont

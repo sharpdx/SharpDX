@@ -33,6 +33,10 @@ It compiles all files of type ToolkitFxc/ToolkitFont
     <AvailableItemName Include="ToolkitFxc"></AvailableItemName>
     <AvailableItemName Include="ToolkitFont"></AvailableItemName>
     <AvailableItemName Include="ToolkitModel"></AvailableItemName>
+    <!-- Currently, toolkit texture is mostly a passthrough and copies the texture to the output directory -->
+    <!--But a future version may provide compression/rescale on the fly, so we need to introduce it now -->
+    <!--in order to keep project compatible-->
+    <AvailableItemName Include="ToolkitTexture"></AvailableItemName>
   </ItemGroup>
 
   <!-- Global property most of them are overridable in the project including this project file -->
@@ -148,6 +152,7 @@ It compiles all files of type ToolkitFxc/ToolkitFont
   <UsingTask TaskName="SharpDX.Toolkit.FontCompilerTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
   <UsingTask TaskName="SharpDX.Toolkit.CompilerDependencyTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
   <UsingTask TaskName="SharpDX.Toolkit.ModelCompilerTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
+  <UsingTask TaskName="SharpDX.Toolkit.TextureCompilerTask" AssemblyFile="$(SharpDXSdkToolsDir)\SharpDX.Toolkit.CompilerTask.dll"/>
 
   <!-- Plugs all compilers in BuildDependsOn --> 
   <PropertyGroup>
@@ -185,7 +190,7 @@ It compiles all files of type ToolkitFxc/ToolkitFont
         ProjectDirectory="$(ProjectDir)"
         IntermediateDirectory="$(IntermediateOutputPath)"
         Debug="$(ToolkitFxcDebugOption)"
-        Files="@(ToolkitFxc);@(ToolkitFont);@(ToolkitModel)"
+        Files="@(ToolkitFxc);@(ToolkitFont);@(ToolkitModel);@(ToolkitTexture)"
         RootNamespace="$(RootNamespace)"
         >
         <Output TaskParameter="ContentFiles" ItemName="TkContent"/>
@@ -196,7 +201,7 @@ It compiles all files of type ToolkitFxc/ToolkitFont
       <!--List Of fxo compiled file-->
       <Content Include="@(TkContent)" KeepMetadata="Link;CopyToOutputDirectory"/>
 
-      <!--List of cs compiled file-->
+  <!--List of cs compiled file-->
       <Compile Include="@(TkCompile)"/>
     </ItemGroup>
   </Target>
@@ -235,5 +240,15 @@ It compiles all files of type ToolkitFxc/ToolkitFont
         >
     </ModelCompilerTask>
 
+    <!--TODO Merge both task into a single one?-->
+    <TextureCompilerTask
+        ProjectDirectory="$(ProjectDir)"
+        IntermediateDirectory="$(IntermediateOutputPath)"
+        DynamicCompiling="$(ToolkitFxcDynamicCompilingOption)"
+        Debug="$(ToolkitFxcDebugOption)"
+        Files="@(ToolkitTexture)"
+        RootNamespace="$(RootNamespace)"
+        >
+    </TextureCompilerTask>
   </Target>
 </Project>

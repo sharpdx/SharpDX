@@ -25,6 +25,7 @@ namespace SharpDX
 			static IntPtr32 FormatMessageW();
 			static IntPtr32 CloseHandle();
 			static IntPtr32 SetEndOfFile();
+			static IntPtr32 GetFileAttributesExW();
 			// D3D11
 			static IntPtr32 D3D11CreateDevice();
 			// DXGI

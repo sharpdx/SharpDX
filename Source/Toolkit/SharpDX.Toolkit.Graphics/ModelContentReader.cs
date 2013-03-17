@@ -43,17 +43,17 @@ namespace SharpDX.Toolkit.Graphics
             // Loads the model.
             var model = Model.Load(device, stream, name =>
                 {
-                    try
+                    // Try to load the texture with its texture path as is
+                    // otherwise try to load with tkb extension
+                    var texturePath = Path.Combine(assetPath ?? string.Empty, name);
+                    if (!readerManager.Exists(texturePath))
                     {
-                        var texturePath = Path.Combine(assetPath ?? string.Empty, name);
-                        return readerManager.Load<Texture>(texturePath);
+                        // Use the extension tkb to load a texture
+                        texturePath = Path.ChangeExtension(texturePath, "tkb");
                     }
-                    catch (AssetNotFoundException ex)
-                    {
-                        // TODO: Because some models could have some textures that are not found, the model should load, even if the
-                        // Texture was not found, but we define what to do in this case. Log error?
-                    }
-                    return null;
+
+                    // If the texture exists, return it, otherwise return null without throwing an exception.
+                    return readerManager.Exists(texturePath) ? readerManager.Load<Texture>(texturePath) : null;
                 });
 
             if (model == null)

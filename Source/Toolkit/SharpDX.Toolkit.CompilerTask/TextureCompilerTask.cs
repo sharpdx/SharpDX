@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,25 +20,26 @@
 
 using System.IO;
 
-namespace SharpDX.Toolkit.Content
-{
-    /// <summary>
-    /// A content resolver is in charge of locating a stream from an asset name.
-    /// </summary>
-    public interface IContentResolver
-    {
-        /// <summary>
-        /// Checks if the specified asset name exists.
-        /// </summary>
-        /// <param name="assetName">Name of the asset.</param>
-        /// <returns><c>true</c> if the specified asset name exists, <c>false</c> otherwise</returns>
-        bool Exists(string assetName);
+using SharpDX.Toolkit.Diagnostics;
+using SharpDX.Toolkit.Graphics;
 
-        /// <summary>
-        /// Resolves the specified asset name to a stream.
-        /// </summary>
-        /// <param name="assetName">Name of the asset.</param>
-        /// <returns>A Stream of the asset. This value can be null if this resolver was not able to locate the asset.</returns>
-        Stream Resolve(string assetName);
+namespace SharpDX.Toolkit
+{
+    public class TextureCompilerTask : ContentCompilerTask
+    {
+        protected override Diagnostics.Logger ProcessFileAndGetLogResults(string inputFilePath, string outputFilePath, string dependencyFilePath, TkItem item)
+        {
+            // For the TextureCompilerTask, simply copy input to output without performing any resize/compression
+            // but a future version will introduce this
+            File.Copy(inputFilePath, outputFilePath, true);
+
+            // Save the depdency file
+            var dependencies = new FileDependencyList();
+            dependencies.AddDefaultDependencies();
+            dependencies.AddDependencyPath(inputFilePath);
+            dependencies.Save(dependencyFilePath);
+
+            return new Logger();
+        }
     }
 }

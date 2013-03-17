@@ -166,5 +166,16 @@ namespace SharpDX.Tests
             var test = new NativeFileStream("blabla", NativeFileMode.Open, NativeFileAccess.Read);
         }
 
+
+        [Test]
+        public void CheckFileExists()
+        {
+            var testFile = "test.txt";
+            File.Delete(testFile);
+            Assert.False(NativeFile.Exists(testFile));
+            File.WriteAllText(testFile, string.Empty);
+            Assert.True(NativeFile.Exists(testFile));
+            File.Delete(testFile);
+        }
     }
 }

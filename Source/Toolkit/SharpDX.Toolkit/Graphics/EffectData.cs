@@ -40,7 +40,10 @@ namespace SharpDX.Toolkit.Graphics
     [ContentReader(typeof(EffectDataContentReader))]
     public sealed partial class EffectData : IDataSerializable
     {
-        private const string MagicCode = "TKFX";
+        public const string MagicCode = "TKFX";
+
+        public const int Version = 0x100;
+
 
         public EffectData()
         {
@@ -277,6 +280,21 @@ namespace SharpDX.Toolkit.Graphics
             // If the serializer don't find the TKFX, It will throw an
             // exception that will be catched by Load method.
             serializer.BeginChunk(MagicCode);
+
+            // Writes the version
+            if (serializer.Mode == SerializerMode.Read)
+            {
+                int version = serializer.Reader.ReadInt32();
+                if (version != Version)
+                {
+                    throw new NotSupportedException(string.Format("EffectData version [0x{0:X}] is not supported. Expecting [0x{1:X}]", version, Version));
+                }
+            }
+            else
+            {
+                serializer.Writer.Write(Version);
+            }
+
 
             // Shaders section
             serializer.BeginChunk("SHDR");

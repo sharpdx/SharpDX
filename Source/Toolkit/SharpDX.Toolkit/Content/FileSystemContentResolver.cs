@@ -43,6 +43,11 @@ namespace SharpDX.Toolkit.Content
         /// <value>The root directory.</value>
         public string RootDirectory { get; private set; }
 
+        public bool Exists(string assetName)
+        {
+            return NativeFile.Exists(Path.Combine(RootDirectory, assetName));
+        }
+
         public Stream Resolve(string assetName)
         {
             try

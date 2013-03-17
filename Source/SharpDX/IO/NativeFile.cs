@@ -30,6 +30,29 @@ namespace SharpDX.IO
     public static class NativeFile 
     {
         /// <summary>
+        /// Checks if the specified file path exists.
+        /// </summary>
+        /// <param name="filePath">The file path.</param>
+        /// <returns><c>true</c> if the specified file path exists, <c>false</c> otherwise</returns>
+        public static bool Exists(string filePath)
+        {
+            try
+            {
+#if !WIN8METRO
+                var fullPath = Path.GetFullPath(filePath);
+#else
+                var fullPath = filePath;
+#endif
+                WIN32_FILE_ATTRIBUTE_DATA data;
+                if (GetFileAttributesEx(fullPath, 0, out data))
+                {
+                    return true;
+                }
+            } catch {}
+            return false;
+        }
+
+        /// <summary>
         /// Opens a binary file, reads the contents of the file into a byte array, and then closes the file.
         /// </summary>
         /// <param name="path">The file to open for reading. </param>
@@ -168,6 +191,44 @@ namespace SharpDX.IO
         }
 #endif
 
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct FILETIME
+        {
+            public uint DateTimeLow;
+            public uint DateTimeHigh;
+
+            public DateTime ToDateTime()
+            {
+                return DateTime.FromFileTimeUtc((((long)DateTimeHigh) << 32) | ((uint)DateTimeLow));
+            }
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct WIN32_FILE_ATTRIBUTE_DATA
+        {
+            public uint FileAttributes;
+            public FILETIME CreationTime;
+            public FILETIME LastAccessTime;
+            public FILETIME LastWriteTime;
+            public uint FileSizeHigh;
+            public uint FileSizeLow;
+        }
+
+        /// <summary>
+        /// Gets the last write time access for the specified path.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <returns>The last write time access</returns>
+        public static DateTime GetLastWriteTime(string path)
+        {
+            WIN32_FILE_ATTRIBUTE_DATA data;
+            if (GetFileAttributesEx(path, 0, out data))
+            {
+                return data.LastWriteTime.ToDateTime().ToLocalTime();
+            }
+            return new DateTime(0);
+        }
+
 #if WP8
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         internal delegate bool ReadFileDelegate(IntPtr fileHandle, IntPtr buffer, int numberOfBytesToRead, out int numberOfBytesRead, IntPtr overlapped);
@@ -193,8 +254,13 @@ namespace SharpDX.IO
         internal delegate IntPtr CreateDelegate([MarshalAs(UnmanagedType.LPWStr)] string fileName, NativeFileAccess desiredAccess, NativeFileShare shareMode, NativeFileMode mode, IntPtr extendedParameters);
         internal static readonly CreateDelegate Create;
 
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate bool GetFileInformationByHandleExDelegate(IntPtr handle, FILE_INFO_BY_HANDLE_CLASS FileInformationClass, IntPtr lpFileInformation, int dwBufferSize);
         private static readonly GetFileInformationByHandleExDelegate GetFileInformationByHandleEx;
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        internal delegate bool GetFileAttributesExDelegate([MarshalAs(UnmanagedType.LPWStr)] string name, int fileInfoLevel, out WIN32_FILE_ATTRIBUTE_DATA lpFileInformation);
+        internal static readonly GetFileAttributesExDelegate GetFileAttributesEx;
 
         static NativeFile()
         {
@@ -206,6 +272,7 @@ namespace SharpDX.IO
             SetEndOfFile = (SetEndOfFileDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.SetEndOfFile()), typeof(SetEndOfFileDelegate));
             Create = (CreateDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.CreateFile2()), typeof(CreateDelegate));
             GetFileInformationByHandleEx = (GetFileInformationByHandleExDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.GetFileInformationByHandleEx()), typeof(GetFileInformationByHandleExDelegate));
+            GetFileAttributesEx = (GetFileAttributesExDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(SharpDX.WP8.Interop.GetFileAttributesExW()), typeof(GetFileAttributesExDelegate));
         }
 #else
     /// <summary>
@@ -259,46 +326,8 @@ namespace SharpDX.IO
         [DllImport("kernel32.dll", EntryPoint = "SetEndOfFile", SetLastError = true, CharSet = CharSet.Ansi)]
         internal static extern bool SetEndOfFile(IntPtr handle);
 
-        [StructLayout(LayoutKind.Sequential)]
-        internal struct FILETIME
-        {
-            public uint DateTimeLow;
-            public uint DateTimeHigh;
-
-            public DateTime ToDateTime()
-            {
-                return DateTime.FromFileTimeUtc((((long)DateTimeHigh) << 32) | ((uint)DateTimeLow));
-            }
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal struct WIN32_FILE_ATTRIBUTE_DATA
-        {
-            public uint FileAttributes;
-            public FILETIME CreationTime;
-            public FILETIME LastAccessTime;
-            public FILETIME LastWriteTime;
-            public uint FileSizeHigh;
-            public uint FileSizeLow;
-        }
-
         [DllImport("kernel32.dll", EntryPoint="GetFileAttributesExW", CharSet = CharSet.Unicode, SetLastError = true)]
         internal static extern bool GetFileAttributesEx(string name, int fileInfoLevel, out WIN32_FILE_ATTRIBUTE_DATA lpFileInformation);
-
-        /// <summary>
-        /// Gets the last write time access for the specified path.
-        /// </summary>
-        /// <param name="path">The path.</param>
-        /// <returns>The last write time access</returns>
-        public static DateTime GetLastWriteTime(string path)
-        {
-            WIN32_FILE_ATTRIBUTE_DATA data;
-            if (GetFileAttributesEx(path, 0, out data))
-            {
-                return data.LastWriteTime.ToDateTime().ToLocalTime();
-            }
-            return new DateTime(0);
-        }
 
 #if W8CORE
 

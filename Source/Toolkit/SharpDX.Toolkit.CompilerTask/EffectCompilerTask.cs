@@ -38,7 +38,7 @@ namespace SharpDX.Toolkit
 
             var existingPaths = new List<string>(Environment.GetEnvironmentVariable("PATH").Split(';'));
 
-            if (!existingPaths.Contains(redistD3DPath))
+            if (Directory.Exists(redistD3DPath) && !existingPaths.Contains(redistD3DPath))
             {
                 var newPath = redistD3DPath + ";" + Environment.GetEnvironmentVariable("PATH");
                 Environment.SetEnvironmentVariable("PATH", newPath);

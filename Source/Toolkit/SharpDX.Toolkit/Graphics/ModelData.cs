@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -32,6 +33,8 @@ namespace SharpDX.Toolkit.Graphics
     public sealed partial class ModelData : CommonData, IDataSerializable
     {
         public const string MagicCode = "TKMD";
+
+        public const int Version = 0x100;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ModelData" /> class.
@@ -167,6 +170,20 @@ namespace SharpDX.Toolkit.Graphics
             // This code should not be modified without modifying the serialize code in Model.
 
             serializer.BeginChunk(MagicCode);
+
+            // Writes the version
+            if (serializer.Mode == SerializerMode.Read)
+            {
+                int version = serializer.Reader.ReadInt32();
+                if (version != Version)
+                {
+                    throw new NotSupportedException(string.Format("ModelData version [0x{0:X}] is not supported. Expecting [0x{1:X}]", version, Version));
+                }
+            }
+            else
+            {
+                serializer.Writer.Write(Version);
+            }
 
             // Serialize the maximum buffer size used when loading this model.
             serializer.Serialize(ref MaximumBufferSizeInBytes);

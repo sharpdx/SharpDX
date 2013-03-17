@@ -43,7 +43,9 @@ namespace SharpDX.Toolkit.Graphics
     [ContentReader(typeof(SpriteFontDataContentReader))]
     public partial class SpriteFontData : IDataSerializable
     {
-        const string FontMagicCode = "TKFT";
+        public const string FontMagicCode = "TKFT";
+
+        public const int Version = 0x100;
 
         /// <summary>
         /// The number of pixels from the absolute top of the line to the base of the characters.
@@ -89,6 +91,7 @@ namespace SharpDX.Toolkit.Graphics
 
             var magicCode = FourCC.Empty;
             serializer.Serialize(ref magicCode);
+
             if (magicCode == "DXTK")
             {
                 data.SerializeMakeSpriteFont(serializer);

@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+
 using SharpDX.Multimedia;
 using SharpDX.Serialization;
 
@@ -37,6 +39,20 @@ namespace SharpDX.Toolkit.Graphics
             if (magicCode2 != "font")
                 return;
 
+            // Writes the version
+            if (serializer.Mode == SerializerMode.Read)
+            {
+                int version = serializer.Reader.ReadInt32();
+                if (version != Version)
+                {
+                    throw new NotSupportedException(string.Format("SpriteFontData version [0x{0:X}] is not supported. Expecting [0x{1:X}]", version, Version));
+                }
+            }
+            else
+            {
+                serializer.Writer.Write(Version);
+            }
+            
             // Deserialize Glyphs
             int glyphCount = 0;
             serializer.Serialize(ref glyphCount);

@@ -124,10 +124,9 @@
     <ToolkitModel Include="..\..\Common\ModelRendering\Content\duck.dae">
       <Link>Content\duck.dae</Link>
     </ToolkitModel>
-    <Content Include="..\..\Common\ModelRendering\Content\duckCM.dds">
+    <ToolkitTexture Include="..\..\Common\ModelRendering\Content\duckCM.dds">
       <Link>Content\duckCM.dds</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </ToolkitTexture>
     <ToolkitModel Include="..\..\Common\ModelRendering\Content\Happy.x">
       <Link>Content\Happy.x</Link>
     </ToolkitModel>
@@ -146,22 +145,18 @@
     <ToolkitModel Include="..\..\Common\ModelRendering\Content\dude.fbx">
       <Link>Content\dude.fbx</Link>
     </ToolkitModel>
-    <Content Include="..\..\Common\ModelRendering\Content\head.dds">
+    <ToolkitTexture Include="..\..\Common\ModelRendering\Content\head.dds">
       <Link>Content\head.dds</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\Common\ModelRendering\Content\jacket.dds">
+    </ToolkitTexture>
+    <ToolkitTexture Include="..\..\Common\ModelRendering\Content\jacket.dds">
       <Link>Content\jacket.dds</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\Common\ModelRendering\Content\pants.dds">
+    </ToolkitTexture>
+    <ToolkitTexture Include="..\..\Common\ModelRendering\Content\pants.dds">
       <Link>Content\pants.dds</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\Common\ModelRendering\Content\upBodyC.dds">
+    </ToolkitTexture>
+    <ToolkitTexture Include="..\..\Common\ModelRendering\Content\upBodyC.dds">
       <Link>Content\upBodyC.dds</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </ToolkitTexture>
     <None Include="Properties\AppManifest.xml" />
     <None Include="Properties\WMAppManifest.xml">
       <SubType>Designer</SubType>

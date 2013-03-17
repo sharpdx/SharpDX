@@ -177,6 +177,13 @@ namespace SharpDX.Toolkit.Graphics
             // exception that will be catched by Load method.
             BeginChunk(ModelData.MagicCode);
 
+            // Writes the version
+            int version = Reader.ReadInt32();
+            if (version != ModelData.Version)
+            {
+                throw new NotSupportedException(string.Format("EffectData version [0x{0:X}] is not supported. Expecting [0x{1:X}]", version, ModelData.Version));
+            }
+
             // Allocated the shared memory used to load this Model
             AllocateSharedMemory(Reader.ReadInt32());
 
