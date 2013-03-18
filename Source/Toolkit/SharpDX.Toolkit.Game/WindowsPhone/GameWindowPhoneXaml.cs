@@ -48,6 +48,7 @@ namespace SharpDX.Toolkit
         internal GameWindowPhoneXaml()
         {
             thisComObjectPtr = CppObjectShadow.ToIntPtr<IDrawingSurfaceContentProviderNative>(this);
+            synchronizedTexture = null;
         }
 
         public override object NativeWindow
@@ -102,12 +103,10 @@ namespace SharpDX.Toolkit
         #region Implementation of IDrawingSurfaceContentProviderNative
 
         private Exception drawException;
-        private RenderTargetGraphicsPresenter graphicsPresenter;
         private DrawingSurfaceSynchronizedTexture synchronizedTexture;
 
         public void CreateSynchronizedTexture(SharpDX.Direct3D11.Texture2D texture2D)
         {
-            Utilities.Dispose(ref synchronizedTexture);
             synchronizedTexture = host.CreateSynchronizedTexture(texture2D);
         }
 
@@ -118,25 +117,14 @@ namespace SharpDX.Toolkit
 
         void IDrawingSurfaceContentProviderNative.Disconnect()
         {
-            Utilities.Dispose(ref synchronizedTexture);
+            Utilities.Dispose(ref this.synchronizedTexture);
+            // Can't release host because it is causing a sporadic access violation 
             //Utilities.Dispose(ref host);
         }
 
         void IDrawingSurfaceContentProviderNative.PrepareResources(DateTime presentTargetTime, out Bool isContentDirty)
         {
             isContentDirty = true;
-        }
-
-        private void DisposeAll()
-        {
-            // Dispose the graphics device
-            if (graphicsDeviceService.GraphicsDevice != null)
-            {
-                var presenter = graphicsDeviceService.GraphicsDevice.Presenter;
-                Utilities.Dispose(ref presenter);
-
-                graphicsDeviceService.GraphicsDevice.Dispose();
-            }
         }
 
         void IDrawingSurfaceContentProviderNative.GetTexture(DrawingSizeF surfaceSize, out DrawingSurfaceSynchronizedTexture synchronizedTexture, out RectangleF textureSubRectangle)
@@ -155,9 +143,14 @@ namespace SharpDX.Toolkit
                     }
                     else if (this.synchronizedTexture == null)
                     {
-                        DisposeAll();
+                        // Dispose the graphics device
+                        if (graphicsDeviceService.GraphicsDevice != null)
+                        {
+                            graphicsDeviceService.GraphicsDevice.Dispose();
+                        }
 
                         // Make sure that the graphics device is created
+                        // This will create indirectly the synchronizedTexture on this instance.
                         graphicsDeviceManager.CreateDevice();
                     }
 

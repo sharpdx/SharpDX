@@ -82,6 +82,8 @@ namespace SharpDX.Toolkit
 
         private bool isReallyFullScreen;
 
+        private GraphicsDevice graphicsDevice;
+
         #endregion
 
         #region Constructors and Destructors
@@ -161,7 +163,17 @@ namespace SharpDX.Toolkit
 
         #region Public Properties
 
-        public GraphicsDevice GraphicsDevice { get; internal set; }
+        public GraphicsDevice GraphicsDevice
+        {
+            get
+            {
+                return graphicsDevice;
+            }
+            internal set
+            {
+                graphicsDevice = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the list of graphics profile to select from the best feature to the lower feature. See remarks.
@@ -481,24 +493,7 @@ namespace SharpDX.Toolkit
                     game.Window.OrientationChanged -= Window_OrientationChanged;
                 }
 
-                if (GraphicsDevice != null)
-                {
-                    if (GraphicsDevice.Presenter != null)
-                    {
-						
-                        // Invalid for WinRT - throwing a "Value does not fall within the expected range" Exception
-#if !WIN8METRO
-                        // Make sure that the Presenter is reverted to window before shutting down
-                        // otherwise the Direct3D11.Device will generate an exception on Dispose()
-                        GraphicsDevice.Presenter.IsFullScreen = false;			
-#endif
-                        GraphicsDevice.Presenter.Dispose();
-                        GraphicsDevice.Presenter = null;
-                    }
-
-                    GraphicsDevice.Dispose();
-                    GraphicsDevice = null;
-                }
+                Utilities.Dispose(ref graphicsDevice);
             }
 
             base.Dispose(disposeManagedResources);
@@ -753,20 +748,7 @@ namespace SharpDX.Toolkit
 
         private void CreateDevice(GraphicsDeviceInformation newInfo)
         {
-            if (GraphicsDevice != null)
-            {
-                if (!GraphicsDevice.IsDisposed)
-                {
-                    if (GraphicsDevice.Presenter != null)
-                    {
-                        GraphicsDevice.Presenter.Dispose();
-                        GraphicsDevice.Presenter = null;
-                    }
-
-                    GraphicsDevice.Dispose();
-                }
-                GraphicsDevice = null;
-            }
+            Utilities.Dispose(ref graphicsDevice);
 
             newInfo.PresentationParameters.IsFullScreen = isFullScreen;
             newInfo.PresentationParameters.PresentationInterval = SynchronizeWithVerticalRetrace ? PresentInterval.One : PresentInterval.Immediate;

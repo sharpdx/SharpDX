@@ -213,8 +213,8 @@ namespace SharpDX.Toolkit
                         }
                         else
                         {
-                            // Dispose the graphics device
                             Utilities.Dispose(ref graphicsDevice);
+
 
                             // Call the graphics device to call us back on EnsureDevice method
                             graphicsDeviceManager.CreateDevice();
@@ -360,9 +360,6 @@ namespace SharpDX.Toolkit
 
             // Dispose the backbuffer
             Utilities.Dispose(ref backBuffer);
-
-            // Clears the presenter
-            graphicsPresenter = null;
         }
 
         private void DrawingSurfaceBackgroundGridOnLoaded(object sender, RoutedEventArgs routedEventArgs)

@@ -1456,6 +1456,19 @@ namespace SharpDX.Toolkit.Graphics
         { 
             if (disposeManagedResources)
             {
+                if (Presenter != null)
+                {
+
+                    // Invalid for WinRT - throwing a "Value does not fall within the expected range" Exception
+#if !WIN8METRO
+                    // Make sure that the Presenter is reverted to window before shutting down
+                    // otherwise the Direct3D11.Device will generate an exception on Dispose()
+                    Presenter.IsFullScreen = false;
+#endif
+                    Presenter.Dispose();
+                    Presenter = null;
+                }
+
                 foreach (var effectPool in EffectPools)
                 {
                     effectPool.Dispose();
