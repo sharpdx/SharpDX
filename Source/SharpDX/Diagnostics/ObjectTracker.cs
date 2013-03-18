@@ -109,9 +109,21 @@ namespace SharpDX.Diagnostics
                     ObjectReferences.Add(comObject.NativePointer, referenceList);
                 }
 #if W8CORE
-                referenceList.Add(new ObjectReference(DateTime.Now, comObject));
+                referenceList.Add(new ObjectReference(DateTime.Now, comObject, "Not Available on this platform"));
 #else
-                referenceList.Add(new ObjectReference(DateTime.Now, comObject, new StackTrace(3, true)));
+                var stackTraceText = new StringBuilder();
+                var stackTrace = new StackTrace(3, true);
+                foreach (var stackFrame in stackTrace.GetFrames())
+                {
+                    // Skip system/generated frame
+                    if (stackFrame.GetFileLineNumber() == 0)
+                        continue;
+                    stackTraceText.AppendFormat(System.Globalization.CultureInfo.InvariantCulture, "\t{0}({1},{2}) : {3}", stackFrame.GetFileName(), stackFrame.GetFileLineNumber(),
+                                         stackFrame.GetFileColumnNumber(),
+                                         stackFrame.GetMethod()).AppendLine();
+                }
+
+                referenceList.Add(new ObjectReference(DateTime.Now, comObject, stackTraceText.ToString()));
 #endif
                 // Fire Tracked event.
                 OnTracked(comObject);

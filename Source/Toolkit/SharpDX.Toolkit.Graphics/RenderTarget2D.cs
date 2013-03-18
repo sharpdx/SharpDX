@@ -307,6 +307,16 @@ namespace SharpDX.Toolkit.Graphics
             return CreateDescription(device.MainDevice, width, height, format, TextureFlags.RenderTarget, 1, arraySize, multiSampleCount);
         }
 
+        /// <summary>
+        /// <see cref="SharpDX.Direct3D11.Texture2D"/> casting operator.
+        /// </summary>
+        /// <param name="from">From the Texture1D.</param>
+        public static implicit operator SharpDX.Direct3D11.Texture2D(RenderTarget2D from)
+        {
+            // Don't bother with multithreading here
+            return from == null ? null : from.Resource;
+        }
+
         internal static Texture2DDescription CreateDescription(GraphicsDevice device, int width, int height, PixelFormat format, TextureFlags textureFlags, int mipCount, int arraySize, MSAALevel multiSampleCount)
         {
             // Make sure that the texture to create is a render target

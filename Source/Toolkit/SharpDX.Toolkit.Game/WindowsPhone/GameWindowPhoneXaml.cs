@@ -105,10 +105,10 @@ namespace SharpDX.Toolkit
         private RenderTargetGraphicsPresenter graphicsPresenter;
         private DrawingSurfaceSynchronizedTexture synchronizedTexture;
 
-        public void CreateSynchronizedTexture(Graphics.Texture2D renderTarget2D)
+        public void CreateSynchronizedTexture(SharpDX.Direct3D11.Texture2D texture2D)
         {
             Utilities.Dispose(ref synchronizedTexture);
-            synchronizedTexture = host.CreateSynchronizedTexture((Texture2D)renderTarget2D);
+            synchronizedTexture = host.CreateSynchronizedTexture(texture2D);
         }
 
         void IDrawingSurfaceContentProviderNative.Connect(DrawingSurfaceRuntimeHost host)
@@ -118,18 +118,25 @@ namespace SharpDX.Toolkit
 
         void IDrawingSurfaceContentProviderNative.Disconnect()
         {
-            // Dispose the graphics device
-            if (graphicsDeviceService.GraphicsDevice != null)
-            {
-                graphicsDeviceService.GraphicsDevice.Dispose();
-            }
-
             Utilities.Dispose(ref synchronizedTexture);
+            //Utilities.Dispose(ref host);
         }
 
         void IDrawingSurfaceContentProviderNative.PrepareResources(DateTime presentTargetTime, out Bool isContentDirty)
         {
             isContentDirty = true;
+        }
+
+        private void DisposeAll()
+        {
+            // Dispose the graphics device
+            if (graphicsDeviceService.GraphicsDevice != null)
+            {
+                var presenter = graphicsDeviceService.GraphicsDevice.Presenter;
+                Utilities.Dispose(ref presenter);
+
+                graphicsDeviceService.GraphicsDevice.Dispose();
+            }
         }
 
         void IDrawingSurfaceContentProviderNative.GetTexture(DrawingSizeF surfaceSize, out DrawingSurfaceSynchronizedTexture synchronizedTexture, out RectangleF textureSubRectangle)
@@ -148,6 +155,8 @@ namespace SharpDX.Toolkit
                     }
                     else if (this.synchronizedTexture == null)
                     {
+                        DisposeAll();
+
                         // Make sure that the graphics device is created
                         graphicsDeviceManager.CreateDevice();
                     }

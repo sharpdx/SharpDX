@@ -106,14 +106,13 @@ namespace SharpDX.Toolkit
                 SampleDescription = new DXGI.SampleDescription(1, 0)
             };
 
-            var renderTarget = Graphics.Texture2D.New(device, renderTargetDesc);
-            var BackBuffer = RenderTarget2D.New(device, new RenderTargetView(device, renderTarget));
+            var backBuffer = RenderTarget2D.New(device, renderTargetDesc);
 
-            var graphicsPresenter = new RenderTargetGraphicsPresenter(device, BackBuffer, deviceInformation.PresentationParameters.DepthStencilFormat);
+            var graphicsPresenter = new RenderTargetGraphicsPresenter(device, backBuffer, deviceInformation.PresentationParameters.DepthStencilFormat, true);
             device.Presenter = graphicsPresenter;
 
             var gameWindowXaml = (GameWindowPhoneXaml)gameWindow;
-            gameWindowXaml.CreateSynchronizedTexture(renderTarget);
+            gameWindowXaml.CreateSynchronizedTexture(backBuffer);
 
             return device;
         }

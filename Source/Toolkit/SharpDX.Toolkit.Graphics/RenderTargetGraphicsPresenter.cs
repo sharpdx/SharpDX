@@ -29,10 +29,13 @@ namespace SharpDX.Toolkit.Graphics
     {
         private RenderTarget2D backBuffer;
 
-        public RenderTargetGraphicsPresenter(GraphicsDevice device, RenderTarget2D renderTarget, DepthFormat depthFormat = DepthFormat.None)
+        public RenderTargetGraphicsPresenter(GraphicsDevice device, RenderTarget2D renderTarget, DepthFormat depthFormat = DepthFormat.None, bool disposeRenderTarget = false)
             : base(device, CreatePresentationParameters(renderTarget, depthFormat))
         {
             PresentInterval = Description.PresentationInterval;
+
+            if (disposeRenderTarget)
+                ToDispose(renderTarget);
 
             // Initialize the swap chain
             backBuffer = renderTarget;
@@ -91,6 +94,11 @@ namespace SharpDX.Toolkit.Graphics
 
         public override void Present()
         {
+        }
+
+        protected override void Dispose(bool disposeManagedResources)
+        {
+            base.Dispose(disposeManagedResources);
         }
     }
 }
