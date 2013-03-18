@@ -217,11 +217,41 @@ namespace SharpDX.Diagnostics
         public static string ReportActiveObjects()
         {
             var text = new StringBuilder();
+            int count = 0;
+            var countPerType = new Dictionary<string, int>();
+
             foreach (var findActiveObject in FindActiveObjects())
             {
                 var findActiveObjectStr = findActiveObject.ToString();
                 if (!string.IsNullOrEmpty(findActiveObjectStr))
-                    text.AppendLine(findActiveObjectStr);
+                {
+                    text.AppendFormat("[{0}]: {1}", count, findActiveObjectStr);
+
+                    var target = findActiveObject.Object.Target;
+                    if (target != null)
+                    {
+                        int typeCount;
+                        var targetType = target.GetType().Name;
+                        if (!countPerType.TryGetValue(targetType, out typeCount))
+                        {
+                            countPerType[targetType] = 0;
+                        }
+
+                        countPerType[targetType] = typeCount + 1;
+                    }
+                }
+                count++;
+            }
+
+            var keys = new List<string>(countPerType.Keys);
+            keys.Sort();
+
+            text.AppendLine();
+            text.AppendLine("Count per Type:");
+            foreach (var key in keys)
+            {
+                text.AppendFormat("{0} : {1}", key, countPerType[key]);
+                text.AppendLine();
             }
             return text.ToString();
         }

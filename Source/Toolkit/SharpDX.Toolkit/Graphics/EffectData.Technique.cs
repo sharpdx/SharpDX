@@ -57,10 +57,11 @@ namespace SharpDX.Toolkit.Graphics
                 var technique = (Technique)MemberwiseClone();
                 if (Passes != null)
                 {
+                    technique.Passes = new List<Pass>(Passes.Count);
                     for (int i = 0; i < Passes.Count; i++)
                     {
                         var pass = Passes[i];
-                        Passes[i] = pass != null ? pass.Clone() : null;
+                        technique.Passes.Add(pass != null ? pass.Clone() : null);
                     }
                 }
                 return technique;
