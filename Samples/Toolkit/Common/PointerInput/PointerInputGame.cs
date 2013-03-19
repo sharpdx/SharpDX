@@ -46,7 +46,6 @@ namespace PointerInput
         {
             private readonly int index;
             private readonly PointerPoint point;
-
             private readonly string description;
 
             private string cache;
@@ -145,39 +144,12 @@ namespace PointerInput
             IsMouseVisible = true;
         }
 
-        private void AddEvent(PointerPoint point)
-        {
-            // uncomment and edit these lines to filter-out the unneeded events
-            //if (recentEvents.Count > 0)
-            //{
-            //    var e = recentEvents.Last();
-            //    var skipEvent = e.Point.DeviceType == point.DeviceType
-            //                    && e.Point.PointerId == point.PointerId
-            //                    && e.Point.Properties.PointerUpdateKind == point.Properties.PointerUpdateKind;
-
-            //    if (skipEvent) return;
-            //}
-
-
-            if (recentEvents.Count == maxEvents)
-                recentEvents.Dequeue();
-
-            recentEvents.Enqueue(new PointerEventDescrption(eventIndex++, point));
-        }
-
         protected override void LoadContent()
         {
-            Window.AllowUserResizing = true;
-
-            // set the resolution to current window size:
-            graphicsDeviceManager.PreferredBackBufferHeight = Window.ClientBounds.Height;
-            graphicsDeviceManager.PreferredBackBufferWidth = Window.ClientBounds.Width;
-            graphicsDeviceManager.ApplyChanges();
-
             // SpriteFont supports the following font file format:
             // - DirectX Toolkit MakeSpriteFont or SharpDX Toolkit tkfont
             // - BMFont from Angelcode http://www.angelcode.com/products/bmfont/
-            arial16BMFont = Content.Load<SpriteFont>("Arial16");
+            arial16BMFont = Content.Load<SpriteFont>("Arial10");
 
             // Instantiate a SpriteBatch
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -195,6 +167,8 @@ namespace PointerInput
         protected override void Initialize()
         {
             Window.Title = "MouseInput demo";
+            Window.AllowUserResizing = true;
+            IsMouseVisible = true;
             base.Initialize();
         }
 
@@ -210,7 +184,7 @@ namespace PointerInput
 
             // Render the text
             spriteBatch.Begin();
-            spriteBatch.DrawString(arial16BMFont, sb.ToString(), new Vector2(8, 32), Color.White);
+            spriteBatch.DrawString(arial16BMFont, sb.ToString(), new Vector2(8, 8), Color.White);
             spriteBatch.End();
 
             // Handle base.Draw
@@ -225,6 +199,14 @@ namespace PointerInput
 
             foreach(var point in pointerState.Points)
                 AddEvent(point);
+        }
+
+        private void AddEvent(PointerPoint point)
+        {
+            if (recentEvents.Count == maxEvents)
+                recentEvents.Dequeue();
+
+            recentEvents.Enqueue(new PointerEventDescrption(eventIndex++, point));
         }
     }
 }

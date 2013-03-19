@@ -116,8 +116,8 @@
     <None Include="PointerInput.WinRT_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <ToolkitFont Include="..\..\Common\PointerInput\Content\Arial16.xml">
-      <Link>Content\Arial16.xml</Link>
+    <ToolkitFont Include="..\..\Common\PointerInput\Content\Arial10.xml">
+      <Link>Content\Arial10.xml</Link>
     </ToolkitFont>
     <Content Include="Assets\Logo.png" />
     <Content Include="Assets\SmallLogo.png" />

@@ -124,8 +124,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ToolkitFont Include="..\..\Common\PointerInput\Content\Arial16.xml">
-      <Link>Content\Arial16.xml</Link>
+    <ToolkitFont Include="..\..\Common\PointerInput\Content\Arial10.xml">
+      <Link>Content\Arial10.xml</Link>
     </ToolkitFont>
     <Content Include="Assets\AlignmentGrid.png" />
     <Content Include="Assets\ApplicationIcon.png">
