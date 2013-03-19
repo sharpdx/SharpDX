@@ -34,7 +34,7 @@ namespace SharpDX.DirectWrite
 
         public static IntPtr ToIntPtr(FontCollectionLoader fontFileEnumerator)
         {
-            return ToIntPtr<FontCollectionLoader>(fontFileEnumerator);
+            return ToCallbackPtr<FontCollectionLoader>(fontFileEnumerator);
         }
 
         public static IntPtr ToIntPtr(Factory factory, FontCollectionLoader fontFileEnumerator)

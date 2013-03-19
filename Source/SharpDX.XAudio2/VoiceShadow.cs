@@ -36,7 +36,7 @@ namespace SharpDX.XAudio2
         /// <returns>A pointer to a shadow c++ callback</returns>
         public static IntPtr ToIntPtr(VoiceCallback callback)
         {
-            return ToIntPtr<VoiceCallback>(callback);
+            return ToCallbackPtr<VoiceCallback>(callback);
         }
 
         private class VoiceVtbl : CppObjectVtbl {

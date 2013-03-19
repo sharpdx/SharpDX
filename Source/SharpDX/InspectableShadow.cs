@@ -38,7 +38,7 @@ namespace SharpDX
         /// <returns>A pointer to a shadow c++ callback</returns>
         public static IntPtr ToIntPtr(IInspectable callback)
         {
-            return ToIntPtr<IInspectable>(callback);
+            return ToCallbackPtr<IInspectable>(callback);
         }
 
         public class InspectableProviderVtbl : ComObjectVtbl

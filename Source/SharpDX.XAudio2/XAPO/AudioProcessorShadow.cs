@@ -20,7 +20,7 @@ namespace SharpDX.XAPO
         /// <returns>A pointer to a shadow c++ callback</returns>
         public static IntPtr ToIntPtr(AudioProcessor callback)
         {
-            return ToIntPtr<AudioProcessor>(callback);
+            return ToCallbackPtr<AudioProcessor>(callback);
         }
 
         public class AudioProcessorVtbl : ComObjectVtbl

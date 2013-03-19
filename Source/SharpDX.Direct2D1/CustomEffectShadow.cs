@@ -37,7 +37,7 @@ namespace SharpDX.Direct2D1
         /// <returns>A pointer to a shadow c++ callback</returns>
         public static IntPtr ToIntPtr(CustomEffect callback)
         {
-            return ToIntPtr<CustomEffect>(callback);
+            return ToCallbackPtr<CustomEffect>(callback);
         }
 
         public class CustomEffectVtbl : ComObjectVtbl

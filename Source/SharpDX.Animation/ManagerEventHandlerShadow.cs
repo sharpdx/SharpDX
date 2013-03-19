@@ -38,7 +38,7 @@ namespace SharpDX.Animation
         /// <returns>A pointer to a shadow c++ callback</returns>
         public static IntPtr ToIntPtr(ManagerEventHandler callback)
         {
-            return ToIntPtr<ManagerEventHandler>(callback);
+            return ToCallbackPtr<ManagerEventHandler>(callback);
         }
 
         public class ManagerEventHandlerVtbl : ComObjectVtbl

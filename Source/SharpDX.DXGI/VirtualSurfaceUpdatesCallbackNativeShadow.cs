@@ -37,7 +37,7 @@ namespace SharpDX.DXGI
         /// <returns>A pointer to the unmanaged geomerty sink counterpart</returns>
         public static IntPtr ToIntPtr(IVirtualSurfaceUpdatesCallbackNative virtualSurfaceUpdatesCallbackNative)
         {
-            return ToIntPtr<IVirtualSurfaceUpdatesCallbackNative>(virtualSurfaceUpdatesCallbackNative);
+            return ToCallbackPtr<IVirtualSurfaceUpdatesCallbackNative>(virtualSurfaceUpdatesCallbackNative);
         }
 
         public class VirtualSurfaceUpdatesCallbackNativeVtbl : ComObjectVtbl

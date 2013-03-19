@@ -47,7 +47,7 @@ namespace SharpDX.Toolkit
 
         internal GameWindowPhoneXaml()
         {
-            thisComObjectPtr = CppObjectShadow.ToIntPtr<IDrawingSurfaceContentProviderNative>(this);
+            thisComObjectPtr = CppObject.ToCallbackPtr<IDrawingSurfaceContentProviderNative>(this);
             synchronizedTexture = null;
         }
 

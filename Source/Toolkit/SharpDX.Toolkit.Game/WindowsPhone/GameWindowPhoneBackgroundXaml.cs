@@ -72,7 +72,7 @@ namespace SharpDX.Toolkit
 
         internal GameWindowPhoneBackgroundXaml()
         {
-            thisComObjectPtr = CppObjectShadow.ToIntPtr<IDrawingSurfaceBackgroundContentProviderNative>(this);
+            thisComObjectPtr = CppObject.ToCallbackPtr<IDrawingSurfaceBackgroundContentProviderNative>(this);
         }
 
         #endregion

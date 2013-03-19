@@ -147,5 +147,33 @@ namespace SharpDX
         {
             return (comObjectPtr == IntPtr.Zero) ? (T)(object)null : (T)Activator.CreateInstance(typeof(T), comObjectPtr);
         }
+
+        /// <summary>
+        /// Return the unmanaged C++ pointer from a <see cref="ICallbackable"/> instance.
+        /// </summary>
+        /// <typeparam name="TCallback">The type of the callback.</typeparam>
+        /// <param name="callback">The callback.</param>
+        /// <returns>A pointer to the unamanaged C++ object of the callback</returns>
+        public static IntPtr ToCallbackPtr<TCallback>(ICallbackable callback)
+            where TCallback : ICallbackable
+        {
+            // If callback is null, then return a null pointer
+            if (callback == null)
+                return IntPtr.Zero;
+
+            // If callback is CppObject
+            if (callback is CppObject)
+                return ((CppObject)callback).NativePointer;
+
+            // Setup the shadow container in order to support multiple inheritance
+            var shadowContainer = callback.Shadow as ShadowContainer;
+            if (shadowContainer == null)
+            {
+                shadowContainer = new ShadowContainer();
+                shadowContainer.Initialize(callback);
+            }
+
+            return shadowContainer.Find(typeof(TCallback));
+        }
     }
 }

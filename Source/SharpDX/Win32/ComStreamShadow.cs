@@ -39,7 +39,7 @@ namespace SharpDX.Win32
         /// <returns></returns>
         public static IntPtr ToIntPtr(IStream stream)
         {
-            return ToIntPtr<IStream>(stream);
+            return ToCallbackPtr<IStream>(stream);
         }
 
         private class ComStreamVtbl : ComStreamBaseVtbl

@@ -37,7 +37,7 @@ namespace SharpDX.Direct2D1
         /// <returns>A pointer to a shadow c++ callback</returns>
         public static IntPtr ToIntPtr(ComputeTransform callback)
         {
-            return ToIntPtr<ComputeTransform>(callback);
+            return ToCallbackPtr<ComputeTransform>(callback);
         }
 
         public class ComputeTransformVtbl : TransformShadow.TransformVtbl

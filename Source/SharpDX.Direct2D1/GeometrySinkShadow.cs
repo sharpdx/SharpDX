@@ -37,7 +37,7 @@ namespace SharpDX.Direct2D1
         /// <returns>A pointer to the unmanaged geomerty sink counterpart</returns>
         public static IntPtr ToIntPtr(GeometrySink geometrySink)
         {
-            return ToIntPtr<GeometrySink>(geometrySink);
+            return ToCallbackPtr<GeometrySink>(geometrySink);
         }
 
         private class GeometrySinkVtbl : SimplifiedGeometrySinkVtbl

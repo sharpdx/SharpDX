@@ -48,7 +48,7 @@ namespace SharpDX.Direct3D11
 
         protected DrawingSurfaceBackgroundContentProviderNativeBase()
         {
-            thisComObjectPtr = CppObjectShadow.ToIntPtr<IDrawingSurfaceBackgroundContentProviderNative>(this);
+            thisComObjectPtr = CppObject.ToCallbackPtr<IDrawingSurfaceBackgroundContentProviderNative>(this);
         }
 
         public abstract void Connect(DrawingSurfaceRuntimeHost host, Device device);
@@ -85,7 +85,7 @@ namespace SharpDX.Direct3D11
         /// <returns>A pointer to a shadow c++ callback</returns>
         public static IntPtr ToIntPtr(IDrawingSurfaceBackgroundContentProviderNative callback)
         {
-            return ToIntPtr<IDrawingSurfaceBackgroundContentProviderNative>(callback);
+            return ToCallbackPtr<IDrawingSurfaceBackgroundContentProviderNative>(callback);
         }
 
         public class DrawingSurfaceBackgroundContentProviderVtbl : ComObjectVtbl

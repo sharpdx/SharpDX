@@ -38,7 +38,7 @@ namespace SharpDX.XAPO
         /// <returns>A pointer to a shadow c++ callback</returns>
         public static IntPtr ToIntPtr(ParameterProvider callback)
         {
-            return ToIntPtr<ParameterProvider>(callback);
+            return ToCallbackPtr<ParameterProvider>(callback);
         }
 
         public class ParameterProviderVtbl : ComObjectVtbl

@@ -37,7 +37,7 @@ namespace SharpDX.MediaFoundation
         /// <returns>A pointer to a shadow c++ callback</returns>
         public static IntPtr ToIntPtr(MediaEngineNotify callback)
         {
-            return ToIntPtr<MediaEngineNotify>(callback);
+            return ToCallbackPtr<MediaEngineNotify>(callback);
         }
 
         public class MediaEngineNotifyVtbl : ComObjectVtbl

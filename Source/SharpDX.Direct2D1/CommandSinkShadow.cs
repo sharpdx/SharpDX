@@ -37,7 +37,7 @@ namespace SharpDX.Direct2D1
         /// <returns>A pointer to a shadow c++ callback</returns>
         public static IntPtr ToIntPtr(CommandSink callback)
         {
-            return ToIntPtr<CommandSink>(callback);
+            return ToCallbackPtr<CommandSink>(callback);
         }
 
         public class CommandSinkVtbl : ComObjectVtbl

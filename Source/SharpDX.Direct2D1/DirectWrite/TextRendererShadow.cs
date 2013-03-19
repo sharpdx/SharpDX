@@ -38,7 +38,7 @@ namespace SharpDX.DirectWrite
         /// <returns>A pointer to a shadow c++ callback</returns>
         public static IntPtr ToIntPtr(TextRenderer callback)
         {
-            return ToIntPtr<TextRenderer>(callback);
+            return ToCallbackPtr<TextRenderer>(callback);
         }
 
         private class TextRendererVtbl : PixelSnappingVtbl

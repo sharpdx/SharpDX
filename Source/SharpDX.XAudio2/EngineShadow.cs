@@ -36,7 +36,7 @@ namespace SharpDX.XAudio2
         /// <returns>A pointer to a shadow c++ callback</returns>
         public static IntPtr ToIntPtr(EngineCallback callback)
         {
-            return ToIntPtr<EngineCallback>(callback);
+            return ToCallbackPtr<EngineCallback>(callback);
         }
 
         public class EngineVtbl : CppObjectVtbl {
