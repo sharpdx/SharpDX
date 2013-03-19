@@ -264,6 +264,20 @@ namespace SharpDX.Toolkit.Graphics
             var destination = new DrawingRectangleF(destinationRectangle.X, destinationRectangle.Y, destinationRectangle.Width, destinationRectangle.Height);
             DrawSprite(texture, ref destination, false, ref nullRectangle, color, 0f, ref vector2Zero, SpriteEffects.None, 0f);
         }
+        
+        /// <summary>
+        /// Adds a sprite to a batch of sprites for rendering using the specified texture, destination rectangle, and color. 
+        /// </summary>
+        /// <param name="texture">A texture.</param>
+        /// <param name="destinationRectangle">A rectangle that specifies (in screen coordinates) the destination for drawing the sprite.</param>
+        /// <param name="color">The color to tint a sprite. Use Color.White for full color with no tinting.</param>
+        /// <remarks>
+        /// Before making any calls to Draw, you must call Begin. Once all calls to Draw are complete, call End. 
+        /// </remarks>
+        public void Draw(ShaderResourceView texture, DrawingRectangleF destinationRectangle, Color color)
+        {
+            DrawSprite(texture, ref destinationRectangle, false, ref nullRectangle, color, 0f, ref vector2Zero, SpriteEffects.None, 0f);
+        }
 
         /// <summary>
         /// Adds a sprite to a batch of sprites for rendering using the specified texture, position and color. 
@@ -292,6 +306,22 @@ namespace SharpDX.Toolkit.Graphics
         {
             var destination = new DrawingRectangleF(destinationRectangle.X, destinationRectangle.Y, destinationRectangle.Width, destinationRectangle.Height);
             DrawSprite(texture, ref destination, false, ref sourceRectangle, color, rotation, ref origin, effects, layerDepth);
+        }
+        
+        /// <summary>
+        /// Adds a sprite to a batch of sprites for rendering using the specified texture, destination rectangle, source rectangle, color, rotation, origin, effects and layer. 
+        /// </summary>
+        /// <param name="texture">A texture.</param>
+        /// <param name="destinationRectangle">A rectangle that specifies (in screen coordinates) the destination for drawing the sprite. If this rectangle is not the same size as the source rectangle, the sprite will be scaled to fit.</param>
+        /// <param name="sourceRectangle">A rectangle that specifies (in texels) the source texels from a texture. Use null to draw the entire texture. </param>
+        /// <param name="color">The color to tint a sprite. Use Color.White for full color with no tinting.</param>
+        /// <param name="rotation">Specifies the angle (in radians) to rotate the sprite about its center.</param>
+        /// <param name="origin">The sprite origin; the default is (0,0) which represents the upper-left corner.</param>
+        /// <param name="effects">Effects to apply.</param>
+        /// <param name="layerDepth">The depth of a layer. By default, 0 represents the front layer and 1 represents a back layer. Use SpriteSortMode if you want sprites to be sorted during drawing.</param>
+        public void Draw(ShaderResourceView texture, DrawingRectangleF destinationRectangle, DrawingRectangle? sourceRectangle, Color color, float rotation, Vector2 origin, SpriteEffects effects, float layerDepth)
+        {
+            DrawSprite(texture, ref destinationRectangle, false, ref sourceRectangle, color, rotation, ref origin, effects, layerDepth);
         }
 
         /// <summary>
