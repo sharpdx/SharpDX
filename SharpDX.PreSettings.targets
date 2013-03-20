@@ -19,7 +19,6 @@
     <SharpDXPlatform>net20</SharpDXPlatform>
     <SharpDXAssemblyType Condition=" '$(SharpDXSign)' == 'true'">Signed</SharpDXAssemblyType>
 
-    
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <OutputType>Library</OutputType>
     <FileAlignment>512</FileAlignment>
@@ -53,6 +52,7 @@
   
   <!--.NET 4.0 - DirectX11.1 - Windows 8 Desktop-->
   <PropertyGroup Condition=" '$(Configuration)' == 'DIRECTX11_1Debug' Or '$(Configuration)' == 'DIRECTX11_1Release'">
+    <SharpDXAssemblyType>Win8Desktop</SharpDXAssemblyType>
     <SharpDXPlatform>net40</SharpDXPlatform>
     <DirectX11_1>true</DirectX11_1>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
