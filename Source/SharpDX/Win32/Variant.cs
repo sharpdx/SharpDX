@@ -91,7 +91,10 @@ namespace SharpDX.Win32
                             case VariantElementType.Blob:
                                 {
                                     var buffer = new byte[(int)variantValue.recordValue.RecordInfo];
-                                    Utilities.Read(variantValue.recordValue.RecordPointer, buffer, 0, buffer.Length);
+                                    if (buffer.Length > 0)
+                                    {
+                                        Utilities.Read(variantValue.recordValue.RecordPointer, buffer, 0, buffer.Length);
+                                    }
                                     return buffer;
                                 }
                             case VariantElementType.Bool:
