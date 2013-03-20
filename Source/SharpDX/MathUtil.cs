@@ -732,7 +732,7 @@ namespace SharpDX
         /// <param name="random">A <see cref="System.Random"/> instance.</param>
         /// <param name="objects">Array of objects.</param>
         /// <returns>Random object from array.</returns>
-        public static T NextObject<T>(Random random, IEnumerable<T> objects)
+        public static T Select<T>(Random random, IEnumerable<T> objects)
         {
             return objects.ElementAt(random.Next(objects.Count()));
         }
