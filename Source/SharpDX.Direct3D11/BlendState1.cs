@@ -35,18 +35,6 @@ namespace SharpDX.Direct3D11
         {
             device.CreateBlendState1(ref description, this);
         }
-
-        /// <summary>
-        ///   Constructs a new <see cref = "T:SharpDX.Direct3D11.BlendState1" /> based on the specified description.
-        /// </summary>
-        /// <param name = "device">The device with which to associate the state object.</param>
-        /// <param name = "description">The state description.</param>
-        /// <returns>The newly created object.</returns>
-        public BlendState1(Device1 device, ref BlendStateDescription1 description)
-            : base(IntPtr.Zero)
-        {
-            device.CreateBlendState1(ref description, this);
-        }
     }
 }
 #endif

@@ -35,18 +35,6 @@ namespace SharpDX.Direct3D11
         {
             device.CreateRasterizerState1(ref description, this);
         }
-
-        /// <summary>
-        ///   Constructs a new <see cref = "T:SharpDX.Direct3D11.RasterizerState1" /> based on the specified description.
-        /// </summary>
-        /// <param name = "device">The device with which to associate the state object.</param>
-        /// <param name = "description">The state description.</param>
-        /// <returns>The newly created object.</returns>
-        public RasterizerState1(Device1 device, ref RasterizerStateDescription1 description)
-            : base(IntPtr.Zero)
-        {
-            device.CreateRasterizerState1(ref description, this);
-        }
     }
 }
 #endif
