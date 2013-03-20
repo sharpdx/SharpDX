@@ -52,8 +52,8 @@ namespace SharpDX.Direct2D1
             }
 
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            private delegate void AddLineDelegate(IntPtr thisPtr, DrawingPointF point);
-            private static unsafe void AddLineImpl(IntPtr thisPtr, DrawingPointF point)
+            private delegate void AddLineDelegate(IntPtr thisPtr, Vector2 point);
+            private static unsafe void AddLineImpl(IntPtr thisPtr, Vector2 point)
             {
                 var shadow = ToShadow<GeometrySinkShadow>(thisPtr);
                 var callback = (GeometrySink)shadow.Callback; 

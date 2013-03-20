@@ -133,7 +133,7 @@
     <bind from="ID3DX11ThreadPump" to="System.IntPtr" />
     <bind from="D3D11_MAPPED_SUBRESOURCE" to="SharpDX.DataBox" />
     <bind from="D3D11_SUBRESOURCE_DATA" to="SharpDX.DataBox" />
-    <bind from="DrawingSurfaceSizeF" to="SharpDX.DrawingSizeF"/>
+    <bind from="DrawingSurfaceSizeF" to="SharpDX.Size2F"/>
     <bind from="DrawingSurfaceRectF" to="SharpDX.RectangleF"/>
     <bind from="D3D11_VIEWPORT" to="SharpDX.ViewportF"/>
   </bindings>

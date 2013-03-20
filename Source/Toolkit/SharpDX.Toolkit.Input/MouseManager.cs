@@ -90,7 +90,7 @@ namespace SharpDX.Toolkit.Input
         /// </summary>
         /// <param name="point">The desired position</param>
         /// <exception cref="InvalidOperationException">Is thrown when <see cref="MouseManager"/> is not initialized</exception>
-        public void SetPosition(DrawingPoint point)
+        public void SetPosition(Point point)
         {
             if (platform == null)
                 throw new InvalidOperationException("MouseManager is not initialized.");

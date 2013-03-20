@@ -28,7 +28,7 @@ namespace SharpDX.Direct2D1
         /// <param name="center">The center.</param>
         /// <param name="radiusX">The radius X.</param>
         /// <param name="radiusY">The radius Y.</param>
-        public Ellipse(DrawingPointF center, float radiusX, float radiusY)
+        public Ellipse(Vector2 center, float radiusX, float radiusY)
         {
             Point = center;
             RadiusX = radiusX;

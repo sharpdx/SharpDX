@@ -43,8 +43,8 @@ namespace D2DCustomVertexShaderEffect
         private Windows.UI.Xaml.UIElement _root;
         private Windows.UI.Xaml.DependencyObject _rootParent;
         private Stopwatch clock;
-        private DrawingSize imageSize;
-        private DrawingSize screenSize;
+        private Size2 imageSize;
+        private Size2 screenSize;
         private float angleX;
         private float angleY;
 
@@ -104,7 +104,7 @@ namespace D2DCustomVertexShaderEffect
 
         private void UpdateSize(TargetBase target)
         {
-            var localSize = new DrawingSize((int)target.RenderTargetSize.Width, (int)target.RenderTargetSize.Height);
+            var localSize = new Size2((int)target.RenderTargetSize.Width, (int)target.RenderTargetSize.Height);
             if (localSize != screenSize)
             {
                 screenSize = localSize;

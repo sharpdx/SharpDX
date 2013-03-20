@@ -17,24 +17,20 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if DIRECTX11_1
-using System;
-using System.Collections.Generic;
-using System.Text;
+#if WIN8METRO
 
-namespace SharpDX.Direct2D1
+namespace SharpDX.Toolkit
 {
-    public partial class OffsetTransform
+    /// <summary>
+    /// A <see cref="GameWindowContext"/> to use for rendering in a WinRT program.
+    /// </summary>
+    public class GameWindowContextFrameView : GameWindowContext
     {
         /// <summary>
-        /// Initialzies a new instance of <see cref="OffsetTransform"/> class
+        /// Initializes a new instance of the <see cref="GameWindowContextFrameView" /> class.
         /// </summary>
-        /// <param name="context">The effect context</param>
-        /// <param name="offset">The offset transformation</param>
-        /// <unmanaged>HRESULT ID2D1EffectContext::CreateOffsetTransform([In] POINT offset,[Out, Fast] ID2D1OffsetTransform** transform)</unmanaged>	
-        public OffsetTransform(EffectContext context, SharpDX.Point offset) : base(IntPtr.Zero)
+        public GameWindowContextFrameView()
         {
-            context.CreateOffsetTransform(offset, this);
         }
     }
 }

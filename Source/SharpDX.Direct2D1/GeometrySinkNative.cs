@@ -22,7 +22,7 @@ namespace SharpDX.Direct2D1
 {
     internal partial class GeometrySinkNative
     {
-        public void AddLine(DrawingPointF point)
+        public void AddLine(Vector2 point)
         {
             AddLine_(point);
         }

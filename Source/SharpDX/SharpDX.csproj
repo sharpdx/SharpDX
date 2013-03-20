@@ -74,13 +74,10 @@
     <Compile Include="ShadowAttribute.cs" />
     <Compile Include="Matrix5x4.cs" />
     <Compile Include="ResultDescriptor.cs" />
-    <Compile Include="DrawingSizeF.cs" />
-    <Compile Include="DrawingSize.cs" />
-    <Compile Include="DrawingPointF.cs" />
-    <Compile Include="DrawingPoint.cs" />
-    <Compile Include="DrawingRectangleF.cs" />
+    <Compile Include="Size2F.cs" />
+    <Compile Include="Size2.cs" />
+    <Compile Include="Point.cs" />
     <Compile Include="Direct3D\PixHelper.cs" />
-    <Compile Include="DrawingRectangle.cs" />
     <Compile Include="IO\NativeFile.cs" />
     <Compile Include="IO\NativeFileStream.cs" />
     <Compile Include="IO\NativeFileAccess.cs" />

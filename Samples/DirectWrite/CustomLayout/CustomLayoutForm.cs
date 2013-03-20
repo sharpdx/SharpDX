@@ -89,7 +89,7 @@ namespace CustomLayout
             Factory2D = new SharpDX.Direct2D1.Factory();
             FactoryDWrite = new SharpDX.DirectWrite.Factory();
 
-            var properties = new HwndRenderTargetProperties { Hwnd = panel1.Handle, PixelSize = new DrawingSize(panel1.ClientSize.Width, panel1.ClientSize.Height), PresentOptions = PresentOptions.None };
+            var properties = new HwndRenderTargetProperties { Hwnd = panel1.Handle, PixelSize = new Size2(panel1.ClientSize.Width, panel1.ClientSize.Height), PresentOptions = PresentOptions.None };
 
             RenderTarget2D = new WindowRenderTarget(Factory2D, new RenderTargetProperties(), properties)
             {
@@ -115,7 +115,7 @@ namespace CustomLayout
         {
             try
             {
-                RenderTarget2D.Resize(new DrawingSize(panel1.ClientRectangle.Size.Width, panel1.ClientRectangle.Size.Height));
+                RenderTarget2D.Resize(new Size2(panel1.ClientRectangle.Size.Width, panel1.ClientRectangle.Size.Height));
                 flowLayoutSource.SetSize(panel1.ClientSize.Width, panel1.ClientSize.Height);
                 ReflowLayout();
             }

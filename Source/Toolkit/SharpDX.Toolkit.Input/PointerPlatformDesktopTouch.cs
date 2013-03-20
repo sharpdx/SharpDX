@@ -183,7 +183,7 @@ namespace SharpDX.Toolkit.Input
         /// <param name="input">The touch point input structure.</param>
         private void DecodeAndDispatchTouchPoint(TOUCHINPUT input)
         {
-            var position = control.PointToClient(new Point(AdjustX(input.x), AdjustY(input.y)));
+            var position = control.PointToClient(new System.Drawing.Point(AdjustX(input.x), AdjustY(input.y)));
 
             var mask = input.dwMask;
             var flags = input.dwFlags;
@@ -214,7 +214,7 @@ namespace SharpDX.Toolkit.Input
                             DeviceType = ((flags & User32.TOUCHEVENTF_PEN) != 0) ? PointerDeviceType.Pen : PointerDeviceType.Touch,
                             PointerId = (uint)input.dwID,
                             Timestamp = (ulong)input.dwTime,
-                            Position = new DrawingPointF(position.X, position.Y),
+                            Position = new Vector2(position.X, position.Y),
                             KeyModifiers = GetCurrentKeyModifiers(),
                             IsPrimary = isPrimary,
                             IsInRange = (flags & User32.TOUCHEVENTF_INRANGE) != 0,
@@ -223,7 +223,7 @@ namespace SharpDX.Toolkit.Input
                         };
 
             if ((mask & User32.TOUCHINPUTMASKF_CONTACTAREA) != 0)
-                point.ContactRect = new DrawingRectangleF(position.X, position.Y, AdjustX(input.cxContact), AdjustY(input.cyContact));
+                point.ContactRect = new RectangleF(position.X, position.Y, AdjustX(input.cxContact), AdjustY(input.cyContact));
 
             manager.AddPointerEvent(ref point);
         }

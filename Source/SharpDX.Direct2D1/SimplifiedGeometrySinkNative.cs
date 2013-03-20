@@ -32,12 +32,12 @@ namespace SharpDX.Direct2D1
             SetSegmentFlags_(vertexFlags);
         }
 
-        public void BeginFigure(DrawingPointF startPoint, FigureBegin figureBegin)
+        public void BeginFigure(Vector2 startPoint, FigureBegin figureBegin)
         {
             BeginFigure_(startPoint, figureBegin);
         }
 
-        public void AddLines(DrawingPointF[] ointsRef)
+        public void AddLines(Vector2[] ointsRef)
         {
             AddLines_(ointsRef, ointsRef.Length);
         }

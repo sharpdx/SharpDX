@@ -266,8 +266,8 @@ namespace SharpDX.Direct2D1
 
             /// <unmanaged>HRESULT ID2D1CommandSink::DrawGlyphRun([In] D2D_POINT_2F baselineOrigin,[In] const DWRITE_GLYPH_RUN* glyphRun,[In, Optional] const DWRITE_GLYPH_RUN_DESCRIPTION* glyphRunDescription,[In] ID2D1Brush* foregroundBrush,[In] DWRITE_MEASURING_MODE measuringMode)</unmanaged>	
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            private delegate int DrawGlyphRunDelegate(IntPtr thisPtr, SharpDX.DrawingPointF baselineOrigin, IntPtr glyphRun, IntPtr glyphRunDescriptionPtr, IntPtr foregroundBrush, SharpDX.Direct2D1.MeasuringMode measuringMode);
-            private unsafe static int DrawGlyphRunImpl(IntPtr thisPtr, SharpDX.DrawingPointF baselineOrigin, IntPtr glyphRunNative, IntPtr glyphRunDescriptionPtr, IntPtr foregroundBrush, SharpDX.Direct2D1.MeasuringMode measuringMode)
+            private delegate int DrawGlyphRunDelegate(IntPtr thisPtr, SharpDX.Vector2 baselineOrigin, IntPtr glyphRun, IntPtr glyphRunDescriptionPtr, IntPtr foregroundBrush, SharpDX.Direct2D1.MeasuringMode measuringMode);
+            private unsafe static int DrawGlyphRunImpl(IntPtr thisPtr, SharpDX.Vector2 baselineOrigin, IntPtr glyphRunNative, IntPtr glyphRunDescriptionPtr, IntPtr foregroundBrush, SharpDX.Direct2D1.MeasuringMode measuringMode)
             {
                 var glyphRun = new DirectWrite.GlyphRun();
                 try
@@ -295,8 +295,8 @@ namespace SharpDX.Direct2D1
 
             /// <unmanaged>HRESULT ID2D1CommandSink::DrawLine([In] D2D_POINT_2F point0,[In] D2D_POINT_2F point1,[In] ID2D1Brush* brush,[In] float strokeWidth,[In, Optional] ID2D1StrokeStyle* strokeStyle)</unmanaged>	
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            private delegate int DrawLineDelegate(IntPtr thisPtr, SharpDX.DrawingPointF point0, SharpDX.DrawingPointF point1, IntPtr brush, float strokeWidth, IntPtr strokeStyle);
-            private unsafe static int DrawLineImpl(IntPtr thisPtr, SharpDX.DrawingPointF point0, SharpDX.DrawingPointF point1, IntPtr brush, float strokeWidth, IntPtr strokeStyle)
+            private delegate int DrawLineDelegate(IntPtr thisPtr, SharpDX.Vector2 point0, SharpDX.Vector2 point1, IntPtr brush, float strokeWidth, IntPtr strokeStyle);
+            private unsafe static int DrawLineImpl(IntPtr thisPtr, SharpDX.Vector2 point0, SharpDX.Vector2 point1, IntPtr brush, float strokeWidth, IntPtr strokeStyle)
             {
                 try
                 {
@@ -380,7 +380,7 @@ namespace SharpDX.Direct2D1
                     var shadow = ToShadow<CommandSinkShadow>(thisPtr);
                     var callback = (CommandSink)shadow.Callback;
                     callback.DrawImage(new Image(image),
-                        targetOffset == IntPtr.Zero ? (SharpDX.DrawingPointF?)null : *(SharpDX.DrawingPointF*)targetOffset,
+                        targetOffset == IntPtr.Zero ? (SharpDX.Vector2?)null : *(SharpDX.Vector2*)targetOffset,
                         imageRectangle == IntPtr.Zero ? (SharpDX.RectangleF?)null : *(SharpDX.RectangleF*)imageRectangle, 
                         interpolationMode,
                         compositeMode);
@@ -402,7 +402,7 @@ namespace SharpDX.Direct2D1
                     var shadow = ToShadow<CommandSinkShadow>(thisPtr);
                     var callback = (CommandSink)shadow.Callback;
                     callback.DrawGdiMetafile(new GdiMetafile(gdiMetafile), 
-                        targetOffset == IntPtr.Zero ? (SharpDX.DrawingPointF?) null: *(SharpDX.DrawingPointF*)targetOffset);
+                        targetOffset == IntPtr.Zero ? (SharpDX.Vector2?) null: *(SharpDX.Vector2*)targetOffset);
                 }
                 catch (Exception exception)
                 {

@@ -106,7 +106,7 @@ namespace SharpDX.Direct3D11
         /// <unmanaged-short>ID3D11DeviceContext::RSSetScissorRects</unmanaged-short>	
         public void SetScissorRectangle(int left, int top, int right, int bottom)
         {
-            var rect = new Rectangle(left, top, right, bottom);
+            var rect = new Rectangle() { Left = left, Top = top, Right = right, Bottom = bottom };
             unsafe
             {
                 SetScissorRects(1, new IntPtr(&rect));

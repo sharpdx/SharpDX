@@ -124,7 +124,7 @@ namespace MiniTriApp
             _renderer.UpdateForWindowSizeChange(width, height);
         }
 
-        internal void GetTexture(DrawingSizeF surfaceSize, DrawingSurfaceSynchronizedTexture synchronizedTexture, RectangleF textureSubRectangle)
+        internal void GetTexture(Size2F surfaceSize, DrawingSurfaceSynchronizedTexture synchronizedTexture, RectangleF textureSubRectangle)
         {
             _timer.Update();
             _renderer.Update(_timer.Total, _timer.Delta);

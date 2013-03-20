@@ -69,13 +69,13 @@ namespace SharpDX.Direct2D1
         }
 
         /// <unmanaged>HRESULT ID2D1CommandSink::DrawGlyphRun([In] D2D_POINT_2F baselineOrigin,[In] const DWRITE_GLYPH_RUN* glyphRun,[In, Optional] const DWRITE_GLYPH_RUN_DESCRIPTION* glyphRunDescription,[In] ID2D1Brush* foregroundBrush,[In] DWRITE_MEASURING_MODE measuringMode)</unmanaged>	
-        public void DrawGlyphRun(SharpDX.DrawingPointF baselineOrigin, SharpDX.DirectWrite.GlyphRun glyphRun, SharpDX.DirectWrite.GlyphRunDescription glyphRunDescription, SharpDX.Direct2D1.Brush foregroundBrush, SharpDX.Direct2D1.MeasuringMode measuringMode)
+        public void DrawGlyphRun(SharpDX.Vector2 baselineOrigin, SharpDX.DirectWrite.GlyphRun glyphRun, SharpDX.DirectWrite.GlyphRunDescription glyphRunDescription, SharpDX.Direct2D1.Brush foregroundBrush, SharpDX.Direct2D1.MeasuringMode measuringMode)
         {
             DrawGlyphRun_(baselineOrigin, glyphRun, glyphRunDescription, foregroundBrush, measuringMode);
         }
 
         /// <unmanaged>HRESULT ID2D1CommandSink::DrawLine([In] D2D_POINT_2F point0,[In] D2D_POINT_2F point1,[In] ID2D1Brush* brush,[In] float strokeWidth,[In, Optional] ID2D1StrokeStyle* strokeStyle)</unmanaged>	
-        public void DrawLine(SharpDX.DrawingPointF point0, SharpDX.DrawingPointF point1, SharpDX.Direct2D1.Brush brush, float strokeWidth, SharpDX.Direct2D1.StrokeStyle strokeStyle)
+        public void DrawLine(SharpDX.Vector2 point0, SharpDX.Vector2 point1, SharpDX.Direct2D1.Brush brush, float strokeWidth, SharpDX.Direct2D1.StrokeStyle strokeStyle)
         {
             DrawLine_(point0, point1, brush, strokeWidth, strokeStyle);
         }
@@ -99,13 +99,13 @@ namespace SharpDX.Direct2D1
         }
 
         /// <unmanaged>HRESULT ID2D1CommandSink::DrawImage([In] ID2D1Image* image,[In, Optional] const D2D_POINT_2F* targetOffset,[In, Optional] const D2D_RECT_F* imageRectangle,[In] D2D1_INTERPOLATION_MODE interpolationMode,[In] D2D1_COMPOSITE_MODE compositeMode)</unmanaged>	
-        public void DrawImage(SharpDX.Direct2D1.Image image, SharpDX.DrawingPointF? targetOffset, SharpDX.RectangleF? imageRectangle, SharpDX.Direct2D1.InterpolationMode interpolationMode, SharpDX.Direct2D1.CompositeMode compositeMode)
+        public void DrawImage(SharpDX.Direct2D1.Image image, SharpDX.Vector2? targetOffset, SharpDX.RectangleF? imageRectangle, SharpDX.Direct2D1.InterpolationMode interpolationMode, SharpDX.Direct2D1.CompositeMode compositeMode)
         {
             DrawImage_(image, targetOffset, imageRectangle, interpolationMode, compositeMode);
         }
 
         /// <unmanaged>HRESULT ID2D1CommandSink::DrawGdiMetafile([In] ID2D1GdiMetafile* gdiMetafile,[In, Optional] const D2D_POINT_2F* targetOffset)</unmanaged>	
-        public void DrawGdiMetafile(SharpDX.Direct2D1.GdiMetafile gdiMetafile, SharpDX.DrawingPointF? targetOffset)
+        public void DrawGdiMetafile(SharpDX.Direct2D1.GdiMetafile gdiMetafile, SharpDX.Vector2? targetOffset)
         {
             DrawGdiMetafile_(gdiMetafile, targetOffset);
         }

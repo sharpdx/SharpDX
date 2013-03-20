@@ -51,11 +51,11 @@ namespace SharpDX.Toolkit
             }
         }
 
-        public override DrawingRectangle ClientBounds
+        public override Rectangle ClientBounds
         {
             get
             {
-                return new DrawingRectangle(0, 0, (int)(CoreWindow.Bounds.Width * DisplayProperties.LogicalDpi / 96.0), (int)(CoreWindow.Bounds.Height * DisplayProperties.LogicalDpi / 96.0));
+                return new Rectangle(0, 0, (int)(CoreWindow.Bounds.Width * DisplayProperties.LogicalDpi / 96.0), (int)(CoreWindow.Bounds.Height * DisplayProperties.LogicalDpi / 96.0));
             }
         }
 

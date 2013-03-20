@@ -118,7 +118,7 @@ namespace D2DCustomPixelShaderEffect
         /// Gets or sets the center of the ripple effect.
         /// </summary>
         [PropertyBinding((int)RippleProperties.Center, "(-2000.0, -2000.0)", "(2000.0, 2000.0)", "(0.0, 0.0)")]
-        public DrawingPointF Center
+        public Vector2 Center
         {
             get
             {
@@ -205,7 +205,7 @@ namespace D2DCustomPixelShaderEffect
             public float Phase;
             public float Amplitude;
             public float Spread;
-            public DrawingPointF Center;
+            public Vector2 Center;
         }
     }
 }

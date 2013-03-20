@@ -32,5 +32,20 @@ namespace SharpDX.WIC
         {
             factory.CreateBitmapClipper(this);
         }
+
+        /// <summary>	
+        /// <p>Initializes the bitmap clipper with the provided parameters.</p>	
+        /// </summary>	
+        /// <param name="sourceRef"><dd>  <p>he input bitmap source.</p> </dd></param>	
+        /// <param name="rectangleRef"><dd>  <p>The rectangle of the bitmap source to clip.</p> </dd></param>	
+        /// <returns><p>If this method succeeds, it returns <strong><see cref="SharpDX.Result.Ok"/></strong>. Otherwise, it returns an <strong><see cref="SharpDX.Result"/></strong> error code.</p></returns>	
+        /// <msdn-id>ee719677</msdn-id>	
+        /// <unmanaged>HRESULT IWICBitmapClipper::Initialize([In, Optional] IWICBitmapSource* pISource,[In] const WICRect* prc)</unmanaged>	
+        /// <unmanaged-short>IWICBitmapClipper::Initialize</unmanaged-short>	
+        public unsafe void Initialize(SharpDX.WIC.BitmapSource sourceRef, Rectangle rectangleRef)
+        {
+            rectangleRef.MakeXYAndWidthHeight();
+            Initialize(sourceRef, new IntPtr(&rectangleRef));
+        }
     }
 }

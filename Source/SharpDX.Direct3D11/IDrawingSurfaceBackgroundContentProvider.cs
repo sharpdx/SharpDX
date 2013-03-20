@@ -34,7 +34,7 @@ namespace SharpDX.Direct3D11
 
         // _In_  const LARGE_INTEGER *presentTargetTime,
         // DrawingSurfaceSizeF *desiredRenderTargetSize
-        void PrepareResources(DateTime presentTargetTime, ref DrawingSizeF desiredRenderTargetSize);
+        void PrepareResources(DateTime presentTargetTime, ref Size2F desiredRenderTargetSize);
 
         //_In_  ID3D11Device1 *hostDevice,
         //_In_  ID3D11DeviceContext1 *hostDeviceContext,
@@ -55,7 +55,7 @@ namespace SharpDX.Direct3D11
 
         public abstract void Disconnect();
 
-        public abstract void PrepareResources(DateTime presentTargetTime, ref DrawingSizeF desiredRenderTargetSize);
+        public abstract void PrepareResources(DateTime presentTargetTime, ref Size2F desiredRenderTargetSize);
 
         public abstract void Draw(Device device, DeviceContext context, RenderTargetView renderTargetView);
 
@@ -140,7 +140,7 @@ namespace SharpDX.Direct3D11
                 {
                     var shadow = ToShadow<DrawingSurfaceBackgroundContentProviderShadow>(thisPtr);
                     var callback = (IDrawingSurfaceBackgroundContentProviderNative)shadow.Callback;
-                    callback.PrepareResources(new DateTime(*(long*)presentTargetTime), ref *(DrawingSizeF*)desiredRenderTargetSize);
+                    callback.PrepareResources(new DateTime(*(long*)presentTargetTime), ref *(Size2F*)desiredRenderTargetSize);
                 }
                 catch (Exception exception)
                 {

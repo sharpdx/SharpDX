@@ -90,7 +90,7 @@ namespace SharpDX.WIC
         /// <msdn-id>ee690294</msdn-id>	
         /// <unmanaged>HRESULT IWICImagingFactory::CreateBitmapFromSourceRect([In, Optional] IWICBitmapSource* pIBitmapSource,[In] unsigned int x,[In] unsigned int y,[In] unsigned int width,[In] unsigned int height,[Out, Fast] IWICBitmap** ppIBitmap)</unmanaged>	
         /// <unmanaged-short>IWICImagingFactory::CreateBitmapFromSourceRect</unmanaged-short>	
-        public Bitmap(ImagingFactory factory, SharpDX.WIC.BitmapSource bitmapSource, DrawingRectangle rectangle)
+        public Bitmap(ImagingFactory factory, SharpDX.WIC.BitmapSource bitmapSource, Rectangle rectangle)
             : base(IntPtr.Zero)
         {
             factory.CreateBitmapFromSourceRect(bitmapSource, rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height, this);
@@ -150,6 +150,40 @@ namespace SharpDX.WIC
                 DeleteObject(hBitmap);
                 Marshal.FreeHGlobal(hPalette);
             }
+        }
+
+        /// <summary>	
+        /// <p>Provides access to a rectangular area of the bitmap.</p>	
+        /// </summary>	
+        /// <param name="flags"><dd>  <p>The access mode you wish to obtain for the lock. This is a bitwise combination of <strong><see cref="SharpDX.WIC.BitmapLockFlags"/></strong> for read, write, or read and write access.</p> <table> <tr><th>Value</th><th>Meaning</th></tr> <tr><td><dl> <dt><strong><see cref="SharpDX.WIC.BitmapLockFlags.Read"/></strong></dt> </dl> </td><td> <p>The read access lock.</p> </td></tr> <tr><td><dl> <dt><strong><see cref="SharpDX.WIC.BitmapLockFlags.Write"/></strong></dt> </dl> </td><td> <p>The write access lock.</p> </td></tr> </table> <p>?</p> </dd></param>	
+        /// <returns><dd>  <p>A reference that receives the locked memory location.</p> </dd></returns>	
+        /// <remarks>	
+        /// <p>Locks are exclusive for writing but can be shared for reading. You cannot call <strong>CopyPixels</strong> while the <strong><see cref="SharpDX.WIC.Bitmap"/></strong> is locked for writing. Doing so will return an error, since locks are exclusive.</p>	
+        /// </remarks>	
+        /// <msdn-id>ee690187</msdn-id>	
+        /// <unmanaged>HRESULT IWICBitmap::Lock([In, Optional] const WICRect* prcLock,[In] WICBitmapLockFlags flags,[Out] IWICBitmapLock** ppILock)</unmanaged>	
+        /// <unmanaged-short>IWICBitmap::Lock</unmanaged-short>	
+        public SharpDX.WIC.BitmapLock Lock(SharpDX.WIC.BitmapLockFlags flags)
+        {
+            return Lock(IntPtr.Zero, flags);
+        }
+
+        /// <summary>	
+        /// <p>Provides access to a rectangular area of the bitmap.</p>	
+        /// </summary>	
+        /// <param name="rcLockRef"><dd>  <p>The rectangle to be accessed.</p> </dd></param>	
+        /// <param name="flags"><dd>  <p>The access mode you wish to obtain for the lock. This is a bitwise combination of <strong><see cref="SharpDX.WIC.BitmapLockFlags"/></strong> for read, write, or read and write access.</p> <table> <tr><th>Value</th><th>Meaning</th></tr> <tr><td><dl> <dt><strong><see cref="SharpDX.WIC.BitmapLockFlags.Read"/></strong></dt> </dl> </td><td> <p>The read access lock.</p> </td></tr> <tr><td><dl> <dt><strong><see cref="SharpDX.WIC.BitmapLockFlags.Write"/></strong></dt> </dl> </td><td> <p>The write access lock.</p> </td></tr> </table> <p>?</p> </dd></param>	
+        /// <returns><dd>  <p>A reference that receives the locked memory location.</p> </dd></returns>	
+        /// <remarks>	
+        /// <p>Locks are exclusive for writing but can be shared for reading. You cannot call <strong>CopyPixels</strong> while the <strong><see cref="SharpDX.WIC.Bitmap"/></strong> is locked for writing. Doing so will return an error, since locks are exclusive.</p>	
+        /// </remarks>	
+        /// <msdn-id>ee690187</msdn-id>	
+        /// <unmanaged>HRESULT IWICBitmap::Lock([In, Optional] const WICRect* prcLock,[In] WICBitmapLockFlags flags,[Out] IWICBitmapLock** ppILock)</unmanaged>	
+        /// <unmanaged-short>IWICBitmap::Lock</unmanaged-short>	
+        public unsafe SharpDX.WIC.BitmapLock Lock(Rectangle rcLockRef, SharpDX.WIC.BitmapLockFlags flags)
+        {
+            rcLockRef.MakeXYAndWidthHeight();
+            return this.Lock(new IntPtr(&rcLockRef), flags);
         }
 
         private static IntPtr ConvertToHPALETTE(ColorPalette colorPalette)

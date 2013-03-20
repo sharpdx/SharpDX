@@ -102,7 +102,7 @@ namespace SharpDX
         /// Initializes a new instance of the <see cref="Viewport"/> struct.
         /// </summary>
         /// <param name="bounds">A bounding box that defines the location and size of the viewport in a render target.</param>
-        public Viewport(DrawingRectangle bounds)
+        public Viewport(Rectangle bounds)
         {
             X = bounds.X;
             Y = bounds.Y;
@@ -116,11 +116,11 @@ namespace SharpDX
         /// Gets the size of this resource.
         /// </summary>
         /// <value>The bounds.</value>
-        public DrawingRectangle Bounds
+        public Rectangle Bounds
         {
             get
             {
-                return new DrawingRectangle(X, Y, Width, Height);
+                return new Rectangle(X, Y, Width, Height);
             }
 
             set

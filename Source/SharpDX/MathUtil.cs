@@ -513,27 +513,27 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Gets random <see cref="SharpDX.DrawingPoint"/>.
+        /// Gets random <see cref="SharpDX.Point"/>.
         /// </summary>
         /// <param name="random">Current <see cref="System.Random"/>.</param>
         /// <param name="min">Minimum.</param>
         /// <param name="max">Maximum.</param>
-        /// <returns>Random <see cref="SharpDX.DrawingPoint"/>.</returns>
-        public static DrawingPoint NextDPoint(this Random random,DrawingPoint min,DrawingPoint max)
+        /// <returns>Random <see cref="SharpDX.Point"/>.</returns>
+        public static Point NextDPoint(this Random random,Point min,Point max)
         {
-            return new DrawingPoint(random.Next(min.X,max.X),random.Next(min.Y,max.Y));
+            return new Point(random.Next(min.X,max.X),random.Next(min.Y,max.Y));
         }
 
         /// <summary>
-        /// Gets random <see cref="SharpDX.DrawingPointF"/>.
+        /// Gets random <see cref="SharpDX.Vector2"/>.
         /// </summary>
         /// <param name="random">Current <see cref="System.Random"/>.</param>
         /// <param name="min">Minimum.</param>
         /// <param name="max">Maximum.</param>
-        /// <returns>Random <see cref="SharpDX.DrawingPointF"/>.</returns>
-        public static DrawingPointF NextDPointF(this Random random, DrawingPointF min, DrawingPointF max)
+        /// <returns>Random <see cref="SharpDX.Vector2"/>.</returns>
+        public static Vector2 NextDPointF(this Random random, Vector2 min, Vector2 max)
         {
-            return new DrawingPointF(random.NextFloat(min.X, max.X), random.NextFloat(min.Y, max.Y));
+            return new Vector2(random.NextFloat(min.X, max.X), random.NextFloat(min.Y, max.Y));
         }
         
         /// <summary>
@@ -686,27 +686,27 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Gets random <see cref="SharpDX.DrawingPoint"/>.
+        /// Gets random <see cref="SharpDX.Point"/>.
         /// </summary>
         /// <param name="random">A <see cref="System.Random"/> instance.</param>
         /// <param name="min">Minimum.</param>
         /// <param name="max">Maximum.</param>
-        /// <returns>Random <see cref="SharpDX.DrawingPoint"/>.</returns>
-        public static DrawingPoint NextDPoint(Random random, DrawingPoint min, DrawingPoint max)
+        /// <returns>Random <see cref="SharpDX.Point"/>.</returns>
+        public static Point NextDPoint(Random random, Point min, Point max)
         {
-            return new DrawingPoint(random.Next(min.X, max.X), random.Next(min.Y, max.Y));
+            return new Point(random.Next(min.X, max.X), random.Next(min.Y, max.Y));
         }
 
         /// <summary>
-        /// Gets random <see cref="SharpDX.DrawingPointF"/>.
+        /// Gets random <see cref="SharpDX.Vector2"/>.
         /// </summary>
         /// <param name="random">A <see cref="System.Random"/> instance.</param>
         /// <param name="min">Minimum.</param>
         /// <param name="max">Maximum.</param>
-        /// <returns>Random <see cref="SharpDX.DrawingPointF"/>.</returns>
-        public static DrawingPointF NextDPointF(Random random, DrawingPointF min, DrawingPointF max)
+        /// <returns>Random <see cref="SharpDX.Vector2"/>.</returns>
+        public static Vector2 NextDPointF(Random random, Vector2 min, Vector2 max)
         {
-            return new DrawingPointF(NextFloat(random, min.X, max.X), NextFloat(random, min.Y, max.Y));
+            return new Vector2(NextFloat(random, min.X, max.X), NextFloat(random, min.Y, max.Y));
         }
 
         /// <summary>

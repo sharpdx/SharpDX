@@ -206,7 +206,7 @@ namespace CommonDX
                 if (dpi != value)
                 {
                     dpi = value;
-                    d2dContext.DotsPerInch = new SharpDX.DrawingSizeF(dpi, dpi);
+                    d2dContext.DotsPerInch = new SharpDX.Size2F(dpi, dpi);
 
                     if (OnDpiChanged != null)
                         OnDpiChanged(this);

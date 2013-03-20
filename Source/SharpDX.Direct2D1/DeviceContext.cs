@@ -70,7 +70,7 @@ namespace SharpDX.Direct2D1
         /// <param name="interpolationMode">No documentation.</param>	
         /// <param name="compositeMode">No documentation.</param>	
         /// <unmanaged>void ID2D1DeviceContext::DrawImage([In] ID2D1Image* image,[In, Optional] const D2D_POINT_2F* targetOffset,[In, Optional] const D2D_RECT_F* imageRectangle,[In] D2D1_INTERPOLATION_MODE interpolationMode,[In] D2D1_COMPOSITE_MODE compositeMode)</unmanaged>	
-        public void DrawImage(SharpDX.Direct2D1.Effect effect, SharpDX.DrawingPointF targetOffset, SharpDX.Direct2D1.InterpolationMode interpolationMode = InterpolationMode.Linear, SharpDX.Direct2D1.CompositeMode compositeMode = CompositeMode.SourceOver)
+        public void DrawImage(SharpDX.Direct2D1.Effect effect, SharpDX.Vector2 targetOffset, SharpDX.Direct2D1.InterpolationMode interpolationMode = InterpolationMode.Linear, SharpDX.Direct2D1.CompositeMode compositeMode = CompositeMode.SourceOver)
         {
             using (var output = effect.Output)
                 DrawImage(output, targetOffset, null, interpolationMode, compositeMode);
@@ -97,7 +97,7 @@ namespace SharpDX.Direct2D1
         /// <param name="interpolationMode">No documentation.</param>	
         /// <param name="compositeMode">No documentation.</param>	
         /// <unmanaged>void ID2D1DeviceContext::DrawImage([In] ID2D1Image* image,[In, Optional] const D2D_POINT_2F* targetOffset,[In, Optional] const D2D_RECT_F* imageRectangle,[In] D2D1_INTERPOLATION_MODE interpolationMode,[In] D2D1_COMPOSITE_MODE compositeMode)</unmanaged>	
-        public void DrawImage(SharpDX.Direct2D1.Image image, SharpDX.DrawingPointF targetOffset, SharpDX.Direct2D1.InterpolationMode interpolationMode = InterpolationMode.Linear, SharpDX.Direct2D1.CompositeMode compositeMode = CompositeMode.SourceOver)
+        public void DrawImage(SharpDX.Direct2D1.Image image, SharpDX.Vector2 targetOffset, SharpDX.Direct2D1.InterpolationMode interpolationMode = InterpolationMode.Linear, SharpDX.Direct2D1.CompositeMode compositeMode = CompositeMode.SourceOver)
         {
             DrawImage(image, targetOffset, null, interpolationMode, compositeMode);
         }

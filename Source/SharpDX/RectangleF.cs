@@ -53,19 +53,16 @@ namespace SharpDX
         /// <summary>
         /// Initializes a new instance of the <see cref="RectangleF"/> struct.
         /// </summary>
-        /// <param name="left">The left.</param>
-        /// <param name="top">The top.</param>
-        /// <param name="right">The right.</param>
-        /// <param name="bottom">The bottom.</param>
-        public RectangleF(float left, float top, float right, float bottom)
+        /// <param name="x">The left.</param>
+        /// <param name="y">The top.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        public RectangleF(float x, float y, float width, float height)
         {
-            System.Diagnostics.Debug.Assert(left <= right, "Width cannot be lower than zero");
-            System.Diagnostics.Debug.Assert(top <= bottom, "Height cannot be lower than zero");
-
-            _left = left;
-            _top = top;
-            _right = right;
-            _bottom = bottom;
+            _left = x;
+            _top = y;
+            _right = x + width;
+            _bottom = y + height;
         }
 
                 /// <summary>
@@ -113,11 +110,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Checks, if specified <see cref="SharpDX.DrawingPoint"/> is inside <see cref="SharpDX.RectangleF"/>. 
+        /// Checks, if specified <see cref="SharpDX.Point"/> is inside <see cref="SharpDX.RectangleF"/>. 
         /// </summary>
-        /// <param name="point">Coordinate <see cref="SharpDX.DrawingPoint"/>.</param> 
-        /// <returns><c>true</c> if <see cref="SharpDX.DrawingPoint"/> is inside <see cref="SharpDX.RectangleF"/>, otherwise <c>false</c>.</returns>
-        public bool Contains(SharpDX.DrawingPoint point)
+        /// <param name="point">Coordinate <see cref="SharpDX.Point"/>.</param> 
+        /// <returns><c>true</c> if <see cref="SharpDX.Point"/> is inside <see cref="SharpDX.RectangleF"/>, otherwise <c>false</c>.</returns>
+        public bool Contains(SharpDX.Point point)
         {
             if (point.X >= _left && point.X <= _right && point.Y >= _top && point.Y <= _bottom)
             {
@@ -127,27 +124,17 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Checks, if specified <see cref="SharpDX.DrawingPointF"/> is inside <see cref="SharpDX.RectangleF"/>. 
-        /// </summary>
-        /// <param name="point">Coordinate <see cref="SharpDX.DrawingPointF"/>.</param> 
-        /// <returns><c>true</c> if <see cref="SharpDX.DrawingPointF"/> is inside <see cref="SharpDX.RectangleF"/>, otherwise <c>false</c>.</returns>
-        public bool Contains(SharpDX.DrawingPointF point)
-        {
-            if (point.X >= _left && point.X <= _right && point.Y >= _top && point.Y <= _bottom)
-            {
-                return true;
-            }
-            return false;
-        } 
-
-        /// <summary>
         /// Gets or sets the left.
         /// </summary>
         /// <value>The left.</value>
         public float Left
         {
             get { return _left; }
-            set { _left = value; }
+            set
+            {
+                _right = value + Width;
+                _left = value;
+            }
         }
 
         /// <summary>
@@ -157,7 +144,11 @@ namespace SharpDX
         public float Top
         {
             get { return _top; }
-            set { _top = value; }
+            set
+            {
+                _bottom = value + Height;
+                _top = value;
+            }
         }
 
         /// <summary>
@@ -181,39 +172,233 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Gets or sets the left position.
+        /// Gets the left position.
         /// </summary>
         /// <value>The left position.</value>
         public float X
         {
             get { return _left; }
+            set
+            {
+                _right = value + Width;
+                _left = value;
+            }
         }
 
         /// <summary>
-        /// Gets or sets the top position.
+        /// Gets the top position.
         /// </summary>
         /// <value>The top position.</value>
         public float Y
         {
             get { return _top; }
+            set
+            {
+                _bottom = value + Height;
+                _top = value;
+            }
         }
 
         /// <summary>
-        /// Gets or sets the width.
+        /// Gets the width.
         /// </summary>
         /// <value>The width.</value>
         public float Width
         {
-            get { return Right - Left; }
+            get { return _right - _left; }
+            set
+            {
+                _right = _left + value;
+            }
         }
 
         /// <summary>
-        /// Gets or sets the height.
+        /// Gets the height.
         /// </summary>
         /// <value>The height.</value>
         public float Height
         {
-            get { return Bottom - Top; }
+            get { return _bottom - _top; }
+            set
+            {
+                _bottom = _top + value;
+            }
+        }
+
+        /// <summary>Gets or sets the upper-left value of the Rectangle.</summary>
+        public Vector2 Location
+        {
+            get
+            {
+                return new Vector2(X, Y);
+            }
+            set
+            {
+                X = value.X;
+                Y = value.Y;
+            }
+        }
+        /// <summary>Gets the Point that specifies the center of the rectangle.</summary>
+        public Vector2 Center
+        {
+            get
+            {
+                return new Vector2(X + (Width / 2), Y + (Height / 2));
+            }
+        }
+
+        /// <summary>Gets a value that indicates whether the Rectangle is empty.</summary>
+        public bool IsEmpty
+        {
+            get
+            {
+                return ((((Width == 0.0f) && (Height == 0.0f)) && (X == 0.0f)) && (Y == 0.0f));
+            }
+        }
+
+        /// <summary>Changes the position of the Rectangle.</summary>
+        /// <param name="amount">The values to adjust the position of the Rectangle by.</param>
+        public void Offset(Point amount)
+        {
+            X += amount.X;
+            Y += amount.Y;
+        }
+
+        /// <summary>Changes the position of the Rectangle.</summary>
+        /// <param name="offsetX">Change in the x-position.</param>
+        /// <param name="offsetY">Change in the y-position.</param>
+        public void Offset(int offsetX, int offsetY)
+        {
+            X += offsetX;
+            Y += offsetY;
+        }
+
+        /// <summary>Pushes the edges of the Rectangle out by the horizontal and vertical values specified.</summary>
+        /// <param name="horizontalAmount">Value to push the sides out by.</param>
+        /// <param name="verticalAmount">Value to push the top and bottom out by.</param>
+        public void Inflate(int horizontalAmount, int verticalAmount)
+        {
+            X -= horizontalAmount;
+            Y -= verticalAmount;
+            Width += horizontalAmount * 2;
+            Height += verticalAmount * 2;
+        }
+
+        /// <summary>Determines whether this Rectangle contains a specified Point.</summary>
+        /// <param name="value">The Point to evaluate.</param>
+        /// <param name="result">[OutAttribute] true if the specified Point is contained within this Rectangle; false otherwise.</param>
+        public void Contains(ref Vector2 value, out bool result)
+        {
+            result = (((X <= value.X) && (value.X < Right)) && (Y <= value.Y)) && (value.Y < Bottom);
+        }
+
+        /// <summary>Determines whether this Rectangle entirely contains a specified Rectangle.</summary>
+        /// <param name="value">The Rectangle to evaluate.</param>
+        public bool Contains(Rectangle value)
+        {
+            return ((((X <= value.X) && (value.Right <= Right)) && (Y <= value.Y)) && (value.Bottom <= Bottom));
+        }
+
+        /// <summary>Determines whether this Rectangle entirely contains a specified Rectangle.</summary>
+        /// <param name="value">The Rectangle to evaluate.</param>
+        /// <param name="result">[OutAttribute] On exit, is true if this Rectangle entirely contains the specified Rectangle, or false if not.</param>
+        public void Contains(ref RectangleF value, out bool result)
+        {
+            result = (((X <= value.X) && (value.Right <= Right)) && (Y <= value.Y)) && (value.Bottom <= Bottom);
+        }
+
+        /// <summary>Determines whether a specified Rectangle intersects with this Rectangle.</summary>
+        /// <param name="value">The Rectangle to evaluate.</param>
+        public bool Intersects(RectangleF value)
+        {
+            return ((((value.X < Right) && (X < value.Right)) && (value.Y < Bottom)) && (Y < value.Bottom));
+        }
+
+        /// <summary>
+        /// Determines whether a specified Rectangle intersects with this Rectangle.
+        /// </summary>
+        /// <param name="value">The Rectangle to evaluate</param>
+        /// <param name="result">[OutAttribute] true if the specified Rectangle intersects with this one; false otherwise.</param>
+        public void Intersects(ref RectangleF value, out bool result)
+        {
+            result = (((value.X < Right) && (X < value.Right)) && (value.Y < Bottom)) && (Y < value.Bottom);
+        }
+
+        /// <summary>
+        /// Creates a Rectangle defining the area where one rectangle overlaps with another rectangle.
+        /// </summary>
+        /// <param name="value1">The first Rectangle to compare.</param>
+        /// <param name="value2">The second Rectangle to compare.</param>
+        /// <returns>Rectangle.</returns>
+        public static RectangleF Intersect(RectangleF value1, RectangleF value2)
+        {
+            float newLeft = (value1.X > value2.X) ? value1.X : value2.X;
+            float newTop = (value1.Y > value2.Y) ? value1.Y : value2.Y;
+            float newRight = (value1.Right < value2.Right) ? value1.Right : value2.Right;
+            float newBottom = (value1.Bottom < value2.Bottom) ? value1.Bottom : value2.Bottom;
+            if ((newRight > newLeft) && (newBottom > newTop))
+            {
+                return new RectangleF(newLeft, newTop, newRight - newLeft, newBottom - newTop);
+            }
+            return Empty;
+        }
+
+        /// <summary>Creates a Rectangle defining the area where one rectangle overlaps with another rectangle.</summary>
+        /// <param name="value1">The first Rectangle to compare.</param>
+        /// <param name="value2">The second Rectangle to compare.</param>
+        /// <param name="result">[OutAttribute] The area where the two first parameters overlap.</param>
+        public static void Intersect(ref RectangleF value1, ref RectangleF value2, out RectangleF result)
+        {
+            float newLeft = (value1.X > value2.X) ? value1.X : value2.X;
+            float newTop = (value1.Y > value2.Y) ? value1.Y : value2.Y;
+            float newRight = (value1.Right < value2.Right) ? value1.Right : value2.Right;
+            float newBottom = (value1.Bottom < value2.Bottom) ? value1.Bottom : value2.Bottom;
+            if ((newRight > newLeft) && (newBottom > newTop))
+            {
+                result = new RectangleF(newLeft, newTop, newRight - newLeft, newBottom - newTop);
+            }
+            else
+            {
+                result = Empty;
+            }
+        }
+
+        /// <summary>
+        /// Creates a new Rectangle that exactly contains two other rectangles.
+        /// </summary>
+        /// <param name="value1">The first Rectangle to contain.</param>
+        /// <param name="value2">The second Rectangle to contain.</param>
+        /// <returns>Rectangle.</returns>
+        public static RectangleF Union(RectangleF value1, RectangleF value2)
+        {
+            float num6 = value1.X + value1.Width;
+            float num5 = value2.X + value2.Width;
+            float num4 = value1.Y + value1.Height;
+            float num3 = value2.Y + value2.Height;
+            float num2 = (value1.X < value2.X) ? value1.X : value2.X;
+            float num = (value1.Y < value2.Y) ? value1.Y : value2.Y;
+            float num8 = (num6 > num5) ? num6 : num5;
+            float num7 = (num4 > num3) ? num4 : num3;
+            return new RectangleF(num2, num, num8 - num2, num7 - num);
+        }
+
+        /// <summary>
+        /// Creates a new Rectangle that exactly contains two other rectangles.
+        /// </summary>
+        /// <param name="value1">The first Rectangle to contain.</param>
+        /// <param name="value2">The second Rectangle to contain.</param>
+        /// <param name="result">[OutAttribute] The Rectangle that must be the union of the first two rectangles.</param>
+        public static void Union(ref RectangleF value1, ref RectangleF value2, out RectangleF result)
+        {
+            float num6 = value1.X + value1.Width;
+            float num5 = value2.X + value2.Width;
+            float num4 = value1.Y + value1.Height;
+            float num3 = value2.Y + value2.Height;
+            float num2 = (value1.X < value2.X) ? value1.X : value2.X;
+            float num = (value1.Y < value2.Y) ? value1.Y : value2.Y;
+            float num8 = (num6 > num5) ? num6 : num5;
+            float num7 = (num4 > num3) ? num4 : num3;
+            result = new RectangleF(num2, num, num8 - num2, num7 - num);
         }
 
         /// <summary>
@@ -255,26 +440,6 @@ namespace SharpDX
                 result = (result * 397) ^ _bottom.GetHashCode();
                 return result;
             }
-        }
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="System.Drawing.RectangleF"/> to <see cref="SharpDX.RectangleF"/>.
-        /// </summary>
-        /// <param name="input">The input.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator RectangleF(SharpDX.DrawingRectangleF input)
-        {
-            return new RectangleF(input.X, input.Y, input.X + input.Width, input.Y + input.Height);
-        }
-
-        /// <summary>
-        /// Rectangles the F.
-        /// </summary>
-        /// <param name="input">The input.</param>
-        /// <returns></returns>
-        public static implicit operator SharpDX.DrawingRectangleF(RectangleF input)
-        {
-            return new SharpDX.DrawingRectangleF(input.Left, input.Top, input.Right - input.Left, input.Bottom - input.Top);
         }
 
         /// <summary>

@@ -168,8 +168,10 @@
     <remove method="IWICEnumMetadataItem::Next"/>
 
     <!--IWICBitmap -->
+    <map method="IWICBitmap::Lock" visibility="internal"/>
     <map param="IWICBitmap::Lock::ppILock" return="true"/>
     <map param="IWICBitmap::Lock::flags" type="WICBitmapLockFlags"/>
+    <map param="IWICBitmap::Lock::prcLock" type="void" attribute="in"/>
 
     <!--IWICBitmapCodecInfo and IWICComponentInfo Get methods for string-->
     <map param="IWIC.*Info::Get.*::wz.*" type="void" attribute="in"/>
@@ -225,10 +227,12 @@
     <!--IWICBitmapSource -->
     <map method="IWICBitmapSource::GetSize" visibility="internal"/>
     <map method="IWICBitmapSource::CopyPixels" visibility="internal"/>
+    <map param="IWICBitmapSource::CopyPixels::prc" type="void" attribute="in"/>
 
     <!--IWICBitmapSourceTransform-->
     <map method="IWICBitmapSourceTransform::GetClosestSize" visibility="internal"/>
     <map method="IWICBitmapSourceTransform::CopyPixels" visibility="internal"/>
+    <map param="IWICBitmapSourceTransform::CopyPixels::prc" type="void" attribute="in"/>
     <map method="IWICBitmapSourceTransform::DoesSupportTransform" name="IsSupportingTransform"/>
 
     <!--IWICColorContext-->
@@ -301,6 +305,12 @@
 
     <map param="IWICImageEncoder::Write.*::pImageParameters" attribute="in value"/>
 
+    <map method="IWICBitmapClipper::Initialize" visibility="internal"/>
+    <map param="IWICBitmapClipper::Initialize::prc" type="void" attribute="in"/>
+
+    <map method="IWICBitmapFrameEncode::WriteSource" visibility="internal"/>
+    <map param="IWICBitmapFrameEncode::WriteSource::prc" type="void" attribute="in"/>
+    
     <!--
     // *****************************************************************
     // WIC Functions

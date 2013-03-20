@@ -172,11 +172,11 @@ namespace SharpDX.Toolkit
             base.Initialize();
         }
 
-        private DrawingSize GetRequestedSize(out PixelFormat format)
+        private Size2 GetRequestedSize(out PixelFormat format)
         {
             var bounds = Window.ClientBounds;
             format = PreferredBackBufferFormat == PixelFormat.Unknown ? PixelFormat.R8G8B8A8.UNorm : PreferredBackBufferFormat;
-            return new DrawingSize(
+            return new Size2(
                 PreferredBackBufferWidth == 0 || windowUserResized ? bounds.Width : PreferredBackBufferWidth,
                 PreferredBackBufferHeight == 0 || windowUserResized ? bounds.Height : PreferredBackBufferHeight);
         }

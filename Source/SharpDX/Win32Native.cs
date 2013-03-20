@@ -107,7 +107,7 @@ namespace SharpDX
             public IntPtr wParam;
             public IntPtr lParam;
             public uint time;
-            public DrawingPoint p;
+            public Point p;
         }
 
         [DllImport("user32.dll", EntryPoint = "PeekMessage"), SuppressUnmanagedCodeSecurity]

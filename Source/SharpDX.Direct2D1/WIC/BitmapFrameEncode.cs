@@ -119,9 +119,38 @@ namespace SharpDX.WIC
             WritePixels(lineCount, stride, lineCount * stride, (IntPtr)Interop.Fixed(pixelBuffer));
         }
 
+        /// <summary>	
+        /// <p>Encodes a bitmap source.</p>	
+        /// </summary>	
+        /// <param name="bitmapSourceRef"><dd>  <p>The bitmap source to encode.</p> </dd></param>	
+        /// <remarks>	
+        /// <p>If <strong>SetSize</strong> is not called prior to calling <strong>WriteSource</strong>, the size given in <em>prc</em> is used if not <strong><c>null</c></strong>. Otherwise, the size of the <strong><see cref="SharpDX.WIC.BitmapSource"/></strong> given in <em>pIBitmapSource</em> is used. </p><p>If <strong>SetPixelFormat</strong> is not called prior to calling <strong>WriteSource</strong>, the pixel format of the <strong><see cref="SharpDX.WIC.BitmapSource"/></strong> given in <em>pIBitmapSource</em> is used.</p><p>If <strong>SetResolution</strong> is not called prior to calling <strong>WriteSource</strong>, the pixel format of <em>pIBitmapSource</em> is used.</p><p>If <strong>SetPalette</strong> is not called prior to calling <strong>WriteSource</strong>, the target pixel format is indexed, and the pixel format of <em>pIBitmapSource</em> matches the encoder frame's pixel format, then the <em>pIBitmapSource</em> pixel format is used.</p><p>When encoding a GIF image, if the global palette is set and the frame level palette is not set directly by the user or by a custom independent software vendor (ISV) GIF codec, <strong>WriteSource</strong> will use the global palette to encode the frame even when <em>pIBitmapSource</em> has a frame level palette.</p><p><strong>Windows Vista:</strong>The source rect width must match the width set through SetSize. Repeated <strong>WriteSource</strong> calls can be made as long as the total accumulated source rect height is the same as set through SetSize.</p>	
+        /// </remarks>	
+        /// <include file='..\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IWICBitmapFrameEncode::WriteSource']/*"/>	
+        /// <msdn-id>ee690159</msdn-id>	
+        /// <unmanaged>HRESULT IWICBitmapFrameEncode::WriteSource([In, Optional] IWICBitmapSource* pIBitmapSource,[In, Optional] WICRect* prc)</unmanaged>	
+        /// <unmanaged-short>IWICBitmapFrameEncode::WriteSource</unmanaged-short>	
         public void WriteSource(SharpDX.WIC.BitmapSource bitmapSource)
         {
-            WriteSource(bitmapSource, null);
+            WriteSource(bitmapSource, IntPtr.Zero);
+        }
+
+        /// <summary>	
+        /// <p>Encodes a bitmap source.</p>	
+        /// </summary>	
+        /// <param name="bitmapSourceRef"><dd>  <p>The bitmap source to encode.</p> </dd></param>	
+        /// <param name="rectangleRef"><dd>  <p>The size rectangle of the bitmap source.</p> </dd></param>	
+        /// <remarks>	
+        /// <p>If <strong>SetSize</strong> is not called prior to calling <strong>WriteSource</strong>, the size given in <em>prc</em> is used if not <strong><c>null</c></strong>. Otherwise, the size of the <strong><see cref="SharpDX.WIC.BitmapSource"/></strong> given in <em>pIBitmapSource</em> is used. </p><p>If <strong>SetPixelFormat</strong> is not called prior to calling <strong>WriteSource</strong>, the pixel format of the <strong><see cref="SharpDX.WIC.BitmapSource"/></strong> given in <em>pIBitmapSource</em> is used.</p><p>If <strong>SetResolution</strong> is not called prior to calling <strong>WriteSource</strong>, the pixel format of <em>pIBitmapSource</em> is used.</p><p>If <strong>SetPalette</strong> is not called prior to calling <strong>WriteSource</strong>, the target pixel format is indexed, and the pixel format of <em>pIBitmapSource</em> matches the encoder frame's pixel format, then the <em>pIBitmapSource</em> pixel format is used.</p><p>When encoding a GIF image, if the global palette is set and the frame level palette is not set directly by the user or by a custom independent software vendor (ISV) GIF codec, <strong>WriteSource</strong> will use the global palette to encode the frame even when <em>pIBitmapSource</em> has a frame level palette.</p><p><strong>Windows Vista:</strong>The source rect width must match the width set through SetSize. Repeated <strong>WriteSource</strong> calls can be made as long as the total accumulated source rect height is the same as set through SetSize.</p>	
+        /// </remarks>	
+        /// <include file='..\..\Documentation\CodeComments.xml' path="/comments/comment[@id='IWICBitmapFrameEncode::WriteSource']/*"/>	
+        /// <msdn-id>ee690159</msdn-id>	
+        /// <unmanaged>HRESULT IWICBitmapFrameEncode::WriteSource([In, Optional] IWICBitmapSource* pIBitmapSource,[In, Optional] WICRect* prc)</unmanaged>	
+        /// <unmanaged-short>IWICBitmapFrameEncode::WriteSource</unmanaged-short>	
+        public unsafe void WriteSource(SharpDX.WIC.BitmapSource bitmapSourceRef, Rectangle rectangleRef)
+        {
+            rectangleRef.MakeXYAndWidthHeight();
+            WriteSource(bitmapSourceRef, new IntPtr(&rectangleRef));
         }
 
         protected override unsafe void Dispose(bool disposing)

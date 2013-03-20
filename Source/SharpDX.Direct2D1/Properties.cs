@@ -145,19 +145,6 @@ namespace SharpDX.Direct2D1
         /// <param name="index"><para>The index of the property from which the data is to be obtained.</para></param>	
         /// <returns>The value of the specified property by index.</returns>	
         /// <unmanaged>HRESULT ID2D1Properties::GetValue([In] unsigned int index,[In] D2D1_PROPERTY_TYPE type,[Out, Buffer] void* data,[In] unsigned int dataSize)</unmanaged>	
-        public unsafe DrawingPointF GetDrawingPointFValue(int index)
-        {
-            DrawingPointF value;
-            this.GetValue(index, PropertyType.Vector2, new IntPtr(&value), Utilities.SizeOf<DrawingPointF>());
-            return value;
-        }
-
-        /// <summary>	
-        /// Gets the value of the specified property by index.
-        /// </summary>	
-        /// <param name="index"><para>The index of the property from which the data is to be obtained.</para></param>	
-        /// <returns>The value of the specified property by index.</returns>	
-        /// <unmanaged>HRESULT ID2D1Properties::GetValue([In] unsigned int index,[In] D2D1_PROPERTY_TYPE type,[Out, Buffer] void* data,[In] unsigned int dataSize)</unmanaged>	
         public unsafe Vector3 GetVector3Value(int index)
         {
             Vector3 value;
@@ -188,19 +175,6 @@ namespace SharpDX.Direct2D1
         {
             Vector4 value;
             this.GetValue(index, PropertyType.Vector4, new IntPtr(&value), Utilities.SizeOf<Vector4>());
-            return value;
-        }
-
-        /// <summary>	
-        /// Gets the value of the specified property by index.
-        /// </summary>	
-        /// <param name="index"><para>The index of the property from which the data is to be obtained.</para></param>	
-        /// <returns>The value of the specified property by index.</returns>	
-        /// <unmanaged>HRESULT ID2D1Properties::GetValue([In] unsigned int index,[In] D2D1_PROPERTY_TYPE type,[Out, Buffer] void* data,[In] unsigned int dataSize)</unmanaged>	
-        public unsafe DrawingRectangleF GetDrawingRectangleFValue(int index)
-        {
-            DrawingRectangleF value;
-            this.GetValue(index, PropertyType.Vector4, new IntPtr(&value), Utilities.SizeOf<DrawingRectangleF>());
             return value;
         }
 
@@ -381,19 +355,6 @@ namespace SharpDX.Direct2D1
         /// <param name="name">The name of the property.</param>	
         /// <returns>The value of the specified property by name.</returns>	
         /// <unmanaged>HRESULT ID2D1Properties::GetValueByName([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[Out, Buffer] void* data,[In] unsigned int dataSize)</unmanaged>	
-        public unsafe DrawingPointF GetDrawingPointFValueByName(string name)
-        {
-            DrawingPointF value;
-            this.GetValueByName(name, PropertyType.Vector2, new IntPtr(&value), Utilities.SizeOf<DrawingPointF>());
-            return value;
-        }
-
-        /// <summary>	
-        /// Gets the value of the specified property by name.
-        /// </summary>	
-        /// <param name="name">The name of the property.</param>	
-        /// <returns>The value of the specified property by name.</returns>	
-        /// <unmanaged>HRESULT ID2D1Properties::GetValueByName([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[Out, Buffer] void* data,[In] unsigned int dataSize)</unmanaged>	
         public unsafe Vector3 GetVector3ValueByName(string name)
         {
             Vector3 value;
@@ -424,19 +385,6 @@ namespace SharpDX.Direct2D1
         {
             Vector4 value;
             this.GetValueByName(name, PropertyType.Vector4, new IntPtr(&value), Utilities.SizeOf<Vector4>());
-            return value;
-        }
-
-        /// <summary>	
-        /// Gets the value of the specified property by name.
-        /// </summary>	
-        /// <param name="name">The name of the property.</param>	
-        /// <returns>The value of the specified property by name.</returns>	
-        /// <unmanaged>HRESULT ID2D1Properties::GetValueByName([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[Out, Buffer] void* data,[In] unsigned int dataSize)</unmanaged>	
-        public unsafe DrawingRectangleF GetDrawingRectangleFValueByName(string name)
-        {
-            DrawingRectangleF value;
-            this.GetValueByName(name, PropertyType.Vector4, new IntPtr(&value), Utilities.SizeOf<DrawingRectangleF>());
             return value;
         }
 
@@ -619,28 +567,6 @@ namespace SharpDX.Direct2D1
         /// <param name="name">Name of the property</param>
         /// <param name="value">Value of the property</param>
         /// <unmanaged>HRESULT ID2D1Properties::SetValueByName([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
-        public unsafe void SetValueByName(string name, DrawingPointF value)
-        {
-            SetValueByName(name, PropertyType.Vector2, new IntPtr(&value), sizeof(DrawingPointF));
-        }
-
-        /// <summary>
-        /// Sets the named property to the given value.
-        /// </summary>
-        /// <param name="name">Name of the property</param>
-        /// <param name="value">Value of the property</param>
-        /// <unmanaged>HRESULT ID2D1Properties::SetValueByName([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
-        public unsafe void SetValueByName(string name, Vector3 value)
-        {
-            SetValueByName(name, PropertyType.Vector3, new IntPtr(&value), sizeof(Vector3));
-        }
-
-        /// <summary>
-        /// Sets the named property to the given value.
-        /// </summary>
-        /// <param name="name">Name of the property</param>
-        /// <param name="value">Value of the property</param>
-        /// <unmanaged>HRESULT ID2D1Properties::SetValueByName([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
         public unsafe void SetValueByName(string name, Color3 value)
         {
             SetValueByName(name, PropertyType.Vector3, new IntPtr(&value), sizeof(Color3));
@@ -655,17 +581,6 @@ namespace SharpDX.Direct2D1
         public unsafe void SetValueByName(string name, Vector4 value)
         {
             SetValueByName(name, PropertyType.Vector4, new IntPtr(&value), sizeof(Vector4));
-        }
-
-        /// <summary>
-        /// Sets the named property to the given value.
-        /// </summary>
-        /// <param name="name">Name of the property</param>
-        /// <param name="value">Value of the property</param>
-        /// <unmanaged>HRESULT ID2D1Properties::SetValueByName([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
-        public unsafe void SetValueByName(string name, DrawingRectangleF value)
-        {
-            SetValueByName(name, PropertyType.Vector4, new IntPtr(&value), sizeof(DrawingRectangleF));
         }
 
         /// <summary>
@@ -832,17 +747,6 @@ namespace SharpDX.Direct2D1
         /// <param name="index">Index of the property</param>
         /// <param name="value">Value of the property</param>
         /// <unmanaged>HRESULT ID2D1Properties::SetValue([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
-        public unsafe void SetValue(int index, DrawingPointF value)
-        {
-            SetValue(index, PropertyType.Vector2, new IntPtr(&value), sizeof(DrawingPointF));
-        }
-
-        /// <summary>
-        /// Sets the named property to the given value.
-        /// </summary>
-        /// <param name="index">Index of the property</param>
-        /// <param name="value">Value of the property</param>
-        /// <unmanaged>HRESULT ID2D1Properties::SetValue([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
         public unsafe void SetValue(int index, Vector3 value)
         {
             SetValue(index, PropertyType.Vector3, new IntPtr(&value), sizeof(Vector3));
@@ -868,17 +772,6 @@ namespace SharpDX.Direct2D1
         public unsafe void SetValue(int index, Vector4 value)
         {
             SetValue(index, PropertyType.Vector4, new IntPtr(&value), sizeof(Vector4));
-        }
-
-        /// <summary>
-        /// Sets the named property to the given value.
-        /// </summary>
-        /// <param name="index">Index of the property</param>
-        /// <param name="value">Value of the property</param>
-        /// <unmanaged>HRESULT ID2D1Properties::SetValue([In] const wchar_t* name,[In] D2D1_PROPERTY_TYPE type,[In, Buffer] const void* data,[In] unsigned int dataSize)</unmanaged>
-        public unsafe void SetValue(int index, DrawingRectangleF value)
-        {
-            SetValue(index, PropertyType.Vector4, new IntPtr(&value), sizeof(DrawingRectangleF));
         }
 
         /// <summary>

@@ -89,20 +89,20 @@ namespace MiniShape
                 // Creates a random geometry inside a circle
                 pathGeometry1 = new PathGeometry1(target.DeviceManager.FactoryDirect2D);
                 var pathSink = pathGeometry1.Open();
-                var startingPoint = new DrawingPointF(sizeShape * 0.5f, 0.0f);
+                var startingPoint = new Vector2(sizeShape * 0.5f, 0.0f);
                 pathSink.BeginFigure(startingPoint, FigureBegin.Hollow);
                 for (int i = 0; i < 128; i++)
                 {
                     float angle = (float)i / 128.0f * (float)Math.PI * 2.0f;
                     float R = (float)(Math.Cos(angle) * 0.1f + 0.4f);
                     R *= sizeShape;
-                    DrawingPointF point1 = new DrawingPointF(R * (float)Math.Cos(angle), R * (float)Math.Sin(angle));
+                    Vector2 point1 = new Vector2(R * (float)Math.Cos(angle), R * (float)Math.Sin(angle));
 
                     if ((i & 1) > 0)
                     {
                         R = (float)(Math.Sin(angle * 6.0f) * 0.1f + 0.9f);
                         R *= sizeShape;
-                        point1 = new DrawingPointF(R * (float)Math.Cos(angle + Math.PI / 12), R * (float)Math.Sin(angle + Math.PI / 12));
+                        point1 = new Vector2(R * (float)Math.Cos(angle + Math.PI / 12), R * (float)Math.Sin(angle + Math.PI / 12));
                     }
                     pathSink.AddLine(point1);
                 }

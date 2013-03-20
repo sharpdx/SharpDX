@@ -99,7 +99,7 @@ namespace SharpDX.Toolkit.Graphics
         private static readonly Vector2[] CornerOffsets = { Vector2.Zero, Vector2.UnitX, Vector2.UnitY, Vector2.One };
         private static readonly short[] indices;
         private static Vector2 vector2Zero = Vector2.Zero;
-        private static DrawingRectangle? nullRectangle;
+        private static Rectangle? nullRectangle;
         
         private readonly BackToFrontComparer backToFrontComparer = new BackToFrontComparer();
         private readonly EffectParameter effectMatrixTransform;
@@ -259,9 +259,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>
         /// Before making any calls to Draw, you must call Begin. Once all calls to Draw are complete, call End. 
         /// </remarks>
-        public void Draw(ShaderResourceView texture, DrawingRectangle destinationRectangle, Color color)
+        public void Draw(ShaderResourceView texture, Rectangle destinationRectangle, Color color)
         {
-            var destination = new DrawingRectangleF(destinationRectangle.X, destinationRectangle.Y, destinationRectangle.Width, destinationRectangle.Height);
+            var destination = new RectangleF(destinationRectangle.X, destinationRectangle.Y, destinationRectangle.Width, destinationRectangle.Height);
             DrawSprite(texture, ref destination, false, ref nullRectangle, color, 0f, ref vector2Zero, SpriteEffects.None, 0f);
         }
 
@@ -273,7 +273,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="color">The color to tint a sprite. Use Color.White for full color with no tinting.</param>
         public void Draw(ShaderResourceView texture, Vector2 position, Color color)
         {
-            var destination = new DrawingRectangleF(position.X, position.Y, 1f, 1f);
+            var destination = new RectangleF(position.X, position.Y, 1f, 1f);
             DrawSprite(texture, ref destination, true, ref nullRectangle, color, 0f, ref vector2Zero, SpriteEffects.None, 0f);
         }
 
@@ -288,9 +288,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="origin">The sprite origin; the default is (0,0) which represents the upper-left corner.</param>
         /// <param name="effects">Effects to apply.</param>
         /// <param name="layerDepth">The depth of a layer. By default, 0 represents the front layer and 1 represents a back layer. Use SpriteSortMode if you want sprites to be sorted during drawing.</param>
-        public void Draw(ShaderResourceView texture, DrawingRectangle destinationRectangle, DrawingRectangle? sourceRectangle, Color color, float rotation, Vector2 origin, SpriteEffects effects, float layerDepth)
+        public void Draw(ShaderResourceView texture, Rectangle destinationRectangle, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, SpriteEffects effects, float layerDepth)
         {
-            var destination = new DrawingRectangleF(destinationRectangle.X, destinationRectangle.Y, destinationRectangle.Width, destinationRectangle.Height);
+            var destination = new RectangleF(destinationRectangle.X, destinationRectangle.Y, destinationRectangle.Width, destinationRectangle.Height);
             DrawSprite(texture, ref destination, false, ref sourceRectangle, color, rotation, ref origin, effects, layerDepth);
         }
 
@@ -301,9 +301,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="position">The location (in screen coordinates) to draw the sprite.</param>
         /// <param name="sourceRectangle">A rectangle that specifies (in texels) the source texels from a texture. Use null to draw the entire texture. </param>
         /// <param name="color">The color to tint a sprite. Use Color.White for full color with no tinting.</param>
-        public void Draw(ShaderResourceView texture, Vector2 position, DrawingRectangle? sourceRectangle, Color color)
+        public void Draw(ShaderResourceView texture, Vector2 position, Rectangle? sourceRectangle, Color color)
         {
-            var destination = new DrawingRectangleF(position.X, position.Y, 1f, 1f);
+            var destination = new RectangleF(position.X, position.Y, 1f, 1f);
             DrawSprite(texture, ref destination, true, ref sourceRectangle, color, 0f, ref vector2Zero, SpriteEffects.None, 0f);
         }
 
@@ -319,9 +319,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="scale">Scale factor.</param>
         /// <param name="effects">Effects to apply.</param>
         /// <param name="layerDepth">The depth of a layer. By default, 0 represents the front layer and 1 represents a back layer. Use SpriteSortMode if you want sprites to be sorted during drawing.</param>
-        public void Draw(ShaderResourceView texture, Vector2 position, DrawingRectangle? sourceRectangle, Color color, float rotation, Vector2 origin, float scale, SpriteEffects effects, float layerDepth)
+        public void Draw(ShaderResourceView texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, float scale, SpriteEffects effects, float layerDepth)
         {
-            var destination = new DrawingRectangleF(position.X, position.Y, scale, scale);
+            var destination = new RectangleF(position.X, position.Y, scale, scale);
             DrawSprite(texture, ref destination, true, ref sourceRectangle, color, rotation, ref origin, effects, layerDepth);
         }
 
@@ -337,9 +337,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="scale">Scale factor.</param>
         /// <param name="effects">Effects to apply.</param>
         /// <param name="layerDepth">The depth of a layer. By default, 0 represents the front layer and 1 represents a back layer. Use SpriteSortMode if you want sprites to be sorted during drawing.</param>
-        public void Draw(ShaderResourceView texture, Vector2 position, DrawingRectangle? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
+        public void Draw(ShaderResourceView texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
         {
-            var destination = new DrawingRectangleF(position.X, position.Y, scale.X, scale.Y);
+            var destination = new RectangleF(position.X, position.Y, scale.X, scale.Y);
             DrawSprite(texture, ref destination, true, ref sourceRectangle, color, rotation, ref origin, effects, layerDepth);
         }
 
@@ -628,7 +628,7 @@ namespace SharpDX.Toolkit.Graphics
             Array.Sort(sortIndices, 0, spriteQueueCount, comparer);
         }
 
-        internal unsafe void DrawSprite(ShaderResourceView texture, ref DrawingRectangleF destination, bool scaleDestination, ref DrawingRectangle? sourceRectangle, Color color, float rotation, ref Vector2 origin, SpriteEffects effects, float depth)
+        internal unsafe void DrawSprite(ShaderResourceView texture, ref RectangleF destination, bool scaleDestination, ref Rectangle? sourceRectangle, Color color, float rotation, ref Vector2 origin, SpriteEffects effects, float depth)
         {
             // Check that texture is not null
             if (texture == null || texture.NativePointer == IntPtr.Zero)
@@ -712,7 +712,7 @@ namespace SharpDX.Toolkit.Graphics
                 // If the source rectangle has a value, then use it.
                 if (sourceRectangle.HasValue)
                 {
-                    DrawingRectangle rectangle = sourceRectangle.Value;
+                    Rectangle rectangle = sourceRectangle.Value;
                     spriteInfo->Source.X = rectangle.X;
                     spriteInfo->Source.Y = rectangle.Y;
                     width = rectangle.Width;
@@ -1028,8 +1028,8 @@ namespace SharpDX.Toolkit.Graphics
         [StructLayout(LayoutKind.Sequential)]
         private struct SpriteInfo
         {
-            public DrawingRectangleF Source;
-            public DrawingRectangleF Destination;
+            public RectangleF Source;
+            public RectangleF Destination;
             public Vector2 Origin;
             public float Rotation;
             public float Depth;

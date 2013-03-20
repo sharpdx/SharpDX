@@ -72,7 +72,7 @@ namespace MiniTriApp
         }
 
         
-        public override void GetTexture(SharpDX.DrawingSizeF surfaceSize, out DrawingSurfaceSynchronizedTexture synchronizedTexture, out SharpDX.RectangleF textureSubRectangle)
+        public override void GetTexture(SharpDX.Size2F surfaceSize, out DrawingSurfaceSynchronizedTexture synchronizedTexture, out SharpDX.RectangleF textureSubRectangle)
         {
             if (_synchronizedTexture == null)
             {

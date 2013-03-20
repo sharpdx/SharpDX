@@ -550,7 +550,7 @@ namespace SharpDX.Direct3D9
         /// <param name="point">The point.</param>
         /// <param name="flags">if set to <c>true</c> [flags].</param>
         /// <unmanaged>void IDirect3DDevice9::SetCursorPosition([In] int X,[In] int Y,[In] unsigned int Flags)</unmanaged>
-        public void SetCursorPosition(DrawingPoint point, bool flags)
+        public void SetCursorPosition(Point point, bool flags)
         {
             SetCursorPosition(point.X, point.Y, flags);
         }
@@ -574,7 +574,7 @@ namespace SharpDX.Direct3D9
         /// <param name="cursorBitmapRef">The cursor bitmap ref.</param>
         /// <returns></returns>
         /// <unmanaged>HRESULT IDirect3DDevice9::SetCursorProperties([In] unsigned int XHotSpot,[In] unsigned int YHotSpot,[In] IDirect3DSurface9* pCursorBitmap)</unmanaged>
-        public void SetCursorProperties(DrawingPoint point, SharpDX.Direct3D9.Surface cursorBitmapRef)
+        public void SetCursorProperties(Point point, SharpDX.Direct3D9.Surface cursorBitmapRef)
         {
             SetCursorProperties(point.X, point.Y, cursorBitmapRef);
         }

@@ -39,7 +39,7 @@ namespace TessellateApp
 
             // Create an ellipse
             Ellipse = new EllipseGeometry(Factory2D,
-                                          new Ellipse(new DrawingPointF(demoConfiguration.Width/2, demoConfiguration.Height/2), demoConfiguration.Width/2 - 100,
+                                          new Ellipse(new Vector2(demoConfiguration.Width/2, demoConfiguration.Height/2), demoConfiguration.Width/2 - 100,
                                                       demoConfiguration.Height/2 - 100));
 
             // Populate a PathGeometry from Ellipse tessellation 

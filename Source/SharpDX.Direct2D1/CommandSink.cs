@@ -100,7 +100,7 @@ namespace SharpDX.Direct2D1
         /// <param name="foregroundBrush"><para>The measuring mode to apply to the glyphs.</para></param>	
         /// <param name="measuringMode">No documentation.</param>	
         /// <unmanaged>HRESULT ID2D1CommandSink::DrawGlyphRun([In] D2D_POINT_2F baselineOrigin,[In] const DWRITE_GLYPH_RUN* glyphRun,[In, Optional] const DWRITE_GLYPH_RUN_DESCRIPTION* glyphRunDescription,[In] ID2D1Brush* foregroundBrush,[In] DWRITE_MEASURING_MODE measuringMode)</unmanaged>	
-        void DrawGlyphRun(SharpDX.DrawingPointF baselineOrigin, SharpDX.DirectWrite.GlyphRun glyphRun, SharpDX.DirectWrite.GlyphRunDescription glyphRunDescription, SharpDX.Direct2D1.Brush foregroundBrush, SharpDX.Direct2D1.MeasuringMode measuringMode);
+        void DrawGlyphRun(SharpDX.Vector2 baselineOrigin, SharpDX.DirectWrite.GlyphRun glyphRun, SharpDX.DirectWrite.GlyphRunDescription glyphRunDescription, SharpDX.Direct2D1.Brush foregroundBrush, SharpDX.Direct2D1.MeasuringMode measuringMode);
 
         /// <summary>	
         /// [This documentation is preliminary and is subject to change.]	
@@ -114,7 +114,7 @@ namespace SharpDX.Direct2D1
         /// Additional References	
         /// </remarks>	
         /// <unmanaged>HRESULT ID2D1CommandSink::DrawLine([In] D2D_POINT_2F point0,[In] D2D_POINT_2F point1,[In] ID2D1Brush* brush,[In] float strokeWidth,[In, Optional] ID2D1StrokeStyle* strokeStyle)</unmanaged>	
-        void DrawLine(SharpDX.DrawingPointF point0, SharpDX.DrawingPointF point1, SharpDX.Direct2D1.Brush brush, float strokeWidth, SharpDX.Direct2D1.StrokeStyle strokeStyle);
+        void DrawLine(SharpDX.Vector2 point0, SharpDX.Vector2 point1, SharpDX.Direct2D1.Brush brush, float strokeWidth, SharpDX.Direct2D1.StrokeStyle strokeStyle);
 
         /// <summary>	
         /// [This documentation is preliminary and is subject to change.]	
@@ -163,7 +163,7 @@ namespace SharpDX.Direct2D1
         /// Because the image can itself be a command list or contain an effect graph that in turn contains a command list, this method can result in recursive processing.	
         /// </remarks>	
         /// <unmanaged>HRESULT ID2D1CommandSink::DrawImage([In] ID2D1Image* image,[In, Optional] const D2D_POINT_2F* targetOffset,[In, Optional] const D2D_RECT_F* imageRectangle,[In] D2D1_INTERPOLATION_MODE interpolationMode,[In] D2D1_COMPOSITE_MODE compositeMode)</unmanaged>	
-        void DrawImage(SharpDX.Direct2D1.Image image, SharpDX.DrawingPointF? targetOffset, SharpDX.RectangleF? imageRectangle, SharpDX.Direct2D1.InterpolationMode interpolationMode, SharpDX.Direct2D1.CompositeMode compositeMode);
+        void DrawImage(SharpDX.Direct2D1.Image image, SharpDX.Vector2? targetOffset, SharpDX.RectangleF? imageRectangle, SharpDX.Direct2D1.InterpolationMode interpolationMode, SharpDX.Direct2D1.CompositeMode compositeMode);
 
         /// <summary>	
         /// No documentation.	
@@ -171,7 +171,7 @@ namespace SharpDX.Direct2D1
         /// <param name="gdiMetafile">No documentation.</param>	
         /// <param name="targetOffset">No documentation.</param>	
         /// <unmanaged>HRESULT ID2D1CommandSink::DrawGdiMetafile([In] ID2D1GdiMetafile* gdiMetafile,[In, Optional] const D2D_POINT_2F* targetOffset)</unmanaged>	
-        void DrawGdiMetafile(SharpDX.Direct2D1.GdiMetafile gdiMetafile, SharpDX.DrawingPointF? targetOffset);
+        void DrawGdiMetafile(SharpDX.Direct2D1.GdiMetafile gdiMetafile, SharpDX.Vector2? targetOffset);
 
         /// <summary>	
         /// [This documentation is preliminary and is subject to change.]	

@@ -29,11 +29,11 @@ namespace SharpDX.Direct2D1
         /// <summary>
         /// Gets the DPI.
         /// </summary>
-        public DrawingPointF Dpi
+        public Vector2 Dpi
         {
             get
             {
-                DrawingPointF dpi;
+                Vector2 dpi;
                 GetDpi(out dpi.X, out dpi.Y);
                 return dpi;
             }

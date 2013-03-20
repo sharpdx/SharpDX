@@ -32,7 +32,7 @@ namespace SharpDX.Direct2D1
         /// <param name="deviceContext">an instance of <see cref = "SharpDX.Direct2D1.RenderTarget" /></param>
         /// <param name="size">The dimension of the bitmap to create in pixels.</param>
         /// <unmanaged>HRESULT ID2D1DeviceContext::CreateBitmap([In] D2D_SIZE_U size,[In, Buffer, Optional] const void* sourceData,[In] unsigned int pitch,[In] const D2D1_BITMAP_PROPERTIES1* bitmapProperties,[Out, Fast] ID2D1Bitmap1** bitmap)</unmanaged>	
-        public Bitmap1(DeviceContext deviceContext, DrawingSize size)
+        public Bitmap1(DeviceContext deviceContext, Size2 size)
             : this(deviceContext, size, null, 0, new BitmapProperties1(new PixelFormat(Format.Unknown, AlphaMode.Unknown)))
         {
         }
@@ -44,7 +44,7 @@ namespace SharpDX.Direct2D1
         /// <param name="size">The dimension of the bitmap to create in pixels.</param>
         /// <param name="bitmapProperties">The pixel format and dots per inch (DPI) of the bitmap to create.</param>
         /// <unmanaged>HRESULT ID2D1DeviceContext::CreateBitmap([In] D2D_SIZE_U size,[In, Buffer, Optional] const void* sourceData,[In] unsigned int pitch,[In] const D2D1_BITMAP_PROPERTIES1* bitmapProperties,[Out, Fast] ID2D1Bitmap1** bitmap)</unmanaged>	
-        public Bitmap1(DeviceContext deviceContext, DrawingSize size, SharpDX.Direct2D1.BitmapProperties1 bitmapProperties)
+        public Bitmap1(DeviceContext deviceContext, Size2 size, SharpDX.Direct2D1.BitmapProperties1 bitmapProperties)
             : this(deviceContext, size, null, 0, bitmapProperties)
         {
         }
@@ -57,7 +57,7 @@ namespace SharpDX.Direct2D1
         /// <param name="dataStream">A pointer to the memory location of the image data, or NULL to create an uninitialized bitmap.</param>
         /// <param name="pitch">The byte count of each scanline, which is equal to (the image width in pixels * the number of bytes per pixel) + memory padding. If srcData is NULL, this value is ignored. (Note that pitch is also sometimes called stride.)</param>
         /// <unmanaged>HRESULT ID2D1DeviceContext::CreateBitmap([In] D2D_SIZE_U size,[In, Buffer, Optional] const void* sourceData,[In] unsigned int pitch,[In] const D2D1_BITMAP_PROPERTIES1* bitmapProperties,[Out, Fast] ID2D1Bitmap1** bitmap)</unmanaged>	
-        public Bitmap1(DeviceContext deviceContext, DrawingSize size, DataStream dataStream, int pitch)
+        public Bitmap1(DeviceContext deviceContext, Size2 size, DataStream dataStream, int pitch)
             : this(deviceContext, size, dataStream, pitch, new BitmapProperties1(new PixelFormat(Format.Unknown, AlphaMode.Unknown)))
         {
         }
@@ -71,7 +71,7 @@ namespace SharpDX.Direct2D1
         /// <param name="pitch">The byte count of each scanline, which is equal to (the image width in pixels * the number of bytes per pixel) + memory padding. If srcData is NULL, this value is ignored. (Note that pitch is also sometimes called stride.)</param>
         /// <param name="bitmapProperties">The pixel format and dots per inch (DPI) of the bitmap to create.</param>
         /// <unmanaged>HRESULT ID2D1DeviceContext::CreateBitmap([In] D2D_SIZE_U size,[In, Buffer, Optional] const void* sourceData,[In] unsigned int pitch,[In] const D2D1_BITMAP_PROPERTIES1* bitmapProperties,[Out, Fast] ID2D1Bitmap1** bitmap)</unmanaged>	
-        public Bitmap1(DeviceContext deviceContext, DrawingSize size, DataStream dataStream, int pitch, SharpDX.Direct2D1.BitmapProperties1 bitmapProperties)
+        public Bitmap1(DeviceContext deviceContext, Size2 size, DataStream dataStream, int pitch, SharpDX.Direct2D1.BitmapProperties1 bitmapProperties)
             : base(IntPtr.Zero)
         {
             deviceContext.CreateBitmap(size, dataStream == null ? IntPtr.Zero : dataStream.PositionPointer, pitch, bitmapProperties, this);

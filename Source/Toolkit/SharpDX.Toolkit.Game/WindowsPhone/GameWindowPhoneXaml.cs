@@ -33,7 +33,7 @@ namespace SharpDX.Toolkit
     internal class GameWindowPhoneXaml : GameWindow, IDrawingSurfaceContentProviderNative,
                                                 IInspectable, ICustomQueryInterface
     {
-        private DrawingSizeF currentSize;
+        private Size2F currentSize;
         private readonly IntPtr thisComObjectPtr;
 
         private bool isInitialized;
@@ -64,11 +64,11 @@ namespace SharpDX.Toolkit
             set { }
         }
 
-        public override DrawingRectangle ClientBounds
+        public override Rectangle ClientBounds
         {
             get
             {
-                return new DrawingRectangle(0, 0, (int)currentSize.Width, (int)currentSize.Height);
+                return new Rectangle(0, 0, (int)currentSize.Width, (int)currentSize.Height);
             }
         }
 
@@ -127,7 +127,7 @@ namespace SharpDX.Toolkit
             isContentDirty = true;
         }
 
-        void IDrawingSurfaceContentProviderNative.GetTexture(DrawingSizeF surfaceSize, out DrawingSurfaceSynchronizedTexture synchronizedTexture, out RectangleF textureSubRectangle)
+        void IDrawingSurfaceContentProviderNative.GetTexture(Size2F surfaceSize, out DrawingSurfaceSynchronizedTexture synchronizedTexture, out RectangleF textureSubRectangle)
         {
             try
             {

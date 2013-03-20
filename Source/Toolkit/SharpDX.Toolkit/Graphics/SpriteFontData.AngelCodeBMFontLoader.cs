@@ -178,7 +178,7 @@ namespace SharpDX.Toolkit.Graphics
                 Glyphs[i] = new Glyph
                                 {
                                     Character = bmfGlyph.Id, 
-                                    Subrect = new Rectangle(bmfGlyph.X, bmfGlyph.Y, bmfGlyph.X + bmfGlyph.Width, bmfGlyph.Y + bmfGlyph.Height), 
+                                    Subrect = new Rectangle(bmfGlyph.X, bmfGlyph.Y, bmfGlyph.Width, bmfGlyph.Height), 
                                     Offset = {X = bmfGlyph.OffsetX, Y = bmfGlyph.OffsetY}, 
                                     XAdvance = bmfGlyph.AdvanceX,
                                     BitmapIndex = bmfGlyph.PageIndex

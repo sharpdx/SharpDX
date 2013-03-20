@@ -30,7 +30,7 @@ namespace SharpDX.Direct2D1
         }
 
         /// <inheritdoc/>
-        public void Draw(SharpDX.Direct2D1.Bitmap1 target, SharpDX.Rectangle drawRect, SharpDX.DrawingPoint targetOrigin)
+        public void Draw(SharpDX.Direct2D1.Bitmap1 target, SharpDX.Rectangle drawRect, SharpDX.Point targetOrigin)
         {
             Draw_(target, drawRect, targetOrigin);
         }

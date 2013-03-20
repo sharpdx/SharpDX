@@ -90,15 +90,15 @@ namespace SharpDX.Toolkit
             }
         }
 
-        public override DrawingRectangle ClientBounds
+        public override Rectangle ClientBounds
         {
             get
             {
                 if (backBuffer != null)
                 {
-                    return new DrawingRectangle(0, 0, backBuffer.Width, backBuffer.Height);
+                    return new Rectangle(0, 0, backBuffer.Width, backBuffer.Height);
                 }
-                return DrawingRectangle.Empty;
+                return Rectangle.Empty;
             }
         }
 
@@ -243,7 +243,7 @@ namespace SharpDX.Toolkit
 
         void IDrawingSurfaceBackgroundContentProviderNative.PrepareResources(
             DateTime presentTargetTime,
-            ref DrawingSizeF desiredRenderTargetSize)
+            ref Size2F desiredRenderTargetSize)
         {
         }
 

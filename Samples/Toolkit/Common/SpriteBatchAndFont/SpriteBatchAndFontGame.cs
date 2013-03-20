@@ -134,7 +134,7 @@ namespace SpriteBatchAndFont
                     Y = spriteSceneHeight + spriteSceneRadiusHeight * radiusOffset * (float)Math.Sin(time * spriteSpeed + angleOffset)
                 };
 
-                var sourceRectangle = new DrawingRectangle(0, (int)((float)random.NextDouble() * 31) * 32, 32, 32);
+                var sourceRectangle = new Rectangle(0, (int)((float)random.NextDouble() * 31) * 32, 32, 32);
                 spriteBatch.Draw(ballsTexture, position, sourceRectangle, Color.White, 0.0f, new Vector2(textureHalfSize, textureHalfSize), Vector2.One, SpriteEffects.None, 0f);
             }
             spriteBatch.End();

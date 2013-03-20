@@ -72,7 +72,7 @@ namespace CustomLayout
 
                 GlyphRun glyphRun = customGlyphRun.Convert(glyphIndices_, glyphAdvances_, glyphOffsets_);
                 if (glyphRun != null)
-                    renderTarget.DrawGlyphRun(new DrawingPointF(customGlyphRun.x, customGlyphRun.y), glyphRun, brush, MeasuringMode.Natural);
+                    renderTarget.DrawGlyphRun(new Vector2(customGlyphRun.x, customGlyphRun.y), glyphRun, brush, MeasuringMode.Natural);
             }
         }
     }

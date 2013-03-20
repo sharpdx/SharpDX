@@ -90,7 +90,7 @@ namespace TextDialog
 
             var properties = new HwndRenderTargetProperties();
             properties.Hwnd = renderControl.Handle;
-            properties.PixelSize = new DrawingSize(renderControl.ClientSize.Width, renderControl.ClientSize.Height);
+            properties.PixelSize = new Size2(renderControl.ClientSize.Width, renderControl.ClientSize.Height);
             properties.PresentOptions = PresentOptions.None;
 
             RenderTarget2D = new WindowRenderTarget(Factory2D, new RenderTargetProperties(new PixelFormat(Format.Unknown, AlphaMode.Premultiplied)), properties);
@@ -243,7 +243,7 @@ namespace TextDialog
         {
             try
             {
-                RenderTarget2D.Resize(new DrawingSize(renderControl.Size.Width, renderControl.Size.Height));
+                RenderTarget2D.Resize(new Size2(renderControl.Size.Width, renderControl.Size.Height));
                 CurrentTextLayout.MaxWidth = renderControl.Size.Width;
                 CurrentTextLayout.MaxHeight = renderControl.Size.Height;
             }
@@ -266,7 +266,7 @@ namespace TextDialog
 
                 RenderTarget2D.Clear(Color.White);
 
-                RenderTarget2D.DrawTextLayout(new DrawingPointF(0, 0), CurrentTextLayout, SceneColorBrush);
+                RenderTarget2D.DrawTextLayout(new Vector2(0, 0), CurrentTextLayout, SceneColorBrush);
 
                 RenderTarget2D.EndDraw();
             }

@@ -243,11 +243,11 @@ namespace SharpDX.Toolkit
             }
         }
 
-        public override DrawingRectangle ClientBounds
+        public override Rectangle ClientBounds
         {
             get
             {
-                return new DrawingRectangle(0, 0, Control.ClientSize.Width, Control.ClientSize.Height);
+                return new Rectangle(0, 0, Control.ClientSize.Width, Control.ClientSize.Height);
             }
         }
 

@@ -79,11 +79,6 @@ namespace SharpDX.Direct2D1
                 binding.nativeGetSet = new NativeGetSetValue<int>(customEffectType, propertyInfo);
                 effectPropType = PropertyType.Bool;
             }
-            else if (propType == typeof(DrawingPointF))
-            {
-                binding.nativeGetSet = new NativeGetSetValue<DrawingPointF>(customEffectType, propertyInfo);
-                effectPropType = PropertyType.Vector2;
-            }
             else if (propType == typeof(Vector2))
             {
                 binding.nativeGetSet = new NativeGetSetValue<Vector2>(customEffectType, propertyInfo);
@@ -97,11 +92,6 @@ namespace SharpDX.Direct2D1
             else if (propType == typeof(RectangleF))
             {
                 binding.nativeGetSet = new NativeGetSetValue<RectangleF>(customEffectType, propertyInfo);
-                effectPropType = PropertyType.Vector4;
-            }
-            else if (propType == typeof(DrawingRectangleF))
-            {
-                binding.nativeGetSet = new NativeGetSetValue<DrawingRectangleF>(customEffectType, propertyInfo);
                 effectPropType = PropertyType.Vector4;
             }
             else if (propType == typeof(Vector4))

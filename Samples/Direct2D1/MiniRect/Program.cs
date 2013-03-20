@@ -67,7 +67,7 @@ namespace MiniRect
             int width = form.ClientSize.Width;
             int height = form.ClientSize.Height;
 
-            var rectangleGeometry = new RoundedRectangleGeometry(d2dFactory, new RoundedRectangle() { RadiusX = 32, RadiusY = 32, Rect = new RectangleF(128, 128, width - 128, height-128) });
+            var rectangleGeometry = new RoundedRectangleGeometry(d2dFactory, new RoundedRectangle() { RadiusX = 32, RadiusY = 32, Rect = new RectangleF(128, 128, width - 128 * 2, height-128 * 2) });
 
             // Ignore all windows events
             Factory factory = swapChain.GetParent<Factory>();

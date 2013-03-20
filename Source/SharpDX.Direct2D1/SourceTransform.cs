@@ -48,7 +48,7 @@ namespace SharpDX.Direct2D1
         /// <returns>No documentation.</returns>	
         /// <include file='.\..\Documentation\CodeComments.xml' path="/comments/comment[@id='ID2D1SourceTransform::Draw']/*"/>	
         /// <unmanaged>HRESULT ID2D1SourceTransform::Draw([In] ID2D1Bitmap1* target,[In] const RECT* drawRect,[In] D2D_POINT_2U targetOrigin)</unmanaged>	
-        void Draw(SharpDX.Direct2D1.Bitmap1 target, SharpDX.Rectangle drawRect, SharpDX.DrawingPoint targetOrigin);
+        void Draw(SharpDX.Direct2D1.Bitmap1 target, SharpDX.Rectangle drawRect, SharpDX.Point targetOrigin);
     }
 }
 #endif

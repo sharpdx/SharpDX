@@ -72,7 +72,7 @@ namespace SharpDX.Toolkit
         /// Gets the client bounds.
         /// </summary>
         /// <value>The client bounds.</value>
-        public abstract DrawingRectangle ClientBounds { get; }
+        public abstract Rectangle ClientBounds { get; }
 
         /// <summary>
         /// Gets the current orientation.

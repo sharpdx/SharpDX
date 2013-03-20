@@ -32,13 +32,13 @@ namespace SharpDX.WIC
         /// <msdn-id>ee690185</msdn-id>	
         /// <unmanaged>HRESULT IWICBitmapSource::GetSize([Out] unsigned int* puiWidth,[Out] unsigned int* puiHeight)</unmanaged>	
         /// <unmanaged-short>IWICBitmapSource::GetSize</unmanaged-short>	
-        public DrawingSize Size
+        public Size2 Size
         {
             get
             {
                 int width, height;
                 GetSize(out width, out height);
-                return new DrawingSize(width, height);
+                return new Size2(width, height);
             }
         }
 
@@ -55,9 +55,12 @@ namespace SharpDX.WIC
         /// <msdn-id>ee690179</msdn-id>	
         /// <unmanaged>HRESULT IWICBitmapSource::CopyPixels([In, Optional] const WICRect* prc,[In] unsigned int cbStride,[In] unsigned int cbBufferSize,[In] void* pbBuffer)</unmanaged>	
         /// <unmanaged-short>IWICBitmapSource::CopyPixels</unmanaged-short>	
-        public void CopyPixels(DrawingRectangle rectangle, int stride, DataPointer dataPointer)
+        public unsafe void CopyPixels(Rectangle rectangle, int stride, DataPointer dataPointer)
         {
-            CopyPixels(rectangle, stride, (int) dataPointer.Size, dataPointer.Pointer);
+            var copyRect = rectangle;
+            copyRect.MakeXYAndWidthHeight();
+
+            CopyPixels(new IntPtr(&copyRect), stride, (int) dataPointer.Size, dataPointer.Pointer);
         }
 
         /// <summary>	
@@ -74,7 +77,7 @@ namespace SharpDX.WIC
         /// <unmanaged-short>IWICBitmapSource::CopyPixels</unmanaged-short>	
         public void CopyPixels(int stride, DataPointer dataPointer)
         {
-            CopyPixels(null, stride, (int)dataPointer.Size, dataPointer.Pointer);
+            CopyPixels(IntPtr.Zero, stride, (int)dataPointer.Size, dataPointer.Pointer);
         }
 
         /// <summary>	
@@ -92,7 +95,7 @@ namespace SharpDX.WIC
         /// <unmanaged-short>IWICBitmapSource::CopyPixels</unmanaged-short>	
         public void CopyPixels(int stride, IntPtr dataPointer, int size)
         {
-            CopyPixels(null, stride, size, dataPointer);
+            CopyPixels(IntPtr.Zero, stride, size, dataPointer);
         }
 
         /// <summary>	
@@ -108,12 +111,15 @@ namespace SharpDX.WIC
         /// <msdn-id>ee690179</msdn-id>	
         /// <unmanaged>HRESULT IWICBitmapSource::CopyPixels([In, Optional] const WICRect* prc,[In] unsigned int cbStride,[In] unsigned int cbBufferSize,[In] void* pbBuffer)</unmanaged>	
         /// <unmanaged-short>IWICBitmapSource::CopyPixels</unmanaged-short>	
-        public unsafe void CopyPixels<T>(DrawingRectangle rectangle, T[] output) where T : struct
+        public unsafe void CopyPixels<T>(Rectangle rectangle, T[] output) where T : struct
         {
             if ((rectangle.Width * rectangle.Height) != output.Length)
                 throw new ArgumentException("output.Length must be equal to Width * Height");
 
-            CopyPixels(null, rectangle.Width * Utilities.SizeOf<T>(), (int)output.Length * Utilities.SizeOf<T>(), (IntPtr)Interop.Fixed(output));
+            var copyRect = rectangle;
+            copyRect.MakeXYAndWidthHeight();
+
+            CopyPixels(new IntPtr(&copyRect), rectangle.Width * Utilities.SizeOf<T>(), (int)output.Length * Utilities.SizeOf<T>(), (IntPtr)Interop.Fixed(output));
         }
 
         /// <summary>	
@@ -134,7 +140,7 @@ namespace SharpDX.WIC
             if ( (size.Width * size.Height) != output.Length)
                 throw new ArgumentException("output.Length must be equal to Width * Height");
 
-            CopyPixels(null, Size.Width * Utilities.SizeOf<T>(), (int)output.Length * Utilities.SizeOf<T>(), (IntPtr)Interop.Fixed(output));
+            CopyPixels(IntPtr.Zero, Size.Width * Utilities.SizeOf<T>(), (int)output.Length * Utilities.SizeOf<T>(), (IntPtr)Interop.Fixed(output));
         }
     }
 }

@@ -53,7 +53,7 @@ namespace BitmapApp
             {
                 var sourceArea = new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height);
                 var bitmapProperties = new BitmapProperties(new PixelFormat(Format.R8G8B8A8_UNorm, AlphaMode.Premultiplied));
-                var size = new DrawingSize(bitmap.Width, bitmap.Height);
+                var size = new Size2(bitmap.Width, bitmap.Height);
 
                 // Transform pixels from BGRA to RGBA
                 int stride = bitmap.Width * sizeof(int);

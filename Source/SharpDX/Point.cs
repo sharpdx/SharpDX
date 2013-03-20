@@ -31,14 +31,14 @@ namespace SharpDX
     [Serializable]
 #endif
     [StructLayout(LayoutKind.Sequential)]
-    public struct DrawingPoint : IEquatable<DrawingPoint>, IDataSerializable
+    public struct Point : IEquatable<Point>, IDataSerializable
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DrawingPoint"/> struct.
+        /// Initializes a new instance of the <see cref="Point"/> struct.
         /// </summary>
         /// <param name="x">The x.</param>
         /// <param name="y">The y.</param>
-        public DrawingPoint(int x, int y)
+        public Point(int x, int y)
         {
             X = x;
             Y = y;
@@ -57,11 +57,11 @@ namespace SharpDX
         /// <summary>
         /// Determines whether the specified <see cref="System.Object"/> is equal to this instance.
         /// </summary>
-        /// <param name="obj">The <see cref="System.Object"/> to compare with this instance.</param>
+        /// <param name="other">The <see cref="System.Object"/> to compare with this instance.</param>
         /// <returns>
         ///   <c>true</c> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(DrawingPoint other)
+        public bool Equals(Point other)
         {
             return other.X == X && other.Y == Y;
         }
@@ -70,8 +70,8 @@ namespace SharpDX
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            if (obj.GetType() != typeof(DrawingPoint)) return false;
-            return Equals((DrawingPoint)obj);
+            if (obj.GetType() != typeof(Point)) return false;
+            return Equals((Point)obj);
         }
 
         /// <inheritdoc/>
@@ -91,7 +91,7 @@ namespace SharpDX
         /// <returns>
         /// The result of the operator.
         /// </returns>
-        public static bool operator ==(DrawingPoint left, DrawingPoint right)
+        public static bool operator ==(Point left, Point right)
         {
             return left.Equals(right);
         }
@@ -104,7 +104,7 @@ namespace SharpDX
         /// <returns>
         /// The result of the operator.
         /// </returns>
-        public static bool operator !=(DrawingPoint left, DrawingPoint right)
+        public static bool operator !=(Point left, Point right)
         {
             return !left.Equals(right);
         }
@@ -112,6 +112,26 @@ namespace SharpDX
         public override string ToString()
         {
             return string.Format("({0},{1})", X, Y);
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="SharpDX.Vector2"/> to <see cref="Point"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static explicit operator Point(Vector2 value)
+        {
+            return new Point((int)value.X, (int)value.Y);
+        }
+
+        /// <summary>
+        /// Performs an explicit conversion from <see cref="Point"/> to <see cref="SharpDX.Vector2"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static implicit operator Vector2(Point value)
+        {
+            return new Vector2(value.X, value.Y);
         }
 
         /// <inheritdoc/>

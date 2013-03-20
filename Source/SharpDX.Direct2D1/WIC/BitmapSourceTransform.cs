@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+
 namespace SharpDX.WIC
 {
     public partial class BitmapSourceTransform
@@ -33,7 +35,7 @@ namespace SharpDX.WIC
         /// <unmanaged>HRESULT IWICBitmapSourceTransform::CopyPixels([In, Optional] const WICRect* prc,[In] unsigned int uiWidth,[In] unsigned int uiHeight,[In, Optional] GUID* pguidDstFormat,[In] WICBitmapTransformOptions dstTransform,[In] unsigned int nStride,[In] unsigned int cbBufferSize,[In] void* pbBuffer)</unmanaged>
         public void CopyPixels(int width, int height, int stride, DataStream output)
         {
-            CopyPixels(null, width, height, null, BitmapTransformOptions.Rotate0, stride, (int)output.Length,
+            CopyPixels(IntPtr.Zero, width, height, null, BitmapTransformOptions.Rotate0, stride, (int)output.Length,
                        output.DataPointer);
         }
 
@@ -49,7 +51,7 @@ namespace SharpDX.WIC
         /// <unmanaged>HRESULT IWICBitmapSourceTransform::CopyPixels([In, Optional] const WICRect* prc,[In] unsigned int uiWidth,[In] unsigned int uiHeight,[In, Optional] GUID* pguidDstFormat,[In] WICBitmapTransformOptions dstTransform,[In] unsigned int nStride,[In] unsigned int cbBufferSize,[In] void* pbBuffer)</unmanaged>
         public void CopyPixels(int width, int height, SharpDX.WIC.BitmapTransformOptions dstTransform, int stride, DataStream output)
         {
-            CopyPixels(null, width, height, null, dstTransform, stride, (int)output.Length,
+            CopyPixels(IntPtr.Zero, width, height, null, dstTransform, stride, (int)output.Length,
                        output.DataPointer);
         }
 
@@ -66,7 +68,7 @@ namespace SharpDX.WIC
         /// <unmanaged>HRESULT IWICBitmapSourceTransform::CopyPixels([In, Optional] const WICRect* prc,[In] unsigned int uiWidth,[In] unsigned int uiHeight,[In, Optional] GUID* pguidDstFormat,[In] WICBitmapTransformOptions dstTransform,[In] unsigned int nStride,[In] unsigned int cbBufferSize,[In] void* pbBuffer)</unmanaged>
         public void CopyPixels(int width, int height, System.Guid guidDstFormat, SharpDX.WIC.BitmapTransformOptions dstTransform, int stride, DataStream output)
         {
-            CopyPixels(null, width, height, guidDstFormat, dstTransform, stride, (int)output.Length,
+            CopyPixels(IntPtr.Zero, width, height, guidDstFormat, dstTransform, stride, (int)output.Length,
                        output.DataPointer);
         }
 
@@ -82,9 +84,10 @@ namespace SharpDX.WIC
         /// <param name="output">The output.</param>
         /// <returns></returns>
         /// <unmanaged>HRESULT IWICBitmapSourceTransform::CopyPixels([In, Optional] const WICRect* prc,[In] unsigned int uiWidth,[In] unsigned int uiHeight,[In, Optional] GUID* pguidDstFormat,[In] WICBitmapTransformOptions dstTransform,[In] unsigned int nStride,[In] unsigned int cbBufferSize,[In] void* pbBuffer)</unmanaged>
-        public void CopyPixels(DrawingRectangle rectangle, int width, int height, System.Guid guidDstFormat, SharpDX.WIC.BitmapTransformOptions dstTransform, int stride, DataStream output)
+        public unsafe void CopyPixels(Rectangle rectangle, int width, int height, System.Guid guidDstFormat, SharpDX.WIC.BitmapTransformOptions dstTransform, int stride, DataStream output)
         {
-            CopyPixels(rectangle, width, height, guidDstFormat, dstTransform, stride, (int) output.Length,
+            rectangle.MakeXYAndWidthHeight();
+            CopyPixels(new IntPtr(&rectangle), width, height, guidDstFormat, dstTransform, stride, (int) output.Length,
                        output.DataPointer);
         }
 
@@ -94,7 +97,7 @@ namespace SharpDX.WIC
         /// <param name="size">The size.</param>
         /// <returns></returns>
         /// <unmanaged>HRESULT IWICBitmapSourceTransform::GetClosestSize([InOut] unsigned int* puiWidth,[InOut] unsigned int* puiHeight)</unmanaged>
-        public void GetClosestSize(ref DrawingSize size)
+        public void GetClosestSize(ref Size2 size)
         {
             int width = size.Width;
             int height = size.Height;

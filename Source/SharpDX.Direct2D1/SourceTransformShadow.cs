@@ -69,8 +69,8 @@ namespace SharpDX.Direct2D1
 
             /// <unmanaged>HRESULT ID2D1SourceTransform::Draw([In] ID2D1Bitmap1* target,[In] const RECT* drawRect,[In] D2D_POINT_2U targetOrigin)</unmanaged>	
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            private delegate int DrawDelegate(IntPtr thisPtr, IntPtr target, IntPtr drawRect, SharpDX.DrawingPoint targetOrigin);
-            private unsafe static int DrawImpl(IntPtr thisPtr, IntPtr target, IntPtr drawRect, SharpDX.DrawingPoint targetOrigin)
+            private delegate int DrawDelegate(IntPtr thisPtr, IntPtr target, IntPtr drawRect, SharpDX.Point targetOrigin);
+            private unsafe static int DrawImpl(IntPtr thisPtr, IntPtr target, IntPtr drawRect, SharpDX.Point targetOrigin)
             {
                 try
                 {

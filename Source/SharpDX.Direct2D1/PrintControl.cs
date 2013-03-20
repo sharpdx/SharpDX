@@ -53,7 +53,7 @@ namespace SharpDX.Direct2D1
         /// <msdn-id>hh847997</msdn-id>	
         /// <unmanaged>HRESULT ID2D1PrintControl::AddPage([In] ID2D1CommandList* commandList,[In] D2D_SIZE_F pageSize,[In, Optional] IStream* pagePrintTicketStream,[Out, Optional] unsigned longlong* tag1,[Out, Optional] unsigned longlong* tag2)</unmanaged>	
         /// <unmanaged-short>ID2D1PrintControl::AddPage</unmanaged-short>	
-        public void AddPage(SharpDX.Direct2D1.CommandList commandList, SharpDX.DrawingSizeF pageSize)
+        public void AddPage(SharpDX.Direct2D1.CommandList commandList, SharpDX.Size2F pageSize)
         {
             long tag1;
             long tag2;
@@ -71,7 +71,7 @@ namespace SharpDX.Direct2D1
         /// <msdn-id>hh847997</msdn-id>	
         /// <unmanaged>HRESULT ID2D1PrintControl::AddPage([In] ID2D1CommandList* commandList,[In] D2D_SIZE_F pageSize,[In, Optional] IStream* pagePrintTicketStream,[Out, Optional] unsigned longlong* tag1,[Out, Optional] unsigned longlong* tag2)</unmanaged>	
         /// <unmanaged-short>ID2D1PrintControl::AddPage</unmanaged-short>	
-        public void AddPage(SharpDX.Direct2D1.CommandList commandList, SharpDX.DrawingSizeF pageSize, out long tag1, out long tag2)
+        public void AddPage(SharpDX.Direct2D1.CommandList commandList, SharpDX.Size2F pageSize, out long tag1, out long tag2)
         {
             AddPage_(commandList, pageSize, IntPtr.Zero, out tag1, out tag2);
         }

@@ -49,7 +49,7 @@ namespace TextRenderingApp
             base.Draw(time);
 
             // Draw the TextLayout
-            RenderTarget2D.DrawTextLayout(new DrawingPointF(0,0), TextLayout, SceneColorBrush, DrawTextOptions.None );
+            RenderTarget2D.DrawTextLayout(new Vector2(0,0), TextLayout, SceneColorBrush, DrawTextOptions.None );
         }
 
 

@@ -41,7 +41,7 @@ namespace SharpDX.Direct2D1
         /// <param name="options">A value that specifies whether the new render target must be compatible with GDI.</param>
         /// <param name="desiredSize">The desired size of the new render target in device-independent pixels if it should be different from the original render target. For more information, see the Remarks section.</param>
         /// <unmanaged>HRESULT CreateCompatibleRenderTarget([In, Optional] const D2D1_SIZE_F* desiredSize,[In, Optional] const D2D1_SIZE_U* desiredPixelSize,[In, Optional] const D2D1_PIXEL_FORMAT* desiredFormat,[None] D2D1_COMPATIBLE_RENDER_TARGET_OPTIONS options,[Out] ID2D1BitmapRenderTarget** bitmapRenderTarget)</unmanaged>
-        public BitmapRenderTarget(RenderTarget renderTarget, SharpDX.Direct2D1.CompatibleRenderTargetOptions options, DrawingSizeF desiredSize)
+        public BitmapRenderTarget(RenderTarget renderTarget, SharpDX.Direct2D1.CompatibleRenderTargetOptions options, Size2F desiredSize)
             : this(renderTarget, options, desiredSize, null, null)
         {
         }
@@ -70,7 +70,7 @@ namespace SharpDX.Direct2D1
         /// <param name="desiredFormat">The desired pixel format and alpha mode of the new render target. If the pixel format is set to DXGI_FORMAT_UNKNOWN, the new render target uses the same pixel format as the original render target. If the alpha mode is <see cref="SharpDX.Direct2D1.AlphaMode.Unknown"/>, the alpha mode of the new render target defaults to D2D1_ALPHA_MODE_PREMULTIPLIED. For information about supported pixel formats, see  {{Supported Pixel  Formats and Alpha Modes}}.</param>
         /// <param name="options">A value that specifies whether the new render target must be compatible with GDI.</param>
         /// <unmanaged>HRESULT CreateCompatibleRenderTarget([In, Optional] const D2D1_SIZE_F* desiredSize,[In, Optional] const D2D1_SIZE_U* desiredPixelSize,[In, Optional] const D2D1_PIXEL_FORMAT* desiredFormat,[None] D2D1_COMPATIBLE_RENDER_TARGET_OPTIONS options,[Out] ID2D1BitmapRenderTarget** bitmapRenderTarget)</unmanaged>
-        public BitmapRenderTarget(RenderTarget renderTarget, SharpDX.Direct2D1.CompatibleRenderTargetOptions options, DrawingSizeF? desiredSize, DrawingSize? desiredPixelSize, SharpDX.Direct2D1.PixelFormat? desiredFormat) : base(IntPtr.Zero)
+        public BitmapRenderTarget(RenderTarget renderTarget, SharpDX.Direct2D1.CompatibleRenderTargetOptions options, Size2F? desiredSize, Size2? desiredPixelSize, SharpDX.Direct2D1.PixelFormat? desiredFormat) : base(IntPtr.Zero)
         {
             renderTarget.CreateCompatibleRenderTarget(desiredSize, desiredPixelSize, desiredFormat, options, this);
         }

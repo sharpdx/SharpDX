@@ -62,14 +62,14 @@ namespace SharpDX.Direct2D1
         /// <remarks>	
         /// Use this method to obtain the system DPI when setting physical pixel values, such as when you specify the size of a window. 	
         /// </remarks>	
-        public DrawingSizeF DesktopDpi
+        public Size2F DesktopDpi
         {
             get
             {
                 float y;
                 float x;
                 GetDesktopDpi(out x, out y);
-                return new DrawingSizeF(x, y);
+                return new Size2F(x, y);
             }
         }
     }

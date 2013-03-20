@@ -254,8 +254,8 @@ namespace SharpDX.Toolkit.Graphics
                                                var glyphRect = new Vector2(glyph.Subrect.Right - glyph.Subrect.Left, glyph.Subrect.Top - glyph.Subrect.Bottom);
                                                Vector2.Modulate(ref glyphRect, ref axisIsMirroredTable[(int) spriteEffects & 3], out offset);
                                            }
-                                           var destination = new DrawingRectangleF(position.X, position.Y, localScale.X, localScale.Y);
-                                           DrawingRectangle? sourceRectangle = glyph.Subrect;
+                                           var destination = new RectangleF(position.X, position.Y, localScale.X, localScale.Y);
+                                           Rectangle? sourceRectangle = glyph.Subrect;
                                            spriteBatch.DrawSprite(textures[glyph.BitmapIndex], ref destination, true, ref sourceRectangle, color, rotation, ref offset, spriteEffects, depth);
                                        });
         }

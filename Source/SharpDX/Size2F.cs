@@ -31,14 +31,14 @@ namespace SharpDX
     [Serializable]
 #endif
     [StructLayout(LayoutKind.Sequential)]
-    public struct DrawingSizeF : IEquatable<DrawingSizeF>, IDataSerializable
+    public struct Size2F : IEquatable<Size2F>, IDataSerializable
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DrawingSizeF"/> struct.
+        /// Initializes a new instance of the <see cref="Size2F"/> struct.
         /// </summary>
         /// <param name="width">The x.</param>
         /// <param name="height">The y.</param>
-        public DrawingSizeF(float width, float height)
+        public Size2F(float width, float height)
         {
             Width = width;
             Height = height;
@@ -61,7 +61,7 @@ namespace SharpDX
         /// <returns>
         ///   <c>true</c> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(DrawingSizeF other)
+        public bool Equals(Size2F other)
         {
             return other.Width == Width && other.Height == Height;
         }
@@ -70,8 +70,8 @@ namespace SharpDX
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            if (obj.GetType() != typeof(DrawingSizeF)) return false;
-            return Equals((DrawingSizeF)obj);
+            if (obj.GetType() != typeof(Size2F)) return false;
+            return Equals((Size2F)obj);
         }
 
         /// <inheritdoc/>
@@ -91,7 +91,7 @@ namespace SharpDX
         /// <returns>
         /// The result of the operator.
         /// </returns>
-        public static bool operator ==(DrawingSizeF left, DrawingSizeF right)
+        public static bool operator ==(Size2F left, Size2F right)
         {
             return left.Equals(right);
         }
@@ -104,7 +104,7 @@ namespace SharpDX
         /// <returns>
         /// The result of the operator.
         /// </returns>
-        public static bool operator !=(DrawingSizeF left, DrawingSizeF right)
+        public static bool operator !=(Size2F left, Size2F right)
         {
             return !left.Equals(right);
         }

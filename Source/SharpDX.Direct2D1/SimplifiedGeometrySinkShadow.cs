@@ -70,8 +70,8 @@ namespace SharpDX.Direct2D1
             }
 
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            private delegate void BeginFigureDelegate(IntPtr thisPtr, DrawingPointF startPoint, SharpDX.Direct2D1.FigureBegin figureBegin);
-            private static void BeginFigureImpl(IntPtr thisPtr, DrawingPointF startPoint, SharpDX.Direct2D1.FigureBegin figureBegin)
+            private delegate void BeginFigureDelegate(IntPtr thisPtr, Vector2 startPoint, SharpDX.Direct2D1.FigureBegin figureBegin);
+            private static void BeginFigureImpl(IntPtr thisPtr, Vector2 startPoint, SharpDX.Direct2D1.FigureBegin figureBegin)
             {
                 var shadow = ToShadow<SimplifiedGeometrySinkShadow>(thisPtr);
                 var callback = (SimplifiedGeometrySink)shadow.Callback;
@@ -86,7 +86,7 @@ namespace SharpDX.Direct2D1
                 {
                     var shadow = ToShadow<SimplifiedGeometrySinkShadow>(thisPtr);
                     var callback = (SimplifiedGeometrySink)shadow.Callback;
-                    var managedPoints = new DrawingPointF[pointsCount];
+                    var managedPoints = new Vector2[pointsCount];
                     Utilities.Read(points, managedPoints, 0, pointsCount);
                     callback.AddLines(managedPoints);
                 }

@@ -43,7 +43,7 @@ namespace SharpDX.Toolkit.Input
         /// <summary>
         /// The location of pointer input point in client coordinates.
         /// </summary>
-        public DrawingPointF Position { get; internal set; }
+        public Vector2 Position { get; internal set; }
 
         /// <summary>
         /// The timestamp when the event occured.
@@ -58,7 +58,7 @@ namespace SharpDX.Toolkit.Input
         /// <summary>
         /// The bounding rectangle of the contact area (typically for touch).
         /// </summary>
-        public DrawingRectangleF ContactRect { get; internal set; }
+        public RectangleF ContactRect { get; internal set; }
 
         /// <summary>
         /// Indicates whether the barrel button of the pen/stylus device is pressed.
