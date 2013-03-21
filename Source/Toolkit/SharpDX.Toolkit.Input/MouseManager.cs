@@ -88,9 +88,9 @@ namespace SharpDX.Toolkit.Input
         /// <summary>
         /// Sets the position of mouse pointer
         /// </summary>
-        /// <param name="point">The desired position</param>
+        /// <param name="point">The desired position in the range X/Y [0,1]</param>
         /// <exception cref="InvalidOperationException">Is thrown when <see cref="MouseManager"/> is not initialized</exception>
-        public void SetPosition(Point point)
+        public void SetPosition(Vector2 point)
         {
             if (platform == null)
                 throw new InvalidOperationException("MouseManager is not initialized.");

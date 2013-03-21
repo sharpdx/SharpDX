@@ -85,6 +85,7 @@ namespace MouseInput
         protected override void Initialize()
         {
             Window.Title = "MouseInput demo";
+            Window.IsMouseVisible = true;
             base.Initialize();
         }
 

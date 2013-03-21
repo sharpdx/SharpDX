@@ -35,6 +35,6 @@ namespace SharpDX.Toolkit.Input
         /// Sets the position of mouse pointer
         /// </summary>
         /// <param name="point">The desired position</param>
-        void SetPosition(Point point);
+        void SetPosition(Vector2 point);
     }
 }

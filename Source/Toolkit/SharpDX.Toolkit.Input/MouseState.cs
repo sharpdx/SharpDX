@@ -31,8 +31,8 @@ namespace SharpDX.Toolkit.Input
         private readonly ButtonState right;
         private readonly ButtonState xButton1;
         private readonly ButtonState xButton2;
-        private readonly int x;
-        private readonly int y;
+        private readonly float x;
+        private readonly float y;
         private readonly int wheelDelta;
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace SharpDX.Toolkit.Input
         /// <param name="x">X-position of the mouse cursor</param>
         /// <param name="y">Y-position of the mouse cursor</param>
         /// <param name="wheelDelta">Delta of mouse wheel relative to previous input event</param>
-        public MouseState(ButtonState left, ButtonState middle, ButtonState right, ButtonState xButton1, ButtonState xButton2, int x, int y, int wheelDelta)
+        public MouseState(ButtonState left, ButtonState middle, ButtonState right, ButtonState xButton1, ButtonState xButton2, float x, float y, int wheelDelta)
         {
             this.left = left;
             this.middle = middle;
@@ -84,14 +84,14 @@ namespace SharpDX.Toolkit.Input
         public ButtonState XButton2 { get { return xButton2; } }
 
         /// <summary>
-        /// X-position of the mouse cursor
+        /// X-position of the mouse cursor in the range [0,1]
         /// </summary>
-        public int X { get { return x; } }
+        public float X { get { return x; } }
 
         /// <summary>
-        /// Y-position of the mouse cursor
+        /// Y-position of the mouse cursor in the range [0,1]
         /// </summary>
-        public int Y { get { return y; } }
+        public float Y { get { return y; } }
 
         /// <summary>
         /// Gets the cumulative mouse scroll wheel value since the game was started.

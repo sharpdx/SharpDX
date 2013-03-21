@@ -23,7 +23,6 @@
 namespace SharpDX.Toolkit.Input
 {
     using System;
-    using System.Runtime.InteropServices;
     using System.Windows.Forms;
 
     /// <summary>
@@ -31,19 +30,19 @@ namespace SharpDX.Toolkit.Input
     /// </summary>
     internal sealed class MousePlatformDesktop : MousePlatform
     {
-        [DllImport("user32.dll")]
-        static extern bool SetCursorPos(int X, int Y);
+        private Control control;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="WindowBinderDesktop"/> class.
+        /// Initializes a new instance of <see cref="MousePlatformDesktop" /> class.
         /// </summary>
-        /// <param name="nativeWindow">A reference to <see cref="Control"/> class.</param>
+        /// <param name="nativeWindow">A reference to <see cref="Control" /> class.</param>
         public MousePlatformDesktop(object nativeWindow) : base(nativeWindow) { }
 
         /// <inheritdoc />
-        internal override void SetLocation(Point point)
+        internal override void SetLocation(Vector2 point)
         {
-            SetCursorPos(point.X, point.Y);
+            point.Saturate();
+            Cursor.Position = control.PointToScreen(new System.Drawing.Point((int)(point.X * control.Width), (int)(point.Y * control.Height)));
         }
 
         /// <summary>
@@ -56,28 +55,25 @@ namespace SharpDX.Toolkit.Input
         {
             if(nativeWindow == null) throw new ArgumentNullException("nativeWindow");
 
-            var w = (Control)nativeWindow;
+            control = (Control)nativeWindow;
 
-            w.MouseDown += HandleMouseDown;
-            w.MouseUp += HandleMouseUp;
-            w.MouseMove += HandleMouseMove;
-            w.MouseWheel += HandleMouseWheel;
+            control.MouseDown += HandleMouseDown;
+            control.MouseUp += HandleMouseUp;
+            control.MouseMove += HandleMouseMove;
+            control.MouseWheel += HandleMouseWheel;
         }
 
         /// <summary>
         /// Returns the mouse cursor position from cached values
         /// </summary>
-        /// <param name="nativeWindow">A reference to <see cref="Control"/> class.</param>
-        /// <exception cref="ArgumentNullException">Is thrown when <paramref name="nativeWindow"/> is null.</exception>
-        /// <exception cref="InvalidCastException">Is thrown when <paramref name="nativeWindow"/> is not an instance of the <see cref="Control"/> class.</exception>
-        protected override Point GetLocationInternal(object nativeWindow)
+        protected override Vector2 GetLocationInternal()
         {
-            if(nativeWindow == null) throw new ArgumentNullException("nativeWindow");
+            var p = control.PointToClient(Cursor.Position);
 
-            var w = (Control)nativeWindow;
-            var p = w.PointToClient(Cursor.Position);
-
-            return new Point(p.X, p.Y);
+            var clientSize = control.ClientSize;
+            var position = new Vector2((float)p.X / clientSize.Width, (float)p.Y / clientSize.Height);
+            position.Saturate();
+            return position;
         }
 
         /// <summary>

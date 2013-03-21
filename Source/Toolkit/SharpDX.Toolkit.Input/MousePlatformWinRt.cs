@@ -38,14 +38,17 @@ namespace SharpDX.Toolkit.Input
     internal class MousePlatformWinRT : MousePlatform
     {
         // keep the mouse cursor location from last event
-        private int pointerX;
-        private int pointerY;
+        private Vector2 pointerPosition;
 
         /// <summary>
         /// Initializes a new instance of <see cref="MousePlatformWinRT"/> class.
         /// </summary>
         /// <param name="nativeWindow">A reference to <see cref="CoreWindow"/> or <see cref="UIElement"/> class.</param>
         internal MousePlatformWinRT(object nativeWindow) : base(nativeWindow) { }
+
+        private FrameworkElement uiElement;
+
+        private Size2F windowSize;
 
         /// <summary>
         /// Binds to specific events of the provided CoreWindow
@@ -59,34 +62,58 @@ namespace SharpDX.Toolkit.Input
             var window = nativeWindow as CoreWindow;
             if (window != null)
             {
+                windowSize = new Size2F((float)window.Bounds.Width, (float)window.Bounds.Height);
+                var position = window.PointerPosition;
+                pointerPosition = new Vector2((float)position.X/windowSize.Width, (float)position.Y / windowSize.Height);
+
                 window.PointerPressed += HandleWindowPointerEvent;
                 window.PointerReleased += HandleWindowPointerEvent;
                 window.PointerWheelChanged += HandleWindowPointerEvent;
                 window.PointerMoved += HandleWindowPointerEvent;
+                window.SizeChanged += window_SizeChanged;
                 return;
             }
 
-            var uiElement = nativeWindow as UIElement;
+            uiElement = nativeWindow as FrameworkElement;
             if (uiElement != null)
             {
+                windowSize = new Size2F((float)uiElement.ActualWidth, (float)uiElement.ActualHeight);
+                uiElement.Loaded += HandleLoadedEvent;
+                uiElement.SizeChanged += HandleSizeChangedEvent;
                 uiElement.PointerPressed += HandleUIElementPointerEvent;
                 uiElement.PointerReleased += HandleUIElementPointerEvent;
                 uiElement.PointerWheelChanged += HandleUIElementPointerEvent;
                 uiElement.PointerMoved += HandleUIElementPointerEvent;
+                uiElement.PointerEntered += HandleUIElementPointerEvent;
                 return;
             }
 
             throw new ArgumentException("Should be an instance of either CoreWindow or UIElement", "nativeWindow");
         }
 
+        void window_SizeChanged(CoreWindow sender, WindowSizeChangedEventArgs args)
+        {
+            windowSize = new Size2F((float)args.Size.Width, (float)args.Size.Height);
+            args.Handled = true;
+        }
+
         /// <summary>
         /// Returns the mouse cursor position from cached values
         /// </summary>
-        /// <param name="nativeWindow">A reference to <see cref="CoreWindow"/> or <see cref="UIElement"/> class.</param>
         /// <returns>The location of mouse cursor</returns>
-        protected override Point GetLocationInternal(object nativeWindow)
+        protected override Vector2 GetLocationInternal()
         {
-            return new Point(pointerX, pointerY);
+            return pointerPosition;
+        }
+
+        private void HandleLoadedEvent(object sender, RoutedEventArgs e)
+        {
+            windowSize = new Size2F((float)uiElement.ActualWidth, (float)uiElement.ActualHeight);
+        }
+
+        private void HandleSizeChangedEvent(object sender, SizeChangedEventArgs e)
+        {
+            windowSize = new Size2F((float)e.NewSize.Width, (float)e.NewSize.Height);
         }
 
         /// <summary>
@@ -133,9 +160,7 @@ namespace SharpDX.Toolkit.Input
         private void UpdateMouse(WinRTPointerPoint p)
         {
             // adjust mouse position from Device-Independent-Pixels to physical pixels
-            var dipFactor = DisplayProperties.LogicalDpi / 96.0f;
-            pointerX = (int)(p.Position.X * dipFactor);
-            pointerY = (int)(p.Position.Y * dipFactor);
+            pointerPosition = new Vector2((float)p.Position.X / windowSize.Width, (float)p.Position.Y / windowSize.Height);
 
             // update mouse wheel delta
             OnMouseWheel(p.Properties.MouseWheelDelta);

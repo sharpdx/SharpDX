@@ -418,6 +418,15 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Saturates this instance in the range [0,1]
+        /// </summary>
+        public void Saturate()
+        {
+            X = X < 0.0f ? 0.0f : X > 1.0f ? 1.0f : X;
+            Y = Y < 0.0f ? 0.0f : Y > 1.0f ? 1.0f : Y;
+        }
+
+        /// <summary>
         /// Calculates the distance between two vectors.
         /// </summary>
         /// <param name="value1">The first vector.</param>

@@ -79,17 +79,17 @@ namespace SharpDX.Toolkit.Input
         /// Returns the location of mouse cursor relative to program window
         /// </summary>
         /// <returns></returns>
-        internal Point GetLocation()
+        internal Vector2 GetLocation()
         {
-            return GetLocationInternal(nativeWindow);
+            return GetLocationInternal();
         }
 
         /// <summary>
         /// Sets the mouse cursor location.
         /// </summary>
+        /// <param name="point">The position in space [0,1].</param>
         /// <remarks>Supported only on Desktop platform. On other platforms the call of this method has no effect.</remarks>
-        /// <param name="point"></param>
-        internal virtual void SetLocation(Point point) { }
+        internal virtual void SetLocation(Vector2 point) { }
 
         /// <summary>
         /// Derived classes should implement platform-specific event bindings in this method
@@ -100,8 +100,7 @@ namespace SharpDX.Toolkit.Input
         /// <summary>
         /// Derived classes should implement platform-specific code to retrieve the mouse cursor location
         /// </summary>
-        /// <param name="nativeWindow">The native window object reference</param>
-        protected abstract Point GetLocationInternal(object nativeWindow);
+        protected abstract Vector2 GetLocationInternal();
 
         /// <summary>
         /// Raises the <see cref="MouseDown"/> event
