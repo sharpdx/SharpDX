@@ -13,6 +13,9 @@
     SupportedOrientations="Portrait" Orientation="Portrait"
     shell:SystemTray.IsVisible="False">
 
-    <DrawingSurfaceBackgroundGrid x:Name="DrawingSurface" />
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot" Background="Transparent">
+        <DrawingSurface x:Name="DrawingSurface" />
+    </Grid>
 
 </phone:PhoneApplicationPage>
