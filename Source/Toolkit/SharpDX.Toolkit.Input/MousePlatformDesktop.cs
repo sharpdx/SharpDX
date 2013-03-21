@@ -42,7 +42,8 @@ namespace SharpDX.Toolkit.Input
         internal override void SetLocation(Vector2 point)
         {
             point.Saturate();
-            Cursor.Position = control.PointToScreen(new System.Drawing.Point((int)(point.X * control.Width), (int)(point.Y * control.Height)));
+            var clientSize = control.ClientSize;
+            Cursor.Position = control.PointToScreen(new System.Drawing.Point((int)(point.X * clientSize.Width), (int)(point.Y * clientSize.Height)));
         }
 
         /// <summary>
