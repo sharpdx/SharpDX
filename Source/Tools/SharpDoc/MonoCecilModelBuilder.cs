@@ -168,7 +168,7 @@ namespace SharpDoc
         private void AddType(NNamespace @namespace, TypeDefinition typeDef)
         {
             // Todo add configurable filter
-            if (!typeDef.IsPublic)
+            if (!typeDef.IsPublic && !typeDef.IsNestedPublic)
                 return;
 
             var typeId = DocIdHelper.GetXmlId(typeDef);
@@ -205,6 +205,13 @@ namespace SharpDoc
                 else
                 {
                     throw new InvalidOperationException(string.Format("Unsupported type [{0}]", typeDef.FullName));
+                }
+
+                // Fix nested type name
+                if (typeDef.IsNestedPublic)
+                {
+                    type.Name = type.DeclaringType.Name + "." + type.Name;
+                    type.FullName = type.FullName.Replace("/", ".");
                 }
 
                 _registry.Register(type);

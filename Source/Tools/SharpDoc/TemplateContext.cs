@@ -370,7 +370,7 @@ namespace SharpDoc
                 {
                     var declaringType = ((NMember) linkDescriptor.LocalReference).DeclaringType;
                     // If link is self referencing the current context, then use a self link
-                    if ((id == CurrentContext.Id || (declaringType != null && declaringType.Id == CurrentContext.Id)) && useSelf)
+                    if ((id == CurrentContext.Id || (declaringType != null && declaringType.Id == CurrentContext.Id && (!id.StartsWith("T:") && !declaringType.Id.StartsWith("T:")))) && useSelf)
                     {
                         linkDescriptor.Type = LinkType.Self;
                     }
