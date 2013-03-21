@@ -40,6 +40,10 @@ namespace SharpDX.Toolkit.Input
         /// <exception cref="ArgumentNullException">Is thrown when either <paramref name="nativeWindow"/> or <paramref name="manager"/> is null.</exception>
         internal PointerPlatformWinRT(object nativeWindow, PointerManager manager) : base(nativeWindow, manager) { }
 
+        private FrameworkElement uiElement;
+
+        private Size2F windowSize;
+
         /// <summary>
         /// Binds to pointer events of specified <paramref name="nativeWindow"/> object and raises the corresponding events on <paramref name="manager"/>.
         /// </summary>
@@ -52,6 +56,9 @@ namespace SharpDX.Toolkit.Input
             var window = nativeWindow as CoreWindow;
             if (window != null)
             {
+                windowSize = new Size2F((float)window.Bounds.Width, (float)window.Bounds.Height);
+                window.SizeChanged += window_SizeChanged;
+
                 window.PointerCaptureLost += (_, e) => CreateAndAddPoint(PointerEventType.CaptureLost, e.KeyModifiers, e.CurrentPoint);
                 window.PointerEntered += (_, e) => CreateAndAddPoint(PointerEventType.Entered, e.KeyModifiers, e.CurrentPoint);
                 window.PointerExited += (_, e) => CreateAndAddPoint(PointerEventType.Exited, e.KeyModifiers, e.CurrentPoint);
@@ -62,20 +69,40 @@ namespace SharpDX.Toolkit.Input
                 return;
             }
 
-            var control = nativeWindow as UIElement;
-            if (control != null)
+            uiElement = nativeWindow as FrameworkElement;
+            if (uiElement != null)
             {
-                control.PointerCaptureLost += (_, e) => CreateAndAddPoint(PointerEventType.CaptureLost, e.KeyModifiers, e.GetCurrentPoint(control));
-                control.PointerEntered += (_, e) => CreateAndAddPoint(PointerEventType.Entered, e.KeyModifiers, e.GetCurrentPoint(control));
-                control.PointerExited += (_, e) => CreateAndAddPoint(PointerEventType.Exited, e.KeyModifiers, e.GetCurrentPoint(control));
-                control.PointerMoved += (_, e) => CreateAndAddPoint(PointerEventType.Moved, e.KeyModifiers, e.GetCurrentPoint(control));
-                control.PointerPressed += (_, e) => CreateAndAddPoint(PointerEventType.Pressed, e.KeyModifiers, e.GetCurrentPoint(control));
-                control.PointerReleased += (_, e) => CreateAndAddPoint(PointerEventType.Released, e.KeyModifiers, e.GetCurrentPoint(control));
-                control.PointerWheelChanged += (_, e) => CreateAndAddPoint(PointerEventType.WheelChanged, e.KeyModifiers, e.GetCurrentPoint(control));
+                windowSize = new Size2F((float)uiElement.ActualWidth, (float)uiElement.ActualHeight);
+                uiElement.Loaded += HandleLoadedEvent;
+                uiElement.SizeChanged += HandleSizeChangedEvent;
+                
+                uiElement.PointerCaptureLost += (_, e) => CreateAndAddPoint(PointerEventType.CaptureLost, e.KeyModifiers, e.GetCurrentPoint(uiElement));
+                uiElement.PointerEntered += (_, e) => CreateAndAddPoint(PointerEventType.Entered, e.KeyModifiers, e.GetCurrentPoint(uiElement));
+                uiElement.PointerExited += (_, e) => CreateAndAddPoint(PointerEventType.Exited, e.KeyModifiers, e.GetCurrentPoint(uiElement));
+                uiElement.PointerMoved += (_, e) => CreateAndAddPoint(PointerEventType.Moved, e.KeyModifiers, e.GetCurrentPoint(uiElement));
+                uiElement.PointerPressed += (_, e) => CreateAndAddPoint(PointerEventType.Pressed, e.KeyModifiers, e.GetCurrentPoint(uiElement));
+                uiElement.PointerReleased += (_, e) => CreateAndAddPoint(PointerEventType.Released, e.KeyModifiers, e.GetCurrentPoint(uiElement));
+                uiElement.PointerWheelChanged += (_, e) => CreateAndAddPoint(PointerEventType.WheelChanged, e.KeyModifiers, e.GetCurrentPoint(uiElement));
                 return;
             }
 
             throw new ArgumentException("Should be an instance of either CoreWindow or UIElement", "nativeWindow");
+        }
+
+        void window_SizeChanged(CoreWindow sender, WindowSizeChangedEventArgs args)
+        {
+            windowSize = new Size2F((float)args.Size.Width, (float)args.Size.Height);
+            args.Handled = true;
+        }
+
+        private void HandleLoadedEvent(object sender, RoutedEventArgs e)
+        {
+            windowSize = new Size2F((float)uiElement.ActualWidth, (float)uiElement.ActualHeight);
+        }
+
+        private void HandleSizeChangedEvent(object sender, SizeChangedEventArgs e)
+        {
+            windowSize = new Size2F((float)e.NewSize.Width, (float)e.NewSize.Height);
         }
 
         /// <summary>
@@ -99,9 +126,9 @@ namespace SharpDX.Toolkit.Input
                             DeviceType = GetDeviceType(point.PointerDevice.PointerDeviceType),
                             KeyModifiers = GetKeyModifiers(modifiers),
                             PointerId = point.PointerId,
-                            Position = new Vector2((float)position.X, (float)position.Y),
+                            Position = new Vector2((float)position.X / windowSize.Width, (float)position.Y / windowSize.Height),
                             Timestamp = point.Timestamp,
-                            ContactRect = new RectangleF((float)contactRect.X, (float)contactRect.Y, (float)contactRect.Width, (float)contactRect.Height),
+                            ContactRect = new RectangleF((float)contactRect.X / windowSize.Width, (float)contactRect.Y / windowSize.Height, (float)contactRect.Width / windowSize.Width, (float)contactRect.Height / windowSize.Height),
                             IsBarrelButtonPresset = properties.IsBarrelButtonPressed,
                             IsCanceled = properties.IsCanceled,
                             IsEraser = properties.IsEraser,

@@ -183,7 +183,7 @@ namespace SharpDX.Toolkit.Input
         /// <param name="input">The touch point input structure.</param>
         private void DecodeAndDispatchTouchPoint(TOUCHINPUT input)
         {
-            var position = control.PointToClient(new System.Drawing.Point(AdjustX(input.x), AdjustY(input.y)));
+            var p = control.PointToClient(new System.Drawing.Point(AdjustX(input.x), AdjustY(input.y)));
 
             var mask = input.dwMask;
             var flags = input.dwFlags;
@@ -208,13 +208,17 @@ namespace SharpDX.Toolkit.Input
                 eventType = PointerEventType.Moved;
             }
 
+            var clientSize = control.ClientSize;
+            var position = new Vector2((float)p.X / clientSize.Width, (float)p.Y / clientSize.Height);
+            position.Saturate();
+
             var point = new PointerPoint
                         {
                             EventType = eventType,
                             DeviceType = ((flags & User32.TOUCHEVENTF_PEN) != 0) ? PointerDeviceType.Pen : PointerDeviceType.Touch,
                             PointerId = (uint)input.dwID,
                             Timestamp = (ulong)input.dwTime,
-                            Position = new Vector2(position.X, position.Y),
+                            Position = position,
                             KeyModifiers = GetCurrentKeyModifiers(),
                             IsPrimary = isPrimary,
                             IsInRange = (flags & User32.TOUCHEVENTF_INRANGE) != 0,
@@ -223,7 +227,7 @@ namespace SharpDX.Toolkit.Input
                         };
 
             if ((mask & User32.TOUCHINPUTMASKF_CONTACTAREA) != 0)
-                point.ContactRect = new RectangleF(position.X, position.Y, AdjustX(input.cxContact), AdjustY(input.cyContact));
+                point.ContactRect = new RectangleF(position.X, position.Y, (float)AdjustX(input.cxContact) / clientSize.Width, (float)AdjustY(input.cyContact) / clientSize.Height);
 
             manager.AddPointerEvent(ref point);
         }

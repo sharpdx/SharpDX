@@ -104,9 +104,13 @@ namespace SharpDX.Toolkit.Input
         /// <param name="wheelDelta">The current mouse wheel delta.</param>
         private void CreateAndAddPoint(PointerEventType eventType, PointerUpdateKind pointerUpdateKind, int wheelDelta)
         {
-            var position = control.PointToClient(Control.MousePosition);
+            var p = control.PointToClient(Control.MousePosition);
 
             var mouseButtons = Control.MouseButtons;
+
+            var clientSize = control.ClientSize;
+            var position = new Vector2((float)p.X / clientSize.Width, (float)p.Y / clientSize.Height);
+            position.Saturate();
 
             var point = new PointerPoint
                    {
@@ -114,7 +118,7 @@ namespace SharpDX.Toolkit.Input
                        DeviceType = PointerDeviceType.Mouse,
                        KeyModifiers = GetCurrentKeyModifiers(),
                        PointerId = 0,
-                       Position = new Vector2(position.X, position.Y),
+                       Position = position,
                        Timestamp = (ulong)DateTime.Now.Ticks,
                        ContactRect = new RectangleF(position.X, position.Y, 0f, 0f),
                        IsBarrelButtonPresset = false,

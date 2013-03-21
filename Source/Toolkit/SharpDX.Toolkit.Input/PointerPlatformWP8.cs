@@ -31,6 +31,8 @@ namespace SharpDX.Toolkit.Input
     /// <remarks>Implements <see cref="IDrawingSurfaceManipulationHandler"/>.</remarks>
     internal sealed class PointerPlatformWP8 : PointerPlatform, IDrawingSurfaceManipulationHandler
     {
+        private System.Windows.FrameworkElement uiElement;
+
         /// <summary>
         /// Initializes a new instace of <see cref="PointerPlatformWP8"/> class.
         /// </summary>
@@ -45,10 +47,28 @@ namespace SharpDX.Toolkit.Input
         {
             if (nativeWindow == null) throw new ArgumentNullException("nativeWindow");
 
+
+            var drawingSurface = nativeWindow as DrawingSurface;
+            if (drawingSurface != null)
+            {
+                uiElement = drawingSurface;
+
+                // avoid threading issues as this is much more restrictive on WP8
+                if (drawingSurface.Dispatcher.CheckAccess())
+                    BindManipulationEvents(drawingSurface);
+                else
+                    drawingSurface.Dispatcher.BeginInvoke(() => BindManipulationEvents(drawingSurface));
+
+                return;
+            }
+
+
             // only DrawingSurfaceBackgroundGrid is supported at this time
             var grid = nativeWindow as DrawingSurfaceBackgroundGrid;
             if (grid != null)
             {
+                uiElement = grid;
+
                 // avoid threading issues as this is much more restrictive on WP8
                 if (grid.Dispatcher.CheckAccess())
                     BindManipulationEvents(grid);
@@ -59,6 +79,22 @@ namespace SharpDX.Toolkit.Input
             }
 
             throw new ArgumentException("Should be an instance of DrawingSurfaceBackgroundGrid", "nativeWindow");
+        }
+
+        /// <summary>
+        /// Binds the corresponding event handler to the provided <see cref="DrawingSurfaceBackgroundGrid"/>
+        /// </summary>
+        /// <param name="drawingSurface">An instance of <see cref="DrawingSurfaceBackgroundGrid"/> whose events needs to be bound to</param>
+        /// <exception cref="ArgumentNullException">Is thrown if <paramref name="drawingSurface"/> is null</exception>
+        private void BindManipulationEvents(DrawingSurface drawingSurface)
+        {
+            if (drawingSurface == null) throw new ArgumentNullException("drawingSurface");
+
+            drawingSurface.SetManipulationHandler(this);
+
+            // TODO: review if we need to unbind the handlers to avoid memory leaks
+            drawingSurface.Unloaded += (_, __) => drawingSurface.SetManipulationHandler(null);
+            Disposing += (_, __) => drawingSurface.SetManipulationHandler(null);
         }
 
         /// <summary>
@@ -104,9 +140,21 @@ namespace SharpDX.Toolkit.Input
         {
             if (point == null) throw new ArgumentNullException("point");
 
-            var position = point.Position;
+            // If we can't access the uiElement (this can happen here), then run this code on the ui thread
+            if (!uiElement.Dispatcher.CheckAccess())
+            {
+                uiElement.Dispatcher.BeginInvoke(() => CreateAndAddPoint(type, point));
+                return;
+            }
+
+            var p = point.Position;
             var properties = point.Properties;
             var contactRect = properties.ContactRect;
+            var width = (float)uiElement.ActualWidth;
+            var height = (float)uiElement.ActualHeight;
+
+            var position = new Vector2((float)p.X / width, (float)p.Y / height);
+            position.Saturate();
 
             var result = new PointerPoint
                          {
@@ -114,9 +162,9 @@ namespace SharpDX.Toolkit.Input
                              DeviceType = PointerDeviceType.Touch,
                              KeyModifiers = KeyModifiers.None,
                              PointerId = point.PointerId,
-                             Position = new Vector2((float)position.X, (float)position.Y),
+                             Position = position,
                              Timestamp = point.Timestamp,
-                             ContactRect = new RectangleF((float)contactRect.X, (float)contactRect.Y, (float)contactRect.Width, (float)contactRect.Height),
+                             ContactRect = new RectangleF((float)contactRect.X / width, (float)contactRect.Y / height, (float)contactRect.Width / width, (float)contactRect.Height / height),
                              IsBarrelButtonPresset = properties.IsBarrelButtonPressed,
                              IsCanceled = properties.IsCanceled,
                              IsEraser = properties.IsEraser,
