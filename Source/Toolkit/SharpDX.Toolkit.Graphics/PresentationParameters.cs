@@ -131,7 +131,7 @@ namespace SharpDX.Toolkit.Graphics
             IsFullScreen = false;
             RefreshRate = new Rational(60, 1); // by default
             RenderTargetUsage = Usage.BackBuffer | Usage.RenderTargetOutput;
-            Flags = SwapChainFlags.None;
+            Flags = SwapChainFlags.AllowModeSwitch;
         }
 
         /// <summary>

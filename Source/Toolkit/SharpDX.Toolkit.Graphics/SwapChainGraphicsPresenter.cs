@@ -90,7 +90,33 @@ namespace SharpDX.Toolkit.Graphics
                     throw new ArgumentException("Cannot switch to non-full screen in Windows RT");
                 }
 #else
+                var isCurrentlyFullscreen = swapChain.IsFullScreen;
+                if (isCurrentlyFullscreen == value)
+                {
+                    return;
+                }
+
+                bool switchToFullScreen = value;
+
+                // If going to fullscreen mode: call 1) SwapChain.ResizeTarget 2) SwapChain.IsFullScreen
+                var description = new ModeDescription(backBuffer.Width, backBuffer.Height, Description.RefreshRate, Description.BackBufferFormat);
+                if (switchToFullScreen)
+                {
+                    swapChain.ResizeTarget(ref description);
+                }
+
                 swapChain.IsFullScreen = value;
+
+                // call 1) SwapChain.IsFullScreen 2) SwapChain.Resize
+                Resize(backBuffer.Width, backBuffer.Height, backBuffer.Format);
+
+                // If going to window mode: 
+                if (!switchToFullScreen)
+                {
+                    // call 1) SwapChain.IsFullScreen 2) SwapChain.Resize
+                    description.RefreshRate = new Rational(0, 0);
+                    swapChain.ResizeTarget(ref description);
+                }
 #endif
             }
         }
@@ -119,6 +145,9 @@ namespace SharpDX.Toolkit.Graphics
 
             // Recreate the back buffer
             backBuffer = ToDispose(RenderTarget2D.New(GraphicsDevice, swapChain.GetBackBuffer<Direct3D11.Texture2D>(0)));
+
+            // Reinit the Viewport
+            DefaultViewport = new ViewportF(0, 0, backBuffer.Width, backBuffer.Height);
         }
 
         private SwapChain CreateSwapChain()
@@ -208,7 +237,14 @@ namespace SharpDX.Toolkit.Graphics
             var newSwapChain = new SwapChain(GraphicsAdapter.Factory, (Direct3D11.Device)GraphicsDevice, description);
             if (Description.IsFullScreen)
             {
-                newSwapChain.IsFullScreen = Description.IsFullScreen;
+                // Before fullscreen switch
+                newSwapChain.ResizeTarget(ref description.ModeDescription);
+
+                // Switch to full screen
+                newSwapChain.IsFullScreen = true;
+
+                // This is really important to call ResizeBuffers AFTER switching to IsFullScreen 
+                newSwapChain.ResizeBuffers(bufferCount, Description.BackBufferWidth, Description.BackBufferHeight, Description.BackBufferFormat, SwapChainFlags.AllowModeSwitch);
             }
 
             return newSwapChain;

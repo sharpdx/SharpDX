@@ -60,7 +60,10 @@ namespace SharpDX.Toolkit
 
         public override void EndScreenDeviceChange(int clientWidth, int clientHeight)
         {
-
+            if (gameForm != null)
+            {
+                gameForm.ClientSize = new Size(clientWidth, clientHeight);
+            }
         }
 
         protected internal override void SetSupportedOrientations(DisplayOrientation orientations)

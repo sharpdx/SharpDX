@@ -769,9 +769,6 @@ namespace SharpDX.Toolkit
             // Clears the GraphicsDevice
             GraphicsDevice = null;
 
-            // Make sure that all GraphicsAdapter are cleared and removed when device is disposed.
-            GraphicsAdapter.Dispose();
-
             OnDeviceDisposing(sender, e);
         }
 
@@ -779,6 +776,9 @@ namespace SharpDX.Toolkit
         {
             if (forceCreate)
             {
+                // Make sure that all GraphicsAdapter are cleared and removed when device is disposed.
+                GraphicsAdapter.Dispose();
+
                 // Make sure that GraphicsAdapter are initialized.
                 GraphicsAdapter.Initialize();
             }
@@ -812,6 +812,9 @@ namespace SharpDX.Toolkit
                             var newFormat = graphicsDeviceInformation.PresentationParameters.BackBufferFormat;
 
                             GraphicsDevice.Presenter.Resize(newWidth, newHeight, newFormat);
+
+                            // Change full screen if needed
+                            GraphicsDevice.Presenter.IsFullScreen = graphicsDeviceInformation.PresentationParameters.IsFullScreen;
 
                             needToCreateNewDevice = false;
                         }

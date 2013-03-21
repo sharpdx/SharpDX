@@ -122,6 +122,14 @@ namespace SharpDX.Toolkit.Graphics
             get { return Description.Depth; }
         }
 
+        /// <summary>
+        /// Gets the texture format.
+        /// </summary>
+        /// <value>The texture format.</value>
+        public PixelFormat Format
+        {
+            get { return Description.Format; }
+        }
 
         protected override void Initialize(DeviceChild resource)
         {
