@@ -71,11 +71,6 @@ namespace SharpDX.Toolkit
                 return new List<GraphicsDeviceInformation>() { deviceInfo };
             }
 
-            // Else for DrawingSurface we are forcing the width and height
-            var gameWindowXaml = (GameWindowPhoneXaml)gameWindow;
-            prefferedParameters.PreferredBackBufferWidth = gameWindowXaml.ClientBounds.Width;
-            prefferedParameters.PreferredBackBufferHeight = gameWindowXaml.ClientBounds.Height;
-
             return base.FindBestDevices(prefferedParameters);
         }
 
@@ -89,8 +84,7 @@ namespace SharpDX.Toolkit
             }
 
             // Else this is a DrawingSruface 
-
-            var device = GraphicsDevice.New(deviceInformation.Adapter, deviceInformation.DeviceCreationFlags);
+            var device = GraphicsDevice.New(deviceInformation.Adapter, deviceInformation.DeviceCreationFlags, deviceInformation.GraphicsProfile);
 
             var renderTargetDesc = new Texture2DDescription
             {
