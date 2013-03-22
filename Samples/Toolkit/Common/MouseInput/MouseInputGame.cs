@@ -101,8 +101,21 @@ namespace MouseInput
             sb.AppendFormat("Right button : {0}\n", mouseState.Right);
             sb.AppendFormat("XButton1     : {0}\n", mouseState.XButton1);
             sb.AppendFormat("XButton2     : {0}\n", mouseState.XButton2);
+
+            // the mouse coordinates are in range [0; 1] relative to window.
+            // any coordinates outside of the game window or control are clamped to this range
+            // on Windows 8 platform it may not get to the values exactly 0 or 1 because of "active corners" feature of the OS.
             sb.AppendFormat("X            : {0}\n", mouseState.X);
             sb.AppendFormat("Y            : {0}\n", mouseState.Y);
+
+            // compute mouse position in screen coordinates
+            var backbuffer = GraphicsDevice.BackBuffer;
+            var screenWidth = backbuffer.Width;
+            var screenHeight = backbuffer.Height;
+
+            sb.AppendFormat("Screen X     : {0}\n", mouseState.X * screenWidth);
+            sb.AppendFormat("Screen Y     : {0}\n", mouseState.Y * screenHeight);
+
             sb.AppendFormat("Wheel        : {0}\n", mouseState.WheelDelta);
 
             // Render the text
