@@ -539,17 +539,17 @@ namespace SharpDX
         { 
             return TimeSpan.FromTicks(random.NextLong(min.Ticks,max.Ticks));
         }
-        
+       
         /// <summary>
         /// Gets random object from array.
         /// </summary>
-        /// <typeparam name="T">Object type.</typeparam>
+        /// <typeparam name="T">Object type.</typeparam> 
         /// <param name="random">Current <see cref="System.Random"/>.</param>
         /// <param name="objects">Array of objects.</param>
         /// <returns>Random object from array.</returns>
-        public static T NextObject<T>(this Random random, IEnumerable<T> objects)
+        public static T Select<T>(this Random random, IList<T> objects)
         {
-            return objects.ElementAt(random.Next(objects.Count()));
+            return objects[random.Next(objects.Count)];
         }
 #else
         /// <summary>
@@ -732,7 +732,7 @@ namespace SharpDX
         /// <param name="random">A <see cref="System.Random"/> instance.</param>
         /// <param name="objects">Array of objects.</param>
         /// <returns>Random object from array.</returns>
-        public static T Select<T>(this Random random, IList<T> objects)
+        public static T Select<T>(Random random, IList<T> objects)
         {
             return objects[random.Next(objects.Count)];
         }
