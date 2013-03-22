@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace SharpDX.Toolkit.Input
 {
@@ -27,7 +28,8 @@ namespace SharpDX.Toolkit.Input
     /// Represents the immediate state of keyboard (pressed keys)
     /// </summary>
     /// <remarks>The returned values from member methods require computation - it is advised to cache them when they needs to be reused</remarks>
-    public struct KeyboardState
+    [StructLayout(LayoutKind.Sequential)]
+    public struct KeyboardState : IEquatable<KeyboardState>
     {
         // The key bit flag storage method was inspired from MonoGame and ExEn engines
         
@@ -229,6 +231,63 @@ namespace SharpDX.Toolkit.Input
                 if ((chunk & (1 << i)) != 0)
                     pressedKeys[index++] = (Keys)(arrayOffset + i);
             }
+        }
+
+        /// <summary>
+        /// Indicates whether the current object is equal to another object of the same type.
+        /// </summary>
+        /// <param name="other">An object to compare with this object.</param>
+        /// <returns>true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.</returns>
+        public bool Equals(KeyboardState other)
+        {
+            return data0 == other.data0 && data1 == other.data1 && data2 == other.data2 && data3 == other.data3 && data4 == other.data4 && data5 == other.data5 && data6 == other.data6 && data7 == other.data7;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+            return obj is KeyboardState && Equals((KeyboardState)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = (int)data0;
+                hashCode = (hashCode * 397) ^ (int)data1;
+                hashCode = (hashCode * 397) ^ (int)data2;
+                hashCode = (hashCode * 397) ^ (int)data3;
+                hashCode = (hashCode * 397) ^ (int)data4;
+                hashCode = (hashCode * 397) ^ (int)data5;
+                hashCode = (hashCode * 397) ^ (int)data6;
+                hashCode = (hashCode * 397) ^ (int)data7;
+                return hashCode;
+            }
+        }
+
+        /// <summary>
+        /// Implements the ==.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator ==(KeyboardState left, KeyboardState right)
+        {
+            return left.Equals(right);
+        }
+
+        /// <summary>
+        /// Implements the !=.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator !=(KeyboardState left, KeyboardState right)
+        {
+            return !left.Equals(right);
         }
     }
 }

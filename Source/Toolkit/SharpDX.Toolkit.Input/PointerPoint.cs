@@ -18,12 +18,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+using System.Runtime.InteropServices;
+
 namespace SharpDX.Toolkit.Input
 {
     /// <summary>
     /// Represents a platform-independent information about a pointer event.
     /// </summary>
-    public struct PointerPoint
+    [StructLayout(LayoutKind.Sequential)]
+    public struct PointerPoint : IEquatable<PointerPoint>
     {
         /// <summary>
         /// The type of event that represents current pointer point
@@ -154,5 +158,80 @@ namespace SharpDX.Toolkit.Input
         /// Indicates the kind of pointer state change.
         /// </summary>
         public PointerUpdateKind PointerUpdateKind { get; internal set; }
+
+        /// <summary>
+        /// Indicates whether the current object is equal to another object of the same type.
+        /// </summary>
+        /// <param name="other">An object to compare with this object.</param>
+        /// <returns>true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.</returns>
+        public bool Equals(PointerPoint other)
+        {
+            return EventType == other.EventType && DeviceType == other.DeviceType && PointerId == other.PointerId && Position.Equals(other.Position) && Timestamp == other.Timestamp && KeyModifiers == other.KeyModifiers && ContactRect.Equals(other.ContactRect) && IsBarrelButtonPresset.Equals(other.IsBarrelButtonPresset) && IsCanceled.Equals(other.IsCanceled) && IsEraser.Equals(other.IsEraser) && IsHorizontalMouseWheel.Equals(other.IsHorizontalMouseWheel) && IsInRange.Equals(other.IsInRange) && IsInverted.Equals(other.IsInverted) && IsLeftButtonPressed.Equals(other.IsLeftButtonPressed) && IsMiddleButtonPressed.Equals(other.IsMiddleButtonPressed) && IsRightButtonPressed.Equals(other.IsRightButtonPressed) && IsXButton1Pressed.Equals(other.IsXButton1Pressed) && IsXButton2Pressed.Equals(other.IsXButton2Pressed) && IsPrimary.Equals(other.IsPrimary) && MouseWheelDelta == other.MouseWheelDelta && Orientation.Equals(other.Orientation) && TouchConfidence.Equals(other.TouchConfidence) && Twist.Equals(other.Twist) && XTilt.Equals(other.XTilt) && YTilt.Equals(other.YTilt) && PointerUpdateKind == other.PointerUpdateKind;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+            return obj is PointerPoint && Equals((PointerPoint)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = (int)EventType;
+                hashCode = (hashCode * 397) ^ (int)DeviceType;
+                hashCode = (hashCode * 397) ^ (int)PointerId;
+                hashCode = (hashCode * 397) ^ Position.GetHashCode();
+                hashCode = (hashCode * 397) ^ Timestamp.GetHashCode();
+                hashCode = (hashCode * 397) ^ (int)KeyModifiers;
+                hashCode = (hashCode * 397) ^ ContactRect.GetHashCode();
+                hashCode = (hashCode * 397) ^ IsBarrelButtonPresset.GetHashCode();
+                hashCode = (hashCode * 397) ^ IsCanceled.GetHashCode();
+                hashCode = (hashCode * 397) ^ IsEraser.GetHashCode();
+                hashCode = (hashCode * 397) ^ IsHorizontalMouseWheel.GetHashCode();
+                hashCode = (hashCode * 397) ^ IsInRange.GetHashCode();
+                hashCode = (hashCode * 397) ^ IsInverted.GetHashCode();
+                hashCode = (hashCode * 397) ^ IsLeftButtonPressed.GetHashCode();
+                hashCode = (hashCode * 397) ^ IsMiddleButtonPressed.GetHashCode();
+                hashCode = (hashCode * 397) ^ IsRightButtonPressed.GetHashCode();
+                hashCode = (hashCode * 397) ^ IsXButton1Pressed.GetHashCode();
+                hashCode = (hashCode * 397) ^ IsXButton2Pressed.GetHashCode();
+                hashCode = (hashCode * 397) ^ IsPrimary.GetHashCode();
+                hashCode = (hashCode * 397) ^ MouseWheelDelta;
+                hashCode = (hashCode * 397) ^ Orientation.GetHashCode();
+                hashCode = (hashCode * 397) ^ TouchConfidence.GetHashCode();
+                hashCode = (hashCode * 397) ^ Twist.GetHashCode();
+                hashCode = (hashCode * 397) ^ XTilt.GetHashCode();
+                hashCode = (hashCode * 397) ^ YTilt.GetHashCode();
+                hashCode = (hashCode * 397) ^ (int)PointerUpdateKind;
+                return hashCode;
+            }
+        }
+
+        /// <summary>
+        /// Implements the ==.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator ==(PointerPoint left, PointerPoint right)
+        {
+            return left.Equals(right);
+        }
+
+        /// <summary>
+        /// Implements the !=.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator !=(PointerPoint left, PointerPoint right)
+        {
+            return !left.Equals(right);
+        }
     }
 }

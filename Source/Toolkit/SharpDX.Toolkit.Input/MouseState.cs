@@ -18,13 +18,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+using System.Runtime.InteropServices;
+
 namespace SharpDX.Toolkit.Input
 {
     /// <summary>
     /// The <see cref="MouseState"/> structure represents a snapshot of mouse state.
     /// </summary>
     /// <remarks>Is inmutable.</remarks>
-    public struct MouseState
+    [StructLayout(LayoutKind.Sequential)]
+    public struct MouseState : IEquatable<MouseState>
     {
         private readonly ButtonState left;
         private readonly ButtonState middle;
@@ -97,5 +101,62 @@ namespace SharpDX.Toolkit.Input
         /// Gets the cumulative mouse scroll wheel value since the game was started.
         /// </summary>
         public int WheelDelta { get { return wheelDelta; } }
+
+        /// <summary>
+        /// Indicates whether the current object is equal to another object of the same type.
+        /// </summary>
+        /// <param name="other">An object to compare with this object.</param>
+        /// <returns>true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.</returns>
+        public bool Equals(MouseState other)
+        {
+            return left == other.left && middle == other.middle && right == other.right && xButton1 == other.xButton1 && xButton2 == other.xButton2 && MathUtil.WithinEpsilon(x, other.x) && MathUtil.WithinEpsilon(y, other.y) && wheelDelta == other.wheelDelta;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+            return obj is MouseState && Equals((MouseState)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = (int)left;
+                hashCode = (hashCode * 397) ^ (int)middle;
+                hashCode = (hashCode * 397) ^ (int)right;
+                hashCode = (hashCode * 397) ^ (int)xButton1;
+                hashCode = (hashCode * 397) ^ (int)xButton2;
+                hashCode = (hashCode * 397) ^ x.GetHashCode();
+                hashCode = (hashCode * 397) ^ y.GetHashCode();
+                hashCode = (hashCode * 397) ^ wheelDelta;
+                return hashCode;
+            }
+        }
+
+        /// <summary>
+        /// Implements the ==.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator ==(MouseState left, MouseState right)
+        {
+            return left.Equals(right);
+        }
+
+        /// <summary>
+        /// Implements the !=.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator !=(MouseState left, MouseState right)
+        {
+            return !left.Equals(right);
+        }
     }
 }
