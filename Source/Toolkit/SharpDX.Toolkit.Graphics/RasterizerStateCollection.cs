@@ -28,6 +28,16 @@ namespace SharpDX.Toolkit.Graphics
     public sealed class RasterizerStateCollection : StateCollectionBase<RasterizerState>
     {
         /// <summary>
+        /// Built-in raterizer state object with settings for wireframe rendering.
+        /// </summary>
+        public readonly RasterizerState WireFrame;
+
+        /// <summary>
+        /// Built-in raterizer state object with settings for wireframe rendering.
+        /// </summary>
+        public readonly RasterizerState WireFrameCullNone;
+
+        /// <summary>
         /// Built-in raterizer state object with settings for culling primitives with clockwise winding order (front facing).
         /// </summary>
         public readonly RasterizerState CullFront;
@@ -56,6 +66,14 @@ namespace SharpDX.Toolkit.Graphics
             CullFront = Add(RasterizerState.New(device, "CullFront", CullMode.Front));
             CullBack =  Add(RasterizerState.New(device, "CullBack", CullMode.Back));
             CullNone =  Add(RasterizerState.New(device, "CullNone", CullMode.None));
+
+            var wireFrameDesk = CullBack.Description;
+            wireFrameDesk.FillMode = FillMode.Wireframe;
+            WireFrame = Add(RasterizerState.New(device, "WireFrame", wireFrameDesk));
+
+            wireFrameDesk.CullMode = CullMode.None;
+            WireFrameCullNone = Add(RasterizerState.New(device, "WireFrameCullNone", wireFrameDesk));
+
             Default = CullBack;
         }
     }
