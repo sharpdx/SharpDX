@@ -166,6 +166,12 @@ namespace SharpDX.Toolkit.Graphics
             Matrix* localSharedDrawBoneMatrices = stackalloc Matrix[boneCount];
 
             CopyAbsoluteBoneTransformsTo(new IntPtr(localSharedDrawBoneMatrices));
+
+            var viewProjection = Matrix.Identity;
+            bool viewProjectionUsed = false;
+            var worldViewProjection = Matrix.Identity;
+            bool worldViewProjectionUsed = false;
+
             for (int i = 0; i < count; i++)
             {
                 var mesh = Meshes[i];
@@ -179,16 +185,57 @@ namespace SharpDX.Toolkit.Graphics
                         throw new InvalidOperationException("Mesh has no effect");
                     }
 
+                    Matrix result;
+                    Matrix.Multiply(ref localSharedDrawBoneMatrices[index], ref world, out result);
+
                     var matrices = effect as IEffectMatrices;
                     if (matrices == null)
                     {
-                        throw new InvalidOperationException("Effect has no IEffectMatrices");
+                        var worldParameter = effect.Parameters["World"];
+                        if (worldParameter != null)
+                            worldParameter.SetValue(ref result);
+
+                        var viewdParameter = effect.Parameters["View"];
+                        if (viewdParameter != null)
+                            viewdParameter.SetValue(ref view);
+
+                        var projectiondParameter = effect.Parameters["Projection"];
+                        if (projectiondParameter != null)
+                            projectiondParameter.SetValue(ref projection);
+
+                        var viewProjectiondParameter = effect.Parameters["ViewProjection"];
+
+                        if (viewProjectiondParameter != null)
+                        {
+                            if (!viewProjectionUsed)
+                            {
+                                Matrix.Multiply(ref view, ref projection, out viewProjection);
+                                viewProjectionUsed = true;
+                            }
+                            viewProjectiondParameter.SetValue(ref viewProjection);
+                        }
+
+                        var worldViewProjectiondParameter = effect.Parameters["WorldViewProj"];
+
+                        if (worldViewProjectiondParameter != null)
+                        {
+                            if (!viewProjectionUsed)
+                            {
+                                Matrix.Multiply(ref view, ref projection, out viewProjection);
+                                viewProjectionUsed = true;
+                            }
+
+                            Matrix.Multiply(ref result, ref viewProjection, out worldViewProjection);
+                            
+                            worldViewProjectiondParameter.SetValue(ref worldViewProjection);
+                        }
                     }
-                    Matrix result;
-                    Matrix.Multiply(ref localSharedDrawBoneMatrices[index], ref world, out result);
-                    matrices.World = result;
-                    matrices.View = view;
-                    matrices.Projection = projection;
+                    else
+                    {
+                        matrices.World = result;
+                        matrices.View = view;
+                        matrices.Projection = projection;
+                    }
                 }
 
                 mesh.Draw(context);
