@@ -861,14 +861,19 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     // For x86 version, It seems that we can write directly to the buffer
                     // TODO: Need to check that this behavior is also running fine under WP8
-                    resourceContext.VertexBuffer.SetDynamicData(GraphicsDevice, ptr =>
-                                                                    {
-                                                                        var texturePtr = (VertexPositionColorTexture*) ptr;
-                                                                        for (int i = 0; i < batchSize; i++)
-                                                                        {
-                                                                            UpdateVertexFromSpriteInfo(ref sprites[offset + i], ref texturePtr, deltaX, deltaY);
-                                                                        }
-                                                                    }, offsetInBytes, noOverwrite);
+                    var deviceContext = (DeviceContext)GraphicsDevice;
+                    try
+                    {
+                        var box = deviceContext.MapSubresource(resourceContext.VertexBuffer, 0, SetDataOptionsHelper.ConvertToMapMode(noOverwrite), MapFlags.None);
+                        var pointer = (IntPtr)((byte*)box.DataPointer + offsetInBytes);
+                        var texturePtr = (VertexPositionColorTexture*)pointer;
+                        for(var i = 0; i < batchSize; i++)
+                            UpdateVertexFromSpriteInfo(ref sprites[offset + i], ref texturePtr, deltaX, deltaY);
+                    }
+                    finally
+                    {
+                        deviceContext.UnmapSubresource(resourceContext.VertexBuffer, 0);
+                    }
                 }
 
                 // Draw from the specified index
