@@ -542,6 +542,11 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         protected internal override EffectPass OnApply(EffectPass pass)
         {
+            // Make sure that domain, hull and geometry shaders are disable.
+            GraphicsDevice.DomainShaderStage.Set(null);
+            GraphicsDevice.HullShaderStage.Set(null);
+            GraphicsDevice.GeometryShaderStage.Set(null);
+
             // Recompute the world+view+projection matrix or fog vector?
             dirtyFlags = EffectHelpers.SetWorldViewProjAndFog(dirtyFlags, ref world, ref view, ref projection, ref worldView, fogEnabled, fogStart, fogEnd, worldViewProjParam, fogVectorParam);
             

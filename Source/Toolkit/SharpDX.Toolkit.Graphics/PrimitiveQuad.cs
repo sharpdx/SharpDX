@@ -87,6 +87,8 @@ namespace SharpDX.Toolkit.Graphics
             GraphicsDevice.SetVertexBuffer(sharedData.VertexBuffer);
             GraphicsDevice.SetVertexInputLayout(sharedData.VertexInputLayout);
 
+            ResetShaderStages();
+
             // Make sure that we are using our vertex shader
             quadPass.Apply();
             GraphicsDevice.Draw(PrimitiveType.TriangleStrip, 4);
@@ -101,6 +103,8 @@ namespace SharpDX.Toolkit.Graphics
         {
             GraphicsDevice.SetVertexBuffer(sharedData.VertexBuffer);
             GraphicsDevice.SetVertexInputLayout(sharedData.VertexInputLayout);
+
+            ResetShaderStages();
 
             // Make sure that we are using our vertex shader
             textureParameter.SetResource(texture);
@@ -117,6 +121,8 @@ namespace SharpDX.Toolkit.Graphics
         {
             GraphicsDevice.SetVertexBuffer(sharedData.VertexBuffer);
             GraphicsDevice.SetVertexInputLayout(sharedData.VertexInputLayout);
+            ResetShaderStages();
+
             foreach (var pass in effect.CurrentTechnique.Passes)
             {
                 // Apply the Effect pass
@@ -135,9 +141,19 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="effectPass">The effect pass.</param>
         public void Draw(EffectPass effectPass)
         {
+            ResetShaderStages();
+
             // Apply the Effect pass
             effectPass.Apply();
             Draw();
+        }
+
+        private void ResetShaderStages()
+        {
+            // Make sure that domain, hull and geometry shaders are disable.
+            GraphicsDevice.DomainShaderStage.Set(null);
+            GraphicsDevice.HullShaderStage.Set(null);
+            GraphicsDevice.GeometryShaderStage.Set(null);
         }
 
         /// <summary>

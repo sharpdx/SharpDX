@@ -95,10 +95,15 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public readonly RasterizerStateCollection RasterizerStates;
 
-        private InputAssemblerStage inputAssemblerStage;
-        private RasterizerStage rasterizerStage;
+        internal InputAssemblerStage InputAssemblerStage;
+        internal VertexShaderStage VertexShaderStage;
+        internal DomainShaderStage DomainShaderStage;
+        internal HullShaderStage HullShaderStage;
+        internal GeometryShaderStage GeometryShaderStage;
+        internal RasterizerStage RasterizerStage;
         internal PixelShaderStage PixelShaderStage;
-        private OutputMergerStage outputMergerStage;
+        internal OutputMergerStage OutputMergerStage;
+        internal ComputeShaderStage ComputeShaderStage;
 
         internal readonly bool needWorkAroundForUpdateSubResource;
 
@@ -215,10 +220,15 @@ namespace SharpDX.Toolkit.Graphics
                 resetVertexBuffersPointer = ToDispose(Utilities.AllocateClearedMemory(Utilities.SizeOf<IntPtr>() * InputAssemblerStage.VertexInputResourceSlotCount));
             }
 
-            inputAssemblerStage = Context.InputAssembler;
-            outputMergerStage = Context.OutputMerger;
-            rasterizerStage = Context.Rasterizer;
+            InputAssemblerStage = Context.InputAssembler;
+            VertexShaderStage = Context.VertexShader;
+            DomainShaderStage = Context.DomainShader;
+            HullShaderStage = Context.HullShader;
+            GeometryShaderStage = Context.GeometryShader;
+            RasterizerStage = Context.Rasterizer;
             PixelShaderStage = Context.PixelShader;
+            OutputMergerStage = Context.OutputMerger;
+            ComputeShaderStage = Context.ComputeShader;
 
             // Precompute shader stages
             ShaderStages = new CommonShaderStage[]
@@ -588,7 +598,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             set
             {
-                inputAssemblerStage.PrimitiveTopology = value;
+                InputAssemblerStage.PrimitiveTopology = value;
             }
         }
 
@@ -960,11 +970,11 @@ namespace SharpDX.Toolkit.Graphics
         {
             if (blendState == null)
             {
-                outputMergerStage.SetBlendState(null, Color.White, -1);
+                OutputMergerStage.SetBlendState(null, Color.White, -1);
             }
             else
             {
-                outputMergerStage.SetBlendState(blendState, blendState.BlendFactor, blendState.MultiSampleMask);
+                OutputMergerStage.SetBlendState(blendState, blendState.BlendFactor, blendState.MultiSampleMask);
             }
         }
 
@@ -984,11 +994,11 @@ namespace SharpDX.Toolkit.Graphics
         {
             if (blendState == null)
             {
-                outputMergerStage.SetBlendState(null, blendFactor, multiSampleMask);
+                OutputMergerStage.SetBlendState(null, blendFactor, multiSampleMask);
             }
             else
             {
-                outputMergerStage.SetBlendState(blendState, blendFactor, multiSampleMask);
+                OutputMergerStage.SetBlendState(blendState, blendFactor, multiSampleMask);
             }
         }
 
@@ -1022,7 +1032,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::OMSetDepthStencilState</unmanaged-short>	
         public void SetDepthStencilState(DepthStencilState depthStencilState, int stencilReference = 0)
         {
-            outputMergerStage.SetDepthStencilState(depthStencilState, stencilReference);
+            OutputMergerStage.SetDepthStencilState(depthStencilState, stencilReference);
         }
 
         /// <summary>	
@@ -1034,7 +1044,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::RSSetState</unmanaged-short>	
         public void SetRasterizerState(RasterizerState rasterizerState)
         {
-            rasterizerStage.State = rasterizerState;
+            RasterizerStage.State = rasterizerState;
         }
 
         /// <summary>
@@ -1052,7 +1062,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::RSSetScissorRects</unmanaged-short>	
         public void SetScissorRectangles(int left, int top, int right, int bottom)
         {
-            rasterizerStage.SetScissorRectangle(left, top, right, bottom);
+            RasterizerStage.SetScissorRectangle(left, top, right, bottom);
         }
 
         /// <summary>
@@ -1067,7 +1077,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::RSSetScissorRects</unmanaged-short>	
         public void SetScissorRectangles(params Rectangle[] scissorRectangles)
         {
-            rasterizerStage.SetScissorRectangles(scissorRectangles);
+            RasterizerStage.SetScissorRectangles(scissorRectangles);
         }
 
         /// <summary>
@@ -1078,7 +1088,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             get
             {
-                rasterizerStage.GetViewports(viewports);
+                RasterizerStage.GetViewports(viewports);
                 return viewports[0];
             }
 
@@ -1095,7 +1105,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <returns>Returns a viewport bind on a specified mulrendertarget</returns>
         public ViewportF GetViewport(int index)
         {
-            rasterizerStage.GetViewports(viewports);
+            RasterizerStage.GetViewports(viewports);
             return viewports[index];
         }
 
@@ -1117,7 +1127,7 @@ namespace SharpDX.Toolkit.Graphics
         public void SetViewport(float x, float y, float width, float height, float minZ = 0.0f, float maxZ = 1.0f)
         {
             viewports[0] = new ViewportF(x, y, width, height, minZ, maxZ);
-            rasterizerStage.SetViewport(x, y, width, height, minZ, maxZ);
+            RasterizerStage.SetViewport(x, y, width, height, minZ, maxZ);
         }
 
         /// <summary>
@@ -1133,7 +1143,7 @@ namespace SharpDX.Toolkit.Graphics
         public void SetViewport(ViewportF viewport)
         {
             viewports[0] = viewport;
-            rasterizerStage.SetViewport(viewport);
+            RasterizerStage.SetViewport(viewport);
         }
 
         /// <summary>
@@ -1151,7 +1161,7 @@ namespace SharpDX.Toolkit.Graphics
             for (int i = 0; i < viewports.Length; i++)
                 this.viewports[i] = viewports[i];
 
-            rasterizerStage.SetViewports(this.viewports, viewports.Length);
+            RasterizerStage.SetViewports(this.viewports, viewports.Length);
         }
 
         /// <summary>
@@ -1164,7 +1174,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             currentRenderTargetView = null;
             currentDepthStencilView = null;
-            outputMergerStage.ResetTargets();
+            OutputMergerStage.ResetTargets();
         }
 
         /// <summary>	
@@ -1186,7 +1196,7 @@ namespace SharpDX.Toolkit.Graphics
 
             CommonSetRenderTargets(renderTargetViews);
             currentDepthStencilView = null;
-            outputMergerStage.SetTargets(renderTargetViews);
+            OutputMergerStage.SetTargets(renderTargetViews);
         }
 
         /// <summary>	
@@ -1203,7 +1213,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             CommonSetRenderTargets(renderTargetView);
             currentDepthStencilView = null;
-            outputMergerStage.SetTargets(renderTargetView);
+            OutputMergerStage.SetTargets(renderTargetView);
         }
 
         /// <summary>
@@ -1226,7 +1236,7 @@ namespace SharpDX.Toolkit.Graphics
 
             CommonSetRenderTargets(renderTargetViews);
             currentDepthStencilView = depthStencilView;
-            outputMergerStage.SetTargets(depthStencilView, renderTargetViews);
+            OutputMergerStage.SetTargets(depthStencilView, renderTargetViews);
         }
 
         /// <summary>
@@ -1244,7 +1254,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             CommonSetRenderTargets(renderTargetView);
             currentDepthStencilView = depthStencilView;
-            outputMergerStage.SetTargets(depthStencilView, renderTargetView);
+            OutputMergerStage.SetTargets(depthStencilView, renderTargetView);
         }
 
         /// <summary>	
@@ -1261,7 +1271,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::IASetIndexBuffer</unmanaged-short>	
         public void SetIndexBuffer(Buffer indexBuffer, bool is32Bit, int offset = 0)
         {
-            inputAssemblerStage.SetIndexBuffer(indexBuffer, is32Bit ? DXGI.Format.R32_UInt : DXGI.Format.R16_UInt, offset);
+            InputAssemblerStage.SetIndexBuffer(indexBuffer, is32Bit ? DXGI.Format.R32_UInt : DXGI.Format.R16_UInt, offset);
         }
 
         /// <summary>
@@ -1317,7 +1327,7 @@ namespace SharpDX.Toolkit.Graphics
                 if ((slot + 1) > maxSlotCountForVertexBuffer)
                     maxSlotCountForVertexBuffer = slot + 1;
             }
-            inputAssemblerStage.SetVertexBuffers(slot, 1, new IntPtr(&vertexBufferPtr), new IntPtr(&stride), new IntPtr(&offset));
+            InputAssemblerStage.SetVertexBuffers(slot, 1, new IntPtr(&vertexBufferPtr), new IntPtr(&stride), new IntPtr(&offset));
         }
 
         /// <summary>
@@ -1344,7 +1354,7 @@ namespace SharpDX.Toolkit.Graphics
                 if ((slot+1) > maxSlotCountForVertexBuffer)
                     maxSlotCountForVertexBuffer = slot + 1;
             }
-            inputAssemblerStage.SetVertexBuffers(slot, 1, new IntPtr(&vertexBufferPtr), new IntPtr(&vertexStride), new IntPtr(&offsetInBytes));
+            InputAssemblerStage.SetVertexBuffers(slot, 1, new IntPtr(&vertexBufferPtr), new IntPtr(&vertexStride), new IntPtr(&offsetInBytes));
         }
 
         /// <summary>
@@ -1362,7 +1372,7 @@ namespace SharpDX.Toolkit.Graphics
             if (maxSlotCountForVertexBuffer == 0)
                 return;
 
-            inputAssemblerStage.SetVertexBuffers(0, maxSlotCountForVertexBuffer, resetVertexBuffersPointer, resetVertexBuffersPointer, resetVertexBuffersPointer);
+            InputAssemblerStage.SetVertexBuffers(0, maxSlotCountForVertexBuffer, resetVertexBuffersPointer, resetVertexBuffersPointer, resetVertexBuffersPointer);
 
             maxSlotCountForVertexBuffer = 0;
         }
@@ -1415,7 +1425,7 @@ namespace SharpDX.Toolkit.Graphics
                 throw new InvalidOperationException("Cannot perform a Draw/Dispatch operation without an EffectPass applied.");
 
             var inputLayout = CurrentPass.GetInputLayout(currentVertexInputLayout);
-            inputAssemblerStage.SetInputLayout(inputLayout);
+            InputAssemblerStage.SetInputLayout(inputLayout);
         }
 
         /// <summary>
