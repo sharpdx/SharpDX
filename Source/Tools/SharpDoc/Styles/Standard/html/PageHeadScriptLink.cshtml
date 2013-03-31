@@ -29,6 +29,25 @@
     {
     var syntax = "../syntaxhighlighter";
     <meta http-equiv="X-UA-Compatible" content="IE=9"/>
+    <meta name="Microsoft.Help.Id" content="@Model.Topic.Id" />
+    <meta name="SelfBranded" content="false" />
+    <meta name="Microsoft.Help.Locale" content="en-us" />
+    <meta name="Microsoft.Help.F1" content="@Model.Topic.FullName" />
+    <meta name="Microsoft.Help.Category" content="TargetOS:Windows" />
+    <meta name="Microsoft.Help.Category" content="DevLang:VB" />
+    <meta name="Microsoft.Help.Category" content="DevLang:CSharp" />
+    <meta name="Microsoft.Help.Category" content="DevLang:FSharp" />
+    <meta name="Microsoft.Help.TOCParentTopicVersion" content="110" />
+    if (Model.Topic.Parent != null)
+    {
+        <meta name="Microsoft.Help.TocParent" content="@Model.Topic.Parent.Id" />
+        <meta name="Microsoft.Help.TocOrder" content="-1" />
+    }
+    else
+    {
+        <meta name="Microsoft.Help.TocParent" content="-1" />
+        <meta name="Microsoft.Help.TocOrder" content="-1" />  
+    }
     <link href="../css/sharpdoc.css" rel="stylesheet" type="text/css" />
     <link href='@syntax/styles/shCoreDefault.css' rel='stylesheet' type='text/css' />         
     <script src="../js/mootools.js" language="javascript"></script>

@@ -176,6 +176,8 @@
     <Compile Include="TopicBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Styles\Mshc\html\PageBody.cshtml" />
+    <None Include="Styles\Mshc\html\TocBody.cshtml" />
     <None Include="Styles\SharpDXWeb\html\PageHeader.cshtml" />
     <None Include="Styles\SharpDXWeb\html\Page.cshtml" />
     <None Include="Styles\SharpDXWeb\html\WriteToFunction.cshtml" />
@@ -283,6 +285,9 @@
   <ItemGroup>
     <Content Include="SharpDoc.ico" />
     <None Include="Styles\SharpDXWeb\css\sharpdoc.css" />
+    <Content Include="Styles\Mshc\style.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Styles\SharpDXWeb\style.xml">
       <SubType>Designer</SubType>
     </Content>
