@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.IO;
 using SharpDX.Toolkit.Content;
 
@@ -28,7 +29,7 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     class ImageContentReader : IContentReader
     {
-        public object ReadContent(IContentManager readerManager, string assetName, Stream stream, out bool keepStreamOpen, object options)
+        public object ReadContent(IContentManager readerManager, string assetName, Type type, Stream stream, out bool keepStreamOpen, object options = null)
         {
             keepStreamOpen = false;
             var image = Image.Load(stream);

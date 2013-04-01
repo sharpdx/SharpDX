@@ -40,6 +40,17 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Clears the list of disposable objects without disposing them.
+        /// </summary>
+        public void Clear()
+        {
+            if (disposables == null)
+                return;
+
+            disposables.Clear();
+        }
+
+        /// <summary>
         /// Disposes all object collected by this class and clear the list. The collector can still be used for collecting.
         /// </summary>
         /// <remarks>

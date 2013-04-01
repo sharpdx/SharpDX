@@ -25,12 +25,12 @@ namespace SharpDX.Toolkit.Graphics
     /// <summary>
     /// A class used to shader input resource parameters and prepare them (i.e. take their NativePointer asap).
     /// </summary>
-    class EffectResourceLinker : IDisposable
+    internal class EffectResourceLinker : IDisposable
     {
         /// <summary>
         /// Real object resources, as they were set on the parameter.
         /// </summary>
-        private object[] resources;
+        public object[] BoundResources;
 
         /// <summary>
         /// Real object resources, as they were set on the parameter.
@@ -52,7 +52,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public void Initialize()
         {
-            resources = new object[Count];
+            BoundResources = new object[Count];
             ConstantBuffers = new Buffer[Count];
             unsafe
             {
@@ -76,12 +76,12 @@ namespace SharpDX.Toolkit.Graphics
 
         public T GetResource<T>(int resourceIndex) where T : class
         {
-            return (T)resources[resourceIndex];
+            return (T)BoundResources[resourceIndex];
         }
 
         public void SetResource<T>(int resourceIndex, EffectResourceType type, object value)
         {
-            resources[resourceIndex] = value;
+            BoundResources[resourceIndex] = value;
             unsafe
             {
                 Pointers[resourceIndex] = GetNativePointer(resourceIndex, type, value);
@@ -102,7 +102,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             foreach (var value in valueArray)
             {
-                resources[resourceIndex] = value;
+                BoundResources[resourceIndex] = value;
                 unsafe
                 {
                     Pointers[resourceIndex] = GetNativePointer(resourceIndex, type, value);

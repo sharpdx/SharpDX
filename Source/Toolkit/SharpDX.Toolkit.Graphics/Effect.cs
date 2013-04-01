@@ -41,17 +41,17 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Gets a collection of constant buffers that are defined for this effect.
         /// </summary>
-        public readonly EffectConstantBufferCollection ConstantBuffers;
+        public EffectConstantBufferCollection ConstantBuffers { get; private set; }
 
         /// <summary>
         /// Gets a collection of parameters that are defined for this effect.
         /// </summary>
-        public readonly EffectParameterCollection Parameters;
+        public EffectParameterCollection Parameters { get; private set; }
 
         /// <summary>
         /// Gets a collection of techniques that are defined for this effect.
         /// </summary>
-        public readonly EffectTechniqueCollection Techniques;
+        public EffectTechniqueCollection Techniques { get; private set; }
 
         /// <summary>
         /// Gets the data associated to this effect.
@@ -90,6 +90,12 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>The effect bytecode must contain only a single effect and will be registered into the <see cref="GraphicsDevice.DefaultEffectPool"/>.</remarks>
         public Effect(GraphicsDevice device, EffectData effectData, EffectPool effectPool = null) : base(device)
         {
+            CreateInstanceFrom(device, effectData, effectPool);
+        }
+
+        internal void CreateInstanceFrom(GraphicsDevice device, EffectData effectData, EffectPool effectPool)
+        {
+            GraphicsDevice = device;
             ConstantBuffers = new EffectConstantBufferCollection();
             Parameters = new EffectParameterCollection();
             Techniques = new EffectTechniqueCollection();
@@ -113,7 +119,7 @@ namespace SharpDX.Toolkit.Graphics
         /// Gets the pool this effect attached to.
         /// </summary>
         /// <value> The pool. </value>
-        public readonly EffectPool Pool;
+        public EffectPool Pool { get; private set; }
 
         /// <summary>
         /// Occurs when the on apply is applied on a pass.
@@ -283,6 +289,48 @@ namespace SharpDX.Toolkit.Graphics
             Initialize();
         }
 
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns>A new instance of this Effect.</returns>
+        public virtual Effect Clone()
+        {
+            var effect = (Effect) MemberwiseClone();
+            effect.DisposeCollector = new DisposeCollector();
+            effect.ConstantBuffers = new EffectConstantBufferCollection();
+            effect.Parameters = new EffectParameterCollection();
+            effect.Techniques = new EffectTechniqueCollection();
+            effect.effectConstantBuffersCache = null;
+
+            // Initialize from effect
+            effect.InitializeFrom(effect.RawEffectData);
+
+            // Copy the content of the constant buffers to the new instance.
+            for (int i = 0; i < effect.ConstantBuffers.Count; i++)
+            {
+                ConstantBuffers[i].CopyTo(effect.ConstantBuffers[i]);
+            }
+
+            // Copy back all bound resources except constant buffers
+            // that are already initialized with InitializeFrom method.
+            for (int i = 0; i < ResourceLinker.Count; i++)
+            {
+                if (ResourceLinker.BoundResources[i] is EffectConstantBuffer) 
+                    continue;
+
+                effect.ResourceLinker.BoundResources[i] = ResourceLinker.BoundResources[i];
+                unsafe
+                {
+                    effect.ResourceLinker.Pointers[i] = ResourceLinker.Pointers[i];
+                }
+            }
+
+            // If everything was fine, then we can register it into the pool
+            Pool.AddEffect(effect);
+
+            return effect;
+        }
+
         protected virtual void Initialize()
         {
         }
@@ -290,6 +338,7 @@ namespace SharpDX.Toolkit.Graphics
         internal new DisposeCollector DisposeCollector
         {
             get { return base.DisposeCollector; }
+            private set { base.DisposeCollector = value; }
         }
 
         protected internal virtual EffectPass OnApply(EffectPass pass)

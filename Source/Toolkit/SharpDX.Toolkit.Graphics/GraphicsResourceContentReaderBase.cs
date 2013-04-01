@@ -30,7 +30,7 @@ namespace SharpDX.Toolkit.Graphics
     /// <typeparam name="T"></typeparam>
     abstract class GraphicsResourceContentReaderBase<T> : IContentReader
     {
-        object IContentReader.ReadContent(IContentManager readerManager, string assetName, Stream stream, out bool keepStreamOpen, object options)
+        object IContentReader.ReadContent(IContentManager readerManager, string assetName, Type type, Stream stream, out bool keepStreamOpen, object options = null)
         {
             keepStreamOpen = false;
             var service = readerManager.ServiceProvider.GetService(typeof (IGraphicsDeviceService)) as IGraphicsDeviceService;
@@ -40,9 +40,9 @@ namespace SharpDX.Toolkit.Graphics
             if (service.GraphicsDevice == null)
                 throw new InvalidOperationException("GraphicsDevice is not initialized");
 
-            return ReadContent(readerManager, service.GraphicsDevice, assetName, stream);
+            return ReadContent(readerManager, service.GraphicsDevice, assetName, type, stream);
         }
 
-        protected abstract T ReadContent(IContentManager readerManager, GraphicsDevice device, string assetName, Stream stream, object options = null);
+        protected abstract T ReadContent(IContentManager readerManager, GraphicsDevice device, string assetName, Type type, Stream stream, object options = null);
     }
 }

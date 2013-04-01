@@ -30,7 +30,7 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     internal class ModelContentReader : GraphicsResourceContentReaderBase<Model>
     {
-        protected override Model ReadContent(IContentManager readerManager, GraphicsDevice device, string assetName, Stream stream, object options)
+        protected override Model ReadContent(IContentManager readerManager, GraphicsDevice device, string assetName, Type type, Stream stream, object options = null)
         {
             var readerOptions = options as ModelContentReaderOptions;
             if (options != null && readerOptions == null)

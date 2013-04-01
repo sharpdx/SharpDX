@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.IO;
 using SharpDX.Toolkit.Content;
 
@@ -28,7 +29,7 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     class TextureContentReader : GraphicsResourceContentReaderBase<Texture>
     {
-        protected override Texture ReadContent(IContentManager readerManager, GraphicsDevice device, string assetName, Stream stream, object options)
+        protected override Texture ReadContent(IContentManager readerManager, GraphicsDevice device, string assetName, Type type, Stream stream, object options = null)
         {
             var texture = Texture.Load(device, stream);
             if (texture != null)
