@@ -270,25 +270,17 @@ namespace SharpDX
         /// <returns>Result of the wrapping.</returns>
         public static int Wrap(int value, int min, int max)
         {
-            if (min > max)
+            if (min == max) return min;
+            int v = (((value - min)%(max - min))); 
+            if (value > max)
             {
-                var tmp = min;
-                min = max;
-                max = tmp;
+                return min + v;
             }
-
-            // adjust to 0
-            value -= min;
-
-            int rangeSize = max - min;
-
-            if (rangeSize == 0)
+            if (value < min)
             {
-                // avoid dividing by 0
-                return max;
+                return max + v;
             }
-
-            return (value - (rangeSize * (value / rangeSize)) + min);
+            return value;
         }
 
         /// <summary>
@@ -547,6 +539,18 @@ namespace SharpDX
         { 
             return TimeSpan.FromTicks(random.NextLong(min.Ticks,max.Ticks));
         }
+       
+        /// <summary>
+        /// Gets random object from array.
+        /// </summary>
+        /// <typeparam name="T">Object type.</typeparam> 
+        /// <param name="random">Current <see cref="System.Random"/>.</param>
+        /// <param name="objects">Array of objects.</param>
+        /// <returns>Random object from array.</returns>
+        public static T Select<T>(this Random random, IList<T> objects)
+        {
+            return objects[random.Next(objects.Count)];
+        }
 #else
         /// <summary>
         /// Gets random <c>float</c> number within range.
@@ -719,6 +723,18 @@ namespace SharpDX
         public static TimeSpan NextTime(Random random, TimeSpan min, TimeSpan max)
         {
             return TimeSpan.FromTicks(NextLong(random, min.Ticks, max.Ticks));
+        }
+        
+        /// <summary>
+        /// Gets random object from array.
+        /// </summary>
+        /// <typeparam name="T">Object type.</typeparam> 
+        /// <param name="random">A <see cref="System.Random"/> instance.</param>
+        /// <param name="objects">Array of objects.</param>
+        /// <returns>Random object from array.</returns>
+        public static T Select<T>(Random random, IList<T> objects)
+        {
+            return objects[random.Next(objects.Count)];
         }
 #endif
     }
