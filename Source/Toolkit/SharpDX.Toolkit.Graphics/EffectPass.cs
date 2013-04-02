@@ -262,16 +262,19 @@ namespace SharpDX.Toolkit.Graphics
             // ----------------------------------------------
             // Iterate on each stage to setup all inputs
             // ----------------------------------------------
-            foreach (var stageBlock in pipeline.Stages)
+            for (int stageIndex = 0; stageIndex < pipeline.Stages.Length; stageIndex++)
             {
+                var stageBlock = pipeline.Stages[stageIndex];
                 if (stageBlock == null)
+                {
                     continue;
+                }
 
                 var shaderStage = stageBlock.ShaderStage;
 
                 // ----------------------------------------------
                 // Setup the shader for this stage.
-                // ----------------------------------------------
+                // ----------------------------------------------               
                 shaderStage.SetShader(stageBlock.Shader, null, 0);
 
                 // If Shader is a null shader, then skip further processing
@@ -425,6 +428,8 @@ namespace SharpDX.Toolkit.Graphics
 
                 stageBlock.Index = link.Index;
                 stageBlock.ShaderStage = Effect.GraphicsDevice.ShaderStages[i];
+                stageBlock.StreamOutputElements = link.StreamOutputElements;
+                stageBlock.StreamOutputRasterizedStream = link.StreamOutputRasterizedStream;
 
                 InitStageBlock(stageBlock, logger);
             }
@@ -445,7 +450,7 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             string errorProfile;
-            stageBlock.Shader = Effect.Pool.GetOrCompileShader(stageBlock.Type, shaderIndex, out errorProfile);
+            stageBlock.Shader = Effect.Pool.GetOrCompileShader(stageBlock.Type, shaderIndex, stageBlock.StreamOutputRasterizedStream, stageBlock.StreamOutputElements, out errorProfile);
 
             if (stageBlock.Shader == null)
             {
@@ -1016,6 +1021,10 @@ namespace SharpDX.Toolkit.Graphics
             public List<SlotLinkSet>[] Slots;
             public EffectShaderType Type;
             public RawSlotLinkSet UnorderedAccessViewSlotLinks;
+
+            public StreamOutputElement[] StreamOutputElements;
+
+            public int StreamOutputRasterizedStream;
 
             public StageBlock(EffectShaderType type)
             {

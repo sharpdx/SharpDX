@@ -166,7 +166,7 @@ namespace SharpDX.Toolkit.Graphics
             OnEffectRemoved(new ObservableCollectionEventArgs<Effect>(effect));
         }
 
-        internal DeviceChild GetOrCompileShader(EffectShaderType shaderType, int index, out string profileError)
+        internal DeviceChild GetOrCompileShader(EffectShaderType shaderType, int index, int soRasterizedStream, StreamOutputElement[] soElements, out string profileError)
         {
             DeviceChild shader = null;
             profileError = null;
@@ -194,7 +194,20 @@ namespace SharpDX.Toolkit.Graphics
                             shader = new HullShader(graphicsDevice, bytecodeRaw);
                             break;
                         case EffectShaderType.Geometry:
-                            shader = new GeometryShader(graphicsDevice, bytecodeRaw);
+                            if (soElements != null)
+                            {
+                                // Calculate the strides
+                                var soStrides = new [] { 0, 0, 0, 0 };
+                                foreach (var streamOutputElement in soElements)
+                                {
+                                    soStrides[streamOutputElement.Stream] += streamOutputElement.ComponentCount * sizeof(float);
+                                }
+                                shader = new GeometryShader(graphicsDevice, bytecodeRaw, soElements, soStrides, soRasterizedStream);
+                            }
+                            else
+                            {
+                                shader = new GeometryShader(graphicsDevice, bytecodeRaw);
+                            }
                             break;
                         case EffectShaderType.Pixel:
                             shader = new PixelShader(graphicsDevice, bytecodeRaw);

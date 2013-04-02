@@ -20,6 +20,7 @@
 
 using System;
 
+using SharpDX.Direct3D11;
 using SharpDX.Serialization;
 
 namespace SharpDX.Toolkit.Graphics
@@ -31,34 +32,28 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public sealed class ShaderLink : IDataSerializable, IEquatable<ShaderLink>
         {
-            public static readonly ShaderLink NullShader = new ShaderLink(-1);
+            public static readonly ShaderLink NullShader = new ShaderLink();
 
             private int index;
             private string importName;
+
+            /// <summary>
+            /// The stream output rasterized stream (-1 if no rasterized stream).
+            /// </summary>
+            public int StreamOutputRasterizedStream;
+
+            /// <summary>
+            /// The stream output elements only valid for a geometry shader, can be null.
+            /// </summary>
+            public StreamOutputElement[] StreamOutputElements;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="ShaderLink" /> class.
             /// </summary>
             public ShaderLink()
             {
-            }
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="ShaderLink" /> class.
-            /// </summary>
-            /// <param name="index">The index in the shader pool.</param>
-            public ShaderLink(int index)
-            {
-                this.index = index;
-            }
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="ShaderLink" /> class.
-            /// </summary>
-            /// <param name="importName">Name of the import function.</param>
-            public ShaderLink(string importName)
-            {
-                this.importName = importName;
+                index = -1;
+                StreamOutputRasterizedStream = -1;
             }
 
             /// <summary>
@@ -156,6 +151,12 @@ namespace SharpDX.Toolkit.Graphics
 
                 // Enable null reference just for the import name
                 serializer.Serialize(ref importName, SerializeFlags.Nullable);
+
+                // Serialize GS rasterized stream if any.
+                serializer.Serialize(ref StreamOutputRasterizedStream);
+
+                // Enable null for StreamOutputElements
+                serializer.Serialize(ref StreamOutputElements, SerializeFlags.Nullable);
             }
         }
     }

@@ -82,6 +82,7 @@
     <Compile Include="SegmentedScan.cs" />
     <Compile Include="ShaderResourceView.cs" />
     <Compile Include="StreamOutputBufferBinding.cs" />
+    <Compile Include="StreamOutputElement.cs" />
     <Compile Include="Texture1D.cs" />
     <Compile Include="Texture2D.cs" />
     <Compile Include="Texture3D.cs" />

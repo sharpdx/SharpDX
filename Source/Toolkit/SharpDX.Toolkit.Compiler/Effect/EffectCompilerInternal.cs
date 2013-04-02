@@ -27,6 +27,7 @@ using System.Text.RegularExpressions;
 
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D;
+using SharpDX.Direct3D11;
 using SharpDX.IO;
 using SharpDX.Toolkit.Diagnostics;
 
@@ -71,6 +72,8 @@ namespace SharpDX.Toolkit.Graphics
         private string preprocessorText;
         private EffectData.Technique technique;
         private int nextSubPassCount;
+
+        private StreamOutputElement[] currentStreamOutputElements;
 
         private FileDependencyList dependencyList;
 
@@ -281,6 +284,13 @@ namespace SharpDX.Toolkit.Graphics
                     continue;
                 HandleExpression(expressionStatement.Expression);
             }
+
+            // Check pass consistency (mainly for the GS)
+            var gsLink = pass.Pipeline[EffectShaderType.Geometry];
+            if (gsLink != null && gsLink.IsNullShader && (gsLink.StreamOutputRasterizedStream >= 0 || gsLink.StreamOutputElements != null))
+            {
+                logger.Error("Cannot specify StreamOutput for null geometry shader", passAst.Span);
+            }
         }
 
         private void HandleExpression(Ast.Expression expression)
@@ -348,6 +358,12 @@ namespace SharpDX.Toolkit.Graphics
                 case "GeometryShader":
                     CompileShader(EffectShaderType.Geometry, expression.Value);
                     break;
+                case "StreamOutput":
+                    HandleStreamOutput(expression.Value);
+                    break;
+                case "StreamOutputRasterizedStream":
+                    HandleStreamOutputRasterizedStream(expression.Value);
+                    break;
                 case "DomainShader":
                     CompileShader(EffectShaderType.Domain, expression.Value);
                     break;
@@ -363,34 +379,208 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        private void HandleExport(Ast.Expression expression)
+        private void HandleStreamOutputRasterizedStream(Ast.Expression expression)
         {
             object value;
             if (!ExtractValue(expression, out value))
                 return;
 
+            if (!(value is int))
+            {
+                logger.Error("StreamOutputRasterizedStream value [{0}] must be an integer", expression.Span, value);
+                return;
+            }
+
+            if (pass.Pipeline[EffectShaderType.Geometry] == null)
+            {
+                pass.Pipeline[EffectShaderType.Geometry] = new EffectData.ShaderLink();
+            }
+
+            pass.Pipeline[EffectShaderType.Geometry].StreamOutputRasterizedStream = (int)value;
+        }
+
+        private static readonly Regex splitSODeclartionRegex = new Regex(@"\s*;\s*");
+        private static readonly Regex soDeclarationItemRegex = new Regex(@"^\s*(\d+)?\s*:?\s*([A-Za-z][A-Za-z0-9_]*)(\.[xyzw]+|\.[rgba]+)?$");
+        private static readonly Regex soSemanticIndex = new Regex(@"^([A-Za-z][A-Za-z0-9_]*?)([0-9]*)?$");
+        private static readonly List<char> xyzwrgbaComponents = new List<char>() { 'x', 'y', 'z', 'w', 'r', 'g', 'b', 'a' };
+
+        private void HandleStreamOutput(Ast.Expression expression)
+        {
+            var values = ExtractStringOrArrayOfStrings(expression);
+            if (values == null) return;
+
+            if (values.Count == 0 || values.Count > 4)
+            {
+                logger.Error("Invalid number [{0}] of stream output declarations. Maximum allowed is 4", expression.Span, values.Count);
+                return;
+            }
+
+            var elements = new List<StreamOutputElement>();
+
+            int streamIndex = 0;
+            foreach (var soDeclarationTexts in values)
+            {
+                if (string.IsNullOrEmpty(soDeclarationTexts))
+                {
+                    logger.Error("StreamOutput declaration cannot be null or empty", expression.Span);
+                    return;
+                }
+
+                // Parse a single string "[<slot> :] <semantic>[<index>][.<mask>]; [[<slot> :] <semantic>[<index>][.<mask>][;]]"
+                var text = soDeclarationTexts.Trim(' ', '\t', ';');
+                var declarationTextItems = splitSODeclartionRegex.Split(text);
+                foreach (var soDeclarationText in declarationTextItems)
+                {
+                    StreamOutputElement element;
+                    if (!ParseStreamOutputElement(soDeclarationText, expression.Span, out element))
+                    {
+                        return;
+                    }
+
+                    element.Stream = streamIndex;
+                    elements.Add(element);
+                }
+
+                streamIndex++;
+            }
+
+            if (elements.Count == 0)
+            {
+                logger.Error("Invalid number [0] of stream output declarations. Expected > 0", expression.Span);
+                return;
+            }
+
+            if (pass.Pipeline[EffectShaderType.Geometry] == null)
+            {
+                pass.Pipeline[EffectShaderType.Geometry] = new EffectData.ShaderLink();
+            }
+
+            pass.Pipeline[EffectShaderType.Geometry].StreamOutputElements = elements.ToArray();
+        }
+
+        private bool ParseStreamOutputElement(string text, SourceSpan span, out StreamOutputElement streamOutputElement)
+        {
+            streamOutputElement = new StreamOutputElement();
+
+            var match = soDeclarationItemRegex.Match(text);
+
+            if (!match.Success)
+            {
+                logger.Error("Invalid StreamOutput declaration [{0}]. Must be of the form [<slot> :] <semantic>[<index>][.<mask>]", span, text);
+                return false;
+            }
+
+            // Parse slot if any
+            var slot = match.Groups[1].Value;
+            int slotIndex = 0;
+            if (!string.IsNullOrEmpty(slot))
+            {
+                int.TryParse(slot, out slotIndex);
+                streamOutputElement.OutputSlot = (byte)slotIndex;
+            }
+
+            // Parse semantic index if any
+            var semanticAndIndex = match.Groups[2].Value;
+            var matchSemanticAndIndex = soSemanticIndex.Match(semanticAndIndex);
+            streamOutputElement.SemanticName = matchSemanticAndIndex.Groups[1].Value;
+            var semanticIndexText = matchSemanticAndIndex.Groups[2].Value;
+            int semanticIndex = 0;
+            if (!string.IsNullOrEmpty(semanticIndexText))
+            {
+                int.TryParse(semanticIndexText, out semanticIndex);
+                streamOutputElement.SemanticIndex = (byte)semanticIndex;
+            }
+
+            // Parse the mask
+            var mask = match.Groups[3].Value;
+            int startComponent = -1;
+            int currentIndex = 0;
+            int countComponent = 1;
+            if (!string.IsNullOrEmpty(mask))
+            {
+                mask = mask.Substring(1);
+                foreach (var maskItem in mask.ToCharArray())
+                {
+                    var nextIndex = xyzwrgbaComponents.IndexOf(maskItem);
+                    if (startComponent < 0)
+                    {
+                        startComponent = nextIndex;
+                    }
+                    else if (nextIndex != (currentIndex + 1))
+                    {
+                        logger.Error("Invalid mask [{0}]. Must be of the form [xyzw] or [rgba] with increasing consecutive component and no duplicate", span, mask);
+                        return false;
+                    }
+                    else
+                    {
+                        countComponent++;
+                    }
+
+                    currentIndex = nextIndex;
+                }
+
+                // If rgba components?
+                if (startComponent > 3)
+                {
+                    startComponent -= 4;
+                }
+            }
+            else
+            {
+                startComponent = 0;
+                countComponent = 4;
+            }
+
+            streamOutputElement.StartComponent = (byte)startComponent;
+            streamOutputElement.ComponentCount = (byte)countComponent;
+
+            return true;
+        }
+
+        private void HandleExport(Ast.Expression expression)
+        {
+            var values = ExtractStringOrArrayOfStrings(expression);
+            if (values != null)
+            {
+                currentExports.AddRange(values);
+            }
+        }
+
+        private List<string> ExtractStringOrArrayOfStrings(Ast.Expression expression)
+        {
+            // TODO implement this method using generics
+            object value;
+            if (!ExtractValue(expression, out value))
+                return null;
+
+            var values = new List<string>();
+
             if (value is string)
             {
-                currentExports.Add((string) value);
+                values.Add((string)value);
             }
             else if (value is object[])
             {
-                var arrayValue = (object[]) value;
+                var arrayValue = (object[])value;
                 foreach (var exportItem in arrayValue)
                 {
                     if (!(exportItem is string))
                     {
                         logger.Error("Unexpected value [{0}]. Expecting a string.", expression.Span, exportItem);
-                        return;
+                        return null;
                     }
-                    currentExports.Add((string) exportItem);
+                    values.Add((string)exportItem);
                 }
             }
             else
             {
                 logger.Error("Unexpected value. Expecting a identifier/string or an array of identifier/string.", expression.Span);
             }
+
+            return values;
         }
+
+
 
         private void HandleShareConstantBuffers(Ast.Expression expression)
         {
@@ -923,7 +1113,12 @@ namespace SharpDX.Toolkit.Graphics
                         effectData.Shaders.Add(shader);
                     }
 
-                    pass.Pipeline[type] = new EffectData.ShaderLink(shaderIndex);
+                    if (pass.Pipeline[type] == null)
+                    {
+                        pass.Pipeline[type] = new EffectData.ShaderLink();
+                    }
+
+                    pass.Pipeline[type].Index = shaderIndex;
                 }
             }
             finally
