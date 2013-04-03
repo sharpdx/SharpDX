@@ -37,7 +37,7 @@
 @helper Dump(NMember member)
 {
     @Helpers.TabCode.Dump(new string[] {
-        "C#",  "<pre class='brush: csharp;'>" + Helpers.SyntaxCodeCSharp.Dump(member) + "</pre>",
+        "C#",  "<pre class='brush: csharp;'>" + Escape(Helpers.SyntaxCodeCSharp.Dump(member)) + "</pre>",
         "VB",  Helpers.SyntaxCodeVB.Dump(member),
         "C++", Helpers.SyntaxCodeCpp.Dump(member),
         "F#",  Helpers.SyntaxCodeFSharp.Dump(member),

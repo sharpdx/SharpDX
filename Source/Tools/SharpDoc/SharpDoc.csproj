@@ -176,6 +176,7 @@
     <Compile Include="TopicBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Styles\Mshc\html\LinkResolver.cshtml" />
     <None Include="Styles\Mshc\html\PageBody.cshtml" />
     <None Include="Styles\Mshc\html\TocBody.cshtml" />
     <None Include="Styles\SharpDXWeb\html\PageHeader.cshtml" />
@@ -316,7 +317,6 @@
     <Content Include="Styles\Standard\js\sharpdoc.js" />
     <Content Include="Styles\Standard\js\mootools-more.js" />
     <Content Include="Styles\Standard\js\mootools.js" />
-    <Content Include="Styles\Standard\syntaxhighlighter\index.html" />
     <Content Include="Styles\Standard\syntaxhighlighter\js\shAutoloader.js" />
     <Content Include="Styles\Standard\syntaxhighlighter\js\shBrushAppleScript.js" />
     <Content Include="Styles\Standard\syntaxhighlighter\js\shBrushAS3.js" />

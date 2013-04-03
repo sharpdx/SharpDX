@@ -26,7 +26,7 @@
 @using SharpDoc.Model
 @Import("PageHeadScriptLink")
 @helper Dump(string title) {
-	<title>@title</title>
+	<title>@Escape(@title)</title>
     @Helpers.PageHeadScriptLink.Dump()
 }
 

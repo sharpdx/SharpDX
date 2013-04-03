@@ -22,45 +22,34 @@
 // Override this template to modify the global behavior for each Dump functions
 // -------------------------------------------------------------------------------
 *@
-@using SharpDoc.Model
-@using System.Text;
 @model SharpDoc.TemplateContext
-@Import("Section")
-
+@using SharpDoc;
+@using SharpDoc.Model
+@using System.Text.RegularExpressions
 @functions {
-
-    public string GetVersionAndPlatform(NModelBase member)
+    public string LinkToUrl(LinkDescriptor link)
     {
-        var text = new StringBuilder();
-
-        text.Append("Supported in:<br/><br/>");
-
-        for (int i = 0; i < member.Groups.Count; i++)
-        {
-            var groupName = member.Groups[i];
-            var groupIconName = groupName;
-            var groupMessageName = groupName;
-            int indexOf = groupName.IndexOf('|');
-            if (indexOf > 0)
-            {
-                groupIconName = groupName.Substring(0, indexOf);
-                groupMessageName = groupName.Substring(indexOf + 1, groupName.Length - indexOf - 1);
-            }
-            text.AppendFormat(@"&nbsp;&nbsp;&nbsp;&nbsp;<div class=""icon {0}"" title=""{1}""></div>&nbsp;{1}<br/>", groupIconName, groupMessageName);
-            text.AppendLine();
+        string url = null;
+        switch (link.Type) {
+            case LinkType.None:
+                return Escape(link.Name);
+                break;
+            case LinkType.Self:
+                return string.Format("<strong>{0}</strong>", Escape(link.Name));
+                break;
+            case LinkType.Local:
+                url = string.Format("ms-xhelp:///?Id={0}", link.LocalReference.Id);
+                break;
+            case LinkType.Msdn:
+                url = link.Location;
+                break;
         }
-
-        return text.ToString();
+        if (url == null)
+            return Escape(link.Name);
+        return string.Format("<a href=\"{0}\" {1}>{2}</a>", url, link.Attributes ?? "", Escape(link.Name));
     }
 }
 
-<!-- 
-// Dumps members
--->
-@helper Dump(NModelBase element)
-{
-   @if (element.Groups.Count > 0)
-   {
-       @Helpers.Section.Dump("Version and Platform Information", GetVersionAndPlatform(element));
-   }
+@{    
+    Model.LinkResolver = LinkToUrl;
 }

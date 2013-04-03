@@ -248,7 +248,7 @@ namespace SharpDocPak
             }
             catch (Exception ex)
             {
-                builder.Append("</br>").Append(ex);
+                builder.Append("<br/>").Append(ex);
             }
 
             // Print "no results found"
