@@ -289,7 +289,16 @@ namespace SharpDX.Toolkit.Graphics
             var gsLink = pass.Pipeline[EffectShaderType.Geometry];
             if (gsLink != null && gsLink.IsNullShader && (gsLink.StreamOutputRasterizedStream >= 0 || gsLink.StreamOutputElements != null))
             {
-                logger.Error("Cannot specify StreamOutput for null geometry shader", passAst.Span);
+                if (pass.Pipeline[EffectShaderType.Vertex] == null || pass.Pipeline[EffectShaderType.Vertex].IsNullShader)
+                {
+                    logger.Error("Cannot specify StreamOutput for null geometry shader / vertex shader", passAst.Span);
+                }
+                else
+                {
+                    // For null geometry shaders with StreamOutput, directly use the VertexShader
+                    gsLink.Index = pass.Pipeline[EffectShaderType.Vertex].Index;
+                    gsLink.ImportName = pass.Pipeline[EffectShaderType.Vertex].ImportName;
+                }
             }
         }
 
