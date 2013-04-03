@@ -1257,6 +1257,42 @@ namespace SharpDX.Toolkit.Graphics
             OutputMergerStage.SetTargets(depthStencilView, renderTargetView);
         }
 
+        /// <summary>
+        /// Resets the stream output targets bound to the StreamOutput stage.
+        /// </summary>
+        /// <msdn-id>ff476484</msdn-id>
+        ///   <unmanaged>void ID3D11DeviceContext::SOSetTargets([In] unsigned int NumBuffers,[In, Buffer, Optional] const ID3D11Buffer** ppSOTargets,[In, Buffer, Optional] const unsigned int* pOffsets)</unmanaged>
+        ///   <unmanaged-short>ID3D11DeviceContext::SOSetTargets</unmanaged-short>
+        public void ResetStreamOutputTargets()
+        {
+            Context.StreamOutput.SetTargets(0, null, null);
+        }
+
+        /// <summary>
+        /// Sets the stream output targets bound to the StreamOutput stage.
+        /// </summary>
+        /// <param name="buffer">The buffer to bind on the first stream output slot.</param>
+        /// <param name="offsets">The offests in bytes of the buffer. An offset of -1 will cause the stream output buffer to be appended, continuing after the last location written to the buffer in a previous stream output pass.</param>
+        /// <msdn-id>ff476484</msdn-id>
+        /// <unmanaged>void ID3D11DeviceContext::SOSetTargets([In] unsigned int NumBuffers,[In, Buffer, Optional] const ID3D11Buffer** ppSOTargets,[In, Buffer, Optional] const unsigned int* pOffsets)</unmanaged>
+        /// <unmanaged-short>ID3D11DeviceContext::SOSetTargets</unmanaged-short>
+        public unsafe void SetStreamOutputTarget(Buffer buffer, int offsets = -1)
+        {
+            Context.StreamOutput.SetTarget(buffer, offsets);
+        }
+
+        /// <summary>
+        /// Sets the stream output targets bound to the StreamOutput stage.
+        /// </summary>
+        /// <param name="buffers">The buffers.</param>
+        /// <msdn-id>ff476484</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::SOSetTargets([In] unsigned int NumBuffers,[In, Buffer, Optional] const ID3D11Buffer** ppSOTargets,[In, Buffer, Optional] const unsigned int* pOffsets)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::SOSetTargets</unmanaged-short>	
+        public void SetStreamOutputTargets(params StreamOutputBufferBinding[] buffers)
+        {
+            Context.StreamOutput.SetTargets(buffers);
+        }
+
         /// <summary>	
         /// <p>Bind an index buffer to the input-assembler stage.</p>	
         /// </summary>	

@@ -17,10 +17,63 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+using System;
+
 namespace SharpDX.Direct3D11
 {
     public partial class StreamOutputStage
     {
+        /// <summary>	
+        /// <p>Set the target output buffers for the stream-output stage of the pipeline.</p>	
+        /// </summary>	
+        /// <param name="numBuffers"><dd>  <p>The number of buffer to bind to the device. A maximum of four output buffers can be set. If less than four are defined by the call, the remaining buffer slots are set to <strong><c>null</c></strong>. See Remarks.</p> </dd></param>	
+        /// <param name="sOTargetsOut"><dd>  <p>The array of output buffers (see <strong><see cref="SharpDX.Direct3D11.Buffer"/></strong>) to bind to the device. The buffers must have been created with the <strong><see cref="SharpDX.Direct3D11.BindFlags.StreamOutput"/></strong> flag.</p> </dd></param>	
+        /// <param name="offsetsRef"><dd>  <p>Array of offsets to the output buffers from <em>ppSOTargets</em>, one offset for each buffer. The offset values must be in bytes.</p> </dd></param>	
+        /// <remarks>	
+        /// <p>An offset of -1 will cause the stream output buffer to be appended, continuing after the last location written to the buffer in a previous stream output pass.</p><p>Calling this method using a buffer that is currently bound for writing will effectively bind <strong><c>null</c></strong> instead because a buffer cannot be bound as both an input and an output at the same time.</p><p>The debug layer will generate a warning whenever a resource is prevented from being bound simultaneously as an input and an output, but this will not prevent invalid data from being used by the runtime.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10. </p>	
+        /// </remarks>	
+        /// <msdn-id>ff476484</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::SOSetTargets([In] unsigned int NumBuffers,[In, Buffer, Optional] const ID3D11Buffer** ppSOTargets,[In, Buffer, Optional] const unsigned int* pOffsets)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::SOSetTargets</unmanaged-short>	
+        internal void SetTargets(int numBuffers, SharpDX.Direct3D11.Buffer[] sOTargetsOut, int[] offsetsRef)
+        {
+            unsafe
+            {
+                var sOTargetsOut_ = (IntPtr*)0;
+                if (sOTargetsOut != null)
+                {
+                    IntPtr* sOTargetsOut__ = stackalloc IntPtr[sOTargetsOut.Length];
+                    sOTargetsOut_ = sOTargetsOut__;
+                    for (int i = 0; i < sOTargetsOut.Length; i++)
+                        sOTargetsOut_[i] = (sOTargetsOut[i] == null) ? IntPtr.Zero : sOTargetsOut[i].NativePointer;
+                }
+                int[] offsetsRef__ = offsetsRef;
+                fixed (void* offsetsRef_ = offsetsRef__)
+                    SetTargets(numBuffers, new IntPtr(sOTargetsOut_), new IntPtr(offsetsRef_));
+            }
+        }
+
+        /// <summary>
+        /// Sets the stream output targets bound to the StreamOutput stage.
+        /// </summary>
+        /// <param name="buffer">The buffer to bind on the first stream output slot.</param>
+        /// <param name="offsets">An offset of -1 will cause the stream output buffer to be appended, continuing after the last location written to the buffer in a previous stream output pass.</param>
+        /// <msdn-id>ff476484</msdn-id>
+        /// <unmanaged>void ID3D11DeviceContext::SOSetTargets([In] unsigned int NumBuffers,[In, Buffer, Optional] const ID3D11Buffer** ppSOTargets,[In, Buffer, Optional] const unsigned int* pOffsets)</unmanaged>
+        /// <unmanaged-short>ID3D11DeviceContext::SOSetTargets</unmanaged-short>
+        public unsafe void SetTarget(Buffer buffer, int offsets)
+        {
+            if (buffer == null)
+            {
+                throw new ArgumentNullException("buffer");
+            }
+
+            var ptr = buffer.NativePointer;
+
+            SetTargets(1, new IntPtr(&ptr), new IntPtr(&offsets));
+        }
+
         /// <summary>	
         /// Set the target output {{buffers}} for the {{StreamOutput}} stage, which enables/disables the pipeline to stream-out data.	
         /// </summary>	
@@ -29,11 +82,14 @@ namespace SharpDX.Direct3D11
         /// </remarks>	
         /// <param name="bufferBindings">an array of output buffers (see <see cref="SharpDX.Direct3D11.StreamOutputBufferBinding"/>) to bind to the device. The buffers must have been created with the <see cref="SharpDX.Direct3D11.BindFlags.StreamOutput"/> flag. </param>
         /// <unmanaged>void SOSetTargets([In] int NumBuffers,[In, Buffer, Optional] const ID3D10Buffer** ppSOTargets,[In, Buffer, Optional] const int* pOffsets)</unmanaged>
-        public void SetTargets(params StreamOutputBufferBinding[] bufferBindings)
+        /// <msdn-id>ff476484</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::SOSetTargets([In] unsigned int NumBuffers,[In, Buffer, Optional] const ID3D11Buffer** ppSOTargets,[In, Buffer, Optional] const unsigned int* pOffsets)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::SOSetTargets</unmanaged-short>	
+        public void SetTargets(StreamOutputBufferBinding[] bufferBindings)
         {
             if (bufferBindings == null)
             {
-                SetTargets(0, (Buffer[])null, null);
+                SetTargets(0, null, null);
             }
             else
             {

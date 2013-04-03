@@ -278,6 +278,9 @@
 
     <map method="ID3D11View::GetResource" property="false" visibility="internal"/>
     <map param="ID3D11View::GetResource::ppResource" type="void"/>
+    
+    <map param="ID3D11DeviceContext::SOSetTargets::ppSOTargets" type="void"/>
+    <map param="ID3D11DeviceContext::SOSetTargets::pOffsets" type="void"/>
 
     <!--
     // *****************************************************************
