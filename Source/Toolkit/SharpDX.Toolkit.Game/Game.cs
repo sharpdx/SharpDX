@@ -821,7 +821,7 @@ namespace SharpDX.Toolkit
             OnExiting(this, EventArgs.Empty);
         }
 
-        private static bool AddGameSystem<T>(T gameSystem, List<T> gameSystems, IComparer<T> comparer, bool removePreviousSystem = false)
+        private static bool AddGameSystem<T>(T gameSystem, List<T> gameSystems, IComparer<T> comparer, Comparison<T> orderComparer, bool removePreviousSystem = false)
         {
             lock (gameSystems)
             {
@@ -840,7 +840,7 @@ namespace SharpDX.Toolkit
                     index = ~index;
 
                     // Iterate until the order is different or we are at the end of the list
-                    while ((index < gameSystems.Count) && (comparer.Compare(gameSystems[index], gameSystem) == 0))
+                    while ((index < gameSystems.Count) && (orderComparer(gameSystems[index], gameSystem) == 0))
                     {
                         index++;
                     }
@@ -912,18 +912,28 @@ namespace SharpDX.Toolkit
 
             // Add an updateable system to the separate list
             var updateableGameSystem = gameSystem as IUpdateable;
-            if (updateableGameSystem != null && AddGameSystem(updateableGameSystem, updateableGameSystems, UpdateableComparer.Default))
+            if (updateableGameSystem != null && AddGameSystem(updateableGameSystem, updateableGameSystems, UpdateableSearcher.Default, UpdateableComparison))
             {
                 updateableGameSystem.UpdateOrderChanged += updateableGameSystem_UpdateOrderChanged;
             }
 
             // Add a drawable system to the separate list
             var drawableGameSystem = gameSystem as IDrawable;
-            if (drawableGameSystem != null && AddGameSystem(drawableGameSystem, drawableGameSystems, DrawableComparer.Default))
+            if (drawableGameSystem != null && AddGameSystem(drawableGameSystem, drawableGameSystems, DrawableSearcher.Default, DrawableComparison))
             {
                 drawableGameSystem.DrawOrderChanged += drawableGameSystem_DrawOrderChanged;
             }
 
+        }
+
+        private static int UpdateableComparison(IUpdateable left, IUpdateable right)
+        {
+            return left.UpdateOrder.CompareTo(right.UpdateOrder);
+        }
+
+        private static int DrawableComparison(IDrawable left, IDrawable right)
+        {
+            return left.DrawOrder.CompareTo(right.DrawOrder);
         }
 
         private void GameSystems_ItemRemoved(object sender, ObservableCollectionEventArgs<IGameSystem> e)
@@ -1003,7 +1013,7 @@ namespace SharpDX.Toolkit
 
         private void drawableGameSystem_DrawOrderChanged(object sender, EventArgs e)
         {
-            AddGameSystem((IDrawable)sender, drawableGameSystems, DrawableComparer.Default, true);
+            AddGameSystem((IDrawable)sender, drawableGameSystems, DrawableSearcher.Default, DrawableComparison, true);
         }
 
         private void graphicsDeviceService_DeviceCreated(object sender, EventArgs e)
@@ -1024,7 +1034,7 @@ namespace SharpDX.Toolkit
 
         private void updateableGameSystem_UpdateOrderChanged(object sender, EventArgs e)
         {
-            AddGameSystem((IUpdateable)sender, updateableGameSystems, UpdateableComparer.Default, true);
+            AddGameSystem((IUpdateable)sender, updateableGameSystems, UpdateableSearcher.Default, UpdateableComparison, true);
         }
 
         #endregion
@@ -1032,9 +1042,9 @@ namespace SharpDX.Toolkit
         /// <summary>
         /// The comparer used to order <see cref="IDrawable"/> objects.
         /// </summary>
-        internal struct DrawableComparer : IComparer<IDrawable>
+        internal struct DrawableSearcher : IComparer<IDrawable>
         {
-            public static readonly DrawableComparer Default = new DrawableComparer();
+            public static readonly DrawableSearcher Default = new DrawableSearcher();
 
             public int Compare(IDrawable left, IDrawable right)
             {
@@ -1060,9 +1070,9 @@ namespace SharpDX.Toolkit
         /// <summary>
         /// The comparer used to order <see cref="IUpdateable"/> objects.
         /// </summary>
-        internal struct UpdateableComparer : IComparer<IUpdateable>
+        internal struct UpdateableSearcher : IComparer<IUpdateable>
         {
-            public static readonly UpdateableComparer Default = new UpdateableComparer();
+            public static readonly UpdateableSearcher Default = new UpdateableSearcher();
 
             public int Compare(IUpdateable left, IUpdateable right)
             {
