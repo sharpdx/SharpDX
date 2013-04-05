@@ -1326,7 +1326,7 @@ namespace SharpDX
             float d14 = value.M21 * b3 + value.M22 * -b1 + value.M23 * b0;
 
             float det = value.M11 * d11 - value.M12 * d12 + value.M13 * d13 - value.M14 * d14;
-            if (Math.Abs(det) <= MathUtil.ZeroTolerance)
+            if (Math.Abs(det) <= MathUtil.ZeroTolerance * 1e-9f)
             {
                 result = Matrix.Zero;
                 return;
