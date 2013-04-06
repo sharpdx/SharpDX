@@ -270,25 +270,19 @@ namespace SharpDX
         /// <returns>Result of the wrapping.</returns>
         public static int Wrap(int value, int min, int max)
         {
-            if (min > max)
+            if (min == max) return min;
+
+            int v = (((value - min) % (max - min)));
+            if (value > max)
             {
-                var tmp = min;
-                min = max;
-                max = tmp;
+                return min + v;
+            }
+            if (value < min)
+            {
+                return max + v;
             }
 
-            // adjust to 0
-            value -= min;
-
-            int rangeSize = max - min;
-
-            if (rangeSize == 0)
-            {
-                // avoid dividing by 0
-                return max;
-            }
-
-            return (value - (rangeSize * (value / rangeSize)) + min);
+            return value;
         }
 
         /// <summary>
@@ -300,25 +294,19 @@ namespace SharpDX
         /// <returns>Result of the wrapping.</returns>
         public static float Wrap(float value, float min, float max)
         {
-            if (min > max)
+            if (WithinEpsilon(min, max)) return min;
+
+            float v = (((value - min) % (max - min)));
+            if (value > max)
             {
-                var tmp = min;
-                min = max;
-                max = tmp;
+                return min + v;
+            }
+            if (value < min)
+            {
+                return max + v;
             }
 
-            // adjust to 0
-            value -= min; 
-
-            float rangeSize = max - min;
-
-            if (rangeSize == 0.0f)
-            {
-                // avoid dividing by 0
-                return max;
-            }
-
-            return (float)(value - (rangeSize * Math.Floor(value / rangeSize)) + min);
+            return value;
         }
         
         /// <summary>
