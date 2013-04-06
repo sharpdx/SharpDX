@@ -429,7 +429,7 @@ namespace SharpDX.Toolkit.Graphics
                 stageBlock.Index = link.Index;
                 stageBlock.ShaderStage = Effect.GraphicsDevice.ShaderStages[i];
                 stageBlock.StreamOutputElements = link.StreamOutputElements;
-                stageBlock.StreamOutputRasterizedStream = link.StreamOutputRasterizedStream;
+                stageBlock.StreamOutputRasterizedStream = Math.Max(0, link.StreamOutputRasterizedStream); // clamp to [0,...]
 
                 InitStageBlock(stageBlock, logger);
             }
