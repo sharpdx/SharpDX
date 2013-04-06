@@ -197,12 +197,17 @@ namespace SharpDX.Toolkit.Graphics
                             if (soElements != null)
                             {
                                 // Calculate the strides
-                                var soStrides = new [] { 0, 0, 0, 0 };
+                                var soStrides = new List<int>();
                                 foreach (var streamOutputElement in soElements)
                                 {
+                                    for (int i = soStrides.Count; i < (streamOutputElement.Stream+1); i++)
+                                    {
+                                        soStrides.Add(0);
+                                    }
+
                                     soStrides[streamOutputElement.Stream] += streamOutputElement.ComponentCount * sizeof(float);
                                 }
-                                shader = new GeometryShader(graphicsDevice, bytecodeRaw, soElements, soStrides, soRasterizedStream);
+                                shader = new GeometryShader(graphicsDevice, bytecodeRaw, soElements, soStrides.ToArray(), soRasterizedStream);
                             }
                             else
                             {
