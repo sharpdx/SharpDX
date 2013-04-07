@@ -625,7 +625,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <exception cref="System.NotSupportedException">If the convertion for this type is not supported.</exception>
         private static Format ConvertTypeToFormat(Type typeT)
         {
-            if (typeof(Vector4) == typeT || typeof(Color4) == typeT)
+            if (typeof(Vector4) == typeT || typeof(Color4) == typeT || typeof(RectangleF) == typeT)
                 return Format.R32G32B32A32_Float;
             if (typeof(Vector3) == typeT || typeof(Color3) == typeT)
                 return Format.R32G32B32_Float;
