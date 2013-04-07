@@ -45,7 +45,7 @@ namespace SharpDX.Toolkit.Graphics
 
 
         internal readonly List<EffectData.Shader> RegisteredShaders;
-        private readonly List<SharpDX.Direct3D11.DeviceChild> compiledShaders;
+        private readonly List<SharpDX.Direct3D11.DeviceChild>[] compiledShadersGroup;
         private readonly GraphicsDevice graphicsDevice;
         private readonly List<Effect> effects;
 
@@ -60,7 +60,12 @@ namespace SharpDX.Toolkit.Graphics
         {
             RegisteredShaders = new List<EffectData.Shader>();
             mapNameToConstantBuffer = new Dictionary<GraphicsDevice, Dictionary<string, Dictionary<EffectConstantBufferKey, EffectConstantBuffer>>>();
-            compiledShaders = new List<DeviceChild>(1024);
+            compiledShadersGroup = new List<DeviceChild>[(int)EffectShaderType.Compute + 1];
+            for (int i = 0; i < compiledShadersGroup.Length; i++)
+            {
+                compiledShadersGroup[i] = new List<DeviceChild>(256);
+            }
+
             registered = new Dictionary<EffectData, EffectData.Effect>(new IdentityEqualityComparer<EffectData>());
             effects = new List<Effect>();
             RegisteredEffects = new ReadOnlyCollection<Effect>(effects);
@@ -118,9 +123,12 @@ namespace SharpDX.Toolkit.Graphics
                     registered.Add(data, effect);
 
                     // Just alocate the compiled shaders array according to the currennt size of shader datas
-                    for (int i = compiledShaders.Count; i < RegisteredShaders.Count; i++)
+                    foreach (var compiledShaders in compiledShadersGroup)
                     {
-                        compiledShaders.Add(null);
+                        for (int i = compiledShaders.Count; i < RegisteredShaders.Count; i++)
+                        {
+                            compiledShaders.Add(null);
+                        }
                     }
                 }
 
@@ -172,7 +180,7 @@ namespace SharpDX.Toolkit.Graphics
             profileError = null;
             lock (sync)
             {
-                shader = compiledShaders[index];
+                shader = compiledShadersGroup[(int)shaderType][index];
                 if (shader == null)
                 {
                     if (RegisteredShaders[index].Level > graphicsDevice.Features.Level)
@@ -221,7 +229,7 @@ namespace SharpDX.Toolkit.Graphics
                             shader = new ComputeShader(graphicsDevice, bytecodeRaw);
                             break;
                     }
-                    compiledShaders[index] = ToDispose(shader);
+                    compiledShadersGroup[(int)shaderType][index] = ToDispose(shader);
                 }
             }
             return shader;
@@ -443,6 +451,14 @@ namespace SharpDX.Toolkit.Graphics
             {
                 handler(this, e);
             }
+        }
+
+
+        private class CompileShader
+        {
+            public SharpDX.Direct3D11.DeviceChild Shader;
+
+            public SharpDX.Direct3D11.DeviceChild GeometryShader;
         }
     }
 }
