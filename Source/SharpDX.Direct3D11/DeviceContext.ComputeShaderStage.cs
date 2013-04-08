@@ -94,7 +94,7 @@ namespace SharpDX.Direct3D11
         /// <unmanaged>void CSSetUnorderedAccessViews([In] int StartSlot,[In] int NumUAVs,[In, Buffer] const ID3D11UnorderedAccessView** ppUnorderedAccessViews,[In, Buffer] const int* pUAVInitialCounts)</unmanaged>
         public unsafe void SetUnorderedAccessViews(int startSlot, SharpDX.Direct3D11.UnorderedAccessView[] unorderedAccessViews, int[] uavInitialCounts)
         {
-            IntPtr* unorderedAccessViewsOut_ = (IntPtr*)0;
+            var unorderedAccessViewsOut_ = (IntPtr*)0;
             if (unorderedAccessViews != null)
             {
                 IntPtr* unorderedAccessViewsOut__ = stackalloc IntPtr[unorderedAccessViews.Length];
@@ -102,7 +102,8 @@ namespace SharpDX.Direct3D11
                 for (int i = 0; i < unorderedAccessViews.Length; i++)
                     unorderedAccessViewsOut_[i] = (unorderedAccessViews[i] == null) ? IntPtr.Zero : unorderedAccessViews[i].NativePointer;
             }
-            SetUnorderedAccessViews(startSlot, unorderedAccessViews != null ? unorderedAccessViews.Length : 0, (IntPtr)unorderedAccessViewsOut_, uavInitialCounts);
+            fixed (void* puav = uavInitialCounts)
+                SetUnorderedAccessViews(startSlot, unorderedAccessViews != null ? unorderedAccessViews.Length : 0, (IntPtr)unorderedAccessViewsOut_, (IntPtr)puav);
         }
     }
 }

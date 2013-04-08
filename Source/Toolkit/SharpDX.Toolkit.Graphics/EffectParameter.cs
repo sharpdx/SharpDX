@@ -356,14 +356,34 @@ namespace SharpDX.Toolkit.Graphics
             buffer.IsDirty = true;
         }
 
+        /// <summary>
+        /// Gets the resource view set for this parameter.
+        /// </summary>
+        /// <typeparam name = "T">The type of the resource view.</typeparam>
+        /// <returns>The resource view.</returns>
         public T GetResource<T>() where T : class
         {
             return resourceLinker.GetResource<T>(offset);
         }
 
-        public void SetResource<T>(T value) where T : class
+        /// <summary>
+        /// Sets a shader resource for the associated parameter.
+        /// </summary>
+        /// <typeparam name = "T">The type of the resource view.</typeparam>
+        /// <param name="resourceView">The resource view.</param>
+        public void SetResource<T>(T resourceView) where T : class
         {
-            resourceLinker.SetResource(offset, ResourceType, value);
+            resourceLinker.SetResource(offset, ResourceType, resourceView);
+        }
+
+        /// <summary>
+        /// Sets a shader resource for the associated parameter.
+        /// </summary>
+        /// <param name="resourceView">The resource.</param>
+        /// <param name="initialUAVCount">The initial count for the UAV (-1) to keep it</param>
+        public void SetResource(Direct3D11.UnorderedAccessView resourceView, int initialUAVCount)
+        {
+            resourceLinker.SetResource(offset, ResourceType, resourceView, initialUAVCount);
         }
 
         /// <summary>
@@ -375,19 +395,57 @@ namespace SharpDX.Toolkit.Graphics
             resourceLinker.SetResourcePointer(offset, ResourceType, resourcePointer);
         }
 
-        public void SetResource<T>(params T[] valueArray) where T : class
+        /// <summary>
+        /// Sets a an array of shader resource views for the associated parameter.
+        /// </summary>
+        /// <typeparam name = "T">The type of the resource view.</typeparam>
+        /// <param name="resourceViewArray">The resource view array.</param>
+        public void SetResource<T>(params T[] resourceViewArray) where T : class
         {
-            resourceLinker.SetResource(offset, ResourceType, valueArray);
+            resourceLinker.SetResource(offset, ResourceType, resourceViewArray);
         }
 
-        public void SetResource<T>(int index, T value) where T : class
+        /// <summary>
+        /// Sets a an array of shader resource views for the associated parameter.
+        /// </summary>
+        /// <param name="resourceViewArray">The resource view array.</param>
+        /// <param name="uavCounts">Sets the initial uavCount</param>
+        public void SetResource(Direct3D11.UnorderedAccessView[] resourceViewArray, int[] uavCounts)
         {
-            resourceLinker.SetResource(offset + index, ResourceType, value);
+            resourceLinker.SetResource(offset, ResourceType, resourceViewArray, uavCounts);
         }
 
-        public void SetResource<T>(int index, params T[] valueArray) where T : class
+        /// <summary>
+        /// Sets a shader resource at the specified index for the associated parameter.
+        /// </summary>
+        /// <typeparam name = "T">The type of the resource view.</typeparam>
+        /// <param name="index">Index to start to set the resource views</param>
+        /// <param name="resourceView">The resource view.</param>
+        public void SetResource<T>(int index, T resourceView) where T : class
         {
-            resourceLinker.SetResource(offset + index, ResourceType, valueArray);
+            resourceLinker.SetResource(offset + index, ResourceType, resourceView);
+        }
+
+        /// <summary>
+        /// Sets a an array of shader resource views at the specified index for the associated parameter.
+        /// </summary>
+        /// <typeparam name = "T">The type of the resource view.</typeparam>
+        /// <param name="index">Index to start to set the resource views</param>
+        /// <param name="resourceViewArray">The resource view array.</param>
+        public void SetResource<T>(int index, params T[] resourceViewArray) where T : class
+        {
+            resourceLinker.SetResource(offset + index, ResourceType, resourceViewArray);
+        }
+
+        /// <summary>
+        /// Sets a an array of shader resource views at the specified index for the associated parameter.
+        /// </summary>
+        /// <param name="index">Index to start to set the resource views</param>
+        /// <param name="resourceViewArray">The resource view array.</param>
+        /// <param name="uavCount">Sets the initial uavCount</param>
+        public void SetResource(int index, Direct3D11.UnorderedAccessView[] resourceViewArray, int[] uavCount)
+        {
+            resourceLinker.SetResource(offset + index, ResourceType, resourceViewArray, uavCount);
         }
 
         internal void SetDefaultValue()

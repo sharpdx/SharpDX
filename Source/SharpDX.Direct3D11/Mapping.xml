@@ -282,6 +282,9 @@
     <map param="ID3D11DeviceContext::SOSetTargets::ppSOTargets" type="void"/>
     <map param="ID3D11DeviceContext::SOSetTargets::pOffsets" type="void"/>
 
+    <map param="ID3D11DeviceContext::CSSetUnorderedAccessViews::pUAVInitialCounts" type="void"/>
+    <map param="ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews::pUAVInitialCounts" type="void"/>
+    
     <!--
     // *****************************************************************
     // D3D11 Functions

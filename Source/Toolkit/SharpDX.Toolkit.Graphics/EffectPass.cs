@@ -245,17 +245,34 @@ namespace SharpDX.Toolkit.Graphics
 
             var pLinks = pipeline.CopySlotLinks.Links;
             var pPointers = pipeline.PointersBuffer;
+            var pUAVs = pipeline.UAVBuffer;
             var constantBuffers = Effect.ResourceLinker.ConstantBuffers;
 
             // ---------------------------------------------------------------------
             // Handle sparse input resources and update their continous counterpart.
             // ---------------------------------------------------------------------
             var resourceLinkerPointers = Effect.ResourceLinker.Pointers;
+            var resourceLinkerUAVCounts  = Effect.ResourceLinker.UAVCounts;
             for (int i = 0; i < pipeline.CopySlotLinks.Count; i++)
             {
-                var pWritePtr = (IntPtr*) ((byte*) pPointers + pLinks->SlotIndex);
-                for (int j = 0; j < pLinks->SlotCount; j++)
-                    *pWritePtr++ = resourceLinkerPointers[pLinks->GlobalIndex + j];
+                var pWritePtr = pPointers + pLinks->SlotIndex;
+                int slotIndex = pLinks->GlobalIndex;
+                if (pLinks->UavInitialCount == IntPtr.Zero)
+                {
+                    for (int j = 0; j < pLinks->SlotCount; j++, slotIndex++)
+                    {
+                        *pWritePtr++ = resourceLinkerPointers[slotIndex];
+                    }
+                }
+                else
+                {
+                    var pWriteUAVPtr = pUAVs + pLinks->SlotIndex;
+                    for (int j = 0; j < pLinks->SlotCount; j++, slotIndex++)
+                    {
+                        *pWritePtr++ = resourceLinkerPointers[slotIndex];
+                        *pWriteUAVPtr++ = resourceLinkerUAVCounts[slotIndex];
+                    }
+                }
                 pLinks++;
             }
 
@@ -325,22 +342,21 @@ namespace SharpDX.Toolkit.Graphics
                 // ----------------------------------------------
                 localLink = stageBlock.UnorderedAccessViewSlotLinks;
                 pLinks = localLink.Links;
-                // TODO: Add support for customizable UAV Counters
+
                 if (stageBlock.Type == EffectShaderType.Compute)
                 {
                     for (int i = 0; i < localLink.Count; i++)
                     {
-                        shaderStage.SetUnorderedAccessViews(pLinks->SlotIndex, pLinks->SlotCount, pLinks->Pointer, UnchangedUAVCounters);
+                        shaderStage.SetUnorderedAccessViews(pLinks->SlotIndex, pLinks->SlotCount, pLinks->Pointer, pLinks->UavInitialCount);
                         pLinks++;
                     }
                 }
                 else
                 {
                     // Otherwise, for OutputMergerStage.
-                    // TODO: Add support for Direct3D11.1 "UAV at all stages". Not sure how this is working for Direct3D11.1.
                     for (int i = 0; i < localLink.Count; i++)
                     {
-                        mergerStage.SetUnorderedAccessViews(pLinks->SlotIndex, pLinks->SlotCount, pLinks->Pointer, UnchangedUAVCounters);
+                        mergerStage.SetUnorderedAccessViewsKeepRTV(pLinks->SlotIndex, pLinks->SlotCount, pLinks->Pointer, pLinks->UavInitialCount);
                         pLinks++;
                     }
                 }
@@ -638,7 +654,7 @@ namespace SharpDX.Toolkit.Graphics
                         }
 
                         // Update the total slot count
-                        previousRange.SlotCount += delta + currentRange.SlotCount;
+                        previousRange.SlotCount += (short)(delta + currentRange.SlotCount);
 
                         slotRangePerResourceType.RemoveAt(i);
                         i--;
@@ -687,6 +703,7 @@ namespace SharpDX.Toolkit.Graphics
             // ----------------------------------------------------------------------------------
             // 1st pass: calculate memory for all SlotLinks and buffer of pointers for each stage
             // ----------------------------------------------------------------------------------
+            int totalPointerCount = 0;
             foreach (var stageBlockVar in pipeline.Stages)
             {
                 var stageBlock = stageBlockVar;
@@ -694,10 +711,13 @@ namespace SharpDX.Toolkit.Graphics
                 if (stageBlock == null || stageBlock.Slots == null)
                     continue;
 
-                foreach (var slotLinkSetList in stageBlock.Slots)
+                for (int resourceType = 0; resourceType < stageBlock.Slots.Length; resourceType++)
                 {
+                    var slotLinkSetList = stageBlock.Slots[resourceType];
                     if (slotLinkSetList == null)
+                    {
                         continue;
+                    }
 
                     // Allocate memory for slotlinks per type
                     singleSlotLinksOffset += slotLinkSetList.Count * Utilities.SizeOf<SlotLink>();
@@ -710,7 +730,9 @@ namespace SharpDX.Toolkit.Graphics
                         if (!slotLinkSet.IsDirectSlot)
                         {
                             pointerBuffersOffset += slotLinkSet.Links.Count * Utilities.SizeOf<SlotLink>();
-                            slotTotalMemory += slotLinkSet.SlotCount * Utilities.SizeOf<IntPtr>();
+                            slotTotalMemory += slotLinkSet.SlotCount * Utilities.SizeOf<IntPtr>(); // +PointerResources
+                            slotTotalMemory += slotLinkSet.SlotCount * sizeof(int); // + UAVCounts
+                            totalPointerCount += slotLinkSet.SlotCount;
                         }
                     }
                 }
@@ -732,6 +754,13 @@ namespace SharpDX.Toolkit.Graphics
 
             // Calculate address of buffer pointers
             pipeline.PointersBuffer = (IntPtr*) ((byte*) pipeline.GlobalSlotPointer + pointerBuffersOffset);
+            pipeline.UAVBuffer = (int*)((byte*)pipeline.PointersBuffer + totalPointerCount * Utilities.SizeOf<IntPtr>());
+
+            // Initialize default UAVCounts to -1
+            for (int i = 0; i < totalPointerCount; i++)
+            {
+                pipeline.UAVBuffer[i] = -1;
+            }
 
             if (EnableDebug)
             {
@@ -754,7 +783,7 @@ namespace SharpDX.Toolkit.Graphics
 
             var slotLinks = pipeline.CopySlotLinks.Links;
 
-            int currentPointerOffset = 0;
+            int currentPointerIndex = 0;
 
             foreach (var stageBlock in pipeline.Stages)
             {
@@ -772,6 +801,7 @@ namespace SharpDX.Toolkit.Graphics
 
                     var slotLinksPerType = globalSoftLink;
 
+                    bool isUAV = false;
                     switch ((EffectResourceType) resourceType)
                     {
                         case EffectResourceType.ConstantBuffer:
@@ -785,6 +815,7 @@ namespace SharpDX.Toolkit.Graphics
                         case EffectResourceType.UnorderedAccessView:
                             stageBlock.UnorderedAccessViewSlotLinks.Count = slotLinkSetList.Count;
                             stageBlock.UnorderedAccessViewSlotLinks.Links = slotLinksPerType;
+                            isUAV = true;
                             break;
                         case EffectResourceType.SamplerState:
                             stageBlock.SamplerStateSlotLinks.Count = slotLinkSetList.Count;
@@ -804,21 +835,34 @@ namespace SharpDX.Toolkit.Graphics
                         if (slotLinkSet.IsDirectSlot)
                         {
                             slotLinksPerType->Pointer = (IntPtr) (Effect.ResourceLinker.Pointers + slotLinkSet.Links[0].GlobalIndex);
+
+                            // Special case for UAV initial counters
+                            if (isUAV)
+                            {
+                                slotLinksPerType->UavInitialCount = (IntPtr)(Effect.ResourceLinker.UAVCounts + slotLinkSet.Links[0].GlobalIndex);
+                            }
                         }
                         else
                         {
-                            slotLinksPerType->Pointer = (IntPtr) ((byte*) pipeline.PointersBuffer + currentPointerOffset);
+                            slotLinksPerType->Pointer = (IntPtr)((byte*)pipeline.PointersBuffer + currentPointerIndex * Utilities.SizeOf<IntPtr>());
+
+                            // Special case for UAV initial counters
+                            if (isUAV)
+                            {
+                                slotLinksPerType->UavInitialCount = (IntPtr)((byte*)pipeline.UAVBuffer + currentPointerIndex * Utilities.SizeOf<int>());
+                            }
+                            
                             foreach (SlotLink localLink in slotLinkSet.Links)
                             {
                                 var slotLink = localLink;
 
                                 // Make slotIndex absolute
-                                slotLink.SlotIndex = slotLink.SlotIndex * Utilities.SizeOf<IntPtr>() + currentPointerOffset;
+                                slotLink.SlotIndex = slotLink.SlotIndex + currentPointerIndex;
                                 *slotLinks++ = slotLink;
                                 pipeline.CopySlotLinks.Count++;
                             }
 
-                            currentPointerOffset += slotLinkSet.SlotCount * Utilities.SizeOf<IntPtr>();
+                            currentPointerIndex += slotLinkSet.SlotCount;
                         }
 
                         slotLinksPerType++;
@@ -927,6 +971,7 @@ namespace SharpDX.Toolkit.Graphics
 
             public OutputMergerStage OutputMergerStage;
             public unsafe IntPtr* PointersBuffer;
+            public unsafe int* UAVBuffer;
             public RawSlotLinkSet CopySlotLinks;
             public StageBlock[] Stages;
         }
@@ -962,6 +1007,7 @@ namespace SharpDX.Toolkit.Graphics
                 Pointer = new IntPtr(globalIndex);
                 SlotIndex = slotIndex;
                 SlotCount = slotCount;
+                UavInitialCount = IntPtr.Zero;
             }
 
             public IntPtr Pointer;
@@ -969,6 +1015,8 @@ namespace SharpDX.Toolkit.Graphics
             public int SlotIndex;
 
             public int SlotCount;
+
+            public IntPtr UavInitialCount;
 
             public int GlobalIndex
             {
@@ -986,7 +1034,7 @@ namespace SharpDX.Toolkit.Graphics
         private class SlotLinkSet
         {
             public List<SlotLink> Links;
-            public int SlotCount;
+            public short SlotCount;
             public int SlotIndex;
 
             public SlotLinkSet()

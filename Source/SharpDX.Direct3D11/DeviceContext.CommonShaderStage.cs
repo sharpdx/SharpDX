@@ -374,7 +374,7 @@ namespace SharpDX.Direct3D11
 
         internal abstract void SetShader(DeviceChild shader, SharpDX.Direct3D11.ClassInstance[] classInstancesOut, int numClassInstances);
 
-        internal abstract void SetUnorderedAccessViews(int startSlot, int numBuffers, IntPtr unorderedAccessBuffer, int[] uavCount);
+        internal abstract void SetUnorderedAccessViews(int startSlot, int numBuffers, IntPtr unorderedAccessBuffer, IntPtr uavCount);
     }
 
     /// <summary>
@@ -452,7 +452,7 @@ namespace SharpDX.Direct3D11
             SetShader((T)shader, classInstancesOut, numClassInstances);
         }
 
-        internal override void SetUnorderedAccessViews(int startSlot, int numBuffers, IntPtr unorderedAccessBuffer, int[] uavCount)
+        internal override void SetUnorderedAccessViews(int startSlot, int numBuffers, IntPtr unorderedAccessBuffer, IntPtr uavCount)
         {
             throw new NotSupportedException();
         }

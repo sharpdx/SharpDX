@@ -416,9 +416,62 @@ namespace SharpDX.Direct3D11
             }
         }
 
+        /// <summary>
+        ///   Binds a depth stencil view and a render target view to the output-merger stage keeping existing unordered access views bindings.
+        /// </summary>
+        /// <param name = "depthStencilView">A view of the depth-stencil buffer to bind.</param>
+        /// <param name = "renderTargetView">A view to a render target to bind.</param>
+        /// <msdn-id>ff476465</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews([In] unsigned int NumRTVs,[In, Buffer, Optional] const ID3D11RenderTargetView** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView,[In] unsigned int UAVStartSlot,[In] unsigned int NumUAVs,[In, Buffer, Optional] const ID3D11UnorderedAccessView** ppUnorderedAccessViews,[In, Buffer, Optional] const unsigned int* pUAVInitialCounts)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews</unmanaged-short>	
+        public unsafe void SetRenderTargets(DepthStencilView depthStencilView, RenderTargetView renderTargetView)
+        {
+            var renderTargetViewPtr = IntPtr.Zero;
+            if (renderTargetView != null)
+            {
+                renderTargetViewPtr = renderTargetView.NativePointer;
+            }
+            SetRenderTargetsAndKeepUAV(1, new IntPtr(&renderTargetViewPtr),  depthStencilView);
+        }
+
+        /// <summary>
+        ///   Binds a render target view to the output-merger stage keeping existing unordered access views bindings.
+        /// </summary>
+        /// <param name = "renderTargetView">A view to a render target to bind.</param>
+        /// <msdn-id>ff476465</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews([In] unsigned int NumRTVs,[In, Buffer, Optional] const ID3D11RenderTargetView** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView,[In] unsigned int UAVStartSlot,[In] unsigned int NumUAVs,[In, Buffer, Optional] const ID3D11UnorderedAccessView** ppUnorderedAccessViews,[In, Buffer, Optional] const unsigned int* pUAVInitialCounts)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews</unmanaged-short>	
+        public void SetRenderTargets(RenderTargetView renderTargetView)
+        {
+            SetRenderTargets(null, renderTargetView);
+        }
+
+        /// <summary>
+        ///   Binds a depth stencil view and a render target view to the output-merger stage keeping existing unordered access views bindings.
+        /// </summary>
+        /// <param name = "depthStencilView">A view of the depth-stencil buffer to bind.</param>
+        /// <param name = "renderTargetViews">A set of render target views to bind.</param>
+        /// <msdn-id>ff476465</msdn-id>	
+        /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews([In] unsigned int NumRTVs,[In, Buffer, Optional] const ID3D11RenderTargetView** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView,[In] unsigned int UAVStartSlot,[In] unsigned int NumUAVs,[In, Buffer, Optional] const ID3D11UnorderedAccessView** ppUnorderedAccessViews,[In, Buffer, Optional] const unsigned int* pUAVInitialCounts)</unmanaged>	
+        /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews</unmanaged-short>	
+        public unsafe void SetRenderTargets(DepthStencilView depthStencilView, params RenderTargetView[] renderTargetViews)
+        {
+            var renderTargetViewsPtr = (IntPtr*)0;
+
+            int count = 0;
+            if (renderTargetViews != null)
+            {
+                count = renderTargetViews.Length;
+                IntPtr* tempPtr = stackalloc IntPtr[renderTargetViews.Length];
+                renderTargetViewsPtr = tempPtr;
+                for (int i = 0; i < renderTargetViews.Length; i++)
+                    renderTargetViewsPtr[i] = (renderTargetViews[i] == null) ? IntPtr.Zero : renderTargetViews[i].NativePointer;
+            }
+            SetRenderTargetsAndKeepUAV(count, new IntPtr(&renderTargetViewsPtr), depthStencilView);
+        }
 
         /// <summary>	
-        /// Sets an array of views for an unordered resource.	
+        /// Sets an array of views for an unordered resource keeping existing render targets bindings.
         /// </summary>	
         /// <remarks>	
         /// </remarks>	
@@ -433,7 +486,7 @@ namespace SharpDX.Direct3D11
         }
 
         /// <summary>	
-        /// Sets an array of views for an unordered resource.	
+        /// Sets an array of views for an unordered resource keeping existing render targets bindings.
         /// </summary>	
         /// <remarks>	
         /// </remarks>	
@@ -449,7 +502,7 @@ namespace SharpDX.Direct3D11
         }
 
         /// <summary>	
-        /// Sets an array of views for an unordered resource.	
+        /// Sets an array of views for an unordered resource keeping existing render targets bindings.
         /// </summary>	
         /// <remarks>	
         /// </remarks>	
@@ -467,7 +520,7 @@ namespace SharpDX.Direct3D11
         }
 
         /// <summary>	
-        /// Sets an array of views for an unordered resource.	
+        /// Sets an array of views for an unordered resource  keeping existing render targets bindings.	
         /// </summary>	
         /// <remarks>	
         /// </remarks>	
@@ -487,7 +540,8 @@ namespace SharpDX.Direct3D11
                 for (int i = 0; i < unorderedAccessViews.Length; i++)
                     unorderedAccessViewsOut_[i] = (unorderedAccessViews[i] == null) ? IntPtr.Zero : unorderedAccessViews[i].NativePointer;
             }
-            SetUnorderedAccessViews(startSlot, unorderedAccessViews != null ? unorderedAccessViews.Length : 0, (IntPtr)unorderedAccessViewsOut_, uavInitialCounts);
+            fixed (void* puav = uavInitialCounts)
+            SetUnorderedAccessViewsKeepRTV(startSlot, unorderedAccessViews != null ? unorderedAccessViews.Length : 0, (IntPtr)unorderedAccessViewsOut_, (IntPtr)puav);
         }
 
         /// <summary>	
@@ -527,7 +581,8 @@ namespace SharpDX.Direct3D11
                         unorderedAccessViewsOut_[i] = (unorderedAccessViewsOut[i] == null) ? IntPtr.Zero : unorderedAccessViewsOut[i].NativePointer;
                 }
 
-                SetRenderTargetsAndUnorderedAccessViews(numRTVs, (IntPtr) renderTargetViewsOut_, depthStencilViewRef, uAVStartSlot, numUAVs, (IntPtr) unorderedAccessViewsOut_, uAVInitialCountsRef);
+                fixed (void* puav = uAVInitialCountsRef)
+                SetRenderTargetsAndUnorderedAccessViews(numRTVs, (IntPtr) renderTargetViewsOut_, depthStencilViewRef, uAVStartSlot, numUAVs, (IntPtr) unorderedAccessViewsOut_, (IntPtr)puav);
             }
         }
 
@@ -547,12 +602,19 @@ namespace SharpDX.Direct3D11
         /// <msdn-id>ff476465</msdn-id>	
         /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews([In] unsigned int NumRTVs,[In, Buffer, Optional] const ID3D11RenderTargetView** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView,[In] unsigned int UAVStartSlot,[In] unsigned int NumUAVs,[In, Buffer, Optional] const ID3D11UnorderedAccessView** ppUnorderedAccessViews,[In, Buffer, Optional] const unsigned int* pUAVInitialCounts)</unmanaged>	
         /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargetsAndUnorderedAccessViews</unmanaged-short>	
-        internal void SetRenderTargetsAndUnorderedAccessViews(int numRTVs, SharpDX.ComArray<SharpDX.Direct3D11.RenderTargetView> renderTargetViewsOut, SharpDX.Direct3D11.DepthStencilView depthStencilViewRef, int uAVStartSlot, int numUAVs, SharpDX.ComArray<SharpDX.Direct3D11.UnorderedAccessView> unorderedAccessViewsOut, int[] uAVInitialCountsRef)
+        internal unsafe void SetRenderTargetsAndUnorderedAccessViews(int numRTVs, SharpDX.ComArray<SharpDX.Direct3D11.RenderTargetView> renderTargetViewsOut, SharpDX.Direct3D11.DepthStencilView depthStencilViewRef, int uAVStartSlot, int numUAVs, SharpDX.ComArray<SharpDX.Direct3D11.UnorderedAccessView> unorderedAccessViewsOut, int[] uAVInitialCountsRef)
         {
-            SetRenderTargetsAndUnorderedAccessViews(numRTVs, ((renderTargetViewsOut == null) ? IntPtr.Zero : renderTargetViewsOut.NativePointer), depthStencilViewRef, uAVStartSlot, numUAVs, ((unorderedAccessViewsOut == null) ? IntPtr.Zero : unorderedAccessViewsOut.NativePointer), uAVInitialCountsRef);
+            fixed (void* puav = uAVInitialCountsRef)
+                SetRenderTargetsAndUnorderedAccessViews(numRTVs, ((renderTargetViewsOut == null) ? IntPtr.Zero : renderTargetViewsOut.NativePointer), depthStencilViewRef, uAVStartSlot, numUAVs, ((unorderedAccessViewsOut == null) ? IntPtr.Zero : unorderedAccessViewsOut.NativePointer), (IntPtr)puav);
         }
 
-        internal void SetUnorderedAccessViews(int startSlot, int numBuffers, IntPtr unorderedAccessBuffer, int[] uavCount)
+        internal void SetRenderTargetsAndKeepUAV(int numRTVs, IntPtr rtvs, SharpDX.Direct3D11.DepthStencilView depthStencilViewRef)
+        {
+            const int D3D11_KEEP_UNORDERED_ACCESS_VIEWS = -1;
+            SetRenderTargetsAndUnorderedAccessViews(numRTVs, rtvs, depthStencilViewRef, 0, D3D11_KEEP_UNORDERED_ACCESS_VIEWS, IntPtr.Zero, IntPtr.Zero);
+        }
+
+        internal void SetUnorderedAccessViewsKeepRTV(int startSlot, int numBuffers, IntPtr unorderedAccessBuffer, IntPtr uavCount)
         {
             const int D3D11_KEEP_RENDER_TARGETS_AND_DEPTH_STENCIL = -1;
             SetRenderTargetsAndUnorderedAccessViews(D3D11_KEEP_RENDER_TARGETS_AND_DEPTH_STENCIL, IntPtr.Zero, null, startSlot, numBuffers, unorderedAccessBuffer, uavCount);

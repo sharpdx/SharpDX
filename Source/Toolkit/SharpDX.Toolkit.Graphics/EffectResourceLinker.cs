@@ -48,6 +48,11 @@ namespace SharpDX.Toolkit.Graphics
         public unsafe IntPtr* Pointers;
 
         /// <summary>
+        /// Pointer to native pointers.
+        /// </summary>
+        public unsafe int* UAVCounts;
+
+        /// <summary>
         /// Initializes this instance.
         /// </summary>
         public void Initialize()
@@ -56,9 +61,14 @@ namespace SharpDX.Toolkit.Graphics
             ConstantBuffers = new Buffer[Count];
             unsafe
             {
-                var ptr = Utilities.AllocateMemory(Count * sizeof(IntPtr));
-                Utilities.ClearMemory(ptr, 0, Count * sizeof(IntPtr));
-                Pointers = (IntPtr*) ptr;
+                // Initialize UAV counts to -1
+                UAVCounts = (int*)Utilities.AllocateMemory(Count * sizeof(int));
+                for (int i = 0; i < Count; i++)
+                {
+                    UAVCounts[i] = -1;
+                }
+
+                Pointers = (IntPtr*)Utilities.AllocateClearedMemory(Count * sizeof(IntPtr));
             }
         }
 
@@ -79,7 +89,17 @@ namespace SharpDX.Toolkit.Graphics
             return (T)resources[resourceIndex];
         }
 
-        public void SetResource<T>(int resourceIndex, EffectResourceType type, object value)
+        public void SetResource(int resourceIndex, EffectResourceType type, Direct3D11.UnorderedAccessView view, int uavInitialCount)
+        {
+            resources[resourceIndex] = view;
+            unsafe
+            {
+                UAVCounts[resourceIndex] = uavInitialCount;
+                Pointers[resourceIndex] = GetNativePointer(resourceIndex, type, view);
+            }
+        }
+
+        public void SetResource<T>(int resourceIndex, EffectResourceType type, T value)
         {
             resources[resourceIndex] = value;
             unsafe
@@ -111,12 +131,26 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        public void SetResource(int resourceIndex, EffectResourceType type, Direct3D11.UnorderedAccessView[] valueArray, int[] uavInitialCount)
+        {
+            for (int i = 0; i < valueArray.Length; i++, resourceIndex++)
+            {
+                var value = valueArray[i];
+                resources[resourceIndex] = value;
+                unsafe
+                {
+                    UAVCounts[resourceIndex] = uavInitialCount[i];
+                    Pointers[resourceIndex] = GetNativePointer(resourceIndex, type, value);
+                }
+            }
+        }
+
         private IntPtr GetNativePointer(int resourceIndex, EffectResourceType type, object value)
         {
             if (value == null)
                 return IntPtr.Zero;
 
-            if (value.GetType() == typeof(IntPtr))
+            if (value is IntPtr)
                 return (IntPtr) value;
 
             switch (type)
