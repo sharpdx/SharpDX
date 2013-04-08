@@ -810,11 +810,6 @@ namespace SharpDX.Toolkit.Graphics
                     case "5_0":
                         level = FeatureLevel.Level_11_0;
                         break;
-#if DIRECTX11_1
-                    case "5_1":
-                        level = FeatureLevel.Level_11_1;
-                        break;
-#endif
                 }
             }
 
@@ -1017,7 +1012,7 @@ namespace SharpDX.Toolkit.Graphics
                     break;
 #if DIRECTX11_1
                 case FeatureLevel.Level_11_1:
-                    profile += "5_1";
+                    profile += "5_0";
                     break;
 #endif
             }
@@ -1527,7 +1522,7 @@ namespace SharpDX.Toolkit.Graphics
                     parameter.Type = EffectParameterType.ConsumeStructuredBuffer;
                     break;
                 case ShaderInputType.UnorderedAccessViewRWStructuredWithCounter:
-                    parameter.Type = EffectParameterType.StructuredBuffer;
+                    parameter.Type = EffectParameterType.RWStructuredBuffer;
                     break;
                 case ShaderInputType.Sampler:
                     parameter.Type = EffectParameterType.Sampler;
