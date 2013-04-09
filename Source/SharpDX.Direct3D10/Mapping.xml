@@ -219,7 +219,6 @@
     // D3D10 Interfaces
     // *****************************************************************
     -->
-    <map interface="ID3D10Multithread" name="DeviceMultithread"/>
     <remove interface="ID3D10ShaderReflection.*" />
     <remove interface="ID3D10ShaderReflection.*" />
     <map method="ID3D10Asynchronous::Get.*" visibility="internal" property="false" />

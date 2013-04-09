@@ -328,6 +328,8 @@
 
     <map method=".*::GetPrivateData" check="false"/>
 
+    <map interface="ID3D10Multithread" name="DeviceMultithread"/>
+
     <!--<remove interface="ID3D10InfoQueue" />
     <remove struct="D3D10_INFO_QUEUE_FILTER" />
     <remove struct="D3D10_INFO_QUEUE_FILTER_DESC" />-->
