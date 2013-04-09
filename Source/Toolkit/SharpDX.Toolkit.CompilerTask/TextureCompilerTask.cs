@@ -29,6 +29,9 @@ namespace SharpDX.Toolkit
     {
         protected override Diagnostics.Logger ProcessFileAndGetLogResults(string inputFilePath, string outputFilePath, string dependencyFilePath, TkItem item)
         {
+            // the textures can be in a subdirectory - make sure it exists before copying there:
+            CreateDirectoryIfNotExists(outputFilePath);
+
             // For the TextureCompilerTask, simply copy input to output without performing any resize/compression
             // but a future version will introduce this
             File.Copy(inputFilePath, outputFilePath, true);
