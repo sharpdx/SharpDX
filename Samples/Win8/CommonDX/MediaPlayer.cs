@@ -77,6 +77,10 @@ namespace CommonDX
                 // Startup MediaManager
                 MediaManager.Startup();
 
+                // Setup multithread on the Direct3D11 device
+                var multithread = deviceManager.DeviceDirect3D.QueryInterface<SharpDX.Direct3D.DeviceMultithread>();
+                multithread.SetMultithreadProtected(true);
+
                 // Create a DXGI Device Manager
                 dxgiDeviceManager = new DXGIDeviceManager();
                 dxgiDeviceManager.ResetDevice(deviceManager.DeviceDirect3D);
