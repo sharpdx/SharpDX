@@ -29,6 +29,11 @@
   <!-- Direct3D includes -->
   <include file="d3dcommon.h" attach="true" output="Direct3D"/>
 
+  <include file="d3d10_1.h"/>
+  <include file="d3d10.h" namespace="SharpDX.Direct3D" output="Direct3D">
+    <attach>ID3D10Multithread</attach>
+  </include>
+
   <naming />
 
   <!-- Direct3D types -->
@@ -37,7 +42,7 @@
 
     <const from-guid="WKPDID_D3DDebugObjectName" class="SharpDX.Direct3D.CommonGuid" type="System.Guid" name="DebugObjectName">new System.Guid("$1")</const>
 
-    <ifndef name="W8CORE">    
+    <ifndef name="W8CORE">
       <create class="D3DCommon" />
     </ifndef>
     <create class="CommonGuid" visibility="public" />
@@ -47,8 +52,17 @@
 
   <!-- Direct3D mapping -->
   <mapping>
-    <context>d3dcommon</context>
+    <!--
+    // *****************************************************************
+    // Direct3D10 shared with Direct3D11
+    // *****************************************************************
+    -->
+    <context>d3d10</context>
+    <map interface="ID3D10Multithread" name="DeviceMultithread"/>
+    <map method="ID3D10Multithread::GetMultithreadProtected" property="false"/>
+    <context-clear />
 
+    <context>d3dcommon</context>
     <!--
     // *****************************************************************
     // Direct3D Common Enumerations
