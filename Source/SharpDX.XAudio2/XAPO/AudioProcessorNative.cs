@@ -60,7 +60,7 @@ namespace SharpDX.XAPO
             if (stream == null)
                 Initialize_(IntPtr.Zero, 0);
             else
-            Initialize_(stream.DataPointer, (int)stream.Length);
+            Initialize_(stream.PositionPointer, (int)(stream.Length - stream.Position));
         }
 
         /// <summary>	

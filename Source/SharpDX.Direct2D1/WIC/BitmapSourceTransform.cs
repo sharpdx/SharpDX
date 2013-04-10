@@ -35,8 +35,8 @@ namespace SharpDX.WIC
         /// <unmanaged>HRESULT IWICBitmapSourceTransform::CopyPixels([In, Optional] const WICRect* prc,[In] unsigned int uiWidth,[In] unsigned int uiHeight,[In, Optional] GUID* pguidDstFormat,[In] WICBitmapTransformOptions dstTransform,[In] unsigned int nStride,[In] unsigned int cbBufferSize,[In] void* pbBuffer)</unmanaged>
         public void CopyPixels(int width, int height, int stride, DataStream output)
         {
-            CopyPixels(IntPtr.Zero, width, height, null, BitmapTransformOptions.Rotate0, stride, (int)output.Length,
-                       output.DataPointer);
+            CopyPixels(IntPtr.Zero, width, height, null, BitmapTransformOptions.Rotate0, stride, (int)(output.Length - output.Position),
+                       output.PositionPointer);
         }
 
         /// <summary>
@@ -51,8 +51,8 @@ namespace SharpDX.WIC
         /// <unmanaged>HRESULT IWICBitmapSourceTransform::CopyPixels([In, Optional] const WICRect* prc,[In] unsigned int uiWidth,[In] unsigned int uiHeight,[In, Optional] GUID* pguidDstFormat,[In] WICBitmapTransformOptions dstTransform,[In] unsigned int nStride,[In] unsigned int cbBufferSize,[In] void* pbBuffer)</unmanaged>
         public void CopyPixels(int width, int height, SharpDX.WIC.BitmapTransformOptions dstTransform, int stride, DataStream output)
         {
-            CopyPixels(IntPtr.Zero, width, height, null, dstTransform, stride, (int)output.Length,
-                       output.DataPointer);
+            CopyPixels(IntPtr.Zero, width, height, null, dstTransform, stride, (int)(output.Length - output.Position),
+                       output.PositionPointer);
         }
 
         /// <summary>
@@ -68,8 +68,8 @@ namespace SharpDX.WIC
         /// <unmanaged>HRESULT IWICBitmapSourceTransform::CopyPixels([In, Optional] const WICRect* prc,[In] unsigned int uiWidth,[In] unsigned int uiHeight,[In, Optional] GUID* pguidDstFormat,[In] WICBitmapTransformOptions dstTransform,[In] unsigned int nStride,[In] unsigned int cbBufferSize,[In] void* pbBuffer)</unmanaged>
         public void CopyPixels(int width, int height, System.Guid guidDstFormat, SharpDX.WIC.BitmapTransformOptions dstTransform, int stride, DataStream output)
         {
-            CopyPixels(IntPtr.Zero, width, height, guidDstFormat, dstTransform, stride, (int)output.Length,
-                       output.DataPointer);
+            CopyPixels(IntPtr.Zero, width, height, guidDstFormat, dstTransform, stride, (int)(output.Length - output.Position),
+                       output.PositionPointer);
         }
 
         /// <summary>
@@ -87,8 +87,8 @@ namespace SharpDX.WIC
         public unsafe void CopyPixels(Rectangle rectangle, int width, int height, System.Guid guidDstFormat, SharpDX.WIC.BitmapTransformOptions dstTransform, int stride, DataStream output)
         {
             rectangle.MakeXYAndWidthHeight();
-            CopyPixels(new IntPtr(&rectangle), width, height, guidDstFormat, dstTransform, stride, (int) output.Length,
-                       output.DataPointer);
+            CopyPixels(new IntPtr(&rectangle), width, height, guidDstFormat, dstTransform, stride, (int)(output.Length - output.Position),
+                       output.PositionPointer);
         }
 
         /// <summary>

@@ -111,8 +111,8 @@ namespace SharpDX.Direct3D9
                         {
                             // Magic shortcut if we happen to get a DataStream
                             var data = (DataStream)stream;
-                            dataRef = data.DataPointer;
-                            bytesRef = (int)data.Length;
+                            dataRef = data.PositionPointer;
+                            bytesRef = (int)(data.Length - data.Position);
                             handle = new GCHandle();
                         }
                         else

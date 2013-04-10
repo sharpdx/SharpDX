@@ -43,7 +43,7 @@ namespace SharpDX.Direct3D10
         public Buffer(Device device, DataStream data, BufferDescription description)
             : base(IntPtr.Zero)
         {
-            device.CreateBuffer(ref description, new DataBox(data.DataPointer, 0, 0), this);
+            device.CreateBuffer(ref description, new DataBox(data.PositionPointer, 0, 0), this);
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace SharpDX.Direct3D10
                                       SizeInBytes = sizeInBytes,
                                       Usage = usage,
                                   };
-            device.CreateBuffer(ref description, new DataBox(data.DataPointer, 0, 0), this);
+            device.CreateBuffer(ref description, new DataBox(data.PositionPointer, 0, 0), this);
         }
 
         /// <summary>	

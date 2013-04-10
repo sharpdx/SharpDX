@@ -308,7 +308,7 @@ namespace SharpDX.Direct3D9
             unsafe
             {
                 if (stream is DataStream)
-                    D3DX9.LoadVolumeFromFileInMemory(volume, palette, destinationBox, ((DataStream)stream).DataPointer, (int)stream.Length, sourceBox, filter, colorKey, (IntPtr)imageInformation);
+                    D3DX9.LoadVolumeFromFileInMemory(volume, palette, destinationBox, ((DataStream)stream).PositionPointer, (int)(stream.Length - stream.Position), sourceBox, filter, colorKey, (IntPtr)imageInformation);
                 var data = Utilities.ReadStream(stream);
                 fixed (void* pData = data)
                     D3DX9.LoadVolumeFromFileInMemory(volume, palette, destinationBox, (IntPtr)pData, data.Length, sourceBox, filter, colorKey, (IntPtr)imageInformation);

@@ -43,7 +43,7 @@ namespace SharpDX.WIC
         /// <unmanaged>HRESULT IWICColorContext::InitializeFromMemory([In] const void* pbBuffer,[In] unsigned int cbBufferSize)</unmanaged>
         public void InitializeFromMemory(DataStream dataStream)
         {
-            InitializeFromMemory(dataStream.DataPointer, (int) dataStream.Length);
+            InitializeFromMemory(dataStream.PositionPointer, (int) (dataStream.Length - dataStream.Position));
         }
 
         /// <summary>

@@ -44,12 +44,12 @@ namespace SharpDX.XAPO
     {
         public void SetParameters(DataStream parameters)
         {
-            SetParameters_(parameters.DataPointer, (int)parameters.Length);
+            SetParameters_(parameters.PositionPointer, (int)(parameters.Length - parameters.Position));
         }
 
         public void GetParameters(DataStream parameters)
         {
-            GetParameters_(parameters.DataPointer, (int)parameters.Length);
+            GetParameters_(parameters.DataPointer, (int)(parameters.Length - parameters.Position));
         }
     }
 }

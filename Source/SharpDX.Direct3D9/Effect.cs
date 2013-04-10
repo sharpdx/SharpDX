@@ -246,8 +246,8 @@ namespace SharpDX.Direct3D9
                     {
                         D3DX9.CreateEffectEx(
                             device,
-                            ((DataStream)stream).DataPointer,
-                            (int)stream.Length,
+                            ((DataStream)stream).PositionPointer,
+                            (int)(stream.Length - stream.Position),
                             PrepareMacros(preprocessorDefines),
                             IncludeShadow.ToIntPtr(includeFile),
                             skipConstants,
@@ -263,7 +263,7 @@ namespace SharpDX.Direct3D9
                         D3DX9.CreateEffectEx(
                             device,
                             (IntPtr)pData,
-                            (int)stream.Length,
+                            data.Length,
                             PrepareMacros(preprocessorDefines),
                             IncludeShadow.ToIntPtr(includeFile),
                             skipConstants,
@@ -407,7 +407,7 @@ namespace SharpDX.Direct3D9
         /// <unmanaged>HRESULT ID3DXEffect::SetRawValue([In] D3DXHANDLE hParameter,[In] const void* pData,[In] unsigned int ByteOffset,[In] unsigned int Bytes)</unmanaged>
         public void SetRawValue(EffectHandle handle, DataStream data, int offset, int countInBytes)
         {
-            SetRawValue(handle, (IntPtr)data.DataPointer, offset, countInBytes);             
+            SetRawValue(handle, (IntPtr)data.PositionPointer, offset, countInBytes);             
         }
 
         /// <summary>

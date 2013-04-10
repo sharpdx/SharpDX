@@ -80,7 +80,7 @@ namespace SharpDX.Direct3D9
             if (stream is DataStream)
             {
                 var dataStream = ((DataStream)stream);
-                result = D3DX9.GetImageInfoFromFileInMemory(dataStream.DataPointer, (int)(dataStream.Length - dataStream.Position));
+                result = D3DX9.GetImageInfoFromFileInMemory(dataStream.PositionPointer, (int)(dataStream.Length - dataStream.Position));
                 dataStream.Position = dataStream.Length;
             } else
             {

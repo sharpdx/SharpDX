@@ -67,7 +67,7 @@ namespace SharpDX.Direct3D9
         /// <param name = "data">A <see cref = "SharpDX.DataStream" /> containing the compiled bytecode.</param>
         public ShaderBytecode(DataStream data)
         {
-            CreateFromPointer(data.DataPointer, (int)data.Length);
+            CreateFromPointer(data.PositionPointer, (int)(data.Length - data.Length));
         }
 
         /// <summary>

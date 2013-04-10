@@ -417,7 +417,7 @@ namespace SharpDX.Direct3D9
             VolumeTexture cubeVolumeTexture;
             if (stream is DataStream)
             {
-                D3DX9.CreateVolumeTextureFromFileInMemory(device, ((DataStream)stream).DataPointer, (int)stream.Length, out cubeVolumeTexture);
+                D3DX9.CreateVolumeTextureFromFileInMemory(device, ((DataStream)stream).PositionPointer, (int)(stream.Length - stream.Position), out cubeVolumeTexture);
             }
             else
             {
@@ -610,12 +610,12 @@ namespace SharpDX.Direct3D9
         private static unsafe VolumeTexture CreateFromStream(Device device, Stream stream, int sizeBytes, int width, int height, int depth, int levelCount, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey, IntPtr imageInformation, PaletteEntry[] palette)
         {
             VolumeTexture cubeVolumeTexture;
-            sizeBytes = sizeBytes == 0 ? (int)stream.Length : sizeBytes;
+            sizeBytes = sizeBytes == 0 ? (int)(stream.Length - stream.Position): sizeBytes;
             if (stream is DataStream)
             {
                 cubeVolumeTexture = CreateFromPointer(
                     device,
-                    ((DataStream)stream).DataPointer,
+                    ((DataStream)stream).PositionPointer,
                     sizeBytes,
                     width,
                     height,

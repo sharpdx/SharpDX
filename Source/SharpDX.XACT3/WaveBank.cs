@@ -52,7 +52,7 @@ namespace SharpDX.XACT3
 
             if (stream is DataStream)
             {
-                audioEngine.CreateInMemoryWaveBank(((DataStream) stream).DataPointer, (int) stream.Length, 0, 0, this);
+                audioEngine.CreateInMemoryWaveBank(((DataStream) stream).PositionPointer, (int) (stream.Length - stream.Position), 0, 0, this);
                 return;
             }
 

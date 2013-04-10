@@ -191,7 +191,7 @@ namespace SharpDX.XAPO
         /* public void SetParameters(IntPtr arametersRef, int parameterByteSize) */
         void ParameterProvider.SetParameters(DataStream parameters)
         {
-            Utilities.Read(parameters.DataPointer, ref _parameters);
+            Utilities.Read(parameters.PositionPointer, ref _parameters);
         }
 
         /// <summary>	
@@ -201,7 +201,7 @@ namespace SharpDX.XAPO
         /// <unmanaged>void IXAPOParameters::GetParameters([Out, Buffer] void* pParameters,[None] UINT32 ParameterByteSize)</unmanaged>
         void ParameterProvider.GetParameters(DataStream parameters)
         {
-            Utilities.Write(parameters.DataPointer, ref _parameters);
+            Utilities.Write(parameters.PositionPointer, ref _parameters);
         }
     }
 }

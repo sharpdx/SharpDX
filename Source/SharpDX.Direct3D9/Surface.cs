@@ -513,7 +513,7 @@ namespace SharpDX.Direct3D9
                 if (stream is DataStream)
                 {
                     D3DX9.LoadSurfaceFromFileInMemory(
-                        surface, null, IntPtr.Zero, ((DataStream)stream).DataPointer, (int)stream.Length, IntPtr.Zero, filter, colorKey, IntPtr.Zero);
+                        surface, null, IntPtr.Zero, ((DataStream)stream).PositionPointer, (int)(stream.Length - stream.Position), IntPtr.Zero, filter, colorKey, IntPtr.Zero);
                 }
 
                 var data = Utilities.ReadStream(stream);
@@ -625,8 +625,8 @@ namespace SharpDX.Direct3D9
                     surface,
                     palette,
                     new IntPtr(&destinationRectangle),
-                    ((DataStream)stream).DataPointer,
-                    (int)stream.Length,
+                    ((DataStream)stream).PositionPointer,
+                    (int)(stream.Length - stream.Position),
                     new IntPtr(&sourceRectangle),
                     filter,
                     colorKey,
@@ -865,7 +865,7 @@ namespace SharpDX.Direct3D9
                         surface,
                         destinationPalette,
                         IntPtr.Zero,
-                        ((DataStream)stream).DataPointer,
+                        ((DataStream)stream).PositionPointer,
                         sourceFormat,
                         sourcePitch,
                         sourcePalette,
@@ -925,7 +925,7 @@ namespace SharpDX.Direct3D9
                         surface,
                         destinationPalette,
                         new IntPtr(&destinationRectangle),
-                        ((DataStream)stream).DataPointer,
+                        ((DataStream)stream).PositionPointer,
                         sourceFormat,
                         sourcePitch,
                         sourcePalette,
