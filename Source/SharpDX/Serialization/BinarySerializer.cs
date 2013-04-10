@@ -516,10 +516,10 @@ namespace SharpDX.Serialization
             if (Mode == SerializerMode.Read)
                 value = new T();
 
-            value.Serialize(this);
-
             // Store ObjectRef
             if (storeObjectRef >= 0) StoreObjectRef(value, storeObjectRef);
+
+            value.Serialize(this);
         }
 
         /// <summary>
@@ -538,10 +538,10 @@ namespace SharpDX.Serialization
             if (SerializeIsNull(ref value, out storeObjectRef, serializeFlags))
                 return;
 
-            value.Serialize(this);
-
             // Store ObjectRef
             if (storeObjectRef >= 0) StoreObjectRef(value, storeObjectRef);
+
+            value.Serialize(this);
         }
 
         /// <summary>
@@ -603,6 +603,9 @@ namespace SharpDX.Serialization
 
             if (Mode == SerializerMode.Write)
             {
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(valueArray, storeObjectRef);
+
                 WriteArrayLength((int)valueArray.Length);
                 for (int i = 0; i < valueArray.Length; i++)
                     serializer(ref valueArray[i]);
@@ -611,12 +614,13 @@ namespace SharpDX.Serialization
             {
                 var count = ReadArrayLength();
                 valueArray = new T[count];
+
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(valueArray, storeObjectRef);
+
                 for (int index = 0; index < count; index++)
                     serializer(ref valueArray[index]);
             }
-
-            // Store ObjectRef
-            if (storeObjectRef >= 0) StoreObjectRef(valueArray, storeObjectRef);
         }
 
         /// <summary>
@@ -640,18 +644,22 @@ namespace SharpDX.Serialization
 
             if (Mode == SerializerMode.Write)
             {
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(valueArray, storeObjectRef);
+
                 for (int i = 0; i < count; i++)
                     serializer(ref valueArray[i]);
             }
             else
             {
                 valueArray = new T[count];
+
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(valueArray, storeObjectRef);
+                
                 for (int index = 0; index < count; index++)
                     serializer(ref valueArray[index]);
             }
-
-            // Store ObjectRef
-            if (storeObjectRef >= 0) StoreObjectRef(valueArray, storeObjectRef);
         }
         
         /// <summary>
@@ -671,6 +679,9 @@ namespace SharpDX.Serialization
 
             if (Mode == SerializerMode.Write)
             {
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(valueArray, storeObjectRef);
+
                 WriteArrayLength(valueArray.Length);
                 for (int i = 0; i < valueArray.Length; i++)
                     Serialize(ref valueArray[i], serializeFlags);
@@ -679,12 +690,13 @@ namespace SharpDX.Serialization
             {
                 var count = ReadArrayLength();
                 valueArray = new T[count];
+                
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(valueArray, storeObjectRef);
+
                 for (int index = 0; index < count; index++)
                     Serialize(ref valueArray[index], serializeFlags);
             }
-
-            // Store ObjectRef
-            if (storeObjectRef >= 0) StoreObjectRef(valueArray, storeObjectRef);
         }
 
         /// <summary>
@@ -704,6 +716,9 @@ namespace SharpDX.Serialization
 
             if (Mode == SerializerMode.Write)
             {
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(valueArray, storeObjectRef);
+
                 WriteArrayLength(valueArray.Length);
                 for (int i = 0; i < valueArray.Length; i++)
                     SerializeWithNoInstance(ref valueArray[i], serializeFlags);
@@ -712,12 +727,13 @@ namespace SharpDX.Serialization
             {
                 var count = ReadArrayLength();
                 valueArray = new T[count];
+                
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(valueArray, storeObjectRef);
+
                 for (int index = 0; index < count; index++)
                     SerializeWithNoInstance(ref valueArray[index], serializeFlags);
             }
-
-            // Store ObjectRef
-            if (storeObjectRef >= 0) StoreObjectRef(valueArray, storeObjectRef);
         }
 
         /// <summary>
@@ -740,18 +756,22 @@ namespace SharpDX.Serialization
 
             if (Mode == SerializerMode.Write)
             {
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(valueArray, storeObjectRef);
+
                 for (int i = 0; i < count; i++)
                     Serialize(ref valueArray[i], serializeFlags);
             }
             else
             {
                 valueArray = new T[count];
+                
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(valueArray, storeObjectRef);
+
                 for (int index = 0; index < count; index++)
                     Serialize(ref valueArray[index], serializeFlags);
             }
-
-            // Store ObjectRef
-            if (storeObjectRef >= 0) StoreObjectRef(valueArray, storeObjectRef);
         }
 
         /// <summary>
@@ -770,6 +790,9 @@ namespace SharpDX.Serialization
 
             if (Mode == SerializerMode.Write)
             {
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(valueArray, storeObjectRef);
+                
                 WriteArrayLength(valueArray.Length);
                 Writer.Write(valueArray);
             }
@@ -777,12 +800,12 @@ namespace SharpDX.Serialization
             {
                 int count = ReadArrayLength();
                 valueArray = new byte[count];
+                
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(valueArray, storeObjectRef);
+
                 Reader.Read(valueArray, 0, count);
             }
-
-
-            // Store ObjectRef
-            if (storeObjectRef >= 0) StoreObjectRef(valueArray, storeObjectRef);
         }
 
         /// <summary>
@@ -804,16 +827,20 @@ namespace SharpDX.Serialization
 
             if (Mode == SerializerMode.Write)
             {
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(valueArray, storeObjectRef);
+
                 Writer.Write(valueArray, 0, count);
             }
             else
             {
                 valueArray = new byte[count];
+
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(valueArray, storeObjectRef);
+
                 Reader.Read(valueArray, 0, count);
             }
-
-            // Store ObjectRef
-            if (storeObjectRef >= 0) StoreObjectRef(valueArray, storeObjectRef);
         }
 
         /// <summary>
@@ -833,6 +860,9 @@ namespace SharpDX.Serialization
 
             if (Mode == SerializerMode.Write)
             {
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(valueList, storeObjectRef);
+                
                 WriteArrayLength(valueList.Count);
                 foreach (var value in valueList)
                 {
@@ -844,6 +874,10 @@ namespace SharpDX.Serialization
             {
                 var count = ReadArrayLength();
                 valueList = new List<T>(count);
+                
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(valueList, storeObjectRef);
+
                 for (int index = 0; index < count; index++)
                 {
                     var value = default(T);
@@ -851,9 +885,6 @@ namespace SharpDX.Serialization
                     valueList.Add(value);
                 }
             }
-
-            // Store ObjectRef
-            if (storeObjectRef >= 0) StoreObjectRef(valueList, storeObjectRef);
         }
 
         /// <summary>
@@ -906,6 +937,9 @@ namespace SharpDX.Serialization
 
             if (Mode == SerializerMode.Write)
             {
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(valueList, storeObjectRef);
+
                 WriteArrayLength(valueList.Count);
                 foreach (var value in valueList)
                 {
@@ -917,6 +951,10 @@ namespace SharpDX.Serialization
             {
                 var count = ReadArrayLength();
                 EnsureList(ref valueList, count);
+                
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(valueList, storeObjectRef);
+
                 for (int i = 0; i < count; i++)
                 {
                     var localValue = default(T);
@@ -924,9 +962,6 @@ namespace SharpDX.Serialization
                     valueList.Add(localValue);
                 }
             }
-
-            // Store ObjectRef
-            if (storeObjectRef >= 0) StoreObjectRef(valueList, storeObjectRef);
         }
 
         /// <summary>
@@ -949,6 +984,9 @@ namespace SharpDX.Serialization
 
             if (Mode == SerializerMode.Write)
             {
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(valueList, storeObjectRef);
+
                 for (int i = 0; i < count; i++)
                 {
                     T localValue = valueList[i];
@@ -958,6 +996,10 @@ namespace SharpDX.Serialization
             else
             {
                 EnsureList(ref valueList, count);
+                
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(valueList, storeObjectRef);
+
                 for (int index = 0; index < count; index++)
                 {
                     var value = default(T);
@@ -965,9 +1007,6 @@ namespace SharpDX.Serialization
                     valueList.Add(value);
                 }
             }
-
-            // Store ObjectRef
-            if (storeObjectRef >= 0) StoreObjectRef(valueList, storeObjectRef);
         }
 
         /// <summary>
@@ -991,6 +1030,9 @@ namespace SharpDX.Serialization
 
             if (Mode == SerializerMode.Write)
             {
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(valueList, storeObjectRef);
+
                 for (int i = 0; i < count; i++)
                 {
                     T localValue = valueList[i];
@@ -1000,6 +1042,10 @@ namespace SharpDX.Serialization
             else
             {
                 EnsureList(ref valueList, count);
+                
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(valueList, storeObjectRef);
+
                 for (int i = 0; i < count; i++)
                 {
                     var localValue = default(T);
@@ -1007,9 +1053,6 @@ namespace SharpDX.Serialization
                     valueList.Add(localValue);
                 }
             }
-
-            // Store ObjectRef
-            if (storeObjectRef >= 0) StoreObjectRef(valueList, storeObjectRef);
         }
 
         private void EnsureList<T>(ref List<T> valueList, int count)
@@ -1049,6 +1092,9 @@ namespace SharpDX.Serialization
 
             if (Mode == SerializerMode.Write)
             {
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(dictionary, storeObjectRef);
+                
                 WriteArrayLength(dictionary.Count);
                 foreach (var value in dictionary)
                 {
@@ -1062,6 +1108,10 @@ namespace SharpDX.Serialization
             {
                 var count = ReadArrayLength();
                 dictionary = new Dictionary<TKey, TValue>(count);
+                
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(dictionary, storeObjectRef);
+
                 for (int i = 0; i < count; i++)
                 {
                     TKey localKey = default(TKey);
@@ -1070,9 +1120,6 @@ namespace SharpDX.Serialization
                     localValue.Serialize(this);
                 }
             }
-
-            // Store ObjectRef
-            if (storeObjectRef >= 0) StoreObjectRef(dictionary, storeObjectRef);
         }
 
         /// <summary>
@@ -1094,6 +1141,9 @@ namespace SharpDX.Serialization
 
             if (Mode == SerializerMode.Write)
             {
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(dictionary, storeObjectRef);
+
                 WriteArrayLength(dictionary.Count);
                 foreach (var value in dictionary)
                 {
@@ -1107,6 +1157,10 @@ namespace SharpDX.Serialization
             {
                 var count = ReadArrayLength();
                 dictionary = new Dictionary<TKey, TValue>(count);
+                
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(dictionary, storeObjectRef);
+
                 for (int i = 0; i < count; i++)
                 {
                     TKey localKey = default(TKey);
@@ -1115,9 +1169,6 @@ namespace SharpDX.Serialization
                     valueSerializer(ref localValue);
                 }
             }
-
-            // Store ObjectRef
-            if (storeObjectRef >= 0) StoreObjectRef(dictionary, storeObjectRef);
         }
 
         /// <summary>
@@ -1139,6 +1190,9 @@ namespace SharpDX.Serialization
 
             if (Mode == SerializerMode.Write)
             {
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(dictionary, storeObjectRef);
+
                 WriteArrayLength(dictionary.Count);
                 foreach (var value in dictionary)
                 {
@@ -1152,6 +1206,10 @@ namespace SharpDX.Serialization
             {
                 var count = ReadArrayLength();
                 dictionary = new Dictionary<TKey, TValue>(count);
+
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(dictionary, storeObjectRef);
+
                 for (int i = 0; i < count; i++)
                 {
                     TKey localKey = default(TKey);
@@ -1160,9 +1218,6 @@ namespace SharpDX.Serialization
                     localValue.Serialize(this);
                 }
             }
-
-            // Store ObjectRef
-            if (storeObjectRef >= 0) StoreObjectRef(dictionary, storeObjectRef);
         }
 
         /// <summary>
@@ -1185,6 +1240,9 @@ namespace SharpDX.Serialization
             
             if (Mode == SerializerMode.Write)
             {
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(dictionary, storeObjectRef);
+                
                 WriteArrayLength(dictionary.Count);
                 foreach (var value in dictionary)
                 {
@@ -1198,6 +1256,10 @@ namespace SharpDX.Serialization
             {
                 var count = ReadArrayLength();
                 dictionary = new Dictionary<TKey, TValue>(count);
+                
+                // Store ObjectRef
+                if (storeObjectRef >= 0) StoreObjectRef(dictionary, storeObjectRef);
+
                 for (int i = 0; i < count; i++)
                 {
                     TKey localKey = default(TKey);
@@ -1206,9 +1268,6 @@ namespace SharpDX.Serialization
                     valueSerializer(ref localValue);
                 }
             }
-
-            // Store ObjectRef
-            if (storeObjectRef >= 0) StoreObjectRef(dictionary, storeObjectRef);
         }
 
         /// <summary>
