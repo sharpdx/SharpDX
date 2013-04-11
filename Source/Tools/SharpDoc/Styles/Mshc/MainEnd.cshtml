@@ -19,20 +19,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.       
 // -------------------------------------------------------------------------------
-// Override this to perform setup before generating all templates
+// Override this to modify the sequence of the generated file for this template
 // -------------------------------------------------------------------------------
 *@
-@using SharpDoc.Model
 @model SharpDoc.TemplateContext
+@using SharpDoc.Model
+@using System.IO;
+@using SharpDoc;           
 @{    
-    //// Code example:
-    // Param.Copyright = "Copyright &copy; 2010-2012 SharpDX - Alexandre Mutel";
-    Param.UseSearchBox = Param.UseSearchBox ?? false;
-    Param.DocumentationTitle = Param.DocumentationTitle ?? "Documentation";
-    Param.SearchBox = Param.SearchBox ?? "Search a term...";
-    Param.LinkToJs = "../js/";
-    Param.LinkToCss = "../css/";
-    Param.LinkToSyntaxHighlighterCss = "../syntaxhighlighter/styles/";
-    Param.LinkToSyntaxHighlighterJs = "../syntaxhighlighter/js/";
+    var model = (TemplateContext)Model;
+    var outputHtml = Path.Combine(model.OutputDirectory, "html");
+    model.CopyDirectory(Path.Combine(model.OutputDirectory, "js"), outputHtml);
+    model.CopyDirectory(Path.Combine(model.OutputDirectory, "images"), outputHtml);
+    model.CopyDirectory(Path.Combine(model.OutputDirectory, "css"), outputHtml);
+    model.CopyDirectory(Path.Combine(model.OutputDirectory, "syntaxhighlighter\\js"), outputHtml);
+    model.CopyDirectory(Path.Combine(model.OutputDirectory, "syntaxhighlighter\\styles"), outputHtml);
 }
-

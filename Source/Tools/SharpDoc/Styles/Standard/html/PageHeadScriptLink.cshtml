@@ -21,16 +21,31 @@
 // -------------------------------------------------------------------------------
 // Override this template to modify the generated html for metadata inside head
 // This template is used to add CSS or META or JavaScript
+// <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 // -------------------------------------------------------------------------------
 *@
 @model SharpDoc.TemplateContext
 @using SharpDoc.Model
 @helper Dump()
     {
-    var syntax = "../syntaxhighlighter";
-    <meta http-equiv="X-UA-Compatible" content="IE=9"/>
+    <link href="@(Param.LinkToCss)sharpdoc.css" rel="stylesheet" type="text/css" />
+    <link href="@(Param.LinkToSyntaxHighlighterCss)shCoreDefault.css" rel="stylesheet" type="text/css" />         
+    <script src="@(Param.LinkToJs)mootools.js" language="javascript"></script>
+    <script src="@(Param.LinkToJs)mootools-more.js" language="javascript"></script>
+    <script src="@(Param.LinkToJs)sharpdoc.js" language="javascript"></script>            
+    <script src="@(Param.LinkToSyntaxHighlighterJs)shCore.js" type="text/javascript"></script>
+    <script src="@(Param.LinkToSyntaxHighlighterJs)shBrushCpp.js" type="text/javascript"></script>
+    <script src="@(Param.LinkToSyntaxHighlighterJs)shBrushCSharp.js" type="text/javascript"></script>
+    <script src="@(Param.LinkToSyntaxHighlighterJs)shBrushJScript.js" type="text/javascript"></script>
+    <script src="@(Param.LinkToSyntaxHighlighterJs)shBrushVb.js" type="text/javascript"></script>
+    <script type="text/javascript" language="javascript">
+        SyntaxHighlighter.defaults['gutter'] = false;
+        SyntaxHighlighter.defaults['smart-tabs'] = false;
+        SyntaxHighlighter.all();
+    </script>
+        
     <meta name="Microsoft.Help.Id" content="@Model.Topic.Id" />
-    <meta name="SelfBranded" content="false" />
+    <meta name="Microsoft.Help.SelfBranded" content="true" />
     <meta name="Microsoft.Help.Locale" content="en-us" />
     <meta name="Microsoft.Help.F1" content="@Model.Topic.FullName" />
     <meta name="Microsoft.Help.Category" content="TargetOS:Windows" />
@@ -48,21 +63,6 @@
         <meta name="Microsoft.Help.TocParent" content="-1" />
         <meta name="Microsoft.Help.TocOrder" content="-1" />  
     }
-    <link href="../css/sharpdoc.css" rel="stylesheet" type="text/css" />
-    <link href='@syntax/styles/shCoreDefault.css' rel='stylesheet' type='text/css' />         
-    <script src="../js/mootools.js" language="javascript"></script>
-    <script src="../js/mootools-more.js" language="javascript"></script>
-    <script src="../js/sharpdoc.js" language="javascript"></script>            
-    <script src="@syntax/js/shCore.js" type="text/javascript"></script>
-    <script src="@syntax/js/shBrushCpp.js" type="text/javascript"></script>
-    <script src="@syntax/js/shBrushCSharp.js" type="text/javascript"></script>
-    <script src="@syntax/js/shBrushJScript.js" type="text/javascript"></script>
-    <script src="@syntax/js/shBrushVb.js" type="text/javascript"></script>
-    <script type="text/javascript" language="javascript">
-        SyntaxHighlighter.defaults['gutter'] = false;
-        SyntaxHighlighter.defaults['smart-tabs'] = false
-        SyntaxHighlighter.all();
-    </script> 
 }
 
 

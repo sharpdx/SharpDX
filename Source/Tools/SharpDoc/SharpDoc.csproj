@@ -177,8 +177,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Styles\Mshc\html\LinkResolver.cshtml" />
+    <None Include="Styles\Mshc\MainEnd.cshtml" />
     <None Include="Styles\Mshc\html\PageBody.cshtml" />
     <None Include="Styles\Mshc\html\TocBody.cshtml" />
+    <None Include="Styles\Mshc\Param.cshtml" />
     <None Include="Styles\SharpDXWeb\html\PageHeader.cshtml" />
     <None Include="Styles\SharpDXWeb\html\Page.cshtml" />
     <None Include="Styles\SharpDXWeb\html\WriteToFunction.cshtml" />
@@ -224,7 +226,6 @@
     <None Include="Styles\Standard\html\PageHead.cshtml" />
     <None Include="Styles\Standard\html\TagResolver.cshtml" />
     <None Include="Styles\Standard\images\table-header-bg.png" />
-    <None Include="Styles\Standard\css\sharpdoc.css" />
     <None Include="Styles\Standard\html\Namespace.cshtml" />
     <None Include="Styles\Standard\images\privclass.gif" />
     <None Include="Styles\Standard\images\privdelegate.gif" />
@@ -286,6 +287,8 @@
   <ItemGroup>
     <Content Include="SharpDoc.ico" />
     <None Include="Styles\SharpDXWeb\css\sharpdoc.css" />
+    <None Include="Styles\Mshc\css\sharpdoc.css" />
+    <Content Include="Styles\Mshc\js\sharpdoc.js" />
     <Content Include="Styles\Mshc\style.xml">
       <SubType>Designer</SubType>
     </Content>

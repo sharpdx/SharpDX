@@ -1,4 +1,3 @@
-﻿@*
 // Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,20 +18,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.       
 // -------------------------------------------------------------------------------
-// Override this to perform setup before generating all templates
+// SplitPane handling Toc and Conent
 // -------------------------------------------------------------------------------
-*@
-@using SharpDoc.Model
-@model SharpDoc.TemplateContext
-@{    
-    //// Code example:
-    // Param.Copyright = "Copyright &copy; 2010-2012 SharpDX - Alexandre Mutel";
-    Param.UseSearchBox = Param.UseSearchBox ?? false;
-    Param.DocumentationTitle = Param.DocumentationTitle ?? "Documentation";
-    Param.SearchBox = Param.SearchBox ?? "Search a term...";
-    Param.LinkToJs = "../js/";
-    Param.LinkToCss = "../css/";
-    Param.LinkToSyntaxHighlighterCss = "../syntaxhighlighter/styles/";
-    Param.LinkToSyntaxHighlighterJs = "../syntaxhighlighter/js/";
+
+function InstallCodeTabs() {
+    var groupTabs = $$('.grouptab');
+    groupTabs.each(function (groupTab, groupIndex) {
+        var tabs = groupTab.getChildren('.tabs li.tab');
+        var content = groupTab.getChildren('.tabcontent');
+        tabs.each(function (tab, index) {
+            tab.addEvent('click', function () {
+                tabs.removeClass('selected');
+                content.removeClass('selected');
+                tabs[index].addClass('selected');
+                content[index].addClass('selected');
+            });
+        });    
+    });  
 }
 
+function SplitPane(splitPaneId, splitPaneToggleId, splitPaneResizerId)
+{
+    // does nothing in mshc
+}  

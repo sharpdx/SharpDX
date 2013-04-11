@@ -484,6 +484,11 @@ namespace SharpDoc
                 foreach (var styleDefinition in toRemove)
                     styles.Remove(styleDefinition);
             }
+
+            foreach (var styleDirectory in StyleDirectories)
+            {
+                Logger.Message("Using Style Directory [{0}]", styleDirectory);
+            }
         }
 
         /// <summary>
@@ -545,11 +550,14 @@ namespace SharpDoc
         /// <param name="directoryName">Name of the directory.</param>
         public void CopyStyleContent(string directoryName)
         {
-            foreach (var templateDirectory in StyleDirectories)
+            for (int i = StyleDirectories.Count - 1; i >=0; i--)
             {
+                var templateDirectory = StyleDirectories[i];
                 string filePath = Path.Combine(templateDirectory, directoryName);
                 if (Directory.Exists(filePath))
+                {
                     CopyDirectory(filePath, OutputDirectory, true);
+                }
             }
         }
 
@@ -573,7 +581,7 @@ namespace SharpDoc
             }
         }
 
-        private void CopyDirectory(string from, string to, bool includeFromDir = false)
+        public void CopyDirectory(string from, string to, bool includeFromDir = false)
         {
             // string source, destination; - folder paths 
             int basePathIndex = (includeFromDir ? from.Trim('/','\\').LastIndexOf('\\') : from.Length) + 1;
