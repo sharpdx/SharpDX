@@ -50,6 +50,7 @@
             {
                 foreach (var member in type.Members)
                 {
+                    Model.Topic = member.TopicLink;
                     Model.Member = member;
                     Model.WriteTo(@member, Parse("Member"));
                 }

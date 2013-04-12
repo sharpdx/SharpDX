@@ -47,12 +47,11 @@
     <meta name="Microsoft.Help.Id" content="@Model.Topic.Id" />
     <meta name="Microsoft.Help.SelfBranded" content="true" />
     <meta name="Microsoft.Help.Locale" content="en-us" />
-    <meta name="Microsoft.Help.F1" content="@Model.Topic.FullName" />
+    <meta name="Microsoft.Help.F1" content="@Escape(Model.Topic.FullName)" />
     <meta name="Microsoft.Help.Category" content="TargetOS:Windows" />
     <meta name="Microsoft.Help.Category" content="DevLang:VB" />
     <meta name="Microsoft.Help.Category" content="DevLang:CSharp" />
     <meta name="Microsoft.Help.Category" content="DevLang:FSharp" />
-    <meta name="Microsoft.Help.TOCParentTopicVersion" content="110" />
     if (Model.Topic.Parent != null)
     {
         <meta name="Microsoft.Help.TocParent" content="@Model.Topic.Parent.Id" />

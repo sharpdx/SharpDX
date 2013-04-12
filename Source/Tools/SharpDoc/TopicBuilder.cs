@@ -146,7 +146,7 @@ namespace SharpDoc
                 {
                     // Affect new Index based on previous topics
                     type.Index = index++;
-                    var typeTopic = new NTopic(type) { Name = type.Name + " " + type.Category, AttachedClassNode = type };
+                    var typeTopic = new NTopic(type) { Name = type.Name + " " + type.Category, AttachedClassNode = type};
                     type.TopicLink = typeTopic;
                     namespaceTopic.SubTopics.Add(typeTopic);
                     type.SeeAlsos.Add(new NSeeAlso(topicLibrary));
@@ -156,6 +156,10 @@ namespace SharpDoc
                     {
                         foreach (var member in type.Members)
                         {
+                            var memberTopic = new NTopic(member) { Name = member.Name, AttachedClassNode = type };
+                            member.TopicLink = memberTopic;
+                            typeTopic.SubTopics.Add(memberTopic);
+
                             // Affect new Index based on previous topics
                             member.Index = index++;
                             member.SeeAlsos.Add(new NSeeAlso(topicLibrary));
