@@ -298,6 +298,7 @@ namespace SharpDX.Toolkit
 
             // Creates the backbuffer
             backBuffer = RenderTarget2D.New(graphicsDevice, currentRenderTargetView, true);
+            currentRenderTargetView.Tag = backBuffer;
 
             // Dispose any previous render target.
             renderTargets[nextRenderTarget].Dispose();
