@@ -233,6 +233,129 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
+        /// Un-Applies this pass to the device pipeline by unbinding all resources/views previously bound by this pass. This is not mandatory to call this method, unless you want to explicitly unbind
+        /// resource views that were bound by this pass.
+        /// </summary>
+        /// <param name="fullUnApply">if set to <c>true</c> this will unbind all resources; otherwise <c>false</c> will unbind only ShaderResourceView and UnorderedAccessView. Default is false.</param>
+        public unsafe void UnApply(bool fullUnApply = false)
+        {
+            // If nothing to clear, return immediately
+            if (graphicsDevice.CurrentPass == null)
+            {
+                return;
+            }
+
+            // Sets the current pass on the graphics device
+            graphicsDevice.CurrentPass = null;
+
+            // ----------------------------------------------
+            // Iterate on each stage to setup all inputs
+            // ----------------------------------------------
+            for (int stageIndex = 0; stageIndex < pipeline.Stages.Length; stageIndex++)
+            {
+                var stageBlock = pipeline.Stages[stageIndex];
+                if (stageBlock == null)
+                {
+                    continue;
+                }
+
+                var shaderStage = stageBlock.ShaderStage;
+
+                // ----------------------------------------------
+                // Setup the shader for this stage.
+                // ----------------------------------------------               
+                if (fullUnApply)
+                {
+                    shaderStage.SetShader(null, null, 0);
+                }
+
+                // If Shader is a null shader, then skip further processing
+                if (stageBlock.Index < 0)
+                {
+                    continue;
+                }
+
+                var mergerStage = pipeline.OutputMergerStage;
+
+                // ----------------------------------------------
+                // Reset ShaderResourceView
+                // ----------------------------------------------
+                RawSlotLinkSet localLink = stageBlock.ShaderResourceViewSlotLinks;
+                SlotLink* pLinks = localLink.Links;
+                for (int i = 0; i < localLink.Count; i++)
+                {
+                    shaderStage.SetShaderResources(pLinks->SlotIndex, pLinks->SlotCount, graphicsDevice.ResetSlotsPointers);
+                    pLinks++;
+                }
+
+                // ----------------------------------------------
+                // Reset UnorderedAccessView
+                // ----------------------------------------------
+                localLink = stageBlock.UnorderedAccessViewSlotLinks;
+                pLinks = localLink.Links;
+
+                if (stageBlock.Type == EffectShaderType.Compute)
+                {
+                    for (int i = 0; i < localLink.Count; i++)
+                    {
+                        shaderStage.SetUnorderedAccessViews(pLinks->SlotIndex, pLinks->SlotCount, graphicsDevice.ResetSlotsPointers, pLinks->UavInitialCount);
+                        pLinks++;
+                    }
+                }
+                else
+                {
+                    // Otherwise, for OutputMergerStage.
+                    for (int i = 0; i < localLink.Count; i++)
+                    {
+                        mergerStage.SetUnorderedAccessViewsKeepRTV(pLinks->SlotIndex, pLinks->SlotCount, graphicsDevice.ResetSlotsPointers, pLinks->UavInitialCount);
+                        pLinks++;
+                    }
+                }
+
+                if (fullUnApply)
+                {
+                    // ----------------------------------------------
+                    // Reset Constant Buffers
+                    // ----------------------------------------------
+                    localLink = stageBlock.ConstantBufferSlotLinks;
+                    pLinks = localLink.Links;
+                    for (int i = 0; i < localLink.Count; i++)
+                    {
+                        shaderStage.SetConstantBuffers(pLinks->SlotIndex, pLinks->SlotCount, graphicsDevice.ResetSlotsPointers);
+                        pLinks++;
+                    }
+                }
+            }
+
+            if (fullUnApply)
+            {
+                // ----------------------------------------------
+                // Set the blend state
+                // ----------------------------------------------
+                if (hasBlendState)
+                {
+                    graphicsDevice.SetBlendState(null);
+                }
+
+                // ----------------------------------------------
+                // Set the depth stencil state
+                // ----------------------------------------------
+                if (hasDepthStencilState)
+                {
+                    graphicsDevice.SetDepthStencilState(null);
+                }
+
+                // ----------------------------------------------
+                // Set the rasterizer state
+                // ----------------------------------------------
+                if (hasRasterizerState)
+                {
+                    graphicsDevice.SetRasterizerState(null);
+                }
+            }
+        }
+
+        /// <summary>
         /// Internal apply.
         /// </summary>
         private unsafe void ApplyInternal()

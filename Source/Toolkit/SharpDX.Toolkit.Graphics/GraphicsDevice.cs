@@ -37,7 +37,7 @@ namespace SharpDX.Toolkit.Graphics
         internal DeviceContext Context;
         internal CommonShaderStage[] ShaderStages;
         private readonly ViewportF[] viewports = new ViewportF[16];
-        private IntPtr resetVertexBuffersPointer;
+        internal IntPtr ResetSlotsPointers { get; private set; }
         private int maxSlotCountForVertexBuffer;
 
         private RenderTargetView currentRenderTargetView;
@@ -196,7 +196,7 @@ namespace SharpDX.Toolkit.Graphics
             sharedDataPerDevice = mainDevice.sharedDataPerDevice;
 
             // Copy the reset vertex buffer
-            resetVertexBuffersPointer = mainDevice.resetVertexBuffersPointer;
+            ResetSlotsPointers = mainDevice.ResetSlotsPointers;
 
             // Create all default states
             BlendStates = mainDevice.BlendStates;
@@ -215,9 +215,10 @@ namespace SharpDX.Toolkit.Graphics
         private void Initialize()
         {
             // Default null VertexBuffers used to reset
-            if (resetVertexBuffersPointer == IntPtr.Zero)
+            if (ResetSlotsPointers == IntPtr.Zero)
             {
-                resetVertexBuffersPointer = ToDispose(Utilities.AllocateClearedMemory(Utilities.SizeOf<IntPtr>() * InputAssemblerStage.VertexInputResourceSlotCount));
+                // CommonShaderStage.InputResourceSlotCount is the maximum of resources bindable in the whole pipeline
+                ResetSlotsPointers = ToDispose(Utilities.AllocateClearedMemory(Utilities.SizeOf<IntPtr>() * CommonShaderStage.InputResourceSlotCount));
             }
 
             InputAssemblerStage = Context.InputAssembler;
@@ -759,10 +760,35 @@ namespace SharpDX.Toolkit.Graphics
         /// Draws a fullscreen quad with a pixel shader to output a texture with a particular sampler (default linear clamp).
         /// </summary>
         /// <param name="texture">The texture.</param>
+        /// <param name="color">The color to multiply with the texture color.</param>
+        public void DrawQuad(SharpDX.Direct3D11.ShaderResourceView texture, Color4 color)
+        {
+            primitiveQuad.Color = color;
+            primitiveQuad.Draw(texture, null);
+            primitiveQuad.Color = new Color4(1.0f);
+        }
+        
+        /// <summary>
+        /// Draws a fullscreen quad with a pixel shader to output a texture with a particular sampler (default linear clamp).
+        /// </summary>
+        /// <param name="texture">The texture.</param>
         /// <param name="samplerState">State of the sampler. If null, default sampler is <see cref="SamplerStateCollection.LinearClamp" />.</param>
         public void DrawQuad(SharpDX.Direct3D11.ShaderResourceView texture, SharpDX.Direct3D11.SamplerState samplerState = null)
         {
             primitiveQuad.Draw(texture, samplerState);
+        }
+
+        /// <summary>
+        /// Draws a fullscreen quad with a pixel shader to output a texture with a particular sampler (default linear clamp).
+        /// </summary>
+        /// <param name="texture">The texture.</param>
+        /// <param name="samplerState">State of the sampler. If null, default sampler is <see cref="SamplerStateCollection.LinearClamp" />.</param>
+        /// <param name="color">The color to multiply with the texture color.</param>
+        public void DrawQuad(SharpDX.Direct3D11.ShaderResourceView texture, SharpDX.Direct3D11.SamplerState samplerState, Color4 color)
+        {
+            primitiveQuad.Color = color;
+            primitiveQuad.Draw(texture, samplerState);
+            primitiveQuad.Color = new Color4(1.0f);
         }
 
         /// <summary>
@@ -1408,7 +1434,7 @@ namespace SharpDX.Toolkit.Graphics
             if (maxSlotCountForVertexBuffer == 0)
                 return;
 
-            InputAssemblerStage.SetVertexBuffers(0, maxSlotCountForVertexBuffer, resetVertexBuffersPointer, resetVertexBuffersPointer, resetVertexBuffersPointer);
+            InputAssemblerStage.SetVertexBuffers(0, maxSlotCountForVertexBuffer, ResetSlotsPointers, ResetSlotsPointers, ResetSlotsPointers);
 
             maxSlotCountForVertexBuffer = 0;
         }

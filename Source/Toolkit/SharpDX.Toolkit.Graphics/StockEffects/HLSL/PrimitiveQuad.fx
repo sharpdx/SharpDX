@@ -8,6 +8,7 @@
 DECLARE_TEXTURE(Texture, 0);
 
 BEGIN_CONSTANTS
+    float4 Color                _vs(c0)  _ps(c1)  _cb(c0);
 MATRIX_CONSTANTS
     row_major float4x4 MatrixTransform    _vs(c0) _cb(c0);
 END_CONSTANTS
@@ -19,7 +20,7 @@ void VS(inout float2 texCoord : TEXCOORD0, inout float4 position : SV_Position)
 
 float4 PS(float2 texCoord : TEXCOORD0) : SV_Target0
 {
-    return SAMPLE_TEXTURE(Texture, texCoord);
+    return SAMPLE_TEXTURE(Texture, texCoord) * Color;
 }
 
 technique SpriteBatch

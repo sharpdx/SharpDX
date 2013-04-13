@@ -30,6 +30,7 @@ namespace SharpDX.Toolkit.Graphics
         private readonly EffectPass textureCopyPass;
         private readonly EffectParameter matrixParameter;
         private readonly EffectParameter textureParameter;
+        private readonly EffectParameter colorParameter;
         private readonly EffectParameter textureSamplerParameter;
         private readonly SharedData sharedData;
 
@@ -46,12 +47,14 @@ namespace SharpDX.Toolkit.Graphics
 
             textureCopyPass = quadEffect.CurrentTechnique.Passes[1];
             textureParameter = quadEffect.Parameters["Texture"];
+            colorParameter = quadEffect.Parameters["Color"];
             textureSamplerParameter = quadEffect.Parameters["TextureSampler"];
 
             // Default LinearClamp
             textureSamplerParameter.SetResource(GraphicsDevice.SamplerStates.LinearClamp);
 
             Transform = Matrix.Identity;
+            Color = new Color4(1.0f);
 
             sharedData = GraphicsDevice.GetOrCreateSharedData(SharedDataType.PerDevice, "Toolkit::PrimitiveQuad::VertexBuffer", () => new SharedData(GraphicsDevice));
         }
@@ -61,6 +64,23 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <value>The graphics device.</value>
         public GraphicsDevice GraphicsDevice { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the color. Default is <see cref="SharpDX.Color.White"/>.
+        /// </summary>
+        /// <value>The color.</value>
+        public Color4 Color
+        {
+            get
+            {
+                return colorParameter.GetValue<Color4>();
+            }
+
+            set
+            {
+                colorParameter.SetValue(value);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the transform. Default is <see cref="Matrix.Identity"/>.
@@ -92,6 +112,10 @@ namespace SharpDX.Toolkit.Graphics
             // Make sure that we are using our vertex shader
             quadPass.Apply();
             GraphicsDevice.Draw(PrimitiveType.TriangleStrip, 4);
+
+            // Reset the vertex buffer
+            GraphicsDevice.SetVertexBuffer(0, null, 0);
+            GraphicsDevice.InputAssemblerStage.SetInputLayout(null);
         }
 
         /// <summary>
@@ -111,6 +135,11 @@ namespace SharpDX.Toolkit.Graphics
             textureSamplerParameter.SetResource(samplerState ?? GraphicsDevice.SamplerStates.LinearClamp);
             textureCopyPass.Apply();
             GraphicsDevice.Draw(PrimitiveType.TriangleStrip, 4);
+
+            // Reset the vertex buffer
+            GraphicsDevice.SetVertexBuffer(0, null, 0);
+            GraphicsDevice.InputAssemblerStage.SetInputLayout(null);
+            GraphicsDevice.Context.PixelShader.SetShaderResource(0, null);
         }
 
         /// <summary>
@@ -132,7 +161,15 @@ namespace SharpDX.Toolkit.Graphics
                 quadPass.Apply();
 
                 GraphicsDevice.Draw(PrimitiveType.TriangleStrip, 4);
+
+                // Reset the quadPass and custom pass
+                quadPass.UnApply();
+                pass.UnApply();
             }
+
+            // Reset the vertex buffer
+            GraphicsDevice.SetVertexBuffer(0, null, 0);
+            GraphicsDevice.InputAssemblerStage.SetInputLayout(null);
         }
 
         /// <summary>
@@ -146,6 +183,9 @@ namespace SharpDX.Toolkit.Graphics
             // Apply the Effect pass
             effectPass.Apply();
             Draw();
+
+            // Unapply this effect
+            effectPass.UnApply();
         }
 
         private void ResetShaderStages()
