@@ -783,11 +783,16 @@ namespace SharpDX.Toolkit.Graphics
                         customEffectTexture.SetResourcePointer(nativeShaderResourceViewPointer);
                     }
 
+                    var currentPass = currentTechnique.Passes[i];
+
                     // Apply the current pass
-                    currentTechnique.Passes[i].Apply();
+                    currentPass.Apply();
 
                     // Draw the batch of sprites
                     DrawBatchPerTextureAndPass(ref texture, sprites, offset, count);
+
+                    // unbind all pass resources as the texture can be used later as a render target
+                    currentPass.UnApply();
                 }
             }
             else
@@ -802,6 +807,9 @@ namespace SharpDX.Toolkit.Graphics
                 }
 
                 DrawBatchPerTextureAndPass(ref texture, sprites, offset, count);
+
+                // unbind the texture from pass as it can be used later as a render target
+                GraphicsDevice.PixelShaderStage.SetShaderResources(0, 1, GraphicsDevice.ResetSlotsPointers);
             }
         }
 
