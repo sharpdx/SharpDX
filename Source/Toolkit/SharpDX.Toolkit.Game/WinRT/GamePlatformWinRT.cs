@@ -60,19 +60,7 @@ namespace SharpDX.Toolkit
                     // Check if this profile is supported.
                     if (graphicsAdapter.IsProfileSupported(featureLevel))
                     {
-                        var deviceInfo = new GraphicsDeviceInformation
-                                             {
-                                                 Adapter = graphicsAdapter,
-                                                 GraphicsProfile = featureLevel,
-                                                 PresentationParameters =
-                                                     {
-                                                         MultiSampleCount = MSAALevel.None,
-                                                         IsFullScreen = prefferedParameters.IsFullScreen,
-                                                         PresentationInterval = prefferedParameters.SynchronizeWithVerticalRetrace ? PresentInterval.One : PresentInterval.Immediate,
-                                                         DeviceWindowHandle = MainWindow.NativeWindow,
-                                                         RenderTargetUsage = Usage.BackBuffer | Usage.RenderTargetOutput
-                                                     }
-                                             };
+                        var deviceInfo = CreateGraphicsDeviceInformation(prefferedParameters, graphicsAdapter, featureLevel);
 
                         // Hardcoded format and refresh rate...
                         // This is a workaround to allow this code to work inside the emulator
