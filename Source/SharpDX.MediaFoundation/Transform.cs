@@ -103,7 +103,7 @@ namespace SharpDX.MediaFoundation
                 result.CheckError();
             }
 
-            return needMoreInput;
+            return !needMoreInput;
         }
     }
 }
