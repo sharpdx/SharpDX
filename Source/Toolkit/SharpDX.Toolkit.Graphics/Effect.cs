@@ -35,7 +35,7 @@ namespace SharpDX.Toolkit.Graphics
         public delegate EffectPass OnApplyDelegate(EffectPass pass);
 
         private Dictionary<EffectConstantBufferKey, EffectConstantBuffer> effectConstantBuffersCache;
-    
+
         internal EffectResourceLinker ResourceLinker { get; private set; }
 
         /// <summary>
@@ -88,7 +88,8 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="effectPool">The effect pool used to register the bytecode. Default is <see cref="GraphicsDevice.DefaultEffectPool"/>.</param>
         /// <exception cref="ArgumentException">If the bytecode doesn't contain a single effect.</exception>
         /// <remarks>The effect bytecode must contain only a single effect and will be registered into the <see cref="GraphicsDevice.DefaultEffectPool"/>.</remarks>
-        public Effect(GraphicsDevice device, EffectData effectData, EffectPool effectPool = null) : base(device)
+        public Effect(GraphicsDevice device, EffectData effectData, EffectPool effectPool = null)
+            : base(device)
         {
             ConstantBuffers = new EffectConstantBufferCollection();
             Parameters = new EffectParameterCollection();
@@ -134,6 +135,14 @@ namespace SharpDX.Toolkit.Graphics
         /// The effect is supporting dynamic compilation.
         /// </summary>
         public bool IsSupportingDynamicCompilation { get; private set; }
+
+        // A set of predefined Parameters that are prebinded here
+        internal EffectParameter WorldParameter;
+        internal EffectParameter ViewParameter;
+        internal EffectParameter ProjectionParameter;
+        internal EffectParameter ViewProjectionParameter;
+        internal EffectParameter WorldInverseTransposeParameter;
+        internal EffectParameter WorldViewProjectionParameter;
 
         /// <summary>
         /// Binds the specified effect data to this instance.
@@ -278,6 +287,14 @@ namespace SharpDX.Toolkit.Graphics
 
             // Setup the first Current Technique.
             CurrentTechnique = this.Techniques[0];
+
+            // Initialize predefined parameters used by Model.Draw (to speedup things internally)
+            WorldParameter = Parameters["World"];
+            ViewParameter = Parameters["View"];
+            ProjectionParameter = Parameters["Projection"];
+            ViewProjectionParameter = Parameters["ViewProjection"] ?? Parameters["ViewProj"];
+            WorldInverseTransposeParameter = Parameters["WorldInverseTranspose"];
+            WorldViewProjectionParameter = Parameters["WorldViewProj"] ?? Parameters["WorldViewProjection"];
 
             // Allow subclasses to complete initialization.
             Initialize();

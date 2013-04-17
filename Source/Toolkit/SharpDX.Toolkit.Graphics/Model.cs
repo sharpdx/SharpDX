@@ -154,12 +154,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="world">A world transformation matrix.</param>
         /// <param name="view">A view transformation matrix.</param>
         /// <param name="projection">A projection transformation matrix.</param>
-        /// <exception cref="System.InvalidOperationException">
-        /// Mesh has no effect
-        /// or
-        /// Effect has no IEffectMatrices
-        /// </exception>
-        public unsafe void Draw(GraphicsDevice context, Matrix world, Matrix view, Matrix projection)
+        /// <param name="effectOverride">An effect instance that will override all effects attached to this model. Null by default (no override)</param>
+        /// <exception cref="System.InvalidOperationException">Mesh has no effect and effectOverride is null</exception>
+        public unsafe void Draw(GraphicsDevice context, Matrix world, Matrix view, Matrix projection, Effect effectOverride = null)
         {
             int count = Meshes.Count;
             int boneCount = Bones.Count;
@@ -170,19 +167,23 @@ namespace SharpDX.Toolkit.Graphics
             var viewProjection = Matrix.Identity;
             bool viewProjectionUsed = false;
             var worldViewProjection = Matrix.Identity;
-            bool worldViewProjectionUsed = false;
 
             for (int i = 0; i < count; i++)
             {
                 var mesh = Meshes[i];
                 int index = mesh.ParentBone.Index;
                 int effectCount = mesh.Effects.Count;
+
+                // When effectOverride is not null, only apply matrix on effectOverride
+                effectCount = effectOverride != null ? 1 : effectCount;
+
                 for (int j = 0; j < effectCount; j++)
                 {
-                    var effect = mesh.Effects[j];
+                    var effectMesh = mesh.Effects[j];
+                    var effect = effectOverride ?? effectMesh;
                     if (effect == null)
                     {
-                        throw new InvalidOperationException("Mesh has no effect");
+                        throw new InvalidOperationException("Mesh has no effect and effectOverride is null");
                     }
 
                     Matrix result;
@@ -191,20 +192,21 @@ namespace SharpDX.Toolkit.Graphics
                     var matrices = effect as IEffectMatrices;
                     if (matrices == null)
                     {
-                        var worldParameter = effect.Parameters["World"];
+                        // If effect doesn't implement IEffectMatrices, we can still use
+                        // directly standard dynamic parameters.
+                        var worldParameter = effect.WorldParameter;
                         if (worldParameter != null)
                             worldParameter.SetValue(ref result);
 
-                        var viewdParameter = effect.Parameters["View"];
-                        if (viewdParameter != null)
-                            viewdParameter.SetValue(ref view);
+                        var viewParameter = effect.ViewParameter;
+                        if (viewParameter != null)
+                            viewParameter.SetValue(ref view);
 
-                        var projectiondParameter = effect.Parameters["Projection"];
-                        if (projectiondParameter != null)
-                            projectiondParameter.SetValue(ref projection);
+                        var projectionParameter = effect.ProjectionParameter;
+                        if (projectionParameter != null)
+                            projectionParameter.SetValue(ref projection);
 
-                        var viewProjectiondParameter = effect.Parameters["ViewProjection"];
-
+                        var viewProjectiondParameter = effect.ViewProjectionParameter;
                         if (viewProjectiondParameter != null)
                         {
                             if (!viewProjectionUsed)
@@ -215,8 +217,17 @@ namespace SharpDX.Toolkit.Graphics
                             viewProjectiondParameter.SetValue(ref viewProjection);
                         }
 
-                        var worldViewProjectiondParameter = effect.Parameters["WorldViewProj"];
+                        var worldInverseTransposeParameter = effect.WorldInverseTransposeParameter;
+                        if (worldInverseTransposeParameter != null)
+                        {
+                            Matrix worldTranspose;
+                            Matrix worldInverseTranspose;
+                            Matrix.Invert(ref result, out worldTranspose);
+                            Matrix.Transpose(ref worldTranspose, out worldInverseTranspose);
+                            worldInverseTransposeParameter.SetValue(ref worldInverseTranspose);
+                        }
 
+                        var worldViewProjectiondParameter = effect.WorldViewProjectionParameter;
                         if (worldViewProjectiondParameter != null)
                         {
                             if (!viewProjectionUsed)
@@ -238,7 +249,7 @@ namespace SharpDX.Toolkit.Graphics
                     }
                 }
 
-                mesh.Draw(context);
+                mesh.Draw(context, effectOverride);
             }
         }
 
