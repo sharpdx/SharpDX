@@ -210,19 +210,7 @@ namespace SharpDX.Toolkit
                     // Check if this profile is supported.
                     if (graphicsAdapter.IsProfileSupported(featureLevel))
                     {
-                        var deviceInfo = new GraphicsDeviceInformation
-                            {
-                                Adapter = graphicsAdapter,
-                                GraphicsProfile = featureLevel,
-                                PresentationParameters =
-                                    {
-                                        MultiSampleCount = MSAALevel.None,
-                                        IsFullScreen = prefferedParameters.IsFullScreen,
-                                        PresentationInterval = prefferedParameters.SynchronizeWithVerticalRetrace ? PresentInterval.One : PresentInterval.Immediate,
-                                        DeviceWindowHandle = MainWindow.NativeWindow,
-                                        RenderTargetUsage = Usage.BackBuffer | Usage.RenderTargetOutput
-                                    }
-                            };
+                        var deviceInfo = CreateGraphicsDeviceInformation(prefferedParameters, graphicsAdapter, featureLevel);
 
                         if (graphicsAdapter.CurrentDisplayMode != null)
                         {
@@ -245,6 +233,25 @@ namespace SharpDX.Toolkit
             }
 
             return graphicsDeviceInfos;
+        }
+
+        protected GraphicsDeviceInformation CreateGraphicsDeviceInformation(GameGraphicsParameters prefferedParameters,
+                                                                            GraphicsAdapter graphicsAdapter,
+                                                                            FeatureLevel featureLevel)
+        {
+            return new GraphicsDeviceInformation
+                   {
+                       Adapter = graphicsAdapter,
+                       GraphicsProfile = featureLevel,
+                       PresentationParameters =
+                       {
+                           MultiSampleCount = MSAALevel.None,
+                           IsFullScreen = prefferedParameters.IsFullScreen,
+                           PresentationInterval = prefferedParameters.SynchronizeWithVerticalRetrace ? PresentInterval.One : PresentInterval.Immediate,
+                           DeviceWindowHandle = MainWindow.NativeWindow,
+                           RenderTargetUsage = Usage.BackBuffer | Usage.RenderTargetOutput
+                       }
+                   };
         }
 
         public virtual GraphicsDevice CreateDevice(GraphicsDeviceInformation deviceInformation)
