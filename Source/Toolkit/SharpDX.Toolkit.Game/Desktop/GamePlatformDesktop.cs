@@ -58,25 +58,7 @@ namespace SharpDX.Toolkit
             {
                 var graphicsAdapter = GraphicsAdapter.Adapters[0];
 
-                // Iterate on each preferred graphics profile
-                foreach (var featureLevel in prefferedParameters.PreferredGraphicsProfile)
-                {
-                    // Check if this profile is supported.
-                    if (graphicsAdapter.IsProfileSupported(featureLevel))
-                    {
-                        var deviceInfo = CreateGraphicsDeviceInformation(prefferedParameters, graphicsAdapter, featureLevel);
-
-                        // Hardcoded format and refresh rate...
-                        // This is a workaround to allow this code to work inside the emulator
-                        // but this is not really robust
-                        // TODO: Check how to handle this case properly
-                        var displayMode = new DisplayMode(DXGI.Format.B8G8R8A8_UNorm, gameWindow.ClientBounds.Width, gameWindow.ClientBounds.Height, new Rational(60, 1));
-                        AddDevice(graphicsAdapter, displayMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
-
-                        // If the profile is supported, we are just using the first best one
-                        break;
-                    }
-                }
+                TryFindSupportedFeatureLevel(prefferedParameters, graphicsAdapter,graphicsDeviceInfos, AddDeviceWithDefaultDisplayMode);
             }
 
             return graphicsDeviceInfos;

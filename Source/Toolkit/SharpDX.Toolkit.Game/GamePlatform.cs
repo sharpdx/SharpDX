@@ -29,6 +29,11 @@ namespace SharpDX.Toolkit
 {
     internal abstract class GamePlatform : DisposeBase, IGraphicsDeviceFactory, IGamePlatform
     {
+        protected delegate void AddDeviceToListDelegate(GameGraphicsParameters prefferedParameters,
+                                                        GraphicsAdapter graphicsAdapter,
+                                                        GraphicsDeviceInformation deviceInfo,
+                                                        List<GraphicsDeviceInformation> graphicsDeviceInfos);
+
         protected readonly Game game;
 
         protected readonly IServiceRegistry Services;
@@ -132,7 +137,7 @@ namespace SharpDX.Toolkit
             Resume = null;
             Suspend = null;
         }
-        
+
         protected void OnActivated(object source, EventArgs e)
         {
             EventHandler<EventArgs> handler = Activated;
@@ -169,7 +174,7 @@ namespace SharpDX.Toolkit
             if (handler != null) handler(this, e);
         }
 
-        protected void AddDevice(GraphicsAdapter graphicsAdapter, DisplayMode mode,  GraphicsDeviceInformation deviceBaseInfo, GameGraphicsParameters prefferedParameters, List<GraphicsDeviceInformation> graphicsDeviceInfos)
+        protected void AddDevice(GraphicsAdapter graphicsAdapter, DisplayMode mode, GraphicsDeviceInformation deviceBaseInfo, GameGraphicsParameters prefferedParameters, List<GraphicsDeviceInformation> graphicsDeviceInfos)
         {
             var deviceInfo = deviceBaseInfo.Clone();
 
@@ -204,40 +209,47 @@ namespace SharpDX.Toolkit
             // Iterate on each adapter
             foreach (var graphicsAdapter in GraphicsAdapter.Adapters)
             {
-                // Iterate on each preferred graphics profile
-                foreach (var featureLevel in prefferedParameters.PreferredGraphicsProfile)
-                {
-                    // Check if this profile is supported.
-                    if (graphicsAdapter.IsProfileSupported(featureLevel))
-                    {
-                        var deviceInfo = CreateGraphicsDeviceInformation(prefferedParameters, graphicsAdapter, featureLevel);
-
-                        if (graphicsAdapter.CurrentDisplayMode != null)
-                        {
-                            AddDevice(graphicsAdapter, graphicsAdapter.CurrentDisplayMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
-                        }
-
-                        if (prefferedParameters.IsFullScreen)
-                        {
-                            // Get display mode for the particular width, height, pixelformat
-                            foreach (var displayMode in graphicsAdapter.SupportedDisplayModes)
-                            {
-                                AddDevice(graphicsAdapter, displayMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
-                            }
-                        }
-
-                        // If the profile is supported, we are just using the first best one
-                        break;
-                    }
-                }
+                TryFindSupportedFeatureLevel(prefferedParameters, graphicsAdapter, graphicsDeviceInfos, TryAddDeviceWithDisplayMode);
             }
 
             return graphicsDeviceInfos;
         }
 
-        protected GraphicsDeviceInformation CreateGraphicsDeviceInformation(GameGraphicsParameters prefferedParameters,
-                                                                            GraphicsAdapter graphicsAdapter,
-                                                                            FeatureLevel featureLevel)
+        public virtual GraphicsDevice CreateDevice(GraphicsDeviceInformation deviceInformation)
+        {
+            var device = GraphicsDevice.New(deviceInformation.Adapter, deviceInformation.DeviceCreationFlags, deviceInformation.GraphicsProfile);
+            device.Presenter = new SwapChainGraphicsPresenter(device, deviceInformation.PresentationParameters);
+
+            // Force to resize the gameWindow
+            gameWindow.Resize(deviceInformation.PresentationParameters.BackBufferWidth, deviceInformation.PresentationParameters.BackBufferHeight);
+
+            return device;
+        }
+
+        protected void TryFindSupportedFeatureLevel(GameGraphicsParameters prefferedParameters, 
+                                                    GraphicsAdapter graphicsAdapter,
+                                                    List<GraphicsDeviceInformation> graphicsDeviceInfos,
+                                                    AddDeviceToListDelegate addDelegate)
+        {
+            // Iterate on each preferred graphics profile
+            foreach (var featureLevel in prefferedParameters.PreferredGraphicsProfile)
+            {
+                // Check if this profile is supported.
+                if (graphicsAdapter.IsProfileSupported(featureLevel))
+                {
+                    var deviceInfo = CreateGraphicsDeviceInformation(prefferedParameters, graphicsAdapter, featureLevel);
+
+                    addDelegate(prefferedParameters, graphicsAdapter, deviceInfo, graphicsDeviceInfos);
+
+                    // If the profile is supported, we are just using the first best one
+                    break;
+                }
+            }
+        }
+
+        private GraphicsDeviceInformation CreateGraphicsDeviceInformation(GameGraphicsParameters prefferedParameters,
+                                                                          GraphicsAdapter graphicsAdapter,
+                                                                          FeatureLevel featureLevel)
         {
             return new GraphicsDeviceInformation
                    {
@@ -254,15 +266,26 @@ namespace SharpDX.Toolkit
                    };
         }
 
-        public virtual GraphicsDevice CreateDevice(GraphicsDeviceInformation deviceInformation)
+        private void TryAddDeviceWithDisplayMode(GameGraphicsParameters prefferedParameters,
+                                                 GraphicsAdapter graphicsAdapter,
+                                                 GraphicsDeviceInformation deviceInfo,
+                                                 List<GraphicsDeviceInformation> graphicsDeviceInfos)
         {
-            var device = GraphicsDevice.New(deviceInformation.Adapter, deviceInformation.DeviceCreationFlags, deviceInformation.GraphicsProfile);
-            device.Presenter = new SwapChainGraphicsPresenter(device, deviceInformation.PresentationParameters);
+            if (graphicsAdapter.CurrentDisplayMode != null)
+                AddDevice(graphicsAdapter, graphicsAdapter.CurrentDisplayMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
 
-            // Force to resize the gameWindow
-            gameWindow.Resize(deviceInformation.PresentationParameters.BackBufferWidth, deviceInformation.PresentationParameters.BackBufferHeight);
+            if (prefferedParameters.IsFullScreen)
+            {
+                // Get display mode for the particular width, height, pixelformat
+                foreach (var displayMode in graphicsAdapter.SupportedDisplayModes)
+                    AddDevice(graphicsAdapter, displayMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
+            }
+        }
 
-            return device;
+        protected void AddDeviceWithDefaultDisplayMode(GameGraphicsParameters prefferedParameters, GraphicsAdapter graphicsAdapter, GraphicsDeviceInformation deviceInfo, List<GraphicsDeviceInformation> graphicsDeviceInfos)
+        {
+            var displayMode = new DisplayMode(DXGI.Format.B8G8R8A8_UNorm, gameWindow.ClientBounds.Width, gameWindow.ClientBounds.Height, new Rational(60, 1));
+            AddDevice(graphicsAdapter, displayMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
         }
 
         protected override void Dispose(bool disposing)
