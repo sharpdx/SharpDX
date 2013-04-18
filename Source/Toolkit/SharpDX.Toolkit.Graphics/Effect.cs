@@ -136,14 +136,10 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         public bool IsSupportingDynamicCompilation { get; private set; }
 
-        // A set of predefined Parameters that are prebinded here
-        internal EffectParameter WorldParameter;
-        internal EffectParameter ViewParameter;
-        internal EffectParameter ProjectionParameter;
-        internal EffectParameter WorldViewParameter;
-        internal EffectParameter ViewProjectionParameter;
-        internal EffectParameter WorldInverseTransposeParameter;
-        internal EffectParameter WorldViewProjectionParameter;
+        /// <summary>
+        /// The default parameters of this effect used by <see cref="Model.Draw"/>.
+        /// </summary>
+        public EffectDefaultParameters DefaultParameters { get; private set; }
 
         /// <summary>
         /// Binds the specified effect data to this instance.
@@ -290,13 +286,7 @@ namespace SharpDX.Toolkit.Graphics
             CurrentTechnique = this.Techniques[0];
 
             // Initialize predefined parameters used by Model.Draw (to speedup things internally)
-            WorldParameter = Parameters["World"];
-            ViewParameter = Parameters["View"];
-            ProjectionParameter = Parameters["Projection"];
-            WorldViewParameter = Parameters["WorldView"];
-            ViewProjectionParameter = Parameters["ViewProjection"] ?? Parameters["ViewProj"];
-            WorldInverseTransposeParameter = Parameters["WorldInverseTranspose"];
-            WorldViewProjectionParameter = Parameters["WorldViewProj"] ?? Parameters["WorldViewProjection"];
+            DefaultParameters = new EffectDefaultParameters(this);
 
             // Allow subclasses to complete initialization.
             Initialize();
