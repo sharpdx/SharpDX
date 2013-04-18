@@ -206,6 +206,14 @@ namespace SharpDX.Toolkit.Graphics
                         if (projectionParameter != null)
                             projectionParameter.SetValue(ref projection);
 
+                        var worldViewParameter = effect.WorldViewParameter;
+                        if (worldViewParameter != null)
+                        {
+                            Matrix worldView;
+                            Matrix.Multiply(ref result, ref view, out worldView);
+                            worldViewParameter.SetValue(ref worldView);
+                        }
+
                         var viewProjectiondParameter = effect.ViewProjectionParameter;
                         if (viewProjectiondParameter != null)
                         {

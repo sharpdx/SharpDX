@@ -140,6 +140,7 @@ namespace SharpDX.Toolkit.Graphics
         internal EffectParameter WorldParameter;
         internal EffectParameter ViewParameter;
         internal EffectParameter ProjectionParameter;
+        internal EffectParameter WorldViewParameter;
         internal EffectParameter ViewProjectionParameter;
         internal EffectParameter WorldInverseTransposeParameter;
         internal EffectParameter WorldViewProjectionParameter;
@@ -292,6 +293,7 @@ namespace SharpDX.Toolkit.Graphics
             WorldParameter = Parameters["World"];
             ViewParameter = Parameters["View"];
             ProjectionParameter = Parameters["Projection"];
+            WorldViewParameter = Parameters["WorldView"];
             ViewProjectionParameter = Parameters["ViewProjection"] ?? Parameters["ViewProj"];
             WorldInverseTransposeParameter = Parameters["WorldInverseTranspose"];
             WorldViewProjectionParameter = Parameters["WorldViewProj"] ?? Parameters["WorldViewProjection"];
