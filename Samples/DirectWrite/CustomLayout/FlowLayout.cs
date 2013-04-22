@@ -258,13 +258,16 @@ namespace CustomLayout
                 }
                 finally
                 {
-                    tries++;
-                    // Try again using a larger buffer.
-                    maxGlyphCount = EstimateGlyphCount(maxGlyphCount);
-                    int totalGlyphsArrayCount = glyphStart + maxGlyphCount;
+                    if (!isDone)
+                    {
+                        tries++;
+                        // Try again using a larger buffer.
+                        maxGlyphCount = EstimateGlyphCount(maxGlyphCount);
+                        int totalGlyphsArrayCount = glyphStart + maxGlyphCount;
 
-                    glyphProps = new ShapingGlyphProperties[maxGlyphCount];
-                    glyphIndices_ = new short[totalGlyphsArrayCount];
+                        glyphProps = new ShapingGlyphProperties[maxGlyphCount];
+                        glyphIndices_ = new short[totalGlyphsArrayCount];
+                    }
                 }
                 if (isDone)
                     break;
@@ -563,7 +566,7 @@ namespace CustomLayout
             {
                 spanIndices[i] = spanStart + i;
             }
-            
+
             if (spanCount <= 1)
                 return;
 
