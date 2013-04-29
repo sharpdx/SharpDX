@@ -56,8 +56,8 @@ namespace CommonDX
             this.pixelHeight = pixelHeight;
             this.surfaceImageSource = new SurfaceImageSource(pixelWidth, pixelHeight, supportOpacity);
             surfaceImageSourceNative = ToDispose(ComObject.As<SharpDX.DXGI.ISurfaceImageSourceNative>(surfaceImageSource));
-            viewDatas[0] = new SurfaceViewData();
-            viewDatas[1] = new SurfaceViewData();
+            viewDatas[0] = ToDispose(new SurfaceViewData());
+            viewDatas[1] = ToDispose(new SurfaceViewData());
         }
 
         /// <summary>
