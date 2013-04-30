@@ -128,6 +128,8 @@ namespace SharpDX.Toolkit
             // Run the rendering loop
             try
             {
+                // Use custom do events to improve performance and avoid GC caused by Application.DoEvents
+                RenderLoop.UseCustomDoEvents = true;
                 RenderLoop.Run(Control, runRenderCallback);
             }
             finally

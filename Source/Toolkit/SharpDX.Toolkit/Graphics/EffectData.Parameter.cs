@@ -49,7 +49,7 @@ namespace SharpDX.Toolkit.Graphics
             {
                 if (ReferenceEquals(null, other)) return false;
                 if (ReferenceEquals(this, other)) return true;
-                return string.Equals(Name, other.Name) && Class.Equals(other.Class) && Type.Equals(other.Type);
+                return string.Equals(Name, other.Name) && Class == other.Class && Type == other.Type;
             }
 
             public override bool Equals(object obj)

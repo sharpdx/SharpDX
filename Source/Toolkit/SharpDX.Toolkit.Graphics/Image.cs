@@ -512,7 +512,31 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>This method support the following format: <c>dds, bmp, jpg, png, gif, tiff, wmp, tga</c>.</remarks>
         public static Image Load(Stream imageStream)
         {
-            // Read the whole stream into memory.
+            // Use fast path using NativeFileStream
+            // TODO: THIS IS NOT OPTIMIZED IN THE CASE THE STREAM IS NOT AN IMAGE. FIND A WAY TO OPTIMIZE THIS CASE.
+            var nativeImageStream = imageStream as NativeFileStream;
+            if (nativeImageStream != null)
+            {
+                var imageBuffer = IntPtr.Zero;
+                Image image = null;
+                try
+                {
+                    var imageSize = (int)nativeImageStream.Length;
+                    imageBuffer = Utilities.AllocateMemory(imageSize);
+                    nativeImageStream.Read(imageBuffer, 0, imageSize);
+                    image = Load(imageBuffer, imageSize);
+                }
+                finally
+                {
+                    if (image == null)
+                    {
+                        Utilities.FreeMemory(imageBuffer);
+                    }
+                }
+                return image;
+            }
+
+            // Else Read the whole stream into memory.
             return Load(Utilities.ReadStream(imageStream));
         }
 

@@ -156,10 +156,12 @@ namespace SharpDX.Toolkit.Graphics
         /// Initializes a new instance of the <see cref="SpriteBatch" /> class.
         /// </summary>
         /// <param name="graphicsDevice">The graphics device.</param>
-        public SpriteBatch(GraphicsDevice graphicsDevice) : base(graphicsDevice)
+        /// <param name="batchCapacity">The batch capacity default to 2048 (minimum 2048).</param>
+        public SpriteBatch(GraphicsDevice graphicsDevice, int batchCapacity = MaxBatchSize) : base(graphicsDevice)
         {
-            spriteQueue = new SpriteInfo[MaxBatchSize];
-            spriteTextures = new TextureInfo[MaxBatchSize];
+            if (batchCapacity < MaxBatchSize) batchCapacity = MaxBatchSize;
+            spriteQueue = new SpriteInfo[batchCapacity];
+            spriteTextures = new TextureInfo[batchCapacity];
 
             spriteEffect = new Effect(graphicsDevice, effectBytecode, graphicsDevice.DefaultEffectPool);
             spriteEffect.CurrentTechnique = spriteEffect.Techniques[0];
@@ -359,8 +361,9 @@ namespace SharpDX.Toolkit.Graphics
                 throw new ArgumentNullException("text");
             }
             var proxy = new SpriteFont.StringProxy(text);
-            var one = Vector2.One;
-            spriteFont.InternalDraw(ref proxy, this, position, color, 0f, Vector2.Zero, ref one, SpriteEffects.None, 0f);
+
+            var drawCommand = new SpriteFont.InternalDrawCommand(this, position, color, 0f, Vector2.Zero, Vector2.One, SpriteEffects.None, 0f);
+            spriteFont.InternalDraw(ref proxy, ref drawCommand);
         }
 
         /// <summary>Adds a string to a batch of sprites for rendering using the specified font, text, position, and color.</summary>
@@ -379,8 +382,8 @@ namespace SharpDX.Toolkit.Graphics
                 throw new ArgumentNullException("text");
             }
             var proxy = new SpriteFont.StringProxy(text);
-            var one = Vector2.One;
-            spriteFont.InternalDraw(ref proxy, this, position, color, 0f, Vector2.Zero, ref one, SpriteEffects.None, 0f);
+            var drawCommand = new SpriteFont.InternalDrawCommand(this, position, color, 0f, Vector2.Zero, Vector2.One, SpriteEffects.None, 0f);
+            spriteFont.InternalDraw(ref proxy, ref drawCommand);
         }
 
         /// <summary>Adds a string to a batch of sprites for rendering using the specified font, text, position, color, rotation, origin, scale, effects and layer.</summary>
@@ -404,7 +407,8 @@ namespace SharpDX.Toolkit.Graphics
                 throw new ArgumentNullException("text");
             }
             var proxy = new SpriteFont.StringProxy(text);
-            spriteFont.InternalDraw(ref proxy, this, position, color, rotation, origin, ref scale, effects, layerDepth);
+            var drawCommand = new SpriteFont.InternalDrawCommand(this, position, color, rotation, origin, scale, effects, layerDepth);
+            spriteFont.InternalDraw(ref proxy, ref drawCommand);
         }
 
         /// <summary>Adds a string to a batch of sprites for rendering using the specified font, text, position, color, rotation, origin, scale, effects and layer.</summary>
@@ -428,8 +432,8 @@ namespace SharpDX.Toolkit.Graphics
                 throw new ArgumentNullException("text");
             }
             var proxy = new SpriteFont.StringProxy(text);
-            var vector = new Vector2(scale, scale);
-            spriteFont.InternalDraw(ref proxy, this, position, color, rotation, origin, ref vector, effects, layerDepth);
+            var drawCommand = new SpriteFont.InternalDrawCommand(this, position, color, rotation, origin, new Vector2(scale, scale), effects, layerDepth);
+            spriteFont.InternalDraw(ref proxy, ref drawCommand);
         }
 
         /// <summary>Adds a string to a batch of sprites for rendering using the specified font, text, position, color, rotation, origin, scale, effects and layer.</summary>
@@ -453,7 +457,8 @@ namespace SharpDX.Toolkit.Graphics
                 throw new ArgumentNullException("text");
             }
             var proxy = new SpriteFont.StringProxy(text);
-            spriteFont.InternalDraw(ref proxy, this, position, color, rotation, origin, ref scale, effects, layerDepth);
+            var drawCommand = new SpriteFont.InternalDrawCommand(this, position, color, rotation, origin, scale, effects, layerDepth);
+            spriteFont.InternalDraw(ref proxy, ref drawCommand);
         }
 
         /// <summary>Adds a string to a batch of sprites for rendering using the specified font, text, position, color, rotation, origin, scale, effects and layer.</summary>
@@ -477,8 +482,8 @@ namespace SharpDX.Toolkit.Graphics
                 throw new ArgumentNullException("text");
             }
             var proxy = new SpriteFont.StringProxy(text);
-            var vector = new Vector2(scale, scale);
-            spriteFont.InternalDraw(ref proxy, this, position, color, rotation, origin, ref vector, effects, layerDepth);
+            var drawCommand = new SpriteFont.InternalDrawCommand(this, position, color, rotation, origin, new Vector2(scale, scale), effects, layerDepth);
+            spriteFont.InternalDraw(ref proxy, ref drawCommand);
         }
 
         /// <summary>

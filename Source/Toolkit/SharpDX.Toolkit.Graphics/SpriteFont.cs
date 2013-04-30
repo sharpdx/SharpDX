@@ -226,38 +226,38 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
-        internal void InternalDraw(ref StringProxy text, SpriteBatch spriteBatch, Vector2 position, Color color, float rotation, Vector2 origin, ref Vector2 scale, SpriteEffects spriteEffects, float depth)
+        internal void InternalDraw(ref StringProxy text, ref InternalDrawCommand drawCommand)
         {
-            var baseOffset = origin;
-            //baseOffset.Y += globalBaseOffsetY;
+            //origin.Y += globalBaseOffsetY;
 
             // If the text is mirrored, offset the start position accordingly.
-            if (spriteEffects != SpriteEffects.None)
+            if (drawCommand.spriteEffects != SpriteEffects.None)
             {
-                baseOffset -= MeasureString(ref text)*axisIsMirroredTable[(int) spriteEffects & 3];
+                drawCommand.origin -= MeasureString(ref text) * axisIsMirroredTable[(int)drawCommand.spriteEffects & 3];
             }
 
-            var localScale = scale;
-
-
             // Draw each character in turn.
-            ForEachGlyph(ref text, (ref SpriteFontData.Glyph glyph, float x, float y) =>
-                                       {
-                                           var offset = new Vector2(x, y + glyph.Offset.Y);
-                                           Vector2.Modulate(ref offset, ref axisDirectionTable[(int) spriteEffects & 3], out offset);
-                                           Vector2.Add(ref offset, ref baseOffset, out offset);
+            ForEachGlyph(ref text, InternalDrawGlyph, ref drawCommand);
+        }
+
+        internal void InternalDrawGlyph(ref InternalDrawCommand parameters, ref SpriteFontData.Glyph glyph, float x, float y)
+        {
+            var spriteEffects = parameters.spriteEffects;
+
+            var offset = new Vector2(x, y + glyph.Offset.Y);
+            Vector2.Modulate(ref offset, ref axisDirectionTable[(int)spriteEffects & 3], out offset);
+            Vector2.Add(ref offset, ref parameters.origin, out offset);
 
 
-                                           if (spriteEffects != SpriteEffects.None)
-                                           {
-                                               // For mirrored characters, specify bottom and/or right instead of top left.
-                                               var glyphRect = new Vector2(glyph.Subrect.Right - glyph.Subrect.Left, glyph.Subrect.Top - glyph.Subrect.Bottom);
-                                               Vector2.Modulate(ref glyphRect, ref axisIsMirroredTable[(int) spriteEffects & 3], out offset);
-                                           }
-                                           var destination = new RectangleF(position.X, position.Y, localScale.X, localScale.Y);
-                                           Rectangle? sourceRectangle = glyph.Subrect;
-                                           spriteBatch.DrawSprite(textures[glyph.BitmapIndex], ref destination, true, ref sourceRectangle, color, rotation, ref offset, spriteEffects, depth);
-                                       });
+            if (spriteEffects != SpriteEffects.None)
+            {
+                // For mirrored characters, specify bottom and/or right instead of top left.
+                var glyphRect = new Vector2(glyph.Subrect.Right - glyph.Subrect.Left, glyph.Subrect.Top - glyph.Subrect.Bottom);
+                Vector2.Modulate(ref glyphRect, ref axisIsMirroredTable[(int)spriteEffects & 3], out offset);
+            }
+            var destination = new RectangleF(parameters.position.X, parameters.position.Y, parameters.scale.X, parameters.scale.Y);
+            Rectangle? sourceRectangle = glyph.Subrect;
+            parameters.spriteBatch.DrawSprite(textures[glyph.BitmapIndex], ref destination, true, ref sourceRectangle, parameters.color, parameters.rotation, ref offset, spriteEffects, parameters.depth);            
         }
 
         /// <summary>Returns the width and height of a string as a Vector2.</summary>
@@ -279,15 +279,22 @@ namespace SharpDX.Toolkit.Graphics
         private Vector2 MeasureString(ref StringProxy text)
         {
             var result = Vector2.Zero;
-            ForEachGlyph(ref text, (ref SpriteFontData.Glyph glyph, float x, float y) =>
-            {
-                float w = x + (glyph.Subrect.Right - glyph.Subrect.Left);
-                float h = y + Math.Max((glyph.Subrect.Bottom - glyph.Subrect.Top) + glyph.Offset.Y, LineSpacing);
-                if (w > result.X) result.X = w;
-                if (h > result.Y) result.Y = h;
-            });
-
+            ForEachGlyph(ref text, MeasureStringGlyph, ref result);
             return result;
+        }
+
+        private void MeasureStringGlyph(ref Vector2 result, ref SpriteFontData.Glyph glyph, float x, float y)
+        {
+            float w = x + (glyph.Subrect.Right - glyph.Subrect.Left);
+            float h = y + Math.Max((glyph.Subrect.Bottom - glyph.Subrect.Top) + glyph.Offset.Y, LineSpacing);
+            if (w > result.X)
+            {
+                result.X = w;
+            }
+            if (h > result.Y)
+            {
+                result.Y = h;
+            }
         }
 
         /// <summary>Gets a collection of all the characters that are included in the font.</summary>
@@ -302,9 +309,9 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>Gets or sets the spacing of the font characters.</summary>
         public float Spacing { get; set; }
 
-        private delegate void GlyphAction(ref SpriteFontData.Glyph glyph, float x, float y);
+        private delegate void GlyphAction<T>(ref T parameters, ref SpriteFontData.Glyph glyph, float x, float y);
 
-        private unsafe void ForEachGlyph(ref StringProxy text, GlyphAction action)
+        private unsafe void ForEachGlyph<T>(ref StringProxy text, GlyphAction<T> action, ref T parameters)
         {
             float x = 0;
             float y = 0;
@@ -363,7 +370,7 @@ namespace SharpDX.Toolkit.Graphics
 
                             if (!char.IsWhiteSpace(character))
                             {
-                                action(ref *glyph, x, y);
+                                action(ref parameters, ref *glyph, x, y);
                             }
 
                             x += glyph->XAdvance;
@@ -408,7 +415,39 @@ namespace SharpDX.Toolkit.Graphics
                 }
             }
         }
+
+        /// <summary>
+        /// Struct InternalDrawCommand used to pass parameters to InternalDrawGlyph
+        /// </summary>
+        internal struct InternalDrawCommand
+        {
+            public InternalDrawCommand(SpriteBatch spriteBatch, Vector2 position, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects spriteEffects, float depth)
+            {
+                this.spriteBatch = spriteBatch;
+                this.position = position;
+                this.color = color;
+                this.rotation = rotation;
+                this.origin = origin;
+                this.scale = scale;
+                this.spriteEffects = spriteEffects;
+                this.depth = depth;
+            }
+
+            public SpriteBatch spriteBatch;
+
+            public Vector2 position;
+
+            public Color color;
+
+            public float rotation;
+
+            public Vector2 origin;
+
+            public Vector2 scale;
+
+            public SpriteEffects spriteEffects;
+
+            public float depth;
+        }
     }
-
-
 }
