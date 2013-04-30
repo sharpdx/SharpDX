@@ -96,6 +96,10 @@ namespace SharpDX.Toolkit.Graphics
         private Texture2D[] textures;
         private readonly int defaultGlyphIndex;
 
+        // cache delegates only once to avoid their construction at runtime which generates garbage
+        private readonly GlyphAction<InternalDrawCommand> drawGlyphDelegate;
+        private readonly GlyphAction<Vector2> measureGlyphDelegate;
+
         // Lookup table indicates which way to move along each axis per SpriteEffects enum value.
         private static readonly Vector2[] axisDirectionTable = new[]
                                                                    {
@@ -165,6 +169,9 @@ namespace SharpDX.Toolkit.Graphics
         internal SpriteFont(GraphicsDevice device, SpriteFontData spriteFontData)
             : base(device)
         {
+            drawGlyphDelegate = InternalDrawGlyph;
+            measureGlyphDelegate = MeasureStringGlyph;
+
             // Read the glyph data.
             globalBaseOffsetY = spriteFontData.BaseOffset;
             glyphs = spriteFontData.Glyphs;
@@ -237,7 +244,7 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             // Draw each character in turn.
-            ForEachGlyph(ref text, InternalDrawGlyph, ref drawCommand);
+            ForEachGlyph(ref text, drawGlyphDelegate, ref drawCommand);
         }
 
         internal void InternalDrawGlyph(ref InternalDrawCommand parameters, ref SpriteFontData.Glyph glyph, float x, float y)
@@ -279,7 +286,7 @@ namespace SharpDX.Toolkit.Graphics
         private Vector2 MeasureString(ref StringProxy text)
         {
             var result = Vector2.Zero;
-            ForEachGlyph(ref text, MeasureStringGlyph, ref result);
+            ForEachGlyph(ref text, measureGlyphDelegate, ref result);
             return result;
         }
 
