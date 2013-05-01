@@ -87,7 +87,7 @@ namespace SharpDX.Toolkit.Graphics
         internal EffectTechnique Technique;
 
         private const bool EnableDebug = false;
-        internal static TextWriter DebugLog = new StringWriter();
+        internal TextWriter DebugLog = new StringWriter();
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="EffectPass" /> class.
@@ -695,10 +695,10 @@ namespace SharpDX.Toolkit.Graphics
 
                 if (stageBlock.Parameters == null)
                 {
-                     stageBlock.Parameters = new List<EffectParameter>();
+                    stageBlock.Parameters = new List<ParameterBinding>(shaderRaw.ResourceParameters.Count);
                 }
 
-                stageBlock.Parameters.Add(parameter);
+                stageBlock.Parameters.Add(new ParameterBinding(parameter, parameterRaw.Slot));
             }
 
             stageBlock.ConstantBufferLinks = constantBufferLinks.ToArray();
@@ -720,8 +720,9 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             // Compute default slot links link
-            foreach (var parameter in stageBlock.Parameters)
+            foreach (var parameterBinding in stageBlock.Parameters)
             {
+                var parameter = parameterBinding.Parameter;
 
                 var slots = stageBlock.Slots[(int)parameter.ResourceType];
                 if (slots == null)
@@ -732,7 +733,7 @@ namespace SharpDX.Toolkit.Graphics
 
                 var parameterRaw = (EffectData.ResourceParameter)parameter.ParameterDescription;
 
-                var range = new SlotLinkSet() { SlotCount = parameterRaw.Count, SlotIndex = parameterRaw.Slot };
+                var range = new SlotLinkSet() { SlotCount = parameterRaw.Count, SlotIndex = parameterBinding.Slot };
                 slots.Add(range);
                 range.Links.Add(new SlotLink(parameter.Offset, 0, parameterRaw.Count));
             }
@@ -1099,6 +1100,19 @@ namespace SharpDX.Toolkit.Graphics
             public StageBlock[] Stages;
         }
 
+        private struct ParameterBinding
+        {
+            public ParameterBinding(EffectParameter parameter, int slot)
+            {
+                Parameter = parameter;
+                Slot = slot;
+            }
+
+            public readonly EffectParameter Parameter;
+
+            public readonly int Slot;
+        }
+
         #endregion
 
         #region Nested type: RawSlotLinkSet
@@ -1177,7 +1191,7 @@ namespace SharpDX.Toolkit.Graphics
 
         private class StageBlock
         {
-            public List<EffectParameter> Parameters;
+            public List<ParameterBinding> Parameters;
 
             public RawSlotLinkSet ConstantBufferSlotLinks;
             public ConstantBufferLink[] ConstantBufferLinks;
