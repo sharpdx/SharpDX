@@ -248,6 +248,11 @@ namespace SharpDX.Toolkit.Graphics
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
         public static RenderTarget2D New(GraphicsDevice device, int width, int height, MSAALevel multiSampleCount, PixelFormat format, int arraySize = 1)
         {
+            if (multiSampleCount == MSAALevel.None)
+            {
+                throw new ArgumentException("Cannot declare a MSAA RenderTarget with MSAALevel.None. Use other non-MSAA constructors", "multiSampleCount");
+            }
+
             return new RenderTarget2D(device, CreateDescription(device.MainDevice, width, height, format, TextureFlags.RenderTarget, 1, arraySize, multiSampleCount));
         }
 
@@ -303,6 +308,11 @@ namespace SharpDX.Toolkit.Graphics
         ///   <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
         public static Texture2DDescription CreateDescription(GraphicsDevice device, int width, int height, MSAALevel multiSampleCount, PixelFormat format, int arraySize = 1)
         {
+            if (multiSampleCount == MSAALevel.None)
+            {
+                throw new ArgumentException("Cannot declare a MSAA RenderTarget with MSAALevel.None. Use other non-MSAA constructors", "multiSampleCount");
+            }
+
             return CreateDescription(device.MainDevice, width, height, format, TextureFlags.RenderTarget, 1, arraySize, multiSampleCount);
         }
 

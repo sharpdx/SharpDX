@@ -677,8 +677,6 @@ namespace SharpDX.Toolkit.Graphics
                 }
                 else
                 {
-                    resourceIndex = ((EffectData.ResourceParameter) previousParameter.ParameterDescription).Slot;
-
                     if (CompareResourceParameter(parameterRaw, (EffectData.ResourceParameter) previousParameter.ParameterDescription))
                     {
                         // If registered parameters is different
