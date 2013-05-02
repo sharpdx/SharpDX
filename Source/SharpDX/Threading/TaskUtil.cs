@@ -37,7 +37,7 @@ namespace SharpDX.Threading
             System.Threading.Tasks.Task.Factory.StartNew(() => action(), System.Threading.Tasks.TaskCreationOptions.LongRunning);
 #else
             var thread = new System.Threading.Thread(() => action()) { IsBackground = true };
-			thread.Name = "SharpDXTask";
+            thread.Name = "SharpDXTask";
             thread.Start();
 #endif
         }
