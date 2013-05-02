@@ -31,12 +31,13 @@ namespace SharpDX.Threading
         /// Runs the specified action in a thread.
         /// </summary>
         /// <param name="action">The action.</param>
-        public static void Run(VoidAction action)
+        /// <param name="taskName">Name of the task.</param>
+        public static void Run(VoidAction action, string taskName = "SharpDXTask")
         {
 #if W8CORE
             System.Threading.Tasks.Task.Factory.StartNew(() => action(), System.Threading.Tasks.TaskCreationOptions.LongRunning);
 #else
-            var thread = new System.Threading.Thread(() => action()) { IsBackground = true };
+            var thread = new System.Threading.Thread(() => action()) { IsBackground = true, Name = taskName };
             thread.Start();
 #endif
         }
