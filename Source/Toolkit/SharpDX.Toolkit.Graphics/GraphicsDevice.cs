@@ -40,7 +40,7 @@ namespace SharpDX.Toolkit.Graphics
         internal IntPtr ResetSlotsPointers { get; private set; }
         private int maxSlotCountForVertexBuffer;
 
-        private const int SimultaneousRenderTargetCount = 8; // TODO: Should be D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT
+        private const int SimultaneousRenderTargetCount = OutputMergerStage.SimultaneousRenderTargetCount;
         private readonly RenderTargetView[] currentRenderTargetViews = new RenderTargetView[SimultaneousRenderTargetCount];
         private RenderTargetView currentRenderTargetView;
         private int actualRenderTargetViewCount;
@@ -1209,6 +1209,11 @@ namespace SharpDX.Toolkit.Graphics
             OutputMergerStage.ResetTargets();
         }
 
+        /// <summary>
+        /// Gets the render targets currently binded to the <see cref="OutputMergerStage"/> through this <see cref="GraphicsDevice"/>instance.
+        /// </summary>
+        /// <param name="depthStencilViewRef">The depth stencil view, may ne null.</param>
+        /// <returns>An array of <see cref="RenderTargetView"/>.</returns>
         public RenderTargetView[] GetRenderTargets(out DepthStencilView depthStencilViewRef)
         {
             var renderTargets = new RenderTargetView[actualRenderTargetViewCount];
@@ -1597,7 +1602,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             Texture texture;
             currentRenderTargetViews[0] = rtv;
-            for (int i = 1; i < currentRenderTargetViews.Length; i++)
+            for (int i = 1; i < actualRenderTargetViewCount; i++)
                 currentRenderTargetViews[i] = null;
             actualRenderTargetViewCount = 1;
             currentRenderTargetView = rtv;
@@ -1613,7 +1618,7 @@ namespace SharpDX.Toolkit.Graphics
             var rtv0 = rtvs.Length > 0 ? rtvs[0] : null;
             for (int i = 0; i < rtvs.Length; i++)
                 currentRenderTargetViews[i] = rtvs[i];
-            for (int i = rtvs.Length; i < currentRenderTargetViews.Length; i++)
+            for (int i = rtvs.Length; i < actualRenderTargetViewCount; i++)
                 currentRenderTargetViews[i] = null;
             actualRenderTargetViewCount = rtvs.Length;
             currentRenderTargetView = rtv0;

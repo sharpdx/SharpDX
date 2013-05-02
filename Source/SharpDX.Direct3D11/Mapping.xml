@@ -120,6 +120,8 @@
 
     <const from-macro="D3D11_PS_([^C][^S].*)" class="SharpDX.Direct3D11.PixelShaderStage" type="int" name="$1" />
 
+    <const from-macro="D3D11_(SIMULTANEOUS_RENDER_TARGET_COUNT)" class="SharpDX.Direct3D11.OutputMergerStage" type="int" name="$1" />
+    
     <create-cpp enum="D3D11_DEBUG_FEATURE_FLAGS" macro="D3D11_DEBUG_FEATURE_(.*)" />    
     <create class="D3D11" />
     <create class="D3DX11" />
