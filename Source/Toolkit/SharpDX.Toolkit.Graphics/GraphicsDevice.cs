@@ -40,7 +40,10 @@ namespace SharpDX.Toolkit.Graphics
         internal IntPtr ResetSlotsPointers { get; private set; }
         private int maxSlotCountForVertexBuffer;
 
+        private const int SimultaneousRenderTargetCount = 8; // TODO: Should be D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT
+        private readonly RenderTargetView[] currentRenderTargetViews = new RenderTargetView[SimultaneousRenderTargetCount];
         private RenderTargetView currentRenderTargetView;
+        private int actualRenderTargetViewCount;
         private DepthStencilView currentDepthStencilView;
 
         private readonly PrimitiveQuad primitiveQuad;
@@ -1198,9 +1201,21 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargets</unmanaged-short>	
         public void ResetTargets()
         {
+            for (int i = 0; i < currentRenderTargetViews.Length; i++)
+                currentRenderTargetViews[i] = null;
+            actualRenderTargetViewCount = 0;
             currentRenderTargetView = null;
             currentDepthStencilView = null;
             OutputMergerStage.ResetTargets();
+        }
+
+        public RenderTargetView[] GetRenderTargets(out DepthStencilView depthStencilViewRef)
+        {
+            var renderTargets = new RenderTargetView[actualRenderTargetViewCount];
+            for (int i = 0; i < actualRenderTargetViewCount; i++)
+                renderTargets[i] = currentRenderTargetViews[i];
+            depthStencilViewRef = currentDepthStencilView;
+            return renderTargets;
         }
 
         /// <summary>	
@@ -1581,6 +1596,10 @@ namespace SharpDX.Toolkit.Graphics
         private void CommonSetRenderTargets(RenderTargetView rtv)
         {
             Texture texture;
+            currentRenderTargetViews[0] = rtv;
+            for (int i = 1; i < currentRenderTargetViews.Length; i++)
+                currentRenderTargetViews[i] = null;
+            actualRenderTargetViewCount = 1;
             currentRenderTargetView = rtv;
             if (AutoViewportFromRenderTargets &&  rtv != null && (texture = rtv.Tag as Texture) != null)
             {
@@ -1592,6 +1611,11 @@ namespace SharpDX.Toolkit.Graphics
         {
             Texture texture;
             var rtv0 = rtvs.Length > 0 ? rtvs[0] : null;
+            for (int i = 0; i < rtvs.Length; i++)
+                currentRenderTargetViews[i] = rtvs[i];
+            for (int i = rtvs.Length; i < currentRenderTargetViews.Length; i++)
+                currentRenderTargetViews[i] = null;
+            actualRenderTargetViewCount = rtvs.Length;
             currentRenderTargetView = rtv0;
             if (AutoViewportFromRenderTargets && rtv0 != null && (texture = rtv0.Tag as Texture) != null)
             {
