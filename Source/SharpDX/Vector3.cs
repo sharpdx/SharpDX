@@ -561,6 +561,32 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Tests whether one 3D vector is near another 3D vector.
+        /// </summary>
+        /// <param name="left">The left vector.</param>
+        /// <param name="right">The right vector.</param>
+        /// <param name="epsilon">The epsilon.</param>
+        /// <returns><c>true</c> if left and right are near another 3D, <c>false</c> otherwise</returns>
+        public static bool NearEqual(Vector3 left, Vector3 right, Vector3 epsilon)
+        {
+            return NearEqual(ref left, ref right, ref epsilon);
+        }
+
+        /// <summary>
+        /// Tests whether one 3D vector is near another 3D vector.
+        /// </summary>
+        /// <param name="left">The left vector.</param>
+        /// <param name="right">The right vector.</param>
+        /// <param name="epsilon">The epsilon.</param>
+        /// <returns><c>true</c> if left and right are near another 3D, <c>false</c> otherwise</returns>
+        public static bool NearEqual(ref Vector3 left, ref Vector3 right, ref Vector3 epsilon)
+        {
+            return MathUtil.WithinEpsilon(left.X, right.X, epsilon.X) &&
+                    MathUtil.WithinEpsilon(left.Y, right.Y, epsilon.Y) &&
+                    MathUtil.WithinEpsilon(left.Z, right.Z, epsilon.Z);
+        }
+
+        /// <summary>
         /// Calculates the dot product of two vectors.
         /// </summary>
         /// <param name="left">First source vector.</param>

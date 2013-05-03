@@ -74,15 +74,27 @@ namespace SharpDX
         public const float PiOverFour = 0.785398163397448310f;
 
         /// <summary>
-        /// Checks if a - b are almost equals within a float epsilon.
+        /// Checks if a - b are almost equals within a float <see cref="Single.Epsilon"/>.
         /// </summary>
         /// <param name="a">The left value to compare.</param>
         /// <param name="b">The right value to compare.</param>
         /// <returns><c>true</c> if a almost equal to b within a float epsilon, <c>false</c> otherwise</returns>
         public static bool WithinEpsilon(float a, float b)
         {
+            return WithinEpsilon(a, b, Single.Epsilon);
+        }
+
+        /// <summary>
+        /// Checks if a - b are almost equals within a float epsilon.
+        /// </summary>
+        /// <param name="a">The left value to compare.</param>
+        /// <param name="b">The right value to compare.</param>
+        /// <param name="epsilon">Epsilon value</param>
+        /// <returns><c>true</c> if a almost equal to b within a float epsilon, <c>false</c> otherwise</returns>
+        public static bool WithinEpsilon(float a, float b, float epsilon)
+        {
             float num = a - b;
-            return ((-Single.Epsilon <= num) && (num <= Single.Epsilon));
+            return ((-epsilon <= num) && (num <= epsilon));
         }
 
         /// <summary>

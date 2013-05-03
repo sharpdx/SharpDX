@@ -26,6 +26,14 @@
     <Compile Include="EffectDefaultParameters.cs" />
     <Compile Include="EffectDefaultParametersContext.cs" />
     <Compile Include="EffectInstallerBase.cs" />
+    <Compile Include="GeometricPrimitive.cs" />
+    <Compile Include="GeometricPrimitive.Cube.cs" />
+    <Compile Include="GeometricPrimitive.Cylinder.cs" />
+    <Compile Include="GeometricPrimitive.GeoSphere.cs" />
+    <Compile Include="GeometricPrimitive.Plane.cs" />
+    <Compile Include="GeometricPrimitive.Sphere.cs" />
+    <Compile Include="GeometricPrimitive.Teapot.cs" />
+    <Compile Include="GeometricPrimitive.Torus.cs" />
     <Compile Include="IEffectInstaller.cs" />
     <Compile Include="ModelContentReader.cs" />
     <Compile Include="MaterialKeys.cs" />
