@@ -142,22 +142,22 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="SharpDX.Direct3D11">
-      <HintPath>..\..\..\Bin\Standard-wp8-$(Platform)\SharpDX.Direct3D11.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11_1-wp8-$(Platform)\SharpDX.Direct3D11.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.DXGI">
-      <HintPath>..\..\..\Bin\Standard-wp8-$(Platform)\SharpDX.DXGI.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11_1-wp8-$(Platform)\SharpDX.DXGI.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX">
-      <HintPath>..\..\..\Bin\Standard-wp8-$(Platform)\SharpDX.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11_1-wp8-$(Platform)\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Toolkit.Game">
-      <HintPath>..\..\..\Bin\Standard-wp8-$(Platform)\SharpDX.Toolkit.Game.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11_1-wp8-$(Platform)\SharpDX.Toolkit.Game.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Toolkit.Graphics">
-      <HintPath>..\..\..\Bin\Standard-wp8-$(Platform)\SharpDX.Toolkit.Graphics.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11_1-wp8-$(Platform)\SharpDX.Toolkit.Graphics.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Toolkit">
-      <HintPath>..\..\..\Bin\Standard-wp8-$(Platform)\SharpDX.Toolkit.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11_1-wp8-$(Platform)\SharpDX.Toolkit.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />

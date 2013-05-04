@@ -15,9 +15,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 
 
-    <SharpDXAssemblyType>Standard</SharpDXAssemblyType>
+    <SharpDXAssemblyType>DirectX11</SharpDXAssemblyType>
     <SharpDXPlatform>net20</SharpDXPlatform>
-    <SharpDXAssemblyType Condition=" '$(SharpDXSign)' == 'true'">Signed</SharpDXAssemblyType>
 
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <OutputType>Library</OutputType>
@@ -52,7 +51,7 @@
   
   <!--.NET 4.0 - DirectX11.1 - Windows 8 Desktop-->
   <PropertyGroup Condition=" '$(Configuration)' == 'DIRECTX11_1Debug' Or '$(Configuration)' == 'DIRECTX11_1Release'">
-    <SharpDXAssemblyType>Win8Desktop</SharpDXAssemblyType>
+    <SharpDXAssemblyType>DirectX11_1</SharpDXAssemblyType>
     <SharpDXPlatform>net40</SharpDXPlatform>
     <DirectX11_1>true</DirectX11_1>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
@@ -61,6 +60,7 @@
   
   <!--.NET 4.5 - DirectX11.1 - Windows 8 Metro-->
   <PropertyGroup Condition=" '$(Configuration)' == 'Win8Debug' Or '$(Configuration)' == 'Win8Release'  ">
+    <SharpDXAssemblyType>DirectX11_1</SharpDXAssemblyType>
     <SharpDXPlatform>winrt</SharpDXPlatform>
     <SharpDXWin8>true</SharpDXWin8>
     <SharpDXWin8Core>true</SharpDXWin8Core>
@@ -73,6 +73,7 @@
   
   <!--.NET Windows Phone - DirectX11.1 - Windows Phone 8-->
   <PropertyGroup Condition=" '$(Configuration)' == 'WP8Debug' Or '$(Configuration)' == 'WP8Release'  ">
+    <SharpDXAssemblyType>DirectX11_1</SharpDXAssemblyType>
     <SharpDXPlatform>wp8-$(Platform)</SharpDXPlatform>
     <SharpDXWin8Core>true</SharpDXWin8Core>
     <SharpDXWP8>true</SharpDXWP8>
@@ -85,6 +86,7 @@
 
   <!--<Import Condition="'$(SharpDXWP8)' != 'false'"  Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />-->
   <PropertyGroup>
+    <SharpDXAssemblyType Condition=" '$(SharpDXSign)' == 'true'">$(SharpDXAssemblyType)-Signed</SharpDXAssemblyType>
     <OutputPath>$(SolutionDir)\Bin\$(SharpDXAssemblyType)-$(SharpDXPlatform)\</OutputPath>
   </PropertyGroup>
 

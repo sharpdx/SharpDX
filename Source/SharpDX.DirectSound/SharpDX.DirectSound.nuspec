@@ -42,13 +42,13 @@
   </metadata>
 
   <files>
-    <file src="..\..\Bin\Signed-net20\SharpDX.DirectSound.dll" target="lib\net20" />
-    <file src="..\..\Bin\Signed-net20\SharpDX.DirectSound.pdb" target="lib\net20" />
-    <file src="..\..\Bin\Signed-net20\SharpDX.DirectSound.xml" target="lib\net20" />
+    <file src="..\..\Bin\DirectX11_Signed-net20\SharpDX.DirectSound.dll" target="lib\net20" />
+    <file src="..\..\Bin\DirectX11_Signed-net20\SharpDX.DirectSound.pdb" target="lib\net20" />
+    <file src="..\..\Bin\DirectX11_Signed-net20\SharpDX.DirectSound.xml" target="lib\net20" />
 
-    <file src="..\..\Bin\Signed-net40\SharpDX.DirectSound.dll" target="lib\net40" />
-    <file src="..\..\Bin\Signed-net40\SharpDX.DirectSound.pdb" target="lib\net40" />
-    <file src="..\..\Bin\Signed-net40\SharpDX.DirectSound.xml" target="lib\net40" />
+    <file src="..\..\Bin\DirectX11_Signed-net40\SharpDX.DirectSound.dll" target="lib\net40" />
+    <file src="..\..\Bin\DirectX11_Signed-net40\SharpDX.DirectSound.pdb" target="lib\net40" />
+    <file src="..\..\Bin\DirectX11_Signed-net40\SharpDX.DirectSound.xml" target="lib\net40" />
 
     <file src="**\*.cs" target="src" />
   </files>

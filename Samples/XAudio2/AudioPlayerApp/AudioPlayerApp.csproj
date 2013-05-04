@@ -105,13 +105,13 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="SharpDX">
-      <HintPath>..\..\..\Bin\Standard-net40\SharpDX.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11-net40\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.XAudio2">
-      <HintPath>..\..\..\Bin\Standard-net40\SharpDX.XAudio2.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11-net40\SharpDX.XAudio2.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.MediaFoundation">
-      <HintPath>..\..\..\Bin\Standard-net40\SharpDX.MediaFoundation.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11-net40\SharpDX.MediaFoundation.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

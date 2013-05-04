@@ -47,16 +47,16 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="SharpDX">
-      <HintPath>..\..\..\Bin\Standard-winrt\SharpDX.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11_1-winrt\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct2D1">
-      <HintPath>..\..\..\Bin\Standard-winrt\SharpDX.Direct2D1.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11_1-winrt\SharpDX.Direct2D1.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D11">
-      <HintPath>..\..\..\Bin\Standard-winrt\SharpDX.Direct3D11.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11_1-winrt\SharpDX.Direct3D11.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.DXGI">
-      <HintPath>..\..\..\Bin\Standard-winrt\SharpDX.DXGI.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11_1-winrt\SharpDX.DXGI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

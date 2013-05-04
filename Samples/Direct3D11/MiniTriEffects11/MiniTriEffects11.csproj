@@ -56,19 +56,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SharpDX">
-      <HintPath>..\..\..\Bin\Standard-net20\SharpDX.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11-net20\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.D3DCompiler">
-      <HintPath>..\..\..\Bin\Standard-net20\SharpDX.D3DCompiler.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11-net20\SharpDX.D3DCompiler.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D11">
-      <HintPath>..\..\..\Bin\Standard-net20\SharpDX.Direct3D11.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11-net20\SharpDX.Direct3D11.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D11.Effects">
-      <HintPath>..\..\..\Bin\Standard-net20\SharpDX.Direct3D11.Effects.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11-net20\SharpDX.Direct3D11.Effects.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.DXGI">
-      <HintPath>..\..\..\Bin\Standard-net20\SharpDX.DXGI.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11-net20\SharpDX.DXGI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -81,11 +81,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\..\Bin\Standard-net20\sharpdx_direct3d11_effects_x64.dll">
+    <Content Include="..\..\..\Bin\DirectX11-net20\sharpdx_direct3d11_effects_x64.dll">
       <Link>sharpdx_direct3d11_effects_x64.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\..\Bin\Standard-net20\sharpdx_direct3d11_effects_x86.dll">
+    <Content Include="..\..\..\Bin\DirectX11-net20\sharpdx_direct3d11_effects_x86.dll">
       <Link>sharpdx_direct3d11_effects_x86.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

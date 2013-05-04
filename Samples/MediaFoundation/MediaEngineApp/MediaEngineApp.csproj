@@ -33,10 +33,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SharpDX">
-      <HintPath>..\..\..\Bin\Win8Desktop-net40\SharpDX.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11_1-net40\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.MediaFoundation">
-      <HintPath>..\..\..\Bin\Win8Desktop-net40\SharpDX.MediaFoundation.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11_1-net40\SharpDX.MediaFoundation.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

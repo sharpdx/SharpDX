@@ -43,13 +43,13 @@ It compiles all files of type ToolkitFxc/ToolkitFont
   <!-- The Most important variable is SharpDXSdkDir that should be a global system environement variable --> 
   <PropertyGroup>
     <!--Detect SharpDX Platform based on .NETFramework version-->
-    <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetFrameworkIdentifier)' == '.NETFramework' and ('$(TargetFrameworkVersion)' == 'v2.0' or '$(TargetFrameworkVersion)' == 'v3.5') ">Standard-net20</SharpDXPlatform>
-    <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetFrameworkIdentifier)' == '.NETFramework' and ('$(TargetFrameworkVersion)' == 'v4.0' or '$(TargetFrameworkVersion)' == 'v4.5') ">Standard-net40</SharpDXPlatform>
-    <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetFrameworkIdentifier)' == '.NETCore'">Standard-winrt</SharpDXPlatform>
-    <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetFrameworkIdentifier)' == 'WindowsPhone' and '$(TargetFrameworkVersion)' == 'v8.0'">Standard-wp8-$(Platform)</SharpDXPlatform>
+    <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetFrameworkIdentifier)' == '.NETFramework' and ('$(TargetFrameworkVersion)' == 'v2.0' or '$(TargetFrameworkVersion)' == 'v3.5') ">DirectX11-net20</SharpDXPlatform>
+    <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetFrameworkIdentifier)' == '.NETFramework' and ('$(TargetFrameworkVersion)' == 'v4.0' or '$(TargetFrameworkVersion)' == 'v4.5') ">DirectX11-net40</SharpDXPlatform>
+    <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetFrameworkIdentifier)' == '.NETCore'">DirectX11_1-winrt</SharpDXPlatform>
+    <SharpDXPlatform Condition="'$(SharpDXPlatform)' == '' and '$(TargetFrameworkIdentifier)' == 'WindowsPhone' and '$(TargetFrameworkVersion)' == 'v8.0'">DirectX11_1-wp8-$(Platform)</SharpDXPlatform>
 
     <!-- Variable used to select the platform used for the tool at compile time - default to Win8Desktop-net40 -->
-    <SharpDXPlatformTool Condition="'$(SharpDXPlatformTool)' == ''">Standard-net40</SharpDXPlatformTool>
+    <SharpDXPlatformTool Condition="'$(SharpDXPlatformTool)' == ''">DirectX11-net40</SharpDXPlatformTool>
     
     <!-- Flag indicating the platform is desktop -->
     <SharpDXIsPlatformDesktop Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">true</SharpDXIsPlatformDesktop>
@@ -60,7 +60,7 @@ It compiles all files of type ToolkitFxc/ToolkitFont
     <!--SharpDX Directory to link against - based on platform-->
     <SharpDXSdkBinDir Condition="'$(SharpDXSdkBinDir)' == ''">$(SharpDXSdkDir)\Bin\$(SharpDXPlatform)</SharpDXSdkBinDir>
     
-    <!--SharpDX Directory used for compiling - Default to Standard-net40-->
+    <!--SharpDX Directory used for compiling - Default to DirectX11-net40-->
     <!--<SharpDXSdkToolsDir Condition="'$(SharpDXSdkToolsDir)' == ''">$(SharpDXSdkDir)\Bin\Win8Desktop-net40</SharpDXSdkToolsDir>-->
     <SharpDXSdkToolsDir Condition="'$(SharpDXSdkToolsDir)' == ''">$(SharpDXSdkDir)\Bin\$(SharpDXPlatformTool)</SharpDXSdkToolsDir>
   </PropertyGroup>

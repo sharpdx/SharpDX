@@ -42,17 +42,17 @@
   </metadata>
 
   <files>
-    <file src="..\..\Bin\Signed-net20\SharpDX.XInput.dll" target="lib\net20" />
-    <file src="..\..\Bin\Signed-net20\SharpDX.XInput.pdb" target="lib\net20" />
-    <file src="..\..\Bin\Signed-net20\SharpDX.XInput.xml" target="lib\net20" />
+    <file src="..\..\Bin\DirectX11_Signed-net20\SharpDX.XInput.dll" target="lib\net20" />
+    <file src="..\..\Bin\DirectX11_Signed-net20\SharpDX.XInput.pdb" target="lib\net20" />
+    <file src="..\..\Bin\DirectX11_Signed-net20\SharpDX.XInput.xml" target="lib\net20" />
 
-    <file src="..\..\Bin\Signed-net40\SharpDX.XInput.dll" target="lib\net40" />
-    <file src="..\..\Bin\Signed-net40\SharpDX.XInput.pdb" target="lib\net40" />
-    <file src="..\..\Bin\Signed-net40\SharpDX.XInput.xml" target="lib\net40" />
+    <file src="..\..\Bin\DirectX11_Signed-net40\SharpDX.XInput.dll" target="lib\net40" />
+    <file src="..\..\Bin\DirectX11_Signed-net40\SharpDX.XInput.pdb" target="lib\net40" />
+    <file src="..\..\Bin\DirectX11_Signed-net40\SharpDX.XInput.xml" target="lib\net40" />
 
-    <file src="..\..\Bin\Signed-winrt\SharpDX.XInput.dll" target="lib\win8" />
-    <file src="..\..\Bin\Signed-winrt\SharpDX.XInput.pdb" target="lib\win8" />
-    <file src="..\..\Bin\Signed-winrt\SharpDX.XInput.xml" target="lib\win8" />
+    <file src="..\..\Bin\DirectX11_Signed-winrt\SharpDX.XInput.dll" target="lib\win8" />
+    <file src="..\..\Bin\DirectX11_Signed-winrt\SharpDX.XInput.pdb" target="lib\win8" />
+    <file src="..\..\Bin\DirectX11_Signed-winrt\SharpDX.XInput.xml" target="lib\win8" />
 
     <file src="**\*.cs" target="src" />
   </files>

@@ -45,20 +45,20 @@
   </metadata>
 
   <files>
-    <file src="..\..\Bin\Signed-net20\SharpDX.dll" target="lib\net20" />
-    <file src="..\..\Bin\Signed-net20\SharpDX.pdb" target="lib\net20" />
-    <file src="..\..\Bin\Signed-net20\SharpDX.xml" target="lib\net20" />
+    <file src="..\..\Bin\DirectX11_Signed-net20\SharpDX.dll" target="lib\net20" />
+    <file src="..\..\Bin\DirectX11_Signed-net20\SharpDX.pdb" target="lib\net20" />
+    <file src="..\..\Bin\DirectX11_Signed-net20\SharpDX.xml" target="lib\net20" />
 
-    <file src="..\..\Bin\Signed-net40\SharpDX.dll" target="lib\net40" />
-    <file src="..\..\Bin\Signed-net40\SharpDX.pdb" target="lib\net40" />
-    <file src="..\..\Bin\Signed-net40\SharpDX.xml" target="lib\net40" />
+    <file src="..\..\Bin\DirectX11_Signed-net40\SharpDX.dll" target="lib\net40" />
+    <file src="..\..\Bin\DirectX11_Signed-net40\SharpDX.pdb" target="lib\net40" />
+    <file src="..\..\Bin\DirectX11_Signed-net40\SharpDX.xml" target="lib\net40" />
 
-    <!--<file src="..\..\Bin\Signed-net40\SharpDX.dll" target="lib\net40" />-->
-    <!--<file src="..\..\Bin\Signed-net40\SharpDX.xml" target="lib\net40" />-->
+    <!--<file src="..\..\Bin\DirectX11_Signed-net40\SharpDX.dll" target="lib\net40" />-->
+    <!--<file src="..\..\Bin\DirectX11_Signed-net40\SharpDX.xml" target="lib\net40" />-->
 
-    <file src="..\..\Bin\Signed-winrt\SharpDX.dll" target="lib\win8" />
-    <file src="..\..\Bin\Signed-winrt\SharpDX.pdb" target="lib\win8" />
-    <file src="..\..\Bin\Signed-winrt\SharpDX.xml" target="lib\win8" />
+    <file src="..\..\Bin\DirectX11_Signed-winrt\SharpDX.dll" target="lib\win8" />
+    <file src="..\..\Bin\DirectX11_Signed-winrt\SharpDX.pdb" target="lib\win8" />
+    <file src="..\..\Bin\DirectX11_Signed-winrt\SharpDX.xml" target="lib\win8" />
 
     <file src="**\*.cs" target="src" />
   </files>

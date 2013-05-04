@@ -58,19 +58,19 @@
     <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)Bin\Standard-wp8-x86\</OutDir>
+    <OutDir>$(SolutionDir)Bin\DirectX11_1-wp8-x86\</OutDir>
     <IntDir>$(ProjectDir)\obj\$(Configuration)-x86\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)Bin\Standard-wp8-x86\</OutDir>
+    <OutDir>$(SolutionDir)Bin\DirectX11_1-wp8-x86\</OutDir>
     <IntDir>$(ProjectDir)\obj\$(Configuration)-x86\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
-    <OutDir>$(SolutionDir)Bin\Standard-wp8-ARM\</OutDir>
+    <OutDir>$(SolutionDir)Bin\DirectX11_1-wp8-ARM\</OutDir>
     <IntDir>$(ProjectDir)\obj\$(Configuration)-ARM\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
-    <OutDir>$(SolutionDir)Bin\Standard-wp8-ARM\</OutDir>
+    <OutDir>$(SolutionDir)Bin\DirectX11_1-wp8-ARM\</OutDir>
     <IntDir>$(ProjectDir)\obj\$(Configuration)-ARM\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

@@ -36,19 +36,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SharpDX, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\Bin\Standard-net20\SharpDX.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11-net20\SharpDX.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="SharpDX.D3DCompiler, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\Bin\Standard-net20\SharpDX.D3DCompiler.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11-net20\SharpDX.D3DCompiler.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="SharpDX.Direct3D10, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\Bin\Standard-net20\SharpDX.Direct3D10.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11-net20\SharpDX.Direct3D10.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="SharpDX.DXGI, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\Bin\Standard-net20\SharpDX.DXGI.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11-net20\SharpDX.DXGI.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="System" />

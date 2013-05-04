@@ -42,17 +42,17 @@
   </metadata>
 
   <files>
-    <file src="..\..\Bin\Signed-net20\SharpDX.XAudio2.dll" target="lib\net20" />
-    <file src="..\..\Bin\Signed-net20\SharpDX.XAudio2.pdb" target="lib\net20" />
-    <file src="..\..\Bin\Signed-net20\SharpDX.XAudio2.xml" target="lib\net20" />
+    <file src="..\..\Bin\DirectX11_Signed-net20\SharpDX.XAudio2.dll" target="lib\net20" />
+    <file src="..\..\Bin\DirectX11_Signed-net20\SharpDX.XAudio2.pdb" target="lib\net20" />
+    <file src="..\..\Bin\DirectX11_Signed-net20\SharpDX.XAudio2.xml" target="lib\net20" />
 
-    <file src="..\..\Bin\Signed-net40\SharpDX.XAudio2.dll" target="lib\net40" />
-    <file src="..\..\Bin\Signed-net40\SharpDX.XAudio2.pdb" target="lib\net40" />
-    <file src="..\..\Bin\Signed-net40\SharpDX.XAudio2.xml" target="lib\net40" />
+    <file src="..\..\Bin\DirectX11_Signed-net40\SharpDX.XAudio2.dll" target="lib\net40" />
+    <file src="..\..\Bin\DirectX11_Signed-net40\SharpDX.XAudio2.pdb" target="lib\net40" />
+    <file src="..\..\Bin\DirectX11_Signed-net40\SharpDX.XAudio2.xml" target="lib\net40" />
 
-    <file src="..\..\Bin\Signed-winrt\SharpDX.XAudio2.dll" target="lib\win8" />
-    <file src="..\..\Bin\Signed-winrt\SharpDX.XAudio2.pdb" target="lib\win8" />
-    <file src="..\..\Bin\Signed-winrt\SharpDX.XAudio2.xml" target="lib\win8" />
+    <file src="..\..\Bin\DirectX11_Signed-winrt\SharpDX.XAudio2.dll" target="lib\win8" />
+    <file src="..\..\Bin\DirectX11_Signed-winrt\SharpDX.XAudio2.pdb" target="lib\win8" />
+    <file src="..\..\Bin\DirectX11_Signed-winrt\SharpDX.XAudio2.xml" target="lib\win8" />
 
     <file src="**\*.cs" target="src" />
   </files>

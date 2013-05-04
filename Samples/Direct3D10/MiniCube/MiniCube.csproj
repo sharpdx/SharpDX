@@ -57,16 +57,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SharpDX">
-      <HintPath>..\..\..\Bin\Standard-net20\SharpDX.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11-net20\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.D3DCompiler">
-      <HintPath>..\..\..\Bin\Standard-net20\SharpDX.D3DCompiler.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11-net20\SharpDX.D3DCompiler.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D10">
-      <HintPath>..\..\..\Bin\Standard-net20\SharpDX.Direct3D10.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11-net20\SharpDX.Direct3D10.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.DXGI">
-      <HintPath>..\..\..\Bin\Standard-net20\SharpDX.DXGI.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11-net20\SharpDX.DXGI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

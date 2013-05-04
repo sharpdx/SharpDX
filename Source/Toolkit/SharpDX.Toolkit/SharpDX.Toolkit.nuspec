@@ -46,20 +46,20 @@
   </metadata>
 
   <files>
-    <file src="..\..\..\Bin\Signed-net20\SharpDX.Toolkit.dll" target="lib\net20" />
-    <file src="..\..\..\Bin\Signed-net20\SharpDX.Toolkit.pdb" target="lib\net20" />
-    <file src="..\..\..\Bin\Signed-net20\SharpDX.Toolkit.xml" target="lib\net20" />
+    <file src="..\..\..\Bin\DirectX11_Signed-net20\SharpDX.Toolkit.dll" target="lib\net20" />
+    <file src="..\..\..\Bin\DirectX11_Signed-net20\SharpDX.Toolkit.pdb" target="lib\net20" />
+    <file src="..\..\..\Bin\DirectX11_Signed-net20\SharpDX.Toolkit.xml" target="lib\net20" />
 
-    <file src="..\..\..\Bin\Signed-net40\SharpDX.Toolkit.dll" target="lib\net40" />
-    <file src="..\..\..\Bin\Signed-net40\SharpDX.Toolkit.pdb" target="lib\net40" />
-    <file src="..\..\..\Bin\Signed-net40\SharpDX.Toolkit.xml" target="lib\net40" />
+    <file src="..\..\..\Bin\DirectX11_Signed-net40\SharpDX.Toolkit.dll" target="lib\net40" />
+    <file src="..\..\..\Bin\DirectX11_Signed-net40\SharpDX.Toolkit.pdb" target="lib\net40" />
+    <file src="..\..\..\Bin\DirectX11_Signed-net40\SharpDX.Toolkit.xml" target="lib\net40" />
 
-    <!--<file src="..\..\Bin\Signed-net40\SharpDX.dll" target="lib\net40" />-->
-    <!--<file src="..\..\Bin\Signed-net40\SharpDX.xml" target="lib\net40" />-->
+    <!--<file src="..\..\Bin\DirectX11_Signed-net40\SharpDX.dll" target="lib\net40" />-->
+    <!--<file src="..\..\Bin\DirectX11_Signed-net40\SharpDX.xml" target="lib\net40" />-->
 
-    <file src="..\..\..\Bin\Signed-winrt\SharpDX.Toolkit.dll" target="lib\win8" />
-    <file src="..\..\..\Bin\Signed-winrt\SharpDX.Toolkit.pdb" target="lib\win8" />
-    <file src="..\..\..\Bin\Signed-winrt\SharpDX.Toolkit.xml" target="lib\win8" />
+    <file src="..\..\..\Bin\DirectX11_Signed-winrt\SharpDX.Toolkit.dll" target="lib\win8" />
+    <file src="..\..\..\Bin\DirectX11_Signed-winrt\SharpDX.Toolkit.pdb" target="lib\win8" />
+    <file src="..\..\..\Bin\DirectX11_Signed-winrt\SharpDX.Toolkit.xml" target="lib\win8" />
 
     <file src="**\*.cs" target="src" />
   </files>

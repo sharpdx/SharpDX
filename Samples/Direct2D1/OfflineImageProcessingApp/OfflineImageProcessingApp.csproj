@@ -33,16 +33,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SharpDX">
-      <HintPath>..\..\..\Bin\Win8Desktop-net40\SharpDX.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11_1-net40\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct2D1">
-      <HintPath>..\..\..\Bin\Win8Desktop-net40\SharpDX.Direct2D1.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11_1-net40\SharpDX.Direct2D1.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D11">
-      <HintPath>..\..\..\Bin\Win8Desktop-net40\SharpDX.Direct3D11.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11_1-net40\SharpDX.Direct3D11.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.DXGI">
-      <HintPath>..\..\..\Bin\Win8Desktop-net40\SharpDX.DXGI.dll</HintPath>
+      <HintPath>..\..\..\Bin\DirectX11_1-net40\SharpDX.DXGI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>

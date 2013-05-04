@@ -42,17 +42,17 @@
   </metadata>
 
   <files>
-    <file src="..\..\Bin\Signed-net20\SharpDX.MediaFoundation.dll" target="lib\net20" />
-    <file src="..\..\Bin\Signed-net20\SharpDX.MediaFoundation.pdb" target="lib\net20" />
-    <file src="..\..\Bin\Signed-net20\SharpDX.MediaFoundation.xml" target="lib\net20" />
+    <file src="..\..\Bin\DirectX11_Signed-net20\SharpDX.MediaFoundation.dll" target="lib\net20" />
+    <file src="..\..\Bin\DirectX11_Signed-net20\SharpDX.MediaFoundation.pdb" target="lib\net20" />
+    <file src="..\..\Bin\DirectX11_Signed-net20\SharpDX.MediaFoundation.xml" target="lib\net20" />
 
-    <file src="..\..\Bin\Signed-net40\SharpDX.MediaFoundation.dll" target="lib\net40" />
-    <file src="..\..\Bin\Signed-net40\SharpDX.MediaFoundation.pdb" target="lib\net40" />
-    <file src="..\..\Bin\Signed-net40\SharpDX.MediaFoundation.xml" target="lib\net40" />
+    <file src="..\..\Bin\DirectX11_Signed-net40\SharpDX.MediaFoundation.dll" target="lib\net40" />
+    <file src="..\..\Bin\DirectX11_Signed-net40\SharpDX.MediaFoundation.pdb" target="lib\net40" />
+    <file src="..\..\Bin\DirectX11_Signed-net40\SharpDX.MediaFoundation.xml" target="lib\net40" />
 
-    <file src="..\..\Bin\Signed-winrt\SharpDX.MediaFoundation.dll" target="lib\win8" />
-    <file src="..\..\Bin\Signed-winrt\SharpDX.MediaFoundation.pdb" target="lib\win8" />
-    <file src="..\..\Bin\Signed-winrt\SharpDX.MediaFoundation.xml" target="lib\win8" />
+    <file src="..\..\Bin\DirectX11_Signed-winrt\SharpDX.MediaFoundation.dll" target="lib\win8" />
+    <file src="..\..\Bin\DirectX11_Signed-winrt\SharpDX.MediaFoundation.pdb" target="lib\win8" />
+    <file src="..\..\Bin\DirectX11_Signed-winrt\SharpDX.MediaFoundation.xml" target="lib\win8" />
 
     <file src="**\*.cs" target="src" />
   </files>
