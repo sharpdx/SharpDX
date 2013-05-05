@@ -1491,6 +1491,17 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        /// <summary>
+        /// Remove all shaders bounded to each stage.
+        /// </summary>
+        public void ResetShaderStages()
+        {
+            foreach (var commonShaderStage in ShaderStages)
+            {
+                commonShaderStage.SetShader(null, null, 0);
+            }
+        }
+
         public static implicit operator Device(GraphicsDevice from)
         {
             return from == null ? null : from.Device;

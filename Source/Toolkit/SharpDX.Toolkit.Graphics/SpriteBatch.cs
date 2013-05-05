@@ -937,6 +937,9 @@ namespace SharpDX.Toolkit.Graphics
             GraphicsDevice.SetDepthStencilState(depthStencilState ?? GraphicsDevice.DepthStencilStates.None);
             GraphicsDevice.SetRasterizerState(rasterizerState ?? GraphicsDevice.RasterizerStates.CullBack);
 
+            // Clear all shaders
+            GraphicsDevice.ResetShaderStages();
+
             // Build ortho-projection matrix
             ViewportF viewport = GraphicsDevice.Viewport;
             float xRatio = (viewport.Width > 0) ? (1f/(viewport.Width)) : 0f;
