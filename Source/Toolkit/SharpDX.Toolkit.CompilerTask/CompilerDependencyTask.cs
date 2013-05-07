@@ -98,6 +98,8 @@ namespace SharpDX.Toolkit
 
         public string RootNamespace { get; set; }
 
+        public string CompilerFlags { get; set; }
+
         public sealed override bool Execute()
         {
             var hasErrors = false;

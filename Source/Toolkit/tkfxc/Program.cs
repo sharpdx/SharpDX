@@ -44,7 +44,7 @@ namespace SharpDX.Toolkit.Graphics
         [Option("I", Description = "Additional include path\n", Value = "<include>")]
         public readonly List<string> IncludeDirs = new List<string>();
 
-        [Option("Fo", Description = "Output object file. default is [output.tkfxo]\n", Value = "<file>")]
+        [Option("Fo", Description = "Output object file. default is [InputFileName.tkb]\n", Value = "<file>")]
         public string OutputFile = null;
 
         [Option("Fc", Description = "Output class file.", Value = "<file>")]
@@ -71,7 +71,7 @@ namespace SharpDX.Toolkit.Graphics
         [Option("Od", Description = "Output shader with debug information and no optimization")]
         public bool Debug;
 
-        [Option("O", Description = "Optimization level 0..3.  1 is default", Value = "<0,1,2,3>")]
+        [Option("O", Description = "Optimization level 0..3.  1 is default\n", Value = "<0,1,2,3>")]
         public int OptimizationLevel = 1;
 
         [Option("Zpr", Description = "Pack matrices in row-major order")]
@@ -79,6 +79,24 @@ namespace SharpDX.Toolkit.Graphics
 
         [Option("Zpc", Description = "Pack matrices in column-major order")]
         public bool PackColumnMajor;
+
+        [Option("Gpp", Description = "Force partial precision")]
+        public bool ForcePartialPrecision;
+
+        [Option("Gfa", Description = "Avoid flow control constructs")]
+        public bool AvoidFlowControl;
+
+        [Option("Gfp", Description = "Prefer flow control constructs")]
+        public bool PreferFlowControl;
+
+        [Option("Ges", Description = "Enable strict mode")]
+        public bool EnableStrictness;
+
+        [Option("Gec", Description = "Enable backwards compatibility mode")]
+        public bool EnableBackwardsCompatibility;
+
+        [Option("Gis", Description = "Force IEEE strictness\n")]
+        public bool IeeeStrictness;
 
         [Option("nodis", Description = "Suppress output of disassembly on the standard output.")]
         public bool NoDisassembly;
@@ -152,22 +170,22 @@ namespace SharpDX.Toolkit.Graphics
             if (options.PackColumnMajor)
                 flags |= EffectCompilerFlags.PackMatrixColumnMajor;
 
+            if (options.AvoidFlowControl)
+                flags |= EffectCompilerFlags.AvoidFlowControl;
+
+            if (options.PreferFlowControl)
+                flags |= EffectCompilerFlags.PreferFlowControl;
+
+            if (options.EnableStrictness)
+                flags |= EffectCompilerFlags.EnableStrictness;
+
+            if (options.EnableBackwardsCompatibility)
+                flags |= EffectCompilerFlags.EnableBackwardsCompatibility;
+
+            if (options.IeeeStrictness)
+                flags |= EffectCompilerFlags.IeeeStrictness;
+
             hasErrors = false;
-
-            // ----------------------------------------------------------------
-            // Pre check files
-            // ----------------------------------------------------------------
-            if (options.OutputClassFile == null && options.OutputFile == null)
-            {
-                options.OutputFile = "output.tkfxo";
-            }
-
-            // Check for output files
-            bool outputFileExist = options.OutputClassFile != null && File.Exists(options.OutputClassFile);
-            if (options.OutputFile != null && !File.Exists(options.OutputFile))
-            {
-                outputFileExist = false;
-            }
 
             // ----------------------------------------------------------------
             // Process each fx files / tkfxo files
@@ -183,7 +201,22 @@ namespace SharpDX.Toolkit.Graphics
                 ResetColor();
                 Abort();
             }
-            
+
+            // ----------------------------------------------------------------
+            // Pre check files
+            // ----------------------------------------------------------------
+            if (options.OutputClassFile == null && options.OutputFile == null)
+            {
+                options.OutputFile = Path.GetFileNameWithoutExtension(options.FxFile) + ".tkb";
+            }
+
+            // Check for output files
+            bool outputFileExist = options.OutputClassFile != null && File.Exists(options.OutputClassFile);
+            if (options.OutputFile != null && !File.Exists(options.OutputFile))
+            {
+                outputFileExist = false;
+            }
+
             // New Compiler
             var compiler = new EffectCompiler();
 

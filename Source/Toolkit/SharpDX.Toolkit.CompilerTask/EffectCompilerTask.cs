@@ -59,8 +59,14 @@ namespace SharpDX.Toolkit
 
         protected override Diagnostics.Logger ProcessFileAndGetLogResults(string inputFilePath, string outputFilePath, string dependencyFilePath, TkItem item)
         {
+            var compilerFlags = Debug ? EffectCompilerFlags.Debug : EffectCompilerFlags.None;
+            if (!string.IsNullOrEmpty(CompilerFlags))
+            {
+                compilerFlags |= (EffectCompilerFlags)Enum.Parse(typeof(EffectCompilerFlags), CompilerFlags);
+            }
+
             var compilerResult = compiler.CompileFromFile(inputFilePath,
-                                                              Debug ? EffectCompilerFlags.Debug : EffectCompilerFlags.None,
+                                                              compilerFlags,
                                                               null,
                                                               null,
                                                               item.DynamicCompiling,
