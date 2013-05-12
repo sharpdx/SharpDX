@@ -51,6 +51,7 @@ namespace SharpDX
         /// </summary>
         /// <value>The Z component of the vector.</value>
         public Half Z;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:SharpDX.Half3" /> structure.
         /// </summary>
@@ -62,6 +63,32 @@ namespace SharpDX
             this.X = x;
             this.Y = y;
             this.Z = z;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:SharpDX.Half3" /> structure.
+        /// </summary>
+        /// <param name="x">The X component.</param>
+        /// <param name="y">The Y component.</param>
+        /// <param name="z">The Z component.</param>
+        public Half3(float x, float y, float z)
+        {
+            this.X = new Half(x);
+            this.Y = new Half(y);
+            this.Z = new Half(z);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:SharpDX.Half3" /> structure.
+        /// </summary>
+        /// <param name="x">The X component.</param>
+        /// <param name="y">The Y component.</param>
+        /// <param name="z">The Z component.</param>
+        public Half3(ushort x, ushort y, ushort z)
+        {
+            this.X = new Half(x);
+            this.Y = new Half(y);
+            this.Z = new Half(z);
         }
 
         /// <summary>

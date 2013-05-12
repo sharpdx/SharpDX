@@ -75,6 +75,36 @@ namespace SharpDX
         /// <summary>
         /// Initializes a new instance of the <see cref="T:SharpDX.Half4" /> structure.
         /// </summary>
+        /// <param name="x">The X component.</param>
+        /// <param name="y">The Y component.</param>
+        /// <param name="z">The Z component.</param>
+        /// <param name="w">The W component.</param>
+        public Half4(float x, float y, float z, float w)
+        {
+            this.X = new Half(x);
+            this.Y = new Half(y);
+            this.Z = new Half(z);
+            this.W = new Half(w);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:SharpDX.Half4" /> structure.
+        /// </summary>
+        /// <param name="x">The X component.</param>
+        /// <param name="y">The Y component.</param>
+        /// <param name="z">The Z component.</param>
+        /// <param name="w">The W component.</param>
+        public Half4(ushort x, ushort y, ushort z, ushort w)
+        {
+            this.X = new Half(x);
+            this.Y = new Half(y);
+            this.Z = new Half(z);
+            this.W = new Half(w);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:SharpDX.Half4" /> structure.
+        /// </summary>
         /// <param name="value">The value to set for the X, Y, Z, and W components.</param>
         public Half4(Half value)
         {
