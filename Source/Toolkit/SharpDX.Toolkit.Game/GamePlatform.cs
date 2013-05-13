@@ -182,17 +182,18 @@ namespace SharpDX.Toolkit
 
             if (prefferedParameters.IsFullScreen)
             {
+                deviceInfo.PresentationParameters.BackBufferFormat = mode.Format;
                 deviceInfo.PresentationParameters.BackBufferWidth = mode.Width;
                 deviceInfo.PresentationParameters.BackBufferHeight = mode.Height;
             }
             else
             {
+                deviceInfo.PresentationParameters.BackBufferFormat = prefferedParameters.PreferredBackBufferFormat;
                 deviceInfo.PresentationParameters.BackBufferWidth = prefferedParameters.PreferredBackBufferWidth;
                 deviceInfo.PresentationParameters.BackBufferHeight = prefferedParameters.PreferredBackBufferHeight;
             }
 
-            // TODO: Handle BackBufferFormat / multisampling / depthstencil format
-            deviceInfo.PresentationParameters.BackBufferFormat = mode.Format;
+            // TODO: Handle multisampling / depthstencil format
             deviceInfo.PresentationParameters.DepthStencilFormat = prefferedParameters.PreferredDepthStencilFormat;
             deviceInfo.PresentationParameters.MultiSampleCount = MSAALevel.None;
 
