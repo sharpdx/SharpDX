@@ -292,7 +292,7 @@ namespace SharpDX.Toolkit.Graphics
 
         private void MeasureStringGlyph(ref Vector2 result, ref SpriteFontData.Glyph glyph, float x, float y)
         {
-            float w = x + (glyph.Subrect.Right - glyph.Subrect.Left);
+            float w = x + (glyph.Subrect.Right - glyph.Subrect.Left) + Spacing;
             float h = y + Math.Max((glyph.Subrect.Bottom - glyph.Subrect.Top) + glyph.Offset.Y, LineSpacing);
             if (w > result.X)
             {
@@ -364,7 +364,6 @@ namespace SharpDX.Toolkit.Graphics
 
                             var glyph = (SpriteFontData.Glyph*) pGlyph + glyphIndex;
 
-
                             x += glyph->Offset.X;
 
                             if (x < 0)
@@ -380,7 +379,7 @@ namespace SharpDX.Toolkit.Graphics
                                 action(ref parameters, ref *glyph, x, y);
                             }
 
-                            x += glyph->XAdvance;
+                            x += glyph->XAdvance + Spacing;
                             break;
                     }
 
