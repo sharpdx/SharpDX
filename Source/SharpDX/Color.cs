@@ -968,13 +968,22 @@ namespace SharpDX
         }
 
         /// <summary>
+        /// Convert this instance to a <see cref="Color4"/>
+        /// </summary>
+        /// <returns>The result of the conversion.</returns>
+        public Color4 ToColor4()
+        {
+            return new Color4(R / 255.0f, G / 255.0f, B / 255.0f, A / 255.0f);
+        }
+
+        /// <summary>
         /// Performs an explicit conversion from <see cref="SharpDX.Color"/> to <see cref="SharpDX.Color4"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
         public static implicit operator Color4(Color value)
         {
-            return new Color4(value.R/255.0f, value.G/255.0f, value.B/255.0f, value.A/255.0f);
+            return value.ToColor4();
         }
 
         /// <summary>
