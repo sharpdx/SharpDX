@@ -108,8 +108,8 @@ namespace SharpDX.RawInput
         /// <param name="usageId">The usage id.</param>
         /// <param name="flags">The flags.</param>
         /// <param name="target">The target.</param>
-        /// <param name="addMessageFilter">if set to <c>true</c> register message filter to Application.AddMessageFilter.</param>
-        public static void RegisterDevice(UsagePage usagePage, UsageId usageId, DeviceFlags flags, IntPtr target, bool addMessageFilter = true)
+        /// <param name="options">The options.</param>
+        public static void RegisterDevice(UsagePage usagePage, UsageId usageId, DeviceFlags flags, IntPtr target, RegisterDeviceOptions options = RegisterDeviceOptions.Default)
         {
             var rawInputDevices = new RawInputDevice[1];
             rawInputDevices[0].UsagePage = (short) usagePage;
@@ -120,10 +120,17 @@ namespace SharpDX.RawInput
             // Register this device
             RawInputFunctions.RegisterRawInputDevices(rawInputDevices, 1, Utilities.SizeOf<RawInputDevice>());
 
-            if (rawInputMessageFilter == null && addMessageFilter)
+            if (options != RegisterDeviceOptions.NoFiltering && rawInputMessageFilter == null)
             {
                 rawInputMessageFilter = new RawInputMessageFilter();
-                MessageFilterHook.AddMessageFilter(target, rawInputMessageFilter);
+                if (options == RegisterDeviceOptions.Default)
+                {
+                    Application.AddMessageFilter(rawInputMessageFilter);
+                }
+                else
+                {
+                    MessageFilterHook.AddMessageFilter(target, rawInputMessageFilter);
+                }
             }
         }
 
