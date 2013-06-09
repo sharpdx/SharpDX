@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 #if !W8CORE
-using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;

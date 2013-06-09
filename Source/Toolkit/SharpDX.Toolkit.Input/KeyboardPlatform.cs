@@ -48,7 +48,13 @@ namespace SharpDX.Toolkit.Input
         {
             if (nativeWindow == null) throw new ArgumentNullException("nativeWindow");
 #if !W8CORE
-            return new KeyboardPlatformDesktop(nativeWindow); // Desktop platform
+            if (nativeWindow is System.Windows.Forms.Control)
+                return new KeyboardPlatformDesktop(nativeWindow); // WinForms platform
+#if !W8CORE && NET35Plus && !DIRECTX11_1
+            if (nativeWindow is SharpDXElement)
+                return new KeyboardPlatformDesktopWpf(nativeWindow); // WPF platform
+#endif
+            throw new ArgumentException("Unsupported window control.", "nativeWindow");
 #elif WIN8METRO
             return new KeyboardPlatformWinRT(nativeWindow);
 #else

@@ -49,8 +49,7 @@ namespace SharpDX.Toolkit.Input
         /// Binds to pointer events of specified <paramref name="nativeWindow"/> object and raises the corresponding events on <paramref name="manager"/>.
         /// </summary>
         /// <param name="nativeWindow">An instance of <see cref="Control"/>.</param>
-        /// <param name="manager">The related <see cref="PointerManager"/> instance.</param>
-        /// <exception cref="ArgumentNullException">Is thrown when either <paramref name="nativeWindow"/> or <paramref name="manager"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">Is thrown when <paramref name="nativeWindow"/> is null.</exception>
         protected override void BindWindow(object nativeWindow)
         {
             if (nativeWindow == null) throw new ArgumentNullException("nativeWindow");
@@ -93,7 +92,7 @@ namespace SharpDX.Toolkit.Input
             pressedButtonsCount--;
 
             var eventType = pressedButtonsCount > 0 ? PointerEventType.Moved : PointerEventType.Released;
-            CreateAndAddPoint(eventType, TranslateMouseButtonDown(e.Button), e.Delta);
+            CreateAndAddPoint(eventType, TranslateMouseButtonUp(e.Button), e.Delta);
         }
 
         /// <summary>

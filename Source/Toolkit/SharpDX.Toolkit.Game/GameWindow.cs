@@ -166,6 +166,14 @@ namespace SharpDX.Toolkit
 
         internal abstract void Resize(int width, int height);
 
+        /// <summary>
+        /// Allows derived classes to create a custom graphics presenter
+        /// </summary>
+        /// <param name="device">The graphics device to use for renderer creation</param>
+        /// <param name="parameters">The desired presentation parameters to use for renderer creation</param>
+        /// <returns>Default implementation returns null</returns>
+        internal virtual GraphicsPresenter CreateGraphicsPresenter(GraphicsDevice device, PresentationParameters parameters) { return null; }
+
         internal IServiceRegistry Services { get; set; }
 
         protected internal abstract void SetSupportedOrientations(DisplayOrientation orientations);

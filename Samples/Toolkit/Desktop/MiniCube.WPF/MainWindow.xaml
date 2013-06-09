@@ -1,0 +1,9 @@
+﻿<Window x:Class="MiniCube.WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:toolkit="clr-namespace:SharpDX.Toolkit;assembly=SharpDX.Toolkit.Game"
+        Title="MainWindow" Height="480" Width="800">
+    <Grid>
+        <toolkit:SharpDXElement x:Name="surface" x:FieldModifier="private" />
+    </Grid>
+</Window>
