@@ -23,6 +23,8 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AssemblyDoc.cs" />
+    <Compile Include="Desktop\GameWindowDesktopWpf.cs" />
+    <Compile Include="Desktop\SharpDXElement.cs" />
     <Compile Include="GameContext.WindowsPhoneBackgroundXaml.cs" />
     <Compile Include="GameContext.WinRTBackgroundXaml.cs" />
     <Compile Include="GameContext.WinRT.cs" />
@@ -70,6 +72,7 @@
       <Name>SharpDX.Direct3D11</Name>
       <Private>False</Private>
     </ProjectReference>
+    
     <ProjectReference Include="..\..\SharpDX.DXGI\SharpDX.DXGI.csproj">
       <Project>{3fc6de77-b412-4101-9e64-6b9aa831179b}</Project>
       <Name>SharpDX.DXGI</Name>
@@ -96,6 +99,16 @@
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
+  <Choose>
+    <When Condition=" '$(Configuration)' == 'Net40Debug' OR '$(Configuration)' == 'Net40Release' ">
+      <ItemGroup>
+        <ProjectReference Include="..\..\SharpDX.Direct3D9\SharpDX.Direct3D9.csproj">
+          <Project>{b4d984df-85b8-4bbf-8c3b-5cef905f40d9}</Project>
+          <Name>SharpDX.Direct3D9</Name>
+        </ProjectReference>
+      </ItemGroup>
+    </When>
+  </Choose>
   <ItemGroup>
     <None Include="SharpDX.Toolkit.Game.nuspec" />
   </ItemGroup>

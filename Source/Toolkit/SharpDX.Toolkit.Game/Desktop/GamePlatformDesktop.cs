@@ -46,7 +46,11 @@ namespace SharpDX.Toolkit
 
         internal override GameWindow[] GetSupportedGameWindows()
         {
-            return new GameWindow[] { new GameWindowDesktop() };
+            return new GameWindow[] { new GameWindowDesktop()
+#if !W8CORE && NET35Plus && !DIRECTX11_1
+                , new GameWindowDesktopWpf() 
+#endif
+            };
         }
 
         public override List<GraphicsDeviceInformation> FindBestDevices(GameGraphicsParameters prefferedParameters)

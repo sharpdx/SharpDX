@@ -94,6 +94,7 @@ namespace SharpDX.Toolkit.Graphics
 
         public override void Present()
         {
+            GraphicsDevice.Flush();
         }
 
         protected override void Dispose(bool disposeManagedResources)

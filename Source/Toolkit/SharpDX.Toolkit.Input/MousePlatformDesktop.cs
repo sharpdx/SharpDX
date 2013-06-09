@@ -24,6 +24,8 @@ namespace SharpDX.Toolkit.Input
 {
     using System;
     using System.Windows.Forms;
+    using Cursor = System.Windows.Forms.Cursor;
+    using MouseEventArgs = System.Windows.Forms.MouseEventArgs;
 
     /// <summary>
     /// Represents a specific <see cref="MousePlatform"/> implementation for WinForms platform (desktop)
@@ -36,6 +38,7 @@ namespace SharpDX.Toolkit.Input
         /// Initializes a new instance of <see cref="MousePlatformDesktop" /> class.
         /// </summary>
         /// <param name="nativeWindow">A reference to <see cref="Control" /> class.</param>
+        /// <exception cref="ArgumentNullException">Is thrown when <paramref name="nativeWindow"/> is null.</exception>
         public MousePlatformDesktop(object nativeWindow) : base(nativeWindow) { }
 
         /// <inheritdoc />
@@ -54,7 +57,7 @@ namespace SharpDX.Toolkit.Input
         /// <exception cref="InvalidCastException">Is thrown when <paramref name="nativeWindow"/> is not an instance of the <see cref="Control"/> class.</exception>
         protected override void BindWindow(object nativeWindow)
         {
-            if(nativeWindow == null) throw new ArgumentNullException("nativeWindow");
+            if (nativeWindow == null) throw new ArgumentNullException("nativeWindow");
 
             control = (Control)nativeWindow;
 
@@ -128,20 +131,20 @@ namespace SharpDX.Toolkit.Input
         {
             switch (button)
             {
-            case MouseButtons.Left:
-                return MouseButton.Left;
-            case MouseButtons.None:
-                return MouseButton.None;
-            case MouseButtons.Right:
-                return MouseButton.Right;
-            case MouseButtons.Middle:
-                return MouseButton.Middle;
-            case MouseButtons.XButton1:
-                return MouseButton.XButton1;
-            case MouseButtons.XButton2:
-                return MouseButton.XButton2;
-            default:
-                throw new ArgumentOutOfRangeException("button");
+                case MouseButtons.Left:
+                    return MouseButton.Left;
+                case MouseButtons.None:
+                    return MouseButton.None;
+                case MouseButtons.Right:
+                    return MouseButton.Right;
+                case MouseButtons.Middle:
+                    return MouseButton.Middle;
+                case MouseButtons.XButton1:
+                    return MouseButton.XButton1;
+                case MouseButtons.XButton2:
+                    return MouseButton.XButton2;
+                default:
+                    throw new ArgumentOutOfRangeException("button");
             }
         }
     }

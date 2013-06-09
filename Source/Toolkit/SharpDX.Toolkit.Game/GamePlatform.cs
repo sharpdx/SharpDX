@@ -27,6 +27,8 @@ using SharpDX.Toolkit.Graphics;
 
 namespace SharpDX.Toolkit
 {
+    using Direct3D11;
+
     internal abstract class GamePlatform : DisposeBase, IGraphicsDeviceFactory, IGamePlatform
     {
         protected delegate void AddDeviceToListDelegate(GameGraphicsParameters prefferedParameters,
@@ -219,7 +221,14 @@ namespace SharpDX.Toolkit
         public virtual GraphicsDevice CreateDevice(GraphicsDeviceInformation deviceInformation)
         {
             var device = GraphicsDevice.New(deviceInformation.Adapter, deviceInformation.DeviceCreationFlags, deviceInformation.GraphicsProfile);
-            device.Presenter = new SwapChainGraphicsPresenter(device, deviceInformation.PresentationParameters);
+
+            var parameters = deviceInformation.PresentationParameters;
+
+            // give a chance to gameWindow to create desired graphics presenter, otherwise - create our own.
+            var presenter = gameWindow.CreateGraphicsPresenter(device, parameters)
+                            ?? new SwapChainGraphicsPresenter(device, parameters);
+
+            device.Presenter = presenter;
 
             // Force to resize the gameWindow
             gameWindow.Resize(deviceInformation.PresentationParameters.BackBufferWidth, deviceInformation.PresentationParameters.BackBufferHeight);

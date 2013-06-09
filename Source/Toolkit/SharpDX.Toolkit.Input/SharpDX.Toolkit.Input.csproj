@@ -25,10 +25,12 @@
     <Compile Include="KeyboardManager.cs" />
     <Compile Include="KeyboardPlatform.cs" />
     <Compile Include="KeyboardPlatformDesktop.cs" />
+    <Compile Include="KeyboardPlatformDesktopWpf.cs" />
     <Compile Include="KeyboardPlatformWinRT.cs" />
     <Compile Include="KeyboardState.cs" />
     <Compile Include="KeyModifiers.cs" />
     <Compile Include="Keys.cs" />
+    <Compile Include="MousePlatformDesktopWpf.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="MousePlatformDesktop.cs" />
     <Compile Include="IMouseService.cs" />
@@ -42,6 +44,7 @@
     <Compile Include="PointerPlatform.cs" />
     <Compile Include="PointerPlatformDesktop.cs" />
     <Compile Include="PointerPlatformDesktopTouch.cs" />
+    <Compile Include="PointerPlatformDesktopWpf.cs" />
     <Compile Include="PointerPlatformWinRT.cs" />
     <Compile Include="PointerPlatformWP8.cs" />
     <Compile Include="PointerPoint.cs" />
@@ -85,6 +88,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="SharpDX.Toolkit.Input.nuspec" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <Import Project="$(SolutionDir)\SharpDX.PostSettings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

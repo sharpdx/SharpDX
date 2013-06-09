@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 #if !W8CORE
+using System;
 using System.Windows.Forms;
-
 using SharpDX.Windows;
 
 namespace SharpDX.Toolkit
@@ -27,12 +27,13 @@ namespace SharpDX.Toolkit
     /// <summary>
     /// A <see cref="GameContext"/> to use for rendering to an existing WinForm <see cref="Control"/>.
     /// </summary>
-    public partial class GameContext 
+    public partial class GameContext
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="GameContext" /> class with a default <see cref="RenderForm"/>.
         /// </summary>
-        public GameContext() : this((Control)null)
+        public GameContext()
+            : this((Control)null)
         {
         }
 
@@ -44,11 +45,23 @@ namespace SharpDX.Toolkit
         /// <param name="requestedHeight">Height of the requested.</param>
         public GameContext(Control control, int requestedWidth = 0, int requestedHeight = 0)
         {
-            Control = control ?? new RenderForm("SharpDX Game") { AllowUserResizing =  false };
+            Control = control ?? new RenderForm("SharpDX Game") { AllowUserResizing = false };
             RequestedWidth = requestedWidth;
             RequestedHeight = requestedHeight;
             ContextType = GameContextType.Desktop;
         }
+
+#if NET35Plus && !DIRECTX11_1
+        public GameContext(SharpDXElement element, int requestedWidth = 0, int requestedHeight = 0)
+        {
+            if (element == null) throw new ArgumentNullException("element");
+
+            Control = element;
+            RequestedWidth = requestedWidth;
+            RequestedHeight = requestedHeight;
+            ContextType = GameContextType.DesktopWpf;
+        }
+#endif
 
         /// <summary>
         /// The control used as a GameWindow context (either an instance of <see cref="System.Windows.Forms.Control"/> or <see cref="System.Windows.Controls.Control"/>.
@@ -64,6 +77,13 @@ namespace SharpDX.Toolkit
         {
             return new GameContext(control);
         }
+
+#if NET35Plus && !DIRECTX11_1
+        public static implicit operator GameContext(SharpDXElement element)
+        {
+            return new GameContext(element);
+        }
+#endif
     }
 }
 #endif
