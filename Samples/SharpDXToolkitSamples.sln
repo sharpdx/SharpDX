@@ -57,6 +57,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelRendering.WinRT", "Too
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geometrics.Desktop", "Toolkit\Desktop\Geometrics\Geometrics.Desktop.csproj", "{E6BB7879-4CAF-48F0-9A15-DF49534B6ADE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamOutParticles.Desktop", "Toolkit\Desktop\StreamOutParticles\StreamOutParticles.Desktop.csproj", "{84D42973-E9B4-4799-B396-5DC74CFE4E6C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -548,6 +550,16 @@ Global
 		{E6BB7879-4CAF-48F0-9A15-DF49534B6ADE}.Release|ARM.ActiveCfg = Release|Any CPU
 		{E6BB7879-4CAF-48F0-9A15-DF49534B6ADE}.Release|x64.ActiveCfg = Release|Any CPU
 		{E6BB7879-4CAF-48F0-9A15-DF49534B6ADE}.Release|x86.ActiveCfg = Release|Any CPU
+		{84D42973-E9B4-4799-B396-5DC74CFE4E6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84D42973-E9B4-4799-B396-5DC74CFE4E6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84D42973-E9B4-4799-B396-5DC74CFE4E6C}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{84D42973-E9B4-4799-B396-5DC74CFE4E6C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{84D42973-E9B4-4799-B396-5DC74CFE4E6C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{84D42973-E9B4-4799-B396-5DC74CFE4E6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84D42973-E9B4-4799-B396-5DC74CFE4E6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84D42973-E9B4-4799-B396-5DC74CFE4E6C}.Release|ARM.ActiveCfg = Release|Any CPU
+		{84D42973-E9B4-4799-B396-5DC74CFE4E6C}.Release|x64.ActiveCfg = Release|Any CPU
+		{84D42973-E9B4-4799-B396-5DC74CFE4E6C}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
