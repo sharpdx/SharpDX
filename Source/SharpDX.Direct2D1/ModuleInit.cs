@@ -36,6 +36,7 @@ namespace SharpDX.Direct2D1
         {
             // Register automatically Resultcode
             ResultDescriptor.RegisterProvider(typeof(ResultCode));
+            ResultDescriptor.RegisterProvider(typeof(WIC.ResultCode));
         }
     }
 }
