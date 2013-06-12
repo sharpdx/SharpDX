@@ -134,6 +134,8 @@ namespace SharpDX.Win32
                             case VariantElementType.IntPointer:
                             case VariantElementType.Pointer:
                                 return variantValue.pointerValue;
+                            case VariantElementType.FileTime:
+                                return DateTime.FromFileTime(variantValue.longValue);
                             default:
                                 return null;
                         }
@@ -237,7 +239,7 @@ namespace SharpDX.Win32
                                     var comArray = new ComObject[size];
                                     for (int i = 0; i < size; i++)
                                         comArray[i] = new ComObject(((IntPtr*)variantValue.recordValue.RecordPointer)[i]);
-                                    return comArray;   
+                                    return comArray;
                                 }
                             case VariantElementType.IntPointer:
                             case VariantElementType.Pointer:
@@ -245,6 +247,13 @@ namespace SharpDX.Win32
                                     var array = new IntPtr[size];
                                     Utilities.Read(variantValue.recordValue.RecordPointer, array, 0, size);
                                     return array;
+                                }
+                            case VariantElementType.FileTime:
+                                {
+                                    var fileTimeArray = new DateTime[size];
+                                    for (int i = 0; i < size; i++)
+                                        fileTimeArray[i] = DateTime.FromFileTime(((long*)variantValue.recordValue.RecordPointer)[i]);
+                                    return fileTimeArray;
                                 }
                             default:
                                 return null;
@@ -329,6 +338,18 @@ namespace SharpDX.Win32
                 {
                     ElementType = VariantElementType.ComUnknown;
                     variantValue.pointerValue = ((ComObject)value).NativePointer;
+                    return;
+                }
+                else if (value is DateTime)
+                {
+                    ElementType = VariantElementType.FileTime;
+                    variantValue.longValue = ((DateTime)value).ToFileTime();
+                    return;
+                }
+                else if (value is string)
+                {
+                    ElementType = VariantElementType.WStringPointer;
+                    variantValue.pointerValue = Marshal.StringToCoTaskMemUni((string)value);
                     return;
                 }
 
