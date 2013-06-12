@@ -267,8 +267,9 @@
     <!--IWICMetadataQueryReader-->
     <map method="IWICMetadataQueryReader::GetLocation" visibility="internal"/>
     <map param="IWICMetadataQueryReader::GetLocation::wz.*"  type="void" attribute="in"/>
-    <map method="IWICMetadataQueryReader::GetMetadataByName"  visibility="internal"/>
-
+    <map method="IWICMetadataQueryReader::GetMetadataByName"  visibility="internal" check="false"/>
+    <map param="IWICMetadataQueryReader::GetMetadataByName::pvarValue" type="void" pointer="*" attribute="in"/>
+      
     <map method="IWICMetadataQueryReader::GetEnumerator" visibility="internal" property="false"/>
     <map param="ppIEnumString" type="void" return="true"/>
 

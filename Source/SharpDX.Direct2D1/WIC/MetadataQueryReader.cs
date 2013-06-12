@@ -21,7 +21,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-
 using SharpDX.Win32;
 
 namespace SharpDX.WIC
@@ -34,6 +33,41 @@ namespace SharpDX.WIC
         public IEnumerable<string> Enumerator
         {
             get { return new ComStringEnumerator(GetEnumerator()); }
+        }
+
+        /// <summary>
+        /// Gets the enumerator on all the metadata query paths.
+        /// http://msdn.microsoft.com/en-us/library/windows/desktop/ee719796(v=vs.85).aspx#expressionanatomy
+        /// </summary>
+        public IEnumerable<string> QueryPaths
+        {
+            get
+            {
+                foreach (var name in Enumerator)
+                {
+                    object value;
+
+                    if (TryGetMetadataByName(name, out value).Success)
+                    {
+                        var subReader = value as MetadataQueryReader;
+
+                        if (subReader == null)
+                        {
+                            yield return name;
+                        }
+                        else
+                        {
+                            foreach (var subPath in subReader.QueryPaths)
+                                yield return name + subPath;
+                        }
+                    }
+                    else
+                    {
+                        // TODO: Report error somehow?
+                        yield return name;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -60,6 +94,55 @@ namespace SharpDX.WIC
         }
 
         /// <summary>
+        /// Try to get the metadata value by name.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="value">The metadata value, or null if the metadata was not found or an error occurred</param>
+        /// <returns>The WIC error code</returns>
+        /// <unmanaged>HRESULT IWICMetadataQueryReader::GetMetadataByName([In] const wchar_t* wzName,[InOut, Optional] PROPVARIANT* pvarValue)</unmanaged>
+        public Result TryGetMetadataByName(string name, out object value)
+        {
+            unsafe
+            {
+                value = null;
+
+                byte* variant = stackalloc byte[512];
+
+                var result = GetMetadataByName(name, (IntPtr)variant);
+                if (result.Success)
+                {
+                    var variantStruct = (Variant*)variant;
+                    value = variantStruct->Value;
+
+                    // If object is a ComObject, try to instantiate a MetaDataQueryReader
+                    var comObject = value as ComObject;
+                    if (comObject != null)
+                        value = comObject.QueryInterfaceOrNull<MetadataQueryReader>();
+                }
+
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Try to get the metadata value by name.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>the metadata value, or null if the metadata was not found</returns>
+        /// <unmanaged>HRESULT IWICMetadataQueryReader::GetMetadataByName([In] const wchar_t* wzName,[InOut, Optional] PROPVARIANT* pvarValue)</unmanaged>
+        public object TryGetMetadataByName(string name)
+        {
+            object value;
+            var result = TryGetMetadataByName(name, out value);
+
+            if (ResultCode.Propertynotfound != result &&
+                ResultCode.Propertynotsupported != result)
+                result.CheckError();
+
+            return value;
+        }
+
+        /// <summary>
         /// Gets the metadata value by name.
         /// </summary>
         /// <param name="name">The name.</param>
@@ -67,21 +150,12 @@ namespace SharpDX.WIC
         /// <unmanaged>HRESULT IWICMetadataQueryReader::GetMetadataByName([In] const wchar_t* wzName,[InOut, Optional] PROPVARIANT* pvarValue)</unmanaged>
         public object GetMetadataByName(string name)
         {
-            unsafe
-            {
-                byte* variant = stackalloc byte[512];
-                var pointer = new IntPtr(variant);
-                GetMetadataByName(name, pointer);
+            object value;
+            
+            var result = TryGetMetadataByName(name, out value);
+            result.CheckError();
 
-                var varianStruct = (Variant*)variant;
-                object value = varianStruct->Value;
-
-                // If object is a ComObject, try to instantiate a MetaDataQueryReader
-                if (value is ComObject)
-                    value = ((ComObject)value).QueryInterfaceOrNull<MetadataQueryReader>();
-
-                return value;
-            }
+            return value;
         }
 
         /// <summary>
