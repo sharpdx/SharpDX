@@ -53,7 +53,10 @@ namespace SharpDX.Diagnostics
     /// </summary>
     public static class ObjectTracker
     {
-        private static readonly Dictionary<IntPtr, List<ObjectReference>> ObjectReferences = new Dictionary<IntPtr, List<ObjectReference>>(EqualityComparer.DefaultIntPtr);
+        private static Dictionary<IntPtr, List<ObjectReference>> processGlobalObjectReferences;
+        
+        [ThreadStatic] 
+        private static Dictionary<IntPtr, List<ObjectReference>> threadStaticObjectReferences;
 
         /// <summary>
         /// Occurs when a ComObject is tracked.
@@ -90,6 +93,31 @@ namespace SharpDX.Diagnostics
             }
         }
 #endif
+
+        private static Dictionary<IntPtr, List<ObjectReference>> ObjectReferences
+        {
+            get
+            {
+                Dictionary<IntPtr, List<ObjectReference>> objectReferences;
+
+                if (Configuration.UseThreadStaticObjectTracking)
+                {
+                    if (threadStaticObjectReferences == null)
+                        threadStaticObjectReferences = new Dictionary<IntPtr, List<ObjectReference>>(EqualityComparer.DefaultIntPtr);
+
+                    objectReferences = threadStaticObjectReferences;
+                }
+                else
+                {
+                    if (processGlobalObjectReferences == null)
+                        processGlobalObjectReferences = new Dictionary<IntPtr, List<ObjectReference>>(EqualityComparer.DefaultIntPtr);
+
+                    objectReferences = processGlobalObjectReferences;
+                }
+
+                return objectReferences;
+            }
+        }
         
         /// <summary>
         /// Tracks the specified COM object.
