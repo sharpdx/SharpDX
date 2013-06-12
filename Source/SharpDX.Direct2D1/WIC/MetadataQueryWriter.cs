@@ -20,6 +20,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using SharpDX.Win32;
 
 namespace SharpDX.WIC
 {
@@ -82,7 +83,10 @@ namespace SharpDX.WIC
         public unsafe void SetMetadataByName(string name, object value)
         {
             byte* variant = stackalloc byte[512];
-            Marshal.GetNativeVariantForObject(value, (IntPtr)variant);
+
+            var variantStruct = (Variant*)variant;
+            variantStruct->Value = value;
+
             SetMetadataByName(name, (IntPtr) variant);
         }
     }
