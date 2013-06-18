@@ -304,14 +304,18 @@ namespace SharpDX.Direct3D9
 
         private static void CreateFromFileInStream(Volume volume, Stream stream, Filter filter, int colorKey, IntPtr sourceBox, IntPtr destinationBox, PaletteEntry[] palette, IntPtr imageInformation)
         {
-
-            unsafe
+            if (stream is DataStream)
             {
-                if (stream is DataStream)
-                    D3DX9.LoadVolumeFromFileInMemory(volume, palette, destinationBox, ((DataStream)stream).PositionPointer, (int)(stream.Length - stream.Position), sourceBox, filter, colorKey, (IntPtr)imageInformation);
-                var data = Utilities.ReadStream(stream);
-                fixed (void* pData = data)
-                    D3DX9.LoadVolumeFromFileInMemory(volume, palette, destinationBox, (IntPtr)pData, data.Length, sourceBox, filter, colorKey, (IntPtr)imageInformation);
+                D3DX9.LoadVolumeFromFileInMemory(volume, palette, destinationBox, ((DataStream)stream).PositionPointer, (int)(stream.Length - stream.Position), sourceBox, filter, colorKey, imageInformation);
+            }
+            else
+            {
+                unsafe
+                {
+                    var data = Utilities.ReadStream(stream);
+                    fixed (void* pData = data)
+                        D3DX9.LoadVolumeFromFileInMemory(volume, palette, destinationBox, (IntPtr)pData, data.Length, sourceBox, filter, colorKey, imageInformation);
+                }
             }
         }
 
