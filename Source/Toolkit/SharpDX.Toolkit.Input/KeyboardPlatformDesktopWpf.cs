@@ -157,6 +157,8 @@ namespace SharpDX.Toolkit.Input
             _keysDictionaryWpf[WpfKeys.DbeNoRoman] = Keys.RightControl;
             _keysDictionaryWpf[WpfKeys.LeftAlt] = Keys.LeftAlt;
             _keysDictionaryWpf[WpfKeys.RightAlt] = Keys.RightAlt;
+            _keysDictionaryWpf[WpfKeys.LeftCtrl] = Keys.LeftControl;
+            _keysDictionaryWpf[WpfKeys.RightCtrl] = Keys.RightControl;
             _keysDictionaryWpf[WpfKeys.BrowserBack] = Keys.BrowserBack;
             _keysDictionaryWpf[WpfKeys.BrowserForward] = Keys.BrowserForward;
             _keysDictionaryWpf[WpfKeys.BrowserRefresh] = Keys.BrowserRefresh;
@@ -211,24 +213,14 @@ namespace SharpDX.Toolkit.Input
             var element = nativeWindow as SharpDXElement;
             if (element != null)
             {
-                element.PreviewKeyDown += HandlePreviewKeyDown;
                 element.KeyDown += HandleKeyDown;
                 element.KeyUp += HandleKeyUp;
+                element.Focus(); // unfocused element will not receive keyboard events
 
                 return;
             }
 
             throw new InvalidOperationException(string.Format("Unsupported native window: {0}", nativeWindow));
-        }
-
-        /// <summary>
-        /// Handles the <see cref="System.Windows.UIElement.PreviewKeyDown"/> event.
-        /// </summary>
-        /// <param name="sender">Ignored</param>
-        /// <param name="e">The key is read from <see cref="System.Windows.Input.KeyEventArgs.Key"/> property.</param>
-        private void HandlePreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            ProcessKeyEvent(e.Key, RaiseKeyPressed);
         }
 
         /// <summary>
