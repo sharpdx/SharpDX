@@ -25,6 +25,7 @@
     <Compile Include="AssemblyDoc.cs" />
     <Compile Include="Desktop\GameWindowDesktopWpf.cs" />
     <Compile Include="Desktop\SharpDXElement.cs" />
+    <Compile Include="GameContext.DesktopWpf.cs" />
     <Compile Include="GameContext.WindowsPhoneBackgroundXaml.cs" />
     <Compile Include="GameContext.WinRTBackgroundXaml.cs" />
     <Compile Include="GameContext.WinRT.cs" />
@@ -72,7 +73,6 @@
       <Name>SharpDX.Direct3D11</Name>
       <Private>False</Private>
     </ProjectReference>
-    
     <ProjectReference Include="..\..\SharpDX.DXGI\SharpDX.DXGI.csproj">
       <Project>{3fc6de77-b412-4101-9e64-6b9aa831179b}</Project>
       <Name>SharpDX.DXGI</Name>

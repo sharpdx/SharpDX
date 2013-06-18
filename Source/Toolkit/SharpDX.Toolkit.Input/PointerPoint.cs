@@ -67,7 +67,7 @@ namespace SharpDX.Toolkit.Input
         /// <summary>
         /// Indicates whether the barrel button of the pen/stylus device is pressed.
         /// </summary>
-        public bool IsBarrelButtonPresset { get; internal set; }
+        public bool IsBarrelButtonPressed { get; internal set; }
 
         /// <summary>
         /// Indicates whether the input was canceled by pointer device.
@@ -166,7 +166,7 @@ namespace SharpDX.Toolkit.Input
         /// <returns>true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.</returns>
         public bool Equals(PointerPoint other)
         {
-            return EventType == other.EventType && DeviceType == other.DeviceType && PointerId == other.PointerId && Position.Equals(other.Position) && Timestamp == other.Timestamp && KeyModifiers == other.KeyModifiers && ContactRect.Equals(other.ContactRect) && IsBarrelButtonPresset.Equals(other.IsBarrelButtonPresset) && IsCanceled.Equals(other.IsCanceled) && IsEraser.Equals(other.IsEraser) && IsHorizontalMouseWheel.Equals(other.IsHorizontalMouseWheel) && IsInRange.Equals(other.IsInRange) && IsInverted.Equals(other.IsInverted) && IsLeftButtonPressed.Equals(other.IsLeftButtonPressed) && IsMiddleButtonPressed.Equals(other.IsMiddleButtonPressed) && IsRightButtonPressed.Equals(other.IsRightButtonPressed) && IsXButton1Pressed.Equals(other.IsXButton1Pressed) && IsXButton2Pressed.Equals(other.IsXButton2Pressed) && IsPrimary.Equals(other.IsPrimary) && MouseWheelDelta == other.MouseWheelDelta && Orientation.Equals(other.Orientation) && TouchConfidence.Equals(other.TouchConfidence) && Twist.Equals(other.Twist) && XTilt.Equals(other.XTilt) && YTilt.Equals(other.YTilt) && PointerUpdateKind == other.PointerUpdateKind;
+            return EventType == other.EventType && DeviceType == other.DeviceType && PointerId == other.PointerId && Position.Equals(other.Position) && Timestamp == other.Timestamp && KeyModifiers == other.KeyModifiers && ContactRect.Equals(other.ContactRect) && IsBarrelButtonPressed.Equals(other.IsBarrelButtonPressed) && IsCanceled.Equals(other.IsCanceled) && IsEraser.Equals(other.IsEraser) && IsHorizontalMouseWheel.Equals(other.IsHorizontalMouseWheel) && IsInRange.Equals(other.IsInRange) && IsInverted.Equals(other.IsInverted) && IsLeftButtonPressed.Equals(other.IsLeftButtonPressed) && IsMiddleButtonPressed.Equals(other.IsMiddleButtonPressed) && IsRightButtonPressed.Equals(other.IsRightButtonPressed) && IsXButton1Pressed.Equals(other.IsXButton1Pressed) && IsXButton2Pressed.Equals(other.IsXButton2Pressed) && IsPrimary.Equals(other.IsPrimary) && MouseWheelDelta == other.MouseWheelDelta && Orientation.Equals(other.Orientation) && TouchConfidence.Equals(other.TouchConfidence) && Twist.Equals(other.Twist) && XTilt.Equals(other.XTilt) && YTilt.Equals(other.YTilt) && PointerUpdateKind == other.PointerUpdateKind;
         }
 
         public override bool Equals(object obj)
@@ -189,7 +189,7 @@ namespace SharpDX.Toolkit.Input
                 hashCode = (hashCode * 397) ^ Timestamp.GetHashCode();
                 hashCode = (hashCode * 397) ^ (int)KeyModifiers;
                 hashCode = (hashCode * 397) ^ ContactRect.GetHashCode();
-                hashCode = (hashCode * 397) ^ IsBarrelButtonPresset.GetHashCode();
+                hashCode = (hashCode * 397) ^ IsBarrelButtonPressed.GetHashCode();
                 hashCode = (hashCode * 397) ^ IsCanceled.GetHashCode();
                 hashCode = (hashCode * 397) ^ IsEraser.GetHashCode();
                 hashCode = (hashCode * 397) ^ IsHorizontalMouseWheel.GetHashCode();

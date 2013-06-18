@@ -51,12 +51,10 @@ namespace SharpDX.Toolkit
             ContextType = GameContextType.Desktop;
         }
 
-#if NET35Plus && !DIRECTX11_1
-        public GameContext(SharpDXElement element, int requestedWidth = 0, int requestedHeight = 0)
+#if !W8CORE && NET35Plus && !DIRECTX11_1
+        protected GameContext(object control, int requestedWidth = 0, int requestedHeight = 0)
         {
-            if (element == null) throw new ArgumentNullException("element");
-
-            Control = element;
+            Control = control;
             RequestedWidth = requestedWidth;
             RequestedHeight = requestedHeight;
             ContextType = GameContextType.DesktopWpf;
@@ -77,13 +75,6 @@ namespace SharpDX.Toolkit
         {
             return new GameContext(control);
         }
-
-#if NET35Plus && !DIRECTX11_1
-        public static implicit operator GameContext(SharpDXElement element)
-        {
-            return new GameContext(element);
-        }
-#endif
     }
 }
 #endif

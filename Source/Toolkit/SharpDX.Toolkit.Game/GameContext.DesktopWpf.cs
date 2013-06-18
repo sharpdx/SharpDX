@@ -17,42 +17,26 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#if !W8CORE && NET35Plus
-using System;
-using System.Windows.Controls;
-using System.Windows.Interop;
+#if !W8CORE && NET35Plus && !DIRECTX11_1
 
 namespace SharpDX.Toolkit
 {
     /// <summary>
-    /// A <see cref="GameContext"/> to use for rendering to an existing WinForm <see cref="Control"/>.
+    /// A <see cref="GameContextWpf"/> to use for rendering to an existing <see cref="SharpDXElement"/>.
     /// </summary>
-    public partial class GameContext 
+    /// <remarks>This class was added to avoid WPF references in the projects using WinForms only.</remarks>
+    public class GameContextWpf : GameContext 
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GameContext" /> class from a WPF <see cref="Control"/>.
+        /// Initializes a new instance of the <see cref="GameContextWpf" /> class from a WPF <see cref="SharpDXElement"/>.
         /// </summary>
-        /// <param name="control">The control.</param>
+        /// <param name="element">The WPF element on which surface scene will be presented.</param>
         /// <param name="requestedWidth">Width of the requested.</param>
         /// <param name="requestedHeight">Height of the requested.</param>
-        public GameContext(Control control, int requestedWidth = 0, int requestedHeight = 0)
+        public GameContextWpf(SharpDXElement element, int requestedWidth = 0, int requestedHeight = 0)
+            : base(element,requestedWidth, requestedHeight)
         {
-            if (control == null)
-            {
-                throw new ArgumentNullException("control");
-            }
-
-            Control = control;
-            RequestedWidth = requestedWidth;
-            RequestedHeight = requestedHeight;
-            ContextType = GameContextType.DesktopWpf;
         }
-
-        /// <summary>
-        /// Gets the D3DImage associated with this window. This property is set once the <see cref="GameWindow"/> has been created.
-        /// </summary>
-        /// <value>The D3DImage interop.</value>
-        public D3DImage D3DImage { get; internal set; }
     }
 }
 #endif
