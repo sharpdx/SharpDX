@@ -22,7 +22,7 @@ using System.Runtime.InteropServices;
 
 namespace SharpDX.DirectWrite
 {
-    public partial class GlyphRun
+    public partial class GlyphRun : IDisposable
     {
         /// <summary>
         /// Gets or sets the <see cref="FontFace"/> associated with this GlypRun.
@@ -152,6 +152,15 @@ namespace SharpDX.DirectWrite
 
             @ref.IsSideways = this.IsSideways;
             @ref.BidiLevel = this.BidiLevel;
+        }
+
+        public void Dispose()
+        {
+            if (FontFace != null)
+            {
+                FontFace.Dispose();
+                FontFace = null;
+            }
         }
     }
 }

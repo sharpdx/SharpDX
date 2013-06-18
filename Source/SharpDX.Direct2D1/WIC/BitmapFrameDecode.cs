@@ -18,28 +18,44 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+
 namespace SharpDX.WIC
 {
-    public partial class BitmapFrameDecode
+    public partial class BitmapFrameDecode 
     {
         /// <summary>
-        /// Gets the <see cref="ColorContext"/> objects of the image.
+        /// Get the <see cref="ColorContext"/> of the image (if any)
         /// </summary>
-        /// <unmanaged>HRESULT IWICBitmapFrameDecode::GetColorContexts([In] unsigned int cCount,[InOut, Buffer, Optional] IWICColorContext** ppIColorContexts,[Out] unsigned int* pcActualCount)</unmanaged>	
+        /// <param name="imagingFactory">The factory for creating new color contexts</param>
+        /// <param name="colorContexts">The color context array, or null</param>
+        /// <remarks>
+        /// When the image format does not support color contexts,
+        /// <see cref="ResultCode.UnsupportedOperation"/> is returned.
+        /// </remarks>
+        /// <unmanaged>HRESULT IWICBitmapDecoder::GetColorContexts([In] unsigned int cCount,[Out, Buffer, Optional] IWICColorContext** ppIColorContexts,[Out] unsigned int* pcActualCount)</unmanaged>	
+        public Result TryGetColorContexts(ImagingFactory imagingFactory, out ColorContext[] colorContexts)
+        {
+            return ColorContextsHelper.TryGetColorContexts(GetColorContexts, imagingFactory, out colorContexts);
+        }
+
+        /// <summary>
+        /// Get the <see cref="ColorContext"/> of the image (if any)
+        /// </summary>
+        /// <returns>
+        /// null if the decoder does not support color contexts;
+        /// otherwise an array of zero or more ColorContext objects
+        /// </returns>
+        /// <unmanaged>HRESULT IWICBitmapDecoder::GetColorContexts([In] unsigned int cCount,[Out, Buffer, Optional] IWICColorContext** ppIColorContexts,[Out] </unmanaged>
+        public ColorContext[] TryGetColorContexts(ImagingFactory imagingFactory)
+        {
+            return ColorContextsHelper.TryGetColorContexts(GetColorContexts, imagingFactory);
+        }
+
+        [Obsolete("Use TryGetColorContexts instead")]
         public ColorContext[] ColorContexts
         {
-            get
-            {
-                int count = 0;
-                GetColorContexts(0, null, out count);
-                if (count == 0)
-                    return new ColorContext[0];
-
-                var temp = new ColorContext[count];
-                GetColorContexts(count, temp, out count);
-
-                return temp;
-            }
+            get { return new ColorContext[0]; }
         }
     }
 }

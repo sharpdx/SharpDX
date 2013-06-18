@@ -230,6 +230,7 @@
     <Compile Include="WIC\BmpBitmapDecoder.cs" />
     <Compile Include="WIC\BmpBitmapEncoder.cs" />
     <Compile Include="WIC\ColorContext.cs" />
+    <Compile Include="WIC\ColorContextsHelper.cs" />
     <Compile Include="WIC\ColorTransform.cs" />
     <Compile Include="WIC\ComponentInfo.cs" />
     <Compile Include="WIC\ImageEncoder.cs" />

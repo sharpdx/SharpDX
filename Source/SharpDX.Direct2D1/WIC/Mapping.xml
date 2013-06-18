@@ -139,7 +139,7 @@
     <map enum="WICBitmapTransformOptions" flags="true"/>
     <map enum="WICBitmapTransformOptions" flags="true"/>
     <map enum="WICBitmapTransformOptions" flags="true"/>
-
+      
     <!--
     // *****************************************************************
     // WIC Structures
@@ -188,8 +188,9 @@
     <map interface="IWICBitmapCodecProgressNotification" visibility="internal"/>
 
     <!--IWICBitmapDecoder -->
-    <map method="IWICBitmapDecoder::GetColorContexts" visibility="internal"/>
-    <map param="IWICBitmapDecoder::GetColorContexts::ppIColorContexts" attribute="out buffer optional"/>
+    <map method="IWICBitmapDecoder::GetColorContexts" visibility="internal" check="false"/>
+    <map param="IWICBitmapDecoder::GetColorContexts::ppIColorContexts" attribute="inout buffer optional"/>
+
     <map param="IWICBitmapDecoder::GetFrame::ppIBitmapFrame" return="true"/>
     <map param="IWICBitmapDecoder::QueryCapability::pdwCapability" type="WICBitmapDecoderCapabilities" return="true"/>
 
@@ -211,7 +212,8 @@
     <map param="IWICBitmapEncoder::CreateNewFrame::.*" attribute="out fast"/>
 
     <!--IWICBitmapFrameDecode-->
-    <map method="IWICBitmapFrameDecode::GetColorContexts" visibility="internal"/>
+    <map method="IWICBitmapFrameDecode::GetColorContexts" visibility="internal" check="false"/>
+    <map param="IWICBitmapFrameDecode::GetColorContexts::ppIColorContexts" attribute="inout buffer optional"/>
 
     <!--IWICBitmapFrameEncode-->
     <map method="IWICBitmapFrameEncode::Initialize" visibility="internal"/>
@@ -267,8 +269,9 @@
     <!--IWICMetadataQueryReader-->
     <map method="IWICMetadataQueryReader::GetLocation" visibility="internal"/>
     <map param="IWICMetadataQueryReader::GetLocation::wz.*"  type="void" attribute="in"/>
-    <map method="IWICMetadataQueryReader::GetMetadataByName"  visibility="internal"/>
-
+    <map method="IWICMetadataQueryReader::GetMetadataByName"  visibility="internal" check="false"/>
+    <map param="IWICMetadataQueryReader::GetMetadataByName::pvarValue" type="void" pointer="*" attribute="in"/>
+      
     <map method="IWICMetadataQueryReader::GetEnumerator" visibility="internal" property="false"/>
     <map param="ppIEnumString" type="void" return="true"/>
 

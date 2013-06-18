@@ -46,6 +46,12 @@ namespace SharpDX
         /// Throws a <see cref="CompilationException"/> when a shader or effect compilation error occured. Default is enabled (true).
         /// </summary>
         public static bool ThrowOnShaderCompileError = true;
+
+        /// <summary>
+        /// By default all objects in the process are tracked.
+        /// Use this property to track objects per thread.
+        /// </summary>
+        public static bool UseThreadStaticObjectTracking = false;
     }
 }
 
