@@ -129,7 +129,7 @@ namespace SharpDX.Toolkit.Input
                             Position = new Vector2((float)position.X / windowSize.Width, (float)position.Y / windowSize.Height),
                             Timestamp = point.Timestamp,
                             ContactRect = new RectangleF((float)contactRect.X / windowSize.Width, (float)contactRect.Y / windowSize.Height, (float)contactRect.Width / windowSize.Width, (float)contactRect.Height / windowSize.Height),
-                            IsBarrelButtonPresset = properties.IsBarrelButtonPressed,
+                            IsBarrelButtonPressed = properties.IsBarrelButtonPressed,
                             IsCanceled = properties.IsCanceled,
                             IsEraser = properties.IsEraser,
                             IsHorizontalMouseWheel = properties.IsHorizontalMouseWheel,

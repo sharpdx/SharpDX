@@ -165,7 +165,7 @@ namespace SharpDX.Toolkit.Input
                              Position = position,
                              Timestamp = point.Timestamp,
                              ContactRect = new RectangleF((float)contactRect.X / width, (float)contactRect.Y / height, (float)contactRect.Width / width, (float)contactRect.Height / height),
-                             IsBarrelButtonPresset = properties.IsBarrelButtonPressed,
+                             IsBarrelButtonPressed = properties.IsBarrelButtonPressed,
                              IsCanceled = properties.IsCanceled,
                              IsEraser = properties.IsEraser,
                              IsHorizontalMouseWheel = properties.IsHorizontalMouseWheel,

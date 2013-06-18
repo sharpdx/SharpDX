@@ -120,7 +120,7 @@ namespace SharpDX.Toolkit.Input
                        Position = position,
                        Timestamp = (ulong)DateTime.Now.Ticks,
                        ContactRect = new RectangleF(position.X, position.Y, 0f, 0f),
-                       IsBarrelButtonPresset = false,
+                       IsBarrelButtonPressed = false,
                        IsCanceled = false,
                        IsEraser = false,
                        IsHorizontalMouseWheel = false,

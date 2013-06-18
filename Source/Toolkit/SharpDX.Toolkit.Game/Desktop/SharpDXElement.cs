@@ -26,6 +26,9 @@ using SharpDX.Direct3D9;
 
 namespace SharpDX.Toolkit
 {
+    /// <summary>
+    /// An framework element that supports rendering D3D11 scene.
+    /// </summary>
     public sealed class SharpDXElement : FrameworkElement, IDisposable
     {
         private readonly D3DImage image;
@@ -35,6 +38,10 @@ namespace SharpDX.Toolkit
 
         private bool isDisposed;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="SharpDXElement"/> class.
+        /// Initializes the D3D9 runtime.
+        /// </summary>
         public SharpDXElement()
         {
             image = new D3DImage();
@@ -59,6 +66,9 @@ namespace SharpDX.Toolkit
             Unloaded += HandleUnloaded;
         }
 
+        /// <summary>
+        /// Disposes all unmanaged resources associated with this instance
+        /// </summary>
         public void Dispose()
         {
             if (isDisposed) return;
@@ -71,6 +81,21 @@ namespace SharpDX.Toolkit
             isDisposed = true;
         }
 
+        /// <summary>
+        /// Converts an <see cref="SharpDXElement"/> to <see cref="GameContext"/>.
+        /// Operator is placed here to avoid WPF references when only WinForms is used.
+        /// </summary>
+        /// <param name="element">The <see cref="SharpDXElement"/> representing the game context.</param>
+        /// <returns>An <see cref="GameContextWpf"/> instance derived from <see cref="GameContext"/>.</returns>
+        public static implicit operator GameContext(SharpDXElement element)
+        {
+            return new GameContextWpf(element);
+        }
+
+        /// <summary>
+        /// Associates an D3D11 render target with the current instance.
+        /// </summary>
+        /// <param name="renderTarget">An valid D3D11 render target. It must be created with the "Shared" flag.</param>
         internal void SetBackbuffer(Direct3D11.Texture2D renderTarget)
         {
             DisposeD3D9Backbuffer();
@@ -92,6 +117,9 @@ namespace SharpDX.Toolkit
                 TrySetBackbufferPointer(surface.NativePointer);
         }
 
+        /// <summary>
+        /// Marks the surface of element as invalid and requests its presentation on screen.
+        /// </summary>
         internal void InvalidateRendering()
         {
             image.Lock();
@@ -103,7 +131,7 @@ namespace SharpDX.Toolkit
         {
             base.OnRender(drawingContext);
 
-            //if (image != null && image.IsFrontBufferAvailable)
+            if (image != null && image.IsFrontBufferAvailable)
                 drawingContext.DrawImage(image, new Rect(new System.Windows.Point(), RenderSize));
         }
 
