@@ -508,17 +508,19 @@ namespace SharpDX.Direct3D9
         /// <unmanaged>HRESULT D3DXLoadSurfaceFromFileInMemory([In] IDirect3DSurface9* pDestSurface,[Out, Buffer] const PALETTEENTRY* pDestPalette,[In] const void* pDestRect,[In] const void* pSrcData,[In] unsigned int SrcDataSize,[In] const void* pSrcRect,[In] D3DX_FILTER Filter,[In] int ColorKey,[In] void* pSrcInfo)</unmanaged>
         public static void FromFileInStream(Surface surface, Stream stream, Filter filter, int colorKey)
         {
-            unsafe
+            if (stream is DataStream)
             {
-                if (stream is DataStream)
+                D3DX9.LoadSurfaceFromFileInMemory(
+                    surface, null, IntPtr.Zero, ((DataStream)stream).PositionPointer, (int)(stream.Length - stream.Position), IntPtr.Zero, filter, colorKey, IntPtr.Zero);
+            }
+            else
+            {
+                unsafe
                 {
-                    D3DX9.LoadSurfaceFromFileInMemory(
-                        surface, null, IntPtr.Zero, ((DataStream)stream).PositionPointer, (int)(stream.Length - stream.Position), IntPtr.Zero, filter, colorKey, IntPtr.Zero);
+                    var data = Utilities.ReadStream(stream);
+                    fixed (void* pData = data)
+                        D3DX9.LoadSurfaceFromFileInMemory(surface, null, IntPtr.Zero, (IntPtr)pData, data.Length, IntPtr.Zero, filter, colorKey, IntPtr.Zero);
                 }
-
-                var data = Utilities.ReadStream(stream);
-                fixed (void* pData = data)
-                    D3DX9.LoadSurfaceFromFileInMemory(surface, null, IntPtr.Zero, (IntPtr)pData, data.Length, IntPtr.Zero, filter, colorKey, IntPtr.Zero);
             }
         }
 
@@ -632,19 +634,21 @@ namespace SharpDX.Direct3D9
                     colorKey,
                     imageInformation);
             }
-
-            var data = Utilities.ReadStream(stream);
-            fixed (void* pData = data)
-                D3DX9.LoadSurfaceFromFileInMemory(
-                    surface,
-                    palette,
-                    new IntPtr(&destinationRectangle),
-                    (IntPtr)pData,
-                    data.Length,
-                    new IntPtr(&sourceRectangle),
-                    filter,
-                    colorKey,
-                    imageInformation);
+            else
+            {
+                var data = Utilities.ReadStream(stream);
+                fixed (void* pData = data)
+                    D3DX9.LoadSurfaceFromFileInMemory(
+                        surface,
+                        palette,
+                        new IntPtr(&destinationRectangle),
+                        (IntPtr)pData,
+                        data.Length,
+                        new IntPtr(&sourceRectangle),
+                        filter,
+                        colorKey,
+                        imageInformation);
+            }
         }
 
         /// <summary>
@@ -861,6 +865,7 @@ namespace SharpDX.Direct3D9
             unsafe
             {
                 if (stream is DataStream)
+                {
                     D3DX9.LoadSurfaceFromMemory(
                         surface,
                         destinationPalette,
@@ -872,20 +877,23 @@ namespace SharpDX.Direct3D9
                         new IntPtr(&sourceRectangle),
                         filter,
                         colorKey);
-
-                var data = Utilities.ReadStream(stream);
-                fixed (void* pData = data)
-                    D3DX9.LoadSurfaceFromMemory(
-                        surface,
-                        destinationPalette,
-                        IntPtr.Zero,
-                        (IntPtr)pData,
-                        sourceFormat,
-                        sourcePitch,
-                        sourcePalette,
-                        new IntPtr(&sourceRectangle),
-                        filter,
-                        colorKey);
+                }
+                else
+                {
+                    var data = Utilities.ReadStream(stream);
+                    fixed (void* pData = data)
+                        D3DX9.LoadSurfaceFromMemory(
+                            surface,
+                            destinationPalette,
+                            IntPtr.Zero,
+                            (IntPtr)pData,
+                            sourceFormat,
+                            sourcePitch,
+                            sourcePalette,
+                            new IntPtr(&sourceRectangle),
+                            filter,
+                            colorKey);
+                }
             }
         }
 
@@ -921,6 +929,7 @@ namespace SharpDX.Direct3D9
             unsafe
             {
                 if (stream is DataStream)
+                {
                     D3DX9.LoadSurfaceFromMemory(
                         surface,
                         destinationPalette,
@@ -932,20 +941,23 @@ namespace SharpDX.Direct3D9
                         new IntPtr(&sourceRectangle),
                         filter,
                         colorKey);
-
-                var data = Utilities.ReadStream(stream);
-                fixed (void* pData = data)
-                    D3DX9.LoadSurfaceFromMemory(
-                        surface,
-                        destinationPalette,
-                        new IntPtr(&destinationRectangle),
-                        (IntPtr)pData,
-                        sourceFormat,
-                        sourcePitch,
-                        sourcePalette,
-                        new IntPtr(&sourceRectangle),
-                        filter,
-                        colorKey);
+                }
+                else
+                {
+                    var data = Utilities.ReadStream(stream);
+                    fixed (void* pData = data)
+                        D3DX9.LoadSurfaceFromMemory(
+                            surface,
+                            destinationPalette,
+                            new IntPtr(&destinationRectangle),
+                            (IntPtr)pData,
+                            sourceFormat,
+                            sourcePitch,
+                            sourcePalette,
+                            new IntPtr(&sourceRectangle),
+                            filter,
+                            colorKey);
+                }
             }
         }
 
