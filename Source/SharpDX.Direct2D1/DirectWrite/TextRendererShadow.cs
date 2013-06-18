@@ -69,17 +69,21 @@ namespace SharpDX.DirectWrite
                     // Read GlyphRun
                     var glyphRunData = default(GlyphRun.__Native);
                     Utilities.Read(glyphRunPtr, ref glyphRunData);
-                    var glyphRun = new GlyphRun();
-                    glyphRun.__MarshalFrom(ref glyphRunData);
+                    using (var glyphRun = new GlyphRun())
+                    {
+                        glyphRun.__MarshalFrom(ref glyphRunData);
 
-                    // Read GlyphRunDescription
-                    var glyphRunDescriptionData = default(GlyphRunDescription.__Native);
-                    Utilities.Read(glyphRunDescriptionPtr, ref glyphRunDescriptionData);
-                    var glyphRunDescription = new GlyphRunDescription();
-                    glyphRunDescription.__MarshalFrom(ref glyphRunDescriptionData);
+                        // Read GlyphRunDescription
+                        var glyphRunDescriptionData = default(GlyphRunDescription.__Native);
+                        Utilities.Read(glyphRunDescriptionPtr, ref glyphRunDescriptionData);
+                        var glyphRunDescription = new GlyphRunDescription();
+                        glyphRunDescription.__MarshalFrom(ref glyphRunDescriptionData);
 
-                    return callback.DrawGlyphRun(GCHandle.FromIntPtr(clientDrawingContextPtr).Target, baselineOriginX, baselineOriginY, measuringMode, glyphRun, glyphRunDescription,
-                        (ComObject)Utilities.GetObjectForIUnknown(clientDrawingEffectPtr)).Code;
+                        return
+                            callback.DrawGlyphRun(GCHandle.FromIntPtr(clientDrawingContextPtr).Target, baselineOriginX,
+                                                  baselineOriginY, measuringMode, glyphRun, glyphRunDescription,
+                                                  (ComObject) Utilities.GetObjectForIUnknown(clientDrawingEffectPtr)).Code;
+                    }
                 }
             }
 

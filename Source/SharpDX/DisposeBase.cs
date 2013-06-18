@@ -53,7 +53,9 @@ namespace SharpDX
             // TODO Should we throw an exception if this method is called more than once?
             if (!IsDisposed)
             {
-                if (Disposing != null) Disposing(this, EventArgs.Empty);
+	            EventHandler<EventArgs> disposingHandlers = Disposing;
+	            if (disposingHandlers != null) 
+					disposingHandlers(this, EventArgs.Empty);
 
                 Dispose(disposing);
 #if !W8CORE
@@ -62,7 +64,9 @@ namespace SharpDX
 #endif
                 IsDisposed = true;
 
-                if (Disposed != null) Disposed(this, EventArgs.Empty);
+	            EventHandler<EventArgs> disposedHandlers = Disposed;
+	            if (disposedHandlers != null) 
+					disposedHandlers(this, EventArgs.Empty);
             }
         }
 
