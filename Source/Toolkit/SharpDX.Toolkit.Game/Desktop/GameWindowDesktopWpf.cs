@@ -38,6 +38,7 @@ namespace SharpDX.Toolkit
         private bool isMouseCurrentlyHidden;
         private bool isVisible;
         private Cursor oldCursor;
+        private RenderTargetGraphicsPresenter presenter;
 
         public override bool AllowUserResizing { get { return false; } set { /* ignore, WPF will resize everything itself */ } }
         public override Rectangle ClientBounds { get { return new Rectangle(0, 0, (int)element.ActualWidth, (int)element.ActualHeight); } }
@@ -73,12 +74,16 @@ namespace SharpDX.Toolkit
 
         public override void BeginScreenDeviceChange(bool willBeFullScreen)
         {
-            // TODO
         }
 
         public override void EndScreenDeviceChange(int clientWidth, int clientHeight)
         {
-            // TODO
+            if (element != null)
+            {
+                element.Width = clientWidth;
+                element.Height = clientHeight;
+                element.SetBackbuffer(presenter.BackBuffer);
+            }
         }
 
         internal override bool CanHandle(GameContext gameContext)
@@ -93,17 +98,17 @@ namespace SharpDX.Toolkit
             var backbufferDesc = RenderTarget2D.CreateDescription(device,
                                                               parameters.BackBufferWidth,
                                                               parameters.BackBufferHeight,
-                                                              Graphics.PixelFormat.B8G8R8A8.UNorm // TODO: take the format from presentation parameters
-                                                              );
+                                                              Graphics.PixelFormat.B8G8R8A8.UNorm);
 
             // mandatory to share the surface with D3D9
             backbufferDesc.OptionFlags |= ResourceOptionFlags.Shared;
 
-            var backbuffer = RenderTarget2D.New(device, backbufferDesc);
+            if (presenter != null)
+                RemoveAndDispose(ref presenter);
 
-            element.SetBackbuffer(backbuffer);
-
-            return new RenderTargetGraphicsPresenter(device, backbuffer, DepthFormat.None, true);
+            presenter = ToDispose(new RenderTargetGraphicsPresenter(device, backbufferDesc, DepthFormat.None, false, true));
+            element.SetBackbuffer(presenter.BackBuffer);
+            return presenter;
         }
 
         internal override void Initialize(GameContext gameContext)

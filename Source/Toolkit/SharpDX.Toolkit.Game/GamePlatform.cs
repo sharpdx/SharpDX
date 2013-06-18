@@ -231,7 +231,7 @@ namespace SharpDX.Toolkit
             device.Presenter = presenter;
 
             // Force to resize the gameWindow
-            gameWindow.Resize(deviceInformation.PresentationParameters.BackBufferWidth, deviceInformation.PresentationParameters.BackBufferHeight);
+            gameWindow.Resize(parameters.BackBufferWidth, parameters.BackBufferHeight);
 
             return device;
         }
