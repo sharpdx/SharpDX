@@ -63,7 +63,7 @@ namespace SharpDX.Toolkit
                     }
                     else
                     {
-                        Log.LogMessage(MessageImportance.High, "Compilation successfull of {0} to {1}", inputFilePath, outputFilePath);
+                        Log.LogMessage(MessageImportance.High, "Compilation successful of {0} to {1}", inputFilePath, outputFilePath);
                         if (item.OutputCs)
                             Log.LogWarning("Compilation to CS not yet supported");
                     }
