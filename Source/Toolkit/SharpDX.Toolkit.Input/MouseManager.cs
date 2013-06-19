@@ -29,7 +29,7 @@ namespace SharpDX.Toolkit.Input
     {
         private readonly Game game; // keep a reference to game to get access to native window during initialization
 
-        // as the MouseState structure is inmutable - keep a state from which the structure can be rebuilt
+        // as the MouseState structure is immutable - keep a state from which the structure can be rebuilt
         private ButtonState left;
         private ButtonState middle;
         private ButtonState right;
@@ -60,7 +60,7 @@ namespace SharpDX.Toolkit.Input
         /// <summary>
         /// Initializes this instance and starts listening to mouse input events
         /// </summary>
-        /// <exception cref="NotSupportedException">Is thrown if mouse manager is used on an usupported platform.</exception>
+        /// <exception cref="NotSupportedException">Is thrown if mouse manager is used on an unsupported platform.</exception>
         public void Initialize()
         {
             // create platform-specific instance
