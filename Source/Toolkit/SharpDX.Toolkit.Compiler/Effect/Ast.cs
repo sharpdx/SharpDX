@@ -200,7 +200,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// An array initialzer {...} expression.
+        /// An array initializer {...} expression.
         /// </summary>
         public class ArrayInitializerExpression : Expression
         {

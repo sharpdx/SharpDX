@@ -67,7 +67,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Compiles an effect from the specified source code and filepath.
+        /// Compiles an effect from the specified source code and file path.
         /// </summary>
         /// <param name="sourceCode">The source code.</param>
         /// <param name="filePath">The file path.</param>

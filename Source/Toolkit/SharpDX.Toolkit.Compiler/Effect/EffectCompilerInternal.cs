@@ -107,7 +107,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Compiles an effect from the specified source code and filepath.
+        /// Compiles an effect from the specified source code and file path.
         /// </summary>
         /// <param name="sourceCode">The source code.</param>
         /// <param name="filePath">The file path.</param>
@@ -645,7 +645,7 @@ namespace SharpDX.Toolkit.Graphics
             if (!ExtractValue(expression, out value))
                 return;
 
-            // If null, then preprocessor is resetted
+            // If null, then preprocessor is reset
             if (value == null)
                 preprocessorText = null;
 
@@ -1078,7 +1078,7 @@ namespace SharpDX.Toolkit.Graphics
                         return;
                     }
 
-                    // Strip reflection datas, as we are storing them in the toolkit format.
+                    // Strip reflection data, as we are storing it in the toolkit format.
                     var byteCodeNoDebugReflection = result.Bytecode.Strip(StripFlags.CompilerStripReflectionData | StripFlags.CompilerStripDebugInformation);
 
                     // Compute Hashcode
@@ -1268,7 +1268,7 @@ namespace SharpDX.Toolkit.Graphics
             var resourceParameters = new Dictionary<string, EffectData.ResourceParameter>();
             var indicesUsedByName = new Dictionary<string, List<IndexedInputBindingDescription>>();
 
-            // Iterate on all resources bound in order to resolve resouce dependencies for this shader.
+            // Iterate on all resources bound in order to resolve resource dependencies for this shader.
             // If the shader is dependent from an object variable, then create this variable as well.
             for (int i = 0; i < description.BoundResources; i++)
             {
@@ -1304,7 +1304,7 @@ namespace SharpDX.Toolkit.Graphics
                     indices.Add(new IndexedInputBindingDescription(arrayIndex, bindingDescription));
                 }
 
-                // In the case of SM5.0 and texture array, there can be several intputbindingdescription, so we ignore them
+                // In the case of SM5.0 and texture array, there can be several input binding descriptions, so we ignore them
                 // here, as we are going to recover them outside this loop.
                 if (!resourceParameters.ContainsKey(name))
                 {
