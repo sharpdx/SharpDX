@@ -159,7 +159,7 @@ namespace SharpDX.Toolkit.Graphics
             {
                 if (parentCount != 0)
                 {
-                    Logger.Error("Error matching closing parenthese for '('", lastParentToken.Span);
+                    Logger.Error("Error matching closing parentheses for '('", lastParentToken.Span);
                 }
 
                 if (bracketCount != 0)
@@ -300,12 +300,12 @@ namespace SharpDX.Toolkit.Graphics
                 {
                     currentFile = token.Value.Substring(1, token.Value.Length - 2);
 
-                    // Replace "file" from #line preprocessor with the actual fullpath.
+                    // Replace "file" from #line preprocessor with the actual full path.
                     var includeHandler = result.IncludeHandler;
                     if (includeHandler.FileResolved.ContainsKey(currentFile))
                     {
                         var fullPathFile = includeHandler.FileResolved[currentFile].FilePath;
-                        // This is not 100% accurate, but it is better than having invalid filepath
+                        // This is not 100% accurate, but it is better than having invalid file path
                         newPreprocessedSource = newPreprocessedSource.Replace(token.Value, "\"" + fullPathFile + "\"");
                         currentFile = fullPathFile;
                     }

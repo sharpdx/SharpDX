@@ -499,7 +499,7 @@ namespace SharpDX.Toolkit.Graphics
                                };
                 model.Meshes.Add(mesh);
 
-                // Precalculate the number of vertices for bouding sphere calculation
+                // Precalculate the number of vertices for bounding sphere calculation
                 boundingPointCount = 0;
                 for (int i = 0; i < node.MeshCount; i++)
                 {

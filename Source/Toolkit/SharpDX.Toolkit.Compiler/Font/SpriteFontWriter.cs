@@ -81,7 +81,7 @@ namespace SharpDX.Toolkit.Graphics
     using System.Drawing;
     using System.Drawing.Imaging;
 
-    // Writes the output spritefont binary file.
+    // Writes the output sprite font binary file.
     internal static class SpriteFontWriter
     {
         const string spriteFontMagic = "DXTKfont";
