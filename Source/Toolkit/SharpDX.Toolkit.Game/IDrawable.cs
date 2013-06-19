@@ -49,7 +49,7 @@ namespace SharpDX.Toolkit
         void Draw(GameTime gameTime);
 
         /// <summary>
-        /// Ends the drawing of a frame. This method is preceeded by calls to Draw and BeginDraw.
+        /// Ends the drawing of a frame. This method is preceded by calls to Draw and BeginDraw.
         /// </summary>
         void EndDraw();
 
