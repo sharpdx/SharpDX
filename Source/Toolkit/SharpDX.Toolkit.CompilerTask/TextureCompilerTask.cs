@@ -36,7 +36,7 @@ namespace SharpDX.Toolkit
             // but a future version will introduce this
             File.Copy(inputFilePath, outputFilePath, true);
 
-            // Save the depdency file
+            // Save the dependency file
             var dependencies = new FileDependencyList();
             dependencies.AddDefaultDependencies();
             dependencies.AddDependencyPath(inputFilePath);
