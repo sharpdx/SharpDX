@@ -29,7 +29,7 @@ namespace SharpDX.Direct3D10
         /// <param name="sizeInBytes">The size in bytes.</param>
         /// <param name="usage">The usage.</param>
         /// <param name="bindFlags">The bind flags.</param>
-        /// <param name="cpuAccessFlags">The cpu access flags.</param>
+        /// <param name="cpuAccessFlags">The CPU access flags.</param>
         /// <param name="optionFlags">The option flags.</param>
         public BufferDescription(int sizeInBytes, ResourceUsage usage, BindFlags bindFlags, CpuAccessFlags cpuAccessFlags, ResourceOptionFlags optionFlags)
         {
