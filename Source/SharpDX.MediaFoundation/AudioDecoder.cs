@@ -122,7 +122,7 @@ namespace SharpDX.MediaFoundation
         public TimeSpan Duration { get; private set; }
 
         /// <summary>
-        /// Gets the PCM wave format outputed by this decoder.
+        /// Gets the PCM wave format output by this decoder.
         /// </summary>
         /// <value>The wave format.</value>
         public WaveFormat WaveFormat { get; private set; }
@@ -204,7 +204,7 @@ namespace SharpDX.MediaFoundation
                         // Warning, because the yield could never return here, currentBuffer and currentSample should be disposed when disposing this object or when
                         // calling it again on the GetSamples method.
 
-                        // In case a Dispose occured while decoding
+                        // In case a Dispose occurred while decoding
                         if (currentBuffer == null)
                             break;
 
