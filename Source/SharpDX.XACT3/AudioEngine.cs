@@ -134,7 +134,7 @@ namespace SharpDX.XACT3
         public event EventHandler<Notification> OnNotification;
 
         /// <summary>
-        /// Called when an internal notification occured.
+        /// Called when an internal notification occurred.
         /// </summary>
         /// <param name="notification">The notification.</param>
         void OnNotificationDelegate(Notification notification)
