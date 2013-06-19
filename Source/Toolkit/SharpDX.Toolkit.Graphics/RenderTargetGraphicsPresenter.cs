@@ -31,6 +31,7 @@ namespace SharpDX.Toolkit.Graphics
     {
         private Texture2DDescription renderTargetDescription;
         private readonly bool allowFormatChange;
+        private readonly bool allowRecreateBackBuffer;
         private RenderTarget2D backBuffer;
 
         public RenderTargetGraphicsPresenter(GraphicsDevice device, Texture2DDescription renderTargetDescription, DepthFormat depthFormat = DepthFormat.None, bool allowFormatChange = true, bool disposeRenderTarget = false)
@@ -38,14 +39,26 @@ namespace SharpDX.Toolkit.Graphics
         {
             PresentInterval = Description.PresentationInterval;
 
-            // Initialize the swap chain
             this.renderTargetDescription = renderTargetDescription;
             this.allowFormatChange = allowFormatChange;
+
+            allowRecreateBackBuffer = true;
 
             backBuffer = RenderTarget2D.New(device, renderTargetDescription);
 
             if (disposeRenderTarget)
                 ToDispose(backBuffer);
+        }
+
+        public RenderTargetGraphicsPresenter(GraphicsDevice device, RenderTarget2D backBuffer, DepthFormat depthFormat = DepthFormat.None, bool disposeRenderTarget = false)
+            : base(device, CreatePresentationParameters(backBuffer, depthFormat))
+        {
+            PresentInterval = Description.PresentationInterval;
+
+            this.backBuffer = backBuffer;
+
+            if (disposeRenderTarget)
+                ToDispose(this.backBuffer);
         }
 
         private static PresentationParameters CreatePresentationParameters(Texture2DDescription renderTargetDescription, DepthFormat depthFormat)
@@ -64,6 +77,24 @@ namespace SharpDX.Toolkit.Graphics
                     RefreshRate = new Rational(60, 1),
                     RenderTargetUsage = Usage.RenderTargetOutput
                 };
+        }
+
+        private static PresentationParameters CreatePresentationParameters(RenderTarget2D renderTarget2D, DepthFormat depthFormat)
+        {
+            return new PresentationParameters()
+            {
+                BackBufferWidth = renderTarget2D.Width,
+                BackBufferHeight = renderTarget2D.Height,
+                BackBufferFormat = renderTarget2D.Description.Format,
+                DepthStencilFormat = depthFormat,
+                DeviceWindowHandle = renderTarget2D,
+                Flags = SwapChainFlags.None,
+                IsFullScreen = true,
+                MultiSampleCount = MSAALevel.None,
+                PresentationInterval = PresentInterval.One,
+                RefreshRate = new Rational(60, 1),
+                RenderTargetUsage = Usage.RenderTargetOutput
+            };
         }
 
         public override RenderTarget2D BackBuffer
@@ -94,15 +125,25 @@ namespace SharpDX.Toolkit.Graphics
             }
         }
 
+        public void SetBackBuffer(RenderTarget2D backBuffer)
+        {
+            this.backBuffer = backBuffer;
+        }
+
         public override void Present()
         {
+#if !WP8
             GraphicsDevice.Flush();
+#endif
         }
 
         public override void Resize(int width, int height, Format format)
         {
             base.Resize(width, height, format);
 
+            // backbuffer was set externally, do not touch it
+            if (!allowRecreateBackBuffer) return;
+            
             renderTargetDescription.Width = width;
             renderTargetDescription.Height = height;
 
