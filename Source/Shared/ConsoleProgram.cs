@@ -30,7 +30,7 @@ using System.Runtime.InteropServices;
 namespace SharpDX
 {
     /// <summary>
-    /// Reusable, reflection based helper for parsing commandline options.
+    /// Reusable, reflection based helper for parsing command line options.
     /// Greetings to Shawn Hargreaves, original code http://blogs.msdn.com/b/shawnhar/archive/2012/04/20/a-reusable-reflection-based-command-line-parser.aspx
     /// This is a modified version of command line parser that adds:
     /// - .NET 2.0 compatible
@@ -79,7 +79,7 @@ namespace SharpDX
         {
             this.optionsObject = optionsObjectArg ?? this;
 
-            // Reflect to find what commandline options are available.
+            // Reflect to find what command line options are available.
             foreach (FieldInfo field in optionsObject.GetType().GetFields())
             {
                 var option = GetOptionName(field);
