@@ -26,7 +26,7 @@ using Windows.Phone.Input.Interop;
 namespace SharpDX.Toolkit.Input
 {
     /// <summary>
-    /// WinPhone 8 platform-specific implmentation of <see cref="PointerPlatform"/>.
+    /// WinPhone 8 platform-specific implementation of <see cref="PointerPlatform"/>.
     /// </summary>
     /// <remarks>Implements <see cref="IDrawingSurfaceManipulationHandler"/>.</remarks>
     internal sealed class PointerPlatformWP8 : PointerPlatform, IDrawingSurfaceManipulationHandler
@@ -34,7 +34,7 @@ namespace SharpDX.Toolkit.Input
         private System.Windows.FrameworkElement uiElement;
 
         /// <summary>
-        /// Initializes a new instace of <see cref="PointerPlatformWP8"/> class.
+        /// Initializes a new instance of <see cref="PointerPlatformWP8"/> class.
         /// </summary>
         /// <param name="nativeWindow">The platform-specific reference to window object</param>
         /// <param name="manager">The <see cref="PointerManager"/> whose events will be raised in response to platform-specific events</param>
@@ -140,7 +140,7 @@ namespace SharpDX.Toolkit.Input
         {
             if (point == null) throw new ArgumentNullException("point");
 
-            // If we can't access the uiElement (this can happen here), then run this code on the ui thread
+            // If we can't access the uiElement (this can happen here), then run this code on the UI thread
             if (!uiElement.Dispatcher.CheckAccess())
             {
                 uiElement.Dispatcher.BeginInvoke(() => CreateAndAddPoint(type, point));

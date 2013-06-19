@@ -387,7 +387,7 @@ namespace SharpDX.Toolkit.Input
         }
 
         /// <summary>
-        /// All availible digitizer capabilities
+        /// All available digitizer capabilities
         /// </summary>
         [Flags]
         private enum DigitizerStatus : byte
