@@ -26,7 +26,7 @@ using SharpDX.Win32;
 namespace SharpDX.MediaFoundation
 {
     /// <summary>
-    /// Associate an attribute key with a type used to retreive keys from a <see cref="MediaAttributes"/> instance.
+    /// Associate an attribute key with a type used to retrieve keys from a <see cref="MediaAttributes"/> instance.
     /// </summary>
     public class MediaAttributeKey
     {
