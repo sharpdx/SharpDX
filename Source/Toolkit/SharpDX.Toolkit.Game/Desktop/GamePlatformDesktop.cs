@@ -62,7 +62,7 @@ namespace SharpDX.Toolkit
             {
                 var graphicsAdapter = GraphicsAdapter.Adapters[0];
 
-                TryFindSupportedFeatureLevel(prefferedParameters, graphicsAdapter,graphicsDeviceInfos, AddDeviceWithDefaultDisplayMode);
+                TryFindSupportedFeatureLevel(prefferedParameters, graphicsAdapter, graphicsDeviceInfos, AddDeviceWithDefaultDisplayMode);
             }
 
             return graphicsDeviceInfos;

@@ -176,11 +176,12 @@ namespace SharpDX.Toolkit
             if (handler != null) handler(this, e);
         }
 
-        protected void AddDevice(GraphicsAdapter graphicsAdapter, DisplayMode mode, GraphicsDeviceInformation deviceBaseInfo, GameGraphicsParameters prefferedParameters, List<GraphicsDeviceInformation> graphicsDeviceInfos)
+        protected void AddDevice(DisplayMode mode, GraphicsDeviceInformation deviceBaseInfo, GameGraphicsParameters prefferedParameters, List<GraphicsDeviceInformation> graphicsDeviceInfos)
         {
             var deviceInfo = deviceBaseInfo.Clone();
 
             deviceInfo.PresentationParameters.RefreshRate = mode.RefreshRate;
+            deviceInfo.PresentationParameters.PreferredFullScreenOutputIndex = prefferedParameters.PreferredFullScreenOutputIndex;
 
             if (prefferedParameters.IsFullScreen)
             {
@@ -224,7 +225,7 @@ namespace SharpDX.Toolkit
 
             var parameters = deviceInformation.PresentationParameters;
 
-            // give a chance to gameWindow to create desired graphics presenter, otherwise - create our own.
+            // Give a chance to gameWindow to create desired graphics presenter, otherwise - create our own.
             var presenter = gameWindow.CreateGraphicsPresenter(device, parameters)
                             ?? new SwapChainGraphicsPresenter(device, parameters);
 
@@ -236,11 +237,15 @@ namespace SharpDX.Toolkit
             return device;
         }
 
-        protected void TryFindSupportedFeatureLevel(GameGraphicsParameters prefferedParameters, 
+        protected void TryFindSupportedFeatureLevel(GameGraphicsParameters prefferedParameters,
                                                     GraphicsAdapter graphicsAdapter,
                                                     List<GraphicsDeviceInformation> graphicsDeviceInfos,
                                                     AddDeviceToListDelegate addDelegate)
         {
+            // Check if the adapter has an output with the preffered index
+            if (prefferedParameters.IsFullScreen && graphicsAdapter.OutputsCount <= prefferedParameters.PreferredFullScreenOutputIndex)
+                return;
+
             // Iterate on each preferred graphics profile
             foreach (var featureLevel in prefferedParameters.PreferredGraphicsProfile)
             {
@@ -269,6 +274,7 @@ namespace SharpDX.Toolkit
                        {
                            MultiSampleCount = MSAALevel.None,
                            IsFullScreen = prefferedParameters.IsFullScreen,
+                           PreferredFullScreenOutputIndex = prefferedParameters.PreferredFullScreenOutputIndex,
                            PresentationInterval = prefferedParameters.SynchronizeWithVerticalRetrace ? PresentInterval.One : PresentInterval.Immediate,
                            DeviceWindowHandle = MainWindow.NativeWindow,
                            RenderTargetUsage = Usage.BackBuffer | Usage.RenderTargetOutput
@@ -281,21 +287,47 @@ namespace SharpDX.Toolkit
                                                  GraphicsDeviceInformation deviceInfo,
                                                  List<GraphicsDeviceInformation> graphicsDeviceInfos)
         {
-            if (graphicsAdapter.CurrentDisplayMode != null)
-                AddDevice(graphicsAdapter, graphicsAdapter.CurrentDisplayMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
+            // if we want to switch to fullscreen, try to find only needed output, otherwise check them all
+            if (prefferedParameters.IsFullScreen)
+            {
+                if (prefferedParameters.PreferredFullScreenOutputIndex < graphicsAdapter.OutputsCount)
+                {
+                    var output = graphicsAdapter.GetOutputAt(prefferedParameters.PreferredFullScreenOutputIndex);
+                    TryAddDeviceFromOutput(prefferedParameters, output, deviceInfo, graphicsDeviceInfos);
+                }
+            }
+            else
+            {
+                for (var i = 0; i < graphicsAdapter.OutputsCount; i++)
+                {
+                    var output = graphicsAdapter.GetOutputAt(i);
+                    TryAddDeviceFromOutput(prefferedParameters, output, deviceInfo, graphicsDeviceInfos);
+                }
+            }
+
+
+        }
+
+        private void TryAddDeviceFromOutput(GameGraphicsParameters prefferedParameters,
+                                            GraphicsOutput output,
+                                            GraphicsDeviceInformation deviceInfo,
+                                            List<GraphicsDeviceInformation> graphicsDeviceInfos)
+        {
+            if (output.CurrentDisplayMode != null)
+                AddDevice(output.CurrentDisplayMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
 
             if (prefferedParameters.IsFullScreen)
             {
                 // Get display mode for the particular width, height, pixelformat
-                foreach (var displayMode in graphicsAdapter.SupportedDisplayModes)
-                    AddDevice(graphicsAdapter, displayMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
+                foreach (var displayMode in output.SupportedDisplayModes)
+                    AddDevice(displayMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
             }
         }
 
         protected void AddDeviceWithDefaultDisplayMode(GameGraphicsParameters prefferedParameters, GraphicsAdapter graphicsAdapter, GraphicsDeviceInformation deviceInfo, List<GraphicsDeviceInformation> graphicsDeviceInfos)
         {
             var displayMode = new DisplayMode(DXGI.Format.B8G8R8A8_UNorm, gameWindow.ClientBounds.Width, gameWindow.ClientBounds.Height, new Rational(60, 1));
-            AddDevice(graphicsAdapter, displayMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
+            AddDevice(displayMode, deviceInfo, prefferedParameters, graphicsDeviceInfos);
         }
 
         protected override void Dispose(bool disposing)

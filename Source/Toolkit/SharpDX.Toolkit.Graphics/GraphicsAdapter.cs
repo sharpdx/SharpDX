@@ -38,13 +38,24 @@ namespace SharpDX.Toolkit.Graphics
         private static DisposeCollector staticCollector;
         private readonly Adapter1 adapter;
         private readonly int adapterOrdinal;
-        private readonly Output[] outputs;
-        private readonly OutputDescription outputDescription;
+
+        private readonly GraphicsOutput[] outputs1;
 
         /// <summary>
-        /// Default PixelFormat used.
+        /// Initializes a new instance of the <see cref="GraphicsAdapter" /> class.
         /// </summary>
-        public PixelFormat DefaultFormat = PixelFormat.R8G8B8A8.UNorm;
+        /// <param name="adapterOrdinal">The adapter ordinal.</param>
+        private GraphicsAdapter(int adapterOrdinal)
+        {
+            this.adapterOrdinal = adapterOrdinal;
+            adapter = ToDispose(Factory.GetAdapter1(adapterOrdinal));
+            Description = adapter.Description1;
+            var outputs = adapter.Outputs;
+
+            outputs1 = new GraphicsOutput[outputs.Length];
+            for (var i = 0; i < outputs.Length; i++)
+                outputs1[i] = new GraphicsOutput(i, outputs[i]);
+        }
 
         /// <summary>
         /// Initializes static members of the <see cref="GraphicsAdapter" /> class.
@@ -64,7 +75,7 @@ namespace SharpDX.Toolkit.Graphics
 #if DIRECTX11_1
             using (var factory = new Factory1()) Initialize(factory.QueryInterface<Factory2>());
 #else
-            Initialize(new Factory1());
+                Initialize(new Factory1());
 #endif
             }
         }
@@ -108,90 +119,9 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GraphicsAdapter" /> class.
-        /// </summary>
-        /// <param name="adapterOrdinal">The adapter ordinal.</param>
-        private GraphicsAdapter(int adapterOrdinal)
-        {
-            this.adapterOrdinal = adapterOrdinal;
-            adapter = ToDispose(Factory.GetAdapter1(adapterOrdinal));
-            Description = adapter.Description1;
-            outputs = adapter.Outputs;
-            SupportedDisplayModes = new DisplayMode[0];
-
-            // Enumerate outputs if any.
-            if (outputs != null && outputs.Length > 0)
-            {
-                outputDescription = outputs[0].Description;
-                SupportedDisplayModes = GetSupportedDisplayModes();
-                foreach (var output in outputs)
-                {
-                    ToDispose(output);
-                }
-
-                foreach (var supportedDisplayMode in SupportedDisplayModes)
-                {
-                    if (supportedDisplayMode.Width == outputDescription.DesktopBounds.Width
-                        && supportedDisplayMode.Height == outputDescription.DesktopBounds.Height
-                        && supportedDisplayMode.Format == Format.R8G8B8A8_UNorm)
-                    {
-                        // Stupid DXGI, there is no way to get the DXGI.Format, nor the refresh rate.
-                        CurrentDisplayMode = new DisplayMode(Format.R8G8B8A8_UNorm, outputDescription.DesktopBounds.Width, outputDescription.DesktopBounds.Height, supportedDisplayMode.RefreshRate);
-                        break;
-                    }
-                }
-
-                if (CurrentDisplayMode == null)
-                {
-                    foreach (var supportedDisplayMode in SupportedDisplayModes)
-                    {
-                        if (supportedDisplayMode.Width == outputDescription.DesktopBounds.Width
-                            && supportedDisplayMode.Height == outputDescription.DesktopBounds.Height
-                            && supportedDisplayMode.Format == Format.B8G8R8A8_UNorm)
-                        {
-                            // Stupid DXGI, there is no way to get the DXGI.Format, nor the refresh rate.
-                            CurrentDisplayMode = new DisplayMode(Format.B8G8R8A8_UNorm, outputDescription.DesktopBounds.Width, outputDescription.DesktopBounds.Height, supportedDisplayMode.RefreshRate);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the <see cref="Factory1"/> used by all GraphicsAdapter.
-        /// </summary>
-        public static SharpDX.DXGI.Factory1 Factory { get; private set; }
-
-        /// <summary>
-        /// Return the description of this adapter
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return Description.Description;
-        }
-
-        /// <summary>
-        /// Tests to see if the adapter supports the requested profile.
-        /// </summary>
-        /// <param name="featureLevel">The graphics profile.</param>
-        /// <returns>true if the profile is supported</returns>
-        public bool IsProfileSupported(FeatureLevel featureLevel)
-        {
-            return SharpDX.Direct3D11.Device.IsSupportedFeatureLevel(this, featureLevel);
-        }
-
-        /// <summary>
-        /// Gets the current display mode.
-        /// </summary>
-        /// <value>The current display mode.</value>
-        public DisplayMode CurrentDisplayMode { get; private set; }
-
-        /// <summary>
         /// Collection of available adapters on the system.
         /// </summary>
-        public static GraphicsAdapter[] Adapters { get; private set;}
+        public static GraphicsAdapter[] Adapters { get; private set; }
 
         /// <summary>
         /// Gets the default adapter.
@@ -199,9 +129,9 @@ namespace SharpDX.Toolkit.Graphics
         public static GraphicsAdapter Default { get; private set; }
 
         /// <summary>
-        /// Returns a collection of supported display modes for the current adapter.
+        /// Gets the number of <see cref="GraphicsOutput"/> attached to this <see cref="GraphicsAdapter"/>.
         /// </summary>
-        public DisplayMode[] SupportedDisplayModes { get; private set; }
+        public int OutputsCount { get { return outputs1.Length; } }
 
         /// <summary>
         /// Gets the description for this adapter.
@@ -209,12 +139,14 @@ namespace SharpDX.Toolkit.Graphics
         public readonly AdapterDescription1 Description;
 
         /// <summary>
-        /// Retrieves bounds of the desktop coordinates.
+        /// Default PixelFormat used.
         /// </summary>
-        /// <msdn-id>bb173068</msdn-id>	
-        /// <unmanaged>RECT DesktopCoordinates</unmanaged>	
-        /// <unmanaged-short>RECT DesktopCoordinates</unmanaged-short>	
-        public Rectangle DesktopBounds { get { return outputDescription.DesktopBounds; } }
+        public readonly PixelFormat DefaultFormat = PixelFormat.R8G8B8A8.UNorm;
+
+        /// <summary>
+        /// Gets the <see cref="Factory1"/> used by all GraphicsAdapter.
+        /// </summary>
+        public static Factory1 Factory { get; private set; }
 
         /// <summary>
         /// Determines if this instance of GraphicsAdapter is the default adapter.
@@ -222,12 +154,35 @@ namespace SharpDX.Toolkit.Graphics
         public bool IsDefaultAdapter { get { return adapterOrdinal == 0; } }
 
         /// <summary>
+        /// Gets the current display mode.
+        /// </summary>
+        /// <value>The current display mode.</value>
+        [Obsolete("Use 'GetOutputAt' method to get specific output and retrieve needed information from it.")]
+        public DisplayMode CurrentDisplayMode { get { return outputs1[0].CurrentDisplayMode; } }
+
+        /// <summary>
+        /// Returns a collection of supported display modes for the current adapter.
+        /// </summary>
+        [Obsolete("Use 'GetOutputAt' method to get specific output and retrieve needed information from it.")]
+        public DisplayMode[] SupportedDisplayModes { get { return outputs1[0].SupportedDisplayModes; } }
+
+        /// <summary>
+        /// Retrieves bounds of the desktop coordinates.
+        /// </summary>
+        /// <msdn-id>bb173068</msdn-id>	
+        /// <unmanaged>RECT DesktopCoordinates</unmanaged>	
+        /// <unmanaged-short>RECT DesktopCoordinates</unmanaged-short>	
+        [Obsolete("Use 'GetOutputAt' method to get specific output and retrieve needed information from it.")]
+        public Rectangle DesktopBounds { get { return outputs1[0].DesktopBounds; } }
+
+        /// <summary>
         /// Retrieves the handle of the monitor associated with the Microsoft Direct3D object.
         /// </summary>
         /// <msdn-id>bb173068</msdn-id>	
         /// <unmanaged>HMONITOR Monitor</unmanaged>	
         /// <unmanaged-short>HMONITOR Monitor</unmanaged-short>	
-        public IntPtr MonitorHandle { get { return outputDescription.MonitorHandle; } }
+        [Obsolete("Use 'GetOutputAt' method to get specific output and retrieve needed information from it.")]
+        public IntPtr MonitorHandle { get { return outputs1[0].MonitorHandle; } }
 
         /// <summary>
         /// <see cref="Adapter1"/> casting operator.
@@ -248,61 +203,36 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Returns a collection of supported display modes for a particular Format.
+        /// Gets the <see cref="GraphicsOutput"/> attached to this adapter at the specified index.
         /// </summary>
-        /// <returns>a read-only collection of display modes</returns>
-        private DisplayMode[] GetSupportedDisplayModes()
+        /// <param name="index">The index of the output to get.</param>
+        /// <returns>The <see cref="GraphicsOutput"/> at the specified <paramref name="index"/>.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Is thrown when <paramref name="index"/> is less than zero or greater or equal to <see cref="OutputsCount"/>.</exception>
+        public GraphicsOutput GetOutputAt(int index)
         {
-            var output = outputs[0];
-            var modeAvailable = new List<DisplayMode>();
-            var modeMap = new Dictionary<string, DisplayMode>();
+            if (index < 0 || index >= OutputsCount)
+                throw new ArgumentOutOfRangeException("index");
 
-#if DIRECTX11_1
-            var output1 = output.QueryInterface<Output1>();
-#endif
+            return outputs1[index];
+        }
 
-            try
-            {
-                foreach (var format in Enum.GetValues(typeof(DXGI.Format)))
-                {
-#if DIRECTX11_1
-                    var modes = output1.GetDisplayModeList1(
-                        (Format)format,
-                        DisplayModeEnumerationFlags.Interlaced |
-                        DisplayModeEnumerationFlags.Scaling);
-#else
-                var modes = output.GetDisplayModeList((Format)format,
-                                                      DisplayModeEnumerationFlags.Interlaced |
-                                                      DisplayModeEnumerationFlags.Scaling);
-#endif
+        /// <summary>
+        /// Tests to see if the adapter supports the requested profile.
+        /// </summary>
+        /// <param name="featureLevel">The graphics profile.</param>
+        /// <returns>true if the profile is supported</returns>
+        public bool IsProfileSupported(FeatureLevel featureLevel)
+        {
+            return Direct3D11.Device.IsSupportedFeatureLevel(this, featureLevel);
+        }
 
-
-                    foreach (var mode in modes)
-                    {
-                        if (mode.Scaling == DisplayModeScaling.Unspecified)
-                        {
-                            string key = format + ";" + mode.Width + ";" + mode.Height + ";" + mode.RefreshRate.Numerator + ";" + mode.RefreshRate.Denominator;
-
-                            DisplayMode oldMode;
-                            if (!modeMap.TryGetValue(key, out oldMode))
-                            {
-                                var displayMode = new DisplayMode(mode.Format, mode.Width, mode.Height, mode.RefreshRate);
-
-                                modeMap.Add(key, displayMode);
-                                modeAvailable.Add(displayMode);
-                            }
-                        }
-                    }
-                }
-            }
-            catch (SharpDXException dxgiException)
-            {
-                if (dxgiException.ResultCode != DXGI.ResultCode.NotCurrentlyAvailable)
-                {
-                    throw;
-                }
-            }
-            return modeAvailable.ToArray();
+        /// <summary>
+        /// Return the description of this adapter
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return Description.Description;
         }
     }
 }
