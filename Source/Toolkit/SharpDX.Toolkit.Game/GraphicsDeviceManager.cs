@@ -62,6 +62,8 @@ namespace SharpDX.Toolkit
 
         private DepthFormat preferredDepthStencilFormat;
 
+        private int preferredFullScreenOutputIndex;
+
         private DisplayOrientation supportedOrientations;
 
         private bool synchronizeWithVerticalRetrace;
@@ -83,6 +85,7 @@ namespace SharpDX.Toolkit
         private bool isReallyFullScreen;
 
         private GraphicsDevice graphicsDevice;
+
 
         #endregion
 
@@ -335,6 +338,23 @@ namespace SharpDX.Toolkit
         }
 
         /// <summary>
+        /// The output (monitor) index to use when switching to fullscreen mode. Doesn't have any effect when windowed mode is used.
+        /// </summary>
+        public int PreferredFullScreenOutputIndex
+        {
+            get { return preferredFullScreenOutputIndex; }
+
+            set
+            {
+                if (preferredFullScreenOutputIndex != value)
+                {
+                    preferredFullScreenOutputIndex = value;
+                    deviceSettingsChanged = true;
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the supported orientations.
         /// </summary>
         /// <value>The supported orientations.</value>
@@ -444,7 +464,7 @@ namespace SharpDX.Toolkit
                 try
                 {
                     GraphicsDevice.Present();
-                } 
+                }
                 catch (SharpDXException ex)
                 {
                     // If this is not a DeviceRemoved or DeviceReset, than throw an exception
@@ -525,6 +545,7 @@ namespace SharpDX.Toolkit
                     PreferredBackBufferFormat = PreferredBackBufferFormat,
                     PreferredDepthStencilFormat = PreferredDepthStencilFormat,
                     IsFullScreen = IsFullScreen,
+                    PreferredFullScreenOutputIndex = PreferredFullScreenOutputIndex,
                     PreferMultiSampling = PreferMultiSampling,
                     SynchronizeWithVerticalRetrace = SynchronizeWithVerticalRetrace,
                     PreferredGraphicsProfile = (FeatureLevel[])PreferredGraphicsProfile.Clone(),
@@ -549,6 +570,7 @@ namespace SharpDX.Toolkit
             {
                 throw new InvalidOperationException("No screen modes found after ranking");
             }
+
             return devices[0];
         }
 
@@ -566,95 +588,99 @@ namespace SharpDX.Toolkit
 
             foundDevices.Sort(
                 (left, right) =>
+                {
+                    var leftParams = left.PresentationParameters;
+                    var rightParams = right.PresentationParameters;
+
+                    var leftAdapter = left.Adapter;
+                    var rightAdapter = right.Adapter;
+
+                    // Sort by GraphicsProfile
+                    if (left.GraphicsProfile != right.GraphicsProfile)
                     {
-                        var leftParams = left.PresentationParameters;
-                        var rightParams = right.PresentationParameters;
+                        return left.GraphicsProfile <= right.GraphicsProfile ? 1 : -1;
+                    }
 
-                        var leftAdapter = left.Adapter;
-                        var rightAdapter = right.Adapter;
+                    // Sort by FullScreen mode
+                    if (leftParams.IsFullScreen != rightParams.IsFullScreen)
+                    {
+                        return IsFullScreen != leftParams.IsFullScreen ? 1 : -1;
+                    }
 
-                        // Sort by GraphicsProfile
-                        if (left.GraphicsProfile != right.GraphicsProfile)
-                        {
-                            return left.GraphicsProfile <= right.GraphicsProfile ? 1 : -1;
-                        }
+                    // Sort by BackBufferFormat
+                    int leftFormat = CalculateRankForFormat(leftParams.BackBufferFormat);
+                    int rightFormat = CalculateRankForFormat(rightParams.BackBufferFormat);
+                    if (leftFormat != rightFormat)
+                    {
+                        return leftFormat >= rightFormat ? 1 : -1;
+                    }
 
-                        // Sort by FullScreen mode
-                        if (leftParams.IsFullScreen != rightParams.IsFullScreen)
-                        {
-                            return IsFullScreen != leftParams.IsFullScreen ? 1 : -1;
-                        }
+                    // Sort by MultiSampleCount
+                    if (leftParams.MultiSampleCount != rightParams.MultiSampleCount)
+                    {
+                        return leftParams.MultiSampleCount <= rightParams.MultiSampleCount ? 1 : -1;
+                    }
 
-                        // Sort by BackBufferFormat
-                        int leftFormat = CalculateRankForFormat(leftParams.BackBufferFormat);
-                        int rightFormat = CalculateRankForFormat(rightParams.BackBufferFormat);
-                        if (leftFormat != rightFormat)
-                        {
-                            return leftFormat >= rightFormat ? 1 : -1;
-                        }
+                    // Sort by AspectRatio
+                    var targetAspectRatio = (PreferredBackBufferWidth == 0) || (PreferredBackBufferHeight == 0) ? (float)DefaultBackBufferWidth / DefaultBackBufferHeight : (float)PreferredBackBufferWidth / PreferredBackBufferHeight;
+                    var leftDiffRatio = Math.Abs(((float)leftParams.BackBufferWidth / leftParams.BackBufferHeight) - targetAspectRatio);
+                    var rightDiffRatio = Math.Abs(((float)rightParams.BackBufferWidth / rightParams.BackBufferHeight) - targetAspectRatio);
+                    if (Math.Abs(leftDiffRatio - rightDiffRatio) > 0.2f)
+                    {
+                        return leftDiffRatio >= rightDiffRatio ? 1 : -1;
+                    }
 
-                        // Sort by MultiSampleCount
-                        if (leftParams.MultiSampleCount != rightParams.MultiSampleCount)
+                    // Sort by PixelCount
+                    int leftPixelCount;
+                    int rightPixelCount;
+                    if (IsFullScreen)
+                    {
+                        if ((PreferredBackBufferWidth == 0) || (PreferredBackBufferHeight == 0))
                         {
-                            return leftParams.MultiSampleCount <= rightParams.MultiSampleCount ? 1 : -1;
-                        }
+                            // assume we got here only adapters that have the needed number of outputs:
+                            var leftOutput = leftAdapter.GetOutputAt(PreferredFullScreenOutputIndex);
+                            var rightOutput = rightAdapter.GetOutputAt(PreferredFullScreenOutputIndex);
 
-                        // Sort by AspectRatio
-                        var targetAspectRatio = (PreferredBackBufferWidth == 0) || (PreferredBackBufferHeight == 0) ? (float)DefaultBackBufferWidth / DefaultBackBufferHeight : (float)PreferredBackBufferWidth / PreferredBackBufferHeight;
-                        var leftDiffRatio = Math.Abs(((float)leftParams.BackBufferWidth / leftParams.BackBufferHeight) - targetAspectRatio);
-                        var rightDiffRatio = Math.Abs(((float)rightParams.BackBufferWidth / rightParams.BackBufferHeight) - targetAspectRatio);
-                        if (Math.Abs(leftDiffRatio - rightDiffRatio) > 0.2f)
-                        {
-                            return leftDiffRatio >= rightDiffRatio ? 1 : -1;
-                        }
-
-                        // Sort by PixelCount
-                        int leftPixelCount;
-                        int rightPixelCount;
-                        if (IsFullScreen)
-                        {
-                            if ((PreferredBackBufferWidth == 0) || (PreferredBackBufferHeight == 0))
-                            {
-                                leftPixelCount = leftAdapter.CurrentDisplayMode.Width * leftAdapter.CurrentDisplayMode.Height;
-                                rightPixelCount = rightAdapter.CurrentDisplayMode.Width * rightAdapter.CurrentDisplayMode.Height;
-                            }
-                            else
-                            {
-                                leftPixelCount = rightPixelCount = PreferredBackBufferWidth * PreferredBackBufferHeight;
-                            }
-                        }
-                        else if ((PreferredBackBufferWidth == 0) || (PreferredBackBufferHeight == 0))
-                        {
-                            leftPixelCount = rightPixelCount = DefaultBackBufferWidth * DefaultBackBufferHeight;
+                            leftPixelCount = leftOutput.CurrentDisplayMode.Width * leftOutput.CurrentDisplayMode.Height;
+                            rightPixelCount = rightOutput.CurrentDisplayMode.Width * rightOutput.CurrentDisplayMode.Height;
                         }
                         else
                         {
                             leftPixelCount = rightPixelCount = PreferredBackBufferWidth * PreferredBackBufferHeight;
                         }
+                    }
+                    else if ((PreferredBackBufferWidth == 0) || (PreferredBackBufferHeight == 0))
+                    {
+                        leftPixelCount = rightPixelCount = DefaultBackBufferWidth * DefaultBackBufferHeight;
+                    }
+                    else
+                    {
+                        leftPixelCount = rightPixelCount = PreferredBackBufferWidth * PreferredBackBufferHeight;
+                    }
 
-                        int leftDeltaPixelCount = Math.Abs((leftParams.BackBufferWidth * leftParams.BackBufferHeight) - leftPixelCount);
-                        int rightDeltaPixelCount = Math.Abs((rightParams.BackBufferWidth * rightParams.BackBufferHeight) - rightPixelCount);
-                        if (leftDeltaPixelCount != rightDeltaPixelCount)
+                    int leftDeltaPixelCount = Math.Abs((leftParams.BackBufferWidth * leftParams.BackBufferHeight) - leftPixelCount);
+                    int rightDeltaPixelCount = Math.Abs((rightParams.BackBufferWidth * rightParams.BackBufferHeight) - rightPixelCount);
+                    if (leftDeltaPixelCount != rightDeltaPixelCount)
+                    {
+                        return leftDeltaPixelCount >= rightDeltaPixelCount ? 1 : -1;
+                    }
+
+                    // Sort by default Adapter, default adapter first
+                    if (left.Adapter != right.Adapter)
+                    {
+                        if (left.Adapter.IsDefaultAdapter)
                         {
-                            return leftDeltaPixelCount >= rightDeltaPixelCount ? 1 : -1;
+                            return -1;
                         }
 
-                        // Sort by default Adapter, default adapter first
-                        if (left.Adapter != right.Adapter)
+                        if (right.Adapter.IsDefaultAdapter)
                         {
-                            if (left.Adapter.IsDefaultAdapter)
-                            {
-                                return -1;
-                            }
-
-                            if (right.Adapter.IsDefaultAdapter)
-                            {
-                                return 1;
-                            }
+                            return 1;
                         }
+                    }
 
-                        return 0;
-                    });
+                    return 0;
+                });
         }
 
         private int CalculateRankForFormat(DXGI.Format format)
@@ -671,7 +697,7 @@ namespace SharpDX.Toolkit
 
             return int.MaxValue;
         }
-        
+
         private int CalculateFormatSize(DXGI.Format format)
         {
             switch (format)
@@ -708,7 +734,7 @@ namespace SharpDX.Toolkit
                 handler(sender, args);
             }
         }
-        
+
         protected virtual void OnDeviceLost(object sender, EventArgs args)
         {
             var handler = DeviceLost;
@@ -717,7 +743,7 @@ namespace SharpDX.Toolkit
                 handler(sender, args);
             }
         }
-        
+
         protected virtual void OnPreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs args)
         {
             var handler = PreparingDeviceSettings;
@@ -810,7 +836,9 @@ namespace SharpDX.Toolkit
                             var newWidth = graphicsDeviceInformation.PresentationParameters.BackBufferWidth;
                             var newHeight = graphicsDeviceInformation.PresentationParameters.BackBufferHeight;
                             var newFormat = graphicsDeviceInformation.PresentationParameters.BackBufferFormat;
+                            var newOutputIndex = graphicsDeviceInformation.PresentationParameters.PreferredFullScreenOutputIndex;
 
+                            GraphicsDevice.Presenter.PrefferedFullScreenOutputIndex = newOutputIndex;
                             GraphicsDevice.Presenter.Resize(newWidth, newHeight, newFormat);
 
                             // Change full screen if needed

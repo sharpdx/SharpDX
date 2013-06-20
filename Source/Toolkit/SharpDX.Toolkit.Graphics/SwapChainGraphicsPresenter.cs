@@ -97,15 +97,18 @@ namespace SharpDX.Toolkit.Graphics
                 }
 
                 bool switchToFullScreen = value;
-
                 // If going to fullscreen mode: call 1) SwapChain.ResizeTarget 2) SwapChain.IsFullScreen
                 var description = new ModeDescription(backBuffer.Width, backBuffer.Height, Description.RefreshRate, Description.BackBufferFormat);
                 if (switchToFullScreen)
                 {
-                    swapChain.ResizeTarget(ref description);
-                }
+                    var outputIndex = PrefferedFullScreenOutputIndex;
+                    var output = GraphicsDevice.Adapter.GetOutputAt(outputIndex);
 
-                swapChain.IsFullScreen = value;
+                    swapChain.ResizeTarget(ref description);
+                    swapChain.SetFullscreenState(true, output);
+                }
+                else
+                    swapChain.IsFullScreen = false;
 
                 // call 1) SwapChain.IsFullScreen 2) SwapChain.Resize
                 Resize(backBuffer.Width, backBuffer.Height, backBuffer.Format);
@@ -224,14 +227,14 @@ namespace SharpDX.Toolkit.Graphics
             bufferCount = 1;
             var description = new SwapChainDescription
                 {
-                    ModeDescription = new ModeDescription(Description.BackBufferWidth, Description.BackBufferHeight, Description.RefreshRate, Description.BackBufferFormat), 
+                    ModeDescription = new ModeDescription(Description.BackBufferWidth, Description.BackBufferHeight, Description.RefreshRate, Description.BackBufferFormat),
                     BufferCount = bufferCount, // TODO: Do we really need this to be configurable by the user?
-                    OutputHandle = control.Handle, 
-                    SampleDescription = new SampleDescription((int)Description.MultiSampleCount, 0), 
-                    SwapEffect = SwapEffect.Discard, 
-                    Usage = Description.RenderTargetUsage, 
+                    OutputHandle = control.Handle,
+                    SampleDescription = new SampleDescription((int)Description.MultiSampleCount, 0),
+                    SwapEffect = SwapEffect.Discard,
+                    Usage = Description.RenderTargetUsage,
                     IsWindowed = true,
-                    Flags = Description.Flags, 
+                    Flags = Description.Flags,
                 };
 
             var newSwapChain = new SwapChain(GraphicsAdapter.Factory, (Direct3D11.Device)GraphicsDevice, description);

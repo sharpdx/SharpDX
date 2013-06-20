@@ -113,6 +113,11 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>DXGI_USAGE_ENUM BufferUsage</unmanaged-short>
         public Usage RenderTargetUsage;
 
+        /// <summary>
+        /// The output (monitor) index to use when switching to fullscreen mode. Doesn't have any effect when windowed mode is used.
+        /// </summary>
+        public int PreferredFullScreenOutputIndex;
+
         #endregion
 
         #region Constructors and Destructors

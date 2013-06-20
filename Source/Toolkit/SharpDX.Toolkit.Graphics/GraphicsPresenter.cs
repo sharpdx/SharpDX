@@ -106,6 +106,11 @@ namespace SharpDX.Toolkit.Graphics
         public abstract bool IsFullScreen { get; set; }
 
         /// <summary>
+        /// Gets or sets the output index to use when switching to fullscreen mode.
+        /// </summary>
+        public int PrefferedFullScreenOutputIndex { get; set; }
+
+        /// <summary>
         /// Gets or sets the <see cref="PresentInterval"/>. Default is to wait for one vertical blanking.
         /// </summary>
         /// <value>The present interval.</value>

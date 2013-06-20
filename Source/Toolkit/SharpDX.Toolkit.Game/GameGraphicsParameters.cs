@@ -80,5 +80,10 @@ namespace SharpDX.Toolkit
         /// Gets or sets a value indicating whether to synochrnize present with vertical blanking.
         /// </summary>
         public bool SynchronizeWithVerticalRetrace;
+
+        /// <summary>
+        /// The output (monitor) index to use when switching to fullscreen mode. Doesn't have any effect when windowed mode is used.
+        /// </summary>
+        public int PreferredFullScreenOutputIndex;
     }
 }
