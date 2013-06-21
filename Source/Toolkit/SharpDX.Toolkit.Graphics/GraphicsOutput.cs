@@ -38,13 +38,11 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Initializes a new instance of <see cref="GraphicsOutput"/>.
         /// </summary>
-        /// <param name="outputOrdinal">The index of the current output from the all outputs of a <see cref="GraphicsAdapter"/>.</param>
         /// <param name="output">The DXGI <see cref="Output"/> counterpart of this instance.</param>
         /// <exception cref="ArgumentOutOfRangeException">Is thrown when <paramref name="outputOrdinal"/> is less than zero.</exception>
         /// <exception cref="ArgumentNullException">Is thrown when <paramref name="output"/> is null.</exception>
-        internal GraphicsOutput(int outputOrdinal, Output output)
+        internal GraphicsOutput(Output output)
         {
-            if (outputOrdinal < 0) throw new ArgumentOutOfRangeException("outputOrdinal");
             if (output == null) throw new ArgumentNullException("output");
 
             this.output = ToDispose(output);
@@ -54,11 +52,6 @@ namespace SharpDX.Toolkit.Graphics
 
             InitializeCurrentDisplayMode();
         }
-
-        /// <summary>
-        /// The index of the current output from the all outputs of a <see cref="GraphicsAdapter"/>.
-        /// </summary>
-        public int OutputOrdinal { get; private set; }
 
         /// <summary>
         /// Gets the current display mode.
