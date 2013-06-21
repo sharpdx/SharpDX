@@ -26,7 +26,7 @@ using SharpDX.IO;
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    /// A Texture 3D frontend to <see cref="SharpDX.Direct3D11.Texture3D"/>.
+    /// A Texture 3D front end to <see cref="SharpDX.Direct3D11.Texture3D"/>.
     /// </summary>
     public class Texture3D : Texture3DBase
     {
@@ -143,7 +143,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="depth">The depth.</param>
         /// <param name="format">Describes the format to use.</param>
         /// <param name="usage">The usage.</param>
-        /// <param name="textureData">The texture data, width * height * depth datas </param>
+        /// <param name="textureData">The texture data, width * height * depth data </param>
         /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
         /// <returns>A new instance of <see cref="Texture3D" /> class.</returns>
         /// <remarks>
@@ -177,7 +177,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <unmanaged-short>ID3D11Device::CreateTexture3D</unmanaged-short>	
         public static Texture3D New(GraphicsDevice device, int width, int height, int depth, MipMapCount mipCount, PixelFormat format, DataBox[] textureData, TextureFlags flags = TextureFlags.ShaderResource, ResourceUsage usage = ResourceUsage.Default)
         {
-            // TODO Add check for number of texture datas according to width/height/depth/mipCount.
+            // TODO Add check for number of texture data according to width/height/depth/mipCount.
             return new Texture3D(device, NewDescription(width, height, depth, format, flags | TextureFlags.ShaderResource, mipCount, usage), textureData);
         }
 

@@ -26,7 +26,7 @@ using SharpDX.IO;
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    /// A Texture 2D frontend to <see cref="SharpDX.Direct3D11.Texture2D"/>.
+    /// A Texture 2D front end to <see cref="SharpDX.Direct3D11.Texture2D"/>.
     /// </summary>
     public class Texture2D : Texture2DBase
     {
@@ -162,7 +162,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="height">The height.</param>
         /// <param name="format">Describes the format to use.</param>
         /// <param name="mipCount">Number of mipmaps, set to true to have all mipmaps, set to an int >=1 for a particular mipmap count.</param>
-        /// <param name="textureData">Texture datas through an array of <see cref="DataBox"/> </param>
+        /// <param name="textureData">Texture data through an array of <see cref="DataBox"/> </param>
         /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
         /// <param name="arraySize">Size of the texture 2D array, default to 1.</param>
         /// <param name="usage">The usage.</param>

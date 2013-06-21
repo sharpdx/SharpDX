@@ -115,7 +115,7 @@ namespace SharpDX.Toolkit.Graphics
         StructuredBuffer = 64,
 
         /// <summary>
-        /// Creates a structured buffer that supports unordered acccess and append.
+        /// Creates a structured buffer that supports unordered access and append.
         /// </summary>
         /// <remarks>
         /// This is equivalent to <see cref="ResourceOptionFlags.BufferStructured"/>.
@@ -126,7 +126,7 @@ namespace SharpDX.Toolkit.Graphics
         StructuredAppendBuffer = UnorderedAccess | StructuredBuffer | 128,
 
         /// <summary>
-        /// Creates a structured buffer that supports unordered acccess and counter.
+        /// Creates a structured buffer that supports unordered access and counter.
         /// </summary>
         /// <remarks>
         /// This is equivalent to <see cref="ResourceOptionFlags.BufferStructured"/>.

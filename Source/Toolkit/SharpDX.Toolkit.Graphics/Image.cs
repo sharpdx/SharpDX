@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // -----------------------------------------------------------------------------
-// Part of te following code is a port of http://directxtex.codeplex.com
+// Part of the following code is a port of http://directxtex.codeplex.com
 // -----------------------------------------------------------------------------
 // Microsoft Public License (Ms-PL)
 //
@@ -126,7 +126,7 @@ namespace SharpDX.Toolkit.Graphics
         private bool bufferIsDisposable;
 
         /// <summary>
-        /// Handke != null if the buffer is a pinned managed object on the LOH (Large Object Heap).
+        /// Handle != null if the buffer is a pinned managed object on the LOH (Large Object Heap).
         /// </summary>
         private GCHandle? handle;
 
@@ -145,7 +145,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <param name="description">The image description.</param>
         /// <param name="dataPointer">The pointer to the data buffer.</param>
         /// <param name="offset">The offset from the beginning of the data buffer.</param>
-        /// <param name="handle">The handle (optionnal).</param>
+        /// <param name="handle">The handle (optional).</param>
         /// <param name="bufferIsDisposable">if set to <c>true</c> [buffer is disposable].</param>
         /// <exception cref="System.InvalidOperationException">If the format is invalid, or width/height/depth/arraysize is invalid with respect to the dimension.</exception>
         internal unsafe Image(ImageDescription description, IntPtr dataPointer, int offset, GCHandle? handle, bool bufferIsDisposable, PitchFlags pitchFlags = PitchFlags.None)
@@ -236,7 +236,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <summary>
         /// Registers a loader/saver for a specified image file type.
         /// </summary>
-        /// <param name="type">The file type (use integer and explicit casting to <see cref="ImageFileType"/> to register other fileformat.</param>
+        /// <param name="type">The file type (use integer and explicit casting to <see cref="ImageFileType"/> to register other file format.</param>
         /// <param name="loader">The loader delegate (can be null).</param>
         /// <param name="saver">The saver delegate (can be null).</param>
         /// <exception cref="System.ArgumentException"></exception>
@@ -310,7 +310,7 @@ namespace SharpDX.Toolkit.Graphics
             {
                 for (int mipIndex = 0; mipIndex < Description.MipLevels; mipIndex++)
                 {
-                    // Get the first z-slize (A DataBox for a Texture3D is pointing to the whole texture).
+                    // Get the first z-slice (A DataBox for a Texture3D is pointing to the whole texture).
                     var pixelBuffer = this.GetPixelBufferUnsafe(arrayIndex, 0, mipIndex);
 
                     dataBoxArray[i].DataPointer = pixelBuffer.DataPointer;
@@ -491,7 +491,7 @@ namespace SharpDX.Toolkit.Graphics
 
             int size = buffer.Length;
 
-            // If buffer is allocated on Larget Object Heap, then we are going to pin it instead of making a copy.
+            // If buffer is allocated on Large Object Heap, then we are going to pin it instead of making a copy.
             if (size > (85 * 1024))
             {
                 var handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
@@ -1050,7 +1050,7 @@ namespace SharpDX.Toolkit.Graphics
                     int heightPacked;
                     ComputePitch(imageDesc.Format, w, h, out rowPitch, out slicePitch, out widthPacked, out heightPacked, pitchFlags);
 
-                    // Store the number of z-slicec per miplevels
+                    // Store the number of z-slices per miplevel
                     if ( j == 0)
                         mipmapToZIndex.Add(bufferCount);
 

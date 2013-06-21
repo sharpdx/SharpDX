@@ -35,15 +35,15 @@ namespace SharpDX.Toolkit.Graphics
             /// <param name="device">The device.</param>
             /// <param name="sizeX">The size X.</param>
             /// <param name="sizeY">The size Y.</param>
-            /// <param name="tesselation">The tesselation, as the number of quads per axis.</param>
+            /// <param name="tesselation">The tessellation, as the number of quads per axis.</param>
             /// <param name="toLeftHanded">if set to <c>true</c> vertices and indices will be transformed to left handed. Default is true.</param>
             /// <returns>A Plane primitive.</returns>
-            /// <exception cref="System.ArgumentOutOfRangeException">tesselation;tesselation must be > 0</exception>
+            /// <exception cref="System.ArgumentOutOfRangeException">tessellation;tessellation must be > 0</exception>
             public static GeometricPrimitive New(GraphicsDevice device, float sizeX = 1.0f, float sizeY = 1.0f, int tesselation = 1, bool toLeftHanded = true)
             {
                 if (tesselation < 1)
                 {
-                    throw new ArgumentOutOfRangeException("tesselation", "tesselation must be > 0");
+                    throw new ArgumentOutOfRangeException("tessellation", "tessellation must be > 0");
                 }
 
                 var lineWidth = tesselation + 1;

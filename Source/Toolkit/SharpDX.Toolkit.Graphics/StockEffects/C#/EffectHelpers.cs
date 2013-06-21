@@ -198,7 +198,7 @@ namespace SharpDX.Toolkit.Graphics
             //
             //     (sum(diffuse directional light) * DiffuseColor) + EmissiveColor
             //
-            // For futher optimization goodness, we merge material alpha with the diffuse
+            // For further optimization goodness, we merge material alpha with the diffuse
             // color parameter, and premultiply all color values by this alpha.
             
             if (lightingEnabled)

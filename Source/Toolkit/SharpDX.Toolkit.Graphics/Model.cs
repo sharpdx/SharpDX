@@ -249,7 +249,7 @@ namespace SharpDX.Toolkit.Graphics
         }
 
         /// <summary>
-        /// Iterator on each <see cref="ModelMeshPart"/>.
+        /// Iterate on each <see cref="ModelMeshPart"/>.
         /// </summary>
         /// <param name="meshPartFunction">The mesh part function.</param>
         public void ForEach(Action<ModelMeshPart> meshPartFunction)

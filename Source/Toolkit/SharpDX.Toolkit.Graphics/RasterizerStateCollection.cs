@@ -28,32 +28,32 @@ namespace SharpDX.Toolkit.Graphics
     public sealed class RasterizerStateCollection : StateCollectionBase<RasterizerState>
     {
         /// <summary>
-        /// Built-in raterizer state object with settings for wireframe rendering.
+        /// Built-in rasterizer state object with settings for wireframe rendering.
         /// </summary>
         public readonly RasterizerState WireFrame;
 
         /// <summary>
-        /// Built-in raterizer state object with settings for wireframe rendering.
+        /// Built-in rasterizer state object with settings for wireframe rendering.
         /// </summary>
         public readonly RasterizerState WireFrameCullNone;
 
         /// <summary>
-        /// Built-in raterizer state object with settings for culling primitives with clockwise winding order (front facing).
+        /// Built-in rasterizer state object with settings for culling primitives with clockwise winding order (front facing).
         /// </summary>
         public readonly RasterizerState CullFront;
 
         /// <summary>
-        /// Built-in raterizer state object with settings for culling primitives with counter-clockwise winding order (back facing).
+        /// Built-in rasterizer state object with settings for culling primitives with counter-clockwise winding order (back facing).
         /// </summary>
         public readonly RasterizerState CullBack;
 
         /// <summary>
-        /// Built-in raterizer state object with settings for not culling any primitives.
+        /// Built-in rasterizer state object with settings for not culling any primitives.
         /// </summary>
         public readonly RasterizerState CullNone;
 
         /// <summary>
-        /// Built-in default raterizer state object is back facing (see <see cref="CullBack"/>).
+        /// Built-in default rasterizer state object is back facing (see <see cref="CullBack"/>).
         /// </summary>
         public readonly RasterizerState Default;
 

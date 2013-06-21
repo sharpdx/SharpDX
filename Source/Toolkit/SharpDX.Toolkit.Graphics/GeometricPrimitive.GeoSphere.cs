@@ -410,7 +410,7 @@ namespace SharpDX.Toolkit.Graphics
             }
 
             // An undirected edge between two vertices, represented by a pair of indexes into a vertex array.
-            // Becuse this edge is undirected, (a,b) is the same as (b,a).
+            // Because this edge is undirected, (a,b) is the same as (b,a).
             private struct UndirectedEdge : IEquatable<UndirectedEdge>
             {
                 public UndirectedEdge(int item1, int item2)

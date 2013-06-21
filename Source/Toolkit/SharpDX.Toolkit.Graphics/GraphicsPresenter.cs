@@ -24,7 +24,7 @@ using SharpDX.DXGI;
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    /// This class is a frontend to <see cref="SwapChain" /> and <see cref="SwapChain1" />.
+    /// This class is a front end to <see cref="SwapChain" /> and <see cref="SwapChain1" />.
     /// </summary>
     /// <remarks>
     /// In order to create a new <see cref="GraphicsPresenter"/>, a <see cref="GraphicsDevice"/> should have been initialized first.

@@ -483,8 +483,8 @@ namespace SharpDX.Toolkit.Graphics
             fixed (void* pMatrix = &matrix)
             {
                 var pSrc = (float*)pMatrix;
-                // If Matrx is row_major but expecting less columns/rows
-                // then copy only necessasry columns/rows.
+                // If Matrix is row_major but expecting less columns/rows
+                // then copy only necessary columns/rows.
                 for (int i = 0; i < RowCount; i++, pSrc +=4, pDest += 4)
                 {
                     for (int j = 0; j < ColumnCount; j++)
@@ -539,8 +539,8 @@ namespace SharpDX.Toolkit.Graphics
             var pSrc = (float*)((byte*)buffer.DataPointer + offset);
             var pDest = (float*)&result;
 
-            // If Matrx is row_major but expecting less columns/rows
-            // then copy only necessasry columns/rows.
+            // If Matrix is row_major but expecting less columns/rows
+            // then copy only necessary columns/rows.
             for (int i = 0; i < RowCount; i++, pSrc += 4, pDest += 4)
             {
                 for (int j = 0; j < ColumnCount; j++)
