@@ -59,14 +59,14 @@ namespace SharpDX.X3DAudio
         }
 
         /// <summary>
-        /// Calculates dsp settings for the specified listener and emitter.
+        /// Calculates DSP settings for the specified listener and emitter.
         /// </summary>
         /// <param name="listener">The listener.</param>
         /// <param name="emitter">The emitter.</param>
         /// <param name="flags">The flags.</param>
         /// <param name="sourceChannelCount">The source channel count.</param>
         /// <param name="destinationChannelCount">The destination channel count.</param>
-        /// <returns>Dsp settings</returns>
+        /// <returns>DSP settings</returns>
         /// <msdn-id>ee419052</msdn-id>	
         /// <unmanaged>void X3DAudioCalculate([In] const X3DAUDIOHANDLE* Instance,[In] const X3DAUDIO_LISTENER* pListener,[In] const X3DAUDIO_EMITTER* pEmitter,[In] X3DAudioCalculateFlags Flags,[In] void* pDSPSettings)</unmanaged>	
         /// <unmanaged-short>X3DAudioCalculate</unmanaged-short>	
@@ -78,7 +78,7 @@ namespace SharpDX.X3DAudio
         }
 
         /// <summary>
-        /// Calculates dsp settings for the specified listener and emitter. See remarks.
+        /// Calculates DSP settings for the specified listener and emitter. See remarks.
         /// </summary>
         /// <param name="listener">The listener.</param>
         /// <param name="emitter">The emitter.</param>

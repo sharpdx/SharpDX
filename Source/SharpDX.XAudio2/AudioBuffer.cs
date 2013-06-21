@@ -55,7 +55,7 @@ namespace SharpDX.XAudio2
         }
 
         /// <summary>
-        /// Gets or sets the datastream associated to this audio buffer
+        /// Gets or sets the data stream associated to this audio buffer
         /// </summary>
         /// <value>The stream.</value>
         public DataStream Stream

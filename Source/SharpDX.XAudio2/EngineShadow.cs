@@ -23,14 +23,14 @@ using System.Runtime.InteropServices;
 namespace SharpDX.XAudio2
 {
     /// <summary>
-    /// Internal EngineCallback Callback Impl
+    /// Internal EngineCallback Callback Implementation
     /// </summary>
     internal class EngineShadow : SharpDX.CppObjectShadow
     {
         private static readonly EngineVtbl Vtbl = new EngineVtbl();
 
         /// <summary>
-        /// Return a pointer to the unamanged version of this callback.
+        /// Return a pointer to the unmanaged version of this callback.
         /// </summary>
         /// <param name="callback">The callback.</param>
         /// <returns>A pointer to a shadow c++ callback</returns>
