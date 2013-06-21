@@ -18,14 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace MonitorInfo.Desktop
+namespace SpriteBatchCustomEffect.Desktop
 {
     static class Program
     {
         [System.STAThread]
         static void Main()
         {
-            using (var game = new MonitorInfoGame())
+            using (var game = new SpriteBatchCustomEffectGame())
                 game.Run();
         }
     }

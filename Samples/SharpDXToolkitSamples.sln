@@ -63,6 +63,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniCube.WPF", "Toolkit\Des
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonitorInfo.Desktop", "Toolkit\Desktop\MonitorInfo\MonitorInfo.Desktop.csproj", "{988AC9BC-4932-4013-8679-846F934320E8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpriteBatchCustomEffect.Desktop", "Toolkit\Desktop\SpriteBatchCustomEffect\SpriteBatchCustomEffect.Desktop.csproj", "{247252A9-B082-49C2-92A5-98DF322A2A5E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -584,6 +586,16 @@ Global
 		{988AC9BC-4932-4013-8679-846F934320E8}.Release|ARM.ActiveCfg = Release|Any CPU
 		{988AC9BC-4932-4013-8679-846F934320E8}.Release|x64.ActiveCfg = Release|Any CPU
 		{988AC9BC-4932-4013-8679-846F934320E8}.Release|x86.ActiveCfg = Release|Any CPU
+		{247252A9-B082-49C2-92A5-98DF322A2A5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{247252A9-B082-49C2-92A5-98DF322A2A5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{247252A9-B082-49C2-92A5-98DF322A2A5E}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{247252A9-B082-49C2-92A5-98DF322A2A5E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{247252A9-B082-49C2-92A5-98DF322A2A5E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{247252A9-B082-49C2-92A5-98DF322A2A5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{247252A9-B082-49C2-92A5-98DF322A2A5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{247252A9-B082-49C2-92A5-98DF322A2A5E}.Release|ARM.ActiveCfg = Release|Any CPU
+		{247252A9-B082-49C2-92A5-98DF322A2A5E}.Release|x64.ActiveCfg = Release|Any CPU
+		{247252A9-B082-49C2-92A5-98DF322A2A5E}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
