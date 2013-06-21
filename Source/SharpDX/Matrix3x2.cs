@@ -500,7 +500,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creates a matrix that uniformally scales along all three axis.
+        /// Creates a matrix that uniformly scales along all three axis.
         /// </summary>
         /// <param name="scale">The uniform scale that is applied along all axis.</param>
         /// <param name="result">When the method completes, contains the created scaling matrix.</param>
@@ -511,7 +511,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creates a matrix that uniformally scales along all three axis.
+        /// Creates a matrix that uniformly scales along all three axis.
         /// </summary>
         /// <param name="scale">The uniform scale that is applied along all axis.</param>
         /// <returns>The created scaling matrix.</returns>
@@ -653,7 +653,7 @@ namespace SharpDX
         /// <summary>
         /// Transforms a vector by this matrix.
         /// </summary>
-        /// <param name="matrix">The matrix to use as a tranformation matrix.</param>
+        /// <param name="matrix">The matrix to use as a transformation matrix.</param>
         /// <param name="point">The original vector to apply the transformation.</param>
         /// <returns>The result of the transformation for the input vector.</returns>
         public static Vector2 TransformPoint(Matrix3x2 matrix, Vector2 point)
@@ -667,7 +667,7 @@ namespace SharpDX
         /// <summary>
         /// Transforms a vector by this matrix.
         /// </summary>
-        /// <param name="matrix">The matrix to use as a tranformation matrix.</param>
+        /// <param name="matrix">The matrix to use as a transformation matrix.</param>
         /// <param name="point">The original vector to apply the transformation.</param>
         /// <param name="result">The result of the transformation for the input vector.</param>
         /// <returns></returns>
@@ -728,11 +728,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Adds two matricies.
+        /// Adds two matrices.
         /// </summary>
         /// <param name="left">The first matrix to add.</param>
         /// <param name="right">The second matrix to add.</param>
-        /// <returns>The sum of the two matricies.</returns>
+        /// <returns>The sum of the two matrices.</returns>
         public static Matrix3x2 operator +(Matrix3x2 left, Matrix3x2 right)
         {
             Matrix3x2 result;
@@ -743,7 +743,7 @@ namespace SharpDX
         /// <summary>
         /// Assert a matrix (return it unchanged).
         /// </summary>
-        /// <param name="value">The matrix to assert (unchange).</param>
+        /// <param name="value">The matrix to assert (unchanged).</param>
         /// <returns>The asserted (unchanged) matrix.</returns>
         public static Matrix3x2 operator +(Matrix3x2 value)
         {
@@ -751,11 +751,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Subtracts two matricies.
+        /// Subtracts two matrices.
         /// </summary>
         /// <param name="left">The first matrix to subtract.</param>
         /// <param name="right">The second matrix to subtract.</param>
-        /// <returns>The difference between the two matricies.</returns>
+        /// <returns>The difference between the two matrices.</returns>
         public static Matrix3x2 operator -(Matrix3x2 left, Matrix3x2 right)
         {
             Matrix3x2 result;
@@ -802,11 +802,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Multiplies two matricies.
+        /// Multiplies two matrices.
         /// </summary>
         /// <param name="left">The first matrix to multiply.</param>
         /// <param name="right">The second matrix to multiply.</param>
-        /// <returns>The product of the two matricies.</returns>
+        /// <returns>The product of the two matrices.</returns>
         public static Matrix3x2 operator *(Matrix3x2 left, Matrix3x2 right)
         {
             Matrix3x2 result;
@@ -828,11 +828,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Divides two matricies.
+        /// Divides two matrices.
         /// </summary>
         /// <param name="left">The first matrix to divide.</param>
         /// <param name="right">The second matrix to divide.</param>
-        /// <returns>The quotient of the two matricies.</returns>
+        /// <returns>The quotient of the two matrices.</returns>
         public static Matrix3x2 operator /(Matrix3x2 left, Matrix3x2 right)
         {
             Matrix3x2 result;

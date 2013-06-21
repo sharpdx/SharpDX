@@ -34,12 +34,12 @@ namespace SharpDX
     public struct OrientedBoundingBox : IEquatable<OrientedBoundingBox>, IFormattable, IDataSerializable
     {
         /// <summary>
-        /// Half lengths of the box along eaxh axis.
+        /// Half lengths of the box along each axis.
         /// </summary>
         public Vector3 Extents;
 
         /// <summary>
-        /// The matrix which aligns and scales the box, and its tarnslation vector represents the center of the box.
+        /// The matrix which aligns and scales the box, and its translation vector represents the center of the box.
         /// </summary>
         public Matrix Transformation;
 
@@ -350,7 +350,7 @@ namespace SharpDX
         /// <param name="IgnoreScale">Optimize the check operation by assuming that <see cref="SharpDX.OrientedBoundingBox"/> has no scaling applied</param>
         /// <returns>The type of containment the two objects have.</returns>
         /// <remarks>
-        /// This method is not desgined for <see cref="SharpDX.OrientedBoundingBox"/> which has a non-uniform scaling appliend to its transformation matrix.
+        /// This method is not designed for <see cref="SharpDX.OrientedBoundingBox"/> which has a non-uniform scaling applied to its transformation matrix.
         /// But any type of scaling applied using Scale method will keep this method accurate.
         /// </remarks>
         public ContainmentType Contains(BoundingSphere sphere, bool IgnoreScale = false)
@@ -373,7 +373,7 @@ namespace SharpDX
                 locRadius = vRadius.Length();
             }
 
-            //Perform regualr BoundingBox to BoundingSphere containment check
+            //Perform regular BoundingBox to BoundingSphere containment check
             Vector3 minusExtens = -Extents;
             Vector3 vector;
             Vector3.Clamp(ref locCenter, ref minusExtens, ref Extents, out vector);
@@ -517,7 +517,7 @@ namespace SharpDX
             if (Math.Abs(LMid.X) > Extents.X + LExt.X) return ContainmentType.Disjoint;
             if (Math.Abs(LMid.Y) > Extents.Y + LExt.Y) return ContainmentType.Disjoint;
             if (Math.Abs(LMid.Z) > Extents.Z + LExt.Z) return ContainmentType.Disjoint;
-            // Crossproducts of line and each axis
+            // Cross products of line and each axis
             if (Math.Abs(LMid.Y * L.Z - LMid.Z * L.Y) > (Extents.Y * LExt.Z + Extents.Z * LExt.Y)) return ContainmentType.Disjoint;
             if (Math.Abs(LMid.X * L.Z - LMid.Z * L.X) > (Extents.X * LExt.Z + Extents.Z * LExt.X)) return ContainmentType.Disjoint;
             if (Math.Abs(LMid.X * L.Y - LMid.Y * L.X) > (Extents.X * LExt.Y + Extents.Y * LExt.X)) return ContainmentType.Disjoint;
@@ -622,7 +622,7 @@ namespace SharpDX
             Vector3.TransformNormal(ref ray.Direction, ref invTrans, out bRay.Direction);
             Vector3.TransformCoordinate(ref ray.Position, ref invTrans, out bRay.Position);
 
-            //Perform a regualr ray to BoundingBox check
+            //Perform a regular ray to BoundingBox check
             var bb = new BoundingBox(-Extents, Extents);
             var intersects = Collision.RayIntersectsBox(ref bRay, ref bb, out point);
 
@@ -673,7 +673,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Caculates the matrix required to transfer any point from one <see cref="SharpDX.OrientedBoundingBox"/> local corrdinates to another.
+        /// Calculates the matrix required to transfer any point from one <see cref="SharpDX.OrientedBoundingBox"/> local coordinates to another.
         /// </summary>
         /// <param name="A">The source OrientedBoundingBox.</param>
         /// <param name="B">The target OrientedBoundingBox.</param>

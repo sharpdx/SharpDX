@@ -117,7 +117,7 @@ namespace SharpDX
         /// <summary>
         /// Initializes a new instance of the <see cref="SharpDX.ColorBGRA"/> struct.
         /// </summary>
-        /// <param name="value">The red, green, and blue compoennts of the color.</param>
+        /// <param name="value">The red, green, and blue components of the color.</param>
         /// <param name="alpha">The alpha component of the color.</param>
         public ColorBGRA(Vector3 value, float alpha)
         {

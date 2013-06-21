@@ -46,7 +46,7 @@ namespace SharpDX.Serialization
     /// <li>Optimized binary format, data serialized to the strict minimum.</li>
     /// <li>Should be compatible with Win8/WinRT, Desktop.</li>
     /// <li>Not reflection based serializer, but fully compile time serializer.</li>
-    /// <li>Format could be readback from C/C++.</li>
+    /// <li>Format could be read back from C/C++.</li>
     /// 
     /// </ul>
     /// </remarks>
@@ -353,9 +353,9 @@ namespace SharpDX.Serialization
         /// <param name="chunkId">The chunk id.</param>
         /// <exception cref="SharpDX.Serialization.InvalidChunkException">If the chuck to read is not the expecting chunk.</exception>
         /// <remarks>
-        /// A Chunk is an identifiable portion of data that will serialized. Chunk are usefull to encapsulate a variable 
+        /// A Chunk is an identifiable portion of data that will serialized. Chunk are useful to encapsulate a variable 
         /// data (and check for the presence of the chunk Id). Chunk are storing a 4 bytes identifier and the length of 
-        /// the chunk before reading/writing actual datas.
+        /// the chunk before reading/writing actual data.
         /// </remarks>
         public void BeginChunk(FourCC chunkId)
         {
@@ -633,7 +633,7 @@ namespace SharpDX.Serialization
         /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags"/>.</param>
         /// <remarks>
         /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.<br/>
-        /// <strong>Caution</strong>: Also unlike the plain array version, the count is not serialized. This method is usefull
+        /// <strong>Caution</strong>: Also unlike the plain array version, the count is not serialized. This method is useful
         /// when we want to serialize the count of an array separately from the array.
         /// </remarks>
         public void Serialize<T>(ref T[] valueArray, int count, SerializerPrimitiveAction<T> serializer, SerializeFlags serializeFlags = SerializeFlags.Normal)
@@ -745,7 +745,7 @@ namespace SharpDX.Serialization
         /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags"/>.</param>
         /// <remarks>
         /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.<br/>
-        /// <strong>Caution</strong>: Also unlike the plain array version, the count is not serialized. This method is usefull
+        /// <strong>Caution</strong>: Also unlike the plain array version, the count is not serialized. This method is useful
         /// when we want to serialize the count of an array separately from the array.
         /// </remarks>
         public void Serialize<T>(ref T[] valueArray, int count, SerializeFlags serializeFlags = SerializeFlags.Normal) where T : IDataSerializable, new()
@@ -816,7 +816,7 @@ namespace SharpDX.Serialization
         /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags"/>.</param>
         /// <remarks>
         /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.<br/>
-        /// <strong>Caution</strong>: Also unlike the plain array version, the count is not serialized. This method is usefull
+        /// <strong>Caution</strong>: Also unlike the plain array version, the count is not serialized. This method is useful
         /// when we want to serialize the count of an array separately from the array.
         /// </remarks>
         public void Serialize(ref byte[] valueArray, int count, SerializeFlags serializeFlags = SerializeFlags.Normal)
@@ -973,7 +973,7 @@ namespace SharpDX.Serialization
         /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags"/>.</param>
         /// <remarks>
         /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.<br/>
-        /// <strong>Caution</strong>: Also unlike the plain array version, the count is not serialized. This method is usefull
+        /// <strong>Caution</strong>: Also unlike the plain array version, the count is not serialized. This method is useful
         /// when we want to serialize the count of an array separately from the array.
         /// </remarks>
         public void Serialize<T>(ref List<T> valueList, int count, SerializeFlags serializeFlags = SerializeFlags.Normal) where T : IDataSerializable, new()
@@ -1019,7 +1019,7 @@ namespace SharpDX.Serialization
         /// <param name="serializeFlags">Type of serialization, see <see cref="SerializeFlags"/>.</param>
         /// <remarks>
         /// Note that depending on the serialization <see cref="Mode"/>, this method reads or writes the value.<br/>
-        /// <strong>Caution</strong>: Also unlike the plain array version, the count is not serialized. This method is usefull
+        /// <strong>Caution</strong>: Also unlike the plain array version, the count is not serialized. This method is useful
         /// when we want to serialize the count of an array separately from the array.
         /// </remarks>
         public void Serialize<T>(ref List<T> valueList, int count, SerializerPrimitiveAction<T> serializerMethod, SerializeFlags serializeFlags = SerializeFlags.Normal)
@@ -1057,7 +1057,7 @@ namespace SharpDX.Serialization
 
         private void EnsureList<T>(ref List<T> valueList, int count)
         {
-            // If there is a list provided, use it inplace instead of allocating a new one
+            // If there is a list provided, use it in place instead of allocating a new one
             if (valueList != null)
             {
                 valueList.Clear();
@@ -1487,7 +1487,7 @@ namespace SharpDX.Serialization
         /// <param name="dataRegion">The pointer to an unmanaged memory region. For read operation, this pointer must be allocated by the caller.</param>
         /// <exception cref="System.IO.EndOfStreamException">If the end of stream was reached before reading all the bytes.</exception>
         /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.
-        /// This method doesn't serialize the sizeInBytes of the region, so the size must be serialized serparetely.
+        /// This method doesn't serialize the sizeInBytes of the region, so the size must be serialized separately.
         /// </remarks>
         public void SerializeMemoryRegion(DataPointer dataRegion)
         {
@@ -1501,7 +1501,7 @@ namespace SharpDX.Serialization
         /// <param name="sizeInBytes">The size in bytes. See remarks.</param>
         /// <exception cref="System.IO.EndOfStreamException">If the end of stream was reached before reading all the bytes.</exception>
         /// <remarks>Note that depending on the serialization <see cref="Mode" />, this method reads or writes the value.
-        /// This method doesn't serialize the sizeInBytes of the region, so the size must be serialized serparetely.
+        /// This method doesn't serialize the sizeInBytes of the region, so the size must be serialized separately.
         /// </remarks>
         public unsafe void SerializeMemoryRegion(IntPtr dataPointer, int sizeInBytes)
         {

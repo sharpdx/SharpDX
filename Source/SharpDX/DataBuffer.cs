@@ -27,7 +27,7 @@ namespace SharpDX
     /// Provides methods to perform fast read/write random access data on a buffer located in an unmanaged memory.
     /// </summary>
     /// <remarks>
-    /// This class doesn't validate the position read/write from. It is the responsability of the client of this class
+    /// This class doesn't validate the position read/write from. It is the responsibility of the client of this class
     /// to verify that access is done within the size of the buffer.
     /// </remarks>
     public class DataBuffer : Component

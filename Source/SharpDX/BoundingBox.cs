@@ -152,12 +152,12 @@ namespace SharpDX
             return Collision.PlaneIntersectsBox(ref plane, ref this);
         }
 
-        /* This implentation is wrong
+        /* This implementation is wrong
         /// <summary>
         /// Determines if there is an intersection between the current object and a triangle.
         /// </summary>
         /// <param name="vertex1">The first vertex of the triangle to test.</param>
-        /// <param name="vertex2">The second vertex of the triagnle to test.</param>
+        /// <param name="vertex2">The second vertex of the triangle to test.</param>
         /// <param name="vertex3">The third vertex of the triangle to test.</param>
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref Vector3 vertex1, ref Vector3 vertex2, ref Vector3 vertex3)
@@ -226,12 +226,12 @@ namespace SharpDX
             return Contains(ref point);
         }
 
-        /* This implentation is wrong
+        /* This implementation is wrong
         /// <summary>
         /// Determines whether the current objects contains a triangle.
         /// </summary>
         /// <param name="vertex1">The first vertex of the triangle to test.</param>
-        /// <param name="vertex2">The second vertex of the triagnle to test.</param>
+        /// <param name="vertex2">The second vertex of the triangle to test.</param>
         /// <param name="vertex3">The third vertex of the triangle to test.</param>
         /// <returns>The type of containment the two objects have.</returns>
         public ContainmentType Contains(ref Vector3 vertex1, ref Vector3 vertex2, ref Vector3 vertex3)

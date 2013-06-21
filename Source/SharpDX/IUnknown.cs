@@ -33,7 +33,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="guid">The guid of the interface.</param>
         /// <param name="comObject">The output COM object reference.</param>
-        /// <returns>If successfull, <see cref="Result.Ok"/> </returns>
+        /// <returns>If successful, <see cref="Result.Ok"/> </returns>
         Result QueryInterface(ref Guid guid, out IntPtr comObject);
 
         /// <summary>

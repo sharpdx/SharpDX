@@ -287,7 +287,7 @@ namespace SharpDX
         /// Determines if there is an intersection between the current object and a triangle.
         /// </summary>
         /// <param name="vertex1">The first vertex of the triangle to test.</param>
-        /// <param name="vertex2">The second vertex of the triagnle to test.</param>
+        /// <param name="vertex2">The second vertex of the triangle to test.</param>
         /// <param name="vertex3">The third vertex of the triangle to test.</param>
         /// <returns>Whether the two objects intersected.</returns>
         public PlaneIntersectionType Intersects(ref Vector3 vertex1, ref Vector3 vertex2, ref Vector3 vertex3)

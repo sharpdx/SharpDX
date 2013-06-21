@@ -153,7 +153,7 @@ namespace SharpDX
         /// </summary>
         /// <typeparam name="TCallback">The type of the callback.</typeparam>
         /// <param name="callback">The callback.</param>
-        /// <returns>A pointer to the unamanaged C++ object of the callback</returns>
+        /// <returns>A pointer to the unmanaged C++ object of the callback</returns>
         public static IntPtr ToCallbackPtr<TCallback>(ICallbackable callback)
             where TCallback : ICallbackable
         {

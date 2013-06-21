@@ -18,11 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.InteropServices;
-using System.ComponentModel;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using SharpDX.Serialization;
 
 namespace SharpDX
@@ -601,12 +598,12 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs a linear interpolation between two matricies.
+        /// Performs a linear interpolation between two matrices.
         /// </summary>
         /// <param name="start">Start Matrix5x4.</param>
         /// <param name="end">End Matrix5x4.</param>
         /// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end"/>.</param>
-        /// <param name="result">When the method completes, contains the linear interpolation of the two matricies.</param>
+        /// <param name="result">When the method completes, contains the linear interpolation of the two matrices.</param>
         /// <remarks>
         /// This method performs the linear interpolation based on the following formula.
         /// <code>start + (end - start) * amount</code>
@@ -637,7 +634,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs a linear interpolation between two matricies.
+        /// Performs a linear interpolation between two matrices.
         /// </summary>
         /// <param name="start">Start Matrix5x4.</param>
         /// <param name="end">End Matrix5x4.</param>
@@ -656,7 +653,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Performs a cubic interpolation between two matricies.
+        /// Performs a cubic interpolation between two matrices.
         /// </summary>
         /// <param name="start">Start Matrix5x4.</param>
         /// <param name="end">End Matrix5x4.</param>
@@ -757,7 +754,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creates a Matrix5x4 that uniformally scales along all three axis.
+        /// Creates a Matrix5x4 that uniformly scales along all three axis.
         /// </summary>
         /// <param name="scale">The uniform scale that is applied along all axis.</param>
         /// <param name="result">When the method completes, contains the created scaling Matrix5x4.</param>
@@ -768,7 +765,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Creates a Matrix5x4 that uniformally scales along all three axis.
+        /// Creates a Matrix5x4 that uniformly scales along all three axis.
         /// </summary>
         /// <param name="scale">The uniform scale that is applied along all axis.</param>
         /// <returns>The created scaling Matrix5x4.</returns>
@@ -833,11 +830,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Adds two matricies.
+        /// Adds two matrices.
         /// </summary>
         /// <param name="left">The first Matrix5x4 to add.</param>
         /// <param name="right">The second Matrix5x4 to add.</param>
-        /// <returns>The sum of the two matricies.</returns>
+        /// <returns>The sum of the two matrices.</returns>
         public static Matrix5x4 operator +(Matrix5x4 left, Matrix5x4 right)
         {
             Matrix5x4 result;
@@ -848,7 +845,7 @@ namespace SharpDX
         /// <summary>
         /// Assert a Matrix5x4 (return it unchanged).
         /// </summary>
-        /// <param name="value">The Matrix5x4 to assert (unchange).</param>
+        /// <param name="value">The Matrix5x4 to assert (unchanged).</param>
         /// <returns>The asserted (unchanged) Matrix5x4.</returns>
         public static Matrix5x4 operator +(Matrix5x4 value)
         {
@@ -856,11 +853,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Subtracts two matricies.
+        /// Subtracts two matrices.
         /// </summary>
         /// <param name="left">The first Matrix5x4 to subtract.</param>
         /// <param name="right">The second Matrix5x4 to subtract.</param>
-        /// <returns>The difference between the two matricies.</returns>
+        /// <returns>The difference between the two matrices.</returns>
         public static Matrix5x4 operator -(Matrix5x4 left, Matrix5x4 right)
         {
             Matrix5x4 result;
