@@ -755,13 +755,13 @@ namespace SharpDX.D3DCompiler
         /// <summary>	
         /// Decompresses all shaders from a compressed set.	
         /// </summary>	
-        /// <returns>Returns an array of decompresss shader bytecode.</returns>	
+        /// <returns>Returns an array of decompress shader bytecode.</returns>	
         /// <unmanaged>HRESULT D3DDecompressShaders([In, Buffer] const void* pSrcData,[In] SIZE_T SrcDataSize,[In] unsigned int uNumShaders,[In] unsigned int uStartIndex,[In, Buffer, Optional] unsigned int* pIndices,[In] unsigned int uFlags,[Out, Buffer] ID3D10Blob** ppShaders,[Out, Optional] unsigned int* pTotalShaders)</unmanaged>	
         public unsafe ShaderBytecode[] Decompress()
         {
             //First we call D3D.DecompressShaders with empty parameters to get the number of shaders in the compressed byte code (totalShadersRef)
             //I set shadersBlobs to an array of one null blob just to make shadersOut_ parameter in DecompressShaders function valid 
-            //which dosn't seem to accept zero pointer, I didn't find any other work around.
+            //which doesn't seem to accept zero pointer, I didn't find any other work around.
             var shadersBlobs = new Blob[1];
             int totalShadersRef;
             fixed(void* bufferPtr = Data)
@@ -776,7 +776,7 @@ namespace SharpDX.D3DCompiler
         /// </summary>	
         /// <param name="numShaders"><para>The number of shaders to decompress.</para></param>	
         /// <param name="startIndex"><para>The index of the first shader to decompress.</para></param>	
-        /// <returns>Returns an array of decompresss shader bytecode.</returns>	
+        /// <returns>Returns an array of decompress shader bytecode.</returns>	
         /// <unmanaged>HRESULT D3DDecompressShaders([In, Buffer] const void* pSrcData,[In] SIZE_T SrcDataSize,[In] unsigned int uNumShaders,[In] unsigned int uStartIndex,[In, Buffer, Optional] unsigned int* pIndices,[In] unsigned int uFlags,[Out, Buffer] ID3D10Blob** ppShaders,[Out, Optional] unsigned int* pTotalShaders)</unmanaged>	
         public unsafe ShaderBytecode[] Decompress(int startIndex, int numShaders)
         {
@@ -788,7 +788,7 @@ namespace SharpDX.D3DCompiler
                 D3D.DecompressShaders((IntPtr)bufferPtr, Data.Length, numShaders, startIndex, null, 0, shadersBlobs, out totalShadersRef);
 
             //The size of shadersBlobs will not change
-            //if the compressed shader contains less than requested in numShaders, null entries will apear in the result array
+            //if the compressed shader contains less than requested in numShaders, null entries will appear in the result array
             var shadersByteArr = new ShaderBytecode[shadersBlobs.Length];
             for (int i = 0; i < shadersBlobs.Length; i++)
                 if (shadersBlobs[i] != null)
@@ -801,7 +801,7 @@ namespace SharpDX.D3DCompiler
         /// Decompresses one or more shaders from a compressed set.	
         /// </summary>	
         /// <param name="indices"><para>An array of indexes that represent the shaders to decompress.</para></param>	
-        /// <returns>Returns an array of decompresss shader bytecode.</returns>	
+        /// <returns>Returns an array of decompress shader bytecode.</returns>	
         /// <unmanaged>HRESULT D3DDecompressShaders([In, Buffer] const void* pSrcData,[In] SIZE_T SrcDataSize,[In] unsigned int uNumShaders,[In] unsigned int uStartIndex,[In, Buffer, Optional] unsigned int* pIndices,[In] unsigned int uFlags,[Out, Buffer] ID3D10Blob** ppShaders,[Out, Optional] unsigned int* pTotalShaders)</unmanaged>	
         public unsafe ShaderBytecode[] Decompress(int[] indices)
         {
@@ -813,7 +813,7 @@ namespace SharpDX.D3DCompiler
                 D3D.DecompressShaders((IntPtr)bufferPtr, Data.Length, indices.Length, 0, indices, 0, shadersBlobs, out totalShadersRef);
 
             //The size of shadersBlobs will not change
-            //if the compressed shader contains less than requested in numShaders, null entries will apear in the result array
+            //if the compressed shader contains less than requested in numShaders, null entries will appear in the result array
             var shadersByteArr = new ShaderBytecode[shadersBlobs.Length];
             for (int i = 0; i < shadersBlobs.Length; i++)
                 if (shadersBlobs[i] != null)
@@ -891,9 +891,9 @@ namespace SharpDX.D3DCompiler
         /// Gets the trace instruction offsets.
         /// </summary>
         /// <param name="isIncludingNonExecutableCode">if set to <c>true</c> [is including non executable code].</param>
-        /// <param name="startInstIndex">Start index of the inst.</param>
-        /// <param name="numInsts">The num insts.</param>
-        /// <param name="totalInstsRef">The total insts ref.</param>
+        /// <param name="startInstIndex">Start index of the instructions.</param>
+        /// <param name="numInsts">The number of instructions.</param>
+        /// <param name="totalInstsRef">The total instructions ref.</param>
         /// <returns>An offset</returns>
         /// <unmanaged>HRESULT D3DGetTraceInstructionOffsets([In, Buffer] const void* pSrcData,[In] SIZE_T SrcDataSize,[In] unsigned int Flags,[In] SIZE_T StartInstIndex,[In] SIZE_T NumInsts,[Out, Buffer, Optional] SIZE_T* pOffsets,[Out, Optional] SIZE_T* pTotalInsts)</unmanaged>
         public unsafe PointerSize GetTraceInstructionOffsets(bool isIncludingNonExecutableCode, PointerSize startInstIndex, PointerSize numInsts, out SharpDX.PointerSize totalInstsRef)
@@ -949,7 +949,7 @@ namespace SharpDX.D3DCompiler
         }
 
         /// <summary>
-        /// Saves this bycode to the specified stream.
+        /// Saves this bytecode to the specified stream.
         /// </summary>
         /// <param name="stream">The stream.</param>
         public void Save(Stream stream)
