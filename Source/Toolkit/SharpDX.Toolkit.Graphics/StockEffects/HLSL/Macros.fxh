@@ -79,7 +79,7 @@
 #ifdef SM4
 
 
-// Macros for targetting shader model 4.0 (DX11)
+// Macros for targeting shader model 4.0 (DX11)
 
 #define BEGIN_CONSTANTS     cbuffer Parameters : register(b0) {
 #define MATRIX_CONSTANTS    }; cbuffer ProjectionMatrix : register(b1) {
@@ -104,7 +104,7 @@
 #else
 
 
-// Macros for targetting shader model 2.0 (DX9)
+// Macros for targeting shader model 2.0 (DX9)
 
 #define BEGIN_CONSTANTS
 #define MATRIX_CONSTANTS

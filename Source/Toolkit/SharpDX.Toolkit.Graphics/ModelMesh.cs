@@ -60,7 +60,7 @@ namespace SharpDX.Toolkit.Graphics
         /// Draws all of the ModelMeshPart objects in this mesh, using their current Effect settings.
         /// </summary>
         /// <param name="context">The graphics context.</param>
-        /// <param name="effectOverride">The effect to use instead of the effect attached to eash mesh part. Default is null (use Effect in MeshPart)</param>
+        /// <param name="effectOverride">The effect to use instead of the effect attached to each mesh part. Default is null (use Effect in MeshPart)</param>
         /// <exception cref="System.InvalidOperationException">Model has no effect</exception>
         public void Draw(GraphicsDevice context, Effect effectOverride = null)
         {

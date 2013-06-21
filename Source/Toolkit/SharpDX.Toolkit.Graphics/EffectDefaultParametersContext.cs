@@ -41,7 +41,7 @@ namespace SharpDX.Toolkit.Graphics
         public Matrix ViewProjection;
 
         /// <summary>
-        /// A boolean indicating wheter the <see cref="ViewProjection"/> matrix is already calculated.
+        /// A boolean indicating whether the <see cref="ViewProjection"/> matrix is already calculated.
         /// </summary>
         public bool IsViewProjectionCalculated;
     }

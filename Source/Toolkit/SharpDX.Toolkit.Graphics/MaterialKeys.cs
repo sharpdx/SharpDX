@@ -21,7 +21,7 @@
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    /// Default keys optionnaly stored in <see cref="Material.Properties"/>.
+    /// Default keys optionally stored in <see cref="Material.Properties"/>.
     /// </summary>
     public class MaterialKeys : MaterialKeysBase
     {
@@ -73,7 +73,7 @@ namespace SharpDX.Toolkit.Graphics
         /// </summary>
         /// <remarks>
         /// The glossiness is in fact the exponent of the specular
-        /// (phong) lighting equation. Usually there is a conversion
+        /// (Phong) lighting equation. Usually there is a conversion
         /// function defined to map the linear color values in the
         /// texture to a suitable exponent. Have fun.
         /// </remarks>
@@ -123,7 +123,7 @@ namespace SharpDX.Toolkit.Graphics
         /// <remarks>
         /// A texture reference that does not match any of the definitions 
         /// above is considered to be 'unknown'. It is still imported,
-        /// but is excluded from any further postprocessing.
+        /// but is excluded from any further post processing.
         /// </remarks>
         public static readonly PropertyKey<MaterialTextureStack> UnknownTexture = RegisterKey(new PropertyKey<MaterialTextureStack>("UnknownTexture"));
     }

@@ -26,7 +26,7 @@ using SharpDX.IO;
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    /// A TextureCube frontend to <see cref="SharpDX.Direct3D11.Texture2D"/>.
+    /// A TextureCube front end to <see cref="SharpDX.Direct3D11.Texture2D"/>.
     /// </summary>
     public class TextureCube : Texture2DBase
     {
@@ -150,7 +150,7 @@ namespace SharpDX.Toolkit.Graphics
         public unsafe static TextureCube New<T>(GraphicsDevice device, int size, PixelFormat format, T[][] textureData, TextureFlags flags = TextureFlags.ShaderResource, ResourceUsage usage = ResourceUsage.Immutable) where T : struct
         {
             if (textureData.Length != 6)
-                throw new ArgumentException("Invalid texture datas. First dimension must be equal to 6", "textureData");
+                throw new ArgumentException("Invalid texture data. First dimension must be equal to 6", "textureData");
 
             var dataBox1 = GetDataBox(format, size, size, 1, textureData[0], (IntPtr)Interop.Fixed(textureData[0]));
             var dataBox2 = GetDataBox(format, size, size, 1, textureData[0], (IntPtr)Interop.Fixed(textureData[1]));
@@ -181,7 +181,7 @@ namespace SharpDX.Toolkit.Graphics
         public static TextureCube New(GraphicsDevice device, int size, PixelFormat format, DataBox[] textureData, TextureFlags flags = TextureFlags.ShaderResource, ResourceUsage usage = ResourceUsage.Immutable)
         {
             if (textureData.Length != 6)
-                throw new ArgumentException("Invalid texture datas. First dimension must be equal to 6", "textureData");
+                throw new ArgumentException("Invalid texture data. First dimension must be equal to 6", "textureData");
 
             return new TextureCube(device, NewTextureCubeDescription(size, format, flags | TextureFlags.ShaderResource, 1, usage), textureData);
         }

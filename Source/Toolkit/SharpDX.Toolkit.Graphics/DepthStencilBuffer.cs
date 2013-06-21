@@ -27,7 +27,7 @@ using SharpDX.Direct3D11;
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    /// A DepthStencilBuffer frontend to <see cref="SharpDX.Direct3D11.Texture2D"/>.
+    /// A DepthStencilBuffer front end to <see cref="SharpDX.Direct3D11.Texture2D"/>.
     /// </summary>
     /// <remarks>
     /// This class instantiates a <see cref="Texture2D"/> with the binding flags <see cref="BindFlags.DepthStencil"/>.

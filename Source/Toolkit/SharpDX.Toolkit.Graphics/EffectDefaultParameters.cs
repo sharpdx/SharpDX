@@ -24,7 +24,7 @@ namespace SharpDX.Toolkit.Graphics
     /// Provides a set of default parameters that could be defined in an effect. See remarks for usage.
     /// </summary>
     /// <remarks>>
-    /// An effect can have several default optionnal parameters that are accessible when using <see cref="Model.Draw"/>.
+    /// An effect can have several default optional parameters that are accessible when using <see cref="Model.Draw"/>.
     /// These parameters are stored in this structure. Each of them can be null.
     /// </remarks>
     public class EffectDefaultParameters

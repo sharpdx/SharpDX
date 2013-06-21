@@ -24,7 +24,7 @@ using SharpDX.Direct3D11;
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    /// Abstract class frontend to <see cref="SharpDX.Direct3D11.Texture1D"/>.
+    /// Abstract class front end to <see cref="SharpDX.Direct3D11.Texture1D"/>.
     /// </summary>
     public abstract class Texture1DBase : Texture
     {

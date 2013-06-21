@@ -30,7 +30,7 @@ namespace SharpDX.Toolkit.Graphics
     /// PrimitiveType is equivalent to <see cref="SharpDX.Direct3D.PrimitiveTopology"/>.
     /// </summary>
     /// <remarks>
-    /// This structure is implicitly castable to and from <see cref="SharpDX.Direct3D.PrimitiveTopology"/>, you can use it inplace where <see cref="SharpDX.Direct3D.PrimitiveTopology"/> is required
+    /// This structure is implicitly castable to and from <see cref="SharpDX.Direct3D.PrimitiveTopology"/>, you can use it in place where <see cref="SharpDX.Direct3D.PrimitiveTopology"/> is required
     /// and vice-versa.
     /// </remarks>
     /// <msdn-id>ff728726</msdn-id>	

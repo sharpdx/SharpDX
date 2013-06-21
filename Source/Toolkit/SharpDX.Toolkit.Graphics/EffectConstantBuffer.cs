@@ -27,7 +27,7 @@ namespace SharpDX.Toolkit.Graphics
     /// </summary>
     /// <remarks>
     /// Constant buffers are created and shared inside a same <see cref="EffectPool"/>. The creation of the underlying GPU buffer
-    /// can be overriden using <see cref="EffectPool.ConstantBufferAllocator"/>.
+    /// can be overridden using <see cref="EffectPool.ConstantBufferAllocator"/>.
     /// </remarks>
     public sealed class EffectConstantBuffer : DataBuffer, IEquatable<EffectConstantBuffer>
     {
@@ -65,7 +65,7 @@ namespace SharpDX.Toolkit.Graphics
         /// Set this flag to true to notify that the buffer was changed
         /// </summary>
         /// <remarks>
-        /// When using Set(value) methods on this buffer, this property must be set to true to ensure that the bufer will
+        /// When using Set(value) methods on this buffer, this property must be set to true to ensure that the buffer will
         /// be uploaded.
         /// </remarks>
         public bool IsDirty;

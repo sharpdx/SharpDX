@@ -27,7 +27,7 @@ using SharpDX.IO;
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    /// A Texture 1D frontend to <see cref="SharpDX.Direct3D11.Texture1D"/>.
+    /// A Texture 1D front end to <see cref="SharpDX.Direct3D11.Texture1D"/>.
     /// </summary>
     public class Texture1D : Texture1DBase
     {

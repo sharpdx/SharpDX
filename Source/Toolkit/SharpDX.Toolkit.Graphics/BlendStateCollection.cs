@@ -38,7 +38,7 @@ namespace SharpDX.Toolkit.Graphics
         public readonly BlendState AlphaBlend;
 
         /// <summary>
-        /// A built-in state object with settings for blending with non-premultipled alpha, that is blending source and destination data using alpha while assuming the color data contains no alpha information.
+        /// A built-in state object with settings for blending with non-premultiplied alpha, that is blending source and destination data using alpha while assuming the color data contains no alpha information.
         /// </summary>
         public readonly BlendState NonPremultiplied;
 

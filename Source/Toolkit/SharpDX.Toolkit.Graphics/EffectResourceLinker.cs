@@ -23,7 +23,7 @@ using System;
 namespace SharpDX.Toolkit.Graphics
 {
     /// <summary>
-    /// A class used to shader input resource parameters and prepare them (i.e. take their NativePointer asap).
+    /// A class used to shader input resource parameters and prepare them (i.e. take their NativePointer ASAP).
     /// </summary>
     class EffectResourceLinker : IDisposable
     {

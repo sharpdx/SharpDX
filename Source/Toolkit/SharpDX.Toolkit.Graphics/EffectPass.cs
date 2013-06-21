@@ -372,7 +372,7 @@ namespace SharpDX.Toolkit.Graphics
             var constantBuffers = Effect.ResourceLinker.ConstantBuffers;
 
             // ---------------------------------------------------------------------
-            // Handle sparse input resources and update their continous counterpart.
+            // Handle sparse input resources and update their continuous counterpart.
             // ---------------------------------------------------------------------
             var resourceLinkerPointers = Effect.ResourceLinker.Pointers;
             var resourceLinkerUAVCounts  = Effect.ResourceLinker.UAVCounts;
@@ -640,7 +640,7 @@ namespace SharpDX.Toolkit.Graphics
                         var previousParameter = Effect.Parameters[parameter.Name];
                         if (previousParameter == null)
                         {
-                            // Add an effect parameter linked to the approriate constant buffer at the effect level.
+                            // Add an effect parameter linked to the appropriate constant buffer at the effect level.
                             Effect.Parameters.Add(new EffectParameter((EffectData.ValueTypeParameter) parameter.ParameterDescription, constantBuffer));
                         }
                         else if (parameter.ParameterDescription != previousParameter.ParameterDescription || parameter.buffer != previousParameter.buffer)
@@ -660,7 +660,7 @@ namespace SharpDX.Toolkit.Graphics
                 EffectParameter parameter;
                 var previousParameter = Effect.Parameters[parameterRaw.Name];
 
-                // Skip enmpty constant buffers.
+                // Skip empty constant buffers.
                 if (parameterRaw.Type == EffectParameterType.ConstantBuffer && Effect.ConstantBuffers[parameterRaw.Name] == null)
                 {
                     continue;
