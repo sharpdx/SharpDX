@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin Composite effect.
+    /// Built in Composite effect.
     /// </summary>
     public class Composite : Effect
     {

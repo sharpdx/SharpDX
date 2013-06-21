@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin Crop effect.
+    /// Built in Crop effect.
     /// </summary>
     public class Crop : Effect
     {

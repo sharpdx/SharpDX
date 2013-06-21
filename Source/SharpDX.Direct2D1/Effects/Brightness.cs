@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin Brightness effect.
+    /// Built in Brightness effect.
     /// </summary>
     public class Brightness : Effect
     {

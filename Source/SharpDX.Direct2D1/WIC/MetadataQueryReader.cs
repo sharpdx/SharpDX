@@ -159,7 +159,7 @@ namespace SharpDX.WIC
         }
 
         /// <summary>
-        /// Dumps all metadatas.
+        /// Dumps all metadata.
         /// </summary>
         /// <param name="writer">The text writer output.</param>
         /// <param name="level">The level of tabulations.</param>

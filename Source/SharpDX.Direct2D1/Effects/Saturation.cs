@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin Saturation effect.
+    /// Built in Saturation effect.
     /// </summary>
     public class Saturation : Effect
     {

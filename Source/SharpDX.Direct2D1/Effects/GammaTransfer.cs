@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin GammaTransfer effect.
+    /// Built in GammaTransfer effect.
     /// </summary>
     public class GammaTransfer : Effect
     {

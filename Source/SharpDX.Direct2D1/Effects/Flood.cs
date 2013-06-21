@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin Flood effect.
+    /// Built in Flood effect.
     /// </summary>
     public class Flood : Effect
     {

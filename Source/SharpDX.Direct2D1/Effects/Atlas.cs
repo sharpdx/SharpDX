@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin Atlas effect.
+    /// Built in Atlas effect.
     /// </summary>
     public class Atlas : Effect
     {

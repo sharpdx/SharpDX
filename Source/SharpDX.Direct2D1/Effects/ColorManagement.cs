@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin ColorManagement effect.
+    /// Built in ColorManagement effect.
     /// </summary>
     public class ColorManagement : Effect
     {

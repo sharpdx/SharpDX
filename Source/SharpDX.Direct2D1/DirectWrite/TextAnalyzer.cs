@@ -171,7 +171,7 @@ namespace SharpDX.DirectWrite
         /// <param name="glyphProps">The glyph props.</param>
         /// <param name="glyphCount">The glyph count.</param>
         /// <param name="fontFace">The font face.</param>
-        /// <param name="fontEmSize">Size of the font em.</param>
+        /// <param name="fontEmSize">Size of the font in ems.</param>
         /// <param name="isSideways">if set to <c>true</c> [is sideways].</param>
         /// <param name="isRightToLeft">if set to <c>true</c> [is right to left].</param>
         /// <param name="scriptAnalysis">The script analysis.</param>

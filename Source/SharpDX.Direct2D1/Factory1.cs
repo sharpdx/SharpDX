@@ -113,7 +113,7 @@ namespace SharpDX.Direct2D1
         }
 
         /// <summary>
-        /// Unregsiter a <see cref="CustomEffect"/>.
+        /// Unregister a <see cref="CustomEffect"/>.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         public void UnRegisterEffect<T>() where T : CustomEffect

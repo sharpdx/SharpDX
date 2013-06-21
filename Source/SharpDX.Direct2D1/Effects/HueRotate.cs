@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin HueRotate effect.
+    /// Built in HueRotate effect.
     /// </summary>
     public class HueRotation : Effect
     {

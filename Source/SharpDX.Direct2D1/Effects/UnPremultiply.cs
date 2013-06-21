@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin Premultiply effect.
+    /// Built in Premultiply effect.
     /// </summary>
     public class UnPremultiply : Effect
     {

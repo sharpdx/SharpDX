@@ -190,10 +190,10 @@ namespace SharpDX.WIC
         private static readonly PropertyBagKey<uint[], uint[]> ChrominanceKey = new PropertyBagKey<uint[], uint[]>("Chrominance");
 
         /// <summary>
-        /// Gets or sets the JPEG Y cr cb subsampling.
+        /// Gets or sets the JPEG Y Cr Cb subsampling.
         /// </summary>
         /// <value>
-        /// The JPEG Y cr cb subsampling.
+        /// The JPEG Y Cr Cb subsampling.
         /// </value>
         /// <remarks>
         /// Range value: <see cref="JpegYCrCbSubsamplingOption"/>

@@ -24,7 +24,7 @@ using System.IO;
 namespace SharpDX.WIC
 {
     /// <summary>
-    /// Wmp bitmap encoder using <see cref="BitmapEncoder"/> initialized with default guid <see cref="ContainerFormatGuids.Wmp"/>.
+    /// WMP bitmap encoder using <see cref="BitmapEncoder"/> initialized with default guid <see cref="ContainerFormatGuids.Wmp"/>.
     /// </summary>
     public class WmpBitmapEncoder : BitmapEncoder
     {

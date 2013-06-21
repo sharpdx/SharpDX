@@ -164,7 +164,7 @@
 
     <map param=".*::.*::pbBuffer" type="void" attribute="in"/>
     
-    <!--Temporarly remove unsupported type from methods -->
+    <!--Temporarily remove unsupported type from methods -->
     <remove method="IWICEnumMetadataItem::Next"/>
 
     <!--IWICBitmap -->

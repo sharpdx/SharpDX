@@ -22,7 +22,7 @@ using System;
 namespace SharpDX.Direct2D1
 {
     /// <summary>
-    /// A Wic RenderTarget.
+    /// A WIC RenderTarget.
     /// </summary>
     public class WicRenderTarget : RenderTarget
     {
@@ -30,7 +30,7 @@ namespace SharpDX.Direct2D1
         /// Initializes a new instance of the <see cref="WicRenderTarget"/> class from a <see cref="SharpDX.WIC.Bitmap"/>.
         /// </summary>
         /// <param name="factory">The factory.</param>
-        /// <param name="wicBitmap">The wic bitmap.</param>
+        /// <param name="wicBitmap">The WIC bitmap.</param>
         /// <param name="renderTargetProperties">The render target properties.</param>
         public WicRenderTarget(Factory factory, WIC.Bitmap wicBitmap, RenderTargetProperties renderTargetProperties)
             : base(IntPtr.Zero)

@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin DpiCompensation effect.
+    /// Built in DpiCompensation effect.
     /// </summary>
     public class DpiCompensation : Effect
     {
