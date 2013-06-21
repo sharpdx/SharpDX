@@ -54,9 +54,9 @@ namespace SharpDX.DirectInput
         }
 
         /// <summary>
-        /// Gets or sets the informations.
+        /// Gets or sets the device instances.
         /// </summary>
-        /// <value>The informations.</value>
+        /// <value>The device instances.</value>
         public List<DeviceInstance> DeviceInstances { get; private set; }
 
         // typedef BOOL (FAR PASCAL * LPDIENUMDEVICESCALLBACKW)(LPCDIDEVICEINSTANCEW, LPVOID);

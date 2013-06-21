@@ -33,7 +33,7 @@ namespace SharpDX.DirectInput
         }
 
         /// <summary>
-        /// Gets or sets the dataformat flags.
+        /// Gets or sets the data format flags.
         /// </summary>
         /// <value>The flags.</value>
         public DataFormatFlag Flags;
