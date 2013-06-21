@@ -79,7 +79,7 @@
 
     <create class="XAudio2Functions" />
     
-    <!-- Warning, gccxml cannot parse thoe CLSID - Need to declare them manually
+    <!-- Warning, gccxml cannot parse the CLSID - Need to declare them manually
     DEFINE_CLSID(AudioVolumeMeter, cac1105f, 619b, 4d04, 83, 1a, 44, e1, cb, f1, 2d, 57);
     DEFINE_CLSID(AudioVolumeMeter_Debug, 2d9a0f9c, e67b, 4b24, ab, 44, 92, b3, e7, 70, c0, 20);
     DEFINE_CLSID(AudioReverb, 6a93130e, 1d53, 41d1, a9, cf, e7, 58, 80, 0b, b1, 79);
