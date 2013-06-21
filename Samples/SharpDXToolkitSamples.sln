@@ -58,7 +58,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geometrics.Desktop", "Toolkit\Desktop\Geometrics\Geometrics.Desktop.csproj", "{E6BB7879-4CAF-48F0-9A15-DF49534B6ADE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamOutParticles.Desktop", "Toolkit\Desktop\StreamOutParticles\StreamOutParticles.Desktop.csproj", "{84D42973-E9B4-4799-B396-5DC74CFE4E6C}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniCube.WPF", "Toolkit\Desktop\MiniCube.WPF\MiniCube.WPF.csproj", "{E67EFC2D-F7EE-4A27-8F21-2C09CABBDF60}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonitorInfo.Desktop", "Toolkit\Desktop\MonitorInfo\MonitorInfo.Desktop.csproj", "{988AC9BC-4932-4013-8679-846F934320E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -571,6 +574,16 @@ Global
 		{E67EFC2D-F7EE-4A27-8F21-2C09CABBDF60}.Release|ARM.ActiveCfg = Release|Any CPU
 		{E67EFC2D-F7EE-4A27-8F21-2C09CABBDF60}.Release|x64.ActiveCfg = Release|Any CPU
 		{E67EFC2D-F7EE-4A27-8F21-2C09CABBDF60}.Release|x86.ActiveCfg = Release|Any CPU
+		{988AC9BC-4932-4013-8679-846F934320E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{988AC9BC-4932-4013-8679-846F934320E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{988AC9BC-4932-4013-8679-846F934320E8}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{988AC9BC-4932-4013-8679-846F934320E8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{988AC9BC-4932-4013-8679-846F934320E8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{988AC9BC-4932-4013-8679-846F934320E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{988AC9BC-4932-4013-8679-846F934320E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{988AC9BC-4932-4013-8679-846F934320E8}.Release|ARM.ActiveCfg = Release|Any CPU
+		{988AC9BC-4932-4013-8679-846F934320E8}.Release|x64.ActiveCfg = Release|Any CPU
+		{988AC9BC-4932-4013-8679-846F934320E8}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

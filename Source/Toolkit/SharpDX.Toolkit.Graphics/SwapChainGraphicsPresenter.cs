@@ -90,10 +90,25 @@ namespace SharpDX.Toolkit.Graphics
                     throw new ArgumentException("Cannot switch to non-full screen in Windows RT");
                 }
 #else
-                var isCurrentlyFullscreen = swapChain.IsFullScreen;
-                if (isCurrentlyFullscreen == value)
+
+                var outputIndex = PrefferedFullScreenOutputIndex;
+                var output = GraphicsDevice.Adapter.GetOutputAt(outputIndex);
+
+                Output currentOutput = null;
+
+                try
                 {
-                    return;
+                    Bool isCurrentlyFullscreen;
+                    swapChain.GetFullscreenState(out isCurrentlyFullscreen, out currentOutput);
+
+                    // check if the current fullscreen monitor is the same as new one
+                    if (isCurrentlyFullscreen == value && currentOutput != null && currentOutput.NativePointer == ((Output)output).NativePointer)
+                        return;
+                }
+                finally
+                {
+                    if (currentOutput != null)
+                        currentOutput.Dispose();
                 }
 
                 bool switchToFullScreen = value;
@@ -101,9 +116,6 @@ namespace SharpDX.Toolkit.Graphics
                 var description = new ModeDescription(backBuffer.Width, backBuffer.Height, Description.RefreshRate, Description.BackBufferFormat);
                 if (switchToFullScreen)
                 {
-                    var outputIndex = PrefferedFullScreenOutputIndex;
-                    var output = GraphicsDevice.Adapter.GetOutputAt(outputIndex);
-
                     swapChain.ResizeTarget(ref description);
                     swapChain.SetFullscreenState(true, output);
                 }
