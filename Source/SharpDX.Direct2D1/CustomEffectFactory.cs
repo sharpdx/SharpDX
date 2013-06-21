@@ -99,7 +99,7 @@ namespace SharpDX.Direct2D1
             }
 
             // Sort property bindings by property order
-            // Don't rely on reflection to get property order, as there is no waranty
+            // Don't rely on reflection to get property order, as there is no warranty
             bindings.Sort((left, right) => left.Attribute.Order.CompareTo(right.Attribute.Order));
 
             Bindings = bindings.ToArray();
@@ -183,7 +183,7 @@ namespace SharpDX.Direct2D1
         }
 
 #if !WIN8METRO
-        // Because we don't want any depdencies on Linq, used a minimalist compatible code to serialize XML
+        // Because we don't want any dependencies on Linq, used a minimalist compatible code to serialize XML
         private enum SaveOptions
         {
             None

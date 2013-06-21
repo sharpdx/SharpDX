@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin Histogram effect.
+    /// Built in Histogram effect.
     /// </summary>
     public class Histogram : Effect
     {

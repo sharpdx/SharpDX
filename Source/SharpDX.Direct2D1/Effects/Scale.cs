@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin Scale effect.
+    /// Built in Scale effect.
     /// </summary>
     public class Scale : Effect
     {

@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin Turbulence effect.
+    /// Built in Turbulence effect.
     /// </summary>
     public class Turbulence : Effect
     {

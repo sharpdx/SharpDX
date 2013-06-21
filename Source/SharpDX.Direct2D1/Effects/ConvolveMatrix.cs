@@ -26,7 +26,7 @@ using SharpDX.WIC;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin ConvolveMatrix effect.
+    /// Built in ConvolveMatrix effect.
     /// </summary>
     public class ConvolveMatrix : Effect
     {

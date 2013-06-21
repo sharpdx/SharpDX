@@ -44,7 +44,7 @@ namespace SharpDX.WIC
         }
 
         /// <summary>
-        /// Gets the color manangement version number the codec supports.
+        /// Gets the color management version number the codec supports.
         /// </summary>
         public string ColorManagementVersion
         {

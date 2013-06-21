@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin ArithmeticComposite effect.
+    /// Built in ArithmeticComposite effect.
     /// </summary>
     public class ArithmeticComposite : Effect
     {

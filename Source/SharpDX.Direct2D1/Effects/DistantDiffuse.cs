@@ -25,7 +25,7 @@ using System.Text;
 namespace SharpDX.Direct2D1.Effects
 {
     /// <summary>
-    /// Builtin DistantDiffuse effect.
+    /// Built in DistantDiffuse effect.
     /// </summary>
     public class DistantDiffuse : Effect
     {

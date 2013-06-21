@@ -27,7 +27,7 @@ namespace SharpDX.Direct2D1
     public partial class BorderTransform
     {
         /// <summary>
-        /// Initialzies a new instance of <see cref="BorderTransform"/> class
+        /// Initializes a new instance of <see cref="BorderTransform"/> class
         /// </summary>
         /// <param name="context">The effect context</param>
         /// <param name="extendModeX">The extend mode for X coordinates</param>
