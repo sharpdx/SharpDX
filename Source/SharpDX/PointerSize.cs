@@ -149,7 +149,7 @@ namespace SharpDX
         /// <summary>
         ///   Assert a size (return it unchanged).
         /// </summary>
-        /// <param name = "value">The size to assert (unchange).</param>
+        /// <param name = "value">The size to assert (unchanged).</param>
         /// <returns>The asserted (unchanged) size.</returns>
         public static PointerSize operator +(PointerSize value)
         {

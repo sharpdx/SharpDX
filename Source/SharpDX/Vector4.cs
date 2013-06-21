@@ -43,9 +43,9 @@
 * THE SOFTWARE.
 */
 using System;
+using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using System.ComponentModel;
 using SharpDX.Serialization;
 
 namespace SharpDX
@@ -1110,7 +1110,7 @@ namespace SharpDX
         /// <summary>
         /// Assert a vector (return it unchanged).
         /// </summary>
-        /// <param name="value">The vector to assert (unchange).</param>
+        /// <param name="value">The vector to assert (unchanged).</param>
         /// <returns>The asserted (unchanged) vector.</returns>
         public static Vector4 operator +(Vector4 value)
         {

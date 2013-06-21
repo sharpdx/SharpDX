@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.Reflection;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
@@ -58,7 +57,7 @@ namespace SharpDX
                     slimInterfaces.AddRange(interfaces);
                     typeToShadowTypes.Add(type, slimInterfaces);
 
-                    // First pass to identify most detailled interfaces
+                    // First pass to identify most detailed interfaces
                     foreach (var item in interfaces)
                     {
                         // Only process interfaces that are using shadow

@@ -57,7 +57,7 @@ namespace SharpDX.Multimedia
         public FourCC Type { get; private set; }
 
         /// <summary>
-        /// Gets the size of the data enbedded by this chunk.
+        /// Gets the size of the data embedded by this chunk.
         /// </summary>
         public uint Size { get; private set; }
 

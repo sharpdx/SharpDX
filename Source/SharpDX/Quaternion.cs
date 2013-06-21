@@ -43,11 +43,9 @@
 * THE SOFTWARE.
 */
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using SharpDX.Serialization;
 
 namespace SharpDX
@@ -438,7 +436,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="left">The first quaternion to modulate.</param>
         /// <param name="right">The second quaternion to modulate.</param>
-        /// <param name="result">When the moethod completes, contains the modulated quaternion.</param>
+        /// <param name="result">When the method completes, contains the modulated quaternion.</param>
         public static void Multiply(ref Quaternion left, ref Quaternion right, out Quaternion result)
         {
             float lx = left.X;
@@ -948,7 +946,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="value1">First source quaternion.</param>
         /// <param name="value2">Second source quaternion.</param>
-        /// <param name="value3">Thrid source quaternion.</param>
+        /// <param name="value3">Third source quaternion.</param>
         /// <param name="value4">Fourth source quaternion.</param>
         /// <param name="amount">Value between 0 and 1 indicating the weight of interpolation.</param>
         /// <param name="result">When the method completes, contains the spherical quadrangle interpolation of the quaternions.</param>
@@ -965,7 +963,7 @@ namespace SharpDX
         /// </summary>
         /// <param name="value1">First source quaternion.</param>
         /// <param name="value2">Second source quaternion.</param>
-        /// <param name="value3">Thrid source quaternion.</param>
+        /// <param name="value3">Third source quaternion.</param>
         /// <param name="value4">Fourth source quaternion.</param>
         /// <param name="amount">Value between 0 and 1 indicating the weight of interpolation.</param>
         /// <returns>The spherical quadrangle interpolation of the quaternions.</returns>

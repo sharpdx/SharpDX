@@ -130,7 +130,7 @@ namespace SharpDX
         /// <summary>
         /// Initializes a new instance of the <see cref="SharpDX.Color4"/> struct.
         /// </summary>
-        /// <param name="value">The red, green, and blue compoennts of the color.</param>
+        /// <param name="value">The red, green, and blue components of the color.</param>
         /// <param name="alpha">The alpha component of the color.</param>
         public Color4(Vector3 value, float alpha)
         {
@@ -564,11 +564,11 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Returns a color containing the smallest components of the specified colorss.
+        /// Returns a color containing the smallest components of the specified colors.
         /// </summary>
         /// <param name="left">The first source color.</param>
         /// <param name="right">The second source color.</param>
-        /// <param name="result">When the method completes, contains an new color composed of the largest components of the source colorss.</param>
+        /// <param name="result">When the method completes, contains an new color composed of the largest components of the source colors.</param>
         public static void Max(ref Color4 left, ref Color4 right, out Color4 result)
         {
             result.Alpha = (left.Alpha > right.Alpha) ? left.Alpha : right.Alpha;
@@ -578,7 +578,7 @@ namespace SharpDX
         }
 
         /// <summary>
-        /// Returns a color containing the largest components of the specified colorss.
+        /// Returns a color containing the largest components of the specified colors.
         /// </summary>
         /// <param name="left">The first source color.</param>
         /// <param name="right">The second source color.</param>
@@ -693,7 +693,7 @@ namespace SharpDX
         /// <summary>
         /// Assert a color (return it unchanged).
         /// </summary>
-        /// <param name="value">The color to assert (unchange).</param>
+        /// <param name="value">The color to assert (unchanged).</param>
         /// <returns>The asserted (unchanged) color.</returns>
         public static Color4 operator +(Color4 value)
         {

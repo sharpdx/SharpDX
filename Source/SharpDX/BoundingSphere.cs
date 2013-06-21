@@ -65,7 +65,7 @@ namespace SharpDX
         public Vector3 Center;
 
         /// <summary>
-        /// The radious of the sphere.
+        /// The radius of the sphere.
         /// </summary>
         public float Radius;
 
@@ -129,7 +129,7 @@ namespace SharpDX
         /// Determines if there is an intersection between the current object and a triangle.
         /// </summary>
         /// <param name="vertex1">The first vertex of the triangle to test.</param>
-        /// <param name="vertex2">The second vertex of the triagnle to test.</param>
+        /// <param name="vertex2">The second vertex of the triangle to test.</param>
         /// <param name="vertex3">The third vertex of the triangle to test.</param>
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref Vector3 vertex1, ref Vector3 vertex2, ref Vector3 vertex3)
@@ -191,7 +191,7 @@ namespace SharpDX
         /// Determines whether the current objects contains a triangle.
         /// </summary>
         /// <param name="vertex1">The first vertex of the triangle to test.</param>
-        /// <param name="vertex2">The second vertex of the triagnle to test.</param>
+        /// <param name="vertex2">The second vertex of the triangle to test.</param>
         /// <param name="vertex3">The third vertex of the triangle to test.</param>
         /// <returns>The type of containment the two objects have.</returns>
         public ContainmentType Contains(ref Vector3 vertex1, ref Vector3 vertex2, ref Vector3 vertex3)
@@ -267,7 +267,7 @@ namespace SharpDX
             float radius = 0f;
             for (int i = start; i < upperEnd; ++i)
             {
-                //We are doing a relative distance comparasin to find the maximum distance
+                //We are doing a relative distance comparison to find the maximum distance
                 //from the center of our sphere.
                 float distance;
                 Vector3.DistanceSquared(ref center, ref points[i], out distance);

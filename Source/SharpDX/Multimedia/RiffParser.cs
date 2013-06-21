@@ -122,7 +122,7 @@ namespace SharpDX.Multimedia
             // If list or header
             if (isList || isHeader)
             {
-                // Check filesize
+                // Check file size
                 if (isHeader && chunkSize > (input.Length - 8))
                 {
                     isErrorState = true;
