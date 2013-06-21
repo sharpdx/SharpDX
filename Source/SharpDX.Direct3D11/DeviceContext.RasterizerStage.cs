@@ -135,8 +135,8 @@ namespace SharpDX.Direct3D11
         /// <summary>
         /// Binds a single viewport to the rasterizer stage.
         /// </summary>
-        /// <param name="x">The x coord of the viewport.</param>
-        /// <param name="y">The x coord of the viewport.</param>
+        /// <param name="x">The x coordinate of the viewport.</param>
+        /// <param name="y">The y coordinate of the viewport.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         /// <param name="minZ">The min Z.</param>
