@@ -50,7 +50,7 @@ namespace SharpDX.DirectInput
         /// </summary>
         /// <param name="device">The device.</param>
         /// <param name="code">The code.</param>
-        /// <param name="propertyType">Howtype.</param>
+        /// <param name="propertyType">The property type.</param>
         internal PropertyAccessor(Device device, int code, PropertyHowType propertyType)
         {
             Device = device;

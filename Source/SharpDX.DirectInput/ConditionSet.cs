@@ -29,7 +29,7 @@ namespace SharpDX.DirectInput
     public class ConditionSet : TypeSpecificParameters
     {
         /// <summary>
-        /// Marshal this class from an unamanaged buffer.
+        /// Marshal this class from an unmanaged buffer.
         /// </summary>
         /// <param name="bufferSize">The size of the unmanaged buffer.</param>
         /// <param name="bufferPointer">The pointer to the unmanaged buffer.</param>

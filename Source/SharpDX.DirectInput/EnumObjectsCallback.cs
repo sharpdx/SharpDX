@@ -54,9 +54,9 @@ namespace SharpDX.DirectInput
         }
 
         /// <summary>
-        /// Gets or sets the informations.
+        /// Gets or sets the device object instances.
         /// </summary>
-        /// <value>The informations.</value>
+        /// <value>The device object instances.</value>
         public List<DeviceObjectInstance> Objects { get; private set; }
 
         // BOOL DIEnumObjectsCallback(LPCDIEffectInfo pdei,LPVOID pvRef)
