@@ -23,6 +23,11 @@ namespace SharpDX.Direct3D9
 {
     public partial struct PresentParameters
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PresentParameters"/> struct.
+        /// </summary>
+        /// <param name="backBufferWidth">Width of the back buffer.</param>
+        /// <param name="backBufferHeight">Height of the back buffer.</param>
         public PresentParameters(int backBufferWidth, int backBufferHeight) : this(backBufferWidth, backBufferHeight, Format.X8R8G8B8, 1, MultisampleType.None, 0, Direct3D9.SwapEffect.Discard, IntPtr.Zero, true, true, Format.D24X8, Direct3D9.PresentFlags.None, 0, PresentInterval.Default|PresentInterval.Immediate)
         {
         }
@@ -42,7 +47,7 @@ namespace SharpDX.Direct3D9
         /// <param name="enableAutoDepthStencil">if set to <c>true</c> [enable auto depth stencil].</param>
         /// <param name="autoDepthStencilFormat">The auto depth stencil format.</param>
         /// <param name="presentFlags">The present flags.</param>
-        /// <param name="fullScreenRefreshRateInHz">The full screen refresh rate in hz.</param>
+        /// <param name="fullScreenRefreshRateInHz">The full screen refresh rate in Hz.</param>
         /// <param name="presentationInterval">The presentation interval.</param>
         public PresentParameters(int backBufferWidth, int backBufferHeight, Format backBufferFormat, int backBufferCount, MultisampleType multiSampleType, int multiSampleQuality, SwapEffect swapEffect, IntPtr deviceWindowHandle, bool windowed, bool enableAutoDepthStencil, Format autoDepthStencilFormat, PresentFlags presentFlags, int fullScreenRefreshRateInHz, PresentInterval presentationInterval)
         {
