@@ -60,7 +60,7 @@ namespace SharpDX.Toolkit.Graphics
         public class BitmapData : IDataSerializable
         {
             /// <summary>
-            /// Wisth of the bitmap.
+            /// Width of the bitmap.
             /// </summary>
             public int Width;
 
@@ -75,12 +75,12 @@ namespace SharpDX.Toolkit.Graphics
             public SharpDX.DXGI.Format PixelFormat;
 
             /// <summary>
-            /// Srite in bytes of a row of pixels.
+            /// Stride in bytes of a row of pixels.
             /// </summary>
             public int RowStride;
 
             /// <summary>
-            /// Number of rowstride (may be less than <see cref="Height"/> when using compressed format.
+            /// Number of row strides (may be less than <see cref="Height"/> when using compressed format.
             /// </summary>
             public int CompressedHeight;
 

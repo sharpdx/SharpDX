@@ -59,7 +59,7 @@ namespace SharpDX.Toolkit.Content
         /// Unloads all data that was loaded by this ContentManager. All data will be disposed.
         /// </summary>
         /// <remarks>
-        /// Unlike <see cref="ContentManager.Load{T}"/> method, this method is not threadsafe and must be called by a single caller at a single time.
+        /// Unlike <see cref="ContentManager.Load{T}"/> method, this method is not thread safe and must be called by a single caller at a single time.
         /// </remarks>
         void Unload();
     }

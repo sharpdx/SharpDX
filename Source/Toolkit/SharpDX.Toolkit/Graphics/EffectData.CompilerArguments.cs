@@ -33,7 +33,7 @@ namespace SharpDX.Toolkit.Graphics
             public string FilePath;
 
             /// <summary>
-            /// The absolute path to dependency filepath generated when compiling this effect.
+            /// The absolute path to dependency file path generated when compiling this effect.
             /// </summary>
             public string DependencyFilePath;
 

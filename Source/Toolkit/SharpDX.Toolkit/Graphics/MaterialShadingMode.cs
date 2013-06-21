@@ -74,7 +74,7 @@ namespace SharpDX.Toolkit.Graphics
     /// undefined). <br>
     /// Again, this value is just a hint. Assimp tries to select the shader whose
     /// most common implementation matches the original rendering results of the
-    /// 3D modeller which wrote a particular model as closely as possible.
+    /// 3D modeler which wrote a particular model as closely as possible.
     /// </remarks>
     public enum MaterialShadingMode
     {

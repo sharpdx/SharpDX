@@ -147,7 +147,7 @@ namespace SharpDX.Toolkit.Content
 
             object result = null;
 
-            // Lock loading by asset name, like this, we can have several loading in multithreaded // with a single instance per assetname
+            // Lock loading by asset name, like this, we can have several loading in multithreaded // with a single instance per asset name
             lock (GetAssetLocker(assetName))
             {
                 // First, try to load the asset from the cache
@@ -183,7 +183,7 @@ namespace SharpDX.Toolkit.Content
         /// Unloads all data that was loaded by this ContentManager. All data will be disposed.
         /// </summary>
         /// <remarks>
-        /// Unlike <see cref="Load{T}"/> method, this method is not threadsafe and must be called by a single caller at a single time.
+        /// Unlike <see cref="Load{T}"/> method, this method is not thread safe and must be called by a single caller at a single time.
         /// </remarks>
         public virtual void Unload()
         {
@@ -306,7 +306,7 @@ namespace SharpDX.Toolkit.Content
                         }
                     }
 
-                    // Rewind position everytime we try to load an asset
+                    // Rewind position every time we try to load an asset
                     stream.Position = startPosition;
                     result = contentReader.ReadContent(this, assetNameWithExtension, stream, out keepStreamOpen);
                     stream.Position = startPosition;
@@ -321,7 +321,7 @@ namespace SharpDX.Toolkit.Content
                     }
                     foreach (IContentReader registeredContentReader in readers)
                     {
-                        // Rewind position everytime we try to load an asset
+                        // Rewind position every time we try to load an asset
                         result = registeredContentReader.ReadContent(this, assetNameWithExtension, stream, out keepStreamOpen);
                         stream.Position = startPosition;
                         if (result != null) break;
