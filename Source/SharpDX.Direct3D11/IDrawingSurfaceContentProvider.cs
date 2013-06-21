@@ -83,7 +83,7 @@ namespace SharpDX.Direct3D11
         private DrawingSurfaceSynchronizedTexture synchronizedTexture;
 
         /// <summary>
-        /// Return a pointer to the unamanged version of this callback.
+        /// Return a pointer to the unmanaged version of this callback.
         /// </summary>
         /// <param name="callback">The callback.</param>
         /// <returns>A pointer to a shadow c++ callback</returns>
@@ -168,10 +168,10 @@ namespace SharpDX.Direct3D11
                     // Call the callback GetTexture method    
                     callback.GetTexture(*(Size2F*)surfaceSize, out shadow.synchronizedTexture, out *(RectangleF*)textureSubRectangle);
 
-                    // Copy back synhronized texture pointer to native code
+                    // Copy back synchronized texture pointer to native code
                     if (shadow.synchronizedTexture != null)
                     {
-                        // Increment COM reference before giving back the sychronized texture
+                        // Increment COM reference before giving back the synchronized texture
                         ((IUnknown)shadow.synchronizedTexture).AddReference();
 
                         // Copy the pointer to the output parameter

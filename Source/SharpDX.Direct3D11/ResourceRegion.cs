@@ -22,13 +22,13 @@ namespace SharpDX.Direct3D11
     public partial struct ResourceRegion
     {
         /// <summary>
-        /// Initiailize a new instance of <see cref="ResourceRegion"/> struct.
+        /// Initialize a new instance of <see cref="ResourceRegion"/> struct.
         /// </summary>
         /// <param name="left">Left coordinates (inclusive)</param>
         /// <param name="top">Top coordinates (inclusive)</param>
         /// <param name="front">Front coordinates (inclusive)</param>
         /// <param name="right">Right coordinates (exclusive)</param>
-        /// <param name="bottom">Botoom coordinates (exclusive)</param>
+        /// <param name="bottom">Bottom coordinates (exclusive)</param>
         /// <param name="back">Back coordinates (exclusive)</param>
         /// <remarks>
         /// <ul>
