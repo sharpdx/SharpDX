@@ -54,7 +54,7 @@ namespace SharpDX.Toolkit.Graphics
 
         /// <summary>
         ///   Returns a value that can be used for the offset parameter of an InputElement to indicate that the element
-        ///   should be aligned directly after the previous element, including any packing if neccessary.
+        ///   should be aligned directly after the previous element, including any packing if necessary.
         /// </summary>
         /// <returns>A value used to align input elements.</returns>
         /// <unmanaged>D3D11_APPEND_ALIGNED_ELEMENT</unmanaged>

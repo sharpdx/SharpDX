@@ -130,7 +130,7 @@ namespace SharpDX.Toolkit.Graphics
         {
             // Starts the whole EffectData by the magiccode "TKFX"
             // If the serializer don't find the TKFX, It will throw an
-            // exception that will be catched by Load method.
+            // exception that will be caught by Load method.
             serializer.BeginChunk(MagicCode);
 
             // Writes the version

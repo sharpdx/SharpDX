@@ -86,7 +86,7 @@ namespace SharpDX.Toolkit.Graphics
         None = 0,
 
         /// <summary>
-        /// The texture's color values have to be inverted (componentwise 1-n)
+        /// The texture's color values have to be inverted (component-wise 1-n)
         /// </summary>
         /// 
         Invert = 0x1,
